@@ -1,0 +1,55 @@
+##############################################################################
+# Microsoft Visual C++ Makefile for primesieve (console version)
+#
+# Usage: nmake -f Makefile.msvc
+# 
+# Author:          Kim Walisch
+# Contact:         kim.walisch@gmail.com
+# Created:         16 November 2010 
+# Last modified:   16 November 2010 
+#
+# Project home:    http://code.google.com/p/primesieve
+##############################################################################
+
+# Ignore all error return codes
+.IGNORE:
+
+TARGET = primesieve
+SRCDIR = src
+OUTDIR = out
+
+# Define the C++ compiler & options
+CPP      = cl
+CPPFLAGS = /O2 /GL /EHsc /W3 /D "NDEBUG" /D "__STDC_CONSTANT_MACROS" /D "__STDC_LIMIT_MACROS"
+
+# Inculde stdint.h (needed prior MSVC 2010)
+INCPATH  = -I"src\utils"
+
+OBJECTS = $(OUTDIR)\EratBig.obj \
+  $(OUTDIR)\ResetSieve.obj \
+  $(OUTDIR)\EratMedium.obj \
+  $(OUTDIR)\SieveOfEratosthenes.obj \
+  $(OUTDIR)\PrimeNumberGenerator.obj \
+  $(OUTDIR)\PrimeSieve.obj \
+  $(OUTDIR)\PrimeNumberFinder.obj \
+  $(OUTDIR)\EratSmall.obj \
+  $(OUTDIR)\WheelFactorization.obj \
+  $(OUTDIR)\main.obj
+TARGET = $(OUTDIR)\$(TARGET)
+
+all : create_dir build
+
+create_dir :
+!if !EXISTS($(OUTDIR))
+  mkdir $(OUTDIR)
+!endif
+ 
+{$(SRCDIR)\}.cpp.obj:
+  $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
+
+build : $(OBJECTS)
+  $(CPP) $(CPPFLAGS) /Fe$(TARGET) $(OBJECTS)
+  
+clean: 
+	del $(OBJECTS)
+	del $(TARGET).exe
