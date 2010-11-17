@@ -223,11 +223,9 @@ protected:
       if (multiple > stopNumber_)
         return false;
     }
-    /// @remark '+ 1' is a correction for primes of type n * 30 + 31
+    /// @remark the following if clause is a correction for primes
+    /// of type n * 30 + 31
     if (multiple == lowerBound + 1) {
-      // the multiple belongs to last byte of the previous sieving
-      // round, thus add primeNumber to get the first multiple of the
-      // current sieve round
       multiple += *primeNumber;
     }
     uint32_t index = (multiple / *primeNumber) % WHEEL_MODULO;
@@ -242,6 +240,7 @@ protected:
     /// @see WheelPrime
     *wheelIndex = INIT_WHEEL[index].subWheelIndex + subWheelOffset;
     assert(*wheelIndex < WHEEL_ELEMENTS * 8);
+    /// @remark '- 6' is a correction for primes of type n * 30 + 31
     *sieveIndex = static_cast<uint32_t> (((multiple - lowerBound) - 6) / 30);
     *primeNumber /= 15;
     return true;
