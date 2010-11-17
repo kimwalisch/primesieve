@@ -58,7 +58,7 @@ namespace settings {
      * Default = CPU L1 or L2 Cache size
      * @pre >= 1024 && <= 2^23
      */
-    DEFAULT_SIEVESIZE_PRIMENUMBERFINDER = 32 * 1024,
+    DEFAULT_SIEVESIZE_PRIMENUMBERFINDER = 64 * 1024,
     /**
      * (sieveSize * SIEVESIZE_FACTOR_ERATMEDIUM) is the upper bound for
      * sieving primes used with EratMedium.
