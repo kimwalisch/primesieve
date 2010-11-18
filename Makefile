@@ -3,8 +3,8 @@
 #
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
-# Created:         16 November 2010
-# Last modified:   16 November 2010
+# Created:         10 July 2010 
+# Last modified:   18 November 2010
 #
 # Project home:    http://code.google.com/p/primesieve
 ##############################################################################

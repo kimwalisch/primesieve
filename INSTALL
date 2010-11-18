@@ -4,33 +4,33 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010 
-# Last modified: 17 November 2010
+# Last modified: 18 November 2010
 #
-# Project home:  http://sites.google.com/site/primesieve
+# Project home:  http://code.google.com/p/primesieve/
 ##############################################################################
 
 How to build primesieve:
 
   1. Microsoft Visual C++
-  
     Open a Visual Studio Command Prompt, cd into the primesieve
     directory and run:
     > nmake -f Makefile.msvc
   
   2. GNU G++ Compiler 
-
     Open a terminal, cd into the primesieve directory and run:
     $ make
     
+  3. Other C++ Compilers
+    Open a terminal, cd into the primesieve directory and run:
+    $ make CXX=my_compiler
+
 How to test primesieve:
 
   1. Windows
-  
     > out\primesieve.exe 1 1000 -p1
     Prints the prime numbers up to 1000 to the standard output.
     
-  2. Linux, Unix, Mac OS X, ...
-  
+  2. Unix-like operating systems (Linux, Mac OS X, Solaris, ...)
     $ out/./primesieve 1 1e10 -s 32 -c1 -c2
     Sets the sieve size to 32 KiloBytes and counts the prime numbers
     and twin primes between 1 and 10^10.
