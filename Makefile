@@ -14,10 +14,6 @@ SRCDIR = src
 OUTDIR = out
 STDINT_MACROS = -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
 CXX = g++
-# Intel C++ Compiler
-#CXX = icpc
-# Oracle Solaris Studio
-#CXX = sunCC
 
 # Set the compiler flags
 ifeq ($(CXX),g++)
@@ -40,6 +36,9 @@ else ifeq ($(CXX),icpc)
     CXXFLAGS += -fast -DNDEBUG
 else ifeq ($(CXX),sunCC)
     CXXFLAGS += -O5 -xarch=sse4_2 -xipo -xrestrict -xalias_level=compatible -DNDEBUG
+else
+    # Default flags for other compilers
+    CXXFLAGS += -O2
 endif
 
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp))
