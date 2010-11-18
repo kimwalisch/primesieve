@@ -31,6 +31,8 @@ How to test primesieve:
     Prints the prime numbers up to 1000 to the standard output.
     
   2. Unix-like operating systems (Linux, Mac OS X, Solaris, ...)
-    $ out/./primesieve 1 1e10 -s 32 -c1 -c2
-    Sets the sieve size to 32 KiloBytes and counts the prime numbers
-    and twin primes between 1 and 10^10.
+    $ out/./primesieve 1 1e10 -c1 -c2 -s 32
+    Counts the prime numbers and twin primes up to 10^10 using a
+    sieve size of 32 KiloBytes.
+    The results should be 455052511 prime numbers and 27412679 
+    twin primes.
