@@ -33,7 +33,6 @@ enum {
   COUNT_QUINTUPLETS = (1 <<  4),
   COUNT_SEXTUPLETS  = (1 <<  5),
   COUNT_SEPTUPLETS  = (1 <<  6),
-  COUNT_FLAGS       = (1 <<  7) - 1,
   PRINT_PRIMES      = (1 <<  7),
   PRINT_TWINS       = (1 <<  8),
   PRINT_TRIPLETS    = (1 <<  9),
@@ -41,11 +40,26 @@ enum {
   PRINT_QUINTUPLETS = (1 << 11),
   PRINT_SEXTUPLETS  = (1 << 12),
   PRINT_SEPTUPLETS  = (1 << 13),
-  PRINT_FLAGS       =((1 << 14) - COUNT_FLAGS) - 1,
   PRINT_STATUS      = (1 << 14),
   STORE_STATUS      = (1 << 15),
-  RESULTS_FLAGS     = (1 << 15) + COUNT_FLAGS,
-  STATUS_FLAGS      =((1 << 16) - PRINT_FLAGS) - 1
+  COUNT_FLAGS       = COUNT_PRIMES | 
+                      COUNT_TWINS | 
+                      COUNT_TRIPLETS | 
+                      COUNT_QUADRUPLETS | 
+                      COUNT_QUINTUPLETS | 
+                      COUNT_SEXTUPLETS | 
+                      COUNT_SEPTUPLETS,
+  PRINT_FLAGS       = PRINT_PRIMES | 
+                      PRINT_TWINS | 
+                      PRINT_TRIPLETS | 
+                      PRINT_QUADRUPLETS | 
+                      PRINT_QUINTUPLETS | 
+                      PRINT_SEXTUPLETS | 
+                      PRINT_SEPTUPLETS,
+  RESULTS_FLAGS     = STORE_STATUS | 
+                      COUNT_FLAGS,
+  STATUS_FLAGS      = PRINT_STATUS |
+                      STORE_STATUS 
 };
 
 /**
