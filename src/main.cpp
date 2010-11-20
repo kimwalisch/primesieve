@@ -28,6 +28,7 @@
 
 #include "PrimeSieve.h"
 #include "pmath.h"
+#include "utils/strtoull.h"
 
 #include <stdint.h>
 #include <exception>
@@ -38,7 +39,7 @@
 
 // PrimeSieve arguments
 uint64_t start = 0;      /* lower bound for sieving */
-uint64_t stop  = 0;      /* upper bound for sieving */
+uint64_t stop = 0;       /* upper bound for sieving */
 uint32_t flags = 0;      /* settings */
 uint32_t sieveSize = 64; /* sieve size in KiloBytes */
 
@@ -54,13 +55,14 @@ void version() {
       << "This is free software: you are free to change and redistribute it."
       << std::endl << "There is NO WARRANTY, to the extent permitted by law."
       << std::endl;
-  exit( EXIT_SUCCESS);
+  exit(EXIT_SUCCESS);
 }
 
 void help() {
   std::cout << "Usage: primesieve START STOP [OPTION]" << std::endl
       << "Use the sieve of Eratosthenes to find the prime numbers and prime"
       << std::endl << "k-tuplets between START and STOP (< 2^64)" << std::endl
+      << "Example: primesieve 1 1000 -p1" << std::endl << std::endl
       << "Options:" << std::endl
       << "  -s <size>  Set the sieve size (in KiloBytes)," << std::endl
       << "             size >= 1 && size <= 8192" << std::endl
@@ -83,8 +85,8 @@ void processOptions(int argc, char* argv[]) {
     help();
   int i = 1;
   if (argc > 2) {
-    start = static_cast<uint64_t> (std::strtod(argv[i++], NULL));
-    stop  = static_cast<uint64_t> (std::strtod(argv[i++], NULL));
+    start = utils::strtoull(argv[i++]);
+    stop  = utils::strtoull(argv[i++]);
   }
   for (; i < argc; i++) {
     if (*argv[i] == '-' || *argv[i] == '/')
@@ -133,7 +135,7 @@ int main(int argc, char* argv[]) {
   if ((flags & COUNT_FLAGS) == 0)
     flags |= COUNT_PRIMES;
   // make sure sieve size is a power of 2
-    sieveSize = nextHighestPowerOf2(sieveSize);
+  sieveSize = nextHighestPowerOf2(sieveSize);
   if ((flags & PRINT_FLAGS) == 0) {
     // print the status whilst sieving
     flags |= PRINT_STATUS;
