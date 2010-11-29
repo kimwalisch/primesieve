@@ -66,23 +66,21 @@ uint32_t PrimeSieve::getFlags() const {
 
 /**
  * @return The count of prime numbers or k-tuplets between
- *         startNumber and stopNumber.
- * @param countFlag
- *   COUNT_PRIMES,
- *   COUNT_TWINS,
- *   COUNT_TRIPLETS,
- *   COUNT_QUADRUPLETS,
- *   COUNT_QUINTUPLETS,
- *   COUNT_SEXTUPLETS,
- *   COUNT_SEPTUPLETS.
+ *         startNumber and stopNumber or -1 if the appropriate
+ *         count flag is not set.
+ *
+ * @param  index 0 = Prime number count
+ *               1 = Twin prime count
+ *               2 = Prime triplet count
+ *               3 = Prime quadruplet count
+ *               4 = Prime quintuplet count
+ *               5 = Prime sextuplet count
+ *               6 = Prime septuplet count
  */
-uint64_t PrimeSieve::getCount(uint32_t countFlag) const {
-  if ((countFlag & COUNT_FLAGS) == 0)
-    throw std::invalid_argument(
-        "PrimeSieve: invalid countFlag parameter.");
-  uint32_t index = 0;
-  for (uint32_t i = COUNT_PRIMES; (i & countFlag) == 0; i <<= 1)
-    index++;
+int64_t PrimeSieve::getCount(uint32_t index) const {
+  if (index >= results_->COUNTS_SIZE)
+    throw std::out_of_range(
+        "PrimeSieve: getCount index must be < 7");
   return results_->counts[index];
 }
 
@@ -136,6 +134,7 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
 
 /**
  * Set the flags (settings) of PrimeSieve.
+ * @link PrimeNumberFinder.h
  * @param flags
  *   COUNT_PRIMES      OR (bitwise '|')
  *   COUNT_TWINS       OR
@@ -155,8 +154,8 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
  *   STORE_STATUS.
  */
 void PrimeSieve::setFlags(uint32_t flags) {
-  /// @link PrimeNumberFinder.h
   flags_ = flags;
+  results_->reset(flags_);
 }
 
 /** For use with multi-thread versions of PrimeSieve. */
@@ -193,7 +192,7 @@ void PrimeSieve::initSieveOfEratosthenes() {
 void PrimeSieve::sieve() {
   if (flags_ & PRINT_STATUS)
     std::cout << "\r0%" << std::flush;
-  results_->reset();
+  results_->reset(flags_);
   // small primes have to be examined manually
   if (startNumber_ <= 5) {
     uint32_t lowerBound[8] = { 2, 3, 5, 3, 5, 5, 5, 5 };

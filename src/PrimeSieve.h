@@ -39,7 +39,7 @@ public:
   uint64_t getStopNumber() const;
   uint32_t getSieveSize() const;
   uint32_t getFlags() const;
-  uint64_t getCount(uint32_t) const;
+   int64_t getCount(uint32_t) const;
   void setStartNumber(uint64_t);
   void setStopNumber(uint64_t);
   void setSieveSize(uint32_t);
