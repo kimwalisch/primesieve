@@ -64,7 +64,7 @@ public:
       COUNTS_SIZE = 7
     };
     // prime count variables
-    int64_t counts[COUNTS_SIZE];
+    volatile int64_t counts[COUNTS_SIZE];
     // status of the sieving process in percents
     volatile float status;
     void reset(uint32_t countFlags) {
