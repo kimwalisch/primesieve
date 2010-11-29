@@ -248,5 +248,5 @@ void PrimeSieve::sieve() {
   if (flags_ & PRINT_STATUS)
     std::cout << "\r100%" << std::endl;
   if (flags_ & STORE_STATUS)
-    results_->status = 100.0;
+    results_->status = 100.0f;
 }
