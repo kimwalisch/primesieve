@@ -58,7 +58,7 @@ public:
   /** PrimeNumberFinder stores its results in here. */
   struct Results {
     Results() {
-      this->results(0);
+      this->reset(0);
     }
     enum {
       COUNTS_SIZE = 7
