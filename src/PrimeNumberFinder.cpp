@@ -145,7 +145,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
     results_->counts[0] += primeCount;
   }
   // count prime k-tuplets
-  for (uint32_t i = 1; i < 7; i++) {
+  for (uint32_t i = 1; i < results_->COUNTS_SIZE; i++) {
     if (flags_  & (COUNT_PRIMES << i)) {
       uint32_t kTupletCount = 0;
       for (uint32_t j = 0; j < sieveSize; j++) {

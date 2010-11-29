@@ -42,6 +42,12 @@ enum {
   PRINT_SEPTUPLETS  = (1 << 13),
   PRINT_STATUS      = (1 << 14),
   STORE_STATUS      = (1 << 15),
+<<<<<<< .mine
+  COUNT_FLAGS       = COUNT_PRIMES | COUNT_TWINS | COUNT_TRIPLETS | COUNT_QUADRUPLETS | COUNT_QUINTUPLETS | COUNT_SEXTUPLETS | COUNT_SEPTUPLETS,
+  PRINT_FLAGS       = PRINT_PRIMES | PRINT_TWINS | PRINT_TRIPLETS | PRINT_QUADRUPLETS | PRINT_QUINTUPLETS | PRINT_SEXTUPLETS | PRINT_SEPTUPLETS,
+  RESULTS_FLAGS     = STORE_STATUS | COUNT_FLAGS,
+  STATUS_FLAGS      = PRINT_STATUS | STORE_STATUS 
+=======
   COUNT_FLAGS       = COUNT_PRIMES | 
                       COUNT_TWINS | 
                       COUNT_TRIPLETS | 
@@ -60,6 +66,7 @@ enum {
                       COUNT_FLAGS,
   STATUS_FLAGS      = PRINT_STATUS |
                       STORE_STATUS 
+>>>>>>> .r49
 };
 
 /**
@@ -71,14 +78,19 @@ class PrimeNumberFinder: public SieveOfEratosthenes {
 public:
   /** PrimeNumberFinder stores its results in here. */
   struct Results {
-    enum { SIZE = 7 };
+    Results() : {
+      this->reset(0);
+    }
+    enum {
+      COUNTS_SIZE = 7
+    };
     // prime count variables
-    volatile uint64_t counts[SIZE];
+    int64_t counts[COUNTS_SIZE];
     // status of the sieving process in percents
     volatile float status;
-    void reset() {
-      for (uint32_t i = 0; i < SIZE; i++)
-        counts[i] = 0;
+    void reset(uint32_t countFlags) {
+      for (uint32_t i = 0; i < COUNTS_SIZE; i++)
+        counts[i] = (countFlags & (COUNT_PRIMES << i)) ? 0 : -1;
       status = 0.0f;
     }
   };
