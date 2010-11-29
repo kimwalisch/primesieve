@@ -154,9 +154,9 @@ int main(int argc, char* argv[]) {
     std::clock_t end = std::clock();
     // print prime count results
     for (int i = 0; i < 7; i++) {
-      if (primeSieve.getCount(i) >= 0)
+      if (primeSieve.getCounts(i) >= 0)
         std::cout << primes[i] << ": "
-            << primeSieve.getCount(i) << std::endl;
+            << primeSieve.getCounts(i) << std::endl;
     }
     std::cout << "Time elapsed: " << ((end - begin)
         / static_cast<double> (CLOCKS_PER_SEC)) << " sec" << std::endl;

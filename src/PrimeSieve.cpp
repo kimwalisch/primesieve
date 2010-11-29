@@ -65,22 +65,22 @@ uint32_t PrimeSieve::getFlags() const {
 }
 
 /**
- * @return The count of prime numbers or k-tuplets between
+ * @return The count of prime numbers or prime k-tuplets between
  *         startNumber and stopNumber or -1 if the appropriate
  *         count flag is not set.
  *
- * @param  index 0 = Prime number count
- *               1 = Twin prime count
- *               2 = Prime triplet count
- *               3 = Prime quadruplet count
- *               4 = Prime quintuplet count
- *               5 = Prime sextuplet count
- *               6 = Prime septuplet count
+ * @param  index 0 = Count of prime numbers
+ *               1 = Count of twin primes
+ *               2 = Count of prime triplets
+ *               3 = Count of prime quadruplets
+ *               4 = Count of prime quintuplets
+ *               5 = Count of prime sextuplets
+ *               6 = Count of prime septuplets
  */
-int64_t PrimeSieve::getCount(uint32_t index) const {
+int64_t PrimeSieve::getCounts(uint32_t index) const {
   if (index >= results_->COUNTS_SIZE)
     throw std::out_of_range(
-        "PrimeSieve: getCount index must be < 7");
+        "PrimeSieve: getCounts index must be < 7");
   return results_->counts[index];
 }
 
