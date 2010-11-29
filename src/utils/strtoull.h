@@ -32,15 +32,15 @@ namespace utils {
    * @pre str must be NULL terminated.
    */
   inline uint64_t strtoull(char* str) {
-    int maxLen = std::strlen(STR_UINT64_MAX);
-    int length = std::strlen(str);
+    size_t maxLen = std::strlen(STR_UINT64_MAX);
+    size_t length = std::strlen(str);
     if (length > maxLen)
       return 0;
     if (length == maxLen && std::strcmp(str, STR_UINT64_MAX) > 0)
       return 0;
     uint64_t n = 0;
     uint64_t base10_offset = 1;
-    for (int i = length - 1; i >= 0; i--) {
+    for (int i = static_cast<int> (length - 1); i >= 0; i--) {
       if (str[i] < '0' || str[i] > '9')
         return 0;
       n += (str[i] - '0') * base10_offset;
