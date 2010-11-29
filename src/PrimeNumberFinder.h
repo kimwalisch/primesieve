@@ -42,31 +42,10 @@ enum {
   PRINT_SEPTUPLETS  = (1 << 13),
   PRINT_STATUS      = (1 << 14),
   STORE_STATUS      = (1 << 15),
-<<<<<<< .mine
   COUNT_FLAGS       = COUNT_PRIMES | COUNT_TWINS | COUNT_TRIPLETS | COUNT_QUADRUPLETS | COUNT_QUINTUPLETS | COUNT_SEXTUPLETS | COUNT_SEPTUPLETS,
   PRINT_FLAGS       = PRINT_PRIMES | PRINT_TWINS | PRINT_TRIPLETS | PRINT_QUADRUPLETS | PRINT_QUINTUPLETS | PRINT_SEXTUPLETS | PRINT_SEPTUPLETS,
   RESULTS_FLAGS     = STORE_STATUS | COUNT_FLAGS,
   STATUS_FLAGS      = PRINT_STATUS | STORE_STATUS 
-=======
-  COUNT_FLAGS       = COUNT_PRIMES | 
-                      COUNT_TWINS | 
-                      COUNT_TRIPLETS | 
-                      COUNT_QUADRUPLETS | 
-                      COUNT_QUINTUPLETS | 
-                      COUNT_SEXTUPLETS | 
-                      COUNT_SEPTUPLETS,
-  PRINT_FLAGS       = PRINT_PRIMES | 
-                      PRINT_TWINS | 
-                      PRINT_TRIPLETS | 
-                      PRINT_QUADRUPLETS | 
-                      PRINT_QUINTUPLETS | 
-                      PRINT_SEXTUPLETS | 
-                      PRINT_SEPTUPLETS,
-  RESULTS_FLAGS     = STORE_STATUS | 
-                      COUNT_FLAGS,
-  STATUS_FLAGS      = PRINT_STATUS |
-                      STORE_STATUS 
->>>>>>> .r49
 };
 
 /**
@@ -78,8 +57,8 @@ class PrimeNumberFinder: public SieveOfEratosthenes {
 public:
   /** PrimeNumberFinder stores its results in here. */
   struct Results {
-    Results() : {
-      this->reset(0);
+    Results() {
+      this->results(0);
     }
     enum {
       COUNTS_SIZE = 7
