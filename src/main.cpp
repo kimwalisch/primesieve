@@ -76,7 +76,7 @@ void help() {
         << std::endl;
   std::cout << "  -v         Print version and license information and exit"
       << std::endl;
-  exit( EXIT_SUCCESS);
+  exit(EXIT_SUCCESS);
 }
 
 /** Process command line arguments. */
@@ -154,9 +154,9 @@ int main(int argc, char* argv[]) {
     std::clock_t end = std::clock();
     // print prime count results
     for (int i = 0; i < 7; i++) {
-      if (flags & (COUNT_PRIMES << i))
+      if (primeSieve.getCount(i) >= 0)
         std::cout << primes[i] << ": "
-            << primeSieve.getCount(COUNT_PRIMES << i) << std::endl;
+            << primeSieve.getCount(i) << std::endl;
     }
     std::cout << "Time elapsed: " << ((end - begin)
         / static_cast<double> (CLOCKS_PER_SEC)) << " sec" << std::endl;
