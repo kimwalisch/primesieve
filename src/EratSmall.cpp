@@ -527,7 +527,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           if (s >= sieveEnd)
             goto out0;
         }
-        #define SIX_MOST_SIGNIFICANT_BITS 4227858432
+        #define SIX_MOST_SIGNIFICANT_BITS 4227858432u
         /**
          * @def SET_WHEELINDEX(next_out)
          * Sets wheelIndex for the next sieve round.
