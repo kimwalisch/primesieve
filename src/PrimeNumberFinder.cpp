@@ -24,6 +24,7 @@
 #include <stdint.h>
 #include <stdexcept>
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
 #include <cassert>
 
@@ -178,8 +179,8 @@ void PrimeNumberFinder::status(uint32_t sieveSize) {
 }
 
 /**
- * Print the prime numbers or k-tuplets of the current sieve
- * round to the standard output.
+ * Print the prime numbers or prime k-tuplets of the current
+ * sieve round to the standard output.
  */
 void PrimeNumberFinder::print(const uint8_t* sieve, uint32_t sieveSize) {
   uint64_t byteValue = this->getLowerBound();
@@ -189,14 +190,16 @@ void PrimeNumberFinder::print(const uint8_t* sieve, uint32_t sieveSize) {
         // print the current prime number
         std::cout << byteValue + *bitValue << std::endl;
       else {
-        // print the current k-tuplet
-        std::cout << "(";
+        // print the current prime k-tuplet
+        std::ostringstream kTuplet;
+        kTuplet << "(";
         uint32_t v = *bitValue;
         for (uint32_t j = PRINT_PRIMES; (j & flags_) == 0; j <<= 1) {
-          std::cout << byteValue + v << ", ";
+          kTuplet << byteValue + v << ", ";
           v = nextBitValue_[v];
         }
-        std::cout << byteValue + v << ")" << std::endl;
+        kTuplet << byteValue + v << ")";
+        std::cout << kTuplet.str() << std::endl;
       }
     }
     byteValue += NUMBERS_PER_BYTE;
