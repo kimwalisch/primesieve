@@ -16,11 +16,11 @@ How to build primesieve:
     directory and run:
     > nmake -f Makefile.msvc
   
-  2. GNU G++ Compiler 
+  2. G++ GNU Compiler 
     Open a terminal, cd into the primesieve directory and run:
     $ make
     
-  3. Other C++ Compilers
+  3. Other C++ compilers
     Open a terminal, cd into the primesieve directory and run:
     $ make CXX=my_compiler
 
@@ -30,7 +30,7 @@ How to test primesieve:
     > out\primesieve.exe 1 1000 -p1
     Prints the prime numbers up to 1000 to the standard output.
     
-  2. Unix-like operating systems (Linux, Mac OS X, Solaris, ...)
+  2. Unix-like operating systems (Linux, Mac OS X, FreeBSD, ...)
     $ out/./primesieve 1 10000000000 -c1 -c2 -s 32
     Counts the prime numbers and twin primes up to 10^10 using a
     sieve size of 32 KiloBytes.
