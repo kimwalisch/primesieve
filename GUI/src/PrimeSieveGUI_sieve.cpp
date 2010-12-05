@@ -42,6 +42,9 @@ void PrimeSieveGUI::on_sieveButton_clicked() {
     this->getBounds(&lowerBound, &upperBound);
     // get the settings
     flags_ = this->getMenuSettings() | STORE_STATUS;
+    if ((flags_ & (COUNT_FLAGS | PRINT_FLAGS)) == 0)
+      throw std::invalid_argument(
+          "Nothing to do, no count or print options selected.");
     // reset the GUI widgets
     ui->progressBar->setValue(ui->progressBar->minimum());
     ui->textEdit->clear();
