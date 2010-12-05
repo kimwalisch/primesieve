@@ -21,24 +21,21 @@ How to build primesieve (Windows, Mac OS X, Linux):
     Old versions can be obtained from (once Qt4 is not supported
     anymore):
     ftp://ftp.trolltech.com/qt/source/
-    
+
   2. Launch the Qt-primesieve.pro file with Qt-Creator (cross-platform
     C++ integrated development environment which is part of the Qt
     SDK). Have a look at Qt-Creator-build-settings.png.
 
 Remarks:
 
-  1. The best performance is achieved with Microsoft Visual C++ (needs
-    "Visual Studio Add-in" for Qt) or the GNU Compiler Suite, G++.
-    MinGW offers poor performance. 
-
-  2. SSE 4.2 POPCNT (bit population count CPU instruction)
+  1. SSE 4.2 POPCNT
     primesieve counts prime numbers faster if it is compiled with
-    POPCNT support. SSE 4.2 is enabled by default for Microsoft Visual
-    C++ but has to be enabled explicitly for GNU G++ (>= 4.4) with:
+    support for the SSE 4.2 POPCNT (bit population count) instruction.
+    SSE 4.2 is enabled by default for Microsoft Visual C++ but has to
+    be enabled explicitly for GNU GCC (>= 4.4) with:
     -mpopcnt or -msse4.2
-    
-  3. The compiled primesieve executable depends on the QtGui4 and
+
+  2. The compiled primesieve executable depends on the QtGui4 and
     QtCore4 libraries (Windows: .dll, Unix: .lib). If you want to run
     the executable on other PCs you have to copy these libraries to
     the primesieve executable directory.
