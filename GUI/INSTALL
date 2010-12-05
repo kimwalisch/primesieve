@@ -24,8 +24,7 @@ How to build primesieve (Windows, Mac OS X, Linux):
 	
   2. Launch the Qt-primesieve.pro file with Qt-Creator (cross-platform
     C++ integrated development environment which is part of the Qt
-	SDK). Set the build settings according to Qt-Creator-settings.jpg
-	and then run "Build All" or "Run".
+	SDK). Have a look at Qt-Creator-build-settings.png.
 
 Remarks:
 
