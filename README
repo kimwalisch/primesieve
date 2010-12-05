@@ -17,7 +17,7 @@
   By the date of release primesieve is the fastest publicly available
   sieve of Eratosthenes program (together with YAFU).
   
-2. Algorithm and complexity¶
+2. Algorithm and complexity
 
   primesieve uses the segmented sieve of Eratosthenes with wheel
   factorization, this algorithm has a complexity of O(n) operations
