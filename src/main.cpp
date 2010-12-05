@@ -61,7 +61,7 @@ void version() {
 void help() {
   std::cout << "Usage: primesieve START STOP [OPTION]" << std::endl
       << "Use the sieve of Eratosthenes to find the prime numbers and prime"
-      << std::endl << "k-tuplets between START and STOP (< 2^64)" << std::endl
+      << std::endl << "k-tuplets between START and STOP < 2^64" << std::endl
       << "Example: primesieve 1 1000 -p1" << std::endl << std::endl
       << "Options:" << std::endl
       << "  -s <size>  Set the sieve size (in KiloBytes)," << std::endl
