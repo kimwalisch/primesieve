@@ -1,0 +1,40 @@
+##############################################################################
+# primesieve, Fast sieve of Eratosthenes implementation
+# 
+# Author:        Kim Walisch
+# Contact:       kim.walisch@gmail.com
+# Created:       5 December 2010
+# Last modified: 5 December 2010
+#
+# Project home:  http://primesieve.googlecode.com
+##############################################################################
+
+1. Introduction
+
+  primesieve is a highly optimized C++ implementation of the sieve of
+  Eratosthenes that finds the prime numbers and prime k-tuplets
+  (twin primes, prime triplets, ...) up to 2^64.
+  By the date of release primesieve is the fastest publicly available
+  sieve of Eratosthenes program (together with YAFU).
+  
+2. Algorithm and complexity¶
+
+  primesieve uses the segmented sieve of Eratosthenes with wheel
+  factorization, this algorithm has a complexity of O(n) operations
+  and a memory requirement of O(pi(n^0.5)).
+
+  Other optimizations used in primesieve:
+
+    * Pre-elimination of multiples of small primes (<= 19).
+    * Dense bit packing (30 numbers per byte).
+    * Use of the SSE 4.2 POPCNT instruction for fast bit counting.
+    * Uses Tomas Oliveira e Silva's list algorithm for big sieving primes.
+    * Parallel, uses multiple processes (Qt GUI version).
+
+3. Build primesieve
+
+  * Console version (Single-Threaded)
+    Please refer to the INSTALL file in the current directory.
+  
+  * Qt GUI version (Multi-Process)
+    Please refer to the INSTALL file in the GUI directory.
