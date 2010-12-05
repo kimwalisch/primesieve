@@ -1,0 +1,38 @@
+##############################################################################
+# Compilation guide for primesieve (Qt GUI version)
+# 
+# Author:        Kim Walisch
+# Contact:       kim.walisch@gmail.com
+# Created:       5 December 2010 
+# Last modified: 5 December 2010
+#
+# Project home:  http://primesieve.googlecode.com
+##############################################################################
+
+How to build primesieve (Windows, Mac OS X, Linux):
+
+  1. Download and install Qt
+    Qt is a C++ cross-platform application and UI framework that is
+	maintained by nokia and available under the GNU GENERAL PUBLIC
+	LICENSE. primesieve has been developed with Qt4 and requires Qt
+	4.4 or above.
+	Download and install the latest version of the Qt SDK from:
+	http://qt.nokia.com/downloads
+	Old versions can be obtained from (once Qt4 is not supported
+	anymore):
+	ftp://ftp.trolltech.com/qt/source/
+	
+  2. Launch the Qt-primesieve.pro file with Qt-Creator (cross-platform
+    C++ integrated development environment which is part of the Qt
+	SDK). Have a look at Qt-Creator.jpg for the build settings.
+	
+Remarks:
+
+  1. The best performance is achieved with Microsoft Visual C++ (needs
+    "Visual Studio Add-in" for Qt) or the GNU Compiler Suite, G++.
+	MinGW offers poor performance. 
+
+  2. The compiled primesieve executable depends on the QtGui4 and
+    QtCore4 libraries (Windows: .dll, Unix: .lib). If you want to run
+	the executable on other PCs you have to copy these libraries to
+	the primesieve executable directory.
