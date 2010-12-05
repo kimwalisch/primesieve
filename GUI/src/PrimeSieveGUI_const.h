@@ -40,7 +40,7 @@ const QString APPLICATION_ABOUT(
     "date of release primesieve is the fastest publicly available "
     "sieve of Eratosthenes program (together with YAFU).<br>"
     "<br>"
-    "This is free software; you can redistribute it and/or modify "
+    "This is free software: you can redistribute it and/or modify "
     "it under the terms of the GNU General Public License as published by "
     "the Free Software Foundation; either version 3 of the License, or "
     "(at your option) any later version.");
