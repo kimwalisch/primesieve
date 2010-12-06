@@ -1,5 +1,5 @@
 ##############################################################################
-# primesieve, parallel sieve of Eratosthenes
+# primesieve, Highly optimized sieve of Eratosthenes
 #
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
