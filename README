@@ -1,6 +1,6 @@
 ##############################################################################
-# primesieve, Fast sieve of Eratosthenes implementation
-# 
+# primesieve, parallel sieve of Eratosthenes
+#
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
@@ -16,7 +16,7 @@
   (twin primes, prime triplets, ...) up to 2^64.
   By the date of release primesieve is the fastest publicly available
   sieve of Eratosthenes program (together with YAFU).
-  
+
 2. Algorithm and complexity
 
   primesieve uses the segmented sieve of Eratosthenes with wheel
