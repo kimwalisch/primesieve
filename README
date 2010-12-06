@@ -42,14 +42,7 @@
   * Qt GUI version (Multi-Process)
     Please refer to the INSTALL file in the GUI directory.
 
-4. License
-
-  primesieve is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-5. Directories
+4. Directories
 
   * ./GUI
     Contains a graphical user interface front end with Multi-Process
@@ -59,7 +52,7 @@
   * ./src
     Contains the sieve of Eratosthenes implementation.
 
-6. Source code documentation (sieve of Eratosthenes)
+5. Source code documentation (sieve of Eratosthenes)
 
   * src/PrimeSieve.cpp
     Main object, provides an easy to use user interface for prime
@@ -101,6 +94,13 @@
     Contains constants that set the size of various arrays within
     primesieve. The values are optimized for CPUs with 32 to 64
     KiloBytes of L1 Data Cache.
+
+6. License
+
+  primesieve is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
 7. Links
 
