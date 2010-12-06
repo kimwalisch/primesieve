@@ -33,9 +33,12 @@
 
 3. Build primesieve
 
+  primesieve is written in portable C++ it compiles on a lot of
+  different systems. I maintain two versions:
+
   * Console version (Single-Threaded)
     Please refer to the INSTALL file in the current directory.
-  
+
   * Qt GUI version (Multi-Process)
     Please refer to the INSTALL file in the GUI directory.
 
@@ -45,3 +48,65 @@
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
+
+5. Directories
+
+  * ./GUI
+    Contains a graphical user interface front end with Multi-Process
+    support for PrimeSieve. The GUI has been created with Qt4 (Qt is a
+    C++ cross-platform application and UI framework).
+
+  * ./src
+    Contains the sieve of Eratosthenes implementation.
+
+6. Source code documentation (sieve of Eratosthenes)
+
+  * src/PrimeSieve.cpp
+    Main object, provides an easy to use user interface for prime
+    sieving. Have a look at src/main.cpp to see how it works.
+    PrimeSieve implements directly or indirectly all the following
+    classes.
+
+  * src/SieveOfEratosthenes.cpp
+    Abstract sieve of Eratosthenes class, PrimeNumberGenerator and
+    PrimeNumberFinder are derived from SieveOfEratosthenes.
+    SieveOfEratosthenes uses the following 3 Erat* algorithms for
+    prime sieving.
+
+  * src/EratSmall
+    Implementation of the segmented sieve of Eratosthenes with wheel
+    factorization optimized for small sieving primes.
+    Uses a hardcoded modulo 30 wheel.
+
+  * src/EratMedium
+    Implementation of the segmented sieve of Eratosthenes with wheel
+    factorization optimized for medium sieving primes.
+    Uses a dynamic modulo 210 wheel.
+
+  * src/EratBig
+    Implementation of the segmented sieve of Eratosthenes with wheel
+    factorization optimized for big sieving primes.
+    Uses a dynamic modulo 210 wheel in conjunction with Tomas Oliveira
+    e Silva's list algorithm.
+
+  * src/PrimeNumberGenerator.cpp
+    Generates the prime numbers up to sqrt(stopNumber) needed for
+    sieving by PrimeNumberFinder.
+
+  * src/PrimeNumberFinder.cpp
+    Main SieveOfEratosthenes object, used to count and print prime
+    numbers and prime k-tuplets.
+
+  * src/settings.h
+    Contains constants that set the size of various arrays within
+    primesieve. The values are optimized for CPUs with 32 to 64
+    KiloBytes of L1 Data Cache.
+
+7. Links
+
+  * http://www.ieeta.pt/~tos/software/prime_sieve.html
+    Detailed description of Tomas Oliveira e Silva's list algorithm.
+
+  * http://sites.google.com/site/bbuhrow/home
+    YAFU Yet Another Factorization Utility, has also a very fast
+    sieve of Eratosthenes implementation in C.
