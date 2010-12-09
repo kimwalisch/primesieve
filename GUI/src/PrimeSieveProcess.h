@@ -40,6 +40,7 @@ public:
   PrimeSieveProcess(QObject*, int);
   ~PrimeSieveProcess();
   void start(qulonglong, qulonglong, int, int);
+  bool isFinished();
   qlonglong getCounts(unsigned int) const;
   float getStatus() const;
 private:

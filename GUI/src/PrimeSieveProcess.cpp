@@ -22,7 +22,7 @@
 #include <QStringList>
 #include <QCoreApplication>
 
-#if defined(Q_OS_WIN32) || defined(Q_OS_WIN64)
+#if defined(Q_OS_WIN)
 #  include <windows.h>
 #else
 #  include <unistd.h>
@@ -37,6 +37,10 @@ PrimeSieveProcess::PrimeSieveProcess(QObject* parent = 0, int sharedMemoryId = 0
 }
 
 PrimeSieveProcess::~PrimeSieveProcess() {
+  // disconnect all signals, must be used to avoid zombie processes
+  this->disconnect();
+  // kill() and terminate() = trouble, close() works fine
+  this->close();
   sharedMemory_.detach();
 }
 
@@ -46,7 +50,7 @@ PrimeSieveProcess::~PrimeSieveProcess() {
  * also it is not portable.
  */
 int PrimeSieveProcess::getProcessId() {
-#if defined(Q_OS_WIN32) || defined(Q_OS_WIN64)
+#if defined(Q_OS_WIN)
   return static_cast<int> (GetCurrentProcessId());
 #else
   return static_cast<int> (getpid());
@@ -87,6 +91,10 @@ void PrimeSieveProcess::start(qulonglong startNumber, qulonglong stopNumber,
        << sharedMemory_.key();
   // start a new process (for prime sieving)
   QProcess::start(path, args, QIODevice::ReadOnly);
+}
+
+bool PrimeSieveProcess::isFinished() {
+  return (results_->status == 100.0f);
 }
 
 /**

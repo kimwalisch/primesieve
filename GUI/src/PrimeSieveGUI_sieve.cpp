@@ -100,16 +100,14 @@ void PrimeSieveGUI::createProcesses(qulonglong lowerBound,
     // connection to detect end of process
     connect(processes_.back(), SIGNAL(finished(int, QProcess::ExitStatus)), this,
         SLOT(processFinished(int, QProcess::ExitStatus)));
+    if (flags & PRINT_FLAGS)
+      connect(processes_.back(), SIGNAL(readyReadStandardOutput()), this,
+          SLOT(printProcessOutput()));
     // start sieving primes
     processes_.back()->start(startNumber, stopNumber, sieveSize, flags);
     // set for the next process
     startNumber = stopNumber + 1;
     stopNumber += interval;
-  }
-  /// connection used to print primes
-  if (flags & PRINT_FLAGS) {
-    connect(processes_[0], SIGNAL(readyReadStandardOutput()), this, SLOT(
-        printProcessOutput()));
   }
 }
 
@@ -118,35 +116,33 @@ void PrimeSieveGUI::createProcesses(qulonglong lowerBound,
  * the sieving process to the TextEdit.
  */
 void PrimeSieveGUI::printProcessOutput() {
-  if (processes_.size() != 1) {
-    this->cleanUp();
-    QMessageBox::critical(this, APPLICATION_NAME,
-        "Multiple print processes detected, please contact the developer.");
-  }
   QByteArray buffer;
   buffer.reserve(PRINT_BUFFER_SIZE + 256);
-  while (!processes_.isEmpty() &&
-          processes_[0]->isReadable() &&
-          processes_[0]->bytesAvailable() > 0) {
+  while (ui->cancelButton->isEnabled() && processes_.front()->canReadLine()) {
     buffer.clear();
-    while (processes_[0]->bytesAvailable() > 0 &&
-           buffer.size() < PRINT_BUFFER_SIZE)
-      buffer.append(processes_[0]->readLine(256));
+    while (processes_.front()->canReadLine() && buffer.size() < PRINT_BUFFER_SIZE)
+      buffer.append(processes_.front()->readLine(256));
     // remove "\r\n" or '\n', '\r' at the back
     while (buffer.endsWith('\n') ||
            buffer.endsWith('\r'))
       buffer.chop(1);
-    if (!buffer.isEmpty()) {
+    if (!buffer.isEmpty())
       ui->textEdit->appendPlainText(buffer);
-      // repaint the textEdit
-      QApplication::processEvents();
-    }
+/// Keep the GUI responsive.
+/// @warning QApplication::processEvents() must not be used on
+///          operating systems that use signal recursion (like Linux
+///          X11) otherwise the stack will explode!
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC) 
+    QApplication::processEvents();
+#else
+    ui->textEdit->repaint();
+#endif
   }
 }
 
 /**
  * Is executed each time a PrimeSieveProcess finishes. Checks for
- * process errors and calls this->sievingFinished() once all
+ * process errors and calls this->printResults() once all
  * processes have finished sieving.
  */
 void PrimeSieveGUI::processFinished(int exitCode,
@@ -182,6 +178,12 @@ void PrimeSieveGUI::processFinished(int exitCode,
         "One of the processes crashed, sieving has been aborted.");
   }
   // all processes have finished sieving without errors
-  else if (++finishedProcesses_ == processes_.size())
-    this->sievingFinished();
+  else if (++finishedProcesses_ == processes_.size()) {
+    // set to 100 percent
+    ui->progressBar->setValue(ui->progressBar->maximum());
+    // print results if not canceled lately
+    if (ui->cancelButton->isEnabled())
+      this->printResults();
+    this->cleanUp();
+  }
 }

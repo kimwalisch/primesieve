@@ -52,7 +52,8 @@ public:
   PrimeSieveGUI(QWidget* parent = 0);
   ~PrimeSieveGUI();
 protected:
-  void changeEvent(QEvent* e);private slots:
+  void changeEvent(QEvent* e);
+private slots:
   void on_cpuCoresComboBox_activated();
   void on_cancelButton_clicked();
   void on_sieveButton_clicked();
@@ -80,8 +81,8 @@ private:
   void getBounds(qulonglong*, qulonglong*);
   void setComboBox(QComboBox*, QString);
   void createProcesses(qulonglong, qulonglong, int, int, int);
-  void sievingFinished();
-  QString setTabStopWidth();
+  void printResults();
+  QString getAlign();
   void cleanUp();
 
   /// Qt GUI object

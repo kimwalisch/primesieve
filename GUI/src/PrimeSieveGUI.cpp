@@ -267,10 +267,14 @@ void PrimeSieveGUI::autoSetCpuCores() {
  * Cancel sieving.
  */
 void PrimeSieveGUI::on_cancelButton_clicked() {
-  // kill any running processes
-  this->cleanUp();
+  ui->cancelButton->setDisabled(true);
   // set to 0 percent
   ui->progressBar->setValue(0);
+  // too late to abort
+  if ((flags_ & PRINT_FLAGS) && processes_.front()->isFinished())
+    return;
+  // kill all running processes
+  this->cleanUp();
 }
 
 void PrimeSieveGUI::advanceProgressBar() {
@@ -291,14 +295,11 @@ void PrimeSieveGUI::advanceProgressBar() {
 /**
  * Print the sieving results and clean up.
  */
-void PrimeSieveGUI::sievingFinished() {
-  // set to 100 percent
-  ui->progressBar->setValue(ui->progressBar->maximum());
+void PrimeSieveGUI::printResults() {
   // add newline
   if (!ui->textEdit->toPlainText().isEmpty())
     ui->textEdit->appendPlainText("");
-  // needed for alignment
-  QString separator = this->setTabStopWidth();
+  QString align = this->getAlign();
 
   // combine the count results of all processes
   QVector<qlonglong> combinedCount(PrimeSieveProcess::COUNTS_SIZE, 0);
@@ -309,7 +310,7 @@ void PrimeSieveGUI::sievingFinished() {
   // print prime counts
   for (int i = 0; i < combinedCount.size(); i++) {
     if (combinedCount[i] >= 0)
-      ui->textEdit->appendPlainText(primeText_[i] + separator +
+      ui->textEdit->appendPlainText(primeText_[i] + align +
           QString::number(combinedCount[i]));
   }
   // add newline for prime k-tuplets
@@ -317,7 +318,7 @@ void PrimeSieveGUI::sievingFinished() {
     ui->textEdit->appendPlainText("");
 
   // print time
-  QString time("Elapsed time" + separator);
+  QString time("Elapsed time" + align);
   int milliSeconds = time_.elapsed();
   int hrs = (milliSeconds / 3600000);
   int min = (milliSeconds / 60000) % 60;
@@ -328,15 +329,13 @@ void PrimeSieveGUI::sievingFinished() {
   double sec = (milliSeconds / 1000.0) - (hrs * 60 + min) * 60;
     time.append(QString::number(sec) + " sec");
   ui->textEdit->appendPlainText(time);
-
-  this->cleanUp();
 }
 
 /**
  * Hack to get the count results aligned.
- * @return Alignment separator string.
+ * @return Align string.
  */
-QString PrimeSieveGUI::setTabStopWidth() {
+QString PrimeSieveGUI::getAlign() {
   // find the text with the largest width
   QString maxSizeText;
   for (int i = 0; i < PrimeSieveProcess::COUNTS_SIZE; i++) {
@@ -366,21 +365,14 @@ QString PrimeSieveGUI::setTabStopWidth() {
 void PrimeSieveGUI::cleanUp() {
   // stop the timer first
   progressBarTimer_.stop();
-
   // kill all processes that are still running
-  for (; !processes_.isEmpty(); processes_.pop_back()) {
-    // disconnect all signals, must be used to avoid zombie processes
-    processes_.back()->disconnect(this);
-    // kill() leads to a lot of trouble, close() works fine
-    processes_.back()->close();
+  for (; !processes_.isEmpty(); processes_.pop_back())
     delete processes_.back();
-  }
   // reset
   finishedProcesses_ = 0;
-
-  // reset buttons
+  // invert buttons
   ui->cancelButton->setDisabled(true);
   ui->sieveButton->setEnabled(true);
-  // repaint all widgets
-  QApplication::processEvents();
+  // force repainting widgets
+  this->repaint();
 }
