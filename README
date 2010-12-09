@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 6 December 2010
+# Last modified: 9 December 2010
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -104,10 +104,10 @@
 
 7. References
 
-  [1] Detailed description of Tomas Oliveira e Silva's sieve of
-    Eratosthenes implementation using linked lists:
-    http://www.ieeta.pt/~tos/software/prime_sieve.html
-
-  [2] YAFU Yet Another Factorization Utility, has also a very fast
+  [1] YAFU Yet Another Factorization Utility, has also a very fast
     multi-threaded sieve of Eratosthenes implementation in C.
     http://sites.google.com/site/bbuhrow/home
+
+  [2] Detailed description of Tomas Oliveira e Silva's sieve of
+    Eratosthenes implementation using linked lists:
+    http://www.ieeta.pt/~tos/software/prime_sieve.html
