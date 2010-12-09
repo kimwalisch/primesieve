@@ -15,7 +15,7 @@
   Eratosthenes that finds the prime numbers and prime k-tuplets
   (twin primes, prime triplets, ...) up to 2^64.
   By the date of release primesieve is the fastest publicly available
-  sieve of Eratosthenes program (together with YAFU).
+  sieve of Eratosthenes program (together with YAFU [1]).
 
 2. Algorithm and complexity
 
@@ -27,8 +27,8 @@
 
     * Pre-elimination of multiples of small primes (<= 19).
     * Dense bit packing (30 numbers per byte).
-    * Uses the SSE 4.2 POPCNT instruction for fast bit counting.
-    * Uses Tomas Oliveira e Silva's list algorithm for big sieving primes.
+    * Use of the SSE 4.2 POPCNT instruction for fast bit counting.
+    * Uses Tomas Oliveira e Silva's list algorithm for big sieving primes. [2]
     * Parallel, uses multiple processes (Qt GUI version).
 
 3. Build primesieve
@@ -102,11 +102,12 @@
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
 
-7. Links
+7. References
 
-  * http://www.ieeta.pt/~tos/software/prime_sieve.html
-    Detailed description of Tomas Oliveira e Silva's list algorithm.
+  [1] Detailed description of Tomas Oliveira e Silva's sieve of
+    Eratosthenes implementation using linked lists:
+    http://www.ieeta.pt/~tos/software/prime_sieve.html
 
-  * http://sites.google.com/site/bbuhrow/home
-    YAFU Yet Another Factorization Utility, has also a very fast
-    sieve of Eratosthenes implementation in C.
+  [2] YAFU Yet Another Factorization Utility, has also a very fast
+    multi-threaded sieve of Eratosthenes implementation in C.
+    http://sites.google.com/site/bbuhrow/home
