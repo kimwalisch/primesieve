@@ -134,10 +134,8 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
 #if defined(POPCNT64)
     // count bits using the SSE 4.2 POPCNT instruction
     if (isPOPCNTSupported_) {
-      uint32_t size = sieveSize >> 3;
-      for (; i < size; i++)
+      for (; i + 8 < sieveSize; i += 8)
         primeCount += POPCNT64(sieve, i);
-      i = sieveSize - (sieveSize & 7);
     }
 #endif
     // count bits using lookup table
