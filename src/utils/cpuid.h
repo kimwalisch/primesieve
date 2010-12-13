@@ -20,39 +20,32 @@
 #ifndef CPUID_H
 #define CPUID_H
 
-#define bit_POPCNT	(1 << 23)
+#define bit_POPCNT (1 << 23)
 
 #if defined(_MSC_VER) || ((defined(_WIN32) || defined(_WIN64)) && defined(__INTEL_COMPILER))
-#  define MSC_CPUID
+#  define MSC_COMPATIBLE
 #  define USE_POPCNT 
 #  include <intrin.h> // __cpuid()
 #elif defined(__GNUC__) || defined(__SUNPRO_CC)
-#  define GCC_CPUID
+#  define GCC_COMPATIBLE
 #  define USE_POPCNT 
 #  include "cpuid_gcc451.h" // cpuid.h of GCC 4.5.1
 #endif
 
 /**
  * @def POPCNT64(n)
- * Macro that takes advantage of the SSE 4.2 POPCNT instruction, works
- * with x86 and x64_86 CPUs.
+ * Calculates the number of bits of the parameter that are set to 1
+ * using the SSE 4.2 POPCNT instruction.
  */
 #if defined(USE_POPCNT)
-#  define POPCNT64_x64(popcnt, addr, i) static_cast<uint32_t> (popcnt(*reinterpret_cast<const uint64_t*> (addr + i)))
-#  define POPCNT64_x86(popcnt, addr, i) (popcnt(*reinterpret_cast<const uint32_t*> (addr + i)) + \
-                                         popcnt(*reinterpret_cast<const uint32_t*> (addr + i + 4)))
-#  if defined(MSC_CPUID)
+#  define POPCNT64_x64(popcnt64, addr, i) static_cast<uint32_t> (popcnt64(*reinterpret_cast<const uint64_t*> (&addr[i])))
+#  define POPCNT64_x86(popcnt32, addr, i) (popcnt32(*reinterpret_cast<const uint32_t*> (&addr[i])) + \
+                                           popcnt32(*reinterpret_cast<const uint32_t*> (&addr[i + 4])))
+#  if defined(MSC_COMPATIBLE) || defined(__SUNPRO_CC)
 #    include <nmmintrin.h> // _mm_popcnt_u32(), _mm_popcnt_u64()
 #    if defined(_WIN64)
 #      define POPCNT64(addr, i) POPCNT64_x64(_mm_popcnt_u64, addr, i)
 #    elif defined(_WIN32)
-#      define POPCNT64(addr, i) POPCNT64_x86(_mm_popcnt_u32, addr, i)
-#    endif
-#  elif defined(__SUNPRO_CC)
-#    include <nmmintrin.h>
-#    if defined(__x86_64)
-#      define POPCNT64(addr, i) POPCNT64_x64(_mm_popcnt_u64, addr, i)
-#    elif defined(__i386)
 #      define POPCNT64(addr, i) POPCNT64_x86(_mm_popcnt_u32, addr, i)
 #    endif
 #  elif defined(__GNUC__)
@@ -69,7 +62,7 @@ namespace utils {
    * Portable implementation of CPUID, successfully tested with:
    * - MSVC 2008 & 2010,
    * - GNU GCC 4.5,
-   * - Intel C++ Compiler 11.1,
+   * - Intel C++ Compiler 11.1
    * - Sun Studio 12,
    * - AMD x86 Open64 Compiler Suite.
    * @return 1 if the CPU supports the cpuid instruction.
@@ -78,7 +71,7 @@ namespace utils {
    */
   inline int getCPUID(unsigned int __level, unsigned int *__eax,
       unsigned int *__ebx, unsigned int *__ecx, unsigned int *__edx) {
-#if defined(MSC_CPUID) // Microsoft Visual C++ compatible compilers
+#if defined(MSC_COMPATIBLE)
     int CPUInfo[4] = {*__eax, *__ebx, *__ecx, *__edx};
     __cpuid(CPUInfo, 0);
     // check if the CPU supports the cpuid instruction.
@@ -91,7 +84,7 @@ namespace utils {
       return 1;
     }
     return 0;
-#elif defined(GCC_CPUID) // GNU GCC compatible compilers
+#elif defined(GCC_COMPATIBLE)
     // __get_cpuid() returns 1 if the CPU supports cpuid else 0
     return __get_cpuid(__level, __eax, __ebx, __ecx, __edx);
 #else
