@@ -4,7 +4,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010 
-# Last modified:   5 December 2010
+# Last modified:   13 December 2010
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -28,10 +28,10 @@ ifeq ($(CXX),g++)
     GCC_MAJOR := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
     GCC_MINOR := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
     GCC_VERSION := $(shell echo $$(($(GCC_MAJOR)*10+$(GCC_MINOR))))
-    # Add SSE 4.2 support if using GCC >= 4.4
-    CXXFLAGS += $(shell if [ $(GCC_VERSION) -ge 44 ]; then echo -msse4.2; fi)
+    # Add POPCNT (SSE 4.2) support if using GCC >= 4.4
+    CXXFLAGS += $(shell if [ $(GCC_VERSION) -ge 44 ]; then echo -mpopcnt; fi)
     # Common GCC flags
-    CXXFLAGS += -funroll-all-loops -DNDEBUG
+    CXXFLAGS += -DNDEBUG
 else ifeq ($(CXX),icpc)
     CXXFLAGS += -fast -DNDEBUG
 else ifeq ($(CXX),sunCC)
