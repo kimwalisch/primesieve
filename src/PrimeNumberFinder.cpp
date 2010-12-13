@@ -136,7 +136,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
     if (isPOPCNTSupported_) {
       uint32_t size = sieveSize >> 3;
       for (; i < size; i++)
-      primeCount += POPCNT64(reinterpret_cast<const uint64_t*>(sieve)[i]);
+        primeCount += POPCNT64(sieve, i);
       i = sieveSize - (sieveSize & 7);
     }
 #endif
