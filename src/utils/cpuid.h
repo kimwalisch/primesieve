@@ -24,30 +24,44 @@
 
 #if defined(_MSC_VER) || ((defined(_WIN32) || defined(_WIN64)) && defined(__INTEL_COMPILER))
 #  define MSC_CPUID
+#  define USE_POPCNT 
 #  include <intrin.h> // __cpuid()
 #elif defined(__GNUC__) || defined(__SUNPRO_CC)
-// TODO does this work with sun's SPARC architecture?
 #  define GCC_CPUID
+#  define USE_POPCNT 
 #  include "cpuid_gcc451.h" // cpuid.h of GCC 4.5.1
-#else
-#  warning "getCPUID() is not supported."
 #endif
 
 /**
  * @def POPCNT64(n)
- * Intrinsic for the SSE 4.2 POPCNT CPU instruction, POPCNT counts 
- * the 1 bits of a variable.
+ * Macro that takes advantage of the SSE 4.2 POPCNT instruction, works
+ * with x86 and x64_86 CPUs.
  */
-#if defined(MSC_CPUID)
-#  include <intrin.h> // __popcnt64(long)
-#  define POPCNT64(n) static_cast<uint32_t>(__popcnt64(n))
-#elif defined(__SUNPRO_CC)
-#  include <nmmintrin.h> // SSE 4.2
-#  define POPCNT64(n) _mm_popcnt_u64(n)
-#elif defined(__GNUC__)
-#  define POPCNT64(n) __builtin_popcountll(n)
-#else
-#  warning "POPCNT64(n) is not supported."
+#if defined(USE_POPCNT)
+#  define POPCNT64_x64(popcnt, addr, i) static_cast<uint32_t> (popcnt(*reinterpret_cast<const uint64_t*>(addr + i)))
+#  define POPCNT64_x86(popcnt, addr, i) (popcnt(*reinterpret_cast<const uint32_t*>(addr + i)) + \
+                                         popcnt(*reinterpret_cast<const uint32_t*>(addr + i + 4)))
+#  if defined(MSC_CPUID)
+#    include <nmmintrin.h> // _mm_popcnt_u32(), _mm_popcnt_u64()
+#    if defined(_WIN64)
+#      define POPCNT64(addr, i) POPCNT64_x64(_mm_popcnt_u64, addr, i)
+#    else if defined(_WIN32)
+#      define POPCNT64(addr, i) POPCNT64_x86(_mm_popcnt_u32, addr, i)
+#    endif
+#  elif defined(__SUNPRO_CC)
+#    include <nmmintrin.h>
+#    if definied(__x86_64)
+#      define POPCNT64(addr, i) POPCNT64_x64(_mm_popcnt_u64, addr, i)
+#    else if defined(__i386)
+#      define POPCNT64(addr, i) POPCNT64_x86(_mm_popcnt_u32, addr, i)
+#    endif
+#  elif defined(__GNUC__)
+#    if definied(__x86_64__)
+#      define POPCNT64(addr, i) POPCNT64_x64(__builtin_popcountll, addr, i)
+#    else if defined(__i386__)
+#      define POPCNT64(addr, i) POPCNT64_x86(__builtin_popcount, addr, i)
+#    endif
+#  endif
 #endif
 
 namespace utils {
