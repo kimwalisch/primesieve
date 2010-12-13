@@ -50,13 +50,13 @@
 #    endif
 #  elif defined(__SUNPRO_CC)
 #    include <nmmintrin.h>
-#    if definied(__x86_64)
+#    if defined(__x86_64)
 #      define POPCNT64(addr, i) POPCNT64_x64(_mm_popcnt_u64, addr, i)
 #    else if defined(__i386)
 #      define POPCNT64(addr, i) POPCNT64_x86(_mm_popcnt_u32, addr, i)
 #    endif
 #  elif defined(__GNUC__)
-#    if definied(__x86_64__)
+#    if defined(__x86_64__)
 #      define POPCNT64(addr, i) POPCNT64_x64(__builtin_popcountll, addr, i)
 #    else if defined(__i386__)
 #      define POPCNT64(addr, i) POPCNT64_x86(__builtin_popcount, addr, i)
