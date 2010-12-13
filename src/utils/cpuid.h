@@ -38,9 +38,9 @@
  * with x86 and x64_86 CPUs.
  */
 #if defined(USE_POPCNT)
-#  define POPCNT64_x64(popcnt, addr, i) static_cast<uint32_t> (popcnt(*reinterpret_cast<const uint64_t*>(addr + i)))
-#  define POPCNT64_x86(popcnt, addr, i) (popcnt(*reinterpret_cast<const uint32_t*>(addr + i)) + \
-                                         popcnt(*reinterpret_cast<const uint32_t*>(addr + i + 4)))
+#  define POPCNT64_x64(popcnt, addr, i) static_cast<uint32_t> (popcnt(*reinterpret_cast<const uint64_t*> (addr + i)))
+#  define POPCNT64_x86(popcnt, addr, i) (popcnt(*reinterpret_cast<const uint32_t*> (addr + i)) + \
+                                         popcnt(*reinterpret_cast<const uint32_t*> (addr + i + 4)))
 #  if defined(MSC_CPUID)
 #    include <nmmintrin.h> // _mm_popcnt_u32(), _mm_popcnt_u64()
 #    if defined(_WIN64)
