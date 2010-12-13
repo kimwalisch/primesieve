@@ -138,7 +138,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
         primeCount += POPCNT64(sieve, i);
     }
 #endif
-    // count bits using lookup table
+    // count bits using a lookup table
     for (; i < sieveSize; i++)
       primeCount += primeByteCounts_[0][sieve[i]];
     results_->counts[0] += primeCount;
