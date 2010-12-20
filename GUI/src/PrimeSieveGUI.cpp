@@ -22,6 +22,7 @@
 #include "../src/pmath.h"
 
 #include <QThread>
+#include <QSize>
 #include <QMessageBox>
 #include <QTextCursor>
 #include <cstdlib>
@@ -93,9 +94,7 @@ void PrimeSieveGUI::initGUI() {
   // fill with values
   this->initSieveSizeComboBox();
 
-  // set ideal GUI size
-  this->resize(this->sizeHint());
-  // set ideal ComboBox width
+  // set an ideal ComboBox width
   int width = ui->sieveSizeComboBox->minimumSizeHint().width();
   ui->sieveSizeComboBox->setFixedWidth(width);
   ui->cpuCoresComboBox->setFixedWidth(width);
@@ -109,6 +108,11 @@ void PrimeSieveGUI::initGUI() {
   validator_ = new QRegExpValidator(rx, this);
   ui->lowerBoundLineEdit->setValidator(validator_);
   ui->upperBoundLineEdit->setValidator(validator_);
+  
+  // set a nice GUI size
+  int guiWidth  = this->minimumSizeHint().width();
+  int guiHeight = static_cast<int> (this->sizeHint().height() * 0.95);
+  this->resize(QSize(guiWidth, guiHeight));
 }
 
 void PrimeSieveGUI::initConnections() {
