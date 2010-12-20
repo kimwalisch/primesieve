@@ -111,7 +111,12 @@ void PrimeSieveGUI::initGUI() {
   
   // set a nice GUI size
   int guiWidth  = this->minimumSizeHint().width();
-  int guiHeight = static_cast<int> (this->sizeHint().height() * 0.95);
+  int guiHeight = this->sizeHint().height();
+#if defined(Q_OS_WIN)
+  guiHeight = static_cast<int> (guiHeight * 0.95);
+#elif defined(Q_OS_MAC)
+  guiHeight = static_cast<int> (guiHeight * 0.96);
+#endif
   this->resize(QSize(guiWidth, guiHeight));
 }
 
