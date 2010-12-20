@@ -50,7 +50,7 @@ namespace settings {
      * Default = CPU L1 Cache size
      * @pre >= 1024 && <= 2^23
      */
-    SIEVESIZE_PRIMENUMBERGENERATOR = 32 * 1024,
+    SIEVESIZE_PRIMENUMBERGENERATOR = 16 * 1024,
     /**
      * Default sieve size of the main sieve of Eratosthenes
      * implementation, is used if the user does not set his own sieve
