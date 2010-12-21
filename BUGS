@@ -1,0 +1,26 @@
+##############################################################################
+# List of known bugs in primesieve
+#
+# Author:        Kim Walisch
+# Contact:       kim.walisch@gmail.com
+# Created:       21 December 2010 
+# Last modified: 21 December 2010
+#
+# Project home:  http://primesieve.googlecode.com
+##############################################################################
+
+Please contact the author if you find a new bug. The most recent
+version of primesieve can be obtained from its Subversion
+repository: http://code.google.com/p/primesieve/source/checkout
+
+Known bugs
+
+  1. The console version of primesieve 1.0 produces the following output:
+
+  > primesieve 10000000000000000 10000000000000001 -s 256
+  Sieve size set to 256 KiloBytes
+  100%966296%
+  Prime numbers: 0
+  Time elapsed: 0.106 sec
+
+  100%966296% is an error, should be 100%
