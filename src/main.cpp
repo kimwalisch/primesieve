@@ -48,7 +48,7 @@ std::string primes[7] = { "Prime numbers", "Twin primes", "Prime triplets",
     "Prime septuplets" };
 
 void version() {
-  std::cout << "primesieve 1.0, <http://code.google.com/p/primesieve>"
+  std::cout << "primesieve 1.01, <http://primesieve.googlecode.com>"
       << std::endl << "Copyright (C) 2010 Kim Walisch" << std::endl
       << "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>."
       << std::endl
