@@ -160,11 +160,14 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  * to the standard output.
  */
 void PrimeNumberFinder::status(uint32_t sieveSize) {
-  uint64_t upperBound = this->getLowerBound() + (sieveSize - 1)
-      * NUMBERS_PER_BYTE;
-  float status = 100.0f * (1.0f - 
-      static_cast<float> (this->getStopNumber() - upperBound) /
-      static_cast<float> (this->getStopNumber() - this->getStartNumber()));
+  uint64_t upperBound = this->getLowerBound() + sieveSize
+      * NUMBERS_PER_BYTE + 1;
+  float status = 100.0f;
+  if (upperBound < this->getStopNumber()) {
+    status *= 1.0f - 
+        static_cast<float> (this->getStopNumber() - upperBound) /
+        static_cast<float> (this->getStopNumber() - this->getStartNumber());
+  }
   if (flags_ & STORE_STATUS)
     results_->status = status;
   if (flags_ & PRINT_STATUS) {
