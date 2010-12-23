@@ -32,7 +32,7 @@
 #include <stdint.h>
 
 const QString APPLICATION_NAME("primesieve");
-const QString APPLICATION_VERSION("1.0");
+const QString APPLICATION_VERSION("1.01");
 const QString APPLICATION_HOMEPAGE("http://primesieve.googlecode.com");
 const QString APPLICATION_ABOUT(
     "primesieve uses a highly optimized implementation of the sieve of "
