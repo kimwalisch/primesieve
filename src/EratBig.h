@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include <cassert>
 #include <cstdlib>
+#include <list>
 
 /**
  * Implementation of Tomas Oliveira e Silva's cache friendly sieve
@@ -50,8 +51,10 @@ private:
    * current sieve round.
    */
   Bucket_t** bucketLists_;
-  /** Memory pool, singly linked list of empty Buckets. */
+  /** Singly linked list of empty Buckets (part of Memory pool). */
   Bucket_t* bucketStock_;
+  /** Contains the pointers of all allocated Buckets (part of Memory pool). */
+  std::list<Bucket_t*> bucketPointers_;
   /** Size of bucketLists_. */
   const uint32_t size_;
   /** Current index of bucketLists_. */
