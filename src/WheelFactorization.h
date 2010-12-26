@@ -92,20 +92,18 @@ template<uint32_t SIZE>
 class Bucket {
 public:
   Bucket* next;
-  Bucket() :
-    next(NULL), count_(0) {
+  void init(Bucket* _next) {
+    next = _next;
+    count_ = 0;
   }
-  Bucket(Bucket* _next) :
-    next(_next), count_(0) {
+  void reset() {
+    count_ = 0;
   }
   WheelPrime* wheelPrimeBegin() {
     return wheelPrime_;
   }
   WheelPrime* wheelPrimeEnd() {
     return &wheelPrime_[count_];
-  }
-  void reset() {
-    count_ = 0;
   }
   /**
    * Adds a wheelPrime to the bucket.
