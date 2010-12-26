@@ -50,7 +50,7 @@ namespace settings {
      * Default = CPU L1 Cache size
      * @pre >= 1024 && <= 2^23
      */
-    SIEVESIZE_PRIMENUMBERGENERATOR = 16 * 1024,
+    SIEVESIZE_PRIMENUMBERGENERATOR = 1024 * 32,
     /**
      * Default sieve size of the main sieve of Eratosthenes
      * implementation, is used if the user does not set his own sieve
@@ -58,7 +58,7 @@ namespace settings {
      * Default = CPU L1 or L2 Cache size
      * @pre >= 1024 && <= 2^23
      */
-    DEFAULT_SIEVESIZE_PRIMENUMBERFINDER = 64 * 1024,
+    DEFAULT_SIEVESIZE_PRIMENUMBERFINDER = 1024 * 64,
     /**
      * (sieveSize * SIEVESIZE_FACTOR_ERATMEDIUM) is the upper bound for
      * sieving primes used with EratMedium.
