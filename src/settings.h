@@ -77,7 +77,13 @@ namespace settings {
      * store sieving primes.
      * Default = 1024 (8 KiloBytes)
      */
-    BUCKETSIZE_ERATBIG = 1 << 10
+    BUCKETSIZE_ERATBIG = 1 << 10,
+    /**
+     * Allocate MEMORY_PER_ALLOC_ERATBIG bytes of new memory each time
+     * EratBig needs more buckets.
+     * Default = 4 MegaBytes
+     */
+    MEMORY_PER_ALLOC_ERATBIG = (1 << 20) * 4
   };
 }
 #endif /* SETTINGS_H */
