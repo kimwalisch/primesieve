@@ -50,10 +50,9 @@ EratBig::EratBig(uint64_t stopNumber, uint32_t sieveSize) :
 EratBig::~EratBig() {
   if (bucketLists_ != NULL) {
     for (uint32_t i = 0; i < size_; i++) {
-      Bucket_t* bucket = bucketLists_[i];
-      while (bucket != NULL) {
-        Bucket_t* old = bucket;
-        bucket = bucket->next;
+      while (bucketLists_[i] != NULL) {
+        Bucket_t* old = bucketLists_[i];
+        bucketLists_[i] = bucketLists_[i]->next;
         delete old;
       }
     }
@@ -159,8 +158,9 @@ void EratBig::sieve(uint8_t* sieve) {
         uint8_t bit = wheel_[wheelIndex].unsetBit;
         uint8_t nmf = wheel_[wheelIndex].nextMultipleFactor;
         uint8_t cor = wheel_[wheelIndex].correct;
-        wheelIndex += wheel_[wheelIndex].next;
+         int8_t nxt = wheel_[wheelIndex].next;
         sieve[sieveIndex] &= bit;
+        wheelIndex += nxt;
         sieveIndex += sievePrime * nmf + cor;
         nextSieveRound = sieveIndex >> log2SieveSize_;
       } while (nextSieveRound == 0);
