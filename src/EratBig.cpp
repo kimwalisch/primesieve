@@ -26,7 +26,8 @@
 #include <cstdlib>
 #include <stdexcept>
 
-#define SIEVE_SIZE ((1u << log2SieveSize_) - 1)
+#define BUCKETS_PER_CREATE    (settings::MEMORY_PER_ALLOC_ERATBIG / sizeof(Bucket_t))
+#define SIEVE_SIZE            ((1u << log2SieveSize_) - 1)
 
 EratBig::EratBig(uint64_t stopNumber, uint32_t sieveSize) :
   Modulo210Wheel(stopNumber, sieveSize), primeCount_(0), bucketLists_(NULL),
@@ -44,25 +45,15 @@ EratBig::EratBig(uint64_t stopNumber, uint32_t sieveSize) :
 }
 
 /**
- * Delete all the buckets of each bucketList and the buckets of the
- * bucket stock.
+ * Delete all the buckets that have been allocated.
  */
 EratBig::~EratBig() {
-  if (bucketLists_ != NULL) {
-    for (uint32_t i = 0; i < size_; i++) {
-      while (bucketLists_[i] != NULL) {
-        Bucket_t* old = bucketLists_[i];
-        bucketLists_[i] = bucketLists_[i]->next;
-        delete old;
-      }
-    }
+  while (!bucketPointers_.empty()) {
+    delete[] bucketPointers_.back();
+    bucketPointers_.pop_back();
+  }
+  if (bucketLists_ != NULL)
     delete[] bucketLists_;
-  }
-  while (bucketStock_ != NULL) {
-    Bucket_t* old = bucketStock_;
-    bucketStock_ = bucketStock_->next;
-    delete old;
-  }
 }
 
 /**  
@@ -88,8 +79,10 @@ uint32_t EratBig::getSize(uint64_t stopNumber, uint32_t sieveSize) {
 void EratBig::initBucketLists() {
   assert(size_ > 0);
   bucketLists_ = new Bucket_t*[size_];
-  for (uint32_t i = 0; i < size_; i++)
-    bucketLists_[i] = new Bucket_t;
+  for (uint32_t i = 0; i < size_; i++) {
+    bucketLists_[i] = NULL;
+    this->moveFrontBucket(bucketLists_[i], bucketStock_);
+  }
 }
 
 /**
@@ -117,12 +110,18 @@ void EratBig::addPrimeNumber(uint32_t primeNumber, uint64_t lowerBound) {
 
 /**
  * Moves the first bucket of the source bucketList to the destination
- * bucketList.
+ * bucketList, creates new buckets if the bucketStock_ is empty.
  * @pre src == bucketstock_ || src != NULL
  */
 void EratBig::moveFrontBucket(Bucket_t*& dest, Bucket_t*& src) {
-  if (bucketStock_ == NULL)
-    bucketStock_ = new Bucket_t;
+  if (bucketStock_ == NULL) {
+    Bucket_t* moreBuckets = new Bucket_t[BUCKETS_PER_CREATE];
+    for(uint32_t i = 0; i < BUCKETS_PER_CREATE - 1; i++)
+      moreBuckets[i].init(&moreBuckets[i + 1]);
+    moreBuckets[BUCKETS_PER_CREATE - 1].init(NULL);
+    bucketStock_ = &moreBuckets[0];
+    bucketPointers_.push_back(moreBuckets);
+  }
   assert(src != NULL);
   Bucket_t* bucket = src;
   src = src->next;
