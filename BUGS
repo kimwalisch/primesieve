@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       21 December 2010 
-# Last modified: 23 December 2010
+# Last modified: 26 December 2010
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -25,4 +25,4 @@ Known bugs
 
   100%966296% is an error, should be 100%
 
-  >> FIXED in version 1.01, committed on the 23rd December
+  >> FIXED in version 1.01, committed on the 23rd December 2010
