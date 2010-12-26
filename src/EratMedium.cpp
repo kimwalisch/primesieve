@@ -52,8 +52,9 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
           uint8_t bit = wheel_[wheelIndex].unsetBit;
           uint8_t nmf = wheel_[wheelIndex].nextMultipleFactor;
           uint8_t cor = wheel_[wheelIndex].correct;
-          wheelIndex += wheel_[wheelIndex].next;
+           int8_t nxt = wheel_[wheelIndex].next;
           sieve[sieveIndex] &= bit;
+          wheelIndex += nxt;
           sieveIndex += sievePrime * nmf + cor;
         } while (sieveIndex < sieveSize);
         // sets the sieveIndex and wheelIndex for the next sieve round
