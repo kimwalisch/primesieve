@@ -529,13 +529,13 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
         }
         // sets the wheelIndex for the next sieve round, i.e. if out
         // happens at "case 63:" wheelIndex is set to 56
-        out0: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (1u << 23); break;
-        out1: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (2u << 23); break;
-        out2: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (3u << 23); break;
-        out3: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (4u << 23); break;
-        out4: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (5u << 23); break;
-        out5: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (6u << 23); break;
-        out6: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (7u << 23); break;
+        out0: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (1 << 23); break;
+        out1: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (2 << 23); break;
+        out2: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (3 << 23); break;
+        out3: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (4 << 23); break;
+        out4: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (5 << 23); break;
+        out5: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (6 << 23); break;
+        out6: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (7 << 23); break;
         out7: ; wPrime->index_ &= 0xFC000000u;
       }
       // set the sieveIndex for the next sieve round
