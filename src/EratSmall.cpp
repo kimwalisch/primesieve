@@ -527,24 +527,16 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           if (s >= sieveEnd)
             goto out0;
         }
-        #define SIX_MOST_SIGNIFICANT_BITS 4227858432u
-        /**
-         * @def SET_WHEELINDEX(next_out)
-         * Sets wheelIndex for the next sieve round.
-         * i.e. if "goto out6;" happens at "case 46:" then wheelIndex is 
-         * set to 47.
-         */
-        #define SET_WHEELINDEX(next_out) wPrime->index_ = \
-          (wPrime->index_ & SIX_MOST_SIGNIFICANT_BITS) | (next_out << 23);
-        
-        out0: ; SET_WHEELINDEX(1); break;
-        out1: ; SET_WHEELINDEX(2); break;
-        out2: ; SET_WHEELINDEX(3); break;
-        out3: ; SET_WHEELINDEX(4); break;
-        out4: ; SET_WHEELINDEX(5); break;
-        out5: ; SET_WHEELINDEX(6); break;
-        out6: ; SET_WHEELINDEX(7); break;
-        out7: ; wPrime->index_ &= SIX_MOST_SIGNIFICANT_BITS;
+        // sets the wheelIndex for the next sieve round, i.e. if out
+        // happens at "case 63:" wheelIndex is set to 56
+        out0: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (1u << 23); break;
+        out1: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (2u << 23); break;
+        out2: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (3u << 23); break;
+        out3: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (4u << 23); break;
+        out4: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (5u << 23); break;
+        out5: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (6u << 23); break;
+        out6: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (7u << 23); break;
+        out7: ; wPrime->index_ &= 0xFC000000u;
       }
       // set the sieveIndex for the next sieve round
       wPrime->setSieveIndex(static_cast<uint32_t> (s - sieveEnd));
