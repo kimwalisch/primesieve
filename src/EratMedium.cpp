@@ -34,14 +34,14 @@ EratMedium::EratMedium(uint32_t limit, uint64_t stopNumber, uint32_t sieveSize) 
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
   // iterate over all the buckets of the bucket list
   for (Bucket_t* bucket = bucketList_; bucket != NULL; bucket = bucket->next) {
-    // iterate over the wheelPrimes of the current bucket
     WheelPrime* wPrime = bucket->wheelPrimeBegin();
     WheelPrime* end    = bucket->wheelPrimeEnd();
+    // iterate over the wheelPrimes of the current bucket
     for (; wPrime != end; wPrime++) {
       uint32_t sieveIndex = wPrime->getSieveIndex();
+      // nothing to do for primes that do not have a multiple
+      // occurence in the current sieve round
       if (sieveIndex >= sieveSize) {
-        // has the meaning of wPrime->setSieveIndex(sieveIndex - sieveSize)
-        // but does not override the wheelIndex
         wPrime->index_ -= sieveSize;
       } else {
         uint32_t sievePrime = wPrime->getSievePrime();
