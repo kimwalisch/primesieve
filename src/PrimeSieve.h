@@ -40,6 +40,13 @@ public:
   uint32_t getSieveSize() const;
   uint32_t getFlags() const;
    int64_t getCounts(uint32_t) const;
+   int64_t getPrimeCounts() const;
+   int64_t getTwinCounts() const;
+   int64_t getTripletCounts() const;
+   int64_t getQuadrupletCounts() const;
+   int64_t getQuintupletCounts() const;
+   int64_t getSextupletCounts() const;
+   int64_t getSeptupletCounts() const;
   void setStartNumber(uint64_t);
   void setStopNumber(uint64_t);
   void setSieveSize(uint32_t);
