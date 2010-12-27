@@ -85,6 +85,62 @@ int64_t PrimeSieve::getCounts(uint32_t index) const {
 }
 
 /**
+ * @return The count of prime numbers between startNumber and 
+ *         stopNumber or -1 if the appropriate count flag is not set.
+ */
+int64_t PrimeSieve::getPrimeCounts() const {
+  return results_->counts[0];
+}
+
+/**
+ * @return The count of twin primes between startNumber and stopNumber
+ *         or -1 if the appropriate count flag is not set.
+ */
+int64_t PrimeSieve::getTwinCounts() const {
+  return results_->counts[1];
+}
+
+/**
+ * @return The count of prime triplets between startNumber and 
+ *         stopNumber or -1 if the appropriate count flag is not set.
+ */
+int64_t PrimeSieve::getTripletCounts() const {
+  return results_->counts[2];
+}
+
+/**
+ * @return The count of prime quadruplets between startNumber and 
+ *         stopNumber or -1 if the appropriate count flag is not set.
+ */
+int64_t PrimeSieve::getQuadrupletCounts() const {
+  return results_->counts[3];
+}
+
+/**
+ * @return The count of prime quintuplets between startNumber and 
+ *         stopNumber or -1 if the appropriate count flag is not set.
+ */
+int64_t PrimeSieve::getQuintupletCounts() const {
+  return results_->counts[4];
+}
+
+/**
+ * @return The count of prime sextuplets between startNumber and 
+ *         stopNumber or -1 if the appropriate count flag is not set.
+ */
+int64_t PrimeSieve::getSextupletCounts() const {
+  return results_->counts[5];
+}
+
+/**
+ * @return The count of prime septuplets between startNumber and 
+ *         stopNumber or -1 if the appropriate count flag is not set.
+ */
+int64_t PrimeSieve::getSeptupletCounts() const {
+  return results_->counts[6];
+}
+
+/**
  * Set a start number for sieving.
  * @pre startNumber < (2^64-1) - (2^32-1) * 10
  */
