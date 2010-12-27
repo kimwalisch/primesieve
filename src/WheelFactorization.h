@@ -42,14 +42,11 @@ class WheelPrime {
 public:
   friend class EratSmall;
   friend class EratMedium;
-  enum {
-    LEAST_23_SIGNIFICANT_BITS = 8388607
-  };
   uint32_t getSievePrime() const {
     return sievePrime_;
   }
   uint32_t getSieveIndex() const {
-    return index_ & LEAST_23_SIGNIFICANT_BITS;
+    return index_ & 0x7FFFFF;
   }
   uint32_t getWheelIndex() const {
     return index_ >> 23;
