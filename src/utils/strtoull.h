@@ -31,7 +31,7 @@ namespace utils {
    * a string to an unsigned long long integer of base 10.
    * @pre str must be NULL terminated.
    */
-  inline uint64_t strtoull(char* str) {
+  inline uint64_t strtoull(const char* str) {
     size_t maxLen = std::strlen(STR_UINT64_MAX);
     size_t length = std::strlen(str);
     if (length > maxLen)
