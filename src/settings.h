@@ -32,7 +32,7 @@ namespace settings {
   /**
    * (sieveSize * SIEVESIZE_FACTOR_ERATSMALL) is the upper bound for
    * sieving primes used with EratSmall.
-   * Default = 1.5
+   * Default = 1.5, a value between 0.75 and 2.5 is reasonable
    * @pre < 5 && <= SIEVESIZE_FACTOR_ERATMEDIUM
    */
   const double SIEVESIZE_FACTOR_ERATSMALL = 1.5;
@@ -40,15 +40,15 @@ namespace settings {
     /**
      * Multiples of prime numbers up to this number will be eliminated
      * without sieving.
-     * Default = 19 (uses 315.7 KiloBytes)
-     * @pre >= 7 && <= 23
+     * Default = 19 (uses 315.7 KiloBytes), for less memory usage 13 is good
+     * @pre a prime number >= 7 && <= 23
      */
     PREELIMINATE_RESETSIEVE = 19,
     /**
      * Sieve size of the sieve of Eratosthenes that generates the prime
      * numbers up to sqrt(stopNumber) needed for sieving.
      * Default = CPU L1 Cache size
-     * @pre >= 1024 && <= 2^23
+     * @pre >= 1024 && <= 2^23 && must be a power of 2
      */
     SIEVESIZE_PRIMENUMBERGENERATOR = 1024 * 32,
     /**
@@ -56,13 +56,13 @@ namespace settings {
      * implementation, is used if the user does not set his own sieve
      * size.
      * Default = CPU L1 or L2 Cache size
-     * @pre >= 1024 && <= 2^23
+     * @pre >= 1024 && <= 2^23 && must be a power of 2
      */
     DEFAULT_SIEVESIZE_PRIMENUMBERFINDER = 1024 * 64,
     /**
      * (sieveSize * SIEVESIZE_FACTOR_ERATMEDIUM) is the upper bound for
      * sieving primes used with EratMedium.
-     * Default = 9
+     * Default = 9, a value between 5 and 15 is reasonable
      * @pre >= SIEVESIZE_FACTOR_ERATSMALL
      */
     SIEVESIZE_FACTOR_ERATMEDIUM = 9,
