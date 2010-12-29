@@ -26,8 +26,8 @@
 #include <cstdlib>
 #include <stdexcept>
 
-#define BUCKETS_PER_CREATE    (settings::MEMORY_PER_ALLOC_ERATBIG / sizeof(Bucket_t))
-#define SIEVE_SIZE            ((1u << log2SieveSize_) - 1)
+#define BUCKETS_PER_CREATE (settings::MEMORY_PER_ALLOC_ERATBIG / sizeof(Bucket_t))
+#define SIEVE_SIZE ((1u << log2SieveSize_) - 1)
 
 EratBig::EratBig(uint64_t stopNumber, uint32_t sieveSize) :
   Modulo210Wheel(stopNumber, sieveSize), primeCount_(0), bucketLists_(NULL),
