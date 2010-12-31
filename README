@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 9 December 2010
+# Last modified: 31 December 2010
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -13,28 +13,30 @@
 
   primesieve is a highly optimized C++ implementation of the sieve of
   Eratosthenes that finds the prime numbers and prime k-tuplets
-  (twin primes, prime triplets, ...) up to 2^64.
+  (twin primes, prime triplets, ...) up to 2^64 maximum.
   By the date of release primesieve is the fastest publicly available
-  sieve of Eratosthenes program (together with YAFU [1]).
+  sieve of Eratosthenes implementation (together with YAFU [1]).
 
 2. Algorithm and complexity
 
   primesieve uses the segmented sieve of Eratosthenes with wheel
   factorization, this algorithm has a complexity of O(n) operations
-  and a memory requirement of O(pi(n^0.5)).
+  and a memory requirement of O(pi(sqrt(n))).
 
-  Other optimizations used in primesieve:
+  Optimizations used in primesieve:
 
-    * Pre-elimination of multiples of small primes (<= 19).
-    * Dense bit packing (30 numbers per byte).
-    * Use of the SSE 4.2 POPCNT instruction for fast bit counting.
-    * Uses Tomas Oliveira e Silva's list algorithm for big sieving primes. [2]
-    * Parallel, uses multiple processes (Qt GUI version).
+    * Dense bit packing with 30 numbers per byte
+    * Pre-elimination of multiples of small primes (<= 19)
+    * Modolo 210 wheel that skips multiples of 2, 3, 5 and 7
+    * Uses Tomas Oliveira e Silva's cache-efficient list algorithm for big sieving primes. [2]
+    * Uses the SSE 4.2 POPCNT instruction for fast prime counting
+    * Parallel, uses multiple processes (Qt GUI version)
 
 3. Build primesieve
 
-  primesieve is written in portable C++ it compiles on a lot of
-  different systems. I maintain two versions:
+  primesieve is written in portable C++ I successfully compiled it
+  with 8 different C++ compilers on Windows, Linux and Mac OS X.
+  I maintain two versions:
 
   * Console version (Single-Threaded)
     Please refer to the INSTALL file in the current directory.
@@ -45,14 +47,14 @@
 4. Directories
 
   * ./GUI
-    Contains a graphical user interface front end with Multi-Process
-    support for PrimeSieve. The GUI has been created with Qt4 (Qt is a
-    C++ cross-platform application and UI framework).
+    Contains a graphical user interface front end for PrimeSieve. The
+    GUI has been created with Qt4 (Qt is a C++ cross-platform
+    application and UI framework by nokia).
 
   * ./src
     Contains the sieve of Eratosthenes implementation.
 
-5. Source code documentation (sieve of Eratosthenes)
+5. Sieve of Eratosthenes documentation (./src directory)
 
   * src/PrimeSieve.cpp
     Main object, provides an easy to use user interface for prime
@@ -69,7 +71,8 @@
   * src/EratSmall
     Implementation of the segmented sieve of Eratosthenes with wheel
     factorization optimized for small sieving primes.
-    Uses a hardcoded modulo 30 wheel.
+    Uses a hardcoded modulo 30 wheel. EratSmall is a further optimized
+    implementation of Achim Flammenkamp's algorithm. [3]
 
   * src/EratMedium
     Implementation of the segmented sieve of Eratosthenes with wheel
@@ -80,7 +83,7 @@
     Implementation of the segmented sieve of Eratosthenes with wheel
     factorization optimized for big sieving primes.
     Uses a dynamic modulo 210 wheel in conjunction with Tomas Oliveira
-    e Silva's list algorithm.
+    e Silva's cache-efficient list algorithm. [2]
 
   * src/PrimeNumberGenerator.cpp
     Generates the prime numbers up to sqrt(stopNumber) needed for
@@ -90,10 +93,20 @@
     Main SieveOfEratosthenes object, used to count and print prime
     numbers and prime k-tuplets.
 
+  * src/ResetSieve.cpp
+    ResetSieve is used to reset the sieve array (resets the bits to 1)
+    of SieveOfEratosthenes after each sieve round. ResetSieve also
+    pre-eliminates multiples of small primes (<= 19).
+
   * src/settings.h
-    Contains constants that set the size of various arrays within
-    primesieve. The values are optimized for CPUs with 32 to 64
-    KiloBytes of L1 Data Cache.
+    Contains compile-time constants that set the size of various
+    arrays within primesieve. The values are optimized for CPUs with
+    32 to 64 KiloBytes of L1 Data Cache.
+
+  * src/WheelFactorization.h
+    Contains data structures related to wheel factorization. Wheel
+    factorization is used to skip multiples of small primes (i.e. a
+    modulo 30 wheel skips multiples of 2, 3 and 5).
 
 6. License
 
@@ -111,3 +124,6 @@
   [2] Detailed description of Tomas Oliveira e Silva's sieve of
     Eratosthenes implementation using linked lists:
     http://www.ieeta.pt/~tos/software/prime_sieve.html
+
+  [3] Achim Flammenkamp: The Art of Prime Sieving (prime_sieve.c)
+    http://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html
