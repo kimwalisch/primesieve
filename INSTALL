@@ -4,30 +4,29 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010 
-# Last modified: 6 December 2010
+# Last modified: 2 January 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
 
-How to build primesieve:
+How to build primesieve
+=======================
 
-  1. Microsoft Visual C++
-    Open a Visual Studio Command Prompt, cd into the primesieve
-    directory and run:
-
-    > nmake -f Makefile.msvc
-
-  2. GCC, GNU Compiler Collection
-    Open a terminal, cd into the primesieve directory and run:
-
+  1. GCC, GNU Compiler Collection
+    Open a terminal cd into the primesieve directory and run:
     $ make
 
-  3. Other C++ compilers
-    Open a terminal, cd into the primesieve directory and run:
+  2. Microsoft Visual C++
+    Open a Visual Studio Command Prompt cd into the primesieve
+    directory and run:
+    > nmake -f Makefile.msvc
 
+  3. Other C++ compilers
+    Open a terminal cd into the primesieve directory and run:
     $ make CXX=my_compiler
 
-How to test primesieve:
+How to test primesieve
+======================
 
   1. Windows
     > out\primesieve.exe 1 1000 -p1
@@ -37,5 +36,5 @@ How to test primesieve:
     $ out/./primesieve 1 10000000000 -c1 -c2 -s 32
 
     Counts the prime numbers and twin primes up to 10^10 using a sieve
-    size of 32 KiloBytes. The results should be 455052511 prime
-    numbers and 27412679 twin primes.
+    size of 32 KiloBytes. The result should be 455052511 primes and
+    27412679 twins.
