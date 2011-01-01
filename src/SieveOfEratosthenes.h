@@ -1,7 +1,7 @@
 /*
  * SieveOfEratosthenes.h -- This file is part of primesieve
  *
- * Copyright (C) 2010 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,9 +63,9 @@ protected:
   }
   virtual void analyseSieve(const uint8_t*, uint32_t) = 0;
 private:
-  /** A start number for the sieve of Eratosthenes. */
+  /** The start number for this sieve of Eratosthenes object. */
   const uint64_t startNumber_;
-  /** A stop number for the sieve of Eratosthenes. */
+  /** The stop number for this sieve of Eratosthenes object. */
   const uint64_t stopNumber_;
   /**
    * Value of the first byte of the sieve_ array. As

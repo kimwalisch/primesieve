@@ -1,7 +1,7 @@
 /*
  * cpuid.h -- This file is part of primesieve
  *
- * Copyright (C) 2010 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,30 +22,45 @@
 
 #define bit_POPCNT (1 << 23)
 
-#if defined(_MSC_VER) || ((defined(_WIN32) || defined(_WIN64)) && defined(__INTEL_COMPILER))
+#if defined(_MSC_VER) || ((defined(_WIN32) || defined(_WIN64)) && \
+    defined(__INTEL_COMPILER))
+#  include <intrin.h> // __cpuid()
 #  define MSC_COMPATIBLE
 #  define USE_POPCNT 
-#  include <intrin.h> // __cpuid()
 #elif defined(__GNUC__) || defined(__SUNPRO_CC)
+#  include "cpuid_gcc451.h" // cpuid.h of GCC 4.5.1
 #  define GCC_COMPATIBLE
 #  define USE_POPCNT 
-#  include "cpuid_gcc451.h" // cpuid.h of GCC 4.5.1
 #endif
 
 /**
  * @def POPCNT64(n)
- * Calculates the number of bits of the parameter that are set to 1
- * using the SSE 4.2 POPCNT instruction.
+ * Counts the number of one bits of the integer n using the SSE 4.2
+ * POPCNT instruction.
+ * Successfully tested with:
+ *   - Microsoft Visual Studio 2010,
+ *   - GNU GCC 4.5,
+ *   - Intel C++ Compiler 12.0,
+ *   - Sun Studio 12.
  */
 #if defined(USE_POPCNT)
-#  define POPCNT64_x64(popcnt64, addr, i) static_cast<uint32_t> (popcnt64(*reinterpret_cast<const uint64_t*> (&addr[i])))
-#  define POPCNT64_x86(popcnt32, addr, i) (popcnt32(*reinterpret_cast<const uint32_t*> (&addr[i])) + \
-                                           popcnt32(*reinterpret_cast<const uint32_t*> (&addr[i + 4])))
-#  if defined(MSC_COMPATIBLE) || defined(__SUNPRO_CC)
+#  define POPCNT64_x64(popcnt64, addr, i) static_cast<uint32_t> \
+     (popcnt64(*reinterpret_cast<const uint64_t*> (&addr[i])))
+#  define POPCNT64_x86(popcnt32, addr, i) \
+     (popcnt32(*reinterpret_cast<const uint32_t*> (&addr[i])) + \
+      popcnt32(*reinterpret_cast<const uint32_t*> (&addr[i + 4])))
+#  if defined(MSC_COMPATIBLE)
 #    include <nmmintrin.h> // _mm_popcnt_u32(), _mm_popcnt_u64()
 #    if defined(_WIN64)
 #      define POPCNT64(addr, i) POPCNT64_x64(_mm_popcnt_u64, addr, i)
 #    elif defined(_WIN32)
+#      define POPCNT64(addr, i) POPCNT64_x86(_mm_popcnt_u32, addr, i)
+#    endif
+#  elif defined(__SUNPRO_CC)
+#    include <nmmintrin.h> // _mm_popcnt_u32(), _mm_popcnt_u64()
+#    if defined(__x86_64)
+#      define POPCNT64(addr, i) POPCNT64_x64(_mm_popcnt_u64, addr, i)
+#    elif defined__i386)
 #      define POPCNT64(addr, i) POPCNT64_x86(_mm_popcnt_u32, addr, i)
 #    endif
 #  elif defined(__GNUC__)
@@ -60,11 +75,11 @@
 namespace utils {
   /**
    * Portable implementation of CPUID, successfully tested with:
-   * - MSVC 2008 & 2010,
-   * - GNU GCC 4.5,
-   * - Intel C++ Compiler 11.1
-   * - Sun Studio 12,
-   * - AMD x86 Open64 Compiler Suite.
+   *   - Microsoft Visual Studio 2010,
+   *   - GNU GCC 4.5,
+   *   - Intel C++ Compiler 12.0
+   *   - Sun Studio 12,
+   *   - AMD x86 Open64 Compiler Suite.
    * @return 1 if the CPU supports the cpuid instruction.
    *         0 if the CPU does not support the cpuid instruction.
    *        -1 if the compiler is not supported.

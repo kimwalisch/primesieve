@@ -1,7 +1,7 @@
 /*
  * main.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2010 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,8 +48,8 @@ std::string primes[7] = { "Prime numbers", "Twin primes", "Prime triplets",
     "Prime septuplets" };
 
 void version() {
-  std::cout << "primesieve 1.03, <http://primesieve.googlecode.com>"
-      << std::endl << "Copyright (C) 2010 Kim Walisch" << std::endl
+  std::cout << "primesieve 1.04, <http://primesieve.googlecode.com>"
+      << std::endl << "Copyright (C) 2011 Kim Walisch" << std::endl
       << "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>."
       << std::endl
       << "This is free software: you are free to change and redistribute it."

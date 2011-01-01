@@ -1,7 +1,7 @@
 /*
  * PrimeSieve.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2010 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -214,7 +214,7 @@ void PrimeSieve::setFlags(uint32_t flags) {
   results_->reset(flags_);
 }
 
-/** For use with multi-thread versions of PrimeSieve. */
+/** For use with multi-threaded versions of PrimeSieve. */
 void PrimeSieve::setResults(PrimeNumberFinder::Results* results) {
   results_ = results;
 }

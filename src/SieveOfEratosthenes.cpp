@@ -1,7 +1,7 @@
 /*
  * SieveOfEratosthenes.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2010 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,8 +88,8 @@ uint32_t SieveOfEratosthenes::getRemainder(uint64_t n) {
 }
 
 void SieveOfEratosthenes::setSieveSize(uint32_t sieveSize) {
-  // the CPU's L1 or L2 cache size is the best choice for the sieve
-  // size, it makes no sense to use very small sieve sizes
+  // It makes no sense to use very small sieve sizes, the CPU's L1 or
+  // L2 cache size usually performs best
   if (sieveSize < 1024)
     throw std::invalid_argument(
         "SieveOfEratosthenes: sieve size must be >= 1024.");
@@ -158,8 +158,8 @@ void SieveOfEratosthenes::initEratAlgorithms() {
 }
 
 /**
- * Use the segmented sieve of Eratosthenes to cross-off the
- * multiples of the current sieve round.
+ * Use the erat* algorithms to cross-off the multiples of the
+ * current sieve round.
  */
 void SieveOfEratosthenes::crossOffMultiples() {
   if (eratSmall_ != NULL) {
@@ -182,16 +182,16 @@ void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
   /// @remark '- 6' is a correction for primes of type n * 30 + 31
   const uint64_t primeSquared = U64SQUARE(primeNumber) - 6;
   // do not enter this while loop until all primes required for
-  // sieving the next round have been added to one of the sieve of
-  // Eratosthenes algorithms below
+  // sieving the next round have been added to one of the erat*
+  // algorithms below
   while (lowerBound_ + sieveSize_ * NUMBERS_PER_BYTE < primeSquared) {
     this->crossOffMultiples();
     this->analyseSieve(sieve_, sieveSize_);
     resetSieve_->reset(sieve_, sieveSize_, &resetIndex_);
     lowerBound_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
-  // add primeNumber to the most optimized sieve
-  // of Eratosthenes implementation
+  // add primeNumber to the appropriate (fastest) sieve of
+  // Eratosthenes implementation
   if (eratSmall_->getLimit() >= primeNumber) {
     eratSmall_->addPrimeNumber(primeNumber, lowerBound_);
   } else if (eratMedium_->getLimit() >= primeNumber) {
