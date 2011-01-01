@@ -33,8 +33,8 @@ Contents
 ===========================
 
   primesieve uses the segmented sieve of Eratosthenes with wheel
-  factorization, this algorithm has a complexity of O(N) operations
-  and is using O(N^0.5/loglogN) bits of space. [2]
+  factorization, this algorithm has a complexity of O(n) operations
+  and is using O(n^0.5) bits of space. [2]
 
   Optimizations used in primesieve:
 
