@@ -1,7 +1,7 @@
 /*
  * PrimeSieveGUI_menu.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2010 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -156,7 +156,7 @@ void PrimeSieveGUI::saveToFile() {
 void PrimeSieveGUI::showAboutDialog() {
   QString title = "About " + APPLICATION_NAME;
   QString message = "<h2>" + APPLICATION_NAME + " " + APPLICATION_VERSION + "</h2>"
-      + "<p>Copyright &copy; 2010 Kim Walisch</p>"
+      + "<p>Copyright &copy; 2011 Kim Walisch</p>"
       + "<p>" + APPLICATION_ABOUT + "</p>"
       + "<a href=\"" + APPLICATION_HOMEPAGE + "\">" + APPLICATION_HOMEPAGE+ "</a>";
   QMessageBox::about(this, title, message);
