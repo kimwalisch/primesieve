@@ -4,13 +4,12 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       29 December 2010 
-# Last modified: 29 December 2010
+# Last modified: 2 January 2010
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
 
-1. Write a test suite to test the correctness of PrimeSieve.
-
+1. Write tests (add -test option to the console version)
   * Calculate pi(x), pi2(x), ... and compare the results with known
     values
   * Do tests with different sieve sizes
@@ -18,16 +17,8 @@
     deallocation
   * Test invalid input
 
-  The test suite will be added to the console version of primesieve
-  using the -test switch.
+2. Add multi-thread support to the console version
+  * OpenMP is an option
+  * C++0x will have new threading facilities, might also be an option
 
-2. When C++0x is available use its new threading facilities and add
-   Multi-thread support to the console version of primesieve.
-   The threading facilities of C++0x will be portable and will not
-   depend on additional libraries.
-
-3. Use threads instead of processes in the GUI version of primesieve
-   and change all "CPU cores" labels to "Threads".
-
-4. Add support for arithmetic expression evaluation to the GUI
-   version of primesieve.
+3. Implement arithmetic expression evaluation in the GUI version
