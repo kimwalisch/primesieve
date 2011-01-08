@@ -27,7 +27,7 @@ Contents
   Eratosthenes that finds prime numbers and prime k-tuplets (twin
   primes, prime triplets, ...) up to 2^64 maximum.
   By the date of release this is the fastest publicly available sieve
-  of Eratosthenes implementation.[5]
+  of Eratosthenes implementation.[6]
 
 2. Algorithm and complexity
 ===========================
@@ -47,7 +47,7 @@ Contents
     * Uses different algorithms for small, medium and big sieving
       primes
     * Uses Tomás Oliveira e Silva's cache-efficient list algorithm for
-      big sieving primes [3]
+      big sieving primes.[3]
     * Uses the SSE 4.2 POPCNT instruction for fast bit counting
     * Parallel, uses multiple processes
 
@@ -68,7 +68,7 @@ Contents
 ==============
 
   * ./GUI
-    Contains primesieve's GUI (created with Qt4 [6])
+    Contains primesieve's GUI (created with Qt4 [7])
 
   * ./src
     Contains the sieve of Eratosthenes implementation
@@ -95,7 +95,7 @@ Contents
     factorization optimized for small sieving primes. EratSmall uses a
     fixed modulo 30 wheel that skips multiples of 2, 3 and 5.
     EratSmall is a further optimized implementation of Achim
-    Flammenkamp's algorithm. [4]
+    Flammenkamp's algorithm.[4]
 
   * src/EratMedium
     Implementation of the segmented sieve of Eratosthenes with wheel
@@ -107,7 +107,7 @@ Contents
     factorization optimized for big sieving primes. EratBig uses a
     fixed modulo 210 wheel that skips  multiples of 2, 3, 5 and 7.
     EratBig uses the same algorithm as EratMedium in conjunction with
-    Tomas Oliveira e Silva's cache-efficient list algorithm. [3]
+    Tomas Oliveira e Silva's cache-efficient list algorithm.[3]
 
   * src/PrimeNumberGenerator.cpp
     Generates the prime numbers up to sqrt(stopNumber) needed for
@@ -132,7 +132,7 @@ Contents
   * src/WheelFactorization.h
     Contains data structures and abstract classes related to wheel
     factorization. Wheel factorization is used to skip multiples of
-    small primes (see [x] for a good introduction).
+    small primes (see [5] for a good introduction).
 
   Note:
 
@@ -165,10 +165,13 @@ Contents
   [4] Achim Flammenkamp, "The Art of Prime Sieving",
     http://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html
 
-  [5] YAFU Yet Another Factorization Utility, has also a very fast
+  [5] Wheel factorization at the Prime Glossary
+    http://primes.utm.edu/glossary/page.php?sort=WheelFactorization
+
+  [6] YAFU Yet Another Factorization Utility, has also a very fast
     multi-threaded sieve of Eratosthenes implementation that is
     equally fast in some cases.
     http://sites.google.com/site/bbuhrow/home
 
-  [6] Qt is a cross-platform application and UI framework.
+  [7] Qt is a cross-platform application and UI framework.
     http://qt.nokia.com/products/
