@@ -125,12 +125,10 @@ void SieveOfEratosthenes::initSieve() {
   uint32_t startRemainder = this->getRemainder(startNumber_);
   // eliminates the bits of the first byte representing numbers
   // smaller than startNumber_
-  for (uint32_t i = 6; i > 0; i--) {
-    if (startRemainder > bitValues_[i]) {
-      sieve_[0] &= 0xff << i;
-      break;
-    }
-  }
+  uint32_t i = 0;
+  while (i < 8 && bitValues_[i] < startRemainder)
+    i++;
+  sieve_[0] &= static_cast<uint8_t> (0xff << i);
 }
 
 /**
