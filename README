@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 8 January 2011
+# Last modified: 9 January 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -33,7 +33,7 @@ Contents
 ===========================
 
   primesieve uses the segmented sieve of Eratosthenes with wheel
-  factorization  also known as Pritchard's segmented wheel sieve, this
+  factorization also known as Pritchard's segmented wheel sieve, this
   algorithm has a complexity of O(n) operations and is using O(n^0.5)
   bits of space.[1] Sorenson in [2] explains the algorithm fairly
   well.
@@ -100,12 +100,12 @@ Contents
   * src/EratMedium
     Implementation of the segmented sieve of Eratosthenes with wheel
     factorization optimized for medium sieving primes. EratMedium uses
-    a fixed modulo 210 wheel that skips  multiples of 2, 3, 5 and 7.
+    a fixed modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
 
   * src/EratBig
     Implementation of the segmented sieve of Eratosthenes with wheel
     factorization optimized for big sieving primes. EratBig uses a
-    fixed modulo 210 wheel that skips  multiples of 2, 3, 5 and 7.
+    fixed modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
     EratBig uses the same algorithm as EratMedium in conjunction with
     Tomas Oliveira e Silva's cache-efficient list algorithm.[3]
 
