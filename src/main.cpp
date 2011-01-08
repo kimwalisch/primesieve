@@ -19,11 +19,12 @@
 
 /** 
  * @file main.cpp
- * @brief Command line version of PrimeSieve.
+ * @brief Command line version of PrimeSieve, compiles on many
+ * platforms, single-threaded.
  * 
  * PrimeSieve is a highly optimized implementation of the sieve of
- * Eratosthenes that finds prime numbers and prime k-tuplets
- * (twin primes, prime triplets, ...) up to 2^64.
+ * Eratosthenes that finds prime numbers and prime k-tuplets (twin
+ * primes, prime triplets, ...) up to 2^64.
  */
 
 #include "PrimeSieve.h"
@@ -35,20 +36,26 @@
 #include <iostream>
 #include <cstdlib>
 #include <cctype>
+#include <cmath>
 #include <ctime>
+
+// Unfortunately there is no easy way to get the CPU L1 and L2 cache
+// size, these values are close for most x86-64 CPUs in 2011
+#define L1_CACHE_SIZE 64
+#define L2_CACHE_SIZE 512
 
 // PrimeSieve arguments
 uint64_t start = 0;      /* lower bound for sieving */
 uint64_t stop = 0;       /* upper bound for sieving */
 uint32_t flags = 0;      /* settings */
-uint32_t sieveSize = 64; /* sieve size in KiloBytes */
+uint32_t sieveSize = 0;  /* sieve size in KiloBytes */
 
 std::string primes[7] = { "Prime numbers", "Twin primes", "Prime triplets",
     "Prime quadruplets", "Prime quintuplets", "Prime sextuplets",
     "Prime septuplets" };
 
 void version() {
-  std::cout << "primesieve 1.04, <http://primesieve.googlecode.com>"
+  std::cout << "primesieve 1.05, <http://primesieve.googlecode.com>"
       << std::endl << "Copyright (C) 2011 Kim Walisch" << std::endl
       << "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>."
       << std::endl
@@ -79,7 +86,13 @@ void help() {
   exit(EXIT_SUCCESS);
 }
 
-/** Process command line arguments. */
+/**
+ * Process command line options.
+ * -c[n], count prime numbers and/or prime k-tuplets
+ * -p[n], print prime numbers and/or prime k-tuplets
+ * -s <size>, set the sieve size in KiloBytes
+ * -v, print version information
+ */
 void processOptions(int argc, char* argv[]) {
   if (argc == 1 || argc > 2 * 7 + 3)
     help();
@@ -93,26 +106,26 @@ void processOptions(int argc, char* argv[]) {
       argv[i]++;
     int x = -1;
     switch (std::tolower(*argv[i])) {
-    case 'c': /* set count flags */
+    case 'c':
       x = argv[i][1] - '0';
       if (x < 1 || x > 7)
         help();
       flags |= COUNT_PRIMES << (x - 1);
       break;
-    case 'p': /* set print flag */
+    case 'p':
       x = argv[i][1] - '0';
       if (x < 1 || x > 7)
         help();
       flags |= PRINT_PRIMES << (x - 1);
       break;
-    case 's': /* set sieve size */
+    case 's':
       if (argv[++i] == NULL)
         help();
       sieveSize = std::strtoul(argv[i], NULL, 10);
       if (sieveSize < 1 || sieveSize > 8192)
         help();
       break;
-    case 'v': /* print version information */
+    case 'v':
       version();
       break;
     default:
@@ -121,6 +134,10 @@ void processOptions(int argc, char* argv[]) {
   }
 }
 
+/**
+ * Process the command line options, initialize PrimeSieve and then
+ * start sieving primes.
+ */
 int main(int argc, char* argv[]) {
   processOptions(argc, argv);
   if (start > stop) {
@@ -134,7 +151,13 @@ int main(int argc, char* argv[]) {
   // count prime numbers if none else selected
   if ((flags & COUNT_FLAGS) == 0)
     flags |= COUNT_PRIMES;
-  // make sure sieve size is a power of 2
+  if (sieveSize == 0) {
+    // L1 cache size gives best performance for small primes
+    // L2 cache size gives best performance for big primes
+    sieveSize = (stop < static_cast<uint64_t> (std::pow(10.0,12)))
+        ? L1_CACHE_SIZE : L2_CACHE_SIZE;
+  }
+  // PrimeSieve requires a power of 2 sieve size
   sieveSize = nextHighestPowerOf2(sieveSize);
   if ((flags & PRINT_FLAGS) == 0) {
     // print the status whilst sieving
@@ -143,16 +166,16 @@ int main(int argc, char* argv[]) {
   }
   try {
     std::clock_t begin = std::clock();
-    // Initialize primeSieve
+    // initialize primeSieve
     PrimeSieve primeSieve;
     primeSieve.setStartNumber(start);
     primeSieve.setStopNumber(stop);
     primeSieve.setSieveSize(sieveSize);
     primeSieve.setFlags(flags);
-    // start sieving primes (using the sieve of Eratosthenes)
+    // start sieving primes
     primeSieve.sieve();
     std::clock_t end = std::clock();
-    // print prime count results
+    // print the prime count results
     for (int i = 0; i < 7; i++) {
       if (primeSieve.getCounts(i) >= 0)
         std::cout << primes[i] << ": "
