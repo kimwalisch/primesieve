@@ -4,21 +4,13 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       29 December 2010 
-# Last modified: 2 January 2010
+# Last modified: 11 January 2010
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
 
-1. Write tests (add -test option to the console version)
-  * Calculate pi(x), pi2(x), ... and compare the results with known
-    values
-  * Do tests with different sieve sizes
-  * Do memory extensive tests with a lot of allocation and
-    deallocation
-  * Test invalid input
-
-2. Add multi-thread support to the console version
+1. Add multi-thread support to the console version
   * OpenMP is an option
   * C++0x will have new threading facilities, might also be an option
 
-3. Implement arithmetic expression evaluation in the GUI version
+2. Implement arithmetic expression evaluation in the GUI version
