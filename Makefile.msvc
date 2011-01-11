@@ -6,7 +6,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010  
-# Last modified:   5 December 2010 
+# Last modified:   11 January 2011 
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -16,6 +16,7 @@
 
 TARGET = primesieve
 SRCDIR = src
+MAINDIR = console
 OUTDIR = out
 
 # Define the C++ compiler & options
@@ -34,6 +35,7 @@ OBJECTS = $(OUTDIR)\EratBig.obj \
   $(OUTDIR)\PrimeNumberFinder.obj \
   $(OUTDIR)\EratSmall.obj \
   $(OUTDIR)\WheelFactorization.obj \
+  $(OUTDIR)\test.obj \
   $(OUTDIR)\main.obj
 TARGET = $(OUTDIR)\$(TARGET)
 
@@ -45,6 +47,9 @@ create_dir :
 !endif
  
 {$(SRCDIR)\}.cpp.obj:
+  $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
+
+{$(MAINDIR)\}.cpp.obj:
   $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
 
 build : $(OBJECTS)
