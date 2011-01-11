@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010 
-# Last modified: 2 January 2011
+# Last modified: 11 January 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -38,3 +38,6 @@ How to test primesieve
     Counts the prime numbers and twin primes up to 10^10 using a sieve
     size of 32 KiloBytes. The result should be 455052511 primes and
     27412679 twins.
+
+  Note:
+    The -help option prints usage information.
