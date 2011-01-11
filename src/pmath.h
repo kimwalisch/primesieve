@@ -124,4 +124,23 @@ inline uint32_t primeProduct(uint32_t x) {
   return pp;
 }
 
+/**
+ * Integer pow, raise to power.
+ * @return base raised to the power exponent.
+ * Code from (adapted):
+ * http://en.wikipedia.org/wiki/Exponentiation_by_squaring
+ */
+inline uint64_t ipow(uint64_t x, uint32_t n) {
+  uint64_t result = 1;
+  while (n != 0) {
+    if (n & 1) {
+      result *= x;
+      n -= 1;
+    }
+    x *= x;
+    n /= 2;
+  }
+  return result;
+}
+
 #endif /* PMATH_H */
