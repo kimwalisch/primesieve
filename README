@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 9 January 2011
+# Last modified: 11 January 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -67,8 +67,11 @@ Contents
 4. Directories
 ==============
 
+  * ./console
+    Contains the console version of primesieve
+
   * ./GUI
-    Contains primesieve's GUI (created with Qt4 [7])
+    Contains the GUI version of primesieve (created with Qt4 [7])
 
   * ./src
     Contains the sieve of Eratosthenes implementation
