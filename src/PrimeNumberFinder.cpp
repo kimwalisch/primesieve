@@ -18,7 +18,7 @@
  */
 
 #include "PrimeNumberFinder.h"
-#include "utils/cpuid.h" 
+#include "cpuid.h" 
 #include "pmath.h"
 
 #include <stdint.h>
@@ -44,8 +44,8 @@ PrimeNumberFinder::PrimeNumberFinder(uint64_t startNumber, uint64_t stopNumber,
     uint32_t sieveSize, ResetSieve* resetSieve, Results* results,
     uint32_t flags) :
   SieveOfEratosthenes(startNumber, stopNumber, sieveSize, resetSieve), flags_(
-      flags), isPOPCNTSupported_(utils::isPOPCNTSupported()), primeByteCounts_(
-      NULL), primeBitValues_(NULL), results_(results), status_(0) {
+      flags), isPOPCNTSupported_(isPOPCNTSupported()), primeByteCounts_(NULL), 
+      primeBitValues_(NULL), results_(results), status_(0) {
   if (results_ == NULL && (flags_ & RESULTS_FLAGS))
     throw std::logic_error("PrimeNumberFinder: cannot use results_ (is NULL).");
   this->initLookupTables();
