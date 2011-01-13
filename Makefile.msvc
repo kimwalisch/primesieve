@@ -6,7 +6,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010  
-# Last modified:   11 January 2011 
+# Last modified:   13 January 2011 
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -15,7 +15,11 @@
 .IGNORE:
 
 TARGET = primesieve
+# Sieve of Eratosthenes directory
 SRCDIR = src
+# Parsifal arithmetic expression evaluator
+EVALDIR = thirdparty/eval11
+# Main.cpp directory
 MAINDIR = console
 OUTDIR = out
 
@@ -24,7 +28,7 @@ CPP      = cl
 CPPFLAGS = /O2 /GL /EHsc /W3 /D "NDEBUG" /D "__STDC_CONSTANT_MACROS" /D "__STDC_LIMIT_MACROS"
 
 # Inculde stdint.h (needed prior MSVC 2010)
-INCPATH  = -I"src\utils"
+INCPATH  = -I"thirdparty"
 
 OBJECTS = $(OUTDIR)\EratBig.obj \
   $(OUTDIR)\ResetSieve.obj \
@@ -35,6 +39,9 @@ OBJECTS = $(OUTDIR)\EratBig.obj \
   $(OUTDIR)\PrimeNumberFinder.obj \
   $(OUTDIR)\EratSmall.obj \
   $(OUTDIR)\WheelFactorization.obj \
+  $(OUTDIR)\evalkern.obj \
+  $(OUTDIR)\evalwrap.obj \
+  $(OUTDIR)\ArithmeticExpression.obj \
   $(OUTDIR)\test.obj \
   $(OUTDIR)\main.obj
 TARGET = $(OUTDIR)\$(TARGET)
@@ -48,6 +55,14 @@ create_dir :
  
 {$(SRCDIR)\}.cpp.obj:
   $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
+
+# The Parsifal expression evaluator is C code from 1999 so few warnings
+# have to be disabled
+{$(EVALDIR)\}.c.obj:
+  $(CPP) $(CPPFLAGS) /D "_CRT_NONSTDC_NO_DEPRECATE" /D "_CRT_SECURE_NO_WARNINGS" $(INCPATH) -c $< /Fo$@
+
+{$(EVALDIR)\}.cpp.obj:
+  $(CPP) $(CPPFLAGS) /D "_SCL_SECURE_NO_WARNINGS" $(INCPATH) -c $< /Fo$@
 
 {$(MAINDIR)\}.cpp.obj:
   $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
