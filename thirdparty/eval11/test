@@ -1,0 +1,41 @@
+/* simple assignment expressions */
+a =  7;
+b = 23;
+
+/* complex assignment operators */
+d = 10, d += b;
+e = 11, e *= a;
+f = 12, f -= b;
+g = 13, g /= a;
+
+/* add to memory, with parenthesized assignment */
+h += (1/(c=.05));
+
+LongVariableNamesAreOK = (a+b)/(a-b);
+
+x = h/LongVariableNamesAreOK, y = 1-x;
+
+// Comparison operators
+xLTy = x<y;
+xLEy = x<=y;
+xGTy = x>y;
+xGEy = x>=y;
+xNEy = x!=y;
+xeqy = x==y;
+
+// Conditional expressions are supported
+test = !(x < y  && u != v) ? y :
+       x >= z ? z : 1 ;
+
+// Standard math functions
+u=sin(x), v = cos(y);
+theta = atan2(u,v);
+
+//checkInversion
+ok = (phi = atan2(sin(theta),cos(theta))) == theta;
+
+// Exponentiation
+w = y**x;
+q = -c**-2;
+z = 23.7*10**-3;
+

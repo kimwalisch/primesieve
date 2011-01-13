@@ -1,0 +1,248 @@
+{
+/*
+ EVALKERN.SYN  Version 1.1
+
+ evaluateExpression: A Simple Expression Evaluator
+ Copyright (c) 1996 - 1999 Parsifal Software, All
+ Rights Reserved.
+
+ evaluateExpression is an example program for evaluating
+ C-style expressions which demonstrates some of the
+ capabilities of the AnaGram parser generator.
+
+ EVALKERN.SYN is the kernel of the example, consisting
+ of the definition of the expression parser itself.
+ Support functions are defined in EVALWRAP.C. A test
+ program is defined in EVALDEMO.C. Global declarations
+ are contained in EVALDEFS.H.
+
+ EVALKERN.SYN is an AnaGram syntax (.SYN) file which
+ describes, in this case, the syntax of expressions. It
+ is written in the AnaGram language, which is a variang of
+ BNF (Backus-Naur Form) with additional constructs to
+ allow more concise descriptions and greater analytical
+ power. AnaGram analyzes a syntax file containing a
+ grammar and produces a parser in C or C++.
+
+ The vital part of a syntax file consists of its
+ productions, each of which takes the form:
+        p -> p1, p2, p3, ... pn
+ Productions describe the grammatical elements to be
+ recognized by the parser. This rule says that the
+ grammatical element p consists of a single instance
+ each of the elements p1, p2, p3, ... pn in order.
+
+ You will notice that a production may have some C code
+ at its right end following an equals sign. This code
+ constitutes a "reduction procedure", which will be
+ executed automatically when the grammatical element
+ specified by the production is identified in the input
+ to the parser.
+
+ AnaGram analyzes EVALKERN.SYN and produces the parser
+ file EVALKERN.C and a header file EVALKERN.H.
+
+ The parse function defined in EVALKERN.SYN is called
+ evalKernel. All communication with evalKernel is via
+ the parser control block (PCB). The wrapper function,
+ evaluateExpression, defined in EVALWRAP.C, provides
+ a more convenient interface for the parse function.
+
+ The expression syntax is borrowed from C but with the
+ addition of the FORTRAN exponentiation operator (**).
+
+ The cast, increment, and decrement operators are not
+ implemented, nor are the following operations that
+ are defined only for integers:
+   Bitwise logical operators:   &, |, ^, ~, &=, |=, ^=
+   Remainder operators:         %, %=
+   Shift operators:             <<, >>, >>=, <<=
+
+ The supported operations are:
+   Assignment operators:        =, +=, -=, *=, /=
+   Conditional expressions:     ? :
+   Logical operators:           !, &&, ||
+   Comparison operators:        ==, !=, <, <=, >, >=
+   Binary arithmetic operators: +, -, *, /
+   Exponentiation:              **
+   Unary arithmetic operators:  +, -
+   Parentheses
+   Function calls
+
+ All arithmetic is double precision floating point.
+
+ Input strings may contain any number of expressions, separated by
+ commas or semicolons. White space may be used freely, including
+ both C and C++ style comments.
+
+ evalKernel() makes the following external calls:
+ ------------------------------------------------
+   void pushChar(int character);
+     Push the specified character onto a character stack.
+
+   double *locateVariable(int nameLength);
+     Pop the last nameLength characters from the character stack
+     and, treating them as the name of a variable, return a pointer
+     to the location where the value of the variable is stored.
+
+   void pushArg(double value);
+     Push the specified value onto an argument stack.
+
+   double callFunction(nameLength, int argCount);
+     Pop the last nameLength characters from the character stack
+     and, treating them as the name of a function, identify the
+     function and invoke it with argCount arguments popped from
+     the argument stack.
+
+   double checkZero(double value);
+     Verify that value is not zero.
+
+ Overrides for macros defined by AnaGram, such as SYNTAX_ERROR
+ should be included in EVALDEFS.H
+
+ For information about AnaGram, contact
+   Parsifal Software
+   http://www.parsifalsoft.com
+   info@parsifalsoft.com
+   1-800-879-2755, Voice/Fax 1-508-358-2564
+   P.O. Box 219
+   Wayland, MA 01778
+*/
+
+#include <math.h>
+#include "evaldefs.h"                  // defines external interface
+
+}
+// -- CONFIGURATION SECTION ----------------------------
+[
+  default token type = double
+  disregard white space
+  lexeme {real, name}
+  pointer input
+  parser name = evalKernel
+]
+//------------------------------------------------------
+
+(void) input string $                       // specify grammar token
+ -> expressions, eof
+
+(void) expressions
+ -> expression?
+ -> expressions, ',' + ';', expression?
+
+expression
+ -> conditional expression
+ -> name:k, '=',  expression:x             =*locateVariable(k)  = x;
+ -> name:k, "+=", expression:x             =*locateVariable(k) += x;
+ -> name:k, "-=", expression:x             =*locateVariable(k) -= x;
+ -> name:k, "*=", expression:x             =*locateVariable(k) *= x;
+ -> name:k, "/=", expression:x             =*locateVariable(k) /= x;
+
+conditional expression
+ -> logical or expression
+ -> logical or expression:c, '?',
+      expression:x, ':', conditional expression:y            =c?x:y;
+
+logical or expression
+ -> logical and expression
+ -> logical or expression:x, "||", logical and expression:y   =x||y;
+
+logical and expression
+ -> equality expression
+ -> logical and expression:x, "&&", equality expression:y     =x&&y;
+
+equality expression
+ -> relational expression
+ -> equality expression:x, "==", relational expression:y      =x==y;
+ -> equality expression:x, "!=", relational expression:y      =x!=y;
+
+relational expression
+ -> additive expression
+ -> relational expression:x, '<',  additive expression:y       =x<y;
+ -> relational expression:x, "<=", additive expression:y      =x<=y;
+ -> relational expression:x, '>',  additive expression:y       =x>y;
+ -> relational expression:x, ">=", additive expression:y      =x>=y;
+
+additive expression
+ -> multiplicative expression
+ -> additive expression:x, '+', multiplicative expression:y    =x+y;
+ -> additive expression:x, '-', multiplicative expression:y    =x-y;
+
+multiplicative expression
+ -> unary expression
+ -> multiplicative expression:x, '*', unary expression:y           =x*y;
+ -> multiplicative expression:x, '/', unary expression:y =x/checkZero(y);
+
+unary expression
+ -> factor:x                                                    = x;
+ -> '-', unary expression:x                                     =-x;
+ -> '+', unary expression:x                                     = x;
+
+factor
+ -> primary
+ -> primary:x, "**", unary expression:y                  = pow(x,y);
+
+primary
+ -> real
+ -> name:k                                      =*locateVariable(k);
+ -> '(', expression:x, ')'                                       =x;
+ -> '!', primary:x                                              =!x;
+
+
+/**** Function calls **********************************************/
+
+/* The following productions have been added to make the grammar  */
+/* handle function calls with any number of arguments. Note how   */
+/* easy it is to change the grammar - this is all you have to do  */
+/* to handle function calls. Arguments may be expressions.        */
+
+primary
+ -> name:k, '(', arguments:n, ')'                =callFunction(k,n);
+
+(int) arguments               //value of arguments is number of args
+ ->                                                              =0;
+ -> argument list              //argument count passes automatically
+
+(int) argument list       //value of argument list is number of args
+ -> expression:x                                     =pushArg(x), 1;
+ -> argument list:k, ',', expression:x             =pushArg(x), k+1;
+/******************************************************************/
+
+
+// -- LEXICAL UNITS ------------------------------------------------
+digit   = '0-9'
+eof     = 0
+letter  = 'a-z' + 'A-Z' + '_'
+
+(void) white space
+ -> ' ' + '\t' + '\f' + '\v' + '\r' + '\n'
+ -> "/*", ~eof?..., "*/"                          // C style comment
+ -> "//", ~(eof+'\n')?..., '\n'                 // C++ style comment
+
+real
+ -> simple real
+ -> simple real:x, 'e'+'E', '+'?,exponent:e            =x*pow(10,e);
+ -> simple real:x, 'e'+'E', '-',exponent:e            =x*pow(10,-e);
+
+simple real
+ -> integer part:i, '.', fraction part:f                      = i+f;
+ -> integer part, '.'?
+ -> '.', fraction part:f                                        = f;
+
+integer part
+ -> digit:d                                                 = d-'0';
+ -> integer part:x, digit:d                          = 10*x + d-'0';
+
+fraction part
+ -> digit:d                                            =(d-'0')/10.;
+ -> digit:d, fraction part:f                       =(d-'0' + f)/10.;
+
+(int) exponent
+ -> digit:d                                                 = d-'0';
+ -> exponent:x, digit:d                              = 10*x + d-'0';
+
+(int) name           //value of name token is length of name string
+ -> letter: c                                       =pushChar(c), 1;
+ -> name:k, letter+digit: c                       =pushChar(c), k+1;
+
+/********************* End of EVALKERN.SYN ************************/
