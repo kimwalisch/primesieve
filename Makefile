@@ -4,13 +4,17 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010 
-# Last modified:   11 January 2011
+# Last modified:   13 January 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
 TARGET = primesieve
+# Sieve of Eratosthenes directory
 SRCDIR = src
+# Parsifal arithmetic expression evaluator
+EVALDIR = thirdparty/eval11
+# Main.cpp directory
 MAINDIR = console
 OUTDIR = out
 STDINT_MACROS = -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
@@ -48,6 +52,8 @@ endif
 
 # Generate list of object files
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp))
+OBJS += $(patsubst $(EVALDIR)/%.c,$(OUTDIR)/%.o,$(wildcard $(EVALDIR)/*.c))
+OBJS += $(patsubst $(EVALDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(EVALDIR)/*.cpp))
 OBJS += $(patsubst $(MAINDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(MAINDIR)/*.cpp))
 
 TARGET := $(OUTDIR)/$(TARGET)
@@ -63,6 +69,12 @@ $(TARGET): $(OBJS)
 	$(CXX) $(OBJS) -o $(TARGET)
 
 $(OUTDIR)/%.o: $(SRCDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
+
+$(OUTDIR)/%.o: $(EVALDIR)/%.c
+	$(CXX) $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
+
+$(OUTDIR)/%.o: $(EVALDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
 
 $(OUTDIR)/%.o: $(MAINDIR)/%.cpp
