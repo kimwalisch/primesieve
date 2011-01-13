@@ -223,7 +223,8 @@ protected:
     if (multiple == lowerBound + 1) {
       multiple += *primeNumber;
     }
-    uint32_t index = (multiple / *primeNumber) % WHEEL_MODULO;
+    uint32_t index = static_cast<uint32_t> (
+        (multiple / *primeNumber) % WHEEL_MODULO);
     // get the next multiple that is not divisible by one of the
     // wheel's primes (i.e. 2, 3 and 5 for a modulo 30 wheel)
     multiple += static_cast<uint64_t> (*primeNumber)
