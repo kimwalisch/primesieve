@@ -20,9 +20,8 @@
 #include <QtGui/QApplication>
 #include "PrimeSieveGUI.h"
 #include "../src/PrimeSieve.h"
-#include "../src/PrimeNumberFinder.h"
-#include "../src/utils/strtoull.h"
 
+#include <QString>
 #include <QSharedMemory>
 #include <stdint.h>
 #include <stdexcept>
@@ -51,8 +50,12 @@ int main(int argc, char *argv[]) {
   }
   // PrimeSieveProcess
   else {
-    uint64_t start     = utils::strtoull(argv[1]);
-    uint64_t stop      = utils::strtoull(argv[2]);
+    QString str;
+    str                = argv[1];
+    bool ok            = true;
+    uint64_t start     = str.toULongLong(&ok, 10);
+    str                = argv[2];
+    uint64_t stop      = str.toULongLong(&ok, 10);
     uint32_t sieveSize = std::strtol(argv[3], NULL, 10);
     uint32_t flags     = std::strtol(argv[4], NULL, 10);
     
