@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 11 January 2011
+# Last modified: 13 January 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -76,6 +76,9 @@ Contents
   * ./src
     Contains the sieve of Eratosthenes implementation
 
+  * ./thirdparty
+    Contains third party libraries used in primesieve.
+
 5. Sieve of Eratosthenes documentation (./src directory)
 ========================================================
 
@@ -83,9 +86,9 @@ Contents
 
   * src/PrimeSieve.cpp
     PrimeSieve objects provide an easy to use user interface for prime
-    sieving. Have a look at src/main.cpp to see how it works.
-    PrimeSieve directly or indirectly implements all of the following
-    classes.
+    sieving. Have a look at console/main.cpp or GUI/main.cpp to see
+    how it works. PrimeSieve directly or indirectly implements all of
+    the following classes.
 
   * src/SieveOfEratosthenes.cpp
     Implementation of the segmented sieve of Eratosthenes using a bit
