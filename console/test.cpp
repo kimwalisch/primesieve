@@ -107,8 +107,9 @@ void testRandomIntervals() {
       primeSieve.sieve();
       // accumulate prime count results
       primeCount += primeSieve.getPrimeCount();
-      std::cout << "\rRemaining chunk: " << upperBound - primeSieve.getStopNumber()
-          << "          " << std::flush;
+      std::cout << "\rRemaining chunk:           "
+                << "\rRemaining chunk: " << upperBound - primeSieve.getStopNumber()
+                << std::flush;
     } while (primeSieve.getStopNumber() < upperBound);
     // finished
     std::cout << std::endl << "Prime count: " << std::setw(11) << primeCount;
