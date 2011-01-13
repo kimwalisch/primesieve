@@ -83,7 +83,7 @@ void SieveOfEratosthenes::free() {
 }
 
 uint32_t SieveOfEratosthenes::getRemainder(uint64_t n) {
-  uint32_t remainder = n % NUMBERS_PER_BYTE;
+  uint32_t remainder = static_cast<uint32_t> (n % NUMBERS_PER_BYTE);
   return (remainder > 1) ? remainder : remainder + NUMBERS_PER_BYTE;
 }
 
