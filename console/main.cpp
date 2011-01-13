@@ -29,7 +29,7 @@
 
 #include "../src/PrimeSieve.h"
 #include "../src/pmath.h"
-#include "../src/utils/strtoull.h"
+#include "../thirdparty/eval11/ArithmeticExpression.h"
 #include "test.h"
 
 #include <stdint.h>
@@ -57,7 +57,7 @@ std::string primes[7] = { "Prime numbers", "Twin primes", "Prime triplets",
     "Prime septuplets" };
 
 void version() {
-  std::cout << "primesieve 1.06, <http://primesieve.googlecode.com>"
+  std::cout << "primesieve 1.1, <http://primesieve.googlecode.com>"
       << std::endl << "Copyright (C) 2011 Kim Walisch" << std::endl
       << "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>."
       << std::endl
@@ -67,10 +67,14 @@ void version() {
 }
 
 void help() {
-  std::cout << "Usage: primesieve START STOP [OPTION]" << std::endl
-      << "Use the sieve of Eratosthenes to find the prime numbers and prime"
-      << std::endl << "k-tuplets between START and STOP < 2^64" << std::endl
-      << "Example: primesieve 1 1000 -p1" << std::endl << std::endl
+  std::cout << "Usage: primesieve START STOP [OPTION]..." << std::endl
+      << "Use the sieve of Eratosthenes to find the prime numbers and prime" << std::endl
+      << "k-tuplets between START and STOP < 2^64" << std::endl
+      << std::endl
+      << "Examples:" << std::endl
+      << "  > primesieve 1 10000000 -p1" << std::endl
+      << "  > primesieve 1 1e11 -s 32" << std::endl
+      << "  > primesieve 1e18 1e18+2**32 -c1 -c2" << std::endl
       << "Options:" << std::endl
       << "  -s <size>  Set the sieve size (in KiloBytes)," << std::endl
       << "             size >= 1 && size <= 8192" << std::endl
@@ -97,8 +101,22 @@ void processOptions(int argc, char* argv[]) {
     help();
   int i = 1;
   if (argc > 2) {
-    start = utils::strtoull(argv[i++]);
-    stop  = utils::strtoull(argv[i++]);
+    // Arithmetic expression parser
+    ArithmeticExpression expr;
+    if (!expr.evaluate(argv[i++])) {
+      std::cerr << "START is not a valid expression: "
+                << expr.getErrorMessage() << std::endl
+                << "Try `primesieve -help' for more information." << std::endl;
+      exit(EXIT_FAILURE);
+    }
+    start = expr.getResult();
+    if (!expr.evaluate(argv[i++])) {
+      std::cerr << "STOP is not a valid expression: "
+                << expr.getErrorMessage() << std::endl
+                << "Try `primesieve -help' for more information." << std::endl;
+      exit(EXIT_FAILURE);
+    }
+    stop = expr.getResult();
   }
   for (; i < argc; i++) {
     if (*argv[i] == '-' || *argv[i] == '/')
