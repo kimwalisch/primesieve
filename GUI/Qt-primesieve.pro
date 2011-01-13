@@ -5,12 +5,12 @@ win32 {
   RC_FILE = icons/win/primesieve.rc
   # MSVC (prior 2010!?) does not support ISO c99 stdint.h, thus I 
   # provide my own version
-  INCLUDEPATH += ../src/utils
+  INCLUDEPATH += ../thirdparty
 }
 # might be necessary in the future
 win64 {
   RC_FILE = icons/win/primesieve.rc
-  INCLUDEPATH += ../src/utils
+  INCLUDEPATH += ../thirdparty
 }
 macx {
   RC_FILE = icons/osx/primesieve.icns
@@ -20,6 +20,12 @@ macx {
 # -------------------------------------------------
 TARGET = primesieve
 TEMPLATE = app
+SOURCES += ../thirdparty/eval11/ArithmeticExpression.cpp \
+    ../thirdparty/eval11/evalwrap.c \
+    ../thirdparty/eval11/evalkern.c
+HEADERS += ../thirdparty/eval11/ArithmeticExpression.h \
+    ../thirdparty/eval11/evaldefs.h \
+    ../thirdparty/eval11/evalkern.h
 SOURCES += src/main.cpp \
     src/PrimeSieveGUI.cpp \
     src/PrimeSieveGUI_sieve.cpp \
