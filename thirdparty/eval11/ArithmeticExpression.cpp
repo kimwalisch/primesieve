@@ -18,7 +18,6 @@
  */
 
 #include "ArithmeticExpression.h"
-#include <algorithm>
 
 ArithmeticExpression::ArithmeticExpression() : result_(0) {
 }
@@ -39,11 +38,11 @@ uint64_t ArithmeticExpression::getResult() const {
  * Evaluates a string that holds an arithmetic expression to a 64 bit
  * unsigned integer. Examples:
  *
- * "1e10"  = 10000000000
- * "2**32" = 4294967296
+ * "1e10"       = 10000000000
+ * "1e18+2**32" = 1000000004294967296
  *
- * @warning As 64 bit unsigned integers for all calculations one has
- *          to be careful with divisions:
+ * @warning As 64 bit unsigned integers are used for all calculations
+ *          one has to be careful with divisions:
  *
  *          (10/6)*10000 = 10000
  */
@@ -53,7 +52,8 @@ bool ArithmeticExpression::evaluate(std::string expression) {
   expression.insert(0,"x=");
   // convert the expression to char*
   char* writable = new char[expression.size() + 1];
-  std::copy(expression.begin(), expression.end(), writable);
+  for (size_t i = 0; i < expression.size(); i++)
+    writable[i] = expression[i];
   writable[expression.size()] = '\0';
   // evaluate the expression
   int errorFlag = evaluateExpression(writable);
