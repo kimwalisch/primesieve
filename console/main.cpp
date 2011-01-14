@@ -100,9 +100,9 @@ void processOptions(int argc, char* argv[]) {
   if (argc == 1 || argc > 2 * 7 + 3)
     help();
   int i = 1;
+  // Arithmetic expression parser
+  ArithmeticExpression expr;
   if (argc > 2) {
-    // Arithmetic expression parser
-    ArithmeticExpression expr;
     if (!expr.evaluate(argv[i++])) {
       std::cerr << "START is not a valid expression: "
                 << expr.getErrorMessage() << std::endl
@@ -138,7 +138,9 @@ void processOptions(int argc, char* argv[]) {
     case 's':
       if (argv[++i] == NULL)
         help();
-      sieveSize = std::strtoul(argv[i], NULL, 10);
+      if (!expr.evaluate(argv[i]))
+        help();
+      sieveSize = static_cast<uint32_t> (expr.getResult());
       if (sieveSize < 1 || sieveSize > 8192)
         help();
       break;
