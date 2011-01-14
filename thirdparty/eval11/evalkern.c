@@ -1,3 +1,30 @@
+/**
+ * @author Kim Walisch <kim.walisch@gmail.com>
+ * @brief This file has been modified for use in primesieve
+ * <http://primesieve.googlecode.com>.
+ * Last updated: January 2011
+ *
+ * CHANGES:
+ *
+ * 1. Use of extern "C" for usage in C++ project
+ * 2. double changed to uint64_t type from stdint.h
+ * 3. Uninitialized variables are set to UINT64_MAX instead
+ *    of 0
+ * 4. Removed use of strdup (not ANSI) and sprintf (causes 
+ *    unsafe warnings)
+ * 5. Added (char*) cast for strings to silence warnings
+ * 6. Unused file evaldemo.c has been deleted
+ *
+ * NOTE:
+ *
+ * The original source archive can be obtained from:
+ * http://www.parsifalsoft.com/examples/evalexpression/index.html
+ */
+ 
+ #ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  EVALKERN.SYN  Version 1.1
 
@@ -68,7 +95,7 @@
    Parentheses
    Function calls
 
- All arithmetic is uint64_t precision floating point.
+ All arithmetic is double precision floating point.
 
  Input strings may contain any number of expressions, separated by
  commas or semicolons. White space may be used freely, including
@@ -79,21 +106,21 @@
    void pushChar(int character);
      Push the specified character onto a character stack.
 
-   uint64_t *locateVariable(int nameLength);
+   double *locateVariable(int nameLength);
      Pop the last nameLength characters from the character stack
      and, treating them as the name of a variable, return a pointer
      to the location where the value of the variable is stored.
 
-   void pushArg(uint64_t value);
+   void pushArg(double value);
      Push the specified value onto an argument stack.
 
-   uint64_t callFunction(nameLength, int argCount);
+   double callFunction(nameLength, int argCount);
      Pop the last nameLength characters from the character stack
      and, treating them as the name of a function, identify the
      function and invoke it with argCount arguments popped from
      the argument stack.
 
-   uint64_t checkZero(uint64_t value);
+   double checkZero(double value);
      Verify that value is not zero.
 
  Overrides for macros defined by AnaGram, such as SYNTAX_ERROR
@@ -108,12 +135,8 @@
    Wayland, MA 01778
 */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <math.h>
 #include <stdint.h>
+#include <math.h>
 #include "evaldefs.h"                  // defines external interface
 
 
@@ -193,10 +216,12 @@ evalKernel_pcb_type evalKernel_pcb;
 
 #define ag_rp_19(x) (x)
 
-#define ag_rp_20(x) (-1*(int64_t)x)
+/* #define ag_rp_20(x) (-x) */
+#define ag_rp_20(x) (-1*(int64_t)x) 
 
 #define ag_rp_21(x) (x)
 
+/* #define ag_rp_22(x, y) (pow(x,y)) */
 #define ag_rp_22(x, y) ((uint64_t)pow((double)x,(double)y))
 
 #define ag_rp_23(k) (*locateVariable(k))
@@ -213,9 +238,11 @@ evalKernel_pcb_type evalKernel_pcb;
 
 #define ag_rp_29(k, x) (pushArg(x), k+1)
 
-#define ag_rp_30(x, e) ((uint64_t)(x*pow(10.0,(double)e)))
+/* #define ag_rp_30(x, e) (x*pow(10,e)) */
+#define ag_rp_30(x, e) (x*(uint64_t)pow(10.0,(double)e))
 
-#define ag_rp_31(x, e) ((uint64_t)(x*pow(10.0,(double)-e)))
+/* #define ag_rp_31(x, e) (x*pow(10,-e)) */
+#define ag_rp_31(x, e) (x*(uint64_t)pow(10.0,-1*(double)e))
 
 #define ag_rp_32(i, f) (i+f)
 
@@ -225,8 +252,10 @@ evalKernel_pcb_type evalKernel_pcb;
 
 #define ag_rp_35(x, d) (10*x + d-'0')
 
+/* #define ag_rp_36(d) ((d-'0')/10.) */
 #define ag_rp_36(d) ((uint64_t)((d-'0')/10.))
 
+/* #define ag_rp_37(d, f) ((d-'0' + f)/10.) */
 #define ag_rp_37(d, f) ((uint64_t)((d-'0' + f)/10.))
 
 #define ag_rp_38(d) (d-'0')
@@ -999,7 +1028,8 @@ const char *const evalKernel_token_names[101] = {
 #define UNNAMED_TOKEN "input"
 #endif
 
-
+/* old code uses unsafe sprintf */
+#if 0
 static void ag_diagnose(void) {
   int ag_snd = (PCB).sn;
   int ag_k = ag_sbt[ag_snd];
@@ -1025,6 +1055,55 @@ static void ag_diagnose(void) {
 
 
 }
+#endif
+
+/* used instead of unsafe sprintf */
+
+static void safe_copy(char *destination, int max_size, 
+    const char *source1, const char * source2) {
+  int i = 0;
+  int j = 0;
+  while (i < (int)strlen(source1) && i < max_size - 1) {
+    destination[i] = source1[i];
+    i = i + 1;
+  }
+  while (j < (int)strlen(source2) && i < max_size - 1) {
+    destination[i] = source2[j];
+    i = i + 1;
+    j = j + 1;
+  }
+  destination[i] = (char) 0;
+}
+
+/* new code without sprintf */
+
+static void ag_diagnose(void) {
+  int ag_snd = (PCB).sn;
+  int ag_k = ag_sbt[ag_snd];
+
+  if (*TOKEN_NAMES[ag_tstt[ag_k]] && ag_astt[ag_k + 1] == ag_action_8) {
+    safe_copy((PCB).ag_msg, 82, "Missing ", TOKEN_NAMES[ag_tstt[ag_k]]);
+  }
+  else if (ag_astt[ag_sbe[(PCB).sn]] == ag_action_8
+          && (ag_k = ag_sbe[(PCB).sn] + 1) == ag_sbt[(PCB).sn+1] - 1
+          && *TOKEN_NAMES[ag_tstt[ag_k]]) {
+    safe_copy((PCB).ag_msg, 82, "Missing ", TOKEN_NAMES[ag_tstt[ag_k]]);
+  }
+  else if ((PCB).token_number && *TOKEN_NAMES[(PCB).token_number]) {
+    safe_copy((PCB).ag_msg, 82, "Unexpected ", TOKEN_NAMES[(PCB).token_number]);
+  }
+  else if (isprint(INPUT_CODE((*(PCB).pointer))) && INPUT_CODE((*(PCB).pointer)) != '\\') {
+    char buf[20];
+    buf[0] = '\'';
+    buf[1] = (char) INPUT_CODE((*(PCB).pointer));
+    buf[2] = '\'';
+    buf[3] = (char) 0;
+    safe_copy((PCB).ag_msg, 82, "Unexpected ", buf);
+  }
+  else safe_copy((PCB).ag_msg, 82, "Unexpected ", UNNAMED_TOKEN);
+  (PCB).error_message = (PCB).ag_msg;
+}
+
 static int ag_action_1_r_proc(void);
 static int ag_action_2_r_proc(void);
 static int ag_action_3_r_proc(void);
@@ -1214,7 +1293,7 @@ static int ag_action_4_proc(void) {
     unsigned ag_t2 = ag_sbt[(PCB).sn+1] - 1;
     do {
       unsigned ag_tx = (ag_t1 + ag_t2)/2;
-      if (ag_tstt[ag_tx] < (unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
+      if (ag_tstt[ag_tx] < (const unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
       else ag_t2 = ag_tx;
     } while (ag_t1 < ag_t2);
     (PCB).ag_ap = ag_pstt[ag_t1];
@@ -1237,7 +1316,7 @@ static int ag_action_3_proc(void) {
     unsigned ag_t2 = ag_sbt[(PCB).sn+1] - 1;
     do {
       unsigned ag_tx = (ag_t1 + ag_t2)/2;
-      if (ag_tstt[ag_tx] < (unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
+      if (ag_tstt[ag_tx] < (const unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
       else ag_t2 = ag_tx;
     } while (ag_t1 < ag_t2);
     (PCB).ag_ap = ag_pstt[ag_t1];
@@ -1276,7 +1355,7 @@ static int ag_action_5_proc(void) {
     unsigned ag_t2 = ag_sbt[(PCB).sn+1] - 1;
     do {
       unsigned ag_tx = (ag_t1 + ag_t2)/2;
-      if (ag_tstt[ag_tx] < (unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
+      if (ag_tstt[ag_tx] < (const unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
       else ag_t2 = ag_tx;
     } while (ag_t1 < ag_t2);
     (PCB).ag_ap = ag_pstt[ag_t1];
@@ -1307,7 +1386,7 @@ static int ag_action_6_proc(void) {
     unsigned ag_t2 = ag_sbt[(PCB).sn+1] - 1;
     do {
       unsigned ag_tx = (ag_t1 + ag_t2)/2;
-      if (ag_tstt[ag_tx] < (unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
+      if (ag_tstt[ag_tx] < (const unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
       else ag_t2 = ag_tx;
     } while (ag_t1 < ag_t2);
     (PCB).ag_ap = ag_pstt[ag_t1];
@@ -1343,11 +1422,11 @@ void evalKernel(void) {
       }
       do {
         unsigned ag_tx = (ag_t1 + ag_t2)/2;
-        if (ag_tstt[ag_tx] > (unsigned char)(PCB).token_number)
+        if (ag_tstt[ag_tx] > (const unsigned char)(PCB).token_number)
           ag_t1 = ag_tx + 1;
         else ag_t2 = ag_tx;
       } while (ag_t1 < ag_t2);
-      if (ag_tstt[ag_t1] != (unsigned char)(PCB).token_number)
+      if (ag_tstt[ag_t1] != (const unsigned char)(PCB).token_number)
         ag_t1 = ag_sbe[(PCB).sn];
     }
     (PCB).ag_ap = ag_pstt[ag_t1];
@@ -1356,5 +1435,6 @@ void evalKernel(void) {
 }
 
 #ifdef __cplusplus
-}
+} /* closing brace for extern "C" */
 #endif
+

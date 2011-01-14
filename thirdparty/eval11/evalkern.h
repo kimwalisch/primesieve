@@ -1,9 +1,32 @@
-#ifndef EVALKERN_H
-#define EVALKERN_H
-
-#ifdef __cplusplus
+/**
+ * @author Kim Walisch <kim.walisch@gmail.com>
+ * @brief This file has been modified for use in primesieve
+ * <http://primesieve.googlecode.com>.
+ * Last updated: January 2011
+ *
+ * CHANGES:
+ *
+ * 1. Use of extern "C" for usage in C++ project
+ * 2. double changed to uint64_t type from stdint.h
+ * 3. Uninitialized variables are set to UINT64_MAX instead
+ *    of 0
+ * 4. Removed use of strdup (not ANSI) and sprintf (causes 
+ *    unsafe warnings)
+ * 5. Added (char*) cast for strings to silence warnings
+ * 6. Unused file evaldemo.c has been deleted
+ *
+ * NOTE:
+ *
+ * The original source archive can be obtained from:
+ * http://www.parsifalsoft.com/examples/evalexpression/index.html
+ */
+ 
+ #ifdef __cplusplus
 extern "C" {
 #endif
+ 
+#ifndef EVALKERN_H
+#define EVALKERN_H
 
 #include <stdint.h>
 
@@ -72,10 +95,9 @@ typedef struct {
 extern evalKernel_pcb_type evalKernel_pcb;
 void init_evalKernel(void);
 void evalKernel(void);
-
-#ifdef __cplusplus
-}
 #endif
 
+#ifdef __cplusplus
+} /* closing brace for extern "C" */
 #endif
 

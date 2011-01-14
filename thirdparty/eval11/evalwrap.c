@@ -1,3 +1,30 @@
+/**
+ * @author Kim Walisch <kim.walisch@gmail.com>
+ * @brief This file has been modified for use in primesieve
+ * <http://primesieve.googlecode.com>.
+ * Last updated: January 2011
+ *
+ * CHANGES:
+ *
+ * 1. Use of extern "C" for usage in C++ project
+ * 2. double changed to uint64_t type from stdint.h
+ * 3. Uninitialized variables are set to UINT64_MAX instead
+ *    of 0
+ * 4. Removed use of strdup (not ANSI) and sprintf (causes 
+ *    unsafe warnings)
+ * 5. Added (char*) cast for strings to silence warnings
+ * 6. Unused file evaldemo.c has been deleted
+ *
+ * NOTE:
+ *
+ * The original source archive can be obtained from:
+ * http://www.parsifalsoft.com/examples/evalexpression/index.html
+ */
+ 
+ #ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  EVALWRAP.C  Version 1.1
 
@@ -44,13 +71,10 @@
    Wayland, MA 01778
 */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <math.h>
 #include <string.h>
 #include <stdint.h>
+#include <assert.h>
 
 #include "evaldefs.h"
 #include "evalkern.h"
@@ -120,6 +144,7 @@ int nVariables = 0;                       /* no. of entries in table */
 /* Callback function to locate named variable */
 
 uint64_t *locateVariable(int nameLength) {   /* identify variable name */
+  int i = 0;
   char *name = popString(nameLength);
   int first = 0;
   int last = nVariables - 1;
@@ -144,8 +169,17 @@ uint64_t *locateVariable(int nameLength) {   /* identify variable name */
           &variable[first],
           (nVariables-first)*sizeof(VariableDescriptor));
   nVariables++;
-  variable[first].name = strdup(name);
-  variable[first].value = 0;
+  while (i < (int)strlen(name)) {
+    if (i >= PRIMESIEVE_NAMESIZE - 1)
+      break;
+    variable[first].name[i] = name[i];
+    i = i + 1;
+  }
+  variable[first].name[i] = (char) 0;
+/*  variable[first].name = strdup(name); */
+/*  variable[first].value = 0; */
+  /* UINT64_MAX is used to mark uninitialized variables */
+  variable[first].value = UINT64_MAX;
   return &variable[first].value;
 }
 
@@ -199,8 +233,8 @@ static uint64_t *popArgs(int nArgs) {                 /* fetch args */
 */
 
 #define WRAPPER_FUNCTION_1_ARG(FUN) \
-uint64_t FUN##Wrapper(int argc, uint64_t *argv) {\
-  if (argc == 1) return (uint64_t) FUN((double)argv[0]);\
+uint64_t FUN##Wrapper(int argc, double *argv) {\
+  if (argc == 1) return (uint64_t) FUN(argv[0]);\
   diagnoseError((char*)"Wrong Number of Arguments");\
   return 0;\
 }
@@ -211,11 +245,12 @@ uint64_t FUN##Wrapper(int argc, uint64_t *argv) {\
 */
 
 #define WRAPPER_FUNCTION_2_ARGS(FUN) \
-uint64_t FUN##Wrapper(int argc, uint64_t *argv) {\
-  if (argc==2) return (uint64_t) FUN((double)argv[0], (double)argv[1]);\
+uint64_t FUN##Wrapper(int argc, double *argv) {\
+  if (argc==2) return (uint64_t) FUN(argv[0], argv[1]);\
   diagnoseError((char*)"Wrong Number of Arguments");\
   return 0;\
 }
+
 
 /*
  Now define wrapper functions for the standard C library
@@ -239,6 +274,7 @@ WRAPPER_FUNCTION_1_ARG(sqrt)
 WRAPPER_FUNCTION_1_ARG(tan)
 WRAPPER_FUNCTION_1_ARG(tanh)
 
+
 /* A macro to make correct functionTable entries */
 #define TABLE_ENTRY(FUN) {#FUN, FUN##Wrapper}
 
@@ -248,7 +284,7 @@ WRAPPER_FUNCTION_1_ARG(tanh)
 /* define the function table -- must be in sorted order! */
 struct {
   const char *name;
-  uint64_t (*function)(int, uint64_t[]);
+  uint64_t (*function)(int, double[]);
 } functionTable[N_FUNCTIONS] = {
   TABLE_ENTRY(acos),
   TABLE_ENTRY(asin),
@@ -272,14 +308,20 @@ struct {
 /* Finally, define the callback function to perform a function call */
 
 uint64_t callFunction(int nameLength, int argCount) {
+  double doubleArgValues[8];
+  int i = 0;
   char *name = popString(nameLength);
   uint64_t *argValues = popArgs(argCount);
   int first = 0;
   int last = N_FUNCTIONS-1;
+  while (i < argCount) {
+    doubleArgValues[i] = (double)argValues[i];
+    i = i + 1;
+  }
   while (first <= last) {                     /* binary search */
     int middle = (first+last)/2;
     int flag = strcmp(name,functionTable[middle].name);
-    if (flag == 0) return functionTable[middle].function(argCount, argValues);
+    if (flag == 0) return functionTable[middle].function(argCount, doubleArgValues);
     if (flag < 0) last = middle-1;
     else first = middle+1;
   }
@@ -304,5 +346,6 @@ int evaluateExpression(char *expressionString) {
 /* End of evalwrap.c */
 
 #ifdef __cplusplus
-}
+} /* closing brace for extern "C" */
 #endif
+
