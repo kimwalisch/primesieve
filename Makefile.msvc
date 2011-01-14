@@ -6,7 +6,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010  
-# Last modified:   13 January 2011 
+# Last modified:   14 January 2011 
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -62,7 +62,7 @@ create_dir :
   $(CPP) $(CPPFLAGS) /D "_CRT_NONSTDC_NO_DEPRECATE" /D "_CRT_SECURE_NO_WARNINGS" $(INCPATH) -c $< /Fo$@
 
 {$(EVALDIR)\}.cpp.obj:
-  $(CPP) $(CPPFLAGS) /D "_SCL_SECURE_NO_WARNINGS" $(INCPATH) -c $< /Fo$@
+  $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
 
 {$(MAINDIR)\}.cpp.obj:
   $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
