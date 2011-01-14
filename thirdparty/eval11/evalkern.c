@@ -1293,7 +1293,7 @@ static int ag_action_4_proc(void) {
     unsigned ag_t2 = ag_sbt[(PCB).sn+1] - 1;
     do {
       unsigned ag_tx = (ag_t1 + ag_t2)/2;
-      if (ag_tstt[ag_tx] < (const unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
+      if (ag_tstt[ag_tx] < (unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
       else ag_t2 = ag_tx;
     } while (ag_t1 < ag_t2);
     (PCB).ag_ap = ag_pstt[ag_t1];
@@ -1316,7 +1316,7 @@ static int ag_action_3_proc(void) {
     unsigned ag_t2 = ag_sbt[(PCB).sn+1] - 1;
     do {
       unsigned ag_tx = (ag_t1 + ag_t2)/2;
-      if (ag_tstt[ag_tx] < (const unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
+      if (ag_tstt[ag_tx] < (unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
       else ag_t2 = ag_tx;
     } while (ag_t1 < ag_t2);
     (PCB).ag_ap = ag_pstt[ag_t1];
@@ -1355,7 +1355,7 @@ static int ag_action_5_proc(void) {
     unsigned ag_t2 = ag_sbt[(PCB).sn+1] - 1;
     do {
       unsigned ag_tx = (ag_t1 + ag_t2)/2;
-      if (ag_tstt[ag_tx] < (const unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
+      if (ag_tstt[ag_tx] < (unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
       else ag_t2 = ag_tx;
     } while (ag_t1 < ag_t2);
     (PCB).ag_ap = ag_pstt[ag_t1];
@@ -1386,7 +1386,7 @@ static int ag_action_6_proc(void) {
     unsigned ag_t2 = ag_sbt[(PCB).sn+1] - 1;
     do {
       unsigned ag_tx = (ag_t1 + ag_t2)/2;
-      if (ag_tstt[ag_tx] < (const unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
+      if (ag_tstt[ag_tx] < (unsigned char)(PCB).reduction_token) ag_t1 = ag_tx + 1;
       else ag_t2 = ag_tx;
     } while (ag_t1 < ag_t2);
     (PCB).ag_ap = ag_pstt[ag_t1];
@@ -1422,11 +1422,11 @@ void evalKernel(void) {
       }
       do {
         unsigned ag_tx = (ag_t1 + ag_t2)/2;
-        if (ag_tstt[ag_tx] > (const unsigned char)(PCB).token_number)
+        if (ag_tstt[ag_tx] > (unsigned char)(PCB).token_number)
           ag_t1 = ag_tx + 1;
         else ag_t2 = ag_tx;
       } while (ag_t1 < ag_t2);
-      if (ag_tstt[ag_t1] != (const unsigned char)(PCB).token_number)
+      if (ag_tstt[ag_t1] != (unsigned char)(PCB).token_number)
         ag_t1 = ag_sbe[(PCB).sn];
     }
     (PCB).ag_ap = ag_pstt[ag_t1];
