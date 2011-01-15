@@ -1,13 +1,14 @@
 /**
- * @author Kim Walisch <kim.walisch@gmail.com>
  * @brief This file has been modified for use in primesieve
  * <http://primesieve.googlecode.com>.
+ * @author Kim Walisch <kim.walisch@gmail.com>
  * Last updated: January 2011
  *
  * CHANGES:
  *
  * 1. Use of extern "C" for usage in C++ project
- * 2. double changed to uint64_t type from stdint.h
+ * 2. double changed to uint64_t (better precision near 1e19) type
+ *    from stdint.h
  * 3. Uninitialized variables are set to UINT64_MAX instead
  *    of 0
  * 4. Removed use of strdup (not ANSI) and sprintf (causes 
@@ -1029,6 +1030,7 @@ const char *const evalKernel_token_names[101] = {
 #endif
 
 /* old code uses unsafe sprintf */
+
 #if 0
 static void ag_diagnose(void) {
   int ag_snd = (PCB).sn;
@@ -1060,7 +1062,7 @@ static void ag_diagnose(void) {
 /* used instead of unsafe sprintf */
 
 static void safe_copy(char *destination, int max_size, 
-    const char *source1, const char * source2) {
+    const char *source1, const char *source2) {
   int i = 0;
   int j = 0;
   while (i < (int)strlen(source1) && i < max_size - 1) {
