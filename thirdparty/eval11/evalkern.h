@@ -1,13 +1,14 @@
 /**
- * @author Kim Walisch <kim.walisch@gmail.com>
  * @brief This file has been modified for use in primesieve
  * <http://primesieve.googlecode.com>.
+ * @author Kim Walisch <kim.walisch@gmail.com>
  * Last updated: January 2011
  *
  * CHANGES:
  *
  * 1. Use of extern "C" for usage in C++ project
- * 2. double changed to uint64_t type from stdint.h
+ * 2. double changed to uint64_t (better precision near 1e19) type
+ *    from stdint.h
  * 3. Uninitialized variables are set to UINT64_MAX instead
  *    of 0
  * 4. Removed use of strdup (not ANSI) and sprintf (causes 
