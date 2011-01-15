@@ -72,9 +72,10 @@ void help() {
       << "k-tuplets between START and STOP < 2^64" << std::endl
       << std::endl
       << "Examples:" << std::endl
-      << "  > primesieve 1 10000000 -p1" << std::endl
-      << "  > primesieve 1 1e11 -s 32" << std::endl
-      << "  > primesieve 1e18 1e18+2**32 -c1 -c2" << std::endl
+      << "  primesieve 1 10000000 -p1" << std::endl
+      << "  primesieve 1 1e11 -s 32" << std::endl
+      << "  primesieve 1e18 1e18+2**32 -c1 -c2" << std::endl
+      << std::endl
       << "Options:" << std::endl
       << "  -s <size>  Set the sieve size (in KiloBytes)," << std::endl
       << "             size >= 1 && size <= 8192" << std::endl
