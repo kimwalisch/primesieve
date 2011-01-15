@@ -57,7 +57,7 @@ uint64_t ArithmeticExpression::getResult() const {
  */
 bool ArithmeticExpression::evaluate(std::string expression) {
   if (expression.size() > 128) {
-    errorMessage_ << "expression size must not exceed 128 characters!";
+    errorMessage_ << "exceeds limit of 128 characters!";
     return false;
   }
   // save the original expression
@@ -98,10 +98,11 @@ bool ArithmeticExpression::evaluate(std::string expression) {
     return false;
   }
   // check for uninitialized variables
-  if (variable[0].value == UINT64_MAX) {
+  if (variable[0].value == UINT64_MAX &&
+      expression_.compare("18446744073709551615") != 0) {
     // "a=" is in index 0
     errorMessage_ << "\"" << variable[1].name << "\""
-                  << " has not been initialized!";
+                  << " has not been defined!";
     return false;
   }
   // variable[0] always holds the result of the last expression
