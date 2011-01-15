@@ -1,0 +1,13 @@
+Kim Walisch <kim.walisch@gmail.com>
+January 2011
+
+This directory contains third party libraries used in primesieve.
+
+  * ./eval11
+    Contains an arithmetic expression evaluator used in the console
+    and GUI version of primesieve. See eval11/README.primesieve for
+    more information.
+    
+  * ./stdint.h
+    Portable implementation of the C99 stdint.h file, currently only
+    needed for MSVC prior 2010.
