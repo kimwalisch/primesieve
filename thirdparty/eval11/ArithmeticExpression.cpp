@@ -38,14 +38,22 @@ uint64_t ArithmeticExpression::getResult() const {
  * Evaluates a string that holds an arithmetic expression to a 64 bit
  * unsigned integer.
  * 
- * Examples:
+ * EXAMPLES of valid expressions:
  *
- * "1e10"       = 10000000000
- * "1e18+2**32" = 1000000004294967296
+ * "3+5"                            = 8
+ * "2**32"                          = 4294967296
+ * "1e18+1e10"                      = 1000000010000000000
+ * "23*5+(7*2**32/(1e18%555))"      = 67561398
+ * "x = 333"                        = 333
+ * "sqrt( 10**14 )"                 = 10000000
+ * "(5 < 8) ?1 :1e10+2**32"         = 1
+ * 2 ** 2 ** (0+2 *2+1)"            = 4294967296
  *
  * @warning As 64 bit unsigned integers are used for all calculations
  *          one has to be careful with divisions and negative numbers:
  *          i.e. (10/6)*10 = 10
+ * @return  true if the expression has successfully been evaluated,
+ *          false if an error occurred
  */
 bool ArithmeticExpression::evaluate(std::string expression) {
   if (expression.size() > 128) {
@@ -72,7 +80,7 @@ bool ArithmeticExpression::evaluate(std::string expression) {
       expression.insert(0, "a=");
     }
   }
-  // Parsifals expression evaluator requires a char*
+  // Parsifal's expression evaluator requires a char*
   // + 1 for NULL
   // + 2 for "a="
   char expr[128 + 1 + 2];
