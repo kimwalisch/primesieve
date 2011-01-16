@@ -35,9 +35,9 @@
  * evalwrap.c:
  *
  * 1. Use of extern "C" for usage in C++ project
- * 2. double changed to uint64_t (better precision near 1e19) type
+ * 2. double changed to int64_t (better precision near 1e19) type
  *    from stdint.h
- * 3. Uninitialized variables are set to UINT64_MAX instead
+ * 3. Uninitialized variables are set to INT64_MIN instead
  *    of 0
  * 4. Removed use of strdup (not ANSI) and sprintf (causes 
  *    unsafe warnings)
@@ -60,8 +60,8 @@
  * "(5 < 8) ?1 :1e10+2**32"         = 1
  * 2 ** 2 ** (0+2 *2+1)"            = 4294967296
  *
- * @warning As 64 bit unsigned integers are used for all calculations
- *          one has to be careful with divisions and negative numbers:
+ * @warning As 64 bit integers are used for all calculations one has
+ *          to be careful with divisions:
  *          i.e. (10/6)*10 = 10
  */
 
@@ -81,13 +81,13 @@ public:
   ArithmeticExpression();
   std::string getExpression() const;
   std::string getErrorMessage() const;
-  uint64_t getResult() const;
+  int64_t getResult() const;
   bool isPlainInteger() const;
   bool evaluate(std::string);
 private:
   std::string expression_;
   std::ostringstream errorMessage_;
-  uint64_t result_;
+  int64_t result_;
 };
 
 #endif // ARITHMETICEXPRESSION_H
