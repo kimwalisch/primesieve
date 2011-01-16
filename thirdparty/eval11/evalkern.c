@@ -7,9 +7,9 @@
  * CHANGES:
  *
  * 1. Use of extern "C" for usage in C++ project
- * 2. double changed to uint64_t (better precision near 1e19) type
+ * 2. double changed to int64_t (better precision near 1e19) type
  *    from stdint.h
- * 3. Uninitialized variables are set to UINT64_MAX instead
+ * 3. Uninitialized variables are set to INT64_MIN instead
  *    of 0
  * 4. Removed use of strdup (not ANSI) and sprintf (causes 
  *    unsafe warnings)
@@ -182,9 +182,11 @@ evalKernel_pcb_type evalKernel_pcb;
 /* used instead of pow(double, double) from math.h which has a
    poor integer precision past 1e15 */
 
-static uint64_t ipow(uint64_t x, uint64_t n) 
+static int64_t ipow(int64_t x, int64_t n) 
 {
-  uint64_t result = 1;
+  int64_t result = 1;
+  if (n < 0)
+    return 0;
   while (n != 0) {
     if (n & 1) {
       result *= x;
@@ -234,8 +236,7 @@ static uint64_t ipow(uint64_t x, uint64_t n)
 
 #define ag_rp_19(x) (x)
 
-/* #define ag_rp_20(x) (-x) */
-#define ag_rp_20(x) (-1*(int64_t)x) 
+#define ag_rp_20(x) (-x)
 
 #define ag_rp_21(x) (x)
 
@@ -243,7 +244,7 @@ static uint64_t ipow(uint64_t x, uint64_t n)
 
 /* Causes errors:
   mingw/g++ 4.5.1 x64, i.e. x=100000000; y=x**2; y = 10000000000000034 
-  #define ag_rp_22(x, y) ((uint64_t)pow((double)x,(double)y)) */
+  #define ag_rp_22(x, y) ((int64_t)pow((double)x,(double)y)) */
   
 #define ag_rp_22(x, y) (ipow(x,y))
 
@@ -265,12 +266,13 @@ static uint64_t ipow(uint64_t x, uint64_t n)
 
 /* Causes errors:
   mingw/g++ 4.5.1 x64, i.e. 1e16 = 10000000000000034 
-  #define ag_rp_30(x, e) (x*(uint64_t)pow(10.0,(double)e)) */
+  #define ag_rp_30(x, e) (x*(int64_t)pow(10.0,(double)e)) */
 
 #define ag_rp_30(x, e) (x*ipow(10,e))
 
 /* #define ag_rp_31(x, e) (x*pow(10,-e)) */
-#define ag_rp_31(x, e) (x*(uint64_t)pow(10.0,-1*(double)e))
+
+#define ag_rp_31(x, e) (x*ipow(10,-e))
 
 #define ag_rp_32(i, f) (i+f)
 
@@ -281,10 +283,10 @@ static uint64_t ipow(uint64_t x, uint64_t n)
 #define ag_rp_35(x, d) (10*x + d-'0')
 
 /* #define ag_rp_36(d) ((d-'0')/10.) */
-#define ag_rp_36(d) ((uint64_t)((d-'0')/10.))
+#define ag_rp_36(d) ((int64_t)((d-'0')/10.))
 
 /* #define ag_rp_37(d, f) ((d-'0' + f)/10.) */
-#define ag_rp_37(d, f) ((uint64_t)((d-'0' + f)/10.))
+#define ag_rp_37(d, f) ((int64_t)((d-'0' + f)/10.))
 
 #define ag_rp_38(d) (d-'0')
 
@@ -895,43 +897,43 @@ static const unsigned char ag_ptt[] = {
 static void ag_ra(void)
 {
   switch(ag_rpx[(PCB).ag_ap]) {
-    case 1: V(0,uint64_t) = ag_rp_1(V(0,int), V(2,uint64_t)); break;
-    case 2: V(0,uint64_t) = ag_rp_2(V(0,int), V(2,uint64_t)); break;
-    case 3: V(0,uint64_t) = ag_rp_3(V(0,int), V(2,uint64_t)); break;
-    case 4: V(0,uint64_t) = ag_rp_4(V(0,int), V(2,uint64_t)); break;
-    case 5: V(0,uint64_t) = ag_rp_5(V(0,int), V(2,uint64_t)); break;
-    case 6: V(0,uint64_t) = ag_rp_6(V(0,uint64_t), V(2,uint64_t), V(4,uint64_t)); break;
-    case 7: V(0,uint64_t) = ag_rp_7(V(0,uint64_t), V(2,uint64_t)); break;
-    case 8: V(0,uint64_t) = ag_rp_8(V(0,uint64_t), V(2,uint64_t)); break;
-    case 9: V(0,uint64_t) = ag_rp_9(V(0,uint64_t), V(2,uint64_t)); break;
-    case 10: V(0,uint64_t) = ag_rp_10(V(0,uint64_t), V(2,uint64_t)); break;
-    case 11: V(0,uint64_t) = ag_rp_11(V(0,uint64_t), V(2,uint64_t)); break;
-    case 12: V(0,uint64_t) = ag_rp_12(V(0,uint64_t), V(2,uint64_t)); break;
-    case 13: V(0,uint64_t) = ag_rp_13(V(0,uint64_t), V(2,uint64_t)); break;
-    case 14: V(0,uint64_t) = ag_rp_14(V(0,uint64_t), V(2,uint64_t)); break;
-    case 15: V(0,uint64_t) = ag_rp_15(V(0,uint64_t), V(2,uint64_t)); break;
-    case 16: V(0,uint64_t) = ag_rp_16(V(0,uint64_t), V(2,uint64_t)); break;
-    case 17: V(0,uint64_t) = ag_rp_17(V(0,uint64_t), V(2,uint64_t)); break;
-    case 18: V(0,uint64_t) = ag_rp_18(V(0,uint64_t), V(2,uint64_t)); break;
-    case 19: V(0,uint64_t) = ag_rp_19(V(0,uint64_t)); break;
-    case 20: V(0,uint64_t) = ag_rp_20(V(1,uint64_t)); break;
-    case 21: V(0,uint64_t) = ag_rp_21(V(1,uint64_t)); break;
-    case 22: V(0,uint64_t) = ag_rp_22(V(0,uint64_t), V(2,uint64_t)); break;
-    case 23: V(0,uint64_t) = ag_rp_23(V(0,int)); break;
-    case 24: V(0,uint64_t) = ag_rp_24(V(1,uint64_t)); break;
-    case 25: V(0,uint64_t) = ag_rp_25(V(1,uint64_t)); break;
-    case 26: V(0,uint64_t) = ag_rp_26(V(0,int), V(2,int)); break;
+    case 1: V(0,int64_t) = ag_rp_1(V(0,int), V(2,int64_t)); break;
+    case 2: V(0,int64_t) = ag_rp_2(V(0,int), V(2,int64_t)); break;
+    case 3: V(0,int64_t) = ag_rp_3(V(0,int), V(2,int64_t)); break;
+    case 4: V(0,int64_t) = ag_rp_4(V(0,int), V(2,int64_t)); break;
+    case 5: V(0,int64_t) = ag_rp_5(V(0,int), V(2,int64_t)); break;
+    case 6: V(0,int64_t) = ag_rp_6(V(0,int64_t), V(2,int64_t), V(4,int64_t)); break;
+    case 7: V(0,int64_t) = ag_rp_7(V(0,int64_t), V(2,int64_t)); break;
+    case 8: V(0,int64_t) = ag_rp_8(V(0,int64_t), V(2,int64_t)); break;
+    case 9: V(0,int64_t) = ag_rp_9(V(0,int64_t), V(2,int64_t)); break;
+    case 10: V(0,int64_t) = ag_rp_10(V(0,int64_t), V(2,int64_t)); break;
+    case 11: V(0,int64_t) = ag_rp_11(V(0,int64_t), V(2,int64_t)); break;
+    case 12: V(0,int64_t) = ag_rp_12(V(0,int64_t), V(2,int64_t)); break;
+    case 13: V(0,int64_t) = ag_rp_13(V(0,int64_t), V(2,int64_t)); break;
+    case 14: V(0,int64_t) = ag_rp_14(V(0,int64_t), V(2,int64_t)); break;
+    case 15: V(0,int64_t) = ag_rp_15(V(0,int64_t), V(2,int64_t)); break;
+    case 16: V(0,int64_t) = ag_rp_16(V(0,int64_t), V(2,int64_t)); break;
+    case 17: V(0,int64_t) = ag_rp_17(V(0,int64_t), V(2,int64_t)); break;
+    case 18: V(0,int64_t) = ag_rp_18(V(0,int64_t), V(2,int64_t)); break;
+    case 19: V(0,int64_t) = ag_rp_19(V(0,int64_t)); break;
+    case 20: V(0,int64_t) = ag_rp_20(V(1,int64_t)); break;
+    case 21: V(0,int64_t) = ag_rp_21(V(1,int64_t)); break;
+    case 22: V(0,int64_t) = ag_rp_22(V(0,int64_t), V(2,int64_t)); break;
+    case 23: V(0,int64_t) = ag_rp_23(V(0,int)); break;
+    case 24: V(0,int64_t) = ag_rp_24(V(1,int64_t)); break;
+    case 25: V(0,int64_t) = ag_rp_25(V(1,int64_t)); break;
+    case 26: V(0,int64_t) = ag_rp_26(V(0,int), V(2,int)); break;
     case 27: V(0,int) = ag_rp_27(); break;
-    case 28: V(0,int) = ag_rp_28(V(0,uint64_t)); break;
-    case 29: V(0,int) = ag_rp_29(V(0,int), V(2,uint64_t)); break;
-    case 30: V(0,uint64_t) = ag_rp_30(V(0,uint64_t), V(3,int)); break;
-    case 31: V(0,uint64_t) = ag_rp_31(V(0,uint64_t), V(3,int)); break;
-    case 32: V(0,uint64_t) = ag_rp_32(V(0,uint64_t), V(2,uint64_t)); break;
-    case 33: V(0,uint64_t) = ag_rp_33(V(1,uint64_t)); break;
-    case 34: V(0,uint64_t) = ag_rp_34(V(0,int)); break;
-    case 35: V(0,uint64_t) = ag_rp_35(V(0,uint64_t), V(1,int)); break;
-    case 36: V(0,uint64_t) = ag_rp_36(V(0,int)); break;
-    case 37: V(0,uint64_t) = ag_rp_37(V(0,int), V(1,uint64_t)); break;
+    case 28: V(0,int) = ag_rp_28(V(0,int64_t)); break;
+    case 29: V(0,int) = ag_rp_29(V(0,int), V(2,int64_t)); break;
+    case 30: V(0,int64_t) = ag_rp_30(V(0,int64_t), V(3,int)); break;
+    case 31: V(0,int64_t) = ag_rp_31(V(0,int64_t), V(3,int)); break;
+    case 32: V(0,int64_t) = ag_rp_32(V(0,int64_t), V(2,int64_t)); break;
+    case 33: V(0,int64_t) = ag_rp_33(V(1,int64_t)); break;
+    case 34: V(0,int64_t) = ag_rp_34(V(0,int)); break;
+    case 35: V(0,int64_t) = ag_rp_35(V(0,int64_t), V(1,int)); break;
+    case 36: V(0,int64_t) = ag_rp_36(V(0,int)); break;
+    case 37: V(0,int64_t) = ag_rp_37(V(0,int), V(1,int64_t)); break;
     case 38: V(0,int) = ag_rp_38(V(0,int)); break;
     case 39: V(0,int) = ag_rp_39(V(0,int), V(1,int)); break;
     case 40: V(0,int) = ag_rp_40(V(0,int)); break;
