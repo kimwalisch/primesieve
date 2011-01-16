@@ -35,6 +35,14 @@ uint64_t ArithmeticExpression::getResult() const {
 }
 
 /**
+ * @return true if the expression contains only digits
+ */
+bool ArithmeticExpression::isPlainInteger() const {
+  return (expression_.size() > 0 &&
+          expression_.find_first_not_of("0123456789") == std::string::npos);
+}
+
+/**
  * Evaluates a string that holds an arithmetic expression to a 64 bit
  * unsigned integer.
  * 
@@ -57,7 +65,7 @@ uint64_t ArithmeticExpression::getResult() const {
  */
 bool ArithmeticExpression::evaluate(std::string expression) {
   if (expression.size() > 128) {
-    errorMessage_ << "exceeds limit of 128 characters!";
+    errorMessage_ << "expression exceeds limit of 128 characters";
     return false;
   }
   // save the original expression
@@ -102,7 +110,7 @@ bool ArithmeticExpression::evaluate(std::string expression) {
       expression_.compare("18446744073709551615") != 0) {
     // "a=" is in index 0
     errorMessage_ << "\"" << variable[1].name << "\""
-                  << " has not been defined!";
+                  << " unkown function or variable";
     return false;
   }
   // variable[0] always holds the result of the last expression
