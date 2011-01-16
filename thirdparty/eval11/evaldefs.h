@@ -7,9 +7,9 @@
  * CHANGES:
  *
  * 1. Use of extern "C" for usage in C++ project
- * 2. double changed to uint64_t (better precision near 1e19) type
+ * 2. double changed to int64_t (better precision near 1e19) type
  *    from stdint.h
- * 3. Uninitialized variables are set to UINT64_MAX instead
+ * 3. Uninitialized variables are set to INT64_MIN instead
  *    of 0
  * 4. Removed use of strdup (not ANSI) and sprintf (causes 
  *    unsafe warnings)
@@ -93,7 +93,7 @@ typedef struct {
 typedef struct {
 /*  char   *name; */
   char   name[PRIMESIEVE_NAMESIZE];
-  uint64_t value;
+  int64_t value;
 } VariableDescriptor;
 
 
@@ -104,10 +104,10 @@ Function prototypes
 **********************************************************************/
 
 void    pushChar(int character);
-void    pushArg(uint64_t value);
-uint64_t  checkZero(uint64_t value);
-uint64_t *locateVariable(int nameLength);
-uint64_t  callFunction(int nameLength, int argCount);
+void    pushArg(int64_t value);
+int64_t  checkZero(int64_t value);
+int64_t *locateVariable(int nameLength);
+int64_t  callFunction(int nameLength, int argCount);
 void    diagnoseError(char *message);
 int     evaluateExpression(char *expressionString);
 
