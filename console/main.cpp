@@ -149,6 +149,7 @@ void processOptions(int argc, char* argv[]) {
       if (x < 1 || x > 7)
         help();
       flags |= PRINT_PRIMES << (x - 1);
+      quietMode = true;
       break;
     case 'q':
       quietMode = true;
@@ -260,6 +261,9 @@ int main(int argc, char* argv[]) {
     // start sieving primes
     primeSieve.sieve();
     std::clock_t end = std::clock();
+    // new line if printing is enabled
+    if ((flags & PRINT_FLAGS) != 0)
+      std::cout << std::endl;
     // print the prime count results
     for (int i = 0; i < 7; i++) {
       if (flags & (COUNT_PRIMES << i))
