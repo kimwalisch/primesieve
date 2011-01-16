@@ -30,7 +30,7 @@ std::string ArithmeticExpression::getErrorMessage() const {
  return errorMessage_.str();
 }
 
-uint64_t ArithmeticExpression::getResult() const {
+int64_t ArithmeticExpression::getResult() const {
   return result_;
 }
 
@@ -44,7 +44,7 @@ bool ArithmeticExpression::isPlainInteger() const {
 
 /**
  * Evaluates a string that holds an arithmetic expression to a 64 bit
- * unsigned integer.
+ * integer.
  * 
  * EXAMPLES of valid expressions:
  *
@@ -57,8 +57,8 @@ bool ArithmeticExpression::isPlainInteger() const {
  * "(5 < 8) ?1 :1e10+2**32"         = 1
  * 2 ** 2 ** (0+2 *2+1)"            = 4294967296
  *
- * @warning As 64 bit unsigned integers are used for all calculations
- *          one has to be careful with divisions and negative numbers:
+ * @warning As 64 bit integers are used for all calculations one has
+ *          to be careful with divisions:
  *          i.e. (10/6)*10 = 10
  * @return  true if the expression has successfully been evaluated,
  *          false if an error occurred
@@ -68,30 +68,35 @@ bool ArithmeticExpression::evaluate(std::string expression) {
     errorMessage_ << "expression exceeds limit of 128 characters";
     return false;
   }
+  // do not allow floating point numbers or floating point functions
+  // with two or more arguments
+  size_t pos = expression.find_first_of(".,");
+  if (pos != std::string::npos) {
+    errorMessage_ << "error token is \""
+                  << expression.substr(pos, std::string::npos)
+                  << "\""
+                  << std::endl;
+    return false;
+  }
+  bool addVariable = false;
   // save the original expression
   expression_ =  expression;
-  size_t pos = expression.find_first_of('=');
-  bool addVariable = false;
-  if (pos == std::string::npos) {
+  pos = expression.find_first_of('=');
+  if (pos == std::string::npos || (
+      pos > 0 &&
+      pos + 1 < expression.size() && (
+      expression[pos - 1] == '!' ||
+      expression[pos - 1] == '<' ||
+      expression[pos - 1] == '>' ||
+      expression[pos + 1] == '='))) {
     addVariable = true;
     // modify the copy
     expression.insert(0, "a=");
   }
-  else if (pos > 0 && pos + 1 < expression.size()) {
-    // check if the first '=' belongs to a logical expression
-    if (expression[pos - 1] == '!' ||
-        expression[pos - 1] == '<' ||
-        expression[pos - 1] == '>' ||
-        expression[pos + 1] == '=') {
-      addVariable = true;
-      // modify the copy
-      expression.insert(0, "a=");
-    }
-  }
   // Parsifal's expression evaluator requires a char*
-  // + 1 for NULL
   // + 2 for "a="
-  char expr[128 + 1 + 2];
+  // + 1 for NULL
+  char expr[128 + 2 + 1];
   for (size_t i = 0; i < expression.size(); i++)
     expr[i] = expression[i];
   expr[expression.size()] = (char) 0;
@@ -105,12 +110,12 @@ bool ArithmeticExpression::evaluate(std::string expression) {
                   << errorRecord.column;
     return false;
   }
-  // check for uninitialized variables
-  if (variable[0].value == UINT64_MAX &&
-      expression_.compare("18446744073709551615") != 0) {
+  // check for uninitialized variable
+  if (variable[0].value == INT64_MIN &&
+      expression_.compare("-9223372036854775808") != 0) {
     // "a=" is in index 0
     errorMessage_ << "\"" << variable[1].name << "\""
-                  << " unkown function or variable";
+                  << " unkown variable";
     return false;
   }
   // variable[0] always holds the result of the last expression
