@@ -82,6 +82,7 @@ public:
   std::string getExpression() const;
   std::string getErrorMessage() const;
   uint64_t getResult() const;
+  bool isPlainInteger() const;
   bool evaluate(std::string);
 private:
   std::string expression_;
