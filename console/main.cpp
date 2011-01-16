@@ -161,6 +161,8 @@ void processOptions(int argc, char* argv[]) {
       sieveSize = static_cast<uint32_t> (expr.getResult());
       if (sieveSize < 1 || sieveSize > 8192)
         help();
+      // PrimeSieve requires a power of 2 sieve size
+      sieveSize = nextHighestPowerOf2(sieveSize);
       break;
     case 't':
       test();
@@ -175,26 +177,46 @@ void processOptions(int argc, char* argv[]) {
   }
 }
 
+void setDefaultSettings() {
+  // count prime numbers if none else selected
+  if ((flags & COUNT_FLAGS) == 0)
+    flags |= COUNT_PRIMES;
+  if (sieveSize == 0) {
+    // L1 cache size gives best performance for small primes
+    // L2 cache size gives best performance for big primes
+    sieveSize = (stop < L2_THRESHOLD)
+        ? L1_CACHE_SIZE : L2_CACHE_SIZE;
+  }
+}
+
+/**
+ * @return maximum output string length.
+ */
+int getMaxLength() {
+  int maxLength = static_cast<int> (std::strlen("Time elapsed"));
+  // find bigger prime string
+  for (int i = 0; i < 7; i++) {
+    if (flags & (COUNT_PRIMES << i)) {
+      int length = static_cast<int> (primes[i].length());
+      if (length > maxLength)
+        maxLength = length;
+    }
+  }
+  return maxLength;
+}
+
 /**
  * Process the command line options, initialize PrimeSieve and then
  * start sieving.
  */
 int main(int argc, char* argv[]) {
   processOptions(argc, argv);
-  // default count prime numbers if none else selected
-  if ((flags & COUNT_FLAGS) == 0)
-    flags |= COUNT_PRIMES;
-  // set left alignment
+  setDefaultSettings();
+  // set left output alignment
   std::cout.setf(std::ios::left);
-  // get the maximum prime string length
-  int maxLength = 0;
-  for (int i = 0; i < 7; i++) {
-    if (flags & (COUNT_PRIMES << i)) {
-      int length = static_cast<int> (std::strlen(primes[i].c_str()));
-      if (length > maxLength)
-        maxLength = length;
-    }
-  }
+  // get maximum output string length
+  int maxLength = getMaxLength();
+  // display arithmetic expression results
   if (!quietMode &&
        showArithmeticExpressionResults) {
     std::cout << std::setw(maxLength)
@@ -216,17 +238,6 @@ int main(int argc, char* argv[]) {
     std::cerr << "STOP must be < (2^64-1) - (2^32-1) * 10." << std::endl;
     exit(EXIT_FAILURE);
   }
-  // count prime numbers if none else selected
-  if ((flags & COUNT_FLAGS) == 0)
-    flags |= COUNT_PRIMES;
-  if (sieveSize == 0) {
-    // L1 cache size gives best performance for small primes
-    // L2 cache size gives best performance for big primes
-    sieveSize = (stop < L2_THRESHOLD)
-        ? L1_CACHE_SIZE : L2_CACHE_SIZE;
-  }
-  // PrimeSieve requires a power of 2 sieve size
-  sieveSize = nextHighestPowerOf2(sieveSize);
   if ((flags & PRINT_FLAGS) == 0) {
     // print the status whilst sieving
     flags |= PRINT_STATUS;
@@ -238,8 +249,8 @@ int main(int argc, char* argv[]) {
                 << " KiloBytes"
                 << std::endl;
   }
+  std::clock_t begin = std::clock();
   try {
-    std::clock_t begin = std::clock();
     // initialize primeSieve
     PrimeSieve primeSieve;
     primeSieve.setStartNumber(start);
