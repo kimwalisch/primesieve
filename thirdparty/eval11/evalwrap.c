@@ -7,9 +7,9 @@
  * CHANGES:
  *
  * 1. Use of extern "C" for usage in C++ project
- * 2. double changed to uint64_t (better precision near 1e19) type
+ * 2. double changed to int64_t (better precision near 1e19) type
  *    from stdint.h
- * 3. Uninitialized variables are set to UINT64_MAX instead
+ * 3. Uninitialized variables are set to INT64_MIN instead
  *    of 0
  * 4. Removed use of strdup (not ANSI) and sprintf (causes 
  *    unsafe warnings)
@@ -97,7 +97,7 @@ void diagnoseError(char *msg) {
   errorRecord.column  = evalKernel_pcb.column;
 }
 
-uint64_t checkZero(uint64_t value) {
+int64_t checkZero(int64_t value) {
   if (value) return value;
   diagnoseError((char*)"Divide by Zero");
   return 1;
@@ -144,7 +144,7 @@ int nVariables = 0;                       /* no. of entries in table */
 
 /* Callback function to locate named variable */
 
-uint64_t *locateVariable(int nameLength) {   /* identify variable name */
+int64_t *locateVariable(int nameLength) {   /* identify variable name */
   int i = 0;
   char *name = popString(nameLength);
   int first = 0;
@@ -160,7 +160,7 @@ uint64_t *locateVariable(int nameLength) {   /* identify variable name */
   /* name not found, check for room in table */
   if (nVariables >= N_VARIABLES) {
     /* table is full, kill parse and issue diagnostic */
-    static uint64_t junk = 0;
+    static int64_t junk = 0;
     diagnoseError((char*)"Symbol Table Full");
     return &junk;
   }
@@ -179,8 +179,8 @@ uint64_t *locateVariable(int nameLength) {   /* identify variable name */
   variable[first].name[i] = (char) 0;
 /*  variable[first].name = strdup(name); */
 /*  variable[first].value = 0; */
-  /* UINT64_MAX is used to mark uninitialized variables */
-  variable[first].value = UINT64_MAX;
+  /* INT64_MIN is used to mark uninitialized variables */
+  variable[first].value = INT64_MIN;
   return &variable[first].value;
 }
 
@@ -191,14 +191,14 @@ Part 4. Accumulate list of function arguments
 
 *******************************************************************/
 
-static uint64_t  argStack[ARG_STACK_LENGTH];      /* argument buffer */
-static uint64_t *argStackTop = argStack;
+static int64_t  argStack[ARG_STACK_LENGTH];      /* argument buffer */
+static int64_t *argStackTop = argStack;
 
 static void resetArgStack(void) {
   argStackTop = argStack;
 }
 
-void pushArg(uint64_t x) {                     /* store arg in list */
+void pushArg(int64_t x) {                     /* store arg in list */
   if (argStackTop < argStack + ARG_STACK_LENGTH) {
     *argStackTop++ = x;
     return;
@@ -207,7 +207,7 @@ void pushArg(uint64_t x) {                     /* store arg in list */
   diagnoseError((char*)"Argument Stack Full");
 }
 
-static uint64_t *popArgs(int nArgs) {                 /* fetch args */
+static int64_t *popArgs(int nArgs) {                 /* fetch args */
   return argStackTop -= nArgs;
 }
 
@@ -234,8 +234,8 @@ static uint64_t *popArgs(int nArgs) {                 /* fetch args */
 */
 
 #define WRAPPER_FUNCTION_1_ARG(FUN) \
-uint64_t FUN##Wrapper(int argc, double *argv) {\
-  if (argc == 1) return (uint64_t) FUN(argv[0]);\
+int64_t FUN##Wrapper(int argc, double *argv) {\
+  if (argc == 1) return (int64_t) FUN(argv[0]);\
   diagnoseError((char*)"Wrong Number of Arguments");\
   return 0;\
 }
@@ -246,8 +246,8 @@ uint64_t FUN##Wrapper(int argc, double *argv) {\
 */
 
 #define WRAPPER_FUNCTION_2_ARGS(FUN) \
-uint64_t FUN##Wrapper(int argc, double *argv) {\
-  if (argc==2) return (uint64_t) FUN(argv[0], argv[1]);\
+int64_t FUN##Wrapper(int argc, double *argv) {\
+  if (argc==2) return (int64_t) FUN(argv[0], argv[1]);\
   diagnoseError((char*)"Wrong Number of Arguments");\
   return 0;\
 }
@@ -285,7 +285,7 @@ WRAPPER_FUNCTION_1_ARG(tanh)
 /* define the function table -- must be in sorted order! */
 struct {
   const char *name;
-  uint64_t (*function)(int, double[]);
+  int64_t (*function)(int, double[]);
 } functionTable[N_FUNCTIONS] = {
   TABLE_ENTRY(acos),
   TABLE_ENTRY(asin),
@@ -308,11 +308,11 @@ struct {
 
 /* Finally, define the callback function to perform a function call */
 
-uint64_t callFunction(int nameLength, int argCount) {
+int64_t callFunction(int nameLength, int argCount) {
   double doubleArgValues[8];
   int i = 0;
   char *name = popString(nameLength);
-  uint64_t *argValues = popArgs(argCount);
+  int64_t *argValues = popArgs(argCount);
   int first = 0;
   int last = N_FUNCTIONS-1;
   while (i < argCount) {
