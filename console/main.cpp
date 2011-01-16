@@ -39,6 +39,8 @@
 #include <cctype>
 #include <ctime>
 #include <string>
+#include <cstring>
+#include <iomanip>
 
 // Unfortunately there is no easy way to get the CPU L1 and L2 cache
 // size, these values are close for most x86-64 CPUs in 2011
@@ -51,6 +53,9 @@ uint64_t start = 0;      /* lower bound for sieving */
 uint64_t stop = 0;       /* upper bound for sieving */
 uint32_t flags = 0;      /* settings */
 uint32_t sieveSize = 0;  /* sieve size in KiloBytes */
+
+bool quietMode = false;
+bool showArithmeticExpressionResults = false;
 
 std::string primes[7] = { "Prime numbers", "Twin primes", "Prime triplets",
     "Prime quadruplets", "Prime quintuplets", "Prime sextuplets",
@@ -80,6 +85,7 @@ void help() {
       << "  -s <size>  Set the sieve size (in KiloBytes)," << std::endl
       << "             size >= 1 && size <= 8192" << std::endl
       << "             Set size to your CPU's L1 or L2 cache size for best performance" << std::endl
+      << "  -q         Quiet mode, less output" << std::endl
       << "  -test      Run various sieving tests" << std::endl
       << "  -v         Print version and license information and exit"
       << std::endl;
@@ -106,18 +112,26 @@ void processOptions(int argc, char* argv[]) {
   if (argc > 2) {
     if (!expr.evaluate(argv[i++])) {
       std::cerr << "START is not a valid expression: "
-                << expr.getErrorMessage() << std::endl
-                << "Try `primesieve -help' for more information." << std::endl;
+                << expr.getErrorMessage()
+                << std::endl
+                << "Try `primesieve -help' for more information."
+                << std::endl;
       exit(EXIT_FAILURE);
     }
     start = expr.getResult();
+    if (!expr.isPlainInteger())
+      showArithmeticExpressionResults = true;
     if (!expr.evaluate(argv[i++])) {
       std::cerr << "STOP is not a valid expression: "
-                << expr.getErrorMessage() << std::endl
-                << "Try `primesieve -help' for more information." << std::endl;
+                << expr.getErrorMessage()
+                << std::endl
+                << "Try `primesieve -help' for more information."
+                << std::endl;
       exit(EXIT_FAILURE);
     }
     stop = expr.getResult();
+    if (!expr.isPlainInteger())
+      showArithmeticExpressionResults = true;
   }
   for (; i < argc; i++) {
     if (*argv[i] == '-' || *argv[i] == '/')
@@ -135,6 +149,9 @@ void processOptions(int argc, char* argv[]) {
       if (x < 1 || x > 7)
         help();
       flags |= PRINT_PRIMES << (x - 1);
+      break;
+    case 'q':
+      quietMode = true;
       break;
     case 's':
       if (argv[++i] == NULL)
@@ -164,8 +181,35 @@ void processOptions(int argc, char* argv[]) {
  */
 int main(int argc, char* argv[]) {
   processOptions(argc, argv);
+  // default count prime numbers if none else selected
+  if ((flags & COUNT_FLAGS) == 0)
+    flags |= COUNT_PRIMES;
+  // set left alignment
+  std::cout.setf(std::ios::left);
+  // get the maximum prime string length
+  int maxLength = 0;
+  for (int i = 0; i < 7; i++) {
+    if (flags & (COUNT_PRIMES << i)) {
+      int length = static_cast<int> (std::strlen(primes[i].c_str()));
+      if (length > maxLength)
+        maxLength = length;
+    }
+  }
+  if (!quietMode &&
+       showArithmeticExpressionResults) {
+    std::cout << std::setw(maxLength)
+              << "START"
+              << " = "
+              << start
+              << std::endl
+              << std::setw(maxLength)
+              << "STOP"
+              << " = "
+              << stop
+              << std::endl;
+  }
   if (start > stop) {
-    std::cerr << "START must be <= STOP" << std::endl;
+    std::cerr << "STOP must be >= START" << std::endl;
     exit(EXIT_FAILURE);
   }
   if (stop >= UINT64_MAX - UINT32_MAX * UINT64_C(10)) {
@@ -186,7 +230,13 @@ int main(int argc, char* argv[]) {
   if ((flags & PRINT_FLAGS) == 0) {
     // print the status whilst sieving
     flags |= PRINT_STATUS;
-    std::cout << "Sieve size set to " << sieveSize << " KiloBytes" << std::endl;
+    if (!quietMode)
+      std::cout << std::setw(maxLength)
+                << "Sieve size"
+                << " = "
+                << sieveSize
+                << " KiloBytes"
+                << std::endl;
   }
   try {
     std::clock_t begin = std::clock();
@@ -201,11 +251,19 @@ int main(int argc, char* argv[]) {
     std::clock_t end = std::clock();
     // print the prime count results
     for (int i = 0; i < 7; i++) {
-      if (primeSieve.getCounts(i) >= 0)
-        std::cout << primes[i] << ": " << primeSieve.getCounts(i) << std::endl;
+      if (flags & (COUNT_PRIMES << i))
+        std::cout << std::setw(maxLength)
+                  << primes[i]
+                  << " : "
+                  << primeSieve.getCounts(i)
+                  << std::endl;
     }
-    std::cout << "Time elapsed: " << ((end - begin)
-        / static_cast<double> (CLOCKS_PER_SEC)) << " sec" << std::endl;
+    std::cout << std::setw(maxLength)
+              << "Time elapsed"
+              << " : "
+              << ((end - begin) / static_cast<double> (CLOCKS_PER_SEC))
+              << " sec"
+              << std::endl;
   } catch (std::exception& ex) {
     std::cerr << "Exception " << ex.what() << std::endl;
     exit(EXIT_FAILURE);
