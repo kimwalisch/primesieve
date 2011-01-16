@@ -180,7 +180,8 @@ void processOptions(int argc, char* argv[]) {
 
 void setDefaultSettings() {
   // count prime numbers if none else selected
-  if ((flags & COUNT_FLAGS) == 0)
+  if ((flags & COUNT_FLAGS) == 0 &&
+      (flags & PRINT_FLAGS) == 0)
     flags |= COUNT_PRIMES;
   if (sieveSize == 0) {
     // L1 cache size gives best performance for small primes
