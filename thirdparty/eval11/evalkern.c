@@ -179,6 +179,23 @@ evalKernel_pcb_type evalKernel_pcb;
 #define TAB_SPACING 8
 #endif
 
+/* used instead of pow(double, double) from math.h which has a
+   poor integer precision past 1e15 */
+
+static uint64_t ipow(uint64_t x, uint64_t n) 
+{
+  uint64_t result = 1;
+  while (n != 0) {
+    if (n & 1) {
+      result *= x;
+      n -= 1;
+    }
+    x *= x;
+    n /= 2;
+  }
+  return result;
+}
+
 #define ag_rp_1(k, x) (*locateVariable(k)  = x)
 
 #define ag_rp_2(k, x) (*locateVariable(k) += x)
@@ -223,7 +240,12 @@ evalKernel_pcb_type evalKernel_pcb;
 #define ag_rp_21(x) (x)
 
 /* #define ag_rp_22(x, y) (pow(x,y)) */
-#define ag_rp_22(x, y) ((uint64_t)pow((double)x,(double)y))
+
+/* Causes errors:
+  mingw/g++ 4.5.1 x64, i.e. x=100000000; y=x**2; y = 10000000000000034 
+  #define ag_rp_22(x, y) ((uint64_t)pow((double)x,(double)y)) */
+  
+#define ag_rp_22(x, y) (ipow(x,y))
 
 #define ag_rp_23(k) (*locateVariable(k))
 
@@ -240,7 +262,12 @@ evalKernel_pcb_type evalKernel_pcb;
 #define ag_rp_29(k, x) (pushArg(x), k+1)
 
 /* #define ag_rp_30(x, e) (x*pow(10,e)) */
-#define ag_rp_30(x, e) (x*(uint64_t)pow(10.0,(double)e))
+
+/* Causes errors:
+  mingw/g++ 4.5.1 x64, i.e. 1e16 = 10000000000000034 
+  #define ag_rp_30(x, e) (x*(uint64_t)pow(10.0,(double)e)) */
+
+#define ag_rp_30(x, e) (x*ipow(10,e))
 
 /* #define ag_rp_31(x, e) (x*pow(10,-e)) */
 #define ag_rp_31(x, e) (x*(uint64_t)pow(10.0,-1*(double)e))
