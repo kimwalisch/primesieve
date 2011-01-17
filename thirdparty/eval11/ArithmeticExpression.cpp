@@ -46,8 +46,9 @@ bool ArithmeticExpression::isDigits() const {
  * @return true if expression has successfully been evaluated.
  */
 bool ArithmeticExpression::evaluateParsifal(std::string expression) {
-  size_t delimiter = expression.find_first_of(";\r\n");
-  size_t pos       = expression.substr(0, delimiter).find('=');
+  int correctColumn = 0;
+  size_t delimiter  = expression.find_first_of(";\r\n");
+  size_t pos        = expression.substr(0, delimiter).find('=');
   if (pos == std::string::npos || (
       pos > 0 &&
       pos + 1 < expression.size() && (
@@ -55,9 +56,9 @@ bool ArithmeticExpression::evaluateParsifal(std::string expression) {
       expression[pos - 1] == '<' ||
       expression[pos - 1] == '>' ||
       expression[pos + 1] == '='))) {
+    correctColumn = static_cast<int> (variable_.length()) + 1;
     // insert a variable if none present
-    expression.insert(0, "=");
-    expression.insert(0, variable_);
+    expression.insert(0, variable_ + "=");
   }
   // Parsifal's expression evaluator requires a char*
   char* expr = new char[expression.length() + 1];
@@ -67,11 +68,9 @@ bool ArithmeticExpression::evaluateParsifal(std::string expression) {
   // evaluate the expression
   int errorFlag = evaluateExpression(expr);
   delete expr;
+  // the expression is erroneous
   if (errorFlag != 0) {
-    // correct column indication
-    if (expression.compare(0, variable_.length(), variable_) == 0)
-      errorRecord.column -= static_cast<int> (variable_.length()) + 1;
-    // first letter to lower case
+    errorRecord.column -= correctColumn;
     errorRecord.message[0] = std::tolower(errorRecord.message[0]);
     errorMessage_ << errorRecord.message
                   << " at column "
@@ -106,7 +105,7 @@ bool ArithmeticExpression::evaluateParsifal(std::string expression) {
  * "x = 333"                        = 333
  * "sqrt( 10**14 )"                 = 10000000
  * "(5 < 8) ?1 :1e10+2**32"         = 1
- * 2 ** 2 ** (0+2 *2+1)"            = 4294967296
+ * "2 ** 2 ** (0+2 *2+1)"            = 4294967296
  *
  * @warning As 64 bit unsigned integers are used for all calculations
  *          one has to be careful with divisions:
