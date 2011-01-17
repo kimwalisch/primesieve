@@ -79,8 +79,7 @@ bool ArithmeticExpression::evaluateParsifal(std::string expression) {
     return false;
   }
   // check for unkown variables
-  // TODO "d=a;a=10" results in `"d" unkown variable'
-  for (int i = 0; i < nVariables; i++) {
+  for (int i = 0; i < N_VARIABLES && i < nVariables; i++) {
     if (variable[i].value == UINT64_MAX &&
         variable_.compare(variable[i].name) != 0) {
       errorMessage_ << "\""
