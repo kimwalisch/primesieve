@@ -7,14 +7,16 @@
  * CHANGES:
  *
  * 1. Use of extern "C" for usage in C++ project
- * 2. double changed to int64_t (better precision near 1e19) type
+ * 2. double changed to uint64_t (better precision near 1e19) type
  *    from stdint.h
- * 3. Uninitialized variables are set to INT64_MIN instead
+ * 3. Uninitialized variables are set to UINT64_MAX instead
  *    of 0
  * 4. Removed use of strdup (not ANSI) and sprintf (causes 
  *    unsafe warnings)
- * 5. Added (char*) cast for strings to silence warnings
- * 6. Unused file evaldemo.c has been deleted
+ * 5. Added a current pointer which points to the last used
+ *    variable
+ * 6. Added (char*) cast for strings to silence warnings
+ * 7. Unused file evaldemo.c has been renamed to evaldemo.c.unused
  *
  * NOTE:
  *
@@ -34,7 +36,7 @@ extern "C" {
 typedef union {
   long alignment;
   char ag_vt_2[sizeof(int)];
-  char ag_vt_4[sizeof(int64_t)];
+  char ag_vt_4[sizeof(uint64_t)];
 } evalKernel_vs_type;
 
 typedef enum {
