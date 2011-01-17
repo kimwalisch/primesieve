@@ -18,33 +18,85 @@
  */
 
 #include "ArithmeticExpression.h"
+#include <cctype>
 
-ArithmeticExpression::ArithmeticExpression() : result_(0) {
-}
-
-std::string ArithmeticExpression::getExpression() const {
-  return expression_;
+ArithmeticExpression::ArithmeticExpression() : variable_("mr4tkXui6esOr"),
+    maxLength_(128), result_(0), isDigits_(false) {
 }
 
 std::string ArithmeticExpression::getErrorMessage() const {
  return errorMessage_.str();
 }
 
-int64_t ArithmeticExpression::getResult() const {
+uint64_t ArithmeticExpression::getResult() const {
   return result_;
 }
 
 /**
- * @return true if the expression contains only digits
+ * @return true if the last expression is a plain integer.
  */
-bool ArithmeticExpression::isPlainInteger() const {
-  return (expression_.size() > 0 &&
-          expression_.find_first_not_of("0123456789") == std::string::npos);
+bool ArithmeticExpression::isDigits() const {
+  return isDigits_;
 }
 
 /**
- * Evaluates a string that holds an arithmetic expression to a 64 bit
- * integer.
+ * Evaluate an arithmetic expression with Parsifal's evaluator.
+ * @brief readme.html and ArithmeticExpression.h contain further
+ *        information.
+ * @return true if expression has successfully been evaluated.
+ */
+bool ArithmeticExpression::evaluateParsifal(std::string expression) {
+  size_t delimiter = expression.find_first_of(";\r\n");
+  size_t pos       = expression.substr(0, delimiter).find('=');
+  if (pos == std::string::npos || (
+      pos > 0 &&
+      pos + 1 < expression.size() && (
+      expression[pos - 1] == '!' ||
+      expression[pos - 1] == '<' ||
+      expression[pos - 1] == '>' ||
+      expression[pos + 1] == '='))) {
+    // insert a variable if none present
+    expression.insert(0, "=");
+    expression.insert(0, variable_);
+  }
+  // Parsifal's expression evaluator requires a char*
+  char* expr = new char[expression.length() + 1];
+  for (size_t i = 0; i < expression.length(); i++)
+    expr[i] = expression[i];
+  expr[expression.length()] = (char) 0;
+  // evaluate the expression
+  int errorFlag = evaluateExpression(expr);
+  delete expr;
+  if (errorFlag != 0) {
+    // correct column indication
+    if (expression.compare(0, variable_.length(), variable_) == 0)
+      errorRecord.column -= static_cast<int> (variable_.length()) + 1;
+    // first letter to lower case
+    errorRecord.message[0] = std::tolower(errorRecord.message[0]);
+    errorMessage_ << errorRecord.message
+                  << " at column "
+                  << errorRecord.column;
+    return false;
+  }
+  // check for unkown variables
+  // TODO "d=a;a=10" results in `"d" unkown variable'
+  for (int i = 0; i < nVariables; i++) {
+    if (variable[i].value == UINT64_MAX &&
+        variable_.compare(variable[i].name) != 0) {
+      errorMessage_ << "\""
+                    << variable[i].name
+                    << "\" unkown variable";
+      return false;
+    }
+  }
+  // current is a pointer to the last used variable
+  result_ = current->value;
+  return true;
+}
+
+/**
+ * Evaluate a string that holds an arithmetic expression to a 64 bit
+ * unsigned integer.
  * 
  * EXAMPLES of valid expressions:
  *
@@ -57,68 +109,42 @@ bool ArithmeticExpression::isPlainInteger() const {
  * "(5 < 8) ?1 :1e10+2**32"         = 1
  * 2 ** 2 ** (0+2 *2+1)"            = 4294967296
  *
- * @warning As 64 bit integers are used for all calculations one has
- *          to be careful with divisions:
+ * @warning As 64 bit unsigned integers are used for all calculations
+ *          one has to be careful with divisions:
  *          i.e. (10/6)*10 = 10
+ *          and negative numbers:
+ *          i.e. -100 = 18446744073709551516
+ *          but -100+1e10 = 9999999900 is OK
+ *
  * @return  true if the expression has successfully been evaluated,
  *          false if an error occurred
  */
-bool ArithmeticExpression::evaluate(std::string expression) {
-  if (expression.size() > 128) {
-    errorMessage_ << "expression exceeds limit of 128 characters";
+bool ArithmeticExpression::evaluate(const std::string& expression) {
+  // reset member variables
+  result_ = 0;
+  isDigits_ = false;
+  // max length error check
+  if (expression.size() > maxLength_) {
+    errorMessage_ << "expression exceeds limit of "
+                  << maxLength_
+                  << " characters";
     return false;
   }
   // do not allow floating point numbers or floating point functions
   // with two or more arguments
   size_t pos = expression.find_first_of(".,");
   if (pos != std::string::npos) {
-    errorMessage_ << "error token is \""
-                  << expression.substr(pos, std::string::npos)
-                  << "\""
-                  << std::endl;
+    errorMessage_ << "invalid character \'"
+                  << expression[pos]
+                  << "\' at column "
+                  << pos + 1;
     return false;
   }
-  bool addVariable = false;
-  // save the original expression
-  expression_ =  expression;
-  pos = expression.find_first_of('=');
-  if (pos == std::string::npos || (
-      pos > 0 &&
-      pos + 1 < expression.size() && (
-      expression[pos - 1] == '!' ||
-      expression[pos - 1] == '<' ||
-      expression[pos - 1] == '>' ||
-      expression[pos + 1] == '='))) {
-    addVariable = true;
-    // modify the copy
-    expression.insert(0, "a=");
-  }
-  // Parsifal's expression evaluator requires a char*
-  // + 2 for "a="
-  // + 1 for NULL
-  char expr[128 + 2 + 1];
-  for (size_t i = 0; i < expression.size(); i++)
-    expr[i] = expression[i];
-  expr[expression.size()] = (char) 0;
-  // evaluate the expression
-  int errorFlag = evaluateExpression(expr);
-  if (errorFlag) {
-    if (addVariable == true)
-      errorRecord.column -= 2;
-    errorMessage_ << errorRecord.message
-                  << " at column "
-                  << errorRecord.column;
+  // evaluate the arithmetic expression with Parsifal's evaluator
+  if (!this->evaluateParsifal(expression))
     return false;
-  }
-  // check for uninitialized variable
-  if (variable[0].value == INT64_MIN &&
-      expression_.compare("-9223372036854775808") != 0) {
-    // "a=" is in index 0
-    errorMessage_ << "\"" << variable[1].name << "\""
-                  << " unkown variable";
-    return false;
-  }
-  // variable[0] always holds the result of the last expression
-  result_ = variable[0].value;
+  // true if the expression contains only digits
+  isDigits_ = (expression.length() > 0 &&
+      expression.find_first_not_of("0123456789") == std::string::npos);
   return true;
 }
