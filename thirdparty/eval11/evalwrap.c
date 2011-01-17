@@ -7,14 +7,16 @@
  * CHANGES:
  *
  * 1. Use of extern "C" for usage in C++ project
- * 2. double changed to int64_t (better precision near 1e19) type
+ * 2. double changed to uint64_t (better precision near 1e19) type
  *    from stdint.h
- * 3. Uninitialized variables are set to INT64_MIN instead
+ * 3. Uninitialized variables are set to UINT64_MAX instead
  *    of 0
  * 4. Removed use of strdup (not ANSI) and sprintf (causes 
  *    unsafe warnings)
- * 5. Added (char*) cast for strings to silence warnings
- * 6. Unused file evaldemo.c has been deleted
+ * 5. Added a current pointer which points to the last used
+ *    variable
+ * 6. Added (char*) cast for strings to silence warnings
+ * 7. Unused file evaldemo.c has been renamed to evaldemo.c.unused
  *
  * NOTE:
  *
@@ -97,7 +99,7 @@ void diagnoseError(char *msg) {
   errorRecord.column  = evalKernel_pcb.column;
 }
 
-int64_t checkZero(int64_t value) {
+uint64_t checkZero(uint64_t value) {
   if (value) return value;
   diagnoseError((char*)"Divide by Zero");
   return 1;
@@ -115,6 +117,22 @@ static char *charStackTop = charStack;
 
 static void resetCharStack(void) {
   charStackTop = charStack;
+}
+
+/* new, reset all */
+
+void resetParsifal() {
+  int i = 0;
+  /* delete all variables within the lookup table */
+  while (i < N_VARIABLES) {
+    variable[i].name[0] = (char) 0;
+    variable[i].value = 0;
+    i = i + 1;
+  }
+  /* reset the variable count */
+  nVariables = 0;
+  /* I don't like to use NULL here*/
+  current = &variable[0];
 }
 
 void pushChar(int c) {              /* append char to name string */
@@ -138,14 +156,18 @@ Part 3. Symbol Table
 
 **********************************************************************/
 
-VariableDescriptor variable[N_VARIABLES];    /* Symbol table array */
+VariableDescriptor variable[N_VARIABLES];      /* Symbol table array */
+
+/* new, pointer to the last used variable */
+VariableDescriptor *current = &variable[0];
 
 int nVariables = 0;                       /* no. of entries in table */
 
+/* old unused code */
+#if 0
 /* Callback function to locate named variable */
 
-int64_t *locateVariable(int nameLength) {   /* identify variable name */
-  int i = 0;
+double *locateVariable(int nameLength) {   /* identify variable name */
   char *name = popString(nameLength);
   int first = 0;
   int last = nVariables - 1;
@@ -160,8 +182,8 @@ int64_t *locateVariable(int nameLength) {   /* identify variable name */
   /* name not found, check for room in table */
   if (nVariables >= N_VARIABLES) {
     /* table is full, kill parse and issue diagnostic */
-    static int64_t junk = 0;
-    diagnoseError((char*)"Symbol Table Full");
+    static double junk = 0;
+    diagnoseError("Symbol Table Full");
     return &junk;
   }
 
@@ -170,20 +192,55 @@ int64_t *locateVariable(int nameLength) {   /* identify variable name */
           &variable[first],
           (nVariables-first)*sizeof(VariableDescriptor));
   nVariables++;
-  while (i < (int)strlen(name)) {
-    if (i >= PRIMESIEVE_NAMESIZE - 1)
-      break;
-    variable[first].name[i] = name[i];
-    i = i + 1;
-  }
-  variable[first].name[i] = (char) 0;
-/*  variable[first].name = strdup(name); */
-/*  variable[first].value = 0; */
-  /* INT64_MIN is used to mark uninitialized variables */
-  variable[first].value = INT64_MIN;
+  variable[first].name = strdup(name);
+  variable[first].value = 0;
   return &variable[first].value;
 }
+#endif
 
+/* this function has been modified:
+   1. to use sequential search instead of binary search
+   2. to not use strdup (not ANSI)
+   3. to set uninitialized variables to UINT64_MAX
+   4. to set current to the last used variable */
+
+uint64_t *locateVariable(int nameLength) { /* identify variable name */
+  int i = 0;
+  int j = 0;
+  char *name = popString(nameLength);
+
+  while (i < nVariables) {
+    if (strcmp(name,variable[i].name) == 0) {
+      /* already existing last used variable */
+      current = &variable[i];
+      return &current->value;
+    }
+    i = i + 1;
+  }
+  /* name not found, check for room in table */
+  if (nVariables >= N_VARIABLES) {
+    /* table is full, kill parse and issue diagnostic */
+    static uint64_t junk = 0;
+    diagnoseError((char*)"Symbol Table Full");
+    return &junk;
+  }
+  /* new last used variable */
+  current = &variable[nVariables];
+  
+  /* used instead of strdup which is not ANSI */
+  while (j < (int)strlen(name)) {
+    if (j >= PRIMESIEVE_NAMESIZE - 1)
+      break;
+    current->name[j] = name[j];
+    j = j + 1;
+  }
+  current->name[j] = (char) 0;
+  
+  // set to UINT64_MAX instead of 0
+  current->value = UINT64_MAX;
+  nVariables = nVariables + 1;
+  return &current->value;
+}
 
 /*******************************************************************
 
@@ -191,14 +248,14 @@ Part 4. Accumulate list of function arguments
 
 *******************************************************************/
 
-static int64_t  argStack[ARG_STACK_LENGTH];      /* argument buffer */
-static int64_t *argStackTop = argStack;
+static uint64_t  argStack[ARG_STACK_LENGTH];      /* argument buffer */
+static uint64_t *argStackTop = argStack;
 
 static void resetArgStack(void) {
   argStackTop = argStack;
 }
 
-void pushArg(int64_t x) {                     /* store arg in list */
+void pushArg(uint64_t x) {                     /* store arg in list */
   if (argStackTop < argStack + ARG_STACK_LENGTH) {
     *argStackTop++ = x;
     return;
@@ -207,7 +264,7 @@ void pushArg(int64_t x) {                     /* store arg in list */
   diagnoseError((char*)"Argument Stack Full");
 }
 
-static int64_t *popArgs(int nArgs) {                 /* fetch args */
+static uint64_t *popArgs(int nArgs) {                 /* fetch args */
   return argStackTop -= nArgs;
 }
 
@@ -234,8 +291,8 @@ static int64_t *popArgs(int nArgs) {                 /* fetch args */
 */
 
 #define WRAPPER_FUNCTION_1_ARG(FUN) \
-int64_t FUN##Wrapper(int argc, double *argv) {\
-  if (argc == 1) return (int64_t) FUN(argv[0]);\
+uint64_t FUN##Wrapper(int argc, double *argv) {\
+  if (argc == 1) return (uint64_t) FUN(argv[0]);\
   diagnoseError((char*)"Wrong Number of Arguments");\
   return 0;\
 }
@@ -246,8 +303,8 @@ int64_t FUN##Wrapper(int argc, double *argv) {\
 */
 
 #define WRAPPER_FUNCTION_2_ARGS(FUN) \
-int64_t FUN##Wrapper(int argc, double *argv) {\
-  if (argc==2) return (int64_t) FUN(argv[0], argv[1]);\
+uint64_t FUN##Wrapper(int argc, double *argv) {\
+  if (argc==2) return (uint64_t) FUN(argv[0], argv[1]);\
   diagnoseError((char*)"Wrong Number of Arguments");\
   return 0;\
 }
@@ -285,7 +342,7 @@ WRAPPER_FUNCTION_1_ARG(tanh)
 /* define the function table -- must be in sorted order! */
 struct {
   const char *name;
-  int64_t (*function)(int, double[]);
+  uint64_t (*function)(int, double[]);
 } functionTable[N_FUNCTIONS] = {
   TABLE_ENTRY(acos),
   TABLE_ENTRY(asin),
@@ -308,11 +365,11 @@ struct {
 
 /* Finally, define the callback function to perform a function call */
 
-int64_t callFunction(int nameLength, int argCount) {
+uint64_t callFunction(int nameLength, int argCount) {
   double doubleArgValues[8];
   int i = 0;
   char *name = popString(nameLength);
-  int64_t *argValues = popArgs(argCount);
+  uint64_t *argValues = popArgs(argCount);
   int first = 0;
   int last = N_FUNCTIONS-1;
   while (i < argCount) {
@@ -337,6 +394,10 @@ Part 6. Wrapper function definition
 *******************************************************************/
 
 int evaluateExpression(char *expressionString) {
+  if (nVariables * 3 > N_VARIABLES * 2) {
+    /* clear all previouly declared variables if memory gets low */
+    resetParsifal(); 
+  }
   resetCharStack();
   resetArgStack();
   evalKernel_pcb.pointer = (unsigned char *) expressionString;
