@@ -119,7 +119,7 @@ void processOptions(int argc, char* argv[]) {
       exit(EXIT_FAILURE);
     }
     start = expr.getResult();
-    if (!expr.isPlainInteger())
+    if (!expr.isDigits())
       showArithmeticExpressionResults = true;
     if (!expr.evaluate(argv[i++])) {
       std::cerr << "STOP is not a valid expression: "
@@ -130,7 +130,7 @@ void processOptions(int argc, char* argv[]) {
       exit(EXIT_FAILURE);
     }
     stop = expr.getResult();
-    if (!expr.isPlainInteger())
+    if (!expr.isDigits())
       showArithmeticExpressionResults = true;
   }
   for (; i < argc; i++) {
@@ -192,7 +192,7 @@ void setDefaultSettings() {
 }
 
 /**
- * @return maximum output string length.
+ * @return maximum string length of ouput.
  */
 int getMaxLength() {
   int maxLength = static_cast<int> (std::strlen("Time elapsed"));
@@ -205,6 +205,23 @@ int getMaxLength() {
     }
   }
   return maxLength;
+}
+
+void checkNumbers() {
+  if (start > stop) {
+    std::cerr << "STOP must be >= START"
+              << std::endl
+              << "Try `primesieve -help' for more information."
+              << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  if (stop >= UINT64_MAX - UINT32_MAX * UINT64_C(10)) {
+    std::cerr << "STOP must be < (2^64-1) - (2^32-1) * 10"
+              << std::endl
+              << "Try `primesieve -help' for more information."
+              << std::endl;
+    exit(EXIT_FAILURE);
+  }
 }
 
 /**
@@ -232,14 +249,8 @@ int main(int argc, char* argv[]) {
               << stop
               << std::endl;
   }
-  if (start > stop) {
-    std::cerr << "STOP must be >= START" << std::endl;
-    exit(EXIT_FAILURE);
-  }
-  if (stop >= UINT64_MAX - UINT32_MAX * UINT64_C(10)) {
-    std::cerr << "STOP must be < (2^64-1) - (2^32-1) * 10." << std::endl;
-    exit(EXIT_FAILURE);
-  }
+  // check for invalid user input
+  checkNumbers();
   if ((flags & PRINT_FLAGS) == 0) {
     // print the status whilst sieving
     flags |= PRINT_STATUS;
