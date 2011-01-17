@@ -124,7 +124,7 @@ static void resetCharStack(void) {
 void resetParsifal() {
   int i = 0;
   /* delete all variables within the lookup table */
-  while (i < N_VARIABLES) {
+  while (i < N_VARIABLES && i < nVariables) {
     variable[i].name[0] = (char) 0;
     variable[i].value = 0;
     i = i + 1;
@@ -209,7 +209,7 @@ uint64_t *locateVariable(int nameLength) { /* identify variable name */
   int j = 0;
   char *name = popString(nameLength);
 
-  while (i < nVariables) {
+  while (i < N_VARIABLES && i < nVariables) {
     if (strcmp(name,variable[i].name) == 0) {
       /* already existing last used variable */
       current = &variable[i];
@@ -236,7 +236,7 @@ uint64_t *locateVariable(int nameLength) { /* identify variable name */
   }
   current->name[j] = (char) 0;
   
-  // set to UINT64_MAX instead of 0
+  /* set to UINT64_MAX instead of 0 */
   current->value = UINT64_MAX;
   nVariables = nVariables + 1;
   return &current->value;
