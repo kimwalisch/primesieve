@@ -35,14 +35,16 @@
  * evalwrap.c:
  *
  * 1. Use of extern "C" for usage in C++ project
- * 2. double changed to int64_t (better precision near 1e19) type
+ * 2. double changed to uint64_t (better precision near 1e19) type
  *    from stdint.h
- * 3. Uninitialized variables are set to INT64_MIN instead
+ * 3. Uninitialized variables are set to UINT64_MAX instead
  *    of 0
  * 4. Removed use of strdup (not ANSI) and sprintf (causes 
  *    unsafe warnings)
- * 5. Added (char*) cast for strings to silence warnings
- * 6. Unused file evaldemo.c has been deleted
+ * 5. Added a current pointer which points to the last used
+ *    variable
+ * 6. Added (char*) cast for strings to silence warnings
+ * 7. Unused file evaldemo.c has been renamed to evaldemo.c.unused
  *
  * NOTE:
  *
@@ -60,9 +62,12 @@
  * "(5 < 8) ?1 :1e10+2**32"         = 1
  * 2 ** 2 ** (0+2 *2+1)"            = 4294967296
  *
- * @warning As 64 bit integers are used for all calculations one has
- *          to be careful with divisions:
+ * @warning As 64 bit unsigned integers are used for all calculations
+ *          one has to be careful with divisions:
  *          i.e. (10/6)*10 = 10
+ *          and negative numbers:
+ *          i.e. -100 = 18446744073709551516
+ *          but -100+1e10 = 9999999900 is OK
  */
 
 #ifndef ARITHMETICEXPRESSION_H
@@ -79,15 +84,17 @@ class ArithmeticExpression
 {
 public:
   ArithmeticExpression();
-  std::string getExpression() const;
   std::string getErrorMessage() const;
-  int64_t getResult() const;
-  bool isPlainInteger() const;
-  bool evaluate(std::string);
+  uint64_t getResult() const;
+  bool isDigits() const;
+  bool evaluate(const std::string&);
 private:
-  std::string expression_;
+  const std::string variable_;
+  const size_t maxLength_;
   std::ostringstream errorMessage_;
-  int64_t result_;
+  uint64_t result_;
+  bool isDigits_;
+  bool evaluateParsifal(std::string);
 };
 
 #endif // ARITHMETICEXPRESSION_H
