@@ -60,7 +60,7 @@
  * "x = 333"                        = 333
  * "sqrt( 10**14 )"                 = 10000000
  * "(5 < 8) ?1 :1e10+2**32"         = 1
- * 2 ** 2 ** (0+2 *2+1)"            = 4294967296
+ * "2 ** 2 ** (0+2 *2+1)"            = 4294967296
  *
  * @warning As 64 bit unsigned integers are used for all calculations
  *          one has to be careful with divisions:
