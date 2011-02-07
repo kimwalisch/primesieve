@@ -18,113 +18,121 @@
  */
 
 /** 
- * @file test.cpp
+ * @file  test.cpp
  * @brief Contains various test routines to check if PrimeSieve
- * produces correct results.
+ *        produces correct results (single-threaded).
  */
 
-#include "test.h"
-#include "../src/PrimeSieve.h"
-#include "../src/pmath.h"
+#include "../soe/PrimeSieve.h"
+#include "../soe/pmath.h"
 
+#include <stdint.h>
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
 #include <exception>
 #include <ctime>
 
-int64_t primeCounts[] = {
-  4,         // pi(1e1)
-  25,        // pi(1e2)
-  168,       // pi(1e3)
-  1229,      // pi(1e4)
-  9592,      // pi(1e5)
-  78498,     // pi(1e6)
-  664579,    // pi(1e7)
-  5761455,   // pi(1e8)
-  50847534,  // pi(1e9)
-  203280221, // pi(2^32)
-  455052511, // pi(1e10)
-  155428406, // prime count of the 2^32 interval starting at 1e12
-  143482916, // prime count of the 2^32 interval starting at 1e13
-  133235063, // prime count of the 2^32 interval starting at 1e14
-  124350420, // prime count of the 2^32 interval starting at 1e15
-  116578809, // prime count of the 2^32 interval starting at 1e16
-  109726486, // prime count of the 2^32 interval starting at 1e17
-  103626726, // prime count of the 2^32 interval starting at 1e18
-  98169972}; // prime count of the 2^32 interval starting at 1e19
+namespace {
+  uint64_t primeCounts[] = {
+    4,         // pi(101)
+    25,        // pi(10^2)
+    168,       // pi(10^3)
+    1229,      // pi(10^4)
+    9592,      // pi(10^5)
+    78498,     // pi(10^6)
+    664579,    // pi(10^7)
+    5761455,   // pi(10^8)
+    50847534,  // pi(10^9)
+    203280221, // pi(2^32)
+    455052511, // pi(10^10)
+    155428406, // prime count 2^32 interval starting at 10^12
+    143482916, // prime count 2^32 interval starting at 10^13
+    133235063, // prime count 2^32 interval starting at 10^14
+    124350420, // prime count 2^32 interval starting at 10^15
+    116578809, // prime count 2^32 interval starting at 10^16
+    109726486, // prime count 2^32 interval starting at 10^17
+    103626726, // prime count 2^32 interval starting at 10^18
+    98169972}; // prime count 2^32 interval starting at 10^19
 
-/// Is set to true if one or more tests fail
-bool error = false;
+  /// Set to true if one or more tests failed
+  bool isError = false;
+}
 
 /**
- * Evaluates a sieving test, sets error to true if one or more tests
+ * Evaluate a sieving test, sets isError to true if one or more tests
  * fail.
  */
-void evaluateTest(bool passed) {
-  if (passed == true)
+void evaluateTest(bool isSuccess) {
+  if (isSuccess)
     std::cout << "OK" << std::endl;
   else {
-    std::cout << "ERROR" << std::endl;
-    error = true;
+    std::cerr << "ERROR" << std::endl;
+    isError  = true;
   }
 }
 
 /**
- * Sieves about 1000 small random intervals starting at 1e14 until an
- * overall interval of 2^32 has been completed. Compares the
+ * Sieve about 1000 small random intervals starting at 10^14 until an
+ * overall interval of 2^32 has been completed and compare the
  * accumulated prime count result with the correct value from the
  * lookup table.
  */
 void testRandomIntervals() {
-  std::cout << "Sieve random intervals starting at 1e14" << std::endl;
+  std::cout << "Sieve random intervals starting at 10^14" << std::endl;
+
   uint64_t lowerBound = ipow(10, 14);
   uint64_t upperBound = lowerBound + ipow(2, 32);
   uint64_t maxInterval = ipow(10, 7);
-  int64_t primeCount = 0;
+  uint64_t primeCount = 0;
+
   try {
-    srand(static_cast<unsigned int> (time(0)));
+    std::srand(static_cast<unsigned int> (std::time(0)));
     PrimeSieve primeSieve;
     primeSieve.setStartNumber(lowerBound - 1);
     primeSieve.setStopNumber(lowerBound - 1);
     primeSieve.setFlags(COUNT_PRIMES);
-    do {
+
+    while (primeSieve.getStopNumber() < upperBound) {
       // generate a rondom 64 bit integer
       uint64_t rand64 = 1;
       while (rand64 < UINT32_MAX)
-        rand64 *= rand();
-      // generate a random interval >= 0 && < 1e7
+        rand64 *= std::rand();
+
+      // generate a random interval >= 0 and < 10^7
       uint64_t interval = rand64 % maxInterval;
-      // generate a random sieve size >= 1 && <= 128
-      uint32_t sieveSize = 1 << (rand64 % 8);
+      // generate a random sieve size >= 1 and <= 128
+      uint32_t sieveSize = 1 << static_cast<uint32_t> (rand64 % 8);
+
       // set up primeSieve for the next random interval
       primeSieve.setStartNumber(primeSieve.getStopNumber() + 1);
       primeSieve.setStopNumber(primeSieve.getStartNumber() + interval);
       primeSieve.setSieveSize(sieveSize);
       if (primeSieve.getStopNumber() > upperBound)
         primeSieve.setStopNumber(upperBound);
+
       // start sieving primes
       primeSieve.sieve();
-      // accumulate prime count results
+      // sum the prime count results
       primeCount += primeSieve.getPrimeCount();
       std::cout << "\rRemaining chunk:           "
                 << "\rRemaining chunk: " << upperBound - primeSieve.getStopNumber()
                 << std::flush;
-    } while (primeSieve.getStopNumber() < upperBound);
-    // finished
-    std::cout << std::endl << "Prime count: " << std::setw(11) << primeCount;
+    }
+    std::cout << std::endl;
+    std::cout << "Prime count: " << std::setw(11) << primeCount;
     evaluateTest(primeCount == primeCounts[13]);
-  } catch (std::exception& ex) {
+  }
+  catch (std::exception& ex) {
     std::cerr << "Exception " << ex.what() << std::endl;
-    exit(EXIT_FAILURE);
+    std::exit(EXIT_FAILURE);
   }
 }
 
 /**
- * Calculates the prime-counting function pi(x) for
- * x = 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 2^32 and 1e10
- * and compares the results with the correct values from the lookup
- * table.
+ * Calculate the prime-counting function pi(x) for some popular values
+ * of x and compare the results with the correct values from the
+ * lookup table.
  */
 void testPix() {
   std::cout << "Calculate the prime-counting function pi(x)" << std::endl;
@@ -134,48 +142,57 @@ void testPix() {
     primeSieve.setStopNumber(0);
     primeSieve.setSieveSize(32);
     primeSieve.setFlags(COUNT_PRIMES);
-    int64_t primeCount = 0;
+
+    uint64_t primeCount = 0;
+
+    // calculate pi(x) for 10^x with x := 1 to 9
     for (int i = 0; i < 9; i++) {
       primeSieve.setStartNumber(primeSieve.getStopNumber() + 1);
       primeSieve.setStopNumber(ipow(10, i + 1));
       primeSieve.sieve();
       primeCount += primeSieve.getPrimeCount();
-      std::cout << "pi(1e" << i + 1 << ")  = " << std::setw(13) << primeCount;
+      std::cout << "pi(10^" << i + 1 << ")  = " << std::setw(12) << primeCount;
       evaluateTest(primeCount == primeCounts[i]);
     }
+
+    // calculate pi(2^32)
     primeSieve.setStartNumber(primeSieve.getStopNumber() + 1);
     primeSieve.setStopNumber(ipow(2, 32));
     primeSieve.sieve();
     primeCount += primeSieve.getPrimeCount();
-    std::cout << "pi(2^32) = " << std::setw(13) << primeCount;
+    std::cout << "pi(2^32)  = " << std::setw(12) << primeCount;
     evaluateTest(primeCount == primeCounts[9]);
+
+    // calculate pi(10^10)
     primeSieve.setStartNumber(primeSieve.getStopNumber() + 1);
     primeSieve.setStopNumber(ipow(10, 10));
     primeSieve.sieve();
     primeCount += primeSieve.getPrimeCount();
-    std::cout << "pi(1e10) = " << std::setw(13) << primeCount;
+    std::cout << "pi(10^10) = " << std::setw(12) << primeCount;
     evaluateTest(primeCount == primeCounts[10]);
   }
   catch (std::exception& ex) {
     std::cerr << "Exception " << ex.what() << std::endl;
-    exit(EXIT_FAILURE);
+    std::exit(EXIT_FAILURE);
   }
 }
 
 /**
- * Counts the prime numbers within the 2^32 interval starting at 1e12,
- * 1e13, 1e14, 1e15, 1e16, 1e17, 1e18 and 1e19 and compares the
- * results with the correct values from the lookup table.
+ * Count the prime numbers within the 2^32 interval starting at 10^x
+ * with x := 12 to 19 and compare the results with the correct values
+ * from the lookup table.
  */
 void testBigPrimes() {
   try {
+    int flags = COUNT_PRIMES | PRINT_STATUS;
     PrimeSieve primeSieve;
     primeSieve.setSieveSize(512);
-    primeSieve.setFlags(COUNT_PRIMES | PRINT_STATUS);
+    primeSieve.setFlags(flags);
+
     for (int i = 0; i <= 7; i++) {
       primeSieve.setStartNumber(ipow(10, 12 + i));
       primeSieve.setStopNumber(primeSieve.getStartNumber() + ipow(2, 32));
-      std::cout << "Sieve an interval of 2^32 starting at 1e" << 12 + i << std::endl;
+      std::cout << "Sieve an interval of 2^32 starting at 10^" << 12 + i << std::endl;
       primeSieve.sieve();
       std::cout << "Prime count: " << std::setw(11) << primeSieve.getPrimeCount();
       evaluateTest(primeSieve.getPrimeCount() == primeCounts[11 + i]);
@@ -183,15 +200,16 @@ void testBigPrimes() {
   }
   catch (std::exception& ex) {
     std::cerr << "Exception " << ex.what() << std::endl;
-    exit(EXIT_FAILURE);
+    std::exit(EXIT_FAILURE);
   }
 }
 
 /**
- * Test PrimeSieve.
+ * Run various sieving tests to check if PrimeSieve produces correct
+ * results.
  *
- * Runs various sieving tests to see if PrimeSieve produces correct
- * results. The test may fail for the following reasons:
+ * The test may fail for one of the following reasons:
+ *
  * 1. The source code has been modified and a new bug has been
  *    introduced somewhere.
  * 2. The compiler has produced an erroneous executable.
@@ -199,17 +217,23 @@ void testBigPrimes() {
  */
 void test() {
   std::cout.setf(std::ios::left);
+
   std::clock_t begin = std::clock();
+  // perform random sieving test
   testRandomIntervals();
   std::cout << std::endl;
+  // calculate some popular values of pi(x)
   testPix();
   std::cout << std::endl;
+  // allocates up to 1 Gigabyte of memory
   testBigPrimes();
+  std::clock_t stop = std::clock();
   std::cout << std::endl;
-  std::cout << "Time elapsed: " << ((std::clock() - begin) / 
-      static_cast<double> (CLOCKS_PER_SEC)) << " sec" << std::endl;
-  if (!error)
-    std::cout << "All tests passed SUCCESSFULLY!" << std::endl;
-  else
-    std::cout << "One or more tests FAILED!" << std::endl;
+
+  std::cout << "Time elapsed: "
+            << ((stop - begin) / static_cast<double> (CLOCKS_PER_SEC))
+            << " sec" << std::endl;
+  std::cout << ((!isError ) ?"All tests passed SUCCESSFULLY!"
+                            :"One or more tests FAILED!")
+            << std::endl;
 }
