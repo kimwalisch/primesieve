@@ -1,1 +1,16 @@
-primesieve 1.11, 18 January 2011
+primesieve 2.0 beta, 7 February 2011
+
+NEW
+===
+
+  - The console version of primesieve is now multi-threaded
+  - An arithmetic expression parser has been added to the console
+    version, e.g. ./primesieve 1e18 1e18+2**32
+
+TODO
+====
+
+  - Improve Makefile of console version
+  - Implement expr/ExpressionParser.h and soe/ParallelPrimeSieve.cpp
+    in the GUI version of primesieve
+  - Add a CHANGES or NEW file
