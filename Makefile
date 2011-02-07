@@ -4,15 +4,13 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010 
-# Last modified:   13 January 2011
+# Last modified:   7 February 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
 TARGET = primesieve
-# Sieve of Eratosthenes directory
 SRCDIR = soe
-# Main.cpp directory
 MAINDIR = console
 OUTDIR = out
 STDINT_MACROS = -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
@@ -20,11 +18,11 @@ CXX = g++
 
 # GNU GCC compiler
 ifeq ($(CXX),g++)
+  CXXFLAGS += -fopenmp
   IS_OSX_GCC := $(shell $(CXX) --version 2>&1 | head -1 | grep -i apple)
   # Mac OS X
   ifneq ($(IS_OSX_GCC),)
     CXXFLAGS += -fast
-  # Linux & Unix
   else
     CXXFLAGS += -O3
   endif
@@ -33,20 +31,21 @@ ifeq ($(CXX),g++)
   GCC_VERSION := $(shell echo $$(($(GCC_MAJOR)*10+$(GCC_MINOR))))
   # Add POPCNT (SSE 4.2) support if using GCC >= 4.4
   CXXFLAGS += $(shell if [ $(GCC_VERSION) -ge 44 ]; then echo -mpopcnt; fi)
-  # trusted compiler diable assertions
   CXXFLAGS += -DNDEBUG
+
 # Intel C++ Compiler
 else ifeq ($(CXX),icpc)
-  # trusted compiler diable assertions
-  CXXFLAGS += -fast -DNDEBUG
+  CXXFLAGS += -openmp -fast -DNDEBUG
+
 # Oracle Solaris Studio (former Sun Studio)
 else ifeq ($(CXX),sunCC)
-  # trusted compiler diable assertions
-  CXXFLAGS += -O5 -xarch=sse4_2 -xipo -xrestrict -xalias_level=compatible -DNDEBUG
+  CXXFLAGS += -xopenmp -O5 -xarch=sse4_2 -xipo -xrestrict -xalias_level=compatible -DNDEBUG
+
+# Unkown compiler, add OpenMP flag if supported
 else
-  # Unkown compiler keep assertions enabled!
   CXXFLAGS += -O2
 endif
+
 # Generate list of object files
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp))
 OBJS += $(patsubst $(MAINDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(MAINDIR)/*.cpp))
@@ -61,15 +60,16 @@ endif
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) -fopenmp $(OBJS) -o $(TARGET)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(TARGET)
 
 $(OUTDIR)/%.o: $(SRCDIR)/%.cpp
-	$(CXX) -fopenmp $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
 
 $(OUTDIR)/%.o: $(MAINDIR)/%.cpp
-	$(CXX) -fopenmp $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
 
 .PHONY: clean
 clean:
 	rm $(OBJS)
 	rm $(TARGET)
+
