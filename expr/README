@@ -1,0 +1,80 @@
+ExpressionParser 1.0
+February, 4 2011
+Kim Walisch, <kim.walisch@gmail.com>
+http://expressionparser.googlecode.com
+
+Contents
+========
+
+  1. About
+  2. Supported Operators
+  3. Examples of valid expressions
+  4. How to use it
+  5. Test programs
+  6. License
+
+1. About
+========
+
+ExpressionParser is a simple C++ expression parser with infix notation
+for integer arithmetic expressions. ExpressionParser evaluates
+arithmetic expressions passed as string arguments and returns the
+result.
+
+2. Supported Operators
+======================
+
+  OPERATOR     NAME                     ASSOCIATIVITY     PRECEDENCE
+
+  or,  OR      Bitwise Inclusive OR     Left               4
+  xor, XOR     Bitwise Exclusive OR     Left               5
+  and, AND     Bitwise AND              Left               6
+  not, NOT     Unary complement         Left              99
+  shl, SHL     Shift Left               Left               9
+  shr, SHR     Shift Right              Left               9
+  +            Addition                 Left              10
+  -            Subtraction              Left              10
+  *            Multiplication           Left              20
+  /            Division                 Left              20
+  %            Modulo                   Left              20
+  ^, **        Raise to power           Right             30
+  e, E         Scientific notation      Right             40
+
+The operator precedence and associativity has been set according to
+(uses the C and C++ operator precedence):
+http://en.wikipedia.org/wiki/Order_of_operations
+
+3. Examples of valid expressions
+================================
+
+  "2^16"                                  = 65536
+  "2^16 shr 15"                           = 2
+  "(0 + 0xdf234 - 1000) * 3 / 2 % 999"    = 828
+  "-(2^2^2^2)"                            = -65536
+  "(0 + not (0xDF234 and 1000) * 3) /-2"  = 817
+  "(2^16) + (1 SHL 16) shr 0X5"           = 4096
+  "5*-(2^(9+7))/3+5*(1 AND 0xFf123)"      = -109221
+
+4. How to use it
+================
+
+Have a look at the homepage http://expressionparser.googlecode.com
+and/or main.cpp for usage examples.
+
+5. Test programs
+================
+
+main.cpp contains 3 test programs for ExpressionParser: expr,
+expr_correctness and expr_benchmark (see main.cpp for more
+information).
+
+To compile these programs with GNU G++ use:
+$ make
+
+6. License
+==========
+
+ExpressionParser is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
