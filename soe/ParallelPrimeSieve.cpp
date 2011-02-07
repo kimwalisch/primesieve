@@ -21,28 +21,35 @@
 #include "PrimeNumberFinder.h"
 #include "pmath.h"
 
-#include <stdint.h>
+#if defined(_OPENMP)
 #include <omp.h>
+#endif
+
+#include <stdint.h>
 #include <stdexcept>
 #include <sstream>
-#include <cassert>
 #include <iostream>
 /**
- * @return The maximum number of threads available for the system's
- *         CPU or 1 if an error occured.
+ * @return The maximum number of threads (i.e. the number of logical
+ *         CPU cores) or 1 if OpenMP is disabled.
+ * @see    http://msdn.microsoft.com/en-us/library/ewb30w8w.aspx
  */
 int ParallelPrimeSieve::getMaxThreads() {
+#if defined(_OPENMP)
   int maxThreads = omp_get_max_threads();
   // check if the CPU has been detected correctly
   if (maxThreads < 1 || maxThreads > 4096)
     maxThreads = 1;
   return maxThreads;
+#else
+  return 1;
+#endif
 }
 
 /**
- * @return The ideal thread count for the system's CPU and the current
- *         set startNumber, stopNumber and flags (usually all threads
- *         available).
+ * @return The ideal thread count for the current set startNumber,
+ *         stopNumber and flags (usually the number of logical
+ *         CPU cores).
  */
 int ParallelPrimeSieve::getIdealThreadCount() const {
   // printing is only allowed using a single thread
@@ -59,7 +66,6 @@ int ParallelPrimeSieve::getIdealThreadCount() const {
   if (threads < 1)
     return 1;
   int maxThreads = getMaxThreads();
-  assert(maxThreads >= 1);
   // use all threads for big sieve intervals
   if (threads > static_cast<uint64_t> (maxThreads))
     return maxThreads;
@@ -68,25 +74,24 @@ int ParallelPrimeSieve::getIdealThreadCount() const {
 }
 
 /**
- * Sieve the prime numbers and prime k-tuplets between startNumber
- * and stopNumber in parallel using an ideal number of threads
- * (usually all threads available).
+ * Sieve the prime numbers and/or prime k-tuplets between startNumber
+ * and stopNumber in parallel using an ideal number of threads.
  */
 void ParallelPrimeSieve::sieve() {
   this->sieve(this->getIdealThreadCount());
 }
 
 /**
- * Sieve the prime numbers and prime k-tuplets between startNumber
- * and stopNumber in parallel.
- * @param threadCount A number of threads >= 1 and <= getMaxThreads()
+ * Sieve the prime numbers and/or prime k-tuplets between startNumber
+ * and stopNumber in parallel using `threadCount' threads.
+ * @pre threadCount >= 1 and <= getMaxThreads()
  */
 void ParallelPrimeSieve::sieve(int threadCount) {
-  if (threadCount < 1 ||
-      threadCount > getMaxThreads()) {
-    std::ostringstream os;
-    os << "threadCount for this CPU must be >= 1 and <= " << getMaxThreads();
-    throw std::invalid_argument(os.str());
+  if (threadCount < 1 || threadCount > getMaxThreads()) {
+    std::ostringstream message;
+    message << "threadCount for this CPU must be >= 1 and <= "
+            << getMaxThreads();
+    throw std::invalid_argument(message.str());
   }
   if (threadCount > 1 && (flags_ & PRINT_FLAGS))
     throw std::invalid_argument(
@@ -94,8 +99,10 @@ void ParallelPrimeSieve::sieve(int threadCount) {
   if (stopNumber_ < startNumber_)
     throw std::invalid_argument("STOP must be >= START");
 
-  // preliminaries
+#if defined(_OPENMP)
   timeElapsed_ = omp_get_wtime();
+
+  // preliminaries
   uint64_t threadInterval = (stopNumber_ - startNumber_) /
       static_cast<unsigned> (threadCount);
   if (threadInterval < 60 && threadCount > 1)
@@ -123,8 +130,6 @@ void ParallelPrimeSieve::sieve(int threadCount) {
     primeSieve[i].setStopNumber(threadStop);
     primeSieve[i].setSieveSize(this->getSieveSize());
     primeSieve[i].setFlags(flags_ & (~PRINT_STATUS));
-
-    // increment for the next thread
     threadStart = threadStop + 1;
     threadStop += threadInterval;
   }
@@ -136,7 +141,6 @@ void ParallelPrimeSieve::sieve(int threadCount) {
   ++i;
 
   // parallel prime sieving (OpenMP)
-  assert(i <= threadCount);
   #pragma omp parallel for num_threads(i)
   for (int j = 0; j < i; j++)
     primeSieve[j].sieve();
@@ -145,7 +149,11 @@ void ParallelPrimeSieve::sieve(int threadCount) {
   for (int k = 0; k < i; k++)
     for (int l = 0; l < COUNTS_SIZE; l++)
       counts_[l] += primeSieve[k].getCounts(l);
-
   delete[] primeSieve;
+
   timeElapsed_ = omp_get_wtime() - timeElapsed_;
+#else
+  // use single-threaded version if OpenMP is disabled
+  PrimeSieve::sieve();
+#endif
 }
