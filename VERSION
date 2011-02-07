@@ -10,7 +10,6 @@ NEW
 TODO
 ====
 
-  - Improve Makefile of console version
   - Implement expr/ExpressionParser.h and soe/ParallelPrimeSieve.cpp
     in the GUI version of primesieve
   - Add a CHANGES or NEW file
