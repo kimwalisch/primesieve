@@ -1,8 +1,0 @@
-Kim Walisch <kim.walisch@gmail.com>
-January 2011
-
-This directory contains Parsifal's arithmetic expression evaluator
-written in C <http://www.parsifalsoft.com/examples/evalexpression/index.html>.
-I have modified the code for use in my C++ project
-<http://primesieve.googlecode.com>, more information can be found in
-ArithmeticExpression.h.
