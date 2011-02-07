@@ -16,9 +16,7 @@
 
 TARGET = primesieve
 # Sieve of Eratosthenes directory
-SRCDIR = src
-# Parsifal arithmetic expression evaluator
-EVALDIR = thirdparty/eval11
+SRCDIR = soe
 # Main.cpp directory
 MAINDIR = console
 OUTDIR = out
@@ -36,12 +34,10 @@ OBJECTS = $(OUTDIR)\EratBig.obj \
   $(OUTDIR)\SieveOfEratosthenes.obj \
   $(OUTDIR)\PrimeNumberGenerator.obj \
   $(OUTDIR)\PrimeSieve.obj \
+  $(OUTDIR)\ParallelPrimeSieve.obj \
   $(OUTDIR)\PrimeNumberFinder.obj \
   $(OUTDIR)\EratSmall.obj \
   $(OUTDIR)\WheelFactorization.obj \
-  $(OUTDIR)\evalkern.obj \
-  $(OUTDIR)\evalwrap.obj \
-  $(OUTDIR)\ArithmeticExpression.obj \
   $(OUTDIR)\test.obj \
   $(OUTDIR)\main.obj
 TARGET = $(OUTDIR)\$(TARGET)
@@ -54,19 +50,13 @@ create_dir :
 !endif
  
 {$(SRCDIR)\}.cpp.obj:
-  $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
-
-{$(EVALDIR)\}.c.obj:
-  $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
-
-{$(EVALDIR)\}.cpp.obj:
-  $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
+  $(CPP) /openmp $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
 
 {$(MAINDIR)\}.cpp.obj:
   $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
 
 build : $(OBJECTS)
-  $(CPP) $(CPPFLAGS) /Fe$(TARGET) $(OBJECTS)
+  $(CPP) /openmp $(CPPFLAGS) /Fe$(TARGET) $(OBJECTS)
   
 clean: 
 	del $(OBJECTS)

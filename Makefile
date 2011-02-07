@@ -11,9 +11,7 @@
 
 TARGET = primesieve
 # Sieve of Eratosthenes directory
-SRCDIR = src
-# Parsifal arithmetic expression evaluator
-EVALDIR = thirdparty/eval11
+SRCDIR = soe
 # Main.cpp directory
 MAINDIR = console
 OUTDIR = out
@@ -49,11 +47,8 @@ else
   # Unkown compiler keep assertions enabled!
   CXXFLAGS += -O2
 endif
-
 # Generate list of object files
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp))
-OBJS += $(patsubst $(EVALDIR)/%.c,$(OUTDIR)/%.o,$(wildcard $(EVALDIR)/*.c))
-OBJS += $(patsubst $(EVALDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(EVALDIR)/*.cpp))
 OBJS += $(patsubst $(MAINDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(MAINDIR)/*.cpp))
 
 TARGET := $(OUTDIR)/$(TARGET)
@@ -66,19 +61,13 @@ endif
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(OBJS) -o $(TARGET)
+	$(CXX) -fopenmp $(OBJS) -o $(TARGET)
 
 $(OUTDIR)/%.o: $(SRCDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
-
-$(OUTDIR)/%.o: $(EVALDIR)/%.c
-	$(CXX) $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
-
-$(OUTDIR)/%.o: $(EVALDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
+	$(CXX) -fopenmp $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
 
 $(OUTDIR)/%.o: $(MAINDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
+	$(CXX) -fopenmp $(CXXFLAGS) $(STDINT_MACROS) -c -o $@ $<
 
 .PHONY: clean
 clean:
