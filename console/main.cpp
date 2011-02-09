@@ -243,6 +243,7 @@ int main(int argc, char* argv[]) {
       }
     }
     // print prime count results
+    std::cout << std::endl;
     for (int i = 0; i < primeSieve.COUNTS_SIZE; i++) {
       if (flags & (COUNT_PRIMES << i))
         std::cout << std::setw(width) << primes[i] << " : " <<
