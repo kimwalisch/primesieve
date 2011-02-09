@@ -23,15 +23,20 @@
 #include "PrimeNumberFinder.h"
 #include <stdint.h>
 
+class ParallelPrimeSieve;
+
 /**
  * PrimeSieve is a highly optimized implementation of the sieve of
  * Eratosthenes that finds prime numbers and prime k-tuplets
  * (twin primes, prime triplets, ...) up to 2^64.
  */
 class PrimeSieve {
+  friend class ParallelPrimeSieve;
+  friend class PrimeNumberFinder;
 public:
   enum { COUNTS_SIZE = PrimeNumberFinder::COUNTS_SIZE };
   PrimeSieve();
+  virtual ~PrimeSieve() { }
   uint64_t getStartNumber() const;
   uint64_t getStopNumber() const;
   uint32_t getSieveSize() const;
@@ -51,6 +56,11 @@ public:
   void setFlags(uint32_t);
   void sieve();
 protected:
+  void set(uint64_t, uint64_t, ParallelPrimeSieve*);
+  void reset();
+  virtual void doStatus(uint64_t);
+  /** Either this or the parent ParallelPrimeSieve object. */
+  PrimeSieve* parent_;
   /** Lower bound for sieving. */
   uint64_t startNumber_;
   /** Upper bound for sieveing. */
@@ -67,6 +77,10 @@ protected:
     * counts_[6] = prime septuplet count
     */
   uint64_t counts_[COUNTS_SIZE];
+  /** Sum of the segments that have been sieved (for status_). */
+  uint64_t segments_;
+  /** Status of the sieving process in percent. */
+  double status_;
   /** Time elapsed in seconds of the last sieve(void) session. */
   double timeElapsed_;
 };
