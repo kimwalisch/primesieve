@@ -18,6 +18,7 @@
  */
 
 #include "PrimeNumberFinder.h"
+#include "PrimeSieve.h"
 #include "cpuid.h" 
 #include "pmath.h"
 
@@ -40,10 +41,11 @@ const uint32_t PrimeNumberFinder::nextBitValue_[NUMBERS_PER_BYTE] = { 0,
      0, 0, 0, 0, 31 };
 
 PrimeNumberFinder::PrimeNumberFinder(uint64_t startNumber, uint64_t stopNumber,
-    uint32_t sieveSize, ResetSieve* resetSieve, uint32_t flags) :
+    uint32_t sieveSize, uint32_t flags,
+    ResetSieve* resetSieve, PrimeSieve* parent) :
   SieveOfEratosthenes(startNumber, stopNumber, sieveSize, resetSieve),
-      flags_(flags), isPOPCNTSupported_(isPOPCNTSupported()),
-      primeByteCounts_(NULL), primeBitValues_(NULL), status_(0) {
+      flags_(flags), parent_(parent), isPOPCNTSupported_(isPOPCNTSupported()),
+      primeByteCounts_(NULL), primeBitValues_(NULL) {
   for (uint32_t i = 0; i < COUNTS_SIZE; i++)
     counts_[i] = 0;
   this->initLookupTables();
@@ -161,28 +163,6 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
 }
 
 /**
- * Print the status (in percents) of the sieving process
- * to the standard output.
- */
-void PrimeNumberFinder::status(uint32_t sieveSize) {
-  uint64_t upperBound = this->getLowerBound() + sieveSize
-      * NUMBERS_PER_BYTE + 1;
-  float status = 100.0f;
-  if (upperBound < this->getStopNumber()) {
-    status *= 1.0f - 
-        static_cast<float> (this->getStopNumber() - upperBound) /
-        static_cast<float> (this->getStopNumber() - this->getStartNumber());
-  }
-  if (flags_ & PRINT_STATUS) {
-    uint32_t floorStatus = static_cast<uint32_t> (status);
-    if (status_ < floorStatus) {
-      status_ = floorStatus;
-      std::cout << '\r' << status_ << '%' << std::flush;
-    }
-  }
-}
-
-/**
  * Print the prime numbers or prime k-tuplets of the current
  * sieve round to the standard output.
  */
@@ -214,8 +194,8 @@ void PrimeNumberFinder::analyseSieve(const uint8_t* sieve,
     uint32_t sieveSize) {
   if (flags_ & COUNT_FLAGS)
     this->count(sieve, sieveSize);
-  if (flags_ & STATUS_FLAGS)
-    this->status(sieveSize);
   if (flags_ & PRINT_FLAGS)
     this->print(sieve, sieveSize);
+  assert(parent_ != NULL);
+  parent_->doStatus(sieveSize * NUMBERS_PER_BYTE);
 }
