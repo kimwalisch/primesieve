@@ -21,8 +21,9 @@
 #define PRIMENUMBERFINDER_H
 
 #include "SieveOfEratosthenes.h"
-
 #include <stdint.h>
+
+class PrimeSieve;
 
 /** Flags (settings) for PrimeNumberFinder. */
 enum {
@@ -56,13 +57,19 @@ enum {
 class PrimeNumberFinder: public SieveOfEratosthenes {
 public:
   enum { COUNTS_SIZE = 7 };
-  PrimeNumberFinder(uint64_t, uint64_t, uint32_t, ResetSieve*, uint32_t);
+  PrimeNumberFinder(uint64_t, uint64_t, uint32_t, uint32_t,
+      ResetSieve*, PrimeSieve*);
   ~PrimeNumberFinder();
   uint64_t getCounts(uint32_t) const;
 private:
   static const uint32_t nextBitValue_[NUMBERS_PER_BYTE];
   /** Settings for PrimeNumberFinder. */
   const uint32_t flags_;
+  /**
+   * Used to calculate the status of the sieving process via
+   * PrimeSieve::doStatus(uint64_t).
+   */
+  PrimeSieve* const parent_;
   /**
    * Used to check if the CPU supports the SSE 4.2 POPCNT
    * instruction.
@@ -90,12 +97,9 @@ private:
     * counts_[6] = prime septuplet count
     */
   uint64_t counts_[COUNTS_SIZE];
-  /** Status of the sieving process in percents. */
-  uint32_t status_;
   void initLookupTables();
   void count(const uint8_t*, uint32_t);
   void print(const uint8_t*, uint32_t);
-  void status(uint32_t);
   void analyseSieve(const uint8_t*, uint32_t);
 };
 
