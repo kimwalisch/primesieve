@@ -24,7 +24,7 @@
 
 /**
  * ParallelPrimeSieve uses multiple PrimeSieve objects and threads
- * for parallel prime sieveing.
+ * (OpenMP) for parallel prime sieveing.
  * @see PrimeSieve.cpp
  */
 class ParallelPrimeSieve: public PrimeSieve {
@@ -33,6 +33,8 @@ public:
   int getIdealThreadCount() const;
   void sieve();
   void sieve(int);
+protected:
+  void doStatus(uint64_t);
 };
 
 #endif // PARALLELPRIMESIEVE_H
