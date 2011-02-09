@@ -194,7 +194,7 @@ void testBigPrimes() {
       primeSieve.setStopNumber(primeSieve.getStartNumber() + ipow(2, 32));
       std::cout << "Sieve an interval of 2^32 starting at 10^" << 12 + i << std::endl;
       primeSieve.sieve();
-      std::cout << "Prime count: " << std::setw(11) << primeSieve.getPrimeCount();
+      std::cout << "\rPrime count: " << std::setw(11) << primeSieve.getPrimeCount();
       evaluateTest(primeSieve.getPrimeCount() == primeCounts[11 + i]);
     }
   }
