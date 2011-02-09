@@ -18,6 +18,7 @@
  */
 
 #include "PrimeSieve.h"
+#include "ParallelPrimeSieve.h"
 #include "settings.h"
 #include "pmath.h"
 #include "ResetSieve.h"
@@ -28,18 +29,17 @@
 #include <stdexcept>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
-#include <cassert>
 
 PrimeSieve::PrimeSieve() :
     startNumber_(0), stopNumber_(0),
     sieveSize_(settings::DEFAULT_SIEVESIZE_PRIMENUMBERFINDER), flags_(
     COUNT_PRIMES), timeElapsed_(0.0) {
-  assert(COUNTS_SIZE == 7);
-  for (uint32_t i = 0; i < COUNTS_SIZE; i++)
-    counts_[i] = 0;
+  parent_ = this;
+  this->reset();
 }
 
 uint64_t PrimeSieve::getStartNumber() const {
@@ -202,19 +202,54 @@ void PrimeSieve::setFlags(uint32_t flags) {
 }
 
 /**
+ * Used for parallel prime sieving.
+ * @see ParallelPrimeSieve.cpp
+ */
+void PrimeSieve::set(uint64_t startNumber, uint64_t stopNumber,
+    ParallelPrimeSieve* parent) {
+  parent_ = parent;
+  startNumber_ = startNumber;
+  stopNumber_ = stopNumber;
+  this->setSieveSize(parent_->getSieveSize());
+  this->setFlags(parent_->getFlags());
+}
+
+void PrimeSieve::reset() {
+  segments_ = 0;
+  for (uint32_t i = 0; i < COUNTS_SIZE; i++)
+    counts_[i] = 0;
+  status_ = -1.0;
+  parent_->doStatus(0);
+}
+
+/**
+ * Print the status (in percent) of the sieving process
+ * to the standard output.
+ */
+void PrimeSieve::doStatus(uint64_t segment) {
+  segments_ += segment;
+  double old = status_;
+  status_ = static_cast<double> (segments_) /
+            static_cast<double> (1 + stopNumber_ - startNumber_) * 100.0;
+  if (static_cast<int> (status_) > 99)
+    status_ = 100.0;
+  if ((flags_ & PRINT_STATUS) &&
+      static_cast<int> (status_) > static_cast<int> (old)) {
+    std::ostringstream os;
+    os << '\r' << static_cast<int> (status_) << '%';
+    std::cout << os.str() << std::flush;
+  }
+}
+
+/**
  * Sieve the prime numbers and prime k-tuplets between
  * startNumber and startNumber.
  */
 void PrimeSieve::sieve() {
   if (stopNumber_ < startNumber_)
     throw std::invalid_argument("STOP must be >= START");
-
-  // preliminaries
   timeElapsed_ = static_cast<double> (std::clock());
-  for (uint32_t i = 0; i < COUNTS_SIZE; i++)
-    counts_[i] = 0;
-  if (flags_ & PRINT_STATUS)
-    std::cout << "\r0%" << std::flush;
+  this->reset();
 
   // small primes have to be examined manually
   if (startNumber_ <= 5) {
@@ -235,21 +270,20 @@ void PrimeSieve::sieve() {
 
   // start sieving
   if (stopNumber_ >= 7) {
-
     // needed by primeNumberGenerator and primeNumberFinder to
     // reset their sieve arrays
     ResetSieve resetSieve(settings::PREELIMINATE_RESETSIEVE);
     // used to sieve the prime numbers and prime k-tuplets between
     // startNumber_ and stopNumber_
     PrimeNumberFinder primeNumberFinder((startNumber_ > 7) ?startNumber_ :7,
-        stopNumber_, sieveSize_, &resetSieve, flags_);
+        stopNumber_, sieveSize_, flags_, &resetSieve, parent_);
 
     if (U32SQRT(stopNumber_) > resetSieve.getEliminateUpTo()) {
       // used to generate the prime numbers up to sqrt(stopNumber_)
       // needed for sieving by primeNumberFinder
       PrimeNumberGenerator primeNumberGenerator(
           settings::SIEVESIZE_PRIMENUMBERGENERATOR, &primeNumberFinder);
-      std::vector < uint32_t > primes16Bit;
+      std::vector<uint32_t> primes16Bit;
       primes16Bit.push_back(3);
       uint32_t stop = U32SQRT(primeNumberGenerator.getStopNumber());
       uint32_t keep = U32SQRT(stop);
@@ -274,7 +308,6 @@ void PrimeSieve::sieve() {
       // generate the last remaining primes
       primeNumberGenerator.finish();
     }
-
     // sieve the the last remaining primes
     primeNumberFinder.finish();
     // sum the results
@@ -282,9 +315,8 @@ void PrimeSieve::sieve() {
       counts_[i] += primeNumberFinder.getCounts(i);
   }
 
-  // finishing
-  if (flags_ & PRINT_STATUS)
-    std::cout << "\r100%" << std::endl;
+  // set status_ to 100.0 (percent)
+  parent_->doStatus(10);
   timeElapsed_ = (static_cast<double> (std::clock()) - timeElapsed_) /
       static_cast<double> (CLOCKS_PER_SEC);
 }
