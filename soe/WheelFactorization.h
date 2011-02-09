@@ -39,9 +39,9 @@
 
 /** A sieving prime for use with wheel factorization. */
 class WheelPrime {
-public:
   friend class EratSmall;
   friend class EratMedium;
+public:
   uint32_t getSievePrime() const {
     return sievePrime_;
   }
