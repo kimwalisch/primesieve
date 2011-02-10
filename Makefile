@@ -17,7 +17,7 @@ STDINT_MACROS = -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
 CXX = g++
 
 # GNU GCC compiler
-ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i GCC),)
+ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G++'),)
   CXXFLAGS += -fopenmp
   # Mac OS X
   ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i apple),)
