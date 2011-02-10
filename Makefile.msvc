@@ -14,14 +14,16 @@
 # Ignore all error return codes
 .IGNORE:
 
-TARGET = primesieve
+TARGET = primesieve.exe
 SRCDIR = soe
 MAINDIR = console
 OUTDIR = out
 
 # Define the C++ compiler & options
 CPP      = cl
-CPPFLAGS = /O2 /GL /EHsc /W3 /D "NDEBUG" /D "__STDC_CONSTANT_MACROS" /D "__STDC_LIMIT_MACROS"
+CPPFLAGS = /openmp /O2 /GL /EHsc /W3 /D "NDEBUG" /D "__STDC_CONSTANT_MACROS" /D "__STDC_LIMIT_MACROS"
+LINK     = link
+LFLAGS   = /OPT:REF /OPT:ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
 
 # Inculde stdint.h (needed prior MSVC 2010)
 INCPATH  = -I"thirdparty"
@@ -48,14 +50,14 @@ create_dir :
 !endif
  
 {$(SRCDIR)\}.cpp.obj:
-  $(CPP) /openmp $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
+  $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
 
 {$(MAINDIR)\}.cpp.obj:
   $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
 
 build : $(OBJECTS)
-  $(CPP) /openmp $(CPPFLAGS) /Fe$(TARGET) $(OBJECTS)
+  $(LINK) $(LFLAGS) /OUT:$(TARGET) $(OBJECTS)
   
 clean: 
 	del $(OBJECTS)
-	del $(TARGET).exe
+	del $(TARGET)
