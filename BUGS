@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       21 December 2010 
-# Last modified: 17 January 2010
+# Last modified: 11 February 2010
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -15,24 +15,6 @@ repository, see http://code.google.com/p/primesieve/source/checkout
 
 Known bugs
 ==========
-
-  4. MINOR BUG
-    Another bug in the arithmetic expression evaluator.
-  
-    > primesieve.exe 1e16 e9+1e16
-    START         = 10000000000000000
-    STOP          = 9233372036854775808
-
-    >> FIXED in version 1.11, committed on the 17th January 2011
-    >> Thanks to ybhuang for bug reporting
-
-  3. SERIOUS BUG
-    The arithmetic expression evaluator gives wrong results with the
-    power of operator "**" and exponential notation.
-    
-    mingw/g++ 4.5.1 x64, i.e. 1e16 = 10000000000000034
-    >> FIXED in version 1.10, committed on the 16th January 2011
-    >> Thanks to hyb for bug reporting
 
   2. SERIOUS BUG
     Prime numbers preceding the startNumber are printed and counted:
