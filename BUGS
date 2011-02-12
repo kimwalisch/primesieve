@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       21 December 2010 
-# Last modified: 11 February 2010
+# Last modified: 12 February 2010
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -16,26 +16,26 @@ repository, see http://code.google.com/p/primesieve/source/checkout
 Known bugs
 ==========
 
-  2. SERIOUS BUG
-    Prime numbers preceding the startNumber are printed and counted:
+2. Prime numbers preceding the startNumber might be counted and
+   printed:
 
-    > primesieve 1000007999999999 1000007999999999
-    Sieve size set to 64 KiloBytes
-    100%
-    Prime numbers: 2
-    Time elapsed: 0.03 sec
+   > primesieve 1000007999999999 1000007999999999
+   Sieve size set to 64 KiloBytes
+   100%
+   Prime numbers: 2
+   Time elapsed: 0.03 sec
 
-    >> FIXED in version 1.05, committed on the 8th January 2011
-    >> Thanks to Andrey Kulsha for bug reporting
+   >> FIXED in version 1.05, committed on the 8th January 2011
+   >> Thanks to Andrey Kulsha for bug reporting
 
-  1. MINOR BUG
-    The console version of primesieve 1.0 produces the following output:
+1. The console version of primesieve 1.0 produces wrong status output
+   in some cases:
 
-    > primesieve 10000000000000000 10000000000000001 -s 256
-    Sieve size set to 256 KiloBytes
-    100%966296%
-    Prime numbers: 0
-    Time elapsed: 0.106 sec
+   > primesieve 10000000000000000 10000000000000001 -s 256
+   Sieve size set to 256 KiloBytes
+   100%966296%
+   Prime numbers: 0
+   Time elapsed: 0.106 sec
 
-    100%966296% is an error, should be 100%
-    >> FIXED in version 1.01, committed on the 23rd December 2010
+   100%966296% is an error, should be 100%
+   >> FIXED in version 1.01, committed on the 23rd December 2010
