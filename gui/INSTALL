@@ -4,15 +4,14 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010 
-# Last modified: 12 February 2011
+# Last modified: 15 February 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
 
-The GUI version of primesieve has not been ported to version 2.0 yet,
+The GUI version of primesieve has not been ported to version 2.0 yet
 the latest GUI version is primesieve-1.06 (fixes bug, improved memory
 pool).
 
 To get primesieve-1.06 use:
-
 $ svn checkout http://primesieve.googlecode.com/svn/tags/primesieve-1.06 primesieve-read-only
