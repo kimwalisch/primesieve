@@ -21,7 +21,7 @@
  * @file  main.cpp
  * @brief Command-line version of primesieve, multi-threaded (OpenMP),
  *        compiles on many platforms.
- * 
+ *
  * primesieve is a highly optimized implementation of the sieve of
  * Eratosthenes that finds prime numbers and prime k-tuplets (twin
  * primes, prime triplets, ...) up to 2^64 maximum.
