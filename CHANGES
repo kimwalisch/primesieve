@@ -1,14 +1,14 @@
-New in version 2.0, 12/02/2011
+New in version 2.0, 15/02/2011
 ==============================
 
 1. Added soe/ParallelPrimeSieve.cpp which counts primes in parallel
-   using multiple threads (OpenMP).
+   using OpenMP.
 2. Added an arithmetic expression parser (./expr) to ease number input.
 3. Added a test suite to the console version of primesieve
    (option: -test) which runs various correctness tests.
 4. The console version has been reviewed and is first released.
-5. Fixed a minor bug in soe/PrimeNumberFinder.cpp which might count and
-   print the prime preceding the start number (see BUGS file).
+5. Fixed a minor bug in soe/PrimeNumberFinder.cpp which counts and
+   prints the prime preceding the start number (see BUGS file).
 6. Improved the memory pool of soe/EratBig.cpp, primesieve 1.0 ran
    into trouble when sieving near 2^64.
 7. Makefile modified to better support GCC compatible compilers,
