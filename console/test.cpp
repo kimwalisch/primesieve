@@ -225,7 +225,7 @@ void test() {
   // calculate some popular values of pi(x)
   testPix();
   std::cout << std::endl;
-  // allocates up to 1 Gigabyte of memory
+  // allocates up to 1 GB of memory
   testBigPrimes();
   std::clock_t stop = std::clock();
   std::cout << std::endl;
