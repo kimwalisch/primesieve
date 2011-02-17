@@ -88,25 +88,26 @@ void help() {
             << "  primesieve 1e18 1e18+2**32 -c1234567" << std::endl
             << std::endl
             << "Options:" << std::endl
-            << "  -c[N]         Count prime numbers and/or prime k-tuplets," << std::endl
-            << "                e.g -c1 count prime numbers, -c3 count prime triplets, ..." << std::endl
-            << "                N >= 1 and N <= 7" << std::endl
-            << "  -p[N]         Print prime numbers or prime k-tuplets," << std::endl
-            << "                e.g -p1 print prime numbers, -p2 print twin primes, ..." << std::endl
-            << "                N >= 1 and N <= 7" << std::endl
-            << "  -q            Quiet mode, print less output" << std::endl
-            << "  -s <SIZE>     Set the sieve size in KiloBytes, e.g. -s 256," << std::endl
-            << "                set SIZE to your CPU's L1/L2 cache size for best performance" << std::endl
-            << "                SIZE >= 1 and SIZE <= 8192" << std::endl
-            << "  -t <THREADS>  Set the number of threads for sieving, e.g. -t 4," << std::endl
-            << "                THREADS >= 1 and THREADS <= " << maxThreads << " (CPU max threads)" << std::endl
-            << "  -test         Run various sieving tests (single-threaded) and exit" << std::endl
-            << "  -v            Print version and license information and exit" << std::endl;
+            << "  -c[N]        Count prime numbers and/or prime k-tuplets," << std::endl
+            << "               e.g -c1 count prime numbers, -c3 count prime triplets, ..." << std::endl
+            << "               N >= 1 and N <= 7" << std::endl
+            << "  -p[N]        Print prime numbers or prime k-tuplets," << std::endl
+            << "               e.g -p1 print prime numbers, -p2 print twin primes, ..." << std::endl
+            << "               N >= 1 and N <= 7" << std::endl
+            << "  -q           Quiet mode, print less output" << std::endl
+            << "  -s <SIZE>    Set the sieve size in KiloBytes, e.g. -s 256," << std::endl
+            << "               set SIZE to your CPU's L1/L2 cache size for best performance" << std::endl
+            << "               SIZE >= 1 and SIZE <= 8192" << std::endl
+            << "  -t <THREADS> Set the number of threads for sieving, e.g. -t 4," << std::endl
+            << "               THREADS >= 1 and THREADS <= " << maxThreads << " (CPU max threads)" << std::endl
+            << "  -test        Run various sieving tests and exit" << std::endl
+            << "  -v           Print version and license information and exit" << std::endl;
   std::exit(EXIT_SUCCESS);
 }
 
-void error(const std::string &str1, const std::string &str2 = "") {
-  std::cerr << str1 << str2 << std::endl
+void exprError(const std::string &str) {
+  std::cerr << "Error: \"" << str
+            << "\" is not a valid arithmetic expression" << std::endl
             << "Try `primesieve -help' for more information." << std::endl;
   std::exit(EXIT_FAILURE);
 }
@@ -127,18 +128,20 @@ void processOptions(int argc, char* argv[]) {
   ExpressionParser<uint64_t> parser;
   int i = 1;
 
-  // process the START and STOP number
+  // process the START and STOP numbers
   if (argc > 2) {
     if (!isDigits(argv[i]))
       showExpressionResults = true;
-    if (!parser.eval(argv[i++]))
-      error("START is not a valid expression: ", parser.getErrorMessage(false));
+    if (!parser.eval(argv[i]))
+      exprError(argv[i]);
     start = parser.getResult();
+    i++;
     if (!isDigits(argv[i]))
       showExpressionResults = true;
-    if (!parser.eval(argv[i++]))
-      error("STOP is not a valid expression: ", parser.getErrorMessage(false));
+    if (!parser.eval(argv[i]))
+      exprError(argv[i]);
     stop = parser.getResult();
+    i++;
   }
 
   // process the options ([OPTION]...)
@@ -160,34 +163,23 @@ void processOptions(int argc, char* argv[]) {
                 break;
       case 'q': quietMode = true;
                 break;
-      case 's': if (!parser.eval(argv[++i]))
+      case 's': if (++i >= argc || !parser.eval(argv[i]))
                   help();
                 sieveSize = static_cast<uint32_t> (parser.getResult());
-                if (sieveSize < 1 || sieveSize > 8192)
-                  error("Sieve size must be >= 1 and <= 8192 KiloBytes");
                 sieveSize = nextHighestPowerOf2(sieveSize);
                 break;
       case 't': if (std::string("test").compare(++argv[i]) == 0) {
                   test();
                   std::exit(EXIT_SUCCESS);
                 }
-                if (!parser.eval(argv[++i]))
+                if (++i >= argc || !parser.eval(argv[i]))
                   help();
                 threads = static_cast<int> (parser.getResult());
-                if (threads < 1 || threads > maxThreads) {
-                  std::ostringstream message;
-                  message << "Use a number of threads >= 1 and <= "
-                          << maxThreads
-                          << " for this CPU";
-                  error(message.str());
-                }
                 break;
       case 'v': version();
       default : help();
     }
   }
-  if ((flags & PRINT_FLAGS) && threads > 1)
-    error("Printing is only allowed using a single thread");
 }
 
 /**
@@ -202,15 +194,11 @@ int main(int argc, char* argv[]) {
   if (!quietMode && showExpressionResults)
     std::cout << std::setw(width) << "START" << " = " << start << std::endl
               << std::setw(width) << "STOP"  << " = " << stop  << std::endl;
-  if (start > stop)
-    error("STOP must be >= START");
-  if (stop >= UINT64_MAX - UINT32_MAX * UINT64_C(10))
-    error("STOP must be < (2^64-1) - (2^32-1) * 10");
 
   // set default settings
   if ((flags & COUNT_FLAGS) == 0 && (flags & PRINT_FLAGS) == 0)
     flags |= COUNT_PRIMES;
-  if ((flags & PRINT_FLAGS) == 0)
+  if (!quietMode && (flags & PRINT_FLAGS) == 0)
     flags |= PRINT_STATUS;
   if (sieveSize == 0)
     sieveSize = (stop < L2_THRESHOLD) ?L1_CACHE_SIZE :L2_CACHE_SIZE;
@@ -228,10 +216,12 @@ int main(int argc, char* argv[]) {
     if (threads == -1)
       threads = primeSieve.getIdealThreadCount();
     if (!quietMode)
-      std::cout << std::setw(width) << "threads" << " = " << threads << std::endl;
+      std::cout << std::setw(width) << "Threads" << " = " << threads << std::endl;
 
     // start sieving primes
     primeSieve.sieve(threads);
+    if ((flags & PRINT_STATUS) || (flags & PRINT_FLAGS))
+      std::cout << std::endl;
 
     // get max output string length
     width = static_cast<int> (std::strlen("Time elapsed"));
@@ -243,7 +233,6 @@ int main(int argc, char* argv[]) {
       }
     }
     // print prime count results
-    std::cout << std::endl;
     for (int i = 0; i < primeSieve.COUNTS_SIZE; i++) {
       if (flags & (COUNT_PRIMES << i))
         std::cout << std::setw(width) << primes[i] << " : " <<
@@ -253,7 +242,8 @@ int main(int argc, char* argv[]) {
         primeSieve.getTimeElapsed() << " sec" << std::endl;
   }
   catch (std::exception& ex) {
-    std::cerr << ex.what() << std::endl;
+    std::cerr << "Error: " << ex.what() << std::endl
+              << "Try `primesieve -help' for more information." << std::endl;
     std::exit(EXIT_FAILURE);
   }
   return 0;
