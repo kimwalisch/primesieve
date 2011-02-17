@@ -55,10 +55,9 @@ namespace {
   bool quietMode = false;
   bool showExpressionResults = false;
 
-  uint64_t start = 0;         /* lower bound for sieving */
-  uint64_t stop = 0;          /* upper bound for sieving */
-  uint32_t sieveSize = 0;     /* sieve size in KiloBytes */
-  uint32_t flags = 0;         /* settings */
+  uint64_t numbers[2] = {0, 0};  /* start and stop number for sieving */
+  uint32_t sieveSize = 0;        /* sieve size in KiloBytes */
+  uint32_t flags = 0;            /* settings */
 
   int maxThreads = ParallelPrimeSieve::getMaxThreads();
   int threads = -1;
@@ -105,13 +104,6 @@ void help() {
   std::exit(EXIT_SUCCESS);
 }
 
-void exprError(const std::string &str) {
-  std::cerr << "Error: \"" << str
-            << "\" is not a valid arithmetic expression" << std::endl
-            << "Try `primesieve -help' for more information." << std::endl;
-  std::exit(EXIT_FAILURE);
-}
-
 bool isDigits(const std::string &str) {
   if (str.length() == 0)
     return false;
@@ -129,20 +121,17 @@ void processOptions(int argc, char* argv[]) {
   int i = 1;
 
   // process the START and STOP numbers
-  if (argc > 2) {
-    if (!isDigits(argv[i]))
-      showExpressionResults = true;
-    if (!parser.eval(argv[i]))
-      exprError(argv[i]);
-    start = parser.getResult();
-    i++;
-    if (!isDigits(argv[i]))
-      showExpressionResults = true;
-    if (!parser.eval(argv[i]))
-      exprError(argv[i]);
-    stop = parser.getResult();
-    i++;
-  }
+  if (argc > 2)
+    for (; i <= 2; i++) {
+      if (!parser.eval(argv[i])) {
+        std::cerr << "Error: \"" << argv[i]  << "\" is not a valid arithmetic expression" << std::endl
+                  << "Try `primesieve -help' for more information." << std::endl;
+        std::exit(EXIT_FAILURE);
+      }
+      numbers[i-1] = parser.getResult();
+      if (!isDigits(argv[i]))
+        showExpressionResults = true;
+    }
 
   // process the options ([OPTION]...)
   for (; i < argc; i++) {
@@ -192,8 +181,8 @@ int main(int argc, char* argv[]) {
 
   // display expression results
   if (!quietMode && showExpressionResults)
-    std::cout << std::setw(width) << "START" << " = " << start << std::endl
-              << std::setw(width) << "STOP"  << " = " << stop  << std::endl;
+    std::cout << std::setw(width) << "START" << " = " << numbers[0] << std::endl
+              << std::setw(width) << "STOP"  << " = " << numbers[1]  << std::endl;
 
   // set default settings
   if ((flags & COUNT_FLAGS) == 0 && (flags & PRINT_FLAGS) == 0)
@@ -201,15 +190,15 @@ int main(int argc, char* argv[]) {
   if (!quietMode && (flags & PRINT_FLAGS) == 0)
     flags |= PRINT_STATUS;
   if (sieveSize == 0)
-    sieveSize = (stop < L2_THRESHOLD) ?L1_CACHE_SIZE :L2_CACHE_SIZE;
+    sieveSize = (numbers[1] < L2_THRESHOLD) ?L1_CACHE_SIZE :L2_CACHE_SIZE;
 
   if (!quietMode)
     std::cout << std::setw(width) << "Sieve size" << " = " << sieveSize
               << " KiloBytes" << std::endl;
   try {
     ParallelPrimeSieve primeSieve;
-    primeSieve.setStartNumber(start);
-    primeSieve.setStopNumber(stop);
+    primeSieve.setStartNumber(numbers[0]);
+    primeSieve.setStopNumber(numbers[1]);
     primeSieve.setSieveSize(sieveSize);
     primeSieve.setFlags(flags);
 
