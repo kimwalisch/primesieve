@@ -164,15 +164,13 @@ void PrimeSieve::setStopNumber(uint64_t stopNumber) {
  *      sieveSize must be a power of 2.
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
-  // SieveOfEratosthenes lower sieve size limit
-  if (sieveSize < 1)
-    throw std::invalid_argument("Sieve size must be >= 1 KiloByte");
+  // SieveOfEratosthenes lower sieve size limit AND 
   // EratBig upper sieveSize limit
-  if (sieveSize > 8192)
-    throw std::invalid_argument("Sieve size must be <= 8192 KiloBytes");
+  if (sieveSize < 1 || sieveSize > 8192)
+    throw std::invalid_argument("sieve size must be >= 1 and <= 8192 KiloBytes");
   // EratBig requires a power of 2 sieve size
   if (!isPowerOf2(sieveSize))
-    throw std::invalid_argument("Sieve size must be a power of 2");
+    throw std::invalid_argument("sieve size must be a power of 2");
   // convert to Bytes
   sieveSize_ = sieveSize * 1024;
 }
