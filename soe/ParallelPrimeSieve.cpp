@@ -53,14 +53,16 @@ int ParallelPrimeSieve::getMaxThreads() {
  *         CPU cores).
  */
 int ParallelPrimeSieve::getIdealThreadCount() const {
-  // printing is only allowed using a single thread
+  if (stopNumber_ < startNumber_)
+    throw std::invalid_argument("STOP must be >= START");
+  // 1 thread for sequential printing
   if (flags_ & PRINT_FLAGS)
     return 1;
   // I made some tests around 10^19 which showed that each
   // thread should at least sieve an interval of
   // sqrt(stopNumber) / 6 for a performance benefit
   uint64_t min = U32SQRT(stopNumber_) / 6;
-  // do not use multiple-threads for small intervals < 10^8
+  // do not use multiple-threads for small intervals
   if (min < 100000000)
     min = 100000000;
   uint64_t threads = (stopNumber_ - startNumber_) / min;
@@ -108,27 +110,28 @@ void ParallelPrimeSieve::sieve(int threadCount) {
   if (threadCount < 1 ||
       threadCount > getMaxThreads()) {
     std::ostringstream message;
-    message << "threadCount for this CPU must be >= 1 and <= "
-            << getMaxThreads();
+    message << "use a number of threads >= 1 and <= "
+            << getMaxThreads()
+            << " for this CPU";
     throw std::invalid_argument(message.str());
   }
   if (threadCount > 1 && (flags_ & PRINT_FLAGS))
     throw std::invalid_argument(
-        "Printing is only allowed using a single thread");
+        "printing is only allowed using a single thread");
 
 #if defined(_OPENMP)
-  timeElapsed_ = omp_get_wtime();
-  this->reset();
-
   uint64_t threadInterval = (stopNumber_ - startNumber_) /
       static_cast<unsigned> (threadCount);
   if (threadInterval < 60 && threadCount > 1)
     throw std::invalid_argument(
-        "Use at least an interval of 60 for each thread");
-  // the thread interval must be a multiple of 30
+        "use at least an interval of 60 for each thread");
+
+  timeElapsed_ = omp_get_wtime();
+  this->reset();
+
+  // threadInterval must be a multiple of 30
   if (threadInterval % 30 != 0)
     threadInterval += 30 - (threadInterval % 30);
-
   // calculate the start and stop number of the first thread
   uint64_t tStart = startNumber_;
   uint64_t tStop  = tStart + threadInterval;
@@ -149,10 +152,11 @@ void ParallelPrimeSieve::sieve(int threadCount) {
   }
   primeSieve[i] = new PrimeSieve;
   primeSieve[i++]->set(tStart, stopNumber_, this);
+  threadCount = i;
 
-  // OpenMP parallel prime sieving
-  #pragma omp parallel for num_threads(i)
-  for (int j = 0; j < i; j++) {
+  // parallel prime sieving
+  #pragma omp parallel for num_threads(threadCount)
+  for (int j = 0; j < threadCount; j++) {
     primeSieve[j]->sieve();
     for (int k = 0; k < COUNTS_SIZE; k++) {
       #pragma omp atomic
