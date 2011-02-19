@@ -23,14 +23,13 @@
  *        compiles on many platforms.
  *
  * primesieve is a highly optimized implementation of the sieve of
- * Eratosthenes that finds prime numbers and prime k-tuplets (twin
+ * Eratosthenes that generates prime numbers and prime k-tuplets (twin
  * primes, prime triplets, ...) up to 2^64 maximum.
  */
 
 #include "../expr/ExpressionParser.h"
 #include "../soe/ParallelPrimeSieve.h"
 #include "../soe/pmath.h"
-#include "../soe/cpuid.h"
 
 /// declared in test.cpp
 void test();
@@ -43,7 +42,6 @@ void test();
 #include <string>
 #include <cstring>    /* std::strlen(const char*) */
 #include <cctype>     /* std::tolower(int) */
-#include <sstream>
 
 namespace {
   // Unfortunately there is no easy way to get the CPU L1 and L2 cache
