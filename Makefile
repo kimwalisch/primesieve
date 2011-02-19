@@ -4,7 +4,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010 
-# Last modified:   11 February 2011
+# Last modified:   19 February 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -16,14 +16,25 @@ OUTDIR = out
 STDINT_MACROS = -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
 CXX = g++
 
-# GNU GCC compiler
-ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G++'),)
+# Oracle Solaris Studio (former Sun Studio)
+ifeq ($(CXX),sunCC)
+  CXXFLAGS += +w -xopenmp -O5 -xarch=sse4_2
+  CXXFLAGS += -xipo -xrestrict -xalias_level=compatible
+  CXXFLAGS += -DNDEBUG
+
+# Intel C++ Compiler
+else ifeq ($(CXX),icpc)
+  CXXFLAGS += -Wall -ansi -openmp -fast
+  CXXFLAGS += -DNDEBUG
+
+# GCC, the GNU Compiler Collection
+else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G++'),)
   CXXFLAGS += -fopenmp
   # Mac OS X
   ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i apple),)
     CXXFLAGS += -fast
   else
-    CXXFLAGS += -O3
+    CXXFLAGS += -O2 -Wall -Wextra -ansi
   endif
   GCC_MAJOR := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
   GCC_MINOR := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
@@ -31,14 +42,6 @@ ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G++'),)
   # Add POPCNT (SSE 4.2) support if using GCC >= 4.4
   CXXFLAGS += $(shell if [ $(GCC_VERSION) -ge 44 ]; then echo -mpopcnt; fi)
   CXXFLAGS += -DNDEBUG
-
-# Intel C++ Compiler
-else ifeq ($(CXX),icpc)
-  CXXFLAGS += -openmp -fast -DNDEBUG
-
-# Oracle Solaris Studio (former Sun Studio)
-else ifeq ($(CXX),sunCC)
-  CXXFLAGS += -xopenmp -O5 -xarch=sse4_2 -xipo -xrestrict -xalias_level=compatible -DNDEBUG
 
 # Unkown compiler, add OpenMP flag if supported
 else
