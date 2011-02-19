@@ -5,7 +5,7 @@ http://primesieve.googlecode.com
 I have successfully tested the primesieve-2.0 sources with Valgrind.
 Valgrind (http://valgrind.org/) is an analysis tool for Unix-like
 operating systems that can automatically detect many memory management
-bugs especially memory leaks and bad memory accesses in programs. I
+bugs (especially memory leaks and bad memory accesses) in programs. I
 compiled the console version of primesieve with GCC 4.2.1 on Mac OS X
 and then ran Valgrind 3.6.1 on `primesieve -test' which tests all
 parts of PrimeSieve. Valgrind completed after about 4 hours and
