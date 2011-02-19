@@ -1,4 +1,15 @@
+February, 19 2011
+Kim Walisch, <kim.walisch@gmail.com>
+http://primesieve.googlecode.com
+
 What needs to be done
 =====================
 
 1. Port the GUI version of primesieve to version 2.0
+
+2. Once C++0x (thread_local) is widely supported
+  All global variables and "static const" member variables within the
+  ./soe directory should be declared either "static const thread_local"
+  or simply const with initialization in the constructor initializer
+  list. This seems to be more correct from a theoretical point of view
+  if multi-threading is used.
