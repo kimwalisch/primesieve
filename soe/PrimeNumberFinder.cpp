@@ -24,7 +24,6 @@
 
 #include <stdint.h>
 #include <iostream>
-#include <sstream>
 #include <cstdlib>
 #include <cassert>
 
@@ -168,26 +167,23 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  */
 void PrimeNumberFinder::print(const uint8_t* sieve, uint32_t sieveSize) {
   uint64_t byteValue = this->getLowerBound();
-  for (uint32_t i = 0; i < sieveSize; i++) {
-    for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++) {
-      if (flags_ & PRINT_PRIMES)
-        // print the current prime number
-        std::cout << byteValue + *bitValue << std::endl;
-      else {
-        // print the current prime k-tuplet
-        std::ostringstream kTuplet;
-        kTuplet << "(";
+  // print prime numbers to stdout
+  if (flags_ & PRINT_PRIMES)
+    for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
+      for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
+        std::cout << byteValue + *bitValue << '\n';
+  // print prime k-tuplets (twin primes, prime triplets, ...) to stdout
+  else 
+    for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
+      for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++) {
+        std::cout << '(';
         uint32_t v = *bitValue;
         for (uint32_t j = PRINT_PRIMES; (j & flags_) == 0; j <<= 1) {
-          kTuplet << byteValue + v << ", ";
+          std::cout << byteValue + v << ", ";
           v = nextBitValue_[v];
         }
-        kTuplet << byteValue + v << ")";
-        std::cout << kTuplet.str() << std::endl;
+        std::cout << byteValue + v << ")\n";
       }
-    }
-    byteValue += NUMBERS_PER_BYTE;
-  }
 }
 
 void PrimeNumberFinder::analyseSieve(const uint8_t* sieve,
