@@ -40,7 +40,6 @@ void test();
 #include <iomanip>    /* std::setw(int) */
 #include <cstdlib>    /* std::exit(int) */
 #include <string>
-#include <cstring>    /* std::strlen(const char*) */
 #include <cctype>     /* std::tolower(int) */
 
 namespace {
@@ -174,13 +173,12 @@ void processOptions(int argc, char* argv[]) {
  */
 int main(int argc, char* argv[]) {
   processOptions(argc, argv);
-  int width = static_cast<int> (std::strlen("Sieve size"));
   std::cout.setf(std::ios::left);
 
   // display expression results
   if (!quietMode && showExpressionResults)
-    std::cout << std::setw(width) << "START" << " = " << numbers[0] << std::endl
-              << std::setw(width) << "STOP"  << " = " << numbers[1]  << std::endl;
+    std::cout << std::setw(10) << "START" << " = " << numbers[0] << std::endl
+              << std::setw(10) << "STOP"  << " = " << numbers[1]  << std::endl;
 
   // set default settings
   if ((flags & COUNT_FLAGS) == 0 && (flags & PRINT_FLAGS) == 0)
@@ -191,9 +189,10 @@ int main(int argc, char* argv[]) {
     sieveSize = (numbers[1] < L2_THRESHOLD) ?L1_CACHE_SIZE :L2_CACHE_SIZE;
 
   if (!quietMode)
-    std::cout << std::setw(width) << "Sieve size" << " = " << sieveSize
+    std::cout << std::setw(10) << "Sieve size" << " = " << sieveSize
               << " KiloBytes" << std::endl;
   try {
+    // init primeSieve
     ParallelPrimeSieve primeSieve;
     primeSieve.setStartNumber(numbers[0]);
     primeSieve.setStopNumber(numbers[1]);
@@ -203,30 +202,33 @@ int main(int argc, char* argv[]) {
     if (threads == -1)
       threads = primeSieve.getIdealThreadCount();
     if (!quietMode)
-      std::cout << std::setw(width) << "Threads" << " = " << threads << std::endl;
+      std::cout << std::setw(10) << "Threads" << " = " << threads << std::endl;
 
     // start sieving primes
     primeSieve.sieve(threads);
-    if ((flags & PRINT_STATUS) || (flags & PRINT_FLAGS))
+
+    // print new line
+    if ((flags & PRINT_STATUS) || (
+        (flags & PRINT_FLAGS) &&
+        (flags & COUNT_FLAGS) ))
       std::cout << std::endl;
 
-    // get max output string length
-    width = static_cast<int> (std::strlen("Time elapsed"));
-    for (int i = 0; i < primeSieve.COUNTS_SIZE; i++) {
-      if (flags & (COUNT_PRIMES << i)) {
-        int length = static_cast<int> (primes[i].length());
-        if (width < length)
-          width = length;
-      }
-    }
+    // get max output width
+    std::size_t width = (quietMode) ?0 :12;
+    for (int i = 0; i < primeSieve.COUNTS_SIZE; i++)
+      if ((flags & (COUNT_PRIMES << i)) && width < primes[i].length())
+        width = primes[i].length();
+
     // print prime count results
-    for (int i = 0; i < primeSieve.COUNTS_SIZE; i++) {
+    for (int i = 0; i < primeSieve.COUNTS_SIZE; i++)
       if (flags & (COUNT_PRIMES << i))
-        std::cout << std::setw(width) << primes[i] << " : " <<
-            primeSieve.getCounts(i) << std::endl;
-    }
-    std::cout << std::setw(width) << "Time elapsed" << " : " <<
-        primeSieve.getTimeElapsed() << " sec" << std::endl;
+        std::cout << std::setw(static_cast<int> (width)) << primes[i] << " : "
+                  << primeSieve.getCounts(i) << std::endl;
+
+    // print time elapsed
+    if (!quietMode)
+      std::cout << std::setw(static_cast<int> (width)) << "Time elapsed" << " : "
+                << primeSieve.getTimeElapsed() << " sec" << std::endl;
   }
   catch (std::exception& ex) {
     std::cerr << "Error: " << ex.what() << std::endl
