@@ -47,7 +47,7 @@ namespace {
   // size, these values are close for most x86-64 CPUs in 2011
   const uint32_t L1_CACHE_SIZE = 64;
   const uint32_t L2_CACHE_SIZE = 512;
-  const uint64_t L2_THRESHOLD = ipow(10, 11) * 5;
+  const uint64_t L2_THRESHOLD = ipow(10, 13);
 
   bool quietMode = false;
   bool showExpressionResults = false;
