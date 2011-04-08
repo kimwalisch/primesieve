@@ -4,7 +4,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010 
-# Last modified:   19 February 2011
+# Last modified:   8 April 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
