@@ -60,7 +60,7 @@
 #    include <nmmintrin.h> // _mm_popcnt_u32(), _mm_popcnt_u64()
 #    if defined(__x86_64)
 #      define POPCNT64(addr, i) POPCNT64_x64(_mm_popcnt_u64, addr, i)
-#    elif defined__i386)
+#    elif defined(__i386)
 #      define POPCNT64(addr, i) POPCNT64_x86(_mm_popcnt_u32, addr, i)
 #    endif
 #  elif defined(__GNUC__)
