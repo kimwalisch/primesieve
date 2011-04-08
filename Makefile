@@ -28,7 +28,7 @@ else ifeq ($(CXX),icpc)
   CXXFLAGS += -DNDEBUG
 
 # GCC, the GNU Compiler Collection
-else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G++'),)
+else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
   CXXFLAGS += -fopenmp
   # Mac OS X
   ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i apple),)
