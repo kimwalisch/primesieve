@@ -21,19 +21,15 @@
 
 #include <QStringList>
 #include <QCoreApplication>
-
 #if defined(Q_OS_WIN)
 #  include <windows.h>
 #else
 #  include <unistd.h>
 #endif
 
-PrimeSieveProcess::PrimeSieveProcess(QObject* parent = 0, int sharedMemoryId = 0) :
-    QProcess(parent) {
-  int processId = this->getProcessId();
+PrimeSieveProcess::PrimeSieveProcess(QObject* parent = 0) : QProcess(parent) {
   sharedMemory_.setParent(parent);
-  sharedMemory_.setKey(QString::number(processId) +
-                       QString::number(sharedMemoryId));
+  sharedMemory_.setKey(QString::number(this->getProcessId()));
 }
 
 PrimeSieveProcess::~PrimeSieveProcess() {
@@ -58,50 +54,54 @@ int PrimeSieveProcess::getProcessId() {
 }
 
 /**
- * Create a shared memory segement to which the process writes
- * its count results and its status.
+ * Create a shared memory segement for communication with the
+ * ParallelPrimeSieve process.
  */
-void PrimeSieveProcess::createSharedMemory(int flags) {
+void PrimeSieveProcess::createSharedMemory() {
   // attach the shared memory segment
-  if (!sharedMemory_.isAttached() && !sharedMemory_.create(sizeof(results_))) {
+  if (!sharedMemory_.isAttached() &&
+      !sharedMemory_.create(sizeof(sharedMemoryPPS_))) {
     throw std::runtime_error(
         "Interprocess communication error, could not allocate shared memory.");
   }
-  // map the attached shared memory to the results_ structure
-  results_ = static_cast<PrimeNumberFinder::Results*> (sharedMemory_.data());
-  // initialize the count and status variables
-  results_->reset(flags);
+  // map the attached shared memory to the sharedMemoryPPS_ structure
+  sharedMemoryPPS_ = static_cast<ParallelPrimeSieve::SharedMemoryPPS*>
+      (sharedMemory_.data());
 }
 
 /**
- * Start a new process that sieves the prime numbers and k-tuplets
- * between startNumber and stopNumber.
+ * Start a new ParallelPrimeSieve process that sieves the
+ * prime numbers and/or k-tuplets between startNumber and stopNumber.
  */
 void PrimeSieveProcess::start(qulonglong startNumber, qulonglong stopNumber,
-    int sieveSize, int flags) {
-  this->createSharedMemory(flags);
+    int sieveSize, int flags, int threads) {
+  this->createSharedMemory();
+  // initialize the shared memory
+  sharedMemoryPPS_->startNumber = startNumber;
+  sharedMemoryPPS_->stopNumber  = stopNumber;
+  sharedMemoryPPS_->sieveSize   = sieveSize;
+  sharedMemoryPPS_->flags       = flags;
+  sharedMemoryPPS_->threads     = threads;
+  for (int i = 0; i < COUNTS_SIZE; i++)
+    sharedMemoryPPS_->counts[i] = 0;
+  sharedMemoryPPS_->status      = 0.0;
+  sharedMemoryPPS_->timeElapsed = 0.0;
   // path + file name of the aplication
   QString path = QCoreApplication::applicationFilePath();
-  // build the arguments for primesieve
-  QStringList args;
-  args << QString::number(startNumber)
-       << QString::number(stopNumber)
-       << QString::number(sieveSize)
-       << QString::number(flags)
-       << sharedMemory_.key();
-  // start a new process (for prime sieving)
+  // process argument: shared memory name
+  QStringList args(sharedMemory_.key());
+  // start a new ParallelPrimeSieve process
+  /// @see main.cpp
   QProcess::start(path, args, QIODevice::ReadOnly);
 }
 
 bool PrimeSieveProcess::isFinished() {
-  return (results_->status == 100.0f);
+  return (sharedMemoryPPS_->status == 100.0);
 }
 
 /**
  * @return The count of prime numbers or prime k-tuplets between
- *         startNumber and stopNumber or -1 if the appropriate
- *         count flag is not set.
- *
+ *         startNumber and stopNumber.
  * @param  index 0 = Count of prime numbers
  *               1 = Count of twin primes
  *               2 = Count of prime triplets
@@ -111,12 +111,19 @@ bool PrimeSieveProcess::isFinished() {
  *               6 = Count of prime septuplets
  */
 qlonglong PrimeSieveProcess::getCounts(unsigned index) const {
-  return results_->counts[index];
+  return sharedMemoryPPS_->counts[index];
 }
 
 /**
- * @return The sieving status in percents.
+ * @return The sieving status in percent.
  */
-float PrimeSieveProcess::getStatus() const {
-  return results_->status;
+double PrimeSieveProcess::getStatus() const {
+  return sharedMemoryPPS_->status;
+}
+
+/**
+ * @return The time elapsed in seconds (if sieving is finished).
+ */
+double PrimeSieveProcess::getTimeElapsed() const {
+  return sharedMemoryPPS_->timeElapsed;
 }

@@ -22,8 +22,8 @@
 
 #include "PrimeSieveGUI_const.h"
 #include "PrimeSieveProcess.h"
-#include "../src/PrimeSieve.h"
-#include "../src/PrimeNumberFinder.h"
+#include "../soe/PrimeSieve.h"
+#include "../soe/PrimeNumberFinder.h"
 
 #include <QMainWindow>
 #include <QtGlobal>
@@ -42,7 +42,7 @@ namespace Ui {
 }
 
 /**
- * PrimeSieveGUI is an easy to use Graphical User Interface with
+ * PrimeSieveGUI is an easy to use graphical user interface with
  * multi-core support for PrimeSieve (highly optimized implementation
  * of the sieve of Eratosthenes).
  */
@@ -54,47 +54,53 @@ public:
 protected:
   void changeEvent(QEvent* e);
 private slots:
-  void on_cpuCoresComboBox_activated();
-  void on_cancelButton_clicked();
+  void autoSetThreads();
+  void on_threadsComboBox_activated();
   void on_sieveButton_clicked();
-  void setPrint(QAction*);
-  void saveToFile();
-  void showAboutDialog();
-  void autoSetCpuCores();
+  void on_cancelButton_clicked();
   void advanceProgressBar();
   void printProcessOutput();
   void processFinished(int, QProcess::ExitStatus);
-private:
-  void initMemberVariables();
-  void initGUI();
-  void initConnections();
-  void initSieveSizeComboBox();
-  void initCpuCoresComboBox(int);
-  void createMenuActions(QVector<QString>&);
-  void createMenuConnections();
-  void createMenu(QVector<QString>&);
-  int getMenuSettings();
-  int getSieveSize();
-  int getCpuCores();
-  int getMaxCpuCores();
-  int getIdealCpuCoreCount(qulonglong, qulonglong, int);
-  void getBounds(qulonglong*, qulonglong*);
-  void setComboBox(QComboBox*, QString);
-  void createProcesses(qulonglong, qulonglong, int, int, int);
-  void printResults();
-  QString getAlign();
-  void cleanUp();
 
+  /// PrimeSieveGUI_menu.cpp
+  void printMenuClicked(QAction*);
+  void saveToFile();
+  void showAboutDialog();
+private:
   /// Qt GUI object
   Ui::PrimeSieveGUI* ui;
 
+  void setComboBoxText(QComboBox*, QString);
+  void initGUI();
+  void initConnections();
+  int getSieveSize();
+  int getThreads();
+  void getBounds(qulonglong*, qulonglong*, bool);
+  void printResults();
+  void cleanUp();
+
+  QVector<QString> primeText_;
+  /// Validates the input of the lower and upperBoundLineEdit.
+  QValidator* validator_;
+  /// Settings (bit flags) for PrimeSieveProcess.
+  int flags_;
+  /// Timer for the progressBar.
+  QTimer progressBarTimer_;
+  /// Separate process used for sieving
+  PrimeSieveProcess* primeSieveProcess_;
+
   /**
-   * Menu bar objects.
+   * PrimeSieveGUI_menu.cpp & menu bar objects.
    */
+  void createMenuActions(QVector<QString>&);
+  void createMenu(QVector<QString>&);
+  int getMenuSettings();
+
   QMenu* fileMenu_;
   QMenu* printMenu_;
   QMenu* countMenu_;
   QMenu* helpMenu_;
+
   /// Save textEdit content to file.
   QAction* saveAct_;
   /// Quit application.
@@ -103,28 +109,11 @@ private:
   QAction* aboutAct_;
   /// Use radio button like behaviour.
   QActionGroup* alignmentGroup_;
+
   /// Count settings for PrimeSieveProcess.
   QVector<QAction*> countAct_;
   /// Print settings for PrimeSieveProcess.
   QVector<QAction*> printAct_;
-  /**
-   * Other member variables.
-   */
-  QVector<QString> primeText_;
-  /// Validates the input of the lower and upperBoundLineEdit.
-  QValidator* validator_;
-  /// true if the CPU has been detected.
-  bool isCpuDetected_;
-  /// Settings (bit flags) for PrimeSieveProcess.
-  int flags_;
-  /// Number of finished processes in the current sieving session.
-  int finishedProcesses_;
-  /// Timer for the progressBar.
-  QTimer progressBarTimer_;
-  /// Used to mesure the sieving time.
-  QTime time_;
-  /// Array used for multi-process sieving.
-  QVector<PrimeSieveProcess*> processes_;
 };
 
 #endif // PRIMESIEVEGUI_H

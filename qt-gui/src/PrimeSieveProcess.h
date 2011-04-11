@@ -20,7 +20,7 @@
 #ifndef PRIMESIEVEPROCESS_H
 #define PRIMESIEVEPROCESS_H
 
-#include "../src/PrimeNumberFinder.h"
+#include "../soe/ParallelPrimeSieve.h"
 
 #include <QProcess>
 #include <QSharedMemory>
@@ -29,26 +29,31 @@
 #include <QVector>
 
 /**
- * Process used to sieve primes, multiple PrimeSieveProcesses may
- * be used for multi-core prime sieving.
+ * QProcess object used for prime sieving. Using a separate process
+ * for prime sieving allows to easily cancel a multi-threaded
+ * ParallelPrimeSieve instance.
  */
 class PrimeSieveProcess : public QProcess {
 public:
   enum {
-    COUNTS_SIZE = PrimeNumberFinder::Results::COUNTS_SIZE
+    COUNTS_SIZE = ParallelPrimeSieve::COUNTS_SIZE
   };
-  PrimeSieveProcess(QObject*, int);
+  PrimeSieveProcess(QObject*);
   ~PrimeSieveProcess();
-  void start(qulonglong, qulonglong, int, int);
+  void start(qulonglong, qulonglong, int, int, int);
   bool isFinished();
   qlonglong getCounts(unsigned int) const;
-  float getStatus() const;
+  double getStatus() const;
+  double getTimeElapsed() const;
 private:
-  /// Shared memory for interprocess communication.
+  /// Shared memory for interprocess communication with the
+  /// Qt GUI process.
   QSharedMemory sharedMemory_;
-  /// Contains the prime count results and the status of the process.
-  PrimeNumberFinder::Results* results_;
-  void createSharedMemory(int);
+  /// Contains the settings for sieving, once the ParallelPrimeSieve
+  /// process has finished it writes its results back to the shared
+  /// memory.
+  ParallelPrimeSieve::SharedMemoryPPS* sharedMemoryPPS_;
+  void createSharedMemory();
   int getProcessId();
 };
 
