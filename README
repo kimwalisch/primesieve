@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 15 February 2011
+# Last modified: 12 April 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -17,14 +17,15 @@ Contents
   3. Build primesieve
   4. Directories
   5. Sieve of Eratosthenes Documentation
-  6. License
-  7. References
+  6. Final Thoughts
+  7. License
+  8. References
 
 1. Introduction
 ===============
 
   primesieve is a highly optimized C++ implementation of the sieve of
-  Eratosthenes that finds prime numbers and prime k-tuplets (twin
+  Eratosthenes that generates prime numbers and prime k-tuplets (twin
   primes, prime triplets, ...) up to 2^64 maximum.
   By the date of release this is the fastest publicly available sieve
   of Eratosthenes implementation.[6]
@@ -62,15 +63,15 @@ Contents
     Please refer to the INSTALL file in the current directory.
 
   * Qt GUI version
-    Please refer to the INSTALL file in the ./gui directory.
+    Please refer to the INSTALL file in the ./qt-gui directory.
 
 4. Directories
 ==============
 
   * ./soe         Contains the sieve of Eratosthenes implementation
   * ./console     Contains the console version of primesieve
-  * ./gui         Contains the GUI version of primesieve (created with
-                  the Qt4 framework[7])
+  * ./qt-gui      Contains the GUI version of primesieve (created with
+                  the Qt framework[7])
   * ./expr        Contains an arithmetic expression parser used in the
                   console and GUI version of primesieve
   * ./thirdparty  Contains stdint.h (needed for MSVC prior 2010)
@@ -82,7 +83,7 @@ Contents
 
   * PrimeSieve.cpp, ParallelPrimeSieve.cpp (uses OpenMP)
     PrimeSieve objects provide an easy to use user interface for prime
-    sieving. Have a look at console/main.cpp or gui/src/main.cpp to
+    sieving. Have a look at console/main.cpp or qt-gui/src/main.cpp to
     see how it works. PrimeSieve directly or indirectly implements all
     of the following classes.
 
@@ -141,7 +142,25 @@ Contents
   All header files contain Doxygen style comments for classes and
   variables, crucial code sections of .cpp files are also commented.
 
-6. License
+6. Final Thoughts
+=================
+
+  The segmented sieve of Eratosthenes does not scale well using real
+  parallelism (without increasing memory usage). Thus my
+  ParallelPrimeSieve subdivides the sieve interval into a number of
+  subintervals matching the number of logical CPU cores, each
+  subinterval is then sieved by a separate PrimeSieve instance in its
+  own thread. This approach scales very well but at the cost of
+  increasing memory usage by a factor of the number of threads used.
+
+  My program uses the fastest known algorithms (2011) for prime number
+  generation at the same speed it can also generate prime k-tuplets.
+  One user made me aware of an algorithm that is more efficient for
+  prime k-tuplets (up to 2000% for prime septuplets), the following
+  site explains the algorithm for twin primes:
+  http://numbers.computation.free.fr/Constants/Primes/twin.html
+
+7. License
 ==========
 
   primesieve is free software: you can redistribute it and/or modify
@@ -149,30 +168,24 @@ Contents
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
 
-7. References and Notes
+8. References and Notes
 =======================
 
   [1] Paul Pritchard, "Fast compact prime number sieves (among
     others)", Journal of Algorithms 4 (1983) 332-344
-
   [2] Jonathan P. Sorenson, "Trading Time for Space in Prime Number
     Sieves", Lecture Notes in Computer Science, Vol. 1423 (1998),
     179-194
-
   [3] Tomas Oliveira e Silva, "Fast implementation of the segmented
     sieve of Eratosthenes", (2002)
     http://www.ieeta.pt/~tos/software/prime_sieve.html
-
   [4] Achim Flammenkamp, "The Art of Prime Sieving",
     http://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html
-
   [5] Wheel factorization at the Prime Glossary
     http://primes.utm.edu/glossary/page.php?sort=WheelFactorization
-
   [6] YAFU Yet Another Factorization Utility, has also a very fast
     multi-threaded sieve of Eratosthenes implementation that is
     equally fast in some cases.
     http://sites.google.com/site/bbuhrow/home
-
   [7] Qt is a cross-platform application and UI framework.
     http://qt.nokia.com/products/
