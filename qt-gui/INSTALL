@@ -4,14 +4,24 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010 
-# Last modified: 15 February 2011
+# Last modified: 11 April 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
 
-The GUI version of primesieve has not been ported to version 2.0 yet
-the latest GUI version is primesieve-1.06 (fixes bug, improved memory
-pool).
+How to build primesieve (Windows, Linux, Mac OS X)
+==================================================
 
-To get primesieve-1.06 use:
-$ svn checkout http://primesieve.googlecode.com/svn/tags/primesieve-1.06 primesieve-read-only
+  1. Download and install the Qt SDK from:
+    http://qt.nokia.com/downloads
+
+  2. Launch the primesieve.pro file with the Qt-Creator IDE and have
+    a look at Qt-Creator-build-settings.png for the build settings.
+
+Remark
+======
+
+  The compiled primesieve executable depends on the QtGui4 and QtCore4
+  libraries (Windows: .dll, Unix: .lib). You need to copy these
+  libraries into the primesieve executable directory if you want to
+  run it on other PCs.
