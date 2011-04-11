@@ -29,12 +29,32 @@
  */
 class ParallelPrimeSieve: public PrimeSieve {
 public:
+  /**
+   * Used in the Qt GUI version of primesieve to handle the
+   * communication between the GUI process and the ParallelPrimeSieve
+   * process.
+   */
+  struct SharedMemoryPPS {
+    uint64_t startNumber;
+    uint64_t stopNumber;
+    uint32_t sieveSize;
+    uint32_t flags;
+    int threads;
+    uint64_t counts[COUNTS_SIZE];
+    double status;
+    double timeElapsed;
+  };
+  ParallelPrimeSieve() : sharedMemoryPPS_(NULL) {};
+  void setSharedMemory(SharedMemoryPPS*);
   static int getMaxThreads();
   int getIdealThreadCount() const;
   void sieve();
   void sieve(int);
 protected:
   void doStatus(uint64_t);
+private:
+  SharedMemoryPPS *sharedMemoryPPS_;
+  void validate(int);
 };
 
 #endif // PARALLELPRIMESIEVE_H

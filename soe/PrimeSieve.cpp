@@ -203,7 +203,7 @@ void PrimeSieve::setFlags(uint32_t flags) {
  * Used for parallel prime sieving.
  * @see ParallelPrimeSieve.cpp
  */
-void PrimeSieve::set(uint64_t startNumber, uint64_t stopNumber,
+void PrimeSieve::setChildPrimeSieve(uint64_t startNumber, uint64_t stopNumber,
     ParallelPrimeSieve* parent) {
   parent_ = parent;
   startNumber_ = startNumber;

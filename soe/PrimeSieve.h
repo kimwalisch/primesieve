@@ -56,11 +56,6 @@ public:
   void setFlags(uint32_t);
   void sieve();
 protected:
-  void set(uint64_t, uint64_t, ParallelPrimeSieve*);
-  void reset();
-  virtual void doStatus(uint64_t);
-  /** Either this or the parent ParallelPrimeSieve object. */
-  PrimeSieve* parent_;
   /** Lower bound for sieving. */
   uint64_t startNumber_;
   /** Upper bound for sieveing. */
@@ -77,12 +72,18 @@ protected:
     * counts_[6] = prime septuplet count
     */
   uint64_t counts_[COUNTS_SIZE];
-  /** Sum of the segments that have been sieved (for status_). */
-  uint64_t segments_;
   /** Status of the sieving process in percent. */
   double status_;
   /** Time elapsed in seconds of the last sieve(void) session. */
   double timeElapsed_;
+  void reset();
+  virtual void doStatus(uint64_t);
+private:
+  /** Either this or the parent ParallelPrimeSieve object. */
+  PrimeSieve* parent_;
+  /** Sum of the segments that have been sieved (for status_). */
+  uint64_t segments_;
+  void setChildPrimeSieve(uint64_t, uint64_t, ParallelPrimeSieve*);
 };
 
 #endif /* PRIMESIEVE_H */
