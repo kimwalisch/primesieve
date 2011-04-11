@@ -1,3 +1,14 @@
+New in version 2.1, 11/04/2011
+==============================
+
+1. Release of primesieve 2.1 GUI version.
+  + fixes start number bug (see BUGS file).
+  + supports integer arithmetic expressions as number input.
+  + uses threads (OpenMP) instead of processes.
+  + added qt-gui/README file.
+2. Fixes bug in Makefile when using the LLVM compiler.
+3. Updated README file.
+
 New in version 2.0, 15/02/2011
 ==============================
 
