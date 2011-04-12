@@ -110,6 +110,9 @@ void PrimeSieveGUI::initGUI() {
   // set a nice GUI size
   QSize size = this->sizeHint();
   size.setWidth(this->minimumSizeHint().width());
+#if defined(Q_OS_WIN)
+  size.setHeight(size.height() - size.height() / 20);
+#endif
   this->resize(size);
 
   // limit input for integer arithmetic expressions
