@@ -19,11 +19,9 @@ DEFINES += NDEBUG \
 win* {
     *msvc* {
         QMAKE_CXXFLAGS += /openmp
-        QMAKE_LFLAGS   += /openmp
     }
     *icc* {
         QMAKE_CXXFLAGS += /Qopenmp
-        QMAKE_LFLAGS   += /Qopenmp
     }
 }
 *icc* {
