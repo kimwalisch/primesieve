@@ -373,7 +373,7 @@ void PrimeSieveGUI::printResults() {
   if (flags_ & (COUNT_FLAGS - COUNT_PRIMES))
     ui->textEdit->appendPlainText("");
   QString time("Elapsed time:\t" +
-               QString::number(primeSieveProcess_->getTimeElapsed()) +
+               QString::number(primeSieveProcess_->getTimeElapsed(), 'f', 2) +
                " sec");
   ui->textEdit->appendPlainText(time);
 }
