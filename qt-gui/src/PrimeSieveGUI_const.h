@@ -38,7 +38,7 @@ const QString APPLICATION_ABOUT(
     "primesieve uses a highly optimized implementation of the sieve of "
     "Eratosthenes to generate prime numbers and prime k-tuplets. By the "
     "date of release primesieve is the fastest publicly available "
-    "prime sieving program (together with YAFU).<br>"
+    "prime sieving software (together with YAFU).<br>"
     "<br>"
     "This is free software: you can redistribute it and/or modify "
     "it under the terms of the GNU General Public License as published by "
