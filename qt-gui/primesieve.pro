@@ -18,10 +18,10 @@ DEFINES += NDEBUG \
     __STDC_LIMIT_MACROS
 win* {
     *msvc* {
-        QMAKE_CXXFLAGS += /openmp
+        QMAKE_CXXFLAGS += /openmp /EHsc
     }
     *icc* {
-        QMAKE_CXXFLAGS += /Qopenmp
+        QMAKE_CXXFLAGS += /Qopenmp /EHsc
     }
 }
 *icc* {
