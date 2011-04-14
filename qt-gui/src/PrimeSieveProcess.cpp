@@ -88,8 +88,9 @@ void PrimeSieveProcess::start(qulonglong startNumber, qulonglong stopNumber,
   sharedMemoryPPS_->timeElapsed = 0.0;
   // path + file name of the aplication
   QString path = QCoreApplication::applicationFilePath();
-  // process argument: shared memory name
-  QStringList args(sharedMemory_.key());
+  // process arguments, see main.cpp
+  QStringList args;
+  args << "PrimeSieveProcess" << sharedMemory_.key();
   // start a new ParallelPrimeSieve process
   /// @see main.cpp
   QProcess::start(path, args, QIODevice::ReadOnly);
