@@ -28,39 +28,33 @@
 #include <iostream>
 
 /**
- * The Qt GUI interface is launched if the user launches the
- * application by mouse click, a ParallelPrimeSieve process is
- * launched if exactly one argument (shared memory identifier) is
- * provided.
- * @see           createProcesses(...)
- * @param argv[1] Shared memory identifier
+ * The primesieve GUI interface is launched if the user launches the
+ * application by mouse click, a PrimeSieveProcess is launched if 
+ * "PrimeSieveProcess" and a shared memory identifier (process id) are
+ * provided as arguments.
+ * @see           PrimeSieveProcess.cpp
+ * @param argv[1] ["PrimeSieveProcess"]
+ * @param argv[2] [Shared memory identifier]
  */
 int main(int argc, char *argv[]) {
-  // Qt GUI interface
-  if (argc != 2) {
-    QApplication a(argc, argv);
-    PrimeSieveGUI w;
-    w.show();
-    return a.exec();
-  }
-  // ParallelPrimeSieve process
-  else {
+  // PrimeSieveProcess
+  if (argc == 3 && QString(argv[1]).compare("PrimeSieveProcess") == 0) {
     // open an existing and initialized shared memory
-    QSharedMemory sharedMemory(argv[1]);
+    QSharedMemory sharedMemory(argv[2]);
     if (!sharedMemory.attach()) {
-      std::cerr << "Unable to attach shared memory " << argv[1] << std::endl;
+      std::cerr << "Unable to attach shared memory " << argv[2] << std::endl;
       exit(EXIT_FAILURE);
     }
     // map the attached shared memory to the results structure
     ParallelPrimeSieve::SharedMemoryPPS* sharedMemoryPPS =
         static_cast<ParallelPrimeSieve::SharedMemoryPPS*> (sharedMemory.data());
     try {
-      // create a new ParallelPrimeSieve object which is initialized
-      // with values from the shared memory (provided by the Qt GUI),
-      // upon completion ParallelPrimeSieve communicates its results
-      // back to the Qt GUI through the shared memory segment.
       ParallelPrimeSieve primesieve;
+      // initialize the ParallelPrimeSieve object with values from the
+      // shared memory provided by the primesieve GUI
       primesieve.setSharedMemory(sharedMemoryPPS);
+      // start sieving primes, the results are communicated back to
+      // the primesieve GUI via the shared memory
       primesieve.sieve(sharedMemoryPPS->threads);
     }
     catch (std::exception& ex) {
@@ -69,7 +63,13 @@ int main(int argc, char *argv[]) {
       exit(EXIT_FAILURE);
     }
     sharedMemory.detach();
+    // exit success
+    return 0;
   }
-  // exit success
-  return 0;
+  else { // Qt GUI interface
+    QApplication a(argc, argv);
+    PrimeSieveGUI w;
+    w.show();
+    return a.exec();
+  }
 }
