@@ -23,8 +23,15 @@
 #include "PrimeSieve.h"
 
 /**
- * ParallelPrimeSieve uses multiple PrimeSieve objects and threads
- * (OpenMP) for parallel prime sieveing.
+ * ParallelPrimeSieve is a parallel implementation of the segmented
+ * sieve of Eratosthenes using OpenMP.
+ * The parallelization is achieved using multiple threads, each thread
+ * uses its own PrimeSieve object to sieve a sub-interval of the
+ * overall interval upon completion the results of the individual
+ * threads are combined.
+ * By default ParallelPrimeSieve uses an ideal number of threads for
+ * the current set startNumber, stopNumber and flags
+ * (i.e. numThreads = USE_IDEAL_NUM_THREADS).
  * @see PrimeSieve.cpp
  */
 class ParallelPrimeSieve: public PrimeSieve {
@@ -44,17 +51,25 @@ public:
     double status;
     double timeElapsed;
   };
-  ParallelPrimeSieve() : sharedMemoryPPS_(NULL) {};
-  void setSharedMemory(SharedMemoryPPS*);
+  enum {
+    /*
+     * Use an ideal number of threads for the current set startNumber,
+     * stopNumber and flags.
+     */
+    USE_IDEAL_NUM_THREADS = -1
+  };
+  ParallelPrimeSieve();
   static int getMaxThreads();
-  int getIdealThreadCount() const;
+  int getNumThreads() const;
+  void setNumThreads(int numThreads);
+  void setSharedMemory(SharedMemoryPPS*);
   void sieve();
-  void sieve(int);
 protected:
   void doStatus(uint64_t);
 private:
   SharedMemoryPPS *sharedMemoryPPS_;
-  void validate(int);
+  int numThreads_;
+  int getIdealNumThreads() const;
 };
 
 #endif // PARALLELPRIMESIEVE_H
