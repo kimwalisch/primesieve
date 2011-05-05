@@ -28,7 +28,6 @@
 #include <stdint.h>
 #include <stdexcept>
 #include <cmath>
-#include <cassert>
 
 /**
  * @def U32SQRT(x)
