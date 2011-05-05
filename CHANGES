@@ -1,3 +1,14 @@
+New in version 2.2, 06/05/2011
+==============================
+
+1. Added two new member functions to soe/PrimeSieve.
+  + getPrimes(uint64_t, uint64_t, void (*callback)(uint64_t))
+    calls a callback function for each generated prime number.
+  + getPrimeCount(uint64_t, uint64_t)
+    convenience function that counts prime numbers.
+2. The thread interface of ParallelPrimeSieve has been simplified.
+3. Updated documentation of Primesieve.h, ParallelPrimeSieve.h
+
 New in version 2.1, 11/04/2011
 ==============================
 
