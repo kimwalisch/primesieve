@@ -169,9 +169,9 @@ void PrimeSieveGUI::on_threadsComboBox_activated() {
 }
 
 /**
- * Show the ideal number of threads for the current lower/upper
- * bound and menu settings in the threadsComboBox if "Auto set" is
- * enabled.
+ * If "Auto set" is enabled set the ideal number of threads for the
+ * current lower bound, upper bound and menu settings in the
+ * threadsComboBox.
  */
 void PrimeSieveGUI::autoSetThreads() {
   if (ui->autoSetCheckBox->isEnabled() && 
@@ -185,7 +185,7 @@ void PrimeSieveGUI::autoSetThreads() {
       pps.setStartNumber(lowerBound);
       pps.setStopNumber(upperBound);
       pps.setFlags(this->getMenuSettings());
-      threads.setNum(pps.getIdealThreadCount());
+      threads.setNum(pps.getNumThreads());
     } catch (...) { }
     this->setComboBoxText(ui->threadsComboBox, threads);
   }

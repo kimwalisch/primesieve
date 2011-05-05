@@ -32,9 +32,9 @@
  * application by mouse click, a PrimeSieveProcess is launched if 
  * "PrimeSieveProcess" and a shared memory identifier (process id) are
  * provided as arguments.
- * @see           PrimeSieveProcess.cpp
- * @param argv[1] ["PrimeSieveProcess"]
- * @param argv[2] [Shared memory identifier]
+ * @param argv[1] "PrimeSieveProcess"
+ * @param argv[2] Shared memory identifier
+ * @see   PrimeSieveProcess.cpp
  */
 int main(int argc, char *argv[]) {
   // PrimeSieveProcess
@@ -49,13 +49,12 @@ int main(int argc, char *argv[]) {
     ParallelPrimeSieve::SharedMemoryPPS* sharedMemoryPPS =
         static_cast<ParallelPrimeSieve::SharedMemoryPPS*> (sharedMemory.data());
     try {
-      ParallelPrimeSieve primesieve;
       // initialize the ParallelPrimeSieve object with values from the
-      // shared memory provided by the primesieve GUI
+      // shared memory provided by the primesieve GUI and start
+      // sieving
+      ParallelPrimeSieve primesieve;
       primesieve.setSharedMemory(sharedMemoryPPS);
-      // start sieving primes, the results are communicated back to
-      // the primesieve GUI via the shared memory
-      primesieve.sieve(sharedMemoryPPS->threads);
+      primesieve.sieve();
     }
     catch (std::exception& ex) {
       sharedMemory.detach();
