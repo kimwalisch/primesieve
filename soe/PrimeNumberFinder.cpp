@@ -25,7 +25,6 @@
 #include <stdint.h>
 #include <iostream>
 #include <cstdlib>
-#include <cassert>
 
 namespace {
   const uint32_t END = ~0u;
@@ -186,12 +185,24 @@ void PrimeNumberFinder::print(const uint8_t* sieve, uint32_t sieveSize) {
       }
 }
 
+/**
+ * Generate the prime numbers of the current sieve round and call
+ * the callback function for each prime.
+ */
+void PrimeNumberFinder::callbackPrimes(const uint8_t* sieve, uint32_t sieveSize) {
+  uint64_t byteValue = this->getLowerBound();
+  for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
+    for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
+      parent_->callback_(byteValue + *bitValue);
+}
+
 void PrimeNumberFinder::analyseSieve(const uint8_t* sieve,
     uint32_t sieveSize) {
   if (flags_ & COUNT_FLAGS)
     this->count(sieve, sieveSize);
   if (flags_ & PRINT_FLAGS)
     this->print(sieve, sieveSize);
-  assert(parent_ != NULL);
+  if (parent_->callback_ != NULL)
+    this->callbackPrimes(sieve, sieveSize);
   parent_->doStatus(sieveSize * NUMBERS_PER_BYTE);
 }

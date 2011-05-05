@@ -23,8 +23,6 @@
 #include "SieveOfEratosthenes.h"
 #include <stdint.h>
 
-class PrimeSieve;
-
 /** Flags (settings) for PrimeNumberFinder. */
 enum {
   COUNT_PRIMES      = (1 <<  0),
@@ -48,6 +46,8 @@ enum {
   RESULTS_FLAGS     = STORE_STATUS | COUNT_FLAGS,
   STATUS_FLAGS      = PRINT_STATUS | STORE_STATUS 
 };
+
+class PrimeSieve;
 
 /**
  * Sieve of Eratosthenes that is used to find the prime numbers and
@@ -100,6 +100,7 @@ private:
   void initLookupTables();
   void count(const uint8_t*, uint32_t);
   void print(const uint8_t*, uint32_t);
+  void callbackPrimes(const uint8_t*, uint32_t);
   void analyseSieve(const uint8_t*, uint32_t);
 };
 
