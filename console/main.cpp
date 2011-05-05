@@ -57,7 +57,7 @@ namespace {
   uint32_t flags = 0;            /* settings */
 
   int maxThreads = ParallelPrimeSieve::getMaxThreads();
-  int threads = -1;
+  int threads    = ParallelPrimeSieve::USE_IDEAL_NUM_THREADS;
 
   std::string primes[7] = { "Prime numbers", "Twin primes", "Prime triplets",
     "Prime quadruplets", "Prime quintuplets", "Prime sextuplets",
@@ -187,7 +187,6 @@ int main(int argc, char* argv[]) {
     flags |= PRINT_STATUS;
   if (sieveSize == 0)
     sieveSize = (numbers[1] < L2_THRESHOLD) ?L1_CACHE_SIZE :L2_CACHE_SIZE;
-
   if (!quietMode)
     std::cout << std::setw(10) << "Sieve size" << " = " << sieveSize
               << " KiloBytes" << std::endl;
@@ -198,14 +197,13 @@ int main(int argc, char* argv[]) {
     primeSieve.setStopNumber(numbers[1]);
     primeSieve.setSieveSize(sieveSize);
     primeSieve.setFlags(flags);
+    primeSieve.setNumThreads(threads);
 
-    if (threads == -1)
-      threads = primeSieve.getIdealThreadCount();
     if (!quietMode)
-      std::cout << std::setw(10) << "Threads" << " = " << threads << std::endl;
+      std::cout << std::setw(10) << "Threads" << " = " << primeSieve.getNumThreads() << std::endl;
 
     // start sieving primes
-    primeSieve.sieve(threads);
+    primeSieve.sieve();
 
     // print new line
     if ((flags & PRINT_STATUS) || (
