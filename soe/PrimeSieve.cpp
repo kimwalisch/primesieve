@@ -37,7 +37,7 @@
 PrimeSieve::PrimeSieve() :
     startNumber_(0), stopNumber_(0),
     sieveSize_(settings::DEFAULT_SIEVESIZE_PRIMENUMBERFINDER), flags_(
-    COUNT_PRIMES), timeElapsed_(0.0) {
+    COUNT_PRIMES), timeElapsed_(0.0), callback_(NULL) {
   parent_ = this;
   this->reset();
 }
@@ -59,76 +59,105 @@ uint32_t PrimeSieve::getFlags() const {
 }
 
 /**
- * @return The count of prime numbers or prime k-tuplets between
- *         startNumber and stopNumber, e.g index = 0 for prime
- *         numbers, index = 1 for twin primes, ...
- * @param  index <= 7
+ * Generate the prime numbers between startNumber and stopNumber and
+ * call the callback function for each prime.
  */
-uint64_t PrimeSieve::getCounts(uint32_t index) const {
-  if (index >= COUNTS_SIZE)
-    throw std::out_of_range("getCounts(uint32_t) index out of range");
-  return counts_[index];
+void PrimeSieve::getPrimes(uint64_t startNumber, uint64_t StopNumber,
+    void (*callback)(uint64_t)) {
+  if (callback != NULL) {
+    this->setStartNumber(startNumber);
+    this->setStopNumber(StopNumber);
+    this->setFlags(0);
+    callback_ = callback;
+    this->sieve();
+    callback_ = NULL;
+  }
 }
 
 /**
- * @return The count of prime numbers between startNumber and
- *         stopNumber.
+ * Get the count of prime numbers between startNumber and stopNumber.
+ */
+uint64_t PrimeSieve::getPrimeCount(uint64_t startNumber, uint64_t stopNumber) {
+  this->setStartNumber(startNumber);
+  this->setStopNumber(stopNumber);
+  this->setFlags(COUNT_PRIMES);
+  this->sieve();
+  return this->getPrimeCount();
+}
+
+/**
+ * Get the count of prime numbers between startNumber and stopNumber
+ * after having called sieve().
  */
 uint64_t PrimeSieve::getPrimeCount() const {
   return counts_[0];
 }
 
 /**
- * @return The count of twin primes between startNumber and
- *          stopNumber.
+ * Get the count of twin primes between startNumber and stopNumber
+ * after having called sieve().
  */
 uint64_t PrimeSieve::getTwinCount() const {
   return counts_[1];
 }
 
 /**
- * @return The count of prime triplets between startNumber and
- *         stopNumber.
+ * Get the count of prime triplets between startNumber and stopNumber
+ * after having called sieve().
  */
 uint64_t PrimeSieve::getTripletCount() const {
   return counts_[2];
 }
 
 /**
- * @return The count of prime quadruplets between startNumber and
- *         stopNumber.
+ * Get the count of prime quadruplets between startNumber and
+ * stopNumber after having called sieve().
  */
 uint64_t PrimeSieve::getQuadrupletCount() const {
   return counts_[3];
 }
 
 /**
- * @return The count of prime quintuplets between startNumber and
- *         stopNumber.
+ * Get the count of prime quintuplets between startNumber and
+ * stopNumber after having called sieve().
  */
 uint64_t PrimeSieve::getQuintupletCount() const {
   return counts_[4];
 }
 
 /**
- * @return The count of prime sextuplets between startNumber and
- *         stopNumber.
+ * Get the count of prime sextuplets between startNumber and
+ * stopNumber after having called sieve().
  */
 uint64_t PrimeSieve::getSextupletCount() const {
   return counts_[5];
 }
 
 /**
- * @return The count of prime septuplets between startNumber and
- *         stopNumber.
+ * Get the count of prime septuplets between startNumber and
+ * stopNumber after having called sieve().
  */
 uint64_t PrimeSieve::getSeptupletCount() const {
   return counts_[6];
 }
 
 /**
- * @return The time elapsed in seconds of the last sieve(void)
- *         session.
+ * Get the count of prime numbers or prime k-tuplets between
+ * startNumber and stopNumber after having called sieve().
+ * e.g type = 0 for prime numbers,
+ *     type = 1 for twin primes,
+ *     type = 2 for prime triplets,
+ *     ...
+ * @param type <= 7
+ */
+uint64_t PrimeSieve::getCounts(uint32_t type) const {
+  if (type >= COUNTS_SIZE)
+    throw std::out_of_range("getCounts(uint32_t) type out of range");
+  return counts_[type];
+}
+
+/**
+ * Get the time elapsed in seconds of the last sieve session.
  */
 double PrimeSieve::getTimeElapsed() const {
   return timeElapsed_;
@@ -157,11 +186,16 @@ void PrimeSieve::setStopNumber(uint64_t stopNumber) {
 }
 
 /**
- * Set the sieve size (in KiloBytes) of the sieve of
- * Eratosthenes array.
- * @pre sieveSize >=    1 KiloByte,
- *      sieveSize <= 8192 KiloBytes,
- *      sieveSize must be a power of 2.
+ * Set the size (in KiloBytes) of the sieve of Eratosthenes array.
+ * The best performance is achieved with a sieve size that matches
+ * the CPU's L1 cache size (usually 32 or 64 KB) when sieving < 10^14
+ * and a sieve size of your CPU's L2 cache size above.
+ *
+ * Default sieveSize = 64 KiloBytes
+ *
+ * @pre sieveSize must be a power of 2,
+ *      sieveSize >= 1 KiloByte,
+ *      sieveSize <= 8192 KiloBytes.
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
   // SieveOfEratosthenes lower sieve size limit AND 
@@ -176,7 +210,7 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
 }
 
 /**
- * Set the settings (flags) of PrimeSieve.
+ * Set the flags (settings) of PrimeSieve.
  * @param flags
  *   COUNT_PRIMES      OR (bitwise '|')
  *   COUNT_TWINS       OR
@@ -200,7 +234,7 @@ void PrimeSieve::setFlags(uint32_t flags) {
 }
 
 /**
- * Used for parallel prime sieving.
+ * For use with ParallelPrimeSieve.
  * @see ParallelPrimeSieve.cpp
  */
 void PrimeSieve::setChildPrimeSieve(uint64_t startNumber, uint64_t stopNumber,
@@ -239,9 +273,21 @@ void PrimeSieve::doStatus(uint64_t segment) {
   }
 }
 
+void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type, 
+    std::string prime) {
+  if (startNumber_ <= low && stopNumber_ >= high) {
+    if (flags_ & (COUNT_PRIMES << type))
+      counts_[type]++;
+    if (flags_ & (PRINT_PRIMES << type))
+      std::cout << prime << std::endl;
+    if (callback_ != NULL && type == 0)
+      callback_(prime[0]-'0');
+  }
+}
+
 /**
- * Sieve the prime numbers and prime k-tuplets between
- * startNumber and startNumber.
+ * Sieve the prime numbers and/or prime k-tuplets between startNumber
+ * and stopNumber.
  */
 void PrimeSieve::sieve() {
   if (stopNumber_ < startNumber_)
@@ -251,44 +297,45 @@ void PrimeSieve::sieve() {
 
   // small primes have to be examined manually
   if (startNumber_ <= 5) {
-    uint32_t lowerBound[8] = { 2, 3, 5, 3, 5, 5, 5, 5 };
-    uint32_t upperBound[8] = { 2, 3, 4, 5, 7, 11, 13, 17 };
-    uint32_t type[8] = { 0, 0, 0, 1, 1, 2, 3, 4 };
-    std::string text[8] = { "2", "3", "5", "(3, 5)", "(5, 7)", "(5, 7, 11)",
-        "(5, 7, 11, 13)", "(5, 7, 11, 13, 17)" };
-    for (uint32_t i = 0; i < 8 && stopNumber_ >= upperBound[i]; i++) {
-      if (startNumber_ <= lowerBound[i]) {
-        if (flags_ & (COUNT_PRIMES << type[i]))
-          counts_[type[i]]++;
-        if (flags_ & (PRINT_PRIMES << type[i]))
-          std::cout << text[i] << std::endl;
-      }
-    }
+    this->doSmallPrime(2,  2, 0, "2");
+    this->doSmallPrime(3,  3, 0, "3");
+    this->doSmallPrime(5,  5, 0, "5");
+    this->doSmallPrime(3,  5, 1, "(3, 5)");
+    this->doSmallPrime(5,  7, 1, "(5, 7)");
+    this->doSmallPrime(5, 11, 2, "(5, 7, 11)");
+    this->doSmallPrime(5, 13, 3, "(5, 7, 11, 13)");
+    this->doSmallPrime(5, 17, 4, "(5, 7, 11, 13, 17)");
   }
 
-  // start sieving
   if (stopNumber_ >= 7) {
     // needed by primeNumberGenerator and primeNumberFinder to
     // reset their sieve arrays
     ResetSieve resetSieve(settings::PREELIMINATE_RESETSIEVE);
     // used to sieve the prime numbers and prime k-tuplets between
     // startNumber_ and stopNumber_
-    PrimeNumberFinder primeNumberFinder((startNumber_ > 7) ?startNumber_ :7,
-        stopNumber_, sieveSize_, flags_, &resetSieve, parent_);
+    PrimeNumberFinder primeNumberFinder(
+        (startNumber_ > 7) ? startNumber_ : 7,
+        stopNumber_, 
+        sieveSize_, 
+        flags_, 
+        &resetSieve, 
+        parent_);
 
     if (U32SQRT(stopNumber_) > resetSieve.getEliminateUpTo()) {
       // used to generate the prime numbers up to sqrt(stopNumber_)
       // needed for sieving by primeNumberFinder
       PrimeNumberGenerator primeNumberGenerator(
-          settings::SIEVESIZE_PRIMENUMBERGENERATOR, &primeNumberFinder);
+          settings::SIEVESIZE_PRIMENUMBERGENERATOR,
+          &primeNumberFinder);
       std::vector<uint32_t> primes16Bit;
       primes16Bit.push_back(3);
       uint32_t stop = U32SQRT(primeNumberGenerator.getStopNumber());
       uint32_t keep = U32SQRT(stop);
-      // The following trial division algorithm is used to generate the
-      // prime numbers up to \sqrt[4]{stopNumber_}. Although the
-      // algorithm is never used > 65536 it finds the prime numbers up
-      // to 10^7 in 1 second on an Intel Core i5-670 3.46GHz.
+      // the following trial division algorithm is used to generate the
+      // prime numbers up to stopNumber_^0.25 needed for sieving by
+      // primeNumberGenerator. Although the algorithm is never
+      // used > 65536 it finds the prime numbers up to 10^7 in 1 second
+      // on an Intel Core i5-670 3.46GHz
       for (uint32_t n = 5; n <= stop; n += 2) {
         uint32_t s = U32SQRT(n);
         uint32_t i = 0;
@@ -298,17 +345,14 @@ void PrimeSieve::sieve() {
           if (primes16Bit[i] <= keep)
             primes16Bit.push_back(n);
           if (n > resetSieve.getEliminateUpTo())
-            // generates the prime numbers up to n^2 and uses them with
-            // primeNumberFinder to sieve up to n^4
+            // generate the prime numbers up to n^2 and call
+            // primeNumberFinder.sieve(p) for each generated prime
             primeNumberGenerator.sieve(n);
         }
       }
-      // generate the last remaining primes
       primeNumberGenerator.finish();
     }
-    // sieve the the last remaining primes
     primeNumberFinder.finish();
-    // sum the results
     for (uint32_t i = 0; i < COUNTS_SIZE; i++)
       counts_[i] += primeNumberFinder.getCounts(i);
   }
