@@ -107,8 +107,9 @@ void ParallelPrimeSieve::setSharedMemory(SharedMemoryPPS *sharedMemoryPPS) {
   this->setStopNumber(sharedMemoryPPS->stopNumber);
   this->setSieveSize(sharedMemoryPPS->sieveSize);
   this->setFlags(sharedMemoryPPS->flags);
-  // the sieving results will later be communicated back to the
-  // Qt GUI process via the shared memory
+  this->setNumThreads(sharedMemoryPPS->threads);
+  // upon completion the sieving results will be communicated back to
+  // the Qt GUI process via the shared memory
   sharedMemoryPPS_ = sharedMemoryPPS;
 }
 
