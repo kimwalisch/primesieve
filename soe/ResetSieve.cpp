@@ -53,7 +53,6 @@ uint32_t ResetSieve::getResetIndex(uint64_t lowerBound) const {
 }
 
 void ResetSieve::setSize(uint32_t eliminateUpTo) {
-  assert(eliminateUpTo > 0);
   size_ = primeProduct(eliminateUpTo) / SieveOfEratosthenes::NUMBERS_PER_BYTE;
 }
 
