@@ -24,8 +24,6 @@
 #include "settings.h"
 
 #include <stdint.h>
-#include <cassert>
-#include <cstdlib>
 #include <list>
 
 /**
