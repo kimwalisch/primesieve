@@ -4,10 +4,16 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010 
-# Last modified: 15 February 2011
+# Last modified: 06 May 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
+
+About
+=====
+
+This file explains how to compile the console version of primesieve
+to compile the Qt GUI version please refer to qt-gui/INSTALL.
 
 How to build primesieve
 =======================
@@ -23,7 +29,7 @@ run:
 
   3. Other C++ compilers
     $ make CXX=my_compiler
-    
+
   The above make/nmake command compiles the primesieve binary to ./out
 
 How to test it
