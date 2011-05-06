@@ -2,7 +2,7 @@ New in version 2.2, 06/05/2011
 ==============================
 
 1. Added two new member functions to soe/PrimeSieve.
-  + getPrimes(uint64_t, uint64_t, void (*callback)(uint64_t))
+  + generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*)
     calls a callback function for each generated prime number.
   + getPrimeCount(uint64_t, uint64_t)
     convenience function that counts prime numbers.
