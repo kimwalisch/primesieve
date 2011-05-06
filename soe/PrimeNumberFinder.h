@@ -25,26 +25,27 @@
 
 /** Flags (settings) for PrimeNumberFinder. */
 enum {
-  COUNT_PRIMES      = (1 <<  0),
-  COUNT_TWINS       = (1 <<  1),
-  COUNT_TRIPLETS    = (1 <<  2),
-  COUNT_QUADRUPLETS = (1 <<  3),
-  COUNT_QUINTUPLETS = (1 <<  4),
-  COUNT_SEXTUPLETS  = (1 <<  5),
-  COUNT_SEPTUPLETS  = (1 <<  6),
-  PRINT_PRIMES      = (1 <<  7),
-  PRINT_TWINS       = (1 <<  8),
-  PRINT_TRIPLETS    = (1 <<  9),
-  PRINT_QUADRUPLETS = (1 << 10),
-  PRINT_QUINTUPLETS = (1 << 11),
-  PRINT_SEXTUPLETS  = (1 << 12),
-  PRINT_SEPTUPLETS  = (1 << 13),
-  PRINT_STATUS      = (1 << 14),
-  STORE_STATUS      = (1 << 15),
+  COUNT_PRIMES      = 1 << 0,
+  COUNT_TWINS       = 1 << 1,
+  COUNT_TRIPLETS    = 1 << 2,
+  COUNT_QUADRUPLETS = 1 << 3,
+  COUNT_QUINTUPLETS = 1 << 4,
+  COUNT_SEXTUPLETS  = 1 << 5,
+  COUNT_SEPTUPLETS  = 1 << 6,
   COUNT_FLAGS       = COUNT_PRIMES | COUNT_TWINS | COUNT_TRIPLETS | COUNT_QUADRUPLETS | COUNT_QUINTUPLETS | COUNT_SEXTUPLETS | COUNT_SEPTUPLETS,
+  PRINT_PRIMES      = 1 << 7,
+  PRINT_TWINS       = 1 << 8,
+  PRINT_TRIPLETS    = 1 << 9,
+  PRINT_QUADRUPLETS = 1 << 10,
+  PRINT_QUINTUPLETS = 1 << 11,
+  PRINT_SEXTUPLETS  = 1 << 12,
+  PRINT_SEPTUPLETS  = 1 << 13,
+  PRINT_STATUS      = 1 << 14,
+  // PRINT_FLAGS is used to print the generated primes to std::cout
+  // thus PRINT_STATUS is not included
   PRINT_FLAGS       = PRINT_PRIMES | PRINT_TWINS | PRINT_TRIPLETS | PRINT_QUADRUPLETS | PRINT_QUINTUPLETS | PRINT_SEXTUPLETS | PRINT_SEPTUPLETS,
-  RESULTS_FLAGS     = STORE_STATUS | COUNT_FLAGS,
-  STATUS_FLAGS      = PRINT_STATUS | STORE_STATUS 
+  CALLBACK_PRIMES   = 1 << 15,
+  GENERATE_FLAGS    = PRINT_FLAGS | CALLBACK_PRIMES
 };
 
 class PrimeSieve;
@@ -86,21 +87,21 @@ private:
    */
   uint32_t** primeBitValues_;
   /**
-    * The prime counts are saved in here.
-    * @warning PrimeNumberFinder does not count and print prime
-    *          numbers and prime k-tuplets < 7.
-    *
-    * counts_[0] = prime number count
-    * counts_[1] = twin prime count
-    * counts_[2] = prime triplet count
-    * ...
-    * counts_[6] = prime septuplet count
+   * Determines the type of primes that will be generated in 
+   * generate(const uint8_t*, uint32_t).
+   * 0 = prime numbers, 1 = twin primes, ..., 6 = prime septuplets
+   */
+  uint32_t generateType_;
+  /**
+    * Count of prime numbers (counts_[0]), twin primes (counts_[1]),
+    * ..., prime septuplets (counts_[6]).
+    * @warning PrimeNumberFinder counts and prints prime numbers and
+    *          prime k-tuplets >= 7.
     */
   uint64_t counts_[COUNTS_SIZE];
   void initLookupTables();
   void count(const uint8_t*, uint32_t);
-  void print(const uint8_t*, uint32_t);
-  void callbackPrimes(const uint8_t*, uint32_t);
+  void generate(const uint8_t*, uint32_t);
   void analyseSieve(const uint8_t*, uint32_t);
 };
 

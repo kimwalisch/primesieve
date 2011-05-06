@@ -37,7 +37,7 @@
 PrimeSieve::PrimeSieve() :
     startNumber_(0), stopNumber_(0),
     sieveSize_(settings::DEFAULT_SIEVESIZE_PRIMENUMBERFINDER), flags_(
-    COUNT_PRIMES), timeElapsed_(0.0), callback_(NULL) {
+    COUNT_PRIMES), timeElapsed_(0.0), callback(NULL) {
   parent_ = this;
   this->reset();
 }
@@ -60,18 +60,18 @@ uint32_t PrimeSieve::getFlags() const {
 
 /**
  * Generate the prime numbers between startNumber and stopNumber and
- * call the callback function for each prime.
+ * call a callback function for each prime.
  */
-void PrimeSieve::getPrimes(uint64_t startNumber, uint64_t StopNumber,
-    void (*callback)(uint64_t)) {
-  if (callback != NULL) {
-    this->setStartNumber(startNumber);
-    this->setStopNumber(StopNumber);
-    this->setFlags(0);
-    callback_ = callback;
-    this->sieve();
-    callback_ = NULL;
-  }
+void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
+    void (*callback)(uint64_t, void*), void* cbObj = NULL) {
+  if (callback == NULL)
+    throw std::invalid_argument("callback must not be NULL");
+  this->setStartNumber(startNumber);
+  this->setStopNumber(stopNumber);
+  this->setFlags(CALLBACK_PRIMES);
+  this->callback = callback;
+  this->cbObj_ = cbObj;
+  this->sieve();
 }
 
 /**
@@ -226,8 +226,7 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
  *   PRINT_QUINTUPLETS OR
  *   PRINT_SEXTUPLETS  OR
  *   PRINT_SEPTUPLETS  OR
- *   PRINT_STATUS      OR
- *   STORE_STATUS.
+ *   PRINT_STATUS.
  */
 void PrimeSieve::setFlags(uint32_t flags) {
   flags_ = flags;
@@ -280,8 +279,8 @@ void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type,
       counts_[type]++;
     if (flags_ & (PRINT_PRIMES << type))
       std::cout << prime << std::endl;
-    if (callback_ != NULL && type == 0)
-      callback_(prime[0]-'0');
+    if (flags_ & CALLBACK_PRIMES)
+      this->callback(prime[0]-'0', cbObj_);
   }
 }
 

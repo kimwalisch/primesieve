@@ -39,28 +39,31 @@ class ParallelPrimeSieve;
  *
  * == USAGE EXAMPLES ==
  *
- * // 1. Count the prime numbers up to 4294967295
- * PrimeSieve primesieve;
- * uint64_t primeCount = primesieve.getPrimeCount(2, 4294967295);
+ * 1. Count the prime numbers up to 4294967295
+ * 
+ *    PrimeSieve primesieve;
+ *    uint64_t primeCount = primesieve.getPrimeCount(2, 4294967295);
  *
- * // 2. Use PrimeSieve as a prime number generator, 
- * //    myPrimes(uint64_t) will be called consecutively for each
- * //    prime number between 2 and 10000
- * void myPrimes(uint64_t prime) {
- *   // do something with the prime
- * }
- * ...
- * PrimeSieve primesieve;
- * primesieve.getPrimes(2, 10000, myPrimes);
+ * 2. Use PrimeSieve as a prime number generator, 
+ *    myPrimes(uint64_t, void*) will be called consecutively for each
+ *    prime number between 2 and 10000
  *
- * // 3. Count and print (to std::cout) the twin primes between 1000
- * //    and 2000
- * PrimeSieve primesieve;
- * primesieve.setStartNumber(1000);
- * primesieve.setStopNumber(2000);
- * primesieve.setFlags(COUNT_TWINS | PRINT_TWINS);
- * primesieve.sieve();
- * uint64_t twinCount = primesieve.getTwinCount();
+ *    void myPrimes(uint64_t prime, void* obj) {
+ *      // do something with the prime
+ *    }
+ *    ...
+ *    PrimeSieve primesieve;
+ *    primesieve.generatePrimes(2, 10000, myPrimes);
+ *
+ * 3. Count and print (to std::cout) the twin primes between 1000 and
+ *    2000
+ *
+ *    PrimeSieve primesieve;
+ *    primesieve.setStartNumber(1000);
+ *    primesieve.setStopNumber(2000);
+ *    primesieve.setFlags(COUNT_TWINS | PRINT_TWINS);
+ *    primesieve.sieve();
+ *    uint64_t twinCount = primesieve.getTwinCount();
  */
 class PrimeSieve {
   friend class ParallelPrimeSieve;
@@ -73,7 +76,7 @@ public:
   uint64_t getStopNumber() const;
   uint32_t getSieveSize() const;
   uint32_t getFlags() const;
-  void getPrimes(uint64_t, uint64_t, void (*)(uint64_t));
+  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
   uint64_t getPrimeCount(uint64_t, uint64_t);
   uint64_t getPrimeCount() const;
   uint64_t getTwinCount() const;
@@ -113,8 +116,9 @@ protected:
   void reset();
   virtual void doStatus(uint64_t);
 private:
-  /** Callback function for prime numbers generated with getPrimes(). */
-  void (*callback_)(uint64_t);
+  /** Callback function and object for use with generatePrimes(). */
+  void (*callback)(uint64_t, void*);
+  void* cbObj_;
   /** Either this or the parent ParallelPrimeSieve object. */
   PrimeSieve* parent_;
   /** Sum of the segments that have been sieved (for status_). */
