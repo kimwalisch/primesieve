@@ -37,7 +37,7 @@
 PrimeSieve::PrimeSieve() :
     startNumber_(0), stopNumber_(0),
     sieveSize_(settings::DEFAULT_SIEVESIZE_PRIMENUMBERFINDER), flags_(
-    COUNT_PRIMES), timeElapsed_(0.0), callback(NULL) {
+    COUNT_PRIMES), timeElapsed_(0.0), callback_(NULL) {
   parent_ = this;
   this->reset();
 }
@@ -69,8 +69,8 @@ void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
   this->setFlags(CALLBACK_PRIMES);
-  this->callback = callback;
-  this->cbObj_ = cbObj;
+  callback_ = callback;
+  cbObj_ = cbObj;
   this->sieve();
 }
 
@@ -280,7 +280,7 @@ void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type,
     if (flags_ & (PRINT_PRIMES << type))
       std::cout << prime << std::endl;
     if (flags_ & CALLBACK_PRIMES)
-      this->callback(prime[0]-'0', cbObj_);
+      this->callback_(prime[0]-'0', cbObj_);
   }
 }
 

@@ -172,7 +172,7 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   if (flags_ & CALLBACK_PRIMES)
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
       for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
-        parent_->callback(byteValue + *bitValue, parent_->cbObj_);
+        parent_->callback_(byteValue + *bitValue, parent_->cbObj_);
   // print the prime numbers to stdout
   else if (flags_ & PRINT_PRIMES)
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)

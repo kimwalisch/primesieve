@@ -117,7 +117,7 @@ protected:
   virtual void doStatus(uint64_t);
 private:
   /** Callback function and object for use with generatePrimes(). */
-  void (*callback)(uint64_t, void*);
+  void (*callback_)(uint64_t, void*);
   void* cbObj_;
   /** Either this or the parent ParallelPrimeSieve object. */
   PrimeSieve* parent_;
