@@ -44,11 +44,10 @@ class ParallelPrimeSieve;
  *    PrimeSieve primesieve;
  *    uint64_t primeCount = primesieve.getPrimeCount(2, 4294967295);
  *
- * 2. Use PrimeSieve as a prime number generator, 
- *    myPrimes(uint64_t, void*) will be called consecutively for each
- *    prime number between 2 and 10000
+ * 2. Use PrimeSieve as a prime number generator, myPrimes(uint64_t)
+ *    will be called consecutively for each prime number up to 10000
  *
- *    void myPrimes(uint64_t prime, void* obj) {
+ *    void myPrimes(uint64_t prime) {
  *      // do something with the prime
  *    }
  *    ...
@@ -76,6 +75,7 @@ public:
   uint64_t getStopNumber() const;
   uint32_t getSieveSize() const;
   uint32_t getFlags() const;
+  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
   uint64_t getPrimeCount(uint64_t, uint64_t);
   uint64_t getPrimeCount() const;
@@ -97,17 +97,17 @@ protected:
   uint64_t startNumber_;
   /** Upper bound for sieveing. */
   uint64_t stopNumber_;
-  /** Size of the sieve of Eratosthenes. */
+  /** Size of the sieve of Eratosthenes (PrimeNumberFinder) in Bytes. */
   uint32_t sieveSize_;
   /** Settings for PrimeNumberFinder. */
   uint32_t flags_;
   /**
-    * counts_[0] = prime number count
-    * counts_[1] = twin prime count
-    * counts_[2] = prime triplet count
-    * ...
-    * counts_[6] = prime septuplet count
-    */
+   * counts_[0] = prime number count
+   * counts_[1] = twin prime count
+   * counts_[2] = prime triplet count
+   * ...
+   * counts_[6] = prime septuplet count
+   */
   uint64_t counts_[COUNTS_SIZE];
   /** Status of the sieving process in percent. */
   double status_;
@@ -116,15 +116,17 @@ protected:
   void reset();
   virtual void doStatus(uint64_t);
 private:
-  /** Callback function and object for use with generatePrimes(). */
-  void (*callback_)(uint64_t, void*);
+  /** Imperative style callback function for use with generatePrimes(). */
+  void (*callback_imp)(uint64_t);
+  /** Object-oriented programming style callback function for use with generatePrimes(). */
+  void (*callback_oop)(uint64_t, void*);
   void* cbObj_;
   /** Either this or the parent ParallelPrimeSieve object. */
   PrimeSieve* parent_;
   /** Sum of the segments that have been sieved (for status_). */
   uint64_t segments_;
+  void setChildPrimeSieve(uint64_t, uint64_t, PrimeSieve*);
   void doSmallPrime(uint32_t, uint32_t, uint32_t, std::string);
-  void setChildPrimeSieve(uint64_t, uint64_t, ParallelPrimeSieve*);
 };
 
 #endif /* PRIMESIEVE_H */

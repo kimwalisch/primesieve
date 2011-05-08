@@ -18,7 +18,6 @@
  */
 
 #include "PrimeSieve.h"
-#include "ParallelPrimeSieve.h"
 #include "settings.h"
 #include "pmath.h"
 #include "ResetSieve.h"
@@ -29,7 +28,6 @@
 #include <stdexcept>
 #include <iostream>
 #include <string>
-#include <sstream>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
@@ -37,7 +35,7 @@
 PrimeSieve::PrimeSieve() :
     startNumber_(0), stopNumber_(0),
     sieveSize_(settings::DEFAULT_SIEVESIZE_PRIMENUMBERFINDER), flags_(
-    COUNT_PRIMES), timeElapsed_(0.0), callback_(NULL) {
+    COUNT_PRIMES), timeElapsed_(0.0) {
   parent_ = this;
   this->reset();
 }
@@ -63,13 +61,28 @@ uint32_t PrimeSieve::getFlags() const {
  * call a callback function for each prime.
  */
 void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
-    void (*callback)(uint64_t, void*), void* cbObj = NULL) {
+    void (*callback)(uint64_t)) {
   if (callback == NULL)
     throw std::invalid_argument("callback must not be NULL");
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
-  this->setFlags(CALLBACK_PRIMES);
-  callback_ = callback;
+  this->setFlags(CALLBACK_PRIMES_IMP);
+  callback_imp = callback;
+  this->sieve();
+}
+
+/**
+ * Generate the prime numbers between startNumber and stopNumber and
+ * call an OOP style callback function for each prime.
+ */
+void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
+    void (*callback)(uint64_t, void*), void* cbObj) {
+  if (callback == NULL)
+    throw std::invalid_argument("callback must not be NULL");
+  this->setStartNumber(startNumber);
+  this->setStopNumber(stopNumber);
+  this->setFlags(CALLBACK_PRIMES_OOP);
+  callback_oop = callback;
   cbObj_ = cbObj;
   this->sieve();
 }
@@ -233,16 +246,20 @@ void PrimeSieve::setFlags(uint32_t flags) {
 }
 
 /**
- * For use with ParallelPrimeSieve.
- * @see ParallelPrimeSieve.cpp
+ * For use with ParallelPrimeSieve which uses multiple child
+ * PrimeSieve objects.
+ * @see ParallelPrimeSieve::sieve()
  */
 void PrimeSieve::setChildPrimeSieve(uint64_t startNumber, uint64_t stopNumber,
-    ParallelPrimeSieve* parent) {
+    PrimeSieve* parent) {
+  this->setStartNumber(startNumber);
+  this->setStopNumber(stopNumber);
+  this->setSieveSize(parent->getSieveSize());
+  this->setFlags(parent->getFlags());
+  callback_imp = parent->callback_imp;
+  callback_oop = parent->callback_oop;
+  cbObj_ = parent->cbObj_;
   parent_ = parent;
-  startNumber_ = startNumber;
-  stopNumber_ = stopNumber;
-  this->setSieveSize(parent_->getSieveSize());
-  this->setFlags(parent_->getFlags());
 }
 
 void PrimeSieve::reset() {
@@ -266,9 +283,7 @@ void PrimeSieve::doStatus(uint64_t segment) {
     status_ = 100.0;
   if ((flags_ & PRINT_STATUS) &&
       static_cast<int> (status_) > static_cast<int> (old)) {
-    std::ostringstream os;
-    os << '\r' << static_cast<int> (status_) << '%';
-    std::cout << os.str() << std::flush;
+    std::cout << '\r' << static_cast<int> (status_) << '%' << std::flush;
   }
 }
 
@@ -279,8 +294,10 @@ void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type,
       counts_[type]++;
     if (flags_ & (PRINT_PRIMES << type))
       std::cout << prime << std::endl;
-    if (flags_ & CALLBACK_PRIMES)
-      this->callback_(prime[0]-'0', cbObj_);
+    else if (flags_ & CALLBACK_PRIMES_IMP)
+      this->callback_imp(prime[0]-'0');
+    else if (flags_ & CALLBACK_PRIMES_OOP)
+      this->callback_oop(prime[0]-'0', cbObj_);
   }
 }
 
@@ -309,23 +326,15 @@ void PrimeSieve::sieve() {
   if (stopNumber_ >= 7) {
     // needed by primeNumberGenerator and primeNumberFinder to
     // reset their sieve arrays
-    ResetSieve resetSieve(settings::PREELIMINATE_RESETSIEVE);
+    ResetSieve resetSieve(this);
     // used to sieve the prime numbers and prime k-tuplets between
     // startNumber_ and stopNumber_
-    PrimeNumberFinder primeNumberFinder(
-        (startNumber_ > 7) ? startNumber_ : 7,
-        stopNumber_, 
-        sieveSize_, 
-        flags_, 
-        &resetSieve, 
-        parent_);
+    PrimeNumberFinder primeNumberFinder(this, resetSieve);
 
     if (U32SQRT(stopNumber_) > resetSieve.getEliminateUpTo()) {
       // used to generate the prime numbers up to sqrt(stopNumber_)
       // needed for sieving by primeNumberFinder
-      PrimeNumberGenerator primeNumberGenerator(
-          settings::SIEVESIZE_PRIMENUMBERGENERATOR,
-          &primeNumberFinder);
+      PrimeNumberGenerator primeNumberGenerator(&primeNumberFinder);
       std::vector<uint32_t> primes16Bit;
       primes16Bit.push_back(3);
       uint32_t stop = U32SQRT(primeNumberGenerator.getStopNumber());
@@ -352,8 +361,6 @@ void PrimeSieve::sieve() {
       primeNumberGenerator.finish();
     }
     primeNumberFinder.finish();
-    for (uint32_t i = 0; i < COUNTS_SIZE; i++)
-      counts_[i] += primeNumberFinder.getCounts(i);
   }
 
   // set status_ to 100.0 (percent)
