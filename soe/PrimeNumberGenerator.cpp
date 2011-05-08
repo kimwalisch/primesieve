@@ -18,19 +18,23 @@
  */
 
 #include "PrimeNumberGenerator.h"
+#include "PrimeNumberFinder.h"
+#include "settings.h"
+#include "pmath.h"
 
+#include <stdint.h>
 #include <cstdlib>
-#include <cassert>
 
 namespace {
   const uint32_t END = ~0u;
   const uint32_t BYTE_SIZE = 256;
 }
 
-PrimeNumberGenerator::PrimeNumberGenerator(uint32_t sieveSize,
-    PrimeNumberFinder* primeNumberFinder) :
-  SieveOfEratosthenes(primeNumberFinder->getResetSieve()->getEliminateUpTo()
-      + 1, U32SQRT(primeNumberFinder->getStopNumber()), sieveSize,
+PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder* primeNumberFinder) :
+  SieveOfEratosthenes(
+      primeNumberFinder->getResetSieve()->getEliminateUpTo() + 1,
+      U32SQRT(primeNumberFinder->getStopNumber()),
+      settings::SIEVESIZE_PRIMENUMBERGENERATOR,
       primeNumberFinder->getResetSieve()),
       primeNumberFinder_(primeNumberFinder), primeBitValues_(NULL) {
   this->initPrimeBitValues();
@@ -72,7 +76,6 @@ void PrimeNumberGenerator::initPrimeBitValues() {
  */
 void PrimeNumberGenerator::analyseSieve(const uint8_t* sieve,
     uint32_t sieveSize) {
-  assert(this->getLowerBound() + sieveSize * NUMBERS_PER_BYTE <= UINT32_MAX);
   uint32_t byteValue = static_cast<uint32_t> (this->getLowerBound());
   for (uint32_t i = 0; i < sieveSize; i++) {
     // generate the prime numbers within the current byte

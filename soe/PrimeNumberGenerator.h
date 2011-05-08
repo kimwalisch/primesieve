@@ -21,9 +21,9 @@
 #define PRIMENUMBERGENERATOR_H
 
 #include "SieveOfEratosthenes.h"
-#include "PrimeNumberFinder.h"
-
 #include <stdint.h>
+
+class PrimeNumberFinder;
 
 /**
  * Sieve of Eratosthenes that is used to generate the prime numbers
@@ -31,10 +31,10 @@
  */
 class PrimeNumberGenerator: public SieveOfEratosthenes {
 public:
-  PrimeNumberGenerator(uint32_t, PrimeNumberFinder*);
+  PrimeNumberGenerator(PrimeNumberFinder*);
   ~PrimeNumberGenerator();
 private:
-  PrimeNumberFinder* primeNumberFinder_;
+  PrimeNumberFinder* const primeNumberFinder_;
   /**
    * Lookup table used to calculate the prime number corresponding
    * to a given 1 bit of the sieve_ array.
