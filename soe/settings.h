@@ -34,29 +34,40 @@ namespace settings {
    * sieving primes used with EratSmall.
    * Default = 1.5, a value between 0.75 and 2.5 is reasonable
    * @pre < 5 && <= SIEVESIZE_FACTOR_ERATMEDIUM
+   * @see SieveOfEratosthenes.cpp
    */
   const double SIEVESIZE_FACTOR_ERATSMALL = 1.5;
   enum {
     /**
      * Multiples of prime numbers up to this number will be eliminated
-     * without sieving.
-     * Default = 19 (uses 315.7 KiloBytes), for less memory usage 13 is good
-     * @pre a prime number >= 7 && <= 23
+     * without sieving if the sieve interval is not too small >= 1E9
+     * else 13 is used.
+     * Default = 19 (uses 315.7 KiloBytes) for less memory usage 13 is
+     * good (uses 1001 Bytes) and still very fast
+     * @pre a prime number >= 13 && <= 23
+     * @see ResetSieve.h & .cpp
      */
     PREELIMINATE_RESETSIEVE = 19,
     /**
-     * Sieve size of the sieve of Eratosthenes that generates the prime
-     * numbers up to sqrt(stopNumber) needed for sieving.
-     * Default = CPU L1 Cache size
-     * @pre >= 1024 && <= 2^23 && must be a power of 2
+     * Sieve size of the secondary sieve of Eratosthenes
+     * (PrimeNumberGenerator) that generates the prime numbers up to
+     * sqrt(stopNumber) needed for sieving.
+     * Default = CPU L1 cache size
+     * @pre >= 1024 && 
+     *      <= 2^23 && 
+     *      must be a power of 2
+     * @see PrimeNumberGenerator.cpp
      */
     SIEVESIZE_PRIMENUMBERGENERATOR = 1024 * 32,
     /**
      * Default sieve size of the main sieve of Eratosthenes
-     * implementation, is used if the user does not set his own sieve
-     * size.
-     * Default = CPU L1 or L2 Cache size
-     * @pre >= 1024 && <= 2^23 && must be a power of 2
+     * (PrimeNumberFinder), is used if the user does not set his own
+     * sieve size.
+     * Default = CPU L1 cache size
+     * @pre >= 1024 && 
+     *      <= 2^23 && 
+     *      must be a power of 2
+     * @see PrimeSieve.cpp
      */
     DEFAULT_SIEVESIZE_PRIMENUMBERFINDER = 1024 * 64,
     /**
@@ -64,6 +75,7 @@ namespace settings {
      * sieving primes used with EratMedium.
      * Default = 9, a value between 5 and 15 is reasonable
      * @pre >= SIEVESIZE_FACTOR_ERATSMALL
+     * @see SieveOfEratosthenes.cpp
      */
     SIEVESIZE_FACTOR_ERATMEDIUM = 9,
     /**
