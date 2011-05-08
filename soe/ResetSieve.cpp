@@ -47,8 +47,7 @@ ResetSieve::ResetSieve(PrimeSieve* primeSieve) :
 }
 
 ResetSieve::~ResetSieve() {
-  if (resetBuffer_ != NULL)
-    delete[] resetBuffer_;
+  delete[] resetBuffer_;
 }
 
 /**
