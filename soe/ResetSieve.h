@@ -22,21 +22,23 @@
 
 #include <stdint.h>
 
+class PrimeSieve;
+
 /**
- * Is used to reset the SieveOfEratosthenes::sieve_ array after each
- * sieve round.
- * Instead of just using @code std::memset(sieve_, 0xff, sieveSize_)
- * @endcode to set the bits of the sieve_ array to 1 ResetSieve 
- * copies a buffer to sieve_ to reset it. In this buffer all
- * multiples of prime numbers <= eliminateUpTo_ (default 19) have
- * been eliminated previously and thus SieveOfEratosthenes does not
- * need to consider these small primes for sieving.
- * The performance benefit of ResetSieve vs. memset is up to 20% when
+ * ResetSieve is used to reset a SieveOfEratosthenes::sieve_ array
+ * i.e. set all bits to 1.
+ * ResetSieve therefore creates a modulo wheel array of size 
+ * prime_product(p)/30 in which all multiples of primes <= p are
+ * crossed off. After each sieve round the modulo wheel array is
+ * copied to the sieve array to reset it. This does not only reset the
+ * sieve array but also eliminates the multiples of primes <= p.
+ * The performance benefit of a modulo wheel array vs.
+ * std::memset(sieve_, 0xff, sieveSize_) is up to 20% when
  * sieving < 10^10.
  */
 class ResetSieve {
 public:
-  ResetSieve(uint32_t);
+  ResetSieve(PrimeSieve*);
   ~ResetSieve();
   uint32_t getResetIndex(uint64_t) const;
   uint32_t getEliminateUpTo() const {
@@ -48,10 +50,10 @@ private:
    * All multiples of prime numbers <= eliminateUpTo_ will be
    * eliminated in resetBuffer_.
    */
-  const uint32_t eliminateUpTo_;
+  uint32_t eliminateUpTo_;
   /**
    * Array used to reset (set bits to 1) the sieve_ array of
-   * SieveOfEratosthenes after each sieve round.
+   * SieveOfEratosthenes objects after each sieve round.
    */
   uint8_t* resetBuffer_;
   /** Size of the resetBuffer_ array. */

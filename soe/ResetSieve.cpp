@@ -18,6 +18,8 @@
  */
 
 #include "ResetSieve.h"
+#include "PrimeSieve.h"
+#include "settings.h"
 #include "SieveOfEratosthenes.h"
 #include "pmath.h"
 #include "bits.h"
@@ -28,11 +30,18 @@
 #include <cstring>
 #include <cassert>
 
-ResetSieve::ResetSieve(uint32_t eliminateUpTo) :
-  eliminateUpTo_(eliminateUpTo), resetBuffer_(NULL), size_(0) {
-  if (eliminateUpTo_ < 7 || eliminateUpTo_ > 23)
-    throw std::invalid_argument(
-        "ResetSieve: eliminateUpTo must be >= 7 && <= 23.");
+ResetSieve::ResetSieve(PrimeSieve* primeSieve) : 
+    eliminateUpTo_(settings::PREELIMINATE_RESETSIEVE), resetBuffer_(NULL), 
+    size_(0) {
+  if (settings::PREELIMINATE_RESETSIEVE < 13 || 
+      settings::PREELIMINATE_RESETSIEVE > 23)
+    throw std::logic_error(
+        "settings::PREELIMINATE_RESETSIEVE must be >= 13 && <= 23.");
+  uint64_t interval = primeSieve->getStopNumber() - primeSieve->getStartNumber();
+  // if the sieve interval is very small eliminateUpTo_ is set to 13 which 
+  // initializes much faster (than 19) and is still fast for sieving
+  if (interval < static_cast<uint64_t> (1E9))
+    eliminateUpTo_ = 13;
   this->setSize(eliminateUpTo_);
   this->initResetBuffer();
 }
