@@ -52,8 +52,7 @@ EratBig::~EratBig() {
     delete[] bucketPointers_.back();
     bucketPointers_.pop_back();
   }
-  if (bucketLists_ != NULL)
-    delete[] bucketLists_;
+  delete[] bucketLists_;
 }
 
 /**  
