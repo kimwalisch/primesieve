@@ -25,27 +25,26 @@
 
 /** Flags (settings) for PrimeNumberFinder. */
 enum {
-  COUNT_PRIMES      = 1 << 0,
-  COUNT_TWINS       = 1 << 1,
-  COUNT_TRIPLETS    = 1 << 2,
-  COUNT_QUADRUPLETS = 1 << 3,
-  COUNT_QUINTUPLETS = 1 << 4,
-  COUNT_SEXTUPLETS  = 1 << 5,
-  COUNT_SEPTUPLETS  = 1 << 6,
-  COUNT_FLAGS       = COUNT_PRIMES | COUNT_TWINS | COUNT_TRIPLETS | COUNT_QUADRUPLETS | COUNT_QUINTUPLETS | COUNT_SEXTUPLETS | COUNT_SEPTUPLETS,
-  PRINT_PRIMES      = 1 << 7,
-  PRINT_TWINS       = 1 << 8,
-  PRINT_TRIPLETS    = 1 << 9,
-  PRINT_QUADRUPLETS = 1 << 10,
-  PRINT_QUINTUPLETS = 1 << 11,
-  PRINT_SEXTUPLETS  = 1 << 12,
-  PRINT_SEPTUPLETS  = 1 << 13,
-  PRINT_STATUS      = 1 << 14,
-  // PRINT_FLAGS is used to print the generated primes to std::cout
-  // thus PRINT_STATUS is not included
-  PRINT_FLAGS       = PRINT_PRIMES | PRINT_TWINS | PRINT_TRIPLETS | PRINT_QUADRUPLETS | PRINT_QUINTUPLETS | PRINT_SEXTUPLETS | PRINT_SEPTUPLETS,
-  CALLBACK_PRIMES   = 1 << 15,
-  GENERATE_FLAGS    = PRINT_FLAGS | CALLBACK_PRIMES
+  COUNT_PRIMES        = 1 << 0,
+  COUNT_TWINS         = 1 << 1,
+  COUNT_TRIPLETS      = 1 << 2,
+  COUNT_QUADRUPLETS   = 1 << 3,
+  COUNT_QUINTUPLETS   = 1 << 4,
+  COUNT_SEXTUPLETS    = 1 << 5,
+  COUNT_SEPTUPLETS    = 1 << 6,
+  PRINT_PRIMES        = 1 << 7,
+  PRINT_TWINS         = 1 << 8,
+  PRINT_TRIPLETS      = 1 << 9,
+  PRINT_QUADRUPLETS   = 1 << 10,
+  PRINT_QUINTUPLETS   = 1 << 11,
+  PRINT_SEXTUPLETS    = 1 << 12,
+  PRINT_SEPTUPLETS    = 1 << 13,
+  PRINT_STATUS        = 1 << 14,
+  CALLBACK_PRIMES_IMP = 1 << 15,
+  CALLBACK_PRIMES_OOP = 1 << 16,
+  COUNT_FLAGS         = COUNT_PRIMES | COUNT_TWINS | COUNT_TRIPLETS | COUNT_QUADRUPLETS | COUNT_QUINTUPLETS | COUNT_SEXTUPLETS | COUNT_SEPTUPLETS,
+  PRINT_FLAGS         = PRINT_PRIMES | PRINT_TWINS | PRINT_TRIPLETS | PRINT_QUADRUPLETS | PRINT_QUINTUPLETS | PRINT_SEXTUPLETS | PRINT_SEPTUPLETS,
+  GENERATE_FLAGS      = PRINT_FLAGS | CALLBACK_PRIMES_IMP | CALLBACK_PRIMES_OOP
 };
 
 class PrimeSieve;
@@ -58,24 +57,15 @@ class PrimeSieve;
 class PrimeNumberFinder: public SieveOfEratosthenes {
 public:
   enum { COUNTS_SIZE = 7 };
-  PrimeNumberFinder(uint64_t, uint64_t, uint32_t, uint32_t,
-      ResetSieve*, PrimeSieve*);
+  PrimeNumberFinder(PrimeSieve*, ResetSieve&);
   ~PrimeNumberFinder();
-  uint64_t getCounts(uint32_t) const;
 private:
   static const uint32_t nextBitValue_[NUMBERS_PER_BYTE];
-  /** Settings for PrimeNumberFinder. */
-  const uint32_t flags_;
   /**
-   * Used to calculate the status of the sieving process via
-   * PrimeSieve::doStatus(uint64_t).
+   * Pointer to the PrimeSieve object that is executing this
+   * PrimeNumberFinder object.
    */
-  PrimeSieve* const parent_;
-  /**
-   * Used to check if the CPU supports the SSE 4.2 POPCNT
-   * instruction.
-   */
-  const bool isPOPCNTSupported_;
+  PrimeSieve* const primeSieve_;
   /**
    * Gives the count of prime numbers and k-tuplets within a byte
    * of the sieve_ array.
@@ -87,18 +77,10 @@ private:
    */
   uint32_t** primeBitValues_;
   /**
-   * Determines the type of primes that will be generated in 
-   * generate(const uint8_t*, uint32_t).
-   * 0 = prime numbers, 1 = twin primes, ..., 6 = prime septuplets
+   * Used to check if the CPU supports the SSE 4.2 POPCNT
+   * instruction.
    */
-  uint32_t generateType_;
-  /**
-    * Count of prime numbers (counts_[0]), twin primes (counts_[1]),
-    * ..., prime septuplets (counts_[6]).
-    * @warning PrimeNumberFinder counts and prints prime numbers and
-    *          prime k-tuplets >= 7.
-    */
-  uint64_t counts_[COUNTS_SIZE];
+  const bool isPOPCNTSupported_;
   void initLookupTables();
   void count(const uint8_t*, uint32_t);
   void generate(const uint8_t*, uint32_t);
