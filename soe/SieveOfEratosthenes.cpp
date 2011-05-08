@@ -54,32 +54,17 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
     this->initEratAlgorithms();
     this->initSieve();
   } catch (...) {
-    this->free();
+    delete eratSmall_;
+    delete eratMedium_;
+    delete eratBig_;
     throw;
   }
 }
 
 SieveOfEratosthenes::~SieveOfEratosthenes() {
-  this->free();
-}
-
-void SieveOfEratosthenes::free() {
-  if (sieve_ != NULL) {
-    delete[] sieve_;
-    sieve_ = NULL;
-  }
-  if (eratSmall_ != NULL) {
-    delete eratSmall_;
-    eratSmall_ = NULL;
-  }
-  if (eratMedium_ != NULL) {
-    delete eratMedium_;
-    eratMedium_ = NULL;
-  }
-  if (eratBig_ != NULL) {
-    delete eratBig_;
-    eratBig_ = NULL;
-  }
+  delete eratSmall_;
+  delete eratMedium_;
+  delete eratBig_;
 }
 
 uint32_t SieveOfEratosthenes::getRemainder(uint64_t n) {

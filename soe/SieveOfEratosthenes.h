@@ -95,7 +95,6 @@ private:
    * primes.
    */
   EratBig* eratBig_;
-  void free();
   uint32_t getRemainder(uint64_t);
   void setSieveSize(uint32_t);
   void setLowerBound(uint64_t);
