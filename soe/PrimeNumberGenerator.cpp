@@ -41,12 +41,9 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder* primeNumberFinder)
 }
 
 PrimeNumberGenerator::~PrimeNumberGenerator() {
-  if (primeBitValues_ != NULL) {
-    for (uint32_t i = 0; i < BYTE_SIZE; i++) {
-      delete[] primeBitValues_[i];
-    }
-    delete[] primeBitValues_;
-  }
+  for (uint32_t i = 0; i < BYTE_SIZE; i++)
+    delete[] primeBitValues_[i];
+  delete[] primeBitValues_;
 }
 
 /**
