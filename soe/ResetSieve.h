@@ -29,7 +29,7 @@ class PrimeSieve;
  * i.e. set all bits to 1.
  * ResetSieve therefore creates a modulo wheel array of size 
  * prime_product(p)/30 in which all multiples of primes <= p are
- * crossed off. After each sieve round the modulo wheel array is
+ * crossed off. After each sieved segment the modulo wheel array is
  * copied to the sieve array to reset it. This does not only reset the
  * sieve array but also eliminates the multiples of primes <= p.
  * The performance benefit of a modulo wheel array vs.
@@ -53,7 +53,7 @@ private:
   uint32_t eliminateUpTo_;
   /**
    * Array used to reset (set bits to 1) the sieve_ array of
-   * SieveOfEratosthenes objects after each sieve round.
+   * SieveOfEratosthenes objects after each sieved segment.
    */
   uint8_t* resetBuffer_;
   /** Size of the resetBuffer_ array. */

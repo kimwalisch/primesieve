@@ -123,8 +123,7 @@ void PrimeNumberFinder::initLookupTables() {
 }
 
 /**
- * Count the prime numbers and prime k-tuplets of the current
- * sieve round.
+ * Count the prime numbers and prime k-tuplets of the current segment.
  */
 void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // count prime numbers

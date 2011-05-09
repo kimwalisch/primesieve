@@ -37,7 +37,7 @@ EratSmall::EratSmall(uint32_t limit, uint64_t stopNumber, uint32_t sieveSize) :
 /**
  * Implementation of the segmented sieve of Eratosthenes with wheel
  * factorization (modulo 30 wheel). Is used to cross-off the 
- * multiples of the current sieve round.
+ * multiples of the current segment.
  */
 void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
   uint8_t* const sieveEnd = &sieve[sieveSize];
@@ -527,7 +527,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           if (s >= sieveEnd)
             goto out0;
         }
-        // sets the wheelIndex for the next sieve round, i.e. if out
+        // sets the wheelIndex for the next segment, i.e. if out
         // happens at "case 63:" wheelIndex is set to 56
         out0: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (1 << 23); break;
         out1: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (2 << 23); break;
@@ -538,7 +538,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
         out6: ; wPrime->index_ = (wPrime->index_ & 0xFC000000u) | (7 << 23); break;
         out7: ; wPrime->index_ &= 0xFC000000u;
       }
-      // set the sieveIndex for the next sieve round
+      // set the sieveIndex for the next segment
       wPrime->setSieveIndex(static_cast<uint32_t> (s - sieveEnd));
     }
   }

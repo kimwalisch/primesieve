@@ -39,17 +39,23 @@ const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23,
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
     uint64_t stopNumber, uint32_t sieveSize, ResetSieve* resetSieve) :
   startNumber_(startNumber), stopNumber_(stopNumber), sieve_(NULL),
-      resetSieve_(resetSieve), eratSmall_(NULL), eratMedium_(NULL), eratBig_(
-          NULL) {
-  if (startNumber_ < 7)
+      sieveSize_(sieveSize), resetSieve_(resetSieve), eratSmall_(NULL),
+           eratMedium_(NULL), eratBig_(NULL) {
+  if (startNumber_ < 7 || startNumber_ > stopNumber_)
+    throw std::logic_error(
+        "SieveOfEratosthenes: startNumber must be >= 7 && <= stop number.");
+  // it makes no sense to use very small sieve sizes as a sieve size
+  // of the CPU's L1 or L2 cache size performs best
+  if (sieveSize_ < 1024)
     throw std::invalid_argument(
-        "SieveOfEratosthenes: start number must be >= 7.");
-  if (startNumber_ > stopNumber_)
-    throw std::invalid_argument(
-        "SieveOfEratosthenes: start number must be <= stop number.");
-  this->setSieveSize(sieveSize);
-  this->setLowerBound(startNumber);
-  this->setResetIndex();
+        "SieveOfEratosthenes: sieveSize must be >= 1024.");
+  if (sieveSize_ > UINT32_MAX / NUMBERS_PER_BYTE)
+    throw std::overflow_error(
+        "SieveOfEratosthenes: sieveSize must be <= 2^32 / 30.");
+
+  lowerBound_ = startNumber - this->getRemainder(startNumber);
+  assert(lowerBound_ % NUMBERS_PER_BYTE == 0);
+  resetIndex_ = resetSieve_->getResetIndex(lowerBound_);
   try {
     this->initEratAlgorithms();
     this->initSieve();
@@ -69,28 +75,9 @@ SieveOfEratosthenes::~SieveOfEratosthenes() {
 
 uint32_t SieveOfEratosthenes::getRemainder(uint64_t n) {
   uint32_t remainder = static_cast<uint32_t> (n % NUMBERS_PER_BYTE);
-  return (remainder > 1) ? remainder : remainder + NUMBERS_PER_BYTE;
-}
-
-void SieveOfEratosthenes::setSieveSize(uint32_t sieveSize) {
-  // It makes no sense to use very small sieve sizes, the CPU's L1 or
-  // L2 cache size usually performs best
-  if (sieveSize < 1024)
-    throw std::invalid_argument(
-        "SieveOfEratosthenes: sieve size must be >= 1024.");
-  if (sieveSize > UINT32_MAX / NUMBERS_PER_BYTE)
-    throw std::overflow_error(
-        "SieveOfEratosthenes: sieve size must be <= 2^32 / 30.");
-  sieveSize_ = sieveSize;
-}
-
-void SieveOfEratosthenes::setLowerBound(uint64_t startNumber) {
-  lowerBound_ = startNumber - this->getRemainder(startNumber);
-  assert(lowerBound_ % NUMBERS_PER_BYTE == 0);
-}
-
-void SieveOfEratosthenes::setResetIndex() {
-  resetIndex_ = resetSieve_->getResetIndex(lowerBound_);
+  return (remainder > 1)
+      ? remainder 
+      : remainder + NUMBERS_PER_BYTE;
 }
 
 /**
@@ -142,7 +129,7 @@ void SieveOfEratosthenes::initEratAlgorithms() {
 
 /**
  * Use the erat* algorithms to cross-off the multiples of the
- * current sieve round.
+ * current segment.
  */
 void SieveOfEratosthenes::crossOffMultiples() {
   if (eratSmall_ != NULL) {
@@ -159,13 +146,15 @@ void SieveOfEratosthenes::crossOffMultiples() {
  * Use the sieve of Eratosthenes to sieve up to primeNumber^2.
  */
 void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
-  assert(eratSmall_ != NULL
-      && primeNumber > resetSieve_->getEliminateUpTo()
-      && U64SQUARE(primeNumber) <= stopNumber_);
+  assert(eratSmall_ != NULL && 
+      primeNumber > resetSieve_->getEliminateUpTo() &&
+      U64SQUARE(primeNumber) <= stopNumber_);
+
   /// @remark '- 6' is a correction for primes of type n * 30 + 31
   const uint64_t primeSquared = U64SQUARE(primeNumber) - 6;
+
   // do not enter this while loop until all primes required for
-  // sieving the next round have been added to one of the erat*
+  // sieving the next segment have been added to one of the erat*
   // algorithms below
   while (lowerBound_ + sieveSize_ * NUMBERS_PER_BYTE < primeSquared) {
     this->crossOffMultiples();
@@ -175,23 +164,22 @@ void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
   }
   // add primeNumber to the appropriate (fastest) sieve of
   // Eratosthenes implementation
-  if (eratSmall_->getLimit() >= primeNumber) {
+  if (primeNumber <= eratSmall_->getLimit())
     eratSmall_->addPrimeNumber(primeNumber, lowerBound_);
-  } else if (eratMedium_->getLimit() >= primeNumber) {
+  else if (primeNumber <= eratMedium_->getLimit())
     eratMedium_->addPrimeNumber(primeNumber, lowerBound_);
-  } else {
+  else
     eratBig_->addPrimeNumber(primeNumber, lowerBound_);
-  }
 }
 
 /**
- * Sieve the last rounds remaing after that @code sieve(uint32_t)
+ * Sieve the last segments remaing after that @code sieve(uint32_t)
  * @endcode has been called consecutively for all primes up to 
  * sqrt(stopNumber).
  */
 void SieveOfEratosthenes::finish() {
   assert(lowerBound_ < stopNumber_);
-  /// sieve all the rounds left except the last one
+  /// sieve all the segments left except the last one
   /// @remark '+ 1' is a correction for primes of type n * 30 + 31
   while (lowerBound_ + sieveSize_ * NUMBERS_PER_BYTE + 1 < stopNumber_) {
     this->crossOffMultiples();
@@ -200,12 +188,12 @@ void SieveOfEratosthenes::finish() {
     lowerBound_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
   uint32_t stopRemainder = this->getRemainder(stopNumber_);
-  // calculate the sieve size of the last sieve round
+  // calculate the sieve size of the last segment
   sieveSize_ = static_cast<uint32_t> ((stopNumber_ - stopRemainder)
       - lowerBound_) / NUMBERS_PER_BYTE + 1;
   assert(lowerBound_ + (sieveSize_ - 1) * NUMBERS_PER_BYTE + stopRemainder
       == stopNumber_);
-  // sieve the last round
+  // sieve the last segment
   this->crossOffMultiples();
   // eliminates the bits of the last byte representing
   // numbers greater than stopNumber_

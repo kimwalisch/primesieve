@@ -111,7 +111,7 @@ void ResetSieve::initResetBuffer() {
 
 /**
  * Used to reset (set bits to 1) the SieveOfEratosthenes::sieve_
- * array after each sieve round, eliminates the multiples of prime
+ * array after each sieved segment, eliminates the multiples of prime
  * numbers <= eliminateUpTo_ without sieving.
  */
 void ResetSieve::reset(uint8_t* sieve, uint32_t sieveSize, uint32_t* resetIndex) {
@@ -130,7 +130,7 @@ void ResetSieve::reset(uint8_t* sieve, uint32_t sieveSize, uint32_t* resetIndex)
       std::memcpy(&sieve[sieveIndex], resetBuffer_, size_);
       sieveIndex += size_;
     }
-    // set *resetIndex for the next sieve round
+    // set *resetIndex for the next segment
     *resetIndex = sieveSize - sieveIndex;
     std::memcpy(&sieve[sieveIndex], resetBuffer_, *resetIndex);
   }

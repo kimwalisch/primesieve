@@ -68,7 +68,7 @@ void PrimeNumberGenerator::initPrimeBitValues() {
 }
 
 /**
- * Generate the prime numbers of the current sieve round and use
+ * Generate the prime numbers of the current segment and use
  * them to sieve with primeNumberFinder_.
  */
 void PrimeNumberGenerator::analyseSieve(const uint8_t* sieve,

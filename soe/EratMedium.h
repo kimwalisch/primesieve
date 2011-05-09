@@ -28,8 +28,9 @@
 /**
  * Implementation of the segmented sieve of Eratosthenes with wheel
  * factorization (modulo 210 wheel) and 30 numbers per byte.
- * This algorithm is faster than EratSmall for sieving primes that
- * do not have a lot of multiple occurences each sieve round.
+ * This algorithm is faster than EratSmall for sieving primes that do
+ * not have a lot of multiple occurrences per segment, it uses
+ * less jump (switch, goto) operations.
  */
 class EratMedium: public EratBase<Modulo210Wheel> {
 public:

@@ -28,9 +28,17 @@
 #include <stdint.h>
 
 /**
- * Implementation of the segmented sieve of Eratosthenes using 30
- * numbers per byte. SieveOfEratosthenes is an abstract class that is
- * used by PrimeNumberGenerator and PrimeNumberFinder.
+ * SieveOfEratosthenes is an implementation of the segmented sieve of
+ * Eratosthenes using a bit array with 30 numbers per byte
+ * (n * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}).
+ * Multiples of prime numbers are crossed off in eratSmall_,
+ * eratMedium_ and eratBig_. EratSmall is optimized for small sieving
+ * primes with a lot of multiple occurrences per segment, EratMedium is
+ * optimized for medium sieving primes and EratBig is optimized for
+ * big sieving primes that have less than one multiple occurrence per
+ * segment.
+ * SieveOfEratosthenes is an abstract class, PrimeNumberGenerator and
+ * PrimeNumberFinder are derived from SieveOfEratosthenes.
  */
 class SieveOfEratosthenes {
 public:
@@ -70,13 +78,13 @@ private:
   /**
    * Value of the first byte of the sieve_ array. As
    * SieveOfEratosthenes uses 30 numbers per byte lowerBound_ is set
-   * to lowerBound_ += sieveSize * 30 after each sieve round.
+   * to lowerBound_ += sieveSize * 30 after each sieved segment.
    */
   uint64_t lowerBound_;
   /** Sieve of Eratosthenes array. */
   uint8_t* sieve_;
   uint32_t sieveSize_;
-  /** Used to reset the sieve_ array after each sieve round. */
+  /** Used to reset the sieve_ array after each sieved segment. */
   ResetSieve* const resetSieve_;
   /** Index needed by resetSieve_ to reset the sieve_ array. */
   uint32_t resetIndex_;
@@ -96,9 +104,6 @@ private:
    */
   EratBig* eratBig_;
   uint32_t getRemainder(uint64_t);
-  void setSieveSize(uint32_t);
-  void setLowerBound(uint64_t);
-  void setResetIndex();
   void initEratAlgorithms();
   void initSieve();
   void crossOffMultiples();

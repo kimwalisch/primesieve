@@ -29,25 +29,27 @@ EratMedium::EratMedium(uint32_t limit, uint64_t stopNumber, uint32_t sieveSize) 
 /**
  * Implementation of the segmented sieve of Eratosthenes with wheel
  * factorization (modulo 210 wheel). Is used to cross-off the
- * multiples of the current sieve round.
+ * multiples of the current segment.
  */
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
-  // iterate over all the buckets of the bucket list
+  // iterate over each bucket of the bucket list
   for (Bucket_t* bucket = bucketList_; bucket != NULL; bucket = bucket->next) {
     WheelPrime* wPrime = bucket->wheelPrimeBegin();
     WheelPrime* end    = bucket->wheelPrimeEnd();
-    // iterate over the wheelPrimes of the current bucket
+
+    // iterate over each wheelPrime of the current bucket
     for (; wPrime != end; wPrime++) {
       uint32_t sieveIndex = wPrime->getSieveIndex();
-      // nothing to do for primes that do not have a multiple
-      // occurence in the current sieve round
+
       if (sieveIndex >= sieveSize) {
+        // nothing to do for primes that do not have a multiple
+        // occurence in the current segment
         wPrime->index_ -= sieveSize;
       } else {
         uint32_t sievePrime = wPrime->getSievePrime();
         uint32_t wheelIndex = wPrime->getWheelIndex();
         // eliminate the multiples of the current wheelPrime (of the
-        // current sieve round)
+        // current segment)
         do {
           uint8_t bit = wheel_[wheelIndex].unsetBit;
           uint8_t nmf = wheel_[wheelIndex].nextMultipleFactor;
@@ -57,7 +59,8 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
           wheelIndex += nxt;
           sieveIndex += sievePrime * nmf + cor;
         } while (sieveIndex < sieveSize);
-        // sets the sieveIndex and wheelIndex for the next sieve round
+
+        // sets the sieveIndex and wheelIndex for the next segment
         sieveIndex -= sieveSize;
         wPrime->setWheelIndex(wheelIndex);
         wPrime->setSieveIndex(sieveIndex);

@@ -44,9 +44,9 @@ private:
   uint32_t primeCount_;
   /**
    * Array of singly linked bucket lists. Each list contains the
-   * sieving primes of the related sieve round, @code
+   * sieving primes of the related segment, @code
    * bucketLists_[index_] @endcode is the list associated to the
-   * current sieve round.
+   * current segment.
    */
   Bucket_t** bucketLists_;
   /** Singly linked list of empty Buckets (part of Memory pool). */

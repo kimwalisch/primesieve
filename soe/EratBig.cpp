@@ -92,7 +92,7 @@ void EratBig::addPrimeNumber(uint32_t primeNumber, uint64_t lowerBound) {
   uint32_t wheelIndex;
   if (this->setWheelPrime(lowerBound, &primeNumber, &sieveIndex, &wheelIndex)
       == true) {
-    // indicates in how many sieve rounds the next multiple of 
+    // indicates in how many segments the next multiple of 
     // primeNumber has to be eliminated
     uint32_t nextSieveRound = sieveIndex >> log2SieveSize_;
     // sieve index of primeNumber's next multiple
@@ -131,7 +131,7 @@ void EratBig::moveFrontBucket(Bucket_t*& dest, Bucket_t*& src) {
 /**
  * Implementation of the segmented sieve of Eratosthenes with wheel
  * factorization (modulo 210 wheel). Is used to cross-off the
- * multiples of the current sieve round.
+ * multiples of the current segment.
  */
 void EratBig::sieve(uint8_t* sieve) {
   // nothing to do
@@ -150,7 +150,7 @@ void EratBig::sieve(uint8_t* sieve) {
       uint32_t wheelIndex = wPrime->getWheelIndex();
       wPrime++;
       // eliminate the multiples of the current wheelPrime (of the
-      // current sieve round)
+      // current segment)
       uint32_t nextSieveRound;
       do {
         uint8_t bit = wheel_[wheelIndex].unsetBit;
@@ -175,8 +175,8 @@ void EratBig::sieve(uint8_t* sieve) {
     this->moveFrontBucket(bucketStock_, bucketLists_[index_]);
   }
   // the current bucketList is empty now, add an empty
-  // bucket for the next sieve round
+  // bucket for the next segment
   this->moveFrontBucket(bucketLists_[index_], bucketStock_);
-  // increase the bucketLists_ index for the next sieve round
+  // increase the bucketLists_ index for the next segment
   index_ = (index_ + 1) & (size_ - 1);
 }
