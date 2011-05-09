@@ -26,8 +26,10 @@
 class PrimeNumberFinder;
 
 /**
- * Sieve of Eratosthenes that is used to generate the prime numbers
- * up to sqrt(stopNumber) needed for sieving by PrimeNumberFinder.
+ * PrimeNumberGenerator is a SieveOfEratosthenes object that is used
+ * to generate the prime numbers up to sqrt(stopNumber) needed by
+ * PrimeNumberFinder to sieve the primes between startNumber and
+ * stopNumber.
  */
 class PrimeNumberGenerator: public SieveOfEratosthenes {
 public:
