@@ -1,0 +1,48 @@
+/****************************************************************************/
+// 1. Count prime numbers up to 10^3 (single-threaded)
+
+#include "soe/PrimeSieve.h"
+#include <iostream>
+
+int main() {
+  PrimeSieve primeSieve;
+  std::cout << "There are "
+            << primeSieve.getPrimeCount(2,1000)
+            << " prime numbers up to 1000"
+            << std::endl;
+}
+
+/****************************************************************************/
+// 2. Count prime numbers (multi-threaded, OpenMP)
+
+#include "soe/ParallelPrimeSieve.h"
+#include <iostream>
+
+int main() {
+  ParallelPrimeSieve primeSieve;
+  std::cout << "There are "
+            << primeSieve.getPrimeCount(2,1000)
+            << " prime numbers up to 1000"
+            << std::endl;
+}
+
+/****************************************************************************/
+// 3. Generate prime numbers up to 10000 and store them
+//    into a STL vector 
+
+#include "soe/PrimeSieve.h"
+#include <stdint.h>
+#include <vector>
+
+std::vector<int> myPrimes;
+
+void storePrimes(uint64_t prime) {
+  myPrimes.push_back(static_cast<int> (prime));
+}
+
+int main() {
+  PrimeSieve primeSieve;
+  primeSieve.generatePrimes(2, 10000, storePrimes);
+}
+
+/****************************************************************************/
