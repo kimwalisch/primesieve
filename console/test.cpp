@@ -95,9 +95,9 @@ void testRandomIntervals() {
 
     while (primeSieve.getStopNumber() < upperBound) {
       // generate a rondom 64 bit integer
-      uint64_t rand64 = 1;
+      uint64_t rand64 = 2 + std::rand();
       while (rand64 < UINT32_MAX)
-        rand64 *= std::rand();
+        rand64 *= rand64;
 
       // generate a random interval >= 0 and < 10^7
       uint64_t interval = rand64 % maxInterval;
