@@ -139,7 +139,6 @@ void EratBig::sieve(uint8_t* sieve) {
     return;
   // iterate over the buckets of the current bucket list
   while (bucketLists_[index_] != NULL) {
-  
     // iterate over the wheelPrimes of the current bucket
     WheelPrime* wPrime = bucketLists_[index_]->wheelPrimeBegin();
     WheelPrime* end    = bucketLists_[index_]->wheelPrimeEnd();
@@ -149,8 +148,8 @@ void EratBig::sieve(uint8_t* sieve) {
       uint32_t sieveIndex = wPrime->getSieveIndex();
       uint32_t wheelIndex = wPrime->getWheelIndex();
       wPrime++;
-      // eliminate the multiples of the current wheelPrime (of the
-      // current segment)
+      // eliminate the multiples of the current wheelPrime
+      // (of the current segment)
       uint32_t nextSieveRound;
       do {
         uint8_t bit = wheel_[wheelIndex].unsetBit;
@@ -177,7 +176,6 @@ void EratBig::sieve(uint8_t* sieve) {
   // the current bucketList is empty now, add an empty
   // bucket for the next segment
   this->moveFront(bucketLists_[index_], bucketStock_);
-  
   // increase the bucketLists_ index for the next segment
   index_ = (index_ + 1) & (size_ - 1);
 }
