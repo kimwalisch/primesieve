@@ -19,7 +19,8 @@ Known bugs
 3. The -test option of the console version of primesieve
    might result in an infinite loop when compiled with MSVC (Windows).
 
-   The error was related to 64-bit random number generation.
+   The error was related to 64-bit random number generation in
+   console/test.cpp.
    >> FIXED in version 2.2, committed on the 9h May 2011
 
 2. Prime numbers preceding the startNumber might be counted and
