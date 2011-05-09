@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       21 December 2010 
-# Last modified: 12 February 2010
+# Last modified: 9 May 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -15,6 +15,12 @@ repository, see http://code.google.com/p/primesieve/source/checkout
 
 Known bugs
 ==========
+
+3. The -test option of the console version of primesieve
+   might result in an infinite loop when compiled with MSVC (Windows).
+
+   The error was related to 64-bit random number generation.
+   >> FIXED in version 2.2, committed on the 9h May 2011
 
 2. Prime numbers preceding the startNumber might be counted and
    printed:
