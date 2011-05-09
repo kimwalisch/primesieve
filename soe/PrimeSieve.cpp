@@ -19,6 +19,7 @@
 
 #include "PrimeSieve.h"
 #include "settings.h"
+#include "ParallelPrimeSieve.h"
 #include "pmath.h"
 #include "ResetSieve.h"
 #include "PrimeNumberFinder.h"
@@ -33,10 +34,27 @@
 #include <ctime>
 
 PrimeSieve::PrimeSieve() :
-    startNumber_(0), stopNumber_(0),
-    sieveSize_(settings::DEFAULT_SIEVESIZE_PRIMENUMBERFINDER), flags_(
-    COUNT_PRIMES), timeElapsed_(0.0) {
+  startNumber_(0), stopNumber_(0),
+    sieveSize_(settings::DEFAULT_SIEVESIZE_PRIMENUMBERFINDER),
+    flags_(COUNT_PRIMES), timeElapsed_(0.0) {
   parent_ = this;
+  this->reset();
+}
+
+/**
+ * Is used by ParallelPrimeSieve which uses multiple PrimeSieve
+ * objects and threads to sieve primes in parallel.
+ * @see ParallelPrimeSieve::sieve()
+ */
+PrimeSieve::PrimeSieve(uint64_t startNumber, uint64_t stopNumber, 
+    ParallelPrimeSieve* parent) :
+  startNumber_(startNumber), stopNumber_(stopNumber),
+    sieveSize_(parent->sieveSize_), flags_(parent->flags_),
+    timeElapsed_(0.0),
+    callback_imp(parent->callback_imp),
+    callback_oop(parent->callback_oop),
+    cbObj_(parent->cbObj_),
+    parent_(parent) {
   this->reset();
 }
 
@@ -243,23 +261,6 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
  */
 void PrimeSieve::setFlags(uint32_t flags) {
   flags_ = flags;
-}
-
-/**
- * For use with ParallelPrimeSieve which uses multiple child
- * PrimeSieve objects.
- * @see ParallelPrimeSieve::sieve()
- */
-void PrimeSieve::setChildPrimeSieve(uint64_t startNumber, uint64_t stopNumber,
-    PrimeSieve* parent) {
-  this->setStartNumber(startNumber);
-  this->setStopNumber(stopNumber);
-  this->setSieveSize(parent->getSieveSize());
-  this->setFlags(parent->getFlags());
-  callback_imp = parent->callback_imp;
-  callback_oop = parent->callback_oop;
-  cbObj_ = parent->cbObj_;
-  parent_ = parent;
 }
 
 void PrimeSieve::reset() {

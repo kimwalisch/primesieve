@@ -167,13 +167,11 @@ void ParallelPrimeSieve::sieve() {
   // a sub-interval of the overall interval
   std::vector<PrimeSieve*> primeSieve;
   while (tStop < stopNumber_) {
-    primeSieve.push_back(new PrimeSieve);
-    primeSieve.back()->setChildPrimeSieve(tStart, tStop, this);
+    primeSieve.push_back(new PrimeSieve(tStart, tStop, this));
     tStart = tStop + 1;
     tStop += threadInterval;
   }
-  primeSieve.push_back(new PrimeSieve);
-  primeSieve.back()->setChildPrimeSieve(tStart, stopNumber_, this);
+  primeSieve.push_back(new PrimeSieve(tStart, stopNumber_, this));
 
   // start parallel sieving
   #pragma omp parallel for num_threads(numThreads)

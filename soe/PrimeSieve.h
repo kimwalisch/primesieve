@@ -39,7 +39,7 @@ class ParallelPrimeSieve;
  *
  * == USAGE EXAMPLES ==
  *
- * 1. Count the prime numbers up to 4294967295
+ * 1. Count prime numbers up to 4294967295
  * 
  *    PrimeSieve primesieve;
  *    uint64_t primeCount = primesieve.getPrimeCount(2, 4294967295);
@@ -65,11 +65,11 @@ class ParallelPrimeSieve;
  *    uint64_t twinCount = primesieve.getTwinCount();
  */
 class PrimeSieve {
-  friend class ParallelPrimeSieve;
   friend class PrimeNumberFinder;
 public:
   enum { COUNTS_SIZE = PrimeNumberFinder::COUNTS_SIZE };
   PrimeSieve();
+  PrimeSieve(uint64_t, uint64_t, ParallelPrimeSieve*);
   virtual ~PrimeSieve() { }
   uint64_t getStartNumber() const;
   uint64_t getStopNumber() const;
@@ -125,7 +125,6 @@ private:
   PrimeSieve* parent_;
   /** Sum of the segments that have been sieved (for status_). */
   uint64_t segments_;
-  void setChildPrimeSieve(uint64_t, uint64_t, PrimeSieve*);
   void doSmallPrime(uint32_t, uint32_t, uint32_t, std::string);
 };
 
