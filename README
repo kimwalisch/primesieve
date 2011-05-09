@@ -80,11 +80,13 @@ Contents
 
   Summary of the important files:
 
-  * PrimeSieve.cpp, ParallelPrimeSieve.cpp (uses OpenMP)
-    PrimeSieve objects provide an easy to use user interface for prime
-    sieving. Have a look at console/main.cpp or qt-gui/src/main.cpp to
-    see how it works. PrimeSieve directly or indirectly implements all
-    of the following classes.
+  * PrimeSieve.cpp and ParallelPrimeSieve.cpp (uses OpenMP)
+    PrimeSieve objects provide an easy API for prime sieving. The file
+    USAGE_EXAMPLES has source code examples of how to use PrimeSieve
+    to generate prime numbers, count prime numbers, print twin primes,
+    ... Also have a look at console/main.cpp to see how it works.
+    PrimeSieve directly or indirectly implements all of the following
+    classes.
 
   * SieveOfEratosthenes.cpp
     Implementation of the segmented sieve of Eratosthenes using a bit
