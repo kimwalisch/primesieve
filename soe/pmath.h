@@ -33,7 +33,7 @@
  * @def U32SQRT(x)
  * Square root of x, result casted to uint32_t.
  */
-#define U32SQRT(x) static_cast<uint32_t> (sqrt(static_cast<double> (x)))
+#define U32SQRT(x) static_cast<uint32_t> (std::sqrt(static_cast<double> (x)))
 
 /**
  * @def U64SQUARE(x)
@@ -118,7 +118,7 @@ inline uint32_t primeProduct(uint32_t x) {
     throw std::overflow_error("primeProduct: 32 bit overflow.");
   const uint32_t smallPrimes[9] = { 2, 3, 5, 7, 11, 13, 17, 19, 23 };
   uint32_t pp = 1;
-  for (uint32_t i = 0; i < 9 && x >= smallPrimes[i]; i++)
+  for (uint32_t i = 0; i < 9 && smallPrimes[i] <= x; i++)
     pp *= smallPrimes[i];
   return pp;
 }
