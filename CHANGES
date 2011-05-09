@@ -1,7 +1,7 @@
 New in version 2.2, 08/05/2011
 ==============================
 
-1. Added prime number generator functionality to soe/PrimeSieve.
+1. Added prime number generation functions to soe/PrimeSieve.
   + void PrimeSieve::generatePrimes(uint64_t, uint64_t, void (*)(uint64_t))
     calls a callback function for each generated prime number.
   + void PrimeSieve::generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*)
@@ -9,7 +9,9 @@ New in version 2.2, 08/05/2011
 2. Added a convenience function to count prime numbers.
   + uint64_t PrimeSieve::getPrimeCount(uint64_t, uint64_t)
 3. The thread interface of ParallelPrimeSieve has been simplified.
-4. Some documentation added, some code cleanup.
+4. Fixed an infinite loop bug (MSVC, Windows) in test.cpp (see BUGS).
+5. Updated documentation.
+6. Code has been reviewed, some cleanup.
 
 New in version 2.1, 11/04/2011
 ==============================
