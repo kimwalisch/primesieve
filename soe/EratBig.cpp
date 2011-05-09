@@ -45,7 +45,7 @@ EratBig::EratBig(uint64_t stopNumber, uint32_t sieveSize) :
 }
 
 /**
- * Delete all the buckets that have been allocated.
+ * Delete all allocated buckets.
  */
 EratBig::~EratBig() {
   while (!bucketPointers_.empty()) {
