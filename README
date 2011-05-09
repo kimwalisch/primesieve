@@ -74,6 +74,7 @@ Contents
   * ./expr        Contains an arithmetic expression parser used in the
                   console and GUI version of primesieve
   * ./thirdparty  Contains stdint.h (needed for MSVC prior 2010)
+  * ./docs        Contains documentation files
 
 5. Sieve of Eratosthenes Implementation (./soe Directory)
 ========================================================
@@ -82,11 +83,11 @@ Contents
 
   * PrimeSieve.cpp and ParallelPrimeSieve.cpp (uses OpenMP)
     PrimeSieve objects provide an easy API for prime sieving. The file
-    USAGE_EXAMPLES has source code examples of how to use PrimeSieve
-    to generate prime numbers, count prime numbers, print twin primes,
-    ... Also have a look at console/main.cpp to see how it works.
-    PrimeSieve directly or indirectly implements all of the following
-    classes.
+    docs/USAGE_EXAMPLES has source code examples that show how to use
+    PrimeSieve to generate prime numbers, count prime numbers, print
+    twin primes, ... Also have a look at console/main.cpp to see how it
+    works. PrimeSieve directly or indirectly implements all of the
+    following classes.
 
   * SieveOfEratosthenes.cpp
     Implementation of the segmented sieve of Eratosthenes using a bit
