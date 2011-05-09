@@ -80,7 +80,7 @@ void EratBig::initBucketLists() {
   bucketLists_ = new Bucket_t*[size_];
   for (uint32_t i = 0; i < size_; i++) {
     bucketLists_[i] = NULL;
-    this->moveFrontBucket(bucketLists_[i], bucketStock_);
+    this->moveFront(bucketLists_[i], bucketStock_);
   }
 }
 
@@ -92,7 +92,7 @@ void EratBig::addPrimeNumber(uint32_t primeNumber, uint64_t lowerBound) {
   uint32_t wheelIndex;
   if (this->setWheelPrime(lowerBound, &primeNumber, &sieveIndex, &wheelIndex)
       == true) {
-    // indicates in how many segments the next multiple of 
+    // indicates in how many segments the next multiple of
     // primeNumber has to be eliminated
     uint32_t nextSieveRound = sieveIndex >> log2SieveSize_;
     // sieve index of primeNumber's next multiple
@@ -102,7 +102,7 @@ void EratBig::addPrimeNumber(uint32_t primeNumber, uint64_t lowerBound) {
     uint32_t nextListIndex = (index_ + nextSieveRound) & (size_ - 1);
     if (!bucketLists_[nextListIndex]->addWheelPrime(primeNumber, sieveIndex,
         wheelIndex))
-      this->moveFrontBucket(bucketLists_[nextListIndex], bucketStock_);
+      this->moveFront(bucketLists_[nextListIndex], bucketStock_);
     primeCount_++;
   }
 }
@@ -112,14 +112,14 @@ void EratBig::addPrimeNumber(uint32_t primeNumber, uint64_t lowerBound) {
  * bucketList, creates new buckets if the bucketStock_ is empty.
  * @pre src == bucketstock_ || src != NULL
  */
-void EratBig::moveFrontBucket(Bucket_t*& dest, Bucket_t*& src) {
+void EratBig::moveFront(Bucket_t*& dest, Bucket_t*& src) {
   if (bucketStock_ == NULL) {
-    Bucket_t* moreBuckets = new Bucket_t[BUCKETS_PER_CREATE];
+    Bucket_t* more = new Bucket_t[BUCKETS_PER_CREATE];
     for(uint32_t i = 0; i < BUCKETS_PER_CREATE - 1; i++)
-      moreBuckets[i].init(&moreBuckets[i + 1]);
-    moreBuckets[BUCKETS_PER_CREATE - 1].init(NULL);
-    bucketStock_ = &moreBuckets[0];
-    bucketPointers_.push_back(moreBuckets);
+      more[i].init(&more[i+1]);
+    more[BUCKETS_PER_CREATE-1].init(NULL);
+    bucketStock_ = &more[0];
+    bucketPointers_.push_back(more);
   }
   assert(src != NULL);
   Bucket_t* bucket = src;
@@ -137,9 +137,9 @@ void EratBig::sieve(uint8_t* sieve) {
   // nothing to do
   if (primeCount_ == 0)
     return;
-
   // iterate over the buckets of the current bucket list
   while (bucketLists_[index_] != NULL) {
+  
     // iterate over the wheelPrimes of the current bucket
     WheelPrime* wPrime = bucketLists_[index_]->wheelPrimeBegin();
     WheelPrime* end    = bucketLists_[index_]->wheelPrimeEnd();
@@ -168,15 +168,16 @@ void EratBig::sieve(uint8_t* sieve) {
       uint32_t nextListIndex = (index_ + nextSieveRound) & (size_ - 1);
       if (!bucketLists_[nextListIndex]->addWheelPrime(sievePrime, sieveIndex,
           wheelIndex))
-        this->moveFrontBucket(bucketLists_[nextListIndex], bucketStock_);
+        this->moveFront(bucketLists_[nextListIndex], bucketStock_);
     }
     bucketLists_[index_]->reset();
     // move the current empty bucket to the bucket stock
-    this->moveFrontBucket(bucketStock_, bucketLists_[index_]);
+    this->moveFront(bucketStock_, bucketLists_[index_]);
   }
   // the current bucketList is empty now, add an empty
   // bucket for the next segment
-  this->moveFrontBucket(bucketLists_[index_], bucketStock_);
+  this->moveFront(bucketLists_[index_], bucketStock_);
+  
   // increase the bucketLists_ index for the next segment
   index_ = (index_ + 1) & (size_ - 1);
 }

@@ -61,7 +61,7 @@ private:
   const uint32_t log2SieveSize_;
   uint32_t getSize(uint64_t, uint32_t);
   void initBucketLists();
-  void moveFrontBucket(Bucket_t*&, Bucket_t*&);
+  void moveFront(Bucket_t*&, Bucket_t*&);
 };
 
 #endif /* ERATBIG_H */
