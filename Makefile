@@ -4,7 +4,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010 
-# Last modified:   8 April 2011
+# Last modified:   9 May 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -13,8 +13,10 @@ TARGET = primesieve
 SRCDIR = soe
 MAINDIR = console
 OUTDIR = out
-STDINT_MACROS = -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
 CXX = g++
+
+# is needed to enable the UINT64_C() and UINT64_MAX, UINT32_MAX macros of stdint.h
+STDINT_MACROS = -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
 
 # Oracle Solaris Studio (former Sun Studio)
 ifeq ($(CXX),sunCC)
