@@ -50,9 +50,12 @@ enum {
 class PrimeSieve;
 
 /**
- * Sieve of Eratosthenes that is used to find the prime numbers and
- * prime k-tuplets (twin primes, prime triplets, ...) between a
- * startNumber_ and a stopNumber_.
+ * PrimeNumberFinder is a SieveOfEratosthenes object that is used to
+ * find the prime numbers and prime k-tuplets (twin primes, prime
+ * triplets, ...) between startNumber and stopNumber.
+ * The prime numbers up to sqrt(stopNumber) needed for sieving are
+ * provided by PrimeNumberGenerator.
+ * @see PrimeNumberGenerator::analyseSieve(const uint8_t*, uint32_t)
  */
 class PrimeNumberFinder: public SieveOfEratosthenes {
 public:
