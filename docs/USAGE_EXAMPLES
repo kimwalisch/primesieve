@@ -27,8 +27,8 @@ int main() {
 }
 
 /****************************************************************************/
-// 3. Generate prime numbers up to 10000 and store them
-//    into a STL vector 
+// 3. Generate the prime numbers up to 10000 and store them
+//    into a STL vector
 
 #include "soe/PrimeSieve.h"
 #include <stdint.h>
