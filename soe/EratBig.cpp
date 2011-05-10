@@ -64,7 +64,7 @@ uint32_t EratBig::getSize(uint64_t stopNumber, uint32_t sieveSize) {
   assert(sieveSize != 0);
   // greatest possible values of sieveIndex and
   // nextSieveRound in sieve(uint8_t*)
-  double maxSieveIndex = (sieveSize - 1) + ((U32SQRT(stopNumber) * 2.0)
+  double maxSieveIndex = (sieveSize - 1) + ((isqrt(stopNumber) * 2.0)
       / SieveOfEratosthenes::NUMBERS_PER_BYTE) * wheel_[1].nextMultipleFactor;
   uint32_t maxNextSieveRound = static_cast<uint32_t> (
       std::ceil(maxSieveIndex / sieveSize));

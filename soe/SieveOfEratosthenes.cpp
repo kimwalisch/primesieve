@@ -106,7 +106,7 @@ void SieveOfEratosthenes::initSieve() {
  */
 void SieveOfEratosthenes::initEratAlgorithms() {
   assert(defs::FACTOR_ERATSMALL <= defs::FACTOR_ERATMEDIUM);
-  uint32_t sqrtStop = U32SQRT(stopNumber_);
+  uint32_t sqrtStop = isqrt(stopNumber_);
   uint32_t limit;
   if (resetSieve_->getEliminateUpTo() < sqrtStop) {
     limit = static_cast<uint32_t> (sieveSize_* defs::FACTOR_ERATSMALL);
@@ -143,10 +143,10 @@ void SieveOfEratosthenes::crossOffMultiples() {
 void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
   assert(eratSmall_ != NULL && 
       primeNumber > resetSieve_->getEliminateUpTo() &&
-      U64SQUARE(primeNumber) <= stopNumber_);
+      isquare(primeNumber) <= stopNumber_);
 
   /// @remark '- 6' is a correction for primes of type n * 30 + 31
-  const uint64_t primeSquared = U64SQUARE(primeNumber) - 6;
+  const uint64_t primeSquared = isquare(primeNumber) - 6;
 
   // do not enter this while loop until all primes required for
   // sieving the next segment have been added to one of the erat*
@@ -168,9 +168,8 @@ void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
 }
 
 /**
- * Sieve the last segments remaing after that @code sieve(uint32_t)
- * @endcode has been called consecutively for all primes up to 
- * sqrt(stopNumber).
+ * Sieve the last segments remaing after that sieve(uint32_t) has been
+ * called consecutively for all primes up to sqrt(stopNumber).
  */
 void SieveOfEratosthenes::finish() {
   assert(lowerBound_ < stopNumber_);

@@ -69,7 +69,7 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   // I made some tests around 10^19 which showed that each
   // thread should at least sieve an interval of
   // sqrt(stopNumber) / 6 for a performance benefit
-  uint64_t minInterval = U32SQRT(stopNumber_) / 6;
+  uint64_t minInterval = isqrt(stopNumber_) / 6;
   // do not use multiple threads for small intervals
   if (minInterval < static_cast<uint64_t> (1E8))
     minInterval = static_cast<uint64_t> (1E8);

@@ -331,21 +331,21 @@ void PrimeSieve::sieve() {
     // startNumber_ and stopNumber_
     PrimeNumberFinder primeNumberFinder(this, resetSieve);
 
-    if (U32SQRT(stopNumber_) > resetSieve.getEliminateUpTo()) {
+    if (isqrt(stopNumber_) > resetSieve.getEliminateUpTo()) {
       // used to generate the prime numbers up to sqrt(stopNumber_)
       // needed for sieving by primeNumberFinder
       PrimeNumberGenerator primeNumberGenerator(&primeNumberFinder);
       std::vector<uint32_t> primes16Bit;
       primes16Bit.push_back(3);
-      uint32_t stop = U32SQRT(primeNumberGenerator.getStopNumber());
-      uint32_t keep = U32SQRT(stop);
+      uint32_t stop = isqrt(primeNumberGenerator.getStopNumber());
+      uint32_t keep = isqrt(stop);
       // the following trial division algorithm is used to generate the
       // prime numbers up to stopNumber_^0.25 needed for sieving by
       // primeNumberGenerator. Although the algorithm is never
       // used > 65536 it finds the prime numbers up to 10^7 in 1 second
       // on an Intel Core i5-670 3.46GHz
       for (uint32_t n = 5; n <= stop; n += 2) {
-        uint32_t s = U32SQRT(n);
+        uint32_t s = isqrt(n);
         uint32_t i = 0;
         for (; primes16Bit[i] <= s && (n % primes16Bit[i]) != 0; i++)
           ;

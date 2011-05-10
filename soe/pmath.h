@@ -19,7 +19,7 @@
 
 /** 
  * @file pmath.h 
- * @brief Auxiliary math functions and macros for primesieve.
+ * @brief Auxiliary math functions needed in primesieve.
  */
 
 #ifndef PMATH_H
@@ -29,17 +29,6 @@
 
 #include <stdexcept>
 #include <cmath>
-
-/**
- * @def U32SQRT(x)
- * Square root of x, result casted to uint32_t.
- */
-#define U32SQRT(x) static_cast<uint32_t> (std::sqrt(static_cast<double> (x)))
-/**
- * @def U64SQUARE(x)
- * Calculates x^2, result casted to uint64_t.
- */
-#define U64SQUARE(x) (static_cast<uint64_t> (x) * static_cast<uint64_t> (x))
 
 /**
  * Number of trailing zeros, simple counting loops.
@@ -107,12 +96,11 @@ inline uint32_t floorLog2(uint32_t x) {
 }
 
 /**
- * Prime product function (n)#.
- * @pre n < 29.
- * @return the product of the prime numbers up to n.
+ * Prime product function (x)#.
+ * @pre x < 29.
+ * @return the product of the prime numbers up to x.
  */
 inline uint32_t primeProduct(uint32_t x) {
-  // primeProduct(29) > 32 bits
   if (x >= 29)
     throw std::overflow_error("primeProduct: 32 bit overflow.");
   const uint32_t smallPrimes[9] = { 2, 3, 5, 7, 11, 13, 17, 19, 23 };
@@ -139,6 +127,29 @@ inline uint64_t ipow(uint64_t x, uint32_t n) {
     n /= 2;
   }
   return result;
+}
+
+/**
+ * Integer square root for 64-bit integers.
+ * @return (uint32_t) floor(sqrt(x)).
+ */
+inline uint32_t isqrt(uint64_t x) {
+  return static_cast<uint32_t> (std::sqrt(static_cast<double> (x)));
+}
+
+/**
+ * Integer square root for 32-bit integers.
+ * @return (uint32_t) floor(sqrt(x)).
+ */
+inline uint32_t isqrt(uint32_t x) {
+  return static_cast<uint32_t> (std::sqrt(static_cast<double> (x)));
+}
+
+/**
+ * Integer square, x^2.
+ */
+inline uint64_t isquare(uint32_t x) {
+  return static_cast<uint64_t> (x) * static_cast<uint64_t> (x);
 }
 
 #endif /* PMATH_H */

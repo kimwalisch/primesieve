@@ -211,7 +211,7 @@ protected:
       uint32_t* sieveIndex, uint32_t* wheelIndex) {
     // by theory primeNumber^2 is the first multiple of primeNumber
     // that needs to be eliminated
-    uint64_t multiple = U64SQUARE(*primeNumber);
+    uint64_t multiple = isquare(*primeNumber);
     if (multiple < lowerBound) {
       // calculate the first multiple >= lowerBound of primeNumber
       multiple = lowerBound + *primeNumber - (lowerBound % *primeNumber);
