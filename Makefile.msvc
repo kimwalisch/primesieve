@@ -6,7 +6,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010  
-# Last modified:   11 February 2011 
+# Last modified:   10 May 2011 
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -21,7 +21,7 @@ OUTDIR = out
 
 # Define the C++ compiler & options
 CPP      = cl
-CPPFLAGS = /openmp /O2 /GL /EHsc /W3 /D "NDEBUG" /D "__STDC_CONSTANT_MACROS" /D "__STDC_LIMIT_MACROS"
+CPPFLAGS = /openmp /O2 /GL /EHsc /W3
 LINK     = link
 LFLAGS   = /OPT:REF /OPT:ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
 
