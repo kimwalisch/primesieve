@@ -130,10 +130,10 @@ Contents
     segment. This does not only reset the sieve array but also
     eliminates multiples of small primes <= 19.
 
-  * settings.h
-    Contains compile-time constants that set the size of various
-    arrays within primesieve. The values are optimized for CPUs with
-    32 to 64 KiloBytes of L1 Data Cache.
+  * defs.h
+    Contains macro definitions and constants that set the size of
+    various arrays and limits within primesieve. The values are
+    optimized for CPUs with 32 to 64 KiloBytes of L1 Data Cache.
 
   * WheelFactorization.h
     Contains data structures and abstract classes related to wheel
