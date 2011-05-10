@@ -26,12 +26,20 @@
 #include "../soe/PrimeSieve.h"
 #include "../soe/pmath.h"
 
-#include <stdint.h>
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
 #include <exception>
 #include <ctime>
+
+/**
+ * @def __STDC_LIMIT_MACROS
+ * Enable the UINT32_MAX macro from <stdint.h>.
+ */
+#if !defined(__STDC_LIMIT_MACROS)
+#  define __STDC_LIMIT_MACROS 1
+#endif
+#include <stdint.h>
 
 namespace {
   uint64_t primeCounts[] = {
