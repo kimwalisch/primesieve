@@ -20,7 +20,7 @@
 /** 
  * @file defs.h 
  * @brief Macro definitions and constants that set the size of various
- *        arrays and upper bounds within primesieve.
+ *        arrays and limits within primesieve.
  * The values are optimized for CPUs with 32 to 64 KiloBytes of L1
  * Data Cache.
  */
@@ -51,6 +51,48 @@
 #  define __STDC_CONSTANT_MACROS  1
 #endif
 #include <stdint.h>
+
+/**
+ * @def POPCNT64(addr, i)
+ * Counts the number of one bits within the next 8 bytes of an array
+ * using the SSE 4.2 POPCNT instruction.
+ * @see http://en.wikipedia.org/wiki/SSE4#SSE4.2
+ *
+ * Successfully tested with:
+ *    Microsoft Visual Studio 2010 (WIN32, WIN64),
+ *    GNU G++ 4.5 (x86, x64),
+ *    Intel C++ Compiler 12.0 (x86, x64),
+ *    Oracle Solaris Studio 12 (x64).
+ */
+#if (defined(_MSC_VER) || defined(__INTEL_COMPILER)) && (defined(_WIN64) || defined(_WIN32))
+#  if defined(_WIN64)
+#    include <nmmintrin.h> 
+#    define POPCNT64(addr, i) static_cast<uint32_t> \
+                              (_mm_popcnt_u64(*reinterpret_cast<const uint64_t*> (&addr[i])))
+#  elif defined(_WIN32)
+#    include <nmmintrin.h>
+#    define POPCNT64(addr, i) (_mm_popcnt_u32(*reinterpret_cast<const uint32_t*> (&addr[i])) + \
+                               _mm_popcnt_u32(*reinterpret_cast<const uint32_t*> (&addr[i+4])))
+#  endif
+#elif defined(__SUNPRO_CC)
+#  if defined(__x86_64)
+#    include <nmmintrin.h>
+#    define POPCNT64(addr, i) static_cast<uint32_t> \
+                              (_mm_popcnt_u64(*reinterpret_cast<const uint64_t*> (&addr[i])))
+#  elif defined(__i386)
+#    include <nmmintrin.h>
+#    define POPCNT64(addr, i) (_mm_popcnt_u32(*reinterpret_cast<const uint32_t*> (&addr[i])) + \
+                               _mm_popcnt_u32(*reinterpret_cast<const uint32_t*> (&addr[i+4])))
+#  endif
+#elif defined(__GNUC__)
+#  if defined(__x86_64__)
+#    define POPCNT64(addr, i) static_cast<uint32_t> \
+                              (__builtin_popcountll(*reinterpret_cast<const uint64_t*> (&addr[i])))
+#  elif defined(__i386__)
+#    define POPCNT64(addr, i) (__builtin_popcount(*reinterpret_cast<const uint32_t*> (&addr[i])) + \
+                               __builtin_popcount(*reinterpret_cast<const uint32_t*> (&addr[i+4])))
+#  endif
+#endif
 
 namespace defs {
   /**

@@ -45,8 +45,9 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve* primeSieve,
       primeSieve->stopNumber_,
       primeSieve->sieveSize_,
       &resetSieve),
-      primeSieve_(primeSieve), primeByteCounts_(NULL), primeBitValues_(NULL),
-      isPOPCNTSupported_(isPOPCNTSupported()) {
+      primeSieve_(primeSieve), primeByteCounts_(NULL), primeBitValues_(NULL) {
+  if (isPOPCNTSupported())
+    primeSieve_->flags_ |= SSE4_POPCNT;
   this->initLookupTables();
 }
 
@@ -132,7 +133,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
     uint32_t i = 0;
 #if defined(POPCNT64)
     // count bits using the SSE 4.2 POPCNT instruction
-    if (isPOPCNTSupported_)
+    if (primeSieve_->flags_ & SSE4_POPCNT)
       for (; i + 8 < sieveSize; i += 8)
         primeCount += POPCNT64(sieve, i);
 #endif
