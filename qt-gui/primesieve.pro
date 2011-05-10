@@ -77,8 +77,7 @@ HEADERS += ../soe/EratBig.h \
     ../soe/ResetSieve.h \
     ../soe/WheelFactorization.h \
     ../soe/pmath.h \
-    ../soe/bits.h \
-    ../soe/settings.h \
+    ../soe/defs.h \
     ../soe/cpuid.h \
     ../soe/cpuid_gcc451.h
 FORMS += forms/PrimeSieveGUI.ui
