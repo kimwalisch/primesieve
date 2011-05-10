@@ -22,7 +22,6 @@
 #include "../soe/ParallelPrimeSieve.h"
 
 #include <QSharedMemory>
-#include <stdint.h>
 #include <stdexcept>
 #include <cstdlib>
 #include <iostream>
