@@ -19,11 +19,11 @@
 
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
-#include "settings.h"
+#include "defs.h"
 #include "pmath.h"
 
-#include <stdint.h>
 #include <cstdlib>
+#include <cassert>
 
 namespace {
   const uint32_t END = ~0u;
@@ -34,9 +34,11 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder* primeNumberFinder)
   SieveOfEratosthenes(
       primeNumberFinder->getResetSieve()->getEliminateUpTo() + 1,
       U32SQRT(primeNumberFinder->getStopNumber()),
-      settings::SIEVESIZE_PRIMENUMBERGENERATOR,
+      defs::SIEVESIZE_PRIMENUMBERGENERATOR,
       primeNumberFinder->getResetSieve()),
       primeNumberFinder_(primeNumberFinder), primeBitValues_(NULL) {
+  // PrimeNumberGenerator uses 32-bit integers
+  assert(this->getStopNumber() <= UINT32_MAX);
   this->initPrimeBitValues();
 }
 

@@ -18,14 +18,13 @@
  */
 
 #include "PrimeSieve.h"
-#include "settings.h"
+#include "defs.h"
 #include "ParallelPrimeSieve.h"
 #include "pmath.h"
 #include "ResetSieve.h"
 #include "PrimeNumberFinder.h"
 #include "PrimeNumberGenerator.h"
 
-#include <stdint.h>
 #include <stdexcept>
 #include <iostream>
 #include <string>
@@ -35,8 +34,8 @@
 
 PrimeSieve::PrimeSieve() :
   startNumber_(0), stopNumber_(0),
-    sieveSize_(settings::DEFAULT_SIEVESIZE_PRIMENUMBERFINDER),
-    flags_(COUNT_PRIMES), timeElapsed_(0.0) {
+    sieveSize_(defs::SIEVESIZE_PRIMENUMBERFINDER), flags_(COUNT_PRIMES),
+    timeElapsed_(0.0) {
   parent_ = this;
   this->reset();
 }
@@ -48,13 +47,13 @@ PrimeSieve::PrimeSieve() :
  */
 PrimeSieve::PrimeSieve(uint64_t startNumber, uint64_t stopNumber, 
     ParallelPrimeSieve* parent) :
-  startNumber_(startNumber), stopNumber_(stopNumber),
-    sieveSize_(parent->sieveSize_), flags_(parent->flags_),
-    timeElapsed_(0.0),
+  sieveSize_(parent->sieveSize_), flags_(parent->flags_), timeElapsed_(0.0),
     callback_imp(parent->callback_imp),
     callback_oop(parent->callback_oop),
     cbObj_(parent->cbObj_),
     parent_(parent) {
+  this->setStartNumber(startNumber);
+  this->setStopNumber(stopNumber);
   this->reset();
 }
 

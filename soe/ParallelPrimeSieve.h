@@ -21,6 +21,7 @@
 #define PARALLELPRIMESIEVE_H
 
 #include "PrimeSieve.h"
+#include "defs.h"
 
 /**
  * ParallelPrimeSieve is a parallel implementation of the segmented

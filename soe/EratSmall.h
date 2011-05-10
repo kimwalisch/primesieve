@@ -23,7 +23,7 @@
 #include "WheelFactorization.h"
 #include "EratBase.h"
 
-#include <stdint.h>
+#include "defs.h"
 
 /**
  * Implementation of the segmented sieve of Eratosthenes with wheel

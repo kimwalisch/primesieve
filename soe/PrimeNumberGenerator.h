@@ -21,7 +21,7 @@
 #define PRIMENUMBERGENERATOR_H
 
 #include "SieveOfEratosthenes.h"
-#include <stdint.h>
+#include "defs.h"
 
 class PrimeNumberFinder;
 

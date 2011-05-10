@@ -21,8 +21,8 @@
 #define PRIMESIEVE_H
 
 #include "PrimeNumberFinder.h"
+#include "defs.h"
 
-#include <stdint.h>
 #include <string>
 
 class ParallelPrimeSieve;

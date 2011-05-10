@@ -18,10 +18,9 @@
  */
 
 #include "SieveOfEratosthenes.h"
-#include "settings.h"
+#include "defs.h"
 #include "pmath.h"
 
-#include <stdint.h>
 #include <stdexcept>
 #include <cstdlib>
 #include <algorithm>
@@ -52,7 +51,6 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
   if (sieveSize_ > UINT32_MAX / NUMBERS_PER_BYTE)
     throw std::overflow_error(
         "SieveOfEratosthenes: sieveSize must be <= 2^32 / 30.");
-
   lowerBound_ = startNumber - this->getRemainder(startNumber);
   assert(lowerBound_ % NUMBERS_PER_BYTE == 0);
   resetIndex_ = resetSieve_->getResetIndex(lowerBound_);
@@ -107,18 +105,15 @@ void SieveOfEratosthenes::initSieve() {
  * Initialize the 3 sieve of Eratosthenes algorithms if needed.
  */
 void SieveOfEratosthenes::initEratAlgorithms() {
-  assert(settings::SIEVESIZE_FACTOR_ERATSMALL
-      <= settings::SIEVESIZE_FACTOR_ERATMEDIUM);
+  assert(defs::FACTOR_ERATSMALL <= defs::FACTOR_ERATMEDIUM);
   uint32_t sqrtStop = U32SQRT(stopNumber_);
   uint32_t limit;
   if (resetSieve_->getEliminateUpTo() < sqrtStop) {
-    limit = static_cast<uint32_t> (sieveSize_
-        * settings::SIEVESIZE_FACTOR_ERATSMALL);
+    limit = static_cast<uint32_t> (sieveSize_* defs::FACTOR_ERATSMALL);
     eratSmall_ = new EratSmall(std::min<uint32_t>(limit, sqrtStop),
         stopNumber_, sieveSize_);
     if (eratSmall_->getLimit() < sqrtStop) {
-      limit = static_cast<uint32_t> (sieveSize_
-          * settings::SIEVESIZE_FACTOR_ERATMEDIUM);
+      limit = static_cast<uint32_t> (sieveSize_* defs::FACTOR_ERATMEDIUM);
       eratMedium_ = new EratMedium(std::min<uint32_t>(limit, sqrtStop),
           stopNumber_, sieveSize_);
       if (eratMedium_->getLimit() < sqrtStop)

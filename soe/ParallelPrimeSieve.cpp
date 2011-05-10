@@ -20,6 +20,7 @@
 #include "ParallelPrimeSieve.h"
 #include "PrimeSieve.h"
 #include "PrimeNumberFinder.h"
+#include "defs.h"
 #include "pmath.h"
 
 #if defined(_OPENMP)
@@ -27,7 +28,6 @@
 #endif
 
 #include <cstdlib>
-#include <stdint.h>
 #include <stdexcept>
 #include <vector>
 

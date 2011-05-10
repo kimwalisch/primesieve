@@ -21,7 +21,7 @@
 #define PRIMENUMBERFINDER_H
 
 #include "SieveOfEratosthenes.h"
-#include <stdint.h>
+#include "defs.h"
 
 /** Flags (settings) for PrimeNumberFinder. */
 enum {

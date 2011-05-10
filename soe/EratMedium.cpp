@@ -18,8 +18,8 @@
  */
 
 #include "EratMedium.h"
+#include "defs.h"
 
-#include <stdint.h>
 #include <cstdlib>
 
 EratMedium::EratMedium(uint32_t limit, uint64_t stopNumber, uint32_t sieveSize) :

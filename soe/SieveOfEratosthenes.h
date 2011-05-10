@@ -24,8 +24,7 @@
 #include "EratSmall.h"
 #include "EratMedium.h"
 #include "EratBig.h"
-
-#include <stdint.h>
+#include "defs.h"
 
 /**
  * SieveOfEratosthenes is an implementation of the segmented sieve of

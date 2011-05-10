@@ -19,10 +19,10 @@
 
 #include "PrimeNumberFinder.h"
 #include "PrimeSieve.h"
+#include "defs.h"
 #include "cpuid.h" 
 #include "pmath.h"
 
-#include <stdint.h>
 #include <cstdlib>
 #include <iostream>
 

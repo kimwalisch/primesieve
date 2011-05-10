@@ -18,7 +18,7 @@
  */
 
 #include "WheelFactorization.h"
-#include "bits.h"
+#include "defs.h"
 
 const InitWheel init30Wheel[30] = { { 1, 1 }, { 0, 1 }, { 5, 2 }, { 4, 2 }, {
     3, 2 }, { 2, 2 }, { 1, 2 }, { 0, 2 }, { 3, 3 }, { 2, 3 }, { 1, 3 },

@@ -18,9 +18,8 @@
  */
 
 #include "EratSmall.h"
-#include "bits.h"
+#include "defs.h"
 
-#include <stdint.h>
 #include <stdexcept>
 #include <cstdlib>
 

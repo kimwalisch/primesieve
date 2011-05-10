@@ -21,9 +21,8 @@
 #define ERATBASE_H
 
 #include "WheelFactorization.h"
-#include "settings.h"
+#include "defs.h"
 
-#include <stdint.h>
 #include <stdexcept>
 #include <cassert>
 #include <cstdlib>
@@ -55,7 +54,7 @@ public:
     }
   }
 protected:
-  typedef Bucket<settings::BUCKETSIZE_ERATBASE> Bucket_t;
+  typedef Bucket<defs::BUCKETSIZE_ERATBASE> Bucket_t;
   /** Upper bound for sieving primes within bucketList_. */
   const uint32_t limit_;
   /**

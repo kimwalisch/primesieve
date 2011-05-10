@@ -21,9 +21,8 @@
 #define ERATBIG_H
 
 #include "WheelFactorization.h"
-#include "settings.h"
+#include "defs.h"
 
-#include <stdint.h>
 #include <list>
 
 /**
@@ -39,7 +38,7 @@ public:
   void addPrimeNumber(uint32_t, uint64_t);
   void sieve(uint8_t*);
 private:
-  typedef Bucket<settings::BUCKETSIZE_ERATBIG> Bucket_t;
+  typedef Bucket<defs::BUCKETSIZE_ERATBIG> Bucket_t;
   /** Current count of sieving primes within EratBig. */
   uint32_t primeCount_;
   /**

@@ -31,6 +31,7 @@
 #ifndef WHEELFACTORIZATION_H
 #define WHEELFACTORIZATION_H
 
+#include "defs.h"
 #include "pmath.h"
 
 #include <stdexcept>
@@ -235,7 +236,6 @@ protected:
         * WHEEL_ELEMENTS;
     /// @see WheelPrime
     *wheelIndex = INIT_WHEEL[index].subWheelIndex + subWheelOffset;
-    assert(*wheelIndex < WHEEL_ELEMENTS * 8);
     /// @remark '- 6' is a correction for primes of type n * 30 + 31
     *sieveIndex = static_cast<uint32_t> (((multiple - lowerBound) - 6) / 30);
     *primeNumber /= 15;

@@ -25,7 +25,8 @@
 #ifndef PMATH_H
 #define PMATH_H
 
-#include <stdint.h>
+#include "defs.h"
+
 #include <stdexcept>
 #include <cmath>
 
@@ -34,13 +35,11 @@
  * Square root of x, result casted to uint32_t.
  */
 #define U32SQRT(x) static_cast<uint32_t> (std::sqrt(static_cast<double> (x)))
-
 /**
  * @def U64SQUARE(x)
  * Calculates x^2, result casted to uint64_t.
  */
-#define U64SQUARE(x) (static_cast<uint64_t> (x) * \
-                      static_cast<uint64_t> (x))
+#define U64SQUARE(x) (static_cast<uint64_t> (x) * static_cast<uint64_t> (x))
 
 /**
  * Number of trailing zeros, simple counting loops.

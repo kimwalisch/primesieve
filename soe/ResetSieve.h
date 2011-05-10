@@ -20,7 +20,7 @@
 #ifndef RESETSIEVE_H
 #define RESETSIEVE_H
 
-#include <stdint.h>
+#include "defs.h"
 
 class PrimeSieve;
 
