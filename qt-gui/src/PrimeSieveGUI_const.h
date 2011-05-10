@@ -29,10 +29,18 @@
 
 #include <QString>
 #include <QtGlobal>
+
+/**
+ * @def __STDC_LIMIT_MACROS
+ * Enable the UINT64_MAX, UINT32_MAX macros from <stdint.h>.
+ */
+#if !defined(__STDC_LIMIT_MACROS)
+#  define __STDC_LIMIT_MACROS 1
+#endif
 #include <stdint.h>
 
 const QString APPLICATION_NAME("primesieve");
-const QString APPLICATION_VERSION("2.1");
+const QString APPLICATION_VERSION("2.2");
 const QString APPLICATION_HOMEPAGE("http://primesieve.googlecode.com");
 const QString APPLICATION_ABOUT(
     "primesieve uses a highly optimized implementation of the sieve of "
