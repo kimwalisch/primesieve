@@ -154,12 +154,12 @@ struct InitWheel {
 };
 
 /**
- * Used to calculate the initial wheelIndex of a prime number of a 
+ * Used to calculate the initial wheelIndex of a WheelPrime of a
  * Modulo30Wheel object.
  */
 extern const InitWheel init30Wheel[30];
 /**
- * Used to calculate the initial wheelIndex of a prime number of a
+ * Used to calculate the initial wheelIndex of a WheelPrime of a
  * Modulo210Wheel object.
  */
 extern const InitWheel init210Wheel[210];
