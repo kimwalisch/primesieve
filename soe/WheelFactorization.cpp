@@ -26,8 +26,6 @@ const InitWheel init30Wheel[30] = { { 1, 1 }, { 0, 1 }, { 5, 2 }, { 4, 2 }, {
         6 }, { 0, 6 }, { 3, 7 }, { 2, 7 }, { 1, 7 }, { 0, 7 }, { 5, 0 },
     { 4, 0 }, { 3, 0 }, { 2, 0 }, { 1, 0 }, { 0, 0 } };
 
-
-#if 0 /* currently not needed */
 const WheelElement Modulo30Wheel::wheel_[8 * 8] = { { BIT5, 1, 1, 1 }, { BIT0,
     3, 1, 1 }, { BIT4, 2, 1, 1 }, { BIT3, 1, 0, 1 }, { BIT7, 2, 1, 1 }, { BIT6,
     1, 1, 1 }, { BIT2, 2, 1, 1 }, { BIT1, 3, 1, -7 }, { BIT4, 1, 1, 1 }, {
@@ -47,7 +45,6 @@ const WheelElement Modulo30Wheel::wheel_[8 * 8] = { { BIT5, 1, 1, 1 }, { BIT0,
     { BIT0, 3, 2, -7 }, { BIT6, 1, 0, 1 }, { BIT7, 3, 1, 1 },
     { BIT0, 2, 0, 1 }, { BIT1, 1, 0, 1 }, { BIT2, 2, 0, 1 }, { BIT3, 1, 0, 1 },
     { BIT4, 2, 0, 1 }, { BIT5, 3, 0, -7 } };
-#endif
 
 const InitWheel init210Wheel[210] = { { 1, 1 }, { 0, 1 }, { 9, 2 }, { 8, 2 }, {
     7, 2 }, { 6, 2 }, { 5, 2 }, { 4, 2 }, { 3, 2 }, { 2, 2 }, { 1, 2 },
