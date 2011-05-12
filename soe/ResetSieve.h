@@ -25,38 +25,40 @@
 class PrimeSieve;
 
 /**
- * ResetSieve is used to reset a SieveOfEratosthenes::sieve_ array
- * i.e. set all bits to 1.
- * ResetSieve therefore creates a modulo wheel array of size 
- * prime_product(p)/30 in which all multiples of primes <= p are
- * crossed off. After each sieved segment the modulo wheel array is
- * copied to the sieve array to reset it. This does not only reset the
- * sieve array but also eliminates the multiples of primes <= p.
- * The performance benefit of a modulo wheel array vs.
- * std::memset(sieve_, 0xff, sieveSize_) is up to 20% when
+ * ResetSieve is used to reset the sieve_ array of SieveOfEratosthenes
+ * objects after each sieved segment (i.e. reset bits to 1).
+ * ResetSieve therefore creates a modulo wheel array of size
+ * primeProduct(limit)/30 in which all multiples of primes <= limit
+ * are crossed-off. After each sieved segment the modulo wheel array
+ * is copied to the sieve array to reset it (i.e. reset bits to 1),
+ * this also eliminates multiples of primes <= limit for the next
+ * segment without sieving. The performance benefit of a modulo wheel
+ * array vs. std::memset(sieve_, 0xff, sieveSize_) is up to 20% when
  * sieving < 10^10.
+ * @see http://en.wikipedia.org/wiki/Wheel_factorization
  */
 class ResetSieve {
 public:
   ResetSieve(PrimeSieve*);
   ~ResetSieve();
   uint32_t getResetIndex(uint64_t) const;
-  uint32_t getEliminateUpTo() const {
-    return eliminateUpTo_;
+  uint32_t getLimit() const {
+    return limit_;
   }
   void reset(uint8_t*, uint32_t, uint32_t*);
 private:
   /**
-   * All multiples of prime numbers <= eliminateUpTo_ will be
-   * eliminated in resetBuffer_.
+   * All multiples of prime numbers <= limit_ will be crossed-off in
+   * the moduloWheel_ array.
    */
-  uint32_t eliminateUpTo_;
+  uint32_t limit_;
   /**
-   * Array used to reset (set bits to 1) the sieve_ array of
-   * SieveOfEratosthenes objects after each sieved segment.
+   * Modulo wheel array used to reset (set bits to 1) the sieve_ array
+   * of SieveOfEratosthenes objects after each sieved segment.
+   * @see http://en.wikipedia.org/wiki/Wheel_factorization
    */
-  uint8_t* resetBuffer_;
-  /** Size of the resetBuffer_ array. */
+  uint8_t* moduloWheel_;
+  /** Size of the moduloWheel_ array. */
   uint32_t size_;
   void setSize(uint32_t);
   void initResetBuffer();
