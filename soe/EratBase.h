@@ -66,7 +66,7 @@ protected:
   Bucket_t* bucketList_;
   EratBase(uint32_t limit, const SieveOfEratosthenes* soe) :
     T_ModuloWheel(soe), limit_(limit), bucketList_(NULL) {
-    if (limit > isqrt(stopNumber_))
+    if (limit > isqrt(this->stopNumber_))
       throw std::logic_error("EratBase: limit must be <= sqrt(stopNumber).");
     // initialize the bucket list with an empty bucket
     bucketList_ = new Bucket_t;
