@@ -150,7 +150,7 @@ struct WheelElement {
 
 struct InitWheel {
   uint32_t nextMultipleFactor;
-  uint32_t subWheelIndex;
+  uint32_t wheelIndex;
 };
 
 /**
@@ -204,33 +204,34 @@ protected:
    * @brief  Calculates the first multiple of primeNumber that needs
    *         to be eliminated and the index of the sieve and wheel
    *         array of that multiple.
+   * @remark The terms '+ 6' and '- 6' are corrections needed for
+   *         primes type n * 30 + 31.
    * @return true if the wheelPrime must be stored for sieving else
    *         false.
    */
   bool setWheelPrime(uint64_t lowerBound, uint32_t* primeNumber,
       uint32_t* sieveIndex, uint32_t* wheelIndex) {
+    assert(lowerBound % 30 == 0);
     // by theory primeNumber^2 is the first multiple of primeNumber
     // that needs to be eliminated
     uint64_t multiple = isquare(*primeNumber);
-    if (multiple < lowerBound) {
-      // calculate the first multiple >= lowerBound of primeNumber
-      multiple = lowerBound + *primeNumber - (lowerBound % *primeNumber);
+    uint64_t quotient = *primeNumber;
+    // calculate the first multiple > lowerBound + 6 of primeNumber
+    if (multiple < lowerBound + 6) {
+      quotient = (lowerBound + 6) / *primeNumber + 1;
+      multiple = *primeNumber * quotient;
       // primeNumber not needed for sieving
       if (multiple > stopNumber_)
         return false;
     }
-    /// @remark correction for primes of type n*30 + 31
-    if (multiple == lowerBound + 1)
-      multiple += *primeNumber;
-    uint32_t index = static_cast<uint32_t> ((multiple / *primeNumber) % WHEEL_MODULO);
-    // get the next multiple that is not divisible by one of the
+    uint32_t index = static_cast<uint32_t> (quotient % WHEEL_MODULO);
+    // calculate the next multiple that is not divisible by one of the
     // wheel's primes (i.e. 2, 3 and 5 for a modulo 30 wheel)
     multiple += static_cast<uint64_t> (*primeNumber) * INIT_WHEEL[index].nextMultipleFactor;
     if (multiple > stopNumber_)
       return false;
-    uint32_t subWheelOffset = primeBitPosition_[*primeNumber % 30] * WHEEL_ELEMENTS;
-    *wheelIndex = INIT_WHEEL[index].subWheelIndex + subWheelOffset;
-    // @remark '- 6' is a correction for primes of type n*30 + 31
+    uint32_t wheelOffset = primeBitPosition_[*primeNumber % 30] * WHEEL_ELEMENTS;
+    *wheelIndex = INIT_WHEEL[index].wheelIndex + wheelOffset;
     *sieveIndex = static_cast<uint32_t> (((multiple - lowerBound) - 6) / 30);
     *primeNumber /= 15;
     return true;
