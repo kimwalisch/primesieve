@@ -32,7 +32,7 @@ namespace {
 
 PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder* primeNumberFinder) :
   SieveOfEratosthenes(
-      primeNumberFinder->getResetSieve()->getEliminateUpTo() + 1,
+      primeNumberFinder->getResetSieve()->getLimit() + 1,
       isqrt(primeNumberFinder->getStopNumber()),
       defs::SIEVESIZE_PRIMENUMBERGENERATOR,
       primeNumberFinder->getResetSieve()),
