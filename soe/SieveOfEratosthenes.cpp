@@ -89,7 +89,7 @@ void SieveOfEratosthenes::initSieve() {
       : static_cast<uint32_t> (bytesToSieve);
   resetSieve_->reset(sieve_, resetSize, &resetIndex_);
   // correct reset() for numbers <= 31
-  if (startNumber_ <= resetSieve_->getEliminateUpTo())
+  if (startNumber_ <= resetSieve_->getLimit())
     sieve_[0] = 0xff;
 
   uint32_t startRemainder = this->getRemainder(startNumber_);
@@ -108,7 +108,7 @@ void SieveOfEratosthenes::initEratAlgorithms() {
   assert(defs::FACTOR_ERATSMALL <= defs::FACTOR_ERATMEDIUM);
   uint32_t sqrtStop = isqrt(stopNumber_);
   uint32_t limit;
-  if (resetSieve_->getEliminateUpTo() < sqrtStop) {
+  if (resetSieve_->getLimit() < sqrtStop) {
     limit = static_cast<uint32_t> (sieveSize_* defs::FACTOR_ERATSMALL);
     eratSmall_ = new EratSmall(std::min<uint32_t>(limit, sqrtStop),
         stopNumber_, sieveSize_);
@@ -142,7 +142,7 @@ void SieveOfEratosthenes::crossOffMultiples() {
  */
 void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
   assert(eratSmall_ != NULL && 
-      primeNumber > resetSieve_->getEliminateUpTo() &&
+      primeNumber > resetSieve_->getLimit() &&
       isquare(primeNumber) <= stopNumber_);
 
   /// @remark '- 6' is a correction for primes of type n * 30 + 31
