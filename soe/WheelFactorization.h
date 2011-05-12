@@ -149,8 +149,8 @@ struct WheelElement {
 };
 
 struct InitWheel {
-  uint32_t nextMultipleFactor;
-  uint32_t wheelIndex;
+  uint8_t nextMultipleFactor;
+  uint8_t wheelIndex;
 };
 
 /**
@@ -174,7 +174,7 @@ template<uint32_t WHEEL_MODULO, uint32_t WHEEL_ELEMENTS,
 class ModuloWheel {
 private:
   /** Is used to assign a wheel index to each prime number. */
-  static const uint32_t primeBitPosition_[30];
+  static const uint8_t primeBitPosition_[30];
 protected:
   const uint64_t stopNumber_;
   /**
@@ -230,23 +230,24 @@ protected:
     multiple += static_cast<uint64_t> (*primeNumber) * INIT_WHEEL[index].nextMultipleFactor;
     if (multiple > stopNumber_)
       return false;
-    uint32_t wheelOffset = primeBitPosition_[*primeNumber % 30] * WHEEL_ELEMENTS;
-    *wheelIndex = INIT_WHEEL[index].wheelIndex + wheelOffset;
+    uint32_t wheelOffset = WHEEL_ELEMENTS * primeBitPosition_[*primeNumber % 30];
+    *wheelIndex = wheelOffset + INIT_WHEEL[index].wheelIndex;
     *sieveIndex = static_cast<uint32_t> (((multiple - lowerBound) - 6) / 30);
     *primeNumber /= 15;
     return true;
   }
 };
 
+// 0xff values are never accessed
 template<uint32_t WHEEL_MODULO, uint32_t WHEEL_ELEMENTS,
     const InitWheel* INIT_WHEEL>
-const uint32_t
-    ModuloWheel<WHEEL_MODULO, WHEEL_ELEMENTS, INIT_WHEEL>::primeBitPosition_[30] = { ~0u,
-          7, ~0u, ~0u, ~0u, ~0u, ~0u,
-          0, ~0u, ~0u, ~0u,   1, ~0u,
-          2, ~0u, ~0u, ~0u,   3, ~0u,
-          4, ~0u, ~0u, ~0u,   5, ~0u,
-        ~0u, ~0u, ~0u, ~0u,   6 };
+const uint8_t
+    ModuloWheel<WHEEL_MODULO, WHEEL_ELEMENTS, INIT_WHEEL>::primeBitPosition_[30] = { 0xff,
+           7, 0xff, 0xff, 0xff, 0xff, 0xff,
+           0, 0xff, 0xff, 0xff,    1, 0xff,
+           2, 0xff, 0xff, 0xff,    3, 0xff,
+           4, 0xff, 0xff, 0xff,    5, 0xff,
+        0xff, 0xff, 0xff, 0xff,    6 };
 
 /**
  * Uses wheel factorization to skip multiples of 2, 3 and 5.
