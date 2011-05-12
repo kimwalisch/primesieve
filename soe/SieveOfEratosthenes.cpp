@@ -168,8 +168,8 @@ void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
 }
 
 /**
- * Sieve the last segments remaing after that sieve(uint32_t) has been
- * called consecutively for all primes up to sqrt(stopNumber).
+ * Sieve the last segments remaining after that sieve(uint32_t) has
+ * been called consecutively for all primes up to sqrt(stopNumber).
  */
 void SieveOfEratosthenes::finish() {
   assert(lowerBound_ < stopNumber_);
