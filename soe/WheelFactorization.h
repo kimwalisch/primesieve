@@ -154,13 +154,13 @@ struct InitWheel {
 };
 
 /**
- * Used to calculate the first multiple >= startNumber of a WheelPrime
- * and the modulo 30 wheel index of that multiple.
+ * Used to calculate the first multiple >= startNumber of a sieving
+ * prime and the modulo 30 wheel index of that multiple.
  */
 extern const InitWheel init30Wheel[30];
 /**
- * Used to calculate the first multiple >= startNumber of a WheelPrime
- * and the modulo 210 wheel index of that multiple.
+ * Used to calculate the first multiple >= startNumber of a sieving
+ * prime and the modulo 210 wheel index of that multiple.
  */
 extern const InitWheel init210Wheel[210];
 
