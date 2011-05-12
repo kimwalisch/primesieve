@@ -31,6 +31,7 @@
 #ifndef WHEELFACTORIZATION_H
 #define WHEELFACTORIZATION_H
 
+#include "SieveOfEratosthenes.h"
 #include "defs.h"
 #include "pmath.h"
 
@@ -177,15 +178,11 @@ private:
   static const uint8_t primeBitPosition_[30];
 protected:
   const uint64_t stopNumber_;
-  /**
-   * @param stopNumber SieveOfEratosthenes::stopNumber_
-   * @param sieveSize  SieveOfEratosthenes::sieveSize_
-   */
-  ModuloWheel(uint64_t stopNumber, uint32_t sieveSize) :
-    stopNumber_(stopNumber) {
+  ModuloWheel(const SieveOfEratosthenes* soe) : 
+    stopNumber_(soe->getStopNumber()) {
     uint64_t greatestWheelFactor = INIT_WHEEL[2].nextMultipleFactor;
     // prevents 64 bit overflows of multiple in setWheelPrime()
-    if (stopNumber > UINT64_MAX - UINT32_MAX * (greatestWheelFactor + 1)) {
+    if (stopNumber_ > UINT64_MAX - UINT32_MAX * (greatestWheelFactor + 1)) {
       std::ostringstream error;
       error << "ModuloWheel: stopNumber must be <= (2^64-1) - (2^32-1) * "
           << greatestWheelFactor + 1 << ".";
@@ -193,7 +190,7 @@ protected:
     }
     // a sieveSize <= 2^28 allows wheels up to p(17)# without 32 bit
     // overflows of sieveIndex in Erat*::sieve()
-    if (sieveSize > (1u << 28))
+    if (soe->getSieveSize() > (1u << 28))
       throw std::overflow_error("ModuloWheel: sieveSize must be <= 2^28");
   }
   ~ModuloWheel() {
@@ -256,8 +253,8 @@ const uint8_t
 class Modulo30Wheel: protected ModuloWheel<30, 8, init30Wheel> {
 protected:
   static const WheelElement wheel_[8 * 8];
-  Modulo30Wheel(uint64_t stopNumber, uint32_t sieveSize) :
-    ModuloWheel<30, 8, init30Wheel> (stopNumber, sieveSize) {
+  Modulo30Wheel(const SieveOfEratosthenes* soe) :
+    ModuloWheel<30, 8, init30Wheel> (soe) {
   }
   ~Modulo30Wheel() {
   }
@@ -270,8 +267,8 @@ protected:
 class Modulo210Wheel: protected ModuloWheel<210, 48, init210Wheel> {
 protected:
   static const WheelElement wheel_[48 * 8];
-  Modulo210Wheel(uint64_t stopNumber, uint32_t sieveSize) :
-    ModuloWheel<210, 48, init210Wheel> (stopNumber, sieveSize) {
+  Modulo210Wheel(const SieveOfEratosthenes* soe) :
+    ModuloWheel<210, 48, init210Wheel> (soe) {
   }
   ~Modulo210Wheel() {
   }

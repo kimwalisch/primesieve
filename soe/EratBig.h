@@ -25,42 +25,43 @@
 
 #include <list>
 
+class SieveOfEratosthenes;
+
 /**
- * Implementation of Tomas Oliveira e Silva's cache friendly sieve
- * of Eratosthenes algorithm. The algorithm is described at:
+ * Implementation of Tomas Oliveira e Silva's cache-friendly segmented
+ * sieve of Eratosthenes. The algorithm is described at:
  * http://www.ieeta.pt/~tos/software/prime_sieve.html
  * My implementation uses 30 numbers per byte and a modulo 210 wheel.
  */
 class EratBig: protected Modulo210Wheel {
 public:
-  EratBig(uint64_t, uint32_t);
+  EratBig(const SieveOfEratosthenes*);
   ~EratBig();
   void addPrimeNumber(uint32_t, uint64_t);
   void sieve(uint8_t*);
 private:
   typedef Bucket<defs::BUCKETSIZE_ERATBIG> Bucket_t;
-  /** Current count of sieving primes within EratBig. */
-  uint32_t primeCount_;
-  /**
-   * Array of singly linked bucket lists. Each list contains the
-   * sieving primes of the related segment, @code
-   * bucketLists_[index_] @endcode is the list associated to the
-   * current segment.
-   */
-  Bucket_t** bucketLists_;
-  /** Singly linked list of empty Buckets (part of Memory pool). */
-  Bucket_t* bucketStock_;
-  /** Contains the pointers of all allocated Buckets (part of Memory pool). */
-  std::list<Bucket_t*> bucketPointers_;
-  /** Size of bucketLists_. */
-  const uint32_t size_;
-  /** Current index of bucketLists_. */
-  uint32_t index_;
   /** log2 of the size of the sieve_ array */
   const uint32_t log2SieveSize_;
-  uint32_t getSize(uint64_t, uint32_t);
+  /** Size of bucketLists_. */
+  uint32_t size_;
+  /** Current count of sieving primes within EratBig. */
+  uint32_t primeCount_;
+  /** Current index of bucketLists_. */
+  uint32_t index_;
+  /**
+   * Array of singly linked bucket lists. Each list contains the
+   * sieving primes of the related segment, bucketLists_[index_] is
+   * the list associated to the current segment.
+   */
+  Bucket_t** bucketLists_;
+  /** Singly linked list of empty Buckets. */
+  Bucket_t* bucketStock_;
+  /** Keeps track of the allocated buckets. */
+  std::list<Bucket_t*> bucketPointers_;
+  void setSize(uint32_t);
   void initBucketLists();
-  void moveFront(Bucket_t*&, Bucket_t*&);
+  void getBucket(uint32_t listIndex);
 };
 
 #endif /* ERATBIG_H */

@@ -20,11 +20,12 @@
 #ifndef SIEVEOFERATOSTHENES_H
 #define SIEVEOFERATOSTHENES_H
 
-#include "ResetSieve.h"
-#include "EratSmall.h"
-#include "EratMedium.h"
-#include "EratBig.h"
 #include "defs.h"
+
+class ResetSieve;
+class EratSmall;
+class EratMedium;
+class EratBig;
 
 /**
  * SieveOfEratosthenes is an implementation of the segmented sieve of
@@ -44,7 +45,7 @@ public:
   enum {
     /**
      * SieveOfEratosthenes uses dense bit packing with 30 numbers
-     * per byte, one byte of the sieve_ array holds the numbers 
+     * per byte, one byte of the sieve_ array holds the numbers
      * n * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
      */
     NUMBERS_PER_BYTE = 30
@@ -54,6 +55,9 @@ public:
   }
   uint64_t getStopNumber() const {
     return stopNumber_;
+  }
+  uint32_t getSieveSize() const {
+    return sieveSize_;
   }
   ResetSieve* getResetSieve() const {
     return resetSieve_;

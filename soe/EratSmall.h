@@ -20,10 +20,11 @@
 #ifndef ERATSMALL_H
 #define ERATSMALL_H
 
-#include "WheelFactorization.h"
 #include "EratBase.h"
-
+#include "WheelFactorization.h"
 #include "defs.h"
+
+class SieveOfEratosthenes;
 
 /**
  * Implementation of the segmented sieve of Eratosthenes with wheel
@@ -36,7 +37,7 @@
  */
 class EratSmall: public EratBase<Modulo30Wheel> {
 public:
-  EratSmall(uint32_t, uint64_t, uint32_t);
+  EratSmall(uint32_t, const SieveOfEratosthenes*);
   void sieve(uint8_t*, uint32_t);
 };
 

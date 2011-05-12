@@ -329,7 +329,7 @@ void PrimeSieve::sieve() {
     ResetSieve resetSieve(this);
     // used to sieve the prime numbers and prime k-tuplets between
     // startNumber_ and stopNumber_
-    PrimeNumberFinder primeNumberFinder(this, resetSieve);
+    PrimeNumberFinder primeNumberFinder(this, &resetSieve);
 
     if (isqrt(stopNumber_) > resetSieve.getLimit()) {
       // used to generate the prime numbers up to sqrt(stopNumber_)

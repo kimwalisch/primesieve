@@ -27,6 +27,8 @@
 #include <cassert>
 #include <cstdlib>
 
+class SieveOfEratosthenes;
+
 /**
  * EratBase provides base functionality for the segmented sieve of
  * Eratosthenes with wheel factorization.
@@ -62,9 +64,9 @@ protected:
    * sieving.
    */
   Bucket_t* bucketList_;
-  EratBase(uint32_t limit, uint64_t stopNumber, uint32_t sieveSize) :
-    T_ModuloWheel(stopNumber, sieveSize), limit_(limit), bucketList_(NULL) {
-    if (limit > isqrt(stopNumber))
+  EratBase(uint32_t limit, const SieveOfEratosthenes* soe) :
+    T_ModuloWheel(soe), limit_(limit), bucketList_(NULL) {
+    if (limit > isqrt(stopNumber_))
       throw std::logic_error("EratBase: limit must be <= sqrt(stopNumber).");
     // initialize the bucket list with an empty bucket
     bucketList_ = new Bucket_t;

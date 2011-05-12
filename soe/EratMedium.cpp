@@ -18,12 +18,15 @@
  */
 
 #include "EratMedium.h"
+#include "SieveOfEratosthenes.h"
+#include "EratBase.h"
+#include "WheelFactorization.h"
 #include "defs.h"
 
 #include <cstdlib>
 
-EratMedium::EratMedium(uint32_t limit, uint64_t stopNumber, uint32_t sieveSize) :
-  EratBase<Modulo210Wheel> (limit, stopNumber, sieveSize) {
+EratMedium::EratMedium(uint32_t limit, const SieveOfEratosthenes* soe) :
+  EratBase<Modulo210Wheel> (limit, soe) {
 }
 
 /**
@@ -35,12 +38,10 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
   // iterate over each bucket of the bucket list
   for (Bucket_t* bucket = bucketList_; bucket != NULL; bucket = bucket->next) {
     WheelPrime* wPrime = bucket->wheelPrimeBegin();
-    WheelPrime* end    = bucket->wheelPrimeEnd();
-
+    WheelPrime* end = bucket->wheelPrimeEnd();
     // iterate over each wheelPrime of the current bucket
     for (; wPrime != end; wPrime++) {
       uint32_t sieveIndex = wPrime->getSieveIndex();
-
       if (sieveIndex >= sieveSize) {
         // nothing to do for primes that do not have a multiple
         // occurence in the current segment
@@ -48,8 +49,7 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
       } else {
         uint32_t sievePrime = wPrime->getSievePrime();
         uint32_t wheelIndex = wPrime->getWheelIndex();
-        // eliminate the multiples of the current wheelPrime (of the
-        // current segment)
+        // eliminate the multiples of the current wheelPrime
         do {
           uint8_t bit = wheel_[wheelIndex].unsetBit;
           uint8_t nmf = wheel_[wheelIndex].nextMultipleFactor;
@@ -59,7 +59,6 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
           wheelIndex += nxt;
           sieveIndex += sievePrime * nmf + cor;
         } while (sieveIndex < sieveSize);
-
         // sets the sieveIndex and wheelIndex for the next segment
         sieveIndex -= sieveSize;
         wPrime->setWheelIndex(wheelIndex);

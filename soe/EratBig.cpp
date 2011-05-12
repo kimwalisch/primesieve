@@ -19,28 +19,29 @@
 
 #include "EratBig.h"
 #include "SieveOfEratosthenes.h"
+#include "WheelFactorization.h"
 #include "defs.h"
 #include "pmath.h"
 
-#include <cassert>
 #include <cstdlib>
 #include <stdexcept>
+#include <cassert>
 
 #define BUCKETS_PER_CREATE (defs::MEMORY_PER_ALLOC_ERATBIG / sizeof(Bucket_t))
 #define SIEVE_SIZE ((1u << log2SieveSize_) - 1)
 
-EratBig::EratBig(uint64_t stopNumber, uint32_t sieveSize) :
-  Modulo210Wheel(stopNumber, sieveSize), primeCount_(0), bucketLists_(NULL),
-      bucketStock_(NULL), size_(getSize(stopNumber, sieveSize)), index_(0),
-      log2SieveSize_(floorLog2(sieveSize)) {
+EratBig::EratBig(const SieveOfEratosthenes* soe) : Modulo210Wheel(soe),
+    log2SieveSize_(floorLog2(soe->getSieveSize())), primeCount_(0), index_(0),
+    bucketLists_(NULL), bucketStock_(NULL) {
   // EratBig uses bitwise operations that require a power of 2 sieve size
-  if (!isPowerOf2(sieveSize))
+  if (!isPowerOf2(soe->getSieveSize()))
     throw std::invalid_argument(
         "EratBig: sieveSize must be a power of 2 (2^n).");
   // max sieveSize = max WheelPrime sieveIndex = 2^23
-  if (sieveSize > (1u << 23))
+  if (soe->getSieveSize() > (1u << 23))
     throw std::invalid_argument(
         "EratBig: sieveSize must be <= 2^23, 8192 Kilobytes.");
+  this->setSize(soe->getSieveSize());
   this->initBucketLists();
 }
 
@@ -56,23 +57,23 @@ EratBig::~EratBig() {
 }
 
 /**  
- * @return The size of the bucketLists_ array.
+ * Set the size of the bucketLists_ array.
  * @remark The size is a power of 2 value which allows use of fast
  *         bitwise operators in sieve(uint8_t*).
  */
-uint32_t EratBig::getSize(uint64_t stopNumber, uint32_t sieveSize) {
+void EratBig::setSize(uint32_t sieveSize) {
   assert(sieveSize != 0);
-  // greatest possible values of sieveIndex and
-  // nextSieveRound in sieve(uint8_t*)
-  double maxSieveIndex = (sieveSize - 1) + ((isqrt(stopNumber) * 2.0)
+  // greatest possible values of sieveIndex and segmentCount in
+  // sieve(uint8_t*)
+  double maxSieveIndex = (sieveSize - 1) + ((isqrt(stopNumber_) * 2.0)
       / SieveOfEratosthenes::NUMBERS_PER_BYTE) * wheel_[1].nextMultipleFactor;
-  uint32_t maxNextSieveRound = static_cast<uint32_t> (
-      std::ceil(maxSieveIndex / sieveSize));
-  return nextHighestPowerOf2(maxNextSieveRound);
+  uint32_t maxSegmentCount = static_cast<uint32_t> (std::ceil(
+      maxSieveIndex / sieveSize));
+  size_ = nextHighestPowerOf2(maxSegmentCount);
 }
 
 /**
- * Allocates the bucketLists_ array and initializes each list with an
+ * Allocate the bucketLists_ array and initialize each list with an
  * empty bucket.
  */
 void EratBig::initBucketLists() {
@@ -80,7 +81,7 @@ void EratBig::initBucketLists() {
   bucketLists_ = new Bucket_t*[size_];
   for (uint32_t i = 0; i < size_; i++) {
     bucketLists_[i] = NULL;
-    this->moveFront(bucketLists_[i], bucketStock_);
+    this->getBucket(i);
   }
 }
 
@@ -92,46 +93,45 @@ void EratBig::addPrimeNumber(uint32_t primeNumber, uint64_t lowerBound) {
   uint32_t wheelIndex;
   if (this->setWheelPrime(lowerBound, &primeNumber, &sieveIndex, &wheelIndex)
       == true) {
-    // indicates in how many segments the next multiple of
-    // primeNumber has to be eliminated
-    uint32_t nextSieveRound = sieveIndex >> log2SieveSize_;
+    // indicates in how many segments the next multiple of primeNumber
+    // needs to be eliminated
+    uint32_t segmentCount = sieveIndex >> log2SieveSize_;
     // sieve index of primeNumber's next multiple
     sieveIndex &= SIEVE_SIZE;
-    // indicates the list that must be used to eliminate the next 
-    // multiple of primeNumber
-    uint32_t nextListIndex = (index_ + nextSieveRound) & (size_ - 1);
-    if (!bucketLists_[nextListIndex]->addWheelPrime(primeNumber, sieveIndex,
-        wheelIndex))
-      this->moveFront(bucketLists_[nextListIndex], bucketStock_);
+    // calculate the index of the bucket list associated to the next
+    // multiple's segment
+    uint32_t nextListIndex = (index_ + segmentCount) & (size_ - 1);
+    if (!bucketLists_[nextListIndex]->addWheelPrime(primeNumber, sieveIndex, wheelIndex))
+      this->getBucket(nextListIndex);
     primeCount_++;
   }
 }
 
 /**
- * Moves the first bucket of the source bucketList to the destination
- * bucketList, creates new buckets if the bucketStock_ is empty.
- * @pre src == bucketstock_ || src != NULL
+ * Adds an empty bucket from the bucketStock_ to the front of
+ * bucketLists_[listIndex], if the bucketStock_ is empty new buckets
+ * are allocated first.
  */
-void EratBig::moveFront(Bucket_t*& dest, Bucket_t*& src) {
+void EratBig::getBucket(uint32_t listIndex) {
   if (bucketStock_ == NULL) {
     Bucket_t* more = new Bucket_t[BUCKETS_PER_CREATE];
     for(uint32_t i = 0; i < BUCKETS_PER_CREATE - 1; i++)
       more[i].init(&more[i+1]);
     more[BUCKETS_PER_CREATE-1].init(NULL);
     bucketStock_ = &more[0];
+    assert(bucketStock_ != NULL);
     bucketPointers_.push_back(more);
   }
-  assert(src != NULL);
-  Bucket_t* bucket = src;
-  src = src->next;
-  bucket->next = dest;
-  dest = bucket;
+  Bucket_t* bucket = bucketStock_;
+  bucketStock_ = bucketStock_->next;
+  bucket->next = bucketLists_[listIndex];
+  bucketLists_[listIndex] = bucket;
 }
 
 /**
- * Implementation of the segmented sieve of Eratosthenes with wheel
- * factorization (modulo 210 wheel). Is used to cross-off the
- * multiples of the current segment.
+ * Implementation of Tomas Oliveira e Silva's cache-friendly segmented
+ * sieve of Eratosthenes with wheel factorization (modulo 210 wheel).
+ * Is used to cross-off the multiples of the current segment.
  */
 void EratBig::sieve(uint8_t* sieve) {
   // nothing to do
@@ -141,16 +141,15 @@ void EratBig::sieve(uint8_t* sieve) {
   while (bucketLists_[index_] != NULL) {
     // iterate over the wheelPrimes of the current bucket
     WheelPrime* wPrime = bucketLists_[index_]->wheelPrimeBegin();
-    WheelPrime* end    = bucketLists_[index_]->wheelPrimeEnd();
+    WheelPrime* end = bucketLists_[index_]->wheelPrimeEnd();
     while (wPrime != end) {
       // get the current wheelPrime's values
       uint32_t sievePrime = wPrime->getSievePrime();
       uint32_t sieveIndex = wPrime->getSieveIndex();
       uint32_t wheelIndex = wPrime->getWheelIndex();
       wPrime++;
-      // eliminate the multiples of the current wheelPrime
-      // (of the current segment)
-      uint32_t nextSieveRound;
+      // cross-off the multiples of the current wheelPrime
+      uint32_t segmentCount;
       do {
         uint8_t bit = wheel_[wheelIndex].unsetBit;
         uint8_t nmf = wheel_[wheelIndex].nextMultipleFactor;
@@ -159,23 +158,24 @@ void EratBig::sieve(uint8_t* sieve) {
         sieve[sieveIndex] &= bit;
         wheelIndex += nxt;
         sieveIndex += sievePrime * nmf + cor;
-        nextSieveRound = sieveIndex >> log2SieveSize_;
-      } while (nextSieveRound == 0);
-
+        segmentCount = sieveIndex >> log2SieveSize_;
+      } while (segmentCount == 0);
       /// @see addPrimeNumber(uint32_t, uint64_t)
       sieveIndex &= SIEVE_SIZE;
-      uint32_t nextListIndex = (index_ + nextSieveRound) & (size_ - 1);
-      if (!bucketLists_[nextListIndex]->addWheelPrime(sievePrime, sieveIndex,
-          wheelIndex))
-        this->moveFront(bucketLists_[nextListIndex], bucketStock_);
+      uint32_t nextListIndex = (index_ + segmentCount) & (size_ - 1);
+      if (!bucketLists_[nextListIndex]->addWheelPrime(sievePrime, sieveIndex, wheelIndex))
+        this->getBucket(nextListIndex);
     }
+    // reset the finished bucket and move it to the bucket stock
     bucketLists_[index_]->reset();
-    // move the current empty bucket to the bucket stock
-    this->moveFront(bucketStock_, bucketLists_[index_]);
+    Bucket_t* bucket = bucketLists_[index_];
+    bucketLists_[index_] = bucketLists_[index_]->next;
+    bucket->next = bucketStock_;
+    bucketStock_ = bucket;
   }
-  // the current bucketList is empty now, add an empty
-  // bucket for the next segment
-  this->moveFront(bucketLists_[index_], bucketStock_);
+  // the current bucketList is empty now, add an empty bucket for the
+  // next segment
+  this->getBucket(index_);
   // increase the bucketLists_ index for the next segment
   index_ = (index_ + 1) & (size_ - 1);
 }

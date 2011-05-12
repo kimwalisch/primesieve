@@ -18,34 +18,35 @@
  */
 
 #include "EratSmall.h"
+#include "SieveOfEratosthenes.h"
+#include "EratBase.h"
+#include "WheelFactorization.h"
 #include "defs.h"
 
 #include <stdexcept>
 #include <cstdlib>
 
-EratSmall::EratSmall(uint32_t limit, uint64_t stopNumber, uint32_t sieveSize) :
-  EratBase<Modulo30Wheel> (limit, stopNumber, sieveSize) {
-  // the following equation prevents array segmentation faults in 
+EratSmall::EratSmall(uint32_t limit, const SieveOfEratosthenes* soe) :
+  EratBase<Modulo30Wheel> (limit, soe) {
+  // the following equation prevents array segmentation faults in
   // sieve(uint8_t*, uint32_t) :
   // sieveSize - 1 + (primeNumber / 15) * 3 + 3 - sieveSize < sieveSize
-  if (limit_ >= (sieveSize - 2) * 5) {
+  if (limit_ >= (soe->getSieveSize() - 2) * 5)
     throw std::logic_error("EratSmall: limit must be < (sieveSize - 2) * 5.");
-  }
 }
 
 /**
  * Implementation of the segmented sieve of Eratosthenes with wheel
- * factorization (modulo 30 wheel). Is used to cross-off the 
+ * factorization (modulo 30 wheel). Is used to cross-off the
  * multiples of the current segment.
  */
 void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
   uint8_t* const sieveEnd = &sieve[sieveSize];
-  
   // iterate over all the buckets of the bucket list
   for (Bucket_t* bucket = bucketList_; bucket != NULL; bucket = bucket->next) {
     // iterate over the wheelPrimes of the current bucket
     WheelPrime* wPrime = bucket->wheelPrimeBegin();
-    WheelPrime* end    = bucket->wheelPrimeEnd();
+    WheelPrime* end = bucket->wheelPrimeEnd();
     for (; wPrime != end; wPrime++) {
       const uint32_t primeX2 = wPrime->getSievePrime();
       const uint32_t primeX4 = primeX2 + primeX2;
@@ -94,7 +95,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 0:
           *s &= BIT5;
           s += primeX2 + 1;
-          // fast while loop (less operations)
+          // fast while loop (less compare operations)
           while (s + primeX6 * 5 + 7 < sieveEnd) {
             *s &= BIT0;
             s += primeX6;
@@ -153,7 +154,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 8:
           *s &= BIT4;
           s += primeX2 + 1;
-          // fast while loop (less operations)
+          // fast while loop (less compare operations)
           while (s + primeX6 * 5 + 11 < sieveEnd) {
             *s &= BIT1;
             s += primeX6;
@@ -212,7 +213,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 16:
           *s &= BIT3;
           s += primeX2 + 1;
-          // fast while loop (less operations)
+          // fast while loop (less compare operations)
           while (s + primeX6 * 5 + 13 < sieveEnd) {
             *s &= BIT2;
             s += primeX6;
@@ -271,7 +272,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 24:
           *s &= BIT2;
           s += primeX2;
-          // fast while loop (less operations)
+          // fast while loop (less compare operations)
           while (s + primeX6 * 5 + 2 < sieveEnd) {
             *s &= BIT3;
             s += primeX6;
@@ -330,7 +331,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 32:
           *s &= BIT1;
           s += primeX2;
-          // fast while loop (less operations)
+          // fast while loop (less compare operations)
           while (s + primeX6 * 5 + 4 < sieveEnd) {
             *s &= BIT4;
             s += primeX6;
@@ -389,7 +390,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 40:
           *s &= BIT0;
           s += primeX2;
-          // fast while loop (less operations)
+          // fast while loop (less compare operations)
           while (s + primeX6 * 5 + 8 < sieveEnd) {
             *s &= BIT5;
             s += primeX6;
@@ -448,7 +449,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 48:
           *s &= BIT7;
           s += primeX2 + 1;
-          // fast while loop (less operations)
+          // fast while loop (less compare operations)
           while (s + primeX6 * 5 + 14 < sieveEnd) {
             *s &= BIT6;
             s += primeX6;
@@ -507,7 +508,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 56:
           *s &= BIT6;
           s += primeX2;
-          // fast while loop (less operations)
+          // fast while loop (less compare operations)
           while (s + primeX6 * 5 + 1 < sieveEnd) {
             *s &= BIT7;
             s += primeX6 + 1;

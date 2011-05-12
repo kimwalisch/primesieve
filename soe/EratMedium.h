@@ -20,20 +20,22 @@
 #ifndef ERATMEDIUM_H
 #define ERATMEDIUM_H
 
-#include "WheelFactorization.h"
 #include "EratBase.h"
+#include "WheelFactorization.h"
 #include "defs.h"
+
+class SieveOfEratosthenes;
 
 /**
  * Implementation of the segmented sieve of Eratosthenes with wheel
  * factorization (modulo 210 wheel) and 30 numbers per byte.
  * This algorithm is faster than EratSmall for sieving primes that do
  * not have a lot of multiple occurrences per segment, it uses
- * less jump (switch, goto) operations.
+ * less jump operations (switch, goto).
  */
 class EratMedium: public EratBase<Modulo210Wheel> {
 public:
-  EratMedium(uint32_t, uint64_t, uint32_t);
+  EratMedium(uint32_t, const SieveOfEratosthenes*);
   void sieve(uint8_t*, uint32_t);
 };
 

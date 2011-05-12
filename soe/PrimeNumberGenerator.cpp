@@ -19,6 +19,8 @@
 
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
+#include "SieveOfEratosthenes.h"
+#include "ResetSieve.h"
 #include "defs.h"
 #include "pmath.h"
 
@@ -26,8 +28,8 @@
 #include <cassert>
 
 namespace {
-  const uint32_t END = ~0u;
   const uint32_t BYTE_SIZE = 256;
+  const uint32_t END = 0xff;
 }
 
 PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder* primeNumberFinder) :

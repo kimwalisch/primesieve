@@ -19,6 +19,8 @@
 
 #include "PrimeNumberFinder.h"
 #include "PrimeSieve.h"
+#include "ResetSieve.h"
+#include "SieveOfEratosthenes.h"
 #include "defs.h"
 #include "cpuid.h" 
 #include "pmath.h"
@@ -27,8 +29,8 @@
 #include <iostream>
 
 namespace {
-  const uint32_t END = ~0u;
   const uint32_t BYTE_SIZE = 256;
+  const uint32_t END = 0xff;
 }
 
 const uint32_t PrimeNumberFinder::nextBitValue_[NUMBERS_PER_BYTE] = { 0,
@@ -38,13 +40,13 @@ const uint32_t PrimeNumberFinder::nextBitValue_[NUMBERS_PER_BYTE] = { 0,
     23, 0, 0, 0, 29, 0,
      0, 0, 0, 0, 31 };
 
-PrimeNumberFinder::PrimeNumberFinder(PrimeSieve* primeSieve, 
-    ResetSieve& resetSieve) :
+PrimeNumberFinder::PrimeNumberFinder(PrimeSieve* primeSieve,
+    ResetSieve* resetSieve) :
   SieveOfEratosthenes(
      (primeSieve->startNumber_ < 7) ?7 :primeSieve->startNumber_,
       primeSieve->stopNumber_,
       primeSieve->sieveSize_,
-      &resetSieve),
+      resetSieve),
       primeSieve_(primeSieve), primeByteCounts_(NULL), primeBitValues_(NULL) {
   if (isPOPCNTSupported())
     primeSieve_->flags_ |= SSE4_POPCNT;

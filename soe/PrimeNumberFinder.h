@@ -61,7 +61,7 @@ class PrimeSieve;
 class PrimeNumberFinder: public SieveOfEratosthenes {
 public:
   enum { COUNTS_SIZE = 7 };
-  PrimeNumberFinder(PrimeSieve*, ResetSieve&);
+  PrimeNumberFinder(PrimeSieve*, ResetSieve*);
   ~PrimeNumberFinder();
 private:
   static const uint32_t nextBitValue_[NUMBERS_PER_BYTE];

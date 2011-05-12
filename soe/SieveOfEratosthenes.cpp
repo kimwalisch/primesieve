@@ -18,6 +18,10 @@
  */
 
 #include "SieveOfEratosthenes.h"
+#include "ResetSieve.h"
+#include "EratSmall.h"
+#include "EratMedium.h"
+#include "EratBig.h"
 #include "defs.h"
 #include "pmath.h"
 
@@ -106,18 +110,16 @@ void SieveOfEratosthenes::initSieve() {
  */
 void SieveOfEratosthenes::initEratAlgorithms() {
   assert(defs::FACTOR_ERATSMALL <= defs::FACTOR_ERATMEDIUM);
-  uint32_t sqrtStop = isqrt(stopNumber_);
+  uint32_t sq = isqrt(stopNumber_);
   uint32_t limit;
-  if (resetSieve_->getLimit() < sqrtStop) {
+  if (resetSieve_->getLimit() < sq) {
     limit = static_cast<uint32_t> (sieveSize_* defs::FACTOR_ERATSMALL);
-    eratSmall_ = new EratSmall(std::min<uint32_t>(limit, sqrtStop),
-        stopNumber_, sieveSize_);
-    if (eratSmall_->getLimit() < sqrtStop) {
+    eratSmall_ = new EratSmall(std::min<uint32_t>(limit, sq), this);
+    if (eratSmall_->getLimit() < sq) {
       limit = static_cast<uint32_t> (sieveSize_* defs::FACTOR_ERATMEDIUM);
-      eratMedium_ = new EratMedium(std::min<uint32_t>(limit, sqrtStop),
-          stopNumber_, sieveSize_);
-      if (eratMedium_->getLimit() < sqrtStop)
-        eratBig_ = new EratBig(stopNumber_, sieveSize_);
+      eratMedium_ = new EratMedium(std::min<uint32_t>(limit, sq), this);
+      if (eratMedium_->getLimit() < sq)
+        eratBig_ = new EratBig(this);
     }
   }
 }
