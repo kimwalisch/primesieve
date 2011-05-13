@@ -65,6 +65,9 @@ uint64_t PrimeSieve::getStopNumber() const {
   return stopNumber_;
 }
 
+/**
+ * Get the sieve size in KiloBytes.
+ */
 uint32_t PrimeSieve::getSieveSize() const {
   return sieveSize_ / 1024;
 }
@@ -236,7 +239,7 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
   // EratBig requires a power of 2 sieve size
   if (!isPowerOf2(sieveSize))
     throw std::invalid_argument("sieve size must be a power of 2");
-  // convert to Bytes
+  // convert to Bytes for SieveOfEratosthenes objects
   sieveSize_ = sieveSize * 1024;
 }
 
