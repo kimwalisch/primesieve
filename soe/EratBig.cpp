@@ -116,8 +116,8 @@ void EratBig::getBucket(uint32_t listIndex) {
   if (bucketStock_ == NULL) {
     Bucket_t* more = new Bucket_t[BUCKETS_PER_CREATE];
     for(uint32_t i = 0; i < BUCKETS_PER_CREATE - 1; i++)
-      more[i].init(&more[i+1]);
-    more[BUCKETS_PER_CREATE-1].init(NULL);
+      more[i].setNext(&more[i+1]);
+    more[BUCKETS_PER_CREATE-1].setNext(NULL);
     bucketStock_ = &more[0];
     assert(bucketStock_ != NULL);
     bucketPointers_.push_back(more);

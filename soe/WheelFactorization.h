@@ -96,9 +96,9 @@ template<uint32_t SIZE>
 class Bucket {
 public:
   Bucket* next;
-  void init(Bucket* _next) {
+  Bucket() : count_(0) {}
+  void setNext(Bucket* _next) {
     next = _next;
-    count_ = 0;
   }
   void reset() {
     count_ = 0;

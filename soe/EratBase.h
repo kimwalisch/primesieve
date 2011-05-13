@@ -50,7 +50,7 @@ public:
         == true) {
       if (!bucketList_->addWheelPrime(primeNumber, sieveIndex, wheelIndex)) {
         Bucket_t* bucket = new Bucket_t;
-        bucket->init(bucketList_);
+        bucket->setNext(bucketList_);
         bucketList_ = bucket;
       }
     }
@@ -70,7 +70,7 @@ protected:
       throw std::logic_error("EratBase: limit must be <= sqrt(stopNumber).");
     // initialize the bucket list with an empty bucket
     bucketList_ = new Bucket_t;
-    bucketList_->init(NULL);
+    bucketList_->setNext(NULL);
   }
   ~EratBase() {
     while (bucketList_ != NULL) {
