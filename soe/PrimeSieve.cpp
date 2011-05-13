@@ -72,8 +72,11 @@ uint32_t PrimeSieve::getSieveSize() const {
   return sieveSize_ / 1024;
 }
 
+/**
+ * Get the current set user flags.
+ */
 uint32_t PrimeSieve::getFlags() const {
-  // hide internal flags
+  // clear out internal flags
   return flags_ & ((1u << 20) - 1);
 }
 
