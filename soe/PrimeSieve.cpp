@@ -220,7 +220,7 @@ void PrimeSieve::setStopNumber(uint64_t stopNumber) {
  * Set the size (in KiloBytes) of the sieve of Eratosthenes array.
  * The best performance is achieved with a sieve size that matches
  * the CPU's L1 cache size (usually 32 or 64 KB) when sieving < 10^14
- * and a sieve size of your CPU's L2 cache size above.
+ * and a sieve size of the CPU's L2 cache size above.
  *
  * Default sieveSize = 64 KiloBytes
  *
