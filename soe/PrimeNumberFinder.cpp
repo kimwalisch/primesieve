@@ -25,6 +25,7 @@
 #include "cpuid.h" 
 #include "pmath.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
 
@@ -43,7 +44,7 @@ const uint32_t PrimeNumberFinder::nextBitValue_[NUMBERS_PER_BYTE] = { 0,
 PrimeNumberFinder::PrimeNumberFinder(PrimeSieve* primeSieve,
     ResetSieve* resetSieve) :
   SieveOfEratosthenes(
-     (primeSieve->startNumber_ < 7) ?7 :primeSieve->startNumber_,
+      std::max<uint64_t>(primeSieve->startNumber_, 7),
       primeSieve->stopNumber_,
       primeSieve->sieveSize_,
       resetSieve),
@@ -160,12 +161,12 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   uint64_t byteValue = this->getLowerBound();
-  // call a callback function (IMP) for each prime number
+  // call a C style callback function for each prime number
   if (primeSieve_->flags_ & PrimeSieve::CALLBACK_PRIMES_IMP)
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
       for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
         primeSieve_->callback_imp(byteValue + *bitValue);
-  // call a callback function (OOP) for each prime number
+  // call an OOP style callback function for each prime number
   else if (primeSieve_->flags_ & PrimeSieve::CALLBACK_PRIMES_OOP)
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
       for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
