@@ -70,7 +70,8 @@ uint32_t PrimeSieve::getSieveSize() const {
 }
 
 uint32_t PrimeSieve::getFlags() const {
-  return flags_;
+  // hide internal flags
+  return flags_ & ((1u << 20) - 1);
 }
 
 /**
@@ -242,23 +243,25 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
 /**
  * Set the flags (settings) of PrimeSieve.
  * @param flags
- *   COUNT_PRIMES      OR (bitwise '|')
- *   COUNT_TWINS       OR
- *   COUNT_TRIPLETS    OR
- *   COUNT_QUADRUPLETS OR
- *   COUNT_QUINTUPLETS OR
- *   COUNT_SEXTUPLETS  OR
- *   COUNT_SEPTUPLETS  OR
- *   PRINT_PRIMES      OR
- *   PRINT_TWINS       OR
- *   PRINT_TRIPLETS    OR
- *   PRINT_QUADRUPLETS OR
- *   PRINT_QUINTUPLETS OR
- *   PRINT_SEXTUPLETS  OR
- *   PRINT_SEPTUPLETS  OR
- *   PRINT_STATUS.
+ *   PrimeSieve::COUNT_PRIMES      OR (bitwise '|')
+ *   PrimeSieve::COUNT_TWINS       OR
+ *   PrimeSieve::COUNT_TRIPLETS    OR
+ *   PrimeSieve::COUNT_QUADRUPLETS OR
+ *   PrimeSieve::COUNT_QUINTUPLETS OR
+ *   PrimeSieve::COUNT_SEXTUPLETS  OR
+ *   PrimeSieve::COUNT_SEPTUPLETS  OR
+ *   PrimeSieve::PRINT_PRIMES      OR
+ *   PrimeSieve::PRINT_TWINS       OR
+ *   PrimeSieve::PRINT_TRIPLETS    OR
+ *   PrimeSieve::PRINT_QUADRUPLETS OR
+ *   PrimeSieve::PRINT_QUINTUPLETS OR
+ *   PrimeSieve::PRINT_SEXTUPLETS  OR
+ *   PrimeSieve::PRINT_SEPTUPLETS  OR
+ *   PrimeSieve::PRINT_STATUS.
  */
 void PrimeSieve::setFlags(uint32_t flags) {
+  if (flags >= (1u << 20))
+    throw std::invalid_argument("invalid flags");
   flags_ = flags;
 }
 

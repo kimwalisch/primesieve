@@ -79,13 +79,14 @@ private:
   /** The stop number for this sieve of Eratosthenes object. */
   const uint64_t stopNumber_;
   /**
-   * Value of the first byte of the sieve_ array. As
+   * Value corresponding to the first byte of the sieve_ array. As
    * SieveOfEratosthenes uses 30 numbers per byte lowerBound_ is set
    * to lowerBound_ += sieveSize * 30 after each sieved segment.
    */
   uint64_t lowerBound_;
   /** Sieve of Eratosthenes array. */
   uint8_t* sieve_;
+  /** Size of the sieve_ array in bytes. */
   uint32_t sieveSize_;
   /** Used to reset the sieve_ array after each sieved segment. */
   ResetSieve* const resetSieve_;

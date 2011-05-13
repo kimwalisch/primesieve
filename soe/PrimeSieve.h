@@ -37,37 +37,36 @@ class ParallelPrimeSieve;
  * PrimeSieve needs pi(n^0.5)*8 bytes of RAM to sieve up to n (1.6 GB
  * near 2^64).
  *
- * == USAGE EXAMPLES ==
- *
- * 1. Count prime numbers up to 4294967295
- * 
- *    PrimeSieve primesieve;
- *    uint64_t primeCount = primesieve.getPrimeCount(2, 4294967295);
- *
- * 2. Use PrimeSieve as a prime number generator, myPrimes(uint64_t)
- *    will be called consecutively for each prime number up to 10000
- *
- *    void myPrimes(uint64_t prime) {
- *      // do something with the prime
- *    }
- *    ...
- *    PrimeSieve primesieve;
- *    primesieve.generatePrimes(2, 10000, myPrimes);
- *
- * 3. Count and print (to std::cout) the twin primes between 1000 and
- *    2000
- *
- *    PrimeSieve primesieve;
- *    primesieve.setStartNumber(1000);
- *    primesieve.setStopNumber(2000);
- *    primesieve.setFlags(COUNT_TWINS | PRINT_TWINS);
- *    primesieve.sieve();
- *    uint64_t twinCount = primesieve.getTwinCount();
+ * The file ../docs/USAGE_EXAMPLES has source code examples that show
+ * how to use PrimeSieve to generate prime numbers, count prime
+ * numbers, print twin primes, ...
  */
 class PrimeSieve {
   friend class PrimeNumberFinder;
 public:
-  enum { COUNTS_SIZE = PrimeNumberFinder::COUNTS_SIZE };
+  /** User flags (settings) for PrimeSieve. */
+  enum {
+    COUNT_PRIMES      = 1 << 0,
+    COUNT_TWINS       = 1 << 1,
+    COUNT_TRIPLETS    = 1 << 2,
+    COUNT_QUADRUPLETS = 1 << 3,
+    COUNT_QUINTUPLETS = 1 << 4,
+    COUNT_SEXTUPLETS  = 1 << 5,
+    COUNT_SEPTUPLETS  = 1 << 6,
+    COUNT_FLAGS       = COUNT_PRIMES | COUNT_TWINS | COUNT_TRIPLETS | COUNT_QUADRUPLETS | COUNT_QUINTUPLETS | COUNT_SEXTUPLETS | COUNT_SEPTUPLETS,
+    PRINT_PRIMES      = 1 << 7,
+    PRINT_TWINS       = 1 << 8,
+    PRINT_TRIPLETS    = 1 << 9,
+    PRINT_QUADRUPLETS = 1 << 10,
+    PRINT_QUINTUPLETS = 1 << 11,
+    PRINT_SEXTUPLETS  = 1 << 12,
+    PRINT_SEPTUPLETS  = 1 << 13,
+    PRINT_FLAGS       = PRINT_PRIMES | PRINT_TWINS | PRINT_TRIPLETS | PRINT_QUADRUPLETS | PRINT_QUINTUPLETS | PRINT_SEXTUPLETS | PRINT_SEPTUPLETS,
+    PRINT_STATUS      = 1 << 14
+  };
+  enum {
+    COUNTS_SIZE = PrimeNumberFinder::COUNTS_SIZE
+  };
   PrimeSieve();
   PrimeSieve(uint64_t, uint64_t, ParallelPrimeSieve*);
   virtual ~PrimeSieve() { }
@@ -93,25 +92,31 @@ public:
   void setFlags(uint32_t);
   void sieve();
 protected:
+  /** Internal flags (>= bit 20) for PrimeSieve. */
+  enum {
+    CALLBACK_PRIMES_IMP = 1 << 20,
+    CALLBACK_PRIMES_OOP = 1 << 21,
+    GENERATE_FLAGS      = PRINT_FLAGS | CALLBACK_PRIMES_IMP | CALLBACK_PRIMES_OOP,
+    SSE4_POPCNT         = 1 << 24
+  };
   /** Lower bound for sieving. */
   uint64_t startNumber_;
   /** Upper bound for sieveing. */
   uint64_t stopNumber_;
-  /** Size of the sieve of Eratosthenes (PrimeNumberFinder) in Bytes. */
+  /** Size of PrimeNumberFinder's sieve array in Bytes. */
   uint32_t sieveSize_;
-  /** Settings for PrimeNumberFinder. */
+  /** Flags (settings) for PrimeSieve. */
   uint32_t flags_;
   /**
-   * counts_[0] = prime number count
-   * counts_[1] = twin prime count
-   * counts_[2] = prime triplet count
-   * ...
-   * counts_[6] = prime septuplet count
+   * Count of prime numbers    (counts_[0]),
+   * Count of twin primes      (counts_[1]),
+   * ...,
+   * Count of prime septuplets (counts_[6]).
    */
   uint64_t counts_[COUNTS_SIZE];
   /** Status of the sieving process in percent. */
   double status_;
-  /** Time elapsed in seconds of the last sieve(void) session. */
+  /** Time elapsed in seconds of the last sieve() call. */
   double timeElapsed_;
   void reset();
   virtual void doStatus(uint64_t);
@@ -123,7 +128,7 @@ private:
   void* cbObj_;
   /** Either this or the parent ParallelPrimeSieve object. */
   PrimeSieve* parent_;
-  /** Sum of the segments that have been sieved (for status_). */
+  /** Sum of the segments that have been sieved so far. */
   uint64_t segments_;
   void doSmallPrime(uint32_t, uint32_t, uint32_t, std::string);
 };

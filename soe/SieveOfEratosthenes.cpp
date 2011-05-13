@@ -30,14 +30,14 @@
 #include <algorithm>
 #include <cassert>
 
-const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23,
-    29, 31 };
+const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
 
 /**
- * @startNumber A start number for prime sieving.
- * @stopNumber  A stop number for prime sieving.
- * @sieveSize   A sieve size in bytes.
- * @resetSieve  A ResetSieve object used to reset the sieve_ array.
+ * @param startNumber A start number for prime sieving.
+ * @param stopNumber  A stop number for prime sieving.
+ * @param sieveSize   A sieve size in bytes.
+ * @param resetSieve  A ResetSieve object used to reset the sieve_
+ *                    array.
  */
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
     uint64_t stopNumber, uint32_t sieveSize, ResetSieve* resetSieve) :
@@ -62,6 +62,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
     this->initEratAlgorithms();
     this->initSieve();
   } catch (...) {
+    delete[] sieve_;
     delete eratSmall_;
     delete eratMedium_;
     delete eratBig_;
@@ -70,6 +71,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
 }
 
 SieveOfEratosthenes::~SieveOfEratosthenes() {
+  delete[] sieve_;
   delete eratSmall_;
   delete eratMedium_;
   delete eratBig_;
@@ -175,7 +177,7 @@ void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
  */
 void SieveOfEratosthenes::finish() {
   assert(lowerBound_ < stopNumber_);
-  /// sieve all the segments left except the last one
+  /// sieve all segments left except the last one
   /// @remark '+ 1' is a correction for primes of type n * 30 + 31
   while (lowerBound_ + sieveSize_ * NUMBERS_PER_BYTE + 1 < stopNumber_) {
     this->crossOffMultiples();

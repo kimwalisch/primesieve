@@ -49,22 +49,19 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve* primeSieve,
       resetSieve),
       primeSieve_(primeSieve), primeByteCounts_(NULL), primeBitValues_(NULL) {
   if (isPOPCNTSupported())
-    primeSieve_->flags_ |= SSE4_POPCNT;
+    primeSieve_->flags_ |= PrimeSieve::SSE4_POPCNT;
   this->initLookupTables();
 }
 
 PrimeNumberFinder::~PrimeNumberFinder() {
   if (primeByteCounts_ != NULL) {
-    for (uint32_t i = 0; i < COUNTS_SIZE; i++) {
-      if (primeByteCounts_[i] != NULL)
-        delete[] primeByteCounts_[i];
-    }
+    for (uint32_t i = 0; i < COUNTS_SIZE; i++)
+      delete[] primeByteCounts_[i];
     delete[] primeByteCounts_;
   }
   if (primeBitValues_ != NULL) {
-    for (uint32_t i = 0; i < BYTE_SIZE; i++) {
+    for (uint32_t i = 0; i < BYTE_SIZE; i++)
       delete[] primeBitValues_[i];
-    }
     delete[] primeBitValues_;
   }
 }
@@ -84,10 +81,10 @@ void PrimeNumberFinder::initLookupTables() {
       { 0x3f, END },            // prime sextuplets     
       { 0xfe, END } };          // prime septuplets
 
-  if (primeSieve_->flags_ & COUNT_FLAGS) {
+  if (primeSieve_->flags_ & PrimeSieve::COUNT_FLAGS) {
     primeByteCounts_ = new uint32_t*[COUNTS_SIZE];
     for (uint32_t i = 0; i < COUNTS_SIZE; i++) {
-      if ((primeSieve_->flags_  & (COUNT_PRIMES << i)) == 0) 
+      if ((primeSieve_->flags_  & (PrimeSieve::COUNT_PRIMES << i)) == 0) 
         primeByteCounts_[i] = NULL;
       else {
         primeByteCounts_[i] = new uint32_t[BYTE_SIZE];
@@ -103,10 +100,10 @@ void PrimeNumberFinder::initLookupTables() {
       }
     }
   }
-  if (primeSieve_->flags_ & GENERATE_FLAGS) {
+  if (primeSieve_->flags_ & PrimeSieve::GENERATE_FLAGS) {
     uint32_t generateType = 0;
-    if (primeSieve_->flags_ & PRINT_FLAGS)
-      for (uint32_t i = PRINT_PRIMES; (i & primeSieve_->flags_) == 0; i <<= 1)
+    if (primeSieve_->flags_ & PrimeSieve::PRINT_FLAGS)
+      for (uint32_t i = PrimeSieve::PRINT_PRIMES; (i & primeSieve_->flags_) == 0; i <<= 1)
         generateType++;
     primeBitValues_ = new uint32_t*[BYTE_SIZE];
     // generate the bitValues for each byte value
@@ -130,12 +127,12 @@ void PrimeNumberFinder::initLookupTables() {
  */
 void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // count prime numbers
-  if (primeSieve_->flags_ & COUNT_PRIMES) {
+  if (primeSieve_->flags_ & PrimeSieve::COUNT_PRIMES) {
     uint32_t primeCount = 0;
     uint32_t i = 0;
 #if defined(POPCNT64)
     // count bits using the SSE 4.2 POPCNT instruction
-    if (primeSieve_->flags_ & SSE4_POPCNT)
+    if (primeSieve_->flags_ & PrimeSieve::SSE4_POPCNT)
       for (; i + 8 < sieveSize; i += 8)
         primeCount += POPCNT64(sieve, i);
 #endif
@@ -146,7 +143,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   }
   // count prime k-tuplets
   for (uint32_t i = 1; i < COUNTS_SIZE; i++) {
-    if (primeSieve_->flags_  & (COUNT_PRIMES << i)) {
+    if (primeSieve_->flags_ & (PrimeSieve::COUNT_PRIMES << i)) {
       uint32_t kTupletCount = 0;
       for (uint32_t j = 0; j < sieveSize; j++) {
         kTupletCount += primeByteCounts_[i][sieve[j]];
@@ -163,27 +160,29 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   uint64_t byteValue = this->getLowerBound();
-  // call a callback function for each prime number
-  if (primeSieve_->flags_ & CALLBACK_PRIMES_IMP)
+  // call a callback function (IMP) for each prime number
+  if (primeSieve_->flags_ & PrimeSieve::CALLBACK_PRIMES_IMP)
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
       for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
         primeSieve_->callback_imp(byteValue + *bitValue);
-  else if (primeSieve_->flags_ & CALLBACK_PRIMES_OOP)
+  // call a callback function (OOP) for each prime number
+  else if (primeSieve_->flags_ & PrimeSieve::CALLBACK_PRIMES_OOP)
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
       for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
         primeSieve_->callback_oop(byteValue + *bitValue, primeSieve_->cbObj_);
   // print the prime numbers to stdout
-  else if (primeSieve_->flags_ & PRINT_PRIMES)
+  else if (primeSieve_->flags_ & PrimeSieve::PRINT_PRIMES)
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
       for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
         std::cout << byteValue + *bitValue << '\n';
-  // print prime k-tuplets (twin primes, prime triplets, ...) to stdout
+  // print the prime k-tuplets to stdout
   else 
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
       for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++) {
         std::cout << '(';
         uint32_t v = *bitValue;
-        for (uint32_t j = PRINT_PRIMES; (j & primeSieve_->flags_) == 0; j <<= 1) {
+        for (uint32_t j = PrimeSieve::PRINT_PRIMES; 
+            (j & primeSieve_->flags_) == 0; j <<= 1) {
           std::cout << byteValue + v << ", ";
           v = nextBitValue_[v];
         }
@@ -193,9 +192,9 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
 
 void PrimeNumberFinder::analyseSieve(const uint8_t* sieve,
     uint32_t sieveSize) {
-  if (primeSieve_->flags_ & COUNT_FLAGS)
+  if (primeSieve_->flags_ & PrimeSieve::COUNT_FLAGS)
     this->count(sieve, sieveSize);
-  if (primeSieve_->flags_ & GENERATE_FLAGS)
+  if (primeSieve_->flags_ & PrimeSieve::GENERATE_FLAGS)
     this->generate(sieve, sieveSize);
   primeSieve_->parent_->doStatus(sieveSize * NUMBERS_PER_BYTE);
 }
