@@ -43,6 +43,7 @@ private:
    */
   uint32_t** primeBitValues_;
   void initPrimeBitValues();
+  void generate(const uint8_t*, uint32_t);
   void analyseSieve(const uint8_t*, uint32_t);
 };
 

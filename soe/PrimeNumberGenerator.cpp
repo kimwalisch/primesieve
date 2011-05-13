@@ -72,18 +72,20 @@ void PrimeNumberGenerator::initPrimeBitValues() {
 }
 
 /**
- * Generate the prime numbers of the current segment and use
- * them to sieve with primeNumberFinder_.
+ * Generate the prime numbers of the current segment and use them to
+ * sieve with primeNumberFinder_.
  */
-void PrimeNumberGenerator::analyseSieve(const uint8_t* sieve,
-    uint32_t sieveSize) {
+void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
   uint32_t byteValue = static_cast<uint32_t> (this->getLowerBound());
   for (uint32_t i = 0; i < sieveSize; i++) {
     // generate the prime numbers within the current byte
-    for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++) {
-      uint32_t primeNumber = byteValue + *bitValue;
-      primeNumberFinder_->sieve(primeNumber);
-    }
+    for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
+      primeNumberFinder_->sieve(byteValue + *bitValue);
     byteValue += NUMBERS_PER_BYTE;
   }
+}
+
+void PrimeNumberGenerator::analyseSieve(const uint8_t* sieve, 
+    uint32_t sieveSize) {
+  this->generate(sieve, sieveSize);
 }
