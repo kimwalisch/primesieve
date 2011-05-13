@@ -99,7 +99,7 @@ void testRandomIntervals() {
     PrimeSieve primeSieve;
     primeSieve.setStartNumber(lowerBound - 1);
     primeSieve.setStopNumber(lowerBound - 1);
-    primeSieve.setFlags(COUNT_PRIMES);
+    primeSieve.setFlags(PrimeSieve::COUNT_PRIMES);
 
     while (primeSieve.getStopNumber() < upperBound) {
       // generate a rondom 64 bit integer
@@ -149,7 +149,7 @@ void testPix() {
     primeSieve.setStartNumber(0);
     primeSieve.setStopNumber(0);
     primeSieve.setSieveSize(32);
-    primeSieve.setFlags(COUNT_PRIMES);
+    primeSieve.setFlags(PrimeSieve::COUNT_PRIMES);
 
     uint64_t primeCount = 0;
 
@@ -192,7 +192,7 @@ void testPix() {
  */
 void testBigPrimes() {
   try {
-    int flags = COUNT_PRIMES | PRINT_STATUS;
+    int flags = PrimeSieve::COUNT_PRIMES | PrimeSieve::PRINT_STATUS;
     PrimeSieve primeSieve;
     primeSieve.setSieveSize(512);
     primeSieve.setFlags(flags);

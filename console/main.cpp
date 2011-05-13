@@ -19,8 +19,7 @@
 
 /** 
  * @file  main.cpp
- * @brief Command-line version of primesieve, multi-threaded (OpenMP),
- *        compiles on many platforms.
+ * @brief Command-line version of primesieve, multi-threaded (OpenMP).
  *
  * primesieve is a highly optimized implementation of the sieve of
  * Eratosthenes that generates prime numbers and prime k-tuplets (twin
@@ -139,12 +138,12 @@ void processOptions(int argc, char* argv[]) {
       case 'c': do {
                   if (*c < '1' || *c > '7')
                     help();
-                  flags |= COUNT_PRIMES << (*c - '1');
+                  flags |= PrimeSieve::COUNT_PRIMES << (*c - '1');
                 } while (*(++c) != 0);
                 break;
       case 'p': if (*c < '1' || *c > '7')
                   help();
-                flags |= PRINT_PRIMES << (*c - '1');
+                flags |= PrimeSieve::PRINT_PRIMES << (*c - '1');
                 quietMode = true;
                 break;
       case 'q': quietMode = true;
@@ -181,10 +180,11 @@ int main(int argc, char* argv[]) {
               << std::setw(10) << "STOP"  << " = " << numbers[1]  << std::endl;
 
   // set default settings
-  if ((flags & COUNT_FLAGS) == 0 && (flags & PRINT_FLAGS) == 0)
-    flags |= COUNT_PRIMES;
-  if (!quietMode && (flags & PRINT_FLAGS) == 0)
-    flags |= PRINT_STATUS;
+  if ((flags & PrimeSieve::COUNT_FLAGS) == 0 && 
+      (flags & PrimeSieve::PRINT_FLAGS) == 0)
+    flags |= PrimeSieve::COUNT_PRIMES;
+  if (!quietMode && (flags & PrimeSieve::PRINT_FLAGS) == 0)
+    flags |= PrimeSieve::PRINT_STATUS;
   if (sieveSize == 0)
     sieveSize = (numbers[1] < L2_THRESHOLD) ?L1_CACHE_SIZE :L2_CACHE_SIZE;
   if (!quietMode)
@@ -206,20 +206,20 @@ int main(int argc, char* argv[]) {
     primeSieve.sieve();
 
     // print new line
-    if ((flags & PRINT_STATUS) || (
-        (flags & PRINT_FLAGS) &&
-        (flags & COUNT_FLAGS) ))
+    if ((flags & PrimeSieve::PRINT_STATUS) || (
+        (flags & PrimeSieve::PRINT_FLAGS) &&
+        (flags & PrimeSieve::COUNT_FLAGS) ))
       std::cout << std::endl;
 
     // get max output width
     std::size_t width = (quietMode) ?0 :12;
-    for (int i = 0; i < primeSieve.COUNTS_SIZE; i++)
-      if ((flags & (COUNT_PRIMES << i)) && width < primes[i].length())
+    for (int i = 0; i < PrimeSieve::COUNTS_SIZE; i++)
+      if ((flags & (PrimeSieve::COUNT_PRIMES << i)) && width < primes[i].length())
         width = primes[i].length();
 
     // print prime count results
-    for (int i = 0; i < primeSieve.COUNTS_SIZE; i++)
-      if (flags & (COUNT_PRIMES << i))
+    for (int i = 0; i < PrimeSieve::COUNTS_SIZE; i++)
+      if (flags & (PrimeSieve::COUNT_PRIMES << i))
         std::cout << std::setw(static_cast<int> (width)) << primes[i] << " : "
                   << primeSieve.getCounts(i) << std::endl;
 
