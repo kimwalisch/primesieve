@@ -108,7 +108,7 @@ void SieveOfEratosthenes::initSieve() {
 }
 
 /**
- * Initialize the 3 sieve of Eratosthenes algorithms if needed.
+ * Initialize the 3 erat* algorithms if needed.
  */
 void SieveOfEratosthenes::initEratAlgorithms() {
   assert(defs::FACTOR_ERATSMALL <= defs::FACTOR_ERATMEDIUM);
@@ -127,8 +127,8 @@ void SieveOfEratosthenes::initEratAlgorithms() {
 }
 
 /**
- * Use the erat* algorithms to cross-off the multiples of the
- * current segment.
+ * Use the erat* algorithms to cross-off the multiples of the current
+ * segment.
  */
 void SieveOfEratosthenes::crossOffMultiples() {
   if (eratSmall_ != NULL) {
@@ -142,38 +142,38 @@ void SieveOfEratosthenes::crossOffMultiples() {
 }
 
 /**
- * Use the sieve of Eratosthenes to sieve up to primeNumber^2.
+ * Use the segmented sieve of Eratosthenes to sieve up to
+ * primeNumber^2.
  */
 void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
   assert(eratSmall_ != NULL && 
       primeNumber > resetSieve_->getLimit() &&
       isquare(primeNumber) <= stopNumber_);
-
   /// @remark '- 6' is a correction for primes of type n * 30 + 31
   const uint64_t primeSquared = isquare(primeNumber) - 6;
 
-  // do not enter this while loop until all primes required for
-  // sieving the next segment have been added to one of the erat*
-  // algorithms below
+  // do not enter this while loop until all primes required to sieve
+  // the next segment are present in the erat* algorithms
   while (lowerBound_ + sieveSize_ * NUMBERS_PER_BYTE < primeSquared) {
     this->crossOffMultiples();
     this->analyseSieve(sieve_, sieveSize_);
     resetSieve_->reset(sieve_, sieveSize_, &resetIndex_);
     lowerBound_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
-  // add primeNumber to the appropriate (fastest) sieve of
-  // Eratosthenes implementation
-  if (primeNumber <= eratSmall_->getLimit())
-    eratSmall_->addPrimeNumber(primeNumber, lowerBound_);
-  else if (primeNumber <= eratMedium_->getLimit())
-    eratMedium_->addPrimeNumber(primeNumber, lowerBound_);
-  else
-    eratBig_->addPrimeNumber(primeNumber, lowerBound_);
+  // once a prime number has been added to one of the erat* algorithms
+  // below its multiples will be crossed-off in all subsequent
+  // segments
+  if (primeNumber > eratSmall_->getLimit())
+    if (primeNumber > eratMedium_->getLimit())
+            eratBig_->addPrimeNumber(primeNumber, lowerBound_);
+    else eratMedium_->addPrimeNumber(primeNumber, lowerBound_);
+  else    eratSmall_->addPrimeNumber(primeNumber, lowerBound_);
 }
 
 /**
  * Sieve the last segments remaining after that sieve(uint32_t) has
- * been called consecutively for all primes up to sqrt(stopNumber).
+ * been called consecutively for all prime numbers up to
+ * sqrt(stopNumber).
  */
 void SieveOfEratosthenes::finish() {
   assert(lowerBound_ < stopNumber_);
