@@ -87,13 +87,13 @@ int PrimeSieveGUI::getMenuSettings() {
   int flags = 0;
   // get count settings
   if (countAct_[0]->isChecked())
-    flags |= COUNT_PRIMES;
+    flags |= PRIMESIEVE::COUNT_PRIMES;
   if (countAct_[1]->isChecked())
-    flags |= COUNT_FLAGS - COUNT_PRIMES;
+    flags |= PRIMESIEVE::COUNT_FLAGS - PRIMESIEVE::COUNT_PRIMES;
   // get print settings
   for (int i = 0; i < printAct_.size(); i++)
     if (printAct_[i]->isChecked())
-      flags |= PRINT_PRIMES << i;
+      flags |= PRIMESIEVE::PRINT_PRIMES << i;
   return flags;
 }
 

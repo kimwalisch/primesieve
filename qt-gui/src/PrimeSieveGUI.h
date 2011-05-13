@@ -23,7 +23,6 @@
 #include "PrimeSieveGUI_const.h"
 #include "PrimeSieveProcess.h"
 #include "../soe/PrimeSieve.h"
-#include "../soe/PrimeNumberFinder.h"
 
 #include <QMainWindow>
 #include <QtGlobal>
