@@ -143,7 +143,8 @@ void SieveOfEratosthenes::crossOffMultiples() {
 
 /**
  * Use the segmented sieve of Eratosthenes to sieve up to
- * primeNumber^2.
+ * primeNumber^2. sieve(uint32_t) must be called consecutively for all
+ * prime numbers up to stopNumber_^0.5.
  */
 void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
   assert(eratSmall_ != NULL && 
@@ -173,7 +174,7 @@ void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
 /**
  * Sieve the last segments remaining after that sieve(uint32_t) has
  * been called consecutively for all prime numbers up to
- * sqrt(stopNumber).
+ * stopNumber_^0.5.
  */
 void SieveOfEratosthenes::finish() {
   assert(lowerBound_ < stopNumber_);

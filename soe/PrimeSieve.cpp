@@ -333,16 +333,15 @@ void PrimeSieve::sieve() {
   }
 
   if (stopNumber_ >= 7) {
-    // needed by primeNumberGenerator and primeNumberFinder to
-    // reset their sieve arrays
     ResetSieve resetSieve(this);
     // used to sieve the prime numbers and prime k-tuplets between
     // startNumber_ and stopNumber_
     PrimeNumberFinder primeNumberFinder(this, &resetSieve);
 
     if (isqrt(stopNumber_) > resetSieve.getLimit()) {
-      // used to generate the prime numbers up to sqrt(stopNumber_)
-      // needed for sieving by primeNumberFinder
+      /// used to generate the prime numbers up to stopNumber_^0.5
+      /// needed for sieving by primeNumberFinder
+      /// @see PrimeNumberGenerator::generate(const uint8_t*, uint32_t)
       PrimeNumberGenerator primeNumberGenerator(&primeNumberFinder);
       std::vector<uint32_t> primes16Bit;
       primes16Bit.push_back(3);
@@ -362,8 +361,6 @@ void PrimeSieve::sieve() {
           if (primes16Bit[i] <= keep)
             primes16Bit.push_back(n);
           if (n > resetSieve.getLimit())
-            // generate the prime numbers up to n^2 and call
-            // primeNumberFinder.sieve(p) for each generated prime
             primeNumberGenerator.sieve(n);
         }
       }
