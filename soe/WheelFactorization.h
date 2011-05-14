@@ -49,8 +49,6 @@
  * @see http://en.wikipedia.org/wiki/Wheel_factorization
  */
 class WheelPrime {
-  friend class EratSmall;
-  friend class EratMedium;
 public:
   uint32_t getSievePrime() const {
     return sievePrime_;
@@ -70,7 +68,6 @@ public:
   void setWheelIndex(uint32_t wheelIndex) {
     index_ = wheelIndex << 23;
   }
-private:
   /**
    * sievePrime_ = (primeNumber * 2) / 30; *2 is used to skip
    * multiples of 2 and /30 is used as SieveOfEratosthenes uses 30
