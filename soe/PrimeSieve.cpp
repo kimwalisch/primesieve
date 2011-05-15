@@ -368,7 +368,6 @@ void PrimeSieve::sieve() {
     }
     primeNumberFinder.finish();
   }
-
   // set status_ to 100.0 (percent)
   parent_->doStatus(10);
   timeElapsed_ = (static_cast<double> (std::clock()) - timeElapsed_) /
