@@ -33,9 +33,10 @@
  * By default ParallelPrimeSieve uses an ideal number of threads for
  * the current set startNumber, stopNumber and flags (i.e. numThreads
  * = USE_IDEAL_NUM_THREADS).
- * @remark ParallelPrimeSieve should only be used for prime counting
- *         as it does not generate prime numbers in order and you
- *         would have to handle thread synchronization yourself.
+ *
+ * @warning ParallelPrimeSieve should only be used for prime counting
+ *          as it does not generate prime numbers in order and you
+ *          would have to handle thread synchronization yourself.
  */
 class ParallelPrimeSieve: public PrimeSieve {
 public:
