@@ -123,9 +123,9 @@ Contents
     optimized for CPUs with 32 to 64 KiloBytes of L1 Data Cache.
 
   * WheelFactorization.h
-    Contains classes and structs related to wheel factorization. Wheel
-    factorization is used to skip multiples of small primes (see [5]
-    for a good introduction).
+    Contains classes and structures related to wheel factorization.
+    Wheel factorization is used to skip multiples of small primes (see
+    [5] for a good introduction).
 
   Note:
   The classes are explained in more detail in their header files.
