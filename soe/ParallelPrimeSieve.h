@@ -31,9 +31,11 @@
  * overall interval upon completion the results of the individual
  * threads are combined.
  * By default ParallelPrimeSieve uses an ideal number of threads for
- * the current set startNumber, stopNumber and flags
- * (i.e. numThreads = USE_IDEAL_NUM_THREADS).
- * @see PrimeSieve.cpp
+ * the current set startNumber, stopNumber and flags (i.e. numThreads
+ * = USE_IDEAL_NUM_THREADS).
+ * @remark ParallelPrimeSieve should only be used for prime counting
+ *         as it does not generate prime numbers in order and you will
+ *         have to take care of thread synchronization yourself.
  */
 class ParallelPrimeSieve: public PrimeSieve {
 public:

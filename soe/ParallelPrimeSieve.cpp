@@ -62,8 +62,8 @@ int ParallelPrimeSieve::getNumThreads() const {
  * stopNumber and flags.
  */
 int ParallelPrimeSieve::getIdealNumThreads() const {
-  // 1 thread to generate (print, callback) primes in sequential order
-  if (flags_ & GENERATE_FLAGS)
+  // 1 thread to print primes in sequential order
+  if (flags_ & PRINT_FLAGS)
     return 1;
 
   // I made some tests around 10^19 which showed that each
