@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 9 May 2011
+# Last modified: 16 May 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -14,15 +14,16 @@ Contents
 
   1. About
   2. Algorithm and Complexity
-  3. Build primesieve
-  4. Directories
-  5. Sieve of Eratosthenes Implementation
-  6. Final Thoughts
-  7. License
-  8. References
+  3. Directories
+  4. Sieve of Eratosthenes Implementation
+  5. Prime Number Generator
+  6. Build primesieve
+  7. Final Thoughts
+  8. License
+  9. References
 
 1. About
-===============
+========
 
   primesieve is a highly optimized C++ implementation of the sieve of
   Eratosthenes that generates prime numbers and prime k-tuplets (twin
@@ -46,38 +47,25 @@ Contents
     * Uses a modolo 210 wheel that skips multiples of 2, 3, 5 and 7
     * Uses specialised algorithms for small, medium and big sieving
       primes
-    * Uses Tomas Oliveira e Silva's cache-friendly list algorithm for
-      big sieving primes.[3]
+    * Uses Tomas Oliveira e Silva's cache-friendly segmented sieve
+      of Eratosthenes for big sieving primes.[3]
     * Uses the SSE 4.2 POPCNT instruction for fast bit counting
     * Parallel, uses multiple threads (OpenMP)
 
-3. Build primesieve
-===================
-
-  primesieve is written in portable C++ I successfully compiled it
-  with 8 different C++ compilers on Windows, Linux and Mac OS X (x86,
-  x86-64 and PowerPC). I maintain two versions:
-
-  * Console version
-    Please refer to the INSTALL file in the current directory.
-
-  * Qt GUI version
-    Please refer to the INSTALL file in the ./qt-gui directory.
-
-4. Directories
+3. Directories
 ==============
 
   * ./soe         Contains the sieve of Eratosthenes implementation
   * ./console     Contains the console version of primesieve
   * ./qt-gui      Contains the GUI version of primesieve (created with
-                  the Qt framework[7])
+                  the Qt4 framework[7])
   * ./expr        Contains an arithmetic expression parser used in the
                   console and GUI version of primesieve
   * ./thirdparty  Contains stdint.h (needed for MSVC prior 2010)
   * ./docs        Contains documentation files
 
 5. Sieve of Eratosthenes Implementation (./soe Directory)
-========================================================
+=========================================================
 
   Summary of the important files:
 
@@ -85,9 +73,8 @@ Contents
     PrimeSieve objects provide an easy API for prime sieving. The file
     docs/USAGE_EXAMPLES has source code examples that show how to use
     PrimeSieve to generate prime numbers, count prime numbers, print
-    twin primes, ... Also have a look at console/main.cpp to see how it
-    works. PrimeSieve directly or indirectly implements all of the
-    following classes.
+    prime triplets, ... PrimeSieve directly or indirectly implements
+    all of the following classes.
 
   * SieveOfEratosthenes.cpp
     Implementation of the segmented sieve of Eratosthenes using a bit
@@ -115,20 +102,20 @@ Contents
     Tomas Oliveira e Silva's cache-friendly list algorithm.[3]
 
   * PrimeNumberGenerator.cpp
-    Generates the prime numbers up to sqrt(stopNumber) needed for
+    Generates the prime numbers up to stopNumber^0.5 needed for
     sieving by PrimeNumberFinder.
     (Is derived from SieveOfEratosthenes)
 
   * PrimeNumberFinder.cpp
-    Main SieveOfEratosthenes object is used to count and print prime
+    Main SieveOfEratosthenes object, is used to count and print prime
     numbers and prime k-tuplets.
     (Is derived from SieveOfEratosthenes)
 
   * ResetSieve.cpp
     ResetSieve uses a modulo wheel array to reset the sieve array
     (sets bits to 1) of SieveOfEratosthenes objects after each sieved
-    segment. This does not only reset the sieve array but also
-    eliminates multiples of small primes <= 19.
+    segment. This also eliminates multiples of small primes <= 19 for
+    the next segment without sieving.
 
   * defs.h
     Contains macro definitions and constants that set the size of
@@ -136,18 +123,37 @@ Contents
     optimized for CPUs with 32 to 64 KiloBytes of L1 Data Cache.
 
   * WheelFactorization.h
-    Contains data structures and abstract classes related to wheel
-    factorization. Wheel factorization is used to skip multiples of
-    small primes (see [5] for a good introduction).
+    Contains classes and structs related to wheel factorization. Wheel
+    factorization is used to skip multiples of small primes (see [5]
+    for a good introduction).
 
   Note:
   The classes are explained in more detail in their header files.
 
-6. Final Thoughts
+5. Prime Number Generator
+=========================
+
+  PrimeSieve may be used as a fast C++ prime number generator, see
+  docs/USAGE_EXAMPLES for an example.
+
+6. Build primesieve
+===================
+
+  primesieve is written in portable C++ I successfully compiled it
+  with 8 different C++ compilers on Windows, Linux and Mac OS X (x86,
+  x86-64 and PowerPC). I maintain two versions:
+
+  * Console version
+    Please refer to the INSTALL file in the current directory.
+  * Qt GUI version
+    Please refer to the INSTALL file in the ./qt-gui directory.
+
+7. Final Thoughts
 =================
 
   The segmented sieve of Eratosthenes does not scale well using real
-  parallelism i.e. without increasing memory usage. Thus my
+  parallelism i.e. without increasing memory usage (at least my tries
+  delivered a performance worse than single-threaded). Thus my
   ParallelPrimeSieve subdivides the sieve interval into a number of
   subintervals matching the number of logical CPU cores, each
   subinterval is then sieved in a separate thread using a PrimeSieve
@@ -163,7 +169,7 @@ Contents
   algorithm for twin primes:
   http://numbers.computation.free.fr/Constants/Primes/twin.html
 
-7. License
+8. License
 ==========
 
   primesieve is free software: you can redistribute it and/or modify
@@ -171,7 +177,7 @@ Contents
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
 
-8. References and Notes
+9. References and Notes
 =======================
 
   [1] Paul Pritchard, "Fast compact prime number sieves (among
