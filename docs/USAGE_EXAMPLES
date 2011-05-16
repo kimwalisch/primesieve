@@ -1,48 +1,116 @@
+May 16, 2011
+Kim Walisch, <kim.walisch@gmail.com>
+http://primesieve.googlecode.com
+
+About
+=====
+
+This file contains various source code examples that show how to use
+PrimeSieve and ParallelPrimeSieve objects. You may also want to have a
+look at ../soe/PrimeSieve.h for the API and ../soe/PrimeSieve.cpp for
+a brief description of each member function.
+
+Examples
+========
+
+  1. Generate prime numbers
+  2. Generate prime numbers (Object-oriented programming)
+  3. Count prime numbers
+  4. Count prime numbers in parallel
+  5. Count twin primes in parallel
+  6. Print prime triplets
+
 /****************************************************************************/
-// 1. Count prime numbers up to 10^3 (single-threaded)
+// 1. Generate prime numbers
+//    myPrimes(uint64_t) will be called back for each prime up to 1000
 
 #include "soe/PrimeSieve.h"
-#include <iostream>
+#include <stdint.h>
 
-int main() {
-  PrimeSieve primeSieve;
-  std::cout << "There are "
-            << primeSieve.getPrimeCount(2,1000)
-            << " prime numbers up to 1000"
-            << std::endl;
+void myPrimes(uint64_t prime) {
+  // ...
+}
+
+void main() {
+  PrimeSieve ps;
+  ps.generatePrimes(2, 1000, myPrimes);
 }
 
 /****************************************************************************/
-// 2. Count prime numbers (multi-threaded, OpenMP)
-
-#include "soe/ParallelPrimeSieve.h"
-#include <iostream>
-
-int main() {
-  ParallelPrimeSieve primeSieve;
-  std::cout << "There are "
-            << primeSieve.getPrimeCount(2,1000)
-            << " prime numbers up to 1000"
-            << std::endl;
-}
-
-/****************************************************************************/
-// 3. Generate the prime numbers up to 10000 and store them
-//    into a STL vector
+// 2. Generate prime numbers (Object-oriented programming)
+//    MyClass::do() generates the prime numbers up to 1000 and stores
+//    them into a private STL vector
 
 #include "soe/PrimeSieve.h"
 #include <stdint.h>
 #include <vector>
 
-std::vector<int> myPrimes;
+class MyClass {
+public:
+  void do() {
+    PrimeSieve ps;
+    ps.generatePrimes(2, 1000, storePrimes, (void*)this);
+  }
+private:
+  std::vector<uint64_t> myPrimes_;
+  static void storePrimes(uint64_t prime, void* myObj) {
+    ((MyClass*)myObj)->myPrimes_.push_back(prime);
+  }
+};
 
-void storePrimes(uint64_t prime) {
-  myPrimes.push_back(static_cast<int> (prime));
-}
+/****************************************************************************/
+// 3. Count prime numbers
+//    Count the prime numbers up to 1000 (single-threaded)
 
-int main() {
-  PrimeSieve primeSieve;
-  primeSieve.generatePrimes(2, 10000, storePrimes);
+#include "soe/PrimeSieve.h"
+#include <stdint.h>
+
+void main() {
+  PrimeSieve ps;
+  uint64_t primeCount = ps.getPrimeCount(2,1000);
 }
 
 /****************************************************************************/
+// 4. Count prime numbers in parallel
+//    Count the prime numbers up to 10^9 in parallel using 4 threads
+
+#include "soe/ParallelPrimeSieve.h"
+#include <stdint.h>
+
+void main() {
+  ParallelPrimeSieve pps;
+  pps.setNumThreads(4);
+  uint64_t primeCount = pps.getPrimeCount(2,(unsigned)(1E9));
+}
+
+/****************************************************************************/
+// 5. Count twin primes in parallel
+//    Count the twin primes between 10^11 and 2*10^11 in parallel
+//    using all available threads (logical CPU cores)
+
+#include "soe/ParallelPrimeSieve.h"
+#include <stdint.h>
+
+void main() {
+  ParallelPrimeSieve pps;
+  pps.setStartNumber((uint64_t)(1E11));
+  pps.setStopNumber(2*(uint64_t)(1E11));
+  pps.setFlags(ParallelPrimeSieve::COUNT_TWINS);
+  pps.sieve();
+  uint64_t twinCount = pps.getTwinCount();
+}
+
+/****************************************************************************/
+// 6. Print prime triplets
+//    Print the prime triplets up to 10^8 to std::cout
+
+#include "soe/PrimeSieve.h"
+#include <stdint.h>
+
+void main() {
+  PrimeSieve ps;
+  ps.setStartNumber(0);
+  ps.setStopNumber((unsigned)(1E8));
+  ps.setFlags(PrimeSieve::PRINT_TRIPLETS);
+  ps.sieve();
+}
