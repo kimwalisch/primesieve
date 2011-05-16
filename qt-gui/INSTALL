@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010 
-# Last modified: 11 April 2011
+# Last modified: 16 May 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -18,8 +18,12 @@ How to build primesieve (Windows, Linux, Mac OS X)
   2. Launch the primesieve.pro file with the Qt-Creator IDE and have
     a look at Qt-Creator-build-settings.png for the build settings.
 
-Remark
-======
+Remarks
+=======
+
+  primesieve has been developed with Qt4, if it does not compile with
+  future releases of Qt old Qt4 builds can be retrieved from:
+  ftp://ftp.trolltech.com/qt/source/
 
   The compiled primesieve executable depends on the QtGui4 and QtCore4
   libraries (Windows: .dll, Unix: .lib). You need to copy these
