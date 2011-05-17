@@ -233,7 +233,7 @@ void PrimeSieveGUI::on_sieveButton_clicked() {
 
   try {
     flags_ = this->getMenuSettings();
-    if ((flags_ & (PRIMESIEVE::COUNT_FLAGS | PRIMESIEVE::PRINT_FLAGS)) == 0)
+    if ((flags_ & (ParallelPrimeSieve::COUNT_FLAGS | ParallelPrimeSieve::PRINT_FLAGS)) == 0)
       throw std::invalid_argument(
           "Nothing to do, no count or print options selected.");
     qulonglong lowerBound = 0;
@@ -254,7 +254,7 @@ void PrimeSieveGUI::on_sieveButton_clicked() {
     primeSieveProcess_ = new PrimeSieveProcess(this);
     connect(primeSieveProcess_, SIGNAL(finished(int, QProcess::ExitStatus)),
         this, SLOT(processFinished(int, QProcess::ExitStatus)));
-    if (flags_ & PRIMESIEVE::PRINT_FLAGS)
+    if (flags_ & ParallelPrimeSieve::PRINT_FLAGS)
       connect(primeSieveProcess_, SIGNAL(readyReadStandardOutput()), this,
           SLOT(printProcessOutput()));
     primeSieveProcess_->start(lowerBound, upperBound, this->getSieveSize(),
@@ -354,7 +354,7 @@ void PrimeSieveGUI::printResults() {
   // hack to get the count results aligned (using tabs)
   QString maxSizeText;
   for (int i = 0; i < PrimeSieveProcess::COUNTS_SIZE; i++) {
-    if (flags_ & (PRIMESIEVE::COUNT_PRIMES << i))
+    if (flags_ & (ParallelPrimeSieve::COUNT_PRIMES << i))
       if (maxSizeText.size() < primeText_[i].size())
         maxSizeText = primeText_[i];
   }
@@ -366,11 +366,11 @@ void PrimeSieveGUI::printResults() {
 
   // print prime counts & time elapsed
   for (int i = 0; i < PrimeSieveProcess::COUNTS_SIZE; i++) {
-    if (flags_ & (PRIMESIEVE::COUNT_PRIMES << i))
+    if (flags_ & (ParallelPrimeSieve::COUNT_PRIMES << i))
       ui->textEdit->appendPlainText(primeText_[i] + ":\t" +
           QString::number(primeSieveProcess_->getCounts(i)));
   }
-  if (flags_ & (PRIMESIEVE::COUNT_FLAGS - PRIMESIEVE::COUNT_PRIMES))
+  if (flags_ & (ParallelPrimeSieve::COUNT_FLAGS - ParallelPrimeSieve::COUNT_PRIMES))
     ui->textEdit->appendPlainText("");
   QString time("Elapsed time:\t" +
                QString::number(primeSieveProcess_->getTimeElapsed(), 'f', 2) +
@@ -385,7 +385,7 @@ void PrimeSieveGUI::on_cancelButton_clicked() {
   ui->cancelButton->setDisabled(true);
   ui->progressBar->setValue(0);
   // too late to abort
-  if ((flags_ & PRIMESIEVE::PRINT_FLAGS) && primeSieveProcess_->isFinished())
+  if ((flags_ & ParallelPrimeSieve::PRINT_FLAGS) && primeSieveProcess_->isFinished())
     return;
   // cancel, kill all running processes
   this->cleanUp();

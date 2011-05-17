@@ -21,6 +21,7 @@
 
 #include <QStringList>
 #include <QCoreApplication>
+#include <stdexcept>
 #if defined(Q_OS_WIN)
 #  include <windows.h>
 #else
