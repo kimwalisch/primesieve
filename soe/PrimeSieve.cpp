@@ -90,7 +90,8 @@ void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
     throw std::invalid_argument("callback must not be NULL");
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
-  this->setFlags(CALLBACK_PRIMES_IMP);
+  // set internal flag
+  flags_ = CALLBACK_PRIMES_IMP;
   callback_imp = callback;
   this->sieve();
 }
@@ -105,7 +106,8 @@ void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
     throw std::invalid_argument("callback must not be NULL");
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
-  this->setFlags(CALLBACK_PRIMES_OOP);
+  // set internal flag
+  flags_ = CALLBACK_PRIMES_OOP;
   callback_oop = callback;
   cbObj_ = cbObj;
   this->sieve();
@@ -303,9 +305,9 @@ void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type,
       counts_[type]++;
     if (flags_ & (PRINT_PRIMES << type))
       std::cout << prime << std::endl;
-    else if (flags_ & CALLBACK_PRIMES_IMP)
+    else if (type == 0 && (flags_ & CALLBACK_PRIMES_IMP))
       this->callback_imp(prime[0]-'0');
-    else if (flags_ & CALLBACK_PRIMES_OOP)
+    else if (type == 0 && (flags_ & CALLBACK_PRIMES_OOP))
       this->callback_oop(prime[0]-'0', cbObj_);
   }
 }
