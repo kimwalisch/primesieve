@@ -31,9 +31,10 @@ void myPrimes(uint64_t prime) {
   // ...
 }
 
-void main() {
+int main() {
   PrimeSieve ps;
   ps.generatePrimes(2, 1000, myPrimes);
+  return 0;
 }
 
 /****************************************************************************/
@@ -65,9 +66,10 @@ private:
 #include "soe/PrimeSieve.h"
 #include <stdint.h>
 
-void main() {
+int main() {
   PrimeSieve ps;
   uint64_t primeCount = ps.getPrimeCount(2,1000);
+  return 0;
 }
 
 /****************************************************************************/
@@ -77,10 +79,11 @@ void main() {
 #include "soe/ParallelPrimeSieve.h"
 #include <stdint.h>
 
-void main() {
+int main() {
   ParallelPrimeSieve pps;
   pps.setNumThreads(4);
   uint64_t primeCount = pps.getPrimeCount(2,(unsigned)(1E9));
+  return 0;
 }
 
 /****************************************************************************/
@@ -91,13 +94,14 @@ void main() {
 #include "soe/ParallelPrimeSieve.h"
 #include <stdint.h>
 
-void main() {
+int main() {
   ParallelPrimeSieve pps;
   pps.setStartNumber((uint64_t)(1E11));
   pps.setStopNumber(2*(uint64_t)(1E11));
   pps.setFlags(ParallelPrimeSieve::COUNT_TWINS);
   pps.sieve();
   uint64_t twinCount = pps.getTwinCount();
+  return 0;
 }
 
 /****************************************************************************/
@@ -107,10 +111,11 @@ void main() {
 #include "soe/PrimeSieve.h"
 #include <stdint.h>
 
-void main() {
+int main() {
   PrimeSieve ps;
   ps.setStartNumber(0);
   ps.setStopNumber((unsigned)(1E8));
   ps.setFlags(PrimeSieve::PRINT_TRIPLETS);
   ps.sieve();
+  return 0;
 }
