@@ -73,10 +73,10 @@ uint32_t PrimeSieve::getSieveSize() const {
 }
 
 /**
- * Get the current set user flags.
+ * Get the current set public flags.
  */
 uint32_t PrimeSieve::getFlags() const {
-  // clear out internal flags
+  // clear out private flags
   return flags_ & ((1u << 20) - 1);
 }
 
@@ -90,7 +90,6 @@ void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
     throw std::invalid_argument("callback must not be NULL");
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
-  // set internal flag
   flags_ = CALLBACK_PRIMES_IMP;
   callback_imp = callback;
   this->sieve();
@@ -106,7 +105,6 @@ void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
     throw std::invalid_argument("callback must not be NULL");
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
-  // set internal flag
   flags_ = CALLBACK_PRIMES_OOP;
   callback_oop = callback;
   cbObj_ = cbObj;
@@ -249,7 +247,7 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
 }
 
 /**
- * Set the flags (settings) of PrimeSieve.
+ * Set public flags (settings).
  * @param flags
  *   PrimeSieve::COUNT_PRIMES      OR (bitwise '|')
  *   PrimeSieve::COUNT_TWINS       OR

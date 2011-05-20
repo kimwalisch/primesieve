@@ -44,7 +44,7 @@ class ParallelPrimeSieve;
 class PrimeSieve {
   friend class PrimeNumberFinder;
 public:
-  /** User flags (settings) for PrimeSieve. */
+  /** Public flags (settings) for PrimeSieve. */
   enum {
     COUNT_PRIMES      = 1 << 0,
     COUNT_TWINS       = 1 << 1,
@@ -92,7 +92,7 @@ public:
   void setFlags(uint32_t);
   void sieve();
 protected:
-  /** Internal flags (>= bit 20) for PrimeSieve. */
+  /** Private flags (>= bit 20) for PrimeSieve. */
   enum {
     CALLBACK_PRIMES_IMP = 1 << 20,
     CALLBACK_PRIMES_OOP = 1 << 21,
