@@ -20,10 +20,11 @@
 #ifndef CPUID_H
 #define CPUID_H
 
+#define bit_POPCNT (1 << 23)
+
 #if (defined(_MSC_VER) || defined(__INTEL_COMPILER)) && (defined(_WIN32) || defined(_WIN64))
 #  include <intrin.h> // __cpuid()
 #  define MSC_X86_COMPATIBLE
-#  define bit_POPCNT (1 << 23)
 #elif defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__)) || \
       defined(__SUNPRO_CC) && (defined(__i386) || defined(__x86_64))
 #  include "cpuidgcc460.h" // gcc-4.6.0/gcc/config/i386/cpuid.h
