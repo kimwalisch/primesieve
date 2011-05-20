@@ -39,8 +39,8 @@ int main() {
 
 /****************************************************************************/
 // 2. Generate prime numbers (Object-oriented programming)
-//    MyClass::do() generates the prime numbers up to 1000 and stores
-//    them into a private STL vector
+//    MyClass::doIt() generates the prime numbers up to 1000 and
+//    stores them into a private STL vector
 
 #include "soe/PrimeSieve.h"
 #include <stdint.h>
@@ -48,7 +48,7 @@ int main() {
 
 class MyClass {
 public:
-  void do() {
+  void doIt() {
     PrimeSieve ps;
     ps.generatePrimes(2, 1000, storePrimes, (void*)this);
   }
