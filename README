@@ -64,7 +64,7 @@ Contents
   * ./thirdparty  Contains stdint.h (needed for MSVC prior 2010)
   * ./docs        Contains documentation files
 
-5. Sieve of Eratosthenes Implementation (./soe Directory)
+4. Sieve of Eratosthenes Implementation (./soe Directory)
 =========================================================
 
   Summary of the important files:
