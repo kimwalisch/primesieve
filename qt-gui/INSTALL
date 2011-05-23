@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010 
-# Last modified: 16 May 2011
+# Last modified: 23 May 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -13,10 +13,10 @@ How to build primesieve (Windows, Linux, Mac OS X)
 ==================================================
 
   1. Download and install the Qt SDK from:
-    http://qt.nokia.com/downloads
+     http://qt.nokia.com/downloads
 
   2. Launch the primesieve.pro file with the Qt-Creator IDE and have
-    a look at Qt-Creator-build-settings.png for the build settings.
+     a look at Qt-Creator-build-settings.png for the build settings.
 
 Remarks
 =======

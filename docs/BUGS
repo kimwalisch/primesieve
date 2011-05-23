@@ -18,7 +18,7 @@ Fixed bugs
 ==========
 
 4. Fixed an OpenMP race condition in ParallelPrimeSieve.cpp which did
-  only show with the sunCC compiler.
+   only show up with the sunCC compiler.
 
    >> FIXED in version 2.2, committed on the 23rd May 2011
 
