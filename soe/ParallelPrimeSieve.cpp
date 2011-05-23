@@ -177,9 +177,10 @@ void ParallelPrimeSieve::sieve() {
   #pragma omp parallel for num_threads(numThreads)
   for (int i = 0; i < static_cast<int> (primeSieve.size()); i++) {
     primeSieve[i]->sieve();
-    for (int j = 0; j < COUNTS_SIZE; j++) {
-      #pragma omp atomic
-      counts_[j] += primeSieve[i]->getCounts(j);
+    #pragma omp critical (counts)
+    {
+      for (int j = 0; j < COUNTS_SIZE; j++)
+        counts_[j] += primeSieve[i]->getCounts(j);
     }
     delete primeSieve[i];
   }
