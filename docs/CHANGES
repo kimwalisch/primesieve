@@ -1,4 +1,4 @@
-New in version 2.2, 08/05/2011
+New in version 2.2, 23/05/2011
 ==============================
 
 1. Added prime number generation functions to soe/PrimeSieve.
@@ -9,7 +9,7 @@ New in version 2.2, 08/05/2011
 2. Added a convenience function to count prime numbers.
   + uint64_t PrimeSieve::getPrimeCount(uint64_t, uint64_t)
 3. The thread interface of ParallelPrimeSieve has been simplified.
-4. Fixed an infinite loop bug (MSVC, Windows) in test.cpp (see BUGS).
+4. Fixed 2 bugs (see BUGS).
 5. Updated documentation.
 6. Code has been reviewed, some cleanup.
 
