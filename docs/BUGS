@@ -11,7 +11,8 @@
 
 Please contact the author if you find a new bug. The most recent
 version of primesieve can be retrieved from its Subversion
-repository, see http://code.google.com/p/primesieve/source/checkout
+repository:
+$ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve-read-only
 
 Fixed bugs
 ==========
@@ -29,7 +30,7 @@ Fixed bugs
    >> FIXED in version 2.2, committed on the 9th May 2011
 
 2. Prime numbers preceding the startNumber might be counted and
-   printed:
+   printed e.g.:
    > primesieve 1000007999999999 1000007999999999
    Sieve size set to 64 KiloBytes
    100%
@@ -40,7 +41,7 @@ Fixed bugs
    >> Thanks to Andrey Kulsha for bug reporting
 
 1. The console version of primesieve 1.0 produces wrong status output
-   in some cases:
+   in some cases e.g.:
    > primesieve 10000000000000000 10000000000000001 -s 256
    Sieve size set to 256 KiloBytes
    100%966296%
