@@ -4,7 +4,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010 
-# Last modified:   10 May 2011
+# Last modified:   24 May 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -16,9 +16,9 @@ OUTDIR = out
 CXX = g++
 
 # Oracle Solaris Studio (former Sun Studio)
+# To use OpenMP with sunCC you may need to set OMP_NUM_THREADS
 ifeq ($(CXX),sunCC)
-  CXXFLAGS += +w -xopenmp -O5 -xarch=sse4_2
-  CXXFLAGS += -xipo -xrestrict -xalias_level=compatible
+  CXXFLAGS += +w -fast -xopenmp -xipo -xrestrict -xalias_level=compatible
 
 # Intel C++ Compiler
 else ifeq ($(CXX),icpc)
@@ -70,3 +70,4 @@ $(OUTDIR)/%.o: $(MAINDIR)/%.cpp
 clean:
 	rm $(OBJS)
 	rm $(TARGET)
+
