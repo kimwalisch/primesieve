@@ -20,6 +20,7 @@
 /** 
  * @file  main.cpp
  * @brief Command-line version of primesieve, multi-threaded (OpenMP).
+ * @see   http://primesieve.googlecode.com
  *
  * primesieve is a highly optimized implementation of the sieve of
  * Eratosthenes that generates prime numbers and prime k-tuplets (twin
@@ -47,17 +48,13 @@ namespace {
   const uint32_t L1_CACHE_SIZE = 64;
   const uint32_t L2_CACHE_SIZE = 512;
   const uint64_t L2_THRESHOLD = ipow(10, 13);
-
   bool quietMode = false;
   bool showExpressionResults = false;
-
   uint64_t numbers[2] = {0, 0};  /* start and stop number for sieving */
   uint32_t sieveSize = 0;        /* sieve size in KiloBytes */
   uint32_t flags = 0;            /* settings */
-
   int maxThreads = ParallelPrimeSieve::getMaxThreads();
   int threads    = ParallelPrimeSieve::USE_IDEAL_NUM_THREADS;
-
   std::string primes[7] = { "Prime numbers", "Twin primes", "Prime triplets",
     "Prime quadruplets", "Prime quintuplets", "Prime sextuplets",
     "Prime septuplets" };
@@ -101,9 +98,10 @@ void help() {
 }
 
 bool isDigits(const std::string &str) {
+  const std::string digits("0123456789");
   if (str.length() == 0)
     return false;
-  return str.find_first_not_of("0123456789") == std::string::npos;
+  return str.find_first_not_of(digits) == std::string::npos;
 }
 
 /**
@@ -111,14 +109,15 @@ bool isDigits(const std::string &str) {
  * @see help(void)
  */
 void processOptions(int argc, char* argv[]) {
+  ExpressionParser<uint64_t> parser;
+  const std::string testOption("test");
+  std::string option;
+
   if (argc < 2 || argc > 20)
     help();
-  ExpressionParser<uint64_t> parser;
-  int i = 1;
-
-  // process the START and STOP numbers
+  // get the START and STOP number
   if (argc > 2)
-    for (; i <= 2; i++) {
+    for (int i = 1; i <= 2; i++) {
       if (!parser.eval(argv[i])) {
         std::cerr << "Error: \"" << argv[i]  << "\" is not a valid arithmetic expression" << std::endl
                   << "Try `primesieve -help' for more information." << std::endl;
@@ -128,9 +127,8 @@ void processOptions(int argc, char* argv[]) {
       if (!isDigits(argv[i]))
         showExpressionResults = true;
     }
-
   // process the options ([OPTION]...)
-  for (; i < argc; i++) {
+  for (int i = 3; i < argc; i++) {
     char* c = argv[i];
     if (*c != '-' && *c != '/')
       help();
@@ -153,7 +151,8 @@ void processOptions(int argc, char* argv[]) {
                 sieveSize = static_cast<uint32_t> (parser.getResult());
                 sieveSize = nextHighestPowerOf2(sieveSize);
                 break;
-      case 't': if (std::string("test").compare(++argv[i]) == 0) {
+      case 't': option = ++argv[i];
+                if (option.compare(testOption) == 0) {
                   test();
                   std::exit(EXIT_SUCCESS);
                 }
@@ -178,7 +177,6 @@ int main(int argc, char* argv[]) {
   if (!quietMode && showExpressionResults)
     std::cout << std::setw(10) << "START" << " = " << numbers[0] << std::endl
               << std::setw(10) << "STOP"  << " = " << numbers[1]  << std::endl;
-
   // set default settings
   if ((flags & PrimeSieve::COUNT_FLAGS) == 0 && 
       (flags & PrimeSieve::PRINT_FLAGS) == 0)
@@ -198,7 +196,6 @@ int main(int argc, char* argv[]) {
     primeSieve.setSieveSize(sieveSize);
     primeSieve.setFlags(flags);
     primeSieve.setNumThreads(threads);
-
     if (!quietMode)
       std::cout << std::setw(10) << "Threads" << " = " << primeSieve.getNumThreads() << std::endl;
 
@@ -210,26 +207,23 @@ int main(int argc, char* argv[]) {
         (flags & PrimeSieve::PRINT_FLAGS) &&
         (flags & PrimeSieve::COUNT_FLAGS) ))
       std::cout << std::endl;
-
     // get max output width
     std::size_t width = (quietMode) ?0 :12;
     for (int i = 0; i < PrimeSieve::COUNTS_SIZE; i++)
       if ((flags & (PrimeSieve::COUNT_PRIMES << i)) && width < primes[i].length())
         width = primes[i].length();
-
     // print prime count results
     for (int i = 0; i < PrimeSieve::COUNTS_SIZE; i++)
       if (flags & (PrimeSieve::COUNT_PRIMES << i))
         std::cout << std::setw(static_cast<int> (width)) << primes[i] << " : "
                   << primeSieve.getCounts(i) << std::endl;
-
     // print time elapsed
     if (!quietMode)
       std::cout << std::setw(static_cast<int> (width)) << "Time elapsed" << " : "
                 << primeSieve.getTimeElapsed() << " sec" << std::endl;
   }
-  catch (std::exception& ex) {
-    std::cerr << "Error: " << ex.what() << std::endl
+  catch (std::exception& e) {
+    std::cerr << "Error: " << e.what() << std::endl
               << "Try `primesieve -help' for more information." << std::endl;
     std::exit(EXIT_FAILURE);
   }
