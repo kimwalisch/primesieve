@@ -29,14 +29,16 @@
 #include <cassert>
 
 /**
- * Operator Precedence Parser.
- * @brief   A simple expression parser with infix notation that
- *          operates on integers. ExpressionParser evaluates
- *          arithmetic expressions passed as string arguments and
- *          returns the result (see main.cpp for an example).
+ * ExpressionParser.
+ * @brief   ExpressionParser.h is a simple C++ operator precedence
+ *          parser with infix notation for integer arithmetic
+ *          expressions. Its eval(const std::string&) function
+ *          evaluates an arithmetic expression passed as string
+ *          argument, getResult() returns the corresponding result.
+ * @see     http://expressionparser.googlecode.com
  * @author  Kim Walisch, <kim.walisch@gmail.com>
- * @version 1.0
- * @date    January 2011
+ * @version 1.1
+ * @date    May, 24 2011
  *
  * == Supported operators ==
  *
@@ -79,10 +81,8 @@
  *
  * == About the algorithm used ==
  *
- * ExpressionParser is an operator-precedence parser that has been
- * ported to C++ from a Javascript parser published at:
+ * ExpressionParser has its roots in a JavaScript parser published at:
  * http://stackoverflow.com/questions/28256/equation-expression-parser-with-precedence/114961#114961
- *
  * The same author has also published an article about his operator
  * precedence algorithm at PerlMonks:
  * http://www.perlmonks.org/?node_id=554516
@@ -142,7 +142,7 @@ private:
    * stack if the operator on top of the stack has lower precedence.
    */
   std::stack<OperatorValue> opv_;
-  /// Result of the last expression
+  /// Result of the evaluated expression
   T result_;
   /// Maximum length for user input
   const std::size_t maxLength_;
@@ -171,7 +171,8 @@ private:
   T checkZero(T value) {
     if (value == 0) {
       assert(offset_ >= 2);
-      std::size_t division = expr_.find_last_of("/%", offset_-2);
+      const std::string divOperators("/%");
+      std::size_t division = expr_.find_last_of(divOperators, offset_-2);
       error_ << "Parser error: division by 0";
       if (division != std::string::npos)
         error_ << " (error token is \""
@@ -446,7 +447,8 @@ public:
    */
   std::string getErrorMessage(bool preamble = true) const {
     if (!preamble) {
-      std::size_t p = error_.str().find(": ");
+      const std::string colon(": ");
+      std::size_t p = error_.str().find(colon);
       if (p != std::string::npos)
         return error_.str().substr(p+2, error_.str().length()-(p+2));
     }
