@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       21 December 2010 
-# Last modified: 23 May 2011
+# Last modified: 25 May 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -16,6 +16,11 @@ $ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve-read-only
 
 Fixed bugs
 ==========
+
+5. PrimeSieve::sieve() was not declared virtual which caused
+   ParallelPrimeSieve to run single-threaded in some cases.
+
+   >> FIXED in version 2.2, committed on the 25th May 2011
 
 4. Fixed an OpenMP race condition in ParallelPrimeSieve.cpp which did
    only show up with the sunCC compiler.
