@@ -41,6 +41,7 @@ void test();
 #include <cstdlib>    /* std::exit(int) */
 #include <string>
 #include <cctype>     /* std::tolower(int) */
+#include <vector>
 
 namespace {
   // Unfortunately there is no easy way to get the CPU L1 and L2 cache
@@ -48,16 +49,25 @@ namespace {
   const uint32_t L1_CACHE_SIZE = 64;
   const uint32_t L2_CACHE_SIZE = 512;
   const uint64_t L2_THRESHOLD = ipow(10, 13);
+  
   bool quietMode = false;
   bool showExpressionResults = false;
-  uint64_t numbers[2] = {0, 0};  /* start and stop number for sieving */
-  uint32_t sieveSize = 0;        /* sieve size in KiloBytes */
-  uint32_t flags = 0;            /* settings */
+  
+  std::vector<uint64_t> numbers;  /* start and stop number for sieving */
+  uint32_t sieveSize = 0;         /* sieve size in KiloBytes */
+  uint32_t flags = 0;             /* settings */
+  
   int maxThreads = ParallelPrimeSieve::getMaxThreads();
   int threads    = ParallelPrimeSieve::USE_IDEAL_NUM_THREADS;
-  std::string primes[7] = { "Prime numbers", "Twin primes", "Prime triplets",
-    "Prime quadruplets", "Prime quintuplets", "Prime sextuplets",
-    "Prime septuplets" };
+
+  std::string primes[7] = {
+      "Prime numbers",
+      "Twin primes",
+      "Prime triplets",
+      "Prime quadruplets",
+      "Prime quintuplets", 
+      "Prime sextuplets",
+      "Prime septuplets"};
 }
 
 void version() {
@@ -99,7 +109,7 @@ void help() {
 
 bool isDigits(const std::string &str) {
   const std::string digits("0123456789");
-  if (str.length() == 0)
+  if (str.size() == 0)
     return false;
   return str.find_first_not_of(digits) == std::string::npos;
 }
@@ -111,28 +121,31 @@ bool isDigits(const std::string &str) {
 void processOptions(int argc, char* argv[]) {
   ExpressionParser<uint64_t> parser;
   const std::string testOption("test");
-  std::string option;
+  std::string arg;
 
   if (argc < 2 || argc > 20)
     help();
   // get the START and STOP number
   if (argc > 2)
-    for (int i = 1; i <= 2; i++) {
-      if (!parser.eval(argv[i])) {
-        std::cerr << "Error: \"" << argv[i]  << "\" is not a valid arithmetic expression" << std::endl
+    for (int i = 1; i < 3; i++) {
+      arg = argv[i];
+      if (!parser.eval(arg)) {
+        std::cerr << "Error: \"" << arg  << "\" is not a valid arithmetic expression" << std::endl
                   << "Try `primesieve -help' for more information." << std::endl;
         std::exit(EXIT_FAILURE);
       }
-      numbers[i-1] = parser.getResult();
-      if (!isDigits(argv[i]))
+      numbers.push_back(parser.getResult());
+      if (!isDigits(arg))
         showExpressionResults = true;
     }
+
   // process the options ([OPTION]...)
   for (int i = 3; i < argc; i++) {
     char* c = argv[i];
     if (*c != '-' && *c != '/')
       help();
-    switch (std::tolower(*(++c)++)) {
+    c++;
+    switch (std::tolower(*c++)) {
       case 'c': do {
                   if (*c < '1' || *c > '7')
                     help();
@@ -151,8 +164,8 @@ void processOptions(int argc, char* argv[]) {
                 sieveSize = static_cast<uint32_t> (parser.getResult());
                 sieveSize = nextHighestPowerOf2(sieveSize);
                 break;
-      case 't': option = ++argv[i];
-                if (option.compare(testOption) == 0) {
+      case 't': arg = &argv[i][1];
+                if (arg.compare(testOption) == 0) {
                   test();
                   std::exit(EXIT_SUCCESS);
                 }
@@ -176,7 +189,7 @@ int main(int argc, char* argv[]) {
   // display expression results
   if (!quietMode && showExpressionResults)
     std::cout << std::setw(10) << "START" << " = " << numbers[0] << std::endl
-              << std::setw(10) << "STOP"  << " = " << numbers[1]  << std::endl;
+              << std::setw(10) << "STOP"  << " = " << numbers[1] << std::endl;
   // set default settings
   if ((flags & PrimeSieve::COUNT_FLAGS) == 0 && 
       (flags & PrimeSieve::PRINT_FLAGS) == 0)
@@ -184,12 +197,11 @@ int main(int argc, char* argv[]) {
   if (!quietMode && (flags & PrimeSieve::PRINT_FLAGS) == 0)
     flags |= PrimeSieve::PRINT_STATUS;
   if (sieveSize == 0)
-    sieveSize = (numbers[1] < L2_THRESHOLD) ?L1_CACHE_SIZE :L2_CACHE_SIZE;
+    sieveSize = (numbers[1] < L2_THRESHOLD) ? L1_CACHE_SIZE : L2_CACHE_SIZE;
   if (!quietMode)
-    std::cout << std::setw(10) << "Sieve size" << " = " << sieveSize
-              << " KiloBytes" << std::endl;
+    std::cout << std::setw(10) << "Sieve size" << " = " << sieveSize << " KiloBytes" << std::endl;
+
   try {
-    // init primeSieve
     ParallelPrimeSieve primeSieve;
     primeSieve.setStartNumber(numbers[0]);
     primeSieve.setStopNumber(numbers[1]);
@@ -207,20 +219,20 @@ int main(int argc, char* argv[]) {
         (flags & PrimeSieve::PRINT_FLAGS) &&
         (flags & PrimeSieve::COUNT_FLAGS) ))
       std::cout << std::endl;
-    // get max output width
-    std::size_t width = (quietMode) ?0 :12;
+    // get max output size
+    std::size_t size = (quietMode) ? 0 : 12;
     for (int i = 0; i < PrimeSieve::COUNTS_SIZE; i++)
-      if ((flags & (PrimeSieve::COUNT_PRIMES << i)) && width < primes[i].length())
-        width = primes[i].length();
+      if ((flags & (PrimeSieve::COUNT_PRIMES << i)) && size < primes[i].size())
+        size = primes[i].size();
     // print prime count results
     for (int i = 0; i < PrimeSieve::COUNTS_SIZE; i++)
       if (flags & (PrimeSieve::COUNT_PRIMES << i))
-        std::cout << std::setw(static_cast<int> (width)) << primes[i] << " : "
-                  << primeSieve.getCounts(i) << std::endl;
+        std::cout << std::setw(static_cast<int> (size)) << primes[i] << " : "
+            << primeSieve.getCounts(i) << std::endl;
     // print time elapsed
     if (!quietMode)
-      std::cout << std::setw(static_cast<int> (width)) << "Time elapsed" << " : "
-                << primeSieve.getTimeElapsed() << " sec" << std::endl;
+      std::cout << std::setw(static_cast<int> (size)) << "Time elapsed" << " : "
+          << primeSieve.getTimeElapsed() << " sec" << std::endl;
   }
   catch (std::exception& e) {
     std::cerr << "Error: " << e.what() << std::endl
