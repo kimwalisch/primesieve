@@ -123,67 +123,59 @@ uint64_t PrimeSieve::getPrimeCount(uint64_t startNumber, uint64_t stopNumber) {
 }
 
 /**
- * Get the count of prime numbers between startNumber and stopNumber
- * after having called sieve().
+ * Get the count of prime numbers after sieve().
  */
 uint64_t PrimeSieve::getPrimeCount() const {
   return counts_[0];
 }
 
 /**
- * Get the count of twin primes between startNumber and stopNumber
- * after having called sieve().
+ * Get the count of twin primes after sieve().
  */
 uint64_t PrimeSieve::getTwinCount() const {
   return counts_[1];
 }
 
 /**
- * Get the count of prime triplets between startNumber and stopNumber
- * after having called sieve().
+ * Get the count of prime triplets after sieve().
  */
 uint64_t PrimeSieve::getTripletCount() const {
   return counts_[2];
 }
 
 /**
- * Get the count of prime quadruplets between startNumber and
- * stopNumber after having called sieve().
+ * Get the count of prime quadruplets after sieve().
  */
 uint64_t PrimeSieve::getQuadrupletCount() const {
   return counts_[3];
 }
 
 /**
- * Get the count of prime quintuplets between startNumber and
- * stopNumber after having called sieve().
+ * Get the count of prime quintuplets after sieve().
  */
 uint64_t PrimeSieve::getQuintupletCount() const {
   return counts_[4];
 }
 
 /**
- * Get the count of prime sextuplets between startNumber and
- * stopNumber after having called sieve().
+ * Get the count of prime sextuplets after sieve().
  */
 uint64_t PrimeSieve::getSextupletCount() const {
   return counts_[5];
 }
 
 /**
- * Get the count of prime septuplets between startNumber and
- * stopNumber after having called sieve().
+ * Get the count of prime septuplets after sieve().
  */
 uint64_t PrimeSieve::getSeptupletCount() const {
   return counts_[6];
 }
 
 /**
- * Get the count of prime numbers or prime k-tuplets between
- * startNumber and stopNumber after having called sieve().
- * e.g type = 0 for prime numbers,
- *     type = 1 for twin primes,
- *     type = 2 for prime triplets,
+ * Get the count of prime numbers or prime k-tuplets after sieve().
+ * e.g type = 0 : prime number count,
+ *     type = 1 : twin prime count,
+ *     type = 2 : prime triplet count,
  *     ...
  * @param type <= 7
  */
@@ -194,7 +186,7 @@ uint64_t PrimeSieve::getCounts(uint32_t type) const {
 }
 
 /**
- * Get the time elapsed in seconds of the last sieve session.
+ * Get the time elapsed in seconds of sieve().
  */
 double PrimeSieve::getTimeElapsed() const {
   return timeElapsed_;
@@ -245,6 +237,7 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
 
 /**
  * Set public flags (settings).
+ * @see   ../docs/USAGE_EXAMPLES
  * @param flags
  *   PrimeSieve::COUNT_PRIMES      OR (bitwise '|')
  *   PrimeSieve::COUNT_TWINS       OR
@@ -277,20 +270,17 @@ void PrimeSieve::reset() {
 }
 
 /**
- * Print the status (in percent) of the sieving process
- * to the standard output.
+ * Calculate the current status (in percent) of sieve().
  */
 void PrimeSieve::doStatus(uint64_t segment) {
   segments_ += segment;
-  double old = status_;
-  status_ = static_cast<double> (segments_) /
-            static_cast<double> (1 + stopNumber_ - startNumber_) * 100.0;
-  if (static_cast<int> (status_) > 99)
+  int old = static_cast<int> (status_);
+  status_ = static_cast<double> (segments_) / (1 + stopNumber_ - startNumber_) * 100.0;
+  int sta = static_cast<int> (status_);
+  if (sta >= 100)
     status_ = 100.0;
-  if ((flags_ & PRINT_STATUS) &&
-      static_cast<int> (status_) > static_cast<int> (old)) {
-    std::cout << '\r' << static_cast<int> (status_) << '%' << std::flush;
-  }
+  if ((flags_ & PRINT_STATUS) && sta > old)
+    std::cout << '\r' << sta << '%' << std::flush;
 }
 
 void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type, 
@@ -365,7 +355,7 @@ void PrimeSieve::sieve() {
     }
     primeNumberFinder.finish();
   }
-  // set status_ to 100.0 (percent)
+  // set status_ to 100.0 percent
   parent_->doStatus(10);
   timeElapsed_ = (static_cast<double> (std::clock()) - timeElapsed_) /
       static_cast<double> (CLOCKS_PER_SEC);
