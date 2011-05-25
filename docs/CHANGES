@@ -1,17 +1,17 @@
-New in version 2.2, 23/05/2011
+New in version 2.2, 25/05/2011
 ==============================
 
-1. Added prime number generation functions to soe/PrimeSieve.
-   + void PrimeSieve::generatePrimes(uint64_t, uint64_t, void (*)(uint64_t))
-     calls a callback function for each generated prime number.
-   + void PrimeSieve::generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*)
-     calls an OOP style callback function for each prime number.
-2. Added a convenience function to count prime numbers.
-   + uint64_t PrimeSieve::getPrimeCount(uint64_t, uint64_t)
-3. The thread interface of ParallelPrimeSieve has been simplified.
-4. Fixed 2 bugs (see BUGS).
-5. Updated documentation.
-6. Code has been reviewed, some cleanup.
+1. Added the file docs/USAGE_EXAMPLES which shows how to use
+   PrimeSieve and ParallelPrimeSieve objects.
+2. Fixed 3 minor bugs (see BUGS).
+3. 10% initialization speedup due to enhancement in
+   ModuloWheel::setWheelPrime(uint64_t, uint32_t*, uint32_t*, uint32_t*)
+4. Added prime number generation functions and a convenience function
+   to count prime numbers to PrimeSieve.
+5. The thread interface of ParallelPrimeSieve has been simplified.
+6. The code now compiles and runs with the sunCC compiler.
+7. The code readability has been improved.
+8. The documentation has been updated.
 
 New in version 2.1, 11/04/2011
 ==============================
