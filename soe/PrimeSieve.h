@@ -90,7 +90,7 @@ public:
   void setStopNumber(uint64_t);
   void setSieveSize(uint32_t);
   void setFlags(uint32_t);
-  void sieve();
+  virtual void sieve();
 protected:
   /** Private flags (>= bit 20) for PrimeSieve. */
   enum {
