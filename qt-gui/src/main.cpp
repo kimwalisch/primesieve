@@ -27,47 +27,50 @@
 #include <iostream>
 
 /**
- * The primesieve GUI interface is launched if the user launches the
- * application by mouse click, a PrimeSieveProcess is launched if 
- * "PrimeSieveProcess" and a shared memory identifier (process id) are
+ * The primesieve GUI is launched if the user launches the application
+ * by mouse click or without arguments, a PrimeSieveProcess is
+ * launched if a process identifier and a shared memory identifier are
  * provided as arguments.
- * @param argv[1] "PrimeSieveProcess"
- * @param argv[2] Shared memory identifier
  * @see   PrimeSieveProcess.cpp
+ * @param argv[1] [process identifier]
+ * @param argv[2] [Shared memory identifier]
  */
 int main(int argc, char *argv[]) {
-  // PrimeSieveProcess
-  if (argc == 3 && QString(argv[1]).compare("PrimeSieveProcess") == 0) {
-    // open an existing and initialized shared memory
-    QSharedMemory sharedMemory(argv[2]);
-    if (!sharedMemory.attach()) {
-      std::cerr << "Unable to attach shared memory " << argv[2] << std::endl;
-      exit(EXIT_FAILURE);
-    }
-    // map the attached shared memory to the results structure
-    ParallelPrimeSieve::SharedMemoryPPS* sharedMemoryPPS =
-        static_cast<ParallelPrimeSieve::SharedMemoryPPS*> (sharedMemory.data());
-    try {
-      // initialize the ParallelPrimeSieve object with values from the
-      // shared memory provided by the primesieve GUI and start
-      // sieving
-      ParallelPrimeSieve primesieve;
-      primesieve.setSharedMemory(sharedMemoryPPS);
-      primesieve.sieve();
-    }
-    catch (std::exception& ex) {
+  if (argc == 3) {
+    QString psp("PrimeSieveProcess");
+    QString parent(argv[1]);
+    if (parent.compare(psp) == 0) {
+      // open an existing and initialized shared memory
+      QString id(argv[2]);
+      QSharedMemory sharedMemory(id);
+      if (!sharedMemory.attach()) {
+        std::cerr << "Unable to attach shared memory " << argv[2] << std::endl;
+        exit(EXIT_FAILURE);
+      }
+      // map the attached shared memory to the results structure
+      ParallelPrimeSieve::SharedMemoryPPS* sharedMemoryPPS =
+          static_cast<ParallelPrimeSieve::SharedMemoryPPS*> (sharedMemory.data());
+      try {
+        // initialize the ParallelPrimeSieve object with values from
+        // the shared memory provided by the primesieve GUI and start
+        // sieving
+        ParallelPrimeSieve primesieve;
+        primesieve.setSharedMemory(sharedMemoryPPS);
+        primesieve.sieve();
+      }
+      catch (std::exception& e) {
+        sharedMemory.detach();
+        std::cerr << "ParallelPrimeSieve error: " << e.what() << std::endl;
+        exit(EXIT_FAILURE);
+      }
       sharedMemory.detach();
-      std::cerr << "ParallelPrimeSieve error: " << ex.what() << std::endl;
-      exit(EXIT_FAILURE);
+      return 0;
     }
-    sharedMemory.detach();
-    // exit success
-    return 0;
   }
-  else { // Qt GUI interface
-    QApplication a(argc, argv);
-    PrimeSieveGUI w;
-    w.show();
-    return a.exec();
-  }
+  // Qt GUI interface
+  QApplication a(argc, argv);
+  PrimeSieveGUI w;
+  w.show();
+  return a.exec();
 }
+
