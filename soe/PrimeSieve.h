@@ -94,9 +94,9 @@ public:
 protected:
   /** Private flags (>= bit 20) for PrimeSieve. */
   enum {
-    CALLBACK_PRIMES_IMP = 1 << 20,
+    CALLBACK_PRIMES     = 1 << 20,
     CALLBACK_PRIMES_OOP = 1 << 21,
-    GENERATE_FLAGS      = PRINT_FLAGS | CALLBACK_PRIMES_IMP | CALLBACK_PRIMES_OOP,
+    GENERATE_FLAGS      = PRINT_FLAGS | CALLBACK_PRIMES | CALLBACK_PRIMES_OOP,
     SSE4_POPCNT         = 1 << 24
   };
   /** Lower bound for sieving. */
@@ -121,10 +121,10 @@ protected:
   void reset();
   virtual void doStatus(uint64_t);
 private:
-  /** Imperative style callback function for use with generatePrimes(). */
-  void (*callback_imp)(uint64_t);
-  /** Object-oriented programming style callback function for use with generatePrimes(). */
-  void (*callback_oop)(uint64_t, void*);
+  /** Callback function for use with generatePrimes(). */
+  void (*callback_)(uint64_t);
+  /** OOP style callback function for use with generatePrimes(). */
+  void (*callbackOOP_)(uint64_t, void*);
   void* cbObj_;
   /** Either this or the parent ParallelPrimeSieve object. */
   PrimeSieve* parent_;

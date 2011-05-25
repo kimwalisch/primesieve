@@ -48,8 +48,8 @@ PrimeSieve::PrimeSieve() :
 PrimeSieve::PrimeSieve(uint64_t startNumber, uint64_t stopNumber, 
     ParallelPrimeSieve* parent) :
   sieveSize_(parent->sieveSize_), flags_(parent->flags_), timeElapsed_(0.0),
-    callback_imp(parent->callback_imp),
-    callback_oop(parent->callback_oop),
+    callback_(parent->callback_),
+    callbackOOP_(parent->callbackOOP_),
     cbObj_(parent->cbObj_),
     parent_(parent) {
   this->setStartNumber(startNumber);
@@ -90,8 +90,8 @@ void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
     throw std::invalid_argument("callback must not be NULL");
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
-  flags_ = CALLBACK_PRIMES_IMP;
-  callback_imp = callback;
+  flags_ = CALLBACK_PRIMES;
+  callback_ = callback;
   this->sieve();
 }
 
@@ -106,7 +106,7 @@ void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
   flags_ = CALLBACK_PRIMES_OOP;
-  callback_oop = callback;
+  callbackOOP_ = callback;
   cbObj_ = cbObj;
   this->sieve();
 }
@@ -223,27 +223,24 @@ void PrimeSieve::setStopNumber(uint64_t stopNumber) {
 }
 
 /**
- * Set the size (in KiloBytes) of the sieve of Eratosthenes array.
+ * Set the size of the sieve of Eratosthenes array (in KiloBytes).
+ * Default sieveSize = 64 KB.
  * The best performance is achieved with a sieve size that matches
  * the CPU's L1 cache size (usually 32 or 64 KB) when sieving < 10^14
- * and a sieve size of the CPU's L2 cache size above.
+ * and a sieve size of the CPU's L2 cache size (e.g. 512 KB) above.
  *
- * Default sieveSize = 64 KiloBytes
- *
- * @pre sieveSize must be a power of 2,
- *      sieveSize >= 1 KiloByte,
- *      sieveSize <= 8192 KiloBytes.
+ * @pre    sieveSize >= 1 && <= 8192 KiloBytes.
+ * @remark sieveSize is rounded up to the next highest power of 2
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
-  // SieveOfEratosthenes lower sieve size limit AND 
-  // EratBig upper sieveSize limit
+  // SieveOfEratosthenes needs sieveSize >= 1 KB
+  // EratBig needs sieveSize <= 8192
   if (sieveSize < 1 || sieveSize > 8192)
     throw std::invalid_argument("sieve size must be >= 1 and <= 8192 KiloBytes");
-  // EratBig requires a power of 2 sieve size
-  if (!isPowerOf2(sieveSize))
-    throw std::invalid_argument("sieve size must be a power of 2");
-  // convert to Bytes for SieveOfEratosthenes objects
-  sieveSize_ = sieveSize * 1024;
+  // EratBig needs a power of 2 sieve size
+  sieveSize_ = nextHighestPowerOf2(sieveSize);
+  // convert KiloBytes to Bytes
+  sieveSize_ *= 1024;
 }
 
 /**
@@ -303,10 +300,10 @@ void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type,
       counts_[type]++;
     if (flags_ & (PRINT_PRIMES << type))
       std::cout << prime << std::endl;
-    else if (type == 0 && (flags_ & CALLBACK_PRIMES_IMP))
-      this->callback_imp(prime[0]-'0');
+    else if (type == 0 && (flags_ & CALLBACK_PRIMES))
+      this->callback_(prime[0]-'0');
     else if (type == 0 && (flags_ & CALLBACK_PRIMES_OOP))
-      this->callback_oop(prime[0]-'0', cbObj_);
+      this->callbackOOP_(prime[0]-'0', cbObj_);
   }
 }
 

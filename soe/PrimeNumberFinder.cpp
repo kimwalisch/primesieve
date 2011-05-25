@@ -161,16 +161,16 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   uint64_t byteValue = this->getLowerBound();
-  // call a C style callback function for each prime number
-  if (primeSieve_->flags_ & PrimeSieve::CALLBACK_PRIMES_IMP)
+  // call a callback function for each prime number
+  if (primeSieve_->flags_ & PrimeSieve::CALLBACK_PRIMES)
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
       for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
-        primeSieve_->callback_imp(byteValue + *bitValue);
+        primeSieve_->callback_(byteValue + *bitValue);
   // call an OOP style callback function for each prime number
   else if (primeSieve_->flags_ & PrimeSieve::CALLBACK_PRIMES_OOP)
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
       for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
-        primeSieve_->callback_oop(byteValue + *bitValue, primeSieve_->cbObj_);
+        primeSieve_->callbackOOP_(byteValue + *bitValue, primeSieve_->cbObj_);
   // print the prime numbers to stdout
   else if (primeSieve_->flags_ & PrimeSieve::PRINT_PRIMES)
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
