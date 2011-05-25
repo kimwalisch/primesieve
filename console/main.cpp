@@ -122,12 +122,13 @@ void processOptions(int argc, char* argv[]) {
   ExpressionParser<uint64_t> parser;
   const std::string testOption("test");
   std::string arg;
+  int i = 1;
 
   if (argc < 2 || argc > 20)
     help();
   // get the START and STOP number
   if (argc > 2)
-    for (int i = 1; i < 3; i++) {
+    for (; i <= 2; i++) {
       arg = argv[i];
       if (!parser.eval(arg)) {
         std::cerr << "Error: \"" << arg  << "\" is not a valid arithmetic expression" << std::endl
@@ -140,7 +141,7 @@ void processOptions(int argc, char* argv[]) {
     }
 
   // process the options ([OPTION]...)
-  for (int i = 3; i < argc; i++) {
+  for (; i < argc; i++) {
     char* c = argv[i];
     if (*c != '-' && *c != '/')
       help();
