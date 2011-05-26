@@ -178,6 +178,8 @@ void processOptions(int argc, char* argv[]) {
       default : help();
     }
   }
+  if (numbers.size() != 2)
+    help();
 }
 
 /**
