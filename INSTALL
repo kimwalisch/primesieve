@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010 
-# Last modified: 23 May 2011
+# Last modified: 26 May 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -21,13 +21,13 @@ How to build primesieve
 Open a terminal or Command Prompt cd into the primesieve directory and
 run:
 
-  1. GCC, GNU Compiler Collection
-     $ make
-
-  2. Microsoft Visual C++
+  1. Microsoft Visual C++
      > nmake -f Makefile.msvc
 
-  3. Other C++ compilers
+  2. GNU g++
+     $ make
+
+  3. Other C++ compilers (icpc, sunCC, llvm-g++, ...)
      $ make CXX=my_compiler
 
   The above make/nmake command compiles the primesieve binary to ./out
