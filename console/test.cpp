@@ -30,7 +30,6 @@
 #include <iomanip>
 #include <cstdlib>
 #include <exception>
-#include <ctime>
 #include <algorithm>
 
 /**
@@ -222,7 +221,6 @@ void testBigPrimes() {
  */
 void test() {
   std::cout.setf(std::ios::left);
-  std::clock_t begin = std::clock();
 
   // run tests
   testRandomIntervals();
