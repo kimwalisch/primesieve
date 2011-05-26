@@ -1,9 +1,9 @@
-New in version 2.2, 25/05/2011
+New in version 2.2, 26/05/2011
 ==============================
 
 1. Added the file docs/USAGE_EXAMPLES which shows how to use
    PrimeSieve and ParallelPrimeSieve objects.
-2. Fixed 3 minor bugs (see BUGS).
+2. Fixed 4 minor bugs (see BUGS).
 3. 10% initialization speedup due to enhancement in
    ModuloWheel::setWheelPrime(uint64_t, uint32_t*, uint32_t*, uint32_t*)
 4. Added prime number generation functions and a convenience function
