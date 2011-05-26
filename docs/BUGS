@@ -19,7 +19,7 @@ Fixed bugs
 
 6. The following options caused a segmentation fault in the console
    version of primesieve:
-   primesieve -q, primesieve -t 1, ...
+   primesieve -q, primesieve -p1, ...
 
    Error in console/main.cpp, processOptions(int, char**)
    >> FIXED in version 2.2, committed on the 26th May 2011
