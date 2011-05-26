@@ -66,9 +66,10 @@ namespace {
     
   /// Keeps the memory requirement below 1 GB in testBigPrimes()
   int maxThreads[8] = {32, 32, 32, 32, 32, 8, 4, 1};
-
   /// Set to true if one or more tests failed
   bool isError = false;
+  /// Time elapsed in seconds of all sieving tests
+  double seconds = 0.0;
 }
 
 /**
@@ -99,12 +100,12 @@ void testRandomIntervals() {
 
   try {
     std::srand(static_cast<unsigned int> (std::time(0)));
-    ParallelPrimeSieve primeSieve;
-    primeSieve.setStartNumber(lowerBound - 1);
-    primeSieve.setStopNumber(lowerBound - 1);
-    primeSieve.setFlags(PrimeSieve::COUNT_PRIMES);
+    ParallelPrimeSieve pps;
+    pps.setStartNumber(lowerBound - 1);
+    pps.setStopNumber(lowerBound - 1);
+    pps.setFlags(ParallelPrimeSieve::COUNT_PRIMES);
 
-    while (primeSieve.getStopNumber() < upperBound) {
+    while (pps.getStopNumber() < upperBound) {
       // generate a rondom 64 bit integer
       uint64_t rand64 = 1;
       while (rand64 < UINT32_MAX)
@@ -114,26 +115,26 @@ void testRandomIntervals() {
       // generate a random sieve size >= 1 and <= 128
       uint32_t sieveSize = 1 << static_cast<int> (rand64 % 8);
 
-      // set up primeSieve for the next random interval
-      primeSieve.setStartNumber(primeSieve.getStopNumber() + 1);
-      primeSieve.setStopNumber(primeSieve.getStartNumber() + interval);
-      primeSieve.setSieveSize(sieveSize);
-      if (primeSieve.getStopNumber() > upperBound)
-        primeSieve.setStopNumber(upperBound);
+      // set up pps for the next random interval
+      pps.setStartNumber(pps.getStopNumber() + 1);
+      pps.setStopNumber(pps.getStartNumber() + interval);
+      pps.setSieveSize(sieveSize);
+      if (pps.getStopNumber() > upperBound)
+        pps.setStopNumber(upperBound);
       // start sieving primes
-      primeSieve.sieve();
-      // sum the prime count results
-      primeCount += primeSieve.getPrimeCount();
+      pps.sieve();
+      primeCount += pps.getPrimeCount();
+      seconds += pps.getTimeElapsed();
       std::cout << "\rRemaining chunk:           "
-                << "\rRemaining chunk: " << upperBound - primeSieve.getStopNumber()
+                << "\rRemaining chunk: " << upperBound - pps.getStopNumber()
                 << std::flush;
     }
     std::cout << std::endl;
     std::cout << "Prime count: " << std::setw(11) << primeCount;
     evaluateTest(primeCount == primeCounts[13]);
   }
-  catch (std::exception& ex) {
-    std::cerr << "Exception " << ex.what() << std::endl;
+  catch (std::exception& e) {
+    std::cerr << "Exception " << e.what() << std::endl;
     std::exit(EXIT_FAILURE);
   }
 }
@@ -146,30 +147,33 @@ void testRandomIntervals() {
 void testPix() {
   std::cout << "Calculate the prime-counting function pi(x)" << std::endl;
   try {
-    ParallelPrimeSieve primeSieve;
-    primeSieve.setStartNumber(0);
-    primeSieve.setStopNumber(0);
-    primeSieve.setSieveSize(32);
-    primeSieve.setFlags(PrimeSieve::COUNT_PRIMES);
+    ParallelPrimeSieve pps;
+    pps.setStartNumber(0);
+    pps.setStopNumber(0);
+    pps.setSieveSize(32);
+    pps.setFlags(pps.COUNT_PRIMES);
     uint64_t primeCount = 0;
 
     // calculate pi(x) for 10^x with x := 1 to 9
     for (int i = 0; i < 9; i++) {
-      primeCount += primeSieve.getPrimeCount(primeSieve.getStopNumber() + 1, ipow(10, i + 1));
+      primeCount += pps.getPrimeCount(pps.getStopNumber() + 1, ipow(10, i + 1));
+      seconds += pps.getTimeElapsed();
       std::cout << "pi(10^" << i + 1 << ")  = " << std::setw(12) << primeCount;
       evaluateTest(primeCount == primeCounts[i]);
     }
     // calculate pi(2^32)
-    primeCount += primeSieve.getPrimeCount(primeSieve.getStopNumber() + 1, ipow(2, 32));
+    primeCount += pps.getPrimeCount(pps.getStopNumber() + 1, ipow(2, 32));
+    seconds += pps.getTimeElapsed();
     std::cout << "pi(2^32)  = " << std::setw(12) << primeCount;
     evaluateTest(primeCount == primeCounts[9]);
     // calculate pi(10^10)
-    primeCount += primeSieve.getPrimeCount(primeSieve.getStopNumber() + 1, ipow(10, 10));
+    primeCount += pps.getPrimeCount(pps.getStopNumber() + 1, ipow(10, 10));
+    seconds += pps.getTimeElapsed();
     std::cout << "pi(10^10) = " << std::setw(12) << primeCount;
     evaluateTest(primeCount == primeCounts[10]);
   }
-  catch (std::exception& ex) {
-    std::cerr << "Exception " << ex.what() << std::endl;
+  catch (std::exception& e) {
+    std::cerr << "Exception " << e.what() << std::endl;
     std::exit(EXIT_FAILURE);
   }
 }
@@ -182,24 +186,24 @@ void testPix() {
  */
 void testBigPrimes() {
   try {
-    int flags = PrimeSieve::COUNT_PRIMES | PrimeSieve::PRINT_STATUS;
-    ParallelPrimeSieve primeSieve;
-    primeSieve.setSieveSize(512);
-    primeSieve.setFlags(flags);
+    ParallelPrimeSieve pps;
+    pps.setSieveSize(512);
+    pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
 
     for (int i = 0; i < 8; i++) {
-      primeSieve.setStartNumber(ipow(10, 12 + i));
-      primeSieve.setStopNumber(primeSieve.getStartNumber() + ipow(2, 32));
+      pps.setStartNumber(ipow(10, 12 + i));
+      pps.setStopNumber(pps.getStartNumber() + ipow(2, 32));
       std::cout << "Sieve an interval of 2^32 starting at 10^" << 12 + i << std::endl;
-      if (primeSieve.getNumThreads() > maxThreads[i])
-        primeSieve.setNumThreads(maxThreads[i]);
-      primeSieve.sieve();
-      std::cout << "\rPrime count: " << std::setw(11) << primeSieve.getPrimeCount();
-      evaluateTest(primeSieve.getPrimeCount() == primeCounts[11 + i]);
+      if (pps.getNumThreads() > maxThreads[i])
+        pps.setNumThreads(maxThreads[i]);
+      pps.sieve();
+      seconds += pps.getTimeElapsed();
+      std::cout << "\rPrime count: " << std::setw(11) << pps.getPrimeCount();
+      evaluateTest(pps.getPrimeCount() == primeCounts[11 + i]);
     }
   }
-  catch (std::exception& ex) {
-    std::cerr << "Exception " << ex.what() << std::endl;
+  catch (std::exception& e) {
+    std::cerr << "Exception " << e.what() << std::endl;
     std::exit(EXIT_FAILURE);
   }
 }
@@ -228,10 +232,7 @@ void test() {
   testBigPrimes();
   std::cout << std::endl;
 
-  std::cout << "Time elapsed: "
-            << static_cast<double> (std::clock() - begin) /  CLOCKS_PER_SEC
-            << " sec" << std::endl
-            << ((!isError ) ? "All tests passed SUCCESSFULLY!" 
-                            : "One or more tests FAILED!")
+  std::cout << "Time elapsed: " << seconds << " sec" << std::endl
+            << ((!isError ) ? "All tests passed SUCCESSFULLY!" : "One or more tests FAILED!")
             << std::endl;
 }
