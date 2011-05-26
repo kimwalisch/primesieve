@@ -15,32 +15,34 @@ MAINDIR = console
 OUTDIR = out
 CXX = g++
 
-# Oracle Solaris Studio (former Sun Studio)
+# sunCC : Oracle Solaris Studio
 ifeq ($(CXX),sunCC)
   $(warning sunCC: you might need to set OMP_NUM_THREADS to use OpenMP)
-  CXXFLAGS += +w -fast -xopenmp -xipo -xrestrict -xalias_level=compatible
+  CXXFLAGS += -xopenmp +w -fast -xipo -xrestrict -xalias_level=compatible
 
-# Intel C++ Compiler
+# icpc : Intel C++ Compiler
 else ifeq ($(CXX),icpc)
-  CXXFLAGS += -Wall -openmp -fast
+  CXXFLAGS += -openmp -Wall -fast
 
-# GCC, the GNU Compiler Collection
+# g++ : GNU Compiler Collection
 else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
-  # Mac OS X
+  # Apple - Mac OS X
   ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i apple),)
-    CXXFLAGS += -fopenmp -fast
+    CXXFLAGS += -fopenmp -Wall -fast
   else
-    CXXFLAGS += -fopenmp -O2 -Wall
+    CXXFLAGS += -fopenmp -Wall -O2
   endif
-  # Add POPCNT (SSE 4.2) support if using GCC >= 4.4
-  GCC_MAJOR := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
-  GCC_MINOR := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
+  # Add SSE4.2 POPCNT flag if using GCC >= 4.4
+  GCC_MAJOR   := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
+  GCC_MINOR   := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
   GCC_VERSION := $(shell echo $$(($(GCC_MAJOR)*10+$(GCC_MINOR))))
-  CXXFLAGS += $(shell if [ $(GCC_VERSION) -ge 44 ]; then echo -mpopcnt; fi)
+  ifneq ($(shell if [ $(GCC_VERSION) -ge 44 ]; then echo yes; fi),)
+    CXXFLAGS += -mpopcnt
+  endif
 
 # Other compilers
 else
-  $(warning unkown compiler: add OpenMP and POPCNT flags if supported)
+  $(warning unknown compiler: add OpenMP and SSE4.2 flags if supported)
   CXXFLAGS += -O2
 endif
 
