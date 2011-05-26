@@ -4,7 +4,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010 
-# Last modified:   24 May 2011
+# Last modified:   26 May 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -16,8 +16,8 @@ OUTDIR = out
 CXX = g++
 
 # Oracle Solaris Studio (former Sun Studio)
-# To use OpenMP with sunCC you may need to set OMP_NUM_THREADS
 ifeq ($(CXX),sunCC)
+  $(warning sunCC: you might need to set OMP_NUM_THREADS to use OpenMP)
   CXXFLAGS += +w -fast -xopenmp -xipo -xrestrict -xalias_level=compatible
 
 # Intel C++ Compiler
@@ -26,21 +26,21 @@ else ifeq ($(CXX),icpc)
 
 # GCC, the GNU Compiler Collection
 else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
-  CXXFLAGS += -fopenmp
   # Mac OS X
   ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i apple),)
-    CXXFLAGS += -fast
+    CXXFLAGS += -fopenmp -fast
   else
-    CXXFLAGS += -O2 -Wall
+    CXXFLAGS += -fopenmp -O2 -Wall
   endif
+  # Add POPCNT (SSE 4.2) support if using GCC >= 4.4
   GCC_MAJOR := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
   GCC_MINOR := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
   GCC_VERSION := $(shell echo $$(($(GCC_MAJOR)*10+$(GCC_MINOR))))
-  # Add POPCNT (SSE 4.2) support if using GCC >= 4.4
   CXXFLAGS += $(shell if [ $(GCC_VERSION) -ge 44 ]; then echo -mpopcnt; fi)
 
-# Unkown compiler, add OpenMP flag if supported
+# Other compilers
 else
+  $(warning unkown compiler: add OpenMP and POPCNT flags if supported)
   CXXFLAGS += -O2
 endif
 
@@ -70,4 +70,3 @@ $(OUTDIR)/%.o: $(MAINDIR)/%.cpp
 clean:
 	rm $(OBJS)
 	rm $(TARGET)
-
