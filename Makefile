@@ -4,7 +4,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010 
-# Last modified:   26 May 2011
+# Last modified:   27 May 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -17,7 +17,7 @@ CXX = g++
 
 # sunCC : Oracle Solaris Studio
 ifeq ($(CXX),sunCC)
-  $(warning sunCC: you might need to set OMP_NUM_THREADS to use OpenMP)
+  $(warning $(CXX): you might need to set OMP_NUM_THREADS for OpenMP)
   CXXFLAGS += -xopenmp +w -fast -xipo -xrestrict -xalias_level=compatible
 
 # icpc : Intel C++ Compiler
@@ -26,23 +26,23 @@ else ifeq ($(CXX),icpc)
 
 # g++ : GNU Compiler Collection
 else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
-  # Apple - Mac OS X
+  # Apple - Mac OS
   ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i apple),)
     CXXFLAGS += -fopenmp -Wall -fast
   else
     CXXFLAGS += -fopenmp -Wall -O2
-  endif
-  # Add SSE4.2 POPCNT flag if using GCC >= 4.4
-  GCC_MAJOR   := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
-  GCC_MINOR   := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
-  GCC_VERSION := $(shell echo $$(($(GCC_MAJOR)*10+$(GCC_MINOR))))
-  ifneq ($(shell if [ $(GCC_VERSION) -ge 44 ]; then echo yes; fi),)
-    CXXFLAGS += -mpopcnt
+    # Add SSE4.2 POPCNT flag if using GCC >= 4.4
+    GCC_MAJ := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
+    GCC_MIN := $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
+    GCC_VER := $(shell echo $$(($(GCC_MAJ)*10+$(GCC_MIN))))
+    ifneq ($(shell if [ $(GCC_VER) -ge 44 ]; then echo yes; fi),)
+      CXXFLAGS  += -mpopcnt
+    endif
   endif
 
 # Other compilers
 else
-  $(warning unknown compiler: add OpenMP and SSE4.2 flags if supported)
+  $(warning $(CXX): add OpenMP and SSE4.2 flags if supported)
   CXXFLAGS += -O2
 endif
 
