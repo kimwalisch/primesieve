@@ -1,4 +1,4 @@
-May 26, 2011
+May 27, 2011
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -41,7 +41,7 @@ int main() {
 /****************************************************************************/
 // 2. Generate prime numbers (OOP)
 //    MyClass::doIt() generates the prime numbers up to 1000 and
-//    stores them into the private myPrimes_ variable
+//    stores them into the private primes_ variable
 
 #include "soe/PrimeSieve.h"
 #include <stdint.h>
@@ -51,12 +51,12 @@ class MyClass {
 public:
   void doIt() {
     PrimeSieve ps;
-    ps.generatePrimes(2, 1000, storePrimes, (void*)this);
+    ps.generatePrimes(2, 1000, myPrimes, (void*) this);
   }
 private:
-  std::vector<uint64_t> myPrimes_;
-  static void storePrimes(uint64_t prime, void* myObj) {
-    ((MyClass*)myObj)->myPrimes_.push_back(prime);
+  std::vector<uint64_t> primes_;
+  static void myPrimes(uint64_t prime, void* myObj) {
+    ((MyClass*) myObj)->primes_.push_back(prime);
   }
 };
 
@@ -69,7 +69,7 @@ private:
 
 int main() {
   PrimeSieve ps;
-  uint64_t primeCount = ps.getPrimeCount(2,1000);
+  uint64_t primeCount = ps.getPrimeCount(2, 1000);
   return 0;
 }
 
@@ -83,7 +83,7 @@ int main() {
 int main() {
   ParallelPrimeSieve pps;
   pps.setNumThreads(4);
-  uint64_t primeCount = pps.getPrimeCount(2,(unsigned)(1E9));
+  uint64_t primeCount = pps.getPrimeCount(2, (int) 1E9);
   return 0;
 }
 
@@ -97,9 +97,9 @@ int main() {
 
 int main() {
   ParallelPrimeSieve pps;
-  pps.setStartNumber((uint64_t)(1E11));
-  pps.setStopNumber(2*(uint64_t)(1E11));
-  pps.setFlags(ParallelPrimeSieve::COUNT_TWINS);
+  pps.setStartNumber((uint64_t) 1E11);
+  pps.setStopNumber(2*(uint64_t) 1E11);
+  pps.setFlags(pps.COUNT_TWINS);
   pps.sieve();
   uint64_t twinCount = pps.getTwinCount();
   return 0;
@@ -115,8 +115,8 @@ int main() {
 int main() {
   PrimeSieve ps;
   ps.setStartNumber(0);
-  ps.setStopNumber((unsigned)(1E8));
-  ps.setFlags(PrimeSieve::PRINT_TRIPLETS);
+  ps.setStopNumber((int) 1E8);
+  ps.setFlags(ps.PRINT_TRIPLETS);
   ps.sieve();
   return 0;
 }
@@ -136,6 +136,6 @@ int main() {
   PrimeSieve ps;
   // set the sieve size in KiloBytes
   ps.setSieveSize(512);
-  uint64_t count = ps.getPrimeCount((uint64_t)(1E15),(uint64_t)(1E15+1E11));
+  uint64_t count = ps.getPrimeCount((uint64_t) 1E15, (uint64_t)(1E15+1E11));
   return 0;
 }
