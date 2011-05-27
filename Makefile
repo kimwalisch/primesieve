@@ -18,7 +18,8 @@ CXX = g++
 # sunCC : Oracle Solaris Studio
 ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE 'sun'),)
   $(warning $(CXX): you might need to set OMP_NUM_THREADS for OpenMP)
-  CXXFLAGS += -xopenmp +w -fast -xipo -xrestrict -xalias_level=compatible
+  CXXFLAGS += -xopenmp +w -fast
+  CXXFLAGS += -xipo -xrestrict -xalias_level=compatible
 
 # icpc : Intel C++ Compiler
 else ifeq ($(CXX),icpc)
