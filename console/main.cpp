@@ -209,9 +209,9 @@ int main(int argc, char* argv[]) {
     if (!quietMode)
       std::cout << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize() << " KiloBytes" << std::endl
                 << std::setw(10) << "Threads" << " = " << pps.getNumThreads() << std::endl;
+
     // start sieving primes
     pps.sieve();
-
     if ((flags & pps.PRINT_STATUS) || (
         (flags & pps.PRINT_FLAGS) &&
         (flags & pps.COUNT_FLAGS)))
