@@ -275,12 +275,13 @@ void PrimeSieve::reset() {
 void PrimeSieve::doStatus(uint64_t segment) {
   segments_ += segment;
   int old = static_cast<int> (status_);
-  status_ = static_cast<double> (segments_) / (1 + stopNumber_ - startNumber_) * 100.0;
-  int sta = static_cast<int> (status_);
-  if (sta >= 100)
-    status_ = 100.0;
-  if ((flags_ & PRINT_STATUS) && sta > old)
-    std::cout << '\r' << sta << '%' << std::flush;
+  status_ = std::min<double>(100.0, (static_cast<double> (segments_) / 
+      (1 + stopNumber_ - startNumber_)) * 100.0);
+  if (flags_ & PRINT_STATUS) {
+    int status = static_cast<int> (status_);
+    if (status > old)
+      std::cout << '\r' << status << '%' << std::flush;
+  }
 }
 
 void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type, 
