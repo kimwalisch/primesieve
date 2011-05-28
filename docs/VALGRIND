@@ -1,19 +1,21 @@
-May, 23 2011
+May, 29 2011
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-I have successfully tested the primesieve-2.0 sources (GCC 4.2,
-Mac OS X 10.6) with Valgrind 3.6.1. Valgrind is an analysis tool for
+I have successfully tested the primesieve-2.2 sources (GCC 4.2,
+Mac OS X 10.6) with Valgrind 3.7.0. Valgrind is an analysis tool for
 Unix-like operating systems that can automatically detect many memory
 management bugs in programs (http://valgrind.org/). Here is the
 terminal log:
 
-???:primesieve-2.0 walki$ valgrind --tool=memcheck --leak-check=yes --dsymutil=yes out/./primesieve -test
-==13173== Memcheck, a memory error detector
-==13173== Copyright (C) 2002-2010, and GNU GPL'd, by Julian Seward et al.
-==13173== Using Valgrind-3.6.1 and LibVEX; rerun with -h for copyright info
-==13173== Command: out/./primesieve -test
-==13173==
+???:primesieve-2.2 ???$ valgrind --tool=memcheck --leak-check=yes --dsymutil=yes out/./primesieve -test
+==13974== Memcheck, a memory error detector
+==13974== Copyright (C) 2002-2010, and GNU GPL'd, by Julian Seward et al.
+==13974== Using Valgrind-3.7.0.SVN and LibVEX; rerun with -h for copyright info
+==13974== Command: out/./primesieve -test
+==13974==
+--13974-- run: /usr/bin/dsymutil "out/./primesieve"
+warning: no debug symbols in executable (-arch x86_64)
 Sieve random intervals starting at 10^14
 Remaining chunk: 0
 Prime count: 133235063  OK
@@ -48,23 +50,23 @@ Prime count: 103626726  OK
 Sieve an interval of 2^32 starting at 10^19
 Prime count: 98169972   OK
 
-Time elapsed: 15329.1 sec
+Time elapsed: 2097.82 sec
 All tests passed SUCCESSFULLY!
-==13173==
-==13173== HEAP SUMMARY:
-==13173==     in use at exit: 4,948 bytes in 7 blocks
-==13173==   total heap usage: 269,369 allocs, 269,362 frees,
-17,224,841,876 bytes allocated
-==13173==
-==13173== LEAK SUMMARY:
-==13173==    definitely lost: 0 bytes in 0 blocks
-==13173==    indirectly lost: 0 bytes in 0 blocks
-==13173==      possibly lost: 0 bytes in 0 blocks
-==13173==    still reachable: 4,948 bytes in 7 blocks
-==13173==         suppressed: 0 bytes in 0 blocks
-==13173== Reachable blocks (those to which a pointer was found) are not shown.
-==13173== To see them, rerun with: --leak-check=full --show-reachable=yes
-==13173==
-==13173== For counts of detected and suppressed errors, rerun with: -v
-==13173== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-???:primesieve-2.0 walki$
+==13974==
+==13974== HEAP SUMMARY:
+==13974==     in use at exit: 4,596 bytes in 9 blocks
+==13974==   total heap usage: 263,741 allocs, 263,732 frees,
+16,686,116,495 bytes allocated
+==13974==
+==13974== LEAK SUMMARY:
+==13974==    definitely lost: 0 bytes in 0 blocks
+==13974==    indirectly lost: 0 bytes in 0 blocks
+==13974==      possibly lost: 0 bytes in 0 blocks
+==13974==    still reachable: 4,508 bytes in 8 blocks
+==13974==         suppressed: 88 bytes in 1 blocks
+==13974== Reachable blocks (those to which a pointer was found) are not shown.
+==13974== To see them, rerun with: --leak-check=full --show-reachable=yes
+==13974==
+==13974== For counts of detected and suppressed errors, rerun with: -v
+==13974== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+???:primesieve-2.2 ???$
