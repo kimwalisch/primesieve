@@ -217,13 +217,13 @@ int main(int argc, char* argv[]) {
       std::cout << std::endl;
 
     const std::string primes[7] = {
-      "Prime numbers",
-      "Twin primes",
-      "Prime triplets",
-      "Prime quadruplets",
-      "Prime quintuplets", 
-      "Prime sextuplets",
-      "Prime septuplets"};
+        "Prime numbers",
+        "Twin primes",
+        "Prime triplets",
+        "Prime quadruplets",
+        "Prime quintuplets", 
+        "Prime sextuplets",
+        "Prime septuplets"};
 
     // get max string size
     std::size_t size = (quietMode) ? 0 : 12;
