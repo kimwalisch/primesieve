@@ -31,14 +31,13 @@
 #include <stdexcept>
 #include <vector>
 
-ParallelPrimeSieve::ParallelPrimeSieve() : sharedMemoryPPS_(NULL), 
-    numThreads_(USE_IDEAL_NUM_THREADS) {
+ParallelPrimeSieve::ParallelPrimeSieve() :
+  shm_(NULL), numThreads_(USE_IDEAL_NUM_THREADS) {
 }
 
 /**
  * Get the maximum number of threads allowed for sieving 
  * (omp_get_max_threads(), i.e. the number of logical CPU cores).
- * @see http://msdn.microsoft.com/en-us/library/ewb30w8w.aspx
  */
 int ParallelPrimeSieve::getMaxThreads() {
 #if defined(_OPENMP)
@@ -87,7 +86,7 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
 /**
  * Set the number of threads for sieving.
  * If numThreads is not valid (i.e. numThreads < 1 or 
- * > getMaxThreads()) numThreads is set to USE_IDEAL_NUM_THREADS.
+ * > getMaxThreads()) it is set to USE_IDEAL_NUM_THREADS.
  */
 void ParallelPrimeSieve::setNumThreads(int numThreads) {
   numThreads_ = (numThreads < 1 || numThreads > this->getMaxThreads())
@@ -100,24 +99,23 @@ void ParallelPrimeSieve::setNumThreads(int numThreads) {
  * the ParallelPrimeSieve object with values from a shared memory
  * segment.
  */
-void ParallelPrimeSieve::setSharedMemory(SharedMemoryPPS *sharedMemoryPPS) {
-  if (sharedMemoryPPS == NULL)
+void ParallelPrimeSieve::init(SharedMemory* shm) {
+  if (shm == NULL)
     throw std::invalid_argument("shared memory segment must not be NULL");
-  this->setStartNumber(sharedMemoryPPS->startNumber);
-  this->setStopNumber(sharedMemoryPPS->stopNumber);
-  this->setSieveSize(sharedMemoryPPS->sieveSize);
-  this->setFlags(sharedMemoryPPS->flags);
-  this->setNumThreads(sharedMemoryPPS->threads);
+  this->setStartNumber(shm->startNumber);
+  this->setStopNumber(shm->stopNumber);
+  this->setSieveSize(shm->sieveSize);
+  this->setFlags(shm->flags);
+  this->setNumThreads(shm->threads);
   // upon completion the sieving results will be communicated back to
   // the Qt GUI process via the shared memory
-  sharedMemoryPPS_ = sharedMemoryPPS;
+  shm_ = shm;
 }
 
 /**
- * Print the status (in percent) of the sieving process to the
- * standard output.
+ * Calculate the current status (in percent) of sieve().
  */
-void ParallelPrimeSieve::doStatus(uint64_t segment) {
+void ParallelPrimeSieve::doStatus(uint32_t segment) {
 #if defined(_OPENMP)
   #pragma omp critical (doStatus)
 #endif
@@ -125,8 +123,8 @@ void ParallelPrimeSieve::doStatus(uint64_t segment) {
     PrimeSieve::doStatus(segment);
     // communicate the current status via shared memory
     // to the Qt GUI process
-    if (sharedMemoryPPS_ != NULL)
-      sharedMemoryPPS_->status = status_;
+    if (shm_ != NULL)
+      shm_->status = status_;
   }
 }
 
@@ -141,17 +139,14 @@ void ParallelPrimeSieve::sieve() {
   int numThreads = this->getNumThreads();
   // 1 thread to print primes in sequential order
   if (numThreads > 1 && (flags_ & PRINT_FLAGS))
-    throw std::invalid_argument(
-        "printing is only allowed using a single thread");
+    throw std::invalid_argument("printing is only allowed using a single thread");
 
 #if defined(_OPENMP)
-  uint64_t threadInterval = (stopNumber_ - startNumber_) /
-      static_cast<unsigned> (numThreads);
-  if (threadInterval < 60 && numThreads > 1)
-    throw std::invalid_argument(
-        "use at least an interval of 60 for each thread");
-  timeElapsed_ = omp_get_wtime();
+  double t1 = omp_get_wtime();
   this->reset();
+  uint64_t threadInterval = (stopNumber_ - startNumber_) / static_cast<unsigned> (numThreads);
+  if (threadInterval < 60 && numThreads > 1)
+    throw std::invalid_argument("use at least an interval of 60 for each thread");
   // the threadInterval must be a multiple of 30
   if (threadInterval % 30 != 0)
     threadInterval += 30 - (threadInterval % 30);
@@ -163,8 +158,8 @@ void ParallelPrimeSieve::sieve() {
     tStop += 30 - (tStop % 30);
   tStop += 1;
 
-  // each thread uses its own PrimeSieve object to sieve
-  // a sub-interval of the overall interval
+  // each thread uses its own PrimeSieve object to sieve a
+  // sub-interval of the overall interval
   std::vector<PrimeSieve*> primeSieve;
   while (tStop < stopNumber_) {
     primeSieve.push_back(new PrimeSieve(tStart, tStop, this));
@@ -184,15 +179,15 @@ void ParallelPrimeSieve::sieve() {
     }
     delete primeSieve[i];
   }
-  timeElapsed_ = omp_get_wtime() - timeElapsed_;
-#else // #if !defined(_OPENMP) use single-threaded PrimeSieve
+  timeElapsed_ = omp_get_wtime() - t1;
+#else // #if !defined(_OPENMP)
   PrimeSieve::sieve();
 #endif
-  // communicate the sieving results via shared memory to the
-  // Qt GUI process
-  if (sharedMemoryPPS_ != NULL) {
+  // communicate the sieving results via shared memory
+  // segment to the Qt GUI process
+  if (shm_ != NULL) {
     for (int i = 0; i < COUNTS_SIZE; i++)
-      sharedMemoryPPS_->counts[i] = counts_[i];
-    sharedMemoryPPS_->timeElapsed = timeElapsed_;
+      shm_->counts[i] = counts_[i];
+    shm_->timeElapsed = timeElapsed_;
   }
 }

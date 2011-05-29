@@ -45,7 +45,7 @@ public:
    * communication between the GUI process and the ParallelPrimeSieve
    * process.
    */
-  struct SharedMemoryPPS {
+  struct SharedMemory {
     uint64_t startNumber;
     uint64_t stopNumber;
     uint32_t sieveSize;
@@ -66,12 +66,12 @@ public:
   static int getMaxThreads();
   int getNumThreads() const;
   void setNumThreads(int numThreads);
-  void setSharedMemory(SharedMemoryPPS*);
+  void init(SharedMemory*);
   void sieve();
 protected:
-  void doStatus(uint64_t);
+  void doStatus(uint32_t);
 private:
-  SharedMemoryPPS *sharedMemoryPPS_;
+  SharedMemory* shm_;
   int numThreads_;
   int getIdealNumThreads() const;
 };

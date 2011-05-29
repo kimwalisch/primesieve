@@ -47,16 +47,16 @@ int main(int argc, char *argv[]) {
         std::cerr << "Unable to attach shared memory " << argv[2] << std::endl;
         exit(EXIT_FAILURE);
       }
-      // map the attached shared memory to the results structure
-      ParallelPrimeSieve::SharedMemoryPPS* sharedMemoryPPS =
-          static_cast<ParallelPrimeSieve::SharedMemoryPPS*> (sharedMemory.data());
+      // map the attached shared memory to the shm segment
+      ParallelPrimeSieve::SharedMemory* shm =
+          static_cast<ParallelPrimeSieve::SharedMemory*> (sharedMemory.data());
       try {
         // initialize the ParallelPrimeSieve object with values from
-        // the shared memory provided by the primesieve GUI and start
-        // sieving
-        ParallelPrimeSieve primesieve;
-        primesieve.setSharedMemory(sharedMemoryPPS);
-        primesieve.sieve();
+        // the shared memory segment provided by the primesieve GUI
+        // and start sieving
+        ParallelPrimeSieve pps;
+        pps.init(shm);
+        pps.sieve();
       }
       catch (std::exception& e) {
         sharedMemory.detach();

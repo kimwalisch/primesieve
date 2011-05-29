@@ -92,7 +92,7 @@ public:
   void setFlags(uint32_t);
   virtual void sieve();
 protected:
-  /** Private flags (>= bit 20) for PrimeSieve. */
+  /** Private flags (bits >= 20) for PrimeSieve. */
   enum {
     CALLBACK_PRIMES     = 1 << 20,
     CALLBACK_PRIMES_OOP = 1 << 21,
@@ -119,7 +119,7 @@ protected:
   /** Time elapsed in seconds of the last sieve() call. */
   double timeElapsed_;
   void reset();
-  virtual void doStatus(uint64_t);
+  virtual void doStatus(uint32_t);
 private:
   /** Callback function for use with generatePrimes(). */
   void (*callback_)(uint64_t);
@@ -130,7 +130,7 @@ private:
   PrimeSieve* parent_;
   /** Sum of the segments that have been sieved so far. */
   uint64_t segments_;
-  void doSmallPrime(uint32_t, uint32_t, uint32_t, std::string);
+  void doSmallPrime(uint32_t, uint32_t, uint32_t, const std::string&);
 };
 
 #endif /* PRIMESIEVE_H */

@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
+#include <cassert>
 
 namespace {
   const uint32_t BYTE_SIZE = 256;
@@ -155,7 +156,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
 }
 
 /**
- * Reconstructs prime numbers or prime k-tuplets (twin primes, prime
+ * Reconstruct prime numbers or prime k-tuplets (twin primes, prime
  * triplets, ...) from 1 bits after that all multiples have been
  * crossed off in the sieve array.
  */
@@ -177,8 +178,8 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
       for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
         std::cout << byteValue + *bitValue << '\n';
   // print the prime k-tuplets to stdout
-  else 
-    for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
+  else {
+    for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE) {
       for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++) {
         std::cout << '(';
         uint32_t v = *bitValue;
@@ -189,13 +190,15 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
         }
         std::cout << byteValue + v << ")\n";
       }
+    }
+  }
 }
 
-void PrimeNumberFinder::analyseSieve(const uint8_t* sieve,
-    uint32_t sieveSize) {
+void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
   if (primeSieve_->flags_ & PrimeSieve::COUNT_FLAGS)
     this->count(sieve, sieveSize);
   if (primeSieve_->flags_ & PrimeSieve::GENERATE_FLAGS)
     this->generate(sieve, sieveSize);
+  assert(sieveSize <= UINT32_MAX / NUMBERS_PER_BYTE);
   primeSieve_->parent_->doStatus(sieveSize * NUMBERS_PER_BYTE);
 }

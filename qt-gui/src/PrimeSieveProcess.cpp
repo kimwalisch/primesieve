@@ -28,7 +28,8 @@
 #  include <unistd.h>
 #endif
 
-PrimeSieveProcess::PrimeSieveProcess(QObject* parent = 0) : QProcess(parent) {
+PrimeSieveProcess::PrimeSieveProcess(QObject* parent = 0) : 
+  QProcess(parent) {
   sharedMemory_.setParent(parent);
   sharedMemory_.setKey(QString::number(this->getProcessId()));
 }
@@ -59,15 +60,14 @@ int PrimeSieveProcess::getProcessId() {
  * ParallelPrimeSieve process.
  */
 void PrimeSieveProcess::createSharedMemory() {
-  // attach the shared memory segment
+  // attach the shared memory
   if (!sharedMemory_.isAttached() &&
-      !sharedMemory_.create(sizeof(sharedMemoryPPS_))) {
+      !sharedMemory_.create(sizeof(shm_))) {
     throw std::runtime_error(
         "Interprocess communication error, could not allocate shared memory.");
   }
-  // map the attached shared memory to the sharedMemoryPPS_ structure
-  sharedMemoryPPS_ = static_cast<ParallelPrimeSieve::SharedMemoryPPS*>
-      (sharedMemory_.data());
+  // map the attached shared memory to the shm_ segment
+  shm_ = static_cast<ParallelPrimeSieve::SharedMemory*> (sharedMemory_.data());
 }
 
 /**
@@ -77,28 +77,28 @@ void PrimeSieveProcess::createSharedMemory() {
 void PrimeSieveProcess::start(qulonglong startNumber, qulonglong stopNumber,
     int sieveSize, int flags, int threads) {
   this->createSharedMemory();
-  // initialize the shared memory
-  sharedMemoryPPS_->startNumber = startNumber;
-  sharedMemoryPPS_->stopNumber  = stopNumber;
-  sharedMemoryPPS_->sieveSize   = sieveSize;
-  sharedMemoryPPS_->flags       = flags;
-  sharedMemoryPPS_->threads     = threads;
+  // initialize the shared memory segment
+  shm_->startNumber = startNumber;
+  shm_->stopNumber  = stopNumber;
+  shm_->sieveSize   = sieveSize;
+  shm_->flags       = flags;
+  shm_->threads     = threads;
   for (int i = 0; i < COUNTS_SIZE; i++)
-    sharedMemoryPPS_->counts[i] = 0;
-  sharedMemoryPPS_->status      = 0.0;
-  sharedMemoryPPS_->timeElapsed = 0.0;
+    shm_->counts[i] = 0;
+  shm_->status      = 0.0;
+  shm_->timeElapsed = 0.0;
   // path + file name of the aplication
   QString path = QCoreApplication::applicationFilePath();
   // process arguments, see main.cpp
   QStringList args;
   args << "PrimeSieveProcess" << sharedMemory_.key();
-  // start a new ParallelPrimeSieve process
+  /// start a new ParallelPrimeSieve process
   /// @see main.cpp
   QProcess::start(path, args, QIODevice::ReadOnly);
 }
 
 bool PrimeSieveProcess::isFinished() {
-  return (sharedMemoryPPS_->status == 100.0);
+  return (shm_->status == 100.0);
 }
 
 /**
@@ -112,20 +112,20 @@ bool PrimeSieveProcess::isFinished() {
  *               5 = Count of prime sextuplets
  *               6 = Count of prime septuplets
  */
-qlonglong PrimeSieveProcess::getCounts(unsigned index) const {
-  return sharedMemoryPPS_->counts[index];
+qlonglong PrimeSieveProcess::getCounts(unsigned int index) const {
+  return shm_->counts[index];
 }
 
 /**
  * @return The sieving status in percent.
  */
 double PrimeSieveProcess::getStatus() const {
-  return sharedMemoryPPS_->status;
+  return shm_->status;
 }
 
 /**
  * @return The time elapsed in seconds (if sieving is finished).
  */
 double PrimeSieveProcess::getTimeElapsed() const {
-  return sharedMemoryPPS_->timeElapsed;
+  return shm_->timeElapsed;
 }

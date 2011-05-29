@@ -34,8 +34,7 @@
 
 PrimeSieve::PrimeSieve() :
   startNumber_(0), stopNumber_(0),
-    sieveSize_(defs::SIEVESIZE_PRIMENUMBERFINDER), flags_(COUNT_PRIMES),
-    timeElapsed_(0.0) {
+    sieveSize_(defs::SIEVESIZE_PRIMENUMBERFINDER), flags_(COUNT_PRIMES) {
   parent_ = this;
   this->reset();
 }
@@ -47,11 +46,9 @@ PrimeSieve::PrimeSieve() :
  */
 PrimeSieve::PrimeSieve(uint64_t startNumber, uint64_t stopNumber, 
     ParallelPrimeSieve* parent) :
-  sieveSize_(parent->sieveSize_), flags_(parent->flags_), timeElapsed_(0.0),
-    callback_(parent->callback_),
-    callbackOOP_(parent->callbackOOP_),
-    cbObj_(parent->cbObj_),
-    parent_(parent) {
+  sieveSize_(parent->sieveSize_), flags_(parent->flags_),
+    callback_(parent->callback_), callbackOOP_(parent->callbackOOP_),
+    cbObj_(parent->cbObj_), parent_(parent) {
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
   this->reset();
@@ -173,9 +170,9 @@ uint64_t PrimeSieve::getSeptupletCount() const {
 
 /**
  * Get the count of prime numbers or prime k-tuplets after sieve().
- * e.g type = 0 : prime number count,
- *     type = 1 : twin prime count,
- *     type = 2 : prime triplet count,
+ * e.g type = 0 : Count of prime numbers
+ *     type = 1 : Count of twin primes
+ *     type = 2 : Count of prime triplets
  *     ...
  * @param type <= 7
  */
@@ -229,7 +226,7 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
   // EratBig needs sieveSize <= 8192
   if (sieveSize < 1 || sieveSize > 8192)
     throw std::invalid_argument("sieve size must be >= 1 and <= 8192 KiloBytes");
-  // EratBig needs a power of 2 sieve size
+  // EratBig needs a power of 2 sieveSize
   sieveSize_ = nextHighestPowerOf2(sieveSize);
   // convert KiloBytes to Bytes
   sieveSize_ *= 1024;
@@ -266,13 +263,14 @@ void PrimeSieve::reset() {
   for (uint32_t i = 0; i < COUNTS_SIZE; i++)
     counts_[i] = 0;
   status_ = -1.0;
+  timeElapsed_ = 0.0;
   parent_->doStatus(0);
 }
 
 /**
  * Calculate the current status (in percent) of sieve().
  */
-void PrimeSieve::doStatus(uint64_t segment) {
+void PrimeSieve::doStatus(uint32_t segment) {
   segments_ += segment;
   int old = static_cast<int> (status_);
   status_ = std::min<double>(100.0, (static_cast<double> (segments_) / 
@@ -285,7 +283,7 @@ void PrimeSieve::doStatus(uint64_t segment) {
 }
 
 void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type, 
-    std::string prime) {
+    const std::string& prime) {
   if (startNumber_ <= low && stopNumber_ >= high) {
     if (flags_ & (COUNT_PRIMES << type))
       counts_[type]++;
@@ -303,10 +301,10 @@ void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type,
  * and stopNumber.
  */
 void PrimeSieve::sieve() {
+  clock_t t1 = std::clock();
+  this->reset();
   if (stopNumber_ < startNumber_)
     throw std::invalid_argument("STOP must be >= START");
-  timeElapsed_ = static_cast<double> (std::clock());
-  this->reset();
 
   // small primes have to be examined manually
   if (startNumber_ <= 5) {
@@ -358,6 +356,5 @@ void PrimeSieve::sieve() {
   }
   // set status_ to 100.0 percent
   parent_->doStatus(10);
-  timeElapsed_ = (static_cast<double> (std::clock()) - timeElapsed_) /
-      static_cast<double> (CLOCKS_PER_SEC);
+  timeElapsed_ = static_cast<double> (std::clock() - t1) / CLOCKS_PER_SEC;
 }

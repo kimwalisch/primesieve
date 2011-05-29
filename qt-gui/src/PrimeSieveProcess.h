@@ -46,13 +46,12 @@ public:
   double getStatus() const;
   double getTimeElapsed() const;
 private:
-  /// Shared memory for interprocess communication with the
-  /// Qt GUI process.
+  /// Shared memory for interprocess communication between the
+  /// Qt GUI process and the ParallelPrimeSieve process.
   QSharedMemory sharedMemory_;
-  /// Contains the settings for sieving, once the ParallelPrimeSieve
-  /// process has finished it writes its results back to the shared
-  /// memory.
-  ParallelPrimeSieve::SharedMemoryPPS* sharedMemoryPPS_;
+  /// Contains the settings (startNumber, stopNumber, sieveSize, ...)
+  /// for sieving, will be mapped to sharedMemory_
+  ParallelPrimeSieve::SharedMemory* shm_;
   void createSharedMemory();
   int getProcessId();
 };

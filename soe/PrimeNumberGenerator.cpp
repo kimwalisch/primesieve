@@ -86,7 +86,6 @@ void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
   }
 }
 
-void PrimeNumberGenerator::analyseSieve(const uint8_t* sieve, 
-    uint32_t sieveSize) {
+void PrimeNumberGenerator::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
   this->generate(sieve, sieveSize);
 }
