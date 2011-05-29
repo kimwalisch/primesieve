@@ -122,14 +122,13 @@ int processOptions(int argc, char* argv[]) {
   if (argc > 2) {
     // get the START and STOP number
     for (; i <= 2; i++) {
-      arg = argv[i];
-      if (!parser.eval(arg)) {
-        std::cerr << "Error: \"" << arg  << "\" is not a valid arithmetic expression" << std::endl
+      if (!parser.eval(argv[i])) {
+        std::cerr << "Error: \"" << argv[i]  << "\" is not a valid arithmetic expression" << std::endl
                   << "Try `primesieve -help' for more information." << std::endl;
         return OPTION_ERROR;
       }
       numbers.push_back(parser.getResult());
-      if (!isDigits(arg))
+      if (!isDigits(argv[i]))
         showParserResults = true;
     }
   }
