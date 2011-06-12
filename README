@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 12 June 2011
+# Last modified: 13 June 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -44,10 +44,10 @@ Contents
 ===============
 
 PrimeSieve objects use about:
-pi(n) * 8 Bytes + sieve size + 320 Kilobytes         (1)
+pi(n^0.5) * 8 Bytes + sieve size + 320 Kilobytes           (1)
 
 ParallelPrimeSieve objects use about:
-(1) * number of threads                              (2)
+(1) * number of threads                                    (2)
 
 4. Source Archive
 =================
@@ -103,7 +103,7 @@ ParallelPrimeSieve objects use about:
   * SieveOfEratosthenes.cpp (abstract class)
     Implementation of the segmented sieve of Eratosthenes using a bit
     array with 30 numbers per byte. Each byte of the sieve array holds
-    the numbers n * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}, 
+    the numbers i * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}, 
     this byte arrangement is convenient for prime k-tuplet sieving.
     The main function is SieveOfEratosthenes::sieve(uint32_t) it must
     be called consecutively for all prime numbers up to n^0.5 in order
