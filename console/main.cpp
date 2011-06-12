@@ -93,7 +93,7 @@ void help() {
 }
 
 void version() {
-  std::cout << "primesieve 2.2, <http://primesieve.googlecode.com>" << std::endl
+  std::cout << "primesieve 2.3, <http://primesieve.googlecode.com>" << std::endl
             << "Copyright (C) 2011 Kim Walisch" << std::endl
             << "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>." << std::endl
             << "This is free software: you are free to change and redistribute it." << std::endl
