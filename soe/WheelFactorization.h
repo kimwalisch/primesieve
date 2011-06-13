@@ -21,11 +21,10 @@
  * @file WheelFactorization.h
  * @brief Contains classes and structs related to wheel factorization.
  *
- * Wheel factorization is used to speed-up the sieve of Eratosthenes
- * by skipping multiples of small primes (i.e. 2, 3, 5 and 7 for a
- * modulo 210 wheel).
- * @see http://en.wikipedia.org/wiki/Wheel_factorization
- * @see http://primes.utm.edu/glossary/xpage/WheelFactorization.html
+ * Wheel factorization is used to skip multiples of small primes and
+ * thus speed up the sieve of Eratosthenes.
+ * http://en.wikipedia.org/wiki/Wheel_factorization
+ * http://primes.utm.edu/glossary/xpage/WheelFactorization.html
  */
 
 #ifndef WHEELFACTORIZATION_H
@@ -40,13 +39,12 @@
 #include <cassert>
 
 /**
- * A WheelPrime is a prime number <= sqrt(stopNumber) used for
- * sieving (called sievePrime_). Additionally each WheelPrime contains
- * a sieveIndex that determines the position within the
- * SieveOfEratosthenes array of the current multiple of sievePrime_
- * and a wheelIndex that is used to calculate the next multiple of
- * sievePrime_ using a modulo wheel.
- * @see http://en.wikipedia.org/wiki/Wheel_factorization
+ * WheelPrime objects are sieving primes <= n^0.5 for use with wheel
+ * factorization. EratSmall, EratMedium and EratBig use WheelPrimes to
+ * cross off multiples.
+ * Each WheelPrime contains the sieving prime (sievePrime_), the
+ * position of the next multiple within the SieveOfEratosthenes array
+ * (sieveIndex_) and an index for the wheel (wheelIndex_).
  */
 class WheelPrime {
 public:
@@ -69,15 +67,17 @@ public:
     index_ = wheelIndex << 23;
   }
   /**
-   * sievePrime_ = (primeNumber * 2) / 30; *2 is used to skip
-   * multiples of 2 and /30 is used as SieveOfEratosthenes uses 30
-   * numbers per byte.
+   * sievePrime_ = primeNumber / 15;
+   * /15 = *2/30, *2 is used to skip multiples of 2 and /30 is used as
+   * SieveOfEratosthenes objects use 30 numbers per byte.
+   * @see ModuloWheel::setWheelPrime(...)
    */
   uint32_t sievePrime_;
   /**
-   * index_ represents sieveIndex (23 bits) and wheelIndex (9 bits),
-   * packing wheelIndex and sieveIndex into the same 32 bit word
-   * reduces primesieve's memory requirement by 20%.
+   * sieveIndex_ = 23 least significant bits of index_.
+   * wheelIndex_ =  9 most significant bits of index_.
+   * Packing sieveIndex_ and wheelIndex_ into the same 32 bit word
+   * reduces primesieve's memory usage by 20%.
    */
   uint32_t index_;
 };
@@ -104,7 +104,6 @@ public:
   WheelPrime* wheelPrimeBegin() {
     return wheelPrime_;
   }
-  /** Pointer to the last WheelPrime within the Bucket. */
   WheelPrime* wheelPrimeEnd() {
     return &wheelPrime_[count_];
   }
@@ -128,21 +127,33 @@ private:
   WheelPrime wheelPrime_[SIZE];
 };
 
+/**
+ * In EratMedium and EratBig the wheel is implemented as a constant
+ * array of WheelElement objects.
+ * In Erat*::sieve() an array of WheelElements is used to cross off
+ * the current multiple of all WheelPrimes and to calculate their next
+ * multiple.
+ */
 struct WheelElement {
   /**
-   * Bitmask used with the '&' operator to unset the bit (within the
-   * SieveOfEratosthenes::sieve_ array) corresponding to the
-   * current multiple.
+   * Bitmask used with the '&' operator to unset the bit corresponding
+   * to the current multiple of a WheelPrime:
+   * SieveOfEratosthenes::sieve_[sieveIndex] &= unsetBit;
    */
   uint8_t unsetBit;
   /**
-   * Factor needed to calculate the next multiple of the current
-   * sievePrime.
+   * Factor used to calculate the next multiple of the a WheelPrime.
    */
   uint8_t nextMultipleFactor;
-  /** Overflow needed to correct sievePrime * nextMultipleFactor. */
+  /**
+   * Overflow needed to correct the next sieve index of a WheelPrime:
+   * sieveIndex_ = sievePrime_ * nextMultipleFactor + correct
+   */
   uint8_t correct;
-  /** next wheelIndex = current wheelIndex + next. */
+  /** 
+   * Used to calculate the next wheel index of a WheelPrime:
+   * wheelIndex_ = wheelIndex_ + next
+   */
    int8_t next;
 };
 
@@ -152,26 +163,29 @@ struct InitWheel {
 };
 
 /**
- * Used to calculate the first multiple >= startNumber of a sieving
- * prime and the modulo 30 wheel index of that multiple.
+ * Used to initialize a sieving prime for use with a modulo 30 wheel.
+ * This lookup table is used to calculate the first
+ * multiple >= startNumber_ that is not divisible by 2, 3 and 5 of a
+ * sieving prime and the wheel index of that multiple.
  */
 extern const InitWheel init30Wheel[30];
 /**
- * Used to calculate the first multiple >= startNumber of a sieving
- * prime and the modulo 210 wheel index of that multiple.
+ * Used to initialize a sieving prime for use with a modulo 210 wheel.
+ * This lookup table is used to calculate the first
+ * multiple >= startNumber_ that is not divisible by 2, 3, 5 and 7 of
+ * a sieving prime and the wheel index of that multiple.
  */
 extern const InitWheel init210Wheel[210];
 
 /**
- * Abstract class that is mainly used to initialize
- * prime numbers <= sqrt(stopNumber) needed for sieving for use with
- * wheel factorization.
+ * Abstract class that is used to initialize sieving primes <= n^0.5
+ * for use with wheel factorization.
  */
 template<uint32_t WHEEL_MODULO, uint32_t WHEEL_ELEMENTS,
     const InitWheel* INIT_WHEEL>
 class ModuloWheel {
 private:
-  /** Is used to assign a wheel index to each prime number. */
+  /** Used in the wheel index calculation of sieving primes. */
   static const uint8_t primeBitPosition_[30];
 protected:
   const uint64_t stopNumber_;
@@ -185,7 +199,7 @@ protected:
           << greatestWheelFactor + 1 << ".";
       throw std::overflow_error(error.str());
     }
-    // a sieveSize <= 2^28 allows wheels up to p(17)# without 32 bit
+    // a sieveSize <= 2^28 allows wheels up to W(17) without 32 bit
     // overflows of sieveIndex in Erat*::sieve()
     if (soe->getSieveSize() > (1u << 28))
       throw std::overflow_error("ModuloWheel: sieveSize must be <= 2^28");
@@ -193,13 +207,16 @@ protected:
   ~ModuloWheel() {
   }
   /**
-   * Sets primeNumber, sieveIndex and wheelIndex to be used as a
-   * wheelPrime.
-   * @brief  Calculates the first multiple of primeNumber that needs
-   *         to be eliminated and the index of the sieve and wheel
-   *         array of that multiple.
+   * Used to initialize sieving primes <= n^0.5 for use with wheel
+   * factorization.
+   * Calculates the first multiple >= startNumber_ that is not
+   * divisible by any of the wheel's primes (i.e. not a multiple of 2,
+   * 3 and 5 for a modulo 30 wheel) of primeNumber and the position
+   * within the SieveOfEratosthenes array (sieveIndex) of that
+   * multiple and the wheel index of that multiple.
+   * 
    * @remark The terms '+ 6' and '- 6' are corrections needed for
-   *         primes type n * 30 + 31.
+   *         primes type i*30 + 31.
    * @return true if the wheelPrime must be stored for sieving else
    *         false.
    */
@@ -219,7 +236,7 @@ protected:
         return false;
     }
     uint32_t index = static_cast<uint32_t> (quotient % WHEEL_MODULO);
-    // calculate the next multiple that is not divisible by one of the
+    // calculate the next multiple that is not divisible by any of the
     // wheel's primes (i.e. 2, 3 and 5 for a modulo 30 wheel)
     multiple += static_cast<uint64_t> (*primeNumber) * INIT_WHEEL[index].nextMultipleFactor;
     if (multiple > stopNumber_)
@@ -244,11 +261,12 @@ const uint8_t
         0xff, 0xff, 0xff, 0xff,    6 };
 
 /**
- * Uses wheel factorization to skip multiples of 2, 3 and 5.
- * Contains a modulo 30 wheel_ array.
+ * Implementation of a modulo 30 wheel (3rd wheel)
+ * EratSmall is derived from Modulo30Wheel.
  */
 class Modulo30Wheel: protected ModuloWheel<30, 8, init30Wheel> {
 protected:
+  /** @see WheelElement */
   static const WheelElement wheel_[8 * 8];
   Modulo30Wheel(const SieveOfEratosthenes* soe) :
     ModuloWheel<30, 8, init30Wheel> (soe) {
@@ -258,11 +276,13 @@ protected:
 };
 
 /**
- * Uses wheel factorization to skip multiples of 2, 3, 5 and 7.
- * Contains a modulo 210 wheel_ array.
+ * Implementation of a modulo 210 wheel (4th wheel).
+ * EratMedium and EratBig are derived from Modulo210Wheel and use its
+ * wheel_ array to skip multiples of 2, 3, 5 and 7.
  */
 class Modulo210Wheel: protected ModuloWheel<210, 48, init210Wheel> {
 protected:
+  /** @see WheelElement */
   static const WheelElement wheel_[48 * 8];
   Modulo210Wheel(const SieveOfEratosthenes* soe) :
     ModuloWheel<210, 48, init210Wheel> (soe) {
