@@ -128,10 +128,10 @@ private:
 };
 
 /**
- * In EratMedium and EratBig the wheel is implemented as a constant
+ * In EratMedium and EratBig the wheel is implemented using a constant
  * array of WheelElement objects.
  * In Erat*::sieve() an array of WheelElements is used to cross off
- * the current multiple of all WheelPrimes and to calculate their next
+ * the current multiple of WheelPrimes and to calculate their next
  * multiple.
  */
 struct WheelElement {
