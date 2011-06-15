@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 13 June 2011
+# Last modified: 15 June 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -25,10 +25,10 @@ Contents
 ========
 
   primesieve is a highly optimized C++ implementation of the sieve of
-  Eratosthenes that generates prime numbers and prime k-tuplets (twin
+  Eratosthenes which generates prime numbers and prime k-tuplets (twin
   primes, prime triplets, ...) in order up to 2^64 maximum.
   
-  homepage: http://primesieve.googlecode.com
+  Homepage: http://primesieve.googlecode.com
 
 2. Algorithm and Complexity
 ===========================
