@@ -44,7 +44,7 @@ Contents
 ===============
 
 PrimeSieve objects use about:
-pi(n^0.5) * 8 Bytes + sieve size + 320 Kilobytes           (1)
+pi(n^0.5) * 8 Bytes + sieve size + 350 Kilobytes           (1)
 
 ParallelPrimeSieve objects use about:
 (1) * number of threads                                    (2)
