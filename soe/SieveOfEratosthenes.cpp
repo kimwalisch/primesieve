@@ -33,11 +33,11 @@
 const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
 
 /**
- * @param startNumber A start number for prime sieving.
- * @param stopNumber  A stop number for prime sieving.
+ * @param startNumber A start number for sieving.
+ * @param stopNumber  A stop number for sieving.
  * @param sieveSize   A sieve size in bytes.
- * @param resetSieve  A ResetSieve object used to reset the sieve_
- *                    array.
+ * @param resetSieve  A ResetSieve object that is used to reset the
+ *                    sieve_ array.
  */
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
     uint64_t stopNumber, uint32_t sieveSize, ResetSieve* resetSieve) :
@@ -94,13 +94,13 @@ void SieveOfEratosthenes::initSieve() {
   uint32_t resetSize = (sieveSize_ < bytesToSieve) ? sieveSize_
       : static_cast<uint32_t> (bytesToSieve);
   resetSieve_->reset(sieve_, resetSize, &resetIndex_);
-  // correct reset() for numbers <= 31
+  // correct the first byte of the sieve_ for numbers <= 31
   if (startNumber_ <= resetSieve_->getLimit())
     sieve_[0] = 0xff;
 
   uint32_t startRemainder = this->getRemainder(startNumber_);
-  // eliminates the bits of the first byte representing numbers
-  // smaller than startNumber_
+  // unset the bits of the first byte corresponding to
+  // numbers < startNumber_
   uint32_t i = 0;
   while (i < 8 && bitValues_[i] < startRemainder)
     i++;
@@ -127,8 +127,8 @@ void SieveOfEratosthenes::initEratAlgorithms() {
 }
 
 /**
- * Use the erat* algorithms to cross-off the multiples of the current
- * segment.
+ * Use the erat* algorithms to cross-off the multiples within the
+ * current segment.
  */
 void SieveOfEratosthenes::crossOffMultiples() {
   if (eratSmall_ != NULL) {
@@ -142,9 +142,10 @@ void SieveOfEratosthenes::crossOffMultiples() {
 }
 
 /**
- * Use the segmented sieve of Eratosthenes to sieve up to
- * primeNumber^2. sieve(uint32_t) must be called consecutively for all
- * prime numbers up to stopNumber_^0.5.
+ * Implementation of the segmented sieve of Eratosthenes.
+ * sieve(uint32_t) must be called consecutively for all primes up to
+ * stopNumber_^0.5 in order to sieve the primes in the interval
+ * [startNumber_, stopNumber_].
  */
 void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
   assert(eratSmall_ != NULL && 
@@ -153,17 +154,15 @@ void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
   /// @remark '- 6' is a correction for primes of type n * 30 + 31
   const uint64_t primeSquared = isquare(primeNumber) - 6;
 
-  // do not enter this while loop until all primes required to sieve
-  // the next segment are present in the erat* algorithms
+  // the following while loop is entered if all primes required to
+  // sieve the next segment are present in the erat* objects
   while (lowerBound_ + sieveSize_ * NUMBERS_PER_BYTE < primeSquared) {
     this->crossOffMultiples();
     this->analyseSieve(sieve_, sieveSize_);
     resetSieve_->reset(sieve_, sieveSize_, &resetIndex_);
     lowerBound_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
-  // once a prime number has been added to one of the erat* algorithms
-  // below its multiples will be crossed-off in all subsequent
-  // segments
+  // add primeNumber to the appropriate erat* object
   if (primeNumber > eratSmall_->getLimit())
     if (primeNumber > eratMedium_->getLimit())
             eratBig_->addPrimeNumber(primeNumber, lowerBound_);
@@ -194,8 +193,8 @@ void SieveOfEratosthenes::finish() {
       == stopNumber_);
   // sieve the last segment
   this->crossOffMultiples();
-  // eliminates the bits of the last byte representing
-  // numbers greater than stopNumber_
+  // unset the bits of the last byte corresponding to
+  // numbers > stopNumber_
   for (uint32_t i = 0; i < 8; i++) {
     if (stopRemainder < bitValues_[i]) {
       sieve_[sieveSize_ - 1] &= 0xff >> (8 - i);
