@@ -21,8 +21,10 @@
  * @file defs.h 
  * @brief Macro definitions and constants that set the size of various
  *        arrays and limits within primesieve.
- * The values are optimized for CPUs with 32 to 64 KiloBytes of L1
- * Data Cache.
+ *
+ * The constants have been optimized for an Intel Core i5-670 3.46GHz
+ * (2 x 32 KB L1 Data Cache, 2 x 256 L2 Cache, 4 MB L3 Cache)
+ * from 2010.
  */
 
 #ifndef DEFS_H
@@ -59,10 +61,11 @@
  * @see http://en.wikipedia.org/wiki/SSE4#SSE4.2
  *
  * Successfully tested with:
- *    Microsoft Visual Studio 2010 (WIN32, WIN64),
- *    GNU G++ 4.5 (x86, x64),
- *    Intel C++ Compiler 12.0 (x86, x64),
- *    Oracle Solaris Studio 12 (x64).
+ *
+ *   Microsoft Visual Studio 2010 (WIN32, WIN64),
+ *   GNU G++ 4.5 (x86, x64),
+ *   Intel C++ Compiler 12.0 (x86, x64),
+ *   Oracle Solaris Studio 12 (x64).
  */
 #if (defined(_MSC_VER) || defined(__INTEL_COMPILER)) && (defined(_WIN64) || defined(_WIN32))
 #  if defined(_WIN64)
@@ -96,71 +99,80 @@
 
 namespace defs {
   /**
-   * (sieveSize * FACTOR_ERATSMALL) is the upper bound for sieving
-   * primes used with EratSmall.
-   * Default = 1.5, a value between 0.75 and 2.5 is reasonable
-   * @pre < 5 && <= FACTOR_ERATMEDIUM
-   * @see SieveOfEratosthenes.cpp
+   * Sieving primes up to (sieveSize in Bytes * FACTOR_ERATSMALL) are
+   * added to EratSmall which is used to cross off multiples.
+   * Default = 1.5, future CPUs might run faster with a smaller value
+   * e.g. 1.25 or 1.0.
+   *
+   * @pre 0 >= FACTOR_ERATSMALL < 5 && <= FACTOR_ERATMEDIUM
+   * @see SieveOfEratosthenes::sieve(uint32_t)
    */
   const double FACTOR_ERATSMALL = 1.5;
 
   enum {
     /**
-     * Multiples of prime numbers up to this number will be eliminated
-     * without sieving if the sieve interval is not too small >= 1E9
-     * else 13 is used.
-     * Default = 19 (uses 315.7 KiloBytes) for less memory usage 13 is
-     * good (uses 1001 Bytes) and still very fast
-     * @pre a prime number >= 13 && <= 23
-     * @see ResetSieve.h & .cpp
+     * Multiples of small primes <= LIMIT_RESETSIEVE are removed
+     * without sieving if the sieve interval >= 1E9, else 13 is used.
+     * Default = 19 (uses 315.7 Kilobytes), for less memory usage 13 is
+     * good (uses 1001 Bytes) and still very fast.
+     *
+     * @pre 13 >= LIMIT_RESETSIEVE <= 23
+     * @see ResetSieve.h
      */
     LIMIT_RESETSIEVE = 19,
     /**
-     * Sieve size of the secondary sieve of Eratosthenes
-     * (PrimeNumberGenerator) that generates the prime numbers up to
-     * sqrt(stopNumber) needed for sieving.
-     * Default = CPU L1 cache size
-     * @pre >= 1024 && 
-     *      <= 2^23 && 
-     *      must be a power of 2
-     * @see PrimeNumberGenerator.cpp
+     * Sieve size in bytes of PrimeNumberGenerator which generates the
+     * primes up to n^0.5 needed for sieving.
+     * Default = CPU L1 Data Cache size.
+     *
+     * @pre 1024 >= SIEVESIZE_PRIMENUMBERGENERATOR <= 2^23 &&
+     *      must be power of 2
      */
     SIEVESIZE_PRIMENUMBERGENERATOR = 1024 * 32,
     /**
-     * Default sieve size of the main sieve of Eratosthenes
-     * (PrimeNumberFinder), is used if the user does not set his own
-     * sieve size.
-     * Default = CPU L1 cache size
-     * @pre >= 1024 && 
-     *      <= 2^23 && 
-     *      must be a power of 2
-     * @see PrimeSieve.cpp
+     * Default sieve size in bytes of PrimeSieve and
+     * ParallelPrimeSieve objects.
+     * Default = CPU L1 Data Cache size.
+     *
+     * @pre 1024 >= SIEVESIZE_PRIMENUMBERFINDER <= 2^23 &&
+     *      must be power of 2     
      */
     SIEVESIZE_PRIMENUMBERFINDER = 1024 * 64,
     /**
-     * (sieveSize * FACTOR_ERATMEDIUM) is the upper bound for sieving
-     * primes used with EratMedium.
-     * Default = 9, a value between 5 and 15 is reasonable
-     * @pre >= FACTOR_ERATSMALL
-     * @see SieveOfEratosthenes.cpp
+     * Sieving primes > EratSmall::getLimit() && 
+     *                <= (sieveSize in Bytes * FACTOR_ERATMEDIUM)
+     * are added to EratMedium which is used to cross off multiples.
+     * Default = 9, future CPUs might run faster with a smaller value
+     * e.g. 7 or 5.
+     *
+     * @pre FACTOR_ERATMEDIUM >= FACTOR_ERATSMALL
+     * @see SieveOfEratosthenes::sieve(uint32_t)
      */
     FACTOR_ERATMEDIUM = 9,
     /**
-     * Size of a bucket array within EratBase, buckets are used to
-     * store sieving primes.
-     * Default = 4096 (32 KiloBytes)
+     * Number of WheelPrimes (i.e. sieving primes) per Bucket in
+     * EratSmall and EratMedium.
+     * Default = 4096 (uses 32 Kilobytes per Bucket), CPUs with more
+     * than 32 KB L1 Data Cache might run faster with a greater value.
+     *
+     * @see Bucket in WheelFactorization.h
      */
     BUCKETSIZE_ERATBASE = 1 << 12,
     /**
-     * Size of a bucket array within EratBig, buckets are used to
-     * store sieving primes.
-     * Default = 1024 (8 KiloBytes)
+     * Number of WheelPrimes (i.e. sieving primes) per Bucket in
+     * EratBig.
+     * Default = 1024 (uses 8 Kilobytes per Bucket), future CPUs might
+     * run faster with a greater value.
+     *
+     * @see Bucket in WheelFactorization.h
      */
     BUCKETSIZE_ERATBIG = 1 << 10,
     /**
-     * Allocate MEMORY_PER_ALLOC_ERATBIG bytes of new memory each time
-     * EratBig needs more buckets.
-     * Default = 4 MegaBytes
+     * EratBig allocates MEMORY_PER_ALLOC_ERATBIG bytes of new memory
+     * each time it needs more Buckets.
+     * Default = 4 Megabytes.
+     *
+     * @see EratBig.cpp
      */
     MEMORY_PER_ALLOC_ERATBIG = (1 << 20) * 4
   };
