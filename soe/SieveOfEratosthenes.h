@@ -29,14 +29,17 @@ class EratBig;
 
 /**
  * SieveOfEratosthenes is an implementation of the segmented sieve of
- * Eratosthenes using a bit array with 30 numbers per byte
- * (n * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}).
- * Multiples of prime numbers are crossed off in eratSmall_,
- * eratMedium_ and eratBig_. EratSmall is optimized for small sieving
- * primes with a lot of multiple occurrences per segment, EratMedium is
- * optimized for medium sieving primes and EratBig is optimized for
- * big sieving primes that have less than one multiple occurrence per
- * segment.
+ * Eratosthenes using a bit array with 30 numbers per byte.
+ * Each byte of the sieve array holds the numbers i * 30 + k with
+ * k = {7, 11, 13, 17, 19, 23, 29, 31}, this byte arrangement is
+ * convenient for prime k-tuplet sieving.
+ * The main function is SieveOfEratosthenes::sieve(uint32_t) it must
+ * be called consecutively for all prime numbers up to n^0.5 in order
+ * to sieve the primes up to n.
+ * Each sieving prime is first added to one of the EratSmall,
+ * EratMedium or EratBig objects which are used to cross off the
+ * multiples using wheel factorization.
+ *
  * SieveOfEratosthenes is an abstract class, PrimeNumberGenerator and
  * PrimeNumberFinder are derived from SieveOfEratosthenes.
  */
@@ -45,7 +48,7 @@ public:
   enum {
     /**
      * SieveOfEratosthenes uses dense bit packing with 30 numbers
-     * per byte, one byte of the sieve_ array holds the numbers
+     * per byte, each byte of the sieve_ array holds the values
      * n * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
      */
     NUMBERS_PER_BYTE = 30
@@ -93,18 +96,18 @@ private:
   /** Index needed by resetSieve_ to reset the sieve_ array. */
   uint32_t resetIndex_;
   /**
-   * Sieve of Eratosthenes algorithm optimized for small sieving
-   * primes.
+   * Used to cross off multiples of small sieving primes that have a
+   * lot of multiple occurrences per segment.
    */
   EratSmall* eratSmall_;
   /**
-   * Sieve of Eratosthenes algorithm optimized for medium sieving
-   * primes.
+   * Used to cross off multiples of medium sieving primes that have a
+   * few multiple occurrences per segment.
    */
   EratMedium* eratMedium_;
   /**
-   * Sieve of Eratosthenes algorithm optimized for big sieving
-   * primes.
+   * Used to cross off multiples of big sieving primes that have less
+   * than one multiple occurrence per segment.
    */
   EratBig* eratBig_;
   uint32_t getRemainder(uint64_t);
