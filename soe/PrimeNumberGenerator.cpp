@@ -51,12 +51,13 @@ PrimeNumberGenerator::~PrimeNumberGenerator() {
 }
 
 /**
- * Create a lookup table with the bitValues_ of the 256 possible
- * values of a byte.
+ * Initialize the primeBitValues_ lookup table.
+ * Is used to reconstruct prime numbers from 1 bits of the sieve
+ * array.
  */
 void PrimeNumberGenerator::initPrimeBitValues() {
   primeBitValues_ = new uint32_t*[BYTE_SIZE];
-  // generate the bitValues for each byte value
+  // calculate the bitValues for the 256 possible byte values
   for (uint32_t i = 0; i < BYTE_SIZE; i++) {
     primeBitValues_[i] = new uint32_t[9];
     uint32_t bitCount = 0;
@@ -72,14 +73,14 @@ void PrimeNumberGenerator::initPrimeBitValues() {
 }
 
 /**
- * Generate the prime numbers of the current segment and use them to
- * sieve with primeNumberFinder_ (is a SieveOfEratosthenes).
+ * Generate the prime numbers within the current segment needed for
+ * sieving by primeNumberFinder_ (is a SieveOfEratosthenes).
  * @see SieveOfEratosthenes::sieve(uint32_t)
  */
 void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
   uint32_t byteValue = static_cast<uint32_t> (this->getLowerBound());
   for (uint32_t i = 0; i < sieveSize; i++) {
-    // generate the prime numbers within the current byte
+    // generate the prime numbers within the current sieve_ byte
     for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
       primeNumberFinder_->sieve(byteValue + *bitValue);
     byteValue += NUMBERS_PER_BYTE;

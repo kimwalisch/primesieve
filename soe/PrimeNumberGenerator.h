@@ -27,9 +27,8 @@ class PrimeNumberFinder;
 
 /**
  * PrimeNumberGenerator is a SieveOfEratosthenes object that is used
- * to generate the prime numbers up to sqrt(stopNumber) needed by
- * PrimeNumberFinder to sieve the primes between startNumber and
- * stopNumber.
+ * to generate the prime numbers up to n^0.5 needed by
+ * PrimeNumberFinder to sieve up to n.
  */
 class PrimeNumberGenerator: public SieveOfEratosthenes {
 public:
@@ -39,7 +38,7 @@ private:
   PrimeNumberFinder* const primeNumberFinder_;
   /**
    * Lookup table used to calculate the prime number corresponding
-   * to a given 1 bit of the sieve_ array.
+   * to a specific 1 bit of the sieve_ array.
    */
   uint32_t** primeBitValues_;
   void initPrimeBitValues();
