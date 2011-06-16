@@ -25,17 +25,21 @@
 class PrimeSieve;
 
 /**
- * ResetSieve is used to reset the sieve_ array of SieveOfEratosthenes
- * objects after each sieved segment (i.e. reset bits to 1).
- * ResetSieve therefore creates a modulo wheel array of size
- * primeProduct(limit)/30 in which all multiples of primes <= limit
- * are crossed-off. After each sieved segment the modulo wheel array
- * is copied to the sieve array to reset it (i.e. reset bits to 1),
- * this also eliminates multiples of primes <= limit for the next
- * segment without sieving. The performance benefit of a modulo wheel
- * array vs. std::memset(sieve_, 0xff, sieveSize_) is up to 20% when
+ * ResetSieve is used to reset the sieve array (set bits to 1) of
+ * SieveOfEratosthenes objects after each sieved segment and to remove
+ * the multiples of small primes <= limit_ without sieving.
+ * The idea is to create a wheel array in which multiples of small
+ * primes are crossed off during initialization.
+ * After each sieved segment the wheel array is copied to the sieve in
+ * order to reset it and remove the multiples of small primes.
+ * Removing multiples of small primes (e.g. <= 19) without sieving
+ * speeds up the sieve of Eratosthenes by about 20 percent when
  * sieving < 10^10.
- * @see http://en.wikipedia.org/wiki/Wheel_factorization
+ *
+ * The idea is also described in Richstein's German doctoral thesis
+ * "Segmentierung und Optimierung von Algorithmen zu Problemen aus der Zahlentheorie", Gießen, Univ., Diss., 1999
+ * 3.3.5 Vorsieben kleiner Primfaktoren
+ * http://geb.uni-giessen.de/geb/volltexte/1999/73/pdf/RichsteinJoerg-1999-08-06.pdf
  */
 class ResetSieve {
 public:
@@ -48,14 +52,13 @@ public:
   void reset(uint8_t*, uint32_t, uint32_t*);
 private:
   /**
-   * All multiples of prime numbers <= limit_ will be crossed-off in
+   * Multiples of small primes <= limit_ (MAX 23) are crossed off in
    * the moduloWheel_ array.
    */
   uint32_t limit_;
   /**
-   * Modulo wheel array used to reset (set bits to 1) the sieve_ array
-   * of SieveOfEratosthenes objects after each sieved segment.
-   * @see http://en.wikipedia.org/wiki/Wheel_factorization
+   * Modulo wheel array of size primeProduct(limit_)/30 in which
+   * multiples of small primes <= limit_ are crossed off.
    */
   uint8_t* moduloWheel_;
   /** Size of the moduloWheel_ array. */
