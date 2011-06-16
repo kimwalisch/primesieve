@@ -69,11 +69,11 @@ PrimeNumberFinder::~PrimeNumberFinder() {
 }
 
 /**
- * Initialize lookup tables needed to count and print primes.
+ * Initialize the lookup tables needed to count and print/generate
+ * primes and k-tuplets.
  */
 void PrimeNumberFinder::initLookupTables() {
-  // bits and bitmasks representing the prime numbers and k-tuplets
-  // within a byte of the sieve_ array
+  // bits and bitmasks corresponding to prime numbers and k-tuplets
   const uint32_t bitmasks[COUNTS_SIZE][9] = {
       { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, END }, // prime numbers
       { 0x06, 0x18, 0xc0, END }, // twin primes
@@ -83,6 +83,7 @@ void PrimeNumberFinder::initLookupTables() {
       { 0x3f, END },            // prime sextuplets     
       { 0xfe, END } };          // prime septuplets
 
+  // initialize count lookup table
   if (primeSieve_->flags_ & PrimeSieve::COUNT_FLAGS) {
     primeByteCounts_ = new uint32_t*[COUNTS_SIZE];
     for (uint32_t i = 0; i < COUNTS_SIZE; i++) {
@@ -90,7 +91,6 @@ void PrimeNumberFinder::initLookupTables() {
         primeByteCounts_[i] = NULL;
       else {
         primeByteCounts_[i] = new uint32_t[BYTE_SIZE];
-        // save the count of bitmasks within each byte value
         for (uint32_t j = 0; j < BYTE_SIZE; j++) {
           uint32_t bitmaskCount = 0;
           for (const uint32_t* b = bitmasks[i]; *b != END; b++) {
@@ -102,13 +102,14 @@ void PrimeNumberFinder::initLookupTables() {
       }
     }
   }
+  // initialize print/generate lookup table
   if (primeSieve_->flags_ & PrimeSieve::GENERATE_FLAGS) {
     uint32_t generateType = 0;
     if (primeSieve_->flags_ & PrimeSieve::PRINT_FLAGS)
       for (uint32_t i = PrimeSieve::PRINT_PRIMES; (i & primeSieve_->flags_) == 0; i <<= 1)
         generateType++;
     primeBitValues_ = new uint32_t*[BYTE_SIZE];
-    // generate the bitValues for each byte value
+    // calculate the bitValues for the 256 possible byte values
     for (uint32_t i = 0; i < BYTE_SIZE; i++) {
       primeBitValues_[i] = new uint32_t[9];
       uint32_t bitmaskCount = 0;
@@ -125,7 +126,8 @@ void PrimeNumberFinder::initLookupTables() {
 }
 
 /**
- * Count the prime numbers and prime k-tuplets of the current segment.
+ * Count the prime numbers and prime k-tuplets within the current
+ * segment.
  */
 void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // count prime numbers
@@ -157,8 +159,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
 
 /**
  * Reconstruct prime numbers or prime k-tuplets (twin primes, prime
- * triplets, ...) from 1 bits after that all multiples have been
- * crossed off in the sieve array.
+ * triplets, ...) from 1 bits of the sieve array.
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   uint64_t byteValue = this->getLowerBound();

@@ -27,11 +27,12 @@ class PrimeSieve;
 
 /**
  * PrimeNumberFinder is a SieveOfEratosthenes class that is used to
- * find the prime numbers and prime k-tuplets (twin primes, prime
- * triplets, ...) between a startNumber and a stopNumber.
- * The prime numbers up to sqrt(stopNumber) needed for sieving are
+ * count, print and generate the prime numbers and prime k-tuplets
+ * (twin primes, prime triplets, ...) in the interval
+ * [startNumber_, stopNumber_].
+ * The prime numbers up to stopNumber_^0.5 needed for sieving are
  * provided by PrimeNumberGenerator.
- * @see PrimeNumberGenerator::analyseSieve(const uint8_t*, uint32_t)
+ * @see PrimeNumberGenerator::generate(const uint8_t*, uint32_t)
  */
 class PrimeNumberFinder: public SieveOfEratosthenes {
 public:
@@ -40,19 +41,16 @@ public:
   ~PrimeNumberFinder();
 private:
   static const uint32_t nextBitValue_[NUMBERS_PER_BYTE];
-  /**
-   * Pointer to the PrimeSieve object that is executing this
-   * PrimeNumberFinder object.
-   */
+  /** Pointer to the parent PrimeSieve object. */
   PrimeSieve* const primeSieve_;
   /**
-   * Gives the count of prime numbers and k-tuplets within a byte
-   * of the sieve_ array.
+   * Lookup table that gives the count of prime numbers and k-tuplets
+   * within a byte of the sieve array.
    */
   uint32_t** primeByteCounts_;
   /**
-   * Lookup table used to calculate the prime number or k-tuplet
-   * corresponding to a given 1 bit of the sieve_ array.
+   * Lookup table used to reconstruct prime numbers and k-tuplets
+   * from 1 bits or bit patterns of the sieve array.
    */
   uint32_t** primeBitValues_;
   void initLookupTables();
