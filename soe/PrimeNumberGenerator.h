@@ -26,7 +26,7 @@
 class PrimeNumberFinder;
 
 /**
- * PrimeNumberGenerator is a SieveOfEratosthenes object that is used
+ * PrimeNumberGenerator is a SieveOfEratosthenes class that is used
  * to generate the prime numbers up to n^0.5 needed by
  * PrimeNumberFinder to sieve up to n.
  */
@@ -37,8 +37,8 @@ public:
 private:
   PrimeNumberFinder* const primeNumberFinder_;
   /**
-   * Lookup table used to calculate the prime number corresponding
-   * to a specific 1 bit of the sieve_ array.
+   * Lookup table used to reconstruct prime numbers from 1 bits of the
+   * sieve array.
    */
   uint32_t** primeBitValues_;
   void initPrimeBitValues();
