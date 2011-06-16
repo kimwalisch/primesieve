@@ -6,6 +6,7 @@ New in version 2.3, 16/06/2011
 3. Revised documentation of defs.h
 4. Revised documentation of SieveOfEratosthenes.h & .cpp
 5. Revised documentation of PrimeNumberGenerator.h & .cpp
+6. Revised documentation of PrimeNumberFinder.h & .cpp
 
 New in version 2.2, 26/05/2011
 ==============================
