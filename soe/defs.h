@@ -22,7 +22,8 @@
  * @brief Macro definitions and constants that set the size of various
  *        arrays and limits within primesieve.
  *
- * The constants have been optimized for an Intel Core i5-670 3.46GHz
+ * The constants have been optimized for an
+ * Intel Core i5-670 3.46GHz
  * (2 x 32 KB L1 Data Cache, 2 x 256 L2 Cache, 4 MB L3 Cache)
  * from 2010.
  */
@@ -34,7 +35,7 @@
  * @def NDEBUG
  * Disable the assert macro from <cassert> if not in debug mode.
  */
-#if !defined(DEBUG) && !defined(_DEBUG)
+#if !defined(NDEBUG) && !defined(DEBUG) && !defined(_DEBUG)
 #  define NDEBUG 1
 #endif
 
