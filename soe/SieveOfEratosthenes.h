@@ -72,28 +72,26 @@ protected:
   static const uint32_t bitValues_[8];
   SieveOfEratosthenes(uint64_t, uint64_t, uint32_t, ResetSieve*);
   ~SieveOfEratosthenes();
-  uint64_t getLowerBound() const {
-    return lowerBound_;
+  uint64_t getSegmentLow() const {
+    return segmentLow_;
   }
   virtual void analyseSieve(const uint8_t*, uint32_t) = 0;
 private:
-  /** The start number for this sieve of Eratosthenes object. */
+  /** The start number for sieving. */
   const uint64_t startNumber_;
-  /** The stop number for this sieve of Eratosthenes object. */
+  /** The stop number for sieving. */
   const uint64_t stopNumber_;
-  /**
-   * Value corresponding to the first byte of the sieve_ array. As
-   * SieveOfEratosthenes uses 30 numbers per byte lowerBound_ is set
-   * to lowerBound_ += sieveSize * 30 after each sieved segment.
-   */
-  uint64_t lowerBound_;
+  /** Lower bound of the current segment. */
+  uint64_t segmentLow_;
+  /** Upper bound of the current segment. */
+  uint64_t segmentHigh_;
   /** Sieve of Eratosthenes array. */
   uint8_t* sieve_;
-  /** Size of the sieve_ array in bytes. */
+  /** Size of sieve_ in bytes. */
   uint32_t sieveSize_;
   /** Used to reset the sieve_ array after each sieved segment. */
   ResetSieve* const resetSieve_;
-  /** Index needed by resetSieve_ to reset the sieve_ array. */
+  /** Index needed by resetSieve_. */
   uint32_t resetIndex_;
   /**
    * Used to cross off multiples of small sieving primes that have a

@@ -78,7 +78,7 @@ void PrimeNumberGenerator::initPrimeBitValues() {
  * @see SieveOfEratosthenes::sieve(uint32_t)
  */
 void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
-  uint32_t byteValue = static_cast<uint32_t> (this->getLowerBound());
+  uint32_t byteValue = static_cast<uint32_t> (this->getSegmentLow());
   for (uint32_t i = 0; i < sieveSize; i++) {
     // generate the prime numbers within the current sieve_ byte
     for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)

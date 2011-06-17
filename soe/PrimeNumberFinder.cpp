@@ -162,7 +162,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  * triplets, ...) from 1 bits of the sieve array.
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
-  uint64_t byteValue = this->getLowerBound();
+  uint64_t byteValue = this->getSegmentLow();
   // call a callback function for each prime number
   if (primeSieve_->flags_ & PrimeSieve::CALLBACK_PRIMES)
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
