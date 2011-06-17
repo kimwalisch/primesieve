@@ -32,11 +32,12 @@ class PrimeSieve;
  * primes are crossed off during initialization.
  * After each sieved segment the wheel array is copied to the sieve in
  * order to reset it and remove the multiples of small primes.
- * Removing multiples of small primes (e.g. <= 19) without sieving
- * speeds up the sieve of Eratosthenes by about 20 percent when
+ * Pre-sieving multiples of small primes (e.g. <= 19) speeds up my
+ * sieve of Eratosthenes implementation by about 20 percent when
  * sieving < 10^10.
  *
- * The idea is also described in Richstein's German doctoral thesis
+ * Pre-sieving multiples of small primes is described in more detail
+ * in Joerg Richstein's German doctoral thesis:
  * "Segmentierung und Optimierung von Algorithmen zu Problemen aus der Zahlentheorie", Gießen, Univ., Diss., 1999
  * 3.3.5 Vorsieben kleiner Primfaktoren
  * http://geb.uni-giessen.de/geb/volltexte/1999/73/pdf/RichsteinJoerg-1999-08-06.pdf
