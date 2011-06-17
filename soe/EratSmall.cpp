@@ -48,7 +48,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
     WheelPrime* wPrime = bucket->wheelPrimeBegin();
     WheelPrime* end = bucket->wheelPrimeEnd();
     for (; wPrime != end; wPrime++) {
-      const uint32_t primeX2 = wPrime->getSievePrime();
+      const uint32_t primeX2 = wPrime->getSievingPrime();
       const uint32_t primeX4 = primeX2 + primeX2;
       const uint32_t primeX6 = primeX2 + primeX4;
 

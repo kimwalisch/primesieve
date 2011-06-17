@@ -42,14 +42,14 @@
  * WheelPrime objects are sieving primes <= n^0.5 for use with wheel
  * factorization. EratSmall, EratMedium and EratBig use WheelPrimes to
  * cross off multiples.
- * Each WheelPrime contains the sieving prime (sievePrime_), the
+ * Each WheelPrime contains the sieving prime (sievingPrime_), the
  * position of the next multiple within the SieveOfEratosthenes array
  * (sieveIndex_) and an index for the wheel (wheelIndex_).
  */
 class WheelPrime {
 public:
-  uint32_t getSievePrime() const {
-    return sievePrime_;
+  uint32_t getSievingPrime() const {
+    return sievingPrime_;
   }
   uint32_t getSieveIndex() const {
     return index_ & 0x7FFFFF;
@@ -57,8 +57,8 @@ public:
   uint32_t getWheelIndex() const {
     return index_ >> 23;
   }
-  void setSievePrime(uint32_t sievePrime) {
-    sievePrime_ = sievePrime;
+  void setSievingPrime(uint32_t sievingPrime) {
+    sievingPrime_ = sievingPrime;
   }
   void setSieveIndex(uint32_t sieveIndex) {
     index_ |= sieveIndex;
@@ -67,12 +67,12 @@ public:
     index_ = wheelIndex << 23;
   }
   /**
-   * sievePrime_ = prime / 15;
+   * sievingPrime_ = prime / 15;
    * /15 = *2/30, *2 is used to skip multiples of 2 and /30 is used as
    * SieveOfEratosthenes objects use 30 numbers per byte.
    * @see ModuloWheel::setWheelPrime(...)
    */
-  uint32_t sievePrime_;
+  uint32_t sievingPrime_;
   /**
    * sieveIndex_ = 23 least significant bits of index_.
    * wheelIndex_ =  9 most significant bits of index_.
@@ -108,15 +108,17 @@ public:
     return &wheelPrime_[count_];
   }
   /**
-   * Adds a WheelPrime to the Bucket.
+   * Add a WheelPrime to the Bucket.
    * @return false if the bucket is full else true.
    */
-  bool addWheelPrime(uint32_t sievePrime, uint32_t sieveIndex,
-      uint32_t wheelIndex) {
-    assert(count_ < SIZE);
+  bool addWheelPrime(uint32_t sievingPrime,
+                     uint32_t sieveIndex,
+                     uint32_t wheelIndex)
+  {
     uint32_t pos = count_++;
+    assert(pos < SIZE);
     WheelPrime& wPrime = wheelPrime_[pos];
-    wPrime.setSievePrime(sievePrime);
+    wPrime.setSievingPrime(sievingPrime);
     wPrime.setWheelIndex(wheelIndex);
     wPrime.setSieveIndex(sieveIndex);
     return (pos != SIZE - 1);
@@ -147,7 +149,7 @@ struct WheelElement {
   uint8_t nextMultipleFactor;
   /**
    * Overflow needed to correct the next sieve index of a WheelPrime:
-   * sieveIndex_ = sievePrime_ * nextMultipleFactor + correct
+   * sieveIndex_ = sievingPrime_ * nextMultipleFactor + correct
    */
   uint8_t correct;
   /** 

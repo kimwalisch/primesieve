@@ -144,7 +144,7 @@ void EratBig::sieve(uint8_t* sieve) {
     WheelPrime* end = bucketLists_[index_]->wheelPrimeEnd();
     while (wPrime != end) {
       // get the current wheelPrime's values
-      uint32_t sievePrime = wPrime->getSievePrime();
+      uint32_t sievingPrime = wPrime->getSievingPrime();
       uint32_t sieveIndex = wPrime->getSieveIndex();
       uint32_t wheelIndex = wPrime->getWheelIndex();
       wPrime++;
@@ -157,13 +157,13 @@ void EratBig::sieve(uint8_t* sieve) {
          int8_t nxt = wheel_[wheelIndex].next;
         sieve[sieveIndex] &= bit;
         wheelIndex += nxt;
-        sieveIndex += sievePrime * nmf + cor;
+        sieveIndex += sievingPrime * nmf + cor;
         segmentCount = sieveIndex >> log2SieveSize_;
       } while (segmentCount == 0);
       /// @see addPrimeNumber(uint32_t, uint64_t)
       sieveIndex &= SIEVE_SIZE;
       uint32_t nextListIndex = (index_ + segmentCount) & (size_ - 1);
-      if (!bucketLists_[nextListIndex]->addWheelPrime(sievePrime, sieveIndex, wheelIndex))
+      if (!bucketLists_[nextListIndex]->addWheelPrime(sievingPrime, sieveIndex, wheelIndex))
         this->getBucket(nextListIndex);
     }
     // reset the finished bucket and move it to the bucket stock

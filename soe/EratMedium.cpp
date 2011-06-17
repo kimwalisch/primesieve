@@ -47,7 +47,7 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
         // occurence in the current segment
         wPrime->index_ -= sieveSize;
       } else {
-        uint32_t sievePrime = wPrime->getSievePrime();
+        uint32_t sievingPrime = wPrime->getSievingPrime();
         uint32_t wheelIndex = wPrime->getWheelIndex();
         // eliminate the multiples of the current wheelPrime
         do {
@@ -57,7 +57,7 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
            int8_t nxt = wheel_[wheelIndex].next;
           sieve[sieveIndex] &= bit;
           wheelIndex += nxt;
-          sieveIndex += sievePrime * nmf + cor;
+          sieveIndex += sievingPrime * nmf + cor;
         } while (sieveIndex < sieveSize);
         // sets the sieveIndex and wheelIndex for the next segment
         sieveIndex -= sieveSize;
