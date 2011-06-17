@@ -92,10 +92,9 @@ void ResetSieve::initWheelArray() {
     }
     primeProduct *= smallPrimes[i];
     uint32_t multiple = smallPrimes[i];
-    /// cross off the multiples of smallPrimes[i] up to the current
-    /// prime product
-    /// @remark The terms '+ 1' and '- 6' are corrections needed for
-    ///         primes of type n * 30 + 31
+    // cross off the multiples of smallPrimes[i] up to the current
+    // prime product
+    // '+ 1' and '- 6' are corrections for primes of type i*30 + 31
     while (multiple <= primeProduct + 1) {
       uint32_t index = (multiple - 6) / SieveOfEratosthenes::NUMBERS_PER_BYTE;
       uint32_t bit = multiple - index * SieveOfEratosthenes::NUMBERS_PER_BYTE;
