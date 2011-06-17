@@ -47,21 +47,21 @@ private:
   uint32_t size_;
   /** Current count of sieving primes within EratBig. */
   uint32_t primeCount_;
-  /** Current index of bucketLists_. */
-  uint32_t index_;
   /**
-   * Array of singly linked bucket lists. Each list contains the
-   * sieving primes of the related segment, bucketLists_[index_] is
-   * the list associated to the current segment.
+   * bucketLists_[index_]   holds the sieving primes with multiple occurrences in the current segment,
+   * bucketLists_[index_+1] holds the sieving primes with multiple occurrences in the next segment,
+   * ...
    */
+  uint32_t index_;
+  /** Array of bucket lists, holds the sieving primes. */
   Bucket_t** bucketLists_;
-  /** Singly linked list of empty Buckets. */
+  /** List of empty buckets. */
   Bucket_t* bucketStock_;
   /** Pointers of the allocated buckets. */
   std::list<Bucket_t*> bucketPointers_;
   void setSize(uint32_t);
   void initBucketLists();
-  void getBucket(uint32_t listIndex);
+  void pushBucket(uint32_t listIndex);
 };
 
 #endif /* ERATBIG_H */
