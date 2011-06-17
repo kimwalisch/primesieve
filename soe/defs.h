@@ -112,8 +112,8 @@ namespace defs {
 
   enum {
     /**
-     * Multiples of small primes <= LIMIT_RESETSIEVE are removed
-     * without sieving if the sieve interval >= 1E9, else 13 is used.
+     * Multiples of small primes <= LIMIT_RESETSIEVE are pre-sieved if
+     * the sieve interval >= 1E8, else LIMIT_RESETSIEVE = 13 is used.
      * Default = 19 (uses 315.7 Kilobytes), for less memory usage 13 is
      * good (uses 1001 Bytes) and still very fast.
      *
