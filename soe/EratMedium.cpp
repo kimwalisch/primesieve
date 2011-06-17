@@ -53,7 +53,7 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
         uint32_t sievingPrime = wPrime->getSievingPrime();
         uint32_t wheelIndex = wPrime->getWheelIndex();
         // remove the multiples of the current sievingPrime from the
-        // sieve (i.e. the current segment)
+        // sieve array (i.e. the current segment)
         do {
           uint8_t bit = wheel_[wheelIndex].unsetBit;
           uint8_t nmf = wheel_[wheelIndex].nextMultipleFactor;

@@ -57,7 +57,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
       uint8_t* s = &sieve[wPrime->getSieveIndex()];
 
       // remove the multiples of the current sievingPrime from the
-      // sieve (i.e. the current segment)
+      // sieve array (i.e. the current segment)
       switch (wPrime->getWheelIndex()) {
         // for sieving primes of type i * 30 + 7
         for (;;) {
