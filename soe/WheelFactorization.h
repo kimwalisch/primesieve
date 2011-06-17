@@ -218,9 +218,6 @@ protected:
    * modulo 30 wheel) of prime and the position within the
    * SieveOfEratosthenes array (sieveIndex) of that multiple and the
    * wheel index of that multiple.
-   * 
-   * @remark The terms '+ 6' and '- 6' are corrections needed for
-   *         primes type i*30 + 31.
    * @return true if the WheelPrime must be stored for sieving else
    *         false.
    */
@@ -230,17 +227,19 @@ protected:
                      uint32_t* wheelIndex)
   {
     assert(segmentLow % 30 == 0);
+    // '+ 6' is a correction for primes of type i*30 + 31
+    segmentLow += 6;
+    // calculate the first multiple > segmentLow of prime
+    uint64_t quotient = segmentLow / *prime + 1;
+    uint64_t multiple = *prime * quotient;
+    // prime not needed for sieving
+    if (multiple > stopNumber_)
+      return false;
     // by theory prime^2 is the first multiple of prime that needs to
     // be crossed off
-    uint64_t multiple = isquare(*prime);
-    uint64_t quotient = *prime;
-    // calculate the first multiple > segmentLow + 6 of prime
-    if (multiple < segmentLow + 6) {
-      quotient = (segmentLow + 6) / *prime + 1;
-      multiple = *prime * quotient;
-      // prime not needed for sieving
-      if (multiple > stopNumber_)
-        return false;
+    if (isquare(*prime) > multiple) {
+       multiple = isquare(*prime);
+       quotient = *prime;
     }
     uint32_t index = static_cast<uint32_t> (quotient % WHEEL_MODULO);
     // calculate the next multiple that is not divisible by any of the
@@ -250,7 +249,7 @@ protected:
       return false;
     uint32_t wheelOffset = WHEEL_ELEMENTS * primeBitPosition_[*prime % 30];
     *wheelIndex = wheelOffset + INIT_WHEEL[index].wheelIndex;
-    *sieveIndex = static_cast<uint32_t> (((multiple - segmentLow) - 6) / 30);
+    *sieveIndex = static_cast<uint32_t> ((multiple - segmentLow) / 30);
     *prime /= 15;
     return true;
   }
