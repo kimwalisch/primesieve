@@ -146,7 +146,7 @@ void SieveOfEratosthenes::crossOffMultiples() {
 /**
  * Implementation of the segmented sieve of Eratosthenes.
  * sieve(uint32_t) must be called consecutively for all primes up to
- * stopNumber_^0.5 in order to sieve the primes in the interval
+ * stopNumber_^0.5 in order to sieve the interval
  * [startNumber_, stopNumber_].
  */
 void SieveOfEratosthenes::sieve(uint32_t prime) {
