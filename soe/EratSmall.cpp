@@ -46,18 +46,18 @@ EratSmall::EratSmall(uint32_t limit, const SieveOfEratosthenes* soe) :
  */
 void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
   uint8_t* const sieveEnd = &sieve[sieveSize];
-  // iterate over the buckets of bucketList_
+  // iterate over the sieving primes within EratSmall
   for (Bucket_t* bucket = bucketList_; bucket != NULL; bucket = bucket->next) {
-    // iterate over the wheelPrimes of the current bucket
     WheelPrime* wPrime = bucket->wheelPrimeBegin();
     WheelPrime* end = bucket->wheelPrimeEnd();
     for (; wPrime != end; wPrime++) {
       const uint32_t primeX2 = wPrime->getSievingPrime();
       const uint32_t primeX4 = primeX2 + primeX2;
       const uint32_t primeX6 = primeX2 + primeX4;
-
-      // a pointer here is faster than an index
       uint8_t* s = &sieve[wPrime->getSieveIndex()];
+
+      // remove the multiples of the current sievingPrime from the
+      // sieve (i.e. the current segment)
       switch (wPrime->getWheelIndex()) {
         // for sieving primes of type i * 30 + 7
         for (;;) {
