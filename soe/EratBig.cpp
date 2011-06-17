@@ -88,7 +88,7 @@ void EratBig::initBucketLists() {
 /**
  * Adds a prime number for sieving to EratBig.
  */
-void EratBig::addPrimeNumber(uint32_t primeNumber, uint64_t lowerBound) {
+void EratBig::addSievingPrime(uint32_t primeNumber, uint64_t lowerBound) {
   uint32_t sieveIndex;
   uint32_t wheelIndex;
   if (this->setWheelPrime(lowerBound, &primeNumber, &sieveIndex, &wheelIndex)

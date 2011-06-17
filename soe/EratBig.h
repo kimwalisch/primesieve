@@ -37,7 +37,7 @@ class EratBig: protected Modulo210Wheel {
 public:
   EratBig(const SieveOfEratosthenes*);
   ~EratBig();
-  void addPrimeNumber(uint32_t, uint64_t);
+  void addSievingPrime(uint32_t, uint64_t);
   void sieve(uint8_t*);
 private:
   typedef Bucket<defs::BUCKETSIZE_ERATBIG> Bucket_t;

@@ -167,9 +167,9 @@ void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
   // add primeNumber to the appropriate erat* object
   if (primeNumber > eratSmall_->getLimit())
     if (primeNumber > eratMedium_->getLimit())
-            eratBig_->addPrimeNumber(primeNumber, segmentLow_);
-    else eratMedium_->addPrimeNumber(primeNumber, segmentLow_);
-  else    eratSmall_->addPrimeNumber(primeNumber, segmentLow_);
+            eratBig_->addSievingPrime(primeNumber, segmentLow_);
+    else eratMedium_->addSievingPrime(primeNumber, segmentLow_);
+  else    eratSmall_->addSievingPrime(primeNumber, segmentLow_);
 }
 
 /**

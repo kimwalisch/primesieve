@@ -42,7 +42,7 @@ public:
     return limit_;
   }
   /** Adds a prime number for sieving to EratBase. */
-  void addPrimeNumber(uint32_t primeNumber, uint64_t lowerBound) {
+  void addSievingPrime(uint32_t primeNumber, uint64_t lowerBound) {
     assert(primeNumber <= limit_);
     uint32_t sieveIndex;
     uint32_t wheelIndex;
