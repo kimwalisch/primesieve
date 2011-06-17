@@ -41,7 +41,7 @@ public:
   void sieve(uint8_t*);
 private:
   typedef Bucket<defs::BUCKETSIZE_ERATBIG> Bucket_t;
-  /** log2 of the size of the sieve_ array */
+  /** log2 of SieveOfEratosthenes::sieveSize_. */
   const uint32_t log2SieveSize_;
   /** Size of bucketLists_. */
   uint32_t size_;
@@ -57,7 +57,7 @@ private:
   Bucket_t** bucketLists_;
   /** Singly linked list of empty Buckets. */
   Bucket_t* bucketStock_;
-  /** Keeps track of the allocated buckets. */
+  /** Pointers of the allocated buckets. */
   std::list<Bucket_t*> bucketPointers_;
   void setSize(uint32_t);
   void initBucketLists();
