@@ -29,7 +29,7 @@ class PrimeSieve;
  * SieveOfEratosthenes objects after each sieved segment and to remove
  * the multiples of small primes <= limit_ without sieving.
  * The idea is to create a wheel array in which multiples of small
- * primes are crossed off during initialization.
+ * primes are crossed off at initialization.
  * After each sieved segment the wheel array is copied to the sieve in
  * order to reset it and remove the multiples of small primes.
  * Pre-sieving multiples of small primes (e.g. <= 19) speeds up my
@@ -54,18 +54,18 @@ public:
 private:
   /**
    * Multiples of small primes <= limit_ (MAX 23) are crossed off in
-   * the moduloWheel_ array.
+   * the wheelArray_.
    */
   uint32_t limit_;
   /**
-   * Modulo wheel array of size primeProduct(limit_)/30 in which
-   * multiples of small primes <= limit_ are crossed off.
+   * Wheel array of size primeProduct(limit_)/30 in which multiples of
+   * small primes <= limit_ are crossed off.
    */
-  uint8_t* moduloWheel_;
-  /** Size of the moduloWheel_ array. */
+  uint8_t* wheelArray_;
+  /** Size of wheelArray_. */
   uint32_t size_;
   void setSize(uint32_t);
-  void initResetBuffer();
+  void initWheelArray();
 };
 
 #endif /* RESETSIEVE_H */
