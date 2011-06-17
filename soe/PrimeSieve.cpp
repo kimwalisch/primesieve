@@ -194,7 +194,7 @@ double PrimeSieve::getTimeElapsed() const {
  * @pre startNumber < (2^64-1) - (2^32-1) * 10
  */
 void PrimeSieve::setStartNumber(uint64_t startNumber) {
-  // EratBig and EratMedium stopNumber limit
+  // EratMedium and EratBig stopNumber limit
   if (startNumber >= UINT64_MAX - UINT32_MAX * UINT64_C(10))
     throw std::invalid_argument("START must be < (2^64-1) - (2^32-1) * 10");
   startNumber_ = startNumber;
@@ -205,7 +205,7 @@ void PrimeSieve::setStartNumber(uint64_t startNumber) {
  * @pre stopNumber < (2^64-1) - (2^32-1) * 10
  */
 void PrimeSieve::setStopNumber(uint64_t stopNumber) {
-  // EratBig and EratMedium stopNumber limit
+  // EratMedium and EratBig stopNumber limit
   if (stopNumber >= UINT64_MAX - UINT32_MAX * UINT64_C(10))
     throw std::invalid_argument("STOP must be < (2^64-1) - (2^32-1) * 10");
   stopNumber_ = stopNumber;
@@ -223,7 +223,7 @@ void PrimeSieve::setStopNumber(uint64_t stopNumber) {
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
   // SieveOfEratosthenes needs sieveSize >= 1 KB
-  // EratBig needs sieveSize <= 8192
+  // EratSmall, EratMedium and EratBig need sieveSize <= 8192
   if (sieveSize < 1 || sieveSize > 8192)
     throw std::invalid_argument("sieve size must be >= 1 and <= 8192 KiloBytes");
   // EratBig needs a power of 2 sieveSize

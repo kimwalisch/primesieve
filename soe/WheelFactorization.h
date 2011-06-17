@@ -201,10 +201,12 @@ protected:
           << greatestWheelFactor + 1 << ".";
       throw std::overflow_error(error.str());
     }
-    // a sieveSize <= 2^28 allows wheels up to W(17) without 32 bit
-    // overflows of sieveIndex in Erat*::sieve()
-    if (soe->getSieveSize() > (1u << 28))
-      throw std::overflow_error("ModuloWheel: sieveSize must be <= 2^28");
+    // max sieveSize = max WheelPrime::sieveIndex_ + 1 = 2^23
+    // also sieveSize <= 2^28 in order to prevent 32 bit overflows of
+    // sieveIndex in Erat*::sieve()
+    if (soe->getSieveSize() > (1u << 23))
+      throw std::overflow_error(
+          "ModuloWheel: sieveSize must be <= 2^23, 8192 Kilobytes.");
   }
   ~ModuloWheel() {
   }

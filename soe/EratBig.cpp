@@ -37,10 +37,6 @@ EratBig::EratBig(const SieveOfEratosthenes* soe) : Modulo210Wheel(soe),
   if (!isPowerOf2(soe->getSieveSize()))
     throw std::invalid_argument(
         "EratBig: sieveSize must be a power of 2 (2^n).");
-  // max sieveSize = max WheelPrime sieveIndex = 2^23
-  if (soe->getSieveSize() > (1u << 23))
-    throw std::invalid_argument(
-        "EratBig: sieveSize must be <= 2^23, 8192 Kilobytes.");
   this->setSize(soe->getSieveSize());
   this->initBucketLists();
 }
