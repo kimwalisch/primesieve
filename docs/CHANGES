@@ -8,6 +8,7 @@ New in version 2.3, 17/06/2011
 5. Revised documentation of PrimeNumberGenerator.h & .cpp
 6. Revised documentation of PrimeNumberFinder.h & .cpp
 7. Revised documentation of ResetSieve.h & .cpp
+8. Revised documentation of EratBase.h
 
 New in version 2.2, 26/05/2011
 ==============================
