@@ -31,25 +31,29 @@ EratMedium::EratMedium(uint32_t limit, const SieveOfEratosthenes* soe) :
 
 /**
  * Implementation of the segmented sieve of Eratosthenes with wheel
- * factorization (modulo 210 wheel). Is used to cross-off the
- * multiples of the current segment.
+ * factorization (modulo 210 wheel) and 30 numbers per byte.
+ * This algorithm is optimized for sieving primes with few multiple
+ * occurrences per segment.
+ *
+ * Removes the multiples (of sieving primes within EratMedium) from the
+ * current segment.
  */
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
-  // iterate over each bucket of the bucket list
+  // iterate over the sieving primes within EratMedium
   for (Bucket_t* bucket = bucketList_; bucket != NULL; bucket = bucket->next) {
     WheelPrime* wPrime = bucket->wheelPrimeBegin();
     WheelPrime* end = bucket->wheelPrimeEnd();
-    // iterate over each wheelPrime of the current bucket
     for (; wPrime != end; wPrime++) {
       uint32_t sieveIndex = wPrime->getSieveIndex();
       if (sieveIndex >= sieveSize) {
-        // nothing to do for primes that do not have a multiple
-        // occurence in the current segment
+        // nothing else to do for sieving primes that do not have a
+        // multiple occurrence in the current segment
         wPrime->index_ -= sieveSize;
       } else {
         uint32_t sievingPrime = wPrime->getSievingPrime();
         uint32_t wheelIndex = wPrime->getWheelIndex();
-        // eliminate the multiples of the current wheelPrime
+        // remove the multiples of the current sievingPrime from the
+        // sieve (i.e. the current segment)
         do {
           uint8_t bit = wheel_[wheelIndex].unsetBit;
           uint8_t nmf = wheel_[wheelIndex].nextMultipleFactor;
@@ -59,7 +63,7 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
           wheelIndex += nxt;
           sieveIndex += sievingPrime * nmf + cor;
         } while (sieveIndex < sieveSize);
-        // sets the sieveIndex and wheelIndex for the next segment
+        // set the sieveIndex and wheelIndex for the next segment
         sieveIndex -= sieveSize;
         wPrime->setWheelIndex(wheelIndex);
         wPrime->setSieveIndex(sieveIndex);
