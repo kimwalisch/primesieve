@@ -112,7 +112,8 @@ void ResetSieve::initWheelArray() {
  * small primes <= limit_ without sieving.
  * @see SieveOfEratosthenes::sieve(uint32_t)
  */
-void ResetSieve::reset(uint8_t* sieve, uint32_t sieveSize, uint32_t* resetIndex) {
+void ResetSieve::reset(uint8_t* sieve, uint32_t sieveSize, 
+    uint32_t* resetIndex) {
   uint32_t sizeLeft = size_ - *resetIndex;
   if (sizeLeft > sieveSize) {
     // reset the sieve array at once
