@@ -30,10 +30,8 @@
 class SieveOfEratosthenes;
 
 /**
- * EratBase provides base functionality for the segmented sieve of
- * Eratosthenes with wheel factorization.
- * EratBase is an abstract class that is used by EratSmall and
- * EratMedium.
+ * EratBase is an abstract class used by EratSmall and EratMedium to
+ * initialize an store sieving primes.
  */
 template<class T_ModuloWheel>
 class EratBase: protected T_ModuloWheel {
@@ -41,14 +39,14 @@ public:
   uint32_t getLimit() const {
     return limit_;
   }
-  /** Adds a prime number for sieving to EratBase. */
-  void addSievingPrime(uint32_t primeNumber, uint64_t lowerBound) {
-    assert(primeNumber <= limit_);
+  /** Add a prime number for sieving to EratBase. */
+  void addSievingPrime(uint32_t prime, uint64_t segmentLow) {
+    assert(prime <= limit_);
     uint32_t sieveIndex;
     uint32_t wheelIndex;
-    if (this->setWheelPrime(lowerBound, &primeNumber, &sieveIndex, &wheelIndex)
+    if (this->setWheelPrime(segmentLow, &prime, &sieveIndex, &wheelIndex)
         == true) {
-      if (!bucketList_->addWheelPrime(primeNumber, sieveIndex, wheelIndex)) {
+      if (!bucketList_->addWheelPrime(prime, sieveIndex, wheelIndex)) {
         Bucket_t* bucket = new Bucket_t;
         bucket->setNext(bucketList_);
         bucketList_ = bucket;
@@ -59,10 +57,7 @@ protected:
   typedef Bucket<defs::BUCKETSIZE_ERATBASE> Bucket_t;
   /** Upper bound for sieving primes within bucketList_. */
   const uint32_t limit_;
-  /**
-   * Singly linked list of buckets, holds the prime numbers for
-   * sieving.
-   */
+  /** Singly linked list of buckets, holds the sieving primes. */
   Bucket_t* bucketList_;
   EratBase(uint32_t limit, const SieveOfEratosthenes* soe) :
     T_ModuloWheel(soe), limit_(limit), bucketList_(NULL) {

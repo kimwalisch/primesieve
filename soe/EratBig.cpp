@@ -86,22 +86,22 @@ void EratBig::initBucketLists() {
 }
 
 /**
- * Adds a prime number for sieving to EratBig.
+ * Add a prime number for sieving to EratBig.
  */
-void EratBig::addSievingPrime(uint32_t primeNumber, uint64_t lowerBound) {
+void EratBig::addSievingPrime(uint32_t prime, uint64_t segmentLow) {
   uint32_t sieveIndex;
   uint32_t wheelIndex;
-  if (this->setWheelPrime(lowerBound, &primeNumber, &sieveIndex, &wheelIndex)
+  if (this->setWheelPrime(segmentLow, &prime, &sieveIndex, &wheelIndex)
       == true) {
-    // indicates in how many segments the next multiple of primeNumber
+    // indicates in how many segments the next multiple of prime
     // needs to be eliminated
     uint32_t segmentCount = sieveIndex >> log2SieveSize_;
-    // sieve index of primeNumber's next multiple
+    // sieve index of prime's next multiple
     sieveIndex &= SIEVE_SIZE;
     // calculate the index of the bucket list associated to the next
     // multiple's segment
     uint32_t nextListIndex = (index_ + segmentCount) & (size_ - 1);
-    if (!bucketLists_[nextListIndex]->addWheelPrime(primeNumber, sieveIndex, wheelIndex))
+    if (!bucketLists_[nextListIndex]->addWheelPrime(prime, sieveIndex, wheelIndex))
       this->getBucket(nextListIndex);
     primeCount_++;
   }

@@ -67,7 +67,7 @@ public:
     index_ = wheelIndex << 23;
   }
   /**
-   * sievePrime_ = primeNumber / 15;
+   * sievePrime_ = prime / 15;
    * /15 = *2/30, *2 is used to skip multiples of 2 and /30 is used as
    * SieveOfEratosthenes objects use 30 numbers per byte.
    * @see ModuloWheel::setWheelPrime(...)
@@ -210,41 +210,44 @@ protected:
    * Used to initialize sieving primes <= n^0.5 for use with wheel
    * factorization.
    * Calculates the first multiple >= startNumber_ that is not
-   * divisible by any of the wheel's primes (i.e. not a multiple of 2,
-   * 3 and 5 for a modulo 30 wheel) of primeNumber and the position
-   * within the SieveOfEratosthenes array (sieveIndex) of that
-   * multiple and the wheel index of that multiple.
+   * divisible by any of the wheel's prime factors (i.e. 2, 3, 5 for a
+   * modulo 30 wheel) of prime and the position within the
+   * SieveOfEratosthenes array (sieveIndex) of that multiple and the
+   * wheel index of that multiple.
    * 
    * @remark The terms '+ 6' and '- 6' are corrections needed for
    *         primes type i*30 + 31.
-   * @return true if the wheelPrime must be stored for sieving else
+   * @return true if the WheelPrime must be stored for sieving else
    *         false.
    */
-  bool setWheelPrime(uint64_t lowerBound, uint32_t* primeNumber,
-      uint32_t* sieveIndex, uint32_t* wheelIndex) {
-    assert(lowerBound % 30 == 0);
-    // by theory primeNumber^2 is the first multiple of primeNumber
-    // that needs to be eliminated
-    uint64_t multiple = isquare(*primeNumber);
-    uint64_t quotient = *primeNumber;
-    // calculate the first multiple > lowerBound + 6 of primeNumber
-    if (multiple < lowerBound + 6) {
-      quotient = (lowerBound + 6) / *primeNumber + 1;
-      multiple = *primeNumber * quotient;
-      // primeNumber not needed for sieving
+  bool setWheelPrime(uint64_t segmentLow, 
+                     uint32_t* prime,
+                     uint32_t* sieveIndex,
+                     uint32_t* wheelIndex)
+  {
+    assert(segmentLow % 30 == 0);
+    // by theory prime^2 is the first multiple of prime that needs to
+    // be crossed off
+    uint64_t multiple = isquare(*prime);
+    uint64_t quotient = *prime;
+    // calculate the first multiple > segmentLow + 6 of prime
+    if (multiple < segmentLow + 6) {
+      quotient = (segmentLow + 6) / *prime + 1;
+      multiple = *prime * quotient;
+      // prime not needed for sieving
       if (multiple > stopNumber_)
         return false;
     }
     uint32_t index = static_cast<uint32_t> (quotient % WHEEL_MODULO);
     // calculate the next multiple that is not divisible by any of the
     // wheel's primes (i.e. 2, 3 and 5 for a modulo 30 wheel)
-    multiple += static_cast<uint64_t> (*primeNumber) * INIT_WHEEL[index].nextMultipleFactor;
+    multiple += static_cast<uint64_t> (*prime) * INIT_WHEEL[index].nextMultipleFactor;
     if (multiple > stopNumber_)
       return false;
-    uint32_t wheelOffset = WHEEL_ELEMENTS * primeBitPosition_[*primeNumber % 30];
+    uint32_t wheelOffset = WHEEL_ELEMENTS * primeBitPosition_[*prime % 30];
     *wheelIndex = wheelOffset + INIT_WHEEL[index].wheelIndex;
-    *sieveIndex = static_cast<uint32_t> (((multiple - lowerBound) - 6) / 30);
-    *primeNumber /= 15;
+    *sieveIndex = static_cast<uint32_t> (((multiple - segmentLow) - 6) / 30);
+    *prime /= 15;
     return true;
   }
 };

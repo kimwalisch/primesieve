@@ -30,7 +30,7 @@ EratSmall::EratSmall(uint32_t limit, const SieveOfEratosthenes* soe) :
   EratBase<Modulo30Wheel> (limit, soe) {
   // the following equation prevents array segmentation faults in
   // sieve(uint8_t*, uint32_t) :
-  // sieveSize - 1 + (primeNumber / 15) * 3 + 3 - sieveSize < sieveSize
+  // sieveSize - 1 + (prime / 15) * 3 + 3 - sieveSize < sieveSize
   if (limit_ >= (soe->getSieveSize() - 2) * 5)
     throw std::logic_error("EratSmall: limit must be < (sieveSize - 2) * 5.");
 }

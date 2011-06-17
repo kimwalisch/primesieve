@@ -51,8 +51,8 @@ ResetSieve::~ResetSieve() {
  * The reset index indicates the wheel position of the sieve array
  * within the wheelArray_.
  */
-uint32_t ResetSieve::getResetIndex(uint64_t lowerBound) const {
-  return static_cast<uint32_t> (lowerBound % primeProduct(limit_))
+uint32_t ResetSieve::getResetIndex(uint64_t segmentLow) const {
+  return static_cast<uint32_t> (segmentLow % primeProduct(limit_))
       / SieveOfEratosthenes::NUMBERS_PER_BYTE;
 }
 

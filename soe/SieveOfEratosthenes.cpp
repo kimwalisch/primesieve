@@ -149,11 +149,11 @@ void SieveOfEratosthenes::crossOffMultiples() {
  * stopNumber_^0.5 in order to sieve the primes in the interval
  * [startNumber_, stopNumber_].
  */
-void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
+void SieveOfEratosthenes::sieve(uint32_t prime) {
   assert(eratSmall_ != NULL && 
-      primeNumber > resetSieve_->getLimit() &&
-      isquare(primeNumber) <= stopNumber_);
-  uint64_t primeSquared = isquare(primeNumber);
+      prime > resetSieve_->getLimit() &&
+      isquare(prime) <= stopNumber_);
+  uint64_t primeSquared = isquare(prime);
 
   // the following while loop is entered if all primes required to
   // sieve the next segment are present in the erat* objects
@@ -164,12 +164,12 @@ void SieveOfEratosthenes::sieve(uint32_t primeNumber) {
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
-  // add primeNumber to the appropriate erat* object
-  if (primeNumber > eratSmall_->getLimit())
-    if (primeNumber > eratMedium_->getLimit())
-            eratBig_->addSievingPrime(primeNumber, segmentLow_);
-    else eratMedium_->addSievingPrime(primeNumber, segmentLow_);
-  else    eratSmall_->addSievingPrime(primeNumber, segmentLow_);
+  // add prime to the appropriate erat* object
+  if (prime > eratSmall_->getLimit())
+    if (prime > eratMedium_->getLimit())
+            eratBig_->addSievingPrime(prime, segmentLow_);
+    else eratMedium_->addSievingPrime(prime, segmentLow_);
+  else    eratSmall_->addSievingPrime(prime, segmentLow_);
 }
 
 /**
