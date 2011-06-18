@@ -29,17 +29,20 @@ class ParallelPrimeSieve;
 
 /**
  * PrimeSieve is an optimized implementation of the segmented sieve of
- * Eratosthenes that finds prime numbers and prime k-tuplets (twin
- * primes, prime triplets, ...) up to 2^64 maximum.
+ * Eratosthenes that generates prime numbers and prime k-tuplets (twin
+ * primes, prime triplets, ...) in order up to 2^64 maximum.
+ * The file ../README describes the algorithms used in more detail.
+ * 
+ * == Usage ==
  *
- * Its algorithm has a complexity of O(n) operations and uses O(n^0.5)
- * space. The memory requirement is 8 bytes per sieving prime i.e.
- * PrimeSieve needs pi(n^0.5)*8 bytes of RAM to sieve up to n (1.6 GB
- * near 2^64).
+ * The file ../docs/USAGE_EXAMPLES contains source code examples that
+ * show how to use PrimeSieve objects to generate primes, count
+ * primes, print prime triplets, ...
  *
- * The file ../docs/USAGE_EXAMPLES has source code examples that show
- * how to use PrimeSieve to generate prime numbers, count prime
- * numbers, print twin primes, ...
+ * == Memory Requirement ==
+ *
+ * PrimeSieve objects use about:
+ * pi(stopNumber_^0.5) * 8 Bytes + sieve size + 350 Kilobytes
  */
 class PrimeSieve {
   friend class PrimeNumberFinder;
@@ -99,36 +102,39 @@ protected:
     GENERATE_FLAGS      = PRINT_FLAGS | CALLBACK_PRIMES | CALLBACK_PRIMES_OOP,
     SSE4_POPCNT         = 1 << 24
   };
-  /** Lower bound for sieving. */
+  /** Start number for sieving. */
   uint64_t startNumber_;
-  /** Upper bound for sieveing. */
+  /** Stop number for sieveing. */
   uint64_t stopNumber_;
-  /** Size of PrimeNumberFinder's sieve array in Bytes. */
+  /** Size of the PrimeNumberFinder::sieve_ in Bytes. */
   uint32_t sieveSize_;
-  /** Flags (settings) for PrimeSieve. */
+  /** Settings for PrimeSieve::sieve(). */
   uint32_t flags_;
   /**
-   * Count of prime numbers    (counts_[0]),
-   * Count of twin primes      (counts_[1]),
-   * ...,
-   * Count of prime septuplets (counts_[6]).
+   * Count of prime numbers     (counts_[0]),
+   * Count of twin primes       (counts_[1]),
+   * Count of prime triplets    (counts_[2]),
+   * Count of prime quadruplets (counts_[3]),
+   * Count of prime quintuplets (counts_[4]),
+   * Count of prime sextuplets  (counts_[5]),
+   * Count of prime septuplets  (counts_[6]).
    */
   uint64_t counts_[COUNTS_SIZE];
-  /** Status of the sieving process in percent. */
+  /** Status of PrimeSieve::sieve() in percent. */
   double status_;
-  /** Time elapsed in seconds of the last sieve() call. */
+  /** Time elapsed in seconds of PrimeSieve::sieve(). */
   double timeElapsed_;
   void reset();
   virtual void doStatus(uint32_t);
 private:
-  /** Callback function for use with generatePrimes(). */
+  /** Callback function for use with PrimeSieve::generatePrimes(). */
   void (*callback_)(uint64_t);
-  /** OOP style callback function for use with generatePrimes(). */
+  /** OOP callback function for use with PrimeSieve::generatePrimes(). */
   void (*callbackOOP_)(uint64_t, void*);
   void* cbObj_;
   /** Either this or the parent ParallelPrimeSieve object. */
   PrimeSieve* parent_;
-  /** Sum of the segments that have been sieved so far. */
+  /** Current sum of sieved segments. */
   uint64_t segments_;
   void doSmallPrime(uint32_t, uint32_t, uint32_t, const std::string&);
 };
