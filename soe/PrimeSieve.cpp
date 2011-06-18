@@ -63,7 +63,7 @@ uint64_t PrimeSieve::getStopNumber() const {
 }
 
 /**
- * Get the sieve size in KiloBytes.
+ * Get the sieve size in Kilobytes.
  */
 uint32_t PrimeSieve::getSieveSize() const {
   return sieveSize_ / 1024;
@@ -78,8 +78,9 @@ uint32_t PrimeSieve::getFlags() const {
 }
 
 /**
- * Generate the prime numbers between startNumber and stopNumber and
- * call a callback function for each prime.
+ * Generate the prime numbers within the interval
+ * [startNumber, stopNumber] and call a callback function for each
+ * prime.
  */
 void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
     void (*callback)(uint64_t)) {
@@ -93,8 +94,9 @@ void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
 }
 
 /**
- * Generate the prime numbers between startNumber and stopNumber and
- * call an OOP style callback function for each prime.
+ * Generate the prime numbers within the interval
+ * [startNumber, stopNumber] and call an OOP callback function for
+ * each prime.
  */
 void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
     void (*callback)(uint64_t, void*), void* cbObj) {
@@ -109,7 +111,8 @@ void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
 }
 
 /**
- * Get the count of prime numbers between startNumber and stopNumber.
+ * Get the count of prime numbers within the interval
+ * [startNumber, stopNumber].
  */
 uint64_t PrimeSieve::getPrimeCount(uint64_t startNumber, uint64_t stopNumber) {
   this->setStartNumber(startNumber);
@@ -170,11 +173,13 @@ uint64_t PrimeSieve::getSeptupletCount() const {
 
 /**
  * Get the count of prime numbers or prime k-tuplets after sieve().
- * e.g type = 0 : Count of prime numbers
- *     type = 1 : Count of twin primes
- *     type = 2 : Count of prime triplets
- *     ...
- * @param type <= 7
+ * @param type = 0 : Count of prime numbers,
+ *        type = 1 : Count of twin primes,    
+ *        type = 2 : Count of prime triplets,    
+ *        type = 3 : Count of prime quadruplets, 
+ *        type = 4 : Count of prime quintuplets, 
+ *        type = 5 : Count of prime sextuplets,
+ *        type = 6 : Count of prime septuplets.
  */
 uint64_t PrimeSieve::getCounts(uint32_t type) const {
   if (type >= COUNTS_SIZE)
@@ -228,7 +233,7 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
     throw std::invalid_argument("sieve size must be >= 1 and <= 8192 KiloBytes");
   // EratBig needs a power of 2 sieveSize
   sieveSize_ = nextHighestPowerOf2(sieveSize);
-  // convert KiloBytes to Bytes
+  // convert Kilobytes to Bytes
   sieveSize_ *= 1024;
 }
 
@@ -268,7 +273,7 @@ void PrimeSieve::reset() {
 }
 
 /**
- * Calculate the current status (in percent) of sieve().
+ * Calculate the current status in percent of sieve().
  */
 void PrimeSieve::doStatus(uint32_t segment) {
   segments_ += segment;
@@ -297,8 +302,8 @@ void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type,
 }
 
 /**
- * Sieve the prime numbers and/or prime k-tuplets between startNumber
- * and stopNumber.
+ * Sieve the prime numbers and/or prime k-tuplets within the interval
+ * [startNumber_, stopNumber_].
  */
 void PrimeSieve::sieve() {
   clock_t t1 = std::clock();
@@ -320,8 +325,8 @@ void PrimeSieve::sieve() {
 
   if (stopNumber_ >= 7) {
     ResetSieve resetSieve(this);
-    // used to sieve the prime numbers and prime k-tuplets between
-    // startNumber_ and stopNumber_
+    // used to sieve the prime numbers and prime k-tuplets within the
+    // interval [startNumber_, stopNumber_]
     PrimeNumberFinder primeNumberFinder(this, &resetSieve);
 
     if (isqrt(stopNumber_) > resetSieve.getLimit()) {
@@ -337,7 +342,7 @@ void PrimeSieve::sieve() {
       // prime numbers up to stopNumber_^0.25 needed for sieving by
       // primeNumberGenerator. Although the algorithm is never
       // used > 65536 it finds the prime numbers up to 10^7 in 1 second
-      // on an Intel Core i5-670 3.46GHz
+      // on an Intel Core i5-670 3.46GHz from 2010
       for (uint32_t n = 5; n <= stop; n += 2) {
         uint32_t s = isqrt(n);
         uint32_t i = 0;
