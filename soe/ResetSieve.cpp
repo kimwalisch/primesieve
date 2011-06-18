@@ -30,9 +30,10 @@
 
 ResetSieve::ResetSieve(PrimeSieve* ps) :
     limit_(defs::LIMIT_RESETSIEVE), wheelArray_(NULL), size_(0) {
-  if (defs::LIMIT_RESETSIEVE < 13 || defs::LIMIT_RESETSIEVE > 23)
+  // assertion, limit_ <= 23 prevents 32 bit overflows
+  if (limit_ < 13 || limit_ > 23)
     throw std::logic_error(
-        "defs::LIMIT_RESETSIEVE must be >= 13 && <= 23.");
+        "ResetSieve::limit_ must be >= 13 && <= 23.");
   uint64_t interval = ps->getStopNumber() - ps->getStartNumber();
   uint32_t sqrtStop = isqrt(ps->getStopNumber());
   // if the sieve interval is small use limit_ 13 instead of 19
