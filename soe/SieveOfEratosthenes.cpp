@@ -55,7 +55,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
   if (sieveSize_ > UINT32_MAX / NUMBERS_PER_BYTE)
     throw std::overflow_error(
         "SieveOfEratosthenes: sieveSize must be <= 2^32 / 30.");
-  segmentLow_ = startNumber - this->getRemainder(startNumber);
+  segmentLow_ = startNumber - this->getByteRemainder(startNumber);
   assert(segmentLow_ % NUMBERS_PER_BYTE == 0);
   // '+ 1' is a correction for primes of type i*30 + 31
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
@@ -79,11 +79,12 @@ SieveOfEratosthenes::~SieveOfEratosthenes() {
   delete eratBig_;
 }
 
-uint32_t SieveOfEratosthenes::getRemainder(uint64_t n) {
+uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
   uint32_t remainder = static_cast<uint32_t> (n % NUMBERS_PER_BYTE);
-  return (remainder > 1)
-      ? remainder 
-      : remainder + NUMBERS_PER_BYTE;
+  // correction for primes of type i*30 + 31
+  if (remainder <= 1)
+    remainder += NUMBERS_PER_BYTE;
+  return remainder;
 }
 
 /**
@@ -93,20 +94,19 @@ void SieveOfEratosthenes::initSieve() {
   sieve_ = new uint8_t[sieveSize_];
 
   uint64_t bytesToSieve = (stopNumber_ - segmentLow_) / NUMBERS_PER_BYTE + 1;
-  uint32_t resetSize = (sieveSize_ < bytesToSieve) ? sieveSize_
-      : static_cast<uint32_t> (bytesToSieve);
+  uint32_t resetSize = static_cast<uint32_t> (
+      std::min<uint64_t>(sieveSize_, bytesToSieve));
   resetSieve_->reset(sieve_, resetSize, &resetIndex_);
-  // correct the first byte of the sieve_ for numbers <= 31
+  // correct reset() for numbers <= 23
   if (startNumber_ <= resetSieve_->getLimit())
     sieve_[0] = 0xff;
 
-  uint32_t startRemainder = this->getRemainder(startNumber_);
   // unset the bits of the first byte corresponding to
   // numbers < startNumber_
-  uint32_t i = 0;
-  while (i < 8 && bitValues_[i] < startRemainder)
-    i++;
-  sieve_[0] &= static_cast<uint8_t> (0xff << i);
+  uint32_t startRemainder = this->getByteRemainder(startNumber_);
+  sieve_[0] &= 0xff << (
+      std::lower_bound(bitValues_, &bitValues_[8], startRemainder) - 
+      bitValues_);
 }
 
 /**
@@ -114,15 +114,15 @@ void SieveOfEratosthenes::initSieve() {
  */
 void SieveOfEratosthenes::initEratAlgorithms() {
   assert(defs::FACTOR_ERATSMALL <= defs::FACTOR_ERATMEDIUM);
-  uint32_t sq = isqrt(stopNumber_);
+  uint32_t sqrtStop = isqrt(stopNumber_);
   uint32_t limit;
-  if (resetSieve_->getLimit() < sq) {
+  if (resetSieve_->getLimit() < sqrtStop) {
     limit = static_cast<uint32_t> (sieveSize_* defs::FACTOR_ERATSMALL);
-    eratSmall_ = new EratSmall(std::min<uint32_t>(limit, sq), this);
-    if (eratSmall_->getLimit() < sq) {
+    eratSmall_ = new EratSmall(std::min<uint32_t>(limit, sqrtStop), this);
+    if (eratSmall_->getLimit() < sqrtStop) {
       limit = static_cast<uint32_t> (sieveSize_* defs::FACTOR_ERATMEDIUM);
-      eratMedium_ = new EratMedium(std::min<uint32_t>(limit, sq), this);
-      if (eratMedium_->getLimit() < sq)
+      eratMedium_ = new EratMedium(std::min<uint32_t>(limit, sqrtStop), this);
+      if (eratMedium_->getLimit() < sqrtStop)
         eratBig_ = new EratBig(this);
     }
   }
@@ -187,7 +187,7 @@ void SieveOfEratosthenes::finish() {
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
-  uint32_t stopRemainder = this->getRemainder(stopNumber_);
+  uint32_t stopRemainder = this->getByteRemainder(stopNumber_);
   // calculate the sieve size of the last segment
   sieveSize_ = static_cast<uint32_t> ((stopNumber_ - stopRemainder)
       - segmentLow_) / NUMBERS_PER_BYTE + 1;
@@ -197,11 +197,8 @@ void SieveOfEratosthenes::finish() {
   this->crossOffMultiples();
   // unset the bits of the last byte corresponding to
   // numbers > stopNumber_
-  for (uint32_t i = 0; i < 8; i++) {
-    if (stopRemainder < bitValues_[i]) {
-      sieve_[sieveSize_ - 1] &= 0xff >> (8 - i);
-      break;
-    }
-  }
+  sieve_[sieveSize_ - 1] &= (1 << (
+    std::upper_bound(bitValues_, &bitValues_[8], stopRemainder) - 
+    bitValues_)) - 1;
   this->analyseSieve(sieve_, sieveSize_);
 }

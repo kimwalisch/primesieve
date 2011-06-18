@@ -108,7 +108,7 @@ private:
    * than one multiple occurrence per segment.
    */
   EratBig* eratBig_;
-  uint32_t getRemainder(uint64_t);
+  uint32_t getByteRemainder(uint64_t);
   void initEratAlgorithms();
   void initSieve();
   void crossOffMultiples();
