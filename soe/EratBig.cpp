@@ -28,10 +28,10 @@
 #include <cassert>
 
 #define BUCKETS_PER_CREATE (defs::MEMORY_PER_ALLOC_ERATBIG / sizeof(Bucket_t))
-#define SIEVE_SIZE ((1u << log2SieveSize_) - 1)
 
 EratBig::EratBig(const SieveOfEratosthenes* soe) : Modulo210Wheel(soe),
-    log2SieveSize_(floorLog2(soe->getSieveSize())), primeCount_(0), index_(0),
+    log2SieveSize_(floorLog2(soe->getSieveSize())),
+    moduloSieveSize_(soe->getSieveSize() - 1), primeCount_(0), index_(0),
     bucketLists_(NULL), bucketStock_(NULL) {
   // EratBig uses bitwise operations that require a power of 2 sieve size
   if (!isPowerOf2(soe->getSieveSize()))
@@ -93,7 +93,7 @@ void EratBig::addSievingPrime(uint32_t prime, uint64_t segmentLow) {
     // needs to be crossed off
     uint32_t segmentCount = sieveIndex >> log2SieveSize_;
     // position of the next multiple of prime within the sieve array
-    sieveIndex &= SIEVE_SIZE;
+    sieveIndex &= moduloSieveSize_;
     // calculate the list that will be used to remove the next
     // multiple of prime
     uint32_t nextIndex = (index_ + segmentCount) & (size_ - 1);
@@ -160,7 +160,7 @@ void EratBig::sieve(uint8_t* sieve) {
         segmentCount = sieveIndex >> log2SieveSize_;
       } while (segmentCount == 0);
       /// @see addSievingPrime(uint32_t, uint64_t)
-      sieveIndex &= SIEVE_SIZE;
+      sieveIndex &= moduloSieveSize_;
       uint32_t nextIndex = (index_ + segmentCount) & (size_ - 1);
       if (!bucketLists_[nextIndex]->addWheelPrime(sievingPrime, sieveIndex, wheelIndex))
         this->pushBucket(nextIndex);

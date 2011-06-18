@@ -43,6 +43,12 @@ private:
   typedef Bucket<defs::BUCKETSIZE_ERATBIG> Bucket_t;
   /** log2 of SieveOfEratosthenes::sieveSize_. */
   const uint32_t log2SieveSize_;
+  /**
+   * moduloSieveSize_ = SieveOfEratosthenes::sieveSize_ - 1.
+   * '& moduloSieveSize_' is the same as '% sieveSize_' as sieveSize_
+   * is a power of 2 value.
+   */
+  const uint32_t moduloSieveSize_;
   /** Size of bucketLists_. */
   uint32_t size_;
   /** Current count of sieving primes within EratBig. */
