@@ -139,8 +139,8 @@ void EratBig::sieve(uint8_t* sieve) {
   // iterate over the sieving primes with multiple occurrences in the
   // current segment
   while (bucketLists_[index_] != NULL) {
-    WheelPrime* wPrime = bucketLists_[index_]->wheelPrimeBegin();
-    WheelPrime* end = bucketLists_[index_]->wheelPrimeEnd();
+    WheelPrime* wPrime = bucketLists_[index_]->begin();
+    WheelPrime* end = bucketLists_[index_]->end();
     while (wPrime != end) {
       uint32_t sievingPrime = wPrime->getSievingPrime();
       uint32_t sieveIndex = wPrime->getSieveIndex();

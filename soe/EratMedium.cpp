@@ -41,8 +41,8 @@ EratMedium::EratMedium(uint32_t limit, const SieveOfEratosthenes* soe) :
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
   // iterate over the sieving primes within EratMedium
   for (Bucket_t* bucket = bucketList_; bucket != NULL; bucket = bucket->next) {
-    WheelPrime* wPrime = bucket->wheelPrimeBegin();
-    WheelPrime* end = bucket->wheelPrimeEnd();
+    WheelPrime* wPrime = bucket->begin();
+    WheelPrime* end = bucket->end();
     for (; wPrime != end; wPrime++) {
       uint32_t sieveIndex = wPrime->getSieveIndex();
       if (sieveIndex >= sieveSize) {

@@ -101,11 +101,11 @@ public:
     count_ = 0;
   }
   /** Pointer to the first WheelPrime within the Bucket. */
-  WheelPrime* wheelPrimeBegin() {
-    return wheelPrime_;
+  WheelPrime* begin() {
+    return wheelPrimes_;
   }
-  WheelPrime* wheelPrimeEnd() {
-    return &wheelPrime_[count_];
+  WheelPrime* end() {
+    return &wheelPrimes_[count_];
   }
   /**
    * Add a WheelPrime to the Bucket.
@@ -117,7 +117,7 @@ public:
   {
     uint32_t pos = count_++;
     assert(pos < SIZE);
-    WheelPrime& wPrime = wheelPrime_[pos];
+    WheelPrime& wPrime = wheelPrimes_[pos];
     wPrime.setSievingPrime(sievingPrime);
     wPrime.setWheelIndex(wheelIndex);
     wPrime.setSieveIndex(sieveIndex);
@@ -126,7 +126,7 @@ public:
 private:
   /** Count of WheelPrimes within the Bucket. */
   uint32_t count_;
-  WheelPrime wheelPrime_[SIZE];
+  WheelPrime wheelPrimes_[SIZE];
 };
 
 /**
