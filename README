@@ -174,12 +174,13 @@ ParallelPrimeSieve objects use about:
 
   My tries to parallelize the segmented sieve of Eratosthenes using
   real parallelism (i.e. without increasing memory usage) resulted in
-  a run time worse than single-threaded. Therefore I create a new
-  PrimeSieve object for each thread in ParallelPrimeSieve and each
-  thread sieves its share of the entire interval. This approach scales
-  well on multi-core CPUs but the memory usage now depends on the
-  number of threads i.e O(n^0.5) * threads, and the primes cannot be
-  printed or generated in order.
+  a run time worse than single-threaded. Therefore in my
+  ParallelPrimeSieve each thread sieves chunks of the interval
+  [startNumber, stopNumber] using PrimeSieve objects until the entire
+  interval has been processed. This approach scales well on multi-core
+  CPUs but the memory usage now depends on the number of threads i.e
+  O(n^0.5) * threads, and the primes cannot be generated or printed in
+  order.
 
   Prime k-tuplets (twin primes, ...)
   ----------------------------------
