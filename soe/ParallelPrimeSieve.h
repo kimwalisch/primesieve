@@ -27,23 +27,29 @@
  * ParallelPrimeSieve is a parallel implementation of the segmented
  * sieve of Eratosthenes using OpenMP.
  * The parallelization is achieved using multiple threads, each thread
- * uses its own PrimeSieve object to sieve a sub-interval of the
- * overall interval upon completion the results of the individual
- * threads are combined.
- * By default ParallelPrimeSieve uses an ideal number of threads for
- * the current set startNumber, stopNumber and flags (i.e. numThreads
- * = USE_IDEAL_NUM_THREADS).
+ * sieves chunks of the interval [startNumber_, stopNumber_] using
+ * PrimeSieve objects until the entire interval has been processed.
+ * This approach scales well on multi-core CPUs but the memory usage
+ * depends on the number of threads i.e O(n^0.5) * threads, and the
+ * primes are not generated or printed in order.
  *
- * @warning ParallelPrimeSieve should only be used for prime counting
- *          as it does not generate prime numbers in order and you
- *          would have to handle thread synchronization yourself.
+ * == Usage ==
+ *
+ * The file ../docs/USAGE_EXAMPLES contains source code examples that
+ * show how to use PrimeSieve and ParallelPrimeSieve objects to
+ * generate primes, count primes, print prime triplets, ...
+ *
+ * == Memory Requirement ==
+ *
+ * ParallelPrimeSieve objects use about:
+ * (pi(n^0.5) * 8 Bytes + 400 Kilobytes) * number of threads
  */
 class ParallelPrimeSieve: public PrimeSieve {
 public:
   /**
-   * Used in the Qt GUI version of primesieve to handle the
-   * communication between the GUI process and the ParallelPrimeSieve
-   * process.
+   * Used in the Qt primesieve application (../qt-gui) in order to
+   * handle the communication between the GUI process and the
+   * ParallelPrimeSieve process.
    */
   struct SharedMemory {
     uint64_t startNumber;
@@ -57,8 +63,8 @@ public:
   };
   enum {
     /*
-     * Use an ideal number of threads for the current set startNumber,
-     * stopNumber and flags.
+     * Use an ideal number of threads for the current set
+     * startNumber_, stopNumber_ and flags_.
      */
     USE_IDEAL_NUM_THREADS = -1
   };
@@ -71,9 +77,16 @@ public:
 protected:
   void doStatus(uint32_t);
 private:
+  /**
+   * Pointer to shared memory segment, for use with the Qt primesieve
+   * application (../qt-gui).
+   */
   SharedMemory* shm_;
+  /** Number of threads for sieving. */
   int numThreads_;
   int getIdealNumThreads() const;
+  uint64_t getIdealSieveInterval() const;
+  uint64_t getPrimeSieveBound(uint64_t) const;
 };
 
 #endif // PARALLELPRIMESIEVE_H
