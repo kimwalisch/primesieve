@@ -178,8 +178,8 @@ ParallelPrimeSieve objects use about:
   ParallelPrimeSieve each thread sieves chunks of the interval
   [startNumber, stopNumber] using PrimeSieve objects until the entire
   interval has been processed. This approach scales well on multi-core
-  CPUs but the memory usage now depends on the number of threads i.e
-  O(n^0.5) * threads, and the primes cannot be generated or printed in
+  CPUs but the memory usage depends on the number of threads i.e
+  O(n^0.5) * threads, and the primes are not generated or printed in
   order.
 
   Prime k-tuplets (twin primes, ...)
