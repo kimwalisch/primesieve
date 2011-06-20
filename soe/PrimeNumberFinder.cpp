@@ -29,6 +29,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <cassert>
+#include <sstream>
 
 namespace {
   const uint32_t BYTE_SIZE = 256;
@@ -176,20 +177,25 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   // print the prime numbers to stdout
   else if (primeSieve_->flags_ & PrimeSieve::PRINT_PRIMES)
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE)
-      for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
-        std::cout << byteValue + *bitValue << '\n';
+      for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++) {
+        std::ostringstream prime;
+        prime << byteValue + *bitValue << '\n';
+        std::cout << prime.str();
+      }
   // print the prime k-tuplets to stdout
   else {
     for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE) {
       for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++) {
-        std::cout << '(';
+        std::ostringstream ktuplet;
+        ktuplet << '(';
         uint32_t v = *bitValue;
         for (uint32_t j = PrimeSieve::PRINT_PRIMES; 
             (j & primeSieve_->flags_) == 0; j <<= 1) {
-          std::cout << byteValue + v << ", ";
+          ktuplet << byteValue + v << ", ";
           v = nextBitValue_[v];
         }
-        std::cout << byteValue + v << ")\n";
+        ktuplet << byteValue + v << ")\n";
+        std::cout << ktuplet.str();
       }
     }
   }
