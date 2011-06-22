@@ -20,7 +20,6 @@
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
 #include "SieveOfEratosthenes.h"
-#include "ResetSieve.h"
 #include "defs.h"
 #include "pmath.h"
 
@@ -28,18 +27,17 @@
 #include <cassert>
 
 namespace {
-  const uint32_t BYTE_SIZE = 256;
-  const uint32_t END = 0xff;
+  const uint32_t BYTE_SIZE = (1 << 8);
+  const uint32_t END = BYTE_SIZE;
 }
 
-PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder* primeNumberFinder) :
+PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
   SieveOfEratosthenes(
-      primeNumberFinder->getResetSieve()->getLimit() + 1,
-      isqrt(primeNumberFinder->getStopNumber()),
-      defs::SIEVESIZE_PRIMENUMBERGENERATOR,
-      primeNumberFinder->getResetSieve()),
-      primeNumberFinder_(primeNumberFinder), primeBitValues_(NULL) {
-  // PrimeNumberGenerator uses 32-bit integers
+      finder.getPreSieveLimit() + 1,
+      isqrt(finder.getStopNumber()),
+      defs::PRIMENUMBERGENERATOR_SIEVESIZE * 1024,
+      defs::PRIMENUMBERGENERATOR_PRESIEVE_LIMIT),
+      primeNumberFinder_(finder), primeBitValues_(NULL) {
   assert(this->getStopNumber() <= UINT32_MAX);
   this->initPrimeBitValues();
 }
@@ -52,21 +50,18 @@ PrimeNumberGenerator::~PrimeNumberGenerator() {
 
 /**
  * Initialize the primeBitValues_ lookup table.
- * Is used to reconstruct prime numbers from 1 bits of the sieve
- * array.
+ * primeBitValues_ is used to reconstruct prime numbers from 1 bits of
+ * the sieve array.
  */
 void PrimeNumberGenerator::initPrimeBitValues() {
   primeBitValues_ = new uint32_t*[BYTE_SIZE];
-  // calculate the bitValues for the 256 possible byte values
   for (uint32_t i = 0; i < BYTE_SIZE; i++) {
     primeBitValues_[i] = new uint32_t[9];
     uint32_t bitCount = 0;
-    // save the bitValues of the current byte value
+    // save the bit values of the current byte value (i)
     for (uint32_t j = 0; (1u << j) <= i; j++) {
-      if ((1u << j) & i) {
-        primeBitValues_[i][bitCount] = bitValues_[j];
-        bitCount++;
-      }
+      if ((1u << j) & i)
+        primeBitValues_[i][bitCount++] = bitValues_[j];
     }
     primeBitValues_[i][bitCount] = END;
   }
@@ -79,11 +74,12 @@ void PrimeNumberGenerator::initPrimeBitValues() {
  */
 void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
   uint32_t byteValue = static_cast<uint32_t> (this->getSegmentLow());
-  for (uint32_t i = 0; i < sieveSize; i++) {
-    // generate the prime numbers within the current sieve_ byte
-    for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++)
-      primeNumberFinder_->sieve(byteValue + *bitValue);
-    byteValue += NUMBERS_PER_BYTE;
+
+  for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE) {
+    for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++) {
+      uint32_t prime = byteValue + *bitValue;
+      primeNumberFinder_.sieve(prime);
+    }
   }
 }
 

@@ -54,7 +54,7 @@ public:
     }
   }
 protected:
-  typedef Bucket<defs::BUCKETSIZE_ERATBASE> Bucket_t;
+  typedef Bucket<defs::ERATBASE_BUCKETSIZE> Bucket_t;
   /** Upper bound for sieving primes within bucketList_. */
   const uint32_t limit_;
   /** Singly linked list of buckets, holds the sieving primes. */

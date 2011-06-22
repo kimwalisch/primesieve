@@ -27,7 +27,7 @@
 #include <stdexcept>
 #include <cassert>
 
-#define BUCKETS_PER_CREATE (defs::MEMORY_PER_ALLOC_ERATBIG / sizeof(Bucket_t))
+#define BUCKETS_PER_CREATE (defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t))
 
 EratBig::EratBig(const SieveOfEratosthenes* soe) : Modulo210Wheel(soe),
     log2SieveSize_(floorLog2(soe->getSieveSize())),

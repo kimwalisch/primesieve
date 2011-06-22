@@ -1,4 +1,4 @@
-May 27, 2011
+June 22, 2011
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -89,8 +89,8 @@ int main() {
 
 /****************************************************************************/
 // 5. Count twin primes in parallel
-//    Count the twin primes between 10^11 and 2*10^11 in parallel
-//    using all available threads (logical CPU cores)
+//    Count the twin primes within the interval [10^11, 10^11*2] in
+//    parallel using all available threads (logical CPU cores)
 
 #include "soe/ParallelPrimeSieve.h"
 #include <stdint.h>
@@ -134,7 +134,7 @@ int main() {
 
 int main() {
   PrimeSieve ps;
-  // set the sieve size in KiloBytes
+  // set the sieve size in Kilobytes
   ps.setSieveSize(512);
   uint64_t count = ps.getPrimeCount((uint64_t) 1E15, (uint64_t)(1E15+1E11));
   return 0;

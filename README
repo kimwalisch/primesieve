@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 15 June 2011
+# Last modified: 22 June 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -88,8 +88,8 @@ ParallelPrimeSieve objects use about:
   fits together, files that start with a capital letter contain a
   class of the same name (except WheelFactorization.h). Additionally
   the source code is documented with doxygen comments, header files
-  contain the class and member variable descriptions, .cpp files
-  contain the function descriptions.
+  contain the class and variable descriptions, .cpp files contain the
+  function descriptions.
 
   Files
   -----
@@ -141,11 +141,9 @@ ParallelPrimeSieve objects use about:
     is initialized in PrimeSieve::sieve() and is used in
     PrimeNumberGenerator::generate(const uint8_t*, uint32_t)
 
-  * ResetSieve.cpp
-    Uses a W(19) wheel array to reset the sieve array of
-    SieveOfEratosthenes objects after each sieved segment. This resets
-    the bits of the sieve array and eliminates multiples of
-    primes <= 19 without sieving.
+  * PreSieve.cpp
+    PreSieve objects are used to pre-sieve multiples of small primes
+    (e.g. <= 19) to speed up the sieve of Eratosthenes.
     Used in SieveOfEratosthenes::sieve(uint32_t)
 
   * defs.h
@@ -178,7 +176,7 @@ ParallelPrimeSieve objects use about:
   ParallelPrimeSieve each thread sieves chunks of the interval
   [startNumber, stopNumber] using PrimeSieve objects until the entire
   interval has been processed. This approach scales well on multi-core
-  CPUs but the memory usage depends on the number of threads i.e
+  CPUs but the memory usage depends on the number of threads i.e.
   O(n^0.5) * threads, and the primes are not generated or printed in
   order.
 

@@ -6,7 +6,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010  
-# Last modified:   10 May 2011 
+# Last modified:   22 June 2011 
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -29,7 +29,7 @@ LFLAGS   = /OPT:REF /OPT:ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.m
 INCPATH  = -I"thirdparty"
 
 OBJECTS = $(OUTDIR)\EratBig.obj \
-  $(OUTDIR)\ResetSieve.obj \
+  $(OUTDIR)\PreSieve.obj \
   $(OUTDIR)\EratMedium.obj \
   $(OUTDIR)\SieveOfEratosthenes.obj \
   $(OUTDIR)\PrimeNumberGenerator.obj \

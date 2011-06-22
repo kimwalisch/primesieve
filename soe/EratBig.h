@@ -40,7 +40,7 @@ public:
   void addSievingPrime(uint32_t, uint64_t);
   void sieve(uint8_t*);
 private:
-  typedef Bucket<defs::BUCKETSIZE_ERATBIG> Bucket_t;
+  typedef Bucket<defs::ERATBIG_BUCKETSIZE> Bucket_t;
   /** log2 of SieveOfEratosthenes::sieveSize_. */
   const uint32_t log2SieveSize_;
   /**

@@ -1,18 +1,12 @@
-New in version 2.3, 18/06/2011
+New in version 2.3, 22/06/2011
 ==============================
 
-1. README has been rewritten from scratch.
-2. Revised documentation of WheelFactorization.h
-3. Revised documentation of defs.h
-4. Revised documentation of SieveOfEratosthenes.h & .cpp
-5. Revised documentation of PrimeNumberGenerator.h & .cpp
-6. Revised documentation of PrimeNumberFinder.h & .cpp
-7. Revised documentation of ResetSieve.h & .cpp
-8. Revised documentation of EratBase.h
-9. Revised documentation of EratSmall.h & .cpp
-10. Revised documentation of EratMedium.h & .cpp
-11. Revised documentation of EratBig.h & .cpp
-12. Revised documentation of PrimeSieve.h & .cpp
+1. The thread scheduling of ParallelPrimeSieve has been improved
+   (10% speed up).
+2. README has been rewritten from scratch and the comments of the
+   sieve of Eratosthenes implementation have been revised.
+3. ResetSieve has been renamed to PreSieve.
+4. Some minor changes to improve the code readability.
 
 New in version 2.2, 26/05/2011
 ==============================

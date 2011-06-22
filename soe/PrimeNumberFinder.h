@@ -28,7 +28,7 @@ class PrimeSieve;
 /**
  * PrimeNumberFinder is a SieveOfEratosthenes class that is used to
  * count, print and generate the prime numbers and prime k-tuplets
- * (twin primes, prime triplets, ...) in the interval
+ * (twin primes, prime triplets, ...) within the interval
  * [startNumber_, stopNumber_].
  * The prime numbers up to stopNumber_^0.5 needed for sieving are
  * provided by PrimeNumberGenerator.
@@ -37,7 +37,7 @@ class PrimeSieve;
 class PrimeNumberFinder: public SieveOfEratosthenes {
 public:
   enum { COUNTS_SIZE = 7 };
-  PrimeNumberFinder(PrimeSieve*, ResetSieve*);
+  PrimeNumberFinder(PrimeSieve*);
   ~PrimeNumberFinder();
 private:
   static const uint32_t nextBitValue_[NUMBERS_PER_BYTE];

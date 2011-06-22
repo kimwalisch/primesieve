@@ -21,8 +21,8 @@
 #define SIEVEOFERATOSTHENES_H
 
 #include "defs.h"
+#include "PreSieve.h"
 
-class ResetSieve;
 class EratSmall;
 class EratMedium;
 class EratBig;
@@ -62,15 +62,13 @@ public:
   uint32_t getSieveSize() const {
     return sieveSize_;
   }
-  ResetSieve* getResetSieve() const {
-    return resetSieve_;
-  }
+  uint32_t getPreSieveLimit() const;
   void sieve(uint32_t);
   void finish();
 protected:
   /** @see NUMBERS_PER_BYTE */
   static const uint32_t bitValues_[8];
-  SieveOfEratosthenes(uint64_t, uint64_t, uint32_t, ResetSieve*);
+  SieveOfEratosthenes(uint64_t, uint64_t, uint32_t, uint32_t);
   ~SieveOfEratosthenes();
   uint64_t getSegmentLow() const {
     return segmentLow_;
@@ -89,10 +87,11 @@ private:
   uint8_t* sieve_;
   /** Size of sieve_ in bytes. */
   uint32_t sieveSize_;
-  /** Used to reset the sieve_ array after each sieved segment. */
-  ResetSieve* const resetSieve_;
-  /** Index needed by resetSieve_. */
-  uint32_t resetIndex_;
+  /**
+   * Used to pre-sieve multiples of small
+   * primes <= preSieve_.getLimit().
+   */
+  const PreSieve preSieve_;
   /**
    * Used to cross off multiples of small sieving primes that have a
    * lot of multiple occurrences per segment.

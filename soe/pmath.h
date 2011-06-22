@@ -74,39 +74,26 @@ inline bool isPowerOf2(uint32_t x) {
  */
 inline uint32_t floorLog2(uint32_t x) {
   uint32_t log2 = 0;
-  if (x >= (1 << 16)) {
-    x >>= 16;
-    log2 |= 16;
-  }
-  if (x >= (1 << 8)) {
-    x >>= 8;
-    log2 |= 8;
-  }
-  if (x >= (1 << 4)) {
-    x >>= 4;
-    log2 |= 4;
-  }
-  if (x >= (1 << 2)) {
-    x >>= 2;
-    log2 |= 2;
-  }
-  if (x >= (1 << 1))
-    log2 |= 1;
+  if (x >= (1 << 16)) { x >>= 16; log2 |= 16; }
+  if (x >= (1 <<  8)) { x >>=  8; log2 |=  8; }
+  if (x >= (1 <<  4)) { x >>=  4; log2 |=  4; }
+  if (x >= (1 <<  2)) { x >>=  2; log2 |=  2; }
+  if (x >= (1 <<  1)) {           log2 |=  1; }
   return log2;
 }
 
 /**
  * Prime product function (x)#.
  * @pre x < 29.
- * @return the product of the prime numbers up to x.
+ * @return the product of the primes up to x.
  */
 inline uint32_t primeProduct(uint32_t x) {
   if (x >= 29)
-    throw std::overflow_error("primeProduct: 32 bit overflow.");
-  const uint32_t smallPrimes[9] = { 2, 3, 5, 7, 11, 13, 17, 19, 23 };
+    throw std::overflow_error("primeProduct(x): 32 bit overflow.");
+  const uint32_t primes[9] = { 2, 3, 5, 7, 11, 13, 17, 19, 23 };
   uint32_t pp = 1;
-  for (uint32_t i = 0; i < 9 && smallPrimes[i] <= x; i++)
-    pp *= smallPrimes[i];
+  for (uint32_t i = 0; i < 9 && primes[i] <= x; i++)
+    pp *= primes[i];
   return pp;
 }
 

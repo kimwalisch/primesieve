@@ -32,10 +32,10 @@ class PrimeNumberFinder;
  */
 class PrimeNumberGenerator: public SieveOfEratosthenes {
 public:
-  PrimeNumberGenerator(PrimeNumberFinder*);
+  PrimeNumberGenerator(PrimeNumberFinder&);
   ~PrimeNumberGenerator();
 private:
-  PrimeNumberFinder* const primeNumberFinder_;
+  PrimeNumberFinder& primeNumberFinder_;
   /**
    * Lookup table used to reconstruct prime numbers from 1 bits of the
    * sieve array.

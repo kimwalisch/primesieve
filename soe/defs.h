@@ -100,56 +100,66 @@
 
 namespace defs {
   /**
-   * Sieving primes up to (sieveSize in Bytes * FACTOR_ERATSMALL) are
+   * Sieving primes <= (sieveSize in Bytes * ERATSMALL_FACTOR) are
    * added to EratSmall which is used to cross off multiples.
    * Default = 1.5, future CPUs might run faster with a smaller value
    * e.g. 1.25 or 1.0.
    *
-   * @pre 0 >= FACTOR_ERATSMALL < 5 && <= FACTOR_ERATMEDIUM
+   * @pre 0 >= ERATSMALL_FACTOR < 5
    * @see SieveOfEratosthenes::sieve(uint32_t)
    */
-  const double FACTOR_ERATSMALL = 1.5;
+  const double ERATSMALL_FACTOR = 1.5;
 
   enum {
     /**
-     * Multiples of small primes <= LIMIT_RESETSIEVE are pre-sieved if
-     * the sieve interval >= 1E8, else LIMIT_RESETSIEVE = 13 is used.
-     * Default = 19 (uses 315.7 Kilobytes), for less memory usage 13 is
-     * good (uses 1001 Bytes) and still very fast.
-     *
-     * @pre 13 >= LIMIT_RESETSIEVE <= 23
-     * @see ResetSieve.h
-     */
-    LIMIT_RESETSIEVE = 19,
-    /**
-     * Sieve size in bytes of PrimeNumberGenerator which generates the
-     * primes up to n^0.5 needed for sieving.
-     * Default = CPU L1 Data Cache size.
-     *
-     * @pre 1024 >= SIEVESIZE_PRIMENUMBERGENERATOR <= 2^23 &&
-     *      must be power of 2
-     */
-    SIEVESIZE_PRIMENUMBERGENERATOR = 1024 * 32,
-    /**
-     * Default sieve size in bytes of PrimeSieve and
+     * Default sieve size in Kilobytes of PrimeSieve and
      * ParallelPrimeSieve objects.
      * Default = CPU L1 Data Cache size.
      *
-     * @pre 1024 >= SIEVESIZE_PRIMENUMBERFINDER <= 2^23 &&
-     *      must be power of 2     
+     * @pre 1 >= PRIMESIEVE_SIEVESIZE <= 8192     
      */
-    SIEVESIZE_PRIMENUMBERFINDER = 1024 * 64,
+    PRIMESIEVE_SIEVESIZE = 64,
     /**
-     * Sieving primes > EratSmall::getLimit() && 
-     *                <= (sieveSize in Bytes * FACTOR_ERATMEDIUM)
+     * Default pre-sieve limit of PrimeSieve and ParallelPrimeSieve
+     * objects. Multiples of small primes <= PRIMESIEVE_PRESIEVE_LIMIT
+     * are pre-sieved to speed up the sieve of Eratosthenes.
+     * Default = 19 (uses 315.7 Kilobytes), for less memory usage 13 is
+     * good (uses 1001 Bytes) and still very fast.
+     *
+     * @pre 11 >= PRIMESIEVE_PRESIEVE_LIMIT <= 23
+     * @see PreSieve.h
+     * @see PrimeSieve::setPreSieveLimit(uint32_t)
+     */
+    PRIMESIEVE_PRESIEVE_LIMIT = 19,
+    /**
+     * Sieve size in Kilobytes of PrimeNumberGenerator which generates
+     * the primes up to n^0.5 needed for sieving.
+     * Default = CPU L1 Data Cache size.
+     *
+     * @pre 1 >= PRIMENUMBERGENERATOR_SIEVESIZE <= 8192 &&
+     *      must be power of 2
+     */
+    PRIMENUMBERGENERATOR_SIEVESIZE = 32,
+    /**
+     * Pre-sieve limit of PrimeNumberGenerator which generates the
+     * primes up to n^0.5 needed for sieving.
+     * Default = 13 (uses 1001 Bytes), a greater value uses more
+     * memory without noticeable speed up.
+     *
+     * @pre 11 >= PRIMENUMBERGENERATOR_PRESIEVE_LIMIT <= 23
+     * @see PrimeNumberGenerator.cpp
+     */
+    PRIMENUMBERGENERATOR_PRESIEVE_LIMIT = 13,
+    /**
+     * Sieving primes > EratSmall::getLimit() &&
+     *                <= (sieveSize in Bytes * ERATMEDIUM_FACTOR)
      * are added to EratMedium which is used to cross off multiples.
      * Default = 9, future CPUs might run faster with a smaller value
      * e.g. 7 or 5.
      *
-     * @pre FACTOR_ERATMEDIUM >= FACTOR_ERATSMALL
      * @see SieveOfEratosthenes::sieve(uint32_t)
      */
-    FACTOR_ERATMEDIUM = 9,
+    ERATMEDIUM_FACTOR = 9,
     /**
      * Number of WheelPrimes (i.e. sieving primes) per Bucket in
      * EratSmall and EratMedium.
@@ -158,7 +168,7 @@ namespace defs {
      *
      * @see Bucket in WheelFactorization.h
      */
-    BUCKETSIZE_ERATBASE = 1 << 12,
+    ERATBASE_BUCKETSIZE = 1 << 12,
     /**
      * Number of WheelPrimes (i.e. sieving primes) per Bucket in
      * EratBig.
@@ -167,15 +177,15 @@ namespace defs {
      *
      * @see Bucket in WheelFactorization.h
      */
-    BUCKETSIZE_ERATBIG = 1 << 10,
+    ERATBIG_BUCKETSIZE = 1 << 10,
     /**
-     * EratBig allocates MEMORY_PER_ALLOC_ERATBIG bytes of new memory
+     * EratBig allocates ERATBIG_MEMORY_PER_ALLOC bytes of new memory
      * each time it needs more Buckets.
      * Default = 4 Megabytes.
      *
      * @see EratBig.cpp
      */
-    MEMORY_PER_ALLOC_ERATBIG = (1 << 20) * 4
+    ERATBIG_MEMORY_PER_ALLOC = (1 << 20) * 4
   };
 }
 
@@ -184,14 +194,14 @@ namespace defs {
  * a byte.
  */
 enum {
-  BIT0 = 0xfe, // 1111.1110
-  BIT1 = 0xfd, // 1111.1101
-  BIT2 = 0xfb, // 1111.1011
-  BIT3 = 0xf7, // 1111.0111
-  BIT4 = 0xef, // 1110.1111
-  BIT5 = 0xdf, // 1101.1111
-  BIT6 = 0xbf, // 1011.1111
-  BIT7 = 0x7f  // 0111.1111
+  BIT0 = 0xfe, // 11111110
+  BIT1 = 0xfd, // 11111101
+  BIT2 = 0xfb, // 11111011
+  BIT3 = 0xf7, // 11110111
+  BIT4 = 0xef, // 11101111
+  BIT5 = 0xdf, // 11011111
+  BIT6 = 0xbf, // 10111111
+  BIT7 = 0x7f  // 01111111
 };
 
 #endif /* DEFS_H */

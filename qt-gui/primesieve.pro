@@ -33,13 +33,13 @@ win* {
 *g++* {
     QMAKE_CXXFLAGS += -fopenmp
     QMAKE_LFLAGS   += -fopenmp
-    # -mpopcnt requires GCC 4.4 (from 2009) or above, Apple GCC is
-    # still version 4.2.1 in 2011
+    # -mpopcnt requires GCC 4.4 (from 2009) or above, Apple GCC does
+    # not support this option
     !macx {
         QMAKE_CXXFLAGS += -mpopcnt
     }
     macx {
-        # Apple GCC performs better with -fast than -O2
+        # Apple GCC performs best with -fast
         QMAKE_CXXFLAGS += -fast
     }
 }
@@ -64,7 +64,7 @@ SOURCES += ../soe/EratBig.cpp \
     ../soe/SieveOfEratosthenes.cpp \
     ../soe/EratMedium.cpp \
     ../soe/PrimeNumberGenerator.cpp \
-    ../soe/ResetSieve.cpp \
+    ../soe/PreSieve.cpp \
     ../soe/WheelFactorization.cpp
 HEADERS += ../soe/EratBig.h \
     ../soe/EratSmall.h \
@@ -74,7 +74,7 @@ HEADERS += ../soe/EratBig.h \
     ../soe/SieveOfEratosthenes.h \
     ../soe/EratMedium.h \
     ../soe/PrimeNumberGenerator.h \
-    ../soe/ResetSieve.h \
+    ../soe/PreSieve.h \
     ../soe/WheelFactorization.h \
     ../soe/pmath.h \
     ../soe/defs.h \

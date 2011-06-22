@@ -76,9 +76,8 @@ public:
   uint64_t getStartNumber() const;
   uint64_t getStopNumber() const;
   uint32_t getSieveSize() const;
+  uint32_t getPreSieveLimit() const;
   uint32_t getFlags() const;
-  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
-  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
   uint64_t getPrimeCount(uint64_t, uint64_t);
   uint64_t getPrimeCount() const;
   uint64_t getTwinCount() const;
@@ -92,7 +91,10 @@ public:
   void setStartNumber(uint64_t);
   void setStopNumber(uint64_t);
   void setSieveSize(uint32_t);
+  void setPreSieveLimit(uint32_t);
   void setFlags(uint32_t);
+  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
+  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
   virtual void sieve();
 protected:
   /** Private flags (bits >= 20) for PrimeSieve. */
@@ -106,7 +108,7 @@ protected:
   uint64_t startNumber_;
   /** Stop number for sieveing. */
   uint64_t stopNumber_;
-  /** Size of the PrimeNumberFinder::sieve_ in Bytes. */
+  /** A sieve size in Kilobytes. */
   uint32_t sieveSize_;
   /** Settings for PrimeSieve::sieve(). */
   uint32_t flags_;
@@ -127,6 +129,8 @@ protected:
   void reset();
   virtual void doStatus(uint32_t);
 private:
+  /** Multiples of small primes <= preSieveLimit_ are pre-sieved. */
+  uint32_t preSieveLimit_;
   /** Callback function for use with PrimeSieve::generatePrimes(). */
   void (*callback_)(uint64_t);
   /** OOP callback function for use with PrimeSieve::generatePrimes(). */

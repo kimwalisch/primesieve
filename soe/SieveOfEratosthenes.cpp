@@ -18,7 +18,7 @@
  */
 
 #include "SieveOfEratosthenes.h"
-#include "ResetSieve.h"
+#include "PreSieve.h"
 #include "EratSmall.h"
 #include "EratMedium.h"
 #include "EratBig.h"
@@ -33,16 +33,16 @@
 const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
 
 /**
- * @param startNumber A start number for sieving.
- * @param stopNumber  A stop number for sieving.
- * @param sieveSize   A sieve size in bytes.
- * @param resetSieve  A ResetSieve object that is used to reset the
- *                    sieve_ array.
+ * @param startNumber   A start number for sieving.
+ * @param stopNumber    A stop number for sieving.
+ * @param sieveSize     A sieve size in bytes.
+ * @param preSieveLimit Multiples of small primes <= preSieveLimit are
+ *                      pre-sieved.
  */
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
-    uint64_t stopNumber, uint32_t sieveSize, ResetSieve* resetSieve) :
+    uint64_t stopNumber, uint32_t sieveSize, uint32_t preSieveLimit) :
   startNumber_(startNumber), stopNumber_(stopNumber), sieve_(NULL),
-      sieveSize_(sieveSize), resetSieve_(resetSieve), eratSmall_(NULL),
+      sieveSize_(sieveSize), preSieve_(preSieveLimit), eratSmall_(NULL),
            eratMedium_(NULL), eratBig_(NULL) {
   if (startNumber_ < 7 || startNumber_ > stopNumber_)
     throw std::logic_error(
@@ -59,7 +59,6 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
   assert(segmentLow_ % NUMBERS_PER_BYTE == 0);
   // '+ 1' is a correction for primes of type i*30 + 31
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
-  resetIndex_ = resetSieve_->getResetIndex(segmentLow_);
   try {
     this->initEratAlgorithms();
     this->initSieve();
@@ -79,6 +78,10 @@ SieveOfEratosthenes::~SieveOfEratosthenes() {
   delete eratBig_;
 }
 
+uint32_t SieveOfEratosthenes::getPreSieveLimit() const {
+  return preSieve_.getLimit();
+}
+
 uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
   uint32_t remainder = static_cast<uint32_t> (n % NUMBERS_PER_BYTE);
   // correction for primes of type i*30 + 31
@@ -94,11 +97,11 @@ void SieveOfEratosthenes::initSieve() {
   sieve_ = new uint8_t[sieveSize_];
 
   uint64_t bytesToSieve = (stopNumber_ - segmentLow_) / NUMBERS_PER_BYTE + 1;
-  uint32_t resetSize = static_cast<uint32_t> (
+  uint32_t size = static_cast<uint32_t> (
       std::min<uint64_t>(sieveSize_, bytesToSieve));
-  resetSieve_->reset(sieve_, resetSize, &resetIndex_);
-  // correct reset() for numbers <= 23
-  if (startNumber_ <= resetSieve_->getLimit())
+  preSieve_.doIt(sieve_, size, segmentLow_);
+  // correct doIt() for numbers <= 23
+  if (startNumber_ <= preSieve_.getLimit())
     sieve_[0] = 0xff;
 
   // unset the bits of the first byte corresponding to
@@ -113,14 +116,13 @@ void SieveOfEratosthenes::initSieve() {
  * Initialize the 3 erat* algorithms if needed.
  */
 void SieveOfEratosthenes::initEratAlgorithms() {
-  assert(defs::FACTOR_ERATSMALL <= defs::FACTOR_ERATMEDIUM);
   uint32_t sqrtStop = isqrt(stopNumber_);
   uint32_t limit;
-  if (resetSieve_->getLimit() < sqrtStop) {
-    limit = static_cast<uint32_t> (sieveSize_* defs::FACTOR_ERATSMALL);
+  if (preSieve_.getLimit() < sqrtStop) {
+    limit = static_cast<uint32_t> (sieveSize_* defs::ERATSMALL_FACTOR);
     eratSmall_ = new EratSmall(std::min<uint32_t>(limit, sqrtStop), this);
     if (eratSmall_->getLimit() < sqrtStop) {
-      limit = static_cast<uint32_t> (sieveSize_* defs::FACTOR_ERATMEDIUM);
+      limit = static_cast<uint32_t> (sieveSize_* defs::ERATMEDIUM_FACTOR);
       eratMedium_ = new EratMedium(std::min<uint32_t>(limit, sqrtStop), this);
       if (eratMedium_->getLimit() < sqrtStop)
         eratBig_ = new EratBig(this);
@@ -145,13 +147,12 @@ void SieveOfEratosthenes::crossOffMultiples() {
 
 /**
  * Implementation of the segmented sieve of Eratosthenes.
- * sieve(uint32_t) must be called consecutively for all primes up to
- * stopNumber_^0.5 in order to sieve the interval
- * [startNumber_, stopNumber_].
+ * sieve(uint32_t) must be called consecutively for all primes 
+ * (> getPreSieveLimit()) up to stopNumber_^0.5 in order to sieve the
+ * interval [startNumber_, stopNumber_].
  */
 void SieveOfEratosthenes::sieve(uint32_t prime) {
-  assert(eratSmall_ != NULL && 
-      prime > resetSieve_->getLimit() &&
+  assert(eratSmall_ != NULL && prime > preSieve_.getLimit() &&
       isquare(prime) <= stopNumber_);
   uint64_t primeSquared = isquare(prime);
 
@@ -160,9 +161,11 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
   while (segmentHigh_ < primeSquared) {
     this->crossOffMultiples();
     this->analyseSieve(sieve_, sieveSize_);
-    resetSieve_->reset(sieve_, sieveSize_, &resetIndex_);
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
+    // reset the sieve array for the next segment and pre-sieve
+    // multiples of small primes <= preSieve_.getLimit()
+    preSieve_.doIt(sieve_, sieveSize_, segmentLow_);
   }
   // add prime to the appropriate erat* object
   if (prime > eratSmall_->getLimit())
@@ -183,9 +186,9 @@ void SieveOfEratosthenes::finish() {
   while (segmentHigh_ < stopNumber_) {
     this->crossOffMultiples();
     this->analyseSieve(sieve_, sieveSize_);
-    resetSieve_->reset(sieve_, sieveSize_, &resetIndex_);
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
+    preSieve_.doIt(sieve_, sieveSize_, segmentLow_);
   }
   uint32_t stopRemainder = this->getByteRemainder(stopNumber_);
   // calculate the sieve size of the last segment
