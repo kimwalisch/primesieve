@@ -356,7 +356,7 @@ void PrimeSieve::sieve() {
       // the primes up to stopNumber_^0.25 needed for sieving by the
       // faster PrimeNumberGenerator
       uint32_t N = isqrt(generator.getStopNumber());
-      std::vector<uint8_t> isPrime((N+8)/8, 0xAA);
+      std::vector<uint8_t> isPrime(N/8+1, 0xAA);
       for (uint32_t i = 3; i*i <= N; i += 2) {
         if (isPrime[i>>3] & (1<<(i&7)))
           for (uint32_t j = i*i; j <= N; j += i*2)
