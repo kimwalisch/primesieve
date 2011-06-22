@@ -30,8 +30,8 @@
  * sieves chunks of the interval [startNumber_, stopNumber_] using
  * PrimeSieve objects until the entire interval has been processed.
  * This approach scales well on multi-core CPUs but the memory usage
- * depends on the number of threads i.e O(n^0.5) * threads, and the
- * primes are not generated or printed in order.
+ * depends on the number of threads i.e. O(n^0.5) * number of threads,
+ * and the primes are not generated or printed in order.
  *
  * == Usage ==
  *
@@ -41,8 +41,8 @@
  *
  * == Memory Requirement ==
  *
- * ParallelPrimeSieve objects use about:
- * (pi(n^0.5) * 8 Bytes + 400 Kilobytes) * number of threads
+ * ParallelPrimeSieve::sieve() uses about:
+ * (pi(n^0.5) * 8 Bytes + 500 Kilobytes) * number of threads
  */
 class ParallelPrimeSieve: public PrimeSieve {
 public:

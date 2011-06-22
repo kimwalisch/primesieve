@@ -43,10 +43,10 @@ Contents
 3. Memory Usage
 ===============
 
-PrimeSieve objects use about:
-pi(n^0.5) * 8 Bytes + sieve size + 350 Kilobytes           (1)
+PrimeSieve::sieve() uses about:
+pi(n^0.5) * 8 Bytes + sieve size + 450 Kilobytes           (1)
 
-ParallelPrimeSieve objects use about:
+ParallelPrimeSieve::sieve() uses about:
 (1) * number of threads                                    (2)
 
 4. Source Archive
