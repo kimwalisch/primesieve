@@ -132,6 +132,15 @@ namespace defs {
      */
     PRIMESIEVE_PRESIEVE_LIMIT = 19,
     /**
+     * Minimum sieve interval per thread in ParallelPrimeSieve.
+     * Due to initialization overhead a single thread is faster for
+     * small sieve intervals.
+     * Default = 1E8
+     *
+     * @pre MIN_THREAD_INTERVAL >= 100
+     */
+    MIN_THREAD_INTERVAL = static_cast<int> (1E8),
+    /**
      * Sieve size in Kilobytes of PrimeNumberGenerator which generates
      * the primes up to n^0.5 needed for sieving.
      * Default = CPU L1 Data Cache size.

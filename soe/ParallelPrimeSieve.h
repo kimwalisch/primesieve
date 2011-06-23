@@ -86,7 +86,6 @@ private:
   int numThreads_;
   int getIdealNumThreads() const;
   uint64_t getIdealSieveInterval() const;
-  uint64_t getPrimeSieveBound(uint64_t) const;
 };
 
 #endif // PARALLELPRIMESIEVE_H
