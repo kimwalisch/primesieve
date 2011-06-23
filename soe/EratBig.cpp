@@ -41,9 +41,6 @@ EratBig::EratBig(const SieveOfEratosthenes* soe) : Modulo210Wheel(soe),
   this->initBucketLists();
 }
 
-/**
- * Delete all allocated buckets.
- */
 EratBig::~EratBig() {
   while (!bucketPointers_.empty()) {
     delete[] bucketPointers_.back();
