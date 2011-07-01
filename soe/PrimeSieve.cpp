@@ -292,9 +292,10 @@ void PrimeSieve::reset() {
 
 /**
  * Calculate the current status in percent of sieve().
+ * @param processed A sieved interval (segment)
  */
-void PrimeSieve::doStatus(uint32_t segment) {
-  segments_ += segment;
+void PrimeSieve::doStatus(uint32_t processed) {
+  segments_ += processed;
   int old = static_cast<int> (status_);
   status_ = std::min<double>(100.0, (static_cast<double> (segments_) / 
       (1 + stopNumber_ - startNumber_)) * 100.0);

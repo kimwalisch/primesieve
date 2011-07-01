@@ -56,7 +56,8 @@ public:
     COUNT_QUINTUPLETS = 1 << 4,
     COUNT_SEXTUPLETS  = 1 << 5,
     COUNT_SEPTUPLETS  = 1 << 6,
-    COUNT_FLAGS       = COUNT_PRIMES | COUNT_TWINS | COUNT_TRIPLETS | COUNT_QUADRUPLETS | COUNT_QUINTUPLETS | COUNT_SEXTUPLETS | COUNT_SEPTUPLETS,
+    COUNT_KTUPLETS    = COUNT_TWINS | COUNT_TRIPLETS | COUNT_QUADRUPLETS | COUNT_QUINTUPLETS | COUNT_SEXTUPLETS | COUNT_SEPTUPLETS,
+    COUNT_FLAGS       = COUNT_PRIMES | COUNT_KTUPLETS,
     PRINT_PRIMES      = 1 << 7,
     PRINT_TWINS       = 1 << 8,
     PRINT_TRIPLETS    = 1 << 9,
@@ -64,15 +65,16 @@ public:
     PRINT_QUINTUPLETS = 1 << 11,
     PRINT_SEXTUPLETS  = 1 << 12,
     PRINT_SEPTUPLETS  = 1 << 13,
-    PRINT_FLAGS       = PRINT_PRIMES | PRINT_TWINS | PRINT_TRIPLETS | PRINT_QUADRUPLETS | PRINT_QUINTUPLETS | PRINT_SEXTUPLETS | PRINT_SEPTUPLETS,
+    PRINT_KTUPLETS    = PRINT_TWINS | PRINT_TRIPLETS | PRINT_QUADRUPLETS | PRINT_QUINTUPLETS | PRINT_SEXTUPLETS | PRINT_SEPTUPLETS,
+    PRINT_FLAGS       = PRINT_PRIMES | PRINT_KTUPLETS,
     PRINT_STATUS      = 1 << 14
   };
   enum {
-    COUNTS_SIZE = PrimeNumberFinder::COUNTS_SIZE
+    COUNTS_SIZE = 7
   };
   PrimeSieve();
   PrimeSieve(uint64_t, uint64_t, ParallelPrimeSieve*);
-  virtual ~PrimeSieve() { }
+  virtual ~PrimeSieve() {}
   uint64_t getStartNumber() const;
   uint64_t getStopNumber() const;
   uint32_t getSieveSize() const;
@@ -113,13 +115,13 @@ protected:
   /** Settings for PrimeSieve::sieve(). */
   uint32_t flags_;
   /**
-   * Count of prime numbers     (counts_[0]),
-   * Count of twin primes       (counts_[1]),
-   * Count of prime triplets    (counts_[2]),
-   * Count of prime quadruplets (counts_[3]),
-   * Count of prime quintuplets (counts_[4]),
-   * Count of prime sextuplets  (counts_[5]),
-   * Count of prime septuplets  (counts_[6]).
+   * counts_[0]: count of prime numbers
+   * counts_[1]: count of twin primes
+   * counts_[2]: count of prime triplets
+   * counts_[3]: count of prime quadruplets
+   * counts_[4]: count of prime quintuplets
+   * counts_[5]: count of prime sextuplets
+   * counts_[6]: count of prime septuplets
    */
   uint64_t counts_[COUNTS_SIZE];
   /** Status of PrimeSieve::sieve() in percent. */
@@ -138,7 +140,7 @@ private:
   void* cbObj_;
   /** Either this or the parent ParallelPrimeSieve object. */
   PrimeSieve* parent_;
-  /** Current sum of sieved segments. */
+  /** Sum of the processed segments. */
   uint64_t segments_;
   void doSmallPrime(uint32_t, uint32_t, uint32_t, const std::string&);
 };
