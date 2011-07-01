@@ -70,7 +70,7 @@ public:
    * sievingPrime_ = prime / 15;
    * /15 = *2/30, *2 is used to skip multiples of 2 and /30 is used as
    * SieveOfEratosthenes objects use 30 numbers per byte.
-   * @see ModuloWheel::setWheelPrime(...)
+   * @see ModuloWheel::getWheelPrimeData(...)
    */
   uint32_t sievingPrime_;
   /**
@@ -187,14 +187,16 @@ template<uint32_t WHEEL_MODULO, uint32_t WHEEL_ELEMENTS,
     const InitWheel* INIT_WHEEL>
 class ModuloWheel {
 private:
-  /** Used in the wheel index calculation of sieving primes. */
-  static const uint8_t primeBitPosition_[30];
+  static const uint32_t primeTypes_[15];
+  /** Uncopyable, declared but not defined. */
+  ModuloWheel(const ModuloWheel&);
+  ModuloWheel& operator=(const ModuloWheel&);
 protected:
   const uint64_t stopNumber_;
   ModuloWheel(const SieveOfEratosthenes* soe) : 
     stopNumber_(soe->getStopNumber()) {
     uint64_t greatestWheelFactor = INIT_WHEEL[2].nextMultipleFactor;
-    // prevents 64 bit overflows of multiple in setWheelPrime()
+    // prevents 64-bit overflows of multiple in getWheelPrimeData()
     if (stopNumber_ > UINT64_MAX - UINT32_MAX * (greatestWheelFactor + 1)) {
       std::ostringstream error;
       error << "ModuloWheel: stopNumber must be <= (2^64-1) - (2^32-1) * "
@@ -208,23 +210,22 @@ protected:
       throw std::overflow_error(
           "ModuloWheel: sieveSize must be <= 2^23, 8192 Kilobytes.");
   }
-  ~ModuloWheel() {
-  }
+  ~ModuloWheel() {}
   /**
    * Used to initialize sieving primes <= n^0.5 for use with wheel
    * factorization.
-   * Calculates the first multiple >= startNumber_ that is not
-   * divisible by any of the wheel's prime factors (i.e. 2, 3, 5 for a
-   * modulo 30 wheel) of prime and the position within the
-   * SieveOfEratosthenes array (sieveIndex) of that multiple and the
-   * wheel index of that multiple.
+   * Calculates the first multiple >= startNumber_ of prime that is
+   * not divisible by any of the wheel's prime factors (i.e. 2, 3, 5
+   * for a modulo 30 wheel) and the position within the
+   * SieveOfEratosthenes array (sieveIndex) of that multiple and its
+   * wheel index.
    * @return true if the WheelPrime must be stored for sieving else
    *         false.
    */
-  bool setWheelPrime(uint64_t segmentLow, 
-                     uint32_t* prime,
-                     uint32_t* sieveIndex,
-                     uint32_t* wheelIndex)
+  bool getWheelPrimeData(uint64_t segmentLow, 
+                         uint32_t* prime,
+                         uint32_t* sieveIndex,
+                         uint32_t* wheelIndex)
   {
     assert(segmentLow % 30 == 0);
     // '+ 6' is a correction for primes of type i*30 + 31
@@ -247,24 +248,24 @@ protected:
     multiple += static_cast<uint64_t> (*prime) * INIT_WHEEL[index].nextMultipleFactor;
     if (multiple > stopNumber_)
       return false;
-    uint32_t wheelOffset = WHEEL_ELEMENTS * primeBitPosition_[*prime % 30];
-    *wheelIndex = wheelOffset + INIT_WHEEL[index].wheelIndex;
+    uint32_t wheelOffset = WHEEL_ELEMENTS * primeTypes_[*prime % 15];
     *sieveIndex = static_cast<uint32_t> ((multiple - segmentLow) / 30);
+    *wheelIndex = wheelOffset + INIT_WHEEL[index].wheelIndex;
     *prime /= 15;
     return true;
   }
 };
 
-// 0xff values are never accessed
+/**
+ * 8 different types of primes, one type for each bit of a byte.
+ * prime type = primeTypes_[prime % 15];
+ * 0xff values are never accessed.
+ */
 template<uint32_t WHEEL_MODULO, uint32_t WHEEL_ELEMENTS,
     const InitWheel* INIT_WHEEL>
-const uint8_t
-    ModuloWheel<WHEEL_MODULO, WHEEL_ELEMENTS, INIT_WHEEL>::primeBitPosition_[30] = { 0xff,
-           7, 0xff, 0xff, 0xff, 0xff, 0xff,
-           0, 0xff, 0xff, 0xff,    1, 0xff,
-           2, 0xff, 0xff, 0xff,    3, 0xff,
-           4, 0xff, 0xff, 0xff,    5, 0xff,
-        0xff, 0xff, 0xff, 0xff,    6 };
+const uint32_t
+    ModuloWheel<WHEEL_MODULO, WHEEL_ELEMENTS, INIT_WHEEL>::primeTypes_[15] = {
+        0xff, 7, 3, 0xff, 4, 0xff, 0xff, 0, 5, 0xff, 0xff, 1, 0xff, 2, 6 };
 
 /**
  * Implementation of a modulo 30 wheel (3rd wheel)
@@ -277,8 +278,7 @@ protected:
   Modulo30Wheel(const SieveOfEratosthenes* soe) :
     ModuloWheel<30, 8, init30Wheel> (soe) {
   }
-  ~Modulo30Wheel() {
-  }
+  ~Modulo30Wheel() {}
 };
 
 /**
@@ -293,8 +293,7 @@ protected:
   Modulo210Wheel(const SieveOfEratosthenes* soe) :
     ModuloWheel<210, 48, init210Wheel> (soe) {
   }
-  ~Modulo210Wheel() {
-  }
+  ~Modulo210Wheel() {}
 };
 
 #endif /* WHEELFACTORIZATION_H */
