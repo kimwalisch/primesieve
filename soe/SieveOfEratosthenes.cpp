@@ -30,7 +30,12 @@
 #include <algorithm>
 #include <cassert>
 
-const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
+const uint32_t SieveOfEratosthenes::bitValues_[32] = {
+     7,  11,  13,  17,  19,  23,  29,  31, /* sieve_[i+0] */
+    37,  41,  43,  47,  49,  53,  59,  61, /* sieve_[i+1] */
+    67,  71,  73,  77,  79,  83,  89,  91, /* sieve_[i+2] */
+    97, 101, 103, 107, 109, 113, 119, 121  /* sieve_[i+3] */
+};
 
 /**
  * @param startNumber   A start number for sieving.
@@ -60,8 +65,8 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
   // '+ 1' is a correction for primes of type i*30 + 31
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   try {
-    this->initEratAlgorithms();
     this->initSieve();
+    this->initEratAlgorithms();
   } catch (...) {
     delete[] sieve_;
     delete eratSmall_;
@@ -152,9 +157,9 @@ void SieveOfEratosthenes::crossOffMultiples() {
  * interval [startNumber_, stopNumber_].
  */
 void SieveOfEratosthenes::sieve(uint32_t prime) {
-  assert(eratSmall_ != NULL && prime > preSieve_.getLimit() &&
-      isquare(prime) <= stopNumber_);
   uint64_t primeSquared = isquare(prime);
+  assert(prime > preSieve_.getLimit() && primeSquared <= stopNumber_ &&
+      eratSmall_ != NULL);
 
   // the following while loop is entered if all primes required to
   // sieve the next segment are present in the erat* objects

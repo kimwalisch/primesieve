@@ -49,7 +49,7 @@ public:
     /**
      * SieveOfEratosthenes uses dense bit packing with 30 numbers
      * per byte, each byte of the sieve_ array holds the values
-     * n * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
+     * i * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
      */
     NUMBERS_PER_BYTE = 30
   };
@@ -66,8 +66,7 @@ public:
   void sieve(uint32_t);
   void finish();
 protected:
-  /** @see NUMBERS_PER_BYTE */
-  static const uint32_t bitValues_[8];
+  static const uint32_t bitValues_[32];
   SieveOfEratosthenes(uint64_t, uint64_t, uint32_t, uint32_t);
   ~SieveOfEratosthenes();
   uint64_t getSegmentLow() const {
@@ -108,9 +107,12 @@ private:
    */
   EratBig* eratBig_;
   uint32_t getByteRemainder(uint64_t);
-  void initEratAlgorithms();
   void initSieve();
+  void initEratAlgorithms();
   void crossOffMultiples();
+  /** Uncopyable, declared but not defined. */
+  SieveOfEratosthenes(const SieveOfEratosthenes&);
+  SieveOfEratosthenes& operator=(const SieveOfEratosthenes&);
 };
 
 #endif /* SIEVEOFERATOSTHENES_H */
