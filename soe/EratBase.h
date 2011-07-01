@@ -44,7 +44,7 @@ public:
     assert(prime <= limit_);
     uint32_t sieveIndex;
     uint32_t wheelIndex;
-    if (this->setWheelPrime(segmentLow, &prime, &sieveIndex, &wheelIndex)
+    if (this->getWheelPrimeData(segmentLow, &prime, &sieveIndex, &wheelIndex)
         == true) {
       if (!bucketList_->addWheelPrime(prime, sieveIndex, wheelIndex)) {
         Bucket_t* bucket = new Bucket_t;

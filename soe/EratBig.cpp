@@ -24,8 +24,9 @@
 #include "pmath.h"
 
 #include <cstdlib>
-#include <stdexcept>
 #include <cassert>
+#include <cmath>
+#include <stdexcept>
 
 #define BUCKETS_PER_CREATE (defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t))
 
@@ -84,7 +85,7 @@ void EratBig::initBucketLists() {
 void EratBig::addSievingPrime(uint32_t prime, uint64_t segmentLow) {
   uint32_t sieveIndex;
   uint32_t wheelIndex;
-  if (this->setWheelPrime(segmentLow, &prime, &sieveIndex, &wheelIndex)
+  if (this->getWheelPrimeData(segmentLow, &prime, &sieveIndex, &wheelIndex)
       == true) {
     // indicates in how many segments the next multiple of prime
     // needs to be crossed off
