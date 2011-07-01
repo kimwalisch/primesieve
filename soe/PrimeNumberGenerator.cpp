@@ -22,14 +22,9 @@
 #include "SieveOfEratosthenes.h"
 #include "defs.h"
 #include "pmath.h"
+#include "cpuid.h"
 
-#include <cstdlib>
 #include <cassert>
-
-namespace {
-  const uint32_t BYTE_SIZE = (1 << 8);
-  const uint32_t END = BYTE_SIZE;
-}
 
 PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
   SieveOfEratosthenes(
@@ -37,52 +32,47 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
       isqrt(finder.getStopNumber()),
       defs::PRIMENUMBERGENERATOR_SIEVESIZE * 1024,
       defs::PRIMENUMBERGENERATOR_PRESIEVE_LIMIT),
-      primeNumberFinder_(finder), primeBitValues_(NULL) {
+      primeNumberFinder_(finder) {
   assert(this->getStopNumber() <= UINT32_MAX);
-  this->initPrimeBitValues();
-}
-
-PrimeNumberGenerator::~PrimeNumberGenerator() {
-  for (uint32_t i = 0; i < BYTE_SIZE; i++)
-    delete[] primeBitValues_[i];
-  delete[] primeBitValues_;
 }
 
 /**
- * Initialize the primeBitValues_ lookup table.
- * primeBitValues_ is used to reconstruct prime numbers from 1 bits of
- * the sieve array.
- */
-void PrimeNumberGenerator::initPrimeBitValues() {
-  primeBitValues_ = new uint32_t*[BYTE_SIZE];
-  for (uint32_t i = 0; i < BYTE_SIZE; i++) {
-    primeBitValues_[i] = new uint32_t[9];
-    uint32_t bitCount = 0;
-    // save the bit values of the current byte value (i)
-    for (uint32_t j = 0; (1u << j) <= i; j++) {
-      if ((1u << j) & i)
-        primeBitValues_[i][bitCount++] = bitValues_[j];
-    }
-    primeBitValues_[i][bitCount] = END;
-  }
-}
-
-/**
- * Generate the prime numbers within the current segment needed for
- * sieving by primeNumberFinder_ (is a SieveOfEratosthenes).
+ * Generate the primes of the current segment (1 bits of the sieve
+ * array) and use them to sieve with primeNumberFinder_
+ * (is a SieveOfEratosthenes).
  * @see SieveOfEratosthenes::sieve(uint32_t)
  */
 void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
-  uint32_t byteValue = static_cast<uint32_t> (this->getSegmentLow());
+  uint32_t lowerBound = static_cast<uint32_t> (this->getSegmentLow());
+  uint32_t i = 0;
 
-  for (uint32_t i = 0; i < sieveSize; i++, byteValue += NUMBERS_PER_BYTE) {
-    for (uint32_t* bitValue = primeBitValues_[sieve[i]]; *bitValue != END; bitValue++) {
-      uint32_t prime = byteValue + *bitValue;
+  for (; i < sieveSize / sizeof(uint32_t); i++) {
+    uint32_t s32 = reinterpret_cast<const uint32_t*> (sieve)[i];
+    while (s32 != 0) {
+      uint32_t bitPosition = bitScanForward(s32);
+      // unset the current bit
+      s32 &= s32 - 1;
+      uint32_t prime = lowerBound + bitValues_[bitPosition];
       primeNumberFinder_.sieve(prime);
     }
+    lowerBound += NUMBERS_PER_BYTE * sizeof(uint32_t);
+  }
+  // process the remaining bytes (MAX 3)
+  for (i *= sizeof(uint32_t); i < sieveSize; i++) {
+    uint32_t s = sieve[i];
+    while (s != 0) {
+      uint32_t bitPosition = bitScanForward(s);
+      s &= s - 1;
+      uint32_t prime = lowerBound + bitValues_[bitPosition];
+      primeNumberFinder_.sieve(prime);
+    }
+    lowerBound += NUMBERS_PER_BYTE;
   }
 }
 
 void PrimeNumberGenerator::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
+  // the C++ Standard guarantees that memory is suitably aligned, 
+  // see "3.7.3.1 Allocation functions"
+  assert(reinterpret_cast<uintptr_t> (sieve) % sizeof(uint32_t) == 0);
   this->generate(sieve, sieveSize);
 }

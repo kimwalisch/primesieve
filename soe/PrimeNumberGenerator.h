@@ -33,17 +33,10 @@ class PrimeNumberFinder;
 class PrimeNumberGenerator: public SieveOfEratosthenes {
 public:
   PrimeNumberGenerator(PrimeNumberFinder&);
-  ~PrimeNumberGenerator();
 private:
   PrimeNumberFinder& primeNumberFinder_;
-  /**
-   * Lookup table used to reconstruct prime numbers from 1 bits of the
-   * sieve array.
-   */
-  uint32_t** primeBitValues_;
-  void initPrimeBitValues();
   void generate(const uint8_t*, uint32_t);
-  void analyseSieve(const uint8_t*, uint32_t);
+  virtual void analyseSieve(const uint8_t*, uint32_t);
 };
 
 #endif /* PRIMENUMBERGENERATOR_H */

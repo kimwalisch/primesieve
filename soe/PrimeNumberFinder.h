@@ -36,27 +36,27 @@ class PrimeSieve;
  */
 class PrimeNumberFinder: public SieveOfEratosthenes {
 public:
-  enum { COUNTS_SIZE = 7 };
   PrimeNumberFinder(PrimeSieve*);
   ~PrimeNumberFinder();
 private:
-  static const uint32_t nextBitValue_[NUMBERS_PER_BYTE];
+  static const uint32_t nextBitValues_[NUMBERS_PER_BYTE];
   /** Pointer to the parent PrimeSieve object. */
-  PrimeSieve* const primeSieve_;
+  PrimeSieve* const ps_;
   /**
-   * Lookup table that gives the count of prime numbers and k-tuplets
-   * within a byte of the sieve array.
+   * Lookup tables that give the count of prime k-tuplets (twin
+   * primes, prime triplets, ...) per byte.
    */
-  uint32_t** primeByteCounts_;
+  uint32_t** kTupletByteCounts_;
   /**
-   * Lookup table used to reconstruct prime numbers and k-tuplets
-   * from 1 bits or bit patterns of the sieve array.
+   * Lookup table used to reconstruct prime k-tuplets from bitmasks
+   * of the sieve array.
    */
-  uint32_t** primeBitValues_;
+  uint32_t** kTupletBitValues_;
   void initLookupTables();
+  virtual void analyseSieve(const uint8_t*, uint32_t);
   void count(const uint8_t*, uint32_t);
   void generate(const uint8_t*, uint32_t);
-  void analyseSieve(const uint8_t*, uint32_t);
+  static void printPrime(uint64_t);
 };
 
 #endif /* PRIMENUMBERFINDER_H */
