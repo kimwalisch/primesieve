@@ -51,21 +51,20 @@ PreSieve::~PreSieve() {
  * primes <= limit_ from it.
  */
 void PreSieve::initWheelArray() {
-  assert(size_ > 0);
-  wheelArray_ = new uint8_t[size_];
-  // initialization, set bits of the first byte to 1
-  wheelArray_[0] = 0xff;
-
   const uint32_t smallPrimes[6] = { 7, 11, 13, 17, 19, 23 };
-  // helps to unset 1 bits corresponding to multiples inside the
-  // wheelArray_
-  const unsigned int unsetBit[37] = { 0xff,
+  const uint32_t unsetBit[37] = { 
+      0xff,
       BIT7, 0xff, 0xff, 0xff, 0xff, 0xff,
       BIT0, 0xff, 0xff, 0xff, BIT1, 0xff,
       BIT2, 0xff, 0xff, 0xff, BIT3, 0xff,
       BIT4, 0xff, 0xff, 0xff, BIT5, 0xff,
       0xff, 0xff, 0xff, 0xff, BIT6, 0xff,
       BIT7, 0xff, 0xff, 0xff, 0xff, 0xff };
+
+  assert(size_ > 0);
+  wheelArray_ = new uint8_t[size_];
+  // initialization, set bits of the first byte to 1
+  wheelArray_[0] = 0xff;
 
   uint32_t primeProduct = 2 * 3 * 5;
   for (uint32_t i = 0; i < 6 && smallPrimes[i] <= limit_; i++) {
