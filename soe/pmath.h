@@ -19,7 +19,8 @@
 
 /** 
  * @file pmath.h 
- * @brief Auxiliary math functions needed in primesieve.
+ * @brief Auxiliary math and bit manipulation functions needed in
+ *        primesieve.
  */
 
 #ifndef PMATH_H
@@ -27,26 +28,80 @@
 
 #include "defs.h"
 
-#include <stdexcept>
+#include <cstdlib>
+#include <cassert>
 #include <cmath>
+#include <stdexcept>
 
 /**
- * Number of trailing zeros, simple counting loops.
- * Code from: "Hacker's Delight"
+ * Count the number of 1 bits (population count) in an array using
+ * Andrew Dalke's version of the 24 word bitslice algorithm.
+ * Bitslice(24) is fast on 32 and 64-bit CPUs and a good choice if
+ * hardware acceleration (SSE4.2 POPCNT) is not available.
+ * http://www.dalkescientific.com/writings/diary/archive/2008/07/05/bitslice_and_popcount.html
  */
-inline uint32_t ntz(uint32_t x) {
-  x = ~x & (x - 1);
-  uint32_t n = 0;
-  while (x != 0) {
-    n = n + 1;
-    x = x >> 1;
+inline uint32_t popCount(const uint32_t* data, uint32_t size) {
+  assert(data != NULL);
+  assert(size <= UINT32_MAX / (8 * sizeof(uint32_t)));
+  uint32_t i = 0;
+  uint32_t bitCount = 0;
+
+  // Bitslice(24)
+  for (; i < size - size % 24; i += 24, data += 24) {
+    uint32_t acc = 0;
+    for (uint32_t j = 0; j < 24; j += 3) {
+      uint32_t count1 = data[j];
+      uint32_t count2 = data[j+1];
+      uint32_t half1  = data[j+2];
+      uint32_t half2  = data[j+2];
+      half1  &= 0x55555555;
+      half2   =            (half2  >> 1) & 0x55555555;
+      count1  =  count1 - ((count1 >> 1) & 0x55555555);
+      count2  =  count2 - ((count2 >> 1) & 0x55555555);
+      count1 +=  half1;
+      count2 +=  half2;
+      count1  = (count1 & 0x33333333) + ((count1 >> 2) & 0x33333333);
+      count1 += (count2 & 0x33333333) + ((count2 >> 2) & 0x33333333);
+      acc    += (count1 & 0x0F0F0F0F) + ((count1 >> 4) & 0x0F0F0F0F);
+    }
+    acc = (acc & 0x00FF00FF) + ((acc >> 8) & 0x00FF00FF);
+    acc =  acc + (acc >> 16);
+    bitCount += acc & 0x0000FFFF;
   }
-  return n;
+
+  // Count the bits of the remaining bytes (MAX 92) using "Counting
+  // bits set, in parallel" from the "Bit Twiddling Hacks":
+  // http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
+  for (; i < size; i++, data++) {
+    uint32_t v = *data;
+    v =  v               - ((v >> 1) & 0x55555555);
+    v = (v & 0x33333333) + ((v >> 2) & 0x33333333);
+    bitCount += ((v      +  (v >> 4) & 0x0F0F0F0F) * 0x01010101) >> 24;
+  }
+  return bitCount;
 }
 
 /**
- * Rounds up to the next highest power of 2.
- * Code from: "Hacker's Delight"
+ * Count the number of 1 bits (population count) in a small array
+ * using "Counting bits set, Brian Kernighan's way" from the
+ * "Bit Twiddling Hacks":
+ * http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetKernighan
+ */
+inline uint32_t popCount(const uint8_t* data, uint32_t size) {
+  assert(data != NULL);
+  assert(size <= UINT32_MAX / (8 * sizeof(uint8_t)));
+  uint32_t bitCount = 0;
+
+  for (uint32_t i = 0; i < size; i++) {
+    for (uint32_t v = data[i]; v != 0; v &= v - 1)
+      bitCount++;
+  }
+  return bitCount;
+}
+
+/**
+ * Round up to the next highest power of 2.
+ * Code from: "Hacker's Delight, p. 48"
  */
 inline uint32_t nextHighestPowerOf2(uint32_t x) {
   x = x - 1;
@@ -59,17 +114,17 @@ inline uint32_t nextHighestPowerOf2(uint32_t x) {
 }
 
 /**
- * Determins if an integer is a power of 2.
+ * Determin if an integer is a power of 2.
  * Code from the "Bit Twiddling Hacks":
  * http://graphics.stanford.edu/~seander/bithacks.html#DetermineIfPowerOf2
  */
 inline bool isPowerOf2(uint32_t x) {
-  return (x && !(x & (x - 1)));
+  return (x != 0 && (x & (x - 1)) == 0);
 }
 
 /**
  * Fast and protable integer log2 function.
- * Code from:
+ * Code from Juan Pablo:
  * http://www.southwindsgames.com/blog/2009/01/19/fast-integer-log2-function-in-cc/
  */
 inline uint32_t floorLog2(uint32_t x) {
@@ -83,9 +138,9 @@ inline uint32_t floorLog2(uint32_t x) {
 }
 
 /**
- * Prime product function (x)#.
- * @pre x < 29.
- * @return the product of the primes up to x.
+ * Prime product function x#.
+ * @pre x < 29
+ * @return the product of the primes up to x
  */
 inline uint32_t primeProduct(uint32_t x) {
   if (x >= 29)
@@ -98,9 +153,8 @@ inline uint32_t primeProduct(uint32_t x) {
 }
 
 /**
- * Integer pow, raise to power.
- * @return base raised to the power exponent.
- * Code from (adapted):
+ * Integer pow, raise to power, x^n.
+ * Code from (ported to C++ from Ruby):
  * http://en.wikipedia.org/wiki/Exponentiation_by_squaring
  */
 inline uint64_t ipow(uint64_t x, uint32_t n) {
@@ -117,18 +171,9 @@ inline uint64_t ipow(uint64_t x, uint32_t n) {
 }
 
 /**
- * Integer square root for 64-bit integers.
- * @return (uint32_t) floor(sqrt(x)).
+ * Integer square root for 64-bit integers, x^(1/2).
  */
 inline uint32_t isqrt(uint64_t x) {
-  return static_cast<uint32_t> (std::sqrt(static_cast<double> (x)));
-}
-
-/**
- * Integer square root for 32-bit integers.
- * @return (uint32_t) floor(sqrt(x)).
- */
-inline uint32_t isqrt(uint32_t x) {
   return static_cast<uint32_t> (std::sqrt(static_cast<double> (x)));
 }
 
