@@ -37,8 +37,8 @@
  *          argument, getResult() returns the corresponding result.
  * @see     http://expressionparser.googlecode.com
  * @author  Kim Walisch, <kim.walisch@gmail.com>
- * @version 1.1
- * @date    May, 24 2011
+ * @version 1.2
+ * @date    July, 01 2011
  *
  * == Supported operators ==
  *
@@ -105,8 +105,22 @@ private:
     OPERATOR_POWER,           /// ^, **
     OPERATOR_EXPONENT         /// e, E
   };
+  
+  enum {
+    /// default max length (32 KB of characters) for the expression string
+    EXPRESSION_MAX_LENGTH = 32767
+  };
 
-  struct Operator {
+  class NoAssign {
+  protected:
+    NoAssign() {}
+    ~NoAssign() {}
+  private:
+    NoAssign& operator=(const NoAssign&);
+  };
+
+  class Operator : private NoAssign {
+  public:
     /// Operator, one of the OPERATOR_+ enum definitions
     const int op;
     const int precedence;
@@ -120,7 +134,8 @@ private:
     }
   };
 
-  struct OperatorValue {
+  class OperatorValue : private NoAssign {
+  public:
     const Operator op;
     const T value;
     OperatorValue(const Operator& op, T value) : op(op), value(value) {
@@ -145,14 +160,15 @@ private:
   /// Result of the evaluated expression
   T result_;
   /// Maximum length for user input
-  const std::size_t maxLength_;
+  std::size_t maxLength_;
+  /// true if the last expression has been evaluated without errors
+  bool isSuccess_;
   /// Error message if eval(const std::string&) failed
   std::ostringstream error_;
 
   /**
-   * Integer pow, raise to power.
-   * @return x raised to the power n.
-   * Code from (adapted):
+   * Integer pow, raise to power, x^n.
+   * Code from (ported to C++ from Ruby):
    * http://en.wikipedia.org/wiki/Exponentiation_by_squaring
    */
   T pow(T x, T n) const {
@@ -303,20 +319,20 @@ private:
     //
     // 1. Closing parentheses `)'
     // 2. End of expression (char) 0
-    // 3. Other characters not handled in switch (error)
+    // 3. Other characters not handled in switch (errors)
     //
     return Operator(OPERATOR_NULL, 0, 'L');
   }
 
   /**
    * @return The integer value of the character c, e.g. 9 for '9' or
-   *         15 for f (hexadecimal number). If c is not a decimal or
-   *         hexadecimal character a number > 0xf is returned.
+   *         15 for f (hexadecimal number).
+   *         If c is not a decimal or hexadecimal character a
+   *         value > 0xf is returned.
    */
   T toInteger(char c) const {
     switch(c) {
-      case '0': case '1': case '2': case '3': case '4': case '5':
-      case '6': case '7': case '8': case '9':
+      case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
         return static_cast<T> (c -'0');
       case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
         return static_cast<T> (0xa + c -'A');
@@ -427,10 +443,52 @@ private:
   }
 
 public:
-  ExpressionParser(std::size_t maxLength = 10240) : result_(0),
-      maxLength_(maxLength) {
+  ExpressionParser() :
+    result_(0), maxLength_(EXPRESSION_MAX_LENGTH), isSuccess_(true) {
   }
 
+  ExpressionParser(const std::string& expr) :
+    result_(0), maxLength_(EXPRESSION_MAX_LENGTH) {
+    isSuccess_ = this->eval(expr);
+  }
+
+  ExpressionParser(const ExpressionParser& parser) {
+    if (this != &parser) {
+      expr_      = parser.expr_;
+      result_    = parser.result_;
+      maxLength_ = parser.maxLength_;
+      isSuccess_ = parser.isSuccess_;
+      error_.clear();
+      error_.str(parser.error_.str());
+    }
+  }
+
+  ExpressionParser& operator=(const ExpressionParser& parser) {
+    if (this != &parser) {
+      expr_      = parser.expr_;
+      result_    = parser.result_;
+      maxLength_ = parser.maxLength_;
+      isSuccess_ = parser.isSuccess_;
+      error_.clear();
+      error_.str(parser.error_.str());
+    }
+    return *this;
+  }
+
+  /**
+   * Get the last evaluated expression.
+   */
+  std::string getExpression() const {
+    return expr_;
+  }
+
+  /**
+   * True if the last expression has been evaluated without errors
+   * else false.
+   */
+  bool isSuccess() const {
+    return isSuccess_;
+  }
   /**
    * Result of the last expression if eval(const std::string&) has
    * been successful else 0.
@@ -441,23 +499,29 @@ public:
 
   /**
    * Error message of the last expression if eval(const std::string&)
-   * failed.
-   * @param preamble If set to false truncates the *": " preamble from
-   *                 the error message.
+   * failed or !isSuccess().
    */
-  std::string getErrorMessage(bool preamble = true) const {
-    if (!preamble) {
-      const std::string colon(": ");
-      std::size_t p = error_.str().find(colon);
-      if (p != std::string::npos)
-        return error_.str().substr(p+2, error_.str().length()-(p+2));
-    }
+  std::string getErrorMessage() const {
     return error_.str();
   }
 
   /**
+   * Get the maximum expression length.
+   */
+  std::size_t getMaxLength() const {
+    return maxLength_;
+  }
+
+  /**
+   * Set the maximum expression length.
+   */
+  void setMaxLength(std::size_t maxLength) {
+    maxLength_ = maxLength;
+  }
+
+  /**
    * Evaluate an integer expression.
-   * @return true if str has correctly been evaluated false if an
+   * @return true if expr has correctly been evaluated false if an
    *         error occurred.
    *
    * == Examples of valid expressions ==
@@ -470,30 +534,29 @@ public:
    *     "(2^16) + (1 SHL 16) shr 0X5"           = 4096
    *     "5*-(2^(9+7))/3+5*(1 AND 0xFf123)"      = -109221
    */
-  bool eval(const std::string& str) {
+  bool eval(const std::string& expr) {
     try {
-      // clear previous error message
       error_.clear();
       error_.str(std::string());
-      if (str.length() > maxLength_) {
+      offset_ = 0;
+      if (expr.length() > maxLength_) {
         expr_ = "";
-        offset_ = 0;
         error_ << "Parser error: expression exceeds limit of "
                << maxLength_
                << " characters";
         throw std::exception();
       }
-      // initialization
-      expr_ = str;
-      offset_ = 0;
+      expr_ = expr;
       // evaluate the expression
       result_ = parseExpr();
-      if (!isEndOfExpression()) throw std::exception();
+      if (isEndOfExpression() == false)
+        throw std::exception();
       // stack is empty here i.e. all operators have been consumed
       assert(opv_.size() == 0);
-      return true;
-    } catch(...) {
-      // clear the stack for the next usage
+      isSuccess_ = true;
+    }
+    catch(...) {
+      // clear the stack for next usage
       while(!opv_.empty()) opv_.pop();
       result_ = 0;
       if (error_.str().length() == 0)
@@ -501,8 +564,9 @@ public:
                << expr_.substr(offset_, expr_.length() - offset_)
                << "\" at index "
                << offset_;
+      isSuccess_ = false;
     }
-    return false;
+    return isSuccess_;
   }
 };
 
