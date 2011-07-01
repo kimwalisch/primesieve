@@ -156,7 +156,7 @@ ParallelPrimeSieve::sieve() uses about:
     Contains classes and structs related to wheel factorization. Wheel
     factorization is used to skip multiples of small primes. The
     abstract ModuloWheel class is used to initialize sieving primes,
-    ModuloWheel::setWheelPrime(...) calculates the first
+    ModuloWheel::getWheelPrimeData(...) calculates the first
     multiple >= startNumber_ of each sieving prime. The sieving prime
     is then stored together with a sieveIndex (position of the next
     multiple within the sieve array) and a wheelIndex as a WheelPrime
