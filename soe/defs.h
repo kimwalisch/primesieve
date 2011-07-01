@@ -22,8 +22,7 @@
  * @brief Macro definitions and constants that set the size of various
  *        arrays and limits within primesieve.
  *
- * The constants have been optimized for an
- * Intel Core i5-670 3.46GHz
+ * The constants have been optimized for an Intel Core i5-670 3.46GHz
  * (2 x 32 KB L1 Data Cache, 2 x 256 L2 Cache, 4 MB L3 Cache)
  * from 2010.
  */
@@ -43,60 +42,17 @@
  * @def __STDC_LIMIT_MACROS
  * Enable the UINT64_MAX, UINT32_MAX macros from <stdint.h>.
  */
+#if !defined(__STDC_LIMIT_MACROS)
+#  define __STDC_LIMIT_MACROS 1
+#endif
  /**
  * @def __STDC_LIMIT_MACROS
  * Enable the UINT64_C(c) macro from <stdint.h>.
  */
-#if !defined(__STDC_LIMIT_MACROS)
-#  define __STDC_LIMIT_MACROS 1
-#endif
 #if !defined(__STDC_CONSTANT_MACROS)
 #  define __STDC_CONSTANT_MACROS  1
 #endif
 #include <stdint.h>
-
-/**
- * @def POPCNT64(addr, i)
- * Counts the number of one bits within the next 8 bytes of an array
- * using the SSE 4.2 POPCNT instruction.
- * @see http://en.wikipedia.org/wiki/SSE4#SSE4.2
- *
- * Successfully tested with:
- *
- *   Microsoft Visual Studio 2010 (WIN32, WIN64),
- *   GNU G++ 4.5 (x86, x64),
- *   Intel C++ Compiler 12.0 (x86, x64),
- *   Oracle Solaris Studio 12 (x64).
- */
-#if (defined(_MSC_VER) || defined(__INTEL_COMPILER)) && (defined(_WIN64) || defined(_WIN32))
-#  if defined(_WIN64)
-#    include <nmmintrin.h> 
-#    define POPCNT64(addr, i) static_cast<uint32_t> \
-                              (_mm_popcnt_u64(*reinterpret_cast<const uint64_t*> (&addr[i])))
-#  elif defined(_WIN32)
-#    include <nmmintrin.h>
-#    define POPCNT64(addr, i) (_mm_popcnt_u32(*reinterpret_cast<const uint32_t*> (&addr[i])) + \
-                               _mm_popcnt_u32(*reinterpret_cast<const uint32_t*> (&addr[i+4])))
-#  endif
-#elif defined(__SUNPRO_CC)
-#  if defined(__x86_64)
-#    include <nmmintrin.h>
-#    define POPCNT64(addr, i) static_cast<uint32_t> \
-                              (_mm_popcnt_u64(*reinterpret_cast<const uint64_t*> (&addr[i])))
-#  elif defined(__i386)
-#    include <nmmintrin.h>
-#    define POPCNT64(addr, i) (_mm_popcnt_u32(*reinterpret_cast<const uint32_t*> (&addr[i])) + \
-                               _mm_popcnt_u32(*reinterpret_cast<const uint32_t*> (&addr[i+4])))
-#  endif
-#elif defined(__GNUC__)
-#  if defined(__x86_64__)
-#    define POPCNT64(addr, i) static_cast<uint32_t> \
-                              (__builtin_popcountll(*reinterpret_cast<const uint64_t*> (&addr[i])))
-#  elif defined(__i386__)
-#    define POPCNT64(addr, i) (__builtin_popcount(*reinterpret_cast<const uint32_t*> (&addr[i])) + \
-                               __builtin_popcount(*reinterpret_cast<const uint32_t*> (&addr[i+4])))
-#  endif
-#endif
 
 namespace defs {
   /**
@@ -203,14 +159,14 @@ namespace defs {
  * a byte.
  */
 enum {
-  BIT0 = 0xfe, // 11111110
-  BIT1 = 0xfd, // 11111101
-  BIT2 = 0xfb, // 11111011
-  BIT3 = 0xf7, // 11110111
-  BIT4 = 0xef, // 11101111
-  BIT5 = 0xdf, // 11011111
-  BIT6 = 0xbf, // 10111111
-  BIT7 = 0x7f  // 01111111
+  BIT0 = 0xfe, /* 11111110 */
+  BIT1 = 0xfd, /* 11111101 */
+  BIT2 = 0xfb, /* 11111011 */
+  BIT3 = 0xf7, /* 11110111 */
+  BIT4 = 0xef, /* 11101111 */
+  BIT5 = 0xdf, /* 11011111 */
+  BIT6 = 0xbf, /* 10111111 */
+  BIT7 = 0x7f  /* 01111111 */
 };
 
 #endif /* DEFS_H */
