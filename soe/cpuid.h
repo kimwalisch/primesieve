@@ -16,34 +16,83 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
+ 
+ /** 
+ * @file cpuid.h 
+ * @brief Contains a portable implementation of cpuid for x86 and x64
+ *        CPUs and macros/functions that make use of compiler
+ *        intrinsics or built-in functions.
+ */
 
 #ifndef CPUID_H
 #define CPUID_H
 
+#include <climits>
+#include <cassert>
+
 #define bit_POPCNT (1 << 23)
 
-#if (defined(_MSC_VER) || defined(__INTEL_COMPILER)) && (defined(_WIN32) || defined(_WIN64))
-#  include <intrin.h> // __cpuid()
+#if defined(_MSC_VER) && (defined(_WIN32) || defined(_WIN64)) || \
+    defined(__INTEL_COMPILER) && (defined(_WIN32) || defined(_WIN64))
 #  define MSC_X86_COMPATIBLE
+#  include <intrin.h> /* __cpuid(), _BitScanForward() */
 #elif defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__)) || \
       defined(__SUNPRO_CC) && (defined(__i386) || defined(__x86_64))
-#  include "cpuidgcc460.h" // gcc-4.6.0/gcc/config/i386/cpuid.h
 #  define GCC_I386_COMPATIBLE
+#  include "cpuidgcc460.h" /* gcc-4.6.0/gcc/config/i386/cpuid.h */
 #endif
 
 /**
- * Portable implementation of CPUID for x86 and x64 CPUs.
+ * @def POPCNT64(addr)
+ * Count the number of 1 bits within the next 8 bytes of an array
+ * using the SSE4.2 POPCNT instruction.
+ * @pre Check if the CPU supports POPCNT with isPOPCNTSupported()
+ * @pre addr must be aligned to an 8-byte boundary
+ *
  * Successfully tested with:
- *    Microsoft Visual Studio 2010,
- *    GNU G++ 4.5,
- *    Apple G++ 4.2,
- *    LLVM 2.9,
- *    Intel C++ Compiler 12.0,
- *    AMD x86 Open64 Compiler Suite,
- *    Oracle Solaris Studio 12.
+ *
+ *   Microsoft Visual Studio 2010 (WIN32, WIN64),
+ *   GNU G++ 4.5 (x86, x64),
+ *   Intel C++ Compiler 12.0 (x86, x64),
+ *   Oracle Solaris Studio 12 (x64).
+ */
+#if defined(MSC_X86_COMPATIBLE) && defined(_WIN64)
+#  include <nmmintrin.h> 
+#  define POPCNT64(addr) static_cast<uint32_t> \
+      (_mm_popcnt_u64(*reinterpret_cast<const uint64_t*> (addr)))
+#elif defined(MSC_X86_COMPATIBLE) && defined(_WIN32)
+#  include <nmmintrin.h>
+#  define POPCNT64(addr) \
+      (_mm_popcnt_u32(reinterpret_cast<const uint32_t*> (addr)[0]) + \
+       _mm_popcnt_u32(reinterpret_cast<const uint32_t*> (addr)[1]))
+#elif defined(__SUNPRO_CC) && defined(__x86_64)
+#  include <nmmintrin.h>
+#  define POPCNT64(addr) static_cast<uint32_t> \
+      (_mm_popcnt_u64(*reinterpret_cast<const uint64_t*> (addr)))
+#elif defined(__GNUC__) && defined(__x86_64__)
+#  define POPCNT64(addr) static_cast<uint32_t> \
+      (__builtin_popcountll(*reinterpret_cast<const uint64_t*> (addr)))
+#elif defined(__GNUC__) && defined(__i386__) && INT_MAX >= 2147483647
+#  define POPCNT64(addr) \
+      (__builtin_popcount(reinterpret_cast<const uint32_t*> (addr)[0]) + \
+       __builtin_popcount(reinterpret_cast<const uint32_t*> (addr)[1]))
+#endif
+
+/**
+ * Portable implementation of cpuid for x86 and x64 CPUs.
  * @return 1 if the CPU supports the cpuid instruction.
  *         0 if the CPU does not support the cpuid instruction.
- *        -1 if the compiler is not supported.
+ *        -1 if the target architecture (or compiler) is not supported.
+ *
+ * Successfully tested with:
+ *
+ *   Microsoft Visual Studio 2010,
+ *   GNU G++ 4.5,
+ *   Apple G++ 4.2,
+ *   LLVM 2.9,
+ *   Intel C++ Compiler 12.0,
+ *   AMD x86 Open64 Compiler Suite,
+ *   Oracle Solaris Studio 12.
  */
 inline int getCPUID(unsigned int __level, unsigned int *__eax,
     unsigned int *__ebx, unsigned int *__ecx, unsigned int *__edx) {
@@ -69,9 +118,8 @@ inline int getCPUID(unsigned int __level, unsigned int *__eax,
 }
 
 /**
- * @return true if the CPU supports the SSE 4.2 POPCNT instruction
- *         (and cpuid) else false.
- * @see http://en.wikipedia.org/wiki/SSE4#SSE4.2
+ * Check if the CPU supports the SSE4.2 POPCNT instruction using
+ * cpuid.
  */
 inline bool isPOPCNTSupported() {
   unsigned int info_type = 0x00000001;
@@ -81,5 +129,32 @@ inline bool isPOPCNTSupported() {
   return false;
 }
 
-#endif /* CPUID_H */
+/**
+ * Search the operand (v) for the least significant set bit (1 bit)
+ * and return its position.
+ * @pre v != 0
+ */
+inline uint32_t bitScanForward(uint32_t v) {
+  assert(v != 0);
+#if defined(MSC_X86_COMPATIBLE)
+  unsigned long r;
+  _BitScanForward(&r, static_cast<unsigned long> (v));
+  return static_cast<uint32_t> (r);
+#elif defined(__GNUC__) && INT_MAX >= 2147483647
+  return static_cast<uint32_t> (__builtin_ctz(v));
+#else
+  // Count the consecutive zero bits (trailing) on the right with
+  // multiply and lookup, code from "Bit Twiddling Hacks":
+  // http://graphics.stanford.edu/~seander/bithacks.html#ZerosOnRightMultLookup
+  static const uint32_t MultiplyDeBruijnBitPosition[32] = {
+       0,  1, 28,  2, 29, 14, 24, 3,
+      30, 22, 20, 15, 25, 17,  4, 8,
+      31, 27, 13, 23, 21, 19, 16, 7,
+      26, 12, 18,  6, 11,  5, 10, 9
+  };
+  const int32_t s = static_cast<int32_t> (v);
+  return MultiplyDeBruijnBitPosition[((s & -s) * 0x077CB531U) >> 27];
+#endif
+}
 
+#endif /* CPUID_H */
