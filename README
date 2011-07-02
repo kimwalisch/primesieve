@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 22 June 2011
+# Last modified: 03 July 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ##############################################################################
@@ -26,7 +26,7 @@ Contents
 
   primesieve is a highly optimized C++ implementation of the sieve of
   Eratosthenes which generates prime numbers and prime k-tuplets (twin
-  primes, prime triplets, ...) in order up to 2^64 maximum.
+  primes, prime triplets, ...) up to 2^64 maximum.
   
   Homepage: http://primesieve.googlecode.com
 
@@ -172,7 +172,7 @@ ParallelPrimeSieve::sieve() uses about:
 
   My tries to parallelize the segmented sieve of Eratosthenes using
   real parallelism (i.e. without increasing memory usage) resulted in
-  a run time worse than single-threaded. Therefore in my
+  a run time worse than single-threaded. Therefore in
   ParallelPrimeSieve each thread sieves chunks of the interval
   [startNumber, stopNumber] using PrimeSieve objects until the entire
   interval has been processed. This approach scales well on multi-core
