@@ -215,9 +215,10 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
     // print prime k-tuplets to cout
     for (uint32_t i = 0; i < sieveSize; i++, lowerBound += NUMBERS_PER_BYTE) {
       for (uint32_t* bitValue = kTupletBitValues_[sieve[i]]; *bitValue != END; bitValue++) {
-        std::ostringstream kTuplet("(");
         uint32_t v = *bitValue;
         uint32_t j = 0;
+        std::ostringstream kTuplet;
+        kTuplet << "(";
         do {
           kTuplet << lowerBound + v << ", ";
           v = nextBitValues_[v];
