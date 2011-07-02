@@ -200,7 +200,8 @@ protected:
     if (stopNumber_ > UINT64_MAX - UINT32_MAX * (greatestWheelFactor + 1)) {
       std::ostringstream error;
       error << "ModuloWheel: stopNumber must be <= (2^64-1) - (2^32-1) * "
-          << greatestWheelFactor + 1 << ".";
+            << greatestWheelFactor + 1
+            << ".";
       throw std::overflow_error(error.str());
     }
     // max sieveSize = max WheelPrime::sieveIndex_ + 1 = 2^23
