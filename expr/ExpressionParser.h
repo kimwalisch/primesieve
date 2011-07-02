@@ -38,7 +38,7 @@
  * @see     http://expressionparser.googlecode.com
  * @author  Kim Walisch, <kim.walisch@gmail.com>
  * @version 1.2
- * @date    July, 01 2011
+ * @date    July, 02 2011
  *
  * == Supported operators ==
  *
@@ -83,6 +83,7 @@
  *
  * ExpressionParser has its roots in a JavaScript parser published at:
  * http://stackoverflow.com/questions/28256/equation-expression-parser-with-precedence/114961#114961
+ *
  * The same author has also published an article about his operator
  * precedence algorithm at PerlMonks:
  * http://www.perlmonks.org/?node_id=554516
@@ -111,35 +112,37 @@ private:
     EXPRESSION_MAX_LENGTH = 32767
   };
 
-  class NoAssign {
-  protected:
-    NoAssign() {}
-    ~NoAssign() {}
+  class parser_error : public std::exception {
+  public:
+    parser_error(const std::string& msg) : msg_(msg) {}
+    parser_error(const std::string& expr, std::size_t offset) {
+      std::ostringstream error;
+      error << "Syntax error: unexpected token \""
+            << expr.substr(offset, expr.length() - offset)
+            << "\" at index "
+            << offset;
+      msg_ = error.str();
+    }
+    virtual ~parser_error() throw() {}
+    const char* what() const throw() { return msg_.c_str(); }
   private:
-    NoAssign& operator=(const NoAssign&);
+    std::string msg_;
   };
 
-  class Operator : private NoAssign {
-  public:
+  struct Operator {
     /// Operator, one of the OPERATOR_+ enum definitions
-    const int op;
-    const int precedence;
+    int op;
+    int precedence;
     /// Associativity, 'L' = left or 'R' = right
-    const int assoc;
-    Operator(const Operator& op) : op(op.op), precedence(op.precedence),
-        assoc(op.assoc) {
-    }
+    int assoc;
     Operator(int op, int precedence, int assoc) : op(op),
-        precedence(precedence), assoc(assoc) {
-    }
+        precedence(precedence), assoc(assoc) {}
   };
 
-  class OperatorValue : private NoAssign {
-  public:
-    const Operator op;
-    const T value;
-    OperatorValue(const Operator& op, T value) : op(op), value(value) {
-    }
+  struct OperatorValue {
+    Operator op;
+    T value;
+    OperatorValue(const Operator& op, T value) : op(op), value(value) {}
     int getPrecedence() const {
       return op.precedence;
     }
@@ -148,8 +151,12 @@ private:
     }
   };
 
+  /// Maximum expression length
+  std::size_t maxLength_;
   /// Expression string
   std::string expr_;
+  /// Error message if eval(const std::string&) failed
+  std::string errorMessage_;
   /// Current expression offset, incremented whilst parsing
   std::size_t offset_;
   /**
@@ -159,12 +166,8 @@ private:
   std::stack<OperatorValue> opv_;
   /// Result of the evaluated expression
   T result_;
-  /// Maximum length for user input
-  std::size_t maxLength_;
   /// true if the last expression has been evaluated without errors
   bool isSuccess_;
-  /// Error message if eval(const std::string&) failed
-  std::ostringstream error_;
 
   /**
    * Integer pow, raise to power, x^n.
@@ -186,15 +189,16 @@ private:
 
   T checkZero(T value) {
     if (value == 0) {
+      std::string divOperators("/%");
       assert(offset_ >= 2);
-      const std::string divOperators("/%");
       std::size_t division = expr_.find_last_of(divOperators, offset_-2);
-      error_ << "Parser error: division by 0";
+      std::ostringstream error;
+      error << "Parser error: division by 0";
       if (division != std::string::npos)
-        error_ << " (error token is \""
-               << expr_.substr(division, expr_.length() - division)
-               << "\")";
-      throw std::exception();
+        error << " (error token is \""
+              << expr_.substr(division, expr_.length() - division)
+              << "\")";
+      throw parser_error(error.str());
     }
     return value;
   }
@@ -268,52 +272,52 @@ private:
     eatSpaces();
     switch (getCurrentCharacter()) {
       case 'o': if (eatString("or"))
-                  return Operator(OPERATOR_BITWISE_OR,       4, 'L');
-                throw std::exception();
+                  return Operator(OPERATOR_BITWISE_OR,      4, 'L');
+                throw parser_error(expr_, offset_);
       case 'O': if (eatString("OR"))
-                  return Operator(OPERATOR_BITWISE_OR,       4, 'L');
-                throw std::exception();
+                  return Operator(OPERATOR_BITWISE_OR,      4, 'L');
+                throw parser_error(expr_, offset_);
       case 'x': if (eatString("xor"))
-                  return Operator(OPERATOR_BITWISE_XOR,      5, 'L');
-                throw std::exception();
+                  return Operator(OPERATOR_BITWISE_XOR,     5, 'L');
+                throw parser_error(expr_, offset_);
       case 'X': if (eatString("XOR"))
-                  return Operator(OPERATOR_BITWISE_XOR,      5, 'L');
-                throw std::exception();
+                  return Operator(OPERATOR_BITWISE_XOR,     5, 'L');
+                throw parser_error(expr_, offset_);
       case 'a': if (eatString("and"))
-                  return Operator(OPERATOR_BITWISE_AND,      6, 'L');
-                throw std::exception();
+                  return Operator(OPERATOR_BITWISE_AND,     6, 'L');
+                throw parser_error(expr_, offset_);
       case 'A': if (eatString("AND"))
-                  return Operator(OPERATOR_BITWISE_AND,      6, 'L');
-                throw std::exception();
+                  return Operator(OPERATOR_BITWISE_AND,     6, 'L');
+                throw parser_error(expr_, offset_);
       case 's': if (eatString("shl"))
-                  return Operator(OPERATOR_BITWISE_SHL,      9, 'L');
+                  return Operator(OPERATOR_BITWISE_SHL,     9, 'L');
                 if (eatString("shr"))
-                  return Operator(OPERATOR_BITWISE_SHR,      9, 'L');
-                throw std::exception();
+                  return Operator(OPERATOR_BITWISE_SHR,     9, 'L');
+                throw parser_error(expr_, offset_);
       case 'S': if (eatString("SHL"))
-                  return Operator(OPERATOR_BITWISE_SHL,      9, 'L');
+                  return Operator(OPERATOR_BITWISE_SHL,     9, 'L');
                 if (eatString("SHR"))
-                  return Operator(OPERATOR_BITWISE_SHR,      9, 'L');
-                throw std::exception();
+                  return Operator(OPERATOR_BITWISE_SHR,     9, 'L');
+                throw parser_error(expr_, offset_);
       case '+': offset_++;
-                return Operator(OPERATOR_ADDITION,          10, 'L');
+                return Operator(OPERATOR_ADDITION,         10, 'L');
       case '-': offset_++;
-                return Operator(OPERATOR_SUBTRACTION,       10, 'L');
+                return Operator(OPERATOR_SUBTRACTION,      10, 'L');
       case '/': offset_++;
-                return Operator(OPERATOR_DIVISION,          20, 'L');
+                return Operator(OPERATOR_DIVISION,         20, 'L');
       case '%': offset_++;
-                return Operator(OPERATOR_MODULO,            20, 'L');
+                return Operator(OPERATOR_MODULO,           20, 'L');
       case '*': offset_++;
                 if (getCurrentCharacter() != '*')
-                  return Operator(OPERATOR_MULTIPLICATION,  20, 'L');
+                  return Operator(OPERATOR_MULTIPLICATION, 20, 'L');
                 offset_++;
-                return Operator(OPERATOR_POWER,             30, 'R');
+                return Operator(OPERATOR_POWER,            30, 'R');
       case '^': offset_++;
-                return Operator(OPERATOR_POWER,             30, 'R');
+                return Operator(OPERATOR_POWER,            30, 'R');
       case 'e': offset_++;
-                return Operator(OPERATOR_EXPONENT,          40, 'R');
+                return Operator(OPERATOR_EXPONENT,         40, 'R');
       case 'E': offset_++;
-                return Operator(OPERATOR_EXPONENT,          40, 'R');
+                return Operator(OPERATOR_EXPONENT,         40, 'R');
     }
     // Operator NULL used for:
     //
@@ -387,9 +391,11 @@ private:
                 value = parseExpr();
                 eatSpaces();
                 if (getCurrentCharacter() != ')') {
-                 if (isEndOfExpression())
-                   error_ << "Syntax error: `)' expected at end of expression";
-                  throw std::exception();
+                  if (!isEndOfExpression())
+                    throw parser_error(expr_, offset_);
+                  else
+                    throw parser_error(
+                        "Syntax error: `)' expected at end of expression");
                 }
                 offset_++; return  value;
       case '+': offset_++; return  parseVal();
@@ -397,14 +403,16 @@ private:
       case '-': offset_++; return static_cast<T> (-1) * parseVal();
       case 'n': if (eatString("not"))
                   return ~parseVal();
-                throw std::exception();
+                throw parser_error(expr_, offset_);
       case 'N': if (eatString("NOT"))
                   return ~parseVal();
-                throw std::exception();
+                throw parser_error(expr_, offset_);
       default:
-        if (isEndOfExpression())
-          error_ << "Syntax error: value expected at end of expression";
-        throw std::exception();
+        if (!isEndOfExpression())
+          throw parser_error(expr_, offset_);
+        else
+          throw parser_error(
+              "Syntax error: value expected at end of expression");
     }
     assert(false); // never reached
     return 0;
@@ -444,35 +452,12 @@ private:
 
 public:
   ExpressionParser() :
-    result_(0), maxLength_(EXPRESSION_MAX_LENGTH), isSuccess_(true) {
+    maxLength_(EXPRESSION_MAX_LENGTH), result_(0), isSuccess_(true) {
   }
 
   ExpressionParser(const std::string& expr) :
-    result_(0), maxLength_(EXPRESSION_MAX_LENGTH) {
+    maxLength_(EXPRESSION_MAX_LENGTH), result_(0) {
     isSuccess_ = this->eval(expr);
-  }
-
-  ExpressionParser(const ExpressionParser& parser) {
-    if (this != &parser) {
-      expr_      = parser.expr_;
-      result_    = parser.result_;
-      maxLength_ = parser.maxLength_;
-      isSuccess_ = parser.isSuccess_;
-      error_.clear();
-      error_.str(parser.error_.str());
-    }
-  }
-
-  ExpressionParser& operator=(const ExpressionParser& parser) {
-    if (this != &parser) {
-      expr_      = parser.expr_;
-      result_    = parser.result_;
-      maxLength_ = parser.maxLength_;
-      isSuccess_ = parser.isSuccess_;
-      error_.clear();
-      error_.str(parser.error_.str());
-    }
-    return *this;
   }
 
   /**
@@ -502,7 +487,7 @@ public:
    * failed or !isSuccess().
    */
   std::string getErrorMessage() const {
-    return error_.str();
+    return errorMessage_;
   }
 
   /**
@@ -536,34 +521,30 @@ public:
    */
   bool eval(const std::string& expr) {
     try {
-      error_.clear();
-      error_.str(std::string());
-      offset_ = 0;
       if (expr.length() > maxLength_) {
         expr_ = "";
-        error_ << "Parser error: expression exceeds limit of "
-               << maxLength_
-               << " characters";
-        throw std::exception();
+        std::ostringstream error;
+        error << "Parser error: expression exceeds limit of "
+              << maxLength_
+              << " characters";
+        throw parser_error(error.str());
       }
       expr_ = expr;
+      errorMessage_ = "";
+      offset_ = 0;
       // evaluate the expression
       result_ = parseExpr();
-      if (isEndOfExpression() == false)
-        throw std::exception();
+      if (!isEndOfExpression())
+        throw parser_error(expr_, offset_);
       // stack is empty here i.e. all operators have been consumed
       assert(opv_.size() == 0);
       isSuccess_ = true;
     }
-    catch(...) {
-      // clear the stack for next usage
+    catch (std::exception& e) {
+      errorMessage_ = e.what();
+      // clean up
       while(!opv_.empty()) opv_.pop();
       result_ = 0;
-      if (error_.str().length() == 0)
-        error_ << "Syntax error: unexpected token \""
-               << expr_.substr(offset_, expr_.length() - offset_)
-               << "\" at index "
-               << offset_;
       isSuccess_ = false;
     }
     return isSuccess_;
