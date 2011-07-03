@@ -32,7 +32,7 @@
 #include <algorithm>
 
 ParallelPrimeSieve::ParallelPrimeSieve() :
-  shm_(NULL), numThreads_(USE_IDEAL_NUM_THREADS) {
+  numThreads_(USE_IDEAL_NUM_THREADS), shm_(NULL) {
   this->setMinThreadInterval(defs::MIN_THREAD_INTERVAL);
 }
 
@@ -126,15 +126,14 @@ void ParallelPrimeSieve::setMinThreadInterval(uint64_t minThreadInterval) {
  */
 void ParallelPrimeSieve::init(SharedMemory* shm) {
   if (shm == NULL)
-    throw std::invalid_argument("shared memory segment must not be NULL");
-  this->setStartNumber(shm->startNumber);
-  this->setStopNumber(shm->stopNumber);
-  this->setSieveSize(shm->sieveSize);
-  this->setFlags(shm->flags);
-  this->setNumThreads(shm->threads);
-  // upon completion the sieving results are communicated back to the
-  // Qt GUI process via shared memory
+    throw std::invalid_argument(
+        "ParallelPrimeSieve: shared memory segment must not be NULL");
   shm_ = shm;
+  this->setStartNumber(shm_->startNumber);
+  this->setStopNumber(shm_->stopNumber);
+  this->setSieveSize(shm_->sieveSize);
+  this->setFlags(shm_->flags);
+  this->setNumThreads(shm_->threads);
 }
 
 /**
