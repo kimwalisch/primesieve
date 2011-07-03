@@ -32,7 +32,7 @@ EratSmall::EratSmall(uint32_t limit, const SieveOfEratosthenes& soe) :
   // assertion that prevents array segmentation faults in
   // sieve(uint8_t*, uint32_t)
   if (limit_ >= (soe.getSieveSize() - 2) * 5)
-    throw std::logic_error("EratSmall: limit must be < (sieveSize - 2) * 5.");
+    throw std::out_of_range("EratSmall: limit must be < (sieveSize - 2) * 5.");
 }
 
 /**
