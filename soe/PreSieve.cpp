@@ -51,22 +51,22 @@ PreSieve::~PreSieve() {
  * primes <= limit_ from it.
  */
 void PreSieve::initWheelArray() {
+  assert(SieveOfEratosthenes::NUMBERS_PER_BYTE == 30);
+  assert(size_ > 0);
+
   const uint32_t smallPrimes[6] = { 7, 11, 13, 17, 19, 23 };
-  const uint32_t unsetBit[37] = { 
-      0xff,
-      BIT7, 0xff, 0xff, 0xff, 0xff, 0xff,
+  const uint32_t unsetBit[30] = {
       BIT0, 0xff, 0xff, 0xff, BIT1, 0xff,
       BIT2, 0xff, 0xff, 0xff, BIT3, 0xff,
       BIT4, 0xff, 0xff, 0xff, BIT5, 0xff,
       0xff, 0xff, 0xff, 0xff, BIT6, 0xff,
       BIT7, 0xff, 0xff, 0xff, 0xff, 0xff };
 
-  assert(size_ > 0);
   wheelArray_ = new uint8_t[size_];
   // initialization, set bits of the first byte to 1
   wheelArray_[0] = 0xff;
-
   uint32_t primeProduct = 2 * 3 * 5;
+
   for (uint32_t i = 0; i < 6 && smallPrimes[i] <= limit_; i++) {
     // cross off the multiples of primes < smallPrimes[i] up to the
     // current prime product
@@ -76,15 +76,14 @@ void PreSieve::initWheelArray() {
       std::memcpy(&wheelArray_[j * pp30], wheelArray_, pp30);
     }
     primeProduct *= smallPrimes[i];
-    uint32_t multiple = smallPrimes[i];
+    // '- 7' is a correction for primes of type i*30 + 31
+    uint32_t multiple = smallPrimes[i] - 7;
     // cross off the multiples of smallPrimes[i] up to the current
     // prime product
-    // '+ 1' and '- 6' are corrections for primes of type i*30 + 31
-    while (multiple <= primeProduct + 1) {
-      uint32_t multipleIndex = (multiple - 6) / 30;
-      uint32_t bitPosition = multiple - multipleIndex * 30;
-      assert(multipleIndex < size_ && 
-             bitPosition < 37);
+    while (multiple < primeProduct) {
+      uint32_t multipleIndex = multiple / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+      uint32_t bitPosition = multiple % SieveOfEratosthenes::NUMBERS_PER_BYTE;
+      assert(multipleIndex < size_);
       wheelArray_[multipleIndex] &= unsetBit[bitPosition];
       multiple += smallPrimes[i] * 2;
     }
