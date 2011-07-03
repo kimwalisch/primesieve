@@ -345,7 +345,7 @@ void PrimeSieve::sieve() {
   if (stopNumber_ >= 7) {
     // used to sieve the primes and prime k-tuplets within the
     // interval [startNumber_, stopNumber_]
-    PrimeNumberFinder finder(this);
+    PrimeNumberFinder finder(*this);
 
     if (isqrt(stopNumber_) > finder.getPreSieveLimit()) {
       /// used to generate the primes up to stopNumber_^0.5 needed for

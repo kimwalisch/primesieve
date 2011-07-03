@@ -36,12 +36,12 @@ class PrimeSieve;
  */
 class PrimeNumberFinder: public SieveOfEratosthenes {
 public:
-  PrimeNumberFinder(PrimeSieve*);
+  PrimeNumberFinder(PrimeSieve&);
   ~PrimeNumberFinder();
 private:
   static const uint32_t nextBitValues_[NUMBERS_PER_BYTE];
-  /** Pointer to the parent PrimeSieve object. */
-  PrimeSieve* const ps_;
+  /** Reference to the parent PrimeSieve object. */
+  PrimeSieve& ps_;
   /**
    * Lookup tables that give the count of prime k-tuplets (twin
    * primes, prime triplets, ...) per byte.
