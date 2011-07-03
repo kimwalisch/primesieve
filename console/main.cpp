@@ -51,7 +51,7 @@ namespace {
   };
 
   std::vector<uint64_t> numbers; /* start and stop number for sieving */
-  uint32_t sieveSize     = 0;    /* sieve size in KiloBytes */
+  uint32_t sieveSize     = 0;    /* sieve size in Kilobytes */
   uint32_t flags         = 0;    /* settings */
   bool quietMode         = false;
   bool showParserResults = false;
@@ -67,29 +67,30 @@ namespace {
 
 void help() {
   std::cout << "Usage: primesieve START STOP [OPTION]..." << std::endl
-            << "Use the sieve of Eratosthenes to find the prime numbers and prime" << std::endl
-            << "k-tuplets between START and STOP < 2^64" << std::endl
-            << std::endl
-            << "Examples:" << std::endl
-            << "  primesieve 1 10000000 -p1" << std::endl
-            << "  primesieve 1 1e11 -s 32" << std::endl
-            << "  primesieve 1e18 1e18+2**32 -c1234567" << std::endl
+            << "Use the segmented sieve of Eratosthenes to generate the prime numbers and" << std::endl
+            << "prime k-tuplets in the interval [START, STOP] < 2^64" << std::endl
             << std::endl
             << "Options:" << std::endl
-            << "  -c[N]        Count prime numbers and/or prime k-tuplets," << std::endl
-            << "               e.g -c1 count prime numbers, -c3 count prime triplets, ..." << std::endl
-            << "               N >= 1 and N <= 7" << std::endl
-            << "  -p[N]        Print prime numbers or prime k-tuplets," << std::endl
-            << "               e.g -p1 print prime numbers, -p2 print twin primes, ..." << std::endl
-            << "               N >= 1 and N <= 7" << std::endl
+            << std::endl
+            << "  -c<N+>       Count prime numbers and/or prime k-tuplets, 1 <= N <= 7" << std::endl
+            << "               e.g. -c1  count prime numbers (DEFAULT)" << std::endl
+            << "                    -c23 count twin primes and prime triplets" << std::endl
+            << "  -p<N>        Print prime numbers or prime k-tuplets, 1 <= N <= 7" << std::endl
+            << "               e.g. -p1 print prime numbers" << std::endl
+            << "                    -p5 print prime quintuplets" << std::endl
             << "  -q           Quiet mode, print less output" << std::endl
-            << "  -s <SIZE>    Set the sieve size in KiloBytes, e.g. -s 256," << std::endl
-            << "               set SIZE to your CPU's L1/L2 cache size for best performance" << std::endl
-            << "               SIZE >= 1 and SIZE <= 8192" << std::endl
-            << "  -t <THREADS> Set the number of threads for sieving, e.g. -t 4," << std::endl
-            << "               THREADS >= 1 and THREADS <= " << maxThreads << " (CPU max threads)" << std::endl
+            << "  -s <SIZE>    Set the sieve size in Kilobytes, 1 <= SIZE <= 8192" << std::endl
+            << "               Set SIZE to your CPU's L1/L2 cache size for best performance" << std::endl
+            << "  -t <THREADS> Set the number of threads for sieving, 1 <= THREADS <= " << maxThreads << std::endl
+            << "               Primes are not generated in order if THREADS >= 2" << std::endl
             << "  -test        Run various sieving tests and exit" << std::endl
-            << "  -v           Print version and license information and exit" << std::endl;
+            << "  -v           Print version and license information and exit" << std::endl
+            << std::endl
+            << "Examples:" << std::endl
+            << std::endl
+            << "  primesieve 2 1000 -p1     print the prime numbers up to 1000" << std::endl
+            << "  primesieve 2 1E11 -s 32   count the prime numbers up to 10^11 using a" << std::endl
+            << "                            sieve size of 32 KB" << std::endl;
 }
 
 void version() {
@@ -206,7 +207,7 @@ int main(int argc, char* argv[]) {
     pps.setNumThreads(threads);
 
     if (!quietMode)
-      std::cout << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize() << " KiloBytes" << std::endl
+      std::cout << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize() << " Kilobytes" << std::endl
                 << std::setw(10) << "Threads" << " = " << pps.getNumThreads() << std::endl;
 
     // start sieving primes
