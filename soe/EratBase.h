@@ -22,6 +22,7 @@
 
 #include "WheelFactorization.h"
 #include "defs.h"
+#include "pmath.h"
 
 #include <stdexcept>
 #include <cassert>
@@ -40,11 +41,11 @@ public:
     return limit_;
   }
   /** Add a prime number for sieving to EratBase. */
-  void addSievingPrime(uint32_t prime, uint64_t segmentLow) {
+  void addSievingPrime(uint32_t prime) {
     assert(prime <= limit_);
     uint32_t sieveIndex;
     uint32_t wheelIndex;
-    if (this->getWheelPrimeData(segmentLow, &prime, &sieveIndex, &wheelIndex)
+    if (this->getWheelPrimeData(&prime, &sieveIndex, &wheelIndex)
         == true) {
       if (!bucketList_->addWheelPrime(prime, sieveIndex, wheelIndex)) {
         Bucket_t* bucket = new Bucket_t;
@@ -59,9 +60,10 @@ protected:
   const uint32_t limit_;
   /** Singly linked list of buckets, holds the sieving primes. */
   Bucket_t* bucketList_;
-  EratBase(uint32_t limit, const SieveOfEratosthenes* soe) :
+  EratBase(uint32_t limit, const SieveOfEratosthenes& soe) :
     T_ModuloWheel(soe), limit_(limit), bucketList_(NULL) {
-    if (limit > isqrt(this->stopNumber_))
+    uint32_t sqrtStop = isqrt(soe.getStopNumber());
+    if (limit_ > sqrtStop)
       throw std::logic_error("EratBase: limit must be <= sqrt(stopNumber).");
     // initialize the bucket list with an empty bucket
     bucketList_ = new Bucket_t;

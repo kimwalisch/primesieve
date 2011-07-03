@@ -23,22 +23,21 @@
 #include "defs.h"
 #include "pmath.h"
 
+#include <stdexcept>
 #include <cstdlib>
 #include <cassert>
-#include <cmath>
-#include <stdexcept>
 
 #define BUCKETS_PER_CREATE (defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t))
 
-EratBig::EratBig(const SieveOfEratosthenes* soe) : Modulo210Wheel(soe),
-    log2SieveSize_(floorLog2(soe->getSieveSize())),
-    moduloSieveSize_(soe->getSieveSize() - 1), primeCount_(0), index_(0),
-    bucketLists_(NULL), bucketStock_(NULL) {
+EratBig::EratBig(const SieveOfEratosthenes& soe) : Modulo210Wheel(soe),
+    log2SieveSize_(floorLog2(soe.getSieveSize())),
+    moduloSieveSize_(soe.getSieveSize() - 1),
+    primeCount_(0), index_(0), bucketLists_(NULL), bucketStock_(NULL) {
   // EratBig uses bitwise operations that require a power of 2 sieve size
-  if (!isPowerOf2(soe->getSieveSize()))
+  if (!isPowerOf2(soe.getSieveSize()))
     throw std::invalid_argument(
         "EratBig: sieveSize must be a power of 2 (2^n).");
-  this->setSize(soe->getSieveSize());
+  this->setSize(soe);
   this->initBucketLists();
 }
 
@@ -55,15 +54,17 @@ EratBig::~EratBig() {
  * @remark The size is a power of 2 value which allows use of fast
  *         bitwise operators in sieve(uint8_t*).
  */
-void EratBig::setSize(uint32_t sieveSize) {
-  assert(sieveSize > 0);
-  // MAX sieveIndex in sieve(uint8_t*)
-  double maxSieveIndex = (sieveSize - 1) + ((isqrt(stopNumber_) * 2.0)
-      / SieveOfEratosthenes::NUMBERS_PER_BYTE) * wheel_[1].nextMultipleFactor;
-  // MAX segmentCount in sieve(uint8_t*)
-  uint32_t maxSegmentCount = static_cast<uint32_t> (std::ceil(
-      maxSieveIndex / sieveSize));
-  size_ = nextHighestPowerOf2(maxSegmentCount);
+void EratBig::setSize(const SieveOfEratosthenes& soe) {
+  uint32_t sieveSize = soe.getSieveSize();
+  uint32_t sqrtStop = isqrt(soe.getStopNumber());
+  // MAX values in sieve(uint8_t*)
+  uint32_t maxSievingPrime = sqrtStop / (SieveOfEratosthenes::NUMBERS_PER_BYTE / 2);
+  uint32_t maxWheelFactor = wheel_[1].nextMultipleFactor;
+  uint32_t maxSieveIndex = (sieveSize - 1) + maxSievingPrime * maxWheelFactor;
+  uint32_t maxSegmentCount = maxSieveIndex / sieveSize;
+  // 'maxSegmentCount + 1' is the smallest possible size for the
+  // bucketLists_ array
+  size_ = nextHighestPowerOf2(maxSegmentCount + 1);
 }
 
 /**
@@ -82,10 +83,10 @@ void EratBig::initBucketLists() {
 /**
  * Add a prime number for sieving to EratBig.
  */
-void EratBig::addSievingPrime(uint32_t prime, uint64_t segmentLow) {
+void EratBig::addSievingPrime(uint32_t prime) {
   uint32_t sieveIndex;
   uint32_t wheelIndex;
-  if (this->getWheelPrimeData(segmentLow, &prime, &sieveIndex, &wheelIndex)
+  if (this->getWheelPrimeData(&prime, &sieveIndex, &wheelIndex)
       == true) {
     // indicates in how many segments the next multiple of prime
     // needs to be crossed off

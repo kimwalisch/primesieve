@@ -25,7 +25,7 @@
 
 #include <cstdlib>
 
-EratMedium::EratMedium(uint32_t limit, const SieveOfEratosthenes* soe) :
+EratMedium::EratMedium(uint32_t limit, const SieveOfEratosthenes& soe) :
   EratBase<Modulo210Wheel> (limit, soe) {
 }
 

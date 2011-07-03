@@ -125,12 +125,12 @@ void SieveOfEratosthenes::initEratAlgorithms() {
   uint32_t limit;
   if (preSieve_.getLimit() < sqrtStop) {
     limit = static_cast<uint32_t> (sieveSize_* defs::ERATSMALL_FACTOR);
-    eratSmall_ = new EratSmall(std::min<uint32_t>(limit, sqrtStop), this);
+    eratSmall_ = new EratSmall(std::min<uint32_t>(limit, sqrtStop), *this);
     if (eratSmall_->getLimit() < sqrtStop) {
       limit = static_cast<uint32_t> (sieveSize_* defs::ERATMEDIUM_FACTOR);
-      eratMedium_ = new EratMedium(std::min<uint32_t>(limit, sqrtStop), this);
+      eratMedium_ = new EratMedium(std::min<uint32_t>(limit, sqrtStop), *this);
       if (eratMedium_->getLimit() < sqrtStop)
-        eratBig_ = new EratBig(this);
+        eratBig_ = new EratBig(*this);
     }
   }
 }
@@ -175,9 +175,9 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
   // add prime to the appropriate erat* object
   if (prime > eratSmall_->getLimit())
     if (prime > eratMedium_->getLimit())
-            eratBig_->addSievingPrime(prime, segmentLow_);
-    else eratMedium_->addSievingPrime(prime, segmentLow_);
-  else    eratSmall_->addSievingPrime(prime, segmentLow_);
+            eratBig_->addSievingPrime(prime);
+    else eratMedium_->addSievingPrime(prime);
+  else    eratSmall_->addSievingPrime(prime);
 }
 
 /**

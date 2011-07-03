@@ -35,9 +35,9 @@ class SieveOfEratosthenes;
  */
 class EratBig: protected Modulo210Wheel {
 public:
-  EratBig(const SieveOfEratosthenes*);
+  EratBig(const SieveOfEratosthenes&);
   ~EratBig();
-  void addSievingPrime(uint32_t, uint64_t);
+  void addSievingPrime(uint32_t);
   void sieve(uint8_t*);
 private:
   typedef Bucket<defs::ERATBIG_BUCKETSIZE> Bucket_t;
@@ -65,7 +65,7 @@ private:
   Bucket_t* bucketStock_;
   /** Pointers of the allocated buckets. */
   std::list<Bucket_t*> bucketPointers_;
-  void setSize(uint32_t);
+  void setSize(const SieveOfEratosthenes&);
   void initBucketLists();
   void pushBucket(uint32_t listIndex);
 };

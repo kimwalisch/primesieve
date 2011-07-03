@@ -53,6 +53,9 @@ public:
      */
     NUMBERS_PER_BYTE = 30
   };
+  uint64_t getSegmentLow() const {
+    return segmentLow_;
+  }
   uint64_t getStartNumber() const {
     return startNumber_;
   }
@@ -69,19 +72,16 @@ protected:
   static const uint32_t bitValues_[32];
   SieveOfEratosthenes(uint64_t, uint64_t, uint32_t, uint32_t);
   ~SieveOfEratosthenes();
-  uint64_t getSegmentLow() const {
-    return segmentLow_;
-  }
   virtual void analyseSieve(const uint8_t*, uint32_t) = 0;
 private:
-  /** The start number for sieving. */
-  const uint64_t startNumber_;
-  /** The stop number for sieving. */
-  const uint64_t stopNumber_;
   /** Lower bound of the current segment. */
   uint64_t segmentLow_;
   /** Upper bound of the current segment. */
   uint64_t segmentHigh_;
+  /** The start number for sieving. */
+  const uint64_t startNumber_;
+  /** The stop number for sieving. */
+  const uint64_t stopNumber_;
   /** Sieve of Eratosthenes array. */
   uint8_t* sieve_;
   /** Size of sieve_ in bytes. */

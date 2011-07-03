@@ -188,26 +188,29 @@ template<uint32_t WHEEL_MODULO, uint32_t WHEEL_ELEMENTS,
 class ModuloWheel {
 private:
   static const uint32_t primeTypes_[15];
+  /** Reference to the parent SieveOfEratosthenes object. */
+  const SieveOfEratosthenes& soe_;
   /** Uncopyable, declared but not defined. */
   ModuloWheel(const ModuloWheel&);
   ModuloWheel& operator=(const ModuloWheel&);
 protected:
-  const uint64_t stopNumber_;
-  ModuloWheel(const SieveOfEratosthenes* soe) : 
-    stopNumber_(soe->getStopNumber()) {
-    uint64_t greatestWheelFactor = INIT_WHEEL[2].nextMultipleFactor;
-    // prevents 64-bit overflows of multiple in getWheelPrimeData()
-    if (stopNumber_ > UINT64_MAX - UINT32_MAX * (greatestWheelFactor + 1)) {
+  ModuloWheel(const SieveOfEratosthenes& soe) : 
+    soe_(soe) {
+    // prevent 64-bit overflows of multiple in getWheelPrimeData()
+    uint64_t maxSievingPrime = UINT32_MAX;
+    uint64_t maxInitFactor   = INIT_WHEEL[2].nextMultipleFactor + 1;
+    uint64_t limit           = UINT64_MAX - maxSievingPrime * maxInitFactor;
+    if (soe_.getStopNumber() > limit) {
       std::ostringstream error;
       error << "ModuloWheel: stopNumber must be <= (2^64-1) - (2^32-1) * "
-            << greatestWheelFactor + 1
+            << maxInitFactor
             << ".";
       throw std::overflow_error(error.str());
     }
-    // max sieveSize = max WheelPrime::sieveIndex_ + 1 = 2^23
-    // also sieveSize <= 2^28 in order to prevent 32 bit overflows of
+    // max sieveSize = max WheelPrime::getSieveIndex() + 1 = 2^23
+    // also sieveSize <= 2^28 in order to prevent 32-bit overflows of
     // sieveIndex in Erat*::sieve()
-    if (soe->getSieveSize() > (1u << 23))
+    if (soe_.getSieveSize() > (1u << 23))
       throw std::overflow_error(
           "ModuloWheel: sieveSize must be <= 2^23, 8192 Kilobytes.");
   }
@@ -223,11 +226,11 @@ protected:
    * @return true if the WheelPrime must be stored for sieving else
    *         false.
    */
-  bool getWheelPrimeData(uint64_t segmentLow, 
-                         uint32_t* prime,
+  bool getWheelPrimeData(uint32_t* prime,
                          uint32_t* sieveIndex,
                          uint32_t* wheelIndex)
   {
+    uint64_t segmentLow = soe_.getSegmentLow();
     assert(segmentLow % 30 == 0);
     // '+ 6' is a correction for primes of type i*30 + 31
     segmentLow += 6;
@@ -235,7 +238,7 @@ protected:
     uint64_t quotient = segmentLow / *prime + 1;
     uint64_t multiple = *prime * quotient;
     // prime not needed for sieving
-    if (multiple > stopNumber_)
+    if (multiple > soe_.getStopNumber())
       return false;
     // by theory prime^2 is the first multiple of prime that needs to
     // be crossed off
@@ -247,7 +250,7 @@ protected:
     // calculate the next multiple that is not divisible by any of the
     // wheel's primes (i.e. 2, 3 and 5 for a modulo 30 wheel)
     multiple += static_cast<uint64_t> (*prime) * INIT_WHEEL[index].nextMultipleFactor;
-    if (multiple > stopNumber_)
+    if (multiple > soe_.getStopNumber())
       return false;
     uint32_t wheelOffset = WHEEL_ELEMENTS * primeTypes_[*prime % 15];
     *sieveIndex = static_cast<uint32_t> ((multiple - segmentLow) / 30);
@@ -276,7 +279,7 @@ class Modulo30Wheel: protected ModuloWheel<30, 8, init30Wheel> {
 protected:
   /** @see WheelElement */
   static const WheelElement wheel_[8 * 8];
-  Modulo30Wheel(const SieveOfEratosthenes* soe) :
+  Modulo30Wheel(const SieveOfEratosthenes& soe) :
     ModuloWheel<30, 8, init30Wheel> (soe) {
   }
   ~Modulo30Wheel() {}
@@ -291,7 +294,7 @@ class Modulo210Wheel: protected ModuloWheel<210, 48, init210Wheel> {
 protected:
   /** @see WheelElement */
   static const WheelElement wheel_[48 * 8];
-  Modulo210Wheel(const SieveOfEratosthenes* soe) :
+  Modulo210Wheel(const SieveOfEratosthenes& soe) :
     ModuloWheel<210, 48, init210Wheel> (soe) {
   }
   ~Modulo210Wheel() {}

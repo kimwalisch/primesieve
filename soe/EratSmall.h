@@ -38,7 +38,7 @@ class SieveOfEratosthenes;
  */
 class EratSmall: public EratBase<Modulo30Wheel> {
 public:
-  EratSmall(uint32_t, const SieveOfEratosthenes*);
+  EratSmall(uint32_t, const SieveOfEratosthenes&);
   void sieve(uint8_t*, uint32_t);
 };
 
