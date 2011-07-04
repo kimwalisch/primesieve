@@ -1,4 +1,4 @@
-New in version 2.3, 02/07/2011
+New in version 2.3, 04/07/2011
 ==============================
 
 1. The thread scheduling of ParallelPrimeSieve has been improved
@@ -7,10 +7,12 @@ New in version 2.3, 02/07/2011
    of lookup tables (15 percent speed up).
 3. Implemented a fast bit population count routine (see pmath.h) for
    CPUs without SSE4.2 POPCNT support.
-4. README has been rewritten from scratch and the comments of the
+4. Revised the option handling in the console version of primesieve,
+   added two new options: -o<OFFSET> and -r<PRE-SIEVE>
+5. README has been rewritten from scratch and the comments of the
    sieve of Eratosthenes implementation have been revised.
-5. ResetSieve has been renamed to PreSieve.
-6. Some minor changes to improve the code readability.
+6. ResetSieve has been renamed to PreSieve.
+7. Some minor changes to improve the code readability.
 
 New in version 2.2, 26/05/2011
 ==============================
