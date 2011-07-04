@@ -86,10 +86,9 @@ private:
   uint8_t* sieve_;
   /** Size of sieve_ in bytes. */
   uint32_t sieveSize_;
-  /**
-   * Used to pre-sieve multiples of small
-   * primes <= preSieve_.getLimit().
-   */
+  /** Set to false after the first sieved segment. */
+  bool isFirstSegment_;
+  /** Pre-sieves multiples of small primes <= preSieve_.getLimit(). */
   const PreSieve preSieve_;
   /**
    * Used to cross off multiples of small sieving primes that have a
@@ -107,8 +106,8 @@ private:
    */
   EratBig* eratBig_;
   uint32_t getByteRemainder(uint64_t);
-  void initSieve();
   void initEratAlgorithms();
+  void preSieve();
   void crossOffMultiples();
   /** Uncopyable, declared but not defined. */
   SieveOfEratosthenes(const SieveOfEratosthenes&);
