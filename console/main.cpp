@@ -28,6 +28,7 @@
  */
 
 #include "../soe/ParallelPrimeSieve.h"
+#include "../soe/defs.h"
 #include "../expr/ExpressionParser.h"
 
 /// declared in test.cpp
@@ -38,20 +39,20 @@ void test();
 #include <iostream>
 #include <string>
 #include <vector>
-#include <cctype>  /* std::tolower(int) */
 #include <iomanip> /* std::setw(int) */
 
 namespace {
   enum {
     OPTION_ERROR,
     OPTION_HELP,
-    OPTION_SIEVE,
     OPTION_TEST,
-    OPTION_VERSION
+    OPTION_VERSION,
+    START_SIEVING
   };
 
   std::vector<uint64_t> numbers; /* start and stop number for sieving */
   uint32_t sieveSize     = 0;    /* sieve size in Kilobytes */
+  uint32_t preSieve      = defs::PRIMESIEVE_PRESIEVE_LIMIT;
   uint32_t flags         = 0;    /* settings */
   bool quietMode         = false;
   bool showParserResults = false;
@@ -66,31 +67,34 @@ namespace {
 }
 
 void help() {
-  std::cout << "Usage: primesieve START STOP [OPTION]..." << std::endl
-            << "Use the segmented sieve of Eratosthenes to generate the prime numbers and" << std::endl
-            << "prime k-tuplets in the interval [START, STOP] < 2^64" << std::endl
-            << std::endl
-            << "Options:" << std::endl
-            << std::endl
-            << "  -c<N+>       Count prime numbers and/or prime k-tuplets, 1 <= N <= 7" << std::endl
-            << "               e.g. -c1  count prime numbers (DEFAULT)" << std::endl
-            << "                    -c23 count twin primes and prime triplets" << std::endl
-            << "  -p<N>        Print prime numbers or prime k-tuplets, 1 <= N <= 7" << std::endl
-            << "               e.g. -p1 print prime numbers" << std::endl
-            << "                    -p5 print prime quintuplets" << std::endl
-            << "  -q           Quiet mode, print less output" << std::endl
-            << "  -s <SIZE>    Set the sieve size in Kilobytes, 1 <= SIZE <= 8192" << std::endl
-            << "               Set SIZE to your CPU's L1/L2 cache size for best performance" << std::endl
-            << "  -t <THREADS> Set the number of threads for sieving, 1 <= THREADS <= " << maxThreads << std::endl
-            << "               Primes are not generated in order if THREADS >= 2" << std::endl
-            << "  -test        Run various sieving tests and exit" << std::endl
-            << "  -v           Print version and license information and exit" << std::endl
-            << std::endl
-            << "Examples:" << std::endl
-            << std::endl
-            << "  primesieve 2 1000 -p1     print the prime numbers up to 1000" << std::endl
-            << "  primesieve 2 1E11 -s 32   count the prime numbers up to 10^11 using a" << std::endl
-            << "                            sieve size of 32 KB" << std::endl;
+  std::cout << "Usage: primesieve START STOP [OPTION]..."                                              << std::endl
+            << "Use the segmented sieve of Eratosthenes to generate the prime numbers and"             << std::endl
+            << "prime k-tuplets in the interval [START, STOP] < 2^64"                                  << std::endl
+                                                                                                       << std::endl
+            << "Options:"                                                                              << std::endl
+                                                                                                       << std::endl
+            << "  -c<N+>        Count prime numbers and/or prime k-tuplets, 1 <= N <= 7"               << std::endl
+            << "                e.g. -c1 count prime numbers (DEFAULT)"                                << std::endl
+            << "                     -c23 count twin primes and prime triplets"                        << std::endl
+            << "  -o<OFFSET>    Sieve the interval [START, START+OFFSET]"                              << std::endl
+            << "  -p<N>         Print prime numbers or prime k-tuplets, 1 <= N <= 7"                   << std::endl
+            << "                e.g. -p1 print prime numbers"                                          << std::endl
+            << "                     -p5 print prime quintuplets"                                      << std::endl
+            << "  -q            Quiet mode, print less output"                                         << std::endl
+            << "  -r<PRE-SIEVE> Pre-sieve multiples of small primes <= PRE-SIEVE to speed up"          << std::endl
+            << "                the sieve of Eratosthenes, 11 <= PRE-SIEVE <= 23"                      << std::endl
+            << "  -s<SIZE>      Set the sieve size in Kilobytes, 1 <= SIZE <= 8192"                    << std::endl
+            << "                Set SIZE to your CPU's L1/L2 cache size for best performance"          << std::endl
+            << "  -t<THREADS>   Set the number of threads for sieving, 1 <= THREADS <= " << maxThreads << std::endl
+            << "                Primes are not generated in order if THREADS >= 2"                     << std::endl
+            << "  -test         Run various sieving tests and exit"                                    << std::endl
+            << "  -v            Print version and license information and exit"                        << std::endl
+                                                                                                       << std::endl
+            << "Examples:"                                                                             << std::endl
+                                                                                                       << std::endl
+            << "  primesieve 2 1000 -p1    print the prime numbers up to 1000"                         << std::endl
+            << "  primesieve 2 1E11 -s32   count the prime numbers up to 10^11 using a"                << std::endl
+            << "                           sieve size of 32 KB"                                        << std::endl;
 }
 
 void version() {
@@ -112,55 +116,70 @@ bool isDigits(const std::string &str) {
  * Process the command-line options.
  * @see help(void)
  */
-int processOptions(int argc, char* argv[]) {
-  std::string testOption("test");
-  std::string arg;
-  ExpressionParser<uint64_t> parser;
-  int i = 1;
-
+int processOptions(std::size_t argc, char* argv[]) {
   if (argc < 2 || argc > 20)
     return OPTION_HELP;
-  if (argc > 2) {
-    // get the START and STOP number
-    for (; i <= 2; i++) {
-      if (!parser.eval(argv[i])) {
-        std::cerr << "Error: \"" << argv[i]  << "\" is not a valid arithmetic expression" << std::endl
-                  << "Try `primesieve -help' for more information." << std::endl;
-        return OPTION_ERROR;
-      }
+
+  std::string testOption("est");
+  std::string arg;
+  ExpressionParser<uint64_t> parser;
+  uint64_t tmp = 0;
+
+  // process the START and STOP numbers
+  for (std::size_t i = 1; i < 3 && i < argc; i++) {
+    if (parser.eval(argv[i])) {
       numbers.push_back(parser.getResult());
       if (!isDigits(argv[i]))
         showParserResults = true;
     }
   }
   // process the options ([OPTION]...)
-  for (; i < argc; i++) {
-    char* c = argv[i];
-    if (*c != '-' && *c != '/')
+  for (std::size_t i = numbers.size() + 1; i < argc; i++) {
+    if (*argv[i] != '-' && *argv[i] != '/')
       return OPTION_HELP;
-    c++;
-    switch (std::tolower(*c++)) {
-      case 'c': do {
-                  if (*c < '1' || *c > '7')
-                    return OPTION_HELP;
-                  flags |= ParallelPrimeSieve::COUNT_PRIMES << (*c - '1');
-                } while (*(++c) != 0);
-                break;
-      case 'p': if (*c < '1' || *c > '7')
+    argv[i]++;
+    switch (*argv[i]++) {
+      case 'c': parser.eval(argv[i]);
+                if (!parser.isSuccess())
                   return OPTION_HELP;
-                flags |= ParallelPrimeSieve::PRINT_PRIMES << (*c - '1');
+                tmp = parser.getResult();
+                do {
+                  if (tmp % 10 < 1 || tmp % 10 > 7)
+                    return OPTION_HELP;
+                  flags |= ParallelPrimeSieve::COUNT_PRIMES << (tmp % 10 - 1);
+                  tmp /= 10;
+                } while (tmp > 0);
+                break;
+      case 'o': parser.eval(argv[i]);
+                if (!parser.isSuccess() || numbers.size() == 0)
+                  return OPTION_HELP;
+                tmp = numbers[0] + parser.getResult();
+                numbers.push_back(tmp);
+                break;
+      case 'p': parser.eval(argv[i]);
+                if (!parser.isSuccess() || parser.getResult() < 1 || parser.getResult() > 7)
+                  return OPTION_HELP;
+                tmp = parser.getResult() - 1;
+                flags |= ParallelPrimeSieve::PRINT_PRIMES << tmp;
                 quietMode = true;
                 break;
       case 'q': quietMode = true;
                 break;
-      case 's': if (++i >= argc || !parser.eval(argv[i]))
+      case 'r': parser.eval(argv[i]);
+                if (!parser.isSuccess())
+                  return OPTION_HELP;
+                preSieve = static_cast<uint32_t> (parser.getResult());
+                break;
+      case 's': parser.eval(argv[i]);
+                if (!parser.isSuccess())
                   return OPTION_HELP;
                 sieveSize = static_cast<uint32_t> (parser.getResult());
                 break;
-      case 't': arg = &argv[i][1];
+      case 't': arg = argv[i];
                 if (arg.compare(testOption) == 0)
                   return OPTION_TEST;
-                if (++i >= argc || !parser.eval(argv[i]))
+                parser.eval(argv[i]);
+                if (!parser.isSuccess())
                   return OPTION_HELP;
                 threads = static_cast<int> (parser.getResult());
                 break;
@@ -168,9 +187,7 @@ int processOptions(int argc, char* argv[]) {
       default : return OPTION_HELP;
     }
   }
-  if (numbers.size() == 2)
-    return OPTION_SIEVE;
-  return OPTION_HELP;
+  return (numbers.size() == 2) ? START_SIEVING : OPTION_HELP;
 }
 
 /**
@@ -182,7 +199,7 @@ int main(int argc, char* argv[]) {
     case OPTION_HELP:    help();    return 0;
     case OPTION_VERSION: version(); return 0;
     case OPTION_TEST:    test();    return 0;
-    default: break;
+    case START_SIEVING:  break;
   }
   // print parser results
   std::cout.setf(std::ios::left);
@@ -203,6 +220,7 @@ int main(int argc, char* argv[]) {
     pps.setStartNumber(numbers[0]);
     pps.setStopNumber(numbers[1]);
     pps.setSieveSize(sieveSize);
+    pps.setPreSieveLimit(preSieve);
     pps.setFlags(flags);
     pps.setNumThreads(threads);
 
