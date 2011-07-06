@@ -74,9 +74,10 @@ inline uint32_t popCount(const uint32_t* data, uint32_t size) {
   // http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
   for (; i < size; i++, data++) {
     uint32_t v = *data;
-    v =  v               - ((v >> 1) & 0x55555555);
-    v = (v & 0x33333333) + ((v >> 2) & 0x33333333);
-    bitCount += ((v      +  (v >> 4) & 0x0F0F0F0F) * 0x01010101) >> 24;
+    v =  v               - ((v >> 1)  & 0x55555555);
+    v = (v & 0x33333333) + ((v >> 2)  & 0x33333333);
+    v = (v               +  (v >> 4)) & 0x0F0F0F0F;
+    bitCount += (v * 0x01010101) >> 24;
   }
   return bitCount;
 }
