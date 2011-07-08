@@ -13,9 +13,6 @@ macx {
 # -------------------------------------------------
 # Compiler options & OpenMP for MSVC, GCC and ICC
 # -------------------------------------------------
-DEFINES += NDEBUG \
-    __STDC_CONSTANT_MACROS \
-    __STDC_LIMIT_MACROS
 win* {
     *msvc* {
         QMAKE_CXXFLAGS += /openmp /EHsc
@@ -33,11 +30,6 @@ win* {
 *g++* {
     QMAKE_CXXFLAGS += -fopenmp
     QMAKE_LFLAGS   += -fopenmp
-    # -mpopcnt requires GCC 4.4 (from 2009) or above, Apple GCC does
-    # not support this option
-    !macx {
-        QMAKE_CXXFLAGS += -mpopcnt
-    }
     macx {
         # Apple GCC performs best with -fast
         QMAKE_CXXFLAGS += -fast
@@ -76,8 +68,7 @@ HEADERS += ../soe/EratBig.h \
     ../soe/PrimeNumberGenerator.h \
     ../soe/PreSieve.h \
     ../soe/WheelFactorization.h \
-    ../soe/pmath.h \
+    ../soe/imath.h \
+    ../soe/bithacks.h \
     ../soe/defs.h \
-    ../soe/cpuid.h \
-    ../soe/cpuid_gcc451.h
 FORMS += forms/PrimeSieveGUI.ui

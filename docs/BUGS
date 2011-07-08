@@ -1,13 +1,13 @@
-##############################################################################
+######################################################################
 # List of fixed bugs in primesieve
 #
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       21 December 2010 
-# Last modified: 25 May 2011
+# Last modified: 07 July 2011
 #
 # Project home:  http://primesieve.googlecode.com
-##############################################################################
+######################################################################
 
 Please contact the author if you find a new bug. The most recent
 version of primesieve can be retrieved from its Subversion

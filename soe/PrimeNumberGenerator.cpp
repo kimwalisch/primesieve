@@ -1,28 +1,43 @@
-/*
- * PrimeNumberGenerator.cpp -- This file is part of primesieve
- *
- * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
+//
+// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// All rights reserved.
+//
+// This file is part of primesieve.
+// Visit: http://primesieve.googlecode.com
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+//
+//   * Redistributions of source code must retain the above copyright
+//     notice, this list of conditions and the following disclaimer.
+//   * Redistributions in binary form must reproduce the above
+//     copyright notice, this list of conditions and the following
+//     disclaimer in the documentation and/or other materials provided
+//     with the distribution.
+//   * Neither the name of the modp.com nor the names of its
+//     contributors may be used to endorse or promote products derived
+//     from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+// OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
 #include "SieveOfEratosthenes.h"
 #include "defs.h"
-#include "pmath.h"
-#include "cpuid.h"
+#include "bithacks.h"
+#include "imath.h"
 
 #include <cassert>
 
@@ -37,42 +52,16 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
 }
 
 /**
- * Generate the primes of the current segment (1 bits of the sieve
- * array) and use them to sieve with primeNumberFinder_
- * (is a SieveOfEratosthenes).
+ * Generate the primes of the current segment and use them to sieve
+ * with primeNumberFinder_ (is a SieveOfEratosthenes).
  * @see SieveOfEratosthenes::sieve(uint32_t)
  */
 void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
   uint32_t lowerBound = static_cast<uint32_t> (this->getSegmentLow());
-  uint32_t i = 0;
-
-  for (; i < sieveSize / sizeof(uint32_t); i++) {
-    uint32_t s32 = reinterpret_cast<const uint32_t*> (sieve)[i];
-    while (s32 != 0) {
-      uint32_t bitPosition = bitScanForward(s32);
-      // unset the current bit
-      s32 &= s32 - 1;
-      uint32_t prime = lowerBound + bitValues_[bitPosition];
-      primeNumberFinder_.sieve(prime);
-    }
-    lowerBound += NUMBERS_PER_BYTE * sizeof(uint32_t);
-  }
-  // process the remaining bytes (MAX 3)
-  for (i *= sizeof(uint32_t); i < sieveSize; i++) {
-    uint32_t s = sieve[i];
-    while (s != 0) {
-      uint32_t bitPosition = bitScanForward(s);
-      s &= s - 1;
-      uint32_t prime = lowerBound + bitValues_[bitPosition];
-      primeNumberFinder_.sieve(prime);
-    }
-    lowerBound += NUMBERS_PER_BYTE;
-  }
+  // macro defined in defs.h
+  GENERATE_PRIMES(primeNumberFinder_.sieve, uint32_t);
 }
 
 void PrimeNumberGenerator::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
-  // the C++ Standard guarantees that memory is suitably aligned, 
-  // see "3.7.3.1 Allocation functions"
-  assert(reinterpret_cast<uintptr_t> (sieve) % sizeof(uint32_t) == 0);
   this->generate(sieve, sieveSize);
 }

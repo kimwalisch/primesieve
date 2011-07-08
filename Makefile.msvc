@@ -1,4 +1,4 @@
-##############################################################################
+######################################################################
 # Microsoft Visual C++ Makefile for primesieve (console version)
 #
 # Usage: nmake -f Makefile.msvc
@@ -6,10 +6,10 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010  
-# Last modified:   22 June 2011 
+# Last modified:   09 July 2011 
 #
 # Project home:    http://primesieve.googlecode.com
-##############################################################################
+######################################################################
 
 # Ignore all error return codes
 .IGNORE:
@@ -21,7 +21,7 @@ OUTDIR = out
 
 # Define the C++ compiler & options
 CPP      = cl
-CPPFLAGS = /openmp /O2 /GL /EHsc /W3
+CPPFLAGS = /openmp /O2 /GL /EHsc /W4
 LINK     = link
 LFLAGS   = /OPT:REF /OPT:ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
 

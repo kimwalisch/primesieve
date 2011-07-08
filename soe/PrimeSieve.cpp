@@ -1,29 +1,45 @@
-/*
- * PrimeSieve.cpp -- This file is part of primesieve
- *
- * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
+//
+// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// All rights reserved.
+//
+// This file is part of primesieve.
+// Visit: http://primesieve.googlecode.com
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+//
+//   * Redistributions of source code must retain the above copyright
+//     notice, this list of conditions and the following disclaimer.
+//   * Redistributions in binary form must reproduce the above
+//     copyright notice, this list of conditions and the following
+//     disclaimer in the documentation and/or other materials provided
+//     with the distribution.
+//   * Neither the name of the modp.com nor the names of its
+//     contributors may be used to endorse or promote products derived
+//     from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+// OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PrimeSieve.h"
-#include "defs.h"
 #include "ParallelPrimeSieve.h"
-#include "pmath.h"
-#include "PreSieve.h"
 #include "PrimeNumberFinder.h"
 #include "PrimeNumberGenerator.h"
+#include "defs.h"
+#include "bithacks.h"
+#include "imath.h"
+#include "PreSieve.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -283,7 +299,7 @@ void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
 
 void PrimeSieve::reset() {
   segments_ = 0;
-  for (uint32_t i = 0; i < COUNTS_SIZE; i++)
+  for (int i = 0; i < COUNTS_SIZE; i++)
     counts_[i] = 0;
   status_ = -1.0;
   timeElapsed_ = 0.0;

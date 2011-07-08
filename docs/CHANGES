@@ -1,18 +1,23 @@
-New in version 2.3, 04/07/2011
+New in version 3.0, 08/07/2011
 ==============================
 
-1. The thread scheduling of ParallelPrimeSieve has been improved
-   (10 percent speed up).
-2. Prime numbers are now generated using the BSF instruction instead
-   of lookup tables (15 percent speed up).
-3. Implemented a fast bit population count routine (see pmath.h) for
-   CPUs without SSE4.2 POPCNT support.
-4. Revised the option handling in the console version of primesieve,
+1. The source code is now licensed under the new BSD License
+   (previously GPL).
+2. The code is now standard C++03 and ISO C99 (stdint.h), i.e. I
+   removed all compiler intrinsics and built-in functions:
+   80386 BSF, cpuid, SSE4.2 POPCNT.
+3. The thread scheduling of ParallelPrimeSieve has been improved,
+   10 percent speed up.
+4. Prime numbers are now generated using bitScanForward() instead of
+   lookup tables, 10 percent speed up.
+5. Implemented a fast bit population count function, see
+   popcount_lauradoux() in bithacks.h.
+6. Revised the option handling in the console version of primesieve,
    added two new options: -o<OFFSET> and -r<PRE-SIEVE>
-5. README has been rewritten from scratch and the comments of the
-   sieve of Eratosthenes implementation have been revised.
-6. ResetSieve has been renamed to PreSieve.
-7. Some minor changes to improve the code readability.
+7. README has been rewritten from scratch.
+8. Improved the code readability and revised the comments of the sieve
+   of Eratosthenes implementation.
+9. ResetSieve has been renamed to PreSieve.
 
 New in version 2.2, 26/05/2011
 ==============================

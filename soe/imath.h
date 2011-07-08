@@ -32,57 +32,42 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ERATBIG_H
-#define ERATBIG_H
+/** 
+ * @file imath.h 
+ * @brief Auxiliary integer math functions needed in primesieve.
+ */
 
-#include "WheelFactorization.h"
+#ifndef IMATH_H
+#define IMATH_H
+
 #include "defs.h"
-
-#include <list>
-
-class SieveOfEratosthenes;
+#include <cmath>
 
 /**
- * Implementation of Tomas Oliveira e Silva's cache-friendly segmented
- * sieve of Eratosthenes. The algorithm is described at:
- * http://www.ieeta.pt/~tos/software/prime_sieve.html
- * My implementation uses 30 numbers per byte and a modulo 210 wheel.
+ * Integer pow, raise to power, x^n.
+ * Code from (ported to C++ from Ruby):
+ * http://en.wikipedia.org/wiki/Exponentiation_by_squaring
  */
-class EratBig: protected Modulo210Wheel {
-public:
-  EratBig(const SieveOfEratosthenes&);
-  ~EratBig();
-  void addSievingPrime(uint32_t);
-  void sieve(uint8_t*);
-private:
-  typedef Bucket<defs::ERATBIG_BUCKETSIZE> Bucket_t;
-  /** log2 of SieveOfEratosthenes::sieveSize_. */
-  const uint32_t log2SieveSize_;
-  /**
-   * moduloSieveSize_ = SieveOfEratosthenes::sieveSize_ - 1.
-   * '& moduloSieveSize_' is the same as '% sieveSize_' as sieveSize_
-   * is a power of 2 value.
-   */
-  const uint32_t moduloSieveSize_;
-  /** Size of bucketLists_. */
-  uint32_t size_;
-  /** Current count of sieving primes within EratBig. */
-  uint32_t primeCount_;
-  /**
-   * bucketLists_[index_]   holds the sieving primes with multiple occurrences in the current segment,
-   * bucketLists_[index_+1] holds the sieving primes with multiple occurrences in the next segment,
-   * ...
-   */
-  uint32_t index_;
-  /** Array of bucket lists, holds the sieving primes. */
-  Bucket_t** bucketLists_;
-  /** List of empty buckets. */
-  Bucket_t* bucketStock_;
-  /** Pointers of the allocated buckets. */
-  std::list<Bucket_t*> bucketPointers_;
-  void setSize(const SieveOfEratosthenes&);
-  void initBucketLists();
-  void pushBucket(uint32_t listIndex);
-};
+inline uint64_t ipow(uint64_t x, uint32_t n) {
+  uint64_t result = 1;
+  while (n != 0) {
+    if (n & 1) {
+      result *= x;
+      n -= 1;
+    }
+    x *= x;
+    n /= 2;
+  }
+  return result;
+}
 
-#endif /* ERATBIG_H */
+inline uint64_t isquare(uint32_t x) {
+  return static_cast<uint64_t> (x) * static_cast<uint64_t> (x);
+}
+
+inline uint32_t isqrt(uint64_t x) {
+  return static_cast<uint32_t> (std::sqrt(static_cast<double> (x)));
+}
+
+
+#endif /* IMATH_H */

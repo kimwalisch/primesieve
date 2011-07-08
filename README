@@ -1,13 +1,13 @@
-##############################################################################
+#####################################################################
 # primesieve, optimized sieve of Eratosthenes implementation
 #
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 03 July 2011
+# Last modified: 08 July 2011
 #
 # Project home:  http://primesieve.googlecode.com
-##############################################################################
+######################################################################
 
 Contents
 ========
@@ -18,17 +18,16 @@ Contents
   4. Source Archive
   5. Sieve of Eratosthenes Implementation
   6. Final Thoughts
-  7. License
-  8. References
+  7. References
 
 1. About
 ========
 
   primesieve is a highly optimized C++ implementation of the sieve of
-  Eratosthenes which generates prime numbers and prime k-tuplets (twin
-  primes, prime triplets, ...) up to 2^64 maximum.
+  Eratosthenes that generates primes and prime k-tuplets (twin primes,
+  prime triplets, ...) up to 2^64 maximum.
   
-  Homepage: http://primesieve.googlecode.com
+  Visit: http://primesieve.googlecode.com
 
 2. Algorithm and Complexity
 ===========================
@@ -37,17 +36,18 @@ Contents
   factorization, this algorithm has a complexity of O(n log log n)
   operations and uses O(n^0.5) space.
 
-  Sorenson in [5] describes how to add a wheel to the sieve of
-  Eratosthenes and in [6] how to segment the sieve of Eratosthenes.
+  Sorenson's papers provide a good introduction to prime number
+  sieves, wheels are described in [5] and the segmented sieve of
+  Eratosthenes in [6].
 
 3. Memory Usage
 ===============
 
 PrimeSieve::sieve() uses about:
-pi(n^0.5) * 8 Bytes + sieve size + 450 Kilobytes           (1)
+pi(n^0.5) * 8 Bytes + 500 Kilobytes              (1)
 
 ParallelPrimeSieve::sieve() uses about:
-(1) * number of threads                                    (2)
+(1) * number of threads                          (2)
 
 4. Source Archive
 =================
@@ -69,7 +69,7 @@ ParallelPrimeSieve::sieve() uses about:
   -----------------------
   ./docs        files: BUGS, CHANGES, TODO, USAGE_EXAMPLES, VALGRIND.
                 USAGE_EXAMPLES is a short tutorial of how to use
-                PrimeSieve objects e.g. as a prime number generator.
+                PrimeSieve objects e.g. for prime number generation.
 
   Build primesieve
   ----------------
@@ -86,10 +86,9 @@ ParallelPrimeSieve::sieve() uses about:
 
   The following file descriptions give an overview of how everything
   fits together, files that start with a capital letter contain a
-  class of the same name (except WheelFactorization.h). Additionally
-  the source code is documented with doxygen comments, header files
-  contain the class and variable descriptions, .cpp files contain the
-  function descriptions.
+  class of the same name. The source code is also documented, header
+  files contain the class and variable descriptions, .cpp files
+  contain the function descriptions.
 
   Files
   -----
@@ -162,7 +161,6 @@ ParallelPrimeSieve::sieve() uses about:
     multiple within the sieve array) and a wheelIndex as a WheelPrime
     object, these objects are used by EratSmall, EratMedium and
     EratBig to cross off the multiples.
-    Sorenson explains wheels in [5].
 
 6. Final Thoughts
 =================
@@ -192,15 +190,7 @@ ParallelPrimeSieve::sieve() uses about:
   quadruplets, quintuplets, ...) resulting in a faster and more
   efficient algorithm, especially if k grows.
 
-7. License
-==========
-
-  primesieve is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-8. References and Notes
+7. References and Notes
 =======================
 
   [1] Richard C. Singleton, "An efficient prime number generator",

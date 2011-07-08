@@ -1,21 +1,36 @@
-/*
- * SieveOfEratosthenes.cpp -- This file is part of primesieve
- *
- * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
+//
+// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// All rights reserved.
+//
+// This file is part of primesieve.
+// Visit: http://primesieve.googlecode.com
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+//
+//   * Redistributions of source code must retain the above copyright
+//     notice, this list of conditions and the following disclaimer.
+//   * Redistributions in binary form must reproduce the above
+//     copyright notice, this list of conditions and the following
+//     disclaimer in the documentation and/or other materials provided
+//     with the distribution.
+//   * Neither the name of the modp.com nor the names of its
+//     contributors may be used to endorse or promote products derived
+//     from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+// OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "SieveOfEratosthenes.h"
 #include "PreSieve.h"
@@ -23,7 +38,7 @@
 #include "EratMedium.h"
 #include "EratBig.h"
 #include "defs.h"
-#include "pmath.h"
+#include "imath.h"
 
 #include <stdexcept>
 #include <cstdlib>
@@ -87,7 +102,7 @@ uint32_t SieveOfEratosthenes::getPreSieveLimit() const {
   return preSieve_.getLimit();
 }
 
-uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
+uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) const {
   uint32_t remainder = static_cast<uint32_t> (n % NUMBERS_PER_BYTE);
   // correction for primes of type i*30 + 31
   if (remainder <= 1)
@@ -153,9 +168,10 @@ void SieveOfEratosthenes::crossOffMultiples() {
  * interval [startNumber_, stopNumber_].
  */
 void SieveOfEratosthenes::sieve(uint32_t prime) {
+  assert(prime > this->getPreSieveLimit());
+  assert(prime <= isqrt(stopNumber_));
+  assert(eratSmall_ != NULL);
   uint64_t primeSquared = isquare(prime);
-  assert(prime > preSieve_.getLimit() && primeSquared <= stopNumber_ &&
-      eratSmall_ != NULL);
 
   // the following while loop is entered if all primes required to
   // sieve the next segment are present in the erat* objects

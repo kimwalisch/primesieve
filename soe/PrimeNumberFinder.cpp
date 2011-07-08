@@ -1,28 +1,43 @@
-/*
- * PrimeNumberFinder.cpp -- This file is part of primesieve
- *
- * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
+//
+// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// All rights reserved.
+//
+// This file is part of primesieve.
+// Visit: http://primesieve.googlecode.com
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+//
+//   * Redistributions of source code must retain the above copyright
+//     notice, this list of conditions and the following disclaimer.
+//   * Redistributions in binary form must reproduce the above
+//     copyright notice, this list of conditions and the following
+//     disclaimer in the documentation and/or other materials provided
+//     with the distribution.
+//   * Neither the name of the modp.com nor the names of its
+//     contributors may be used to endorse or promote products derived
+//     from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+// OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PrimeNumberFinder.h"
 #include "PrimeSieve.h"
 #include "SieveOfEratosthenes.h"
 #include "defs.h"
-#include "cpuid.h" 
-#include "pmath.h"
+#include "bithacks.h"
+#include "imath.h"
 
 #include <algorithm>
 #include <cstdlib>
@@ -34,7 +49,7 @@ namespace {
   const uint32_t END = 1 << (8 * sizeof(uint8_t));
 }
 
-const uint32_t PrimeNumberFinder::nextBitValues_[NUMBERS_PER_BYTE] = { 0,
+const uint32_t PrimeNumberFinder::nextBitValues_[30] = { 0,
      0, 0, 0, 0,  0, 0,
     11, 0, 0, 0, 13, 0,
     17, 0, 0, 0, 19, 0,
@@ -49,21 +64,17 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
       ps.getPreSieveLimit()),
       ps_(ps), kTupletByteCounts_(NULL), kTupletBitValues_(NULL) {
   assert(PrimeSieve::COUNTS_SIZE >= 1 + 6);
-#if defined(POPCNT64)
-  if ((ps_.flags_ & PrimeSieve::COUNT_PRIMES) != 0 && isPOPCNTSupported())
-    ps_.flags_ |= PrimeSieve::SSE4_POPCNT;
-#endif
   this->initLookupTables();
 }
 
 PrimeNumberFinder::~PrimeNumberFinder() {
   if (kTupletByteCounts_ != NULL) {
-    for (uint32_t i = 0; i < 6; i++)
+    for (int i = 0; i < 6; i++)
       delete[] kTupletByteCounts_[i];
     delete[] kTupletByteCounts_;
   }
   if (kTupletBitValues_ != NULL) {
-    for (uint32_t i = 0; i < 256; i++)
+    for (int i = 0; i < 256; i++)
       delete[] kTupletBitValues_[i];
     delete[] kTupletBitValues_;
   }
@@ -82,7 +93,7 @@ void PrimeNumberFinder::initLookupTables() {
     // initialize the lookup tables needed to count prime k-tuplets
     // (twin primes, prime triplets, ...) per byte
     kTupletByteCounts_ = new uint32_t*[6];
-    for (uint32_t i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++) {
       kTupletByteCounts_[i] = NULL;
       if (ps_.flags_  & (PrimeSieve::COUNT_TWINS << i)) {
         kTupletByteCounts_[i] = new uint32_t[256];
@@ -99,7 +110,7 @@ void PrimeNumberFinder::initLookupTables() {
   }
   if (ps_.flags_ & PrimeSieve::PRINT_KTUPLETS) {
     // i=0 twins, i=1 triplets, ...
-    uint32_t i = 0;
+    int i = 0;
     while ((ps_.flags_ & (PrimeSieve::PRINT_TWINS << i)) == 0)
       i++;
     // initialize the lookup table needed to reconstruct prime
@@ -118,10 +129,6 @@ void PrimeNumberFinder::initLookupTables() {
 }
 
 void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
-  // the C++ Standard guarantees that memory is suitably aligned,
-  // see "3.7.3.1 Allocation functions"
-  assert(reinterpret_cast<uintptr_t> (sieve) % sizeof(uint32_t) == 0);
-
   if (ps_.flags_ & PrimeSieve::COUNT_FLAGS)
     this->count(sieve, sieveSize);
   if (ps_.flags_ & PrimeSieve::GENERATE_FLAGS)
@@ -136,35 +143,21 @@ void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
  * segment.
  */
 void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
-  // count prime numbers
+  // count prime numbers (1 bits within the sieve)
   if (ps_.flags_ & PrimeSieve::COUNT_PRIMES) {
-    uint32_t primeCount = 0;
-#if defined(POPCNT64)
-    // count bits using the SSE4.2 POPCNT instruction
-    if (ps_.flags_ & PrimeSieve::SSE4_POPCNT) {
-      uint32_t i = 0;
-      for (; i < sieveSize - sieveSize % 8; i += 8)
-        primeCount += POPCNT64(&sieve[i]);
-      // count the remaining bytes (MAX 7)
-      if (i < sieveSize)
-        primeCount += popCount(&sieve[i], sieveSize - i);
-    }
-    else // no SSE4.2 POPCNT
-#endif
-    {
-      // count bits using BitSlice(24) (see pmath.h)
-      primeCount += popCount(reinterpret_cast<const uint32_t*> (sieve), 
-          sieveSize / sizeof(uint32_t));
-      uint32_t left = sieveSize % sizeof(uint32_t);
-      if (left > 0)
-        primeCount += popCount(&sieve[sieveSize - left], left);
-    }
+    // see bithacks.h
+    uint32_t primeCount = popcount_lauradoux(
+        reinterpret_cast<const uint64_t*> (sieve), sieveSize / 8);
+    uint32_t bytesLeft = sieveSize % 8;
+    if (bytesLeft > 0)
+      primeCount += popcount_kernighan(
+          &sieve[sieveSize - bytesLeft], bytesLeft);
     // add up to total prime count
     ps_.counts_[0] += primeCount;
   }
   // count prime k-tuplets (i=0 twins, i=1 triplets, ...)
   // using lookup tables
-  for (uint32_t i = 0; i < 6; i++) {
+  for (int i = 0; i < 6; i++) {
     if (ps_.flags_ & (PrimeSieve::COUNT_TWINS << i)) {
       uint32_t kTupletCount = 0;
       for (uint32_t j = 0; j < sieveSize; j++)
@@ -175,48 +168,21 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
 }
 
 /**
- * Reconstruct primes numbers from 1 bits of the sieve array and call
- * a callback function for each prime.
- */
-#define GENERATE_PRIMES(callback, ...) {                         \
-  uint32_t i = 0;                                                \
-  for (; i < sieveSize / sizeof(uint32_t); i++) {                \
-    uint32_t s32 = reinterpret_cast<const uint32_t*> (sieve)[i]; \
-    while (s32 != 0) {                                           \
-      uint32_t bitPosition = bitScanForward(s32);                \
-      s32 &= s32 - 1;                                            \
-      uint64_t prime = lowerBound + bitValues_[bitPosition];     \
-      callback (prime, ##__VA_ARGS__);                           \
-    }                                                            \
-    lowerBound += NUMBERS_PER_BYTE * sizeof(uint32_t);           \
-  }                                                              \
-  for (i *= sizeof(uint32_t); i < sieveSize; i++) {              \
-    uint32_t s = sieve[i];                                       \
-    while (s != 0) {                                             \
-      uint32_t bitPosition = bitScanForward(s);                  \
-      s &= s - 1;                                                \
-      uint64_t prime = lowerBound + bitValues_[bitPosition];     \
-      callback (prime, ##__VA_ARGS__);                           \
-    }                                                            \
-    lowerBound += NUMBERS_PER_BYTE;                              \
-  }                                                              \
-}
-
-/**
  * Generate the prime numbers or prime k-tuplets (twin primes, prime
  * triplets, ...) of the current segment.
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   uint64_t lowerBound = this->getSegmentLow();
-       if (ps_.flags_ & PrimeSieve::CALLBACK_PRIMES)     GENERATE_PRIMES(ps_.callback_)
-  else if (ps_.flags_ & PrimeSieve::CALLBACK_PRIMES_OOP) GENERATE_PRIMES(ps_.callbackOOP_, ps_.cbObj_)
-  else if (ps_.flags_ & PrimeSieve::PRINT_PRIMES)        GENERATE_PRIMES(printPrime)
+  // the GENERATE_PRIMES() macro is defined in defs.h
+       if (ps_.flags_ & PrimeSieve::CALLBACK_PRIMES)     GENERATE_PRIMES(ps_.callback_,     uint64_t)
+  else if (ps_.flags_ & PrimeSieve::CALLBACK_PRIMES_OOP) GENERATE_PRIMES(this->callbackOOP, uint64_t)
+  else if (ps_.flags_ & PrimeSieve::PRINT_PRIMES)        GENERATE_PRIMES(this->printPrime,  uint64_t)
   else {
     // print prime k-tuplets to cout
     for (uint32_t i = 0; i < sieveSize; i++, lowerBound += NUMBERS_PER_BYTE) {
       for (uint32_t* bitValue = kTupletBitValues_[sieve[i]]; *bitValue != END; bitValue++) {
         uint32_t v = *bitValue;
-        uint32_t j = 0;
+        int j = 0;
         std::ostringstream kTuplet;
         kTuplet << "(";
         do {
@@ -230,8 +196,12 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   }
 }
 
-void PrimeNumberFinder::printPrime(uint64_t prime) {
-  std::ostringstream out;
-  out << prime << '\n';
-  std::cout << out.str();
+void PrimeNumberFinder::callbackOOP(uint64_t prime) {
+  ps_.callbackOOP_(prime, ps_.cbObj_);
+}
+
+void PrimeNumberFinder::printPrime(uint64_t prime) const {
+  std::ostringstream oss;
+  oss << prime << '\n';
+  std::cout << oss.str();
 }
