@@ -84,7 +84,7 @@ void PrimeNumberFinder::initLookupTables() {
   const uint32_t bitmasks[6][5] = {
       { 0x06, 0x18, 0xc0, END },       // twin prime bitmasks
       { 0x07, 0x0e, 0x1c, 0x38, END }, // prime triplet bitmasks
-      { 0x1e, END },                   // prime quadruplet bitmasks
+      { 0x1e, END },                   // prime quadruplet bitmask
       { 0x1f, 0x3e, END },             // prime quintuplet bitmasks
       { 0x3f, END },                   // prime sextuplet bitmask
       { 0xfe, END } };                 // prime septuplet bitmask
@@ -180,8 +180,8 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   else {
     // print prime k-tuplets to cout
     for (uint32_t i = 0; i < sieveSize; i++, lowerBound += NUMBERS_PER_BYTE) {
-      for (uint32_t* bitValue = kTupletBitValues_[sieve[i]]; *bitValue != END; bitValue++) {
-        uint32_t v = *bitValue;
+      for (uint32_t* bitValues = kTupletBitValues_[sieve[i]]; *bitValues != END; bitValues++) {
+        uint32_t v = *bitValues;
         int j = 0;
         std::ostringstream kTuplet;
         kTuplet << "(";
