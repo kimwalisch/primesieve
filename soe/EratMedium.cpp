@@ -64,25 +64,25 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
         // nothing else to do for sieving primes that do not have a
         // multiple occurrence in the current segment
         wPrime->index_ -= sieveSize;
-      } else {
-        uint32_t sievingPrime = wPrime->getSievingPrime();
-        uint32_t wheelIndex = wPrime->getWheelIndex();
-        // remove the multiples of the current sievingPrime from the
-        // sieve array (i.e. the current segment)
-        do {
-          uint8_t bit = wheel_[wheelIndex].unsetBit;
-          uint8_t nmf = wheel_[wheelIndex].nextMultipleFactor;
-          uint8_t cor = wheel_[wheelIndex].correct;
-           int8_t nxt = wheel_[wheelIndex].next;
-          sieve[sieveIndex] &= bit;
-          wheelIndex += nxt;
-          sieveIndex += sievingPrime * nmf + cor;
-        } while (sieveIndex < sieveSize);
-        // set the sieveIndex and wheelIndex for the next segment
-        sieveIndex -= sieveSize;
-        wPrime->setWheelIndex(wheelIndex);
-        wPrime->setSieveIndex(sieveIndex);
+        continue;
       }
+      uint32_t sievingPrime = wPrime->getSievingPrime();
+      uint32_t wheelIndex = wPrime->getWheelIndex();
+      // remove the multiples of the current sievingPrime from the
+      // sieve array (i.e. the current segment)
+      do {
+        uint8_t bit = wheel_[wheelIndex].unsetBit;
+        uint8_t nmf = wheel_[wheelIndex].nextMultipleFactor;
+        uint8_t cor = wheel_[wheelIndex].correct;
+         int8_t nxt = wheel_[wheelIndex].next;
+        sieve[sieveIndex] &= bit;
+        wheelIndex += nxt;
+        sieveIndex += sievingPrime * nmf + cor;
+      } while (sieveIndex < sieveSize);
+      // set the sieveIndex and wheelIndex for the next segment
+      sieveIndex -= sieveSize;
+      wPrime->setWheelIndex(wheelIndex);
+      wPrime->setSieveIndex(sieveIndex);
     }
   }
 }
