@@ -66,7 +66,7 @@ public:
     return sievingPrime_;
   }
   uint32_t getSieveIndex() const {
-    return index_ & 0x7FFFFF;
+    return index_ & 0x7FFFFFU;
   }
   uint32_t getWheelIndex() const {
     return index_ >> 23;
@@ -224,7 +224,7 @@ protected:
     // max sieveSize = max WheelPrime::getSieveIndex() + 1 = 2^23
     // also sieveSize <= 2^28 in order to prevent 32-bit overflows of
     // sieveIndex in Erat*::sieve()
-    if (soe_.getSieveSize() > (1u << 23))
+    if (soe_.getSieveSize() > (1U << 23))
       throw std::overflow_error(
           "ModuloWheel: sieveSize must be <= 2^23, 8192 Kilobytes.");
   }

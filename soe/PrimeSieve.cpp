@@ -99,7 +99,7 @@ uint32_t PrimeSieve::getPreSieveLimit() const {
  */
 uint32_t PrimeSieve::getFlags() const {
   // clear out private flags
-  return flags_ & ((1u << 20) - 1);
+  return flags_ & ((1U << 20) - 1);
 }
 
 /**
@@ -259,7 +259,7 @@ void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
  *   PrimeSieve::PRINT_STATUS.
  */
 void PrimeSieve::setFlags(uint32_t flags) {
-  if (flags >= (1u << 20))
+  if (flags >= (1U << 20))
     throw std::invalid_argument("invalid flags");
   flags_ = flags;
 }
