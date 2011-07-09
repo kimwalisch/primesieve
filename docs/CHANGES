@@ -1,10 +1,10 @@
-New in version 3.0, 08/07/2011
+New in version 3.0, 09/07/2011
 ==============================
 
-1. The source code is now licensed under the new BSD License
+1. The source code is now licensed under the New BSD License
    (previously GPL).
-2. The code is now standard C++03 and ISO C99 (stdint.h), i.e. I
-   removed all compiler intrinsics and built-in functions:
+2. The source code is now standard C++03 and ISO C99 (stdint.h), i.e.
+   I removed all compiler intrinsics and built-in functions:
    80386 BSF, cpuid, SSE4.2 POPCNT.
 3. The thread scheduling of ParallelPrimeSieve has been improved,
    10 percent speed up.

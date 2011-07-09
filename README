@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 08 July 2011
+# Last modified: 09 July 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -18,7 +18,8 @@ Contents
   4. Source Archive
   5. Sieve of Eratosthenes Implementation
   6. Final Thoughts
-  7. References
+  7. License
+  8. References
 
 1. About
 ========
@@ -190,7 +191,14 @@ ParallelPrimeSieve::sieve() uses about:
   quadruplets, quintuplets, ...) resulting in a faster and more
   efficient algorithm, especially if k grows.
 
-7. References and Notes
+7. License
+==========
+
+primesieve is licensed under the New BSD License, see the LICENSE file
+for more information. The primesieve GUI application in ./qt-gui is
+licensed under the GPLv3 as it uses the Qt framework.
+
+8. References and Notes
 =======================
 
   [1] Richard C. Singleton, "An efficient prime number generator",
