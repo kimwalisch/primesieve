@@ -1,27 +1,26 @@
-##############################################################################
+######################################################################
 # primesieve, Qt GUI Documentation
 #
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       11 April 2011
-# Last modified: 11 April 2011
+# Last modified: 09 July 2011
 #
 # Project home:  http://primesieve.googlecode.com
-##############################################################################
+######################################################################
 
 About
 =====
 
-  The qt-gui directory contains the GUI version of primesieve
-  developed with the Qt cross-platform framework
-  (http://qt.nokia.com/products/).
+  The qt-gui directory contains the primesieve GUI application
+  developed with the Qt framework (http://qt.nokia.com/products/).
 
 Qt project file (MSVC, GCC, Intel ICC)
 ======================================
 
   * primesieve.pro
-    Use this file to open the primesieve project in the Qt-Creator IDE
-    (e.g. to edit the source files or build a primesieve executable).
+    primesieve project file to be used with the Qt-Creator IDE (e.g.
+    to edit the source code or build a primesieve executable).
 
 Source files
 ============
