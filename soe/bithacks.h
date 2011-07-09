@@ -68,8 +68,9 @@ inline uint32_t popcount_lauradoux(const uint64_t* data, uint32_t size) {
 
   const uint64_t m1  = UINT64_C(0x5555555555555555);
   const uint64_t m2  = UINT64_C(0x3333333333333333);
-  const uint64_t m4  = UINT64_C(0x0f0f0f0f0f0f0f0f);
-  const uint64_t m8  = UINT64_C(0x00ff00ff00ff00ff);
+  const uint64_t m4  = UINT64_C(0x0F0F0F0F0F0F0F0F);
+  const uint64_t m8  = UINT64_C(0x00FF00FF00FF00FF);
+  const uint64_t m16 = UINT64_C(0x0000FFFF0000FFFF);
   const uint64_t h01 = UINT64_C(0x0101010101010101);
 
   uint32_t bitCount = 0;
@@ -88,15 +89,15 @@ inline uint32_t popcount_lauradoux(const uint64_t* data, uint32_t size) {
       half2   =  data[j+2];
       half1  &=  m1;
       half2   = (half2 >> 1) & m1;
-      count1  =  half1 + count1 - ((count1 >> 1) & m1);
-      count2  =  half2 + count2 - ((count2 >> 1) & m1);
+      count1 +=  half1          - ((count1 >> 1) & m1);
+      count2 +=  half2          - ((count2 >> 1) & m1);
       count1  = (count1 & m2)   + ((count1 >> 2) & m2);
       count1 += (count2 & m2)   + ((count2 >> 2) & m2);
       acc    += (count1 & m4)   + ((count1 >> 4) & m4);
     }
-    acc  = (acc & m8) + ((acc >> 8) & m8);
-    acc += (acc >> 16);
-    bitCount += static_cast<uint32_t> (acc + (acc >> 32)) & 0xffff;
+    acc = (acc & m8)  + ((acc >>  8) & m8);
+    acc = (acc & m16) + ((acc >> 16) & m16);
+    bitCount += (uint32_t)acc + (uint32_t)(acc >> 32);
   }
 
   // count the bits of the remaining bytes (MAX 29*8) using 
@@ -108,7 +109,7 @@ inline uint32_t popcount_lauradoux(const uint64_t* data, uint32_t size) {
     x =  x       - ((x >> 1)  & m1);
     x = (x & m2) + ((x >> 2)  & m2);
     x = (x       +  (x >> 4)) & m4;
-    bitCount += static_cast<uint32_t> ((x * h01) >> 56);
+    bitCount += (uint32_t)((x * h01) >> 56);
   }
   return bitCount;
 }
@@ -145,7 +146,7 @@ inline uint32_t bitScanForward(uint32_t v) {
       31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18,  6, 11,  5, 10, 9
   };
   const uint32_t i = (uint32_t)-(int32_t)v;
-  return MultiplyDeBruijnBitPosition[((v & i) * UINT32_C(0x077CB531)) >> 27];
+  return MultiplyDeBruijnBitPosition[((v & i) * 0x077CB531U) >> 27];
 }
 
 /**
