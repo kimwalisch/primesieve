@@ -82,22 +82,25 @@ inline uint32_t popcount_lauradoux(const uint64_t* data, uint32_t size) {
   // 64-bit tree merging (merging3)
   for (i = 0; i < limit30; i += 30, data += 30) {
     acc = 0;
-    for (j = 0, acc = 0; j < 30; j += 3) {
+    for (j = 0; j < 30; j += 3) {
       count1  =  data[j];
       count2  =  data[j+1];
       half1   =  data[j+2];
       half2   =  data[j+2];
       half1  &=  m1;
-      half2   = (half2 >> 1) & m1;
-      count1 +=  half1          - ((count1 >> 1) & m1);
-      count2 +=  half2          - ((count2 >> 1) & m1);
-      count1  = (count1 & m2)   + ((count1 >> 2) & m2);
-      count1 += (count2 & m2)   + ((count2 >> 2) & m2);
-      acc    += (count1 & m4)   + ((count1 >> 4) & m4);
+      half2   = (half2  >> 1) & m1;
+      count1 -= (count1 >> 1) & m1;
+      count2 -= (count2 >> 1) & m1;
+      count1 +=  half1;
+      count2 +=  half2;
+      count1  = (count1 & m2) + ((count1 >> 2) & m2);
+      count1 += (count2 & m2) + ((count2 >> 2) & m2);
+      acc    += (count1 & m4) + ((count1 >> 4) & m4);
     }
-    acc = (acc & m8)  + ((acc >>  8) & m8);
-    acc = (acc & m16) + ((acc >> 16) & m16);
-    bitCount += (uint32_t)acc + (uint32_t)(acc >> 32);
+    acc = (acc & m8)  + ((acc >>  8)  & m8);
+    acc = (acc        +  (acc >> 16)) & m16;
+    acc =  acc        +  (acc >> 32);
+    bitCount += (uint32_t)acc;
   }
 
   // count the bits of the remaining bytes (MAX 29*8) using 
