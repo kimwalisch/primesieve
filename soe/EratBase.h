@@ -47,7 +47,7 @@ class SieveOfEratosthenes;
 
 /**
  * EratBase is an abstract class used by EratSmall and EratMedium to
- * initialize an store sieving primes.
+ * initialize and store sieving primes.
  */
 template<class T_ModuloWheel>
 class EratBase: protected T_ModuloWheel {
