@@ -1,13 +1,13 @@
-##############################################################################
+######################################################################
 # Compilation guide for primesieve (Qt GUI version)
 # 
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010 
-# Last modified: 23 May 2011
+# Last modified: 09 July 2011
 #
 # Project home:  http://primesieve.googlecode.com
-##############################################################################
+######################################################################
 
 How to build primesieve (Windows, Linux, Mac OS X)
 ==================================================
