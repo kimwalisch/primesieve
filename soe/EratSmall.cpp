@@ -111,11 +111,11 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case  8: *s &= BIT4; s += primeX2 + 1;
           while (s + primeX6 * 5 + 11 < sieveEnd) {
             *s               &= BIT1; s += primeX6;
-             s[2] &= BIT3;
+             s[2]            &= BIT3;
              s[primeX4 +  3] &= BIT7; s += primeX6;
-             s[4] &= BIT5;
+             s[4]            &= BIT5;
              s[primeX4 +  6] &= BIT0; s += primeX6;
-             s[6] &= BIT6;
+             s[6]            &= BIT6;
              s[primeX4 +  8] &= BIT2; s += primeX6;
              s[primeX4 + 10] &= BIT4; s += primeX6 + 11;
           }
@@ -159,9 +159,9 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
             *s              &= BIT3; s += primeX6;
             *s              &= BIT6;
              s[primeX4 + 1] &= BIT0; s += primeX6;
-             s[1] &= BIT1;
+             s[1]           &= BIT1;
              s[primeX4 + 1] &= BIT4; s += primeX6;
-             s[1] &= BIT5;
+             s[1]           &= BIT5;
              s[primeX4 + 1] &= BIT7; s += primeX6 + 2;
              s[primeX4]     &= BIT2; s += primeX6;
           }
@@ -182,9 +182,9 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
             *s              &= BIT4; s += primeX6;
              s[1]           &= BIT2;
              s[primeX4 + 1] &= BIT6; s += primeX6;
-             s[2] &= BIT0;
+             s[2]           &= BIT0;
              s[primeX4 + 2] &= BIT5; s += primeX6;
-             s[2] &= BIT7;
+             s[2]           &= BIT7;
              s[primeX4 + 3] &= BIT3; s += primeX6 + 4;
              s[primeX4]     &= BIT1; s += primeX6;
           }
