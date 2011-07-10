@@ -97,9 +97,9 @@ inline uint32_t popcount_lauradoux(const uint64_t* data, uint32_t size) {
       count1 += (count2 & m2) + ((count2 >> 2) & m2);
       acc    += (count1 & m4) + ((count1 >> 4) & m4);
     }
-    acc = (acc & m8)  + ((acc >>  8)  & m8);
-    acc = (acc        +  (acc >> 16)) & m16;
-    acc =  acc        +  (acc >> 32);
+    acc = (acc & m8) + ((acc >>  8)  & m8);
+    acc = (acc       +  (acc >> 16)) & m16;
+    acc =  acc       +  (acc >> 32);
     bitCount += (uint32_t)acc;
   }
 
