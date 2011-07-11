@@ -76,7 +76,7 @@
  * @see PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
  */
 #define GENERATE_PRIMES(callback, uintXX_t) {                     \
-  assert(sizeof(uint32_t) / 4 == sizeof(uint8_t));                \
+  assert(sizeof(uint8_t) * 4 == sizeof(uint32_t));                \
   uint32_t i = 0;                                                 \
   for (; i < sieveSize / 4; i++) {                                \
     uint32_t word = reinterpret_cast<const uint32_t*> (sieve)[i]; \
