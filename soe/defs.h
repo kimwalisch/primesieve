@@ -52,6 +52,7 @@
 #if !defined(NDEBUG) && !defined(DEBUG) && !defined(_DEBUG)
 #  define NDEBUG 1
 #endif
+#include <cassert>
 
 /**
  * @def __STDC_LIMIT_MACROS
@@ -75,8 +76,9 @@
  * @see PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
  */
 #define GENERATE_PRIMES(callback, uintXX_t) {                     \
+  assert(sizeof(uint32_t) / 4 == sizeof(uint8_t));                \
   uint32_t i = 0;                                                 \
-  for (; i < sieveSize / sizeof(uint32_t); i++) {                 \
+  for (; i < sieveSize / 4; i++) {                                \
     uint32_t word = reinterpret_cast<const uint32_t*> (sieve)[i]; \
     while (word != 0) {                                           \
       uint32_t bitPosition = bitScanForward(word);                \
@@ -84,9 +86,9 @@
       word &= word - 1;                                           \
       callback (prime);                                           \
     }                                                             \
-    lowerBound += NUMBERS_PER_BYTE * sizeof(uint32_t);            \
+    lowerBound += NUMBERS_PER_BYTE * 4;                           \
   }                                                               \
-  for (i *= sizeof(uint32_t); i < sieveSize; i++) {               \
+  for (i *= 4; i < sieveSize; i++) {                              \
     uint32_t byte = sieve[i];                                     \
     while (byte != 0) {                                           \
       uint32_t bitPosition = bitScanForward(byte);                \
