@@ -42,6 +42,7 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <cassert>
+#include <list>
 
 #define BUCKETS_PER_CREATE (defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t))
 
@@ -58,11 +59,10 @@ EratBig::EratBig(const SieveOfEratosthenes& soe) : Modulo210Wheel(soe),
 }
 
 EratBig::~EratBig() {
-  while (!bucketPointers_.empty()) {
-    delete[] bucketPointers_.back();
-    bucketPointers_.pop_back();
-  }
   delete[] bucketLists_;
+  for (std::list<Bucket_t*>::iterator it = bucketPointers_.begin();
+      it != bucketPointers_.end(); it++)
+    delete[] *it;
 }
 
 /**  
