@@ -53,7 +53,7 @@
  * @see     http://expressionparser.googlecode.com
  * @author  Kim Walisch, <kim.walisch@gmail.com>
  * @version 2.0
- * @date    July, 09 2011
+ * @date    July, 12 2011
  *
  * == Supported operators ==
  *
