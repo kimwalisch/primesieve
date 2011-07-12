@@ -55,6 +55,8 @@ public:
   ~PrimeNumberFinder();
 private:
   static const uint32_t nextBitValues_[30];
+  /** Used to recognize the last bit value in kTupletBitValues_. */
+  enum { END = 1 << 8 };
   /** Reference to the parent PrimeSieve object. */
   PrimeSieve& ps_;
   /**

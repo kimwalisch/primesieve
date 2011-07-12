@@ -45,10 +45,6 @@
 #include <iostream>
 #include <sstream>
 
-namespace {
-  const uint32_t END = 1 << (8 * sizeof(uint8_t));
-}
-
 const uint32_t PrimeNumberFinder::nextBitValues_[30] = { 0,
      0, 0, 0, 0,  0, 0,
     11, 0, 0, 0, 13, 0,
@@ -89,9 +85,9 @@ void PrimeNumberFinder::initLookupTables() {
       { 0x3f, END },                   // prime sextuplet bitmask
       { 0xfe, END } };                 // prime septuplet bitmask
 
+  // initialize the lookup tables needed to count prime k-tuplets
+  // (twin primes, prime triplets, ...) per byte
   if (ps_.flags_ & PrimeSieve::COUNT_KTUPLETS) {
-    // initialize the lookup tables needed to count prime k-tuplets
-    // (twin primes, prime triplets, ...) per byte
     kTupletByteCounts_ = new uint32_t*[6];
     for (int i = 0; i < 6; i++) {
       kTupletByteCounts_[i] = NULL;
@@ -108,13 +104,13 @@ void PrimeNumberFinder::initLookupTables() {
       }
     }
   }
+  // initialize the lookup table needed to reconstruct prime k-tuplets
+  // from bitmasks of the sieve array
   if (ps_.flags_ & PrimeSieve::PRINT_KTUPLETS) {
     // i=0 twins, i=1 triplets, ...
     int i = 0;
     while ((ps_.flags_ & (PrimeSieve::PRINT_TWINS << i)) == 0)
       i++;
-    // initialize the lookup table needed to reconstruct prime
-    // k-tuplets from bitmasks of the sieve array
     kTupletBitValues_ = new uint32_t*[256];
     for (uint32_t j = 0; j < 256; j++) {
       kTupletBitValues_[j] = new uint32_t[5];
