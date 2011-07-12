@@ -50,35 +50,38 @@
  * Disable the assert macro from <cassert> if not in debug mode.
  */
 #if !defined(NDEBUG) && !defined(DEBUG) && !defined(_DEBUG)
-#  define NDEBUG 1
+#  define NDEBUG
 #endif
 #include <cassert>
 
 /**
  * @def __STDC_LIMIT_MACROS
- * Enable the UINT64_MAX, UINT32_MAX macros from <stdint.h>.
+ * Enable the UINT32_MAX, UINT64_MAX macros from <stdint.h>.
  */
 #if !defined(__STDC_LIMIT_MACROS)
-#  define __STDC_LIMIT_MACROS 1
+#  define __STDC_LIMIT_MACROS
 #endif
  /**
  * @def __STDC_LIMIT_MACROS
  * Enable the UINT64_C(c) macro from <stdint.h>.
  */
 #if !defined(__STDC_CONSTANT_MACROS)
-#  define __STDC_CONSTANT_MACROS  1
+#  define __STDC_CONSTANT_MACROS
 #endif
 #include <stdint.h>
+
+/** Used to silence 64-bit size_t warnings. */
+#define SIZEOF(x) static_cast<uint32_t> (sizeof(x))
 
 /**
  * Reconstruct prime numbers from 1 bits of the sieve array and call a
  * callback function for each prime.
- * @see PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
+ * @remark The sieve array is of type uint8_t*
+ * @see    PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
  */
 #define GENERATE_PRIMES(callback, uintXX_t) {                     \
-  assert(sizeof(uint8_t) * 4 == sizeof(uint32_t));                \
   uint32_t i = 0;                                                 \
-  for (; i < sieveSize / 4; i++) {                                \
+  for (; i < sieveSize / SIZEOF(uint32_t); i++) {                 \
     uint32_t word = reinterpret_cast<const uint32_t*> (sieve)[i]; \
     while (word != 0) {                                           \
       uint32_t bitPosition = bitScanForward(word);                \
@@ -86,9 +89,9 @@
       word &= word - 1;                                           \
       callback (prime);                                           \
     }                                                             \
-    lowerBound += NUMBERS_PER_BYTE * 4;                           \
+    lowerBound += NUMBERS_PER_BYTE * SIZEOF(uint32_t);            \
   }                                                               \
-  for (i *= 4; i < sieveSize; i++) {                              \
+  for (i *= SIZEOF(uint32_t); i < sieveSize; i++) {               \
     uint32_t byte = sieve[i];                                     \
     while (byte != 0) {                                           \
       uint32_t bitPosition = bitScanForward(byte);                \
