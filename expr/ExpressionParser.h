@@ -53,7 +53,7 @@
  * @see     http://expressionparser.googlecode.com
  * @author  Kim Walisch, <kim.walisch@gmail.com>
  * @version 2.0
- * @date    July, 12 2011
+ * @date    July, 13 2011
  *
  * == Supported operators ==
  *
@@ -442,7 +442,8 @@ private:
     opv_.push(OperatorValue(Operator(OPERATOR_NULL, 0, 'L'), 0));
     // first value on the left
     T value = parseVal();
-    for (;;) {
+    while (!opv_.empty()) {
+      // parse an operator (+, -, *, ...)
       Operator op(parseOp());
       while (op.precedence < opv_.top().getPrecedence() || (
              op.precedence == opv_.top().getPrecedence() &&
