@@ -86,8 +86,7 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   // each thread should at least sieve an interval of n^0.5/6 and not
   // smaller than minThreadInterval_ for a performance benefit
   uint64_t threadThreshold = std::max<uint64_t>(
-      minThreadInterval_,
-      isqrt(stopNumber_) / 6);
+      minThreadInterval_, isqrt(stopNumber_) / 6);
 
   int idealNumThreads = static_cast<int> (
       std::min<uint64_t>(
@@ -108,16 +107,17 @@ uint64_t ParallelPrimeSieve::getIdealInterval() const {
 
   // idealInterval = n^0.5*2000 (0.1 percent initialization overhead)
   uint64_t idealInterval = std::max<uint64_t>(
-      minThreadInterval_,
-      isqrt(stopNumber_) * UINT64_C(2000));
+      minThreadInterval_, isqrt(stopNumber_) * UINT64_C(2000));
 
   uint64_t maxThreadInterval = this->getSieveInterval() / numThreads;
   // correct the user's thread settings
-  if (maxThreadInterval < minThreadInterval_)
+  if (maxThreadInterval < this->getSieveInterval() &&
+      maxThreadInterval < minThreadInterval_)
     maxThreadInterval = this->getSieveInterval() / this->getIdealNumThreads();
 
-  // minThreadInterval_ <= idealInterval <= maxThreadInterval
-  return std::min(idealInterval, maxThreadInterval);
+  assert(maxThreadInterval == this->getSieveInterval() ||
+         maxThreadInterval >= minThreadInterval_);
+  return std::min<uint64_t>(idealInterval, maxThreadInterval);
 }
 
 /**
@@ -183,34 +183,31 @@ void ParallelPrimeSieve::sieve() {
 #if defined(_OPENMP)
   double t1 = omp_get_wtime();
   this->reset();
-  if (this->getSieveInterval() >= minThreadInterval_) {
-    uint64_t idealInterval = this->getIdealInterval();
-    uint64_t chunks = this->getSieveInterval() / idealInterval;
-    uint64_t maxOffset = chunks * idealInterval;
-    uint64_t maxStop = startNumber_ + maxOffset + 32 - maxOffset % 30;
-    if (maxStop < stopNumber_)
-      chunks++;
-    int numThreads = this->getNumThreads();
-    // OpenMP parallel sieving
-    #pragma omp parallel for num_threads(numThreads) schedule(dynamic)
-    for (int64_t i = 0; i < static_cast<int64_t> (chunks); i++) {
-      uint64_t start = startNumber_ + idealInterval * i;
-      uint64_t stop = startNumber_ + idealInterval * (i+1);
-      // the start/stop numbers for PrimeSieve objects must be chosen
-      // carefully in order to avoid gaps when sieving prime k-tuplets
-      // in parallel
-      if (i > 0)
-        start += 32 - start % 30;
-      stop += 32 - stop % 30;
-      // sieve the interval [start, stop]
-      PrimeSieve ps(start, std::min<uint64_t>(stop, stopNumber_), this);
-      ps.sieve();
-      #pragma omp critical (counts)
-      for (int j = 0; j < COUNTS_SIZE; j++)
-        counts_[j] += ps.getCounts(j);
-    }
-  } else // single-threaded sieving
-    PrimeSieve::sieve();
+  uint64_t idealInterval = this->getIdealInterval();
+  uint64_t chunks = this->getSieveInterval() / idealInterval;
+  uint64_t maxOffset = chunks * idealInterval;
+  uint64_t maxStop = startNumber_ + maxOffset + 32 - maxOffset % 30;
+  if (maxStop < stopNumber_)
+    chunks++;
+  int numThreads = this->getNumThreads();
+  // OpenMP parallel sieving
+  #pragma omp parallel for num_threads(numThreads) schedule(dynamic)
+  for (int64_t i = 0; i < static_cast<int64_t> (chunks); i++) {
+    uint64_t start = startNumber_ + idealInterval * i;
+    uint64_t stop = startNumber_ + idealInterval * (i+1);
+    // the start/stop numbers for PrimeSieve objects must be chosen
+    // carefully in order to avoid gaps when sieving prime k-tuplets
+    // in parallel
+    if (i > 0)
+      start += 32 - start % 30;
+    stop += 32 - stop % 30;
+    // sieve the interval [start, stop]
+    PrimeSieve ps(start, std::min<uint64_t>(stop, stopNumber_), this);
+    ps.sieve();
+    #pragma omp critical (counts)
+    for (int j = 0; j < COUNTS_SIZE; j++)
+      counts_[j] += ps.getCounts(j);
+  }
   timeElapsed_ = omp_get_wtime() - t1;
 #else
   PrimeSieve::sieve();
