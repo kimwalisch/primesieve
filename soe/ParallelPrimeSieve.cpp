@@ -102,12 +102,16 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
  * threads.
  */
 uint64_t ParallelPrimeSieve::getIdealInterval() const {
+  int numThreads = this->getNumThreads();
+  if (numThreads == 1)
+    return this->getSieveInterval();
+
   // idealInterval = n^0.5*2000 (0.1 percent initialization overhead)
   uint64_t idealInterval = std::max<uint64_t>(
       minThreadInterval_,
       isqrt(stopNumber_) * UINT64_C(2000));
 
-  uint64_t maxThreadInterval = this->getSieveInterval() / this->getNumThreads();
+  uint64_t maxThreadInterval = this->getSieveInterval() / numThreads;
   // correct the user's thread settings
   if (maxThreadInterval < minThreadInterval_)
     maxThreadInterval = this->getSieveInterval() / this->getIdealNumThreads();
@@ -187,7 +191,6 @@ void ParallelPrimeSieve::sieve() {
     if (maxStop < stopNumber_)
       chunks++;
     int numThreads = this->getNumThreads();
-
     // OpenMP parallel sieving
     #pragma omp parallel for num_threads(numThreads) schedule(dynamic)
     for (int64_t i = 0; i < static_cast<int64_t> (chunks); i++) {
