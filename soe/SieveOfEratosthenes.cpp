@@ -110,9 +110,6 @@ uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) const {
   return remainder;
 }
 
-/**
- * Initialize the 3 erat* algorithms if needed.
- */
 void SieveOfEratosthenes::initEratAlgorithms() {
   uint32_t sqrtStop = isqrt(stopNumber_);
   uint32_t limit;
@@ -147,8 +144,7 @@ void SieveOfEratosthenes::preSieve() {
 }
 
 /**
- * Use the erat* algorithms to cross-off the multiples within the
- * current segment.
+ * Cross-off the multiples within the current segment.
  */
 void SieveOfEratosthenes::crossOffMultiples() {
   if (eratSmall_ != NULL) {
