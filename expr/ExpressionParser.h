@@ -53,7 +53,7 @@
  * @see     http://expressionparser.googlecode.com
  * @author  Kim Walisch, <kim.walisch@gmail.com>
  * @version 2.0
- * @date    July, 13 2011
+ * @date    July, 15 2011
  *
  * == Supported operators ==
  *
@@ -567,7 +567,7 @@ public:
   }
 
   bool eval(char c) {
-    std::string expr(c);
+    std::string expr(1, c);
     return eval(expr);
   }
 };
