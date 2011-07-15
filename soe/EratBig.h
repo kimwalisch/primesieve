@@ -56,6 +56,7 @@ public:
   void sieve(uint8_t*);
 private:
   typedef Bucket<defs::ERATBIG_BUCKETSIZE> Bucket_t;
+  enum { BUCKETS_PER_CREATE = defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t) };
   /** log2 of SieveOfEratosthenes::sieveSize_. */
   const uint32_t log2SieveSize_;
   /**

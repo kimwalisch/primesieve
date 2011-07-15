@@ -44,8 +44,6 @@
 #include <cassert>
 #include <list>
 
-#define BUCKETS_PER_CREATE (defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t))
-
 EratBig::EratBig(const SieveOfEratosthenes& soe) : Modulo210Wheel(soe),
     log2SieveSize_(floorLog2(soe.getSieveSize())),
     moduloSieveSize_(soe.getSieveSize() - 1),
@@ -126,7 +124,7 @@ void EratBig::addSievingPrime(uint32_t prime) {
 void EratBig::pushBucket(uint32_t index) {
   if (bucketStock_ == NULL) {
     Bucket_t* more = new Bucket_t[BUCKETS_PER_CREATE];
-    for(uint32_t i = 0; i < BUCKETS_PER_CREATE - 1; i++)
+    for(int i = 0; i < BUCKETS_PER_CREATE - 1; i++)
       more[i].setNext(&more[i+1]);
     more[BUCKETS_PER_CREATE-1].setNext(NULL);
     bucketStock_ = &more[0];
