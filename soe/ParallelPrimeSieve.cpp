@@ -206,7 +206,7 @@ void ParallelPrimeSieve::sieve() {
     PrimeSieve ps(start, std::min<uint64_t>(stop, stopNumber_), this);
     ps.sieve();
     #pragma omp critical (counts)
-    for (int j = 0; j < COUNTS_SIZE; j++)
+    for (uint32_t j = 0; j < COUNTS_SIZE; j++)
       counts_[j] += ps.getCounts(j);
   }
   timeElapsed_ = omp_get_wtime() - t1;
@@ -216,7 +216,7 @@ void ParallelPrimeSieve::sieve() {
   // communicate the sieving results via shared memory
   // segment to the Qt GUI process
   if (shm_ != NULL) {
-    for (int i = 0; i < COUNTS_SIZE; i++)
+    for (uint32_t i = 0; i < COUNTS_SIZE; i++)
       shm_->counts[i] = counts_[i];
     shm_->timeElapsed = timeElapsed_;
   }
