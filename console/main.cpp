@@ -265,7 +265,7 @@ int main(int argc, char* argv[]) {
         size = primes[i].size();
     // print prime count results and time elapsed
     int width = static_cast<int> (size);
-    for (int i = 0; i < 7; i++)
+    for (uint32_t i = 0; i < 7; i++)
       if (flags & (pps.COUNT_PRIMES << i))
         std::cout << std::setw(width) << primes[i] << " : " << pps.getCounts(i) << std::endl;
     if (!quietMode)
