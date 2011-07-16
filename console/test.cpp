@@ -162,7 +162,7 @@ namespace {
       pps.setStopNumber(0);
       pps.setSieveSize(32);
       pps.setFlags(pps.COUNT_PRIMES);
-      int i = 0;
+      uint32_t i = 0;
       uint64_t primeCount = 0;
 
       // calculate pi(x) for 10^x with x := 1 to 9
@@ -201,7 +201,7 @@ namespace {
       pps.setSieveSize(512);
       pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
 
-      for (int i = 0; i < 8; i++) {
+      for (uint32_t i = 0; i < 8; i++) {
         pps.setStartNumber(ipow(10, 12 + i));
         pps.setStopNumber(pps.getStartNumber() + ipow(2, 32));
         std::cout << "Sieve an interval of 2^32 starting at 10^" << 12 + i << std::endl;
