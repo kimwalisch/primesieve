@@ -45,12 +45,14 @@
 #include <iostream>
 #include <sstream>
 
-const uint32_t PrimeNumberFinder::nextBitValues_[30] = { 0,
-     0, 0, 0, 0,  0, 0,
-    11, 0, 0, 0, 13, 0,
-    17, 0, 0, 0, 19, 0,
-    23, 0, 0, 0, 29, 0,
-     0, 0, 0, 0, 31 };
+const uint32_t PrimeNumberFinder::kTupletBitmasks_[6][5] = {
+  { 0x06, 0x18, 0xc0, END },        // Twin primes
+  { 0x07, 0x0e, 0x1c, 0x38, END },  // Prime triplets
+  { 0x1e, END },                    // Prime quadruplets
+  { 0x1f, 0x3e, END },              // Prime quintuplets
+  { 0x3f, END },                    // Prime sextuplets
+  { 0xfe, END }                     // Prime septuplets
+};
 
 PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
   SieveOfEratosthenes(
@@ -58,9 +60,10 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
       ps.getStopNumber(),
       ps.getSieveSize() * 1024,
       ps.getPreSieveLimit()),
-      ps_(ps), kTupletByteCounts_(NULL), kTupletBitValues_(NULL) {
-  assert(PrimeSieve::COUNTS_SIZE >= 1 + 6);
-  this->initLookupTables();
+      ps_(ps), kTupletByteCounts_(NULL) {
+  assert(PrimeSieve::COUNTS_SIZE >= 7);
+  if (ps_.flags_ & PrimeSieve::COUNT_KTUPLETS)
+    this->initLookupTables();
 }
 
 PrimeNumberFinder::~PrimeNumberFinder() {
@@ -69,57 +72,26 @@ PrimeNumberFinder::~PrimeNumberFinder() {
       delete[] kTupletByteCounts_[i];
     delete[] kTupletByteCounts_;
   }
-  if (kTupletBitValues_ != NULL) {
-    for (int i = 0; i < 256; i++)
-      delete[] kTupletBitValues_[i];
-    delete[] kTupletBitValues_;
-  }
 }
 
+/**
+ * Initialize the lookup tables needed to count the prime k-tuplets
+ * (twin primes, prime triplets, ...) per byte.
+ */
 void PrimeNumberFinder::initLookupTables() {
-  const uint32_t bitmasks[6][5] = {
-      { 0x06, 0x18, 0xc0, END },       // twin prime bitmasks
-      { 0x07, 0x0e, 0x1c, 0x38, END }, // prime triplet bitmasks
-      { 0x1e, END },                   // prime quadruplet bitmask
-      { 0x1f, 0x3e, END },             // prime quintuplet bitmasks
-      { 0x3f, END },                   // prime sextuplet bitmask
-      { 0xfe, END } };                 // prime septuplet bitmask
-
-  // initialize the lookup tables needed to count prime k-tuplets
-  // (twin primes, prime triplets, ...) per byte
-  if (ps_.flags_ & PrimeSieve::COUNT_KTUPLETS) {
-    kTupletByteCounts_ = new uint32_t*[6];
-    for (int i = 0; i < 6; i++) {
-      kTupletByteCounts_[i] = NULL;
-      if (ps_.flags_  & (PrimeSieve::COUNT_TWINS << i)) {
-        kTupletByteCounts_[i] = new uint32_t[256];
-        for (uint32_t j = 0; j < 256; j++) {
-          uint32_t bitmaskCount = 0;
-          for (const uint32_t* b = bitmasks[i]; *b <= j; b++) {
-            if ((j & *b) == *b)
-              bitmaskCount++;
-          }
-          kTupletByteCounts_[i][j] = bitmaskCount;
+  kTupletByteCounts_ = new uint32_t*[6];
+  for (uint32_t i = 0; i < 6; i++) {
+    kTupletByteCounts_[i] = NULL;
+    if (ps_.flags_ & (PrimeSieve::COUNT_TWINS << i)) {
+      kTupletByteCounts_[i] = new uint32_t[256];
+      for (uint32_t j = 0; j < 256; j++) {
+        uint32_t bitmaskCount = 0;
+        for (const uint32_t* b = kTupletBitmasks_[i]; *b <= j; b++) {
+          if ((j & *b) == *b)
+            bitmaskCount++;
         }
+        kTupletByteCounts_[i][j] = bitmaskCount;
       }
-    }
-  }
-  // initialize the lookup table needed to reconstruct prime k-tuplets
-  // from bitmasks of the sieve array
-  if (ps_.flags_ & PrimeSieve::PRINT_KTUPLETS) {
-    // i=0 twins, i=1 triplets, ...
-    int i = 0;
-    while ((ps_.flags_ & (PrimeSieve::PRINT_TWINS << i)) == 0)
-      i++;
-    kTupletBitValues_ = new uint32_t*[256];
-    for (uint32_t j = 0; j < 256; j++) {
-      kTupletBitValues_[j] = new uint32_t[5];
-      uint32_t bitmaskCount = 0;
-      for (const uint32_t* b = bitmasks[i]; *b <= j; b++) {
-        if ((j & *b) == *b)
-          kTupletBitValues_[j][bitmaskCount++] = bitValues_[bitScanForward(*b)];
-      }
-      kTupletBitValues_[j][bitmaskCount] = END;
     }
   }
 }
@@ -129,14 +101,13 @@ void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
     this->count(sieve, sieveSize);
   if (ps_.flags_ & PrimeSieve::GENERATE_FLAGS)
     this->generate(sieve, sieveSize);
-
   uint32_t processed = sieveSize * NUMBERS_PER_BYTE;
   ps_.parent_->doStatus(processed);
 }
 
 /**
- * Count the prime numbers and prime k-tuplets of the current
- * segment.
+ * Count the prime numbers and prime k-tuplets within the
+ * current segment.
  */
 void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // count prime numbers (1 bits within the sieve)
@@ -153,7 +124,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   }
   // count prime k-tuplets (i=0 twins, i=1 triplets, ...)
   // using lookup tables
-  for (int i = 0; i < 6; i++) {
+  for (uint32_t i = 0; i < 6; i++) {
     if (ps_.flags_ & (PrimeSieve::COUNT_TWINS << i)) {
       uint32_t kTupletCount = 0;
       for (uint32_t j = 0; j < sieveSize; j++)
@@ -173,20 +144,24 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
        if (ps_.flags_ & PrimeSieve::CALLBACK_PRIMES)     GENERATE_PRIMES(ps_.callback_,     uint64_t)
   else if (ps_.flags_ & PrimeSieve::CALLBACK_PRIMES_OOP) GENERATE_PRIMES(this->callbackOOP, uint64_t)
   else if (ps_.flags_ & PrimeSieve::PRINT_PRIMES)        GENERATE_PRIMES(this->printPrime,  uint64_t)
-  else {
+  else if (ps_.flags_ & PrimeSieve::PRINT_KTUPLETS) {
+    // i=0 twins, i=1 triplets, ...
+    uint32_t i = 0;
+    while ((ps_.flags_ & (PrimeSieve::PRINT_TWINS << i)) == 0)
+      i++;
     // print prime k-tuplets to cout
-    for (uint32_t i = 0; i < sieveSize; i++, lowerBound += NUMBERS_PER_BYTE) {
-      for (uint32_t* bitValues = kTupletBitValues_[sieve[i]]; *bitValues != END; bitValues++) {
-        uint32_t v = *bitValues;
-        int j = 0;
-        std::ostringstream kTuplet;
-        kTuplet << "(";
-        do {
-          kTuplet << lowerBound + v << ", ";
-          v = nextBitValues_[v];
-        } while ((ps_.flags_ & (PrimeSieve::PRINT_TWINS << j++)) == 0);
-        kTuplet << lowerBound + v << ")\n";
-        std::cout << kTuplet.str();
+    for (uint32_t j = 0; j < sieveSize; j++) {
+      for (const uint32_t* bitmasks = kTupletBitmasks_[i]; *bitmasks <= sieve[j]; bitmasks++) {
+        if ((sieve[j] & *bitmasks) == *bitmasks) {
+          uint32_t leastBit = bitScanForward(*bitmasks);
+          std::ostringstream kTuplet;
+          kTuplet << "(";
+          for (uint32_t l = leastBit; l < leastBit + i + 2; l++) {
+            kTuplet << lowerBound + j * NUMBERS_PER_BYTE + bitValues_[l]
+                    << (l < leastBit + i + 1 ? ", " : ")\n");
+          }
+          std::cout << kTuplet.str();
+        }
       }
     }
   }

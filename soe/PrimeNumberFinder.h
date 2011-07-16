@@ -54,9 +54,9 @@ public:
   PrimeNumberFinder(PrimeSieve&);
   ~PrimeNumberFinder();
 private:
-  static const uint32_t nextBitValues_[30];
-  /** Used to recognize the last bit value in kTupletBitValues_. */
-  enum { END = 1 << 8 };
+  enum { END = 0xFF + 1 };
+  /** Bitmasks corresponding to twin primes, prime triplets, ... */
+  static const uint32_t kTupletBitmasks_[6][5];
   /** Reference to the parent PrimeSieve object. */
   PrimeSieve& ps_;
   /**
@@ -64,11 +64,6 @@ private:
    * primes, prime triplets, ...) per byte.
    */
   uint32_t** kTupletByteCounts_;
-  /**
-   * Lookup table used to reconstruct prime k-tuplets from bitmasks
-   * of the sieve array.
-   */
-  uint32_t** kTupletBitValues_;
   void initLookupTables();
   virtual void analyseSieve(const uint8_t*, uint32_t);
   void count(const uint8_t*, uint32_t);
