@@ -3,15 +3,15 @@
 #
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
-# Created:         10 July 2010 
-# Last modified:   09 July 2011
+# Created:         10 July 2010
+# Last modified:   22 July 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
 TARGET = primesieve
-SRCDIR = soe
-MAINDIR = console
+SRCDIR = src/soe
+MAINDIR = src/console
 OUTDIR = out
 CXX = g++
 

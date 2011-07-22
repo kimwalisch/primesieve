@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 09 July 2011
+# Last modified: 22 July 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -59,12 +59,12 @@ ParallelPrimeSieve::sieve() uses about:
 
   Source Code Directories
   -----------------------
-  ./soe         Contains the sieve of Eratosthenes implementation.
-  ./console     Contains the primesieve console application.
-  ./qt-gui      Contains the primesieve GUI application.
-  ./expr        Contains an arithmetic expression parser used in the
-                primesieve console and GUI application.
-  ./thirdparty  Contains stdint.h (needed for MSVC prior 2010)
+  src/soe         Contains the sieve of Eratosthenes implementation.
+  src/console     Contains the primesieve console application.
+  src/qt-gui      Contains the primesieve GUI application.
+  src/expr        Contains an arithmetic expression parser used in the
+                  primesieve console and GUI application.
+  src/thirdparty  Contains stdint.h (needed for MSVC prior 2010)
 
   Documentation Directory
   -----------------------
@@ -76,11 +76,11 @@ ParallelPrimeSieve::sieve() uses about:
   ----------------
   The INSTALL file in the current directory explains how to compile
   and use the primesieve console application.
-  The file ./qt-gui/INSTALL explains how to compile the primesieve Qt
-  GUI application.
+  The file src/qt-gui/INSTALL explains how to compile the primesieve
+  Qt GUI application.
 
-5. Sieve of Eratosthenes Implementation (./soe directory)
-=========================================================
+5. Sieve of Eratosthenes Implementation (src/soe directory)
+===========================================================
 
   General Information
   -------------------
@@ -195,7 +195,7 @@ ParallelPrimeSieve::sieve() uses about:
 ==========
 
 primesieve is licensed under the New BSD License, see the LICENSE file
-for more information. The primesieve GUI application in ./qt-gui is
+for more information. The primesieve GUI application in src/qt-gui is
 licensed under the GPLv3 as it uses the Qt framework.
 
 8. References and Notes

@@ -5,8 +5,8 @@
 # 
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
-# Created:         10 July 2010  
-# Last modified:   09 July 2011 
+# Created:         10 July 2010
+# Last modified:   22 July 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -15,8 +15,8 @@
 .IGNORE:
 
 TARGET = primesieve.exe
-SRCDIR = soe
-MAINDIR = console
+SRCDIR = src/soe
+MAINDIR = src/console
 OUTDIR = out
 
 # Define the C++ compiler & options
@@ -26,7 +26,7 @@ LINK     = link
 LFLAGS   = /OPT:REF /OPT:ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
 
 # Inculde stdint.h (needed prior MSVC 2010)
-INCPATH  = -I"thirdparty"
+INCPATH  = -I"src/thirdparty"
 
 OBJECTS = $(OUTDIR)\EratBig.obj \
   $(OUTDIR)\PreSieve.obj \

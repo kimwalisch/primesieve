@@ -1,4 +1,4 @@
-June 22, 2011
+July 22, 2011
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -7,8 +7,8 @@ About
 
 This file contains various source code examples that show how to use
 PrimeSieve and ParallelPrimeSieve objects. You may also want to have a
-look at ../soe/PrimeSieve.h for the API and ../soe/PrimeSieve.cpp for
-a brief description of each member function.
+look at ../src/soe/PrimeSieve.h for the API and PrimeSieve.cpp for a
+brief description of each member function.
 
 Examples
 ========
