@@ -19,6 +19,7 @@
 
 #include "PrimeSieveGUI.h"
 #include "ui_PrimeSieveGUI.h"
+#include "../soe/ParallelPrimeSieve.h"
 
 #include <QMessageBox>
 #include <QDir>
@@ -59,29 +60,27 @@ void PrimeSieveGUI::createMenuActions(QVector<QString>& primeText) {
 }
 
 /**
- * Create the menu bar.
+ * Create the menu bar with 'File', 'Count', 'Print' and 'Help'
+ * menu options.
  */
 void PrimeSieveGUI::createMenu(QVector<QString>& primeText) {
   this->createMenuActions(primeText);
-  // create file menu
+
   fileMenu_ = menuBar()->addMenu("&File");
   fileMenu_->addAction(saveAct_);
   fileMenu_->addAction(quitAct_);
-  // create count menu
   countMenu_ = menuBar()->addMenu("&Count");
   for (int i = 0; i < countAct_.size(); i++)
     countMenu_->addAction(countAct_[i]);
-  // create print menu
   printMenu_ = menuBar()->addMenu("&Print");
   for (int i = 0; i < printAct_.size(); i++)
     printMenu_->addAction(printAct_[i]);
-  // create help menu
   helpMenu_ = menuBar()->addMenu("&Help");
   helpMenu_->addAction(aboutAct_);
 }
 
 /**
- * Returns the count and print menu settings as bit flags.
+ * Return the count and print menu settings as bit flags.
  */
 int PrimeSieveGUI::getMenuSettings() {
   int flags = 0;
@@ -89,7 +88,7 @@ int PrimeSieveGUI::getMenuSettings() {
   if (countAct_[0]->isChecked())
     flags |= ParallelPrimeSieve::COUNT_PRIMES;
   if (countAct_[1]->isChecked())
-    flags |= ParallelPrimeSieve::COUNT_FLAGS - ParallelPrimeSieve::COUNT_PRIMES;
+    flags |= ParallelPrimeSieve::COUNT_KTUPLETS;
   // get print settings
   for (int i = 0; i < printAct_.size(); i++)
     if (printAct_[i]->isChecked())
@@ -110,7 +109,7 @@ void PrimeSieveGUI::printMenuClicked(QAction* qAct) {
   ui->autoSetCheckBox->setDisabled(qAct->isChecked());
   if (qAct->isChecked()) {
     ui->autoSetCheckBox->setChecked(true);
-    this->setComboBoxText(ui->threadsComboBox, "1");
+    ui->threadsComboBox->setCurrentIndex(0);
   }
   ui->threadsComboBox->setDisabled(qAct->isChecked());
   this->autoSetThreads();
@@ -122,8 +121,7 @@ void PrimeSieveGUI::printMenuClicked(QAction* qAct) {
 void PrimeSieveGUI::saveToFile() {
   // Qt uses '/' internally, also for Windows
   QString currentPath = QDir::currentPath() + "/Unsaved Document 1";
-  QString fileName = QFileDialog::getSaveFileName(this, "Save As...",
-      currentPath, "All Files (*)");
+  QString fileName = QFileDialog::getSaveFileName(this, "Save As...", currentPath, "All Files (*)");
   QFile file(fileName);
   if (file.open(QFile::WriteOnly | QFile::Text)) {
     QTextStream textStream(&file);
