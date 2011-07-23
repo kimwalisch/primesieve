@@ -29,20 +29,17 @@
 #include <QVector>
 
 /**
- * QProcess object used for prime sieving. Using a separate process
- * for prime sieving allows to easily cancel a multi-threaded
+ * QProcess class used for prime sieving, using a separate process
+ * for sieving allows to easily cancel a multi-threaded
  * ParallelPrimeSieve instance.
  */
 class PrimeSieveProcess : public QProcess {
 public:
-  enum {
-    COUNTS_SIZE = ParallelPrimeSieve::COUNTS_SIZE
-  };
   PrimeSieveProcess(QObject*);
   ~PrimeSieveProcess();
-  void start(qulonglong, qulonglong, int, int, int);
+  void start(quint64, quint64, int, int, int);
   bool isFinished();
-  qlonglong getCounts(unsigned int) const;
+  quint64 getCounts(unsigned int) const;
   double getStatus() const;
   double getTimeElapsed() const;
 private:
