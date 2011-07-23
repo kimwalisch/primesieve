@@ -18,10 +18,10 @@
  */
 
 /**
- * @file PrimeSieveGUI_const.h
+ * @file  PrimeSieveGUI_const.h
  * @brief Various constants used in PrimeSieveGUI.
- * The values are optimized for CPUs with 32 to 64 KiloBytes of L1
- * Data Cache (set in 2010).
+ *        The values are optimized for CPUs with 32 to 64 Kilobytes of
+ *        L1 Data Cache (set in 2010).
  */
 
 #ifndef PRIMESIEVEGUI_CONST_H
@@ -35,7 +35,7 @@
  * Enable the UINT64_MAX, UINT32_MAX macros from <stdint.h>.
  */
 #if !defined(__STDC_LIMIT_MACROS)
-#  define __STDC_LIMIT_MACROS 1
+#  define __STDC_LIMIT_MACROS
 #endif
 #include <stdint.h>
 
@@ -54,7 +54,7 @@ const QString APPLICATION_ABOUT(
     "(at your option) any later version.");
 
 /**
- * Minimum sieve size in KiloBytes.
+ * Minimum sieve size in Kilobytes.
  * For performance reasons the minimum sieve size should not be much
  * smaller than the system's CPU L1 cache size.
  * @pre MINIMUM_SIEVE_SIZE >= 1
@@ -68,16 +68,16 @@ const int MINIMUM_SIEVE_SIZE = 16;
 const int MAXIMUM_SIEVE_SIZE = 8192;
 /**
  * The best performance is achieved with a sieve size of the CPU's
- * L1 or L2 cache size. 64 KiloBytes is a good choice as most CPUs
- * have a L1 cache size of 32 to 64 KiloBytes in 2010.
- * @pre DEFAULT_SIEVE_SIZE must be a power of 2.
+ * L1/L2 cache size. 64 Kilobytes is a good choice as most CPUs have a
+ * L1 cache size of 16 to 64 Kilobytes in 2010.
  */
 const int DEFAULT_SIEVE_SIZE = 64;
 /**
- * PrimeSieve allows numbers up to < (2^64-1) - (2^32-1) * 10.
+ * PrimeSieve allows numbers up to < (2^64-1)-(2^32-1)*10.
  * @see PrimeSieve.cpp
  */
 const quint64 UPPER_BOUND_LIMIT = UINT64_MAX - UINT32_MAX * Q_UINT64_C(10);
+const QString UPPER_BOUND_STR = QString::number(UPPER_BOUND_LIMIT);
 /**
  * Print chunks of PRINT_BUFFER_SIZE bytes to the TextEdit.
  */
