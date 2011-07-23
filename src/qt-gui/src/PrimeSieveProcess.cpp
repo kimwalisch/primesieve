@@ -18,7 +18,9 @@
  */
 
 #include "PrimeSieveProcess.h"
+#include "../soe/ParallelPrimeSieve.h"
 
+#include <QtGlobal>
 #include <QStringList>
 #include <QCoreApplication>
 #include <stdexcept>
@@ -74,16 +76,16 @@ void PrimeSieveProcess::createSharedMemory() {
  * Start a new ParallelPrimeSieve process that sieves the
  * prime numbers and/or k-tuplets between startNumber and stopNumber.
  */
-void PrimeSieveProcess::start(qulonglong startNumber, qulonglong stopNumber,
+void PrimeSieveProcess::start(quint64 startNumber, quint64 stopNumber,
     int sieveSize, int flags, int threads) {
   this->createSharedMemory();
   // initialize the shared memory segment
   shm_->startNumber = startNumber;
   shm_->stopNumber  = stopNumber;
-  shm_->sieveSize   = sieveSize;
-  shm_->flags       = flags;
+  shm_->sieveSize   = static_cast<quint32> (sieveSize);
+  shm_->flags       = static_cast<quint32> (flags);
   shm_->threads     = threads;
-  for (int i = 0; i < COUNTS_SIZE; i++)
+  for (int i = 0; i < ParallelPrimeSieve::COUNTS_SIZE; i++)
     shm_->counts[i] = 0;
   shm_->status      = 0.0;
   shm_->timeElapsed = 0.0;
@@ -104,15 +106,9 @@ bool PrimeSieveProcess::isFinished() {
 /**
  * @return The count of prime numbers or prime k-tuplets between
  *         startNumber and stopNumber.
- * @param  index 0 = Count of prime numbers
- *               1 = Count of twin primes
- *               2 = Count of prime triplets
- *               3 = Count of prime quadruplets
- *               4 = Count of prime quintuplets
- *               5 = Count of prime sextuplets
- *               6 = Count of prime septuplets
+ * @param  index <= 6
  */
-qlonglong PrimeSieveProcess::getCounts(unsigned int index) const {
+quint64 PrimeSieveProcess::getCounts(unsigned int index) const {
   return shm_->counts[index];
 }
 
