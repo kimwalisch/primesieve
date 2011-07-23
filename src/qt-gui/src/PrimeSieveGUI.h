@@ -21,8 +21,6 @@
 #define PRIMESIEVEGUI_H
 
 #include "PrimeSieveGUI_const.h"
-#include "PrimeSieveProcess.h"
-#include "../soe/PrimeSieve.h"
 
 #include <QMainWindow>
 #include <QtGlobal>
@@ -40,10 +38,11 @@ namespace Ui {
   class PrimeSieveGUI;
 }
 
+class PrimeSieveProcess;
+
 /**
- * PrimeSieveGUI is an easy to use graphical user interface with
- * multi-core support for PrimeSieve (highly optimized implementation
- * of the sieve of Eratosthenes).
+ * PrimeSieveGUI is a graphical user interface for primeSieve (highly
+ * optimized sieve of Eratosthenes implementation).
  */
 class PrimeSieveGUI: public QMainWindow {
 Q_OBJECT
@@ -74,7 +73,7 @@ private:
   void initConnections();
   int getSieveSize();
   int getThreads();
-  void getBounds(qulonglong*, qulonglong*, bool);
+  quint64 getNumber(const QString&);
   void printResults();
   void cleanUp();
 
