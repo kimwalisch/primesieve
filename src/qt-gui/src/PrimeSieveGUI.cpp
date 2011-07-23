@@ -19,8 +19,11 @@
 
 #include "PrimeSieveGUI.h"
 #include "ui_PrimeSieveGUI.h"
+#include "PrimeSieveProcess.h"
+#include "../soe/ParallelPrimeSieve.h"
 #include "../expr/ExpressionParser.h"
 
+#include <QtGlobal>
 #include <QCoreApplication>
 #include <QByteArray>
 #include <QTextStream>
@@ -47,9 +50,7 @@ PrimeSieveGUI::PrimeSieveGUI(QWidget *parent) :
 }
 
 PrimeSieveGUI::~PrimeSieveGUI() {
-  // kill all processes
   this->cleanUp();
-  // free all allocated memory
   delete validator_;
   delete saveAct_;
   delete quitAct_;
@@ -75,32 +76,25 @@ void PrimeSieveGUI::changeEvent(QEvent *e) {
 }
 
 void PrimeSieveGUI::setComboBoxText(QComboBox* comboBox, QString text) {
-  int index = comboBox->findText(text);
-  if (index < 0)
-    QMessageBox::critical(this, APPLICATION_NAME,
-        "Internal ComboBox error, please contact the developer.");
-  comboBox->setCurrentIndex(index);
+  comboBox->setCurrentIndex(comboBox->findText(text));
 }
 
 void PrimeSieveGUI::initGUI() {
   this->setWindowTitle(APPLICATION_NAME + " " + APPLICATION_VERSION);
   this->createMenu(primeText_);
 
-  // fill the sieveSizeComboBox with power of 2 values from
-  // "16 KB" till "8192 KB"
+  // fill the sieveSizeComboBox with power of 2 values <= "8192 KB"
   for (int i = MINIMUM_SIEVE_SIZE; i <= MAXIMUM_SIEVE_SIZE; i *= 2)
     ui->sieveSizeComboBox->addItem(QString::number(i) + " KB");
   QString defaultSieveSize = QString::number(DEFAULT_SIEVE_SIZE) + " KB";
   this->setComboBoxText(ui->sieveSizeComboBox, defaultSieveSize);
 
-  // fill the threadsComboBox with power of 2 values from 1 till
-  // maxThreads (number of logical CPU cores)
+  // fill the threadsComboBox with power of 2 values <= maxThreads
   int maxThreads = ParallelPrimeSieve::getMaxThreads();
   for (int i = 1; i < maxThreads; i *= 2)
     ui->threadsComboBox->addItem(QString::number(i));
   ui->threadsComboBox->addItem(QString::number(maxThreads));
-  QString defaultThreads("1");
-  this->setComboBoxText(ui->threadsComboBox, defaultThreads);
+  ui->threadsComboBox->setCurrentIndex(0);
 
   // set an ideal ComboBox width
   int width = ui->sieveSizeComboBox->minimumSizeHint().width();
@@ -115,7 +109,7 @@ void PrimeSieveGUI::initGUI() {
 #endif
   this->resize(size);
 
-  // limit input for integer arithmetic expressions
+  // limit input for arithmetic expressions
   QRegExp rx("[0-9\\+\\-\\*\\/\\%\\^\\(\\)\\e\\E]*");
   validator_ = new QRegExpValidator(rx, this);
   ui->lowerBoundLineEdit->setValidator(validator_);
@@ -123,24 +117,14 @@ void PrimeSieveGUI::initGUI() {
 }
 
 void PrimeSieveGUI::initConnections() {
-  // progress bar connection
-  connect(&progressBarTimer_, SIGNAL(timeout()), this, SLOT(
-      advanceProgressBar()));
-  // autoSetThreads() connections
-  connect(ui->lowerBoundLineEdit, SIGNAL(textChanged(const QString &)),
-      this, SLOT(autoSetThreads()));
-  connect(ui->upperBoundLineEdit, SIGNAL(textChanged(const QString &)),
-      this, SLOT(autoSetThreads()));
-  connect(ui->autoSetCheckBox, SIGNAL(toggled(bool)),
-      this, SLOT(autoSetThreads()));
-  // file menu connections
-  connect(saveAct_, SIGNAL(triggered()), this, SLOT(saveToFile()));
-  connect(quitAct_, SIGNAL(triggered()), qApp, SLOT(closeAllWindows()));
-  // print menu connection
-  connect(alignmentGroup_, SIGNAL(triggered(QAction*)), this,
-      SLOT(printMenuClicked(QAction*)));
-  // about dialog connection
-  connect(aboutAct_, SIGNAL(triggered()), this, SLOT(showAboutDialog()));
+  connect(&progressBarTimer_,     SIGNAL(timeout()),                    this, SLOT(advanceProgressBar()));
+  connect(ui->lowerBoundLineEdit, SIGNAL(textChanged(const QString &)), this, SLOT(autoSetThreads()));
+  connect(ui->upperBoundLineEdit, SIGNAL(textChanged(const QString &)), this, SLOT(autoSetThreads()));
+  connect(ui->autoSetCheckBox,    SIGNAL(toggled(bool)),                this, SLOT(autoSetThreads()));
+  connect(saveAct_,               SIGNAL(triggered()),                  this, SLOT(saveToFile()));
+  connect(quitAct_,               SIGNAL(triggered()),                  qApp, SLOT(closeAllWindows()));
+  connect(alignmentGroup_,        SIGNAL(triggered(QAction*)),          this, SLOT(printMenuClicked(QAction*)));
+  connect(aboutAct_,              SIGNAL(triggered()),                  this, SLOT(showAboutDialog()));
 }
 
 /**
@@ -161,6 +145,25 @@ int PrimeSieveGUI::getThreads() {
   return ui->threadsComboBox->currentText().toInt();
 }
 
+quint64 PrimeSieveGUI::getNumber(const QString& str) {
+  if (str.isEmpty())
+    throw std::invalid_argument("Missing number input.");
+
+  ExpressionParser<quint64> parser;
+  if (!parser.eval(str.toAscii().data()))
+    throw std::invalid_argument(parser.getErrorMessage());
+
+  int digits = str.count(QRegExp("[0-9]"));
+  if (parser.getResult() >= UPPER_BOUND_LIMIT ||
+      digits == str.size() && (
+      digits >  UPPER_BOUND_STR.size() ||
+      digits == UPPER_BOUND_STR.size() &&
+      str    >= UPPER_BOUND_STR))
+    throw std::invalid_argument("Please use positive integers < (2^64-1)-(2^32-1)*10.");
+
+  return parser.getResult();
+}
+
 /**
  * The user has chosen a custom number of threads, disable "Auto set".
  */
@@ -169,18 +172,16 @@ void PrimeSieveGUI::on_threadsComboBox_activated() {
 }
 
 /**
- * If "Auto set" is enabled set the ideal number of threads for the
+ * If "Auto set" is enabled set an ideal number of threads for the
  * current lower bound, upper bound and menu settings in the
  * threadsComboBox.
  */
 void PrimeSieveGUI::autoSetThreads() {
-  if (ui->autoSetCheckBox->isEnabled() && 
-      ui->autoSetCheckBox->isChecked()) {
+  if (ui->autoSetCheckBox->isEnabled() && ui->autoSetCheckBox->isChecked()) {
     QString threads("1");
     try {
-      qulonglong lowerBound = 0;
-      qulonglong upperBound = 0;
-      this->getBounds(&lowerBound, &upperBound, false);
+      quint64 lowerBound = this->getNumber(ui->lowerBoundLineEdit->text());
+      quint64 upperBound = this->getNumber(ui->upperBoundLineEdit->text());
       ParallelPrimeSieve pps;
       pps.setStartNumber(lowerBound);
       pps.setStopNumber(upperBound);
@@ -192,76 +193,39 @@ void PrimeSieveGUI::autoSetThreads() {
 }
 
 /**
- * Get the users lower and upper bound for prime sieving.
- */
-void PrimeSieveGUI::getBounds(qulonglong* lowerBound, qulonglong* upperBound,
-    bool solveArithmeticExpression) {
-  if (ui->lowerBoundLineEdit->text().isEmpty() ||
-      ui->upperBoundLineEdit->text().isEmpty())
-    throw std::invalid_argument("Missing number input.");
-
-  QByteArray text = ui->lowerBoundLineEdit->text().toAscii();
-  ExpressionParser<qulonglong> expr;
-  if (!expr.eval(text.data()))
-    throw std::invalid_argument(expr.getErrorMessage());
-  *lowerBound = expr.getResult();
-  if (solveArithmeticExpression)
-    ui->lowerBoundLineEdit->setText(QString::number(expr.getResult()));
-  text = ui->upperBoundLineEdit->text().toAscii();
-  if (!expr.eval(text.data()))
-    throw std::invalid_argument(expr.getErrorMessage());
-  *upperBound = expr.getResult();
-  if (solveArithmeticExpression)
-    ui->upperBoundLineEdit->setText(QString::number(expr.getResult()));
-
-  if (*lowerBound >= UPPER_BOUND_LIMIT ||
-      *upperBound >= UPPER_BOUND_LIMIT)
-    throw std::invalid_argument(
-        "Please use numbers >= 0 and < (2^64-1) - (2^32-1) * 10.");
-  if (*lowerBound > *upperBound)
-    throw std::invalid_argument(
-        "The lower bound must not be greater than the upper bound.");
-}
-
-/**
- * Start sieving prime numbers.
+ * Start sieving primes.
  */
 void PrimeSieveGUI::on_sieveButton_clicked() {
   // invert buttons, reset upon cleanUp()
   ui->sieveButton->setDisabled(true);
   ui->cancelButton->setEnabled(true);
-
   try {
     flags_ = this->getMenuSettings();
     if ((flags_ & (ParallelPrimeSieve::COUNT_FLAGS | ParallelPrimeSieve::PRINT_FLAGS)) == 0)
-      throw std::invalid_argument(
-          "Nothing to do, no count or print options selected.");
-    qulonglong lowerBound = 0;
-    qulonglong upperBound = 0;
-    this->getBounds(&lowerBound, &upperBound, true);
-    int threads = this->getThreads();
-    if (threads > 1 && (upperBound - lowerBound) / threads < 60)
-      throw std::invalid_argument(
-          "Use at least an interval of 60 for each thread");
+      throw std::invalid_argument("Nothing to do, no count or print options selected.");
+
+    quint64 lowerBound = this->getNumber(ui->lowerBoundLineEdit->text());
+    quint64 upperBound = this->getNumber(ui->upperBoundLineEdit->text());
+    if (lowerBound > upperBound)
+      throw std::invalid_argument("The lower bound must be <= upper bound.");
 
     // reset the GUI widgets
     ui->progressBar->setValue(ui->progressBar->minimum());
     ui->textEdit->clear();
     progressBarTimer_.start(25);
 
-    // start a separate process for sieving,
-    // this allows to easily cancel the sieving process
+    // start a new process for sieving (avoids cancel
+    // trouble with multiple threads)
     primeSieveProcess_ = new PrimeSieveProcess(this);
+    if (flags_ & ParallelPrimeSieve::PRINT_FLAGS)
+      connect(primeSieveProcess_, SIGNAL(readyReadStandardOutput()),
+          this, SLOT(printProcessOutput()));
     connect(primeSieveProcess_, SIGNAL(finished(int, QProcess::ExitStatus)),
         this, SLOT(processFinished(int, QProcess::ExitStatus)));
-    if (flags_ & ParallelPrimeSieve::PRINT_FLAGS)
-      connect(primeSieveProcess_, SIGNAL(readyReadStandardOutput()), this,
-          SLOT(printProcessOutput()));
     primeSieveProcess_->start(lowerBound, upperBound, this->getSieveSize(),
-        flags_, threads);
+        flags_, this->getThreads());
 
   } catch (std::invalid_argument& ex) {
-    // kill any running processes, free all memory
     this->cleanUp();
     QMessageBox::warning(this, APPLICATION_NAME, ex.what());
   } catch (std::exception& ex) {
@@ -310,38 +274,34 @@ void PrimeSieveGUI::printProcessOutput() {
  */
 void PrimeSieveGUI::processFinished(int exitCode,
     QProcess::ExitStatus exitStatus) {
-  // the process did not exit normally, i.e threw and exception,
-  // exit(EXIT_FAILURE) ...
+  // the process did not exit normally, i.e. threw and exception
   if (exitCode != 0) {
     // Qt uses '/' internally, even for Windows
-    QString path = QCoreApplication::applicationDirPath() + "/"
-        + APPLICATION_NAME + "_error.txt";
+    QString path = QCoreApplication::applicationDirPath() + "/" + APPLICATION_NAME + "_error.txt";
     QFile error_log(path);
-    if (error_log.open(QIODevice::WriteOnly | QIODevice::Append
-        | QIODevice::Text)) {
+    if (error_log.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
       QTextStream out(&error_log);
       out << primeSieveProcess_->readAllStandardError();
       error_log.close();
     }
     this->cleanUp();
-    QMessageBox::critical(
-        this,
-        APPLICATION_NAME,
+    QMessageBox::critical(this, APPLICATION_NAME,
         "The PrimeSieveProcess reported an error, sieving has been aborted. Please contact the developer.");
   }
-  // the process has been interrupted by a signal (SIGTERM,
+  // the PrimeSieveProcess has been interrupted by a signal (SIGTERM,
   // SIGKILL, ...) or a segmentation fault
   else if (exitStatus == QProcess::CrashExit) {
     this->cleanUp();
-    QMessageBox::critical(this, APPLICATION_NAME,
-        "The PrimeSieveProcess crashed, sieving has been aborted.");
+    QMessageBox::critical(this, APPLICATION_NAME, "The PrimeSieveProcess crashed, sieving has been aborted.");
   }
   // the PrimeSieveProcess has finished correctly
-  ui->progressBar->setValue(ui->progressBar->maximum());
-  // print results if not canceled lately
-  if (ui->cancelButton->isEnabled())
-    this->printResults();
-  this->cleanUp();
+  else {
+    ui->progressBar->setValue(ui->progressBar->maximum());
+    // print results if not canceled lately
+    if (ui->cancelButton->isEnabled())
+      this->printResults();
+    this->cleanUp();
+  }
 }
 
 /**
@@ -351,12 +311,12 @@ void PrimeSieveGUI::printResults() {
   if (!ui->textEdit->toPlainText().isEmpty())
     ui->textEdit->appendPlainText("");
 
-  // hack to get the count results aligned (using tabs)
+  // hack to get the count results aligned using tabs
   QString maxSizeText;
-  for (int i = 0; i < PrimeSieveProcess::COUNTS_SIZE; i++) {
-    if (flags_ & (ParallelPrimeSieve::COUNT_PRIMES << i))
-      if (maxSizeText.size() < primeText_[i].size())
-        maxSizeText = primeText_[i];
+  for (int i = 0; i < ParallelPrimeSieve::COUNTS_SIZE; i++) {
+    if ((flags_ & (ParallelPrimeSieve::COUNT_PRIMES << i)) &&
+        maxSizeText.size() < primeText_[i].size())
+      maxSizeText = primeText_[i];
   }
   ui->textEdit->insertPlainText(maxSizeText + ": ");
   int maxWidth = ui->textEdit->cursorRect().left();
@@ -365,16 +325,13 @@ void PrimeSieveGUI::printResults() {
   ui->textEdit->setTabStopWidth(maxWidth);
 
   // print prime counts & time elapsed
-  for (int i = 0; i < PrimeSieveProcess::COUNTS_SIZE; i++) {
+  for (int i = 0; i < ParallelPrimeSieve::COUNTS_SIZE; i++) {
     if (flags_ & (ParallelPrimeSieve::COUNT_PRIMES << i))
-      ui->textEdit->appendPlainText(primeText_[i] + ":\t" +
-          QString::number(primeSieveProcess_->getCounts(i)));
+      ui->textEdit->appendPlainText(primeText_[i] + ":\t" + QString::number(primeSieveProcess_->getCounts(i)));
   }
-  if (flags_ & (ParallelPrimeSieve::COUNT_FLAGS - ParallelPrimeSieve::COUNT_PRIMES))
+  if (flags_ & ParallelPrimeSieve::COUNT_KTUPLETS)
     ui->textEdit->appendPlainText("");
-  QString time("Elapsed time:\t" +
-               QString::number(primeSieveProcess_->getTimeElapsed(), 'f', 2) +
-               " sec");
+  QString time("Elapsed time:\t" + QString::number(primeSieveProcess_->getTimeElapsed(), 'f', 2) + " sec");
   ui->textEdit->appendPlainText(time);
 }
 
@@ -387,17 +344,15 @@ void PrimeSieveGUI::on_cancelButton_clicked() {
   // too late to abort
   if ((flags_ & ParallelPrimeSieve::PRINT_FLAGS) && primeSieveProcess_->isFinished())
     return;
-  // cancel, kill all running processes
   this->cleanUp();
 }
 
 /**
- * Clean up after sieving is finished or canceled (abort all
- * running processes).
+ * Clean up after sieving is finished or canceled (abort the
+ * PrimeSieveProcess if still running).
  */
 void PrimeSieveGUI::cleanUp() {
   progressBarTimer_.stop();
-  // kill the sieving process if still running
   if (primeSieveProcess_ != 0)
     delete primeSieveProcess_;
   primeSieveProcess_ = 0;
