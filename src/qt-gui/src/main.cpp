@@ -27,13 +27,13 @@
 #include <iostream>
 
 /**
- * The primesieve GUI is launched if the user launches the application
+ * The primesieve GUI is launched if the user starts the application
  * by mouse click or without arguments, a PrimeSieveProcess is
- * launched if a process identifier and a shared memory identifier are
- * provided as arguments.
- * @see   PrimeSieveProcess.cpp
+ * launched if process and a shared memory identifiers are provided as
+ * arguments.
  * @param argv[1] [process identifier]
  * @param argv[2] [Shared memory identifier]
+ * @see   PrimeSieveProcess.cpp
  */
 int main(int argc, char *argv[]) {
   if (argc == 3) {
@@ -73,4 +73,3 @@ int main(int argc, char *argv[]) {
   w.show();
   return a.exec();
 }
-
