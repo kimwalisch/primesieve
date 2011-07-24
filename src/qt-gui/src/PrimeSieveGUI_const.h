@@ -43,10 +43,10 @@ const QString APPLICATION_NAME("primesieve");
 const QString APPLICATION_VERSION("3.0");
 const QString APPLICATION_HOMEPAGE("http://primesieve.googlecode.com");
 const QString APPLICATION_ABOUT(
-    "primesieve uses a highly optimized implementation of the sieve of "
-    "Eratosthenes to generate prime numbers and prime k-tuplets. By the "
-    "date of release primesieve is the fastest publicly available "
-    "prime sieving software (together with YAFU).<br>"
+    "primesieve generates prime numbers and prime k-tuplets using a highly "
+    "optimized implementation of the sieve of Eratosthenes. By the date "
+    "of release this is the fastest publicly available prime sieving software "
+    "(together with YAFU).<br>"
     "<br>"
     "This is free software: you can redistribute it and/or modify "
     "it under the terms of the GNU General Public License as published by "
