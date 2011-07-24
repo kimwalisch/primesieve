@@ -75,10 +75,6 @@ void PrimeSieveGUI::changeEvent(QEvent *e) {
   }
 }
 
-void PrimeSieveGUI::setComboBoxText(QComboBox* comboBox, QString text) {
-  comboBox->setCurrentIndex(comboBox->findText(text));
-}
-
 void PrimeSieveGUI::initGUI() {
   this->setWindowTitle(APPLICATION_NAME + " " + APPLICATION_VERSION);
   this->createMenu(primeText_);
@@ -86,15 +82,14 @@ void PrimeSieveGUI::initGUI() {
   // fill the sieveSizeComboBox with power of 2 values <= "8192 KB"
   for (int i = MINIMUM_SIEVE_SIZE; i <= MAXIMUM_SIEVE_SIZE; i *= 2)
     ui->sieveSizeComboBox->addItem(QString::number(i) + " KB");
-  QString defaultSieveSize = QString::number(DEFAULT_SIEVE_SIZE) + " KB";
-  this->setComboBoxText(ui->sieveSizeComboBox, defaultSieveSize);
+  this->setTo(ui->sieveSizeComboBox, DEFAULT_SIEVE_SIZE);
 
-  // fill the threadsComboBox with power of 2 values <= maxThreads
-  int maxThreads = ParallelPrimeSieve::getMaxThreads();
-  for (int i = 1; i < maxThreads; i *= 2)
+  // fill the threadsComboBox with power of 2 values <= maxThreads_
+  maxThreads_ = ParallelPrimeSieve::getMaxThreads();
+  for (int i = 1; i < maxThreads_; i *= 2)
     ui->threadsComboBox->addItem(QString::number(i));
-  ui->threadsComboBox->addItem(QString::number(maxThreads));
-  ui->threadsComboBox->setCurrentIndex(0);
+  ui->threadsComboBox->addItem(QString::number(maxThreads_));
+  this->setTo(ui->threadsComboBox, "1");
 
   // set an ideal ComboBox width
   int width = ui->sieveSizeComboBox->minimumSizeHint().width();
@@ -164,32 +159,42 @@ quint64 PrimeSieveGUI::getNumber(const QString& str) {
   return parser.getResult();
 }
 
-/**
- * The user has chosen a custom number of threads, disable "Auto set".
- */
-void PrimeSieveGUI::on_threadsComboBox_activated() {
-  ui->autoSetCheckBox->setChecked(false);
+void PrimeSieveGUI::setTo(QComboBox* comboBox, const QString& text) {
+  comboBox->setCurrentIndex(comboBox->findText(text));
 }
 
 /**
  * If "Auto set" is enabled set an ideal number of threads for the
- * current lower bound, upper bound and menu settings in the
- * threadsComboBox.
+ * current lower bound, upper bound in the threadsComboBox.
  */
 void PrimeSieveGUI::autoSetThreads() {
   if (ui->autoSetCheckBox->isEnabled() && ui->autoSetCheckBox->isChecked()) {
-    QString threads("1");
     try {
       quint64 lowerBound = this->getNumber(ui->lowerBoundLineEdit->text());
       quint64 upperBound = this->getNumber(ui->upperBoundLineEdit->text());
       ParallelPrimeSieve pps;
       pps.setStartNumber(lowerBound);
       pps.setStopNumber(upperBound);
-      pps.setFlags(this->getMenuSettings());
-      threads.setNum(pps.getNumThreads());
-    } catch (...) { }
-    this->setComboBoxText(ui->threadsComboBox, threads);
+      int idealNumThreads = pps.getNumThreads();
+      if (idealNumThreads < maxThreads_) {
+        // floor to the next power of 2 value
+        int p = 1;
+        for (; p <= idealNumThreads; p *= 2)
+          ;
+        idealNumThreads = p / 2;
+      }
+      this->setTo(ui->threadsComboBox, QString::number(idealNumThreads));
+    } catch (...) {
+      this->setTo(ui->threadsComboBox, "1");
+    }
   }
+}
+
+/**
+ * The user has chosen a custom number of threads, disable "Auto set".
+ */
+void PrimeSieveGUI::on_threadsComboBox_activated() {
+  ui->autoSetCheckBox->setChecked(false);
 }
 
 /**

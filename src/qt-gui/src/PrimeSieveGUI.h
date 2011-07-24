@@ -68,18 +68,19 @@ private:
   /// Qt GUI object
   Ui::PrimeSieveGUI* ui;
 
-  void setComboBoxText(QComboBox*, QString);
   void initGUI();
   void initConnections();
   int getSieveSize();
   int getThreads();
   quint64 getNumber(const QString&);
+  void setComboBoxText(QComboBox*, const QString&);
   void printResults();
   void cleanUp();
 
   QVector<QString> primeText_;
   /// Validates the input of the lower and upperBoundLineEdit.
   QValidator* validator_;
+  int maxThreads_;
   /// Settings (bit flags) for PrimeSieveProcess.
   int flags_;
   /// Timer for the progressBar.
