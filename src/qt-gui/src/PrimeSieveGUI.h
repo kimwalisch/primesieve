@@ -73,7 +73,7 @@ private:
   int getSieveSize();
   int getThreads();
   quint64 getNumber(const QString&);
-  void setComboBoxText(QComboBox*, const QString&);
+  void setTo(QComboBox*, const QString&);
   void printResults();
   void cleanUp();
 
