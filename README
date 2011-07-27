@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 22 July 2011
+# Last modified: 27 July 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -77,7 +77,7 @@ ParallelPrimeSieve::sieve() uses about:
   The INSTALL file in the current directory explains how to compile
   and use the primesieve console application.
   The file src/qt-gui/INSTALL explains how to compile the primesieve
-  Qt GUI application.
+  GUI application (uses the Qt framework).
 
 5. Sieve of Eratosthenes Implementation (src/soe directory)
 ===========================================================
