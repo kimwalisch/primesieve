@@ -151,9 +151,9 @@ quint64 PrimeSieveGUI::getNumber(const QString& str) {
   int digits = str.count(QRegExp("[0-9]"));
   if (parser.getResult() >= UPPER_BOUND_LIMIT ||
       digits == str.size() && (
-      digits >  UPPER_BOUND_STR.size() ||
+      digits >  UPPER_BOUND_STR.size() || (
       digits == UPPER_BOUND_STR.size() &&
-      str    >= UPPER_BOUND_STR))
+      str    >= UPPER_BOUND_STR)))
     throw std::invalid_argument("Please use positive integers < (2^64-1)-(2^32-1)*10.");
 
   return parser.getResult();
