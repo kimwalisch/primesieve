@@ -185,7 +185,8 @@ void ParallelPrimeSieve::sieve() {
   double t1 = omp_get_wtime();
   this->reset();
   uint64_t idealInterval = this->getIdealInterval();
-  uint64_t chunks = this->getSieveInterval() / idealInterval;
+  uint64_t chunks = (idealInterval == 0)
+      ? 1 : this->getSieveInterval() / idealInterval;
   uint64_t maxOffset = chunks * idealInterval;
   uint64_t maxStop = startNumber_ + maxOffset + 32 - maxOffset % 30;
   if (maxStop < stopNumber_)
