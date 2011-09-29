@@ -4,4 +4,5 @@ http://primesieve.googlecode.com
 What needs to be done
 =====================
 
-09/23/2011 - fix bug, see BUGS.
+09/23/2011 - fix bug, see ../docs/BUGS
+09/29/2011 - Add Compilers section to README file
