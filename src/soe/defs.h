@@ -107,8 +107,7 @@ namespace defs {
   /**
    * Sieving primes <= (sieveSize in Bytes * ERATSMALL_FACTOR) are
    * added to EratSmall which is used to cross off multiples.
-   * Default = 1.5, future CPUs might run faster with a smaller value
-   * e.g. 1.25 or 1.0.
+   * Default = 1.5.
    *
    * @pre 0 >= ERATSMALL_FACTOR < 5
    * @see SieveOfEratosthenes::sieve(uint32_t)
@@ -177,8 +176,7 @@ namespace defs {
     /**
      * Number of WheelPrimes (i.e. sieving primes) per Bucket in
      * EratSmall and EratMedium.
-     * Default = 4096 (uses 32 Kilobytes per Bucket), CPUs with more
-     * than 32 KB L1 Data Cache might run faster with a greater value.
+     * Default = 4096 (uses 32 Kilobytes per Bucket).
      *
      * @see Bucket in WheelFactorization.h
      */
@@ -187,7 +185,7 @@ namespace defs {
      * Number of WheelPrimes (i.e. sieving primes) per Bucket in
      * EratBig.
      * Default = 1024 (uses 8 Kilobytes per Bucket), future CPUs might
-     * run faster with a greater value.
+     * run faster with a greater value e.g. 1 << 11 or 1 << 12.
      *
      * @see Bucket in WheelFactorization.h
      */
