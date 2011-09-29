@@ -56,18 +56,19 @@ EratMedium::EratMedium(uint32_t limit, const SieveOfEratosthenes& soe) :
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
   // iterate over the sieving primes within EratMedium
   for (Bucket_t* bucket = bucketList_; bucket != NULL; bucket = bucket->next) {
-    WheelPrime* wPrime = bucket->begin();
-    WheelPrime* end = bucket->end();
-    for (; wPrime != end; wPrime++) {
-      uint32_t sieveIndex = wPrime->getSieveIndex();
+    uint32_t    count       = bucket->getCount();
+    WheelPrime* wheelPrimes = bucket->getWheelPrimes();
+
+    for (uint32_t i = 0; i < count; i++) {
+      uint32_t sieveIndex = wheelPrimes[i].getSieveIndex();
       if (sieveIndex >= sieveSize) {
         // nothing else to do for sieving primes that do not have a
         // multiple occurrence in the current segment
-        wPrime->index_ -= sieveSize;
+        wheelPrimes[i].indexes_ -= sieveSize;
         continue;
       }
-      uint32_t sievingPrime = wPrime->getSievingPrime();
-      uint32_t wheelIndex = wPrime->getWheelIndex();
+      uint32_t sievingPrime = wheelPrimes[i].getSievingPrime();
+      uint32_t wheelIndex   = wheelPrimes[i].getWheelIndex();
       // remove the multiples of the current sievingPrime from the
       // sieve array (i.e. the current segment)
       do {
@@ -80,9 +81,7 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
         sieveIndex += sievingPrime * nmf + cor;
       } while (sieveIndex < sieveSize);
       // set the sieveIndex and wheelIndex for the next segment
-      sieveIndex -= sieveSize;
-      wPrime->setWheelIndex(wheelIndex);
-      wPrime->setSieveIndex(sieveIndex);
+      wheelPrimes[i].setIndexes(sieveIndex - sieveSize, wheelIndex);
     }
   }
 }

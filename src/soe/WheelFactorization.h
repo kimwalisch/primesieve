@@ -66,34 +66,53 @@ public:
     return sievingPrime_;
   }
   uint32_t getSieveIndex() const {
-    return index_ & 0x7FFFFFU;
+    // get the 23 least significant bits
+    return indexes_ & ((1U << 23) - 1);
   }
   uint32_t getWheelIndex() const {
-    return index_ >> 23;
+    // get the 9 most significant bits
+    return indexes_ >> 23;
   }
-  void setSievingPrime(uint32_t sievingPrime) {
-    sievingPrime_ = sievingPrime;
+  void set(uint32_t sievingPrime,
+           uint32_t sieveIndex,
+           uint32_t wheelIndex)
+  {
+    assert(sieveIndex < (1U << 23) &&
+           wheelIndex < (1U << 9));
+    uint32_t packed = sieveIndex | (wheelIndex << 23);
+    sievingPrime_   = sievingPrime;
+    indexes_        = packed;
   }
-  void setSieveIndex(uint32_t sieveIndex) {
-    index_ |= sieveIndex;
+  void setIndexes(uint32_t sieveIndex,
+                  uint32_t wheelIndex)
+  {
+    assert(sieveIndex < (1U << 23) &&
+           wheelIndex < (1U << 9));
+    uint32_t packed = sieveIndex | (wheelIndex << 23);
+    indexes_        = packed;
   }
   void setWheelIndex(uint32_t wheelIndex) {
-    index_ = wheelIndex << 23;
+    assert(wheelIndex < (1U << 9));
+    indexes_ = wheelIndex << 23;
+  }
+  void setSieveIndex(uint32_t sieveIndex) {
+    assert(sieveIndex < (1U << 23));
+    indexes_ |= sieveIndex;
   }
   /**
    * sievingPrime_ = prime / 15;
-   * /15 = *2/30, *2 is used to skip multiples of 2 and /30 is used as
+   * /15 = *2/30, *2 is used to skip multiples of 2, /30 is used as
    * SieveOfEratosthenes objects use 30 numbers per byte.
    * @see ModuloWheel::getWheelPrimeData(...)
    */
   uint32_t sievingPrime_;
   /**
-   * sieveIndex_ = 23 least significant bits of index_.
-   * wheelIndex_ =  9 most significant bits of index_.
+   * sieveIndex_ = 23 least significant bits of indexes_.
+   * wheelIndex_ = 9 most significant bits of indexes_.
    * Packing sieveIndex_ and wheelIndex_ into the same 32 bit word
    * reduces primesieve's memory usage by 20%.
    */
-  uint32_t index_;
+  uint32_t indexes_;
 };
 
 /**
@@ -114,12 +133,12 @@ public:
   void reset() {
     count_ = 0;
   }
-  /** Pointer to the first WheelPrime within the Bucket. */
-  WheelPrime* begin() {
-    return wheelPrimes_;
+  uint32_t getCount() const {
+    return count_;
   }
-  WheelPrime* end() {
-    return &wheelPrimes_[count_];
+  /** Get a pointer to the first WheelPrime within the Bucket. */
+  WheelPrime* getWheelPrimes() {
+    return wheelPrimes_;
   }
   /**
    * Add a WheelPrime to the Bucket.
@@ -129,12 +148,10 @@ public:
                      uint32_t sieveIndex,
                      uint32_t wheelIndex)
   {
-    uint32_t pos = count_++;
+    uint32_t pos = count_;
+    count_ += 1;
     assert(pos < SIZE);
-    WheelPrime& wPrime = wheelPrimes_[pos];
-    wPrime.setSievingPrime(sievingPrime);
-    wPrime.setWheelIndex(wheelIndex);
-    wPrime.setSieveIndex(sieveIndex);
+    wheelPrimes_[pos].set(sievingPrime, sieveIndex, wheelIndex);
     return (pos != SIZE - 1);
   }
 private:
@@ -158,7 +175,7 @@ struct WheelElement {
    */
   uint8_t unsetBit;
   /**
-   * Factor used to calculate the next multiple of the a WheelPrime.
+   * Factor used to calculate the next multiple of a WheelPrime.
    */
   uint8_t nextMultipleFactor;
   /**
@@ -242,7 +259,7 @@ protected:
    */
   bool getWheelPrimeData(uint32_t* prime,
                          uint32_t* sieveIndex,
-                         uint32_t* wheelIndex)
+                         uint32_t* wheelIndex) const
   {
     uint64_t segmentLow = soe_.getSegmentLow();
     assert(segmentLow % 30 == 0);
