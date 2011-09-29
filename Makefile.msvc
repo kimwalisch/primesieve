@@ -6,7 +6,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   24 July 2011
+# Last modified:   29 September 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -19,11 +19,16 @@ SRCDIR = src/soe
 MAINDIR = src/console
 OUTDIR = out
 
+# Useful compiler options:
+# /Gy      Enable Function-Level Linking, may reduce the file size
+# /fp:fast Fast floating-point model, reduces the file size
+# /FAs     Generates ASM files (*.s) with comments
+
 # Define the C++ compiler & options
 CPP      = cl
 CPPFLAGS = /openmp /O2 /GL /EHsc /W3
 LINK     = link
-LFLAGS   = /OPT:REF /OPT:ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
+LFLAGS   = /OPT:REF,ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
 
 # Inculde stdint.h (needed prior MSVC 2010)
 INCPATH  = -I"src/thirdparty"

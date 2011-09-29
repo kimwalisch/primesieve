@@ -4,7 +4,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   22 July 2011
+# Last modified:   29 September 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -16,28 +16,50 @@ OUTDIR = out
 CXX = g++
 
 # sunCC : Oracle Solaris Studio
+# Sun Studio optimization flags: http://dsc.sun.com/solaris/articles/amdopt.html
+#
+# == Profile guided optimization (3 percent speed up) ==
+# CXXFLAGS = +w -xopenmp -fast -xalias_level=compatible -xrestrict -xipo=2 -xprofile=collect:./feedback
+# make CXX=sunCC
+# out/./primesieve 1e18 1e18+1e10 -t1
+# make clean
+# CXXFLAGS = +w -xopenmp -fast -xalias_level=compatible -xrestrict -xipo=2 -xprofile=use:./feedback
+# make CXX=sunCC
 ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE 'sun'),)
-  $(warning $(CXX): you might need to export OMP_NUM_THREADS for OpenMP)
-  CXXFLAGS += -xopenmp +w -fast
-  CXXFLAGS += -xipo -xrestrict -xalias_level=compatible
-
+  $(warning primesieve: You might need to export OMP_NUM_THREADS for OpenMP multi-threading)
+  $(warning )
+  CXXFLAGS = +w -xopenmp -fast -xalias_level=compatible -xrestrict
+ 
 # icpc : Intel C++ Compiler
+#
+# == Profile guided optimization (5 percent speed up) ==
+# CXXFLAGS = -openmp -Wall -fast -prof-gen
+# make CXX=icpc
+# out/./primesieve 1e18 1e18+1e10 -t1
+# make clean
+# CXXFLAGS = -openmp -Wall -fast -prof-use
+# make CXX=icpc
 else ifeq ($(CXX),icpc)
-  CXXFLAGS += -openmp -Wall -fast
+  CXXFLAGS = -openmp -Wall -O2
 
 # g++ : GNU Compiler Collection
+# Compilers: GNU g++, MinGW g++, Apple g++, llvm-g++, ...
 else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
-  # Apple - Mac OS
   ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i apple),)
+    # Apple g++ produces the fastest executable using the -fast option
     CXXFLAGS += -fopenmp -Wall -fast
   else
+    # GNU g++ produces the fastest executable using the -O2 option
+    # Profile guided optimization (-fprofile-generate, -fprofile-use) does
+    # not speed up primesieve
     CXXFLAGS += -fopenmp -Wall -O2
   endif
 
-# Other compilers
+# Unkown compilers
 else
-  $(warning $(CXX): add OpenMP flag if supported)
-  CXXFLAGS += -O2
+  $(warning primesieve: Unkown compiler, add OpenMP flag if supported)
+  $(warning )
+  CXXFLAGS = -O2 -Wall -pedantic -ansi
 endif
 
 # Generate list of object files
