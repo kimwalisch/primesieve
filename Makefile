@@ -18,7 +18,7 @@ CXX = g++
 # sunCC : Oracle Solaris Studio
 # Sun Studio optimization flags: http://dsc.sun.com/solaris/articles/amdopt.html
 #
-# == Profile guided optimization (3 percent speed up) ==
+# == Profile guided optimization (3 percent speed up, sunCC 12.2) ==
 # CXXFLAGS = +w -xopenmp -fast -xalias_level=compatible -xrestrict -xipo=2 -xprofile=collect:./feedback
 # make CXX=sunCC
 # out/./primesieve 1e18 1e18+1e10 -t1
@@ -32,7 +32,7 @@ ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE 'sun'),)
  
 # icpc : Intel C++ Compiler
 #
-# == Profile guided optimization (5 percent speed up) ==
+# == Profile guided optimization (5 percent speed up, icpc 12.0) ==
 # CXXFLAGS = -openmp -Wall -fast -prof-gen
 # make CXX=icpc
 # out/./primesieve 1e18 1e18+1e10 -t1
@@ -51,7 +51,7 @@ else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
   else
     # GNU g++ produces the fastest executable using the -O2 option
     # Profile guided optimization (-fprofile-generate, -fprofile-use) does
-    # not speed up primesieve
+    # not speed things up
     CXXFLAGS += -fopenmp -Wall -O2
   endif
 
@@ -59,7 +59,7 @@ else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
 else
   $(warning primesieve: Unkown compiler, add OpenMP flag if supported)
   $(warning )
-  CXXFLAGS = -O2 -Wall -pedantic -ansi
+  CXXFLAGS = -O2
 endif
 
 # Generate list of object files
