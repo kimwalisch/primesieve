@@ -182,7 +182,7 @@ inline uint32_t nextHighestPowerOf2(uint32_t x) {
 }
 
 /**
- * Determin if an integer is a power of 2.
+ * Determine if an integer is a power of 2.
  * Code from the "Bit Twiddling Hacks":
  * http://graphics.stanford.edu/~seander/bithacks.html#DetermineIfPowerOf2
  */
