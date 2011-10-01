@@ -330,9 +330,9 @@ void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type,
     if (flags_ & (PRINT_PRIMES << type))
       std::cout << prime << std::endl;
     else if (type == 0 && (flags_ & CALLBACK_PRIMES))
-      this->callback_(prime[0]-'0');
+      this->callback_(prime[0] - '0');
     else if (type == 0 && (flags_ & CALLBACK_PRIMES_OOP))
-      this->callbackOOP_(prime[0]-'0', cbObj_);
+      this->callbackOOP_(prime[0] - '0', cbObj_);
   }
 }
 
@@ -359,34 +359,35 @@ void PrimeSieve::sieve() {
   }
 
   if (stopNumber_ >= 7) {
-    // used to sieve the primes and prime k-tuplets within the
-    // interval [startNumber_, stopNumber_]
+    // fast segmented sieve of Eratosthenes object that sieves the
+    // primes and prime k-tuplets within the interval
+    // [startNumber_, stopNumber_]
     PrimeNumberFinder finder(*this);
 
     if (isqrt(stopNumber_) > finder.getPreSieveLimit()) {
-      /// used to generate the primes up to stopNumber_^0.5 needed for
-      /// sieving by finder
-      /// @see PrimeNumberGenerator::generate(const uint8_t*, uint32_t)
+      // fast segmented sieve of Eratosthenes object that generates the
+      // primes up to stopNumber_^0.5 needed for sieving by the
+      // PrimeNumberFinder object
       PrimeNumberGenerator generator(finder);
 
-      // the following sieve of Eratosthenes implementation generates
-      // the primes up to stopNumber_^0.25 needed for sieving by the
-      // faster PrimeNumberGenerator
+      // sieve of Eratosthenes implementation that generates the primes
+      // up to stopNumber_^0.25 for the PrimeNumberGenerator
       uint32_t N = isqrt(generator.getStopNumber());
-      std::vector<uint8_t> isPrime(N/8+1, 0xAA);
-      for (uint32_t i = 3; i*i <= N; i += 2) {
-        if (isPrime[i>>3] & (1<<(i&7)))
-          for (uint32_t j = i*i; j <= N; j += i*2)
-            isPrime[j>>3] &= ~(1<<(j&7));
+      std::vector<uint8_t> isPrime(N / 8 + 1, 0xAA);
+      for (uint32_t i = 3; i * i <= N; i += 2) {
+        if (isPrime[i >> 3] & (1 << (i & 7)))
+          for (uint32_t j = i * i; j <= N; j += i * 2)
+            isPrime[j >> 3] &= ~(1 << (j & 7));
       }
       for (uint32_t i = generator.getPreSieveLimit() + 1; i <= N; i++) {
-        if (isPrime[i>>3] & (1<<(i&7)))
+        if (isPrime[i >> 3] & (1 << (i & 7)))
           generator.sieve(i);
       }
       generator.finish();
     }
     finder.finish();
   }
+
   // set status_ to 100.0 percent
   parent_->doStatus(10);
   timeElapsed_ = static_cast<double> (std::clock() - t1) / CLOCKS_PER_SEC;
