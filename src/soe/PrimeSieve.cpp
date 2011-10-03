@@ -308,7 +308,7 @@ void PrimeSieve::reset() {
 
 /**
  * Calculate the current status in percent of sieve().
- * @param processed A sieved interval (segment)
+ * @param processed The size of the processed interval (segment)
  */
 void PrimeSieve::doStatus(uint32_t processed) {
   segments_ += processed;
@@ -337,8 +337,9 @@ void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type,
 }
 
 /**
- * Sieve the prime numbers and/or prime k-tuplets within the interval
- * [startNumber_, stopNumber_].
+ * Sieve the primes/prime k-tuplets within the interval
+ * [startNumber_, stopNumber_] using a fast segmented sieve of
+ * Eratosthenes implementation.
  */
 void PrimeSieve::sieve() {
   clock_t t1 = std::clock();
@@ -360,8 +361,7 @@ void PrimeSieve::sieve() {
 
   if (stopNumber_ >= 7) {
     // fast segmented sieve of Eratosthenes object that sieves the
-    // primes and prime k-tuplets within the interval
-    // [startNumber_, stopNumber_]
+    // primes/prime k-tuplets within [startNumber_, stopNumber_]
     PrimeNumberFinder finder(*this);
 
     if (isqrt(stopNumber_) > finder.getPreSieveLimit()) {
