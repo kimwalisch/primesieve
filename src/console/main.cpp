@@ -215,8 +215,9 @@ int main(int argc, char* argv[]) {
     case OPTION_TEST:    test();    return 0;
     case START_SIEVING:  break;
   }
+  // use left alignment with std::setw
+  std::cout << std::left;
   // print parser results
-  std::cout.setf(std::ios::left);
   if (!quietMode && showParserResults)
     std::cout << std::setw(10) << "START" << " = " << numbers[0] << std::endl
               << std::setw(10) << "STOP"  << " = " << numbers[1] << std::endl;
