@@ -101,7 +101,7 @@ private:
   uint8_t* sieve_;
   /** Size of sieve_ in bytes. */
   uint32_t sieveSize_;
-  /** Set to false after the first sieved segment. */
+  /** Set to false when the first segment has been sieved. */
   bool isFirstSegment_;
   /** Pre-sieves multiples of small primes <= preSieve_.getLimit(). */
   const PreSieve preSieve_;
