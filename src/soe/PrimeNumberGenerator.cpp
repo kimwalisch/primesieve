@@ -52,13 +52,14 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
 }
 
 /**
- * Generate the primes of the current segment and use them to sieve
+ * Generate the primes within the current segment i.e. 
+ * [lowerBound, lowerBound + (sieveSize*30+1)] and use them to sieve
  * with primeNumberFinder_ (is a SieveOfEratosthenes).
  * @see SieveOfEratosthenes::sieve(uint32_t)
  */
 void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
   uint32_t lowerBound = static_cast<uint32_t> (this->getSegmentLow());
-  // macro defined in defs.h
+  // GENERATE_PRIMES() is defined in defs.h
   GENERATE_PRIMES(primeNumberFinder_.sieve, uint32_t);
 }
 
