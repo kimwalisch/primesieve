@@ -140,8 +140,9 @@ void EratBig::pushBucket(uint32_t index) {
  * http://www.ieeta.pt/~tos/software/prime_sieve.html
  * My implementation uses 30 numbers per byte and a modulo 210 wheel.
  *
- * Removes the multiples (of sieving primes within EratBig) from the
- * current segment.
+ * Removes the multiples of sieving primes within EratBig from
+ * the current segment.
+ * @see SieveOfEratosthenes::crossOffMultiples()
  */
 void EratBig::sieve(uint8_t* sieve) {
   if (primeCount_ == 0)
@@ -163,16 +164,16 @@ void EratBig::sieve(uint8_t* sieve) {
       uint32_t sieveIndex   = wheelPrimes[i].getSieveIndex();
       uint32_t wheelIndex   = wheelPrimes[i].getWheelIndex();
       uint32_t segmentCount;
-      // remove the multiples of the current sievingPrime from the
-      // sieve array (i.e. the current segment)
+      // cross off the multiples (unset corresponding bits) of the
+      // current sievingPrime in the sieve array
       do {
-        uint8_t bit = wheel_[wheelIndex].unsetBit;
-        uint8_t nmf = wheel_[wheelIndex].nextMultipleFactor;
-        uint8_t cor = wheel_[wheelIndex].correct;
-         int8_t nxt = wheel_[wheelIndex].next;
-        sieve[sieveIndex] &= bit;
-        wheelIndex += nxt;
-        sieveIndex += sievingPrime * nmf + cor;
+        uint8_t unsetBit   = wheel_[wheelIndex].unsetBit;
+        uint8_t nextFactor = wheel_[wheelIndex].nextMultipleFactor;
+        uint8_t correct    = wheel_[wheelIndex].correct;
+         int8_t next       = wheel_[wheelIndex].next;
+        sieve[sieveIndex] &= unsetBit;
+        wheelIndex += next;
+        sieveIndex += sievingPrime * nextFactor + correct;
         segmentCount = sieveIndex >> log2SieveSize_;
       } while (segmentCount == 0);
       /// @see addSievingPrime(uint32_t, uint64_t)

@@ -50,8 +50,9 @@ EratMedium::EratMedium(uint32_t limit, const SieveOfEratosthenes& soe) :
  * This algorithm is optimized for sieving primes with few multiple
  * occurrences per segment.
  *
- * Removes the multiples (of sieving primes within EratMedium) from the
- * current segment.
+ * Removes the multiples of sieving primes within EratMedium from
+ * the current segment.
+ * @see SieveOfEratosthenes::crossOffMultiples()
  */
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
   // iterate over the sieving primes within EratMedium
@@ -62,23 +63,23 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
     for (uint32_t i = 0; i < count; i++) {
       uint32_t sieveIndex = wheelPrimes[i].getSieveIndex();
       if (sieveIndex >= sieveSize) {
-        // nothing else to do for sieving primes that do not have a
-        // multiple occurrence in the current segment
+        // the current sievingPrime does not have a multiple
+        // occurrence in the current segment
         wheelPrimes[i].indexes_ -= sieveSize;
         continue;
       }
       uint32_t sievingPrime = wheelPrimes[i].getSievingPrime();
       uint32_t wheelIndex   = wheelPrimes[i].getWheelIndex();
-      // remove the multiples of the current sievingPrime from the
-      // sieve array (i.e. the current segment)
+      // cross off the multiples (unset corresponding bits) of the
+      // current sievingPrime in the sieve array
       do {
-        uint8_t bit = wheel_[wheelIndex].unsetBit;
-        uint8_t nmf = wheel_[wheelIndex].nextMultipleFactor;
-        uint8_t cor = wheel_[wheelIndex].correct;
-         int8_t nxt = wheel_[wheelIndex].next;
-        sieve[sieveIndex] &= bit;
-        wheelIndex += nxt;
-        sieveIndex += sievingPrime * nmf + cor;
+        uint8_t unsetBit   = wheel_[wheelIndex].unsetBit;
+        uint8_t nextFactor = wheel_[wheelIndex].nextMultipleFactor;
+        uint8_t correct    = wheel_[wheelIndex].correct;
+         int8_t next       = wheel_[wheelIndex].next;
+        sieve[sieveIndex] &= unsetBit;
+        wheelIndex += next;
+        sieveIndex += sievingPrime * nextFactor + correct;
       } while (sieveIndex < sieveSize);
       // set the sieveIndex and wheelIndex for the next segment
       wheelPrimes[i].setIndexes(sieveIndex - sieveSize, wheelIndex);

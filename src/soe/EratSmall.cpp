@@ -57,8 +57,9 @@ EratSmall::EratSmall(uint32_t limit, const SieveOfEratosthenes& soe) :
  * 30 numbers per byte. This algorithm is very fast for sieving primes
  * that have a lot of multiple occurrences per segment.
  *
- * Removes the multiples (of sieving primes within EratSmall) from the
- * current segment.
+ * Removes the multiples of sieving primes within EratSmall from
+ * the current segment.
+ * @see SieveOfEratosthenes::crossOffMultiples()
  */
 void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
   uint8_t* sieveEnd = &sieve[sieveSize];
@@ -72,8 +73,8 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
       const uint32_t primeX4 = primeX2 * 2;
       const uint32_t primeX6 = primeX2 * 3;
 
-      // remove the multiples of the current sievingPrime from the
-      // sieve array (i.e. the current segment)
+      // cross off the multiples (unset corresponding bits) of the
+      // current sievingPrime in the sieve array
       uint8_t* s = &sieve[wPrime->getSieveIndex()];
       switch (wPrime->getWheelIndex()) {
         // for sieving primes of type i * 30 + 7
