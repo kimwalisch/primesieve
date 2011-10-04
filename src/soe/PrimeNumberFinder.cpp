@@ -75,7 +75,7 @@ PrimeNumberFinder::~PrimeNumberFinder() {
 }
 
 /**
- * Initialize the lookup tables needed to count the prime k-tuplets
+ * Initialize the lookup tables needed to count prime k-tuplets
  * (twin primes, prime triplets, ...) per byte.
  */
 void PrimeNumberFinder::initLookupTables() {
@@ -96,6 +96,10 @@ void PrimeNumberFinder::initLookupTables() {
   }
 }
 
+/**
+ * Analyse (generate, count) the primes and prime k-tuplets within the
+ * current segment [segmentLow, segmentLow + (sieveSize*30+1)].
+ */
 void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
   if (ps_.flags_ & PrimeSieve::COUNT_FLAGS)
     this->count(sieve, sieveSize);
@@ -136,11 +140,11 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
 
 /**
  * Generate the prime numbers or prime k-tuplets (twin primes, prime
- * triplets, ...) of the current segment.
+ * triplets, ...) within the current segment.
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   uint64_t lowerBound = this->getSegmentLow();
-  // the GENERATE_PRIMES() macro is defined in defs.h
+  // GENERATE_PRIMES() is defined in defs.h
        if (ps_.flags_ & PrimeSieve::CALLBACK_PRIMES)     GENERATE_PRIMES(ps_.callback_,     uint64_t)
   else if (ps_.flags_ & PrimeSieve::CALLBACK_PRIMES_OOP) GENERATE_PRIMES(this->callbackOOP, uint64_t)
   else if (ps_.flags_ & PrimeSieve::PRINT_PRIMES)        GENERATE_PRIMES(this->printPrime,  uint64_t)
@@ -149,7 +153,7 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
     uint32_t i = 0;
     while ((ps_.flags_ & (PrimeSieve::PRINT_TWINS << i)) == 0)
       i++;
-    // print prime k-tuplets to cout
+    // print prime k-tuplets to std::cout
     for (uint32_t j = 0; j < sieveSize; j++) {
       for (const uint32_t* bitmasks = kTupletBitmasks_[i]; *bitmasks <= sieve[j]; bitmasks++) {
         if ((sieve[j] & *bitmasks) == *bitmasks) {
