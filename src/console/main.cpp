@@ -64,7 +64,6 @@ namespace {
     OPTION_VERSION,
     START_SIEVING
   };
-
   std::vector<uint64_t> numbers; /* start and stop number for sieving */
   uint32_t sieveSize     = 0;    /* sieve size in Kilobytes */
   uint32_t preSieve      = defs::PRIMESIEVE_PRESIEVE_LIMIT;
@@ -73,12 +72,6 @@ namespace {
   bool showParserResults = false;
   int threads            = ParallelPrimeSieve::USE_IDEAL_NUM_THREADS;
   int maxThreads         = ParallelPrimeSieve::getMaxThreads();
-
-  // Unfortunately there is no easy way to get the CPU L1 and L2 cache
-  // size, these values are close for most x86-64 CPUs in 2011
-  const uint32_t L1_CACHE_SIZE = 64;
-  const uint32_t L2_CACHE_SIZE = 512;
-  const uint64_t L2_THRESHOLD  = static_cast<uint64_t> (1E13);
 }
 
 void help() {
@@ -230,7 +223,8 @@ int main(int argc, char* argv[]) {
     if (!quietMode && (flags & pps.PRINT_FLAGS) == 0)
       flags |= pps.PRINT_STATUS;
     if (sieveSize == 0)
-      sieveSize = (numbers[1] < L2_THRESHOLD) ? L1_CACHE_SIZE : L2_CACHE_SIZE;
+      sieveSize = (numbers[1] < static_cast<uint64_t> (1E14))
+          ? L1_DCACHE_SIZE : L2_CACHE_SIZE;
 
     pps.setStartNumber(numbers[0]);
     pps.setStopNumber(numbers[1]);
