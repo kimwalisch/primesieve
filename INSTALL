@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010 
-# Last modified: 22 July 2011
+# Last modified: 05 October 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -12,14 +12,14 @@
 About
 =====
 
-This file explains how to compile the console version of primesieve
-to compile the Qt GUI version please refer to src/qt-gui/INSTALL.
+  This file explains how to compile the console version of primesieve
+  to compile the Qt GUI version please refer to src/qt-gui/INSTALL.
 
 How to build primesieve
 =======================
 
-Open a terminal or Command Prompt cd into the primesieve directory and
-run:
+  Open a terminal or Command Prompt cd into the primesieve directory
+  and run:
 
   1. Microsoft Visual C++
      > nmake -f Makefile.msvc
@@ -31,6 +31,14 @@ run:
      $ make CXX=my_compiler
 
   The make command compiles the primesieve binary to ./out
+
+Target a specific CPU
+=====================
+
+  You may indicate your CPU's L1 (data) and L2 cache sizes per core to
+  get the best performance e.g.:
+
+  $ make L1_DCACHE_SIZE=64 L2_CACHE_SIZE=512
 
 How to test it
 ==============
