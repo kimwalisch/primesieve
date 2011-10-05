@@ -4,7 +4,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   29 September 2011
+# Last modified:   05 October 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -60,6 +60,14 @@ else
   $(warning primesieve: Unkown compiler, add OpenMP flag if supported)
   $(warning )
   CXXFLAGS = -O2
+endif
+
+# Check if the user has given his CPU L1/L2 cache sizes
+ifneq ($(L1_DCACHE_SIZE),)
+  CXXFLAGS += -DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
+endif
+ifneq ($(L2_CACHE_SIZE),)
+  CXXFLAGS += -DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
 endif
 
 # Generate list of object files
