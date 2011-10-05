@@ -3,8 +3,8 @@
 #
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
-# Created:       5 December 2010
-# Last modified: 27 July 2011
+# Created:       05 December 2010
+# Last modified: 05 October 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -44,11 +44,11 @@ Contents
 3. Memory Usage
 ===============
 
-PrimeSieve::sieve() uses about:
-pi(n^0.5) * 8 Bytes + 500 Kilobytes              (1)
+  PrimeSieve::sieve() uses about:
+  pi(n^0.5) * 8 Bytes + 500 Kilobytes              (1)
 
-ParallelPrimeSieve::sieve() uses about:
-(1) * number of threads                          (2)
+  ParallelPrimeSieve::sieve() uses about:
+  (1) * number of threads                          (2)
 
 4. Source Archive
 =================
@@ -194,9 +194,9 @@ ParallelPrimeSieve::sieve() uses about:
 7. License
 ==========
 
-primesieve is licensed under the New BSD License, see the LICENSE file
-for more information. The primesieve GUI application in src/qt-gui is
-licensed under the GPLv3 as it uses the Qt framework.
+  primesieve is licensed under the New BSD License, see the LICENSE
+  file for more information. The primesieve GUI application in
+  src/qt-gui is licensed under the GPLv3 as it uses the Qt framework.
 
 8. References and Notes
 =======================
