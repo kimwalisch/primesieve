@@ -6,7 +6,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   29 September 2011
+# Last modified:   05 October 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -26,9 +26,15 @@ OUTDIR = out
 
 # Define the C++ compiler & options
 CPP      = cl
-CPPFLAGS = /openmp /O2 /GL /EHsc /W3
 LINK     = link
 LFLAGS   = /OPT:REF,ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
+CPPFLAGS = /openmp /O2 /GL /EHsc /W3 \
+!ifdef L1_DCACHE_SIZE
+  /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE) \
+!endif
+!ifdef L2_CACHE_SIZE
+  /DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
+!endif
 
 # Inculde stdint.h (needed prior MSVC 2010)
 INCPATH  = -I"src/thirdparty"
