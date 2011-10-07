@@ -116,11 +116,13 @@ public:
 };
 
 /**
- * A Bucket is a container for WheelPrimes.
- * If the current Bucket is full of WheelPrimes a new empty Bucket is
- * created that sets its next node to the full Bucket. This singly
- * linked list approach allows to dynamically manage memory for
- * WheelPrimes.
+ * A Bucket is a container for sieving primes <= sqrt(n) that is
+ * designed as a singly linked list, once there is no more space in
+ * the current bucket a new bucket node is created ...
+ * The Bucket data structure is due to Tomas Oliveira, see
+ * http://www.ieeta.pt/~tos/software/prime_sieve.html
+ *
+ * @param SIZE  Number of WheelPrimes per Bucket.
  */
 template<uint32_t SIZE>
 class Bucket {
@@ -155,7 +157,7 @@ public:
     return (pos != SIZE - 1);
   }
 private:
-  /** Count of WheelPrimes within the Bucket. */
+  /** Current count of WheelPrimes within the Bucket. */
   uint32_t count_;
   WheelPrime wheelPrimes_[SIZE];
 };
