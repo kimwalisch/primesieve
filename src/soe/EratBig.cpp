@@ -193,7 +193,7 @@ void EratBig::sieve(uint8_t* sieve) {
     bucketStock_ = old;
   }
 
-  // no more buckets in the current bucketList,
+  // no more buckets in the processed bucket list,
   // re-initialize with an empty bucket
   this->pushBucket(index_);
   // increase the list index_ for the next segment
