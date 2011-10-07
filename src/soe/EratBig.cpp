@@ -154,10 +154,11 @@ void EratBig::sieve(uint8_t* sieve) {
   // of type 2^n - 1
   const uint32_t moduloListsSize = size_ - 1;
 
-  // iterate over the buckets related to the current segment
+  // iterate over the bucket list
   while (bucket != NULL) {
     const uint32_t    count       = bucket->getCount();
     const WheelPrime* wheelPrimes = bucket->getWheelPrimes();
+
     // iterate over the sieving primes within the current bucket
     for (uint32_t i = 0; i < count; i++) {
       uint32_t sievingPrime = wheelPrimes[i].getSievingPrime();
@@ -176,12 +177,14 @@ void EratBig::sieve(uint8_t* sieve) {
         sieveIndex += sievingPrime * nextFactor + correct;
         segmentCount = sieveIndex >> log2SieveSize_;
       } while (segmentCount == 0);
-      /// @see addSievingPrime(uint32_t, uint64_t)
       sieveIndex &= (1U << log2SieveSize_) - 1;
       uint32_t nextIndex = (index_ + segmentCount) & moduloListsSize;
+      // move the current sieving prime to the bucket list
+      // related to its next multiple occurrence
       if (!bucketLists_[nextIndex]->addWheelPrime(sievingPrime, sieveIndex, wheelIndex))
         this->pushBucket(nextIndex);
     }
+
     // reset the processed bucket and move it to the bucket stock
     bucket->reset();
     Bucket_t* old = bucket;
@@ -189,8 +192,9 @@ void EratBig::sieve(uint8_t* sieve) {
     old->next = bucketStock_;
     bucketStock_ = old;
   }
-  // no more buckets in the current bucketList, add an empty bucket
-  // for the next segment
+
+  // no more buckets in the current bucketList,
+  // add an empty bucket for the next segment
   this->pushBucket(index_);
   // increase the list index_ for the next segment
   index_ = (index_ + 1) & moduloListsSize;
