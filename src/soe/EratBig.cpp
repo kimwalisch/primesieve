@@ -136,7 +136,7 @@ void EratBig::pushBucket(uint32_t index) {
 
 /**
  * Implementation of Tomas Oliveira e Silva's cache-friendly segmented
- * sieve of Eratosthenes. The algorithm is described at:
+ * sieve of Eratosthenes, the algorithm is described at:
  * http://www.ieeta.pt/~tos/software/prime_sieve.html
  * My implementation uses 30 numbers per byte and a modulo 210 wheel.
  *
