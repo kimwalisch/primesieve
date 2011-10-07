@@ -194,7 +194,7 @@ void EratBig::sieve(uint8_t* sieve) {
   }
 
   // no more buckets in the current bucketList,
-  // add an empty bucket for the next segment
+  // re-initialize with an empty bucket
   this->pushBucket(index_);
   // increase the list index_ for the next segment
   index_ = (index_ + 1) & moduloListsSize;
