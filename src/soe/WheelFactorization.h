@@ -53,12 +53,12 @@
 #include <cassert>
 
 /**
- * WheelPrime objects are sieving primes <= n^0.5 for use with wheel
- * factorization. EratSmall, EratMedium and EratBig use WheelPrimes to
- * cross off multiples.
- * Each WheelPrime contains the sieving prime (sievingPrime_), the
- * position of the next multiple within the SieveOfEratosthenes array
- * (sieveIndex_) and an index for the wheel (wheelIndex_).
+ * WheelPrime objects are sieving primes <= sqrt(n) for use with
+ * wheel factorization (skips multiples of small primes). EratSmall,
+ * EratMedium and EratBig use WheelPrimes to cross off multiples.
+ * Each WheelPrime object contains the sieving prime, the position
+ * of the next multiple within the SieveOfEratosthenes array (sieve
+ * index) and a wheel index.
  */
 class WheelPrime {
 public:
@@ -101,15 +101,15 @@ public:
   }
   /**
    * sievingPrime_ = prime / 15;
-   * /15 = *2/30, *2 is used to skip multiples of 2, /30 is used as
+   * /15 = *2 /30, *2 is used to skip multiples of 2, /30 is used as
    * SieveOfEratosthenes objects use 30 numbers per byte.
    * @see ModuloWheel::getWheelPrimeData(...)
    */
   uint32_t sievingPrime_;
   /**
-   * sieveIndex_ = 23 least significant bits of indexes_.
-   * wheelIndex_ = 9 most significant bits of indexes_.
-   * Packing sieveIndex_ and wheelIndex_ into the same 32 bit word
+   * sieveIndex = 23 least significant bits of indexes_.
+   * wheelIndex =  9 most  significant bits of indexes_.
+   * Packing the sieveIndex and wheelIndex into the same 32-bit word
    * reduces primesieve's memory usage by 20%.
    */
   uint32_t indexes_;
