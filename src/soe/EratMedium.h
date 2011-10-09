@@ -48,9 +48,9 @@ class SieveOfEratosthenes;
  * occurrences per segment, it uses less jump operations (switch,
  * break, goto) than EratSmall.
  */
-class EratMedium: public EratBase<Modulo210Wheel> {
+class EratMedium: public EratBase<Modulo210Wheel, WheelPrime_2> {
 public:
-  EratMedium(uint32_t, const SieveOfEratosthenes&);
+  EratMedium(const SieveOfEratosthenes&);
   void sieve(uint8_t*, uint32_t);
 };
 

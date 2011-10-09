@@ -36,12 +36,21 @@
 #include "SieveOfEratosthenes.h"
 #include "EratBase.h"
 #include "WheelFactorization.h"
+#include "imath.h"
 #include "defs.h"
 
+#include <algorithm>
+#include <cassert>
 #include <cstdlib>
 
-EratMedium::EratMedium(uint32_t limit, const SieveOfEratosthenes& soe) :
-  EratBase<Modulo210Wheel> (limit, soe) {
+EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
+  EratBase<Modulo210Wheel, WheelPrime_2> (soe)
+{
+  uint32_t sqrtStop = isqrt(soe.getStopNumber());
+  uint32_t max      = soe.getSieveSize() * 15;
+  uint32_t limit    = std::min<uint32_t>(sqrtStop, max);
+  assert(limit <= (1U << 23));
+  this->setLimit(limit);
 }
 
 /**
@@ -57,32 +66,33 @@ EratMedium::EratMedium(uint32_t limit, const SieveOfEratosthenes& soe) :
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
   // iterate over the sieving primes within EratMedium
   for (Bucket_t* bucket = bucketList_; bucket != NULL; bucket = bucket->next) {
-    uint32_t    count       = bucket->getCount();
-    WheelPrime* wheelPrimes = bucket->getWheelPrimes();
+    uint32_t      count       = bucket->getCount();
+    WheelPrime_t* wheelPrimes = bucket->getWheelPrimes();
 
     for (uint32_t i = 0; i < count; i++) {
-      uint32_t sieveIndex = wheelPrimes[i].getSieveIndex();
-      if (sieveIndex >= sieveSize) {
+      if (wheelPrimes[i].sieveIndex_ >= sieveSize) {
         // the current sievingPrime does not have a multiple
         // occurrence in the current segment
-        wheelPrimes[i].indexes_ -= sieveSize;
+        wheelPrimes[i].sieveIndex_ -= sieveSize;
         continue;
       }
-      uint32_t sievingPrime = wheelPrimes[i].getSievingPrime();
+      uint32_t sieveIndex   = wheelPrimes[i].getSieveIndex();
       uint32_t wheelIndex   = wheelPrimes[i].getWheelIndex();
+      uint32_t sievingPrime = wheelPrimes[i].getSievingPrime();
       // cross off the multiples (unset corresponding bits) of the
-      // current sievingPrime in the sieve array
+      // current sievingPrime within the sieve array
       do {
         uint8_t unsetBit   = wheel_[wheelIndex].unsetBit;
         uint8_t nextFactor = wheel_[wheelIndex].nextMultipleFactor;
         uint8_t correct    = wheel_[wheelIndex].correct;
          int8_t next       = wheel_[wheelIndex].next;
-        sieve[sieveIndex] &= unsetBit;
         wheelIndex += next;
+        sieve[sieveIndex] &= unsetBit;
         sieveIndex += sievingPrime * nextFactor + correct;
       } while (sieveIndex < sieveSize);
-      // set the sieveIndex and wheelIndex for the next segment
-      wheelPrimes[i].setIndexes(sieveIndex - sieveSize, wheelIndex);
+      sieveIndex -= sieveSize;
+      // set sieveIndex and wheelIndex for the next segment
+      wheelPrimes[i].set(sievingPrime, sieveIndex, wheelIndex);
     }
   }
 }
