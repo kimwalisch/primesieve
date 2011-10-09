@@ -51,9 +51,9 @@ class SieveOfEratosthenes;
  * Flammenkamp's prime_sieve.c, see:
  * http://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html
  */
-class EratSmall: public EratBase<Modulo30Wheel> {
+class EratSmall: public EratBase<Modulo30Wheel, WheelPrime_1> {
 public:
-  EratSmall(uint32_t, const SieveOfEratosthenes&);
+  EratSmall(const SieveOfEratosthenes&, uint32_t);
   void sieve(uint8_t*, uint32_t);
 };
 

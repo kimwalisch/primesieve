@@ -41,14 +41,15 @@
 #include <stdexcept>
 #include <cstdlib>
 
-EratSmall::EratSmall(uint32_t limit, const SieveOfEratosthenes& soe) :
-  EratBase<Modulo30Wheel> (limit, soe) {
+EratSmall::EratSmall(const SieveOfEratosthenes& soe, uint32_t limit) :
+  EratBase<Modulo30Wheel, WheelPrime_1> (soe) {
   // sieveSize - 1 + (prime / 15) * 3 + 3 - sieveSize < sieveSize
   // assertion that prevents array segmentation faults in
   // sieve(uint8_t*, uint32_t)
-  if (limit_ >= (soe.getSieveSize() - 2) * 5)
+  if (limit >= (soe.getSieveSize() - 2) * 5)
     throw std::invalid_argument(
         "EratSmall: limit must be < (sieveSize - 2) * 5.");
+  this->setLimit(limit);
 }
 
 /**
@@ -65,16 +66,17 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
   uint8_t* sieveEnd = &sieve[sieveSize];
   // iterate over the sieving primes within EratSmall
   for (Bucket_t* bucket = bucketList_; bucket != NULL; bucket = bucket->next) {
-    uint32_t    count  = bucket->getCount();
-    WheelPrime* wPrime = bucket->getWheelPrimes();
+    uint32_t      count  = bucket->getCount();
+    WheelPrime_t* wPrime = bucket->getWheelPrimes();
+    WheelPrime_t* end    = &wPrime[count];
 
-    for (WheelPrime* end = &wPrime[count]; wPrime != end; wPrime++) {
+    for (; wPrime != end; wPrime++) {
       const uint32_t primeX2 = wPrime->getSievingPrime();
       const uint32_t primeX4 = primeX2 * 2;
       const uint32_t primeX6 = primeX2 * 3;
 
       // cross off the multiples (unset corresponding bits) of the
-      // current sievingPrime in the sieve array
+      // current sievingPrime within the sieve array
       uint8_t* s = &sieve[wPrime->getSieveIndex()];
       switch (wPrime->getWheelIndex()) {
         // for sieving primes of type i * 30 + 7
