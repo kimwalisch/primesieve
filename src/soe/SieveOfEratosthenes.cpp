@@ -42,7 +42,6 @@
 
 #include <stdexcept>
 #include <cstdlib>
-#include <algorithm>
 #include <cassert>
 
 const uint32_t SieveOfEratosthenes::bitValues_[32] = {
@@ -116,13 +115,14 @@ uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) const {
 
 void SieveOfEratosthenes::initEratAlgorithms() {
   uint32_t sqrtStop = isqrt(stopNumber_);
-  uint32_t limit;
+
   if (preSieve_.getLimit() < sqrtStop) {
-    limit = static_cast<uint32_t> (sieveSize_* defs::ERATSMALL_FACTOR);
-    eratSmall_ = new EratSmall(std::min<uint32_t>(limit, sqrtStop), *this);
+    uint32_t limit = static_cast<uint32_t> (sieveSize_* defs::ERATSMALL_FACTOR);
+    if (sqrtStop < limit)
+      limit = sqrtStop;
+    eratSmall_ = new EratSmall(*this, limit);
     if (eratSmall_->getLimit() < sqrtStop) {
-      limit = static_cast<uint32_t> (sieveSize_* defs::ERATMEDIUM_FACTOR);
-      eratMedium_ = new EratMedium(std::min<uint32_t>(limit, sqrtStop), *this);
+      eratMedium_ = new EratMedium(*this);
       if (eratMedium_->getLimit() < sqrtStop)
         eratBig_ = new EratBig(*this);
     }
