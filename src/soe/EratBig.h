@@ -55,8 +55,11 @@ public:
   void addSievingPrime(uint32_t);
   void sieve(uint8_t*);
 private:
-  typedef Bucket<defs::ERATBIG_BUCKETSIZE> Bucket_t;
-  enum { BUCKETS_PER_CREATE = defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t) };
+  typedef WheelPrime_1 WheelPrime_t;
+  typedef Bucket<WheelPrime_t, defs::ERATBIG_BUCKETSIZE> Bucket_t;
+  enum { 
+    BUCKETS_PER_CREATE = defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t)
+  };
   /** Current count of sieving primes within EratBig. */
   uint32_t primeCount_;
   /** log2 of SieveOfEratosthenes::sieveSize_. */
