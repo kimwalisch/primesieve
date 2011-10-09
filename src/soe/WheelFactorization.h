@@ -53,14 +53,17 @@
 #include <cassert>
 
 /**
- * WheelPrime objects are sieving primes <= sqrt(n) for use with
- * wheel factorization (skips multiples of small primes). EratSmall,
- * EratMedium and EratBig use WheelPrimes to cross off multiples.
- * Each WheelPrime object contains the sieving prime, the position
- * of the next multiple within the SieveOfEratosthenes array (sieve
- * index) and a wheel index.
+ * WheelPrime objects are sieving primes <= sqrt(n) for use with wheel
+ * factorization (skips multiples of small primes). EratSmall,
+ * EratMedium and EratBig use WheelPrimes to cross off multiples. Each
+ * WheelPrime object contains the sieving prime, the position of the
+ * next multiple within the SieveOfEratosthenes array (sieve index)
+ * and a wheel index.
+ *
+ * @remark WheelPrime_1  Uses 8 bytes per sieving prime, WheelPrime_1
+ *                       is used in EratSmall and EratBig.
  */
-class WheelPrime {
+class WheelPrime_1 {
 public:
   uint32_t getSievingPrime() const {
     return sievingPrime_;
@@ -79,17 +82,8 @@ public:
   {
     assert(sieveIndex < (1U << 23) &&
            wheelIndex < (1U << 9));
-    uint32_t packed = sieveIndex | (wheelIndex << 23);
-    sievingPrime_   = sievingPrime;
-    indexes_        = packed;
-  }
-  void setIndexes(uint32_t sieveIndex,
-                  uint32_t wheelIndex)
-  {
-    assert(sieveIndex < (1U << 23) &&
-           wheelIndex < (1U << 9));
-    uint32_t packed = sieveIndex | (wheelIndex << 23);
-    indexes_        = packed;
+    indexes_      = sieveIndex | (wheelIndex << 23);
+    sievingPrime_ = sievingPrime;
   }
   void setWheelIndex(uint32_t wheelIndex) {
     assert(wheelIndex < (1U << 9));
@@ -99,6 +93,14 @@ public:
     assert(sieveIndex < (1U << 23));
     indexes_ |= sieveIndex;
   }
+private:
+  /**
+   * sieveIndex = 23 least significant bits of indexes_.
+   * wheelIndex =  9 most  significant bits of indexes_.
+   * Packing sieveIndex and wheelIndex into the same 32-bit word
+   * reduces primesieve's memory usage by 20%.
+   */
+  uint32_t indexes_;
   /**
    * sievingPrime_ = prime / 15;
    * /15 = *2 /30, *2 is used to skip multiples of 2, /30 is used as
@@ -106,25 +108,59 @@ public:
    * @see ModuloWheel::getWheelPrimeData(...)
    */
   uint32_t sievingPrime_;
-  /**
-   * sieveIndex = 23 least significant bits of indexes_.
-   * wheelIndex =  9 most  significant bits of indexes_.
-   * Packing the sieveIndex and wheelIndex into the same 32-bit word
-   * reduces primesieve's memory usage by 20%.
-   */
-  uint32_t indexes_;
 };
 
 /**
- * A Bucket is a container for sieving primes <= sqrt(n) that is
+ * @see    WheelPrime_1
+ * @remark WheelPrime_2  Unlike WheelPrime_1 WheelPrime_2 allows
+ *                       sieveIndex_  >  23-bits but requires
+ *                       sievingPrime <= 23-bits.
+ */
+class WheelPrime_2 {
+public:
+  uint32_t getSievingPrime() const {
+    // get the 23 most significant bits
+    return data_ >> 9;
+  }
+  uint32_t getSieveIndex() const {
+    return sieveIndex_;
+  }
+  uint32_t getWheelIndex() const {
+    // get the 9 least significant bits
+    return data_ & ((1U << 9) - 1);
+  }
+  void set(uint32_t sievingPrime,
+           uint32_t sieveIndex,
+           uint32_t wheelIndex)
+  {
+    assert(sievingPrime < (1U << 23) &&
+           wheelIndex   < (1U << 9));
+    uint32_t packed = wheelIndex | (sievingPrime << 9);
+    sieveIndex_     = sieveIndex;
+    data_           = packed;
+  }
+  uint32_t sieveIndex_;
+  /**
+   * wheelIndex   =  9 least significant bits of data_.
+   * sievingPrime = 23 most  significant bits of data_.
+   * Packing wheelIndex and sievingPrime into the same 32-bit word
+   * reduces primesieve's memory usage by 20%.
+   */
+  uint32_t data_;
+};
+
+/**
+ * A Bucket is a container for sieving primes <= sqrt(n), it is
  * designed as a singly linked list, once there is no more space in
  * the current bucket a new bucket node is created ...
- * The Bucket data structure is due to Tomas Oliveira, see
+ * The Bucket data structure is due to Tom‡s Oliveira, see
  * http://www.ieeta.pt/~tos/software/prime_sieve.html
  *
- * @param SIZE  Number of WheelPrimes per Bucket.
+ * @param T_WheelPrime  A WheelPrime object is a sieving prime for use
+ *                      with wheel factorization.
+ * @param SIZE          Number of WheelPrimes per Bucket.
  */
-template<uint32_t SIZE>
+template<class T_WheelPrime, uint32_t SIZE>
 class Bucket {
 public:
   Bucket* next;
@@ -139,7 +175,7 @@ public:
     return count_;
   }
   /** Get a pointer to the first WheelPrime within the Bucket. */
-  WheelPrime* getWheelPrimes() {
+  T_WheelPrime* getWheelPrimes() {
     return wheelPrimes_;
   }
   /**
@@ -157,9 +193,9 @@ public:
     return (pos != SIZE - 1);
   }
 private:
-  /** Current count of WheelPrimes within the Bucket. */
+  /** Count of WheelPrimes within the Bucket. */
   uint32_t count_;
-  WheelPrime wheelPrimes_[SIZE];
+  T_WheelPrime wheelPrimes_[SIZE];
 };
 
 /**
