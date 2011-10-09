@@ -210,21 +210,26 @@ void PrimeSieve::setStopNumber(uint64_t stopNumber) {
 
 /**
  * Set the size of the sieve of Eratosthenes array (in KiloBytes).
- * Default sieveSize = 64 KB.
+ * Default sieveSize = 32 KB.
  * The best performance is achieved with a sieve size that matches
  * the CPU's L1 cache size (usually 32 or 64 KB) when sieving < 10^14
  * and a sieve size of the CPU's L2 cache size (e.g. 512 KB) above.
  *
- * @pre    sieveSize >= 1 && <= 8192 KiloBytes.
- * @remark sieveSize is rounded up to the next highest power of 2
+ * @param sieveSize  >= 1 && <= 8192 KiloBytes.
+ * @remark           sieveSize is rounded up to the next highest
+ *                   power of 2.
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
   // SieveOfEratosthenes needs sieveSize >= 1 KB
+  if (sieveSize < 1)
+    sieveSize = 1;
   // EratSmall, EratMedium and EratBig need sieveSize <= 8192
-  if (sieveSize < 1 || sieveSize > 8192)
-    throw std::invalid_argument("sieve size must be >= 1 && <= 8192 KiloBytes");
-  // EratBig needs a power of 2 sieveSize
-  sieveSize_ = nextHighestPowerOf2(sieveSize);
+  else if (sieveSize > 8192)
+    sieveSize = 8192;
+  else {
+    // EratBig needs a power of 2 sieve size
+    sieveSize_ = nextHighestPowerOf2(sieveSize);
+  }
 }
 
 /**
