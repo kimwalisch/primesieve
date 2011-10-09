@@ -123,7 +123,7 @@
 namespace defs {
   /**
    * Sieving primes <= (sieveSize in bytes * ERATSMALL_FACTOR) are
-   * added to EratSmall objects.
+   * used with EratSmall.
    * @pre 0 >= ERATSMALL_FACTOR < 5
    * @see SieveOfEratosthenes::sieve(uint32_t)
    */
@@ -165,15 +165,6 @@ namespace defs {
      * @pre 11 >= PRIMENUMBERGENERATOR_PRESIEVE_LIMIT <= 23
      */
     PRIMENUMBERGENERATOR_PRESIEVE_LIMIT = 13,
-    /**
-     * Sieving primes <= (sieveSize in bytes * ERATMEDIUM_FACTOR) && 
-     *                 > (sieveSize in bytes * ERATSMALL_FACTOR)
-     * are added to EratMedium objects. Default = 9 optimized for 
-     * DDR3-1066, faster memory might perform better with a smaller
-     * value e.g. 7 or 5.
-     * @see SieveOfEratosthenes::sieve(uint32_t)
-     */
-    ERATMEDIUM_FACTOR = 9,
     /**
      * Number of WheelPrimes (i.e. sieving primes) per Bucket in
      * EratSmall and EratMedium, default = 4096 (uses 32 kilobytes per
