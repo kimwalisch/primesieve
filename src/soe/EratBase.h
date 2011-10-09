@@ -37,9 +37,7 @@
 
 #include "WheelFactorization.h"
 #include "defs.h"
-#include "imath.h"
 
-#include <stdexcept>
 #include <cassert>
 #include <cstdlib>
 
@@ -49,7 +47,7 @@ class SieveOfEratosthenes;
  * EratBase is an abstract class used by EratSmall and EratMedium to
  * initialize and store sieving primes.
  */
-template<class T_ModuloWheel>
+template<class T_ModuloWheel, class T_WheelPrime>
 class EratBase: protected T_ModuloWheel {
 public:
   uint32_t getLimit() const {
@@ -70,15 +68,14 @@ public:
     }
   }
 protected:
-  typedef Bucket<defs::ERATBASE_BUCKETSIZE> Bucket_t;
-  /** Upper bound for sieving primes within bucketList_. */
-  const uint32_t limit_;
+  typedef T_WheelPrime WheelPrime_t;
+  typedef Bucket<WheelPrime_t, defs::ERATBASE_BUCKETSIZE> Bucket_t;
+  /** Upper bound for sieving primes within EratBase. */
+  uint32_t limit_;
   /** Singly linked list of buckets, holds the sieving primes. */
   Bucket_t* bucketList_;
-  EratBase(uint32_t limit, const SieveOfEratosthenes& soe) :
-    T_ModuloWheel(soe), limit_(limit), bucketList_(NULL) {
-    if (limit_ > isqrt(soe.getStopNumber()))
-      throw std::logic_error("EratBase: limit must be <= sqrt(stopNumber).");
+  EratBase(const SieveOfEratosthenes& soe) : T_ModuloWheel(soe),
+      bucketList_(NULL) {
     // initialize the bucket list with an empty bucket
     bucketList_ = new Bucket_t;
     bucketList_->setNext(NULL);
@@ -89,6 +86,9 @@ protected:
       bucketList_ = bucketList_->next;
       delete old;
     }
+  }
+  void setLimit(uint32_t limit) {
+    limit_ = limit;
   }
 };
 
