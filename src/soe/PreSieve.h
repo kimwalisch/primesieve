@@ -57,13 +57,13 @@
  *
  * == Memory Usage ==
  * 
- * PreSieve uses: primeProduct(limit_)/30 Bytes of memory.
+ * PreSieve uses: primeProduct(limit_)/30 bytes of memory.
  *
- * PreSieve multiples of primes <= 11 uses 77 Bytes
- * PreSieve multiples of primes <= 13 uses 1001 Bytes
- * PreSieve multiples of primes <= 17 uses 16.62 Kilobytes
- * PreSieve multiples of primes <= 19 uses 315.75 KiloBytes
- * PreSieve multiples of primes <= 23 uses 7.09 Megabytes
+ * PreSieve multiples of primes <= 11 uses   77    bytes
+ * PreSieve multiples of primes <= 13 uses 1001    bytes
+ * PreSieve multiples of primes <= 17 uses   16.62 kilobytes
+ * PreSieve multiples of primes <= 19 uses  315.75 kilobytes
+ * PreSieve multiples of primes <= 23 uses    7.09 megabytes
  */
 class PreSieve {
 public:

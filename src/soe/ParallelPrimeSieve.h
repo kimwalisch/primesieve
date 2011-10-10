@@ -57,7 +57,7 @@
  * == Memory Requirement ==
  *
  * ParallelPrimeSieve::sieve() uses about:
- * (pi(n^0.5) * 8 Bytes + 500 Kilobytes) * number of threads
+ * (pi(n^0.5) * 8 bytes + 500 kilobytes) * number of threads
  */
 class ParallelPrimeSieve: public PrimeSieve {
 public:

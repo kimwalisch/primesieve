@@ -57,7 +57,7 @@ class ParallelPrimeSieve;
  * == Memory Requirement ==
  *
  * PrimeSieve::sieve() uses about:
- * pi(stopNumber_^0.5) * 8 Bytes + sieve size + 450 Kilobytes
+ * pi(stopNumber_^0.5) * 8 bytes + sieve size + 450 kilobytes
  */
 class PrimeSieve {
   friend class PrimeNumberFinder;
@@ -122,7 +122,7 @@ protected:
   uint64_t startNumber_;
   /** Stop number for sieveing. */
   uint64_t stopNumber_;
-  /** A sieve size in Kilobytes. */
+  /** A sieve size in kilobytes. */
   uint32_t sieveSize_;
   /** Settings for PrimeSieve::sieve(). */
   uint32_t flags_;
