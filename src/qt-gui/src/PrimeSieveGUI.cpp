@@ -123,7 +123,7 @@ void PrimeSieveGUI::initConnections() {
 }
 
 /**
- * Get the sieve size in KiloBytes from the sieveSizeComboBox.
+ * Get the sieve size in kilobytes from the sieveSizeComboBox.
  * @post sieveSize >= 1 && sieveSize <= 8192.
  */
 int PrimeSieveGUI::getSieveSize() {

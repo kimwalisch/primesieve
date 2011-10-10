@@ -20,7 +20,7 @@
 /**
  * @file  PrimeSieveGUI_const.h
  * @brief Various constants used in PrimeSieveGUI.
- *        The values are optimized for CPUs with 32 to 64 Kilobytes of
+ *        The values are optimized for CPUs with 32 to 64 kilobytes of
  *        L1 Data Cache (set in 2010).
  */
 
@@ -40,7 +40,7 @@
 #include <stdint.h>
 
 const QString APPLICATION_NAME("primesieve");
-const QString APPLICATION_VERSION("3.0");
+const QString APPLICATION_VERSION("3.1");
 const QString APPLICATION_HOMEPAGE("http://primesieve.googlecode.com");
 const QString APPLICATION_ABOUT(
     "primesieve generates prime numbers and prime k-tuplets using a highly "
@@ -54,7 +54,7 @@ const QString APPLICATION_ABOUT(
     "(at your option) any later version.");
 
 /**
- * Minimum sieve size in Kilobytes.
+ * Minimum sieve size in kilobytes.
  * For performance reasons the minimum sieve size should not be much
  * smaller than the system's CPU L1 cache size.
  * @pre MINIMUM_SIEVE_SIZE >= 1
@@ -68,8 +68,8 @@ const int MINIMUM_SIEVE_SIZE = 16;
 const int MAXIMUM_SIEVE_SIZE = 8192;
 /**
  * The best performance is achieved with a sieve size of the CPU's
- * L1/L2 cache size. 64 Kilobytes is a good choice as most CPUs have a
- * L1 cache size of 16 to 64 Kilobytes in 2010.
+ * L1/L2 cache size. 64 kilobytes is a good choice as most CPUs have a
+ * L1 cache size of 16 to 64 kilobytes in 2010.
  * @pre >= MINIMUM_SIEVE_SIZE && <= MAXIMUM_SIEVE_SIZE
  */
 const QString DEFAULT_SIEVE_SIZE = "64 KB";
