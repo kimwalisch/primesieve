@@ -62,14 +62,14 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
                                          uint64_t stopNumber,
                                          uint32_t sieveSize,
                                          uint32_t preSieveLimit) :
-  startNumber_(startNumber), stopNumber_(stopNumber),
+  startNumber_(startNumber), stopNumber_(stopNumber), sqrtStop_(isqrt(stopNumber)),
     sieve_(NULL), sieveSize_(sieveSize),
       isFirstSegment_(true), preSieve_(preSieveLimit),
         eratSmall_(NULL), eratMedium_(NULL), eratBig_(NULL)
-  {
+{
   if (startNumber_ < 7 || startNumber_ > stopNumber_)
     throw std::logic_error(
-        "SieveOfEratosthenes: startNumber must be >= 7 && <= stop number.");
+        "SieveOfEratosthenes: startNumber must be >= 7 && <= stopNumber.");
   // it makes no sense to use very small sieve sizes as a sieve
   // size of the CPU's L1 or L2 cache size performs best
   if (sieveSize_ < 1024)
@@ -114,16 +114,11 @@ uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) const {
 }
 
 void SieveOfEratosthenes::initEratAlgorithms() {
-  uint32_t sqrtStop = isqrt(stopNumber_);
-
-  if (preSieve_.getLimit() < sqrtStop) {
-    uint32_t limit = static_cast<uint32_t> (sieveSize_* defs::ERATSMALL_FACTOR);
-    if (sqrtStop < limit)
-      limit = sqrtStop;
-    eratSmall_ = new EratSmall(*this, limit);
-    if (eratSmall_->getLimit() < sqrtStop) {
+  if (preSieve_.getLimit() < sqrtStop_) {
+    eratSmall_ = new EratSmall(*this);
+    if (eratSmall_->getLimit() < sqrtStop_) {
       eratMedium_ = new EratMedium(*this);
-      if (eratMedium_->getLimit() < sqrtStop)
+      if (eratMedium_->getLimit() < sqrtStop_)
         eratBig_ = new EratBig(*this);
     }
   }
@@ -170,7 +165,7 @@ void SieveOfEratosthenes::crossOffMultiples() {
  */
 void SieveOfEratosthenes::sieve(uint32_t prime) {
   assert(prime > this->getPreSieveLimit());
-  assert(prime <= isqrt(stopNumber_));
+  assert(prime <= this->getSquareRoot());
   assert(eratSmall_ != NULL);
   uint64_t primeSquared = isquare(prime);
 

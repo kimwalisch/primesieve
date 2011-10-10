@@ -92,8 +92,6 @@ public:
 private:
   /** Number of threads for sieving. */
   int numThreads_;
-  /** Each thread sieves at least an interval of minThreadInterval_. */
-  uint64_t minThreadInterval_;
   /**
    * Pointer to a shared memory segment, for use with the Qt
    * primesieve application (../qt-gui).
@@ -102,7 +100,6 @@ private:
   uint64_t getSieveInterval() const;
   int getIdealNumThreads() const;
   uint64_t getIdealInterval() const;
-  void setMinThreadInterval(uint64_t);
   virtual void doStatus(uint32_t);
 };
 

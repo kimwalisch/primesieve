@@ -53,6 +53,7 @@ class PrimeNumberFinder: public SieveOfEratosthenes {
 public:
   PrimeNumberFinder(PrimeSieve&);
   ~PrimeNumberFinder();
+  bool needGenerator() const;
 private:
   enum { END = 0xFF + 1 };
   /** Bitmasks corresponding to twin primes, prime triplets, ... */

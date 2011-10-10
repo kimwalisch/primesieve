@@ -37,7 +37,6 @@
 #include "WheelFactorization.h"
 #include "defs.h"
 #include "bithacks.h"
-#include "imath.h"
 
 #include <stdexcept>
 #include <cstdlib>
@@ -68,8 +67,8 @@ EratBig::~EratBig() {
  *         bitwise operators in sieve(uint8_t*).
  */
 void EratBig::setSize(const SieveOfEratosthenes& soe) {
+  uint32_t sqrtStop  = soe.getSquareRoot();
   uint32_t sieveSize = soe.getSieveSize();
-  uint32_t sqrtStop = isqrt(soe.getStopNumber());
   // MAX values in sieve(uint8_t*)
   uint32_t maxSievingPrime = sqrtStop / (SieveOfEratosthenes::NUMBERS_PER_BYTE / 2);
   uint32_t maxWheelFactor  = wheel_[1].nextMultipleFactor;

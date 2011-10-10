@@ -72,6 +72,14 @@
 #include <cassert>
 
 /**
+ * @def static_assert(expression, message)
+ * Disable static_assert(...) for compilers without C++11 support.
+ */
+#if __cplusplus <= 199711L
+#  define static_assert(expression, message) static_cast<void> (0)
+#endif
+
+/**
  * @def __STDC_LIMIT_MACROS
  * Enable the UINT32_MAX, UINT64_MAX macros from <stdint.h>.
  */

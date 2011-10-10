@@ -38,14 +38,18 @@
 #include "WheelFactorization.h"
 #include "defs.h"
 
+#include <algorithm>
 #include <stdexcept>
 #include <cstdlib>
 
-EratSmall::EratSmall(const SieveOfEratosthenes& soe, uint32_t limit) :
-  EratBase<Modulo30Wheel, WheelPrime_1> (soe) {
+EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
+  EratBase<Modulo30Wheel, WheelPrime_1> (soe)
+{
+  uint32_t sqrtStop = soe.getSquareRoot();
+  uint32_t max      = static_cast<uint32_t> (soe.getSieveSize() * defs::ERATSMALL_FACTOR);
+  uint32_t limit    = std::min<uint32_t>(sqrtStop, max);
   // sieveSize - 1 + (prime / 15) * 3 + 3 - sieveSize < sieveSize
-  // assertion that prevents array segmentation faults in
-  // sieve(uint8_t*, uint32_t)
+  // prevents array segmentation faults in sieve(uint8_t*, uint32_t)
   if (limit >= (soe.getSieveSize() - 2) * 5)
     throw std::invalid_argument(
         "EratSmall: limit must be < (sieveSize - 2) * 5.");

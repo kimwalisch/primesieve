@@ -66,6 +66,14 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
     this->initLookupTables();
 }
 
+/**
+ * Check if the current PrimeNumberFinder object requires a
+ * PrimeNumberGenerator object to generate the sieving primes.
+ */
+bool PrimeNumberFinder::needGenerator() const {
+  return (this->getSquareRoot() > this->getPreSieveLimit());
+}
+
 PrimeNumberFinder::~PrimeNumberFinder() {
   if (kTupletByteCounts_ != NULL) {
     for (int i = 0; i < 6; i++)

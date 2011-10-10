@@ -38,7 +38,6 @@
 #include "PrimeNumberGenerator.h"
 #include "defs.h"
 #include "bithacks.h"
-#include "imath.h"
 #include "PreSieve.h"
 
 #include <stdexcept>
@@ -369,7 +368,7 @@ void PrimeSieve::sieve() {
     // primes/prime k-tuplets within [startNumber_, stopNumber_]
     PrimeNumberFinder finder(*this);
 
-    if (isqrt(stopNumber_) > finder.getPreSieveLimit()) {
+    if (finder.needGenerator()) {
       // fast segmented sieve of Eratosthenes object that generates the
       // primes up to stopNumber_^0.5 needed for sieving by the
       // PrimeNumberFinder object
@@ -377,7 +376,7 @@ void PrimeSieve::sieve() {
 
       // sieve of Eratosthenes implementation that generates the primes
       // up to stopNumber_^0.25 for the PrimeNumberGenerator
-      uint32_t N = isqrt(generator.getStopNumber());
+      uint32_t N = generator.getSquareRoot();
       std::vector<uint8_t> isPrime(N / 8 + 1, 0xAA);
       for (uint32_t i = 3; i * i <= N; i += 2) {
         if (isPrime[i >> 3] & (1 << (i & 7)))

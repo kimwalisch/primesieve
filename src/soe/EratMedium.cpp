@@ -36,7 +36,6 @@
 #include "SieveOfEratosthenes.h"
 #include "EratBase.h"
 #include "WheelFactorization.h"
-#include "imath.h"
 #include "defs.h"
 
 #include <algorithm>
@@ -46,7 +45,7 @@
 EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
   EratBase<Modulo210Wheel, WheelPrime_2> (soe)
 {
-  uint32_t sqrtStop = isqrt(soe.getStopNumber());
+  uint32_t sqrtStop = soe.getSquareRoot();
   uint32_t max      = soe.getSieveSize() * 15;
   uint32_t limit    = std::min<uint32_t>(sqrtStop, max);
   assert(limit <= (1U << 23) * 15);

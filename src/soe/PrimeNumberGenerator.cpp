@@ -37,14 +37,13 @@
 #include "SieveOfEratosthenes.h"
 #include "defs.h"
 #include "bithacks.h"
-#include "imath.h"
 
 #include <cassert>
 
 PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
   SieveOfEratosthenes(
       finder.getPreSieveLimit() + 1,
-      isqrt(finder.getStopNumber()),
+      finder.getSquareRoot(),
       nextHighestPowerOf2(defs::PRIMENUMBERGENERATOR_SIEVESIZE * 1024),
       defs::PRIMENUMBERGENERATOR_PRESIEVE_LIMIT),
       primeNumberFinder_(finder) {

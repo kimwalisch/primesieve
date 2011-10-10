@@ -48,7 +48,8 @@
 
 ParallelPrimeSieve::ParallelPrimeSieve() :
   numThreads_(USE_IDEAL_NUM_THREADS), shm_(NULL) {
-  this->setMinThreadInterval(defs::MIN_THREAD_INTERVAL);
+  // prevents prime k-tuplet gaps
+  static_assert(defs::MIN_THREAD_INTERVAL < 100, "defs::MIN_THREAD_INTERVAL >= 100");
 }
 
 int ParallelPrimeSieve::getMaxThreads() {
@@ -92,9 +93,10 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   if (flags_ & PRINT_FLAGS)
     return 1;
   // each thread should at least sieve an interval of size n^0.5/6 and
-  // not smaller than minThreadInterval_
+  // not smaller than defs::MIN_THREAD_INTERVAL
   uint64_t threadThreshold = std::max<uint64_t>(
-      minThreadInterval_, isqrt(stopNumber_) / 6);
+      defs::MIN_THREAD_INTERVAL,
+      isqrt(stopNumber_) / 6);
   // set to maxThreads if the sieve interval is sufficiently large
   int idealNumThreads = static_cast<int> (
       std::min<uint64_t>(
@@ -115,24 +117,16 @@ uint64_t ParallelPrimeSieve::getIdealInterval() const {
 
   // idealInterval = n^0.5*2000, 0.1 percent initialization
   uint64_t idealInterval = std::max<uint64_t>(
-      minThreadInterval_,
+      defs::MIN_THREAD_INTERVAL,
       static_cast<uint64_t> (isqrt(stopNumber_)) * 2000);
   // maximum interval size per thread
   uint64_t maxThreadInterval = this->getSieveInterval() / numThreads;
   // correct the user's bad settings
   if (maxThreadInterval < this->getSieveInterval() &&
-      maxThreadInterval < minThreadInterval_) {
+      maxThreadInterval < defs::MIN_THREAD_INTERVAL) {
     maxThreadInterval = this->getSieveInterval() / this->getIdealNumThreads();
   }
   return std::min<uint64_t>(idealInterval, maxThreadInterval);
-}
-
-void ParallelPrimeSieve::setMinThreadInterval(uint64_t minThreadInterval) {
-  // assertion that prevents prime k-tuplet gaps
-  if (minThreadInterval < 100)
-    throw std::underflow_error(
-        "ParallelPrimeSieve: minThreadInterval must be >= 100");
-  minThreadInterval_ = minThreadInterval;
 }
 
 /**

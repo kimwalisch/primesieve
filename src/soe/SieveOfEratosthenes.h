@@ -77,6 +77,9 @@ public:
   uint64_t getStopNumber() const {
     return stopNumber_;
   }
+  uint32_t getSquareRoot() const {
+    return sqrtStop_;
+  }
   uint32_t getSieveSize() const {
     return sieveSize_;
   }
@@ -97,6 +100,8 @@ private:
   const uint64_t startNumber_;
   /** The stop number for sieving. */
   const uint64_t stopNumber_;
+  /** sqrt(stopNumber_) */
+  const uint32_t sqrtStop_;
   /** Sieve of Eratosthenes array. */
   uint8_t* sieve_;
   /** Size of sieve_ in bytes. */
