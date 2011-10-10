@@ -49,7 +49,7 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
   uint32_t sqrtStop = isqrt(soe.getStopNumber());
   uint32_t max      = soe.getSieveSize() * 15;
   uint32_t limit    = std::min<uint32_t>(sqrtStop, max);
-  assert(limit <= (1U << 23));
+  assert(limit <= (1U << 23) * 15);
   this->setLimit(limit);
 }
 
