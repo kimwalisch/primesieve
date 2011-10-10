@@ -65,7 +65,7 @@ namespace {
     START_SIEVING
   };
   std::vector<uint64_t> numbers; /* start and stop number for sieving */
-  uint32_t sieveSize     = 0;    /* sieve size in Kilobytes */
+  uint32_t sieveSize     = 0;    /* sieve size in kilobytes */
   uint32_t preSieve      = defs::PRIMESIEVE_PRESIEVE_LIMIT;
   uint32_t flags         = 0;    /* settings */
   bool quietMode         = false;
@@ -91,7 +91,7 @@ void help() {
             << "  -q            Quiet mode, print less output"                                         << std::endl
             << "  -r<PRE-SIEVE> Pre-sieve multiples of small primes <= PRE-SIEVE to speed up"          << std::endl
             << "                the sieve of Eratosthenes, 11 <= PRE-SIEVE <= 23"                      << std::endl
-            << "  -s<SIZE>      Set the sieve size in Kilobytes, 1 <= SIZE <= 8192"                    << std::endl
+            << "  -s<SIZE>      Set the sieve size in kilobytes, 1 <= SIZE <= 8192"                    << std::endl
             << "                Set SIZE to your CPU's L1/L2 cache size for best performance"          << std::endl
             << "  -t<THREADS>   Set the number of threads for sieving, 1 <= THREADS <= " << maxThreads << std::endl
             << "                Primes are not generated in order if THREADS >= 2"                     << std::endl
@@ -106,7 +106,7 @@ void help() {
 }
 
 void version() {
-  std::cout << "primesieve 3.0, <http://primesieve.googlecode.com>" << std::endl
+  std::cout << "primesieve 3.1, <http://primesieve.googlecode.com>" << std::endl
             << "Copyright (C) 2011 Kim Walisch" << std::endl
             << "This software is licensed under the New BSD License. See the LICENSE file" << std::endl
             << "for more information." << std::endl;
@@ -234,7 +234,7 @@ int main(int argc, char* argv[]) {
     pps.setNumThreads(threads);
 
     if (!quietMode)
-      std::cout << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize() << " Kilobytes" << std::endl
+      std::cout << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize() << " kilobytes" << std::endl
                 << std::setw(10) << "Threads" << " = " << pps.getNumThreads() << std::endl;
 
     // start sieving primes
