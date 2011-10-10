@@ -105,7 +105,7 @@ private:
    * sievingPrime_ = prime / 15;
    * /15 = *2 /30, *2 is used to skip multiples of 2, /30 is used as
    * SieveOfEratosthenes objects use 30 numbers per byte.
-   * @see ModuloWheel::getWheelPrimeData(...)
+   * @see ModuloWheel::getWheelPrimeData()
    */
   uint32_t sievingPrime_;
 };
@@ -153,7 +153,7 @@ public:
  * A Bucket is a container for sieving primes <= sqrt(n), it is
  * designed as a singly linked list, once there is no more space in
  * the current bucket a new bucket node is created ...
- * The Bucket data structure is due to Tom‡s Oliveira, see
+ * The Bucket data structure is due to Tomas Oliveira, see
  * http://www.ieeta.pt/~tos/software/prime_sieve.html
  *
  * @param T_WheelPrime  A WheelPrime object is a sieving prime for use
@@ -199,30 +199,31 @@ private:
 };
 
 /**
- * In EratMedium and EratBig the wheel is implemented using a constant
- * array of WheelElement objects.
- * In Erat*::sieve() an array of WheelElements is used to cross off
- * the current multiple of WheelPrimes and to calculate their next
- * multiple.
+ * In EratMedium and EratBig the wheel is implemented using a static
+ * const array of WheelElement objects. The WheelElement data
+ * structure helps to cross-off (unset bit) the current multiple of a
+ * sieving prime and to calculate the prime's next multiple.
+ * @see EratMedium::sieve()
  */
 struct WheelElement {
   /**
    * Bitmask used with the '&' operator to unset the bit corresponding
-   * to the current multiple of a WheelPrime:
-   * SieveOfEratosthenes::sieve_[sieveIndex] &= unsetBit;
+   * to the current multiple of a sieving prime (WheelPrime).
    */
   uint8_t unsetBit;
   /**
-   * Factor used to calculate the next multiple of a WheelPrime.
+   * Factor used to calculate the next multiple of a sieving prime
+   * (WheelPrime) that is not a multiple of any of the wheel's factors
+   * (e.g. not a multiple of 2, 3, and 5 for a modulo 30 wheel).
    */
   uint8_t nextMultipleFactor;
   /**
-   * Overflow needed to correct the next sieve index of a WheelPrime:
+   * Overflow needed to correct the next sieve index:
    * sieveIndex_ = sievingPrime_ * nextMultipleFactor + correct
    */
   uint8_t correct;
   /** 
-   * Used to calculate the next wheel index of a WheelPrime:
+   * Used to calculate the next wheel index:
    * wheelIndex_ = wheelIndex_ + next
    */
    int8_t next;
@@ -234,22 +235,22 @@ struct InitWheel {
 };
 
 /**
- * Used to initialize a sieving prime for use with a modulo 30 wheel.
- * This lookup table is used to calculate the first
- * multiple >= startNumber_ that is not divisible by 2, 3 and 5 of a
- * sieving prime and the wheel index of that multiple.
+ * Used to initialize sieving primes for use with the Modulo30Wheel
+ * class. This lookup table is used to calculate the first
+ * multiple >= startNumber that is not divisible by 2, 3 and 5 of
+ * each sieving prime (and the related wheel index).
  */
 extern const InitWheel init30Wheel[30];
 /**
- * Used to initialize a sieving prime for use with a modulo 210 wheel.
- * This lookup table is used to calculate the first
- * multiple >= startNumber_ that is not divisible by 2, 3, 5 and 7 of
- * a sieving prime and the wheel index of that multiple.
+ * Used to initialize sieving primes for use with the Modulo210Wheel
+ * class. This lookup table is used to calculate the first
+ * multiple >= startNumber that is not divisible by 2, 3, 5 and 7 of
+ * each sieving prime (and the related wheel index).
  */
 extern const InitWheel init210Wheel[210];
 
 /**
- * Abstract class that is used to initialize sieving primes <= n^0.5
+ * Abstract class that is used to initialize sieving primes <= sqrt(n)
  * for use with wheel factorization.
  */
 template<uint32_t WHEEL_MODULO, uint32_t WHEEL_ELEMENTS,
@@ -281,7 +282,7 @@ protected:
     // sieveIndex in Erat*::sieve()
     if (soe_.getSieveSize() > (1U << 23))
       throw std::overflow_error(
-          "ModuloWheel: sieveSize must be <= 2^23, 8192 Kilobytes.");
+          "ModuloWheel: sieveSize must be <= 2^23, 8192 kilobytes.");
   }
   ~ModuloWheel() {}
   /**
