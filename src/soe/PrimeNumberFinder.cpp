@@ -37,7 +37,6 @@
 #include "SieveOfEratosthenes.h"
 #include "defs.h"
 #include "bithacks.h"
-#include "imath.h"
 
 #include <algorithm>
 #include <cstdlib>
@@ -58,10 +57,11 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
   SieveOfEratosthenes(
       std::max<uint64_t>(ps.getStartNumber(), 7),
       ps.getStopNumber(),
-      ps.getSieveSize() * 1024,
+      ps.getSieveSize(),
       ps.getPreSieveLimit()),
-      ps_(ps), kTupletByteCounts_(NULL) {
-  assert(PrimeSieve::COUNTS_SIZE >= 7);
+  ps_(ps), kTupletByteCounts_(NULL)
+{
+  static_assert(PrimeSieve::COUNTS_SIZE >= 7, "PrimeSieve::COUNTS_SIZE >= 7");
   if (ps_.flags_ & PrimeSieve::COUNT_KTUPLETS)
     this->initLookupTables();
 }

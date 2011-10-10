@@ -48,9 +48,9 @@
 #include "defs.h"
 #include "imath.h"
 
+#include <cassert>
 #include <stdexcept>
 #include <sstream>
-#include <cassert>
 
 /**
  * WheelPrime objects are sieving primes <= sqrt(n) for use with wheel
@@ -288,7 +288,7 @@ protected:
    * Used to initialize sieving primes <= n^0.5 for use with wheel
    * factorization.
    * Calculates the first multiple >= startNumber_ of prime that is
-   * not divisible by any of the wheel's prime factors (i.e. 2, 3, 5
+   * not divisible by any of the wheel's prime factors (e.g. 2, 3, 5
    * for a modulo 30 wheel) and the position within the
    * SieveOfEratosthenes array (sieveIndex) of that multiple and its
    * wheel index.
@@ -317,7 +317,7 @@ protected:
     }
     uint32_t index = static_cast<uint32_t> (quotient % WHEEL_MODULO);
     // calculate the next multiple that is not divisible by any of the
-    // wheel's primes (i.e. 2, 3 and 5 for a modulo 30 wheel)
+    // wheel's primes (e.g. 2, 3 and 5 for a modulo 30 wheel)
     multiple += static_cast<uint64_t> (*prime) * INIT_WHEEL[index].nextMultipleFactor;
     if (multiple > soe_.getStopNumber())
       return false;
@@ -341,12 +341,11 @@ const uint32_t
         0xff, 7, 3, 0xff, 4, 0xff, 0xff, 0, 5, 0xff, 0xff, 1, 0xff, 2, 6 };
 
 /**
- * Implementation of a modulo 30 wheel (3rd wheel)
+ * Modulo 30 wheel (3rd wheel) implementation.
  * EratSmall is derived from Modulo30Wheel.
  */
 class Modulo30Wheel: protected ModuloWheel<30, 8, init30Wheel> {
 protected:
-  /** @see WheelElement */
   static const WheelElement wheel_[8 * 8];
   Modulo30Wheel(const SieveOfEratosthenes& soe) :
     ModuloWheel<30, 8, init30Wheel> (soe) {
@@ -355,13 +354,12 @@ protected:
 };
 
 /**
- * Implementation of a modulo 210 wheel (4th wheel).
+ * Modulo 210 wheel (4th wheel) implementation.
  * EratMedium and EratBig are derived from Modulo210Wheel and use its
  * wheel_ array to skip multiples of 2, 3, 5 and 7.
  */
 class Modulo210Wheel: protected ModuloWheel<210, 48, init210Wheel> {
 protected:
-  /** @see WheelElement */
   static const WheelElement wheel_[48 * 8];
   Modulo210Wheel(const SieveOfEratosthenes& soe) :
     ModuloWheel<210, 48, init210Wheel> (soe) {

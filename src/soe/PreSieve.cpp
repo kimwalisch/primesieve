@@ -75,7 +75,8 @@ uint32_t PreSieve::getPrimeProduct(uint32_t limit) const {
  * primes <= limit_ from it.
  */
 void PreSieve::initWheelArray() {
-  assert(SieveOfEratosthenes::NUMBERS_PER_BYTE == 30);
+  static_assert(SieveOfEratosthenes::NUMBERS_PER_BYTE == 30, 
+               "SieveOfEratosthenes::NUMBERS_PER_BYTE == 30");
   assert(size_ > 0);
   const uint32_t unsetBit[30] = {
       BIT0, 0xff, 0xff, 0xff, BIT1, 0xff,

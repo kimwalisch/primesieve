@@ -52,18 +52,20 @@ const uint32_t SieveOfEratosthenes::bitValues_[32] = {
 };
 
 /**
- * @param startNumber   Sieve the primes within the interval [startNumber, stopNumber].
- * @param stopNumber    ...
- * @param sieveSize     A sieve size in bytes.
- * @param preSieveLimit Multiples of small primes <= preSieveLimit are
- *                      pre-sieved.
+ * @param startNumber    Sieve the primes within the interval [startNumber, stopNumber].
+ * @param stopNumber     ...
+ * @param sieveSize      A sieve size in kilobytes.
+ * @param preSieveLimit  Multiples of small primes <= preSieveLimit are pre-sieved.
+ *
+ * @pre   sieveSize      >=  1 && <= 8192
+ * @pre   preSieveLimit  >= 11 && <= 23 
  */
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
                                          uint64_t stopNumber,
                                          uint32_t sieveSize,
                                          uint32_t preSieveLimit) :
   startNumber_(startNumber), stopNumber_(stopNumber), sqrtStop_(isqrt(stopNumber)),
-    sieve_(NULL), sieveSize_(sieveSize),
+    sieve_(NULL), sieveSize_(sieveSize * 1024),
       isFirstSegment_(true), preSieve_(preSieveLimit),
         eratSmall_(NULL), eratMedium_(NULL), eratBig_(NULL)
 {
@@ -74,31 +76,24 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
   // size of the CPU's L1 or L2 cache size performs best
   if (sieveSize_ < 1024)
     throw std::invalid_argument(
-        "SieveOfEratosthenes: sieveSize must be >= 1024.");
+        "SieveOfEratosthenes: sieveSize must be >= 1 kilobyte.");
   if (sieveSize_ > UINT32_MAX / NUMBERS_PER_BYTE)
     throw std::overflow_error(
         "SieveOfEratosthenes: sieveSize must be <= 2^32 / 30.");
-  sieve_ = new uint8_t[sieveSize_];
   segmentLow_ = startNumber_ - this->getByteRemainder(startNumber_);
   assert(segmentLow_ % NUMBERS_PER_BYTE == 0);
   // '+ 1' is a correction for primes of type i*30 + 31
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
-  try {
-    this->initEratAlgorithms();
-  } catch (...) {
-    delete[] sieve_;
-    delete eratSmall_;
-    delete eratMedium_;
-    delete eratBig_;
-    throw;
-  }
+  this->initEratAlgorithms();
+  // allocate the sieve of Eratosthenes array
+  sieve_ = new uint8_t[sieveSize_];
 }
 
 SieveOfEratosthenes::~SieveOfEratosthenes() {
-  delete[] sieve_;
   delete eratSmall_;
   delete eratMedium_;
   delete eratBig_;
+  delete[] sieve_;
 }
 
 uint32_t SieveOfEratosthenes::getPreSieveLimit() const {
@@ -114,13 +109,20 @@ uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) const {
 }
 
 void SieveOfEratosthenes::initEratAlgorithms() {
-  if (preSieve_.getLimit() < sqrtStop_) {
-    eratSmall_ = new EratSmall(*this);
-    if (eratSmall_->getLimit() < sqrtStop_) {
-      eratMedium_ = new EratMedium(*this);
-      if (eratMedium_->getLimit() < sqrtStop_)
-        eratBig_ = new EratBig(*this);
+  try {
+    if (preSieve_.getLimit() < sqrtStop_) {
+      eratSmall_ = new EratSmall(*this);
+      if (eratSmall_->getLimit() < sqrtStop_) {
+        eratMedium_ = new EratMedium(*this);
+        if (eratMedium_->getLimit() < sqrtStop_)
+          eratBig_ = new EratBig(*this);
+      }
     }
+  } catch (...) {
+    delete eratSmall_;
+    delete eratMedium_;
+    delete eratBig_;
+    throw;
   }
 }
 

@@ -94,6 +94,7 @@ void EratBig::initBucketLists() {
 
 /**
  * Add a prime number for sieving to EratBig.
+ * @pre prime >= sieveSize * 15
  */
 void EratBig::addSievingPrime(uint32_t prime) {
   uint32_t sieveIndex;

@@ -80,6 +80,7 @@ public:
   uint32_t getSquareRoot() const {
     return sqrtStop_;
   }
+  /** Get the sieve size in bytes. */
   uint32_t getSieveSize() const {
     return sieveSize_;
   }
@@ -96,9 +97,9 @@ private:
   uint64_t segmentLow_;
   /** Upper bound of the current segment. */
   uint64_t segmentHigh_;
-  /** The start number for sieving. */
+  /** Sieve the primes within the interval [startNumber_, stopNumber_]. */
   const uint64_t startNumber_;
-  /** The stop number for sieving. */
+  /** Sieve the primes within the interval [startNumber_, stopNumber_]. */
   const uint64_t stopNumber_;
   /** sqrt(stopNumber_) */
   const uint32_t sqrtStop_;

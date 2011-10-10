@@ -60,15 +60,17 @@ PrimeSieve::PrimeSieve() :
  * sieve primes in parallel.
  * @see ParallelPrimeSieve::sieve()
  */
-PrimeSieve::PrimeSieve(uint64_t startNumber, uint64_t stopNumber, 
-    ParallelPrimeSieve* parent) :
+PrimeSieve::PrimeSieve(uint64_t startNumber,
+                       uint64_t stopNumber, 
+                       ParallelPrimeSieve* parent) :
   sieveSize_(parent->sieveSize_), 
-    flags_(parent->flags_),
-    preSieveLimit_(parent->preSieveLimit_),
-    callback_(parent->callback_),
-    callbackOOP_(parent->callbackOOP_), 
-    cbObj_(parent->cbObj_),
-    parent_(parent) {
+  flags_(parent->flags_),
+  preSieveLimit_(parent->preSieveLimit_),
+  callback_(parent->callback_),
+  callbackOOP_(parent->callbackOOP_), 
+  cbObj_(parent->cbObj_),
+  parent_(parent)
+{
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
   this->reset();
@@ -83,7 +85,7 @@ uint64_t PrimeSieve::getStopNumber() const {
 }
 
 /**
- * Get the sieve size in Kilobytes.
+ * Get the sieve size in kilobytes.
  */
 uint32_t PrimeSieve::getSieveSize() const {
   return sieveSize_;
@@ -208,27 +210,25 @@ void PrimeSieve::setStopNumber(uint64_t stopNumber) {
 }
 
 /**
- * Set the size of the sieve of Eratosthenes array (in KiloBytes).
+ * Set the size of the sieve of Eratosthenes array (in kilobytes).
  * Default sieveSize = 32 KB.
- * The best performance is achieved with a sieve size that matches
- * the CPU's L1 cache size (usually 32 or 64 KB) when sieving < 10^14
- * and a sieve size of the CPU's L2 cache size (e.g. 512 KB) above.
+ * The best performance is achieved with a sieve size that matches the
+ * CPU's L1 cache size (usually 32 or 64 KB) when sieving < 10^14 and
+ * a sieve size of the CPU's L2 cache size (e.g. 512 KB) above.
  *
- * @param sieveSize  >= 1 && <= 8192 KiloBytes.
- * @remark           sieveSize is rounded up to the next highest
- *                   power of 2.
+ * @param sieveSize  >= 1 && <= 8192 kilobytes, sieveSize is rounded
+ *                   up to the next highest power of 2.
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
   // SieveOfEratosthenes needs sieveSize >= 1 KB
+  // EratSmall, EratMedium and EratBig need sieveSize <= 8192
+  // EratBig needs a power of 2 sieve size
   if (sieveSize < 1)
     sieveSize = 1;
-  // EratSmall, EratMedium and EratBig need sieveSize <= 8192
   else if (sieveSize > 8192)
     sieveSize = 8192;
-  else {
-    // EratBig needs a power of 2 sieve size
+  else
     sieveSize_ = nextHighestPowerOf2(sieveSize);
-  }
 }
 
 /**

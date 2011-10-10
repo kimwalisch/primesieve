@@ -44,9 +44,10 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
   SieveOfEratosthenes(
       finder.getPreSieveLimit() + 1,
       finder.getSquareRoot(),
-      nextHighestPowerOf2(defs::PRIMENUMBERGENERATOR_SIEVESIZE * 1024),
+      nextHighestPowerOf2(defs::PRIMENUMBERGENERATOR_SIEVESIZE),
       defs::PRIMENUMBERGENERATOR_PRESIEVE_LIMIT),
-      primeNumberFinder_(finder) {
+  primeNumberFinder_(finder)
+{
   assert(this->getStopNumber() <= UINT32_MAX);
 }
 
