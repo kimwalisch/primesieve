@@ -42,12 +42,12 @@
 class SieveOfEratosthenes;
 
 /**
- * Implementation of the segmented sieve of Eratosthenes with a
- * hardcoded modulo 30 wheel (skips multiples of 2, 3, 5) and
- * 30 numbers per byte.
- * This algorithm is very fast for sieving primes that have a lot of
- * multiple occurrences per segment.
- * The algorithm is a further optimized implementation of Achim
+ * EratSmall is an implementation of the segmented sieve of
+ * Eratosthenes with wheel factorization optimized for small sieving
+ * primes with many multiple occurrences per segment.
+ * It uses a sieve array with 30 numbers per byte, 8 bytes per sieving
+ * prime and a hardcoded modulo 30 wheel that skips multiples of 2, 3
+ * and 5. The algorithm is a further optimized implementation of Achim
  * Flammenkamp's prime_sieve.c, see:
  * http://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html
  */
