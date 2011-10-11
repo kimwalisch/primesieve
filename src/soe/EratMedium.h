@@ -42,11 +42,13 @@
 class SieveOfEratosthenes;
 
 /**
- * Implementation of the segmented sieve of Eratosthenes with wheel
- * factorization (modulo 210 wheel) and 30 numbers per byte.
- * This algorithm is optimized for sieving primes with few multiple
- * occurrences per segment, it uses less jump operations (switch,
- * break, goto) than EratSmall.
+ * EratMedium is an implementation of the segmented sieve of
+ * Eratosthenes with wheel factorization optimized for medium sieving
+ * primes with few multiple occurrences per segment.
+ * It uses a sieve array with 30 numbers per byte, 8 bytes per sieving
+ * prime and a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
+ * EratMedium is used for all sieving primes > EratSmall::getLimit()
+ * that may have more than one multiple occurrence per segment.
  */
 class EratMedium: public EratBase<Modulo210Wheel, WheelPrime_2> {
 public:
