@@ -175,11 +175,11 @@ namespace defs {
     PRIMENUMBERGENERATOR_PRESIEVE_LIMIT = 13,
     /**
      * Number of WheelPrimes (i.e. sieving primes) per Bucket in
-     * EratSmall and EratMedium, default = 4096 (uses 32 kilobytes per
+     * EratSmall and EratMedium, default = 8192 (uses 64 kilobytes per
      * Bucket).
      * @see Bucket in WheelFactorization.h
      */
-    ERATBASE_BUCKETSIZE = 1 << 12,
+    ERATBASE_BUCKETSIZE = 1 << 13,
     /**
      * Number of WheelPrimes (i.e. sieving primes) per Bucket in
      * EratBig, default = 1024 (uses 8 kilobytes per Bucket), future
