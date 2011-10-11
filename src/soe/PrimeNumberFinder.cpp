@@ -106,7 +106,7 @@ void PrimeNumberFinder::initLookupTables() {
 
 /**
  * Analyse (generate, count) the primes and prime k-tuplets within the
- * current segment [segmentLow, segmentLow + (sieveSize*30+1)].
+ * current segment [segmentLow+7, segmentLow + (sieveSize*30+1)].
  */
 void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
   if (ps_.flags_ & PrimeSieve::COUNT_FLAGS)
