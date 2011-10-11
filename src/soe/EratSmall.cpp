@@ -57,13 +57,15 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
 }
 
 /**
- * Implementation of the segmented sieve of Eratosthenes with a
- * hardcoded modulo 30 wheel (skips multiples of 2, 3, 5) and
- * 30 numbers per byte. This algorithm is very fast for sieving primes
- * that have a lot of multiple occurrences per segment.
+ * Implementation of the segmented sieve of Eratosthenes with wheel
+ * factorization optimized for small sieving primes with many multiple
+ * occurrences per segment.
+ * This implementation uses a sieve array with 30 numbers per byte,
+ * 8 bytes per sieving prime and a hardcoded modulo 30 wheel that
+ * skips multiples of 2, 3 and 5.
  *
- * Removes the multiples of sieving primes within EratSmall from
- * the current segment.
+ * Removes the multiples of small sieving primes
+ * (<= sieveSize * defs::ERATSMALL_FACTOR) from the current segment.
  * @see SieveOfEratosthenes::crossOffMultiples()
  */
 void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
