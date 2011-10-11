@@ -58,7 +58,6 @@
  * 
  * PreSieve objects use: primeProduct(limit_)/30 bytes of memory
  *
- * PreSieve multiples of primes <= 11 uses   77    bytes
  * PreSieve multiples of primes <= 13 uses 1001    bytes
  * PreSieve multiples of primes <= 17 uses   16.62 kilobytes
  * PreSieve multiples of primes <= 19 uses  315.75 kilobytes
@@ -73,20 +72,23 @@ public:
   }
   void doIt(uint8_t*, uint32_t, uint64_t) const;
 private:
-  static const uint32_t smallPrimes_[9];
+  static const uint32_t smallPrimes_[10];
   /** Multiples of small primes <= limit_ (MAX 23) are pre-sieved. */
-  uint32_t limit_;
+  const uint32_t limit_;
   /** Product of the primes <= limit_. */
   uint32_t primeProduct_;
   /**
-   * Wheel array of size primeProduct(limit_)/30 in which multiples of
-   * small primes <= limit_ are crossed-off.
+   * Array (of size primeProduct(limit_)/30) in which multiples of
+   * small primes <= limit_ are crossed-off at initialization.
    */
   uint8_t* wheelArray_;
   /** Size of wheelArray_ in bytes. */
   uint32_t size_;
   uint32_t getPrimeProduct(uint32_t) const;
   void initWheelArray();
+  /** Uncopyable, declared but not defined. */
+  PreSieve(const PreSieve&);
+  PreSieve& operator=(const PreSieve&);
 };
 
 #endif /* PRESIEVE_H */
