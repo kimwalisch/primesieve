@@ -75,7 +75,7 @@
  * @def static_assert(expression, message)
  * Disable static_assert(...) for compilers without C++11 support.
  */
-#if __cplusplus <= 199711L
+#if __cplusplus <= 199711L && !defined(__GXX_EXPERIMENTAL_CXX0X__)
 #  define static_assert(expression, message) static_cast<void> (0)
 #endif
 
