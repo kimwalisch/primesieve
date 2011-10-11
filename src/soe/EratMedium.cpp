@@ -56,9 +56,8 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
  * Implementation of the segmented sieve of Eratosthenes with wheel
  * factorization optimized for medium sieving primes with a few
  * multiple occurrences per segment.
- * This implementation uses a sieve array with 30 numbers per byte,
- * 8 bytes per sieving prime and a modulo 210 wheel that skips
- * multiples of 2, 3, 5 and 7.
+ * This implementation uses a sieve array with 30 numbers per byte and
+ * a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
  *
  * Removes the multiples of medium sieving primes (<= sieveSize*15)
  * from the current segment (sieve array).
