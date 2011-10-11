@@ -73,7 +73,7 @@
 
 /**
  * @def static_assert(expression, message)
- * Disable static_assert(...) for compilers without C++11 support.
+ * Disable static_assert() for compilers without C++11 support.
  */
 #if __cplusplus <= 199711L && !defined(__GXX_EXPERIMENTAL_CXX0X__)
 #  define static_assert(expression, message) static_cast<void> (0)
@@ -132,7 +132,7 @@ namespace defs {
   /**
    * Sieving primes <= (sieveSize in bytes * ERATSMALL_FACTOR) are
    * used with EratSmall.
-   * @pre 0 >= ERATSMALL_FACTOR < 5
+   * @pre ERATSMALL_FACTOR >= 0 && < 5
    * @see SieveOfEratosthenes::sieve(uint32_t)
    */
   const double ERATSMALL_FACTOR = 1.5;
@@ -141,7 +141,7 @@ namespace defs {
     /**
      * Default sieve size in kilobytes of PrimeSieve and
      * ParallelPrimeSieve objects.
-     * @pre 1 >= PRIMESIEVE_SIEVESIZE <= 8192
+     * @pre PRIMESIEVE_SIEVESIZE >= 1 && <= 8192
      */
     PRIMESIEVE_SIEVESIZE = L1_DCACHE_SIZE,
     /**
@@ -150,7 +150,7 @@ namespace defs {
      * pre-sieved to speed up the sieve of Eratosthenes.
      * Default = 19 (uses 315.7 kilobytes), for less memory usage 13 is
      * good (uses 1001 bytes) and still fast.
-     * @pre 11 >= PRIMESIEVE_PRESIEVE_LIMIT <= 23
+     * @pre PRIMESIEVE_PRESIEVE_LIMIT >= 13 && <= 23
      * @see PreSieve.h
      */
     PRIMESIEVE_PRESIEVE_LIMIT = 19,
@@ -163,14 +163,14 @@ namespace defs {
     /**
      * Sieve size in kilobytes of PrimeNumberGenerator which generates
      * the primes up to sqrt(n) needed for sieving.
-     * @pre 1 >= PRIMENUMBERGENERATOR_SIEVESIZE <= 8192
+     * @pre PRIMENUMBERGENERATOR_SIEVESIZE >= 1 && <= 8192
      */
     PRIMENUMBERGENERATOR_SIEVESIZE = L1_DCACHE_SIZE,
     /**
      * Pre-sieve limit of PrimeNumberGenerator, default = 13 (uses
      * 1001 bytes) a greater value uses more memory without noticeable
      * speed up.
-     * @pre 11 >= PRIMENUMBERGENERATOR_PRESIEVE_LIMIT <= 23
+     * @pre PRIMENUMBERGENERATOR_PRESIEVE_LIMIT >= 13 && <= 23
      */
     PRIMENUMBERGENERATOR_PRESIEVE_LIMIT = 13,
     /**
@@ -197,8 +197,8 @@ namespace defs {
 }
 
 /**
- * Bit patterns used with the '&' operator to unset a specific bit of
- * a byte.
+ * Bit patterns used with the '&' operator to unset
+ * a specific bit of a byte.
  */
 enum {
   BIT0 = 0xfe, /* 11111110 */
