@@ -53,7 +53,7 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
 
 /**
  * Generate the primes within the current segment i.e. 
- * [lowerBound, lowerBound + (sieveSize*30+1)] and use them to sieve
+ * [lowerBound+7, lowerBound + (sieveSize*30+1)] and use them to sieve
  * with primeNumberFinder_ (is a SieveOfEratosthenes).
  * @see SieveOfEratosthenes::sieve(uint32_t)
  */
