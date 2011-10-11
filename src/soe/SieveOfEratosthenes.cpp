@@ -58,8 +58,8 @@ const uint32_t SieveOfEratosthenes::bitValues_[32] = {
  * @param preSieveLimit  Multiples of small primes <= preSieveLimit are pre-sieved
  *                       to speed up the sieve of Eratosthenes.
  *
- * @pre   sieveSize      >=  1 && <= 8192
- * @pre   preSieveLimit  >= 11 && <= 23 
+ * @pre   sieveSize      >= 1  && <= 8192
+ * @pre   preSieveLimit  >= 13 && <= 23 
  */
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
                                          uint64_t stopNumber,

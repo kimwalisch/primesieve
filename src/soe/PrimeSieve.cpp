@@ -234,11 +234,11 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
 /**
  * Multiples of small primes <= preSieveLimit are pre-sieved to speed
  * up the sieve of Eratosthenes.
- * @pre preSieveLimit >= 11 && preSieveLimit <= 23
+ * @pre preSieveLimit >= 13 && <= 23
  */
 void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
-  if (preSieveLimit < 11 || preSieveLimit > 23)
-    throw std::invalid_argument("pre-sieve limit must be >= 11 && <= 23");
+  if (preSieveLimit < 13 || preSieveLimit > 23)
+    throw std::invalid_argument("pre-sieve limit must be >= 13 && <= 23");
   preSieveLimit_ = preSieveLimit;
 }
 
