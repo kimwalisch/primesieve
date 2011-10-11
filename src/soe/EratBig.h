@@ -50,7 +50,7 @@ class SieveOfEratosthenes;
  * 8 bytes per sieving prime and a modulo 210 wheel that skips
  * multiples of 2, 3, 5 and 7. Furthermore each sieving prime
  * (WheelPrime_t) has at most one multiple occurrence per segment
- * which allows to process the sieving primes in parallel.
+ * which allows to unroll the main loop in sieve(uint8_t*).
  */
 class EratBig: protected Modulo210Wheel {
 public:
