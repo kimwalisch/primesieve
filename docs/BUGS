@@ -6,8 +6,9 @@ version of primesieve can be retrieved from its Subversion
 repository:
 $ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve-read-only
 
-Fixed bugs in primesieve
-========================
+
+List of fixed bugs in primesieve
+================================
 
 7. SieveIndex overflow (> 2^23) in src/soe/EratMedium.cpp when using a
    sieve size >= 4096 kilobytes past 1E15.
@@ -17,8 +18,8 @@ Fixed bugs in primesieve
    > Prime numbers : 280434992
 
    Correct
-   primesieve 1e16 1e16+1e10 -s256 -t1
-   Prime numbers : 271425366
+   > primesieve 1e16 1e16+1e10 -s256 -t1
+   > Prime numbers : 271425366
 
    >> FIXED in version 3.1, committed on the 10th October 2011
 
