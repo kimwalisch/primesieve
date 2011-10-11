@@ -49,7 +49,8 @@
 ParallelPrimeSieve::ParallelPrimeSieve() :
   numThreads_(USE_IDEAL_NUM_THREADS), shm_(NULL) {
   // prevents prime k-tuplet gaps
-  static_assert(defs::MIN_THREAD_INTERVAL < 100, "defs::MIN_THREAD_INTERVAL >= 100");
+  static_assert(defs::MIN_THREAD_INTERVAL >= 100,
+               "defs::MIN_THREAD_INTERVAL >= 100");
 }
 
 int ParallelPrimeSieve::getMaxThreads() {
