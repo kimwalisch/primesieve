@@ -1,24 +1,16 @@
-######################################################################
-# List of fixed bugs in primesieve
-#
-# Author:        Kim Walisch
-# Contact:       kim.walisch@gmail.com
-# Created:       21 December 2010 
-# Last modified: 23 September 2011
-#
-# Project home:  http://primesieve.googlecode.com
-######################################################################
+Kim Walisch, <kim.walisch@gmail.com>
+http://primesieve.googlecode.com
 
 Please contact the author if you find a new bug. The most recent
 version of primesieve can be retrieved from its Subversion
 repository:
 $ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve-read-only
 
-Unfixed bugs
-============
+Fixed bugs in primesieve
+========================
 
-1. Possible sieveIndex overflow (> 2^23) in src/soe/EratMedium.cpp when
-   using big sieve sizes.
+7. SieveIndex overflow (> 2^23) in src/soe/EratMedium.cpp when using a
+   sieve size >= 4096 kilobytes past 1E15.
 
    Error
    > primesieve 1e16 1e16+1e10 -s8192 -t1
@@ -28,8 +20,7 @@ Unfixed bugs
    primesieve 1e16 1e16+1e10 -s256 -t1
    Prime numbers : 271425366
 
-Fixed bugs
-==========
+   >> FIXED in version 3.1, committed on the 10th October 2011
 
 6. The following options caused a segmentation fault in the console
    version of primesieve:
