@@ -169,7 +169,7 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
   assert(prime > this->getPreSieveLimit());
   assert(prime <= this->getSquareRoot());
   assert(eratSmall_ != NULL);
-  uint64_t primeSquared = isquare(prime);
+  uint64_t primeSquared = isquare<uint64_t>(prime);
 
   // The following while loop segments the sieve of Eratosthenes,
   // it is entered if all sieving primes <= sqrt(segmentHigh_)

@@ -310,10 +310,11 @@ protected:
     // prime not needed for sieving
     if (multiple > soe_.getStopNumber())
       return false;
-    // by theory prime^2 is the first multiple of prime that needs to
-    // be crossed off
-    if (isquare(*prime) > multiple) {
-       multiple = isquare(*prime);
+    // by theory prime^2 is the first multiple of prime
+    // that needs to be crossed off
+    uint64_t primeSquared = isquare<uint64_t>(*prime);
+    if (primeSquared > multiple) {
+       multiple = primeSquared;
        quotient = *prime;
     }
     uint32_t index = static_cast<uint32_t> (quotient % WHEEL_MODULO);

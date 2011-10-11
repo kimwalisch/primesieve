@@ -61,13 +61,13 @@ inline uint64_t ipow(uint64_t x, uint32_t n) {
   return result;
 }
 
-inline uint64_t isquare(uint32_t x) {
-  return static_cast<uint64_t> (x) * static_cast<uint64_t> (x);
+template <typename T>
+inline T isquare(T x) {
+  return x * x;
 }
 
 inline uint32_t isqrt(uint64_t x) {
   return static_cast<uint32_t> (std::sqrt(static_cast<double> (x)));
 }
-
 
 #endif /* IMATH_H */
