@@ -38,16 +38,15 @@
 #include "defs.h"
 
 /**
- * PreSieve objects are used to reset the sieve array (set bits to 1)
- * of SieveOfEratosthenes objects after each sieved segment and to
- * pre-sieve multiples of small primes <= limit_.
- * The idea is to create a wheel array in which multiples of small
- * primes are crossed off at initialization.
+ * PreSieve objects are used to pre-sieve multiples of small
+ * primes <= limit_ to speed up the sieve of Eratosthenes. The idea is
+ * to create a wheel array in which multiples of small primes are
+ * crossed-off once at initialization.
  * After each sieved segment the wheel array is copied to the sieve in
  * order to reset it and remove the multiples of small primes.
  * Pre-sieving multiples of small primes (e.g. <= 19) speeds up my
  * sieve of Eratosthenes implementation by about 20 percent when
- * sieving < 10^10.
+ * sieving <= 1E10.
  *
  * Pre-sieving multiples of small primes is described in more detail
  * in Joerg Richstein's German doctoral thesis:
@@ -57,7 +56,7 @@
  *
  * == Memory Usage ==
  * 
- * PreSieve uses: primeProduct(limit_)/30 bytes of memory.
+ * PreSieve objects use: primeProduct(limit_)/30 bytes of memory
  *
  * PreSieve multiples of primes <= 11 uses   77    bytes
  * PreSieve multiples of primes <= 13 uses 1001    bytes
@@ -81,10 +80,10 @@ private:
   uint32_t primeProduct_;
   /**
    * Wheel array of size primeProduct(limit_)/30 in which multiples of
-   * small primes <= limit_ are crossed off.
+   * small primes <= limit_ are crossed-off.
    */
   uint8_t* wheelArray_;
-  /** Size of wheelArray_. */
+  /** Size of wheelArray_ in bytes. */
   uint32_t size_;
   uint32_t getPrimeProduct(uint32_t) const;
   void initWheelArray();
