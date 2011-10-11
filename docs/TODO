@@ -4,4 +4,9 @@ http://primesieve.googlecode.com
 What needs to be done
 =====================
 
-09/29/2011 - Add Compilers section to README file
+10/11/2011 - Optimize src/soe/EratBig.cpp
+10/11/2011 - src/soe/EratMedium and src/soe/EratBig documentation
+10/11/2011 - Makefile DEBUG/NDEBUG
+10/11/2011 - Rewrite README
+10/11/2011 - Write docs/CHANGES for version 3.1
+09/29/2011 - Add Compilers section to README or INSTALL file
