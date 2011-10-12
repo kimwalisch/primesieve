@@ -125,13 +125,11 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   // 1 thread to print primes in sequential order
   if (flags_ & PRINT_FLAGS)
     return 1;
-
   // each thread sieves at least an interval of size sqrt(n)/6
   // but not smaller than defs::MIN_THREAD_INTERVAL
   uint64_t threadThreshold = std::max<uint64_t>(
       defs::MIN_THREAD_INTERVAL,
       isqrt(stopNumber_) / 6);
-
   // use all threads if the sieve interval is sufficiently large
   int idealNumThreads = static_cast<int> (
       std::min<uint64_t>(
