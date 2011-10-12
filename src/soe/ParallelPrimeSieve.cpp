@@ -47,10 +47,46 @@
 #include <algorithm>
 
 ParallelPrimeSieve::ParallelPrimeSieve() :
-  numThreads_(USE_IDEAL_NUM_THREADS), shm_(NULL) {
+  numThreads_(USE_IDEAL_NUM_THREADS),
+  shm_(NULL)
+{
   // prevents prime k-tuplet gaps
   static_assert(defs::MIN_THREAD_INTERVAL >= 100,
                "defs::MIN_THREAD_INTERVAL >= 100");
+}
+
+/**
+ * Used with the primesieve Qt application in ../qt-gui.
+ * Initializes the ParallelPrimeSieve object with values from
+ * a shared memory segment.
+ */
+void ParallelPrimeSieve::init(SharedMemory* shm) {
+  if (shm == NULL)
+    throw std::invalid_argument(
+        "ParallelPrimeSieve: shared memory segment must not be NULL");
+  shm_ = shm;
+  this->setStartNumber(shm_->startNumber);
+  this->setStopNumber(shm_->stopNumber);
+  this->setSieveSize(shm_->sieveSize);
+  this->setFlags(shm_->flags);
+  this->setNumThreads(shm_->threads);
+}
+
+/**
+ * Calculate the current status in percent of sieve().
+ * @param processed  The size of the processed segment (interval)
+ */
+void ParallelPrimeSieve::doStatus(uint32_t processed) {
+#if defined(_OPENMP)
+  #pragma omp critical (doStatus)
+#endif
+  {
+    PrimeSieve::doStatus(processed);
+    // communicate the current status via shared memory
+    // to the Qt GUI process
+    if (shm_ != NULL)
+      shm_->status = status_;
+  }
 }
 
 int ParallelPrimeSieve::getMaxThreads() {
@@ -76,96 +112,65 @@ int ParallelPrimeSieve::getNumThreads() const {
  * is set to numThreads = USE_IDEAL_NUM_THREADS.
  */
 void ParallelPrimeSieve::setNumThreads(int numThreads) {
-  numThreads_ = (numThreads >= 1 && numThreads <= this->getMaxThreads())
-      ? numThreads
-      : USE_IDEAL_NUM_THREADS;
-}
-
-uint64_t ParallelPrimeSieve::getSieveInterval() const {
-  return stopNumber_ - startNumber_;
+  numThreads_ = (numThreads < 1 && numThreads > this->getMaxThreads())
+      ? USE_IDEAL_NUM_THREADS
+      : numThreads;
 }
 
 /**
- * Get an ideal number of threads for the current set startNumber_,
- * stopNumber_ and flags_.
+ * Get an ideal number of threads for the current set
+ * startNumber_, stopNumber_ and flags_.
  */
 int ParallelPrimeSieve::getIdealNumThreads() const {
   // 1 thread to print primes in sequential order
   if (flags_ & PRINT_FLAGS)
     return 1;
-  // each thread should at least sieve an interval of size n^0.5/6 and
-  // not smaller than defs::MIN_THREAD_INTERVAL
+
+  // each thread sieves at least an interval of size sqrt(n)/6
+  // but not smaller than defs::MIN_THREAD_INTERVAL
   uint64_t threadThreshold = std::max<uint64_t>(
       defs::MIN_THREAD_INTERVAL,
       isqrt(stopNumber_) / 6);
-  // set to maxThreads if the sieve interval is sufficiently large
+
+  // use all threads if the sieve interval is sufficiently large
   int idealNumThreads = static_cast<int> (
       std::min<uint64_t>(
-          this->getSieveInterval() / threadThreshold,
+          this->getInterval() / threadThreshold,
           this->getMaxThreads()));
 
   return std::max<int>(1, idealNumThreads);
 }
 
+uint64_t ParallelPrimeSieve::getInterval() const {
+  return stopNumber_ - startNumber_;
+}
+
 /**
- * Get an interval size that ensures a good load balance among
- * threads whilst sieving.
+ * Get an interval size that ensures a good load
+ * balance among threads.
  */
 uint64_t ParallelPrimeSieve::getIdealInterval() const {
-  int numThreads = this->getNumThreads();
-  if (numThreads == 1)
-    return this->getSieveInterval();
+  uint64_t threads  = this->getNumThreads();
+  uint64_t interval = this->getInterval();
+  if (threads == 1)
+    return interval;
 
-  // idealInterval = n^0.5*2000, 0.1 percent initialization
+  // idealInterval = sqrt(n)*2000, 0.1 percent initialization
   uint64_t idealInterval = std::max<uint64_t>(
       defs::MIN_THREAD_INTERVAL,
       static_cast<uint64_t> (isqrt(stopNumber_)) * 2000);
-  // maximum interval size per thread
-  uint64_t maxThreadInterval = this->getSieveInterval() / numThreads;
+
+  uint64_t maxThreadInterval = interval / threads;
   // correct the user's bad settings
-  if (maxThreadInterval < this->getSieveInterval() &&
-      maxThreadInterval < defs::MIN_THREAD_INTERVAL) {
-    maxThreadInterval = this->getSieveInterval() / this->getIdealNumThreads();
-  }
+  if (maxThreadInterval < interval &&
+      maxThreadInterval < defs::MIN_THREAD_INTERVAL)
+    maxThreadInterval = interval / this->getIdealNumThreads();
+
   return std::min<uint64_t>(idealInterval, maxThreadInterval);
 }
 
 /**
- * For use with the Qt primesieve application in ../qt-gui.
- * Initializes this ParallelPrimeSieve object with values from a
- * shared memory segment.
- */
-void ParallelPrimeSieve::init(SharedMemory* shm) {
-  if (shm == NULL)
-    throw std::invalid_argument(
-        "ParallelPrimeSieve: shared memory segment must not be NULL");
-  shm_ = shm;
-  this->setStartNumber(shm_->startNumber);
-  this->setStopNumber(shm_->stopNumber);
-  this->setSieveSize(shm_->sieveSize);
-  this->setFlags(shm_->flags);
-  this->setNumThreads(shm_->threads);
-}
-
-/**
- * Calculate the current status in percent of sieve().
- * @param processed The size of the processed interval (segment)
- */
-void ParallelPrimeSieve::doStatus(uint32_t processed) {
-#if defined(_OPENMP)
-  #pragma omp critical (doStatus)
-#endif
-  {
-    PrimeSieve::doStatus(processed);
-    // communicate the current status via shared memory
-    // to the Qt GUI process
-    if (shm_ != NULL)
-      shm_->status = status_;
-  }
-}
-
-/**
- * Sieve the primes/prime k-tuplets within [startNumber_, stopNumber_]
+ * Sieve the primes and prime k-tuplets within [startNumber, stopNumber]
  * in parallel using OpenMP.
  */
 void ParallelPrimeSieve::sieve() {
@@ -176,27 +181,30 @@ void ParallelPrimeSieve::sieve() {
   double t1 = omp_get_wtime();
   this->reset();
   uint64_t idealInterval = this->getIdealInterval();
-  uint64_t chunks = (idealInterval == 0)
-      ? 1 : this->getSieveInterval() / idealInterval;
-  uint64_t maxOffset = chunks * idealInterval;
-  uint64_t maxStop = startNumber_ + maxOffset + 32 - maxOffset % 30;
-  if (maxStop < stopNumber_)
-    chunks++;
-  int numThreads = this->getNumThreads();
+   int64_t chunks        = (idealInterval > 0) ? this->getInterval() / idealInterval : 1;
+  uint64_t maxOffset     = idealInterval * chunks;
+  uint64_t maxStop       = startNumber_ + maxOffset + (32 - maxOffset % 30);
+  if (maxStop < stopNumber_) 
+    chunks += 1;
 
-  // the sieve interval [startNumber_, stopNumber_] is split into
-  // numerous sub-intervals that are processed in parallel
-  #pragma omp parallel for num_threads(numThreads) schedule(dynamic)
-  for (int64_t i = 0; i < static_cast<int64_t> (chunks); i++) {
+  int threads = this->getNumThreads();
+
+  // split the sieve interval [startNumber_, stopNumber_]
+  // into 'chunks' sub-intervals that are processed in
+  // parallel using OpenMP
+  #pragma omp parallel for num_threads(threads) schedule(dynamic)
+  for (int64_t i = 0; i < chunks; i++) {
     uint64_t start = startNumber_ + idealInterval * i;
-    uint64_t stop = startNumber_ + idealInterval * (i+1);
-    // start/stop numbers must be chosen carefully for PrimeSieve
-    // objects to prevent prime k-tuplets gaps
+    uint64_t stop  = startNumber_ + idealInterval * (i+1);
+    // start/stop numbers must be chosen carefully
+    // to prevent prime k-tuplets gaps
     if (i > 0)
       start += 32 - start % 30;
     stop += 32 - stop % 30;
+    if (stop > stopNumber_)
+      stop = stopNumber_;
     // sieve the primes within [start, stop]
-    PrimeSieve ps(start, std::min<uint64_t>(stop, stopNumber_), this);
+    PrimeSieve ps(start, stop, this);
     ps.sieve();
     #pragma omp critical (counts)
     for (uint32_t j = 0; j < COUNTS_SIZE; j++)

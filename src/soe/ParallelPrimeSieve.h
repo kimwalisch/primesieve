@@ -84,10 +84,10 @@ public:
     USE_IDEAL_NUM_THREADS = -1
   };
   ParallelPrimeSieve();
+  void init(SharedMemory*);
   static int getMaxThreads();
   int getNumThreads() const;
   void setNumThreads(int numThreads);
-  void init(SharedMemory*);
   virtual void sieve();
 private:
   /** Number of threads for sieving. */
@@ -97,10 +97,10 @@ private:
    * primesieve application (../qt-gui).
    */
   SharedMemory* shm_;
-  uint64_t getSieveInterval() const;
-  int getIdealNumThreads() const;
-  uint64_t getIdealInterval() const;
   virtual void doStatus(uint32_t);
+  int getIdealNumThreads() const;
+  uint64_t getInterval() const;
+  uint64_t getIdealInterval() const;
 };
 
 #endif // PARALLELPRIMESIEVE_H
