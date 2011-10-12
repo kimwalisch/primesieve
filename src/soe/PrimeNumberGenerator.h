@@ -42,8 +42,8 @@ class PrimeNumberFinder;
 
 /**
  * PrimeNumberGenerator is a SieveOfEratosthenes class that is used
- * to generate the prime numbers up to n^0.5 needed by
- * PrimeNumberFinder to sieve up to n.
+ * to generate the primes up to sqrt(n) needed for sieving by
+ * PrimeNumberFinder.
  */
 class PrimeNumberGenerator: public SieveOfEratosthenes {
 public:

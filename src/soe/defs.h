@@ -99,10 +99,9 @@
 #define SIZEOF(x) static_cast<uint32_t> (sizeof(x))
 
 /**
- * Reconstruct prime numbers from 1 bits of the sieve array and call a
- * callback function for each prime.
- * @remark The sieve array is of type uint8_t*
- * @see    PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
+ * Reconstruct prime numbers from 1 bits of the sieve array
+ * and call a callback function for each prime.
+ * @see PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
  */
 #define GENERATE_PRIMES(callback, uintXX_t) {                     \
   uint32_t i = 0;                                                 \
