@@ -48,7 +48,10 @@
 #include <ctime>
 
 PrimeSieve::PrimeSieve() :
-  startNumber_(0), stopNumber_(0), flags_(COUNT_PRIMES) {
+  startNumber_(0),
+  stopNumber_(0),
+  flags_(COUNT_PRIMES)
+{
   parent_ = this;
   this->setSieveSize(defs::PRIMESIEVE_SIEVESIZE);
   this->setPreSieveLimit(defs::PRIMESIEVE_PRESIEVE_LIMIT);
@@ -76,27 +79,13 @@ PrimeSieve::PrimeSieve(uint64_t startNumber,
   this->reset();
 }
 
-uint64_t PrimeSieve::getStartNumber() const {
-  return startNumber_;
-}
-
-uint64_t PrimeSieve::getStopNumber() const {
-  return stopNumber_;
-}
+uint64_t PrimeSieve::getStartNumber()   const { return startNumber_; }
+uint64_t PrimeSieve::getStopNumber()    const { return stopNumber_; }
+uint32_t PrimeSieve::getSieveSize()     const { return sieveSize_; }
+uint32_t PrimeSieve::getPreSieveLimit() const { return preSieveLimit_; }
 
 /**
- * Get the sieve size in kilobytes.
- */
-uint32_t PrimeSieve::getSieveSize() const {
-  return sieveSize_;
-}
-
-uint32_t PrimeSieve::getPreSieveLimit() const {
-  return preSieveLimit_;
-}
-
-/**
- * Get the current set public flags.
+ * Get the current user flags.
  */
 uint32_t PrimeSieve::getFlags() const {
   // clear out private flags
@@ -107,7 +96,8 @@ uint32_t PrimeSieve::getFlags() const {
  * Get the count of prime numbers within the interval
  * [startNumber, stopNumber].
  */
-uint64_t PrimeSieve::getPrimeCount(uint64_t startNumber, uint64_t stopNumber) {
+uint64_t PrimeSieve::getPrimeCount(uint64_t startNumber, 
+                                   uint64_t stopNumber) {
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
   this->setFlags(COUNT_PRIMES);
@@ -115,57 +105,17 @@ uint64_t PrimeSieve::getPrimeCount(uint64_t startNumber, uint64_t stopNumber) {
   return this->getPrimeCount();
 }
 
-/**
- * Get the count of prime numbers after sieve().
- */
-uint64_t PrimeSieve::getPrimeCount() const {
-  return counts_[0];
-}
+/// Get the count of primes and prime k-tuplets after sieve()
+uint64_t PrimeSieve::getPrimeCount()      const { return counts_[0]; }
+uint64_t PrimeSieve::getTwinCount()       const { return counts_[1]; }
+uint64_t PrimeSieve::getTripletCount()    const { return counts_[2]; }
+uint64_t PrimeSieve::getQuadrupletCount() const { return counts_[3]; }
+uint64_t PrimeSieve::getQuintupletCount() const { return counts_[4]; }
+uint64_t PrimeSieve::getSextupletCount()  const { return counts_[5]; }
+uint64_t PrimeSieve::getSeptupletCount()  const { return counts_[6]; }
 
 /**
- * Get the count of twin primes after sieve().
- */
-uint64_t PrimeSieve::getTwinCount() const {
-  return counts_[1];
-}
-
-/**
- * Get the count of prime triplets after sieve().
- */
-uint64_t PrimeSieve::getTripletCount() const {
-  return counts_[2];
-}
-
-/**
- * Get the count of prime quadruplets after sieve().
- */
-uint64_t PrimeSieve::getQuadrupletCount() const {
-  return counts_[3];
-}
-
-/**
- * Get the count of prime quintuplets after sieve().
- */
-uint64_t PrimeSieve::getQuintupletCount() const {
-  return counts_[4];
-}
-
-/**
- * Get the count of prime sextuplets after sieve().
- */
-uint64_t PrimeSieve::getSextupletCount() const {
-  return counts_[5];
-}
-
-/**
- * Get the count of prime septuplets after sieve().
- */
-uint64_t PrimeSieve::getSeptupletCount() const {
-  return counts_[6];
-}
-
-/**
- * Get the count of prime numbers or prime k-tuplets after sieve().
+ * Get the count of primes or prime k-tuplets after sieve().
  * @param type = 0 : Count of prime numbers,
  *        type = 1 : Count of twin primes,    
  *        type = 2 : Count of prime triplets,    
@@ -192,7 +142,7 @@ double PrimeSieve::getTimeElapsed() const {
  * @pre startNumber < (2^64-1) - (2^32-1) * 10
  */
 void PrimeSieve::setStartNumber(uint64_t startNumber) {
-  // EratMedium and EratBig stopNumber limit
+  // Erat(Medium|Big) stopNumber limit
   if (startNumber >= UINT64_MAX - UINT32_MAX * UINT64_C(10))
     throw std::invalid_argument("START must be < (2^64-1) - (2^32-1) * 10");
   startNumber_ = startNumber;
@@ -203,7 +153,7 @@ void PrimeSieve::setStartNumber(uint64_t startNumber) {
  * @pre stopNumber < (2^64-1) - (2^32-1) * 10
  */
 void PrimeSieve::setStopNumber(uint64_t stopNumber) {
-  // EratMedium and EratBig stopNumber limit
+  // Erat(Medium|Big) stopNumber limit
   if (stopNumber >= UINT64_MAX - UINT32_MAX * UINT64_C(10))
     throw std::invalid_argument("STOP must be < (2^64-1) - (2^32-1) * 10");
   stopNumber_ = stopNumber;
@@ -211,29 +161,27 @@ void PrimeSieve::setStopNumber(uint64_t stopNumber) {
 
 /**
  * Set the size of the sieve of Eratosthenes array (in kilobytes).
- * Default sieveSize = 32 KB.
- * The best performance is achieved with a sieve size that matches the
- * CPU's L1 cache size (usually 32 or 64 KB) when sieving < 10^14 and
- * a sieve size of the CPU's L2 cache size (e.g. 512 KB) above.
- *
+ * Default sieveSize = 32 KB, the best performance is achieved with a
+ * sieve size that matches the CPU's L1 cache size (usually 32 or 64
+ * KB) when sieving < 10^14 and a sieve size of the CPU's L2 cache
+ * size (e.g. 512 KB) above.
  * @param sieveSize  >= 1 && <= 8192 kilobytes, sieveSize is rounded
  *                   up to the next highest power of 2.
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
-  // SieveOfEratosthenes needs sieveSize >= 1 KB
-  // EratSmall, EratMedium and EratBig need sieveSize <= 8192
-  // EratBig needs a power of 2 sieve size
+  // SieveOfEratosthenes needs   sieveSize >= 1
+  // Erat(Small|Medium|Big) need sieveSize <= 8192
   if (sieveSize < 1)
     sieveSize = 1;
-  else if (sieveSize > 8192)
+  if (sieveSize > 8192)
     sieveSize = 8192;
-  else
-    sieveSize_ = nextHighestPowerOf2(sieveSize);
+  // EratBig needs a power of 2 sieveSize
+  sieveSize_ = nextHighestPowerOf2(sieveSize);
 }
 
 /**
- * Multiples of small primes <= preSieveLimit are pre-sieved to speed
- * up the sieve of Eratosthenes.
+ * Multiples of small primes <= preSieveLimit are pre-sieved
+ * to speed up the sieve of Eratosthenes.
  * @pre preSieveLimit >= 13 && <= 23
  */
 void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
@@ -269,12 +217,12 @@ void PrimeSieve::setFlags(uint32_t flags) {
 }
 
 /**
- * Generate the prime numbers within the interval
- * [startNumber, stopNumber] and call a callback function for each
- * prime.
+ * Generate the prime numbers within the interval [startNumber, stopNumber]
+ * and call a callback function for each prime.
  */
-void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
-    void (*callback)(uint64_t)) {
+void PrimeSieve::generatePrimes(uint64_t startNumber,
+                                uint64_t stopNumber,
+                                void (*callback)(uint64_t)) {
   if (callback == NULL)
     throw std::invalid_argument("callback must not be NULL");
   this->setStartNumber(startNumber);
@@ -285,12 +233,12 @@ void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
 }
 
 /**
- * Generate the prime numbers within the interval
- * [startNumber, stopNumber] and call an OOP callback function for
- * each prime.
+ * Generate the prime numbers within the interval [startNumber, stopNumber]
+ * and call an OOP callback function for each prime.
  */
-void PrimeSieve::generatePrimes(uint64_t startNumber, uint64_t stopNumber,
-    void (*callback)(uint64_t, void*), void* cbObj) {
+void PrimeSieve::generatePrimes(uint64_t startNumber, 
+                                uint64_t stopNumber,
+                                void (*callback)(uint64_t, void*), void* cbObj) {
   if (callback == NULL)
     throw std::invalid_argument("callback must not be NULL");
   this->setStartNumber(startNumber);
@@ -312,13 +260,14 @@ void PrimeSieve::reset() {
 
 /**
  * Calculate the current status in percent of sieve().
- * @param processed The size of the processed interval (segment)
+ * @param processed  The size of the processed segment (interval)
  */
 void PrimeSieve::doStatus(uint32_t processed) {
   segments_ += processed;
-  int old = static_cast<int> (status_);
-  status_ = std::min<double>(100.0, (static_cast<double> (segments_) / 
-      (1 + stopNumber_ - startNumber_)) * 100.0);
+  int    old  = static_cast<int> (status_);
+  double sum  = static_cast<double> (segments_);
+  double todo = static_cast<double> (1 + stopNumber_ - startNumber_);
+  status_ = std::min<double>((sum / todo) * 100.0, 100.0);
   if (flags_ & PRINT_STATUS) {
     int status = static_cast<int> (status_);
     if (status > old)
@@ -326,24 +275,28 @@ void PrimeSieve::doStatus(uint32_t processed) {
   }
 }
 
-void PrimeSieve::doSmallPrime(uint32_t low, uint32_t high, uint32_t type, 
-    const std::string& prime) {
-  if (startNumber_ <= low && stopNumber_ >= high) {
+void PrimeSieve::doSmallPrime(uint32_t low,
+                              uint32_t high,
+                              uint32_t type, 
+                              const std::string& prime) {
+  if (startNumber_ <= low && 
+      stopNumber_  >= high)
+  {
     if (flags_ & (COUNT_PRIMES << type))
       counts_[type]++;
     if (flags_ & (PRINT_PRIMES << type))
       std::cout << prime << std::endl;
-    else if (type == 0 && (flags_ & CALLBACK_PRIMES))
+    if (flags_ & CALLBACK_PRIMES)
       this->callback_(prime[0] - '0');
-    else if (type == 0 && (flags_ & CALLBACK_PRIMES_OOP))
+    if (flags_ & CALLBACK_PRIMES_OOP)
       this->callbackOOP_(prime[0] - '0', cbObj_);
   }
 }
 
 /**
- * Sieve the primes/prime k-tuplets within the interval
- * [startNumber_, stopNumber_] using a fast segmented sieve of
- * Eratosthenes implementation.
+ * Sieve the primes and prime k-tuplets (twins, triplets, ...) within
+ * the interval [startNumber, stopNumber] using a fast segmented sieve
+ * of Eratosthenes implementation.
  */
 void PrimeSieve::sieve() {
   clock_t t1 = std::clock();
@@ -351,7 +304,7 @@ void PrimeSieve::sieve() {
   if (stopNumber_ < startNumber_)
     throw std::invalid_argument("STOP must be >= START");
 
-  // small primes have to be examined manually
+  // do small primes and k-tuplets manually
   if (startNumber_ <= 5) {
     this->doSmallPrime(2,  2, 0, "2");
     this->doSmallPrime(3,  3, 0, "3");
@@ -365,13 +318,13 @@ void PrimeSieve::sieve() {
 
   if (stopNumber_ >= 7) {
     // fast segmented sieve of Eratosthenes object that sieves the
-    // primes/prime k-tuplets within [startNumber_, stopNumber_]
+    // primes within [startNumber_, stopNumber_]
     PrimeNumberFinder finder(*this);
 
     if (finder.needGenerator()) {
       // fast segmented sieve of Eratosthenes object that generates the
-      // primes up to stopNumber_^0.5 needed for sieving by the
-      // PrimeNumberFinder object
+      // primes up to sqrt(stopNumber_) needed for sieving by the
+      // PrimeNumberFinder
       PrimeNumberGenerator generator(finder);
 
       // sieve of Eratosthenes implementation that generates the primes
