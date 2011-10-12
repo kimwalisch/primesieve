@@ -44,7 +44,10 @@
 #include <iostream>
 #include <sstream>
 
-const uint32_t PrimeNumberFinder::kTupletBitmasks_[6][5] = {
+/// Bit patterns corresponding to prime k-tuplets
+/// within bytes of the sieve array.
+const uint32_t PrimeNumberFinder::kTupletBitmasks_[6][5] =
+{
   { 0x06, 0x18, 0xc0, END },        // Twin primes
   { 0x07, 0x0e, 0x1c, 0x38, END },  // Prime triplets
   { 0x1e, END },                    // Prime quadruplets
@@ -61,17 +64,9 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
       ps.getPreSieveLimit()),
   ps_(ps), kTupletByteCounts_(NULL)
 {
-  static_assert(PrimeSieve::COUNTS_SIZE >= 7, "PrimeSieve::COUNTS_SIZE >= 7");
+  static_assert(PrimeSieve::COUNTS_SIZE == 7, "PrimeSieve::COUNTS_SIZE == 7");
   if (ps_.flags_ & PrimeSieve::COUNT_KTUPLETS)
     this->initLookupTables();
-}
-
-/**
- * Check if the current PrimeNumberFinder object requires a
- * PrimeNumberGenerator object to generate the sieving primes.
- */
-bool PrimeNumberFinder::needGenerator() const {
-  return (this->getSquareRoot() > this->getPreSieveLimit());
 }
 
 PrimeNumberFinder::~PrimeNumberFinder() {
@@ -80,6 +75,14 @@ PrimeNumberFinder::~PrimeNumberFinder() {
       delete[] kTupletByteCounts_[i];
     delete[] kTupletByteCounts_;
   }
+}
+
+/**
+ * Check if PrimeNumberFinder requires a PrimeNumberGenerator
+ * object to generate its sieving primes.
+ */
+bool PrimeNumberFinder::needGenerator() const {
+  return (this->getSquareRoot() > this->getPreSieveLimit());
 }
 
 /**
@@ -105,8 +108,8 @@ void PrimeNumberFinder::initLookupTables() {
 }
 
 /**
- * Analyse (generate, count) the primes and prime k-tuplets within the
- * current segment [segmentLow+7, segmentLow + (sieveSize*30+1)].
+ * Generate/count the primes and prime k-tuplets within the current
+ * segment i.e. [segmentLow_+7, segmentHigh_].
  */
 void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
   if (ps_.flags_ & PrimeSieve::COUNT_FLAGS)
@@ -118,19 +121,19 @@ void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
 }
 
 /**
- * Count the prime numbers and prime k-tuplets within the
- * current segment.
+ * Count the primes and prime k-tuplets within
+ * the current segment.
  */
 void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
-  // count prime numbers (1 bits within the sieve)
+  // count prime numbers (1 bits within the sieve array)
   if (ps_.flags_ & PrimeSieve::COUNT_PRIMES) {
+    const uint64_t* sieve64 = reinterpret_cast<const uint64_t*> (sieve);
+    uint32_t size64    = sieveSize / SIZEOF(uint64_t);
+    uint32_t bytesLeft = sieveSize % SIZEOF(uint64_t);
     // see bithacks.h
-    uint32_t primeCount = popcount_lauradoux(
-        reinterpret_cast<const uint64_t*> (sieve), sieveSize / 8);
-    uint32_t bytesLeft = sieveSize % 8;
+    uint32_t primeCount = popcount_lauradoux(sieve64, size64);
     if (bytesLeft > 0)
-      primeCount += popcount_kernighan(
-          &sieve[sieveSize - bytesLeft], bytesLeft);
+      primeCount += popcount_kernighan(&sieve[sieveSize - bytesLeft], bytesLeft);
     // add up to total prime count
     ps_.counts_[0] += primeCount;
   }
@@ -138,16 +141,16 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // using lookup tables
   for (uint32_t i = 0; i < 6; i++) {
     if (ps_.flags_ & (PrimeSieve::COUNT_TWINS << i)) {
-      uint32_t kTupletCount = 0;
+      uint32_t kCount = 0;
       for (uint32_t j = 0; j < sieveSize; j++)
-        kTupletCount += kTupletByteCounts_[i][sieve[j]];
-      ps_.counts_[i+1] += kTupletCount;
+        kCount += kTupletByteCounts_[i][sieve[j]];
+      ps_.counts_[i+1] += kCount;
     }
   }
 }
 
 /**
- * Generate the prime numbers or prime k-tuplets (twin primes, prime
+ * Generate the primes or prime k-tuplets (twin primes, prime
  * triplets, ...) within the current segment.
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
@@ -155,22 +158,22 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   // GENERATE_PRIMES() is defined in defs.h
        if (ps_.flags_ & PrimeSieve::CALLBACK_PRIMES)     GENERATE_PRIMES(ps_.callback_,     uint64_t)
   else if (ps_.flags_ & PrimeSieve::CALLBACK_PRIMES_OOP) GENERATE_PRIMES(this->callbackOOP, uint64_t)
-  else if (ps_.flags_ & PrimeSieve::PRINT_PRIMES)        GENERATE_PRIMES(this->printPrime,  uint64_t)
+  else if (ps_.flags_ & PrimeSieve::PRINT_PRIMES)        GENERATE_PRIMES(this->print,       uint64_t)
   else if (ps_.flags_ & PrimeSieve::PRINT_KTUPLETS) {
     // i=0 twins, i=1 triplets, ...
     uint32_t i = 0;
-    while ((ps_.flags_ & (PrimeSieve::PRINT_TWINS << i)) == 0)
-      i++;
+    for (; (ps_.flags_ & (PrimeSieve::PRINT_TWINS << i)) == 0; i++)
+      ;
     // print prime k-tuplets to std::cout
     for (uint32_t j = 0; j < sieveSize; j++) {
-      for (const uint32_t* bitmasks = kTupletBitmasks_[i]; *bitmasks <= sieve[j]; bitmasks++) {
-        if ((sieve[j] & *bitmasks) == *bitmasks) {
-          uint32_t leastBit = bitScanForward(*bitmasks);
+      for (const uint32_t* bitmask = kTupletBitmasks_[i]; *bitmask <= sieve[j]; bitmask++) {
+        if ((sieve[j] & *bitmask) == *bitmask) {
+          uint32_t leastBit = bitScanForward(*bitmask);
+          uint32_t limit    = leastBit + (i + 1);
           std::ostringstream kTuplet;
           kTuplet << "(";
-          for (uint32_t l = leastBit; l < leastBit + i + 2; l++) {
-            kTuplet << lowerBound + j * NUMBERS_PER_BYTE + bitValues_[l]
-                    << (l < leastBit + i + 1 ? ", " : ")\n");
+          for (uint32_t l = leastBit; l <= limit; l++) {
+            kTuplet << lowerBound + j * NUMBERS_PER_BYTE + bitValues_[l] << (l < limit ? ", " : ")\n");
           }
           std::cout << kTuplet.str();
         }
@@ -183,8 +186,9 @@ void PrimeNumberFinder::callbackOOP(uint64_t prime) {
   ps_.callbackOOP_(prime, ps_.cbObj_);
 }
 
-void PrimeNumberFinder::printPrime(uint64_t prime) const {
+void PrimeNumberFinder::print(uint64_t prime) const {
   std::ostringstream oss;
   oss << prime << '\n';
+  // thread-safe
   std::cout << oss.str();
 }
