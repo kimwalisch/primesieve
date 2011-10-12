@@ -78,11 +78,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
   if (sieveSize_ < 1024)
     throw std::invalid_argument(
         "SieveOfEratosthenes: sieveSize must be >= 1 kilobyte.");
-  if (sieveSize_ > UINT32_MAX / NUMBERS_PER_BYTE)
-    throw std::overflow_error(
-        "SieveOfEratosthenes: sieveSize must be <= 2^32 / 30.");
   segmentLow_ = startNumber_ - this->getByteRemainder(startNumber_);
-  assert(segmentLow_ % NUMBERS_PER_BYTE == 0);
   // '+ 1' is a correction for primes of type i*30 + 31
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   this->initEratAlgorithms();
@@ -128,8 +124,8 @@ void SieveOfEratosthenes::initEratAlgorithms() {
 }
 
 /**
- * Pre-sieve multiples of small primes <= preSieve_.getLimit() to
- * speed up the sieve of Eratosthenes.
+ * Pre-sieve multiples of small primes <= preSieve_.getLimit()
+ * to speed up the sieve of Eratosthenes.
  */
 void SieveOfEratosthenes::preSieve() {
   preSieve_.doIt(sieve_, sieveSize_, segmentLow_);
@@ -146,7 +142,8 @@ void SieveOfEratosthenes::preSieve() {
 }
 
 /**
- * Cross-off the multiples within the current segment.
+ * Cross-off the multiples within the current segment i.e.
+ * [segmentLow_+7, segmentHigh_].
  */
 void SieveOfEratosthenes::crossOffMultiples() {
   if (eratSmall_ != NULL) {
@@ -164,14 +161,15 @@ void SieveOfEratosthenes::crossOffMultiples() {
 }
 
 /**
- * Implementation of the segmented sieve of Eratosthenes,
+ * Implementation of the segmented sieve of Eratosthenes.
  * sieve(uint32_t) must be called consecutively for all primes
  * (> getPreSieveLimit()) up to sqrt(stopNumber) in order to sieve
  * the primes within the interval [startNumber, stopNumber].
  */
 void SieveOfEratosthenes::sieve(uint32_t prime) {
-  assert(prime > this->getPreSieveLimit());
+  assert(prime >  this->getPreSieveLimit());
   assert(prime <= this->getSquareRoot());
+  assert(sieveSize_ <= UINT32_MAX / NUMBERS_PER_BYTE);
   assert(eratSmall_ != NULL);
   uint64_t primeSquared = isquare<uint64_t>(prime);
 
@@ -180,7 +178,7 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
   // sieve the next segment have been added to one of the three
   // erat(Small|Medium|Big)_ objects.
   // Each loop iteration sieves the primes within the interval
-  // [segmentLow_+7, segmentLow_ + (sieveSize_*30+1)].
+  // [segmentLow_+7, segmentHigh_].
   while (segmentHigh_ < primeSquared) {
     this->preSieve();
     this->crossOffMultiples();
@@ -199,8 +197,8 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
 }
 
 /**
- * Sieve the last segments remaining after that sieve(uint32_t) has
- * been called for all primes up to sqrt(stopNumber).
+ * Sieve the last segments remaining after that sieve(uint32_t)
+ * has been called for all primes up to sqrt(stopNumber).
  */
 void SieveOfEratosthenes::finish() {
   assert(segmentLow_ < stopNumber_);
