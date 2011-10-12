@@ -286,13 +286,12 @@ protected:
   }
   ~ModuloWheel() {}
   /**
-   * Used to initialize sieving primes <= n^0.5 for use with wheel
-   * factorization.
-   * Calculates the first multiple >= startNumber_ of prime that is
-   * not divisible by any of the wheel's prime factors (e.g. 2, 3, 5
-   * for a modulo 30 wheel) and the position within the
-   * SieveOfEratosthenes array (sieveIndex) of that multiple and its
-   * wheel index.
+   * Used to initialize sieving primes <= sqrt(n) for use with wheel
+   * factorization. Calculates the first multiple >= startNumber of
+   * prime that is not divisible by any of the wheel's prime factors
+   * (e.g. 2, 3 and 5 for a modulo 30 wheel) and the position within
+   * the SieveOfEratosthenes array (sieveIndex) of that multiple and
+   * its wheel index.
    * @return true if the WheelPrime must be stored for sieving else
    *         false.
    */
@@ -311,7 +310,7 @@ protected:
     if (multiple > soe_.getStopNumber())
       return false;
     // by theory prime^2 is the first multiple of prime
-    // that needs to be crossed off
+    // that needs to be crossed-off
     uint64_t primeSquared = isquare<uint64_t>(*prime);
     if (primeSquared > multiple) {
        multiple = primeSquared;
@@ -323,10 +322,10 @@ protected:
     multiple += static_cast<uint64_t> (*prime) * INIT_WHEEL[index].nextMultipleFactor;
     if (multiple > soe_.getStopNumber())
       return false;
-    uint32_t wheelOffset = WHEEL_ELEMENTS * primeTypes_[*prime % 15];
     *sieveIndex = static_cast<uint32_t> ((multiple - segmentLow) / 30);
-    *wheelIndex = wheelOffset + INIT_WHEEL[index].wheelIndex;
+    uint32_t wheelOffset = WHEEL_ELEMENTS * primeTypes_[*prime % 15];
     *prime /= 15;
+    *wheelIndex = wheelOffset + INIT_WHEEL[index].wheelIndex;
     return true;
   }
 };
