@@ -46,10 +46,11 @@ class SieveOfEratosthenes;
  * EratBig is my implementation of Tomas Oliveira e Silva's
  * cache-friendly segmented sieve of Eratosthenes algorithm, see:
  * http://www.ieeta.pt/~tos/software/prime_sieve.html
- * EratBig is optimized for big sieving primes that have at most one
- * multiple occurrence per segment. My implementation uses a sieve
- * array with 30 numbers per byte, 8 bytes per sieving prime and a
- * modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
+ * My implementation uses a sieve array with 30 numbers per byte,
+ * 8 bytes per sieving prime and a modulo 210 wheel that skips
+ * multiples of 2, 3, 5 and 7.
+ * EratBig is optimized for big sieving primes that have very few
+ * multiple occurrences per segment. 
  */
 class EratBig: protected Modulo210Wheel {
 public:
@@ -61,26 +62,24 @@ private:
   typedef WheelPrime_1 WheelPrime_t;
   typedef Bucket<WheelPrime_t, defs::ERATBIG_BUCKETSIZE> Bucket_t;
   enum { 
-    BUCKETS_PER_CREATE = defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t)
+    BUCKETS_PER_ALLOC = defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t)
   };
-  /** Current count of sieving primes within EratBig. */
-  uint32_t primeCount_;
   /** log2 of SieveOfEratosthenes::sieveSize_. */
   const uint32_t log2SieveSize_;
-  /** Size of bucketLists_. */
+  /** Size of the lists_ array. */
   uint32_t size_;
   /**
-   * bucketLists_[index_]   holds the sieving primes with multiple occurrences in the current segment,
-   * bucketLists_[index_+1] holds the sieving primes with multiple occurrences in the next segment,
+   * lists_[index_]   holds the sieving primes with multiple(s) in the current segment,
+   * lists_[index_+1] holds the sieving primes with multiple(s) in the next segment,
    * ...
    */
   uint32_t index_;
   /** Array of bucket lists, holds the sieving primes. */
-  Bucket_t** bucketLists_;
+  Bucket_t** lists_;
   /** List of empty buckets. */
-  Bucket_t* bucketStock_;
+  Bucket_t* stock_;
   /** Pointers of the allocated buckets. */
-  std::list<Bucket_t*> bucketPointers_;
+  std::list<Bucket_t*> pointers_;
   void setSize(const SieveOfEratosthenes&);
   void initBucketLists();
   void pushBucket(uint32_t);
