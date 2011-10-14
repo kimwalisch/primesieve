@@ -39,48 +39,45 @@
 #include "defs.h"
 
 #include <algorithm>
-#include <cassert>
 #include <cstdlib>
 
 EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
   EratBase<Modulo210Wheel, WheelPrime_2> (soe)
 {
+  static_assert(defs::ERATMEDIUM_FACTOR <= 15, "defs::ERATMEDIUM_FACTOR <= 15");
   uint32_t sqrtStop = soe.getSquareRoot();
-  uint32_t max      = soe.getSieveSize() * 15;
+  uint32_t max      = soe.getSieveSize() * defs::ERATMEDIUM_FACTOR;
   uint32_t limit    = std::min<uint32_t>(sqrtStop, max);
-  assert(limit <= (1U << 23) * 15);
   this->setLimit(limit);
 }
 
 /**
  * Implementation of the segmented sieve of Eratosthenes with wheel
  * factorization optimized for medium sieving primes with a few
- * multiple occurrences per segment.
+ * multiples per segment.
  * This implementation uses a sieve array with 30 numbers per byte and
  * a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
- *
- * Removes the multiples of medium sieving primes (<= sieveSize*15)
- * from the current segment (sieve array).
  * @see SieveOfEratosthenes::crossOffMultiples()
  */
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
-  // iterate over the sieving primes within EratMedium
-  for (Bucket_t* bucket = bucketList_; bucket != NULL; bucket = bucket->next) {
+  // iterate over the buckets within list_
+  for (Bucket_t* bucket = list_; bucket != NULL; bucket = bucket->next()) {
     uint32_t      count       = bucket->getCount();
     WheelPrime_t* wheelPrimes = bucket->getWheelPrimes();
 
+    // process the sieving primes within the current bucket
     for (uint32_t i = 0; i < count; i++) {
-      if (wheelPrimes[i].sieveIndex_ >= sieveSize) {
-        // the current sievingPrime does not have a multiple
-        // occurrence in the current segment
-        wheelPrimes[i].sieveIndex_ -= sieveSize;
+      if (wheelPrimes[i].sieveIndex >= sieveSize) {
+        // the current sieving prime does not have a
+        // multiple in the current segment
+        wheelPrimes[i].sieveIndex -= sieveSize;
         continue;
       }
       uint32_t sieveIndex   = wheelPrimes[i].getSieveIndex();
       uint32_t wheelIndex   = wheelPrimes[i].getWheelIndex();
       uint32_t sievingPrime = wheelPrimes[i].getSievingPrime();
-      // cross off the multiples (unset corresponding bits) of the
-      // current sievingPrime within the sieve array
+      // cross-off the multiples (unset corresponding bits) of the
+      // current sieving prime within the sieve array
       do {
         uint8_t unsetBit   = wheel_[wheelIndex].unsetBit;
         uint8_t nextFactor = wheel_[wheelIndex].nextMultipleFactor;
