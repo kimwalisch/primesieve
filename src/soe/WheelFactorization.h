@@ -113,7 +113,7 @@ private:
 /**
  * @see    WheelPrime_1
  * @remark WheelPrime_2  Unlike WheelPrime_1 WheelPrime_2 allows
- *                       sieveIndex_  >  23-bits but requires
+ *                       sieveIndex   >  23-bits but requires
  *                       sievingPrime <= 23-bits.
  */
 class WheelPrime_2 {
@@ -123,7 +123,7 @@ public:
     return data_ >> 9;
   }
   uint32_t getSieveIndex() const {
-    return sieveIndex_;
+    return sieveIndex;
   }
   uint32_t getWheelIndex() const {
     // get the 9 least significant bits
@@ -135,11 +135,12 @@ public:
   {
     assert(sievingPrime < (1U << 23) &&
            wheelIndex   < (1U << 9));
-    uint32_t packed = wheelIndex | (sievingPrime << 9);
-    sieveIndex_     = sieveIndex;
-    data_           = packed;
+    uint32_t packed  = wheelIndex | (sievingPrime << 9);
+    this->sieveIndex = sieveIndex;
+    data_            = packed;
   }
-  uint32_t sieveIndex_;
+  uint32_t sieveIndex;
+private:
   /**
    * wheelIndex   =  9 least significant bits of data_.
    * sievingPrime = 23 most  significant bits of data_.
@@ -163,29 +164,35 @@ public:
 template<class T_WheelPrime, uint32_t SIZE>
 class Bucket {
 public:
-  Bucket* next;
   Bucket() : count_(0) {}
-  void setNext(Bucket* _next) {
-    next = _next;
+  Bucket* next() {
+    return next_;
   }
-  void reset() {
-    count_ = 0;
+  void setNext(Bucket* next) {
+    next_ = next;
+  }
+  bool hasNext() const {
+    return (next_ != NULL);
+  }
+  bool isEmpty() const {
+    return (count_ == 0);
   }
   uint32_t getCount() const {
     return count_;
   }
-  /** Get a pointer to the first WheelPrime within the Bucket. */
   T_WheelPrime* getWheelPrimes() {
     return wheelPrimes_;
   }
+  void reset() {
+    count_ = 0;
+  }
   /**
    * Add a WheelPrime to the Bucket.
-   * @return false if the bucket is full else true.
+   * @return false  If the bucket is full else true.
    */
   bool addWheelPrime(uint32_t sievingPrime,
                      uint32_t sieveIndex,
-                     uint32_t wheelIndex)
-  {
+                     uint32_t wheelIndex) {
     uint32_t pos = count_;
     count_ += 1;
     assert(pos < SIZE);
@@ -193,8 +200,8 @@ public:
     return (pos != SIZE - 1);
   }
 private:
-  /** Count of WheelPrimes within the Bucket. */
   uint32_t count_;
+  Bucket* next_;
   T_WheelPrime wheelPrimes_[SIZE];
 };
 
