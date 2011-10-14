@@ -265,9 +265,9 @@ void PrimeSieve::reset() {
 void PrimeSieve::doStatus(uint32_t processed) {
   segments_ += processed;
   int    old  = static_cast<int> (status_);
-  double sum  = static_cast<double> (segments_);
-  double todo = static_cast<double> (1 + stopNumber_ - startNumber_);
-  status_ = std::min<double>((sum / todo) * 100.0, 100.0);
+  double done = static_cast<double> (segments_);
+  double all  = static_cast<double> (1 + stopNumber_ - startNumber_);
+  status_ = std::min<double>((done / all) * 100.0, 100.0);
   if (flags_ & PRINT_STATUS) {
     int status = static_cast<int> (status_);
     if (status > old)
