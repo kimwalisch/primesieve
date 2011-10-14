@@ -60,10 +60,11 @@ public:
     uint32_t wheelIndex;
     if (this->getWheelPrimeData(&prime, &sieveIndex, &wheelIndex)
         == true) {
-      if (!bucketList_->addWheelPrime(prime, sieveIndex, wheelIndex)) {
+      if (!list_->addWheelPrime(prime, sieveIndex, wheelIndex)) {
+        // the current bucket is full, allocate a new one
         Bucket_t* bucket = new Bucket_t;
-        bucket->setNext(bucketList_);
-        bucketList_ = bucket;
+        bucket->setNext(list_);
+        list_ = bucket;
       }
     }
   }
@@ -73,17 +74,16 @@ protected:
   /** Upper bound for sieving primes within EratBase. */
   uint32_t limit_;
   /** Singly linked list of buckets, holds the sieving primes. */
-  Bucket_t* bucketList_;
-  EratBase(const SieveOfEratosthenes& soe) : T_ModuloWheel(soe),
-      bucketList_(NULL) {
+  Bucket_t* list_;
+  EratBase(const SieveOfEratosthenes& soe) : T_ModuloWheel(soe) {
     // initialize the bucket list with an empty bucket
-    bucketList_ = new Bucket_t;
-    bucketList_->setNext(NULL);
+    list_ = new Bucket_t;
+    list_->setNext(NULL);
   }
   ~EratBase() {
-    while (bucketList_ != NULL) {
-      Bucket_t* old = bucketList_;
-      bucketList_ = bucketList_->next;
+    while (list_ != NULL) {
+      Bucket_t* old = list_;
+      list_ = list_->next();
       delete old;
     }
   }
