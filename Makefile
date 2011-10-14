@@ -4,7 +4,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   05 October 2011
+# Last modified:   14 October 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -29,15 +29,15 @@ ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE 'sun'),)
   $(warning primesieve: You might need to export OMP_NUM_THREADS for OpenMP multi-threading)
   $(warning )
   CXXFLAGS = +w -xopenmp -fast -xalias_level=compatible -xrestrict
- 
+
 # icpc : Intel C++ Compiler
 #
 # == Profile guided optimization (5 percent speed up, icpc 12.0) ==
-# CXXFLAGS = -openmp -Wall -fast -prof-gen
+# CXXFLAGS = -openmp -Wall -O2 -prof-gen
 # make CXX=icpc
 # out/./primesieve 1e18 1e18+1e10 -t1
 # make clean
-# CXXFLAGS = -openmp -Wall -fast -prof-use
+# CXXFLAGS = -openmp -Wall -O2 -prof-use
 # make CXX=icpc
 else ifeq ($(CXX),icpc)
   CXXFLAGS = -openmp -Wall -O2
@@ -46,12 +46,10 @@ else ifeq ($(CXX),icpc)
 # Compilers: GNU g++, MinGW g++, Apple g++, llvm-g++, ...
 else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
   ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i apple),)
-    # Apple g++ produces the fastest executable using the -fast option
+    # Apple g++, fastest executable using -fast
     CXXFLAGS += -fopenmp -Wall -fast
   else
-    # GNU g++ produces the fastest executable using the -O2 option
-    # Profile guided optimization (-fprofile-generate, -fprofile-use) does
-    # not speed things up
+    # GNU g++ (v. 4.6), fastest executable using -O2
     CXXFLAGS += -fopenmp -Wall -O2
   endif
 
