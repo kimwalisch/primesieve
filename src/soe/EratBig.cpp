@@ -40,15 +40,13 @@
 
 #include <stdexcept>
 #include <cstdlib>
-#include <cassert>
 #include <list>
 
 EratBig::EratBig(const SieveOfEratosthenes& soe) :
   Modulo210Wheel(soe),
-  log2SieveSize_(floorLog2(soe.getSieveSize())),
+  stock_(NULL),
   index_(0),
-  lists_(NULL),
-  stock_(NULL)
+  log2SieveSize_(floorLog2(soe.getSieveSize()))
 {
   // EratBig uses bitwise operations that require a power of 2 sieve size
   if (!isPowerOf2(soe.getSieveSize()))
@@ -122,10 +120,10 @@ void EratBig::pushBucket(uint32_t index) {
   if (stock_ == NULL) {
     Bucket_t* more = new Bucket_t[BUCKETS_PER_ALLOC];
     pointers_.push_back(more);
-    stock_ = &more[0];
     for(int i = 0; i < BUCKETS_PER_ALLOC - 1; i++)
       more[i].setNext(&more[i + 1]);
     more[BUCKETS_PER_ALLOC - 1].setNext(NULL);
+    stock_ = &more[0];
   }
   Bucket_t* bucket = stock_;
   stock_ = stock_->next();
@@ -161,25 +159,19 @@ void EratBig::sieve(uint8_t* sieve) {
     // each loop iteration processes a bucket i.e. removes the
     // next multiple of its sieving primes
     do {
-      const uint32_t      count       = bucket->getCount();
-      const WheelPrime_t* wheelPrimes = bucket->getWheelPrimes();
-      uint32_t i = 0;
+      const uint32_t      count  = bucket->getCount();
+      const WheelPrime_t* wPrime = bucket->getWheelPrimes();
+      const WheelPrime_t* end    = &wPrime[count - count % 2];
 
       // iterate over the sieving primes within the
-      // current bucket, loop unrolled by 4
-      for (; i < count - count % 4; i += 4) {
-        uint32_t sieveIndex0   = wheelPrimes[i+0].getSieveIndex();
-        uint32_t wheelIndex0   = wheelPrimes[i+0].getWheelIndex();
-        uint32_t sievingPrime0 = wheelPrimes[i+0].getSievingPrime();
-        uint32_t sieveIndex1   = wheelPrimes[i+1].getSieveIndex();
-        uint32_t wheelIndex1   = wheelPrimes[i+1].getWheelIndex();
-        uint32_t sievingPrime1 = wheelPrimes[i+1].getSievingPrime();
-        uint32_t sieveIndex2   = wheelPrimes[i+2].getSieveIndex();
-        uint32_t wheelIndex2   = wheelPrimes[i+2].getWheelIndex();
-        uint32_t sievingPrime2 = wheelPrimes[i+2].getSievingPrime();
-        uint32_t sieveIndex3   = wheelPrimes[i+3].getSieveIndex();
-        uint32_t wheelIndex3   = wheelPrimes[i+3].getWheelIndex();
-        uint32_t sievingPrime3 = wheelPrimes[i+3].getSievingPrime();
+      // current bucket, loop unrolled 2 times
+      for (; wPrime < end; wPrime += 2) {
+        uint32_t sieveIndex0   = wPrime[0].getSieveIndex();
+        uint32_t wheelIndex0   = wPrime[0].getWheelIndex();
+        uint32_t sievingPrime0 = wPrime[0].getSievingPrime();
+        uint32_t sieveIndex1   = wPrime[1].getSieveIndex();
+        uint32_t wheelIndex1   = wPrime[1].getWheelIndex();
+        uint32_t sievingPrime1 = wPrime[1].getSievingPrime();
 
         // cross-off the next multiple (unset corresponding bit) of the
         // current sieving primes within the sieve array
@@ -191,23 +183,11 @@ void EratBig::sieve(uint8_t* sieve) {
         sieveIndex1 += wheel_[wheelIndex1].nextMultipleFactor * sievingPrime1;
         sieveIndex1 += wheel_[wheelIndex1].correct;
         wheelIndex1 += wheel_[wheelIndex1].next;
-        sieve[sieveIndex2] &= wheel_[wheelIndex2].unsetBit;
-        sieveIndex2 += wheel_[wheelIndex2].nextMultipleFactor * sievingPrime2;
-        sieveIndex2 += wheel_[wheelIndex2].correct;
-        wheelIndex2 += wheel_[wheelIndex2].next;
-        sieve[sieveIndex3] &= wheel_[wheelIndex3].unsetBit;
-        sieveIndex3 += wheel_[wheelIndex3].nextMultipleFactor * sievingPrime3;
-        sieveIndex3 += wheel_[wheelIndex3].correct;
-        wheelIndex3 += wheel_[wheelIndex3].next;
 
         uint32_t next0 = (index_ + (sieveIndex0 >> log2SieveSize_)) & (size_ - 1);
         sieveIndex0 &= (1U << log2SieveSize_) - 1;
         uint32_t next1 = (index_ + (sieveIndex1 >> log2SieveSize_)) & (size_ - 1);
         sieveIndex1 &= (1U << log2SieveSize_) - 1;
-        uint32_t next2 = (index_ + (sieveIndex2 >> log2SieveSize_)) & (size_ - 1);
-        sieveIndex2 &= (1U << log2SieveSize_) - 1;
-        uint32_t next3 = (index_ + (sieveIndex3 >> log2SieveSize_)) & (size_ - 1);
-        sieveIndex3 &= (1U << log2SieveSize_) - 1;
 
         // move the current sieving primes to the bucket list
         // related to their next multiple occurrence
@@ -215,17 +195,13 @@ void EratBig::sieve(uint8_t* sieve) {
           this->pushBucket(next0);
         if (!lists_[next1]->addWheelPrime(sievingPrime1, sieveIndex1, wheelIndex1))
           this->pushBucket(next1);
-        if (!lists_[next2]->addWheelPrime(sievingPrime2, sieveIndex2, wheelIndex2))
-          this->pushBucket(next2);
-        if (!lists_[next3]->addWheelPrime(sievingPrime3, sieveIndex3, wheelIndex3))
-          this->pushBucket(next3);
       }
 
       // process the remaining sieving primes
-      for (; i < count; i++) {
-        uint32_t sieveIndex   = wheelPrimes[i].getSieveIndex();
-        uint32_t wheelIndex   = wheelPrimes[i].getWheelIndex();
-        uint32_t sievingPrime = wheelPrimes[i].getSievingPrime();
+      for (; wPrime < &end[count % 2]; wPrime++) {
+        uint32_t sieveIndex   = wPrime->getSieveIndex();
+        uint32_t wheelIndex   = wPrime->getWheelIndex();
+        uint32_t sievingPrime = wPrime->getSievingPrime();
         sieve[sieveIndex] &= wheel_[wheelIndex].unsetBit;
         sieveIndex += wheel_[wheelIndex].nextMultipleFactor * sievingPrime;
         sieveIndex += wheel_[wheelIndex].correct;

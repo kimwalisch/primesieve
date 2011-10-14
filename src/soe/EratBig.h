@@ -64,22 +64,22 @@ private:
   enum { 
     BUCKETS_PER_ALLOC = defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t)
   };
-  /** log2 of SieveOfEratosthenes::sieveSize_. */
-  const uint32_t log2SieveSize_;
-  /** Size of the lists_ array. */
-  uint32_t size_;
-  /**
-   * lists_[index_]   holds the sieving primes with multiple(s) in the current segment,
-   * lists_[index_+1] holds the sieving primes with multiple(s) in the next segment,
-   * ...
-   */
-  uint32_t index_;
   /** Array of bucket lists, holds the sieving primes. */
   Bucket_t** lists_;
   /** List of empty buckets. */
   Bucket_t* stock_;
   /** Pointers of the allocated buckets. */
   std::list<Bucket_t*> pointers_;
+  /**
+   * lists_[index_]   holds the sieving primes with multiple(s) in the current segment,
+   * lists_[index_+1] holds the sieving primes with multiple(s) in the next segment,
+   * ...
+   */
+  uint32_t index_;
+  /** log2 of SieveOfEratosthenes::sieveSize_. */
+  const uint32_t log2SieveSize_;
+  /** Size of the lists_ array. */
+  uint32_t size_;
   void setSize(const SieveOfEratosthenes&);
   void initBucketLists();
   void pushBucket(uint32_t);
