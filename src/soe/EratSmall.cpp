@@ -49,7 +49,7 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
   uint32_t max      = static_cast<uint32_t> (soe.getSieveSize() * defs::ERATSMALL_FACTOR);
   uint32_t limit    = std::min<uint32_t>(sqrtStop, max);
   // sieveSize - 1 + (prime / 15) * 3 + 3 - sieveSize < sieveSize
-  // prevents array segmentation faults in sieve(uint8_t*, uint32_t)
+  // prevents segmentation faults in sieve(uint8_t*, uint32_t)
   if (limit >= (soe.getSieveSize() - 2) * 5)
     throw std::invalid_argument(
         "EratSmall: limit must be < (sieveSize - 2) * 5.");
@@ -58,30 +58,28 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
 
 /**
  * Implementation of the segmented sieve of Eratosthenes with wheel
- * factorization optimized for small sieving primes with many multiple
- * occurrences per segment.
+ * factorization optimized for small sieving primes with many
+ * multiples per segment.
  * This implementation uses a sieve array with 30 numbers per byte and
  * a hardcoded modulo 30 wheel that skips multiples of 2, 3 and 5.
- *
- * Removes the multiples of small sieving primes
- * (<= sieveSize * defs::ERATSMALL_FACTOR) from the current segment.
  * @see SieveOfEratosthenes::crossOffMultiples()
  */
 void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
   uint8_t* sieveEnd = &sieve[sieveSize];
-  // iterate over the sieving primes within EratSmall
-  for (Bucket_t* bucket = bucketList_; bucket != NULL; bucket = bucket->next) {
+  // iterate over the buckets within list_
+  for (Bucket_t* bucket = list_; bucket != NULL; bucket = bucket->next()) {
     uint32_t      count  = bucket->getCount();
     WheelPrime_t* wPrime = bucket->getWheelPrimes();
     WheelPrime_t* end    = &wPrime[count];
 
+    // process the sieving primes within the current bucket
     for (; wPrime != end; wPrime++) {
       const uint32_t primeX2 = wPrime->getSievingPrime();
       const uint32_t primeX4 = primeX2 * 2;
       const uint32_t primeX6 = primeX2 * 3;
 
-      // cross off the multiples (unset corresponding bits) of the
-      // current sievingPrime within the sieve array
+      // cross-off the multiples (unset corresponding bits) of the
+      // current sieving prime within the sieve array
       uint8_t* s = &sieve[wPrime->getSieveIndex()];
       switch (wPrime->getWheelIndex()) {
         // for sieving primes of type i * 30 + 7
