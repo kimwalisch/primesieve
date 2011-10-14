@@ -44,7 +44,7 @@ class SieveOfEratosthenes;
 /**
  * EratSmall is an implementation of the segmented sieve of
  * Eratosthenes with wheel factorization optimized for small sieving
- * primes with many multiple occurrences per segment.
+ * primes with many multiples per segment.
  * It uses a sieve array with 30 numbers per byte, 8 bytes per sieving
  * prime and a hardcoded modulo 30 wheel that skips multiples of 2, 3
  * and 5. The algorithm is a further optimized implementation of Achim
