@@ -121,7 +121,7 @@ private:
   EratMedium* eratMedium_;
   /**
    * Used to cross-off the multiples of big sieving primes
-   * that have at most one multiple per segment.
+   * that have very few multiples per segment.
    */
   EratBig* eratBig_;
   uint32_t getByteRemainder(uint64_t) const;

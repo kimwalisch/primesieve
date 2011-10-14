@@ -153,8 +153,7 @@ void SieveOfEratosthenes::crossOffMultiples() {
       // process the sieving primes with a few multiples per segment
       eratMedium_->sieve(sieve_, sieveSize_);
       if (eratBig_ != NULL)
-        // process the sieving primes having at most
-        // one multiple per segment
+        // process the sieving primes with very few multiples per segment
         eratBig_->sieve(sieve_);
     }
   }
@@ -188,7 +187,7 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
   }
   // prime is added to eratSmall_ if it has many multiples per
   // segment, to eratMedium_ if it has a few multiples per segment
-  // and to eratBig_ if it has at most one multiple per segment.
+  // and to eratBig_ if it has very few multiples per segment.
   if (prime > eratSmall_->getLimit())
     if (prime > eratMedium_->getLimit())
             eratBig_->addSievingPrime(prime);
