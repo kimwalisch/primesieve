@@ -4,7 +4,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   14 October 2011
+# Last modified:   15 October 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -19,12 +19,10 @@ CXX = g++
 # Sun Studio optimization flags: http://dsc.sun.com/solaris/articles/amdopt.html
 #
 # == Profile guided optimization (3 percent speed up, sunCC 12.2) ==
-# CXXFLAGS = +w -xopenmp -fast -xalias_level=compatible -xrestrict -xipo=2 -xprofile=collect:./feedback
-# make CXX=sunCC
+# make CXX=sunCC "CXXFLAGS = -xopenmp -fast -xalias_level=compatible -xrestrict -xipo=2 -xprofile=collect:./feedback"
 # out/./primesieve 1e18 1e18+1e10 -t1
 # make clean
-# CXXFLAGS = +w -xopenmp -fast -xalias_level=compatible -xrestrict -xipo=2 -xprofile=use:./feedback
-# make CXX=sunCC
+# make CXX=sunCC "CXXFLAGS = -xopenmp -fast -xalias_level=compatible -xrestrict -xipo=2 -xprofile=use:./feedback"
 ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE 'sun'),)
   $(warning primesieve: You might need to export OMP_NUM_THREADS for OpenMP multi-threading)
   $(warning )
@@ -33,12 +31,10 @@ ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE 'sun'),)
 # icpc : Intel C++ Compiler
 #
 # == Profile guided optimization (5 percent speed up, icpc 12.0) ==
-# CXXFLAGS = -openmp -Wall -O2 -prof-gen
-# make CXX=icpc
+# make CXX=icpc "CXXFLAGS = -openmp -Wall -O2 -prof-gen"
 # out/./primesieve 1e18 1e18+1e10 -t1
 # make clean
-# CXXFLAGS = -openmp -Wall -O2 -prof-use
-# make CXX=icpc
+# make CXX=icpc "CXXFLAGS = -openmp -Wall -O2 -ipo -prof-use"
 else ifeq ($(CXX),icpc)
   CXXFLAGS = -openmp -Wall -O2
 
