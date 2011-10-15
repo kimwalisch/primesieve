@@ -163,8 +163,8 @@ void EratBig::sieve(uint8_t* sieve) {
       const WheelPrime_t* wPrime = bucket->getWheelPrimes();
       const WheelPrime_t* end    = &wPrime[count - count % 2];
 
-      // iterate over the sieving primes within the
-      // current bucket, loop unrolled 2 times
+      // iterate over the sieving primes within the current bucket
+      // loop unrolled 2 times, optimized for x64 CPUs
       for (; wPrime < end; wPrime += 2) {
         uint32_t sieveIndex0   = wPrime[0].getSieveIndex();
         uint32_t wheelIndex0   = wPrime[0].getWheelIndex();
