@@ -43,26 +43,17 @@
 class ParallelPrimeSieve;
 
 /**
- * PrimeSieve is an optimized implementation of the segmented sieve of
- * Eratosthenes that generates prime numbers and prime k-tuplets (twin
- * primes, prime triplets, ...) in order up to 2^64 maximum.
+ * PrimeSieve is a highly optimized implementation of the segmented
+ * sieve of Eratosthenes that generates primes and prime k-tuplets
+ * (twins, triplets, ...) in order up to 2^64 maximum.
  * The file ../README describes the algorithms used in more detail.
- * 
- * == Usage ==
- *
- * The file ../docs/USAGE_EXAMPLES contains source code examples that
- * show how to use PrimeSieve objects to generate primes, count
- * primes, print prime triplets, ...
- *
- * == Memory Requirement ==
- *
- * PrimeSieve::sieve() uses about:
- * pi(stopNumber_^0.5) * 8 bytes + sieve size + 450 kilobytes
+ * The file ../docs/USAGE_EXAMPLES contains source code examples of
+ * how to use PrimeSieve & ParallelPrimeSieve objects.
  */
 class PrimeSieve {
   friend class PrimeNumberFinder;
 public:
-  /** Public flags (settings) for PrimeSieve. */
+  /** Public user flags. */
   enum {
     COUNTS_SIZE       = 7,
     COUNT_PRIMES      = 1 << 0,
@@ -112,31 +103,31 @@ public:
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
   virtual void sieve();
 protected:
-  /** Private flags (bits >= 20) for PrimeSieve. */
+  /** Private internal falgs (bits >= 20). */
   enum {
     CALLBACK_PRIMES     = 1 << 20,
     CALLBACK_PRIMES_OOP = 1 << 21,
     GENERATE_FLAGS      = PRINT_FLAGS | CALLBACK_PRIMES | CALLBACK_PRIMES_OOP
   };
-  /** Start number for sieving. */
+  /** Sieve the primes within the interval [startNumber_, stopNumber_]. */
   uint64_t startNumber_;
-  /** Stop number for sieveing. */
+  /** Sieve the primes within the interval [startNumber_, stopNumber_]. */
   uint64_t stopNumber_;
   /** A sieve size in kilobytes. */
   uint32_t sieveSize_;
   /** Settings for PrimeSieve::sieve(). */
   uint32_t flags_;
   /**
-   * counts_[0]: count of prime numbers
-   * counts_[1]: count of twin primes
-   * counts_[2]: count of prime triplets
-   * counts_[3]: count of prime quadruplets
-   * counts_[4]: count of prime quintuplets
-   * counts_[5]: count of prime sextuplets
-   * counts_[6]: count of prime septuplets
+   * counts_[0]: count of prime numbers,
+   * counts_[1]: count of twin primes,
+   * counts_[2]: count of prime triplets,
+   * counts_[3]: count of prime quadruplets,
+   * counts_[4]: count of prime quintuplets,
+   * counts_[5]: count of prime sextuplets,
+   * counts_[6]: count of prime septuplets.
    */
   uint64_t counts_[COUNTS_SIZE];
-  /** Status of PrimeSieve::sieve() in percent. */
+  /** Status in percent of PrimeSieve::sieve(). */
   double status_;
   /** Time elapsed in seconds of PrimeSieve::sieve(). */
   double timeElapsed_;

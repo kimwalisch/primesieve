@@ -39,32 +39,19 @@
 #include "defs.h"
 
 /**
- * ParallelPrimeSieve is a parallel implementation of the segmented
- * sieve of Eratosthenes using OpenMP.
- * The parallelization is achieved using multiple threads, each thread
- * sieves chunks of the interval [startNumber_, stopNumber_] using
- * PrimeSieve objects until the entire interval has been processed.
- * This approach scales well on multi-core CPUs but the memory usage
- * depends on the number of threads i.e. O(n^0.5) * number of threads,
- * and the primes are not generated or printed in order.
- *
- * == Usage ==
- *
- * The file ../docs/USAGE_EXAMPLES contains source code examples that
- * show how to use PrimeSieve and ParallelPrimeSieve objects to
- * generate primes, count primes, print prime triplets, ...
- *
- * == Memory Requirement ==
- *
- * ParallelPrimeSieve::sieve() uses about:
- * (pi(n^0.5) * 8 bytes + 500 kilobytes) * number of threads
+ * ParallelPrimeSieve is a multi-threaded implementation of the
+ * segmented sieve of Eratosthenes using OpenMP that generates primes
+ * and prime k-tuplets (twins, triplets, ...) up to 2^64 maximum.
+ * The file ../README describes the algorithms used in more detail.
+ * The file ../docs/USAGE_EXAMPLES contains source code examples of
+ * how to use PrimeSieve & ParallelPrimeSieve objects.
  */
 class ParallelPrimeSieve: public PrimeSieve {
 public:
   /**
-   * Used in the Qt primesieve application (../qt-gui) in order to
-   * handle the communication between the GUI process and the
-   * ParallelPrimeSieve process.
+   * Used in the primesieve Qt application (../qt-gui) to
+   * handle the communication between the GUI process and
+   * the ParallelPrimeSieve process.
    */
   struct SharedMemory {
     uint64_t startNumber;
@@ -78,8 +65,8 @@ public:
   };
   enum {
     /*
-     * Use an ideal number of threads for the current set
-     * startNumber_, stopNumber_ and flags_.
+     * if (numThreads_ == USE_IDEAL_NUM_THREADS) an ideal number of
+     * threads i.e. getIdealNumThreads() will be used for sieving.
      */
     USE_IDEAL_NUM_THREADS = -1
   };
@@ -93,8 +80,8 @@ private:
   /** Number of threads for sieving. */
   int numThreads_;
   /**
-   * Pointer to a shared memory segment, for use with the Qt
-   * primesieve application (../qt-gui).
+   * Used for interprocess communication with the
+   * primesieve Qt application (../qt-gui).
    */
   SharedMemory* shm_;
   virtual void doStatus(uint32_t);
