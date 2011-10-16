@@ -119,11 +119,11 @@ void EratBig::addSievingPrime(uint32_t prime) {
 void EratBig::pushBucket(uint32_t index) {
   if (stock_ == NULL) {
     Bucket_t* more = new Bucket_t[BUCKETS_PER_ALLOC];
+    stock_ = &more[0];
     pointers_.push_back(more);
     for(int i = 0; i < BUCKETS_PER_ALLOC - 1; i++)
       more[i].setNext(&more[i + 1]);
     more[BUCKETS_PER_ALLOC - 1].setNext(NULL);
-    stock_ = &more[0];
   }
   Bucket_t* bucket = stock_;
   stock_ = stock_->next();
