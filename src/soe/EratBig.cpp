@@ -44,6 +44,7 @@
 
 EratBig::EratBig(const SieveOfEratosthenes& soe) :
   Modulo210Wheel(soe),
+  lists_(NULL),
   stock_(NULL),
   index_(0),
   log2SieveSize_(floorLog2(soe.getSieveSize()))
