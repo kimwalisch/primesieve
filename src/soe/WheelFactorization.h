@@ -164,27 +164,32 @@ private:
 template<class T_WheelPrime, uint32_t SIZE>
 class Bucket {
 public:
-  Bucket() : count_(0) {}
-  Bucket* next() {
-    return next_;
+  Bucket() : count_(0) {
   }
-  void setNext(Bucket* next) {
-    next_ = next;
+  // list.push_back(Bucket()) adds an empty bucket without
+  // unnecessary copying
+  Bucket(const Bucket&) : count_(0) {
   }
-  bool hasNext() const {
-    return (next_ != NULL);
-  }
-  bool isEmpty() const {
-    return (count_ == 0);
+  void reset() {
+    count_ = 0;
   }
   uint32_t getCount() const {
     return count_;
   }
+  Bucket* next() {
+    return next_;
+  }
   T_WheelPrime* getWheelPrimes() {
     return wheelPrimes_;
   }
-  void reset() {
-    count_ = 0;
+  void setNext(Bucket* next) {
+    next_ = next;
+  }
+  bool isEmpty() const {
+    return (count_ == 0);
+  }
+  bool hasNext() const {
+    return (next_ != NULL);
   }
   /**
    * Add a WheelPrime to the Bucket.
