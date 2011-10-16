@@ -66,10 +66,10 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
  */
 void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
   uint8_t* sieveEnd = &sieve[sieveSize];
-  // iterate over the buckets within list_
-  for (Bucket_t* bucket = list_; bucket != NULL; bucket = bucket->next()) {
-    uint32_t      count  = bucket->getCount();
-    WheelPrime_t* wPrime = bucket->getWheelPrimes();
+  // iterate over the buckets within EratSmall
+  for (std::list<Bucket_t>::iterator it = list_.begin(); it != list_.end(); ++it) {
+    uint32_t      count  = it->getCount();
+    WheelPrime_t* wPrime = it->getWheelPrimes();
     WheelPrime_t* end    = &wPrime[count];
 
     // process the sieving primes within the current bucket
