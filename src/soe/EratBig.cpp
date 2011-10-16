@@ -59,7 +59,7 @@ EratBig::EratBig(const SieveOfEratosthenes& soe) :
 EratBig::~EratBig() {
   delete[] lists_;
   for (std::list<Bucket_t*>::iterator it = pointers_.begin();
-      it != pointers_.end(); it++)
+      it != pointers_.end(); ++it)
     delete[] *it;
 }
 
@@ -176,13 +176,13 @@ void EratBig::sieve(uint8_t* sieve) {
         // cross-off the next multiple (unset corresponding bit) of the
         // current sieving primes within the sieve array
         sieve[sieveIndex0] &= wheel_[wheelIndex0].unsetBit;
-        sieveIndex0 += wheel_[wheelIndex0].nextMultipleFactor * sievingPrime0;
-        sieveIndex0 += wheel_[wheelIndex0].correct;
-        wheelIndex0 += wheel_[wheelIndex0].next;
+        sieveIndex0        += wheel_[wheelIndex0].nextMultipleFactor * sievingPrime0;
+        sieveIndex0        += wheel_[wheelIndex0].correct;
+        wheelIndex0        += wheel_[wheelIndex0].next;
         sieve[sieveIndex1] &= wheel_[wheelIndex1].unsetBit;
-        sieveIndex1 += wheel_[wheelIndex1].nextMultipleFactor * sievingPrime1;
-        sieveIndex1 += wheel_[wheelIndex1].correct;
-        wheelIndex1 += wheel_[wheelIndex1].next;
+        sieveIndex1        += wheel_[wheelIndex1].nextMultipleFactor * sievingPrime1;
+        sieveIndex1        += wheel_[wheelIndex1].correct;
+        wheelIndex1        += wheel_[wheelIndex1].next;
 
         uint32_t next0 = (index_ + (sieveIndex0 >> log2SieveSize_)) & (size_ - 1);
         sieveIndex0 &= (1U << log2SieveSize_) - 1;
