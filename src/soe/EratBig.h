@@ -60,7 +60,7 @@ public:
   void sieve(uint8_t*);
 private:
   typedef WheelPrime_1 WheelPrime_t;
-  typedef Bucket<WheelPrime_t, defs::ERATBIG_BUCKETSIZE> Bucket_t;
+  typedef Bucket<WheelPrime_t> Bucket_t;
   enum { 
     BUCKETS_PER_ALLOC = defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t)
   };

@@ -159,9 +159,8 @@ private:
  *
  * @param T_WheelPrime  A WheelPrime object is a sieving prime for use
  *                      with wheel factorization.
- * @param SIZE          Number of WheelPrimes per Bucket.
  */
-template<class T_WheelPrime, uint32_t SIZE>
+template<class T_WheelPrime>
 class Bucket {
 public:
   Bucket() : count_(0) {
@@ -200,14 +199,14 @@ public:
                      uint32_t wheelIndex) {
     uint32_t pos = count_;
     count_ += 1;
-    assert(pos < SIZE);
+    assert(pos < defs::BUCKET_SIZE);
     wheelPrimes_[pos].set(sievingPrime, sieveIndex, wheelIndex);
-    return (pos != SIZE - 1);
+    return (pos != defs::BUCKET_SIZE - 1);
   }
 private:
   uint32_t count_;
   Bucket* next_;
-  T_WheelPrime wheelPrimes_[SIZE];
+  T_WheelPrime wheelPrimes_[defs::BUCKET_SIZE];
 };
 
 /**

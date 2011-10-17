@@ -39,9 +39,8 @@
  *
  * The constants have been optimized for my Intel Core i5-670 3.46GHz
  * (2x 32 KB L1 Data Cache, 2x 256 L2 Cache) and DDR3-1066.
- * You may want to set L1_DCACHE_SIZE, L2_CACHE_SIZE and
- * ERATBIG_BUCKETSIZE according to your CPU specifications to get the
- * best performance.
+ * You may want to set L1_DCACHE_SIZE, L2_CACHE_SIZE and BUCKET_SIZE
+ * according to your CPU specifications to get the best performance.
  */
 
 #ifndef DEFS_H
@@ -146,12 +145,6 @@ namespace defs {
     */
     ERATMEDIUM_FACTOR = 9,
     /**
-     * Default sieve size in kilobytes of PrimeSieve and
-     * ParallelPrimeSieve objects.
-     * @pre PRIMESIEVE_SIEVESIZE >= 1 && <= 8192
-     */
-    PRIMESIEVE_SIEVESIZE = L1_DCACHE_SIZE,
-    /**
      * Default pre-sieve limit of PrimeSieve and ParallelPrimeSieve
      * objects, multiples of small primes up to this limit are
      * pre-sieved to speed up the sieve of Eratosthenes.
@@ -162,17 +155,11 @@ namespace defs {
      */
     PRIMESIEVE_PRESIEVE_LIMIT = 19,
     /**
-     * For performance reasons each thread sieves at least an interval
-     * of size MIN_THREAD_INTERVAL in ParallelPrimeSieve::sieve().
-     * @pre MIN_THREAD_INTERVAL >= 100
+     * Default sieve size in kilobytes of PrimeSieve and
+     * ParallelPrimeSieve objects.
+     * @pre PRIMESIEVE_SIEVESIZE >= 1 && <= 8192
      */
-    MIN_THREAD_INTERVAL = static_cast<int> (1E8),
-    /**
-     * Sieve size in kilobytes of PrimeNumberGenerator which generates
-     * the primes up to sqrt(n) needed for sieving.
-     * @pre PRIMENUMBERGENERATOR_SIEVESIZE >= 1 && <= 8192
-     */
-    PRIMENUMBERGENERATOR_SIEVESIZE = L1_DCACHE_SIZE,
+    PRIMESIEVE_SIEVESIZE = L1_DCACHE_SIZE,
     /**
      * Pre-sieve limit of PrimeNumberGenerator, default = 13 (uses
      * 1001 bytes) a greater value uses more memory without noticeable
@@ -181,25 +168,31 @@ namespace defs {
      */
     PRIMENUMBERGENERATOR_PRESIEVE_LIMIT = 13,
     /**
-     * Number of WheelPrimes (i.e. sieving primes) per Bucket in
-     * EratSmall and EratMedium, default = 8192 (uses 64 kilobytes per
-     * Bucket).
-     * @see Bucket in WheelFactorization.h
+     * Sieve size in kilobytes of PrimeNumberGenerator which generates
+     * the primes up to sqrt(n) needed for sieving.
+     * @pre PRIMENUMBERGENERATOR_SIEVESIZE >= 1 && <= 8192
      */
-    ERATBASE_BUCKETSIZE = 1 << 13,
+    PRIMENUMBERGENERATOR_SIEVESIZE = L1_DCACHE_SIZE,
     /**
      * Number of WheelPrimes (i.e. sieving primes) per Bucket in
-     * EratBig, default = 1024 (uses 8 kilobytes per Bucket), future
-     * CPUs are likely to perform better with a greater value.
+     * Erat(Small|Medium|Big) objects.
+     * Default = 1024 (uses 8 kilobytes per Bucket), future CPUs are
+     * likely to perform better with a greater value.
      * @see Bucket in WheelFactorization.h
      */
-    ERATBIG_BUCKETSIZE = 1 << 10,
+    BUCKET_SIZE = 1 << 10,
     /**
      * EratBig allocates ERATBIG_MEMORY_PER_ALLOC bytes of new memory
-     * each time it needs more Buckets to reduce dynamic memory
-     * allocation and deallocation overhead, default = 4 megabytes.
+     * each time it needs more Buckets.
+     * Default = 4 megabytes.
      */
-    ERATBIG_MEMORY_PER_ALLOC = (1 << 20) * 4
+    ERATBIG_MEMORY_PER_ALLOC = (1 << 20) * 4,
+    /**
+     * For performance reasons each thread sieves at least an interval
+     * of size MIN_THREAD_INTERVAL in ParallelPrimeSieve::sieve().
+     * @pre MIN_THREAD_INTERVAL >= 100
+     */
+    MIN_THREAD_INTERVAL = static_cast<int> (1E8)
   };
 }
 
