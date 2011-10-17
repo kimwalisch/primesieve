@@ -165,7 +165,7 @@ class Bucket {
 public:
   Bucket() : count_(0) {
   }
-  // list.push_back(Bucket()) adds an empty bucket without
+  // list::push_back(Bucket()) adds an empty bucket without
   // unnecessary copying
   Bucket(const Bucket&) : count_(0) {
   }
