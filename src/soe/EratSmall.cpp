@@ -40,7 +40,7 @@
 
 #include <algorithm>
 #include <stdexcept>
-#include <cstdlib>
+#include <list>
 
 EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
   EratBase<Modulo30Wheel, WheelPrime_1> (soe)
@@ -66,8 +66,8 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
  */
 void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
   uint8_t* sieveEnd = &sieve[sieveSize];
-  // iterate over the buckets within EratSmall
-  for (std::list<Bucket_t>::iterator it = list_.begin(); it != list_.end(); ++it) {
+
+  for (std::list<Bucket_t>::iterator it = buckets_.begin(); it != buckets_.end(); ++it) {
     uint32_t      count  = it->getCount();
     WheelPrime_t* wPrime = it->getWheelPrimes();
     WheelPrime_t* end    = &wPrime[count];

@@ -61,9 +61,9 @@ public:
     uint32_t wheelIndex;
     if (this->getWheelPrimeData(&prime, &sieveIndex, &wheelIndex)
         == true) {
-      if (!list_.back().addWheelPrime(prime, sieveIndex, wheelIndex)) {
+      if (!buckets_.back().addWheelPrime(prime, sieveIndex, wheelIndex)) {
         // the current bucket is full, add a new one
-        list_.push_back(Bucket_t());
+        buckets_.push_back(Bucket_t());
       }
     }
   }
@@ -73,10 +73,10 @@ protected:
   /** Upper bound for sieving primes within EratBase. */
   uint32_t limit_;
   /** List of buckets, holds the sieving primes. */
-  std::list<Bucket_t> list_;
+  std::list<Bucket_t> buckets_;
   EratBase(const SieveOfEratosthenes& soe) : T_ModuloWheel(soe) {
     // initialize with an empty bucket
-    list_.push_back(Bucket_t());
+    buckets_.push_back(Bucket_t());
   }
   void setLimit(uint32_t limit) {
     limit_ = limit;

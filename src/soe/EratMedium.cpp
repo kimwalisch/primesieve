@@ -39,7 +39,7 @@
 #include "defs.h"
 
 #include <algorithm>
-#include <cstdlib>
+#include <list>
 
 EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
   EratBase<Modulo210Wheel, WheelPrime_2> (soe)
@@ -59,9 +59,9 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
  * a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
  * @see SieveOfEratosthenes::crossOffMultiples()
  */
-void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
-  // iterate over the buckets within EratMedium
-  for (std::list<Bucket_t>::iterator it = list_.begin(); it != list_.end(); ++it) {
+void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
+{
+  for (std::list<Bucket_t>::iterator it = buckets_.begin(); it != buckets_.end(); ++it) {
     uint32_t      count       = it->getCount();
     WheelPrime_t* wheelPrimes = it->getWheelPrimes();
 
@@ -85,8 +85,8 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize) {
         uint8_t nextFactor = wheel_[wheelIndex].nextMultipleFactor;
         uint8_t correct    = wheel_[wheelIndex].correct;
          int8_t next       = wheel_[wheelIndex].next;
-        wheelIndex += next;
         sieve[sieveIndex] &= unsetBit;
+        wheelIndex += next;
         sieveIndex += sievingPrime * nextFactor + correct;
       } while (sieveIndex < sieveSize);
       sieveIndex -= sieveSize;
