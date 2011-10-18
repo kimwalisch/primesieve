@@ -123,7 +123,7 @@ public:
     return data_ >> 9;
   }
   uint32_t getSieveIndex() const {
-    return sieveIndex;
+    return sieveIndex_;
   }
   uint32_t getWheelIndex() const {
     // get the 9 least significant bits
@@ -135,11 +135,11 @@ public:
   {
     assert(sievingPrime < (1U << 23) &&
            wheelIndex   < (1U << 9));
-    uint32_t packed  = wheelIndex | (sievingPrime << 9);
-    this->sieveIndex = sieveIndex;
-    data_            = packed;
+    uint32_t packed   = wheelIndex | (sievingPrime << 9);
+    this->sieveIndex_ = sieveIndex;
+    data_             = packed;
   }
-  uint32_t sieveIndex;
+  uint32_t sieveIndex_;
 private:
   /**
    * wheelIndex   =  9 least significant bits of data_.
@@ -165,8 +165,8 @@ class Bucket {
 public:
   Bucket() : count_(0) {
   }
-  // list::push_back(Bucket()) adds an empty bucket without
-  // unnecessary copying
+  // list::push_back( Bucket() ) adds an empty bucket
+  // without unnecessary copying
   Bucket(const Bucket&) : count_(0) {
   }
   void reset() {
@@ -178,8 +178,11 @@ public:
   Bucket* next() {
     return next_;
   }
-  T_WheelPrime* getWheelPrimes() {
-    return wheelPrimes_;
+  T_WheelPrime* begin() {
+    return &wheelPrimes_[0];
+  }
+  T_WheelPrime* end() {
+    return &wheelPrimes_[count_];
   }
   void setNext(Bucket* next) {
     next_ = next;
@@ -196,7 +199,8 @@ public:
    */
   bool addWheelPrime(uint32_t sievingPrime,
                      uint32_t sieveIndex,
-                     uint32_t wheelIndex) {
+                     uint32_t wheelIndex)
+  {
     uint32_t pos = count_;
     count_ += 1;
     assert(pos < defs::BUCKET_SIZE);
