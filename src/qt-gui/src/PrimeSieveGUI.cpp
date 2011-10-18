@@ -291,7 +291,7 @@ void PrimeSieveGUI::processFinished(int exitCode,
     }
     this->cleanUp();
     QMessageBox::critical(this, APPLICATION_NAME,
-        "The PrimeSieveProcess reported an error, sieving has been aborted. Please contact the developer.");
+        "The PrimeSieveProcess reported an error (see primesieve_error.txt), sieving has been aborted.");
   }
   // the PrimeSieveProcess has been interrupted by a signal (SIGTERM,
   // SIGKILL, ...) or a segmentation fault
