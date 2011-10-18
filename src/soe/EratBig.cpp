@@ -160,13 +160,12 @@ void EratBig::sieve(uint8_t* sieve) {
     // each loop iteration processes a bucket i.e. removes the
     // next multiple of its sieving primes
     do {
-      const uint32_t      count  = bucket->getCount();
-      const WheelPrime_t* wPrime = bucket->getWheelPrimes();
-      const WheelPrime_t* end    = &wPrime[count - count % 2];
+      const WheelPrime_t* wPrime = bucket->begin();
+      const WheelPrime_t* end    = bucket->end();
 
       // iterate over the sieving primes within the current bucket
       // loop unrolled 2 times, optimized for x64 CPUs
-      for (; wPrime < end; wPrime += 2) {
+      for (; &wPrime[2] <= end; wPrime += 2) {
         uint32_t sieveIndex0   = wPrime[0].getSieveIndex();
         uint32_t wheelIndex0   = wPrime[0].getWheelIndex();
         uint32_t sievingPrime0 = wPrime[0].getSievingPrime();
@@ -199,7 +198,7 @@ void EratBig::sieve(uint8_t* sieve) {
       }
 
       // process the remaining sieving primes
-      for (; wPrime < &end[count % 2]; wPrime++) {
+      for (; wPrime < end; wPrime++) {
         uint32_t sieveIndex   = wPrime->getSieveIndex();
         uint32_t wheelIndex   = wPrime->getWheelIndex();
         uint32_t sievingPrime = wPrime->getSievingPrime();
