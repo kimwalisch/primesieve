@@ -4,50 +4,64 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010 
-# Last modified: 05 October 2011
+# Last modified: 18 October 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
 
-About
-=====
+I. About
+========
 
-  This file explains how to compile the console version of primesieve
-  to compile the Qt GUI version please refer to src/qt-gui/INSTALL.
+This file explains how to compile the console version of primesieve to
+compile the Qt GUI version please refer to src/qt-gui/INSTALL.
 
-How to build primesieve
-=======================
+II. How to build primesieve
+===========================
 
-  Open a terminal or Command Prompt cd into the primesieve directory
-  and run:
+Open a terminal or Command Prompt cd into the primesieve directory and
+run:
 
-  1. Microsoft Visual C++
-     > nmake -f Makefile.msvc
+1. Microsoft Visual C++
+  > nmake -f Makefile.msvc
+2. GNU g++
+  $ make
+3. Other C++ compilers (icpc, sunCC, clang++, ...)
+  $ make CXX=my_compiler
 
-  2. GNU g++
-     $ make
+The make command compiles the primesieve binary to ./out
 
-  3. Other C++ compilers (icpc, sunCC, llvm-g++, ...)
-     $ make CXX=my_compiler
+III. How to test it
+===================
 
-  The make command compiles the primesieve binary to ./out
+> out\primesieve -help
+Shows usage examples and an option summary.
+> out\primesieve -test
+Runs various sieving tests to check if primesieve produces correct
+results.
 
-Target a specific CPU
-=====================
+NOTE: for Unix-like operating systems use out/./primesieve
 
-  You may indicate your CPU's L1 (data) and L2 cache sizes per core to
-  get the best performance e.g.:
+IV. Target a specific CPU
+=========================
 
-  $ make L1_DCACHE_SIZE=64 L2_CACHE_SIZE=512
+You may indicate your CPU's L1 (data) and L2 cache sizes per core to
+get the best performance e.g.:
+$ make L1_DCACHE_SIZE=64 L2_CACHE_SIZE=512
 
-How to test it
-==============
+V. Benchmark
+============
 
-  > out\primesieve -help
-  Shows usage examples and an option summary.
-  
-  > out\primesieve -test
-  Runs various sieving tests to check if primesieve produces correct
-  results.
+Here are some primesieve timings for various C++ compilers measured on
+an Intel Core-i5 670 3.46Ghz running Windows 7 64-bit and Fedora 13
+64-bit. Best time in seconds to sieve an interval of size 1E10
+starting at 1E18 using a single thread:
 
-  NOTE: for Unix-like operating systems use out/./primesieve
+$ ./primesieve-3.1 1E18 -o1E10 -t1
+
+Compiler                    Optimization flags   Time/s   Performance
+---------------------------------------------------------------------
+Microsoft Visual C++ 2010   /O2 /GL              15.35    100%  
+Intel C++ Compiler 12.0     -O2 -ipo -prof-use   15.47     99%
+GNU g++ 4.4                 -O2 -funroll-loops   16.10     95%
+SunStudio 12                -fast -xrestrict     16.61     92%
+LLVM/clang++ 2.8            -O2                  17.65     87%
