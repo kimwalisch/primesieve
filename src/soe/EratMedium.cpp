@@ -62,20 +62,19 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
 {
   for (std::list<Bucket_t>::iterator it = buckets_.begin(); it != buckets_.end(); ++it) {
-    uint32_t      count       = it->getCount();
-    WheelPrime_t* wheelPrimes = it->getWheelPrimes();
-
+    const uint32_t count       = it->getCount();
+    WheelPrime_t*  wheelPrimes = it->begin();
     // remove the multiples of sieving primes within the current
     // bucket from the sieve array
     for (uint32_t i = 0; i < count; i++)
     {
-      if (wheelPrimes[i].sieveIndex >= sieveSize) {
+      if (wheelPrimes[i].sieveIndex_ >= sieveSize) {
         // the current sieving prime does not have
         // a multiple in this segment
-        wheelPrimes[i].sieveIndex -= sieveSize;
+        wheelPrimes[i].sieveIndex_ -= sieveSize;
         continue;
       }
-      uint32_t sieveIndex   = wheelPrimes[i].sieveIndex; 
+      uint32_t sieveIndex   = wheelPrimes[i].getSieveIndex(); 
       uint32_t wheelIndex   = wheelPrimes[i].getWheelIndex();
       uint32_t sievingPrime = wheelPrimes[i].getSievingPrime();
       // cross-off the multiples (unset corresponding bits) of the
