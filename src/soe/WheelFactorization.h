@@ -163,35 +163,35 @@ private:
 template<class T_WheelPrime>
 class Bucket {
 public:
-  Bucket() : count_(0) {
+  Bucket() : current_(wheelPrimes_) {
   }
   // list::push_back( Bucket() ) adds an empty bucket
   // without unnecessary copying
-  Bucket(const Bucket&) : count_(0) {
+  Bucket(const Bucket&) : current_(wheelPrimes_) {
   }
   void reset() {
-    count_ = 0;
+    current_ = wheelPrimes_;
   }
-  uint32_t getCount() const {
-    return count_;
+  T_WheelPrime* begin() {
+    return wheelPrimes_;
+  }
+  T_WheelPrime* end() {
+    return current_;
   }
   Bucket* next() {
     return next_;
   }
-  T_WheelPrime* begin() {
-    return &wheelPrimes_[0];
-  }
-  T_WheelPrime* end() {
-    return &wheelPrimes_[count_];
-  }
   void setNext(Bucket* next) {
     next_ = next;
   }
+  unsigned int getCount() const {
+    return static_cast<unsigned int> (current_ - wheelPrimes_);
+  }
   bool isEmpty() const {
-    return (count_ == 0);
+    return current_ == wheelPrimes_;
   }
   bool hasNext() const {
-    return (next_ != NULL);
+    return next_ != NULL;
   }
   /**
    * Add a WheelPrime to the Bucket.
@@ -201,14 +201,13 @@ public:
                      uint32_t sieveIndex,
                      uint32_t wheelIndex)
   {
-    uint32_t pos = count_;
-    count_ += 1;
-    assert(pos < defs::BUCKET_SIZE);
-    wheelPrimes_[pos].set(sievingPrime, sieveIndex, wheelIndex);
-    return (pos != defs::BUCKET_SIZE - 1);
+    T_WheelPrime* wPrime = current_;
+    ++current_;
+    wPrime->set(sievingPrime, sieveIndex, wheelIndex);
+    return current_ != &wheelPrimes_[defs::BUCKET_SIZE - 1];
   }
 private:
-  uint32_t count_;
+  T_WheelPrime* current_;
   Bucket* next_;
   T_WheelPrime wheelPrimes_[defs::BUCKET_SIZE];
 };
