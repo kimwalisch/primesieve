@@ -52,7 +52,7 @@ V. Benchmark
 ============
 
 Here are some primesieve timings for various C++ compilers measured on
-an Intel Core-i5 670 3.46Ghz running Windows 7 64-bit and Fedora 13
+an Intel Core-i5 670 3.46GHz running Windows 7 64-bit and Fedora 13
 64-bit. Best time in seconds to sieve an interval of size 1E10
 starting at 1E18 using a single thread:
 
