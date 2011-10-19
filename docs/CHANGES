@@ -1,3 +1,14 @@
+New in version 3.1, 19/10/2011
+==============================
+
+1. EratBig::sieve(uint8_t*) now processes multiple sieving primes per
+   iteration, I measured a speed up of about 6 percent near 1E18.
+2. STL containers are now used instead of dynamic memory allocation in
+   Erat(Small|Medium) which improves multi-threading performance ~ 3%.
+3. Fixed an integer overflow bug in EratMedium.cpp (see BUGS file).
+4. I improved the code readability and code documentation, the README
+   and INSTALL files have also been revised.
+
 New in version 3.0, 09/07/2011
 ==============================
 
