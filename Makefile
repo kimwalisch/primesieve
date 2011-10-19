@@ -4,7 +4,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   15 October 2011
+# Last modified:   19 October 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -17,41 +17,35 @@ CXX = g++
 
 # sunCC : Oracle Solaris Studio
 # Sun Studio optimization flags: http://dsc.sun.com/solaris/articles/amdopt.html
-#
-# == Profile guided optimization (3 percent speed up, sunCC 12.2) ==
-# make CXX=sunCC "CXXFLAGS = -xopenmp -fast -xalias_level=compatible -xrestrict -xipo=2 -xprofile=collect:./feedback"
-# out/./primesieve 1e18 1e18+1e10 -t1
-# make clean
-# make CXX=sunCC "CXXFLAGS = -xopenmp -fast -xalias_level=compatible -xrestrict -xipo=2 -xprofile=use:./feedback"
 ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE 'sun'),)
-  $(warning primesieve: You might need to export OMP_NUM_THREADS for OpenMP multi-threading)
+  $(warning primesieve, sunCC: You might need to export OMP_NUM_THREADS for OpenMP multi-threading.)
   $(warning )
-  CXXFLAGS = +w -xopenmp -fast -xalias_level=compatible -xrestrict
+  CXXFLAGS = +w -xopenmp -fast -xrestrict
 
 # icpc : Intel C++ Compiler
-#
-# == Profile guided optimization (5 percent speed up, icpc 12.0) ==
-# make CXX=icpc "CXXFLAGS = -openmp -Wall -O2 -prof-gen"
-# out/./primesieve 1e18 1e18+1e10 -t1
-# make clean
-# make CXX=icpc "CXXFLAGS = -openmp -Wall -O2 -ipo -prof-use"
+# == Profile-guided optimization (5 percent speed up, icpc 12.0) ==
+# $ make CXX=icpc "CXXFLAGS = -openmp -Wall -O2 -prof-gen"
+# $ out/./primesieve 1E18 -o1E10 -t1
+# $ make clean
+# $ make CXX=icpc "CXXFLAGS = -openmp -Wall -O2 -ipo -prof-use"
 else ifeq ($(CXX),icpc)
+  $(warning primesieve, icpc: Have a look at the Makefile for instructions on profile-guided optimization.)
+  $(warning )
   CXXFLAGS = -openmp -Wall -O2
 
 # g++ : GNU Compiler Collection
-# Compilers: GNU g++, MinGW g++, Apple g++, llvm-g++, ...
 else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
   ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i apple),)
     # Apple g++, fastest executable using -fast
     CXXFLAGS += -fopenmp -Wall -fast
   else
-    # GNU g++ (v. 4.6), fastest executable using -O2
+    # GNU g++, fastest executable using -O2
     CXXFLAGS += -fopenmp -Wall -O2
   endif
 
-# Unkown compilers
+# Other unkown compilers
 else
-  $(warning primesieve: Unkown compiler, add OpenMP flag if supported)
+  $(warning primesieve: Unkown compiler, add OpenMP flag if supported.)
   $(warning )
   CXXFLAGS = -O2
 endif
