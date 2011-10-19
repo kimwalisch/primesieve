@@ -176,7 +176,8 @@ namespace defs {
     /**
      * Number of WheelPrimes (i.e. sieving primes) per Bucket in
      * Erat(Small|Medium|Big) objects.
-     * Default = 1024 (uses 8 kilobytes per Bucket), future CPUs are
+     * For Intel Core 2 CPUs from 2008 and first generation Intel
+     * Core-i CPUs from 2010 use 1024, future CPU generations are
      * likely to perform better with a greater value.
      * @see Bucket in WheelFactorization.h
      */
