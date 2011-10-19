@@ -136,7 +136,7 @@ public:
     assert(sievingPrime < (1U << 23) &&
            wheelIndex   < (1U << 9));
     uint32_t packed   = wheelIndex | (sievingPrime << 9);
-    this->sieveIndex_ = sieveIndex;
+    sieveIndex_       = sieveIndex;
     data_             = packed;
   }
   uint32_t sieveIndex_;
