@@ -184,9 +184,6 @@ public:
   void setNext(Bucket* next) {
     next_ = next;
   }
-  unsigned int getCount() const {
-    return static_cast<unsigned int> (current_ - wheelPrimes_);
-  }
   bool isEmpty() const {
     return current_ == wheelPrimes_;
   }
