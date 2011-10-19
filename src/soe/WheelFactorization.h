@@ -204,7 +204,7 @@ public:
     T_WheelPrime* wPrime = current_;
     ++current_;
     wPrime->set(sievingPrime, sieveIndex, wheelIndex);
-    return current_ != &wheelPrimes_[defs::BUCKET_SIZE - 1];
+    return wPrime != &wheelPrimes_[defs::BUCKET_SIZE - 1];
   }
 private:
   T_WheelPrime* current_;
