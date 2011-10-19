@@ -1,17 +1,17 @@
-July 22, 2011
+October 19, 2011
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-About
-=====
+I. About
+========
 
 This file contains various source code examples that show how to use
 PrimeSieve and ParallelPrimeSieve objects. You may also want to have a
 look at ../src/soe/PrimeSieve.h for the API and PrimeSieve.cpp for a
 brief description of each member function.
 
-Examples
-========
+II. Examples
+============
 
   1. Generate prime numbers
   2. Generate prime numbers (OOP)
@@ -40,8 +40,8 @@ int main() {
 
 /****************************************************************************/
 // 2. Generate prime numbers (OOP)
-//    MyClass::doIt() generates the prime numbers up to 1000 and
-//    stores them into the private primes_ variable
+//    MyClass::doIt() generates the primes up to 1000 and
+//    stores them into the private primes_ vector
 
 #include "soe/PrimeSieve.h"
 #include <stdint.h>
@@ -62,7 +62,7 @@ private:
 
 /****************************************************************************/
 // 3. Count prime numbers
-//    Count the prime numbers up to 1000 (single-threaded)
+//    Count the primes up to 1000 (single-threaded)
 
 #include "soe/PrimeSieve.h"
 #include <stdint.h>
@@ -75,7 +75,7 @@ int main() {
 
 /****************************************************************************/
 // 4. Count prime numbers in parallel
-//    Count the prime numbers up to 10^9 in parallel using 4 threads
+//    Count the primes up to 10^9 in parallel using 4 threads
 
 #include "soe/ParallelPrimeSieve.h"
 #include <stdint.h>
@@ -90,7 +90,7 @@ int main() {
 /****************************************************************************/
 // 5. Count twin primes in parallel
 //    Count the twin primes within the interval [10^11, 10^11*2] in
-//    parallel using all available threads (logical CPU cores)
+//    parallel using all available threads
 
 #include "soe/ParallelPrimeSieve.h"
 #include <stdint.h>
@@ -127,14 +127,13 @@ int main() {
 //    matches the CPU's L1 cache size (usually 32 or 64 KB) when
 //    sieving < 10^14 and a sieve size of the CPU's L2 cache size
 //    (e.g. 512 KB) above
-//    Default sieveSize = 64 KB
 
 #include "soe/PrimeSieve.h"
 #include <stdint.h>
 
 int main() {
   PrimeSieve ps;
-  // set the sieve size in Kilobytes
+  // set the sieve size in kilobytes
   ps.setSieveSize(512);
   uint64_t count = ps.getPrimeCount((uint64_t) 1E15, (uint64_t)(1E15+1E11));
   return 0;
