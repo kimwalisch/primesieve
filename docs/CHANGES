@@ -6,7 +6,8 @@ New in version 3.1, 19/10/2011
 2. STL containers are now used instead of dynamic memory allocation in
    Erat(Small|Medium) which improves multi-threading performance ~ 3%.
 3. Fixed an integer overflow bug in EratMedium.cpp (see BUGS file).
-4. I improved the code readability and code documentation, the README
+4. The -test option (primesieve console) has been simplified.
+5. I improved the code readability and code documentation, the README
    and INSTALL files have also been revised.
 
 New in version 3.0, 09/07/2011
