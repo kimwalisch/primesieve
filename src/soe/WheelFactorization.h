@@ -199,7 +199,7 @@ public:
                      uint32_t wheelIndex)
   {
     T_WheelPrime* wPrime = current_;
-    ++current_;
+    current_++;
     wPrime->set(sievingPrime, sieveIndex, wheelIndex);
     return wPrime != &wheelPrimes_[defs::BUCKET_SIZE - 1];
   }
