@@ -68,7 +68,7 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
     WheelPrime_t* wPrime = bucket->begin();
     WheelPrime_t* end    = bucket->end();
     // remove the multiples of sieving primes within the current
-    // bucket from the sieve array
+    // bucket from the sieve array    
     for (; wPrime != end; wPrime++) {
       if (wPrime->sieveIndex_ >= sieveSize) {
         // the current sieving prime does not have
@@ -82,13 +82,15 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
       // cross-off the multiples (unset corresponding bits) of the
       // current sieving prime within the sieve array
       do {
-        uint8_t unsetBit   = wheel_[wheelIndex].unsetBit;
-        uint8_t nextFactor = wheel_[wheelIndex].nextMultipleFactor;
-        uint8_t correct    = wheel_[wheelIndex].correct;
-        wheelIndex        += wheel_[wheelIndex].next;
+        uint32_t unsetBit = wheel_[wheelIndex].unsetBit;
+        uint32_t factor   = wheel_[wheelIndex].nextMultipleFactor;
+        uint32_t correct  = wheel_[wheelIndex].correct;
+         int32_t next     = wheel_[wheelIndex].next;
         sieve[sieveIndex] &= unsetBit;
-        sieveIndex += sievingPrime * nextFactor + correct;
-      } while (sieveIndex < sieveSize);
+        wheelIndex += next;
+        sieveIndex += sievingPrime * factor + correct;
+      }
+      while (sieveIndex < sieveSize);
       sieveIndex -= sieveSize;
       // set sieveIndex and wheelIndex for the next segment
       wPrime->set(sievingPrime, sieveIndex, wheelIndex);
