@@ -4,37 +4,37 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       11 April 2011
-# Last modified: 09 July 2011
+# Last modified: 20 October 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
 
-About
-=====
+I. About
+========
 
-  The qt-gui directory contains the primesieve GUI application
-  developed with the Qt framework (http://qt.nokia.com/products/).
+The qt-gui directory contains the primesieve GUI application developed
+with the Qt framework (http://qt-project.org).
 
-Qt project file (MSVC, GCC, Intel ICC)
-======================================
+II. Qt project file (MSVC, GNU g++, Intel icpc)
+===============================================
 
-  * primesieve.pro
-    primesieve project file to be used with the Qt-Creator IDE (e.g.
-    to edit the source code or build a primesieve executable).
+* primesieve.pro
+  primesieve project file for the Qt-Creator IDE (e.g. to edit the
+  source code or build a primesieve executable).
 
-Source files
-============
+III. Source files
+=================
 
-  * src/PrimeSieveGUI.cpp & .h
-    Contains the graphical user interface code.
-  * src/PrimeSieveGUI_menu.cpp
-    Contains code related to the menu bar of the GUI.
-  * src/PrimeSieveProcess.cpp & .h
-    Class that is used for prime sieving. PrimeSieveProcess launches
-    a ParallelPrimeSieve instance in a separate process, this approach
-    allows to easily cancel the sieving process.
-    The communication between the GUI process (PrimeSieveGUI) and
-    PrimeSieveProcess is realised via shared memory.
-  * src/main.cpp
-    Contains the ParallelPrimeSieve code launched by a
-    PrimeSieveProcess object.
+* src/PrimeSieveGUI.cpp & .h
+  Contains the graphical user interface code.
+* src/PrimeSieveGUI_menu.cpp
+  Contains code related to the menu bar.
+* src/PrimeSieveProcess.cpp & .h
+  Class that is used for prime sieving. PrimeSieveProcess launches
+  a ParallelPrimeSieve instance in a separate process, this approach
+  allows to easily cancel sieving by killing the process.
+  The communication between the GUI process (PrimeSieveGUI) and the
+  ParallelPrimeSieve instance is realised via shared memory.
+* src/main.cpp
+  Contains the ParallelPrimeSieve code launched by PrimeSieveProcess
+  objects.
