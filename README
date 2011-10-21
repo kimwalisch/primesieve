@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       05 December 2010
-# Last modified: 05 October 2011
+# Last modified: 21 October 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -12,194 +12,195 @@
 Contents
 ========
 
-  1. About
-  2. Algorithm and Complexity
-  3. Memory Usage
-  4. Source Archive
-  5. Sieve of Eratosthenes Implementation
-  6. Final Thoughts
+  1. About primesieve
+  2. What's in this source archive
+  3. Implementation and algorithm complexity
+  4. Source code documentation
+  5. Further reading
+  6. Thanks
   7. License
   8. References
 
-1. About
-========
+1. About primesieve
+===================
 
   primesieve is a highly optimized C++ implementation of the sieve of
   Eratosthenes that generates primes and prime k-tuplets (twin primes,
   prime triplets, ...) up to 2^64 maximum.
-  
-  Visit: http://primesieve.googlecode.com
 
-2. Algorithm and Complexity
-===========================
+  Homepage: http://primesieve.googlecode.com
+
+2. What's in this source archive
+================================
+
+  Installation file
+  -----------------
+  INSTALL  Explains how to compile primesieve.
+
+  Documentation directory
+  -----------------------
+  docs                 files: CHANGES, TODO, BUGS, ...
+  docs/USAGE_EXAMPLES  Contains commented source code examples that
+                       show how to use PrimeSieve objects e.g. for
+                       prime number generation.
+
+  Source code directories
+  -----------------------
+  src/soe         Contains the sieve of Eratosthenes implementation.
+  src/console     Contains the primesieve console application.
+  src/qt-gui      Contains the primesieve Qt GUI application.
+  src/expr        Contains an arithmetic expression parser used to
+                  ease number input e.g. 2^32, 1E10, ...
+  src/thirdparty  Contains stdint.h (needed for MSVC prior 2010)
+
+3. Implementation and algorithm complexity
+==========================================
+
+  primesieve is written in C++03, the parallelization is implemented
+  using OpenMP. I successfully compiled it with 8 different C++
+  compilers on Windows, Linux and Mac OS X.
+  primesieve runs on Little-Endian (i.e. x86, x64) and Big-Endian
+  (i.e. PowerPC, SPARC, ...) CPUs.
 
   primesieve uses the segmented sieve of Eratosthenes with wheel
   factorization, this algorithm has a complexity of O(n log log n)
   operations and uses O(n^0.5) space.
 
-  Sorenson's papers provide a good introduction to prime number
-  sieves, wheels are described in [5] and the segmented sieve of
-  Eratosthenes in [6].
+  My implementation uses a compressed sieve array with 30 numbers per
+  byte, the 8 bits of each byte hold the values
+  i*30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
+  It further uses 8 bytes per sieving prime <= sqrt(x), that is 4
+  bytes for the sieving prime and another 4 bytes for the sieve array
+  index and wheel index.
 
-3. Memory Usage
-===============
+  primesieve's memory requirement (per thread) is about:
+  pi(sqrt(x)) * 8 bytes + 400 kilobytes
 
-  PrimeSieve::sieve() uses about:
-  pi(n^0.5) * 8 Bytes + 500 Kilobytes              (1)
+4. Source code documentation (./src/soe)
+========================================
 
-  ParallelPrimeSieve::sieve() uses about:
-  (1) * number of threads                          (2)
-
-4. Source Archive
-=================
-
-  primesieve is written in portable C++, I successfully compiled it
-  with 8 different C++ compilers on Windows, Linux and Mac OS X (x86,
-  x86-64 and PowerPC).
-
-  Source Code Directories
-  -----------------------
-  src/soe         Contains the sieve of Eratosthenes implementation.
-  src/console     Contains the primesieve console application.
-  src/qt-gui      Contains the primesieve GUI application.
-  src/expr        Contains an arithmetic expression parser used in the
-                  primesieve console and GUI application.
-  src/thirdparty  Contains stdint.h (needed for MSVC prior 2010)
-
-  Documentation Directory
-  -----------------------
-  ./docs        files: BUGS, CHANGES, TODO, USAGE_EXAMPLES, VALGRIND.
-                USAGE_EXAMPLES is a short tutorial of how to use
-                PrimeSieve objects e.g. for prime number generation.
-
-  Build primesieve
-  ----------------
-  The INSTALL file in the current directory explains how to compile
-  and use the primesieve console application.
-  The file src/qt-gui/INSTALL explains how to compile the primesieve
-  GUI application (uses the Qt framework).
-
-5. Sieve of Eratosthenes Implementation (src/soe directory)
-===========================================================
-
-  General Information
+  General information
   -------------------
+  The src/soe directory contains the sieve of Eratosthenes source
+  code, .h & .cpp files that start with a capital letter contain a
+  class of the same name. The source code is quite well documented, a
+  good starting point for code reading is PrimeSieve::sieve() in
+  PrimeSieve.cpp and then SieveOfEratosthenes.cpp.
+  If you are not too familiar with prime sieving I recommend reading
+  Achim Flammenkamp's "The Art of Prime Sieving" [7] and Jonathan P.
+  Sorenson's paper [5] for a good introduction on wheels.
 
-  The following file descriptions give an overview of how everything
-  fits together, files that start with a capital letter contain a
-  class of the same name. The source code is also documented, header
-  files contain the class and variable descriptions, .cpp files
-  contain the function descriptions.
-
-  Files
-  -----
-
-  * PrimeSieve.cpp and ParallelPrimeSieve.cpp (uses OpenMP)
+  C++ classes
+  -----------
+  * PrimeSieve & ParallelPrimeSieve (uses OpenMP)
     PrimeSieve objects provide an easy API for prime sieving, the file
     docs/USAGE_EXAMPLES contains a short tutorial.
-    PrimeSieve::sieve() starts sieving, the following classes are all
-    used directly or indirectly for sieving.
+    PrimeSieve::sieve() starts sieving the primes within the interval
+    [startNumber_, stopNumber_], the following classes are all used
+    directly or indirectly for sieving.
 
-  * SieveOfEratosthenes.cpp (abstract class)
+  * SieveOfEratosthenes (abstract class)
     Implementation of the segmented sieve of Eratosthenes using a bit
-    array with 30 numbers per byte. Each byte of the sieve array holds
-    the numbers i * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}, 
-    this byte arrangement is convenient for prime k-tuplet sieving.
-    The main function is SieveOfEratosthenes::sieve(uint32_t) it must
-    be called consecutively for all prime numbers up to n^0.5 in order
-    to sieve the primes up to n. Each sieving prime is first added to
-    one of the following three Erat* objects which are used to cross
-    off the multiples.
+    array with 30 numbers per byte, each byte of the sieve array holds
+    the numbers i*30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
+    The main method is SieveOfEratosthenes::sieve(uint32_t prime) it
+    must be called consecutively for all primes <= sqrt(n) in order to
+    sieve the primes up to n. Each sieving prime is first stored in
+    one of the Erat(Small|Medium|Big) objects that are used to cross
+    off its multiples.
 
-  * EratSmall.cpp
-    Implementation of the segmented sieve of Eratosthenes with a
-    hard-coded modulo 30 wheel (skips multiples of 2, 3 and 5). The
-    algorithm is optimized for small sieving primes that have a lot of
-    multiple occurrences per segment. EratSmall is a further optimized
-    implementation of Achim Flammenkamp's algorithm.[7]
+  * EratSmall
+    Segmented sieve of Eratosthenes algorithm with a hard-coded
+    modulo 30 wheel that skips multiples of 2, 3 and 5. This algorithm
+    is optimized for small sieving primes that have many multiples per
+    segment. EratSmall is a further optimized implementation of Achim
+    Flammenkamp's algorithm.[7]
 
-  * EratMedium.cpp
-    Implementation of the segmented sieve of Eratosthenes with a fixed
-    modulo 210 wheel (skips multiples of 2, 3, 5 and 7). The wheel is
-    implemented using the Modulo210Wheel::wheel_ array from
-    WheelFactorization.cpp. This algorithm is faster than EratSmall
-    for sieving primes that have only a few multiple occurrences per
-    segment.
+  * EratMedium
+    Segmented sieve of Eratosthenes algorithm with a fixed modulo 210
+    wheel that skips multiples of 2, 3, 5 and 7. The wheel is
+    implemented using a precomputed lookup table (wheel_ array from
+    WheelFactorization.cpp). This algorithm is optimized for medium
+    sieving primes with a few multiples per segment.
 
-  * EratBig.cpp
-    Uses the same algorithm as EratMedium in conjunction with Tomas
-    Oliveira e Silva's cache-friendly list algorithm.[9]
-    EratBig is optimized for sieving primes that have less than one
-    multiple occurrence per segment.
+  * EratBig
+    Segmented sieve of Eratosthenes algorithm with Tomás Oliveira's
+    improvement for big sieving primes [9] and a fixed modulo 210
+    wheel that skips multiples of 2, 3, 5 and 7. The wheel is
+    implemented using a precomputed lookup table (wheel_ array from
+    WheelFactorization.cpp). EratBig is optimized for big sieving
+    primes that have less than one multiple occurrence per segment.
 
-  * PrimeNumberGenerator.cpp (derived from SieveOfEratosthenes)
-    Generates the prime numbers up to n^0.5 needed for sieving by
-    PrimeNumberFinder. Used in PrimeSieve::sieve()
+  * PrimeNumberGenerator (derived from SieveOfEratosthenes)
+    Generates the primes up to sqrt(n) needed for sieving by
+    PrimeNumberFinder.
 
-  * PrimeNumberFinder.cpp (derived from SieveOfEratosthenes)
-    Counts, prints and generates the primes up to n. PrimeNumberFinder
-    is initialized in PrimeSieve::sieve() and is used in
-    PrimeNumberGenerator::generate(const uint8_t*, uint32_t)
+  * PrimeNumberFinder (derived from SieveOfEratosthenes)
+    Main SieveOfEratosthenes class, used to generate, print and count
+    the primes and prime k-tuplets (twins, triplets, ...) within the
+    interval [PrimeSieve::startNumber_, PrimeSieve::stopNumber_].
 
-  * PreSieve.cpp
+  * PreSieve
     PreSieve objects are used to pre-sieve multiples of small primes
     (e.g. <= 19) to speed up the sieve of Eratosthenes.
-    Used in SieveOfEratosthenes::sieve(uint32_t)
+
+  Other files
+  -----------
+  * bithacks.h
+    Contains fast bit manipulation functions needed in primesieve
+    e.g. popcount(), bitScanForward(), floorLog2(), ...
 
   * defs.h
     Contains macro definitions and constants that set the size of
-    various arrays and limits within primesieve. The constants have
-    been optimized for my Intel Core i5-670 3.46GHz (2 x 32 KB L1 Data
-    Cache, 2 x 256 L2 Cache, 4 MB L3 Cache) from 2010.
+    various arrays and limits within primesieve. You can set the
+    L1_DCACHE_SIZE, L2_CACHE_SIZE, BUCKET_SIZE constants according to
+    your CPU specifications to get the best performance.
 
   * WheelFactorization.h
-    Contains classes and structs related to wheel factorization. Wheel
-    factorization is used to skip multiples of small primes. The
-    abstract ModuloWheel class is used to initialize sieving primes,
-    ModuloWheel::getWheelPrimeData(...) calculates the first
-    multiple >= startNumber_ of each sieving prime. The sieving prime
-    is then stored together with a sieveIndex (position of the next
-    multiple within the sieve array) and a wheelIndex as a WheelPrime
-    object, these objects are used by EratSmall, EratMedium and
-    EratBig to cross off the multiples.
+    Contains classes and structs related to wheel factorization, wheel
+    factorization is used to skip multiples of small primes to speed
+    up the sieve of Eratosthenes. The abstract ModuloWheel class is
+    used to initialize sieving primes i.e. getWheelPrimeData()
+    calculates the first multiple >= startNumber_ of each sieving
+    prime. The sieving prime is then stored together with its
+    sieveIndex (position of the next multiple within the sieve array)
+    and wheelIndex as a WheelPrime object. Erat(Small|Medium|Big)
+    objects use WheelPrimes to cross-off multiples.
 
-6. Final Thoughts
-=================
+5. Further reading
+==================
 
-  Parallelization
-  ---------------
+  Jonathan P. Sorenson's papers provide a good introduction to prime
+  number sieves, the segmented sieve of Eratosthenes is described in
+  [6] and wheel factorization in [5].
+  Achim Flammenkamp's "The Art of Prime Sieving" [7] explains how to
+  optimize the segmented sieve of Eratosthenes to effectively use the
+  CPU's cache memory [7].
+  Joerg Richstein in [8] (German language) describes how to pre-sieve
+  multiples of small primes to speed up the sieve of Eratosthenes.
+  Tomás Oliveira e Silva on his website [9] explains his improvement
+  to the segmented sieve of Eratosthenes for big sieving primes.
 
-  My tries to parallelize the segmented sieve of Eratosthenes using
-  real parallelism (i.e. without increasing memory usage) resulted in
-  a run time worse than single-threaded. Therefore in
-  ParallelPrimeSieve each thread sieves chunks of the interval
-  [startNumber, stopNumber] using PrimeSieve objects until the entire
-  interval has been processed. This approach scales well on multi-core
-  CPUs but the memory usage depends on the number of threads i.e.
-  O(n^0.5) * threads, and the primes are not generated or printed in
-  order.
+6. Thanks
+=========
 
-  Prime k-tuplets (twin primes, ...)
-  ----------------------------------
+  Thanks to Silver Möls for helping me to further optimize primesieve
+  for out-of-order execution of modern CPUs in version 3.1.
 
-  primesieve has been written for fast prime number generation, at the
-  same speed it can also generate twin primes, prime triplets, ...
-  One user made me aware of an algorithm specialised for twin prime
-  sieving, the idea is published at:
-  http://numbers.computation.free.fr/Constants/Primes/twin.html
-  This algorithm can be generalised to prime k-tuplets (triplets,
-  quadruplets, quintuplets, ...) resulting in a faster and more
-  efficient algorithm, especially if k grows.
+  Thanks to Andrey Kulsha for benchmarking new primesieve releases on
+  his hexa-core AMD Phenon CPU and also for his help to debug
+  primesieve 1.0.
 
 7. License
 ==========
 
-  primesieve is licensed under the New BSD License, see the LICENSE
-  file for more information. The primesieve GUI application in
-  src/qt-gui is licensed under the GPLv3 as it uses the Qt framework.
+  primesieve is free software, it is licensed under the New BSD
+  License see the LICENSE file for more information.
+  The primesieve GUI application in src/qt-gui is licensed under the
+  GPLv3 as it uses the Qt framework.
 
-8. References and Notes
-=======================
+8. References
+=============
 
   [1] Richard C. Singleton, "An efficient prime number generator",
       Communications of the ACM 12, 563-564, 1969.
