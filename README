@@ -175,7 +175,7 @@ Contents
   [6] and wheel factorization in [5].
   Achim Flammenkamp's "The Art of Prime Sieving" [7] explains how to
   optimize the segmented sieve of Eratosthenes to effectively use the
-  CPU's cache memory [7].
+  CPU's cache memory.
   Joerg Richstein in [8] (German language) describes how to pre-sieve
   multiples of small primes to speed up the sieve of Eratosthenes.
   Tomás Oliveira e Silva on his website [9] explains his improvement
