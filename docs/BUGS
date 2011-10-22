@@ -1,11 +1,10 @@
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-Please contact the author if you find a new bug. The most recent
-version of primesieve can be retrieved from its Subversion
-repository:
-$ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve-read-only
+Please contact the author if you find a new bug. The latest version of
+primesieve can be retrieved from its Subversion repository:
 
+$ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve-read-only
 
 List of fixed bugs in primesieve
 ================================
@@ -32,14 +31,13 @@ List of fixed bugs in primesieve
    only show up with the sunCC compiler.
    >> FIXED in version 2.2, committed on the 23rd May 2011
 
-3. The -test option of the console version of primesieve
-   might result in an infinite loop when compiled with MSVC (Windows).
+3. The -test option of the console version of primesieve might cause
+   an infinite loop when compiled with MSVC (Windows).
    The error was related to 64-bit random number generation in
    console/test.cpp.
    >> FIXED in version 2.2, committed on the 9th May 2011
 
-2. Prime numbers preceding the startNumber might be counted and
-   printed e.g.:
+2. Primes preceding the startNumber might be counted and printed e.g.:
    $ ./primesieve 1000007999999999 1000007999999999
    Sieve size set to 64 KiloBytes
    100%
