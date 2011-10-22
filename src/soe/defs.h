@@ -38,9 +38,9 @@
  *        arrays and limits within primesieve.
  *
  * The constants have been optimized for my Intel Core i5-670 3.46GHz
- * (2x 32K L1 Data Cache, 2x 256K L2 Cache) and DDR3-1066.
- * You may want to set L1_DCACHE_SIZE, L2_CACHE_SIZE and BUCKET_SIZE
- * according to your CPU specifications to get the best performance.
+ * (2x 32K L1 Data Cache, 2x 256K L2 Cache) and DDR3-1333MHz.
+ * You can set L1_DCACHE_SIZE, L2_CACHE_SIZE and BUCKET_SIZE according
+ * to your CPU specifications to get the best performance.
  */
 
 #ifndef DEFS_H
