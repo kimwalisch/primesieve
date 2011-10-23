@@ -72,7 +72,7 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
     for (; wPrime != end; wPrime++) {
       uint32_t sievingPrime = wPrime->getSievingPrime();
       uint32_t wheelIndex   = wPrime->getWheelIndex();
-      uint32_t sieveIndex   = wPrime->getSieveIndex(); 
+      uint32_t sieveIndex   = wPrime->getSieveIndex();
       // cross-off the multiples (unset corresponding bits) of the
       // current sieving prime within the sieve array
       while (sieveIndex < sieveSize) {
