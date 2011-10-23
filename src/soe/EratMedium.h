@@ -3,7 +3,7 @@
 // All rights reserved.
 //
 // This file is part of primesieve.
-// Visit: http://primesieve.googlecode.com
+// Homepage: http://primesieve.googlecode.com
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
