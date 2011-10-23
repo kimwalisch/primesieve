@@ -46,7 +46,7 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
 {
   static_assert(defs::ERATMEDIUM_FACTOR <= 15, "defs::ERATMEDIUM_FACTOR <= 15");
   uint32_t sqrtStop = soe.getSquareRoot();
-  uint32_t max      = soe.getSieveSize() * defs::ERATMEDIUM_FACTOR;
+  uint32_t max      = static_cast<uint32_t> (soe.getSieveSize() * defs::ERATMEDIUM_FACTOR);
   uint32_t limit    = std::min<uint32_t>(sqrtStop, max);
   this->setLimit(limit);
 }
@@ -67,21 +67,15 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
   {
     WheelPrime_t* wPrime = bucket->begin();
     WheelPrime_t* end    = bucket->end();
-    // remove the multiples of sieving primes within the current
-    // bucket from the sieve array    
+    // remove the multiples of sieving primes within the
+    // current bucket from the sieve array
     for (; wPrime != end; wPrime++) {
-      if (wPrime->sieveIndex_ >= sieveSize) {
-        // the current sieving prime does not have
-        // a multiple in this segment
-        wPrime->sieveIndex_ -= sieveSize;
-        continue;
-      }
-      uint32_t sieveIndex   = wPrime->getSieveIndex(); 
-      uint32_t wheelIndex   = wPrime->getWheelIndex();
       uint32_t sievingPrime = wPrime->getSievingPrime();
+      uint32_t wheelIndex   = wPrime->getWheelIndex();
+      uint32_t sieveIndex   = wPrime->getSieveIndex(); 
       // cross-off the multiples (unset corresponding bits) of the
       // current sieving prime within the sieve array
-      do {
+      while (sieveIndex < sieveSize) {
         uint32_t unsetBit = wheel_[wheelIndex].unsetBit;
         uint32_t factor   = wheel_[wheelIndex].nextMultipleFactor;
         uint32_t correct  = wheel_[wheelIndex].correct;
@@ -90,7 +84,6 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
         wheelIndex += next;
         sieveIndex += sievingPrime * factor + correct;
       }
-      while (sieveIndex < sieveSize);
       sieveIndex -= sieveSize;
       // set sieveIndex and wheelIndex for the next segment
       wPrime->set(sievingPrime, sieveIndex, wheelIndex);

@@ -113,21 +113,21 @@ private:
 /**
  * @see    WheelPrime_1
  * @remark WheelPrime_2  Unlike WheelPrime_1 WheelPrime_2 allows
- *                       sieveIndex   >  23-bits but requires
+ *                       sieveIndex > 23-bits but requires
  *                       sievingPrime <= 23-bits.
  */
 class WheelPrime_2 {
 public:
   uint32_t getSievingPrime() const {
-    // get the 23 most significant bits
-    return data_ >> 9;
+    // get the 23 least significant bits
+    return data_ & ((1U << 23) - 1);
   }
   uint32_t getSieveIndex() const {
     return sieveIndex_;
   }
   uint32_t getWheelIndex() const {
-    // get the 9 least significant bits
-    return data_ & ((1U << 9) - 1);
+    // get the 9 most significant bits
+    return data_ >> 23;
   }
   void set(uint32_t sievingPrime,
            uint32_t sieveIndex,
@@ -135,19 +135,18 @@ public:
   {
     assert(sievingPrime < (1U << 23) &&
            wheelIndex   < (1U << 9));
-    uint32_t packed   = wheelIndex | (sievingPrime << 9);
-    sieveIndex_       = sieveIndex;
-    data_             = packed;
+    data_       = sievingPrime | (wheelIndex << 23);
+    sieveIndex_ = sieveIndex;
   }
-  uint32_t sieveIndex_;
 private:
   /**
-   * wheelIndex   =  9 least significant bits of data_.
-   * sievingPrime = 23 most  significant bits of data_.
+   * sievingPrime = 23 least significant bits of data_.
+   * wheelIndex   =  9 most  significant bits of data_.
    * Packing wheelIndex and sievingPrime into the same 32-bit word
    * reduces primesieve's memory usage by 20%.
    */
   uint32_t data_;
+  uint32_t sieveIndex_;
 };
 
 /**
