@@ -87,8 +87,7 @@ Contents
   good starting point for code reading is PrimeSieve::sieve() in
   PrimeSieve.cpp and then SieveOfEratosthenes.cpp.
   If you are not too familiar with prime sieving I recommend reading
-  Achim Flammenkamp's "The Art of Prime Sieving" [7] and Jonathan P.
-  Sorenson's paper [5] for a good introduction on wheels.
+  Jonathan Sorenson's papers, see section 5.
 
   C++ classes
   -----------
@@ -114,7 +113,7 @@ Contents
     modulo 30 wheel that skips multiples of 2, 3 and 5. This algorithm
     is optimized for small sieving primes that have many multiples per
     segment. EratSmall is a further optimized implementation of Achim
-    Flammenkamp's algorithm.[7]
+    Flammenkamp's algorithm.[8]
 
   * EratMedium
     Segmented sieve of Eratosthenes algorithm with a fixed modulo 210
@@ -125,7 +124,7 @@ Contents
 
   * EratBig
     Segmented sieve of Eratosthenes algorithm with Tomás Oliveira's
-    improvement for big sieving primes [9] and a fixed modulo 210
+    improvement for big sieving primes [10] and a fixed modulo 210
     wheel that skips multiples of 2, 3, 5 and 7. The wheel is
     implemented using a precomputed lookup table (wheel_ array from
     WheelFactorization.cpp). EratBig is optimized for big sieving
@@ -170,15 +169,15 @@ Contents
 5. Further reading
 ==================
 
-  Jonathan P. Sorenson's papers provide a good introduction to prime
-  number sieves, the segmented sieve of Eratosthenes is described in
-  [6] and wheel factorization in [5].
-  Achim Flammenkamp's "The Art of Prime Sieving" [7] explains how to
+  Jonathan Sorenson's papers provide a good introduction to prime
+  number sieves, the sieve of Eratosthenes and segmentation are
+  explained in [5], wheel factorization is covered in [6].
+  Achim Flammenkamp's "The Art of Prime Sieving" [8] describes how to
   optimize the segmented sieve of Eratosthenes to effectively use the
   CPU's cache memory.
-  Joerg Richstein in [8] (German language) describes how to pre-sieve
+  Joerg Richstein in [9] (German language) describes how to pre-sieve
   multiples of small primes to speed up the sieve of Eratosthenes.
-  Tomás Oliveira e Silva on his website [9] explains his improvement
+  Tomás Oliveira e Silva on his website [10] explains his improvement
   to the segmented sieve of Eratosthenes for big sieving primes.
 
 6. Thanks
@@ -212,14 +211,16 @@ Contents
       1977.
   [4] Paul Pritchard, "Fast compact prime number sieves (among 
       others)", Journal of Algorithms 4 (1983), 332-344.
-  [5] J. Sorenson, "An analysis of two prime number sieves", Computer 
+  [5] J. Sorenson, "An Introduction To Prime Number Sieves", Computer 
+      Science Technical Report Vol. 909, January 1990.
+  [6] J. Sorenson, "An analysis of two prime number sieves", Computer 
       Science Technical Report Vol. 1028, June 1991.
-  [6] J. Sorenson, "Trading Time for Space in Prime Number Sieves", 
+  [7] J. Sorenson, "Trading Time for Space in Prime Number Sieves", 
       Lecture Notes in Computer Science, Vol. 1423 (1998), 179-194.
-  [7] Achim Flammenkamp, "The Art of Prime Sieving", 1998.
+  [8] Achim Flammenkamp, "The Art of Prime Sieving", 1998.
       http://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html
-  [8] Jörg Richstein, "Segmentierung und Optimierung von Algorithmen
+  [9] Jörg Richstein, "Segmentierung und Optimierung von Algorithmen
       zu Problemen aus der Zahlentheorie", Gießen, Univ., Diss., 1999.
-  [9] Tomás Oliveira e Silva, "Fast implementation of the segmented 
+ [10] Tomás Oliveira e Silva, "Fast implementation of the segmented
       sieve of Eratosthenes", 2002.
       http://www.ieeta.pt/~tos/software/prime_sieve.html
