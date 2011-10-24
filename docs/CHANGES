@@ -1,4 +1,4 @@
-New in version 3.1, 19/10/2011
+New in version 3.1, 24/10/2011
 ==============================
 
 1. EratBig::sieve(uint8_t*) now processes multiple sieving primes per
@@ -7,9 +7,11 @@ New in version 3.1, 19/10/2011
    Erat(Small|Medium) which improves multi-threading performance ~ 3%.
 3. The Bucket data structure (WheelFactorization.h) has been modified
    and it performs well now with more compilers.
-4. Fixed an integer overflow bug in EratMedium.cpp (see BUGS file).
-5. The -test option (primesieve console) has been simplified.
-6. I improved the code readability and code documentation, the README
+4. EratMedium has been simplifed, the new code is far easier to
+   understand and it is faster with the GNU g++ compiler.
+5. Fixed an integer overflow bug in EratMedium.cpp (see BUGS file).
+6. The -test option (primesieve console) has been reviewed.
+7. I improved the code readability and code documentation, the README
    and INSTALL files have also been revised.
 
 New in version 3.0, 09/07/2011
