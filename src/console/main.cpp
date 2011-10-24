@@ -76,7 +76,7 @@ namespace {
 
 void help() {
   std::cout << "Usage: primesieve START STOP [OPTION]..."                                              << std::endl
-            << "Use the segmented sieve of Eratosthenes to generate the prime numbers and"             << std::endl
+            << "Use the segmented sieve of Eratosthenes to generate the prime numbers and/or"          << std::endl
             << "prime k-tuplets in the interval [START, STOP] < 2^64"                                  << std::endl
                                                                                                        << std::endl
             << "Options:"                                                                              << std::endl
@@ -100,9 +100,11 @@ void help() {
                                                                                                        << std::endl
             << "Examples:"                                                                             << std::endl
                                                                                                        << std::endl
-            << "  primesieve 2 1000 -p1    print the prime numbers up to 1000"                         << std::endl
-            << "  primesieve 2 1E11 -s32   count the prime numbers up to 10^11 using a"                << std::endl
-            << "                           sieve size of 32 KB"                                        << std::endl;
+            << "Print the prime numbers up to 1000:"                                                   << std::endl
+            << "> primesieve 2 1000 -p1"                                                               << std::endl
+                                                                                                       << std::endl
+            << "Count the twin primes and prime triplets in the interval [1E10, 1E10+2^32]:"           << std::endl
+            << "> primesieve 1E10 -o2**32 -c23"                                                        << std::endl;
 }
 
 void version() {
