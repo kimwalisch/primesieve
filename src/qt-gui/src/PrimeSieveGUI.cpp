@@ -142,7 +142,7 @@ int PrimeSieveGUI::getThreads() {
 
 quint64 PrimeSieveGUI::getNumber(const QString& str) {
   if (str.isEmpty())
-    throw std::invalid_argument("Missing number input.");
+    throw std::invalid_argument("Please enter a lower and upper bound for prime sieving.");
 
   ExpressionParser<quint64> parser;
   if (!parser.eval(str.toAscii().data()))
@@ -154,7 +154,7 @@ quint64 PrimeSieveGUI::getNumber(const QString& str) {
       digits >  UPPER_BOUND_STR.size() || (
       digits == UPPER_BOUND_STR.size() &&
       str    >= UPPER_BOUND_STR))))
-    throw std::invalid_argument("Please use positive integers < (2^64-1)-(2^32-1)*10.");
+    throw std::invalid_argument("Please use positive integers < 2^64 - 2^32*10.");
 
   return parser.getResult();
 }
@@ -212,7 +212,7 @@ void PrimeSieveGUI::on_sieveButton_clicked() {
     quint64 lowerBound = this->getNumber(ui->lowerBoundLineEdit->text());
     quint64 upperBound = this->getNumber(ui->upperBoundLineEdit->text());
     if (lowerBound > upperBound)
-      throw std::invalid_argument("The lower bound must be <= upper bound.");
+      throw std::invalid_argument("The lower bound must not be greater than the upper bound.");
 
     // reset the GUI widgets
     ui->progressBar->setValue(ui->progressBar->minimum());

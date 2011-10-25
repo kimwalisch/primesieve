@@ -100,7 +100,7 @@ void PrimeSieveProcess::start(quint64 startNumber, quint64 stopNumber,
 }
 
 bool PrimeSieveProcess::isFinished() {
-  return (shm_->status == 100.0);
+  return (static_cast<int> (shm_->status) == 100);
 }
 
 /**

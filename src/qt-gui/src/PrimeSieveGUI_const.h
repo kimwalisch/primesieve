@@ -45,9 +45,8 @@ const QString APPLICATION_HOMEPAGE("http://primesieve.googlecode.com");
 const QString APPLICATION_ABOUT(
     "primesieve generates prime numbers and prime k-tuplets using a highly "
     "optimized implementation of the sieve of Eratosthenes. By the date "
-    "of release this is the fastest publicly available prime sieving software "
-    "(together with YAFU).<br>"
-    "<br>"
+    "of release this is the fastest publicly available prime sieving software."
+    "<br><br>"
     "This is free software: you can redistribute it and/or modify "
     "it under the terms of the GNU General Public License as published by "
     "the Free Software Foundation; either version 3 of the License, or "
@@ -68,11 +67,11 @@ const int MINIMUM_SIEVE_SIZE = 16;
 const int MAXIMUM_SIEVE_SIZE = 8192;
 /**
  * The best performance is achieved with a sieve size of the CPU's
- * L1/L2 cache size. 64 kilobytes is a good choice as most CPUs have a
+ * L1/L2 cache size. 32 kilobytes is a good choice as most CPUs have a
  * L1 cache size of 16 to 64 kilobytes in 2010.
  * @pre >= MINIMUM_SIEVE_SIZE && <= MAXIMUM_SIEVE_SIZE
  */
-const QString DEFAULT_SIEVE_SIZE = "64 KB";
+const QString DEFAULT_SIEVE_SIZE = "32 KB";
 /**
  * PrimeSieve allows numbers up to < (2^64-1)-(2^32-1)*10.
  * @see PrimeSieve.cpp
