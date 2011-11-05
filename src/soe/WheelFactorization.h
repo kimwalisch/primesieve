@@ -366,8 +366,8 @@ const uint32_t
         0xFF, 2 * WHEEL_SIZE, 6 * WHEEL_SIZE };
 
 extern const WheelInit    wheel30Init[30];
-extern const WheelElement wheel30Array[8*8];
 extern const WheelInit    wheel210Init[210];
+extern const WheelElement wheel30Array[8*8];
 extern const WheelElement wheel210Array[48*8];
 
 /** 3rd wheel, skips multiples of 2, 3 and 5. */
