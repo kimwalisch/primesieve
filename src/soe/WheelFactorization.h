@@ -323,12 +323,12 @@ protected:
     // prime not needed for sieving
     if (multiple > soe_.getStopNumber())
       return false;
+    uint64_t primeSquared = isquare<uint64_t>(*prime);
     // by theory prime^2 is the first multiple of prime
     // that needs to be crossed-off
-    uint64_t primeSquared = isquare<uint64_t>(*prime);
-    if (primeSquared > multiple) {
-       multiple = primeSquared;
-       quotient = *prime;
+    if (multiple < primeSquared) {
+      multiple = primeSquared;
+      quotient = *prime;
     }
     const WheelInit& wheelInit = WHEEL_INIT[quotient % WHEEL_MODULO];
     // calculate the next multiple that is not divisible by any of the
