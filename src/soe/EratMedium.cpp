@@ -42,7 +42,7 @@
 #include <list>
 
 EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
-  EratBase<Modulo210Wheel, WheelPrime_2> (soe)
+  EratBase<Modulo210Wheel_t, WheelPrime_2> (soe)
 {
   static_assert(defs::ERATMEDIUM_FACTOR <= 15, "defs::ERATMEDIUM_FACTOR <= 15");
   uint32_t sqrtStop = soe.getSquareRoot();
@@ -76,10 +76,10 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
       // cross-off the multiples (unset corresponding bits) of the
       // current sieving prime within the sieve array
       while (sieveIndex < sieveSize) {
-        uint32_t unsetBit = wheel_[wheelIndex].unsetBit;
-        uint32_t factor   = wheel_[wheelIndex].nextMultipleFactor;
-        uint32_t correct  = wheel_[wheelIndex].correct;
-         int32_t next     = wheel_[wheelIndex].next;
+        uint32_t unsetBit = wheel(wheelIndex)->unsetBit;
+        uint32_t factor   = wheel(wheelIndex)->nextMultipleFactor;
+        uint32_t correct  = wheel(wheelIndex)->correct;
+         int32_t next     = wheel(wheelIndex)->next;
         sieve[sieveIndex] &= unsetBit;
         wheelIndex += next;
         sieveIndex += sievingPrime * factor + correct;

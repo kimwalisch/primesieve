@@ -43,7 +43,7 @@
 #include <list>
 
 EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
-  EratBase<Modulo30Wheel, WheelPrime_1> (soe)
+  EratBase<Modulo30Wheel_t, WheelPrime_1> (soe)
 {
   uint32_t sqrtStop = soe.getSquareRoot();
   uint32_t max      = static_cast<uint32_t> (soe.getSieveSize() * defs::ERATSMALL_FACTOR);

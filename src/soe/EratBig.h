@@ -52,7 +52,7 @@ class SieveOfEratosthenes;
  * EratBig is optimized for big sieving primes that have very few
  * multiple occurrences per segment. 
  */
-class EratBig: protected Modulo210Wheel {
+class EratBig: protected Modulo210Wheel_t {
 public:
   EratBig(const SieveOfEratosthenes&);
   ~EratBig();

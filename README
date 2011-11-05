@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       05 December 2010
-# Last modified: 21 October 2011
+# Last modified: 05 November 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -158,13 +158,13 @@ Contents
   * WheelFactorization.h
     Contains classes and structs related to wheel factorization, wheel
     factorization is used to skip multiples of small primes to speed
-    up the sieve of Eratosthenes. The abstract ModuloWheel class is
-    used to initialize sieving primes i.e. getWheelPrimeData()
-    calculates the first multiple >= startNumber_ of each sieving
-    prime. The sieving prime is then stored together with its
-    sieveIndex (position of the next multiple within the sieve array)
-    and wheelIndex as a WheelPrime object. Erat(Small|Medium|Big)
-    objects use WheelPrimes to cross-off multiples.
+    up the sieve of Eratosthenes. The abstract Wheel class is used to
+    initialize sieving primes i.e. getWheelPrimeData() calculates the
+    first multiple >= startNumber of each sieving prime. The sieving
+    prime is then stored together with its sieveIndex (position of the
+    next multiple within the sieve array) and wheelIndex as a
+    WheelPrime object. Erat(Small|Medium|Big) objects use WheelPrimes
+    to cross-off multiples.
 
 5. Further reading
 ==================
