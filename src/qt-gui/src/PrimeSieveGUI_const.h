@@ -40,7 +40,7 @@
 #include <stdint.h>
 
 const QString APPLICATION_NAME("primesieve");
-const QString APPLICATION_VERSION("3.1");
+const QString APPLICATION_VERSION("3.2");
 const QString APPLICATION_HOMEPAGE("http://primesieve.googlecode.com");
 const QString APPLICATION_ABOUT(
     "primesieve generates prime numbers and prime k-tuplets using a highly "
