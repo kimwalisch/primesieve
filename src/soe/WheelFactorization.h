@@ -362,6 +362,7 @@ const uint32_t
         0xFF,           0xFF, 1 * WHEEL_SIZE,
         0xFF, 2 * WHEEL_SIZE, 6 * WHEEL_SIZE };
 
+/** Wheel arrays defined in WheelFactorization.cpp */
 extern const WheelInit    wheel30Init[30];
 extern const WheelInit    wheel210Init[210];
 extern const WheelElement wheel30Array[8*8];
