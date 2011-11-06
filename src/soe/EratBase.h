@@ -68,12 +68,13 @@ public:
     }
   }
 protected:
-  typedef T_WheelPrime WheelPrime_t;
+  typedef T_WheelPrime         WheelPrime_t;
   typedef Bucket<WheelPrime_t> Bucket_t;
+  typedef std::list<Bucket_t>  BucketList_t;
   /** Upper bound for sieving primes within EratBase. */
   uint32_t limit_;
   /** List of buckets, holds the sieving primes. */
-  std::list<Bucket_t> buckets_;
+  BucketList_t buckets_;
   EratBase(const SieveOfEratosthenes& soe) : T_Wheel(soe) {
     // initialize with an empty bucket
     buckets_.push_back(Bucket_t());

@@ -204,9 +204,9 @@ void EratBig::sieve(uint8_t* sieve) {
         uint32_t wheelIndex   = wPrime->getWheelIndex();
         uint32_t sievingPrime = wPrime->getSievingPrime();
         sieve[sieveIndex] &= wheel(wheelIndex)->unsetBit;
-        sieveIndex += wheel(wheelIndex)->nextMultipleFactor * sievingPrime;
-        sieveIndex += wheel(wheelIndex)->correct;
-        wheelIndex += wheel(wheelIndex)->next;
+        sieveIndex        += wheel(wheelIndex)->nextMultipleFactor * sievingPrime;
+        sieveIndex        += wheel(wheelIndex)->correct;
+        wheelIndex        += wheel(wheelIndex)->next;
         uint32_t next = (index_ + (sieveIndex >> log2SieveSize_)) & (size_ - 1);
         sieveIndex &= (1U << log2SieveSize_) - 1;
         if (!lists_[next]->addWheelPrime(sievingPrime, sieveIndex, wheelIndex))
