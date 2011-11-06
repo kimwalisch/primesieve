@@ -61,28 +61,22 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
  */
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
 {
-  std::list<Bucket_t>::iterator bucket     = buckets_.begin();
-  std::list<Bucket_t>::iterator bucketsEnd = buckets_.end();
-  for (; bucket != bucketsEnd; ++bucket)
-  {
+  for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
     WheelPrime_t* wPrime = bucket->begin();
     WheelPrime_t* end    = bucket->end();
     // remove the multiples of sieving primes within the
     // current bucket from the sieve array
     for (; wPrime != end; wPrime++) {
-      uint32_t sievingPrime = wPrime->getSievingPrime();
-      uint32_t wheelIndex   = wPrime->getWheelIndex();
       uint32_t sieveIndex   = wPrime->getSieveIndex();
+      uint32_t wheelIndex   = wPrime->getWheelIndex();
+      uint32_t sievingPrime = wPrime->getSievingPrime();
       // cross-off the multiples (unset corresponding bits) of the
       // current sieving prime within the sieve array
       while (sieveIndex < sieveSize) {
-        uint32_t unsetBit = wheel(wheelIndex)->unsetBit;
-        uint32_t factor   = wheel(wheelIndex)->nextMultipleFactor;
-        uint32_t correct  = wheel(wheelIndex)->correct;
-         int32_t next     = wheel(wheelIndex)->next;
-        sieve[sieveIndex] &= unsetBit;
-        wheelIndex += next;
-        sieveIndex += sievingPrime * factor + correct;
+        sieve[sieveIndex] &= wheel(wheelIndex)->unsetBit;
+        sieveIndex        += wheel(wheelIndex)->nextMultipleFactor * sievingPrime;
+        sieveIndex        += wheel(wheelIndex)->correct;
+        wheelIndex        += wheel(wheelIndex)->next;
       }
       sieveIndex -= sieveSize;
       // set sieveIndex and wheelIndex for the next segment
