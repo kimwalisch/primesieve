@@ -313,17 +313,14 @@ protected:
                          uint32_t* sieveIndex,
                          uint32_t* wheelIndex) const
   {
-    uint64_t segmentLow = soe_.getSegmentLow();
-    assert(segmentLow % 30 == 0);
-    // '+ 6' is a correction for primes of type i*30 + 31
-    segmentLow += 6;
+    // '+ 6' is a correction for sieving primes of type i*30 + 31
+    const uint64_t segmentLow = soe_.getSegmentLow() + 6;
     // calculate the first multiple > segmentLow of prime
     uint64_t quotient = segmentLow / *prime + 1;
     uint64_t multiple = *prime * quotient;
-    // prime not needed for sieving
     if (multiple > soe_.getStopNumber())
       return false;
-    uint64_t primeSquared = isquare<uint64_t>(*prime);
+    const uint64_t primeSquared = isquare<uint64_t>(*prime);
     // by theory prime^2 is the first multiple of prime
     // that needs to be crossed-off
     if (multiple < primeSquared) {
