@@ -219,7 +219,7 @@ struct WheelInit {
 };
 
 /**
- * In EratMedium and EratBig the wheel is implemented using a static
+ * In EratMedium and EratBig the wheel is implemented using a global
  * const array of WheelElement objects. The WheelElement data
  * structure is used to cross-off (unset bit) the current multiple of
  * sieving primes and to calculate their next multiple.
@@ -306,8 +306,8 @@ protected:
    * (e.g. 2, 3 and 5 for a modulo 30 wheel) and the position within
    * the SieveOfEratosthenes array (sieveIndex) of that multiple and
    * its wheel index.
-   * @return true if the WheelPrime must be stored for sieving else
-   *         false.
+   * @return true if the WheelPrime must be stored for sieving
+   *         else false.
    */
   bool getWheelPrimeData(uint32_t* prime,
                          uint32_t* sieveIndex,
