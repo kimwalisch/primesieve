@@ -38,6 +38,7 @@
 #include "PrimeNumberFinder.h"
 #include "defs.h"
 
+#include <stdexcept>
 #include <string>
 
 class ParallelPrimeSieve;
@@ -75,6 +76,10 @@ public:
     PRINT_KTUPLETS    = PRINT_TWINS | PRINT_TRIPLETS | PRINT_QUADRUPLETS | PRINT_QUINTUPLETS | PRINT_SEXTUPLETS | PRINT_SEPTUPLETS,
     PRINT_FLAGS       = PRINT_PRIMES | PRINT_KTUPLETS,
     PRINT_STATUS      = 1 << 14
+  };
+  class cancel_sieving : public std::runtime_error {
+  public:
+    cancel_sieving() : std::runtime_error("PrimeSieve: sieving canceled.") { }
   };
   PrimeSieve();
   PrimeSieve(uint64_t, uint64_t, ParallelPrimeSieve*);
