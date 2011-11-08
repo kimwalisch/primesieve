@@ -1,4 +1,4 @@
-November 7, 2011
+November 8, 2011
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -7,9 +7,9 @@ I. About
 
 This file contains various source code examples that show how to use
 PrimeSieve & ParallelPrimeSieve objects.
-You may also want to have a look at primesieve/src/soe/PrimeSieve.h
-for the API and PrimeSieve.cpp for a brief description of each member
-function.
+You may also want to have a look at ../src/soe/PrimeSieve.h for the
+API and ../src/soe/PrimeSieve.cpp for a brief description of each
+member function.
 
 II. Examples
 ============
@@ -31,7 +31,7 @@ II. Examples
 #include <iostream>
 
 void myPrimes(unsigned int prime) {
-  std::cout << prime << std::endl;
+  std::cout << prime << ", ";
 }
 
 int main() {
@@ -50,7 +50,7 @@ int main() {
 int main() {
   PrimeSieve ps;
   std::cout << "prime count: "
-            <<  ps.getPrimeCount(2, 1000)
+            << ps.getPrimeCount(2, 1000)
             << std::endl;
   return 0;
 }
@@ -82,11 +82,12 @@ int main() {
 
 int main() {
   ParallelPrimeSieve pps;
-  pps.setFlags(pps.COUNT_TWINS);
+  pps.setFlags(pps.COUNT_TWINS | pps.PRINT_STATUS);
   pps.setStartNumber((uint64_t) (1E11));
   pps.setStopNumber( (uint64_t) (1E11 * 2.0));
   pps.sieve();
-  std::cout << "twin prime count: "
+  std::cout << std::endl
+            << "twin prime count: "
             << pps.getTwinCount()
             << std::endl;
   return 0;
@@ -108,24 +109,27 @@ int main() {
 }
 
 /****************************************************************************/
-// 6. Set the sieve size
+// 6. Set the sieve size (default 32 kilobytes)
 //    The best sieving performance is achieved with a sieve size of
 //    the CPU's L1 (data) cache size (usually 32 or 64 KB) when
 //    sieving < 10^14 and a sieve size of the CPU's L2 cache size
 //    (e.g. 512 KB) above
 
-#include "soe/PrimeSieve.h"
+#include "soe/ParallelPrimeSieve.h"
 #include <iostream>
 #include <stdint.h>
 
 int main() {
-  PrimeSieve ps;
+  ParallelPrimeSieve pps;
   // set the sieve size in kilobytes
-  ps.setSieveSize(512);
-  uint64_t start = (uint64_t) (1E15);
-  uint64_t stop  = (uint64_t) (1E15 + 1E11);
-  std::cout << "prime count: "
-            << ps.getPrimeCount(start, stop)
+  pps.setSieveSize(512);
+  pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
+  pps.setStartNumber((uint64_t) (1E16));
+  pps.setStopNumber( (uint64_t) (1E16 + 1E11));
+  pps.sieve();
+  std::cout << std::endl
+            << "prime count: "
+            << pps.getPrimeCount()
             << std::endl;
   return 0;
 }
@@ -142,11 +146,11 @@ class MyClass {
 public:
   void generatePrimes(unsigned int x) {
     PrimeSieve ps;
-    ps.generatePrimes(0, x, myPrimes, (void*) this);
+    ps.generatePrimes(0, x, store, (void*) this);
   }
 private:
   std::vector<unsigned int> primes_;
-  static void myPrimes(unsigned int prime, void* myObj) {
+  static void store(unsigned int prime, void* myObj) {
     ((MyClass*) myObj)->primes_.push_back(prime);
   }
 };
@@ -157,10 +161,10 @@ private:
 //    sieving if 'candidate' is not a prime by throwing a
 //    cancel_sieving exception (PrimeSieve is exception safe)
 
-#include "src/soe/PrimeSieve.h"
+#include "soe/PrimeSieve.h"
+#include <iostream>
 #include <cstdlib>
 #include <cmath>
-#include <iostream>
 
 unsigned int candidate;
 
@@ -175,7 +179,7 @@ int main(int argc, char* argv[]) {
 
   if (candidate > 1) {
     PrimeSieve ps;
-    // reduces initialization overhead
+    // reduce initialization overhead
     ps.setPreSieveLimit(13);
     try {
       ps.generatePrimes(0, (unsigned int) std::sqrt((double) candidate), check);
@@ -183,7 +187,8 @@ int main(int argc, char* argv[]) {
     }
     catch (...) { }
   }
-  std::cout << candidate << (isPrime ? " is " : " is not ")
-            << "a prime" << std::endl;
+  std::cout << candidate
+            << (isPrime ? " is a prime" : " is not a prime")
+            << std::endl;
   return 0;
 }
