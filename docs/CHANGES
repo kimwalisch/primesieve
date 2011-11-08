@@ -1,8 +1,12 @@
-New in version 3.2, 05/11/2011
+New in version 3.2, 08/11/2011
 ==============================
 
 1. The code readability and documentation of WheelFactorization.h &
    .cpp has been improved.
+2. EratMedium has been simplified.
+3. Added a PrimeSieve::cancel_sieving exception that allows to cancel
+   sieving at run time (see docs/USAGE_EXAMPLES).
+4. Added 32-bit prime number generation methods to PrimeSieve.
 
 New in version 3.1, 24/10/2011
 ==============================
