@@ -372,22 +372,30 @@
 #endif
 #endif
 
+/*
+ * Author: Kim Walisch, <kim.walisch@gmail.com>
+ * I reversed the order of 'unsigned int' and 'unsigned long' to prevent
+ * the following bug in my software when compiling with MSVC 2010:
+ * "... cannot convert parameter 3 from 'void (__cdecl *)(unsigned int)'
+ * to 'void (__cdecl *)(uint32_t)' ..."
+ */
+
 #ifndef UINT32_MAX
 # define UINT32_MAX (0xffffffffUL)
 #endif
 #ifndef uint32_t
-#if (ULONG_MAX == UINT32_MAX) || defined (S_SPLINT_S)
-  typedef unsigned long uint32_t;
-# define UINT32_C(v) v ## UL
-# ifndef PRINTF_INT32_MODIFIER
-#  define PRINTF_INT32_MODIFIER "l"
-# endif
-#elif (UINT_MAX == UINT32_MAX)
+#if (UINT_MAX == UINT32_MAX) && !defined (S_SPLINT_S)
   typedef unsigned int uint32_t;
 # ifndef PRINTF_INT32_MODIFIER
 #  define PRINTF_INT32_MODIFIER ""
 # endif
 # define UINT32_C(v) v ## U
+#elif (ULONG_MAX == UINT32_MAX) || defined (S_SPLINT_S)
+  typedef unsigned long uint32_t;
+# define UINT32_C(v) v ## UL
+# ifndef PRINTF_INT32_MODIFIER
+#  define PRINTF_INT32_MODIFIER "l"
+# endif
 #elif (USHRT_MAX == UINT32_MAX)
   typedef unsigned short uint32_t;
 # define UINT32_C(v) ((unsigned short) (v))
