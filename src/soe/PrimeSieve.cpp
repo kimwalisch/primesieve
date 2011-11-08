@@ -66,13 +66,13 @@ PrimeSieve::PrimeSieve() :
 PrimeSieve::PrimeSieve(uint64_t startNumber,
                        uint64_t stopNumber, 
                        ParallelPrimeSieve* parent) :
+  startNumber_(startNumber),
+  stopNumber_(stopNumber),
   sieveSize_(parent->getSieveSize()),
   preSieveLimit_(parent->getPreSieveLimit()),
   flags_(parent->getFlags()),
   parent_(parent)
 {
-  this->setStartNumber(startNumber);
-  this->setStopNumber(stopNumber);
   this->reset();
 }
 
@@ -113,18 +113,18 @@ uint64_t PrimeSieve::getSeptupletCount()  const { return counts_[6]; }
 
 /**
  * Get the count of primes or prime k-tuplets after sieve().
- * @param type = 0 : Count of prime numbers,
- *        type = 1 : Count of twin primes,    
- *        type = 2 : Count of prime triplets,    
- *        type = 3 : Count of prime quadruplets, 
- *        type = 4 : Count of prime quintuplets, 
- *        type = 5 : Count of prime sextuplets,
- *        type = 6 : Count of prime septuplets.
+ * @param index = 0 : Count of prime numbers,
+ *        index = 1 : Count of twin primes,    
+ *        index = 2 : Count of prime triplets,    
+ *        index = 3 : Count of prime quadruplets, 
+ *        index = 4 : Count of prime quintuplets, 
+ *        index = 5 : Count of prime sextuplets,
+ *        index = 6 : Count of prime septuplets.
  */
-uint64_t PrimeSieve::getCounts(uint32_t type) const {
-  if (type >= COUNTS_SIZE)
-    throw std::out_of_range("getCounts(uint32_t) type out of range");
-  return counts_[type];
+uint64_t PrimeSieve::getCounts(uint32_t index) const {
+  if (index >= COUNTS_SIZE)
+    throw std::out_of_range("getCounts(uint32_t) index out of range");
+  return counts_[index];
 }
 
 /**
@@ -283,10 +283,10 @@ void PrimeSieve::reset() {
  */
 void PrimeSieve::doStatus(uint32_t processed) {
   segments_ += processed;
-  int    old  = static_cast<int> (status_);
+  double todo = static_cast<double> (stopNumber_ - startNumber_ + 1);
   double done = static_cast<double> (segments_);
-  double all  = static_cast<double> (1 + stopNumber_ - startNumber_);
-  status_ = std::min<double>((done / all) * 100.0, 100.0);
+  int    old  = static_cast<int> (status_);
+  status_ = std::min<double>((done / todo) * 100.0, 100.0);
   if (flags_ & PRINT_STATUS) {
     int status = static_cast<int> (status_);
     if (status > old)
@@ -294,28 +294,21 @@ void PrimeSieve::doStatus(uint32_t processed) {
   }
 }
 
-void PrimeSieve::doSmallPrime(uint32_t low,
-                              uint32_t high,
+void PrimeSieve::doSmallPrime(uint32_t min,
+                              uint32_t max,
                               uint32_t type, 
-                              const std::string& primeStr) {
-  if (startNumber_ <= low && 
-      stopNumber_  >= high)
-  {
-    if (type == 0 && (flags_ & CALLBACK_FLAGS)) {
+                              const std::string& primeStr)
+{
+  if (startNumber_ <= min && stopNumber_ >= max) {
+    if ((flags_ & CALLBACK_FLAGS) && type == 0) {
       uint32_t prime = primeStr[0] - '0';
-      if (flags_ & CALLBACK32_PRIMES)
-        this->callback32_(prime);
-      if (flags_ & CALLBACK32_OOP_PRIMES)
-        this->callback32_OOP_(prime, cbObj_);
-      if (flags_ & CALLBACK64_PRIMES)
-        this->callback64_(prime);
-      if (flags_ & CALLBACK64_OOP_PRIMES)
-        this->callback64_OOP_(prime, cbObj_);
+      if (flags_ & CALLBACK32_PRIMES)     this->callback32_(prime);
+      if (flags_ & CALLBACK32_OOP_PRIMES) this->callback32_OOP_(prime, cbObj_);
+      if (flags_ & CALLBACK64_PRIMES)     this->callback64_(prime);
+      if (flags_ & CALLBACK64_OOP_PRIMES) this->callback64_OOP_(prime, cbObj_);
     } else {
-      if (flags_ & (COUNT_PRIMES << type))
-        counts_[type]++;
-      if (flags_ & (PRINT_PRIMES << type))
-        std::cout << primeStr << std::endl;
+      if (flags_ & (COUNT_PRIMES << type)) counts_[type]++;
+      if (flags_ & (PRINT_PRIMES << type)) std::cout << primeStr << std::endl;
     }
   }
 }
@@ -372,7 +365,7 @@ void PrimeSieve::sieve() {
     finder.finish();
   }
 
-  // make sure status_ is 100.0 percent
-  parent_->doStatus(10);
+  // make sure that status_ = 100.0 percent
+  parent_->doStatus(8);
   timeElapsed_ = static_cast<double> (std::clock() - t1) / CLOCKS_PER_SEC;
 }
