@@ -366,6 +366,6 @@ void PrimeSieve::sieve() {
   }
 
   // make sure that status_ = 100.0 percent
-  parent_->doStatus(8);
+  parent_->doStatus(10);
   timeElapsed_ = static_cast<double> (std::clock() - t1) / CLOCKS_PER_SEC;
 }
