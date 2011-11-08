@@ -47,9 +47,9 @@ class ParallelPrimeSieve;
  * PrimeSieve is a highly optimized implementation of the segmented
  * sieve of Eratosthenes that generates primes and prime k-tuplets
  * (twins, triplets, ...) in order up to 2^64 maximum.
- * The file ../README describes the algorithms used in more detail.
- * The file ../docs/USAGE_EXAMPLES contains source code examples of
- * how to use PrimeSieve & ParallelPrimeSieve objects.
+ * The file primesieve/README describes the algorithms used in more
+ * detail and primesieve/docs/USAGE_EXAMPLES contains source code
+ * examples that show how to use PrimeSieve objects.
  */
 class PrimeSieve {
   friend class PrimeNumberFinder;
@@ -83,7 +83,7 @@ public:
   };
   PrimeSieve();
   PrimeSieve(uint64_t, uint64_t, ParallelPrimeSieve*);
-  virtual ~PrimeSieve() {}
+  virtual ~PrimeSieve() { }
   uint64_t getStartNumber() const;
   uint64_t getStopNumber() const;
   uint32_t getSieveSize() const;
@@ -104,15 +104,21 @@ public:
   void setSieveSize(uint32_t);
   void setPreSieveLimit(uint32_t);
   void setFlags(uint32_t);
-  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
-  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
+  /** Prime number generation methods (32-bit & 64-bit ). */
+  void generatePrimes(uint32_t, uint32_t, void (*callback)(uint32_t));
+  void generatePrimes(uint32_t, uint32_t, void (*callback)(uint32_t, void*), void* cbObj);
+  void generatePrimes(uint64_t, uint64_t, void (*callback)(uint64_t));
+  void generatePrimes(uint64_t, uint64_t, void (*callback)(uint64_t, void*), void* cbObj);
   virtual void sieve();
 protected:
   /** Private internal falgs (bits >= 20). */
   enum {
-    CALLBACK_PRIMES     = 1 << 20,
-    CALLBACK_PRIMES_OOP = 1 << 21,
-    GENERATE_FLAGS      = PRINT_FLAGS | CALLBACK_PRIMES | CALLBACK_PRIMES_OOP
+    CALLBACK32_PRIMES     = 1 << 20,
+    CALLBACK32_OOP_PRIMES = 1 << 21,
+    CALLBACK64_PRIMES     = 1 << 22,
+    CALLBACK64_OOP_PRIMES = 1 << 23,
+    CALLBACK_FLAGS        = CALLBACK32_PRIMES | CALLBACK32_OOP_PRIMES | CALLBACK64_PRIMES | CALLBACK64_OOP_PRIMES,
+    GENERATE_FLAGS        = CALLBACK_FLAGS | PRINT_PRIMES | PRINT_KTUPLETS
   };
   /** Sieve the primes within the interval [startNumber_, stopNumber_]. */
   uint64_t startNumber_;
@@ -120,6 +126,8 @@ protected:
   uint64_t stopNumber_;
   /** A sieve size in kilobytes. */
   uint32_t sieveSize_;
+  /** Multiples of small primes <= preSieveLimit_ are pre-sieved. */
+  uint32_t preSieveLimit_;
   /** Settings for PrimeSieve::sieve(). */
   uint32_t flags_;
   /**
@@ -139,12 +147,11 @@ protected:
   void reset();
   virtual void doStatus(uint32_t);
 private:
-  /** Multiples of small primes <= preSieveLimit_ are pre-sieved. */
-  uint32_t preSieveLimit_;
-  /** Callback function for use with PrimeSieve::generatePrimes(). */
-  void (*callback_)(uint64_t);
-  /** OOP callback function for use with PrimeSieve::generatePrimes(). */
-  void (*callbackOOP_)(uint64_t, void*);
+  /** Various callback functions for use with generatePrimes(). */
+  void (*callback32_)(uint32_t);
+  void (*callback32_OOP_)(uint32_t, void*);
+  void (*callback64_)(uint64_t);
+  void (*callback64_OOP_)(uint64_t, void*);
   void* cbObj_;
   /** Either this or the parent ParallelPrimeSieve object. */
   PrimeSieve* parent_;

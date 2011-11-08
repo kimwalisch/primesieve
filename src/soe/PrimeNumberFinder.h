@@ -65,7 +65,8 @@ private:
   virtual void analyseSieve(const uint8_t*, uint32_t);
   void count(const uint8_t*, uint32_t);
   void generate(const uint8_t*, uint32_t);
-  void callbackOOP(uint64_t);
+  void callback32_OOP(uint32_t) const;
+  void callback64_OOP(uint64_t) const;
   void print(uint64_t) const;
 };
 

@@ -40,7 +40,6 @@
 
 #include <algorithm>
 #include <cstdlib>
-#include <cassert>
 #include <iostream>
 #include <sstream>
 
@@ -48,21 +47,22 @@
 /// within bytes of the sieve array.
 const uint32_t PrimeNumberFinder::kTupletBitmasks_[6][5] =
 {
-  { 0x06, 0x18, 0xc0, END },        // Twin primes
-  { 0x07, 0x0e, 0x1c, 0x38, END },  // Prime triplets
-  { 0x1e, END },                    // Prime quadruplets
-  { 0x1f, 0x3e, END },              // Prime quintuplets
-  { 0x3f, END },                    // Prime sextuplets
-  { 0xfe, END }                     // Prime septuplets
+  { 0x06, 0x18, 0xc0, END },       // Twin primes
+  { 0x07, 0x0e, 0x1c, 0x38, END }, // Prime triplets
+  { 0x1e, END },                   // Prime quadruplets
+  { 0x1f, 0x3e, END },             // Prime quintuplets
+  { 0x3f, END },                   // Prime sextuplets
+  { 0xfe, END }                    // Prime septuplets
 };
 
 PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
   SieveOfEratosthenes(
-      std::max<uint64_t>(ps.getStartNumber(), 7),
+      std::max<uint64_t>(7, ps.getStartNumber()),
       ps.getStopNumber(),
       ps.getSieveSize(),
       ps.getPreSieveLimit()),
-  ps_(ps), kTupletByteCounts_(NULL)
+  ps_(ps),
+  kTupletByteCounts_(NULL)
 {
   static_assert(PrimeSieve::COUNTS_SIZE == 7, "PrimeSieve::COUNTS_SIZE == 7");
   if (ps_.flags_ & PrimeSieve::COUNT_KTUPLETS)
@@ -154,12 +154,14 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  * triplets, ...) within the current segment.
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
-  uint64_t lowerBound = this->getSegmentLow();
-  // GENERATE_PRIMES() is defined in defs.h
-       if (ps_.flags_ & PrimeSieve::CALLBACK_PRIMES)     GENERATE_PRIMES(ps_.callback_,     uint64_t)
-  else if (ps_.flags_ & PrimeSieve::CALLBACK_PRIMES_OOP) GENERATE_PRIMES(this->callbackOOP, uint64_t)
-  else if (ps_.flags_ & PrimeSieve::PRINT_PRIMES)        GENERATE_PRIMES(this->print,       uint64_t)
+  // the GENERATE_PRIMES() macro is defined in defs.h
+       if (ps_.flags_ & PrimeSieve::CALLBACK32_PRIMES)     GENERATE_PRIMES(ps_.callback32_,      uint32_t)
+  else if (ps_.flags_ & PrimeSieve::CALLBACK32_OOP_PRIMES) GENERATE_PRIMES(this->callback32_OOP, uint32_t)
+  else if (ps_.flags_ & PrimeSieve::CALLBACK64_PRIMES)     GENERATE_PRIMES(ps_.callback64_,      uint64_t)
+  else if (ps_.flags_ & PrimeSieve::CALLBACK64_OOP_PRIMES) GENERATE_PRIMES(this->callback64_OOP, uint64_t)
+  else if (ps_.flags_ & PrimeSieve::PRINT_PRIMES)          GENERATE_PRIMES(this->print,          uint64_t)
   else if (ps_.flags_ & PrimeSieve::PRINT_KTUPLETS) {
+    uint64_t lowerBound = this->getSegmentLow();
     // i=0 twins, i=1 triplets, ...
     uint32_t i = 0;
     for (; (ps_.flags_ & (PrimeSieve::PRINT_TWINS << i)) == 0; i++)
@@ -182,8 +184,12 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   }
 }
 
-void PrimeNumberFinder::callbackOOP(uint64_t prime) {
-  ps_.callbackOOP_(prime, ps_.cbObj_);
+void PrimeNumberFinder::callback32_OOP(uint32_t prime) const {
+  ps_.callback32_OOP_(prime, ps_.cbObj_);
+}
+
+void PrimeNumberFinder::callback64_OOP(uint64_t prime) const {
+  ps_.callback64_OOP_(prime, ps_.cbObj_);
 }
 
 void PrimeNumberFinder::print(uint64_t prime) const {

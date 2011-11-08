@@ -66,12 +66,9 @@ PrimeSieve::PrimeSieve() :
 PrimeSieve::PrimeSieve(uint64_t startNumber,
                        uint64_t stopNumber, 
                        ParallelPrimeSieve* parent) :
-  sieveSize_(parent->sieveSize_), 
-  flags_(parent->flags_),
-  preSieveLimit_(parent->preSieveLimit_),
-  callback_(parent->callback_),
-  callbackOOP_(parent->callbackOOP_), 
-  cbObj_(parent->cbObj_),
+  sieveSize_(parent->getSieveSize()),
+  preSieveLimit_(parent->getPreSieveLimit()),
+  flags_(parent->getFlags()),
   parent_(parent)
 {
   this->setStartNumber(startNumber);
@@ -105,7 +102,7 @@ uint64_t PrimeSieve::getPrimeCount(uint64_t startNumber,
   return this->getPrimeCount();
 }
 
-/// Get the count of primes and prime k-tuplets after sieve()
+/** Get the count of primes and prime k-tuplets after sieve(). */
 uint64_t PrimeSieve::getPrimeCount()      const { return counts_[0]; }
 uint64_t PrimeSieve::getTwinCount()       const { return counts_[1]; }
 uint64_t PrimeSieve::getTripletCount()    const { return counts_[2]; }
@@ -162,17 +159,17 @@ void PrimeSieve::setStopNumber(uint64_t stopNumber) {
 /**
  * Set the size of the sieve of Eratosthenes array (in kilobytes).
  * Default sieveSize = 32 KB, the best performance is achieved with a
- * sieve size that matches the CPU's L1 cache size (usually 32 or 64
- * KB) when sieving < 10^14 and a sieve size of the CPU's L2 cache
- * size (e.g. 512 KB) above.
+ * sieve size of the CPU's L1 cache size (usually 32 or 64 KB) when
+ * sieving < 10^14 and a sieve size of the CPU's L2 cache size
+ * (e.g. 512 KB) above.
  * @param sieveSize  >= 1 && <= 8192 kilobytes, sieveSize is rounded
  *                   up to the next highest power of 2.
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
-  // SieveOfEratosthenes needs   sieveSize >= 1
-  // Erat(Small|Medium|Big) need sieveSize <= 8192
+  // SieveOfEratosthenes needs sieveSize >= 1
   if (sieveSize < 1)
     sieveSize = 1;
+  // Erat(Small|Medium|Big) need sieveSize <= 8192
   if (sieveSize > 8192)
     sieveSize = 8192;
   // EratBig needs a power of 2 sieveSize
@@ -192,7 +189,7 @@ void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
 
 /**
  * Settings for sieve().
- * @see   ../docs/USAGE_EXAMPLES
+ * @see   primesieve/docs/USAGE_EXAMPLES
  * @param flags
  *   PrimeSieve::COUNT_PRIMES      OR (bitwise '|')
  *   PrimeSieve::COUNT_TWINS       OR
@@ -217,35 +214,57 @@ void PrimeSieve::setFlags(uint32_t flags) {
 }
 
 /**
- * Generate the prime numbers within the interval [startNumber, stopNumber]
- * and call a callback function for each prime.
+ * Prime number generation methods (32-bit & 64-bit), see
+ * primesieve/docs/USAGE_EXAMPLES for usage examples.
  */
-void PrimeSieve::generatePrimes(uint64_t startNumber,
+
+void PrimeSieve::generatePrimes(uint32_t startNumber, 
+                                uint32_t stopNumber,
+                                void (*callback)(uint32_t)) {
+  if (callback == NULL)
+    throw std::invalid_argument("callback must not be NULL");
+  this->setStartNumber(startNumber);
+  this->setStopNumber(stopNumber);
+  callback32_ = callback;
+  flags_      = CALLBACK32_PRIMES;
+  this->sieve();
+}
+
+void PrimeSieve::generatePrimes(uint32_t startNumber, 
+                                uint32_t stopNumber,
+                                void (*callback)(uint32_t, void*), void* cbObj) {
+  if (callback == NULL || cbObj == NULL)
+    throw std::invalid_argument("callback & cbObj must not be NULL");
+  this->setStartNumber(startNumber);
+  this->setStopNumber(stopNumber);
+  callback32_OOP_ = callback;
+  cbObj_ = cbObj;
+  flags_ = CALLBACK32_OOP_PRIMES;
+  this->sieve();
+}
+
+void PrimeSieve::generatePrimes(uint64_t startNumber, 
                                 uint64_t stopNumber,
                                 void (*callback)(uint64_t)) {
   if (callback == NULL)
     throw std::invalid_argument("callback must not be NULL");
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
-  flags_ = CALLBACK_PRIMES;
-  callback_ = callback;
+  callback64_ = callback;
+  flags_      = CALLBACK64_PRIMES;
   this->sieve();
 }
 
-/**
- * Generate the prime numbers within the interval [startNumber, stopNumber]
- * and call an OOP callback function for each prime.
- */
 void PrimeSieve::generatePrimes(uint64_t startNumber, 
                                 uint64_t stopNumber,
                                 void (*callback)(uint64_t, void*), void* cbObj) {
-  if (callback == NULL)
-    throw std::invalid_argument("callback must not be NULL");
+  if (callback == NULL || cbObj == NULL)
+    throw std::invalid_argument("callback & cbObj must not be NULL");
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
-  flags_ = CALLBACK_PRIMES_OOP;
-  callbackOOP_ = callback;
+  callback64_OOP_ = callback;
   cbObj_ = cbObj;
+  flags_ = CALLBACK64_OOP_PRIMES;
   this->sieve();
 }
 
@@ -278,18 +297,26 @@ void PrimeSieve::doStatus(uint32_t processed) {
 void PrimeSieve::doSmallPrime(uint32_t low,
                               uint32_t high,
                               uint32_t type, 
-                              const std::string& prime) {
+                              const std::string& primeStr) {
   if (startNumber_ <= low && 
       stopNumber_  >= high)
   {
-    if (flags_ & (COUNT_PRIMES << type))
-      counts_[type]++;
-    if (flags_ & (PRINT_PRIMES << type))
-      std::cout << prime << std::endl;
-    if (flags_ & CALLBACK_PRIMES)
-      this->callback_(prime[0] - '0');
-    if (flags_ & CALLBACK_PRIMES_OOP)
-      this->callbackOOP_(prime[0] - '0', cbObj_);
+    if (type == 0 && (flags_ & CALLBACK_FLAGS)) {
+      uint32_t prime = primeStr[0] - '0';
+      if (flags_ & CALLBACK32_PRIMES)
+        this->callback32_(prime);
+      if (flags_ & CALLBACK32_OOP_PRIMES)
+        this->callback32_OOP_(prime, cbObj_);
+      if (flags_ & CALLBACK64_PRIMES)
+        this->callback64_(prime);
+      if (flags_ & CALLBACK64_OOP_PRIMES)
+        this->callback64_OOP_(prime, cbObj_);
+    } else {
+      if (flags_ & (COUNT_PRIMES << type))
+        counts_[type]++;
+      if (flags_ & (PRINT_PRIMES << type))
+        std::cout << primeStr << std::endl;
+    }
   }
 }
 
@@ -345,7 +372,7 @@ void PrimeSieve::sieve() {
     finder.finish();
   }
 
-  // set status_ to 100.0 percent
+  // make sure status_ is 100.0 percent
   parent_->doStatus(10);
   timeElapsed_ = static_cast<double> (std::clock() - t1) / CLOCKS_PER_SEC;
 }

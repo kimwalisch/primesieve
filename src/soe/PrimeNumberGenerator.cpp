@@ -57,7 +57,6 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
  * @see SieveOfEratosthenes::sieve(uint32_t)
  */
 void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
-  uint32_t lowerBound = static_cast<uint32_t> (this->getSegmentLow());
   // GENERATE_PRIMES() is defined in defs.h
   GENERATE_PRIMES(primeNumberFinder_.sieve, uint32_t);
 }
