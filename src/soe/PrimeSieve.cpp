@@ -350,14 +350,14 @@ void PrimeSieve::sieve() {
       // sieve of Eratosthenes implementation that generates the primes
       // up to stopNumber_^0.25 for the PrimeNumberGenerator
       uint32_t N = generator.getSquareRoot();
-      std::vector<uint8_t> isPrime(N / 8 + 1, 0xAA);
+      std::vector<uint32_t> isPrime(N / 32 + 1, 0xAAAAAAAAu);
       for (uint32_t i = 3; i * i <= N; i += 2) {
-        if (isPrime[i >> 3] & (1 << (i & 7)))
+        if (isPrime[i >> 5] & (1 << (i & 31)))
           for (uint32_t j = i * i; j <= N; j += i * 2)
-            isPrime[j >> 3] &= ~(1 << (j & 7));
+            isPrime[j >> 5] &= ~(1 << (j & 31));
       }
       for (uint32_t i = generator.getPreSieveLimit() + 1; i <= N; i++) {
-        if (isPrime[i >> 3] & (1 << (i & 7)))
+        if (isPrime[i >> 5] & (1 << (i & 31)))
           generator.sieve(i);
       }
       generator.finish();
