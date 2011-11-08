@@ -43,6 +43,12 @@
 
 const uint32_t PreSieve::smallPrimes_[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 31 };
 
+const uint32_t PreSieve::unsetBits_[30] = {
+    BIT0, 0xFF, 0xFF, 0xFF, BIT1, 0xFF, BIT2, 0xFF, 0xFF, 0xFF,
+    BIT3, 0xFF, BIT4, 0xFF, 0xFF, 0xFF, BIT5, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, BIT6, 0xFF, BIT7, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+};
+
 /**
  * Pre-sieve multiples of small primes <= limit to speed up
  * the sieve of Eratosthenes.
@@ -83,15 +89,8 @@ void PreSieve::initWheelArray() {
                "SieveOfEratosthenes::NUMBERS_PER_BYTE == 30");
   assert(limit_ < smallPrimes_[9]);
   assert(size_ > 0);
-  const uint32_t unsetBit[30] = {
-      BIT0, 0xff, 0xff, 0xff, BIT1, 0xff,
-      BIT2, 0xff, 0xff, 0xff, BIT3, 0xff,
-      BIT4, 0xff, 0xff, 0xff, BIT5, 0xff,
-      0xff, 0xff, 0xff, 0xff, BIT6, 0xff,
-      BIT7, 0xff, 0xff, 0xff, 0xff, 0xff
-  };
   wheelArray_ = new uint8_t[size_];
-  wheelArray_[0] = 0xff;
+  wheelArray_[0] = 0xFF;
   uint32_t primeProduct = 2 * 3 * 5;
 
   for (int i = 3; smallPrimes_[i] <= limit_; i++) {
@@ -112,7 +111,7 @@ void PreSieve::initWheelArray() {
       uint32_t multipleIndex = multiple / SieveOfEratosthenes::NUMBERS_PER_BYTE;
       uint32_t bitPosition   = multiple % SieveOfEratosthenes::NUMBERS_PER_BYTE;
       assert(multipleIndex < size_);
-      wheelArray_[multipleIndex] &= unsetBit[bitPosition];
+      wheelArray_[multipleIndex] &= unsetBits_[bitPosition];
     }
   }
 }
