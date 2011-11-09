@@ -44,7 +44,7 @@
 EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
   EratBase<Modulo210Wheel_t, WheelPrime_2> (soe)
 {
-  static_assert(defs::ERATMEDIUM_FACTOR <= 15, "defs::ERATMEDIUM_FACTOR <= 15");
+  static_assert(defs::ERATMEDIUM_FACTOR <= 30, "defs::ERATMEDIUM_FACTOR <= 30");
   uint32_t sqrtStop = soe.getSquareRoot();
   uint32_t max      = soe.getSieveSize() * defs::ERATMEDIUM_FACTOR;
   uint32_t limit    = std::min<uint32_t>(sqrtStop, max);
