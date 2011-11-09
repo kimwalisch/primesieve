@@ -72,18 +72,20 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
     WheelPrime_t* end    = bucket->end();
     // process the sieving primes within the current bucket
     for (; wPrime != end; wPrime++) {
-      const uint32_t primeX2 = wPrime->getSievingPrime() * 2;
-      const uint32_t primeX4 = primeX2 * 2;
-      const uint32_t primeX6 = primeX2 * 3;
+      const uint32_t primeX2       = wPrime->getSievingPrime() * 2;
+      const uint32_t primeX4       = primeX2 * 2;
+      const uint32_t primeX6       = primeX2 * 3;
       const uint32_t maxLoopOffset = primeX2 * 15 + 29;
+      const uint32_t multipleIndex = wPrime->getMultipleIndex();
+      const uint32_t wheelIndex    = wPrime->getWheelIndex();
 
-      uint8_t* s = &sieve[wPrime->getMultipleIndex()];
-      uint8_t* const loopLimit = (maxLoopOffset < sieveSize) 
-          ? sieveEnd - maxLoopOffset
-          : s;
+      uint8_t* const loopLimit = (maxLoopOffset < sieveSize)
+          ? sieveEnd - maxLoopOffset : sieve;
+      uint8_t* s = &sieve[multipleIndex];
+
       // cross-off the multiples (unset corresponding bits) of the
       // current sieving prime within the sieve array
-      switch (wPrime->getWheelIndex()) {
+      switch (wheelIndex) {
         // for sieving primes of type i * 30 + 7
         for (;;) {
           case 1: *s &= BIT0; s += primeX6 + 1; if (s >= sieveEnd) { wPrime->setWheelIndex(2); break; }
