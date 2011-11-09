@@ -1,4 +1,4 @@
-November 8, 2011
+November 9, 2011
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -179,7 +179,7 @@ int main(int argc, char* argv[]) {
 
   if (candidate > 1) {
     PrimeSieve ps;
-    // reduce initialization overhead
+    // reduces initialization overhead
     ps.setPreSieveLimit(13);
     try {
       ps.generatePrimes(0, (unsigned int) std::sqrt((double) candidate), check);
