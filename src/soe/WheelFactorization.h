@@ -55,9 +55,9 @@
 /**
  * WheelPrime objects are sieving primes <= sqrt(n) for use with wheel
  * factorization (skips multiples of small primes). EratSmall,
- * EratMedium and EratBig use WheelPrimes to cross off multiples. Each
+ * EratMedium and EratBig use WheelPrimes to cross-off multiples. Each
  * WheelPrime object contains the sieving prime, the position of the
- * next multiple within the SieveOfEratosthenes array (sieve index)
+ * next multiple within the SieveOfEratosthenes array (multipleIndex)
  * and a wheel index.
  *
  * @remark WheelPrime_1  Uses 8 bytes per sieving prime, WheelPrime_1
@@ -68,7 +68,7 @@ public:
   uint32_t getSievingPrime() const {
     return sievingPrime_;
   }
-  uint32_t getSieveIndex() const {
+  uint32_t getMultipleIndex() const {
     // get the 23 least significant bits
     return indexes_ & ((1U << 23) - 1);
   }
@@ -77,34 +77,34 @@ public:
     return indexes_ >> 23;
   }
   void set(uint32_t sievingPrime,
-           uint32_t sieveIndex,
+           uint32_t multipleIndex,
            uint32_t wheelIndex)
   {
-    assert(sieveIndex < (1U << 23) &&
-           wheelIndex < (1U << 9));
-    indexes_      = sieveIndex | (wheelIndex << 23);
+    assert(multipleIndex < (1U << 23) &&
+           wheelIndex    < (1U << 9));
+    indexes_      = multipleIndex | (wheelIndex << 23);
     sievingPrime_ = sievingPrime;
   }
   void setWheelIndex(uint32_t wheelIndex) {
     assert(wheelIndex < (1U << 9));
     indexes_ = wheelIndex << 23;
   }
-  void setSieveIndex(uint32_t sieveIndex) {
-    assert(sieveIndex < (1U << 23));
-    indexes_ |= sieveIndex;
+  void setMultipleIndex(uint32_t multipleIndex) {
+    assert(multipleIndex < (1U << 23));
+    indexes_ |= multipleIndex;
   }
 private:
   /**
-   * sieveIndex = 23 least significant bits of indexes_.
-   * wheelIndex =  9 most  significant bits of indexes_.
-   * Packing sieveIndex and wheelIndex into the same 32-bit word
+   * multipleIndex = 23 least significant bits of indexes_.
+   * wheelIndex    =  9 most  significant bits of indexes_.
+   * Packing multipleIndex and wheelIndex into the same 32-bit word
    * reduces primesieve's memory usage by 20%.
    */
   uint32_t indexes_;
   /**
-   * sievingPrime_ = prime / 15;
-   * /15 = *2 /30, *2 is used to skip multiples of 2, /30 is used as
-   * SieveOfEratosthenes objects use 30 numbers per byte.
+   * sievingPrime_ = prime / 30;
+   * '/ 30' is used as SieveOfEratosthenes objects use a bit array
+   * with 30 numbers per byte.
    * @see Wheel::getWheelPrimeData()
    */
   uint32_t sievingPrime_;
@@ -113,7 +113,7 @@ private:
 /**
  * @see    WheelPrime_1
  * @remark WheelPrime_2  Unlike WheelPrime_1 WheelPrime_2 allows
- *                       sieveIndex > 23-bits but requires
+ *                       multipleIndex > 23-bits but requires
  *                       sievingPrime <= 23-bits.
  */
 class WheelPrime_2 {
@@ -122,21 +122,21 @@ public:
     // get the 23 least significant bits
     return data_ & ((1U << 23) - 1);
   }
-  uint32_t getSieveIndex() const {
-    return sieveIndex_;
+  uint32_t getMultipleIndex() const {
+    return multipleIndex_;
   }
   uint32_t getWheelIndex() const {
     // get the 9 most significant bits
     return data_ >> 23;
   }
   void set(uint32_t sievingPrime,
-           uint32_t sieveIndex,
+           uint32_t multipleIndex,
            uint32_t wheelIndex)
   {
     assert(sievingPrime < (1U << 23) &&
            wheelIndex   < (1U << 9));
-    data_       = sievingPrime | (wheelIndex << 23);
-    sieveIndex_ = sieveIndex;
+    data_          = sievingPrime | (wheelIndex << 23);
+    multipleIndex_ = multipleIndex;
   }
 private:
   /**
@@ -146,7 +146,7 @@ private:
    * reduces primesieve's memory usage by 20%.
    */
   uint32_t data_;
-  uint32_t sieveIndex_;
+  uint32_t multipleIndex_;
 };
 
 /**
@@ -194,13 +194,13 @@ public:
    * @return false  If the bucket is full else true.
    */
   bool addWheelPrime(uint32_t sievingPrime,
-                     uint32_t sieveIndex,
+                     uint32_t multipleIndex,
                      uint32_t wheelIndex)
   {
     T_WheelPrime* wPrime = current_;
     current_++;
-    wPrime->set(sievingPrime, sieveIndex, wheelIndex);
-    return wPrime != &wheelPrimes_[defs::BUCKET_SIZE - 1];
+    wPrime->set(sievingPrime, multipleIndex, wheelIndex);
+    return (wPrime != &wheelPrimes_[defs::BUCKET_SIZE - 1]);
   }
 private:
   T_WheelPrime* current_;
@@ -249,7 +249,7 @@ struct WheelElement {
   uint8_t nextMultipleFactor;
   /**
    * Overflow needed to correct the next multiple offset i.e.
-   * sieveIndex += prime * nextMultipleFactor + correct;
+   * multipleIndex += prime * nextMultipleFactor + correct;
    */
   uint8_t correct;
   /**
@@ -272,7 +272,7 @@ template<uint32_t            WHEEL_MODULO,
          const WheelInit*    WHEEL_INIT>
 class Wheel {
 private:
-  static const uint32_t wheelOffsets_[15];
+  static const uint32_t wheelOffsets_[30];
   /** Reference to the parent SieveOfEratosthenes object. */
   const SieveOfEratosthenes& soe_;
   /** Uncopyable, declared but not defined. */
@@ -291,9 +291,9 @@ protected:
             << ".";
       throw std::overflow_error(error.str());
     }
-    // max sieveSize = max WheelPrime::getSieveIndex() + 1 = 2^23
+    // max sieveSize = max WheelPrime::getMultipleIndex() + 1 = 2^23
     // also sieveSize <= 2^28 in order to prevent 32-bit overflows of
-    // sieveIndex in Erat*::sieve()
+    // multipleIndex in Erat*::sieve()
     if (soe_.getSieveSize() > (1U << 23))
       throw std::overflow_error(
           "Wheel: sieveSize must be <= 2^23, 8192 kilobytes.");
@@ -304,13 +304,13 @@ protected:
    * factorization. Calculates the first multiple >= startNumber of
    * prime that is not divisible by any of the wheel's prime factors
    * (e.g. 2, 3 and 5 for a modulo 30 wheel) and the position within
-   * the SieveOfEratosthenes array (sieveIndex) of that multiple and
-   * its wheel index.
+   * the SieveOfEratosthenes array (multipleIndex) of that multiple
+   * and its wheel index.
    * @return true if the WheelPrime must be stored for sieving
    *         else false.
    */
   bool getWheelPrimeData(uint32_t* prime,
-                         uint32_t* sieveIndex,
+                         uint32_t* multipleIndex,
                          uint32_t* wheelIndex) const
   {
     // '+ 6' is a correction for sieving primes of type i*30 + 31
@@ -333,9 +333,9 @@ protected:
     multiple += static_cast<uint64_t> (*prime) * wheelInit.nextMultipleFactor;
     if (multiple > soe_.getStopNumber())
       return false;
-    *sieveIndex = static_cast<uint32_t> ((multiple - segmentLow) / 30);
-    *wheelIndex = wheelOffsets_[*prime % 15] + wheelInit.wheelIndex;
-    *prime /= 15;
+    *multipleIndex = static_cast<uint32_t> ((multiple - segmentLow) / 30);
+    *wheelIndex = wheelOffsets_[*prime % 30] + wheelInit.wheelIndex;
+    *prime /= 30;
     return true;
   }
   const WheelElement* wheel(uint32_t n) const {
@@ -355,12 +355,12 @@ template<uint32_t            WHEEL_MODULO,
          const WheelElement* WHEEL_ARRAY,
          const WheelInit*    WHEEL_INIT>
 const uint32_t
-    Wheel<WHEEL_MODULO, WHEEL_SIZE, WHEEL_ARRAY, WHEEL_INIT>::wheelOffsets_[15] = {
-        0xFF, 7 * WHEEL_SIZE, 3 * WHEEL_SIZE,
-        0xFF, 4 * WHEEL_SIZE,           0xFF,
-        0xFF, 0 * WHEEL_SIZE, 5 * WHEEL_SIZE,
-        0xFF,           0xFF, 1 * WHEEL_SIZE,
-        0xFF, 2 * WHEEL_SIZE, 6 * WHEEL_SIZE };
+    Wheel<WHEEL_MODULO, WHEEL_SIZE, WHEEL_ARRAY, WHEEL_INIT>::wheelOffsets_[30] = {
+        0xFF, 7 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF,           0xFF,
+        0xFF, 0 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF, 1 * WHEEL_SIZE,
+        0xFF, 2 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF, 3 * WHEEL_SIZE,
+        0xFF, 4 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF, 5 * WHEEL_SIZE,
+        0xFF,           0xFF, 0xFF, 0xFF, 0xFF, 6 * WHEEL_SIZE };
 
 /** Wheel arrays defined in WheelFactorization.cpp */
 extern const WheelInit    wheel30Init[30];

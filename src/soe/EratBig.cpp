@@ -71,11 +71,11 @@ EratBig::~EratBig() {
  */
 void EratBig::setSize(const SieveOfEratosthenes& soe) {
   // MAX values in sieve(uint8_t*)
-  uint32_t maxSievingPrime = soe.getSquareRoot() / (SieveOfEratosthenes::NUMBERS_PER_BYTE / 2);
-  uint32_t maxWheelFactor  = wheel(1)->nextMultipleFactor;
-  uint32_t maxSieveOffset  = maxSievingPrime * maxWheelFactor + maxWheelFactor;
-  uint32_t maxSieveIndex   = (soe.getSieveSize() - 1) + maxSieveOffset;
-  uint32_t maxSegmentCount = maxSieveIndex / soe.getSieveSize();
+  uint32_t maxSievingPrime   = soe.getSquareRoot() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+  uint32_t maxWheelFactor    = wheel(1)->nextMultipleFactor;
+  uint32_t maxMultipleOffset = maxSievingPrime * maxWheelFactor + maxWheelFactor;
+  uint32_t maxMultipleIndex  = (soe.getSieveSize() - 1) + maxMultipleOffset;
+  uint32_t maxSegmentCount   = maxMultipleIndex / soe.getSieveSize();
   // 'maxSegmentCount + 1' is the smallest possible
   // size for the lists_ array
   size_ = nextHighestPowerOf2(maxSegmentCount + 1);
@@ -97,18 +97,18 @@ void EratBig::initBucketLists() {
  * Add a prime number <= sqrt(n) for sieving to EratBig.
  */
 void EratBig::addSievingPrime(uint32_t prime) {
-  uint32_t sieveIndex;
+  uint32_t multipleIndex;
   uint32_t wheelIndex;
-  if (this->getWheelPrimeData(&prime, &sieveIndex, &wheelIndex) == true) {
+  if (this->getWheelPrimeData(&prime, &multipleIndex, &wheelIndex) == true) {
     // indicates in how many segments the next multiple
     // of prime needs to be crossed-off
-    uint32_t segmentCount = sieveIndex >> log2SieveSize_;
-    sieveIndex &= (1U << log2SieveSize_) - 1;
+    uint32_t segmentCount = multipleIndex >> log2SieveSize_;
+    multipleIndex &= (1U << log2SieveSize_) - 1;
     // calculate the list index related to the next multiple of prime
     uint32_t next = (index_ + segmentCount) & (size_ - 1);
     // add prime to the bucket list related to
     // its next multiple occurrence
-    if (!lists_[next]->addWheelPrime(prime, sieveIndex, wheelIndex))
+    if (!lists_[next]->addWheelPrime(prime, multipleIndex, wheelIndex))
       this->pushBucket(next);
   }
 }
@@ -167,49 +167,49 @@ void EratBig::sieve(uint8_t* sieve) {
       // iterate over the sieving primes within the current bucket
       // loop unrolled 2 times, optimized for x64 CPUs
       for (; wPrime + 2 <= end; wPrime += 2) {
-        uint32_t sieveIndex0   = wPrime[0].getSieveIndex();
-        uint32_t wheelIndex0   = wPrime[0].getWheelIndex();
-        uint32_t sievingPrime0 = wPrime[0].getSievingPrime();
-        uint32_t sieveIndex1   = wPrime[1].getSieveIndex();
-        uint32_t wheelIndex1   = wPrime[1].getWheelIndex();
-        uint32_t sievingPrime1 = wPrime[1].getSievingPrime();
+        uint32_t multipleIndex0 = wPrime[0].getMultipleIndex();
+        uint32_t wheelIndex0    = wPrime[0].getWheelIndex();
+        uint32_t sievingPrime0  = wPrime[0].getSievingPrime();
+        uint32_t multipleIndex1 = wPrime[1].getMultipleIndex();
+        uint32_t wheelIndex1    = wPrime[1].getWheelIndex();
+        uint32_t sievingPrime1  = wPrime[1].getSievingPrime();
 
         // cross-off the next multiple (unset corresponding bit) of the
         // current sieving primes within the sieve array
-        sieve[sieveIndex0] &= wheel(wheelIndex0)->unsetBit;
-        sieveIndex0        += wheel(wheelIndex0)->nextMultipleFactor * sievingPrime0;
-        sieveIndex0        += wheel(wheelIndex0)->correct;
-        wheelIndex0        += wheel(wheelIndex0)->next;
-        sieve[sieveIndex1] &= wheel(wheelIndex1)->unsetBit;
-        sieveIndex1        += wheel(wheelIndex1)->nextMultipleFactor * sievingPrime1;
-        sieveIndex1        += wheel(wheelIndex1)->correct;
-        wheelIndex1        += wheel(wheelIndex1)->next;
+        sieve[multipleIndex0] &= wheel(wheelIndex0)->unsetBit;
+        multipleIndex0        += wheel(wheelIndex0)->nextMultipleFactor * sievingPrime0;
+        multipleIndex0        += wheel(wheelIndex0)->correct;
+        wheelIndex0           += wheel(wheelIndex0)->next;
+        sieve[multipleIndex1] &= wheel(wheelIndex1)->unsetBit;
+        multipleIndex1        += wheel(wheelIndex1)->nextMultipleFactor * sievingPrime1;
+        multipleIndex1        += wheel(wheelIndex1)->correct;
+        wheelIndex1           += wheel(wheelIndex1)->next;
 
-        uint32_t next0 = (index_ + (sieveIndex0 >> log2SieveSize_)) & (size_ - 1);
-        sieveIndex0 &= (1U << log2SieveSize_) - 1;
-        uint32_t next1 = (index_ + (sieveIndex1 >> log2SieveSize_)) & (size_ - 1);
-        sieveIndex1 &= (1U << log2SieveSize_) - 1;
+        uint32_t next0 = (index_ + (multipleIndex0 >> log2SieveSize_)) & (size_ - 1);
+        multipleIndex0 &= (1U << log2SieveSize_) - 1;
+        uint32_t next1 = (index_ + (multipleIndex1 >> log2SieveSize_)) & (size_ - 1);
+        multipleIndex1 &= (1U << log2SieveSize_) - 1;
 
         // move the current sieving primes to the bucket list
         // related to their next multiple occurrence
-        if (!lists_[next0]->addWheelPrime(sievingPrime0, sieveIndex0, wheelIndex0))
+        if (!lists_[next0]->addWheelPrime(sievingPrime0, multipleIndex0, wheelIndex0))
           this->pushBucket(next0);
-        if (!lists_[next1]->addWheelPrime(sievingPrime1, sieveIndex1, wheelIndex1))
+        if (!lists_[next1]->addWheelPrime(sievingPrime1, multipleIndex1, wheelIndex1))
           this->pushBucket(next1);
       }
 
       // process the remaining sieving primes
       for (; wPrime < end; wPrime++) {
-        uint32_t sieveIndex   = wPrime->getSieveIndex();
-        uint32_t wheelIndex   = wPrime->getWheelIndex();
-        uint32_t sievingPrime = wPrime->getSievingPrime();
-        sieve[sieveIndex] &= wheel(wheelIndex)->unsetBit;
-        sieveIndex        += wheel(wheelIndex)->nextMultipleFactor * sievingPrime;
-        sieveIndex        += wheel(wheelIndex)->correct;
-        wheelIndex        += wheel(wheelIndex)->next;
-        uint32_t next = (index_ + (sieveIndex >> log2SieveSize_)) & (size_ - 1);
-        sieveIndex &= (1U << log2SieveSize_) - 1;
-        if (!lists_[next]->addWheelPrime(sievingPrime, sieveIndex, wheelIndex))
+        uint32_t multipleIndex = wPrime->getMultipleIndex();
+        uint32_t wheelIndex    = wPrime->getWheelIndex();
+        uint32_t sievingPrime  = wPrime->getSievingPrime();
+        sieve[multipleIndex] &= wheel(wheelIndex)->unsetBit;
+        multipleIndex        += wheel(wheelIndex)->nextMultipleFactor * sievingPrime;
+        multipleIndex        += wheel(wheelIndex)->correct;
+        wheelIndex           += wheel(wheelIndex)->next;
+        uint32_t next = (index_ + (multipleIndex >> log2SieveSize_)) & (size_ - 1);
+        multipleIndex &= (1U << log2SieveSize_) - 1;
+        if (!lists_[next]->addWheelPrime(sievingPrime, multipleIndex, wheelIndex))
           this->pushBucket(next);
       }
 

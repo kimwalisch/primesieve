@@ -33,6 +33,7 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PreSieve.h"
+#include "WheelFactorization.h"
 #include "SieveOfEratosthenes.h"
 #include "defs.h"
 
@@ -43,12 +44,6 @@
 
 const uint32_t PreSieve::smallPrimes_[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 31 };
 
-const uint32_t PreSieve::unsetBits_[30] = {
-    BIT0, 0xFF, 0xFF, 0xFF, BIT1, 0xFF, BIT2, 0xFF, 0xFF, 0xFF,
-    BIT3, 0xFF, BIT4, 0xFF, 0xFF, 0xFF, BIT5, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, BIT6, 0xFF, BIT7, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
-};
-
 /**
  * Pre-sieve multiples of small primes <= limit to speed up
  * the sieve of Eratosthenes.
@@ -57,7 +52,7 @@ const uint32_t PreSieve::unsetBits_[30] = {
  */
 PreSieve::PreSieve(uint32_t limit) :
   limit_(limit),
-  wheelArray_(NULL),
+  preSieved_(NULL),
   size_(0)
 {
   // limit_ <= 23 prevents 32 bit overflows
@@ -65,53 +60,50 @@ PreSieve::PreSieve(uint32_t limit) :
     throw std::overflow_error("PreSieve: limit must be >= 13 && <= 23.");
   primeProduct_ = this->getPrimeProduct(limit_);
   size_ = primeProduct_ / SieveOfEratosthenes::NUMBERS_PER_BYTE;
-  this->initWheelArray();
+  this->initPreSieved();
 }
 
 PreSieve::~PreSieve() {
-  delete[] wheelArray_;
+  delete[] preSieved_;
 }
 
 uint32_t PreSieve::getPrimeProduct(uint32_t limit) const {
   assert(limit < smallPrimes_[9]);
   uint32_t pp = 1;
-  for (int i = 0; smallPrimes_[i] <= limit; i++)
+  for (uint32_t i = 0; smallPrimes_[i] <= limit; i++)
     pp *= smallPrimes_[i];
   return pp;
 }
 
 /**
- * Allocate the wheelArray_ and remove (unset bits) the multiples of
- * small primes <= limit_ from it.
+ * Allocate the preSieved_ array and remove the multiples (unset
+ * corresponding bits) of small primes <= limit_ from it.
  */
-void PreSieve::initWheelArray() {
+void PreSieve::initPreSieved() {
   static_assert(SieveOfEratosthenes::NUMBERS_PER_BYTE == 30, 
                "SieveOfEratosthenes::NUMBERS_PER_BYTE == 30");
   assert(limit_ < smallPrimes_[9]);
   assert(size_ > 0);
-  wheelArray_ = new uint8_t[size_];
-  wheelArray_[0] = 0xFF;
-  uint32_t primeProduct = 2 * 3 * 5;
 
-  for (int i = 3; smallPrimes_[i] <= limit_; i++) {
+  preSieved_ = new uint8_t[size_];
+  preSieved_[0] = 0xFF;
+  uint32_t primeProduct = (2 * 3 * 5) / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+
+  for (uint32_t i = 3; smallPrimes_[i] <= limit_; i++) {
     // cross-off the multiples of primes < smallPrimes_[i]
-    // up to the current primeProduct
-    uint32_t pp30 = primeProduct / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+    // up to the next primeProduct
     for (uint32_t j = 1; j < smallPrimes_[i]; j++) {
-      assert((j + 1) * pp30 <= size_);
-      std::memcpy(&wheelArray_[j * pp30], wheelArray_, pp30);
+      std::memcpy(&preSieved_[primeProduct * j], preSieved_, primeProduct);
     }
-    // next prime product
     primeProduct *= smallPrimes_[i];
-    // '- 7' is a correction for primes of type i*30 + 31
-    uint32_t multiple = smallPrimes_[i] - 7;
-    // cross-off the multiples (unset bits) of smallPrimes_[i]
-    // up to the current primeProduct
-    for (; multiple < primeProduct; multiple += smallPrimes_[i] * 2) {
-      uint32_t multipleIndex = multiple / SieveOfEratosthenes::NUMBERS_PER_BYTE;
-      uint32_t bitPosition   = multiple % SieveOfEratosthenes::NUMBERS_PER_BYTE;
-      assert(multipleIndex < size_);
-      wheelArray_[multipleIndex] &= unsetBits_[bitPosition];
+    uint32_t multipleIndex = smallPrimes_[i] / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+    uint32_t wheelIndex    = 8 * (i - 3) + 1;
+    // cross-off the multiples (unset corresponding bits) of
+    // smallPrimes_[i] up to its primeProduct
+    while (multipleIndex < primeProduct) {
+      preSieved_[multipleIndex] &= wheel30Array[wheelIndex].unsetBit;
+      multipleIndex += wheel30Array[wheelIndex].correct;
+      wheelIndex    += wheel30Array[wheelIndex].next;
     }
   }
 }
@@ -125,23 +117,23 @@ void PreSieve::doIt(uint8_t* sieve,
                     uint32_t sieveSize,
                     uint64_t segmentLow) const
 {
-  // map segmentLow to the wheelArray_
+  // map segmentLow to the preSieved_ array
   uint32_t offset = static_cast<uint32_t> (segmentLow % primeProduct_) / 
       SieveOfEratosthenes::NUMBERS_PER_BYTE;
   uint32_t sizeLeft = size_ - offset;
 
   if (sizeLeft > sieveSize) {
     // copy a chunk of sieveSize bytes to sieve
-    std::memcpy(sieve, &wheelArray_[offset], sieveSize);
+    std::memcpy(sieve, &preSieved_[offset], sieveSize);
   } else {
-    // copy the last remaining bytes at the end of wheelArray_
+    // copy the last remaining bytes at the end of preSieved_
     // to the beginning of the sieve array
-    std::memcpy(sieve, &wheelArray_[offset], sizeLeft);
+    std::memcpy(sieve, &preSieved_[offset], sizeLeft);
     offset = sizeLeft;
-    // restart copying at the beginning of wheelArray_
+    // restart copying at the beginning of preSieved_
     for (; offset + size_ < sieveSize; offset += size_) {
-      std::memcpy(&sieve[offset], wheelArray_, size_);
+      std::memcpy(&sieve[offset], preSieved_, size_);
     }
-    std::memcpy(&sieve[offset], wheelArray_, sieveSize - offset);
+    std::memcpy(&sieve[offset], preSieved_, sieveSize - offset);
   }
 }

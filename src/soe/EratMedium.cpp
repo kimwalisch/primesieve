@@ -67,20 +67,20 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
     // remove the multiples of sieving primes within the
     // current bucket from the sieve array
     for (; wPrime != end; wPrime++) {
-      uint32_t sieveIndex   = wPrime->getSieveIndex();
-      uint32_t wheelIndex   = wPrime->getWheelIndex();
-      uint32_t sievingPrime = wPrime->getSievingPrime();
+      uint32_t multipleIndex = wPrime->getMultipleIndex();
+      uint32_t wheelIndex    = wPrime->getWheelIndex();
+      uint32_t sievingPrime  = wPrime->getSievingPrime();
       // cross-off the multiples (unset corresponding bits) of the
       // current sieving prime within the sieve array
-      while (sieveIndex < sieveSize) {
-        sieve[sieveIndex] &= wheel(wheelIndex)->unsetBit;
-        sieveIndex        += wheel(wheelIndex)->nextMultipleFactor * sievingPrime;
-        sieveIndex        += wheel(wheelIndex)->correct;
-        wheelIndex        += wheel(wheelIndex)->next;
+      while (multipleIndex < sieveSize) {
+        sieve[multipleIndex] &= wheel(wheelIndex)->unsetBit;
+        multipleIndex        += wheel(wheelIndex)->nextMultipleFactor * sievingPrime;
+        multipleIndex        += wheel(wheelIndex)->correct;
+        wheelIndex           += wheel(wheelIndex)->next;
       }
-      sieveIndex -= sieveSize;
-      // set sieveIndex and wheelIndex for the next segment
-      wPrime->set(sievingPrime, sieveIndex, wheelIndex);
+      multipleIndex -= sieveSize;
+      // set multipleIndex and wheelIndex for the next segment
+      wPrime->set(sievingPrime, multipleIndex, wheelIndex);
     }
   }
 }

@@ -57,11 +57,11 @@ public:
   /** Add a prime number for sieving to EratBase. */
   void addSievingPrime(uint32_t prime) {
     assert(prime <= limit_);
-    uint32_t sieveIndex;
+    uint32_t multipleIndex;
     uint32_t wheelIndex;
-    if (this->getWheelPrimeData(&prime, &sieveIndex, &wheelIndex)
+    if (this->getWheelPrimeData(&prime, &multipleIndex, &wheelIndex)
         == true) {
-      if (!buckets_.back().addWheelPrime(prime, sieveIndex, wheelIndex)) {
+      if (!buckets_.back().addWheelPrime(prime, multipleIndex, wheelIndex)) {
         // the current bucket is full, add a new one
         buckets_.push_back(Bucket_t());
       }
