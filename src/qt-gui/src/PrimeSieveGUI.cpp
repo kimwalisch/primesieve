@@ -206,7 +206,9 @@ void PrimeSieveGUI::on_sieveButton_clicked() {
   ui->cancelButton->setEnabled(true);
   try {
     flags_ = this->getMenuSettings();
-    if ((flags_ & (ParallelPrimeSieve::COUNT_FLAGS | ParallelPrimeSieve::PRINT_FLAGS)) == 0)
+    if ((flags_ & (ParallelPrimeSieve::COUNT_FLAGS | 
+                   ParallelPrimeSieve::PRINT_PRIMES | 
+                   ParallelPrimeSieve::PRINT_KTUPLETS)) == 0)
       throw std::invalid_argument("Nothing to do, no count or print options selected.");
 
     quint64 lowerBound = this->getNumber(ui->lowerBoundLineEdit->text());
@@ -222,7 +224,7 @@ void PrimeSieveGUI::on_sieveButton_clicked() {
     // start a new process for sieving (avoids cancel
     // trouble with multiple threads)
     primeSieveProcess_ = new PrimeSieveProcess(this);
-    if (flags_ & ParallelPrimeSieve::PRINT_FLAGS)
+    if (flags_ & (ParallelPrimeSieve::PRINT_PRIMES | ParallelPrimeSieve::PRINT_KTUPLETS))
       connect(primeSieveProcess_, SIGNAL(readyReadStandardOutput()),
           this, SLOT(printProcessOutput()));
     connect(primeSieveProcess_, SIGNAL(finished(int, QProcess::ExitStatus)),
@@ -347,7 +349,9 @@ void PrimeSieveGUI::on_cancelButton_clicked() {
   ui->cancelButton->setDisabled(true);
   ui->progressBar->setValue(0);
   // too late to abort
-  if ((flags_ & ParallelPrimeSieve::PRINT_FLAGS) && primeSieveProcess_->isFinished())
+  if ((flags_ & (ParallelPrimeSieve::PRINT_PRIMES | 
+                 ParallelPrimeSieve::PRINT_KTUPLETS))
+       && primeSieveProcess_->isFinished())
     return;
   this->cleanUp();
 }
