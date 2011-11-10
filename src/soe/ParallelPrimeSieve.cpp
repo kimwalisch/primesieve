@@ -122,11 +122,11 @@ void ParallelPrimeSieve::setNumThreads(int numThreads) {
  * startNumber_, stopNumber_ and flags_.
  */
 int ParallelPrimeSieve::getIdealNumThreads() const {
-  // 1 thread to print primes in sequential order
-  if (flags_ & PRINT_FLAGS)
+  // 1 thread to print primes and k-tuplets in sequential order
+  if (flags_ & (PRINT_PRIMES | PRINT_KTUPLETS))
     return 1;
 
-  // each thread sieves at least an interval of size sqrt(n)/6
+  // each thread sieves at least an interval of size sqrt(n) / 6
   // but not smaller than defs::MIN_THREAD_INTERVAL
   uint64_t threadThreshold = std::max<uint64_t>(
       defs::MIN_THREAD_INTERVAL,
