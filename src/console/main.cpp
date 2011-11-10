@@ -220,9 +220,9 @@ int main(int argc, char* argv[]) {
     ParallelPrimeSieve pps;
 
     // set default settings
-    if ((flags & pps.COUNT_FLAGS) == 0 && (flags & pps.PRINT_FLAGS) == 0)
+    if ((flags & (pps.COUNT_FLAGS | pps.PRINT_PRIMES | pps.PRINT_KTUPLETS)) == 0)
       flags |= pps.COUNT_PRIMES;
-    if (!quietMode && (flags & pps.PRINT_FLAGS) == 0)
+    if (!quietMode && (flags & (pps.PRINT_PRIMES | pps.PRINT_KTUPLETS)) == 0)
       flags |= pps.PRINT_STATUS;
     if (sieveSize == 0)
       sieveSize = (numbers[1] < static_cast<uint64_t> (1E14))
@@ -241,9 +241,9 @@ int main(int argc, char* argv[]) {
 
     // start sieving primes
     pps.sieve();
-    if ((flags & pps.PRINT_STATUS) || (
-        (flags & pps.PRINT_FLAGS) &&
-        (flags & pps.COUNT_FLAGS)))
+    if (flags & pps.PRINT_STATUS)
+      std::cout << std::endl;
+    else if ((flags & (pps.PRINT_PRIMES | pps.PRINT_KTUPLETS)) && (flags & pps.COUNT_FLAGS))
       std::cout << std::endl;
 
     const std::string primes[7] = {
