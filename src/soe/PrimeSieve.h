@@ -74,7 +74,6 @@ public:
     PRINT_SEXTUPLETS  = 1 << 12,
     PRINT_SEPTUPLETS  = 1 << 13,
     PRINT_KTUPLETS    = PRINT_TWINS | PRINT_TRIPLETS | PRINT_QUADRUPLETS | PRINT_QUINTUPLETS | PRINT_SEXTUPLETS | PRINT_SEPTUPLETS,
-    PRINT_FLAGS       = PRINT_PRIMES | PRINT_KTUPLETS,
     PRINT_STATUS      = 1 << 14
   };
   class cancel_sieving : public std::runtime_error {
