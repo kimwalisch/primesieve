@@ -256,7 +256,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 61: *s &= BIT3; s += primeX2 + 0; if (s >= sieveEnd) { wPrime->setWheelIndex(62); break; }
           case 62: *s &= BIT4; s += primeX4 + 0; if (s >= sieveEnd) { wPrime->setWheelIndex(63); break; }
           case 63: *s &= BIT5; s += primeX6 + 0; if (s >= sieveEnd) { wPrime->setWheelIndex(56); break; }
-          case 56: *s &= BIT6; s += primeX2 + 0;    
+          case 56: *s &= BIT6; s += primeX2 + 0;
                    while (s < loopLimit) {
                      *s          &= BIT7; s += primeX6 + 1;
                      *s          &= BIT0;
