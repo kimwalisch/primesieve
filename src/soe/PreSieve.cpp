@@ -33,7 +33,6 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PreSieve.h"
-#include "WheelFactorization.h"
 #include "SieveOfEratosthenes.h"
 #include "defs.h"
 
@@ -42,7 +41,17 @@
 #include <cstring>
 #include <cassert>
 
-const uint32_t PreSieve::smallPrimes_[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 31 };
+const uint32_t PreSieve::smallPrimes_[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 };
+
+/**
+ * Bitmasks used to unset bits corresponding to multiples in the
+ * preSieved_ array. Each byte of preSieved_ holds the 8 values
+ * i * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
+ */
+const uint32_t PreSieve::unsetBits_[30] = {
+  BIT0, 0xFF, 0xFF, 0xFF, BIT1, 0xFF, BIT2, 0xFF, 0xFF, 0xFF,
+  BIT3, 0xFF, BIT4, 0xFF, 0xFF, 0xFF, BIT5, 0xFF, 0xFF, 0xFF,
+  0xFF, 0xFF, BIT6, 0xFF, BIT7, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
 /**
  * Pre-sieve multiples of small primes <= limit to speed up
@@ -84,26 +93,29 @@ void PreSieve::initPreSieved() {
                "SieveOfEratosthenes::NUMBERS_PER_BYTE == 30");
   assert(limit_ < smallPrimes_[9]);
   assert(size_ > 0);
-
   preSieved_ = new uint8_t[size_];
   preSieved_[0] = 0xFF;
-  uint32_t primeProduct = (2 * 3 * 5) / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+  uint32_t primeProduct = 2 * 3 * 5;
 
   for (uint32_t i = 3; smallPrimes_[i] <= limit_; i++) {
     // cross-off the multiples of primes < smallPrimes_[i]
     // up to the next primeProduct
     for (uint32_t j = 1; j < smallPrimes_[i]; j++) {
-      std::memcpy(&preSieved_[primeProduct * j], preSieved_, primeProduct);
+      std::memcpy(&preSieved_[primeProduct / 30 * j], preSieved_, primeProduct / 30);
     }
-    primeProduct *= smallPrimes_[i];
-    uint32_t multipleIndex = smallPrimes_[i] / SieveOfEratosthenes::NUMBERS_PER_BYTE;
-    uint32_t wheelIndex    = 8 * (i - 3) + 1;
+    uint32_t multiple = smallPrimes_[i] - 7;
+    uint32_t primeX2  = smallPrimes_[i] * 2;
+    uint32_t primeX4  = smallPrimes_[i] * 4;
+    primeProduct     *= smallPrimes_[i];
     // cross-off the multiples (unset corresponding bits) of
     // smallPrimes_[i] up to its primeProduct
-    while (multipleIndex < primeProduct) {
-      preSieved_[multipleIndex] &= wheel30Array[wheelIndex].unsetBit;
-      multipleIndex += wheel30Array[wheelIndex].correct;
-      wheelIndex    += wheel30Array[wheelIndex].next;
+    for (;;) {
+      if (multiple >= primeProduct) break;
+      preSieved_[multiple / 30] &= unsetBits_[multiple % 30];
+      multiple += primeX4;
+      if (multiple >= primeProduct) break;
+      preSieved_[multiple / 30] &= unsetBits_[multiple % 30];
+      multiple += primeX2;
     }
   }
 }

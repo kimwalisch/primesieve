@@ -72,6 +72,7 @@ public:
   void doIt(uint8_t*, uint32_t, uint64_t) const;
 private:
   static const uint32_t smallPrimes_[10];
+  static const uint32_t unsetBits_[30];
   /** Multiples of small primes <= limit_ (MAX 23) are pre-sieved. */
   const uint32_t limit_;
   /** Product of the primes <= limit_. */
