@@ -1,4 +1,4 @@
-New in version 3.2, 09/11/2011
+New in version 3.2, 10/11/2011
 ==============================
 
 1. Added 32-bit prime number generation methods to PrimeSieve.
@@ -6,8 +6,8 @@ New in version 3.2, 09/11/2011
    sieving at run time (see docs/USAGE_EXAMPLES).
 3. The code readability and documentation of WheelFactorization.h &
    .cpp has been improved.
-4. PreSieve now initializes its array using the global modulo30Array
-   from WheelFactorization.cpp, up to 3 times faster.
+4. PreSieve now initializes its preSieved_ array using a 2nd wheel, up
+   to 40 percent faster.
 5. I introduced a loopLimit variable in EratSmall that saves some
    calculations and reduces the code size.
 6. EratMedium has been simplified.
