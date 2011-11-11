@@ -1,16 +1,20 @@
-New in version 3.2, 10/11/2011
+New in version 3.2, 11/11/2011
 ==============================
 
 1. Added 32-bit prime number generation methods to PrimeSieve.
 2. Added a PrimeSieve::cancel_sieving exception that allows to cancel
    sieving at run time (see docs/USAGE_EXAMPLES).
-3. The code readability and documentation of WheelFactorization.h &
-   .cpp has been improved.
-4. PreSieve now initializes its preSieved_ array using a 2nd wheel, up
+3. ParallelPrimeSieve is now able to generate prime numbers using
+   multiple threads (previously only multi-threaded counting).
+4. The code readability and documentation of WheelFactorization.h/.cpp
+   has been improved (e.g. renamed sieveIndex to multipleIndex).
+5. PreSieve now initializes its preSieved_ array using a 2nd wheel, up
    to 40 percent faster.
-5. I introduced a loopLimit variable in EratSmall that saves some
+6. I introduced a 'loopLimit' variable in EratSmall that saves some
    calculations and reduces the code size.
-6. EratMedium has been simplified.
+7. Added a testFlags(uint32_t) convenience function to PrimeSieve.
+8. EratMedium has been simplified, it runs faster than v. 3.1 using
+   Intel C++ 12.0 but runs slightly slower with most other compilers.
 
 New in version 3.1, 24/10/2011
 ==============================
