@@ -122,8 +122,8 @@ void ParallelPrimeSieve::setNumThreads(int numThreads) {
  * startNumber_, stopNumber_ and flags_.
  */
 int ParallelPrimeSieve::getIdealNumThreads() const {
-  // 1 thread to print primes and k-tuplets in sequential order
-  if (testFlags(PRINT_PRIMES | PRINT_KTUPLETS))
+  // 1 thread to generate primes and k-tuplets in sequential order
+  if (testFlags(GENERATE_FLAGS))
     return 1;
 
   // each thread sieves at least an interval of size sqrt(n) / 6
