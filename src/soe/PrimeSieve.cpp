@@ -47,6 +47,10 @@
 #include <cstdlib>
 #include <ctime>
 
+#if defined(_OPENMP)
+  #include <omp.h>
+#endif
+
 PrimeSieve::PrimeSieve() :
   startNumber_(0),
   stopNumber_(0),
@@ -311,6 +315,10 @@ void PrimeSieve::doSmallPrime(uint32_t min,
                               uint32_t type, 
                               const std::string& primeStr)
 {
+#if defined(_OPENMP)
+#pragma omp critical (generate)
+ {
+#endif
   if (startNumber_ <= min && stopNumber_ >= max) {
     if (testFlags(CALLBACK_FLAGS) && type == 0) {
       uint32_t prime = primeStr[0] - '0';
@@ -320,9 +328,12 @@ void PrimeSieve::doSmallPrime(uint32_t min,
       if (testFlags(CALLBACK64_OOP_PRIMES)) this->callback64_OOP_(prime, cbObj_);
     } else {
       if (testFlags(COUNT_PRIMES << type)) counts_[type]++;
-      if (testFlags(PRINT_PRIMES << type)) std::cout << primeStr << std::endl;
+      if (testFlags(PRINT_PRIMES << type)) std::cout << primeStr << '\n';
     }
   }
+#if defined(_OPENMP)
+ }
+#endif
 }
 
 /**
