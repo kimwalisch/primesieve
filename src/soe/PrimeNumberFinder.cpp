@@ -41,7 +41,10 @@
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
-#include <sstream>
+
+#if defined(_OPENMP)
+  #include <omp.h>
+#endif
 
 /// Bit patterns corresponding to prime k-tuplets
 /// within bytes of the sieve array.
@@ -65,7 +68,7 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
   kTupletByteCounts_(NULL)
 {
   static_assert(PrimeSieve::COUNTS_SIZE == 7, "PrimeSieve::COUNTS_SIZE == 7");
-  if (ps_.flags_ & PrimeSieve::COUNT_KTUPLETS)
+  if (ps_.testFlags(ps_.COUNT_KTUPLETS))
     this->initLookupTables();
 }
 
@@ -93,7 +96,7 @@ void PrimeNumberFinder::initLookupTables() {
   kTupletByteCounts_ = new uint32_t*[6];
   for (uint32_t i = 0; i < 6; i++) {
     kTupletByteCounts_[i] = NULL;
-    if (ps_.flags_ & (PrimeSieve::COUNT_TWINS << i)) {
+    if (ps_.testFlags(ps_.COUNT_TWINS << i)) {
       kTupletByteCounts_[i] = new uint32_t[256];
       for (uint32_t j = 0; j < 256; j++) {
         uint32_t bitmaskCount = 0;
@@ -112,9 +115,9 @@ void PrimeNumberFinder::initLookupTables() {
  * segment i.e. [segmentLow_+7, segmentHigh_].
  */
 void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
-  if (ps_.flags_ & PrimeSieve::COUNT_FLAGS)
+  if (ps_.testFlags(ps_.COUNT_FLAGS))
     this->count(sieve, sieveSize);
-  if (ps_.flags_ & PrimeSieve::GENERATE_FLAGS)
+  if (ps_.testFlags(ps_.GENERATE_FLAGS))
     this->generate(sieve, sieveSize);
   uint32_t processed = sieveSize * NUMBERS_PER_BYTE;
   ps_.parent_->doStatus(processed);
@@ -126,7 +129,7 @@ void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
  */
 void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // count prime numbers (1 bits within the sieve array)
-  if (ps_.flags_ & PrimeSieve::COUNT_PRIMES) {
+  if (ps_.testFlags(ps_.COUNT_PRIMES)) {
     const uint64_t* sieve64 = reinterpret_cast<const uint64_t*> (sieve);
     uint32_t size64    = sieveSize / SIZEOF(uint64_t);
     uint32_t bytesLeft = sieveSize % SIZEOF(uint64_t);
@@ -140,7 +143,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // count prime k-tuplets (i=0 twins, i=1 triplets, ...)
   // using lookup tables
   for (uint32_t i = 0; i < 6; i++) {
-    if (ps_.flags_ & (PrimeSieve::COUNT_TWINS << i)) {
+    if (ps_.testFlags(ps_.COUNT_TWINS << i)) {
       uint32_t kCount = 0;
       for (uint32_t j = 0; j < sieveSize; j++)
         kCount += kTupletByteCounts_[i][sieve[j]];
@@ -154,34 +157,38 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  * triplets, ...) within the current segment.
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
+#if defined(_OPENMP)
+#  pragma omp critical (generate)
+  {
+#endif
   // the GENERATE_PRIMES() macro is defined in defs.h
-       if (ps_.flags_ & PrimeSieve::CALLBACK32_PRIMES)     GENERATE_PRIMES(ps_.callback32_,      uint32_t)
-  else if (ps_.flags_ & PrimeSieve::CALLBACK32_OOP_PRIMES) GENERATE_PRIMES(this->callback32_OOP, uint32_t)
-  else if (ps_.flags_ & PrimeSieve::CALLBACK64_PRIMES)     GENERATE_PRIMES(ps_.callback64_,      uint64_t)
-  else if (ps_.flags_ & PrimeSieve::CALLBACK64_OOP_PRIMES) GENERATE_PRIMES(this->callback64_OOP, uint64_t)
-  else if (ps_.flags_ & PrimeSieve::PRINT_PRIMES)          GENERATE_PRIMES(this->print,          uint64_t)
-  else if (ps_.flags_ & PrimeSieve::PRINT_KTUPLETS) {
+       if (ps_.testFlags(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_,      uint32_t)
+  else if (ps_.testFlags(ps_.CALLBACK32_OOP_PRIMES)) GENERATE_PRIMES(this->callback32_OOP, uint32_t)
+  else if (ps_.testFlags(ps_.CALLBACK64_PRIMES))     GENERATE_PRIMES(ps_.callback64_,      uint64_t)
+  else if (ps_.testFlags(ps_.CALLBACK64_OOP_PRIMES)) GENERATE_PRIMES(this->callback64_OOP, uint64_t)
+  else if (ps_.testFlags(ps_.PRINT_PRIMES))          GENERATE_PRIMES(this->print,          uint64_t)
+  else if (ps_.testFlags(ps_.PRINT_KTUPLETS)) {
     uint64_t lowerBound = this->getSegmentLow();
     // i=0 twins, i=1 triplets, ...
     uint32_t i = 0;
-    for (; (ps_.flags_ & (PrimeSieve::PRINT_TWINS << i)) == 0; i++)
+    for (; !ps_.testFlags(ps_.PRINT_TWINS << i); i++)
       ;
     // print prime k-tuplets to std::cout
-    for (uint32_t j = 0; j < sieveSize; j++) {
+    for (uint32_t j = 0; j < sieveSize; j++, lowerBound += NUMBERS_PER_BYTE) {
       for (const uint32_t* bitmask = kTupletBitmasks_[i]; *bitmask <= sieve[j]; bitmask++) {
         if ((sieve[j] & *bitmask) == *bitmask) {
           uint32_t leastBit = bitScanForward(*bitmask);
           uint32_t limit    = leastBit + (i + 1);
-          std::ostringstream kTuplet;
-          kTuplet << "(";
-          for (uint32_t l = leastBit; l <= limit; l++) {
-            kTuplet << lowerBound + j * NUMBERS_PER_BYTE + bitValues_[l] << (l < limit ? ", " : ")\n");
-          }
-          std::cout << kTuplet.str();
+          std::cout << "(";
+          for (uint32_t l = leastBit; l <= limit; l++)
+            std::cout << lowerBound + bitValues_[l] << (l < limit ? ", " : ")\n");
         }
       }
     }
   }
+#if defined(_OPENMP)
+  }
+#endif
 }
 
 void PrimeNumberFinder::callback32_OOP(uint32_t prime) const {
@@ -193,8 +200,5 @@ void PrimeNumberFinder::callback64_OOP(uint64_t prime) const {
 }
 
 void PrimeNumberFinder::print(uint64_t prime) const {
-  std::ostringstream oss;
-  oss << prime << '\n';
-  // thread-safe
-  std::cout << oss.str();
+  std::cout << prime << '\n';
 }
