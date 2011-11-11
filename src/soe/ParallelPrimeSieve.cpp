@@ -123,7 +123,7 @@ void ParallelPrimeSieve::setNumThreads(int numThreads) {
  */
 int ParallelPrimeSieve::getIdealNumThreads() const {
   // 1 thread to print primes and k-tuplets in sequential order
-  if (flags_ & (PRINT_PRIMES | PRINT_KTUPLETS))
+  if (testFlags(PRINT_PRIMES | PRINT_KTUPLETS))
     return 1;
 
   // each thread sieves at least an interval of size sqrt(n) / 6

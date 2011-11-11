@@ -218,32 +218,32 @@ int main(int argc, char* argv[]) {
               << std::setw(10) << "STOP"  << " = " << numbers[1] << std::endl;
   try {
     ParallelPrimeSieve pps;
+    pps.setFlags(flags);
 
     // set default settings
-    if ((flags & (pps.COUNT_FLAGS | pps.PRINT_PRIMES | pps.PRINT_KTUPLETS)) == 0)
-      flags |= pps.COUNT_PRIMES;
-    if (!quietMode && (flags & (pps.PRINT_PRIMES | pps.PRINT_KTUPLETS)) == 0)
-      flags |= pps.PRINT_STATUS;
-    if (sieveSize == 0)
+    if (!pps.testFlags(pps.COUNT_FLAGS | pps.PRINT_PRIMES | pps.PRINT_KTUPLETS))
+      pps.addFlags(pps.COUNT_PRIMES);
+    if (!pps.testFlags(pps.PRINT_PRIMES | pps.PRINT_KTUPLETS) && !quietMode)
+      pps.addFlags(pps.PRINT_STATUS);
+    if (sieveSize == 0) {
       sieveSize = (numbers[1] < static_cast<uint64_t> (1E14))
           ? L1_DCACHE_SIZE : L2_CACHE_SIZE;
-
+    }
     pps.setStartNumber(numbers[0]);
     pps.setStopNumber(numbers[1]);
     pps.setSieveSize(sieveSize);
     pps.setPreSieveLimit(preSieve);
-    pps.setFlags(flags);
     pps.setNumThreads(threads);
 
-    if (!quietMode)
-      std::cout << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize() << " kilobytes" << std::endl
-                << std::setw(10) << "Threads" << " = " << pps.getNumThreads() << std::endl;
-
+    if (!quietMode) {
+      std::cout << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize()  << " kilobytes" << std::endl
+                << std::setw(10) << "Threads"    << " = " << pps.getNumThreads() << std::endl;
+    }
     // start sieving primes
     pps.sieve();
-    if (flags & pps.PRINT_STATUS)
+    if (pps.testFlags(pps.PRINT_STATUS))
       std::cout << std::endl;
-    else if ((flags & (pps.PRINT_PRIMES | pps.PRINT_KTUPLETS)) && (flags & pps.COUNT_FLAGS))
+    else if (pps.testFlags(pps.COUNT_FLAGS) && pps.testFlags(pps.PRINT_PRIMES | pps.PRINT_KTUPLETS))
       std::cout << std::endl;
 
     const std::string primes[7] = {
@@ -253,20 +253,26 @@ int main(int argc, char* argv[]) {
         "Prime quadruplets",
         "Prime quintuplets", 
         "Prime sextuplets",
-        "Prime septuplets"};
+        "Prime septuplets" };
 
     // get max string size
     std::size_t size = (quietMode) ? 0 : 12;
-    for (int i = 0; i < 7; i++)
-      if ((flags & (pps.COUNT_PRIMES << i)) && size < primes[i].size())
+    for (int i = 0; i < 7; i++) {
+      if (pps.testFlags(pps.COUNT_PRIMES << i) && size < primes[i].size())
         size = primes[i].size();
-    // print prime count results and time elapsed
+    }
+    // print prime count results
     int width = static_cast<int> (size);
-    for (uint32_t i = 0; i < 7; i++)
-      if (flags & (pps.COUNT_PRIMES << i))
-        std::cout << std::setw(width) << primes[i] << " : " << pps.getCounts(i) << std::endl;
+    for (uint32_t i = 0; i < 7; i++) {
+      if (pps.testFlags(pps.COUNT_PRIMES << i))
+        std::cout << std::setw(width)
+                  << primes[i] << " : " << pps.getCounts(i)
+                  << std::endl;
+    }
     if (!quietMode)
-      std::cout << std::setw(width) << "Time elapsed" << " : " << pps.getTimeElapsed() << " sec" << std::endl;
+      std::cout << std::setw(width)
+                << "Time elapsed" << " : " << pps.getTimeElapsed() << " sec"
+                << std::endl;
   }
   catch (std::exception& e) {
     std::cerr << "Error: " << e.what() << std::endl

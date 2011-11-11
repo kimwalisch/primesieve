@@ -68,11 +68,18 @@ PrimeSieve::PrimeSieve(uint64_t startNumber,
                        ParallelPrimeSieve* parent) :
   startNumber_(startNumber),
   stopNumber_(stopNumber),
-  sieveSize_(parent->getSieveSize()),
-  preSieveLimit_(parent->getPreSieveLimit()),
-  flags_(parent->getFlags()),
+  sieveSize_(parent->sieveSize_),
+  preSieveLimit_(parent->preSieveLimit_),
+  flags_(parent->flags_),
   parent_(parent)
 {
+  if (testFlags(CALLBACK_FLAGS)) {
+    callback32_     = parent->callback32_;
+    callback32_OOP_ = parent->callback32_OOP_;
+    callback64_     = parent->callback64_;
+    callback64_OOP_ = parent->callback64_OOP_;
+    cbObj_          = parent->cbObj_;
+  }
   this->reset();
 }
 
@@ -80,59 +87,6 @@ uint64_t PrimeSieve::getStartNumber()   const { return startNumber_; }
 uint64_t PrimeSieve::getStopNumber()    const { return stopNumber_; }
 uint32_t PrimeSieve::getSieveSize()     const { return sieveSize_; }
 uint32_t PrimeSieve::getPreSieveLimit() const { return preSieveLimit_; }
-
-/**
- * Get the current user flags.
- */
-uint32_t PrimeSieve::getFlags() const {
-  // clear out private flags
-  return flags_ & ((1U << 20) - 1);
-}
-
-/**
- * Get the count of prime numbers within the interval
- * [startNumber, stopNumber].
- */
-uint64_t PrimeSieve::getPrimeCount(uint64_t startNumber, 
-                                   uint64_t stopNumber) {
-  this->setStartNumber(startNumber);
-  this->setStopNumber(stopNumber);
-  this->setFlags(COUNT_PRIMES);
-  this->sieve();
-  return this->getPrimeCount();
-}
-
-/** Get the count of primes and prime k-tuplets after sieve(). */
-uint64_t PrimeSieve::getPrimeCount()      const { return counts_[0]; }
-uint64_t PrimeSieve::getTwinCount()       const { return counts_[1]; }
-uint64_t PrimeSieve::getTripletCount()    const { return counts_[2]; }
-uint64_t PrimeSieve::getQuadrupletCount() const { return counts_[3]; }
-uint64_t PrimeSieve::getQuintupletCount() const { return counts_[4]; }
-uint64_t PrimeSieve::getSextupletCount()  const { return counts_[5]; }
-uint64_t PrimeSieve::getSeptupletCount()  const { return counts_[6]; }
-
-/**
- * Get the count of primes or prime k-tuplets after sieve().
- * @param index = 0 : Count of prime numbers,
- *        index = 1 : Count of twin primes,    
- *        index = 2 : Count of prime triplets,    
- *        index = 3 : Count of prime quadruplets, 
- *        index = 4 : Count of prime quintuplets, 
- *        index = 5 : Count of prime sextuplets,
- *        index = 6 : Count of prime septuplets.
- */
-uint64_t PrimeSieve::getCounts(uint32_t index) const {
-  if (index >= COUNTS_SIZE)
-    throw std::out_of_range("getCounts(uint32_t) index out of range");
-  return counts_[index];
-}
-
-/**
- * Get the time elapsed in seconds of sieve().
- */
-double PrimeSieve::getTimeElapsed() const {
-  return timeElapsed_;
-}
 
 /**
  * Set a start number for sieving.
@@ -187,6 +141,15 @@ void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
   preSieveLimit_ = preSieveLimit;
 }
 
+/** Get the current set public flags. */
+uint32_t PrimeSieve::getFlags() const {
+  return flags_ & ((1U << 20) - 1);
+}
+
+bool PrimeSieve::testFlags(uint32_t flags) const {
+  return (flags_ & flags) != 0; 
+}
+
 /**
  * Settings for sieve().
  * @see   primesieve/docs/USAGE_EXAMPLES
@@ -211,6 +174,55 @@ void PrimeSieve::setFlags(uint32_t flags) {
   if (flags >= (1U << 20))
     throw std::invalid_argument("invalid flags");
   flags_ = flags;
+}
+
+void PrimeSieve::addFlags(uint32_t flags) {
+  if (flags >= (1U << 20))
+    throw std::invalid_argument("invalid flags");
+  flags_ |= flags;
+}
+
+/**
+ * Get the count of prime numbers within the interval
+ * [startNumber, stopNumber].
+ */
+uint64_t PrimeSieve::getPrimeCount(uint64_t startNumber, 
+                                   uint64_t stopNumber) {
+  this->setStartNumber(startNumber);
+  this->setStopNumber(stopNumber);
+  this->setFlags(COUNT_PRIMES);
+  this->sieve();
+  return this->getPrimeCount();
+}
+
+/** Get the count of primes and prime k-tuplets after sieve(). */
+uint64_t PrimeSieve::getPrimeCount()      const { return counts_[0]; }
+uint64_t PrimeSieve::getTwinCount()       const { return counts_[1]; }
+uint64_t PrimeSieve::getTripletCount()    const { return counts_[2]; }
+uint64_t PrimeSieve::getQuadrupletCount() const { return counts_[3]; }
+uint64_t PrimeSieve::getQuintupletCount() const { return counts_[4]; }
+uint64_t PrimeSieve::getSextupletCount()  const { return counts_[5]; }
+uint64_t PrimeSieve::getSeptupletCount()  const { return counts_[6]; }
+
+/**
+ * Get the count of primes or prime k-tuplets after sieve().
+ * @param index = 0 : Count of prime numbers,
+ *        index = 1 : Count of twin primes,    
+ *        index = 2 : Count of prime triplets,    
+ *        index = 3 : Count of prime quadruplets, 
+ *        index = 4 : Count of prime quintuplets, 
+ *        index = 5 : Count of prime sextuplets,
+ *        index = 6 : Count of prime septuplets.
+ */
+uint64_t PrimeSieve::getCounts(uint32_t index) const {
+  if (index >= COUNTS_SIZE)
+    throw std::out_of_range("getCounts(uint32_t) index out of range");
+  return counts_[index];
+}
+
+/** Get the time elapsed in seconds of sieve(). */
+double PrimeSieve::getTimeElapsed() const {
+  return timeElapsed_;
 }
 
 /**
@@ -287,7 +299,7 @@ void PrimeSieve::doStatus(uint32_t processed) {
   double done = static_cast<double> (segments_);
   int    old  = static_cast<int> (status_);
   status_ = std::min<double>((done / todo) * 100.0, 100.0);
-  if (flags_ & PRINT_STATUS) {
+  if (testFlags(PRINT_STATUS)) {
     int status = static_cast<int> (status_);
     if (status > old)
       std::cout << '\r' << status << '%' << std::flush;
@@ -300,15 +312,15 @@ void PrimeSieve::doSmallPrime(uint32_t min,
                               const std::string& primeStr)
 {
   if (startNumber_ <= min && stopNumber_ >= max) {
-    if ((flags_ & CALLBACK_FLAGS) && type == 0) {
+    if (testFlags(CALLBACK_FLAGS) && type == 0) {
       uint32_t prime = primeStr[0] - '0';
-      if (flags_ & CALLBACK32_PRIMES)     this->callback32_(prime);
-      if (flags_ & CALLBACK32_OOP_PRIMES) this->callback32_OOP_(prime, cbObj_);
-      if (flags_ & CALLBACK64_PRIMES)     this->callback64_(prime);
-      if (flags_ & CALLBACK64_OOP_PRIMES) this->callback64_OOP_(prime, cbObj_);
+      if (testFlags(CALLBACK32_PRIMES))     this->callback32_(prime);
+      if (testFlags(CALLBACK32_OOP_PRIMES)) this->callback32_OOP_(prime, cbObj_);
+      if (testFlags(CALLBACK64_PRIMES))     this->callback64_(prime);
+      if (testFlags(CALLBACK64_OOP_PRIMES)) this->callback64_OOP_(prime, cbObj_);
     } else {
-      if (flags_ & (COUNT_PRIMES << type)) counts_[type]++;
-      if (flags_ & (PRINT_PRIMES << type)) std::cout << primeStr << std::endl;
+      if (testFlags(COUNT_PRIMES << type)) counts_[type]++;
+      if (testFlags(PRINT_PRIMES << type)) std::cout << primeStr << std::endl;
     }
   }
 }
