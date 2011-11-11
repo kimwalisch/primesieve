@@ -158,8 +158,8 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
 #if defined(_OPENMP)
-#  pragma omp critical (generate)
-  {
+#pragma omp critical (generate)
+ {
 #endif
   // the GENERATE_PRIMES() macro is defined in defs.h
        if (ps_.testFlags(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_,      uint32_t)
@@ -187,7 +187,7 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
     }
   }
 #if defined(_OPENMP)
-  }
+ }
 #endif
 }
 
