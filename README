@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       05 December 2010
-# Last modified: 11 November 2011
+# Last modified: 12 November 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -57,21 +57,18 @@ Contents
 ==========================================
 
   primesieve is written in C++03, the parallelization is implemented
-  using OpenMP. I successfully compiled it with 8 different C++
-  compilers on Windows, Linux and Mac OS X.
-  primesieve runs on Little-Endian (i.e. x86, x64) and Big-Endian
-  (i.e. PowerPC, SPARC, ...) CPUs.
+  using OpenMP. It runs on both little-endian (i.e. x86, x64) and
+  big-endian (i.e. PowerPC, SPARC, ...) CPUs.
 
   primesieve uses the segmented sieve of Eratosthenes with wheel
   factorization, this algorithm has a complexity of O(n log log n)
   operations and uses O(n^0.5) space.
 
   My implementation uses a compressed sieve array with 30 numbers per
-  byte, the 8 bits of each byte hold the values
-  i*30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
-  It further uses 8 bytes per sieving prime <= sqrt(x), that is 4
-  bytes for the sieving prime and another 4 bytes for the sieve array
-  index and wheel index.
+  byte, the 8 bits of each byte hold the values i * 30 + k with
+  k = {7, 11, 13, 17, 19, 23, 29, 31}. It further uses 8 bytes per
+  sieving prime <= sqrt(x) that is 4 bytes for the sieving prime and
+  another 4 bytes for the next multiple index and wheel index.
 
   primesieve's memory requirement (per thread) is about:
   pi(sqrt(x)) * 8 bytes + 400 kilobytes
@@ -85,7 +82,7 @@ Contents
   code, .h & .cpp files that start with a capital letter contain a
   class of the same name. The source code is quite well documented, a
   good starting point for code reading is PrimeSieve::sieve() in
-  PrimeSieve.cpp and then SieveOfEratosthenes.cpp.
+  src/soe/PrimeSieve.cpp and then src/soe/SieveOfEratosthenes.cpp.
   If you are not too familiar with prime sieving I recommend reading
   Jonathan Sorenson's papers, see section 5.
 
@@ -101,7 +98,7 @@ Contents
   * SieveOfEratosthenes (abstract class)
     Implementation of the segmented sieve of Eratosthenes using a bit
     array with 30 numbers per byte, each byte of the sieve array holds
-    the numbers i*30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
+    the numbers i * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
     The main method is SieveOfEratosthenes::sieve(uint32_t prime) it
     must be called consecutively for all primes <= sqrt(n) in order to
     sieve the primes up to n. Each sieving prime is first stored in
@@ -118,7 +115,7 @@ Contents
   * EratMedium
     Segmented sieve of Eratosthenes algorithm with a fixed modulo 210
     wheel that skips multiples of 2, 3, 5 and 7. The wheel is
-    implemented using a precomputed lookup table (wheel_ array from
+    implemented using a precomputed lookup table (wheel210Array from
     WheelFactorization.cpp). This algorithm is optimized for medium
     sieving primes with a few multiples per segment.
 
@@ -126,7 +123,7 @@ Contents
     Segmented sieve of Eratosthenes algorithm with Tomás Oliveira's
     improvement for big sieving primes [10] and a fixed modulo 210
     wheel that skips multiples of 2, 3, 5 and 7. The wheel is
-    implemented using a precomputed lookup table (wheel_ array from
+    implemented using a precomputed lookup table (wheel210Array from
     WheelFactorization.cpp). EratBig is optimized for big sieving
     primes that have less than one multiple occurrence per segment.
 
@@ -152,17 +149,17 @@ Contents
   * defs.h
     Contains macro definitions and constants that set the size of
     various arrays and limits within primesieve. You can set the
-    L1_DCACHE_SIZE, L2_CACHE_SIZE, BUCKET_SIZE constants according to
-    your CPU specifications to get the best performance.
+    L1_DCACHE_SIZE, L2_CACHE_SIZE and BUCKET_SIZE constants according
+    to your CPU specifications to get the best performance.
 
   * WheelFactorization.h
-    Contains classes and structs related to wheel factorization, wheel
-    factorization is used to skip multiples of small primes to speed
-    up the sieve of Eratosthenes. The abstract Wheel class is used to
-    initialize sieving primes i.e. getWheelPrimeData() calculates the
-    first multiple >= startNumber of each sieving prime. The sieving
-    prime is then stored together with its multipleIndex (position of
-    the next multiple within the sieve array) and wheelIndex as a
+    Contains classes and structs related to wheel factorization (used
+    to skip multiples of small primes to speed up the sieve of
+    Eratosthenes). The abstract Wheel class is used to initialize
+    sieving primes i.e. getWheelPrimeData() calculates the first
+    multiple >= startNumber of each sieving prime. The sieving prime
+    is then stored together with its multipleIndex (position of the
+    next multiple within the sieve array) and wheelIndex as a
     WheelPrime object. Erat(Small|Medium|Big) objects use WheelPrimes
     to cross-off multiples.
 
