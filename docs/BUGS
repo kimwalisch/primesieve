@@ -9,6 +9,12 @@ $ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve-read-only
 List of fixed bugs in primesieve
 ================================
 
+8. src/soe/ParallelPrimeSieve.cpp might create PrimeSieve objects with
+   START > STOP and cause an invalid_argument exception.
+   $ export OMP_NUM_THREADS=8
+   $ ./primesieve -test; ./primesieve -test; ./primesieve -test;
+   >> FIXED in version 3.2, committed on the 13th November 2011
+
 7. SieveIndex overflow (> 2^23) in src/soe/EratMedium.cpp when using a
    sieve size >= 4096 kilobytes past 1E15.
    $ ./primesieve 1e16 1e16+1e10 -s8192 -t1
