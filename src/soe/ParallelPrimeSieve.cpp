@@ -182,8 +182,8 @@ void ParallelPrimeSieve::sieve() {
   this->reset();
   uint64_t idealInterval = this->getIdealInterval();
    int64_t chunks        = (idealInterval > 0) ? this->getInterval() / idealInterval : 1;
-  uint64_t maxOffset     = idealInterval * chunks;
-  uint64_t maxStop       = startNumber_ + maxOffset + (32 - maxOffset % 30);
+  uint64_t maxStop       = startNumber_ + idealInterval * chunks;
+  maxStop               += 32 - maxStop % 30;
   if (maxStop < stopNumber_) 
     chunks += 1;
 
@@ -201,10 +201,8 @@ void ParallelPrimeSieve::sieve() {
     if (i > 0)
       start += 32 - start % 30;
     stop += 32 - stop % 30;
-    if (stop > stopNumber_)
-      stop = stopNumber_;
     // sieve the primes within [start, stop]
-    PrimeSieve ps(start, stop, this);
+    PrimeSieve ps(start, std::min(stop, stopNumber_), this);
     ps.sieve();
     #pragma omp critical (counts)
     for (uint32_t j = 0; j < COUNTS_SIZE; j++)
