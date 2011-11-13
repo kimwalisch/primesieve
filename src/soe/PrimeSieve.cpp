@@ -316,8 +316,7 @@ void PrimeSieve::doSmallPrime(uint32_t min,
                               const std::string& primeStr)
 {
 #if defined(_OPENMP)
-#pragma omp critical (generate)
- {
+  #pragma omp critical (generate)
 #endif
   if (startNumber_ <= min && stopNumber_ >= max) {
     if (testFlags(CALLBACK_FLAGS) && type == 0) {
@@ -331,9 +330,6 @@ void PrimeSieve::doSmallPrime(uint32_t min,
       if (testFlags(PRINT_PRIMES << type)) std::cout << primeStr << '\n';
     }
   }
-#if defined(_OPENMP)
- }
-#endif
 }
 
 /**
