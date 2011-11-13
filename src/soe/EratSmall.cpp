@@ -47,7 +47,7 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
 {
   uint32_t sqrtStop = soe.getSquareRoot();
   uint32_t max      = static_cast<uint32_t> (soe.getSieveSize() * defs::ERATSMALL_FACTOR);
-  uint32_t limit    = std::min<uint32_t>(sqrtStop, max);
+  uint32_t limit    = std::min(sqrtStop, max);
   // sieveSize - 1 + (prime / 30) * 6 + 6 - sieveSize < sieveSize
   // prevents segmentation faults in sieve(uint8_t*, uint32_t)
   if (limit >= (soe.getSieveSize() - 5) * 5)
