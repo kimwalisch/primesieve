@@ -41,6 +41,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 
 #if defined(_OPENMP)
   #include <omp.h>
@@ -157,17 +158,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  * triplets, ...) within the current segment.
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
-#if defined(_OPENMP)
-#pragma omp critical (generate)
- {
-#endif
-  // the GENERATE_PRIMES() macro is defined in defs.h
-       if (ps_.testFlags(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_,      uint32_t)
-  else if (ps_.testFlags(ps_.CALLBACK32_OOP_PRIMES)) GENERATE_PRIMES(this->callback32_OOP, uint32_t)
-  else if (ps_.testFlags(ps_.CALLBACK64_PRIMES))     GENERATE_PRIMES(ps_.callback64_,      uint64_t)
-  else if (ps_.testFlags(ps_.CALLBACK64_OOP_PRIMES)) GENERATE_PRIMES(this->callback64_OOP, uint64_t)
-  else if (ps_.testFlags(ps_.PRINT_PRIMES))          GENERATE_PRIMES(this->print,          uint64_t)
-  else if (ps_.testFlags(ps_.PRINT_KTUPLETS)) {
+  if (ps_.testFlags(ps_.PRINT_KTUPLETS)) {
     uint64_t lowerBound = this->getSegmentLow();
     // i=0 twins, i=1 triplets, ...
     uint32_t i = 0;
@@ -179,16 +170,27 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
         if ((sieve[j] & *bitmask) == *bitmask) {
           uint32_t leastBit = bitScanForward(*bitmask);
           uint32_t limit    = leastBit + (i + 1);
-          std::cout << "(";
+          std::ostringstream kTuplet;
+          kTuplet << "(";
           for (uint32_t l = leastBit; l <= limit; l++)
-            std::cout << lowerBound + bitValues_[l] << (l < limit ? ", " : ")\n");
+            kTuplet << lowerBound + bitValues_[l] << (l < limit ? ", " : ")\n");
+          std::cout << kTuplet.str();
         }
       }
     }
   }
+  else
 #if defined(_OPENMP)
- }
+  #pragma omp critical (generate)
 #endif
+  {
+    // the GENERATE_PRIMES() macro is defined in defs.h
+         if (ps_.testFlags(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_,      uint32_t)
+    else if (ps_.testFlags(ps_.CALLBACK32_OOP_PRIMES)) GENERATE_PRIMES(this->callback32_OOP, uint32_t)
+    else if (ps_.testFlags(ps_.CALLBACK64_PRIMES))     GENERATE_PRIMES(ps_.callback64_,      uint64_t)
+    else if (ps_.testFlags(ps_.CALLBACK64_OOP_PRIMES)) GENERATE_PRIMES(this->callback64_OOP, uint64_t)
+    else if (ps_.testFlags(ps_.PRINT_PRIMES))          GENERATE_PRIMES(this->print,          uint64_t)
+  }
 }
 
 void PrimeNumberFinder::callback32_OOP(uint32_t prime) const {
