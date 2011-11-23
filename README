@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       05 December 2010
-# Last modified: 13 November 2011
+# Last modified: 23 November 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -120,7 +120,7 @@ Contents
     sieving primes with a few multiples per segment.
 
   * EratBig
-    Segmented sieve of Eratosthenes algorithm with Tom·s Oliveira's
+    Segmented sieve of Eratosthenes algorithm with Tom√°s Oliveira's
     improvement for big sieving primes [11] and a fixed modulo 210
     wheel that skips multiples of 2, 3, 5 and 7. The wheel is
     implemented using a precomputed lookup table (wheel210Array from
@@ -174,17 +174,17 @@ Contents
   CPU's cache memory.
   Joerg Richstein in [10] (German language) describes how to pre-sieve
   multiples of small primes to speed up the sieve of Eratosthenes.
-  Tom·s Oliveira e Silva on his website [11] explains his improvement
+  Tom√°s Oliveira e Silva on his website [11] explains his improvement
   to the segmented sieve of Eratosthenes for big sieving primes.
 
 6. Thanks
 =========
 
-  Thanks to Silver Mˆls for helping me to further optimize primesieve
+  Thanks to Silver M√∂ls for helping me to further optimize primesieve
   for out-of-order execution of modern CPUs in version 3.1.
 
   Thanks to Andrey Kulsha for benchmarking new primesieve releases on
-  his hexa-core AMD Phenon CPU and also for his help to debug
+  his hexa-core AMD Phenom CPU and also for his help to debug
   primesieve 1.0.
 
 7. License
@@ -219,8 +219,8 @@ Contents
       Lecture Notes in Computer Science, Vol. 1423 (1998), 179-194.
   [9] Achim Flammenkamp, "The Art of Prime Sieving", 1998.
       http://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html
- [10] Jˆrg Richstein, "Segmentierung und Optimierung von Algorithmen
-      zu Problemen aus der Zahlentheorie", Gieﬂen, Univ., Diss., 1999.
- [11] Tom·s Oliveira e Silva, "Fast implementation of the segmented
+ [10] J√∂rg Richstein, "Segmentierung und Optimierung von Algorithmen
+      zu Problemen aus der Zahlentheorie", Gie√üen, Univ., Diss., 1999.
+ [11] Tom√°s Oliveira e Silva, "Fast implementation of the segmented
       sieve of Eratosthenes", 2002.
       http://www.ieeta.pt/~tos/software/prime_sieve.html
