@@ -78,8 +78,10 @@ private:
   uint32_t index_;
   /** log2 of SieveOfEratosthenes::sieveSize_. */
   const uint32_t log2SieveSize_;
+  const uint32_t moduloSieveSize_;
   /** Size of the lists_ array. */
   uint32_t size_;
+  uint32_t moduloListsSize_;
   void setSize(const SieveOfEratosthenes&);
   void initBucketLists();
   void pushBucket(uint32_t);

@@ -47,7 +47,8 @@ EratBig::EratBig(const SieveOfEratosthenes& soe) :
   lists_(NULL),
   stock_(NULL),
   index_(0),
-  log2SieveSize_(floorLog2(soe.getSieveSize()))
+  log2SieveSize_(floorLog2(soe.getSieveSize())),
+  moduloSieveSize_(soe.getSieveSize() - 1)
 {
   // EratBig uses bitwise operations that require a power of 2 sieve size
   if (!isPowerOf2(soe.getSieveSize()))
@@ -79,6 +80,7 @@ void EratBig::setSize(const SieveOfEratosthenes& soe) {
   // 'maxSegmentCount + 1' is the smallest possible
   // size for the lists_ array
   size_ = nextHighestPowerOf2(maxSegmentCount + 1);
+  moduloListsSize_ = size_ - 1;
 }
 
 /**
@@ -103,9 +105,9 @@ void EratBig::addSievingPrime(uint32_t prime) {
     // indicates in how many segments the next multiple
     // of prime needs to be crossed-off
     uint32_t segmentCount = multipleIndex >> log2SieveSize_;
-    multipleIndex &= (1U << log2SieveSize_) - 1;
+    multipleIndex &= moduloSieveSize_;
     // calculate the list index related to the next multiple of prime
-    uint32_t next = (index_ + segmentCount) & (size_ - 1);
+    uint32_t next = (index_ + segmentCount) & moduloListsSize_;
     // add prime to the bucket list related to
     // its next multiple occurrence
     if (!lists_[next]->addWheelPrime(prime, multipleIndex, wheelIndex))
@@ -185,10 +187,10 @@ void EratBig::sieve(uint8_t* sieve) {
         multipleIndex1        += wheel(wheelIndex1)->correct;
         wheelIndex1           += wheel(wheelIndex1)->next;
 
-        uint32_t next0 = (index_ + (multipleIndex0 >> log2SieveSize_)) & (size_ - 1);
-        multipleIndex0 &= (1U << log2SieveSize_) - 1;
-        uint32_t next1 = (index_ + (multipleIndex1 >> log2SieveSize_)) & (size_ - 1);
-        multipleIndex1 &= (1U << log2SieveSize_) - 1;
+        uint32_t next0 = (index_ + (multipleIndex0 >> log2SieveSize_)) & moduloListsSize_;
+        multipleIndex0 &= moduloSieveSize_;
+        uint32_t next1 = (index_ + (multipleIndex1 >> log2SieveSize_)) & moduloListsSize_;
+        multipleIndex1 &= moduloSieveSize_;
 
         // move the current sieving primes to the bucket list
         // related to their next multiple occurrence
@@ -207,8 +209,8 @@ void EratBig::sieve(uint8_t* sieve) {
         multipleIndex        += wheel(wheelIndex)->nextMultipleFactor * sievingPrime;
         multipleIndex        += wheel(wheelIndex)->correct;
         wheelIndex           += wheel(wheelIndex)->next;
-        uint32_t next = (index_ + (multipleIndex >> log2SieveSize_)) & (size_ - 1);
-        multipleIndex &= (1U << log2SieveSize_) - 1;
+        uint32_t next = (index_ + (multipleIndex >> log2SieveSize_)) & moduloListsSize_;
+        multipleIndex &= moduloSieveSize_;
         if (!lists_[next]->addWheelPrime(sievingPrime, multipleIndex, wheelIndex))
           this->pushBucket(next);
       }
@@ -224,5 +226,5 @@ void EratBig::sieve(uint8_t* sieve) {
   }
 
   // increase the list index_ for the next segment
-  index_ = (index_ + 1) & (size_ - 1);
+  index_ = (index_ + 1) & moduloListsSize_;
 }
