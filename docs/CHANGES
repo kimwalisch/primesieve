@@ -1,3 +1,9 @@
+New in version 3.3, 11/12/2011
+==============================
+
+1. Minor optimizations for Intel Sandy Bridge CPUs in
+   src/soe/EratBig.cpp.
+
 New in version 3.2, 13/11/2011
 ==============================
 
