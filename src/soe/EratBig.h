@@ -70,12 +70,6 @@ private:
   Bucket_t* stock_;
   /** Pointers of the allocated buckets. */
   std::list<Bucket_t*> pointers_;
-  /**
-   * lists_[index_]   holds the sieving primes with multiple(s) in the current segment,
-   * lists_[index_+1] holds the sieving primes with multiple(s) in the next segment,
-   * ...
-   */
-  uint32_t index_;
   /** log2 of SieveOfEratosthenes::sieveSize_. */
   const uint32_t log2SieveSize_;
   const uint32_t moduloSieveSize_;
