@@ -150,8 +150,9 @@ void EratBig::pushBucket(uint32_t index) {
  */
 void EratBig::sieve(uint8_t* sieve)
 {
-  // lists_[0] contains the sieving primes that have multiple
-  // occurence(s) in the current segment
+  // lists_[0] contains the list of buckets related to the current
+  // segment i.e. its buckets contain all the sieving primes that have
+  // multiple occurrence(s) in the current segment
   while (!lists_[0]->isEmpty() || lists_[0]->hasNext()) {
     Bucket_t* bucket = lists_[0];
     lists_[0] = NULL;
