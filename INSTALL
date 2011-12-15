@@ -3,8 +3,8 @@
 #
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
-# Created:       10 July 2010 
-# Last modified: 26 October 2011
+# Created:       10 July 2010
+# Last modified: 15 December 2011
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -19,10 +19,10 @@
   II. How to build primesieve
   ===========================
 
-  Open a terminal or 'Visual Studio Command Prompt' unzip the source
-  archive and cd into the primesieve directory. Then use one of the
-  following make commands to build primesieve with your favorite C++
-  compiler:
+  Unzip the source archive, then open a terminal or 'Visual Studio 
+  Command Prompt' and cd into the primesieve directory.
+  Now use one of the following make commands to build primesieve with
+  your favorite C++ compiler:
 
   Microsoft Visual C++
   --------------------
@@ -52,8 +52,8 @@
   IV. Target a specific CPU
   =========================
 
-  You can indicate your CPU's L1 (data) and L2 cache sizes per core to
-  get the best performance e.g.:
+  You can indicate your CPU's L1 (data) cache and L2 cache sizes per
+  core to get the best performance e.g.:
 
   $ make L1_DCACHE_SIZE=64 L2_CACHE_SIZE=512
 
