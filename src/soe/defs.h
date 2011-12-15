@@ -86,7 +86,7 @@
 #  define __STDC_LIMIT_MACROS
 #endif
  /**
- * @def __STDC_LIMIT_MACROS
+ * @def __STDC_CONSTANT_MACROS
  * Enable the UINT64_C(c) macro from <stdint.h>.
  */
 #if !defined(__STDC_CONSTANT_MACROS)
