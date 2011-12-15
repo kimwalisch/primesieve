@@ -60,18 +60,18 @@
   V. Compiler benchmark
   =====================
 
-  Here are some primesieve (v. 3.1) timings for various C++ compilers
+  Here are some primesieve (v. 3.3) timings for various C++ compilers
   measured on an Intel Core-i5 670 3.46GHz with DDR3-1333 running
-  Fedora 16 64-bit and Windows 7 64-bit. Best time in seconds to sieve
+  Fedora 16 x86_64 and Windows 7 64-bit. Best time in seconds to sieve
   (single-threaded) an interval of size 1E10 starting at 1E18:
 
   $ ./primesieve-3.1 1E18 -o1E10 -t1
 
-  Compiler                    Optimization flags   OS        Time/s   Rating
-  --------------------------------------------------------------------------
-  Intel C++ Compiler 12.0     -O2 -ipo -prof-use   Linux     14.95    100%
-  Microsoft Visual C++ 2010   /O2 /GL              Windows   15.34     97%
-  GNU g++ 4.4                 -O2 -funroll-loops   Linux     15.44     97%
-  SunStudio 12                -fast -xrestrict     Linux     15.53     96%
-  Mingw-w64 g++ 4.6           -O2                  Windows   15.78     95%
-  LLVM/clang++ 2.8            -O2                  Linux     17.22     87%
+  Compiler                    Optimization flags   OS        Time/s   Perf.
+  -------------------------------------------------------------------------
+  Intel C++ Compiler 12.0     -O2 -ipo -prof-use   Linux     14.69    100%
+  SunStudio 12                -fast -xrestrict     Linux     14.97     98%
+  GNU g++ 4.6                 -O2                  Linux     15.08     97%
+  Microsoft Visual C++ 2010   /O2 /GL              Windows   15.53     95%
+  Mingw-w64 g++ 4.6           -O2                  Windows   15.60     94%
+  LLVM/clang++ 2.8            -O2                  Linux     17.62     83%
