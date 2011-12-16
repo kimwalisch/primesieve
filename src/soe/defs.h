@@ -144,7 +144,7 @@ namespace defs {
      * @pre ERATMEDIUM_FACTOR >= 0 && <= 30
      * @see SieveOfEratosthenes::sieve(uint32_t)
      */
-    ERATMEDIUM_FACTOR = 8,
+    ERATMEDIUM_FACTOR = 6,
     /**
      * Default pre-sieve limit of PrimeSieve and ParallelPrimeSieve
      * objects, multiples of small primes up to this limit are
