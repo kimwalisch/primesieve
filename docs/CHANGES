@@ -1,8 +1,9 @@
-New in version 3.3, 11/12/2011
+New in version 3.3, 16/12/2011
 ==============================
 
-1. Minor optimizations for Intel Sandy Bridge CPUs in
-   src/soe/EratBig.cpp.
+1. Minor optimizations in src/soe/EratBig.cpp (2% speed up).
+2. Improved code readability and documentation of
+   src/soe/ParallelPrimeSieve.cpp.
 
 New in version 3.2, 13/11/2011
 ==============================
