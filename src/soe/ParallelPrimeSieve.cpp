@@ -51,8 +51,7 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
   shm_(NULL)
 {
   // prevents prime k-tuplet gaps
-  static_assert(defs::MIN_THREAD_INTERVAL >= 100,
-               "defs::MIN_THREAD_INTERVAL >= 100");
+  static_assert(defs::MIN_THREAD_INTERVAL >= 100, "defs::MIN_THREAD_INTERVAL >= 100");
 }
 
 /**
@@ -61,15 +60,16 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
  * a shared memory segment.
  */
 void ParallelPrimeSieve::init(SharedMemory* shm) {
-  if (shm == NULL)
+  if (shm == NULL) {
     throw std::invalid_argument(
         "ParallelPrimeSieve: shared memory segment must not be NULL");
+  }
   shm_ = shm;
-  this->setStartNumber(shm_->startNumber);
-  this->setStopNumber(shm_->stopNumber);
-  this->setSieveSize(shm_->sieveSize);
-  this->setFlags(shm_->flags);
-  this->setNumThreads(shm_->threads);
+  setStartNumber(shm_->startNumber);
+  setStopNumber(shm_->stopNumber);
+  setSieveSize(shm_->sieveSize);
+  setFlags(shm_->flags);
+  setNumThreads(shm_->threads);
 }
 
 /**
@@ -102,7 +102,7 @@ int ParallelPrimeSieve::getMaxThreads() {
  */
 int ParallelPrimeSieve::getNumThreads() const {
   return (numThreads_ == USE_IDEAL_NUM_THREADS)
-      ? this->getIdealNumThreads() 
+      ? getIdealNumThreads() 
       : numThreads_;
 }
 
@@ -112,7 +112,7 @@ int ParallelPrimeSieve::getNumThreads() const {
  * is set to numThreads = USE_IDEAL_NUM_THREADS.
  */
 void ParallelPrimeSieve::setNumThreads(int numThreads) {
-  numThreads_ = (numThreads < 1 && numThreads > this->getMaxThreads())
+  numThreads_ = (numThreads < 1 && numThreads > getMaxThreads())
       ? USE_IDEAL_NUM_THREADS
       : numThreads;
 }
@@ -128,17 +128,16 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
 
   // each thread sieves at least an interval of size sqrt(n) / 6
   // but not smaller than defs::MIN_THREAD_INTERVAL
-  uint64_t threadThreshold = std::max<uint64_t>(
-      defs::MIN_THREAD_INTERVAL,
-      isqrt(stopNumber_) / 6);
+  uint64_t minInterval = isqrt(stopNumber_) / 6;
+  uint64_t threadThreshold = std::max<uint64_t>(defs::MIN_THREAD_INTERVAL, minInterval);
 
-  // use all threads if the sieve interval is sufficiently large
-  int idealNumThreads = static_cast<int> (
-      std::min<uint64_t>(
-          this->getInterval() / threadThreshold,
-          this->getMaxThreads()));
+  // use getMaxThreads() if the interval size is sufficiently large
+  uint64_t idealMaxThreads = getInterval() / threadThreshold;
+  uint64_t idealNumThreads = std::min<uint64_t>(idealMaxThreads, getMaxThreads());
+  if (idealNumThreads < 1)
+    idealNumThreads = 1;
 
-  return std::max<int>(1, idealNumThreads);
+  return static_cast<int> (idealNumThreads);
 }
 
 uint64_t ParallelPrimeSieve::getInterval() const {
@@ -150,23 +149,21 @@ uint64_t ParallelPrimeSieve::getInterval() const {
  * balance among threads.
  */
 uint64_t ParallelPrimeSieve::getIdealInterval() const {
-  uint64_t threads  = this->getNumThreads();
-  uint64_t interval = this->getInterval();
+  uint64_t threads  = getNumThreads();
+  uint64_t interval = getInterval();
   if (threads == 1)
     return interval;
 
-  // idealInterval = sqrt(n)*2000, 0.1 percent initialization
-  uint64_t idealInterval = std::max<uint64_t>(
-      defs::MIN_THREAD_INTERVAL,
-      static_cast<uint64_t> (isqrt(stopNumber_)) * 2000);
+  // idealInterval = sqrt(n) * 2000, 0.1% initialization overhead
+  uint64_t sqrtStop = isqrt(stopNumber_);
+  uint64_t idealInterval = std::max<uint64_t>(defs::MIN_THREAD_INTERVAL, sqrtStop * 2000);
 
-  uint64_t maxThreadInterval = interval / threads;
+  uint64_t maxInterval = interval / threads;
   // correct the user's bad settings
-  if (maxThreadInterval < interval &&
-      maxThreadInterval < defs::MIN_THREAD_INTERVAL)
-    maxThreadInterval = interval / this->getIdealNumThreads();
+  if (maxInterval < interval && maxInterval < defs::MIN_THREAD_INTERVAL)
+    maxInterval = interval / getIdealNumThreads();
 
-  return std::min<uint64_t>(idealInterval, maxThreadInterval);
+  return std::min<uint64_t>(idealInterval, maxInterval);
 }
 
 /**
@@ -179,19 +176,18 @@ void ParallelPrimeSieve::sieve() {
 
 #if defined(_OPENMP)
   double t1 = omp_get_wtime();
-  this->reset();
-  uint64_t idealInterval = this->getIdealInterval();
-   int64_t chunks        = (idealInterval > 0) ? this->getInterval() / idealInterval : 1;
+  reset();
+  uint64_t idealInterval = getIdealInterval();
+   int64_t chunks        = (idealInterval > 0) ? getInterval() / idealInterval : 1;
   uint64_t maxStop       = startNumber_ + idealInterval * chunks;
-  maxStop               += 32 - maxStop % 30;
+  maxStop += 32 - maxStop % 30;
   if (maxStop < stopNumber_) 
     chunks += 1;
-
-  int threads = this->getNumThreads();
 
   // split the sieve interval [startNumber_, stopNumber_]
   // into 'chunks' sub-intervals that are processed in
   // parallel using OpenMP
+  int threads = getNumThreads();
   #pragma omp parallel for num_threads(threads) schedule(dynamic)
   for (int64_t i = 0; i < chunks; i++) {
     uint64_t start = startNumber_ + idealInterval * i;
