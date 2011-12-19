@@ -141,7 +141,7 @@ namespace defs {
      * Sieving primes >  (sieveSize in bytes * ERATSMALL_FACTOR) &&
      *                <= (sieveSize in bytes * ERATMEDIUM_FACTOR)
      * are used with EratMedium objects.
-     * @pre ERATMEDIUM_FACTOR >= 0 && <= 10
+     * @pre ERATMEDIUM_FACTOR >= 0 && <= 12
      * @see SieveOfEratosthenes::sieve(uint32_t)
      */
     ERATMEDIUM_FACTOR = 8,
