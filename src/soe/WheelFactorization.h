@@ -242,9 +242,7 @@ protected:
             << ".";
       throw std::overflow_error(error.str());
     }
-    // max sieveSize = max WheelPrime::getMultipleIndex() + 1 = 2^23
-    // also sieveSize <= 2^28 in order to prevent 32-bit overflows of
-    // multipleIndex in Erat*::sieve()
+    // max(sieveSize) = max(WheelPrime::getMultipleIndex()) + 1 = 2^23
     if (soe_.getSieveSize() > (1U << 23))
       throw std::overflow_error(
           "Wheel: sieveSize must be <= 2^23, 8192 kilobytes.");
