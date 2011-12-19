@@ -196,8 +196,8 @@ namespace {
           rand64 += rand64 * std::max<int> (2, std::rand());
         // generate a random interval >= 0 and < 10^9
         uint64_t interval = rand64 % maxInterval;
-        // generate a random sieve size >= 1 and <= 8192
-        uint32_t sieveSize = 1 << static_cast<int> (rand64 % 14);
+        // generate a random sieve size >= 1 and <= 2048
+        uint32_t sieveSize = 1 << static_cast<int> (rand64 % 12);
 
         // sieve the next random interval
         pps.setStartNumber(pps.getStopNumber() + 1);

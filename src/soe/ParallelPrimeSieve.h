@@ -93,4 +93,4 @@ private:
   uint64_t getIdealInterval() const;
 };
 
-#endif // PARALLELPRIMESIEVE_H
+#endif /* PARALLELPRIMESIEVE_H */

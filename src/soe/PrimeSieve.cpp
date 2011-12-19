@@ -120,16 +120,16 @@ void PrimeSieve::setStopNumber(uint64_t stopNumber) {
  * sieve size of the CPU's L1 cache size (usually 32 or 64 KB) when
  * sieving < 10^14 and a sieve size of the CPU's L2 cache size
  * (e.g. 512 KB) above.
- * @param sieveSize  >= 1 && <= 8192 kilobytes, sieveSize is rounded
+ * @param sieveSize  >= 1 && <= 2048 kilobytes, sieveSize is rounded
  *                   up to the next highest power of 2.
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
   // SieveOfEratosthenes needs sieveSize >= 1
   if (sieveSize < 1)
     sieveSize = 1;
-  // Erat(Small|Medium|Big) need sieveSize <= 8192
-  if (sieveSize > 8192)
-    sieveSize = 8192;
+  // EratMedium needs sieveSize <= 2048
+  if (sieveSize > 2048)
+    sieveSize = 2048;
   // EratBig needs a power of 2 sieveSize
   sieveSize_ = nextHighestPowerOf2(sieveSize);
 }

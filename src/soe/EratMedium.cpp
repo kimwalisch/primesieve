@@ -38,13 +38,18 @@
 #include "WheelFactorization.h"
 #include "defs.h"
 
+#include <stdexcept>
 #include <algorithm>
 #include <list>
 
 EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
-  EratBase<Modulo210Wheel_t, WheelPrime_2> (soe)
+  EratBase<Modulo210Wheel_t> (soe)
 {
-  static_assert(defs::ERATMEDIUM_FACTOR <= 30, "defs::ERATMEDIUM_FACTOR <= 30");
+  // conditions that assert multipleIndex < 2^23 in sieve()
+  static_assert(defs::ERATMEDIUM_FACTOR <= 11, "defs::ERATMEDIUM_FACTOR <= 11");
+  if (soe.getSieveSize() > (1U << 21))
+    throw std::overflow_error(
+        "EratMedium: sieveSize must be <= 2^21, 2048 kilobytes.");
   uint32_t sqrtStop = soe.getSquareRoot();
   uint32_t max      = soe.getSieveSize() * defs::ERATMEDIUM_FACTOR;
   uint32_t limit    = std::min(sqrtStop, max);
@@ -62,8 +67,8 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
 {
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
-    WheelPrime_t* wPrime = bucket->begin();
-    WheelPrime_t* end    = bucket->end();
+    WheelPrime* wPrime = bucket->begin();
+    WheelPrime* end    = bucket->end();
     // remove the multiples of sieving primes within the
     // current bucket from the sieve array
     for (; wPrime != end; wPrime++) {

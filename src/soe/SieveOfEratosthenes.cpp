@@ -53,13 +53,11 @@ const uint32_t SieveOfEratosthenes::bitValues_[32] = {
 
 /**
  * @param startNumber    Sieve the primes within the interval [startNumber, stopNumber].
- * @param stopNumber     ...
- * @param sieveSize      A sieve size in kilobytes.
+ * @param stopNumber     Sieve the primes within the interval [startNumber, stopNumber].
+ * @param sieveSize      A sieve size in kilobytes, sieveSize >= 1 && <= 2048.
  * @param preSieveLimit  Multiples of small primes <= preSieveLimit are pre-sieved
- *                       to speed up the sieve of Eratosthenes.
- *
- * @pre   sieveSize      >= 1  && <= 8192
- * @pre   preSieveLimit  >= 13 && <= 23 
+ *                       to speed up the sieve of Eratosthenes,
+ *                       preSieveLimit >= 13 && <= 23.
  */
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
                                          uint64_t stopNumber,
@@ -175,9 +173,8 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
   // The following while loop segments the sieve of Eratosthenes,
   // it is entered if all primes <= sqrt(segmentHigh_) required to
   // sieve the next segment have been added to one of the three
-  // erat(Small|Medium|Big)_ objects.
-  // Each loop iteration sieves the primes within the interval
-  // [segmentLow_+7, segmentHigh_].
+  // erat(Small|Medium|Big)_ objects. Each loop iteration sieves the
+  // primes within the interval [segmentLow_+7, segmentHigh_].
   while (segmentHigh_ < primeSquared) {
     this->preSieve();
     this->crossOffMultiples();

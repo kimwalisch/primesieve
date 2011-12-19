@@ -59,17 +59,13 @@ public:
   void addSievingPrime(uint32_t);
   void sieve(uint8_t*);
 private:
-  typedef WheelPrime_1 WheelPrime_t;
-  typedef Bucket<WheelPrime_t> Bucket_t;
-  enum { 
-    BUCKETS_PER_ALLOC = defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket_t)
-  };
+  enum { BUCKETS_PER_ALLOC = defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket) };
   /** Array of bucket lists, holds the sieving primes. */
-  Bucket_t** lists_;
+  Bucket** lists_;
   /** List of empty buckets. */
-  Bucket_t* stock_;
+  Bucket* stock_;
   /** Pointers of the allocated buckets. */
-  std::list<Bucket_t*> pointers_;
+  std::list<Bucket*> pointers_;
   /** log2 of SieveOfEratosthenes::sieveSize_. */
   const uint32_t log2SieveSize_;
   const uint32_t moduloSieveSize_;

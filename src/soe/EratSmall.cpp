@@ -43,7 +43,7 @@
 #include <list>
 
 EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
-  EratBase<Modulo30Wheel_t, WheelPrime_1> (soe)
+  EratBase<Modulo30Wheel_t> (soe)
 {
   uint32_t sqrtStop = soe.getSquareRoot();
   uint32_t max      = static_cast<uint32_t> (soe.getSieveSize() * defs::ERATSMALL_FACTOR);
@@ -68,8 +68,8 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
   uint8_t* const sieveEnd = &sieve[sieveSize];
 
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
-    WheelPrime_t* wPrime = bucket->begin();
-    WheelPrime_t* end    = bucket->end();
+    WheelPrime* wPrime = bucket->begin();
+    WheelPrime* end    = bucket->end();
     // process the sieving primes within the current bucket
     for (; wPrime != end; wPrime++) {
       const uint32_t primeX2       = wPrime->getSievingPrime() * 2;
@@ -79,8 +79,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
       const uint32_t multipleIndex = wPrime->getMultipleIndex();
       const uint32_t wheelIndex    = wPrime->getWheelIndex();
 
-      uint8_t* const loopLimit = (maxLoopOffset < sieveSize)
-          ? sieveEnd - maxLoopOffset : sieve;
+      uint8_t* const loopLimit = (maxLoopOffset < sieveSize) ? sieveEnd - maxLoopOffset : sieve;
       uint8_t* s = &sieve[multipleIndex];
 
       // cross-off the multiples (unset corresponding bits) of the

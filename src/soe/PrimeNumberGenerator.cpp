@@ -48,12 +48,13 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
       defs::PRIMENUMBERGENERATOR_PRESIEVE_LIMIT),
   primeNumberFinder_(finder)
 {
-  assert(this->getStopNumber() <= UINT32_MAX);
+  static_assert(defs::PRIMENUMBERGENERATOR_SIEVESIZE <= 2048, "Maximum sieveSize = 2048 kilobytes");
+  assert(getStopNumber() <= UINT32_MAX);
 }
 
 /**
- * Generate the primes within the current segment i.e. [segmentLow_+7, segmentHigh_]
- * and use them to sieve with primeNumberFinder_.
+ * Generate the primes within the current segment and use them
+ * to sieve with primeNumberFinder_.
  * @see SieveOfEratosthenes::sieve(uint32_t)
  */
 void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
@@ -62,5 +63,5 @@ void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
 }
 
 void PrimeNumberGenerator::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
-  this->generate(sieve, sieveSize);
+  generate(sieve, sieveSize);
 }

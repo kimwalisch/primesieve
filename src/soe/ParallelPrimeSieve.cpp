@@ -163,7 +163,7 @@ uint64_t ParallelPrimeSieve::getIdealInterval() const {
   if (maxInterval < interval && maxInterval < defs::MIN_THREAD_INTERVAL)
     maxInterval = interval / getIdealNumThreads();
 
-  return std::min<uint64_t>(idealInterval, maxInterval);
+  return std::min(idealInterval, maxInterval);
 }
 
 /**

@@ -48,7 +48,7 @@ class SieveOfEratosthenes;
  * EratBase is an abstract class used by EratSmall and EratMedium to
  * initialize and store sieving primes.
  */
-template<class T_Wheel, class T_WheelPrime>
+template<class T_Wheel>
 class EratBase: protected T_Wheel {
 public:
   uint32_t getLimit() const {
@@ -63,21 +63,19 @@ public:
         == true) {
       if (!buckets_.back().addWheelPrime(prime, multipleIndex, wheelIndex)) {
         // the current bucket is full, add a new one
-        buckets_.push_back(Bucket_t());
+        buckets_.push_back(Bucket());
       }
     }
   }
 protected:
-  typedef T_WheelPrime         WheelPrime_t;
-  typedef Bucket<WheelPrime_t> Bucket_t;
-  typedef std::list<Bucket_t>  BucketList_t;
+  typedef std::list<Bucket> BucketList_t;
   /** Upper bound for sieving primes within EratBase. */
   uint32_t limit_;
   /** List of buckets, holds the sieving primes. */
   BucketList_t buckets_;
   EratBase(const SieveOfEratosthenes& soe) : T_Wheel(soe) {
     // initialize with an empty bucket
-    buckets_.push_back(Bucket_t());
+    buckets_.push_back(Bucket());
   }
   void setLimit(uint32_t limit) {
     limit_ = limit;

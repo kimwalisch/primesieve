@@ -60,7 +60,7 @@ EratBig::EratBig(const SieveOfEratosthenes& soe) :
 
 EratBig::~EratBig() {
   delete[] lists_;
-  for (std::list<Bucket_t*>::iterator it = pointers_.begin();
+  for (std::list<Bucket*>::iterator it = pointers_.begin();
       it != pointers_.end(); ++it)
     delete[] *it;
 }
@@ -88,7 +88,7 @@ void EratBig::setSize(const SieveOfEratosthenes& soe) {
  * with an empty bucket.
  */
 void EratBig::initBucketLists() {
-  lists_ = new Bucket_t*[size_];
+  lists_ = new Bucket*[size_];
   for (uint32_t i = 0; i < size_; i++) {
     lists_[i] = NULL;
     this->pushBucket(i);
@@ -123,14 +123,14 @@ void EratBig::addSievingPrime(uint32_t prime) {
  */
 void EratBig::pushBucket(uint32_t index) {
   if (stock_ == NULL) {
-    Bucket_t* more = new Bucket_t[BUCKETS_PER_ALLOC];
+    Bucket* more = new Bucket[BUCKETS_PER_ALLOC];
     stock_ = &more[0];
     pointers_.push_back(more);
     for(int i = 0; i < BUCKETS_PER_ALLOC - 1; i++)
       more[i].setNext(&more[i + 1]);
     more[BUCKETS_PER_ALLOC - 1].setNext(NULL);
   }
-  Bucket_t* bucket = stock_;
+  Bucket* bucket = stock_;
   stock_ = stock_->next();
   bucket->setNext(lists_[index]);
   lists_[index] = bucket;
@@ -154,15 +154,15 @@ void EratBig::sieve(uint8_t* sieve)
   // segment i.e. its buckets contain all the sieving primes that have
   // multiple occurrence(s) in the current segment
   while (!lists_[0]->isEmpty() || lists_[0]->hasNext()) {
-    Bucket_t* bucket = lists_[0];
+    Bucket* bucket = lists_[0];
     lists_[0] = NULL;
     this->pushBucket(0);
 
     // each loop iteration processes a bucket i.e. removes
     // the next multiple of its sieving primes
     do {
-      const WheelPrime_t* wPrime = bucket->begin();
-      const WheelPrime_t* end    = bucket->end();
+      const WheelPrime* wPrime = bucket->begin();
+      const WheelPrime* end    = bucket->end();
 
       // iterate over the sieving primes within the current bucket
       // loop unrolled 2 times, optimized for x64 CPUs
@@ -214,7 +214,7 @@ void EratBig::sieve(uint8_t* sieve)
       }
 
       // reset the processed bucket and move it to the bucket stock_
-      Bucket_t* old = bucket;
+      Bucket* old = bucket;
       bucket = bucket->next();
       old->reset();
       old->setNext(stock_);
@@ -225,7 +225,7 @@ void EratBig::sieve(uint8_t* sieve)
 
   // lists_[0] has been processed, thus the list related to
   // the next segment lists_[1] moves to lists_[0]
-  Bucket_t* tmp = lists_[0];
-  std::memmove(lists_, &lists_[1], (size_ - 1) * sizeof(Bucket_t*));
+  Bucket* tmp = lists_[0];
+  std::memmove(lists_, &lists_[1], (size_ - 1) * sizeof(Bucket*));
   lists_[size_ - 1] = tmp;
 }
