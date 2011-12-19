@@ -1,9 +1,12 @@
-New in version 3.3, 16/12/2011
+New in version 3.3, 19/12/2011
 ==============================
 
 1. Minor optimizations in src/soe/EratBig.cpp (2% speed up).
 2. Improved code readability and documentation of
    src/soe/ParallelPrimeSieve.cpp.
+3. The sieveSize must be <= 2048 kilobytes now (previously 8192), this
+   makes the WheelFactorization.h & EratBase.h code easier to
+   understand.
 
 New in version 3.2, 13/11/2011
 ==============================
