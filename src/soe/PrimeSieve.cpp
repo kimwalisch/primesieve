@@ -124,10 +124,10 @@ void PrimeSieve::setStopNumber(uint64_t stopNumber) {
  *                   up to the next highest power of 2.
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
-  // SieveOfEratosthenes needs sieveSize >= 1
+  // SieveOfEratosthenes needs sieveSize >= 1 kilobyte
   if (sieveSize < 1)
     sieveSize = 1;
-  // EratMedium needs sieveSize <= 2048
+  // EratMedium needs sieveSize <= 2048 kilobytes
   if (sieveSize > 2048)
     sieveSize = 2048;
   // EratBig needs a power of 2 sieveSize
@@ -140,8 +140,12 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
  * @pre preSieveLimit >= 13 && <= 23
  */
 void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
-  if (preSieveLimit < 13 || preSieveLimit > 23)
-    throw std::invalid_argument("pre-sieve limit must be >= 13 && <= 23");
+  // minimum preSieveLimit is 13 (uses 1001 bytes)
+  if (preSieveLimit < 13)
+    preSieveLimit = 13;
+  // maximum preSieveLimit is 23 (uses 7 megabytes)
+  if (preSieveLimit > 23)
+    preSieveLimit = 23;
   preSieveLimit_ = preSieveLimit;
 }
 
