@@ -115,13 +115,13 @@ void PrimeSieve::setStopNumber(uint64_t stopNumber) {
 }
 
 /**
- * Set the size of the sieve of Eratosthenes array (in kilobytes).
- * Default sieveSize = 32 KB, the best performance is achieved with a
- * sieve size of the CPU's L1 cache size (usually 32 or 64 KB) when
- * sieving < 10^14 and a sieve size of the CPU's L2 cache size
- * (e.g. 512 KB) above.
- * @param sieveSize  >= 1 && <= 2048 kilobytes, sieveSize is rounded
- *                   up to the next highest power of 2.
+ * Set the size of the sieve of Eratosthenes array in kilobytes.
+ * The best performance is achieved with a sieve size of the CPU's L1
+ * cache size (usually 32 or 64 KB) when sieving < 10^14 and a sieve
+ * size of the CPU's L2 cache size (e.g. 512 KB) above.
+ * @param sieveSize  default = 32, >= 1 && <= 2048 kilobytes,
+ *                   sieveSize is rounded up to the next highest power
+ *                   of 2.
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
   // SieveOfEratosthenes needs sieveSize >= 1 kilobyte
@@ -137,7 +137,7 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
 /**
  * Multiples of small primes <= preSieveLimit are pre-sieved
  * to speed up the sieve of Eratosthenes.
- * @pre preSieveLimit >= 13 && <= 23
+ * @pre preSieveLimit  default = 19, >= 13 && <= 23
  */
 void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
   // minimum preSieveLimit = 13 (uses 1001 bytes)
