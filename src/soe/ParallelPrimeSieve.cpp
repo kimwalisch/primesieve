@@ -112,7 +112,7 @@ int ParallelPrimeSieve::getNumThreads() const {
  * is set to numThreads = USE_IDEAL_NUM_THREADS.
  */
 void ParallelPrimeSieve::setNumThreads(int numThreads) {
-  numThreads_ = (numThreads < 1 && numThreads > getMaxThreads())
+  numThreads_ = (numThreads < 1 || numThreads > getMaxThreads())
       ? USE_IDEAL_NUM_THREADS
       : numThreads;
 }
