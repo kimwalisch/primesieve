@@ -140,10 +140,10 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
  * @pre preSieveLimit >= 13 && <= 23
  */
 void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
-  // minimum preSieveLimit is 13 (uses 1001 bytes)
+  // minimum preSieveLimit = 13 (uses 1001 bytes)
   if (preSieveLimit < 13)
     preSieveLimit = 13;
-  // maximum preSieveLimit is 23 (uses 7 megabytes)
+  // maximum preSieveLimit = 23 (uses 7 megabytes)
   if (preSieveLimit > 23)
     preSieveLimit = 23;
   preSieveLimit_ = preSieveLimit;
