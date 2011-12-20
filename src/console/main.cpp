@@ -236,8 +236,10 @@ int main(int argc, char* argv[]) {
     pps.setNumThreads(threads);
 
     if (!quietMode) {
-      std::cout << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize()  << " kilobytes" << std::endl
-                << std::setw(10) << "Threads"    << " = " << pps.getNumThreads() << std::endl;
+      std::cout   << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize()  << " kilobytes" << std::endl;
+      if (pps.getPreSieveLimit() != defs::PRIMESIEVE_PRESIEVE_LIMIT)
+        std::cout << std::setw(10) << "Pre-sieve"  << " = " << pps.getPreSieveLimit() << std::endl;
+      std::cout   << std::setw(10) << "Threads"    << " = " << pps.getNumThreads()    << std::endl;
     }
     // start sieving primes
     pps.sieve();
