@@ -76,12 +76,17 @@ public:
   }
   void set(uint32_t sievingPrime,
            uint32_t multipleIndex,
-           uint32_t wheelIndex)
-  {
-    assert(multipleIndex < (1U << 23) &&
-           wheelIndex    < (1U << 9));
-    indexes_      = multipleIndex | (wheelIndex << 23);
+           uint32_t wheelIndex) {
+    assert(multipleIndex < (1U << 23));
+    assert(wheelIndex    < (1U << 9));
+    indexes_ = multipleIndex | (wheelIndex << 23);
     sievingPrime_ = sievingPrime;
+  }
+  void setIndexes(uint32_t multipleIndex,
+                  uint32_t wheelIndex) {
+    assert(multipleIndex < (1U << 23));
+    assert(wheelIndex    < (1U << 9));
+    indexes_ = multipleIndex | (wheelIndex << 23);
   }
   void setWheelIndex(uint32_t wheelIndex) {
     assert(wheelIndex < (1U << 9));
