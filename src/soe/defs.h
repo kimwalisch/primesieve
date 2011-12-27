@@ -102,29 +102,29 @@
  * and call a callback function for each prime.
  * @see PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
  */
-#define GENERATE_PRIMES(callback, uintXX_t) {                     \
-  uintXX_t lowerBound = static_cast<uintXX_t> (getSegmentLow());  \
-  uint32_t i = 0;                                                 \
-  for (; i < sieveSize / SIZEOF(uint32_t); i++) {                 \
-    uint32_t word = reinterpret_cast<const uint32_t*> (sieve)[i]; \
-    while (word != 0) {                                           \
-      uint32_t bitPosition = bitScanForward(word);                \
-      uintXX_t prime = lowerBound + bitValues_[bitPosition];      \
-      word &= word - 1;                                           \
-      callback (prime);                                           \
-    }                                                             \
-    lowerBound += NUMBERS_PER_BYTE * SIZEOF(uint32_t);            \
-  }                                                               \
-  for (i *= SIZEOF(uint32_t); i < sieveSize; i++) {               \
-    uint32_t byte = sieve[i];                                     \
-    while (byte != 0) {                                           \
-      uint32_t bitPosition = bitScanForward(byte);                \
-      uintXX_t prime = lowerBound + bitValues_[bitPosition];      \
-      byte &= byte - 1;                                           \
-      callback (prime);                                           \
-    }                                                             \
-    lowerBound += NUMBERS_PER_BYTE;                               \
-  }                                                               \
+#define GENERATE_PRIMES(callback, uintXX_t) {                      \
+  uintXX_t lowerBound = static_cast<uintXX_t> (getSegmentLow());   \
+  uint32_t i = 0;                                                  \
+  for (; i < sieveSize / SIZEOF(uint32_t); i++) {                  \
+    uint32_t dword = reinterpret_cast<const uint32_t*> (sieve)[i]; \
+    while (dword != 0) {                                           \
+      uint32_t bitPosition = bitScanForward(dword);                \
+      uintXX_t prime = lowerBound + bitValues_[bitPosition];       \
+      dword &= dword - 1;                                          \
+      callback (prime);                                            \
+    }                                                              \
+    lowerBound += NUMBERS_PER_BYTE * SIZEOF(uint32_t);             \
+  }                                                                \
+  for (i *= SIZEOF(uint32_t); i < sieveSize; i++) {                \
+    uint32_t byte = sieve[i];                                      \
+    while (byte != 0) {                                            \
+      uint32_t bitPosition = bitScanForward(byte);                 \
+      uintXX_t prime = lowerBound + bitValues_[bitPosition];       \
+      byte &= byte - 1;                                            \
+      callback (prime);                                            \
+    }                                                              \
+    lowerBound += NUMBERS_PER_BYTE;                                \
+  }                                                                \
 }
 
 namespace defs {
