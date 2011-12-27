@@ -85,7 +85,7 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
       }
       multipleIndex -= sieveSize;
       // set multipleIndex and wheelIndex for the next segment
-      wPrime->set(sievingPrime, multipleIndex, wheelIndex);
+      wPrime->setIndexes(multipleIndex, wheelIndex);
     }
   }
 }
