@@ -91,7 +91,7 @@ void help() {
             << "  -q            Quiet mode, print less output"                                         << std::endl
             << "  -r<PRE-SIEVE> Pre-sieve multiples of small primes <= PRE-SIEVE to speed up"          << std::endl
             << "                the sieve of Eratosthenes, 13 <= PRE-SIEVE <= 23"                      << std::endl
-            << "  -s<SIZE>      Set the sieve size in kilobytes, 1 <= SIZE <= 2048"                    << std::endl
+            << "  -s<SIZE>      Set the sieve size in kilobytes, 1 <= SIZE <= 4096"                    << std::endl
             << "                Set SIZE to your CPU's L1/L2 cache size for best performance"          << std::endl
             << "  -t<THREADS>   Set the number of threads for sieving, 1 <= THREADS <= " << maxThreads << std::endl
             << "                Primes are not generated in order if THREADS >= 2"                     << std::endl
@@ -108,7 +108,7 @@ void help() {
 }
 
 void version() {
-  std::cout << "primesieve 3.3, <http://primesieve.googlecode.com>" << std::endl
+  std::cout << "primesieve 3.4, <http://primesieve.googlecode.com>" << std::endl
             << "Copyright (C) 2011 Kim Walisch" << std::endl
             << "This software is licensed under the New BSD License. See the LICENSE file" << std::endl
             << "for more information." << std::endl;
