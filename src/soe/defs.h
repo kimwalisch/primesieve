@@ -134,17 +134,17 @@ namespace defs {
    * @pre ERATSMALL_FACTOR >= 0 && < 5
    * @see SieveOfEratosthenes::sieve(uint32_t)
    */
-  const double ERATSMALL_FACTOR = 1.5;
+  const double ERATSMALL_FACTOR = 0.75;
 
   enum {
     /**
      * Sieving primes >  (sieveSize in bytes * ERATSMALL_FACTOR) &&
      *                <= (sieveSize in bytes * ERATMEDIUM_FACTOR)
      * are used with EratMedium objects.
-     * @pre ERATMEDIUM_FACTOR >= 0 && <= 12
+     * @pre ERATMEDIUM_FACTOR >= 0 && <= 6
      * @see SieveOfEratosthenes::sieve(uint32_t)
      */
-    ERATMEDIUM_FACTOR = 8,
+    ERATMEDIUM_FACTOR = 6,
     /**
      * Default pre-sieve limit of PrimeSieve and ParallelPrimeSieve
      * objects, multiples of small primes up to this limit are
@@ -158,7 +158,7 @@ namespace defs {
     /**
      * Default sieve size in kilobytes of PrimeSieve and
      * ParallelPrimeSieve objects.
-     * @pre PRIMESIEVE_SIEVESIZE >= 1 && <= 2048
+     * @pre PRIMESIEVE_SIEVESIZE >= 1 && <= 4096
      */
     PRIMESIEVE_SIEVESIZE = L1_DCACHE_SIZE,
     /**
@@ -171,7 +171,7 @@ namespace defs {
     /**
      * Sieve size in kilobytes of PrimeNumberGenerator which generates
      * the primes up to sqrt(n) needed for sieving.
-     * @pre PRIMENUMBERGENERATOR_SIEVESIZE >= 1 && <= 2048
+     * @pre PRIMENUMBERGENERATOR_SIEVESIZE >= 1 && <= 4096
      */
     PRIMENUMBERGENERATOR_SIEVESIZE = L1_DCACHE_SIZE,
     /**

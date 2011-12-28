@@ -48,7 +48,7 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
       defs::PRIMENUMBERGENERATOR_PRESIEVE_LIMIT),
   primeNumberFinder_(finder)
 {
-  static_assert(defs::PRIMENUMBERGENERATOR_SIEVESIZE <= 2048, "Maximum sieveSize = 2048 kilobytes");
+  static_assert(defs::PRIMENUMBERGENERATOR_SIEVESIZE <= 4096, "Maximum sieveSize = 4096 kilobytes");
   assert(getStopNumber() <= UINT32_MAX);
 }
 
