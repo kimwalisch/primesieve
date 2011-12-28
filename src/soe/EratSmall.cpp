@@ -58,7 +58,7 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
 
 /**
  * Implementation of the segmented sieve of Eratosthenes with wheel
- * factorization optimized for small sieving primes with many
+ * factorization optimized for small sieving primes that have many
  * multiples per segment.
  * This implementation uses a sieve array with 30 numbers per byte and
  * a hardcoded modulo 30 wheel that skips multiples of 2, 3 and 5.
