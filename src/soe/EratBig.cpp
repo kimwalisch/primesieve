@@ -164,8 +164,10 @@ void EratBig::sieve(uint8_t* sieve)
       const WheelPrime* wPrime = bucket->begin();
       const WheelPrime* end    = bucket->end();
 
-      // iterate over the sieving primes within the current bucket
-      // loop unrolled 2 times, optimized for x64 CPUs
+      // Optimized for out-of-order CPUs
+      // The wheel(wheelIndex)->... lookup table is the algorithm's main
+      // bottleneck, the memory access time is improved by processing 2
+      // sieving primes per loop iteration
       for (; wPrime + 2 <= end; wPrime += 2) {
         uint32_t multipleIndex0 = wPrime[0].getMultipleIndex();
         uint32_t wheelIndex0    = wPrime[0].getWheelIndex();
@@ -173,7 +175,6 @@ void EratBig::sieve(uint8_t* sieve)
         uint32_t multipleIndex1 = wPrime[1].getMultipleIndex();
         uint32_t wheelIndex1    = wPrime[1].getWheelIndex();
         uint32_t sievingPrime1  = wPrime[1].getSievingPrime();
-
         // cross-off the next multiple (unset corresponding bit) of the
         // current sieving primes within the sieve array
         sieve[multipleIndex0] &= wheel(wheelIndex0)->unsetBit;
@@ -184,12 +185,10 @@ void EratBig::sieve(uint8_t* sieve)
         multipleIndex1        += wheel(wheelIndex1)->nextMultipleFactor * sievingPrime1;
         multipleIndex1        += wheel(wheelIndex1)->correct;
         wheelIndex1           += wheel(wheelIndex1)->next;
-
         uint32_t next0 = (multipleIndex0 >> log2SieveSize_) & moduloListsSize_;
         multipleIndex0 &= moduloSieveSize_;
         uint32_t next1 = (multipleIndex1 >> log2SieveSize_) & moduloListsSize_;
         multipleIndex1 &= moduloSieveSize_;
-
         // move the current sieving primes to the bucket list
         // related to their next multiple occurrence
         if (!lists_[next0]->addWheelPrime(sievingPrime0, multipleIndex0, wheelIndex0))
@@ -198,8 +197,8 @@ void EratBig::sieve(uint8_t* sieve)
           this->pushBucket(next1);
       }
 
-      // process the remaining sieving primes
-      for (; wPrime < end; wPrime++) {
+      // process the remaining sieving prime
+      if (wPrime != end) {
         uint32_t multipleIndex = wPrime->getMultipleIndex();
         uint32_t wheelIndex    = wPrime->getWheelIndex();
         uint32_t sievingPrime  = wPrime->getSievingPrime();
