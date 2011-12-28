@@ -40,7 +40,7 @@
 #include <stdint.h>
 
 const QString APPLICATION_NAME("primesieve");
-const QString APPLICATION_VERSION("3.3");
+const QString APPLICATION_VERSION("3.4");
 const QString APPLICATION_HOMEPAGE("http://primesieve.googlecode.com");
 const QString APPLICATION_ABOUT(
     "primesieve generates prime numbers and prime k-tuplets using a highly "
@@ -61,10 +61,10 @@ const QString APPLICATION_ABOUT(
  */
 const int MINIMUM_SIEVE_SIZE = 16;
 /**
- * @pre MAXIMUM_SIEVE_SIZE <= 2048
+ * @pre MAXIMUM_SIEVE_SIZE <= 4096
  * @see PrimeSieve.cpp
  */
-const int MAXIMUM_SIEVE_SIZE = 2048;
+const int MAXIMUM_SIEVE_SIZE = 4096;
 /**
  * The best performance is achieved with a sieve size of the CPU's
  * L1/L2 cache size. 32 kilobytes is a good choice as most CPUs have a
