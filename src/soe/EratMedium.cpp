@@ -66,10 +66,10 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
  */
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
 {
-  // Optimized for out-of-order CPUs
-  // The wheel(wheelIndex)->... lookup table is the algorithm's main
-  // bottleneck, the memory access time is improved by processing 2
-  // sieving primes per loop iteration
+  // The integer multiplication and wheel(...)-> lookup table are the
+  // algorithm's bottlenecks, out-of-order optimization: 2 sieving
+  // primes are processed per loop iteration to break the dependency
+  // chain and reduce data hazards in the CPU's pipeline
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
     WheelPrime* wPrime = bucket->begin();
     WheelPrime* end    = bucket->end();
