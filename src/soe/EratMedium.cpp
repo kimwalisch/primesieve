@@ -66,7 +66,7 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
  */
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
 {
-  // The integer multiplication and wheel(...)-> lookup table are the
+  // The integer multiplication and wheel(...)-> lookup table are this
   // algorithm's bottlenecks, out-of-order optimization: 2 sieving
   // primes are processed per loop iteration to break the dependency
   // chain and reduce data hazards in the CPU's pipeline
