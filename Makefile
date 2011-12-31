@@ -33,9 +33,9 @@ help:
 set_cxxflags:
 # sunCC : Oracle Solaris Studio
 # Sun Studio optimization flags: http://dsc.sun.com/solaris/articles/amdopt.html
-ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE 'sun'),)
+ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE sun),)
   CXXFLAGS = +w -xopenmp -fast -xrestrict
-  REMARK = You might need to export OMP_NUM_THREADS for OpenMP multi-threading.
+  REMARK = you might need to export OMP_NUM_THREADS for OpenMP multi-threading.
 
 # icpc : Intel C++ Compiler
 # == Profile-guided optimization (5 percent speed up, icpc 12.0) ==
@@ -45,10 +45,10 @@ ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE 'sun'),)
 # $ make CXX=icpc "CXXFLAGS= -openmp -O2 -ipo -prof-use"
 else ifeq ($(CXX),icpc)
   CXXFLAGS = -openmp -Wall -O2
-  REMARK = Read Makefile for instructions on profile-guided optimization.
+  REMARK = read the Makefile for instructions on profile-guided optimization.
 
 # g++ : GNU Compiler Collection
-else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
+else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE "GCC|G\+\+"),)
   ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i apple),)
     # Apple g++ flags
     CXXFLAGS = -fopenmp -Wall -fast
@@ -71,8 +71,8 @@ ifneq ($(L2_CACHE_SIZE),)
 endif
 
 create_dir:
-ifeq ($(wildcard $(OUTDIR)/),)
-  $(shell mkdir -p $(OUTDIR))
+ifeq ($(shell [ -d $(OUTDIR) ] && echo exists),)
+  $(shell mkdir $(OUTDIR))
 endif
 
 build: $(OBJS)
@@ -91,5 +91,4 @@ endif
 
 .PHONY: clean
 clean:
-	rm $(OBJS)
-	rm $(BINARY)
+	rm -rf $(OUTDIR)
