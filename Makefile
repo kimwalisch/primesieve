@@ -9,36 +9,51 @@
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
-TARGET = primesieve
 SRCDIR = src/soe
 MAINDIR = src/console
 OUTDIR = out
+BINARY = $(OUTDIR)/primesieve
 CXX = g++
 CXXFLAGS = -O2
+OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp))
+OBJS += $(patsubst $(MAINDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(MAINDIR)/*.cpp))
 
+all: set_cxxflags create_dir build remark
+
+help:
+	@echo                  -----------------------------------------
+	@echo                  ---------- primesieve Makefile ----------
+	@echo                  -----------------------------------------
+	@echo make                                       build primesieve using g++ (DEFAULT)
+	@echo make CXX=my_compiler "CXXFLAGS=options"    specify a custom C++ compiler
+	@echo make L1_DCACHE_SIZE=32 L2_CACHE_SIZE=256   specify L1/L2 cache sizes per core
+	@echo make clean                                 remove binary and object files
+	@echo make help                                  show this help menu
+
+set_cxxflags:
 # sunCC : Oracle Solaris Studio
 # Sun Studio optimization flags: http://dsc.sun.com/solaris/articles/amdopt.html
 ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE 'sun'),)
-  REMARK = You might need to export OMP_NUM_THREADS for OpenMP multi-threading.
   CXXFLAGS = +w -xopenmp -fast -xrestrict
+  REMARK = You might need to export OMP_NUM_THREADS for OpenMP multi-threading.
 
 # icpc : Intel C++ Compiler
 # == Profile-guided optimization (5 percent speed up, icpc 12.0) ==
-# $ make CXX=icpc "CXXFLAGS= -openmp -Wall -O2 -prof-gen"
+# $ make CXX=icpc "CXXFLAGS= -openmp -O2 -prof-gen"
 # $ out/./primesieve 1E18 -o1E10 -t1
 # $ make clean
-# $ make CXX=icpc "CXXFLAGS= -openmp -Wall -O2 -ipo -prof-use"
+# $ make CXX=icpc "CXXFLAGS= -openmp -O2 -ipo -prof-use"
 else ifeq ($(CXX),icpc)
-  REMARK = Read Makefile for instructions on profile-guided optimization.
   CXXFLAGS = -openmp -Wall -O2
+  REMARK = Read Makefile for instructions on profile-guided optimization.
 
 # g++ : GNU Compiler Collection
 else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
   ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i apple),)
-    # Apple g++, fastest executable using -fast
+    # Apple g++ flags
     CXXFLAGS = -fopenmp -Wall -fast
   else
-    # GNU g++, fastest executable using -O2
+    # GNU g++ flags
     CXXFLAGS = -fopenmp -Wall -O2
   endif
 
@@ -55,24 +70,13 @@ ifneq ($(L2_CACHE_SIZE),)
   CXXFLAGS += -DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
 endif
 
-# Generate list of object files
-OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp))
-OBJS += $(patsubst $(MAINDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(MAINDIR)/*.cpp))
-TARGET := $(OUTDIR)/$(TARGET)
-
-# Create output directory if it does not exist
+create_dir:
 ifeq ($(wildcard $(OUTDIR)/),)
   $(shell mkdir -p $(OUTDIR))
 endif
 
-ifneq ($(REMARK),)
-  all: $(TARGET) remark
-else
-  all: $(TARGET)
-endif
-
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $(TARGET)
+build: $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(BINARY)
 
 $(OUTDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
@@ -81,19 +85,11 @@ $(OUTDIR)/%.o: $(MAINDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 remark:
+ifneq ($(REMARK),)
 	@echo Remark: $(REMARK)
-
-help:
-	@echo -------------------------
-	@echo -- primesieve Makefile --
-	@echo -------------------------
-	@echo make                                       build primesieve using g++ (DEFAULT)
-	@echo make CXX=my_compiler "CXXFLAGS=options"    specify a custom C++ compiler
-	@echo make L1_DCACHE_SIZE=32 L2_CACHE_SIZE=256   specify L1/L2 cache sizes per core
-	@echo make clean                                 remove binary and object files
-	@echo make help                                  show this help menu
+endif
 
 .PHONY: clean
 clean:
 	rm $(OBJS)
-	rm $(TARGET)
+	rm $(BINARY)
