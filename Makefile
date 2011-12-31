@@ -91,4 +91,5 @@ endif
 
 .PHONY: clean
 clean:
-	rm -rf $(OUTDIR)
+	rm -f $(OBJS)
+	rm -f $(BINARY)
