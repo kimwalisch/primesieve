@@ -34,7 +34,7 @@ set_cxxflags:
 # sunCC : Oracle Solaris Studio
 # Sun Studio optimization flags: http://dsc.sun.com/solaris/articles/amdopt.html
 ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE sun),)
-  CXXFLAGS = +w -xopenmp -fast -xrestrict
+  CXXFLAGS = +w -fast -xopenmp -xrestrict
   REMARK = you might need to export OMP_NUM_THREADS for OpenMP multi-threading.
 
 # icpc : Intel C++ Compiler
@@ -44,22 +44,22 @@ ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE sun),)
 # $ make clean
 # $ make CXX=icpc "CXXFLAGS= -openmp -O2 -ipo -prof-use"
 else ifeq ($(CXX),icpc)
-  CXXFLAGS = -openmp -Wall -O2
+  CXXFLAGS = -Wall -O2 -openmp
   REMARK = read the Makefile for instructions on profile-guided optimization.
 
 # g++ : GNU Compiler Collection
 else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE "GCC|G\+\+"),)
   ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -i apple),)
     # Apple g++ flags
-    CXXFLAGS = -fopenmp -Wall -fast
+    CXXFLAGS = -Wall -fast -fopenmp
   else
     # GNU g++ flags
-    CXXFLAGS = -fopenmp -Wall -O2
+    CXXFLAGS = -Wall -O2 -fopenmp
   endif
 
 # Unkown compilers (use default flags)
 else
-  REMARK = unkown compiler, add OpenMP flag if supported (make help).
+  REMARK = unkown compiler, add OpenMP flag if supported \(make help\).
 endif
 
 # Check if the user indicated his CPU L1/L2 cache sizes
@@ -91,5 +91,5 @@ endif
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS)
 	rm -f $(BINARY)
+	rm -f $(OUTDIR)/*.o
