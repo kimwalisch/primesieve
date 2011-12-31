@@ -6,7 +6,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   05 October 2011
+# Last modified:   31 December 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -14,20 +14,20 @@
 # Ignore all error return codes
 .IGNORE:
 
-TARGET = primesieve.exe
 SRCDIR = src/soe
 MAINDIR = src/console
 OUTDIR = out
+BINARY = $(OUTDIR)\primesieve.exe
 
-# Useful compiler options:
-# /Gy      Enable Function-Level Linking, may reduce the file size
-# /fp:fast Fast floating-point model, reduces the file size
-# /FAs     Generates ASM files (*.s) with comments
+# == Useful compiler options ==
+# /Gy       Enable Function-Level Linking, may reduce the file size
+# /fp:fast  Fast floating-point model, reduces the file size
+# /FAs      Generate ASM files (*.asm) with comments
 
-# Define the C++ compiler & options
-CPP      = cl
-LINK     = link
-LFLAGS   = /OPT:REF,ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
+# Define C++ compiler & options
+CPP = cl
+LINK = link
+LFLAGS = /OPT:REF,ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
 CPPFLAGS = /openmp /O2 /GL /EHsc /W3 \
 !ifdef L1_DCACHE_SIZE
   /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE) \
@@ -51,24 +51,23 @@ OBJECTS = $(OUTDIR)\EratBig.obj \
   $(OUTDIR)\WheelFactorization.obj \
   $(OUTDIR)\test.obj \
   $(OUTDIR)\main.obj
-TARGET = $(OUTDIR)\$(TARGET)
 
-all : create_dir build
+all: create_dir build
 
-create_dir :
+create_dir:
 !if !EXISTS($(OUTDIR))
   mkdir $(OUTDIR)
 !endif
  
 {$(SRCDIR)\}.cpp.obj:
-  $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
+	$(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
 
 {$(MAINDIR)\}.cpp.obj:
-  $(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
+	$(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
 
-build : $(OBJECTS)
-  $(LINK) $(LFLAGS) /OUT:$(TARGET) $(OBJECTS)
-  
-clean: 
+build: $(OBJECTS)
+	$(LINK) $(LFLAGS) /OUT:$(BINARY) $(OBJECTS)
+
+clean:
 	del $(OBJECTS)
-	del $(TARGET)
+	del $(BINARY)
