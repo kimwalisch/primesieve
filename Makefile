@@ -23,9 +23,9 @@ OBJS += $(patsubst $(CONDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(CONDIR)/*.cpp))
 # e.g. make CXX=sunCC; sets "CXXFLAGS = +w -fast -xopenmp -xrestrict"
 #-----------------------------------------------------------------------------
 
-# sunCC : Oracle Solaris Studio
+# sunCC, CC : Oracle Solaris Studio
 # Optimization flags: http://dsc.sun.com/solaris/articles/amdopt.html
-ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE sun),)
+ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE "sun|oracle"),)
   CXXFLAGS = +w -fast -xopenmp -xrestrict
   REMARK = you might need to export OMP_NUM_THREADS for OpenMP multi-threading.
 
