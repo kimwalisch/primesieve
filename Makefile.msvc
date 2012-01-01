@@ -6,7 +6,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   31 December 2011
+# Last modified:   1 January 2011
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -14,21 +14,21 @@
 # Ignore all error return codes
 .IGNORE:
 
-SRCDIR = src/soe
-MAINDIR = src/console
+SOEDIR = src/soe
+CONDIR = src/console
 OUTDIR = out
 BINARY = $(OUTDIR)\primesieve.exe
 
 # == Useful compiler options ==
+# /FAs      Generate ASM files (*.asm) with comments
 # /Gy       Enable Function-Level Linking, may reduce the file size
 # /fp:fast  Fast floating-point model, reduces the file size
-# /FAs      Generate ASM files (*.asm) with comments
 
 # Define C++ compiler & options
 CPP = cl
 LINK = link
 LFLAGS = /OPT:REF,ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
-CPPFLAGS = /openmp /O2 /GL /EHsc /W3 \
+CPPFLAGS = /W3 /O2 /openmp /GL /EHsc \
 !ifdef L1_DCACHE_SIZE
   /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE) \
 !endif
@@ -39,16 +39,16 @@ CPPFLAGS = /openmp /O2 /GL /EHsc /W3 \
 # Inculde stdint.h (needed prior MSVC 2010)
 INCPATH  = -I"src/thirdparty"
 
-OBJECTS = $(OUTDIR)\EratBig.obj \
+OBJECTS = $(OUTDIR)\WheelFactorization.obj \
   $(OUTDIR)\PreSieve.obj \
+  $(OUTDIR)\EratSmall.obj \
   $(OUTDIR)\EratMedium.obj \
+  $(OUTDIR)\EratBig.obj \
   $(OUTDIR)\SieveOfEratosthenes.obj \
   $(OUTDIR)\PrimeNumberGenerator.obj \
+  $(OUTDIR)\PrimeNumberFinder.obj \
   $(OUTDIR)\PrimeSieve.obj \
   $(OUTDIR)\ParallelPrimeSieve.obj \
-  $(OUTDIR)\PrimeNumberFinder.obj \
-  $(OUTDIR)\EratSmall.obj \
-  $(OUTDIR)\WheelFactorization.obj \
   $(OUTDIR)\test.obj \
   $(OUTDIR)\main.obj
 
@@ -58,16 +58,15 @@ create_dir:
 !if !EXISTS($(OUTDIR))
   mkdir $(OUTDIR)
 !endif
- 
-{$(SRCDIR)\}.cpp.obj:
-	$(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
-
-{$(MAINDIR)\}.cpp.obj:
-	$(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
 
 build: $(OBJECTS)
 	$(LINK) $(LFLAGS) /OUT:$(BINARY) $(OBJECTS)
 
+{$(SOEDIR)\}.cpp.obj:
+	$(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
+
+{$(CONDIR)\}.cpp.obj:
+	$(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
+
 clean:
-	del $(OBJECTS)
-	del $(BINARY)
+	del $(BINARY) $(OBJECTS)
