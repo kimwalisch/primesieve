@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -67,9 +67,9 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
 {
   // The integer multiplication and wheel(...)-> lookup table are this
-  // algorithm's bottlenecks, out-of-order optimization: 2 sieving
-  // primes are processed per loop iteration to break the dependency
-  // chain and reduce data hazards in the CPU's pipeline
+  // algorithm's bottlenecks. For out-of-order CPUs the algorithm
+  // can be sped up by processing 2 sieving primes per loop iteration,
+  // this breaks the dependency chain and reduces pipeline stalls
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
     WheelPrime* wPrime = bucket->begin();
     WheelPrime* end    = bucket->end();
