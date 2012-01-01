@@ -9,14 +9,14 @@
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
-SRCDIR = src/soe
-MAINDIR = src/console
+SOEDIR = src/soe
+CONDIR = src/console
 OUTDIR = out
 BINARY = $(OUTDIR)/primesieve
 CXX = g++
 CXXFLAGS = -O2
-OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp))
-OBJS += $(patsubst $(MAINDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(MAINDIR)/*.cpp))
+OBJS := $(patsubst $(SOEDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(SOEDIR)/*.cpp))
+OBJS += $(patsubst $(CONDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(CONDIR)/*.cpp))
 
 #-----------------------------------------------------------------------------
 # set CXXFLAGS for various C++ compilers (sunCC, icpc, g++, ...)
@@ -24,13 +24,13 @@ OBJS += $(patsubst $(MAINDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(MAINDIR)/*.cpp))
 #-----------------------------------------------------------------------------
 
 # sunCC : Oracle Solaris Studio
-# Sun Studio optimization flags: http://dsc.sun.com/solaris/articles/amdopt.html
+# Optimization flags: http://dsc.sun.com/solaris/articles/amdopt.html
 ifneq ($(shell $(CXX) -V 2>&1 | head -1 | grep -iE sun),)
   CXXFLAGS = +w -fast -xopenmp -xrestrict
   REMARK = you might need to export OMP_NUM_THREADS for OpenMP multi-threading.
 
 # icpc : Intel C++ Compiler
-# == Profile-guided optimization (5 percent speed up, icpc 12.0) ==
+# == Profile-guided optimization (5 percent faster, icpc 12.0) ==
 # make CXX=icpc "CXXFLAGS= -openmp -O2 -prof-gen"
 # out/./primesieve 1E18 -o1E10 -t1
 # make clean
@@ -85,10 +85,10 @@ help:
 build: $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(BINARY) $(OBJS)
 
-$(OUTDIR)/%.o: $(SRCDIR)/%.cpp
+$(OUTDIR)/%.o: $(SOEDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
-$(OUTDIR)/%.o: $(MAINDIR)/%.cpp
+$(OUTDIR)/%.o: $(CONDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 remark:
