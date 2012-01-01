@@ -25,10 +25,10 @@ BINARY = $(OUTDIR)\primesieve.exe
 # /fp:fast  Fast floating-point model, reduces the file size
 
 # Define C++ compiler & options
-CPP = cl
+CXX = cl
 LINK = link
 LFLAGS = /OPT:REF,ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
-CPPFLAGS = /W3 /O2 /openmp /GL /EHsc \
+CXXFLAGS = /W3 /O2 /openmp /GL /EHsc \
 !ifdef L1_DCACHE_SIZE
   /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE) \
 !endif
@@ -63,10 +63,10 @@ build: $(OBJECTS)
 	$(LINK) $(LFLAGS) /OUT:$(BINARY) $(OBJECTS)
 
 {$(SOEDIR)\}.cpp.obj:
-	$(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
+	$(CXX) $(CXXFLAGS) $(INCPATH) -c $< /Fo$@
 
 {$(CONDIR)\}.cpp.obj:
-	$(CPP) $(CPPFLAGS) $(INCPATH) -c $< /Fo$@
+	$(CXX) $(CXXFLAGS) $(INCPATH) -c $< /Fo$@
 
 clean:
 	del $(BINARY) $(OBJECTS)
