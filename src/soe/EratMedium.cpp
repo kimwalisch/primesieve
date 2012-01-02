@@ -66,13 +66,12 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
  */
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
 {
-  // The integer multiplication and wheel(...)-> lookup table are this
-  // algorithm's bottlenecks. For out-of-order CPUs the algorithm
-  // can be sped up by processing 2 sieving primes per loop iteration,
-  // this breaks the dependency chain and reduces pipeline stalls
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
-    WheelPrime* wPrime = bucket->begin();
-    WheelPrime* end    = bucket->end();
+    WheelPrime* wPrime    = bucket->begin();
+    WheelPrime* const end = bucket->end();
+    // For out-of-order CPUs this algorithm can be sped up by
+    // processing 2 sieving primes per loop iteration, this breaks the
+    // dependency chain and reduces pipeline stalls
     for (; wPrime + 2 <= end; wPrime += 2) {
       uint32_t multipleIndex0 = wPrime[0].getMultipleIndex();
       uint32_t wheelIndex0    = wPrime[0].getWheelIndex();
@@ -82,6 +81,8 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
       uint32_t sievingPrime1  = wPrime[1].getSievingPrime();
       while (multipleIndex0 < sieveSize &&
              multipleIndex1 < sieveSize) {
+        // cross-off the next multiple (unset corresponding bit) of
+        // the current sieving primes within the sieve array
         sieve[multipleIndex0] &= wheel(wheelIndex0)->unsetBit;
         multipleIndex0        += wheel(wheelIndex0)->nextMultipleFactor * sievingPrime0;
         multipleIndex0        += wheel(wheelIndex0)->correct;
@@ -105,6 +106,7 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
       }
       multipleIndex0 -= sieveSize;
       multipleIndex1 -= sieveSize;
+      // set the multipleIndex and wheelIndex for the next segment
       wPrime[0].setIndexes(multipleIndex0, wheelIndex0);
       wPrime[1].setIndexes(multipleIndex1, wheelIndex1);
     }
