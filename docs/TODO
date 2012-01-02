@@ -1,5 +1,5 @@
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-1. src/soe/ParallelPrimeSieve is currently not exception safe due to
-   lack of C++ exception support in OpenMP (2011).
+1. src/soe/ParallelPrimeSieve.cpp is currently not exception safe due
+   to lack of C++ exception support in OpenMP (2012).
