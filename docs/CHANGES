@@ -1,3 +1,14 @@
+New in version 3.4, 02/01/2012
+==============================
+
+1. I implemented a new algorithm for medium sieving primes that is up
+   to 20 percent faster on todays out-of-order CPUs,
+   see src/soe/EratMedium.cpp.
+2. I adapted the constants in defs.h due to the new EratMedium
+   algorithm, the maximum sieveSize is now 4096 kilobytes (previously
+   2048 kilobytes).
+3. I revised the Makefiles and INSTALL file.
+
 New in version 3.3, 19/12/2011
 ==============================
 
