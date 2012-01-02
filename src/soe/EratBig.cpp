@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -109,8 +109,8 @@ void EratBig::addSievingPrime(uint32_t prime) {
     multipleIndex &= moduloSieveSize_;
     // calculate the list index related to the next multiple of prime
     uint32_t next = segmentCount & moduloListsSize_;
-    // add prime to the bucket list related to
-    // its next multiple occurrence
+    // add prime to the bucket list related
+    // to its next multiple occurrence
     if (!lists_[next]->addWheelPrime(prime, multipleIndex, wheelIndex))
       this->pushBucket(next);
   }
@@ -164,10 +164,9 @@ void EratBig::sieve(uint8_t* sieve)
       const WheelPrime* wPrime = bucket->begin();
       const WheelPrime* end    = bucket->end();
 
-      // Optimized for out-of-order CPUs
-      // The wheel(wheelIndex)->... lookup table is the algorithm's main
-      // bottleneck, the memory access time is improved by processing 2
-      // sieving primes per loop iteration
+      // For out-of-order CPUs this algorithm can be sped up by
+      // processing 2 sieving primes per loop iteration, this breaks
+      // the dependency chain and reduces pipeline stalls
       for (; wPrime + 2 <= end; wPrime += 2) {
         uint32_t multipleIndex0 = wPrime[0].getMultipleIndex();
         uint32_t wheelIndex0    = wPrime[0].getWheelIndex();
@@ -175,8 +174,8 @@ void EratBig::sieve(uint8_t* sieve)
         uint32_t multipleIndex1 = wPrime[1].getMultipleIndex();
         uint32_t wheelIndex1    = wPrime[1].getWheelIndex();
         uint32_t sievingPrime1  = wPrime[1].getSievingPrime();
-        // cross-off the next multiple (unset corresponding bit) of the
-        // current sieving primes within the sieve array
+        // cross-off the next multiple (unset corresponding bit) of
+        // the current sieving primes within the sieve array
         sieve[multipleIndex0] &= wheel(wheelIndex0)->unsetBit;
         multipleIndex0        += wheel(wheelIndex0)->nextMultipleFactor * sievingPrime0;
         multipleIndex0        += wheel(wheelIndex0)->correct;
