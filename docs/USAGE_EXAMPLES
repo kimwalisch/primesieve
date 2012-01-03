@@ -1,4 +1,4 @@
-November 9, 2011
+January 3, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -6,10 +6,9 @@ I. About
 ========
 
 This file contains various source code examples that show how to use
-PrimeSieve & ParallelPrimeSieve objects.
-You may also want to have a look at ../src/soe/PrimeSieve.h for the
-API and ../src/soe/PrimeSieve.cpp for a brief description of each
-member function.
+PrimeSieve & ParallelPrimeSieve objects. You may also want to have a
+look at ../src/soe/PrimeSieve.h for the API and PrimeSieve.cpp for a
+brief description of each member function.
 
 II. Examples
 ============
@@ -36,6 +35,8 @@ void myPrimes(unsigned int prime) {
 
 int main() {
   PrimeSieve ps;
+  // speed up initialization (default pre-sieve limit = 19)
+  ps.SetPreSieveLimit(13);
   ps.generatePrimes(2, 1000, myPrimes);
   return 0;
 }
@@ -84,7 +85,7 @@ int main() {
   ParallelPrimeSieve pps;
   pps.setFlags(pps.COUNT_TWINS | pps.PRINT_STATUS);
   pps.setStartNumber((uint64_t) (1E11));
-  pps.setStopNumber( (uint64_t) (1E11 * 2.0));
+  pps.setStopNumber((uint64_t) (1E11 * 2.0));
   pps.sieve();
   std::cout << std::endl
             << "twin prime count: "
@@ -125,7 +126,7 @@ int main() {
   pps.setSieveSize(512);
   pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
   pps.setStartNumber((uint64_t) (1E16));
-  pps.setStopNumber( (uint64_t) (1E16 + 1E11));
+  pps.setStopNumber((uint64_t) (1E16 + 1E11));
   pps.sieve();
   std::cout << std::endl
             << "prime count: "
@@ -174,7 +175,7 @@ void check(unsigned int prime) {
 }
 
 int main(int argc, char* argv[]) {
-  candidate    = strtoul(argv[1], NULL, 10);
+  candidate = strtoul(argv[1], NULL, 10);
   bool isPrime = false;
 
   if (candidate > 1) {
