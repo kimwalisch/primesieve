@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -109,7 +109,7 @@ void help() {
 
 void version() {
   std::cout << "primesieve 3.4, <http://primesieve.googlecode.com>" << std::endl
-            << "Copyright (C) 2011 Kim Walisch" << std::endl
+            << "Copyright (C) 2012 Kim Walisch" << std::endl
             << "This software is licensed under the New BSD License. See the LICENSE file" << std::endl
             << "for more information." << std::endl;
 }
