@@ -35,8 +35,6 @@ void myPrimes(unsigned int prime) {
 
 int main() {
   PrimeSieve ps;
-  // speed up initialization (default pre-sieve limit = 19)
-  ps.SetPreSieveLimit(13);
   ps.generatePrimes(2, 1000, myPrimes);
   return 0;
 }
@@ -180,8 +178,6 @@ int main(int argc, char* argv[]) {
 
   if (candidate > 1) {
     PrimeSieve ps;
-    // reduces initialization overhead
-    ps.setPreSieveLimit(13);
     try {
       ps.generatePrimes(0, (unsigned int) std::sqrt((double) candidate), check);
       isPrime = true;

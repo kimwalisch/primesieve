@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -243,6 +243,8 @@ void PrimeSieve::generatePrimes(uint32_t startNumber,
                                 void (*callback)(uint32_t)) {
   if (callback == NULL)
     throw std::invalid_argument("callback must not be NULL");
+  // speed up initialization (default pre-sieve limit = 19)
+  this->setPreSieveLimit(13);
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
   callback32_ = callback;
@@ -255,6 +257,7 @@ void PrimeSieve::generatePrimes(uint32_t startNumber,
                                 void (*callback)(uint32_t, void*), void* cbObj) {
   if (callback == NULL || cbObj == NULL)
     throw std::invalid_argument("callback & cbObj must not be NULL");
+  this->setPreSieveLimit(13);
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
   callback32_OOP_ = callback;
@@ -268,6 +271,7 @@ void PrimeSieve::generatePrimes(uint64_t startNumber,
                                 void (*callback)(uint64_t)) {
   if (callback == NULL)
     throw std::invalid_argument("callback must not be NULL");
+  this->setPreSieveLimit(13);
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
   callback64_ = callback;
@@ -280,6 +284,7 @@ void PrimeSieve::generatePrimes(uint64_t startNumber,
                                 void (*callback)(uint64_t, void*), void* cbObj) {
   if (callback == NULL || cbObj == NULL)
     throw std::invalid_argument("callback & cbObj must not be NULL");
+  this->setPreSieveLimit(13);
   this->setStartNumber(startNumber);
   this->setStopNumber(stopNumber);
   callback64_OOP_ = callback;
