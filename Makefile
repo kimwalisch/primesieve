@@ -17,7 +17,7 @@ BINARY = $(OUTDIR)/primesieve
 LIBPRIMESIEVE = $(LIBDIR)/libprimesieve.a
 CXX = g++
 CXXFLAGS = -O2
-CXXFLAGS_LIBPRIMESIEVE = -O2
+CXXFLAGS_LIBPRIMESIEVE = -Wall -O2
 
 OBJECTS = $(OUTDIR)/WheelFactorization.o \
   $(OUTDIR)/PreSieve.o \
@@ -121,7 +121,7 @@ clean:
 
 #-----------------------------------------------------------------------------
 # build libprimesieve (static library, read docs/LIBPRIMESIEVE)
-# installation directories: /usr/local/lib, /usr/local/include/soe
+# installation directories: /usr/lib, /usr/include/soe
 #-----------------------------------------------------------------------------
 
 create-lib-dir:
@@ -135,13 +135,13 @@ $(LIBDIR)/%.o: $(SOEDIR)/%.cpp
 
 # needs root privileges ($ sudo make install-lib)
 install-lib:
-	cp -f $(LIBPRIMESIEVE) /usr/local/lib
-	mkdir -p /usr/local/include/soe
-	cp -f src/soe/*.h /usr/local/include/soe
+	cp -f $(LIBPRIMESIEVE) /usr/lib
+	mkdir -p /usr/include/soe
+	cp -f src/soe/*.h /usr/include/soe
 
 # needs root privileges ($ sudo make uninstall-lib)
 uninstall-lib:
-	rm -rf /usr/local/lib/$(LIBPRIMESIEVE) /usr/local/include/soe
+	rm -rf /usr/lib/libprimesieve.a /usr/include/soe
 
 clean-lib:
 	rm -f $(LIBPRIMESIEVE) $(LIBDIR)/*.o
