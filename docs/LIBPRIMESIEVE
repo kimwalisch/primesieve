@@ -38,8 +38,8 @@ Contents
   $ sudo make install-lib
 
   The first command builds lib/libprimesieve.a, the second command
-  copies the library to /usr/local and the primesieve header files to
-  /usr/local/include/soe.
+  copies the library to /usr/lib and the primesieve header files to
+  /usr/include/soe.
 
   Note: by default libprimesieve is built using g++, you can specify a
   custom C++ compiler using `make lib CXX=my_compiler`.
