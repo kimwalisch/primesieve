@@ -96,6 +96,8 @@ endif
 # build primesieve console application (read INSTALL)
 #-----------------------------------------------------------------------------
 
+.PHONY: all create-out-dir build remark clean
+
 all: create-out-dir build remark
 
 create-out-dir:
@@ -115,7 +117,6 @@ ifneq ($(REMARK),)
 	@echo Remark: $(REMARK)
 endif
 
-.PHONY: clean
 clean:
 	rm -f $(BINARY) $(OUTDIR)/*.o
 
@@ -123,6 +124,8 @@ clean:
 # build libprimesieve (static library, read docs/LIBPRIMESIEVE)
 # installation directories: /usr/lib, /usr/include/soe
 #-----------------------------------------------------------------------------
+
+.PHONY: create-lib-dir lib install-lib uninstall-lib clean-lib
 
 create-lib-dir:
 	mkdir -p $(LIBDIR)
