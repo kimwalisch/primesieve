@@ -5,7 +5,7 @@ http://primesieve.googlecode.com
 Contents
 ========
 
-  1. About the primesieve library
+  1. About the primesieve C++ library
   2. Build libprimesieve    (Unix-like OSes)
   3. Usage example          (Unix-like OSes)
   4. OpenMP multi-threading (Unix-like OSes)
@@ -15,8 +15,8 @@ Contents
   8. OpenMP multi-threading (Windows, MSVC++)
   9. sum_primes.cpp
 
-1. About the primesieve library
-===============================
+1. About the primesieve C++ library
+===================================
 
   The easiest way to use primesieve in your C++ program is to build
   the static primesieve library and link it into your application,
