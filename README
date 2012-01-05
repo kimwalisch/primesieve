@@ -3,8 +3,8 @@
 #
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
-# Created:       05 December 2010
-# Last modified: 23 November 2011
+# Created:       5 December 2010
+# Last modified: 5 January 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -24,9 +24,10 @@ Contents
 1. About primesieve
 ===================
 
-  primesieve is a highly optimized C++ implementation of the sieve of
-  Eratosthenes that generates primes and prime k-tuplets (twin primes,
-  prime triplets, ...) up to 2^64 maximum.
+  primesieve is a free software program and C++ library that generates
+  prime numbers and prime k-tuplets (twin primes, prime triplets, ...)
+  < 2^64 using a highly optimized implementation of the sieve of
+  Eratosthenes.
 
   Homepage: http://primesieve.googlecode.com
 
@@ -40,6 +41,8 @@ Contents
   Documentation directory
   -----------------------
   docs                 files: CHANGES, TODO, BUGS, ...
+  docs/LIBPRIMESIEVE   Explains how to build and use the primesieve
+                       C++ library on Unix-like OSes and Windows.
   docs/USAGE_EXAMPLES  Contains commented source code examples that
                        show how to use PrimeSieve objects e.g. for
                        prime number generation.
@@ -82,9 +85,9 @@ Contents
   code, .h & .cpp files that start with a capital letter contain a
   class of the same name. The source code is quite well documented, a
   good starting point for code reading is PrimeSieve::sieve() in
-  src/soe/PrimeSieve.cpp and then src/soe/SieveOfEratosthenes.cpp.
-  If you are not too familiar with prime sieving I recommend reading
-  Jonathan Sorenson's papers, see section 5.
+  src/soe/PrimeSieve.cpp and then SieveOfEratosthenes.cpp. If you are
+  not too familiar with prime sieving I recommend reading Jonathan
+  Sorenson's papers, see section 5.
 
   C++ classes
   -----------
@@ -191,9 +194,9 @@ Contents
 ==========
 
   primesieve is free software, it is licensed under the New BSD
-  License see the LICENSE file for more information.
-  The primesieve GUI application in src/qt-gui is licensed under the
-  GPLv3 as it uses the Qt framework.
+  License see the LICENSE file for more information. The primesieve
+  GUI application in src/qt-gui is licensed under the GPLv3 as it
+  uses the Qt framework.
 
 8. References
 =============

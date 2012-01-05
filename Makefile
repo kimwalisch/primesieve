@@ -1,10 +1,10 @@
 ##############################################################################
-# Makefile for primesieve (console version)
+# Makefile for primesieve (console app) and libprimesieve
 #
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   1 January 2012
+# Last modified:   5 January 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -12,11 +12,36 @@
 SOEDIR = src/soe
 CONDIR = src/console
 OUTDIR = out
+LIBDIR = lib
 BINARY = $(OUTDIR)/primesieve
+LIBPRIMESIEVE = $(LIBDIR)/libprimesieve.a
 CXX = g++
 CXXFLAGS = -O2
-OBJS := $(patsubst $(SOEDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(SOEDIR)/*.cpp))
-OBJS += $(patsubst $(CONDIR)/%.cpp,$(OUTDIR)/%.o,$(wildcard $(CONDIR)/*.cpp))
+CXXFLAGS_LIBPRIMESIEVE = -O2
+
+OBJECTS = $(OUTDIR)/WheelFactorization.o \
+  $(OUTDIR)/PreSieve.o \
+  $(OUTDIR)/EratSmall.o \
+  $(OUTDIR)/EratMedium.o \
+  $(OUTDIR)/EratBig.o \
+  $(OUTDIR)/SieveOfEratosthenes.o \
+  $(OUTDIR)/PrimeNumberGenerator.o \
+  $(OUTDIR)/PrimeNumberFinder.o \
+  $(OUTDIR)/PrimeSieve.o \
+  $(OUTDIR)/ParallelPrimeSieve.o \
+  $(OUTDIR)/test.o \
+  $(OUTDIR)/main.o
+
+OBJECTS_LIBPRIMESIEVE = $(LIBDIR)/WheelFactorization.o \
+  $(LIBDIR)/PreSieve.o \
+  $(LIBDIR)/EratSmall.o \
+  $(LIBDIR)/EratMedium.o \
+  $(LIBDIR)/EratBig.o \
+  $(LIBDIR)/SieveOfEratosthenes.o \
+  $(LIBDIR)/PrimeNumberGenerator.o \
+  $(LIBDIR)/PrimeNumberFinder.o \
+  $(LIBDIR)/PrimeSieve.o \
+  $(LIBDIR)/ParallelPrimeSieve.o
 
 #-----------------------------------------------------------------------------
 # set CXXFLAGS for various C++ compilers (sunCC, icpc, g++, ...)
@@ -50,7 +75,7 @@ else ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE "GCC|G\+\+"),)
   endif
 
 else
-  REMARK = unkown compiler, add OpenMP flag if supported \(make help\).
+  REMARK = unkown compiler, add OpenMP flag if supported \(edit Makefile\).
 endif
 
 #-----------------------------------------------------------------------------
@@ -60,30 +85,24 @@ endif
 
 ifneq ($(L1_DCACHE_SIZE),)
   CXXFLAGS += -DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
+  CXXFLAGS_LIBPRIMESIEVE += -DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 endif
 ifneq ($(L2_CACHE_SIZE),)
   CXXFLAGS += -DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
+  CXXFLAGS_LIBPRIMESIEVE += -DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
 endif
 
-# create output directory
-ifeq ($(shell [ -d $(OUTDIR) ] && echo exists),)
-  $(shell mkdir $(OUTDIR))
-endif
+#-----------------------------------------------------------------------------
+# build primesieve console application (read INSTALL)
+#-----------------------------------------------------------------------------
 
-all: build remark
+all: create-out-dir build remark
 
-help:
-	@echo                  -----------------------------------------
-	@echo                  ---------- primesieve Makefile ----------
-	@echo                  -----------------------------------------
-	@echo make                                       build primesieve using g++ (DEFAULT)
-	@echo make CXX=my_compiler "CXXFLAGS=options"    specify a custom C++ compiler
-	@echo make L1_DCACHE_SIZE=32 L2_CACHE_SIZE=256   specify L1/L2 cache sizes per core
-	@echo make clean                                 remove binary and object files
-	@echo make help                                  show this help menu
+create-out-dir:
+	mkdir -p $(OUTDIR)
 
-build: $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(BINARY) $(OBJS)
+build: $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $(BINARY) $(OBJECTS)
 
 $(OUTDIR)/%.o: $(SOEDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
@@ -99,3 +118,30 @@ endif
 .PHONY: clean
 clean:
 	rm -f $(BINARY) $(OUTDIR)/*.o
+
+#-----------------------------------------------------------------------------
+# build libprimesieve (static library, read docs/LIBPRIMESIEVE)
+# installation directories: /usr/local/lib, /usr/local/include/soe
+#-----------------------------------------------------------------------------
+
+create-lib-dir:
+	mkdir -p $(LIBDIR)
+
+lib: create-lib-dir $(OBJECTS_LIBPRIMESIEVE)
+	ar rcs $(LIBPRIMESIEVE) $(OBJECTS_LIBPRIMESIEVE)
+
+$(LIBDIR)/%.o: $(SOEDIR)/%.cpp
+	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) -o $@ -c $<
+
+# needs root privileges ($ sudo make install-lib)
+install-lib:
+	cp -f $(LIBPRIMESIEVE) /usr/local/lib
+	mkdir -p /usr/local/include/soe
+	cp -f src/soe/*.h /usr/local/include/soe
+
+# needs root privileges ($ sudo make uninstall-lib)
+uninstall-lib:
+	rm -rf /usr/local/lib/$(LIBPRIMESIEVE) /usr/local/include/soe
+
+clean-lib:
+	rm -f $(LIBPRIMESIEVE) $(LIBDIR)/*.o

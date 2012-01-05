@@ -1,4 +1,4 @@
-January 3, 2012
+January 5, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -6,9 +6,13 @@ I. About
 ========
 
 This file contains various source code examples that show how to use
-PrimeSieve & ParallelPrimeSieve objects. You may also want to have a
-look at ../src/soe/PrimeSieve.h for the API and PrimeSieve.cpp for a
-brief description of each member function.
+PrimeSieve & ParallelPrimeSieve objects. The file docs/LIBPRIMESIEVE
+explains how to build and use the primesieve C++ library on Unix-like
+OSes (Linux, Mac OS X, ...) and on Windows.
+
+Note: You may also want to have a look at ../src/soe/PrimeSieve.h for
+the API and PrimeSieve.cpp for a brief description of each member
+function.
 
 II. Examples
 ============
@@ -26,7 +30,7 @@ II. Examples
 // 1. Generate prime numbers
 //    myPrimes(unsigned int) will be called back for each prime up to 1000
 
-#include "soe/PrimeSieve.h"
+#include <soe/PrimeSieve.h>
 #include <iostream>
 
 void myPrimes(unsigned int prime) {
@@ -43,7 +47,7 @@ int main() {
 // 2. Count prime numbers
 //    Count the primes up to 1000 (single-threaded)
 
-#include "soe/PrimeSieve.h"
+#include <soe/PrimeSieve.h>
 #include <iostream>
 
 int main() {
@@ -58,7 +62,7 @@ int main() {
 // 3. Count prime numbers in parallel
 //    Count the primes up to 10^9 in parallel using 4 threads
 
-#include "soe/ParallelPrimeSieve.h"
+#include <soe/ParallelPrimeSieve.h>
 #include <iostream>
 
 int main() {
@@ -75,7 +79,7 @@ int main() {
 //    Count the twin primes within the interval [10^11, 10^11*2] in
 //    parallel using all available threads
 
-#include "soe/ParallelPrimeSieve.h"
+#include <soe/ParallelPrimeSieve.h>
 #include <iostream>
 #include <stdint.h>
 
@@ -96,7 +100,7 @@ int main() {
 // 5. Print prime triplets
 //    Print the prime triplets up to 10^8 to std::cout
 
-#include "soe/PrimeSieve.h"
+#include <soe/PrimeSieve.h>
 
 int main() {
   PrimeSieve ps;
@@ -114,7 +118,7 @@ int main() {
 //    sieving < 10^14 and a sieve size of the CPU's L2 cache size
 //    (e.g. 512 KB) above
 
-#include "soe/ParallelPrimeSieve.h"
+#include <soe/ParallelPrimeSieve.h>
 #include <iostream>
 #include <stdint.h>
 
@@ -138,7 +142,7 @@ int main() {
 //    MyClass::generatePrimes(unsigned int x) generates the primes
 //    up to x and stores them into the private primes_ vector
 
-#include "soe/PrimeSieve.h"
+#include <soe/PrimeSieve.h>
 #include <vector>
 
 class MyClass {
@@ -160,7 +164,7 @@ private:
 //    sieving if 'candidate' is not a prime by throwing a
 //    cancel_sieving exception (PrimeSieve is exception safe)
 
-#include "soe/PrimeSieve.h"
+#include <soe/PrimeSieve.h>
 #include <iostream>
 #include <cstdlib>
 #include <cmath>

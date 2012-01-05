@@ -1,0 +1,121 @@
+January, 5 2012
+Kim Walisch, <kim.walisch@gmail.com>
+http://primesieve.googlecode.com
+
+Contents
+========
+
+  1. About the primesieve library
+  2. Build libprimesieve    (Unix-like OSes)
+  3. Usage example          (Unix-like OSes)
+  4. OpenMP multi-threading (Unix-like OSes)
+  5. Makefile options       (Unix-like OSes)
+  6. Build primesieve.lib   (Windows, MSVC++)
+  7. Usage example          (Windows, MSVC++)
+  8. OpenMP multi-threading (Windows, MSVC++)
+  9. sum_primes.cpp
+
+1. About the primesieve library
+===============================
+
+  The easiest way to use primesieve in your C++ program is to build
+  the static primesieve library and link it into your application,
+  this causes no dependencies. For Unix-like operating systems (Linux,
+  Mac OS X, ...) read sections 2 to 5, for Windows and MSVC++ read
+  sections 6 to 8.
+
+  The file docs/USAGE_EXAMPLES contains commented source code examples
+  that show how to use PrimeSieve objects e.g. for prime number
+  generation.
+
+2. Build libprimesieve (Unix-like OSes)
+=======================================
+
+  Open a terminal, cd into the primesieve source code directory and
+  run:
+
+  $ make lib
+  $ sudo make install-lib
+
+  The first command builds lib/libprimesieve.a, the second command
+  copies the library to /usr/local and the primesieve header files to
+  /usr/local/include/soe.
+
+  Note: by default libprimesieve is built using g++, you can specify a
+  custom C++ compiler using `make lib CXX=my_compiler`.
+
+3. Usage example (Unix-like OSes)
+=================================
+
+  The sum_primes.cpp program (see section 9.) can now be compiled by
+  specifying libprimsieve (-lprimesieve flag) at the end of the linker
+  command:
+
+  $ g++ sum_primes.cpp -lprimesieve
+
+4. OpenMP multi-threading (Unix-like OSes)
+==========================================
+
+  By default libprimesieve is single-threaded, if you want to use
+  multi-threaded ParallelPrimeSieve objects then you have to build
+  libprimesieve using OpenMP and you must also add the OpenMP flag in
+  the linker step of your program e.g.:
+
+  $ make lib "CXXFLAGS_LIBPRIMESIEVE=-O2 -fopenmp"
+  $ sudo make install-lib
+  $ g++ my_program.cpp -lprimesieve -fopenmp
+
+5. Makefile options (Unix-like OSes)
+====================================
+
+  make lib                                                    ;Builds libprimesieve using g++ (DEFAULT)
+  make lib CXX=my_compiler "CXXFLAGS_LIBPRIMESIEVE=options"   ;Builds libprimesieve using custom C++ compiler
+  make clean-lib                                              ;Cleans the lib directory
+  sudo make install-lib                                       ;Installs libprimesieve and header files
+  sudo make uninstall-lib                                     ;Completely removes libprimesieve from the system
+
+6. Build primesieve.lib (Windows, MSVC++)
+=========================================
+
+  Open a Visual Studio Command Prompt, cd into the primesieve source
+  code directory and run:
+
+  > nmake -f Makefile.msvc lib
+
+  This command builds the primesieve C++ library to
+  lib\primesieve.lib.
+
+7. Usage example (Windows, MSVC++)
+==================================
+
+  The sum_primes.cpp program (see section 9.) can now be compiled by
+  specifying primsieve.lib at the /link option:
+
+  > cl /O2 /EHsc /I"path-to-primesieve\src" sum_primes.cpp /link "path-to-primesieve\lib\primsieve.lib"
+
+8. OpenMP multi-threading (Windows, MSVC++)
+==========================================
+
+  By default primesieve.lib is single-threaded, if you want to use
+  multi-threaded ParallelPrimeSieve objects then you have to build
+  primesieve.lib using OpenMP:
+
+  > nmake -f Makefile.msvc lib "CXXFLAGS_LIBPRIMESIEVE=/O2 /openmp /EHsc"
+
+9. sum_primes.cpp
+=================
+
+  #include <soe/PrimeSieve.h>
+  #include <iostream>
+
+  unsigned int sum = 0;
+  void sumPrimes(unsigned int prime) {
+    sum += prime;
+  }
+
+  int main() {
+    PrimeSieve ps;
+    ps.generatePrimes(2, 1000, sumPrimes);
+    std::cout << "Sum of the primes below 1000 = " << sum << std::endl;
+    return 0;
+  }
