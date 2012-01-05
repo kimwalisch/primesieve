@@ -6,7 +6,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   5 January 2012
+# Last modified:   6 January 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -20,31 +20,6 @@ OUTDIR = out
 LIBDIR = lib
 BINARY = $(OUTDIR)\primesieve.exe
 LIBPRIMESIEVE = $(LIBDIR)\primesieve.lib
-
-# == Useful compiler options ==
-# /FAs      Generate ASM files (*.asm) with comments
-# /Gy       Enable Function-Level Linking, may reduce the file size
-# /fp:fast  Fast floating-point model, reduces the file size
-
-# Define C++ compiler & options
-CXX = cl
-LINK = link
-LFLAGS = /OPT:REF,ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
-CXXFLAGS = /W3 /O2 /openmp /GL /EHsc \
-!ifdef L1_DCACHE_SIZE
-  /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE) \
-!endif
-!ifdef L2_CACHE_SIZE
-  /DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
-!endif
-
-CXXFLAGS_LIBPRIMESIEVE = /W3 /O2 /EHsc \
-!ifdef L1_DCACHE_SIZE
-  /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE) \
-!endif
-!ifdef L2_CACHE_SIZE
-  /DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
-!endif
 
 # Inculde stdint.h (needed prior MSVC 2010)
 INCPATH  = -I"src/thirdparty"
@@ -73,6 +48,31 @@ OBJECTS_LIBPRIMESIEVE = $(LIBDIR)\WheelFactorization.obj \
   $(LIBDIR)\PrimeSieve.obj \
   $(LIBDIR)\ParallelPrimeSieve.obj
 
+# == Useful compiler options ==
+# /FAs      Generate ASM files (*.asm) with comments
+# /Gy       Enable Function-Level Linking, may reduce the file size
+# /fp:fast  Fast floating-point model, reduces the file size
+
+# Define C++ compiler & options
+CXX = cl
+LINK = link
+LFLAGS = /OPT:REF,ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
+CXXFLAGS = /W4 /O2 /openmp /GL /EHsc \
+!ifdef L1_DCACHE_SIZE
+  /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE) \
+!endif
+!ifdef L2_CACHE_SIZE
+  /DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
+!endif
+
+CXXFLAGS_LIBPRIMESIEVE = /W3 /O2 /EHsc \
+!ifdef L1_DCACHE_SIZE
+  /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE) \
+!endif
+!ifdef L2_CACHE_SIZE
+  /DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
+!endif
+
 #-----------------------------------------------------------------------------
 # build primesieve console application (read INSTALL)
 #-----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ build: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(INCPATH) -c $< /Fo$@
 
 clean:
-	del /Q $(BINARY) $(OUTDIR)\*.obj
+	del /Q $(BINARY) $(OUTDIR)\*.obj $(OUTDIR)\*.manifest
 
 #-----------------------------------------------------------------------------
 # build primesieve.lib (static library, read docs/LIBPRIMESIEVE)
