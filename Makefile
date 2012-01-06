@@ -44,7 +44,7 @@ OBJECTS_LIBPRIMESIEVE = $(LIBDIR)/WheelFactorization.o \
 
 #-----------------------------------------------------------------------------
 # check if the user indicated his CPU's L1/L2 cache sizes per core
-# e.g. make L1_DCACHE_SIZE=32 L2_CACHE_SIZE=256
+# e.g. `make L1_DCACHE_SIZE=32 L2_CACHE_SIZE=256`
 #-----------------------------------------------------------------------------
 
 ifneq ($(L1_DCACHE_SIZE),)
@@ -55,12 +55,12 @@ ifneq ($(L2_CACHE_SIZE),)
 endif
 
 #-----------------------------------------------------------------------------
-# build primesieve console application (read INSTALL)
+# build the primesieve console application (read INSTALL)
 #-----------------------------------------------------------------------------
 
-.PHONY: all dir_bin
+.PHONY: bin dir_bin
 
-all: dir_bin $(OBJECTS)
+bin: dir_bin $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(BINARY) $(OBJECTS)
 
 $(BINDIR)/%.o: $(SOEDIR)/%.cpp
@@ -70,38 +70,47 @@ $(BINDIR)/%.o: $(CONDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 dir_bin:
-	mkdir -p $(BINDIR)
+	@mkdir -p $(BINDIR)
 
 #-----------------------------------------------------------------------------
-# build libprimesieve (static library, read ./docs/LIBPRIMESIEVE)
+# build the libprimesieve library (read ./docs/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-.PHONY: lib set_cxxflags dir_lib
+CXXFLAGS_LIBPRIMESIEVE = -Wall -O2 -fopenmp
+ifeq ($(CXXFLAGS),$(CXXFLAGS_LIBPRIMESIEVE))
+  # these are the default compiler flags for libprimesieve
+  CXXFLAGS_LIBPRIMESIEVE = -Wall -O2
+endif
 
-lib: set_cxxflags dir_lib $(OBJECTS_LIBPRIMESIEVE)
+.PHONY: lib dir_lib
+
+lib: dir_lib $(OBJECTS_LIBPRIMESIEVE)
 	ar rcs $(LIBDIR)/$(LIBPRIMESIEVE) $(OBJECTS_LIBPRIMESIEVE)
 
 $(LIBDIR)/%.o: $(SOEDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -o $@ -c $<
-
-# by default libprimesieve is built without OpenMP
-set_cxxflags:
-DEFAULT = -Wall -O2 -fopenmp
-ifeq ($(CXXFLAGS),$(DEFAULT))
-CXXFLAGS = -Wall -O2
-endif
+	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) -o $@ -c $<
 
 dir_lib:
-	mkdir -p $(LIBDIR)
+	@mkdir -p $(LIBDIR)
 
 #-----------------------------------------------------------------------------
-# primesieve & libprimesieve installation
-# copies to directories: /usr/bin, /usr/lib, /usr/include/soe
+# Common primesieve & libprimesieve targets
 #-----------------------------------------------------------------------------
 
-.PHONY: install uninstall clean
+.PHONY: all clean install uninstall
+
+all: bin lib
+
+clean:
+ifneq ($(shell [ -d $(BINDIR) ] && echo exists),)
+	rm -f $(BINDIR)/$(BINARY) $(BINDIR)/*.o
+endif
+ifneq ($(shell [ -d $(LIBDIR) ] && echo exists),)
+	rm -f $(LIBDIR)/$(LIBPRIMESIEVE) $(LIBDIR)/*.o
+endif
 
 # needs root privileges (sudo make install)
+# installation directories: /usr/bin, /usr/lib, /usr/include/soe
 install:
 ifneq ($(shell [ -f $(BINDIR)/$(BINARY) ] && echo exists),)
 	cp -f $(BINDIR)/$(BINARY) /usr/bin
@@ -124,16 +133,18 @@ ifneq ($(shell [ -d /usr/include/soe ] && echo exists),)
 	rm -rf /usr/include/soe
 endif
 
-clean:
-ifneq ($(shell [ -d $(BINDIR) ] && echo exists),)
-	rm -f $(BINDIR)/$(BINARY) $(BINDIR)/*.o
-endif
-ifneq ($(shell [ -d $(LIBDIR) ] && echo exists),)
-	rm -f $(LIBDIR)/$(LIBPRIMESIEVE) $(LIBDIR)/*.o
-endif
+#-----------------------------------------------------------------------------
+# `make check` runs various sieving tests to assure that the compiled
+# primesieve binary produces correct results
+#-----------------------------------------------------------------------------
+
+.PHONY: check test
+
+check test: bin
+	$(BINDIR)/./$(BINARY) -test
 
 #-----------------------------------------------------------------------------
-# help menu (make help)
+# Makefile help menu
 #-----------------------------------------------------------------------------
 
 .PHONY: help
@@ -144,6 +155,7 @@ help:
 	@echo -----------------------------------------------------------
 	@echo "make                                      Builds the primesieve console application using g++ (DEFAULT)"
 	@echo "make lib                                  Builds the primesieve C++ library (read docs/LIBPRIMESIEVE)"
+	@echo "make check                                Tests the compiled primesieve binary"
 	@echo "sudo make install                         Installs primesieve and libprimesieve (to /usr/bin, /usr/lib)"
 	@echo "sudo make uninstall                       Completely removes primesieve and libprimesieve"
 	@echo "make clean                                Cleans the output directories (./bin, ./lib)"
