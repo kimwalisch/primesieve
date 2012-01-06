@@ -55,7 +55,7 @@ V. Compiler benchmark
   Fedora 16 x86_64 and Windows 7 64-bit. Best time in seconds to sieve
   (single-threaded) an interval of size 1E10 starting at 1E18:
 
-  $ ./primesieve-3.1 1E18 -o1E10 -t1
+  $ ./primesieve-3.3 1E18 -o1E10 -t1
 
   Compiler                    Optimization flags   OS        Time/s   Perf.
   -------------------------------------------------------------------------
