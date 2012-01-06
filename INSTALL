@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 5 January 2012
+# Last modified: 6 January 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -25,19 +25,19 @@ II. How to build primesieve
   following make commands to build primesieve with your favorite C++
   compiler:
 
-  > nmake -f Makefile.msvc       Microsoft Visual C++
-  $ make                         GNU g++
-  $ make CXX=my_compiler         Other C++ compilers
+  > nmake -f Makefile.msvc                 Microsoft Visual C++
+  $ make                                   GNU g++
+  $ make CXX=compiler CXXFLAGS="options"   Other C++ compilers
 
 III. How to test it
 ===================
 
-  > out\primesieve 2 10000       Counts the primes up to 10000
-  > out\primesieve 2 1E6 -p1     Prints the primes up to 10^6
-  > out\primesieve -help         Prints the help menu
-  > out\primesieve -test         Runs various sieving tests
+  > bin\primesieve 2 10000       Counts the primes up to 10000
+  > bin\primesieve 2 1E6 -p1     Prints the primes up to 10^6
+  > bin\primesieve -help         Prints the help menu
+  > bin\primesieve -test         Runs various sieving tests
 
-  NOTE: for Unix-like operating systems use out/./primesieve
+  Note: for Unix-like operating systems use bin/./primesieve
 
 IV. Target a specific CPU
 =========================
