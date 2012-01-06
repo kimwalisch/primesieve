@@ -76,8 +76,11 @@ dir_bin:
 # build the libprimesieve library (read ./docs/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
+# default CXXFLAGS flags
 CXXFLAGS_LIBPRIMESIEVE = -Wall -O2 -fopenmp
-ifeq ($(CXXFLAGS),$(CXXFLAGS_LIBPRIMESIEVE))
+ifneq ($(CXXFLAGS_LIBPRIMESIEVE),$(CXXFLAGS))
+  CXXFLAGS_LIBPRIMESIEVE = $(CXXFLAGS)
+else
   # these are the default compiler flags for libprimesieve
   CXXFLAGS_LIBPRIMESIEVE = -Wall -O2
 endif
