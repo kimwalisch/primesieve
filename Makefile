@@ -62,9 +62,6 @@ endif
 
 all: dir_bin $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(BINARY) $(OBJECTS)
-ifneq ($(REMARK),)
-	@echo Remark: $(REMARK)
-endif
 
 $(BINDIR)/%.o: $(SOEDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
