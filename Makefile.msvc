@@ -11,17 +11,17 @@
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
 
+CXX           = cl /nologo
+CXXFLAGS      = /W2 /O2 /GL /openmp /EHsc
+LINK          = link
+LFLAGS        = /OPT:REF,ICF /LTCG
+INCPATH       = /I"src\thirdparty"
 SOEDIR        = src\soe
 CONDIR        = src\console
 BINDIR        = bin
 LIBDIR        = lib
 BINARY        = primesieve.exe
 LIBPRIMESIEVE = primesieve.lib
-CXX           = cl /nologo
-CXXFLAGS      = /W2 /O2 /GL /openmp /EHsc
-LINK          = link
-LFLAGS        = /OPT:REF,ICF /LTCG /MANIFEST /MANIFESTFILE:$(BINDIR)\primesieve.exe.manifest
-INCPATH       = /I"src\thirdparty"
 
 OBJECTS = $(BINDIR)\WheelFactorization.obj \
   $(BINDIR)\PreSieve.obj \
@@ -77,7 +77,7 @@ dir_bin:
 
 CXXFLAGS_LIBPRIMESIEVE = /W2 /O2 /GL /openmp /EHsc
 !IF "$(CXXFLAGS_LIBPRIMESIEVE)" == "$(CXXFLAGS)"
-# default flags for primesieve.lib (no OpenMP multi-threading)
+# default flags for primesieve.lib (single-threaded, no OpenMP)
 CXXFLAGS_LIBPRIMESIEVE = /W2 /O2 /EHsc
 !ELSE
 # use the user's custom CXXFLAGS
@@ -101,7 +101,7 @@ all: bin lib
 
 clean:
 !IF EXIST($(BINDIR))
-	del /Q $(BINDIR)\$(BINARY) $(BINDIR)\*.obj $(BINDIR)\*.manifest
+	del /Q $(BINDIR)\$(BINARY) $(BINDIR)\*.obj
 !ENDIF
 !IF EXIST($(LIBDIR))
 	del /Q $(LIBDIR)\$(LIBPRIMESIEVE) $(LIBDIR)\*.obj
