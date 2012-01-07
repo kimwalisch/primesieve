@@ -1,8 +1,6 @@
 ######################################################################
 # Microsoft Visual C++ Makefile for the primesieve console 
 # application and the primesieve C++ library
-#
-# Usage: nmake -f Makefile.msvc
 # 
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
@@ -109,8 +107,8 @@ clean:
 !ENDIF
 
 #-----------------------------------------------------------------------------
-# `nmake -f Makefile check` runs various sieving tests to assure that the
-# compiled primesieve binary produces correct results
+# `nmake -f Makefile.msvc check` runs various sieving tests to assure that
+# the compiled primesieve binary produces correct results
 #-----------------------------------------------------------------------------
 
 check test: bin
