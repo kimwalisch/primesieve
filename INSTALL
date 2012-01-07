@@ -33,12 +33,13 @@ II. How to build primesieve
 III. How to test it
 ===================
 
-  > bin\primesieve 2 10000       Counts the primes up to 10000
-  > bin\primesieve 2 1E6 -p1     Prints the primes up to 10^6
-  > bin\primesieve -help         Prints the help menu
-  > bin\primesieve -test         Runs various sieving tests
+  > cd bin
+  > primesieve 2 10000       Counts the primes up to 10000
+  > primesieve 2 1E6 -p1     Prints the primes up to 10^6
+  > primesieve -help         Prints the help menu
+  > primesieve -test         Runs various sieving tests
 
-  Note: for Unix-like operating systems use bin/./primesieve
+  Note: for Unix-like operating systems use ./primesieve
 
 IV. Target a specific CPU
 =========================
