@@ -80,7 +80,8 @@ Contents
 ==================================
 
   The sum_primes.cpp program (see section 8.) can now be compiled by
-  specifying primsieve.lib at the /link option:
+  specifying the path to the primesieve header files (/I) to the
+  compiler and by adding primsieve.lib to the linker:
 
   > cl /O2 /EHsc /I"path-to-primesieve\src" sum_primes.cpp /link "path-to-primesieve\lib\primsieve.lib"
 
