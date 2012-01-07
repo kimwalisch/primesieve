@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 6 January 2012
+# Last modified: 7 January 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -57,7 +57,7 @@ V. Compiler benchmark
   Fedora 16 x86_64 and Windows 7 64-bit. Best time in seconds to sieve
   (single-threaded) an interval of size 1E10 starting at 1E18:
 
-  $ ./primesieve-3.3 1E18 -o1E10 -t1
+  $ ./primesieve 1E18 -o1E10 -t1
 
   Compiler                    Optimization flags   OS        Time/s   Perf.
   -------------------------------------------------------------------------
