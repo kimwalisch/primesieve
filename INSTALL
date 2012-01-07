@@ -28,7 +28,6 @@ II. How to build primesieve
   > nmake -f Makefile.msvc                 Microsoft Visual C++
   $ make                                   GNU g++
   $ make CXX=compiler CXXFLAGS="options"   Other C++ compilers
-  $ make help                              Prints all Makefile options
 
 III. How to test it
 ===================
