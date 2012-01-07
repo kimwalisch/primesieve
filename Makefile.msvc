@@ -1,5 +1,6 @@
 ######################################################################
-# Microsoft Visual C++ Makefile for primesieve (console version)
+# Microsoft Visual C++ Makefile for the primesieve console 
+# application and the primesieve C++ library
 #
 # Usage: nmake -f Makefile.msvc
 # 
@@ -106,3 +107,11 @@ clean:
 !IF EXIST($(LIBDIR))
 	del /Q $(LIBDIR)\$(LIBPRIMESIEVE) $(LIBDIR)\*.obj
 !ENDIF
+
+#-----------------------------------------------------------------------------
+# `nmake -f Makefile check` runs various sieving tests to assure that the
+# compiled primesieve binary produces correct results
+#-----------------------------------------------------------------------------
+
+check test: bin
+	$(BINDIR)\$(BINARY) -test
