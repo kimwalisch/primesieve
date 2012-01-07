@@ -43,8 +43,8 @@ III. How to test it
 IV. Target a specific CPU
 =========================
 
-  You can indicate your CPU's L1 (data) cache and L2 cache sizes per
-  core to get the best performance e.g.:
+  You can indicate your CPU's L1 data cache and L2 cache sizes (in
+  kilobytes) per core to get the best performance e.g.:
 
   $ make L1_DCACHE_SIZE=64 L2_CACHE_SIZE=512
 
