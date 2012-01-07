@@ -1,4 +1,4 @@
-January, 6 2012
+January, 7 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -36,12 +36,13 @@ Contents
   $ make lib
   $ sudo make install
 
-  The first command builds lib/libprimesieve.a, the second command
-  copies the library to /usr/lib and the primesieve header files to
-  /usr/include/soe.
+  The first command builds lib/libprimesieve.a using g++, the second
+  command copies the library to /usr/lib and the primesieve header
+  files to /usr/include/soe.
 
-  Note: by default libprimesieve is built using g++, you can specify a
-  custom C++ compiler using `make lib CXX=my_compiler`.
+  To build libprimesieve using a custom C++ compiler use:
+
+  $ make lib CXX=compiler CXXFLAGS="options"
 
 3. Usage example (Unix-like OSes)
 =================================
