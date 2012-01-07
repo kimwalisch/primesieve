@@ -56,10 +56,10 @@ Contents
 4. OpenMP multi-threading (Unix-like OSes)
 ==========================================
 
-  By default libprimesieve is single-threaded, if you want to use
-  multi-threaded ParallelPrimeSieve objects then you have to build
-  libprimesieve using OpenMP and you must also add the OpenMP flag in
-  the linker step of your program e.g.:
+  By default libprimesieve is built single-threaded, if you want to
+  use multi-threaded ParallelPrimeSieve objects then you have to
+  compile libprimesieve using OpenMP and you must also add the OpenMP
+  flag in the linker step of your program e.g.:
 
   $ make lib CXXFLAGS="-O2 -fopenmp"
   $ sudo make install
@@ -87,9 +87,9 @@ Contents
 7. OpenMP multi-threading (Windows, MSVC++)
 ==========================================
 
-  By default primesieve.lib is single-threaded, if you want to use
-  multi-threaded ParallelPrimeSieve objects then you have to build
-  primesieve.lib using OpenMP:
+  By default primesieve.lib is built single-threaded, if you want to
+  use multi-threaded ParallelPrimeSieve objects then you have to
+  compile primesieve.lib using OpenMP:
 
   > nmake -f Makefile.msvc lib CXXFLAGS="/O2 /openmp /EHsc"
 
