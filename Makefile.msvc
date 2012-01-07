@@ -6,58 +6,28 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   6 January 2012
+# Last modified:   7 January 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
 
-# Ignore all error return codes
-.IGNORE:
-
-SOEDIR = src/soe
-CONDIR = src/console
-OUTDIR = out
-LIBDIR = lib
-BINARY = $(OUTDIR)\primesieve.exe
-LIBPRIMESIEVE = $(LIBDIR)\primesieve.lib
-
-# Inculde stdint.h (needed prior MSVC 2010)
-INCPATH  = -I"src/thirdparty"
-
-OBJECTS = $(OUTDIR)\WheelFactorization.obj \
-  $(OUTDIR)\PreSieve.obj \
-  $(OUTDIR)\EratSmall.obj \
-  $(OUTDIR)\EratMedium.obj \
-  $(OUTDIR)\EratBig.obj \
-  $(OUTDIR)\SieveOfEratosthenes.obj \
-  $(OUTDIR)\PrimeNumberGenerator.obj \
-  $(OUTDIR)\PrimeNumberFinder.obj \
-  $(OUTDIR)\PrimeSieve.obj \
-  $(OUTDIR)\ParallelPrimeSieve.obj \
-  $(OUTDIR)\test.obj \
-  $(OUTDIR)\main.obj
-
-OBJECTS_LIBPRIMESIEVE = $(LIBDIR)\WheelFactorization.obj \
-  $(LIBDIR)\PreSieve.obj \
-  $(LIBDIR)\EratSmall.obj \
-  $(LIBDIR)\EratMedium.obj \
-  $(LIBDIR)\EratBig.obj \
-  $(LIBDIR)\SieveOfEratosthenes.obj \
-  $(LIBDIR)\PrimeNumberGenerator.obj \
-  $(LIBDIR)\PrimeNumberFinder.obj \
-  $(LIBDIR)\PrimeSieve.obj \
-  $(LIBDIR)\ParallelPrimeSieve.obj
+SOEDIR        = src\soe
+CONDIR        = src\console
+BINDIR        = bin
+LIBDIR        = lib
+BINARY        = primesieve.exe
+LIBPRIMESIEVE = primesieve.lib
+CXX           = cl.exe /nologo
+LINK          = link.exe
+LFLAGS        = /OPT:REF,ICF /LTCG /MANIFEST /MANIFESTFILE:$(BINDIR)\primesieve.exe.manifest
+INCPATH       = -I"src/thirdparty"
 
 # == Useful compiler options ==
 # /FAs      Generate ASM files (*.asm) with comments
 # /Gy       Enable Function-Level Linking, may reduce the file size
 # /fp:fast  Fast floating-point model, reduces the file size
 
-# Define C++ compiler & options
-CXX = cl
-LINK = link
-LFLAGS = /OPT:REF,ICF /LTCG /MANIFEST /MANIFESTFILE:"out\primesieve.exe.manifest"
-CXXFLAGS = /W4 /O2 /openmp /GL /EHsc \
+CXXFLAGS = /W3 /O2 /openmp /GL /EHsc \
 !ifdef L1_DCACHE_SIZE
   /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE) \
 !endif
@@ -73,45 +43,66 @@ CXXFLAGS_LIBPRIMESIEVE = /W3 /O2 /EHsc \
   /DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
 !endif
 
+OBJECTS = $(BINDIR)\WheelFactorization.obj \
+  $(BINDIR)\PreSieve.obj \
+  $(BINDIR)\EratSmall.obj \
+  $(BINDIR)\EratMedium.obj \
+  $(BINDIR)\EratBig.obj \
+  $(BINDIR)\SieveOfEratosthenes.obj \
+  $(BINDIR)\PrimeNumberGenerator.obj \
+  $(BINDIR)\PrimeNumberFinder.obj \
+  $(BINDIR)\PrimeSieve.obj \
+  $(BINDIR)\ParallelPrimeSieve.obj \
+  $(BINDIR)\test.obj \
+  $(BINDIR)\main.obj
+
+OBJECTS_LIBPRIMESIEVE = $(LIBDIR)\WheelFactorization.obj \
+  $(LIBDIR)\PreSieve.obj \
+  $(LIBDIR)\EratSmall.obj \
+  $(LIBDIR)\EratMedium.obj \
+  $(LIBDIR)\EratBig.obj \
+  $(LIBDIR)\SieveOfEratosthenes.obj \
+  $(LIBDIR)\PrimeNumberGenerator.obj \
+  $(LIBDIR)\PrimeNumberFinder.obj \
+  $(LIBDIR)\PrimeSieve.obj \
+  $(LIBDIR)\ParallelPrimeSieve.obj
+
 #-----------------------------------------------------------------------------
-# build primesieve console application (read INSTALL)
+# build the primesieve console application (read INSTALL)
 #-----------------------------------------------------------------------------
 
-all: create-out-dir build
+bin: dir_bin $(OBJECTS)
+	$(LINK) $(LFLAGS) /OUT:$(BINDIR)\$(BINARY) $(OBJECTS)
 
-create-out-dir:
-!if !EXISTS($(OUTDIR))
-  mkdir $(OUTDIR)
-!endif
+$(OBJECTS): {$(SOEDIR)\;$(CONDIR)\}$$(@B).cpp
+	$(CXX) $(CXXFLAGS) $(INCPATH) -c $? /Fo$@
 
-build: $(OBJECTS)
-	$(LINK) $(LFLAGS) /OUT:$(BINARY) $(OBJECTS)
+dir_bin:
+	@if not exist $(BINDIR) mkdir $(BINDIR)
 
-{$(SOEDIR)\}.cpp.obj:
-	$(CXX) $(CXXFLAGS) $(INCPATH) -c $< /Fo$@
+#-----------------------------------------------------------------------------
+# build the primesieve C++ library (read docs/LIBPRIMESIEVE)
+#-----------------------------------------------------------------------------
 
-{$(CONDIR)\}.cpp.obj:
-	$(CXX) $(CXXFLAGS) $(INCPATH) -c $< /Fo$@
+lib: dir_lib $(OBJECTS_LIBPRIMESIEVE)
+	lib.exe /OUT:$(LIBDIR)\$(LIBPRIMESIEVE) $(OBJECTS_LIBPRIMESIEVE)
+
+$(OBJECTS_LIBPRIMESIEVE): $(SOEDIR)\$$(@B).cpp
+	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) $(INCPATH) -c $? /Fo$@
+
+dir_lib:
+	@if not exist $(LIBDIR) mkdir $(LIBDIR)
+
+#-----------------------------------------------------------------------------
+# Common targets
+#-----------------------------------------------------------------------------
+
+all: bin lib
 
 clean:
-	del /Q $(BINARY) $(OUTDIR)\*.obj $(OUTDIR)\*.manifest
-
-#-----------------------------------------------------------------------------
-# build primesieve.lib (static library, read docs/LIBPRIMESIEVE)
-#-----------------------------------------------------------------------------
-
-lib: create-lib-dir build-lib
-
-create-lib-dir:
-!if !EXISTS($(LIBDIR))
-  mkdir $(LIBDIR)
-!endif
-
-build-lib: $(OBJECTS_LIBPRIMESIEVE)
-	lib.exe /OUT:$(LIBPRIMESIEVE) $(OBJECTS_LIBPRIMESIEVE)
-
-{$(SOEDIR)\}.cpp.obj:
-	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) $(INCPATH) -c $< /Fo$@
-
-clean-lib:
-	del /Q $(LIBPRIMESIEVE) $(LIBDIR)\*.obj
+!IF EXIST($(BINDIR))
+	del $(BINDIR)\$(BINARY) $(BINDIR)\*.obj $(BINDIR)\*.manifest
+!ENDIF
+!IF EXIST($(LIBDIR))
+	del $(LIBDIR)\$(LIBPRIMESIEVE) $(LIBDIR)\*.obj
+!ENDIF
