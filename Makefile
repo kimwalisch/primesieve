@@ -1,22 +1,23 @@
 ##############################################################################
-# Makefile for primesieve (console app) and libprimesieve
+# Makefile for the primesieve console application (read INSTALL) and the
+# primesieve C++ library (read docs/LIBPRIMESIEVE)
 #
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   6 January 2012
+# Last modified:   7 January 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
-SOEDIR = ./src/soe
-CONDIR = ./src/console
-BINDIR = ./bin
-LIBDIR = ./lib
-BINARY = primesieve
-LIBPRIMESIEVE = libprimesieve.a
 CXX = g++
 CXXFLAGS = -Wall -O2 -fopenmp
+BINARY = primesieve
+LIBPRIMESIEVE = libprimesieve.a
+SOEDIR = src/soe
+CONDIR = src/console
+BINDIR = bin
+LIBDIR = lib
 
 OBJECTS = $(BINDIR)/WheelFactorization.o \
   $(BINDIR)/PreSieve.o \
@@ -48,10 +49,10 @@ OBJECTS_LIBPRIMESIEVE = $(LIBDIR)/WheelFactorization.o \
 #-----------------------------------------------------------------------------
 
 ifneq ($(L1_DCACHE_SIZE),)
-  CXXFLAGS += -DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
+  CPU_CACHE_SIZES += -DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 endif
 ifneq ($(L2_CACHE_SIZE),)
-  CXXFLAGS += -DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
+  CPU_CACHE_SIZES += -DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
 endif
 
 #-----------------------------------------------------------------------------
@@ -61,13 +62,13 @@ endif
 .PHONY: bin dir_bin
 
 bin: dir_bin $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(BINARY) $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZES) -o $(BINDIR)/$(BINARY) $(OBJECTS)
 
 $(BINDIR)/%.o: $(SOEDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZES) -o $@ -c $<
 
 $(BINDIR)/%.o: $(CONDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZES) -o $@ -c $<
 
 dir_bin:
 	@mkdir -p $(BINDIR)
@@ -76,13 +77,13 @@ dir_bin:
 # build the libprimesieve library (read ./docs/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-# default CXXFLAGS flags
 CXXFLAGS_LIBPRIMESIEVE = -Wall -O2 -fopenmp
-ifneq ($(CXXFLAGS_LIBPRIMESIEVE),$(CXXFLAGS))
-  CXXFLAGS_LIBPRIMESIEVE = $(CXXFLAGS)
-else
-  # these are the default compiler flags for libprimesieve
+ifeq ($(CXXFLAGS_LIBPRIMESIEVE),$(CXXFLAGS))
+  # default flags for libprimesieve (single-threaded, no OpenMP)
   CXXFLAGS_LIBPRIMESIEVE = -Wall -O2
+else
+  # use the user's custom CXXFLAGS
+  CXXFLAGS_LIBPRIMESIEVE = $(CXXFLAGS)
 endif
 
 .PHONY: lib dir_lib
@@ -91,7 +92,7 @@ lib: dir_lib $(OBJECTS_LIBPRIMESIEVE)
 	ar rcs $(LIBDIR)/$(LIBPRIMESIEVE) $(OBJECTS_LIBPRIMESIEVE)
 
 $(LIBDIR)/%.o: $(SOEDIR)/%.cpp
-	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) -o $@ -c $<
+	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) $(CPU_CACHE_SIZES) -o $@ -c $<
 
 dir_lib:
 	@mkdir -p $(LIBDIR)
