@@ -17,31 +17,11 @@ BINDIR        = bin
 LIBDIR        = lib
 BINARY        = primesieve.exe
 LIBPRIMESIEVE = primesieve.lib
-CXX           = cl.exe /nologo
-LINK          = link.exe
+CXX           = cl /nologo
+CXXFLAGS      = /W2 /O2 /GL /openmp /EHsc
+LINK          = link
 LFLAGS        = /OPT:REF,ICF /LTCG /MANIFEST /MANIFESTFILE:$(BINDIR)\primesieve.exe.manifest
-INCPATH       = -I"src/thirdparty"
-
-# == Useful compiler options ==
-# /FAs      Generate ASM files (*.asm) with comments
-# /Gy       Enable Function-Level Linking, may reduce the file size
-# /fp:fast  Fast floating-point model, reduces the file size
-
-CXXFLAGS = /W3 /O2 /openmp /GL /EHsc \
-!ifdef L1_DCACHE_SIZE
-  /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE) \
-!endif
-!ifdef L2_CACHE_SIZE
-  /DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
-!endif
-
-CXXFLAGS_LIBPRIMESIEVE = /W3 /O2 /EHsc \
-!ifdef L1_DCACHE_SIZE
-  /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE) \
-!endif
-!ifdef L2_CACHE_SIZE
-  /DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
-!endif
+INCPATH       = /I"src\thirdparty"
 
 OBJECTS = $(BINDIR)\WheelFactorization.obj \
   $(BINDIR)\PreSieve.obj \
@@ -68,6 +48,17 @@ OBJECTS_LIBPRIMESIEVE = $(LIBDIR)\WheelFactorization.obj \
   $(LIBDIR)\ParallelPrimeSieve.obj
 
 #-----------------------------------------------------------------------------
+# check if the user indicated his CPU's L1/L2 cache sizes (read INSTALL)
+#-----------------------------------------------------------------------------
+
+!IFDEF L1_DCACHE_SIZE
+CPU_CACHE_SIZES = /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
+!ENDIF
+!IFDEF L2_CACHE_SIZE
+CPU_CACHE_SIZES = $(CPU_CACHE_SIZES) /DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
+!ENDIF
+
+#-----------------------------------------------------------------------------
 # build the primesieve console application (read INSTALL)
 #-----------------------------------------------------------------------------
 
@@ -75,7 +66,7 @@ bin: dir_bin $(OBJECTS)
 	$(LINK) $(LFLAGS) /OUT:$(BINDIR)\$(BINARY) $(OBJECTS)
 
 $(OBJECTS): {$(SOEDIR)\;$(CONDIR)\}$$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) -c $? /Fo$@
+	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZES) $(INCPATH) /c $? /Fo"$@"
 
 dir_bin:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
@@ -84,11 +75,20 @@ dir_bin:
 # build the primesieve C++ library (read docs/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
+CXXFLAGS_LIBPRIMESIEVE = /W2 /O2 /GL /openmp /EHsc
+!IF "$(CXXFLAGS_LIBPRIMESIEVE)" == "$(CXXFLAGS)"
+# default flags for primesieve.lib (no OpenMP multi-threading)
+CXXFLAGS_LIBPRIMESIEVE = /W2 /O2 /EHsc
+!ELSE
+# use the user's custom CXXFLAGS
+CXXFLAGS_LIBPRIMESIEVE = $(CXXFLAGS)
+!ENDIf
+
 lib: dir_lib $(OBJECTS_LIBPRIMESIEVE)
 	lib.exe /OUT:$(LIBDIR)\$(LIBPRIMESIEVE) $(OBJECTS_LIBPRIMESIEVE)
 
 $(OBJECTS_LIBPRIMESIEVE): $(SOEDIR)\$$(@B).cpp
-	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) $(INCPATH) -c $? /Fo$@
+	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) $(CPU_CACHE_SIZES) $(INCPATH) /c $? /Fo"$@"
 
 dir_lib:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
@@ -101,8 +101,8 @@ all: bin lib
 
 clean:
 !IF EXIST($(BINDIR))
-	del $(BINDIR)\$(BINARY) $(BINDIR)\*.obj $(BINDIR)\*.manifest
+	del /Q $(BINDIR)\$(BINARY) $(BINDIR)\*.obj $(BINDIR)\*.manifest
 !ENDIF
 !IF EXIST($(LIBDIR))
-	del $(LIBDIR)\$(LIBPRIMESIEVE) $(LIBDIR)\*.obj
+	del /Q $(LIBDIR)\$(LIBPRIMESIEVE) $(LIBDIR)\*.obj
 !ENDIF
