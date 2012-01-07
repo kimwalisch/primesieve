@@ -48,8 +48,8 @@ Contents
 =================================
 
   The sum_primes.cpp program (see section 8.) can now be compiled by
-  specifying libprimsieve (-lprimesieve flag) at the end of the linker
-  command:
+  specifying libprimesieve (-lprimesieve flag) at the end of the
+  linker command:
 
   $ g++ sum_primes.cpp -lprimesieve
 
@@ -81,9 +81,9 @@ Contents
 
   The sum_primes.cpp program (see section 8.) can now be compiled by
   specifying the path to the primesieve header files (/I) to the
-  compiler and by adding primsieve.lib to the linker:
+  compiler and by adding primesieve.lib to the linker:
 
-  > cl /O2 /EHsc /I"path-to-primesieve\src" sum_primes.cpp /link "path-to-primesieve\lib\primsieve.lib"
+  > cl /O2 /EHsc /I"path-to-primesieve\src" sum_primes.cpp /link "path-to-primesieve\lib\primesieve.lib"
 
 7. OpenMP multi-threading (Windows, MSVC++)
 ==========================================
