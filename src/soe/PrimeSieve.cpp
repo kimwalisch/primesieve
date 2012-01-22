@@ -40,6 +40,7 @@
 #include "bithacks.h"
 #include "PreSieve.h"
 
+#include <stdint.h>
 #include <stdexcept>
 #include <iostream>
 #include <string>

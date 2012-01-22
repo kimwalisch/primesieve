@@ -38,6 +38,7 @@
 #include "WheelFactorization.h"
 #include "defs.h"
 
+#include <stdint.h>
 #include <stdexcept>
 #include <algorithm>
 #include <list>

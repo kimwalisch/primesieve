@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -42,6 +42,7 @@
 
 #include "defs.h"
 
+#include <stdint.h>
 #include <cstdlib>
 #include <cassert>
 
@@ -133,23 +134,6 @@ inline uint32_t popcount_kernighan(const uint8_t* data, uint32_t size) {
       bitCount++;
   }
   return bitCount;
-}
-
-/**
- * Search the operand (v) for the least significant set bit (1 bit)
- * and return its position.
- * Code from the "Bit Twiddling Hacks":
- * http://graphics.stanford.edu/~seander/bithacks.html#ZerosOnRightMultLookup
- * @pre v != 0
- */
-inline uint32_t bitScanForward(uint32_t v) {
-  assert(v != 0);
-  static const uint32_t MultiplyDeBruijnBitPosition[32] = {
-       0,  1, 28,  2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17,  4, 8,
-      31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18,  6, 11,  5, 10, 9
-  };
-  const uint32_t i = (uint32_t)-(int32_t)v;
-  return MultiplyDeBruijnBitPosition[((v & i) * 0x077CB531U) >> 27];
 }
 
 /**

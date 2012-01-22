@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -36,10 +36,11 @@
 #include "SieveOfEratosthenes.h"
 #include "defs.h"
 
+#include <stdint.h>
 #include <stdexcept>
+#include <cassert>
 #include <cstdlib>
 #include <cstring>
-#include <cassert>
 
 const uint32_t PreSieve::smallPrimes_[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 };
 

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -38,6 +38,7 @@
 #include "defs.h"
 #include "bithacks.h"
 
+#include <stdint.h>
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
@@ -132,8 +133,8 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // count prime numbers (1 bits within the sieve array)
   if (ps_.testFlags(ps_.COUNT_PRIMES)) {
     const uint64_t* sieve64 = reinterpret_cast<const uint64_t*> (sieve);
-    uint32_t size64    = sieveSize / SIZEOF(uint64_t);
-    uint32_t bytesLeft = sieveSize % SIZEOF(uint64_t);
+    uint32_t size64 = sieveSize / 8;
+    uint32_t bytesLeft = sieveSize % 8;
     // see bithacks.h
     uint32_t primeCount = popcount_lauradoux(sieve64, size64);
     if (bytesLeft > 0)
@@ -168,12 +169,12 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
     for (uint32_t j = 0; j < sieveSize; j++, lowerBound += NUMBERS_PER_BYTE) {
       for (const uint32_t* bitmask = kTupletBitmasks_[i]; *bitmask <= sieve[j]; bitmask++) {
         if ((sieve[j] & *bitmask) == *bitmask) {
-          uint32_t leastBit = bitScanForward(*bitmask);
-          uint32_t limit    = leastBit + (i + 1);
           std::ostringstream kTuplet;
           kTuplet << "(";
-          for (uint32_t l = leastBit; l <= limit; l++)
-            kTuplet << lowerBound + bitValues_[l] << (l < limit ? ", " : ")\n");
+          uint32_t bits = *bitmask;
+          for (; bits & (bits - 1); bits &= bits - 1)
+            kTuplet << lowerBound + lsbValues_[bits] << ", ";
+          kTuplet << lowerBound + lsbValues_[bits] << ")\n";
           std::cout << kTuplet.str();
         }
       }

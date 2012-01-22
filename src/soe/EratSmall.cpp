@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -38,6 +38,7 @@
 #include "WheelFactorization.h"
 #include "defs.h"
 
+#include <stdint.h>
 #include <algorithm>
 #include <stdexcept>
 #include <list>

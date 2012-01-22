@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -48,6 +48,7 @@
 #include "defs.h"
 #include "imath.h"
 
+#include <stdint.h>
 #include <cassert>
 #include <stdexcept>
 #include <sstream>
@@ -55,10 +56,10 @@
 /**
  * WheelPrime objects are sieving primes <= sqrt(n) for use with wheel
  * factorization (skips multiples of small primes). EratSmall,
- * EratMedium and EratBig use WheelPrimes to cross-off multiples. Each
- * WheelPrime object contains the sieving prime, the position of the
- * next multiple within the SieveOfEratosthenes array (multipleIndex)
- * and a wheel index.
+ * EratMedium and EratBig objects use WheelPrimes to cross-off
+ * multiples. Each WheelPrime object contains the sieving prime, the
+ * position of the next multiple within the SieveOfEratosthenes array
+ * (multipleIndex) and a wheel index.
  * @remark WheelPrime  Uses 8 bytes per sieving prime.
  */
 class WheelPrime {
@@ -68,7 +69,7 @@ public:
   }
   uint32_t getMultipleIndex() const {
     // get the 23 least significant bits
-    return indexes_ & ((1U << 23) - 1);
+    return indexes_ & ((1u << 23) - 1);
   }
   uint32_t getWheelIndex() const {
     // get the 9 most significant bits
@@ -77,30 +78,30 @@ public:
   void set(uint32_t sievingPrime,
            uint32_t multipleIndex,
            uint32_t wheelIndex) {
-    assert(multipleIndex < (1U << 23));
-    assert(wheelIndex    < (1U << 9));
+    assert(multipleIndex < (1u << 23) && 
+           wheelIndex    < (1u << 9));
     indexes_ = multipleIndex | (wheelIndex << 23);
     sievingPrime_ = sievingPrime;
   }
   void setIndexes(uint32_t multipleIndex,
                   uint32_t wheelIndex) {
-    assert(multipleIndex < (1U << 23));
-    assert(wheelIndex    < (1U << 9));
+    assert(multipleIndex < (1u << 23) && 
+           wheelIndex    < (1u << 9));
     indexes_ = multipleIndex | (wheelIndex << 23);
   }
   void setWheelIndex(uint32_t wheelIndex) {
-    assert(wheelIndex < (1U << 9));
+    assert(wheelIndex < (1u << 9));
     indexes_ = wheelIndex << 23;
   }
   void setMultipleIndex(uint32_t multipleIndex) {
-    assert(multipleIndex < (1U << 23));
+    assert(multipleIndex < (1u << 23));
     indexes_ |= multipleIndex;
   }
 private:
   /**
    * multipleIndex = 23 least significant bits of indexes_.
    * wheelIndex    =  9 most  significant bits of indexes_.
-   * Packing multipleIndex and wheelIndex into the same 32-bit word
+   * Packing multipleIndex and wheelIndex into the same 32-bit dword
    * reduces primesieve's memory usage by 20%.
    */
   uint32_t indexes_;
@@ -123,8 +124,8 @@ private:
 class Bucket {
 public:
   Bucket() : current_(wheelPrimes_) { }
-  // list::push_back(Bucket()) adds an empty bucket
-  // without unnecessary copying
+  // list::push_back( Bucket() ) adds an empty
+  // bucket without unnecessary copying
   Bucket(const Bucket&) : current_(wheelPrimes_) { }
   void reset() {
     current_ = wheelPrimes_;
@@ -167,9 +168,10 @@ private:
 };
 
 /**
- * An array of WheelInit objects is used to calculate the first
+ * Lookup tables of WheelInit objects are used to calculate the first
  * multiple >= startNumber of each sieving prime that is not
  * divisible by any of the wheel's factors.
+ * @see WheelFactorization.cpp
  */
 struct WheelInit {
   uint8_t nextMultipleFactor;
@@ -193,15 +195,15 @@ struct WheelElement {
     correct(_correct),
     next(_next) { }
   /**
-   * Bitmask used with the '&' operator to unset the bit (within the
-   * SieveOfEratosthenes array) corresponding to the current multiple
+   * Bitmask used with the '&' operator to unset the bit within the
+   * SieveOfEratosthenes array corresponding to the current multiple
    * of a WheelPrime object.
    */
   uint8_t unsetBit;
   /**
-   * Factor used to calculate the next multiple of a WheelPrime object
-   * (sieving prime) that is coprime to the wheel's factors
-   * (e.g. not a multiple of 2, 3, and 5 for a modulo 30 wheel).
+   * Factor used to calculate the next multiple of WheelPrime objects
+   * that is not divisible by any of the wheel factors (e.g. not a
+   * multiple of 2, 3, and 5 for a modulo 30 wheel).
    */
   uint8_t nextMultipleFactor;
   /**
@@ -210,18 +212,18 @@ struct WheelElement {
    */
   uint8_t correct;
   /**
-   * Offset that is used to calculate the next wheel index of a
-   * WheelPrime object i.e. wheelIndex += next;
+   * Offset that is used to calculate the next wheel index of
+   * WheelPrime objects i.e. wheelIndex += next;
    */
    int8_t next;
 };
 
 /**
- * The Wheel class uses wheel factorization to skip multiples of small
- * primes in the sieve of Eratosthenes. Via template arguments it is
- * possible to build different Wheel classes e.g. Modulo30Wheel_t and
- * Modulo210Wheel_t. The Erat(Small|Medium|Big) classes are derived
- * from Wheel.
+ * The abstract Wheel class provides functionality needed to use wheel
+ * factorization with the sieve of Eratosthenes. Via template
+ * arguments it is possible to build different types of Wheel classes
+ * e.g. Modulo30Wheel_t and Modulo210Wheel_t. The EratSmall,
+ * EratMedium and EratBig classes are derived from Wheel.
  */
 template<uint32_t            WHEEL_MODULO,
          uint32_t            WHEEL_SIZE,
@@ -275,8 +277,8 @@ protected:
     if (multiple > soe_.getStopNumber())
       return false;
     const uint64_t primeSquared = isquare<uint64_t>(*prime);
-    // by theory prime^2 is the first multiple of prime
-    // that needs to be crossed-off
+    // by theory prime^2 is the first multiple of
+    // prime that needs to be crossed-off
     if (multiple < primeSquared) {
       multiple = primeSquared;
       quotient = *prime;
@@ -323,7 +325,7 @@ extern const WheelElement wheel30Array[8*8];
 extern const WheelElement wheel210Array[48*8];
 
 /** 3rd wheel, skips multiples of 2, 3 and 5. */
-typedef Wheel< 30,  8, wheel30Array,  wheel30Init> Modulo30Wheel_t;
+typedef Wheel<30, 8, wheel30Array, wheel30Init> Modulo30Wheel_t;
 /** 4th wheel, skips multiples of 2, 3, 5 and 7. */
 typedef Wheel<210, 48, wheel210Array, wheel210Init> Modulo210Wheel_t;
 

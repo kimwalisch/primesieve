@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -39,24 +39,17 @@
  *        produces correct results.
  */
 
+#include "../soe/defs.h"
 #include "../soe/ParallelPrimeSieve.h"
 #include "../soe/imath.h"
 
+#include <stdint.h>
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
 #include <exception>
 #include <algorithm>
-
-/**
- * @def __STDC_LIMIT_MACROS
- * Enable the UINT32_MAX macro from <stdint.h>.
- */
-#if !defined(__STDC_LIMIT_MACROS)
-#  define __STDC_LIMIT_MACROS 1
-#endif
-#include <stdint.h>
 
 namespace {
   uint32_t primeCounts[21] = {

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -42,8 +42,9 @@
   #include <omp.h>
 #endif
 
-#include <cstdlib>
+#include <stdint.h>
 #include <stdexcept>
+#include <cstdlib>
 #include <algorithm>
 
 ParallelPrimeSieve::ParallelPrimeSieve() :

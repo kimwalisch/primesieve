@@ -1,7 +1,7 @@
 /*
  * PrimeSieveGUI_const.h -- This file is part of primesieve
  *
- * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@
 #include <stdint.h>
 
 const QString APPLICATION_NAME("primesieve");
-const QString APPLICATION_VERSION("3.4");
+const QString APPLICATION_VERSION("3.5");
 const QString APPLICATION_HOMEPAGE("http://primesieve.googlecode.com");
 const QString APPLICATION_ABOUT(
     "primesieve generates prime numbers and prime k-tuplets using a highly "

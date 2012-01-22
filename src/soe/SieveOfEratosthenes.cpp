@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -40,15 +40,31 @@
 #include "defs.h"
 #include "imath.h"
 
+#include <stdint.h>
 #include <stdexcept>
 #include <cstdlib>
 #include <cassert>
 
-const uint32_t SieveOfEratosthenes::bitValues_[32] = {
-     7,  11,  13,  17,  19,  23,  29,  31, /* sieve_[i+0] */
-    37,  41,  43,  47,  49,  53,  59,  61, /* sieve_[i+1] */
-    67,  71,  73,  77,  79,  83,  89,  91, /* sieve_[i+2] */
-    97, 101, 103, 107, 109, 113, 119, 121  /* sieve_[i+3] */
+const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
+
+/** least significant bitValues_ */
+const uint32_t SieveOfEratosthenes::lsbValues_[256] = {
+   0, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  23, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  29, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  23, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  31, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  23, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  29, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  23, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
+  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7
 };
 
 /**
@@ -133,9 +149,10 @@ void SieveOfEratosthenes::preSieve() {
     if (startNumber_ <= preSieve_.getLimit())
       sieve_[0] = 0xff;
     uint32_t startRemainder = this->getByteRemainder(startNumber_);
-    // unset the bits corresponding to numbers < startNumber_
-    for (int i = 0; bitValues_[i] < startRemainder; i++)
-      sieve_[0] &= ~(1 << i);
+    // unset bits corresponding to numbers < startNumber_
+    for (int i = 0; i < 8; i++)
+      if (bitValues_[i] < startRemainder)
+        sieve_[0] &= ~(1 << i);
   }
 }
 
@@ -213,7 +230,7 @@ void SieveOfEratosthenes::finish() {
   // sieve the last segment
   this->preSieve();
   this->crossOffMultiples();
-  // unset the bits corresponding to numbers > stopNumber_
+  // unset bits corresponding to numbers > stopNumber_
   for (int i = 0; i < 8; i++) {
     if (bitValues_[i] > stopRemainder)
       sieve_[sieveSize_ - 1] &= ~(1 << i);

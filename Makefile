@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   7 January 2012
+# Last modified:   22 January 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -44,15 +44,12 @@ OBJECTS_LIBPRIMESIEVE = $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/ParallelPrimeSieve.o
 
 #-----------------------------------------------------------------------------
-# check if the user indicated his CPU's L1/L2 cache sizes per core
-# e.g. `make L1_DCACHE_SIZE=32 L2_CACHE_SIZE=256`
+# check if the user indicated his CPU's L1 data cache size per core
+# e.g. `make L1_DCACHE_SIZE=32`
 #-----------------------------------------------------------------------------
 
 ifneq ($(L1_DCACHE_SIZE),)
   CPU_CACHE_SIZES += -DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
-endif
-ifneq ($(L2_CACHE_SIZE),)
-  CPU_CACHE_SIZES += -DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
 endif
 
 #-----------------------------------------------------------------------------
@@ -154,15 +151,15 @@ check test: bin
 .PHONY: help
 
 help:
-	@echo -----------------------------------------------------------
-	@echo ------------------- primesieve Makefile -------------------
-	@echo -----------------------------------------------------------
-	@echo "make                                      Builds the primesieve console application using g++ (DEFAULT)"
-	@echo "make lib                                  Builds the primesieve C++ library (read docs/LIBPRIMESIEVE)"
-	@echo "make check                                Tests the compiled primesieve binary"
-	@echo "sudo make install                         Installs primesieve and libprimesieve (to /usr/bin, /usr/lib)"
-	@echo "sudo make uninstall                       Completely removes primesieve and libprimesieve"
-	@echo "make clean                                Cleans the output directories (./bin, ./lib)"
-	@echo "make CXX=compiler CXXFLAGS=\"options\"      Specify a custom C++ compiler"
-	@echo "make L1_DCACHE_SIZE=KB L2_CACHE_SIZE=KB   Specify the CPU's L1/L2 cache sizes (read INSTALL)"
-	@echo "make help                                 Prints this help menu"
+	@echo ---------------------------------------------------
+	@echo --------------- primesieve Makefile ---------------
+	@echo ---------------------------------------------------
+	@echo "make                                   Builds the primesieve console application using g++ (DEFAULT)"
+	@echo "make lib                               Builds the primesieve C++ library (read docs/LIBPRIMESIEVE)"
+	@echo "make check                             Tests the compiled primesieve binary"
+	@echo "sudo make install                      Installs primesieve and libprimesieve (to /usr/bin, /usr/lib)"
+	@echo "sudo make uninstall                    Completely removes primesieve and libprimesieve"
+	@echo "make clean                             Cleans the output directories (./bin, ./lib)"
+	@echo "make CXX=compiler CXXFLAGS=\"options\"   Specify a custom C++ compiler"
+	@echo "make L1_DCACHE_SIZE=KB                 Specify the CPU's L1 data cache size (read INSTALL)"
+	@echo "make help                              Prints this help menu"

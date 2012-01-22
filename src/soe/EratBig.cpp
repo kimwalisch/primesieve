@@ -38,6 +38,7 @@
 #include "defs.h"
 #include "bithacks.h"
 
+#include <stdint.h>
 #include <stdexcept>
 #include <cstdlib>
 #include <cstring>

@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 5 January 2012
+# Last modified: 22 January 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -152,8 +152,8 @@ Contents
   * defs.h
     Contains macro definitions and constants that set the size of
     various arrays and limits within primesieve. You can set the
-    L1_DCACHE_SIZE, L2_CACHE_SIZE and BUCKET_SIZE constants according
-    to your CPU specifications to get the best performance.
+    L1_DCACHE_SIZE and BUCKET_SIZE constants according to your CPU
+    specifications to get the best performance.
 
   * WheelFactorization.h
     Contains classes and structs related to wheel factorization (used

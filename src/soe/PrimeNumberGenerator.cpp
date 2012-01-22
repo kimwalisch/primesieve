@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -38,6 +38,7 @@
 #include "defs.h"
 #include "bithacks.h"
 
+#include <stdint.h>
 #include <cassert>
 
 PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :

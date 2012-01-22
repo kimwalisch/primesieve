@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Kim Walisch, <kim.walisch@gmail.com>.
+// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
 // All rights reserved.
 //
 // This file is part of primesieve.
@@ -37,6 +37,8 @@
 
 #include "defs.h"
 #include "PreSieve.h"
+
+#include <stdint.h>
 
 class EratSmall;
 class EratMedium;
@@ -84,7 +86,8 @@ public:
   void sieve(uint32_t);
   void finish();
 protected:
-  static const uint32_t bitValues_[32];
+  static const uint32_t bitValues_[8];
+  static const uint32_t lsbValues_[256];
   SieveOfEratosthenes(uint64_t, uint64_t, uint32_t, uint32_t);
   ~SieveOfEratosthenes();
   virtual void analyseSieve(const uint8_t*, uint32_t) = 0;

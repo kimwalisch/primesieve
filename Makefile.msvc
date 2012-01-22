@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   7 January 2012
+# Last modified:   22 January 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -47,14 +47,11 @@ OBJECTS_LIBPRIMESIEVE = $(LIBDIR)\WheelFactorization.obj \
   $(LIBDIR)\ParallelPrimeSieve.obj
 
 #-----------------------------------------------------------------------------
-# check if the user indicated his CPU's L1/L2 cache sizes (read INSTALL)
+# check if the user indicated his CPU's L1 data cache size (read INSTALL)
 #-----------------------------------------------------------------------------
 
 !IFDEF L1_DCACHE_SIZE
 CPU_CACHE_SIZES = /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
-!ENDIF
-!IFDEF L2_CACHE_SIZE
-CPU_CACHE_SIZES = $(CPU_CACHE_SIZES) /DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
 !ENDIF
 
 #-----------------------------------------------------------------------------
@@ -128,5 +125,4 @@ help:
 	@echo "nmake -f Makefile.msvc clean              Cleans the output directories (./bin, ./lib)"
 	@echo "nmake -f Makefile.msvc CXXFLAGS=options   Specify custom compiler flags"
 	@echo "nmake -f Makefile.msvc L1_DCACHE_SIZE=KB  Specify the CPU's L1 data cache size (read INSTALL)"
-	@echo "nmake -f Makefile.msvc L2_CACHE_SIZE=KB   Specify the CPU's L2 cache size (read INSTALL)"
 	@echo "nmake -f Makefile.msvc help               Prints this help menu"
