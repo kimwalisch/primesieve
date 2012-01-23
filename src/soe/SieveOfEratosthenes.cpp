@@ -48,7 +48,8 @@
 const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
 
 /** least significant bitValues_ */
-const uint32_t SieveOfEratosthenes::lsbValues_[256] = {
+const uint32_t SieveOfEratosthenes::lsbValues_[256] =
+{
    0, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
   19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
   23, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
@@ -177,14 +178,10 @@ void SieveOfEratosthenes::crossOffMultiples() {
 /**
  * Implementation of the segmented sieve of Eratosthenes.
  * sieve(uint32_t) must be called consecutively for all primes
- * (> getPreSieveLimit()) up to sqrt(stopNumber) in order to sieve
+ * > getPreSieveLimit() up to sqrt(stopNumber) in order to sieve
  * the primes within the interval [startNumber, stopNumber].
  */
 void SieveOfEratosthenes::sieve(uint32_t prime) {
-  assert(prime >  this->getPreSieveLimit());
-  assert(prime <= this->getSquareRoot());
-  assert(sieveSize_ <= UINT32_MAX / NUMBERS_PER_BYTE);
-  assert(eratSmall_ != NULL);
   uint64_t primeSquared = isquare<uint64_t>(prime);
 
   // The following while loop segments the sieve of Eratosthenes,
@@ -199,6 +196,7 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
+
   // prime is added to eratSmall_ if it has many multiples per
   // segment, to eratMedium_ if it has a few multiples per segment
   // and to eratBig_ if it has very few multiples per segment.
