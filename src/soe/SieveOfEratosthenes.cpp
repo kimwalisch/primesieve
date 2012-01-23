@@ -182,7 +182,7 @@ void SieveOfEratosthenes::crossOffMultiples() {
  * the primes within the interval [startNumber, stopNumber].
  */
 void SieveOfEratosthenes::sieve(uint32_t prime) {
-  uint64_t primeSquared = isquare<uint64_t>(prime);
+  const uint64_t primeSquared = isquare<uint64_t>(prime);
 
   // The following while loop segments the sieve of Eratosthenes,
   // it is entered if all primes <= sqrt(segmentHigh_) required to
