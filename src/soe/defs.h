@@ -71,11 +71,11 @@
  * @see PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
  */
 #define GENERATE_PRIMES(callback, uintXX_t) {                                \
-  uintXX_t lowerBound = static_cast<uintXX_t> (getSegmentLow());             \
+  uintXX_t segmentLow = static_cast<uintXX_t> (getSegmentLow());             \
   for (uint32_t i = 0; i < sieveSize; i++) {                                 \
     unsigned int byte = sieve[i];                                            \
     while (byte != 0) {                                                      \
-      uintXX_t prime = lowerBound + i * NUMBERS_PER_BYTE + lsbValues_[byte]; \
+      uintXX_t prime = segmentLow + i * NUMBERS_PER_BYTE + lsbValues_[byte]; \
       byte &= byte - 1;                                                      \
       callback (prime);                                                      \
     }                                                                        \
