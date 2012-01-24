@@ -43,7 +43,6 @@
 #include <stdint.h>
 #include <stdexcept>
 #include <cstdlib>
-#include <cassert>
 
 const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
 
@@ -86,13 +85,10 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
         eratSmall_(NULL), eratMedium_(NULL), eratBig_(NULL)
 {
   if (startNumber_ < 7 || startNumber_ > stopNumber_)
-    throw std::logic_error(
-        "SieveOfEratosthenes: startNumber must be >= 7 && <= stopNumber.");
-  // it makes no sense to use very small sieve sizes as a sieve
-  // size of the CPU's L1 or L2 cache size performs best
+    throw std::logic_error("SieveOfEratosthenes: startNumber must be >= 7 && <= stopNumber.");
+  // it makes no sense to use very small sieve sizes
   if (sieveSize_ < 1024)
-    throw std::invalid_argument(
-        "SieveOfEratosthenes: sieveSize must be >= 1 kilobyte.");
+    throw std::invalid_argument("SieveOfEratosthenes: sieveSize must be >= 1 kilobyte.");
   segmentLow_ = startNumber_ - this->getByteRemainder(startNumber_);
   // '+ 1' is a correction for primes of type i*30 + 31
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
@@ -146,7 +142,7 @@ void SieveOfEratosthenes::preSieve() {
   preSieve_.doIt(sieve_, sieveSize_, segmentLow_);
   if (isFirstSegment_) {
     isFirstSegment_ = false;
-    // correct preSieve_.doIt() for numbers <= 23 
+    // correct preSieve_.doIt() for numbers <= 23
     if (startNumber_ <= preSieve_.getLimit())
       sieve_[0] = 0xff;
     uint32_t startRemainder = this->getByteRemainder(startNumber_);
@@ -184,11 +180,11 @@ void SieveOfEratosthenes::crossOffMultiples() {
 void SieveOfEratosthenes::sieve(uint32_t prime) {
   const uint64_t primeSquared = isquare<uint64_t>(prime);
 
-  // The following while loop segments the sieve of Eratosthenes,
-  // it is entered if all primes <= sqrt(segmentHigh_) required to
-  // sieve the next segment have been added to one of the three
-  // erat(Small|Medium|Big)_ objects. Each loop iteration sieves the
-  // primes within the interval [segmentLow_+7, segmentHigh_].
+  // The following while loop segments the sieve of Eratosthenes, it
+  // is executed when all sieving primes <= sqrt(segmentHigh_)
+  // required to sieve the next segment have been stored in the erat*
+  // objects (see below). Each loop iteration sieves the primes within
+  // the interval [segmentLow_+7, segmentHigh_].
   while (segmentHigh_ < primeSquared) {
     this->preSieve();
     this->crossOffMultiples();
@@ -212,7 +208,6 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
  * has been called for all primes up to sqrt(stopNumber).
  */
 void SieveOfEratosthenes::finish() {
-  assert(segmentLow_ < stopNumber_);
   // sieve all segments left except the last one
   while (segmentHigh_ < stopNumber_) {
     this->preSieve();
@@ -223,8 +218,7 @@ void SieveOfEratosthenes::finish() {
   }
   uint32_t stopRemainder = this->getByteRemainder(stopNumber_);
   // calculate the sieve size of the last segment
-  sieveSize_ = static_cast<uint32_t> ((stopNumber_ - stopRemainder) 
-      - segmentLow_) / NUMBERS_PER_BYTE + 1;
+  sieveSize_ = static_cast<uint32_t> ((stopNumber_ - stopRemainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
   // sieve the last segment
   this->preSieve();
   this->crossOffMultiples();
