@@ -160,21 +160,21 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   if (ps_.testFlags(ps_.PRINT_KTUPLETS)) {
-    uint64_t lowerBound = this->getSegmentLow();
-    // i=0 twins, i=1 triplets, ...
+    const uint64_t segmentLow = this->getSegmentLow();
+    // i = 0 twins, i = 1 triplets, ...
     uint32_t i = 0;
     for (; !ps_.testFlags(ps_.PRINT_TWINS << i); i++)
       ;
     // print prime k-tuplets to std::cout
-    for (uint32_t j = 0; j < sieveSize; j++, lowerBound += NUMBERS_PER_BYTE) {
+    for (uint32_t j = 0; j < sieveSize; j++) {
       for (const uint32_t* bitmask = kTupletBitmasks_[i]; *bitmask <= sieve[j]; bitmask++) {
         if ((sieve[j] & *bitmask) == *bitmask) {
           std::ostringstream kTuplet;
           kTuplet << "(";
           uint32_t bits = *bitmask;
           for (; bits & (bits - 1); bits &= bits - 1)
-            kTuplet << lowerBound + lsbValues_[bits] << ", ";
-          kTuplet << lowerBound + lsbValues_[bits] << ")\n";
+            kTuplet << segmentLow + j * NUMBERS_PER_BYTE + lsbValues_[bits] << ", ";
+          kTuplet << segmentLow + j * NUMBERS_PER_BYTE + lsbValues_[bits] << ")\n";
           std::cout << kTuplet.str();
         }
       }
