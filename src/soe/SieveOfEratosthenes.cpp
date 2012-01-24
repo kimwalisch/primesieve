@@ -44,10 +44,10 @@
 #include <stdexcept>
 #include <cstdlib>
 
-const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
+const uint8_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
 
 /** least significant bitValues_ */
-const uint32_t SieveOfEratosthenes::lsbValues_[256] =
+const uint8_t SieveOfEratosthenes::lsbValues_[256] =
 {
    0, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
   19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,

@@ -86,8 +86,8 @@ public:
   void sieve(uint32_t);
   void finish();
 protected:
-  static const uint32_t bitValues_[8];
-  static const uint32_t lsbValues_[256];
+  static const uint8_t bitValues_[8];
+  static const uint8_t lsbValues_[256];
   SieveOfEratosthenes(uint64_t, uint64_t, uint32_t, uint32_t);
   ~SieveOfEratosthenes();
   virtual void analyseSieve(const uint8_t*, uint32_t) = 0;
