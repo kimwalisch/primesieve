@@ -61,10 +61,8 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
  * a shared memory segment.
  */
 void ParallelPrimeSieve::init(SharedMemory* shm) {
-  if (shm == NULL) {
-    throw std::invalid_argument(
-        "ParallelPrimeSieve: shared memory segment must not be NULL");
-  }
+  if (shm == NULL)
+    throw std::invalid_argument("ParallelPrimeSieve: shared memory segment must not be NULL");
   shm_ = shm;
   setStartNumber(shm_->startNumber);
   setStopNumber(shm_->stopNumber);
@@ -150,7 +148,7 @@ uint64_t ParallelPrimeSieve::getInterval() const {
  * balance among threads.
  */
 uint64_t ParallelPrimeSieve::getIdealInterval() const {
-  uint64_t threads  = getNumThreads();
+  uint64_t threads = getNumThreads();
   uint64_t interval = getInterval();
   if (threads == 1)
     return interval;
@@ -179,8 +177,8 @@ void ParallelPrimeSieve::sieve() {
   double t1 = omp_get_wtime();
   reset();
   uint64_t idealInterval = getIdealInterval();
-   int64_t chunks        = (idealInterval > 0) ? getInterval() / idealInterval : 1;
-  uint64_t maxStop       = startNumber_ + idealInterval * chunks;
+   int64_t chunks = (idealInterval > 0) ? getInterval() / idealInterval : 1;
+  uint64_t maxStop = startNumber_ + idealInterval * chunks;
   maxStop += 32 - maxStop % 30;
   if (maxStop < stopNumber_) 
     chunks += 1;
