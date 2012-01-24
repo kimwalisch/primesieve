@@ -49,8 +49,7 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
   // conditions that assert multipleIndex < 2^23 in sieve()
   static_assert(defs::ERATMEDIUM_FACTOR <= 6, "defs::ERATMEDIUM_FACTOR <= 6");
   if (soe.getSieveSize() > (1U << 22))
-    throw std::overflow_error(
-        "EratMedium: sieveSize must be <= 2^22, 4096 kilobytes.");
+    throw std::overflow_error("EratMedium: sieveSize must be <= 2^22, 4096 kilobytes.");
   uint32_t sqrtStop = soe.getSquareRoot();
   uint32_t max      = soe.getSieveSize() * defs::ERATMEDIUM_FACTOR;
   uint32_t limit    = std::min(sqrtStop, max);

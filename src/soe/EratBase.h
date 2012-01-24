@@ -39,7 +39,6 @@
 #include "defs.h"
 
 #include <stdint.h>
-#include <cstdlib>
 #include <cassert>
 #include <list>
 

@@ -53,8 +53,7 @@ EratBig::EratBig(const SieveOfEratosthenes& soe) :
 {
   // EratBig uses bitwise operations that require a power of 2 sieve size
   if (!isPowerOf2(soe.getSieveSize()))
-    throw std::invalid_argument(
-        "EratBig: sieveSize must be a power of 2 (2^n).");
+    throw std::invalid_argument("EratBig: sieveSize must be a power of 2 (2^n).");
   this->setSize(soe);
   this->initBucketLists();
 }
@@ -78,8 +77,7 @@ void EratBig::setSize(const SieveOfEratosthenes& soe) {
   uint32_t maxMultipleOffset = maxSievingPrime * maxWheelFactor + maxWheelFactor;
   uint32_t maxMultipleIndex  = (soe.getSieveSize() - 1) + maxMultipleOffset;
   uint32_t maxSegmentCount   = maxMultipleIndex / soe.getSieveSize();
-  // 'maxSegmentCount + 1' is the smallest possible
-  // size for the lists_ array
+  // size_ must be >= maxSegmentCount + 1
   size_ = nextHighestPowerOf2(maxSegmentCount + 1);
   moduloListsSize_ = size_ - 1;
 }
