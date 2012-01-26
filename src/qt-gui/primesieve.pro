@@ -3,8 +3,6 @@
 # -------------------------------------------------
 win* {
     RC_FILE = icons/win/primesieve.rc
-    # MSVC (prior 2010!?) does not support ISO c99 stdint.h, thus I
-    # provide my own version
     INCLUDEPATH += ../thirdparty
 }
 macx {
@@ -71,4 +69,5 @@ HEADERS += ../soe/EratBig.h \
     ../soe/WheelFactorization.h \
     ../soe/imath.h \
     ../soe/bithacks.h \
-    ../soe/defs.h \
+    ../soe/bits.h \
+    ../soe/config.h

@@ -37,31 +37,14 @@
  * @brief Auxiliary integer math functions needed in primesieve.
  */
 
-#ifndef IMATH_H
-#define IMATH_H
+#ifndef IMATH_PRIMESIEVE_H
+#define IMATH_PRIMESIEVE_H
 
-#include "defs.h"
-
+#include "config.h"
 #include <stdint.h>
 #include <cmath>
 
-/**
- * Integer pow, raise to power, x^n.
- * Code from (ported to C++ from Ruby):
- * http://en.wikipedia.org/wiki/Exponentiation_by_squaring
- */
-inline uint64_t ipow(uint64_t x, uint32_t n) {
-  uint64_t result = 1;
-  while (n != 0) {
-    if (n & 1) {
-      result *= x;
-      n -= 1;
-    }
-    x *= x;
-    n /= 2;
-  }
-  return result;
-}
+namespace soe {
 
 template <typename T>
 inline T isquare(T x) {
@@ -72,4 +55,6 @@ inline uint32_t isqrt(uint64_t x) {
   return static_cast<uint32_t> (std::sqrt(static_cast<double> (x)));
 }
 
-#endif /* IMATH_H */
+} // namespace soe
+
+#endif /* IMATH_PRIMESIEVE_H */

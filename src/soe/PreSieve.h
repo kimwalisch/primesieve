@@ -35,8 +35,10 @@
 #ifndef PRESIEVE_H
 #define PRESIEVE_H
 
-#include "defs.h"
+#include "config.h"
 #include <stdint.h>
+
+namespace soe {
 
 /**
  * PreSieve objects are used to pre-sieve multiples of small primes
@@ -91,5 +93,7 @@ private:
   PreSieve(const PreSieve&);
   PreSieve& operator=(const PreSieve&);
 };
+
+} // namespace soe
 
 #endif /* PRESIEVE_H */

@@ -37,34 +37,24 @@
 #include "EratSmall.h"
 #include "EratMedium.h"
 #include "EratBig.h"
-#include "defs.h"
+#include "config.h"
 #include "imath.h"
 
 #include <stdint.h>
 #include <stdexcept>
 #include <cstdlib>
 
-const uint8_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
+namespace soe {
 
-/** least significant bitValues_ */
-const uint8_t SieveOfEratosthenes::lsbValues_[256] =
+const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
+
+/** De Bruijn sequence for first set bitValues_ */
+const uint32_t SieveOfEratosthenes::deBruijnFsbValues_[32] =
 {
-   0, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  23, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  29, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  23, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  31, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  23, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  29, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  23, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7,
-  19, 7, 11, 7, 13, 7, 11, 7, 17, 7, 11, 7, 13, 7, 11, 7
+    7,  11, 109, 13, 113, 59, 97, 17,
+  119,  89,  79, 61, 101, 71, 19, 37,
+  121, 107,  53, 91,  83, 77, 67, 31,
+  103,  49,  73, 29,  47, 23, 43, 41
 };
 
 /**
@@ -102,6 +92,11 @@ SieveOfEratosthenes::~SieveOfEratosthenes() {
   delete eratMedium_;
   delete eratBig_;
   delete[] sieve_;
+}
+
+/** returns bitValues_[ bitScanForward(v) ] */
+uint32_t SieveOfEratosthenes::getFirstSetBitValue(uint32_t v) {
+  return deBruijnFsbValues_[((v & -static_cast<int32_t>(v)) * 0x077CB531U) >> 27];
 }
 
 uint32_t SieveOfEratosthenes::getPreSieveLimit() const {
@@ -229,3 +224,5 @@ void SieveOfEratosthenes::finish() {
   }
   this->analyseSieve(sieve_, sieveSize_);
 }
+
+} // namespace soe

@@ -36,19 +36,22 @@
 #include "SieveOfEratosthenes.h"
 #include "EratBase.h"
 #include "WheelFactorization.h"
-#include "defs.h"
+#include "config.h"
+#include "bits.h"
 
 #include <stdint.h>
 #include <algorithm>
 #include <stdexcept>
 #include <list>
 
+namespace soe {
+
 EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
   EratBase<Modulo30Wheel_t> (soe)
 {
   uint32_t sqrtStop = soe.getSquareRoot();
-  uint32_t max      = static_cast<uint32_t> (soe.getSieveSize() * defs::ERATSMALL_FACTOR);
-  uint32_t limit    = std::min(sqrtStop, max);
+  uint32_t max = static_cast<uint32_t> (soe.getSieveSize() * config::FACTOR_ERATSMALL);
+  uint32_t limit = std::min(sqrtStop, max);
   // sieveSize - 1 + (prime / 30) * 6 + 6 - sieveSize < sieveSize
   // prevents segmentation faults in sieve(uint8_t*, uint32_t)
   if (limit >= (soe.getSieveSize() - 5) * 5)
@@ -275,3 +278,5 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
     }
   }
 }
+
+} // namespace soe

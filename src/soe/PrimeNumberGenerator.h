@@ -36,7 +36,7 @@
 #define PRIMENUMBERGENERATOR_H
 
 #include "SieveOfEratosthenes.h"
-#include "defs.h"
+#include "config.h"
 
 #include <stdint.h>
 
@@ -47,7 +47,7 @@ class PrimeNumberFinder;
  * to generate the primes up to sqrt(n) needed for sieving by
  * PrimeNumberFinder.
  */
-class PrimeNumberGenerator: public SieveOfEratosthenes {
+class PrimeNumberGenerator: public soe::SieveOfEratosthenes {
 public:
   PrimeNumberGenerator(PrimeNumberFinder&);
 private:

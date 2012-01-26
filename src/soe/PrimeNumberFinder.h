@@ -36,7 +36,7 @@
 #define PRIMENUMBERFINDER_H
 
 #include "SieveOfEratosthenes.h"
-#include "defs.h"
+#include "config.h"
 
 #include <stdint.h>
 
@@ -48,7 +48,7 @@ class PrimeSieve;
  * prime triplets, ...).
  * PrimeNumberFinder objects are used in PrimeSieve::sieve().
  */
-class PrimeNumberFinder: public SieveOfEratosthenes {
+class PrimeNumberFinder: public soe::SieveOfEratosthenes {
 public:
   PrimeNumberFinder(PrimeSieve&);
   ~PrimeNumberFinder();

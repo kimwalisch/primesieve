@@ -36,12 +36,13 @@
 #define ERATBASE_H
 
 #include "WheelFactorization.h"
-#include "defs.h"
+#include "config.h"
 
 #include <stdint.h>
 #include <cassert>
 #include <list>
 
+namespace soe {
 class SieveOfEratosthenes;
 
 /**
@@ -81,5 +82,7 @@ protected:
     limit_ = limit;
   }
 };
+
+} // namespace soe
 
 #endif /* ERATBASE_H */

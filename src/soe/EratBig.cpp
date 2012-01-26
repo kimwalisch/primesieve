@@ -35,7 +35,7 @@
 #include "EratBig.h"
 #include "SieveOfEratosthenes.h"
 #include "WheelFactorization.h"
-#include "defs.h"
+#include "config.h"
 #include "bithacks.h"
 
 #include <stdint.h>
@@ -43,6 +43,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <list>
+
+namespace soe {
 
 EratBig::EratBig(const SieveOfEratosthenes& soe) :
   Modulo210Wheel_t(soe),
@@ -226,3 +228,5 @@ void EratBig::sieve(uint8_t* sieve)
   std::memmove(lists_, &lists_[1], (size_ - 1) * sizeof(Bucket*));
   lists_[size_ - 1] = tmp;
 }
+
+} // namespace soe

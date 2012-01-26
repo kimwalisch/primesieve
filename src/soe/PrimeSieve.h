@@ -36,7 +36,7 @@
 #define PRIMESIEVE_H
 
 #include "PrimeNumberFinder.h"
-#include "defs.h"
+#include "config.h"
 
 #include <stdint.h>
 #include <stdexcept>

@@ -35,7 +35,7 @@
 #include "PrimeNumberFinder.h"
 #include "PrimeSieve.h"
 #include "SieveOfEratosthenes.h"
-#include "defs.h"
+#include "config.h"
 #include "bithacks.h"
 
 #include <stdint.h>
@@ -47,6 +47,8 @@
 #if defined(_OPENMP)
   #include <omp.h>
 #endif
+
+using namespace soe;
 
 /// Bit patterns corresponding to prime k-tuplets
 /// within bytes of the sieve array.
@@ -133,10 +135,10 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // count prime numbers (1 bits within the sieve array)
   if (ps_.testFlags(ps_.COUNT_PRIMES)) {
     const uint64_t* sieve64 = reinterpret_cast<const uint64_t*> (sieve);
-    uint32_t size64 = sieveSize / 8;
+    uint32_t sieveSize64 = sieveSize / 8;
     uint32_t bytesLeft = sieveSize % 8;
     // see bithacks.h
-    uint32_t primeCount = popcount_lauradoux(sieve64, size64);
+    uint32_t primeCount = popcount_lauradoux(sieve64, sieveSize64);
     if (bytesLeft > 0)
       primeCount += popcount_kernighan(&sieve[sieveSize - bytesLeft], bytesLeft);
     // add up to total prime count
@@ -172,9 +174,10 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
           std::ostringstream kTuplet;
           kTuplet << "(";
           uint32_t bits = *bitmask;
+          uint64_t offset = segmentLow + j * NUMBERS_PER_BYTE;
           for (; bits & (bits - 1); bits &= bits - 1)
-            kTuplet << segmentLow + j * NUMBERS_PER_BYTE + lsbValues_[bits] << ", ";
-          kTuplet << segmentLow + j * NUMBERS_PER_BYTE + lsbValues_[bits] << ")\n";
+            kTuplet << offset + this->getFirstSetBitValue(bits) << ", ";
+          kTuplet << offset + this->getFirstSetBitValue(bits) << ")\n";
           std::cout << kTuplet.str();
         }
       }
@@ -185,7 +188,7 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   #pragma omp critical (generate)
 #endif
   {
-    // the GENERATE_PRIMES() macro is defined in defs.h
+    // GENERATE_PRIMES() is defined in SieveOfEratosthenes.h
          if (ps_.testFlags(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_,      uint32_t)
     else if (ps_.testFlags(ps_.CALLBACK32_OOP_PRIMES)) GENERATE_PRIMES(this->callback32_OOP, uint32_t)
     else if (ps_.testFlags(ps_.CALLBACK64_PRIMES))     GENERATE_PRIMES(ps_.callback64_,      uint64_t)

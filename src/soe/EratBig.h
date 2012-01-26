@@ -36,10 +36,12 @@
 #define ERATBIG_H
 
 #include "WheelFactorization.h"
-#include "defs.h"
+#include "config.h"
 
 #include <stdint.h>
 #include <list>
+
+namespace soe {
 
 class SieveOfEratosthenes;
 
@@ -60,7 +62,7 @@ public:
   void addSievingPrime(uint32_t);
   void sieve(uint8_t*);
 private:
-  enum { BUCKETS_PER_ALLOC = defs::ERATBIG_MEMORY_PER_ALLOC / sizeof(Bucket) };
+  enum { BUCKETS_PER_ALLOC = config::MEMORY_PER_ALLOC / sizeof(Bucket) };
   /** Array of bucket lists, holds the sieving primes. */
   Bucket** lists_;
   /** List of empty buckets. */
@@ -77,5 +79,7 @@ private:
   void initBucketLists();
   void pushBucket(uint32_t);
 };
+
+} // namespace soe
 
 #endif /* ERATBIG_H */

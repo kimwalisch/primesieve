@@ -35,21 +35,23 @@
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
 #include "SieveOfEratosthenes.h"
-#include "defs.h"
+#include "config.h"
 #include "bithacks.h"
 
 #include <stdint.h>
 #include <cassert>
 
+using namespace soe;
+
 PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
   SieveOfEratosthenes(
       finder.getPreSieveLimit() + 1,
       finder.getSquareRoot(),
-      nextHighestPowerOf2(defs::PRIMENUMBERGENERATOR_SIEVESIZE),
-      defs::PRIMENUMBERGENERATOR_PRESIEVE_LIMIT),
+      nextHighestPowerOf2(config::SIEVESIZE_PRIMENUMBERGENERATOR),
+      config::PRESIEVE_LIMIT_PRIMENUMBERGENERATOR),
   primeNumberFinder_(finder)
 {
-  static_assert(defs::PRIMENUMBERGENERATOR_SIEVESIZE <= 4096, "Maximum sieveSize = 4096 kilobytes");
+  static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "Maximum sieveSize = 4096 kilobytes");
   assert(getStopNumber() <= UINT32_MAX);
 }
 
@@ -59,7 +61,7 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
  * @see SieveOfEratosthenes::sieve(uint32_t)
  */
 void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
-  // GENERATE_PRIMES() is defined in defs.h
+  // GENERATE_PRIMES() is defined in SieveOfEratosthenes.h
   GENERATE_PRIMES(primeNumberFinder_.sieve, uint32_t);
 }
 

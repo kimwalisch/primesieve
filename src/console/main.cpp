@@ -42,9 +42,8 @@
  * primes, prime triplets, ...) up to 2^64 maximum.
  */
 
-#include "../soe/ParallelPrimeSieve.h"
-#include "../soe/defs.h"
 #include "../expr/ExpressionParser.h"
+#include "../soe/ParallelPrimeSieve.h"
 
 /// declared in test.cpp
 void test();
@@ -59,13 +58,14 @@ void test();
 namespace {
   std::vector<uint64_t> numbers; /* start and stop number for sieving */
 
-  uint32_t sieveSize = L1_DCACHE_SIZE;
-  uint32_t preSieve  = defs::PRIMESIEVE_PRESIEVE_LIMIT;
-  uint32_t flags     = 0;
-  int threads        = ParallelPrimeSieve::USE_IDEAL_NUM_THREADS;
-  int maxThreads     = ParallelPrimeSieve::getMaxThreads();
-  bool quietMode     = false;
-  bool printParser   = false;
+  int32_t maxThreads = ParallelPrimeSieve::getMaxThreads();
+  int32_t threads    = -1;
+  int32_t flags      =  0;
+  int32_t sieveSize  = -1;
+  int32_t preSieve   = -1;
+
+  bool quietMode   = false;
+  bool printParser = false;
 
   const std::string primes[7] = {
     "Prime numbers",
@@ -189,12 +189,12 @@ int processOptions(std::size_t argc, char* argv[]) {
       case 'r': parser.eval(argv[i]);
                 if (!parser.isSuccess())
                   return OPTION_HELP;
-                preSieve = static_cast<uint32_t> (parser.getResult());
+                preSieve = static_cast<int32_t> (parser.getResult());
                 break;
       case 's': parser.eval(argv[i]);
                 if (!parser.isSuccess())
                   return OPTION_HELP;
-                sieveSize = static_cast<uint32_t> (parser.getResult());
+                sieveSize = static_cast<int32_t> (parser.getResult());
                 break;
       case 't': arg = argv[i];
                 if (arg.compare(testOption) == 0)
@@ -202,7 +202,7 @@ int processOptions(std::size_t argc, char* argv[]) {
                 parser.eval(argv[i]);
                 if (!parser.isSuccess())
                   return OPTION_HELP;
-                threads = static_cast<int> (parser.getResult());
+                threads = static_cast<int32_t> (parser.getResult());
                 break;
       case 'v': return OPTION_VERSION;
       default : return OPTION_HELP;
@@ -228,12 +228,12 @@ int main(int argc, char* argv[]) {
   }
   try {
     ParallelPrimeSieve pps;
-    pps.setFlags(flags);
     pps.setStartNumber(numbers[0]);
     pps.setStopNumber(numbers[1]);
-    pps.setSieveSize(sieveSize);
-    pps.setPreSieveLimit(preSieve);
-    pps.setNumThreads(threads);
+    if (flags     !=  0) pps.setFlags(flags);
+    if (sieveSize != -1) pps.setSieveSize(sieveSize);
+    if (preSieve  != -1) pps.setPreSieveLimit(preSieve);
+    if (threads   != -1) pps.setNumThreads(threads);
 
     // set default settings
     if (!pps.testFlags(pps.COUNT_FLAGS | pps.PRINT_PRIMES | pps.PRINT_KTUPLETS))
@@ -242,10 +242,10 @@ int main(int argc, char* argv[]) {
       pps.addFlags(pps.PRINT_STATUS);
 
     if (!quietMode) {
-      std::cout   << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize()  << " kilobytes" << std::endl;
-      if (pps.getPreSieveLimit() != defs::PRIMESIEVE_PRESIEVE_LIMIT)
-        std::cout << std::setw(10) << "Pre-sieve"  << " = " << pps.getPreSieveLimit() << std::endl;
-      std::cout   << std::setw(10) << "Threads"    << " = " << pps.getNumThreads()    << std::endl;
+      if (preSieve != -1)
+      std::cout << std::setw(10) << "Pre-sieve"  << " = " << pps.getPreSieveLimit() << std::endl;
+      std::cout << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize() << " kilobytes" << std::endl;
+      std::cout << std::setw(10) << "Threads"    << " = " << pps.getNumThreads() << std::endl;
     }
 
     // start sieving primes
@@ -264,7 +264,7 @@ int main(int argc, char* argv[]) {
     }
     // print prime count results
     int width = static_cast<int> (size);
-    for (uint32_t i = 0; i < 7; i++) {
+    for (int32_t i = 0; i < 7; i++) {
       if (pps.testFlags(pps.COUNT_PRIMES << i))
         std::cout << std::setw(width)
                   << primes[i] << " : " << pps.getCounts(i)

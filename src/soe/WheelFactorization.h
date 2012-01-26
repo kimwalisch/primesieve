@@ -45,13 +45,15 @@
 #define WHEELFACTORIZATION_H
 
 #include "SieveOfEratosthenes.h"
-#include "defs.h"
+#include "config.h"
 #include "imath.h"
 
 #include <stdint.h>
 #include <cassert>
 #include <stdexcept>
 #include <sstream>
+
+namespace soe {
 
 /**
  * WheelPrime objects are sieving primes <= sqrt(n) for use with wheel
@@ -159,12 +161,12 @@ public:
     WheelPrime* wPrime = current_;
     current_++;
     wPrime->set(sievingPrime, multipleIndex, wheelIndex);
-    return (wPrime != &wheelPrimes_[defs::BUCKET_SIZE - 1]);
+    return (wPrime != &wheelPrimes_[config::BUCKETSIZE - 1]);
   }
 private:
   WheelPrime* current_;
   Bucket* next_;
-  WheelPrime wheelPrimes_[defs::BUCKET_SIZE];
+  WheelPrime wheelPrimes_[config::BUCKETSIZE];
 };
 
 /**
@@ -328,5 +330,7 @@ extern const WheelElement wheel210Array[48*8];
 typedef Wheel<30, 8, wheel30Array, wheel30Init> Modulo30Wheel_t;
 /** 4th wheel, skips multiples of 2, 3, 5 and 7. */
 typedef Wheel<210, 48, wheel210Array, wheel210Init> Modulo210Wheel_t;
+
+} // namespace soe
 
 #endif /* WHEELFACTORIZATION_H */

@@ -40,11 +40,13 @@
 #ifndef BITHACKS_H
 #define BITHACKS_H
 
-#include "defs.h"
+#include "config.h"
 
 #include <stdint.h>
 #include <cstdlib>
 #include <cassert>
+
+namespace soe {
 
 /**
  * Count the number of 1 bits (population count) in an array using
@@ -173,5 +175,7 @@ inline uint32_t nextHighestPowerOf2(uint32_t x) {
 inline bool isPowerOf2(uint32_t x) {
   return (x != 0 && (x & (x - 1)) == 0);
 }
+
+} // namespace soe
 
 #endif /* BITHACKS_H */

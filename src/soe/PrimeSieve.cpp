@@ -36,7 +36,7 @@
 #include "ParallelPrimeSieve.h"
 #include "PrimeNumberFinder.h"
 #include "PrimeNumberGenerator.h"
-#include "defs.h"
+#include "config.h"
 #include "bithacks.h"
 #include "PreSieve.h"
 
@@ -52,14 +52,16 @@
   #include <omp.h>
 #endif
 
+using namespace soe;
+
 PrimeSieve::PrimeSieve() :
   startNumber_(0),
   stopNumber_(0),
   flags_(COUNT_PRIMES)
 {
   parent_ = this;
-  this->setSieveSize(defs::PRIMESIEVE_SIEVESIZE);
-  this->setPreSieveLimit(defs::PRIMESIEVE_PRESIEVE_LIMIT);
+  this->setSieveSize(config::SIEVESIZE);
+  this->setPreSieveLimit(config::PRESIEVE_LIMIT);
   this->reset();
 }
 

@@ -36,7 +36,7 @@
 #define PARALLELPRIMESIEVE_H
 
 #include "PrimeSieve.h"
-#include "defs.h"
+#include "config.h"
 
 #include <stdint.h>
 

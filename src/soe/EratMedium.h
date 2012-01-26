@@ -37,9 +37,11 @@
 
 #include "EratBase.h"
 #include "WheelFactorization.h"
-#include "defs.h"
+#include "config.h"
 
 #include <stdint.h>
+
+namespace soe {
 
 class SieveOfEratosthenes;
 
@@ -55,5 +57,7 @@ public:
   EratMedium(const SieveOfEratosthenes&);
   void sieve(uint8_t*, uint32_t);
 };
+
+} // namespace soe
 
 #endif /* ERATMEDIUM_H */

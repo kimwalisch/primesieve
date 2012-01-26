@@ -33,7 +33,9 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "WheelFactorization.h"
-#include "defs.h"
+#include "bits.h"
+
+namespace soe {
 
 const WheelInit wheel30Init[30] = {
   {1,  1}, {0,  1}, {5,  2}, {4,  2}, {3,  2}, {2,  2}, {1,  2}, {0,  2},
@@ -223,3 +225,5 @@ const WheelElement wheel210Array[48*8] = {
   WheelElement(BIT4, 4, 0, 1), WheelElement(BIT5,  6,  0, 1), WheelElement(BIT6,  2, 0, 1), 
   WheelElement(BIT7, 6, 1, 1), WheelElement(BIT0,  4,  0, 1), WheelElement(BIT1,  2, 0, 1), 
   WheelElement(BIT2, 4, 0, 1), WheelElement(BIT3,  2,  0, 1), WheelElement(BIT4, 10, 0, -47) };
+
+} // namespace soe

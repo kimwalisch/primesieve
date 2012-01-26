@@ -35,7 +35,7 @@
 #include "ParallelPrimeSieve.h"
 #include "PrimeSieve.h"
 #include "PrimeNumberFinder.h"
-#include "defs.h"
+#include "config.h"
 #include "imath.h"
 
 #if defined(_OPENMP)
@@ -47,12 +47,14 @@
 #include <cstdlib>
 #include <algorithm>
 
+using namespace soe;
+
 ParallelPrimeSieve::ParallelPrimeSieve() :
   numThreads_(USE_IDEAL_NUM_THREADS),
   shm_(NULL)
 {
   // prevents prime k-tuplet gaps
-  static_assert(defs::MIN_THREAD_INTERVAL >= 100, "defs::MIN_THREAD_INTERVAL >= 100");
+  static_assert(config::MIN_THREAD_INTERVAL >= 100, "config::MIN_THREAD_INTERVAL >= 100");
 }
 
 /**
@@ -126,9 +128,9 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
     return 1;
 
   // each thread sieves at least an interval of size sqrt(n) / 6
-  // but not smaller than defs::MIN_THREAD_INTERVAL
+  // but not smaller than MIN_THREAD_INTERVAL
   uint64_t minInterval = isqrt(stopNumber_) / 6;
-  uint64_t threadThreshold = std::max<uint64_t>(defs::MIN_THREAD_INTERVAL, minInterval);
+  uint64_t threadThreshold = std::max<uint64_t>(config::MIN_THREAD_INTERVAL, minInterval);
 
   // use getMaxThreads() if the interval size is sufficiently large
   uint64_t idealMaxThreads = getInterval() / threadThreshold;
@@ -155,11 +157,11 @@ uint64_t ParallelPrimeSieve::getIdealInterval() const {
 
   // idealInterval = sqrt(n) * 2000, 0.1% initialization overhead
   uint64_t sqrtStop = isqrt(stopNumber_);
-  uint64_t idealInterval = std::max<uint64_t>(defs::MIN_THREAD_INTERVAL, sqrtStop * 2000);
+  uint64_t idealInterval = std::max<uint64_t>(config::MIN_THREAD_INTERVAL, sqrtStop * 2000);
 
   uint64_t maxInterval = interval / threads;
   // correct the user's bad settings
-  if (maxInterval < interval && maxInterval < defs::MIN_THREAD_INTERVAL)
+  if (maxInterval < interval && maxInterval < config::MIN_THREAD_INTERVAL)
     maxInterval = interval / getIdealNumThreads();
 
   return std::min(idealInterval, maxInterval);

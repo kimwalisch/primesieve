@@ -33,15 +33,12 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /** 
- * @file  test.cpp
- * @brief -test option in the console version of primesieve,
- *        contains various test routines to check if PrimeSieve
- *        produces correct results.
+ * @file test.cpp
+ * @brief `make test` or `./primesieve -test` runs sieving tests to
+ *        check if primesieve produces correct results.
  */
 
-#include "../soe/defs.h"
 #include "../soe/ParallelPrimeSieve.h"
-#include "../soe/imath.h"
 
 #include <stdint.h>
 #include <iostream>
@@ -52,185 +49,205 @@
 #include <algorithm>
 
 namespace {
-  uint32_t primeCounts[21] = {
-      4,          // pi(10^1)
-      25,         // pi(10^2)
-      168,        // pi(10^3)
-      1229,       // pi(10^4)
-      9592,       // pi(10^5)
-      78498,      // pi(10^6)
-      664579,     // pi(10^7)
-      5761455,    // pi(10^8)
-      50847534,   // pi(10^9)
-      203280221,  // pi(2^32)
-      455052511,  // pi(10^10)
-      4118054813U,// pi(10^11)
-      155428406,  // prime count of [10^12, 10^12 + 2^32]
-      143482916,  // prime count of [10^13, 10^13 + 2^32]
-      133235063,  // prime count of [10^14, 10^14 + 2^32]
-      124350420,  // prime count of [10^15, 10^15 + 2^32]
-      116578809,  // prime count of [10^16, 10^16 + 2^32]
-      109726486,  // prime count of [10^17, 10^17 + 2^32]
-      103626726,  // prime count of [10^18, 10^18 + 2^32]
-      98169972,   // prime count of [10^19, 10^19 + 2^32]
-      2895317534U // prime count of [10^15, 10^15 + 10^11]
-  };
 
-  // Keeps the memory requirement below 1GB in testBigPrimes()
-  int maxThreads[8] = {32, 32, 32, 32, 32, 8, 4, 1};
-  // Set to true if any test fails
-  bool isError = false;
-  // Time elapsed in seconds of all sieving tests
-  double seconds = 0.0;
+unsigned int primeCounts[21] = {
+  4,           // pi(10^1)
+  25,          // pi(10^2)
+  168,         // pi(10^3)
+  1229,        // pi(10^4)
+  9592,        // pi(10^5)
+  78498,       // pi(10^6)
+  664579,      // pi(10^7)
+  5761455,     // pi(10^8)
+  50847534,    // pi(10^9)
+  203280221,   // pi(2^32)
+  455052511,   // pi(10^10)
+  4118054813U, // pi(10^11)
+  155428406,   // pi[10^12, 10^12+2^32]
+  143482916,   // pi[10^13, 10^13+2^32]
+  133235063,   // pi[10^14, 10^14+2^32]
+  124350420,   // pi[10^15, 10^15+2^32]
+  116578809,   // pi[10^16, 10^16+2^32]
+  109726486,   // pi[10^17, 10^17+2^32]
+  103626726,   // pi[10^18, 10^18+2^32]
+  98169972,    // pi[10^19, 10^19+2^32]
+  2895317534U  // pi[10^15, 10^15+10^11]
+};
 
-  void evaluateTest(bool isSuccess) {
-    if (isSuccess)
-      std::cout << "OK" << std::endl;
-    else {
-      std::cout << "ERROR" << std::endl;
-      isError  = true;
+// Keeps the memory requirement below 1GB in testBigPrimes()
+int maxThreads[8] = { 32, 32, 32, 32, 32, 8, 4, 1 };
+// Set to true if any test fails
+bool isError = false;
+// Time elapsed in seconds of all sieving tests
+double seconds = 0.0;
+
+/**
+ * Integer pow, raise to power, x^n.
+ * Code from (ported to C++ from Ruby):
+ * http://en.wikipedia.org/wiki/Exponentiation_by_squaring
+ */
+uint64_t ipow(uint64_t x, int n) {
+  uint64_t result = 1;
+  while (n != 0) {
+    if (n & 1) {
+      result *= x;
+      n -= 1;
     }
+    x *= x;
+    n /= 2;
   }
+  return result;
+}
 
-  /**
-   * Calculate the prime-counting function pi(x) up to 10^11 and
-   * and compare the results (primeCounts[]).
-   */
-  void testPix() {
-    std::cout << "Calculate the prime-counting function pi(x)" << std::endl;
-    try {
-      ParallelPrimeSieve pps;
-      pps.setStartNumber(0);
-      pps.setStopNumber(0);
-      pps.setSieveSize(32);
-      uint64_t primeCount = 0;
-
-      // pi(x) for 10^x with x = 1 to 9
-      for (int i = 1; i <= 9; i++) {
-        primeCount += pps.getPrimeCount(pps.getStopNumber() + 1, ipow(10, i));
-        seconds += pps.getTimeElapsed();
-        std::cout << "pi(10^" << i << ")  = " << std::setw(12) << primeCount;
-        evaluateTest(primeCount == primeCounts[i-1]);
-      }
-      // pi(2^32)
-      primeCount += pps.getPrimeCount(pps.getStopNumber() + 1, ipow(2, 32));
-      seconds += pps.getTimeElapsed();
-      std::cout << "pi(2^32)  = " << std::setw(12) << primeCount;
-      evaluateTest(primeCount == primeCounts[9]);
-
-      pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
-      // pi(x) for 10^x with x = 10 to 11
-      for (int i = 10; i <= 11; i++) {
-        pps.setStartNumber(pps.getStopNumber() + 1);
-        pps.setStopNumber(ipow(10, i));
-        pps.sieve();
-        primeCount += pps.getPrimeCount();
-        seconds += pps.getTimeElapsed();
-        std::cout << "\rpi(10^" << i << ") = " << std::setw(12) << primeCount;
-        evaluateTest(primeCount == primeCounts[i]);
-      }
-    }
-    catch (std::exception& e) {
-      std::cerr << "Exception " << e.what() << std::endl;
-      std::exit(EXIT_FAILURE);
-    }
+void evaluateTest(bool isSuccess) {
+  if (isSuccess)
+    std::cout << "OK" << std::endl;
+  else {
+    std::cout << "ERROR" << std::endl;
+    isError  = true;
   }
+}
 
-  /**
-   * Count the primes within the interval [10^x, 10^x + 2^32] with
-   * x = 12 to 19 and compare the results (primeCounts[]).
-   * @remark Uses up to 1GB of memory
-   */
-  void testBigPrimes() {
-    try {
-      ParallelPrimeSieve pps;
-      pps.setSieveSize(512);
-      pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
-
-      for (uint32_t i = 0; i < 8; i++) {
-        pps.setStartNumber(ipow(10, 12 + i));
-        pps.setStopNumber(pps.getStartNumber() + ipow(2, 32));
-        std::cout << "Sieve the primes within [10^" << 12 + i << ", 10^" << 12 + i << "+2^32]" << std::endl;
-        if (pps.getNumThreads() > maxThreads[i])
-          pps.setNumThreads(maxThreads[i]);
-        pps.sieve();
-        seconds += pps.getTimeElapsed();
-        std::cout << "\rPrime count: " << std::setw(11) << pps.getPrimeCount();
-        evaluateTest(pps.getPrimeCount() == primeCounts[12 + i]);
-      }
-    }
-    catch (std::exception& e) {
-      std::cerr << "Exception " << e.what() << std::endl;
-      std::exit(EXIT_FAILURE);
-    }
-  }
-
-  /**
-   * Sieve about 200 small random intervals (using random sieve sizes)
-   * until the interval [10^15, 10^15 + 10^11] has been completed and
-   * compare the prime count result (primeCounts[]).
-   */
-  void testRandomIntervals() {
-    std::cout << "Sieve the primes within [10^15, 10^15+10^11] randomly" << std::endl;
-    uint64_t lowerBound = ipow(10, 15);
-    uint64_t upperBound = lowerBound + ipow(10, 11);
-    uint64_t maxInterval = ipow(10, 9);
+/**
+ * Calculate the prime-counting function pi(x) up to 10^11
+ * and check the primeCounts[] results.
+ */
+void testPix() {
+  std::cout << "Calculating the prime-counting function pi(x)" << std::endl;
+  try {
+    ParallelPrimeSieve pps;
+    pps.setStartNumber(0);
+    pps.setStopNumber(0);
     uint64_t primeCount = 0;
-    try {
-      std::srand(static_cast<unsigned int> (std::time(0)));
-      ParallelPrimeSieve pps;
-      pps.setStartNumber(lowerBound - 1);
-      pps.setStopNumber(lowerBound - 1);
-      pps.setFlags(ParallelPrimeSieve::COUNT_PRIMES);
 
-      while (pps.getStopNumber() < upperBound) {
-        uint64_t rand64 = 1;
-        while (rand64 < UINT32_MAX)
-          rand64 += rand64 * std::max<int> (2, std::rand());
-        // generate a random interval >= 0 and < 10^9
-        uint64_t interval = rand64 % maxInterval;
-        // generate a random sieve size >= 1 and <= 4096
-        uint32_t sieveSize = 1 << static_cast<int> (rand64 % 13);
-
-        // sieve the next random interval
-        pps.setStartNumber(pps.getStopNumber() + 1);
-        pps.setStopNumber(pps.getStartNumber() + interval);
-        pps.setSieveSize(sieveSize);
-        if (pps.getStopNumber() > upperBound)
-          pps.setStopNumber(upperBound);
-        pps.sieve();
-        primeCount += pps.getPrimeCount();
-        seconds += pps.getTimeElapsed();
-        std::cout << "\rRemaining chunk:             "
-                  << "\rRemaining chunk: " << upperBound - pps.getStopNumber()
-                  << std::flush;
-      }
-      std::cout << std::endl;
-      std::cout << "Prime count: " << std::setw(11) << primeCount;
-      evaluateTest(primeCount == primeCounts[20]);
+    // pi(x) for 10^x with x = 1 to 9
+    for (int i = 1; i <= 9; i++) {
+      primeCount += pps.getPrimeCount(pps.getStopNumber() + 1, ipow(10, i));
+      seconds += pps.getTimeElapsed();
+      std::cout << "pi(10^" << i << ")  = " << std::setw(12) << primeCount;
+      evaluateTest(primeCount == primeCounts[i-1]);
     }
-    catch (std::exception& e) {
-      std::cerr << "Exception " << e.what() << std::endl;
-      std::exit(EXIT_FAILURE);
+    // pi(2^32)
+    primeCount += pps.getPrimeCount(pps.getStopNumber() + 1, ipow(2, 32));
+    seconds += pps.getTimeElapsed();
+    std::cout << "pi(2^32)  = " << std::setw(12) << primeCount;
+    evaluateTest(primeCount == primeCounts[9]);
+
+    pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
+    // pi(x) for 10^x with x = 10 to 11
+    for (int i = 10; i <= 11; i++) {
+      pps.setStartNumber(pps.getStopNumber() + 1);
+      pps.setStopNumber(ipow(10, i));
+      pps.sieve();
+      primeCount += pps.getPrimeCount();
+      seconds += pps.getTimeElapsed();
+      std::cout << "\rpi(10^" << i << ") = " << std::setw(12) << primeCount;
+      evaluateTest(primeCount == primeCounts[i]);
     }
   }
-} // end anonymous namespace
+  catch (std::exception& e) {
+    std::cerr << "Exception " << e.what() << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+}
+
+/**
+ * Count the primes within the interval [10^x, 10^x+2^32] with x = 12
+ * to 19 and check the primeCounts[] results.
+ * @remark Uses up to 1GB of memory
+ */
+void testBigPrimes() {
+  try {
+    ParallelPrimeSieve pps;
+    pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
+    pps.setSieveSize(512);
+
+    for (int i = 0; i < 8; i++) {
+      std::cout << "Sieving the primes within [10^" << i+12 << ", 10^" << i+12 << "+2^32]" << std::endl;
+      pps.setStartNumber(ipow(10, i + 12));
+      pps.setStopNumber(pps.getStartNumber() + ipow(2, 32));
+      if (pps.getNumThreads() > maxThreads[i])
+        pps.setNumThreads(maxThreads[i]);
+      pps.sieve();
+      seconds += pps.getTimeElapsed();
+      std::cout << "\rPrime count: " << std::setw(11) << pps.getPrimeCount();
+      evaluateTest(pps.getPrimeCount() == primeCounts[i + 12]);
+    }
+  }
+  catch (std::exception& e) {
+    std::cerr << "Exception " << e.what() << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+}
+
+/** Generate a random 64-bit integer >= 0 && < limit */
+uint64_t getRand64(uint64_t limit) {
+  uint64_t rand64 = 0;
+  for (int i = 0; i < 4; i++)
+    rand64 = std::rand() % (1 << 16) + (rand64 << (16 * i));
+  return rand64 % limit;
+}
+
+/** Generate a random (power of 2) sieve size >= 1 and <= 4096 */
+uint32_t getRandomSieveSize() {
+  return static_cast<uint32_t> (1 << (std::rand() % 13));
+}
+
+/**
+ * Sieve about 200 small random intervals (using random sieve sizes)
+ * until the interval [10^15, 10^15+10^11] has been completed and
+ * check the prime count result.
+ */
+void testRandomIntervals() {
+  std::cout << "Sieving the primes within [10^15, 10^15+10^11] randomly" << std::endl;
+  std::srand(static_cast<unsigned int> (std::time(0)));
+  uint64_t lowerBound = ipow(10, 15);
+  uint64_t upperBound = lowerBound + ipow(10, 11);
+  uint64_t primeCount = 0;
+  const uint64_t maxInterval = ipow(10, 9);
+  try {
+    ParallelPrimeSieve pps;
+    pps.setStartNumber(lowerBound - 1);
+    pps.setStopNumber(lowerBound - 1);
+    pps.setFlags(pps.COUNT_PRIMES);
+
+    while (pps.getStopNumber() < upperBound) {
+      pps.setStartNumber(pps.getStopNumber() + 1);
+      pps.setStopNumber(pps.getStartNumber() + getRand64(maxInterval));
+      if (pps.getStopNumber() > upperBound)
+        pps.setStopNumber(upperBound);
+      pps.setSieveSize(getRandomSieveSize());
+      pps.sieve();
+      primeCount += pps.getPrimeCount();
+      seconds += pps.getTimeElapsed();
+      std::cout << "\rRemaining chunk:             "
+                << "\rRemaining chunk: " << upperBound - pps.getStopNumber()
+                << std::flush;
+    }
+    std::cout << std::endl;
+    std::cout << "Prime count: " << std::setw(11) << primeCount;
+    evaluateTest(primeCount == primeCounts[20]);
+  }
+  catch (std::exception& e) {
+    std::cerr << "Exception " << e.what() << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+}
+
+} // annonymous namespace
 
 /**
  * Run various sieving tests to check if PrimeSieve produces correct
  * results, uses up to 1GB of memory.
  *
  * The test may fail for one of the following reasons:
- *
  * 1. The source code has been modified and a new bug has been
  *    introduced somewhere.
  * 2. The compiler has produced an erroneous executable.
  * 3. The user's system is not stable.
  */
 void test() {
-  // use left alignment with std::setw
   std::cout << std::left;
-  // run tests
   testPix();
   std::cout << std::endl;
   testBigPrimes();

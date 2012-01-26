@@ -34,13 +34,16 @@
 
 #include "PreSieve.h"
 #include "SieveOfEratosthenes.h"
-#include "defs.h"
+#include "config.h"
+#include "bits.h"
 
 #include <stdint.h>
 #include <stdexcept>
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
+
+namespace soe {
 
 const uint32_t PreSieve::smallPrimes_[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 };
 
@@ -92,8 +95,6 @@ uint32_t PreSieve::getPrimeProduct(uint32_t limit) const {
 void PreSieve::initPreSieved() {
   static_assert(SieveOfEratosthenes::NUMBERS_PER_BYTE == 30, 
                "SieveOfEratosthenes::NUMBERS_PER_BYTE == 30");
-  assert(limit_ < smallPrimes_[9]);
-  assert(size_ > 0);
   preSieved_ = new uint8_t[size_];
   preSieved_[0] = 0xFF;
   uint32_t primeProduct = 2 * 3 * 5;
@@ -150,3 +151,5 @@ void PreSieve::doIt(uint8_t* sieve,
     std::memcpy(&sieve[offset], preSieved_, sieveSize - offset);
   }
 }
+
+} // namespace soe
