@@ -53,7 +53,7 @@ class ParallelPrimeSieve;
  * examples that show how to use PrimeSieve objects.
  */
 class PrimeSieve {
-  friend class PrimeNumberFinder;
+  friend class soe::PrimeNumberFinder;
 public:
   /** Public (user) flags. */
   enum {

@@ -42,13 +42,15 @@
 
 class PrimeSieve;
 
+namespace soe {
+
 /**
  * PrimeNumberFinder is a SieveOfEratosthenes class that is used to
  * generate, count and print primes and prime k-tuplets (twin primes,
  * prime triplets, ...).
  * PrimeNumberFinder objects are used in PrimeSieve::sieve().
  */
-class PrimeNumberFinder: public soe::SieveOfEratosthenes {
+class PrimeNumberFinder: public SieveOfEratosthenes {
 public:
   PrimeNumberFinder(PrimeSieve&);
   ~PrimeNumberFinder();
@@ -71,5 +73,7 @@ private:
   void callback64_OOP(uint64_t) const;
   void print(uint64_t) const;
 };
+
+} // namespace soe
 
 #endif /* PRIMENUMBERFINDER_H */

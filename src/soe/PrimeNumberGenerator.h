@@ -40,6 +40,7 @@
 
 #include <stdint.h>
 
+namespace soe {
 class PrimeNumberFinder;
 
 /**
@@ -47,7 +48,7 @@ class PrimeNumberFinder;
  * to generate the primes up to sqrt(n) needed for sieving by
  * PrimeNumberFinder.
  */
-class PrimeNumberGenerator: public soe::SieveOfEratosthenes {
+class PrimeNumberGenerator: public SieveOfEratosthenes {
 public:
   PrimeNumberGenerator(PrimeNumberFinder&);
 private:
@@ -55,5 +56,7 @@ private:
   void generate(const uint8_t*, uint32_t);
   virtual void analyseSieve(const uint8_t*, uint32_t);
 };
+
+} // namespace soe
 
 #endif /* PRIMENUMBERGENERATOR_H */

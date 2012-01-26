@@ -48,7 +48,7 @@
   #include <omp.h>
 #endif
 
-using namespace soe;
+namespace soe {
 
 /// Bit patterns corresponding to prime k-tuplets
 /// within bytes of the sieve array.
@@ -208,3 +208,5 @@ void PrimeNumberFinder::callback64_OOP(uint64_t prime) const {
 void PrimeNumberFinder::print(uint64_t prime) const {
   std::cout << prime << '\n';
 }
+
+} // namespace soe
