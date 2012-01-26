@@ -69,10 +69,16 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
                                          uint64_t stopNumber,
                                          uint32_t sieveSize,
                                          uint32_t preSieveLimit) :
-  startNumber_(startNumber), stopNumber_(stopNumber), sqrtStop_(isqrt(stopNumber)),
-    sieve_(NULL), sieveSize_(sieveSize * 1024),
-      isFirstSegment_(true), preSieve_(preSieveLimit),
-        eratSmall_(NULL), eratMedium_(NULL), eratBig_(NULL)
+  startNumber_(startNumber),
+  stopNumber_(stopNumber),
+  sqrtStop_(isqrt(stopNumber)),
+  sieve_(NULL),
+  sieveSize_(sieveSize * 1024),
+  isFirstSegment_(true),
+  preSieve_(preSieveLimit),
+  eratSmall_(NULL),
+  eratMedium_(NULL),
+  eratBig_(NULL)
 {
   if (startNumber_ < 7 || startNumber_ > stopNumber_)
     throw std::logic_error("SieveOfEratosthenes: startNumber must be >= 7 && <= stopNumber.");
