@@ -46,7 +46,7 @@
 namespace soe {
 
 EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
-  EratBase<Modulo210Wheel_t> (soe)
+  EratBase<Modulo210Wheel_t>(soe)
 {
   // conditions that assert multipleIndex < 2^23 in sieve()
   static_assert(config::FACTOR_ERATMEDIUM <= 6, "config::FACTOR_ERATMEDIUM <= 6");

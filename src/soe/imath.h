@@ -52,7 +52,7 @@ inline T isquare(T x) {
 }
 
 inline uint32_t isqrt(uint64_t x) {
-  return static_cast<uint32_t> (std::sqrt(static_cast<double> (x)));
+  return static_cast<uint32_t>(std::sqrt(static_cast<double>(x)));
 }
 
 } // namespace soe

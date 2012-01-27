@@ -282,10 +282,10 @@ protected:
     const WheelInit& wheelInit = WHEEL_INIT[quotient % WHEEL_MODULO];
     // calculate the next multiple that is not divisible by any of the
     // wheel's primes (e.g. 2, 3 and 5 for a modulo 30 wheel)
-    multiple += static_cast<uint64_t> (*prime) * wheelInit.nextMultipleFactor;
+    multiple += static_cast<uint64_t>(*prime) * wheelInit.nextMultipleFactor;
     if (multiple > soe_.getStopNumber())
       return false;
-    *multipleIndex = static_cast<uint32_t> ((multiple - segmentLow) / 30);
+    *multipleIndex = static_cast<uint32_t>((multiple - segmentLow) / 30);
     *wheelIndex = wheelOffsets_[*prime % 30] + wheelInit.wheelIndex;
     *prime /= 30;
     return true;

@@ -190,7 +190,7 @@ uint64_t getRand64(uint64_t limit) {
 
 /** Generate a random (power of 2) sieve size >= 1 and <= 4096 */
 uint32_t getRandomSieveSize() {
-  return static_cast<uint32_t> (1 << (std::rand() % 13));
+  return static_cast<uint32_t>(1 << (std::rand() % 13));
 }
 
 /**
@@ -200,7 +200,7 @@ uint32_t getRandomSieveSize() {
  */
 void testRandomIntervals() {
   std::cout << "Sieving the primes within [10^15, 10^15+10^11] randomly" << std::endl;
-  std::srand(static_cast<unsigned int> (std::time(0)));
+  std::srand(static_cast<unsigned int>(std::time(0)));
   uint64_t lowerBound = ipow(10, 15);
   uint64_t upperBound = lowerBound + ipow(10, 11);
   uint64_t primeCount = 0;

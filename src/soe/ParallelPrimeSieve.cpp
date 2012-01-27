@@ -138,7 +138,7 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   if (idealNumThreads < 1)
     idealNumThreads = 1;
 
-  return static_cast<int> (idealNumThreads);
+  return static_cast<int>(idealNumThreads);
 }
 
 uint64_t ParallelPrimeSieve::getInterval() const {

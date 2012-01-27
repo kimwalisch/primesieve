@@ -1,7 +1,7 @@
 /*
  * main.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
       }
       // map the attached shared memory to the shm segment
       ParallelPrimeSieve::SharedMemory* shm =
-          static_cast<ParallelPrimeSieve::SharedMemory*> (sharedMemory.data());
+          static_cast<ParallelPrimeSieve::SharedMemory*>(sharedMemory.data());
       try {
         // initialize the ParallelPrimeSieve object with values from
         // the shared memory segment provided by the primesieve GUI

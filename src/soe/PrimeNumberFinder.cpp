@@ -134,7 +134,7 @@ void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
 void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // count prime numbers (1 bits within the sieve array)
   if (ps_.testFlags(ps_.COUNT_PRIMES)) {
-    const uint64_t* sieve64 = reinterpret_cast<const uint64_t*> (sieve);
+    const uint64_t* sieve64 = reinterpret_cast<const uint64_t*>(sieve);
     uint32_t sieveSize64 = sieveSize / 8;
     uint32_t bytesLeft = sieveSize % 8;
     // see bithacks.h

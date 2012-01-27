@@ -132,7 +132,7 @@ void PreSieve::doIt(uint8_t* sieve,
                     uint64_t segmentLow) const
 {
   // map segmentLow to the preSieved_ array
-  uint32_t offset = static_cast<uint32_t> (segmentLow % primeProduct_) / 
+  uint32_t offset = static_cast<uint32_t>(segmentLow % primeProduct_) / 
       SieveOfEratosthenes::NUMBERS_PER_BYTE;
   uint32_t sizeLeft = size_ - offset;
 

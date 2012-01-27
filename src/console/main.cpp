@@ -189,12 +189,12 @@ int processOptions(std::size_t argc, char* argv[]) {
       case 'r': parser.eval(argv[i]);
                 if (!parser.isSuccess())
                   return OPTION_HELP;
-                preSieve = static_cast<int32_t> (parser.getResult());
+                preSieve = static_cast<int32_t>(parser.getResult());
                 break;
       case 's': parser.eval(argv[i]);
                 if (!parser.isSuccess())
                   return OPTION_HELP;
-                sieveSize = static_cast<int32_t> (parser.getResult());
+                sieveSize = static_cast<int32_t>(parser.getResult());
                 break;
       case 't': arg = argv[i];
                 if (arg.compare(testOption) == 0)
@@ -202,7 +202,7 @@ int processOptions(std::size_t argc, char* argv[]) {
                 parser.eval(argv[i]);
                 if (!parser.isSuccess())
                   return OPTION_HELP;
-                threads = static_cast<int32_t> (parser.getResult());
+                threads = static_cast<int32_t>(parser.getResult());
                 break;
       case 'v': return OPTION_VERSION;
       default : return OPTION_HELP;
@@ -263,7 +263,7 @@ int main(int argc, char* argv[]) {
         size = primes[i].size();
     }
     // print prime count results
-    int width = static_cast<int> (size);
+    int width = static_cast<int>(size);
     for (int32_t i = 0; i < 7; i++) {
       if (pps.testFlags(pps.COUNT_PRIMES << i))
         std::cout << std::setw(width)

@@ -65,7 +65,7 @@
 #if __cplusplus <= 199711L && \
        !defined(__GXX_EXPERIMENTAL_CXX0X__) && \
       (!defined(_MSC_VER) || _MSC_VER < 1600)
-#  define static_assert(expression, message) static_cast<void> (0)
+#  define static_assert(expression, message) static_cast<void>(0)
 #endif
 
 /** Default CPU L1 data cache size per core in kilobytes. */
@@ -141,7 +141,7 @@ enum {
    * of size MIN_THREAD_INTERVAL in ParallelPrimeSieve.
    * @pre MIN_THREAD_INTERVAL >= 100
    */
-  MIN_THREAD_INTERVAL = static_cast<int> (1E8)
+  MIN_THREAD_INTERVAL = static_cast<int>(1E8)
 };
 
 } // namespace config

@@ -47,10 +47,10 @@
 namespace soe {
 
 EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
-  EratBase<Modulo30Wheel_t> (soe)
+  EratBase<Modulo30Wheel_t>(soe)
 {
   uint32_t sqrtStop = soe.getSquareRoot();
-  uint32_t max = static_cast<uint32_t> (soe.getSieveSize() * config::FACTOR_ERATSMALL);
+  uint32_t max = static_cast<uint32_t>(soe.getSieveSize() * config::FACTOR_ERATSMALL);
   uint32_t limit = std::min(sqrtStop, max);
   // sieveSize - 1 + (prime / 30) * 6 + 6 - sieveSize < sieveSize
   // prevents segmentation faults in sieve(uint8_t*, uint32_t)
@@ -274,7 +274,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
         break;
       }
       // set the next multiple's index for the next segment
-      wPrime->setMultipleIndex(static_cast<uint32_t> (s - sieveEnd));
+      wPrime->setMultipleIndex(static_cast<uint32_t>(s - sieveEnd));
     }
   }
 }

@@ -144,30 +144,30 @@ private:
  * and call a callback function for each prime.
  * @see PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
  */
-#define GENERATE_PRIMES(callback, uintXX_t) {                \
-  uintXX_t offset = static_cast<uintXX_t> (getSegmentLow()); \
-  uint32_t i = 0;                                            \
-  for (; i < sieveSize - sieveSize % 4; i += 4) {            \
-    /* big-endian safe, reinterpret_cast won't work */       \
-    uint32_t dword = (sieve[i+0] << (8 * 0)) +               \
-                     (sieve[i+1] << (8 * 1)) +               \
-                     (sieve[i+2] << (8 * 2)) +               \
-                     (sieve[i+3] << (8 * 3));                \
-    while (dword != 0) {                                     \
-      uintXX_t prime = offset + getFirstSetBitValue(dword);  \
-      dword &= dword - 1;                                    \
-      callback (prime);                                      \
-    }                                                        \
-    offset += NUMBERS_PER_BYTE * 4;                          \
-  }                                                          \
-  for (; i < sieveSize; i++, offset += NUMBERS_PER_BYTE) {   \
-    uint32_t byte = sieve[i];                                \
-    while (byte != 0) {                                      \
-      uintXX_t prime = offset + getFirstSetBitValue(byte);   \
-      byte &= byte - 1;                                      \
-      callback (prime);                                      \
-    }                                                        \
-  }                                                          \
+#define GENERATE_PRIMES(callback, uintXX_t) {               \
+  uintXX_t offset = static_cast<uintXX_t>(getSegmentLow()); \
+  uint32_t i = 0;                                           \
+  for (; i < sieveSize - sieveSize % 4; i += 4) {           \
+    /* big-endian safe, reinterpret_cast won't work */      \
+    uint32_t dword = (sieve[i+0] << (8 * 0)) +              \
+                     (sieve[i+1] << (8 * 1)) +              \
+                     (sieve[i+2] << (8 * 2)) +              \
+                     (sieve[i+3] << (8 * 3));               \
+    while (dword != 0) {                                    \
+      uintXX_t prime = offset + getFirstSetBitValue(dword); \
+      dword &= dword - 1;                                   \
+      callback (prime);                                     \
+    }                                                       \
+    offset += NUMBERS_PER_BYTE * 4;                         \
+  }                                                         \
+  for (; i < sieveSize; i++, offset += NUMBERS_PER_BYTE) {  \
+    uint32_t byte = sieve[i];                               \
+    while (byte != 0) {                                     \
+      uintXX_t prime = offset + getFirstSetBitValue(byte);  \
+      byte &= byte - 1;                                     \
+      callback (prime);                                     \
+    }                                                       \
+  }                                                         \
 }
 
 #endif /* SIEVEOFERATOSTHENES_H */

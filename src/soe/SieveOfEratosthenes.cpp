@@ -110,7 +110,7 @@ uint32_t SieveOfEratosthenes::getPreSieveLimit() const {
 }
 
 uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) const {
-  uint32_t remainder = static_cast<uint32_t> (n % NUMBERS_PER_BYTE);
+  uint32_t remainder = static_cast<uint32_t>(n % NUMBERS_PER_BYTE);
   // correction for primes of type i*30 + 31
   if (remainder <= 1)
     remainder += NUMBERS_PER_BYTE;
@@ -219,7 +219,7 @@ void SieveOfEratosthenes::finish() {
   }
   uint32_t stopRemainder = this->getByteRemainder(stopNumber_);
   // calculate the sieve size of the last segment
-  sieveSize_ = static_cast<uint32_t> ((stopNumber_ - stopRemainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
+  sieveSize_ = static_cast<uint32_t>((stopNumber_ - stopRemainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
   // sieve the last segment
   this->preSieve();
   this->crossOffMultiples();

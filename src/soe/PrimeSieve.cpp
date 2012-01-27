@@ -311,12 +311,12 @@ void PrimeSieve::reset() {
  */
 void PrimeSieve::doStatus(uint32_t processed) {
   segments_ += processed;
-  double todo = static_cast<double> (stopNumber_ - startNumber_ + 1);
-  double done = static_cast<double> (segments_);
-  int    old  = static_cast<int> (status_);
+  double todo = static_cast<double>(stopNumber_ - startNumber_ + 1);
+  double done = static_cast<double>(segments_);
+  int    old  = static_cast<int>(status_);
   status_ = std::min<double>((done / todo) * 100.0, 100.0);
   if (testFlags(PRINT_STATUS)) {
-    int status = static_cast<int> (status_);
+    int status = static_cast<int>(status_);
     if (status > old)
       std::cout << '\r' << status << '%' << std::flush;
   }
@@ -398,5 +398,5 @@ void PrimeSieve::sieve() {
 
   // make sure that status_ = 100.0 percent
   parent_->doStatus(10);
-  timeElapsed_ = static_cast<double> (std::clock() - t1) / CLOCKS_PER_SEC;
+  timeElapsed_ = static_cast<double>(std::clock() - t1) / CLOCKS_PER_SEC;
 }

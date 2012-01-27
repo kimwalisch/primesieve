@@ -1,7 +1,7 @@
 /*
  * PrimeSieveGUI.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -242,7 +242,7 @@ void PrimeSieveGUI::on_sieveButton_clicked() {
 }
 
 void PrimeSieveGUI::advanceProgressBar() {
-  int permil = static_cast<int> (primeSieveProcess_->getStatus() * 10.0);
+  int permil = static_cast<int>(primeSieveProcess_->getStatus() * 10.0);
   ui->progressBar->setValue(permil);
 }
 

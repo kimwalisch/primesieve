@@ -1,7 +1,7 @@
 /*
  * PrimeSieveProcess.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,9 +51,9 @@ PrimeSieveProcess::~PrimeSieveProcess() {
  */
 int PrimeSieveProcess::getProcessId() {
 #if defined(Q_OS_WIN)
-  return static_cast<int> (GetCurrentProcessId());
+  return static_cast<int>(GetCurrentProcessId());
 #else
-  return static_cast<int> (getpid());
+  return static_cast<int>(getpid());
 #endif
 }
 
@@ -69,7 +69,7 @@ void PrimeSieveProcess::createSharedMemory() {
         "Interprocess communication error, could not allocate shared memory.");
   }
   // map the attached shared memory to the shm_ segment
-  shm_ = static_cast<ParallelPrimeSieve::SharedMemory*> (sharedMemory_.data());
+  shm_ = static_cast<ParallelPrimeSieve::SharedMemory*>(sharedMemory_.data());
 }
 
 /**
@@ -82,8 +82,8 @@ void PrimeSieveProcess::start(quint64 startNumber, quint64 stopNumber,
   // initialize the shared memory segment
   shm_->startNumber = startNumber;
   shm_->stopNumber  = stopNumber;
-  shm_->sieveSize   = static_cast<quint32> (sieveSize);
-  shm_->flags       = static_cast<quint32> (flags);
+  shm_->sieveSize   = static_cast<quint32>(sieveSize);
+  shm_->flags       = static_cast<quint32>(flags);
   shm_->threads     = threads;
   for (int i = 0; i < ParallelPrimeSieve::COUNTS_SIZE; i++)
     shm_->counts[i] = 0;
@@ -100,7 +100,7 @@ void PrimeSieveProcess::start(quint64 startNumber, quint64 stopNumber,
 }
 
 bool PrimeSieveProcess::isFinished() {
-  return (static_cast<int> (shm_->status) == 100);
+  return (static_cast<int>(shm_->status) == 100);
 }
 
 /**
