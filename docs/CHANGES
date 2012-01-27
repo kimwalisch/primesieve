@@ -1,3 +1,14 @@
+New in version 3.5, 27/01/2012
+==============================
+
+1. Bug fix for big-endian CPUs (PowerPC, SPARC), see docs/BUGS.
+2. Helper classes and functions within src/soe are now defined in the
+   the newly introduced soe namespace. This makes PrimeSieve more
+   usable as a library.
+3. The header file src/soe/defs.h has been renamed to config.h and its
+   code readability has been improved.
+4. The code of src/console/test.cpp has been simplified.
+
 New in version 3.4, 05/01/2012
 ==============================
 
