@@ -1,10 +1,10 @@
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-Please contact the author if you find a new bug. The latest version of
-primesieve can be retrieved from its Subversion repository:
+Please contact the author if you find a new bug. The latest primesieve
+source code can be retrieved from its Subversion repository:
 
-$ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve-read-only
+$ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve
 
 List of fixed bugs in primesieve
 ================================
