@@ -314,7 +314,7 @@ void PrimeSieve::doStatus(uint32_t processed) {
   double todo = static_cast<double>(stopNumber_ - startNumber_ + 1);
   double done = static_cast<double>(segments_);
   int    old  = static_cast<int>(status_);
-  status_ = std::min<double>((done / todo) * 100.0, 100.0);
+  status_ = std::min((done / todo) * 100.0, 100.0);
   if (testFlags(PRINT_STATUS)) {
     int status = static_cast<int>(status_);
     if (status > old)
