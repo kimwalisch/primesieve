@@ -64,10 +64,10 @@ const uint32_t PrimeNumberFinder::kTupletBitmasks_[6][5] =
 
 PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
   SieveOfEratosthenes(
-      std::max<uint64_t>(7, ps.getStartNumber()),
-      ps.getStopNumber(),
-      ps.getSieveSize(),
-      ps.getPreSieveLimit()),
+      std::max<uint64_t>(7, ps.getStart()),
+      ps.getStop(),
+      ps.getPreSieveLimit(),
+      ps.getSieveSize()),
   ps_(ps),
   kTupletByteCounts_(NULL)
 {
@@ -123,8 +123,7 @@ void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
     this->count(sieve, sieveSize);
   if (ps_.testFlags(ps_.GENERATE_FLAGS))
     this->generate(sieve, sieveSize);
-  uint32_t processed = sieveSize * NUMBERS_PER_BYTE;
-  ps_.parent_->doStatus(processed);
+  ps_.parent_->doStatus(sieveSize * NUMBERS_PER_BYTE);
 }
 
 /**

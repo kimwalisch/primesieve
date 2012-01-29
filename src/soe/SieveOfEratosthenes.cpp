@@ -58,34 +58,34 @@ const uint32_t SieveOfEratosthenes::deBruijnFsbValues_[32] =
 };
 
 /**
- * @param startNumber    Sieve the primes within the interval [startNumber, stopNumber].
- * @param stopNumber     Sieve the primes within the interval [startNumber, stopNumber].
- * @param sieveSize      A sieve size in kilobytes, sieveSize >= 1 && <= 4096.
- * @param preSieveLimit  Multiples of small primes <= preSieveLimit are pre-sieved
- *                       to speed up the sieve of Eratosthenes,
+ * @param start          Sieve the primes within the interval [start, stop].
+ * @param stop           Sieve the primes within the interval [start, stop].
+ * @param preSieveLimit  Multiples of small primes <= preSieveLimit are
+ *                       pre-sieved to speed up the sieve of Eratosthenes,
  *                       preSieveLimit >= 13 && <= 23.
+ * @param sieveSize      A sieve size in kilobytes, sieveSize >= 1 && <= 4096.
  */
-SieveOfEratosthenes::SieveOfEratosthenes(uint64_t startNumber,
-                                         uint64_t stopNumber,
-                                         uint32_t sieveSize,
-                                         uint32_t preSieveLimit) :
-  startNumber_(startNumber),
-  stopNumber_(stopNumber),
-  sqrtStop_(isqrt(stopNumber)),
+SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
+                                         uint64_t stop,
+                                         uint32_t preSieveLimit,
+                                         uint32_t sieveSize) :
+  start_(start),
+  stop_(stop),
+  sqrtStop_(static_cast<uint32_t>(isqrt(stop))),
+  preSieve_(preSieveLimit),
+  isFirstSegment_(true),
   sieve_(NULL),
   sieveSize_(sieveSize * 1024),
-  isFirstSegment_(true),
-  preSieve_(preSieveLimit),
   eratSmall_(NULL),
   eratMedium_(NULL),
   eratBig_(NULL)
 {
-  if (startNumber_ < 7 || startNumber_ > stopNumber_)
-    throw std::logic_error("SieveOfEratosthenes: startNumber must be >= 7 && <= stopNumber.");
+  if (start_ < 7 || start_ > stop_)
+    throw std::logic_error("SieveOfEratosthenes: start must be >= 7 && <= stop.");
   // it makes no sense to use very small sieve sizes
   if (sieveSize_ < 1024)
     throw std::invalid_argument("SieveOfEratosthenes: sieveSize must be >= 1 kilobyte.");
-  segmentLow_ = startNumber_ - this->getByteRemainder(startNumber_);
+  segmentLow_ = start_ - this->getByteRemainder(start_);
   // '+ 1' is a correction for primes of type i*30 + 31
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   this->initEratAlgorithms();
@@ -144,10 +144,10 @@ void SieveOfEratosthenes::preSieve() {
   if (isFirstSegment_) {
     isFirstSegment_ = false;
     // correct preSieve_.doIt() for numbers <= 23
-    if (startNumber_ <= preSieve_.getLimit())
+    if (start_ <= preSieve_.getLimit())
       sieve_[0] = 0xff;
-    uint32_t startRemainder = this->getByteRemainder(startNumber_);
-    // unset bits corresponding to numbers < startNumber_
+    uint32_t startRemainder = this->getByteRemainder(start_);
+    // unset bits corresponding to numbers < start_
     for (int i = 0; i < 8; i++)
       if (bitValues_[i] < startRemainder)
         sieve_[0] &= ~(1 << i);
@@ -174,9 +174,9 @@ void SieveOfEratosthenes::crossOffMultiples() {
 
 /**
  * Implementation of the segmented sieve of Eratosthenes.
- * sieve(uint32_t) must be called consecutively for all primes
- * > getPreSieveLimit() up to sqrt(stopNumber) in order to sieve
- * the primes within the interval [startNumber, stopNumber].
+ * sieve(uint32_t) must be called consecutively for all primes up to
+ * sqrt(stop) in order to sieve the primes within the interval
+ * [start_, stop_].
  */
 void SieveOfEratosthenes::sieve(uint32_t prime) {
   const uint64_t primeSquared = isquare<uint64_t>(prime);
@@ -206,24 +206,24 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
 
 /**
  * Sieve the last segments remaining after that sieve(uint32_t)
- * has been called for all primes up to sqrt(stopNumber).
+ * has been called for all primes up to sqrt(stop_).
  */
 void SieveOfEratosthenes::finish() {
   // sieve all segments left except the last one
-  while (segmentHigh_ < stopNumber_) {
+  while (segmentHigh_ < stop_) {
     this->preSieve();
     this->crossOffMultiples();
     this->analyseSieve(sieve_, sieveSize_);
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
-  uint32_t stopRemainder = this->getByteRemainder(stopNumber_);
+  uint32_t stopRemainder = this->getByteRemainder(stop_);
   // calculate the sieve size of the last segment
-  sieveSize_ = static_cast<uint32_t>((stopNumber_ - stopRemainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
+  sieveSize_ = static_cast<uint32_t>((stop_ - stopRemainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
   // sieve the last segment
   this->preSieve();
   this->crossOffMultiples();
-  // unset bits corresponding to numbers > stopNumber_
+  // unset bits corresponding to numbers > stop_
   for (int i = 0; i < 8; i++) {
     if (bitValues_[i] > stopRemainder)
       sieve_[sieveSize_ - 1] &= ~(1 << i);

@@ -228,8 +228,8 @@ int main(int argc, char* argv[]) {
   }
   try {
     ParallelPrimeSieve pps;
-    pps.setStartNumber(numbers[0]);
-    pps.setStopNumber(numbers[1]);
+    pps.setStart(numbers[0]);
+    pps.setStop(numbers[1]);
     if (flags     !=  0) pps.setFlags(flags);
     if (sieveSize != -1) pps.setSieveSize(sieveSize);
     if (preSieve  != -1) pps.setPreSieveLimit(preSieve);

@@ -71,11 +71,11 @@ public:
   uint64_t getSegmentLow() const {
     return segmentLow_;
   }
-  uint64_t getStartNumber() const {
-    return startNumber_;
+  uint64_t getStart() const {
+    return start_;
   }
-  uint64_t getStopNumber() const {
-    return stopNumber_;
+  uint64_t getStop() const {
+    return stop_;
   }
   uint32_t getSquareRoot() const {
     return sqrtStop_;
@@ -99,20 +99,20 @@ private:
   uint64_t segmentLow_;
   /** Upper bound of the current segment. */
   uint64_t segmentHigh_;
-  /** Sieve the primes within the interval [startNumber_, stopNumber_]. */
-  const uint64_t startNumber_;
-  /** Sieve the primes within the interval [startNumber_, stopNumber_]. */
-  const uint64_t stopNumber_;
-  /** sqrt(stopNumber_) */
+  /** Sieve the primes within the interval [start_, stop_]. */
+  const uint64_t start_;
+  /** Sieve the primes within the interval [start_, stop_]. */
+  const uint64_t stop_;
+  /** sqrt(stop_) */
   const uint32_t sqrtStop_;
+  /** Pre-sieves multiples of small primes <= preSieve_.getLimit(). */
+  const PreSieve preSieve_;
+  /** Set to false when the first segment has been sieved. */
+  bool isFirstSegment_;
   /** Sieve of Eratosthenes array. */
   uint8_t* sieve_;
   /** Size of the sieve_ array in bytes. */
   uint32_t sieveSize_;
-  /** Set to false when the first segment has been sieved. */
-  bool isFirstSegment_;
-  /** Pre-sieves multiples of small primes <= preSieve_.getLimit(). */
-  const PreSieve preSieve_;
   /**
    * Used to cross-off the multiples of small sieving primes
    * that have many multiples per segment.

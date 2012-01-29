@@ -47,20 +47,20 @@
  * The file primesieve/README describes the algorithms used in more
  * detail, the file primesieve/docs/USAGE_EXAMPLES contains source
  * code examples that show how to use ParallelPrimeSieve objects.
- *
- * @warning  ParallelPrimeSieve does not generate primes and prime
- *           k-tuplets in order.
+
+ * @warning ParallelPrimeSieve does not generate primes and prime
+ *          k-tuplets in arithmetic order.
  */
 class ParallelPrimeSieve: public PrimeSieve {
 public:
   /**
-   * Used in the primesieve Qt application (../qt-gui) to
-   * handle the communication between the GUI process and
-   * the ParallelPrimeSieve process.
+   * Used in the primesieve Qt application (../qt-gui)
+   * to handle the communication between the GUI process
+   * and the ParallelPrimeSieve process.
    */
   struct SharedMemory {
-    uint64_t startNumber;
-    uint64_t stopNumber;
+    uint64_t start;
+    uint64_t stop;
     uint32_t sieveSize;
     uint32_t flags;
     int threads;
@@ -68,13 +68,11 @@ public:
     double status;
     double timeElapsed;
   };
-  enum {
-    /*
-     * if (numThreads_ == USE_IDEAL_NUM_THREADS) an ideal number of
-     * threads i.e. getIdealNumThreads() will be used for sieving.
-     */
-    USE_IDEAL_NUM_THREADS = -1
-  };
+  /*
+   * if (numThreads_ == IDEAL_NUM_THREADS) an ideal number
+   * of threads will be used for sieving.
+   */
+  enum { IDEAL_NUM_THREADS = -1 };
   ParallelPrimeSieve();
   void init(SharedMemory*);
   static int getMaxThreads();
@@ -82,17 +80,13 @@ public:
   void setNumThreads(int numThreads);
   virtual void sieve();
 private:
-  /** Number of threads for sieving. */
+  /** Number of threads to be used for sieving. */
   int numThreads_;
-  /**
-   * Used for interprocess communication with the
-   * primesieve Qt application (../qt-gui).
-   */
   SharedMemory* shm_;
   virtual void doStatus(uint32_t);
   int getIdealNumThreads() const;
-  uint64_t getInterval() const;
-  uint64_t getIdealInterval() const;
+  uint64_t getBalancedInterval(int) const;
+  void sieveTask(uint64_t, uint64_t);
 };
 
 #endif /* PARALLELPRIMESIEVE_H */

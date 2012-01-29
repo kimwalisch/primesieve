@@ -173,8 +173,8 @@ void PrimeSieveGUI::autoSetThreads() {
       quint64 lowerBound = this->getNumber(ui->lowerBoundLineEdit->text());
       quint64 upperBound = this->getNumber(ui->upperBoundLineEdit->text());
       ParallelPrimeSieve pps;
-      pps.setStartNumber(lowerBound);
-      pps.setStopNumber(upperBound);
+      pps.setStart(lowerBound);
+      pps.setStop(upperBound);
       int idealNumThreads = pps.getNumThreads();
       if (idealNumThreads < maxThreads_) {
         // floor to the next power of 2 value

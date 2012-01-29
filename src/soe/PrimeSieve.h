@@ -83,16 +83,16 @@ public:
       std::runtime_error("PrimeSieve: sieving canceled.") { }
   };
   PrimeSieve();
-  PrimeSieve(uint64_t, uint64_t, ParallelPrimeSieve*);
+  PrimeSieve(ParallelPrimeSieve*);
   virtual ~PrimeSieve() { }
 
   /** Sieving parameters. */
-  uint64_t getStartNumber() const;
-  uint64_t getStopNumber() const;
+  uint64_t getStart() const;
+  uint64_t getStop() const;
   uint32_t getSieveSize() const;
   uint32_t getPreSieveLimit() const;
-  void setStartNumber(uint64_t);
-  void setStopNumber(uint64_t);
+  void setStart(uint64_t);
+  void setStop(uint64_t);
   void setSieveSize(uint32_t);
   void setPreSieveLimit(uint32_t);
 
@@ -120,8 +120,15 @@ public:
   void generatePrimes(uint64_t, uint64_t, void (*callback)(uint64_t, void*), void* cbObj);
 
   /** Starts sieving primes and k-tuplets. */
+  void sieve(uint64_t, uint64_t);
   virtual void sieve();
   double getTimeElapsed() const;
+
+  /** Old API (version <= 3.4) to keep backward compatibility. */
+  uint64_t getStartNumber() const;
+  uint64_t getStopNumber() const;
+  void setStartNumber(uint64_t);
+  void setStopNumber(uint64_t);
 protected:
   /** Internal PrimeSieve flags (bits >= 20). */
   enum {
@@ -132,10 +139,10 @@ protected:
     CALLBACK_FLAGS        = CALLBACK32_PRIMES | CALLBACK32_OOP_PRIMES | CALLBACK64_PRIMES | CALLBACK64_OOP_PRIMES,
     GENERATE_FLAGS        = CALLBACK_FLAGS | PRINT_PRIMES | PRINT_KTUPLETS
   };
-  /** Sieve the primes within the interval [startNumber_, stopNumber_]. */
-  uint64_t startNumber_;
-  /** Sieve the primes within the interval [startNumber_, stopNumber_]. */
-  uint64_t stopNumber_;
+  /** Sieve the primes within the interval [start_, stop_]. */
+  uint64_t start_;
+  /** Sieve the primes within the interval [start_, stop_]. */
+  uint64_t stop_;
   /** Sieve size in kilobytes. */
   uint32_t sieveSize_;
   /** Multiples of small primes <= preSieveLimit_ are pre-sieved. */
@@ -160,7 +167,7 @@ private:
   /** Either this or the parent ParallelPrimeSieve object. */
   PrimeSieve* parent_;
   /** Sum of the processed segments. */
-  uint64_t segments_;
+  uint64_t sumSegments_;
   void doSmallPrime(uint32_t, uint32_t, uint32_t, const std::string&);
 };
 

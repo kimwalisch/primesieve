@@ -238,9 +238,9 @@ protected:
     uint64_t maxInitFactor   = WHEEL_INIT[2].nextMultipleFactor + 1;
     uint64_t limit           = UINT64_MAX - maxSievingPrime * maxInitFactor;
     // prevent 64-bit overflows of multiple in getWheelPrimeData()
-    if (soe_.getStopNumber() > limit) {
+    if (soe_.getStop() > limit) {
       std::ostringstream error;
-      error << "Wheel: stopNumber must be <= (2^64-1) - (2^32-1) * "
+      error << "Wheel: stop must be <= (2^64-1) - (2^32-1) * "
             << maxInitFactor
             << ".";
       throw std::overflow_error(error.str());
@@ -253,11 +253,11 @@ protected:
   ~Wheel() { }
   /**
    * Used to initialize sieving primes <= sqrt(n) for use with wheel
-   * factorization. Calculates the first multiple >= startNumber of
-   * prime that is not divisible by any of the wheel's prime factors
-   * (e.g. 2, 3 and 5 for a modulo 30 wheel) and the position within
-   * the SieveOfEratosthenes array (multipleIndex) of that multiple
-   * and its wheel index.
+   * factorization. Calculates the first multiple >= start of prime
+   * that is not divisible by any of the wheel's prime factors (e.g.
+   * 2, 3 and 5 for a modulo 30 wheel) and the position within the
+   * SieveOfEratosthenes array (multipleIndex) of that multiple and
+   * its wheel index.
    * @return true if the WheelPrime must be stored for sieving
    *         else false.
    */
@@ -270,7 +270,7 @@ protected:
     // calculate the first multiple > segmentLow of prime
     uint64_t quotient = segmentLow / *prime + 1;
     uint64_t multiple = *prime * quotient;
-    if (multiple > soe_.getStopNumber())
+    if (multiple > soe_.getStop())
       return false;
     const uint64_t primeSquared = isquare<uint64_t>(*prime);
     // by theory prime^2 is the first multiple of
@@ -283,7 +283,7 @@ protected:
     // calculate the next multiple that is not divisible by any of the
     // wheel's primes (e.g. 2, 3 and 5 for a modulo 30 wheel)
     multiple += static_cast<uint64_t>(*prime) * wheelInit.nextMultipleFactor;
-    if (multiple > soe_.getStopNumber())
+    if (multiple > soe_.getStop())
       return false;
     *multipleIndex = static_cast<uint32_t>((multiple - segmentLow) / 30);
     *wheelIndex = wheelOffsets_[*prime % 30] + wheelInit.wheelIndex;
@@ -297,10 +297,10 @@ protected:
 };
 
 /**
- * The wheelOffsets_ array is used to calculate the position of the
- * first multiple >= startNumber within the WHEEL_ARRAY.
- * There are 8 different types of sieving primes, one type for each
- * bit of a byte thus there are also 8 different offsets.
+ * The wheelOffsets_ array helps to calculate the position of the
+ * first multiple >= start within the WHEEL_ARRAY. There are 8
+ * different types of sieving primes, one type for each bit of a byte
+ * thus there are also 8 different offsets.
  */
 template<uint32_t            WHEEL_MODULO,
          uint32_t            WHEEL_SIZE,

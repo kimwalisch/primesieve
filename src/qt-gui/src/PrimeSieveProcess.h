@@ -1,7 +1,7 @@
 /*
  * PrimeSieveProcess.h -- This file is part of primesieve
  *
- * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ private:
   /// Shared memory for interprocess communication between the
   /// Qt GUI process and the ParallelPrimeSieve process.
   QSharedMemory sharedMemory_;
-  /// Contains the settings (startNumber, stopNumber, sieveSize, ...)
+  /// Contains the settings (start, stop, sieveSize, ...)
   /// for sieving, will be mapped to sharedMemory_
   ParallelPrimeSieve::SharedMemory* shm_;
   void createSharedMemory();

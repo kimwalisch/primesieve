@@ -116,19 +116,19 @@ void testPix() {
   std::cout << "Calculating the prime-counting function pi(x)" << std::endl;
   try {
     ParallelPrimeSieve pps;
-    pps.setStartNumber(0);
-    pps.setStopNumber(0);
+    pps.setStart(0);
+    pps.setStop(0);
     uint64_t primeCount = 0;
 
     // pi(x) for 10^x with x = 1 to 9
     for (int i = 1; i <= 9; i++) {
-      primeCount += pps.getPrimeCount(pps.getStopNumber() + 1, ipow(10, i));
+      primeCount += pps.getPrimeCount(pps.getStop() + 1, ipow(10, i));
       seconds += pps.getTimeElapsed();
       std::cout << "pi(10^" << i << ")  = " << std::setw(12) << primeCount;
       evaluateTest(primeCount == primeCounts[i-1]);
     }
     // pi(2^32)
-    primeCount += pps.getPrimeCount(pps.getStopNumber() + 1, ipow(2, 32));
+    primeCount += pps.getPrimeCount(pps.getStop() + 1, ipow(2, 32));
     seconds += pps.getTimeElapsed();
     std::cout << "pi(2^32)  = " << std::setw(12) << primeCount;
     evaluateTest(primeCount == primeCounts[9]);
@@ -136,8 +136,8 @@ void testPix() {
     pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
     // pi(x) for 10^x with x = 10 to 11
     for (int i = 10; i <= 11; i++) {
-      pps.setStartNumber(pps.getStopNumber() + 1);
-      pps.setStopNumber(ipow(10, i));
+      pps.setStart(pps.getStop() + 1);
+      pps.setStop(ipow(10, i));
       pps.sieve();
       primeCount += pps.getPrimeCount();
       seconds += pps.getTimeElapsed();
@@ -164,8 +164,8 @@ void testBigPrimes() {
 
     for (int i = 0; i < 8; i++) {
       std::cout << "Sieving the primes within [10^" << i+12 << ", 10^" << i+12 << "+2^32]" << std::endl;
-      pps.setStartNumber(ipow(10, i + 12));
-      pps.setStopNumber(pps.getStartNumber() + ipow(2, 32));
+      pps.setStart(ipow(10, i + 12));
+      pps.setStop(pps.getStart() + ipow(2, 32));
       if (pps.getNumThreads() > maxThreads[i])
         pps.setNumThreads(maxThreads[i]);
       pps.sieve();
@@ -207,21 +207,21 @@ void testRandomIntervals() {
   const uint64_t maxInterval = ipow(10, 9);
   try {
     ParallelPrimeSieve pps;
-    pps.setStartNumber(lowerBound - 1);
-    pps.setStopNumber(lowerBound - 1);
+    pps.setStart(lowerBound - 1);
+    pps.setStop(lowerBound - 1);
     pps.setFlags(pps.COUNT_PRIMES);
 
-    while (pps.getStopNumber() < upperBound) {
-      pps.setStartNumber(pps.getStopNumber() + 1);
-      pps.setStopNumber(pps.getStartNumber() + getRand64(maxInterval));
-      if (pps.getStopNumber() > upperBound)
-        pps.setStopNumber(upperBound);
+    while (pps.getStop() < upperBound) {
+      pps.setStart(pps.getStop() + 1);
+      pps.setStop(pps.getStart() + getRand64(maxInterval));
+      if (pps.getStop() > upperBound)
+        pps.setStop(upperBound);
       pps.setSieveSize(getRandomSieveSize());
       pps.sieve();
       primeCount += pps.getPrimeCount();
       seconds += pps.getTimeElapsed();
       std::cout << "\rRemaining chunk:             "
-                << "\rRemaining chunk: " << upperBound - pps.getStopNumber()
+                << "\rRemaining chunk: " << upperBound - pps.getStop()
                 << std::flush;
     }
     std::cout << std::endl;

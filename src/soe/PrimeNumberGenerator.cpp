@@ -47,12 +47,12 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
   SieveOfEratosthenes(
       finder.getPreSieveLimit() + 1,
       finder.getSquareRoot(),
-      nextHighestPowerOf2(config::SIEVESIZE_PRIMENUMBERGENERATOR),
-      config::PRESIEVE_LIMIT_PRIMENUMBERGENERATOR),
+      config::PRESIEVE_LIMIT_PRIMENUMBERGENERATOR,
+      nextHighestPowerOf2(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
   primeNumberFinder_(finder)
 {
   static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "Maximum sieveSize = 4096 kilobytes");
-  assert(getStopNumber() <= UINT32_MAX);
+  assert(getStop() <= UINT32_MAX);
 }
 
 /**
