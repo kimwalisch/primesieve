@@ -72,7 +72,7 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
   kTupletByteCounts_(NULL)
 {
   static_assert(PrimeSieve::COUNTS_SIZE == 7, "PrimeSieve::COUNTS_SIZE == 7");
-  if (ps_.testFlags(ps_.COUNT_KTUPLETS))
+  if (ps_.anyFlags(ps_.COUNT_KTUPLETS))
     this->initLookupTables();
 }
 
@@ -100,7 +100,7 @@ void PrimeNumberFinder::initLookupTables() {
   kTupletByteCounts_ = new uint32_t*[6];
   for (uint32_t i = 0; i < 6; i++) {
     kTupletByteCounts_[i] = NULL;
-    if (ps_.testFlags(ps_.COUNT_TWINS << i)) {
+    if (ps_.testFlag(ps_.COUNT_TWINS << i)) {
       kTupletByteCounts_[i] = new uint32_t[256];
       for (uint32_t j = 0; j < 256; j++) {
         uint32_t bitmaskCount = 0;
@@ -119,11 +119,11 @@ void PrimeNumberFinder::initLookupTables() {
  * segment i.e. [segmentLow_+7, segmentHigh_].
  */
 void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
-  if (ps_.testFlags(ps_.COUNT_FLAGS))
+  if (ps_.anyFlags(ps_.COUNT_FLAGS))
     this->count(sieve, sieveSize);
-  if (ps_.testFlags(ps_.GENERATE_FLAGS))
+  if (ps_.anyFlags(ps_.GENERATE_FLAGS))
     this->generate(sieve, sieveSize);
-  if (ps_.testFlags(ps_.CALCULATE_STATUS))
+  if (ps_.testFlag(ps_.CALCULATE_STATUS))
     ps_()->calcStatus(sieveSize * NUMBERS_PER_BYTE);
 }
 
@@ -133,7 +133,7 @@ void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
  */
 void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // count prime numbers (1 bits within the sieve array)
-  if (ps_.testFlags(ps_.COUNT_PRIMES)) {
+  if (ps_.testFlag(ps_.COUNT_PRIMES)) {
     const uint64_t* sieve64 = reinterpret_cast<const uint64_t*>(sieve);
     uint32_t sieveSize64 = sieveSize / 8;
     uint32_t bytesLeft = sieveSize % 8;
@@ -147,7 +147,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // count prime k-tuplets (i=0 twins, i=1 triplets, ...)
   // using lookup tables
   for (uint32_t i = 0; i < 6; i++) {
-    if (ps_.testFlags(ps_.COUNT_TWINS << i)) {
+    if (ps_.testFlag(ps_.COUNT_TWINS << i)) {
       uint32_t kCount = 0;
       for (uint32_t j = 0; j < sieveSize; j++)
         kCount += kTupletByteCounts_[i][sieve[j]];
@@ -161,11 +161,11 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  * triplets, ...) within the current segment.
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
-  if (ps_.testFlags(ps_.PRINT_KTUPLETS)) {
+  if (ps_.anyFlags(ps_.PRINT_KTUPLETS)) {
     const uint64_t segmentLow = this->getSegmentLow();
     // i = 0 twins, i = 1 triplets, ...
     uint32_t i = 0;
-    for (; !ps_.testFlags(ps_.PRINT_TWINS << i); i++)
+    for (; !ps_.testFlag(ps_.PRINT_TWINS << i); i++)
       ;
     // print prime k-tuplets to std::cout
     for (uint32_t j = 0; j < sieveSize; j++) {
@@ -189,11 +189,11 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
 #endif
   {
     // GENERATE_PRIMES() is defined in SieveOfEratosthenes.h
-         if (ps_.testFlags(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_,      uint32_t)
-    else if (ps_.testFlags(ps_.CALLBACK32_OOP_PRIMES)) GENERATE_PRIMES(this->callback32_OOP, uint32_t)
-    else if (ps_.testFlags(ps_.CALLBACK64_PRIMES))     GENERATE_PRIMES(ps_.callback64_,      uint64_t)
-    else if (ps_.testFlags(ps_.CALLBACK64_OOP_PRIMES)) GENERATE_PRIMES(this->callback64_OOP, uint64_t)
-    else if (ps_.testFlags(ps_.PRINT_PRIMES))          GENERATE_PRIMES(this->print,          uint64_t)
+         if (ps_.testFlag(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_,      uint32_t)
+    else if (ps_.testFlag(ps_.CALLBACK32_OOP_PRIMES)) GENERATE_PRIMES(this->callback32_OOP, uint32_t)
+    else if (ps_.testFlag(ps_.CALLBACK64_PRIMES))     GENERATE_PRIMES(ps_.callback64_,      uint64_t)
+    else if (ps_.testFlag(ps_.CALLBACK64_OOP_PRIMES)) GENERATE_PRIMES(this->callback64_OOP, uint64_t)
+    else if (ps_.testFlag(ps_.PRINT_PRIMES))          GENERATE_PRIMES(this->print,          uint64_t)
   }
 }
 
