@@ -244,7 +244,7 @@ void PrimeSieve::calcStatus(uint32_t segment) {
   sumSegments_ += segment;
   int old = static_cast<int>(status_);
   status_ = std::min((sumSegments_ / interval_) * 100.0, 100.0);
-  if (testFlags(PRINT_STATUS)) {
+  if (testFlag(PRINT_STATUS)) {
     int status = static_cast<int>(status_);
     if (status > old)
       std::cout << '\r' << status << '%' << std::flush;
