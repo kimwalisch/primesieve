@@ -117,7 +117,7 @@ void ParallelPrimeSieve::setNumThreads(int numThreads) {
  */
 int ParallelPrimeSieve::getIdealNumThreads() const {
   // 1 thread generate primes in arithmetic order
-  if (testFlags(GENERATE_FLAGS))
+  if (anyFlags(GENERATE_FLAGS))
     return 1;
   // each thread sieves at least an interval of size x^0.5/6
   // but not smaller than MIN_THREAD_INTERVAL

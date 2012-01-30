@@ -60,8 +60,8 @@ PrimeSieve::PrimeSieve() :
   flags_(COUNT_PRIMES)
 {
   parent_ = this;
-  setSieveSize(config::SIEVESIZE);
   setPreSieveLimit(config::PRESIEVE_LIMIT);
+  setSieveSize(config::SIEVESIZE);
   reset();
 }
 
@@ -71,12 +71,12 @@ PrimeSieve::PrimeSieve() :
  * @see ParallelPrimeSieve::sieve()
  */
 PrimeSieve::PrimeSieve(ParallelPrimeSieve* parent) :
-  sieveSize_(parent->sieveSize_),
   preSieveLimit_(parent->preSieveLimit_),
+  sieveSize_(parent->sieveSize_),
   flags_(parent->flags_),
   parent_(parent)
 {
-  if (testFlags(CALLBACK_FLAGS)) {
+  if (anyFlags(CALLBACK_FLAGS)) {
     callback32_     = parent->callback32_;
     callback32_OOP_ = parent->callback32_OOP_;
     callback64_     = parent->callback64_;
@@ -88,8 +88,6 @@ PrimeSieve::PrimeSieve(ParallelPrimeSieve* parent) :
 
 uint64_t PrimeSieve::getStart()         const { return start_; }
 uint64_t PrimeSieve::getStop()          const { return stop_; }
-uint64_t PrimeSieve::getStartNumber()   const { return getStart(); }
-uint64_t PrimeSieve::getStopNumber()    const { return getStop(); }
 uint32_t PrimeSieve::getSieveSize()     const { return sieveSize_; }
 uint32_t PrimeSieve::getPreSieveLimit() const { return preSieveLimit_; }
 
@@ -123,7 +121,7 @@ uint32_t PrimeSieve::getFlags() const {
   return flags_ & ((1U << 20) - 1);
 }
 
-bool PrimeSieve::testFlags(uint32_t flags) const {
+bool PrimeSieve::anyFlags(uint32_t flags) const {
   return (flags_ & flags) != 0; 
 }
 
@@ -153,9 +151,20 @@ void PrimeSieve::setStop(uint64_t stop) {
   stop_ = stop;
 }
 
-/** Old API (version <= 3.4) keps backward compatibility. */
-void PrimeSieve::setStartNumber(uint64_t start) { setStart(start); }
-void PrimeSieve::setStopNumber(uint64_t stop)   { setStop(stop); }
+/**
+ * Multiples of small primes <= preSieveLimit are pre-sieved
+ * to speed up the sieve of Eratosthenes.
+ * @param preSieveLimit  Default = 19, >= 13 && <= 23
+ */
+void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
+  // min preSieveLimit = 13 (uses 1001 bytes)
+  // max preSieveLimit = 23 (uses 7 megabytes)
+  if (preSieveLimit < 13)
+    preSieveLimit = 13;
+  if (preSieveLimit > 23)
+    preSieveLimit = 23;
+  preSieveLimit_ = preSieveLimit;
+}
 
 /**
  * Set the size of the sieve of Eratosthenes array in kilobytes.
@@ -175,21 +184,6 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
   if (sieveSize > 4096)
     sieveSize = 4096;
   sieveSize_ = nextHighestPowerOf2(sieveSize);
-}
-
-/**
- * Multiples of small primes <= preSieveLimit are pre-sieved
- * to speed up the sieve of Eratosthenes.
- * @param preSieveLimit  Default = 19, >= 13 && <= 23
- */
-void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
-  // min preSieveLimit = 13 (uses 1001 bytes)
-  // max preSieveLimit = 23 (uses 7 megabytes)
-  if (preSieveLimit < 13)
-    preSieveLimit = 13;
-  if (preSieveLimit > 23)
-    preSieveLimit = 23;
-  preSieveLimit_ = preSieveLimit;
 }
 
 /**
@@ -260,15 +254,15 @@ void PrimeSieve::doSmallPrime(uint32_t min,
   #pragma omp critical (generate)
 #endif
   if (start_ <= min && stop_ >= max) {
-    if (testFlags(CALLBACK_FLAGS) && type == 0) {
+    if (anyFlags(CALLBACK_FLAGS) && type == 0) {
       uint32_t prime = primeStr[0] - '0';
-      if (testFlags(CALLBACK32_PRIMES))     callback32_(prime);
-      if (testFlags(CALLBACK32_OOP_PRIMES)) callback32_OOP_(prime, cbObj_);
-      if (testFlags(CALLBACK64_PRIMES))     callback64_(prime);
-      if (testFlags(CALLBACK64_OOP_PRIMES)) callback64_OOP_(prime, cbObj_);
+      if (testFlag(CALLBACK32_PRIMES))     callback32_(prime);
+      if (testFlag(CALLBACK32_OOP_PRIMES)) callback32_OOP_(prime, cbObj_);
+      if (testFlag(CALLBACK64_PRIMES))     callback64_(prime);
+      if (testFlag(CALLBACK64_OOP_PRIMES)) callback64_OOP_(prime, cbObj_);
     } else {
-      if (testFlags(COUNT_PRIMES << type)) counts_[type]++;
-      if (testFlags(PRINT_PRIMES << type)) std::cout << primeStr << '\n';
+      if (testFlag(COUNT_PRIMES << type)) counts_[type]++;
+      if (testFlag(PRINT_PRIMES << type)) std::cout << primeStr << '\n';
     }
   }
 }
@@ -465,3 +459,10 @@ void PrimeSieve::printSextuplets(uint64_t start, uint64_t stop) {
 void PrimeSieve::printSeptuplets(uint64_t start, uint64_t stop) {
   sieve(start, stop, PRINT_SEPTUPLETS);
 }
+
+/** Old API (version <= 3.4) keps backward compatibility. */
+uint64_t PrimeSieve::getStartNumber() const { return getStart(); }
+uint64_t PrimeSieve::getStopNumber() const { return getStop(); }
+bool PrimeSieve::testFlags(uint32_t flags) const { return anyFlags(flags); }
+void PrimeSieve::setStartNumber(uint64_t start) { setStart(start); }
+void PrimeSieve::setStopNumber(uint64_t stop) { setStop(stop); }
