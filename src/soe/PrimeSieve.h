@@ -95,8 +95,8 @@ public:
   double getTimeElapsed() const;
   double getStatus() const;
   uint32_t getFlags() const;
-  bool anyFlags(uint32_t) const;
-  bool testFlag(uint32_t) const;
+  bool testFlags(uint32_t) const;
+  bool isFlag(uint32_t) const;
 
   /** sieve() parameter setters. */
   void setStart(uint64_t);
@@ -148,7 +148,6 @@ public:
   /** Old API (version <= 3.4) keps backward compatibility. */
   uint64_t getStartNumber() const;
   uint64_t getStopNumber() const;
-  bool testFlags(uint32_t) const;
   void setStartNumber(uint64_t);
   void setStopNumber(uint64_t);
 protected:

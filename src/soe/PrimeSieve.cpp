@@ -76,7 +76,7 @@ PrimeSieve::PrimeSieve(ParallelPrimeSieve* parent) :
   flags_(parent->flags_),
   parent_(parent)
 {
-  if (anyFlags(CALLBACK_FLAGS)) {
+  if (testFlags(CALLBACK_FLAGS)) {
     callback32_     = parent->callback32_;
     callback32_OOP_ = parent->callback32_OOP_;
     callback64_     = parent->callback64_;
@@ -121,11 +121,11 @@ uint32_t PrimeSieve::getFlags() const {
   return flags_ & ((1U << 20) - 1);
 }
 
-bool PrimeSieve::anyFlags(uint32_t flags) const {
+bool PrimeSieve::testFlags(uint32_t flags) const {
   return (flags_ & flags) != 0; 
 }
 
-bool PrimeSieve::testFlag(uint32_t flag) const {
+bool PrimeSieve::isFlag(uint32_t flag) const {
   return (flags_ & flag) == flag; 
 }
 
@@ -238,7 +238,7 @@ void PrimeSieve::calcStatus(uint32_t segment) {
   sumSegments_ += segment;
   int old = static_cast<int>(status_);
   status_ = std::min((sumSegments_ / interval_) * 100.0, 100.0);
-  if (testFlag(PRINT_STATUS)) {
+  if (isFlag(PRINT_STATUS)) {
     int status = static_cast<int>(status_);
     if (status > old)
       std::cout << '\r' << status << '%' << std::flush;
@@ -254,15 +254,15 @@ void PrimeSieve::doSmallPrime(uint32_t min,
   #pragma omp critical (generate)
 #endif
   if (start_ <= min && stop_ >= max) {
-    if (anyFlags(CALLBACK_FLAGS) && type == 0) {
+    if (testFlags(CALLBACK_FLAGS) && type == 0) {
       uint32_t prime = primeStr[0] - '0';
-      if (testFlag(CALLBACK32_PRIMES))     callback32_(prime);
-      if (testFlag(CALLBACK32_OOP_PRIMES)) callback32_OOP_(prime, cbObj_);
-      if (testFlag(CALLBACK64_PRIMES))     callback64_(prime);
-      if (testFlag(CALLBACK64_OOP_PRIMES)) callback64_OOP_(prime, cbObj_);
+      if (isFlag(CALLBACK32_PRIMES))     callback32_(prime);
+      if (isFlag(CALLBACK32_OOP_PRIMES)) callback32_OOP_(prime, cbObj_);
+      if (isFlag(CALLBACK64_PRIMES))     callback64_(prime);
+      if (isFlag(CALLBACK64_OOP_PRIMES)) callback64_OOP_(prime, cbObj_);
     } else {
-      if (testFlag(COUNT_PRIMES << type)) counts_[type]++;
-      if (testFlag(PRINT_PRIMES << type)) std::cout << primeStr << '\n';
+      if (isFlag(COUNT_PRIMES << type)) counts_[type]++;
+      if (isFlag(PRINT_PRIMES << type)) std::cout << primeStr << '\n';
     }
   }
 }
@@ -463,6 +463,5 @@ void PrimeSieve::printSeptuplets(uint64_t start, uint64_t stop) {
 /** Old API (version <= 3.4) keps backward compatibility. */
 uint64_t PrimeSieve::getStartNumber() const { return getStart(); }
 uint64_t PrimeSieve::getStopNumber() const { return getStop(); }
-bool PrimeSieve::testFlags(uint32_t flags) const { return anyFlags(flags); }
 void PrimeSieve::setStartNumber(uint64_t start) { setStart(start); }
 void PrimeSieve::setStopNumber(uint64_t stop) { setStop(stop); }
