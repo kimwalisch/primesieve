@@ -245,24 +245,25 @@ void PrimeSieve::calcStatus(uint32_t segment) {
   }
 }
 
-void PrimeSieve::doSmallPrime(uint32_t min,
-                              uint32_t max,
-                              uint32_t type, 
+void PrimeSieve::doSmallPrime(uint32_t minPrime,
+                              uint32_t maxPrime,
+                              uint32_t index,
                               const std::string& primeStr)
 {
 #if defined(_OPENMP)
   #pragma omp critical (generate)
 #endif
-  if (start_ <= min && stop_ >= max) {
-    if (testFlags(CALLBACK_FLAGS) && type == 0) {
+  if (minPrime >= start_ &&
+      maxPrime <= stop_) {
+    if (index == 0 && testFlags(CALLBACK_FLAGS)) {
       uint32_t prime = primeStr[0] - '0';
       if (isFlag(CALLBACK32_PRIMES))     callback32_(prime);
       if (isFlag(CALLBACK32_OOP_PRIMES)) callback32_OOP_(prime, cbObj_);
       if (isFlag(CALLBACK64_PRIMES))     callback64_(prime);
       if (isFlag(CALLBACK64_OOP_PRIMES)) callback64_OOP_(prime, cbObj_);
     } else {
-      if (isFlag(COUNT_PRIMES << type)) counts_[type]++;
-      if (isFlag(PRINT_PRIMES << type)) std::cout << primeStr << '\n';
+      if (isFlag(COUNT_PRIMES << index)) counts_[index]++;
+      if (isFlag(PRINT_PRIMES << index)) std::cout << primeStr << '\n';
     }
   }
 }
@@ -278,7 +279,7 @@ void PrimeSieve::sieve() {
   if (stop_ < start_)
     throw std::invalid_argument("STOP must be >= START");
 
-  // do small primes and prime k-tuplets manually
+  // do small primes and k-tuplets manually
   if (start_ <= 5) {
     doSmallPrime(2,  2, 0, "2");
     doSmallPrime(3,  3, 0, "3");
