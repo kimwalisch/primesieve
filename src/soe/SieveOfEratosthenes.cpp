@@ -148,9 +148,10 @@ void SieveOfEratosthenes::preSieve() {
       sieve_[0] = 0xff;
     uint32_t startRemainder = getByteRemainder(start_);
     // unset bits corresponding to numbers < start_
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 8; i++) {
       if (bitValues_[i] < startRemainder)
         sieve_[0] &= ~(1 << i);
+    }
   }
 }
 
