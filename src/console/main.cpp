@@ -251,7 +251,7 @@ int main(int argc, char* argv[]) {
     // start sieving primes
     pps.sieve();
 
-    if (pps.testFlags(pps.PRINT_STATUS))
+    if (pps.isFlag(pps.PRINT_STATUS))
       std::cout << std::endl;
     else if (pps.testFlags(pps.COUNT_FLAGS) && pps.testFlags(pps.PRINT_PRIMES | pps.PRINT_KTUPLETS))
       std::cout << std::endl;
@@ -259,13 +259,13 @@ int main(int argc, char* argv[]) {
     // get max string size
     std::size_t size = (quietMode) ? 0 : 12;
     for (int i = 0; i < 7; i++) {
-      if (pps.testFlags(pps.COUNT_PRIMES << i) && size < primes[i].size())
+      if (pps.isFlag(pps.COUNT_PRIMES << i) && size < primes[i].size())
         size = primes[i].size();
     }
     // print prime count results
     int width = static_cast<int>(size);
     for (int32_t i = 0; i < 7; i++) {
-      if (pps.testFlags(pps.COUNT_PRIMES << i))
+      if (pps.isFlag(pps.COUNT_PRIMES << i))
         std::cout << std::setw(width)
                   << primes[i] << " : " << pps.getCounts(i)
                   << std::endl;
