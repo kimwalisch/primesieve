@@ -205,7 +205,7 @@ void PrimeSieveGUI::on_sieveButton_clicked() {
   ui->sieveButton->setDisabled(true);
   ui->cancelButton->setEnabled(true);
   try {
-    flags_ = this->getMenuSettings();
+    flags_ = this->getMenuSettings() | ParallelPrimeSieve::CALCULATE_STATUS;
     if ((flags_ & (ParallelPrimeSieve::COUNT_FLAGS | 
                    ParallelPrimeSieve::PRINT_PRIMES | 
                    ParallelPrimeSieve::PRINT_KTUPLETS)) == 0)

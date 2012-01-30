@@ -78,16 +78,16 @@ void ParallelPrimeSieve::init(SharedMemory* shm) {
  * Calculate the current status in percent of sieve().
  * @param segment  The interval size of the processed segment
  */
-void ParallelPrimeSieve::doStatus(uint32_t segment) {
+void ParallelPrimeSieve::calcStatus(uint32_t segment) {
 #if defined(_OPENMP)
-  #pragma omp critical (doStatus)
+  #pragma omp critical (calcStatus)
 #endif
   {
-    PrimeSieve::doStatus(segment);
+    PrimeSieve::calcStatus(segment);
     // communicate the current status via shared
     // memory to the Qt GUI process
     if (shm_ != NULL)
-      shm_->status = status_;
+      shm_->status = getStatus();
   }
 }
 

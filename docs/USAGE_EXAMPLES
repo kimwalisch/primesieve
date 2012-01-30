@@ -1,4 +1,4 @@
-January 5, 2012
+January 30, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -115,7 +115,7 @@ int main() {
 // 6. Set the sieve size (default 32 kilobytes)
 //    The best sieving performance is achieved with a sieve size of
 //    the CPU's L1 (data) cache size (usually 32 or 64 KB) when
-//    sieving < 10^14 and a sieve size of the CPU's L2 cache size
+//    sieving < 10^15 and a sieve size of the CPU's L2 cache size
 //    (e.g. 512 KB) above
 
 #include <soe/ParallelPrimeSieve.h>

@@ -123,7 +123,8 @@ void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
     this->count(sieve, sieveSize);
   if (ps_.testFlags(ps_.GENERATE_FLAGS))
     this->generate(sieve, sieveSize);
-  ps_.parent_->doStatus(sieveSize * NUMBERS_PER_BYTE);
+  if (ps_.testFlag(ps_.CALCULATE_STATUS))
+    ps_()->calcStatus(sieveSize * NUMBERS_PER_BYTE);
 }
 
 /**

@@ -83,7 +83,7 @@ private:
   /** Number of threads to be used for sieving. */
   int numThreads_;
   SharedMemory* shm_;
-  virtual void doStatus(uint32_t);
+  virtual void calcStatus(uint32_t);
   int getIdealNumThreads() const;
   uint64_t getBalancedInterval(int) const;
   void sieveTask(uint64_t, uint64_t);
