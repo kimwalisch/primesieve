@@ -71,9 +71,9 @@ PreSieve::PreSieve(uint32_t limit) :
   // limit_ <= 23 prevents 32 bit overflows
   if (limit_ < 13 || limit_ > 23)
     throw std::overflow_error("PreSieve: limit must be >= 13 && <= 23.");
-  primeProduct_ = this->getPrimeProduct(limit_);
+  primeProduct_ = getPrimeProduct(limit_);
   size_ = primeProduct_ / SieveOfEratosthenes::NUMBERS_PER_BYTE;
-  this->initPreSieved();
+  initPreSieved();
 }
 
 PreSieve::~PreSieve() {
