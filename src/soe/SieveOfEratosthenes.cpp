@@ -85,10 +85,10 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   // it makes no sense to use very small sieve sizes
   if (sieveSize_ < 1024)
     throw std::invalid_argument("SieveOfEratosthenes: sieveSize must be >= 1 kilobyte.");
-  segmentLow_ = start_ - this->getByteRemainder(start_);
+  segmentLow_ = start_ - getByteRemainder(start_);
   // '+ 1' is a correction for primes of type i*30 + 31
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
-  this->initEratAlgorithms();
+  initEratAlgorithms();
   // allocate the sieve of Eratosthenes array
   sieve_ = new uint8_t[sieveSize_];
 }
@@ -146,7 +146,7 @@ void SieveOfEratosthenes::preSieve() {
     // correct preSieve_.doIt() for numbers <= 23
     if (start_ <= preSieve_.getLimit())
       sieve_[0] = 0xff;
-    uint32_t startRemainder = this->getByteRemainder(start_);
+    uint32_t startRemainder = getByteRemainder(start_);
     // unset bits corresponding to numbers < start_
     for (int i = 0; i < 8; i++)
       if (bitValues_[i] < startRemainder)
@@ -187,9 +187,9 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
   // objects (see below). Each loop iteration sieves the primes within
   // the interval [segmentLow_+7, segmentHigh_].
   while (segmentHigh_ < primeSquared) {
-    this->preSieve();
-    this->crossOffMultiples();
-    this->analyseSieve(sieve_, sieveSize_);
+    preSieve();
+    crossOffMultiples();
+    analyseSieve(sieve_, sieveSize_);
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
@@ -211,24 +211,24 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
 void SieveOfEratosthenes::finish() {
   // sieve all segments left except the last one
   while (segmentHigh_ < stop_) {
-    this->preSieve();
-    this->crossOffMultiples();
-    this->analyseSieve(sieve_, sieveSize_);
+    preSieve();
+    crossOffMultiples();
+    analyseSieve(sieve_, sieveSize_);
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
-  uint32_t stopRemainder = this->getByteRemainder(stop_);
+  uint32_t stopRemainder = getByteRemainder(stop_);
   // calculate the sieve size of the last segment
   sieveSize_ = static_cast<uint32_t>((stop_ - stopRemainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
   // sieve the last segment
-  this->preSieve();
-  this->crossOffMultiples();
+  preSieve();
+  crossOffMultiples();
   // unset bits corresponding to numbers > stop_
   for (int i = 0; i < 8; i++) {
     if (bitValues_[i] > stopRemainder)
       sieve_[sieveSize_ - 1] &= ~(1 << i);
   }
-  this->analyseSieve(sieve_, sieveSize_);
+  analyseSieve(sieve_, sieveSize_);
 }
 
 } // namespace soe
