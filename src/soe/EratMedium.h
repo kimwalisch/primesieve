@@ -52,7 +52,7 @@ class SieveOfEratosthenes;
  * It uses a sieve array with 30 numbers per byte, 8 bytes per sieving
  * prime and a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
  */
-class EratMedium: public EratBase<Modulo210Wheel_t> {
+class EratMedium : public EratBase<Modulo210Wheel_t> {
 public:
   EratMedium(const SieveOfEratosthenes&);
   void sieve(uint8_t*, uint32_t);

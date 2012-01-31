@@ -53,7 +53,7 @@
 class PrimeSieve {
   friend class soe::PrimeNumberFinder;
 public:
-  class cancel_sieving: public std::runtime_error {
+  class cancel_sieving : public std::runtime_error {
   public:
     cancel_sieving() : 
       std::runtime_error("PrimeSieve: sieving canceled.") { }

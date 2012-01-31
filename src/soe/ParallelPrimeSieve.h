@@ -51,7 +51,7 @@
  * @warning ParallelPrimeSieve does not generate primes and prime
  *          k-tuplets in arithmetic order.
  */
-class ParallelPrimeSieve: public PrimeSieve {
+class ParallelPrimeSieve : public PrimeSieve {
 public:
   using PrimeSieve::sieve;
   /**

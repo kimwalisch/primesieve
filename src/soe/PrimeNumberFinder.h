@@ -50,7 +50,7 @@ namespace soe {
  * prime triplets, ...).
  * PrimeNumberFinder objects are used in PrimeSieve::sieve().
  */
-class PrimeNumberFinder: public SieveOfEratosthenes {
+class PrimeNumberFinder : public SieveOfEratosthenes {
 public:
   PrimeNumberFinder(PrimeSieve&);
   ~PrimeNumberFinder();
