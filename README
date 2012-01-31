@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 27 January 2012
+# Last modified: 31 January 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -60,8 +60,8 @@ Contents
 ==========================================
 
   primesieve is written in C++03, the parallelization is implemented
-  using OpenMP. It runs on both little-endian (x86, x64, ...) and
-  big-endian (PowerPC, SPARC, ...) CPUs.
+  using OpenMP (version 3.0 or later). It runs on both little-endian
+  (x86, x64, ...) and big-endian (PowerPC, SPARC, ...) CPUs.
 
   primesieve uses the segmented sieve of Eratosthenes with wheel
   factorization, this algorithm has a complexity of O(n log log n)
