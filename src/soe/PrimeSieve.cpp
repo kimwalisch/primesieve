@@ -277,10 +277,10 @@ void PrimeSieve::doSmallPrime(uint32_t minPrime,
  * sieve of Eratosthenes implementation.
  */
 void PrimeSieve::sieve() {
-  clock_t t1 = std::clock();
-  reset();
   if (stop_ < start_)
     throw std::invalid_argument("STOP must be >= START");
+  clock_t t1 = std::clock();
+  reset();
 
   // do small primes and k-tuplets manually
   if (start_ <= 5) {
@@ -298,13 +298,11 @@ void PrimeSieve::sieve() {
     // fast segmented SieveOfEratosthenes object that
     // sieves the primes within [start_, stop_]
     PrimeNumberFinder finder(*this);
-
     if (finder.needGenerator()) {
       // fast segmented SieveOfEratosthenes object that generates the
       // primes up to sqrt(stop_) needed for sieving by the
       // PrimeNumberFinder
       PrimeNumberGenerator generator(finder);
-
       // sieve of Eratosthenes implementation that generates the primes
       // up to stop_^0.25 for the PrimeNumberGenerator
       uint32_t N = generator.getSquareRoot();
