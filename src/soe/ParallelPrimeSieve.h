@@ -53,6 +53,7 @@
  */
 class ParallelPrimeSieve: public PrimeSieve {
 public:
+  using PrimeSieve::sieve;
   /**
    * Used in the primesieve Qt application (../qt-gui)
    * to handle the communication between the GUI process
@@ -86,7 +87,7 @@ private:
   virtual void calcStatus(uint32_t);
   int getIdealNumThreads() const;
   uint64_t getBalancedInterval(int) const;
-  void sieveTask(uint64_t, uint64_t);
+  void sieveThread(uint64_t, uint64_t);
 };
 
 #endif /* PARALLELPRIMESIEVE_H */

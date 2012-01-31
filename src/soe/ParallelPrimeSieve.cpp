@@ -143,7 +143,7 @@ uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   return std::min(balanced, max);
 }
 
-void ParallelPrimeSieve::sieveTask(uint64_t start, uint64_t stop) {
+void ParallelPrimeSieve::sieveThread(uint64_t start, uint64_t stop) {
   PrimeSieve ps(this);
   ps.sieve(start, std::min(stop, stop_));
   #pragma omp critical (counts)
@@ -155,7 +155,7 @@ void ParallelPrimeSieve::sieveTask(uint64_t start, uint64_t stop) {
 
 /**
  * Sieve the primes and prime k-tuplets within [start, stop] in
- * parallel using OpenMP tasks (version 3.0 or later).
+ * parallel using OpenMP (version 3.0 or later).
  */
 void ParallelPrimeSieve::sieve() {
   if (stop_ < start_)
@@ -172,16 +172,12 @@ void ParallelPrimeSieve::sieve() {
     double t1 = omp_get_wtime();
     reset();
     uint64_t balanced = getBalancedInterval(threads);
-    uint64_t n = start_ + (32 - start_ % 30) + balanced;
-    #pragma omp task
-    sieveTask(start_, n);
-    #pragma omp parallel firstprivate(n) num_threads(threads)
-    {
-      #pragma omp single
-      for (; n < stop_; n += balanced) {
-        #pragma omp task
-        sieveTask(n, n + balanced);
-      }
+    uint64_t align = start_ + 32 - start_ % 30;
+    #pragma omp parallel for num_threads(threads) schedule(dynamic)
+    for (uint64_t n = align; n < stop_; n += balanced) {
+      // first iteration x = start_ else n
+      uint64_t x = (n != align) ? n : start_;
+      sieveThread(x, n + balanced);
     }
     timeElapsed_ = omp_get_wtime() - t1;
   }
