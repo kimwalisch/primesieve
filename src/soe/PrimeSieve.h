@@ -42,8 +42,6 @@
 #include <stdexcept>
 #include <string>
 
-class ParallelPrimeSieve;
-
 /**
  * PrimeSieve is a highly optimized implementation of the segmented
  * sieve of Eratosthenes that generates primes and prime k-tuplets
@@ -84,7 +82,7 @@ public:
     PRINT_STATUS      =(1 << 15) + CALCULATE_STATUS
   };
   PrimeSieve();
-  PrimeSieve(ParallelPrimeSieve*);
+  PrimeSieve(PrimeSieve*);
   virtual ~PrimeSieve() { }
 
   /** sieve() parameter getters. */

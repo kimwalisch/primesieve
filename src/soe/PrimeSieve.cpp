@@ -33,7 +33,6 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PrimeSieve.h"
-#include "ParallelPrimeSieve.h"
 #include "PrimeNumberFinder.h"
 #include "PrimeNumberGenerator.h"
 #include "config.h"
@@ -70,7 +69,7 @@ PrimeSieve::PrimeSieve() :
  * sieve primes in parallel.
  * @see ParallelPrimeSieve::sieve()
  */
-PrimeSieve::PrimeSieve(ParallelPrimeSieve* parent) :
+PrimeSieve::PrimeSieve(PrimeSieve* parent) :
   preSieveLimit_(parent->preSieveLimit_),
   sieveSize_(parent->sieveSize_),
   flags_(parent->flags_),
