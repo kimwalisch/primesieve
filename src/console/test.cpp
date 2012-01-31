@@ -160,7 +160,6 @@ void testBigPrimes() {
   try {
     ParallelPrimeSieve pps;
     pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
-    pps.setSieveSize(512);
 
     for (int i = 0; i < 8; i++) {
       std::cout << "Sieving the primes within [10^" << i+12 << ", 10^" << i+12 << "+2^32]" << std::endl;
