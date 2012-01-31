@@ -124,7 +124,7 @@ void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
   if (ps_.testFlags(ps_.GENERATE_FLAGS))
     generate(sieve, sieveSize);
   if (ps_.isFlag(ps_.CALCULATE_STATUS))
-    ps_()->calcStatus(sieveSize * NUMBERS_PER_BYTE);
+    ps_.calcStatus(sieveSize * NUMBERS_PER_BYTE);
 }
 
 /**
