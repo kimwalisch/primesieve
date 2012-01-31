@@ -1,7 +1,7 @@
 /*
  * PrimeSieveGUI.h -- This file is part of primesieve
  *
- * Copyright (C) 2011 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ class PrimeSieveProcess;
  * PrimeSieveGUI is a graphical user interface for primeSieve (highly
  * optimized sieve of Eratosthenes implementation).
  */
-class PrimeSieveGUI: public QMainWindow {
+class PrimeSieveGUI : public QMainWindow {
 Q_OBJECT
 public:
   PrimeSieveGUI(QWidget* parent = 0);
