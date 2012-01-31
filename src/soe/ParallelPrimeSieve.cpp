@@ -114,9 +114,10 @@ void ParallelPrimeSieve::setNumThreads(int numThreads) {
 /**
  * Get an ideal number of threads for the current set
  * start_, stop_ and flags_.
+ * @remark returns 1 if _OPENMP is not defined
  */
 int ParallelPrimeSieve::getIdealNumThreads() const {
-  // 1 thread generate primes in arithmetic order
+  // 1 thread generates primes in arithmetic order
   if (testFlags(GENERATE_FLAGS))
     return 1;
   // each thread sieves at least an interval of size x^0.5/6
@@ -150,16 +151,13 @@ void ParallelPrimeSieve::sieve() {
   if (stop_ < start_)
     throw std::invalid_argument("STOP must be >= START");
 
-  #if !defined(_OPENMP)
-  // single-threaded sieving
-  PrimeSieve::sieve();
-  #else
   int threads = getNumThreads();
   // correct the user's bad number of threads
-  if ((stop_ - start_) / threads < config::MIN_THREAD_INTERVAL)
+  if (threads >= 2 && (stop_ - start_) / threads < config::MIN_THREAD_INTERVAL)
     threads = getIdealNumThreads();
-  if (threads <= 1)
+  if (threads == 1)
     PrimeSieve::sieve();
+#if defined(_OPENMP)
   else {
     double t1 = omp_get_wtime();
     reset();
@@ -190,7 +188,7 @@ void ParallelPrimeSieve::sieve() {
     counts_[6] = count6;
     timeElapsed_ = omp_get_wtime() - t1;
   }
-  #endif
+#endif
   // communicate the sieving results via shared memory
   // segment to the Qt GUI process
   if (shm_ != NULL) {
