@@ -177,7 +177,7 @@ private:
   uint32_t sieveSize_;
   /** PrimeSieve options (e.g. COUNT_PRIMES). */
   uint32_t flags_;
-  /** Either this or the parent ParallelPrimeSieve object. */
+  /** Either NULL or the parent ParallelPrimeSieve object. */
   PrimeSieve* parent_;
   /** Sum of the processed segments. */
   uint64_t sumSegments_;
@@ -185,8 +185,6 @@ private:
   double interval_;
   /** Status in percent of sieve(). */
   double status_;
-  /** returns this or the parent ParallelPrimeSieve object. */
-  PrimeSieve* operator()() { return parent_; }
   /** Callback functions for use with generatePrimes(). */
   void (*callback32_)(uint32_t);
   void (*callback32_OOP_)(uint32_t, void*);

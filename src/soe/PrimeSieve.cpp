@@ -57,9 +57,9 @@ using namespace soe;
 PrimeSieve::PrimeSieve() :
   start_(0),
   stop_(0),
-  flags_(COUNT_PRIMES)
+  flags_(COUNT_PRIMES),
+  parent_(NULL)
 {
-  parent_ = this;
   setPreSieveLimit(config::PRESIEVE_LIMIT);
   setSieveSize(config::SIEVESIZE);
   reset();
@@ -226,7 +226,7 @@ void PrimeSieve::reset() {
   interval_ = static_cast<double>(stop_ - start_ + 1);
   status_ = -1.0;
   timeElapsed_ = 0.0;
-  (*this)()->calcStatus(0);
+  calcStatus(0);
 }
 
 /**
@@ -235,13 +235,17 @@ void PrimeSieve::reset() {
  * @param segment  The interval size of the processed segment.
  */
 void PrimeSieve::calcStatus(uint32_t segment) {
-  sumSegments_ += segment;
-  int old = static_cast<int>(status_);
-  status_ = std::min((sumSegments_ / interval_) * 100.0, 100.0);
-  if (isFlag(PRINT_STATUS)) {
-    int status = static_cast<int>(status_);
-    if (status > old)
-      std::cout << '\r' << status << '%' << std::flush;
+  if (parent_ != NULL)
+    parent_->calcStatus(segment);
+  else {
+    sumSegments_ += segment;
+    int old = static_cast<int>(status_);
+    status_ = std::min((sumSegments_ / interval_) * 100.0, 100.0);
+    if (isFlag(PRINT_STATUS)) {
+      int status = static_cast<int>(status_);
+      if (status > old)
+        std::cout << '\r' << status << '%' << std::flush;
+    }
   }
 }
 
@@ -321,7 +325,7 @@ void PrimeSieve::sieve() {
   }
 
   // ensures status_ = 100.0 percent
-  (*this)()->calcStatus(10);
+  calcStatus(10);
   timeElapsed_ = static_cast<double>(std::clock() - t1) / CLOCKS_PER_SEC;
 }
 
