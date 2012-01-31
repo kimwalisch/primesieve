@@ -68,10 +68,10 @@ Contents
   operations and uses O(n^0.5) space.
 
   My implementation uses a compressed sieve array with 30 numbers per
-  byte, the 8 bits of each byte hold the values i * 30 + k with
-  k = {7, 11, 13, 17, 19, 23, 29, 31}. It further uses 8 bytes per
-  sieving prime <= sqrt(x) that is 4 bytes for the sieving prime and
-  another 4 bytes for the next multiple index and wheel index.
+  byte, the 8 bits of each byte correspond to the numbers i * 30 + k
+  with k = {7, 11, 13, 17, 19, 23, 29, 31}. It further uses 8 bytes
+  per sieving prime <= sqrt(x) that is 4 bytes for the sieving prime
+  and another 4 bytes for the next multiple index and wheel index.
 
   primesieve's memory requirement (per thread) is about:
   pi(sqrt(x)) * 8 bytes + 400 kilobytes
