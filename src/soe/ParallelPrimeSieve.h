@@ -87,7 +87,6 @@ private:
   virtual void calcStatus(uint32_t);
   int getIdealNumThreads() const;
   uint64_t getBalancedInterval(int) const;
-  void sieveThread(uint64_t, uint64_t);
 };
 
 #endif /* PARALLELPRIMESIEVE_H */

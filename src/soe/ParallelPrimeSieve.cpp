@@ -123,12 +123,11 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   // but not smaller than MIN_THREAD_INTERVAL
   uint64_t threshold = std::max<uint64_t>(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 6);
   uint64_t idealNumThreads = (stop_ - start_) / threshold;
-  // use getMaxThreads() if the interval size is large
+  // 1 <= idealNumThreads <= getMaxThreads()
+  idealNumThreads = std::max<uint64_t>(1, idealNumThreads);
   idealNumThreads = std::min<uint64_t>(idealNumThreads, getMaxThreads());
   return static_cast<int>(idealNumThreads);
 }
-
-#if defined(_OPENMP)
 
 /** Get an interval size that ensures a good load balance. */
 uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
@@ -143,16 +142,6 @@ uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   return std::min(balanced, max);
 }
 
-void ParallelPrimeSieve::sieveThread(uint64_t start, uint64_t stop) {
-  PrimeSieve ps(this);
-  ps.sieve(start, std::min(stop, stop_));
-  #pragma omp critical (counts)
-  for (uint32_t i = 0; i < COUNTS_SIZE; i++)
-    counts_[i] += ps.getCounts(i);
-}
-
-#endif /* _OPENMP */
-
 /**
  * Sieve the primes and prime k-tuplets within [start, stop] in
  * parallel using OpenMP (version 3.0 or later).
@@ -166,19 +155,39 @@ void ParallelPrimeSieve::sieve() {
   PrimeSieve::sieve();
   #else
   int threads = getNumThreads();
+  // correct the user's bad number of threads
+  if ((stop_ - start_) / threads < config::MIN_THREAD_INTERVAL)
+    threads = getIdealNumThreads();
   if (threads <= 1)
     PrimeSieve::sieve();
   else {
     double t1 = omp_get_wtime();
     reset();
+    uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
     uint64_t balanced = getBalancedInterval(threads);
     uint64_t align = start_ + 32 - start_ % 30;
-    #pragma omp parallel for num_threads(threads) schedule(dynamic)
+    #pragma omp parallel for schedule(dynamic) num_threads(threads) \
+        reduction(+: count0, count1, count2, count3, count4, count5, count6)
     for (uint64_t n = align; n < stop_; n += balanced) {
-      // first iteration x = start_ else n
-      uint64_t x = (n != align) ? n : start_;
-      sieveThread(x, n + balanced);
+      uint64_t threadStart = (n > align) ? n : start_;
+      uint64_t threadStop = std::min(n + balanced, stop_);
+      PrimeSieve ps(this);
+      ps.sieve(threadStart, threadStop);
+      count0 += ps.getCounts(0);
+      count1 += ps.getCounts(1);
+      count2 += ps.getCounts(2);
+      count3 += ps.getCounts(3);
+      count4 += ps.getCounts(4);
+      count5 += ps.getCounts(5);
+      count6 += ps.getCounts(6);
     }
+    counts_[0] = count0;
+    counts_[1] = count1;
+    counts_[2] = count2;
+    counts_[3] = count3;
+    counts_[4] = count4;
+    counts_[5] = count5;
+    counts_[6] = count6;
     timeElapsed_ = omp_get_wtime() - t1;
   }
   #endif
