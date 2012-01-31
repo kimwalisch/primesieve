@@ -270,10 +270,14 @@ int main(int argc, char* argv[]) {
                   << primes[i] << " : " << pps.getCounts(i)
                   << std::endl;
     }
-    if (!quietMode) {
+    if (!pps.testFlags(pps.PRINT_PRIMES | pps.PRINT_KTUPLETS)) {
       std::cout << std::setw(width)
                 << "Time elapsed" << " : " << pps.getTimeElapsed() << " sec"
                 << std::endl;
+    }
+    if (!quietMode && pps.getNumThreads() >= 64) {
+      std::cout << "\nHint: the -q (Quiet mode) option significantly reduces the thread" << std::endl
+                << "synchronization overhead when using >= 64 threads." << std::endl;
     }
   }
   catch (std::exception& e) {
