@@ -56,35 +56,35 @@ void test();
 #include <iomanip> /* std::setw(int) */
 
 namespace {
-  std::vector<uint64_t> numbers; /* start and stop number for sieving */
 
-  int32_t maxThreads = ParallelPrimeSieve::getMaxThreads();
-  int32_t threads    = -1;
-  int32_t flags      =  0;
-  int32_t sieveSize  = -1;
-  int32_t preSieve   = -1;
+std::vector<uint64_t> numbers; /* start and stop number for sieving */
 
-  bool quietMode   = false;
-  bool printParser = false;
+int32_t maxThreads = ParallelPrimeSieve::getMaxThreads();
+int32_t threads    = -1;
+int32_t flags      =  0;
+int32_t sieveSize  = -1;
+int32_t preSieve   = -1;
 
-  const std::string primes[7] = {
-    "Prime numbers",
-    "Twin primes",
-    "Prime triplets",
-    "Prime quadruplets",
-    "Prime quintuplets", 
-    "Prime sextuplets",
-    "Prime septuplets"
-  };
+bool quietMode   = false;
+bool printParser = false;
 
-  enum {
-    OPTION_ERROR,
-    OPTION_HELP,
-    OPTION_TEST,
-    OPTION_VERSION,
-    START_SIEVING
-  };
-}
+const std::string primes[7] = {
+  "Prime numbers",
+  "Twin primes",
+  "Prime triplets",
+  "Prime quadruplets",
+  "Prime quintuplets", 
+  "Prime sextuplets",
+  "Prime septuplets"
+};
+
+enum {
+  OPTION_ERROR,
+  OPTION_HELP,
+  OPTION_TEST,
+  OPTION_VERSION,
+  START_SIEVING
+};
 
 void help() {
   std::cout << "Usage: primesieve START STOP [OPTION]..."                                              << std::endl
@@ -210,6 +210,8 @@ int processOptions(std::size_t argc, char* argv[]) {
   }
   return (numbers.size() == 2) ? START_SIEVING : OPTION_HELP;
 }
+
+} // end anonymous namespace
 
 int main(int argc, char* argv[]) {
   // process the command-line options, see help()
