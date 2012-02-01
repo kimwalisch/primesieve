@@ -86,6 +86,7 @@ enum {
 };
 
 void help() {
+  const int maxThreads = ParallelPrimeSieve::getMaxThreads();
   std::cout << "Usage: primesieve START STOP [OPTION]..."                                              << std::endl
             << "Use the segmented sieve of Eratosthenes to generate the prime numbers and/or"          << std::endl
             << "prime k-tuplets in the interval [START, STOP] < 2^64"                                  << std::endl
@@ -104,7 +105,7 @@ void help() {
             << "                the sieve of Eratosthenes, 13 <= PRE-SIEVE <= 23"                      << std::endl
             << "  -s<SIZE>      Set the sieve size in kilobytes, 1 <= SIZE <= 4096"                    << std::endl
             << "                Set SIZE to your CPU's L1/L2 cache size for best performance"          << std::endl
-            << "  -t<THREADS>   Set the number of threads for sieving, 1 <= THREADS <= " << ParallelPrimeSieve::getMaxThreads() << std::endl
+            << "  -t<THREADS>   Set the number of threads for sieving, 1 <= THREADS <= " << maxThreads << std::endl
             << "                Primes are not generated in order if THREADS >= 2"                     << std::endl
             << "  -test         Run various sieving tests and exit"                                    << std::endl
             << "  -v            Print version and license information and exit"                        << std::endl
