@@ -104,11 +104,13 @@ int ParallelPrimeSieve::getNumThreads() const {
 }
 
 /**
- * Set the number of threads for sieving, if numThreads
- * is not valid IDEAL_NUM_THREADS are used.
+ * Set the number of threads for sieving.
+ * If numThreads is invalid IDEAL_NUM_THREADS are used.
  */
 void ParallelPrimeSieve::setNumThreads(int numThreads) {
-  numThreads_ = (numThreads >= 1 && numThreads <= getMaxThreads()) ? numThreads : IDEAL_NUM_THREADS;
+  numThreads_ = numThreads;
+  if (numThreads_ < 1 || numThreads_ > getMaxThreads())
+    numThreads_ = IDEAL_NUM_THREADS;
 }
 
 /**
