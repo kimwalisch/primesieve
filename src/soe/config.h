@@ -149,10 +149,10 @@ const uint64_t MIN_THREAD_INTERVAL = static_cast<uint64_t>(1E8);
 /**
  * Worker threads sieve at most an interval of size
  * MAX_THREAD_INTERVAL to prevent load imbalance when lots of threads
- * are used. Default = 1E10, this setting guarantees that worker
- * threads always finish in less than half a minute.
+ * are used. Default = 2E10, this setting guarantees that worker
+ * threads always finish in less than a minute.
  */
-const uint64_t MAX_THREAD_INTERVAL = static_cast<uint64_t>(1E10);
+const uint64_t MAX_THREAD_INTERVAL = static_cast<uint64_t>(2E10);
 
 } // namespace config
 } // namespace soe
