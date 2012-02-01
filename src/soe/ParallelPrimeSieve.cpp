@@ -114,33 +114,32 @@ void ParallelPrimeSieve::setNumThreads(int numThreads) {
 /**
  * Get an ideal number of threads for the current set
  * start_, stop_ and flags_.
- * @remark returns 1 if _OPENMP is not defined
  */
 int ParallelPrimeSieve::getIdealNumThreads() const {
   // 1 thread generates primes in arithmetic order
   if (testFlags(GENERATE_FLAGS))
     return 1;
-  // each thread sieves at least an interval of size x^0.5/6
+  // each thread sieves at least an interval of size x^0.5/5
   // but not smaller than MIN_THREAD_INTERVAL
-  uint64_t threshold = std::max<uint64_t>(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 6);
+  uint64_t threshold = std::max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
   uint64_t idealNumThreads = (stop_ - start_) / threshold;
-  // 1 <= idealNumThreads <= getMaxThreads()
-  idealNumThreads = std::max<uint64_t>(1, idealNumThreads);
-  idealNumThreads = std::min<uint64_t>(idealNumThreads, getMaxThreads());
+  idealNumThreads = getMiddleValue<uint64_t>(1, idealNumThreads, getMaxThreads());
   return static_cast<int>(idealNumThreads);
 }
 
-/** Get an interval size that ensures a good load balance. */
+#if defined(_OPENMP)
+
+/** Get a thread interval size that ensures a good load balance. */
 uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   assert(threads > 1);
-  // balanced interval = x^0.5*1000, 0.1% initialization overhead
-  uint64_t interval = stop_ - start_;
-  uint64_t balanced = std::max<uint64_t>(config::MIN_THREAD_INTERVAL, isqrt(stop_) * 1000);
-  uint64_t max = std::max<uint64_t>(config::MIN_THREAD_INTERVAL, interval / threads);
+  uint64_t unbalanced = std::max(config::MIN_THREAD_INTERVAL, (stop_ - start_) / threads);
+  // balanced interval = x^0.5*1000, 0.5% initialization overhead
+  uint64_t balanced = getMiddleValue<uint64_t>(
+      config::MIN_THREAD_INTERVAL, isqrt(stop_) * 1000, config::MAX_THREAD_INTERVAL);
   // align to mod 30 to prevent prime k-tuplet gaps
+  unbalanced += 30 - unbalanced % 30;
   balanced += 30 - balanced % 30;
-  max += 30 - max % 30;
-  return std::min(balanced, max);
+  return std::min(balanced, unbalanced);
 }
 
 /**
@@ -157,7 +156,6 @@ void ParallelPrimeSieve::sieve() {
     threads = getIdealNumThreads();
   if (threads == 1)
     PrimeSieve::sieve();
-#if defined(_OPENMP)
   else {
     double t1 = omp_get_wtime();
     reset();
@@ -188,7 +186,6 @@ void ParallelPrimeSieve::sieve() {
     counts_[6] = count6;
     timeElapsed_ = omp_get_wtime() - t1;
   }
-#endif
   // communicate the sieving results via shared memory
   // segment to the Qt GUI process
   if (shm_ != NULL) {
@@ -197,3 +194,5 @@ void ParallelPrimeSieve::sieve() {
       shm_->counts[i] = counts_[i];
   }
 }
+
+#endif /* _OPENMP */

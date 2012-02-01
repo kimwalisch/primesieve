@@ -53,7 +53,6 @@
  */
 class ParallelPrimeSieve : public PrimeSieve {
 public:
-  using PrimeSieve::sieve;
   /**
    * Used in the primesieve Qt application (../qt-gui)
    * to handle the communication between the GUI process
@@ -79,14 +78,19 @@ public:
   static int getMaxThreads();
   int getNumThreads() const;
   void setNumThreads(int numThreads);
+#if defined(_OPENMP)
+  using PrimeSieve::sieve;
   virtual void sieve();
+#endif
 private:
   /** Number of threads to be used for sieving. */
   int numThreads_;
   SharedMemory* shm_;
   virtual void calcStatus(uint32_t);
   int getIdealNumThreads() const;
+#if defined(_OPENMP)
   uint64_t getBalancedInterval(int) const;
+#endif
 };
 
 #endif /* PARALLELPRIMESIEVE_H */
