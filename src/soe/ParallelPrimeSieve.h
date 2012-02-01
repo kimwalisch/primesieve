@@ -77,7 +77,7 @@ public:
   void init(SharedMemory*);
   static int getMaxThreads();
   int getNumThreads() const;
-  void setNumThreads(int numThreads);
+  void setNumThreads(int);
 #if defined(_OPENMP)
   using PrimeSieve::sieve;
   virtual void sieve();
