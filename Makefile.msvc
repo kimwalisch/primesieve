@@ -5,13 +5,13 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   22 January 2012
+# Last modified:   1 February 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
 
 CXX           = cl /nologo
-CXXFLAGS      = /W2 /O2 /GL /openmp /EHsc
+CXXFLAGS      = /W2 /O2 /GL /EHsc
 LINK          = link
 LFLAGS        = /OPT:REF,ICF /LTCG
 INCPATH       = /I"src\thirdparty"
@@ -71,7 +71,7 @@ dir_bin:
 # build the primesieve C++ library (read docs/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-CXXFLAGS_LIBPRIMESIEVE = /W2 /O2 /GL /openmp /EHsc
+CXXFLAGS_LIBPRIMESIEVE = /W2 /O2 /GL /EHsc
 !IF "$(CXXFLAGS_LIBPRIMESIEVE)" == "$(CXXFLAGS)"
 # default flags for primesieve.lib (single-threaded, no OpenMP)
 CXXFLAGS_LIBPRIMESIEVE = /W2 /O2 /EHsc
