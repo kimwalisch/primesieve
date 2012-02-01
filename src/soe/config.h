@@ -56,6 +56,8 @@
 #  define __STDC_CONSTANT_MACROS
 #endif
 
+#include <stdint.h>
+
 /** Disable the assert macro from <cassert> if not in debug mode. */
 #if !defined(NDEBUG) && !defined(DEBUG) && !defined(_DEBUG)
 #  define NDEBUG
@@ -135,14 +137,22 @@ enum {
    * EratBig allocates MEMORY_PER_ALLOC bytes of new memory each time
    * it needs more Buckets. Default = 4 megabytes.
    */
-  MEMORY_PER_ALLOC = (1 << 20) * 4,
-  /**
-   * For performance reasons each thread sieves at least an interval
-   * of size MIN_THREAD_INTERVAL in ParallelPrimeSieve.
-   * @pre MIN_THREAD_INTERVAL >= 100
-   */
-  MIN_THREAD_INTERVAL = static_cast<int>(1E8)
+  MEMORY_PER_ALLOC = (1 << 20) * 4
 };
+
+/**
+ * Worker threads sieve at least an interval of size
+ * MIN_THREAD_INTERVAL to reduce the thread creation overhead.
+ * @pre MIN_THREAD_INTERVAL >= 100
+ */
+const uint64_t MIN_THREAD_INTERVAL = static_cast<uint64_t>(1E8);
+/**
+ * Worker threads sieve at most an interval of size
+ * MAX_THREAD_INTERVAL to prevent load imbalance when lots of threads
+ * are used. Default = 1E10, this setting guarantees that worker
+ * threads always finish in less than half a minute.
+ */
+const uint64_t MAX_THREAD_INTERVAL = static_cast<uint64_t>(1E10);
 
 } // namespace config
 } // namespace soe
