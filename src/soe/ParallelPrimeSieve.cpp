@@ -145,7 +145,7 @@ uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
 }
 
 /**
- * Sieve the primes and prime k-tuplets within [start, stop] in
+ * Sieve the primes and prime k-tuplets within [start_, stop_] in
  * parallel using OpenMP (version 3.0 or later).
  */
 void ParallelPrimeSieve::sieve() {
