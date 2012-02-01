@@ -59,7 +59,6 @@ namespace {
 
 std::vector<uint64_t> numbers; /* start and stop number for sieving */
 
-int32_t maxThreads = ParallelPrimeSieve::getMaxThreads();
 int32_t threads    = -1;
 int32_t flags      =  0;
 int32_t sieveSize  = -1;
@@ -105,7 +104,7 @@ void help() {
             << "                the sieve of Eratosthenes, 13 <= PRE-SIEVE <= 23"                      << std::endl
             << "  -s<SIZE>      Set the sieve size in kilobytes, 1 <= SIZE <= 4096"                    << std::endl
             << "                Set SIZE to your CPU's L1/L2 cache size for best performance"          << std::endl
-            << "  -t<THREADS>   Set the number of threads for sieving, 1 <= THREADS <= " << maxThreads << std::endl
+            << "  -t<THREADS>   Set the number of threads for sieving, 1 <= THREADS <= " << ParallelPrimeSieve::getMaxThreads() << std::endl
             << "                Primes are not generated in order if THREADS >= 2"                     << std::endl
             << "  -test         Run various sieving tests and exit"                                    << std::endl
             << "  -v            Print version and license information and exit"                        << std::endl
