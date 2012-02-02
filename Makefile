@@ -10,14 +10,14 @@
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
-CXX = g++
-CXXFLAGS = -Wall -O2
-BINARY = primesieve
-LIBPRIMESIEVE = libprimesieve.a
-SOEDIR = src/soe
-CONDIR = src/console
-BINDIR = bin
-LIBDIR = lib
+TARGET       = primesieve
+CXX          = g++
+CXXFLAGS     = -Wall -O2
+CXXFLAGS_LIB = -Wall -O2
+SOEDIR       = src/soe
+CONDIR       = src/console
+BINDIR       = bin
+LIBDIR       = lib
 
 OBJECTS = $(BINDIR)/WheelFactorization.o \
   $(BINDIR)/PreSieve.o \
@@ -32,7 +32,7 @@ OBJECTS = $(BINDIR)/WheelFactorization.o \
   $(BINDIR)/test.o \
   $(BINDIR)/main.o
 
-OBJECTS_LIBPRIMESIEVE = $(LIBDIR)/WheelFactorization.o \
+OBJECTS_LIB = $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/PreSieve.o \
   $(LIBDIR)/EratSmall.o \
   $(LIBDIR)/EratMedium.o \
@@ -72,7 +72,7 @@ endif
 .PHONY: bin dir_bin
 
 bin: dir_bin $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZE) -o $(BINDIR)/$(BINARY) $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZE) -o $(BINDIR)/$(TARGET) $(OBJECTS)
 
 $(BINDIR)/%.o: $(SOEDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZE) -o $@ -c $<
@@ -87,22 +87,13 @@ dir_bin:
 # build the libprimesieve library (read ./docs/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-CXXFLAGS_LIBPRIMESIEVE = -Wall -O2 -fopenmp
-ifeq ($(CXXFLAGS_LIBPRIMESIEVE),$(CXXFLAGS))
-  # default flags for libprimesieve (single-threaded, no OpenMP)
-  CXXFLAGS_LIBPRIMESIEVE = -Wall -O2
-else
-  # use the user's custom CXXFLAGS
-  CXXFLAGS_LIBPRIMESIEVE = $(CXXFLAGS)
-endif
-
 .PHONY: lib dir_lib
 
-lib: dir_lib $(OBJECTS_LIBPRIMESIEVE)
-	ar rcs $(LIBDIR)/$(LIBPRIMESIEVE) $(OBJECTS_LIBPRIMESIEVE)
+lib: dir_lib $(OBJECTS_LIB)
+	ar rcs $(LIBDIR)/lib$(TARGET).a $(OBJECTS_LIB)
 
 $(LIBDIR)/%.o: $(SOEDIR)/%.cpp
-	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) $(CPU_CACHE_SIZE) -o $@ -c $<
+	$(CXX) $(CXXFLAGS_LIB) $(CPU_CACHE_SIZE) -o $@ -c $<
 
 dir_lib:
 	@mkdir -p $(LIBDIR)
@@ -117,31 +108,34 @@ all: bin lib
 
 clean:
 ifneq ($(shell [ -d $(BINDIR) ] && echo exists),)
-	rm -f $(BINDIR)/$(BINARY) $(BINDIR)/*.o
+	rm -f $(BINDIR)/$(TARGET) $(BINDIR)/$(TARGET).exe $(BINDIR)/*.o
+endif
+ifneq ($(shell [ -f $(BINDIR)/$(TARGET).exe ] && echo exists),)
+	rm -f $(BINDIR)/$(TARGET).exe
 endif
 ifneq ($(shell [ -d $(LIBDIR) ] && echo exists),)
-	rm -f $(LIBDIR)/$(LIBPRIMESIEVE) $(LIBDIR)/*.o
+	rm -f $(LIBDIR)/lib$(TARGET).a $(LIBDIR)/*.o
 endif
 
 # needs root privileges (sudo make install)
 # installation directories: /usr/bin, /usr/lib, /usr/include/soe
 install:
-ifneq ($(shell [ -f $(BINDIR)/$(BINARY) ] && echo exists),)
-	cp -f $(BINDIR)/$(BINARY) /usr/bin
+ifneq ($(shell [ -f $(BINDIR)/$(TARGET) ] && echo exists),)
+	cp -f $(BINDIR)/$(TARGET) /usr/bin
 endif
-ifneq ($(shell [ -f $(LIBDIR)/$(LIBPRIMESIEVE) ] && echo exists),)
-	cp -f $(LIBDIR)/$(LIBPRIMESIEVE) /usr/lib
+ifneq ($(shell [ -f $(LIBDIR)/lib$(TARGET).a ] && echo exists),)
+	cp -f $(LIBDIR)/lib$(TARGET).a /usr/lib
 	mkdir -p /usr/include/soe
 	cp -f src/soe/*.h /usr/include/soe
 endif
 
 # needs root privileges (sudo make uninstall)
 uninstall:
-ifneq ($(shell [ -f /usr/bin/$(BINARY) ] && echo exists),)
-	rm -f /usr/bin/$(BINARY)
+ifneq ($(shell [ -f /usr/bin/$(TARGET) ] && echo exists),)
+	rm -f /usr/bin/$(TARGET)
 endif
-ifneq ($(shell [ -f /usr/lib/$(LIBPRIMESIEVE) ] && echo exists),)
-	rm -f /usr/lib/$(LIBPRIMESIEVE)
+ifneq ($(shell [ -f /usr/lib/lib$(TARGET).a ] && echo exists),)
+	rm -f /usr/lib/lib$(TARGET).a
 endif
 ifneq ($(shell [ -d /usr/include/soe ] && echo exists),)
 	rm -rf /usr/include/soe
@@ -155,7 +149,7 @@ endif
 .PHONY: check test
 
 check test: bin
-	$(BINDIR)/./$(BINARY) -test
+	$(BINDIR)/./$(TARGET) -test
 
 #-----------------------------------------------------------------------------
 # Makefile help menu
