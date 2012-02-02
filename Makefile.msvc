@@ -22,7 +22,7 @@ CONDIR       = src\console
 BINDIR       = bin
 LIBDIR       = lib
 
-OBJECTS = $(BINDIR)\WheelFactorization.obj \
+BIN_OBJECTS = $(BINDIR)\WheelFactorization.obj \
   $(BINDIR)\PreSieve.obj \
   $(BINDIR)\EratSmall.obj \
   $(BINDIR)\EratMedium.obj \
@@ -35,7 +35,7 @@ OBJECTS = $(BINDIR)\WheelFactorization.obj \
   $(BINDIR)\test.obj \
   $(BINDIR)\main.obj
 
-OBJECTS_LIB = $(LIBDIR)\WheelFactorization.obj \
+LIB_OBJECTS = $(LIBDIR)\WheelFactorization.obj \
   $(LIBDIR)\PreSieve.obj \
   $(LIBDIR)\EratSmall.obj \
   $(LIBDIR)\EratMedium.obj \
@@ -67,10 +67,10 @@ CPU_CACHE_SIZE = /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 # build the primesieve console application (read INSTALL)
 #-----------------------------------------------------------------------------
 
-bin: dir_bin $(OBJECTS)
-	$(LINK) $(LFLAGS) /OUT:$(BINDIR)\$(TARGET).exe $(OBJECTS)
+bin: dir_bin $(BIN_OBJECTS)
+	$(LINK) $(LFLAGS) /OUT:$(BINDIR)\$(TARGET).exe $(BIN_OBJECTS)
 
-$(OBJECTS): {$(SOEDIR)\;$(CONDIR)\}$$(@B).cpp
+$(BIN_OBJECTS): {$(SOEDIR)\;$(CONDIR)\}$$(@B).cpp
 	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZE) $(INCPATH) /c $? /Fo"$@"
 
 dir_bin:
@@ -80,10 +80,10 @@ dir_bin:
 # build the primesieve C++ library (read docs/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-lib: dir_lib $(OBJECTS_LIB)
-	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $(OBJECTS_LIB)
+lib: dir_lib $(LIB_OBJECTS)
+	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $(LIB_OBJECTS)
 
-$(OBJECTS_LIB): $(SOEDIR)\$$(@B).cpp
+$(LIB_OBJECTS): $(SOEDIR)\$$(@B).cpp
 	$(CXX) $(CXXFLAGS_LIB) $(CPU_CACHE_SIZE) $(INCPATH) /c $? /Fo"$@"
 
 dir_lib:
