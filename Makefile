@@ -5,13 +5,13 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   22 January 2012
+# Last modified:   2 February 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
 CXX = g++
-CXXFLAGS = -Wall -O2 -fopenmp
+CXXFLAGS = -Wall -O2
 BINARY = primesieve
 LIBPRIMESIEVE = libprimesieve.a
 SOEDIR = src/soe
@@ -44,12 +44,24 @@ OBJECTS_LIBPRIMESIEVE = $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/ParallelPrimeSieve.o
 
 #-----------------------------------------------------------------------------
+# Add -fopenmp for GCC 4.4 or later (supports OpenMP 3.0)
+#-----------------------------------------------------------------------------
+
+ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
+  GCC_MAJOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
+  GCC_MINOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
+  ifneq ($(shell if [ $$(($(GCC_MAJOR)*10+$(GCC_MINOR))) -ge 44 ]; then echo gcc44_or_later; fi),)
+    CXXFLAGS += -fopenmp
+  endif
+endif
+
+#-----------------------------------------------------------------------------
 # check if the user indicated his CPU's L1 data cache size per core
 # e.g. `make L1_DCACHE_SIZE=32`
 #-----------------------------------------------------------------------------
 
 ifneq ($(L1_DCACHE_SIZE),)
-  CPU_CACHE_SIZES += -DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
+  CPU_CACHE_SIZE += -DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 endif
 
 #-----------------------------------------------------------------------------
@@ -59,13 +71,13 @@ endif
 .PHONY: bin dir_bin
 
 bin: dir_bin $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZES) -o $(BINDIR)/$(BINARY) $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZE) -o $(BINDIR)/$(BINARY) $(OBJECTS)
 
 $(BINDIR)/%.o: $(SOEDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZES) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZE) -o $@ -c $<
 
 $(BINDIR)/%.o: $(CONDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZES) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZE) -o $@ -c $<
 
 dir_bin:
 	@mkdir -p $(BINDIR)
@@ -89,7 +101,7 @@ lib: dir_lib $(OBJECTS_LIBPRIMESIEVE)
 	ar rcs $(LIBDIR)/$(LIBPRIMESIEVE) $(OBJECTS_LIBPRIMESIEVE)
 
 $(LIBDIR)/%.o: $(SOEDIR)/%.cpp
-	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) $(CPU_CACHE_SIZES) -o $@ -c $<
+	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) $(CPU_CACHE_SIZE) -o $@ -c $<
 
 dir_lib:
 	@mkdir -p $(LIBDIR)
