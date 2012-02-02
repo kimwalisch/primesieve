@@ -10,17 +10,17 @@
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
 
-CXX           = cl /nologo
-CXXFLAGS      = /W2 /O2 /GL /EHsc
-LINK          = link
-LFLAGS        = /OPT:REF,ICF /LTCG
-INCPATH       = /I"src\thirdparty"
-SOEDIR        = src\soe
-CONDIR        = src\console
-BINDIR        = bin
-LIBDIR        = lib
-BINARY        = primesieve.exe
-LIBPRIMESIEVE = primesieve.lib
+TARGET       = primesieve
+CXX          = cl /nologo
+CXXFLAGS     = /W2 /O2 /GL /EHsc
+CXXFLAGS_LIB = /W2 /O2 /EHsc
+LINK         = link
+LFLAGS       = /OPT:REF,ICF /LTCG
+INCPATH      = /I"src\thirdparty"
+SOEDIR       = src\soe
+CONDIR       = src\console
+BINDIR       = bin
+LIBDIR       = lib
 
 OBJECTS = $(BINDIR)\WheelFactorization.obj \
   $(BINDIR)\PreSieve.obj \
@@ -35,7 +35,7 @@ OBJECTS = $(BINDIR)\WheelFactorization.obj \
   $(BINDIR)\test.obj \
   $(BINDIR)\main.obj
 
-OBJECTS_LIBPRIMESIEVE = $(LIBDIR)\WheelFactorization.obj \
+OBJECTS_LIB = $(LIBDIR)\WheelFactorization.obj \
   $(LIBDIR)\PreSieve.obj \
   $(LIBDIR)\EratSmall.obj \
   $(LIBDIR)\EratMedium.obj \
@@ -45,6 +45,15 @@ OBJECTS_LIBPRIMESIEVE = $(LIBDIR)\WheelFactorization.obj \
   $(LIBDIR)\PrimeNumberFinder.obj \
   $(LIBDIR)\PrimeSieve.obj \
   $(LIBDIR)\ParallelPrimeSieve.obj
+
+#-----------------------------------------------------------------------------
+# Add /openmp to CXXFLAGS if MSVC supports OpenMP 3.0 or later
+#-----------------------------------------------------------------------------
+
+!IF ([$(CXX) /? 2>&1 | findstr /I "OpenMP" > nul ] == 0) && \
+    ([$(CXX) /? 2>&1 | findstr /I /C:"OpenMP 2" > nul ] != 0)
+CXXFLAGS = $(CXXFLAGS) /openmp
+!ENDIF
 
 #-----------------------------------------------------------------------------
 # check if the user indicated his CPU's L1 data cache size (read INSTALL)
@@ -59,7 +68,7 @@ CPU_CACHE_SIZE = /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 #-----------------------------------------------------------------------------
 
 bin: dir_bin $(OBJECTS)
-	$(LINK) $(LFLAGS) /OUT:$(BINDIR)\$(BINARY) $(OBJECTS)
+	$(LINK) $(LFLAGS) /OUT:$(BINDIR)\$(TARGET).exe $(OBJECTS)
 
 $(OBJECTS): {$(SOEDIR)\;$(CONDIR)\}$$(@B).cpp
 	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZE) $(INCPATH) /c $? /Fo"$@"
@@ -71,20 +80,11 @@ dir_bin:
 # build the primesieve C++ library (read docs/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-CXXFLAGS_LIBPRIMESIEVE = /W2 /O2 /GL /EHsc
-!IF "$(CXXFLAGS_LIBPRIMESIEVE)" == "$(CXXFLAGS)"
-# default flags for primesieve.lib (single-threaded, no OpenMP)
-CXXFLAGS_LIBPRIMESIEVE = /W2 /O2 /EHsc
-!ELSE
-# use the user's custom CXXFLAGS
-CXXFLAGS_LIBPRIMESIEVE = $(CXXFLAGS)
-!ENDIf
+lib: dir_lib $(OBJECTS_LIB)
+	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $(OBJECTS_LIB)
 
-lib: dir_lib $(OBJECTS_LIBPRIMESIEVE)
-	lib.exe /OUT:$(LIBDIR)\$(LIBPRIMESIEVE) $(OBJECTS_LIBPRIMESIEVE)
-
-$(OBJECTS_LIBPRIMESIEVE): $(SOEDIR)\$$(@B).cpp
-	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) $(CPU_CACHE_SIZE) $(INCPATH) /c $? /Fo"$@"
+$(OBJECTS_LIB): $(SOEDIR)\$$(@B).cpp
+	$(CXX) $(CXXFLAGS_LIB) $(CPU_CACHE_SIZE) $(INCPATH) /c $? /Fo"$@"
 
 dir_lib:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
@@ -97,10 +97,10 @@ all: bin lib
 
 clean:
 !IF EXIST($(BINDIR))
-	del /Q $(BINDIR)\$(BINARY) $(BINDIR)\*.obj
+	del /Q $(BINDIR)\$(TARGET).exe $(BINDIR)\*.obj
 !ENDIF
 !IF EXIST($(LIBDIR))
-	del /Q $(LIBDIR)\$(LIBPRIMESIEVE) $(LIBDIR)\*.obj
+	del /Q $(LIBDIR)\$(TARGET).lib $(LIBDIR)\*.obj
 !ENDIF
 
 #-----------------------------------------------------------------------------
@@ -109,7 +109,7 @@ clean:
 #-----------------------------------------------------------------------------
 
 check test: bin
-	$(BINDIR)\$(BINARY) -test
+	$(BINDIR)\$(TARGET).exe -test
 
 #-----------------------------------------------------------------------------
 # Makefile help menu
