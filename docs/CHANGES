@@ -1,18 +1,42 @@
-New in version 3.5, 01/02/2012
+New in version 3.5, 02/02/2012
 ==============================
 
 1. Bug fix for big-endian CPUs (PowerPC, SPARC), see docs/BUGS.
 2. src/soe/ParallelPrimeSieve.cpp has been rewritten using OpenMP 3.0
    (previously OpenMP 2.0). The new OpenMP code is more elegant and
    scales better when lots of threads (> 32) are used.
-   !!NOTE: OpenMP is now disabled by default for the Microsoft Visual
-   C++ compiler as it only supports OpenMP 2.0 (MSVC 2010).
+   NOTE: OpenMP is now disabled by default for the Microsoft Visual
+   C++ compiler as it currently only supports OpenMP 2.0.
 3. Helper classes and functions within src/soe are now defined in the
    the newly introduced soe namespace. This makes PrimeSieve more
    usable as a library.
 4. The header file src/soe/defs.h has been renamed to config.h and its
    code readability has been improved.
 5. The code of src/console/test.cpp has been simplified.
+6. I added the following convenience functions to PrimeSieve:
+
+  // Print member functions (to std::cout)
+  void printPrimes     (uint64_t start, uint64_t stop);
+  void printTwins      (uint64_t start, uint64_t stop);
+  void printTriplets   (uint64_t start, uint64_t stop);
+  void printQuadruplets(uint64_t start, uint64_t stop);
+  void printQuintuplets(uint64_t start, uint64_t stop);
+  void printSextuplets (uint64_t start, uint64_t stop);
+  void printSeptuplets (uint64_t start, uint64_t stop);
+
+  // Count member functions
+  uint64_t getPrimeCount     (uint64_t start, uint64_t stop);
+  uint64_t getTwinCount      (uint64_t start, uint64_t stop);
+  uint64_t getTripletCount   (uint64_t start, uint64_t stop);
+  uint64_t getQuadrupletCount(uint64_t start, uint64_t stop);
+  uint64_t getQuintupletCount(uint64_t start, uint64_t stop);
+  uint64_t getSextupletCount (uint64_t start, uint64_t stop);
+  uint64_t getSeptupletCount (uint64_t start, uint64_t stop);
+
+  // Sieve member functions
+  void sieve(uint64_t start, uint64_t stop);
+  void sieve(uint64_t start, uint64_t stop, uint32_t flags);
+  void sieve();
 
 New in version 3.4, 05/01/2012
 ==============================
