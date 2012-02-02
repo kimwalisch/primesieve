@@ -108,10 +108,8 @@ all: bin lib
 
 clean:
 ifneq ($(shell [ -d $(BINDIR) ] && echo exists),)
-	rm -f $(BINDIR)/$(TARGET) $(BINDIR)/$(TARGET).exe $(BINDIR)/*.o
-endif
-ifneq ($(shell [ -f $(BINDIR)/$(TARGET).exe ] && echo exists),)
-	rm -f $(BINDIR)/$(TARGET).exe
+	rm -f $(BINDIR)/$(TARGET) $(BINDIR)/*.o
+	@rm -f $(BINDIR)/$(TARGET).exe
 endif
 ifneq ($(shell [ -d $(LIBDIR) ] && echo exists),)
 	rm -f $(LIBDIR)/lib$(TARGET).a $(LIBDIR)/*.o
