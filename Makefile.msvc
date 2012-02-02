@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   1 February 2012
+# Last modified:   2 February 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -51,7 +51,7 @@ OBJECTS_LIBPRIMESIEVE = $(LIBDIR)\WheelFactorization.obj \
 #-----------------------------------------------------------------------------
 
 !IFDEF L1_DCACHE_SIZE
-CPU_CACHE_SIZES = /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
+CPU_CACHE_SIZE = /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 !ENDIF
 
 #-----------------------------------------------------------------------------
@@ -62,7 +62,7 @@ bin: dir_bin $(OBJECTS)
 	$(LINK) $(LFLAGS) /OUT:$(BINDIR)\$(BINARY) $(OBJECTS)
 
 $(OBJECTS): {$(SOEDIR)\;$(CONDIR)\}$$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZES) $(INCPATH) /c $? /Fo"$@"
+	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZE) $(INCPATH) /c $? /Fo"$@"
 
 dir_bin:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
@@ -84,7 +84,7 @@ lib: dir_lib $(OBJECTS_LIBPRIMESIEVE)
 	lib.exe /OUT:$(LIBDIR)\$(LIBPRIMESIEVE) $(OBJECTS_LIBPRIMESIEVE)
 
 $(OBJECTS_LIBPRIMESIEVE): $(SOEDIR)\$$(@B).cpp
-	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) $(CPU_CACHE_SIZES) $(INCPATH) /c $? /Fo"$@"
+	$(CXX) $(CXXFLAGS_LIBPRIMESIEVE) $(CPU_CACHE_SIZE) $(INCPATH) /c $? /Fo"$@"
 
 dir_lib:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
