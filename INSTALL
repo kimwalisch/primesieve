@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 22 January 2012
+# Last modified: 2 February 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -25,18 +25,21 @@ II. How to build primesieve
   following make commands to build primesieve with your favorite C++
   compiler:
 
-  > nmake -f Makefile.msvc                 Microsoft Visual C++
   $ make                                   GNU g++
-  $ make CXX=compiler CXXFLAGS="options"   Other C++ compilers
+  $ make CXX=compiler CXXFLAGS="options"   Other C++ compilers (icpc, sunCC, clang++, ...)
+  > nmake -f Makefile.msvc                 Microsoft Visual C++
+
+  Note: If your compiler supports OpenMP 3.0 or later (2008) good
+  CXXFLAGS for primesieve are e.g. CXXFLAGS="-O2 -openmp".
 
 III. How to test it
 ===================
 
   > cd bin
-  > primesieve 2 10000       Counts the primes up to 10000
-  > primesieve 2 1E6 -p1     Prints the primes up to 10^6
-  > primesieve -help         Prints the help menu
-  > primesieve -test         Runs various sieving tests
+  > primesieve 2 10000     Counts the primes up to 10000
+  > primesieve 2 1E6 -p1   Prints the primes up to 10^6
+  > primesieve -help       Prints the help menu
+  > primesieve -test       Runs various sieving tests
 
   Note: for Unix-like operating systems use ./primesieve
 
