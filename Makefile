@@ -140,42 +140,44 @@ dir_lib:
 all: bin lib
 
 clean:
-ifneq ($(shell [ -d $(BINDIR) ] && echo exists),)
+ifneq ($(wildcard $(BINDIR)/$(TARGET)* $(BINDIR)/*.o),)
 	rm -f $(BINDIR)/$(TARGET) $(BINDIR)/*.o
 	@rm -f $(BINDIR)/$(TARGET).exe
 endif
-ifneq ($(shell [ -d $(LIBDIR) ] && echo exists),)
-	rm -f $(LIBDIR)/$(LIBPRIMESIEVE) $(LIBDIR)/*.o
+ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).* $(LIBDIR)/*.o),)
+	rm -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(LIBDIR)/*.o
 endif
 
 # might need root privileges (sudo make install)
 install:
-ifneq ($(shell [ -f $(BINDIR)/$(TARGET) ] && echo exists),)
+ifneq ($(wildcard $(BINDIR)/$(TARGET)*),)
 	@mkdir -p $(PREFIX)/bin
 	cp -f $(BINDIR)/$(TARGET) $(PREFIX)/bin
 endif
-ifneq ($(shell [ -f $(LIBDIR)/$(LIBPRIMESIEVE) ] && echo exists),)
+ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
 	@mkdir -p $(PREFIX)/include/primesieve/expr
 	@mkdir -p $(PREFIX)/include/primesieve/soe
 	@mkdir -p $(PREFIX)/lib
 	cp -f src/expr/*.h $(PREFIX)/include/primesieve/expr
 	cp -f src/soe/*.h $(PREFIX)/include/primesieve/soe
-	cp -f $(LIBDIR)/$(LIBPRIMESIEVE) $(PREFIX)/lib
-  ifneq ($(SHARED),)
-	ldconfig $(PREFIX)/lib
+	cp -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(PREFIX)/lib
+  ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).so),)
+    ifneq ($(findstring ldconfig,$(shell echo `which ldconfig 2> /dev/null`)),)
+		ldconfig -n $(PREFIX)/lib
+    endif
   endif
 endif
 
 # might need root privileges (sudo make uninstall)
 uninstall:
-ifneq ($(shell [ -f $(PREFIX)/bin/$(TARGET) ] && echo exists),)
+ifneq ($(wildcard $(PREFIX)/bin/$(TARGET)*),)
 	rm -f $(PREFIX)/bin/$(TARGET)
 	@rm -f $(PREFIX)/bin/$(TARGET).exe
 endif
-ifneq ($(shell [ -f $(PREFIX)/lib/$(LIBPRIMESIEVE) ] && echo exists),)
-	rm -f $(PREFIX)/lib/$(LIBPRIMESIEVE)
+ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).*),)
+	rm -f $(wildcard $(PREFIX)/lib/lib$(TARGET).*)
 endif
-ifneq ($(shell [ -d $(PREFIX)/include/primesieve ] && echo exists),)
+ifneq ($(wildcard $(PREFIX)/include/primesieve),)
 	rm -rf $(PREFIX)/include/primesieve
 endif
 
