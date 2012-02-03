@@ -55,7 +55,10 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
   shm_(NULL)
 {
   // prevents prime k-tuplet gaps
-  static_assert(config::MIN_THREAD_INTERVAL >= 100, "config::MIN_THREAD_INTERVAL >= 100");
+  static_assert(config::MIN_THREAD_INTERVAL >= 100,
+      "config::MIN_THREAD_INTERVAL >= 100");
+  static_assert(config::MIN_THREAD_INTERVAL <= config::MAX_THREAD_INTERVAL,
+      "config::MIN_THREAD_INTERVAL <= config::MAX_THREAD_INTERVAL");
 }
 
 /**
@@ -125,7 +128,7 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   // but not smaller than MIN_THREAD_INTERVAL
   uint64_t threshold = std::max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
   uint64_t idealNumThreads = (stop_ - start_) / threshold;
-  idealNumThreads = getMiddleValue<uint64_t>(1, idealNumThreads, getMaxThreads());
+  idealNumThreads = getInBetween<uint64_t>(1, idealNumThreads, getMaxThreads());
   return static_cast<int>(idealNumThreads);
 }
 
@@ -136,7 +139,7 @@ uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   assert(threads > 1);
   uint64_t unbalanced = std::max(config::MIN_THREAD_INTERVAL, (stop_ - start_) / threads);
   // balanced interval = x^0.5*1000, 0.5% initialization overhead
-  uint64_t balanced = getMiddleValue<uint64_t>(
+  uint64_t balanced = getInBetween<uint64_t>(
       config::MIN_THREAD_INTERVAL, isqrt(stop_) * 1000, config::MAX_THREAD_INTERVAL);
   // align to mod 30 to prevent prime k-tuplet gaps
   unbalanced += 30 - unbalanced % 30;

@@ -43,7 +43,6 @@
 #include "config.h"
 #include <stdint.h>
 #include <cmath>
-#include <algorithm>
 
 namespace soe {
 
@@ -55,12 +54,6 @@ inline T isquare(T x) {
 template <typename T>
 inline T isqrt(T x) {
   return static_cast<T>(std::sqrt(static_cast<double>(x)));
-}
-
-template <typename T>
-inline T getMiddleValue(T a, T b, T c) {
-  T values[3] = { a, b, c };
-  return (a + b + c) - *std::min_element(values, &values[3]) - *std::max_element(values, &values[3]);
 }
 
 } // namespace soe

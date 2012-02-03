@@ -87,6 +87,14 @@ private:
   int numThreads_;
   SharedMemory* shm_;
   virtual void calcStatus(uint32_t);
+  template <typename T>
+  static T getInBetween(T lowerBound, T value, T upperBound) {
+    if (value < lowerBound)
+      return lowerBound;
+    if (value > upperBound)
+      return upperBound;
+    return value;
+  }
   int getIdealNumThreads() const;
 #if defined(_OPENMP)
   uint64_t getBalancedInterval(int) const;
