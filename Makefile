@@ -148,11 +148,12 @@ ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).* $(LIBDIR)/*.o),)
 	rm -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(LIBDIR)/*.o
 endif
 
-# might need root privileges (sudo make install)
+# needs root privileges (sudo make install)
 install:
 ifneq ($(wildcard $(BINDIR)/$(TARGET)*),)
 	@mkdir -p $(PREFIX)/bin
 	cp -f $(BINDIR)/$(TARGET) $(PREFIX)/bin
+	@cp -f $(BINDIR)/$(TARGET).exe $(PREFIX)/bin
 endif
 ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
 	@mkdir -p $(PREFIX)/include/primesieve/expr
@@ -163,12 +164,12 @@ ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
 	cp -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(PREFIX)/lib
   ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).so),)
     ifneq ($(findstring ldconfig,$(shell echo `which ldconfig 2> /dev/null`)),)
-		ldconfig -n $(PREFIX)/lib
+		ldconfig $(PREFIX)/lib
     endif
   endif
 endif
 
-# might need root privileges (sudo make uninstall)
+# needs root privileges (sudo make uninstall)
 uninstall:
 ifneq ($(wildcard $(PREFIX)/bin/$(TARGET)*),)
 	rm -f $(PREFIX)/bin/$(TARGET)
