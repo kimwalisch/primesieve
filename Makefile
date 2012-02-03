@@ -145,7 +145,7 @@ ifneq ($(shell [ -d $(BINDIR) ] && echo exists),)
 	@rm -f $(BINDIR)/$(TARGET).exe
 endif
 ifneq ($(shell [ -d $(LIBDIR) ] && echo exists),)
-	rm -f $(LIBDIR)/lib$(TARGET).* $(LIBDIR)/*.o
+	rm -f $(LIBDIR)/$(LIBPRIMESIEVE) $(LIBDIR)/*.o
 endif
 
 # might need root privileges (sudo make install)
