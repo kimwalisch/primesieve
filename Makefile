@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   3 February 2012
+# Last modified:   4 February 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -203,11 +203,13 @@ help:
 	@echo --------------- primesieve Makefile ---------------
 	@echo ---------------------------------------------------
 	@echo "make                                   Builds the primesieve console application using g++ (DEFAULT)"
-	@echo "make lib                               Builds the primesieve C++ library (read docs/LIBPRIMESIEVE)"
-	@echo "make check                             Tests the compiled primesieve binary"
-	@echo "sudo make install                      Installs primesieve and libprimesieve (to /usr/local or /usr)"
-	@echo "sudo make uninstall                    Completely removes primesieve and libprimesieve"
-	@echo "make clean                             Cleans the output directories (./bin, ./lib)"
 	@echo "make CXX=compiler CXXFLAGS=\"options\"   Specify a custom C++ compiler"
 	@echo "make L1_DCACHE_SIZE=KB                 Specify the CPU's L1 data cache size (read INSTALL)"
+	@echo "make check                             Tests the compiled primesieve binary"
+	@echo "make clean                             Cleans the output directories (./bin, ./lib)"
+	@echo "make lib                               Builds static libprimesieve (read docs/LIBPRIMESIEVE)"
+	@echo "make lib SHARED=yes                    Builds shared libprimesieve (read docs/LIBPRIMESIEVE)"
+	@echo "sudo make install                      Installs primesieve and libprimesieve (to /usr/local or /usr)"
+	@echo "sudo make install PREFIX=path          Specify a custom installation path"
+	@echo "sudo make uninstall                    Completely removes primesieve and libprimesieve"
 	@echo "make help                              Prints this help menu"
