@@ -155,12 +155,15 @@ ifneq ($(shell [ -f $(BINDIR)/$(TARGET) ] && echo exists),)
 	cp -f $(BINDIR)/$(TARGET) $(PREFIX)/bin
 endif
 ifneq ($(shell [ -f $(LIBDIR)/$(LIBPRIMESIEVE) ] && echo exists),)
-	@mkdir -p $(PREFIX)/lib
 	@mkdir -p $(PREFIX)/include/primesieve/expr
 	@mkdir -p $(PREFIX)/include/primesieve/soe
-	cp -f $(LIBDIR)/$(LIBPRIMESIEVE) $(PREFIX)/lib
+	@mkdir -p $(PREFIX)/lib
 	cp -f src/expr/*.h $(PREFIX)/include/primesieve/expr
 	cp -f src/soe/*.h $(PREFIX)/include/primesieve/soe
+	cp -f $(LIBDIR)/$(LIBPRIMESIEVE) $(PREFIX)/lib
+  ifneq ($(SHARED),)
+	ldconfig $(PREFIX)/lib
+  endif
 endif
 
 # might need root privileges (sudo make uninstall)
