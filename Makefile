@@ -73,27 +73,20 @@ else
 endif
 
 #-----------------------------------------------------------------------------
-# use -fopenmp with GCC 4.4 or later (supports OpenMP >= 3.0)
-#-----------------------------------------------------------------------------
-
-ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
-  GCC_MAJOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
-  GCC_MINOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
-  ifneq ($(shell if [ $$(($(GCC_MAJOR)*100+$(GCC_MINOR))) -ge 404 ]; \
-      then echo GCC 4.4 or later; fi),)
-    OPENMP = -fopenmp
-  endif
-endif
-
-#-----------------------------------------------------------------------------
 # build the primesieve console application (read INSTALL)
 #-----------------------------------------------------------------------------
 
 .PHONY: bin dir_bin
 
 BIN_CXXFLAGS = $(CXXFLAGS)
-ifneq ($(OPENMP),)
-  BIN_CXXFLAGS += $(OPENMP)
+# add -fopenmp for GCC 4.4 or later (supports OpenMP >= 3.0)
+ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
+  GCC_MAJOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
+  GCC_MINOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
+  ifneq ($(shell if [ $$(($(GCC_MAJOR)*100+$(GCC_MINOR))) -ge 404 ]; \
+      then echo GCC 4.4 or later; fi),)
+    BIN_CXXFLAGS += -fopenmp
+  endif
 endif
 ifneq ($(L1_DCACHE_SIZE),)
   BIN_CXXFLAGS += -DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
@@ -139,7 +132,7 @@ dir_lib:
 	@mkdir -p $(LIBDIR)
 
 #-----------------------------------------------------------------------------
-# Common targets (clean, install, uninstall)
+# Common targets (all, clean, install, uninstall)
 #-----------------------------------------------------------------------------
 
 .PHONY: all clean install uninstall
@@ -158,12 +151,16 @@ endif
 # might need root privileges (sudo make install)
 install:
 ifneq ($(shell [ -f $(BINDIR)/$(TARGET) ] && echo exists),)
+	@mkdir -p $(PREFIX)/bin
 	cp -f $(BINDIR)/$(TARGET) $(PREFIX)/bin
 endif
-ifneq ($(shell [ -f $(LIBDIR)/lib$(TARGET).* ] && echo exists),)
-	cp -f $(LIBDIR)/lib$(TARGET).* $(PREFIX)/lib
-	mkdir -p $(PREFIX)/include/primesieve
-	cp -f src/soe/*.h $(PREFIX)/include/primesieve
+ifneq ($(shell [ -f $(LIBDIR)/$(LIBPRIMESIEVE) ] && echo exists),)
+	@mkdir -p $(PREFIX)/lib
+	@mkdir -p $(PREFIX)/include/primesieve/expr
+	@mkdir -p $(PREFIX)/include/primesieve/soe
+	cp -f $(LIBDIR)/$(LIBPRIMESIEVE) $(PREFIX)/lib
+	cp -f src/expr/*.h $(PREFIX)/include/primesieve/expr
+	cp -f src/soe/*.h $(PREFIX)/include/primesieve/soe
 endif
 
 # might need root privileges (sudo make uninstall)
@@ -172,8 +169,8 @@ ifneq ($(shell [ -f $(PREFIX)/bin/$(TARGET) ] && echo exists),)
 	rm -f $(PREFIX)/bin/$(TARGET)
 	@rm -f $(PREFIX)/bin/$(TARGET).exe
 endif
-ifneq ($(shell [ -f $(PREFIX)/lib/lib$(TARGET).* ] && echo exists),)
-	rm -f $(PREFIX)/lib/lib$(TARGET).*
+ifneq ($(shell [ -f $(PREFIX)/lib/$(LIBPRIMESIEVE) ] && echo exists),)
+	rm -f $(PREFIX)/lib/$(LIBPRIMESIEVE)
 endif
 ifneq ($(shell [ -d $(PREFIX)/include/primesieve ] && echo exists),)
 	rm -rf $(PREFIX)/include/primesieve
