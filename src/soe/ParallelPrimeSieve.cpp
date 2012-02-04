@@ -56,9 +56,9 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
 {
   // prevents prime k-tuplet gaps
   static_assert(config::MIN_THREAD_INTERVAL >= 100,
-      "config::MIN_THREAD_INTERVAL >= 100");
+      "config::MIN_THREAD_INTERVAL must not be < 100");
   static_assert(config::MIN_THREAD_INTERVAL <= config::MAX_THREAD_INTERVAL,
-      "config::MIN_THREAD_INTERVAL <= config::MAX_THREAD_INTERVAL");
+      "config::MIN_THREAD_INTERVAL must not be > config::MAX_THREAD_INTERVAL");
 }
 
 /**

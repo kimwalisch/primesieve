@@ -51,7 +51,7 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
       nextHighestPowerOf2(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
   primeNumberFinder_(finder)
 {
-  static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "Maximum sieveSize = 4096 kilobytes");
+  static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "SieveSize must not be > 4096 kilobytes");
   assert(getStop() <= UINT32_MAX);
 }
 

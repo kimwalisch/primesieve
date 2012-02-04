@@ -71,7 +71,6 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
   ps_(ps),
   kTupletByteCounts_(NULL)
 {
-  static_assert(PrimeSieve::COUNTS_SIZE == 7, "PrimeSieve::COUNTS_SIZE == 7");
   if (ps_.testFlags(ps_.COUNT_KTUPLETS))
     initLookupTables();
 }

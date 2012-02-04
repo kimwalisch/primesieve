@@ -49,7 +49,7 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
   EratBase<Modulo210Wheel_t>(soe)
 {
   // conditions that assert multipleIndex < 2^23 in sieve()
-  static_assert(config::FACTOR_ERATMEDIUM <= 6, "config::FACTOR_ERATMEDIUM <= 6");
+  static_assert(config::FACTOR_ERATMEDIUM <= 6, "config::FACTOR_ERATMEDIUM must not be > 6");
   if (soe.getSieveSize() > (1U << 22))
     throw std::overflow_error("EratMedium: sieveSize must be <= 2^22, 4096 kilobytes.");
   uint32_t sqrtStop = soe.getSquareRoot();

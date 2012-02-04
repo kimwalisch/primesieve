@@ -94,7 +94,7 @@ uint32_t PreSieve::getPrimeProduct(uint32_t limit) const {
  */
 void PreSieve::initPreSieved() {
   static_assert(SieveOfEratosthenes::NUMBERS_PER_BYTE == 30, 
-               "SieveOfEratosthenes::NUMBERS_PER_BYTE == 30");
+               "SieveOfEratosthenes::NUMBERS_PER_BYTE must not be != 30");
   preSieved_ = new uint8_t[size_];
   preSieved_[0] = 0xFF;
   uint32_t primeProduct = 2 * 3 * 5;
