@@ -153,7 +153,6 @@ install:
 ifneq ($(wildcard $(BINDIR)/$(TARGET)*),)
 	@mkdir -p $(PREFIX)/bin
 	cp -f $(BINDIR)/$(TARGET) $(PREFIX)/bin
-	@cp -f $(BINDIR)/$(TARGET).exe $(PREFIX)/bin
 endif
 ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
 	@mkdir -p $(PREFIX)/include/primesieve/expr
@@ -199,9 +198,9 @@ check test: bin
 .PHONY: help
 
 help:
-	@echo ---------------------------------------------------
-	@echo --------------- primesieve Makefile ---------------
-	@echo ---------------------------------------------------
+	@echo ----------------------------------------------------
+	@echo ---------------- Makefile help menu ----------------
+	@echo ----------------------------------------------------
 	@echo "make                                   Builds the primesieve console application using g++ (DEFAULT)"
 	@echo "make CXX=compiler CXXFLAGS=\"options\"   Specify a custom C++ compiler"
 	@echo "make L1_DCACHE_SIZE=KB                 Specify the CPU's L1 data cache size (read INSTALL)"
