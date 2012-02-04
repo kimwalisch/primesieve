@@ -46,11 +46,11 @@ LIB_OBJECTS = $(LIBDIR)/WheelFactorization.o \
 # set the installation directory (read docs/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-ifeq ($(shell uname | grep -i darwin),)
-  # default installation directory is /usr/local
+ifneq ($(shell uname | grep -i linux),)
+  # Linux installation directory is /usr/local
   PREFIX = /usr/local
 else
-  # on Mac OS X it is /usr
+  # Unix (Mac OS X, BSD, ...) installation directory
   PREFIX = /usr
 endif
 
