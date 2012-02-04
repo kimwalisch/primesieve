@@ -88,7 +88,7 @@ private:
   SharedMemory* shm_;
   virtual void calcStatus(uint32_t);
   template <typename T>
-  static T getInBetween(T lowerBound, T value, T upperBound) {
+  static T getBoundedValue(T lowerBound, T value, T upperBound) {
     if (value < lowerBound)
       return lowerBound;
     if (value > upperBound)
