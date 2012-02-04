@@ -62,13 +62,13 @@ endif
 ifeq ($(SHARED),)
   LIBPRIMESIEVE = lib$(TARGET).a
 else
-  ifeq ($(shell uname | grep -i darwin),)
+  ifneq ($(shell uname | grep -i darwin),)
+    SOFLAG = -dynamiclib
+    LIBPRIMESIEVE = lib$(TARGET).dylib
+  else
     SOFLAG = -shared
     LIBPRIMESIEVE = lib$(TARGET).so
     FPIC = -fPIC
-  else
-    SOFLAG = -dynamiclib
-    LIBPRIMESIEVE = lib$(TARGET).dylib
   endif
 endif
 
