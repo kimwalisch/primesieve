@@ -1,11 +1,11 @@
 ##############################################################################
-# Makefile for the primesieve console application (read INSTALL) and the
-# primesieve C++ library (read docs/LIBPRIMESIEVE)
+# GNU Makefile for the primesieve console application (read INSTALL)
+# and the primesieve C++ library (read docs/LIBPRIMESIEVE)
 #
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   4 February 2012
+# Last modified:   5 February 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
