@@ -1,19 +1,22 @@
-New in version 3.5, 02/02/2012
+New in version 3.5, 04/02/2012
 ==============================
 
 1. Bug fix for big-endian CPUs (PowerPC, SPARC), see docs/BUGS.
-2. src/soe/ParallelPrimeSieve.cpp has been rewritten using OpenMP 3.0
+2. The GNU Makefile now provides an option to build primesieve as
+   a shared library e.g. `make lib SHARED=yes`.
+3. src/soe/ParallelPrimeSieve.cpp has been rewritten using OpenMP 3.0
    (previously OpenMP 2.0). The new OpenMP code is more elegant and
    scales better when lots of threads (> 32) are used.
-   NOTE: OpenMP is now disabled by default for the Microsoft Visual
+   !NOTE: OpenMP is now disabled by default for the Microsoft Visual
    C++ compiler as it currently only supports OpenMP 2.0.
-3. Helper classes and functions within src/soe are now defined in the
+4. Helper classes and functions within src/soe are now defined in the
    the newly introduced soe namespace. This makes PrimeSieve more
    usable as a library.
-4. The header file src/soe/defs.h has been renamed to config.h and its
+5. The header file src/soe/defs.h has been renamed to config.h and its
    code readability has been improved.
-5. The code of src/console/test.cpp has been simplified.
-6. I added the following convenience functions to PrimeSieve:
+6. The code of src/console/test.cpp has been simplified.
+7. I added the following convenience functions to the PrimeSieve
+   class:
 
   // Print member functions (to std::cout)
   void printPrimes     (uint64_t start, uint64_t stop);
