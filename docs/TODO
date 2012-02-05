@@ -3,3 +3,10 @@ http://primesieve.googlecode.com
 
 1. src/soe/ParallelPrimeSieve.cpp is currently not exception safe due
    to lack of C++ exception support in OpenMP (2012).
+
+for the primesieve-3.5 release
+------------------------------
+- PrimeSieve::cancel_sieving() does not work with -fopenmp
+  maybe completly remove openmp from all files except ParallelPrimeSieve?
+- PRINT_STATUS new line when finished? check all PRINT_STATUS occurences
+- test libprimesieve.a Mac OS X
