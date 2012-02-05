@@ -46,23 +46,24 @@ Contents
   $ make lib SHARED=yes
   $ sudo make install
 
-  Note: on traditional Unix systems (BSD, MINIX, ...) you might need
-  to use gmake instead of make.
+  Notes: To build libprimesieve using an alternate C++ compiler use
+  e.g. `make lib CXX=clang++`. On traditional Unix systems (BSD,
+  MINIX, ...) you might need to use gmake instead of make.
 
   ----------------------------------------------------
   ---------------- Makefile help menu ----------------
   ----------------------------------------------------
-  make                                   Builds the primesieve console application using g++ (DEFAULT)"
-  make CXX=compiler CXXFLAGS="options"   Specify a custom C++ compiler"
-  make L1_DCACHE_SIZE=KB                 Specify the CPU's L1 data cache size (read INSTALL)"
-  make check                             Tests the compiled primesieve binary"
-  make clean                             Cleans the output directories (./bin, ./lib)"
-  make lib                               Builds static libprimesieve.a to ./lib"
-  make lib SHARED=yes                    Builds shared libprimesieve.(so|dylib) to ./lib"
-  sudo make install                      Installs primesieve and libprimesieve (to /usr/local or /usr)"
-  sudo make install PREFIX=path          Specify a custom installation path"
-  sudo make uninstall                    Completely removes primesieve and libprimesieve"
-  make help                              Prints this help menu"
+  make                                   Builds the primesieve console application using g++ (DEFAULT)
+  make CXX=compiler CXXFLAGS="options"   Specify a custom C++ compiler
+  make L1_DCACHE_SIZE=KB                 Specify the CPU's L1 data cache size (read INSTALL)
+  make check                             Tests the compiled primesieve binary
+  make clean                             Cleans the output directories (./bin, ./lib)
+  make lib                               Builds static libprimesieve.a to ./lib
+  make lib SHARED=yes                    Builds shared libprimesieve.(so|dylib) to ./lib
+  sudo make install                      Installs primesieve and libprimesieve (to /usr/local or /usr)
+  sudo make install PREFIX=path          Specify a custom installation path
+  sudo make uninstall                    Completely removes primesieve and libprimesieve
+  make help                              Prints this help menu
 
 3. Test libprimesieve (Unix-like OSes)
 ======================================
