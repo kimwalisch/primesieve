@@ -1,4 +1,4 @@
-February, 4 2012
+February, 5 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -100,7 +100,7 @@ Contents
   The sum_primes.cpp program (see section 8.) can now be compiled by
   specifying primesieve.lib to the linker:
 
-  > cl /O2 /GL /EHsc /I"path-to-primesieve" sum_primes.cpp /link "path-to-primesieve\lib\primesieve.lib"
+  > cl /O2 /GL /EHsc /I"dist" sum_primes.cpp /link "dist\primesieve.lib"
   > sum_primes.exe
 
   Note: /I adds the path to the primesieve header files needed for

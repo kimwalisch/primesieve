@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   2 February 2012
+# Last modified:   5 February 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -13,7 +13,6 @@
 TARGET       = primesieve
 CXX          = cl /nologo
 CXXFLAGS     = /W2 /O2 /GL /EHsc
-CXXFLAGS_LIB = /W2 /O2 /EHsc
 LINK         = link
 LFLAGS       = /OPT:REF,ICF /LTCG
 INCPATH      = /I"src\thirdparty"
@@ -21,6 +20,7 @@ SOEDIR       = src\soe
 CONDIR       = src\console
 BINDIR       = bin
 LIBDIR       = lib
+DISTDIR      = dist
 
 BIN_OBJECTS = $(BINDIR)\WheelFactorization.obj \
   $(BINDIR)\PreSieve.obj \
@@ -47,50 +47,51 @@ LIB_OBJECTS = $(LIBDIR)\WheelFactorization.obj \
   $(LIBDIR)\ParallelPrimeSieve.obj
 
 #-----------------------------------------------------------------------------
-# Add /openmp to CXXFLAGS if MSVC supports OpenMP 3.0 or later
-#-----------------------------------------------------------------------------
-
-!IF ([$(CXX) /? 2>&1 | findstr /I "OpenMP" > nul ] == 0) && \
-    ([$(CXX) /? 2>&1 | findstr /I /C:"OpenMP 2" > nul ] != 0)
-CXXFLAGS = $(CXXFLAGS) /openmp
-!ENDIF
-
-#-----------------------------------------------------------------------------
-# check if the user indicated his CPU's L1 data cache size (read INSTALL)
-#-----------------------------------------------------------------------------
-
-!IFDEF L1_DCACHE_SIZE
-CPU_CACHE_SIZE = /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
-!ENDIF
-
-#-----------------------------------------------------------------------------
 # build the primesieve console application (read INSTALL)
 #-----------------------------------------------------------------------------
+
+BIN_CXXFLAGS = $(CXXFLAGS)
+# add /openmp if MSVC supports OpenMP 3.0 or later
+!IF ([$(CXX) /? 2>&1 | findstr /I "OpenMP" > nul ] == 0) && \
+    ([$(CXX) /? 2>&1 | findstr /I /C:"OpenMP 2" > nul ] != 0)
+BIN_CXXFLAGS = $(BIN_CXXFLAGS) /openmp
+!ENDIF
+!IFDEF L1_DCACHE_SIZE
+BIN_CXXFLAGS = $(BIN_CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
+!ENDIF
 
 bin: dir_bin $(BIN_OBJECTS)
 	$(LINK) $(LFLAGS) /OUT:$(BINDIR)\$(TARGET).exe $(BIN_OBJECTS)
 
 $(BIN_OBJECTS): {$(SOEDIR)\;$(CONDIR)\}$$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(CPU_CACHE_SIZE) $(INCPATH) /c $? /Fo"$@"
+	$(CXX) $(BIN_CXXFLAGS) $(INCPATH) /c $? /Fo"$@"
 
 dir_bin:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
 
 #-----------------------------------------------------------------------------
-# build the primesieve C++ library (read docs/LIBPRIMESIEVE)
+# build static primesieve.lib (read docs/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
+
+LIB_CXXFLAGS = $(CXXFLAGS)
+!IFDEF L1_DCACHE_SIZE
+LIB_CXXFLAGS = $(LIB_CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
+!ENDIF
 
 lib: dir_lib $(LIB_OBJECTS)
 	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $(LIB_OBJECTS)
+	@if not exist $(DISTDIR)\$(TARGET)\soe mkdir $(DISTDIR)\$(TARGET)\soe
+	copy /Y $(LIBDIR)\$(TARGET).lib $(DISTDIR)
+	copy /Y $(SOEDIR)\*.h $(DISTDIR)\$(TARGET)\soe
 
 $(LIB_OBJECTS): $(SOEDIR)\$$(@B).cpp
-	$(CXX) $(CXXFLAGS_LIB) $(CPU_CACHE_SIZE) $(INCPATH) /c $? /Fo"$@"
+	$(CXX) $(LIB_CXXFLAGS) $(INCPATH) /c $? /Fo"$@"
 
 dir_lib:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
 
 #-----------------------------------------------------------------------------
-# Common targets
+# Common targets (all, clean)
 #-----------------------------------------------------------------------------
 
 all: bin lib
@@ -101,6 +102,12 @@ clean:
 !ENDIF
 !IF EXIST($(LIBDIR))
 	del /Q $(LIBDIR)\$(TARGET).lib $(LIBDIR)\*.obj
+!ENDIF
+!IF EXIST($(DISTDIR)\$(TARGET).lib)
+	del /Q $(DISTDIR)\$(TARGET).lib
+!ENDIF
+!IF EXIST($(DISTDIR)\$(TARGET))
+	rd /Q /S $(DISTDIR)\$(TARGET)
 !ENDIF
 
 #-----------------------------------------------------------------------------
@@ -116,12 +123,12 @@ check test: bin
 #-----------------------------------------------------------------------------
 
 help:
-	@echo --------------------------------------------------------
-	@echo --------------- primesieve Makefile.msvc ---------------
-	@echo --------------------------------------------------------
+	@echo ---------------------------------------------------------
+	@echo ---------------- Makefile.msvc help menu ----------------
+	@echo ---------------------------------------------------------
 	@echo "nmake -f Makefile.msvc                    Builds the primesieve console application using MSVC++"
-	@echo "nmake -f Makefile.msvc lib                Builds the primesieve C++ library (read docs/LIBPRIMESIEVE)"
 	@echo "nmake -f Makefile.msvc check              Tests the compiled primesieve binary"
+	@echo "nmake -f Makefile.msvc lib                Builds static primesieve.lib to lib\ (read docs/LIBPRIMESIEVE)"
 	@echo "nmake -f Makefile.msvc clean              Cleans the output directories (./bin, ./lib)"
 	@echo "nmake -f Makefile.msvc CXXFLAGS=options   Specify custom compiler flags"
 	@echo "nmake -f Makefile.msvc L1_DCACHE_SIZE=KB  Specify the CPU's L1 data cache size (read INSTALL)"
