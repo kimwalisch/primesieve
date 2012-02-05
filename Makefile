@@ -155,10 +155,8 @@ ifneq ($(wildcard $(BINDIR)/$(TARGET)*),)
 	cp -f $(BINDIR)/$(TARGET) $(PREFIX)/bin
 endif
 ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
-	@mkdir -p $(PREFIX)/include/primesieve/expr
 	@mkdir -p $(PREFIX)/include/primesieve/soe
 	@mkdir -p $(PREFIX)/lib
-	cp -f src/expr/*.h $(PREFIX)/include/primesieve/expr
 	cp -f src/soe/*.h $(PREFIX)/include/primesieve/soe
 	cp -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(PREFIX)/lib
   ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).so),)
