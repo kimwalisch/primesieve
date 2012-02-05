@@ -10,3 +10,4 @@ for the primesieve-3.5 release
   maybe completly remove openmp from all files except ParallelPrimeSieve?
 - PRINT_STATUS new line when finished? check all PRINT_STATUS occurences
 - test libprimesieve.a Mac OS X
+- valgrind
