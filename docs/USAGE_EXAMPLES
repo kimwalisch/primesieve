@@ -1,4 +1,4 @@
-February, 5 2012
+February, 6 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -206,7 +206,7 @@ II. Examples
   int main() {
     ParallelPrimeSieve pps;
     std::cout << "prime count:  " << pps.getPrimeCount(2, 0xFFFFFFFFU) << std::endl
-              << "time elapsed: " << pps.getTimeElased() << " sec"     << std::endl;
+              << "time elapsed: " << pps.getTimeElapsed() << " sec"    << std::endl;
     return 0;
   }
 
@@ -232,7 +232,7 @@ II. Examples
     uint64_t start = static_cast<uint64_t>(1E19);
     uint64_t stop  = static_cast<uint64_t>(1E19+1E10);
     std::cout << "prime count:  " << ps.getPrimeCount(start, stop) << std::endl
-              << "time elapsed: " << ps.getTimeElased() << " sec"  << std::endl;
+              << "time elapsed: " << ps.getTimeElapsed() << " sec" << std::endl;
     return 0;
   }
 
@@ -325,8 +325,8 @@ II. Examples
     ParallelPrimeSieve pps;
     pps.setFlags(pps.COUNT_PRIMES | pps.COUNT_TWINS | pps.PRINT_STATUS);
     pps.sieve(start, stop);
-    std::cout << "prime count: " << pps.getPrimeCount() << std::endl
-              << "twin count:  " << pps.getTwinCount()  << std::endl;
+    std::cout << "\nprime count: " << pps.getPrimeCount() << std::endl
+              << "twin count:  "   << pps.getTwinCount()  << std::endl;
     return 0;
   }
 
