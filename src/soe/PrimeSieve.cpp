@@ -354,9 +354,10 @@ void PrimeSieve::generatePrimes(uint32_t start,
   if (callback == NULL)
     throw std::invalid_argument("callback must not be NULL");
   callback32_ = callback;
+  flags_ = CALLBACK32_PRIMES;
   // speed up initialization (default pre-sieve limit = 19)
   setPreSieveLimit(13);
-  sieve(start, stop, CALLBACK32_PRIMES);
+  sieve(start, stop);
 }
 
 void PrimeSieve::generatePrimes(uint32_t start, 
@@ -366,8 +367,9 @@ void PrimeSieve::generatePrimes(uint32_t start,
     throw std::invalid_argument("callback & cbObj must not be NULL");
   callback32_OOP_ = callback;
   cbObj_ = cbObj;
+  flags_ = CALLBACK32_OOP_PRIMES;
   setPreSieveLimit(13);
-  sieve(start, stop, CALLBACK32_OOP_PRIMES);
+  sieve(start, stop);
 }
 
 void PrimeSieve::generatePrimes(uint64_t start, 
@@ -376,8 +378,9 @@ void PrimeSieve::generatePrimes(uint64_t start,
   if (callback == NULL)
     throw std::invalid_argument("callback must not be NULL");
   callback64_ = callback;
+  flags_ = CALLBACK64_PRIMES;
   setPreSieveLimit(13);
-  sieve(start, stop, CALLBACK64_PRIMES);
+  sieve(start, stop);
 }
 
 void PrimeSieve::generatePrimes(uint64_t start, 
@@ -387,8 +390,9 @@ void PrimeSieve::generatePrimes(uint64_t start,
     throw std::invalid_argument("callback & cbObj must not be NULL");
   callback64_OOP_ = callback;
   cbObj_ = cbObj;
+  flags_ = CALLBACK64_OOP_PRIMES;
   setPreSieveLimit(13);
-  sieve(start, stop, CALLBACK64_OOP_PRIMES);
+  sieve(start, stop);
 }
 
 /**
