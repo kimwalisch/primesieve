@@ -59,6 +59,15 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
       "config::MIN_THREAD_INTERVAL must not be < 100");
   static_assert(config::MIN_THREAD_INTERVAL <= config::MAX_THREAD_INTERVAL,
       "config::MIN_THREAD_INTERVAL must not be > config::MAX_THREAD_INTERVAL");
+#if defined(_OPENMP)
+  omp_init_lock(&lock_);
+#endif
+}
+
+ParallelPrimeSieve::~ParallelPrimeSieve() {
+#if defined(_OPENMP)
+  omp_destroy_lock(&lock_);
+#endif
 }
 
 /**
@@ -168,7 +177,6 @@ void ParallelPrimeSieve::sieve() {
     PrimeSieve::sieve();
   else {
     double t1 = omp_get_wtime();
-    omp_init_lock(&lock_);
     reset();
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
     uint64_t balanced = getBalancedInterval(threads);
@@ -195,7 +203,6 @@ void ParallelPrimeSieve::sieve() {
     counts_[4] = count4;
     counts_[5] = count5;
     counts_[6] = count6;
-    omp_destroy_lock(&lock_);
     timeElapsed_ = omp_get_wtime() - t1;
   }
   // communicate the sieving results via shared memory
