@@ -8,8 +8,7 @@ I. About
   This file contains various C++ source code examples that show how to
   use PrimeSieve & ParallelPrimeSieve objects. For these examples to
   compile you need to build primesieve as a library and add it to the
-  linker in the compilation process, this is explained in the
-  LIBPRIMESIEVE file.
+  linker, this is explained in the LIBPRIMESIEVE file.
 
 II. Examples
 ============
@@ -152,8 +151,12 @@ II. Examples
   The ParallelPrimeSieve class is derived from PrimeSieve so it has
   the same API but it uses OpenMP multi-threading to sieve primes and
   prime k-tuplets in parallel. Its main use is to count primes and
-  prime k-tuplets. It can also generate and print primes and k-tuplets
-  in parallel but only in random order.
+  k-tuplets. It can also generate and print primes and k-tuplets in
+  parallel but only in random order.
+
+  Note: by default ParallelPrimeSieve counts primes and k-tuplets in
+  parallel but generates and print primes and k-tuplets in arithmetic
+  order without OpenMP multi-threading.
 
   ////////////////////////////////////////////////////////////////////
   // Count the primes up to 2^32-1 in parallel
