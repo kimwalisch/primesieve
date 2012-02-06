@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   5 February 2012
+# Last modified:   6 February 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -47,15 +47,19 @@ LIB_OBJECTS = $(LIBDIR)\WheelFactorization.obj \
   $(LIBDIR)\ParallelPrimeSieve.obj
 
 #-----------------------------------------------------------------------------
+# add /openmp if MSVC supports OpenMP 3.0 or later
+#-----------------------------------------------------------------------------
+
+!IF ([$(CXX) /? 2>&1 | findstr /I "OpenMP" > nul ] == 0) && \
+    ([$(CXX) /? 2>&1 | findstr /I /C:"OpenMP 2" > nul ] != 0)
+CXXFLAGS = $(CXXFLAGS) /openmp
+!ENDIF
+
+#-----------------------------------------------------------------------------
 # build the primesieve console application (read INSTALL)
 #-----------------------------------------------------------------------------
 
 BIN_CXXFLAGS = $(CXXFLAGS)
-# add /openmp if MSVC supports OpenMP 3.0 or later
-!IF ([$(CXX) /? 2>&1 | findstr /I "OpenMP" > nul ] == 0) && \
-    ([$(CXX) /? 2>&1 | findstr /I /C:"OpenMP 2" > nul ] != 0)
-BIN_CXXFLAGS = $(BIN_CXXFLAGS) /openmp
-!ENDIF
 !IFDEF L1_DCACHE_SIZE
 BIN_CXXFLAGS = $(BIN_CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 !ENDIF

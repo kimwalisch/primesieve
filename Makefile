@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   5 February 2012
+# Last modified:   6 February 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -43,6 +43,19 @@ LIB_OBJECTS = $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/ParallelPrimeSieve.o
 
 #-----------------------------------------------------------------------------
+# add OpenMP flag for GCC 4.4 or later (supports OpenMP >= 3.0)
+#-----------------------------------------------------------------------------
+
+ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
+  GCC_MAJOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
+  GCC_MINOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
+  ifneq ($(shell if [ $$(($(GCC_MAJOR)*100+$(GCC_MINOR))) -ge 404 ]; \
+      then echo GCC 4.4 or later; fi),)
+    CXXFLAGS += -fopenmp
+  endif
+endif
+
+#-----------------------------------------------------------------------------
 # set the installation directory (read docs/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
@@ -55,8 +68,8 @@ else
 endif
 
 #-----------------------------------------------------------------------------
-# check if the user wants to build a shared library instead of a
-# static one e.g. `make SHARED=yes`
+# check if the user wants to build a shared library instead
+# of a static one e.g. `make SHARED=yes`
 #-----------------------------------------------------------------------------
 
 ifeq ($(SHARED),)
@@ -79,15 +92,6 @@ endif
 .PHONY: bin dir_bin
 
 BIN_CXXFLAGS = $(CXXFLAGS)
-# add -fopenmp for GCC 4.4 or later (supports OpenMP >= 3.0)
-ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
-  GCC_MAJOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
-  GCC_MINOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
-  ifneq ($(shell if [ $$(($(GCC_MAJOR)*100+$(GCC_MINOR))) -ge 404 ]; \
-      then echo GCC 4.4 or later; fi),)
-    BIN_CXXFLAGS += -fopenmp
-  endif
-endif
 ifneq ($(L1_DCACHE_SIZE),)
   BIN_CXXFLAGS += -DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 endif
