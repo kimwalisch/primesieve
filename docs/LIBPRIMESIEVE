@@ -7,9 +7,9 @@ Contents
 
   1. About the primesieve C++ library
   2. Build libprimesieve  (Unix-like OSes)
-  3. Test libprimesieve   (Unix-like OSes)
+  3. How to use it        (Unix-like OSes)
   4. Build primesieve.lib (Windows, MSVC)
-  5. Test primesieve.lib  (Windows, MSVC)
+  5. How to use it        (Windows, MSVC)
   6. sum_primes.cpp
 
 1. About the primesieve C++ library
@@ -51,8 +51,8 @@ Contents
   ------------------
   $ make help           Shows more options
 
-3. Test libprimesieve (Unix-like OSes)
-======================================
+3. How to use it (Unix-like OSes)
+=================================
 
   The sum_primes.cpp program (see section 6.) can now be compiled by
   specifying libprimesieve (-lprimesieve flag) at the end of the
@@ -75,8 +75,8 @@ Contents
 
   > nmake -f Makefile.msvc lib
 
-5. Test primesieve.lib (Windows, MSVC)
-======================================
+5. How to use it (Windows, MSVC)
+================================
 
   The sum_primes.cpp program (see section 6.) can now be compiled by
   specifying primesieve.lib to the linker:

@@ -1,10 +1,7 @@
+February, 6 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-1. src/soe/ParallelPrimeSieve.cpp is currently not exception safe due
-   to lack of C++ exception support in OpenMP (2012).
-
-for the primesieve-3.5 release
-------------------------------
-- test libprimesieve.a Mac OS X
-- valgrind
+1. src/soe/ParallelPrimeSieve.cpp is currently not exception safe when
+   >= 2 threads are used due to lack of C++ exception support in
+   OpenMP (February 2012).
