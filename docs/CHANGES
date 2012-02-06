@@ -1,4 +1,4 @@
-New in version 3.5, 04/02/2012
+New in version 3.5, 06/02/2012
 ==============================
 
 1. Bug fix for big-endian CPUs (PowerPC, SPARC), see docs/BUGS.
@@ -7,7 +7,10 @@ New in version 3.5, 04/02/2012
 3. src/soe/ParallelPrimeSieve.cpp has been rewritten using OpenMP 3.0
    (previously OpenMP 2.0). The new OpenMP code is more elegant and
    scales better when lots of threads (> 32) are used.
-   !NOTE: OpenMP is now disabled by default for the Microsoft Visual
+   Compiler notes:
+   g++ 4.4 supports OpenMP 3.0, g++ 4.2 does not support OpenMP 3.0
+   but compiles primesieve-3.5 with a warning that may safely be
+   ignored. OpenMP is now disabled by default for the Microsoft Visual
    C++ compiler as it currently only supports OpenMP 2.0.
 4. Helper classes and functions within src/soe are now defined in the
    the newly introduced soe namespace. This makes PrimeSieve more
