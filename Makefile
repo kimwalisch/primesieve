@@ -43,14 +43,14 @@ LIB_OBJECTS = $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/ParallelPrimeSieve.o
 
 #-----------------------------------------------------------------------------
-# add OpenMP flag for GCC 4.4 or later (supports OpenMP >= 3.0)
+# add OpenMP flag for GCC 4.2 or later
 #-----------------------------------------------------------------------------
 
 ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
   GCC_MAJOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
   GCC_MINOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
-  ifneq ($(shell if [ $$(($(GCC_MAJOR)*100+$(GCC_MINOR))) -ge 404 ]; \
-      then echo GCC 4.4 or later; fi),)
+  ifneq ($(shell if [ $$(($(GCC_MAJOR)*100+$(GCC_MINOR))) -ge 402 ]; \
+      then echo GCC 4.2 or later; fi),)
     CXXFLAGS += -fopenmp
   endif
 endif
