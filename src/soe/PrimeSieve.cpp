@@ -261,7 +261,7 @@ void PrimeSieve::doSmallPrime(uint32_t minPrime,
 {
   if (minPrime >= start_ && maxPrime <= stop_) {
     // only one thread at a time may access this code section
-    set_lock();
+    LockGuard lock(*this);
     if (index == 0 && testFlags(CALLBACK_FLAGS)) {
       uint32_t prime = primeStr[0] - '0';
       if (isFlag(CALLBACK32_PRIMES))     callback32_(prime);
@@ -272,7 +272,6 @@ void PrimeSieve::doSmallPrime(uint32_t minPrime,
       if (isFlag(COUNT_PRIMES << index)) counts_[index]++;
       if (isFlag(PRINT_PRIMES << index)) std::cout << primeStr << '\n';
     }
-    unset_lock();
   }
 }
 

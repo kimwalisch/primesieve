@@ -171,6 +171,15 @@ protected:
   virtual void set_lock();
   virtual void unset_lock();
 private:
+  class LockGuard {
+  public:
+    LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.set_lock(); }
+    ~LockGuard() { ps_.unset_lock(); }
+  private:
+    PrimeSieve& ps_;
+    LockGuard(const LockGuard&);
+    LockGuard& operator=(const LockGuard&);
+  };
   /** Multiples of small primes <= preSieveLimit_ are pre-sieved. */
   uint32_t preSieveLimit_;
   /** Sieve size in kilobytes. */
