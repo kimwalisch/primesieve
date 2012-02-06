@@ -37,8 +37,11 @@
 
 #include "PrimeSieve.h"
 #include "config.h"
-
 #include <stdint.h>
+
+#if defined(_OPENMP)
+  #include <omp.h>
+#endif
 
 /**
  * ParallelPrimeSieve is a multi-threaded implementation of the
@@ -86,7 +89,6 @@ private:
   /** Number of threads to be used for sieving. */
   int numThreads_;
   SharedMemory* shm_;
-  virtual void calcStatus(uint32_t);
   template <typename T>
   static T getBoundedValue(T lowerBound, T value, T upperBound) {
     if (value < lowerBound)
@@ -97,6 +99,10 @@ private:
   }
   int getIdealNumThreads() const;
 #if defined(_OPENMP)
+  omp_lock_t lock_;
+  virtual void calcStatus(uint32_t);
+  virtual void set_lock();
+  virtual void unset_lock();
   uint64_t getBalancedInterval(int) const;
 #endif
 };

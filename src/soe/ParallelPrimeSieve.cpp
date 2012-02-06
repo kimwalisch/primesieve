@@ -77,23 +77,6 @@ void ParallelPrimeSieve::init(SharedMemory* shm) {
   setNumThreads(shm->threads);
 }
 
-/**
- * Calculate the current status in percent of sieve().
- * @param segment  The interval size of the processed segment
- */
-void ParallelPrimeSieve::calcStatus(uint32_t segment) {
-#if defined(_OPENMP)
-  #pragma omp critical (calcStatus)
-#endif
-  {
-    PrimeSieve::calcStatus(segment);
-    // communicate the current status via shared
-    // memory to the Qt GUI process
-    if (shm_ != NULL)
-      shm_->status = getStatus();
-  }
-}
-
 int ParallelPrimeSieve::getMaxThreads() {
 #if defined(_OPENMP)
   return omp_get_max_threads();
@@ -133,6 +116,29 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
 
 #if defined(_OPENMP)
 
+void ParallelPrimeSieve::set_lock() {
+  omp_set_lock(&lock_);
+}
+
+void ParallelPrimeSieve::unset_lock() {
+  omp_unset_lock(&lock_);
+}
+
+/**
+ * Calculate the current status in percent of sieve().
+ * @param segment  The interval size of the processed segment
+ */
+void ParallelPrimeSieve::calcStatus(uint32_t segment) {
+  #pragma omp critical (calcStatus)
+  {
+    PrimeSieve::calcStatus(segment);
+    // communicate the current status via shared
+    // memory to the Qt GUI process
+    if (shm_ != NULL)
+      shm_->status = getStatus();
+  }
+}
+
 /** Get a thread interval size that ensures a good load balance. */
 uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   assert(threads > 1);
@@ -162,6 +168,7 @@ void ParallelPrimeSieve::sieve() {
     PrimeSieve::sieve();
   else {
     double t1 = omp_get_wtime();
+    omp_init_lock(&lock_);
     reset();
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
     uint64_t balanced = getBalancedInterval(threads);
@@ -188,6 +195,7 @@ void ParallelPrimeSieve::sieve() {
     counts_[4] = count4;
     counts_[5] = count5;
     counts_[6] = count6;
+    omp_destroy_lock(&lock_);
     timeElapsed_ = omp_get_wtime() - t1;
   }
   // communicate the sieving results via shared memory
