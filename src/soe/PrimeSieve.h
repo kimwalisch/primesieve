@@ -168,6 +168,8 @@ protected:
   double timeElapsed_;
   void reset();
   virtual void calcStatus(uint32_t);
+  virtual void set_lock();
+  virtual void unset_lock();
 private:
   /** Multiples of small primes <= preSieveLimit_ are pre-sieved. */
   uint32_t preSieveLimit_;

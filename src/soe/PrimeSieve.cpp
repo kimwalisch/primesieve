@@ -47,10 +47,6 @@
 #include <cstdlib>
 #include <ctime>
 
-#if defined(_OPENMP)
-  #include <omp.h>
-#endif
-
 using namespace soe;
 
 PrimeSieve::PrimeSieve() :
@@ -228,6 +224,16 @@ void PrimeSieve::reset() {
   calcStatus(0);
 }
 
+void PrimeSieve::set_lock() {
+  if (parent_ != NULL)
+    parent_->set_lock();
+}
+
+void PrimeSieve::unset_lock() {
+  if (parent_ != NULL)
+    parent_->unset_lock();
+}
+
 /**
  * Calculate the current status in percent of sieve()
  * and print it to the standard output.
@@ -253,11 +259,9 @@ void PrimeSieve::doSmallPrime(uint32_t minPrime,
                               uint32_t index,
                               const std::string& primeStr)
 {
-#if defined(_OPENMP)
-  #pragma omp critical (generate)
-#endif
-  if (minPrime >= start_ &&
-      maxPrime <= stop_) {
+  if (minPrime >= start_ && maxPrime <= stop_) {
+    // only one thread at a time may access this code section
+    set_lock();
     if (index == 0 && testFlags(CALLBACK_FLAGS)) {
       uint32_t prime = primeStr[0] - '0';
       if (isFlag(CALLBACK32_PRIMES))     callback32_(prime);
@@ -268,6 +272,7 @@ void PrimeSieve::doSmallPrime(uint32_t minPrime,
       if (isFlag(COUNT_PRIMES << index)) counts_[index]++;
       if (isFlag(PRINT_PRIMES << index)) std::cout << primeStr << '\n';
     }
+    unset_lock();
   }
 }
 

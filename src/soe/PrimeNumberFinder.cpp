@@ -44,10 +44,6 @@
 #include <iostream>
 #include <sstream>
 
-#if defined(_OPENMP)
-  #include <omp.h>
-#endif
-
 namespace soe {
 
 /// Bit patterns corresponding to prime k-tuplets
@@ -123,7 +119,7 @@ void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
   if (ps_.testFlags(ps_.GENERATE_FLAGS))
     generate(sieve, sieveSize);
   if (ps_.isFlag(ps_.CALCULATE_STATUS))
-    ps_.calcStatus(sieveSize * NUMBERS_PER_BYTE);
+    ps_.PrimeSieve::calcStatus(sieveSize * NUMBERS_PER_BYTE);
 }
 
 /**
@@ -183,16 +179,16 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
     }
   }
   else
-#if defined(_OPENMP)
-  #pragma omp critical (generate)
-#endif
   {
+    // only one thread at a time may access this code section
+    ps_.PrimeSieve::set_lock();
     // GENERATE_PRIMES() is defined in SieveOfEratosthenes.h
          if (ps_.isFlag(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_, uint32_t)
     else if (ps_.isFlag(ps_.CALLBACK32_OOP_PRIMES)) GENERATE_PRIMES(callback32_OOP,  uint32_t)
     else if (ps_.isFlag(ps_.CALLBACK64_PRIMES))     GENERATE_PRIMES(ps_.callback64_, uint64_t)
     else if (ps_.isFlag(ps_.CALLBACK64_OOP_PRIMES)) GENERATE_PRIMES(callback64_OOP,  uint64_t)
     else if (ps_.isFlag(ps_.PRINT_PRIMES))          GENERATE_PRIMES(print,           uint64_t)
+    ps_.PrimeSieve::unset_lock();
   }
 }
 
