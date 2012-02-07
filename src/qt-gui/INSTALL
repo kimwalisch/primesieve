@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010 
-# Last modified: 6 February 2012
+# Last modified: 7 February 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -16,7 +16,7 @@ I. How to build primesieve (Windows, Linux, Mac OS X)
   -------------
   Since version 3.5 primesieve requires OpenMP 3.0 or later (2008).
   If your compiler only supports OpenMP <= 2.5 (e.g. MSVC 2010, Apple
-  g++ 4.2) then have to switch to primesieve 3.4:
+  g++ 4.2) then you have to switch to primesieve 3.4:
   http://primesieve.googlecode.com/files/primesieve-3.4-src.zip
 
   1. Download and install the Qt SDK from:
