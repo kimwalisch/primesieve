@@ -28,16 +28,17 @@ II. How to build primesieve
   $ make                     GNU g++
   > nmake -f Makefile.msvc   Microsoft Visual C++
 
-  The make command automatically enables OpenMP multi-threading for
-  GNU g++ 4.4 or later and Microsoft Visual C++ if it supports OpenMP
-  3.0 or later (2008).
-
   Other C++ compilers
   -------------------
   $ make CXX=icpc CXXFLAGS="-O2 -openmp"
   $ make CXX=clang++ CXXFLAGS="-O2"
   $ make CXX=sunCC CXXFLAGS="-fast -xrestrict -xopenmp"
   ...
+
+  Note: since version 3.5 primesieve requires OpenMP 3.0 or later
+  (2008). If your compiler only supports OpenMP < 3.0 (e.g. MSVC 2010,
+  Apple g++ 4.2) then you can switch to primesieve 3.4:
+  http://primesieve.googlecode.com/files/primesieve-3.4-src.zip
 
   Makefile help menu
   ------------------
