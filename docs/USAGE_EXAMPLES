@@ -159,21 +159,8 @@ II. Examples
   order without OpenMP multi-threading.
 
   ////////////////////////////////////////////////////////////////////
-  // Count the primes up to 2^32-1 in parallel
-  // using all CPU cores
-
-  #include <primesieve/soe/ParallelPrimeSieve.h>
-  #include <iostream>
-
-  int main() {
-    ParallelPrimeSieve pps;
-    std::cout << "prime count: " << pps.getPrimeCount(2, 0xFFFFFFFFU) << std::endl;
-    return 0;
-  }
-
-  ////////////////////////////////////////////////////////////////////
   // Count the prime triplets within [1E14, 1E14+1E11]
-  // using 4 threads
+  // using all CPU cores
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
   #include <stdint.h>
@@ -181,10 +168,31 @@ II. Examples
 
   int main() {
     ParallelPrimeSieve pps;
-    pps.setNumThreads(4);
     uint64_t start = static_cast<uint64_t>(1E14);
     uint64_t stop  = static_cast<uint64_t>(1E14+1E11);
     std::cout << "prime triplet count: " << pps.getTripletCount(start, stop) << std::endl;
+    return 0;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  // Sum the primes below 10^10 using 4 threads
+
+  #include <primesieve/soe/ParallelPrimeSieve.h>
+  #include <stdint.h>
+  #include <iostream>
+
+  uint64_t sum = 0;
+
+  void sumPrimes(uint64_t prime) {
+   sum += prime;
+  }
+
+  int main() {
+    uint64_t stop = static_cast<uint64_t>(1E10);
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(4);
+    pps.generatePrimes(0, stop, sumPrimes);
+    std::cout << "Sum of the primes below 10^10 = " << sum << std::endl;
     return 0;
   }
 
