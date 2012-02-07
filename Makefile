@@ -43,14 +43,15 @@ LIB_OBJECTS = $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/ParallelPrimeSieve.o
 
 #-----------------------------------------------------------------------------
-# add OpenMP flag for GCC 4.2 or later
+# primesieve requires at least OpenMP 3.0 which is
+# supported by GCC 4.4 or later
 #-----------------------------------------------------------------------------
 
 ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
   GCC_MAJOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
   GCC_MINOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
-  ifneq ($(shell if [ $$(($(GCC_MAJOR)*100+$(GCC_MINOR))) -ge 402 ]; \
-      then echo GCC 4.2 or later; fi),)
+  ifneq ($(shell if [ $$(($(GCC_MAJOR)*100+$(GCC_MINOR))) -ge 404 ]; \
+      then echo GCC 4.4 or later; fi),)
     CXXFLAGS += -fopenmp
   endif
 endif
@@ -176,6 +177,9 @@ ifneq ($(wildcard $(PREFIX)/bin/$(TARGET)*),)
 	rm -f $(PREFIX)/bin/$(TARGET)
 	@rm -f $(PREFIX)/bin/$(TARGET).exe
 endif
+ifneq ($(wildcard $(PREFIX)/include/primesieve),)
+	rm -rf $(PREFIX)/include/primesieve
+endif
 ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).*),)
   ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).so),)
 	rm -f $(wildcard $(PREFIX)/lib/lib$(TARGET).so)
@@ -185,9 +189,6 @@ ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).*),)
   else
 	rm -f $(wildcard $(PREFIX)/lib/lib$(TARGET).*)
   endif
-endif
-ifneq ($(wildcard $(PREFIX)/include/primesieve),)
-	rm -rf $(PREFIX)/include/primesieve
 endif
 
 #-----------------------------------------------------------------------------
