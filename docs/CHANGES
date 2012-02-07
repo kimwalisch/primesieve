@@ -1,25 +1,12 @@
-New in version 3.5, 06/02/2012
+New in version 3.5, 07/02/2012
 ==============================
 
 1. Bug fix for big-endian CPUs (PowerPC, SPARC), see docs/BUGS.
 2. The GNU Makefile now provides an option to build primesieve as
    a shared library e.g. `make lib SHARED=yes`.
-3. src/soe/ParallelPrimeSieve.cpp has been rewritten using OpenMP 3.0
-   (previously OpenMP 2.0). The new OpenMP code is more elegant and
-   scales better when lots of threads (> 32) are used.
-   Compiler notes:
-   g++ 4.4 supports OpenMP 3.0, g++ 4.2 does not support OpenMP 3.0
-   but compiles primesieve-3.5 with a warning that may safely be
-   ignored. OpenMP is now disabled by default for the Microsoft Visual
-   C++ compiler as it currently only supports OpenMP 2.0.
-4. Helper classes and functions within src/soe are now defined in the
-   the newly introduced soe namespace. This makes PrimeSieve more
-   usable as a library.
-5. The header file src/soe/defs.h has been renamed to config.h and its
-   code readability has been improved.
-6. The code of src/console/test.cpp has been simplified.
-7. I added the following convenience functions to the PrimeSieve
-   class:
+3. I have rewritten the main documentation files docs/LIBPRIMESIEVE
+   and docs/USAGE_EXAMPLES.
+4. I have added convenience functions to the PrimeSieve class:
 
   // Print member functions (to std::cout)
   void printPrimes     (uint64_t start, uint64_t stop);
@@ -43,6 +30,21 @@ New in version 3.5, 06/02/2012
   void sieve(uint64_t start, uint64_t stop);
   void sieve(uint64_t start, uint64_t stop, uint32_t flags);
   void sieve();
+
+5. src/soe/ParallelPrimeSieve.cpp has been rewritten using OpenMP 3.0
+   (previously OpenMP 2.0). The new OpenMP code is more elegant and
+   scales better when lots of threads (> 32) are used.
+   Compiler notes:
+   OpenMP is now disabled by default for the Microsoft Visual C++
+   compiler as it currently only supports OpenMP 2.0. Some compilers
+   e.g. g++ 4.2 even build primesieve with OpenMP <= 2.5 but the
+   resulting binary miscalculates when sieving > 2^63.
+6. Helper classes and functions within src/soe are now defined in the
+   the newly introduced soe namespace. This makes PrimeSieve more
+   usable as a library.
+7. The header file src/soe/defs.h has been renamed to config.h and its
+   code readability has been improved.
+8. The code of src/console/test.cpp has been simplified.
 
 New in version 3.4, 05/01/2012
 ==============================
