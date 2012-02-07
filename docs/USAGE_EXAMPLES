@@ -1,4 +1,4 @@
-February, 6 2012
+February, 7 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -44,13 +44,13 @@ II. Examples
   #include <primesieve/soe/PrimeSieve.h>
   #include <iostream>
 
-  void myPrimes(unsigned int prime) {
+  void print(unsigned int prime) {
     std::cout << prime << std::endl;
   }
 
   int main() {
     PrimeSieve ps;
-    ps.generatePrimes(2, 1000, myPrimes);
+    ps.generatePrimes(2, 1000, print);
     return 0;
   }
 
