@@ -297,7 +297,7 @@ II. Examples
 
   Counting and printing can also be done using flags, this allows
   for instance to count prime numbers and twin primes in one go or to
-  print the sieving status in percent whilst sieving.
+  print the status in percent whilst sieving.
 
   API
   ---
