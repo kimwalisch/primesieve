@@ -2,6 +2,15 @@ February, 6 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-1. src/soe/ParallelPrimeSieve.cpp is currently not exception safe when
+I consider primesieve stable now. I may implement the following TODOs
+in a few years when C++11 is widely supported.
+
+1. Use smart pointers (std::unique_ptr) for dynamic memory allocation.
+2. Use unsigned int or auto instead of uint32_t where appropriate.
+3. use <cstdint> instead of <stdint.h>
+4. Use nullptr instead of NULL.
+5. src/soe/ParallelPrimeSieve.cpp is currently not exception safe when
    >= 2 threads are used due to lack of C++ exception support in
    OpenMP (February 2012).
+6. Once OpenMP supports array reduction I should use it in
+   src/soe/ParallelPrimeSieve.cpp.
