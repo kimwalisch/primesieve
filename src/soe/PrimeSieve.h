@@ -142,12 +142,6 @@ public:
   void printQuintuplets(uint64_t, uint64_t);
   void printSextuplets(uint64_t, uint64_t);
   void printSeptuplets(uint64_t, uint64_t);
-
-  /** Old API (version <= 3.4) keps backward compatibility. */
-  uint64_t getStartNumber() const;
-  uint64_t getStopNumber() const;
-  void setStartNumber(uint64_t);
-  void setStopNumber(uint64_t);
 protected:
   /** Internal PrimeSieve flags (bits >= 20). */
   enum {

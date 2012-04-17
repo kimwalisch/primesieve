@@ -75,7 +75,7 @@ EratBig::~EratBig() {
 void EratBig::setSize(const SieveOfEratosthenes& soe) {
   // MAX values in sieve(uint8_t*)
   uint32_t maxSievingPrime   = soe.getSquareRoot() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
-  uint32_t maxWheelFactor    = wheel(1)->nextMultipleFactor;
+  uint32_t maxWheelFactor    = wheel(0)->nextMultipleFactor;
   uint32_t maxMultipleOffset = maxSievingPrime * maxWheelFactor + maxWheelFactor;
   uint32_t maxMultipleIndex  = (soe.getSieveSize() - 1) + maxMultipleOffset;
   uint32_t maxSegmentCount   = maxMultipleIndex / soe.getSieveSize();

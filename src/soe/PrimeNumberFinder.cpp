@@ -119,7 +119,7 @@ void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
   if (ps_.testFlags(ps_.GENERATE_FLAGS))
     generate(sieve, sieveSize);
   if (ps_.isFlag(ps_.CALCULATE_STATUS))
-    ps_.PrimeSieve::calcStatus(sieveSize * NUMBERS_PER_BYTE);
+    ps_.calcStatus(sieveSize * NUMBERS_PER_BYTE);
 }
 
 /**
@@ -199,7 +199,7 @@ void PrimeNumberFinder::callback64_OOP(uint64_t prime) const {
   ps_.callback64_OOP_(prime, ps_.cbObj_);
 }
 
-void PrimeNumberFinder::print(uint64_t prime) const {
+void PrimeNumberFinder::print(uint64_t prime) {
   std::cout << prime << '\n';
 }
 

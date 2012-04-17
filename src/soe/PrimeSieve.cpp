@@ -469,9 +469,3 @@ void PrimeSieve::printSextuplets(uint64_t start, uint64_t stop) {
 void PrimeSieve::printSeptuplets(uint64_t start, uint64_t stop) {
   sieve(start, stop, PRINT_SEPTUPLETS);
 }
-
-/** Old API (version <= 3.4) keps backward compatibility. */
-uint64_t PrimeSieve::getStartNumber() const { return getStart(); }
-uint64_t PrimeSieve::getStopNumber() const { return getStop(); }
-void PrimeSieve::setStartNumber(uint64_t start) { setStart(start); }
-void PrimeSieve::setStopNumber(uint64_t stop) { setStop(stop); }
