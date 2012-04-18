@@ -66,7 +66,7 @@ private:
    */
   uint32_t** kTupletByteCounts_;
   void initLookupTables();
-  virtual void analyseSieve(const uint8_t*, uint32_t);
+  virtual void segmentProcessed(const uint8_t*, uint32_t);
   void count(const uint8_t*, uint32_t);
   void generate(const uint8_t*, uint32_t);
   void callback32_OOP(uint32_t) const;

@@ -93,7 +93,7 @@ protected:
   SieveOfEratosthenes(uint64_t, uint64_t, uint32_t, uint32_t);
   ~SieveOfEratosthenes();
   static uint32_t getFirstSetBitValue(uint32_t);
-  virtual void analyseSieve(const uint8_t*, uint32_t) = 0;
+  virtual void segmentProcessed(const uint8_t*, uint32_t) = 0;
 private:
   /** Lower bound of the current segment. */
   uint64_t segmentLow_;

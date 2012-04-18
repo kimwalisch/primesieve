@@ -190,7 +190,7 @@ void SieveOfEratosthenes::sieve(uint32_t prime) {
   while (segmentHigh_ < primeSquared) {
     preSieve();
     crossOffMultiples();
-    analyseSieve(sieve_, sieveSize_);
+    segmentProcessed(sieve_, sieveSize_);
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
@@ -214,7 +214,7 @@ void SieveOfEratosthenes::finish() {
   while (segmentHigh_ < stop_) {
     preSieve();
     crossOffMultiples();
-    analyseSieve(sieve_, sieveSize_);
+    segmentProcessed(sieve_, sieveSize_);
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
@@ -229,7 +229,7 @@ void SieveOfEratosthenes::finish() {
     if (bitValues_[i] > stopRemainder)
       sieve_[sieveSize_ - 1] &= ~(1 << i);
   }
-  analyseSieve(sieve_, sieveSize_);
+  segmentProcessed(sieve_, sieveSize_);
 }
 
 } // namespace soe

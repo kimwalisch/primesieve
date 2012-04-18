@@ -110,10 +110,12 @@ void PrimeNumberFinder::initLookupTables() {
 }
 
 /**
- * Generate/count the primes and prime k-tuplets within the current
- * segment i.e. [segmentLow_+7, segmentHigh_].
+ * Executed after each sieved segment, generates and counts the primes
+ * (1 bits within sieve array) within the interval
+ * [segmentLow_+7, segmentHigh_].
+ * @see SieveOfEratosthenes::sieve(uint32_t)
  */
-void PrimeNumberFinder::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
+void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint32_t sieveSize) {
   if (ps_.testFlags(ps_.COUNT_FLAGS))
     count(sieve, sieveSize);
   if (ps_.testFlags(ps_.GENERATE_FLAGS))

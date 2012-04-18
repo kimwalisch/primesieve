@@ -44,8 +44,8 @@ namespace soe {
 class PrimeNumberFinder;
 
 /**
- * PrimeNumberGenerator is a SieveOfEratosthenes class that is used
- * to generate the primes up to sqrt(n) needed for sieving by
+ * PrimeNumberGenerator is a SieveOfEratosthenes class that is used to
+ * generate the primes up to sqrt(n) needed for sieving by
  * PrimeNumberFinder.
  */
 class PrimeNumberGenerator : public SieveOfEratosthenes {
@@ -53,8 +53,7 @@ public:
   PrimeNumberGenerator(PrimeNumberFinder&);
 private:
   PrimeNumberFinder& primeNumberFinder_;
-  void generate(const uint8_t*, uint32_t);
-  virtual void analyseSieve(const uint8_t*, uint32_t);
+  virtual void segmentProcessed(const uint8_t*, uint32_t);
 };
 
 } // namespace soe

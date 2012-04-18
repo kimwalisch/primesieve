@@ -56,17 +56,14 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
 }
 
 /**
- * Generate the primes within the current segment and use them
- * to sieve with primeNumberFinder_.
+ * Executed after each sieved segment, generates the primes within the
+ * current segment (1 bits within sieve array) and uses them to sieve
+ * with primeNumberFinder_.
  * @see SieveOfEratosthenes::sieve(uint32_t)
  */
-void PrimeNumberGenerator::generate(const uint8_t* sieve, uint32_t sieveSize) {
+void PrimeNumberGenerator::segmentProcessed(const uint8_t* sieve, uint32_t sieveSize) {
   // GENERATE_PRIMES() is defined in SieveOfEratosthenes.h
   GENERATE_PRIMES(primeNumberFinder_.sieve, uint32_t);
-}
-
-void PrimeNumberGenerator::analyseSieve(const uint8_t* sieve, uint32_t sieveSize) {
-  generate(sieve, sieveSize);
 }
 
 } // namespace soe
