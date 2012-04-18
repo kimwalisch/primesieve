@@ -141,12 +141,10 @@ void EratBig::pushBucket(uint32_t index) {
  * Implementation of Tomas Oliveira e Silva's cache-friendly segmented
  * sieve of Eratosthenes algorithm, see:
  * http://www.ieeta.pt/~tos/software/prime_sieve.html
- * My implementation uses a sieve array with 30 numbers per byte,
- * 8 bytes per sieving prime and a modulo 210 wheel that skips
- * multiples of 2, 3, 5 and 7.
- *
- * Removes the multiples of big sieving primes (i.e. with very few
- * multiple occurrences per segment) from the sieve array.
+ * This algorithm is used to remove the multiples of big sieving
+ * primes (i.e. very few multiples per segment) from the sieve array.
+ * My implementation uses a sieve array with 30 numbers per byte and a
+ * modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
  * @see SieveOfEratosthenes::crossOffMultiples()
  */
 void EratBig::sieve(uint8_t* sieve)
