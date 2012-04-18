@@ -77,8 +77,8 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
       const uint32_t multipleIndex = wPrime->getMultipleIndex();
       const uint32_t wheelIndex    = wPrime->getWheelIndex();
       const uint32_t maxLoopOffset = sievingPrime * 30 + 29;
-
       uint8_t* const loopLimit = (maxLoopOffset < sieveSize) ? sieveEnd - maxLoopOffset : sieve;
+
       // pointer to the byte containing the first multiple of
       // sievingPrime within the current segment
       uint8_t* p = &sieve[multipleIndex];
@@ -102,8 +102,8 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
                   // iteration to cross-off the next 8 multiples.
                   // two pointers (p, q) are used to break the dependency chain
                   // and take advantage of Instruction-Level Parallelism.
-                  q = p + sievingPrime * 6;
                   while (p < loopLimit) {
+                    q = p + sievingPrime * 6;
                     p[0] &= BIT0; p += sievingPrime * 10;
                     q[1] &= BIT4; q += sievingPrime * 6;
                     p[2] &= BIT3; p += sievingPrime * 6;
@@ -111,7 +111,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
                     p[3] &= BIT6; p += sievingPrime * 6;
                     q[4] &= BIT2; q += sievingPrime * 10;
                     p[5] &= BIT1; p += sievingPrime * 8 + 7;
-                    q[6] &= BIT5; q += sievingPrime * 8 + 7;
+                    q[6] &= BIT5;
                   }
                   if (p >= sieveEnd) { wPrime->setWheelIndex(0); break; }
         }
@@ -126,8 +126,8 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 13: *p &= BIT6; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(14); break; }
           case 14: *p &= BIT2; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(15); break; }
           case 15: *p &= BIT4; p += sievingPrime * 2 + 1;
-                   q = p + sievingPrime * 6;
                    while (p < loopLimit) {
+                     q = p + sievingPrime * 6;
                      p[0]  &= BIT1; p += sievingPrime * 10;
                      q[2]  &= BIT3; q += sievingPrime * 6;
                      p[3]  &= BIT7; p += sievingPrime * 6;
@@ -135,7 +135,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
                      p[6]  &= BIT0; p += sievingPrime * 6;
                      q[6]  &= BIT6; q += sievingPrime * 10;
                      p[8]  &= BIT2; p += sievingPrime * 8 + 11;
-                     q[10] &= BIT4; q += sievingPrime * 8 + 11;
+                     q[10] &= BIT4;
                    }
                    if (p >= sieveEnd) { wPrime->setWheelIndex(8); break; }
         }
@@ -150,8 +150,8 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 21: *p &= BIT0; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(22); break; }
           case 22: *p &= BIT6; p += sievingPrime * 6 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(23); break; }
           case 23: *p &= BIT3; p += sievingPrime * 2 + 1;
-                   q = p + sievingPrime * 6;
                    while (p < loopLimit) {
+                     q = p + sievingPrime * 6;
                      p[0]  &= BIT2; p += sievingPrime * 10;
                      q[2]  &= BIT7; q += sievingPrime * 6;
                      p[4]  &= BIT5; p += sievingPrime * 6;
@@ -159,7 +159,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
                      p[7]  &= BIT1; p += sievingPrime * 6;
                      q[8]  &= BIT0; q += sievingPrime * 10;
                      p[9]  &= BIT6; p += sievingPrime * 8 + 13;
-                     q[12] &= BIT3; q += sievingPrime * 8 + 13;
+                     q[12] &= BIT3;
                    }
                    if (p >= sieveEnd) { wPrime->setWheelIndex(16); break; }
         }
@@ -174,8 +174,8 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 29: *p &= BIT5; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(30); break; }
           case 30: *p &= BIT7; p += sievingPrime * 6 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(31); break; }
           case 31: *p &= BIT2; p += sievingPrime * 2 + 1;
-                   q = p + sievingPrime * 6;
                    while (p < loopLimit) {
+                     q = p + sievingPrime * 6;
                      p[0]  &= BIT3; p += sievingPrime * 10;
                      q[3]  &= BIT6; q += sievingPrime * 6;
                      p[6]  &= BIT0; p += sievingPrime * 6;
@@ -183,7 +183,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
                      p[9]  &= BIT4; p += sievingPrime * 6;
                      q[10] &= BIT5; q += sievingPrime * 10;
                      p[12] &= BIT7; p += sievingPrime * 8 + 17;
-                     q[16] &= BIT2; q += sievingPrime * 8 + 17;
+                     q[16] &= BIT2;
                    }
                    if (p >= sieveEnd) { wPrime->setWheelIndex(24); break; }
         }
@@ -198,8 +198,8 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 37: *p &= BIT7; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(38); break; }
           case 38: *p &= BIT3; p += sievingPrime * 6 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(39); break; }
           case 39: *p &= BIT1; p += sievingPrime * 2 + 1;
-                   q = p + sievingPrime * 6;
                    while (p < loopLimit) {
+                     q = p + sievingPrime * 6;
                      p[0]  &= BIT4; p += sievingPrime * 10;
                      q[4]  &= BIT2; q += sievingPrime * 6;
                      p[6]  &= BIT6; p += sievingPrime * 6;
@@ -207,7 +207,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
                      p[10] &= BIT5; p += sievingPrime * 6;
                      q[11] &= BIT7; q += sievingPrime * 10;
                      p[14] &= BIT3; p += sievingPrime * 8 + 19;
-                     q[18] &= BIT1; q += sievingPrime * 8 + 19;
+                     q[18] &= BIT1;
                    }
                    if (p >= sieveEnd) { wPrime->setWheelIndex(32); break; }
         }
@@ -222,8 +222,8 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 45: *p &= BIT3; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(46); break; }
           case 46: *p &= BIT4; p += sievingPrime * 6 + 5; if (p >= sieveEnd) { wPrime->setWheelIndex(47); break; }
           case 47: *p &= BIT0; p += sievingPrime * 2 + 1;
-                   q = p + sievingPrime * 6;
                    while (p < loopLimit) {
+                     q = p + sievingPrime * 6;
                      p[0]  &= BIT5; p += sievingPrime * 10;
                      q[5]  &= BIT1; q += sievingPrime * 6;
                      p[8]  &= BIT2; p += sievingPrime * 6;
@@ -231,7 +231,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
                      p[12] &= BIT7; p += sievingPrime * 6;
                      q[14] &= BIT3; q += sievingPrime * 10;
                      p[17] &= BIT4; p += sievingPrime * 8 + 23;
-                     q[22] &= BIT0; q += sievingPrime * 8 + 23;
+                     q[22] &= BIT0;
                    }
                    if (p >= sieveEnd) { wPrime->setWheelIndex(40); break; }
         }
@@ -246,8 +246,8 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 53: *p &= BIT1; p += sievingPrime * 4 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(54); break; }
           case 54: *p &= BIT0; p += sievingPrime * 6 + 5; if (p >= sieveEnd) { wPrime->setWheelIndex(55); break; }
           case 55: *p &= BIT7; p += sievingPrime * 2 + 2;
-                   q = p + sievingPrime * 6;
                    while (p < loopLimit) {
+                     q = p + sievingPrime * 6;
                      p[0]  &= BIT6; p += sievingPrime * 10;
                      q[6]  &= BIT5; q += sievingPrime * 6;
                      p[10] &= BIT4; p += sievingPrime * 6;
@@ -255,7 +255,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
                      p[16] &= BIT2; p += sievingPrime * 6;
                      q[18] &= BIT1; q += sievingPrime * 10;
                      p[22] &= BIT0; p += sievingPrime * 8 + 29;
-                     q[27] &= BIT7; q += sievingPrime * 8 + 29;
+                     q[27] &= BIT7;
                    }
                    if (p >= sieveEnd) { wPrime->setWheelIndex(48); break; }
         }
@@ -270,8 +270,8 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
           case 61: *p &= BIT4; p += sievingPrime * 4 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(62); break; }
           case 62: *p &= BIT5; p += sievingPrime * 6 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(63); break; }
           case 63: *p &= BIT6; p += sievingPrime * 2 + 0;
-                   q = p + sievingPrime * 6;
                    while (p < loopLimit) {
+                     q = p + sievingPrime * 6;
                      p[0] &= BIT7; p += sievingPrime * 10;
                      q[1] &= BIT0; q += sievingPrime * 6;
                      p[1] &= BIT1; p += sievingPrime * 6;
@@ -279,13 +279,13 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
                      p[1] &= BIT3; p += sievingPrime * 6;
                      q[1] &= BIT4; q += sievingPrime * 10;
                      p[1] &= BIT5; p += sievingPrime * 8 + 1;
-                     q[1] &= BIT6; q += sievingPrime * 8 + 1;
+                     q[1] &= BIT6;
                    }
                    if (p >= sieveEnd) { wPrime->setWheelIndex(56); break; }
         }
         break;
       }
-      // set the next multiple's index for the next segment
+      // set multipleIndex for the next segment
       wPrime->setMultipleIndex(static_cast<uint32_t>(p - sieveEnd));
     }
   }
