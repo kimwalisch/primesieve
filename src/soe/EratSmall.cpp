@@ -79,8 +79,10 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
       const uint32_t maxLoopOffset = sievingPrime * 30 + 29;
 
       uint8_t* const loopLimit = (maxLoopOffset < sieveSize) ? sieveEnd - maxLoopOffset : sieve;
-      uint8_t* s0 = &sieve[multipleIndex];
-      uint8_t* s1;
+      // pointer to the byte containing the first multiple of
+      // sievingPrime within the current segment
+      uint8_t* p = &sieve[multipleIndex];
+      uint8_t* q;
 
       // cross-off the multiples (unset corresponding bits) of the
       // current sievingPrime within the sieve array using a hardcoded
@@ -88,203 +90,203 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
       switch (wheelIndex) {
         // for sieving primes of type i * 30 + 7
         for (;;) {
-          case 0: *s0 &= BIT0; s0 += sievingPrime * 6 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(1); break; }
-          case 1: *s0 &= BIT4; s0 += sievingPrime * 4 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(2); break; }
-          case 2: *s0 &= BIT3; s0 += sievingPrime * 2 + 0; if (s0 >= sieveEnd) { wPrime->setWheelIndex(3); break; }
-          case 3: *s0 &= BIT7; s0 += sievingPrime * 4 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(4); break; }
-          case 4: *s0 &= BIT6; s0 += sievingPrime * 2 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(5); break; }
-          case 5: *s0 &= BIT2; s0 += sievingPrime * 4 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(6); break; }
-          case 6: *s0 &= BIT1; s0 += sievingPrime * 6 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(7); break; }
-          case 7: *s0 &= BIT5; s0 += sievingPrime * 2 + 1;
+          case 0: *p &= BIT0; p += sievingPrime * 6 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(1); break; }
+          case 1: *p &= BIT4; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(2); break; }
+          case 2: *p &= BIT3; p += sievingPrime * 2 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(3); break; }
+          case 3: *p &= BIT7; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(4); break; }
+          case 4: *p &= BIT6; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(5); break; }
+          case 5: *p &= BIT2; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(6); break; }
+          case 6: *p &= BIT1; p += sievingPrime * 6 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(7); break; }
+          case 7: *p &= BIT5; p += sievingPrime * 2 + 1;
                   // fast loop, takes only =~ 16 asm instructions per loop
                   // iteration to cross-off the next 8 multiples.
-                  // two pointers (s0, s1) are used to break the dependency chain
+                  // two pointers (p, q) are used to break the dependency chain
                   // and take advantage of Instruction-Level Parallelism.
-                  s1 = s0 + sievingPrime * 6;
-                  while (s0 < loopLimit) {
-                    s0[0] &= BIT0; s0 += sievingPrime * 10;
-                    s1[1] &= BIT4; s1 += sievingPrime * 6;
-                    s0[2] &= BIT3; s0 += sievingPrime * 6;
-                    s1[2] &= BIT7; s1 += sievingPrime * 6;
-                    s0[3] &= BIT6; s0 += sievingPrime * 6;
-                    s1[4] &= BIT2; s1 += sievingPrime * 10;
-                    s0[5] &= BIT1; s0 += sievingPrime * 8 + 7;
-                    s1[6] &= BIT5; s1 += sievingPrime * 8 + 7;
+                  q = p + sievingPrime * 6;
+                  while (p < loopLimit) {
+                    p[0] &= BIT0; p += sievingPrime * 10;
+                    q[1] &= BIT4; q += sievingPrime * 6;
+                    p[2] &= BIT3; p += sievingPrime * 6;
+                    q[2] &= BIT7; q += sievingPrime * 6;
+                    p[3] &= BIT6; p += sievingPrime * 6;
+                    q[4] &= BIT2; q += sievingPrime * 10;
+                    p[5] &= BIT1; p += sievingPrime * 8 + 7;
+                    q[6] &= BIT5; q += sievingPrime * 8 + 7;
                   }
-                  if (s0 >= sieveEnd) { wPrime->setWheelIndex(0); break; }
+                  if (p >= sieveEnd) { wPrime->setWheelIndex(0); break; }
         }
         break;
         // for sieving primes of type i * 30 + 11
         for (;;) {
-          case  8: *s0 &= BIT1; s0 += sievingPrime * 6 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(9);  break; }
-          case  9: *s0 &= BIT3; s0 += sievingPrime * 4 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(10); break; }
-          case 10: *s0 &= BIT7; s0 += sievingPrime * 2 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(11); break; }
-          case 11: *s0 &= BIT5; s0 += sievingPrime * 4 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(12); break; }
-          case 12: *s0 &= BIT0; s0 += sievingPrime * 2 + 0; if (s0 >= sieveEnd) { wPrime->setWheelIndex(13); break; }
-          case 13: *s0 &= BIT6; s0 += sievingPrime * 4 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(14); break; }
-          case 14: *s0 &= BIT2; s0 += sievingPrime * 6 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(15); break; }
-          case 15: *s0 &= BIT4; s0 += sievingPrime * 2 + 1;
-                   s1 = s0 + sievingPrime * 6;
-                   while (s0 < loopLimit) {
-                     s0[0]  &= BIT1; s0 += sievingPrime * 10;
-                     s1[2]  &= BIT3; s1 += sievingPrime * 6;
-                     s0[3]  &= BIT7; s0 += sievingPrime * 6;
-                     s1[4]  &= BIT5; s1 += sievingPrime * 6;
-                     s0[6]  &= BIT0; s0 += sievingPrime * 6;
-                     s1[6]  &= BIT6; s1 += sievingPrime * 10;
-                     s0[8]  &= BIT2; s0 += sievingPrime * 8 + 11;
-                     s1[10] &= BIT4; s1 += sievingPrime * 8 + 11;
+          case  8: *p &= BIT1; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(9);  break; }
+          case  9: *p &= BIT3; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(10); break; }
+          case 10: *p &= BIT7; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(11); break; }
+          case 11: *p &= BIT5; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(12); break; }
+          case 12: *p &= BIT0; p += sievingPrime * 2 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(13); break; }
+          case 13: *p &= BIT6; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(14); break; }
+          case 14: *p &= BIT2; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(15); break; }
+          case 15: *p &= BIT4; p += sievingPrime * 2 + 1;
+                   q = p + sievingPrime * 6;
+                   while (p < loopLimit) {
+                     p[0]  &= BIT1; p += sievingPrime * 10;
+                     q[2]  &= BIT3; q += sievingPrime * 6;
+                     p[3]  &= BIT7; p += sievingPrime * 6;
+                     q[4]  &= BIT5; q += sievingPrime * 6;
+                     p[6]  &= BIT0; p += sievingPrime * 6;
+                     q[6]  &= BIT6; q += sievingPrime * 10;
+                     p[8]  &= BIT2; p += sievingPrime * 8 + 11;
+                     q[10] &= BIT4; q += sievingPrime * 8 + 11;
                    }
-                   if (s0 >= sieveEnd) { wPrime->setWheelIndex(8); break; }
+                   if (p >= sieveEnd) { wPrime->setWheelIndex(8); break; }
         }
         break;
         // for sieving primes of type i * 30 + 13
         for (;;) {
-          case 16: *s0 &= BIT2; s0 += sievingPrime * 6 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(17); break; }
-          case 17: *s0 &= BIT7; s0 += sievingPrime * 4 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(18); break; }
-          case 18: *s0 &= BIT5; s0 += sievingPrime * 2 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(19); break; }
-          case 19: *s0 &= BIT4; s0 += sievingPrime * 4 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(20); break; }
-          case 20: *s0 &= BIT1; s0 += sievingPrime * 2 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(21); break; }
-          case 21: *s0 &= BIT0; s0 += sievingPrime * 4 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(22); break; }
-          case 22: *s0 &= BIT6; s0 += sievingPrime * 6 + 3; if (s0 >= sieveEnd) { wPrime->setWheelIndex(23); break; }
-          case 23: *s0 &= BIT3; s0 += sievingPrime * 2 + 1;
-                   s1 = s0 + sievingPrime * 6;
-                   while (s0 < loopLimit) {
-                     s0[0]  &= BIT2; s0 += sievingPrime * 10;
-                     s1[2]  &= BIT7; s1 += sievingPrime * 6;
-                     s0[4]  &= BIT5; s0 += sievingPrime * 6;
-                     s1[5]  &= BIT4; s1 += sievingPrime * 6;
-                     s0[7]  &= BIT1; s0 += sievingPrime * 6;
-                     s1[8]  &= BIT0; s1 += sievingPrime * 10;
-                     s0[9]  &= BIT6; s0 += sievingPrime * 8 + 13;
-                     s1[12] &= BIT3; s1 += sievingPrime * 8 + 13;
+          case 16: *p &= BIT2; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(17); break; }
+          case 17: *p &= BIT7; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(18); break; }
+          case 18: *p &= BIT5; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(19); break; }
+          case 19: *p &= BIT4; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(20); break; }
+          case 20: *p &= BIT1; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(21); break; }
+          case 21: *p &= BIT0; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(22); break; }
+          case 22: *p &= BIT6; p += sievingPrime * 6 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(23); break; }
+          case 23: *p &= BIT3; p += sievingPrime * 2 + 1;
+                   q = p + sievingPrime * 6;
+                   while (p < loopLimit) {
+                     p[0]  &= BIT2; p += sievingPrime * 10;
+                     q[2]  &= BIT7; q += sievingPrime * 6;
+                     p[4]  &= BIT5; p += sievingPrime * 6;
+                     q[5]  &= BIT4; q += sievingPrime * 6;
+                     p[7]  &= BIT1; p += sievingPrime * 6;
+                     q[8]  &= BIT0; q += sievingPrime * 10;
+                     p[9]  &= BIT6; p += sievingPrime * 8 + 13;
+                     q[12] &= BIT3; q += sievingPrime * 8 + 13;
                    }
-                   if (s0 >= sieveEnd) { wPrime->setWheelIndex(16); break; }
+                   if (p >= sieveEnd) { wPrime->setWheelIndex(16); break; }
         }
         break;
         // for sieving primes of type i * 30 + 17
         for (;;) {
-          case 24: *s0 &= BIT3; s0 += sievingPrime * 6 + 3; if (s0 >= sieveEnd) { wPrime->setWheelIndex(25); break; }
-          case 25: *s0 &= BIT6; s0 += sievingPrime * 4 + 3; if (s0 >= sieveEnd) { wPrime->setWheelIndex(26); break; }
-          case 26: *s0 &= BIT0; s0 += sievingPrime * 2 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(27); break; }
-          case 27: *s0 &= BIT1; s0 += sievingPrime * 4 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(28); break; }
-          case 28: *s0 &= BIT4; s0 += sievingPrime * 2 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(29); break; }
-          case 29: *s0 &= BIT5; s0 += sievingPrime * 4 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(30); break; }
-          case 30: *s0 &= BIT7; s0 += sievingPrime * 6 + 4; if (s0 >= sieveEnd) { wPrime->setWheelIndex(31); break; }
-          case 31: *s0 &= BIT2; s0 += sievingPrime * 2 + 1;
-                   s1 = s0 + sievingPrime * 6;
-                   while (s0 < loopLimit) {
-                     s0[0]  &= BIT3; s0 += sievingPrime * 10;
-                     s1[3]  &= BIT6; s1 += sievingPrime * 6;
-                     s0[6]  &= BIT0; s0 += sievingPrime * 6;
-                     s1[7]  &= BIT1; s1 += sievingPrime * 6;
-                     s0[9]  &= BIT4; s0 += sievingPrime * 6;
-                     s1[10] &= BIT5; s1 += sievingPrime * 10;
-                     s0[12] &= BIT7; s0 += sievingPrime * 8 + 17;
-                     s1[16] &= BIT2; s1 += sievingPrime * 8 + 17;
+          case 24: *p &= BIT3; p += sievingPrime * 6 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(25); break; }
+          case 25: *p &= BIT6; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(26); break; }
+          case 26: *p &= BIT0; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(27); break; }
+          case 27: *p &= BIT1; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(28); break; }
+          case 28: *p &= BIT4; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(29); break; }
+          case 29: *p &= BIT5; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(30); break; }
+          case 30: *p &= BIT7; p += sievingPrime * 6 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(31); break; }
+          case 31: *p &= BIT2; p += sievingPrime * 2 + 1;
+                   q = p + sievingPrime * 6;
+                   while (p < loopLimit) {
+                     p[0]  &= BIT3; p += sievingPrime * 10;
+                     q[3]  &= BIT6; q += sievingPrime * 6;
+                     p[6]  &= BIT0; p += sievingPrime * 6;
+                     q[7]  &= BIT1; q += sievingPrime * 6;
+                     p[9]  &= BIT4; p += sievingPrime * 6;
+                     q[10] &= BIT5; q += sievingPrime * 10;
+                     p[12] &= BIT7; p += sievingPrime * 8 + 17;
+                     q[16] &= BIT2; q += sievingPrime * 8 + 17;
                    }
-                   if (s0 >= sieveEnd) { wPrime->setWheelIndex(24); break; }
+                   if (p >= sieveEnd) { wPrime->setWheelIndex(24); break; }
         }
         break;
         // for sieving primes of type i * 30 + 19
         for (;;) {
-          case 32: *s0 &= BIT4; s0 += sievingPrime * 6 + 4; if (s0 >= sieveEnd) { wPrime->setWheelIndex(33); break; }
-          case 33: *s0 &= BIT2; s0 += sievingPrime * 4 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(34); break; }
-          case 34: *s0 &= BIT6; s0 += sievingPrime * 2 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(35); break; }
-          case 35: *s0 &= BIT0; s0 += sievingPrime * 4 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(36); break; }
-          case 36: *s0 &= BIT5; s0 += sievingPrime * 2 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(37); break; }
-          case 37: *s0 &= BIT7; s0 += sievingPrime * 4 + 3; if (s0 >= sieveEnd) { wPrime->setWheelIndex(38); break; }
-          case 38: *s0 &= BIT3; s0 += sievingPrime * 6 + 4; if (s0 >= sieveEnd) { wPrime->setWheelIndex(39); break; }
-          case 39: *s0 &= BIT1; s0 += sievingPrime * 2 + 1;
-                   s1 = s0 + sievingPrime * 6;
-                   while (s0 < loopLimit) {
-                     s0[0]  &= BIT4; s0 += sievingPrime * 10;
-                     s1[4]  &= BIT2; s1 += sievingPrime * 6;
-                     s0[6]  &= BIT6; s0 += sievingPrime * 6;
-                     s1[8]  &= BIT0; s1 += sievingPrime * 6;
-                     s0[10] &= BIT5; s0 += sievingPrime * 6;
-                     s1[11] &= BIT7; s1 += sievingPrime * 10;
-                     s0[14] &= BIT3; s0 += sievingPrime * 8 + 19;
-                     s1[18] &= BIT1; s1 += sievingPrime * 8 + 19;
+          case 32: *p &= BIT4; p += sievingPrime * 6 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(33); break; }
+          case 33: *p &= BIT2; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(34); break; }
+          case 34: *p &= BIT6; p += sievingPrime * 2 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(35); break; }
+          case 35: *p &= BIT0; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(36); break; }
+          case 36: *p &= BIT5; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(37); break; }
+          case 37: *p &= BIT7; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(38); break; }
+          case 38: *p &= BIT3; p += sievingPrime * 6 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(39); break; }
+          case 39: *p &= BIT1; p += sievingPrime * 2 + 1;
+                   q = p + sievingPrime * 6;
+                   while (p < loopLimit) {
+                     p[0]  &= BIT4; p += sievingPrime * 10;
+                     q[4]  &= BIT2; q += sievingPrime * 6;
+                     p[6]  &= BIT6; p += sievingPrime * 6;
+                     q[8]  &= BIT0; q += sievingPrime * 6;
+                     p[10] &= BIT5; p += sievingPrime * 6;
+                     q[11] &= BIT7; q += sievingPrime * 10;
+                     p[14] &= BIT3; p += sievingPrime * 8 + 19;
+                     q[18] &= BIT1; q += sievingPrime * 8 + 19;
                    }
-                   if (s0 >= sieveEnd) { wPrime->setWheelIndex(32); break; }
+                   if (p >= sieveEnd) { wPrime->setWheelIndex(32); break; }
         }
         break;
         // for sieving primes of type i * 30 + 23
         for (;;) {
-          case 40: *s0 &= BIT5; s0 += sievingPrime * 6 + 5; if (s0 >= sieveEnd) { wPrime->setWheelIndex(41); break; }
-          case 41: *s0 &= BIT1; s0 += sievingPrime * 4 + 3; if (s0 >= sieveEnd) { wPrime->setWheelIndex(42); break; }
-          case 42: *s0 &= BIT2; s0 += sievingPrime * 2 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(43); break; }
-          case 43: *s0 &= BIT6; s0 += sievingPrime * 4 + 3; if (s0 >= sieveEnd) { wPrime->setWheelIndex(44); break; }
-          case 44: *s0 &= BIT7; s0 += sievingPrime * 2 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(45); break; }
-          case 45: *s0 &= BIT3; s0 += sievingPrime * 4 + 3; if (s0 >= sieveEnd) { wPrime->setWheelIndex(46); break; }
-          case 46: *s0 &= BIT4; s0 += sievingPrime * 6 + 5; if (s0 >= sieveEnd) { wPrime->setWheelIndex(47); break; }
-          case 47: *s0 &= BIT0; s0 += sievingPrime * 2 + 1;
-                   s1 = s0 + sievingPrime * 6;
-                   while (s0 < loopLimit) {
-                     s0[0]  &= BIT5; s0 += sievingPrime * 10;
-                     s1[5]  &= BIT1; s1 += sievingPrime * 6;
-                     s0[8]  &= BIT2; s0 += sievingPrime * 6;
-                     s1[9]  &= BIT6; s1 += sievingPrime * 6;
-                     s0[12] &= BIT7; s0 += sievingPrime * 6;
-                     s1[14] &= BIT3; s1 += sievingPrime * 10;
-                     s0[17] &= BIT4; s0 += sievingPrime * 8 + 23;
-                     s1[22] &= BIT0; s1 += sievingPrime * 8 + 23;
+          case 40: *p &= BIT5; p += sievingPrime * 6 + 5; if (p >= sieveEnd) { wPrime->setWheelIndex(41); break; }
+          case 41: *p &= BIT1; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(42); break; }
+          case 42: *p &= BIT2; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(43); break; }
+          case 43: *p &= BIT6; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(44); break; }
+          case 44: *p &= BIT7; p += sievingPrime * 2 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(45); break; }
+          case 45: *p &= BIT3; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(46); break; }
+          case 46: *p &= BIT4; p += sievingPrime * 6 + 5; if (p >= sieveEnd) { wPrime->setWheelIndex(47); break; }
+          case 47: *p &= BIT0; p += sievingPrime * 2 + 1;
+                   q = p + sievingPrime * 6;
+                   while (p < loopLimit) {
+                     p[0]  &= BIT5; p += sievingPrime * 10;
+                     q[5]  &= BIT1; q += sievingPrime * 6;
+                     p[8]  &= BIT2; p += sievingPrime * 6;
+                     q[9]  &= BIT6; q += sievingPrime * 6;
+                     p[12] &= BIT7; p += sievingPrime * 6;
+                     q[14] &= BIT3; q += sievingPrime * 10;
+                     p[17] &= BIT4; p += sievingPrime * 8 + 23;
+                     q[22] &= BIT0; q += sievingPrime * 8 + 23;
                    }
-                   if (s0 >= sieveEnd) { wPrime->setWheelIndex(40); break; }
+                   if (p >= sieveEnd) { wPrime->setWheelIndex(40); break; }
         }
         break;
         // for sieving primes of type i * 30 + 29
         for (;;) {
-          case 48: *s0 &= BIT6; s0 += sievingPrime * 6 + 6; if (s0 >= sieveEnd) { wPrime->setWheelIndex(49); break; }
-          case 49: *s0 &= BIT5; s0 += sievingPrime * 4 + 4; if (s0 >= sieveEnd) { wPrime->setWheelIndex(50); break; }
-          case 50: *s0 &= BIT4; s0 += sievingPrime * 2 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(51); break; }
-          case 51: *s0 &= BIT3; s0 += sievingPrime * 4 + 4; if (s0 >= sieveEnd) { wPrime->setWheelIndex(52); break; }
-          case 52: *s0 &= BIT2; s0 += sievingPrime * 2 + 2; if (s0 >= sieveEnd) { wPrime->setWheelIndex(53); break; }
-          case 53: *s0 &= BIT1; s0 += sievingPrime * 4 + 4; if (s0 >= sieveEnd) { wPrime->setWheelIndex(54); break; }
-          case 54: *s0 &= BIT0; s0 += sievingPrime * 6 + 5; if (s0 >= sieveEnd) { wPrime->setWheelIndex(55); break; }
-          case 55: *s0 &= BIT7; s0 += sievingPrime * 2 + 2;
-                   s1 = s0 + sievingPrime * 6;
-                   while (s0 < loopLimit) {
-                     s0[0]  &= BIT6; s0 += sievingPrime * 10;
-                     s1[6]  &= BIT5; s1 += sievingPrime * 6;
-                     s0[10] &= BIT4; s0 += sievingPrime * 6;
-                     s1[12] &= BIT3; s1 += sievingPrime * 6;
-                     s0[16] &= BIT2; s0 += sievingPrime * 6;
-                     s1[18] &= BIT1; s1 += sievingPrime * 10;
-                     s0[22] &= BIT0; s0 += sievingPrime * 8 + 29;
-                     s1[27] &= BIT7; s1 += sievingPrime * 8 + 29;
+          case 48: *p &= BIT6; p += sievingPrime * 6 + 6; if (p >= sieveEnd) { wPrime->setWheelIndex(49); break; }
+          case 49: *p &= BIT5; p += sievingPrime * 4 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(50); break; }
+          case 50: *p &= BIT4; p += sievingPrime * 2 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(51); break; }
+          case 51: *p &= BIT3; p += sievingPrime * 4 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(52); break; }
+          case 52: *p &= BIT2; p += sievingPrime * 2 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(53); break; }
+          case 53: *p &= BIT1; p += sievingPrime * 4 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(54); break; }
+          case 54: *p &= BIT0; p += sievingPrime * 6 + 5; if (p >= sieveEnd) { wPrime->setWheelIndex(55); break; }
+          case 55: *p &= BIT7; p += sievingPrime * 2 + 2;
+                   q = p + sievingPrime * 6;
+                   while (p < loopLimit) {
+                     p[0]  &= BIT6; p += sievingPrime * 10;
+                     q[6]  &= BIT5; q += sievingPrime * 6;
+                     p[10] &= BIT4; p += sievingPrime * 6;
+                     q[12] &= BIT3; q += sievingPrime * 6;
+                     p[16] &= BIT2; p += sievingPrime * 6;
+                     q[18] &= BIT1; q += sievingPrime * 10;
+                     p[22] &= BIT0; p += sievingPrime * 8 + 29;
+                     q[27] &= BIT7; q += sievingPrime * 8 + 29;
                    }
-                   if (s0 >= sieveEnd) { wPrime->setWheelIndex(48); break; }
+                   if (p >= sieveEnd) { wPrime->setWheelIndex(48); break; }
         }
         break;
         // for sieving primes of type i * 30 + 31
         for (;;) {
-          case 56: *s0 &= BIT7; s0 += sievingPrime * 6 + 1; if (s0 >= sieveEnd) { wPrime->setWheelIndex(57); break; }
-          case 57: *s0 &= BIT0; s0 += sievingPrime * 4 + 0; if (s0 >= sieveEnd) { wPrime->setWheelIndex(58); break; }
-          case 58: *s0 &= BIT1; s0 += sievingPrime * 2 + 0; if (s0 >= sieveEnd) { wPrime->setWheelIndex(59); break; }
-          case 59: *s0 &= BIT2; s0 += sievingPrime * 4 + 0; if (s0 >= sieveEnd) { wPrime->setWheelIndex(60); break; }
-          case 60: *s0 &= BIT3; s0 += sievingPrime * 2 + 0; if (s0 >= sieveEnd) { wPrime->setWheelIndex(61); break; }
-          case 61: *s0 &= BIT4; s0 += sievingPrime * 4 + 0; if (s0 >= sieveEnd) { wPrime->setWheelIndex(62); break; }
-          case 62: *s0 &= BIT5; s0 += sievingPrime * 6 + 0; if (s0 >= sieveEnd) { wPrime->setWheelIndex(63); break; }
-          case 63: *s0 &= BIT6; s0 += sievingPrime * 2 + 0;
-                   s1 = s0 + sievingPrime * 6;
-                   while (s0 < loopLimit) {
-                     s0[0] &= BIT7; s0 += sievingPrime * 10;
-                     s1[1] &= BIT0; s1 += sievingPrime * 6;
-                     s0[1] &= BIT1; s0 += sievingPrime * 6;
-                     s1[1] &= BIT2; s1 += sievingPrime * 6;
-                     s0[1] &= BIT3; s0 += sievingPrime * 6;
-                     s1[1] &= BIT4; s1 += sievingPrime * 10;
-                     s0[1] &= BIT5; s0 += sievingPrime * 8 + 1;
-                     s1[1] &= BIT6; s1 += sievingPrime * 8 + 1;
+          case 56: *p &= BIT7; p += sievingPrime * 6 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(57); break; }
+          case 57: *p &= BIT0; p += sievingPrime * 4 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(58); break; }
+          case 58: *p &= BIT1; p += sievingPrime * 2 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(59); break; }
+          case 59: *p &= BIT2; p += sievingPrime * 4 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(60); break; }
+          case 60: *p &= BIT3; p += sievingPrime * 2 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(61); break; }
+          case 61: *p &= BIT4; p += sievingPrime * 4 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(62); break; }
+          case 62: *p &= BIT5; p += sievingPrime * 6 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(63); break; }
+          case 63: *p &= BIT6; p += sievingPrime * 2 + 0;
+                   q = p + sievingPrime * 6;
+                   while (p < loopLimit) {
+                     p[0] &= BIT7; p += sievingPrime * 10;
+                     q[1] &= BIT0; q += sievingPrime * 6;
+                     p[1] &= BIT1; p += sievingPrime * 6;
+                     q[1] &= BIT2; q += sievingPrime * 6;
+                     p[1] &= BIT3; p += sievingPrime * 6;
+                     q[1] &= BIT4; q += sievingPrime * 10;
+                     p[1] &= BIT5; p += sievingPrime * 8 + 1;
+                     q[1] &= BIT6; q += sievingPrime * 8 + 1;
                    }
-                   if (s0 >= sieveEnd) { wPrime->setWheelIndex(56); break; }
+                   if (p >= sieveEnd) { wPrime->setWheelIndex(56); break; }
         }
         break;
       }
       // set the next multiple's index for the next segment
-      wPrime->setMultipleIndex(static_cast<uint32_t>(s0 - sieveEnd));
+      wPrime->setMultipleIndex(static_cast<uint32_t>(p - sieveEnd));
     }
   }
 }
