@@ -149,16 +149,12 @@ void PrimeSieve::setStop(uint64_t stop) {
 /**
  * Multiples of small primes <= preSieveLimit are pre-sieved
  * to speed up the sieve of Eratosthenes.
- * @param preSieveLimit  Default = 19, >= 13 && <= 23
+ * @param preSieveLimit  >= 13 && <= 23, default = 19
+ *                       min = 13 (uses 1001 bytes)
+ *                       max = 23 (uses 7 megabytes)
  */
 void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
-  // min preSieveLimit = 13 (uses 1001 bytes)
-  // max preSieveLimit = 23 (uses 7 megabytes)
-  if (preSieveLimit < 13)
-    preSieveLimit = 13;
-  if (preSieveLimit > 23)
-    preSieveLimit = 23;
-  preSieveLimit_ = preSieveLimit;
+  preSieveLimit_ = getBoundedValue<uint32_t>(13, preSieveLimit, 23);
 }
 
 /**
@@ -166,19 +162,12 @@ void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
  * The best performance is achieved with a sieve size of the CPU's L1
  * data cache size (usually 32 or 64 KB) when sieving < 10^15 and a
  * sieve size of the CPU's L2 cache size above.
- * @param sieveSize  Default = 32, >= 1 && <= 4096 kilobytes,
+ * @param sieveSize  >= 1 && <= 4096 kilobytes, default = 32, 
  *                   sieveSize is rounded up to the next highest power
  *                   of 2.
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
-  // SieveOfEratosthenes min sieveSize = 1 kilobyte
-  // EratMedium max sieveSize = 4096 kilobytes
-  // EratBig needs a power of 2 sieveSize
-  if (sieveSize < 1)
-    sieveSize = 1;
-  if (sieveSize > 4096)
-    sieveSize = 4096;
-  sieveSize_ = nextHighestPowerOf2(sieveSize);
+  sieveSize_ = getBoundedValue<uint32_t>(1, nextHighestPowerOf2(sieveSize), 4096);
 }
 
 /**

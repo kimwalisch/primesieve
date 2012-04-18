@@ -90,14 +90,6 @@ private:
   /** Number of threads to be used for sieving. */
   int numThreads_;
   SharedMemory* shm_;
-  template <typename T>
-  static T getBoundedValue(T lowerBound, T value, T upperBound) {
-    if (value < lowerBound)
-      return lowerBound;
-    if (value > upperBound)
-      return upperBound;
-    return value;
-  }
   int getIdealNumThreads() const;
 #if defined(_OPENMP)
   omp_lock_t lock_;

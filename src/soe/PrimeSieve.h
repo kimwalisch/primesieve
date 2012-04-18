@@ -164,6 +164,12 @@ protected:
   virtual void calcStatus(uint32_t);
   virtual void set_lock();
   virtual void unset_lock();
+  template <typename T>
+  static T getBoundedValue(T lowerBound, T value, T upperBound) {
+    if (value < lowerBound) return lowerBound;
+    if (value > upperBound) return upperBound;
+    return value;
+  }
 private:
   class LockGuard {
   public:
