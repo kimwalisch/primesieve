@@ -1,3 +1,14 @@
+New in version 3.6, 19/04/2012
+==============================
+
+1. Updated source code documentation (src/soe directory).
+2. Removed unused source code. The deprecated API of
+   PrimeSieve <= 3.4 is not supported anymore, use
+   PrimeSieve::getStart() instead of PrimeSieve::getStartNumber() ...
+   LIBPRIMESIEVE contains the up-to-date API.
+3. src/soe/EratSmall.cpp has been enhanced to better take advantage of
+   Instruction-Level Parallelism.
+
 New in version 3.5, 07/02/2012
 ==============================
 
