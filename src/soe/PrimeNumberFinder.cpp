@@ -46,8 +46,7 @@
 
 namespace soe {
 
-/// Bit patterns corresponding to prime k-tuplets
-/// within bytes of the sieve array.
+/** Bit patterns corresponding to prime k-tuplets */
 const uint32_t PrimeNumberFinder::kTupletBitmasks_[6][5] =
 {
   { 0x06, 0x18, 0xc0, END },       // Twin primes
@@ -129,7 +128,7 @@ void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint32_t sieveSiz
  * the current segment.
  */
 void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
-  // count prime numbers (1 bits within the sieve array)
+  // count prime numbers (1 bits within sieve array)
   if (ps_.isFlag(ps_.COUNT_PRIMES)) {
     const uint64_t* sieve64 = reinterpret_cast<const uint64_t*>(sieve);
     uint32_t sieveSize64 = sieveSize / 8;
@@ -180,9 +179,8 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
       }
     }
   }
-  else
-  {
-    // only one thread at a time may access this code section
+  else {
+    // only one thread at a time may generate primes
     PrimeSieve::LockGuard lock(ps_);
     // GENERATE_PRIMES() is defined in SieveOfEratosthenes.h
          if (ps_.isFlag(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_, uint32_t)
