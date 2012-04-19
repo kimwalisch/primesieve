@@ -50,7 +50,7 @@ class SieveOfEratosthenes;
  * initialize and store sieving primes.
  */
 template<class T_Wheel>
-class EratBase: protected T_Wheel {
+class EratBase : protected T_Wheel {
 public:
   uint32_t getLimit() const {
     return limit_;
