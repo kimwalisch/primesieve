@@ -75,7 +75,7 @@ EratBig::~EratBig() {
 void EratBig::setSize(const SieveOfEratosthenes& soe) {
   // MAX values in sieve(uint8_t*)
   uint32_t maxSievingPrime   = soe.getSquareRoot() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
-  uint32_t maxWheelFactor    = wheel(0)->nextMultipleFactor;
+  uint32_t maxWheelFactor    = wheel(0).nextMultipleFactor;
   uint32_t maxMultipleOffset = maxSievingPrime * maxWheelFactor + maxWheelFactor;
   uint32_t maxMultipleIndex  = (soe.getSieveSize() - 1) + maxMultipleOffset;
   uint32_t maxSegmentCount   = maxMultipleIndex / soe.getSieveSize();
@@ -175,14 +175,14 @@ void EratBig::sieve(uint8_t* sieve)
         uint32_t sievingPrime1  = wPrime[1].getSievingPrime();
         // cross-off the next multiple (unset corresponding bit) of
         // the current sieving primes within the sieve array
-        sieve[multipleIndex0] &= wheel(wheelIndex0)->unsetBit;
-        multipleIndex0        += wheel(wheelIndex0)->nextMultipleFactor * sievingPrime0;
-        multipleIndex0        += wheel(wheelIndex0)->correct;
-        wheelIndex0           += wheel(wheelIndex0)->next;
-        sieve[multipleIndex1] &= wheel(wheelIndex1)->unsetBit;
-        multipleIndex1        += wheel(wheelIndex1)->nextMultipleFactor * sievingPrime1;
-        multipleIndex1        += wheel(wheelIndex1)->correct;
-        wheelIndex1           += wheel(wheelIndex1)->next;
+        sieve[multipleIndex0] &= wheel(wheelIndex0).unsetBit;
+        multipleIndex0        += wheel(wheelIndex0).nextMultipleFactor * sievingPrime0;
+        multipleIndex0        += wheel(wheelIndex0).correct;
+        wheelIndex0           += wheel(wheelIndex0).next;
+        sieve[multipleIndex1] &= wheel(wheelIndex1).unsetBit;
+        multipleIndex1        += wheel(wheelIndex1).nextMultipleFactor * sievingPrime1;
+        multipleIndex1        += wheel(wheelIndex1).correct;
+        wheelIndex1           += wheel(wheelIndex1).next;
         uint32_t next0 = (multipleIndex0 >> log2SieveSize_) & moduloListsSize_;
         multipleIndex0 &= moduloSieveSize_;
         uint32_t next1 = (multipleIndex1 >> log2SieveSize_) & moduloListsSize_;
@@ -200,10 +200,10 @@ void EratBig::sieve(uint8_t* sieve)
         uint32_t multipleIndex = wPrime->getMultipleIndex();
         uint32_t wheelIndex    = wPrime->getWheelIndex();
         uint32_t sievingPrime  = wPrime->getSievingPrime();
-        sieve[multipleIndex] &= wheel(wheelIndex)->unsetBit;
-        multipleIndex        += wheel(wheelIndex)->nextMultipleFactor * sievingPrime;
-        multipleIndex        += wheel(wheelIndex)->correct;
-        wheelIndex           += wheel(wheelIndex)->next;
+        sieve[multipleIndex] &= wheel(wheelIndex).unsetBit;
+        multipleIndex        += wheel(wheelIndex).nextMultipleFactor * sievingPrime;
+        multipleIndex        += wheel(wheelIndex).correct;
+        wheelIndex           += wheel(wheelIndex).next;
         uint32_t next = (multipleIndex >> log2SieveSize_) & moduloListsSize_;
         multipleIndex &= moduloSieveSize_;
         if (!lists_[next]->addWheelPrime(sievingPrime, multipleIndex, wheelIndex))

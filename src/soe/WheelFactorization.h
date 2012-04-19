@@ -309,10 +309,10 @@ protected:
     *prime /= 30;
     return true;
   }
-  const WheelElement* wheel(uint32_t n) const
+  const WheelElement& wheel(uint32_t n) const
   {
     assert(n < WHEEL_SIZE * 8);
-    return &WHEEL_ARRAY[n];
+    return WHEEL_ARRAY[n];
   }
 };
 

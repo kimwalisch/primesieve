@@ -85,26 +85,26 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
              multipleIndex1 < sieveSize) {
         // cross-off the next multiple (unset corresponding bit) of
         // the current sieving primes within the sieve array
-        sieve[multipleIndex0] &= wheel(wheelIndex0)->unsetBit;
-        multipleIndex0        += wheel(wheelIndex0)->nextMultipleFactor * sievingPrime0;
-        multipleIndex0        += wheel(wheelIndex0)->correct;
-        wheelIndex0           += wheel(wheelIndex0)->next;
-        sieve[multipleIndex1] &= wheel(wheelIndex1)->unsetBit;
-        multipleIndex1        += wheel(wheelIndex1)->nextMultipleFactor * sievingPrime1;
-        multipleIndex1        += wheel(wheelIndex1)->correct;
-        wheelIndex1           += wheel(wheelIndex1)->next;
+        sieve[multipleIndex0] &= wheel(wheelIndex0).unsetBit;
+        multipleIndex0        += wheel(wheelIndex0).nextMultipleFactor * sievingPrime0;
+        multipleIndex0        += wheel(wheelIndex0).correct;
+        wheelIndex0           += wheel(wheelIndex0).next;
+        sieve[multipleIndex1] &= wheel(wheelIndex1).unsetBit;
+        multipleIndex1        += wheel(wheelIndex1).nextMultipleFactor * sievingPrime1;
+        multipleIndex1        += wheel(wheelIndex1).correct;
+        wheelIndex1           += wheel(wheelIndex1).next;
       }
       while (multipleIndex0 < sieveSize) {
-        sieve[multipleIndex0] &= wheel(wheelIndex0)->unsetBit;
-        multipleIndex0        += wheel(wheelIndex0)->nextMultipleFactor * sievingPrime0;
-        multipleIndex0        += wheel(wheelIndex0)->correct;
-        wheelIndex0           += wheel(wheelIndex0)->next;
+        sieve[multipleIndex0] &= wheel(wheelIndex0).unsetBit;
+        multipleIndex0        += wheel(wheelIndex0).nextMultipleFactor * sievingPrime0;
+        multipleIndex0        += wheel(wheelIndex0).correct;
+        wheelIndex0           += wheel(wheelIndex0).next;
       }
       while (multipleIndex1 < sieveSize) {
-        sieve[multipleIndex1] &= wheel(wheelIndex1)->unsetBit;
-        multipleIndex1        += wheel(wheelIndex1)->nextMultipleFactor * sievingPrime1;
-        multipleIndex1        += wheel(wheelIndex1)->correct;
-        wheelIndex1           += wheel(wheelIndex1)->next;
+        sieve[multipleIndex1] &= wheel(wheelIndex1).unsetBit;
+        multipleIndex1        += wheel(wheelIndex1).nextMultipleFactor * sievingPrime1;
+        multipleIndex1        += wheel(wheelIndex1).correct;
+        wheelIndex1           += wheel(wheelIndex1).next;
       }
       multipleIndex0 -= sieveSize;
       multipleIndex1 -= sieveSize;
@@ -117,10 +117,10 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
       uint32_t wheelIndex    = wPrime->getWheelIndex();
       uint32_t sievingPrime  = wPrime->getSievingPrime();
       while (multipleIndex < sieveSize) {
-        sieve[multipleIndex] &= wheel(wheelIndex)->unsetBit;
-        multipleIndex        += wheel(wheelIndex)->nextMultipleFactor * sievingPrime;
-        multipleIndex        += wheel(wheelIndex)->correct;
-        wheelIndex           += wheel(wheelIndex)->next;
+        sieve[multipleIndex] &= wheel(wheelIndex).unsetBit;
+        multipleIndex        += wheel(wheelIndex).nextMultipleFactor * sievingPrime;
+        multipleIndex        += wheel(wheelIndex).correct;
+        wheelIndex           += wheel(wheelIndex).next;
       }
       multipleIndex -= sieveSize;
       wPrime->setIndexes(multipleIndex, wheelIndex);
