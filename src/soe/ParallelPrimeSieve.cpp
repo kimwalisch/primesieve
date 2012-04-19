@@ -75,15 +75,13 @@ ParallelPrimeSieve::~ParallelPrimeSieve() {
  * Initializes the ParallelPrimeSieve object with values from
  * a shared memory segment.
  */
-void ParallelPrimeSieve::init(SharedMemory* shm) {
-  if (shm == NULL)
-    throw std::invalid_argument("ParallelPrimeSieve: shared memory segment must not be NULL");
-  shm_ = shm;
-  setStart(shm->start);
-  setStop(shm->stop);
-  setSieveSize(shm->sieveSize);
-  setFlags(shm->flags);
-  setNumThreads(shm->threads);
+void ParallelPrimeSieve::init(SharedMemory& shm) {
+  setStart(shm.start);
+  setStop(shm.stop);
+  setSieveSize(shm.sieveSize);
+  setFlags(shm.flags);
+  setNumThreads(shm.threads);
+  shm_ = &shm;
 }
 
 int ParallelPrimeSieve::getMaxThreads() {
@@ -181,10 +179,17 @@ void ParallelPrimeSieve::sieve() {
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
     uint64_t balanced = getBalancedInterval(threads);
     uint64_t align = start_ + 32 - start_ % 30;
+    /**
+     * The interval to be sieved [start_, stop_] is subdivided into
+     * chunks of size 'balanced' that are sieved in parallel using
+     * multiple threads. This scales well as each thread sieves using
+     * its own dedicated memory and thus there is no synchronisation
+     * required for sieving.
+     */
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
         reduction(+: count0, count1, count2, count3, count4, count5, count6)
     for (uint64_t n = align; n < stop_; n += balanced) {
-      uint64_t threadStart = (n > align) ? n : start_;
+      uint64_t threadStart = (n == align) ? start : n;
       uint64_t threadStop = std::min(n + balanced, stop_);
       PrimeSieve ps(this);
       ps.sieve(threadStart, threadStop);

@@ -78,7 +78,7 @@ public:
   enum { IDEAL_NUM_THREADS = -1 };
   ParallelPrimeSieve();
   virtual ~ParallelPrimeSieve();
-  void init(SharedMemory*);
+  void init(SharedMemory&);
   static int getMaxThreads();
   int getNumThreads() const;
   void setNumThreads(int);

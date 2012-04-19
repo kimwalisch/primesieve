@@ -51,11 +51,13 @@ int main(int argc, char *argv[]) {
       ParallelPrimeSieve::SharedMemory* shm =
           static_cast<ParallelPrimeSieve::SharedMemory*>(sharedMemory.data());
       try {
-        // initialize the ParallelPrimeSieve object with values from
-        // the shared memory segment provided by the primesieve GUI
-        // and start sieving
+        // initialize the ParallelPrimeSieve object with
+        // values from the shared memory segment provided by
+        // the primesieve GUI and start sieving
+        if (shm == NULL)
+          throw std::runtime_error("sharedMemory.data() must not be NULL");
         ParallelPrimeSieve pps;
-        pps.init(shm);
+        pps.init(*shm);
         pps.sieve();
       }
       catch (std::exception& e) {
