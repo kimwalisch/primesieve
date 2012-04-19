@@ -189,7 +189,7 @@ void ParallelPrimeSieve::sieve() {
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
         reduction(+: count0, count1, count2, count3, count4, count5, count6)
     for (uint64_t n = align; n < stop_; n += balanced) {
-      uint64_t threadStart = (n == align) ? start : n;
+      uint64_t threadStart = (n == align) ? start_ : n;
       uint64_t threadStop = std::min(n + balanced, stop_);
       PrimeSieve ps(this);
       ps.sieve(threadStart, threadStop);
