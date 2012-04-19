@@ -66,31 +66,38 @@ namespace soe {
  */
 class WheelPrime {
 public:
-  uint32_t getSievingPrime() const {
+  uint32_t getSievingPrime() const
+  {
     return sievingPrime_;
   }
-  uint32_t getMultipleIndex() const {
+  uint32_t getMultipleIndex() const
+  {
     // get the 23 least significant bits
     return indexes_ & ((1u << 23) - 1);
   }
-  uint32_t getWheelIndex() const {
+  uint32_t getWheelIndex() const
+  {
     // get the 9 most significant bits
     return indexes_ >> 23;
   }
   void set(uint32_t sievingPrime,
            uint32_t multipleIndex,
-           uint32_t wheelIndex) {
+           uint32_t wheelIndex)
+  {
     indexes_ = multipleIndex | (wheelIndex << 23);
     sievingPrime_ = sievingPrime;
   }
   void setIndexes(uint32_t multipleIndex,
-                  uint32_t wheelIndex) {
+                  uint32_t wheelIndex)
+  {
     indexes_ = multipleIndex | (wheelIndex << 23);
   }
-  void setWheelIndex(uint32_t wheelIndex) {
+  void setWheelIndex(uint32_t wheelIndex)
+  {
     indexes_ = wheelIndex << 23;
   }
-  void setMultipleIndex(uint32_t multipleIndex) {
+  void setMultipleIndex(uint32_t multipleIndex)
+  {
     indexes_ |= multipleIndex;
   }
 private:
@@ -111,9 +118,9 @@ private:
 };
 
 /**
- * A Bucket is a container for sieving primes <= sqrt(n), it is
- * designed as a singly linked list, once there is no more space in
- * the current bucket a new bucket node is created ...
+ * The Bucket data structure is used to store sieving primes <= sqrt(n).
+ * It is designed as a singly linked list, once there is no more space
+ * in the current bucket a new bucket node is allocated ...
  * The Bucket data structure is due to Tomas Oliveira, see
  * http://www.ieeta.pt/~tos/software/prime_sieve.html
  */
@@ -123,25 +130,32 @@ public:
   // list::push_back( Bucket() ) adds an empty
   // bucket without unnecessary copying
   Bucket(const Bucket&) : current_(wheelPrimes_) { }
-  void reset() {
+  void reset()
+  {
     current_ = wheelPrimes_;
   }
-  WheelPrime* begin() {
+  WheelPrime* begin()
+  {
     return wheelPrimes_;
   }
-  WheelPrime* end() {
+  WheelPrime* end()
+  {
     return current_;
   }
-  Bucket* next() {
+  Bucket* next()
+  {
     return next_;
   }
-  void setNext(Bucket* next) {
+  void setNext(Bucket* next)
+  {
     next_ = next;
   }
-  bool isEmpty() const {
+  bool isEmpty() const
+  {
     return current_ == wheelPrimes_;
   }
-  bool hasNext() const {
+  bool hasNext() const
+  {
     return next_ != NULL;
   }
   /**
@@ -164,9 +178,9 @@ private:
 };
 
 /**
- * Lookup tables of WheelInit objects are used to calculate the first
- * multiple >= startNumber of each sieving prime that is not
- * divisible by any of the wheel's factors.
+ * Precomputed arrays of WheelInit objects are used to calculate the
+ * first multiple >= START of each sieving prime that is not
+ * divisible by any of the wheel's factors and its wheel index.
  * @see WheelFactorization.cpp
  */
 struct WheelInit {
@@ -175,11 +189,14 @@ struct WheelInit {
 };
 
 /**
- * In EratMedium and EratBig the wheel is implemented using a global
- * const array of WheelElement objects. The WheelElement data
- * structure is used to cross-off (unset bit) the current multiple of
- * sieving primes and to calculate their next multiple.
- * @see EratMedium::sieve()
+ * Precomputed arrays of WheelElement objects are used to add wheel
+ * factorization to the sieve of Eratosthenes.
+ * The WheelElement data structure holds the information needed to
+ * unset the bit within the SieveOfEratosthenes array corresponding to
+ * the current multiple of each sieving prime, a factor used to
+ * calculate the prime's next multiple and an offset used to calculate
+ * its next wheel index.
+ * @see EratMedium::sieve(), EratBig::sieve()
  */
 struct WheelElement {
   WheelElement(uint8_t _unsetBit,
@@ -191,35 +208,35 @@ struct WheelElement {
     correct(_correct),
     next(_next) { }
   /**
-   * Bitmask used with the '&' operator to unset the bit within the
-   * SieveOfEratosthenes array corresponding to the current multiple
-   * of a WheelPrime object.
+   * Bitmask used with the '&' operator to unset the bit corresponding
+   * to the current multiple of a WheelPrime object.
    */
   uint8_t unsetBit;
   /**
-   * Factor used to calculate the next multiple of WheelPrime objects
+   * Factor used to calculate the next multiple of a WheelPrime object
    * that is not divisible by any of the wheel factors (e.g. not a
    * multiple of 2, 3, and 5 for a modulo 30 wheel).
    */
   uint8_t nextMultipleFactor;
   /**
-   * Overflow needed to correct the next multiple offset i.e.
-   * multipleIndex += prime * nextMultipleFactor + correct;
+   * Overflow needed to correct (because of sievingPrime = prime / 30)
+   * the next multiple offset i.e.
+   * multipleIndex += sievingPrime * nextMultipleFactor + correct;
    */
   uint8_t correct;
   /**
-   * Offset that is used to calculate the next wheel index of
-   * WheelPrime objects i.e. wheelIndex += next;
+   * Offset that is used to calculate the next wheel index of a
+   * WheelPrime object i.e. wheelIndex += next;
    */
    int8_t next;
 };
 
 /**
  * The abstract Wheel class provides functionality needed to use wheel
- * factorization with the sieve of Eratosthenes. Via template
- * arguments it is possible to build different types of Wheel classes
- * e.g. Modulo30Wheel_t and Modulo210Wheel_t. The EratSmall,
+ * factorization with the sieve of Eratosthenes. The EratSmall,
  * EratMedium and EratBig classes are derived from Wheel.
+ * Via template arguments it is possible to build different types of
+ * Wheel classes e.g. Modulo30Wheel_t and Modulo210Wheel_t. 
  */
 template<uint32_t            WHEEL_MODULO,
          uint32_t            WHEEL_SIZE,
@@ -233,7 +250,8 @@ private:
   Wheel(const Wheel&);
   Wheel& operator=(const Wheel&);
 protected:
-  Wheel(const SieveOfEratosthenes& soe) : soe_(soe) {
+  Wheel(const SieveOfEratosthenes& soe) : soe_(soe)
+  {
     uint64_t maxSievingPrime = UINT32_MAX;
     uint64_t maxInitFactor   = WHEEL_INIT[2].nextMultipleFactor + 1;
     uint64_t limit           = UINT64_MAX - maxSievingPrime * maxInitFactor;
@@ -247,67 +265,69 @@ protected:
     }
     // max(sieveSize) = max(WheelPrime::getMultipleIndex()) + 1 = 2^23
     if (soe_.getSieveSize() > (1U << 23))
-      throw std::overflow_error(
-          "Wheel: sieveSize must be <= 2^23, 8192 kilobytes.");
+      throw std::overflow_error("Wheel: sieveSize must be <= 2^23, 8192 kilobytes.");
   }
   ~Wheel() { }
   /**
-   * Used to initialize sieving primes <= sqrt(n) for use with wheel
-   * factorization. Calculates the first multiple >= start of prime
-   * that is not divisible by any of the wheel's prime factors (e.g.
-   * 2, 3 and 5 for a modulo 30 wheel) and the position within the
+   * Used to initialize sieving primes <= sqrt(n) for use with the
+   * segmented sieve of Eratosthenes with wheel factorization.
+   * Calculates the first multiple >= segmentLow of prime that is not
+   * divisible by any of the wheel's prime factors (e.g. 2, 3 and 5
+   * for a modulo 30 wheel) and the position within the
    * SieveOfEratosthenes array (multipleIndex) of that multiple and
    * its wheel index.
-   * @return true if the WheelPrime must be stored for sieving
-   *         else false.
+   * @return true  If the WheelPrime must be stored for sieving
+   *               (<= STOP) else false.
    */
   bool getWheelPrimeData(uint32_t* prime,
                          uint32_t* multipleIndex,
                          uint32_t* wheelIndex) const
   {
-    // '+ 6' is a correction for sieving primes of type i*30 + 31
+    // '+ 6' is a correction for sieving primes of type i * 30 + 31
     const uint64_t segmentLow = soe_.getSegmentLow() + 6;
     // calculate the first multiple > segmentLow of prime
     uint64_t quotient = segmentLow / *prime + 1;
     uint64_t multiple = *prime * quotient;
     if (multiple > soe_.getStop())
       return false;
-    const uint64_t primeSquared = isquare<uint64_t>(*prime);
-    // by theory prime^2 is the first multiple of
-    // prime that needs to be crossed-off
-    if (multiple < primeSquared) {
-      multiple = primeSquared;
+    const uint64_t square = isquare<uint64_t>(*prime);
+    // prime^2 is the first multiple of prime
+    // that needs to be crossed-off
+    if (multiple < square) {
+      multiple = square;
       quotient = *prime;
     }
-    const WheelInit& wheelInit = WHEEL_INIT[quotient % WHEEL_MODULO];
     // calculate the next multiple that is not divisible by any of the
     // wheel's primes (e.g. 2, 3 and 5 for a modulo 30 wheel)
-    multiple += static_cast<uint64_t>(*prime) * wheelInit.nextMultipleFactor;
+    multiple += static_cast<uint64_t>(*prime) * WHEEL_INIT[quotient % WHEEL_MODULO].nextMultipleFactor;
     if (multiple > soe_.getStop())
       return false;
     *multipleIndex = static_cast<uint32_t>((multiple - segmentLow) / 30);
-    *wheelIndex = wheelOffsets_[*prime % 30] + wheelInit.wheelIndex;
+    *wheelIndex = wheelOffsets_[*prime % 30] + WHEEL_INIT[quotient % WHEEL_MODULO].wheelIndex;
     *prime /= 30;
     return true;
   }
-  const WheelElement* wheel(uint32_t n) const {
+  const WheelElement* wheel(uint32_t n) const
+  {
     assert(n < WHEEL_SIZE * 8);
     return &WHEEL_ARRAY[n];
   }
 };
 
 /**
- * The wheelOffsets_ array helps to calculate the position of the
- * first multiple >= start within the WHEEL_ARRAY. There are 8
- * different types of sieving primes, one type for each bit of a byte
- * thus there are also 8 different offsets.
+ * The wheelOffsets_ array is used to calculate the index of the
+ * first multiple >= START within the WHEEL_ARRAY. In primesieve there
+ * are eight modulo 30 residue classes of sieving primes i.e.
+ * i * 30 + k with k = { 1, 7, 11, 13, 17, 19, 23, 29 }, thus there
+ * are also 8 wheel offsets. (In fact wheel30Array and wheel210Array
+ * contain 8 wheels, one for each residue class)
  */
 template<uint32_t            WHEEL_MODULO,
          uint32_t            WHEEL_SIZE,
          const WheelElement* WHEEL_ARRAY,
          const WheelInit*    WHEEL_INIT>
 const uint32_t
-    Wheel<WHEEL_MODULO, WHEEL_SIZE, WHEEL_ARRAY, WHEEL_INIT>::wheelOffsets_[30] = {
+Wheel<WHEEL_MODULO, WHEEL_SIZE, WHEEL_ARRAY, WHEEL_INIT>::wheelOffsets_[30] = {
         0xFF, 7 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF,           0xFF,
         0xFF, 0 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF, 1 * WHEEL_SIZE,
         0xFF, 2 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF, 3 * WHEEL_SIZE,
