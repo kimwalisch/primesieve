@@ -32,10 +32,21 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+/** 
+ * @file WheelFactorization.cpp
+ * @brief Contains precomputed arrays needed for wheel factorization.
+ *
+ * Wheel factorization is used to skip multiples of small primes to
+ * speed up the sieve of Eratosthenes.
+ * http://en.wikipedia.org/wiki/Wheel_factorization
+ */
+
 #include "WheelFactorization.h"
 #include "bits.h"
 
 namespace soe {
+
+/** @see WheelInit in WheelFactorization.h */
 
 const WheelInit wheel30Init[30] = {
   {1,  0}, {0,  0}, {5,  1}, {4,  1}, {3,  1}, {2,  1}, {1,  1}, {0,  1},
@@ -71,6 +82,14 @@ const WheelInit wheel210Init[210] = {
   {1, 44}, {0, 44}, {3, 45}, {2, 45}, {1, 45}, {0, 45}, {1, 46}, {0, 46},
   {9, 47}, {8, 47}, {7, 47}, {6, 47}, {5, 47}, {4, 47}, {3, 47}, {2, 47},
   {1, 47}, {0, 47}, };
+
+/**
+ * The wheel30Array and wheel210Array arrays contain 8 wheels, one for
+ * each modulo 30 residue class of sieving primes (i * 30 + k with
+ * k = { 7, 11, 13, 17, 19, 23, 29, 1 }), e.g. the wheel related to
+ * k = 13 is: index of 13 = 2 -> wheelArray[8*2] to wheelArray[8*2+WHEEL_SIZE-1]
+ * @see WheelElement in WheelFactorization.h
+ */
 
 const WheelElement wheel30Array[8*8] = {
   WheelElement(BIT0, 6, 1, 1), WheelElement(BIT4, 4, 1, 1), WheelElement(BIT3, 2, 0, 1),

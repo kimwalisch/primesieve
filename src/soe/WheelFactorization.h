@@ -182,6 +182,7 @@ private:
  * first multiple >= START of each sieving prime that is not
  * divisible by any of the wheel's factors and its wheel index.
  * @see WheelFactorization.cpp
+ * @see Wheel::getWheelPrimeData(...)
  */
 struct WheelInit {
   uint8_t nextMultipleFactor;
@@ -196,6 +197,7 @@ struct WheelInit {
  * the current multiple of each sieving prime, a factor used to
  * calculate the prime's next multiple and an offset used to calculate
  * its next wheel index.
+ * @see WheelFactorization.cpp
  * @see EratMedium::sieve(), EratBig::sieve()
  */
 struct WheelElement {
