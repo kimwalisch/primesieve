@@ -49,13 +49,15 @@ const uint32_t PreSieve::smallPrimes_[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29
 
 /**
  * Bitmasks used to unset bits corresponding to multiples in the
- * preSieved_ array. Each byte of preSieved_ holds the 8 values
+ * preSieved_ array. Each byte of preSieved_ holds the 8 numbers
  * i * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
  */
-const uint32_t PreSieve::unsetBits_[30] = {
+const uint32_t PreSieve::unsetBit_[30] =
+{
   BIT0, 0xFF, 0xFF, 0xFF, BIT1, 0xFF, BIT2, 0xFF, 0xFF, 0xFF,
   BIT3, 0xFF, BIT4, 0xFF, 0xFF, 0xFF, BIT5, 0xFF, 0xFF, 0xFF,
-  0xFF, 0xFF, BIT6, 0xFF, BIT7, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+  0xFF, 0xFF, BIT6, 0xFF, BIT7, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+};
 
 /**
  * Pre-sieve multiples of small primes <= limit to speed up
@@ -89,8 +91,8 @@ uint32_t PreSieve::getPrimeProduct(uint32_t limit) const {
 }
 
 /**
- * Allocate the preSieved_ array and remove the multiples (unset
- * corresponding bits) of small primes <= limit_ from it.
+ * Allocate the preSieved_ array and remove the multiples
+ * of small primes <= limit_ from it.
  */
 void PreSieve::initPreSieved() {
   static_assert(SieveOfEratosthenes::NUMBERS_PER_BYTE == 30, 
@@ -113,17 +115,17 @@ void PreSieve::initPreSieved() {
     // smallPrimes_[i] up to its primeProduct
     for (;;) {
       if (multiple >= primeProduct) break;
-      preSieved_[multiple / 30] &= unsetBits_[multiple % 30];
+      preSieved_[multiple / 30] &= unsetBit_[multiple % 30];
       multiple += primeX4;
       if (multiple >= primeProduct) break;
-      preSieved_[multiple / 30] &= unsetBits_[multiple % 30];
+      preSieved_[multiple / 30] &= unsetBit_[multiple % 30];
       multiple += primeX2;
     }
   }
 }
 
 /**
- * Pre-sieve multiples of small primes <= getLimit() (e.g. 19) to
+ * Pre-sieve multiples of small primes <= limit_ (default = 19) to
  * speed up the sieve of Eratosthenes.
  * @see PreSieve.h for more information.
  */
@@ -132,8 +134,8 @@ void PreSieve::doIt(uint8_t* sieve,
                     uint64_t segmentLow) const
 {
   // map segmentLow to the preSieved_ array
-  uint32_t offset = static_cast<uint32_t>(segmentLow % primeProduct_) / 
-      SieveOfEratosthenes::NUMBERS_PER_BYTE;
+  uint32_t remainder = static_cast<uint32_t>(segmentLow % primeProduct_);
+  uint32_t offset = remainder / SieveOfEratosthenes::NUMBERS_PER_BYTE;
   uint32_t sizeLeft = size_ - offset;
 
   if (sizeLeft > sieveSize) {
@@ -143,9 +145,9 @@ void PreSieve::doIt(uint8_t* sieve,
     // copy the last remaining bytes at the end of preSieved_
     // to the beginning of the sieve array
     std::memcpy(sieve, &preSieved_[offset], sizeLeft);
-    offset = sizeLeft;
+
     // restart copying at the beginning of preSieved_
-    for (; offset + size_ < sieveSize; offset += size_) {
+    for (offset = sizeLeft; offset + size_ < sieveSize; offset += size_) {
       std::memcpy(&sieve[offset], preSieved_, size_);
     }
     std::memcpy(&sieve[offset], preSieved_, sieveSize - offset);
