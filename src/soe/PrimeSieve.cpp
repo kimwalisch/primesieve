@@ -129,7 +129,6 @@ bool PrimeSieve::isFlag(uint32_t flag) const {
  * @pre start < (2^64-1) - (2^32-1) * 10
  */
 void PrimeSieve::setStart(uint64_t start) {
-  // EratMedium & EratBig stop number limit
   if (start >= UINT64_MAX - UINT32_MAX * UINT64_C(10))
     throw std::invalid_argument("START must be < (2^64-1) - (2^32-1) * 10");
   start_ = start;
@@ -140,7 +139,6 @@ void PrimeSieve::setStart(uint64_t start) {
  * @pre stop < (2^64-1) - (2^32-1) * 10
  */
 void PrimeSieve::setStop(uint64_t stop) {
-  // EratMedium & EratBig stop number limit
   if (stop >= UINT64_MAX - UINT32_MAX * UINT64_C(10))
     throw std::invalid_argument("STOP must be < (2^64-1) - (2^32-1) * 10");
   stop_ = stop;
