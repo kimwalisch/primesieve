@@ -287,11 +287,10 @@ void PrimeSieve::sieve() {
     PrimeNumberFinder finder(*this);
     if (finder.needGenerator()) {
       // fast segmented SieveOfEratosthenes object that generates the
-      // primes up to sqrt(stop_) needed for sieving by the
-      // PrimeNumberFinder
+      // primes up to sqrt(stop_) needed for sieving by 'finder'
       PrimeNumberGenerator generator(finder);
-      // sieve of Eratosthenes implementation that generates the primes
-      // up to stop_^0.25 for the PrimeNumberGenerator
+      // tiny sieve of Eratosthenes implementation that generates the
+      // primes up to stop_^0.25 needed for sieving by 'generator'
       uint32_t N = generator.getSquareRoot();
       std::vector<uint32_t> isPrime(N / 32 + 1, 0xAAAAAAAAU);
       for (uint32_t i = 3; i * i <= N; i += 2) {
