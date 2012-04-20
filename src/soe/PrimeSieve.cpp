@@ -246,19 +246,15 @@ void PrimeSieve::doSmallPrime(uint32_t minPrime,
                               uint32_t index,
                               const std::string& primeStr)
 {
-  if (minPrime >= start_ && maxPrime <= stop_) {
+  if (start_ <= minPrime && maxPrime <= stop_) {
     // only one thread at a time may access this code section
     LockGuard lock(*this);
-    if (index == 0 && testFlags(CALLBACK_FLAGS)) {
-      uint32_t prime = primeStr[0] - '0';
-      if (isFlag(CALLBACK32_PRIMES))     callback32_(prime);
-      if (isFlag(CALLBACK32_OOP_PRIMES)) callback32_OOP_(prime, cbObj_);
-      if (isFlag(CALLBACK64_PRIMES))     callback64_(prime);
-      if (isFlag(CALLBACK64_OOP_PRIMES)) callback64_OOP_(prime, cbObj_);
-    } else {
-      if (isFlag(COUNT_PRIMES << index)) counts_[index]++;
-      if (isFlag(PRINT_PRIMES << index)) std::cout << primeStr << '\n';
-    }
+    if (isFlag(CALLBACK32_PRIMES)     && index == 0) callback32_(minPrime);
+    if (isFlag(CALLBACK32_OOP_PRIMES) && index == 0) callback32_OOP_(minPrime, cbObj_);
+    if (isFlag(CALLBACK64_PRIMES)     && index == 0) callback64_(minPrime);
+    if (isFlag(CALLBACK64_OOP_PRIMES) && index == 0) callback64_OOP_(minPrime, cbObj_);
+    if (isFlag(COUNT_PRIMES << index)) counts_[index]++;
+    if (isFlag(PRINT_PRIMES << index)) std::cout << primeStr << '\n';
   }
 }
 
