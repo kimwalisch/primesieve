@@ -58,7 +58,9 @@ public:
     cancel_sieving() : 
       std::runtime_error("PrimeSieve: sieving canceled.") { }
   };
-  enum { COUNTS_SIZE = 7 };
+  enum {
+    COUNTS_SIZE = 7
+  };
   /** Public flags for sieve(). */
   enum {
     COUNT_PRIMES      = 1 << 0,
@@ -68,8 +70,6 @@ public:
     COUNT_QUINTUPLETS = 1 << 4,
     COUNT_SEXTUPLETS  = 1 << 5,
     COUNT_SEPTUPLETS  = 1 << 6,
-    COUNT_KTUPLETS    = COUNT_SEPTUPLETS * 2 - 1 - (COUNT_TWINS - 1),
-    COUNT_FLAGS       = COUNT_PRIMES + COUNT_KTUPLETS,
     PRINT_PRIMES      = 1 << 7,
     PRINT_TWINS       = 1 << 8,
     PRINT_TRIPLETS    = 1 << 9,
@@ -77,9 +77,8 @@ public:
     PRINT_QUINTUPLETS = 1 << 11,
     PRINT_SEXTUPLETS  = 1 << 12,
     PRINT_SEPTUPLETS  = 1 << 13,
-    PRINT_KTUPLETS    = PRINT_SEPTUPLETS * 2 - 1 - (PRINT_TWINS - 1),
     CALCULATE_STATUS  = 1 << 14,
-    PRINT_STATUS      =(1 << 15) + CALCULATE_STATUS
+    PRINT_STATUS      = 1 << 15
   };
   PrimeSieve();
   PrimeSieve(PrimeSieve*);
@@ -93,8 +92,12 @@ public:
   double getTimeElapsed() const;
   double getStatus() const;
   uint32_t getFlags() const;
-  bool testFlags(uint32_t) const;
   bool isFlag(uint32_t) const;
+  bool isFlags(uint32_t, uint32_t) const;
+  bool isCount() const;
+  bool isPrint() const;
+  bool isGenerate() const;
+  bool isStatus() const;
 
   /** sieve() configuration setters. */
   void setStart(uint64_t);
@@ -146,11 +149,9 @@ protected:
   /** Internal PrimeSieve flags (bits >= 20). */
   enum {
     CALLBACK32_PRIMES     = 1 << 20,
-    CALLBACK32_OOP_PRIMES = 1 << 21,
-    CALLBACK64_PRIMES     = 1 << 22,
-    CALLBACK64_OOP_PRIMES = 1 << 23,
-    CALLBACK_FLAGS        = CALLBACK64_OOP_PRIMES * 2 - 1 - (CALLBACK32_PRIMES - 1),
-    GENERATE_FLAGS        = CALLBACK_FLAGS + PRINT_PRIMES + PRINT_KTUPLETS
+    CALLBACK64_PRIMES     = 1 << 21,
+    CALLBACK32_OOP_PRIMES = 1 << 22,
+    CALLBACK64_OOP_PRIMES = 1 << 23
   };
   /** Sieve the primes within [start_, stop_]. */
   uint64_t start_;
@@ -161,7 +162,7 @@ protected:
   /** Time elapsed in seconds of sieve(). */
   double timeElapsed_;
   void reset();
-  virtual void calcStatus(uint32_t);
+  virtual void updateStatus(uint32_t);
   virtual void set_lock();
   virtual void unset_lock();
   template <typename T>

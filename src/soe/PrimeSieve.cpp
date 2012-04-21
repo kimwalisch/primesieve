@@ -84,7 +84,8 @@ void PrimeSieve::reset() {
   interval_ = static_cast<double>(stop_ - start_ + 1);
   status_ = -1.0;
   timeElapsed_ = 0.0;
-  calcStatus(0);
+  if (isStatus())
+    updateStatus(0);
 }
 
 uint64_t PrimeSieve::getStart()         const { return start_; }
@@ -122,13 +123,30 @@ uint32_t PrimeSieve::getFlags() const {
   return flags_ & ((1U << 20) - 1);
 }
 
-/** @return true  IF any bit of flags is set, else false. */
-bool PrimeSieve::testFlags(uint32_t flags) const {
-  return (flags_ & flags) != 0; 
-}
-
 bool PrimeSieve::isFlag(uint32_t flag) const {
   return (flags_ & flag) == flag; 
+}
+
+/** @return true  If any bits in the range [first, last] are set. */
+bool PrimeSieve::isFlags(uint32_t first, uint32_t last) const {
+  return (flags_ & (last * 2 - first)) != 0;
+}
+
+bool PrimeSieve::isCount() const {
+  return isFlags(COUNT_PRIMES, COUNT_SEPTUPLETS);
+}
+
+/** For convenience the PRINT_STATUS flag is not included. */
+bool PrimeSieve::isPrint() const {
+  return isFlags(PRINT_PRIMES, PRINT_SEPTUPLETS);
+}
+
+bool PrimeSieve::isGenerate() const {
+  return isFlags(CALLBACK32_PRIMES, CALLBACK64_OOP_PRIMES) || isPrint();
+}
+
+bool PrimeSieve::isStatus() const {
+  return isFlags(CALCULATE_STATUS, PRINT_STATUS);
 }
 
 /**
@@ -223,9 +241,9 @@ void PrimeSieve::unset_lock() {
  * and print it to the standard output.
  * @param segment  The interval size of the processed segment.
  */
-void PrimeSieve::calcStatus(uint32_t segment) {
+void PrimeSieve::updateStatus(uint32_t segment) {
   if (parent_ != NULL)
-    parent_->calcStatus(segment);
+    parent_->updateStatus(segment);
   else {
     sumSegments_ += segment;
     int old = static_cast<int>(status_);
@@ -306,9 +324,9 @@ void PrimeSieve::sieve() {
     finder.finish();
   }
 
-  // ensures status_ = 100.0 percent
-  calcStatus(10);
   timeElapsed_ = static_cast<double>(std::clock() - t1) / CLOCKS_PER_SEC;
+  if (isStatus())
+    updateStatus(10);
 }
 
 /**

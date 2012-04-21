@@ -111,8 +111,9 @@ void ParallelPrimeSieve::setNumThreads(int numThreads) {
  * start_, stop_ and flags_.
  */
 int ParallelPrimeSieve::getIdealNumThreads() const {
-  // 1 thread generates primes in arithmetic order
-  if (testFlags(GENERATE_FLAGS))
+  // by default 1 thread is used to generate primes in arithmetic
+  // order but multiple threads are used for counting
+  if (isGenerate())
     return 1;
   // each thread sieves at least an interval of size x^0.5/5
   // but not smaller than MIN_THREAD_INTERVAL
@@ -135,10 +136,10 @@ void ParallelPrimeSieve::unset_lock() {
  * Calculate the current status in percent of sieve().
  * @param segment  The interval size of the processed segment
  */
-void ParallelPrimeSieve::calcStatus(uint32_t segment) {
-  #pragma omp critical (calcStatus)
+void ParallelPrimeSieve::updateStatus(uint32_t segment) {
+  #pragma omp critical (status)
   {
-    PrimeSieve::calcStatus(segment);
+    PrimeSieve::updateStatus(segment);
     // communicate the current status via shared
     // memory to the Qt GUI process
     if (shm_ != NULL)

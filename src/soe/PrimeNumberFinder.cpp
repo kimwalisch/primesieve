@@ -64,17 +64,17 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
       ps.getPreSieveLimit(),
       ps.getSieveSize()),
   ps_(ps),
-  kTupletByteCounts_(NULL)
+  kCounts_(NULL)
 {
-  if (ps_.testFlags(ps_.COUNT_KTUPLETS))
-    initLookupTables();
+  if (ps_.isFlags(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
+    initCounts();
 }
 
 PrimeNumberFinder::~PrimeNumberFinder() {
-  if (kTupletByteCounts_ != NULL) {
+  if (kCounts_ != NULL) {
     for (int i = 0; i < 6; i++)
-      delete[] kTupletByteCounts_[i];
-    delete[] kTupletByteCounts_;
+      delete[] kCounts_[i];
+    delete[] kCounts_;
   }
 }
 
@@ -90,19 +90,19 @@ bool PrimeNumberFinder::needGenerator() const {
  * Initialize the lookup tables needed to count prime k-tuplets
  * (twin primes, prime triplets, ...) per byte.
  */
-void PrimeNumberFinder::initLookupTables() {
-  kTupletByteCounts_ = new uint32_t*[6];
+void PrimeNumberFinder::initCounts() {
+  kCounts_ = new uint32_t*[6];
   for (uint32_t i = 0; i < 6; i++) {
-    kTupletByteCounts_[i] = NULL;
+    kCounts_[i] = NULL;
     if (ps_.isFlag(ps_.COUNT_TWINS << i)) {
-      kTupletByteCounts_[i] = new uint32_t[256];
+      kCounts_[i] = new uint32_t[256];
       for (uint32_t j = 0; j < 256; j++) {
         uint32_t bitmaskCount = 0;
         for (const uint32_t* b = kTupletBitmasks_[i]; *b <= j; b++) {
           if ((j & *b) == *b)
             bitmaskCount++;
         }
-        kTupletByteCounts_[i][j] = bitmaskCount;
+        kCounts_[i][j] = bitmaskCount;
       }
     }
   }
@@ -115,12 +115,12 @@ void PrimeNumberFinder::initLookupTables() {
  * @see SieveOfEratosthenes::sieve(uint32_t)
  */
 void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint32_t sieveSize) {
-  if (ps_.testFlags(ps_.COUNT_FLAGS))
+  if (ps_.isCount())
     count(sieve, sieveSize);
-  if (ps_.testFlags(ps_.GENERATE_FLAGS))
+  if (ps_.isGenerate())
     generate(sieve, sieveSize);
-  if (ps_.isFlag(ps_.CALCULATE_STATUS))
-    ps_.calcStatus(sieveSize * NUMBERS_PER_BYTE);
+  if (ps_.isStatus())
+    ps_.updateStatus(sieveSize * NUMBERS_PER_BYTE);
 }
 
 /**
@@ -146,7 +146,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
     if (ps_.isFlag(ps_.COUNT_TWINS << i)) {
       uint32_t kCount = 0;
       for (uint32_t j = 0; j < sieveSize; j++)
-        kCount += kTupletByteCounts_[i][sieve[j]];
+        kCount += kCounts_[i][sieve[j]];
       ps_.counts_[i+1] += kCount;
     }
   }
@@ -157,7 +157,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  * triplets, ...) within the current segment.
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
-  if (ps_.testFlags(ps_.PRINT_KTUPLETS)) {
+  if (ps_.isFlags(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS)) {
     const uint64_t segmentLow = getSegmentLow();
     // i = 0 twins, i = 1 triplets, ...
     uint32_t i = 0;

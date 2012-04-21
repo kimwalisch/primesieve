@@ -54,6 +54,7 @@ void test();
 #include <string>
 #include <vector>
 #include <iomanip> /* std::setw(int) */
+#include <algorithm>
 
 namespace {
 
@@ -238,9 +239,9 @@ int main(int argc, char* argv[]) {
     if (threads   != -1) pps.setNumThreads(threads);
 
     // set default settings
-    if (!pps.testFlags(pps.COUNT_FLAGS | pps.PRINT_PRIMES | pps.PRINT_KTUPLETS))
+    if (!pps.isPrint() && !pps.isCount())
       pps.addFlags(pps.COUNT_PRIMES);
-    if (!pps.testFlags(pps.PRINT_PRIMES | pps.PRINT_KTUPLETS) && !quietMode)
+    if (!pps.isPrint() && !quietMode)
       pps.addFlags(pps.PRINT_STATUS);
 
     if (!quietMode) {
@@ -255,24 +256,24 @@ int main(int argc, char* argv[]) {
 
     if (pps.isFlag(pps.PRINT_STATUS))
       std::cout << std::endl;
-    else if (pps.testFlags(pps.COUNT_FLAGS) && pps.testFlags(pps.PRINT_PRIMES | pps.PRINT_KTUPLETS))
+    if (pps.isPrint() && pps.isCount())
       std::cout << std::endl;
 
     // get max string size
-    std::size_t size = (quietMode) ? 0 : 12;
+    std::size_t size = 0;
     for (int i = 0; i < 7; i++) {
-      if (pps.isFlag(pps.COUNT_PRIMES << i) && size < primes[i].size())
-        size = primes[i].size();
+      if (pps.isFlag(pps.COUNT_PRIMES << i))
+        size = std::max(size, primes[i].size());
     }
-    // print prime count results
     int width = static_cast<int>(size);
+    // print prime count results
     for (int32_t i = 0; i < 7; i++) {
       if (pps.isFlag(pps.COUNT_PRIMES << i))
         std::cout << std::setw(width)
                   << primes[i] << " : " << pps.getCounts(i)
                   << std::endl;
     }
-    if (!pps.testFlags(pps.PRINT_PRIMES | pps.PRINT_KTUPLETS)) {
+    if (!pps.isPrint()) {
       std::cout << std::setw(width)
                 << "Time elapsed" << " : " << pps.getTimeElapsed() << " sec"
                 << std::endl;

@@ -64,8 +64,8 @@ private:
    * Lookup tables that give the count of prime k-tuplets
    * (twin primes, prime triplets, ...) per byte.
    */
-  uint32_t** kTupletByteCounts_;
-  void initLookupTables();
+  uint32_t** kCounts_;
+  void initCounts();
   virtual void segmentProcessed(const uint8_t*, uint32_t);
   void count(const uint8_t*, uint32_t);
   void generate(const uint8_t*, uint32_t);

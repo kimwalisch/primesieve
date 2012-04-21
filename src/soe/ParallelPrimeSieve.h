@@ -93,7 +93,7 @@ private:
   int getIdealNumThreads() const;
 #if defined(_OPENMP)
   omp_lock_t lock_;
-  virtual void calcStatus(uint32_t);
+  virtual void updateStatus(uint32_t);
   virtual void set_lock();
   virtual void unset_lock();
   uint64_t getBalancedInterval(int) const;
