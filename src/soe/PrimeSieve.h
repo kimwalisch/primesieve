@@ -82,7 +82,7 @@ public:
     PRINT_STATUS      =(1 << 15) + CALCULATE_STATUS
   };
   PrimeSieve();
-  PrimeSieve(PrimeSieve&);
+  PrimeSieve(PrimeSieve*);
   virtual ~PrimeSieve() { }
 
   /** sieve() configuration getters. */

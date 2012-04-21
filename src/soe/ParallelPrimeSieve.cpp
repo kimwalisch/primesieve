@@ -191,7 +191,7 @@ void ParallelPrimeSieve::sieve() {
     for (uint64_t n = align; n < stop_; n += balanced) {
       uint64_t threadStart = (n == align) ? start_ : n;
       uint64_t threadStop = std::min(n + balanced, stop_);
-      PrimeSieve ps(*this);
+      PrimeSieve ps(this);
       ps.sieve(threadStart, threadStop);
       count0 += ps.getCounts(0);
       count1 += ps.getCounts(1);

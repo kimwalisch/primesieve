@@ -65,18 +65,26 @@ PrimeSieve::PrimeSieve() :
  * and threads to sieve primes in parallel.
  * @see ParallelPrimeSieve::sieve()
  */
-PrimeSieve::PrimeSieve(PrimeSieve& parent) :
-  preSieveLimit_(parent.preSieveLimit_),
-  sieveSize_(parent.sieveSize_),
-  flags_(parent.flags_),
-  parent_(&parent),
-  callback32_(parent.callback32_),
-  callback64_(parent.callback64_),
-  callback32_OOP_(parent.callback32_OOP_),
-  callback64_OOP_(parent.callback64_OOP_),
-  obj_(parent.obj_)
-{
-  reset();
+PrimeSieve::PrimeSieve(PrimeSieve* parent) :
+  preSieveLimit_(parent->preSieveLimit_),
+  sieveSize_(parent->sieveSize_),
+  flags_(parent->flags_),
+  parent_(parent),
+  callback32_(parent->callback32_),
+  callback64_(parent->callback64_),
+  callback32_OOP_(parent->callback32_OOP_),
+  callback64_OOP_(parent->callback64_OOP_),
+  obj_(parent->obj_)
+{ }
+
+void PrimeSieve::reset() {
+  sumSegments_ = 0;
+  for (int i = 0; i < COUNTS_SIZE; i++)
+    counts_[i] = 0;
+  interval_ = static_cast<double>(stop_ - start_ + 1);
+  status_ = -1.0;
+  timeElapsed_ = 0.0;
+  calcStatus(0);
 }
 
 uint64_t PrimeSieve::getStart()         const { return start_; }
@@ -198,16 +206,6 @@ void PrimeSieve::addFlags(uint32_t flags) {
   if (flags >= (1U << 20))
     throw std::invalid_argument("invalid flags");
   flags_ |= flags;
-}
-
-void PrimeSieve::reset() {
-  sumSegments_ = 0;
-  for (int i = 0; i < COUNTS_SIZE; i++)
-    counts_[i] = 0;
-  interval_ = static_cast<double>(stop_ - start_ + 1);
-  status_ = -1.0;
-  timeElapsed_ = 0.0;
-  calcStatus(0);
 }
 
 void PrimeSieve::set_lock() {
