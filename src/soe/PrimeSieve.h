@@ -82,10 +82,10 @@ public:
     PRINT_STATUS      =(1 << 15) + CALCULATE_STATUS
   };
   PrimeSieve();
-  PrimeSieve(PrimeSieve*);
+  PrimeSieve(PrimeSieve&);
   virtual ~PrimeSieve() { }
 
-  /** sieve() parameter getters. */
+  /** sieve() configuration getters. */
   uint64_t getStart() const;
   uint64_t getStop() const;
   uint32_t getPreSieveLimit() const;
@@ -96,7 +96,7 @@ public:
   bool testFlags(uint32_t) const;
   bool isFlag(uint32_t) const;
 
-  /** sieve() parameter setters. */
+  /** sieve() configuration setters. */
   void setStart(uint64_t);
   void setStop(uint64_t);
   void setPreSieveLimit(uint32_t);
@@ -110,10 +110,10 @@ public:
   virtual void sieve();
 
   /** Prime number generation methods. */
-  void generatePrimes(uint32_t, uint32_t, void (*callback)(uint32_t));
-  void generatePrimes(uint32_t, uint32_t, void (*callback)(uint32_t, void*), void* cbObj);
-  void generatePrimes(uint64_t, uint64_t, void (*callback)(uint64_t));
-  void generatePrimes(uint64_t, uint64_t, void (*callback)(uint64_t, void*), void* cbObj);
+  void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t));
+  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
+  void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t, void*), void*);
+  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
 
   /** Count member functions. */
   uint64_t getPrimeCount(uint64_t, uint64_t);
@@ -196,8 +196,8 @@ private:
   double status_;
   /** Callback functions for use with generatePrimes(). */
   void (*callback32_)(uint32_t);
-  void (*callback32_OOP_)(uint32_t, void*);
   void (*callback64_)(uint64_t);
+  void (*callback32_OOP_)(uint32_t, void*);
   void (*callback64_OOP_)(uint64_t, void*);
   void* cbObj_;
   void doSmallPrime(uint32_t, uint32_t, uint32_t, const std::string&);

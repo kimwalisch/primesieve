@@ -61,23 +61,21 @@ PrimeSieve::PrimeSieve() :
 }
 
 /**
- * ParallelPrimeSieve uses multiple PrimeSieve objects and threads to
- * sieve primes in parallel.
+ * Used by ParallelPrimeSieve which uses multiple PrimeSieve objects
+ * and threads to sieve primes in parallel.
  * @see ParallelPrimeSieve::sieve()
  */
-PrimeSieve::PrimeSieve(PrimeSieve* parent) :
-  preSieveLimit_(parent->preSieveLimit_),
-  sieveSize_(parent->sieveSize_),
-  flags_(parent->flags_),
-  parent_(parent)
+PrimeSieve::PrimeSieve(PrimeSieve& parent) :
+  preSieveLimit_(parent.preSieveLimit_),
+  sieveSize_(parent.sieveSize_),
+  flags_(parent.flags_),
+  parent_(&parent),
+  callback32_(parent.callback32_),
+  callback64_(parent.callback64_),
+  callback32_OOP_(parent.callback32_OOP_),
+  callback64_OOP_(parent.callback64_OOP_),
+  cbObj_(parent.cbObj_)
 {
-  if (testFlags(CALLBACK_FLAGS)) {
-    callback32_     = parent->callback32_;
-    callback32_OOP_ = parent->callback32_OOP_;
-    callback64_     = parent->callback64_;
-    callback64_OOP_ = parent->callback64_OOP_;
-    cbObj_          = parent->cbObj_;
-  }
   reset();
 }
 
@@ -116,6 +114,7 @@ uint32_t PrimeSieve::getFlags() const {
   return flags_ & ((1U << 20) - 1);
 }
 
+/** @return true  IF any bit of flags is set, else false. */
 bool PrimeSieve::testFlags(uint32_t flags) const {
   return (flags_ & flags) != 0; 
 }
@@ -250,8 +249,8 @@ void PrimeSieve::doSmallPrime(uint32_t minPrime,
     // only one thread at a time may access this code section
     LockGuard lock(*this);
     if (isFlag(CALLBACK32_PRIMES)     && index == 0) callback32_(minPrime);
-    if (isFlag(CALLBACK32_OOP_PRIMES) && index == 0) callback32_OOP_(minPrime, cbObj_);
     if (isFlag(CALLBACK64_PRIMES)     && index == 0) callback64_(minPrime);
+    if (isFlag(CALLBACK32_OOP_PRIMES) && index == 0) callback32_OOP_(minPrime, cbObj_);
     if (isFlag(CALLBACK64_OOP_PRIMES) && index == 0) callback64_OOP_(minPrime, cbObj_);
     if (isFlag(COUNT_PRIMES << index)) counts_[index]++;
     if (isFlag(PRINT_PRIMES << index)) std::cout << primeStr << '\n';
@@ -346,6 +345,17 @@ void PrimeSieve::generatePrimes(uint32_t start,
   sieve(start, stop);
 }
 
+void PrimeSieve::generatePrimes(uint64_t start, 
+                                uint64_t stop,
+                                void (*callback)(uint64_t)) {
+  if (callback == NULL)
+    throw std::invalid_argument("callback must not be NULL");
+  callback64_ = callback;
+  flags_ = CALLBACK64_PRIMES;
+  setPreSieveLimit(13);
+  sieve(start, stop);
+}
+
 void PrimeSieve::generatePrimes(uint32_t start, 
                                 uint32_t stop,
                                 void (*callback)(uint32_t, void*), void* cbObj) {
@@ -354,17 +364,6 @@ void PrimeSieve::generatePrimes(uint32_t start,
   callback32_OOP_ = callback;
   cbObj_ = cbObj;
   flags_ = CALLBACK32_OOP_PRIMES;
-  setPreSieveLimit(13);
-  sieve(start, stop);
-}
-
-void PrimeSieve::generatePrimes(uint64_t start, 
-                                uint64_t stop,
-                                void (*callback)(uint64_t)) {
-  if (callback == NULL)
-    throw std::invalid_argument("callback must not be NULL");
-  callback64_ = callback;
-  flags_ = CALLBACK64_PRIMES;
   setPreSieveLimit(13);
   sieve(start, stop);
 }
