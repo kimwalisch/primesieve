@@ -1,9 +1,9 @@
-May, 29 2011
+April 21, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-I have successfully tested the primesieve-2.2 sources (GCC 4.2,
-Mac OS X 10.6) with Valgrind 3.7.0. Valgrind is an analysis tool for
+I have successfully tested the primesieve-2.2 sources using Valgrind
+3.7.0 (GCC 4.2, Mac OS X 10.6). Valgrind is an analysis tool for
 Unix-like operating systems that can automatically detect many memory
 management bugs in programs (http://valgrind.org/). Here is the
 terminal log:
