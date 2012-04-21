@@ -63,7 +63,7 @@ II. Examples
 
   class Foo {
   public:
-    void generatePrimes(unsigned int x) {
+    void primes(unsigned int x) {
       PrimeSieve ps;
       ps.generatePrimes(0, x, store, (void*) this);
     }
@@ -77,7 +77,7 @@ II. Examples
 
   int main() {
     Foo foo;
-    foo.generatePrimes(1000);
+    foo.primes(1000);
     return 0;
   }
 
