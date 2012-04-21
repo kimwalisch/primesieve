@@ -21,6 +21,7 @@
 #define PRIMESIEVEGUI_H
 
 #include "PrimeSieveGUI_const.h"
+#include "../soe/ParallelPrimeSieve.h"
 
 #include <QMainWindow>
 #include <QtGlobal>
@@ -67,6 +68,16 @@ private slots:
 private:
   /// Qt GUI object
   Ui::PrimeSieveGUI* ui;
+
+  enum {
+    COUNTS_SIZE      = ParallelPrimeSieve::COUNTS_SIZE,
+    COUNT_PRIMES     = ParallelPrimeSieve::COUNT_PRIMES,
+    COUNT_KTUPLETS   = ParallelPrimeSieve::COUNT_SEPTUPLETS * 2 - ParallelPrimeSieve::COUNT_TWINS,
+    COUNT_FLAGS      = ParallelPrimeSieve::COUNT_SEPTUPLETS * 2 - ParallelPrimeSieve::COUNT_PRIMES,
+    PRINT_FLAGS      = ParallelPrimeSieve::PRINT_SEPTUPLETS * 2 - ParallelPrimeSieve::PRINT_PRIMES,
+    PRINT_PRIMES     = ParallelPrimeSieve::PRINT_PRIMES,
+    CALCULATE_STATUS = ParallelPrimeSieve::CALCULATE_STATUS,
+  }
 
   void initGUI();
   void initConnections();

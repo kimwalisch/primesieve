@@ -205,10 +205,8 @@ void PrimeSieveGUI::on_sieveButton_clicked() {
   ui->sieveButton->setDisabled(true);
   ui->cancelButton->setEnabled(true);
   try {
-    flags_ = this->getMenuSettings() | ParallelPrimeSieve::CALCULATE_STATUS;
-    if ((flags_ & (ParallelPrimeSieve::COUNT_FLAGS | 
-                   ParallelPrimeSieve::PRINT_PRIMES | 
-                   ParallelPrimeSieve::PRINT_KTUPLETS)) == 0)
+    flags_ = this->getMenuSettings() | CALCULATE_STATUS;
+    if ((flags_ & (COUNT_FLAGS | PRINT_FLAGS)) == 0)
       throw std::invalid_argument("Nothing to do, no count or print options selected.");
 
     quint64 lowerBound = this->getNumber(ui->lowerBoundLineEdit->text());
@@ -224,7 +222,7 @@ void PrimeSieveGUI::on_sieveButton_clicked() {
     // start a new process for sieving (avoids cancel
     // trouble with multiple threads)
     primeSieveProcess_ = new PrimeSieveProcess(this);
-    if (flags_ & (ParallelPrimeSieve::PRINT_PRIMES | ParallelPrimeSieve::PRINT_KTUPLETS))
+    if (flags_ & PRINT_FLAGS)
       connect(primeSieveProcess_, SIGNAL(readyReadStandardOutput()),
           this, SLOT(printProcessOutput()));
     connect(primeSieveProcess_, SIGNAL(finished(int, QProcess::ExitStatus)),
@@ -320,9 +318,8 @@ void PrimeSieveGUI::printResults() {
 
   // hack to get the count results aligned using tabs
   QString maxSizeText;
-  for (int i = 0; i < ParallelPrimeSieve::COUNTS_SIZE; i++) {
-    if ((flags_ & (ParallelPrimeSieve::COUNT_PRIMES << i)) &&
-        maxSizeText.size() < primeText_[i].size())
+  for (int i = 0; i < COUNTS_SIZE; i++) {
+    if ((flags_ & (COUNT_PRIMES << i)) && maxSizeText.size() < primeText_[i].size())
       maxSizeText = primeText_[i];
   }
   ui->textEdit->insertPlainText(maxSizeText + ": ");
@@ -332,11 +329,11 @@ void PrimeSieveGUI::printResults() {
   ui->textEdit->setTabStopWidth(maxWidth);
 
   // print prime counts & time elapsed
-  for (int i = 0; i < ParallelPrimeSieve::COUNTS_SIZE; i++) {
-    if (flags_ & (ParallelPrimeSieve::COUNT_PRIMES << i))
+  for (int i = 0; i < COUNTS_SIZE; i++) {
+    if (flags_ & (COUNT_PRIMES << i))
       ui->textEdit->appendPlainText(primeText_[i] + ":\t" + QString::number(primeSieveProcess_->getCounts(i)));
   }
-  if (flags_ & ParallelPrimeSieve::COUNT_KTUPLETS)
+  if (flags_ & COUNT_KTUPLETS)
     ui->textEdit->appendPlainText("");
   QString time("Elapsed time:\t" + QString::number(primeSieveProcess_->getTimeElapsed(), 'f', 2) + " sec");
   ui->textEdit->appendPlainText(time);
@@ -349,9 +346,7 @@ void PrimeSieveGUI::on_cancelButton_clicked() {
   ui->cancelButton->setDisabled(true);
   ui->progressBar->setValue(0);
   // too late to abort
-  if ((flags_ & (ParallelPrimeSieve::PRINT_PRIMES | 
-                 ParallelPrimeSieve::PRINT_KTUPLETS))
-       && primeSieveProcess_->isFinished())
+  if ((flags_ & PRINT_FLAGS) && primeSieveProcess_->isFinished())
     return;
   this->cleanUp();
 }

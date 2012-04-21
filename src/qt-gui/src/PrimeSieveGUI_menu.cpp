@@ -86,13 +86,13 @@ int PrimeSieveGUI::getMenuSettings() {
   int flags = 0;
   // get count settings
   if (countAct_[0]->isChecked())
-    flags |= ParallelPrimeSieve::COUNT_PRIMES;
+    flags |= COUNT_PRIMES;
   if (countAct_[1]->isChecked())
-    flags |= ParallelPrimeSieve::COUNT_KTUPLETS;
+    flags |= COUNT_KTUPLETS;
   // get print settings
   for (int i = 0; i < printAct_.size(); i++)
     if (printAct_[i]->isChecked())
-      flags |= ParallelPrimeSieve::PRINT_PRIMES << i;
+      flags |= PRINT_PRIMES << i;
   return flags;
 }
 
