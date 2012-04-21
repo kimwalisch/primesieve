@@ -1,4 +1,4 @@
-February, 7 2012
+April 21, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -33,8 +33,8 @@ II. Examples
   API for prime number generation
   -------------------------------
   void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t));
-  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t, void*), void*);
   void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t));
+  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t, void*), void*);
   void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, void*), void*);
 
   ////////////////////////////////////////////////////////////////////
@@ -65,12 +65,12 @@ II. Examples
   public:
     void generatePrimes(unsigned int x) {
       PrimeSieve ps;
-      ps.generatePrimes(0, x, store, reinterpret_cast<void*>(this));
+      ps.generatePrimes(0, x, store, (void*) this);
     }
   private:
     std::vector<unsigned int> primes_;
-    static void store(unsigned int prime, void* cbObj) {
-      Foo* p = reinterpret_cast<Foo*>(cbObj);
+    static void store(unsigned int prime, void* obj) {
+      Foo* p = (Foo*) obj;
       p->primes_.push_back(prime);
     }
   };

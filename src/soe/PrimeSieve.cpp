@@ -74,7 +74,7 @@ PrimeSieve::PrimeSieve(PrimeSieve& parent) :
   callback64_(parent.callback64_),
   callback32_OOP_(parent.callback32_OOP_),
   callback64_OOP_(parent.callback64_OOP_),
-  cbObj_(parent.cbObj_)
+  obj_(parent.obj_)
 {
   reset();
 }
@@ -250,8 +250,8 @@ void PrimeSieve::doSmallPrime(uint32_t minPrime,
     LockGuard lock(*this);
     if (isFlag(CALLBACK32_PRIMES)     && index == 0) callback32_(minPrime);
     if (isFlag(CALLBACK64_PRIMES)     && index == 0) callback64_(minPrime);
-    if (isFlag(CALLBACK32_OOP_PRIMES) && index == 0) callback32_OOP_(minPrime, cbObj_);
-    if (isFlag(CALLBACK64_OOP_PRIMES) && index == 0) callback64_OOP_(minPrime, cbObj_);
+    if (isFlag(CALLBACK32_OOP_PRIMES) && index == 0) callback32_OOP_(minPrime, obj_);
+    if (isFlag(CALLBACK64_OOP_PRIMES) && index == 0) callback64_OOP_(minPrime, obj_);
     if (isFlag(COUNT_PRIMES << index)) counts_[index]++;
     if (isFlag(PRINT_PRIMES << index)) std::cout << primeStr << '\n';
   }
@@ -358,11 +358,11 @@ void PrimeSieve::generatePrimes(uint64_t start,
 
 void PrimeSieve::generatePrimes(uint32_t start, 
                                 uint32_t stop,
-                                void (*callback)(uint32_t, void*), void* cbObj) {
-  if (callback == NULL || cbObj == NULL)
-    throw std::invalid_argument("callback & cbObj must not be NULL");
+                                void (*callback)(uint32_t, void*), void* obj) {
+  if (callback == NULL || obj == NULL)
+    throw std::invalid_argument("callback & obj must not be NULL");
   callback32_OOP_ = callback;
-  cbObj_ = cbObj;
+  obj_ = obj;
   flags_ = CALLBACK32_OOP_PRIMES;
   setPreSieveLimit(13);
   sieve(start, stop);
@@ -370,11 +370,11 @@ void PrimeSieve::generatePrimes(uint32_t start,
 
 void PrimeSieve::generatePrimes(uint64_t start, 
                                 uint64_t stop,
-                                void (*callback)(uint64_t, void*), void* cbObj) {
-  if (callback == NULL || cbObj == NULL)
-    throw std::invalid_argument("callback & cbObj must not be NULL");
+                                void (*callback)(uint64_t, void*), void* obj) {
+  if (callback == NULL || obj == NULL)
+    throw std::invalid_argument("callback & obj must not be NULL");
   callback64_OOP_ = callback;
-  cbObj_ = cbObj;
+  obj_ = obj;
   flags_ = CALLBACK64_OOP_PRIMES;
   setPreSieveLimit(13);
   sieve(start, stop);

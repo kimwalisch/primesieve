@@ -194,12 +194,12 @@ private:
   double interval_;
   /** Status in percent of sieve(). */
   double status_;
-  /** Callback functions for use with generatePrimes(). */
+  /** Callback functions and object for use with generatePrimes(). */
   void (*callback32_)(uint32_t);
   void (*callback64_)(uint64_t);
   void (*callback32_OOP_)(uint32_t, void*);
   void (*callback64_OOP_)(uint64_t, void*);
-  void* cbObj_;
+  void* obj_;
   void doSmallPrime(uint32_t, uint32_t, uint32_t, const std::string&);
 };
 

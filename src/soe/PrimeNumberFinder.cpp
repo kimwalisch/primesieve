@@ -192,11 +192,11 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
 }
 
 void PrimeNumberFinder::callback32_OOP(uint32_t prime) const {
-  ps_.callback32_OOP_(prime, ps_.cbObj_);
+  ps_.callback32_OOP_(prime, ps_.obj_);
 }
 
 void PrimeNumberFinder::callback64_OOP(uint64_t prime) const {
-  ps_.callback64_OOP_(prime, ps_.cbObj_);
+  ps_.callback64_OOP_(prime, ps_.obj_);
 }
 
 void PrimeNumberFinder::print(uint64_t prime) {
