@@ -128,25 +128,25 @@ bool PrimeSieve::isFlag(uint32_t flag) const {
 }
 
 /** @return true  If any bit in the range [first, last] is set. */
-bool PrimeSieve::isFlags(uint32_t first, uint32_t last) const {
+bool PrimeSieve::isFlag(uint32_t first, uint32_t last) const {
   return (flags_ & (last * 2 - first)) != 0;
 }
 
 bool PrimeSieve::isCount() const {
-  return isFlags(COUNT_PRIMES, COUNT_SEPTUPLETS);
+  return isFlag(COUNT_PRIMES, COUNT_SEPTUPLETS);
 }
 
 /** For convenience the PRINT_STATUS flag is not included. */
 bool PrimeSieve::isPrint() const {
-  return isFlags(PRINT_PRIMES, PRINT_SEPTUPLETS);
+  return isFlag(PRINT_PRIMES, PRINT_SEPTUPLETS);
 }
 
 bool PrimeSieve::isGenerate() const {
-  return isFlags(CALLBACK32_PRIMES, CALLBACK64_OOP_PRIMES) || isPrint();
+  return isFlag(CALLBACK32_PRIMES, CALLBACK64_OOP_PRIMES) || isPrint();
 }
 
 bool PrimeSieve::isStatus() const {
-  return isFlags(CALCULATE_STATUS, PRINT_STATUS);
+  return isFlag(CALCULATE_STATUS, PRINT_STATUS);
 }
 
 /**

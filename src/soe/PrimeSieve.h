@@ -92,7 +92,7 @@ public:
   double getStatus() const;
   uint32_t getFlags() const;
   bool isFlag(uint32_t) const;
-  bool isFlags(uint32_t, uint32_t) const;
+  bool isFlag(uint32_t, uint32_t) const;
   bool isCount() const;
   bool isPrint() const;
   bool isGenerate() const;

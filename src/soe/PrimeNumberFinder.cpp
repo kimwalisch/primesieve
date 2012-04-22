@@ -66,7 +66,7 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
   ps_(ps),
   kCounts_(NULL)
 {
-  if (ps_.isFlags(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
+  if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
     initCounts();
 }
 
@@ -157,7 +157,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  * triplets, ...) within the current segment.
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
-  if (ps_.isFlags(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS)) {
+  if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS)) {
     const uint64_t segmentLow = getSegmentLow();
     // i = 0 twins, i = 1 triplets, ...
     uint32_t i = 0;
