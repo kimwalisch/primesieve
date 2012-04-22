@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010 
-# Last modified: 7 February 2012
+# Last modified: 22 April 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -14,10 +14,9 @@ I. How to build primesieve (Windows, Linux, Mac OS X)
 
   Prerequisites
   -------------
-  Since version 3.5 primesieve requires OpenMP 3.0 or later (2008).
-  If your compiler only supports OpenMP <= 2.5 (e.g. MSVC 2010, Apple
-  g++ 4.2) then you have to switch to primesieve 3.4:
-  http://primesieve.googlecode.com/files/primesieve-3.4-src.zip
+  Since version 3.5 the primesieve GUI application requires a compiler
+  that supports OpenMP 3.0 or later (2008). The Qt SDK includes a
+  recent version of g++ which works fine.
 
   1. Download and install the Qt SDK from:
      http://qt.nokia.com/downloads
@@ -32,8 +31,3 @@ II. Remarks
   primesieve has been developed with Qt 4.7, if it does not compile
   with future releases of Qt old Qt4 builds can be retrieved from:
   ftp://ftp.trolltech.com/qt/source/
-
-  The compiled primesieve executable depends on the QtGui4 and QtCore4
-  libraries (Windows: .dll, Unix: .lib). You have to copy these
-  libraries into the primesieve executable directory if you want to
-  run it on other PCs.
