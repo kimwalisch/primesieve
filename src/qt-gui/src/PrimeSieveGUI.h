@@ -76,8 +76,8 @@ private:
     COUNT_FLAGS      = ParallelPrimeSieve::COUNT_SEPTUPLETS * 2 - ParallelPrimeSieve::COUNT_PRIMES,
     PRINT_FLAGS      = ParallelPrimeSieve::PRINT_SEPTUPLETS * 2 - ParallelPrimeSieve::PRINT_PRIMES,
     PRINT_PRIMES     = ParallelPrimeSieve::PRINT_PRIMES,
-    CALCULATE_STATUS = ParallelPrimeSieve::CALCULATE_STATUS,
-  }
+    CALCULATE_STATUS = ParallelPrimeSieve::CALCULATE_STATUS
+  };
 
   void initGUI();
   void initConnections();
