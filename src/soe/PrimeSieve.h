@@ -47,8 +47,7 @@
  * sieve of Eratosthenes that generates primes and prime k-tuplets
  * (twins, triplets, ...) in order up to 2^64 maximum.
  * The file /README describes the algorithms used in more detail and
- * /docs/USAGE_EXAMPLES contains source code examples that show how to
- * use PrimeSieve objects.
+ * /docs/USAGE_EXAMPLES contains source code examples.
  */
 class PrimeSieve {
   friend class soe::PrimeNumberFinder;

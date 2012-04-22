@@ -44,15 +44,11 @@
 #endif
 
 /**
- * ParallelPrimeSieve is a multi-threaded implementation of the
- * segmented sieve of Eratosthenes using OpenMP that generates primes
- * and prime k-tuplets (twins, triplets, ...) up to 2^64 maximum.
- * The file primesieve/README describes the algorithms used in more
- * detail, the file primesieve/docs/USAGE_EXAMPLES contains source
- * code examples that show how to use ParallelPrimeSieve objects.
-
- * @warning ParallelPrimeSieve does not generate primes and prime
- *          k-tuplets in arithmetic order.
+ * ParallelPrimeSieve uses multiple PrimeSieve objects and OpenMP to
+ * sieve primes in parallel. By default it counts primes using
+ * multiple threads but generates primes in arithmetic order using a
+ * single thread. The file /README describes the algorithms used in
+ * more detail and /docs/USAGE_EXAMPLES contains source code examples.
  */
 class ParallelPrimeSieve : public PrimeSieve {
 public:
