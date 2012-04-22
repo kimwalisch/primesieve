@@ -127,7 +127,7 @@ bool PrimeSieve::isFlag(uint32_t flag) const {
   return (flags_ & flag) == flag; 
 }
 
-/** @return true  If any bits in the range [first, last] are set. */
+/** @return true  If any bit in the range [first, last] is set. */
 bool PrimeSieve::isFlags(uint32_t first, uint32_t last) const {
   return (flags_ & (last * 2 - first)) != 0;
 }
