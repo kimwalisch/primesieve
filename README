@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 31 January 2012
+# Last modified: 22 April 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -95,8 +95,8 @@ Contents
     PrimeSieve objects provide an easy API for prime sieving, the file
     docs/USAGE_EXAMPLES contains a short tutorial.
     PrimeSieve::sieve() starts sieving the primes within the interval
-    [startNumber_, stopNumber_], the following classes are all used
-    directly or indirectly for sieving.
+    [start_, stop_], the following classes are all used directly or
+    indirectly for sieving.
 
   * SieveOfEratosthenes (abstract class)
     Implementation of the segmented sieve of Eratosthenes using a bit
@@ -137,7 +137,7 @@ Contents
   * PrimeNumberFinder (derived from SieveOfEratosthenes)
     Main SieveOfEratosthenes class, used to generate, print and count
     the primes and prime k-tuplets (twins, triplets, ...) within the
-    interval [PrimeSieve::startNumber_, PrimeSieve::stopNumber_].
+    interval [start_, stop_] of the associated PrimeSieve object.
 
   * PreSieve
     PreSieve objects are used to pre-sieve multiples of small primes
