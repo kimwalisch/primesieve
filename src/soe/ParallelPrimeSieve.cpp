@@ -148,10 +148,9 @@ void ParallelPrimeSieve::updateStatus(uint32_t segment) {
  */
 uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   assert(threads > 1);
-  uint64_t balanced = getBoundedValue(config::MIN_THREAD_INTERVAL, isqrt(stop_) * 1000, config::MAX_THREAD_INTERVAL);
-  uint64_t unbalanced = std::max(config::MIN_THREAD_INTERVAL, (stop_ - start_) / threads);
+  uint64_t bestStrategy = std::min(isqrt(stop_) * 1000, (stop_ - start_) / threads);
+  uint64_t balanced = getBoundedValue(config::MIN_THREAD_INTERVAL, bestStrategy, config::MAX_THREAD_INTERVAL);
   // align to mod 30 to prevent prime k-tuplet gaps
-  balanced = std::min(balanced, unbalanced);
   balanced += 30 - balanced % 30;
   return balanced;
 }
