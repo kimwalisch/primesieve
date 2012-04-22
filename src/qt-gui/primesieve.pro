@@ -9,7 +9,7 @@ macx {
     RC_FILE = icons/osx/primesieve.icns
 }
 # -------------------------------------------------
-# Compiler options & OpenMP for MSVC, GCC and ICC
+# Compiler options for MSVC, GCC, ICC, LLVM
 # -------------------------------------------------
 win* {
     *msvc* {
@@ -32,6 +32,10 @@ win* {
         # Apple GCC performs best with -fast
         QMAKE_CXXFLAGS += -fast
     }
+}
+*llvm* {
+    QMAKE_CXXFLAGS += -fopenmp
+    QMAKE_LFLAGS   += -fopenmp
 }
 # -------------------------------------------------
 # Project created by QtCreator
