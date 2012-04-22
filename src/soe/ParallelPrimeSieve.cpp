@@ -56,9 +56,9 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
 {
   // prevents prime k-tuplet gaps
   static_assert(config::MIN_THREAD_INTERVAL >= 100,
-      "config::MIN_THREAD_INTERVAL must not be < 100");
+               "config::MIN_THREAD_INTERVAL must not be < 100");
   static_assert(config::MIN_THREAD_INTERVAL <= config::MAX_THREAD_INTERVAL,
-      "config::MIN_THREAD_INTERVAL must not be > config::MAX_THREAD_INTERVAL");
+               "config::MIN_THREAD_INTERVAL must not be > config::MAX_THREAD_INTERVAL");
 #if defined(_OPENMP)
   omp_init_lock(&lock_);
 #endif
@@ -93,17 +93,12 @@ int ParallelPrimeSieve::getMaxThreads() {
 }
 
 int ParallelPrimeSieve::getNumThreads() const {
-  return (numThreads_ != IDEAL_NUM_THREADS) ? numThreads_ : getIdealNumThreads();
+  return (numThreads_ == IDEAL_NUM_THREADS) ? getIdealNumThreads() : numThreads_;
 }
 
-/**
- * Set the number of threads for sieving.
- * If numThreads is invalid IDEAL_NUM_THREADS are used.
- */
+/** Set the number of threads for sieving. */
 void ParallelPrimeSieve::setNumThreads(int numThreads) {
-  numThreads_ = numThreads;
-  if (numThreads_ < 1 || numThreads_ > getMaxThreads())
-    numThreads_ = IDEAL_NUM_THREADS;
+  numThreads_ = getBoundedValue(1, numThreads, getMaxThreads());
 }
 
 /**
@@ -115,10 +110,11 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   // order but multiple threads are used for counting
   if (isGenerate())
     return 1;
-  // each thread sieves at least an interval of size x^0.5/5
+  // each thread sieves at least an interval of size sqrt(x)/5
   // but not smaller than MIN_THREAD_INTERVAL
   uint64_t threshold = std::max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
-  uint64_t idealNumThreads = getBoundedValue<uint64_t>(1, (stop_ - start_) / threshold, getMaxThreads());
+  uint64_t numThreads = (stop_ - start_) / threshold;
+  uint64_t idealNumThreads = getBoundedValue<uint64_t>(1, numThreads, getMaxThreads());
   return static_cast<int>(idealNumThreads);
 }
 
@@ -147,17 +143,17 @@ void ParallelPrimeSieve::updateStatus(uint32_t segment) {
   }
 }
 
-/** Get a thread interval size that ensures a good load balance. */
+/**
+ * Get a thread interval size that ensures a good load balance.
+ */
 uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   assert(threads > 1);
+  uint64_t balanced = getBoundedValue(config::MIN_THREAD_INTERVAL, isqrt(stop_) * 1000, config::MAX_THREAD_INTERVAL);
   uint64_t unbalanced = std::max(config::MIN_THREAD_INTERVAL, (stop_ - start_) / threads);
-  // balanced interval = x^0.5*1000, 0.5% initialization overhead
-  uint64_t balanced = getBoundedValue<uint64_t>(
-      config::MIN_THREAD_INTERVAL, isqrt(stop_) * 1000, config::MAX_THREAD_INTERVAL);
   // align to mod 30 to prevent prime k-tuplet gaps
-  unbalanced += 30 - unbalanced % 30;
+  balanced = std::min(balanced, unbalanced);
   balanced += 30 - balanced % 30;
-  return std::min(balanced, unbalanced);
+  return balanced;
 }
 
 /**
@@ -169,7 +165,7 @@ void ParallelPrimeSieve::sieve() {
     throw std::invalid_argument("STOP must be >= START");
 
   int threads = getNumThreads();
-  // correct the user's bad number of threads
+  // the user has set too many threads
   if (threads >= 2 && (stop_ - start_) / threads < config::MIN_THREAD_INTERVAL)
     threads = getIdealNumThreads();
   if (threads == 1)
