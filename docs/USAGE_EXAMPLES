@@ -1,4 +1,4 @@
-April 21, 2012
+April 22, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -148,15 +148,15 @@ II. Examples
 4. ParallelPrimeSieve
 =====================
 
-  The ParallelPrimeSieve class is derived from PrimeSieve so it has
-  the same API but it uses OpenMP multi-threading to sieve primes and
-  prime k-tuplets in parallel. Its main use is to count primes and
-  k-tuplets. It can also generate and print primes and k-tuplets in
-  parallel but only in random order.
+  The ParallelPrimeSieve class is derived from PrimeSieve thus it has
+  the same API but it uses OpenMP multi-threading to sieve primes in
+  parallel. Its main use is to count primes and k-tuplets, it can also
+  generate and print primes and k-tuplets in parallel but only in
+  random order.
 
   Note: by default ParallelPrimeSieve counts primes and k-tuplets in
-  parallel but generates and print primes and k-tuplets in arithmetic
-  order without OpenMP multi-threading.
+  parallel but generates and prints primes and k-tuplets in arithmetic
+  order using a single thread.
 
   ////////////////////////////////////////////////////////////////////
   // Count the prime triplets within [1E14, 1E14+1E11]
