@@ -1,4 +1,4 @@
-April 22, 2012
+April 24, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -168,8 +168,8 @@ II. Examples
 
   int main() {
     ParallelPrimeSieve pps;
-    uint64_t start = static_cast<uint64_t>(1E14);
-    uint64_t stop  = static_cast<uint64_t>(1E14+1E11);
+    uint64_t start = (uint64_t) 1E14;
+    uint64_t stop = (uint64_t) (1E14+1E11);
     std::cout << "prime triplet count: " << pps.getTripletCount(start, stop) << std::endl;
     return 0;
   }
@@ -184,11 +184,11 @@ II. Examples
   uint64_t sum = 0;
 
   void sumPrimes(uint64_t prime) {
-   sum += prime;
+    sum += prime;
   }
 
   int main() {
-    uint64_t stop = static_cast<uint64_t>(1E10);
+    uint64_t stop = (uint64_t) 1E10;
     ParallelPrimeSieve pps;
     pps.setNumThreads(4);
     pps.generatePrimes(0, stop, sumPrimes);
@@ -208,7 +208,7 @@ II. Examples
   ////////////////////////////////////////////////////////////////////
   // getTimeElased() returns the time elapsed in seconds
   // Program output:
-  // prime count:  203280221
+  // prime count: 203280221
   // time elapsed: 0.471 sec
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
@@ -216,7 +216,7 @@ II. Examples
 
   int main() {
     ParallelPrimeSieve pps;
-    std::cout << "prime count:  " << pps.getPrimeCount(2, 0xFFFFFFFFU) << std::endl
+    std::cout << "prime count: "  << pps.getPrimeCount(2, 0xFFFFFFFFU) << std::endl
               << "time elapsed: " << pps.getTimeElapsed() << " sec"    << std::endl;
     return 0;
   }
@@ -240,8 +240,8 @@ II. Examples
   int main() {
     PrimeSieve ps;
     ps.setSieveSize(512);
-    uint64_t start = static_cast<uint64_t>(1E19);
-    uint64_t stop  = static_cast<uint64_t>(1E19+1E10);
+    uint64_t start = (uint64_t) 1E19;
+    uint64_t stop = (uint64_t) (1E19+1E10);
     std::cout << "prime count:  " << ps.getPrimeCount(start, stop) << std::endl
               << "time elapsed: " << ps.getTimeElapsed() << " sec" << std::endl;
     return 0;
@@ -332,7 +332,7 @@ II. Examples
 
   int main() {
     uint64_t start = 0;
-    uint64_t stop = static_cast<uint64_t>(1E11);
+    uint64_t stop = (uint64_t) 1E11;
     ParallelPrimeSieve pps;
     pps.setFlags(pps.COUNT_PRIMES | pps.COUNT_TWINS | pps.PRINT_STATUS);
     pps.sieve(start, stop);
