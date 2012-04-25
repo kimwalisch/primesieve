@@ -39,6 +39,7 @@
 #include "config.h"
 
 #include <stdint.h>
+#include <vector>
 #include <list>
 
 namespace soe {
@@ -63,8 +64,8 @@ public:
   void sieve(uint8_t*);
 private:
   enum { BUCKETS_PER_ALLOC = config::MEMORY_PER_ALLOC / sizeof(Bucket) };
-  /** Array of bucket lists, holds the sieving primes. */
-  Bucket** lists_;
+  /** Vector of bucket lists, holds the sieving primes. */
+  std::vector<Bucket*> lists_;
   /** List of empty buckets. */
   Bucket* stock_;
   /** Pointers of the allocated buckets. */
@@ -72,8 +73,6 @@ private:
   /** log2 of SieveOfEratosthenes::sieveSize_. */
   const uint32_t log2SieveSize_;
   const uint32_t moduloSieveSize_;
-  /** Size of the lists_ array. */
-  uint32_t size_;
   uint32_t moduloListsSize_;
   void setSize(const SieveOfEratosthenes&);
   void initBucketLists();
