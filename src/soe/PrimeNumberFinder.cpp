@@ -85,7 +85,7 @@ void PrimeNumberFinder::initCounts() {
   for (uint32_t i = 0; i < 6; i++) {
     if (ps_.isFlag(ps_.COUNT_TWINS << i)) {
       kCounts_[i].resize(256);
-      for (uint32_t j = 0; j < 256; j++) {
+      for (uint32_t j = 0; j < kCounts_[i].size(); j++) {
         uint32_t bitmaskCount = 0;
         for (const uint32_t* b = kTupletBitmasks_[i]; *b <= j; b++) {
           if ((j & *b) == *b)
