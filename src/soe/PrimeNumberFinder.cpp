@@ -40,7 +40,7 @@
 
 #include <stdint.h>
 #include <algorithm>
-#include <cstdlib>
+#include <vector>
 #include <iostream>
 #include <sstream>
 
@@ -63,19 +63,10 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
       ps.getStop(),
       ps.getPreSieveLimit(),
       ps.getSieveSize()),
-  ps_(ps),
-  kCounts_(NULL)
+  ps_(ps)
 {
   if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
     initCounts();
-}
-
-PrimeNumberFinder::~PrimeNumberFinder() {
-  if (kCounts_ != NULL) {
-    for (int i = 0; i < 6; i++)
-      delete[] kCounts_[i];
-    delete[] kCounts_;
-  }
 }
 
 /**
@@ -91,11 +82,9 @@ bool PrimeNumberFinder::needGenerator() const {
  * (twin primes, prime triplets, ...) per byte.
  */
 void PrimeNumberFinder::initCounts() {
-  kCounts_ = new uint32_t*[6];
   for (uint32_t i = 0; i < 6; i++) {
-    kCounts_[i] = NULL;
     if (ps_.isFlag(ps_.COUNT_TWINS << i)) {
-      kCounts_[i] = new uint32_t[256];
+      kCounts_[i].resize(256);
       for (uint32_t j = 0; j < 256; j++) {
         uint32_t bitmaskCount = 0;
         for (const uint32_t* b = kTupletBitmasks_[i]; *b <= j; b++) {

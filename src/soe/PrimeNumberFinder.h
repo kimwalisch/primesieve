@@ -39,6 +39,7 @@
 #include "config.h"
 
 #include <stdint.h>
+#include <vector>
 
 class PrimeSieve;
 
@@ -53,7 +54,6 @@ namespace soe {
 class PrimeNumberFinder : public SieveOfEratosthenes {
 public:
   PrimeNumberFinder(PrimeSieve&);
-  ~PrimeNumberFinder();
   bool needGenerator() const;
 private:
   enum { END = 0xFF + 1 };
@@ -64,7 +64,7 @@ private:
    * Lookup tables that give the count of prime k-tuplets
    * (twin primes, prime triplets, ...) per byte.
    */
-  uint32_t** kCounts_;
+  std::vector<uint32_t> kCounts_[6];
   void initCounts();
   virtual void segmentProcessed(const uint8_t*, uint32_t);
   void count(const uint8_t*, uint32_t);
