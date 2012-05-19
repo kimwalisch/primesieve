@@ -50,24 +50,20 @@ inline T isquare(T x) {
 /**
  * Integer square root, Newton's method.
  * @see "Hacker's Delight, p. 203-207"
- * @typename T  32 or 64-bit unsigned integer type
+ * @param T unsigned integer type
  */
 template <typename T>
 inline T isqrt(T x) {
-  T x1;
-  T s, g0, g1;
+  const T bits = static_cast<T>(sizeof(T) * 8);
 
   if (x <= 1) return x;
-  s = 1;
-  x1 = x - 1;
-  if (x1 > 4294967295u) { s += 16; x1 >>= 31; x1 >>= 1; }
-  if (x1 > 65535)       { s +=  8; x1 >>= 16; }
-  if (x1 > 255)         { s +=  4; x1 >>=  8; }
-  if (x1 > 15)          { s +=  2; x1 >>=  4; }
-  if (x1 > 3)           { s +=  1; }
+  T s = 1;
+  T x1 = x - 1;
+  for (T i = bits >> 1; x1 > 3; i >>= 1)
+    if ((x1 >> i) != 0) { x1 >>= i; s += i >> 1; }
 
-  g0 = 1; g0 <<= s;
-  g1 = (g0 + (x >> s)) >> 1;
+  T g0 = 1; g0 <<= s;
+  T g1 = (g0 + (x >> s)) >> 1;
 
   while (g1 < g0) {
     g0 = g1;
