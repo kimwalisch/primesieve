@@ -6,83 +6,115 @@ source code can be retrieved from its Subversion repository:
 
 $ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve
 
-List of fixed bugs in primesieve
-================================
+List of fixed bugs
+==================
 
-9. primesieve 3.0 to 3.4 produces incorrect results and/or
-   segmentation faults on big-endian CPUs (PowerPC, SPARC). The bug is
-   caused by the GENERATE_PRIMES() macro in defs.h due to an unsafe
-   reinterpret_cast:
+-----------------------------------------------------------------------
+  >> Fixed in version 3.7, committed on the 19th May 2012
 
-   ...
-   uint32_t dword = reinterpret_cast<const uint32_t*> (sieve)[i]; \
-   while (dword != 0) {                                           \
-     uint32_t bitPosition = bitScanForward(dword);                \
-     uintXX_t prime = lowerBound + bitValues_[bitPosition];       \
-     ...
+  The isqrt() function defined in src/soe/imath.h might return a
+  square root that is too large by 1. This is because isqrt() is a
+  simple wrapper for 'double sqrt(double)' from math.h, the double
+  type has a precision of 52 bits which is why there are rounding
+  errors when casting numbers > 1E15 from uint64_t to double. Although
+  this has never caused a bug so far primesieve might generate a
+  superfluous sieving prime > sqrt(stop_).
 
-   The above reinterpret_cast produces a different dword on
-   little-endian CPUs (x86, x64) and big-endian CPUs due to the
-   different byte order on both CPU architectures. The bug has been
-   fixed with the following code that produces the same dword on
-   little-endian and big-endian CPUs (SieveOfEratosthenes.h):
+  I wrote a new isqrt() function using Newton's method that calculates
+  the integer square root using integer arithmetic.
 
-   uint32_t dword = (sieve[i+0] << (8 * 0)) + \
-                    (sieve[i+1] << (8 * 1)) + \
-                    (sieve[i+2] << (8 * 2)) + \
-                    (sieve[i+3] << (8 * 3));  \
+-----------------------------------------------------------------------
+  >> Fixed in version 3.5, committed on the 26th January 2012
 
-   >> FIXED in version 3.5, committed on the 26th January 2012
+  primesieve 3.0 to 3.4 produces incorrect results and/or
+  segmentation faults on big-endian CPUs (PowerPC, SPARC). The bug is
+  caused by the GENERATE_PRIMES() macro in defs.h due to an unsafe
+  reinterpret_cast:
 
-8. src/soe/ParallelPrimeSieve.cpp might create PrimeSieve objects with
-   START > STOP and cause an invalid_argument exception.
-   $ export OMP_NUM_THREADS=8
-   $ ./primesieve -test; ./primesieve -test; ./primesieve -test;
-   >> FIXED in version 3.2, committed on the 13th November 2011
+  ...
+  uint32_t dword = reinterpret_cast<const uint32_t*> (sieve)[i]; \
+  while (dword != 0) {                                           \
+    uint32_t bitPosition = bitScanForward(dword);                \
+    uintXX_t prime = lowerBound + bitValues_[bitPosition];       \
+    ...
 
-7. SieveIndex overflow (> 2^23) in src/soe/EratMedium.cpp when using a
-   sieve size >= 4096 kilobytes past 1E15.
-   $ ./primesieve 1e16 1e16+1e10 -s8192 -t1
-   Prime numbers : 280434992
-   $ ./primesieve 1e16 1e16+1e10 -s256 -t1
-   Prime numbers : 271425366
-   >> FIXED in version 3.1, committed on the 10th October 2011
+  The above reinterpret_cast produces a different dword on
+  little-endian CPUs (x86, x64) and big-endian CPUs due to the
+  different byte order on both CPU architectures. The bug has been
+  fixed with the following code that produces the same dword on
+  little-endian and big-endian CPUs (SieveOfEratosthenes.h):
 
-6. The following options caused a segmentation fault in the console
-   version of primesieve:
-   $ ./primesieve -q; ./primesieve -p1; ...
-   Error in console/main.cpp, processOptions(int, char**)
-   >> FIXED in version 2.2, committed on the 26th May 2011
+  uint32_t dword = (sieve[i+0] << (8 * 0)) + \
+                   (sieve[i+1] << (8 * 1)) + \
+                   (sieve[i+2] << (8 * 2)) + \
+                   (sieve[i+3] << (8 * 3));  \
 
-5. PrimeSieve::sieve() was not declared virtual which caused
-   ParallelPrimeSieve to run single-threaded in some cases.
-   >> FIXED in version 2.2, committed on the 25th May 2011
+-----------------------------------------------------------------------
+  >> Fixed in version 3.2, committed on the 13th November 2011
 
-4. Fixed an OpenMP race condition in ParallelPrimeSieve.cpp which did
-   only show up with the sunCC compiler.
-   >> FIXED in version 2.2, committed on the 23rd May 2011
+  src/soe/ParallelPrimeSieve.cpp might create PrimeSieve objects with
+  START > STOP and throw an invalid_argument exception.
+  $ export OMP_NUM_THREADS=8
+  $ ./primesieve -test; ./primesieve -test; ./primesieve -test;
 
-3. The -test option of the console version of primesieve might cause
-   an infinite loop when compiled with MSVC (Windows).
-   The error was related to 64-bit random number generation in
-   console/test.cpp.
-   >> FIXED in version 2.2, committed on the 9th May 2011
+-----------------------------------------------------------------------
+  >> Fixed in version 3.1, committed on the 10th October 2011
 
-2. Primes preceding the startNumber might be counted and printed e.g.:
-   $ ./primesieve 1000007999999999 1000007999999999
-   Sieve size set to 64 KiloBytes
-   100%
-   Prime numbers: 2
-   Time elapsed: 0.03 sec
-   >> FIXED in version 1.05, committed on the 8th January 2011
-   >> Thanks to Andrey Kulsha for bug reporting
+  SieveIndex overflow (> 2^23) in src/soe/EratMedium.cpp when using a
+  sieve size >= 4096 kilobytes past 1E15.
+  $ ./primesieve 1e16 1e16+1e10 -s8192 -t1
+  Prime numbers : 280434992
+  $ ./primesieve 1e16 1e16+1e10 -s256 -t1
+  Prime numbers : 271425366
 
-1. The console version of primesieve 1.0 produces wrong status output
-   in some cases e.g.:
-   $ ./primesieve 10000000000000000 10000000000000001 -s 256
-   Sieve size set to 256 KiloBytes
-   100%966296%
-   Prime numbers: 0
-   Time elapsed: 0.106 sec
-   100%966296% is an error, should be 100%
-   >> FIXED in version 1.01, committed on the 23rd December 2010
+-----------------------------------------------------------------------
+  >> Fixed in version 2.2, committed on the 26th May 2011
+
+  The following options caused a segmentation fault in the console
+  version of primesieve:
+  $ ./primesieve -q; ./primesieve -p1; ...
+  Error in console/main.cpp, processOptions(int, char**)
+
+-----------------------------------------------------------------------
+  >> Fixed in version 2.2, committed on the 25th May 2011
+
+  PrimeSieve::sieve() was not declared virtual which caused
+  ParallelPrimeSieve to run single-threaded in some cases.
+
+-----------------------------------------------------------------------
+  >> Fixed in version 2.2, committed on the 23rd May 2011
+
+  Fixed an OpenMP race condition in ParallelPrimeSieve.cpp which did
+  only show up with the sunCC compiler.
+
+-----------------------------------------------------------------------
+  >> Fixed in version 2.2, committed on the 9th May 2011
+
+  The -test option of the console version of primesieve might cause an
+  infinite loop when compiled with MSVC (Windows). The error was
+  related to 64-bit random number generation in console/test.cpp.
+
+-----------------------------------------------------------------------
+  >> Fixed in version 1.05, committed on the 8th January 2011
+  >> Thanks to Andrey Kulsha for bug reporting
+
+  Primes preceding the startNumber might be counted and printed e.g.:
+  $ ./primesieve 1000007999999999 1000007999999999
+  Sieve size set to 64 KiloBytes
+  100%
+  Prime numbers: 2
+  Time elapsed: 0.03 sec
+
+-----------------------------------------------------------------------
+  >> Fixed in version 1.01, committed on the 23rd December 2010
+
+  The console version of primesieve 1.0 produces wrong status output
+  in some cases e.g.:
+  $ ./primesieve 10000000000000000 10000000000000001 -s 256
+  Sieve size set to 256 KiloBytes
+  100%966296%
+  Prime numbers: 0
+  Time elapsed: 0.106 sec
+  100%966296% is an error, should be 100%
+
+-----------------------------------------------------------------------
