@@ -36,7 +36,7 @@
 #include "PrimeNumberFinder.h"
 #include "PrimeNumberGenerator.h"
 #include "config.h"
-#include "bithacks.h"
+#include "imath.h"
 #include "PreSieve.h"
 
 #include <stdint.h>
@@ -190,7 +190,7 @@ void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
  *                   of 2.
  */
 void PrimeSieve::setSieveSize(uint32_t sieveSize) {
-  sieveSize_ = getBoundedValue<uint32_t>(1, nextHighestPowerOf2(sieveSize), 4096);
+  sieveSize_ = getBoundedValue<uint32_t>(1, nextPowerOf2(sieveSize), 4096);
 }
 
 /**
