@@ -48,7 +48,7 @@ namespace soe {
 EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
   EratBase<Modulo210Wheel_t>(soe)
 {
-  // conditions that assert multipleIndex < 2^23 in sieve()
+  // Conditions that assert multipleIndex < 2^23 in sieve()
   static_assert(config::FACTOR_ERATMEDIUM <= 6, "config::FACTOR_ERATMEDIUM must not be > 6");
   if (soe.getSieveSize() > (1U << 22))
     throw std::overflow_error("EratMedium: sieveSize must be <= 2^22, 4096 kilobytes.");
@@ -83,7 +83,7 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
       uint32_t sievingPrime1  = wPrime[1].getSievingPrime();
       while (multipleIndex0 < sieveSize &&
              multipleIndex1 < sieveSize) {
-        // cross-off the current multiple (unset corresponding bit) of
+        // Cross-off the current multiple (unset corresponding bit) of
         // sievingPrime0 and sievingPrime1, calculate their next
         // multipleIndex and the wheel indexes of their next multiples
         sieve[multipleIndex0] &= wheel(wheelIndex0).unsetBit;
@@ -109,7 +109,7 @@ void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
       }
       multipleIndex0 -= sieveSize;
       multipleIndex1 -= sieveSize;
-      // set the multipleIndex and wheelIndex for the next segment
+      // Set the multipleIndex and wheelIndex for the next segment
       wPrime[0].setIndexes(multipleIndex0, wheelIndex0);
       wPrime[1].setIndexes(multipleIndex1, wheelIndex1);
     }
