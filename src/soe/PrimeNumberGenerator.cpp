@@ -36,7 +36,7 @@
 #include "PrimeNumberFinder.h"
 #include "SieveOfEratosthenes.h"
 #include "config.h"
-#include "bithacks.h"
+#include "imath.h"
 
 #include <stdint.h>
 #include <cassert>
@@ -48,7 +48,7 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
       finder.getPreSieveLimit() + 1,
       finder.getSquareRoot(),
       config::PRESIEVE_LIMIT_PRIMENUMBERGENERATOR,
-      nextHighestPowerOf2<uint32_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
+      nextPowerOf2<uint32_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
   primeNumberFinder_(finder)
 {
   static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096,
