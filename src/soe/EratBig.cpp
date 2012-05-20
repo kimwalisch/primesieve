@@ -36,7 +36,7 @@
 #include "SieveOfEratosthenes.h"
 #include "WheelFactorization.h"
 #include "config.h"
-#include "bithacks.h"
+#include "imath.h"
 
 #include <stdint.h>
 #include <stdexcept>
@@ -50,7 +50,7 @@ namespace soe {
 EratBig::EratBig(const SieveOfEratosthenes& soe) :
   Modulo210Wheel_t(soe),
   stock_(NULL),
-  log2SieveSize_(floorLog2(soe.getSieveSize())),
+  log2SieveSize_(ilog2(soe.getSieveSize())),
   moduloSieveSize_(soe.getSieveSize() - 1)
 {
   // EratBig uses bitwise operations that require a power of 2 sieve size
@@ -79,7 +79,7 @@ void EratBig::setSize(const SieveOfEratosthenes& soe) {
   uint32_t maxMultipleIndex  = (soe.getSieveSize() - 1) + maxMultipleOffset;
   uint32_t maxSegmentCount   = maxMultipleIndex / soe.getSieveSize();
   // size must be >= maxSegmentCount + 1
-  uint32_t size = nextHighestPowerOf2(maxSegmentCount + 1);
+  uint32_t size = nextPowerOf2(maxSegmentCount + 1);
   moduloListsSize_ = size - 1;
   lists_.resize(size, NULL);
 }
