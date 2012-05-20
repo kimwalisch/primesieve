@@ -72,7 +72,7 @@ EratBig::~EratBig() {
  *         bitwise operators in sieve(uint8_t*).
  */
 void EratBig::setSize(const SieveOfEratosthenes& soe) {
-  // MAX values in sieve(uint8_t*)
+  // max values in sieve(uint8_t*)
   uint32_t maxSievingPrime   = soe.getSquareRoot() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
   uint32_t maxWheelFactor    = wheel(0).nextMultipleFactor;
   uint32_t maxMultipleOffset = maxSievingPrime * maxWheelFactor + maxWheelFactor;
@@ -84,10 +84,8 @@ void EratBig::setSize(const SieveOfEratosthenes& soe) {
   lists_.resize(size, NULL);
 }
 
-/**
- * Initialize each list with an empty bucket.
- */
 void EratBig::initBucketLists() {
+  // initialize each bucket list with an empty bucket
   for (uint32_t i = 0; i < lists_.size(); i++)
     pushBucket(i);
 }
@@ -102,9 +100,7 @@ void EratBig::addSievingPrime(uint32_t prime) {
     // indicates in how many segments the next multiple
     // of prime needs to be crossed-off
     uint32_t segmentCount = multipleIndex >> log2SieveSize_;
-    // index for the SieveOfEratosthenes::sieve_ array
     multipleIndex &= moduloSieveSize_;
-    // calculate the list index related to the next multiple of prime
     uint32_t next = segmentCount & moduloListsSize_;
     // add prime to the bucket list related
     // to its next multiple occurrence
@@ -184,7 +180,7 @@ void EratBig::sieve(uint8_t* sieve)
         multipleIndex0 &= moduloSieveSize_;
         uint32_t next1 = (multipleIndex1 >> log2SieveSize_) & moduloListsSize_;
         multipleIndex1 &= moduloSieveSize_;
-        // move sievingPrime0 abd sievingPrime1 to the bucket list
+        // move sievingPrime0 and sievingPrime1 to the bucket list
         // related to their next multiple occurrence
         if (!lists_[next0]->addWheelPrime(sievingPrime0, multipleIndex0, wheelIndex0))
           pushBucket(next0);
@@ -192,7 +188,6 @@ void EratBig::sieve(uint8_t* sieve)
           pushBucket(next1);
       }
 
-      // process the remaining sieving prime
       if (wPrime != end) {
         uint32_t multipleIndex = wPrime->getMultipleIndex();
         uint32_t wheelIndex    = wPrime->getWheelIndex();
