@@ -206,12 +206,11 @@ void ParallelPrimeSieve::sieve() {
     counts_[6] = count6;
     timeElapsed_ = omp_get_wtime() - t1;
   }
-  // communicate the sieving results via shared memory
-  // segment to the Qt GUI process
+
   if (shm_ != NULL) {
-    shm_->timeElapsed = timeElapsed_;
     for (int i = 0; i < COUNTS_SIZE; i++)
       shm_->counts[i] = counts_[i];
+    shm_->timeElapsed = timeElapsed_;
   }
 }
 
