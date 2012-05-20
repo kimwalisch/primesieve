@@ -48,10 +48,11 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
       finder.getPreSieveLimit() + 1,
       finder.getSquareRoot(),
       config::PRESIEVE_LIMIT_PRIMENUMBERGENERATOR,
-      nextHighestPowerOf2(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
+      nextHighestPowerOf2<uint32_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
   primeNumberFinder_(finder)
 {
-  static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "SieveSize must not be > 4096 kilobytes");
+  static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096,
+                "SieveSize must not be > 4096 kilobytes");
   assert(getStop() <= UINT32_MAX);
 }
 
