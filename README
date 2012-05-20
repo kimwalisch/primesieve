@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 22 April 2012
+# Last modified: 20 May 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -71,7 +71,7 @@ Contents
   byte, the 8 bits of each byte correspond to the numbers i * 30 + k
   with k = {7, 11, 13, 17, 19, 23, 29, 31}. It further uses 8 bytes
   per sieving prime <= sqrt(x) that is 4 bytes for the sieving prime
-  and another 4 bytes for the next multiple index and wheel index.
+  and another 4 bytes for the multiple index and wheel index.
 
   primesieve's memory requirement (per thread) is about:
   pi(sqrt(x)) * 8 bytes + 400 kilobytes
@@ -82,12 +82,12 @@ Contents
   General information
   -------------------
   The src/soe directory contains the sieve of Eratosthenes source
-  code, .h & .cpp files that start with a capital letter contain a
-  class of the same name. The source code is quite well documented, a
-  good starting point for code reading is PrimeSieve::sieve() in
-  src/soe/PrimeSieve.cpp and then SieveOfEratosthenes.cpp. If you are
-  not too familiar with prime sieving I recommend reading Jonathan
-  Sorenson's papers, see section 5.
+  code, files that start with a capital letter contain a class of the
+  same name. The source code is quite well documented, a good starting
+  point for code reading is PrimeSieve::sieve() in PrimeSieve.cpp and
+  then SieveOfEratosthenes.cpp. If you are not too familiar with prime
+  number sieves I recommend reading Jonathan Sorenson's papers first,
+  see section 5.
 
   C++ classes
   -----------
@@ -105,8 +105,8 @@ Contents
     The main method is SieveOfEratosthenes::sieve(uint32_t prime) it
     must be called consecutively for all primes <= sqrt(n) in order to
     sieve the primes up to n. Each sieving prime is first stored in
-    one of the Erat(Small|Medium|Big) objects that are used to cross
-    off its multiples.
+    one of the Erat(Small|Medium|Big) objects which are used to cross
+    off the multiples.
 
   * EratSmall
     Segmented sieve of Eratosthenes algorithm with a hard-coded
@@ -145,9 +145,11 @@ Contents
 
   Other files
   -----------
-  * bithacks.h
-    Contains fast bit manipulation functions needed in primesieve
-    e.g. popcount(), bitScanForward(), floorLog2(), ...
+  * popcount.h
+    Contains high performance bit population count algorithms.
+
+  * imath.h
+    isqrt(), ilog2(), isquare(), isPowerOf2(), ...
 
   * config.h
     Contains macro definitions and constants that set the size of
