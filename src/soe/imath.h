@@ -49,8 +49,8 @@ inline T isquare(T x) {
 
 /**
  * Integer square root, Newton's method.
- * @see "Hacker's Delight, p. 203-207"
- * @param T unsigned integer type
+ * @see      Hacker's Delight, p. 203-207.
+ * @param x  Unsigned integer.
  */
 template <typename T>
 inline T isqrt(T x) {
