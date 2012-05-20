@@ -36,7 +36,7 @@
 #include "PrimeSieve.h"
 #include "SieveOfEratosthenes.h"
 #include "config.h"
-#include "bithacks.h"
+#include "popcount.h"
 
 #include <stdint.h>
 #include <algorithm>
@@ -122,7 +122,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
     const uint64_t* sieve64 = reinterpret_cast<const uint64_t*>(sieve);
     uint32_t sieveSize64 = sieveSize / 8;
     uint32_t bytesLeft = sieveSize % 8;
-    // see bithacks.h
+    // see popcount.h
     uint32_t primeCount = popcount_lauradoux(sieve64, sieveSize64);
     if (bytesLeft > 0)
       primeCount += popcount_kernighan(&sieve[sieveSize - bytesLeft], bytesLeft);
