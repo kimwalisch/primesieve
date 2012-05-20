@@ -72,6 +72,6 @@ HEADERS += ../soe/EratBig.h \
     ../soe/PreSieve.h \
     ../soe/WheelFactorization.h \
     ../soe/imath.h \
-    ../soe/bithacks.h \
+    ../soe/popcount.h \
     ../soe/bits.h \
     ../soe/config.h
