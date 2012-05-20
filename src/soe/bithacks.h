@@ -65,10 +65,9 @@ namespace soe {
  * http://primesieve.googlecode.com/svn/claurado/hamming-weight/overview.pdf
  * http://primesieve.googlecode.com/svn/claurado/hamming-weight/all.tar.gz
  */
-inline uint32_t popcount_lauradoux(const uint64_t* data, uint32_t size) {
+template <typename T>
+inline T popcount_lauradoux(const uint64_t* data, T size) {
   assert(data != NULL);
-  assert(size <= UINT32_MAX / (8 * sizeof(uint64_t)));
-
   const uint64_t m1  = UINT64_C(0x5555555555555555);
   const uint64_t m2  = UINT64_C(0x3333333333333333);
   const uint64_t m4  = UINT64_C(0x0F0F0F0F0F0F0F0F);
@@ -76,11 +75,11 @@ inline uint32_t popcount_lauradoux(const uint64_t* data, uint32_t size) {
   const uint64_t m16 = UINT64_C(0x0000FFFF0000FFFF);
   const uint64_t h01 = UINT64_C(0x0101010101010101);
 
-  uint32_t bitCount = 0;
-  uint32_t i, j;
   uint64_t count1, count2, half1, half2, acc;
   uint64_t x;
-  uint32_t limit30 = size - size % 30;
+  T bitCount = 0;
+  T i, j;
+  T limit30 = size - size % 30;
 
   // 64-bit tree merging (merging3)
   for (i = 0; i < limit30; i += 30, data += 30) {
@@ -103,10 +102,11 @@ inline uint32_t popcount_lauradoux(const uint64_t* data, uint32_t size) {
     acc = (acc & m8) + ((acc >>  8)  & m8);
     acc = (acc       +  (acc >> 16)) & m16;
     acc =  acc       +  (acc >> 32);
-    bitCount += (uint32_t)acc;
+
+    bitCount += static_cast<T>(acc);
   }
 
-  // count the bits of the remaining bytes (MAX 29*8) using 
+  // Count the bits of the remaining bytes (max 29*8 = 232) using 
   // "Counting bits set, in parallel" from the "Bit Twiddling Hacks",
   // the code uses wikipedia's 64-bit popcount_3() implementation:
   // http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
@@ -115,24 +115,22 @@ inline uint32_t popcount_lauradoux(const uint64_t* data, uint32_t size) {
     x =  x       - ((x >> 1)  & m1);
     x = (x & m2) + ((x >> 2)  & m2);
     x = (x       +  (x >> 4)) & m4;
-    bitCount += (uint32_t)((x * h01) >> 56);
+    bitCount += static_cast<T>((x * h01) >> 56);
   }
   return bitCount;
 }
 
 /**
  * Count the number of 1 bits (population count) in a small array
- * using "Counting bits set, Brian Kernighan's way" from the
- * "Bit Twiddling Hacks":
+ * using Brian Kernighan's method:
  * http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetKernighan
  */
-inline uint32_t popcount_kernighan(const uint8_t* data, uint32_t size) {
+template <typename T>
+inline T popcount_kernighan(const uint8_t* data, T size) {
   assert(data != NULL);
-  assert(size <= UINT32_MAX / (8 * sizeof(uint8_t)));
-  uint32_t bitCount = 0;
-
-  for (uint32_t i = 0; i < size; i++) {
-    for (uint32_t v = data[i]; v != 0; v &= v - 1)
+  T bitCount = 0;
+  for (T i = 0; i < size; i++) {
+    for (unsigned int v = data[i]; v != 0; v &= v - 1)
       bitCount++;
   }
   return bitCount;
@@ -140,39 +138,37 @@ inline uint32_t popcount_kernighan(const uint8_t* data, uint32_t size) {
 
 /**
  * Fast and protable integer log2 function.
- * Code from Juan Pablo:
- * http://www.southwindsgames.com/blog/2009/01/19/fast-integer-log2-function-in-cc/
+ * @param x  Integer value.
  */
-inline uint32_t floorLog2(uint32_t x) {
-  uint32_t log2 = 0;
-  if (x >= (1 << 16)) { x >>= 16; log2 |= 16; }
-  if (x >= (1 <<  8)) { x >>=  8; log2 |=  8; }
-  if (x >= (1 <<  4)) { x >>=  4; log2 |=  4; }
-  if (x >= (1 <<  2)) { x >>=  2; log2 |=  2; }
-  if (x >= (1 <<  1)) {           log2 |=  1; }
+template <typename T>
+inline T floorLog2(T x) {
+  const T bits = static_cast<T>(sizeof(T) * 8);
+  T log2 = 0;
+  for (T i = bits >> 1; x >= 2; i >>= 1)
+    if ((x >> i) != 0) { x >>= i; log2 += i; }
   return log2;
 }
 
 /**
  * Round up to the next highest power of 2.
- * Code from: "Hacker's Delight, p. 48"
+ * @see      Hacker's Delight, p. 48.
+ * @param x  Integer value.
  */
-inline uint32_t nextHighestPowerOf2(uint32_t x) {
+template <typename T>
+inline T nextHighestPowerOf2(T x) {
+  const T bits = static_cast<T>(sizeof(T) * 8);
   x = x - 1;
-  x = x | (x >> 1);
-  x = x | (x >> 2);
-  x = x | (x >> 4);
-  x = x | (x >> 8);
-  x = x | (x >> 16);
+  for (T i = 1; i < bits; i += i)
+    x = x | (x >> i);
   return x + 1;
 }
 
 /**
  * Determine if an integer is a power of 2.
- * Code from the "Bit Twiddling Hacks":
- * http://graphics.stanford.edu/~seander/bithacks.html#DetermineIfPowerOf2
+ * @param x  Integer value.
  */
-inline bool isPowerOf2(uint32_t x) {
+template <typename T>
+inline bool isPowerOf2(T x) {
   return (x != 0 && (x & (x - 1)) == 0);
 }
 
