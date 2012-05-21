@@ -89,7 +89,7 @@ public:
   void finish();
 protected:
   static const uint32_t bitValues_[8];
-  static const uint32_t deBruijnFsbValues_[32];
+  static const uint32_t bruijnBitValues_[32];
   SieveOfEratosthenes(uint64_t, uint64_t, uint32_t, uint32_t);
   ~SieveOfEratosthenes();
   static uint32_t getFirstSetBitValue(uint32_t);

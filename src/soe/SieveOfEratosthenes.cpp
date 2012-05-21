@@ -49,7 +49,7 @@ namespace soe {
 const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
 
 /** De Bruijn sequence for first set bitValues_ */
-const uint32_t SieveOfEratosthenes::deBruijnFsbValues_[32] =
+const uint32_t SieveOfEratosthenes::bruijnBitValues_[32] =
 {
     7,  11, 109, 13, 113, 59, 97, 17,
   119,  89,  79, 61, 101, 71, 19, 37,
@@ -102,7 +102,7 @@ SieveOfEratosthenes::~SieveOfEratosthenes() {
 
 /** returns bitValues_[ bitScanForward(v) ] */
 uint32_t SieveOfEratosthenes::getFirstSetBitValue(uint32_t v) {
-  return deBruijnFsbValues_[((v & -static_cast<int32_t>(v)) * 0x077CB531U) >> 27];
+  return bruijnBitValues_[((v & -static_cast<int32_t>(v)) * 0x077CB531U) >> 27];
 }
 
 uint32_t SieveOfEratosthenes::getPreSieveLimit() const {
