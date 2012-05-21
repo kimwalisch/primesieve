@@ -72,12 +72,10 @@ public:
   }
   uint32_t getMultipleIndex() const
   {
-    // get the 23 least significant bits
     return indexes_ & ((1u << 23) - 1);
   }
   uint32_t getWheelIndex() const
   {
-    // get the 9 most significant bits
     return indexes_ >> 23;
   }
   void set(uint32_t sievingPrime,
