@@ -94,10 +94,10 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
 }
 
 SieveOfEratosthenes::~SieveOfEratosthenes() {
-  delete[] sieve_;
   delete eratSmall_;
   delete eratMedium_;
   delete eratBig_;
+  delete[] sieve_;
 }
 
 /** returns bitValues_[ bitScanForward(v) ] */
