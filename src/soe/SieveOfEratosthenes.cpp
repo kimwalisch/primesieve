@@ -102,14 +102,14 @@ SieveOfEratosthenes::~SieveOfEratosthenes() {
 
 /** returns bitValues_[ bitScanForward(v) ] */
 uint32_t SieveOfEratosthenes::getFirstSetBitValue(uint32_t v) {
-  return bruijnBitValues_[((v & -static_cast<int32_t>(v)) * 0x077CB531U) >> 27];
+  return bruijnBitValues_[((v & -static_cast<int32_t>(v)) * 0x077CB531) >> 27];
 }
 
 uint32_t SieveOfEratosthenes::getPreSieveLimit() const {
   return preSieve_.getLimit();
 }
 
-uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) const {
+uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
   uint32_t remainder = static_cast<uint32_t>(n % NUMBERS_PER_BYTE);
   // correction for primes of type i*30 + 31
   if (remainder <= 1)

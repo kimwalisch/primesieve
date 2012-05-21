@@ -128,7 +128,7 @@ private:
    * that have very few multiples per segment.
    */
   EratBig* eratBig_;
-  uint32_t getByteRemainder(uint64_t) const;
+  static uint32_t getByteRemainder(uint64_t);
   void initEratAlgorithms();
   void preSieve();
   void crossOffMultiples();
@@ -148,11 +148,10 @@ private:
   uintXX_t offset = static_cast<uintXX_t>(getSegmentLow()); \
   uint32_t i = 0;                                           \
   for (; i < sieveSize - sieveSize % 4; i += 4) {           \
+    uint32_t dword = 0;                                     \
     /* big-endian safe, reinterpret_cast won't work */      \
-    uint32_t dword = (sieve[i+0] << (8 * 0)) +              \
-                     (sieve[i+1] << (8 * 1)) +              \
-                     (sieve[i+2] << (8 * 2)) +              \
-                     (sieve[i+3] << (8 * 3));               \
+    for (int j = 4; j >= 0; j--)                            \
+      dword = (dword << 8) + sieve[i + j];                  \
     while (dword != 0) {                                    \
       uintXX_t prime = offset + getFirstSetBitValue(dword); \
       dword &= dword - 1;                                   \
