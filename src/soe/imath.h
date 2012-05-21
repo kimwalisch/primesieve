@@ -78,7 +78,7 @@ template <typename T>
 inline T ilog2(T x) {
   const T bits = static_cast<T>(sizeof(T) * 8);
   T log2 = 0;
-  for (T i = bits >> 1; x > 1; i >>= 1)
+  for (T i = bits >> 1; x >= 2; i >>= 1)
     if ((x >> i) != 0) { x >>= i; log2 += i; }
   return log2;
 }
