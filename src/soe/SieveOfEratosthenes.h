@@ -150,7 +150,7 @@ private:
   for (; i < sieveSize - sieveSize % 4; i += 4) {           \
     uint32_t dword = 0;                                     \
     /* big-endian safe, reinterpret_cast won't work */      \
-    for (int j = 4; j >= 0; j--)                            \
+    for (int j = 3; j >= 0; j--)                            \
       dword = (dword << 8) + sieve[i + j];                  \
     while (dword != 0) {                                    \
       uintXX_t prime = offset + getFirstSetBitValue(dword); \
