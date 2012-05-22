@@ -92,8 +92,8 @@ protected:
   static const uint32_t bruijnBitValues_[32];
   SieveOfEratosthenes(uint64_t, uint64_t, uint32_t, uint32_t);
   ~SieveOfEratosthenes();
-  static uint32_t getFirstSetBitValue(uint32_t);
   virtual void segmentProcessed(const uint8_t*, uint32_t) = 0;
+  template<typename T> inline T getNextPrime(uint32_t, uint32_t*) const;
 private:
   /** Lower bound of the current segment. */
   uint64_t segmentLow_;
@@ -137,36 +137,45 @@ private:
   SieveOfEratosthenes& operator=(const SieveOfEratosthenes&);
 };
 
-} // namespace soe
+/**
+ * Reconstruct the prime number corresponding to the first set bit
+ * of the dword parameter (and unset bit).
+ * @param index  Current sieve index.
+ * @param dword  The next 4 bytes of the sieve array.
+ */
+template <typename T>
+T SieveOfEratosthenes::getNextPrime(uint32_t index, uint32_t* dword) const {
+  uint32_t firstBit = *dword & -static_cast<int32_t>(*dword);
+  // calculate bitValues_[ bitScanForward(dword) ]
+  uint32_t bitValue = bruijnBitValues_[(firstBit * 0x077CB531) >> 27];
+  T prime = static_cast<T>(segmentLow_) + index * NUMBERS_PER_BYTE + bitValue;
+  *dword ^= firstBit;
+  return prime;
+}
 
 /**
  * Reconstruct prime numbers from 1 bits of the sieve array
  * and call a callback function for each prime.
  * @see PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
  */
-#define GENERATE_PRIMES(callback, uintXX_t) {               \
-  uintXX_t offset = static_cast<uintXX_t>(getSegmentLow()); \
-  uint32_t i = 0;                                           \
-  for (; i < sieveSize - sieveSize % 4; i += 4) {           \
-    uint32_t dword = 0;                                     \
-    /* big-endian safe, reinterpret_cast won't work */      \
-    for (int j = 3; j >= 0; j--)                            \
-      dword = (dword << 8) + sieve[i + j];                  \
-    while (dword != 0) {                                    \
-      uintXX_t prime = offset + getFirstSetBitValue(dword); \
-      dword &= dword - 1;                                   \
-      callback (prime);                                     \
-    }                                                       \
-    offset += NUMBERS_PER_BYTE * 4;                         \
-  }                                                         \
-  for (; i < sieveSize; i++, offset += NUMBERS_PER_BYTE) {  \
-    uint32_t byte = sieve[i];                               \
-    while (byte != 0) {                                     \
-      uintXX_t prime = offset + getFirstSetBitValue(byte);  \
-      byte &= byte - 1;                                     \
-      callback (prime);                                     \
-    }                                                       \
-  }                                                         \
+#define GENERATE_PRIMES(callback, uintXX_t) {              \
+  uint32_t i = 0;                                          \
+  for (; i < sieveSize - sieveSize % 4; i += 4) {          \
+    /* big-endian safe, reinterpret_cast won't work */     \
+    uint32_t dword =  sieve[i] +                           \
+                     (sieve[i+1] <<  8) +                  \
+                     (sieve[i+2] << 16) +                  \
+                     (sieve[i+3] << 24);                   \
+    while (dword != 0)                                     \
+      callback ( getNextPrime<uintXX_t>(i, &dword) );      \
+  }                                                        \
+  for (; i < sieveSize; i++) {                             \
+    uint32_t byte = sieve[i];                              \
+    while (byte != 0)                                      \
+      callback ( getNextPrime<uintXX_t>(i, &byte) );       \
+  }                                                        \
 }
+
+} // namespace soe
 
 #endif /* SIEVEOFERATOSTHENES_H */

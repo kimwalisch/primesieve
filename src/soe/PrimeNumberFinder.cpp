@@ -147,7 +147,6 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
  */
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS)) {
-    const uint64_t segmentLow = getSegmentLow();
     // i = 0 twins, i = 1 triplets, ...
     uint32_t i = 0;
     for (; !ps_.isFlag(ps_.PRINT_TWINS << i); i++)
@@ -159,10 +158,10 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
           std::ostringstream kTuplet;
           kTuplet << "(";
           uint32_t bits = *bitmask;
-          uint64_t offset = segmentLow + j * NUMBERS_PER_BYTE;
-          for (; bits & (bits - 1); bits &= bits - 1)
-            kTuplet << offset + getFirstSetBitValue(bits) << ", ";
-          kTuplet << offset + getFirstSetBitValue(bits) << ")\n";
+          do {
+            kTuplet << getNextPrime<uint64_t>(j, &bits) << ", ";
+          } while (bits & (bits - 1));
+          kTuplet << getNextPrime<uint64_t>(j, &bits) << ")\n";
           std::cout << kTuplet.str();
         }
       }

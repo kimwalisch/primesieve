@@ -51,10 +51,10 @@ const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29,
 /** De Bruijn sequence for first set bitValues_ */
 const uint32_t SieveOfEratosthenes::bruijnBitValues_[32] =
 {
-    7,  11, 109, 13, 113, 59, 97, 17,
-  119,  89,  79, 61, 101, 71, 19, 37,
-  121, 107,  53, 91,  83, 77, 67, 31,
-  103,  49,  73, 29,  47, 23, 43, 41
+    7,  11, 109,  13, 113,  59,  97,  17,
+  119,  89,  79,  61, 101,  71,  19,  37,
+  121, 107,  53,  91,  83,  77,  67,  31,
+  103,  49,  73,  29,  47,  23,  43,  41
 };
 
 /**
@@ -98,11 +98,6 @@ SieveOfEratosthenes::~SieveOfEratosthenes() {
   delete eratMedium_;
   delete eratBig_;
   delete[] sieve_;
-}
-
-/** returns bitValues_[ bitScanForward(v) ] */
-uint32_t SieveOfEratosthenes::getFirstSetBitValue(uint32_t v) {
-  return bruijnBitValues_[((v & -static_cast<int32_t>(v)) * 0x077CB531) >> 27];
 }
 
 uint32_t SieveOfEratosthenes::getPreSieveLimit() const {
