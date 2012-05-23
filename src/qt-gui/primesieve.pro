@@ -61,12 +61,14 @@ SOURCES += ../soe/EratBig.cpp \
     ../soe/PrimeNumberGenerator.cpp \
     ../soe/PreSieve.cpp \
     ../soe/WheelFactorization.cpp
-HEADERS += ../soe/EratBig.h \
-    ../soe/EratSmall.h \
+HEADERS += ../soe/EratSmall.h \
+    ../soe/EratBig.h \
+    ../soe/EratBig-inline.h \
     ../soe/PrimeNumberFinder.h \
     ../soe/PrimeSieve.h \
     ../soe/ParallelPrimeSieve.h \
     ../soe/SieveOfEratosthenes.h \
+    ../soe/SieveOfEratosthenes-inline.h \
     ../soe/EratMedium.h \
     ../soe/PrimeNumberGenerator.h \
     ../soe/PreSieve.h \
