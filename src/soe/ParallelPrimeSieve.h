@@ -36,27 +36,23 @@
 #define PARALLELPRIMESIEVE_H
 
 #include "PrimeSieve.h"
-#include "config.h"
 #include <stdint.h>
 
-#if defined(_OPENMP)
+#ifdef _OPENMP
   #include <omp.h>
 #endif
 
-/**
- * ParallelPrimeSieve uses multiple PrimeSieve objects and OpenMP to
- * sieve primes in parallel. By default it counts primes using
- * multiple threads but generates primes in arithmetic order using a
- * single thread. The file /README describes the algorithms used in
- * more detail and /docs/USAGE_EXAMPLES contains source code examples.
- */
+/// ParallelPrimeSieve uses multiple PrimeSieve objects and OpenMP to
+/// sieve primes in parallel. By default it counts primes using
+/// multiple threads but generates primes in arithmetic order using a
+/// single thread. The README file describes the algorithms used in
+/// more detail and docs/USAGE_EXAMPLES contains source code examples.
+///
 class ParallelPrimeSieve : public PrimeSieve {
 public:
-  /**
-   * Used in the primesieve Qt application (../qt-gui)
-   * to handle the communication between the GUI process
-   * and the ParallelPrimeSieve process.
-   */
+  /// Used in the primesieve Qt application (../qt-gui)
+  /// to handle the communication between the GUI process
+  /// and the ParallelPrimeSieve process
   struct SharedMemory {
     uint64_t start;
     uint64_t stop;
@@ -67,10 +63,8 @@ public:
     double status;
     double timeElapsed;
   };
-  /*
-   * if (numThreads_ == IDEAL_NUM_THREADS) an ideal number
-   * of threads will be used for sieving.
-   */
+  /// if (numThreads_ == IDEAL_NUM_THREADS) an ideal number
+  /// of threads will be used for sieving
   enum { IDEAL_NUM_THREADS = -1 };
   ParallelPrimeSieve();
   virtual ~ParallelPrimeSieve();
@@ -78,16 +72,16 @@ public:
   static int getMaxThreads();
   int getNumThreads() const;
   void setNumThreads(int);
-#if defined(_OPENMP)
+#ifdef _OPENMP
   using PrimeSieve::sieve;
   virtual void sieve();
 #endif
 private:
-  /** Number of threads to be used for sieving. */
+  /// Number of threads to be used for sieving
   int numThreads_;
   SharedMemory* shm_;
   int getIdealNumThreads() const;
-#if defined(_OPENMP)
+#ifdef _OPENMP
   omp_lock_t lock_;
   virtual void updateStatus(uint32_t);
   virtual void set_lock();
@@ -96,4 +90,4 @@ private:
 #endif
 };
 
-#endif /* PARALLELPRIMESIEVE_H */
+#endif

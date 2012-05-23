@@ -34,6 +34,7 @@
 
 #include "EratMedium.h"
 #include "SieveOfEratosthenes.h"
+#include "SieveOfEratosthenes-inline.h"
 #include "EratBase.h"
 #include "WheelFactorization.h"
 #include "config.h"
@@ -58,14 +59,13 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
   this->setLimit(limit);
 }
 
-/**
- * Implementation of the segmented sieve of Eratosthenes with wheel
- * factorization optimized for medium sieving primes that have a few
- * multiples per segment.
- * This implementation uses a sieve array with 30 numbers per byte and
- * a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
- * @see SieveOfEratosthenes::crossOffMultiples()
- */
+/// Implementation of the segmented sieve of Eratosthenes with wheel
+/// factorization optimized for medium sieving primes that have a
+/// few multiples per segment. This implementation uses a sieve array
+/// with 30 numbers per byte and a modulo 210 wheel that skips
+/// multiples of 2, 3, 5 and 7.
+/// @see SieveOfEratosthenes::crossOffMultiples()
+///
 void EratMedium::sieve(uint8_t* sieve, uint32_t sieveSize)
 {
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {

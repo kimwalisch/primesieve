@@ -32,20 +32,18 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/** 
- * @file  main.cpp
- * @brief Command-line version of primesieve, multi-threaded (OpenMP).
- * @see   http://primesieve.googlecode.com
- *
- * primesieve is a highly optimized implementation of the sieve of
- * Eratosthenes that generates prime numbers and prime k-tuplets (twin
- * primes, prime triplets, ...) up to 2^64 maximum.
- */
+
+/// @file  main.cpp
+/// @brief Command-line version of primesieve, multi-threaded (OpenMP).
+/// @see   http://primesieve.googlecode.com
+/// primesieve is a highly optimized implementation of the sieve of
+/// Eratosthenes that generates prime numbers and prime k-tuplets (twin
+/// primes, prime triplets, ...) up to 2^64 maximum.
 
 #include "../expr/ExpressionParser.h"
 #include "../soe/ParallelPrimeSieve.h"
 
-/// declared in test.cpp
+// declared in test.cpp
 void test();
 
 #include <stdint.h>
@@ -53,12 +51,13 @@ void test();
 #include <iostream>
 #include <string>
 #include <vector>
-#include <iomanip> /* std::setw(int) */
+#include <iomanip>
 #include <algorithm>
 
 namespace {
 
-std::vector<uint64_t> numbers; /* start and stop number for sieving */
+// start and stop number for sieving
+std::vector<uint64_t> numbers;
 
 int32_t threads    = -1;
 int32_t flags      =  0;
@@ -134,10 +133,9 @@ bool isDigits(const std::string &str) {
   return str.find_first_not_of(digits) == std::string::npos;
 }
 
-/**
- * Process the command-line options.
- * @see help(void)
- */
+/// Process the command-line options.
+/// @see help(void)
+///
 int processOptions(std::size_t argc, char* argv[]) {
   if (argc < 2 || argc > 20)
     return OPTION_HELP;
@@ -155,7 +153,7 @@ int processOptions(std::size_t argc, char* argv[]) {
         printParser = true;
     }
   }
-  // process the options
+  // process options
   for (std::size_t i = numbers.size() + 1; i < argc; i++) {
     if (*argv[i] != '-' && *argv[i] != '/')
       return OPTION_HELP;
@@ -212,7 +210,7 @@ int processOptions(std::size_t argc, char* argv[]) {
   return (numbers.size() == 2) ? START_SIEVING : OPTION_HELP;
 }
 
-} // end anonymous namespace
+} // end namespace
 
 int main(int argc, char* argv[]) {
   // process the command-line options, see help()
@@ -223,7 +221,6 @@ int main(int argc, char* argv[]) {
     case OPTION_TEST:    test();    return 0;
     case START_SIEVING:  break;
   }
-
   std::cout << std::left;
   if (!quietMode && printParser) {
     std::cout << std::setw(10) << "START" << " = " << numbers[0] << std::endl;

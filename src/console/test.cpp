@@ -32,11 +32,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/** 
- * @file test.cpp
- * @brief `make test` or `./primesieve -test` runs sieving tests to
- *        check if primesieve produces correct results.
- */
+
+/// @file test.cpp
+/// @brief `make test` or `./primesieve -test` runs sieving tests to
+///        ensure that primesieve produces correct results.
 
 #include "../soe/ParallelPrimeSieve.h"
 
@@ -74,22 +73,18 @@ unsigned int primeCounts[21] = {
   2895317534U  // pi[10^15, 10^15+10^11]
 };
 
-// Keeps the memory requirement below 1GB in testBigPrimes()
+/// Keeps the memory requirement below 1GB in testBigPrimes()
 int maxThreads[8] = { 32, 32, 32, 32, 32, 8, 4, 1 };
-// Set to true if any test fails
+/// Set to true if any test fails
 bool isError = false;
-// Time elapsed in seconds of all sieving tests
+/// Time elapsed in seconds of all sieving tests
 double seconds = 0.0;
 
-/**
- * Integer pow, raise to power, x^n.
- * Code from (ported to C++ from Ruby):
- * http://en.wikipedia.org/wiki/Exponentiation_by_squaring
- */
+/// Raise to power, x^n.
 uint64_t ipow(uint64_t x, int n) {
   uint64_t result = 1;
   while (n != 0) {
-    if (n & 1) {
+    if ((n & 1) != 0) {
       result *= x;
       n -= 1;
     }
@@ -108,10 +103,9 @@ void evaluateTest(bool isSuccess) {
   }
 }
 
-/**
- * Calculate the prime-counting function pi(x) up to 10^11
- * and check the primeCounts[] results.
- */
+/// Calculate the prime-counting function pi(x) up to 10^11
+/// and check the primeCounts[] results.
+///
 void testPix() {
   std::cout << "Calculating the prime-counting function pi(x)" << std::endl;
   try {
@@ -151,11 +145,10 @@ void testPix() {
   }
 }
 
-/**
- * Count the primes within the interval [10^x, 10^x+2^32] with x = 12
- * to 19 and check the primeCounts[] results.
- * @remark Uses up to 1GB of memory
- */
+/// Count the primes within the interval [10^x, 10^x+2^32] with x = 12
+/// to 19 and check the primeCounts[] results.
+/// @remark Uses up to 1GB of memory
+///
 void testBigPrimes() {
   try {
     ParallelPrimeSieve pps;
@@ -179,7 +172,7 @@ void testBigPrimes() {
   }
 }
 
-/** Generate a random 64-bit integer >= 0 && < limit */
+/// Generate a random 64-bit integer >= 0 && < limit
 uint64_t getRand64(uint64_t limit) {
   uint64_t rand64 = 0;
   for (int i = 0; i < 4; i++)
@@ -187,16 +180,15 @@ uint64_t getRand64(uint64_t limit) {
   return rand64 % limit;
 }
 
-/** Generate a random (power of 2) sieve size >= 1 and <= 4096 */
+/// Generate a random (power of 2) sieve size >= 1 and <= 4096
 uint32_t getRandomSieveSize() {
   return static_cast<uint32_t>(1 << (std::rand() % 13));
 }
 
-/**
- * Sieve about 200 small random intervals (using random sieve sizes)
- * until the interval [10^15, 10^15+10^11] has been completed and
- * check the prime count result.
- */
+/// Sieve about 200 small random intervals (using random sieve sizes)
+/// until the interval [10^15, 10^15+10^11] has been completed and
+/// check the prime count result.
+///
 void testRandomIntervals() {
   std::cout << "Sieving the primes within [10^15, 10^15+10^11] randomly" << std::endl;
   std::srand(static_cast<unsigned int>(std::time(0)));
@@ -233,18 +225,17 @@ void testRandomIntervals() {
   }
 }
 
-} // annonymous namespace
+} // end namespace
 
-/**
- * Run various sieving tests to check if PrimeSieve produces correct
- * results, uses up to 1GB of memory.
- *
- * The test may fail for one of the following reasons:
- * 1. The source code has been modified and a new bug has been
- *    introduced somewhere.
- * 2. The compiler has produced an erroneous executable.
- * 3. The user's system is not stable.
- */
+/// Run various sieving tests to check if PrimeSieve produces correct
+/// results, uses up to 1GB of memory.
+///
+/// The test may fail for one of the following reasons:
+/// 1. The source code has been modified and a new bug has been
+///    introduced somewhere.
+/// 2. The compiler has produced an erroneous executable.
+/// 3. The user's system is not stable.
+///
 void test() {
   std::cout << std::left;
   testPix();

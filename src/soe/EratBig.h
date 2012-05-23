@@ -35,42 +35,40 @@
 #ifndef ERATBIG_H
 #define ERATBIG_H
 
-#include "WheelFactorization.h"
 #include "config.h"
+#include "WheelFactorization.h"
 
 #include <stdint.h>
 #include <vector>
 #include <list>
 
 namespace soe {
-
 class SieveOfEratosthenes;
 
-/**
- * EratBig is my implementation of Tomas Oliveira e Silva's
- * cache-friendly segmented sieve of Eratosthenes algorithm, see:
- * http://www.ieeta.pt/~tos/software/prime_sieve.html
- * My implementation uses a sieve array with 30 numbers per byte,
- * 8 bytes per sieving prime and a modulo 210 wheel that skips
- * multiples of 2, 3, 5 and 7.
- * EratBig is optimized for big sieving primes that have very few
- * multiple occurrences per segment. 
- */
+/// EratBig is my implementation of Tomas Oliveira e Silva's
+/// cache-friendly segmented sieve of Eratosthenes algorithm, see:
+/// http://www.ieeta.pt/~tos/software/prime_sieve.html
+/// My implementation uses a sieve array with 30 numbers per byte,
+/// 8 bytes per sieving prime and a modulo 210 wheel that skips
+/// multiples of 2, 3, 5 and 7.
+/// EratBig is optimized for big sieving primes that have very few
+/// multiple occurrences per segment. 
+///
 class EratBig: protected Modulo210Wheel_t {
 public:
   EratBig(const SieveOfEratosthenes&);
   ~EratBig();
-  void addSievingPrime(uint32_t);
+  void addSievingPrime(uint64_t, uint32_t);
   void sieve(uint8_t*);
 private:
   enum { BUCKETS_PER_ALLOC = config::MEMORY_PER_ALLOC / sizeof(Bucket) };
-  /** Vector of bucket lists, holds the sieving primes. */
+  /// Vector of bucket lists, holds the sieving primes
   std::vector<Bucket*> lists_;
-  /** List of empty buckets. */
+  /// List of empty buckets
   Bucket* stock_;
-  /** Pointers of the allocated buckets. */
+  /// Pointers of the allocated buckets
   std::list<Bucket*> pointers_;
-  /** log2 of SieveOfEratosthenes::sieveSize_. */
+  /// log2 of SieveOfEratosthenes::sieveSize_
   const uint32_t log2SieveSize_;
   const uint32_t moduloSieveSize_;
   uint32_t moduloListsSize_;
@@ -81,4 +79,4 @@ private:
 
 } // namespace soe
 
-#endif /* ERATBIG_H */
+#endif

@@ -35,23 +35,21 @@
 #ifndef ERATMEDIUM_H
 #define ERATMEDIUM_H
 
-#include "EratBase.h"
-#include "WheelFactorization.h"
 #include "config.h"
+#include "WheelFactorization.h"
+#include "EratBase.h"
 
 #include <stdint.h>
 
 namespace soe {
-
 class SieveOfEratosthenes;
 
-/**
- * EratMedium is an implementation of the segmented sieve of
- * Eratosthenes with wheel factorization optimized for medium sieving
- * primes with a few multiples per segment.
- * It uses a sieve array with 30 numbers per byte, 8 bytes per sieving
- * prime and a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
- */
+/// EratMedium is an implementation of the segmented sieve of
+/// Eratosthenes with wheel factorization optimized for medium sieving
+/// primes with a few multiples per segment. It uses a sieve array
+/// with 30 numbers per byte, 8 bytes per sieving prime and a modulo
+/// 210 wheel that skips multiples of 2, 3, 5 and 7.
+///
 class EratMedium : public EratBase<Modulo210Wheel_t> {
 public:
   EratMedium(const SieveOfEratosthenes&);
@@ -60,4 +58,4 @@ public:
 
 } // namespace soe
 
-#endif /* ERATMEDIUM_H */
+#endif

@@ -34,8 +34,8 @@
 
 #include "EratBig.h"
 #include "SieveOfEratosthenes.h"
+#include "SieveOfEratosthenes-inline.h"
 #include "WheelFactorization.h"
-#include "config.h"
 #include "imath.h"
 
 #include <stdint.h>
@@ -66,11 +66,10 @@ EratBig::~EratBig() {
     delete[] *it;
 }
 
-/**  
- * Set the size of the lists_ vector.
- * @remark The size is a power of 2 value which allows use of fast
- *         bitwise operators in sieve(uint8_t*).
- */
+/// Set the size of the lists_ vector.
+/// @remark The size is a power of 2 value which allows use of fast
+///         bitwise operators in sieve(uint8_t*).
+///
 void EratBig::setSize(const SieveOfEratosthenes& soe) {
   // max values in sieve(uint8_t*)
   uint32_t maxSievingPrime   = soe.getSquareRoot() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
@@ -90,30 +89,10 @@ void EratBig::initBucketLists() {
     pushBucket(i);
 }
 
-/**
- * Add a prime number <= sqrt(n) for sieving to EratBig.
- */
-void EratBig::addSievingPrime(uint32_t prime) {
-  uint32_t multipleIndex;
-  uint32_t wheelIndex;
-  if (getWheelPrimeData(&prime, &multipleIndex, &wheelIndex) == true) {
-    // indicates in how many segments the next multiple
-    // of prime needs to be crossed-off
-    uint32_t segmentCount = multipleIndex >> log2SieveSize_;
-    multipleIndex &= moduloSieveSize_;
-    uint32_t next = segmentCount & moduloListsSize_;
-    // add prime to the bucket list related
-    // to its next multiple occurrence
-    if (!lists_[next]->addWheelPrime(prime, multipleIndex, wheelIndex))
-      pushBucket(next);
-  }
-}
-
-/**
- * Add an empty bucket from the bucket stock_ to the
- * front of lists_[index], if the bucket stock_ is
- * empty new buckets are allocated first.
- */
+/// Add an empty bucket from the bucket stock_ to the
+/// front of lists_[index], if the bucket stock_ is
+/// empty new buckets are allocated first.
+///
 void EratBig::pushBucket(uint32_t index) {
   if (stock_ == NULL) {
     Bucket* more = new Bucket[BUCKETS_PER_ALLOC];
@@ -129,16 +108,15 @@ void EratBig::pushBucket(uint32_t index) {
   lists_[index] = bucket;
 }
 
-/**
- * Implementation of Tomas Oliveira e Silva's cache-friendly segmented
- * sieve of Eratosthenes algorithm, see:
- * http://www.ieeta.pt/~tos/software/prime_sieve.html
- * This algorithm is used to remove the multiples of big sieving
- * primes (i.e. very few multiples per segment) from the sieve array.
- * My implementation uses a sieve array with 30 numbers per byte and a
- * modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
- * @see SieveOfEratosthenes::crossOffMultiples()
- */
+/// Implementation of Tomas Oliveira e Silva's cache-friendly segmented
+/// sieve of Eratosthenes algorithm, see:
+/// http://www.ieeta.pt/~tos/software/prime_sieve.html
+/// This algorithm is used to remove the multiples of big sieving
+/// primes (i.e. very few multiples per segment) from the sieve array.
+/// This implementation uses a sieve array with 30 numbers per byte and
+/// a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
+/// @see SieveOfEratosthenes::crossOffMultiples()
+///
 void EratBig::sieve(uint8_t* sieve)
 {
   // lists_[0] contains the list of buckets related to the current
@@ -187,7 +165,6 @@ void EratBig::sieve(uint8_t* sieve)
         if (!lists_[next1]->addWheelPrime(sievingPrime1, multipleIndex1, wheelIndex1))
           pushBucket(next1);
       }
-
       if (wPrime != end) {
         uint32_t multipleIndex = wPrime->getMultipleIndex();
         uint32_t wheelIndex    = wPrime->getWheelIndex();

@@ -46,44 +46,28 @@ class EratSmall;
 class EratMedium;
 class EratBig;
 
-/**
- * SieveOfEratosthenes is an implementation of the segmented sieve of
- * Eratosthenes with wheel factorization.
- * It uses a bit array with 30 numbers per byte and 3 different sieve
- * of Eratosthenes algorithms i.e. Erat(Small|Medium|Big) objects
- * optimized for small, medium and big sieving primes.
- * Its main method is sieve(uint32_t) it must be called consecutively
- * for all primes up to sqrt(n) in order to sieve the primes up to n.
- * @remark SieveOfEratosthenes is an abstract class, PrimeNumberFinder
- *         and PrimeNumberGenerator are derived from it.
- */
+/// SieveOfEratosthenes is an implementation of the segmented sieve of
+/// Eratosthenes with wheel factorization. It uses a bit array with 30
+/// numbers per byte and 3 different sieve of Eratosthenes algorithms
+/// i.e. Erat(Small|Medium|Big) objects optimized for small, medium
+/// and big sieving primes. Its main method is sieve(uint32_t) it must
+/// be called consecutively for all primes up to sqrt(n) in order to
+/// sieve the primes up to n. SieveOfEratosthenes is an abstract class,
+/// PrimeNumberFinder and PrimeNumberGenerator are derived from it.
+///
 class SieveOfEratosthenes {
 public:
   enum {
-    /**
-     * SieveOfEratosthenes uses dense bit packing with 30 numbers
-     * per byte. Each byte of the sieve_ array holds the values
-     * i * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}, that is
-     * 8 values per byte and thus one for each bit.
-     */
+    /// SieveOfEratosthenes uses dense bit packing with 30 numbers
+    /// per byte. Each byte of the sieve_ array holds the values
+    /// i * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}, that is
+    /// 8 values per byte and thus one for each bit.
     NUMBERS_PER_BYTE = 30
   };
-  uint64_t getSegmentLow() const {
-    return segmentLow_;
-  }
-  uint64_t getStart() const {
-    return start_;
-  }
-  uint64_t getStop() const {
-    return stop_;
-  }
-  uint32_t getSquareRoot() const {
-    return sqrtStop_;
-  }
-  /** Get the sieve size in bytes. */
-  uint32_t getSieveSize() const {
-    return sieveSize_;
-  }
+  uint64_t getStart() const;
+  uint64_t getStop() const;
+  uint32_t getSquareRoot() const;
+  uint32_t getSieveSize() const;
   uint32_t getPreSieveLimit() const;
   void sieve(uint32_t);
   void finish();
@@ -95,69 +79,46 @@ protected:
   virtual void segmentProcessed(const uint8_t*, uint32_t) = 0;
   template<typename T> T getNextPrime(uint32_t, uint32_t*) const;
 private:
-  /** Lower bound of the current segment. */
+  /// Lower bound of the current segment
   uint64_t segmentLow_;
-  /** Upper bound of the current segment. */
+  /// Upper bound of the current segment
   uint64_t segmentHigh_;
-  /** Sieve the primes within the interval [start_, stop_]. */
+  /// Sieve the primes within the interval [start_, stop_]
   const uint64_t start_;
-  /** Sieve the primes within the interval [start_, stop_]. */
+  /// Sieve the primes within the interval [start_, stop_]
   const uint64_t stop_;
-  /** sqrt(stop_) */
+  /// sqrt(stop_) */
   const uint32_t sqrtStop_;
-  /** Pre-sieves multiples of small primes <= preSieve_.getLimit(). */
+  /// Pre-sieves multiples of small primes <= preSieve_.getLimit()
   const PreSieve preSieve_;
-  /** Set to false when the first segment has been sieved. */
+  /// Set to false when the first segment has been sieved
   bool isFirstSegment_;
-  /** Sieve of Eratosthenes array. */
+  /// Sieve of Eratosthenes array
   uint8_t* sieve_;
-  /** Size of the sieve_ array in bytes. */
+  /// Size of the sieve_ array in bytes
   uint32_t sieveSize_;
-  /**
-   * Used to cross-off the multiples of small sieving primes
-   * that have many multiples per segment.
-   */
+  /// Used to cross-off the multiples of small sieving primes
+  /// that have many multiples per segment
   EratSmall* eratSmall_;
-  /**
-   * Used to cross-off the multiples of medium sieving primes
-   * that have a few multiples per segment.
-   */
+  /// Used to cross-off the multiples of medium sieving primes
+  /// that have a few multiples per segment
   EratMedium* eratMedium_;
-  /**
-   * Used to cross-off the multiples of big sieving primes
-   * that have very few multiples per segment.
-   */
+  /// Used to cross-off the multiples of big sieving primes
+  /// that have very few multiples per segment
   EratBig* eratBig_;
   static uint32_t getByteRemainder(uint64_t);
   void initEratAlgorithms();
   void preSieve();
   void crossOffMultiples();
-  /** Uncopyable, declared but not defined. */
+  /// Uncopyable, declared but not defined
   SieveOfEratosthenes(const SieveOfEratosthenes&);
   SieveOfEratosthenes& operator=(const SieveOfEratosthenes&);
 };
 
-/**
- * Reconstruct the prime number corresponding to the first set bit
- * of the dword parameter (and unset bit).
- * @param index  Current sieve index.
- * @param dword  The next 4 bytes of the sieve array.
- */
-template <typename T>
-inline T SieveOfEratosthenes::getNextPrime(uint32_t index, uint32_t* dword) const {
-  uint32_t firstBit = *dword & -static_cast<int32_t>(*dword);
-  // calculate bitValues_[ bitScanForward(dword) ]
-  uint32_t bitValue = bruijnBitValues_[(firstBit * 0x077CB531) >> 27];
-  T prime = static_cast<T>(segmentLow_) + index * NUMBERS_PER_BYTE + bitValue;
-  *dword ^= firstBit;
-  return prime;
-}
-
-/**
- * Reconstruct prime numbers from 1 bits of the sieve array
- * and call a callback function for each prime.
- * @see PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
- */
+/// Reconstruct prime numbers from 1 bits of the sieve array
+/// and call a callback function for each prime.
+/// @see PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
+///
 #define GENERATE_PRIMES(callback, uintXX_t) {           \
   uint32_t i = 0;                                       \
   for (; i < sieveSize - sieveSize % 4; i += 4) {       \
@@ -178,4 +139,4 @@ inline T SieveOfEratosthenes::getNextPrime(uint32_t index, uint32_t* dword) cons
 
 } // namespace soe
 
-#endif /* SIEVEOFERATOSTHENES_H */
+#endif

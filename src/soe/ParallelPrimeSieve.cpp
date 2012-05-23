@@ -32,13 +32,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "config.h"
 #include "ParallelPrimeSieve.h"
 #include "PrimeSieve.h"
 #include "PrimeNumberFinder.h"
-#include "config.h"
 #include "imath.h"
 
-#if defined(_OPENMP)
+#ifdef _OPENMP
   #include <omp.h>
 #endif
 
@@ -59,22 +59,21 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
                "config::MIN_THREAD_INTERVAL must not be < 100");
   static_assert(config::MIN_THREAD_INTERVAL <= config::MAX_THREAD_INTERVAL,
                "config::MIN_THREAD_INTERVAL must not be > config::MAX_THREAD_INTERVAL");
-#if defined(_OPENMP)
+#ifdef _OPENMP
   omp_init_lock(&lock_);
 #endif
 }
 
 ParallelPrimeSieve::~ParallelPrimeSieve() {
-#if defined(_OPENMP)
+#ifdef _OPENMP
   omp_destroy_lock(&lock_);
 #endif
 }
 
-/**
- * API for the primesieve Qt application in src/qt-gui.
- * Initializes the ParallelPrimeSieve object with values from
- * a shared memory segment.
- */
+/// API for the primesieve Qt application in src/qt-gui.
+/// Initializes the ParallelPrimeSieve object with values from
+/// a shared memory segment.
+///
 void ParallelPrimeSieve::init(SharedMemory& shm) {
   setStart(shm.start);
   setStop(shm.stop);
@@ -85,7 +84,7 @@ void ParallelPrimeSieve::init(SharedMemory& shm) {
 }
 
 int ParallelPrimeSieve::getMaxThreads() {
-#if defined(_OPENMP)
+#ifdef _OPENMP
   return omp_get_max_threads();
 #else
   return 1;
@@ -96,15 +95,14 @@ int ParallelPrimeSieve::getNumThreads() const {
   return (numThreads_ == IDEAL_NUM_THREADS) ? getIdealNumThreads() : numThreads_;
 }
 
-/** Set the number of threads for sieving. */
+/// Set the number of threads for sieving
 void ParallelPrimeSieve::setNumThreads(int numThreads) {
   numThreads_ = getBoundedValue(1, numThreads, getMaxThreads());
 }
 
-/**
- * Get an ideal number of threads for the current set
- * start_, stop_ and flags_.
- */
+/// Get an ideal number of threads for the current
+/// set start_, stop_ and flags_.
+///
 int ParallelPrimeSieve::getIdealNumThreads() const {
   // by default 1 thread is used to generate primes in arithmetic
   // order but multiple threads are used for counting
@@ -118,7 +116,7 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   return static_cast<int>(idealNumThreads);
 }
 
-#if defined(_OPENMP)
+#ifdef _OPENMP
 
 void ParallelPrimeSieve::set_lock() {
   omp_set_lock(&lock_);
@@ -128,10 +126,9 @@ void ParallelPrimeSieve::unset_lock() {
   omp_unset_lock(&lock_);
 }
 
-/**
- * Calculate the current status in percent of sieve().
- * @param segment  The interval size of the processed segment
- */
+/// Calculate the current status in percent of sieve().
+/// @param segment  The interval size of the processed segment.
+///
 void ParallelPrimeSieve::updateStatus(uint32_t segment) {
   #pragma omp critical (status)
   {
@@ -143,9 +140,9 @@ void ParallelPrimeSieve::updateStatus(uint32_t segment) {
   }
 }
 
-/**
- * Get a thread interval size that ensures a good load balance.
- */
+/// Get a thread interval size that ensures a
+/// good load balance.
+///
 uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   assert(threads > 1);
   uint64_t bestStrategy = std::min(isqrt(stop_) * 1000, (stop_ - start_) / threads);
@@ -155,10 +152,9 @@ uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   return balanced;
 }
 
-/**
- * Sieve the primes and prime k-tuplets within [start_, stop_] in
- * parallel using OpenMP (version 3.0 or later).
- */
+/// Sieve the primes and prime k-tuplets within [start_, stop_] in
+/// parallel using OpenMP (version 3.0 or later).
+///
 void ParallelPrimeSieve::sieve() {
   if (stop_ < start_)
     throw std::invalid_argument("STOP must be >= START");
@@ -175,13 +171,11 @@ void ParallelPrimeSieve::sieve() {
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
     uint64_t balanced = getBalancedInterval(threads);
     uint64_t align = start_ + 32 - start_ % 30;
-    /**
-     * The sieve interval [start_, stop_] is subdivided into chunks of
-     * size 'balanced' that are sieved in parallel using multiple
-     * threads. This scales well as each thread sieves using its own
-     * dedicated memory and thus there is no synchronisation required
-     * for sieving.
-     */
+    // The sieve interval [start_, stop_] is subdivided into chunks of
+    // size 'balanced' that are sieved in parallel using multiple
+    // threads. This scales well as each thread sieves using its own
+    // dedicated memory and thus there is no synchronisation required
+    // for sieving.
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
         reduction(+: count0, count1, count2, count3, count4, count5, count6)
     for (uint64_t n = align; n < stop_; n += balanced) {
@@ -214,4 +208,4 @@ void ParallelPrimeSieve::sieve() {
   }
 }
 
-#endif /* _OPENMP */
+#endif

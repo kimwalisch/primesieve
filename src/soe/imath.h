@@ -32,10 +32,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/** 
- * @file imath.h 
- * @brief Auxiliary integer math functions needed in primesieve.
- */
+
+/// @file imath.h 
+/// @brief Auxiliary integer math functions needed in primesieve.
 
 #ifndef IMATH_PRIMESIEVE_H
 #define IMATH_PRIMESIEVE_H
@@ -47,20 +46,18 @@ inline T isquare(T x) {
   return x * x;
 }
 
-/**
- * Determine if an integer is a power of 2.
- * @param x  Integer value.
- */
+/// Determine if an integer is a power of 2.
+/// @param x  Integer value.
+///
 template <typename T>
 inline bool isPowerOf2(T x) {
   return (x != 0 && (x & (x - 1)) == 0);
 }
 
-/**
- * Round up to the next highest power of 2.
- * @see      Hacker's Delight, p. 48.
- * @param x  Integer value.
- */
+/// Round up to the next highest power of 2.
+/// @see      Hacker's Delight, p. 48.
+/// @param x  Integer value.
+///
 template <typename T>
 inline T nextPowerOf2(T x) {
   const T bits = static_cast<T>(sizeof(T) * 8);
@@ -70,10 +67,9 @@ inline T nextPowerOf2(T x) {
   return x + 1;
 }
 
-/**
- * Fast and protable integer log2 function.
- * @param x  Integer value.
- */
+/// Fast and protable integer log2 function.
+/// @param x  Integer value.
+///
 template <typename T>
 inline T ilog2(T x) {
   const T bits = static_cast<T>(sizeof(T) * 8);
@@ -83,11 +79,10 @@ inline T ilog2(T x) {
   return log2;
 }
 
-/**
- * Integer square root, Newton's method.
- * @see      Hacker's Delight, p. 203-207.
- * @param x  Unsigned integer.
- */
+/// Integer square root, Newton's method.
+/// @see      Hacker's Delight, p. 203-207.
+/// @param x  Unsigned integer.
+///
 template <typename T>
 inline T isqrt(T x) {
   if (x <= 1) return x;
@@ -105,4 +100,4 @@ inline T isqrt(T x) {
 
 } // namespace soe
 
-#endif /* IMATH_PRIMESIEVE_H */
+#endif

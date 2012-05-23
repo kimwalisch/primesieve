@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   6 February 2012
+# Last modified:   23 May 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -86,7 +86,7 @@ lib: dir_lib $(LIB_OBJECTS)
 	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $(LIB_OBJECTS)
 	@if not exist $(DISTDIR)\$(TARGET)\soe mkdir $(DISTDIR)\$(TARGET)\soe
 	copy /Y $(LIBDIR)\$(TARGET).lib $(DISTDIR)
-	copy /Y $(SOEDIR)\*.h $(DISTDIR)\$(TARGET)\soe
+	copy /Y $(SOEDIR)\*PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
 
 $(LIB_OBJECTS): $(SOEDIR)\$$(@B).cpp
 	$(CXX) $(LIB_CXXFLAGS) $(INCPATH) /c $? /Fo"$@"

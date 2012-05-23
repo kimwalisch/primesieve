@@ -35,26 +35,24 @@
 #ifndef ERATSMALL_H
 #define ERATSMALL_H
 
-#include "EratBase.h"
-#include "WheelFactorization.h"
 #include "config.h"
+#include "WheelFactorization.h"
+#include "EratBase.h"
 
 #include <stdint.h>
 
 namespace soe {
-
 class SieveOfEratosthenes;
 
-/**
- * EratSmall is an implementation of the segmented sieve of
- * Eratosthenes with wheel factorization optimized for small sieving
- * primes with many multiples per segment.
- * It uses a sieve array with 30 numbers per byte, 8 bytes per sieving
- * prime and a hardcoded modulo 30 wheel that skips multiples of 2, 3
- * and 5. The algorithm is a further optimized implementation of Achim
- * Flammenkamp's prime_sieve.c, see:
- * http://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html
- */
+/// EratSmall is an implementation of the segmented sieve of
+/// Eratosthenes with wheel factorization optimized for small sieving
+/// primes with many multiples per segment.
+/// It uses a sieve array with 30 numbers per byte, 8 bytes per
+/// sieving prime and a hardcoded modulo 30 wheel that skips multiples
+/// of 2, 3 and 5. The algorithm is a further optimized implementation
+/// of Achim Flammenkamp's prime_sieve.c, see:
+/// http://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html
+///
 class EratSmall : public EratBase<Modulo30Wheel_t> {
 public:
   EratSmall(const SieveOfEratosthenes&);
@@ -63,4 +61,4 @@ public:
 
 } // namespace soe
 
-#endif /* ERATSMALL_H */
+#endif

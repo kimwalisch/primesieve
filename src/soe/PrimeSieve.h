@@ -35,22 +35,22 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
-#include "PrimeNumberFinder.h"
-#include "config.h"
-
 #include <stdint.h>
 #include <stdexcept>
 #include <string>
 
-/**
- * PrimeSieve is a highly optimized implementation of the segmented
- * sieve of Eratosthenes that generates primes and prime k-tuplets
- * (twins, triplets, ...) in order up to 2^64 maximum.
- * The file /README describes the algorithms used in more detail and
- * /docs/USAGE_EXAMPLES contains source code examples.
- */
+namespace soe { class PrimeNumberFinder; }
+
+using soe::PrimeNumberFinder;
+
+/// PrimeSieve is a highly optimized implementation of the segmented
+/// sieve of Eratosthenes that generates primes and prime k-tuplets
+/// (twins, triplets, ...) in order up to 2^64 maximum.
+/// The README file describes the algorithms used in more detail and
+/// docs/USAGE_EXAMPLES contains source code examples.
+///
 class PrimeSieve {
-  friend class soe::PrimeNumberFinder;
+  friend class PrimeNumberFinder;
 public:
   class cancel_sieving : public std::runtime_error {
   public:
@@ -60,7 +60,7 @@ public:
   enum {
     COUNTS_SIZE = 7
   };
-  /** Public flags for sieve(). */
+  /// Public flags for sieve()
   enum {
     COUNT_PRIMES      = 1 << 0,
     COUNT_TWINS       = 1 << 1,
@@ -82,8 +82,7 @@ public:
   PrimeSieve();
   PrimeSieve(PrimeSieve*);
   virtual ~PrimeSieve() { }
-
-  /** sieve() configuration getters. */
+  /// sieve() config getters
   uint64_t getStart() const;
   uint64_t getStop() const;
   uint32_t getPreSieveLimit() const;
@@ -97,27 +96,23 @@ public:
   bool isPrint() const;
   bool isGenerate() const;
   bool isStatus() const;
-
-  /** sieve() configuration setters. */
+  /// sieve() config setters
   void setStart(uint64_t);
   void setStop(uint64_t);
   void setPreSieveLimit(uint32_t);
   void setSieveSize(uint32_t);
   void setFlags(uint32_t);
   void addFlags(uint32_t);
-
-  /** Sieving member functions. */
+  /// sieve() member functions
   void sieve(uint64_t, uint64_t);
   void sieve(uint64_t, uint64_t, uint32_t);
   virtual void sieve();
-
-  /** Prime number generation methods. */
+  /// Prime number generation methods
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t));
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t, void*), void*);
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
-
-  /** Count member functions. */
+  /// Count member functions
   uint64_t getPrimeCount(uint64_t, uint64_t);
   uint64_t getTwinCount(uint64_t, uint64_t);
   uint64_t getTripletCount(uint64_t, uint64_t);
@@ -125,8 +120,7 @@ public:
   uint64_t getQuintupletCount(uint64_t, uint64_t);
   uint64_t getSextupletCount(uint64_t, uint64_t);
   uint64_t getSeptupletCount(uint64_t, uint64_t);
-
-  /** Count member functions after sieve() execution. */
+  /// Count member functions after sieve() execution
   uint64_t getPrimeCount() const;
   uint64_t getTwinCount() const;
   uint64_t getTripletCount() const;
@@ -135,8 +129,7 @@ public:
   uint64_t getSextupletCount() const;
   uint64_t getSeptupletCount() const;
   uint64_t getCounts(uint32_t) const;
-
-  /** Print member functions (to std::cout). */
+  /// Print member functions (to std::cout)
   void printPrimes(uint64_t, uint64_t);
   void printTwins(uint64_t, uint64_t);
   void printTriplets(uint64_t, uint64_t);
@@ -145,20 +138,20 @@ public:
   void printSextuplets(uint64_t, uint64_t);
   void printSeptuplets(uint64_t, uint64_t);
 protected:
-  /** Internal PrimeSieve flags (bits >= 20). */
+  /// Internal PrimeSieve flags (bits >= 20)
   enum {
     CALLBACK32_PRIMES     = 1 << 20,
     CALLBACK64_PRIMES     = 1 << 21,
     CALLBACK32_OOP_PRIMES = 1 << 22,
     CALLBACK64_OOP_PRIMES = 1 << 23
   };
-  /** Sieve the primes within [start_, stop_]. */
+  /// Sieve the primes within [start_, stop_]
   uint64_t start_;
-  /** Sieve the primes within [start_, stop_]. */
+  /// Sieve the primes within [start_, stop_]
   uint64_t stop_;
-  /** Prime number and prime k-tuplet counts. */
+  /// Prime number and prime k-tuplet counts
   uint64_t counts_[COUNTS_SIZE];
-  /** Time elapsed in seconds of sieve(). */
+  /// Time elapsed in seconds of sieve()
   double timeElapsed_;
   void reset();
   virtual void updateStatus(uint32_t);
@@ -180,21 +173,21 @@ private:
     LockGuard(const LockGuard&);
     LockGuard& operator=(const LockGuard&);
   };
-  /** Multiples of small primes <= preSieveLimit_ are pre-sieved. */
+  /// Multiples of small primes <= preSieveLimit_ are pre-sieved
   uint32_t preSieveLimit_;
-  /** Sieve size in kilobytes. */
+  /// Sieve size in kilobytes
   uint32_t sieveSize_;
-  /** PrimeSieve options (e.g. COUNT_PRIMES). */
+  /// PrimeSieve options (e.g. COUNT_PRIMES)
   uint32_t flags_;
-  /** Either NULL or the parent ParallelPrimeSieve object. */
+  /// Either NULL or the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
-  /** Sum of the processed segments. */
+  /// Sum of the processed segments
   uint64_t sumSegments_;
-  /** stop_ - start_ (+ 1 to avoid /0). */
+  /// stop_ - start_ (+ 1 to avoid /0)
   double interval_;
-  /** Status in percent of sieve(). */
+  /// Status in percent of sieve()
   double status_;
-  /** Callback functions and object for use with generatePrimes(). */
+  /// Callback functions and object for use with generatePrimes()
   void (*callback32_)(uint32_t);
   void (*callback64_)(uint64_t);
   void (*callback32_OOP_)(uint32_t, void*);
@@ -203,4 +196,4 @@ private:
   void doSmallPrime(uint32_t, uint32_t, uint32_t, const std::string&);
 };
 
-#endif /* PRIMESIEVE_H */
+#endif

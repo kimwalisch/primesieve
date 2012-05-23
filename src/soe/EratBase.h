@@ -35,8 +35,8 @@
 #ifndef ERATBASE_H
 #define ERATBASE_H
 
-#include "WheelFactorization.h"
 #include "config.h"
+#include "WheelFactorization.h"
 
 #include <stdint.h>
 #include <cassert>
@@ -45,23 +45,22 @@
 namespace soe {
 class SieveOfEratosthenes;
 
-/**
- * EratBase is an abstract class used by EratSmall and EratMedium to
- * initialize and store sieving primes.
- */
+/// EratBase is an abstract class used by EratSmall and EratMedium
+/// to initialize and store sieving primes.
 template<class T_Wheel>
 class EratBase : protected T_Wheel {
 public:
   uint32_t getLimit() const {
     return limit_;
   }
-  /** Add a prime number for sieving to EratBase. */
-  void addSievingPrime(uint32_t prime) {
+  /// Add a prime number for sieving to EratBase
+  /// @see SieveOfEratosthenes-inline.h
+  void addSievingPrime(uint64_t segmentLow, uint32_t prime) {
     assert(prime <= limit_);
     uint32_t multipleIndex;
     uint32_t wheelIndex;
-    if (this->getWheelPrimeData(&prime, &multipleIndex, &wheelIndex)
-        == true) {
+    bool store = this->getWheelPrimeData(segmentLow, &prime, &multipleIndex, &wheelIndex);
+    if (store == true) {
       if (!buckets_.back().addWheelPrime(prime, multipleIndex, wheelIndex)) {
         // the current bucket is full, add a new one
         buckets_.push_back(Bucket());
@@ -70,9 +69,9 @@ public:
   }
 protected:
   typedef std::list<Bucket> BucketList_t;
-  /** Upper bound for sieving primes within EratBase. */
+  /// Upper bound for sieving primes within EratBase
   uint32_t limit_;
-  /** List of buckets, holds the sieving primes. */
+  /// List of buckets, holds the sieving primes
   BucketList_t buckets_;
   EratBase(const SieveOfEratosthenes& soe) : T_Wheel(soe) {
     // initialize with an empty bucket
@@ -85,4 +84,4 @@ protected:
 
 } // namespace soe
 
-#endif /* ERATBASE_H */
+#endif

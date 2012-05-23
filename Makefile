@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   7 February 2012
+# Last modified:   23 May 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -162,7 +162,7 @@ endif
 ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
 	@mkdir -p $(PREFIX)/include/primesieve/soe
 	@mkdir -p $(PREFIX)/lib
-	cp -f src/soe/*.h $(PREFIX)/include/primesieve/soe
+	cp -f src/soe/*PrimeSieve.h $(PREFIX)/include/primesieve/soe
 	cp -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(PREFIX)/lib
   ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).so),)
     ifneq ($(findstring ldconfig,$(shell echo `which ldconfig 2> /dev/null`)),)

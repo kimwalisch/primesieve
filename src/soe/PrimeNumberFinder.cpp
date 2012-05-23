@@ -35,7 +35,7 @@
 #include "PrimeNumberFinder.h"
 #include "PrimeSieve.h"
 #include "SieveOfEratosthenes.h"
-#include "config.h"
+#include "SieveOfEratosthenes-inline.h"
 #include "popcount.h"
 
 #include <stdint.h>
@@ -46,7 +46,7 @@
 
 namespace soe {
 
-/** Bit patterns corresponding to prime k-tuplets */
+/// Bit patterns corresponding to prime k-tuplets
 const uint32_t PrimeNumberFinder::kTupletBitmasks_[6][5] =
 {
   { 0x06, 0x18, 0xc0, END },       // Twin primes
@@ -69,18 +69,16 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
     initCounts();
 }
 
-/**
- * Check if PrimeNumberFinder requires a PrimeNumberGenerator
- * object to generate its sieving primes.
- */
+/// Check if PrimeNumberFinder requires a PrimeNumberGenerator
+/// object to generate its sieving primes.
+///
 bool PrimeNumberFinder::needGenerator() const {
   return getPreSieveLimit() < getSquareRoot();
 }
 
-/**
- * Initialize the lookup tables needed to count prime k-tuplets
- * (twin primes, prime triplets, ...) per byte.
- */
+/// Initialize the lookup tables needed to count prime k-tuplets
+/// (twin primes, prime triplets, ...) per byte.
+///
 void PrimeNumberFinder::initCounts() {
   for (uint32_t i = 0; i < 6; i++) {
     if (ps_.isFlag(ps_.COUNT_TWINS << i)) {
@@ -97,12 +95,11 @@ void PrimeNumberFinder::initCounts() {
   }
 }
 
-/**
- * Executed after each sieved segment, generates and counts the primes
- * (1 bits within sieve array) within the interval
- * [segmentLow_+7, segmentHigh_].
- * @see SieveOfEratosthenes::sieve(uint32_t)
- */
+/// Executed after each sieved segment, generates and counts the
+/// primes (1 bits within sieve array) within the interval
+/// [segmentLow_+7, segmentHigh_].
+/// @see SieveOfEratosthenes::sieve(uint32_t)
+///
 void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint32_t sieveSize) {
   if (ps_.isCount())
     count(sieve, sieveSize);
@@ -112,10 +109,9 @@ void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint32_t sieveSiz
     ps_.updateStatus(sieveSize * NUMBERS_PER_BYTE);
 }
 
-/**
- * Count the primes and prime k-tuplets within
- * the current segment.
- */
+/// Count the primes and prime k-tuplets within
+/// the current segment.
+///
 void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   // count prime numbers (1 bits within sieve array)
   if (ps_.isFlag(ps_.COUNT_PRIMES)) {
@@ -141,10 +137,9 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint32_t sieveSize) {
   }
 }
 
-/**
- * Generate the primes or prime k-tuplets (twin primes, prime
- * triplets, ...) within the current segment.
- */
+/// Generate the primes or prime k-tuplets (twin primes, prime
+/// triplets, ...) within the current segment.
+///
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS)) {
     // i = 0 twins, i = 1 triplets, ...

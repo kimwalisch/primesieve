@@ -39,7 +39,6 @@
 
 #include <stdint.h>
 #include <stdexcept>
-#include <cassert>
 #include <cstdlib>
 #include <cstring>
 
@@ -47,11 +46,9 @@ namespace soe {
 
 const uint32_t PreSieve::smallPrimes_[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 };
 
-/**
- * Bitmasks used to unset bits corresponding to multiples in the
- * preSieved_ array. Each byte of preSieved_ holds the 8 numbers
- * i * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
- */
+/// Bitmasks used to unset bits corresponding to multiples
+/// in the preSieved_ array.
+///
 const uint32_t PreSieve::unsetBit_[30] =
 {
   BIT0, 0xFF, 0xFF, 0xFF, BIT1, 0xFF, BIT2, 0xFF, 0xFF, 0xFF,
@@ -59,12 +56,11 @@ const uint32_t PreSieve::unsetBit_[30] =
   0xFF, 0xFF, BIT6, 0xFF, BIT7, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
 };
 
-/**
- * Pre-sieve multiples of small primes <= limit to speed up
- * the sieve of Eratosthenes.
- * @pre limit >= 13 && <= 23
- * @see PreSieve.h for more information.
- */
+/// Pre-sieve multiples of small primes <= limit to speed up
+/// the sieve of Eratosthenes.
+/// @pre limit >= 13 && <= 23
+/// @see PreSieve.h for more information.
+///
 PreSieve::PreSieve(uint32_t limit) :
   limit_(limit),
   preSieved_(NULL),
@@ -83,17 +79,15 @@ PreSieve::~PreSieve() {
 }
 
 uint32_t PreSieve::getPrimeProduct(uint32_t limit) const {
-  assert(limit < smallPrimes_[9]);
   uint32_t pp = 1;
   for (uint32_t i = 0; smallPrimes_[i] <= limit; i++)
     pp *= smallPrimes_[i];
   return pp;
 }
 
-/**
- * Allocate the preSieved_ array and remove the multiples
- * of small primes <= limit_ from it.
- */
+/// Allocate the preSieved_ array and remove the multiples
+/// of small primes <= limit_ from it.
+///
 void PreSieve::initPreSieved() {
   static_assert(SieveOfEratosthenes::NUMBERS_PER_BYTE == 30, 
                "SieveOfEratosthenes::NUMBERS_PER_BYTE must not be != 30");
@@ -124,11 +118,10 @@ void PreSieve::initPreSieved() {
   }
 }
 
-/**
- * Pre-sieve multiples of small primes <= limit_ (default = 19) to
- * speed up the sieve of Eratosthenes.
- * @see PreSieve.h for more information.
- */
+/// Pre-sieve multiples of small primes <= limit_ (default = 19) to
+/// speed up the sieve of Eratosthenes.
+/// @see sieve() in SieveOfEratosthenes-inline.h
+///
 void PreSieve::doIt(uint8_t* sieve, 
                     uint32_t sieveSize,
                     uint64_t segmentLow) const
