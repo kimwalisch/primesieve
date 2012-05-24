@@ -98,7 +98,7 @@ inline void SieveOfEratosthenes::sieve(uint32_t prime) {
 
 /// Reconstruct the prime number corresponding to the first set
 /// bit of the dword parameter (and unset bit).
-/// @param index  Current sieve index.
+/// @param index  The current sieve index.
 /// @param dword  The next 4 bytes of the sieve array.
 ///
 template <typename T>
