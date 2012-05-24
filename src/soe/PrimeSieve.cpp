@@ -323,7 +323,6 @@ void PrimeSieve::sieve() {
 }
 
 /// Convenience sieve member functions.
-///
 
  void PrimeSieve::sieve(uint64_t start, uint64_t stop) {
   setStart(start);
@@ -340,7 +339,6 @@ void PrimeSieve::sieve(uint64_t start, uint64_t stop, uint32_t flags) {
 
 /// 32 & 64-bit prime number generation methods, see
 /// docs/USAGE_EXAMPLES for usage examples.
-///
 
 void PrimeSieve::generatePrimes(uint32_t start, 
                                 uint32_t stop,
@@ -390,7 +388,6 @@ void PrimeSieve::generatePrimes(uint64_t start,
 }
 
 /// Convenience count member functions.
-///
 
 uint64_t PrimeSieve::getPrimeCount(uint64_t start, uint64_t stop) {
   sieve(start, stop, COUNT_PRIMES);
@@ -428,7 +425,6 @@ uint64_t PrimeSieve::getSeptupletCount(uint64_t start, uint64_t stop) {
 }
 
 /// Convenience print (to std::cout) member functions.
-///
 
 void PrimeSieve::printPrimes(uint64_t start, uint64_t stop) {
   sieve(start, stop, PRINT_PRIMES);

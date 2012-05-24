@@ -84,7 +84,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   if (sieveSize_ < 1024)
     throw std::invalid_argument("SieveOfEratosthenes: sieveSize must be >= 1 kilobyte.");
   segmentLow_ = start_ - getByteRemainder(start_);
-  // '+1' is a correction for primes of type i*30+31
+  // '+1' is a correction for primes of type i*30 + 31
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   initEratAlgorithms();
   // allocate the sieve of Eratosthenes array
@@ -118,7 +118,7 @@ void SieveOfEratosthenes::initEratAlgorithms() {
 
 uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
   uint32_t remainder = static_cast<uint32_t>(n % NUMBERS_PER_BYTE);
-  // correction for primes of type i*30+31
+  // correction for primes of type i*30 + 31
   if (remainder <= 1)
     remainder += NUMBERS_PER_BYTE;
   return remainder;

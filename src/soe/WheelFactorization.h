@@ -108,11 +108,10 @@ private:
   uint32_t sievingPrime_;
 };
 
-/// The Bucket data structure is used to store sieving primes <= sqrt(n).
-/// It is designed as a singly linked list, once there is no more space
-/// in the current bucket a new bucket node is allocated ...
-/// The Bucket data structure is due to Tomas Oliveira, see
-/// http://www.ieeta.pt/~tos/software/prime_sieve.html
+/// The Bucket data structure is used to store sieving primes. It is
+/// designed as a singly linked list, once there is no more space in
+/// the current bucket a new bucket node is allocated ...
+/// @see http://www.ieeta.pt/~tos/software/prime_sieve.html
 ///
 class Bucket {
 public:
@@ -262,7 +261,7 @@ protected:
                          uint32_t* multipleIndex,
                          uint32_t* wheelIndex) const
   {
-    // correction for primes of type i*30+31
+    // correction for primes of type i*30 + 31
     segmentLow += 6;
     // calculate the first multiple > segmentLow of prime
     uint64_t quotient = segmentLow / *prime + 1;
