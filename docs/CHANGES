@@ -1,3 +1,16 @@
+New in version 3.7, 24/05/2012
+==============================
+
+1. More aggressive inlining (*-inline.h), up to 10 percent faster
+   prime number generation, up to 20 percent faster initialization.
+2. Reduced header file dependencies, libprimesieve now only depends on
+   PrimeSieve.h or ParallelPrimeSieve.h (and PrimeSieve.h).
+3. New generic imath.h functions: isqrt(), ilog2(), isPowerOf2(), ...
+   isqrt() has been rewritten using Newton's algorithm to avoid
+   rounding errors of (int)sqrt((double)n) if n > 10^15.
+4. New internal SieveOfEratosthenes::getNextPrime(...) member function.
+5. Replaced old C-style comments with C++ comments.
+
 New in version 3.6, 22/04/2012
 ==============================
 
