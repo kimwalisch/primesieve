@@ -36,6 +36,7 @@
 #include "PrimeSieve.h"
 #include "SieveOfEratosthenes.h"
 #include "SieveOfEratosthenes-inline.h"
+#include "GENERATE.h"
 #include "popcount.h"
 
 #include <stdint.h>
@@ -165,7 +166,7 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint32_t sieveSize) {
   else {
     // to keep things simple only one thread at a time calls back primes
     PrimeSieve::LockGuard lock(ps_);
-    // GENERATE_PRIMES() is defined in SieveOfEratosthenes.h
+    // @see GENERATE.h, SieveOfEratosthenes-inline.h
     if (ps_.isFlag(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_, uint32_t)
     if (ps_.isFlag(ps_.CALLBACK64_PRIMES))     GENERATE_PRIMES(ps_.callback64_, uint64_t)
     if (ps_.isFlag(ps_.CALLBACK32_OOP_PRIMES)) GENERATE_PRIMES(callback32_OOP,  uint32_t)

@@ -46,26 +46,25 @@
 
 /// Enable the UINT32_MAX, UINT64_MAX macros from <stdint.h>
 #if !defined(__STDC_LIMIT_MACROS)
-#  define __STDC_LIMIT_MACROS
+  #define __STDC_LIMIT_MACROS
 #endif
 
 /// Enable the UINT64_C(c) macro from <stdint.h>
 #if !defined(__STDC_CONSTANT_MACROS)
-#  define __STDC_CONSTANT_MACROS
+  #define __STDC_CONSTANT_MACROS
 #endif
 
 #include <stdint.h>
 
 /// Disable the assert macro from <cassert> if not in debug mode
 #if !defined(NDEBUG) && !defined(DEBUG) && !defined(_DEBUG)
-#  define NDEBUG
+  #define NDEBUG
 #endif
 
 /// Disable static_assert() for compilers without C++11 support
-#if __cplusplus <= 199711L && \
-       !defined(__GXX_EXPERIMENTAL_CXX0X__) && \
-      (!defined(_MSC_VER) || _MSC_VER < 1600)
-#  define static_assert(expression, message) static_cast<void>(0)
+#if __cplusplus <= 199711L && !defined(__GXX_EXPERIMENTAL_CXX0X__) \
+    && (!defined(_MSC_VER) || _MSC_VER < 1600)
+  #define static_assert(expression, message) static_cast<void>(0)
 #endif
 
 /// Default CPU L1 data cache size per core in kilobytes

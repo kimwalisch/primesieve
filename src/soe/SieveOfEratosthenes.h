@@ -115,28 +115,6 @@ private:
   SieveOfEratosthenes& operator=(const SieveOfEratosthenes&);
 };
 
-/// Reconstruct prime numbers from 1 bits of the sieve array
-/// and call a callback function for each prime.
-/// @see PrimeNumberFinder.cpp, PrimeNumberGenerator.cpp
-///
-#define GENERATE_PRIMES(callback, uintXX_t) {           \
-  uint32_t i = 0;                                       \
-  for (; i < sieveSize - sieveSize % 4; i += 4) {       \
-    /* big-endian safe, reinterpret_cast won't work */  \
-    uint32_t dword =  sieve[i] +                        \
-                     (sieve[i+1] <<  8) +               \
-                     (sieve[i+2] << 16) +               \
-                     (sieve[i+3] << 24);                \
-    while (dword != 0)                                  \
-      callback ( getNextPrime<uintXX_t>(i, &dword) );   \
-  }                                                     \
-  for (; i < sieveSize; i++) {                          \
-    uint32_t byte = sieve[i];                           \
-    while (byte != 0)                                   \
-      callback ( getNextPrime<uintXX_t>(i, &byte) );    \
-  }                                                     \
-}
-
 } // namespace soe
 
 #endif

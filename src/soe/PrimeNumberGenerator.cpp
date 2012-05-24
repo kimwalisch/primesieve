@@ -32,12 +32,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "config.h"
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
 #include "SieveOfEratosthenes.h"
 #include "SieveOfEratosthenes-inline.h"
-#include "config.h"
 #include "imath.h"
+#include "GENERATE.h"
 
 #include <stdint.h>
 #include <cassert>
@@ -60,10 +61,9 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
 /// Executed after each sieved segment, generates the primes within
 /// the current segment (1 bits within sieve array) and uses them to
 /// sieve with primeNumberFinder_.
-/// @see SieveOfEratosthenes::sieve(uint32_t)
+/// @see GENERATE.h, SieveOfEratosthenes-inline.h
 ///
 void PrimeNumberGenerator::segmentProcessed(const uint8_t* sieve, uint32_t sieveSize) {
-  // GENERATE_PRIMES() is defined in SieveOfEratosthenes.h
   GENERATE_PRIMES(primeNumberFinder_.sieve, uint32_t);
 }
 
