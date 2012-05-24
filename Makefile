@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   23 May 2012
+# Last modified:   24 May 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -24,7 +24,6 @@ BIN_OBJECTS = $(BINDIR)/WheelFactorization.o \
   $(BINDIR)/EratMedium.o \
   $(BINDIR)/EratBig.o \
   $(BINDIR)/SieveOfEratosthenes.o \
-  $(BINDIR)/PrimeNumberGenerator.o \
   $(BINDIR)/PrimeNumberFinder.o \
   $(BINDIR)/PrimeSieve.o \
   $(BINDIR)/ParallelPrimeSieve.o \
@@ -37,7 +36,6 @@ LIB_OBJECTS = $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/EratMedium.o \
   $(LIBDIR)/EratBig.o \
   $(LIBDIR)/SieveOfEratosthenes.o \
-  $(LIBDIR)/PrimeNumberGenerator.o \
   $(LIBDIR)/PrimeNumberFinder.o \
   $(LIBDIR)/PrimeSieve.o \
   $(LIBDIR)/ParallelPrimeSieve.o

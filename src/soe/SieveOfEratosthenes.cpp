@@ -88,7 +88,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   initEratAlgorithms();
   // allocate the sieve of Eratosthenes array
-  sieve_ = new uint8_t[sieveSize_];
+  sieve_ = new uint8_t[sieveSize_ + 8];
 }
 
 SieveOfEratosthenes::~SieveOfEratosthenes() {
@@ -136,10 +136,9 @@ void SieveOfEratosthenes::preSieve() {
       sieve_[0] = 0xff;
     uint32_t startRemainder = getByteRemainder(start_);
     // unset bits corresponding to numbers < start_
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++)
       if (bitValues_[i] < startRemainder)
         sieve_[0] &= ~(1 << i);
-    }
   }
 }
 
@@ -173,15 +172,16 @@ void SieveOfEratosthenes::finish() {
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
   uint32_t stopRemainder = getByteRemainder(stop_);
-  // calculate the sieve size of the last segment
+  // sieve size of the last segment
   sieveSize_ = static_cast<uint32_t>((stop_ - stopRemainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
   // sieve the last segment
   preSieve();
   crossOffMultiples();
-  // unset bits corresponding to numbers > stop_
+  // unset bits and bytes corresponding to numbers > stop_
   for (int i = 0; i < 8; i++) {
     if (bitValues_[i] > stopRemainder)
       sieve_[sieveSize_ - 1] &= ~(1 << i);
+    sieve_[sieveSize_ + i] = 0;
   }
   segmentProcessed(sieve_, sieveSize_);
 }

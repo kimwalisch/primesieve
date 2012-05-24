@@ -36,9 +36,15 @@
 #define PRIMENUMBERGENERATOR_H
 
 #include "config.h"
+#include "PrimeNumberGenerator.h"
+#include "PrimeNumberFinder.h"
 #include "SieveOfEratosthenes.h"
+#include "SieveOfEratosthenes-inline.h"
+#include "imath.h"
+#include "GENERATE.h"
 
 #include <stdint.h>
+#include <cassert>
 
 namespace soe {
 class PrimeNumberFinder;
@@ -46,13 +52,31 @@ class PrimeNumberFinder;
 /// PrimeNumberGenerator is a SieveOfEratosthenes class that is used
 /// to generate the primes up to sqrt(n) needed for sieving by
 /// PrimeNumberFinder.
+/// @see sieve() in PrimeSieve.cpp
 ///
 class PrimeNumberGenerator : public SieveOfEratosthenes {
 public:
-  PrimeNumberGenerator(PrimeNumberFinder&);
+  PrimeNumberGenerator(PrimeNumberFinder& finder) :
+    SieveOfEratosthenes(
+        finder.getPreSieveLimit() + 1,
+        finder.getSquareRoot(),
+        config::PRESIEVE_LIMIT_PRIMENUMBERGENERATOR,
+        nextPowerOf2<uint32_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
+    finder_(finder)
+  {
+    static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "SieveSize must not be > 4096 kilobytes");
+    assert(getStop() <= UINT32_MAX);
+  }
 private:
-  PrimeNumberFinder& primeNumberFinder_;
-  virtual void segmentProcessed(const uint8_t*, uint32_t);
+  PrimeNumberFinder& finder_;
+  /// Executed after each sieved segment, generates the primes within
+  /// the current segment (1 bits within sieve array) and uses them to
+  /// sieve with primeNumberFinder_.
+  /// @see GENERATE.h, SieveOfEratosthenes-inline.h
+  ///
+  void segmentProcessed(const uint8_t* sieve, uint32_t sieveSize) {
+    GENERATE_PRIMES(finder_.sieve, uint32_t);
+  }
 };
 
 } // namespace soe

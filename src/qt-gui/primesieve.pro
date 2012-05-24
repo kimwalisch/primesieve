@@ -58,7 +58,6 @@ SOURCES += ../soe/EratBig.cpp \
     ../soe/ParallelPrimeSieve.cpp \
     ../soe/SieveOfEratosthenes.cpp \
     ../soe/EratMedium.cpp \
-    ../soe/PrimeNumberGenerator.cpp \
     ../soe/PreSieve.cpp \
     ../soe/WheelFactorization.cpp
 HEADERS += ../soe/EratSmall.h \

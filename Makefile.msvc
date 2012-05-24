@@ -5,14 +5,14 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   23 May 2012
+# Last modified:   24 May 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
 
 TARGET       = primesieve
 CXX          = cl /nologo
-CXXFLAGS     = /W2 /O2 /GL /EHsc
+CXXFLAGS     = /W4 /O2 /GL /EHsc
 LINK         = link
 LFLAGS       = /OPT:REF,ICF /LTCG
 INCPATH      = /I"src\thirdparty"
@@ -28,7 +28,6 @@ BIN_OBJECTS = $(BINDIR)\WheelFactorization.obj \
   $(BINDIR)\EratMedium.obj \
   $(BINDIR)\EratBig.obj \
   $(BINDIR)\SieveOfEratosthenes.obj \
-  $(BINDIR)\PrimeNumberGenerator.obj \
   $(BINDIR)\PrimeNumberFinder.obj \
   $(BINDIR)\PrimeSieve.obj \
   $(BINDIR)\ParallelPrimeSieve.obj \
@@ -41,7 +40,6 @@ LIB_OBJECTS = $(LIBDIR)\WheelFactorization.obj \
   $(LIBDIR)\EratMedium.obj \
   $(LIBDIR)\EratBig.obj \
   $(LIBDIR)\SieveOfEratosthenes.obj \
-  $(LIBDIR)\PrimeNumberGenerator.obj \
   $(LIBDIR)\PrimeNumberFinder.obj \
   $(LIBDIR)\PrimeSieve.obj \
   $(LIBDIR)\ParallelPrimeSieve.obj

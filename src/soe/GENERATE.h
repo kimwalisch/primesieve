@@ -46,8 +46,7 @@
 /// @see getNextPrime(...) in SieveOfEratosthenes-inline.h
 ///
 #define GENERATE_PRIMES(callback, uintXX_t) {           \
-  uint32_t i = 0;                                       \
-  for (; i < sieveSize - sieveSize % 4; i += 4) {       \
+  for (uint32_t i = 0; i < sieveSize; i += 4) {         \
     /* big-endian safe, reinterpret_cast won't work */  \
     uint32_t dword =  sieve[i] +                        \
                      (sieve[i+1] <<  8) +               \
@@ -56,11 +55,6 @@
     while (dword != 0)                                  \
       callback ( getNextPrime<uintXX_t>(i, &dword) );   \
   }                                                     \
-  for (; i < sieveSize; i++) {                          \
-    uint32_t byte = sieve[i];                           \
-    while (byte != 0)                                   \
-      callback ( getNextPrime<uintXX_t>(i, &byte) );    \
-  }                                                     \
 }
 
 /// Reconstruct twin primes from 11 bit patterns of the sieve array.
@@ -68,8 +62,7 @@
 /// back i.e. callback( p1 ).
 ///
 #define GENERATE_TWINS(callback, uintXX_t) {            \
-  uint32_t i = 0;                                       \
-  for (; i < sieveSize - sieveSize % 4; i += 4) {       \
+  for (uint32_t i = 0; i < sieveSize; i += 4) {         \
     /* big-endian safe, reinterpret_cast won't work */  \
     uint32_t dword =  sieve[i] +                        \
                      (sieve[i+1] <<  8) +               \
@@ -79,12 +72,6 @@
     dword &= (dword >> 1) & 0x4A4A4A4A;                 \
     while (dword != 0)                                  \
       callback ( getNextPrime<uintXX_t>(i, &dword) );   \
-  }                                                     \
-  for (; i < sieveSize; i++) {                          \
-    uint32_t byte = sieve[i];                           \
-    byte &= (byte >> 1) & 0x4A;                         \
-    while (byte != 0)                                   \
-      callback ( getNextPrime<uintXX_t>(i, &byte) );    \
   }                                                     \
 }
 
