@@ -103,8 +103,9 @@ inline void SieveOfEratosthenes::sieve(uint32_t prime) {
 ///
 template <typename T>
 inline T SieveOfEratosthenes::getNextPrime(uint32_t index, uint32_t* dword) const {
+  // calculate bitValues_[ bitScanForward(dword) ] using De Bruijn bitscan
+  // http://graphics.stanford.edu/~seander/bithacks.html#ZerosOnRightMultLookup
   uint32_t firstBit = *dword & -static_cast<int32_t>(*dword);
-  // calculate bitValues_[ bitScanForward(dword) ]
   uint32_t bitValue = bruijnBitValues_[(firstBit * 0x077CB531) >> 27];
   T prime = static_cast<T>(segmentLow_) + index * NUMBERS_PER_BYTE + bitValue;
   *dword ^= firstBit;
