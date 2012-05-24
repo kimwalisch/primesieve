@@ -34,9 +34,8 @@
 
 #include "config.h"
 #include "PrimeSieve.h"
-#include "SieveOfEratosthenes-inline.h"
-#include "PrimeNumberFinder.h"
 #include "PrimeNumberGenerator.h"
+#include "PrimeNumberFinder.h"
 #include "imath.h"
 #include "PreSieve.h"
 

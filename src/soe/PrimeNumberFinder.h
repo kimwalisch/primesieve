@@ -37,6 +37,7 @@
 
 #include "config.h"
 #include "SieveOfEratosthenes.h"
+#include "SieveOfEratosthenes-inline.h"
 
 #include <stdint.h>
 #include <vector>

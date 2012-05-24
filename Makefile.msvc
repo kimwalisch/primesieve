@@ -12,7 +12,7 @@
 
 TARGET       = primesieve
 CXX          = cl /nologo
-CXXFLAGS     = /W4 /O2 /GL /EHsc
+CXXFLAGS     = /W2 /O2 /GL /EHsc
 LINK         = link
 LFLAGS       = /OPT:REF,ICF /LTCG
 INCPATH      = /I"src\thirdparty"
