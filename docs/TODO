@@ -10,7 +10,7 @@ widely supported.
 
 1. Use smart pointers (std::unique_ptr) for dynamic memory allocation.
 2. Use auto and decltype where appropriate.
-3. Use <cstdint> instead of <stdint.h>
+3. Use <cstdint> instead of <stdint.h>.
 4. Use nullptr instead of NULL (remove <cstdlib> header).
 
 OpenMP
