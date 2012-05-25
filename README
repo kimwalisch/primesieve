@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 20 May 2012
+# Last modified: 25 May 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -40,12 +40,12 @@ Contents
 
   Documentation directory
   -----------------------
-  docs                 files: CHANGES, TODO, BUGS, ...
   docs/LIBPRIMESIEVE   Explains how to build and use the primesieve
                        C++ library on Unix-like OSes and Windows.
   docs/USAGE_EXAMPLES  Contains commented source code examples that
                        show how to use PrimeSieve objects e.g. for
                        prime number generation.
+  Other files:         CHANGES, TODO, BUGS, VALGRIND.
 
   Source code directories
   -----------------------
@@ -68,12 +68,12 @@ Contents
   operations and uses O(n^0.5) space.
 
   My implementation uses a compressed sieve array with 30 numbers per
-  byte, the 8 bits of each byte correspond to the numbers i * 30 + k
+  byte, the 8 bits of each byte correspond to the numbers i*30 + k
   with k = {7, 11, 13, 17, 19, 23, 29, 31}. It further uses 8 bytes
   per sieving prime <= sqrt(x) that is 4 bytes for the sieving prime
   and another 4 bytes for the multiple index and wheel index.
 
-  primesieve's memory requirement (per thread) is about:
+  primesieve's memory requirement per thread is about:
   pi(sqrt(x)) * 8 bytes + 400 kilobytes
 
 4. Source code documentation (./src/soe)
@@ -82,12 +82,18 @@ Contents
   General information
   -------------------
   The src/soe directory contains the sieve of Eratosthenes source
-  code, files that start with a capital letter contain a class of the
-  same name. The source code is quite well documented, a good starting
-  point for code reading is PrimeSieve::sieve() in PrimeSieve.cpp and
-  then SieveOfEratosthenes.cpp. If you are not too familiar with prime
-  number sieves I recommend reading Jonathan Sorenson's papers first,
-  see section 5.
+  code. Files that start with a capital letter
+  (e.g. SieveOfEratosthenes.h, *-inline.h, *.cpp) contain a class of
+  the same name, files in lower case contain inline functions and
+  constant definitions. If you are new to prime number sieving I
+  recommend reading some of the papers from section 5.
+
+  Quick start
+  -----------
+  The sieving algorithms are in EratSmall.cpp, EratMedium.cpp and
+  EratBig.cpp. The segmented sieve of Eratosthenes is in 
+  SieveOfEratosthenes-inline.h. Prime number generation (and counting)
+  is done in PrimeNumberFinder.cpp using macros from GENERATE.h.
 
   C++ classes
   -----------
@@ -101,12 +107,12 @@ Contents
   * SieveOfEratosthenes (abstract class)
     Implementation of the segmented sieve of Eratosthenes using a bit
     array with 30 numbers per byte, each byte of the sieve array holds
-    the numbers i * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
+    the numbers i*30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
     The main method is SieveOfEratosthenes::sieve(uint32_t prime) it
     must be called consecutively for all primes <= sqrt(n) in order to
     sieve the primes up to n. Each sieving prime is first stored in
-    one of the Erat(Small|Medium|Big) objects which are used to cross
-    off the multiples.
+    one of the Erat(Small|Medium|Big) objects which are then used to
+    cross off the multiples.
 
   * EratSmall
     Segmented sieve of Eratosthenes algorithm with a hard-coded
@@ -130,11 +136,11 @@ Contents
     WheelFactorization.cpp). EratBig is optimized for big sieving
     primes that have less than one multiple occurrence per segment.
 
-  * PrimeNumberGenerator (derived from SieveOfEratosthenes)
+  * PrimeNumberGenerator (is-a SieveOfEratosthenes)
     Generates the primes up to sqrt(n) needed for sieving by
     PrimeNumberFinder.
 
-  * PrimeNumberFinder (derived from SieveOfEratosthenes)
+  * PrimeNumberFinder (is-a SieveOfEratosthenes)
     Main SieveOfEratosthenes class, used to generate, print and count
     the primes and prime k-tuplets (twins, triplets, ...) within the
     interval [start_, stop_] of the associated PrimeSieve object.
@@ -151,18 +157,22 @@ Contents
   * imath.h
     isqrt(), ilog2(), isquare(), isPowerOf2(), ...
 
+  * GENERATE.h
+    Contains macros used to reconstruct primes and k-tuplets from 1
+    bits of the sieve array.
+
   * config.h
-    Contains macro definitions and constants that set the size of
-    various arrays and limits within primesieve. You can set the
-    L1_DCACHE_SIZE and BUCKETSIZE constants according to your CPU
-    specifications to get the best performance.
+    Contains constants that set the size of various arrays and limits
+    within primesieve. You can set the L1_DCACHE_SIZE and BUCKETSIZE
+    constants according to your CPU specifications to get the best
+    performance.
 
   * WheelFactorization.h
     Contains classes and structs related to wheel factorization (used
     to skip multiples of small primes to speed up the sieve of
     Eratosthenes). The abstract Wheel class is used to initialize
     sieving primes i.e. getWheelPrimeData() calculates the first
-    multiple >= startNumber of each sieving prime. The sieving prime
+    multiple >= start number of each sieving prime. The sieving prime
     is then stored together with its multipleIndex (position of the
     next multiple within the sieve array) and wheelIndex as a
     WheelPrime object. Erat(Small|Medium|Big) objects use WheelPrimes
@@ -185,7 +195,7 @@ Contents
 6. Thanks
 =========
 
-  Thanks to Silver Möls for helping me to further optimize primesieve
+  Thanks to Silver Möls for helping me to further optimize EratBig
   for out-of-order execution of modern CPUs in version 3.1.
 
   Thanks to Andrey Kulsha for benchmarking new primesieve releases on
@@ -215,8 +225,10 @@ Contents
       others)", Journal of Algorithms 4 (1983), 332-344.
   [5] J. Sorenson, "An Introduction To Prime Number Sieves", Computer
       Science Technical Report Vol. 909, January 1990.
+      http://research.cs.wisc.edu/techreports/1990/TR909.pdf
   [6] J. Sorenson, "An analysis of two prime number sieves", Computer
       Science Technical Report Vol. 1028, June 1991.
+      http://research.cs.wisc.edu/techreports/1991/TR1028.pdf
   [7] J. Sorenson and I. Parberry, "Two Fast Parallel Prime Number
       Sieves", Information and Computation, Vol. 114, No. 1, 1994.
       http://larc.unt.edu/ian/pubs/sieve.pdf
