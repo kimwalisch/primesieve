@@ -1,4 +1,4 @@
-April 24, 2012
+May 25, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -70,8 +70,8 @@ II. Examples
   private:
     std::vector<unsigned int> primes_;
     static void store(unsigned int prime, void* obj) {
-      Foo* p = (Foo*) obj;
-      p->primes_.push_back(prime);
+      Foo* f = (Foo*) obj;
+      f->primes_.push_back(prime);
     }
   };
 
@@ -155,8 +155,8 @@ II. Examples
   random order.
 
   Note: by default ParallelPrimeSieve counts primes and k-tuplets in
-  parallel but generates and prints primes and k-tuplets in arithmetic
-  order using a single thread.
+  parallel using multiple threads but generates and prints primes and
+  k-tuplets in arithmetic order using a single thread.
 
   ////////////////////////////////////////////////////////////////////
   // Count the prime triplets within [1E14, 1E14+1E11]
