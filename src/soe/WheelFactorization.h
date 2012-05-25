@@ -285,10 +285,11 @@ protected:
     *prime /= 30;
     return true;
   }
-  const WheelElement& wheel(uint32_t n) const
+  template <typename T>
+  const WheelElement& wheel(T index) const
   {
-    assert(n < WHEEL_SIZE * 8);
-    return WHEEL_ARRAY[n];
+    assert(index >= 0 && index < WHEEL_SIZE * 8);
+    return WHEEL_ARRAY[index];
   }
 };
 
