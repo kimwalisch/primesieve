@@ -61,7 +61,7 @@ public:
     int threads;
     uint64_t counts[COUNTS_SIZE];
     double status;
-    double timeElapsed;
+    double seconds;
   };
   /// if (numThreads_ == IDEAL_NUM_THREADS) an ideal number
   /// of threads will be used for sieving

@@ -198,13 +198,13 @@ void ParallelPrimeSieve::sieve() {
     counts_[4] = count4;
     counts_[5] = count5;
     counts_[6] = count6;
-    timeElapsed_ = omp_get_wtime() - t1;
+    seconds_ = omp_get_wtime() - t1;
   }
 
   if (shm_ != NULL) {
     for (int i = 0; i < COUNTS_SIZE; i++)
       shm_->counts[i] = counts_[i];
-    shm_->timeElapsed = timeElapsed_;
+    shm_->seconds = seconds_;
   }
 }
 

@@ -87,8 +87,8 @@ public:
   uint64_t getStop() const;
   uint32_t getPreSieveLimit() const;
   uint32_t getSieveSize() const;
-  double getTimeElapsed() const;
   double getStatus() const;
+  double getSeconds() const;
   uint32_t getFlags() const;
   bool isFlag(uint32_t) const;
   bool isFlag(uint32_t, uint32_t) const;
@@ -152,7 +152,7 @@ protected:
   /// Prime number and prime k-tuplet counts
   uint64_t counts_[COUNTS_SIZE];
   /// Time elapsed in seconds of sieve()
-  double timeElapsed_;
+  double seconds_;
   void reset();
   virtual void updateStatus(uint32_t);
   virtual void set_lock();

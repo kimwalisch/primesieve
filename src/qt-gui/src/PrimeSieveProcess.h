@@ -41,7 +41,7 @@ public:
   bool isFinished();
   quint64 getCounts(unsigned int) const;
   double getStatus() const;
-  double getTimeElapsed() const;
+  double getSeconds() const;
 private:
   /// Shared memory for interprocess communication between the
   /// Qt GUI process and the ParallelPrimeSieve process.

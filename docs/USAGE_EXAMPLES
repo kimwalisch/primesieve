@@ -203,10 +203,10 @@ II. Examples
 
   API for timing
   --------------
-  double PrimeSieve::getTimeElapsed() const;
+  double PrimeSieve::getSeconds() const;
 
   ////////////////////////////////////////////////////////////////////
-  // getTimeElased() returns the time elapsed in seconds
+  // getSeconds() returns the time elapsed in seconds
   // Program output:
   // prime count: 203280221
   // time elapsed: 0.471 sec
@@ -216,8 +216,8 @@ II. Examples
 
   int main() {
     ParallelPrimeSieve pps;
-    std::cout << "prime count: "  << pps.getPrimeCount(2, 0xFFFFFFFFU) << std::endl
-              << "time elapsed: " << pps.getTimeElapsed() << " sec"    << std::endl;
+    std::cout << "prime count: "  << pps.getPrimeCount(2, 4294967295U) << std::endl
+              << "time elapsed: " << pps.getSeconds() << " sec"        << std::endl;
     return 0;
   }
 
@@ -242,8 +242,8 @@ II. Examples
     ps.setSieveSize(512);
     uint64_t start = (uint64_t) 1E19;
     uint64_t stop = (uint64_t) (1E19+1E10);
-    std::cout << "prime count:  " << ps.getPrimeCount(start, stop) << std::endl
-              << "time elapsed: " << ps.getTimeElapsed() << " sec" << std::endl;
+    std::cout << "prime count: "  << ps.getPrimeCount(start, stop) << std::endl
+              << "time elapsed: " << ps.getSeconds() << " sec"     << std::endl;
     return 0;
   }
 
@@ -267,8 +267,7 @@ II. Examples
   unsigned int candidate;
 
   void check(unsigned int prime) {
-    if (candidate % prime == 0)
-      throw PrimeSieve::cancel_sieving();
+    if (candidate % prime == 0) throw PrimeSieve::cancel_sieving();
   }
 
   int main(int argc, char* argv[]) {

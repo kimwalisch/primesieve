@@ -272,7 +272,7 @@ int main(int argc, char* argv[]) {
     }
     if (!pps.isPrint()) {
       std::cout << std::setw(width)
-                << "Time elapsed" << " : " << pps.getTimeElapsed() << " sec"
+                << "Time elapsed" << " : " << pps.getSeconds() << " sec"
                 << std::endl;
     }
     if (!quietMode && pps.getNumThreads() >= 64) {

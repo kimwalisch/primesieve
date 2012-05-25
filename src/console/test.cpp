@@ -117,13 +117,13 @@ void testPix() {
     // pi(x) for 10^x with x = 1 to 9
     for (int i = 1; i <= 9; i++) {
       primeCount += pps.getPrimeCount(pps.getStop() + 1, ipow(10, i));
-      seconds += pps.getTimeElapsed();
+      seconds += pps.getSeconds();
       std::cout << "pi(10^" << i << ")  = " << std::setw(12) << primeCount;
       evaluateTest(primeCount == primeCounts[i-1]);
     }
     // pi(2^32)
     primeCount += pps.getPrimeCount(pps.getStop() + 1, ipow(2, 32));
-    seconds += pps.getTimeElapsed();
+    seconds += pps.getSeconds();
     std::cout << "pi(2^32)  = " << std::setw(12) << primeCount;
     evaluateTest(primeCount == primeCounts[9]);
 
@@ -134,7 +134,7 @@ void testPix() {
       pps.setStop(ipow(10, i));
       pps.sieve();
       primeCount += pps.getPrimeCount();
-      seconds += pps.getTimeElapsed();
+      seconds += pps.getSeconds();
       std::cout << "\rpi(10^" << i << ") = " << std::setw(12) << primeCount;
       evaluateTest(primeCount == primeCounts[i]);
     }
@@ -161,7 +161,7 @@ void testBigPrimes() {
       if (pps.getNumThreads() > maxThreads[i])
         pps.setNumThreads(maxThreads[i]);
       pps.sieve();
-      seconds += pps.getTimeElapsed();
+      seconds += pps.getSeconds();
       std::cout << "\rPrime count: " << std::setw(11) << pps.getPrimeCount();
       evaluateTest(pps.getPrimeCount() == primeCounts[i + 12]);
     }
@@ -210,7 +210,7 @@ void testRandomIntervals() {
       pps.setSieveSize(getRandomSieveSize());
       pps.sieve();
       primeCount += pps.getPrimeCount();
-      seconds += pps.getTimeElapsed();
+      seconds += pps.getSeconds();
       std::cout << "\rRemaining chunk:             "
                 << "\rRemaining chunk: " << upperBound - pps.getStop()
                 << std::flush;

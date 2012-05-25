@@ -82,7 +82,7 @@ void PrimeSieve::reset() {
     counts_[i] = 0;
   interval_ = static_cast<double>(stop_ - start_ + 1);
   status_ = -1.0;
-  timeElapsed_ = 0.0;
+  seconds_ = 0.0;
   if (isStatus())
     updateStatus(0);
 }
@@ -113,8 +113,8 @@ double PrimeSieve::getStatus() const {
 }
 
 /// Get the time elapsed in seconds of sieve()
-double PrimeSieve::getTimeElapsed() const {
-  return timeElapsed_;
+double PrimeSieve::getSeconds() const {
+  return seconds_;
 }
 
 /// Get the current set public flags
@@ -316,7 +316,7 @@ void PrimeSieve::sieve() {
     finder.finish();
   }
 
-  timeElapsed_ = static_cast<double>(std::clock() - t1) / CLOCKS_PER_SEC;
+  seconds_ = static_cast<double>(std::clock() - t1) / CLOCKS_PER_SEC;
   if (isStatus())
     updateStatus(10);
 }

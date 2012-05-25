@@ -86,7 +86,7 @@ void PrimeSieveProcess::start(quint64 start, quint64 stop,
   shm_->flags = static_cast<quint32>(flags);
   shm_->threads = threads;
   shm_->status = 0.0;
-  shm_->timeElapsed = 0.0;
+  shm_->seconds = 0.0;
   for (int i = 0; i < ParallelPrimeSieve::COUNTS_SIZE; i++)
     shm_->counts[i] = 0;
   // path + file name of the aplication
@@ -121,6 +121,6 @@ double PrimeSieveProcess::getStatus() const {
 /**
  * @return The time elapsed in seconds (if sieving is finished).
  */
-double PrimeSieveProcess::getTimeElapsed() const {
-  return shm_->timeElapsed;
+double PrimeSieveProcess::getSeconds() const {
+  return shm_->seconds;
 }
