@@ -269,7 +269,6 @@ private:
     eatSpaces();
     switch (getCharacter()) {
       case '|': index_++;     return Operator(OPERATOR_BITWISE_OR,      4, 'L');
-      case '^': index_++;     return Operator(OPERATOR_BITWISE_XOR,     5, 'L');
       case '&': index_++;     return Operator(OPERATOR_BITWISE_AND,     6, 'L');
       case '<': expect("<<"); return Operator(OPERATOR_BITWISE_SHL,     9, 'L');
       case '>': expect(">>"); return Operator(OPERATOR_BITWISE_SHR,     9, 'L');
@@ -279,7 +278,7 @@ private:
       case '%': index_++;     return Operator(OPERATOR_MODULO,         20, 'L');
       case '*': index_++; if (getCharacter() != '*')
                               return Operator(OPERATOR_MULTIPLICATION, 20, 'L');
-                index_++;     return Operator(OPERATOR_POWER,          30, 'R');
+      case '^': index_++;     return Operator(OPERATOR_POWER,          30, 'R');
       case 'e': index_++;     return Operator(OPERATOR_EXPONENT,       40, 'R');
       case 'E': index_++;     return Operator(OPERATOR_EXPONENT,       40, 'R');
     }
