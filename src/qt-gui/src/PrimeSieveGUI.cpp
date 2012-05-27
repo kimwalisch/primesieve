@@ -154,7 +154,7 @@ quint64 PrimeSieveGUI::getNumber(const QString& str) {
   }
 
   int digits = str.count(QRegExp("[0-9]"));
-  if (parser.getResult() >= UPPER_BOUND_LIMIT || (
+  if (result >= UPPER_BOUND_LIMIT || (
       digits == str.size() && (
       digits >  UPPER_BOUND_STR.size() || (
       digits == UPPER_BOUND_STR.size() &&
