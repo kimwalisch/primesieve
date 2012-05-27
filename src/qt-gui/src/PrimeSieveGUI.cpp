@@ -145,8 +145,13 @@ quint64 PrimeSieveGUI::getNumber(const QString& str) {
     throw std::invalid_argument("Please enter a lower and upper bound for prime sieving.");
 
   ExpressionParser<quint64> parser;
-  if (!parser.eval(str.toAscii().data()))
-    throw std::invalid_argument(parser.getErrorMessage());
+  quint64 result = 0;
+  try {
+    result = parser.eval(str.toAscii().data());
+  }
+  catch (parser_error& e) {
+    throw std::invalid_argument(e.what());
+  }
 
   int digits = str.count(QRegExp("[0-9]"));
   if (parser.getResult() >= UPPER_BOUND_LIMIT || (
@@ -156,7 +161,7 @@ quint64 PrimeSieveGUI::getNumber(const QString& str) {
       str    >= UPPER_BOUND_STR))))
     throw std::invalid_argument("Please use positive integers < 2^64 - 2^32*10.");
 
-  return parser.getResult();
+  return result;
 }
 
 void PrimeSieveGUI::setTo(QComboBox* comboBox, const QString& text) {
