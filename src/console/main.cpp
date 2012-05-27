@@ -78,8 +78,13 @@ const std::string primes[7] = {
   "Prime septuplets"
 };
 
+enum {
+  COUNT_PRIMES = ParallelPrimeSieve::COUNT_PRIMES,
+  PRINT_PRIMES = ParallelPrimeSieve::PRINT_PRIMES
+};
+
 void help() {
-  int maxThreads = ParallelPrimeSieve::getMaxThreads();
+  const int maxThreads = ParallelPrimeSieve::getMaxThreads();
   std::cout << "Usage: primesieve START STOP [OPTION]..."                                              << std::endl
             << "Use the segmented sieve of Eratosthenes to generate the prime numbers and/or"          << std::endl
             << "prime k-tuplets in the interval [START, STOP] < 2^64"                                  << std::endl
@@ -145,7 +150,7 @@ void processOptions(int argc, char* argv[]) {
   std::string arg;
   ExpressionParser<uint64_t> parser64;
   ExpressionParser<> parser;
-  uint64_t tmp = 0;
+  uint64_t res = 0;
 
   // process START and STOP number
   for (int i = 1; i < std::min(3, argc); i++) {
@@ -162,23 +167,23 @@ void processOptions(int argc, char* argv[]) {
         *argv[i] != '/') help();
     argv[i]++;
     switch (*argv[i]++) {
-      case 'c': tmp = parser.eval(argv[i]);
+      case 'c': res = parser.eval(argv[i]);
                 do {
-                  if (tmp % 10 < 1 || tmp % 10 > 7)
+                  if (res % 10 < 1 || res % 10 > 7)
                     help();
-                  flags |= ParallelPrimeSieve::COUNT_PRIMES << (tmp % 10 - 1);
-                  tmp /= 10;
-                } while (tmp > 0);
+                  flags |= COUNT_PRIMES << (res % 10 - 1);
+                  res /= 10;
+                } while (res > 0);
                 break;
       case 'o': if (number.size() == 0)
                   help();
-                tmp = number[0] + parser64.eval(argv[i]);
-                number.push_back(tmp);
+                res = number[0] + parser64.eval(argv[i]);
+                number.push_back(res);
                 break;
-      case 'p': tmp = parser.eval(argv[i]);
-                if (tmp < 1 || tmp > 7)
+      case 'p': res = parser.eval(argv[i]);
+                if (res < 1 || res > 7)
                   help();
-                flags |= ParallelPrimeSieve::PRINT_PRIMES << (tmp - 1);
+                flags |= PRINT_PRIMES << (res - 1);
                 quietMode = true;
                 break;
       case 'q': quietMode = true;                 break;
