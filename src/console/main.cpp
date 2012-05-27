@@ -68,11 +68,6 @@ int32_t preSieve   = -1;
 bool quietMode   = false;
 bool printParser = false;
 
-enum {
-  COUNT_PRIMES = ParallelPrimeSieve::COUNT_PRIMES,
-  PRINT_PRIMES = ParallelPrimeSieve::PRINT_PRIMES
-};
-
 const std::string primes[7] = {
   "Prime numbers",
   "Twin primes",
@@ -171,7 +166,7 @@ void processOptions(int argc, char* argv[]) {
                 do {
                   if (tmp % 10 < 1 || tmp % 10 > 7)
                     help();
-                  flags |= COUNT_PRIMES << (tmp % 10 - 1);
+                  flags |= ParallelPrimeSieve::COUNT_PRIMES << (tmp % 10 - 1);
                   tmp /= 10;
                 } while (tmp > 0);
                 break;
@@ -183,7 +178,7 @@ void processOptions(int argc, char* argv[]) {
       case 'p': tmp = parser.eval(argv[i]);
                 if (tmp < 1 || tmp > 7)
                   help();
-                flags |= PRINT_PRIMES << (tmp - 1);
+                flags |= ParallelPrimeSieve::PRINT_PRIMES << (tmp - 1);
                 quietMode = true;
                 break;
       case 'q': quietMode = true;                 break;
@@ -217,7 +212,7 @@ int main(int argc, char* argv[]) {
   try {
     ParallelPrimeSieve pps;
     pps.setStart(number[0]);
-    pps.setStop(number[1]);
+    pps.setStop (number[1]);
     if (flags     !=  0) pps.setFlags(flags);
     if (sieveSize != -1) pps.setSieveSize(sieveSize);
     if (preSieve  != -1) pps.setPreSieveLimit(preSieve);
@@ -239,8 +234,8 @@ int main(int argc, char* argv[]) {
 
     if (pps.isFlag(pps.PRINT_STATUS))   std::cout << std::endl;
     if (pps.isPrint() && pps.isCount()) std::cout << std::endl;
-
     int width = getWidth(pps);
+
     for (int32_t i = 0; i < 7; i++) {
       if (pps.isFlag(pps.COUNT_PRIMES << i))
         std::cout << std::setw(width)
