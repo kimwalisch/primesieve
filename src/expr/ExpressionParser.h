@@ -47,7 +47,30 @@
 #include <cstddef>
 #include <cctype>
 
-class parser_error;
+/// ExpressionParser throws a parser_error if it fails
+/// to evaluate the expression string.
+///
+class parser_error : public std::exception {
+public:
+  parser_error(const std::string& expr,
+               const std::string& error) :
+    expr_(expr), error_(error) { }
+  parser_error(const std::string& expr, std::size_t index) :
+    expr_(expr)
+  {
+    std::ostringstream error;
+    error << "Syntax error: unexpected token \""
+          << expr.substr(index, expr.size() - index)
+          << "\" at index " << index;
+    error_ = error.str();
+  }
+  virtual ~parser_error() throw() { }
+  virtual const char* what() const throw() { return error_.c_str(); }
+  std::string expression() const { return expr_; }
+private:
+  std::string expr_;
+  std::string error_;
+};
 
 /// ExpressionParser
 /// @brief   ExpressionParser.h is a simple C++ operator precedence
@@ -384,31 +407,6 @@ private:
     }
     return 0;
   }
-};
-
-/// ExpressionParser throws a parser_error if it fails
-/// to evaluate the expression string.
-///
-class parser_error : public std::exception {
-public:
-  parser_error(const std::string& expr,
-               const std::string& error) :
-    expr_(expr), error_(error) { }
-  parser_error(const std::string& expr, std::size_t index) :
-    expr_(expr)
-  {
-    std::ostringstream error;
-    error << "Syntax error: unexpected token \""
-          << expr.substr(index, expr.size() - index)
-          << "\" at index " << index;
-    error_ = error.str();
-  }
-  virtual ~parser_error() throw() { }
-  virtual const char* what() const throw() { return error_.c_str(); }
-  std::string expression() const { return expr_; }
-private:
-  std::string expr_;
-  std::string error_;
 };
 
 #endif
