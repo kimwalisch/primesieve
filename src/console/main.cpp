@@ -43,9 +43,6 @@
 #include "../expr/ExpressionParser.h"
 #include "../soe/ParallelPrimeSieve.h"
 
-// defined in test.cpp
-void test();
-
 #include <stdint.h>
 #include <exception>
 #include <cstdlib>
@@ -54,6 +51,8 @@ void test();
 #include <vector>
 #include <iomanip>
 #include <algorithm>
+
+void test();
 
 namespace {
 
