@@ -143,7 +143,7 @@ bool isDigits(const std::string &str) {
 }
 
 /// Process the command-line options.
-/// @see help(void)
+/// @see help()
 ///
 void processOptions(int argc, char* argv[]) {
   if (argc < 2 || argc > 20) help();
@@ -161,7 +161,6 @@ void processOptions(int argc, char* argv[]) {
     }
     catch (parser_error&) { }
   }
-  // process options
   for (int i = (int) number.size() + 1; i < argc; i++) {
     if (*argv[i] != '-' &&
         *argv[i] != '/') help();
