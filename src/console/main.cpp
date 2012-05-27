@@ -244,8 +244,7 @@ int main(int argc, char* argv[]) {
     }
     if (!pps.isPrint()) {
       std::cout << std::setw(width)
-                << "Time elapsed" 
-                << " : "
+                << "Time elapsed"   << " : "
                 << pps.getSeconds() << " sec"
                 << std::endl;
     }
