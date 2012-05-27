@@ -231,7 +231,6 @@ int main(int argc, char* argv[]) {
       std::cout << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize() << " kilobytes" << std::endl;
       std::cout << std::setw(10) << "Threads"    << " = " << pps.getNumThreads()                << std::endl;
     }
-
     // start sieving primes
     pps.sieve();
 
