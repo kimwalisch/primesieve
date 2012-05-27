@@ -94,9 +94,9 @@ uint64_t ipow(uint64_t x, int n) {
   return result;
 }
 
-void compare(bool isSuccess) {
-  std::cout << (isSuccess ? "OK" : "ERROR") << std::endl;
-  if (!isSuccess) isError  = true;
+void compare(bool isCorrect) {
+  std::cout << (isCorrect ? "OK" : "ERROR") << std::endl;
+  if (!isCorrect) isError  = true;
 }
 
 /// Calculate the prime-counting function pi(x) up to 10^11
