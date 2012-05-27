@@ -72,6 +72,7 @@ HEADERS += ../soe/EratSmall.h \
     ../soe/PrimeNumberGenerator.h \
     ../soe/PreSieve.h \
     ../soe/WheelFactorization.h \
+    ../soe/GENERATE.h \
     ../soe/imath.h \
     ../soe/popcount.h \
     ../soe/bits.h \
