@@ -18,15 +18,17 @@ OpenMP
 
 1. ParallelPrimeSieve.cpp is currently not exception safe when >= 2
    threads are used due to lack of C++ exception support in OpenMP 3.1
-   (May 2012), OpenMP 4 may support C++ exceptions.
+   (May 2012), OpenMP 4 seems to finally support C++ exceptions.
 2. Once OpenMP supports array reduction I should use it in
    ParallelPrimeSieve.cpp.
 
 Possible future optimizations
 -----------------------------
-1. Once CPUs have >= 4 ALUs per physical core unrolling the main
+1. Once most CPUs have 64 KB L1 data cache per CPU core I should set
+   L1_DCACHE_SIZE = 64 in src/soe/config.h.
+2. Once CPUs have >= 4 ALUs per physical core unrolling the main
    sieving loop 4 times (currently 2 times) in EratBig.cpp and
    EratMedium.cpp might be faster.
-2. Prime number generation (not counting) can be sped up by about 10
+3. Prime number generation (not counting) can be sped up by about 10
    percent using the 64-bit BSF instruction (Assembly) instead of the
    De Bruijn bitscan in SieveOfEratosthenes-inline.h.
