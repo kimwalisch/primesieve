@@ -43,11 +43,12 @@
 #include "../expr/ExpressionParser.h"
 #include "../soe/ParallelPrimeSieve.h"
 
-// declared in test.cpp
+// defined in test.cpp
 void test();
 
 #include <stdint.h>
 #include <exception>
+#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -57,7 +58,7 @@ void test();
 namespace {
 
 // start and stop number for sieving
-std::vector<uint64_t> numbers;
+std::vector<uint64_t> number;
 
 int32_t threads    = -1;
 int32_t flags      =  0;
@@ -66,6 +67,11 @@ int32_t preSieve   = -1;
 
 bool quietMode   = false;
 bool printParser = false;
+
+enum {
+  COUNT_PRIMES = ParallelPrimeSieve::COUNT_PRIMES,
+  PRINT_PRIMES = ParallelPrimeSieve::PRINT_PRIMES
+};
 
 const std::string primes[7] = {
   "Prime numbers",
@@ -77,16 +83,8 @@ const std::string primes[7] = {
   "Prime septuplets"
 };
 
-enum {
-  OPTION_ERROR,
-  OPTION_HELP,
-  OPTION_TEST,
-  OPTION_VERSION,
-  START_SIEVING
-};
-
 void help() {
-  const int maxThreads = ParallelPrimeSieve::getMaxThreads();
+  int maxThreads = ParallelPrimeSieve::getMaxThreads();
   std::cout << "Usage: primesieve START STOP [OPTION]..."                                              << std::endl
             << "Use the segmented sieve of Eratosthenes to generate the prime numbers and/or"          << std::endl
             << "prime k-tuplets in the interval [START, STOP] < 2^64"                                  << std::endl
@@ -117,6 +115,7 @@ void help() {
                                                                                                        << std::endl
             << "Count the twin primes and prime triplets in the interval [1E10, 1E10+2^32]:"           << std::endl
             << "> primesieve 1E10 -o2**32 -c23"                                                        << std::endl;
+  std::exit(1);
 }
 
 void version() {
@@ -124,6 +123,16 @@ void version() {
             << "Copyright (C) 2012 Kim Walisch" << std::endl
             << "This software is licensed under the New BSD License. See the LICENSE file" << std::endl
             << "for more information." << std::endl;
+  std::exit(1);
+}
+
+int getWidth(const ParallelPrimeSieve& pps) {
+  int size = 0;
+  for (int i = 0; i < 7; i++) {
+    if (pps.isFlag(COUNT_PRIMES << i))
+      size = std::max(size, (int) primes[i].size());
+  }
+  return size;
 }
 
 bool isDigits(const std::string &str) {
@@ -136,134 +145,102 @@ bool isDigits(const std::string &str) {
 /// Process the command-line options.
 /// @see help(void)
 ///
-int processOptions(std::size_t argc, char* argv[]) {
-  if (argc < 2 || argc > 20)
-    return OPTION_HELP;
-
-  std::string testOption("est");
+void processOptions(int argc, char* argv[]) {
+  if (argc < 2 || argc > 20) help();
   std::string arg;
-  ExpressionParser<uint64_t> parser;
+  ExpressionParser<uint64_t> parser64;
+  ExpressionParser<> parser;
   uint64_t tmp = 0;
 
-  // process the START and STOP numbers
-  for (std::size_t i = 1; i < 3 && i < argc; i++) {
-    if (parser.eval(argv[i])) {
-      numbers.push_back(parser.getResult());
+  // process START and STOP number
+  for (int i = 1; i < std::min(3, argc); i++) {
+    try {
+      number.push_back(parser64.eval(argv[i]));
       if (!isDigits(argv[i]))
         printParser = true;
     }
+    catch (parser_error&) { }
   }
   // process options
-  for (std::size_t i = numbers.size() + 1; i < argc; i++) {
-    if (*argv[i] != '-' && *argv[i] != '/')
-      return OPTION_HELP;
+  for (int i = (int) number.size() + 1; i < argc; i++) {
+    if (*argv[i] != '-' &&
+        *argv[i] != '/') help();
     argv[i]++;
     switch (*argv[i]++) {
-      case 'c': parser.eval(argv[i]);
-                if (!parser.isSuccess())
-                  return OPTION_HELP;
-                tmp = parser.getResult();
+      case 'c': tmp = parser.eval(argv[i]);
                 do {
                   if (tmp % 10 < 1 || tmp % 10 > 7)
-                    return OPTION_HELP;
-                  flags |= ParallelPrimeSieve::COUNT_PRIMES << (tmp % 10 - 1);
+                    help();
+                  flags |= COUNT_PRIMES << (tmp % 10 - 1);
                   tmp /= 10;
                 } while (tmp > 0);
                 break;
-      case 'o': parser.eval(argv[i]);
-                if (!parser.isSuccess() || numbers.size() == 0)
-                  return OPTION_HELP;
-                tmp = numbers[0] + parser.getResult();
-                numbers.push_back(tmp);
+      case 'o': if (number.size() == 0)
+                  help();
+                tmp = number[0] + parser64.eval(argv[i]);
+                number.push_back(tmp);
                 break;
-      case 'p': parser.eval(argv[i]);
-                if (!parser.isSuccess() || parser.getResult() < 1 || parser.getResult() > 7)
-                  return OPTION_HELP;
-                tmp = parser.getResult() - 1;
-                flags |= ParallelPrimeSieve::PRINT_PRIMES << tmp;
+      case 'p': tmp = parser.eval(argv[i]);
+                if (tmp < 1 || tmp > 7)
+                  help();
+                flags |= PRINT_PRIMES << (tmp - 1);
                 quietMode = true;
                 break;
-      case 'q': quietMode = true;
-                break;
-      case 'r': parser.eval(argv[i]);
-                if (!parser.isSuccess())
-                  return OPTION_HELP;
-                preSieve = static_cast<int32_t>(parser.getResult());
-                break;
-      case 's': parser.eval(argv[i]);
-                if (!parser.isSuccess())
-                  return OPTION_HELP;
-                sieveSize = static_cast<int32_t>(parser.getResult());
-                break;
+      case 'q': quietMode = true;                 break;
+      case 'r': preSieve  = parser.eval(argv[i]); break;
+      case 's': sieveSize = parser.eval(argv[i]); break;
       case 't': arg = argv[i];
-                if (arg.compare(testOption) == 0)
-                  return OPTION_TEST;
-                parser.eval(argv[i]);
-                if (!parser.isSuccess())
-                  return OPTION_HELP;
-                threads = static_cast<int32_t>(parser.getResult());
+                if (arg.compare("est") == 0)
+                  test();
+                threads = parser.eval(argv[i]);
                 break;
-      case 'v': return OPTION_VERSION;
-      default : return OPTION_HELP;
+      case 'v': version();
+      default : help();
     }
   }
-  return (numbers.size() == 2) ? START_SIEVING : OPTION_HELP;
+  if (number.size() != 2)
+    help();
 }
 
 } // end namespace
 
 int main(int argc, char* argv[]) {
-  // process the command-line options, see help()
-  switch(processOptions(argc, argv)) {
-    case OPTION_ERROR:              return 1;
-    case OPTION_HELP:    help();    return 0;
-    case OPTION_VERSION: version(); return 0;
-    case OPTION_TEST:    test();    return 0;
-    case START_SIEVING:  break;
+  try { processOptions(argc, argv); }
+  catch (parser_error&) {
+    help();
   }
   std::cout << std::left;
   if (!quietMode && printParser) {
-    std::cout << std::setw(10) << "START" << " = " << numbers[0] << std::endl;
-    std::cout << std::setw(10) << "STOP"  << " = " << numbers[1] << std::endl;
+    std::cout << std::setw(10) << "START" << " = " << number[0] << std::endl;
+    std::cout << std::setw(10) << "STOP"  << " = " << number[1] << std::endl;
   }
   try {
     ParallelPrimeSieve pps;
-    pps.setStart(numbers[0]);
-    pps.setStop(numbers[1]);
+    pps.setStart(number[0]);
+    pps.setStop(number[1]);
     if (flags     !=  0) pps.setFlags(flags);
     if (sieveSize != -1) pps.setSieveSize(sieveSize);
     if (preSieve  != -1) pps.setPreSieveLimit(preSieve);
     if (threads   != -1) pps.setNumThreads(threads);
 
     // set default settings
-    if (!pps.isPrint() && !pps.isCount())
-      pps.addFlags(pps.COUNT_PRIMES);
-    if (!pps.isPrint() && !quietMode)
-      pps.addFlags(pps.PRINT_STATUS);
+    if (!pps.isPrint() && !pps.isCount()) pps.addFlags(pps.COUNT_PRIMES);
+    if (!pps.isPrint() && !quietMode)     pps.addFlags(pps.PRINT_STATUS);
 
     if (!quietMode) {
       if (preSieve != -1)
-      std::cout << std::setw(10) << "Pre-sieve"  << " = " << pps.getPreSieveLimit() << std::endl;
+      std::cout << std::setw(10) << "Pre-sieve"  << " = " << pps.getPreSieveLimit()             << std::endl;
       std::cout << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize() << " kilobytes" << std::endl;
-      std::cout << std::setw(10) << "Threads"    << " = " << pps.getNumThreads() << std::endl;
+      std::cout << std::setw(10) << "Threads"    << " = " << pps.getNumThreads()                << std::endl;
     }
 
     // start sieving primes
     pps.sieve();
 
-    if (pps.isFlag(pps.PRINT_STATUS))
-      std::cout << std::endl;
-    if (pps.isPrint() && pps.isCount())
-      std::cout << std::endl;
+    if (pps.isFlag(pps.PRINT_STATUS))   std::cout << std::endl;
+    if (pps.isPrint() && pps.isCount()) std::cout << std::endl;
 
-    // get max string size
-    std::size_t size = 0;
-    for (int i = 0; i < 7; i++) {
-      if (pps.isFlag(pps.COUNT_PRIMES << i))
-        size = std::max(size, primes[i].size());
-    }
-    int width = static_cast<int>(size);
-    // print prime count results
+    int width = getWidth(pps);
     for (int32_t i = 0; i < 7; i++) {
       if (pps.isFlag(pps.COUNT_PRIMES << i))
         std::cout << std::setw(width)
@@ -272,16 +249,18 @@ int main(int argc, char* argv[]) {
     }
     if (!pps.isPrint()) {
       std::cout << std::setw(width)
-                << "Time elapsed" << " : " << pps.getSeconds() << " sec"
+                << "Time elapsed" 
+                << " : "
+                << pps.getSeconds() << " sec"
                 << std::endl;
     }
     if (!quietMode && pps.getNumThreads() >= 64) {
       std::cout << "\nHint: the -q (Quiet mode) option significantly reduces the thread" << std::endl
-                << "synchronization overhead when using >= 64 threads." << std::endl;
+                << "synchronization overhead when using >= 64 threads."                  << std::endl;
     }
   }
   catch (std::exception& e) {
-    std::cerr << "Error: " << e.what() << std::endl
+    std::cerr << "Error: " << e.what()                          << std::endl
               << "Try `primesieve -help' for more information." << std::endl;
     return 1;
   }
