@@ -52,14 +52,6 @@ using soe::PrimeNumberFinder;
 class PrimeSieve {
   friend class PrimeNumberFinder;
 public:
-  class cancel_sieving : public std::runtime_error {
-  public:
-    cancel_sieving() : 
-      std::runtime_error("PrimeSieve: sieving canceled.") { }
-  };
-  enum {
-    COUNTS_SIZE = 7
-  };
   /// Public flags for sieve()
   enum {
     COUNT_PRIMES      = 1 << 0,
@@ -78,6 +70,9 @@ public:
     PRINT_SEPTUPLETS  = 1 << 13,
     CALCULATE_STATUS  = 1 << 14,
     PRINT_STATUS      = 1 << 15
+  };
+  enum {
+    COUNTS_SIZE = 7
   };
   PrimeSieve();
   PrimeSieve(PrimeSieve*);
@@ -194,6 +189,12 @@ private:
   void (*callback64_OOP_)(uint64_t, void*);
   void* obj_;
   void doSmallPrime(uint32_t, uint32_t, uint32_t, const std::string&);
+};
+
+class cancel_sieving : public std::runtime_error {
+public:
+  cancel_sieving(const std::string& msg = "Sieving canceled!") : 
+    std::runtime_error(msg) { }
 };
 
 #endif

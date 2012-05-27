@@ -1,4 +1,4 @@
-May 25, 2012
+May 27, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -255,7 +255,7 @@ II. Examples
   PrimeSieve objects are exception safe so it is possible to throw an
   exception to cancel sieving. The following trial-division prime
   number checker cancels prime number generation if 'candidate' is not
-  a prime by throwing a PrimeSieve::cancel_sieving() exception.
+  a prime by throwing a cancel_sieving() exception.
 
   ////////////////////////////////////////////////////////////////////
 
@@ -267,7 +267,7 @@ II. Examples
   unsigned int candidate;
 
   void check(unsigned int prime) {
-    if (candidate % prime == 0) throw PrimeSieve::cancel_sieving();
+    if (candidate % prime == 0) throw cancel_sieving();
   }
 
   int main(int argc, char* argv[]) {
