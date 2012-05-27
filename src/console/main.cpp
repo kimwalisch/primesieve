@@ -60,13 +60,13 @@ namespace {
 // start and stop number for sieving
 std::vector<uint64_t> number;
 
-int32_t threads    = -1;
-int32_t flags      =  0;
-int32_t sieveSize  = -1;
-int32_t preSieve   = -1;
+int32_t threads   = -1;
+int32_t flags     =  0;
+int32_t sieveSize = -1;
+int32_t preSieve  = -1;
 
-bool quietMode   = false;
-bool printParser = false;
+bool quietMode = false;
+bool printParserResult = false;
 
 const std::string primes[7] = {
   "Prime numbers",
@@ -152,7 +152,7 @@ void processOptions(int argc, char* argv[]) {
     try {
       number.push_back(parser64.eval(argv[i]));
       if (!isDigits(argv[i]))
-        printParser = true;
+        printParserResult = true;
     }
     catch (parser_error&) { }
   }
@@ -205,7 +205,7 @@ int main(int argc, char* argv[]) {
     help();
   }
   std::cout << std::left;
-  if (!quietMode && printParser) {
+  if (!quietMode && printParserResult) {
     std::cout << std::setw(10) << "START" << " = " << number[0] << std::endl;
     std::cout << std::setw(10) << "STOP"  << " = " << number[1] << std::endl;
   }
