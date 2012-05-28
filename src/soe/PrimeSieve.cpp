@@ -316,7 +316,7 @@ void PrimeSieve::generatePrimes(uint32_t start,
     throw std::invalid_argument("callback must not be NULL");
   callback32_ = callback;
   flags_ = CALLBACK32_PRIMES;
-  // speed up initialization (default pre-sieve limit = 19)
+  // speed up initialization (default pre-sieve = 19)
   setPreSieve(17);
   sieve(start, stop);
 }
