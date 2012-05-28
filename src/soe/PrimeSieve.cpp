@@ -108,18 +108,10 @@ uint64_t PrimeSieve::getQuadrupletCount() const { return counts_[3]; }
 uint64_t PrimeSieve::getQuintupletCount() const { return counts_[4]; }
 uint64_t PrimeSieve::getSextupletCount()  const { return counts_[5]; }
 uint64_t PrimeSieve::getSeptupletCount()  const { return counts_[6]; }
+double   PrimeSieve::getStatus()          const { return status_; }
+double   PrimeSieve::getSeconds()         const { return seconds_; }
 int      PrimeSieve::getPreSieve()        const { return preSieve_; }
 int      PrimeSieve::getSieveSize()       const { return sieveSize_; }
-
-/// Get the current status in percent of sieve()
-double PrimeSieve::getStatus() const {
-  return status_;
-}
-
-/// Get the time elapsed in seconds of sieve()
-double PrimeSieve::getSeconds() const {
-  return seconds_;
-}
 
 /// Set a start number for sieving.
 /// @pre start < (2^64-1) - (2^32-1) * 10
@@ -191,16 +183,6 @@ void PrimeSieve::addFlags(int flags) {
   if (flags >= (1 << 20))
     throw std::invalid_argument("invalid flags");
   flags_ |= flags;
-}
-
-void PrimeSieve::set_lock() {
-  if (parent_ != NULL)
-    parent_->set_lock();
-}
-
-void PrimeSieve::unset_lock() {
-  if (parent_ != NULL)
-    parent_->unset_lock();
 }
 
 /// Calculate the current status in percent of sieve()

@@ -113,7 +113,6 @@ public:
   uint64_t getQuintupletCount() const;
   uint64_t getSextupletCount() const;
   uint64_t getSeptupletCount() const;
-  uint64_t getCounts(int) const;
   /// printing
   void printPrimes(uint64_t, uint64_t);
   void printTwins(uint64_t, uint64_t);
@@ -146,25 +145,27 @@ protected:
     CALLBACK32_OOP_PRIMES = 1 << 22,
     CALLBACK64_OOP_PRIMES = 1 << 23
   };
-  /// Sieve the primes within [start_, stop_]
+  /// sieve the primes within [start_, stop_]
   uint64_t start_;
-  /// Sieve the primes within [start_, stop_]
+  /// sieve the primes within [start_, stop_]
   uint64_t stop_;
-  /// Prime number and prime k-tuplet counts
+  /// prime number and prime k-tuplet counts
   uint64_t counts_[7];
-  /// Time elapsed in seconds of sieve()
+  /// time elapsed in seconds of sieve()
   double seconds_;
-  void reset();
   virtual void updateStatus(int);
-  virtual void set_lock();
-  virtual void unset_lock();
-  template <typename T>
+  void reset();
+  /// protected inline methods
+  template<typename T>
   static T getInBetween(T low, T value, T high) {
     if (value < low ) return low;
     if (value > high) return high;
     return value;
   }
+  virtual void set_lock()   { if (parent_ != NULL) parent_->set_lock(); }
+  virtual void unset_lock() { if (parent_ != NULL) parent_->unset_lock(); }
 private:
+  /// used to synchronize ParallelPrimeSieve threads
   class LockGuard {
   public:
     LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.set_lock(); }
@@ -182,21 +183,21 @@ private:
     std::string str;
   };
   static const SmallPrime smallPrimes_[8];
-  /// Multiples of small primes <= preSieve_ are pre-sieved
+  /// multiples of small primes <= preSieve_ are pre-sieved
   int preSieve_;
-  /// Sieve size in kilobytes
+  /// sieve size in kilobytes
   int sieveSize_;
-  /// PrimeSieve options (e.g. COUNT_PRIMES)
+  /// primeSieve options (e.g. COUNT_PRIMES)
   int flags_;
-  /// Either NULL or the parent ParallelPrimeSieve object
+  /// either NULL or the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
-  /// Sum of the processed segments
+  /// sum of the processed segments
   uint64_t sumSegments_;
   /// stop_ - start_ (+ 1 to avoid / 0)
   double interval_;
-  /// Status in percent of sieve()
+  /// status in percent of sieve()
   double status_;
-  /// Callback functions and object for use with generatePrimes()
+  /// callback functions and object for use with generatePrimes()
   void (*callback32_)(uint32_t);
   void (*callback64_)(uint64_t);
   void (*callback32_OOP_)(uint32_t, void*);
