@@ -77,10 +77,19 @@ public:
   /// getters
   uint64_t getStart() const;
   uint64_t getStop() const;
-  int getPreSieve() const;
-  int getSieveSize() const;
   double getStatus() const;
   double getSeconds() const;
+  int getPreSieve() const;
+  int getSieveSize() const;
+  int getFlags() const;
+  bool isFlag(int flag) const;
+  bool isFlag(int first, int last) const;
+  bool isGenerate() const;
+  bool isCount() const;
+  bool isCount(int index) const;
+  bool isPrint() const;
+  bool isPrint(int index) const;
+  bool isStatus() const;
   /// setters
   void setStart(uint64_t);
   void setStop(uint64_t);
@@ -97,6 +106,14 @@ public:
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t, void*), void*);
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
+  /// printing
+  void printPrimes(uint64_t, uint64_t);
+  void printTwins(uint64_t, uint64_t);
+  void printTriplets(uint64_t, uint64_t);
+  void printQuadruplets(uint64_t, uint64_t);
+  void printQuintuplets(uint64_t, uint64_t);
+  void printSextuplets(uint64_t, uint64_t);
+  void printSeptuplets(uint64_t, uint64_t);
   /// counting
   uint64_t getPrimeCount(uint64_t, uint64_t);
   uint64_t getTwinCount(uint64_t, uint64_t);
@@ -106,6 +123,7 @@ public:
   uint64_t getSextupletCount(uint64_t, uint64_t);
   uint64_t getSeptupletCount(uint64_t, uint64_t);
   /// count getters
+  uint64_t getCounts(int) const;
   uint64_t getPrimeCount() const;
   uint64_t getTwinCount() const;
   uint64_t getTripletCount() const;
@@ -113,30 +131,6 @@ public:
   uint64_t getQuintupletCount() const;
   uint64_t getSextupletCount() const;
   uint64_t getSeptupletCount() const;
-  /// printing
-  void printPrimes(uint64_t, uint64_t);
-  void printTwins(uint64_t, uint64_t);
-  void printTriplets(uint64_t, uint64_t);
-  void printQuadruplets(uint64_t, uint64_t);
-  void printQuintuplets(uint64_t, uint64_t);
-  void printSextuplets(uint64_t, uint64_t);
-  void printSeptuplets(uint64_t, uint64_t);
-  /// public inline methods
-  int  PrimeSieve::getFlags()                  const { return (flags_ & ((1 << 20) - 1)); }
-  bool PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last * 2 - first)) != 0; }
-  bool PrimeSieve::isFlag(int flag)            const { return (flags_ & flag) == flag; }
-  bool PrimeSieve::isGenerate()                const { return isFlag(CALLBACK32_PRIMES, CALLBACK64_OOP_PRIMES) || isPrint(); }
-  bool PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEPTUPLETS); }
-  bool PrimeSieve::isCount(int index)          const { return isFlag(COUNT_PRIMES << index); }
-  bool PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEPTUPLETS); }
-  bool PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRIMES << index); }
-  bool PrimeSieve::isStatus()                  const { return isFlag(CALCULATE_STATUS, PRINT_STATUS); }
-  /// 0 = prime count, 1 = twin count, 2 = triplet count, ...
-  uint64_t PrimeSieve::getCounts(int index) const {
-    if (index < 0 || index > 7)
-      throw std::out_of_range("getCounts(int) index out of range");
-    return counts_[index];
-  }
 protected:
   /// private flags (bits >= 20)
   enum {
