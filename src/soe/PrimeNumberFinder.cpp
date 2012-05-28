@@ -143,12 +143,11 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint_t sieveSize) {
 /// triplets, ...) within the current segment.
 ///
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) {
+  // print prime k-tuplets to std::cout
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS)) {
-    // i = 1 twins, i = 2 triplets, ...
-    uint_t i = 1;
+    uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
     for (; !ps_.isPrint(i); i++)
       ;
-    // print prime k-tuplets to cout
     for (uint_t j = 0; j < sieveSize; j++) {
       for (const uint_t* bitmask = kTupletBitmasks_[i]; *bitmask <= sieve[j]; bitmask++) {
         if ((sieve[j] & *bitmask) == *bitmask) {
