@@ -111,12 +111,6 @@ uint64_t PrimeSieve::getSeptupletCount()  const { return counts_[6]; }
 int      PrimeSieve::getPreSieve()        const { return preSieve_; }
 int      PrimeSieve::getSieveSize()       const { return sieveSize_; }
 
-uint64_t PrimeSieve::getCounts(int index) const {
-  if (index < 0 || index > 7)
-    throw std::out_of_range("getCounts(int) index out of range");
-  return counts_[index];
-}
-
 /// Get the current status in percent of sieve()
 double PrimeSieve::getStatus() const {
   return status_;
@@ -145,8 +139,8 @@ void PrimeSieve::setStop(uint64_t stop) {
   stop_ = stop;
 }
 
-/// Multiples of small primes <= preSieve are pre-sieved
-/// to speed up the sieve of Eratosthenes.
+/// Multiples of small primes <= preSieve are pre-sieved to speed up
+/// the sieve of Eratosthenes.
 /// @param preSieve  >= 13 && <= 23, default = 19
 ///                  min = 13 (uses 1001 bytes)
 ///                  max = 23 (uses 7 megabytes)

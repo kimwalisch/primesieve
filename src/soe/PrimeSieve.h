@@ -122,7 +122,7 @@ public:
   void printQuintuplets(uint64_t, uint64_t);
   void printSextuplets(uint64_t, uint64_t);
   void printSeptuplets(uint64_t, uint64_t);
-  // public inline methods
+  /// public inline methods
   int  PrimeSieve::getFlags()                  const { return (flags_ & ((1 << 20) - 1)); }
   bool PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last * 2 - first)) != 0; }
   bool PrimeSieve::isFlag(int flag)            const { return (flags_ & flag) == flag; }
@@ -132,6 +132,12 @@ public:
   bool PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEPTUPLETS); }
   bool PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRIMES << index); }
   bool PrimeSieve::isStatus()                  const { return isFlag(CALCULATE_STATUS, PRINT_STATUS); }
+  /// 0 = prime count, 1 = twin count, 2 = triplet count, ...
+  uint64_t PrimeSieve::getCounts(int index) const {
+    if (index < 0 || index > 7)
+      throw std::out_of_range("getCounts(int) index out of range");
+    return counts_[index];
+  }
 protected:
   /// private flags (bits >= 20)
   enum {
@@ -186,7 +192,7 @@ private:
   PrimeSieve* parent_;
   /// Sum of the processed segments
   uint64_t sumSegments_;
-  /// stop_ - start_ (+ 1 to avoid /0)
+  /// stop_ - start_ (+ 1 to avoid / 0)
   double interval_;
   /// Status in percent of sieve()
   double status_;
