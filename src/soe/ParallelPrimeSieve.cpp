@@ -183,13 +183,13 @@ void ParallelPrimeSieve::sieve() {
       uint64_t threadStop = std::min(n + balanced, stop_);
       PrimeSieve ps(this);
       ps.sieve(threadStart, threadStop);
-      count0 += ps.counts_[0];
-      count1 += ps.counts_[1];
-      count2 += ps.counts_[2];
-      count3 += ps.counts_[3];
-      count4 += ps.counts_[4];
-      count5 += ps.counts_[5];
-      count6 += ps.counts_[6];
+      count0 += ps.getCounts(0);
+      count1 += ps.getCounts(1);
+      count2 += ps.getCounts(2);
+      count3 += ps.getCounts(3);
+      count4 += ps.getCounts(4);
+      count5 += ps.getCounts(5);
+      count6 += ps.getCounts(6);
     }
     counts_[0] = count0;
     counts_[1] = count1;
