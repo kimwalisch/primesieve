@@ -239,8 +239,8 @@ void PrimeSieve::doSmallPrime(const SmallPrime& sp)
       if (isFlag(CALLBACK32_OOP_PRIMES)) callback32_OOP_(sp.min, obj_);
       if (isFlag(CALLBACK64_OOP_PRIMES)) callback64_OOP_(sp.min, obj_);
     }
-    if (isFlag(COUNT_PRIMES << sp.index)) counts_[sp.index]++;
-    if (isFlag(PRINT_PRIMES << sp.index)) std::cout << sp.str << '\n';
+    if (isCount(sp.index)) counts_[sp.index]++;
+    if (isPrint(sp.index)) std::cout << sp.str << '\n';
   }
 }
 
