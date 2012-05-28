@@ -97,7 +97,7 @@ int ParallelPrimeSieve::getNumThreads() const {
 
 /// Set the number of threads for sieving
 void ParallelPrimeSieve::setNumThreads(int numThreads) {
-  numThreads_ = getBoundedValue(1, numThreads, getMaxThreads());
+  numThreads_ = getInBetween(1, numThreads, getMaxThreads());
 }
 
 /// Get an ideal number of threads for the current
@@ -112,7 +112,7 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   // but not smaller than MIN_THREAD_INTERVAL
   uint64_t threshold = std::max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
   uint64_t numThreads = (stop_ - start_) / threshold;
-  uint64_t idealNumThreads = getBoundedValue<uint64_t>(1, numThreads, getMaxThreads());
+  uint64_t idealNumThreads = getInBetween<uint64_t>(1, numThreads, getMaxThreads());
   return static_cast<int>(idealNumThreads);
 }
 
@@ -129,7 +129,7 @@ void ParallelPrimeSieve::unset_lock() {
 /// Calculate the current status in percent of sieve().
 /// @param segment  The interval size of the processed segment.
 ///
-void ParallelPrimeSieve::updateStatus(uint32_t segment) {
+void ParallelPrimeSieve::updateStatus(int segment) {
   #pragma omp critical (status)
   {
     PrimeSieve::updateStatus(segment);
@@ -146,7 +146,7 @@ void ParallelPrimeSieve::updateStatus(uint32_t segment) {
 uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   assert(threads > 1);
   uint64_t bestStrategy = std::min(isqrt(stop_) * 1000, (stop_ - start_) / threads);
-  uint64_t balanced = getBoundedValue(config::MIN_THREAD_INTERVAL, bestStrategy, config::MAX_THREAD_INTERVAL);
+  uint64_t balanced = getInBetween(config::MIN_THREAD_INTERVAL, bestStrategy, config::MAX_THREAD_INTERVAL);
   // align to mod 30 to prevent prime k-tuplet gaps
   balanced += 30 - balanced % 30;
   return balanced;
@@ -183,13 +183,13 @@ void ParallelPrimeSieve::sieve() {
       uint64_t threadStop = std::min(n + balanced, stop_);
       PrimeSieve ps(this);
       ps.sieve(threadStart, threadStop);
-      count0 += ps.getCounts(0);
-      count1 += ps.getCounts(1);
-      count2 += ps.getCounts(2);
-      count3 += ps.getCounts(3);
-      count4 += ps.getCounts(4);
-      count5 += ps.getCounts(5);
-      count6 += ps.getCounts(6);
+      count0 += ps.counts_[0];
+      count1 += ps.counts_[1];
+      count2 += ps.counts_[2];
+      count3 += ps.counts_[3];
+      count4 += ps.counts_[4];
+      count5 += ps.counts_[5];
+      count6 += ps.counts_[6];
     }
     counts_[0] = count0;
     counts_[1] = count1;
@@ -202,7 +202,7 @@ void ParallelPrimeSieve::sieve() {
   }
 
   if (shm_ != NULL) {
-    for (int i = 0; i < COUNTS_SIZE; i++)
+    for (int i = 0; i < 7; i++)
       shm_->counts[i] = counts_[i];
     shm_->seconds = seconds_;
   }

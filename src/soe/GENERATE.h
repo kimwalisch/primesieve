@@ -45,13 +45,14 @@
 /// PrimeNumberFinder.cpp and PrimeNumberGenerator.h
 /// @see getNextPrime(...) in SieveOfEratosthenes-inline.h
 ///
-#define GENERATE_PRIMES(callback, uintXX_t) {           \
-  for (uint32_t i = 0; i < sieveSize; i += 4) {         \
+#define GENERATE_PRIMES(callback, uintXX_t)             \
+{                                                       \
+  for (uint_t i = 0; i < sieveSize; i += 4) {           \
     /* big-endian safe, reinterpret_cast won't work */  \
-    uint32_t dword =  sieve[i] +                        \
-                     (sieve[i+1] <<  8) +               \
-                     (sieve[i+2] << 16) +               \
-                     (sieve[i+3] << 24);                \
+    uint_t dword = sieve[i] +                           \
+                  (sieve[i+1] <<  8) +                  \
+                  (sieve[i+2] << 16) +                  \
+                  (sieve[i+3] << 24);                   \
     while (dword != 0)                                  \
       callback ( getNextPrime<uintXX_t>(i, &dword) );   \
   }                                                     \
@@ -61,13 +62,14 @@
 /// For each twin prime pair (p1, p2) the first prime p1 is called
 /// back i.e. callback( p1 ).
 ///
-#define GENERATE_TWINS(callback, uintXX_t) {            \
-  for (uint32_t i = 0; i < sieveSize; i += 4) {         \
+#define GENERATE_TWINS(callback, uintXX_t)              \
+{                                                       \
+  for (uint_t i = 0; i < sieveSize; i += 4) {           \
     /* big-endian safe, reinterpret_cast won't work */  \
-    uint32_t dword =  sieve[i] +                        \
-                     (sieve[i+1] <<  8) +               \
-                     (sieve[i+2] << 16) +               \
-                     (sieve[i+3] << 24);                \
+    uint_t dword = sieve[i] +                           \
+                  (sieve[i+1] <<  8) +                  \
+                  (sieve[i+2] << 16) +                  \
+                  (sieve[i+3] << 24);                   \
     /* leave 1 bit for each 11 twin prime pattern */    \
     dword &= (dword >> 1) & 0x4A4A4A4A;                 \
     while (dword != 0)                                  \

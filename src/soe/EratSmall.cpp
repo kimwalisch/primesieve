@@ -50,11 +50,11 @@ namespace soe {
 EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
   EratBase<Modulo30Wheel_t>(soe)
 {
-  uint32_t sqrtStop = soe.getSquareRoot();
-  uint32_t max = static_cast<uint32_t>(soe.getSieveSize() * config::FACTOR_ERATSMALL);
-  uint32_t limit = std::min(sqrtStop, max);
+  uint_t sqrtStop = soe.getSquareRoot();
+  uint_t max = static_cast<uint_t>(soe.getSieveSize() * config::FACTOR_ERATSMALL);
+  uint_t limit = std::min(sqrtStop, max);
   // sieveSize - 1 + (sievingPrime / 30) * 6 + 6 - sieveSize < sieveSize
-  // prevents segmentation faults in sieve(uint8_t*, uint32_t)
+  // prevents segmentation faults in sieve(uint8_t*, uint_t)
   if (limit >= (soe.getSieveSize() - 5) * 5)
     throw std::invalid_argument("EratSmall: limit must be < (sieveSize - 5) * 5.");
   this->setLimit(limit);
@@ -65,18 +65,18 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
 /// many multiples per segment.
 /// @see SieveOfEratosthenes::crossOffMultiples()
 ///
-void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
+void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
   uint8_t* const sieveEnd = &sieve[sieveSize];
 
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
     WheelPrime* wPrime    = bucket->begin();
     WheelPrime* const end = bucket->end();
     for (; wPrime != end; wPrime++) {
-      const uint32_t sievingPrime  = wPrime->getSievingPrime();
-      const uint32_t multipleIndex = wPrime->getMultipleIndex();
-      const uint32_t wheelIndex    = wPrime->getWheelIndex();
-      const uint32_t maxLoopOffset = sievingPrime * 30 + 29;
-      uint8_t* const loopLimit = (maxLoopOffset < sieveSize) ? sieveEnd - maxLoopOffset : sieve;
+      const uint_t sievingPrime  = wPrime->getSievingPrime();
+      const uint_t multipleIndex = wPrime->getMultipleIndex();
+      const uint_t wheelIndex    = wPrime->getWheelIndex();
+      const uint_t maxLoopOffset = sievingPrime * 30 + 29;
+      uint8_t* const loopLimit   = (maxLoopOffset < sieveSize) ? sieveEnd - maxLoopOffset : sieve;
 
       // Pointer to the byte containing the first multiple of
       // sievingPrime within the current segment
@@ -285,7 +285,7 @@ void EratSmall::sieve(uint8_t* sieve, uint32_t sieveSize) {
         break;
       }
       // Set multipleIndex for the next segment
-      wPrime->setMultipleIndex(static_cast<uint32_t>(p - sieveEnd));
+      wPrime->setMultipleIndex(static_cast<uint_t>(p - sieveEnd));
     }
   }
 }

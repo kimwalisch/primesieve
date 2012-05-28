@@ -45,10 +45,10 @@
 
 namespace soe {
 
-const uint32_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
+const uint_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
 
 /// De Bruijn sequence for first set bitValues_
-const uint32_t SieveOfEratosthenes::bruijnBitValues_[32] =
+const uint_t SieveOfEratosthenes::bruijnBitValues_[32] =
 {
     7,  11, 109,  13, 113,  59,  97,  17,
   119,  89,  79,  61, 101,  71,  19,  37,
@@ -65,11 +65,11 @@ const uint32_t SieveOfEratosthenes::bruijnBitValues_[32] =
 ///
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
                                          uint64_t stop,
-                                         uint32_t preSieveLimit,
-                                         uint32_t sieveSize) :
+                                         uint_t preSieveLimit,
+                                         uint_t sieveSize) :
   start_(start),
   stop_(stop),
-  sqrtStop_(static_cast<uint32_t>(isqrt(stop))),
+  sqrtStop_(static_cast<uint_t>(isqrt(stop))),
   preSieve_(preSieveLimit),
   isFirstSegment_(true),
   sieve_(NULL),
@@ -116,8 +116,8 @@ void SieveOfEratosthenes::initEratAlgorithms() {
   }
 }
 
-uint32_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
-  uint32_t remainder = static_cast<uint32_t>(n % NUMBERS_PER_BYTE);
+uint_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
+  uint_t remainder = static_cast<uint_t>(n % NUMBERS_PER_BYTE);
   // correction for primes of type i*30 + 31
   if (remainder <= 1)
     remainder += NUMBERS_PER_BYTE;
@@ -134,7 +134,7 @@ void SieveOfEratosthenes::preSieve() {
     // correct preSieve_.doIt() for numbers <= 23
     if (start_ <= preSieve_.getLimit())
       sieve_[0] = 0xff;
-    uint32_t startRemainder = getByteRemainder(start_);
+    uint_t startRemainder = getByteRemainder(start_);
     // unset bits corresponding to numbers < start_
     for (int i = 0; i < 8; i++)
       if (bitValues_[i] < startRemainder)
@@ -159,7 +159,7 @@ void SieveOfEratosthenes::crossOffMultiples() {
   }
 }
 
-/// Sieve the last segments remaining after that sieve(uint32_t)
+/// Sieve the last segments remaining after that sieve(uint_t)
 /// has been called for all primes up to sqrt(stop_).
 ///
 void SieveOfEratosthenes::finish() {
@@ -171,9 +171,9 @@ void SieveOfEratosthenes::finish() {
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
-  uint32_t stopRemainder = getByteRemainder(stop_);
+  uint_t stopRemainder = getByteRemainder(stop_);
   // sieve size of the last segment
-  sieveSize_ = static_cast<uint32_t>((stop_ - stopRemainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
+  sieveSize_ = static_cast<uint_t>((stop_ - stopRemainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
   // sieve the last segment
   preSieve();
   crossOffMultiples();

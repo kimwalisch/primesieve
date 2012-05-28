@@ -47,16 +47,16 @@ namespace soe {
 /// Add a prime number <= sqrt(n) for sieving to EratBig.
 /// @see sieve() in SieveOfEratosthenes-inline.h
 ///
-inline void EratBig::addSievingPrime(uint64_t segmentLow, uint32_t prime) {
-  uint32_t multipleIndex;
-  uint32_t wheelIndex;
+inline void EratBig::addSievingPrime(uint64_t segmentLow, uint_t prime) {
+  uint_t multipleIndex;
+  uint_t wheelIndex;
   bool store = getWheelPrimeData(segmentLow, &prime, &multipleIndex, &wheelIndex);
   if (store == true) {
     // indicates in how many segments the next multiple
     // of prime needs to be crossed-off
-    uint32_t segmentCount = multipleIndex >> log2SieveSize_;
+    uint_t segmentCount = multipleIndex >> log2SieveSize_;
     multipleIndex &= moduloSieveSize_;
-    uint32_t next = segmentCount & moduloListsSize_;
+    uint_t next = segmentCount & moduloListsSize_;
     // add prime to the bucket list related
     // to its next multiple occurrence
     if (!lists_[next]->addWheelPrime(prime, multipleIndex, wheelIndex))

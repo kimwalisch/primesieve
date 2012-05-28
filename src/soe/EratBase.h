@@ -50,15 +50,15 @@ class SieveOfEratosthenes;
 template<class T_Wheel>
 class EratBase : protected T_Wheel {
 public:
-  uint32_t getLimit() const {
+  uint_t getLimit() const {
     return limit_;
   }
   /// Add a prime number for sieving to EratBase
   /// @see SieveOfEratosthenes-inline.h
-  void addSievingPrime(uint64_t segmentLow, uint32_t prime) {
+  void addSievingPrime(uint64_t segmentLow, uint_t prime) {
     assert(prime <= limit_);
-    uint32_t multipleIndex;
-    uint32_t wheelIndex;
+    uint_t multipleIndex;
+    uint_t wheelIndex;
     bool store = this->getWheelPrimeData(segmentLow, &prime, &multipleIndex, &wheelIndex);
     if (store == true) {
       if (!buckets_.back().addWheelPrime(prime, multipleIndex, wheelIndex)) {
@@ -70,14 +70,14 @@ public:
 protected:
   typedef std::list<Bucket> BucketList_t;
   /// Upper bound for sieving primes within EratBase
-  uint32_t limit_;
+  uint_t limit_;
   /// List of buckets, holds the sieving primes
   BucketList_t buckets_;
   EratBase(const SieveOfEratosthenes& soe) : T_Wheel(soe) {
     // initialize with an empty bucket
     buckets_.push_back(Bucket());
   }
-  void setLimit(uint32_t limit) {
+  void setLimit(uint_t limit) {
     limit_ = limit;
   }
 };

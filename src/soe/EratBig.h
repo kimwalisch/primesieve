@@ -58,7 +58,7 @@ class EratBig: protected Modulo210Wheel_t {
 public:
   EratBig(const SieveOfEratosthenes&);
   ~EratBig();
-  void addSievingPrime(uint64_t, uint32_t);
+  void addSievingPrime(uint64_t, uint_t);
   void sieve(uint8_t*);
 private:
   enum { BUCKETS_PER_ALLOC = config::MEMORY_PER_ALLOC / sizeof(Bucket) };
@@ -69,12 +69,12 @@ private:
   /// Pointers of the allocated buckets
   std::list<Bucket*> pointers_;
   /// log2 of SieveOfEratosthenes::sieveSize_
-  const uint32_t log2SieveSize_;
-  const uint32_t moduloSieveSize_;
-  uint32_t moduloListsSize_;
+  const uint_t log2SieveSize_;
+  const uint_t moduloSieveSize_;
+  uint_t moduloListsSize_;
   void setSize(const SieveOfEratosthenes&);
   void initBucketLists();
-  void pushBucket(uint32_t);
+  void pushBucket(uint_t);
 };
 
 } // namespace soe

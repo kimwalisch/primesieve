@@ -72,20 +72,20 @@ EratBig::~EratBig() {
 ///
 void EratBig::setSize(const SieveOfEratosthenes& soe) {
   // max values in sieve(uint8_t*)
-  uint32_t maxSievingPrime   = soe.getSquareRoot() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
-  uint32_t maxWheelFactor    = wheel(0).nextMultipleFactor;
-  uint32_t maxMultipleOffset = maxSievingPrime * maxWheelFactor + maxWheelFactor;
-  uint32_t maxMultipleIndex  = (soe.getSieveSize() - 1) + maxMultipleOffset;
-  uint32_t maxSegmentCount   = maxMultipleIndex / soe.getSieveSize();
+  uint_t maxSievingPrime   = soe.getSquareRoot() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+  uint_t maxWheelFactor    = wheel(0).nextMultipleFactor;
+  uint_t maxMultipleOffset = maxSievingPrime * maxWheelFactor + maxWheelFactor;
+  uint_t maxMultipleIndex  = (soe.getSieveSize() - 1) + maxMultipleOffset;
+  uint_t maxSegmentCount   = maxMultipleIndex / soe.getSieveSize();
   // size must be >= maxSegmentCount + 1
-  uint32_t size = nextPowerOf2(maxSegmentCount + 1);
+  uint_t size = nextPowerOf2(maxSegmentCount + 1);
   moduloListsSize_ = size - 1;
   lists_.resize(size, NULL);
 }
 
 void EratBig::initBucketLists() {
   // initialize each bucket list with an empty bucket
-  for (uint32_t i = 0; i < lists_.size(); i++)
+  for (uint_t i = 0; i < lists_.size(); i++)
     pushBucket(i);
 }
 
@@ -93,7 +93,7 @@ void EratBig::initBucketLists() {
 /// front of lists_[index], if the bucket stock_ is
 /// empty new buckets are allocated first.
 ///
-void EratBig::pushBucket(uint32_t index) {
+void EratBig::pushBucket(uint_t index) {
   if (stock_ == NULL) {
     Bucket* more = new Bucket[BUCKETS_PER_ALLOC];
     stock_ = &more[0];
@@ -131,18 +131,18 @@ void EratBig::sieve(uint8_t* sieve)
     // multiple of its sieving primes
     do {
       const WheelPrime* wPrime = bucket->begin();
-      const WheelPrime* end    = bucket->end();
+      const WheelPrime* end = bucket->end();
 
       // For out-of-order CPUs this algorithm can be sped up by
       // processing 2 sieving primes per loop iteration, this breaks
       // the dependency chain and reduces pipeline stalls
       for (; wPrime + 2 <= end; wPrime += 2) {
-        uint32_t multipleIndex0 = wPrime[0].getMultipleIndex();
-        uint32_t wheelIndex0    = wPrime[0].getWheelIndex();
-        uint32_t sievingPrime0  = wPrime[0].getSievingPrime();
-        uint32_t multipleIndex1 = wPrime[1].getMultipleIndex();
-        uint32_t wheelIndex1    = wPrime[1].getWheelIndex();
-        uint32_t sievingPrime1  = wPrime[1].getSievingPrime();
+        uint_t multipleIndex0 = wPrime[0].getMultipleIndex();
+        uint_t wheelIndex0    = wPrime[0].getWheelIndex();
+        uint_t sievingPrime0  = wPrime[0].getSievingPrime();
+        uint_t multipleIndex1 = wPrime[1].getMultipleIndex();
+        uint_t wheelIndex1    = wPrime[1].getWheelIndex();
+        uint_t sievingPrime1  = wPrime[1].getSievingPrime();
         // cross-off the current multiple (unset corresponding bit) of
         // sievingPrime0 and sievingPrime1, calculate their next
         // multipleIndex and the wheel indexes of their next multiples
@@ -154,9 +154,9 @@ void EratBig::sieve(uint8_t* sieve)
         multipleIndex1        += wheel(wheelIndex1).nextMultipleFactor * sievingPrime1;
         multipleIndex1        += wheel(wheelIndex1).correct;
         wheelIndex1           += wheel(wheelIndex1).next;
-        uint32_t next0 = (multipleIndex0 >> log2SieveSize_) & moduloListsSize_;
+        uint_t next0 = (multipleIndex0 >> log2SieveSize_) & moduloListsSize_;
         multipleIndex0 &= moduloSieveSize_;
-        uint32_t next1 = (multipleIndex1 >> log2SieveSize_) & moduloListsSize_;
+        uint_t next1 = (multipleIndex1 >> log2SieveSize_) & moduloListsSize_;
         multipleIndex1 &= moduloSieveSize_;
         // move sievingPrime0 and sievingPrime1 to the bucket list
         // related to their next multiple occurrence
@@ -166,14 +166,14 @@ void EratBig::sieve(uint8_t* sieve)
           pushBucket(next1);
       }
       if (wPrime != end) {
-        uint32_t multipleIndex = wPrime->getMultipleIndex();
-        uint32_t wheelIndex    = wPrime->getWheelIndex();
-        uint32_t sievingPrime  = wPrime->getSievingPrime();
+        uint_t multipleIndex = wPrime->getMultipleIndex();
+        uint_t wheelIndex    = wPrime->getWheelIndex();
+        uint_t sievingPrime  = wPrime->getSievingPrime();
         sieve[multipleIndex] &= wheel(wheelIndex).unsetBit;
         multipleIndex        += wheel(wheelIndex).nextMultipleFactor * sievingPrime;
         multipleIndex        += wheel(wheelIndex).correct;
         wheelIndex           += wheel(wheelIndex).next;
-        uint32_t next = (multipleIndex >> log2SieveSize_) & moduloListsSize_;
+        uint_t next = (multipleIndex >> log2SieveSize_) & moduloListsSize_;
         multipleIndex &= moduloSieveSize_;
         if (!lists_[next]->addWheelPrime(sievingPrime, multipleIndex, wheelIndex))
           pushBucket(next);

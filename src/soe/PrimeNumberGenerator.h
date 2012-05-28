@@ -58,10 +58,10 @@ class PrimeNumberGenerator : public SieveOfEratosthenes {
 public:
   PrimeNumberGenerator(PrimeNumberFinder& finder) :
     SieveOfEratosthenes(
-        finder.getPreSieveLimit() + 1,
+        finder.getPreSieve() + 1,
         finder.getSquareRoot(),
-        config::PRESIEVE_LIMIT_PRIMENUMBERGENERATOR,
-        nextPowerOf2<uint32_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
+        config::PRESIEVE_PRIMENUMBERGENERATOR,
+        nextPowerOf2<uint_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
     finder_(finder)
   {
     static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "SieveSize must not be > 4096 kilobytes");
@@ -74,8 +74,8 @@ private:
   /// sieve with primeNumberFinder_.
   /// @see GENERATE.h, SieveOfEratosthenes-inline.h
   ///
-  void segmentProcessed(const uint8_t* sieve, uint32_t sieveSize) {
-    GENERATE_PRIMES(finder_.sieve, uint32_t);
+  void segmentProcessed(const uint8_t* sieve, uint_t sieveSize) {
+    GENERATE_PRIMES(finder_.sieve, uint_t);
   }
 };
 

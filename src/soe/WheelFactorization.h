@@ -63,37 +63,37 @@ namespace soe {
 ///
 class WheelPrime {
 public:
-  uint32_t getSievingPrime() const
+  uint_t getSievingPrime() const
   {
     return sievingPrime_;
   }
-  uint32_t getMultipleIndex() const
+  uint_t getMultipleIndex() const
   {
     return indexes_ & ((1u << 23) - 1);
   }
-  uint32_t getWheelIndex() const
+  uint_t getWheelIndex() const
   {
     return indexes_ >> 23;
   }
-  void set(uint32_t sievingPrime,
-           uint32_t multipleIndex,
-           uint32_t wheelIndex)
+  void set(uint_t sievingPrime,
+           uint_t multipleIndex,
+           uint_t wheelIndex)
   {
-    indexes_ = multipleIndex | (wheelIndex << 23);
-    sievingPrime_ = sievingPrime;
+    setIndexes(multipleIndex, wheelIndex);
+    sievingPrime_ = static_cast<uint32_t>(sievingPrime);
   }
-  void setIndexes(uint32_t multipleIndex,
-                  uint32_t wheelIndex)
+  void setIndexes(uint_t multipleIndex,
+                  uint_t wheelIndex)
   {
-    indexes_ = multipleIndex | (wheelIndex << 23);
+    indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
   }
-  void setWheelIndex(uint32_t wheelIndex)
+  void setWheelIndex(uint_t wheelIndex)
   {
-    indexes_ = wheelIndex << 23;
+    indexes_ = static_cast<uint32_t>(wheelIndex << 23);
   }
-  void setMultipleIndex(uint32_t multipleIndex)
+  void setMultipleIndex(uint_t multipleIndex)
   {
-    indexes_ |= multipleIndex;
+    indexes_ = static_cast<uint32_t>(indexes_ | multipleIndex);
   }
 private:
   /// multipleIndex = 23 least significant bits of indexes_.
@@ -149,9 +149,9 @@ public:
   }
   /// Add a WheelPrime to the Bucket.
   /// @return false  If the bucket is full else true.
-  bool addWheelPrime(uint32_t sievingPrime,
-                     uint32_t multipleIndex,
-                     uint32_t wheelIndex)
+  bool addWheelPrime(uint_t sievingPrime,
+                     uint_t multipleIndex,
+                     uint_t wheelIndex)
   {
     WheelPrime* wPrime = current_;
     current_++;
@@ -216,13 +216,13 @@ struct WheelElement {
 /// Via template arguments it is possible to build different types of
 /// Wheel classes e.g. Modulo30Wheel_t and Modulo210Wheel_t. 
 ///
-template<uint32_t            WHEEL_MODULO,
-         uint32_t            WHEEL_SIZE,
+template<uint_t              WHEEL_MODULO,
+         uint_t              WHEEL_SIZE,
          const WheelElement* WHEEL_ARRAY,
          const WheelInit*    WHEEL_INIT>
 class Wheel {
 private:
-  static const uint32_t wheelOffsets_[30];
+  static const uint_t wheelOffsets_[30];
   /// Reference to the parent SieveOfEratosthenes object
   const SieveOfEratosthenes& soe_;
   Wheel(const Wheel&);
@@ -257,9 +257,9 @@ protected:
   ///               (next multiple <= STOP) else false.
   ///
   bool getWheelPrimeData(uint64_t segmentLow,
-                         uint32_t* prime,
-                         uint32_t* multipleIndex,
-                         uint32_t* wheelIndex) const
+                         uint_t* prime,
+                         uint_t* multipleIndex,
+                         uint_t* wheelIndex) const
   {
     // correction for primes of type i*30 + 31
     segmentLow += 6;
@@ -280,15 +280,14 @@ protected:
     multiple += static_cast<uint64_t>(*prime) * WHEEL_INIT[quotient % WHEEL_MODULO].nextMultipleFactor;
     if (multiple > soe_.getStop())
       return false;
-    *multipleIndex = static_cast<uint32_t>((multiple - segmentLow) / 30);
+    *multipleIndex = static_cast<uint_t>((multiple - segmentLow) / 30);
     *wheelIndex = wheelOffsets_[*prime % 30] + WHEEL_INIT[quotient % WHEEL_MODULO].wheelIndex;
     *prime /= 30;
     return true;
   }
-  template <typename T>
-  const WheelElement& wheel(T index) const
+  const WheelElement& wheel(uint_t index) const
   {
-    assert(index >= 0 && index < WHEEL_SIZE * 8);
+    assert(index < WHEEL_SIZE * 8);
     return WHEEL_ARRAY[index];
   }
 };
@@ -300,11 +299,11 @@ protected:
 /// are also 8 wheel offsets. (In fact wheel30Array and wheel210Array
 /// contain 8 wheels, one for each residue class)
 ///
-template<uint32_t            WHEEL_MODULO,
-         uint32_t            WHEEL_SIZE,
+template<uint_t              WHEEL_MODULO,
+         uint_t              WHEEL_SIZE,
          const WheelElement* WHEEL_ARRAY,
          const WheelInit*    WHEEL_INIT>
-const uint32_t
+const uint_t
 Wheel<WHEEL_MODULO, WHEEL_SIZE, WHEEL_ARRAY, WHEEL_INIT>::wheelOffsets_[30] = {
         0xFF, 7 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF,           0xFF,
         0xFF, 0 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF, 1 * WHEEL_SIZE,

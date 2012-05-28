@@ -82,12 +82,12 @@ void PrimeSieveProcess::start(quint64 start, quint64 stop,
   // initialize the shared memory segment
   shm_->start = start;
   shm_->stop = stop;
-  shm_->sieveSize = static_cast<quint32>(sieveSize);
-  shm_->flags = static_cast<quint32>(flags);
+  shm_->sieveSize = sieveSize;
+  shm_->flags = flags;
   shm_->threads = threads;
   shm_->status = 0.0;
   shm_->seconds = 0.0;
-  for (int i = 0; i < ParallelPrimeSieve::COUNTS_SIZE; i++)
+  for (int i = 0; i < 7; i++)
     shm_->counts[i] = 0;
   // path + file name of the aplication
   QString path = QCoreApplication::applicationFilePath();

@@ -67,23 +67,23 @@ namespace soe {
 ///
 class PreSieve {
 public:
-  PreSieve(uint32_t);
+  PreSieve(uint_t);
   ~PreSieve();
-  uint32_t getLimit() const { return limit_; }
-  void doIt(uint8_t*, uint32_t, uint64_t) const;
+  uint_t getLimit() const { return limit_; }
+  void doIt(uint8_t*, uint_t, uint64_t) const;
 private:
-  static const uint32_t smallPrimes_[10];
-  static const uint32_t unsetBit_[30];
+  static const uint_t smallPrimes_[10];
+  static const uint_t unsetBit_[30];
   /// Multiples of small primes <= limit_ (max 23) are pre-sieved
-  const uint32_t limit_;
+  const uint_t limit_;
   /// Product of the primes <= limit_
-  uint32_t primeProduct_;
+  uint_t primeProduct_;
   /// Array of size primeProduct(limit_) / 30 in which the multiples
   /// of small primes <= limit_ are crossed-off at initialization
   uint8_t* preSieved_;
   /// Size of preSieved_ in bytes
-  uint32_t size_;
-  uint32_t getPrimeProduct(uint32_t) const;
+  uint_t size_;
+  uint_t getPrimeProduct(uint_t) const;
   void initPreSieved();
   /// Uncopyable, declared but not defined
   PreSieve(const PreSieve&);

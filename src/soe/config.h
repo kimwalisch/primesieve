@@ -73,12 +73,14 @@
 #endif
 
 namespace soe {
+typedef unsigned int uint_t;
+
 namespace config {
 
 /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
 /// are used with EratSmall objects.
 /// @pre FACTOR_ERATSMALL >= 0 && < 5
-/// @see SieveOfEratosthenes::sieve(uint32_t)
+/// @see SieveOfEratosthenes::sieve(uint_t)
 ///
 const double FACTOR_ERATSMALL = 0.75;
 
@@ -87,7 +89,7 @@ enum {
   ///               <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
   /// are used with EratMedium objects.
   /// @pre FACTOR_ERATMEDIUM >= 0 && <= 6
-  /// @see SieveOfEratosthenes::sieve(uint32_t)
+  /// @see SieveOfEratosthenes::sieve(uint_t)
   ///
   FACTOR_ERATMEDIUM = 6,
 
@@ -96,10 +98,10 @@ enum {
   /// pre-sieved to speed up the sieve of Eratosthenes.
   /// Default = 19 (uses 315.7 kilobytes), for less memory usage 13 is
   /// good (uses 1001 bytes) and still fast.
-  /// @pre PRESIEVE_LIMIT >= 13 && <= 23
+  /// @pre PRESIEVE >= 13 && <= 23
   /// @see PreSieve.h
   ///
-  PRESIEVE_LIMIT = 19,
+  PRESIEVE = 19,
 
   /// Default sieve size in kilobytes of PrimeSieve and
   /// ParallelPrimeSieve objects.
@@ -110,9 +112,9 @@ enum {
   /// Pre-sieve limit of PrimeNumberGenerator.
   /// Default = 13 (uses 1001 bytes) a greater value uses more memory
   /// without noticeable speed speed up.
-  /// @pre PRESIEVE_LIMIT_PRIMENUMBERGENERATOR >= 13 && <= 23
+  /// @pre PRESIEVE_PRIMENUMBERGENERATOR >= 13 && <= 23
   ///
-  PRESIEVE_LIMIT_PRIMENUMBERGENERATOR = 13,
+  PRESIEVE_PRIMENUMBERGENERATOR = 13,
 
   /// Sieve size in kilobytes of PrimeNumberGenerator which generates
   /// the primes up to sqrt(n) needed for sieving.

@@ -71,22 +71,19 @@ public:
     CALCULATE_STATUS  = 1 << 14,
     PRINT_STATUS      = 1 << 15
   };
-  enum {
-    COUNTS_SIZE = 7
-  };
   PrimeSieve();
   PrimeSieve(PrimeSieve*);
   virtual ~PrimeSieve() { }
   /// sieve() config getters
   uint64_t getStart() const;
   uint64_t getStop() const;
-  uint32_t getPreSieveLimit() const;
-  uint32_t getSieveSize() const;
+  int getPreSieve() const;
+  int getSieveSize() const;
   double getStatus() const;
   double getSeconds() const;
-  uint32_t getFlags() const;
-  bool isFlag(uint32_t) const;
-  bool isFlag(uint32_t, uint32_t) const;
+  int getFlags() const;
+  bool isFlag(int) const;
+  bool isFlag(int, int) const;
   bool isCount() const;
   bool isPrint() const;
   bool isGenerate() const;
@@ -94,13 +91,13 @@ public:
   /// sieve() config setters
   void setStart(uint64_t);
   void setStop(uint64_t);
-  void setPreSieveLimit(uint32_t);
-  void setSieveSize(uint32_t);
-  void setFlags(uint32_t);
-  void addFlags(uint32_t);
+  void setPreSieve(int);
+  void setSieveSize(int);
+  void setFlags(int);
+  void addFlags(int);
   /// sieve() member functions
   void sieve(uint64_t, uint64_t);
-  void sieve(uint64_t, uint64_t, uint32_t);
+  void sieve(uint64_t, uint64_t, int);
   virtual void sieve();
   /// Prime number generation methods
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t));
@@ -123,7 +120,7 @@ public:
   uint64_t getQuintupletCount() const;
   uint64_t getSextupletCount() const;
   uint64_t getSeptupletCount() const;
-  uint64_t getCounts(uint32_t) const;
+  uint64_t getCounts(int) const;
   /// Print member functions (to std::cout)
   void printPrimes(uint64_t, uint64_t);
   void printTwins(uint64_t, uint64_t);
@@ -145,17 +142,17 @@ protected:
   /// Sieve the primes within [start_, stop_]
   uint64_t stop_;
   /// Prime number and prime k-tuplet counts
-  uint64_t counts_[COUNTS_SIZE];
+  uint64_t counts_[7];
   /// Time elapsed in seconds of sieve()
   double seconds_;
   void reset();
-  virtual void updateStatus(uint32_t);
+  virtual void updateStatus(int);
   virtual void set_lock();
   virtual void unset_lock();
   template <typename T>
-  static T getBoundedValue(T lowerBound, T value, T upperBound) {
-    if (value < lowerBound) return lowerBound;
-    if (value > upperBound) return upperBound;
+  static T getInBetween(T low, T value, T high) {
+    if (value < low ) return low;
+    if (value > high) return high;
     return value;
   }
 private:
@@ -168,12 +165,20 @@ private:
     LockGuard(const LockGuard&);
     LockGuard& operator=(const LockGuard&);
   };
-  /// Multiples of small primes <= preSieveLimit_ are pre-sieved
-  uint32_t preSieveLimit_;
+  struct SmallPrime
+  {
+    unsigned int min;
+    unsigned int max;
+    int index;
+    std::string str;
+  };
+  static const SmallPrime smallPrimes_[8];
+  /// Multiples of small primes <= preSieve_ are pre-sieved
+  int preSieve_;
   /// Sieve size in kilobytes
-  uint32_t sieveSize_;
+  int sieveSize_;
   /// PrimeSieve options (e.g. COUNT_PRIMES)
-  uint32_t flags_;
+  int flags_;
   /// Either NULL or the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
   /// Sum of the processed segments
@@ -188,7 +193,7 @@ private:
   void (*callback32_OOP_)(uint32_t, void*);
   void (*callback64_OOP_)(uint64_t, void*);
   void* obj_;
-  void doSmallPrime(uint32_t, uint32_t, uint32_t, const std::string&);
+  void doSmallPrime(const SmallPrime&);
 };
 
 class cancel_sieving : public std::runtime_error {

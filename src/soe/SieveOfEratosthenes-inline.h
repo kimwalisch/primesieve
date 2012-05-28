@@ -55,24 +55,24 @@ inline uint64_t SieveOfEratosthenes::getStop() const {
   return stop_;
 }
 
-inline uint32_t SieveOfEratosthenes::getSquareRoot() const {
+inline uint_t SieveOfEratosthenes::getSquareRoot() const {
   return sqrtStop_;
 }
 
-inline uint32_t SieveOfEratosthenes::getSieveSize() const {
+inline uint_t SieveOfEratosthenes::getSieveSize() const {
   return sieveSize_;
 }
 
-inline uint32_t SieveOfEratosthenes::getPreSieveLimit() const {
+inline uint_t SieveOfEratosthenes::getPreSieve() const {
   return preSieve_.getLimit();
 }
 
 /// Implementation of the segmented sieve of Eratosthenes.
-/// sieve(uint32_t) must be called consecutively for all primes up to
+/// sieve(uint_t) must be called consecutively for all primes up to
 /// sqrt(stop_) in order to sieve the primes within the interval
 /// [start_, stop_].
 ///
-inline void SieveOfEratosthenes::sieve(uint32_t prime) {
+inline void SieveOfEratosthenes::sieve(uint_t prime) {
   const uint64_t square = isquare<uint64_t>(prime);
   // The following while loop segments the sieve of Eratosthenes, it
   // is executed when all sieving primes <= sqrt(segmentHigh_)
@@ -102,11 +102,11 @@ inline void SieveOfEratosthenes::sieve(uint32_t prime) {
 /// @param dword  The next 4 bytes of the sieve array.
 ///
 template <typename T>
-inline T SieveOfEratosthenes::getNextPrime(uint32_t index, uint32_t* dword) const {
+inline T SieveOfEratosthenes::getNextPrime(uint_t index, uint_t* dword) const {
   // calculate bitValues_[ bitScanForward(dword) ] using De Bruijn bitscan
-  uint32_t firstBit = *dword & -static_cast<int32_t>(*dword);
-  uint32_t bitValue = bruijnBitValues_[(firstBit * 0x077CB531) >> 27];
-  T prime = static_cast<T>(segmentLow_) + index * NUMBERS_PER_BYTE + bitValue;
+  uint_t firstBit = *dword & -static_cast<int>(*dword);
+  uint_t bitValue = bruijnBitValues_[(firstBit * 0x077CB531) >> 27];
+  T prime = static_cast<T>(segmentLow_ + index * NUMBERS_PER_BYTE + bitValue);
   *dword ^= firstBit;
   return prime;
 }

@@ -49,8 +49,8 @@ class EratBig;
 /// SieveOfEratosthenes is an implementation of the segmented sieve of
 /// Eratosthenes with wheel factorization. It uses a bit array with 30
 /// numbers per byte and 3 different sieve of Eratosthenes algorithms
-/// i.e. Erat(Small|Medium|Big) objects optimized for small, medium
-/// and big sieving primes. Its main method is sieve(uint32_t) it must
+/// (i.e. Erat(Small|Medium|Big) objects) optimized for small, medium
+/// and big sieving primes. Its main method is sieve(uint_t) it must
 /// be called consecutively for all primes up to sqrt(n) in order to
 /// sieve the primes up to n. SieveOfEratosthenes is an abstract class,
 /// PrimeNumberFinder and PrimeNumberGenerator are derived from it.
@@ -66,18 +66,19 @@ public:
   };
   uint64_t getStart() const;
   uint64_t getStop() const;
-  uint32_t getSquareRoot() const;
-  uint32_t getSieveSize() const;
-  uint32_t getPreSieveLimit() const;
-  void sieve(uint32_t);
+  uint_t getSquareRoot() const;
+  uint_t getSieveSize() const;
+  uint_t getPreSieve() const;
+  void sieve(uint_t);
   void finish();
 protected:
-  static const uint32_t bitValues_[8];
-  static const uint32_t bruijnBitValues_[32];
-  SieveOfEratosthenes(uint64_t, uint64_t, uint32_t, uint32_t);
+  static const uint_t bitValues_[8];
+  static const uint_t bruijnBitValues_[32];
+  SieveOfEratosthenes(uint64_t, uint64_t, uint_t, uint_t);
   ~SieveOfEratosthenes();
-  virtual void segmentProcessed(const uint8_t*, uint32_t) = 0;
-  template<typename T> T getNextPrime(uint32_t, uint32_t*) const;
+  virtual void segmentProcessed(const uint8_t*, uint_t) = 0;
+  template<typename T>
+  T getNextPrime(uint_t, uint_t*) const;
 private:
   /// Lower bound of the current segment
   uint64_t segmentLow_;
@@ -88,7 +89,7 @@ private:
   /// Sieve the primes within the interval [start_, stop_]
   const uint64_t stop_;
   /// sqrt(stop_) */
-  const uint32_t sqrtStop_;
+  const uint_t sqrtStop_;
   /// Pre-sieves multiples of small primes <= preSieve_.getLimit()
   const PreSieve preSieve_;
   /// Set to false when the first segment has been sieved
@@ -96,7 +97,7 @@ private:
   /// Sieve of Eratosthenes array
   uint8_t* sieve_;
   /// Size of the sieve_ array in bytes
-  uint32_t sieveSize_;
+  uint_t sieveSize_;
   /// Used to cross-off the multiples of small sieving primes
   /// that have many multiples per segment
   EratSmall* eratSmall_;
@@ -106,7 +107,7 @@ private:
   /// Used to cross-off the multiples of big sieving primes
   /// that have very few multiples per segment
   EratBig* eratBig_;
-  static uint32_t getByteRemainder(uint64_t);
+  static uint_t getByteRemainder(uint64_t);
   void initEratAlgorithms();
   void preSieve();
   void crossOffMultiples();

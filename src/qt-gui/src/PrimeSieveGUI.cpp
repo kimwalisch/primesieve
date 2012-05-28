@@ -323,7 +323,7 @@ void PrimeSieveGUI::printResults() {
 
   // hack to get the count results aligned using tabs
   QString maxSizeText;
-  for (int i = 0; i < COUNTS_SIZE; i++) {
+  for (int i = 0; i < 7; i++) {
     if ((flags_ & (COUNT_PRIMES << i)) && maxSizeText.size() < primeText_[i].size())
       maxSizeText = primeText_[i];
   }
@@ -334,7 +334,7 @@ void PrimeSieveGUI::printResults() {
   ui->textEdit->setTabStopWidth(maxWidth);
 
   // print prime counts & time elapsed
-  for (int i = 0; i < COUNTS_SIZE; i++) {
+  for (int i = 0; i < 7; i++) {
     if (flags_ & (COUNT_PRIMES << i))
       ui->textEdit->appendPlainText(primeText_[i] + ":\t" + QString::number(primeSieveProcess_->getCounts(i)));
   }

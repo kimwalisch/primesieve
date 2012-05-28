@@ -57,16 +57,16 @@ public:
   bool needGenerator() const;
 private:
   enum { END = 0xFF + 1 };
-  static const uint32_t kTupletBitmasks_[6][5];
+  static const uint_t kTupletBitmasks_[6][5];
   /// Reference to the parent PrimeSieve object
   PrimeSieve& ps_;
   /// Lookup tables that give the count of prime k-tuplets
   /// (twin primes, prime triplets, ...) per byte
-  std::vector<uint32_t> kCounts_[6];
+  std::vector<uint_t> kCounts_[6];
   void initCounts();
-  virtual void segmentProcessed(const uint8_t*, uint32_t);
-  void count(const uint8_t*, uint32_t);
-  void generate(const uint8_t*, uint32_t);
+  virtual void segmentProcessed(const uint8_t*, uint_t);
+  void count(const uint8_t*, uint_t);
+  void generate(const uint8_t*, uint_t);
   void callback32_OOP(uint32_t) const;
   void callback64_OOP(uint64_t) const;
   static void print(uint64_t);

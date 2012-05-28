@@ -218,7 +218,7 @@ int main(int argc, char* argv[]) {
     pps.setStop (number[1]);
     if (flags     !=  0) pps.setFlags(flags);
     if (sieveSize != -1) pps.setSieveSize(sieveSize);
-    if (preSieve  != -1) pps.setPreSieveLimit(preSieve);
+    if (preSieve  != -1) pps.setPreSieve(preSieve);
     if (threads   != -1) pps.setNumThreads(threads);
 
     // set default settings
@@ -227,7 +227,7 @@ int main(int argc, char* argv[]) {
 
     if (!quietMode) {
       if (preSieve != -1)
-      std::cout << std::setw(10) << "Pre-sieve"  << " = " << pps.getPreSieveLimit()             << std::endl;
+      std::cout << std::setw(10) << "Pre-sieve"  << " = " << pps.getPreSieve()                  << std::endl;
       std::cout << std::setw(10) << "Sieve size" << " = " << pps.getSieveSize() << " kilobytes" << std::endl;
       std::cout << std::setw(10) << "Threads"    << " = " << pps.getNumThreads()                << std::endl;
     }

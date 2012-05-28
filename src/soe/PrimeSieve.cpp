@@ -49,13 +49,25 @@
 
 using namespace soe;
 
+const PrimeSieve::SmallPrime PrimeSieve::smallPrimes_[8] =
+{
+  { 2,  2, 0, "2" },
+  { 3,  3, 0, "3" },
+  { 5,  5, 0, "5" },
+  { 3,  5, 1, "(3, 5)" },
+  { 5,  7, 1, "(5, 7)" },
+  { 5, 11, 2, "(5, 7, 11)" },
+  { 5, 13, 3, "(5, 7, 11, 13)" },
+  { 5, 17, 4, "(5, 7, 11, 13, 17)" }
+};
+
 PrimeSieve::PrimeSieve() :
   start_(0),
   stop_(0),
   flags_(COUNT_PRIMES),
   parent_(NULL)
 {
-  setPreSieveLimit(config::PRESIEVE_LIMIT);
+  setPreSieve(config::PRESIEVE);
   setSieveSize(config::SIEVESIZE);
   reset();
 }
@@ -65,7 +77,7 @@ PrimeSieve::PrimeSieve() :
 /// @see ParallelPrimeSieve::sieve()
 ///
 PrimeSieve::PrimeSieve(PrimeSieve* parent) :
-  preSieveLimit_(parent->preSieveLimit_),
+  preSieve_(parent->preSieve_),
   sieveSize_(parent->sieveSize_),
   flags_(parent->flags_),
   parent_(parent),
@@ -78,7 +90,7 @@ PrimeSieve::PrimeSieve(PrimeSieve* parent) :
 
 void PrimeSieve::reset() {
   sumSegments_ = 0;
-  for (int i = 0; i < COUNTS_SIZE; i++)
+  for (int i = 0; i < 7; i++)
     counts_[i] = 0;
   interval_ = static_cast<double>(stop_ - start_ + 1);
   status_ = -1.0;
@@ -87,12 +99,8 @@ void PrimeSieve::reset() {
     updateStatus(0);
 }
 
-uint64_t PrimeSieve::getStart()         const { return start_; }
-uint64_t PrimeSieve::getStop()          const { return stop_; }
-uint32_t PrimeSieve::getSieveSize()     const { return sieveSize_; }
-uint32_t PrimeSieve::getPreSieveLimit() const { return preSieveLimit_; }
-
-/// Get the count of primes after sieve() execution
+uint64_t PrimeSieve::getStart()           const { return start_; }
+uint64_t PrimeSieve::getStop()            const { return stop_; }
 uint64_t PrimeSieve::getPrimeCount()      const { return counts_[0]; }
 uint64_t PrimeSieve::getTwinCount()       const { return counts_[1]; }
 uint64_t PrimeSieve::getTripletCount()    const { return counts_[2]; }
@@ -100,10 +108,12 @@ uint64_t PrimeSieve::getQuadrupletCount() const { return counts_[3]; }
 uint64_t PrimeSieve::getQuintupletCount() const { return counts_[4]; }
 uint64_t PrimeSieve::getSextupletCount()  const { return counts_[5]; }
 uint64_t PrimeSieve::getSeptupletCount()  const { return counts_[6]; }
+int      PrimeSieve::getPreSieve()        const { return preSieve_; }
+int      PrimeSieve::getSieveSize()       const { return sieveSize_; }
 
-uint64_t PrimeSieve::getCounts(uint32_t index) const {
-  if (index >= COUNTS_SIZE)
-    throw std::out_of_range("getCounts(uint32_t) index out of range");
+uint64_t PrimeSieve::getCounts(int index) const {
+  if (index < 0 || index > 7)
+    throw std::out_of_range("getCounts(int) index out of range");
   return counts_[index];
 }
 
@@ -117,17 +127,16 @@ double PrimeSieve::getSeconds() const {
   return seconds_;
 }
 
-/// Get the current set public flags
-uint32_t PrimeSieve::getFlags() const {
-  return flags_ & ((1U << 20) - 1);
+int PrimeSieve::getFlags() const {
+  return flags_ & ((1 << 20) - 1);
 }
 
-bool PrimeSieve::isFlag(uint32_t flag) const {
+bool PrimeSieve::isFlag(int flag) const {
   return (flags_ & flag) == flag; 
 }
 
 /// @return true  If any bit in the range [first, last] is set
-bool PrimeSieve::isFlag(uint32_t first, uint32_t last) const {
+bool PrimeSieve::isFlag(int first, int last) const {
   return (flags_ & (last * 2 - first)) != 0;
 }
 
@@ -166,14 +175,14 @@ void PrimeSieve::setStop(uint64_t stop) {
   stop_ = stop;
 }
 
-/// Multiples of small primes <= preSieveLimit are pre-sieved
+/// Multiples of small primes <= preSieve are pre-sieved
 /// to speed up the sieve of Eratosthenes.
-/// @param preSieveLimit  >= 13 && <= 23, default = 19
-///                       min = 13 (uses 1001 bytes)
-///                       max = 23 (uses 7 megabytes)
+/// @param preSieve  >= 13 && <= 23, default = 19
+///                  min = 13 (uses 1001 bytes)
+///                  max = 23 (uses 7 megabytes)
 ///
-void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
-  preSieveLimit_ = getBoundedValue<uint32_t>(13, preSieveLimit, 23);
+void PrimeSieve::setPreSieve(int preSieve) {
+  preSieve_ = getInBetween(13, preSieve, 23);
 }
 
 /// Set the size of the sieve of Eratosthenes array in kilobytes.
@@ -184,8 +193,8 @@ void PrimeSieve::setPreSieveLimit(uint32_t preSieveLimit) {
 ///                   sieveSize is rounded up to the next highest
 ///                   power of 2.
 ///
-void PrimeSieve::setSieveSize(uint32_t sieveSize) {
-  sieveSize_ = getBoundedValue<uint32_t>(1, nextPowerOf2(sieveSize), 4096);
+void PrimeSieve::setSieveSize(int sieveSize) {
+  sieveSize_ = getInBetween(1, nextPowerOf2(sieveSize), 4096);
 }
 
 /// Settings for sieve().
@@ -208,14 +217,14 @@ void PrimeSieve::setSieveSize(uint32_t sieveSize) {
 ///   PrimeSieve::CALCULATE_STATUS  OR
 ///   PrimeSieve::PRINT_STATUS.
 ///
-void PrimeSieve::setFlags(uint32_t flags) {
-  if (flags >= (1U << 20))
+void PrimeSieve::setFlags(int flags) {
+  if (flags >= (1 << 20))
     throw std::invalid_argument("invalid flags");
   flags_ = flags;
 }
 
-void PrimeSieve::addFlags(uint32_t flags) {
-  if (flags >= (1U << 20))
+void PrimeSieve::addFlags(int flags) {
+  if (flags >= (1 << 20))
     throw std::invalid_argument("invalid flags");
   flags_ |= flags;
 }
@@ -234,7 +243,7 @@ void PrimeSieve::unset_lock() {
 /// and print it to the standard output.
 /// @param segment  The interval size of the processed segment.
 ///
-void PrimeSieve::updateStatus(uint32_t segment) {
+void PrimeSieve::updateStatus(int segment) {
   if (parent_ != NULL)
     parent_->updateStatus(segment);
   else {
@@ -249,22 +258,19 @@ void PrimeSieve::updateStatus(uint32_t segment) {
   }
 }
 
-void PrimeSieve::doSmallPrime(uint32_t minPrime,
-                              uint32_t maxPrime,
-                              uint32_t index,
-                              const std::string& primeStr)
+void PrimeSieve::doSmallPrime(const SmallPrime& sp)
 {
-  if (start_ <= minPrime && maxPrime <= stop_) {
+  if (start_ <= sp.min && sp.max <= stop_) {
     // only one thread at a time may access this code section
     LockGuard lock(*this);
-    if (index == 0) {
-      if (isFlag(CALLBACK32_PRIMES)) callback32_(minPrime);
-      if (isFlag(CALLBACK64_PRIMES)) callback64_(minPrime);
-      if (isFlag(CALLBACK32_OOP_PRIMES)) callback32_OOP_(minPrime, obj_);
-      if (isFlag(CALLBACK64_OOP_PRIMES)) callback64_OOP_(minPrime, obj_);
+    if (sp.index == 0) {
+      if (isFlag(CALLBACK32_PRIMES)) callback32_(sp.min);
+      if (isFlag(CALLBACK64_PRIMES)) callback64_(sp.min);
+      if (isFlag(CALLBACK32_OOP_PRIMES)) callback32_OOP_(sp.min, obj_);
+      if (isFlag(CALLBACK64_OOP_PRIMES)) callback64_OOP_(sp.min, obj_);
     }
-    if (isFlag(COUNT_PRIMES << index)) counts_[index]++;
-    if (isFlag(PRINT_PRIMES << index)) std::cout << primeStr << '\n';
+    if (isFlag(COUNT_PRIMES << sp.index)) counts_[sp.index]++;
+    if (isFlag(PRINT_PRIMES << sp.index)) std::cout << sp.str << '\n';
   }
 }
 
@@ -280,14 +286,8 @@ void PrimeSieve::sieve() {
 
   // do small primes and k-tuplets manually
   if (start_ <= 5) {
-    doSmallPrime(2,  2, 0, "2");
-    doSmallPrime(3,  3, 0, "3");
-    doSmallPrime(5,  5, 0, "5");
-    doSmallPrime(3,  5, 1, "(3, 5)");
-    doSmallPrime(5,  7, 1, "(5, 7)");
-    doSmallPrime(5, 11, 2, "(5, 7, 11)");
-    doSmallPrime(5, 13, 3, "(5, 7, 11, 13)");
-    doSmallPrime(5, 17, 4, "(5, 7, 11, 13, 17)");
+    for (int i = 0; i < 8; i++)
+      doSmallPrime(smallPrimes_[i]);
   }
 
   if (stop_ >= 7) {
@@ -300,14 +300,14 @@ void PrimeSieve::sieve() {
       PrimeNumberGenerator generator(finder);
       // tiny sieve of Eratosthenes implementation that generates the
       // primes up to stop_^0.25 needed for sieving by 'generator'
-      uint32_t N = generator.getSquareRoot();
-      std::vector<uint32_t> isPrime(N / 32 + 1, 0xAAAAAAAAU);
-      for (uint32_t i = 3; i * i <= N; i += 2) {
+      uint_t N = generator.getSquareRoot();
+      std::vector<uint_t> isPrime(N / 32 + 1, 0xAAAAAAAAu);
+      for (uint_t i = 3; i * i <= N; i += 2) {
         if (isPrime[i >> 5] & (1 << (i & 31)))
-          for (uint32_t j = i * i; j <= N; j += i * 2)
+          for (uint_t j = i * i; j <= N; j += i * 2)
             isPrime[j >> 5] &= ~(1 << (j & 31));
       }
-      for (uint32_t i = generator.getPreSieveLimit() + 1; i <= N; i++) {
+      for (uint_t i = generator.getPreSieve() + 1; i <= N; i++) {
         if (isPrime[i >> 5] & (1 << (i & 31)))
           generator.sieve(i);
       }
@@ -329,7 +329,7 @@ void PrimeSieve::sieve() {
   sieve();
 }
 
-void PrimeSieve::sieve(uint64_t start, uint64_t stop, uint32_t flags) {
+void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags) {
   setStart(start);
   setStop(stop);
   setFlags(flags);
@@ -347,7 +347,7 @@ void PrimeSieve::generatePrimes(uint32_t start,
   callback32_ = callback;
   flags_ = CALLBACK32_PRIMES;
   // speed up initialization (default pre-sieve limit = 19)
-  setPreSieveLimit(17);
+  setPreSieve(17);
   sieve(start, stop);
 }
 
@@ -358,7 +358,7 @@ void PrimeSieve::generatePrimes(uint64_t start,
     throw std::invalid_argument("callback must not be NULL");
   callback64_ = callback;
   flags_ = CALLBACK64_PRIMES;
-  setPreSieveLimit(17);
+  setPreSieve(17);
   sieve(start, stop);
 }
 
@@ -370,7 +370,7 @@ void PrimeSieve::generatePrimes(uint32_t start,
   callback32_OOP_ = callback;
   obj_ = obj;
   flags_ = CALLBACK32_OOP_PRIMES;
-  setPreSieveLimit(17);
+  setPreSieve(17);
   sieve(start, stop);
 }
 
@@ -382,7 +382,7 @@ void PrimeSieve::generatePrimes(uint64_t start,
   callback64_OOP_ = callback;
   obj_ = obj;
   flags_ = CALLBACK64_OOP_PRIMES;
-  setPreSieveLimit(17);
+  setPreSieve(17);
   sieve(start, stop);
 }
 

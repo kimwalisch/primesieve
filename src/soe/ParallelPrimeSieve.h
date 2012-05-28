@@ -56,12 +56,12 @@ public:
   struct SharedMemory {
     uint64_t start;
     uint64_t stop;
-    uint32_t sieveSize;
-    uint32_t flags;
-    int threads;
-    uint64_t counts[COUNTS_SIZE];
+    uint64_t counts[7];
     double status;
     double seconds;
+    int flags;
+    int sieveSize;
+    int threads;
   };
   /// if (numThreads_ == IDEAL_NUM_THREADS) an ideal number
   /// of threads will be used for sieving
@@ -83,7 +83,7 @@ private:
   int getIdealNumThreads() const;
 #ifdef _OPENMP
   omp_lock_t lock_;
-  virtual void updateStatus(uint32_t);
+  virtual void updateStatus(int);
   virtual void set_lock();
   virtual void unset_lock();
   uint64_t getBalancedInterval(int) const;

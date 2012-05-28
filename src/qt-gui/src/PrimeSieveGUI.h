@@ -70,7 +70,6 @@ private:
   Ui::PrimeSieveGUI* ui;
 
   enum {
-    COUNTS_SIZE      = ParallelPrimeSieve::COUNTS_SIZE,
     COUNT_PRIMES     = ParallelPrimeSieve::COUNT_PRIMES,
     COUNT_KTUPLETS   = ParallelPrimeSieve::COUNT_SEPTUPLETS * 2 - ParallelPrimeSieve::COUNT_TWINS,
     COUNT_FLAGS      = ParallelPrimeSieve::COUNT_SEPTUPLETS * 2 - ParallelPrimeSieve::COUNT_PRIMES,
