@@ -211,7 +211,7 @@ void PrimeSieve::unset_lock() {
 
 /// Calculate the current status in percent of sieve()
 /// and print it to the standard output.
-/// @param segment  The interval size of the processed segment.
+/// @param segment  The size of the processed segment.
 ///
 void PrimeSieve::updateStatus(int segment) {
   if (parent_ != NULL)

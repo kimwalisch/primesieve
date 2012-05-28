@@ -127,7 +127,7 @@ void ParallelPrimeSieve::unset_lock() {
 }
 
 /// Calculate the current status in percent of sieve().
-/// @param segment  The interval size of the processed segment.
+/// @param segment  The size of the processed segment.
 ///
 void ParallelPrimeSieve::updateStatus(int segment) {
   #pragma omp critical (status)
