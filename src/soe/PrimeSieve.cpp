@@ -127,36 +127,6 @@ double PrimeSieve::getSeconds() const {
   return seconds_;
 }
 
-int PrimeSieve::getFlags() const {
-  return flags_ & ((1 << 20) - 1);
-}
-
-bool PrimeSieve::isFlag(int flag) const {
-  return (flags_ & flag) == flag; 
-}
-
-/// @return true  If any bit in the range [first, last] is set
-bool PrimeSieve::isFlag(int first, int last) const {
-  return (flags_ & (last * 2 - first)) != 0;
-}
-
-bool PrimeSieve::isCount() const {
-  return isFlag(COUNT_PRIMES, COUNT_SEPTUPLETS);
-}
-
-/// For convenience the PRINT_STATUS flag is not included
-bool PrimeSieve::isPrint() const {
-  return isFlag(PRINT_PRIMES, PRINT_SEPTUPLETS);
-}
-
-bool PrimeSieve::isGenerate() const {
-  return isFlag(CALLBACK32_PRIMES, CALLBACK64_OOP_PRIMES) || isPrint();
-}
-
-bool PrimeSieve::isStatus() const {
-  return isFlag(CALCULATE_STATUS, PRINT_STATUS);
-}
-
 /// Set a start number for sieving.
 /// @pre start < (2^64-1) - (2^32-1) * 10
 ///
@@ -261,7 +231,7 @@ void PrimeSieve::updateStatus(int segment) {
 void PrimeSieve::doSmallPrime(const SmallPrime& sp)
 {
   if (start_ <= sp.min && sp.max <= stop_) {
-    // only one thread at a time may access this code section
+    // synchronize threads here
     LockGuard lock(*this);
     if (sp.index == 0) {
       if (isFlag(CALLBACK32_PRIMES)) callback32_(sp.min);

@@ -48,8 +48,9 @@
 namespace soe {
 
 /// Bit patterns corresponding to prime k-tuplets
-const uint_t PrimeNumberFinder::kTupletBitmasks_[6][5] =
+const uint_t PrimeNumberFinder::kTupletBitmasks_[7][5] =
 {
+  { END },
   { 0x06, 0x18, 0xc0, END },       // Twin primes
   { 0x07, 0x0e, 0x1c, 0x38, END }, // Prime triplets
   { 0x1e, END },                   // Prime quadruplets
@@ -81,8 +82,8 @@ bool PrimeNumberFinder::needGenerator() const {
 /// (twin primes, prime triplets, ...) per byte.
 ///
 void PrimeNumberFinder::initCounts() {
-  for (uint_t i = 0; i < 6; i++) {
-    if (ps_.isFlag(ps_.COUNT_TWINS << i)) {
+  for (uint_t i = 1; i < 7; i++) {
+    if (ps_.isCount(i)) {
       kCounts_[i].resize(256);
       for (uint_t j = 0; j < kCounts_[i].size(); j++) {
         uint_t bitmaskCount = 0;
@@ -126,14 +127,14 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint_t sieveSize) {
     // add up to total prime count
     ps_.counts_[0] += primeCount;
   }
-  // count prime k-tuplets (i=0 twins, i=1 triplets, ...)
+  // count prime k-tuplets (i = 1 twins, i = 2 triplets, ...)
   // using lookup tables
-  for (uint_t i = 0; i < 6; i++) {
-    if (ps_.isFlag(ps_.COUNT_TWINS << i)) {
+  for (uint_t i = 1; i < 7; i++) {
+    if (ps_.isCount(i)) {
       uint_t kCount = 0;
       for (uint_t j = 0; j < sieveSize; j++)
         kCount += kCounts_[i][sieve[j]];
-      ps_.counts_[i+1] += kCount;
+      ps_.counts_[i] += kCount;
     }
   }
 }
@@ -143,11 +144,11 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint_t sieveSize) {
 ///
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) {
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS)) {
-    // i = 0 twins, i = 1 triplets, ...
-    uint_t i = 0;
-    for (; !ps_.isFlag(ps_.PRINT_TWINS << i); i++)
+    // i = 1 twins, i = 2 triplets, ...
+    uint_t i = 1;
+    for (; !ps_.isPrint(i); i++)
       ;
-    // print prime k-tuplets to std::cout
+    // print prime k-tuplets to cout
     for (uint_t j = 0; j < sieveSize; j++) {
       for (const uint_t* bitmask = kTupletBitmasks_[i]; *bitmask <= sieve[j]; bitmask++) {
         if ((sieve[j] & *bitmask) == *bitmask) {
