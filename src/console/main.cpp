@@ -59,10 +59,10 @@ namespace {
 // start and stop number for sieving
 std::vector<uint64_t> number;
 
-int32_t threads   = -1;
-int32_t flags     =  0;
-int32_t sieveSize = -1;
-int32_t preSieve  = -1;
+int preSieve  = -1;
+int sieveSize = -1;
+int threads   = -1;
+int flags     =  0;
 
 bool quietMode = false;
 bool printParserResult = false;
@@ -126,12 +126,12 @@ void version() {
 }
 
 int getWidth(const ParallelPrimeSieve& pps) {
-  int size = 0;
+  std::size_t size = 0;
   for (int i = 0; i < 7; i++) {
-    if (pps.isFlag(COUNT_PRIMES << i))
-      size = std::max(size, (int) primes[i].size());
+    if (pps.isCount(i))
+      size = std::max(size, primes[i].size());
   }
-  return size;
+  return static_cast<int>(size);
 }
 
 bool isDigits(const std::string &str) {
@@ -160,7 +160,8 @@ void processOptions(int argc, char* argv[]) {
     }
     catch (parser_error&) { }
   }
-  for (int i = (int) number.size() + 1; i < argc; i++) {
+  int i = static_cast<int>(number.size() + 1);
+  for (; i < argc; i++) {
     if (*argv[i] != '-' &&
         *argv[i] != '/') help();
     argv[i]++;
@@ -238,8 +239,8 @@ int main(int argc, char* argv[]) {
     if (pps.isPrint() && pps.isCount()) std::cout << std::endl;
     int width = getWidth(pps);
 
-    for (int32_t i = 0; i < 7; i++) {
-      if (pps.isFlag(pps.COUNT_PRIMES << i))
+    for (int i = 0; i < 7; i++) {
+      if (pps.isCount(i))
         std::cout << std::setw(width)
                   << primes[i] << " : " << pps.getCounts(i)
                   << std::endl;
