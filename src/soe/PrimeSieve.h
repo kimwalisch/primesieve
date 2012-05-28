@@ -97,16 +97,16 @@ public:
   void setSieveSize(int);
   void setFlags(int);
   void addFlags(int);
-  /// sieving
+  /// sieve
   void sieve(uint64_t, uint64_t);
   void sieve(uint64_t, uint64_t, int);
   virtual void sieve();
-  /// generation
+  /// generate
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t));
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t, void*), void*);
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
-  /// printing
+  /// print
   void printPrimes(uint64_t, uint64_t);
   void printTwins(uint64_t, uint64_t);
   void printTriplets(uint64_t, uint64_t);
@@ -114,7 +114,7 @@ public:
   void printQuintuplets(uint64_t, uint64_t);
   void printSextuplets(uint64_t, uint64_t);
   void printSeptuplets(uint64_t, uint64_t);
-  /// counting
+  /// count
   uint64_t getPrimeCount(uint64_t, uint64_t);
   uint64_t getTwinCount(uint64_t, uint64_t);
   uint64_t getTripletCount(uint64_t, uint64_t);
