@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 7 February 2012
+# Last modified: 29 May 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -12,17 +12,20 @@
 I. About
 ========
 
-  This file explains how to compile the primesieve console
+  This file explains how to compile and use the primesieve console
   application, to compile the primesieve GUI application please refer
   to src/qt-gui/INSTALL. If you want to use primesieve in your own C++
   program read docs/LIBPRIMESIEVE.
+
+  Precompiled binaries for Windows, Linux and Mac OS X are available
+  at: http://code.google.com/p/primesieve/downloads/list
 
 II. How to build primesieve
 ===========================
 
   Unzip the source archive, open a terminal or 'Visual Studio Command 
   Prompt' and cd into the primesieve directory. Now use one of the
-  following make commands to build primesieve with your favorite C++
+  following make commands to build primesieve using your favorite C++
   compiler:
 
   $ make                     GNU g++
@@ -30,55 +33,59 @@ II. How to build primesieve
 
   Other C++ compilers
   -------------------
-  $ make CXX=icpc CXXFLAGS="-O2 -openmp"
+  $ make CXX=icpc    CXXFLAGS="-O2 -openmp"
   $ make CXX=clang++ CXXFLAGS="-O2"
-  $ make CXX=sunCC CXXFLAGS="-fast -xrestrict -xopenmp"
+  $ make CXX=sunCC   CXXFLAGS="-fast -xopenmp"
+  $ make CXX=pathCC  CXXFLAGS="-Ofast"
   ...
-
-  Note: since version 3.5 primesieve requires OpenMP 3.0 or later
-  (2008). If your compiler only supports OpenMP < 3.0 (e.g. MSVC 2010,
-  Apple g++ 4.2) then you can switch to primesieve 3.4:
-  http://primesieve.googlecode.com/files/primesieve-3.4-src.zip
 
   Makefile help menu
   ------------------
   $ make help                     Shows more options
-  > nmake -f Makefile.msvc help   Shows more options
+  > nmake -f Makefile.msvc help   ...
 
-III. How to test it
-===================
+  Note:
+  If your compiler supports OpenMP 3.0 or later you can add the
+  corresponding flag to CXXFLAGS to enable multi-threading, for g++
+  and Microsoft Visual C++ this is done automatically.
+
+III. How to use it
+==================
 
   > cd bin
-  > primesieve 2 10000     Counts the primes up to 10000
-  > primesieve 2 1E6 -p1   Prints the primes up to 10^6
-  > primesieve -test       Runs various sieving tests
-  > primesieve -help       Prints the help menu
+  > primesieve 2 10000       Count the primes up to 10000
+  > primesieve 2 1E6 -p1     Print the primes up to 10^6
+  > primesieve 100 200 -p2   Print the twin primes within [100, 200]
+  > primesieve -test         Run various sieving tests
+  > primesieve -help         Print the help menu
 
   Note: for Unix-like operating systems use ./primesieve
 
 IV. Target a specific CPU
 =========================
 
-  You can indicate your CPU's L1 data cache size (in kilobytes) per
-  core to get the best performance e.g.:
+  You can indicate your CPU's L1 data cache size in kilobytes per
+  core to get the best performance (default 32) e.g.:
 
   $ make L1_DCACHE_SIZE=64
 
-V. Compiler benchmark
-=====================
+V. Compiler benchmark (May 2012)
+================================
 
-  Here are some primesieve (v. 3.3) timings for various C++ compilers
-  measured on an Intel Core-i5 670 3.46GHz with DDR3-1333 running
-  Fedora 16 x86_64 and Windows 7 64-bit. Best time in seconds to sieve
-  (single-threaded) an interval of size 1E10 starting at 1E18:
+  System: Intel Core-i5 670 3.46GHz, DDR3-1333
+  OS 1:   Scientific Linux 6.2 x86_64
+  OS 2:   Windows 7 64-bit
 
-  $ ./primesieve 1E18 -o1E10 -t1
+  Best time in seconds to sieve an interval of size 10^10 starting at
+  10^18 (single-threaded):
 
-  Compiler                    Optimization flags   OS        Time/s   Perf.
-  -------------------------------------------------------------------------
-  Intel C++ Compiler 12.0     -O2 -ipo -prof-use   Linux     14.69    100%
-  SunStudio 12                -fast -xrestrict     Linux     14.97     98%
-  GNU g++ 4.6                 -O2                  Linux     15.08     97%
-  Microsoft Visual C++ 2010   /O2 /GL              Windows   15.53     95%
-  Mingw-w64 g++ 4.6           -O2                  Windows   15.60     94%
-  LLVM/clang++ 2.8            -O2                  Linux     17.62     83%
+  $ ./primesieve-3.7 1E18 -o1E10 -t1 -s256
+
+  Compiler                    Optimization flag   OS        Time/s   Perf.
+  ------------------------------------------------------------------------
+  Intel C++ Compiler 12.0     -O2                 Linux     14.54    100%
+  GNU g++ 4.7                 -O2                 Linux     14.65     99%
+  Oracle Studio 12            -fast               Linux     14.80     98%
+  Microsoft Visual C++ 2010   /O2                 Windows   15.15     96%
+  PathScale EKOPath 4.0       -Ofast              Linux     17.16     85%
+  LLVM/clang++ 2.8            -O2                 Linux     17.62     83%
