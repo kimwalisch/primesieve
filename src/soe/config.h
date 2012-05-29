@@ -137,7 +137,6 @@ enum {
   MEMORY_PER_ALLOC = (1 << 20) * 4
 };
 
-
 /// Worker threads sieve at least an interval of size
 /// MIN_THREAD_INTERVAL to reduce the thread creation overhead.
 /// @pre MIN_THREAD_INTERVAL >= 100
