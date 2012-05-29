@@ -71,13 +71,6 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
     initCounts();
 }
 
-/// Check if PrimeNumberFinder requires a PrimeNumberGenerator
-/// object to generate its sieving primes.
-///
-bool PrimeNumberFinder::needGenerator() const {
-  return getPreSieve() < getSquareRoot();
-}
-
 /// Initialize the lookup tables needed to count prime k-tuplets
 /// (twin primes, prime triplets, ...) per byte.
 ///
@@ -148,6 +141,7 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) {
     uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
     for (; !ps_.isPrint(i); i++)
       ;
+    // this algorithm is slow, for more speed see GENERATE.h
     for (uint_t j = 0; j < sieveSize; j++) {
       for (const uint_t* bitmask = kTupletBitmasks_[i]; *bitmask <= sieve[j]; bitmask++) {
         if ((sieve[j] & *bitmask) == *bitmask) {
@@ -164,7 +158,7 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) {
     }
   }
   else {
-    // to keep things simple only one thread at a time calls back primes
+    // only one thread at a time calls back primes
     PrimeSieve::LockGuard lock(ps_);
     // @see GENERATE.h, SieveOfEratosthenes-inline.h
     if (ps_.isFlag(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_, uint32_t)
