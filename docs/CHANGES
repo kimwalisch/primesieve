@@ -1,4 +1,4 @@
-New in version 3.7, 27/05/2012
+New in version 3.7, 29/05/2012
 ==============================
 
 1. More aggressive inlining (*-inline.h), up to 10 percent faster
@@ -11,11 +11,16 @@ New in version 3.7, 27/05/2012
 4. New internal SieveOfEratosthenes::getNextPrime(...) member function.
 5. Replaced old C-style comments with C++ comments.
 6. Updated ExpressionParser to version 2.2.
+7. uin32_t has been replaced by uint_t in src/soe/*.
+8. New int API for PrimeSieve and ParallelPrimeSieve objects, getters
+   and setters now use int instead of uint32_t.
 
-two API changes!
-----------------
-- PrimeSieve::getTimeElapsed() is now PrimeSieve::getSeconds().
-- PrimeSieve::cancel_sieving() is now cancel_sieving().
+API changes!
+------------
+- PrimeSieve::getTimeElapsed()   is now PrimeSieve::getSeconds().
+- PrimeSieve::setPreSieveLimit() is now PrimeSieve::setPreSieve().
+- PrimeSieve::cancel_sieving()   is now cancel_sieving().
+- PrimeSieve::COUNTS_SIZE has been removed.
 
 New in version 3.6, 22/04/2012
 ==============================
