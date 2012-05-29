@@ -1,4 +1,4 @@
-April 21, 2012
+May 29, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -10,42 +10,36 @@ Contents
   3. How to use it        (Unix-like OSes)
   4. Build primesieve.lib (Windows, MSVC)
   5. How to use it        (Windows, MSVC)
-  6. sum_primes.cpp
 
 1. About the primesieve C++ library
 ===================================
 
-  The easiest way to use primesieve in your C++ program is to build
-  it as a static library and link it into your application, this
-  causes no dependencies. On Unix-like operating systems (Linux, Mac
-  OS X, ...) it is also possible to build primesieve as a shared
-  library.
-
-  The file USAGE_EXAMPLES contains commented source code examples that
-  show how to use PrimeSieve & ParallelPrimeSieve objects e.g. for
-  prime number generation.
+  primesieve has been designed to be usable in other projects, this
+  file explains how to compile primesieve as a C++ library i.e.
+  libprimesieve and link it into your application. By default
+  libprimesieve is built as a static library which causes no
+  dependencies, on Unix-like operating systems (Linux, Mac OS X, ...)
+  it is also possible to build libprimesieve as a shared library.
+  The file USAGE_EXAMPLES contains C++ source code examples that show
+  how to generate, count and print primes and k-tuplets (twins,
+  triplets, ...) using libprimesieve. 
 
 2. Build libprimesieve (Unix-like OSes)
 =======================================
 
   Open a terminal and cd into the primesieve source code directory.
   The following make commands build libprimesieve using g++ and
-  install it together with the primesieve header files to /usr/local
-  (Mac OS X: /usr).
+  install it together with the PrimeSieve.h and ParallelPrimeSieve.h
+  header files to /usr/local (Mac OS X: /usr).
 
   static libprimesieve (DEFAULT)
   ------------------------------
   $ make lib
   $ sudo make install
 
-  shared libprimesieve
-  --------------------
-  $ make lib SHARED=yes
-  $ sudo make install
-
-  Notes: To build libprimesieve using an alternate C++ compiler use
-  e.g. `make lib CXX=clang++`. On traditional Unix systems (BSD,
-  MINIX, ...) you might need to use gmake instead of make.
+  Notes:
+  To build libprimesieve as a shared library use `make lib SHARED=yes`.
+  To use an alternate C++ compiler use e.g. `make lib CXX=clang++`.
 
   Makefile help menu
   ------------------
@@ -54,14 +48,16 @@ Contents
 3. How to use it (Unix-like OSes)
 =================================
 
-  The sum_primes.cpp program (see section 6.) can now be compiled by
-  specifying libprimesieve (-lprimesieve flag) at the end of the
-  linker command:
+  The sum_primes.cpp example program in the current directory can now
+  be compiled by specifying libprimesieve (-lprimesieve flag) at the
+  end of the linker command:
 
-  $ g++ -o sum_primes sum_primes.cpp -lprimesieve
+  $ g++ -o sum_primes docs/sum_primes.cpp -lprimesieve
   $ ./sum_primes
 
-  Note: if you want to use ParallelPrimeSieve objects and you have
+  OpenMP multi-threading
+  ----------------------
+  If you want to use ParallelPrimeSieve objects and you have
   built libprimesieve statically then you also have to add the OpenMP
   flag to the linker e.g.:
 
@@ -71,21 +67,21 @@ Contents
 =======================================
 
   Open a Visual Studio Command Prompt, cd into the primesieve source
-  code directory and build primesieve as a static library using:
+  code directory and run the following command to build primesieve as
+  a static library. For ease of use the new primesieve.lib and the
+  PrimeSieve.h and ParallelPrimeSieve.h header files are also copied
+  to the dist directory.
 
   > nmake -f Makefile.msvc lib
 
 5. How to use it (Windows, MSVC)
 ================================
 
-  The sum_primes.cpp program (see section 6.) can now be compiled by
-  specifying primesieve.lib to the linker:
+  The sum_primes.cpp example program in the current directory can now
+  be compiled by specifying primesieve.lib to the linker:
 
-  > cl /O2 /GL /EHsc /I"dist" sum_primes.cpp /link "dist\primesieve.lib"
+  > cl /EHsc docs\sum_primes.cpp /I"dist" /link "dist\primesieve.lib"
   > sum_primes.exe
-
-  Note: /I adds the path to the primesieve header files needed for
-  compilation.
 
   OpenMP multi-threading
   ----------------------
@@ -95,21 +91,3 @@ Contents
   (http://primesieve.googlecode.com/files/primesieve-3.4-src.zip)
   which builds with OpenMP using Microsoft Visual C++ >= 2005 or use
   an alternate compiler e.g. the Intel C++ Compiler or MinGW.
-
-6. sum_primes.cpp
-=================
-
-  #include <primesieve/soe/PrimeSieve.h>
-  #include <iostream>
-
-  unsigned int sum = 0;
-  void sumPrimes(unsigned int prime) {
-    sum += prime;
-  }
-
-  int main() {
-    PrimeSieve ps;
-    ps.generatePrimes(2, 1000, sumPrimes);
-    std::cout << "Sum of the primes below 1000 = " << sum << std::endl;
-    return 0;
-  }
