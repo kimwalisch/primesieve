@@ -164,8 +164,8 @@ uint64_t getRand64(uint64_t limit) {
 }
 
 /// Generate a random (power of 2) sieve size >= 1 and <= 4096
-uint32_t getRandomSieveSize() {
-  return static_cast<uint32_t>(1 << (std::rand() % 13));
+int getRandomSieveSize() {
+  return (1 << (std::rand() % 13));
 }
 
 /// Sieve about 200 small random intervals (using random sieve sizes)
