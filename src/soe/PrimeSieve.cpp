@@ -123,7 +123,11 @@ bool     PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRI
 bool     PrimeSieve::isStatus()                  const { return isFlag(CALCULATE_STATUS, PRINT_STATUS); }
 bool     PrimeSieve::isGenerate()                const { return isFlag(CALLBACK32_PRIMES, CALLBACK64_OOP_PRIMES) || isPrint(); }
 
-/// 0 = prime count, 1 = twin count, 2 = triplet count, ...
+/// @param index  0 = prime count,
+///               1 = twin count,
+///               2 = triplet count,
+///               ...
+///               6 = septuplet count.
 uint64_t PrimeSieve::getCounts(int index) const {
   if (index < 0 || index > 7)
     throw std::out_of_range("getCounts(int) index out of range");
