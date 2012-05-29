@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 25 May 2012
+# Last modified: 29 May 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -15,7 +15,7 @@ Contents
   1. About primesieve
   2. What's in this source archive
   3. Implementation and algorithm complexity
-  4. Source code documentation
+  4. Sieve of Eratosthenes
   5. Further reading
   6. Thanks
   7. License
@@ -42,9 +42,9 @@ Contents
   -----------------------
   docs/LIBPRIMESIEVE   Explains how to build and use the primesieve
                        C++ library on Unix-like OSes and Windows.
-  docs/USAGE_EXAMPLES  Contains commented source code examples that
-                       show how to use PrimeSieve objects e.g. for
-                       prime number generation.
+  docs/USAGE_EXAMPLES  Contains source code examples that show how to
+                       use PrimeSieve objects e.g. for prime number
+                       generation.
   Other files:         CHANGES, TODO, BUGS, VALGRIND.
 
   Source code directories
@@ -60,31 +60,26 @@ Contents
 ==========================================
 
   primesieve is written in C++03, the parallelization is implemented
-  using OpenMP (version 3.0 or later). It runs on both little-endian
-  (x86, x64, ...) and big-endian (PowerPC, SPARC, ...) CPUs.
+  using OpenMP 3.0 or later. It compiles with every standard compliant
+  C++ compiler and runs on both little-endian (x86, x64) and
+  big-endian (PowerPC, SPARC, ...) CPUs.
 
   primesieve uses the segmented sieve of Eratosthenes with wheel
   factorization, this algorithm has a complexity of O(n log log n)
   operations and uses O(n^0.5) space.
 
-  My implementation uses a compressed sieve array with 30 numbers per
-  byte, the 8 bits of each byte correspond to the numbers i*30 + k
-  with k = {7, 11, 13, 17, 19, 23, 29, 31}. It further uses 8 bytes
-  per sieving prime <= sqrt(x) that is 4 bytes for the sieving prime
-  and another 4 bytes for the multiple index and wheel index.
-
   primesieve's memory requirement per thread is about:
   pi(sqrt(x)) * 8 bytes + 400 kilobytes
 
-4. Source code documentation (./src/soe)
-========================================
+4. Sieve of Eratosthenes
+========================
 
   General information
   -------------------
   The src/soe directory contains the sieve of Eratosthenes source
   code. Files that start with a capital letter
   (e.g. SieveOfEratosthenes.h, *-inline.h, *.cpp) contain a class of
-  the same name, files in lower case contain inline functions and
+  the same name, files in lower case contain C-style functions and
   constant definitions. If you are new to prime number sieving I
   recommend reading some of the papers from section 5.
 
@@ -93,7 +88,7 @@ Contents
   The sieving algorithms are in EratSmall.cpp, EratMedium.cpp and
   EratBig.cpp. The segmented sieve of Eratosthenes is in 
   SieveOfEratosthenes-inline.h. Prime number generation (and counting)
-  is done in PrimeNumberFinder.cpp using macros from GENERATE.h.
+  is done in PrimeNumberFinder.cpp using a macro from GENERATE.h.
 
   C++ classes
   -----------
@@ -108,7 +103,7 @@ Contents
     Implementation of the segmented sieve of Eratosthenes using a bit
     array with 30 numbers per byte, each byte of the sieve array holds
     the numbers i*30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
-    The main method is SieveOfEratosthenes::sieve(uint32_t prime) it
+    The main method is SieveOfEratosthenes::sieve(uint_t prime) it
     must be called consecutively for all primes <= sqrt(n) in order to
     sieve the primes up to n. Each sieving prime is first stored in
     one of the Erat(Small|Medium|Big) objects which are then used to
@@ -184,13 +179,12 @@ Contents
   Jonathan Sorenson's papers provide a good introduction to prime
   number sieves, the sieve of Eratosthenes and segmentation are
   explained in [5], wheel factorization is covered in [6].
-  Achim Flammenkamp's "The Art of Prime Sieving" [9] describes how to
-  optimize the segmented sieve of Eratosthenes to effectively use the
-  CPU's cache memory.
-  Joerg Richstein in [10] (German language) describes how to pre-sieve
-  multiples of small primes to speed up the sieve of Eratosthenes.
   Tomás Oliveira e Silva on his website [11] explains his improvement
   to the segmented sieve of Eratosthenes for big sieving primes.
+  A. Járai and E. Vatai's paper "Cache optimized linear sieve" [12]
+  covers many of the optimizations used in primesieve.
+  Joerg Richstein in [10] (German language) describes how to pre-sieve
+  multiples of small primes to speed up the sieve of Eratosthenes.
 
 6. Thanks
 =========
@@ -241,3 +235,6 @@ Contents
  [11] Tomás Oliveira e Silva, "Fast implementation of the segmented
       sieve of Eratosthenes", 2002.
       http://www.ieeta.pt/~tos/software/prime_sieve.html
+ [12] A. Járai and E. Vatai, "Cache optimized linear sieve", Acta
+      Univ. Sapientiae, Informatica, 3, 2 (2011) 205-223.
+      http://www.acta.sapientia.ro/acta-info/C3-2/info32-5.pdf
