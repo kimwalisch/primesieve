@@ -172,7 +172,7 @@ void SieveOfEratosthenes::finish() {
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
   uint_t stopRemainder = getByteRemainder(stop_);
-  // sieve size of the last segment
+  // sieveSize of the last segment
   sieveSize_ = static_cast<uint_t>((stop_ - stopRemainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
   // sieve the last segment
   preSieve();
