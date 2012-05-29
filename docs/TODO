@@ -1,4 +1,4 @@
-May 27, 2012
+May 29, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -24,11 +24,12 @@ OpenMP
 
 Possible future optimizations
 -----------------------------
-1. Once most CPUs have 64 KB L1 data cache per CPU core I should set
+
+1. Once most CPUs have 64 KB L1 data cache per core I should set
    L1_DCACHE_SIZE = 64 in src/soe/config.h.
 2. Once CPUs have >= 4 ALUs per physical core unrolling the main
    sieving loop 4 times (currently 2 times) in EratBig.cpp and
    EratMedium.cpp might be faster.
-3. Prime number generation (not counting) can be sped up by about 10
-   percent using the 64-bit BSF instruction (Assembly) instead of the
-   De Bruijn bitscan in SieveOfEratosthenes-inline.h.
+3. Prime number generation can be sped up by about 10 percent when
+   sieving < 2^32 using the 64-bit BSF instruction (Assembly) instead
+   of the De Bruijn bitscan in SieveOfEratosthenes-inline.h.
