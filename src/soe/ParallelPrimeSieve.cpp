@@ -106,8 +106,7 @@ void ParallelPrimeSieve::setNumThreads(int numThreads) {
 int ParallelPrimeSieve::getIdealNumThreads() const {
   // by default 1 thread is used to generate primes in arithmetic
   // order but multiple threads are used for counting
-  if (isGenerate())
-    return 1;
+  if (isGenerate()) return 1;
   // each thread sieves at least an interval of size sqrt(x)/5
   // but not smaller than MIN_THREAD_INTERVAL
   uint64_t threshold = std::max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
@@ -126,9 +125,6 @@ void ParallelPrimeSieve::unset_lock() {
   omp_unset_lock(&lock_);
 }
 
-/// Calculate the current status in percent of sieve().
-/// @param segment  The size of the processed segment.
-///
 void ParallelPrimeSieve::updateStatus(int segment) {
   #pragma omp critical (status)
   {
