@@ -79,11 +79,10 @@ public:
            uint_t multipleIndex,
            uint_t wheelIndex)
   {
-    setIndexes(multipleIndex, wheelIndex);
+    set(multipleIndex, wheelIndex);
     sievingPrime_ = static_cast<uint32_t>(sievingPrime);
   }
-  void setIndexes(uint_t multipleIndex,
-                  uint_t wheelIndex)
+  void set(uint_t multipleIndex, uint_t wheelIndex)
   {
     indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
   }

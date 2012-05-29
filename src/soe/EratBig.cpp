@@ -133,9 +133,8 @@ void EratBig::sieve(uint8_t* sieve)
       const WheelPrime* wPrime = bucket->begin();
       const WheelPrime* end = bucket->end();
 
-      // For out-of-order CPUs this algorithm can be sped up by
-      // processing 2 sieving primes per loop iteration, this breaks
-      // the dependency chain and reduces pipeline stalls
+    // 2 sieving primes are processed per loop iteration to break the
+    // dependency chain and reduce pipeline stalls
       for (; wPrime + 2 <= end; wPrime += 2) {
         uint_t multipleIndex0 = wPrime[0].getMultipleIndex();
         uint_t wheelIndex0    = wPrime[0].getWheelIndex();
@@ -144,8 +143,8 @@ void EratBig::sieve(uint8_t* sieve)
         uint_t wheelIndex1    = wPrime[1].getWheelIndex();
         uint_t sievingPrime1  = wPrime[1].getSievingPrime();
         // cross-off the current multiple (unset corresponding bit) of
-        // sievingPrime0 and sievingPrime1, calculate their next
-        // multipleIndex and the wheel indexes of their next multiples
+        // sievingPrime0 and sievingPrime1 and calculate their next
+        // multipleIndex and wheelIndex
         sieve[multipleIndex0] &= wheel(wheelIndex0).unsetBit;
         multipleIndex0        += wheel(wheelIndex0).nextMultipleFactor * sievingPrime0;
         multipleIndex0        += wheel(wheelIndex0).correct;

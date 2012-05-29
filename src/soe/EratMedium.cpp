@@ -71,9 +71,8 @@ void EratMedium::sieve(uint8_t* sieve, uint_t sieveSize)
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
     WheelPrime* wPrime    = bucket->begin();
     WheelPrime* const end = bucket->end();
-    // For out-of-order CPUs this algorithm can be sped up by
-    // processing 2 sieving primes per loop iteration, this breaks the
-    // dependency chain and reduces pipeline stalls
+    // 2 sieving primes are processed per loop iteration to break the
+    // dependency chain and reduce pipeline stalls
     for (; wPrime + 2 <= end; wPrime += 2) {
       uint_t multipleIndex0 = wPrime[0].getMultipleIndex();
       uint_t wheelIndex0    = wPrime[0].getWheelIndex();
@@ -83,9 +82,9 @@ void EratMedium::sieve(uint8_t* sieve, uint_t sieveSize)
       uint_t sievingPrime1  = wPrime[1].getSievingPrime();
       while (multipleIndex0 < sieveSize &&
              multipleIndex1 < sieveSize) {
-        // Cross-off the current multiple (unset corresponding bit) of
-        // sievingPrime0 and sievingPrime1, calculate their next
-        // multipleIndex and the wheel indexes of their next multiples
+        // cross-off the current multiple (unset corresponding bit) of
+        // sievingPrime0 and sievingPrime1 and calculate their next
+        // multipleIndex and wheelIndex
         sieve[multipleIndex0] &= wheel(wheelIndex0).unsetBit;
         multipleIndex0        += wheel(wheelIndex0).nextMultipleFactor * sievingPrime0;
         multipleIndex0        += wheel(wheelIndex0).correct;
@@ -109,9 +108,9 @@ void EratMedium::sieve(uint8_t* sieve, uint_t sieveSize)
       }
       multipleIndex0 -= sieveSize;
       multipleIndex1 -= sieveSize;
-      // Set the multipleIndex and wheelIndex for the next segment
-      wPrime[0].setIndexes(multipleIndex0, wheelIndex0);
-      wPrime[1].setIndexes(multipleIndex1, wheelIndex1);
+      // set the multipleIndex and wheelIndex for the next segment
+      wPrime[0].set(multipleIndex0, wheelIndex0);
+      wPrime[1].set(multipleIndex1, wheelIndex1);
     }
     if (wPrime != end) {
       uint_t multipleIndex = wPrime->getMultipleIndex();
@@ -124,7 +123,7 @@ void EratMedium::sieve(uint8_t* sieve, uint_t sieveSize)
         wheelIndex           += wheel(wheelIndex).next;
       }
       multipleIndex -= sieveSize;
-      wPrime->setIndexes(multipleIndex, wheelIndex);
+      wPrime->set(multipleIndex, wheelIndex);
     }
   }
 }
