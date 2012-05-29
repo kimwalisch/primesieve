@@ -47,38 +47,23 @@
 
 namespace soe {
 
-inline uint64_t SieveOfEratosthenes::getStart() const {
-  return start_;
-}
-
-inline uint64_t SieveOfEratosthenes::getStop() const {
-  return stop_;
-}
-
-inline uint_t SieveOfEratosthenes::getSquareRoot() const {
-  return sqrtStop_;
-}
-
-inline uint_t SieveOfEratosthenes::getSieveSize() const {
-  return sieveSize_;
-}
-
-inline uint_t SieveOfEratosthenes::getPreSieve() const {
-  return preSieve_.getLimit();
-}
+inline uint64_t SieveOfEratosthenes::getStart()      const { return start_; }
+inline uint64_t SieveOfEratosthenes::getStop()       const { return stop_; }
+inline uint_t   SieveOfEratosthenes::getSquareRoot() const { return sqrtStop_; }
+inline uint_t   SieveOfEratosthenes::getPreSieve()   const { return preSieve_.getLimit(); }
+inline uint_t   SieveOfEratosthenes::getSieveSize()  const { return sieveSize_; }
 
 /// Implementation of the segmented sieve of Eratosthenes.
 /// sieve(uint_t) must be called consecutively for all primes up to
-/// sqrt(stop_) in order to sieve the primes within the interval
-/// [start_, stop_].
+/// sqrt(stop_) in order to sieve the primes within [start_, stop_].
 ///
 inline void SieveOfEratosthenes::sieve(uint_t prime) {
-  const uint64_t square = isquare<uint64_t>(prime);
-  // The following while loop segments the sieve of Eratosthenes, it
-  // is executed when all sieving primes <= sqrt(segmentHigh_)
-  // required to sieve the next segment have been stored in the erat*
-  // objects (see below). Each loop iteration sieves the primes within
-  // the interval [segmentLow_+7, segmentHigh_].
+  uint64_t square = isquare<uint64_t>(prime);
+  // The following loop segments the sieve of Eratosthenes, it is
+  // executed when all sieving primes <= sqrt(segmentHigh_) required
+  // to sieve the next segment have been stored in the erat* objects
+  // (see below). Each loop iteration sieves the primes within the
+  // interval [segmentLow_+7, segmentHigh_].
   while (segmentHigh_ < square) {
     preSieve();
     crossOffMultiples();
