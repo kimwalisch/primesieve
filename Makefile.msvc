@@ -5,16 +5,15 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   24 May 2012
+# Last modified:   29 May 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
 
 TARGET       = primesieve
 CXX          = cl /nologo
-CXXFLAGS     = /W2 /O2 /GL /EHsc
+CXXFLAGS     = /W2 /O2 /EHsc
 LINK         = link
-LFLAGS       = /OPT:REF,ICF /LTCG
 INCPATH      = /I"src\thirdparty"
 SOEDIR       = src\soe
 CONDIR       = src\console
@@ -63,7 +62,7 @@ BIN_CXXFLAGS = $(BIN_CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 !ENDIF
 
 bin: dir_bin $(BIN_OBJECTS)
-	$(LINK) $(LFLAGS) /OUT:$(BINDIR)\$(TARGET).exe $(BIN_OBJECTS)
+	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $(BIN_OBJECTS)
 
 $(BIN_OBJECTS): {$(SOEDIR)\;$(CONDIR)\}$$(@B).cpp
 	$(CXX) $(BIN_CXXFLAGS) $(INCPATH) /c $? /Fo"$@"
