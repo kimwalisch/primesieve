@@ -1,26 +1,23 @@
-May 27, 2012
+May 29, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-I. About
+About
+=====
+
+  This file contains C++ source code examples that show how to use
+  PrimeSieve and ParallelPrimeSieve objects. *PrimeSieve objects can
+  generate (callback), print and count primes and prime k-tuplets
+  (twins, triplets, ...). For these examples to compile you need to
+  build primesieve as a library and add it to the linker, this is
+  explained in the LIBPRIMESIEVE file.
+
+Contents
 ========
 
-  This file contains various C++ source code examples that show how to
-  use PrimeSieve & ParallelPrimeSieve objects. For these examples to
-  compile you need to build primesieve as a library and add it to the
-  linker, this is explained in the LIBPRIMESIEVE file.
-
-II. Examples
-============
-
-  API
-  ---
   1. Prime number generation
-  2. Count primes and prime k-tuplets
-  3. Print primes and prime k-tuplets
-
-  Advanced usage
-  --------------
+  2. Count primes
+  3. Print primes
   4. ParallelPrimeSieve
   5. Timing
   6. Set the sieve size
@@ -83,8 +80,8 @@ II. Examples
 
   ////////////////////////////////////////////////////////////////////
 
-2. Count primes and prime k-tuplets
-===================================
+2. Count primes
+===============
 
   API for counting
   ----------------
@@ -110,8 +107,8 @@ II. Examples
 
   ////////////////////////////////////////////////////////////////////
 
-3. Print primes and prime k-tuplets
-===================================
+3. Print primes
+===============
 
   API for printing (to std::cout)
   -------------------------------
@@ -300,7 +297,7 @@ II. Examples
 
   API
   ---
-  void PrimeSieve::setFlags(uint32_t flags);
+  void PrimeSieve::setFlags(int flags);
 
   Flags
   -----
