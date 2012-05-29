@@ -6,10 +6,10 @@ Contents
 ========
 
   1. About the primesieve C++ library
-  2. Build libprimesieve  (Unix-like OSes)
-  3. How to use it        (Unix-like OSes)
+  2. Build libprimesieve (Unix-like OSes)
+  3. How to use it
   4. Build primesieve.lib (Windows, MSVC)
-  5. How to use it        (Windows, MSVC)
+  5. How to use it
 
 1. About the primesieve C++ library
 ===================================
