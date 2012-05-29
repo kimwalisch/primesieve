@@ -125,11 +125,7 @@ Contents
   // Program output:
   // (3, 5)
   // (5, 7)
-  // (11, 13)
-  // (17, 19)
-  // (29, 31)
   // ...
-  // (881, 883)
 
   #include <primesieve/soe/PrimeSieve.h>
   #include <iostream>
