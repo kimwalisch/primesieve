@@ -75,24 +75,25 @@ public:
   {
     return indexes_ >> 23;
   }
+  void setMultipleIndex(uint_t multipleIndex)
+  {
+    indexes_ = static_cast<uint32_t>(indexes_ | multipleIndex);
+  }
+  void setWheelIndex(uint_t wheelIndex)
+  {
+    indexes_ = static_cast<uint32_t>(wheelIndex << 23);
+  }
+  void set(uint_t multipleIndex,
+           uint_t wheelIndex)
+  {
+    indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
+  }
   void set(uint_t sievingPrime,
            uint_t multipleIndex,
            uint_t wheelIndex)
   {
     set(multipleIndex, wheelIndex);
     sievingPrime_ = static_cast<uint32_t>(sievingPrime);
-  }
-  void set(uint_t multipleIndex, uint_t wheelIndex)
-  {
-    indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
-  }
-  void setWheelIndex(uint_t wheelIndex)
-  {
-    indexes_ = static_cast<uint32_t>(wheelIndex << 23);
-  }
-  void setMultipleIndex(uint_t multipleIndex)
-  {
-    indexes_ = static_cast<uint32_t>(indexes_ | multipleIndex);
   }
 private:
   /// multipleIndex = 23 least significant bits of indexes_.
