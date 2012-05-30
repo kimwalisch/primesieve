@@ -116,8 +116,7 @@ private:
 class Bucket {
 public:
   Bucket() : current_(wheelPrimes_) { }
-  // list::push_back(Bucket()) adds an empty
-  // bucket without unnecessary copying
+  /// list::push_back(Bucket()) adds an empty bucket (no copying)
   Bucket(const Bucket&) : current_(wheelPrimes_) { }
   void reset()
   {
