@@ -69,25 +69,25 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
   uint8_t* const sieveEnd = &sieve[sieveSize];
 
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
-    WheelPrime* wPrime    = bucket->begin();
-    WheelPrime* const end = bucket->end();
-    for (; wPrime != end; wPrime++) {
+    WheelPrime* wPrime = bucket->begin();
+    WheelPrime* wEnd   = bucket->end();
+    for (; wPrime != wEnd; wPrime++) {
       const uint_t sievingPrime  = wPrime->getSievingPrime();
       const uint_t multipleIndex = wPrime->getMultipleIndex();
       const uint_t wheelIndex    = wPrime->getWheelIndex();
-      const uint_t maxLoopOffset = sievingPrime * 30 + 29;
-      uint8_t* const loopLimit   = (maxLoopOffset < sieveSize) ? sieveEnd - maxLoopOffset : sieve;
+      const uint_t loopDistance  = sievingPrime * 30 + 29;
+      uint8_t* const loopLimit   = (loopDistance < sieveSize) ? sieveEnd - loopDistance : sieve;
 
-      // Pointer to the byte containing the first multiple of
+      // pointer to the byte containing the first multiple of
       // sievingPrime within the current segment
       uint8_t* p = &sieve[multipleIndex];
       uint8_t* q;
 
-      // Cross-off the multiples (unset corresponding bits) of the
-      // current sievingPrime within the sieve array using a hardcoded
-      // modulo 30 wheel that skips multiples of 2, 3 and 5
+      // cross-off the multiples (unset bits) of the current sievingPrime
+      // within the sieve array using a hardcoded modulo 30 wheel that
+      // skips multiples of 2, 3 and 5
       switch (wheelIndex) {
-        // For sieving primes of type i*30 + 7
+        // for sieving primes of type i*30 + 7
         for (;;) {
           case 0: *p &= BIT0; p += sievingPrime * 6 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(1); break; }
           case 1: *p &= BIT4; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(2); break; }
@@ -97,7 +97,7 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
           case 5: *p &= BIT2; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(6); break; }
           case 6: *p &= BIT1; p += sievingPrime * 6 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(7); break; }
           case 7: *p &= BIT5; p += sievingPrime * 2 + 1;
-                  // Fast loop, takes only =~ 16 asm instructions per loop
+                  // faster loop, takes only =~ 16 asm instructions per
                   // iteration to cross-off the next 8 multiples. Two
                   // pointers (p, q) are used to break the dependency chain
                   // and take advantage of Instruction-Level Parallelism.
@@ -115,7 +115,7 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                   if (p >= sieveEnd) { wPrime->setWheelIndex(0); break; }
         }
         break;
-        // For sieving primes of type i*30 + 11
+        // for sieving primes of type i*30 + 11
         for (;;) {
           case  8: *p &= BIT1; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(9);  break; }
           case  9: *p &= BIT3; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(10); break; }
@@ -139,7 +139,7 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                    if (p >= sieveEnd) { wPrime->setWheelIndex(8); break; }
         }
         break;
-        // For sieving primes of type i*30 + 13
+        // for sieving primes of type i*30 + 13
         for (;;) {
           case 16: *p &= BIT2; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(17); break; }
           case 17: *p &= BIT7; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(18); break; }
@@ -163,7 +163,7 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                    if (p >= sieveEnd) { wPrime->setWheelIndex(16); break; }
         }
         break;
-        // For sieving primes of type i*30 + 17
+        // for sieving primes of type i*30 + 17
         for (;;) {
           case 24: *p &= BIT3; p += sievingPrime * 6 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(25); break; }
           case 25: *p &= BIT6; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(26); break; }
@@ -187,7 +187,7 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                    if (p >= sieveEnd) { wPrime->setWheelIndex(24); break; }
         }
         break;
-        // For sieving primes of type i*30 + 19
+        // for sieving primes of type i*30 + 19
         for (;;) {
           case 32: *p &= BIT4; p += sievingPrime * 6 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(33); break; }
           case 33: *p &= BIT2; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(34); break; }
@@ -211,7 +211,7 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                    if (p >= sieveEnd) { wPrime->setWheelIndex(32); break; }
         }
         break;
-        // For sieving primes of type i*30 + 23
+        // for sieving primes of type i*30 + 23
         for (;;) {
           case 40: *p &= BIT5; p += sievingPrime * 6 + 5; if (p >= sieveEnd) { wPrime->setWheelIndex(41); break; }
           case 41: *p &= BIT1; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(42); break; }
@@ -235,7 +235,7 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                    if (p >= sieveEnd) { wPrime->setWheelIndex(40); break; }
         }
         break;
-        // For sieving primes of type i*30 + 29
+        // for sieving primes of type i*30 + 29
         for (;;) {
           case 48: *p &= BIT6; p += sievingPrime * 6 + 6; if (p >= sieveEnd) { wPrime->setWheelIndex(49); break; }
           case 49: *p &= BIT5; p += sievingPrime * 4 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(50); break; }
@@ -259,7 +259,7 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                    if (p >= sieveEnd) { wPrime->setWheelIndex(48); break; }
         }
         break;
-        // For sieving primes of type i*30 + 31
+        // for sieving primes of type i*30 + 31
         for (;;) {
           case 56: *p &= BIT7; p += sievingPrime * 6 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(57); break; }
           case 57: *p &= BIT0; p += sievingPrime * 4 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(58); break; }
@@ -284,7 +284,7 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
         }
         break;
       }
-      // Set multipleIndex for the next segment
+      // set multipleIndex for the next segment
       wPrime->setMultipleIndex(static_cast<uint_t>(p - sieveEnd));
     }
   }
