@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 29 May 2012
+# Last modified: 30 May 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -84,8 +84,8 @@ V. Compiler benchmark (May 2012)
   Compiler                    Optimization flag   OS        Time/s   Perf.
   ------------------------------------------------------------------------
   Intel C++ Compiler 12.0     -O2                 Linux     14.54    100%
-  GNU g++ 4.7                 -O2                 Linux     14.65     99%
-  Oracle Studio 12            -fast               Linux     14.80     98%
+  GNU g++ 4.7                 -O2                 Linux     14.55    100%
+  Oracle Studio 12            -fast               Linux     14.69     99%
   Microsoft Visual C++ 2010   /O2                 Windows   15.15     96%
-  PathScale EKOPath 4.0       -Ofast              Linux     17.16     85%
+  PathScale EKOPath 4.0       -Ofast              Linux     16.98     86%
   LLVM/clang++ 2.8            -O2                 Linux     17.62     83%
