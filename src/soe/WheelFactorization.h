@@ -69,7 +69,7 @@ public:
   }
   uint_t getMultipleIndex() const
   {
-    return indexes_ & ((1u << 23) - 1);
+    return indexes_ & ((1 << 23) - 1);
   }
   uint_t getWheelIndex() const
   {
