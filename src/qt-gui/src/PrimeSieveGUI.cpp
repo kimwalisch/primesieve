@@ -150,7 +150,7 @@ quint64 PrimeSieveGUI::getNumber(const QString& str) {
     result = parser.eval(str.toAscii().data());
   }
   catch (parser_error& e) {
-    throw std::invalid_argument((("\"" + e.expression()) + "\"\n") + e.what());
+    throw std::invalid_argument(e.what());
   }
 
   int digits = str.count(QRegExp("[0-9]"));
