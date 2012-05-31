@@ -111,7 +111,7 @@ enum {
 
   /// Pre-sieve limit of PrimeNumberGenerator.
   /// Default = 13 (uses 1001 bytes) a greater value uses more memory
-  /// without noticeable speed speed up.
+  /// without noticeable speed up.
   /// @pre PRESIEVE_PRIMENUMBERGENERATOR >= 13 && <= 23
   ///
   PRESIEVE_PRIMENUMBERGENERATOR = 13,
@@ -132,7 +132,7 @@ enum {
   BUCKETSIZE = 1 << 10,
 
   /// EratBig allocates MEMORY_PER_ALLOC bytes of new memory each time
-  /// it needs more Buckets. Default = 4 megabytes.
+  /// it needs more buckets. Default = 4 megabytes.
   ///
   MEMORY_PER_ALLOC = (1 << 20) * 4
 };
