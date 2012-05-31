@@ -88,7 +88,7 @@ private:
   const uint64_t start_;
   /// Sieve the primes within the interval [start_, stop_]
   const uint64_t stop_;
-  /// sqrt(stop_) */
+  /// sqrt(stop_)
   const uint_t sqrtStop_;
   /// Pre-sieves multiples of small primes <= preSieve_.getLimit()
   const PreSieve preSieve_;
