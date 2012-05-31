@@ -76,7 +76,7 @@ void EratBig::setSize(const SieveOfEratosthenes& soe) {
   uint_t maxWheelFactor    = wheel(0).nextMultipleFactor;
   uint_t maxMultipleOffset = maxSievingPrime * maxWheelFactor + maxWheelFactor;
   uint_t maxMultipleIndex  = (soe.getSieveSize() - 1) + maxMultipleOffset;
-  uint_t maxSegmentCount   = maxMultipleIndex / soe.getSieveSize();
+  uint_t maxSegmentCount   = maxMultipleIndex >> log2SieveSize_;
   // size must be >= maxSegmentCount + 1
   uint_t size = nextPowerOf2(maxSegmentCount + 1);
   moduloListsSize_ = size - 1;
