@@ -41,7 +41,7 @@
 #include <stdint.h>
 #include <stdexcept>
 #include <cstdlib>
-#include <cstring>
+#include <algorithm>
 #include <vector>
 #include <list>
 
