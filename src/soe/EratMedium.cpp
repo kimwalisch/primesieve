@@ -81,9 +81,8 @@ void EratMedium::sieve(uint8_t* sieve, uint_t sieveSize)
       uint_t wheelIndex1    = wPrime[1].getWheelIndex();
       uint_t sievingPrime1  = wPrime[1].getSievingPrime();
       while (multipleIndex0 < sieveSize) {
-        // cross-off the current multiple (unset corresponding bit) of
-        // sievingPrime0 and sievingPrime1 and calculate their next
-        // multipleIndex and wheelIndex
+        // cross-off the current multiple (unset bit) of sievingPrime0
+        // and sievingPrime1 and calculate their next multiple
         sieve[multipleIndex0] &= wheel(wheelIndex0).unsetBit;
         multipleIndex0        += wheel(wheelIndex0).nextMultipleFactor * sievingPrime0;
         multipleIndex0        += wheel(wheelIndex0).correct;
