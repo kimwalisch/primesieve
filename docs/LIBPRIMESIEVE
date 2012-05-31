@@ -1,4 +1,4 @@
-May 29, 2012
+May 31, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -16,9 +16,9 @@ Contents
 
   primesieve has been designed to be usable in other projects, this
   file explains how to compile primesieve as a C++ library i.e.
-  libprimesieve and link it into your application. By default
-  libprimesieve is built as a static library which causes no
-  dependencies, on Unix-like operating systems (Linux, Mac OS X, ...)
+  libprimesieve and link it with your application.
+  By default libprimesieve is built as a static library which causes
+  no dependencies, on Unix-like operating systems (Linux, Mac OS X, ...)
   it is also possible to build libprimesieve as a shared library.
   The file USAGE_EXAMPLES contains C++ source code examples that show
   how to generate, count and print primes and k-tuplets (twins,
@@ -52,7 +52,7 @@ Contents
   be compiled by specifying libprimesieve (-lprimesieve flag) at the
   end of the linker command:
 
-  $ g++ -o sum_primes docs/sum_primes.cpp -lprimesieve
+  $ g++ docs/sum_primes.cpp -o sum_primes -lprimesieve
   $ ./sum_primes
 
   OpenMP multi-threading
