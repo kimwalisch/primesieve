@@ -170,8 +170,7 @@ void ParallelPrimeSieve::sieve() {
     // The sieve interval [start_, stop_] is subdivided into chunks of
     // size 'balanced' that are sieved in parallel using multiple
     // threads. This scales well as each thread sieves using its own
-    // dedicated memory and thus there is no synchronisation required
-    // for sieving.
+    // private memory without need of synchronization.
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
         reduction(+: count0, count1, count2, count3, count4, count5, count6)
     for (uint64_t n = align; n < stop_; n += balanced) {
