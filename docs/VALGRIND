@@ -1,26 +1,20 @@
-April 21, 2012
+May 31, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-I have successfully tested the primesieve-2.2 sources using Valgrind
-3.7.0 (GCC 4.2, Mac OS X 10.6). Valgrind is an analysis tool for
-Unix-like operating systems that can automatically detect many memory
-management bugs in programs (http://valgrind.org/). Here is the
-terminal log:
+Valgrind is an analysis tool for Unix-like operating systems that can
+automatically detect many memory management bugs (e.g. memory leaks)
+in programs (http://valgrind.org/). I have successfully tested
+primesieve-3.7 using Valgrind 3.6 (GCC 4.7, SL Linux 6.2 x86_64), here
+is the terminal log:
 
-???:primesieve-2.2 ???$ valgrind --tool=memcheck --leak-check=yes --dsymutil=yes out/./primesieve -test
-==13974== Memcheck, a memory error detector
-==13974== Copyright (C) 2002-2010, and GNU GPL'd, by Julian Seward et al.
-==13974== Using Valgrind-3.7.0.SVN and LibVEX; rerun with -h for copyright info
-==13974== Command: out/./primesieve -test
-==13974==
---13974-- run: /usr/bin/dsymutil "out/./primesieve"
-warning: no debug symbols in executable (-arch x86_64)
-Sieve random intervals starting at 10^14
-Remaining chunk: 0
-Prime count: 133235063  OK
-
-Calculate the prime-counting function pi(x)
+$ valgrind --tool=memcheck --leak-check=yes --dsymutil=yes ./test-3.7
+==4246== Memcheck, a memory error detector
+==4246== Copyright (C) 2002-2010, and GNU GPL'd, by Julian Seward et al.
+==4246== Using Valgrind-3.6.0 and LibVEX; rerun with -h for copyright info
+==4246== Command: ./test-3.7
+==4246== 
+Calculating the prime-counting function pi(x)
 pi(10^1)  = 4           OK
 pi(10^2)  = 25          OK
 pi(10^3)  = 168         OK
@@ -32,41 +26,37 @@ pi(10^8)  = 5761455     OK
 pi(10^9)  = 50847534    OK
 pi(2^32)  = 203280221   OK
 pi(10^10) = 455052511   OK
+pi(10^11) = 4118054813  OK
 
-Sieve an interval of 2^32 starting at 10^12
+Sieving the primes within [10^12, 10^12+2^32]
 Prime count: 155428406  OK
-Sieve an interval of 2^32 starting at 10^13
+Sieving the primes within [10^13, 10^13+2^32]
 Prime count: 143482916  OK
-Sieve an interval of 2^32 starting at 10^14
+Sieving the primes within [10^14, 10^14+2^32]
 Prime count: 133235063  OK
-Sieve an interval of 2^32 starting at 10^15
+Sieving the primes within [10^15, 10^15+2^32]
 Prime count: 124350420  OK
-Sieve an interval of 2^32 starting at 10^16
+Sieving the primes within [10^16, 10^16+2^32]
 Prime count: 116578809  OK
-Sieve an interval of 2^32 starting at 10^17
+Sieving the primes within [10^17, 10^17+2^32]
 Prime count: 109726486  OK
-Sieve an interval of 2^32 starting at 10^18
+Sieving the primes within [10^18, 10^18+2^32]
 Prime count: 103626726  OK
-Sieve an interval of 2^32 starting at 10^19
+Sieving the primes within [10^19, 10^19+2^32]
 Prime count: 98169972   OK
 
-Time elapsed: 2097.82 sec
+Sieving the primes within [10^15, 10^15+10^11] randomly
+Remaining chunk: 0           
+Prime count: 2895317534 OK
+
+Time elapsed: 3027.45 sec
 All tests passed SUCCESSFULLY!
-==13974==
-==13974== HEAP SUMMARY:
-==13974==     in use at exit: 4,596 bytes in 9 blocks
-==13974==   total heap usage: 263,741 allocs, 263,732 frees,
-16,686,116,495 bytes allocated
-==13974==
-==13974== LEAK SUMMARY:
-==13974==    definitely lost: 0 bytes in 0 blocks
-==13974==    indirectly lost: 0 bytes in 0 blocks
-==13974==      possibly lost: 0 bytes in 0 blocks
-==13974==    still reachable: 4,508 bytes in 8 blocks
-==13974==         suppressed: 88 bytes in 1 blocks
-==13974== Reachable blocks (those to which a pointer was found) are not shown.
-==13974== To see them, rerun with: --leak-check=full --show-reachable=yes
-==13974==
-==13974== For counts of detected and suppressed errors, rerun with: -v
-==13974== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-???:primesieve-2.2 ???$
+==4246== 
+==4246== HEAP SUMMARY:
+==4246==     in use at exit: 0 bytes in 0 blocks
+==4246==   total heap usage: 59,361 allocs, 59,361 frees, 9,219,296,039 bytes allocated
+==4246== 
+==4246== All heap blocks were freed -- no leaks are possible
+==4246== 
+==4246== For counts of detected and suppressed errors, rerun with: -v
+==4246== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
