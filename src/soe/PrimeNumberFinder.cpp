@@ -148,10 +148,10 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) {
           std::ostringstream kTuplet;
           kTuplet << "(";
           uint_t bits = *bitmask;
-          do {
-            kTuplet << getNextPrime<uint64_t>(j, &bits) << ", ";
-          } while (bits & (bits - 1));
-          kTuplet << getNextPrime<uint64_t>(j, &bits) << ")\n";
+          while (bits != 0) {
+            kTuplet << getNextPrime<uint64_t>(j, &bits);
+            kTuplet << (bits != 0 ? ", " : ")\n");
+          }
           std::cout << kTuplet.str();
         }
       }
