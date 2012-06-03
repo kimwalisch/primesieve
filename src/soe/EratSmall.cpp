@@ -65,7 +65,7 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
 /// many multiples per segment.
 /// @see SieveOfEratosthenes::crossOffMultiples()
 ///
-void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
+void EratSmall::crossOff(uint8_t* sieve, uint_t sieveSize) {
   uint8_t* const sieveEnd = &sieve[sieveSize];
 
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
@@ -91,15 +91,7 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
       switch (wheelIndex) {
         // for sieving primes of type i*30 + 7
         for (;;) {
-          case 0: *p &= BIT0; p += sievingPrime * 6 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(1); break; }
-          case 1: *p &= BIT4; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(2); break; }
-          case 2: *p &= BIT3; p += sievingPrime * 2 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(3); break; }
-          case 3: *p &= BIT7; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(4); break; }
-          case 4: *p &= BIT6; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(5); break; }
-          case 5: *p &= BIT2; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(6); break; }
-          case 6: *p &= BIT1; p += sievingPrime * 6 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(7); break; }
-          case 7: *p &= BIT5; p += sievingPrime * 2 + 1;
-                  // faster loop, takes only =~ 16 asm instructions per
+          case 0: // fast loop, takes only =~ 16 asm instructions per
                   // iteration to cross-off the next 8 multiples. Two
                   // pointers (p, q) are used to break the dependency chain
                   // and take advantage of Instruction-Level Parallelism.
@@ -114,20 +106,20 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                     p[5] &= BIT1; p += sievingPrime * 8 + 7;
                     q[6] &= BIT5;
                   }
-                  if (p >= sieveEnd) { wPrime->setWheelIndex(0); break; }
+                                                         if (p >= sieveEnd) { wPrime->setWheelIndex(0); break; }
+                  *p &= BIT0; p += sievingPrime * 6 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(1); break; }
+          case 1: *p &= BIT4; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(2); break; }
+          case 2: *p &= BIT3; p += sievingPrime * 2 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(3); break; }
+          case 3: *p &= BIT7; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(4); break; }
+          case 4: *p &= BIT6; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(5); break; }
+          case 5: *p &= BIT2; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(6); break; }
+          case 6: *p &= BIT1; p += sievingPrime * 6 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(7); break; }
+          case 7: *p &= BIT5; p += sievingPrime * 2 + 1;
         }
         break;
         // for sieving primes of type i*30 + 11
         for (;;) {
-          case  8: *p &= BIT1; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(9);  break; }
-          case  9: *p &= BIT3; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(10); break; }
-          case 10: *p &= BIT7; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(11); break; }
-          case 11: *p &= BIT5; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(12); break; }
-          case 12: *p &= BIT0; p += sievingPrime * 2 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(13); break; }
-          case 13: *p &= BIT6; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(14); break; }
-          case 14: *p &= BIT2; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(15); break; }
-          case 15: *p &= BIT4; p += sievingPrime * 2 + 1;
-                   while (p < loopLimit) {
+          case  8: while (p < loopLimit) {
                      q = p + sievingPrime * 6;
                      p[0]  &= BIT1; p += sievingPrime * 10;
                      q[2]  &= BIT3; q += sievingPrime * 6;
@@ -138,20 +130,20 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                      p[8]  &= BIT2; p += sievingPrime * 8 + 11;
                      q[10] &= BIT4;
                    }
-                   if (p >= sieveEnd) { wPrime->setWheelIndex(8); break; }
+                                                          if (p >= sieveEnd) { wPrime->setWheelIndex(8); break; }
+                   *p &= BIT1; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(9);  break; }
+          case  9: *p &= BIT3; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(10); break; }
+          case 10: *p &= BIT7; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(11); break; }
+          case 11: *p &= BIT5; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(12); break; }
+          case 12: *p &= BIT0; p += sievingPrime * 2 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(13); break; }
+          case 13: *p &= BIT6; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(14); break; }
+          case 14: *p &= BIT2; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(15); break; }
+          case 15: *p &= BIT4; p += sievingPrime * 2 + 1;
         }
         break;
         // for sieving primes of type i*30 + 13
         for (;;) {
-          case 16: *p &= BIT2; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(17); break; }
-          case 17: *p &= BIT7; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(18); break; }
-          case 18: *p &= BIT5; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(19); break; }
-          case 19: *p &= BIT4; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(20); break; }
-          case 20: *p &= BIT1; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(21); break; }
-          case 21: *p &= BIT0; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(22); break; }
-          case 22: *p &= BIT6; p += sievingPrime * 6 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(23); break; }
-          case 23: *p &= BIT3; p += sievingPrime * 2 + 1;
-                   while (p < loopLimit) {
+          case 16: while (p < loopLimit) {
                      q = p + sievingPrime * 6;
                      p[0]  &= BIT2; p += sievingPrime * 10;
                      q[2]  &= BIT7; q += sievingPrime * 6;
@@ -162,20 +154,20 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                      p[9]  &= BIT6; p += sievingPrime * 8 + 13;
                      q[12] &= BIT3;
                    }
-                   if (p >= sieveEnd) { wPrime->setWheelIndex(16); break; }
+                                                          if (p >= sieveEnd) { wPrime->setWheelIndex(16); break; }
+                   *p &= BIT2; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(17); break; }
+          case 17: *p &= BIT7; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(18); break; }
+          case 18: *p &= BIT5; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(19); break; }
+          case 19: *p &= BIT4; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(20); break; }
+          case 20: *p &= BIT1; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(21); break; }
+          case 21: *p &= BIT0; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(22); break; }
+          case 22: *p &= BIT6; p += sievingPrime * 6 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(23); break; }
+          case 23: *p &= BIT3; p += sievingPrime * 2 + 1;
         }
         break;
         // for sieving primes of type i*30 + 17
         for (;;) {
-          case 24: *p &= BIT3; p += sievingPrime * 6 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(25); break; }
-          case 25: *p &= BIT6; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(26); break; }
-          case 26: *p &= BIT0; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(27); break; }
-          case 27: *p &= BIT1; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(28); break; }
-          case 28: *p &= BIT4; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(29); break; }
-          case 29: *p &= BIT5; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(30); break; }
-          case 30: *p &= BIT7; p += sievingPrime * 6 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(31); break; }
-          case 31: *p &= BIT2; p += sievingPrime * 2 + 1;
-                   while (p < loopLimit) {
+          case 24: while (p < loopLimit) {
                      q = p + sievingPrime * 6;
                      p[0]  &= BIT3; p += sievingPrime * 10;
                      q[3]  &= BIT6; q += sievingPrime * 6;
@@ -186,20 +178,20 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                      p[12] &= BIT7; p += sievingPrime * 8 + 17;
                      q[16] &= BIT2;
                    }
-                   if (p >= sieveEnd) { wPrime->setWheelIndex(24); break; }
+                                                          if (p >= sieveEnd) { wPrime->setWheelIndex(24); break; }
+                   *p &= BIT3; p += sievingPrime * 6 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(25); break; }
+          case 25: *p &= BIT6; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(26); break; }
+          case 26: *p &= BIT0; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(27); break; }
+          case 27: *p &= BIT1; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(28); break; }
+          case 28: *p &= BIT4; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(29); break; }
+          case 29: *p &= BIT5; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(30); break; }
+          case 30: *p &= BIT7; p += sievingPrime * 6 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(31); break; }
+          case 31: *p &= BIT2; p += sievingPrime * 2 + 1;
         }
         break;
         // for sieving primes of type i*30 + 19
         for (;;) {
-          case 32: *p &= BIT4; p += sievingPrime * 6 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(33); break; }
-          case 33: *p &= BIT2; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(34); break; }
-          case 34: *p &= BIT6; p += sievingPrime * 2 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(35); break; }
-          case 35: *p &= BIT0; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(36); break; }
-          case 36: *p &= BIT5; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(37); break; }
-          case 37: *p &= BIT7; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(38); break; }
-          case 38: *p &= BIT3; p += sievingPrime * 6 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(39); break; }
-          case 39: *p &= BIT1; p += sievingPrime * 2 + 1;
-                   while (p < loopLimit) {
+          case 32: while (p < loopLimit) {
                      q = p + sievingPrime * 6;
                      p[0]  &= BIT4; p += sievingPrime * 10;
                      q[4]  &= BIT2; q += sievingPrime * 6;
@@ -210,20 +202,20 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                      p[14] &= BIT3; p += sievingPrime * 8 + 19;
                      q[18] &= BIT1;
                    }
-                   if (p >= sieveEnd) { wPrime->setWheelIndex(32); break; }
+                                                          if (p >= sieveEnd) { wPrime->setWheelIndex(32); break; }
+                   *p &= BIT4; p += sievingPrime * 6 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(33); break; }
+          case 33: *p &= BIT2; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(34); break; }
+          case 34: *p &= BIT6; p += sievingPrime * 2 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(35); break; }
+          case 35: *p &= BIT0; p += sievingPrime * 4 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(36); break; }
+          case 36: *p &= BIT5; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(37); break; }
+          case 37: *p &= BIT7; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(38); break; }
+          case 38: *p &= BIT3; p += sievingPrime * 6 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(39); break; }
+          case 39: *p &= BIT1; p += sievingPrime * 2 + 1;
         }
         break;
         // for sieving primes of type i*30 + 23
         for (;;) {
-          case 40: *p &= BIT5; p += sievingPrime * 6 + 5; if (p >= sieveEnd) { wPrime->setWheelIndex(41); break; }
-          case 41: *p &= BIT1; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(42); break; }
-          case 42: *p &= BIT2; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(43); break; }
-          case 43: *p &= BIT6; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(44); break; }
-          case 44: *p &= BIT7; p += sievingPrime * 2 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(45); break; }
-          case 45: *p &= BIT3; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(46); break; }
-          case 46: *p &= BIT4; p += sievingPrime * 6 + 5; if (p >= sieveEnd) { wPrime->setWheelIndex(47); break; }
-          case 47: *p &= BIT0; p += sievingPrime * 2 + 1;
-                   while (p < loopLimit) {
+          case 40: while (p < loopLimit) {
                      q = p + sievingPrime * 6;
                      p[0]  &= BIT5; p += sievingPrime * 10;
                      q[5]  &= BIT1; q += sievingPrime * 6;
@@ -234,20 +226,20 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                      p[17] &= BIT4; p += sievingPrime * 8 + 23;
                      q[22] &= BIT0;
                    }
-                   if (p >= sieveEnd) { wPrime->setWheelIndex(40); break; }
+                                                          if (p >= sieveEnd) { wPrime->setWheelIndex(40); break; }
+                   *p &= BIT5; p += sievingPrime * 6 + 5; if (p >= sieveEnd) { wPrime->setWheelIndex(41); break; }
+          case 41: *p &= BIT1; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(42); break; }
+          case 42: *p &= BIT2; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(43); break; }
+          case 43: *p &= BIT6; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(44); break; }
+          case 44: *p &= BIT7; p += sievingPrime * 2 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(45); break; }
+          case 45: *p &= BIT3; p += sievingPrime * 4 + 3; if (p >= sieveEnd) { wPrime->setWheelIndex(46); break; }
+          case 46: *p &= BIT4; p += sievingPrime * 6 + 5; if (p >= sieveEnd) { wPrime->setWheelIndex(47); break; }
+          case 47: *p &= BIT0; p += sievingPrime * 2 + 1;
         }
         break;
         // for sieving primes of type i*30 + 29
         for (;;) {
-          case 48: *p &= BIT6; p += sievingPrime * 6 + 6; if (p >= sieveEnd) { wPrime->setWheelIndex(49); break; }
-          case 49: *p &= BIT5; p += sievingPrime * 4 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(50); break; }
-          case 50: *p &= BIT4; p += sievingPrime * 2 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(51); break; }
-          case 51: *p &= BIT3; p += sievingPrime * 4 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(52); break; }
-          case 52: *p &= BIT2; p += sievingPrime * 2 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(53); break; }
-          case 53: *p &= BIT1; p += sievingPrime * 4 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(54); break; }
-          case 54: *p &= BIT0; p += sievingPrime * 6 + 5; if (p >= sieveEnd) { wPrime->setWheelIndex(55); break; }
-          case 55: *p &= BIT7; p += sievingPrime * 2 + 2;
-                   while (p < loopLimit) {
+          case 48: while (p < loopLimit) {
                      q = p + sievingPrime * 6;
                      p[0]  &= BIT6; p += sievingPrime * 10;
                      q[6]  &= BIT5; q += sievingPrime * 6;
@@ -258,20 +250,20 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                      p[22] &= BIT0; p += sievingPrime * 8 + 29;
                      q[27] &= BIT7;
                    }
-                   if (p >= sieveEnd) { wPrime->setWheelIndex(48); break; }
+                                                          if (p >= sieveEnd) { wPrime->setWheelIndex(48); break; }
+                   *p &= BIT6; p += sievingPrime * 6 + 6; if (p >= sieveEnd) { wPrime->setWheelIndex(49); break; }
+          case 49: *p &= BIT5; p += sievingPrime * 4 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(50); break; }
+          case 50: *p &= BIT4; p += sievingPrime * 2 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(51); break; }
+          case 51: *p &= BIT3; p += sievingPrime * 4 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(52); break; }
+          case 52: *p &= BIT2; p += sievingPrime * 2 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(53); break; }
+          case 53: *p &= BIT1; p += sievingPrime * 4 + 4; if (p >= sieveEnd) { wPrime->setWheelIndex(54); break; }
+          case 54: *p &= BIT0; p += sievingPrime * 6 + 5; if (p >= sieveEnd) { wPrime->setWheelIndex(55); break; }
+          case 55: *p &= BIT7; p += sievingPrime * 2 + 2;
         }
         break;
         // for sieving primes of type i*30 + 31
         for (;;) {
-          case 56: *p &= BIT7; p += sievingPrime * 6 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(57); break; }
-          case 57: *p &= BIT0; p += sievingPrime * 4 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(58); break; }
-          case 58: *p &= BIT1; p += sievingPrime * 2 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(59); break; }
-          case 59: *p &= BIT2; p += sievingPrime * 4 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(60); break; }
-          case 60: *p &= BIT3; p += sievingPrime * 2 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(61); break; }
-          case 61: *p &= BIT4; p += sievingPrime * 4 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(62); break; }
-          case 62: *p &= BIT5; p += sievingPrime * 6 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(63); break; }
-          case 63: *p &= BIT6; p += sievingPrime * 2 + 0;
-                   while (p < loopLimit) {
+          case 56: while (p < loopLimit) {
                      q = p + sievingPrime * 6;
                      p[0] &= BIT7; p += sievingPrime * 10;
                      q[1] &= BIT0; q += sievingPrime * 6;
@@ -282,7 +274,15 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
                      p[1] &= BIT5; p += sievingPrime * 8 + 1;
                      q[1] &= BIT6;
                    }
-                   if (p >= sieveEnd) { wPrime->setWheelIndex(56); break; }
+                                                          if (p >= sieveEnd) { wPrime->setWheelIndex(56); break; }
+                   *p &= BIT7; p += sievingPrime * 6 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(57); break; }
+          case 57: *p &= BIT0; p += sievingPrime * 4 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(58); break; }
+          case 58: *p &= BIT1; p += sievingPrime * 2 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(59); break; }
+          case 59: *p &= BIT2; p += sievingPrime * 4 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(60); break; }
+          case 60: *p &= BIT3; p += sievingPrime * 2 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(61); break; }
+          case 61: *p &= BIT4; p += sievingPrime * 4 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(62); break; }
+          case 62: *p &= BIT5; p += sievingPrime * 6 + 0; if (p >= sieveEnd) { wPrime->setWheelIndex(63); break; }
+          case 63: *p &= BIT6; p += sievingPrime * 2 + 0;
         }
         break;
       }

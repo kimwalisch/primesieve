@@ -56,7 +56,7 @@ class SieveOfEratosthenes;
 class EratSmall : public EratBase<Modulo30Wheel_t> {
 public:
   EratSmall(const SieveOfEratosthenes&);
-  void sieve(uint8_t*, uint_t);
+  void crossOff(uint8_t*, uint_t);
 };
 
 } // namespace soe

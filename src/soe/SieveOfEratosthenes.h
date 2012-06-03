@@ -111,6 +111,7 @@ private:
   void initEratAlgorithms();
   void preSieve();
   void crossOffMultiples();
+  void sieveSegment();
   /// Uncopyable, declared but not defined
   SieveOfEratosthenes(const SieveOfEratosthenes&);
   SieveOfEratosthenes& operator=(const SieveOfEratosthenes&);

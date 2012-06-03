@@ -117,7 +117,7 @@ void EratBig::pushBucket(uint_t index) {
 /// a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
 /// @see SieveOfEratosthenes::crossOffMultiples()
 ///
-void EratBig::sieve(uint8_t* sieve)
+void EratBig::crossOff(uint8_t* sieve)
 {
   // lists_[0] contains the list of buckets related to the current
   // segment i.e. its buckets contain all the sieving primes that have

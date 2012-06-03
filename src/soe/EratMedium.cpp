@@ -66,7 +66,7 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
 /// multiples of 2, 3, 5 and 7.
 /// @see SieveOfEratosthenes::crossOffMultiples()
 ///
-void EratMedium::sieve(uint8_t* sieve, uint_t sieveSize)
+void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize)
 {
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
     WheelPrime* wPrime    = bucket->begin();

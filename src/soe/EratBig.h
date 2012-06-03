@@ -59,7 +59,7 @@ public:
   EratBig(const SieveOfEratosthenes&);
   ~EratBig();
   void addSievingPrime(uint64_t, uint_t);
-  void sieve(uint8_t*);
+  void crossOff(uint8_t*);
 private:
   enum { BUCKETS_PER_ALLOC = config::MEMORY_PER_ALLOC / sizeof(Bucket) };
   /// Vector of bucket lists, holds the sieving primes
