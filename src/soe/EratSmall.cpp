@@ -70,7 +70,7 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
 
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
     WheelPrime* wPrime    = bucket->begin();
-    WheelPrime* end const = bucket->end();
+    WheelPrime* const end = bucket->end();
     for (; wPrime != end; wPrime++) {
       const uint_t sievingPrime  = wPrime->getSievingPrime();
       const uint_t multipleIndex = wPrime->getMultipleIndex();
