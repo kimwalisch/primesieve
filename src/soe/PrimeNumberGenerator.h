@@ -52,16 +52,14 @@ class PrimeNumberFinder;
 /// PrimeNumberGenerator is a SieveOfEratosthenes class that is used
 /// to generate the primes up to sqrt(n) needed for sieving by
 /// PrimeNumberFinder.
-/// @see sieve() in PrimeSieve.cpp
 ///
 class PrimeNumberGenerator : public SieveOfEratosthenes {
 public:
   PrimeNumberGenerator(PrimeNumberFinder& finder) :
-    SieveOfEratosthenes(
-        finder.getPreSieve() + 1,
-        finder.getSquareRoot(),
-        config::PRESIEVE_PRIMENUMBERGENERATOR,
-        nextPowerOf2<uint_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
+    SieveOfEratosthenes(finder.getPreSieve() + 1,
+                        finder.getSquareRoot(),
+                        config::PRESIEVE_PRIMENUMBERGENERATOR,
+                        nextPowerOf2<uint_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
     finder_(finder)
   {
     static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "SieveSize must not be > 4096 kilobytes");

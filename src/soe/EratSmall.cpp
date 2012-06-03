@@ -54,7 +54,7 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
   uint_t max = static_cast<uint_t>(soe.getSieveSize() * config::FACTOR_ERATSMALL);
   uint_t limit = std::min(sqrtStop, max);
   // sieveSize - 1 + (sievingPrime / 30) * 6 + 6 - sieveSize < sieveSize
-  // prevents segmentation faults in sieve(uint8_t*, uint_t)
+  // prevents segmentation faults in crossOff()
   if (limit >= (soe.getSieveSize() - 5) * 5)
     throw std::invalid_argument("EratSmall: limit must be < (sieveSize - 5) * 5.");
   this->setLimit(limit);

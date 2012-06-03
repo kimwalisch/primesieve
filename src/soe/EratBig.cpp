@@ -68,10 +68,10 @@ EratBig::~EratBig() {
 
 /// Set the size of the lists_ vector.
 /// @remark The size is a power of 2 value which allows use of fast
-///         bitwise operators in sieve(uint8_t*).
+///         bitwise operators in crossOff().
 ///
 void EratBig::setSize(const SieveOfEratosthenes& soe) {
-  // max values in sieve(uint8_t*)
+  // max values in crossOff()
   uint_t maxSievingPrime   = soe.getSquareRoot() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
   uint_t maxWheelFactor    = wheel(0).nextMultipleFactor;
   uint_t maxMultipleOffset = maxSievingPrime * maxWheelFactor + maxWheelFactor;

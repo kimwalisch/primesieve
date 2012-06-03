@@ -92,8 +92,8 @@ void PrimeNumberFinder::initCounts() {
 
 /// Executed after each sieved segment, generates and counts the
 /// primes (1 bits within sieve array) within the interval
-/// [segmentLow_+7, segmentHigh_].
-/// @see SieveOfEratosthenes::sieve(uint_t)
+/// [segmentLow_, segmentHigh_].
+/// @see SieveOfEratosthenes::sieveSegment()
 ///
 void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint_t sieveSize) {
   if (ps_.isCount())

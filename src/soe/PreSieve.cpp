@@ -118,7 +118,7 @@ void PreSieve::initPreSieved()
 
 /// Pre-sieve multiples of small primes <= limit_ (default = 19) to
 /// speed up the sieve of Eratosthenes.
-/// @see sieve() in SieveOfEratosthenes-inline.h
+/// @see SieveOfEratosthenes.cpp
 ///
 void PreSieve::doIt(uint8_t* sieve, uint_t sieveSize, uint64_t segmentLow) const
 {

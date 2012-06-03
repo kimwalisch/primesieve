@@ -49,7 +49,7 @@ namespace soe {
 EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
   EratBase<Modulo210Wheel_t>(soe)
 {
-  // Conditions that assert multipleIndex < 2^23 in sieve()
+  // assert multipleIndex < 2^23 in crossOff()
   static_assert(config::FACTOR_ERATMEDIUM <= 6, "config::FACTOR_ERATMEDIUM must not be > 6");
   if (soe.getSieveSize() > (1u << 22))
     throw std::overflow_error("EratMedium: sieveSize must be <= 2^22, 4096 kilobytes.");
