@@ -130,7 +130,7 @@ void EratSmall::crossOff(uint8_t* sieve, uint_t sieveSize) {
                      p[8]  &= BIT2; p += sievingPrime * 8 + 11;
                      q[10] &= BIT4;
                    }
-                                                          if (p >= sieveEnd) { wPrime->setWheelIndex(8); break; }
+                                                          if (p >= sieveEnd) { wPrime->setWheelIndex(8);  break; }
                    *p &= BIT1; p += sievingPrime * 6 + 2; if (p >= sieveEnd) { wPrime->setWheelIndex(9);  break; }
           case  9: *p &= BIT3; p += sievingPrime * 4 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(10); break; }
           case 10: *p &= BIT7; p += sievingPrime * 2 + 1; if (p >= sieveEnd) { wPrime->setWheelIndex(11); break; }
