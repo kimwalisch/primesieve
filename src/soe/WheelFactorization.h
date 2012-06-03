@@ -182,7 +182,7 @@ struct WheelInit {
 /// calculate the prime's next multiple and an offset used to calculate
 /// its next wheel index.
 /// @see WheelFactorization.cpp
-/// @see EratMedium::sieve(), EratBig::sieve()
+/// @see EratMedium.cpp, EratBig.cpp
 ///
 struct WheelElement {
   WheelElement(uint8_t _unsetBit,
@@ -241,7 +241,7 @@ protected:
       throw std::overflow_error(error.str());
     }
     // max(sieveSize) = max(WheelPrime::getMultipleIndex()) + 1 = 2^23
-    if (soe_.getSieveSize() > (1U << 23))
+    if (soe_.getSieveSize() > (1u << 23))
       throw std::overflow_error("Wheel: sieveSize must be <= 2^23, 8192 kilobytes.");
   }
   ~Wheel() { }
