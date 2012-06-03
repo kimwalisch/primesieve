@@ -71,12 +71,14 @@ void EratSmall::sieve(uint8_t* sieve, uint_t sieveSize) {
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
     WheelPrime* wPrime    = bucket->begin();
     WheelPrime* const end = bucket->end();
+
     for (; wPrime != end; wPrime++) {
       const uint_t sievingPrime  = wPrime->getSievingPrime();
       const uint_t multipleIndex = wPrime->getMultipleIndex();
       const uint_t wheelIndex    = wPrime->getWheelIndex();
-      const uint_t loopDistance  = sievingPrime * 30 + 29;
-      uint8_t* const loopLimit   = (loopDistance < sieveSize) ? sieveEnd - loopDistance : sieve;
+
+      const uint_t loopDistance = sievingPrime * 30 + 29;
+      uint8_t* const loopLimit  = (loopDistance < sieveSize) ? sieveEnd - loopDistance : sieve;
 
       // pointer to the byte containing the first multiple of
       // sievingPrime within the current segment
