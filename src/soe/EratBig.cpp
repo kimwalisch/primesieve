@@ -122,7 +122,7 @@ void EratBig::sieve(uint8_t* sieve)
   // lists_[0] contains the list of buckets related to the current
   // segment i.e. its buckets contain all the sieving primes that have
   // multiple occurrence(s) in the current segment
-  while (!lists_[0]->isEmpty() || lists_[0]->hasNext()) {
+  while (lists_[0]->hasNext() || !lists_[0]->isEmpty()) {
     Bucket* bucket = lists_[0];
     lists_[0] = NULL;
     pushBucket(0);
@@ -152,9 +152,9 @@ void EratBig::sieve(uint8_t* sieve)
         multipleIndex1        += wheel(wheelIndex1).nextMultipleFactor * sievingPrime1;
         multipleIndex1        += wheel(wheelIndex1).correct;
         wheelIndex1           += wheel(wheelIndex1).next;
-        uint_t next0 = (multipleIndex0 >> log2SieveSize_) & moduloListsSize_;
+        uint_t next0 = multipleIndex0 >> log2SieveSize_;
+        uint_t next1 = multipleIndex1 >> log2SieveSize_;
         multipleIndex0 &= moduloSieveSize_;
-        uint_t next1 = (multipleIndex1 >> log2SieveSize_) & moduloListsSize_;
         multipleIndex1 &= moduloSieveSize_;
         // move sievingPrime0 and sievingPrime1 to the bucket list
         // related to their next multiple occurrence
@@ -171,7 +171,7 @@ void EratBig::sieve(uint8_t* sieve)
         multipleIndex        += wheel(wheelIndex).nextMultipleFactor * sievingPrime;
         multipleIndex        += wheel(wheelIndex).correct;
         wheelIndex           += wheel(wheelIndex).next;
-        uint_t next = (multipleIndex >> log2SieveSize_) & moduloListsSize_;
+        uint_t next = multipleIndex >> log2SieveSize_;
         multipleIndex &= moduloSieveSize_;
         if (!lists_[next]->addWheelPrime(sievingPrime, multipleIndex, wheelIndex))
           pushBucket(next);
