@@ -54,13 +54,12 @@ inline void EratBig::addSievingPrime(uint64_t segmentLow, uint_t prime) {
   if (store == true) {
     // indicates in how many segments the next multiple
     // of prime needs to be crossed-off
-    uint_t segmentCount = multipleIndex >> log2SieveSize_;
+    uint_t segment = multipleIndex >> log2SieveSize_;
     multipleIndex &= moduloSieveSize_;
-    uint_t next = segmentCount & moduloListsSize_;
-    // add prime to the bucket list related
-    // to its next multiple occurrence
-    if (!lists_[next]->addWheelPrime(prime, multipleIndex, wheelIndex))
-      pushBucket(next);
+    // add prime to the bucket list related to its
+    // next multiple occurrence
+    if (!lists_[segment]->addWheelPrime(prime, multipleIndex, wheelIndex))
+      pushBucket(segment);
   }
 }
 
