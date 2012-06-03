@@ -53,18 +53,16 @@ inline uint_t   SieveOfEratosthenes::getSquareRoot() const { return sqrtStop_; }
 inline uint_t   SieveOfEratosthenes::getPreSieve()   const { return preSieve_.getLimit(); }
 inline uint_t   SieveOfEratosthenes::getSieveSize()  const { return sieveSize_; }
 
-/// Segmented sieve of Eratosthenes.
+/// Segmented sieve of Eratosthenes implementation.
 /// sieve( prime ) must be called consecutively for all primes up to
 /// sqrt(stop_) in order to sieve the primes within [start_, stop_].
-/// @see SieveOfEratosthenes.cpp
 ///
 inline void SieveOfEratosthenes::sieve(uint_t prime) {
   uint64_t square = isquare<uint64_t>(prime);
-  // The following loop segments the sieve of Eratosthenes, it is
-  // executed when all sieving primes <= sqrt(segmentHigh_) required
-  // to sieve the next segment have been stored in the erat* objects
-  // (see below). Each loop iteration sieves the primes within the
-  // interval [segmentLow_, segmentHigh_].
+  // This loop segments the sieve of Eratosthenes, it is executed when
+  // all primes <= sqrt(segmentHigh_) required to sieve the next
+  // segment have been stored in the erat* objects below.
+  // @see sieveSegment() in SieveOfEratosthenes.cpp.
   while (segmentHigh_ < square)
     sieveSegment();
   // prime is added to eratSmall_ if it has many multiples per segment,
