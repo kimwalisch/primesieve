@@ -167,7 +167,7 @@ private:
 /// first multiple >= START of each sieving prime that is not
 /// divisible by any of the wheel's factors and its wheel index.
 /// @see WheelFactorization.cpp
-/// @see Wheel::getWheelPrimeData(...)
+/// @see Wheel::getWheelPrimeData()
 ///
 struct WheelInit {
   uint8_t nextMultipleFactor;
