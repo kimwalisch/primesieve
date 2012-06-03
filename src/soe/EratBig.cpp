@@ -108,8 +108,8 @@ void EratBig::pushBucket(uint_t index) {
   lists_[index] = bucket;
 }
 
-/// Implementation of Tomas Oliveira e Silva's cache-friendly segmented
-/// sieve of Eratosthenes algorithm, see:
+/// Optimized implementation of Tomas Oliveira e Silva's cache-friendly
+/// segmented sieve of Eratosthenes algorithm, see:
 /// http://www.ieeta.pt/~tos/software/prime_sieve.html
 /// This algorithm is used to remove the multiples of big sieving
 /// primes (i.e. very few multiples per segment) from the sieve array.
