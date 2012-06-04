@@ -134,8 +134,8 @@ void SieveOfEratosthenes::preSieve() {
     // correct preSieve_.doIt() for numbers <= 23
     if (start_ <= preSieve_.getLimit())
       sieve_[0] = 0xff;
-    uint64_t remainder = getByteRemainder(start_);
     // unset bits (numbers) < start_
+    uint64_t remainder = getByteRemainder(start_);
     for (int i = 0; i < 8; i++)
       if (bitValues_[i] < remainder)
         sieve_[0] &= ~(1 << i);
