@@ -63,7 +63,7 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
 /// Implementation of the segmented sieve of Eratosthenes with
 /// wheel factorization optimized for small sieving primes that have
 /// many multiples per segment.
-/// @see SieveOfEratosthenes::crossOffMultiples()
+/// @see crossOffMultiples() in SieveOfEratosthenes.cpp
 ///
 void EratSmall::crossOff(uint8_t* sieve, uint_t sieveSize) {
   uint8_t* const sieveEnd = &sieve[sieveSize];

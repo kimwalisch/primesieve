@@ -55,11 +55,11 @@ public:
   }
   /// Add a prime number for sieving to EratBase
   /// @see SieveOfEratosthenes-inline.h
-  void addSievingPrime(uint64_t segmentLow, uint_t prime) {
+  void addSievingPrime(uint_t prime, uint64_t segmentLow) {
     assert(prime <= limit_);
     uint_t multipleIndex;
     uint_t wheelIndex;
-    bool store = this->getWheelPrimeData(segmentLow, &prime, &multipleIndex, &wheelIndex);
+    bool store = this->getWheelPrime(segmentLow, &prime, &multipleIndex, &wheelIndex);
     if (store == true) {
       if (!buckets_.back().addWheelPrime(prime, multipleIndex, wheelIndex)) {
         // the current bucket is full, add a new one

@@ -99,10 +99,10 @@ void PreSieve::initPreSieved()
     for (uint_t j = 1; j < smallPrimes_[i]; j++) {
       std::memcpy(&preSieved_[primeProduct / 30 * j], preSieved_, primeProduct / 30);
     }
+    primeProduct   *= smallPrimes_[i];
     uint_t multiple = smallPrimes_[i] - 7;
     uint_t primeX2  = smallPrimes_[i] * 2;
     uint_t primeX4  = smallPrimes_[i] * 4;
-    primeProduct   *= smallPrimes_[i];
     // cross-off the multiples (unset corresponding bits) of
     // smallPrimes_[i] up to its primeProduct
     for (;;) {

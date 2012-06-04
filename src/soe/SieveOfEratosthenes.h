@@ -107,7 +107,7 @@ private:
   /// Used to cross-off the multiples of big sieving primes
   /// that have very few multiples per segment
   EratBig* eratBig_;
-  static uint_t getByteRemainder(uint64_t);
+  static uint64_t getByteRemainder(uint64_t);
   void initEratAlgorithms();
   void preSieve();
   void crossOffMultiples();

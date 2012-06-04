@@ -115,7 +115,7 @@ void EratBig::pushBucket(uint_t index) {
 /// primes (i.e. very few multiples per segment) from the sieve array.
 /// This implementation uses a sieve array with 30 numbers per byte and
 /// a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
-/// @see SieveOfEratosthenes::crossOffMultiples()
+/// @see crossOffMultiples() in SieveOfEratosthenes.cpp
 ///
 void EratBig::crossOff(uint8_t* sieve)
 {

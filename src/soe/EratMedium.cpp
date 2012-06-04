@@ -64,7 +64,7 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
 /// few multiples per segment. This implementation uses a sieve array
 /// with 30 numbers per byte and a modulo 210 wheel that skips
 /// multiples of 2, 3, 5 and 7.
-/// @see SieveOfEratosthenes::crossOffMultiples()
+/// @see crossOffMultiples() in SieveOfEratosthenes.cpp
 ///
 void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize)
 {

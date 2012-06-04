@@ -45,20 +45,15 @@
 namespace soe {
 class SieveOfEratosthenes;
 
-/// EratBig is my implementation of Tomas Oliveira e Silva's
-/// cache-friendly segmented sieve of Eratosthenes algorithm, see:
-/// http://www.ieeta.pt/~tos/software/prime_sieve.html
-/// My implementation uses a sieve array with 30 numbers per byte,
-/// 8 bytes per sieving prime and a modulo 210 wheel that skips
-/// multiples of 2, 3, 5 and 7.
-/// EratBig is optimized for big sieving primes that have very few
-/// multiple occurrences per segment. 
+/// EratBig is an implementation of the segmented sieve of
+/// Eratosthenes optimized for big sieving primes that have very few
+/// multiples per segment.
 ///
 class EratBig: protected Modulo210Wheel_t {
 public:
   EratBig(const SieveOfEratosthenes&);
   ~EratBig();
-  void addSievingPrime(uint64_t, uint_t);
+  void addSievingPrime(uint_t, uint64_t);
   void crossOff(uint8_t*);
 private:
   enum { BUCKETS_PER_ALLOC = config::MEMORY_PER_ALLOC / sizeof(Bucket) };

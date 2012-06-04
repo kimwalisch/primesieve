@@ -45,10 +45,8 @@ namespace soe {
 class SieveOfEratosthenes;
 
 /// EratMedium is an implementation of the segmented sieve of
-/// Eratosthenes with wheel factorization optimized for medium sieving
-/// primes with a few multiples per segment. It uses a sieve array
-/// with 30 numbers per byte, 8 bytes per sieving prime and a modulo
-/// 210 wheel that skips multiples of 2, 3, 5 and 7.
+/// Eratosthenes optimized for medium sieving primes that have a few
+/// multiples per segment.
 ///
 class EratMedium : public EratBase<Modulo210Wheel_t> {
 public:

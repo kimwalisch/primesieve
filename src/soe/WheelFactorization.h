@@ -104,7 +104,7 @@ private:
   /// sievingPrime_ = prime / 30;
   /// '/ 30' is used as SieveOfEratosthenes objects use a bit array
   /// with 30 numbers per byte for sieving.
-  /// @see Wheel::getWheelPrimeData()
+  /// @see Wheel::getWheelPrime()
   uint32_t sievingPrime_;
 };
 
@@ -167,7 +167,7 @@ private:
 /// first multiple >= START of each sieving prime that is not
 /// divisible by any of the wheel's factors and its wheel index.
 /// @see WheelFactorization.cpp
-/// @see Wheel::getWheelPrimeData()
+/// @see getWheelPrime()
 ///
 struct WheelInit {
   uint8_t nextMultipleFactor;
@@ -232,7 +232,7 @@ protected:
     uint64_t maxSievingPrime = UINT32_MAX;
     uint64_t maxInitFactor   = WHEEL_INIT[2].nextMultipleFactor + 1;
     uint64_t limit           = UINT64_MAX - maxSievingPrime * maxInitFactor;
-    // prevent 64-bit overflows of multiple in getWheelPrimeData()
+    // prevent 64-bit overflows of multiple in getWheelPrime()
     if (soe_.getStop() > limit) {
       std::ostringstream error;
       error << "Wheel: stop must be <= (2^64-1) - (2^32-1) * "
@@ -255,12 +255,11 @@ protected:
   /// @return true  if the WheelPrime must be stored for sieving
   ///               (next multiple <= STOP) else false.
   ///
-  bool getWheelPrimeData(uint64_t segmentLow,
-                         uint_t* prime,
-                         uint_t* multipleIndex,
-                         uint_t* wheelIndex) const
+  bool getWheelPrime(uint64_t segmentLow,
+                     uint_t* prime,
+                     uint_t* multipleIndex,
+                     uint_t* wheelIndex) const
   {
-    // correction for primes of type i*30 + 31
     segmentLow += 6;
     // calculate the first multiple > segmentLow of prime
     uint64_t quotient = segmentLow / *prime + 1;
@@ -275,7 +274,7 @@ protected:
       quotient = *prime;
     }
     // calculate the next multiple that is not divisible by any of the
-    // wheel's primes (e.g. 2, 3 and 5 for a modulo 30 wheel)
+    // wheel's primes e.g. 2, 3 and 5 for a modulo 30 wheel
     multiple += static_cast<uint64_t>(*prime) * WHEEL_INIT[quotient % WHEEL_MODULO].nextMultipleFactor;
     if (multiple > soe_.getStop())
       return false;

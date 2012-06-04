@@ -70,9 +70,9 @@ inline void SieveOfEratosthenes::sieve(uint_t prime) {
   // eratBig_ if it has very few multiples per segment.
   if (prime > eratSmall_->getLimit()) 
     if (prime > eratMedium_->getLimit())
-            eratBig_->addSievingPrime(segmentLow_, prime);
-    else eratMedium_->addSievingPrime(segmentLow_, prime);
-  else    eratSmall_->addSievingPrime(segmentLow_, prime);
+            eratBig_->addSievingPrime(prime, segmentLow_);
+    else eratMedium_->addSievingPrime(prime, segmentLow_);
+  else    eratSmall_->addSievingPrime(prime, segmentLow_);
 }
 
 /// Reconstruct the prime number corresponding to the first set
