@@ -152,7 +152,7 @@ protected:
   /// protected inline methods
   template<typename T>
   static T getInBetween(T low, T value, T high) {
-    if (value < low ) return low;
+    if (value < low)  return low;
     if (value > high) return high;
     return value;
   }
