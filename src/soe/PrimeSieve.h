@@ -36,6 +36,7 @@
 #define PRIMESIEVE_H
 
 #include <stdint.h>
+#include <cstdlib>
 #include <stdexcept>
 #include <string>
 
@@ -159,7 +160,7 @@ protected:
   virtual void set_lock()   { if (parent_ != NULL) parent_->set_lock(); }
   virtual void unset_lock() { if (parent_ != NULL) parent_->unset_lock(); }
 private:
-  /// used to synchronize ParallelPrimeSieve threads
+  /// synchronizes ParallelPrimeSieve threads
   class LockGuard {
   public:
     LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.PrimeSieve::set_lock(); }
