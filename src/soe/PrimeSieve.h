@@ -52,7 +52,7 @@ using soe::PrimeNumberFinder;
 class PrimeSieve {
   friend class PrimeNumberFinder;
 public:
-  /// Public flags for sieve()
+  /// for setFlags(int)
   enum {
     COUNT_PRIMES      = 1 << 0,
     COUNT_TWINS       = 1 << 1,
@@ -163,7 +163,7 @@ private:
   class LockGuard {
   public:
     LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.PrimeSieve::set_lock(); }
-    ~LockGuard() { ps_.PrimeSieve::unset_lock(); }
+    ~LockGuard()                        { ps_.PrimeSieve::unset_lock(); }
   private:
     PrimeSieve& ps_;
     LockGuard(const LockGuard&);
@@ -177,7 +177,7 @@ private:
     std::string str;
   };
   static const SmallPrime smallPrimes_[8];
-  /// multiples of small primes <= preSieve_ are pre-sieved
+  /// pre-sieve multiples of small primes <= preSieve_
   int preSieve_;
   /// sieve size in kilobytes
   int sieveSize_;
@@ -191,7 +191,7 @@ private:
   double interval_;
   /// status in percent of sieve()
   double status_;
-  /// callback functions and object for use with generatePrimes()
+  /// callback functions for use with generatePrimes()
   void (*callback32_)(uint32_t);
   void (*callback64_)(uint64_t);
   void (*callback32_OOP_)(uint32_t, void*);
