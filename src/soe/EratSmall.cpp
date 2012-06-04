@@ -60,9 +60,10 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
   this->setLimit(limit);
 }
 
-/// Implementation of the segmented sieve of Eratosthenes with
-/// wheel factorization optimized for small sieving primes that have
-/// many multiples per segment.
+/// This is an implementation of the segmented sieve of Eratosthenes
+/// with wheel factorization optimized for small sieving primes that
+/// have many multiples per segment. EratSmall uses a hardcoded modulo
+/// 30 wheel that skips multiples of 2, 3 and 5.
 /// @see crossOffMultiples() in SieveOfEratosthenes.cpp
 ///
 void EratSmall::crossOff(uint8_t* sieve, uint_t sieveSize) {
@@ -85,16 +86,14 @@ void EratSmall::crossOff(uint8_t* sieve, uint_t sieveSize) {
       uint8_t* p = &sieve[multipleIndex];
       uint8_t* q;
 
-      // cross-off the multiples (unset bits) of the current sievingPrime
-      // within the sieve array using a hardcoded modulo 30 wheel that
-      // skips multiples of 2, 3 and 5
+      // cross-off the multiples (unset bits) of sievingPrime
       switch (wheelIndex) {
         // for sieving primes of type i*30 + 7
         for (;;) {
-          case 0: // fast loop, takes only =~ 16 asm instructions per
-                  // iteration to cross-off the next 8 multiples. Two
-                  // pointers (p, q) are used to break the dependency chain
-                  // and take advantage of Instruction-Level Parallelism.
+          case 0: // fast loop, takes only =~ 16 asm instructions per iteration
+                  // to cross-off the next 8 multiples. Two pointers (p, q) are
+                  // used to break the dependency chain and take advantage of
+                  // Instruction-Level Parallelism.
                   while (p < loopLimit) {
                     q = p + sievingPrime * 6;
                     p[0] &= BIT0; p += sievingPrime * 10;
