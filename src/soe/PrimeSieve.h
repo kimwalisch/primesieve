@@ -162,8 +162,8 @@ private:
   /// used to synchronize ParallelPrimeSieve threads
   class LockGuard {
   public:
-    LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.set_lock(); }
-    ~LockGuard() { ps_.unset_lock(); }
+    LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.PrimeSieve::set_lock(); }
+    ~LockGuard() { ps_.PrimeSieve::unset_lock(); }
   private:
     PrimeSieve& ps_;
     LockGuard(const LockGuard&);

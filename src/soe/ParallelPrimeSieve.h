@@ -67,7 +67,7 @@ public:
   /// of threads will be used for sieving
   enum { IDEAL_NUM_THREADS = -1 };
   ParallelPrimeSieve();
-  virtual ~ParallelPrimeSieve();
+  virtual ~ParallelPrimeSieve() { }
   void init(SharedMemory&);
   static int getMaxThreads();
   int getNumThreads() const;

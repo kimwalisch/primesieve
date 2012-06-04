@@ -59,15 +59,6 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
                "config::MIN_THREAD_INTERVAL must not be < 100");
   static_assert(config::MIN_THREAD_INTERVAL <= config::MAX_THREAD_INTERVAL,
                "config::MIN_THREAD_INTERVAL must not be > config::MAX_THREAD_INTERVAL");
-#ifdef _OPENMP
-  omp_init_lock(&lock_);
-#endif
-}
-
-ParallelPrimeSieve::~ParallelPrimeSieve() {
-#ifdef _OPENMP
-  omp_destroy_lock(&lock_);
-#endif
 }
 
 /// API for the primesieve Qt application in src/qt-gui.
@@ -171,6 +162,7 @@ void ParallelPrimeSieve::sieve() {
     // size 'balanced' that are sieved in parallel using multiple
     // threads. This scales well as each thread sieves using its own
     // private memory without need of synchronization.
+    omp_init_lock(&lock_);
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
         reduction(+: count0, count1, count2, count3, count4, count5, count6)
     for (uint64_t n = align; n < stop_; n += balanced) {
@@ -193,6 +185,7 @@ void ParallelPrimeSieve::sieve() {
     counts_[4] = count4;
     counts_[5] = count5;
     counts_[6] = count6;
+    omp_destroy_lock(&lock_);
     seconds_ = omp_get_wtime() - t1;
   }
 
