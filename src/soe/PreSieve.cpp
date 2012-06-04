@@ -94,24 +94,23 @@ void PreSieve::initPreSieved()
   uint_t primeProduct = 2 * 3 * 5;
 
   for (uint_t i = 3; smallPrimes_[i] <= limit_; i++) {
-    // cross-off the multiples of primes < smallPrimes_[i]
+    uint_t smallPrime = smallPrimes_[i] ;
+    // cross-off the multiples of primes < smallPrime
     // up to the next primeProduct
-    for (uint_t j = 1; j < smallPrimes_[i]; j++) {
+    for (uint_t j = 1; j < smallPrime; j++) {
       std::memcpy(&preSieved_[primeProduct / 30 * j], preSieved_, primeProduct / 30);
     }
-    primeProduct   *= smallPrimes_[i];
-    uint_t multiple = smallPrimes_[i] - 7;
-    uint_t primeX2  = smallPrimes_[i] * 2;
-    uint_t primeX4  = smallPrimes_[i] * 4;
-    // cross-off the multiples (unset corresponding bits) of
-    // smallPrimes_[i] up to its primeProduct
+    primeProduct *= smallPrime;
+    uint_t multiple = smallPrime - 7;
+    // cross-off the multiples (unset bits) of
+    // smallPrime up to its primeProduct
     for (;;) {
       if (multiple >= primeProduct) break;
       preSieved_[multiple / 30] &= unsetBit_[multiple % 30];
-      multiple += primeX4;
+      multiple += smallPrime * 4;
       if (multiple >= primeProduct) break;
       preSieved_[multiple / 30] &= unsetBit_[multiple % 30];
-      multiple += primeX2;
+      multiple += smallPrime * 2;
     }
   }
 }
