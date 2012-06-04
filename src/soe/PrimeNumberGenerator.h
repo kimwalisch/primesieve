@@ -68,9 +68,8 @@ public:
 private:
   PrimeNumberFinder& finder_;
   /// Executed after each sieved segment, generates the primes within
-  /// the current segment (1 bits within sieve array) and uses them to
-  /// sieve with primeNumberFinder_.
-  /// @see GENERATE.h, SieveOfEratosthenes-inline.h
+  /// the current segment and uses them to sieve with finder_.
+  /// @see GENERATE.h
   ///
   void segmentProcessed(const uint8_t* sieve, uint_t sieveSize) {
     GENERATE_PRIMES(finder_.sieve, uint_t);
