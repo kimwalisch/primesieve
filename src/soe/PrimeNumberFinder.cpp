@@ -160,7 +160,7 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) {
   else {
     // only one thread at a time calls back primes
     PrimeSieve::LockGuard lock(ps_);
-    // @see GENERATE.h, SieveOfEratosthenes-inline.h
+    // @see GENERATE.h
     if (ps_.isFlag(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_, uint32_t)
     if (ps_.isFlag(ps_.CALLBACK64_PRIMES))     GENERATE_PRIMES(ps_.callback64_, uint64_t)
     if (ps_.isFlag(ps_.CALLBACK32_OOP_PRIMES)) GENERATE_PRIMES(callback32_OOP,  uint32_t)
