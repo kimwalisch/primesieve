@@ -178,6 +178,7 @@ void ParallelPrimeSieve::sieve() {
       count5 += ps.getCounts(5);
       count6 += ps.getCounts(6);
     }
+    omp_destroy_lock(&lock_);
     counts_[0] = count0;
     counts_[1] = count1;
     counts_[2] = count2;
@@ -185,7 +186,6 @@ void ParallelPrimeSieve::sieve() {
     counts_[4] = count4;
     counts_[5] = count5;
     counts_[6] = count6;
-    omp_destroy_lock(&lock_);
     seconds_ = omp_get_wtime() - t1;
   }
 
