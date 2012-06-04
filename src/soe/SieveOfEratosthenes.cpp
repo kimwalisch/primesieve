@@ -117,7 +117,7 @@ void SieveOfEratosthenes::initEratAlgorithms() {
 }
 
 uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
-  uint_t remainder = n % NUMBERS_PER_BYTE;
+  uint64_t remainder = n % NUMBERS_PER_BYTE;
   if (remainder <= 1)
     remainder += NUMBERS_PER_BYTE;
   return remainder;
