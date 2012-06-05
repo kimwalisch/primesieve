@@ -129,7 +129,7 @@ void EratBig::crossOff(uint8_t* sieve)
     // multiple of its sieving primes
     do {
       WheelPrime* wPrime = bucket->begin();
-      WheelPrime* end    = bucket->end();
+      WheelPrime* end = bucket->end();
 
       // 2 sieving primes are processed per loop iteration to break
       // the dependency chain and reduce pipeline stalls
