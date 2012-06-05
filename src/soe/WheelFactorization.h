@@ -283,10 +283,19 @@ protected:
     *prime /= 30;
     return true;
   }
-  const WheelElement& wheel(uint_t index) const
+  /// Unset the bit corresponding to the current multiple of
+  /// sievingPrime and calculate its next multiple.
+  ///
+  static void unsetBit(uint8_t* sieve, uint_t sievingPrime, uint_t* multipleIndex, uint_t* wheelIndex)
   {
-    assert(index < WHEEL_SIZE * 8);
-    return WHEEL_ARRAY[index];
+    sieve[*multipleIndex] &= WHEEL_ARRAY[*wheelIndex].unsetBit;
+    *multipleIndex        += WHEEL_ARRAY[*wheelIndex].nextMultipleFactor * sievingPrime;
+    *multipleIndex        += WHEEL_ARRAY[*wheelIndex].correct;
+    *wheelIndex           += WHEEL_ARRAY[*wheelIndex].next;
+  }
+  static uint_t getMaxFactor()
+  {
+    return WHEEL_ARRAY[0].nextMultipleFactor;
   }
 };
 

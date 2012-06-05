@@ -82,7 +82,7 @@ namespace config {
 /// @pre FACTOR_ERATSMALL >= 0 && < 5
 /// @see SieveOfEratosthenes::sieve(uint_t)
 ///
-const double FACTOR_ERATSMALL = 0.75;
+const double FACTOR_ERATSMALL = 0.7;
 
 enum {
   /// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL) &&

@@ -68,8 +68,8 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
 void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize)
 {
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
-    WheelPrime* wPrime    = bucket->begin();
-    WheelPrime* const end = bucket->end();
+    WheelPrime* wPrime = bucket->begin();
+    WheelPrime* end    = bucket->end();
     // 2 sieving primes are processed per loop iteration to break the
     // dependency chain and reduce pipeline stalls
     for (; wPrime + 2 <= end; wPrime += 2) {
@@ -79,34 +79,17 @@ void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize)
       uint_t multipleIndex1 = wPrime[1].getMultipleIndex();
       uint_t wheelIndex1    = wPrime[1].getWheelIndex();
       uint_t sievingPrime1  = wPrime[1].getSievingPrime();
-      while (multipleIndex0 < sieveSize) {
-        // cross-off the current multiple (unset bit) of sievingPrime0
-        // and sievingPrime1 and calculate their next multiple
-        sieve[multipleIndex0] &= wheel(wheelIndex0).unsetBit;
-        multipleIndex0        += wheel(wheelIndex0).nextMultipleFactor * sievingPrime0;
-        multipleIndex0        += wheel(wheelIndex0).correct;
-        wheelIndex0           += wheel(wheelIndex0).next;
-        if (multipleIndex1 >= sieveSize) break;
-        sieve[multipleIndex1] &= wheel(wheelIndex1).unsetBit;
-        multipleIndex1        += wheel(wheelIndex1).nextMultipleFactor * sievingPrime1;
-        multipleIndex1        += wheel(wheelIndex1).correct;
-        wheelIndex1           += wheel(wheelIndex1).next;
+      // cross-off the multiples (unset bits) of sievingPrime(0|1)
+      // @see unsetBit() in WheelFactorization.h
+      for (;;) {
+         if (multipleIndex0 < sieveSize) unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0); else break;
+         if (multipleIndex1 < sieveSize) unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1); else break;
       }
-      while (multipleIndex0 < sieveSize) {
-        sieve[multipleIndex0] &= wheel(wheelIndex0).unsetBit;
-        multipleIndex0        += wheel(wheelIndex0).nextMultipleFactor * sievingPrime0;
-        multipleIndex0        += wheel(wheelIndex0).correct;
-        wheelIndex0           += wheel(wheelIndex0).next;
-      }
-      while (multipleIndex1 < sieveSize) {
-        sieve[multipleIndex1] &= wheel(wheelIndex1).unsetBit;
-        multipleIndex1        += wheel(wheelIndex1).nextMultipleFactor * sievingPrime1;
-        multipleIndex1        += wheel(wheelIndex1).correct;
-        wheelIndex1           += wheel(wheelIndex1).next;
-      }
+      while (multipleIndex0 < sieveSize) unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
+      while (multipleIndex1 < sieveSize) unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
       multipleIndex0 -= sieveSize;
       multipleIndex1 -= sieveSize;
-      // set the multipleIndex and wheelIndex for the next segment
+      // set multipleIndex and wheelIndex for the next segment
       wPrime[0].set(multipleIndex0, wheelIndex0);
       wPrime[1].set(multipleIndex1, wheelIndex1);
     }
@@ -114,12 +97,8 @@ void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize)
       uint_t multipleIndex = wPrime->getMultipleIndex();
       uint_t wheelIndex    = wPrime->getWheelIndex();
       uint_t sievingPrime  = wPrime->getSievingPrime();
-      while (multipleIndex < sieveSize) {
-        sieve[multipleIndex] &= wheel(wheelIndex).unsetBit;
-        multipleIndex        += wheel(wheelIndex).nextMultipleFactor * sievingPrime;
-        multipleIndex        += wheel(wheelIndex).correct;
-        wheelIndex           += wheel(wheelIndex).next;
-      }
+      while (multipleIndex < sieveSize)
+        unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
       multipleIndex -= sieveSize;
       wPrime->set(multipleIndex, wheelIndex);
     }
