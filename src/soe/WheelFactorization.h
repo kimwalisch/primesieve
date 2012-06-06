@@ -180,7 +180,6 @@ struct WheelInit {
 /// calculate the prime's next multiple and an offset used to calculate
 /// its next wheel index.
 /// @see WheelFactorization.cpp
-/// @see EratMedium.cpp, EratBig.cpp
 ///
 struct WheelElement {
   WheelElement(uint8_t _unsetBit,
