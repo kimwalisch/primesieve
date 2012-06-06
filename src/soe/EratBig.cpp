@@ -72,10 +72,10 @@ EratBig::~EratBig() {
 ///
 void EratBig::setSize(const SieveOfEratosthenes& soe) {
   // max values in crossOff()
-  uint_t maxSievingPrime   = soe.getSquareRoot() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
-  uint_t maxMultipleOffset = maxSievingPrime * getMaxFactor() + getMaxFactor();
-  uint_t maxMultipleIndex  = soe.getSieveSize() - 1 + maxMultipleOffset;
-  uint_t maxSegmentCount   = maxMultipleIndex >> log2SieveSize_;
+  uint_t maxSievingPrime  = soe.getSquareRoot() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+  uint_t maxMultipleDist  = maxSievingPrime * getMaxFactor() + getMaxFactor();
+  uint_t maxMultipleIndex = soe.getSieveSize() - 1 + maxMultipleDist;
+  uint_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
   // size must be >= maxSegmentCount + 1
   uint_t size = nextPowerOf2(maxSegmentCount + 1);
   moduloListsSize_ = size - 1;
@@ -117,19 +117,18 @@ void EratBig::pushBucket(uint_t index) {
 ///
 void EratBig::crossOff(uint8_t* sieve)
 {
-  // lists_[0] contains the list of buckets related to the current
-  // segment i.e. its buckets contain all the sieving primes that have
-  // multiple occurrence(s) in the current segment
+  // lists_[0] contains the buckets related to the current segment
+  // i.e. its buckets contain all the sieving primes that have
+  // multiples in the current segment
   while (lists_[0]->hasNext() || !lists_[0]->isEmpty()) {
     Bucket* bucket = lists_[0];
     lists_[0] = NULL;
     pushBucket(0);
-
-    // each loop iteration processes a bucket i.e. removes the next
-    // multiple of its sieving primes
+    // each loop iteration removes the next multiple of the
+    // sieving primes of the current bucket
     do {
       WheelPrime* wPrime = bucket->begin();
-      WheelPrime* end = bucket->end();
+      WheelPrime* end    = bucket->end();
 
       // 2 sieving primes are processed per loop iteration to break
       // the dependency chain and reduce pipeline stalls
@@ -149,8 +148,8 @@ void EratBig::crossOff(uint8_t* sieve)
         uint_t segment1 = multipleIndex1 >> log2SieveSize_;
         multipleIndex0 &= moduloSieveSize_;
         multipleIndex1 &= moduloSieveSize_;
-        // move sievingPrime0 and sievingPrime1 to the bucket list
-        // related to their next multiple occurrence
+        // move sievingPrime(0|1) to the bucket list
+        // related to its next multiple
         if (!lists_[segment0]->addWheelPrime(sievingPrime0, multipleIndex0, wheelIndex0))
           pushBucket(segment0);
         if (!lists_[segment1]->addWheelPrime(sievingPrime1, multipleIndex1, wheelIndex1))
@@ -178,7 +177,7 @@ void EratBig::crossOff(uint8_t* sieve)
   }
 
   // lists_[0] has been processed, thus the list related to the next
-  // segment lists_[1] moves to lists_[0] and so on
+  // segment lists_[1] moves to lists_[0]
   Bucket* tmp = lists_[0];
   std::copy(lists_.begin() + 1, lists_.end(), lists_.begin());
   lists_.back() = tmp;
