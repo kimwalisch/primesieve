@@ -52,7 +52,7 @@ class EratSmall : public Modulo30Wheel_t {
 public:
   EratSmall(const SieveOfEratosthenes&);
   uint_t getLimit() const { return limit_; }
-  void storeWheelPrime(uint_t, uint_t, uint_t);
+  void storeInBucket(uint_t, uint_t, uint_t);
   void crossOff(uint8_t*, uint_t);
 private:
   typedef std::list<Bucket> BucketList_t;

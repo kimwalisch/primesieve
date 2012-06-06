@@ -67,12 +67,12 @@ inline void SieveOfEratosthenes::sieve(uint_t prime) {
   // store prime in eratSmall_ if it has many multiples per segment,
   // in eratMedium_ if it has a few multiples per segment or
   // in eratBig_ if it has very few multiples per segment.
-  // @see Wheel::store() in WheelFactorization.h
+  // @see addSievingPrime() in WheelFactorization.h
   if (prime > eratSmall_->getLimit()) 
     if (prime > eratMedium_->getLimit())
-            eratBig_->store(prime, segmentLow_);
-    else eratMedium_->store(prime, segmentLow_);
-  else    eratSmall_->store(prime, segmentLow_);
+            eratBig_->addSievingPrime(prime, segmentLow_);
+    else eratMedium_->addSievingPrime(prime, segmentLow_);
+  else    eratSmall_->addSievingPrime(prime, segmentLow_);
 }
 
 /// Reconstruct the prime number corresponding to the first set

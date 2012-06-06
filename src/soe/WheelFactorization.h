@@ -103,7 +103,7 @@ private:
   uint32_t indexes_;
   /// sievingPrime_ = prime / 30;
   /// '/ 30' is used as SieveOfEratosthenes objects use a bit array
-  /// with 30 numbers per byte for sieving, @see Wheel::store().
+  /// with 30 numbers per byte for sieving.
   uint32_t sievingPrime_;
 };
 
@@ -147,9 +147,9 @@ public:
   }
   /// Store a WheelPrime in the bucket.
   /// @return false  if the bucket is full else true.
-  bool storeWheelPrime(uint_t sievingPrime,
-                       uint_t multipleIndex,
-                       uint_t wheelIndex)
+  bool store(uint_t sievingPrime,
+             uint_t multipleIndex,
+             uint_t wheelIndex)
   {
     WheelPrime* wPrime = current_;
     current_++;
@@ -165,7 +165,7 @@ private:
 /// Precomputed arrays of WheelInit objects are used to calculate the
 /// first multiple >= START of each sieving prime that is not
 /// divisible by any of the wheel's factors and its wheel index.
-/// @see Wheel::store(), WheelFactorization.cpp
+/// @see WheelFactorization.cpp
 ///
 struct WheelInit {
   uint8_t nextMultipleFactor;
@@ -225,7 +225,7 @@ public:
   /// When done store the sieving prime.
   /// @see sieve() in SieveOfEratosthenes-inline.h
   ///
-  void store(uint_t prime, uint64_t segmentLow)
+  void addSievingPrime(uint_t prime, uint64_t segmentLow)
   {
     segmentLow += 6;
     // calculate the first multiple > segmentLow
@@ -248,17 +248,17 @@ public:
     uint_t multipleIndex = static_cast<uint_t>((multiple - segmentLow) / 30);
     uint_t wheelIndex = wheelOffsets_[prime % 30] + WHEEL_INIT[quotient % WHEEL_MODULO].wheelIndex;
     prime /= 30;
-    this->storeWheelPrime(prime, multipleIndex, wheelIndex);
+    storeInBucket(prime, multipleIndex, wheelIndex);
   }
-  /// Store a WheelPrime in a bucket
-  virtual void storeWheelPrime(uint_t, uint_t, uint_t) = 0;
+  /// Store a sieving prime in a bucket
+  virtual void storeInBucket(uint_t, uint_t, uint_t) = 0;
 protected:
   Wheel(const SieveOfEratosthenes& soe) : soe_(soe)
   {
     uint64_t maxSievingPrime = UINT32_MAX;
     uint64_t maxInitFactor   = WHEEL_INIT[2].nextMultipleFactor + 1;
     uint64_t limit           = UINT64_MAX - maxSievingPrime * maxInitFactor;
-    // prevent 64-bit overflows of multiple in store()
+    // prevent 64-bit overflows of multiple in addSievingPrime()
     if (soe_.getStop() > limit) {
       std::ostringstream error;
       error << "Wheel: stop must be <= (2^64-1) - (2^32-1) * "

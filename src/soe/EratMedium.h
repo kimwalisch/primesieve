@@ -52,7 +52,7 @@ class EratMedium : public Modulo210Wheel_t {
 public:
   EratMedium(const SieveOfEratosthenes&);
   uint_t getLimit() const { return limit_; }
-  void storeWheelPrime(uint_t, uint_t, uint_t);
+  void storeInBucket(uint_t, uint_t, uint_t);
   void crossOff(uint8_t*, uint_t);
 private:
   typedef std::list<Bucket> BucketList_t;
