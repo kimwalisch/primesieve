@@ -51,15 +51,15 @@ class SieveOfEratosthenes;
 class EratMedium : public Modulo210Wheel_t {
 public:
   EratMedium(const SieveOfEratosthenes&);
-  uint_t getLimit() const { return limit_; }
-  void storeInBucket(uint_t, uint_t, uint_t);
   void crossOff(uint8_t*, uint_t);
+  uint_t getLimit() const { return limit_; }
 private:
-  typedef std::list<Bucket> BucketList_t;
-  /// Upper bound for sieving primes within EratMedium
+  /// Sieving primes in EratMedium are <= limit_
   uint_t limit_;
+  typedef std::list<Bucket> BucketList_t;
   /// List of buckets, holds the sieving primes
   BucketList_t buckets_;
+  void storeSievingPrime(uint_t, uint_t, uint_t);
 };
 
 } // namespace soe

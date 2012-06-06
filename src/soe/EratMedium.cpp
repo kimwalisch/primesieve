@@ -57,10 +57,10 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
   limit_          = std::min(sqrtStop, max);
 }
 
-/// Add a sieving prime to EratMedium
+/// Add a new sieving prime to EratMedium
 /// @see addSievingPrime() in WheelFactorization.h
 ///
-void EratMedium::storeInBucket(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
+void EratMedium::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
   if (!buckets_.back().store(prime, multipleIndex, wheelIndex))
     buckets_.push_back(Bucket());

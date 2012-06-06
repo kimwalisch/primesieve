@@ -57,10 +57,10 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
     throw std::invalid_argument("EratSmall: limit must be < (sieveSize - 5) * 5.");
 }
 
-/// Add a sieving prime to EratSmall
+/// Add a new sieving prime to EratSmall
 /// @see addSievingPrime() in WheelFactorization.h
 ///
-void EratSmall::storeInBucket(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
+void EratSmall::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
   if (!buckets_.back().store(prime, multipleIndex, wheelIndex))
     buckets_.push_back(Bucket());

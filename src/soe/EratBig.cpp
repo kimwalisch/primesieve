@@ -107,10 +107,10 @@ void EratBig::pushBucket(uint_t index) {
   lists_[index] = bucket;
 }
 
-/// Add a sieving prime to EratBig
+/// Add a new sieving prime to EratBig
 /// @see addSievingPrime() in WheelFactorization.h
 ///
-void EratBig::storeInBucket(uint_t prime, uint_t multipleIndex, uint_t wheelIndex) {
+void EratBig::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex) {
   // indicates in how many segments the next multiple
   // of prime must be crossed-off
   uint_t segment = multipleIndex >> log2SieveSize_;

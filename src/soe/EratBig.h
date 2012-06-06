@@ -53,7 +53,6 @@ class EratBig: public Modulo210Wheel_t {
 public:
   EratBig(const SieveOfEratosthenes&);
   ~EratBig();
-  void storeInBucket(uint_t, uint_t, uint_t);
   void crossOff(uint8_t*);
 private:
   enum { BUCKETS_PER_ALLOC = config::MEMORY_PER_ALLOC / sizeof(Bucket) };
@@ -70,6 +69,7 @@ private:
   void setSize(const SieveOfEratosthenes&);
   void initBucketLists();
   void pushBucket(uint_t);
+  void storeSievingPrime(uint_t, uint_t, uint_t);
 };
 
 } // namespace soe

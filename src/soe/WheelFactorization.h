@@ -248,10 +248,8 @@ public:
     uint_t multipleIndex = static_cast<uint_t>((multiple - segmentLow) / 30);
     uint_t wheelIndex = wheelOffsets_[prime % 30] + WHEEL_INIT[quotient % WHEEL_MODULO].wheelIndex;
     prime /= 30;
-    storeInBucket(prime, multipleIndex, wheelIndex);
+    storeSievingPrime(prime, multipleIndex, wheelIndex);
   }
-  /// Store a sieving prime in a bucket
-  virtual void storeInBucket(uint_t, uint_t, uint_t) = 0;
 protected:
   Wheel(const SieveOfEratosthenes& soe) : soe_(soe)
   {
@@ -271,8 +269,10 @@ protected:
       throw std::overflow_error("Wheel: sieveSize must be <= 2^23, 8192 kilobytes.");
   }
   virtual ~Wheel() { }
-  /// Unset the bit corresponding to the current multiple of
-  /// sievingPrime and calculate its next multiple.
+  /// @see EratSmall.cpp, EratMedium.cpp, EratBig.cpp
+  virtual void storeSievingPrime(uint_t, uint_t, uint_t) = 0;
+  /// Cross-off the current multiple (unset bit) of sievingPrime and
+  /// calculate its next multiple.
   ///
   static void unsetBit(uint8_t* sieve, uint_t sievingPrime, uint_t* multipleIndex, uint_t* wheelIndex)
   {
