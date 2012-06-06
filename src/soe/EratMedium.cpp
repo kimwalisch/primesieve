@@ -89,7 +89,6 @@ void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize)
       while (multipleIndex1 < sieveSize) unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
       multipleIndex0 -= sieveSize;
       multipleIndex1 -= sieveSize;
-      // set multipleIndex and wheelIndex for the next segment
       wPrime[0].set(multipleIndex0, wheelIndex0);
       wPrime[1].set(multipleIndex1, wheelIndex1);
     }
