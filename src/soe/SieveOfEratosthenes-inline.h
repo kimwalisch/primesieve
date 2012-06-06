@@ -64,9 +64,10 @@ inline void SieveOfEratosthenes::sieve(uint_t prime) {
   // @see sieveSegment() in SieveOfEratosthenes.cpp.
   while (segmentHigh_ < square)
     sieveSegment();
-  // prime is added to eratSmall_ if it has many multiples per segment,
-  // to eratMedium_ if it has a few multiples per segment and to
-  // eratBig_ if it has very few multiples per segment.
+  // store prime in eratSmall_ if it has many multiples per segment,
+  // in eratMedium_ if it has a few multiples per segment or
+  // in eratBig_ if it has very few multiples per segment.
+  // @see Wheel::store() in WheelFactorization.h
   if (prime > eratSmall_->getLimit()) 
     if (prime > eratMedium_->getLimit())
             eratBig_->store(prime, segmentLow_);
