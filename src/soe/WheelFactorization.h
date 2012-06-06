@@ -34,7 +34,7 @@
 
 
 /// @file WheelFactorization.h
-/// @brief Contains classes and structs related to wheel factorization.
+/// @brief Classes and structs related to wheel factorization.
 /// Wheel factorization is used to skip multiples of small primes to
 /// speed up the sieve of Eratosthenes.
 /// http://en.wikipedia.org/wiki/Wheel_factorization
