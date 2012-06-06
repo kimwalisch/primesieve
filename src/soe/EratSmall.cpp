@@ -35,7 +35,6 @@
 #include "EratSmall.h"
 #include "SieveOfEratosthenes.h"
 #include "SieveOfEratosthenes-inline.h"
-#include "EratBase.h"
 #include "WheelFactorization.h"
 #include "config.h"
 #include "bits.h"
@@ -48,16 +47,22 @@
 namespace soe {
 
 EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
-  EratBase<Modulo30Wheel_t>(soe)
+  Modulo30Wheel_t(soe), buckets_(1, Bucket())
 {
   uint_t sqrtStop = soe.getSquareRoot();
   uint_t max = static_cast<uint_t>(soe.getSieveSize() * config::FACTOR_ERATSMALL);
-  uint_t limit = std::min(sqrtStop, max);
+  limit_ = std::min(sqrtStop, max);
   // sieveSize - 1 + (sievingPrime / 30) * 6 + 6 - sieveSize < sieveSize
-  // prevents segmentation faults in crossOff()
-  if (limit >= (soe.getSieveSize() - 5) * 5)
+  if (limit_ >= (soe.getSieveSize() - 5) * 5)
     throw std::invalid_argument("EratSmall: limit must be < (sieveSize - 5) * 5.");
-  this->setLimit(limit);
+}
+
+/// Add a WheelPrime for sieving to EratSmall
+/// @see store() in WheelFactorization.h
+void EratSmall::storeWheelPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
+{
+  if (!buckets_.back().storeWheelPrime(prime, multipleIndex, wheelIndex))
+    buckets_.push_back(Bucket());
 }
 
 /// This is an implementation of the segmented sieve of Eratosthenes
@@ -67,19 +72,19 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
 /// @see crossOffMultiples() in SieveOfEratosthenes.cpp
 ///
 void EratSmall::crossOff(uint8_t* sieve, uint_t sieveSize) {
-  uint8_t* const sieveEnd = &sieve[sieveSize];
+  uint8_t* sieveEnd = &sieve[sieveSize];
 
   for (BucketList_t::iterator bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket) {
-    WheelPrime* wPrime    = bucket->begin();
-    WheelPrime* const end = bucket->end();
+    WheelPrime* wPrime = bucket->begin();
+    WheelPrime* end    = bucket->end();
 
     for (; wPrime != end; wPrime++) {
-      const uint_t sievingPrime  = wPrime->getSievingPrime();
-      const uint_t multipleIndex = wPrime->getMultipleIndex();
-      const uint_t wheelIndex    = wPrime->getWheelIndex();
+      uint_t sievingPrime  = wPrime->getSievingPrime();
+      uint_t multipleIndex = wPrime->getMultipleIndex();
+      uint_t wheelIndex    = wPrime->getWheelIndex();
 
-      const uint_t loopDistance = sievingPrime * 30 + 29;
-      uint8_t* const loopLimit  = (loopDistance < sieveSize) ? sieveEnd - loopDistance : sieve;
+      uint_t loopDistance = sievingPrime * 30 + 29;
+      uint8_t* loopLimit  = (loopDistance < sieveSize) ? sieveEnd - loopDistance : sieve;
 
       // pointer to the byte containing the first multiple of
       // sievingPrime within the current segment

@@ -40,7 +40,6 @@
 #include "EratSmall.h"
 #include "EratMedium.h"
 #include "EratBig.h"
-#include "EratBig-inline.h"
 #include "imath.h"
 
 #include <stdint.h>
@@ -70,9 +69,9 @@ inline void SieveOfEratosthenes::sieve(uint_t prime) {
   // eratBig_ if it has very few multiples per segment.
   if (prime > eratSmall_->getLimit()) 
     if (prime > eratMedium_->getLimit())
-            eratBig_->addSievingPrime(prime, segmentLow_);
-    else eratMedium_->addSievingPrime(prime, segmentLow_);
-  else    eratSmall_->addSievingPrime(prime, segmentLow_);
+            eratBig_->store(prime, segmentLow_);
+    else eratMedium_->store(prime, segmentLow_);
+  else    eratSmall_->store(prime, segmentLow_);
 }
 
 /// Reconstruct the prime number corresponding to the first set

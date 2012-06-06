@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 4 June 2012
+# Last modified: 6 June 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -166,12 +166,12 @@ Contents
     Contains classes and structs related to wheel factorization (used
     to skip multiples of small primes to speed up the sieve of
     Eratosthenes). The abstract Wheel class is used to initialize
-    sieving primes i.e. getWheelPrime() calculates the first
-    multiple >= start number of each sieving prime. The sieving prime
-    is then stored together with its multipleIndex (position of the
-    next multiple within the sieve array) and wheelIndex as a
-    WheelPrime object. Erat(Small|Medium|Big) objects use WheelPrimes
-    to cross-off multiples.
+    sieving primes i.e. store() calculates the first multiple >= start
+    of each sieving prime. The sieving prime is then stored together
+    with its multipleIndex (position of the next multiple within the
+    SieveOfEratosthenes array) and wheelIndex as a WheelPrime object.
+    Erat(Small|Medium|Big) objects use WheelPrimes to cross-off
+    multiples.
 
 5. Further reading
 ==================

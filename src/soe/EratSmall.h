@@ -37,9 +37,9 @@
 
 #include "config.h"
 #include "WheelFactorization.h"
-#include "EratBase.h"
 
 #include <stdint.h>
+#include <list> 
 
 namespace soe {
 class SieveOfEratosthenes;
@@ -48,10 +48,18 @@ class SieveOfEratosthenes;
 /// Eratosthenes optimized for small sieving primes that have many
 /// multiples per segment.
 ///
-class EratSmall : public EratBase<Modulo30Wheel_t> {
+class EratSmall : public Modulo30Wheel_t {
 public:
   EratSmall(const SieveOfEratosthenes&);
+  uint_t getLimit() const { return limit_; }
+  void storeWheelPrime(uint_t, uint_t, uint_t);
   void crossOff(uint8_t*, uint_t);
+private:
+  typedef std::list<Bucket> BucketList_t;
+  /// Upper bound for sieving primes within EratSmall
+  uint_t limit_;
+  /// List of buckets, holds the sieving primes
+  BucketList_t buckets_;
 };
 
 } // namespace soe

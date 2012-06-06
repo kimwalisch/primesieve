@@ -35,7 +35,6 @@
 #include "EratMedium.h"
 #include "SieveOfEratosthenes.h"
 #include "SieveOfEratosthenes-inline.h"
-#include "EratBase.h"
 #include "WheelFactorization.h"
 #include "config.h"
 
@@ -47,7 +46,7 @@
 namespace soe {
 
 EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
-  EratBase<Modulo210Wheel_t>(soe)
+  Modulo210Wheel_t(soe), buckets_(1, Bucket())
 {
   // assert multipleIndex < 2^23 in crossOff()
   static_assert(config::FACTOR_ERATMEDIUM <= 6, "config::FACTOR_ERATMEDIUM must not be > 6");
@@ -55,8 +54,15 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
     throw std::overflow_error("EratMedium: sieveSize must be <= 2^22, 4096 kilobytes.");
   uint_t sqrtStop = soe.getSquareRoot();
   uint_t max      = soe.getSieveSize() * config::FACTOR_ERATMEDIUM;
-  uint_t limit    = std::min(sqrtStop, max);
-  this->setLimit(limit);
+  limit_          = std::min(sqrtStop, max);
+}
+
+/// Add a WheelPrime for sieving to EratMedium
+/// @see store() in WheelFactorization.h
+void EratMedium::storeWheelPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
+{
+  if (!buckets_.back().storeWheelPrime(prime, multipleIndex, wheelIndex))
+    buckets_.push_back(Bucket());
 }
 
 /// This is an implementation of the segmented sieve of Eratosthenes

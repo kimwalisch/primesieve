@@ -62,7 +62,6 @@ SOURCES += ../soe/EratBig.cpp \
     ../soe/WheelFactorization.cpp
 HEADERS += ../soe/EratSmall.h \
     ../soe/EratBig.h \
-    ../soe/EratBig-inline.h \
     ../soe/PrimeNumberFinder.h \
     ../soe/PrimeSieve.h \
     ../soe/ParallelPrimeSieve.h \

@@ -49,11 +49,11 @@ class SieveOfEratosthenes;
 /// Eratosthenes optimized for big sieving primes that have very few
 /// multiples per segment.
 ///
-class EratBig: protected Modulo210Wheel_t {
+class EratBig: public Modulo210Wheel_t {
 public:
   EratBig(const SieveOfEratosthenes&);
   ~EratBig();
-  void addSievingPrime(uint_t, uint64_t);
+  void storeWheelPrime(uint_t, uint_t, uint_t);
   void crossOff(uint8_t*);
 private:
   enum { BUCKETS_PER_ALLOC = config::MEMORY_PER_ALLOC / sizeof(Bucket) };

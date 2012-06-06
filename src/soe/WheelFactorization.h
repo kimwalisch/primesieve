@@ -103,8 +103,7 @@ private:
   uint32_t indexes_;
   /// sievingPrime_ = prime / 30;
   /// '/ 30' is used as SieveOfEratosthenes objects use a bit array
-  /// with 30 numbers per byte for sieving.
-  /// @see Wheel::getWheelPrime()
+  /// with 30 numbers per byte for sieving, @see Wheel::store().
   uint32_t sievingPrime_;
 };
 
@@ -146,11 +145,11 @@ public:
   {
     return next_ != NULL;
   }
-  /// Add a WheelPrime to the Bucket.
-  /// @return false  If the bucket is full else true.
-  bool addWheelPrime(uint_t sievingPrime,
-                     uint_t multipleIndex,
-                     uint_t wheelIndex)
+  /// Store a WheelPrime in the bucket.
+  /// @return false  if the bucket is full else true.
+  bool storeWheelPrime(uint_t sievingPrime,
+                       uint_t multipleIndex,
+                       uint_t wheelIndex)
   {
     WheelPrime* wPrime = current_;
     current_++;
@@ -166,8 +165,7 @@ private:
 /// Precomputed arrays of WheelInit objects are used to calculate the
 /// first multiple >= START of each sieving prime that is not
 /// divisible by any of the wheel's factors and its wheel index.
-/// @see WheelFactorization.cpp
-/// @see getWheelPrime()
+/// @see Wheel::store(), WheelFactorization.cpp
 ///
 struct WheelInit {
   uint8_t nextMultipleFactor;
@@ -220,19 +218,48 @@ template<uint_t              WHEEL_MODULO,
          const WheelElement* WHEEL_ARRAY,
          const WheelInit*    WHEEL_INIT>
 class Wheel {
-private:
-  static const uint_t wheelOffsets_[30];
-  /// Reference to the parent SieveOfEratosthenes object
-  const SieveOfEratosthenes& soe_;
-  Wheel(const Wheel&);
-  Wheel& operator=(const Wheel&);
+public:
+  /// Calculate the first multiple >= segmentLow of prime that is not
+  /// divisible by any of the wheel's factors (e.g. 2, 3 and 5 for a
+  /// modulo 30 wheel) and the position within the SieveOfEratosthenes
+  /// array of that multiple (multipleIndex) and its wheel index.
+  /// When done store the sieving prime.
+  /// @see sieve() in SieveOfEratosthenes-inline.h
+  ///
+  void store(uint_t prime, uint64_t segmentLow)
+  {
+    segmentLow += 6;
+    // calculate the first multiple > segmentLow
+    uint64_t quotient = segmentLow / prime + 1;
+    uint64_t multiple = prime * quotient;
+    // prime is not needed for sieving
+    if (multiple > soe_.getStop())
+      return;
+    uint64_t square = isquare<uint64_t>(prime);
+    // prime^2 is the first multiple that needs to be crossed-off
+    if (multiple < square) {
+      multiple = square;
+      quotient = prime;
+    }
+    // calculate the next multiple of prime that is not
+    // divisible by any of the wheel's factors
+    multiple += static_cast<uint64_t>(prime) * WHEEL_INIT[quotient % WHEEL_MODULO].nextMultipleFactor;
+    if (multiple > soe_.getStop())
+      return;
+    uint_t multipleIndex = static_cast<uint_t>((multiple - segmentLow) / 30);
+    uint_t wheelIndex = wheelOffsets_[prime % 30] + WHEEL_INIT[quotient % WHEEL_MODULO].wheelIndex;
+    prime /= 30;
+    this->storeWheelPrime(prime, multipleIndex, wheelIndex);
+  }
+  /// Store a WheelPrime in a bucket
+  virtual void storeWheelPrime(uint_t, uint_t, uint_t) = 0;
 protected:
   Wheel(const SieveOfEratosthenes& soe) : soe_(soe)
   {
     uint64_t maxSievingPrime = UINT32_MAX;
     uint64_t maxInitFactor   = WHEEL_INIT[2].nextMultipleFactor + 1;
     uint64_t limit           = UINT64_MAX - maxSievingPrime * maxInitFactor;
-    // prevent 64-bit overflows of multiple in getWheelPrime()
+    // prevent 64-bit overflows of multiple in store()
     if (soe_.getStop() > limit) {
       std::ostringstream error;
       error << "Wheel: stop must be <= (2^64-1) - (2^32-1) * "
@@ -244,45 +271,7 @@ protected:
     if (soe_.getSieveSize() > (1u << 23))
       throw std::overflow_error("Wheel: sieveSize must be <= 2^23, 8192 kilobytes.");
   }
-  ~Wheel() { }
-  /// Used to initialize sieving primes <= sqrt(n) for use with the
-  /// segmented sieve of Eratosthenes with wheel factorization.
-  /// Calculates the first multiple >= segmentLow of prime that is not
-  /// divisible by any of the wheel's prime factors (e.g. 2, 3 and 5
-  /// for a modulo 30 wheel) and the position within the
-  /// SieveOfEratosthenes array (multipleIndex) of that multiple and
-  /// its wheel index.
-  /// @return true  if the WheelPrime must be stored for sieving
-  ///               (next multiple <= STOP) else false.
-  ///
-  bool getWheelPrime(uint64_t segmentLow,
-                     uint_t* prime,
-                     uint_t* multipleIndex,
-                     uint_t* wheelIndex) const
-  {
-    segmentLow += 6;
-    // calculate the first multiple > segmentLow of prime
-    uint64_t quotient = segmentLow / *prime + 1;
-    uint64_t multiple = *prime * quotient;
-    if (multiple > soe_.getStop())
-      return false;
-    const uint64_t square = isquare<uint64_t>(*prime);
-    // prime^2 is the first multiple of prime
-    // that needs to be crossed-off
-    if (multiple < square) {
-      multiple = square;
-      quotient = *prime;
-    }
-    // calculate the next multiple that is not divisible by any of the
-    // wheel's primes e.g. 2, 3 and 5 for a modulo 30 wheel
-    multiple += static_cast<uint64_t>(*prime) * WHEEL_INIT[quotient % WHEEL_MODULO].nextMultipleFactor;
-    if (multiple > soe_.getStop())
-      return false;
-    *multipleIndex = static_cast<uint_t>((multiple - segmentLow) / 30);
-    *wheelIndex = wheelOffsets_[*prime % 30] + WHEEL_INIT[quotient % WHEEL_MODULO].wheelIndex;
-    *prime /= 30;
-    return true;
-  }
+  virtual ~Wheel() { }
   /// Unset the bit corresponding to the current multiple of
   /// sievingPrime and calculate its next multiple.
   ///
@@ -297,6 +286,12 @@ protected:
   {
     return WHEEL_ARRAY[0].nextMultipleFactor;
   }
+private:
+  static const uint_t wheelOffsets_[30];
+  /// Reference to the parent SieveOfEratosthenes object
+  const SieveOfEratosthenes& soe_;
+  Wheel(const Wheel&);
+  Wheel& operator=(const Wheel&);
 };
 
 /// The wheelOffsets_ array is used to calculate the index of the

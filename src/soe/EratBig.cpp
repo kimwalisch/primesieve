@@ -107,6 +107,19 @@ void EratBig::pushBucket(uint_t index) {
   lists_[index] = bucket;
 }
 
+/// Add a WheelPrime for sieving to EratBig
+/// @see store() in WheelFactorization.h
+///
+void EratBig::storeWheelPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex) {
+  // indicates in how many segments the next multiple
+  // of prime needs to be crossed-off
+  uint_t segment = multipleIndex >> log2SieveSize_;
+  multipleIndex &= moduloSieveSize_;
+  // add prime to the bucket list related to its next multiple
+  if (!lists_[segment]->storeWheelPrime(prime, multipleIndex, wheelIndex))
+    pushBucket(segment);
+}
+
 /// This is an optimized implementation of Tomas Oliveira e Silva's
 /// cache-friendly segmented sieve of Eratosthenes algorithm, see:
 /// http://www.ieeta.pt/~tos/software/prime_sieve.html
@@ -150,9 +163,9 @@ void EratBig::crossOff(uint8_t* sieve)
         multipleIndex1 &= moduloSieveSize_;
         // move sievingPrime(0|1) to the bucket list
         // related to its next multiple
-        if (!lists_[segment0]->addWheelPrime(sievingPrime0, multipleIndex0, wheelIndex0))
+        if (!lists_[segment0]->storeWheelPrime(sievingPrime0, multipleIndex0, wheelIndex0))
           pushBucket(segment0);
-        if (!lists_[segment1]->addWheelPrime(sievingPrime1, multipleIndex1, wheelIndex1))
+        if (!lists_[segment1]->storeWheelPrime(sievingPrime1, multipleIndex1, wheelIndex1))
           pushBucket(segment1);
       }
       if (wPrime != end) {
@@ -162,7 +175,7 @@ void EratBig::crossOff(uint8_t* sieve)
         unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
         uint_t segment = multipleIndex >> log2SieveSize_;
         multipleIndex &= moduloSieveSize_;
-        if (!lists_[segment]->addWheelPrime(sievingPrime, multipleIndex, wheelIndex))
+        if (!lists_[segment]->storeWheelPrime(sievingPrime, multipleIndex, wheelIndex))
           pushBucket(segment);
       }
 
