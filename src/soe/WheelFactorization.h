@@ -309,7 +309,7 @@ WheelFactorization<MODULO, SIZE, INIT, WHEEL>::wheelOffsets_[30] =
 extern const WheelInit    wheel30Init[30];
 extern const WheelInit    wheel210Init[210];
 extern const WheelElement wheel30[8*8];
-extern const WheelElement wheel210[8*48];
+extern const WheelElement wheel210[48*8];
 
 /// 3rd wheel, skips multiples of 2, 3 and 5
 typedef WheelFactorization<30, 8, wheel30Init, wheel30> Modulo30Wheel_t;

@@ -111,7 +111,7 @@ const WheelElement wheel30[8*8] = {
   WheelElement(BIT3, 2, 0, 1), WheelElement(BIT4, 4, 0, 1), WheelElement(BIT5, 6, 0, 1),
   WheelElement(BIT6, 2, 0,-7) };
 
-const WheelElement wheel210[8*48] = {
+const WheelElement wheel210[48*8] = {
   WheelElement(BIT0,10, 2, 1), WheelElement(BIT3, 2, 0, 1), WheelElement(BIT7, 4, 1, 1),
   WheelElement(BIT6, 2, 1, 1), WheelElement(BIT2, 4, 1, 1), WheelElement(BIT1, 6, 1, 1),
   WheelElement(BIT5, 2, 1, 1), WheelElement(BIT0, 6, 1, 1), WheelElement(BIT4, 4, 1, 1),
