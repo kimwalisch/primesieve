@@ -115,35 +115,21 @@ private:
 class Bucket {
 public:
   Bucket() : current_(wheelPrimes_) { }
-  /// list::push_back(Bucket()) adds an empty bucket (no copying)
-  Bucket(const Bucket&) : current_(wheelPrimes_) { }
+  /// list.push_back(Bucket()) adds an empty bucket without copying
+  Bucket(const Bucket&) : current_(wheelPrimes_)
+  { }
+  WheelPrime* begin()  { return wheelPrimes_; }
+  WheelPrime* end()    { return current_;}
+  Bucket* next()       { return next_; }
+  bool hasNext() const { return next_ != NULL; }
+  bool isEmpty() const { return current_ == wheelPrimes_; }
   void reset()
   {
     current_ = wheelPrimes_;
   }
-  WheelPrime* begin()
-  {
-    return wheelPrimes_;
-  }
-  WheelPrime* end()
-  {
-    return current_;
-  }
-  Bucket* next()
-  {
-    return next_;
-  }
   void setNext(Bucket* next)
   {
     next_ = next;
-  }
-  bool isEmpty() const
-  {
-    return current_ == wheelPrimes_;
-  }
-  bool hasNext() const
-  {
-    return next_ != NULL;
   }
   /// Store a WheelPrime in the bucket.
   /// @return false  if the bucket is full else true.
@@ -154,7 +140,7 @@ public:
     WheelPrime* wPrime = current_;
     current_++;
     wPrime->set(sievingPrime, multipleIndex, wheelIndex);
-    return (wPrime != &wheelPrimes_[config::BUCKETSIZE - 1]);
+    return wPrime != &wheelPrimes_[config::BUCKETSIZE - 1];
   }
 private:
   WheelPrime* current_;
