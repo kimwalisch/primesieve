@@ -1,4 +1,4 @@
-May 29, 2012
+June 07, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -9,7 +9,7 @@ I may implement the following TODOs in a few years when C++11 is
 widely supported.
 
 1. Use smart pointers (std::unique_ptr) for dynamic memory allocation.
-2. Use auto and decltype where appropriate.
+2. Use the auto and final keywords where appropriate.
 3. Use <cstdint> instead of <stdint.h>.
 4. Use nullptr instead of NULL (remove <cstdlib> header).
 
