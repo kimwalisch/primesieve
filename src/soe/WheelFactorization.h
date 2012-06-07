@@ -197,7 +197,7 @@ struct WheelElement {
   /// object that is not divisible by any of the wheel factors (e.g.
   /// not a multiple of 2, 3, and 5 for a modulo 30 wheel).
   uint8_t nextMultipleFactor;
-  /// Overflow needed to correct (because of sievingPrime = prime / 30)
+  /// Overflow needed to correct (due to sievingPrime = prime / 30)
   /// the next multiple offset i.e.
   /// multipleIndex += sievingPrime * nextMultipleFactor + correct;
   uint8_t correct;
