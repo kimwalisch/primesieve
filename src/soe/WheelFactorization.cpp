@@ -81,13 +81,13 @@ const WheelInit wheel210Init[210] = {
   {9, 47}, {8, 47}, {7, 47}, {6, 47}, {5, 47}, {4, 47}, {3, 47}, {2, 47},
   {1, 47}, {0, 47}, };
 
-/// The wheel30Array and wheel210Array arrays contain 8 wheels, one for
-/// each modulo 30 residue class of sieving primes (i * 30 + k with
-/// k = { 7, 11, 13, 17, 19, 23, 29, 1 }), e.g. the wheel related to
-/// k = 13 is: index of 13 = 2 -> wheelArray[8 * 2] to wheelArray[8 * 2 + WHEEL_SIZE-1]
+/// The wheel30 and wheel210 arrays contain 8 wheels, one for each
+/// modulo 30 residue class of sieving primes ( k = { 7, 11, 13, 17,
+/// 19, 23, 29, 1 } ), e.g. the wheel related to k = 13 is:
+/// index of 13 = 2 -> wheel[8 * 2] to wheel[8 * 2 + SIZE - 1]
 /// @see WheelElement in WheelFactorization.h
 
-const WheelElement wheel30Array[8*8] = {
+const WheelElement wheel30[8*8] = {
   WheelElement(BIT0, 6, 1, 1), WheelElement(BIT4, 4, 1, 1), WheelElement(BIT3, 2, 0, 1),
   WheelElement(BIT7, 4, 1, 1), WheelElement(BIT6, 2, 1, 1), WheelElement(BIT2, 4, 1, 1),
   WheelElement(BIT1, 6, 1, 1), WheelElement(BIT5, 2, 1,-7), WheelElement(BIT1, 6, 2, 1),
@@ -111,7 +111,7 @@ const WheelElement wheel30Array[8*8] = {
   WheelElement(BIT3, 2, 0, 1), WheelElement(BIT4, 4, 0, 1), WheelElement(BIT5, 6, 0, 1),
   WheelElement(BIT6, 2, 0,-7) };
 
-const WheelElement wheel210Array[48*8] = {
+const WheelElement wheel210[8*48] = {
   WheelElement(BIT0,10, 2, 1), WheelElement(BIT3, 2, 0, 1), WheelElement(BIT7, 4, 1, 1),
   WheelElement(BIT6, 2, 1, 1), WheelElement(BIT2, 4, 1, 1), WheelElement(BIT1, 6, 1, 1),
   WheelElement(BIT5, 2, 1, 1), WheelElement(BIT0, 6, 1, 1), WheelElement(BIT4, 4, 1, 1),

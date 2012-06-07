@@ -292,9 +292,7 @@ private:
 /// The wheelOffsets_ array is used to calculate the index of the
 /// first multiple >= segmentLow within the WHEEL array. In primesieve
 /// there are eight modulo 30 residue classes of sieving primes i.e.
-/// i * 30 + k with k = { 1, 7, 11, 13, 17, 19, 23, 29 }, thus there
-/// are also 8 wheel offsets. (In fact wheel30Array and wheel210Array
-/// contain 8 wheels, one for each residue class)
+/// k = { 1, 7, 11, 13, 17, 19, 23, 29 }, thus 8 wheel offsets.
 ///
 template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
 const uint_t
@@ -309,14 +307,14 @@ WheelFactorization<MODULO, SIZE, INIT, WHEEL>::wheelOffsets_[30] =
 
 /// @see WheelFactorization.cpp
 extern const WheelInit    wheel30Init[30];
-extern const WheelElement wheel30Array[8*8];
 extern const WheelInit    wheel210Init[210];
-extern const WheelElement wheel210Array[48*8];
+extern const WheelElement wheel30[8*8];
+extern const WheelElement wheel210[8*48];
 
 /// 3rd wheel, skips multiples of 2, 3 and 5
-typedef WheelFactorization<30, 8, wheel30Init, wheel30Array> Modulo30Wheel_t;
+typedef WheelFactorization<30, 8, wheel30Init, wheel30> Modulo30Wheel_t;
 /// 4th wheel, skips multiples of 2, 3, 5 and 7
-typedef WheelFactorization<210, 48, wheel210Init, wheel210Array> Modulo210Wheel_t;
+typedef WheelFactorization<210, 48, wheel210Init, wheel210> Modulo210Wheel_t;
 
 } // namespace soe
 
