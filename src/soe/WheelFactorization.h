@@ -206,17 +206,13 @@ struct WheelElement {
    int8_t next;
 };
 
-/// The abstract Wheel class provides functionality needed to use wheel
-/// factorization with the sieve of Eratosthenes. The EratSmall,
-/// EratMedium and EratBig classes are derived from Wheel.
-/// Via template arguments it is possible to build different types of
-/// Wheel classes e.g. Modulo30Wheel_t and Modulo210Wheel_t. 
+/// The abstract WheelFactorization class provides wheel factorization
+/// functionality needed to skip multiples of small primes e.g. <= 7
+/// in the sieve of Eratosthenes. The EratSmall, EratMedium and
+/// EratBig classes are derived from WheelFactorization.
 ///
-template<uint_t              WHEEL_MODULO,
-         uint_t              WHEEL_SIZE,
-         const WheelElement* WHEEL_ARRAY,
-         const WheelInit*    WHEEL_INIT>
-class Wheel {
+template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
+class WheelFactorization {
 public:
   /// Calculate the first multiple >= segmentLow of prime that is not
   /// divisible by any of the wheel's factors (e.g. 2, 3 and 5 for a
@@ -235,82 +231,80 @@ public:
     if (multiple > soe_.getStop())
       return;
     uint64_t square = isquare<uint64_t>(prime);
-    // prime^2 is the first multiple that needs to be crossed-off
+    // first multiple that must be crossed-off is prime^2
     if (multiple < square) {
       multiple = square;
       quotient = prime;
     }
     // calculate the next multiple of prime that is not
     // divisible by any of the wheel's factors
-    multiple += static_cast<uint64_t>(prime) * WHEEL_INIT[quotient % WHEEL_MODULO].nextMultipleFactor;
+    multiple += static_cast<uint64_t>(prime) * INIT[quotient % MODULO].nextMultipleFactor;
     if (multiple > soe_.getStop())
       return;
     uint_t multipleIndex = static_cast<uint_t>((multiple - segmentLow) / 30);
-    uint_t wheelIndex = wheelOffsets_[prime % 30] + WHEEL_INIT[quotient % WHEEL_MODULO].wheelIndex;
+    uint_t wheelIndex = wheelOffsets_[prime % 30] + INIT[quotient % MODULO].wheelIndex;
     prime /= 30;
     // @see Erat(Small|Medium|Big).cpp
     storeSievingPrime(prime, multipleIndex, wheelIndex);
   }
 protected:
-  Wheel(const SieveOfEratosthenes& soe) : soe_(soe)
+  WheelFactorization(const SieveOfEratosthenes& soe) : soe_(soe)
   {
     uint64_t maxSievingPrime = UINT32_MAX;
-    uint64_t maxInitFactor   = WHEEL_INIT[2].nextMultipleFactor + 1;
-    uint64_t limit           = UINT64_MAX - maxSievingPrime * maxInitFactor;
+    uint64_t limit           = UINT64_MAX - maxSievingPrime * getMaxFactor();
     // prevent 64-bit overflows of multiple in addSievingPrime()
     if (soe_.getStop() > limit) {
       std::ostringstream error;
-      error << "Wheel: stop must be <= (2^64-1) - (2^32-1) * "
-            << maxInitFactor
+      error << "WheelFactorization: stop must be <= (2^64-1) - (2^32-1) * "
+            << getMaxFactor()
             << ".";
       throw std::overflow_error(error.str());
     }
     // max(sieveSize) = max(WheelPrime::getMultipleIndex()) + 1 = 2^23
     if (soe_.getSieveSize() > (1u << 23))
-      throw std::overflow_error("Wheel: sieveSize must be <= 2^23, 8192 kilobytes.");
+      throw std::overflow_error("WheelFactorization: sieveSize must be <= 2^23, 8192 kilobytes.");
   }
-  virtual ~Wheel() { }
+  virtual ~WheelFactorization() { }
   virtual void storeSievingPrime(uint_t, uint_t, uint_t) = 0;
   static uint_t getMaxFactor()
   {
-    return WHEEL_ARRAY[0].nextMultipleFactor;
+    return WHEEL[0].nextMultipleFactor;
   }
   /// Cross-off the current multiple (unset bit) of sievingPrime and
   /// calculate its next multiple.
   ///
   static void unsetBit(uint8_t* sieve, uint_t sievingPrime, uint_t* multipleIndex, uint_t* wheelIndex)
   {
-    sieve[*multipleIndex] &= WHEEL_ARRAY[*wheelIndex].unsetBit;
-    *multipleIndex        += WHEEL_ARRAY[*wheelIndex].nextMultipleFactor * sievingPrime;
-    *multipleIndex        += WHEEL_ARRAY[*wheelIndex].correct;
-    *wheelIndex           += WHEEL_ARRAY[*wheelIndex].next;
+    sieve[*multipleIndex] &= WHEEL[*wheelIndex].unsetBit;
+    *multipleIndex        += WHEEL[*wheelIndex].nextMultipleFactor * sievingPrime;
+    *multipleIndex        += WHEEL[*wheelIndex].correct;
+    *wheelIndex           += WHEEL[*wheelIndex].next;
   }
 private:
   static const uint_t wheelOffsets_[30];
   /// Reference to the parent SieveOfEratosthenes object
   const SieveOfEratosthenes& soe_;
-  Wheel(const Wheel&);
-  Wheel& operator=(const Wheel&);
+  WheelFactorization(const WheelFactorization&);
+  WheelFactorization& operator=(const WheelFactorization&);
 };
 
 /// The wheelOffsets_ array is used to calculate the index of the
-/// first multiple >= START within the WHEEL_ARRAY. In primesieve there
-/// are eight modulo 30 residue classes of sieving primes i.e.
+/// first multiple >= segmentLow within the WHEEL array. In primesieve
+/// there are eight modulo 30 residue classes of sieving primes i.e.
 /// i * 30 + k with k = { 1, 7, 11, 13, 17, 19, 23, 29 }, thus there
 /// are also 8 wheel offsets. (In fact wheel30Array and wheel210Array
 /// contain 8 wheels, one for each residue class)
 ///
-template<uint_t              WHEEL_MODULO,
-         uint_t              WHEEL_SIZE,
-         const WheelElement* WHEEL_ARRAY,
-         const WheelInit*    WHEEL_INIT>
+template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
 const uint_t
-Wheel<WHEEL_MODULO, WHEEL_SIZE, WHEEL_ARRAY, WHEEL_INIT>::wheelOffsets_[30] = {
-        0xFF, 7 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF,           0xFF,
-        0xFF, 0 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF, 1 * WHEEL_SIZE,
-        0xFF, 2 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF, 3 * WHEEL_SIZE,
-        0xFF, 4 * WHEEL_SIZE, 0xFF, 0xFF, 0xFF, 5 * WHEEL_SIZE,
-        0xFF,           0xFF, 0xFF, 0xFF, 0xFF, 6 * WHEEL_SIZE };
+WheelFactorization<MODULO, SIZE, INIT, WHEEL>::wheelOffsets_[30] =
+{
+  0xFF, 7 * SIZE, 0xFF, 0xFF, 0xFF, 0xFF,
+  0xFF, 0 * SIZE, 0xFF, 0xFF, 0xFF, 1 * SIZE,
+  0xFF, 2 * SIZE, 0xFF, 0xFF, 0xFF, 3 * SIZE,
+  0xFF, 4 * SIZE, 0xFF, 0xFF, 0xFF, 5 * SIZE,
+  0xFF, 0xFF,     0xFF, 0xFF, 0xFF, 6 * SIZE
+};
 
 /// @see WheelFactorization.cpp
 extern const WheelInit    wheel30Init[30];
@@ -319,9 +313,9 @@ extern const WheelInit    wheel210Init[210];
 extern const WheelElement wheel210Array[48*8];
 
 /// 3rd wheel, skips multiples of 2, 3 and 5
-typedef Wheel<30, 8, wheel30Array, wheel30Init> Modulo30Wheel_t;
+typedef WheelFactorization<30, 8, wheel30Init, wheel30Array> Modulo30Wheel_t;
 /// 4th wheel, skips multiples of 2, 3, 5 and 7
-typedef Wheel<210, 48, wheel210Array, wheel210Init> Modulo210Wheel_t;
+typedef WheelFactorization<210, 48, wheel210Init, wheel210Array> Modulo210Wheel_t;
 
 } // namespace soe
 
