@@ -189,7 +189,8 @@ struct WheelElement {
     unsetBit(_unsetBit),
     nextMultipleFactor(_nextMultipleFactor),
     correct(_correct),
-    next(_next) { }
+    next(_next)
+  { }
   /// Bitmask used with the '&' operator to unset the bit corresponding
   /// to the current multiple of a WheelPrime object.
   uint8_t unsetBit;
