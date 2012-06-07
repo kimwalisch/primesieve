@@ -75,7 +75,7 @@ protected:
   static const uint_t bitValues_[8];
   static const uint_t bruijnBitValues_[32];
   SieveOfEratosthenes(uint64_t, uint64_t, uint_t, uint_t);
-  ~SieveOfEratosthenes();
+  virtual ~SieveOfEratosthenes();
   virtual void segmentProcessed(const uint8_t*, uint_t) = 0;
   template<typename T>
   T getNextPrime(uint_t, uint_t*) const;
