@@ -80,7 +80,7 @@ private:
   /// multipleIndex = 23 least significant bits of indexes_.
   /// wheelIndex    =  9 most  significant bits of indexes_.
   /// Packing multipleIndex and wheelIndex into the same 32-bit word
-  /// reduces primesieve's memory usage by 20%.
+  /// reduces primesieve's memory usage by 20 percent.
   uint32_t indexes_;
   /// sievingPrime_ = prime / 30;
   /// '/ 30' is used as SieveOfEratosthenes objects use a bit array
