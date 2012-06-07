@@ -248,6 +248,7 @@ public:
     uint_t multipleIndex = static_cast<uint_t>((multiple - segmentLow) / 30);
     uint_t wheelIndex = wheelOffsets_[prime % 30] + WHEEL_INIT[quotient % WHEEL_MODULO].wheelIndex;
     prime /= 30;
+    // @see Erat(Small|Medium|Big).cpp
     storeSievingPrime(prime, multipleIndex, wheelIndex);
   }
 protected:
@@ -269,8 +270,11 @@ protected:
       throw std::overflow_error("Wheel: sieveSize must be <= 2^23, 8192 kilobytes.");
   }
   virtual ~Wheel() { }
-  /// @see EratSmall.cpp, EratMedium.cpp, EratBig.cpp
   virtual void storeSievingPrime(uint_t, uint_t, uint_t) = 0;
+  static uint_t getMaxFactor()
+  {
+    return WHEEL_ARRAY[0].nextMultipleFactor;
+  }
   /// Cross-off the current multiple (unset bit) of sievingPrime and
   /// calculate its next multiple.
   ///
@@ -280,10 +284,6 @@ protected:
     *multipleIndex        += WHEEL_ARRAY[*wheelIndex].nextMultipleFactor * sievingPrime;
     *multipleIndex        += WHEEL_ARRAY[*wheelIndex].correct;
     *wheelIndex           += WHEEL_ARRAY[*wheelIndex].next;
-  }
-  static uint_t getMaxFactor()
-  {
-    return WHEEL_ARRAY[0].nextMultipleFactor;
   }
 private:
   static const uint_t wheelOffsets_[30];
@@ -313,9 +313,9 @@ Wheel<WHEEL_MODULO, WHEEL_SIZE, WHEEL_ARRAY, WHEEL_INIT>::wheelOffsets_[30] = {
         0xFF,           0xFF, 0xFF, 0xFF, 0xFF, 6 * WHEEL_SIZE };
 
 /// @see WheelFactorization.cpp
-extern const WheelInit wheel30Init[30];
-extern const WheelInit wheel210Init[210];
+extern const WheelInit    wheel30Init[30];
 extern const WheelElement wheel30Array[8*8];
+extern const WheelInit    wheel210Init[210];
 extern const WheelElement wheel210Array[48*8];
 
 /// 3rd wheel, skips multiples of 2, 3 and 5
