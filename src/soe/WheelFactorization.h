@@ -34,9 +34,8 @@
 
 
 /// @file WheelFactorization.h
-/// @brief Classes and structs related to wheel factorization.
-/// Wheel factorization is used to skip multiples of small primes to
-/// speed up the sieve of Eratosthenes.
+/// @brief Wheel factorization is used to skip multiples of small
+/// primes to speed up the sieve of Eratosthenes.
 /// http://en.wikipedia.org/wiki/Wheel_factorization
 
 #ifndef WHEELFACTORIZATION_H
@@ -53,41 +52,18 @@
 
 namespace soe {
 
-/// WheelPrime objects are sieving primes <= sqrt(n) for use with wheel
-/// factorization (skips multiples of small primes). EratSmall,
-/// EratMedium and EratBig objects use WheelPrimes to cross-off
-/// multiples. Each WheelPrime object contains the sieving prime, the
-/// position of the next multiple within the SieveOfEratosthenes array
-/// (multipleIndex) and a wheel index.
-/// @remark WheelPrime  Uses 8 bytes per sieving prime.
+/// WheelPrime objects are sieving primes <= sqrt(n) that are used to
+/// cross-off multiples and that skip multiples of small primes e.g.
+/// <= 7 using wheel factorization. Each WheelPrime contains a sieving
+/// prime, the position of the next multiple within the sieve of
+/// Eratosthenes array (multipleIndex) and a wheelIndex.
 ///
 class WheelPrime {
 public:
-  uint_t getSievingPrime() const
-  {
-    return sievingPrime_;
-  }
-  uint_t getMultipleIndex() const
-  {
-    return indexes_ & ((1 << 23) - 1);
-  }
-  uint_t getWheelIndex() const
-  {
-    return indexes_ >> 23;
-  }
-  void setMultipleIndex(uint_t multipleIndex)
-  {
-    indexes_ = static_cast<uint32_t>(indexes_ | multipleIndex);
-  }
-  void setWheelIndex(uint_t wheelIndex)
-  {
-    indexes_ = static_cast<uint32_t>(wheelIndex << 23);
-  }
-  void set(uint_t multipleIndex,
-           uint_t wheelIndex)
-  {
-    indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
-  }
+  uint_t getSievingPrime() const  { return sievingPrime_; }
+  uint_t getMultipleIndex() const { return indexes_ & ((1 << 23) - 1); }
+  uint_t getWheelIndex() const    { return indexes_ >> 23; }
+  /// Store a sieving prime an its indexes
   void set(uint_t sievingPrime,
            uint_t multipleIndex,
            uint_t wheelIndex)
@@ -95,10 +71,15 @@ public:
     set(multipleIndex, wheelIndex);
     sievingPrime_ = static_cast<uint32_t>(sievingPrime);
   }
+  /// Compress multipleIndex and wheelIndex into the
+  /// same 32-bit indexes_ variable.
+  void setMultipleIndex(uint_t multipleIndex)       { indexes_ = static_cast<uint32_t>(indexes_ | multipleIndex); }
+  void setWheelIndex(uint_t wheelIndex)             { indexes_ = static_cast<uint32_t>(wheelIndex << 23); }
+  void set(uint_t multipleIndex, uint_t wheelIndex) { indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23)); }
 private:
   /// multipleIndex = 23 least significant bits of indexes_.
   /// wheelIndex    =  9 most  significant bits of indexes_.
-  /// Packing multipleIndex and wheelIndex into the same 32-bit dword
+  /// Packing multipleIndex and wheelIndex into the same 32-bit word
   /// reduces primesieve's memory usage by 20%.
   uint32_t indexes_;
   /// sievingPrime_ = prime / 30;
