@@ -119,7 +119,7 @@ Contents
   * EratMedium
     Segmented sieve of Eratosthenes algorithm with a fixed modulo 210
     wheel that skips multiples of 2, 3, 5 and 7. The wheel is
-    implemented using a precomputed lookup table (wheel210Array from
+    implemented using a precomputed lookup table (wheel210 array from
     WheelFactorization.cpp). This algorithm is optimized for medium
     sieving primes with a few multiples per segment.
 
@@ -127,7 +127,7 @@ Contents
     Segmented sieve of Eratosthenes algorithm with Tomás Oliveira's
     improvement for big sieving primes [11] and a fixed modulo 210
     wheel that skips multiples of 2, 3, 5 and 7. The wheel is
-    implemented using a precomputed lookup table (wheel210Array from
+    implemented using a precomputed lookup table (wheel210 array from
     WheelFactorization.cpp). EratBig is optimized for big sieving
     primes that have less than one multiple occurrence per segment.
 
