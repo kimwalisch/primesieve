@@ -98,8 +98,8 @@ void EratSmall::crossOff(uint8_t* sieve, uint_t sieveSize) {
         for (;;) {
           case 0: // fast loop, takes only =~ 16 asm instructions per iteration
                   // to cross-off the next 8 multiples. Two pointers (p, q) are
-                  // used to break the dependency chain and take advantage of
-                  // Instruction-Level Parallelism.
+                  // used to break the dependency chain and increase
+                  // instruction-level parallelism (ILP)
                   while (p < loopLimit) {
                     q = p + sievingPrime * 6;
                     p[0] &= BIT0; p += sievingPrime * 10;
