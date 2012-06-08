@@ -57,7 +57,7 @@ class PrimeNumberGenerator : public SieveOfEratosthenes {
 public:
   PrimeNumberGenerator(PrimeNumberFinder& finder) :
     SieveOfEratosthenes(finder.getPreSieve() + 1,
-                        finder.getSquareRoot(),
+                        finder.getSqrtStop(),
                         config::PRESIEVE_PRIMENUMBERGENERATOR,
                         nextPowerOf2<uint_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
     finder_(finder)

@@ -267,7 +267,7 @@ void PrimeSieve::sieve() {
       PrimeNumberGenerator generator(finder);
       // tiny sieve of Eratosthenes implementation that generates the
       // primes up to stop_^0.25 needed for sieving by 'generator'
-      uint_t N = generator.getSquareRoot();
+      uint_t N = generator.getSqrtStop();
       std::vector<uint8_t> isPrime(N / 8 + 1, 0xAA);
       for (uint_t i = 3; i * i <= N; i += 2) {
         if (isPrime[i >> 3] & (1 << (i & 7)))

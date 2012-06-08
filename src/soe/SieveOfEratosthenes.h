@@ -57,16 +57,14 @@ class EratBig;
 ///
 class SieveOfEratosthenes {
 public:
-  enum {
-    /// SieveOfEratosthenes uses dense bit packing with 30 numbers
-    /// per byte. Each byte of the sieve_ array holds the values
-    /// i * 30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}, that is
-    /// 8 values per byte and thus one for each bit.
-    NUMBERS_PER_BYTE = 30
-  };
+  /// SieveOfEratosthenes uses dense bit packing with 30 numbers
+  /// per byte. Each byte of the sieve_ array holds the values
+  /// i * 30 + k with k = { 7, 11, 13, 17, 19, 23, 29, 31 }, that
+  /// is 8 values per byte and thus one for each bit.
+  enum { NUMBERS_PER_BYTE = 30 };
   uint64_t getStart() const;
   uint64_t getStop() const;
-  uint_t getSquareRoot() const;
+  uint_t getSqrtStop() const;
   uint_t getSieveSize() const;
   uint_t getPreSieve() const;
   void sieve(uint_t);
@@ -80,13 +78,11 @@ protected:
   template<typename T>
   T getNextPrime(uint_t, uint_t*) const;
 private:
-  /// Lower bound of the current segment
+  /// The current segment is [segmentLow_, segmentHigh_]
   uint64_t segmentLow_;
-  /// Upper bound of the current segment
   uint64_t segmentHigh_;
-  /// Sieve the primes within the interval [start_, stop_]
+  /// Sieve the primes within [start_, stop_]
   const uint64_t start_;
-  /// Sieve the primes within the interval [start_, stop_]
   const uint64_t stop_;
   /// sqrt(stop_)
   const uint_t sqrtStop_;

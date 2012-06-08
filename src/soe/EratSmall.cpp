@@ -49,7 +49,7 @@ namespace soe {
 EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
   Modulo30Wheel_t(soe), buckets_(1, Bucket())
 {
-  uint_t sqrtStop = soe.getSquareRoot();
+  uint_t sqrtStop = soe.getSqrtStop();
   uint_t max = static_cast<uint_t>(soe.getSieveSize() * config::FACTOR_ERATSMALL);
   limit_ = std::min(sqrtStop, max);
   // sieveSize - 1 + (sievingPrime / 30) * 6 + 6 - sieveSize < sieveSize
