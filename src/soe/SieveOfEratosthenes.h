@@ -48,12 +48,12 @@ class EratBig;
 
 /// SieveOfEratosthenes is an implementation of the segmented sieve of
 /// Eratosthenes with wheel factorization. It uses a bit array with 30
-/// numbers per byte and 3 different sieve of Eratosthenes algorithms
-/// (i.e. Erat(Small|Medium|Big) objects) optimized for small, medium
-/// and big sieving primes. Its main method is sieve(uint_t) it must
-/// be called consecutively for all primes up to sqrt(n) in order to
-/// sieve the primes up to n. SieveOfEratosthenes is an abstract class,
-/// PrimeNumberFinder and PrimeNumberGenerator are derived from it.
+/// numbers per byte for sieving and 3 different sieve of Eratosthenes
+/// algorithms optimized for small, medium and and big sieving primes.
+/// Its main method is sieve(uint_t) it must be called consecutively
+/// for all primes up to sqrt(n) in order to sieve the primes up to n.
+/// SieveOfEratosthenes is an abstract class, PrimeNumberFinder and
+/// PrimeNumberGenerator are derived from it.
 ///
 class SieveOfEratosthenes {
 public:
