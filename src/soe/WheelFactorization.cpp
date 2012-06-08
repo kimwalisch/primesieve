@@ -33,11 +33,11 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-/// @file WheelFactorization.cpp
-/// @brief Contains precomputed arrays needed for wheel factorization.
-/// Wheel factorization is used to skip multiples of small primes to
-/// speed up the sieve of Eratosthenes.
-/// http://en.wikipedia.org/wiki/Wheel_factorization
+/// @file  WheelFactorization.cpp
+/// @brief This file contains precomputed arrays that are used to skip
+///        multiples of small primes e.g. <= 7 in the sieve of
+///        Eratosthenes using wheel factorization.
+/// @see   http://en.wikipedia.org/wiki/Wheel_factorization
 
 #include "WheelFactorization.h"
 #include "bits.h"
