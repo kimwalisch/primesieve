@@ -94,14 +94,11 @@ private:
   uint8_t* sieve_;
   /// Size of the sieve_ array in bytes
   uint_t sieveSize_;
-  /// Used to cross-off the multiples of small sieving primes
-  /// that have many multiples per segment
+  /// Sieve of Eratosthenes algorithm for small sieving primes
   EratSmall* eratSmall_;
-  /// Used to cross-off the multiples of medium sieving primes
-  /// that have a few multiples per segment
+  /// Sieve of Eratosthenes algorithm for medium sieving primes
   EratMedium* eratMedium_;
-  /// Used to cross-off the multiples of big sieving primes
-  /// that have very few multiples per segment
+  /// Sieve of Eratosthenes algorithm for big sieving primes
   EratBig* eratBig_;
   static uint64_t getByteRemainder(uint64_t);
   void initEratAlgorithms();
