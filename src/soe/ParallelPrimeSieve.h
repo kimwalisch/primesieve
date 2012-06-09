@@ -50,9 +50,8 @@
 ///
 class ParallelPrimeSieve : public PrimeSieve {
 public:
-  /// The primesieve GUI application (../qt-gui) uses a
-  /// SharedMemory object to handle the communication between
-  /// the GUI process and the ParallelPrimeSieve process
+  /// The primesieve GUI application (../qt-gui) uses a SharedMemory
+  /// object to communicate with the ParallelPrimeSieve process
   struct SharedMemory {
     uint64_t start;
     uint64_t stop;
