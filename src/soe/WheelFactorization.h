@@ -216,7 +216,8 @@ public:
     storeSievingPrime(prime, multipleIndex, wheelIndex);
   }
 protected:
-  WheelFactorization(const SieveOfEratosthenes& soe) : soe_(soe)
+  WheelFactorization(const SieveOfEratosthenes& soe) :
+    soe_(soe)
   {
     uint64_t maxSievingPrime = UINT32_MAX;
     uint64_t limit           = UINT64_MAX - maxSievingPrime * getMaxFactor();
