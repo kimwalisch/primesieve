@@ -51,8 +51,8 @@
 using namespace soe;
 
 ParallelPrimeSieve::ParallelPrimeSieve() :
-  numThreads_(IDEAL_NUM_THREADS),
-  shm_(NULL)
+  shm_(NULL),
+  numThreads_(IDEAL_NUM_THREADS)
 {
   // prevents prime k-tuplet gaps
   static_assert(config::MIN_THREAD_INTERVAL >= 100,
@@ -61,10 +61,7 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
                "config::MIN_THREAD_INTERVAL must not be > config::MAX_THREAD_INTERVAL");
 }
 
-/// API for the primesieve Qt application in src/qt-gui.
-/// Initializes the ParallelPrimeSieve object with values from
-/// a shared memory segment.
-///
+/// API for the primesieve GUI application in src/qt-gui
 void ParallelPrimeSieve::init(SharedMemory& shm) {
   setStart(shm.start);
   setStop(shm.stop);
@@ -87,8 +84,8 @@ int ParallelPrimeSieve::getNumThreads() const {
 }
 
 /// Set the number of threads for sieving
-void ParallelPrimeSieve::setNumThreads(int numThreads) {
-  numThreads_ = getInBetween(1, numThreads, getMaxThreads());
+void ParallelPrimeSieve::setNumThreads(int threads) {
+  numThreads_ = getInBetween(1, threads, getMaxThreads());
 }
 
 /// Get an ideal number of threads for the current
@@ -98,33 +95,12 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   // by default 1 thread is used to generate primes in arithmetic
   // order but multiple threads are used for counting
   if (isGenerate()) return 1;
-  // each thread sieves at least an interval of size sqrt(x)/5
+  // each thread sieves at least an interval of size sqrt(x) / 5
   // but not smaller than MIN_THREAD_INTERVAL
   uint64_t threshold = std::max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
   uint64_t numThreads = (stop_ - start_) / threshold;
   uint64_t idealNumThreads = getInBetween<uint64_t>(1, numThreads, getMaxThreads());
   return static_cast<int>(idealNumThreads);
-}
-
-#ifdef _OPENMP
-
-void ParallelPrimeSieve::set_lock() {
-  omp_set_lock(&lock_);
-}
-
-void ParallelPrimeSieve::unset_lock() {
-  omp_unset_lock(&lock_);
-}
-
-void ParallelPrimeSieve::updateStatus(int segment) {
-  #pragma omp critical (status)
-  {
-    PrimeSieve::updateStatus(segment);
-    // communicate the current status via shared
-    // memory to the Qt GUI process
-    if (shm_ != NULL)
-      shm_->status = getStatus();
-  }
 }
 
 /// Get a thread interval size that ensures a
@@ -137,6 +113,19 @@ uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   // align to mod 30 to prevent prime k-tuplet gaps
   balanced += 30 - balanced % 30;
   return balanced;
+}
+
+#ifdef _OPENMP
+
+void ParallelPrimeSieve::updateStatus(int segment) {
+  #pragma omp critical (status)
+  {
+    PrimeSieve::updateStatus(segment);
+    // communicate the current status via shared
+    // memory to the Qt GUI process
+    if (shm_ != NULL)
+      shm_->status = getStatus();
+  }
 }
 
 /// Sieve the primes and prime k-tuplets within [start_, stop_] in
@@ -158,11 +147,11 @@ void ParallelPrimeSieve::sieve() {
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
     uint64_t balanced = getBalancedInterval(threads);
     uint64_t align = start_ + 32 - start_ % 30;
+    OmpLockGuard omp_lock(lock_);
     // The sieve interval [start_, stop_] is subdivided into chunks of
     // size 'balanced' that are sieved in parallel using multiple
     // threads. This scales well as each thread sieves using its own
     // private memory without need of synchronization.
-    omp_init_lock(&lock_);
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
         reduction(+: count0, count1, count2, count3, count4, count5, count6)
     for (uint64_t n = align; n < stop_; n += balanced) {
@@ -178,7 +167,6 @@ void ParallelPrimeSieve::sieve() {
       count5 += ps.getCounts(5);
       count6 += ps.getCounts(6);
     }
-    omp_destroy_lock(&lock_);
     counts_[0] = count0;
     counts_[1] = count1;
     counts_[2] = count2;

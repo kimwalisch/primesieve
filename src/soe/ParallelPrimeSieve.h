@@ -50,9 +50,9 @@
 ///
 class ParallelPrimeSieve : public PrimeSieve {
 public:
-  /// Used in the primesieve Qt application (../qt-gui)
-  /// to handle the communication between the GUI process
-  /// and the ParallelPrimeSieve process
+  /// The primesieve GUI application (../qt-gui) uses a
+  /// SharedMemory object to handle the communication between
+  /// the GUI process and the ParallelPrimeSieve process
   struct SharedMemory {
     uint64_t start;
     uint64_t stop;
@@ -63,30 +63,41 @@ public:
     int sieveSize;
     int threads;
   };
-  /// if (numThreads_ == IDEAL_NUM_THREADS) an ideal number
-  /// of threads will be used for sieving
   enum { IDEAL_NUM_THREADS = -1 };
   ParallelPrimeSieve();
   virtual ~ParallelPrimeSieve() { }
   void init(SharedMemory&);
+  /// Get the number of logical CPU cores
   static int getMaxThreads();
   int getNumThreads() const;
   void setNumThreads(int);
-#ifdef _OPENMP
-  using PrimeSieve::sieve;
-  virtual void sieve();
-#endif
 private:
-  /// Number of threads to be used for sieving
-  int numThreads_;
   SharedMemory* shm_;
+  /// Number of threads for sieving
+  int numThreads_;
   int getIdealNumThreads() const;
-#ifdef _OPENMP
-  omp_lock_t lock_;
-  virtual void updateStatus(int);
-  virtual void set_lock();
-  virtual void unset_lock();
   uint64_t getBalancedInterval(int) const;
+#ifdef _OPENMP
+public:
+  using PrimeSieve::sieve;
+  /// Sieve primes in parallel using OpenMP
+  virtual void sieve();
+private:
+  /// OpenMP lock initialization and destroy
+  class OmpLockGuard {
+  public:
+    OmpLockGuard(omp_lock_t& lock) : lock_(lock) { omp_init_lock(&lock_); }
+    ~OmpLockGuard()                              { omp_destroy_lock(&lock_); }
+  private:
+    omp_lock_t& lock_;
+    OmpLockGuard(const OmpLockGuard&);
+    OmpLockGuard& operator=(const OmpLockGuard&);
+  };
+  omp_lock_t lock_;
+  /// Synchronize prime number generation
+  virtual void set_lock()   { omp_set_lock(&lock_); }
+  virtual void unset_lock() { omp_unset_lock(&lock_); }
+  virtual void updateStatus(int);
 #endif
 };
 
