@@ -1,10 +1,10 @@
-#####################################################################
+######################################################################
 # primesieve, optimized sieve of Eratosthenes implementation
 #
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 10 June 2012
+# Last modified: 11 June 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -17,16 +17,17 @@ Contents
   3. Algorithm complexity
   4. Sieve of Eratosthenes implementation
   5. Further reading
-  6. Thanks
-  7. License
-  8. References
+  6. Motivation
+  7. Thanks
+  8. License
+  9. References
 
 1. About primesieve
 ===================
 
   primesieve is a free software program and C++ library that generates
-  prime numbers and prime k-tuplets (twin primes, prime triplets, ...)
-  < 2^64 using a highly optimized implementation of the sieve of
+  prime numbers and prime k-tuplets (twins, triplets, ...) < 2^64
+  using a highly optimized implementation of the sieve of
   Eratosthenes.
 
   Homepage: http://primesieve.googlecode.com
@@ -36,21 +37,21 @@ Contents
 
   ./doc - Documentation directory
   -------------------------------
-  INSTALL         Explains how to compile primesieve.
-  LIBPRIMESIEVE   Explains how to build and use the primesieve C++
-                  library on Unix-like OSes and Windows.
-  USAGE_EXAMPLES  Contains source code examples that show how to use
-                  libprimesieve e.g. for prime number generation.
-  Other files:    CHANGES, TODO, BUGS, VALGRIND, ...
+  INSTALL          Explains how to compile primesieve.
+  LIBPRIMESIEVE    Explains how to build and use the primesieve C++
+                   library on Unix-like OSes and Windows.
+  USAGE_EXAMPLES   Contains source code examples that show how to use
+                   libprimesieve e.g. for prime number generation.
+  Other files:     CHANGES, TODO, BUGS, VALGRIND, ...
 
   ./src - Source code directory
   -----------------------------
-  src/soe         Contains the sieve of Eratosthenes implementation.
-  src/console     Contains the primesieve console application.
-  src/qt-gui      Contains the primesieve Qt GUI application.
-  src/expr        Contains an arithmetic expression parser used to
-                  ease number input e.g. 2^32, 1E10, ...
-  src/thirdparty  Contains stdint.h (needed for MSVC prior 2010)
+  src/soe          Contains the sieve of Eratosthenes implementation.
+  src/console      Contains the primesieve console application.
+  src/qt-gui       Contains the primesieve Qt GUI application.
+  src/expr         Contains an arithmetic expression parser used to
+                   ease number input e.g. 2^32, 1E10, ...
+  src/thirdparty   Contains stdint.h (needed for MSVC prior 2010)
 
 3. Algorithm complexity
 =======================
@@ -181,7 +182,19 @@ Contents
   Joerg Richstein in [10] (German language) describes how to pre-sieve
   multiples of small primes to speed up the sieve of Eratosthenes.
 
-6. Thanks
+6. Motivation
+=============
+
+  I got my first PC in 1997, it had an Intel 200 mmx CPU and 32
+  megabytes of memory. I was 14 years old then and bought the book
+  "C++ for Kids" because I wanted to program a computer game and I had
+  heard that you could do that in C++ :-) The book contained a trial
+  division prime number checker which I found amazing, one entered a
+  positive integer and the PC started calculating, after a about
+  minute the program printed "is prime" or "is not prime". I soon
+  started to invent new faster algorithms ...
+
+7. Thanks
 =========
 
   Thanks to Silver Möls for helping me to further optimize EratBig
@@ -191,7 +204,7 @@ Contents
   his hexa-core AMD Phenom CPU and also for his help to debug
   primesieve 1.0.
 
-7. License
+8. License
 ==========
 
   primesieve is free software, it is licensed under the New BSD
@@ -199,7 +212,7 @@ Contents
   GUI application in src/qt-gui is licensed under the GPLv3 as it
   uses the Qt framework.
 
-8. References
+9. References
 =============
 
   [1] Richard C. Singleton, "An efficient prime number generator",
