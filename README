@@ -14,8 +14,8 @@ Contents
 
   1. About primesieve
   2. What's in this source archive
-  3. Implementation and algorithm complexity
-  4. Sieve of Eratosthenes
+  3. Algorithm complexity
+  4. Sieve of Eratosthenes implementation
   5. Further reading
   6. Thanks
   7. License
@@ -40,7 +40,7 @@ Contents
   LIBPRIMESIEVE   Explains how to build and use the primesieve C++
                   library on Unix-like OSes and Windows.
   USAGE_EXAMPLES  Contains source code examples that show how to use
-                  PrimeSieve objects e.g. for prime number generation.
+                  libprimesieve e.g. for prime number generation.
   Other files:    CHANGES, TODO, BUGS, VALGRIND, ...
 
   ./src - Source code directory
@@ -52,13 +52,8 @@ Contents
                   ease number input e.g. 2^32, 1E10, ...
   src/thirdparty  Contains stdint.h (needed for MSVC prior 2010)
 
-3. Implementation and algorithm complexity
-==========================================
-
-  primesieve is written in C++03, the parallelization is implemented
-  using OpenMP 3.0 or later. It compiles with every standard compliant
-  C++ compiler and runs on both little-endian (x86, x64) and
-  big-endian (PowerPC, SPARC, ...) CPUs.
+3. Algorithm complexity
+=======================
 
   primesieve uses the segmented sieve of Eratosthenes with wheel
   factorization, this algorithm has a complexity of O(n log log n)
@@ -67,12 +62,17 @@ Contents
   primesieve's memory requirement per thread is about:
   pi(sqrt(n)) * 8 bytes + 400 kilobytes
 
-4. Sieve of Eratosthenes
-========================
+4. Sieve of Eratosthenes implementation
+=======================================
 
   General information
   -------------------
-  The src/soe directory contains the sieve of Eratosthenes source
+  primesieve is written in C++03, the parallelization is implemented
+  using OpenMP 3.0 or later. It compiles with every standard compliant
+  C++ compiler and runs on both little-endian (x86, x86-64) and
+  big-endian (PowerPC, SPARC, ...) CPUs.
+
+  The ./src/soe directory contains the sieve of Eratosthenes source
   code. Files that start with a capital letter
   (e.g. SieveOfEratosthenes.h, *-inline.h, *.cpp) contain a class of
   the same name, files in lower case contain C-style functions and
@@ -86,8 +86,8 @@ Contents
   SieveOfEratosthenes-inline.h. Prime number generation (and counting)
   is done in PrimeNumberFinder.cpp using a macro from GENERATE.h.
 
-  C++ classes
-  -----------
+  C++ classes in ./src/soe
+  ------------------------
   * PrimeSieve & ParallelPrimeSieve (uses OpenMP)
     PrimeSieve objects provide an easy API for prime sieving, the file
     doc/USAGE_EXAMPLES contains a short tutorial.
@@ -98,12 +98,12 @@ Contents
   * SieveOfEratosthenes (abstract class)
     Implementation of the segmented sieve of Eratosthenes using a bit
     array with 30 numbers per byte, each byte of the sieve array holds
-    the numbers i*30 + k with k = {7, 11, 13, 17, 19, 23, 29, 31}.
+    the numbers i*30 + k with k = { 7, 11, 13, 17, 19, 23, 29, 31 }.
     The main method is SieveOfEratosthenes::sieve(uint_t prime) it
     must be called consecutively for all primes <= sqrt(n) in order to
     sieve the primes up to n. Each sieving prime is first stored in
     one of the Erat(Small|Medium|Big) objects which are then used to
-    cross off the multiples.
+    cross-off the multiples.
 
   * EratSmall
     Segmented sieve of Eratosthenes algorithm with a hard-coded
@@ -140,6 +140,16 @@ Contents
     PreSieve objects are used to pre-sieve multiples of small primes
     (e.g. <= 19) to speed up the sieve of Eratosthenes.
 
+  * WheelFactorization (abstract class)
+    Wheel factorization is used to skip multiples of small primes e.g.
+    <= 7 to speed up the sieve of Eratosthenes. The abstract
+    WheelFactorization class is used to initialize sieving primes i.e.
+    addSievingPrime() calculates the first multiple >= start of each
+    sieving prime and the position within the SieveOfEratosthenes
+    array of that multiple (multipleIndex). The unsetBit() method is
+    used to cross-off a multiple (unset a bit) and to calculate the
+    sieving prime's next multiple.
+
   Other files
   -----------
   * popcount.h
@@ -149,24 +159,14 @@ Contents
     isqrt(), ilog2(), isquare(), isPowerOf2(), ...
 
   * GENERATE.h
-    Contains macros used to reconstruct primes and k-tuplets from 1
-    bits of the sieve array.
+    Contains macros used to reconstruct primes and prime k-tuplets
+    (twins, triplets) from 1 bits of the sieve array.
 
   * config.h
     Contains constants that set the size of various arrays and limits
     within primesieve. You can set the L1_DCACHE_SIZE and BUCKETSIZE
     constants according to your CPU specifications to get the best
     performance.
-
-  * WheelFactorization.h
-    Wheel factorization is used to skip multiples of small primes e.g.
-    <= 7 to speed up the sieve of Eratosthenes. The abstract
-    WheelFactorization class is used to initialize sieving primes i.e.
-    addSievingPrime() calculates the first multiple >= start of each
-    sieving prime and the position within the SieveOfEratosthenes
-    array of that multiple (multipleIndex). The unsetBit() method is
-    used to cross-off a multiple (unset a bit) and to calculate the
-    sieving prime's next multiple.
 
 5. Further reading
 ==================
@@ -177,7 +177,7 @@ Contents
   Tomás Oliveira e Silva on his website [11] explains his improvement
   to the segmented sieve of Eratosthenes for big sieving primes.
   A. Járai and E. Vatai's paper "Cache optimized linear sieve" [12]
-  covers many of the optimizations used in primesieve.
+  explains many of the optimizations used in primesieve.
   Joerg Richstein in [10] (German language) describes how to pre-sieve
   multiples of small primes to speed up the sieve of Eratosthenes.
 
