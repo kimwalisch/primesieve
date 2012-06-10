@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   29 May 2012
+# Last modified:   10 June 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -71,7 +71,7 @@ dir_bin:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
 
 #-----------------------------------------------------------------------------
-# build static primesieve.lib (read docs/LIBPRIMESIEVE)
+# build static primesieve.lib (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
 LIB_CXXFLAGS = $(CXXFLAGS)
@@ -129,7 +129,7 @@ help:
 	@echo ---------------------------------------------------------
 	@echo "nmake -f Makefile.msvc                    Builds the primesieve console application using MSVC++"
 	@echo "nmake -f Makefile.msvc check              Tests the compiled primesieve binary"
-	@echo "nmake -f Makefile.msvc lib                Builds static primesieve.lib to lib\ (read docs/LIBPRIMESIEVE)"
+	@echo "nmake -f Makefile.msvc lib                Builds static primesieve.lib to lib\ (read doc/LIBPRIMESIEVE)"
 	@echo "nmake -f Makefile.msvc clean              Cleans the output directories (./bin, ./lib)"
 	@echo "nmake -f Makefile.msvc CXXFLAGS=options   Specify custom compiler flags"
 	@echo "nmake -f Makefile.msvc L1_DCACHE_SIZE=KB  Specify the CPU's L1 data cache size (read INSTALL)"

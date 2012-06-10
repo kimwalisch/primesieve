@@ -1,11 +1,12 @@
-New in version 3.8, 08/06/2012
+New in version 3.8, 10/06/2012
 ==============================
 
 1. Improved OOP design of WheelFactorization.h.
 2. Minor speed improvement for big sieving primes ~ 2%, reduced the
    number of arithmetic operations in EratBig's main loop.
 3. Improved code readability of EratSmall.cpp, EratMedium.cpp,
-   EratBig.cpp and SieveOfEratosthenes.cpp. 
+   EratBig.cpp and SieveOfEratosthenes.cpp.
+4. Renamed ./docs to ./doc
 
 New in version 3.7, 31/05/2012
 ==============================

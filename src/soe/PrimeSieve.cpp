@@ -175,7 +175,7 @@ void PrimeSieve::setSieveSize(int sieveSize) {
 }
 
 /// Settings for sieve().
-/// @see primesieve/docs/USAGE_EXAMPLES
+/// @see doc/USAGE_EXAMPLES
 /// @param flags
 ///   PrimeSieve::COUNT_PRIMES      OR (bitwise '|')
 ///   PrimeSieve::COUNT_TWINS       OR
@@ -304,7 +304,7 @@ void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags) {
 }
 
 /// 32 & 64-bit prime number generation methods, see
-/// docs/USAGE_EXAMPLES for usage examples.
+/// doc/USAGE_EXAMPLES for usage examples.
 
 void PrimeSieve::generatePrimes(uint32_t start, 
                                 uint32_t stop,

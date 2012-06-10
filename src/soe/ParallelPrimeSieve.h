@@ -46,7 +46,7 @@
 /// sieve primes in parallel. By default it counts primes using
 /// multiple threads but generates primes in arithmetic order using a
 /// single thread. The README file describes the algorithms used in
-/// more detail and docs/USAGE_EXAMPLES contains source code examples.
+/// more detail and doc/USAGE_EXAMPLES contains source code examples.
 ///
 class ParallelPrimeSieve : public PrimeSieve {
 public:

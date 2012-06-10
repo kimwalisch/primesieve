@@ -1,4 +1,4 @@
-May 31, 2012
+June 10, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -52,7 +52,7 @@ Contents
   be compiled by specifying libprimesieve (-lprimesieve flag) at the
   end of the linker command:
 
-  $ g++ docs/sum_primes.cpp -o sum_primes -lprimesieve
+  $ g++ doc/sum_primes.cpp -o sum_primes -lprimesieve
   $ ./sum_primes
 
   OpenMP multi-threading
@@ -80,7 +80,7 @@ Contents
   The sum_primes.cpp example program in the current directory can now
   be compiled by specifying primesieve.lib to the linker:
 
-  > cl /EHsc docs\sum_primes.cpp /I"dist" /link "dist\primesieve.lib"
+  > cl /EHsc doc\sum_primes.cpp /I"dist" /link "dist\primesieve.lib"
   > sum_primes.exe
 
   OpenMP multi-threading

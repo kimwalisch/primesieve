@@ -1,11 +1,11 @@
 ##############################################################################
 # GNU Makefile for the primesieve console application (read INSTALL)
-# and the primesieve C++ library (read docs/LIBPRIMESIEVE)
+# and the primesieve C++ library (read doc/LIBPRIMESIEVE)
 #
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   24 May 2012
+# Last modified:   10 June 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -55,7 +55,7 @@ ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
 endif
 
 #-----------------------------------------------------------------------------
-# set the installation directory (read docs/LIBPRIMESIEVE)
+# set the installation directory (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
 ifneq ($(shell uname | grep -i linux),)
@@ -108,7 +108,7 @@ dir_bin:
 	@mkdir -p $(BINDIR)
 
 #-----------------------------------------------------------------------------
-# build libprimesieve (read docs/LIBPRIMESIEVE)
+# build libprimesieve (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
 .PHONY: lib dir_lib
