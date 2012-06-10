@@ -98,8 +98,8 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   // each thread sieves at least an interval of size sqrt(x) / 5
   // but not smaller than MIN_THREAD_INTERVAL
   uint64_t threshold = std::max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
-  uint64_t numThreads = (stop_ - start_) / threshold;
-  uint64_t idealNumThreads = getInBetween<uint64_t>(1, numThreads, getMaxThreads());
+  uint64_t threads = (stop_ - start_) / threshold;
+  uint64_t idealNumThreads = getInBetween<uint64_t>(1, threads, getMaxThreads());
   return static_cast<int>(idealNumThreads);
 }
 
@@ -117,12 +117,11 @@ uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
 
 #ifdef _OPENMP
 
+/// @see updateStatus() in PrimeSieve.cpp
 void ParallelPrimeSieve::updateStatus(int segment) {
   #pragma omp critical (status)
   {
     PrimeSieve::updateStatus(segment);
-    // communicate the current status via shared
-    // memory to the Qt GUI process
     if (shm_ != NULL)
       shm_->status = getStatus();
   }
@@ -177,6 +176,8 @@ void ParallelPrimeSieve::sieve() {
     seconds_ = omp_get_wtime() - t1;
   }
 
+  // communicate the sieving results to the
+  // primesieve GUI application
   if (shm_ != NULL) {
     for (int i = 0; i < 7; i++)
       shm_->counts[i] = counts_[i];
