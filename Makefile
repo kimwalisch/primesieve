@@ -1,5 +1,5 @@
 ##############################################################################
-# GNU Makefile for the primesieve console application (read INSTALL)
+# GNU Makefile for the primesieve console application (read doc/INSTALL)
 # and the primesieve C++ library (read doc/LIBPRIMESIEVE)
 #
 # Author:          Kim Walisch
@@ -85,7 +85,7 @@ else
 endif
 
 #-----------------------------------------------------------------------------
-# build the primesieve console application (read INSTALL)
+# build the primesieve console application (read doc/INSTALL)
 #-----------------------------------------------------------------------------
 
 .PHONY: bin dir_bin
@@ -211,7 +211,7 @@ help:
 	@echo ----------------------------------------------------
 	@echo "make                                   Builds the primesieve console application using g++ (DEFAULT)"
 	@echo "make CXX=compiler CXXFLAGS=\"options\"   Specify a custom C++ compiler"
-	@echo "make L1_DCACHE_SIZE=KB                 Specify the CPU's L1 data cache size (read INSTALL)"
+	@echo "make L1_DCACHE_SIZE=KB                 Specify the CPU's L1 data cache size (read doc/INSTALL)"
 	@echo "make check                             Tests the compiled primesieve binary"
 	@echo "make clean                             Cleans the output directories (./bin, ./lib)"
 	@echo "make lib                               Builds static libprimesieve.a to ./lib"

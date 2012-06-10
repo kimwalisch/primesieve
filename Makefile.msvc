@@ -53,7 +53,7 @@ CXXFLAGS = $(CXXFLAGS) /openmp
 !ENDIF
 
 #-----------------------------------------------------------------------------
-# build the primesieve console application (read INSTALL)
+# build the primesieve console application (read doc/INSTALL)
 #-----------------------------------------------------------------------------
 
 BIN_CXXFLAGS = $(CXXFLAGS)
@@ -132,5 +132,5 @@ help:
 	@echo "nmake -f Makefile.msvc lib                Builds static primesieve.lib to lib\ (read doc/LIBPRIMESIEVE)"
 	@echo "nmake -f Makefile.msvc clean              Cleans the output directories (./bin, ./lib)"
 	@echo "nmake -f Makefile.msvc CXXFLAGS=options   Specify custom compiler flags"
-	@echo "nmake -f Makefile.msvc L1_DCACHE_SIZE=KB  Specify the CPU's L1 data cache size (read INSTALL)"
+	@echo "nmake -f Makefile.msvc L1_DCACHE_SIZE=KB  Specify the CPU's L1 data cache size (read doc/INSTALL)"
 	@echo "nmake -f Makefile.msvc help               Prints this help menu"

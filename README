@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 7 June 2012
+# Last modified: 10 June 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -34,21 +34,17 @@ Contents
 2. What's in this source archive
 ================================
 
-  Installation file
-  -----------------
-  INSTALL  Explains how to compile primesieve.
+  ./doc - Documentation directory
+  -------------------------------
+  INSTALL         Explains how to compile primesieve.
+  LIBPRIMESIEVE   Explains how to build and use the primesieve C++
+                  library on Unix-like OSes and Windows.
+  USAGE_EXAMPLES  Contains source code examples that show how to use
+                  PrimeSieve objects e.g. for prime number generation.
+  Other files:    CHANGES, TODO, BUGS, VALGRIND, ...
 
-  Documentation directory
-  -----------------------
-  docs/LIBPRIMESIEVE   Explains how to build and use the primesieve
-                       C++ library on Unix-like OSes and Windows.
-  docs/USAGE_EXAMPLES  Contains source code examples that show how to
-                       use PrimeSieve objects e.g. for prime number
-                       generation.
-  Other files:         CHANGES, TODO, BUGS, VALGRIND.
-
-  Source code directories
-  -----------------------
+  ./src - Source code directory
+  -----------------------------
   src/soe         Contains the sieve of Eratosthenes implementation.
   src/console     Contains the primesieve console application.
   src/qt-gui      Contains the primesieve Qt GUI application.
@@ -94,7 +90,7 @@ Contents
   -----------
   * PrimeSieve & ParallelPrimeSieve (uses OpenMP)
     PrimeSieve objects provide an easy API for prime sieving, the file
-    docs/USAGE_EXAMPLES contains a short tutorial.
+    doc/USAGE_EXAMPLES contains a short tutorial.
     PrimeSieve::sieve() starts sieving the primes within the interval
     [start_, stop_], the following classes are all used directly or
     indirectly for sieving.
