@@ -12,15 +12,16 @@
 Contents
 ========
 
-  1. About primesieve
-  2. What's in this source archive
-  3. Algorithm complexity
-  4. Sieve of Eratosthenes implementation
-  5. Further reading
-  6. Motivation
-  7. Thanks
-  8. License
-  9. References
+   1. About primesieve
+   2. What's in this source archive
+   3. Requirements
+   4. Algorithm complexity
+   5. Sieve of Eratosthenes implementation
+   6. Further reading
+   7. Motivation
+   8. Thanks
+   9. License
+  10. References
 
 1. About primesieve
 ===================
@@ -53,7 +54,17 @@ Contents
                    ease number input e.g. 2^32, 1E10, ...
   src/thirdparty   Contains stdint.h (needed for MSVC prior 2010)
 
-3. Algorithm complexity
+3. Requirements
+===============
+
+  primesieve is written in C++03, it compiles with every standard
+  compliant C++ compiler and runs on both little-endian (x86, x86-64)
+  and big-endian (PowerPC, SPARC, ...) CPUs. The parallelization
+  (optional) is implemented using OpenMP 3.0 or later.
+
+  Read doc/INSTALL for compilation instructions.
+
+4. Algorithm complexity
 =======================
 
   primesieve uses the segmented sieve of Eratosthenes with wheel
@@ -63,22 +74,17 @@ Contents
   primesieve's memory requirement per thread is about:
   pi(sqrt(n)) * 8 bytes + 400 kilobytes
 
-4. Sieve of Eratosthenes implementation
+5. Sieve of Eratosthenes implementation
 =======================================
 
   General information
   -------------------
-  primesieve is written in C++03, the parallelization is implemented
-  using OpenMP 3.0 or later. It compiles with every standard compliant
-  C++ compiler and runs on both little-endian (x86, x86-64) and
-  big-endian (PowerPC, SPARC, ...) CPUs.
-
   The ./src/soe directory contains the sieve of Eratosthenes source
   code. Files that start with a capital letter
   (e.g. SieveOfEratosthenes.h, *-inline.h, *.cpp) contain a class of
   the same name, files in lower case contain C-style functions and
   constant definitions. If you are new to prime number sieving I
-  recommend reading some of the papers from section 5.
+  recommend reading some of the papers from section 6.
 
   Quick start
   -----------
@@ -106,21 +112,21 @@ Contents
     one of the Erat(Small|Medium|Big) objects which are then used to
     cross-off the multiples.
 
-  * EratSmall
+  * EratSmall (derived from WheelFactorization)
     Segmented sieve of Eratosthenes algorithm with a hard-coded
     modulo 30 wheel that skips multiples of 2, 3 and 5. This algorithm
     is optimized for small sieving primes that have many multiples per
     segment. EratSmall is a further optimized implementation of Achim
     Flammenkamp's algorithm.[9]
 
-  * EratMedium
+  * EratMedium (derived from WheelFactorization)
     Segmented sieve of Eratosthenes algorithm with a fixed modulo 210
     wheel that skips multiples of 2, 3, 5 and 7. The wheel is
     implemented using a precomputed lookup table (wheel210 array from
     WheelFactorization.cpp). This algorithm is optimized for medium
     sieving primes with a few multiples per segment.
 
-  * EratBig
+  * EratBig (derived from WheelFactorization)
     Segmented sieve of Eratosthenes algorithm with Tomás Oliveira's
     improvement for big sieving primes [11] and a fixed modulo 210
     wheel that skips multiples of 2, 3, 5 and 7. The wheel is
@@ -128,11 +134,11 @@ Contents
     WheelFactorization.cpp). EratBig is optimized for big sieving
     primes that have less than one multiple occurrence per segment.
 
-  * PrimeNumberGenerator (is-a SieveOfEratosthenes)
+  * PrimeNumberGenerator (derived from SieveOfEratosthenes)
     Generates the primes up to sqrt(n) needed for sieving by
     PrimeNumberFinder.
 
-  * PrimeNumberFinder (is-a SieveOfEratosthenes)
+  * PrimeNumberFinder (derived from SieveOfEratosthenes)
     Main SieveOfEratosthenes class, used to generate, print and count
     the primes and prime k-tuplets (twins, triplets, ...) within the
     interval [start_, stop_] of the associated PrimeSieve object.
@@ -169,7 +175,7 @@ Contents
     constants according to your CPU specifications to get the best
     performance.
 
-5. Further reading
+6. Further reading
 ==================
 
   Jonathan Sorenson's papers provide a good introduction to prime
@@ -182,7 +188,7 @@ Contents
   Joerg Richstein in [10] (German language) describes how to pre-sieve
   multiples of small primes to speed up the sieve of Eratosthenes.
 
-6. Motivation
+7. Motivation
 =============
 
   I got my first PC in 1997, it had an Intel 200 mmx CPU and 32
@@ -194,7 +200,7 @@ Contents
   minute the program printed "is prime" or "is not prime". I soon
   started to invent new faster algorithms ...
 
-7. Thanks
+8. Thanks
 =========
 
   Thanks to Silver Möls for helping me to further optimize EratBig
@@ -204,7 +210,7 @@ Contents
   his hexa-core AMD Phenom CPU and also for his help to debug
   primesieve 1.0.
 
-8. License
+9. License
 ==========
 
   primesieve is free software, it is licensed under the New BSD
@@ -212,8 +218,8 @@ Contents
   GUI application in src/qt-gui is licensed under the GPLv3 as it
   uses the Qt framework.
 
-9. References
-=============
+10. References
+==============
 
   [1] Richard C. Singleton, "An efficient prime number generator",
       Communications of the ACM 12, 563-564, 1969.
