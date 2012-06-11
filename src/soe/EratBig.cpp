@@ -89,10 +89,10 @@ void EratBig::initBucketLists() {
 }
 
 /// Add an empty bucket from the bucket stock_ to the
-/// front of lists_[index], if the bucket stock_ is
+/// front of lists_[segment], if the bucket stock_ is
 /// empty new buckets are allocated first.
 ///
-void EratBig::pushBucket(uint_t index) {
+void EratBig::pushBucket(uint_t segment) {
   if (stock_ == NULL) {
     Bucket* more = new Bucket[BUCKETS_PER_ALLOC];
     stock_ = &more[0];
@@ -103,8 +103,8 @@ void EratBig::pushBucket(uint_t index) {
   }
   Bucket* bucket = stock_;
   stock_ = stock_->next();
-  bucket->setNext(lists_[index]);
-  lists_[index] = bucket;
+  bucket->setNext(lists_[segment]);
+  lists_[segment] = bucket;
 }
 
 /// Add a new sieving prime
