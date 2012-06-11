@@ -72,7 +72,7 @@ Contents
   operations and uses O(n^0.5) space.
 
   primesieve's memory requirement per thread is about:
-  pi(sqrt(n)) * 8 bytes + 400 kilobytes
+  pi(n^0.5) * 8 bytes + 400 kilobytes
 
 5. Sieve of Eratosthenes implementation
 =======================================
