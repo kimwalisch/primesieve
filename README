@@ -111,6 +111,29 @@ Contents
     one of the Erat(Small|Medium|Big) objects which are then used to
     cross-off the multiples.
 
+  * PrimeNumberFinder (derived from SieveOfEratosthenes)
+    Main SieveOfEratosthenes class, used to generate, print and count
+    the primes and prime k-tuplets (twins, triplets, ...) within the
+    interval [start_, stop_] of the associated PrimeSieve object.
+
+  * PrimeNumberGenerator (derived from SieveOfEratosthenes)
+    Generates the primes up to sqrt(n) needed for sieving by the
+    PrimeNumberFinder.
+
+  * PreSieve
+    PreSieve objects are used to pre-sieve multiples of small primes
+    (e.g. <= 19) to speed up the sieve of Eratosthenes.
+
+  * WheelFactorization (abstract class)
+    Wheel factorization is used to skip multiples of small primes e.g.
+    <= 7 to speed up the sieve of Eratosthenes. The abstract
+    WheelFactorization class is used to initialize sieving primes i.e.
+    addSievingPrime() calculates the first multiple >= start of each
+    sieving prime and the position within the SieveOfEratosthenes
+    array of that multiple (multipleIndex). The unsetBit() method is
+    used to cross-off a multiple (unset a bit) and to calculate the
+    sieving prime's next multiple.
+
   * EratSmall (derived from WheelFactorization)
     Segmented sieve of Eratosthenes algorithm with a hard-coded
     modulo 30 wheel that skips multiples of 2, 3 and 5. This algorithm
@@ -132,29 +155,6 @@ Contents
     implemented using a precomputed lookup table (wheel210 array from
     WheelFactorization.cpp). EratBig is optimized for big sieving
     primes that have less than one multiple occurrence per segment.
-
-  * PrimeNumberGenerator (derived from SieveOfEratosthenes)
-    Generates the primes up to sqrt(n) needed for sieving by
-    PrimeNumberFinder.
-
-  * PrimeNumberFinder (derived from SieveOfEratosthenes)
-    Main SieveOfEratosthenes class, used to generate, print and count
-    the primes and prime k-tuplets (twins, triplets, ...) within the
-    interval [start_, stop_] of the associated PrimeSieve object.
-
-  * PreSieve
-    PreSieve objects are used to pre-sieve multiples of small primes
-    (e.g. <= 19) to speed up the sieve of Eratosthenes.
-
-  * WheelFactorization (abstract class)
-    Wheel factorization is used to skip multiples of small primes e.g.
-    <= 7 to speed up the sieve of Eratosthenes. The abstract
-    WheelFactorization class is used to initialize sieving primes i.e.
-    addSievingPrime() calculates the first multiple >= start of each
-    sieving prime and the position within the SieveOfEratosthenes
-    array of that multiple (multipleIndex). The unsetBit() method is
-    used to cross-off a multiple (unset a bit) and to calculate the
-    sieving prime's next multiple.
 
   Other files
   -----------
