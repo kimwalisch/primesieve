@@ -69,8 +69,8 @@ IV. Target a specific CPU
 
   $ make L1_DCACHE_SIZE=64
 
-V. Compiler benchmark (May 2012)
-================================
+V. Compiler benchmark
+=====================
 
   System: Intel Core-i5 670 3.46GHz, DDR3-1333
   OS 1:   Scientific Linux 6.2 x86_64
@@ -79,13 +79,13 @@ V. Compiler benchmark (May 2012)
   Best time in seconds to sieve an interval of size 10^10 starting at
   10^18 (single-threaded):
 
-  $ ./primesieve-3.7 1E18 -o1E10 -t1 -s256
+  $ ./primesieve-3.8 1E18 -o1E10 -t1 -s256
 
-  Compiler                    Optimization flag   OS        Time/s   Perf.
-  ------------------------------------------------------------------------
-  Intel C++ Compiler 12.0     -O2                 Linux     14.54    100%
-  GNU g++ 4.7                 -O2                 Linux     14.55    100%
-  Oracle Studio 12            -fast               Linux     14.69     99%
-  Microsoft Visual C++ 2010   /O2                 Windows   15.15     96%
-  PathScale EKOPath 4.0       -Ofast              Linux     16.98     86%
-  LLVM/clang++ 2.8            -O2                 Linux     17.62     83%
+  Compilers (June 2012)       Optimization flags   OSes      Time/s   Perf.
+  -------------------------------------------------------------------------
+  Intel C++ Compiler 12.0     -O2 -ipo -prof-use   Linux     14.07    100%
+  GNU g++ 4.7                 -O2                  Linux     14.41     98%
+  Oracle Studio 12            -fast                Linux     14.56     97%
+  Microsoft Visual C++ 2010   /O2                  Windows   15.05     93%
+  LLVM/clang++ 3.1            -O2                  Linux     15.22     92%
+  PathScale EKOPath 4.0       -Ofast               Linux     16.72     84%
