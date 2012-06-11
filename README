@@ -80,9 +80,8 @@ Contents
   General information
   -------------------
   The ./src/soe directory contains the sieve of Eratosthenes source
-  code. Files that start with a capital letter
-  (e.g. SieveOfEratosthenes.h, *-inline.h, *.cpp) contain a class of
-  the same name, files in lower case contain C-style functions and
+  code. Files that start with a capital letter contain a class of the
+  same name, files in lower case contain C-style functions and
   constant definitions. If you are new to prime number sieving I
   recommend reading some of the papers from section 6.
 
