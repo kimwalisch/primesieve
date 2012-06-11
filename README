@@ -94,7 +94,7 @@ Contents
 
   C++ classes in ./src/soe
   ------------------------
-  * PrimeSieve & ParallelPrimeSieve (uses OpenMP)
+  * PrimeSieve & ParallelPrimeSieve (derived from PrimeSieve)
     PrimeSieve objects provide an easy API for prime sieving, the file
     doc/USAGE_EXAMPLES contains a short tutorial.
     PrimeSieve::sieve() starts sieving the primes within the interval
