@@ -1,4 +1,4 @@
-June 10, 2012
+June 12, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -21,8 +21,8 @@ Contents
   no dependencies, on Unix-like operating systems (Linux, Mac OS X, ...)
   it is also possible to build libprimesieve as a shared library.
   The file USAGE_EXAMPLES contains C++ source code examples that show
-  how to generate, count and print primes and k-tuplets (twins,
-  triplets, ...) using libprimesieve. 
+  how to generate, count and print primes and k-tuplets (twin primes,
+  prime triplets, ...) using libprimesieve. 
 
 2. Build libprimesieve (Unix-like OSes)
 =======================================
@@ -32,14 +32,14 @@ Contents
   install it together with the PrimeSieve.h and ParallelPrimeSieve.h
   header files to /usr/local (Mac OS X: /usr).
 
-  static libprimesieve (DEFAULT)
+  Static libprimesieve (DEFAULT)
   ------------------------------
   $ make lib
   $ sudo make install
 
-  Notes:
-  To build libprimesieve as a shared library use `make lib SHARED=yes`.
-  To use an alternate C++ compiler use e.g. `make lib CXX=clang++`.
+  Options:
+  `make lib SHARED=yes` builds libprimesieve as a shared library.
+  `make lib CXX=clang++` use an alternate C++ compiler, here clang++.
 
   Makefile help menu
   ------------------
@@ -57,9 +57,9 @@ Contents
 
   OpenMP multi-threading
   ----------------------
-  If you want to use ParallelPrimeSieve objects and you have
-  built libprimesieve statically then you also have to add the OpenMP
-  flag to the linker e.g.:
+  If you use ParallelPrimeSieve objects and you have built
+  libprimesieve statically then you also have to add the OpenMP flag
+  to the linker e.g.:
 
   $ g++ -o parallel parallel.cpp -lprimesieve -fopenmp
 
@@ -69,8 +69,8 @@ Contents
   Open a Visual Studio Command Prompt, cd into the primesieve source
   code directory and run the following command to build primesieve as
   a static library. For ease of use the new primesieve.lib and the
-  PrimeSieve.h and ParallelPrimeSieve.h header files are also copied
-  to the dist directory.
+  PrimeSieve.h and ParallelPrimeSieve.h header files are copied to the
+  dist directory.
 
   > nmake -f Makefile.msvc lib
 
@@ -86,7 +86,7 @@ Contents
   OpenMP multi-threading
   ----------------------
   Since version 3.5 primesieve requires OpenMP 3.0 or later which is
-  currently (February 2012) not supported by Microsoft Visual C++.
+  currently (June 2012) not supported by Microsoft Visual C++.
   You can either switch to primesieve-3.4
   (http://primesieve.googlecode.com/files/primesieve-3.4-src.zip)
   which builds with OpenMP using Microsoft Visual C++ >= 2005 or use
