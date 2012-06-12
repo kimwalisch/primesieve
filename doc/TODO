@@ -26,8 +26,8 @@ OpenMP
 Possible future optimizations
 -----------------------------
 
-1. Once most CPUs have 64 KB L1 data cache per core I should set
-   L1_DCACHE_SIZE = 64 in src/soe/config.h.
+1. Once most CPUs have 64 KB L1 data cache per core set
+   L1_DCACHE_SIZE=64 in src/soe/config.h.
 2. On CPUs with aggressive instruction-level parallelism (ILP) and 32
    or more integer registers (e.g. IBM POWER, Intel Itanium) unrolling
    the main sieving loop 4 times in src/soe/EratBig.cpp and
