@@ -1,4 +1,4 @@
-June 07, 2012
+June 12, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -9,9 +9,10 @@ I may implement the following TODOs in a few years when C++11 is
 widely supported.
 
 1. Use smart pointers (std::unique_ptr) for dynamic memory allocation.
-2. Use the auto and final keywords where appropriate.
-3. Use <cstdint> instead of <stdint.h>.
-4. Use nullptr instead of NULL (remove <cstdlib> header).
+2. Use std::array instead of C-style arrays and std::vector.
+3. Use auto and final keywords where appropriate.
+4. Use <cstdint> instead of <stdint.h>.
+5. Use nullptr instead of NULL (remove <cstdlib> header).
 
 OpenMP
 ------
@@ -27,9 +28,10 @@ Possible future optimizations
 
 1. Once most CPUs have 64 KB L1 data cache per core I should set
    L1_DCACHE_SIZE = 64 in src/soe/config.h.
-2. Once CPUs have >= 4 ALUs per physical core unrolling the main
-   sieving loop 4 times (currently 2 times) in EratBig.cpp and
+2. On CPUs with aggressive instruction-level parallelism (ILP) and 32
+   or more integer registers (e.g. IBM POWER, Intel Itanium) unrolling
+   the main sieving loop 4 times in src/soe/EratBig.cpp and
    EratMedium.cpp might be faster.
 3. Prime number generation can be sped up by about 10 percent when
-   sieving < 2^32 using the 64-bit BSF instruction (Assembly) instead
-   of the De Bruijn bitscan in SieveOfEratosthenes-inline.h.
+   sieving < 2^32 using the BSF instruction (Assembly) instead of the
+   De Bruijn bitscan in SieveOfEratosthenes-inline.h.
