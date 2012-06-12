@@ -1,4 +1,4 @@
-May 29, 2012
+June 12, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -20,7 +20,7 @@ Contents
   3. Print primes
   4. ParallelPrimeSieve
   5. Timing
-  6. Set the sieve size
+  6. Performance tuning
   7. Cancel prime number generation
   8. Setting flags
 
@@ -42,7 +42,7 @@ Contents
   #include <iostream>
 
   void print(unsigned int prime) {
-    std::cout << prime << std::endl;
+    std::cout << prime << '\n';
   }
 
   int main() {
@@ -143,16 +143,16 @@ Contents
 
   The ParallelPrimeSieve class is derived from PrimeSieve thus it has
   the same API but it uses OpenMP multi-threading to sieve primes in
-  parallel. Its main use is to count primes and k-tuplets, it can also
-  generate and print primes and k-tuplets in parallel but only in
-  random order.
+  parallel. Its main use is to count primes and prime k-tuplets, it
+  can also generate and print primes and k-tuplets in parallel but
+  only in random order.
 
   Note: by default ParallelPrimeSieve counts primes and k-tuplets in
   parallel using multiple threads but generates and prints primes and
   k-tuplets in arithmetic order using a single thread.
 
   ////////////////////////////////////////////////////////////////////
-  // Count the prime triplets within [1E14, 1E14+1E11]
+  // Count the prime triplets within [10^14, 10^14+10^11]
   // using all CPU cores
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
@@ -216,12 +216,12 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-6. Set the sieve size
+6. Performance tuning
 =====================
 
   The best sieving performance is achieved with a sieve size of the
   CPU's L1 data cache size (usually 32 or 64 KB) when sieving < 10^16
-  and a sieve size of the CPU's L2 cache size per core (e.g. 512 KB)
+  and a sieve size of the CPU's L2 cache size per core e.g. 512 KB
   above. The default sieve size is 32 kilobytes.
 
   ////////////////////////////////////////////////////////////////////
@@ -253,9 +253,9 @@ Contents
   ////////////////////////////////////////////////////////////////////
 
   #include <primesieve/soe/PrimeSieve.h>
+  #include <iostream>
   #include <cstdlib>
   #include <cmath>
-  #include <iostream>
 
   unsigned int candidate;
 
