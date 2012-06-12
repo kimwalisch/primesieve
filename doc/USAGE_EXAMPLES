@@ -22,7 +22,7 @@ Contents
   5. Timing
   6. Performance tuning
   7. Cancel prime number generation
-  8. Setting flags
+  8. Flags
 
 1. Prime number generation
 ==========================
@@ -284,12 +284,13 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-8. Setting flags
-================
+8. Flags
+========
 
-  Counting and printing can also be done using flags, this allows
-  for instance to count prime numbers and twin primes in one go or to
-  print the status in percent whilst sieving.
+  Flags are settings for PrimeSieve and ParallelPrimeSieve objects,
+  they are set using setFlags(int) and when done sieve() starts
+  sieving. For instance flags allow to count prime numbers and twin
+  primes in one go and print the status in percent whilst sieving.
 
   API
   ---
@@ -318,18 +319,18 @@ Contents
   // Count prime numbers and twin primes in one go
   // and print the status whilst sieving
 
-  #include <primesieve/soe/ParallelPrimeSieve.h>
+  #include <primesieve/soe/PrimeSieve.h>
   #include <stdint.h>
   #include <iostream>
 
   int main() {
     uint64_t start = 0;
     uint64_t stop = (uint64_t) 1E11;
-    ParallelPrimeSieve pps;
-    pps.setFlags(pps.COUNT_PRIMES | pps.COUNT_TWINS | pps.PRINT_STATUS);
-    pps.sieve(start, stop);
-    std::cout << "\nprime count: " << pps.getPrimeCount() << std::endl
-              << "twin count:  "   << pps.getTwinCount()  << std::endl;
+    PrimeSieve ps;
+    ps.setFlags(ps.COUNT_PRIMES | ps.COUNT_TWINS | ps.PRINT_STATUS);
+    ps.sieve(start, stop);
+    std::cout << "\nprime count: " << ps.getPrimeCount() << std::endl
+              << "twin count:  "   << ps.getTwinCount()  << std::endl;
     return 0;
   }
 
