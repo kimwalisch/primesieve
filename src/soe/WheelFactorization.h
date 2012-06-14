@@ -99,9 +99,9 @@ public:
   Bucket(const Bucket&) : current_(wheelPrimes_) { }
   Bucket() :              current_(wheelPrimes_)
   { }
-  WheelPrime* begin()  { return wheelPrimes_; }
-  WheelPrime* end()    { return current_;}
+  WheelPrime* begin()  { return &wheelPrimes_[0]; }
   WheelPrime* last()   { return &wheelPrimes_[config::BUCKETSIZE - 1]; }
+  WheelPrime* end()    { return current_;}
   Bucket* next()       { return next_; }
   bool hasNext() const { return next_ != NULL; }
   bool empty() const   { return current_ == wheelPrimes_; }
