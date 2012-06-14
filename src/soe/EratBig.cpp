@@ -134,7 +134,7 @@ void EratBig::crossOff(uint8_t* sieve)
   // lists_[0] contains the buckets related to the current segment
   // i.e. its buckets contain all the sieving primes that have
   // multiples in the current segment
-  while (lists_[0]->hasNext() || !lists_[0]->isEmpty()) {
+  while (lists_[0]->hasNext() || !lists_[0]->empty()) {
     Bucket* bucket = lists_[0];
     lists_[0] = NULL;
     pushBucket(0);
