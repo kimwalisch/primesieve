@@ -52,9 +52,8 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
   static_assert(config::FACTOR_ERATMEDIUM <= 6, "config::FACTOR_ERATMEDIUM must not be > 6");
   if (soe.getSieveSize() > (1u << 22))
     throw std::overflow_error("EratMedium: sieveSize must be <= 2^22, 4096 kilobytes.");
-  uint_t sqrtStop = soe.getSqrtStop();
-  uint_t max      = soe.getSieveSize() * config::FACTOR_ERATMEDIUM;
-  limit_          = std::min(sqrtStop, max);
+  uint_t max = soe.getSieveSize() * config::FACTOR_ERATMEDIUM;
+  limit_     = std::min(soe.getSqrtStop(), max);
 }
 
 /// Add a new sieving prime
