@@ -79,7 +79,7 @@ namespace config {
 
 /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
 /// are used with EratSmall objects.
-/// @pre FACTOR_ERATSMALL >= 0 && < 5
+/// @pre FACTOR_ERATSMALL >= 0 && <= 6
 /// @see SieveOfEratosthenes::sieve(uint_t)
 ///
 const double FACTOR_ERATSMALL = 0.7;
