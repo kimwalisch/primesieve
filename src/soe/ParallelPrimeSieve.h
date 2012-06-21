@@ -61,7 +61,6 @@ public:
     int sieveSize;
     int threads;
   };
-  enum { IDEAL_NUM_THREADS = -1 };
   ParallelPrimeSieve();
   virtual ~ParallelPrimeSieve() { }
   void init(SharedMemory&);
@@ -70,6 +69,7 @@ public:
   int getNumThreads() const;
   void setNumThreads(int);
 private:
+  enum { IDEAL_NUM_THREADS = -1 };
   SharedMemory* shm_;
   /// Number of threads for sieving
   int numThreads_;
@@ -84,17 +84,16 @@ private:
   /// OpenMP lock initialization and destroy
   class OmpLockGuard {
   public:
-    OmpLockGuard(omp_lock_t& lock) : lock_(lock) { omp_init_lock(&lock_); }
-    ~OmpLockGuard()                              { omp_destroy_lock(&lock_); }
+    OmpLockGuard(omp_lock_t* lock) : lock_(*lock) { omp_init_lock(&lock_); }
+    ~OmpLockGuard()                               { omp_destroy_lock(&lock_); }
   private:
     omp_lock_t& lock_;
     OmpLockGuard(const OmpLockGuard&);
     OmpLockGuard& operator=(const OmpLockGuard&);
   };
   omp_lock_t lock_;
-  /// Synchronize prime number generation
-  virtual void set_lock()   { omp_set_lock(&lock_); }
-  virtual void unset_lock() { omp_unset_lock(&lock_); }
+  virtual void set_lock();
+  virtual void unset_lock();
   virtual void updateStatus(int);
 #endif
 };

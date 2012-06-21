@@ -79,6 +79,7 @@ int ParallelPrimeSieve::getMaxThreads() {
 #endif
 }
 
+/// Get the number of threads for sieving
 int ParallelPrimeSieve::getNumThreads() const {
   return (numThreads_ == IDEAL_NUM_THREADS) ? getIdealNumThreads() : numThreads_;
 }
@@ -88,9 +89,6 @@ void ParallelPrimeSieve::setNumThreads(int threads) {
   numThreads_ = getInBetween(1, threads, getMaxThreads());
 }
 
-/// Get an ideal number of threads for the current
-/// set start_, stop_ and flags_.
-///
 int ParallelPrimeSieve::getIdealNumThreads() const {
   // by default 1 thread is used to generate primes in arithmetic
   // order but multiple threads are used for counting
@@ -103,9 +101,7 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   return static_cast<int>(idealNumThreads);
 }
 
-/// Get a thread interval size that ensures a
-/// good load balance.
-///
+/// Get a thread interval size that ensures a good load balance
 uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   assert(threads > 1);
   uint64_t bestStrategy = std::min(isqrt(stop_) * 1000, (stop_ - start_) / threads);
@@ -117,10 +113,19 @@ uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
 
 #ifdef _OPENMP
 
-/// @see updateStatus() in PrimeSieve.cpp
+/// Used to synchronize OpenMP threads for prime number generation
+void ParallelPrimeSieve::set_lock() {
+  omp_set_lock(&lock_);
+}
+
+void ParallelPrimeSieve::unset_lock() {
+  omp_unset_lock(&lock_);
+}
+
 void ParallelPrimeSieve::updateStatus(int segment) {
   #pragma omp critical (status)
   {
+    /// @see PrimeSieve.cpp
     PrimeSieve::updateStatus(segment);
     if (shm_ != NULL)
       shm_->status = getStatus();
@@ -146,7 +151,7 @@ void ParallelPrimeSieve::sieve() {
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
     uint64_t balanced = getBalancedInterval(threads);
     uint64_t align = start_ + 32 - start_ % 30;
-    OmpLockGuard omp_lock(lock_);
+    OmpLockGuard omp_lock(&lock_);
     // The sieve interval [start_, stop_] is subdivided into chunks of
     // size 'balanced' that are sieved in parallel using multiple
     // threads. This scales well as each thread sieves using its own
