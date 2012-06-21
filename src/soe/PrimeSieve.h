@@ -148,17 +148,17 @@ protected:
   uint64_t counts_[7];
   /// time elapsed in seconds of sieve()
   double seconds_;
+  virtual void set_lock();
+  virtual void unset_lock();
   virtual void updateStatus(int);
   void reset();
-  /// protected inline methods
+  /// protected inline method
   template<typename T>
   static T getInBetween(T low, T value, T high) {
     if (value < low)  return low;
     if (value > high) return high;
     return value;
   }
-  virtual void set_lock()   { if (parent_ != NULL) parent_->set_lock(); }
-  virtual void unset_lock() { if (parent_ != NULL) parent_->unset_lock(); }
 private:
   /// synchronizes ParallelPrimeSieve threads
   class LockGuard {

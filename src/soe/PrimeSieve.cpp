@@ -206,6 +206,10 @@ void PrimeSieve::addFlags(int flags) {
   flags_ |= flags;
 }
 
+// Used to synchronize threads for prime number generation
+void PrimeSieve::set_lock()   { if (parent_ != NULL) parent_->set_lock(); }
+void PrimeSieve::unset_lock() { if (parent_ != NULL) parent_->unset_lock(); }
+
 /// Calculate the current status in percent of sieve()
 /// and print it to the standard output.
 /// @param segment  The size of the processed segment.
