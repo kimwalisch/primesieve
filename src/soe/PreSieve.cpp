@@ -62,8 +62,7 @@ const uint_t PreSieve::unsetBit_[30] =
 ///
 PreSieve::PreSieve(uint_t limit) :
   limit_(limit),
-  preSieved_(NULL),
-  size_(0)
+  preSieved_(NULL)
 {
   // limit_ <= 23 prevents 32 bit overflows
   if (limit_ < 13 || limit_ > 23)
@@ -77,7 +76,7 @@ PreSieve::~PreSieve() {
   delete[] preSieved_;
 }
 
-uint_t PreSieve::getPrimeProduct(uint_t limit) const {
+uint_t PreSieve::getPrimeProduct(uint_t limit) {
   uint_t pp = 1;
   for (uint_t i = 0; smallPrimes_[i] <= limit; i++)
     pp *= smallPrimes_[i];

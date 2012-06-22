@@ -78,12 +78,12 @@ private:
   const uint_t limit_;
   /// Product of the primes <= limit_
   uint_t primeProduct_;
-  /// Array of size primeProduct(limit_) / 30 in which the multiples
-  /// of small primes <= limit_ are crossed-off at initialization
+  /// Array in which the multiples of small primes <= limit_
+  /// are crossed-off at initialization
   uint8_t* preSieved_;
   /// Size of preSieved_ in bytes
   uint_t size_;
-  uint_t getPrimeProduct(uint_t) const;
+  static uint_t getPrimeProduct(uint_t);
   void initPreSieved();
   /// Uncopyable, declared but not defined
   PreSieve(const PreSieve&);
