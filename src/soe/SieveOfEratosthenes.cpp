@@ -71,7 +71,6 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   stop_(stop),
   sqrtStop_(static_cast<uint_t>(isqrt(stop))),
   preSieve_(preSieveLimit),
-  isFirstSegment_(true),
   sieve_(NULL),
   sieveSize_(sieveSize * 1024),
   eratSmall_(NULL),
@@ -79,12 +78,11 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   eratBig_(NULL)
 {
   if (start_ < 7 || start_ > stop_)
-    throw std::logic_error("SieveOfEratosthenes: start must be >= 7 && <= stop.");
-  // it makes no sense to use very small sieve sizes
+    throw std::invalid_argument("SieveOfEratosthenes: start must be >= 7 && <= stop.");
   if (sieveSize_ < 1024)
     throw std::invalid_argument("SieveOfEratosthenes: sieveSize must be >= 1 kilobyte.");
   segmentLow_ = start_ - getByteRemainder(start_);
-  // '+1' is a correction for primes of type i*30 + 31
+  // '+1' is a correction for primes of type i * 30 + 31
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   initEratAlgorithms();
   // allocate the sieve of Eratosthenes array
@@ -129,13 +127,12 @@ uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
 ///
 void SieveOfEratosthenes::preSieve() {
   preSieve_.doIt(sieve_, sieveSize_, segmentLow_);
-  if (isFirstSegment_) {
-    isFirstSegment_ = false;
+  if (segmentLow_ <= start_) {
     // correct preSieve_.doIt() for numbers <= 23
     if (start_ <= preSieve_.getLimit())
       sieve_[0] = 0xff;
-    // unset bits (numbers) < start_
     uint64_t remainder = getByteRemainder(start_);
+    // unset bits (numbers) < start_
     for (int i = 0; i < 8; i++)
       if (bitValues_[i] < remainder)
         sieve_[0] &= ~(1 << i);

@@ -88,8 +88,6 @@ private:
   const uint_t sqrtStop_;
   /// Pre-sieves multiples of small primes <= preSieve_.getLimit()
   const PreSieve preSieve_;
-  /// Set to false when the first segment has been sieved
-  bool isFirstSegment_;
   /// Sieve of Eratosthenes array
   uint8_t* sieve_;
   /// Size of the sieve_ array in bytes
