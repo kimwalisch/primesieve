@@ -99,7 +99,6 @@ void PrimeSieve::reset() {
     updateStatus(0);
 }
 
-/// public getters
 uint64_t PrimeSieve::getStart()                  const { return start_; }
 uint64_t PrimeSieve::getStop()                   const { return stop_; }
 uint64_t PrimeSieve::getPrimeCount()             const { return counts_[0]; }
@@ -152,26 +151,22 @@ void PrimeSieve::setStop(uint64_t stop) {
   stop_ = stop;
 }
 
-/// Multiples of small primes <= preSieve are pre-sieved to speed up
-/// the sieve of Eratosthenes.
+/// Multiples of small primes <= preSieve are pre-sieved
+/// to speed up the sieve of Eratosthenes.
 /// @param preSieve  >= 13 && <= 23, default = 19
-///                  min = 13 (uses 1001 bytes)
-///                  max = 23 (uses 7 megabytes)
 ///
 void PrimeSieve::setPreSieve(int preSieve) {
   preSieve_ = getInBetween(13, preSieve, 23);
 }
 
-/// Set the size of the sieve of Eratosthenes array in kilobytes.
-/// The best performance is achieved with a sieve size of the CPU's L1
+/// Set the size of the sieve of Eratosthenes array in kilobytes. The 
+/// best performance is achieved with a sieve size of the CPU's L1
 /// data cache size (usually 32 or 64 KB) when sieving < 10^15 and a
 /// sieve size of the CPU's L2 cache size above.
-/// @param sieveSize  >= 1 && <= 4096 kilobytes, default = 32, 
-///                   sieveSize is rounded up to the next highest
-///                   power of 2.
+/// @param sieveSize  >= 1 && <= 4096 kilobytes, default = 32
 ///
 void PrimeSieve::setSieveSize(int sieveSize) {
-  sieveSize_ = getInBetween(1, nextPowerOf2(sieveSize), 4096);
+  sieveSize_ = getInBetween(1, floorPowerOf2(sieveSize), 4096);
 }
 
 /// Settings for sieve().
@@ -237,8 +232,7 @@ void PrimeSieve::updateStatus(int segment) {
 void PrimeSieve::doSmallPrime(const SmallPrime& sp)
 {
   if (start_ <= sp.min && sp.max <= stop_) {
-    // synchronize threads here
-    LockGuard lock(*this);
+    LockGuard lock(*this); // synchronize threads
     if (sp.index == 0) {
       if (isFlag(CALLBACK32_PRIMES)) callback32_(sp.min);
       if (isFlag(CALLBACK64_PRIMES)) callback64_(sp.min);
@@ -251,8 +245,8 @@ void PrimeSieve::doSmallPrime(const SmallPrime& sp)
 }
 
 /// Sieve the primes and prime k-tuplets (twins, triplets, ...) within
-/// the interval [start_, stop_] using PrimeSieve's fast segmented
-/// sieve of Eratosthenes implementation.
+/// the interval [start_, stop_] using primesieve's highly optimized
+/// segmented sieve of Eratosthenes implementation.
 ///
 void PrimeSieve::sieve() {
   if (stop_ < start_)
@@ -399,7 +393,7 @@ uint64_t PrimeSieve::getSeptupletCount(uint64_t start, uint64_t stop) {
   return getSeptupletCount();
 }
 
-/// Convenience print (to std::cout) member functions.
+/// Convenience print member functions.
 
 void PrimeSieve::printPrimes(uint64_t start, uint64_t stop) {
   sieve(start, stop, PRINT_PRIMES);
