@@ -42,7 +42,6 @@
 #include <stdint.h>
 #include <cassert>
 #include <algorithm>
-#include <stdexcept>
 #include <list>
 
 namespace soe {
@@ -50,12 +49,10 @@ namespace soe {
 EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
   Modulo30Wheel_t(soe), buckets_(1, Bucket())
 {
-  if (soe.getSieveSize() > (1u << 22))
-    throw std::overflow_error("EratSmall: sieveSize must be <= 2^22, 4096 kilobytes.");
   // assert multipleIndex < 2^23 in crossOff()
-  assert(config::FACTOR_ERATSMALL <= 6.0);
+  assert(config::FACTOR_ERATSMALL <= 4.0);
   uint_t max = static_cast<uint_t>(soe.getSieveSize() * config::FACTOR_ERATSMALL);
-  limit_     = std::min(soe.getSqrtStop(), max);
+  limit_ = std::min(soe.getSqrtStop(), max);
 }
 
 /// Add a new sieving prime
