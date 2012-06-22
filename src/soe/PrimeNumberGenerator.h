@@ -63,7 +63,7 @@ public:
     finder_(finder)
   {
     static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "SieveSize must not be > 4096 kilobytes");
-    assert(getStop() <= UINT32_MAX);
+    assert(getStop() <= ~0u);
   }
 private:
   PrimeNumberFinder& finder_;
