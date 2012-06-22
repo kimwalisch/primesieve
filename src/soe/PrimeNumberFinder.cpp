@@ -141,7 +141,7 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) {
     uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
     for (; !ps_.isPrint(i); i++)
       ;
-    // this algorithm is slow, for more speed see GENERATE.h
+    // for more speed see GENERATE.h
     for (uint_t j = 0; j < sieveSize; j++) {
       for (const uint_t* bitmask = kTupletBitmasks_[i]; *bitmask <= sieve[j]; bitmask++) {
         if ((sieve[j] & *bitmask) == *bitmask) {
