@@ -39,8 +39,7 @@
 #include "SieveOfEratosthenes-inline.h"
 
 /// Reconstruct prime numbers from 1 bits of the sieve array and call
-/// a callback function for each prime. This macro is used in
-/// PrimeNumberFinder.cpp and PrimeNumberGenerator.h
+/// a callback function for each prime.
 /// @see getNextPrime() in SieveOfEratosthenes-inline.h
 ///
 #define GENERATE_PRIMES(callback, uintXX_t)             \
