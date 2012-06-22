@@ -59,7 +59,7 @@ public:
     SieveOfEratosthenes(finder.getPreSieve() + 1,
                         finder.getSqrtStop(),
                         config::PRESIEVE_PRIMENUMBERGENERATOR,
-                        nextPowerOf2<uint_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
+                        floorPowerOf2<uint_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
     finder_(finder)
   {
     static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "SieveSize must not be > 4096 kilobytes");
