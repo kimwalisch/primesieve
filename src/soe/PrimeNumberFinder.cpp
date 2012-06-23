@@ -71,8 +71,8 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
     initCounts();
 }
 
-/// Initialize the lookup tables needed to count prime k-tuplets
-/// (twin primes, prime triplets, ...) per byte.
+/// Initialize the kCounts_ lookup tables needed to count prime
+/// k-tuplets (twin primes, prime triplets, ...) per byte.
 ///
 void PrimeNumberFinder::initCounts() {
   for (uint_t i = 1; i < 7; i++) {
@@ -90,10 +90,8 @@ void PrimeNumberFinder::initCounts() {
   }
 }
 
-/// Executed after each sieved segment, generates and counts the
-/// primes (1 bits within sieve array) within the interval
-/// [segmentLow_, segmentHigh_].
-/// @see SieveOfEratosthenes::sieveSegment()
+/// Executed after each sieved segment.
+/// @see sieveSegment() in SieveOfEratosthenes.cpp
 ///
 void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint_t sieveSize) {
   if (ps_.isCount())
@@ -136,7 +134,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint_t sieveSize) {
 /// triplets, ...) within the current segment.
 ///
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) {
-  // print prime k-tuplets to std::cout
+  // print prime k-tuplets
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS)) {
     uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
     for (; !ps_.isPrint(i); i++)
@@ -157,9 +155,9 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) {
       }
     }
   }
+  // callback prime numbers
   else {
-    // only one thread at a time calls back primes
-    PrimeSieve::LockGuard lock(ps_);
+    PrimeSieve::LockGuard lock(ps_); // synchronize threads
     // @see GENERATE.h
     if (ps_.isFlag(ps_.CALLBACK32_PRIMES))     GENERATE_PRIMES(ps_.callback32_, uint32_t)
     if (ps_.isFlag(ps_.CALLBACK64_PRIMES))     GENERATE_PRIMES(ps_.callback64_, uint64_t)
