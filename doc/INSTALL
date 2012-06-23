@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 11 June 2012
+# Last modified: 23 June 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -23,10 +23,10 @@ I. About
 II. How to build primesieve
 ===========================
 
-  Unzip the source archive, open a terminal or 'Visual Studio Command 
-  Prompt' and cd into the primesieve directory. Now use one of the
-  following make commands to build primesieve using your favorite C++
-  compiler:
+  Unzip the primesieve source archive, open a terminal or 'Visual
+  Studio Command Prompt' and cd into the primesieve directory. Now use
+  one of the following make commands to build primesieve using your
+  favorite C++ compiler:
 
   $ make                     GNU g++
   > nmake -f Makefile.msvc   Microsoft Visual C++
