@@ -112,8 +112,8 @@ void help() {
             << "Print the prime numbers up to 1000:"                                                   << std::endl
             << "> primesieve 2 1000 -p1"                                                               << std::endl
                                                                                                        << std::endl
-            << "Count the twin primes and prime triplets in the interval [1E10, 1E10+2^32]:"           << std::endl
-            << "> primesieve 1E10 -o2**32 -c23"                                                        << std::endl;
+            << "Count the twin primes in the interval [1E10, 1E10+2^32]:"                              << std::endl
+            << "> primesieve 1E10 -o2**32 -c2"                                                         << std::endl;
   std::exit(1);
 }
 
