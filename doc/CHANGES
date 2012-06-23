@@ -12,12 +12,12 @@ quality.
 4. Renamed ./docs to ./doc
 5. Revised README.txt, added 7. Motivation.
 6. Updated INSTALL, LIBPRIMESIEVE and USAGE_EXAMPLES.
-7. Added version #defines to PrimeSieve.h e.g. for this release:
+7. Added version #defines to PrimeSieve.h, e.g. for this release:
 
-   PRIMESIEVE_VERSION       "3.8"
-   PRIMESIEVE_MAJOR_VERSION  3
-   PRIMESIEVE_MINOR_VERSION  8
-   PRIMESIEVE_YEAR           2012
+   #define PRIMESIEVE_VERSION       "3.8"
+   #define PRIMESIEVE_MAJOR_VERSION  3
+   #define PRIMESIEVE_MINOR_VERSION  8
+   #define PRIMESIEVE_YEAR           2012
 
 New in version 3.7, 31/05/2012
 ==============================
