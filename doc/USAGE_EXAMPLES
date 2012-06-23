@@ -1,4 +1,4 @@
-June 12, 2012
+June 23, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -200,9 +200,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
   // getSeconds() returns the time elapsed in seconds
-  // Program output:
-  // prime count: 203280221
-  // time elapsed: 0.471 sec
+  // e.g.: time elapsed: 0.471 sec
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
   #include <iostream>
