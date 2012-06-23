@@ -35,6 +35,10 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
+#define PRIMESIEVE_VERSION "3.8"
+#define PRIMESIEVE_MAJOR_VERSION 3
+#define PRIMESIEVE_MINOR_VERSION 8
+
 #include <stdint.h>
 #include <cstdlib>
 #include <stdexcept>
@@ -53,7 +57,7 @@ using soe::PrimeNumberFinder;
 class PrimeSieve {
   friend class PrimeNumberFinder;
 public:
-  /// for setFlags(int)
+  /// public flags
   enum {
     COUNT_PRIMES      = 1 << 0,
     COUNT_TWINS       = 1 << 1,
@@ -123,7 +127,6 @@ public:
   uint64_t getQuintupletCount(uint64_t, uint64_t);
   uint64_t getSextupletCount(uint64_t, uint64_t);
   uint64_t getSeptupletCount(uint64_t, uint64_t);
-  /// count getters
   uint64_t getCounts(int) const;
   uint64_t getPrimeCount() const;
   uint64_t getTwinCount() const;
@@ -142,7 +145,6 @@ protected:
   };
   /// sieve the primes within [start_, stop_]
   uint64_t start_;
-  /// sieve the primes within [start_, stop_]
   uint64_t stop_;
   /// prime number and prime k-tuplet counts
   uint64_t counts_[7];
@@ -160,7 +162,7 @@ protected:
     return value;
   }
 private:
-  /// synchronizes ParallelPrimeSieve threads
+  /// synchronizes threads
   class LockGuard {
   public:
     LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.PrimeSieve::set_lock(); }
@@ -182,13 +184,13 @@ private:
   int preSieve_;
   /// sieve size in kilobytes
   int sieveSize_;
-  /// primeSieve options (e.g. COUNT_PRIMES)
+  /// PrimeSieve options e.g. COUNT_PRIMES, PRINT_TWINS, ...
   int flags_;
   /// either NULL or the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
   /// sum of the processed segments
   uint64_t sumSegments_;
-  /// stop_ - start_ (+ 1 to avoid / 0)
+  /// sieve interval i.e. (stop_ - start_)
   double interval_;
   /// status in percent of sieve()
   double status_;
