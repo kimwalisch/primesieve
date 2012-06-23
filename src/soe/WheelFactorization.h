@@ -52,81 +52,6 @@
 
 namespace soe {
 
-/// WheelPrime objects are sieving primes <= sqrt(n) that are used to
-/// cross-off multiples and that skip multiples of small primes e.g.
-/// <= 7 using wheel factorization. Each WheelPrime contains a sieving
-/// prime, the position of the next multiple within the sieve of
-/// Eratosthenes array (multipleIndex) and a wheelIndex.
-///
-class WheelPrime {
-public:
-  uint_t getSievingPrime() const  { return sievingPrime_; }
-  uint_t getMultipleIndex() const { return indexes_ & ((1 << 23) - 1); }
-  uint_t getWheelIndex() const    { return indexes_ >> 23; }
-  /// Store a sieving prime and its indexes
-  void set(uint_t sievingPrime,
-           uint_t multipleIndex,
-           uint_t wheelIndex)
-  {
-    set(multipleIndex, wheelIndex);
-    sievingPrime_ = static_cast<uint32_t>(sievingPrime);
-  }
-  /// Compress multipleIndex and wheelIndex into the
-  /// same 32-bit indexes_ variable.
-  void setMultipleIndex(uint_t multipleIndex)       { indexes_ = static_cast<uint32_t>(indexes_ | multipleIndex); }
-  void setWheelIndex(uint_t wheelIndex)             { indexes_ = static_cast<uint32_t>(wheelIndex << 23); }
-  void set(uint_t multipleIndex, uint_t wheelIndex) { indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23)); }
-private:
-  /// multipleIndex = 23 least significant bits of indexes_.
-  /// wheelIndex    =  9 most  significant bits of indexes_.
-  /// Packing multipleIndex and wheelIndex into the same 32-bit word
-  /// reduces primesieve's memory usage by 20%.
-  uint32_t indexes_;
-  /// sievingPrime_ = prime / 30;
-  /// '/ 30' is used as SieveOfEratosthenes objects use a bit array
-  /// with 30 numbers per byte for sieving.
-  uint32_t sievingPrime_;
-};
-
-/// The Bucket data structure is used to store sieving primes. It is
-/// designed as a singly linked list, once there is no more space in
-/// the current bucket a new bucket node is allocated ...
-/// @see http://www.ieeta.pt/~tos/software/prime_sieve.html
-///
-class Bucket {
-public:
-  /// list.push_back(Bucket()) adds an empty bucket without copying
-  Bucket(const Bucket&) : current_(wheelPrimes_) { }
-  Bucket() :              current_(wheelPrimes_)
-  { }
-  WheelPrime* begin()  { return &wheelPrimes_[0]; }
-  WheelPrime* last()   { return &wheelPrimes_[config::BUCKETSIZE - 1]; }
-  WheelPrime* end()    { return current_;}
-  Bucket* next()       { return next_; }
-  bool hasNext() const { return next_ != NULL; }
-  bool empty() const   { return current_ == wheelPrimes_; }
-  void reset()         { current_ = begin(); }
-  void setNext(Bucket* next)
-  {
-    next_ = next;
-  }
-  /// Store a WheelPrime in the bucket.
-  /// @return true  if the bucket is not full else false.
-  bool store(uint_t sievingPrime,
-             uint_t multipleIndex,
-             uint_t wheelIndex)
-  {
-    WheelPrime* wPrime = current_;
-    current_++;
-    wPrime->set(sievingPrime, multipleIndex, wheelIndex);
-    return wPrime != last();
-  }
-private:
-  WheelPrime* current_;
-  Bucket* next_;
-  WheelPrime wheelPrimes_[config::BUCKETSIZE];
-};
-
 /// Precomputed arrays of WheelInit objects are used to calculate the
 /// first multiple >= START of each sieving prime that is not
 /// divisible by any of the wheel's factors and its wheel index.
@@ -136,6 +61,10 @@ struct WheelInit {
   uint8_t nextMultipleFactor;
   uint8_t wheelIndex;
 };
+
+/// @see WheelFactorization.cpp
+extern const WheelInit wheel30Init[30];
+extern const WheelInit wheel210Init[210];
 
 /// Precomputed arrays of WheelElement objects are used to add wheel
 /// factorization to the sieve of Eratosthenes.
@@ -170,6 +99,83 @@ struct WheelElement {
   /// Offset that is used to calculate the next wheel index of a
   /// WheelPrime object i.e. wheelIndex += next;
    int8_t next;
+};
+
+/// @see WheelFactorization.cpp
+extern const WheelElement wheel30[8*8];
+extern const WheelElement wheel210[48*8];
+
+/// WheelPrime objects are sieving primes <= sqrt(n) that are used to
+/// cross-off multiples and that skip multiples of small primes e.g.
+/// <= 7 using wheel factorization. Each WheelPrime contains a sieving
+/// prime, the position of the next multiple within the sieve of
+/// Eratosthenes array (multipleIndex) and a wheelIndex.
+///
+class WheelPrime {
+public:
+  uint_t getSievingPrime() const  { return sievingPrime_; }
+  uint_t getMultipleIndex() const { return indexes_ & ((1 << 23) - 1); }
+  uint_t getWheelIndex() const    { return indexes_ >> 23; }
+  /// Store a sieving prime and its indexes
+  void set(uint_t sievingPrime,
+           uint_t multipleIndex,
+           uint_t wheelIndex)
+  {
+    set(multipleIndex, wheelIndex);
+    sievingPrime_ = static_cast<uint32_t>(sievingPrime);
+  }
+  /// Compress multipleIndex and wheelIndex into the
+  /// same 32-bit indexes_ variable.
+  void setMultipleIndex(uint_t multipleIndex)       { indexes_ = static_cast<uint32_t>(indexes_ | multipleIndex); }
+  void setWheelIndex(uint_t wheelIndex)             { indexes_ = static_cast<uint32_t>(wheelIndex << 23); }
+  void set(uint_t multipleIndex, uint_t wheelIndex) { indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23)); }
+private:
+  /// multipleIndex = 23 least significant bits of indexes_.
+  /// wheelIndex    =  9 most  significant bits of indexes_.
+  uint32_t indexes_;
+  /// sievingPrime_ = prime / 30;
+  /// '/ 30' is used as SieveOfEratosthenes objects use a bit array
+  /// with 30 numbers per byte for sieving.
+  uint32_t sievingPrime_;
+};
+
+/// The Bucket data structure is used to store sieving primes. It is
+/// designed as a singly linked list, once there is no more space in
+/// the current bucket a new bucket node is allocated ...
+/// @see http://www.ieeta.pt/~tos/software/prime_sieve.html
+///
+class Bucket {
+public:
+  /// list.push_back(Bucket()) adds an empty bucket without copying
+  Bucket(const Bucket&) : current_(wheelPrimes_) { }
+  Bucket() :              current_(wheelPrimes_)
+  { }
+  WheelPrime* begin() { return &wheelPrimes_[0]; }
+  WheelPrime* last()  { return &wheelPrimes_[config::BUCKETSIZE - 1]; }
+  WheelPrime* end()   { return current_;}
+  Bucket* next()      { return next_; }
+  bool hasNext()      { return next_ != NULL; }
+  bool empty()        { return begin() == end(); }
+  void reset()        { current_ = begin(); }
+  void setNext(Bucket* next)
+  {
+    next_ = next;
+  }
+  /// Store a WheelPrime in the bucket.
+  /// @return true  if the bucket is not full else false.
+  bool store(uint_t sievingPrime,
+             uint_t multipleIndex,
+             uint_t wheelIndex)
+  {
+    WheelPrime* wPrime = current_;
+    current_++;
+    wPrime->set(sievingPrime, multipleIndex, wheelIndex);
+    return wPrime != last();
+  }
+private:
+  WheelPrime* current_;
+  Bucket* next_;
+  WheelPrime wheelPrimes_[config::BUCKETSIZE];
 };
 
 /// The abstract WheelFactorization class provides wheel factorization
@@ -270,12 +276,6 @@ WheelFactorization<MODULO, SIZE, INIT, WHEEL>::wheelOffsets_[30] =
   0xFF, 4 * SIZE, 0xFF, 0xFF, 0xFF, 5 * SIZE,
   0xFF, 0xFF,     0xFF, 0xFF, 0xFF, 6 * SIZE
 };
-
-/// @see WheelFactorization.cpp
-extern const WheelInit    wheel30Init[30];
-extern const WheelInit    wheel210Init[210];
-extern const WheelElement wheel30[8*8];
-extern const WheelElement wheel210[48*8];
 
 /// 3rd wheel, skips multiples of 2, 3 and 5
 typedef WheelFactorization<30, 8, wheel30Init, wheel30> Modulo30Wheel_t;
