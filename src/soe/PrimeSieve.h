@@ -38,6 +38,7 @@
 #define PRIMESIEVE_VERSION "3.8"
 #define PRIMESIEVE_MAJOR_VERSION 3
 #define PRIMESIEVE_MINOR_VERSION 8
+#define PRIMESIEVE_YEAR 2012
 
 #include <stdint.h>
 #include <cstdlib>
