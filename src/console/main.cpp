@@ -40,8 +40,8 @@
 /// Eratosthenes that generates prime numbers and prime k-tuplets (twin
 /// primes, prime triplets, ...) up to 2^64 maximum.
 
-#include "../expr/ExpressionParser.h"
 #include "../soe/ParallelPrimeSieve.h"
+#include "../expr/ExpressionParser.h"
 
 #include <stdint.h>
 #include <exception>
@@ -118,8 +118,8 @@ void help() {
 }
 
 void version() {
-  std::cout << "primesieve 3.8, <http://primesieve.googlecode.com>" << std::endl
-            << "Copyright (C) 2012 Kim Walisch" << std::endl
+  std::cout << "primesieve " << PRIMESIEVE_VERSION << ", <http://primesieve.googlecode.com>" << std::endl
+            << "Copyright (C) " << PRIMESIEVE_YEAR << " Kim Walisch" << std::endl
             << "This software is licensed under the New BSD License. See the LICENSE file" << std::endl
             << "for more information." << std::endl;
   std::exit(1);
@@ -150,51 +150,56 @@ void processOptions(int argc, char* argv[]) {
   ExpressionParser<uint64_t> parser64;
   ExpressionParser<> parser;
   uint64_t res = 0;
+  int i = 1;
 
   // process START and STOP number
-  for (int i = 1; i < std::min(3, argc); i++) {
+  for (; i < std::min(3, argc); i++) {
     try {
       number.push_back(parser64.eval(argv[i]));
       if (!isDigits(argv[i]))
         printParserResult = true;
+    } catch (...) {
+      break;
     }
-    catch (parser_error&) { }
   }
-  int i = static_cast<int>(number.size() + 1);
   for (; i < argc; i++) {
     if (*argv[i] != '-' &&
         *argv[i] != '/') help();
     argv[i]++;
-    switch (*argv[i]++) {
-      case 'c': res = parser.eval(argv[i]);
-                do {
-                  if (res % 10 < 1 || res % 10 > 7)
+    try {
+      switch (*argv[i]++) {
+        case 'c': res = parser.eval(argv[i]);
+                  do {
+                    if (res % 10 < 1 || res % 10 > 7)
+                      help();
+                    flags |= COUNT_PRIMES << (res % 10 - 1);
+                    res /= 10;
+                  } while (res > 0);
+                  break;
+        case 'o': if (number.size() == 0)
                     help();
-                  flags |= COUNT_PRIMES << (res % 10 - 1);
-                  res /= 10;
-                } while (res > 0);
-                break;
-      case 'o': if (number.size() == 0)
-                  help();
-                res = number[0] + parser64.eval(argv[i]);
-                number.push_back(res);
-                break;
-      case 'p': res = parser.eval(argv[i]);
-                if (res < 1 || res > 7)
-                  help();
-                flags |= PRINT_PRIMES << (res - 1);
-                quietMode = true;
-                break;
-      case 'q': quietMode = true;                 break;
-      case 'r': preSieve  = parser.eval(argv[i]); break;
-      case 's': sieveSize = parser.eval(argv[i]); break;
-      case 't': arg = argv[i];
-                if (arg.compare("est") == 0)
-                  test();
-                threads = parser.eval(argv[i]);
-                break;
-      case 'v': version();
-      default : help();
+                  res = number[0] + parser64.eval(argv[i]);
+                  number.push_back(res);
+                  break;
+        case 'p': res = parser.eval(argv[i]);
+                  if (res < 1 || res > 7)
+                    help();
+                  flags |= PRINT_PRIMES << (res - 1);
+                  quietMode = true;
+                  break;
+        case 'q': quietMode = true;                 break;
+        case 'r': preSieve  = parser.eval(argv[i]); break;
+        case 's': sieveSize = parser.eval(argv[i]); break;
+        case 't': arg = argv[i];
+                  if (arg.compare("est") == 0)
+                    test();
+                  threads = parser.eval(argv[i]);
+                  break;
+        case 'v': version();
+        default : help();
+      }
+    } catch (parser_error&) {
+      help();
     }
   }
   if (number.size() != 2)
@@ -204,10 +209,8 @@ void processOptions(int argc, char* argv[]) {
 } // end namespace
 
 int main(int argc, char* argv[]) {
-  try { processOptions(argc, argv); }
-  catch (parser_error&) {
-    help();
-  }
+  processOptions(argc, argv);
+
   std::cout << std::left;
   if (!quietMode && printParserResult) {
     std::cout << std::setw(10) << "START" << " = " << number[0] << std::endl;
