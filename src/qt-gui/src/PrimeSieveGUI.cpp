@@ -76,7 +76,7 @@ void PrimeSieveGUI::changeEvent(QEvent *e) {
 }
 
 void PrimeSieveGUI::initGUI() {
-  this->setWindowTitle(APPLICATION_NAME + " " + APPLICATION_VERSION);
+  this->setWindowTitle(APPLICATION_NAME + " " + PRIMESIEVE_VERSION);
   this->createMenu(primeText_);
 
   // fill the sieveSizeComboBox with power of 2 values <= "4096 KB"
