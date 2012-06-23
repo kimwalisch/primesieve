@@ -104,7 +104,7 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
 /// Get a thread interval size that ensures a good load balance
 uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
   assert(threads > 1);
-  uint64_t bestStrategy = std::min(isqrt(stop_) * 1000, (stop_ - start_) / threads);
+  uint64_t bestStrategy = std::min((stop_ - start_) / threads, isqrt(stop_) * 1000);
   uint64_t balanced = getInBetween(config::MIN_THREAD_INTERVAL, bestStrategy, config::MAX_THREAD_INTERVAL);
   // align to mod 30 to prevent prime k-tuplet gaps
   balanced += 30 - balanced % 30;
@@ -113,7 +113,7 @@ uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
 
 #ifdef _OPENMP
 
-/// Used to synchronize OpenMP threads for prime number generation
+/// Used to synchronize threads for prime number generation
 void ParallelPrimeSieve::set_lock() {
   omp_set_lock(&lock_);
 }
@@ -148,10 +148,10 @@ void ParallelPrimeSieve::sieve() {
   else {
     double t1 = omp_get_wtime();
     reset();
-    uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
-    uint64_t balanced = getBalancedInterval(threads);
-    uint64_t align = start_ + 32 - start_ % 30;
     OmpLockGuard omp_lock(&lock_);
+    uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
+    uint64_t align = start_ + 32 - start_ % 30;
+    uint64_t balanced = getBalancedInterval(threads);
     // The sieve interval [start_, stop_] is subdivided into chunks of
     // size 'balanced' that are sieved in parallel using multiple
     // threads. This scales well as each thread sieves using its own
