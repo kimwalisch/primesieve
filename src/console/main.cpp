@@ -59,10 +59,11 @@ namespace {
 // start and stop number for sieving
 std::vector<uint64_t> number;
 
-int preSieve  = -1;
-int sieveSize = -1;
-int threads   = -1;
-int flags     =  0;
+int preSieve   = -1;
+int sieveSize  = -1;
+int threads    = -1;
+int maxThreads = ParallelPrimeSieve::getMaxThreads();
+int flags      = 0;
 
 bool quietMode = false;
 bool printParserResult = false;
@@ -83,7 +84,6 @@ enum {
 };
 
 void help() {
-  const int maxThreads = ParallelPrimeSieve::getMaxThreads();
   std::cout << "Usage: primesieve START STOP [OPTION]..."                                              << std::endl
             << "Use the segmented sieve of Eratosthenes to generate the prime numbers and/or"          << std::endl
             << "prime k-tuplets in the interval [START, STOP] < 2^64"                                  << std::endl
@@ -148,7 +148,7 @@ void processOptions(int argc, char* argv[]) {
   if (argc < 2 || argc > 20) help();
   std::string arg;
   ExpressionParser<uint64_t> parser64;
-  ExpressionParser<> parser;
+  ExpressionParser<int> parser;
   uint64_t res = 0;
   int i = 1;
 
