@@ -68,7 +68,7 @@ inline T popcount_lauradoux(const uint64_t* data, T size) {
 
   uint64_t count1, count2, half1, half2, acc;
   uint64_t x;
-  T bitCount = 0;
+  T bit_count = 0;
   T i, j;
   T limit30 = size - size % 30;
 
@@ -93,8 +93,7 @@ inline T popcount_lauradoux(const uint64_t* data, T size) {
     acc = (acc & m8) + ((acc >>  8)  & m8);
     acc = (acc       +  (acc >> 16)) & m16;
     acc =  acc       +  (acc >> 32);
-
-    bitCount += static_cast<T>(acc);
+    bit_count += static_cast<T>(acc);
   }
 
   // Count the bits of the remaining bytes (max 29*8 = 232)
@@ -104,9 +103,9 @@ inline T popcount_lauradoux(const uint64_t* data, T size) {
     x =  x       - ((x >> 1)  & m1);
     x = (x & m2) + ((x >> 2)  & m2);
     x = (x       +  (x >> 4)) & m4;
-    bitCount += static_cast<T>((x * h01) >> 56);
+    bit_count += static_cast<T>((x * h01) >> 56);
   }
-  return bitCount;
+  return bit_count;
 }
 
 /// Count the number of 1 bits (population count) in a
@@ -116,12 +115,12 @@ inline T popcount_lauradoux(const uint64_t* data, T size) {
 template <typename T>
 inline T popcount_kernighan(const uint8_t* data, T size) {
   assert(data != NULL);
-  T bitCount = 0;
+  T bit_count = 0;
   for (T i = 0; i < size; i++) {
     for (unsigned int v = data[i]; v != 0; v &= v - 1)
-      bitCount++;
+      bit_count++;
   }
-  return bitCount;
+  return bit_count;
 }
 
 } // namespace soe
