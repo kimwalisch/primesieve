@@ -56,8 +56,8 @@ EratBig::EratBig(const SieveOfEratosthenes& soe) :
   // EratBig uses bitwise operations that require a power of 2 sieve size
   if (!isPowerOf2(soe.getSieveSize()))
     throw std::invalid_argument("EratBig: sieveSize must be a power of 2 (2^n).");
-  setSize(soe);
-  initBucketLists();
+  setListsSize(soe);
+  init();
 }
 
 EratBig::~EratBig() {
@@ -66,23 +66,17 @@ EratBig::~EratBig() {
     delete[] *it;
 }
 
-/// Set the size of the lists_ vector.
-/// @remark The size is a power of 2 value which allows use of fast
-///         bitwise operators in crossOff().
-///
-void EratBig::setSize(const SieveOfEratosthenes& soe) {
+void EratBig::setListsSize(const SieveOfEratosthenes& soe) {
   // max values in crossOff()
   uint_t maxSievingPrime  = soe.getSqrtStop() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
-  uint_t maxMultipleDist  = maxSievingPrime * getMaxFactor() + getMaxFactor();
-  uint_t maxMultipleIndex = soe.getSieveSize() - 1 + maxMultipleDist;
+  uint_t maxNextMultiple  = maxSievingPrime * getMaxFactor() + getMaxFactor();
+  uint_t maxMultipleIndex = soe.getSieveSize() - 1 + maxNextMultiple;
   uint_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
-  // size must be >= maxSegmentCount + 1
-  uint_t size = nextPowerOf2(maxSegmentCount + 1);
-  moduloListsSize_ = size - 1;
+  uint_t size = maxSegmentCount + 1;
   lists_.resize(size, NULL);
 }
 
-void EratBig::initBucketLists() {
+void EratBig::init() {
   // initialize each bucket list with an empty bucket
   for (uint_t i = 0; i < lists_.size(); i++)
     pushBucket(i);

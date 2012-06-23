@@ -65,9 +65,8 @@ private:
   /// log2 of SieveOfEratosthenes::sieveSize_
   const uint_t log2SieveSize_;
   const uint_t moduloSieveSize_;
-  uint_t moduloListsSize_;
-  void setSize(const SieveOfEratosthenes&);
-  void initBucketLists();
+  void setListsSize(const SieveOfEratosthenes&);
+  void init();
   void pushBucket(uint_t);
   void storeSievingPrime(uint_t, uint_t, uint_t);
 };
