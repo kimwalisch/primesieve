@@ -59,18 +59,6 @@ inline bool isPowerOf2(T x) {
   return (x != 0 && (x & (x - 1)) == 0);
 }
 
-/// Round up to the next power of 2.
-/// @see Hacker's Delight, p. 48.
-/// @param x  Integer value.
-///
-template <typename T>
-inline T nextPowerOf2(T x) {
-  x = x - 1;
-  for (T i = 1; i < getBits<T>(); i += i)
-    x = x | (x >> i);
-  return x + 1;
-}
-
 /// Round down to the next power of 2.
 /// @see Hacker's Delight, p. 47.
 /// @param x  Integer value.
