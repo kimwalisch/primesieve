@@ -39,7 +39,7 @@ Contents
   ./doc - Documentation directory
   -------------------------------
   INSTALL          Explains how to compile primesieve.
-  LIBPRIMESIEVE    Explains how to build the primesieve C++ library
+  LIBPRIMESIEVE    Explains how to build primesieve as a C++ library
                    on Unix-like OSes and Windows.
   USAGE_EXAMPLES   Source code examples that show how to use
                    libprimesieve e.g. for prime number generation.
