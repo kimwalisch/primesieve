@@ -271,8 +271,7 @@ Contents
       try {
         ps.generatePrimes(0, limit, check);
         isPrime = true;
-      }
-      catch (...) { }
+      } catch (cancel_sieving&) { }
     }
     std::cout << candidate << " is "
               << (isPrime ? "a prime" : "not a prime")
