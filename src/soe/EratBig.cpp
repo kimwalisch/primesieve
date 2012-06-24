@@ -163,6 +163,7 @@ void EratBig::crossOff(uint8_t* sieve)
         if (!lists_[segment1]->store(sievingPrime1, multipleIndex1, wheelIndex1))
           pushBucket(segment1);
       }
+
       if (wPrime != end) {
         uint_t multipleIndex = wPrime->getMultipleIndex();
         uint_t wheelIndex    = wPrime->getWheelIndex();
