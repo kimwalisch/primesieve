@@ -123,10 +123,9 @@ enum {
   SIEVESIZE_PRIMENUMBERGENERATOR = L1_DCACHE_SIZE,
 
   /// Number of WheelPrimes (i.e. sieving primes) per Bucket in
-  /// EratSmall, EratMedium and EratBig objects. For Intel Core 2 CPUs
-  /// from 2008 and first generation Intel Core-i CPUs from 2010 use
-  /// 1024, future CPU generations are likely to perform better with a
-  /// greater value.
+  /// EratSmall, EratMedium and EratBig objects. For first generation
+  /// Intel Core-i CPUs from 2010 use 512 or 1024, for older CPUs e.g.
+  /// PowerPC G4 from 2003 use 256.
   /// @see Bucket in WheelFactorization.h
   ///
   BUCKETSIZE = 1 << 10,
