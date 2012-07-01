@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 23 June 2012
+# Last modified: 01 July 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -13,9 +13,9 @@ I. About
 ========
 
   This file explains how to compile and use the primesieve console
-  application, to compile the primesieve GUI application please refer
-  to src/qt-gui/INSTALL. If you want to use primesieve in your own C++
-  program read LIBPRIMESIEVE.
+  (terminal) application, to compile the primesieve GUI application
+  please refer to src/qt-gui/INSTALL. If you want to use primesieve in
+  your own C++ program read LIBPRIMESIEVE.
 
   Precompiled binaries for Windows, Linux and Mac OS X are available
   at: http://code.google.com/p/primesieve/downloads/list
