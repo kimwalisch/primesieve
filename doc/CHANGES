@@ -1,18 +1,18 @@
-New in version 3.8, 23/06/2012
+New in version 3.8, 01/07/2012
 ==============================
 
-This is a maintenance release with focus on documentation and code
-quality.
-
 1. Improved OOP design of WheelFactorization.h.
-2. Minor speed improvement for big sieving primes ~ 2%, reduced the
-   number of arithmetic operations in EratBig's main loop.
-3. Improved code readability of EratSmall.cpp, EratMedium.cpp,
+2. Minor speed up for big sieving primes ~2% (src/soe/EratBig.cpp),
+   reduced the number of operations in the main sieving loop.
+3. Minor speed up for small sieving primes ~3% (src/soe/EraSmall.cpp),
+   new inner sieving loop without instruction dependencies and that
+   uses only 11 asm instructions (previously 16).
+4. Improved code readability of EratSmall.cpp, EratMedium.cpp,
    EratBig.cpp, SieveOfEratosthenes.cpp and others.
-4. Renamed ./docs to ./doc
-5. Revised README.txt, added 7. Motivation.
-6. Updated INSTALL, LIBPRIMESIEVE and USAGE_EXAMPLES.
-7. Added version #defines to PrimeSieve.h, e.g. for this release:
+5. Renamed ./docs to ./doc
+6. Revised README.txt, added 7. Motivation.
+7. Updated INSTALL, LIBPRIMESIEVE and USAGE_EXAMPLES.
+8. Added version #defines to PrimeSieve.h, e.g. for this release:
 
    #define PRIMESIEVE_VERSION       "3.8"
    #define PRIMESIEVE_MAJOR_VERSION  3
