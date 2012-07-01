@@ -80,7 +80,7 @@ void EratSmall::crossOff(uint8_t* sieve, uint_t sieveSize)
 
     for (; wPrime != end; wPrime++) {
       uint_t sievingPrime  = wPrime->getSievingPrime();
-      uint_t loopDistance  = wPrime->getSievingPrime() * 30 + 29;
+      uint_t loopDistance  = wPrime->getSievingPrime() * 28 + 27;
       uint_t multipleIndex = wPrime->getMultipleIndex();
       uint_t wheelIndex    = wPrime->getWheelIndex();
 
