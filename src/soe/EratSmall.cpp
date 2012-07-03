@@ -58,9 +58,9 @@ EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
 /// Add a new sieving prime
 /// @see addSievingPrime() in WheelFactorization.h
 ///
-void EratSmall::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
+void EratSmall::storeSievingPrime(uint_t sievingPrime, uint_t multipleIndex, uint_t wheelIndex)
 {
-  if (!buckets_.back().store(prime, multipleIndex, wheelIndex))
+  if (!buckets_.back().store(sievingPrime, multipleIndex, wheelIndex))
     buckets_.push_back(Bucket());
 }
 

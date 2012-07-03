@@ -59,9 +59,9 @@ EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
 /// Add a new sieving prime
 /// @see addSievingPrime() in WheelFactorization.h
 ///
-void EratMedium::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
+void EratMedium::storeSievingPrime(uint_t sievingPrime, uint_t multipleIndex, uint_t wheelIndex)
 {
-  if (!buckets_.back().store(prime, multipleIndex, wheelIndex))
+  if (!buckets_.back().store(sievingPrime, multipleIndex, wheelIndex))
     buckets_.push_back(Bucket());
 }
 
@@ -88,8 +88,8 @@ void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize)
       // cross-off the multiples (unset bits) of sievingPrime(0|1)
       // @see unsetBit() in WheelFactorization.h
       for (;;) {
-         if (multipleIndex0 < sieveSize) unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0); else break;
-         if (multipleIndex1 < sieveSize) unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1); else break;
+        if (multipleIndex0 < sieveSize) unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0); else break;
+        if (multipleIndex1 < sieveSize) unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1); else break;
       }
       while (multipleIndex0 < sieveSize) unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
       while (multipleIndex1 < sieveSize) unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
