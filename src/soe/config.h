@@ -79,10 +79,13 @@ namespace config {
 
 /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
 /// are used with EratSmall objects.
+/// Good FACTOR_ERATSMALL values:
+/// For PowerPC G4 CPUs from 2003 use 1.0
+/// For x86-64 CPUs from 2006 to 2012 use 0.4
 /// @pre FACTOR_ERATSMALL >= 0 && <= 4
 /// @see SieveOfEratosthenes::sieve(uint_t)
 ///
-const double FACTOR_ERATSMALL = 0.7;
+const double FACTOR_ERATSMALL = 0.4;
 
 enum {
   /// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL) &&
@@ -123,9 +126,10 @@ enum {
   SIEVESIZE_PRIMENUMBERGENERATOR = L1_DCACHE_SIZE,
 
   /// Number of WheelPrimes (i.e. sieving primes) per Bucket in
-  /// EratSmall, EratMedium and EratBig objects. For first generation
-  /// Intel Core-i CPUs from 2010 use 512 or 1024, for older CPUs e.g.
-  /// PowerPC G4 from 2003 use 256.
+  /// EratSmall, EratMedium and EratBig objects.
+  /// Good BUCKETSIZE values:
+  /// For PowerPC G4 CPUs from 2003 use 256.
+  /// For x86-64 CPUs from 2006 to 2012 use 512 or 1024.
   /// @see Bucket in WheelFactorization.h
   ///
   BUCKETSIZE = 1 << 10,
