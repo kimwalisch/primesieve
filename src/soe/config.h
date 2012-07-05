@@ -36,10 +36,10 @@
 /// @file config.h
 /// @brief Macro definitions and constants that set the size of
 ///        various arrays and limits within primesieve.
-/// The constants have been optimized for my Intel Core i5-670 3.46GHz
-/// (32K L1 data cache per CPU core) and DDR3-1333. You can set
-/// L1_DCACHE_SIZE and BUCKETSIZE according to your CPU specifications
-/// to get the best performance.
+/// The constants have been optimized for an Intel Core i7-3770K
+/// 3.5GHz (32K L1 data cache per CPU core) CPU from 2012.
+/// You can set L1_DCACHE_SIZE and BUCKETSIZE according to your CPU
+/// specifications to get the best performance.
 
 #ifndef CONFIG_PRIMESIEVE_H
 #define CONFIG_PRIMESIEVE_H
