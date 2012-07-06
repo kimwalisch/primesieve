@@ -81,11 +81,11 @@ namespace config {
 /// are used with EratSmall objects.
 /// Good FACTOR_ERATSMALL values:
 /// For PowerPC G4 CPUs from 2003 use 1.0
-/// For x86-64 CPUs from 2006 to 2012 use 0.4
+/// For x86-64 CPUs from 2006 to 2012 use an element of [0.3, 0.8]
 /// @pre FACTOR_ERATSMALL >= 0 && <= 4
 /// @see SieveOfEratosthenes::sieve(uint_t)
 ///
-const double FACTOR_ERATSMALL = 0.4;
+const double FACTOR_ERATSMALL = 0.5;
 
 enum {
   /// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL) &&
