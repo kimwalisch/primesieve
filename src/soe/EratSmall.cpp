@@ -94,8 +94,8 @@ void EratSmall::crossOff(uint8_t* sieve, uint_t sieveSize)
       switch (wheelIndex) {
         // for sieving primes of type i*30 + 7
         for (;;) {
-          case 0: // fast loop, takes only =~ 11 asm instructions per
-                  // iteration to cross-off the next 8 multiples
+          case 0: // fast loop, uses only =~ 12 asm instructions (x86-64)
+                  // per iteration to cross-off the next 8 multiples
                   for (; p < loopLimit; p += sievingPrime * 30 + 7) {
                     p[sievingPrime *  0 + 0] &= BIT0;
                     p[sievingPrime *  6 + 1] &= BIT4;
