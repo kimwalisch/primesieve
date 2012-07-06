@@ -78,7 +78,7 @@ typedef unsigned int uint_t;
 namespace config {
 
 /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
-/// are used with EratSmall objects.
+/// are processed in an EratSmall object.
 /// Good FACTOR_ERATSMALL values:
 /// For PowerPC G4 CPUs from 2003 use 1.0
 /// For x86-64 CPUs from 2006 to 2012 use an element of [0.3, 0.8]
@@ -90,7 +90,7 @@ const double FACTOR_ERATSMALL = 0.5;
 enum {
   /// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL) &&
   ///               <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
-  /// are used with EratMedium objects.
+  /// are processed in an EratMedium object.
   /// @pre FACTOR_ERATMEDIUM >= 0 && <= 6
   /// @see SieveOfEratosthenes::sieve(uint_t)
   ///
