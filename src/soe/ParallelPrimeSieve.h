@@ -74,7 +74,7 @@ private:
   /// Number of threads for sieving
   int numThreads_;
   int getIdealNumThreads() const;
-  uint64_t getBalancedInterval(int) const;
+  uint64_t getThreadInterval(int) const;
 #ifdef _OPENMP
 public:
   using PrimeSieve::sieve;

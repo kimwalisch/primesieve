@@ -101,14 +101,18 @@ int ParallelPrimeSieve::getIdealNumThreads() const {
   return static_cast<int>(idealNumThreads);
 }
 
-/// Get a thread interval size that ensures a good load balance
-uint64_t ParallelPrimeSieve::getBalancedInterval(int threads) const {
-  assert(threads > 1);
-  uint64_t bestStrategy = std::min((stop_ - start_) / threads, isqrt(stop_) * 1000);
-  uint64_t balanced = getInBetween(config::MIN_THREAD_INTERVAL, bestStrategy, config::MAX_THREAD_INTERVAL);
+/// Get an interval size that ensures a good load balance
+uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const {
+  assert(threads > 0);
+  uint64_t unbalanced = (stop_ - start_) / threads;
+  uint64_t balanced = isqrt(stop_) * 1000;
+  uint64_t fastest = std::min(balanced, unbalanced);
+  uint64_t threadInterval = getInBetween(config::MIN_THREAD_INTERVAL, fastest, config::MAX_THREAD_INTERVAL);
+  if ((stop_ - start_) / threadInterval < threads * 5u)
+    threadInterval = unbalanced;
   // align to mod 30 to prevent prime k-tuplet gaps
-  balanced += 30 - balanced % 30;
-  return balanced;
+  threadInterval += 30 - threadInterval % 30;
+  return threadInterval;
 }
 
 #ifdef _OPENMP
@@ -151,16 +155,16 @@ void ParallelPrimeSieve::sieve() {
     OmpLockGuard omp_lock(&lock_);
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
     uint64_t align = start_ + 32 - start_ % 30;
-    uint64_t balanced = getBalancedInterval(threads);
+    uint64_t threadInterval = getThreadInterval(threads);
     // The sieve interval [start_, stop_] is subdivided into chunks of
-    // size 'balanced' that are sieved in parallel using multiple
-    // threads. This scales well as each thread sieves using its own
-    // private memory without need of synchronization.
+    // size 'threadInterval' that are sieved in parallel using
+    // multiple threads. This scales well as each thread sieves using
+    // its own private memory without need of synchronization.
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
         reduction(+: count0, count1, count2, count3, count4, count5, count6)
-    for (uint64_t n = align; n < stop_; n += balanced) {
+    for (uint64_t n = align; n < stop_; n += threadInterval) {
       uint64_t threadStart = (n == align) ? start_ : n;
-      uint64_t threadStop = std::min(n + balanced, stop_);
+      uint64_t threadStop = std::min(n + threadInterval, stop_);
       PrimeSieve ps(this);
       ps.sieve(threadStart, threadStop);
       count0 += ps.getCounts(0);
