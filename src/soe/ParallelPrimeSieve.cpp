@@ -90,8 +90,7 @@ void ParallelPrimeSieve::setNumThreads(int threads) {
 }
 
 int ParallelPrimeSieve::getIdealNumThreads() const {
-  // by default 1 thread is used to generate primes in arithmetic
-  // order but multiple threads are used for counting
+  // use 1 thread to generate primes in arithmetic order
   if (isGenerate()) return 1;
   // each thread sieves at least an interval of size sqrt(x) / 5
   // but not smaller than MIN_THREAD_INTERVAL
@@ -108,9 +107,10 @@ uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const {
   uint64_t balanced = isqrt(stop_) * 1000;
   uint64_t fastest = std::min(balanced, unbalanced);
   uint64_t threadInterval = getInBetween(config::MIN_THREAD_INTERVAL, fastest, config::MAX_THREAD_INTERVAL);
-  if ((stop_ - start_) / threadInterval < threads * 5u)
+  uint64_t chunks = (stop_ - start_) / threadInterval;
+  if (chunks < threads * 5u)
     threadInterval = unbalanced;
-  // align to mod 30 to prevent prime k-tuplet gaps
+  // align to modulo 30 to prevent prime k-tuplet gaps
   threadInterval += 30 - threadInterval % 30;
   return threadInterval;
 }
@@ -145,8 +145,9 @@ void ParallelPrimeSieve::sieve() {
 
   int threads = getNumThreads();
   // the user has set too many threads
-  if (threads >= 2 && (stop_ - start_) / threads < config::MIN_THREAD_INTERVAL)
+  if (threads > 1 && (stop_ - start_) / threads < config::MIN_THREAD_INTERVAL)
     threads = getIdealNumThreads();
+
   if (threads == 1)
     PrimeSieve::sieve();
   else {
