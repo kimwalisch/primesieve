@@ -54,12 +54,13 @@ public:
   void crossOff(uint8_t*, uint_t);
   uint_t getLimit() const { return limit_; }
 private:
+  typedef std::list<Bucket>::iterator BucketIterator_t;
   /// Sieving primes in EratSmall are <= limit_
   uint_t limit_;
-  typedef std::list<Bucket> BucketList_t;
   /// List of buckets, holds the sieving primes
-  BucketList_t buckets_;
+  std::list<Bucket> buckets_;
   void storeSievingPrime(uint_t, uint_t, uint_t);
+  void crossOff(Bucket&, uint8_t*, uint_t);
 };
 
 } // namespace soe

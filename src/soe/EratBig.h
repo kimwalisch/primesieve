@@ -69,6 +69,7 @@ private:
   void init();
   void pushBucket(uint_t);
   void storeSievingPrime(uint_t, uint_t, uint_t);
+  void crossOff(Bucket&, uint8_t*);
 };
 
 } // namespace soe

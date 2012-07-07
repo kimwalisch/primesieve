@@ -115,12 +115,8 @@ void EratBig::storeSievingPrime(uint_t sievingPrime, uint_t multipleIndex, uint_
     pushBucket(segment);
 }
 
-/// This is an optimized implementation of Tomas Oliveira e Silva's
-/// cache-friendly segmented sieve of Eratosthenes algorithm, see:
-/// http://www.ieeta.pt/~tos/software/prime_sieve.html
 /// This algorithm is used to cross-off the multiples of big sieving
-/// primes that have very few multiples per segment. EratBig uses a
-/// modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
+/// primes that have very few multiples per segment.
 /// @see crossOffMultiples() in SieveOfEratosthenes.cpp
 ///
 void EratBig::crossOff(uint8_t* sieve)
@@ -128,68 +124,78 @@ void EratBig::crossOff(uint8_t* sieve)
   // lists_[0] contains the buckets related to the current segment
   // i.e. its buckets contain all the sieving primes that have
   // multiples in the current segment
-  while (lists_[0]->hasNext() || !lists_[0]->empty()) {
-    Bucket* bucket = lists_[0];
-    lists_[0] = NULL;
+  Bucket*& list = lists_[0];
+
+  while (list->hasNext() || !list->empty()) {
+    Bucket* bucket = list;
+    list = NULL;
     pushBucket(0);
-    // each loop iteration removes the next multiple of the
-    // sieving primes of the current bucket
     do {
-      WheelPrime* wPrime = bucket->begin();
-      WheelPrime* end    = bucket->end();
-
-      // 2 sieving primes are processed per loop iteration to break
-      // the dependency chain and reduce pipeline stalls
-      for (; wPrime + 2 <= end; wPrime += 2) {
-        uint_t multipleIndex0 = wPrime[0].getMultipleIndex();
-        uint_t wheelIndex0    = wPrime[0].getWheelIndex();
-        uint_t sievingPrime0  = wPrime[0].getSievingPrime();
-        uint_t multipleIndex1 = wPrime[1].getMultipleIndex();
-        uint_t wheelIndex1    = wPrime[1].getWheelIndex();
-        uint_t sievingPrime1  = wPrime[1].getSievingPrime();
-        // cross-off the current multiple (unset corresponding bit) of
-        // sievingPrime(0|1) and calculate the next multiple
-        // @see unsetBit() in WheelFactorization.h
-        unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
-        unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
-        uint_t segment0 = multipleIndex0 >> log2SieveSize_;
-        uint_t segment1 = multipleIndex1 >> log2SieveSize_;
-        multipleIndex0 &= moduloSieveSize_;
-        multipleIndex1 &= moduloSieveSize_;
-        // move sievingPrime(0|1) to the bucket list
-        // related to its next multiple
-        if (!lists_[segment0]->store(sievingPrime0, multipleIndex0, wheelIndex0))
-          pushBucket(segment0);
-        if (!lists_[segment1]->store(sievingPrime1, multipleIndex1, wheelIndex1))
-          pushBucket(segment1);
-      }
-
-      if (wPrime != end) {
-        uint_t multipleIndex = wPrime->getMultipleIndex();
-        uint_t wheelIndex    = wPrime->getWheelIndex();
-        uint_t sievingPrime  = wPrime->getSievingPrime();
-        unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
-        uint_t segment = multipleIndex >> log2SieveSize_;
-        multipleIndex &= moduloSieveSize_;
-        if (!lists_[segment]->store(sievingPrime, multipleIndex, wheelIndex))
-          pushBucket(segment);
-      }
-
+      crossOff(*bucket, sieve);
       // reset the processed bucket and move it to the bucket stock_
       Bucket* old = bucket;
       bucket = bucket->next();
       old->reset();
       old->setNext(stock_);
       stock_ = old;
-    }
-    while (bucket != NULL);
+    } while (bucket != NULL);
   }
 
-  // lists_[0] has been processed, thus the list related to the next
-  // segment lists_[1] moves to lists_[0]
-  Bucket* tmp = lists_[0];
+  // lists_[0] has been processed, thus the list related to the
+  // next segment lists_[1] moves to lists_[0]
+  Bucket* tmp = list;
   std::copy(lists_.begin() + 1, lists_.end(), lists_.begin());
   lists_.back() = tmp;
+}
+
+/// Cross-off the next multiple of each sieving prime within the
+/// current bucket. This algorithm uses a modulo 210 wheel that skips
+/// multiples of 2, 3, 5 and 7.
+/// This is an optimized implementation of Tomas Oliveira e Silva's
+/// cache-friendly segmented sieve of Eratosthenes algorithm:
+/// http://www.ieeta.pt/~tos/software/prime_sieve.html
+///
+void EratBig::crossOff(Bucket& bucket, uint8_t* sieve)
+{
+  WheelPrime* wPrime = bucket.begin();
+  WheelPrime* end    = bucket.end();
+
+  // 2 sieving primes are processed per loop iteration to break
+  // the dependency chain and reduce pipeline stalls
+  for (; wPrime + 2 <= end; wPrime += 2) {
+    uint_t multipleIndex0 = wPrime[0].getMultipleIndex();
+    uint_t wheelIndex0    = wPrime[0].getWheelIndex();
+    uint_t sievingPrime0  = wPrime[0].getSievingPrime();
+    uint_t multipleIndex1 = wPrime[1].getMultipleIndex();
+    uint_t wheelIndex1    = wPrime[1].getWheelIndex();
+    uint_t sievingPrime1  = wPrime[1].getSievingPrime();
+    // cross-off the current multiple (unset corresponding bit) of
+    // sievingPrime(0|1) and calculate the next multiple
+    // @see unsetBit() in WheelFactorization.h
+    unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
+    unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
+    uint_t segment0 = multipleIndex0 >> log2SieveSize_;
+    uint_t segment1 = multipleIndex1 >> log2SieveSize_;
+    multipleIndex0 &= moduloSieveSize_;
+    multipleIndex1 &= moduloSieveSize_;
+    // move sievingPrime(0|1) to the bucket list
+    // related to its next multiple
+    if (!lists_[segment0]->store(sievingPrime0, multipleIndex0, wheelIndex0))
+      pushBucket(segment0);
+    if (!lists_[segment1]->store(sievingPrime1, multipleIndex1, wheelIndex1))
+      pushBucket(segment1);
+  }
+
+  if (wPrime != end) {
+    uint_t multipleIndex = wPrime->getMultipleIndex();
+    uint_t wheelIndex    = wPrime->getWheelIndex();
+    uint_t sievingPrime  = wPrime->getSievingPrime();
+    unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
+    uint_t segment = multipleIndex >> log2SieveSize_;
+    multipleIndex &= moduloSieveSize_;
+    if (!lists_[segment]->store(sievingPrime, multipleIndex, wheelIndex))
+      pushBucket(segment);
+  }
 }
 
 } // namespace soe
