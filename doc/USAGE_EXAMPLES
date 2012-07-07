@@ -1,4 +1,4 @@
-June 23, 2012
+July 7, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -41,13 +41,13 @@ Contents
   #include <primesieve/soe/PrimeSieve.h>
   #include <iostream>
 
-  void print(unsigned int prime) {
+  void callback(unsigned int prime) {
     std::cout << prime << '\n';
   }
 
   int main() {
     PrimeSieve ps;
-    ps.generatePrimes(2, 1000, print);
+    ps.generatePrimes(2, 1000, callback);
     return 0;
   }
 
@@ -169,6 +169,8 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
   // Sum the primes below 10^10 using 4 threads
+  // Note: prime number generation is synchronized i.e. only one
+  // thread at a time calls back primes.
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
   #include <stdint.h>
@@ -176,7 +178,7 @@ Contents
 
   uint64_t sum = 0;
 
-  void sumPrimes(uint64_t prime) {
+  void callback(uint64_t prime) {
     sum += prime;
   }
 
@@ -184,7 +186,7 @@ Contents
     uint64_t stop = (uint64_t) 1E10;
     ParallelPrimeSieve pps;
     pps.setNumThreads(4);
-    pps.generatePrimes(0, stop, sumPrimes);
+    pps.generatePrimes(0, stop, callback);
     std::cout << "Sum of the primes below 10^10 = " << sum << std::endl;
     return 0;
   }
