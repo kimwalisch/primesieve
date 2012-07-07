@@ -144,7 +144,7 @@ enum {
 /// MIN_THREAD_INTERVAL to reduce the thread creation overhead.
 /// @pre MIN_THREAD_INTERVAL >= 100
 ///
-const uint64_t MIN_THREAD_INTERVAL = static_cast<uint64_t>(1E8);
+const uint64_t MIN_THREAD_INTERVAL = static_cast<uint64_t>(1E7);
 
 /// Worker threads sieve at most an interval of size
 /// MAX_THREAD_INTERVAL to prevent load imbalance when lots of threads
