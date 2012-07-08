@@ -55,6 +55,7 @@ public:
   ~EratBig();
   void crossOff(uint8_t*);
 private:
+  typedef std::list<Bucket*>::iterator PointerIterator_t;
   enum { BUCKETS_PER_ALLOC = config::MEMORY_PER_ALLOC / sizeof(Bucket) };
   /// Vector of bucket lists, holds the sieving primes
   std::vector<Bucket*> lists_;
@@ -67,9 +68,11 @@ private:
   const uint_t moduloSieveSize_;
   void setListsSize(const SieveOfEratosthenes&);
   void init();
-  void pushBucket(uint_t);
+  static void moveBucket(Bucket&, Bucket*&);
+  void pushBucket(Bucket*&);
   void storeSievingPrime(uint_t, uint_t, uint_t);
   void crossOff(Bucket&, uint8_t*);
+  Bucket*& getList(uint_t*);
 };
 
 } // namespace soe

@@ -60,14 +60,14 @@ EratBig::EratBig(const SieveOfEratosthenes& soe) :
   init();
 }
 
-EratBig::~EratBig() {
-  for (std::list<Bucket*>::iterator it = pointers_.begin();
-      it != pointers_.end(); ++it)
-    delete[] *it;
+EratBig::~EratBig()
+{
+  for (PointerIterator_t iter = pointers_.begin(); iter != pointers_.end(); ++iter)
+    delete[] *iter;
 }
 
-void EratBig::setListsSize(const SieveOfEratosthenes& soe) {
-  // max values in crossOff()
+void EratBig::setListsSize(const SieveOfEratosthenes& soe)
+{
   uint_t maxSievingPrime  = soe.getSqrtStop() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
   uint_t maxNextMultiple  = maxSievingPrime * getMaxFactor() + getMaxFactor();
   uint_t maxMultipleIndex = soe.getSieveSize() - 1 + maxNextMultiple;
@@ -76,17 +76,24 @@ void EratBig::setListsSize(const SieveOfEratosthenes& soe) {
   lists_.resize(size, NULL);
 }
 
-void EratBig::init() {
+void EratBig::init()
+{
   // initialize each bucket list with an empty bucket
   for (uint_t i = 0; i < lists_.size(); i++)
-    pushBucket(i);
+    pushBucket(lists_[i]);
 }
 
-/// Add an empty bucket from the bucket stock_ to the
-/// front of lists_[segment], if the bucket stock_ is
-/// empty new buckets are allocated first.
+void EratBig::moveBucket(Bucket& src, Bucket*& dest)
+{
+  src.setNext(dest);
+  dest = &src;
+}
+
+/// Move an empty bucket from the stock_ to the front of list,
+/// if the stock_ is empty new buckets are allocated first.
 ///
-void EratBig::pushBucket(uint_t segment) {
+void EratBig::pushBucket(Bucket*& list)
+{
   if (stock_ == NULL) {
     Bucket* more = new Bucket[BUCKETS_PER_ALLOC];
     stock_ = &more[0];
@@ -95,24 +102,29 @@ void EratBig::pushBucket(uint_t segment) {
       more[i].setNext(&more[i + 1]);
     more[BUCKETS_PER_ALLOC - 1].setNext(NULL);
   }
-  Bucket* bucket = stock_;
+  Bucket* emptyBucket = stock_;
   stock_ = stock_->next();
-  bucket->setNext(lists_[segment]);
-  lists_[segment] = bucket;
+  moveBucket(*emptyBucket, list);
+}
+
+/// Get the bucket list related to the segment of the next
+/// multiple (multipleIndex) of sievingPrime.
+///
+Bucket*& EratBig::getList(uint_t* multipleIndex)
+{
+  uint_t segment = *multipleIndex >> log2SieveSize_;
+  *multipleIndex &= moduloSieveSize_;
+  return lists_[segment];
 }
 
 /// Add a new sieving prime
 /// @see addSievingPrime() in WheelFactorization.h
 ///
-void EratBig::storeSievingPrime(uint_t sievingPrime, uint_t multipleIndex, uint_t wheelIndex) {
-  // indicates in how many segments the next multiple
-  // of sievingPrime must be crossed-off
-  uint_t segment = multipleIndex >> log2SieveSize_;
-  multipleIndex &= moduloSieveSize_;
-  // store sievingPrime in the bucket list related to
-  // its next multiple's segment
-  if (!lists_[segment]->store(sievingPrime, multipleIndex, wheelIndex))
-    pushBucket(segment);
+void EratBig::storeSievingPrime(uint_t sievingPrime, uint_t multipleIndex, uint_t wheelIndex)
+{
+  Bucket*& list = getList(&multipleIndex);
+  if (!list->store(sievingPrime, multipleIndex, wheelIndex))
+    pushBucket(list);
 }
 
 /// This algorithm is used to cross-off the multiples of big sieving
@@ -129,20 +141,18 @@ void EratBig::crossOff(uint8_t* sieve)
   while (list->hasNext() || !list->empty()) {
     Bucket* bucket = list;
     list = NULL;
-    pushBucket(0);
+    pushBucket(list);
     do {
       crossOff(*bucket, sieve);
-      // reset the processed bucket and move it to the bucket stock_
-      Bucket* old = bucket;
+      Bucket* processed = bucket;
       bucket = bucket->next();
-      old->reset();
-      old->setNext(stock_);
-      stock_ = old;
+      processed->reset();
+      moveBucket(*processed, stock_);
     } while (bucket != NULL);
   }
 
   // lists_[0] has been processed, thus the list related to the
-  // next segment lists_[1] moves to lists_[0]
+  // next segment lists_[1] moves to lists_[0] ...
   Bucket* tmp = list;
   std::copy(lists_.begin() + 1, lists_.end(), lists_.begin());
   lists_.back() = tmp;
@@ -174,16 +184,14 @@ void EratBig::crossOff(Bucket& bucket, uint8_t* sieve)
     // @see unsetBit() in WheelFactorization.h
     unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
     unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
-    uint_t segment0 = multipleIndex0 >> log2SieveSize_;
-    uint_t segment1 = multipleIndex1 >> log2SieveSize_;
-    multipleIndex0 &= moduloSieveSize_;
-    multipleIndex1 &= moduloSieveSize_;
+    Bucket*& list0 = getList(&multipleIndex0);
+    Bucket*& list1 = getList(&multipleIndex1);
     // move sievingPrime(0|1) to the bucket list
     // related to its next multiple
-    if (!lists_[segment0]->store(sievingPrime0, multipleIndex0, wheelIndex0))
-      pushBucket(segment0);
-    if (!lists_[segment1]->store(sievingPrime1, multipleIndex1, wheelIndex1))
-      pushBucket(segment1);
+    if (!list0->store(sievingPrime0, multipleIndex0, wheelIndex0))
+      pushBucket(list0);
+    if (!list1->store(sievingPrime1, multipleIndex1, wheelIndex1))
+      pushBucket(list1);
   }
 
   if (wPrime != end) {
@@ -191,10 +199,9 @@ void EratBig::crossOff(Bucket& bucket, uint8_t* sieve)
     uint_t wheelIndex    = wPrime->getWheelIndex();
     uint_t sievingPrime  = wPrime->getSievingPrime();
     unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
-    uint_t segment = multipleIndex >> log2SieveSize_;
-    multipleIndex &= moduloSieveSize_;
-    if (!lists_[segment]->store(sievingPrime, multipleIndex, wheelIndex))
-      pushBucket(segment);
+    Bucket*& list = getList(&multipleIndex);
+    if (!list->store(sievingPrime, multipleIndex, wheelIndex))
+      pushBucket(list);
   }
 }
 
