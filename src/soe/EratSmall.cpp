@@ -67,10 +67,10 @@ void EratSmall::storeSievingPrime(uint_t sievingPrime, uint_t multipleIndex, uin
 /// Cross-off the multiples of sieving primes wihtin EratSmall
 /// @see crossOffMultiples() in SieveOfEratosthenes.cpp
 ///
-void EratSmall::crossOff(uint8_t* sieve, uint_t sieveSize)
+void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveLimit)
 {
   for (BucketIterator_t bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket)
-    crossOff(*bucket, sieve, sieveSize);
+    crossOff(*bucket, sieve, sieveLimit);
 }
 
 /// Cross-off the multiples of the sieving primes within the current
@@ -79,20 +79,17 @@ void EratSmall::crossOff(uint8_t* sieve, uint_t sieveSize)
 /// primes that have many multiples per segment. This algorithm uses a
 /// hardcoded modulo 30 wheel that skips multiples of 2, 3 and 5.
 ///
-void EratSmall::crossOff(Bucket& bucket, uint8_t* sieve, uint_t sieveSize)
+void EratSmall::crossOff(Bucket& bucket, uint8_t* sieve, uint8_t* sieveLimit)
 {
-  uint8_t* const sieveLimit = &sieve[sieveSize];
-
   WheelPrime* wPrime = bucket.begin();
   WheelPrime* end    = bucket.end();
 
   for (; wPrime != end; wPrime++) {
     uint_t sievingPrime  = wPrime->getSievingPrime();
-    uint_t loopDistance  = wPrime->getSievingPrime() * 28 + 27;
     uint_t multipleIndex = wPrime->getMultipleIndex();
     uint_t wheelIndex    = wPrime->getWheelIndex();
 
-    uint8_t* const loopLimit = (loopDistance < sieveSize) ? sieveLimit - loopDistance : sieve;
+    uint8_t* loopLimit = std::max(sieve, sieveLimit - (sievingPrime * 28 + 27));
 
     // pointer to the byte containing the first multiple of
     // sievingPrime within the current segment

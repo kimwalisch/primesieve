@@ -142,7 +142,7 @@ void SieveOfEratosthenes::preSieve() {
 void SieveOfEratosthenes::crossOffMultiples() {
   if (eratSmall_ != NULL) {
     // process the sieving primes with many multiples per segment
-    eratSmall_->crossOff(sieve_, sieveSize_);
+    eratSmall_->crossOff(sieve_, &sieve_[sieveSize_]);
     if (eratMedium_ != NULL) {
       // process the sieving primes with a few ...
       eratMedium_->crossOff(sieve_, sieveSize_);

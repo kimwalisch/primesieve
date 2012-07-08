@@ -51,7 +51,7 @@ class SieveOfEratosthenes;
 class EratSmall : public Modulo30Wheel_t {
 public:
   EratSmall(const SieveOfEratosthenes&);
-  void crossOff(uint8_t*, uint_t);
+  void crossOff(uint8_t*, uint8_t*);
   uint_t getLimit() const { return limit_; }
 private:
   typedef std::list<Bucket>::iterator BucketIterator_t;
@@ -60,7 +60,7 @@ private:
   /// List of buckets, holds the sieving primes
   std::list<Bucket> buckets_;
   void storeSievingPrime(uint_t, uint_t, uint_t);
-  void crossOff(Bucket&, uint8_t*, uint_t);
+  void crossOff(Bucket&, uint8_t*, uint8_t*);
 };
 
 } // namespace soe
