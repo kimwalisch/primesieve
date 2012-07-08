@@ -116,7 +116,7 @@ public:
   uint_t getSievingPrime() const  { return sievingPrime_; }
   uint_t getMultipleIndex() const { return indexes_ & ((1 << 23) - 1); }
   uint_t getWheelIndex() const    { return indexes_ >> 23; }
-  /// Store a sieving prime and its indexes
+
   void set(uint_t sievingPrime,
            uint_t multipleIndex,
            uint_t wheelIndex)

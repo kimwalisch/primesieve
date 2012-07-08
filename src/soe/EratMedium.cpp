@@ -70,8 +70,8 @@ void EratMedium::storeSievingPrime(uint_t sievingPrime, uint_t multipleIndex, ui
 ///
 void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize)
 {
-  for (BucketIterator_t bucket = buckets_.begin(); bucket != buckets_.end(); ++bucket)
-    crossOff(*bucket, sieve, sieveSize);
+  for (BucketIterator_t iter = buckets_.begin(); iter != buckets_.end(); ++iter)
+    crossOff(*iter, sieve, sieveSize);
 }
 
 /// Cross-off the multiples of the sieving primes within the current
