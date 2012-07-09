@@ -71,7 +71,7 @@ private:
   static void moveBucket(Bucket&, Bucket*&);
   void pushBucket(Bucket*&);
   void storeSievingPrime(uint_t, uint_t, uint_t);
-  void crossOff(Bucket&, uint8_t*);
+  void crossOff(uint8_t*, Bucket&);
   Bucket*& getList(uint_t*);
 };
 

@@ -143,7 +143,7 @@ void EratBig::crossOff(uint8_t* sieve)
     list = NULL;
     pushBucket(list);
     do {
-      crossOff(*bucket, sieve);
+      crossOff(sieve, *bucket);
       Bucket* processed = bucket;
       bucket = bucket->next();
       processed->reset();
@@ -165,7 +165,7 @@ void EratBig::crossOff(uint8_t* sieve)
 /// cache-friendly segmented sieve of Eratosthenes algorithm:
 /// http://www.ieeta.pt/~tos/software/prime_sieve.html
 ///
-void EratBig::crossOff(Bucket& bucket, uint8_t* sieve)
+void EratBig::crossOff(uint8_t* sieve, Bucket& bucket)
 {
   WheelPrime* wPrime = bucket.begin();
   WheelPrime* end    = bucket.end();

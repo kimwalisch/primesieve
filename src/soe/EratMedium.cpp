@@ -71,7 +71,7 @@ void EratMedium::storeSievingPrime(uint_t sievingPrime, uint_t multipleIndex, ui
 void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize)
 {
   for (BucketIterator_t iter = buckets_.begin(); iter != buckets_.end(); ++iter)
-    crossOff(*iter, sieve, sieveSize);
+    crossOff(sieve, sieveSize, *iter);
 }
 
 /// Cross-off the multiples of the sieving primes within the current
@@ -80,7 +80,7 @@ void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize)
 /// primes that have a few multiples per segment. This algorithm uses
 /// a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
 ///
-void EratMedium::crossOff(Bucket& bucket, uint8_t* sieve, uint_t sieveSize)
+void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize, Bucket& bucket)
 {
   WheelPrime* wPrime = bucket.begin();
   WheelPrime* end    = bucket.end();

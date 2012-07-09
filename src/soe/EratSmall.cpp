@@ -70,7 +70,7 @@ void EratSmall::storeSievingPrime(uint_t sievingPrime, uint_t multipleIndex, uin
 void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveLimit)
 {
   for (BucketIterator_t iter = buckets_.begin(); iter != buckets_.end(); ++iter)
-    crossOff(*iter, sieve, sieveLimit);
+    crossOff(sieve, sieveLimit, *iter);
 }
 
 /// Cross-off the multiples of the sieving primes within the current
@@ -79,7 +79,7 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveLimit)
 /// primes that have many multiples per segment. This algorithm uses a
 /// hardcoded modulo 30 wheel that skips multiples of 2, 3 and 5.
 ///
-void EratSmall::crossOff(Bucket& bucket, uint8_t* sieve, uint8_t* sieveLimit)
+void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveLimit, Bucket& bucket)
 {
   WheelPrime* wPrime = bucket.begin();
   WheelPrime* end    = bucket.end();

@@ -60,7 +60,7 @@ private:
   /// List of buckets, holds the sieving primes
   std::list<Bucket> buckets_;
   void storeSievingPrime(uint_t, uint_t, uint_t);
-  void crossOff(Bucket&, uint8_t*, uint_t);
+  void crossOff(uint8_t*, uint_t, Bucket&);
 };
 
 } // namespace soe
