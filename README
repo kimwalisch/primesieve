@@ -3,8 +3,8 @@
 #
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
-# Created:       5 December 2010
-# Last modified: 9 July 2012
+# Created:       05 December 2010
+# Last modified: 09 July 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -196,12 +196,11 @@ Contents
 
   I got my first PC in 1997, it had an Intel 200 mmx CPU and 32
   megabytes of memory. I was 14 years old then and bought the book
-  "C++ for Kids" because I wanted to program a computer game and I had
-  heard that you could do that in C++ :-) The book contained a trial
-  division prime number checker which I found amazing, one entered a
-  positive integer and the PC started calculating, after about a
-  minute the program printed "is prime" or "is not prime". I soon
-  started to invent new faster algorithms ...
+  "C++ for Kids" because I wanted to program a computer game :-) The
+  book also contained a trial division prime number checker which I
+  found amazing, one entered a positive integer and the PC started
+  calculating, after about a minute the program printed "is prime" or
+  "is not prime". I soon started to invent new faster algorithms ...
 
 8. Thanks
 =========
