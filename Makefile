@@ -39,7 +39,7 @@ LIB_OBJECTS = $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/ParallelPrimeSieve.o
 
 #-----------------------------------------------------------------------------
-# set the compiler, use g++ if it is installed
+# set the compiler, use g++ if available
 #-----------------------------------------------------------------------------
 
 ifneq ($(shell command -v g++ 2> /dev/null),)
@@ -68,10 +68,8 @@ endif
 #-----------------------------------------------------------------------------
 
 ifneq ($(shell uname | grep -i linux),)
-  # Linux installation directory is /usr/local
   PREFIX = /usr/local
 else
-  # Unix (Mac OS X, BSD, ...) installation directory
   PREFIX = /usr
 endif
 
@@ -199,8 +197,8 @@ ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).*),)
 endif
 
 #-----------------------------------------------------------------------------
-# `make check` runs various sieving tests to assure that the compiled
-# primesieve binary produces correct results
+# `make check` runs various sieving tests to assure that the
+# compiled primesieve binary produces correct results
 #-----------------------------------------------------------------------------
 
 .PHONY: check test
