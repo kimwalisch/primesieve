@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 23 June 2012
+# Last modified: 9 July 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -14,8 +14,8 @@ Contents
 
    1. About primesieve
    2. What's in this source archive
-   3. Requirements
-   4. Algorithm complexity
+   3. Algorithm complexity
+   4. Requirements
    5. Sieve of Eratosthenes implementation
    6. Further reading
    7. Motivation
@@ -54,17 +54,7 @@ Contents
                    ease number input e.g. 2^32, 1E10, ...
   src/thirdparty   Contains stdint.h (needed for MSVC prior 2010)
 
-3. Requirements
-===============
-
-  primesieve is written in C++03, it compiles with every standard
-  compliant C++ compiler and runs on both little-endian (x86, x86-64)
-  and big-endian (PowerPC, SPARC, ...) CPUs. The parallelization
-  (optional) is implemented using OpenMP 3.0 or later.
-
-  Read doc/INSTALL for compilation instructions.
-
-4. Algorithm complexity
+3. Algorithm complexity
 =======================
 
   primesieve uses the segmented sieve of Eratosthenes with wheel
@@ -74,12 +64,26 @@ Contents
   primesieve's memory requirement per thread is about:
   pi(n^0.5) * 8 bytes + 400 kilobytes
 
+4. Requirements
+===============
+
+  primesieve is written in C++03, it compiles with every standard
+  compliant C++ compiler and runs on both little-endian (x86, x86-64)
+  and big-endian (PowerPC, SPARC, ...) CPUs. The parallelization
+  (optional) is implemented using OpenMP 3.0 (2008) or later.
+
+  primesieve has been optimized for CPUs with 15 or more integer
+  registers, so if you have a x86-64 CPU you should prefer 64-bit (16
+  registers) over 32-bit (8 registers).
+
+  Read doc/INSTALL for compilation instructions.
+
 5. Sieve of Eratosthenes implementation
 =======================================
 
   General information
   -------------------
-  The ./src/soe directory contains the sieve of Eratosthenes source
+  The src/soe directory contains the sieve of Eratosthenes source
   code. Files that start with a capital letter contain a class of the
   same name, files in lower case contain C-style functions and
   constant definitions. If you are new to prime number sieving I
