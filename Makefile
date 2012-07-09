@@ -5,18 +5,16 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   10 June 2012
+# Last modified:   09 July 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
-TARGET   = primesieve
-CXX      = g++
-CXXFLAGS = -Wall -O2
-SOEDIR   = src/soe
-CONDIR   = src/console
-BINDIR   = bin
-LIBDIR   = lib
+TARGET = primesieve
+SOEDIR = src/soe
+CONDIR = src/console
+BINDIR = bin
+LIBDIR = lib
 
 BIN_OBJECTS = $(BINDIR)/WheelFactorization.o \
   $(BINDIR)/PreSieve.o \
@@ -41,8 +39,19 @@ LIB_OBJECTS = $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/ParallelPrimeSieve.o
 
 #-----------------------------------------------------------------------------
-# primesieve requires at least OpenMP 3.0 which is
-# supported by GCC 4.4 or later
+# set the compiler, use g++ if it is installed
+#-----------------------------------------------------------------------------
+
+ifneq ($(shell command -v g++ 2> /dev/null),)
+  CXX = g++
+  CXXFLAGS = -Wall -O2
+else
+  CXXFLAGS = -O2
+endif
+
+#-----------------------------------------------------------------------------
+# primesieve requires OpenMP 3.0 (2008) or later
+# which is supported by GCC 4.4 or later
 #-----------------------------------------------------------------------------
 
 ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
@@ -135,7 +144,7 @@ dir_lib:
 	@mkdir -p $(LIBDIR)
 
 #-----------------------------------------------------------------------------
-# Common targets (all, clean, install, uninstall)
+# common targets (all, clean, install, uninstall)
 #-----------------------------------------------------------------------------
 
 .PHONY: all clean install uninstall
@@ -163,7 +172,7 @@ ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
 	cp -f src/soe/*PrimeSieve.h $(PREFIX)/include/primesieve/soe
 	cp -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(PREFIX)/lib
   ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).so),)
-    ifneq ($(findstring ldconfig,$(shell echo `which ldconfig 2> /dev/null`)),)
+    ifneq ($(shell command -v ldconfig 2> /dev/null),)
 		ldconfig $(PREFIX)/lib
     endif
   endif
@@ -181,7 +190,7 @@ endif
 ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).*),)
   ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).so),)
 	rm -f $(wildcard $(PREFIX)/lib/lib$(TARGET).so)
-    ifneq ($(findstring ldconfig,$(shell echo `which ldconfig 2> /dev/null`)),)
+    ifneq ($(shell command -v ldconfig 2> /dev/null),)
 		ldconfig $(PREFIX)/lib
     endif
   else
