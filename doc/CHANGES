@@ -1,12 +1,12 @@
-New in version 3.8, 07/07/2012
+New in version 3.8, 09/07/2012
 ==============================
 
 1. Improved OOP design of WheelFactorization.h.
 2. Minor speed up for big sieving primes ~2% (src/soe/EratBig.cpp),
    reduced the number of operations in the main sieving loop.
 3. Minor speed up for small sieving primes ~3% (src/soe/EraSmall.cpp),
-   new inner sieving loop without instruction dependencies and that
-   uses only 12 asm instructions (previously 16).
+   new inner sieving loop without instruction dependencies that uses
+   only 12 asm instructions (previously 16).
 4. Improved OpenMP load balance in src/soe/ParallelPrimeSieve.cpp.
 5. Improved code readability of EratSmall.cpp, EratMedium.cpp,
    EratBig.cpp, SieveOfEratosthenes.cpp and others.
