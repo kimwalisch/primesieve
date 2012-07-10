@@ -62,8 +62,11 @@ inline void SieveOfEratosthenes::sieve(uint_t prime) {
   // all primes <= sqrt(segmentHigh_) required to sieve the next
   // segment have been stored in the erat* objects below.
   // @see sieveSegment() in SieveOfEratosthenes.cpp.
-  while (segmentHigh_ < square)
+  while (segmentHigh_ < square) {
     sieveSegment();
+    segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
+    segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
+  }
   // add prime to eratSmall_ if it has many multiples per segment,
   // to eratMedium_ if it has a few multiples per segment or
   // to eratBig_ if it has very few multiples per segment.

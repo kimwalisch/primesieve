@@ -160,8 +160,6 @@ void SieveOfEratosthenes::sieveSegment() {
   preSieve();
   crossOffMultiples();
   segmentProcessed(sieve_, sieveSize_);
-  segmentLow_  += sieveSize_ * NUMBERS_PER_BYTE;
-  segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
 }
 
 /// Sieve the last segments remaining after that sieve(prime) has
@@ -169,8 +167,11 @@ void SieveOfEratosthenes::sieveSegment() {
 ///
 void SieveOfEratosthenes::finish() {
   // sieve all segments left except the last one
-  while (segmentHigh_ < stop_)
+  while (segmentHigh_ < stop_) {
     sieveSegment();
+    segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
+    segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
+  }
   // sieve the last segment
   uint64_t remainder = getByteRemainder(stop_);
   sieveSize_ = static_cast<uint_t>((stop_ - remainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
