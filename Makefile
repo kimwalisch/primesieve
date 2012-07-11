@@ -5,16 +5,20 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   09 July 2012
+# Last modified:   11 July 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
-TARGET = primesieve
-SOEDIR = src/soe
-CONDIR = src/console
-BINDIR = bin
-LIBDIR = lib
+DEFAULT_CXX := $(CXX)
+
+CXX      = g++
+CXXFLAGS = -Wall -O2
+TARGET   = primesieve
+SOEDIR   = src/soe
+CONDIR   = src/console
+BINDIR   = bin
+LIBDIR   = lib
 
 BIN_OBJECTS = $(BINDIR)/WheelFactorization.o \
   $(BINDIR)/PreSieve.o \
@@ -39,13 +43,11 @@ LIB_OBJECTS = $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/ParallelPrimeSieve.o
 
 #-----------------------------------------------------------------------------
-# set the compiler, use g++ if available
+# use default compiler if g++ is not installed
 #-----------------------------------------------------------------------------
 
-ifneq ($(shell command -v g++ 2> /dev/null),)
-  CXX = g++
-  CXXFLAGS = -Wall -O2
-else
+ifeq ($(shell command -v $(CXX) 2> /dev/null),)
+  CXX = $(DEFAULT_CXX)
   CXXFLAGS = -O2
 endif
 
