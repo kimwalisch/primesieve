@@ -79,37 +79,39 @@ int ParallelPrimeSieve::getMaxThreads() {
 #endif
 }
 
-/// Get the number of threads for sieving
 int ParallelPrimeSieve::getNumThreads() const {
-  return (numThreads_ == IDEAL_NUM_THREADS) ? getIdealNumThreads() : numThreads_;
+  return (numThreads_ == IDEAL_NUM_THREADS) ? idealNumThreads() : numThreads_;
 }
 
-/// Set the number of threads for sieving
 void ParallelPrimeSieve::setNumThreads(int threads) {
   numThreads_ = getInBetween(1, threads, getMaxThreads());
 }
 
-int ParallelPrimeSieve::getIdealNumThreads() const {
+uint64_t ParallelPrimeSieve::getInterval() const {
+  return stop_ - start_;
+}
+
+int ParallelPrimeSieve::idealNumThreads() const {
   // use 1 thread to generate primes in arithmetic order
   if (isGenerate()) return 1;
   // each thread sieves at least an interval of size sqrt(x) / 5
   // but not smaller than MIN_THREAD_INTERVAL
   uint64_t threshold = std::max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
-  uint64_t threads = (stop_ - start_) / threshold;
-  uint64_t idealNumThreads = getInBetween<uint64_t>(1, threads, getMaxThreads());
-  return static_cast<int>(idealNumThreads);
+  uint64_t threads = getInterval() / threshold;
+  threads = getInBetween<uint64_t>(1, threads, getMaxThreads());
+  return static_cast<int>(threads);
 }
 
 /// Get an interval size that ensures a good load balance
 uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const {
   assert(threads > 0);
-  uint64_t unbalanced = (stop_ - start_) / threads;
+  uint64_t unbalanced = getInterval() / threads;
   uint64_t balanced = isqrt(stop_) * 1000;
   uint64_t fastest = std::min(balanced, unbalanced);
   uint64_t threadInterval = getInBetween(config::MIN_THREAD_INTERVAL, fastest, config::MAX_THREAD_INTERVAL);
-  uint64_t chunks = (stop_ - start_) / threadInterval;
+  uint64_t chunks = getInterval() / threadInterval;
   if (chunks < threads * 5u)
-    threadInterval = unbalanced;
+    threadInterval = std::max(config::MIN_THREAD_INTERVAL, unbalanced);
   // align to modulo 30 to prevent prime k-tuplet gaps
   threadInterval += 30 - threadInterval % 30;
   return threadInterval;
@@ -145,8 +147,8 @@ void ParallelPrimeSieve::sieve() {
 
   int threads = getNumThreads();
   // the user has set too many threads
-  if (threads > 1 && (stop_ - start_) / threads < config::MIN_THREAD_INTERVAL)
-    threads = getIdealNumThreads();
+  if (threads > 1 && getInterval() / threads < config::MIN_THREAD_INTERVAL)
+    threads = idealNumThreads();
 
   if (threads == 1)
     PrimeSieve::sieve();

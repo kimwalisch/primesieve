@@ -73,7 +73,8 @@ private:
   SharedMemory* shm_;
   /// Number of threads for sieving
   int numThreads_;
-  int getIdealNumThreads() const;
+  int idealNumThreads() const;
+  uint64_t getInterval() const;
   uint64_t getThreadInterval(int) const;
 #ifdef _OPENMP
 public:
