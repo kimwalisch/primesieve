@@ -151,17 +151,17 @@ protected:
   uint64_t counts_[7];
   /// time elapsed in seconds of sieve()
   double seconds_;
-  virtual void set_lock();
-  virtual void unset_lock();
-  virtual void updateStatus(int);
+  uint64_t getInterval() const;
   void reset();
-  /// protected inline method
   template<typename T>
   static T getInBetween(T low, T value, T high) {
     if (value < low)  return low;
     if (value > high) return high;
     return value;
   }
+  virtual void updateStatus(int);
+  virtual void set_lock();
+  virtual void unset_lock();
 private:
   /// synchronizes threads
   class LockGuard {
@@ -191,8 +191,6 @@ private:
   PrimeSieve* parent_;
   /// sum of the processed segments
   uint64_t sumSegments_;
-  /// sieve interval i.e. (stop_ - start_)
-  double interval_;
   /// status in percent of sieve()
   double status_;
   /// callback functions for use with generatePrimes()

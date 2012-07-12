@@ -74,7 +74,6 @@ private:
   /// Number of threads for sieving
   int numThreads_;
   int idealNumThreads() const;
-  uint64_t getInterval() const;
   uint64_t getThreadInterval(int) const;
 #ifdef _OPENMP
 public:

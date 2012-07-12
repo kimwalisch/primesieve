@@ -87,10 +87,6 @@ void ParallelPrimeSieve::setNumThreads(int threads) {
   numThreads_ = getInBetween(1, threads, getMaxThreads());
 }
 
-uint64_t ParallelPrimeSieve::getInterval() const {
-  return stop_ - start_;
-}
-
 int ParallelPrimeSieve::idealNumThreads() const {
   // use 1 thread to generate primes in arithmetic order
   if (isGenerate()) return 1;

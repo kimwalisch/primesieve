@@ -88,13 +88,18 @@ PrimeSieve::PrimeSieve(PrimeSieve* parent) :
   obj_(parent->obj_)
 { }
 
+/// Get the size of the sieve interval [start_, stop_]
+uint64_t PrimeSieve::getInterval() const {
+  return stop_ - start_;
+}
+
 void PrimeSieve::reset() {
-  sumSegments_ = 0;
-  for (int i = 0; i < 7; i++)
+  for (int i = 0; i < 7; i++) {
     counts_[i] = 0;
-  interval_ = static_cast<double>(stop_ - start_ + 1);
+  }
   status_ = -1.0;
   seconds_ = 0.0;
+  sumSegments_ = 0;
   if (isStatus())
     updateStatus(0);
 }
@@ -201,7 +206,7 @@ void PrimeSieve::addFlags(int flags) {
   flags_ |= flags;
 }
 
-// Used to synchronize threads for prime number generation
+/// Used to synchronize threads for prime number generation
 void PrimeSieve::set_lock()   {
   if (parent_ != NULL) parent_->set_lock();
 }
@@ -219,11 +224,12 @@ void PrimeSieve::updateStatus(int segment) {
     parent_->updateStatus(segment);
   else {
     sumSegments_ += segment;
-    int old = static_cast<int>(status_);
-    status_ = std::min((sumSegments_ / interval_) * 100.0, 100.0);
+    double percent = sumSegments_ * 100.0 / (getInterval() + 1);
+    double old = status_;
+    status_ = std::min(percent, 100.0);
     if (isFlag(PRINT_STATUS)) {
       int status = static_cast<int>(status_);
-      if (status > old)
+      if (status > static_cast<int>(old))
         std::cout << '\r' << status << '%' << std::flush;
     }
   }
