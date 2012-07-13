@@ -47,8 +47,8 @@ LIB_OBJECTS = $(LIBDIR)/WheelFactorization.o \
 ifneq ($(shell getconf LEVEL1_DCACHE_SIZE 2> /dev/null),)
   L1_DCACHE_BYTES = $(shell getconf LEVEL1_DCACHE_SIZE)
 else
-  ifneq ($(shell sysctl -a 2> /dev/null | grep l1dcachesize),)
-    L1_DCACHE_BYTES = $(shell sysctl -a | grep l1dcachesize | head -n 1 | sed -e 's/^.* //')
+  ifneq ($(shell sysctl hw.l1dcachesize 2> /dev/null),)
+    L1_DCACHE_BYTES = $(shell sysctl hw.l1dcachesize | sed -e 's/^.* //')
   endif
 endif
 
