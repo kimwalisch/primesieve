@@ -1,19 +1,21 @@
-New in version 3.8, 09/07/2012
+New in version 3.8, 13/07/2012
 ==============================
 
-1. Improved OOP design of WheelFactorization.h.
-2. Minor speed up for big sieving primes ~2% (src/soe/EratBig.cpp),
-   reduced the number of operations in the main sieving loop.
-3. Minor speed up for small sieving primes ~3% (src/soe/EraSmall.cpp),
-   new inner sieving loop without instruction dependencies that uses
-   only 12 asm instructions (previously 16).
-4. Improved OpenMP load balance in src/soe/ParallelPrimeSieve.cpp.
-5. Improved code readability of EratSmall.cpp, EratMedium.cpp,
-   EratBig.cpp, SieveOfEratosthenes.cpp and others.
-6. Renamed ./docs to ./doc
-7. Revised README.txt, added 7. Motivation.
-8. Updated INSTALL, LIBPRIMESIEVE and USAGE_EXAMPLES.
-9. Added version #defines to PrimeSieve.h, e.g. for this release:
+ 1. Improved OOP design of WheelFactorization.h.
+ 2. Minor speed up for big sieving primes ~2% (src/soe/EratBig.cpp),
+    reduced the number of operations in the main sieving loop.
+ 3. Minor speed up for small sieving primes ~3% (src/soe/EraSmall.cpp),
+    new inner sieving loop without instruction dependencies that uses
+    only 12 asm instructions (previously 16).
+ 4. Improved OpenMP load balance in src/soe/ParallelPrimeSieve.cpp.
+ 5. Improved code readability of EratSmall.cpp, EratMedium.cpp,
+    EratBig.cpp, SieveOfEratosthenes.cpp and others.
+ 6. The Makefile now automatically detects the CPU's L1 data cache
+    size on Unix-like OSes (Linux, Mac OS X).
+ 7. Renamed ./docs to ./doc
+ 8. Revised README.txt, added 7. Motivation.
+ 9. Updated INSTALL, LIBPRIMESIEVE and USAGE_EXAMPLES.
+10. Added version #defines to PrimeSieve.h, e.g. for this release:
 
    #define PRIMESIEVE_VERSION       "3.8"
    #define PRIMESIEVE_MAJOR_VERSION  3
