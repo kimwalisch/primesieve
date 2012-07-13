@@ -108,7 +108,7 @@ void EratBig::pushBucket(Bucket*& list)
 }
 
 /// Get the bucket list related to the segment of the next
-/// multiple (multipleIndex) of sievingPrime.
+/// multiple (multipleIndex) of a sievingPrime.
 ///
 Bucket*& EratBig::getList(uint_t* multipleIndex)
 {
