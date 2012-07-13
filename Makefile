@@ -41,15 +41,21 @@ LIB_OBJECTS = $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/ParallelPrimeSieve.o
 
 #-----------------------------------------------------------------------------
+# use bash shell if it is installed
+#-----------------------------------------------------------------------------
+
+BASH = $(shell command -v bash 2> /dev/null)
+ifneq ($(BASH),)
+  SHELL := $(BASH)
+endif
+
+#-----------------------------------------------------------------------------
 # try to get the CPU's L1 data cache size
 #-----------------------------------------------------------------------------
 
-ifneq ($(shell getconf LEVEL1_DCACHE_SIZE 2> /dev/null),)
-  L1_DCACHE_BYTES = $(shell getconf LEVEL1_DCACHE_SIZE)
-else
-  ifneq ($(shell sysctl hw.l1dcachesize 2> /dev/null),)
-    L1_DCACHE_BYTES = $(shell sysctl hw.l1dcachesize | sed -e 's/^.* //')
-  endif
+L1_DCACHE_BYTES = $(shell getconf LEVEL1_DCACHE_SIZE 2> /dev/null)
+ifeq ($(L1_DCACHE_BYTES),)
+  L1_DCACHE_BYTES = $(shell sysctl hw.l1dcachesize 2> /dev/null | sed -e 's/^.* //')
 endif
 
 ifneq ($(shell if (( $(L1_DCACHE_BYTES) > 0 )) 2> /dev/null; then echo is a number; fi),)
