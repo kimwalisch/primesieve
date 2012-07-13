@@ -1,16 +1,14 @@
 ##############################################################################
 # GNU Makefile for the primesieve console application (read doc/INSTALL)
-# and the primesieve C++ library (read doc/LIBPRIMESIEVE)
+#              and the primesieve C++ library         (read doc/LIBPRIMESIEVE)
 #
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   11 July 2012
+# Last modified:   13 July 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
-
-DEFAULT_CXX := $(CXX)
 
 CXX      = g++
 CXXFLAGS = -Wall -O2
@@ -43,24 +41,34 @@ LIB_OBJECTS = $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/ParallelPrimeSieve.o
 
 #-----------------------------------------------------------------------------
-# use default compiler if g++ is not installed
+# try to get the CPU's L1 data cache size
 #-----------------------------------------------------------------------------
 
-ifeq ($(shell command -v $(CXX) 2> /dev/null),)
-  CXX = $(DEFAULT_CXX)
-  CXXFLAGS = -O2
+ifneq ($(shell getconf LEVEL1_DCACHE_SIZE 2> /dev/null),)
+  L1_DCACHE_BYTES = $(shell getconf LEVEL1_DCACHE_SIZE)
+else
+  ifneq ($(shell sysctl -a 2> /dev/null | grep l1dcachesize),)
+    L1_DCACHE_BYTES = $(shell sysctl -a | grep l1dcachesize | head -n 1 | cut -d'=' -f2)
+  endif
+endif
+
+ifneq ($(shell if (( $(L1_DCACHE_BYTES) > 0 )) 2> /dev/null; then echo is a number; fi),)
+  L1_DCACHE_SIZE = $(shell echo $$(( $(L1_DCACHE_BYTES) / 1024 )) )
+  ifneq ($(shell if (( $(L1_DCACHE_SIZE) < 8 )) || \
+                    (( $(L1_DCACHE_SIZE) > 4096 )); then echo no; fi),)
+    L1_DCACHE_SIZE =
+  endif
 endif
 
 #-----------------------------------------------------------------------------
-# primesieve requires OpenMP 3.0 (2008) or later
-# which is supported by GCC 4.4 or later
+# check if g++ supports OpenMP 3.0 (2008) or later
 #-----------------------------------------------------------------------------
 
 ifneq ($(shell $(CXX) --version 2>&1 | head -1 | grep -iE 'GCC|G\+\+'),)
-  GCC_MAJOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
-  GCC_MINOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
-  ifneq ($(shell if [ $$(($(GCC_MAJOR)*100+$(GCC_MINOR))) -ge 404 ]; \
-      then echo GCC 4.4 or later; fi),)
+  MAJOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f1)
+  MINOR = $(shell $(CXX) -dumpversion 2>&1 | cut -d'.' -f2)
+  GCC_VERSION = $(shell echo $$(( $(MAJOR) * 100 + $(MINOR) )) )
+  ifneq ($(shell if (( $(GCC_VERSION) >= 404 )); then echo GCC 4.4 or later; fi),)
     CXXFLAGS += -fopenmp
   endif
 endif
