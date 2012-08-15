@@ -128,7 +128,6 @@ uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
 void SieveOfEratosthenes::preSieve() {
   preSieve_.doIt(sieve_, sieveSize_, segmentLow_);
   if (segmentLow_ <= start_) {
-    // correct preSieve_.doIt() for numbers <= 23
     if (start_ <= preSieve_.getLimit())
       sieve_[0] = 0xff;
     uint64_t remainder = getByteRemainder(start_);
