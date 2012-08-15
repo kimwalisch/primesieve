@@ -108,21 +108,6 @@ inline T popcount_lauradoux(const uint64_t* data, T size) {
   return bit_count;
 }
 
-/// Count the number of 1 bits (population count) in a
-/// small array using Brian Kernighan's method:
-/// http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetKernighan
-///
-template <typename T>
-inline T popcount_kernighan(const uint8_t* data, T size) {
-  assert(data != NULL);
-  T bit_count = 0;
-  for (T i = 0; i < size; i++) {
-    for (unsigned int v = data[i]; v != 0; v &= v - 1)
-      bit_count++;
-  }
-  return bit_count;
-}
-
 } // namespace soe
 
 #endif

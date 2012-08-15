@@ -108,35 +108,25 @@ void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint_t sieveSize)
 void PrimeNumberFinder::count(const uint8_t* sieve, uint_t sieveSize) {
   // count prime numbers (1 bits within sieve array)
   if (ps_.isFlag(ps_.COUNT_PRIMES)) {
-    const uint64_t* sieve64 = reinterpret_cast<const uint64_t*>(sieve);
-    uint_t size64 = sieveSize / 8;
-    uint_t bytesLeft = sieveSize % 8;
     // see popcount.h
-    uint_t primeCount = popcount_lauradoux(sieve64, size64);
-    if (bytesLeft > 0)
-      primeCount += popcount_kernighan(&sieve[sieveSize - bytesLeft], bytesLeft);
-    ps_.counts_[0] += primeCount;
+    ps_.counts_[0] += popcount_lauradoux(reinterpret_cast<const uint64_t*>(sieve), (sieveSize + 7) / 8);
   }
   // count prime k-tuplets (i = 1 twins, i = 2 triplets, ...)
   // using lookup tables
   for (uint_t i = 1; i < 7; i++) {
     if (ps_.isCount(i)) {
       const std::vector<uint_t>& kCounts = kCounts_[i];
-      uint_t kCount0 = 0;
-      uint_t kCount1 = 0;
-      uint_t kCount2 = 0;
-      uint_t kCount3 = 0;
-      uint_t j = 0;
-      for (; j < sieveSize - sieveSize % 4; j += 4) {
-        kCount0 += kCounts[sieve[j+0]];
-        kCount1 += kCounts[sieve[j+1]];
-        kCount2 += kCounts[sieve[j+2]];
-        kCount3 += kCounts[sieve[j+3]];
+      uint_t sum0 = 0;
+      uint_t sum1 = 0;
+      uint_t sum2 = 0;
+      uint_t sum3 = 0;
+      for (uint_t j = 0; j < sieveSize; j += 4) {
+        sum0 += kCounts[sieve[j+0]];
+        sum1 += kCounts[sieve[j+1]];
+        sum2 += kCounts[sieve[j+2]];
+        sum3 += kCounts[sieve[j+3]];
       }
-      for (; j < sieveSize; j++) {
-        kCount0 += kCounts[sieve[j]];
-      }
-      ps_.counts_[i] += (kCount0 + kCount1) + (kCount2 + kCount3);
+      ps_.counts_[i] += (sum0 + sum1) + (sum2 + sum3);
     }
   }
 }
