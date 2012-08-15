@@ -175,6 +175,7 @@ void SieveOfEratosthenes::finish() {
   // sieve the last segment
   uint64_t remainder = getByteRemainder(stop_);
   sieveSize_ = static_cast<uint_t>((stop_ - remainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
+  segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   preSieve();
   crossOffMultiples();
   // unset bits and bytes (numbers) > stop_
