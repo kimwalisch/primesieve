@@ -1,4 +1,4 @@
-June 23, 2012
+August 15, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -10,6 +10,16 @@ $ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve
 
 List of fixed bugs
 ==================
+
+----------------------------------------------------------------------
+  >> Fixed in version 3.9
+
+  uint8_t* loopLimit = std::max(sieve, sieveLimit - (sievingPrime * 28 + 27));
+
+  The above code from src/soe/EratSmall.cpp is unsafe. It is
+  theoretically possible that the subtraction
+ 'sieveLimit - (sievingPrime * 28 + 27)' causes an integer underflow,
+  which would lead to a segmentation fault later in the code.
 
 ----------------------------------------------------------------------
   >> Fixed in version 3.7
