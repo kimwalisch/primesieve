@@ -89,11 +89,12 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveLimit, Bucket& bucket)
     uint_t multipleIndex = wPrime->getMultipleIndex();
     uint_t wheelIndex    = wPrime->getWheelIndex();
 
-    uint8_t* loopLimit = std::max(sieve, sieveLimit - (sievingPrime * 28 + 27));
-
     // pointer to the byte containing the first multiple of
     // sievingPrime within the current segment
     uint8_t* p = &sieve[multipleIndex];
+    uint8_t* loopLimit = sieveLimit - (sievingPrime * 28 + 27);
+    if (loopLimit > sieveLimit)
+      loopLimit = p;
 
     // cross-off the multiples (unset bits) of sievingPrime
     switch (wheelIndex) {
