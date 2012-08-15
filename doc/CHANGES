@@ -1,3 +1,10 @@
+New in version 3.9, 15/08/2012
+================================
+
+1. Optimized prime k-tuplet (twin primes, prime triplets) counting for
+   out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
+2. Fixed a potential bug in EratSmall.cpp (read BUGS file).
+
 New in version 3.8, 13/07/2012
 ==============================
 
