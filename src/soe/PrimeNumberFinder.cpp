@@ -47,12 +47,11 @@
 
 namespace soe {
 
-/// Bit patterns corresponding to prime k-tuplets
 const uint_t PrimeNumberFinder::kTupletBitmasks_[7][5] =
 {
   { END },
-  { 0x06, 0x18, 0xc0, END },       // Twin primes
-  { 0x07, 0x0e, 0x1c, 0x38, END }, // Prime triplets
+  { 0x06, 0x18, 0xc0, END },       // Twin primes,    i.e. b00000110, b00011000, ...
+  { 0x07, 0x0e, 0x1c, 0x38, END }, // Prime triplets, i.e. b00000111, b00001110, ...
   { 0x1e, END },                   // Prime quadruplets
   { 0x1f, 0x3e, END },             // Prime quintuplets
   { 0x3f, END },                   // Prime sextuplets
