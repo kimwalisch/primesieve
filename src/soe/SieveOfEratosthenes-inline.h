@@ -56,7 +56,8 @@ inline uint_t   SieveOfEratosthenes::getSieveSize() const { return sieveSize_; }
 /// sieve( prime ) must be called consecutively for all primes up to
 /// sqrt(stop_) in order to sieve the primes within [start_, stop_].
 ///
-inline void SieveOfEratosthenes::sieve(uint_t prime) {
+inline void SieveOfEratosthenes::sieve(uint_t prime)
+{
   uint64_t square = isquare<uint64_t>(prime);
   // This loop segments the sieve of Eratosthenes, it is executed when
   // all primes <= sqrt(segmentHigh_) required to sieve the next
@@ -84,7 +85,8 @@ inline void SieveOfEratosthenes::sieve(uint_t prime) {
 /// @param dword  The next 4 bytes of the sieve array.
 ///
 template <typename T>
-inline T SieveOfEratosthenes::getNextPrime(uint_t index, uint_t* dword) const {
+inline T SieveOfEratosthenes::getNextPrime(uint_t index, uint_t* dword) const
+{
   // calculate bitValues_[ bitScanForward(dword) ] using De Bruijn bitscan
   uint_t firstBit = *dword & -static_cast<int>(*dword);
   uint_t byteValue = index * NUMBERS_PER_BYTE;
