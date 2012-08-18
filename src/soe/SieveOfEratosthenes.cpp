@@ -85,7 +85,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   initEratAlgorithms();
   // allocate the sieve of Eratosthenes array
-  sieve_ = new uint8_t[sieveSize_ + 8];
+  sieve_ = new uint8_t[sieveSize_];
 }
 
 SieveOfEratosthenes::~SieveOfEratosthenes() {
@@ -130,10 +130,9 @@ void SieveOfEratosthenes::preSieve() {
   if (segmentLow_ <= start_) {
     if (start_ <= preSieve_.getLimit())
       sieve_[0] = 0xff;
-    uint64_t remainder = getByteRemainder(start_);
-    for (int i = 0; i < 8; i++)
-      if (bitValues_[i] < remainder)
-        sieve_[0] &= ~(1 << i);
+    int i = 0;
+    while (bitValues_[i] < getByteRemainder(start_)) i++;
+    sieve_[0] &= 0xff << i;
   }
 }
 
@@ -176,12 +175,14 @@ void SieveOfEratosthenes::finish() {
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   preSieve();
   crossOffMultiples();
-  // unset bits and bytes (numbers) > stop_
-  for (int i = 0; i < 8; i++) {
+  int i;
+  // unset bits (numbers) > stop_
+  for (i = 0; i < 8; i++)
     if (bitValues_[i] > remainder)
-      sieve_[sieveSize_ - 1] &= ~(1 << i);
-    sieve_[sieveSize_ + i] = 0;
-  }
+      break;
+  sieve_[sieveSize_ - 1] &= ~(0xff << i);
+  for (uint_t j = sieveSize_; j % 8 != 0; j++)
+    sieve_[j] = 0;
   segmentProcessed(sieve_, sieveSize_);
 }
 
