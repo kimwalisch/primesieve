@@ -43,6 +43,7 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <algorithm>
+#include <cassert>
 
 namespace soe {
 
@@ -85,6 +86,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   initEratAlgorithms();
   // allocate the sieve of Eratosthenes array
+  assert(sieveSize_ % 8 == 0);
   sieve_ = new uint8_t[sieveSize_];
 }
 
