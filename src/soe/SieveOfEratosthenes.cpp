@@ -42,6 +42,7 @@
 #include <stdint.h>
 #include <stdexcept>
 #include <cstdlib>
+#include <algorithm>
 
 namespace soe {
 
@@ -71,18 +72,16 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   stop_(stop),
   sqrtStop_(static_cast<uint_t>(isqrt(stop))),
   preSieve_(preSieveLimit),
-  sieve_(NULL),
-  sieveSize_(sieveSize * 1024),
+  sieveSize_(std::max(1u, sieveSize) * 1024), // convert to bytes
   eratSmall_(NULL),
   eratMedium_(NULL),
   eratBig_(NULL)
 {
-  if (start_ < 7 || start_ > stop_)
-    throw std::invalid_argument("SieveOfEratosthenes: start must be >= 7 && <= stop.");
-  if (sieveSize_ < 1024)
-    throw std::invalid_argument("SieveOfEratosthenes: sieveSize must be >= 1 kilobyte.");
+  if (start_ < 7)
+    throw std::invalid_argument("SieveOfEratosthenes: start must be >= 7.");
+  if (start_ > stop_)
+    throw std::invalid_argument("SieveOfEratosthenes: start must be <= stop.");
   segmentLow_ = start_ - getByteRemainder(start_);
-  // '+1' is a correction for primes of type i * 30 + 31
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   initEratAlgorithms();
   // allocate the sieve of Eratosthenes array
@@ -143,7 +142,7 @@ void SieveOfEratosthenes::crossOffMultiples() {
     // process the sieving primes with many multiples per segment
     eratSmall_->crossOff(sieve_, &sieve_[sieveSize_]);
     if (eratMedium_ != NULL) {
-      // process the sieving primes with a few ...
+      // process the sieving primes with a few multiples per segment
       eratMedium_->crossOff(sieve_, sieveSize_);
       if (eratBig_ != NULL)
         // process the sieving primes with very few ...
