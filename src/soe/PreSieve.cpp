@@ -125,7 +125,7 @@ void PreSieve::doIt(uint8_t* sieve, uint_t sieveSize, uint64_t segmentLow) const
   uint_t offset = remainder / 30;
   uint_t sizeLeft = size_ - offset;
 
-  if (sizeLeft > sieveSize) {
+  if (sieveSize <= sizeLeft) {
     // copy a chunk of sieveSize bytes to sieve
     std::memcpy(sieve, &preSieved_[offset], sieveSize);
   } else {
