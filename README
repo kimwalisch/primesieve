@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       05 December 2010
-# Last modified: 17 August 2012
+# Last modified: 19 August 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -39,11 +39,10 @@ Contents
   ./doc - Documentation directory
   -------------------------------
   INSTALL          Explains how to compile primesieve.
-  LIBPRIMESIEVE    Explains how to build primesieve as a C++ library
-                   on Unix-like OSes and Windows.
+  LIBPRIMESIEVE    Explains how to build primesieve as a C++ library.
   USAGE_EXAMPLES   Source code examples that show how to use
                    libprimesieve e.g. for prime number generation.
-  Other files:     FAQ, TODO, BUGS, ...
+  Other files:     CHANGES, FAQ, TODO, BUGS, ...
 
   ./src - Source code directory
   -----------------------------
