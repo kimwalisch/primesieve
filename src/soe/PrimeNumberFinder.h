@@ -53,7 +53,6 @@ namespace soe {
 class PrimeNumberFinder : public SieveOfEratosthenes {
 public:
   PrimeNumberFinder(PrimeSieve&);
-  bool needGenerator() const { return getPreSieve() < getSqrtStop(); }
 private:
   enum { END = 0xFF + 1 };
   static const uint_t kTupletBitmasks_[7][5];

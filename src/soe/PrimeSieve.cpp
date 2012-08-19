@@ -270,7 +270,7 @@ void PrimeSieve::sieve() {
     // fast segmented SieveOfEratosthenes object that
     // sieves the primes within [start_, stop_]
     PrimeNumberFinder finder(*this);
-    if (finder.needGenerator()) {
+    if (finder.getSqrtStop() > finder.getPreSieve()) {
       // fast segmented SieveOfEratosthenes object that generates the
       // primes up to sqrt(stop_) needed for sieving by 'finder'
       PrimeNumberGenerator generator(finder);

@@ -58,22 +58,22 @@ const uint_t SieveOfEratosthenes::bruijnBitValues_[32] =
   103,  49,  73,  29,  47,  23,  43,  41
 };
 
-/// @param start          Sieve the primes within the interval [start, stop].
-/// @param stop           Sieve the primes within the interval [start, stop].
-/// @param preSieveLimit  Multiples of small primes <= preSieveLimit are
-///                       pre-sieved to speed up the sieve of Eratosthenes,
-///                       preSieveLimit >= 13 && <= 23.
-/// @param sieveSize      A sieve size in kilobytes, sieveSize >= 1 && <= 4096.
+/// @param start      Sieve the primes within the interval [start, stop].
+/// @param stop       Sieve the primes within the interval [start, stop].
+/// @param sieveSize  A sieve size in kilobytes, sieveSize >= 1 && <= 4096.
+/// @param preSieve   Multiples of small primes <= preSieve are pre-sieved
+///                   to speed up the sieve of Eratosthenes,
+///                   preSieve >= 13 && <= 23.
 ///
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
                                          uint64_t stop,
-                                         uint_t preSieveLimit,
-                                         uint_t sieveSize) :
+                                         uint_t sieveSize,
+                                         uint_t preSieve) :
   start_(start),
   stop_(stop),
   sqrtStop_(static_cast<uint_t>(isqrt(stop))),
-  preSieve_(preSieveLimit),
   sieveSize_(std::max(1u, sieveSize) * 1024), // convert to bytes
+  preSieve_(preSieve),
   eratSmall_(NULL),
   eratMedium_(NULL),
   eratBig_(NULL)

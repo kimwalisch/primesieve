@@ -56,13 +56,14 @@ class PrimeNumberFinder;
 class PrimeNumberGenerator : public SieveOfEratosthenes {
 public:
   PrimeNumberGenerator(PrimeNumberFinder& finder) :
-    SieveOfEratosthenes(finder.getPreSieve() + 1,
-                        finder.getSqrtStop(),
-                        config::PRESIEVE_PRIMENUMBERGENERATOR,
-                        floorPowerOf2<uint_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR)),
+    SieveOfEratosthenes(
+      finder.getPreSieve() + 1,
+      finder.getSqrtStop(),
+      floorPowerOf2<uint_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR),
+      config::PRESIEVE_PRIMENUMBERGENERATOR),
     finder_(finder)
   {
-    static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "SieveSize must not be > 4096 kilobytes");
+    static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "sieveSize must not be > 4096 kilobytes");
     assert(getStop() <= ~0u);
   }
 private:

@@ -86,12 +86,12 @@ private:
   const uint64_t stop_;
   /// sqrt(stop_)
   const uint_t sqrtStop_;
-  /// Pre-sieves multiples of small primes <= preSieve_.getLimit()
-  const PreSieve preSieve_;
   /// Sieve of Eratosthenes array
   uint8_t* sieve_;
   /// Size of the sieve_ array in bytes
   uint_t sieveSize_;
+  /// Used to pre-sieve multiples of small primes e.g. <= 19
+  const PreSieve preSieve_;
   /// Sieve of Eratosthenes algorithm for small sieving primes
   EratSmall* eratSmall_;
   /// Sieve of Eratosthenes algorithm for medium sieving primes

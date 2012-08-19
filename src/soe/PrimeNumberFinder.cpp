@@ -60,10 +60,10 @@ const uint_t PrimeNumberFinder::kTupletBitmasks_[7][5] =
 
 PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
   SieveOfEratosthenes(
-      std::max<uint64_t>(7, ps.getStart()),
-      ps.getStop(),
-      ps.getPreSieve(),
-      ps.getSieveSize()),
+    std::max<uint64_t>(7, ps.getStart()),
+    ps.getStop(),
+    ps.getSieveSize(),
+    ps.getPreSieve()),
   ps_(ps)
 {
   if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
