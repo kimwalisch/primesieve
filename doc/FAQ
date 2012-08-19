@@ -1,0 +1,15 @@
+August 19, 2012
+Kim Walisch, <kim.walisch@gmail.com>
+http://primesieve.googlecode.com
+
+1. I want to generate primes > 2^64. Is it possible to extend
+   primesieve to 128 bits?
+
+   Technically it is possible but it makes no sense due to the
+   enormous memory requirement. primesieve uses the segmented sieve of
+   Eratosthenes which uses O(pi(n^0.5)) memory, thus e.g. near 10^25
+   primesieve would need ~ 1300 GB (gigabytes) per thread!
+
+   J. Sorenson's paper "The Pseudosquares Prime Sieve" presents an
+   algorithm that can be used to generate primes up to 33 digits
+   using very little memory.

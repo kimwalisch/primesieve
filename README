@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       05 December 2010
-# Last modified: 09 July 2012
+# Last modified: 17 August 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -43,7 +43,7 @@ Contents
                    on Unix-like OSes and Windows.
   USAGE_EXAMPLES   Source code examples that show how to use
                    libprimesieve e.g. for prime number generation.
-  Other files:     CHANGES, TODO, BUGS, ...
+  Other files:     FAQ, TODO, BUGS, ...
 
   ./src - Source code directory
   -----------------------------
@@ -163,7 +163,7 @@ Contents
   Other files
   -----------
   * popcount.h
-    Contains high performance bit population count algorithms.
+    Contains a fast bit population count algorithm.
 
   * imath.h
     isqrt(), ilog2(), isquare(), isPowerOf2(), ...
