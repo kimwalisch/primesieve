@@ -42,12 +42,14 @@
 namespace soe {
 
 template <typename T>
-inline T isquare(T x) {
+inline T isquare(T x)
+{
   return x * x;
 }
 
 template <typename T>
-inline T getBits() {
+inline T getNumberOfBits()
+{
   return static_cast<T>(sizeof(T) * 8);
 }
 
@@ -55,7 +57,8 @@ inline T getBits() {
 /// @param x  Integer value.
 ///
 template <typename T>
-inline bool isPowerOf2(T x) {
+inline bool isPowerOf2(T x)
+{
   return (x != 0 && (x & (x - 1)) == 0);
 }
 
@@ -64,8 +67,9 @@ inline bool isPowerOf2(T x) {
 /// @param x  Integer value.
 ///
 template <typename T>
-inline T floorPowerOf2(T x) {
-  for (T i = 1; i < getBits<T>(); i += i)
+inline T floorPowerOf2(T x)
+{
+  for (T i = 1; i < getNumberOfBits<T>(); i += i)
     x = x | (x >> i);
   x -= x >> 1;
   return x;
@@ -75,9 +79,10 @@ inline T floorPowerOf2(T x) {
 /// @param x  Integer value.
 ///
 template <typename T>
-inline T ilog2(T x) {
+inline T ilog2(T x)
+{
   T log2 = 0;
-  for (T i = getBits<T>() >> 1; x >= 2; i >>= 1)
+  for (T i = getNumberOfBits<T>() >> 1; x >= 2; i >>= 1)
     if (x >> i) { x >>= i; log2 += i; }
   return log2;
 }
@@ -87,7 +92,8 @@ inline T ilog2(T x) {
 /// @param x  Unsigned integer.
 ///
 template <typename T>
-inline T isqrt(T x) {
+inline T isqrt(T x)
+{
   if (x <= 1) return x;
 
   T s = (ilog2(x - 1) >> 1) + 1;
@@ -99,6 +105,14 @@ inline T isqrt(T x) {
     g1 = (g0 + (x / g0)) >> 1;
   }
   return g0;
+}
+
+template <typename T>
+inline T getInBetween(T min, T value, T max)
+{
+  if (value < min) return min;
+  if (value > max) return max;
+  return value;
 }
 
 } // namespace soe

@@ -43,6 +43,7 @@
 #include "imath.h"
 
 #include <stdint.h>
+#include <cassert>
 
 namespace soe {
 
@@ -52,17 +53,17 @@ inline uint_t   SieveOfEratosthenes::getSqrtStop() const  { return sqrtStop_; }
 inline uint_t   SieveOfEratosthenes::getPreSieve() const  { return preSieve_.getLimit(); }
 inline uint_t   SieveOfEratosthenes::getSieveSize() const { return sieveSize_; }
 
-/// Segmented sieve of Eratosthenes implementation.
-/// sieve( prime ) must be called consecutively for all primes up to
+/// Segmented sieve of Eratosthenes.
+/// sieve(uint_t) must be called consecutively for all primes up to
 /// sqrt(stop_) in order to sieve the primes within [start_, stop_].
 ///
 inline void SieveOfEratosthenes::sieve(uint_t prime)
 {
+  assert(prime <= sqrtStop_);
   uint64_t square = isquare<uint64_t>(prime);
   // This loop segments the sieve of Eratosthenes, it is executed when
   // all primes <= sqrt(segmentHigh_) required to sieve the next
   // segment have been stored in the erat* objects below.
-  // @see sieveSegment() in SieveOfEratosthenes.cpp.
   while (segmentHigh_ < square) {
     sieveSegment();
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
@@ -71,12 +72,12 @@ inline void SieveOfEratosthenes::sieve(uint_t prime)
   // add prime to eratSmall_ if it has many multiples per segment,
   // to eratMedium_ if it has a few multiples per segment or
   // to eratBig_ if it has very few multiples per segment.
-  // @see addSievingPrime() in WheelFactorization.h
+  // @see add() in WheelFactorization.h
   if (prime > eratSmall_->getLimit()) 
     if (prime > eratMedium_->getLimit())
-            eratBig_->addSievingPrime(prime, segmentLow_);
-    else eratMedium_->addSievingPrime(prime, segmentLow_);
-  else    eratSmall_->addSievingPrime(prime, segmentLow_);
+            eratBig_->add(prime, segmentLow_);
+    else eratMedium_->add(prime, segmentLow_);
+  else    eratSmall_->add(prime, segmentLow_);
 }
 
 /// Reconstruct the prime number corresponding to the first set
@@ -84,14 +85,13 @@ inline void SieveOfEratosthenes::sieve(uint_t prime)
 /// @param index  The current sieve index.
 /// @param dword  The next 4 bytes of the sieve array.
 ///
-template <typename T>
-inline T SieveOfEratosthenes::getNextPrime(uint_t index, uint_t* dword) const
+inline uint64_t SieveOfEratosthenes::getNextPrime(uint_t index, uint_t* dword) const
 {
-  // calculate bitValues_[ bitScanForward(dword) ] using De Bruijn bitscan
+  // calculate bitValues_[ bitScanForward(*dword) ] using De Bruijn bitscan
   uint_t firstBit = *dword & -static_cast<int>(*dword);
   uint_t byteValue = index * NUMBERS_PER_BYTE;
   uint_t bitValue = bruijnBitValues_[(firstBit * 0x077CB531) >> 27];
-  T prime = static_cast<T>(segmentLow_ + byteValue + bitValue);
+  uint64_t prime = segmentLow_ + byteValue + bitValue;
   *dword ^= firstBit;
   return prime;
 }

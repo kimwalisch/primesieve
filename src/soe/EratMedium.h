@@ -42,7 +42,6 @@
 #include <list> 
 
 namespace soe {
-class SieveOfEratosthenes;
 
 /// EratMedium is an implementation of the segmented sieve of
 /// Eratosthenes optimized for medium sieving primes that have a few
@@ -50,17 +49,18 @@ class SieveOfEratosthenes;
 ///
 class EratMedium : public Modulo210Wheel_t {
 public:
-  EratMedium(const SieveOfEratosthenes&);
-  void crossOff(uint8_t*, uint_t);
+  EratMedium(uint64_t, uint_t, uint_t);
   uint_t getLimit() const { return limit_; }
+  void crossOff(uint8_t*, uint_t);
 private:
   typedef std::list<Bucket>::iterator BucketIterator_t;
-  /// Sieving primes in EratMedium are <= limit_
-  uint_t limit_;
+  const uint_t limit_;
   /// List of buckets, holds the sieving primes
   std::list<Bucket> buckets_;
-  void storeSievingPrime(uint_t, uint_t, uint_t);
+  void store(uint_t, uint_t, uint_t);
   void crossOff(uint8_t*, uint_t, Bucket&);
+  EratMedium(const EratMedium&);
+  EratMedium& operator=(const EratMedium&);
 };
 
 } // namespace soe

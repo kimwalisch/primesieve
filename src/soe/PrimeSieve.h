@@ -41,9 +41,9 @@
 #define PRIMESIEVE_YEAR 2012
 
 #include <stdint.h>
-#include <cstdlib>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 namespace soe { class PrimeNumberFinder; }
 
@@ -148,17 +148,11 @@ protected:
   uint64_t start_;
   uint64_t stop_;
   /// prime number and prime k-tuplet counts
-  uint64_t counts_[7];
-  /// time elapsed in seconds of sieve()
+  std::vector<uint64_t> counts_;
+  /// time elapsed of sieve()
   double seconds_;
   uint64_t getInterval() const;
   void reset();
-  template<typename T>
-  static T getInBetween(T low, T value, T high) {
-    if (value < low)  return low;
-    if (value > high) return high;
-    return value;
-  }
   virtual void updateStatus(int);
   virtual void set_lock();
   virtual void unset_lock();
@@ -187,7 +181,7 @@ private:
   int sieveSize_;
   /// PrimeSieve options e.g. COUNT_PRIMES, PRINT_TWINS, ...
   int flags_;
-  /// either NULL or the parent ParallelPrimeSieve object
+  /// pointer to the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
   /// sum of the processed segments
   uint64_t sumSegments_;

@@ -40,14 +40,12 @@
 #include "PrimeNumberFinder.h"
 #include "SieveOfEratosthenes.h"
 #include "SieveOfEratosthenes-inline.h"
-#include "imath.h"
 #include "GENERATE.h"
 
 #include <stdint.h>
 #include <cassert>
 
 namespace soe {
-class PrimeNumberFinder;
 
 /// PrimeNumberGenerator is a SieveOfEratosthenes class that is used
 /// to generate the primes up to sqrt(n) needed for sieving by
@@ -59,11 +57,11 @@ public:
     SieveOfEratosthenes(
       finder.getPreSieve() + 1,
       finder.getSqrtStop(),
-      floorPowerOf2<uint_t>(config::SIEVESIZE_PRIMENUMBERGENERATOR),
+      config::SIEVESIZE,
       config::PRESIEVE_PRIMENUMBERGENERATOR),
     finder_(finder)
   {
-    static_assert(config::SIEVESIZE_PRIMENUMBERGENERATOR <= 4096, "sieveSize must not be > 4096 kilobytes");
+    static_assert(config::SIEVESIZE <= 4096, "sieveSize must not be > 4096 kilobytes");
     assert(getStop() <= ~0u);
   }
 private:

@@ -44,7 +44,11 @@
 
 namespace soe {
 
-/// @see WheelInit in WheelFactorization.h
+/// The following WheelInit arrays are used to calculate the first
+/// multiple >= startNumber of each prime that (the multiple) is not
+/// divisible by any of the wheels prime factors e.g. not a
+/// multiple of 2, 3 and 5 for a modulo 30 wheel.
+/// @see add() in WheelFactorization.h
 
 const WheelInit wheel30Init[30] = {
   {1,  0}, {0,  0}, {5,  1}, {4,  1}, {3,  1}, {2,  1}, {1,  1}, {0,  1},
@@ -82,9 +86,9 @@ const WheelInit wheel210Init[210] = {
   {1, 47}, {0, 47}, };
 
 /// The wheel30 and wheel210 arrays contain 8 wheels, one for each
-/// modulo 30 residue class of sieving primes ( k = { 7, 11, 13, 17,
-/// 19, 23, 29, 1 } ), e.g. the wheel related to k = 13 is:
-/// index of 13 = 2 -> wheel[8 * 2] to wheel[8 * 2 + SIZE - 1]
+/// modulo 30 residue class of sieving primes k = { 7, 11, 13, 17, 19,
+/// 23, 29, 1 }. E.g. the wheel related to the prime 1063 is:
+/// 1063 % 30 = 13, index(13) = 2 -> wheel[8*2] to wheel[8*2 + SIZE-1]
 /// @see WheelElement in WheelFactorization.h
 
 const WheelElement wheel30[8*8] = {

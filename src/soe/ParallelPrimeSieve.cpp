@@ -187,8 +187,7 @@ void ParallelPrimeSieve::sieve() {
   // communicate the sieving results to the
   // primesieve GUI application
   if (shm_ != NULL) {
-    for (int i = 0; i < 7; i++)
-      shm_->counts[i] = counts_[i];
+    std::copy(counts_.begin(), counts_.end(), shm_->counts);
     shm_->seconds = seconds_;
   }
 }

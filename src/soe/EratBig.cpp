@@ -33,30 +33,36 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "EratBig.h"
-#include "SieveOfEratosthenes.h"
-#include "SieveOfEratosthenes-inline.h"
 #include "WheelFactorization.h"
+#include "SieveOfEratosthenes.h"
 #include "imath.h"
 
 #include <stdint.h>
 #include <stdexcept>
 #include <cstdlib>
+#include <cassert>
 #include <algorithm>
 #include <vector>
 #include <list>
 
 namespace soe {
 
-EratBig::EratBig(const SieveOfEratosthenes& soe) :
-  Modulo210Wheel_t(soe),
-  stock_(NULL),
-  log2SieveSize_(ilog2(soe.getSieveSize())),
-  moduloSieveSize_(soe.getSieveSize() - 1)
+/// @param stop       Upper bound for sieving.
+/// @param sieveSize  Sieve size in bytes.
+/// @param limit      Sieving primes in EratBig must be <= limit,
+///                   usually limit = sqrt(stop).
+///
+EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t limit) :
+  Modulo210Wheel_t(stop, sieveSize),
+  limit_(limit),
+  log2SieveSize_(ilog2(sieveSize)),
+  moduloSieveSize_(sieveSize - 1),
+  stock_(NULL)
 {
   // EratBig uses bitwise operations that require a power of 2 sieve size
-  if (!isPowerOf2(soe.getSieveSize()))
+  if (!isPowerOf2(sieveSize))
     throw std::invalid_argument("EratBig: sieveSize must be a power of 2 (2^n).");
-  setListsSize(soe);
+  setListsSize(sieveSize);
   init();
 }
 
@@ -66,11 +72,11 @@ EratBig::~EratBig()
     delete[] *iter;
 }
 
-void EratBig::setListsSize(const SieveOfEratosthenes& soe)
+void EratBig::setListsSize(uint_t sieveSize)
 {
-  uint_t maxSievingPrime  = soe.getSqrtStop() / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+  uint_t maxSievingPrime  = limit_ / SieveOfEratosthenes::NUMBERS_PER_BYTE;
   uint_t maxNextMultiple  = maxSievingPrime * getMaxFactor() + getMaxFactor();
-  uint_t maxMultipleIndex = soe.getSieveSize() - 1 + maxNextMultiple;
+  uint_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
   uint_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
   uint_t size = maxSegmentCount + 1;
   lists_.resize(size, NULL);
@@ -118,10 +124,12 @@ Bucket*& EratBig::getList(uint_t* multipleIndex)
 }
 
 /// Add a new sieving prime
-/// @see addSievingPrime() in WheelFactorization.h
+/// @see add() in WheelFactorization.h
 ///
-void EratBig::storeSievingPrime(uint_t sievingPrime, uint_t multipleIndex, uint_t wheelIndex)
+void EratBig::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
+  assert(prime <= limit_);
+  uint_t sievingPrime = prime / SieveOfEratosthenes::NUMBERS_PER_BYTE;
   Bucket*& list = getList(&multipleIndex);
   if (!list->store(sievingPrime, multipleIndex, wheelIndex))
     pushBucket(list);
@@ -153,9 +161,7 @@ void EratBig::crossOff(uint8_t* sieve)
 
   // lists_[0] has been processed, thus the list related to the
   // next segment lists_[1] moves to lists_[0] ...
-  Bucket* tmp = list;
-  std::copy(lists_.begin() + 1, lists_.end(), lists_.begin());
-  lists_.back() = tmp;
+  std::rotate(lists_.begin(), lists_.begin() + 1, lists_.end());
 }
 
 /// Cross-off the next multiple of each sieving prime within the

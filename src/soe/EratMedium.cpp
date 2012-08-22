@@ -33,35 +33,41 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "EratMedium.h"
-#include "SieveOfEratosthenes.h"
-#include "SieveOfEratosthenes-inline.h"
 #include "WheelFactorization.h"
-#include "config.h"
+#include "SieveOfEratosthenes.h"
 
 #include <stdint.h>
 #include <stdexcept>
-#include <algorithm>
+#include <cassert>
 #include <list>
 
 namespace soe {
 
-EratMedium::EratMedium(const SieveOfEratosthenes& soe) :
-  Modulo210Wheel_t(soe), buckets_(1, Bucket())
+/// @param stop       Upper bound for sieving.
+/// @param sieveSize  Sieve size in bytes.
+/// @param limit      Sieving primes in EratMedium must be <= limit.
+///
+EratMedium::EratMedium(uint64_t stop, uint_t sieveSize, uint_t limit) :
+  Modulo210Wheel_t(stop, sieveSize),
+  limit_(limit),
+  buckets_(1, Bucket())
 {
-  if (soe.getSieveSize() > (1u << 22))
+  // ensure multipleIndex < 2^23 in crossOff()
+  if (sieveSize > (1u << 22))
     throw std::overflow_error("EratMedium: sieveSize must be <= 2^22, 4096 kilobytes.");
-  // assert multipleIndex < 2^23 in crossOff()
-  static_assert(config::FACTOR_ERATMEDIUM <= 6, "config::FACTOR_ERATMEDIUM must not be > 6");
-  uint_t max = soe.getSieveSize() * config::FACTOR_ERATMEDIUM;
-  limit_     = std::min(soe.getSqrtStop(), max);
+  if (limit > sieveSize * 6)
+    throw std::overflow_error("EratMedium: limit must be <= sieveSize * 6.");
 }
 
 /// Add a new sieving prime
-/// @see addSievingPrime() in WheelFactorization.h
+/// @see add() in WheelFactorization.h
 ///
-void EratMedium::storeSievingPrime(uint_t sievingPrime, uint_t multipleIndex, uint_t wheelIndex)
+void EratMedium::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
-  if (!buckets_.back().store(sievingPrime, multipleIndex, wheelIndex))
+  assert(prime <= limit_);
+  uint_t sievingPrime = prime / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+  Bucket& bucket = buckets_.back();
+  if (!bucket.store(sievingPrime, multipleIndex, wheelIndex))
     buckets_.push_back(Bucket());
 }
 

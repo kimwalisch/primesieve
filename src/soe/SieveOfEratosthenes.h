@@ -75,8 +75,7 @@ protected:
   SieveOfEratosthenes(uint64_t, uint64_t, uint_t, uint_t);
   virtual ~SieveOfEratosthenes();
   virtual void segmentProcessed(const uint8_t*, uint_t) = 0;
-  template<typename T>
-  T getNextPrime(uint_t, uint_t*) const;
+  uint64_t getNextPrime(uint_t, uint_t*) const;
 private:
   /// The current segment is [segmentLow_, segmentHigh_]
   uint64_t segmentLow_;
@@ -88,15 +87,15 @@ private:
   const uint_t sqrtStop_;
   /// Sieve of Eratosthenes array
   uint8_t* sieve_;
-  /// Size of the sieve_ array in bytes
+  /// Size of the sieve_ array in bytes, must be a power of 2
   uint_t sieveSize_;
   /// Used to pre-sieve multiples of small primes e.g. <= 19
   const PreSieve preSieve_;
-  /// Sieve of Eratosthenes algorithm for small sieving primes
+  /// Sieve of Eratosthenes optimized for small sieving primes
   EratSmall* eratSmall_;
-  /// Sieve of Eratosthenes algorithm for medium sieving primes
+  /// Sieve of Eratosthenes optimized for medium sieving primes
   EratMedium* eratMedium_;
-  /// Sieve of Eratosthenes algorithm for big sieving primes
+  /// Sieve of Eratosthenes optimized for big sieving primes
   EratBig* eratBig_;
   static uint64_t getByteRemainder(uint64_t);
   void initEratAlgorithms();

@@ -67,14 +67,14 @@ PrimeSieve::PrimeSieve() :
   flags_(COUNT_PRIMES),
   parent_(NULL)
 {
+  counts_.resize(7);
   setPreSieve(config::PRESIEVE);
   setSieveSize(config::SIEVESIZE);
   reset();
 }
 
-/// Used by ParallelPrimeSieve which uses multiple PrimeSieve objects
-/// and threads to sieve primes in parallel.
-/// @see ParallelPrimeSieve::sieve()
+/// Used by ParallelPrimeSieve which uses multiple PrimeSieve
+/// objects and threads to sieve primes in parallel.
 ///
 PrimeSieve::PrimeSieve(PrimeSieve* parent) :
   preSieve_(parent->preSieve_),
@@ -86,7 +86,9 @@ PrimeSieve::PrimeSieve(PrimeSieve* parent) :
   callback32_OOP_(parent->callback32_OOP_),
   callback64_OOP_(parent->callback64_OOP_),
   obj_(parent->obj_)
-{ }
+{
+  counts_.resize(7);
+}
 
 /// Get the size of the sieve interval [start_, stop_]
 uint64_t PrimeSieve::getInterval() const {
@@ -94,14 +96,11 @@ uint64_t PrimeSieve::getInterval() const {
 }
 
 void PrimeSieve::reset() {
-  for (int i = 0; i < 7; i++) {
-    counts_[i] = 0;
-  }
+  std::fill(counts_.begin(), counts_.end(), 0);
   status_ = -1.0;
   seconds_ = 0.0;
   sumSegments_ = 0;
-  if (isStatus())
-    updateStatus(0);
+  if (isStatus()) updateStatus(0);
 }
 
 uint64_t PrimeSieve::getStart()                  const { return start_; }
@@ -113,6 +112,7 @@ uint64_t PrimeSieve::getQuadrupletCount()        const { return counts_[3]; }
 uint64_t PrimeSieve::getQuintupletCount()        const { return counts_[4]; }
 uint64_t PrimeSieve::getSextupletCount()         const { return counts_[5]; }
 uint64_t PrimeSieve::getSeptupletCount()         const { return counts_[6]; }
+uint64_t PrimeSieve::getCounts(int index)        const { return counts_.at(index); }
 double   PrimeSieve::getStatus()                 const { return status_; }
 double   PrimeSieve::getSeconds()                const { return seconds_; }
 int      PrimeSieve::getPreSieve()               const { return preSieve_; }
@@ -126,17 +126,6 @@ bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRI
 bool     PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRIMES << index); }
 bool     PrimeSieve::isStatus()                  const { return isFlag(CALCULATE_STATUS, PRINT_STATUS); }
 bool     PrimeSieve::isGenerate()                const { return isFlag(CALLBACK32_PRIMES, CALLBACK64_OOP_PRIMES) || isPrint(); }
-
-/// @param index  0 = prime count,
-///               1 = twin count,
-///               2 = triplet count,
-///               ...
-///               6 = septuplet count.
-uint64_t PrimeSieve::getCounts(int index) const {
-  if (index < 0 || index > 7)
-    throw std::out_of_range("getCounts(int) index out of range");
-  return counts_[index];
-}
 
 /// Set a start number for sieving.
 /// @pre start < (2^64-1) - (2^32-1) * 10
@@ -158,17 +147,16 @@ void PrimeSieve::setStop(uint64_t stop) {
 
 /// Multiples of small primes <= preSieve are pre-sieved
 /// to speed up the sieve of Eratosthenes.
-/// @param preSieve  >= 13 && <= 23, default = 19
+/// @param preSieve  >= 13 && <= 23, default = 19.
 ///
 void PrimeSieve::setPreSieve(int preSieve) {
   preSieve_ = getInBetween(13, preSieve, 23);
 }
 
-/// Set the size of the sieve of Eratosthenes array in kilobytes. The 
-/// best performance is achieved with a sieve size of the CPU's L1
-/// data cache size (usually 32 or 64 KB) when sieving < 10^15 and a
-/// sieve size of the CPU's L2 cache size above.
-/// @param sieveSize  >= 1 && <= 4096 kilobytes, default = 32
+/// Set the size of the sieve of Eratosthenes array in kilobytes. 
+/// The best performance is achieved with a sieve size
+/// of the CPU's L1 data cache size.
+/// @param sieveSize  >= 1 && <= 4096 kilobytes, default = 32.
 ///
 void PrimeSieve::setSieveSize(int sieveSize) {
   sieveSize_ = getInBetween(1, floorPowerOf2(sieveSize), 4096);

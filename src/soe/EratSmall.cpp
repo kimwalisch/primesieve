@@ -33,34 +33,39 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "EratSmall.h"
-#include "SieveOfEratosthenes.h"
-#include "SieveOfEratosthenes-inline.h"
 #include "WheelFactorization.h"
-#include "config.h"
+#include "SieveOfEratosthenes.h"
 #include "bits.h"
 
 #include <stdint.h>
+#include <stdexcept>
 #include <cassert>
-#include <algorithm>
 #include <list>
 
 namespace soe {
 
-EratSmall::EratSmall(const SieveOfEratosthenes& soe) :
-  Modulo30Wheel_t(soe), buckets_(1, Bucket())
+/// @param stop       Upper bound for sieving.
+/// @param sieveSize  Sieve size in bytes.
+/// @param limit      Sieving primes in EratSmall must be <= limit.
+///
+EratSmall::EratSmall(uint64_t stop, uint_t sieveSize, uint_t limit) :
+  Modulo30Wheel_t(stop, sieveSize),
+  limit_(limit),
+  buckets_(1, Bucket())
 {
-  // assert multipleIndex < 2^23 in crossOff()
-  assert(config::FACTOR_ERATSMALL <= 4.0);
-  uint_t max = static_cast<uint_t>(soe.getSieveSize() * config::FACTOR_ERATSMALL);
-  limit_ = std::min(soe.getSqrtStop(), max);
+  if (limit > sieveSize * 3)
+    throw std::overflow_error("EratSmall: limit must be <= sieveSize * 3.");
 }
 
 /// Add a new sieving prime
-/// @see addSievingPrime() in WheelFactorization.h
+/// @see add() in WheelFactorization.h
 ///
-void EratSmall::storeSievingPrime(uint_t sievingPrime, uint_t multipleIndex, uint_t wheelIndex)
+void EratSmall::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
-  if (!buckets_.back().store(sievingPrime, multipleIndex, wheelIndex))
+  assert(prime <= limit_);
+  uint_t sievingPrime = prime / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+  Bucket& bucket = buckets_.back();
+  if (!bucket.store(sievingPrime, multipleIndex, wheelIndex))
     buckets_.push_back(Bucket());
 }
 

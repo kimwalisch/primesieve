@@ -43,7 +43,6 @@
 #include <list>
 
 namespace soe {
-class SieveOfEratosthenes;
 
 /// EratBig is an implementation of the segmented sieve of
 /// Eratosthenes optimized for big sieving primes that have very few
@@ -51,26 +50,29 @@ class SieveOfEratosthenes;
 ///
 class EratBig: public Modulo210Wheel_t {
 public:
-  EratBig(const SieveOfEratosthenes&);
+  EratBig(uint64_t, uint_t, uint_t);
   ~EratBig();
   void crossOff(uint8_t*);
 private:
   typedef std::list<Bucket*>::iterator PointerIterator_t;
-  enum { BUCKETS_PER_ALLOC = config::MEMORY_PER_ALLOC / sizeof(Bucket) };
+  enum {
+    BUCKETS_PER_ALLOC = config::MEMORY_PER_ALLOC / sizeof(Bucket)
+  };
+  const uint_t limit_;
+  /// log2 of SieveOfEratosthenes::sieveSize_
+  const uint_t log2SieveSize_;
+  const uint_t moduloSieveSize_;
   /// Vector of bucket lists, holds the sieving primes
   std::vector<Bucket*> lists_;
   /// List of empty buckets
   Bucket* stock_;
   /// Pointers of the allocated buckets
   std::list<Bucket*> pointers_;
-  /// log2 of SieveOfEratosthenes::sieveSize_
-  const uint_t log2SieveSize_;
-  const uint_t moduloSieveSize_;
-  void setListsSize(const SieveOfEratosthenes&);
+  void setListsSize(uint_t);
   void init();
   static void moveBucket(Bucket&, Bucket*&);
   void pushBucket(Bucket*&);
-  void storeSievingPrime(uint_t, uint_t, uint_t);
+  void store(uint_t, uint_t, uint_t);
   void crossOff(uint8_t*, Bucket&);
   Bucket*& getList(uint_t*);
 };

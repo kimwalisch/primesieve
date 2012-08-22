@@ -42,7 +42,6 @@
 #include <list> 
 
 namespace soe {
-class SieveOfEratosthenes;
 
 /// EratSmall is an implementation of the segmented sieve of
 /// Eratosthenes optimized for small sieving primes that have many
@@ -50,17 +49,18 @@ class SieveOfEratosthenes;
 ///
 class EratSmall : public Modulo30Wheel_t {
 public:
-  EratSmall(const SieveOfEratosthenes&);
-  void crossOff(uint8_t*, uint8_t*);
+  EratSmall(uint64_t, uint_t, uint_t);
   uint_t getLimit() const { return limit_; }
+  void crossOff(uint8_t*, uint8_t*);
 private:
   typedef std::list<Bucket>::iterator BucketIterator_t;
-  /// Sieving primes in EratSmall are <= limit_
-  uint_t limit_;
+  const uint_t limit_;
   /// List of buckets, holds the sieving primes
   std::list<Bucket> buckets_;
-  void storeSievingPrime(uint_t, uint_t, uint_t);
+  void store(uint_t, uint_t, uint_t);
   void crossOff(uint8_t*, uint8_t*, Bucket&);
+  EratSmall(const EratSmall&);
+  EratSmall& operator=(const EratSmall&);
 };
 
 } // namespace soe

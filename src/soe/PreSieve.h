@@ -59,7 +59,7 @@ namespace soe {
 ///
 /// == Memory Usage ==
 /// 
-/// PreSieve objects use: primeProduct(limit_) / 30 bytes of memory
+/// PreSieve objects use: primeProduct(limit_)/30 bytes of memory
 /// PreSieve multiples of primes <= 13 uses 1001    bytes
 /// PreSieve multiples of primes <= 17 uses   16.62 kilobytes
 /// PreSieve multiples of primes <= 19 uses  315.75 kilobytes
@@ -67,27 +67,22 @@ namespace soe {
 ///
 class PreSieve {
 public:
-  PreSieve(uint_t);
+  PreSieve(int);
   ~PreSieve();
   uint_t getLimit() const { return limit_; }
   void doIt(uint8_t*, uint_t, uint64_t) const;
 private:
-  static const uint_t smallPrimes_[10];
-  static const uint_t unsetBit_[30];
-  /// Multiples of small primes <= limit_ (max 23) are pre-sieved
-  const uint_t limit_;
+  static const uint_t primes_[10];
+  /// Multiples of small primes <= limit_ are pre-sieved
+  uint_t limit_;
   /// Product of the primes <= limit_
   uint_t primeProduct_;
   /// Array in which the multiples of small primes <= limit_
   /// are crossed-off at initialization
   uint8_t* preSieved_;
-  /// Size of preSieved_ in bytes
+  /// Size of the preSieved_ array in bytes
   uint_t size_;
-  static uint_t getPrimeProduct(uint_t);
-  void initPreSieved();
-  /// Uncopyable, declared but not defined
-  PreSieve(const PreSieve&);
-  PreSieve& operator=(const PreSieve&);
+  void init();
 };
 
 } // namespace soe

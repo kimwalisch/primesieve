@@ -42,8 +42,6 @@
 #include <stdint.h>
 #include <stdexcept>
 #include <cstdlib>
-#include <algorithm>
-#include <cassert>
 
 namespace soe {
 
@@ -72,7 +70,6 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   start_(start),
   stop_(stop),
   sqrtStop_(static_cast<uint_t>(isqrt(stop))),
-  sieveSize_(std::max(1u, sieveSize) * 1024), // convert to bytes
   preSieve_(preSieve),
   eratSmall_(NULL),
   eratMedium_(NULL),
@@ -82,11 +79,13 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
     throw std::invalid_argument("SieveOfEratosthenes: start must be >= 7.");
   if (start_ > stop_)
     throw std::invalid_argument("SieveOfEratosthenes: start must be <= stop.");
+  // sieveSize_ must be a power of 2 
+  sieveSize_ = getInBetween(1, floorPowerOf2<int>(sieveSize), 4096);
+  sieveSize_ *= 1024; // convert to bytes
   segmentLow_ = start_ - getByteRemainder(start_);
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   initEratAlgorithms();
   // allocate the sieve of Eratosthenes array
-  assert(sieveSize_ % 8 == 0);
   sieve_ = new uint8_t[sieveSize_];
 }
 
@@ -98,13 +97,15 @@ SieveOfEratosthenes::~SieveOfEratosthenes() {
 }
 
 void SieveOfEratosthenes::initEratAlgorithms() {
+  uint_t esLimit = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATSMALL);
+  uint_t emLimit = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATMEDIUM);
   try {
     if (sqrtStop_ > preSieve_.getLimit()) {
-      eratSmall_ = new EratSmall(*this);
+      eratSmall_ = new EratSmall(stop_, sieveSize_, esLimit);
       if (sqrtStop_ > eratSmall_->getLimit()) {
-        eratMedium_ = new EratMedium(*this);
+        eratMedium_ = new EratMedium(stop_, sieveSize_, emLimit);
         if (sqrtStop_ > eratMedium_->getLimit())
-          eratBig_ = new EratBig(*this);
+          eratBig_ = new EratBig(stop_, sieveSize_, sqrtStop_);
       }
     }
   } catch (...) {

@@ -67,7 +67,7 @@
   #define static_assert(expression, message) static_cast<void>(0)
 #endif
 
-/// Default CPU L1 data cache size per core in kilobytes
+/// Default CPU L1 data cache size in kilobytes (per core)
 #if !defined(L1_DCACHE_SIZE)
   #define L1_DCACHE_SIZE 32
 #endif
@@ -77,40 +77,22 @@ typedef unsigned int uint_t;
 
 namespace config {
 
-/// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
-/// are processed in an EratSmall object.
-/// Good FACTOR_ERATSMALL values:
-/// For PowerPC G4 CPUs from 2003 use 1.0
-/// For x86-64 CPUs from 2006 to 2012 use an element of [0.3, 0.8]
-/// @pre FACTOR_ERATSMALL >= 0 && <= 4
-/// @see SieveOfEratosthenes::sieve(uint_t)
-///
-const double FACTOR_ERATSMALL = 0.5;
-
 enum {
-  /// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL) &&
-  ///               <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
-  /// are processed in an EratMedium object.
-  /// @pre FACTOR_ERATMEDIUM >= 0 && <= 6
-  /// @see SieveOfEratosthenes::sieve(uint_t)
+  /// Default sieve size in kilobytes of PrimeSieve and
+  /// ParallelPrimeSieve (and PrimeNumberGenerator) objects.
+  /// @pre SIEVESIZE >= 1 && <= 4096
   ///
-  FACTOR_ERATMEDIUM = 6,
+  SIEVESIZE = L1_DCACHE_SIZE,
 
   /// Default pre-sieve limit of PrimeSieve and ParallelPrimeSieve
   /// objects. Multiples of small primes up to this limit are
   /// pre-sieved to speed up the sieve of Eratosthenes.
   /// Default = 19 (uses 315.7 kilobytes), for less memory usage 13 is
-  /// good (uses 1001 bytes) and still fast.
+  /// good (uses 1001 bytes) but slightly slower.
   /// @pre PRESIEVE >= 13 && <= 23
   /// @see PreSieve.h
   ///
   PRESIEVE = 19,
-
-  /// Default sieve size in kilobytes of PrimeSieve and
-  /// ParallelPrimeSieve objects.
-  /// @pre SIEVESIZE >= 1 && <= 4096
-  ///
-  SIEVESIZE = L1_DCACHE_SIZE,
 
   /// Pre-sieve limit of PrimeNumberGenerator.
   /// Default = 13 (uses 1001 bytes) a greater value uses more memory
@@ -118,12 +100,6 @@ enum {
   /// @pre PRESIEVE_PRIMENUMBERGENERATOR >= 13 && <= 23
   ///
   PRESIEVE_PRIMENUMBERGENERATOR = 13,
-
-  /// Sieve size in kilobytes of PrimeNumberGenerator which generates
-  /// the primes up to sqrt(n) needed for sieving.
-  /// @pre SIEVESIZE_PRIMENUMBERGENERATOR >= 1 && <= 4096
-  ///
-  SIEVESIZE_PRIMENUMBERGENERATOR = L1_DCACHE_SIZE,
 
   /// Number of WheelPrimes (i.e. sieving primes) per Bucket in
   /// EratSmall, EratMedium and EratBig objects.
@@ -137,11 +113,29 @@ enum {
   /// EratBig allocates MEMORY_PER_ALLOC bytes of new memory each time
   /// it needs more buckets. Default = 4 megabytes.
   ///
-  MEMORY_PER_ALLOC = (1 << 20) * 4
+  MEMORY_PER_ALLOC = (1 << 20) * 4,
+
+  /// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL) &&
+  ///               <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
+  /// are processed in EratMedium objects.
+  /// @pre FACTOR_ERATMEDIUM >= 0 && <= 6
+  /// @see SieveOfEratosthenes.cpp
+  ///
+  FACTOR_ERATMEDIUM = 6
 };
 
+/// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
+/// are processed in EratSmall objects.
+/// Good FACTOR_ERATSMALL values:
+/// For PowerPC G4 CPUs from 2003 use 1.0
+/// For x86-64 CPUs from 2006 to 2012 use an element of [0.3, 0.8]
+/// @pre FACTOR_ERATSMALL >= 0 && <= 3
+/// @see SieveOfEratosthenes.cpp
+///
+const double FACTOR_ERATSMALL = 0.5;
+
 /// Worker threads sieve at least an interval of size
-/// MIN_THREAD_INTERVAL to reduce the thread creation overhead.
+/// MIN_THREAD_INTERVAL to reduce the initialization overhead.
 /// @pre MIN_THREAD_INTERVAL >= 100
 ///
 const uint64_t MIN_THREAD_INTERVAL = static_cast<uint64_t>(1E7);
