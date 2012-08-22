@@ -45,9 +45,10 @@
 #include "imath.h"
 
 #include <stdint.h>
-#include <cassert>
 #include <stdexcept>
 #include <sstream>
+#include <limits>
+#include <cassert>
 
 namespace soe {
 
@@ -99,6 +100,12 @@ extern const WheelElement wheel210[48*8];
 ///
 class WheelPrime {
 public:
+  static void checkLimit(uint_t sieveSize)
+  {
+    // assert (multipleIndex % sieveSize) < 2^23
+    if (sieveSize > (1u << 23))
+      throw std::overflow_error("sieveSize must be <= 2^23, 8192 kilobytes.");
+  }
   /// multipleIndex and wheelIndex are compressed into the
   /// same 32-bit indexes_ variable.
   void set(uint_t multipleIndex, uint_t wheelIndex)
@@ -123,12 +130,6 @@ public:
   {
     assert(wheelIndex < (1u << 9));
     indexes_ = static_cast<uint32_t>(wheelIndex << 23);
-  }
-  static void check(uint_t sieveSize)
-  {
-     // assert (multipleIndex % sieveSize) < 2^23
-    if (sieveSize > (1u << 23))
-      throw std::overflow_error("sieveSize must be <= 2^23, 8192 kilobytes.");
   }
   uint_t getSievingPrime() const  { return sievingPrime_; }
   uint_t getMultipleIndex() const { return indexes_ & ((1 << 23) - 1); }
@@ -188,6 +189,17 @@ private:
 template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
 class WheelFactorization {
 public:
+  static void checkLimit(uint64_t stop)
+  {
+    uint64_t maxSievingPrime = std::numeric_limits<uint32_t>::max();
+    uint64_t limit           = std::numeric_limits<uint64_t>::max() - maxSievingPrime * getMaxFactor();
+    // prevent 64-bit overflows of multiple in add()
+    if (stop > limit) {
+      std::ostringstream error;
+      error << "stop must be <= (2^64-1) - (2^32-1) * " << getMaxFactor() << ".";
+      throw std::overflow_error(error.str());
+    }
+  }
   /// Calculate the first multiple > segmentLow of prime that is not
   /// divisible by any of the wheel's factors (e.g. not a multiple of
   /// 2, 3 and 5 for a modulo 30 wheel) and the position within the
@@ -227,24 +239,11 @@ protected:
   WheelFactorization(uint64_t stop, uint_t sieveSize) :
     stop_(stop)
   {
-    uint64_t maxSievingPrime = UINT32_MAX;
-    uint64_t limit           = UINT64_MAX - maxSievingPrime * getMaxFactor();
-    // prevent 64-bit overflows of multiple in add()
-    if (stop > limit) {
-      std::ostringstream error;
-      error << "WheelFactorization: stop must be <= (2^64-1) - (2^32-1) * "
-            << getMaxFactor()
-            << ".";
-      throw std::overflow_error(error.str());
-    }
-    WheelPrime::check(sieveSize);
+    checkLimit(stop);
+    WheelPrime::checkLimit(sieveSize);
   }
   virtual ~WheelFactorization() { }
   virtual void store(uint_t, uint_t, uint_t) = 0;
-  static uint_t getMaxFactor()
-  {
-    return WHEEL[0].nextMultipleFactor;
-  }
   /// Cross-off the current multiple (unset bit) of sievingPrime
   /// and calculate its next multiple.
   ///
@@ -254,6 +253,10 @@ protected:
     *multipleIndex        += WHEEL[*wheelIndex].nextMultipleFactor * sievingPrime;
     *multipleIndex        += WHEEL[*wheelIndex].correct;
     *wheelIndex           += WHEEL[*wheelIndex].next;
+  }
+  static uint_t getMaxFactor()
+  {
+    return WHEEL[0].nextMultipleFactor;
   }
 private:
   static const uint_t wheelOffsets_[30];

@@ -36,8 +36,8 @@
 #include "PrimeSieve.h"
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
+#include "EratBig.h"
 #include "imath.h"
-#include "PreSieve.h"
 
 #include <stdint.h>
 #include <stdexcept>
@@ -128,11 +128,7 @@ bool     PrimeSieve::isStatus()                  const { return isFlag(CALCULATE
 bool     PrimeSieve::isGenerate()                const { return isFlag(CALLBACK32_PRIMES, CALLBACK64_OOP_PRIMES) || isPrint(); }
 
 /// Set a start number for sieving.
-/// @pre start < (2^64-1) - (2^32-1) * 10
-///
 void PrimeSieve::setStart(uint64_t start) {
-  if (start >= UINT64_MAX - UINT32_MAX * UINT64_C(10))
-    throw std::invalid_argument("START must be < (2^64-1) - (2^32-1) * 10");
   start_ = start;
 }
 
@@ -140,8 +136,7 @@ void PrimeSieve::setStart(uint64_t start) {
 /// @pre stop < (2^64-1) - (2^32-1) * 10
 ///
 void PrimeSieve::setStop(uint64_t stop) {
-  if (stop >= UINT64_MAX - UINT32_MAX * UINT64_C(10))
-    throw std::invalid_argument("STOP must be < (2^64-1) - (2^32-1) * 10");
+  EratBig::checkLimit(stop);
   stop_ = stop;
 }
 

@@ -44,23 +44,15 @@
 #ifndef CONFIG_PRIMESIEVE_H
 #define CONFIG_PRIMESIEVE_H
 
-/// Enable the UINT32_MAX, UINT64_MAX macros from <stdint.h>
-#if !defined(__STDC_LIMIT_MACROS)
-  #define __STDC_LIMIT_MACROS
-#endif
-/// Enable the UINT64_C(c) macro from <stdint.h>
-#if !defined(__STDC_CONSTANT_MACROS)
-  #define __STDC_CONSTANT_MACROS
-#endif
 #include <stdint.h>
 
-/// Disable the assert macro from <cassert> if not in debug mode
+/// Disable the assert() macro from <cassert> if not in debug mode
 #if !defined(DEBUG) && !defined(_DEBUG) && !defined(NDEBUG)
   #define NDEBUG
 #endif
 
 /// Default CPU L1 data cache size in kilobytes (per core)
-#if !defined(L1_DCACHE_SIZE)
+#ifndef L1_DCACHE_SIZE
   #define L1_DCACHE_SIZE 32
 #endif
 
@@ -134,8 +126,8 @@ const uint64_t MIN_THREAD_INTERVAL = static_cast<uint64_t>(1E7);
 
 /// Worker threads sieve at most an interval of size
 /// MAX_THREAD_INTERVAL to prevent load imbalance when lots of threads
-/// are used. Default = 2E10, this setting guarantees that worker
-/// threads always finish in less than a minute.
+/// are used. Default = 2E10, this value guarantees that threads
+/// always finish in less than a minute.
 ///
 const uint64_t MAX_THREAD_INTERVAL = static_cast<uint64_t>(2E10);
 
