@@ -37,10 +37,11 @@
 
 #include "config.h"
 #include "SieveOfEratosthenes.h"
+#include "PreSieve.h"
+#include "imath.h"
 #include "EratSmall.h"
 #include "EratMedium.h"
 #include "EratBig.h"
-#include "imath.h"
 
 #include <stdint.h>
 #include <cassert>
