@@ -43,7 +43,6 @@
 #include "GENERATE.h"
 
 #include <stdint.h>
-#include <cassert>
 
 namespace soe {
 
@@ -60,10 +59,7 @@ public:
       config::SIEVESIZE,
       config::PRESIEVE_PRIMENUMBERGENERATOR),
     finder_(finder)
-  {
-    static_assert(config::SIEVESIZE <= 4096, "sieveSize must not be > 4096 kilobytes");
-    assert(getStop() <= ~0u);
-  }
+  { }
 private:
   PrimeNumberFinder& finder_;
   /// Executed after each sieved segment, generates the primes within
