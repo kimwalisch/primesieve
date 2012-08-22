@@ -35,11 +35,11 @@
 #ifndef POPCOUNT_PRIMESIEVE_H
 #define POPCOUNT_PRIMESIEVE_H
 
-#include "config.h"
-
+/// Enable the UINT64_C(c) macro from <stdint.h>
+#if !defined(__STDC_CONSTANT_MACROS)
+  #define __STDC_CONSTANT_MACROS
+#endif
 #include <stdint.h>
-#include <cstdlib>
-#include <cassert>
 
 namespace soe {
 
@@ -58,7 +58,8 @@ namespace soe {
 ///
 template <typename T>
 inline T popcount_lauradoux(const uint64_t* data, T size) {
-  assert(data != NULL);
+  if (data == 0) return 0;
+
   const uint64_t m1  = UINT64_C(0x5555555555555555);
   const uint64_t m2  = UINT64_C(0x3333333333333333);
   const uint64_t m4  = UINT64_C(0x0F0F0F0F0F0F0F0F);
