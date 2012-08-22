@@ -53,13 +53,7 @@ using namespace soe;
 ParallelPrimeSieve::ParallelPrimeSieve() :
   shm_(NULL),
   numThreads_(IDEAL_NUM_THREADS)
-{
-  // prevents prime k-tuplet gaps
-  static_assert(config::MIN_THREAD_INTERVAL >= 100,
-               "config::MIN_THREAD_INTERVAL must not be < 100");
-  static_assert(config::MIN_THREAD_INTERVAL <= config::MAX_THREAD_INTERVAL,
-               "config::MIN_THREAD_INTERVAL must not be > config::MAX_THREAD_INTERVAL");
-}
+{ }
 
 /// API for the primesieve GUI application in src/qt-gui
 void ParallelPrimeSieve::init(SharedMemory& shm) {
