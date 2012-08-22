@@ -6,6 +6,8 @@ New in version 3.9, 22/08/2012
    out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
 3. New pre-sieve code (src/soe/PreSieve.cpp).
 4. Fixed a potential bug in EratSmall.cpp (read BUGS file).
+5. Added assertions to critical code sections (disabled unless DEBUG
+   is defined).
 
 New in version 3.8, 13/07/2012
 ==============================
