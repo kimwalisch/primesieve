@@ -46,9 +46,9 @@
 {                                                               \
   for (uint_t i = 0; i < sieveSize; i += 4) {                   \
     /* big-endian safe, reinterpret_cast won't work */          \
-    uint_t dword = sieve[i] +                                   \
-                  (sieve[i+1] <<  8) +                          \
-                  (sieve[i+2] << 16) +                          \
+    uint_t dword = sieve[i] |                                   \
+                  (sieve[i+1] << 8) |                           \
+                  (sieve[i+2] << 16) |                          \
                   (sieve[i+3] << 24);                           \
     while (dword != 0)                                          \
       callback (static_cast<uintX>( getNextPrime(i, &dword) )); \
@@ -62,9 +62,9 @@
 #define GENERATE_TWINS(callback, uintX)                         \
 {                                                               \
   for (uint_t i = 0; i < sieveSize; i += 4) {                   \
-    uint_t dword = sieve[i] +                                   \
-                  (sieve[i+1] <<  8) +                          \
-                  (sieve[i+2] << 16) +                          \
+    uint_t dword = sieve[i] |                                   \
+                  (sieve[i+1] << 8) |                           \
+                  (sieve[i+2] << 16) |                          \
                   (sieve[i+3] << 24);                           \
     /* leave 1 bit for each 11 twin prime pattern */            \
     dword &= (dword >> 1) & 0x4A4A4A4A;                         \
@@ -80,9 +80,9 @@
 #define GENERATE_TRIPLETS(callback, uintX)                      \
 {                                                               \
   for (uint_t i = 0; i < sieveSize; i += 4) {                   \
-    uint_t dword = sieve[i] +                                   \
-                  (sieve[i+1] <<  8) +                          \
-                  (sieve[i+2] << 16) +                          \
+    uint_t dword = sieve[i] |                                   \
+                  (sieve[i+1] << 8) |                           \
+                  (sieve[i+2] << 16) |                          \
                   (sieve[i+3] << 24);                           \
     /* leave 1 bit for each 111 triplet pattern */              \
     dword &= (dword >> 1);                                      \
