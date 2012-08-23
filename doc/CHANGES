@@ -1,7 +1,8 @@
-New in version 3.9, 22/08/2012
+New in version 3.9, 23/08/2012
 ================================
 
-1. Improved OOP design and documentation (src/soe).
+1. Improved OOP design and documentation of the sieve of Eratosthenes
+   implementation (src/soe).
 2. Optimized prime k-tuplet (twin primes, prime triplets) counting for
    out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
 3. New pre-sieve code (src/soe/PreSieve.cpp).
