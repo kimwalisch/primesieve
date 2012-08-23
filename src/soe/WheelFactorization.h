@@ -100,7 +100,7 @@ extern const WheelElement wheel210[48*8];
 ///
 class WheelPrime {
 public:
-  static void checkLimit(uint_t sieveSize)
+  static void checkMaxSieveSize(uint_t sieveSize)
   {
     // assert (multipleIndex % sieveSize) < 2^23
     if (sieveSize > (1u << 23))
@@ -189,12 +189,12 @@ private:
 template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
 class WheelFactorization {
 public:
-  static void checkLimit(uint64_t stop)
+  static void checkMaxStop(uint64_t stop)
   {
     uint64_t maxSievingPrime = std::numeric_limits<uint32_t>::max();
-    uint64_t limit           = std::numeric_limits<uint64_t>::max() - maxSievingPrime * getMaxFactor();
+    uint64_t maxStop         = std::numeric_limits<uint64_t>::max() - maxSievingPrime * getMaxFactor();
     // prevent 64-bit overflows of multiple in add()
-    if (stop > limit) {
+    if (stop > maxStop) {
       std::ostringstream error;
       error << "stop must be <= (2^64-1) - (2^32-1) * " << getMaxFactor() << ".";
       throw std::overflow_error(error.str());
@@ -239,8 +239,8 @@ protected:
   WheelFactorization(uint64_t stop, uint_t sieveSize) :
     stop_(stop)
   {
-    checkLimit(stop);
-    WheelPrime::checkLimit(sieveSize);
+    checkMaxStop(stop);
+    WheelPrime::checkMaxSieveSize(sieveSize);
   }
   virtual ~WheelFactorization() { }
   virtual void store(uint_t, uint_t, uint_t) = 0;
