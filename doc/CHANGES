@@ -3,11 +3,13 @@ New in version 3.9, 23/08/2012
 
 1. Improved OOP design and documentation of the sieve of Eratosthenes
    implementation (src/soe).
-2. Optimized prime k-tuplet (twin primes, prime triplets) counting for
+2. New primesieve_error() exception used for all exceptions within
+   PrimeSieve and ParallelPrimeSieve.
+3. Optimized prime k-tuplet (twin primes, prime triplets) counting for
    out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
-3. New pre-sieve code (src/soe/PreSieve.cpp).
-4. Fixed a potential bug in EratSmall.cpp (read BUGS file).
-5. Added assertions to critical code sections (disabled unless DEBUG
+4. New pre-sieve code (src/soe/PreSieve.cpp).
+5. Fixed a potential bug in EratSmall.cpp (read BUGS file).
+6. Added assertions to critical code sections (disabled unless DEBUG
    is defined).
 
 New in version 3.8, 13/07/2012
