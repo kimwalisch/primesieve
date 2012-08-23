@@ -34,10 +34,10 @@
 
 #include "EratMedium.h"
 #include "WheelFactorization.h"
+#include "PrimeSieve.h"
 #include "SieveOfEratosthenes.h"
 
 #include <stdint.h>
-#include <stdexcept>
 #include <cassert>
 #include <list>
 
@@ -54,9 +54,9 @@ EratMedium::EratMedium(uint64_t stop, uint_t sieveSize, uint_t limit) :
 {
   // ensure multipleIndex < 2^23 in crossOff()
   if (sieveSize > (1u << 22))
-    throw std::overflow_error("EratMedium: sieveSize must be <= 2^22, 4096 kilobytes.");
+    throw primesieve_error("EratMedium: sieveSize must be <= 2^22, 4096 kilobytes");
   if (limit > sieveSize * 6)
-    throw std::overflow_error("EratMedium: limit must be <= sieveSize * 6.");
+    throw primesieve_error("EratMedium: limit must be <= sieveSize * 6");
 }
 
 /// Add a new sieving prime

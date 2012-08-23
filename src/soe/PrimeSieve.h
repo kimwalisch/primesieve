@@ -45,8 +45,17 @@
 #include <string>
 #include <vector>
 
-namespace soe { class PrimeNumberFinder; }
+/// PrimeSieve objects throw primesieve_error exceptions for
+/// invalid arguments like start > stop.
+///
+class primesieve_error : public std::runtime_error {
+public:
+  primesieve_error(const std::string& message)
+    : std::runtime_error(message)
+  { }
+};
 
+namespace soe { class PrimeNumberFinder; }
 using soe::PrimeNumberFinder;
 
 /// PrimeSieve is a highly optimized implementation of the segmented
@@ -194,12 +203,6 @@ private:
   void (*callback64_OOP_)(uint64_t, void*);
   void* obj_;
   void doSmallPrime(const SmallPrime&);
-};
-
-class cancel_sieving : public std::runtime_error {
-public:
-  cancel_sieving(const std::string& msg = "Sieving canceled!") : 
-    std::runtime_error(msg) { }
 };
 
 #endif

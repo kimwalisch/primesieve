@@ -42,11 +42,11 @@
 #define WHEELFACTORIZATION_H
 
 #include "config.h"
+#include "PrimeSieve.h"
 #include "imath.h"
+#include "toString.h"
 
 #include <stdint.h>
-#include <stdexcept>
-#include <sstream>
 #include <limits>
 #include <cassert>
 
@@ -92,6 +92,7 @@ extern const WheelInit wheel210Init[210];
 extern const WheelElement wheel30[8*8];
 extern const WheelElement wheel210[48*8];
 
+
 /// WheelPrime objects are sieving primes <= sqrt(n) that are used to
 /// cross-off multiples and that skip multiples of small primes e.g.
 /// <= 7 using wheel factorization. Each WheelPrime contains a sieving
@@ -100,11 +101,11 @@ extern const WheelElement wheel210[48*8];
 ///
 class WheelPrime {
 public:
-  static void checkMaxSieveSize(uint_t sieveSize)
+  static uint_t getMaxSieveSize()
   {
-    // assert (multipleIndex % sieveSize) < 2^23
-    if (sieveSize > (1u << 23))
-      throw std::overflow_error("sieveSize must be <= 2^23, 8192 kilobytes.");
+    // max(multipleIndex) = 2^23-1 (see indexes_),
+    // max(multipleIndex) % sieveSize <= 2^23-1
+    return (1u << 23);
   }
   /// multipleIndex and wheelIndex are compressed into the
   /// same 32-bit indexes_ variable.
@@ -144,6 +145,7 @@ private:
   uint32_t sievingPrime_;
 };
 
+
 /// The Bucket data structure is used to store sieving primes. It is
 /// designed as a singly linked list, once there is no more space in
 /// the current bucket a new bucket node is allocated.
@@ -182,6 +184,7 @@ private:
   WheelPrime wheelPrimes_[config::BUCKETSIZE];
 };
 
+
 /// The abstract WheelFactorization is used skip multiples of small
 /// primes in the sieve of Eratosthenes. The EratSmall, EratMedium and
 /// EratBig classes are derived from WheelFactorization.
@@ -189,16 +192,18 @@ private:
 template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
 class WheelFactorization {
 public:
-  static void checkMaxStop(uint64_t stop)
+  /// stop_ must be <= getMaxStop() in order to prevent
+  /// 64-bit integer overflows in add().
+  ///
+  static uint64_t getMaxStop()
   {
-    uint64_t maxSievingPrime = std::numeric_limits<uint32_t>::max();
-    uint64_t maxStop         = std::numeric_limits<uint64_t>::max() - maxSievingPrime * getMaxFactor();
-    // prevent 64-bit overflows of multiple in add()
-    if (stop > maxStop) {
-      std::ostringstream error;
-      error << "stop must be <= (2^64-1) - (2^32-1) * " << getMaxFactor() << ".";
-      throw std::overflow_error(error.str());
-    }
+    uint64_t maxPrime = std::numeric_limits<uint32_t>::max();
+    return              std::numeric_limits<uint64_t>::max() - maxPrime * getMaxFactor();
+  }
+  /// Get the maximum wheel factor.
+  static uint_t getMaxFactor()
+  {
+    return WHEEL[0].nextMultipleFactor;
   }
   /// Calculate the first multiple > segmentLow of prime that is not
   /// divisible by any of the wheel's factors (e.g. not a multiple of
@@ -239,8 +244,11 @@ protected:
   WheelFactorization(uint64_t stop, uint_t sieveSize) :
     stop_(stop)
   {
-    checkMaxStop(stop);
-    WheelPrime::checkMaxSieveSize(sieveSize);
+    uint_t maxSieveSize = WheelPrime::getMaxSieveSize();
+    if (sieveSize > maxSieveSize)
+      throw primesieve_error("WheelFactorization: sieveSize must be <= " + toString( maxSieveSize ));
+    if (stop > getMaxStop())
+      throw primesieve_error("WheelFactorization: stop must be <= 2^64 - 2^32 * " + toString( getMaxFactor() ));
   }
   virtual ~WheelFactorization() { }
   virtual void store(uint_t, uint_t, uint_t) = 0;
@@ -253,10 +261,6 @@ protected:
     *multipleIndex        += WHEEL[*wheelIndex].nextMultipleFactor * sievingPrime;
     *multipleIndex        += WHEEL[*wheelIndex].correct;
     *wheelIndex           += WHEEL[*wheelIndex].next;
-  }
-  static uint_t getMaxFactor()
-  {
-    return WHEEL[0].nextMultipleFactor;
   }
 private:
   static const uint_t wheelOffsets_[30];

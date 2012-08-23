@@ -43,7 +43,6 @@
 #endif
 
 #include <stdint.h>
-#include <stdexcept>
 #include <cstdlib>
 #include <cassert>
 #include <algorithm>
@@ -132,8 +131,8 @@ void ParallelPrimeSieve::updateStatus(int segment) {
 /// parallel using OpenMP (version 3.0 or later).
 ///
 void ParallelPrimeSieve::sieve() {
-  if (stop_ < start_)
-    throw std::invalid_argument("STOP must be >= START");
+  if (start_ > stop_)
+    throw primesieve_error("start must be <= stop");
 
   int threads = getNumThreads();
   // the user has set too many threads

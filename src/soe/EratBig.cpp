@@ -34,11 +34,11 @@
 
 #include "EratBig.h"
 #include "WheelFactorization.h"
+#include "PrimeSieve.h"
 #include "SieveOfEratosthenes.h"
 #include "imath.h"
 
 #include <stdint.h>
-#include <stdexcept>
 #include <cstdlib>
 #include <cassert>
 #include <algorithm>
@@ -61,7 +61,7 @@ EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t limit) :
 {
   // EratBig uses bitwise operations that require a power of 2 sieve size
   if (!isPowerOf2(sieveSize))
-    throw std::invalid_argument("EratBig: sieveSize must be a power of 2 (2^n).");
+    throw primesieve_error("EratBig: sieveSize must be a power of 2");
   setListsSize(sieveSize);
   init();
 }

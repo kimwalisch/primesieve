@@ -38,9 +38,9 @@
 #include "PrimeNumberFinder.h"
 #include "EratBig.h"
 #include "imath.h"
+#include "toString.h"
 
 #include <stdint.h>
-#include <stdexcept>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -133,10 +133,11 @@ void PrimeSieve::setStart(uint64_t start) {
 }
 
 /// Set a stop number for sieving.
-/// @pre stop < (2^64-1) - (2^32-1) * 10
+/// @pre stop <= 2^64 - 2^32 * 10
 ///
 void PrimeSieve::setStop(uint64_t stop) {
-  EratBig::checkMaxStop(stop);
+  if (stop > EratBig::getMaxStop())
+    throw primesieve_error("stop must be <= 2^64 - 2^32 * " + toString( EratBig::getMaxFactor() ));
   stop_ = stop;
 }
 
@@ -151,7 +152,7 @@ void PrimeSieve::setPreSieve(int preSieve) {
 /// Set the size of the sieve of Eratosthenes array in kilobytes. 
 /// The best performance is achieved with a sieve size
 /// of the CPU's L1 data cache size.
-/// @param sieveSize  >= 1 && <= 4096 kilobytes, default = 32.
+/// @param sieveSize  <= 4096 kilobytes, default = 32.
 ///
 void PrimeSieve::setSieveSize(int sieveSize) {
   sieveSize_ = getInBetween(1, floorPowerOf2(sieveSize), 4096);
@@ -179,13 +180,13 @@ void PrimeSieve::setSieveSize(int sieveSize) {
 ///
 void PrimeSieve::setFlags(int flags) {
   if (flags >= (1 << 20))
-    throw std::invalid_argument("invalid flags");
+    throw primesieve_error("invalid flags");
   flags_ = flags;
 }
 
 void PrimeSieve::addFlags(int flags) {
   if (flags >= (1 << 20))
-    throw std::invalid_argument("invalid flags");
+    throw primesieve_error("invalid flags");
   flags_ |= flags;
 }
 
@@ -238,8 +239,8 @@ void PrimeSieve::doSmallPrime(const SmallPrime& sp)
 /// segmented sieve of Eratosthenes implementation.
 ///
 void PrimeSieve::sieve() {
-  if (stop_ < start_)
-    throw std::invalid_argument("STOP must be >= START");
+  if (start_ > stop_)
+    throw primesieve_error("start must be <= stop");
   clock_t t1 = std::clock();
   reset();
 
@@ -302,7 +303,7 @@ void PrimeSieve::generatePrimes(uint32_t start,
                                 uint32_t stop,
                                 void (*callback)(uint32_t)) {
   if (callback == NULL)
-    throw std::invalid_argument("callback must not be NULL");
+    throw primesieve_error("callback must not be NULL");
   callback32_ = callback;
   flags_ = CALLBACK32_PRIMES;
   // speed up initialization (default pre-sieve = 19)
@@ -314,7 +315,7 @@ void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
                                 void (*callback)(uint64_t)) {
   if (callback == NULL)
-    throw std::invalid_argument("callback must not be NULL");
+    throw primesieve_error("callback must not be NULL");
   callback64_ = callback;
   flags_ = CALLBACK64_PRIMES;
   setPreSieve(17);
@@ -324,8 +325,8 @@ void PrimeSieve::generatePrimes(uint64_t start,
 void PrimeSieve::generatePrimes(uint32_t start, 
                                 uint32_t stop,
                                 void (*callback)(uint32_t, void*), void* obj) {
-  if (callback == NULL || obj == NULL)
-    throw std::invalid_argument("callback & obj must not be NULL");
+  if (callback == NULL)
+    throw primesieve_error("callback must not be NULL");
   callback32_OOP_ = callback;
   obj_ = obj;
   flags_ = CALLBACK32_OOP_PRIMES;
@@ -336,8 +337,8 @@ void PrimeSieve::generatePrimes(uint32_t start,
 void PrimeSieve::generatePrimes(uint64_t start, 
                                 uint64_t stop,
                                 void (*callback)(uint64_t, void*), void* obj) {
-  if (callback == NULL || obj == NULL)
-    throw std::invalid_argument("callback & obj must not be NULL");
+  if (callback == NULL)
+    throw primesieve_error("callback must not be NULL");
   callback64_OOP_ = callback;
   obj_ = obj;
   flags_ = CALLBACK64_OOP_PRIMES;

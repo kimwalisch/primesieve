@@ -34,11 +34,11 @@
 
 #include "EratSmall.h"
 #include "WheelFactorization.h"
+#include "PrimeSieve.h"
 #include "SieveOfEratosthenes.h"
 #include "bits.h"
 
 #include <stdint.h>
-#include <stdexcept>
 #include <cassert>
 #include <list>
 
@@ -54,7 +54,7 @@ EratSmall::EratSmall(uint64_t stop, uint_t sieveSize, uint_t limit) :
   buckets_(1, Bucket())
 {
   if (limit > sieveSize * 3)
-    throw std::overflow_error("EratSmall: limit must be <= sieveSize * 3.");
+    throw primesieve_error("EratSmall: limit must be <= sieveSize * 3");
 }
 
 /// Add a new sieving prime

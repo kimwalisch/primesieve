@@ -33,6 +33,7 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "SieveOfEratosthenes.h"
+#include "PrimeSieve.h"
 #include "PreSieve.h"
 #include "EratSmall.h"
 #include "EratMedium.h"
@@ -40,7 +41,6 @@
 #include "imath.h"
 
 #include <stdint.h>
-#include <stdexcept>
 #include <cstdlib>
 
 namespace soe {
@@ -57,7 +57,7 @@ const uint_t SieveOfEratosthenes::bruijnBitValues_[32] =
 };
 
 /// @param start      Sieve primes >= start, start <= stop.
-/// @param stop       Sieve primes <= stop, stop < (2^64-1) - (2^32-1) * 10.
+/// @param stop       Sieve primes <= stop, stop <= 2^64 - 2^32 * 10.
 /// @param sieveSize  A sieve size in kilobytes, sieveSize <= 4096.
 /// @param preSieve   Multiples of small primes <= preSieve are pre-sieved
 ///                   to speed up the sieve of Eratosthenes,
@@ -76,9 +76,9 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   eratBig_(NULL)
 {
   if (start_ < 7)
-    throw std::invalid_argument("SieveOfEratosthenes: start must be >= 7.");
+    throw primesieve_error("SieveOfEratosthenes: start must be >= 7");
   if (start_ > stop_)
-    throw std::invalid_argument("SieveOfEratosthenes: start must be <= stop.");
+    throw primesieve_error("SieveOfEratosthenes: start must be <= stop");
   // sieveSize_ must be a power of 2 
   sieveSize_ = getInBetween(1, floorPowerOf2<int>(sieveSize), 4096);
   sieveSize_ *= 1024; // convert to bytes
