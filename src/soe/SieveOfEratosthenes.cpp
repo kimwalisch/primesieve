@@ -56,9 +56,9 @@ const uint_t SieveOfEratosthenes::bruijnBitValues_[32] =
   103,  49,  73,  29,  47,  23,  43,  41
 };
 
-/// @param start      Sieve the primes within the interval [start, stop].
-/// @param stop       Sieve the primes within the interval [start, stop].
-/// @param sieveSize  A sieve size in kilobytes, sieveSize >= 1 && <= 4096.
+/// @param start      Sieve primes >= start, start <= stop.
+/// @param stop       Sieve primes <= stop, stop < (2^64-1) - (2^32-1) * 10.
+/// @param sieveSize  A sieve size in kilobytes, sieveSize <= 4096.
 /// @param preSieve   Multiples of small primes <= preSieve are pre-sieved
 ///                   to speed up the sieve of Eratosthenes,
 ///                   preSieve >= 13 && <= 23.
