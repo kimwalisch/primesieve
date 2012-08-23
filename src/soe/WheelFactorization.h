@@ -63,14 +63,14 @@ struct WheelInit {
 /// @see WheelFactorization.cpp
 ///
 struct WheelElement {
-  WheelElement(uint8_t _unsetBit,
-               uint8_t _nextMultipleFactor,
-               uint8_t _correct,
-                int8_t _next) :
-    unsetBit(_unsetBit),
-    nextMultipleFactor(_nextMultipleFactor),
-    correct(_correct),
-    next(_next)
+  WheelElement(uint8_t unsetBit_,
+               uint8_t nextMultipleFactor_,
+               uint8_t correct_,
+                int8_t next_) :
+    unsetBit(unsetBit_),
+    nextMultipleFactor(nextMultipleFactor_),
+    correct(correct_),
+    next(next_)
   { }
   /// Bitmask used with the bitwise & operator to unset the bit
   /// corresponding to the current multiple of a WheelPrime object.
