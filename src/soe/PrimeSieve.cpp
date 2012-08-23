@@ -136,7 +136,7 @@ void PrimeSieve::setStart(uint64_t start) {
 /// @pre stop < (2^64-1) - (2^32-1) * 10
 ///
 void PrimeSieve::setStop(uint64_t stop) {
-  EratBig::checkLimit(stop);
+  EratBig::checkMaxStop(stop);
   stop_ = stop;
 }
 
