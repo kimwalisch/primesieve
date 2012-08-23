@@ -70,20 +70,22 @@ template <typename T>
 inline T floorPowerOf2(T x)
 {
   for (T i = 1; i < getNumberOfBits<T>(); i += i)
-    x = x | (x >> i);
-  x -= x >> 1;
-  return x;
+    x |= (x >> i);
+  return x - (x >> 1);
 }
 
 /// Fast and protable integer log2 function.
+/// @see Hacker's Delight, p. 215.
 /// @param x  Integer value.
 ///
 template <typename T>
 inline T ilog2(T x)
 {
+  const T bits = getNumberOfBits<T>();
+  const T one = 1;
   T log2 = 0;
-  for (T i = getNumberOfBits<T>() >> 1; x >= 2; i >>= 1)
-    if (x >> i) { x >>= i; log2 += i; }
+  for (T i = bits / 2; i != 0; i /= 2)
+    if (x >= one << i) { x >>= i; log2 += i; }
   return log2;
 }
 
@@ -95,9 +97,15 @@ template <typename T>
 inline T isqrt(T x)
 {
   if (x <= 1) return x;
+  const T bits = getNumberOfBits<T>();
+  const T one = 1;
 
-  T s = (ilog2(x - 1) >> 1) + 1;
-  T g0 = 1; g0 <<= s;
+  // s      = bits / 2 - nlz(x - 1) / 2
+  // nlz(x) = bits - 1 - ilog2(x)
+  T s = bits / 2 - (bits - 1) / 2 + ilog2(x - 1) / 2;
+
+  // first guess: least power of 2 >= sqrt(x)
+  T g0 = one << s;
   T g1 = (g0 + (x >> s)) >> 1;
 
   while (g1 < g0) {
