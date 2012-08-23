@@ -32,12 +32,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "popcount.h"
 #include "PrimeNumberFinder.h"
 #include "PrimeSieve.h"
 #include "SieveOfEratosthenes.h"
 #include "SieveOfEratosthenes-inline.h"
 #include "GENERATE.h"
-#include "popcount.h"
 
 #include <stdint.h>
 #include <algorithm>

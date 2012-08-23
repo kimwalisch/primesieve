@@ -32,10 +32,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+/// @warning  Include this header file before any <stdint.h> otherwise
+///           the UINT64_C() macro will not be defined!
+
 #ifndef POPCOUNT_PRIMESIEVE_H
 #define POPCOUNT_PRIMESIEVE_H
 
-/// Enable the UINT64_C(c) macro from <stdint.h>
 #if !defined(__STDC_CONSTANT_MACROS)
   #define __STDC_CONSTANT_MACROS
 #endif
