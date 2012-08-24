@@ -1,4 +1,4 @@
-July 7, 2012
+August 24, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -6,11 +6,12 @@ About
 =====
 
   This file contains C++ source code examples that show how to use
-  PrimeSieve and ParallelPrimeSieve objects. *PrimeSieve objects can
-  generate (callback), print and count primes and prime k-tuplets
-  (twins, triplets, ...). For these examples to compile you need to
-  build primesieve as a library and add it to the linker, this is
-  explained in the LIBPRIMESIEVE file.
+  PrimeSieve and ParallelPrimeSieve objects. Both PrimeSieve and
+  ParallelPrimeSieve objects can generate, print (to cout) and count
+  primes and prime k-tuplets (twins, triplets, ...).
+  For these examples to compile you need to build primesieve as a
+  library and add it to the linker, this is explained in the
+  LIBPRIMESIEVE file.
 
 Contents
 ========
@@ -97,11 +98,13 @@ Contents
   // Count the primes up to 1000
 
   #include <primesieve/soe/PrimeSieve.h>
+  #include <stdint.h>
   #include <iostream>
 
   int main() {
     PrimeSieve ps;
-    std::cout << "prime count: " << ps.getPrimeCount(2, 1000) << std::endl;
+    uint64_t count = ps.getPrimeCount(2, 1000);
+    std::cout << "prime count: " << count << std::endl;
     return 0;
   }
 
@@ -141,19 +144,25 @@ Contents
 4. ParallelPrimeSieve
 =====================
 
-  The ParallelPrimeSieve class is derived from PrimeSieve thus it has
-  the same API but it uses OpenMP multi-threading to sieve primes in
+  ParallelPrimeSieve uses OpenMP multi-threading to sieve primes in
   parallel. Its main use is to count primes and prime k-tuplets, it
   can also generate and print primes and k-tuplets in parallel but
-  only in random order.
+  only in random order. The ParallelPrimeSieve class is derived from
+  PrimeSieve so it has the same API. 
 
-  Note: by default ParallelPrimeSieve counts primes and k-tuplets in
-  parallel using multiple threads but generates and prints primes and
-  k-tuplets in arithmetic order using a single thread.
+  Note: by default ParallelPrimeSieve counts primes in parallel using
+  multiple threads but generates and prints primes in arithmetic
+  order using a single thread.
+
+  API
+  ---
+  void       ParallelPrimeSieve::setNumThreads(int);
+  static int ParallelPrimeSieve::getMaxThreads();
+  int        ParallelPrimeSieve::getNumThreads() const;
 
   ////////////////////////////////////////////////////////////////////
   // Count the prime triplets within [10^14, 10^14+10^11]
-  // using all CPU cores
+  // using all CPU cores (default)
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
   #include <stdint.h>
@@ -162,13 +171,14 @@ Contents
   int main() {
     ParallelPrimeSieve pps;
     uint64_t start = (uint64_t) 1E14;
-    uint64_t stop = (uint64_t) (1E14+1E11);
-    std::cout << "prime triplet count: " << pps.getTripletCount(start, stop) << std::endl;
+    uint64_t stop  = (uint64_t) (1E14+1E11);
+    uint64_t count = pps.getTripletCount(start, stop);
+    std::cout << "prime triplet count: " << count << std::endl;
     return 0;
   }
 
   ////////////////////////////////////////////////////////////////////
-  // Sum the primes below 10^10 using 4 threads
+  // Sum the primes below 10^10 using 4 threads.
   // Note: prime number generation is synchronized i.e. only one
   // thread at a time calls back primes.
 
@@ -183,10 +193,9 @@ Contents
   }
 
   int main() {
-    uint64_t stop = (uint64_t) 1E10;
     ParallelPrimeSieve pps;
     pps.setNumThreads(4);
-    pps.generatePrimes(0, stop, callback);
+    pps.generatePrimes(0, (uint64_t) 1E10, callback);
     std::cout << "Sum of the primes below 10^10 = " << sum << std::endl;
     return 0;
   }
@@ -202,15 +211,17 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
   // getSeconds() returns the time elapsed in seconds
-  // e.g.: time elapsed: 0.471 sec
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
+  #include <stdint.h>
   #include <iostream>
 
   int main() {
     ParallelPrimeSieve pps;
-    std::cout << "prime count: "  << pps.getPrimeCount(2, 4294967295U) << std::endl
-              << "time elapsed: " << pps.getSeconds() << " sec"        << std::endl;
+    uint64_t count = pps.getPrimeCount(2, 4294967295U);
+    double seconds = pps.getSeconds();
+    std::cout << "prime count: "  << count             << std::endl
+              << "time elapsed: " << seconds << " sec" << std::endl;
     return 0;
   }
 
@@ -220,23 +231,30 @@ Contents
 =====================
 
   The best sieving performance is achieved with a sieve size of the
-  CPU's L1 data cache size (usually 32 or 64 KB) when sieving < 10^16
-  and a sieve size of the CPU's L2 cache size per core e.g. 512 KB
-  above. The default sieve size is 32 kilobytes.
+  CPU's L1 data cache size per core (usually 32 or 64 KB) when
+  sieving < 10^17 and a sieve size of the CPU's L2 cache size per core
+  e.g. 512 KB above. The default sieve size is 32 kilobytes.
+
+  API
+  ---
+  void PrimeSieve::setSieveSize(int);
 
   ////////////////////////////////////////////////////////////////////
-  // Set a faster sieve size
+  // Set a faster sieve size, for > 10^17 use L2 cache size
 
   #include <primesieve/soe/PrimeSieve.h>
+  #include <stdint.h>
   #include <iostream>
 
   int main() {
     PrimeSieve ps;
     ps.setSieveSize(512);
     uint64_t start = (uint64_t) 1E19;
-    uint64_t stop = (uint64_t) (1E19+1E10);
-    std::cout << "prime count: "  << ps.getPrimeCount(start, stop) << std::endl
-              << "time elapsed: " << ps.getSeconds() << " sec"     << std::endl;
+    uint64_t stop  = (uint64_t) (1E19+1E10);
+    uint64_t count = ps.getPrimeCount(start, stop);
+    double seconds = ps.getSeconds();
+    std::cout << "prime count: "  << count             << std::endl
+              << "time elapsed: " << seconds << " sec" << std::endl;
     return 0;
   }
 
@@ -248,7 +266,7 @@ Contents
   PrimeSieve objects are exception safe so it is possible to throw an
   exception to cancel sieving. The following trial-division prime
   number checker cancels prime number generation if 'candidate' is not
-  a prime by throwing a cancel_sieving() exception.
+  a prime by throwing an exception.
 
   ////////////////////////////////////////////////////////////////////
 
@@ -260,20 +278,20 @@ Contents
   unsigned int candidate;
 
   void check(unsigned int prime) {
-    if (candidate % prime == 0) throw cancel_sieving();
+    if (candidate % prime == 0) throw std::exception();
   }
 
   int main(int argc, char* argv[]) {
-    candidate = strtoul(argv[1], NULL, 10);
     bool isPrime = false;
+    candidate = atoi(argv[1]);
 
     if (candidate > 1) {
-      unsigned int limit = (unsigned int) std::sqrt((double) candidate);
-      PrimeSieve ps;
+      unsigned int sq = (unsigned int) std::sqrt((double) candidate);
       try {
-        ps.generatePrimes(0, limit, check);
+        PrimeSieve ps;
+        ps.generatePrimes(0, sq, check);
         isPrime = true;
-      } catch (cancel_sieving&) { }
+      } catch (...) { }
     }
     std::cout << candidate << " is "
               << (isPrime ? "a prime" : "not a prime")
@@ -287,9 +305,9 @@ Contents
 ========
 
   Flags are settings for PrimeSieve and ParallelPrimeSieve objects,
-  they are set using setFlags(int) and when done sieve() starts
-  sieving. For instance flags allow to count prime numbers and twin
-  primes in one go and print the status in percent whilst sieving.
+  they are set using setFlags(int), when done sieve() starts sieving.
+  Flags allow to do multiple tasks in one go e.g. count prime numbers
+  and twin primes and print the status in percent whilst sieving.
 
   API
   ---
@@ -328,8 +346,11 @@ Contents
     PrimeSieve ps;
     ps.setFlags(ps.COUNT_PRIMES | ps.COUNT_TWINS | ps.PRINT_STATUS);
     ps.sieve(start, stop);
-    std::cout << "\nprime count: " << ps.getPrimeCount() << std::endl
-              << "twin count:  "   << ps.getTwinCount()  << std::endl;
+    // get the previously calculated count results
+    uint64_t pcount = ps.getPrimeCount();
+    uint64_t tcount = ps.getTwinCount();
+    std::cout << "\nprime count: " << pcount << std::endl
+              << "twin count:  "   << tcount << std::endl;
     return 0;
   }
 
