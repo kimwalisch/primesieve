@@ -251,8 +251,8 @@ void PrimeSieve::sieve() {
   }
 
   if (stop_ >= 7) {
-    // fast segmented SieveOfEratosthenes object that
-    // sieves the primes within [start_, stop_]
+    // fast segmented SieveOfEratosthenes object that sieves
+    // the primes within [start_, stop_]
     PrimeNumberFinder finder(*this);
     if (finder.getSqrtStop() > finder.getPreSieve()) {
       // fast segmented SieveOfEratosthenes object that generates the
