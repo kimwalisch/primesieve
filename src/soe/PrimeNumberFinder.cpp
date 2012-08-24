@@ -34,10 +34,10 @@
 
 #include "popcount.h"
 #include "PrimeNumberFinder.h"
-#include "PrimeSieve.h"
 #include "SieveOfEratosthenes.h"
-#include "SieveOfEratosthenes-inline.h"
+#include "PrimeSieve.h"
 #include "GENERATE.h"
+#include "config.h"
 
 #include <stdint.h>
 #include <algorithm>

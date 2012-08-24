@@ -41,10 +41,10 @@
 #ifndef WHEELFACTORIZATION_H
 #define WHEELFACTORIZATION_H
 
-#include "config.h"
 #include "PrimeSieve.h"
-#include "imath.h"
 #include "toString.h"
+#include "imath.h"
+#include "config.h"
 
 #include <stdint.h>
 #include <limits>

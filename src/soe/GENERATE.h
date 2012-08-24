@@ -35,8 +35,8 @@
 #ifndef GENERATE_PRIMESIEVE_H
 #define GENERATE_PRIMESIEVE_H
 
-#include "config.h"
 #include "SieveOfEratosthenes-inline.h"
+#include "config.h"
 
 /// Reconstruct prime numbers from 1 bits of the sieve array and call
 /// a callback function for each prime.

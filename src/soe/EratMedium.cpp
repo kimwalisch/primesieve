@@ -34,8 +34,9 @@
 
 #include "EratMedium.h"
 #include "WheelFactorization.h"
-#include "PrimeSieve.h"
 #include "SieveOfEratosthenes.h"
+#include "PrimeSieve.h"
+#include "config.h"
 
 #include <stdint.h>
 #include <cassert>

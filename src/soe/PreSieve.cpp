@@ -35,6 +35,7 @@
 #include "PreSieve.h"
 #include "EratSmall.h"
 #include "imath.h"
+#include "config.h"
 
 #include <stdint.h>
 #include <cstring>

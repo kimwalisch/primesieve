@@ -32,11 +32,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "config.h"
 #include "ParallelPrimeSieve.h"
 #include "PrimeSieve.h"
-#include "PrimeNumberFinder.h"
 #include "imath.h"
+#include "config.h"
 
 #ifdef _OPENMP
   #include <omp.h>

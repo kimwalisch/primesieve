@@ -35,9 +35,9 @@
 #ifndef PRIMENUMBERFINDER_H
 #define PRIMENUMBERFINDER_H
 
-#include "config.h"
 #include "SieveOfEratosthenes.h"
 #include "SieveOfEratosthenes-inline.h"
+#include "config.h"
 
 #include <stdint.h>
 #include <vector>

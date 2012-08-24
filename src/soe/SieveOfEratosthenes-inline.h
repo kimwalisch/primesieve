@@ -35,13 +35,13 @@
 #ifndef SIEVEOFERATOSTHENES_INLINE_H
 #define SIEVEOFERATOSTHENES_INLINE_H
 
-#include "config.h"
 #include "SieveOfEratosthenes.h"
 #include "PreSieve.h"
-#include "imath.h"
 #include "EratSmall.h"
 #include "EratMedium.h"
 #include "EratBig.h"
+#include "imath.h"
+#include "config.h"
 
 #include <stdint.h>
 #include <cassert>

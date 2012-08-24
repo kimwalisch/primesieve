@@ -39,6 +39,7 @@
 #include "EratMedium.h"
 #include "EratBig.h"
 #include "imath.h"
+#include "config.h"
 
 #include <stdint.h>
 #include <cstdlib>

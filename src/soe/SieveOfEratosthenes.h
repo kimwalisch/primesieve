@@ -35,8 +35,8 @@
 #ifndef SIEVEOFERATOSTHENES_H
 #define SIEVEOFERATOSTHENES_H
 
-#include "config.h"
 #include "PreSieve.h"
+#include "config.h"
 
 #include <stdint.h>
 
