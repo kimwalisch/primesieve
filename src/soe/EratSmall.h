@@ -39,7 +39,7 @@
 #include "config.h"
 
 #include <stdint.h>
-#include <list> 
+#include <list>
 
 namespace soe {
 

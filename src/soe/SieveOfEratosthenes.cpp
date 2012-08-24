@@ -80,7 +80,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
     throw primesieve_error("SieveOfEratosthenes: start must be >= 7");
   if (start_ > stop_)
     throw primesieve_error("SieveOfEratosthenes: start must be <= stop");
-  // sieveSize_ must be a power of 2 
+  // sieveSize_ must be a power of 2
   sieveSize_ = getInBetween(1, floorPowerOf2<int>(sieveSize), 4096);
   sieveSize_ *= 1024; // convert to bytes
   segmentLow_ = start_ - getByteRemainder(start_);

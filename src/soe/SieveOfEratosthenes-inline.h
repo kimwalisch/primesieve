@@ -74,7 +74,7 @@ inline void SieveOfEratosthenes::sieve(uint_t prime)
   // to eratMedium_ if it has a few multiples per segment or
   // to eratBig_ if it has very few multiples per segment.
   // @see add() in WheelFactorization.h
-  if (prime > eratSmall_->getLimit()) 
+  if (prime > eratSmall_->getLimit())
     if (prime > eratMedium_->getLimit())
             eratBig_->add(prime, segmentLow_);
     else eratMedium_->add(prime, segmentLow_);

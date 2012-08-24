@@ -33,7 +33,7 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-/// @file imath.h 
+/// @file imath.h
 /// @brief Auxiliary integer math functions needed in primesieve.
 
 #ifndef IMATH_PRIMESIEVE_H

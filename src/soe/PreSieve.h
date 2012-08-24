@@ -58,7 +58,7 @@ namespace soe {
 /// http://geb.uni-giessen.de/geb/volltexte/1999/73/pdf/RichsteinJoerg-1999-08-06.pdf
 ///
 /// == Memory Usage ==
-/// 
+///
 /// PreSieve objects use: primeProduct(limit_)/30 bytes of memory
 /// PreSieve multiples of primes <= 13 uses 1001    bytes
 /// PreSieve multiples of primes <= 17 uses   16.62 kilobytes

@@ -137,7 +137,7 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveLimit, Bucket& bucket)
                    p[sievingPrime * 12 +  4] &= BIT5;
                    p[sievingPrime * 16 +  6] &= BIT0;
                    p[sievingPrime * 18 +  6] &= BIT6;
-                   p[sievingPrime * 22 +  8] &= BIT2; 
+                   p[sievingPrime * 22 +  8] &= BIT2;
                    p[sievingPrime * 28 + 10] &= BIT4;
                  }
                  if (p >= sieveLimit) { wPrime->setWheelIndex(8);  break; } *p &= BIT1; p += sievingPrime * 6 + 2;

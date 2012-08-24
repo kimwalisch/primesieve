@@ -149,9 +149,9 @@ void PrimeSieve::setPreSieve(int preSieve) {
   preSieve_ = getInBetween(13, preSieve, 23);
 }
 
-/// Set the size of the sieve of Eratosthenes array in kilobytes. 
-/// The best performance is achieved with a sieve size
-/// of the CPU's L1 data cache size.
+/// Set the size of the sieve of Eratosthenes array in kilobytes.
+/// The best performance is achieved with a sieve
+/// size of the CPU's L1 data cache size.
 /// @param sieveSize  <= 4096 kilobytes, default = 32.
 ///
 void PrimeSieve::setSieveSize(int sieveSize) {
@@ -299,7 +299,7 @@ void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags) {
 /// 32 & 64-bit prime number generation methods, see
 /// doc/USAGE_EXAMPLES for usage examples.
 
-void PrimeSieve::generatePrimes(uint32_t start, 
+void PrimeSieve::generatePrimes(uint32_t start,
                                 uint32_t stop,
                                 void (*callback)(uint32_t)) {
   if (callback == NULL)
@@ -311,7 +311,7 @@ void PrimeSieve::generatePrimes(uint32_t start,
   sieve(start, stop);
 }
 
-void PrimeSieve::generatePrimes(uint64_t start, 
+void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
                                 void (*callback)(uint64_t)) {
   if (callback == NULL)
@@ -322,7 +322,7 @@ void PrimeSieve::generatePrimes(uint64_t start,
   sieve(start, stop);
 }
 
-void PrimeSieve::generatePrimes(uint32_t start, 
+void PrimeSieve::generatePrimes(uint32_t start,
                                 uint32_t stop,
                                 void (*callback)(uint32_t, void*), void* obj) {
   if (callback == NULL)
@@ -334,7 +334,7 @@ void PrimeSieve::generatePrimes(uint32_t start,
   sieve(start, stop);
 }
 
-void PrimeSieve::generatePrimes(uint64_t start, 
+void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
                                 void (*callback)(uint64_t, void*), void* obj) {
   if (callback == NULL)
