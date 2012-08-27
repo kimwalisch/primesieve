@@ -54,9 +54,10 @@ inline uint_t   SieveOfEratosthenes::getSqrtStop() const  { return sqrtStop_; }
 inline uint_t   SieveOfEratosthenes::getPreSieve() const  { return preSieve_.getLimit(); }
 inline uint_t   SieveOfEratosthenes::getSieveSize() const { return sieveSize_; }
 
-/// Segmented sieve of Eratosthenes.
-/// sieve(uint_t) must be called consecutively for all primes up to
-/// sqrt(stop_) in order to sieve the primes within [start_, stop_].
+/// Sieve primes using the segmented sieve of Eratosthenes.
+/// sieve(uint_t prime) must be called consecutively for all primes
+/// up to sqrt(stop) in order to sieve the primes within the
+/// interval [start, stop].
 ///
 inline void SieveOfEratosthenes::sieve(uint_t prime)
 {
@@ -70,10 +71,9 @@ inline void SieveOfEratosthenes::sieve(uint_t prime)
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
-  // add prime to eratSmall_ if it has many multiples per segment,
-  // to eratMedium_ if it has a few multiples per segment or
-  // to eratBig_ if it has very few multiples per segment.
-  // @see add() in WheelFactorization.h
+  // add prime to eratSmall_  if it has many multiples per segment,
+  // add prime to eratMedium_ if it has a few multiples per segment,
+  // add prime to eratBig_    if it has very few ...
   if (prime > eratSmall_->getLimit())
     if (prime > eratMedium_->getLimit())
             eratBig_->add(prime, segmentLow_);
@@ -81,8 +81,8 @@ inline void SieveOfEratosthenes::sieve(uint_t prime)
   else    eratSmall_->add(prime, segmentLow_);
 }
 
-/// Reconstruct the prime number corresponding to the first set
-/// bit of the dword parameter (and unset bit).
+/// Reconstruct the prime number corresponding to the first
+/// set bit of the dword parameter (and unset bit).
 /// @param index  The current sieve index.
 /// @param dword  The next 4 bytes of the sieve array.
 ///

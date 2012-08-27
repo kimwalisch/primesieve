@@ -42,15 +42,14 @@
   #include <omp.h>
 #endif
 
-/// ParallelPrimeSieve uses multiple PrimeSieve objects and OpenMP to
-/// sieve primes in parallel. By default it counts primes using
-/// multiple threads but generates primes in arithmetic order using a
-/// single thread. The README file describes the algorithms used in
-/// more detail and doc/USAGE_EXAMPLES contains source code examples.
+/// ParallelPrimeSieve sieves primes in parallel using OpenMP, it is
+/// derived from PrimeSieve so it has the same API.
+/// Please refer to doc/USAGE_EXAMPLES for more information.
 ///
 class ParallelPrimeSieve : public PrimeSieve {
 public:
-  /// Inter-process communication with the primesieve GUI application
+  /// Used for inter-process communication with the
+  /// primesieve GUI application.
   struct SharedMemory {
     uint64_t start;
     uint64_t stop;
@@ -64,12 +63,13 @@ public:
   ParallelPrimeSieve();
   virtual ~ParallelPrimeSieve() { }
   void init(SharedMemory&);
-  /// Get the number of logical CPU cores
   static int getMaxThreads();
   int getNumThreads() const;
-  void setNumThreads(int);
+  void setNumThreads(int numThreads);
 private:
-  enum { IDEAL_NUM_THREADS = -1 };
+  enum {
+    IDEAL_NUM_THREADS = -1
+  };
   SharedMemory* shm_;
   /// Number of threads for sieving
   int numThreads_;
@@ -78,7 +78,6 @@ private:
 #ifdef _OPENMP
 public:
   using PrimeSieve::sieve;
-  /// Sieve primes in parallel using OpenMP
   virtual void sieve();
 private:
   /// OpenMP lock initialization and destroy

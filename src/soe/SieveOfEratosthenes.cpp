@@ -57,12 +57,15 @@ const uint_t SieveOfEratosthenes::bruijnBitValues_[32] =
   103,  49,  73,  29,  47,  23,  43,  41
 };
 
-/// @param start      Sieve primes >= start, start <= stop.
-/// @param stop       Sieve primes <= stop, stop <= 2^64 - 2^32 * 10.
-/// @param sieveSize  A sieve size in kilobytes, sieveSize <= 4096.
-/// @param preSieve   Multiples of small primes <= preSieve are pre-sieved
-///                   to speed up the sieve of Eratosthenes,
-///                   preSieve >= 13 && <= 23.
+/// @param start      Sieve primes >= start.
+/// @param stop       Sieve primes <= stop.
+/// @param sieveSize  A sieve size in kilobytes.
+/// @param preSieve   Pre-sieve multiples of small primes <= preSieve
+///                   to speed up the sieve of Eratosthenes.
+/// @pre   start      >= 7
+/// @pre   stop       <= 2^64 - 2^32 * 10
+/// @pre   sieveSize  >= 1 && <= 4096
+/// @pre   preSieve   >= 13 && <= 23
 ///
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
                                          uint64_t stop,
@@ -124,9 +127,8 @@ uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
   return remainder;
 }
 
-/// Pre-sieve multiples of small primes <= preSieve_.getLimit()
+/// Pre-sieve multiples of small primes e.g. <= 19
 /// to speed up the sieve of Eratosthenes.
-/// @see PreSieve.cpp
 ///
 void SieveOfEratosthenes::preSieve() {
   preSieve_.doIt(sieve_, sieveSize_, segmentLow_);
@@ -142,29 +144,26 @@ void SieveOfEratosthenes::preSieve() {
 
 void SieveOfEratosthenes::crossOffMultiples() {
   if (eratSmall_ != NULL) {
-    // process the sieving primes with many multiples per segment
+    // process small sieving primes with many multiples per segment
     eratSmall_->crossOff(sieve_, &sieve_[sieveSize_]);
     if (eratMedium_ != NULL) {
-      // process the sieving primes with a few multiples per segment
+      // process medium sieving primes with a few multiples per segment
       eratMedium_->crossOff(sieve_, sieveSize_);
       if (eratBig_ != NULL)
-        // process the sieving primes with very few ...
+        // process big sieving primes with very few ...
         eratBig_->crossOff(sieve_);
     }
   }
 }
 
-/// Sieve the primes within the current segment i.e.
-/// [segmentLow_, segmentHigh_].
-///
 void SieveOfEratosthenes::sieveSegment() {
   preSieve();
   crossOffMultiples();
   segmentProcessed(sieve_, sieveSize_);
 }
 
-/// Sieve the last segments remaining after that sieve(prime) has
-/// been called for all primes up to sqrt(stop_).
+/// Sieve the last segments remaining after that sieve(uint_t prime)
+/// has been called for all primes up to sqrt(stop).
 ///
 void SieveOfEratosthenes::finish() {
   // sieve all segments left except the last one

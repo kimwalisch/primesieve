@@ -32,23 +32,17 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-/// @file  WheelFactorization.cpp
-/// @brief This file contains precomputed arrays that are used to skip
-///        multiples of small primes e.g. <= 7 in the sieve of
-///        Eratosthenes using wheel factorization.
-/// @see   http://en.wikipedia.org/wiki/Wheel_factorization
+/// @file   WheelFactorization.cpp
+/// @brief  Arrays needed for wheel factorization.
+///
+/// This file contains precomputed arrays that are used to skip
+/// multiples of small primes e.g. <= 7 in the sieve of Eratosthenes
+/// using wheel factorization.
 
 #include "WheelFactorization.h"
 #include "bits.h"
 
 namespace soe {
-
-/// The following WheelInit arrays are used to calculate the first
-/// multiple >= startNumber of each prime that (the multiple) is not
-/// divisible by any of the wheels prime factors e.g. not a
-/// multiple of 2, 3 and 5 for a modulo 30 wheel.
-/// @see add() in WheelFactorization.h
 
 const WheelInit wheel30Init[30] = {
   {1,  0}, {0,  0}, {5,  1}, {4,  1}, {3,  1}, {2,  1}, {1,  1}, {0,  1},
@@ -84,12 +78,6 @@ const WheelInit wheel210Init[210] = {
   {1, 44}, {0, 44}, {3, 45}, {2, 45}, {1, 45}, {0, 45}, {1, 46}, {0, 46},
   {9, 47}, {8, 47}, {7, 47}, {6, 47}, {5, 47}, {4, 47}, {3, 47}, {2, 47},
   {1, 47}, {0, 47}, };
-
-/// The wheel30 and wheel210 arrays contain 8 wheels, one for each
-/// modulo 30 residue class of sieving primes k = { 7, 11, 13, 17, 19,
-/// 23, 29, 1 }. E.g. the wheel related to the prime 1063 is:
-/// 1063 % 30 = 13, index(13) = 2 -> wheel[8*2] to wheel[8*2 + SIZE-1]
-/// @see WheelElement in WheelFactorization.h
 
 const WheelElement wheel30[8*8] = {
   WheelElement(BIT0, 6, 1, 1), WheelElement(BIT4, 4, 1, 1), WheelElement(BIT3, 2, 0, 1),

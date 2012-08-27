@@ -3,7 +3,7 @@
 
 namespace soe {
 
-/// Bit patterns used to unset specific bits of a byte
+/// Bitmasks used to unset specific bits of a byte
 enum {
   BIT0 = 0xfe, // 11111110
   BIT1 = 0xfd, // 11111101

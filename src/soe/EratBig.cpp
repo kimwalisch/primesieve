@@ -32,6 +32,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+/// @file   EratBig.cpp
+/// @brief  This is my implementation of Tomas Oliveira e Silva's
+///         cache-friendly segmented sieve of Eratosthenes algorithm.
+/// @see    http://www.ieeta.pt/~tos/software/prime_sieve.html
+
 #include "EratBig.h"
 #include "WheelFactorization.h"
 #include "SieveOfEratosthenes.h"
@@ -48,6 +53,9 @@
 
 namespace soe {
 
+/// Create a new EratBig object to cross-off the multiples
+/// of big sieving primes.
+///
 /// @param stop       Upper bound for sieving.
 /// @param sieveSize  Sieve size in bytes.
 /// @param limit      Sieving primes in EratBig must be <= limit,
@@ -60,7 +68,7 @@ EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t limit) :
   moduloSieveSize_(sieveSize - 1),
   stock_(NULL)
 {
-  // EratBig uses bitwise operations that require a power of 2 sieve size
+  // '>> log2SieveSize' requires a power of 2 sieveSize
   if (!isPowerOf2(sieveSize))
     throw primesieve_error("EratBig: sieveSize must be a power of 2");
   setListsSize(sieveSize);
@@ -85,7 +93,6 @@ void EratBig::setListsSize(uint_t sieveSize)
 
 void EratBig::init()
 {
-  // initialize each bucket list with an empty bucket
   for (uint_t i = 0; i < lists_.size(); i++)
     pushBucket(lists_[i]);
 }
@@ -96,11 +103,10 @@ void EratBig::moveBucket(Bucket& src, Bucket*& dest)
   dest = &src;
 }
 
-/// Move an empty bucket from the stock_ to the front of list,
-/// if the stock_ is empty new buckets are allocated first.
-///
+/// Add an empty bucket to the front of list
 void EratBig::pushBucket(Bucket*& list)
 {
+  /// if the stock_ is empty new buckets are allocated first
   if (stock_ == NULL) {
     Bucket* more = new Bucket[BUCKETS_PER_ALLOC];
     stock_ = &more[0];
@@ -115,7 +121,7 @@ void EratBig::pushBucket(Bucket*& list)
 }
 
 /// Get the bucket list related to the segment of the next
-/// multiple (multipleIndex) of a sievingPrime.
+/// multiple (multipleIndex) of sievingPrime.
 ///
 Bucket*& EratBig::getList(uint_t* multipleIndex)
 {
@@ -124,9 +130,7 @@ Bucket*& EratBig::getList(uint_t* multipleIndex)
   return lists_[segment];
 }
 
-/// Add a new sieving prime
-/// @see add() in WheelFactorization.h
-///
+/// Store a new sieving prime in EratBig
 void EratBig::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
   assert(prime <= limit_);
@@ -136,15 +140,13 @@ void EratBig::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
     pushBucket(list);
 }
 
-/// This algorithm is used to cross-off the multiples of big sieving
-/// primes that have very few multiples per segment.
-/// @see crossOffMultiples() in SieveOfEratosthenes.cpp
+/// Cross-off the multiples of big sieving
+/// primes from the sieve array.
 ///
 void EratBig::crossOff(uint8_t* sieve)
 {
-  // lists_[0] contains the buckets related to the current segment
-  // i.e. its buckets contain all the sieving primes that have
-  // multiples in the current segment
+  // lists_[0] contains the buckets with the sieving primes
+  // that have multiples in the current segment
   Bucket*& list = lists_[0];
 
   while (list->hasNext() || !list->empty()) {
@@ -160,25 +162,24 @@ void EratBig::crossOff(uint8_t* sieve)
     } while (bucket != NULL);
   }
 
-  // lists_[0] has been processed, thus the list related to the
-  // next segment lists_[1] moves to lists_[0] ...
+  // lists_[0] has been processed, thus the list related to
+  // the next segment lists_[1] moves to lists_[0] ...
   std::rotate(lists_.begin(), lists_.begin() + 1, lists_.end());
 }
 
 /// Cross-off the next multiple of each sieving prime within the
-/// current bucket. This algorithm uses a modulo 210 wheel that skips
-/// multiples of 2, 3, 5 and 7.
-/// This is an optimized implementation of Tomas Oliveira e Silva's
-/// cache-friendly segmented sieve of Eratosthenes algorithm:
-/// http://www.ieeta.pt/~tos/software/prime_sieve.html
+/// current bucket. This is an implementation of the segmented sieve
+/// of Eratosthenes with wheel factorization optimized for big sieving
+/// primes that have very few multiples per segment. This algorithm
+/// uses a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
 ///
 void EratBig::crossOff(uint8_t* sieve, Bucket& bucket)
 {
   WheelPrime* wPrime = bucket.begin();
   WheelPrime* end    = bucket.end();
 
-  // 2 sieving primes are processed per loop iteration to break
-  // the dependency chain and reduce pipeline stalls
+  // process 2 sieving primes per loop iteration to
+  // increase instruction level parallelism
   for (; wPrime + 2 <= end; wPrime += 2) {
     uint_t multipleIndex0 = wPrime[0].getMultipleIndex();
     uint_t wheelIndex0    = wPrime[0].getWheelIndex();
@@ -186,15 +187,14 @@ void EratBig::crossOff(uint8_t* sieve, Bucket& bucket)
     uint_t multipleIndex1 = wPrime[1].getMultipleIndex();
     uint_t wheelIndex1    = wPrime[1].getWheelIndex();
     uint_t sievingPrime1  = wPrime[1].getSievingPrime();
-    // cross-off the current multiple (unset corresponding bit) of
-    // sievingPrime(0|1) and calculate the next multiple
-    // @see unsetBit() in WheelFactorization.h
+    // cross-off the current multiple (unset bit)
+    // and calculate the next multiple
     unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
     unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
     Bucket*& list0 = getList(&multipleIndex0);
     Bucket*& list1 = getList(&multipleIndex1);
-    // move sievingPrime(0|1) to the bucket list
-    // related to its next multiple
+    // move sievingPrime to the list corresponding
+    // to its next multiple
     if (!list0->store(sievingPrime0, multipleIndex0, wheelIndex0))
       pushBucket(list0);
     if (!list1->store(sievingPrime1, multipleIndex1, wheelIndex1))

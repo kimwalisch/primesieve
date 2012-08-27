@@ -45,9 +45,8 @@
 
 namespace soe {
 
-/// PrimeNumberGenerator is a SieveOfEratosthenes class that is used
-/// to generate the primes up to sqrt(n) needed for sieving by
-/// PrimeNumberFinder.
+/// PrimeNumberGenerator generates the primes up to sqrt(n) needed
+/// for sieving by PrimeNumberFinder.
 ///
 class PrimeNumberGenerator : public SieveOfEratosthenes {
 public:
@@ -56,14 +55,13 @@ public:
       finder.getPreSieve() + 1,
       finder.getSqrtStop(),
       config::SIEVESIZE,
-      config::PRESIEVE_PRIMENUMBERGENERATOR),
+      config::PRESIEVE_GENERATOR),
     finder_(finder)
   { }
 private:
   PrimeNumberFinder& finder_;
-  /// Executed after each sieved segment, generates the primes within
-  /// the current segment and uses them to sieve with finder_.
-  /// @see GENERATE.h
+  /// Generates the primes within the current segment
+  /// and use them to sieve with finder_.
   ///
   void segmentProcessed(const uint8_t* sieve, uint_t sieveSize) {
     GENERATE_PRIMES(finder_.sieve, uint_t);

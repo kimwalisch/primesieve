@@ -32,10 +32,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-/// @file config.h
-/// @brief Macro definitions and constants that set the size of
-///        various arrays and limits within primesieve.
+/// @file   config.h
+/// @brief  Constants that set the size of various arrays and limits
+///         within primesieve.
 ///
 /// The constants have been optimized for an Intel Core i7-3770K
 /// 3.5GHz (32K L1 data cache per CPU core) CPU from 2012.
@@ -47,8 +46,9 @@
 
 #include <stdint.h>
 
+/// Disable assert() macro
 #if !defined(DEBUG) && !defined(_DEBUG) && !defined(NDEBUG)
-  #define NDEBUG /* disable assert() */
+  #define NDEBUG
 #endif
 
 /// Default CPU L1 data cache size in kilobytes (per core)
@@ -63,7 +63,8 @@ namespace config {
 
 enum {
   /// Default sieve size in kilobytes of PrimeSieve and
-  /// ParallelPrimeSieve (and PrimeNumberGenerator) objects.
+  /// ParallelPrimeSieve objects. Set SIEVESIZE to your CPUs L1 data
+  /// cache size to get the best performance.
   /// @pre SIEVESIZE >= 1 && <= 4096
   ///
   SIEVESIZE = L1_DCACHE_SIZE,
@@ -71,60 +72,54 @@ enum {
   /// Default pre-sieve limit of PrimeSieve and ParallelPrimeSieve
   /// objects. Multiples of small primes up to this limit are
   /// pre-sieved to speed up the sieve of Eratosthenes.
-  /// Default = 19 (uses 315.7 kilobytes), for less memory usage 13 is
-  /// good (uses 1001 bytes) but slightly slower.
-  /// @pre PRESIEVE >= 13 && <= 23
-  /// @see PreSieve.h
+  /// @pre PRESIEVE >= 13 && <= 23.
   ///
   PRESIEVE = 19,
 
-  /// Pre-sieve limit of PrimeNumberGenerator.
-  /// Default = 13 (uses 1001 bytes) a greater value uses more memory
-  /// without noticeable speed up.
-  /// @pre PRESIEVE_PRIMENUMBERGENERATOR >= 13 && <= 23
+  /// Pre-sieve limit of PrimeNumberGenerator. Default = 13 (uses 1001 bytes),
+  /// a greater value uses more memory with no speedup.
+  /// @pre PRESIEVE_GENERATOR >= 13 && <= 23
   ///
-  PRESIEVE_PRIMENUMBERGENERATOR = 13,
+  PRESIEVE_GENERATOR = 13,
 
-  /// Number of WheelPrimes (i.e. sieving primes) per Bucket in
-  /// EratSmall, EratMedium and EratBig objects.
-  /// Good BUCKETSIZE values:
-  /// For PowerPC G4 CPUs from 2003 use 256.
-  /// For x86-64 CPUs from 2006 to 2012 use 512 or 1024.
-  /// @see Bucket in WheelFactorization.h
+  /// Number of sieving primes per Bucket in EratSmall, EratMedium and EratBig
+  /// objects. This constant is important for performance.
+  ///
+  /// - For x86-64 CPUs post 2010 use 1024
+  /// - For x86-64 CPUs prior 2010 use 512
+  /// - For PowerPC G4 CPUs (2003) use 256
   ///
   BUCKETSIZE = 1 << 10,
 
   /// EratBig allocates MEMORY_PER_ALLOC bytes of new memory each time
   /// it needs more buckets. Default = 4 megabytes.
   ///
-  MEMORY_PER_ALLOC = (1 << 20) * 4,
-
-  /// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL) &&
-  ///               <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
-  /// are processed in EratMedium objects.
-  /// @pre FACTOR_ERATMEDIUM >= 0 && <= 6
-  /// @see SieveOfEratosthenes.cpp
-  ///
-  FACTOR_ERATMEDIUM = 6
+  MEMORY_PER_ALLOC = (1 << 20) * 4
 };
 
-/// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
+/// In SieveOfEratosthenes sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
 /// are processed in EratSmall objects.
-/// Good FACTOR_ERATSMALL values:
-/// For PowerPC G4 CPUs from 2003 use 1.0
-/// For x86-64 CPUs from 2006 to 2012 use an element of [0.3, 0.8]
 /// @pre FACTOR_ERATSMALL >= 0 && <= 3
-/// @see SieveOfEratosthenes.cpp
+///
+/// - For x86-64 CPUs post 2010 use 0.5 or 0.3
+/// - For x86-64 CPUs prior 2010 use 0.8
+/// - For PowerPC G4 CPUs (2003) use 1.0
 ///
 const double FACTOR_ERATSMALL = 0.5;
 
-/// Worker threads sieve at least an interval of size
+/// In SieveOfEratosthenes sieving primes <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
+/// and > EratSmall (see above) are processed in EratMedium objects.
+/// @pre FACTOR_ERATMEDIUM >= 0 && <= 6
+///
+const double FACTOR_ERATMEDIUM = 6;
+
+/// In ParallelPrimeSieve threads sieve at least an interval of size
 /// MIN_THREAD_INTERVAL to reduce the initialization overhead.
 /// @pre MIN_THREAD_INTERVAL >= 100
 ///
 const uint64_t MIN_THREAD_INTERVAL = static_cast<uint64_t>(1E7);
 
-/// Worker threads sieve at most an interval of size
+/// In ParallelPrimeSieve threads sieve at most an interval of size
 /// MAX_THREAD_INTERVAL to prevent load imbalance when lots of threads
 /// are used. Default = 2E10, this value guarantees that threads
 /// always finish in less than a minute.

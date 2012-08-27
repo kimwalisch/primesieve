@@ -44,9 +44,9 @@ namespace soe {
 
 const uint_t PreSieve::primes_[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 };
 
-/// @param limit  Pre-sieve multiples of small primes <= limit
-///               to speed up the sieve of Eratosthenes,
-///               limit >= 13 && <= 23.
+/// Create a new PreSieve object to pre-sieve multiples
+/// of small primes <= limit in SieveOfEratosthenes.
+/// @pre limit >= 13 && <= 23
 ///
 PreSieve::PreSieve(int limit)
 {
@@ -79,9 +79,8 @@ void PreSieve::init()
   eratSmall.crossOff(preSieved_, &preSieved_[size_]);
 }
 
-/// Pre-sieve multiples of small primes <= limit_ (default 19)
-/// to speed up the sieve of Eratosthenes.
-/// @see SieveOfEratosthenes.cpp
+/// Pre-sieve multiples of small primes <= getLimit()
+/// to speed up SieveOfEratosthenes.
 ///
 void PreSieve::doIt(uint8_t* sieve, uint_t sieveSize, uint64_t segmentLow) const
 {

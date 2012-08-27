@@ -32,8 +32,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+/// @file     popcount.h
+/// @brief    Fast bit population count in an array.
 /// @warning  Include this header file before any <stdint.h> otherwise
-///           the UINT64_C() macro will not be defined!
+///           the UINT64_C() macro will not be defined.
 
 #ifndef POPCOUNT_PRIMESIEVE_H
 #define POPCOUNT_PRIMESIEVE_H
@@ -45,18 +47,16 @@
 
 namespace soe {
 
-/// Count the number of 1 bits (population count) in an array using
-/// 64-bit tree merging. This implementation uses only 8 operations
-/// per 8 bytes on 64-bit CPUs, according to my benchmarks it is about
-/// as fast as the SSE4.2 popcnt_u32 instruction.
-/// The algorithm is due to Cédric Lauradoux, it is described and
-/// benchmarked against other bit population count solutions (lookup
-/// tables, bit-slicing) in his paper:
+/// @brief  Fast algorithm to count the number of 1 bits in an array.
+///
+/// This algorithm counts the number of 1 bits (population count) in
+/// an array using 64-bit tree merging. This implementation uses only
+/// 8 operations per 8 bytes on 64-bit CPUs, according to my
+/// benchmarks it is about as fast as the SSE4.2 popcnt_u32
+/// instruction. The 64-bit tree merging popcount algorithm is due to
+/// Cédric Lauradoux, it is described in his paper:
 /// http://perso.citi.insa-lyon.fr/claurado/ham/overview.pdf
 /// http://perso.citi.insa-lyon.fr/claurado/hamming.html
-/// Also available from:
-/// http://primesieve.googlecode.com/svn/claurado/hamming-weight/overview.pdf
-/// http://primesieve.googlecode.com/svn/claurado/hamming-weight/all.tar.gz
 ///
 template <typename T>
 inline T popcount_lauradoux(const uint64_t* data, T size) {

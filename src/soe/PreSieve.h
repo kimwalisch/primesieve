@@ -40,40 +40,36 @@
 
 namespace soe {
 
+/// @brief  Pre-sieve multiples of small primes to speed up the sieve
+///         of Eratosthenes.
+///
 /// PreSieve objects are used to pre-sieve multiples of small primes
-/// <= limit_ to speed up the sieve of Eratosthenes.
-/// The idea is to allocate an array (preSieved_) and remove the
-/// multiples of small primes e.g. <= 19 from it at initialization.
-/// Whilst sieving the preSieved_ array is copied to the
-/// SieveOfEratosthenes sieve at the beginning of each new segment to
-/// pre-sieve the multiples of small primes <= limit_.
+/// e.g. <= 19 to speed up SieveOfEratosthenes. The idea is to
+/// allocate an array (preSieved_) and remove the multiples of small
+/// primes from it at initialization. Then whilst sieving, the
+/// preSieved_ array is copied to the SieveOfEratosthenes sieve array
+/// at the beginning of each new segment to pre-sieve the multiples
+/// of small primes <= limit_.
 /// Pre-sieving speeds up my sieve of Eratosthenes implementation by
-/// about 20 percent when sieving < 1E10.
+/// about 20 percent when sieving < 10^10.
 ///
-/// Pre-sieving multiples of small primes is described in more detail
-/// in Joerg Richstein's German doctoral thesis:
-/// "Segmentierung und Optimierung von Algorithmen zu Problemen aus
-/// der Zahlentheorie", Gießen, Univ., Diss., 1999
-/// 3.3.5 Vorsieben kleiner Primfaktoren
-/// http://geb.uni-giessen.de/geb/volltexte/1999/73/pdf/RichsteinJoerg-1999-08-06.pdf
+/// <b> Memory Usage </b>
 ///
-/// == Memory Usage ==
-///
-/// PreSieve objects use: primeProduct(limit_)/30 bytes of memory
-/// PreSieve multiples of primes <= 13 uses 1001    bytes
-/// PreSieve multiples of primes <= 17 uses   16.62 kilobytes
-/// PreSieve multiples of primes <= 19 uses  315.75 kilobytes
-/// PreSieve multiples of primes <= 23 uses    7.09 megabytes
+/// - PreSieve objects use: primeProduct(limit_) / 30 bytes of memory
+/// - PreSieve multiples of primes <= 13 uses 1001    bytes
+/// - PreSieve multiples of primes <= 17 uses   16.62 kilobytes
+/// - PreSieve multiples of primes <= 19 uses  315.75 kilobytes
+/// - PreSieve multiples of primes <= 23 uses    7.09 megabytes
 ///
 class PreSieve {
 public:
   PreSieve(int);
   ~PreSieve();
+  /// Multiples of primes up to this limit are pre-sieved
   uint_t getLimit() const { return limit_; }
   void doIt(uint8_t*, uint_t, uint64_t) const;
 private:
   static const uint_t primes_[10];
-  /// Multiples of small primes <= limit_ are pre-sieved
   uint_t limit_;
   /// Product of the primes <= limit_
   uint_t primeProduct_;

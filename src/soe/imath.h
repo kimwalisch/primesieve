@@ -32,9 +32,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-/// @file imath.h
-/// @brief Auxiliary integer math functions needed in primesieve.
+/// @file   imath.h
+/// @brief  Auxiliary integer math functions needed in primesieve
 
 #ifndef IMATH_PRIMESIEVE_H
 #define IMATH_PRIMESIEVE_H
@@ -53,18 +52,15 @@ inline T getNumberOfBits()
   return static_cast<T>(sizeof(T) * 8);
 }
 
-/// Determine if an integer is a power of 2.
-/// @param x  Integer value.
-///
 template <typename T>
 inline bool isPowerOf2(T x)
 {
   return (x != 0 && (x & (x - 1)) == 0);
 }
 
-/// Round down to the next power of 2.
-/// @see Hacker's Delight, p. 47.
-/// @param x  Integer value.
+/// @brief  Round down to the next power of 2.
+/// @see    Hacker's Delight, p. 47.
+/// @param  x  Integer value.
 ///
 template <typename T>
 inline T floorPowerOf2(T x)
@@ -74,9 +70,9 @@ inline T floorPowerOf2(T x)
   return x - (x >> 1);
 }
 
-/// Fast and protable integer log2 function.
-/// @see Hacker's Delight, p. 215.
-/// @param x  Integer value.
+/// @brief  Fast and protable integer log2 function.
+/// @see    Hacker's Delight, p. 215.
+/// @param  x  Integer value.
 ///
 template <typename T>
 inline T ilog2(T x)
@@ -89,9 +85,9 @@ inline T ilog2(T x)
   return log2;
 }
 
-/// Integer square root, Newton's method.
-/// @see Hacker's Delight, p. 203-207.
-/// @param x  Unsigned integer.
+/// @brief  Integer square root, Newton's method.
+/// @see    Hacker's Delight, p. 203-207.
+/// @param  x  Unsigned integer.
 ///
 template <typename T>
 inline T isqrt(T x)

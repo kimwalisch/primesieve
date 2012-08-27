@@ -45,6 +45,9 @@
 
 namespace soe {
 
+/// Create a new EratSmall object to cross-off the multiples
+/// of small sieving primes.
+///
 /// @param stop       Upper bound for sieving.
 /// @param sieveSize  Sieve size in bytes.
 /// @param limit      Sieving primes in EratSmall must be <= limit.
@@ -58,9 +61,7 @@ EratSmall::EratSmall(uint64_t stop, uint_t sieveSize, uint_t limit) :
     throw primesieve_error("EratSmall: limit must be <= sieveSize * 3");
 }
 
-/// Add a new sieving prime
-/// @see add() in WheelFactorization.h
-///
+/// Store a new sieving prime in EratSmall
 void EratSmall::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
   assert(prime <= limit_);
@@ -70,8 +71,8 @@ void EratSmall::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
     buckets_.push_back(Bucket());
 }
 
-/// Cross-off the multiples of sieving primes wihtin EratSmall
-/// @see crossOffMultiples() in SieveOfEratosthenes.cpp
+/// Cross-off the multiples of small sieving
+/// primes from the sieve array.
 ///
 void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveLimit)
 {
@@ -102,7 +103,6 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveLimit, Bucket& bucket)
     if (loopLimit > sieveLimit)
       loopLimit = p;
 
-    // cross-off the multiples (unset bits) of sievingPrime
     switch (wheelIndex) {
       // for sieving primes of type i*30 + 7
       for (;;) {

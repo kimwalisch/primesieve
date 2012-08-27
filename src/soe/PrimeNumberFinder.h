@@ -46,22 +46,22 @@ class PrimeSieve;
 
 namespace soe {
 
-/// PrimeNumberFinder is a SieveOfEratosthenes class that is
-/// used to generate, count and print primes and prime
-/// k-tuplets (twin primes, prime triplets, ...).
+/// PrimeNumberFinder is a SieveOfEratosthenes class that is used to
+/// generate, count and print primes and prime k-tuplets
+/// (twin primes, prime triplets, ...).
 ///
 class PrimeNumberFinder : public SieveOfEratosthenes {
 public:
   PrimeNumberFinder(PrimeSieve&);
 private:
   enum { END = 0xFF + 1 };
-  static const uint_t kTupletBitmasks_[7][5];
-  /// Reference to the parent PrimeSieve object
+  static const uint_t kBitmasks_[7][5];
+  /// Reference to the friend PrimeSieve object
   PrimeSieve& ps_;
   /// Lookup tables that give the count of prime k-tuplets
-  /// (twin primes, prime triplets, ...) per byte
+  /// (twin primes, prime triplets, ...) per byte.
   std::vector<uint_t> kCounts_[7];
-  void initCounts();
+  void init_kCounts();
   virtual void segmentProcessed(const uint8_t*, uint_t);
   void count(const uint8_t*, uint_t);
   void generate(const uint8_t*, uint_t);

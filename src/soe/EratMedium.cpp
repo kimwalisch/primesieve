@@ -44,6 +44,9 @@
 
 namespace soe {
 
+/// Create a new EratMedium object to cross-off the multiples
+/// of medium sieving primes.
+///
 /// @param stop       Upper bound for sieving.
 /// @param sieveSize  Sieve size in bytes.
 /// @param limit      Sieving primes in EratMedium must be <= limit.
@@ -60,9 +63,7 @@ EratMedium::EratMedium(uint64_t stop, uint_t sieveSize, uint_t limit) :
     throw primesieve_error("EratMedium: limit must be <= sieveSize * 6");
 }
 
-/// Add a new sieving prime
-/// @see add() in WheelFactorization.h
-///
+/// Store a new sieving prime in EratMedium
 void EratMedium::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
   assert(prime <= limit_);
@@ -72,8 +73,8 @@ void EratMedium::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
     buckets_.push_back(Bucket());
 }
 
-/// Cross-off the multiples of sieving primes wihtin EratMedium
-/// @see crossOffMultiples() in SieveOfEratosthenes.cpp
+/// Cross-off the multiples of medium sieving
+/// primes from the sieve array.
 ///
 void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize)
 {
@@ -92,8 +93,8 @@ void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize, Bucket& bucket)
   WheelPrime* wPrime = bucket.begin();
   WheelPrime* end    = bucket.end();
 
-  // 2 sieving primes are processed per loop iteration to break the
-  // dependency chain and reduce pipeline stalls
+  // process 2 sieving primes per loop iteration to
+  // increase instruction level parallelism
   for (; wPrime + 2 <= end; wPrime += 2) {
     uint_t multipleIndex0 = wPrime[0].getMultipleIndex();
     uint_t wheelIndex0    = wPrime[0].getWheelIndex();
@@ -101,7 +102,7 @@ void EratMedium::crossOff(uint8_t* sieve, uint_t sieveSize, Bucket& bucket)
     uint_t multipleIndex1 = wPrime[1].getMultipleIndex();
     uint_t wheelIndex1    = wPrime[1].getWheelIndex();
     uint_t sievingPrime1  = wPrime[1].getSievingPrime();
-    // cross-off the multiples (unset bits) of sievingPrime(0|1)
+    // cross-off the multiples (unset bits) of sievingPrime
     // @see unsetBit() in WheelFactorization.h
     for (;;) {
       if (multipleIndex0 < sieveSize) unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0); else break;

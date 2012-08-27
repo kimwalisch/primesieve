@@ -47,15 +47,15 @@
 
 namespace soe {
 
-const uint_t PrimeNumberFinder::kTupletBitmasks_[7][5] =
+const uint_t PrimeNumberFinder::kBitmasks_[7][5] =
 {
   { END },
-  { 0x06, 0x18, 0xc0, END },       // Twin primes,    i.e. b00000110, b00011000, ...
-  { 0x07, 0x0e, 0x1c, 0x38, END }, // Prime triplets, i.e. b00000111, b00001110, ...
-  { 0x1e, END },                   // Prime quadruplets
-  { 0x1f, 0x3e, END },             // Prime quintuplets
-  { 0x3f, END },                   // Prime sextuplets
-  { 0xfe, END }                    // Prime septuplets
+  { 0x06, 0x18, 0xc0, END },       // Twin prime       bitmasks, i.e. b00000110, b00011000, b11000000
+  { 0x07, 0x0e, 0x1c, 0x38, END }, // Prime triplet    bitmasks, i.e. b00000111, b00001110, ...
+  { 0x1e, END },                   // Prime quadruplet bitmasks
+  { 0x1f, 0x3e, END },             // Prime quintuplet bitmasks
+  { 0x3f, END },                   // Prime sextuplet  bitmasks
+  { 0xfe, END }                    // Prime septuplet  bitmasks
 };
 
 PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
@@ -67,20 +67,20 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
   ps_(ps)
 {
   if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
-    initCounts();
+    init_kCounts();
 }
 
-/// Initialize the kCounts_ lookup tables needed to count prime
-/// k-tuplets (twin primes, prime triplets, ...) per byte.
+/// Calculate the number of twins, triplets, ... (bitmask matches)
+/// for each possible byte value 0 - 255.
 ///
-void PrimeNumberFinder::initCounts()
+void PrimeNumberFinder::init_kCounts()
 {
   for (uint_t i = 1; i < ps_.counts_.size(); i++) {
     if (ps_.isCount(i)) {
       kCounts_[i].resize(256);
       for (uint_t j = 0; j < kCounts_[i].size(); j++) {
         uint_t bitmaskCount = 0;
-        for (const uint_t* b = kTupletBitmasks_[i]; *b <= j; b++) {
+        for (const uint_t* b = kBitmasks_[i]; *b <= j; b++) {
           if ((j & *b) == *b)
             bitmaskCount++;
         }
@@ -112,8 +112,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint_t sieveSize)
   // count prime numbers, see popcount.h
   if (ps_.isFlag(ps_.COUNT_PRIMES))
     counts[0] += popcount_lauradoux(reinterpret_cast<const uint64_t*>(sieve), (sieveSize + 7) / 8);
-  // count prime k-tuplets (i=1 twins, i=2 triplets, ...)
-  // using lookup tables
+  // count prime k-tuplets (i = 1 twins, i = 2 triplets, ...)
   for (uint_t i = 1; i < counts.size(); i++) {
     if (ps_.isCount(i)) {
       const std::vector<uint_t>& kCounts = kCounts_[i];
@@ -139,12 +138,12 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize)
 {
   // print prime k-tuplets to cout
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS)) {
-    uint_t i = 1; // i=1 twins, i=2 triplets, ...
+    uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
     for (; !ps_.isPrint(i); i++)
       ;
     // for more speed see GENERATE.h
     for (uint_t j = 0; j < sieveSize; j++) {
-      for (const uint_t* bitmask = kTupletBitmasks_[i]; *bitmask <= sieve[j]; bitmask++) {
+      for (const uint_t* bitmask = kBitmasks_[i]; *bitmask <= sieve[j]; bitmask++) {
         if ((sieve[j] & *bitmask) == *bitmask) {
           std::ostringstream kTuplet;
           kTuplet << "(";

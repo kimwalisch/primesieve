@@ -53,7 +53,7 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
   numThreads_(IDEAL_NUM_THREADS)
 { }
 
-/// API for the primesieve GUI application in src/qt-gui
+/// API for the primesieve GUI application
 void ParallelPrimeSieve::init(SharedMemory& shm) {
   setStart(shm.start);
   setStop(shm.stop);
@@ -63,6 +63,7 @@ void ParallelPrimeSieve::init(SharedMemory& shm) {
   shm_ = &shm;
 }
 
+/// Get the number of logical CPU cores
 int ParallelPrimeSieve::getMaxThreads() {
 #ifdef _OPENMP
   return omp_get_max_threads();
@@ -71,10 +72,12 @@ int ParallelPrimeSieve::getMaxThreads() {
 #endif
 }
 
+/// Get the current set number of threads for sieving
 int ParallelPrimeSieve::getNumThreads() const {
   return (numThreads_ == IDEAL_NUM_THREADS) ? idealNumThreads() : numThreads_;
 }
 
+/// Set the number of threads for sieving
 void ParallelPrimeSieve::setNumThreads(int threads) {
   numThreads_ = getInBetween(1, threads, getMaxThreads());
 }
@@ -126,8 +129,8 @@ void ParallelPrimeSieve::updateStatus(int segment) {
   }
 }
 
-/// Sieve the primes and prime k-tuplets within [start_, stop_] in
-/// parallel using OpenMP (version 3.0 or later).
+/// Sieve the primes and prime k-tuplets within [start, stop]
+/// in parallel using OpenMP (version 3.0 or later).
 ///
 void ParallelPrimeSieve::sieve() {
   if (start_ > stop_)
