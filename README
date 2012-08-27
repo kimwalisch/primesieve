@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       05 December 2010
-# Last modified: 19 August 2012
+# Last modified: 27 August 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -72,8 +72,8 @@ Contents
   (optional) is implemented using OpenMP 3.0 (2008) or later.
 
   primesieve has been optimized for CPUs with 15 or more integer
-  registers, so if you have a x86-64 CPU you should prefer 64-bit (16
-  registers) over 32-bit (8 registers).
+  registers, so if you have a x86-64 CPU make sure to use a 64-bit
+  version of primesieve (i386 has only 8 registers).
 
   Read doc/INSTALL for compilation instructions.
 
