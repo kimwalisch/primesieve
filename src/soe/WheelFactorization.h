@@ -33,7 +33,7 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /// @file   WheelFactorization.h
-/// @brief  Classes and structs releated to wheel factorization.
+/// @brief  Classes and structs related to wheel factorization.
 /// @see    http://en.wikipedia.org/wiki/Wheel_factorization
 ///
 /// Wheel factorization is used to skip multiples of small primes to
