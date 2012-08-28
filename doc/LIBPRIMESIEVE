@@ -1,4 +1,4 @@
-June 12, 2012
+August 28, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -15,7 +15,7 @@ Contents
 ===================================
 
   primesieve has been designed to be usable in other projects, this
-  file explains how to compile primesieve as a C++ library i.e.
+  file explains how to compile primesieve as a C++ library a.k.a.
   libprimesieve and link it with your application.
   By default libprimesieve is built as a static library which causes
   no dependencies, on Unix-like operating systems (Linux, Mac OS X, ...)
@@ -37,20 +37,19 @@ Contents
   $ make lib
   $ sudo make install
 
-  Options:
-  `make lib SHARED=yes` builds libprimesieve as a shared library.
-  `make lib CXX=clang++` use an alternate C++ compiler, here clang++.
-
-  Makefile help menu
-  ------------------
-  $ make help           Shows more options
+  Options
+  -------
+  $ make lib SHARED=yes    Build libprimesieve as a shared library.
+  $ make lib CXX=icpc      Use an alternate C++ compiler, here icpc.
+  $ sudo make uninstall    Completely remove libprimesieve.
+  $ make help              Show the Makefile help menu.
 
 3. How to use it (Unix-like OSes)
 =================================
 
-  The sum_primes.cpp example program in the current directory can now
-  be compiled by specifying libprimesieve (-lprimesieve flag) at the
-  end of the linker command:
+  After having built and installed libprimesieve the sum_primes.cpp
+  test program in the current directory can be compiled by specifying
+  -libprimesieve at the end of the linker command:
 
   $ g++ doc/sum_primes.cpp -o sum_primes -lprimesieve
   $ ./sum_primes
@@ -77,7 +76,7 @@ Contents
 5. How to use it (Windows, MSVC)
 ================================
 
-  The sum_primes.cpp example program in the current directory can now
+  The sum_primes.cpp test program in the current directory can now
   be compiled by specifying primesieve.lib to the linker:
 
   > cl /EHsc doc\sum_primes.cpp /I"dist" /link "dist\primesieve.lib"
@@ -86,8 +85,8 @@ Contents
   OpenMP multi-threading
   ----------------------
   Since version 3.5 primesieve requires OpenMP 3.0 or later which is
-  currently (June 2012) not supported by Microsoft Visual C++.
+  currently (August 2012) not supported by Microsoft Visual C++.
   You can either switch to primesieve-3.4
-  (http://primesieve.googlecode.com/files/primesieve-3.4-src.zip)
+  http://primesieve.googlecode.com/files/primesieve-3.4-src.zip
   which builds with OpenMP using Microsoft Visual C++ >= 2005 or use
   an alternate compiler e.g. the Intel C++ Compiler or MinGW.
