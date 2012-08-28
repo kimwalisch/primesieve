@@ -154,7 +154,6 @@ void PrimeSieve::setPreSieve(int preSieve) {
   preSieve_ = getInBetween(13, preSieve, 23);
 }
 
-/// Set the flags (settings) for sieve()
 void PrimeSieve::setFlags(int flags) {
   if (flags >= (1 << 20))
     throw primesieve_error("invalid flags");
