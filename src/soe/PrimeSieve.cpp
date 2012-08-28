@@ -137,21 +137,21 @@ void PrimeSieve::setStop(uint64_t stop) {
   stop_ = stop;
 }
 
+/// Set the size of the sieve of Eratosthenes array in kilobytes
+/// (default = 32). The best sieving performance is achieved with a
+/// sieve size of the CPU's L1 data cache size per core.
+/// @pre sieveSize >= 1 && <= 4096
+///
+void PrimeSieve::setSieveSize(int sieveSize) {
+  sieveSize_ = getInBetween(1, floorPowerOf2(sieveSize), 4096);
+}
+
 /// Pre-sieve multiples of small primes <= preSieve (default = 19)
 /// to speed up the sieve of Eratosthenes.
 /// @pre preSieve >= 13 && <= 23
 ///
 void PrimeSieve::setPreSieve(int preSieve) {
   preSieve_ = getInBetween(13, preSieve, 23);
-}
-
-/// Set the size of the sieve of Eratosthenes array in kilobytes
-/// (default = 32). The best sieving performance is achieved with a
-/// sieve size of the CPU's L1 data cache size pre core.
-/// @pre sieveSize >= 1 && <= 4096
-///
-void PrimeSieve::setSieveSize(int sieveSize) {
-  sieveSize_ = getInBetween(1, floorPowerOf2(sieveSize), 4096);
 }
 
 /// Set the flags (settings) for sieve()
@@ -176,8 +176,7 @@ void PrimeSieve::unset_lock() {
   if (parent_ != NULL) parent_->unset_lock();
 }
 
-/// Calculate the current status in percent of
-/// sieve() and print it to cout.
+/// Calculate the current status in percent of sieve().
 /// @param segment The size of the processed segment.
 ///
 void PrimeSieve::updateStatus(int segment) {
@@ -196,6 +195,7 @@ void PrimeSieve::updateStatus(int segment) {
   }
 }
 
+/// Small primes and prime k-tuplets are checked manually
 void PrimeSieve::doSmallPrime(const SmallPrime& sp)
 {
   if (start_ <= sp.min && sp.max <= stop_) {
@@ -220,12 +220,10 @@ void PrimeSieve::sieve() {
   clock_t t1 = std::clock();
   reset();
 
-  // do small primes and k-tuplets manually
   if (start_ <= 5) {
     for (int i = 0; i < 8; i++)
       doSmallPrime(smallPrimes_[i]);
   }
-
   if (stop_ >= 7) {
     // fast segmented SieveOfEratosthenes object that
     // sieves the primes within [start, stop]

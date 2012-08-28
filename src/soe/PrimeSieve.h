@@ -106,8 +106,8 @@ public:
   bool isStatus() const;
   void setStart(uint64_t);
   void setStop(uint64_t);
-  void setPreSieve(int);
   void setSieveSize(int);
+  void setPreSieve(int);
   void setFlags(int);
   void addFlags(int);
   virtual void sieve();
