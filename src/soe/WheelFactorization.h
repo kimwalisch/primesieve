@@ -167,7 +167,7 @@ public:
     next_ = next;
   }
   /// Store a WheelPrime in the bucket.
-  /// @return true if the bucket is not full else false.
+  /// @return false if the bucket is full else true.
   ///
   bool store(uint_t sievingPrime,
              uint_t multipleIndex,
