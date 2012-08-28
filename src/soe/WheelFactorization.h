@@ -120,8 +120,6 @@ public:
   {
     assert(multipleIndex < (1u << 23));
     assert(wheelIndex    < (1u << 9));
-    // compress multipleIndex and wheelIndex
-    // into the 32-bit indexes_ variable
     indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
   }
   void setMultipleIndex(uint_t multipleIndex)
