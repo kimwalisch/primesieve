@@ -1,4 +1,4 @@
-August 27, 2012
+August 28, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -329,8 +329,8 @@ Contents
   PrimeSieve::PRINT_QUINTUPLETS
   PrimeSieve::PRINT_SEXTUPLETS
   PrimeSieve::PRINT_SEPTUPLETS
-  PrimeSieve::CALCULATE_STATUS
   PrimeSieve::PRINT_STATUS
+  PrimeSieve::CALCULATE_STATUS
 
   ////////////////////////////////////////////////////////////////////
   // Count prime numbers and twin primes in one go
