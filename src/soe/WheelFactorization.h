@@ -109,20 +109,20 @@ public:
     // max(sieveSize) = max(multipleIndex) + 1
     return (1u << 23);
   }
-  void set(uint_t multipleIndex, uint_t wheelIndex)
-  {
-    // compress multipleIndex and wheelIndex into
-    // the 32-bit indexes_ variable
-    assert(multipleIndex < (1u << 23));
-    assert(wheelIndex    < (1u << 9));
-    indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
-  }
   void set(uint_t sievingPrime,
            uint_t multipleIndex,
            uint_t wheelIndex)
   {
     set(multipleIndex, wheelIndex);
     sievingPrime_ = static_cast<uint32_t>(sievingPrime);
+  }
+  void set(uint_t multipleIndex, uint_t wheelIndex)
+  {
+    assert(multipleIndex < (1u << 23));
+    assert(wheelIndex    < (1u << 9));
+    // compress multipleIndex and wheelIndex
+    // into the 32-bit indexes_ variable
+    indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
   }
   void setMultipleIndex(uint_t multipleIndex)
   {
