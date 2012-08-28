@@ -68,6 +68,7 @@ class PrimeSieve {
   friend class PrimeNumberFinder;
 public:
   /// Public flags for use with setFlags(int)
+  /// @pre flag < (1 << 20)
   enum {
     COUNT_PRIMES      = 1 << 0,
     COUNT_TWINS       = 1 << 1,
@@ -83,8 +84,8 @@ public:
     PRINT_QUINTUPLETS = 1 << 11,
     PRINT_SEXTUPLETS  = 1 << 12,
     PRINT_SEPTUPLETS  = 1 << 13,
-    CALCULATE_STATUS  = 1 << 14,
-    PRINT_STATUS      = 1 << 15
+    PRINT_STATUS      = 1 << 14,
+    CALCULATE_STATUS  = 1 << 15
   };
   PrimeSieve();
   PrimeSieve(PrimeSieve*);
@@ -97,7 +98,7 @@ public:
   int getSieveSize() const;
   int getFlags() const;
   bool isFlag(int flag) const;
-  bool isFlag(int first, int last) const;
+  bool isFlags(int first, int last) const;
   bool isGenerate() const;
   bool isCount() const;
   bool isCount(int index) const;
@@ -154,7 +155,8 @@ protected:
   virtual void set_lock();
   virtual void unset_lock();
 private:
-  /// Private flags (bits >= 20)
+  /// Private flags
+  /// @pre flag >= (1 << 20)
   enum {
     CALLBACK32_PRIMES     = 1 << 20,
     CALLBACK64_PRIMES     = 1 << 21,
@@ -198,6 +200,7 @@ private:
   void (*callback64_OOP_)(uint64_t, void*);
   void* obj_;
   void doSmallPrime(const SmallPrime&);
+  bool isPublicFlags(int) const;
 };
 
 #endif

@@ -66,7 +66,7 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
     ps.getPreSieve()),
   ps_(ps)
 {
-  if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
+  if (ps_.isFlags(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
     init_kCounts();
 }
 
@@ -137,7 +137,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint_t sieveSize)
 void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize)
 {
   // print prime k-tuplets to cout
-  if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS)) {
+  if (ps_.isFlags(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS)) {
     uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
     for (; !ps_.isPrint(i); i++)
       ;
