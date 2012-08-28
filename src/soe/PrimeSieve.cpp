@@ -73,9 +73,7 @@ PrimeSieve::PrimeSieve() :
   reset();
 }
 
-/// Used by ParallelPrimeSieve which uses multiple PrimeSieve
-/// objects and threads to sieve primes in parallel.
-///
+/// API for ParallelPrimeSieve
 PrimeSieve::PrimeSieve(PrimeSieve* parent) :
   preSieve_(parent->preSieve_),
   sieveSize_(parent->sieveSize_),
