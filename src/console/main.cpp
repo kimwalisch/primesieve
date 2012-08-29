@@ -39,6 +39,7 @@
 
 #include "../soe/ParallelPrimeSieve.h"
 #include "../expr/ExpressionParser.h"
+#include "../test/test.h"
 
 #include <stdint.h>
 #include <exception>
@@ -48,8 +49,6 @@
 #include <vector>
 #include <iomanip>
 #include <algorithm>
-
-void test();
 
 namespace {
 
@@ -185,8 +184,10 @@ void processOptions(int argc, char* argv[]) {
         case 'r': preSieve  = parser.eval(argv[i]); break;
         case 's': sieveSize = parser.eval(argv[i]); break;
         case 't': arg = argv[i];
-                  if (arg.compare("est") == 0)
-                    test();
+                  if (arg.compare("est") == 0) {
+                    bool ok = test();
+                    exit((ok == true) ? 0 : 1);
+                  }
                   threads = parser.eval(argv[i]);
                   break;
         case 'v': version();

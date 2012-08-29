@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   10 June 2012
+# Last modified:   29 August 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -15,8 +15,6 @@ CXX          = cl /nologo
 CXXFLAGS     = /W2 /O2 /EHsc
 LINK         = link
 INCPATH      = /I"src\thirdparty"
-SOEDIR       = src\soe
-CONDIR       = src\console
 BINDIR       = bin
 LIBDIR       = lib
 DISTDIR      = dist
@@ -64,7 +62,7 @@ BIN_CXXFLAGS = $(BIN_CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 bin: dir_bin $(BIN_OBJECTS)
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $(BIN_OBJECTS)
 
-$(BIN_OBJECTS): {$(SOEDIR)\;$(CONDIR)\}$$(@B).cpp
+$(BIN_OBJECTS): {src\soe\;src\test\;src\console\}$$(@B).cpp
 	$(CXX) $(BIN_CXXFLAGS) $(INCPATH) /c $? /Fo"$@"
 
 dir_bin:
@@ -83,9 +81,9 @@ lib: dir_lib $(LIB_OBJECTS)
 	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $(LIB_OBJECTS)
 	@if not exist $(DISTDIR)\$(TARGET)\soe mkdir $(DISTDIR)\$(TARGET)\soe
 	copy /Y $(LIBDIR)\$(TARGET).lib $(DISTDIR)
-	copy /Y $(SOEDIR)\*PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
+	copy /Y src\soe\*PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
 
-$(LIB_OBJECTS): $(SOEDIR)\$$(@B).cpp
+$(LIB_OBJECTS): src\soe\$$(@B).cpp
 	$(CXX) $(LIB_CXXFLAGS) $(INCPATH) /c $? /Fo"$@"
 
 dir_lib:

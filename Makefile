@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   13 July 2012
+# Last modified:   29 August 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -13,8 +13,6 @@
 CXX      = g++
 CXXFLAGS = -Wall -O2
 TARGET   = primesieve
-SOEDIR   = src/soe
-CONDIR   = src/console
 BINDIR   = bin
 LIBDIR   = lib
 
@@ -121,10 +119,13 @@ endif
 bin: dir_bin $(BIN_OBJECTS)
 	$(CXX) $(BIN_CXXFLAGS) -o $(BINDIR)/$(TARGET) $(BIN_OBJECTS)
 
-$(BINDIR)/%.o: $(SOEDIR)/%.cpp
+$(BINDIR)/%.o: src/soe/%.cpp
 	$(CXX) $(BIN_CXXFLAGS) -o $@ -c $<
 
-$(BINDIR)/%.o: $(CONDIR)/%.cpp
+$(BINDIR)/%.o: src/test/%.cpp
+	$(CXX) $(BIN_CXXFLAGS) -o $@ -c $<
+
+$(BINDIR)/%.o: src/console/%.cpp
 	$(CXX) $(BIN_CXXFLAGS) -o $@ -c $<
 
 dir_bin:
@@ -151,7 +152,7 @@ else
 	$(CXX) $(LIB_CXXFLAGS) $(SOFLAG) -o $(LIBDIR)/$(LIBPRIMESIEVE) $(LIB_OBJECTS)
 endif
 
-$(LIBDIR)/%.o: $(SOEDIR)/%.cpp
+$(LIBDIR)/%.o: src/soe/%.cpp
 	$(CXX) $(LIB_CXXFLAGS) -o $@ -c $<
 
 dir_lib:
