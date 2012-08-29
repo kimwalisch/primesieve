@@ -10,14 +10,14 @@
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
 
-TARGET       = primesieve
-CXX          = cl /nologo
-CXXFLAGS     = /W2 /O2 /EHsc
-LINK         = link
-INCPATH      = /I"src\thirdparty"
-BINDIR       = bin
-LIBDIR       = lib
-DISTDIR      = dist
+CXX      = cl /nologo
+CXXFLAGS = /W2 /O2 /EHsc
+INCPATH  = /I "src\thirdparty"
+LINK     = link
+TARGET   = primesieve
+BINDIR   = bin
+LIBDIR   = lib
+DISTDIR  = dist
 
 BIN_OBJECTS = $(BINDIR)\WheelFactorization.obj \
   $(BINDIR)\PreSieve.obj \
