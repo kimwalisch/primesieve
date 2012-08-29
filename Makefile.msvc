@@ -110,8 +110,8 @@ clean:
 !ENDIF
 
 #-----------------------------------------------------------------------------
-# `nmake -f Makefile.msvc check` runs various sieving tests to assure that
-# the compiled primesieve binary produces correct results
+# `nmake -f Makefile.msvc check` runs various sieving tests to assure
+# that the compiled primesieve binary produces correct results
 #-----------------------------------------------------------------------------
 
 check test: bin
