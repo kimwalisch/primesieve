@@ -1,4 +1,4 @@
-August 28, 2012
+August 29, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -22,8 +22,9 @@ Contents
   4. ParallelPrimeSieve
   5. Timing
   6. Performance tuning
-  7. Cancel prime number generation
-  8. Flags
+  7. C++ Exceptions
+  8. Cancel prime number generation
+  9. Flags
 
 1. Prime number generation
 ==========================
@@ -260,7 +261,36 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-7. Cancel prime number generation
+7. C++ Exceptions
+=================
+
+  PrimeSieve and ParallelPrimeSieve objects throw primesieve_error
+  exceptions for invalid arguments like start > stop. primesieve_error
+  is defined in PrimeSieve.h and derived from std::runtime_error
+  (which is derived from std::exception).
+
+  ////////////////////////////////////////////////////////////////////
+  // Catch primesieve_error exceptions
+
+  #include <primesieve/soe/PrimeSieve.h>
+  #include <iostream>
+
+  int main() {
+    int start = 100;
+    int stop = 0;
+    try {
+      PrimeSieve ps;
+      ps.printPrimes(start, stop);
+    }
+    catch (primesieve_error& e) {
+      std::cerr << "Error: " << e.what() << std::endl;
+    }
+    return 0;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+
+8. Cancel prime number generation
 =================================
 
   PrimeSieve objects are exception safe so it is possible to throw an
@@ -301,12 +331,12 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-8. Flags
+9. Flags
 ========
 
   Flags are settings for PrimeSieve and ParallelPrimeSieve objects,
   they are set using setFlags(int), when done sieve() starts sieving.
-  Flags allow to do multiple tasks in one go e.g. count prime numbers
+  Flags allow to do multiple tasks in one go e.g., count prime numbers
   and twin primes and print the status in percent whilst sieving.
 
   API
