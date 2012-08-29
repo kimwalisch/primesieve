@@ -32,13 +32,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-/// @file  main.cpp
-/// @brief Command-line version of primesieve, multi-threaded (OpenMP).
-/// @see   http://primesieve.googlecode.com
-/// primesieve is a highly optimized implementation of the sieve of
-/// Eratosthenes that generates prime numbers and prime k-tuplets (twin
-/// primes, prime triplets, ...) up to 2^64 maximum.
+/// @file   main.cpp
+/// @brief  This is the primesieve console (terminal) application.
+///         Precompiled binaries are available at:
+///         https://code.google.com/p/primesieve/downloads/list
 
 #include "../soe/ParallelPrimeSieve.h"
 #include "../expr/ExpressionParser.h"
@@ -141,9 +138,6 @@ bool isDigits(const std::string &str) {
   return str.find_first_not_of(digits) == std::string::npos;
 }
 
-/// Process the command-line options.
-/// @see help()
-///
 void processOptions(int argc, char* argv[]) {
   if (argc < 2 || argc > 20) help();
   std::string arg;
@@ -208,7 +202,9 @@ void processOptions(int argc, char* argv[]) {
 
 } // end namespace
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
+  // process the command-line options
   processOptions(argc, argv);
 
   std::cout << std::left;
@@ -238,7 +234,6 @@ int main(int argc, char* argv[]) {
     // start sieving primes
     pps.sieve();
 
-    if (pps.isFlag(pps.PRINT_STATUS))   std::cout << std::endl;
     if (pps.isPrint() && pps.isCount()) std::cout << std::endl;
     int width = getWidth(pps);
 

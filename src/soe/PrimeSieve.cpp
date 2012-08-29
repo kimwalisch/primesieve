@@ -192,8 +192,11 @@ void PrimeSieve::updateStatus(int segment) {
     status_ = std::min(percent, 100.0);
     if (isFlag(PRINT_STATUS)) {
       int status = static_cast<int>(status_);
-      if (status > static_cast<int>(old))
+      if (status > static_cast<int>(old)) {
         std::cout << '\r' << status << '%' << std::flush;
+        if (status == 100)
+          std::cout << std::endl;
+      }
     }
   }
 }
