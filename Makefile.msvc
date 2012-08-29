@@ -19,7 +19,8 @@ BINDIR   = bin
 LIBDIR   = lib
 DISTDIR  = dist
 
-BIN_OBJECTS = $(BINDIR)\WheelFactorization.obj \
+BIN_OBJECTS = \
+  $(BINDIR)\WheelFactorization.obj \
   $(BINDIR)\PreSieve.obj \
   $(BINDIR)\EratSmall.obj \
   $(BINDIR)\EratMedium.obj \
@@ -31,7 +32,8 @@ BIN_OBJECTS = $(BINDIR)\WheelFactorization.obj \
   $(BINDIR)\test.obj \
   $(BINDIR)\main.obj
 
-LIB_OBJECTS = $(LIBDIR)\WheelFactorization.obj \
+LIB_OBJECTS = \
+  $(LIBDIR)\WheelFactorization.obj \
   $(LIBDIR)\PreSieve.obj \
   $(LIBDIR)\EratSmall.obj \
   $(LIBDIR)\EratMedium.obj \
