@@ -16,7 +16,8 @@ TARGET   = primesieve
 BINDIR   = bin
 LIBDIR   = lib
 
-BIN_OBJECTS = $(BINDIR)/WheelFactorization.o \
+BIN_OBJECTS = \
+  $(BINDIR)/WheelFactorization.o \
   $(BINDIR)/PreSieve.o \
   $(BINDIR)/EratSmall.o \
   $(BINDIR)/EratMedium.o \
@@ -28,7 +29,8 @@ BIN_OBJECTS = $(BINDIR)/WheelFactorization.o \
   $(BINDIR)/test.o \
   $(BINDIR)/main.o
 
-LIB_OBJECTS = $(LIBDIR)/WheelFactorization.o \
+LIB_OBJECTS = \
+  $(LIBDIR)/WheelFactorization.o \
   $(LIBDIR)/PreSieve.o \
   $(LIBDIR)/EratSmall.o \
   $(LIBDIR)/EratMedium.o \
