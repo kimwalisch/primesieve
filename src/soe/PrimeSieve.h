@@ -98,7 +98,7 @@ public:
   int getSieveSize() const;
   int getFlags() const;
   bool isFlag(int flag) const;
-  bool isFlags(int first, int last) const;
+  bool isFlag(int first, int last) const;
   bool isGenerate() const;
   bool isCount() const;
   bool isCount(int index) const;
