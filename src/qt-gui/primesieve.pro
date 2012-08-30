@@ -43,7 +43,7 @@ win* {
 TARGET = primesieve
 TEMPLATE = app
 FORMS += forms/PrimeSieveGUI.ui
-HEADERS += ../expr/ExpressionParser.h
+HEADERS += ../parser/ExpressionParser.h
 SOURCES += src/main.cpp \
     src/PrimeSieveGUI.cpp \
     src/PrimeSieveGUI_menu.cpp \

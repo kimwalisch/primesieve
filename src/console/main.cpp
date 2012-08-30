@@ -37,8 +37,8 @@
 ///         Precompiled binaries are available at:
 ///         https://code.google.com/p/primesieve/downloads/list
 
+#include "../parser/ExpressionParser.h"
 #include "../soe/ParallelPrimeSieve.h"
-#include "../expr/ExpressionParser.h"
 #include "../test/test.h"
 
 #include <stdint.h>

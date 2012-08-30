@@ -21,7 +21,7 @@
 #include "ui_PrimeSieveGUI.h"
 #include "PrimeSieveProcess.h"
 #include "../soe/ParallelPrimeSieve.h"
-#include "../expr/ExpressionParser.h"
+#include "../parser/ExpressionParser.h"
 
 #include <QtGlobal>
 #include <QCoreApplication>
