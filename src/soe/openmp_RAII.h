@@ -32,60 +32,70 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef PARALLELPRIMESIEVE_H
-#define PARALLELPRIMESIEVE_H
+/// @file   openmp_RAII.h
+/// @brief  The OmpInitGuard and OmpGuard classes are RAII-style
+///         wrappers for OpenMP locks.
 
-#include "PrimeSieve.h"
-#include <stdint.h>
+#ifndef OPENMP_RAII_H
+#define OPENMP_RAII_H
 
-#ifdef _OPENMP
-  #include <omp.h>
-#endif
+#include <omp.h>
 
-/// ParallelPrimeSieve sieves primes in parallel using OpenMP, it is
-/// derived from PrimeSieve so it has the same API.
-/// Please refer to doc/USAGE_EXAMPLES for more information.
-///
-class ParallelPrimeSieve : public PrimeSieve {
+namespace soe {
+
+/// OpenMP RAII lock initialization and destroy
+class OmpInitGuard {
 public:
-  /// Used for inter-process communication with the
-  /// primesieve GUI application.
-  struct SharedMemory {
-    uint64_t start;
-    uint64_t stop;
-    uint64_t counts[7];
-    double status;
-    double seconds;
-    int flags;
-    int sieveSize;
-    int threads;
-  };
-  ParallelPrimeSieve();
-  virtual ~ParallelPrimeSieve() { }
-  void init(SharedMemory&);
-  static int getMaxThreads();
-  int getNumThreads() const;
-  void setNumThreads(int numThreads);
+  OmpInitGuard(omp_lock_t&);
+  ~OmpInitGuard();
 private:
-  enum {
-    IDEAL_NUM_THREADS = -1
-  };
-  SharedMemory* shm_;
-  /// Number of threads for sieving
-  int numThreads_;
-  int idealNumThreads() const;
-  uint64_t getThreadInterval(int) const;
-#ifdef _OPENMP
-public:
-  using PrimeSieve::sieve;
-  virtual void sieve();
-private:
-  omp_lock_t lock_;
-  virtual void set_lock();
-  virtual void unset_lock();
-  virtual bool updateStatus(uint64_t, bool);
-  bool tooMany(int) const;
-#endif
+  omp_lock_t* lock_;
 };
+
+/// OpenMP RAII lock guard
+class OmpGuard {
+public:
+  OmpGuard(omp_lock_t&, bool);
+  ~OmpGuard();
+  bool isSet() const;
+private:
+  omp_lock_t* lock_;
+  bool isSet_;
+};
+
+OmpInitGuard::OmpInitGuard(omp_lock_t& lock) :
+  lock_(&lock)
+{
+  omp_init_lock(lock_);
+}
+
+OmpInitGuard::~OmpInitGuard()
+{
+  omp_destroy_lock(lock_);
+}
+
+OmpGuard::OmpGuard(omp_lock_t& lock, bool noWait) :
+  lock_(&lock)
+{
+  if (noWait)
+    isSet_ = (omp_test_lock(lock_) != false);
+  else {
+    omp_set_lock(lock_);
+    isSet_ = true;
+  }
+}
+
+OmpGuard::~OmpGuard()
+{
+  if (isSet())
+    omp_unset_lock(lock_);
+}
+
+bool OmpGuard::isSet() const
+{
+  return isSet_;
+}
+
+} // namespace soe
 
 #endif

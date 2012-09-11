@@ -39,6 +39,7 @@
 
 #ifdef _OPENMP
   #include <omp.h>
+  #include "openmp_RAII.h"
 #endif
 
 #include <stdint.h>
@@ -111,6 +112,7 @@ uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const {
 #ifdef _OPENMP
 
 /// Used to synchronize threads for prime number generation
+
 void ParallelPrimeSieve::set_lock() {
   omp_set_lock(&lock_);
 }
@@ -119,14 +121,23 @@ void ParallelPrimeSieve::unset_lock() {
   omp_unset_lock(&lock_);
 }
 
-void ParallelPrimeSieve::updateStatus(int segment) {
-  #pragma omp critical (status)
-  {
-    /// @see PrimeSieve.cpp
-    PrimeSieve::updateStatus(segment);
+/// Calculate the current status (in percent) of sieve().
+/// @param processed Sum of processed segments.
+/// @param noWait    Do not block the current thread if the
+///                  lock is not available.
+///
+bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool noWait) {
+  OmpGuard lock(lock_, noWait);
+  if (lock.isSet()) {
+    PrimeSieve::updateStatus(processed, noWait);
     if (shm_ != NULL)
       shm_->status = getStatus();
   }
+  return lock.isSet();
+}
+
+bool ParallelPrimeSieve::tooMany(int threads) const {
+  return (threads > 1 && getInterval() / threads < config::MIN_THREAD_INTERVAL);
 }
 
 /// Sieve the primes and prime k-tuplets within [start, stop]
@@ -137,16 +148,14 @@ void ParallelPrimeSieve::sieve() {
     throw primesieve_error("start must be <= stop");
 
   int threads = getNumThreads();
-  // the user has set too many threads
-  if (threads > 1 && getInterval() / threads < config::MIN_THREAD_INTERVAL)
-    threads = idealNumThreads();
+  if (tooMany(threads)) threads = idealNumThreads();
+  OmpInitGuard init(lock_);
 
   if (threads == 1)
     PrimeSieve::sieve();
   else {
     double t1 = omp_get_wtime();
     reset();
-    OmpLockGuard omp_lock(&lock_);
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
     uint64_t align = start_ + 32 - start_ % 30;
     uint64_t threadInterval = getThreadInterval(threads);

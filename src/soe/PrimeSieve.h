@@ -151,7 +151,7 @@ protected:
   double seconds_;
   uint64_t getInterval() const;
   void reset();
-  virtual void updateStatus(int);
+  virtual bool updateStatus(uint64_t, bool);
   virtual void set_lock();
   virtual void unset_lock();
 private:
@@ -166,8 +166,8 @@ private:
   /// Synchronizes threads
   class LockGuard {
   public:
-    LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.PrimeSieve::set_lock(); }
-    ~LockGuard()                        { ps_.PrimeSieve::unset_lock(); }
+    LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.set_lock(); }
+    ~LockGuard()                        { ps_.unset_lock(); }
   private:
     PrimeSieve& ps_;
     LockGuard(const LockGuard&);
@@ -189,8 +189,10 @@ private:
   int flags_;
   /// Pointer to the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
-  /// Sum of the processed segments
+  /// Sum of all processed segments
   uint64_t sumSegments_;
+  /// Sum of processed segments for updateStatus()
+  uint64_t sumToUpdate_;
   /// Status in percent of sieve()
   double status_;
   /// Callback function for use with generatePrimes()

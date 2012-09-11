@@ -90,10 +90,12 @@ PrimeSieve::PrimeSieve(PrimeSieve* parent) :
 
 void PrimeSieve::reset() {
   std::fill(counts_.begin(), counts_.end(), 0);
-  status_ = -1.0;
   seconds_ = 0.0;
+  status_ = -1.0;
   sumSegments_ = 0;
-  if (isStatus()) updateStatus(0);
+  sumToUpdate_ = 0;
+  if (isStatus())
+    updateStatus(0, true);
 }
 
 uint64_t PrimeSieve::getStart()                  const { return start_; }
@@ -166,7 +168,7 @@ void PrimeSieve::addFlags(int flags) {
 }
 
 /// Used to synchronize ParallelPrimeSieve threads
-void PrimeSieve::set_lock()   {
+void PrimeSieve::set_lock() {
   if (parent_ != NULL) parent_->set_lock();
 }
 
@@ -174,14 +176,18 @@ void PrimeSieve::unset_lock() {
   if (parent_ != NULL) parent_->unset_lock();
 }
 
-/// Calculate the current status in percent of sieve().
-/// @param segment The size of the processed segment.
+/// Calculate the current status (in percent) of sieve().
+/// @param processed Sum of processed segments.
+/// @param noWait    Do not block the current thread if the
+///                  lock is not available.
 ///
-void PrimeSieve::updateStatus(int segment) {
-  if (parent_ != NULL)
-    parent_->updateStatus(segment);
-  else {
-    sumSegments_ += segment;
+bool PrimeSieve::updateStatus(uint64_t processed, bool noWait) {
+  if (parent_ != NULL) {
+    sumToUpdate_ += processed;
+    if (parent_->updateStatus(sumToUpdate_, noWait))
+      sumToUpdate_ = 0;
+  } else {
+    sumSegments_ += processed;
     double percent = sumSegments_ * 100.0 / (getInterval() + 1);
     double old = status_;
     status_ = std::min(percent, 100.0);
@@ -194,6 +200,7 @@ void PrimeSieve::updateStatus(int segment) {
       }
     }
   }
+  return true;
 }
 
 /// Small primes and prime k-tuplets are checked manually
@@ -253,7 +260,7 @@ void PrimeSieve::sieve() {
 
   seconds_ = static_cast<double>(std::clock() - t1) / CLOCKS_PER_SEC;
   if (isStatus())
-    updateStatus(10);
+    updateStatus(10, false);
 }
 
  void PrimeSieve::sieve(uint64_t start, uint64_t stop) {

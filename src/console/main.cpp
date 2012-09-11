@@ -246,13 +246,9 @@ int main(int argc, char* argv[])
     }
     if (!pps.isPrint()) {
       std::cout << std::setw(width)
-                << "Time elapsed"   << " : "
+                << "Time elapsed" << " : "
                 << pps.getSeconds() << " sec"
                 << std::endl;
-    }
-    if (!quietMode && pps.getNumThreads() >= 64) {
-      std::cout << "\nHint: the -q (Quiet mode) option significantly reduces the thread" << std::endl
-                << "synchronization overhead when using >= 64 threads."                  << std::endl;
     }
   }
   catch (std::exception& e) {
