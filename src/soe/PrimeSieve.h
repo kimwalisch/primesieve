@@ -163,7 +163,7 @@ private:
     CALLBACK32_OOP_PRIMES = 1 << 22,
     CALLBACK64_OOP_PRIMES = 1 << 23
   };
-  /// Synchronize threads
+  /// Synchronizes threads
   class LockGuard {
   public:
     LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.PrimeSieve::set_lock(); }
