@@ -191,7 +191,7 @@ private:
   PrimeSieve* parent_;
   /// Sum of all processed segments
   uint64_t sumSegments_;
-  /// Sum of processed segments for updateStatus()
+  /// Sum of recently processed segments
   uint64_t sumToUpdate_;
   /// Status in percent of sieve()
   double status_;

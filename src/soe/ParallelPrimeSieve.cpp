@@ -121,8 +121,8 @@ void ParallelPrimeSieve::unset_lock() {
   omp_unset_lock(&lock_);
 }
 
-/// Calculate the current status (in percent) of sieve().
-/// @param processed Sum of processed segments.
+/// Calculate the sieving status (in percent).
+/// @param processed Sum of recently processed segments.
 /// @param noWait    Do not block the current thread if the
 ///                  lock is not available.
 ///
