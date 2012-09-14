@@ -100,7 +100,7 @@ void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint_t sieveSize)
   if (ps_.isGenerate())
     generate(sieve, sieveSize);
   if (ps_.isStatus())
-    ps_.updateStatus(sieveSize * NUMBERS_PER_BYTE, true);
+    ps_.updateStatus(sieveSize * NUMBERS_PER_BYTE, false);
 }
 
 /// Count the primes and prime k-tuplets within

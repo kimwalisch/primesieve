@@ -190,9 +190,9 @@ private:
   /// Pointer to the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
   /// Sum of all processed segments
-  uint64_t sumSegments_;
+  uint64_t processed_;
   /// Sum of recently processed segments
-  uint64_t sumToUpdate_;
+  uint64_t toUpdate_;
   /// Status in percent of sieve()
   double status_;
   /// Callback function for use with generatePrimes()

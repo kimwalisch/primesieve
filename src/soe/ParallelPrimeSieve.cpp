@@ -122,14 +122,12 @@ void ParallelPrimeSieve::unset_lock() {
 }
 
 /// Calculate the sieving status (in percent).
-/// @param processed Sum of recently processed segments.
-/// @param noWait    Do not block the current thread if the
-///                  lock is not available.
+/// @param processed  Sum of recently processed segments.
 ///
-bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool noWait) {
-  OmpGuard lock(lock_, noWait);
+bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock) {
+  OmpGuard lock(lock_, waitForLock);
   if (lock.isSet()) {
-    PrimeSieve::updateStatus(processed, noWait);
+    PrimeSieve::updateStatus(processed, false);
     if (shm_ != NULL)
       shm_->status = getStatus();
   }

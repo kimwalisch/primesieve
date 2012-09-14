@@ -74,11 +74,11 @@ OmpInitGuard::~OmpInitGuard()
   omp_destroy_lock(lock_);
 }
 
-OmpGuard::OmpGuard(omp_lock_t& lock, bool noWait) :
+OmpGuard::OmpGuard(omp_lock_t& lock, bool waitForLock = true) :
   lock_(&lock)
 {
-  if (noWait)
-    isSet_ = (omp_test_lock(lock_) != false);
+  if (!waitForLock)
+    isSet_ = (omp_test_lock(lock_) == true);
   else {
     omp_set_lock(lock_);
     isSet_ = true;
