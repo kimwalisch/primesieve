@@ -231,8 +231,8 @@ void PrimeSieve::sieve() {
       doSmallPrime(smallPrimes_[i]);
   }
   if (stop_ >= 7) {
-    // fast segmented SieveOfEratosthenes object that
-    // sieves the primes within [start, stop]
+    // fast segmented SieveOfEratosthenes object that sieves
+    // the primes within the interval [start, stop]
     PrimeNumberFinder finder(*this);
     if (finder.getSqrtStop() > finder.getPreSieve()) {
       // generates the primes up to sqrt(stop)
