@@ -185,8 +185,8 @@ void processOptions(int argc, char* argv[]) {
         case 's': sieveSize = parser.eval(argv[i]); break;
         case 't': arg = argv[i];
                   if (arg.compare("est") == 0) {
-                    bool ok = test();
-                    exit((ok == true) ? 0 : 1);
+                    bool ok = test_ParallelPrimeSieve();
+                    exit(ok ? 0 : 1);
                   }
                   threads = parser.eval(argv[i]);
                   break;

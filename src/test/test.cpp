@@ -33,18 +33,19 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /// @file   test.cpp
-/// @brief  bool test(); runs tests to ensure that PrimeSieve and
-///         ParallelPrimeSieve objects produce correct results.
+/// @brief  bool test_ParallelPrimeSieve(); runs sieving tests to
+///         ensure that ParallelPrimeSieve (and PrimeSieve) objects
+///         produce correct results.
 
 #include "test.h"
 #include "../soe/ParallelPrimeSieve.h"
 
+#include <stdint.h>
 #include <iostream>
 #include <iomanip>
 #include <exception>
+#include <stdexcept>
 #include <algorithm>
-#include <string>
-#include <stdint.h>
 #include <cstdlib>
 #include <ctime>
 
@@ -74,8 +75,6 @@ unsigned int primeCounts[19] = {
 
 /// Keeps the memory requirement below 1GB
 int maxThreads[8] = { 32, 32, 32, 32, 32, 8, 4, 1 };
-/// Set to true if any test fails
-bool isError = false;
 /// Time elapsed in seconds of all tests
 double seconds = 0.0;
 
@@ -93,9 +92,10 @@ uint64_t ipow(uint64_t x, int n) {
   return result;
 }
 
-void compare(bool isCorrect) {
+void evaluate(bool isCorrect) {
   std::cout << (isCorrect ? "OK" : "ERROR") << std::endl;
-  if (!isCorrect) isError = true;
+  if (!isCorrect)
+    throw std::runtime_error("test failed!");
 }
 
 /// Calculate the prime-counting function pi(x) up to 10^11
@@ -113,13 +113,13 @@ void testPix() {
     primeCount += pps.getPrimeCount(pps.getStop() + 1, ipow(10, i));
     seconds += pps.getSeconds();
     std::cout << "pi(10^" << i << ")  = " << std::setw(12) << primeCount;
-    compare(primeCount == primeCounts[i-1]);
+    evaluate(primeCount == primeCounts[i - 1]);
   }
   // pi(2^32)
   primeCount += pps.getPrimeCount(pps.getStop() + 1, ipow(2, 32));
   seconds += pps.getSeconds();
   std::cout << "pi(2^32)  = " << std::setw(12) << primeCount;
-  compare(primeCount == primeCounts[9]);
+  evaluate(primeCount == primeCounts[9]);
   std::cout << std::endl;
 }
 
@@ -132,14 +132,14 @@ void testBigPrimes() {
   pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
 
   for (int i = 0; i < 8; i++) {
-    std::cout << "Sieving the primes within [10^" << i+12 << ", 10^" << i+12 << "+2^32]" << std::endl;
+    std::cout << "Sieving the primes within [10^" << i + 12 << ", 10^" << i + 12 << "+2^32]" << std::endl;
     pps.setStart(ipow(10, i + 12));
     pps.setStop(pps.getStart() + ipow(2, 32));
     pps.setNumThreads(std::min(pps.getNumThreads(), maxThreads[i]));
     pps.sieve();
     seconds += pps.getSeconds();
     std::cout << "\rPrime count: " << std::setw(11) << pps.getPrimeCount();
-    compare(pps.getPrimeCount() == primeCounts[i + 10]);
+    evaluate(pps.getPrimeCount() == primeCounts[i + 10]);
   }
   std::cout << std::endl;
 }
@@ -185,35 +185,31 @@ void testRandomIntervals() {
               << upperBound - pps.getStop() << std::flush;
   }
   std::cout << std::endl << "Prime count: " << std::setw(11) << primeCount;
-  compare(primeCount == primeCounts[18]);
+  evaluate(primeCount == primeCounts[18]);
   std::cout << std::endl;
 }
 
 } // end namespace
 
-/// Run various sieving tests to ensure that PrimeSieve produces
-/// correct results. These tests use up to 1 GB of memory and take
-/// about 2 minutes two complete on a dual core CPU from 2011.
-/// @return true If no error occurred else false.
+/// Run various sieving tests to ensure that ParallelPrimeSieve
+/// (and PrimeSieve) objects produce correct results.
+/// The tests use up to 1 GB of memory and take about 2 minutes to
+/// complete on a dual core CPU from 2011.
+/// @return true  If no error occurred else false.
 ///
-bool test() {
+bool test_ParallelPrimeSieve() {
   std::cout << std::left;
   try {
     testPix();
     testBigPrimes();
     testRandomIntervals();
   }
-  catch (std::exception& e) {
-    std::cerr << "Exception " << e.what() << std::endl;
+  catch (const std::exception& e) {
+    std::cout << std::endl;
+    std::cerr << "Error: " << e.what() << std::endl;
     return false;
   }
-  std::string message;
-  if (!isError)
-    message = "All tests passed SUCCESSFULLY!";
-  else
-    message = "One or more tests FAILED!";
-
-  std::cout << message << std::endl;
   std::cout << "Time elapsed: " << seconds << " sec" << std::endl;
-  return !isError;
+  std::cout << "All tests passed SUCCESSFULLY!"      << std::endl;
+  return true;
 }
