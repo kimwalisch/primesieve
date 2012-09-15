@@ -48,6 +48,7 @@
 #include "config.h"
 
 #include <stdint.h>
+#include <string>
 #include <limits>
 #include <cassert>
 
@@ -197,10 +198,9 @@ public:
 
     return MAX_UINT64 - MAX_UINT32 * getMaxFactor();
   }
-  /// Get the maximum wheel factor
-  static uint_t getMaxFactor()
+  static std::string getMaxStopString()
   {
-    return WHEEL[0].nextMultipleFactor;
+    return "2^64 - 2^32 * " + toString(getMaxFactor());
   }
   /// @brief Add a new sieving prime.
   ///
@@ -242,12 +242,16 @@ protected:
   {
     const uint_t maxSieveSize = WheelPrime::MAX_MULTIPLE_INDEX + 1;
     if (sieveSize > maxSieveSize)
-      throw primesieve_error("WheelFactorization: sieveSize must be <= " + toString( maxSieveSize ));
+      throw primesieve_error("WheelFactorization: sieveSize must be <= " + toString(maxSieveSize));
     if (stop > getMaxStop())
-      throw primesieve_error("WheelFactorization: stop must be <= 2^64 - 2^32 * " + toString( getMaxFactor() ));
+      throw primesieve_error("WheelFactorization: stop must be <= " + getMaxStopString());
   }
   virtual ~WheelFactorization() { }
   virtual void store(uint_t, uint_t, uint_t) = 0;
+  static uint_t getMaxFactor()
+  {
+    return WHEEL[0].nextMultipleFactor;
+  }
   /// Cross-off the current multiple (unset bit) of sievingPrime and
   /// calculate its next multiple i.e. multipleIndex.
   ///

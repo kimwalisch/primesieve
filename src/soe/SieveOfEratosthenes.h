@@ -39,6 +39,7 @@
 #include "config.h"
 
 #include <stdint.h>
+#include <string>
 
 namespace soe {
 
@@ -66,6 +67,8 @@ public:
     /// is 8 values per byte and thus one for each bit.
     NUMBERS_PER_BYTE = 30
   };
+  static uint64_t getMaxStop();
+  static std::string getMaxStopString();
   uint64_t getStart() const;
   uint64_t getStop() const;
   uint_t getSqrtStop() const;
@@ -93,23 +96,22 @@ private:
   const uint_t sqrtStop_;
   /// Sieve of Eratosthenes array
   uint8_t* sieve_;
-  /// @brief  Size of the sieve_ array in bytes
-  /// @pre    must be a power of 2
+  /// @brief Size of the sieve_ array in bytes
+  /// @pre   must be a power of 2
   uint_t sieveSize_;
   /// Used to pre-sieve multiples of small primes e.g. <= 19
   const PreSieve preSieve_;
-  /// Sieve of Eratosthenes for small sieving primes
+  /// Used to cross-off multiples of small sieving primes
   EratSmall* eratSmall_;
-  /// Sieve of Eratosthenes for medium sieving primes
+  /// Used to cross-off multiples of medium sieving primes
   EratMedium* eratMedium_;
-  /// Sieve of Eratosthenes for big sieving primes
+  /// Used to cross-off multiples of big sieving primes
   EratBig* eratBig_;
   static uint64_t getByteRemainder(uint64_t);
   void initEratAlgorithms();
   void preSieve();
   void crossOffMultiples();
   void sieveSegment();
-  /// Uncopyable, declared but not defined
   SieveOfEratosthenes(const SieveOfEratosthenes&);
   SieveOfEratosthenes& operator=(const SieveOfEratosthenes&);
 };

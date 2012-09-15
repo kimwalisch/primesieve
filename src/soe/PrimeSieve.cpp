@@ -35,8 +35,6 @@
 #include "PrimeSieve.h"
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
-#include "EratBig.h"
-#include "toString.h"
 #include "imath.h"
 #include "config.h"
 
@@ -133,8 +131,9 @@ void PrimeSieve::setStart(uint64_t start) {
 /// @pre stop <= 2^64 - 2^32 * 10
 ///
 void PrimeSieve::setStop(uint64_t stop) {
-  if (stop > EratBig::getMaxStop())
-    throw primesieve_error("stop must be <= 2^64 - 2^32 * " + toString( EratBig::getMaxFactor() ));
+  const uint64_t maxStop = PrimeNumberFinder::getMaxStop();
+  if (stop > maxStop)
+    throw primesieve_error("stop must be <= " + PrimeNumberFinder::getMaxStopString());
   stop_ = stop;
 }
 
