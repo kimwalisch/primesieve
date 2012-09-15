@@ -104,24 +104,14 @@ extern const WheelElement wheel210[48*8];
 ///
 class WheelPrime {
 public:
-  static uint_t getMaxSieveSize()
+  static uint_t getMaxMultipleIndex()
   {
-    // max(sieveSize) = max(multipleIndex) + 1
-    return (1u << 23);
+    return (1u << 23) - 1;
   }
-  void set(uint_t sievingPrime,
-           uint_t multipleIndex,
-           uint_t wheelIndex)
-  {
-    set(multipleIndex, wheelIndex);
-    sievingPrime_ = static_cast<uint32_t>(sievingPrime);
-  }
-  void set(uint_t multipleIndex, uint_t wheelIndex)
-  {
-    assert(multipleIndex < (1u << 23));
-    assert(wheelIndex    < (1u << 9));
-    indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
-  }
+  uint_t getSievingPrime() const  { return sievingPrime_; }
+  uint_t getMultipleIndex() const { return indexes_ & ((1 << 23) - 1); }
+  uint_t getWheelIndex() const    { return indexes_ >> 23; }
+
   void setMultipleIndex(uint_t multipleIndex)
   {
     assert(multipleIndex < (1u << 23));
@@ -132,9 +122,17 @@ public:
     assert(wheelIndex < (1u << 9));
     indexes_ = static_cast<uint32_t>(wheelIndex << 23);
   }
-  uint_t getSievingPrime() const  { return sievingPrime_; }
-  uint_t getMultipleIndex() const { return indexes_ & ((1 << 23) - 1); }
-  uint_t getWheelIndex() const    { return indexes_ >> 23; }
+  void set(uint_t multipleIndex, uint_t wheelIndex)
+  {
+    assert(multipleIndex < (1u << 23));
+    assert(wheelIndex    < (1u << 9));
+    indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
+  }
+  void set(uint_t sievingPrime, uint_t multipleIndex, uint_t wheelIndex)
+  {
+    set(multipleIndex, wheelIndex);
+    sievingPrime_ = static_cast<uint32_t>(sievingPrime);
+  }
 private:
   /// multipleIndex = 23 least significant bits of indexes_.
   /// wheelIndex    =  9 most  significant bits of indexes_.
@@ -241,7 +239,7 @@ protected:
   WheelFactorization(uint64_t stop, uint_t sieveSize) :
     stop_(stop)
   {
-    uint_t maxSieveSize = WheelPrime::getMaxSieveSize();
+    const uint_t maxSieveSize = WheelPrime::getMaxMultipleIndex() + 1;
     if (sieveSize > maxSieveSize)
       throw primesieve_error("WheelFactorization: sieveSize must be <= " + toString( maxSieveSize ));
     if (stop > getMaxStop())
