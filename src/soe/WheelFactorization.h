@@ -104,10 +104,9 @@ extern const WheelElement wheel210[48*8];
 ///
 class WheelPrime {
 public:
-  static uint_t getMaxMultipleIndex()
-  {
-    return (1u << 23) - 1;
-  }
+  enum {
+    MAX_MULTIPLE_INDEX = (1 << 23) - 1
+  };
   uint_t getSievingPrime() const  { return sievingPrime_; }
   uint_t getMultipleIndex() const { return indexes_ & ((1 << 23) - 1); }
   uint_t getWheelIndex() const    { return indexes_ >> 23; }
@@ -193,8 +192,10 @@ public:
   /// Get the maximum upper bound for sieving
   static uint64_t getMaxStop()
   {
-    uint64_t maxPrime = std::numeric_limits<uint32_t>::max();
-    return              std::numeric_limits<uint64_t>::max() - maxPrime * getMaxFactor();
+    const uint64_t MAX_UINT32 = std::numeric_limits<uint32_t>::max();
+    const uint64_t MAX_UINT64 = std::numeric_limits<uint64_t>::max();
+
+    return MAX_UINT64 - MAX_UINT32 * getMaxFactor();
   }
   /// Get the maximum wheel factor
   static uint_t getMaxFactor()
@@ -239,7 +240,7 @@ protected:
   WheelFactorization(uint64_t stop, uint_t sieveSize) :
     stop_(stop)
   {
-    const uint_t maxSieveSize = WheelPrime::getMaxMultipleIndex() + 1;
+    const uint_t maxSieveSize = WheelPrime::MAX_MULTIPLE_INDEX + 1;
     if (sieveSize > maxSieveSize)
       throw primesieve_error("WheelFactorization: sieveSize must be <= " + toString( maxSieveSize ));
     if (stop > getMaxStop())
