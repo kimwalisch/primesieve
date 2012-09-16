@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 09 July 2012
+# Last modified: 16 September 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -14,8 +14,8 @@ I. About
 
   This file explains how to compile and use the primesieve console
   (terminal) application, to compile the primesieve GUI application
-  please refer to src/qt-gui/INSTALL. If you want to use primesieve in
-  your own C++ program read LIBPRIMESIEVE.
+  please refer to src/qt-gui/INSTALL. If you want to use primesieve as
+  a library in your own C++ program read LIBPRIMESIEVE.
 
   Precompiled binaries for Windows, Linux and Mac OS X are available
   at: http://code.google.com/p/primesieve/downloads/list
@@ -24,9 +24,9 @@ II. How to build primesieve
 ===========================
 
   Unzip the primesieve source archive, open a terminal or 'Visual
-  Studio Command Prompt' and cd into the primesieve directory. Now use
-  one of the following make commands to build primesieve using your
-  favorite C++ compiler:
+  Studio Command Prompt' and cd into the newly created directory. Then
+  use one of the following make commands to build primesieve using
+  your favorite C++ compiler:
 
   $ make                     GNU g++
   > nmake -f Makefile.msvc   Microsoft Visual C++
@@ -47,7 +47,7 @@ II. How to build primesieve
 
   Makefile help menu
   ------------------
-  $ make help                     Shows more options
+  $ make help                     Print all build options
   > nmake -f Makefile.msvc help   ...
 
 III. Target a specific CPU
@@ -56,16 +56,19 @@ III. Target a specific CPU
   You can indicate your CPU's L1 data cache size in kilobytes per
   core (default 32) to get the best performance e.g.:
 
-  $ make L1_DCACHE_SIZE=64
+  > nmake -f Makefile.msvc L1_DCACHE_SIZE=64
+
+  On most Unix-like OSes (Linux, Mac OS X) this is done automatically.
 
 IV. How to use it
 =================
 
   > cd bin
-  > primesieve 2 10000       Count the primes up to 10000
-  > primesieve 2 1E6 -p1     Print the primes up to 10^6
-  > primesieve 100 200 -p2   Print the twin primes within [100, 200]
-  > primesieve -test         Run various sieving tests
-  > primesieve -help         Print the help menu
+  > primesieve 2 10000         Count the primes up to 10000
+  > primesieve 2 10000 -p1     Print the primes up to 10000
+  > primesieve 1e5 2e5 -p2     Print the twin primes within [10^5, 2*10^5]
+  > primesieve 1e9 -o1e5 -c2   Count the twin primes within [10^9, 10^9+10^5]
+  > primesieve -help           Print the help menu
+  > primesieve -test           Run various sieving tests
 
-  Note: for Unix-like operating systems use ./primesieve
+  For Unix-like operating systems use ./primesieve
