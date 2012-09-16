@@ -54,7 +54,7 @@ III. Target a specific CPU
 ==========================
 
   You can indicate your CPU's L1 data cache size in kilobytes per
-  core (default 32) to get the best performance e.g.:
+  core to get the best performance. For Windows use e.g.:
 
   > nmake -f Makefile.msvc L1_DCACHE_SIZE=64
 
