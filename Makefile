@@ -52,6 +52,19 @@ ifneq ($(BASH),)
 endif
 
 #-----------------------------------------------------------------------------
+# Add -fopenmp to CXXFLAGS if GCC supports OpenMP >= 3.0
+#-----------------------------------------------------------------------------
+
+ifneq ($(shell $(CXX) --version 2> /dev/null | head -1 | grep -iE 'GCC|G\+\+'),)
+  MAJOR := $(shell $(CXX) -dumpversion | cut -d'.' -f1)
+  MINOR := $(shell $(CXX) -dumpversion | cut -d'.' -f2)
+  GCC_VERSION := $(shell echo $$(( $(MAJOR) * 100 + $(MINOR) )) )
+  ifneq ($(shell if (( $(GCC_VERSION) >= 404 )); then echo 'OpenMP >= 3.0'; fi),)
+    CXXFLAGS += -fopenmp
+  endif
+endif
+
+#-----------------------------------------------------------------------------
 # Add the CPU's L1 data cache size (in kilobytes) to CXXFLAGS
 #-----------------------------------------------------------------------------
 
@@ -70,19 +83,6 @@ endif
 
 ifneq ($(L1_DCACHE_SIZE),)
   override CXXFLAGS += -DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
-endif
-
-#-----------------------------------------------------------------------------
-# Add -fopenmp to CXXFLAGS if GCC supports OpenMP >= 3.0
-#-----------------------------------------------------------------------------
-
-ifneq ($(shell $(CXX) --version 2> /dev/null | head -1 | grep -iE 'GCC|G\+\+'),)
-  MAJOR := $(shell $(CXX) -dumpversion | cut -d'.' -f1)
-  MINOR := $(shell $(CXX) -dumpversion | cut -d'.' -f2)
-  GCC_VERSION := $(shell echo $$(( $(MAJOR) * 100 + $(MINOR) )) )
-  ifneq ($(shell if (( $(GCC_VERSION) >= 404 )); then echo 'OpenMP >= 3.0'; fi),)
-    CXXFLAGS += -fopenmp
-  endif
 endif
 
 #-----------------------------------------------------------------------------
