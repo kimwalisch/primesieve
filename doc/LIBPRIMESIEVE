@@ -1,4 +1,4 @@
-September 16, 2012
+September 17, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -53,6 +53,7 @@ Contents
   More build options
   ------------------
   $ make lib CXX=icpc CXXFLAGS="-fast -openmp"   Use an alternate C++ compiler, here icpc.
+  $ make lib dist                                Create a distribution archive.
   $ sudo make install PREFIX=/path               Set the installation path.
   $ sudo make uninstall                          Completely remove libprimesieve.
   $ make help                                    Print all build options.
