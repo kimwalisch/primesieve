@@ -1,4 +1,4 @@
-August 29, 2012
+September 18, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -151,20 +151,31 @@ Contents
 =====================
 
   ParallelPrimeSieve uses OpenMP multi-threading to sieve primes in
-  parallel. Its main use is to count primes and prime k-tuplets, it
-  can also generate and print primes and k-tuplets in parallel but
-  only in random order. The ParallelPrimeSieve class is derived from
-  PrimeSieve so it has the same API. 
+  parallel. It scales well even with hundreds of CPU cores! Its main
+  use is to count primes and prime k-tuplets, it can also generate
+  and print primes and prime k-tuplets in parallel but only in random
+  order.
 
-  Note: by default ParallelPrimeSieve counts primes in parallel using
-  multiple threads but generates and prints primes in arithmetic
-  order using a single thread.
+  The ParallelPrimeSieve class is derived from PrimeSieve so it
+  inherits PrimeSieve's API. The following API methods are exclusive
+  to ParallelPrimeSieve:
 
   API
   ---
   void       ParallelPrimeSieve::setNumThreads(int numThreads);
   static int ParallelPrimeSieve::getMaxThreads();
   int        ParallelPrimeSieve::getNumThreads() const;
+  void       ParallelPrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int));
+
+  Threading behavior
+  ------------------
+  By default ParallelPrimeSieve counts primes and prime k-tuplets
+  using all available CPU cores but generates and prints primes and
+  prime k-tuplets in arithmetic order using a single thread.
+  To generate or print primes in parallel use setNumThreads(int).
+
+  Examples
+  --------
 
   ////////////////////////////////////////////////////////////////////
   // Count the prime triplets within [10^14, 10^14+10^11]
@@ -185,9 +196,15 @@ Contents
   }
 
   ////////////////////////////////////////////////////////////////////
+
+  Synchronized prime number generation
+  ------------------------------------
+  The four generatePrimes(...) methods from (1.) are synchronized i.e.
+  only one thread at a time calls back primes. These methods are easy
+  to use but do not scale well beyond 4 CPU cores.
+
+  ////////////////////////////////////////////////////////////////////
   // Sum the primes below 10^10 using 4 threads.
-  // Note: prime number generation is synchronized i.e. only one
-  // thread at a time calls back primes.
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
   #include <stdint.h>
@@ -205,6 +222,46 @@ Contents
     pps.setNumThreads(4);
     pps.generatePrimes(0, (uint64_t) 1E10, callback);
     std::cout << "Sum of the primes below 10^10 = " << sum << std::endl;
+    return 0;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+
+  Unsynchronized prime number generation
+  --------------------------------------
+  ParallelPrimeSieve's generatePrimes(...) method is not synchronized,
+  it scales well even with a hundred CPU cores but it is a little
+  harder to use: You must pay attention not to read or write to the
+  same variables from multiple threads, for a good performance it is
+  also important that multiple threads do not share the same cache
+  line (see below).
+
+  ////////////////////////////////////////////////////////////////////
+  // Sum the primes below 10^11 using 100 threads.
+
+  #include <primesieve/soe/ParallelPrimeSieve.h>
+  #include <stdint.h>
+  #include <iostream>
+  #include <vector>
+  #include <numeric>
+
+  const int CACHE_LINE = 128;
+  const int NO_FALSE_SHARING = CACHE_LINE / sizeof(uint64_t);
+
+  std::vector<uint64_t> sum;
+
+  void callback(uint64_t prime, int threadNumber)
+  {
+    sum[threadNumber * NO_FALSE_SHARING] += prime;
+  }
+
+  int main()
+  {
+    sum.resize(100 * NO_FALSE_SHARING, 0);
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(100);
+    pps.generatePrimes(0, (uint64_t) 1E11, callback);
+    std::cout << std::accumulate(sum.begin(), sum.end(), 0ull) << std::endl;
     return 0;
   }
 
