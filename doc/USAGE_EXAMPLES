@@ -231,10 +231,10 @@ Contents
   --------------------------------------
   ParallelPrimeSieve's generatePrimes(...) method is not synchronized,
   it scales well even with a hundred CPU cores but it is a little
-  harder to use: You must pay attention not to read or write to the
-  same variables from multiple threads, for a good performance it is
-  also important that multiple threads do not share the same cache
-  line (see below).
+  harder to use: You must pay attention not to write to (or read from
+  and write to) the same variable from multiple threads, for a good
+  performance it is also important that multiple threads do not share
+  the same cache line (see below).
 
   ////////////////////////////////////////////////////////////////////
   // Sum the primes below 10^11 using 100 threads.
