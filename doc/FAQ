@@ -1,4 +1,4 @@
-September 16, 2012
+September 18, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -12,12 +12,3 @@ http://primesieve.googlecode.com
    J. Sorenson's paper "The Pseudosquares Prime Sieve" presents an
    algorithm that can be used to generate primes up to 33 digits
    using very little memory.
-
-2. Does ParallelPrimeSieve::generatePrimes(...) call back primes in
-   parallel?
-
-   No, for ease of use prime number generation is synchronized i.e.
-   only one thread at a time calls back primes.
-   To call back primes in parallel you have to remove the
-   synchronization statement: "PrimeSieve::LockGuard lock(ps_);" from
-   src/soe/PrimeNumberFinder.cpp.
