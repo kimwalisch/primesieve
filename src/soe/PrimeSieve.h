@@ -88,7 +88,7 @@ public:
     CALCULATE_STATUS  = 1 << 15
   };
   PrimeSieve();
-  PrimeSieve(PrimeSieve*);
+  PrimeSieve(PrimeSieve&, int);
   virtual ~PrimeSieve() { }
   uint64_t getStart() const;
   uint64_t getStop() const;
@@ -118,6 +118,7 @@ public:
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t, void*), void*);
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
+  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, int));
   void printPrimes(uint64_t, uint64_t);
   void printTwins(uint64_t, uint64_t);
   void printTriplets(uint64_t, uint64_t);
@@ -141,9 +142,9 @@ public:
   uint64_t getSextupletCount() const;
   uint64_t getSeptupletCount() const;
 protected:
-  /// Sieve primes >= start
+  /// Sieve primes >= start_
   uint64_t start_;
-  /// Sieve primes <= stop
+  /// Sieve primes <= stop_
   uint64_t stop_;
   /// Prime number and prime k-tuplet counts
   std::vector<uint64_t> counts_;
@@ -158,10 +159,11 @@ private:
   /// Private flags
   /// @pre flag >= (1 << 20)
   enum {
-    CALLBACK32_PRIMES     = 1 << 20,
-    CALLBACK64_PRIMES     = 1 << 21,
-    CALLBACK32_OOP_PRIMES = 1 << 22,
-    CALLBACK64_OOP_PRIMES = 1 << 23
+    CALLBACK32     = 1 << 20,
+    CALLBACK64     = 1 << 21,
+    CALLBACK32_OBJ = 1 << 22,
+    CALLBACK64_OBJ = 1 << 23,
+    CALLBACK64_INT = 1 << 24
   };
   /// Synchronizes threads
   class LockGuard {
@@ -187,6 +189,8 @@ private:
   int sieveSize_;
   /// Flags (settings) for PrimeSieve e.g. COUNT_PRIMES, PRINT_TWINS, ...
   int flags_;
+  /// ParallelPrimeSieve thread number
+  int threadNum_;
   /// Pointer to the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
   /// Sum of all processed segments
@@ -198,8 +202,10 @@ private:
   /// Callback function for use with generatePrimes()
   void (*callback32_)(uint32_t);
   void (*callback64_)(uint64_t);
-  void (*callback32_OOP_)(uint32_t, void*);
-  void (*callback64_OOP_)(uint64_t, void*);
+  void (*callback32_obj_)(uint32_t, void*);
+  void (*callback64_obj_)(uint64_t, void*);
+  void (*callback64_int_)(uint64_t, int);
+  /// Callback object
   void* obj_;
   void doSmallPrime(const SmallPrime&);
   bool isPublicFlags(int) const;

@@ -64,9 +64,10 @@ private:
   void init_kCounts();
   virtual void segmentProcessed(const uint8_t*, uint_t);
   void count(const uint8_t*, uint_t);
-  void generate(const uint8_t*, uint_t);
-  void callback32_OOP(uint32_t) const;
-  void callback64_OOP(uint64_t) const;
+  void generate(const uint8_t*, uint_t) const;
+  void callback32_obj(uint32_t) const;
+  void callback64_obj(uint64_t) const;
+  void callback64_int(uint64_t) const;
   static void print(uint64_t);
 };
 
