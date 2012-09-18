@@ -1,18 +1,18 @@
-New in version 3.9, 16/09/2012
-================================
+New in version 3.9, 18/09/2012
+==============================
 
 1. Faster thread synchronization in ParallelPrimeSieve, replaced slow
    OpenMP critical directive with faster omp_test_lock().
-2. Improved OOP design and documentation of the sieve of Eratosthenes
-   implementation (src/soe directory).
-3. New primesieve_error() exception used for all exceptions within
+2. New unsynchronized ParallelPrimeSieve::generatePrimes(...) method
+   that calls back primes in parallel (read USAGE_EXAMPLES).
+3. New pre-sieve code (src/soe/PreSieve.cpp).
+4. New primesieve_error() exception used for all exceptions within
    PrimeSieve and ParallelPrimeSieve.
-4. Optimized prime k-tuplet (twin primes, prime triplets) counting for
+5. Optimized prime k-tuplet (twin primes, ...) counting for
    out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
-5. New pre-sieve code (src/soe/PreSieve.cpp).
-6. Fixed a potential bug in EratSmall.cpp (read BUGS file).
-7. Added assertions to critical code sections (disabled unless DEBUG
-   is defined).
+6. Improved OOP design and documentation of the sieve of Eratosthenes
+   implementation (src/soe directory).
+7. Fixed a potential bug in EratSmall.cpp (read BUGS file).
 
 New in version 3.8, 13/07/2012
 ==============================
