@@ -78,7 +78,7 @@ OmpGuard::OmpGuard(omp_lock_t& lock, bool waitForLock = true) :
   lock_(&lock)
 {
   if (!waitForLock)
-    isSet_ = (omp_test_lock(lock_) == true);
+    isSet_ = (omp_test_lock(lock_) != 0);
   else {
     omp_set_lock(lock_);
     isSet_ = true;
