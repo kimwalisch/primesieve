@@ -1,4 +1,4 @@
-September 18, 2012
+September 19, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -252,14 +252,16 @@ Contents
 
   void callback(uint64_t prime, int threadNumber)
   {
-    sum[threadNumber * NO_FALSE_SHARING] += prime;
+    int threadIndex = threadNumber * NO_FALSE_SHARING;
+    sum[threadIndex] += prime;
   }
 
   int main()
   {
-    sum.resize(100 * NO_FALSE_SHARING, 0);
+    const int THREADS = 100;
+    sum.resize(THREADS * NO_FALSE_SHARING, 0);
     ParallelPrimeSieve pps;
-    pps.setNumThreads(100);
+    pps.setNumThreads(THREADS);
     pps.generatePrimes(0, (uint64_t) 1E11, callback);
     std::cout << std::accumulate(sum.begin(), sum.end(), 0ull) << std::endl;
     return 0;
