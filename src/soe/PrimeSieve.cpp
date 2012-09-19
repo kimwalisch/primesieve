@@ -170,12 +170,12 @@ void PrimeSieve::addFlags(int flags) {
 }
 
 /// Used to synchronize ParallelPrimeSieve threads
-void PrimeSieve::set_lock() {
-  if (parent_ != NULL) parent_->set_lock();
+void PrimeSieve::setLock() {
+  if (parent_ != NULL) parent_->setLock();
 }
 
-void PrimeSieve::unset_lock() {
-  if (parent_ != NULL) parent_->unset_lock();
+void PrimeSieve::unsetLock() {
+  if (parent_ != NULL) parent_->unsetLock();
 }
 
 /// Calculate the sieving status (in percent).

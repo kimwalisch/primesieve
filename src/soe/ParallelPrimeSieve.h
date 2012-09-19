@@ -81,8 +81,8 @@ public:
   virtual void sieve();
 private:
   omp_lock_t lock_;
-  virtual void set_lock();
-  virtual void unset_lock();
+  virtual void setLock();
+  virtual void unsetLock();
   virtual bool updateStatus(uint64_t, bool);
   bool tooMany(int) const;
 #endif

@@ -153,8 +153,8 @@ protected:
   uint64_t getInterval() const;
   void reset();
   virtual bool updateStatus(uint64_t, bool);
-  virtual void set_lock();
-  virtual void unset_lock();
+  virtual void setLock();
+  virtual void unsetLock();
 private:
   /// Private flags
   /// @pre flag >= (1 << 20)
@@ -168,8 +168,8 @@ private:
   /// Synchronizes threads
   class LockGuard {
   public:
-    LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.set_lock(); }
-    ~LockGuard()                        { ps_.unset_lock(); }
+    LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.setLock(); }
+    ~LockGuard()                        { ps_.unsetLock(); }
   private:
     PrimeSieve& ps_;
     LockGuard(const LockGuard&);

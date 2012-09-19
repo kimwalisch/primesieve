@@ -113,11 +113,11 @@ uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const {
 
 /// Used to synchronize threads for prime number generation
 
-void ParallelPrimeSieve::set_lock() {
+void ParallelPrimeSieve::setLock() {
   omp_set_lock(&lock_);
 }
 
-void ParallelPrimeSieve::unset_lock() {
+void ParallelPrimeSieve::unsetLock() {
   omp_unset_lock(&lock_);
 }
 
