@@ -56,6 +56,7 @@ public:
 };
 
 namespace soe { class PrimeNumberFinder; }
+
 using soe::PrimeNumberFinder;
 
 /// PrimeSieve is a highly optimized C++ implementation of the
@@ -177,8 +178,8 @@ private:
   };
   struct SmallPrime
   {
-    unsigned int min;
-    unsigned int max;
+    unsigned int firstPrime;
+    unsigned int lastPrime;
     int index;
     std::string str;
   };

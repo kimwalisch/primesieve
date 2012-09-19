@@ -205,14 +205,14 @@ bool PrimeSieve::updateStatus(uint64_t processed, bool waitForLock) {
 
 void PrimeSieve::doSmallPrime(const SmallPrime& sp)
 {
-  if (sp.min >= start_ && sp.max <= stop_) {
-    // callback small prime numbers
+  if (sp.firstPrime >= start_ && sp.lastPrime <= stop_) {
+    // callback small prime number
     if (sp.index == 0) {
-      if (isFlag(CALLBACK32))     callback32_(sp.min);
-      if (isFlag(CALLBACK64))     callback64_(sp.min);
-      if (isFlag(CALLBACK32_OBJ)) callback32_obj_(sp.min, obj_);
-      if (isFlag(CALLBACK64_OBJ)) callback64_obj_(sp.min, obj_);
-      if (isFlag(CALLBACK64_INT)) callback64_int_(sp.min, threadNum_);
+      if (isFlag(CALLBACK32)) callback32_(sp.firstPrime);
+      if (isFlag(CALLBACK64)) callback64_(sp.firstPrime);
+      if (isFlag(CALLBACK32_OBJ)) callback32_obj_(sp.firstPrime, obj_);
+      if (isFlag(CALLBACK64_OBJ)) callback64_obj_(sp.firstPrime, obj_);
+      if (isFlag(CALLBACK64_INT)) callback64_int_(sp.firstPrime, threadNum_);
     }
     if (isCount(sp.index)) counts_[sp.index]++;
     if (isPrint(sp.index)) std::cout << sp.str << '\n';
