@@ -1,19 +1,20 @@
 New in version 3.9, 20/09/2012
 ==============================
 
-1. New unsynchronized ParallelPrimeSieve::generatePrimes(...) method
+1. Ported the primesieve GUI application from Qt 4 to Qt 5.
+2. New unsynchronized ParallelPrimeSieve::generatePrimes(...) method
    that calls back primes in parallel (read USAGE_EXAMPLES).
-2. Faster thread synchronization in ParallelPrimeSieve, replaced slow
+3. Faster thread synchronization in ParallelPrimeSieve, replaced slow
    OpenMP critical directive with faster omp_test_lock().
-3. New pre-sieve code (src/soe/PreSieve.cpp).
-4. New primesieve_error() exception used for all exceptions within
+4. New pre-sieve code (src/soe/PreSieve.cpp).
+5. New primesieve_error() exception used for all exceptions within
    PrimeSieve and ParallelPrimeSieve.
-5. Optimized prime k-tuplet (twin primes, ...) counting for
+6. Optimized prime k-tuplet (twin primes, ...) counting for
    out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
-6. Improved OOP design and documentation of the sieve of Eratosthenes
+7. Improved OOP design and documentation of the sieve of Eratosthenes
    implementation (src/soe directory).
-7. Moved src/console/test.cpp to src/test/test.cpp
-8. Renamed src/expr to src/parser.
+8. Moved src/console/test.cpp to src/test/test.cpp
+9. Renamed src/expr to src/parser.
 
 New in version 3.8, 13/07/2012
 ==============================
