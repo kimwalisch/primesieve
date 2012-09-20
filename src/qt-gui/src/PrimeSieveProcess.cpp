@@ -24,10 +24,11 @@
 #include <QStringList>
 #include <QCoreApplication>
 #include <stdexcept>
+
 #if defined(Q_OS_WIN)
-#  include <windows.h>
+  #include <windows.h>
 #else
-#  include <unistd.h>
+  #include <unistd.h>
 #endif
 
 PrimeSieveProcess::PrimeSieveProcess(QObject* parent = 0) : 

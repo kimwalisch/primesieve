@@ -35,8 +35,9 @@
  * Enable the UINT64_MAX, UINT32_MAX macros from <stdint.h>.
  */
 #if !defined(__STDC_LIMIT_MACROS)
-#  define __STDC_LIMIT_MACROS
+  #define __STDC_LIMIT_MACROS
 #endif
+
 #include <stdint.h>
 
 const QString APPLICATION_NAME("primesieve");

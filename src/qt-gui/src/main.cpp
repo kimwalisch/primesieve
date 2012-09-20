@@ -17,9 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include <QtGui/QApplication>
 #include "PrimeSieveGUI.h"
 #include "../soe/ParallelPrimeSieve.h"
+
+#if QT_VERSION >= 0x050000
+  #include <QtWidgets/QApplication>
+#else
+  #include <QtGui/QApplication>
+#endif
 
 #include <QSharedMemory>
 #include <stdexcept>

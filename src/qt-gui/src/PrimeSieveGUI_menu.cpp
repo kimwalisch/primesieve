@@ -19,13 +19,23 @@
 
 #include "PrimeSieveGUI.h"
 #include "ui_PrimeSieveGUI.h"
+
 #include "../soe/ParallelPrimeSieve.h"
 
-#include <QMessageBox>
-#include <QDir>
-#include <QFile>
-#include <QTextStream>
-#include <QFileDialog>
+#if QT_VERSION >= 0x050000
+  #include <QTextStream>
+  #include <QDir>
+  #include <QFile>
+  #include <QtWidgets/QMessageBox>
+  #include <QtWidgets/QFileDialog>
+  #include <QtWidgets/QMenuBar>
+#else
+  #include <QMessageBox>
+  #include <QDir>
+  #include <QFile>
+  #include <QTextStream>
+  #include <QFileDialog>
+#endif
 
 /**
  * Initialize the menu items.

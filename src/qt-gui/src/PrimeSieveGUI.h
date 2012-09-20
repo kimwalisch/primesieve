@@ -23,17 +23,31 @@
 #include "PrimeSieveGUI_const.h"
 #include "../soe/ParallelPrimeSieve.h"
 
-#include <QMainWindow>
-#include <QtGlobal>
-#include <QMenu>
-#include <QAction>
-#include <QProcess>
-#include <QVector>
-#include <QComboBox>
-#include <QTime>
-#include <QTimer>
-#include <QValidator>
-#include <QString>
+#if QT_VERSION >= 0x050000
+  #include <QtGlobal>
+  #include <QtWidgets/QMainWindow>
+  #include <QtWidgets/QMenu>
+  #include <QtWidgets/QAction>
+  #include <QtWidgets/QComboBox>
+  #include <QProcess>
+  #include <QVector>
+  #include <QTime>
+  #include <QTimer>
+  #include <QValidator>
+  #include <QString>
+#else
+  #include <QMainWindow>
+  #include <QtGlobal>
+  #include <QMenu>
+  #include <QAction>
+  #include <QProcess>
+  #include <QVector>
+  #include <QComboBox>
+  #include <QTime>
+  #include <QTimer>
+  #include <QValidator>
+  #include <QString>
+#endif
 
 namespace Ui {
   class PrimeSieveGUI;

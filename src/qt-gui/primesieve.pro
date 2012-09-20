@@ -1,57 +1,49 @@
 # -------------------------------------------------
-# primesieve icon & stdint.h
+# primesieve GUI project settings
 # -------------------------------------------------
-win* {
-    RC_FILE = icons/win/primesieve.rc
-    INCLUDEPATH += ../thirdparty
-}
-macx {
-    RC_FILE = icons/osx/primesieve.icns
-}
-# -------------------------------------------------
-# Compiler options for MSVC, GCC, ICC, LLVM
-# -------------------------------------------------
-win* {
-    *msvc* {
-        QMAKE_CXXFLAGS += /openmp /EHsc
-    }
-    *icc* {
-        QMAKE_CXXFLAGS += /Qopenmp /EHsc
-    }
-}
-*icc* {
-    unix {
-        QMAKE_CXXFLAGS += -openmp
-        QMAKE_LFLAGS   += -openmp
-    }
-}
-*g++* {
-    QMAKE_CXXFLAGS += -fopenmp
-    QMAKE_LFLAGS   += -fopenmp
-    macx {
-        # Apple GCC performs best with -fast
-        QMAKE_CXXFLAGS += -fast
-    }
-}
-*llvm* {
-    QMAKE_CXXFLAGS += -fopenmp
-    QMAKE_LFLAGS   += -fopenmp
-}
-# -------------------------------------------------
-# Project created by QtCreator
-# -------------------------------------------------
+
 TARGET = primesieve
 TEMPLATE = app
 FORMS += forms/PrimeSieveGUI.ui
-HEADERS += ../parser/ExpressionParser.h
-SOURCES += src/main.cpp \
+
+# -------------------------------------------------
+# Qt modules: core, gui and widgets (Qt > 4)
+# -------------------------------------------------
+
+QT_VER = $$QT_VERSION
+QT_VER = $$split(QT_VER, ".")
+QT_MAJ = $$member(QT_VER, 0)
+!contains(QT_MAJ, 4) {
+  QT += core gui widgets
+}
+
+# -------------------------------------------------
+# primesieve GUI application sources (src/qt-gui)
+# -------------------------------------------------
+
+SOURCES += \
+    src/main.cpp \
     src/PrimeSieveGUI.cpp \
     src/PrimeSieveGUI_menu.cpp \
     src/PrimeSieveProcess.cpp
-HEADERS += src/PrimeSieveGUI.h \
-    src/PrimeSieveProcess.h \
-    src/PrimeSieveGUI_const.h
-SOURCES += ../soe/EratBig.cpp \
+
+HEADERS += \
+    src/PrimeSieveGUI.h \
+    src/PrimeSieveGUI_const.h \
+    src/PrimeSieveProcess.h
+
+# -------------------------------------------------
+# Arithmetic Expression parser (src/parser)
+# -------------------------------------------------    
+
+HEADERS += ../parser/ExpressionParser.h
+
+# -------------------------------------------------
+# Sieve of Eratosthenes sources (src/soe)
+# -------------------------------------------------
+
+SOURCES += \
+    ../soe/EratBig.cpp \
     ../soe/EratSmall.cpp \
     ../soe/PrimeNumberFinder.cpp \
     ../soe/PrimeSieve.cpp \
@@ -60,6 +52,7 @@ SOURCES += ../soe/EratBig.cpp \
     ../soe/EratMedium.cpp \
     ../soe/PreSieve.cpp \
     ../soe/WheelFactorization.cpp
+
 HEADERS += ../soe/EratSmall.h \
     ../soe/EratBig.h \
     ../soe/PrimeNumberFinder.h \
@@ -78,3 +71,35 @@ HEADERS += ../soe/EratSmall.h \
     ../soe/openmp_RAII.h \
     ../soe/popcount.h \
     ../soe/toString.h
+
+# -------------------------------------------------
+# primesieve icon file
+# -------------------------------------------------
+
+win* {
+  RC_FILE = icons/win/primesieve.rc
+}
+macx {
+  RC_FILE = icons/osx/primesieve.icns
+}
+
+# -------------------------------------------------
+# Compiler options (todo: add clang++ -fopenmp)
+# -------------------------------------------------
+
+*msvc* {
+  QMAKE_CXXFLAGS += /openmp /EHsc
+}
+*g++* {
+  QMAKE_CXXFLAGS += -fopenmp
+  QMAKE_LFLAGS   += -fopenmp
+}
+*icc* {
+  win* {
+    QMAKE_CXXFLAGS += /Qopenmp /EHsc
+  }
+  unix {
+    QMAKE_CXXFLAGS += -openmp
+    QMAKE_LFLAGS   += -openmp
+  }
+}

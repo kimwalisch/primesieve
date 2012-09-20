@@ -23,15 +23,27 @@
 #include "../soe/ParallelPrimeSieve.h"
 #include "../parser/ExpressionParser.h"
 
-#include <QtGlobal>
-#include <QCoreApplication>
-#include <QByteArray>
-#include <QTextStream>
-#include <QFile>
-#include <QSize>
-#include <QMessageBox>
-#include <QTextCursor>
-#include <stdexcept>
+#if QT_VERSION >= 0x050000
+  #include <QtGlobal>
+  #include <QCoreApplication>
+  #include <QByteArray>
+  #include <QTextStream>
+  #include <QFile>
+  #include <QSize>
+  #include <QtWidgets/QMessageBox>
+  #include <QTextCursor>
+  #include <stdexcept>
+#else
+  #include <QtGlobal>
+  #include <QCoreApplication>
+  #include <QByteArray>
+  #include <QTextStream>
+  #include <QFile>
+  #include <QSize>
+  #include <QMessageBox>
+  #include <QTextCursor>
+  #include <stdexcept>
+#endif
 
 PrimeSieveGUI::PrimeSieveGUI(QWidget *parent) :
   QMainWindow(parent), ui(new Ui::PrimeSieveGUI), validator_(0),
@@ -270,7 +282,7 @@ void PrimeSieveGUI::printProcessOutput() {
 /// @warning QApplication::processEvents() must not be used on
 ///          operating systems that use signal recursion (like Linux
 ///          X11) otherwise the stack will explode!
-#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
+#if QT_VERSION < 0x050000 && (defined(Q_OS_WIN) || defined(Q_OS_MAC))
     QApplication::processEvents();
 #else
     ui->textEdit->repaint();
