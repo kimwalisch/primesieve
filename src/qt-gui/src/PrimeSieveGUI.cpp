@@ -282,7 +282,7 @@ void PrimeSieveGUI::printProcessOutput() {
 /// @warning QApplication::processEvents() must not be used on
 ///          operating systems that use signal recursion (like Linux
 ///          X11) otherwise the stack will explode!
-#if QT_VERSION < 0x050000 && (defined(Q_OS_WIN) || defined(Q_OS_MAC))
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC) || defined(Q_OS_IOS)
     QApplication::processEvents();
 #else
     ui->textEdit->repaint();
