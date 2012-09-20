@@ -278,7 +278,8 @@ void PrimeSieveGUI::printProcessOutput() {
       buffer.chop(1);
     if (!buffer.isEmpty())
       ui->textEdit->appendPlainText(buffer);
-/// Keep the GUI responsive.
+/// @brief   Keep the GUI responsive.
+/// @bug     processEvents() crashes on Windows with MSVC 2010 and Qt 5 beta.
 /// @warning QApplication::processEvents() must not be used on
 ///          operating systems that use signal recursion (like Linux
 ///          X11) otherwise the stack will explode!
