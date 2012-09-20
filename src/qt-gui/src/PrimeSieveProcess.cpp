@@ -31,7 +31,7 @@
   #include <unistd.h>
 #endif
 
-PrimeSieveProcess::PrimeSieveProcess(QObject* parent = 0) : 
+PrimeSieveProcess::PrimeSieveProcess(QObject* parent) : 
   QProcess(parent) {
   sharedMemory_.setParent(parent);
   sharedMemory_.setKey(QString::number(this->getProcessId()));
