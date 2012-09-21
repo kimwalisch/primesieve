@@ -162,9 +162,9 @@ Contents
 
   API
   ---
-  void       ParallelPrimeSieve::setNumThreads(int numThreads);
-  static int ParallelPrimeSieve::getMaxThreads();
+  void       ParallelPrimeSieve::setNumThreads(int);
   int        ParallelPrimeSieve::getNumThreads() const;
+  static int ParallelPrimeSieve::getMaxThreads();
   void       ParallelPrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int));
 
   Threading behavior
@@ -405,7 +405,7 @@ Contents
 
   API
   ---
-  void PrimeSieve::setFlags(int flags);
+  void PrimeSieve::setFlags(int);
 
   Flags
   -----
