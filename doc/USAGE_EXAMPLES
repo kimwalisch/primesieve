@@ -286,7 +286,7 @@ Contents
   int main()
   {
     ParallelPrimeSieve pps;
-    uint64_t count = pps.getPrimeCount(2, 4294967295U);
+    uint64_t count = pps.getPrimeCount(2, 1000000000);
     double seconds = pps.getSeconds();
     std::cout << "Prime count: " << count << std::endl
               << "Time elapsed: " << seconds << " sec" << std::endl;
