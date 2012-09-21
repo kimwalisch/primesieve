@@ -83,6 +83,10 @@ void ParallelPrimeSieve::setNumThreads(int threads) {
   numThreads_ = getInBetween(1, threads, getMaxThreads());
 }
 
+bool ParallelPrimeSieve::tooMany(int threads) const {
+  return (threads > 1 && getInterval() / threads < config::MIN_THREAD_INTERVAL);
+}
+
 int ParallelPrimeSieve::idealNumThreads() const {
   // use 1 thread to generate primes in arithmetic order
   if (isGenerate()) return 1;
@@ -132,10 +136,6 @@ bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock) {
       shm_->status = getStatus();
   }
   return lock.isSet();
-}
-
-bool ParallelPrimeSieve::tooMany(int threads) const {
-  return (threads > 1 && getInterval() / threads < config::MIN_THREAD_INTERVAL);
 }
 
 /// Sieve the primes and prime k-tuplets within [start, stop]

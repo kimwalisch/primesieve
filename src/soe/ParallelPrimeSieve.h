@@ -73,6 +73,7 @@ private:
   SharedMemory* shm_;
   /// Number of threads for sieving
   int numThreads_;
+  bool tooMany(int) const;
   int idealNumThreads() const;
   uint64_t getThreadInterval(int) const;
 #ifdef _OPENMP
@@ -84,7 +85,6 @@ private:
   virtual void setLock();
   virtual void unsetLock();
   virtual bool updateStatus(uint64_t, bool);
-  bool tooMany(int) const;
 #endif
 };
 
