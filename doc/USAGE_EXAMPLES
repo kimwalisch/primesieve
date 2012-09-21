@@ -1,4 +1,4 @@
-September 19, 2012
+September 21, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -322,10 +322,7 @@ Contents
     ps.setSieveSize(512);
     uint64_t start = (uint64_t) 1E19;
     uint64_t stop  = (uint64_t) (1E19+1E10);
-    uint64_t count = ps.getPrimeCount(start, stop);
-    double seconds = ps.getSeconds();
-    std::cout << "Prime count: "  << count << std::endl
-              << "Time elapsed: " << seconds << " sec" << std::endl;
+    std::cout << ps.getPrimeCount(start, stop) << std::endl;
     return 0;
   }
 
@@ -335,9 +332,9 @@ Contents
 =================
 
   PrimeSieve and ParallelPrimeSieve objects throw primesieve_error
-  exceptions for invalid arguments like start > stop. primesieve_error
-  is defined in PrimeSieve.h and derived from std::runtime_error
-  (which is derived from std::exception).
+  exceptions for invalid arguments like start > stop.
+  primesieve_error is defined in PrimeSieve.h and derived from
+  std::runtime_error.
 
   ////////////////////////////////////////////////////////////////////
   // Catch primesieve_error exceptions
@@ -446,10 +443,10 @@ Contents
 
   int main()
   {
-    uint64_t start = 0;
-    uint64_t stop = (uint64_t) 1E11;
     PrimeSieve ps;
     ps.setFlags(ps.COUNT_PRIMES | ps.COUNT_TWINS | ps.PRINT_STATUS);
+    uint64_t start = 0;
+    uint64_t stop = (uint64_t) 1E11;
     ps.sieve(start, stop);
     // get the previously calculated count results
     uint64_t primeCount = ps.getPrimeCount();
