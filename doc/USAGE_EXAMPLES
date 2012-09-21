@@ -288,7 +288,7 @@ Contents
     ParallelPrimeSieve pps;
     uint64_t count = pps.getPrimeCount(2, 4294967295U);
     double seconds = pps.getSeconds();
-    std::cout << "Prime count: "  << count << std::endl
+    std::cout << "Prime count: " << count << std::endl
               << "Time elapsed: " << seconds << " sec" << std::endl;
     return 0;
   }
@@ -362,41 +362,33 @@ Contents
 =================================
 
   PrimeSieve objects are exception safe so it is possible to throw an
-  exception to cancel sieving. The following trial-division prime
-  number checker cancels prime number generation if 'candidate' is not
-  a prime by throwing an exception.
+  exception to cancel prime number generation.
 
   ////////////////////////////////////////////////////////////////////
-  // Prime number checker
-  // Usage: ./checker NUMBER
+  // Store the first 1000 primes in a vector
 
   #include <primesieve/soe/PrimeSieve.h>
   #include <iostream>
-  #include <cstdlib>
-  #include <cmath>
+  #include <exception>
+  #include <vector>
 
-  unsigned int candidate;
+  std::vector<unsigned int> primes;
 
-  void check(unsigned int prime) {
-    if (candidate % prime == 0) throw std::exception();
+  void store(unsigned int prime)
+  {
+    if (primes.size() == 1000) throw std::exception();
+    primes.push_back(prime);
   }
 
-  int main(int argc, char **argv)
+  int main()
   {
-    bool isPrime = false;
-    candidate = atoi(argv[1]);
-
-    if (candidate > 1) {
-      unsigned int sq = (unsigned int) std::sqrt((double) candidate);
-      try {
-        PrimeSieve ps;
-        ps.generatePrimes(0, sq, check);
-        isPrime = true;
-      } catch (...) { }
+    PrimeSieve ps;
+    try {
+      ps.generatePrimes(0, 999999, store);
     }
-    std::cout << candidate << " is "
-              << ((isPrime) ? "a prime" : "not a prime")
-              << std::endl;
+    catch (std::exception&) { }
+    for (unsigned i = 0; i < primes.size(); i++)
+      std::cout << primes[i] << '\n';
     return 0;
   }
 
