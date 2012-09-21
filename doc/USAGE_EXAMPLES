@@ -399,8 +399,9 @@ Contents
 
   Flags are settings for PrimeSieve and ParallelPrimeSieve objects,
   they are set using setFlags(int), when done sieve() starts sieving.
-  Flags allow to do multiple tasks in one go e.g., count primes and
-  twin primes and print the status in percent whilst sieving.
+  PrimeSieve flags can be used to do multiple tasks in one go,
+  e.g. count primes and twin primes and print the status in percent
+  whilst sieving.
 
   API
   ---
@@ -426,8 +427,7 @@ Contents
   PrimeSieve::CALCULATE_STATUS
 
   ////////////////////////////////////////////////////////////////////
-  // Count prime numbers and twin primes in one go
-  // and print the status whilst sieving
+  // Count prime numbers and twin primes using flags
 
   #include <primesieve/soe/PrimeSieve.h>
   #include <stdint.h>
@@ -437,14 +437,10 @@ Contents
   {
     PrimeSieve ps;
     ps.setFlags(ps.COUNT_PRIMES | ps.COUNT_TWINS | ps.PRINT_STATUS);
-    uint64_t start = 0;
-    uint64_t stop = (uint64_t) 1E11;
-    ps.sieve(start, stop);
-    // get the previously calculated count results
-    uint64_t primeCount = ps.getPrimeCount();
-    uint64_t twinCount  = ps.getTwinCount();
-    std::cout << "Prime number count: " << primeCount << std::endl
-              << "Twin prime count:   " << twinCount  << std::endl;
+    ps.sieve(0, (uint64_t) 1E11);
+    // print the previously calculated count results
+    std::cout << ps.getPrimeCount() << std::endl
+              << ps.getTwinCount()  << std::endl;
     return 0;
   }
 
