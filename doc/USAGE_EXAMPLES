@@ -9,9 +9,11 @@ About
   PrimeSieve and ParallelPrimeSieve objects. Both PrimeSieve and
   ParallelPrimeSieve objects can generate, print (to cout) and count
   primes and prime k-tuplets (twins, triplets, ...).
+
   For these examples to compile you need to build primesieve as a
   library and add it to the linker, this is explained in the
-  LIBPRIMESIEVE file.
+  LIBPRIMESIEVE file. The complete PrimeSieve and ParallelPrimeSieve
+  API is presented in the doc/API file.
 
 Contents
 ========
