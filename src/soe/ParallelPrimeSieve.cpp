@@ -64,7 +64,7 @@ void ParallelPrimeSieve::init(SharedMemory& shm) {
   shm_ = &shm;
 }
 
-/// Get the number of logical CPU cores
+/// Get the number of CPU cores
 int ParallelPrimeSieve::getMaxThreads() {
 #ifdef _OPENMP
   return omp_get_max_threads();
