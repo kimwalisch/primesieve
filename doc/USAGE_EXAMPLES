@@ -204,7 +204,7 @@ Contents
   to use but do not scale well beyond 4 CPU cores.
 
   ////////////////////////////////////////////////////////////////////
-  // Sum the primes below 10^10 using 4 threads.
+  // Sum the primes below 10^10 using 4 threads
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
   #include <stdint.h>
@@ -237,7 +237,7 @@ Contents
   the same cache line (see below).
 
   ////////////////////////////////////////////////////////////////////
-  // Sum the primes below 10^11 using 100 threads.
+  // Sum the primes below 10^11 using 100 threads
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
   #include <stdint.h>
