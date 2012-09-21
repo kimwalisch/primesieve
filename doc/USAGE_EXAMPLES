@@ -37,6 +37,7 @@ Contents
   void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t));
   void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t, void*), void*);
   void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, void*), void*);
+  void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int));
 
   ////////////////////////////////////////////////////////////////////
   // C-style callback, generate the primes up to 1000
@@ -167,7 +168,6 @@ Contents
   void       ParallelPrimeSieve::setNumThreads(int);
   int        ParallelPrimeSieve::getNumThreads() const;
   static int ParallelPrimeSieve::getMaxThreads();
-  void       ParallelPrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int));
 
   Threading behavior
   ------------------
@@ -201,9 +201,9 @@ Contents
 
   Synchronized prime number generation
   ------------------------------------
-  The four generatePrimes(...) methods from (1.) are synchronized i.e.
-  only one thread at a time calls back primes. These methods are easy
-  to use but do not scale well beyond 4 CPU cores.
+  The first four generatePrimes(...) methods from section 1. are
+  synchronized i.e. only one thread at a time calls back primes. These
+  methods are easy to use but do not scale well beyond 4 CPU cores.
 
   ////////////////////////////////////////////////////////////////////
   // Sum the primes below 10^10 using 4 threads
@@ -231,10 +231,11 @@ Contents
 
   Unsynchronized prime number generation
   --------------------------------------
-  ParallelPrimeSieve's generatePrimes(...) method is not synchronized,
-  it scales well even with a hundred CPU cores but it is a little
-  harder to use: You must pay attention not to write to (or read from
-  and write to) the same variable from multiple threads, for a good
+  The last generatePrimes(...) method from section 1. is not
+  synchronized i.e. multiple threads call back primes in parallel.
+  This method scales well even with 100 CPU cores but it must be used
+  with care: You must pay attention not to write to (nor read from and
+  write to) the same variable from multiple threads, for a good
   performance it is also important that multiple threads do not share
   the same cache line (see below).
 
