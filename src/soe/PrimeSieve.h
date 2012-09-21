@@ -91,35 +91,41 @@ public:
   PrimeSieve();
   PrimeSieve(PrimeSieve&, int);
   virtual ~PrimeSieve() { }
+  // Getters
   uint64_t getStart() const;
   uint64_t getStop() const;
+  int getSieveSize() const;
+  int getPreSieve() const;
+  int getFlags() const;
   double getStatus() const;
   double getSeconds() const;
-  int getPreSieve() const;
-  int getSieveSize() const;
-  int getFlags() const;
-  bool isFlag(int flag) const;
-  bool isFlag(int first, int last) const;
-  bool isGenerate() const;
-  bool isCount() const;
-  bool isCount(int index) const;
-  bool isPrint() const;
-  bool isPrint(int index) const;
-  bool isStatus() const;
+  // Setters
   void setStart(uint64_t);
   void setStop(uint64_t);
   void setSieveSize(int);
   void setPreSieve(int);
   void setFlags(int);
   void addFlags(int);
+  // Bool is*
+  bool isFlag(int) const;
+  bool isFlag(int, int) const;
+  bool isGenerate() const;
+  bool isCount() const;
+  bool isCount(int) const;
+  bool isPrint() const;
+  bool isPrint(int) const;
+  bool isStatus() const;
+  // Sieve
   virtual void sieve();
   void sieve(uint64_t, uint64_t);
   void sieve(uint64_t, uint64_t, int);
+  // Generate
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t));
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t, void*), void*);
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, int));
+  // Print
   void printPrimes(uint64_t, uint64_t);
   void printTwins(uint64_t, uint64_t);
   void printTriplets(uint64_t, uint64_t);
@@ -127,6 +133,7 @@ public:
   void printQuintuplets(uint64_t, uint64_t);
   void printSextuplets(uint64_t, uint64_t);
   void printSeptuplets(uint64_t, uint64_t);
+  // Count
   uint64_t getPrimeCount(uint64_t, uint64_t);
   uint64_t getTwinCount(uint64_t, uint64_t);
   uint64_t getTripletCount(uint64_t, uint64_t);
@@ -200,7 +207,7 @@ private:
   uint64_t toUpdate_;
   /// Status in percent of sieve()
   double status_;
-  /// Callback function for use with generatePrimes()
+  /// Callback functions for use with generatePrimes()
   void (*callback32_)(uint32_t);
   void (*callback64_)(uint64_t);
   void (*callback32_obj_)(uint32_t, void*);
