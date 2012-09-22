@@ -89,17 +89,35 @@ macx {
 
 *msvc* {
   QMAKE_CXXFLAGS += /openmp /EHsc
+  IS_OPENMP = true
 }
+
 *g++* {
   QMAKE_CXXFLAGS += -fopenmp
   QMAKE_LFLAGS   += -fopenmp
+  IS_OPENMP = true
 }
+
 *icc* {
   win* {
     QMAKE_CXXFLAGS += /Qopenmp /EHsc
+    IS_OPENMP = true
   }
   unix {
     QMAKE_CXXFLAGS += -openmp
     QMAKE_LFLAGS   += -openmp
+    IS_OPENMP = true
   }
+}
+
+# clang does not yet support OpenMP (2012)
+
+*clang* {
+  # QMAKE_CXXFLAGS += -fopenmp
+  # QMAKE_LFLAGS   += -fopenmp
+  # IS_OPENMP = true
+}
+
+!contains(IS_OPENMP, true) {
+  error(Add your compilers OpenMP flag to primesieve.pro)
 }
