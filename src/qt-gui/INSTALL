@@ -1,34 +1,41 @@
 ######################################################################
-# Compilation guide for primesieve (Qt GUI version)
+# Compilation guide for the primesieve GUI application
 # 
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010 
-# Last modified: 19 September 2012
+# Last modified: 22 September 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
 
-I. How to build primesieve (Windows, Linux, Mac OS X)
-=====================================================
+I. About
+========
 
-  Prerequisites
-  -------------
-  Since version 3.5 the primesieve GUI application requires a compiler
-  that supports OpenMP 3.0 or later (2008). The Qt SDK includes a
-  recent version of g++ which works fine.
+  The primesieve GUI application has been developed with the Qt
+  framework (http://qt-project.org). This file explains how to install
+  Qt and how to compile the primesieve GUI application.
 
-  1. Download and install the Qt SDK from:
+II. How to build primesieve (All operating systems)
+===================================================
+
+  Requirement
+  -----------
+  The primesieve GUI application requires a compiler that supports
+  OpenMP 3.0 or later (2008). The Qt SDK includes a recent version of
+  g++ which works fine.
+
+  1. For Windows download and install the latest Qt 4 SDK:
+     ftp://ftp.trolltech.com/qt/source/qt-win-opensource-4.8.1-mingw.exe
+
+     For all other OSes download and install the latest Qt 5 SDK:
      http://qt-project.org/downloads
 
   2. Launch the primesieve.pro project file with the Qt-Creator IDE
      and have a look at Qt-Creator-build-settings.png for the
      compilation steps.
 
-II. Remarks
-===========
+     Alternatively you can also run the following commands from a
+     terminal to directly build a primesieve binary:
 
-  primesieve has been developed with Qt 4.7 and also tested with
-  Qt 5.0 (2012). If primesieve does not compile with future releases
-  of Qt old Qt4 (and Qt5) builds can be retrieved from:
-  ftp://ftp.trolltech.com/qt/source/
+     $ qmake; make

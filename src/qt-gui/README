@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       11 April 2011
-# Last modified: 19 September 2012
+# Last modified: 22 September 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -12,15 +12,16 @@
 I. About
 ========
 
-  The src/qt-gui directory contains the primesieve GUI application
-  developed with the Qt framework (http://qt-project.org).
+  This directory contains the primesieve GUI application developed
+  with the Qt framework (http://qt-project.org).
+  The INSTALL file in the current directory explains how to compile
+  the primesieve GUI application.
 
-II. Qt project file (MSVC, GNU g++, Intel icpc)
-===============================================
+II. Project file
+================
 
   * primesieve.pro
-    primesieve project file for the Qt-Creator IDE (e.g. to edit the
-    source code and/or build a primesieve executable).
+    Project file for use with the Qt-Creator IDE.
 
 III. Source files
 =================
