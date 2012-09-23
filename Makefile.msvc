@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   29 August 2012
+# Last modified:   23 September 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -53,19 +53,22 @@ CXXFLAGS = $(CXXFLAGS) /openmp
 !ENDIF
 
 #-----------------------------------------------------------------------------
-# build the primesieve console application (read doc/INSTALL)
+# Add L1_DCACHE_SIZE to CXXFLAGS
 #-----------------------------------------------------------------------------
 
-BIN_CXXFLAGS = $(CXXFLAGS)
 !IFDEF L1_DCACHE_SIZE
-BIN_CXXFLAGS = $(BIN_CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
+CXXFLAGS = $(CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 !ENDIF
+
+#-----------------------------------------------------------------------------
+# build the primesieve console application (read doc/INSTALL)
+#-----------------------------------------------------------------------------
 
 bin: dir_bin $(BIN_OBJECTS)
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $(BIN_OBJECTS)
 
 $(BIN_OBJECTS): {src\soe\;src\test\;src\console\}$$(@B).cpp
-	$(CXX) $(BIN_CXXFLAGS) $(INCPATH) /c $? /Fo"$@"
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $? /Fo"$@"
 
 dir_bin:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
@@ -74,11 +77,6 @@ dir_bin:
 # build static primesieve.lib (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-LIB_CXXFLAGS = $(CXXFLAGS)
-!IFDEF L1_DCACHE_SIZE
-LIB_CXXFLAGS = $(LIB_CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
-!ENDIF
-
 lib: dir_lib $(LIB_OBJECTS)
 	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $(LIB_OBJECTS)
 	@if not exist $(DISTDIR)\$(TARGET)\soe mkdir $(DISTDIR)\$(TARGET)\soe
@@ -86,7 +84,7 @@ lib: dir_lib $(LIB_OBJECTS)
 	copy /Y src\soe\*PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
 
 $(LIB_OBJECTS): src\soe\$$(@B).cpp
-	$(CXX) $(LIB_CXXFLAGS) $(INCPATH) /c $? /Fo"$@"
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $? /Fo"$@"
 
 dir_lib:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
@@ -112,8 +110,7 @@ clean:
 !ENDIF
 
 #-----------------------------------------------------------------------------
-# `nmake -f Makefile.msvc check` runs various sieving tests to assure
-# that the compiled primesieve binary produces correct results
+# `nmake -f Makefile.msvc check` runs correctness tests
 #-----------------------------------------------------------------------------
 
 check test: bin
@@ -124,13 +121,13 @@ check test: bin
 #-----------------------------------------------------------------------------
 
 help:
-	@echo ---------------------------------------------------------
-	@echo ---------------- Makefile.msvc help menu ----------------
-	@echo ---------------------------------------------------------
-	@echo "nmake -f Makefile.msvc                    Builds the primesieve console application using MSVC++"
-	@echo "nmake -f Makefile.msvc check              Tests the compiled primesieve binary"
-	@echo "nmake -f Makefile.msvc lib                Builds static primesieve.lib to lib\ (read doc/LIBPRIMESIEVE)"
-	@echo "nmake -f Makefile.msvc clean              Cleans the output directories (./bin, ./lib)"
+	@echo ------------------------------------------------------
+	@echo -------------- primesieve build options --------------
+	@echo ------------------------------------------------------
+	@echo "nmake -f Makefile.msvc                    Build the primesieve console application using MSVC++"
+	@echo "nmake -f Makefile.msvc check              Test the compiled primesieve binary"
+	@echo "nmake -f Makefile.msvc lib                Build a static primesieve.lib (read doc/LIBPRIMESIEVE)"
+	@echo "nmake -f Makefile.msvc clean              Clean the output directories (bin, lib)"
 	@echo "nmake -f Makefile.msvc CXXFLAGS=options   Specify custom compiler flags"
 	@echo "nmake -f Makefile.msvc L1_DCACHE_SIZE=KB  Specify the CPU's L1 data cache size (read doc/INSTALL)"
-	@echo "nmake -f Makefile.msvc help               Prints this help menu"
+	@echo "nmake -f Makefile.msvc help               Print this help menu"
