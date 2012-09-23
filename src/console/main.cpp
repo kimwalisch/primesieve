@@ -151,7 +151,7 @@ void processOptions(int argc, char* argv[]) {
       number.push_back(parser64.eval(argv[i]));
       if (!isDigits(argv[i]))
         printParserResult = true;
-    } catch (...) {
+    } catch (parser_error&) {
       break;
     }
   }
