@@ -38,11 +38,7 @@
 #include "PrimeSieve.h"
 #include <stdint.h>
 
-#ifdef _OPENMP
-  #include <omp.h>
-#endif
-
-/// ParallelPrimeSieve sieves primes in parallel using OpenMP, it is
+/// ParallelPrimeSieve sieves primes in parallel, it is
 /// derived from PrimeSieve so it has the same API.
 /// Please refer to doc/USAGE_EXAMPLES for more information.
 ///
@@ -66,6 +62,8 @@ public:
   static int getMaxThreads();
   int getNumThreads() const;
   void setNumThreads(int numThreads);
+  using PrimeSieve::sieve;
+  virtual void sieve();
 private:
   enum {
     IDEAL_NUM_THREADS = -1
@@ -73,19 +71,18 @@ private:
   SharedMemory* shm_;
   /// Number of threads for sieving
   int numThreads_;
+  /// Used to synchronize threads
+  void* lock_;
   bool tooMany(int) const;
   int idealNumThreads() const;
   uint64_t getThreadInterval(int) const;
-#ifdef _OPENMP
-public:
-  using PrimeSieve::sieve;
-  virtual void sieve();
-private:
-  omp_lock_t lock_;
+  template <typename T>
+  T getLock() {
+    return static_cast<T> (lock_);
+  }
   virtual void setLock();
   virtual void unsetLock();
   virtual bool updateStatus(uint64_t, bool);
-#endif
 };
 
 #endif

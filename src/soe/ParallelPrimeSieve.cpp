@@ -32,6 +32,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+/// @brief  ParallelPrimeSieve sieves primes in parallel
+///         using OpenMP 3.0 (2008) or later.
+
 #include "ParallelPrimeSieve.h"
 #include "PrimeSieve.h"
 #include "imath.h"
@@ -55,7 +58,8 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
 { }
 
 /// API for the primesieve GUI application
-void ParallelPrimeSieve::init(SharedMemory& shm) {
+void ParallelPrimeSieve::init(SharedMemory& shm)
+{
   setStart(shm.start);
   setStop(shm.stop);
   setSieveSize(shm.sieveSize);
@@ -64,8 +68,8 @@ void ParallelPrimeSieve::init(SharedMemory& shm) {
   shm_ = &shm;
 }
 
-/// Get the number of CPU cores
-int ParallelPrimeSieve::getMaxThreads() {
+int ParallelPrimeSieve::getMaxThreads()
+{
 #ifdef _OPENMP
   return omp_get_max_threads();
 #else
@@ -73,21 +77,25 @@ int ParallelPrimeSieve::getMaxThreads() {
 #endif
 }
 
-/// Get the current set number of threads for sieving
-int ParallelPrimeSieve::getNumThreads() const {
+/// Get the number of threads
+int ParallelPrimeSieve::getNumThreads() const
+{
   return (numThreads_ == IDEAL_NUM_THREADS) ? idealNumThreads() : numThreads_;
 }
 
-/// Set the number of threads for sieving
-void ParallelPrimeSieve::setNumThreads(int threads) {
+/// Set the number of threads
+void ParallelPrimeSieve::setNumThreads(int threads)
+{
   numThreads_ = getInBetween(1, threads, getMaxThreads());
 }
 
-bool ParallelPrimeSieve::tooMany(int threads) const {
+bool ParallelPrimeSieve::tooMany(int threads) const
+{
   return (threads > 1 && getInterval() / threads < config::MIN_THREAD_INTERVAL);
 }
 
-int ParallelPrimeSieve::idealNumThreads() const {
+int ParallelPrimeSieve::idealNumThreads() const
+{
   // use 1 thread to generate primes in arithmetic order
   if (isGenerate()) return 1;
   // each thread sieves at least an interval of size sqrt(x) / 5
@@ -99,7 +107,8 @@ int ParallelPrimeSieve::idealNumThreads() const {
 }
 
 /// Get an interval size that ensures a good load balance
-uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const {
+uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const
+{
   assert(threads > 0);
   uint64_t unbalanced = getInterval() / threads;
   uint64_t balanced = isqrt(stop_) * 1000;
@@ -117,19 +126,24 @@ uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const {
 
 /// Used to synchronize threads for prime number generation
 
-void ParallelPrimeSieve::setLock() {
-  omp_set_lock(&lock_);
+void ParallelPrimeSieve::setLock()
+{
+  omp_lock_t* lock = getLock<omp_lock_t*>();
+  omp_set_lock(lock);
 }
 
-void ParallelPrimeSieve::unsetLock() {
-  omp_unset_lock(&lock_);
+void ParallelPrimeSieve::unsetLock()
+{
+  omp_lock_t* lock = getLock<omp_lock_t*>();
+  omp_unset_lock(lock);
 }
 
 /// Calculate the sieving status (in percent).
-/// @param processed  Sum of recently processed segments.
+/// @param processed Sum of recently processed segments.
 ///
-bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock) {
-  OmpGuard lock(lock_, waitForLock);
+bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
+{
+  OmpLockGuard lock(getLock<omp_lock_t*>(), waitForLock);
   if (lock.isSet()) {
     PrimeSieve::updateStatus(processed, false);
     if (shm_ != NULL)
@@ -141,13 +155,14 @@ bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock) {
 /// Sieve the primes and prime k-tuplets within [start, stop]
 /// in parallel using OpenMP (version 3.0 or later).
 ///
-void ParallelPrimeSieve::sieve() {
+void ParallelPrimeSieve::sieve()
+{
   if (start_ > stop_)
     throw primesieve_error("start must be <= stop");
 
   int threads = getNumThreads();
   if (tooMany(threads)) threads = idealNumThreads();
-  OmpInitGuard init(lock_);
+  OmpNewLockGuard newLock(&lock_);
 
   if (threads == 1)
     PrimeSieve::sieve();
@@ -193,5 +208,26 @@ void ParallelPrimeSieve::sieve() {
     shm_->seconds = seconds_;
   }
 }
+
+#endif /* _OPENMP */
+
+/// If OpenMP is not used than ParallelPrimeSieve bahaves like
+/// the single threaded PrimeSieve.
+///
+#if !defined(_OPENMP)
+
+void ParallelPrimeSieve::sieve()
+{
+  PrimeSieve::sieve();
+}
+
+bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
+{
+  return PrimeSieve::updateStatus(processed, waitForLock);
+}
+
+void ParallelPrimeSieve::setLock() { }
+
+void ParallelPrimeSieve::unsetLock() { }
 
 #endif

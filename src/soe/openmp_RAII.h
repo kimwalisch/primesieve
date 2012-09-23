@@ -33,8 +33,8 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /// @file   openmp_RAII.h
-/// @brief  The OmpInitGuard and OmpGuard classes are RAII-style
-///         wrappers for OpenMP locks.
+/// @brief  The OmpNewLockGuard and OmpLockGuard classes are
+///         RAII-style wrappers for OpenMP locks.
 
 #ifndef OPENMP_RAII_H
 #define OPENMP_RAII_H
@@ -43,39 +43,41 @@
 
 namespace soe {
 
-/// OpenMP RAII lock initialization and destroy
-class OmpInitGuard {
+/// OpenMP RAII, new lock -> initialization -> destroy -> delete
+class OmpNewLockGuard {
 public:
-  OmpInitGuard(omp_lock_t&);
-  ~OmpInitGuard();
+  OmpNewLockGuard(void**);
+  ~OmpNewLockGuard();
 private:
   omp_lock_t* lock_;
 };
 
 /// OpenMP RAII lock guard
-class OmpGuard {
+class OmpLockGuard {
 public:
-  OmpGuard(omp_lock_t&, bool);
-  ~OmpGuard();
+  OmpLockGuard(omp_lock_t*, bool);
+  ~OmpLockGuard();
   bool isSet() const;
 private:
   omp_lock_t* lock_;
   bool isSet_;
 };
 
-OmpInitGuard::OmpInitGuard(omp_lock_t& lock) :
-  lock_(&lock)
+OmpNewLockGuard::OmpNewLockGuard(void** lockAddress) :
+  lock_(new omp_lock_t)
 {
+  *lockAddress = static_cast<void*> (lock_);
   omp_init_lock(lock_);
 }
 
-OmpInitGuard::~OmpInitGuard()
+OmpNewLockGuard::~OmpNewLockGuard()
 {
   omp_destroy_lock(lock_);
+  delete lock_;
 }
 
-OmpGuard::OmpGuard(omp_lock_t& lock, bool waitForLock = true) :
-  lock_(&lock)
+OmpLockGuard::OmpLockGuard(omp_lock_t* lock, bool waitForLock = true) :
+  lock_(lock)
 {
   if (!waitForLock)
     isSet_ = (omp_test_lock(lock_) != 0);
@@ -85,13 +87,13 @@ OmpGuard::OmpGuard(omp_lock_t& lock, bool waitForLock = true) :
   }
 }
 
-OmpGuard::~OmpGuard()
+OmpLockGuard::~OmpLockGuard()
 {
   if (isSet())
     omp_unset_lock(lock_);
 }
 
-bool OmpGuard::isSet() const
+bool OmpLockGuard::isSet() const
 {
   return isSet_;
 }
