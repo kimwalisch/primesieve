@@ -211,7 +211,7 @@ void ParallelPrimeSieve::sieve()
 
 #endif /* _OPENMP */
 
-/// If OpenMP is not used than ParallelPrimeSieve bahaves like
+/// If OpenMP is not used then ParallelPrimeSieve behaves like
 /// the single threaded PrimeSieve.
 ///
 #if !defined(_OPENMP)
