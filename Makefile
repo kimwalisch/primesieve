@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   17 September 2012
+# Last modified:   23 September 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -152,7 +152,7 @@ dir_lib:
 	@mkdir -p $(LIBDIR)
 
 #-----------------------------------------------------------------------------
-# Copy libprimesieve and *PrimeSieve.h header files to ./dist
+# Create a libprimesieve distribution archive (./dist)
 #-----------------------------------------------------------------------------
 
 .PHONY: dist check_lib
@@ -248,7 +248,7 @@ help:
 	@echo "make clean                               Clean the output directories (bin, lib)"
 	@echo "make lib                                 Build a static libprimesieve library (using g++)"
 	@echo "make lib SHARED=yes                      Build a shared libprimesieve library (using g++)"
-	@echo "make dist                                Copy libprimesieve and *PrimeSieve.h header files to ./dist"
+	@echo "make dist                                Create a libprimesieve distribution archive (./dist)"
 	@echo "sudo make install                        Install primesieve and libprimesieve to /usr/local (Linux) or /usr (Unix)"
 	@echo "sudo make install PREFIX=/path           Specify a custom installation path"
 	@echo "sudo make uninstall                      Completely remove primesieve and libprimesieve"
