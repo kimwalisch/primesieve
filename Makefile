@@ -184,7 +184,7 @@ ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).* $(LIBDIR)/*.o),)
 	rm -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(LIBDIR)/*.o
 endif
 
-# needs root privileges (sudo make install)
+# requires sudo privileges
 install:
 ifneq ($(wildcard $(BINDIR)/$(TARGET)*),)
 	@mkdir -p $(PREFIX)/bin
@@ -202,7 +202,7 @@ ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
   endif
 endif
 
-# needs root privileges (sudo make uninstall)
+# requires sudo privileges
 uninstall:
 ifneq ($(wildcard $(PREFIX)/bin/$(TARGET)*),)
 	rm -f $(PREFIX)/bin/$(TARGET)
