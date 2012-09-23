@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       05 December 2010
-# Last modified: 21 September 2012
+# Last modified: 23 September 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -87,9 +87,14 @@ Contents
   -------------------
   The src/soe directory contains the sieve of Eratosthenes source
   code. Files that start with a capital letter contain a class of the
-  same name, files in lower case contain C-style functions and
+  same name, files in lower case contain inline functions and
   constant definitions. If you are new to prime number sieving I
   recommend reading some of the papers from section 6.
+
+  The doc/API file contains the complete API of the PrimeSieve and
+  ParallelPrimeSieve C++ classes. The file doc/USAGE_EXAMPLES contains
+  C++ source code examples that show how to use PrimeSieve objects to
+  generate, count and print primes and prime k-tuplets.
 
   Quick start
   -----------
@@ -98,14 +103,21 @@ Contents
   SieveOfEratosthenes-inline.h. Prime number generation (and counting)
   is done in PrimeNumberFinder.cpp using a macro from GENERATE.h.
 
-  C++ classes in ./src/soe
-  ------------------------
-  * PrimeSieve & ParallelPrimeSieve (derived from PrimeSieve)
+  C++ classes
+  -----------
+  * ParallelPrimeSieve (derived from PrimeSieve)
+    ParallelPrimeSieve uses OpenMP multi-threading to sieve primes in
+    parallel. It scales well even with 100 CPU cores! In
+    ParallelPrimeSieve each OpenMP thread sieves primes using a thread
+    private PrimeSieve object. The doc/USAGE_EXAMPLES file explains
+    ParallelPrimeSieve in more detail.
+
+  * PrimeSieve
     PrimeSieve objects provide an easy API for prime sieving, the file
     doc/USAGE_EXAMPLES contains a short tutorial.
-    PrimeSieve::sieve() starts sieving the primes within the interval
-    [start_, stop_], the following classes are all used directly or
-    indirectly for sieving.
+    PrimeSieve::sieve(start, stop) starts sieving the primes within
+    the interval [start, stop]. The following classes are all used
+    directly or indirectly for sieving.
 
   * SieveOfEratosthenes (abstract class)
     Implementation of the segmented sieve of Eratosthenes using a bit
@@ -162,21 +174,25 @@ Contents
     WheelFactorization.cpp). EratBig is optimized for big sieving
     primes that have less than one multiple occurrence per segment.
 
-  Other files
-  -----------
+  Inline functions
+  ----------------
+  * imath.h
+    isqrt(), ilog2(), isquare(), ...
+
   * popcount.h
     Contains a fast bit population count algorithm.
 
-  * imath.h
-    isqrt(), ilog2(), isquare(), isPowerOf2(), ...
-
+  Macros
+  ------
   * GENERATE.h
     Contains macros used to reconstruct primes and prime k-tuplets
     (twins, triplets) from 1 bits of the sieve array.
 
+  Compile time constants
+  ----------------------
   * config.h
-    Contains constants that set the size of various arrays and limits
-    within primesieve. You can set the L1_DCACHE_SIZE and BUCKETSIZE
+    Constants that set the size of various arrays and limits within
+    primesieve. You can set the L1_DCACHE_SIZE and BUCKETSIZE
     constants according to your CPU specifications to get the best
     performance.
 
