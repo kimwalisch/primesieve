@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   23 September 2012
+# Last modified:   24 September 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -18,28 +18,28 @@ LIBDIR   := lib
 DISTDIR  := dist
 
 BIN_OBJECTS := \
-  $(BINDIR)/WheelFactorization.o \
-  $(BINDIR)/PreSieve.o \
-  $(BINDIR)/EratSmall.o \
-  $(BINDIR)/EratMedium.o \
-  $(BINDIR)/EratBig.o \
-  $(BINDIR)/SieveOfEratosthenes.o \
-  $(BINDIR)/PrimeNumberFinder.o \
+  $(BINDIR)/main.o \
+  $(BINDIR)/test.o \
   $(BINDIR)/PrimeSieve.o \
   $(BINDIR)/ParallelPrimeSieve.o \
-  $(BINDIR)/test.o \
-  $(BINDIR)/main.o
+  $(BINDIR)/SieveOfEratosthenes.o \
+  $(BINDIR)/PrimeNumberFinder.o \
+  $(BINDIR)/PreSieve.o \
+  $(BINDIR)/WheelFactorization.o \
+  $(BINDIR)/EratSmall.o \
+  $(BINDIR)/EratMedium.o \
+  $(BINDIR)/EratBig.o
 
 LIB_OBJECTS := \
-  $(LIBDIR)/WheelFactorization.o \
-  $(LIBDIR)/PreSieve.o \
-  $(LIBDIR)/EratSmall.o \
-  $(LIBDIR)/EratMedium.o \
-  $(LIBDIR)/EratBig.o \
+  $(LIBDIR)/PrimeSieve.o \
+  $(LIBDIR)/ParallelPrimeSieve.o \
   $(LIBDIR)/SieveOfEratosthenes.o \
   $(LIBDIR)/PrimeNumberFinder.o \
-  $(LIBDIR)/PrimeSieve.o \
-  $(LIBDIR)/ParallelPrimeSieve.o
+  $(LIBDIR)/PreSieve.o \
+  $(LIBDIR)/WheelFactorization.o \
+  $(LIBDIR)/EratSmall.o \
+  $(LIBDIR)/EratMedium.o \
+  $(LIBDIR)/EratBig.o
 
 #-----------------------------------------------------------------------------
 # Use the Bash shell
