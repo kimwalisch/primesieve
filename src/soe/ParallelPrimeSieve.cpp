@@ -131,7 +131,7 @@ void ParallelPrimeSieve::sieve()
 
   int threads = getNumThreads();
   if (tooMany(threads)) threads = idealNumThreads();
-  OmpNewLockGuard newLock(&lock_);
+  OmpInitLock initLock(&lock_);
 
   if (threads == 1)
     PrimeSieve::sieve();
