@@ -51,6 +51,13 @@
   #define NDEBUG
 #endif
 
+#ifndef DISALLOW_COPY_AND_ASSIGN
+/// Disable the default copy constructor and assignment operator
+#define DISALLOW_COPY_AND_ASSIGN(ClassName) \
+  ClassName(const ClassName&); \
+  void operator=(const ClassName&)
+#endif
+
 /// Default CPU L1 data cache size in kilobytes (per core)
 #ifndef L1_DCACHE_SIZE
   #define L1_DCACHE_SIZE 32

@@ -59,6 +59,7 @@ public:
     finder_(finder)
   { }
 private:
+  DISALLOW_COPY_AND_ASSIGN(PrimeNumberGenerator);
   PrimeNumberFinder& finder_;
   /// Generates the primes within the current segment
   /// and use them to sieve with finder_.

@@ -69,6 +69,7 @@ private:
   void callback64_obj(uint64_t) const;
   void callback64_int(uint64_t) const;
   static void print(uint64_t);
+  DISALLOW_COPY_AND_ASSIGN(PrimeNumberFinder);
 };
 
 } // namespace soe

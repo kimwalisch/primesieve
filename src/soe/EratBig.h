@@ -75,6 +75,7 @@ private:
   void store(uint_t, uint_t, uint_t);
   void crossOff(uint8_t*, Bucket&);
   Bucket*& getList(uint_t*);
+  DISALLOW_COPY_AND_ASSIGN(EratBig);
 };
 
 } // namespace soe

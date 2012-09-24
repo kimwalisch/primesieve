@@ -151,15 +151,15 @@ private:
 ///
 class Bucket {
 public:
-  Bucket(const Bucket&) : current_(wheelPrimes_) { }
-  Bucket() :              current_(wheelPrimes_) { }
-  WheelPrime* begin() { return &wheelPrimes_[0]; }
-  WheelPrime* last()  { return &wheelPrimes_[config::BUCKETSIZE - 1]; }
-  WheelPrime* end()   { return current_;}
-  Bucket* next()      { return next_; }
-  bool hasNext()      { return next_ != NULL; }
-  bool empty()        { return begin() == end(); }
-  void reset()        { current_ = begin(); }
+  Bucket(const Bucket&) { reset(); }
+  Bucket()              { reset(); }
+  WheelPrime* begin()   { return &wheelPrimes_[0]; }
+  WheelPrime* last()    { return &wheelPrimes_[config::BUCKETSIZE - 1]; }
+  WheelPrime* end()     { return current_;}
+  Bucket* next()        { return next_; }
+  bool hasNext() const  { return next_ != NULL; }
+  bool empty()          { return begin() == end(); }
+  void reset()          { current_ = begin(); }
   void setNext(Bucket* next)
   {
     next_ = next;
@@ -265,8 +265,7 @@ protected:
 private:
   static const uint_t wheelOffsets_[30];
   const uint64_t stop_;
-  WheelFactorization(const WheelFactorization&);
-  WheelFactorization& operator=(const WheelFactorization&);
+  DISALLOW_COPY_AND_ASSIGN(WheelFactorization);
 };
 
 template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement* WHEEL>

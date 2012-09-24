@@ -112,8 +112,7 @@ private:
   void preSieve();
   void crossOffMultiples();
   void sieveSegment();
-  SieveOfEratosthenes(const SieveOfEratosthenes&);
-  SieveOfEratosthenes& operator=(const SieveOfEratosthenes&);
+  DISALLOW_COPY_AND_ASSIGN(SieveOfEratosthenes);
 };
 
 } // namespace soe

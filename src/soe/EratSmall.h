@@ -59,8 +59,7 @@ private:
   std::list<Bucket> buckets_;
   void store(uint_t, uint_t, uint_t);
   void crossOff(uint8_t*, uint8_t*, Bucket&);
-  EratSmall(const EratSmall&);
-  EratSmall& operator=(const EratSmall&);
+  DISALLOW_COPY_AND_ASSIGN(EratSmall);
 };
 
 } // namespace soe

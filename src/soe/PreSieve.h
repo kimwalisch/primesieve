@@ -79,6 +79,7 @@ private:
   /// Size of the preSieved_ array in bytes
   uint_t size_;
   void init();
+  DISALLOW_COPY_AND_ASSIGN(PreSieve);
 };
 
 } // namespace soe
