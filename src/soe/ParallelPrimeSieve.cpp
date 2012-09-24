@@ -40,15 +40,15 @@
 #include "imath.h"
 #include "config.h"
 
-#ifdef _OPENMP
-  #include <omp.h>
-  #include "openmp_RAII.h"
-#endif
-
 #include <stdint.h>
 #include <cstdlib>
 #include <cassert>
 #include <algorithm>
+
+#ifdef _OPENMP
+  #include <omp.h>
+  #include "openmp_RAII.h"
+#endif
 
 using namespace soe;
 
@@ -66,15 +66,6 @@ void ParallelPrimeSieve::init(SharedMemory& shm)
   setFlags(shm.flags);
   setNumThreads(shm.threads);
   shm_ = &shm;
-}
-
-int ParallelPrimeSieve::getMaxThreads()
-{
-#ifdef _OPENMP
-  return omp_get_max_threads();
-#else
-  return 1;
-#endif
 }
 
 /// Get the number of threads
@@ -123,6 +114,12 @@ uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const
 }
 
 #ifdef _OPENMP
+
+/// Get the number of CPU cores
+int ParallelPrimeSieve::getMaxThreads()
+{
+  return omp_get_max_threads();
+}
 
 /// Sieve the primes and prime k-tuplets within [start, stop]
 /// in parallel using OpenMP (version 3.0 or later).
@@ -215,6 +212,11 @@ void ParallelPrimeSieve::unsetLock()
 /// the single threaded PrimeSieve.
 ///
 #if !defined(_OPENMP)
+
+int ParallelPrimeSieve::getMaxThreads()
+{
+  return 1;
+}
 
 void ParallelPrimeSieve::sieve()
 {
