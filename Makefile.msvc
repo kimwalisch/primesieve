@@ -19,9 +19,9 @@ BINDIR   = bin
 LIBDIR   = lib
 DISTDIR  = dist
 
-BIN_OBJECTS = \
-  $(BINDIR)\main.obj \
-  $(BINDIR)\test.obj \
+BIN_OBJECTS1 = $(BINDIR)\main.obj
+BIN_OBJECTS2 = $(BINDIR)\test.obj
+BIN_OBJECTS3 = \
   $(BINDIR)\PrimeSieve.obj \
   $(BINDIR)\ParallelPrimeSieve.obj \
   $(BINDIR)\SieveOfEratosthenes.obj \
@@ -64,11 +64,19 @@ CXXFLAGS = $(CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 # build the primesieve console application (read doc/INSTALL)
 #-----------------------------------------------------------------------------
 
+BIN_OBJECTS = $(BIN_OBJECTS1) $(BIN_OBJECTS2) $(BIN_OBJECTS3)
+
 bin: dir_bin $(BIN_OBJECTS)
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $(BIN_OBJECTS)
 
-$(BIN_OBJECTS): {src\soe\;src\test\;src\console\}$$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $? /Fo"$@"
+$(BIN_OBJECTS1): src\console\$$(@B).cpp
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
+
+$(BIN_OBJECTS2): src\test\$$(@B).cpp
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
+
+$(BIN_OBJECTS3): src\soe\$$(@B).cpp
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
 
 dir_bin:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
@@ -84,7 +92,7 @@ lib: dir_lib $(LIB_OBJECTS)
 	copy /Y src\soe\*PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
 
 $(LIB_OBJECTS): src\soe\$$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $? /Fo"$@"
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
 
 dir_lib:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
