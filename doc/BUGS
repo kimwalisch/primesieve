@@ -1,4 +1,4 @@
-August 15, 2012
+September 24, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -14,11 +14,20 @@ List of fixed bugs
 ----------------------------------------------------------------------
   >> Fixed in version 3.9
 
+  g++ parallel.cpp -o parallel -lprimesieve
+
+  Linking ParallelPrimeSieve against a shared libprimesieve runs
+  single threaded unless -fopenmp is added to the linker. The bug has
+  been fixed and -fopenmp is not needed anymore.
+
+----------------------------------------------------------------------
+  >> Fixed in version 3.9
+
   uint8_t* loopLimit = std::max(sieve, sieveLimit - (sievingPrime * 28 + 27));
 
   The above code from src/soe/EratSmall.cpp is unsafe. It is
   theoretically possible that the subtraction
- 'sieveLimit - (sievingPrime * 28 + 27)' causes an integer underflow,
+  'sieveLimit - (sievingPrime * 28 + 27)' causes an integer underflow,
   which would lead to a segmentation fault later in the code.
 
 ----------------------------------------------------------------------
@@ -46,6 +55,7 @@ List of fixed bugs
 
   ParallelPrimeSieve::sieve() might create PrimeSieve objects with
   START > STOP and throw an invalid_argument exception:
+
   $ export OMP_NUM_THREADS=8
   $ ./primesieve -test; ./primesieve -test; ./primesieve -test;
 
@@ -54,8 +64,10 @@ List of fixed bugs
 
   SieveIndex overflow (> 2^23) in src/soe/EratMedium.cpp when using a
   sieve size >= 4096 kilobytes past 1E15:
+
   $ ./primesieve 1e16 1e16+1e10 -s8192 -t1
   Prime numbers : 280434992
+
   $ ./primesieve 1e16 1e16+1e10 -s256 -t1
   Prime numbers : 271425366
 
@@ -64,7 +76,9 @@ List of fixed bugs
 
   The following options caused a segmentation fault in the console
   version of primesieve:
+
   $ ./primesieve -q; ./primesieve -p1; ...
+
   Error in console/main.cpp, processOptions(int, char**)
 
 ----------------------------------------------------------------------
@@ -91,6 +105,7 @@ List of fixed bugs
   >> Thanks to Andrey Kulsha for bug reporting
 
   Primes preceding the startNumber might be counted and printed e.g.:
+
   $ ./primesieve 1000007999999999 1000007999999999
   Sieve size set to 64 KiloBytes
   100%
@@ -102,11 +117,13 @@ List of fixed bugs
 
   The console version of primesieve 1.0 produces wrong status output
   in some cases e.g.:
+
   $ ./primesieve 10000000000000000 10000000000000001 -s 256
   Sieve size set to 256 KiloBytes
   100%966296%
   Prime numbers: 0
   Time elapsed: 0.106 sec
+
   100%966296% is an error, should be 100%
 
 ----------------------------------------------------------------------
