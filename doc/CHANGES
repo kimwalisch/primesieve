@@ -1,6 +1,10 @@
 New in version 3.9, 24/09/2012
 ==============================
 
+This is a major new release. primesieve 3.9 is source compatible but
+not binary compatible with the previous version i.e. you have to
+recompile your program to link against libprimesieve 3.9.
+
  1. New unsynchronized ParallelPrimeSieve::generatePrimes(...) method
     that calls back primes in parallel (read USAGE_EXAMPLES).
  2. Faster thread synchronization in ParallelPrimeSieve, replaced slow
