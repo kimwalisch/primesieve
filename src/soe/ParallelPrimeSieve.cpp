@@ -124,34 +124,6 @@ uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const
 
 #ifdef _OPENMP
 
-/// Used to synchronize threads for prime number generation
-
-void ParallelPrimeSieve::setLock()
-{
-  omp_lock_t* lock = getLock<omp_lock_t*>();
-  omp_set_lock(lock);
-}
-
-void ParallelPrimeSieve::unsetLock()
-{
-  omp_lock_t* lock = getLock<omp_lock_t*>();
-  omp_unset_lock(lock);
-}
-
-/// Calculate the sieving status (in percent).
-/// @param processed Sum of recently processed segments.
-///
-bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
-{
-  OmpLockGuard lock(getLock<omp_lock_t*>(), waitForLock);
-  if (lock.isSet()) {
-    PrimeSieve::updateStatus(processed, false);
-    if (shm_ != NULL)
-      shm_->status = getStatus();
-  }
-  return lock.isSet();
-}
-
 /// Sieve the primes and prime k-tuplets within [start, stop]
 /// in parallel using OpenMP (version 3.0 or later).
 ///
@@ -207,6 +179,34 @@ void ParallelPrimeSieve::sieve()
     std::copy(counts_.begin(), counts_.end(), shm_->counts);
     shm_->seconds = seconds_;
   }
+}
+
+/// Calculate the sieving status (in percent).
+/// @param processed Sum of recently processed segments.
+///
+bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
+{
+  OmpLockGuard lock(getLock<omp_lock_t*>(), waitForLock);
+  if (lock.isSet()) {
+    PrimeSieve::updateStatus(processed, false);
+    if (shm_ != NULL)
+      shm_->status = getStatus();
+  }
+  return lock.isSet();
+}
+
+/// Used to synchronize threads for prime number generation
+
+void ParallelPrimeSieve::setLock()
+{
+  omp_lock_t* lock = getLock<omp_lock_t*>();
+  omp_set_lock(lock);
+}
+
+void ParallelPrimeSieve::unsetLock()
+{
+  omp_lock_t* lock = getLock<omp_lock_t*>();
+  omp_unset_lock(lock);
 }
 
 #endif /* _OPENMP */
