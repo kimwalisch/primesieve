@@ -69,15 +69,6 @@ extern const WheelInit wheel210Init[210];
 /// small primes using wheel factorization.
 ///
 struct WheelElement {
-  WheelElement(uint8_t unsetBit_,
-               uint8_t nextMultipleFactor_,
-               uint8_t correct_,
-                int8_t next_) :
-    unsetBit(unsetBit_),
-    nextMultipleFactor(nextMultipleFactor_),
-    correct(correct_),
-    next(next_)
-  { }
   /// Bitmask used with the bitwise & operator to unset the bit
   /// corresponding to the current multiple of a WheelPrime object.
   uint8_t unsetBit;
