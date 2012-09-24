@@ -43,46 +43,50 @@
 
 namespace soe {
 
-/// OpenMP RAII, new lock -> initialization -> destroy -> delete
+/// RAII-style wrapper for OpenMP locks.
+/// New lock (stack) -> initialization -> destroy -> delete.
+///
 class OmpNewLockGuard {
 public:
   OmpNewLockGuard(void**);
   ~OmpNewLockGuard();
 private:
-  omp_lock_t* lock_;
+  omp_lock_t lock_;
 };
 
-/// OpenMP RAII lock guard
+OmpNewLockGuard::OmpNewLockGuard(void** lockAddress)
+{
+  *lockAddress = static_cast<void*> (&lock_);
+  omp_init_lock(&lock_);
+}
+
+OmpNewLockGuard::~OmpNewLockGuard()
+{
+  omp_destroy_lock(&lock_);
+}
+
+/// RAII-style wrapper for OpenMP locks.
+/// Set lock -> unset lock.
+///
 class OmpLockGuard {
 public:
   OmpLockGuard(omp_lock_t*, bool);
   ~OmpLockGuard();
   bool isSet() const;
 private:
-  omp_lock_t* lock_;
+  omp_lock_t& lock_;
   bool isSet_;
+  OmpLockGuard(const OmpLockGuard&);
+  OmpLockGuard& operator=(const OmpLockGuard&);
 };
 
-OmpNewLockGuard::OmpNewLockGuard(void** lockAddress) :
-  lock_(new omp_lock_t)
-{
-  *lockAddress = static_cast<void*> (lock_);
-  omp_init_lock(lock_);
-}
-
-OmpNewLockGuard::~OmpNewLockGuard()
-{
-  omp_destroy_lock(lock_);
-  delete lock_;
-}
-
 OmpLockGuard::OmpLockGuard(omp_lock_t* lock, bool waitForLock = true) :
-  lock_(lock)
+  lock_(*lock)
 {
   if (!waitForLock)
-    isSet_ = (omp_test_lock(lock_) != 0);
+    isSet_ = (omp_test_lock(&lock_) != 0);
   else {
-    omp_set_lock(lock_);
+    omp_set_lock(&lock_);
     isSet_ = true;
   }
 }
@@ -90,7 +94,7 @@ OmpLockGuard::OmpLockGuard(omp_lock_t* lock, bool waitForLock = true) :
 OmpLockGuard::~OmpLockGuard()
 {
   if (isSet())
-    omp_unset_lock(lock_);
+    omp_unset_lock(&lock_);
 }
 
 bool OmpLockGuard::isSet() const
