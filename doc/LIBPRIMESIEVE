@@ -1,4 +1,4 @@
-September 17, 2012
+September 25, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -79,17 +79,18 @@ Contents
   Unzip the primesieve source archive, open a Visual Studio Command
   Prompt and cd into the newly created directory. Then run:
 
-  > nmake -f Makefile.msvc lib
+  > nmake -f Makefile.msvc lib dist
 
   This builds a static primesieve.lib library using Microsoft's
-  Visual C++ compiler and copies it to the ./dist directory.
+  Visual C++ compiler and creates a distribution archive ./dist with
+  primesieve.lib and the PrimeSieve header files.
 
 5. How to link against primesieve.lib (Windows, MSVC)
 =====================================================
 
   After having built primesieve.lib the doc/sum_primes.cpp example
   program can be compiled by specifying primesieve.lib to the linker
-  and including (/I) the primesieve header files:
+  and including (/I) the PrimeSieve header files:
 
   > cl /EHsc doc\sum_primes.cpp /I "dist" /link "dist\primesieve.lib"
   > sum_primes.exe
