@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       05 December 2010
-# Last modified: 23 September 2012
+# Last modified: 25 September 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -50,8 +50,8 @@ Contents
   ./src - Source code directory
   -----------------------------
   src/soe          Contains the sieve of Eratosthenes implementation.
-  src/console      Contains the primesieve console application.
-  src/qt-gui       Contains the primesieve Qt GUI application.
+  src/application  Contains the primesieve console application.
+  src/qt-gui       Contains the primesieve GUI application.
   src/parser       Contains an arithmetic expression parser used to
                    ease number input e.g. 2^32, 1E10, ...
   src/thirdparty   Contains stdint.h (needed for MSVC prior 2010).

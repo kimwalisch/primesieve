@@ -70,7 +70,7 @@ dir_bin:
 link_bin: $(BINDIR)\main.obj $(BINDIR)\test.obj $(BIN_OBJECTS)
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
 
-$(BINDIR)\main.obj: src\console\main.cpp
+$(BINDIR)\main.obj: src\application\main.cpp
 	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
 
 $(BINDIR)\test.obj: src\test\test.cpp

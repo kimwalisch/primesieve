@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   24 September 2012
+# Last modified:   25 September 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -124,7 +124,7 @@ $(BINDIR)/%.o: src/soe/%.cpp
 $(BINDIR)/%.o: src/test/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BINDIR)/%.o: src/console/%.cpp
+$(BINDIR)/%.o: src/application/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 dir_bin:
