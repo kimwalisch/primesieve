@@ -54,11 +54,11 @@ namespace soe {
 ///
 EratSmall::EratSmall(uint64_t stop, uint_t sieveSize, uint_t limit) :
   Modulo30Wheel_t(stop, sieveSize),
-  limit_(limit),
-  buckets_(1, Bucket())
+  limit_(limit)
 {
   if (limit > sieveSize * 3)
     throw primesieve_error("EratSmall: limit must be <= sieveSize * 3");
+  buckets_.push_back(Bucket());
 }
 
 /// Store a new sieving prime in EratSmall

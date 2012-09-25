@@ -53,14 +53,14 @@ namespace soe {
 ///
 EratMedium::EratMedium(uint64_t stop, uint_t sieveSize, uint_t limit) :
   Modulo210Wheel_t(stop, sieveSize),
-  limit_(limit),
-  buckets_(1, Bucket())
+  limit_(limit)
 {
   // ensure multipleIndex < 2^23 in crossOff()
   if (sieveSize > (1u << 22))
     throw primesieve_error("EratMedium: sieveSize must be <= 2^22, 4096 kilobytes");
   if (limit > sieveSize * 6)
     throw primesieve_error("EratMedium: limit must be <= sieveSize * 6");
+  buckets_.push_back(Bucket());
 }
 
 /// Store a new sieving prime in EratMedium
