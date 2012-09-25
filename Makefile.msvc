@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   24 September 2012
+# Last modified:   25 September 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -19,9 +19,7 @@ BINDIR   = bin
 LIBDIR   = lib
 DISTDIR  = dist
 
-BIN_OBJECTS1 = $(BINDIR)\main.obj
-BIN_OBJECTS2 = $(BINDIR)\test.obj
-BIN_OBJECTS3 = \
+BIN_OBJECTS = \
   $(BINDIR)\PrimeSieve.obj \
   $(BINDIR)\ParallelPrimeSieve.obj \
   $(BINDIR)\SieveOfEratosthenes.obj \
@@ -64,22 +62,22 @@ CXXFLAGS = $(CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 # build the primesieve console application (read doc/INSTALL)
 #-----------------------------------------------------------------------------
 
-BIN_OBJECTS = $(BIN_OBJECTS1) $(BIN_OBJECTS2) $(BIN_OBJECTS3)
-
-bin: dir_bin $(BIN_OBJECTS)
-	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $(BIN_OBJECTS)
-
-$(BIN_OBJECTS1): src\console\$$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
-
-$(BIN_OBJECTS2): src\test\$$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
-
-$(BIN_OBJECTS3): src\soe\$$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
+bin: dir_bin link_bin
 
 dir_bin:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
+
+link_bin: $(BINDIR)\main.obj $(BINDIR)\test.obj $(BIN_OBJECTS)
+	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
+
+$(BINDIR)\main.obj: src\console\main.cpp
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
+
+$(BINDIR)\test.obj: src\test\test.cpp
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
+
+$(BIN_OBJECTS): src\soe\$$(@B).cpp
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
 
 #-----------------------------------------------------------------------------
 # build static primesieve.lib (read doc/LIBPRIMESIEVE)
@@ -87,15 +85,21 @@ dir_bin:
 
 lib: dir_lib $(LIB_OBJECTS)
 	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $(LIB_OBJECTS)
-	@if not exist $(DISTDIR)\$(TARGET)\soe mkdir $(DISTDIR)\$(TARGET)\soe
-	copy /Y $(LIBDIR)\$(TARGET).lib $(DISTDIR)
-	copy /Y src\soe\*PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
 
 $(LIB_OBJECTS): src\soe\$$(@B).cpp
 	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
 
 dir_lib:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
+
+#-----------------------------------------------------------------------------
+# Create a primesieve.lib distribution archive (./dist)
+#-----------------------------------------------------------------------------
+
+dist: lib
+	@if not exist $(DISTDIR)\$(TARGET)\soe mkdir $(DISTDIR)\$(TARGET)\soe
+	copy /Y $(LIBDIR)\$(TARGET).lib $(DISTDIR)
+	copy /Y src\soe\*PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
 
 #-----------------------------------------------------------------------------
 # Common targets (all, clean)
@@ -132,10 +136,10 @@ help:
 	@echo ------------------------------------------------------
 	@echo -------------- primesieve build options --------------
 	@echo ------------------------------------------------------
-	@echo "nmake -f Makefile.msvc                    Build the primesieve console application using MSVC++"
+	@echo "nmake -f Makefile.msvc                    Build the primesieve application"
+	@echo "nmake -f Makefile.msvc L1_DCACHE_SIZE=64  Set CPU L1 data cache, here 64 KB"
 	@echo "nmake -f Makefile.msvc check              Test the compiled primesieve binary"
-	@echo "nmake -f Makefile.msvc lib                Build a static primesieve.lib (read doc/LIBPRIMESIEVE)"
-	@echo "nmake -f Makefile.msvc clean              Clean the output directories (bin, lib)"
-	@echo "nmake -f Makefile.msvc CXXFLAGS=options   Specify custom compiler flags"
-	@echo "nmake -f Makefile.msvc L1_DCACHE_SIZE=KB  Specify the CPU's L1 data cache size (read doc/INSTALL)"
+	@echo "nmake -f Makefile.msvc lib                Build a static primesieve.lib"
+	@echo "nmake -f Makefile.msvc dist               Create a *.lib distribution archive"
+	@echo "nmake -f Makefile.msvc clean              Clean the output directories"
 	@echo "nmake -f Makefile.msvc help               Print this help menu"
