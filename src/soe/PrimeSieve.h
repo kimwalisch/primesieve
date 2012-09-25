@@ -95,7 +95,6 @@ public:
   static std::string getVersion();
   static int getMajorVersion();
   static int getMinorVersion();
-  static int getYear();
   // Getters
   uint64_t getStart() const;
   uint64_t getStop() const;
