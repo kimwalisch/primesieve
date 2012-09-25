@@ -52,9 +52,11 @@
 #endif
 
 /// Disable the default copy constructor and assignment operator
+#ifndef DISALLOW_COPY_AND_ASSIGN
 #define DISALLOW_COPY_AND_ASSIGN(ClassName) \
   ClassName(const ClassName&); \
   void operator=(const ClassName&)
+#endif
 
 /// Default CPU L1 data cache size in kilobytes (per core)
 #ifndef L1_DCACHE_SIZE
