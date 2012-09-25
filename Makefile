@@ -113,10 +113,15 @@ endif
 # Build the primesieve console application
 #-----------------------------------------------------------------------------
 
-.PHONY: bin dir_bin
+.PHONY: bin bin_dir bin_link
 
-bin: dir_bin $(BIN_OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $(BIN_OBJECTS)
+bin: bin_dir bin_link
+
+bin_dir:
+	@mkdir -p $(BINDIR)
+
+bin_link: $(BIN_OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $^
 
 $(BINDIR)/%.o: src/soe/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -127,29 +132,28 @@ $(BINDIR)/%.o: src/test/%.cpp
 $(BINDIR)/%.o: src/application/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-dir_bin:
-	@mkdir -p $(BINDIR)
-
 #-----------------------------------------------------------------------------
 # Build libprimesieve
 #-----------------------------------------------------------------------------
 
-.PHONY: lib dir_lib
-
 LIB_CXXFLAGS := $(if $(FPIC),$(CXXFLAGS) $(FPIC),$(CXXFLAGS))
 
-lib: dir_lib $(LIB_OBJECTS)
-ifeq ($(SHARED),)
-	ar rcs $(LIBDIR)/$(LIBPRIMESIEVE) $(LIB_OBJECTS)
+.PHONY: lib lib_dir lib_link
+
+lib: lib_dir lib_link
+
+lib_dir:
+	@mkdir -p $(LIBDIR)
+
+lib_link: $(LIB_OBJECTS)
+ifneq ($(SHARED),)
+	$(CXX) $(LIB_CXXFLAGS) $(SOFLAG) -o $(LIBDIR)/$(LIBPRIMESIEVE) $^
 else
-	$(CXX) $(LIB_CXXFLAGS) $(SOFLAG) -o $(LIBDIR)/$(LIBPRIMESIEVE) $(LIB_OBJECTS)
+	ar rcs $(LIBDIR)/$(LIBPRIMESIEVE) $^
 endif
 
 $(LIBDIR)/%.o: src/soe/%.cpp
 	$(CXX) $(LIB_CXXFLAGS) -c $< -o $@
-
-dir_lib:
-	@mkdir -p $(LIBDIR)
 
 #-----------------------------------------------------------------------------
 # Create a libprimesieve distribution archive (./dist)
