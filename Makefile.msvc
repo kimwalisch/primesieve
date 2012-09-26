@@ -71,26 +71,28 @@ bin_obj: $(BINDIR)\main.obj $(BINDIR)\test.obj $(BIN_OBJECTS)
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
 
 $(BINDIR)\main.obj: src\application\main.cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo$@
 
 $(BINDIR)\test.obj: src\test\test.cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo$@
 
 $(BIN_OBJECTS): src\soe\$$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo$@
 
 #-----------------------------------------------------------------------------
 # build static primesieve.lib (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-lib: lib_dir $(LIB_OBJECTS)
-	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $(LIB_OBJECTS)
-
-$(LIB_OBJECTS): src\soe\$$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
+lib: lib_dir lib_obj
 
 lib_dir:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
+
+lib_obj: $(LIB_OBJECTS)
+	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $**
+
+$(LIB_OBJECTS): src\soe\$$(@B).cpp
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo$@
 
 #-----------------------------------------------------------------------------
 # Create a primesieve.lib distribution archive (./dist)
