@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   25 September 2012
+# Last modified:   26 September 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -62,12 +62,12 @@ CXXFLAGS = $(CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 # build the primesieve console application (read doc/INSTALL)
 #-----------------------------------------------------------------------------
 
-bin: dir_bin link_bin
+bin: bin_dir bin_obj
 
-dir_bin:
+bin_dir:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
 
-link_bin: $(BINDIR)\main.obj $(BINDIR)\test.obj $(BIN_OBJECTS)
+bin_obj: $(BINDIR)\main.obj $(BINDIR)\test.obj $(BIN_OBJECTS)
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
 
 $(BINDIR)\main.obj: src\application\main.cpp
@@ -83,13 +83,13 @@ $(BIN_OBJECTS): src\soe\$$(@B).cpp
 # build static primesieve.lib (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-lib: dir_lib $(LIB_OBJECTS)
+lib: lib_dir $(LIB_OBJECTS)
 	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $(LIB_OBJECTS)
 
 $(LIB_OBJECTS): src\soe\$$(@B).cpp
 	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo"$@"
 
-dir_lib:
+lib_dir:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
 
 #-----------------------------------------------------------------------------
