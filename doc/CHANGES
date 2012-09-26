@@ -1,9 +1,10 @@
-New in version 3.9, 25/09/2012
+New in version 3.9, 26/09/2012
 ==============================
 
-This is a major new release. primesieve 3.9 is source compatible but
-not binary compatible with the previous version i.e. you have to
-recompile your program to link against libprimesieve 3.9.
+This is a major new release. The API of primesieve 3.9 is backward
+compatible with primesieve 3.8 but the ABI (Application binary
+interface) is not backward compatible i.e. you have to recompile
+your program to link against libprimesieve 3.9.
 
  1. New unsynchronized ParallelPrimeSieve::generatePrimes(...) method
     that calls back primes in parallel (read USAGE_EXAMPLES).
@@ -17,9 +18,10 @@ recompile your program to link against libprimesieve 3.9.
     PrimeSieve and ParallelPrimeSieve.
  6. New pre-sieve code (src/soe/PreSieve.cpp).
  7. Moved src/console/test.cpp to src/test/test.cpp
- 8. Renamed src/expr to src/parser.
- 9. Ported the primesieve GUI application from Qt 4 to Qt 5.
-10. Added dist target to the Makefiles, `make lib dist` creates a
+ 8. Renamed src/console to src/application.
+ 9. Renamed src/expr to src/parser.
+10. Ported the primesieve GUI application from Qt 4 to Qt 5.
+11. Added dist target to the Makefiles, `make dist` creates a
     libprimesieve distribution archive ./dist.
 11. Fixed shared libprimesieve bug (read doc/BUGS).
 
