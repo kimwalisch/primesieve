@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   25 September 2012
+# Last modified:   26 September 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -113,14 +113,14 @@ endif
 # Build the primesieve console application
 #-----------------------------------------------------------------------------
 
-.PHONY: bin bin_dir bin_link
+.PHONY: bin bin_dir bin_obj
 
-bin: bin_dir bin_link
+bin: bin_dir bin_obj
 
 bin_dir:
 	@mkdir -p $(BINDIR)
 
-bin_link: $(BIN_OBJECTS)
+bin_obj: $(BIN_OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $^
 
 $(BINDIR)/%.o: src/soe/%.cpp
@@ -138,14 +138,14 @@ $(BINDIR)/%.o: src/application/%.cpp
 
 LIB_CXXFLAGS := $(if $(FPIC),$(CXXFLAGS) $(FPIC),$(CXXFLAGS))
 
-.PHONY: lib lib_dir lib_link
+.PHONY: lib lib_dir lib_obj
 
-lib: lib_dir lib_link
+lib: dist_check lib_dir lib_obj
 
 lib_dir:
 	@mkdir -p $(LIBDIR)
 
-lib_link: $(LIB_OBJECTS)
+lib_obj: $(LIB_OBJECTS)
 ifneq ($(SHARED),)
 	$(CXX) $(LIB_CXXFLAGS) $(SOFLAG) -o $(LIBDIR)/$(LIBPRIMESIEVE) $^
 else
@@ -159,16 +159,21 @@ $(LIBDIR)/%.o: src/soe/%.cpp
 # Create a libprimesieve distribution archive (./dist)
 #-----------------------------------------------------------------------------
 
-.PHONY: dist check_lib
+.PHONY: dist dist_check lib_check
 
-dist: check_lib
+dist: lib_check
 	@mkdir -p $(DISTDIR)/$(TARGET)/soe
 	cp -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(DISTDIR)
 	cp -f src/soe/*PrimeSieve.h $(DISTDIR)/$(TARGET)/soe
 
-check_lib:
-ifeq ($(wildcard $(LIBDIR)/*),)
-	$(error Error: Please use `make lib` first)
+dist_check:
+ifneq ($(findstring dist,$(MAKECMDGOALS)),)
+	$(error Error: Please use `make lib; make dist` instead of `make lib dist`)
+endif
+
+lib_check:
+ifeq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
+	$(error Error: Library missing, please use `make lib` first)
 endif
 
 #-----------------------------------------------------------------------------
