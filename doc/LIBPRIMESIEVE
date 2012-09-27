@@ -1,4 +1,4 @@
-September 26, 2012
+September 27, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -61,13 +61,12 @@ Contents
 3. How to link against libprimesieve (Unix-like OSes)
 =====================================================
 
-  After having built and installed libprimesieve the doc/sum_primes.cpp
-  example program can be compiled by specifying -lprimesieve at the
-  end of the linker command:
+  After having installed libprimesieve you can link against
+  libprimesieve by specifying -lprimesieve at the end of the linker
+  command, e.g.:
 
-  $ g++ doc/sum_primes.cpp -o sum_primes -lprimesieve
-  $ ./sum_primes
-  Sum of the primes below 1000 = 76127
+  $ g++ examples/count_primes.cpp -o count_primes -lprimesieve
+  $ ./count_primes
 
   You must add -fopenmp if:
   -------------------------
@@ -89,13 +88,12 @@ Contents
 5. How to link against primesieve.lib (Windows, MSVC)
 =====================================================
 
-  After having built primesieve.lib the doc/sum_primes.cpp example
-  program can be compiled by specifying primesieve.lib to the linker
-  and including (/I) the PrimeSieve header files:
+  After having created a primesieve.lib distribution archive (./dist)
+  you can link against primesieve.lib by specifying primesieve.lib to
+  the linker and including (/I) the PrimeSieve header files:
 
-  > cl /EHsc doc\sum_primes.cpp /I "dist" /link "dist\primesieve.lib"
-  > sum_primes.exe
-  Sum of the primes below 1000 = 76127
+  > cl examples\count_primes.cpp /EHsc /I "dist" /link "dist\primesieve.lib"
+  > count_primes.exe
 
   primesieve.lib is a static Windows library so it causes no
   dependency if you link against it.
