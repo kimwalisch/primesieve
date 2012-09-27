@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   26 September 2012
+# Last modified:   27 September 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -16,6 +16,7 @@ CXXFLAGS := -Wall -O2
 BINDIR   := bin
 LIBDIR   := lib
 DISTDIR  := dist
+EXDIR    := examples
 
 BIN_OBJECTS := \
   $(BINDIR)/main.o \
@@ -156,6 +157,17 @@ $(LIBDIR)/%.o: src/soe/%.cpp
 	$(CXX) $(LIB_CXXFLAGS) -c $< -o $@
 
 #-----------------------------------------------------------------------------
+# Build the example programs in ./examples
+#-----------------------------------------------------------------------------
+
+.PHONY: examples
+
+examples: $(subst .cpp,,$(wildcard $(EXDIR)/*.cpp))
+
+$(EXDIR)/%: $(EXDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $< -o $@ -l$(TARGET)
+
+#-----------------------------------------------------------------------------
 # Create a libprimesieve distribution archive (./dist)
 #-----------------------------------------------------------------------------
 
@@ -191,6 +203,9 @@ ifneq ($(wildcard $(BINDIR)/$(TARGET) $(BINDIR)/$(TARGET).exe $(BINDIR)/*.o),)
 endif
 ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).* $(LIBDIR)/*.o),)
 	rm -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(LIBDIR)/*.o
+endif
+ifneq ($(filter-out %INSTALL %.cpp,$(wildcard $(EXDIR)/*)),)
+	rm -f $(filter-out %INSTALL %.cpp,$(wildcard $(EXDIR)/*))
 endif
 
 # requires sudo privileges
@@ -258,6 +273,7 @@ help:
 	@echo "make lib                                 Build a static libprimesieve library (using g++)"
 	@echo "make lib SHARED=yes                      Build a shared libprimesieve library (using g++)"
 	@echo "make dist                                Create a libprimesieve distribution archive (./dist)"
+	@echo "make examples                            Build the example programs in ./examples"
 	@echo "sudo make install                        Install primesieve and libprimesieve to /usr/local (Linux) or /usr (Unix)"
 	@echo "sudo make install PREFIX=/path           Specify a custom installation path"
 	@echo "sudo make uninstall                      Completely remove primesieve and libprimesieve"
