@@ -2,8 +2,23 @@ September 27, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-About
-=====
+Contents
+========
+
+   1. About
+   2. Try it yourself
+   3. Prime number generation
+   4. Count primes
+   5. Print primes
+   6. ParallelPrimeSieve
+   7. Timing
+   8. Performance tuning
+   9. C++ Exceptions
+  10. Cancel prime number generation
+  11. Flags
+
+1. About
+========
 
   This file contains C++ source code examples that show how to use
   PrimeSieve and ParallelPrimeSieve objects. Both PrimeSieve and
@@ -15,20 +30,15 @@ About
   LIBPRIMESIEVE file. The complete PrimeSieve and ParallelPrimeSieve
   API is presented in the doc/API file.
 
-Contents
-========
+2. Try it yourself
+==================
 
-  1. Prime number generation
-  2. Count primes
-  3. Print primes
-  4. ParallelPrimeSieve
-  5. Timing
-  6. Performance tuning
-  7. C++ Exceptions
-  8. Cancel prime number generation
-  9. Flags
+  All of the example programs in this file are also stored as .cpp
+  files in the ../examples directory and can easily be compiled using
+  the Makefiles. Please refer to ../examples/INSTALL for more
+  information.
 
-1. Prime number generation
+3. Prime number generation
 ==========================
 
   API for prime number generation
@@ -93,7 +103,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-2. Count primes
+4. Count primes
 ===============
 
   API for counting
@@ -124,7 +134,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-3. Print primes
+5. Print primes
 ===============
 
   API for printing (to std::cout)
@@ -156,7 +166,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-4. ParallelPrimeSieve
+6. ParallelPrimeSieve
 =====================
 
   ParallelPrimeSieve uses OpenMP multi-threading to sieve primes in
@@ -284,7 +294,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-5. Timing
+7. Timing
 =========
 
   API for timing
@@ -311,7 +321,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-6. Performance tuning
+8. Performance tuning
 =====================
 
   The best sieving performance is achieved if the sieve array fits
@@ -347,7 +357,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-7. C++ Exceptions
+9. C++ Exceptions
 =================
 
   PrimeSieve and ParallelPrimeSieve objects throw primesieve_error
@@ -378,8 +388,8 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-8. Cancel prime number generation
-=================================
+10. Cancel prime number generation
+==================================
 
   PrimeSieve objects are exception safe so it is possible to throw an
   exception to cancel prime number generation.
@@ -416,8 +426,8 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-9. Flags
-========
+11. Flags
+=========
 
   Flags are settings for PrimeSieve and ParallelPrimeSieve objects.
   PrimeSieve flags can be used to do multiple tasks in one go,
