@@ -105,4 +105,4 @@ Contents
   You can either switch to primesieve 3.4
   http://primesieve.googlecode.com/files/primesieve-3.4-src.zip
   which builds with OpenMP using Microsoft Visual C++ >= 2005 or use
-  an alternate compiler e.g. the Intel C++ Compiler or MinGW.
+  an alternative compiler e.g. the Intel C++ Compiler or MinGW.
