@@ -6,18 +6,18 @@ About
 =====
 
   The example programs in the current directory use libprimesieve to
-  generate, count and print primes and prime k-tuplets (twin primes,
-  prime triplets, ...).
+  generate, count and print primes and prime k-tuplets.
 
-  The doc/USAGE_EXAMPLES file explains the example programs, the
-  doc/LIBPRIMESIEVE file explains how to build libprimesieve in more
+  The example programs are documented in doc/USAGE_EXAMPLES,
+  doc/LIBPRIMESIEVE explains how to build libprimesieve in more
   detail.
 
 How to compile the example programs
 ===================================
 
   Open a terminal or 'Visual Studio Command Prompt' and cd into the
-  primesieve directory.
+  primesieve directory. The following commands build and install
+  libprimesieve and compile the example programs.
 
   For Windows and Microsoft Visual C++ use:
 
