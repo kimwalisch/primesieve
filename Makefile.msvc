@@ -12,7 +12,7 @@
 
 CXX      = cl /nologo
 CXXFLAGS = /W2 /O2 /EHsc
-INCPATH  = /I "src\thirdparty"
+INCPATH  = /I src\thirdparty
 LINK     = link
 TARGET   = primesieve
 BINDIR   = bin
