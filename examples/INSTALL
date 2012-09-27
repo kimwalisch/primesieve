@@ -1,0 +1,38 @@
+September 27, 2012
+Kim Walisch, <kim.walisch@gmail.com>
+http://primesieve.googlecode.com
+
+About
+=====
+
+  The example programs in the current directory use libprimesieve to
+  generate, count and print primes and prime k-tuplets (twin primes,
+  prime triplets, ...).
+
+  The doc/USAGE_EXAMPLES file explains the example programs, the
+  doc/LIBPRIMESIEVE file explains how to build libprimesieve in more
+  detail.
+
+How to compile the example programs
+===================================
+
+  Open a terminal or 'Visual Studio Command Prompt' and cd into the
+  primesieve directory.
+
+  For Windows and Microsoft Visual C++ use:
+
+  > nmake -f Makefile.msvc lib
+  > nmake -f Makefile.msvc dist
+  > nmake -f Makefile.msvc examples
+
+  For Unix-like OSes (Linux, Mac OS X, ...) and GNU g++ use:
+
+  $ make lib
+  $ sudo make install
+  $ make examples
+
+  For Unix-like OSes and other C++ compilers, here icpc:
+
+  $ make lib CXX=icpc CXXFLAGS="-O2 -openmp"
+  $ sudo make install
+  $ make examples CXX=icpc
