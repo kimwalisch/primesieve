@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   26 September 2012
+# Last modified:   27 September 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -18,6 +18,7 @@ TARGET   = primesieve
 BINDIR   = bin
 LIBDIR   = lib
 DISTDIR  = dist
+EXDIR    = examples
 
 BIN_OBJECTS = \
   $(BINDIR)\PrimeSieve.obj \
@@ -41,8 +42,22 @@ LIB_OBJECTS = \
   $(LIBDIR)\EratMedium.obj \
   $(LIBDIR)\EratBig.obj
 
+EXAMPLE_OBJECTS = \
+  $(EXDIR)\cancel_prime_generation.obj \
+  $(EXDIR)\count_primes.obj \
+  $(EXDIR)\flags.obj \
+  $(EXDIR)\generate_primes.obj \
+  $(EXDIR)\generate_primes_oop.obj \
+  $(EXDIR)\parallel_count.obj \
+  $(EXDIR)\parallel_sum_primes.obj \
+  $(EXDIR)\parallel_sum_primes2.obj \
+  $(EXDIR)\primesieve_error.obj \
+  $(EXDIR)\print_twins.obj \
+  $(EXDIR)\sieve_size.obj \
+  $(EXDIR)\timing.obj
+
 #-----------------------------------------------------------------------------
-# add /openmp if MSVC supports OpenMP 3.0 or later
+# Add /openmp if MSVC supports OpenMP 3.0 or later
 #-----------------------------------------------------------------------------
 
 !IF ([$(CXX) /? 2>&1 | findstr /I "OpenMP" > nul ] == 0) && \
@@ -59,7 +74,7 @@ CXXFLAGS = $(CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 !ENDIF
 
 #-----------------------------------------------------------------------------
-# build the primesieve console application (read doc/INSTALL)
+# Build the primesieve console application (read doc/INSTALL)
 #-----------------------------------------------------------------------------
 
 bin: bin_dir bin_obj
@@ -76,11 +91,11 @@ $(BINDIR)\main.obj: src\application\main.cpp
 $(BINDIR)\test.obj: src\test\test.cpp
 	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo$@
 
-$(BIN_OBJECTS): src\soe\$$(@B).cpp
+$(BIN_OBJECTS): src\soe\$(@B).cpp
 	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo$@
 
 #-----------------------------------------------------------------------------
-# build static primesieve.lib (read doc/LIBPRIMESIEVE)
+# Build a static primesieve.lib (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
 lib: lib_dir lib_obj
@@ -91,17 +106,26 @@ lib_dir:
 lib_obj: $(LIB_OBJECTS)
 	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $**
 
-$(LIB_OBJECTS): src\soe\$$(@B).cpp
+$(LIB_OBJECTS): src\soe\$(@B).cpp
 	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo$@
 
 #-----------------------------------------------------------------------------
 # Create a primesieve.lib distribution archive (./dist)
 #-----------------------------------------------------------------------------
 
-dist: lib
+dist:
 	@if not exist $(DISTDIR)\$(TARGET)\soe mkdir $(DISTDIR)\$(TARGET)\soe
 	copy /Y $(LIBDIR)\$(TARGET).lib $(DISTDIR)
 	copy /Y src\soe\*PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
+
+#-----------------------------------------------------------------------------
+# Build the example programs (read examples/INSTALL)
+#-----------------------------------------------------------------------------
+
+examples: $(EXAMPLE_OBJECTS)
+
+$(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
+	$(CXX) $(CXXFLAGS) $(INCPATH) /I $(DISTDIR) $** /Fo$@ /Fe$(@R).exe /link dist\$(TARGET).lib
 
 #-----------------------------------------------------------------------------
 # Common targets (all, clean)
@@ -121,6 +145,9 @@ clean:
 !ENDIF
 !IF EXIST($(DISTDIR)\$(TARGET))
 	rd /Q /S $(DISTDIR)\$(TARGET)
+!ENDIF
+!IF EXIST($(EXDIR))
+	del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj
 !ENDIF
 
 #-----------------------------------------------------------------------------
@@ -143,5 +170,6 @@ help:
 	@echo "nmake -f Makefile.msvc check              Test the compiled primesieve binary"
 	@echo "nmake -f Makefile.msvc lib                Build a static primesieve.lib"
 	@echo "nmake -f Makefile.msvc dist               Create a *.lib distribution archive"
+	@echo "nmake -f Makefile.msvc examples           Build the example programs"
 	@echo "nmake -f Makefile.msvc clean              Clean the output directories"
 	@echo "nmake -f Makefile.msvc help               Print this help menu"
