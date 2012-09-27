@@ -8,7 +8,7 @@ About
   The example programs in the current directory use libprimesieve to
   generate, count and print primes and prime k-tuplets.
 
-  The example programs are documented in doc/USAGE_EXAMPLES,
+  The example programs are documented in doc/USAGE_EXAMPLES.
   doc/LIBPRIMESIEVE explains how to build libprimesieve in more
   detail.
 
