@@ -31,7 +31,8 @@ How to compile the example programs
   $ sudo make install
   $ make examples
 
-  For Unix-like OSes and other C++ compilers, here icpc:
+  For Unix-like OSes and other C++ compilers use:
+  (here icpc, OpenMP is optional) 
 
   $ make lib CXX=icpc CXXFLAGS="-O2 -openmp"
   $ sudo make install
