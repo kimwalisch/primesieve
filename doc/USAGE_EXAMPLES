@@ -1,4 +1,4 @@
-September 26, 2012
+September 27, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -40,8 +40,8 @@ Contents
   void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int));
 
   ////////////////////////////////////////////////////////////////////
-  // C-style callback, generate the primes up to 1000
-  // and print them to std::cout
+  // generate_primes.cpp
+  // Generate the primes up to 1000 and print them.
 
   #include <primesieve/soe/PrimeSieve.h>
   #include <iostream>
@@ -58,21 +58,25 @@ Contents
   }
 
   ////////////////////////////////////////////////////////////////////
-  // OOP-style callback, generate the primes up to 1000
-  // and store them into the private primes_ vector
+  // generate_primes_oop.cpp
+  // OOP-style callback, generate the primes up to 1000 and
+  // store them into the private primes_ vector.
 
   #include <primesieve/soe/PrimeSieve.h>
+  #include <iostream>
   #include <vector>
 
   class Foo {
   public:
-    void primes(unsigned int x)
+    void storePrimes(unsigned int limit)
     {
       PrimeSieve ps;
-      ps.generatePrimes(0, x, store, (void*) this);
+      ps.generatePrimes(0, limit, store, (void*) this);
+      std::cout << primes_.size() << " primes stored!" << std::endl;
     }
   private:
     std::vector<unsigned int> primes_;
+    /// OOP-style callback
     static void store(unsigned int prime, void* obj)
     {
       Foo* f = (Foo*) obj;
@@ -83,7 +87,7 @@ Contents
   int main()
   {
     Foo foo;
-    foo.primes(1000);
+    foo.storePrimes(1000);
     return 0;
   }
 
@@ -103,7 +107,8 @@ Contents
   uint64_t PrimeSieve::getSeptupletCount (uint64_t start, uint64_t stop);
 
   ////////////////////////////////////////////////////////////////////
-  // Count the primes up to 1000
+  // count_primes.cpp
+  // Count the primes up to 1000.
 
   #include <primesieve/soe/PrimeSieve.h>
   #include <stdint.h>
@@ -113,7 +118,7 @@ Contents
   {
     PrimeSieve ps;
     uint64_t count = ps.getPrimeCount(2, 1000);
-    std::cout << "Prime count: " << count << std::endl;
+    std::cout << "Primes below 1000 = " << count << std::endl;
     return 0;
   }
 
@@ -133,7 +138,8 @@ Contents
   void PrimeSieve::printSeptuplets (uint64_t start, uint64_t stop);
 
   ////////////////////////////////////////////////////////////////////
-  // Print the twin primes up to 1000 to std::cout
+  // print_twins.cpp
+  // Print the twin primes up to 1000 to std::cout.
   // Program output:
   // (3, 5)
   // (5, 7)
@@ -180,8 +186,9 @@ Contents
   --------
 
   ////////////////////////////////////////////////////////////////////
+  // parallel_count.cpp
   // Count the prime triplets within [10^14, 10^14+10^11]
-  // using all CPU cores (default)
+  // using all CPU cores (default).
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
   #include <stdint.h>
@@ -193,7 +200,8 @@ Contents
     uint64_t start = (uint64_t) 1E14;
     uint64_t stop  = (uint64_t) (1E14+1E11);
     uint64_t count = pps.getTripletCount(start, stop);
-    std::cout << "Prime triplet count: " << count << std::endl;
+    std::cout << "Prime triplets in [10^14, 10^14+10^11] = "
+              << count << std::endl;
     return 0;
   }
 
@@ -206,7 +214,8 @@ Contents
   methods are easy to use but do not scale well beyond 4 CPU cores.
 
   ////////////////////////////////////////////////////////////////////
-  // Sum the primes below 10^10 using 4 threads
+  // parallel_sum_primes.cpp
+  // Sum the primes below 10^10 using 4 threads.
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
   #include <stdint.h>
@@ -240,7 +249,8 @@ Contents
   the same cache line (see below).
 
   ////////////////////////////////////////////////////////////////////
-  // Sum the primes below 10^11 using 100 threads
+  // parallel_sum_primes2.cpp
+  // Sum the primes below 10^11 using all CPU cores.
 
   #include <primesieve/soe/ParallelPrimeSieve.h>
   #include <stdint.h>
@@ -248,6 +258,7 @@ Contents
   #include <vector>
   #include <numeric>
 
+  const int THREADS = ParallelPrimeSieve::getMaxThreads();
   const int CACHE_LINE = 128;
   const int NO_FALSE_SHARING = CACHE_LINE / sizeof(uint64_t);
 
@@ -261,12 +272,13 @@ Contents
 
   int main()
   {
-    const int THREADS = 100;
     sum.resize(THREADS * NO_FALSE_SHARING, 0);
     ParallelPrimeSieve pps;
     pps.setNumThreads(THREADS);
     pps.generatePrimes(0, (uint64_t) 1E11, callback);
-    std::cout << std::accumulate(sum.begin(), sum.end(), 0ull) << std::endl;
+    std::cout << "Sum of the primes below 10^11 = "
+              << std::accumulate(sum.begin(), sum.end(), 0ull)
+              << std::endl;
     return 0;
   }
 
@@ -280,18 +292,19 @@ Contents
   double PrimeSieve::getSeconds() const;
 
   ////////////////////////////////////////////////////////////////////
-  // getSeconds() returns the time elapsed in seconds
+  // timing.cpp
+  // getSeconds() returns the time elapsed in seconds.
 
-  #include <primesieve/soe/ParallelPrimeSieve.h>
+  #include <primesieve/soe/PrimeSieve.h>
   #include <stdint.h>
   #include <iostream>
 
   int main()
   {
-    ParallelPrimeSieve pps;
-    uint64_t count = pps.getPrimeCount(2, 1000000000);
-    double seconds = pps.getSeconds();
-    std::cout << "Prime count: " << count << std::endl
+    PrimeSieve ps;
+    uint64_t count = ps.getPrimeCount(2, 1000000000);
+    double seconds = ps.getSeconds();
+    std::cout << "Primes below 10^9: " << count << std::endl
               << "Time elapsed: " << seconds << " sec" << std::endl;
     return 0;
   }
@@ -313,7 +326,8 @@ Contents
   void PrimeSieve::setSieveSize(int sieveSize);
 
   ////////////////////////////////////////////////////////////////////
-  // Set a faster sieve size, for > 10^17 use L2 cache size
+  // sieve_size.cpp
+  // Set a faster sieve size, for > 10^17 use L2 cache size.
 
   #include <primesieve/soe/PrimeSieve.h>
   #include <stdint.h>
@@ -325,7 +339,9 @@ Contents
     ps.setSieveSize(512);
     uint64_t start = (uint64_t) 1E19;
     uint64_t stop  = (uint64_t) (1E19+1E10);
-    std::cout << ps.getPrimeCount(start, stop) << std::endl;
+    std::cout << "Twin primes in [10^14, 10^14+10^11] = "
+              << ps.getTwinCount(start, stop)
+              << std::endl;
     return 0;
   }
 
@@ -340,7 +356,8 @@ Contents
   std::runtime_error.
 
   ////////////////////////////////////////////////////////////////////
-  // Catch primesieve_error exceptions
+  // primesieve_error.cpp
+  // Catch primesieve_error exceptions, start must be <= stop.
 
   #include <primesieve/soe/PrimeSieve.h>
   #include <iostream>
@@ -368,7 +385,8 @@ Contents
   exception to cancel prime number generation.
 
   ////////////////////////////////////////////////////////////////////
-  // Store the first 1000 primes in a vector
+  // cancel_prime_generation.cpp
+  // Store the first 1000 primes in a vector.
 
   #include <primesieve/soe/PrimeSieve.h>
   #include <iostream>
@@ -379,6 +397,7 @@ Contents
 
   void store(unsigned int prime)
   {
+    // cancel by throwing an exception
     if (primes.size() == 1000) throw std::exception();
     primes.push_back(prime);
   }
@@ -400,15 +419,14 @@ Contents
 9. Flags
 ========
 
-  Flags are settings for PrimeSieve and ParallelPrimeSieve objects,
-  they are set using setFlags(int), when done sieve() starts sieving.
+  Flags are settings for PrimeSieve and ParallelPrimeSieve objects.
   PrimeSieve flags can be used to do multiple tasks in one go,
   e.g. count primes and twin primes and print the status in percent
   whilst sieving.
 
   API
   ---
-  void PrimeSieve::setFlags(int);
+  void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags);
 
   Flags
   -----
@@ -430,7 +448,8 @@ Contents
   PrimeSieve::CALCULATE_STATUS
 
   ////////////////////////////////////////////////////////////////////
-  // Count prime numbers and twin primes using flags
+  // flags.cpp
+  // Count prime numbers and twin primes using flags.
 
   #include <primesieve/soe/PrimeSieve.h>
   #include <stdint.h>
@@ -439,11 +458,12 @@ Contents
   int main()
   {
     PrimeSieve ps;
-    ps.setFlags(ps.COUNT_PRIMES | ps.COUNT_TWINS | ps.PRINT_STATUS);
-    ps.sieve(0, (uint64_t) 1E11);
-    // print the previously calculated count results
-    std::cout << ps.getPrimeCount() << std::endl
-              << ps.getTwinCount()  << std::endl;
+    int flags = ps.COUNT_PRIMES | ps.COUNT_TWINS | ps.PRINT_STATUS;
+    uint64_t start = 0;
+    uint64_t stop  = (uint64_t) 1E11;
+    ps.sieve(start, stop, flags);
+    std::cout << "Primes below 10^11: " << ps.getPrimeCount() << std::endl
+              << "Twins  below 10^11: " << ps.getTwinCount()  << std::endl;
     return 0;
   }
 
