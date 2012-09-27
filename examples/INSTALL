@@ -35,4 +35,4 @@ How to compile the example programs
 
   $ make lib CXX=icpc CXXFLAGS="-O2 -openmp"
   $ sudo make install
-  $ make examples CXX=icpc
+  $ make examples CXX=icpc CXXFLAGS="-O2 -openmp"
