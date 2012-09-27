@@ -12,7 +12,7 @@ int main()
   ps.setSieveSize(512);
   uint64_t start = (uint64_t) 1E19;
   uint64_t stop  = (uint64_t) (1E19+1E10);
-  std::cout << "Twin primes in [10^14, 10^14+10^11] = "
+  std::cout << "Twin primes in [10^19, 10^19+10^10] = "
             << ps.getTwinCount(start, stop)
             << std::endl;
   return 0;
