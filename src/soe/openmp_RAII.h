@@ -82,7 +82,7 @@ private:
 };
 
 /// @param waitForLock  If false do not block the current thread if
-///                     the lock is currently not available.
+///                     the lock is not available.
 ///
 OmpLockGuard::OmpLockGuard(omp_lock_t* lock, bool waitForLock = true) :
   lock_(lock)
