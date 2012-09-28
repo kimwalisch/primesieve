@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       05 December 2010
-# Last modified: 25 September 2012
+# Last modified: 28 September 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -92,9 +92,8 @@ Contents
   recommend reading some of the papers from section 6.
 
   The doc/API file contains the complete API of the PrimeSieve and
-  ParallelPrimeSieve C++ classes. The file doc/USAGE_EXAMPLES contains
-  C++ source code examples that show how to use PrimeSieve objects to
-  generate, count and print primes and prime k-tuplets.
+  ParallelPrimeSieve C++ classes. The doc/USAGE_EXAMPLES file contains
+  C++ source code examples that show how to use PrimeSieve objects.
 
   Quick start
   -----------
@@ -174,27 +173,18 @@ Contents
     WheelFactorization.cpp). EratBig is optimized for big sieving
     primes that have less than one multiple occurrence per segment.
 
-  Inline functions
-  ----------------
-  * imath.h
-    isqrt(), ilog2(), isquare(), ...
-
-  * popcount.h
-    Contains a fast bit population count algorithm.
-
   Macros
   ------
   * GENERATE.h
     Contains macros used to reconstruct primes and prime k-tuplets
     (twins, triplets) from 1 bits of the sieve array.
 
-  Compile time constants
-  ----------------------
+  Configuration file
+  ------------------
   * config.h
-    Constants that set the size of various arrays and limits within
-    primesieve. You can set the L1_DCACHE_SIZE and BUCKETSIZE
-    constants according to your CPU specifications to get the best
-    performance.
+    Contains constants that set the size of various arrays and limits
+    within primesieve. You can set these constants according to your
+    CPU type to get the best performance.
 
 6. Further reading
 ==================
@@ -230,13 +220,15 @@ Contents
   his hexa-core AMD Phenom CPU and also for his help to debug
   primesieve 1.0.
 
+  And thanks to everyone who has reported bugs!
+
 9. License
 ==========
 
   primesieve is free software, it is licensed under the New BSD
-  License see the LICENSE file for more information. The primesieve
-  GUI application in src/qt-gui is licensed under the GPLv3 as it
-  uses the Qt framework.
+  License see the LICENSE file for more information.
+  The primesieve GUI application in src/qt-gui is licensed under the
+  GPL as it uses the Qt framework.
 
 10. References
 ==============
