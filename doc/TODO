@@ -1,6 +1,20 @@
-September 27, 2012
+September 28, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
+
+Missing features
+----------------
+
+Option to cancel sieving in PrimeSieve and ParallelPrimeSieve objects.
+
+OpenMP
+------
+
+1. Make ParallelPrimeSieve.cpp exception safe once OpenMP supports
+   C++ exceptions.
+2. Test if the new OpenMP 4.0 affinity() clause speeds up primesieve.
+3. Once OpenMP supports array reduction I should use it in
+   ParallelPrimeSieve.cpp.
 
 C++11
 -----
@@ -8,13 +22,3 @@ C++11
 In a few years when C++11 is widely supported ...
 
 1. Use smart pointers (std::unique_ptr) for dynamic memory allocation.
-2. Use nullptr instead of NULL (remove <cstdlib> header).
-3. PrimeSieve::counts_ should be an std::array.
-
-OpenMP
-------
-
-1. Make ParallelPrimeSieve.cpp exception safe once OpenMP supports C++
-   exceptions.
-2. Once OpenMP supports array reduction I should use it in
-   ParallelPrimeSieve.cpp.
