@@ -9,7 +9,7 @@
 #include <numeric>
 
 const int THREADS = ParallelPrimeSieve::getMaxThreads();
-const int CACHE_LINE = 128;
+const int CACHE_LINE = 256;
 const int NO_FALSE_SHARING = CACHE_LINE / sizeof(uint64_t);
 
 std::vector<uint64_t> sum;

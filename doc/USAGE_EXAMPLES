@@ -1,4 +1,4 @@
-September 27, 2012
+September 28, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -269,7 +269,7 @@ Contents
   #include <numeric>
 
   const int THREADS = ParallelPrimeSieve::getMaxThreads();
-  const int CACHE_LINE = 128;
+  const int CACHE_LINE = 256;
   const int NO_FALSE_SHARING = CACHE_LINE / sizeof(uint64_t);
 
   std::vector<uint64_t> sum;
