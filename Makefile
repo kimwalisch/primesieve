@@ -112,8 +112,10 @@ else
     LIBPRIMESIEVE := lib$(TARGET).dylib
   else
     SOFLAG := -shared
-    FPIC := -fPIC
     LIBPRIMESIEVE := lib$(TARGET).so
+    ifeq ($(shell uname | grep -iE 'mingw|cygwin'),)
+      FPIC := -fPIC
+    endif
   endif
 endif
 
