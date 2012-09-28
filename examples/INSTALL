@@ -47,5 +47,6 @@ Other C++ compilers (e.g. clang++)
   $ sudo make install
   $ make examples CXX=clang++
 
-  If your compiler supports OpenMP you can add the corresponding flag
-  to CXXFLAGS e.g. CXXFLAGS="-O2 -openmp".
+  If your compiler supports OpenMP 3.0 or later you can add the
+  corresponding flag e.g. CXXFLAGS="-O2 -openmp" to both the lib and
+  examples targets.
