@@ -1,4 +1,4 @@
-New in version 3.9, 27/09/2012
+New in version 3.9, 28/09/2012
 ==============================
 
 This is a major new release. The API of primesieve 3.9 is backward
@@ -13,7 +13,7 @@ your program to link against libprimesieve 3.9.
  3. Optimized prime k-tuplet (twin primes, ...) counting for
     out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
  4. New examples directory with 12 simple example programs using
-    libprimesieve, they can be built using `make examples`.
+    libprimesieve (read examples/INSTALL).
  5. New doc/API file that lists the public member functions of the
     PrimeSieve and ParallelPrimeSieve C++ classes.
  6. New primesieve_error() exception used for all exceptions within
@@ -22,10 +22,11 @@ your program to link against libprimesieve 3.9.
  8. Moved src/console/test.cpp to src/test/test.cpp
  9. Renamed src/console to src/application.
 10. Renamed src/expr to src/parser.
-11. Ported the primesieve GUI application from Qt 4 to Qt 5.
+11. The Makefile now supports MinGW (with MSYS) and Cygwin.
 12. Added dist target to the Makefiles, `make dist` creates a
     libprimesieve distribution archive ./dist.
-13. Fixed shared libprimesieve bug (read doc/BUGS).
+13. Ported the primesieve GUI application from Qt 4 to Qt 5.
+14. Fixed shared libprimesieve bug (read doc/BUGS).
 
 New in version 3.8, 13/07/2012
 ==============================
