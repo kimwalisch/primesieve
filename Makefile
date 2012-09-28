@@ -105,14 +105,14 @@ endif
 #-----------------------------------------------------------------------------
 
 ifeq ($(SHARED),)
-  LIBPRIMESIEVE := lib$(TARGET).a
+  LIBRARY := lib$(TARGET).a
 else
   ifneq ($(shell uname | grep -i darwin),)
     SOFLAG := -dynamiclib
-    LIBPRIMESIEVE := lib$(TARGET).dylib
+    LIBRARY := lib$(TARGET).dylib
   else
     SOFLAG := -shared
-    LIBPRIMESIEVE := lib$(TARGET).so
+    LIBRARY := lib$(TARGET).so
     ifeq ($(shell uname | grep -iE 'mingw|cygwin'),)
       FPIC := -fPIC
     endif
@@ -157,9 +157,9 @@ lib_dir:
 
 lib_obj: $(LIB_OBJECTS)
 ifneq ($(SHARED),)
-	$(CXX) $(LIB_CXXFLAGS) $(SOFLAG) -o $(LIBDIR)/$(LIBPRIMESIEVE) $^
+	$(CXX) $(LIB_CXXFLAGS) $(SOFLAG) -o $(LIBDIR)/$(LIBRARY) $^
 else
-	ar rcs $(LIBDIR)/$(LIBPRIMESIEVE) $^
+	ar rcs $(LIBDIR)/$(LIBRARY) $^
 endif
 
 $(LIBDIR)/%.o: src/soe/%.cpp
