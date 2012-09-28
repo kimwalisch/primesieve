@@ -1,4 +1,4 @@
-September 27, 2012
+September 28, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -19,21 +19,33 @@ How to compile the example programs
   primesieve directory. The following commands build and install
   libprimesieve and compile the example programs.
 
-  For Windows and Microsoft Visual C++ use:
-
-  > nmake -f Makefile.msvc lib
-  > nmake -f Makefile.msvc dist
-  > nmake -f Makefile.msvc examples
-
-  For Unix-like OSes (Linux, Mac OS X, ...) and GNU g++ use:
+  For Unix-like OSes (Linux, Mac OS X, ...) and GNU g++
+  -----------------------------------------------------
 
   $ make lib
   $ sudo make install
   $ make examples
 
-  For Unix-like OSes and other C++ compilers use:
-  (here icpc, OpenMP is optional) 
+  For Windows and Microsoft Visual C++
+  ------------------------------------
 
-  $ make lib CXX=icpc CXXFLAGS="-O2 -openmp"
+  > nmake -f Makefile.msvc lib
+  > nmake -f Makefile.msvc distmingw
+  > nmake -f Makefile.msvc examples
+
+  For MinGW (with MSYS) and Cygwin with GNU g++
+  ---------------------------------------------
+
+  $ make lib
+  $ make install
+  $ make examples
+
+Other C++ compilers (e.g. clang++)
+==================================
+
+  $ make lib CXX=clang++
   $ sudo make install
-  $ make examples CXX=icpc CXXFLAGS="-O2 -openmp"
+  $ make examples CXX=clang++
+
+  If your compiler supports OpenMP you can add the corresponding flag
+  to CXXFLAGS e.g. CXXFLAGS="-O2 -openmp".
