@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   27 September 2012
+# Last modified:   28 September 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -87,10 +87,17 @@ ifneq ($(L1_DCACHE_SIZE),)
 endif
 
 #-----------------------------------------------------------------------------
-# Installation path: Linux = /usr/local, Unix = /usr
+# Default installation path
 #-----------------------------------------------------------------------------
 
-PREFIX := $(if $(shell uname | grep -i linux),/usr/local,/usr)
+PREFIX := /usr
+
+ifneq ($(shell uname | grep -i linux),)
+  PREFIX := /usr/local
+endif
+ifneq ($(shell uname | grep -i mingw),)
+  PREFIX := /mingw
+endif
 
 #-----------------------------------------------------------------------------
 # `make lib`            -> libprimesieve.a
