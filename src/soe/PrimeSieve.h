@@ -91,10 +91,6 @@ public:
   PrimeSieve();
   PrimeSieve(PrimeSieve&, int);
   virtual ~PrimeSieve() { }
-  // Version
-  static std::string getVersion();
-  static int getMajorVersion();
-  static int getMinorVersion();
   // Getters
   uint64_t getStart() const;
   uint64_t getStop() const;
@@ -152,6 +148,10 @@ public:
   uint64_t getSextupletCount() const;
   uint64_t getSeptupletCount() const;
   uint64_t getCount(int) const;
+  // Version
+  static std::string getVersion();
+  static int getMajorVersion();
+  static int getMinorVersion();
 protected:
   /// Sieve primes >= start_
   uint64_t start_;
