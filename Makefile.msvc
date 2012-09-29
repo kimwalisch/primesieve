@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   27 September 2012
+# Last modified:   29 September 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -113,10 +113,12 @@ $(LIB_OBJECTS): src\soe\$(@B).cpp
 # Create a primesieve.lib distribution archive (./dist)
 #-----------------------------------------------------------------------------
 
-dist:
-	@if not exist $(DISTDIR)\$(TARGET)\soe mkdir $(DISTDIR)\$(TARGET)\soe
+dist: dist_dir
 	copy /Y $(LIBDIR)\$(TARGET).lib $(DISTDIR)
 	copy /Y src\soe\*PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
+
+dist_dir:
+	@if not exist $(DISTDIR)\$(TARGET)\soe mkdir $(DISTDIR)\$(TARGET)\soe
 
 #-----------------------------------------------------------------------------
 # Build the example programs (read examples/INSTALL)
