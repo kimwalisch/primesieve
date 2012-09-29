@@ -136,14 +136,14 @@ public:
   void printSextuplets(uint64_t, uint64_t);
   void printSeptuplets(uint64_t, uint64_t);
   // Count
-  uint64_t getPrimeCount(uint64_t, uint64_t);
-  uint64_t getTwinCount(uint64_t, uint64_t);
-  uint64_t getTripletCount(uint64_t, uint64_t);
-  uint64_t getQuadrupletCount(uint64_t, uint64_t);
-  uint64_t getQuintupletCount(uint64_t, uint64_t);
-  uint64_t getSextupletCount(uint64_t, uint64_t);
-  uint64_t getSeptupletCount(uint64_t, uint64_t);
-  uint64_t getCount(int) const;
+  uint64_t countPrimes(uint64_t, uint64_t);
+  uint64_t countTwins(uint64_t, uint64_t);
+  uint64_t countTriplets(uint64_t, uint64_t);
+  uint64_t countQuadruplets(uint64_t, uint64_t);
+  uint64_t countQuintuplets(uint64_t, uint64_t);
+  uint64_t countSextuplets(uint64_t, uint64_t);
+  uint64_t countSeptuplets(uint64_t, uint64_t);
+  // Count getters
   uint64_t getPrimeCount() const;
   uint64_t getTwinCount() const;
   uint64_t getTripletCount() const;
@@ -151,6 +151,7 @@ public:
   uint64_t getQuintupletCount() const;
   uint64_t getSextupletCount() const;
   uint64_t getSeptupletCount() const;
+  uint64_t getCount(int) const;
 protected:
   /// Sieve primes >= start_
   uint64_t start_;

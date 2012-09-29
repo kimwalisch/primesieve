@@ -353,43 +353,6 @@ void PrimeSieve::generatePrimes(uint64_t start,
   sieve(start, stop);
 }
 
-// Count member functions
-
-uint64_t PrimeSieve::getPrimeCount(uint64_t start, uint64_t stop) {
-  sieve(start, stop, COUNT_PRIMES);
-  return getPrimeCount();
-}
-
-uint64_t PrimeSieve::getTwinCount(uint64_t start, uint64_t stop) {
-  sieve(start, stop, COUNT_TWINS);
-  return getTwinCount();
-}
-
-uint64_t PrimeSieve::getTripletCount(uint64_t start, uint64_t stop) {
-  sieve(start, stop, COUNT_TRIPLETS);
-  return getTripletCount();
-}
-
-uint64_t PrimeSieve::getQuadrupletCount(uint64_t start, uint64_t stop) {
-  sieve(start, stop, COUNT_QUADRUPLETS);
-  return getQuadrupletCount();
-}
-
-uint64_t PrimeSieve::getQuintupletCount(uint64_t start, uint64_t stop) {
-  sieve(start, stop, COUNT_QUINTUPLETS);
-  return getQuintupletCount();
-}
-
-uint64_t PrimeSieve::getSextupletCount(uint64_t start, uint64_t stop) {
-  sieve(start, stop, COUNT_SEXTUPLETS);
-  return getSextupletCount();
-}
-
-uint64_t PrimeSieve::getSeptupletCount(uint64_t start, uint64_t stop) {
-  sieve(start, stop, COUNT_SEPTUPLETS);
-  return getSeptupletCount();
-}
-
 // Print member functions
 
 void PrimeSieve::printPrimes(uint64_t start, uint64_t stop) {
@@ -418,4 +381,41 @@ void PrimeSieve::printSextuplets(uint64_t start, uint64_t stop) {
 
 void PrimeSieve::printSeptuplets(uint64_t start, uint64_t stop) {
   sieve(start, stop, PRINT_SEPTUPLETS);
+}
+
+// Count member functions
+
+uint64_t PrimeSieve::countPrimes(uint64_t start, uint64_t stop) {
+  sieve(start, stop, COUNT_PRIMES);
+  return getPrimeCount();
+}
+
+uint64_t PrimeSieve::countTwins(uint64_t start, uint64_t stop) {
+  sieve(start, stop, COUNT_TWINS);
+  return getTwinCount();
+}
+
+uint64_t PrimeSieve::countTriplets(uint64_t start, uint64_t stop) {
+  sieve(start, stop, COUNT_TRIPLETS);
+  return getTripletCount();
+}
+
+uint64_t PrimeSieve::countQuadruplets(uint64_t start, uint64_t stop) {
+  sieve(start, stop, COUNT_QUADRUPLETS);
+  return getQuadrupletCount();
+}
+
+uint64_t PrimeSieve::countQuintuplets(uint64_t start, uint64_t stop) {
+  sieve(start, stop, COUNT_QUINTUPLETS);
+  return getQuintupletCount();
+}
+
+uint64_t PrimeSieve::countSextuplets(uint64_t start, uint64_t stop) {
+  sieve(start, stop, COUNT_SEXTUPLETS);
+  return getSextupletCount();
+}
+
+uint64_t PrimeSieve::countSeptuplets(uint64_t start, uint64_t stop) {
+  sieve(start, stop, COUNT_SEPTUPLETS);
+  return getSeptupletCount();
 }

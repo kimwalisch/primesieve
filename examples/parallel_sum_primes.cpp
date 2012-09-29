@@ -14,9 +14,10 @@ void callback(uint64_t prime) {
 
 int main()
 {
+  uint64_t stop = (uint64_t) 1E10;
   ParallelPrimeSieve pps;
   pps.setNumThreads(4);
-  pps.generatePrimes(0, (uint64_t) 1E10, callback);
+  pps.generatePrimes(0, stop, callback);
   std::cout << "Sum of the primes below 10^10 = " << sum << std::endl;
   return 0;
 }

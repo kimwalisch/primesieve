@@ -8,7 +8,7 @@ About
   This file contains the public API of the PrimeSieve and
   ParallelPrimeSieve C++ classes (src/soe). The USAGE_EXAMPLES file
   contains source code examples that show how to use PrimeSieve
-  objects to generate, count and print primes and prime k-tuplets.
+  objects to generate, print and count primes and prime k-tuplets.
 
 PrimeSieve API
 ==============
@@ -53,8 +53,8 @@ PrimeSieve API
     bool isPrint()        const;
     bool isPrint(int)     const;
 
-    Prime number generation, Runtime: O(n log log n)
-    ------------------------------------------------
+    Generate methods, Runtime: O(n log log n)
+    -----------------------------------------
     void generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t));
     void generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t));
     void generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t, void*), void*);
@@ -73,13 +73,13 @@ PrimeSieve API
 
     Count methods, Runtime: O(n log log n)
     --------------------------------------
-    uint64_t getPrimeCount     (uint64_t start, uint64_t stop);
-    uint64_t getTwinCount      (uint64_t start, uint64_t stop);
-    uint64_t getTripletCount   (uint64_t start, uint64_t stop);
-    uint64_t getQuadrupletCount(uint64_t start, uint64_t stop);
-    uint64_t getQuintupletCount(uint64_t start, uint64_t stop);
-    uint64_t getSextupletCount (uint64_t start, uint64_t stop);
-    uint64_t getSeptupletCount (uint64_t start, uint64_t stop);
+    uint64_t countPrimes     (uint64_t start, uint64_t stop);
+    uint64_t countTwins      (uint64_t start, uint64_t stop);
+    uint64_t countTriplets   (uint64_t start, uint64_t stop);
+    uint64_t countQuadruplets(uint64_t start, uint64_t stop);
+    uint64_t countQuintuplets(uint64_t start, uint64_t stop);
+    uint64_t countSextuplets (uint64_t start, uint64_t stop);
+    uint64_t countSeptuplets (uint64_t start, uint64_t stop);
 
     Count getters, Runtime: O(1)
     ----------------------------

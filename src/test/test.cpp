@@ -110,13 +110,13 @@ void testPix() {
 
   // pi(x) for 10^x with x = 1 to 9
   for (int i = 1; i <= 9; i++) {
-    primeCount += pps.getPrimeCount(pps.getStop() + 1, ipow(10, i));
+    primeCount += pps.countPrimes(pps.getStop() + 1, ipow(10, i));
     seconds += pps.getSeconds();
     std::cout << "pi(10^" << i << ")  = " << std::setw(12) << primeCount;
     evaluate(primeCount == primeCounts[i - 1]);
   }
   // pi(2^32)
-  primeCount += pps.getPrimeCount(pps.getStop() + 1, ipow(2, 32));
+  primeCount += pps.countPrimes(pps.getStop() + 1, ipow(2, 32));
   seconds += pps.getSeconds();
   std::cout << "pi(2^32)  = " << std::setw(12) << primeCount;
   evaluate(primeCount == primeCounts[9]);

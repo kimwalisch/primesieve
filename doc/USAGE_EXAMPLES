@@ -1,4 +1,4 @@
-September 28, 2012
+September 29, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -108,27 +108,34 @@ Contents
 
   API for counting
   ----------------
-  uint64_t PrimeSieve::getPrimeCount     (uint64_t start, uint64_t stop);
-  uint64_t PrimeSieve::getTwinCount      (uint64_t start, uint64_t stop);
-  uint64_t PrimeSieve::getTripletCount   (uint64_t start, uint64_t stop);
-  uint64_t PrimeSieve::getQuadrupletCount(uint64_t start, uint64_t stop);
-  uint64_t PrimeSieve::getQuintupletCount(uint64_t start, uint64_t stop);
-  uint64_t PrimeSieve::getSextupletCount (uint64_t start, uint64_t stop);
-  uint64_t PrimeSieve::getSeptupletCount (uint64_t start, uint64_t stop);
+  uint64_t PrimeSieve::countPrimes     (uint64_t start, uint64_t stop);
+  uint64_t PrimeSieve::countTwins      (uint64_t start, uint64_t stop);
+  uint64_t PrimeSieve::countTriplets   (uint64_t start, uint64_t stop);
+  uint64_t PrimeSieve::countQuadruplets(uint64_t start, uint64_t stop);
+  uint64_t PrimeSieve::countQuintuplets(uint64_t start, uint64_t stop);
+  uint64_t PrimeSieve::countSextuplets (uint64_t start, uint64_t stop);
+  uint64_t PrimeSieve::countSeptuplets (uint64_t start, uint64_t stop);
+
+  uint64_t PrimeSieve::getPrimeCount()      const;
+  uint64_t PrimeSieve::getTwinCount()       const;
+  uint64_t PrimeSieve::getTripletCount()    const;
+  uint64_t PrimeSieve::getQuadrupletCount() const;
+  uint64_t PrimeSieve::getQuintupletCount() const;
+  uint64_t PrimeSieve::getSextupletCount()  const;
+  uint64_t PrimeSieve::getSeptupletCount()  const;
 
   ////////////////////////////////////////////////////////////////////
   // count_primes.cpp
   // Count the primes up to 1000.
 
   #include <primesieve/soe/PrimeSieve.h>
-  #include <stdint.h>
   #include <iostream>
 
   int main()
   {
     PrimeSieve ps;
-    uint64_t count = ps.getPrimeCount(2, 1000);
-    std::cout << "Primes below 1000 = " << count << std::endl;
+    ps.countPrimes(2, 1000);
+    std::cout << "Primes below 1000 = " << ps.getPrimeCount() << std::endl;
     return 0;
   }
 
@@ -206,12 +213,12 @@ Contents
 
   int main()
   {
-    ParallelPrimeSieve pps;
     uint64_t start = (uint64_t) 1E14;
     uint64_t stop  = (uint64_t) (1E14+1E11);
-    uint64_t count = pps.getTripletCount(start, stop);
+    ParallelPrimeSieve pps;
+    pps.countTriplets(start, stop);
     std::cout << "Prime triplets in [10^14, 10^14+10^11] = "
-              << count << std::endl;
+              << pps.getTripletCount() << std::endl;
     return 0;
   }
 
@@ -239,9 +246,10 @@ Contents
 
   int main()
   {
+    uint64_t stop = (uint64_t) 1E10;
     ParallelPrimeSieve pps;
     pps.setNumThreads(4);
-    pps.generatePrimes(0, (uint64_t) 1E10, callback);
+    pps.generatePrimes(0, stop, callback);
     std::cout << "Sum of the primes below 10^10 = " << sum << std::endl;
     return 0;
   }
@@ -306,16 +314,14 @@ Contents
   // getSeconds() returns the time elapsed in seconds.
 
   #include <primesieve/soe/PrimeSieve.h>
-  #include <stdint.h>
   #include <iostream>
 
   int main()
   {
     PrimeSieve ps;
-    uint64_t count = ps.getPrimeCount(2, 1000000000);
-    double seconds = ps.getSeconds();
-    std::cout << "Primes below 10^9: " << count << std::endl
-              << "Time elapsed: " << seconds << " sec" << std::endl;
+    ps.countPrimes(2, 1000000000);
+    std::cout << "Primes below 10^9: " << ps.getPrimeCount()        << std::endl
+              << "Time elapsed: "      << ps.getSeconds() << " sec" << std::endl;
     return 0;
   }
 
@@ -345,12 +351,13 @@ Contents
 
   int main()
   {
-    PrimeSieve ps;
-    ps.setSieveSize(512);
     uint64_t start = (uint64_t) 1E19;
     uint64_t stop  = (uint64_t) (1E19+1E10);
+    PrimeSieve ps;
+    ps.setSieveSize(512);
+    ps.countTwins(start, stop);
     std::cout << "Twin primes in [10^19, 10^19+10^10] = "
-              << ps.getTwinCount(start, stop)
+              << ps.getTwinCount()
               << std::endl;
     return 0;
   }
