@@ -1,4 +1,4 @@
-September 25, 2012
+September 29, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -47,13 +47,11 @@ PrimeSieve API
     Bool is* methods
     ----------------
     bool isFlag(int)      const;
-    bool isFlag(int, int) const;
     bool isGenerate()     const;
     bool isCount()        const;
     bool isCount(int)     const;
     bool isPrint()        const;
     bool isPrint(int)     const;
-    bool isStatus()       const;
 
     Prime number generation, Runtime: O(n log log n)
     ------------------------------------------------
@@ -92,7 +90,7 @@ PrimeSieve API
     uint64_t getQuintupletCount() const;
     uint64_t getSextupletCount()  const;
     uint64_t getSeptupletCount()  const;
-    uint64_t getCounts(int)       const;
+    uint64_t getCount(int)        const;
 
     Sieve methods, Runtime: O(n log log n)
     --------------------------------------

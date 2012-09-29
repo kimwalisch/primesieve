@@ -39,7 +39,7 @@ public:
   ~PrimeSieveProcess();
   void start(quint64, quint64, int, int, int);
   bool isFinished();
-  quint64 getCounts(unsigned int) const;
+  quint64 getCount(unsigned int) const;
   double getStatus() const;
   double getSeconds() const;
 private:

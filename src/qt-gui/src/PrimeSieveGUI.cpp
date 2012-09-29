@@ -349,7 +349,7 @@ void PrimeSieveGUI::printResults() {
   // print prime counts & time elapsed
   for (int i = 0; i < 7; i++) {
     if (flags_ & (COUNT_PRIMES << i))
-      ui->textEdit->appendPlainText(primeText_[i] + ":\t" + QString::number(primeSieveProcess_->getCounts(i)));
+      ui->textEdit->appendPlainText(primeText_[i] + ":\t" + QString::number(primeSieveProcess_->getCount(i)));
   }
   if (flags_ & COUNT_KTUPLETS)
     ui->textEdit->appendPlainText("");

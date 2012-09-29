@@ -241,7 +241,7 @@ int main(int argc, char* argv[])
     for (int i = 0; i < 7; i++) {
       if (pps.isCount(i))
         std::cout << std::setw(width)
-                  << primes[i] << " : " << pps.getCounts(i)
+                  << primes[i] << " : " << pps.getCount(i)
                   << std::endl;
     }
     if (!pps.isPrint()) {

@@ -62,11 +62,11 @@ const PrimeSieve::SmallPrime PrimeSieve::smallPrimes_[8] =
 PrimeSieve::PrimeSieve() :
   start_(0),
   stop_(0),
+  counts_(7),
   flags_(COUNT_PRIMES),
   threadNum_(0),
   parent_(NULL)
 {
-  counts_.resize(7);
   setPreSieve(config::PRESIEVE);
   setSieveSize(config::SIEVESIZE);
   reset();
@@ -74,6 +74,7 @@ PrimeSieve::PrimeSieve() :
 
 /// API for ParallelPrimeSieve
 PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
+  counts_(7),
   preSieve_(parent.preSieve_),
   sieveSize_(parent.sieveSize_),
   flags_(parent.flags_),
@@ -85,9 +86,7 @@ PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
   callback64_obj_(parent.callback64_obj_),
   callback64_int_(parent.callback64_int_),
   obj_(parent.obj_)
-{
-  counts_.resize(7);
-}
+{ }
 
 std::string PrimeSieve::getVersion()                      { return PRIMESIEVE_VERSION; }
 int         PrimeSieve::getMajorVersion()                 { return PRIMESIEVE_MAJOR_VERSION; }
@@ -102,7 +101,7 @@ uint64_t    PrimeSieve::getQuadrupletCount()        const { return counts_[3]; }
 uint64_t    PrimeSieve::getQuintupletCount()        const { return counts_[4]; }
 uint64_t    PrimeSieve::getSextupletCount()         const { return counts_[5]; }
 uint64_t    PrimeSieve::getSeptupletCount()         const { return counts_[6]; }
-uint64_t    PrimeSieve::getCounts(int index)        const { return counts_.at(index); }
+uint64_t    PrimeSieve::getCount(int index)         const { return counts_.at(index); }
 double      PrimeSieve::getStatus()                 const { return status_; }
 double      PrimeSieve::getSeconds()                const { return seconds_; }
 int         PrimeSieve::getPreSieve()               const { return preSieve_; }

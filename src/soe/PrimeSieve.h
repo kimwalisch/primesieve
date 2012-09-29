@@ -112,13 +112,11 @@ public:
   void addFlags(int);
   // Bool is*
   bool isFlag(int) const;
-  bool isFlag(int, int) const;
   bool isGenerate() const;
   bool isCount() const;
   bool isCount(int) const;
   bool isPrint() const;
   bool isPrint(int) const;
-  bool isStatus() const;
   // Sieve
   virtual void sieve();
   void sieve(uint64_t, uint64_t);
@@ -145,7 +143,7 @@ public:
   uint64_t getQuintupletCount(uint64_t, uint64_t);
   uint64_t getSextupletCount(uint64_t, uint64_t);
   uint64_t getSeptupletCount(uint64_t, uint64_t);
-  uint64_t getCounts(int) const;
+  uint64_t getCount(int) const;
   uint64_t getPrimeCount() const;
   uint64_t getTwinCount() const;
   uint64_t getTripletCount() const;
@@ -219,8 +217,10 @@ private:
   void (*callback64_int_)(uint64_t, int);
   /// Callback object
   void* obj_;
-  void doSmallPrime(const SmallPrime&);
+  bool isFlag(int, int) const;
   bool isPublicFlags(int) const;
+  bool isStatus() const;
+  void doSmallPrime(const SmallPrime&);
 };
 
 #endif

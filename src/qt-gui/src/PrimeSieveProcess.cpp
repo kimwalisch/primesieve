@@ -108,7 +108,7 @@ bool PrimeSieveProcess::isFinished() {
  * @return The count of primes/k-tuplets within [start, stop].
  * @pre index <= 6
  */
-quint64 PrimeSieveProcess::getCounts(unsigned int index) const {
+quint64 PrimeSieveProcess::getCount(unsigned int index) const {
   return shm_->counts[index];
 }
 
