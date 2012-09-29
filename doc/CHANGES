@@ -1,10 +1,5 @@
-New in version 3.9, 28/09/2012
-==============================
-
-This is a major new release. The API of primesieve 3.9 is backward
-compatible with primesieve 3.8 but the ABI (Application binary
-interface) is not backward compatible i.e. you have to recompile
-your program to link against libprimesieve 3.9.
+Changes in version 4.0, 29/09/2012
+==================================
 
  1. New unsynchronized ParallelPrimeSieve::generatePrimes(...) method
     that calls back primes in parallel (read USAGE_EXAMPLES).
@@ -19,17 +14,14 @@ your program to link against libprimesieve 3.9.
  6. New primesieve_error() exception used for all exceptions within
     PrimeSieve and ParallelPrimeSieve.
  7. New pre-sieve code (src/soe/PreSieve.cpp).
- 8. Moved src/console/test.cpp to src/test/test.cpp
- 9. Renamed src/console to src/application.
-10. Renamed src/expr to src/parser.
-11. The Makefile now supports MinGW (with MSYS) and Cygwin.
-12. Added dist target to the Makefiles, `make dist` creates a
+ 8. The Makefile now supports MinGW (with MSYS) and Cygwin.
+ 9. Added dist target to the Makefiles, `make dist` creates a
     libprimesieve distribution archive ./dist.
-13. Ported the primesieve GUI application from Qt 4 to Qt 5.
-14. Fixed shared libprimesieve bug (read doc/BUGS).
+10. Ported the primesieve GUI application from Qt 4 to Qt 5.
+11. Fixed a shared libprimesieve bug (read doc/BUGS).
 
-New in version 3.8, 13/07/2012
-==============================
+Changes in version 3.8, 13/07/2012
+==================================
 
  1. Improved OOP design of WheelFactorization.h.
  2. Minor speed up for big sieving primes ~2% (src/soe/EratBig.cpp),
@@ -52,8 +44,8 @@ New in version 3.8, 13/07/2012
    #define PRIMESIEVE_MINOR_VERSION  8
    #define PRIMESIEVE_YEAR           2012
 
-New in version 3.7, 31/05/2012
-==============================
+Changes in version 3.7, 31/05/2012
+==================================
 
  1. More aggressive inlining (*-inline.h), up to 10 percent faster
     prime number generation, up to 20 percent faster initialization.
@@ -80,8 +72,8 @@ API changes!
 - PrimeSieve::cancel_sieving()   is now cancel_sieving().
 - PrimeSieve::COUNTS_SIZE has been removed.
 
-New in version 3.6, 22/04/2012
-==============================
+Changes in version 3.6, 22/04/2012
+==================================
 
 1. Improved code readability and updated source code documentation
    (src/soe directory).
@@ -92,8 +84,8 @@ New in version 3.6, 22/04/2012
 3. src/soe/EratSmall.cpp has been enhanced to better take advantage of
    Instruction-Level Parallelism.
 
-New in version 3.5, 07/02/2012
-==============================
+Changes in version 3.5, 07/02/2012
+==================================
 
 1. Bug fix for big-endian CPUs (PowerPC, SPARC), see docs/BUGS.
 2. The GNU Makefile now provides an option to build primesieve as
@@ -140,8 +132,8 @@ New in version 3.5, 07/02/2012
    code readability has been improved.
 8. The code of src/console/test.cpp has been simplified.
 
-New in version 3.4, 05/01/2012
-==============================
+Changes in version 3.4, 05/01/2012
+==================================
 
 1. I implemented a new algorithm for medium sieving primes that is up
    to 20 percent faster on todays out-of-order CPUs,
@@ -153,8 +145,8 @@ New in version 3.4, 05/01/2012
 4. Added docs/LIBPRIMESIEVE and updated README and
    docs/USAGE_EXAMPLES.
 
-New in version 3.3, 19/12/2011
-==============================
+Changes in version 3.3, 19/12/2011
+==================================
 
 1. Minor optimizations in src/soe/EratBig.cpp (2% speed up).
 2. Improved code readability and documentation of
@@ -163,8 +155,8 @@ New in version 3.3, 19/12/2011
    makes the WheelFactorization.h & EratBase.h code easier to
    understand.
 
-New in version 3.2, 13/11/2011
-==============================
+Changes in version 3.2, 13/11/2011
+==================================
 
 1. Fixed a bug in src/soe/ParallelPrimeSieve.cpp, see ../docs/BUGS.
 2. Added 32-bit prime number generation methods to PrimeSieve.
@@ -182,8 +174,8 @@ New in version 3.2, 13/11/2011
 9. EratMedium has been simplified, it runs faster than v. 3.1 using
    Intel C++ 12.0 but slightly slower with most other compilers.
 
-New in version 3.1, 24/10/2011
-==============================
+Changes in version 3.1, 24/10/2011
+==================================
 
 1. EratBig::sieve(uint8_t*) now processes multiple sieving primes per
    iteration, I measured a speed up of about 6 percent near 1E18.
@@ -198,8 +190,8 @@ New in version 3.1, 24/10/2011
 7. I improved the code readability and code documentation, the README
    and INSTALL files have also been revised.
 
-New in version 3.0, 09/07/2011
-==============================
+Changes in version 3.0, 09/07/2011
+==================================
 
 1. The source code is now licensed under the New BSD License
    (previously GPL).
@@ -219,8 +211,8 @@ New in version 3.0, 09/07/2011
    of Eratosthenes implementation.
 9. ResetSieve has been renamed to PreSieve.
 
-New in version 2.2, 26/05/2011
-==============================
+Changes in version 2.2, 26/05/2011
+==================================
 
 1. Added the file docs/USAGE_EXAMPLES which shows how to use
    PrimeSieve and ParallelPrimeSieve objects.
@@ -234,8 +226,8 @@ New in version 2.2, 26/05/2011
 7. The code readability has been improved.
 8. The documentation has been updated.
 
-New in version 2.1, 11/04/2011
-==============================
+Changes in version 2.1, 11/04/2011
+==================================
 
 1. Release of primesieve 2.1 GUI version.
    + fixes start number bug (see BUGS file).
@@ -245,8 +237,8 @@ New in version 2.1, 11/04/2011
 2. Fixes bug in Makefile when using the LLVM compiler.
 3. Updated README file.
 
-New in version 2.0, 15/02/2011
-==============================
+Changes in version 2.0, 15/02/2011
+==================================
 
 1. Added soe/ParallelPrimeSieve.cpp which counts primes in parallel
    using OpenMP.
