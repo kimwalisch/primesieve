@@ -1,4 +1,4 @@
-September 24, 2012
+September 29, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -12,7 +12,7 @@ List of fixed bugs
 ==================
 
 ----------------------------------------------------------------------
-  >> Fixed in version 3.9
+  >> Fixed in version 4.0
 
   g++ parallel.cpp -o parallel -lprimesieve
 
@@ -21,7 +21,7 @@ List of fixed bugs
   been fixed and -fopenmp is not needed anymore.
 
 ----------------------------------------------------------------------
-  >> Fixed in version 3.9
+  >> Fixed in version 4.0
 
   uint8_t* loopLimit = std::max(sieve, sieveLimit - (sievingPrime * 28 + 27));
 
