@@ -1,4 +1,4 @@
-September 28, 2012
+September 29, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -30,7 +30,7 @@ How to compile the example programs
   ------------------------------------
 
   > nmake -f Makefile.msvc lib
-  > nmake -f Makefile.msvc distmingw
+  > nmake -f Makefile.msvc dist
   > nmake -f Makefile.msvc examples
 
   For MinGW (with MSYS) and Cygwin with GNU g++
