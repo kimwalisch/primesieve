@@ -265,7 +265,7 @@ void PrimeSieve::sieve() {
 
   seconds_ = static_cast<double>(std::clock() - t1) / CLOCKS_PER_SEC;
   if (isStatus())
-    updateStatus(10, true);
+    updateStatus(10, /* waitForLock = */ true);
 }
 
  void PrimeSieve::sieve(uint64_t start, uint64_t stop) {
