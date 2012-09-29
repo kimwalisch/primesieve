@@ -1,6 +1,11 @@
 Changes in version 4.0, 29/09/2012
 ==================================
 
+primesieve 4.0 is a major new release. A lot of work has been put into
+documentation and improving primesieve as a library. The API of
+primesieve 4.0 is backward incompatible with primesieve 3.*, the few
+changes are documented below.
+
  1. New unsynchronized ParallelPrimeSieve::generatePrimes(...) method
     that calls back primes in parallel (read USAGE_EXAMPLES).
  2. Faster thread synchronization in ParallelPrimeSieve, replaced slow
@@ -19,6 +24,25 @@ Changes in version 4.0, 29/09/2012
     libprimesieve distribution archive ./dist.
 10. Ported the primesieve GUI application from Qt 4 to Qt 5.
 11. Fixed a shared libprimesieve bug (read doc/BUGS).
+
+    API changes
+    -----------
+
+    The PrimeSieve 3.* count methods:
+
+    uint64_t getPrimeCount(uint64_t start, uint64_t stop);
+    uint64_t getTwinCount (uint64_t start, uint64_t stop);
+    ...
+
+    Have been renamed to:
+
+    uint64_t countPrimes     (uint64_t start, uint64_t stop);
+    uint64_t countTwins      (uint64_t start, uint64_t stop);
+    uint64_t countTriplets   (uint64_t start, uint64_t stop);
+    uint64_t countQuadruplets(uint64_t start, uint64_t stop);
+    uint64_t countQuintuplets(uint64_t start, uint64_t stop);
+    uint64_t countSextuplets (uint64_t start, uint64_t stop);
+    uint64_t countSeptuplets (uint64_t start, uint64_t stop);
 
 Changes in version 3.8, 13/07/2012
 ==================================
@@ -39,10 +63,10 @@ Changes in version 3.8, 13/07/2012
  9. Updated INSTALL, LIBPRIMESIEVE and USAGE_EXAMPLES.
 10. Added version #defines to PrimeSieve.h, e.g. for this release:
 
-   #define PRIMESIEVE_VERSION       "3.8"
-   #define PRIMESIEVE_MAJOR_VERSION  3
-   #define PRIMESIEVE_MINOR_VERSION  8
-   #define PRIMESIEVE_YEAR           2012
+    #define PRIMESIEVE_VERSION       "3.8"
+    #define PRIMESIEVE_MAJOR_VERSION  3
+    #define PRIMESIEVE_MINOR_VERSION  8
+    #define PRIMESIEVE_YEAR           2012
 
 Changes in version 3.7, 31/05/2012
 ==================================
@@ -63,14 +87,6 @@ Changes in version 3.7, 31/05/2012
     and setters now use int instead of uint32_t.
 10. Updated documentation files: README, INSTALL, LIBPRIMESIEVE,
     USAGE_EXAMPLES, VALGRIND, TODO, BUGS.
-
-API changes!
-------------
-- PrimeSieve::getTimeElapsed()   is now PrimeSieve::getSeconds().
-- PrimeSieve::getPreSieveLimit() is now PrimeSieve::getPreSieve().
-- PrimeSieve::setPreSieveLimit() is now PrimeSieve::setPreSieve().
-- PrimeSieve::cancel_sieving()   is now cancel_sieving().
-- PrimeSieve::COUNTS_SIZE has been removed.
 
 Changes in version 3.6, 22/04/2012
 ==================================
@@ -94,28 +110,25 @@ Changes in version 3.5, 07/02/2012
    and docs/USAGE_EXAMPLES.
 4. I have added convenience functions to the PrimeSieve class:
 
-  // Print member functions (to std::cout)
-  void printPrimes     (uint64_t start, uint64_t stop);
-  void printTwins      (uint64_t start, uint64_t stop);
-  void printTriplets   (uint64_t start, uint64_t stop);
-  void printQuadruplets(uint64_t start, uint64_t stop);
-  void printQuintuplets(uint64_t start, uint64_t stop);
-  void printSextuplets (uint64_t start, uint64_t stop);
-  void printSeptuplets (uint64_t start, uint64_t stop);
+   void printPrimes     (uint64_t start, uint64_t stop);
+   void printTwins      (uint64_t start, uint64_t stop);
+   void printTriplets   (uint64_t start, uint64_t stop);
+   void printQuadruplets(uint64_t start, uint64_t stop);
+   void printQuintuplets(uint64_t start, uint64_t stop);
+   void printSextuplets (uint64_t start, uint64_t stop);
+   void printSeptuplets (uint64_t start, uint64_t stop);
 
-  // Count member functions
-  uint64_t getPrimeCount     (uint64_t start, uint64_t stop);
-  uint64_t getTwinCount      (uint64_t start, uint64_t stop);
-  uint64_t getTripletCount   (uint64_t start, uint64_t stop);
-  uint64_t getQuadrupletCount(uint64_t start, uint64_t stop);
-  uint64_t getQuintupletCount(uint64_t start, uint64_t stop);
-  uint64_t getSextupletCount (uint64_t start, uint64_t stop);
-  uint64_t getSeptupletCount (uint64_t start, uint64_t stop);
+   uint64_t getPrimeCount     (uint64_t start, uint64_t stop);
+   uint64_t getTwinCount      (uint64_t start, uint64_t stop);
+   uint64_t getTripletCount   (uint64_t start, uint64_t stop);
+   uint64_t getQuadrupletCount(uint64_t start, uint64_t stop);
+   uint64_t getQuintupletCount(uint64_t start, uint64_t stop);
+   uint64_t getSextupletCount (uint64_t start, uint64_t stop);
+   uint64_t getSeptupletCount (uint64_t start, uint64_t stop);
 
-  // Sieve member functions
-  void sieve(uint64_t start, uint64_t stop);
-  void sieve(uint64_t start, uint64_t stop, uint32_t flags);
-  void sieve();
+   void sieve(uint64_t start, uint64_t stop);
+   void sieve(uint64_t start, uint64_t stop, uint32_t flags);
+   void sieve();
 
 5. src/soe/ParallelPrimeSieve.cpp has been rewritten using OpenMP 3.0
    (previously OpenMP 2.0). The new OpenMP code is more elegant and
@@ -229,13 +242,12 @@ Changes in version 2.2, 26/05/2011
 Changes in version 2.1, 11/04/2011
 ==================================
 
-1. Release of primesieve 2.1 GUI version.
-   + fixes start number bug (see BUGS file).
-   + supports integer arithmetic expressions as number input.
-   + uses threads (OpenMP) instead of processes.
-   + added qt-gui/README file.
-2. Fixes bug in Makefile when using the LLVM compiler.
-3. Updated README file.
+1. Fixed a start number bug (read doc/BUGS).
+2. Now supports integer arithmetic expressions as number input.
+3. Uses OpenMP instead of processes.
+4. Added qt-gui/README file.
+5. Fixed a bug in the Makefile (clang++ compiler).
+6. Updated the README file.
 
 Changes in version 2.0, 15/02/2011
 ==================================
