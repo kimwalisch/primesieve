@@ -131,7 +131,9 @@ endif
 #-----------------------------------------------------------------------------
 
 BIN_OBJECTS := \
-  $(patsubst src/soe/%,$(BINDIR)/%,$(subst .cpp,.o,$(SOE_SOURCES))) \
+  $(patsubst %,$(BINDIR)/%, \
+    $(notdir \
+      $(subst .cpp,.o,$(SOE_SOURCES)))) \
   $(BINDIR)/main.o \
   $(BINDIR)/test.o
 
@@ -159,6 +161,10 @@ $(BINDIR)/%.o: src/test/%.cpp
 #-----------------------------------------------------------------------------
 
 LIB_CXXFLAGS := $(if $(FPIC),$(CXXFLAGS) $(FPIC),$(CXXFLAGS))
+LIB_OBJECTS  := \
+  $(patsubst %,$(LIBDIR)/%, \
+    $(notdir \
+      $(subst .cpp,.o,$(SOE_SOURCES))))
 
 .PHONY: lib lib_dir lib_obj
 
@@ -167,7 +173,7 @@ lib: dist_check lib_dir lib_obj
 lib_dir:
 	@mkdir -p $(LIBDIR)
 
-lib_obj: $(patsubst src/soe/%,$(LIBDIR)/%,$(subst .cpp,.o,$(SOE_SOURCES)))
+lib_obj: $(LIB_OBJECTS)
 ifneq ($(SHARED),)
 	$(CXX) $(LIB_CXXFLAGS) $(SOFLAG) -o $(LIBDIR)/$(LIBRARY) $^
 else
