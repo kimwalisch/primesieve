@@ -224,7 +224,8 @@ endif
 all: bin lib
 
 clean:
-	rm -f $(BINDIR)/$(TARGET) $(BINDIR)/$(TARGET).exe $(BINDIR)/*.o
+	rm -f $(BINDIR)/$(TARGET) $(BINDIR)/*.o
+	@rm -f $(BINDIR)/$(TARGET).exe
 	rm -f $(LIBDIR)/lib$(TARGET).* $(LIBDIR)/*.o
 	rm -f $(EXDIR)/[^I]*[^c]??
 
