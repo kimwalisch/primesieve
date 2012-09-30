@@ -131,7 +131,7 @@ endif
 #-----------------------------------------------------------------------------
 
 BIN_OBJECTS := \
-  $(patsubst %,$(BINDIR)/%, \
+  $(addprefix $(BINDIR)/, \
     $(notdir \
       $(subst .cpp,.o,$(SOE_SOURCES)))) \
   $(BINDIR)/main.o \
@@ -162,7 +162,7 @@ $(BINDIR)/%.o: src/test/%.cpp
 
 LIB_CXXFLAGS := $(if $(FPIC),$(CXXFLAGS) $(FPIC),$(CXXFLAGS))
 LIB_OBJECTS  := \
-  $(patsubst %,$(LIBDIR)/%, \
+  $(addprefix $(LIBDIR)/, \
     $(notdir \
       $(subst .cpp,.o,$(SOE_SOURCES))))
 
@@ -189,7 +189,7 @@ $(LIBDIR)/%.o: src/soe/%.cpp $(SOE_HEADERS)
 
 .PHONY: examples
 
-examples: $(subst .cpp,,$(wildcard $(EXDIR)/*.cpp))
+examples: $(basename $(wildcard $(EXDIR)/*.cpp))
 
 $(EXDIR)/%: $(EXDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $< -o $@ -l$(TARGET)
