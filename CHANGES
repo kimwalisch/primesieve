@@ -1,10 +1,10 @@
-Changes in version 4.0, 29/09/2012
+Changes in version 4.0, 30/09/2012
 ==================================
 
 primesieve 4.0 is a major new release. A lot of work has been put into
 documentation and improving primesieve as a library. The API of
 primesieve 4.0 is backward incompatible with primesieve 3.*, the few
-changes are documented below.
+changes are documented further down.
 
  1. New unsynchronized ParallelPrimeSieve::generatePrimes(...) method
     that calls back primes in parallel (read USAGE_EXAMPLES).
