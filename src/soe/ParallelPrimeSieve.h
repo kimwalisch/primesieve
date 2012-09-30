@@ -66,7 +66,7 @@ public:
   virtual void sieve();
 private:
   enum {
-    IDEAL_NUM_THREADS = -1
+    DEFAULT_NUM_THREADS = -1
   };
   SharedMemory* shm_;
   /// Number of threads for sieving

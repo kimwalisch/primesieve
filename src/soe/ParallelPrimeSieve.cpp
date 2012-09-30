@@ -54,7 +54,7 @@ using namespace soe;
 
 ParallelPrimeSieve::ParallelPrimeSieve() :
   shm_(NULL),
-  numThreads_(IDEAL_NUM_THREADS)
+  numThreads_(DEFAULT_NUM_THREADS)
 { }
 
 /// API for the primesieve GUI application
@@ -68,29 +68,28 @@ void ParallelPrimeSieve::init(SharedMemory& shm)
   shm_ = &shm;
 }
 
-/// Get the number of threads
 int ParallelPrimeSieve::getNumThreads() const
 {
-  return (numThreads_ == IDEAL_NUM_THREADS) ? idealNumThreads() : numThreads_;
+  if (numThreads_ == DEFAULT_NUM_THREADS) {
+    // 1 thread generates primes in arithmetic order
+    if (isGenerate())
+       return 1;
+    else
+       return idealNumThreads();
+  }
+  return numThreads_;
 }
 
-/// Set the number of threads
 void ParallelPrimeSieve::setNumThreads(int threads)
 {
   numThreads_ = getInBetween(1, threads, getMaxThreads());
 }
 
-bool ParallelPrimeSieve::tooMany(int threads) const
-{
-  return (threads > 1 && getInterval() / threads < config::MIN_THREAD_INTERVAL);
-}
-
+/// Get an ideal number of threads for the current
+/// set start_ and stop_ numbers.
+///
 int ParallelPrimeSieve::idealNumThreads() const
 {
-  // use 1 thread to generate primes in arithmetic order
-  if (isGenerate()) return 1;
-  // each thread sieves at least an interval of size sqrt(x) / 5
-  // but not smaller than MIN_THREAD_INTERVAL
   uint64_t threshold = std::max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
   uint64_t threads = getInterval() / threshold;
   threads = getInBetween<uint64_t>(1, threads, getMaxThreads());
@@ -98,6 +97,8 @@ int ParallelPrimeSieve::idealNumThreads() const
 }
 
 /// Get an interval size that ensures a good load balance
+/// when multiple threads are used.
+///
 uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const
 {
   assert(threads > 0);
@@ -113,9 +114,13 @@ uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const
   return threadInterval;
 }
 
+bool ParallelPrimeSieve::tooMany(int threads) const
+{
+  return (threads > 1 && getInterval() / threads < config::MIN_THREAD_INTERVAL);
+}
+
 #ifdef _OPENMP
 
-/// Get the number of CPU cores
 int ParallelPrimeSieve::getMaxThreads()
 {
   return omp_get_max_threads();
