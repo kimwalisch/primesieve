@@ -224,16 +224,9 @@ endif
 all: bin lib
 
 clean:
-ifneq ($(wildcard $(BINDIR)/$(TARGET) $(BINDIR)/$(TARGET).exe $(BINDIR)/*.o),)
-	rm -f $(BINDIR)/$(TARGET) $(BINDIR)/*.o
-	@rm -f $(BINDIR)/$(TARGET).exe
-endif
-ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).* $(LIBDIR)/*.o),)
-	rm -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(LIBDIR)/*.o
-endif
-ifneq ($(filter-out %INSTALL %.cpp,$(wildcard $(EXDIR)/*)),)
-	rm -f $(filter-out %INSTALL %.cpp,$(wildcard $(EXDIR)/*))
-endif
+	rm -f $(BINDIR)/$(TARGET) $(BINDIR)/$(TARGET).exe $(BINDIR)/*.o
+	rm -f $(LIBDIR)/lib$(TARGET).* $(LIBDIR)/*.o
+	rm -f $(EXDIR)/[^I]*[^c][^p][^p]
 
 # requires sudo privileges
 install:
