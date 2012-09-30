@@ -160,7 +160,7 @@ $(BINDIR)/%.o: src/test/%.cpp
 # Build libprimesieve
 #-----------------------------------------------------------------------------
 
-LIB_CXXFLAGS := $(if $(FPIC),$(CXXFLAGS) $(FPIC),$(CXXFLAGS))
+LIB_CXXFLAGS := $(strip $(CXXFLAGS) $(FPIC))
 LIB_OBJECTS  := \
   $(addprefix $(LIBDIR)/, \
     $(notdir \
