@@ -6,24 +6,24 @@ documentation and improving primesieve as a library. The API of
 primesieve 4.0 is backward incompatible with primesieve 3.*, the few
 changes are documented further down.
 
- 1. New unsynchronized ParallelPrimeSieve::generatePrimes(...) method
-    that calls back primes in parallel (read USAGE_EXAMPLES).
- 2. Faster thread synchronization in ParallelPrimeSieve, replaced slow
-    OpenMP critical directive with faster omp_test_lock().
- 3. Optimized prime k-tuplet (twin primes, ...) counting for
-    out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
- 4. New examples directory with 12 simple example programs using
+ 1. Fixed a shared libprimesieve bug (read doc/BUGS).
+ 2. New examples directory with 12 simple example programs using
     libprimesieve (read examples/INSTALL).
- 5. New doc/API file that lists the public member functions of the
+ 3. New doc/API file that lists the public member functions of the
     PrimeSieve and ParallelPrimeSieve C++ classes.
- 6. New primesieve_error() exception used for all exceptions within
+ 4. The Makefile now supports MinGW (with MSYS) and Cygwin.
+ 5. Added dist target to the Makefiles, `make dist` creates a
+    (./dist) libprimesieve distribution archive.
+ 6. New unsynchronized ParallelPrimeSieve::generatePrimes() method
+    that calls back primes in parallel (read USAGE_EXAMPLES).
+ 7. Faster thread synchronization in ParallelPrimeSieve, replaced slow
+    OpenMP critical directive with faster omp_test_lock().
+ 8. Optimized prime k-tuplet (twin primes, ...) counting for
+    out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
+ 9. New primesieve_error() exception used for all exceptions within
     PrimeSieve and ParallelPrimeSieve.
- 7. New pre-sieve code (src/soe/PreSieve.cpp).
- 8. The Makefile now supports MinGW (with MSYS) and Cygwin.
- 9. Added dist target to the Makefiles, `make dist` creates a
-    libprimesieve distribution archive ./dist.
-10. Ported the primesieve GUI application from Qt 4 to Qt 5.
-11. Fixed a shared libprimesieve bug (read doc/BUGS).
+10. New pre-sieve code (src/soe/PreSieve.cpp).
+11. Ported the primesieve GUI application from Qt 4 to Qt 5.
 
     API changes
     -----------
