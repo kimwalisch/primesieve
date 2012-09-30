@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   28 September 2012
+# Last modified:   30 September 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -18,29 +18,36 @@ LIBDIR   := lib
 DISTDIR  := dist
 EXDIR    := examples
 
-BIN_OBJECTS := \
-  $(BINDIR)/main.o \
-  $(BINDIR)/test.o \
-  $(BINDIR)/PrimeSieve.o \
-  $(BINDIR)/ParallelPrimeSieve.o \
-  $(BINDIR)/SieveOfEratosthenes.o \
-  $(BINDIR)/PrimeNumberFinder.o \
-  $(BINDIR)/PreSieve.o \
-  $(BINDIR)/WheelFactorization.o \
-  $(BINDIR)/EratSmall.o \
-  $(BINDIR)/EratMedium.o \
-  $(BINDIR)/EratBig.o
+SOE_OBJECTS:= \
+  src/soe/PrimeSieve.o \
+  src/soe/ParallelPrimeSieve.o \
+  src/soe/SieveOfEratosthenes.o \
+  src/soe/PrimeNumberFinder.o \
+  src/soe/PreSieve.o \
+  src/soe/WheelFactorization.o \
+  src/soe/EratSmall.o \
+  src/soe/EratMedium.o \
+  src/soe/EratBig.o
 
-LIB_OBJECTS := \
-  $(LIBDIR)/PrimeSieve.o \
-  $(LIBDIR)/ParallelPrimeSieve.o \
-  $(LIBDIR)/SieveOfEratosthenes.o \
-  $(LIBDIR)/PrimeNumberFinder.o \
-  $(LIBDIR)/PreSieve.o \
-  $(LIBDIR)/WheelFactorization.o \
-  $(LIBDIR)/EratSmall.o \
-  $(LIBDIR)/EratMedium.o \
-  $(LIBDIR)/EratBig.o
+SOE_HEADERS := \
+  src/soe/bits.h \
+  src/soe/config.h \
+  src/soe/EratBig.h \
+  src/soe/EratMedium.h \
+  src/soe/EratSmall.h \
+  src/soe/GENERATE.h \
+  src/soe/imath.h \
+  src/soe/openmp_RAII.h \
+  src/soe/ParallelPrimeSieve.h \
+  src/soe/popcount.h \
+  src/soe/PreSieve.h \
+  src/soe/PrimeNumberFinder.h \
+  src/soe/PrimeNumberGenerator.h \
+  src/soe/PrimeSieve.h \
+  src/soe/SieveOfEratosthenes.h \
+  src/soe/SieveOfEratosthenes-inline.h \
+  src/soe/toString.h \
+  src/soe/WheelFactorization.h
 
 #-----------------------------------------------------------------------------
 # Use the Bash shell
@@ -130,16 +137,16 @@ bin: bin_dir bin_obj
 bin_dir:
 	@mkdir -p $(BINDIR)
 
-bin_obj: $(BIN_OBJECTS)
+bin_obj: $(BINDIR)/main.o $(BINDIR)/test.o $(patsubst src/soe/%,$(BINDIR)/%,$(SOE_OBJECTS))
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $^
 
-$(BINDIR)/%.o: src/soe/%.cpp
+$(BINDIR)/%.o: src/application/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BINDIR)/%.o: src/test/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BINDIR)/%.o: src/application/%.cpp
+$(BINDIR)/%.o: src/soe/%.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 #-----------------------------------------------------------------------------
@@ -155,14 +162,14 @@ lib: dist_check lib_dir lib_obj
 lib_dir:
 	@mkdir -p $(LIBDIR)
 
-lib_obj: $(LIB_OBJECTS)
+lib_obj: $(patsubst src/soe/%,$(LIBDIR)/%,$(SOE_OBJECTS))
 ifneq ($(SHARED),)
 	$(CXX) $(LIB_CXXFLAGS) $(SOFLAG) -o $(LIBDIR)/$(LIBRARY) $^
 else
 	ar rcs $(LIBDIR)/$(LIBRARY) $^
 endif
 
-$(LIBDIR)/%.o: src/soe/%.cpp
+$(LIBDIR)/%.o: src/soe/%.cpp $(SOE_HEADERS)
 	$(CXX) $(LIB_CXXFLAGS) -c $< -o $@
 
 #-----------------------------------------------------------------------------
