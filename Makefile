@@ -18,16 +18,16 @@ LIBDIR   := lib
 DISTDIR  := dist
 EXDIR    := examples
 
-SOE_OBJECTS:= \
-  src/soe/PrimeSieve.o \
-  src/soe/ParallelPrimeSieve.o \
-  src/soe/SieveOfEratosthenes.o \
-  src/soe/PrimeNumberFinder.o \
-  src/soe/PreSieve.o \
-  src/soe/WheelFactorization.o \
-  src/soe/EratSmall.o \
-  src/soe/EratMedium.o \
-  src/soe/EratBig.o
+SOE_SOURCES:= \
+  src/soe/PrimeSieve.cpp \
+  src/soe/ParallelPrimeSieve.cpp \
+  src/soe/SieveOfEratosthenes.cpp \
+  src/soe/PrimeNumberFinder.cpp \
+  src/soe/PreSieve.cpp \
+  src/soe/EratSmall.cpp \
+  src/soe/EratMedium.cpp \
+  src/soe/EratBig.cpp \
+  src/soe/WheelFactorization.cpp
 
 SOE_HEADERS := \
   src/soe/bits.h \
@@ -130,6 +130,11 @@ endif
 # Build the primesieve console application
 #-----------------------------------------------------------------------------
 
+BIN_OBJECTS := \
+  $(patsubst src/soe/%,$(BINDIR)/%,$(subst .cpp,.o,$(SOE_SOURCES))) \
+  $(BINDIR)/main.o \
+  $(BINDIR)/test.o
+
 .PHONY: bin bin_dir bin_obj
 
 bin: bin_dir bin_obj
@@ -137,16 +142,16 @@ bin: bin_dir bin_obj
 bin_dir:
 	@mkdir -p $(BINDIR)
 
-bin_obj: $(BINDIR)/main.o $(BINDIR)/test.o $(patsubst src/soe/%,$(BINDIR)/%,$(SOE_OBJECTS))
+bin_obj: $(BIN_OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $^
+
+$(BINDIR)/%.o: src/soe/%.cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BINDIR)/%.o: src/application/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BINDIR)/%.o: src/test/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(BINDIR)/%.o: src/soe/%.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 #-----------------------------------------------------------------------------
@@ -162,7 +167,7 @@ lib: dist_check lib_dir lib_obj
 lib_dir:
 	@mkdir -p $(LIBDIR)
 
-lib_obj: $(patsubst src/soe/%,$(LIBDIR)/%,$(SOE_OBJECTS))
+lib_obj: $(patsubst src/soe/%,$(LIBDIR)/%,$(subst .cpp,.o,$(SOE_SOURCES)))
 ifneq ($(SHARED),)
 	$(CXX) $(LIB_CXXFLAGS) $(SOFLAG) -o $(LIBDIR)/$(LIBRARY) $^
 else
