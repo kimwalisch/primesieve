@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   29 September 2012
+# Last modified:   1 October 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -56,6 +56,37 @@ EXAMPLE_OBJECTS = \
   $(EXDIR)\sieve_size.obj \
   $(EXDIR)\timing.obj
 
+SOE_HEADERS = \
+  src\soe\bits.h \
+  src\soe\config.h \
+  src\soe\EratBig.h \
+  src\soe\EratMedium.h \
+  src\soe\EratSmall.h \
+  src\soe\GENERATE.h \
+  src\soe\imath.h \
+  src\soe\openmp_RAII.h \
+  src\soe\ParallelPrimeSieve.h \
+  src\soe\popcount.h \
+  src\soe\PreSieve.h \
+  src\soe\PrimeNumberFinder.h \
+  src\soe\PrimeNumberGenerator.h \
+  src\soe\PrimeSieve.h \
+  src\soe\SieveOfEratosthenes.h \
+  src\soe\SieveOfEratosthenes-inline.h \
+  src\soe\toString.h \
+  src\soe\WheelFactorization.h
+  
+MAIN_HEADERS = \
+  src\parser\ExpressionParser.h \
+  src\soe\PrimeSieve.h \
+  src\soe\ParallelPrimeSieve.h \
+  src\test\test.h
+
+TEST_HEADERS = \
+  src\soe\PrimeSieve.h \
+  src\soe\ParallelPrimeSieve.h \
+  src\test\test.h
+
 #-----------------------------------------------------------------------------
 # Add /openmp if MSVC supports OpenMP 3.0 or later
 #-----------------------------------------------------------------------------
@@ -82,17 +113,17 @@ bin: bin_dir bin_obj
 bin_dir:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
 
-bin_obj: $(BINDIR)\main.obj $(BINDIR)\test.obj $(BIN_OBJECTS)
+bin_obj: $(BIN_OBJECTS) $(BINDIR)\main.obj $(BINDIR)\test.obj
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
 
-$(BINDIR)\main.obj: src\application\main.cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo$@
+$(BIN_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c src\soe\$(@B).cpp /Fo$@
 
-$(BINDIR)\test.obj: src\test\test.cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo$@
+$(BINDIR)\main.obj: src\application\main.cpp $(MAIN_HEADERS)
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c src\application\main.cpp /Fo$@
 
-$(BIN_OBJECTS): src\soe\$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo$@
+$(BINDIR)\test.obj: src\test\test.cpp $(TEST_HEADERS)
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c src\test\test.cpp /Fo$@
 
 #-----------------------------------------------------------------------------
 # Build a static primesieve.lib (read doc/LIBPRIMESIEVE)
@@ -106,8 +137,8 @@ lib_dir:
 lib_obj: $(LIB_OBJECTS)
 	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $**
 
-$(LIB_OBJECTS): src\soe\$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c $** /Fo$@
+$(LIB_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) $(INCPATH) /c src\soe\$(@B).cpp /Fo$@
 
 #-----------------------------------------------------------------------------
 # Create a primesieve.lib distribution archive (./dist)
@@ -169,9 +200,9 @@ help:
 	@echo ------------------------------------------------------
 	@echo "nmake -f Makefile.msvc                    Build the primesieve application"
 	@echo "nmake -f Makefile.msvc L1_DCACHE_SIZE=64  Set CPU L1 data cache, here 64 KB"
-	@echo "nmake -f Makefile.msvc check              Test the compiled primesieve binary"
+	@echo "nmake -f Makefile.msvc check              Test the primesieve binary"
 	@echo "nmake -f Makefile.msvc lib                Build a static primesieve.lib"
-	@echo "nmake -f Makefile.msvc dist               Create a *.lib distribution archive"
+	@echo "nmake -f Makefile.msvc dist               Create a lib distribution archive"
 	@echo "nmake -f Makefile.msvc examples           Build the example programs"
 	@echo "nmake -f Makefile.msvc clean              Clean the output directories"
 	@echo "nmake -f Makefile.msvc help               Print this help menu"
