@@ -167,9 +167,9 @@ $(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
 all: bin lib
 
 clean:
-	-del /Q $(BINDIR)\$(TARGET).exe $(BINDIR)\*.obj 2> /nul
-	-del /Q $(LIBDIR)\$(TARGET).lib $(LIBDIR)\*.obj 2> /nul
-	-del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj 2> /nul
+	-del /Q $(BINDIR)\$(TARGET).exe $(BINDIR)\*.obj
+	-del /Q $(LIBDIR)\$(TARGET).lib $(LIBDIR)\*.obj
+	-del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj
 
 #-----------------------------------------------------------------------------
 # `nmake -f Makefile.msvc check` runs correctness tests
