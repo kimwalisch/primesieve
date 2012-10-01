@@ -179,7 +179,7 @@ LIB_OBJECTS  := \
 
 .PHONY: lib lib_dir lib_obj
 
-lib: dist_check lib_dir lib_obj
+lib: lib_dir lib_obj
 
 lib_dir:
 	@mkdir -p $(LIBDIR)
@@ -195,7 +195,7 @@ $(LIBDIR)/%.o: src/soe/%.cpp $(SOE_HEADERS)
 	$(CXX) $(LIB_CXXFLAGS) -c $< -o $@
 
 #-----------------------------------------------------------------------------
-# Build the example programs in ./examples
+# Compile the example programs (./examples)
 #-----------------------------------------------------------------------------
 
 .PHONY: examples
@@ -209,22 +209,12 @@ $(EXDIR)/%: $(EXDIR)/%.cpp
 # Create a libprimesieve distribution archive (./dist)
 #-----------------------------------------------------------------------------
 
-.PHONY: dist dist_check lib_check
+.PHONY: dist
 
-dist: lib_check
+dist:
 	@mkdir -p $(DISTDIR)/$(TARGET)/soe
-	cp -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(DISTDIR)
+	cp -f $(LIBDIR)/lib$(TARGET).* $(DISTDIR)
 	cp -f src/soe/*PrimeSieve.h $(DISTDIR)/$(TARGET)/soe
-
-dist_check:
-ifneq ($(findstring dist,$(MAKECMDGOALS)),)
-	$(error Error: Please use `make lib; make dist` instead of `make lib dist`)
-endif
-
-lib_check:
-ifeq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
-	$(error Error: Library missing, please use `make lib` first)
-endif
 
 #-----------------------------------------------------------------------------
 # Common targets (all, clean, install, uninstall)
@@ -235,10 +225,7 @@ endif
 all: bin lib
 
 clean:
-	rm -f $(BINDIR)/$(TARGET) $(BINDIR)/*.o
-	@rm -f $(BINDIR)/$(TARGET).exe
-	rm -f $(LIBDIR)/lib$(TARGET).* $(LIBDIR)/*.o
-	rm -f $(EXDIR)/[^I]*[^c]??
+	rm -rf $(BINDIR) $(LIBDIR) $(DISTDIR) $(EXDIR)/[^I]*[^c]??
 
 # requires sudo privileges
 install:
