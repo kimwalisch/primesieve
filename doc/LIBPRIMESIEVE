@@ -90,9 +90,9 @@ Contents
 5. How to link against primesieve.lib (Windows, MSVC)
 =====================================================
 
-  After having created a primesieve.lib distribution archive (./dist)
-  you can link against primesieve.lib by specifying primesieve.lib to
-  the linker and including (/I) the PrimeSieve header files:
+  After having created a primesieve.lib distribution archive you can
+  link against primesieve.lib by specifying primesieve.lib to the
+  linker and including (/I) the PrimeSieve header files:
 
   > cl examples\count_primes.cpp /EHsc /I "dist" /link "dist\primesieve.lib"
   > count_primes.exe
@@ -103,8 +103,8 @@ Contents
   OpenMP multi-threading
   ----------------------
   Since version 3.5 primesieve requires OpenMP 3.0 or later which is
-  currently (September 2012) not supported by Microsoft Visual C++.
-  You can either switch to primesieve 3.4
+  currently (October 2012) not supported by Microsoft Visual C++.
+  You can either switch to primesieve 3.4:
   http://primesieve.googlecode.com/files/primesieve-3.4-src.zip
   which builds with OpenMP using Microsoft Visual C++ >= 2005 or use
   an alternative compiler e.g. MinGW or the Intel C++ Compiler.
