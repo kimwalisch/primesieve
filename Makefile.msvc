@@ -75,17 +75,17 @@ SOE_HEADERS = \
   src\soe\SieveOfEratosthenes-inline.h \
   src\soe\toString.h \
   src\soe\WheelFactorization.h
-  
-APP_HEADERS = \
+
+MAIN_DEPENDENCIES = \
   src\parser\ExpressionParser.h \
   src\soe\PrimeSieve.h \
   src\soe\ParallelPrimeSieve.h \
   src\test\test.h
 
-TEST_HEADERS = \
+TEST_DEPENDENCIES = \
+  src\test\test.h \
   src\soe\PrimeSieve.h \
-  src\soe\ParallelPrimeSieve.h \
-  src\test\test.h
+  src\soe\ParallelPrimeSieve.h
 
 #-----------------------------------------------------------------------------
 # Add /openmp if MSVC supports OpenMP 3.0 or later
@@ -105,6 +105,14 @@ CXXFLAGS = $(CXXFLAGS) /DL1_DCACHE_SIZE=$(L1_DCACHE_SIZE)
 !ENDIF
 
 #-----------------------------------------------------------------------------
+# Add include path to CXXFLAGS
+#-----------------------------------------------------------------------------
+
+!IFDEF INCPATH
+CXXFLAGS = $(CXXFLAGS) $(INCPATH)
+!ENDIF
+
+#-----------------------------------------------------------------------------
 # Build the primesieve console application (read doc/INSTALL)
 #-----------------------------------------------------------------------------
 
@@ -117,13 +125,13 @@ bin_obj: $(BIN_OBJECTS) $(BINDIR)\main.obj $(BINDIR)\test.obj
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
 
 $(BIN_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c src\soe\$(@B).cpp /Fo$@
+	$(CXX) $(CXXFLAGS) /c src\soe\$(@B).cpp /Fo$@
 
-$(BINDIR)\main.obj: src\application\main.cpp $(APP_HEADERS)
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c src\application\main.cpp /Fo$@
+$(BINDIR)\main.obj: src\application\main.cpp $(MAIN_DEPENDENCIES)
+	$(CXX) $(CXXFLAGS) /c src\application\main.cpp /Fo$@
 
-$(BINDIR)\test.obj: src\test\test.cpp $(TEST_HEADERS)
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c src\test\test.cpp /Fo$@
+$(BINDIR)\test.obj: src\test\test.cpp $(TEST_DEPENDENCIES)
+	$(CXX) $(CXXFLAGS) /c src\test\test.cpp /Fo$@
 
 #-----------------------------------------------------------------------------
 # Build a static primesieve.lib (read doc/LIBPRIMESIEVE)
@@ -138,7 +146,7 @@ lib_obj: $(LIB_OBJECTS)
 	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $**
 
 $(LIB_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) $(INCPATH) /c src\soe\$(@B).cpp /Fo$@
+	$(CXX) $(CXXFLAGS) /c src\soe\$(@B).cpp /Fo$@
 
 #-----------------------------------------------------------------------------
 # Create a primesieve.lib distribution archive (./dist)
@@ -158,7 +166,7 @@ dist_dir:
 examples: $(EXAMPLE_OBJECTS)
 
 $(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
-	$(CXX) $(CXXFLAGS) $(INCPATH) /I $(DISTDIR) $** /Fo$@ /Fe$(@R).exe /link dist\$(TARGET).lib
+	$(CXX) $(CXXFLAGS) /I $(DISTDIR) $** /Fo$@ /Fe$(@R).exe /link dist\$(TARGET).lib
 
 #-----------------------------------------------------------------------------
 # Common targets (all, clean)
@@ -167,9 +175,8 @@ $(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
 all: bin lib
 
 clean:
-	-del /Q $(BINDIR)\$(TARGET).exe $(BINDIR)\*.obj
-	-del /Q $(LIBDIR)\$(TARGET).lib $(LIBDIR)\*.obj
-	-del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj
+	-rd /Q /S $(BINDIR) $(LIBDIR) $(DISTDIR) 2> /nul
+	-del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj 2> /nul
 
 #-----------------------------------------------------------------------------
 # `nmake -f Makefile.msvc check` runs correctness tests
