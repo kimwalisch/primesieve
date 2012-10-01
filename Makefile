@@ -71,7 +71,7 @@ ifneq ($(BASH),)
 endif
 
 #-----------------------------------------------------------------------------
-# Add -fopenmp to CXXFLAGS if GCC supports OpenMP >= 3.0
+# Add -fopenmp if GCC supports OpenMP >= 3.0
 #-----------------------------------------------------------------------------
 
 ifneq ($(shell $(CXX) --version 2> /dev/null | head -1 | grep -iE 'GCC|G\+\+'),)
@@ -217,6 +217,15 @@ dist:
 	cp -f src/soe/*PrimeSieve.h $(DISTDIR)/$(TARGET)/soe
 
 #-----------------------------------------------------------------------------
+# `make check` runs correctness tests
+#-----------------------------------------------------------------------------
+
+.PHONY: check test
+
+check test: bin
+	$(BINDIR)/./$(TARGET) -test
+
+#-----------------------------------------------------------------------------
 # Common targets (all, clean, install, uninstall)
 #-----------------------------------------------------------------------------
 
@@ -264,15 +273,6 @@ ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).*),)
 	rm -f $(wildcard $(PREFIX)/lib/lib$(TARGET).*)
   endif
 endif
-
-#-----------------------------------------------------------------------------
-# `make check` runs correctness tests
-#-----------------------------------------------------------------------------
-
-.PHONY: check test
-
-check test: bin
-	$(BINDIR)/./$(TARGET) -test
 
 #-----------------------------------------------------------------------------
 # Makefile help menu
