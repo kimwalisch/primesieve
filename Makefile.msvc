@@ -76,7 +76,7 @@ SOE_HEADERS = \
   src\soe\toString.h \
   src\soe\WheelFactorization.h
   
-MAIN_HEADERS = \
+APP_HEADERS = \
   src\parser\ExpressionParser.h \
   src\soe\PrimeSieve.h \
   src\soe\ParallelPrimeSieve.h \
@@ -119,7 +119,7 @@ bin_obj: $(BIN_OBJECTS) $(BINDIR)\main.obj $(BINDIR)\test.obj
 $(BIN_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) $(INCPATH) /c src\soe\$(@B).cpp /Fo$@
 
-$(BINDIR)\main.obj: src\application\main.cpp $(MAIN_HEADERS)
+$(BINDIR)\main.obj: src\application\main.cpp $(APP_HEADERS)
 	$(CXX) $(CXXFLAGS) $(INCPATH) /c src\application\main.cpp /Fo$@
 
 $(BINDIR)\test.obj: src\test\test.cpp $(TEST_HEADERS)
@@ -167,21 +167,9 @@ $(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
 all: bin lib
 
 clean:
-!IF EXIST($(BINDIR))
-	del /Q $(BINDIR)\$(TARGET).exe $(BINDIR)\*.obj
-!ENDIF
-!IF EXIST($(LIBDIR))
-	del /Q $(LIBDIR)\$(TARGET).lib $(LIBDIR)\*.obj
-!ENDIF
-!IF EXIST($(DISTDIR)\$(TARGET).lib)
-	del /Q $(DISTDIR)\$(TARGET).lib
-!ENDIF
-!IF EXIST($(DISTDIR)\$(TARGET))
-	rd /Q /S $(DISTDIR)\$(TARGET)
-!ENDIF
-!IF EXIST($(EXDIR))
-	del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj
-!ENDIF
+	-del /Q $(BINDIR)\$(TARGET).exe $(BINDIR)\*.obj 2> /nul
+	-del /Q $(LIBDIR)\$(TARGET).lib $(LIBDIR)\*.obj 2> /nul
+	-del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj 2> /nul
 
 #-----------------------------------------------------------------------------
 # `nmake -f Makefile.msvc check` runs correctness tests
