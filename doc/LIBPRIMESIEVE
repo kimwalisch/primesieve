@@ -1,4 +1,4 @@
-September 27, 2012
+October 1, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -6,10 +6,12 @@ Contents
 ========
 
   1. About libprimesieve
-  2. Build and install libprimesieve      (Unix-like OSes)
-  3. How to link against libprimesieve    (Unix-like OSes)
-  4. Build primesieve.lib                 (Windows, Visual C++)
-  5. How to link against primesieve.lib   (Windows, Visual C++)
+  2. Build and install libprimesieve     (Unix-like OSes)
+  3. How to link against libprimesieve   (Unix-like OSes)
+  4. Build primesieve.lib                (Windows, Visual C++)
+  5. How to link against primesieve.lib  (Windows, Visual C++)
+  6. Build and install libprimesieve     (Windows, MinGW & Cygwin)
+  7. How to link against libprimesieve   (Windows, MinGW & Cygwin)
 
 1. About libprimesieve
 ======================
@@ -105,4 +107,18 @@ Contents
   You can either switch to primesieve 3.4
   http://primesieve.googlecode.com/files/primesieve-3.4-src.zip
   which builds with OpenMP using Microsoft Visual C++ >= 2005 or use
-  an alternative compiler e.g. the Intel C++ Compiler or MinGW.
+  an alternative compiler e.g. MinGW or the Intel C++ Compiler.
+
+6. Build and install libprimesieve (MinGW, Cygwin)
+==================================================
+
+  For MinGW with MSYS or Cygwin with GNU g++ you can build and install
+  libprimesieve using:
+
+  $ make lib
+  $ make install
+
+7. How to link against libprimesieve (MinGW, Cygwin)
+====================================================
+
+  Same as (3.).
