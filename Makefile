@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   30 September 2012
+# Last modified:   1 October 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -48,6 +48,17 @@ SOE_HEADERS := \
   src/soe/SieveOfEratosthenes-inline.h \
   src/soe/toString.h \
   src/soe/WheelFactorization.h
+
+MAIN_DEPENDENCIES := \
+  src/parser/ExpressionParser.h \
+  src/soe/PrimeSieve.h \
+  src/soe/ParallelPrimeSieve.h \
+  src/test/test.h
+
+TEST_DEPENDENCIES := \
+  src/test/test.h \
+  src/soe/PrimeSieve.h \
+  src/soe/ParallelPrimeSieve.h
 
 #-----------------------------------------------------------------------------
 # Use the Bash shell
@@ -132,8 +143,8 @@ endif
 
 BIN_OBJECTS := \
   $(addprefix $(BINDIR)/, \
-    $(notdir \
-      $(subst .cpp,.o,$(SOE_SOURCES)))) \
+    $(subst .cpp,.o, \
+      $(notdir $(SOE_SOURCES)))) \
   $(BINDIR)/main.o \
   $(BINDIR)/test.o
 
@@ -147,13 +158,13 @@ bin_dir:
 bin_obj: $(BIN_OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $^
 
+$(BINDIR)/main.o: src/application/main.cpp $(MAIN_DEPENDENCIES)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BINDIR)/test.o: src/test/test.cpp $(TEST_DEPENDENCIES)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 $(BINDIR)/%.o: src/soe/%.cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(BINDIR)/%.o: src/application/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(BINDIR)/%.o: src/test/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 #-----------------------------------------------------------------------------
@@ -163,8 +174,8 @@ $(BINDIR)/%.o: src/test/%.cpp
 LIB_CXXFLAGS := $(strip $(CXXFLAGS) $(FPIC))
 LIB_OBJECTS  := \
   $(addprefix $(LIBDIR)/, \
-    $(notdir \
-      $(subst .cpp,.o,$(SOE_SOURCES))))
+    $(subst .cpp,.o, \
+      $(notdir $(SOE_SOURCES))))
 
 .PHONY: lib lib_dir lib_obj
 
