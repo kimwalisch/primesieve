@@ -5,18 +5,21 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   1 October 2012
+# Last modified:   2 October 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
-TARGET   := primesieve
-CXX      := g++
-CXXFLAGS := -Wall -O2
-BINDIR   := bin
-LIBDIR   := lib
-DISTDIR  := dist
-EXDIR    := examples
+TARGET    := primesieve
+CXX       := g++
+CXXFLAGS  := -Wall -O2
+NO_STDOUT := 1> /dev/null
+NO_STDERR := 2> /dev/null
+NO_OUTPUT := $(NO_STDOUT) $(NO_STDERR)
+BINDIR    := bin
+LIBDIR    := lib
+DISTDIR   := dist
+EXDIR     := examples
 
 SOE_SOURCES:= \
   src/soe/PrimeSieve.cpp \
@@ -61,24 +64,14 @@ TEST_DEPENDENCIES := \
   src/soe/ParallelPrimeSieve.h
 
 #-----------------------------------------------------------------------------
-# Use the Bash shell
+# Add -fopenmp if GCC version >= 4.4
 #-----------------------------------------------------------------------------
 
-BASH := $(shell command -v bash 2> /dev/null)
-
-ifneq ($(BASH),)
-  SHELL := $(BASH)
-endif
-
-#-----------------------------------------------------------------------------
-# Add -fopenmp if GCC supports OpenMP >= 3.0
-#-----------------------------------------------------------------------------
-
-ifneq ($(shell $(CXX) --version 2> /dev/null | head -1 | grep -iE 'GCC|G\+\+'),)
+ifneq ($(shell $(CXX) --version $(NO_STDERR) | head -1 | grep -iE 'GCC|G\+\+'),)
   MAJOR := $(shell $(CXX) -dumpversion | cut -d'.' -f1)
   MINOR := $(shell $(CXX) -dumpversion | cut -d'.' -f2)
-  GCC_VERSION := $(shell echo $$(( $(MAJOR) * 100 + $(MINOR) )) )
-  ifneq ($(shell if (( $(GCC_VERSION) >= 404 )); then echo 'OpenMP >= 3.0'; fi),)
+  GCC_VERSION := $(shell expr $(MAJOR) '*' 100 + $(MINOR) $(NO_STDERR))
+  ifneq ($(shell expr $(GCC_VERSION) '>=' 404 $(NO_OUTPUT) && echo 'GCC >= 4.4'),)
     CXXFLAGS += -fopenmp
   endif
 endif
@@ -87,15 +80,15 @@ endif
 # Add the CPU's L1 data cache size (in kilobytes) to CXXFLAGS
 #-----------------------------------------------------------------------------
 
-L1_DCACHE_BYTES := $(shell getconf LEVEL1_DCACHE_SIZE 2> /dev/null)
+L1_DCACHE_BYTES := $(shell getconf LEVEL1_DCACHE_SIZE $(NO_STDERR))
 ifeq ($(L1_DCACHE_BYTES),)
-  L1_DCACHE_BYTES := $(shell sysctl hw.l1dcachesize 2> /dev/null | sed -e 's/^.* //')
+  L1_DCACHE_BYTES := $(shell sysctl hw.l1dcachesize $(NO_STDERR) | sed -e 's/^.* //')
 endif
 
-ifneq ($(shell if (( $(L1_DCACHE_BYTES) > 0 )) 2> /dev/null; then echo is a number; fi),)
-  L1_DCACHE_SIZE := $(shell echo $$(( $(L1_DCACHE_BYTES) / 1024 )) )
-  ifneq ($(shell if (( $(L1_DCACHE_SIZE) < 8 )) || \
-                    (( $(L1_DCACHE_SIZE) > 4096 )); then echo no; fi),)
+ifneq ($(shell expr $(L1_DCACHE_BYTES) '-' $(L1_DCACHE_BYTES) '+' 1 $(NO_OUTPUT) && echo is a number),)
+  L1_DCACHE_SIZE := $(shell expr $(L1_DCACHE_BYTES) '/' 1024)
+  ifeq ($(shell expr $(L1_DCACHE_SIZE) '>=' 8 && \
+                expr $(L1_DCACHE_SIZE) '<=' 4096 && echo valid),)
     L1_DCACHE_SIZE :=
   endif
 endif
@@ -248,7 +241,7 @@ ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
 	cp -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(PREFIX)/lib
 	cp -f src/soe/*PrimeSieve.h $(PREFIX)/include/primesieve/soe
   ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).so),)
-    ifneq ($(shell command -v ldconfig 2> /dev/null),)
+    ifneq ($(shell command -v ldconfig $(NO_STDERR)),)
 		ldconfig $(PREFIX)/lib
     endif
   endif
@@ -266,7 +259,7 @@ endif
 ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).*),)
   ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).so),)
 		rm -f $(wildcard $(PREFIX)/lib/lib$(TARGET).so)
-    ifneq ($(shell command -v ldconfig 2> /dev/null),)
+    ifneq ($(shell command -v ldconfig $(NO_STDERR)),)
 		ldconfig $(PREFIX)/lib
     endif
   else
