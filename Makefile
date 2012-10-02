@@ -81,10 +81,8 @@ endif
 # Add the CPU's L1 data cache size (in kilobytes) to CXXFLAGS
 #-----------------------------------------------------------------------------
 
-L1_DCACHE_BYTES := $(shell getconf LEVEL1_DCACHE_SIZE $(NO_STDERR))
-ifeq ($(L1_DCACHE_BYTES),)
-  L1_DCACHE_BYTES := $(shell sysctl hw.l1dcachesize $(NO_STDERR) | sed -e 's/^.* //')
-endif
+L1_DCACHE_BYTES := $(shell getconf LEVEL1_DCACHE_SIZE $(NO_STDERR) || \
+                           sysctl  hw.l1dcachesize    $(NO_STDERR) | sed -e 's/^.* //')
 
 ifneq ($(shell expr $(L1_DCACHE_BYTES) '-' $(L1_DCACHE_BYTES) '+' 1 $(NO_OUTPUT) && \
                echo is a number),)
