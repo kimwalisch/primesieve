@@ -70,8 +70,7 @@ TEST_DEPENDENCIES := \
 ifneq ($(shell $(CXX) --version $(NO_STDERR) | head -1 | grep -iE 'GCC|G\+\+'),)
   MAJOR := $(shell $(CXX) -dumpversion | cut -d'.' -f1)
   MINOR := $(shell $(CXX) -dumpversion | cut -d'.' -f2)
-  GCC_VERSION := $(shell expr $(MAJOR) '*' 100 '+' $(MINOR) $(NO_STDERR))
-  ifneq ($(shell expr $(GCC_VERSION) '>=' 404 $(NO_OUTPUT) && \
+  ifneq ($(shell expr $(MAJOR) '*' 100 '+' $(MINOR) '>=' 404 $(NO_OUTPUT) && \
                  echo 'GCC >= 4.4'),)
     CXXFLAGS += -fopenmp
   endif
