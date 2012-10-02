@@ -1,21 +1,21 @@
-September 29, 2012
+October 2, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
 About
 =====
 
-  This file contains the public API of the PrimeSieve and
-  ParallelPrimeSieve C++ classes (src/soe). The USAGE_EXAMPLES file
-  contains source code examples that show how to use PrimeSieve
-  objects to generate, print and count primes and prime k-tuplets.
+  This file contains a list of the public member functions of the
+  PrimeSieve and ParallelPrimeSieve C++ classes (src/soe).
+  Most of these member functions are documented in the USAGE_EXAMPLES
+  file in the current directory.
 
 PrimeSieve API
 ==============
 
-  PrimeSieve provides an easy API to sieve primes and prime k-tuplets
-  (twin primes, prime triplets, ...). The start and stop parameters in
-  many methods set the sieve interval [start, stop].
+  PrimeSieve provides an easy API to generate (callback), print (to
+  std::cout) and count primes and prime k-tuplets. The start and stop
+  parameters in many methods set the sieve interval [start, stop].
 
   1. Public Member Functions
   ==========================
