@@ -229,8 +229,11 @@ check test: bin
 
 all: bin lib
 
+EXAMPLE_PROGRAMS = $(shell find $(EXDIR) -mindepth 1 -maxdepth 1 \
+  ! -name '*.cpp' ! -name INSTALL $(NO_STDERR))
+
 clean:
-	rm -rf $(BINDIR) $(LIBDIR) $(DISTDIR) $(EXDIR)/[^I]*[^c]??
+	rm -rf $(BINDIR) $(LIBDIR) $(DISTDIR) $(EXAMPLE_PROGRAMS)
 
 # requires sudo privileges
 install:
