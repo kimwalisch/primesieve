@@ -87,8 +87,8 @@ L1_DCACHE_BYTES := $(shell getconf LEVEL1_DCACHE_SIZE $(NO_STDERR) || \
 ifneq ($(shell expr $(L1_DCACHE_BYTES) '-' $(L1_DCACHE_BYTES) '+' 1 $(NO_OUTPUT) && \
                echo is a number),)
   L1_DCACHE_SIZE := $(shell expr $(L1_DCACHE_BYTES) '/' 1024)
-  ifeq ($(shell expr $(L1_DCACHE_SIZE) '>=' 8 && \
-                expr $(L1_DCACHE_SIZE) '<=' 4096 && \
+  ifeq ($(shell expr $(L1_DCACHE_SIZE) '>=' 8    $(NO_OUTPUT) && \
+                expr $(L1_DCACHE_SIZE) '<=' 4096 $(NO_OUTPUT) && \
                 echo valid),)
     L1_DCACHE_SIZE :=
   endif
