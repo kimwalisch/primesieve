@@ -1,4 +1,4 @@
-Changes in version 4.0, 30/09/2012
+Changes in version 4.0, 02/10/2012
 ==================================
 
 primesieve 4.0 is a major new release. A lot of work has been put into
@@ -21,7 +21,7 @@ changes are documented further down.
  8. Optimized prime k-tuplet (twin primes, ...) counting for
     out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
  9. New primesieve_error() exception used for all exceptions within
-    PrimeSieve and ParallelPrimeSieve.
+    PrimeSieve and ParallelPrimeSieve (read USAGE_EXAMPLES).
 10. New pre-sieve code (src/soe/PreSieve.cpp).
 11. Ported the primesieve GUI application from Qt 4 to Qt 5.
 
