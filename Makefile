@@ -71,7 +71,8 @@ ifneq ($(shell $(CXX) --version $(NO_STDERR) | head -1 | grep -iE 'GCC|G\+\+'),)
   MAJOR := $(shell $(CXX) -dumpversion | cut -d'.' -f1)
   MINOR := $(shell $(CXX) -dumpversion | cut -d'.' -f2)
   GCC_VERSION := $(shell expr $(MAJOR) '*' 100 + $(MINOR) $(NO_STDERR))
-  ifneq ($(shell expr $(GCC_VERSION) '>=' 404 $(NO_OUTPUT) && echo 'GCC >= 4.4'),)
+  ifneq ($(shell expr $(GCC_VERSION) '>=' 404 $(NO_OUTPUT) && \
+                 echo 'GCC >= 4.4'),)
     CXXFLAGS += -fopenmp
   endif
 endif
@@ -85,10 +86,12 @@ ifeq ($(L1_DCACHE_BYTES),)
   L1_DCACHE_BYTES := $(shell sysctl hw.l1dcachesize $(NO_STDERR) | sed -e 's/^.* //')
 endif
 
-ifneq ($(shell expr $(L1_DCACHE_BYTES) '-' $(L1_DCACHE_BYTES) '+' 1 $(NO_OUTPUT) && echo is a number),)
+ifneq ($(shell expr $(L1_DCACHE_BYTES) '-' $(L1_DCACHE_BYTES) '+' 1 $(NO_OUTPUT) && \
+               echo is a number),)
   L1_DCACHE_SIZE := $(shell expr $(L1_DCACHE_BYTES) '/' 1024)
   ifeq ($(shell expr $(L1_DCACHE_SIZE) '>=' 8 && \
-                expr $(L1_DCACHE_SIZE) '<=' 4096 && echo valid),)
+                expr $(L1_DCACHE_SIZE) '<=' 4096 && \
+                echo valid),)
     L1_DCACHE_SIZE :=
   endif
 endif
