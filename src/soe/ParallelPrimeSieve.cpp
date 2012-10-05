@@ -110,12 +110,14 @@ uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const
   return threadInterval;
 }
 
-/// Align start_ to modulo 30 + 2 to prevent prime k-tuplet
+/// Align n to modulo 30 + 2 to prevent prime k-tuplet
 /// (twin primes, prime triplets, ...) gaps.
 ///
-uint64_t ParallelPrimeSieve::getStartAligned() const
+uint64_t ParallelPrimeSieve::align(uint64_t n) const
 {
-  return start_ + 32 - start_ % 30;
+  if (n != start_)
+    n = std::min(n + 32 - n % 30, stop_);
+  return n;
 }
 
 bool ParallelPrimeSieve::tooMany(int threads) const
@@ -147,9 +149,8 @@ void ParallelPrimeSieve::sieve()
   else {
     double time = omp_get_wtime();
     reset();
-    uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
-    uint64_t startAligned = getStartAligned();
     uint64_t threadInterval = getThreadInterval(threads);
+    uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
 
     // The sieve interval [start_, stop_] is subdivided into chunks of
     // size 'threadInterval' that are sieved in parallel using
@@ -157,10 +158,10 @@ void ParallelPrimeSieve::sieve()
     // its own private memory without need of synchronization.
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
         reduction(+: count0, count1, count2, count3, count4, count5, count6)
-    for (uint64_t n = startAligned; n < stop_; n += threadInterval) {
+    for (uint64_t n = start_; n < stop_; n += threadInterval) {
       PrimeSieve ps(*this, omp_get_thread_num());
-      uint64_t threadStart = (n > startAligned) ? n : start_;
-      uint64_t threadStop  = std::min(n + threadInterval, stop_);
+      uint64_t threadStart = align(n);
+      uint64_t threadStop  = align(n + threadInterval);
       ps.sieve(threadStart, threadStop);
       count0 += ps.getCount(0);
       count1 += ps.getCount(1);
