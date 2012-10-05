@@ -1,4 +1,4 @@
-October 2, 2012
+October 5, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -133,7 +133,3 @@ ParallelPrimeSieve API
     CPU information
     ---------------
     static int ParallelPrimeSieve::getMaxThreads();
-
-    The getMaxThreads() method returns the number of logical CPU
-    cores, e.g. for a quad-core CPU with Hyper-Threading
-    getMaxThreads() returns 8.
