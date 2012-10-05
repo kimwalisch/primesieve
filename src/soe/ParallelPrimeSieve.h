@@ -76,6 +76,7 @@ private:
   bool tooMany(int) const;
   int idealNumThreads() const;
   uint64_t getThreadInterval(int) const;
+  uint64_t getStartAligned() const;
   template <typename T>
   T getLock() {
     return static_cast<T> (lock_);
