@@ -38,18 +38,20 @@
 #ifndef IMATH_PRIMESIEVE_H
 #define IMATH_PRIMESIEVE_H
 
-namespace soe {
+#include <cassert>
 
-template <typename T>
-inline T isquare(T x)
-{
-  return x * x;
-}
+namespace soe {
 
 template <typename T>
 inline T getNumberOfBits()
 {
   return static_cast<T>(sizeof(T) * 8);
+}
+
+template <typename T>
+inline T isquare(T x)
+{
+  return x * x;
 }
 
 template <typename T>
@@ -68,6 +70,17 @@ inline T floorPowerOf2(T x)
   for (T i = 1; i < getNumberOfBits<T>(); i += i)
     x |= (x >> i);
   return x - (x >> 1);
+}
+
+/// @brief  Integer division with round up.
+/// @pre    x > 0 && y > 0
+///
+template <typename T>
+inline T idivCeil(T x, T y)
+{
+  assert(x > 0);
+  assert(y > 0);
+  return 1 + ((x - 1) / y);
 }
 
 /// @brief  Fast and protable integer log2 function.
