@@ -32,8 +32,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/// @brief  ParallelPrimeSieve sieves primes in parallel
-///         using OpenMP 3.0 (2008) or later.
+/// @brief  ParallelPrimeSieve sieves primes in parallel using
+///         OpenMP 2.0 (2002) or later.
 
 #include "ParallelPrimeSieve.h"
 #include "PrimeSieve.h"
@@ -133,7 +133,7 @@ int ParallelPrimeSieve::getMaxThreads()
 }
 
 /// Sieve the primes and prime k-tuplets within [start, stop]
-/// in parallel using OpenMP (version 3.0 or later).
+/// in parallel using OpenMP multi-threading.
 ///
 void ParallelPrimeSieve::sieve()
 {
@@ -149,15 +149,17 @@ void ParallelPrimeSieve::sieve()
   else {
     double time = omp_get_wtime();
     reset();
-    uint64_t threadInterval = getThreadInterval(threads);
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
+    uint64_t threadInterval = getThreadInterval(threads);
+
+#if _OPENMP >= 200800 /* OpenMP >= 3.0 (2008) */
 
     // The sieve interval [start_, stop_] is subdivided into chunks of
     // size 'threadInterval' that are sieved in parallel using
     // multiple threads. This scales well as each thread sieves using
     // its own private memory without need of synchronization.
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
-        reduction(+: count0, count1, count2, count3, count4, count5, count6)
+      reduction(+: count0, count1, count2, count3, count4, count5, count6)
     for (uint64_t n = start_; n < stop_; n += threadInterval) {
       PrimeSieve ps(*this, omp_get_thread_num());
       uint64_t threadStart = align(n);
@@ -171,6 +173,28 @@ void ParallelPrimeSieve::sieve()
       count5 += ps.getCount(5);
       count6 += ps.getCount(6);
     }
+
+#else /* OpenMP 2.x */
+
+    int64_t iters = idivCeil(getInterval(), threadInterval);
+
+    #pragma omp parallel for schedule(dynamic) num_threads(threads) \
+      reduction(+: count0, count1, count2, count3, count4, count5, count6)
+    for (int64_t i = 0; i < iters; i++) {
+      PrimeSieve ps(*this, omp_get_thread_num());
+      uint64_t threadStart = align(start_ +  i * threadInterval);
+      uint64_t threadStop  = align(start_ + (i + 1) * threadInterval);
+      ps.sieve(threadStart, threadStop);
+      count0 += ps.getCount(0);
+      count1 += ps.getCount(1);
+      count2 += ps.getCount(2);
+      count3 += ps.getCount(3);
+      count4 += ps.getCount(4);
+      count5 += ps.getCount(5);
+      count6 += ps.getCount(6);
+    }
+
+#endif
 
     seconds_ = omp_get_wtime() - time;
     counts_[0] = count0;
