@@ -7,7 +7,7 @@ primesieve 4.0 is backward incompatible with primesieve 3.*, the few
 changes are documented further down. 
 
  1. Added support for OpenMP 2.*, useful for Microsoft's Visual C++
-    compiler and Appel's g++ (do not support OpenMP >= 3.0).
+    compiler and Appel's g++ (do not support OpenMP 3.*).
  2. New examples directory with 12 simple example programs.
  3. New doc/API file that lists the public member functions of the
     PrimeSieve and ParallelPrimeSieve C++ classes.
