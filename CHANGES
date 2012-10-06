@@ -1,28 +1,30 @@
-Changes in version 4.0, 03/10/2012
+Changes in version 4.0, 06/10/2012
 ==================================
 
 primesieve 4.0 is a major new release. A lot of work has been put into
 documentation and improving primesieve as a library. The API of
 primesieve 4.0 is backward incompatible with primesieve 3.*, the few
-changes are documented further down.
+changes are documented further down. 
 
- 1. New examples directory with 12 simple example programs.
- 2. New doc/API file that lists the public member functions of the
+ 1. Added support for OpenMP 2.*, useful for Microsoft's Visual C++
+    compiler and Appel's g++ (do not support OpenMP >= 3.0).
+ 2. New examples directory with 12 simple example programs.
+ 3. New doc/API file that lists the public member functions of the
     PrimeSieve and ParallelPrimeSieve C++ classes.
- 3. The Makefile is now POSIX compatible, it works with any POSIX
+ 4. The Makefile is now POSIX compatible, it works with any POSIX
     shell e.g. sh, bash, ash, ksh, zsh, ...
- 4. The Makefile now supports MinGW (with MSYS) and Cygwin.
- 5. Fixed a shared libprimesieve bug (read doc/BUGS).
- 6. New unsynchronized ParallelPrimeSieve::generatePrimes() method
+ 5. The Makefile now supports MinGW (with MSYS) and Cygwin.
+ 6. Fixed a shared libprimesieve bug (read doc/BUGS).
+ 7. New unsynchronized ParallelPrimeSieve::generatePrimes() method
     that calls back primes in parallel (read USAGE_EXAMPLES).
- 7. Faster thread synchronization in ParallelPrimeSieve, replaced slow
+ 8. Faster thread synchronization in ParallelPrimeSieve, replaced slow
     OpenMP critical directive with faster omp_test_lock().
- 8. Optimized prime k-tuplet (twin primes, ...) counting for
+ 9. Optimized prime k-tuplet (twin primes, ...) counting for
     out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
- 9. New primesieve_error() exception used for all exceptions within
+10. New primesieve_error() exception used for all exceptions within
     PrimeSieve and ParallelPrimeSieve (read USAGE_EXAMPLES).
-10. New pre-sieve code (src/soe/PreSieve.cpp).
-11. Ported the primesieve GUI application from Qt 4 to Qt 5.
+11. New pre-sieve code (src/soe/PreSieve.cpp).
+12. Ported the primesieve GUI application from Qt 4 to Qt 5.
 
     API changes
     -----------
