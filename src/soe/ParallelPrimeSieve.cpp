@@ -244,7 +244,7 @@ void ParallelPrimeSieve::unsetLock()
 
 #endif /* _OPENMP */
 
-/// If OpenMP is not used then ParallelPrimeSieve behaves like
+/// If OpenMP is disabled then ParallelPrimeSieve behaves like
 /// the single threaded PrimeSieve.
 ///
 #if !defined(_OPENMP)
