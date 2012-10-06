@@ -176,7 +176,7 @@ void ParallelPrimeSieve::sieve()
 
 #else /* OpenMP 2.x */
 
-    int64_t iters = idivCeil(getInterval(), threadInterval);
+    int64_t iters = 1 + ((getInterval() - 1) / threadInterval);
 
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
       reduction(+: count0, count1, count2, count3, count4, count5, count6)
