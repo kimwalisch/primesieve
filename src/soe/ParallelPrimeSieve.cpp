@@ -139,18 +139,18 @@ void ParallelPrimeSieve::sieve()
 {
   if (start_ > stop_)
     throw primesieve_error("start must be <= stop");
-
-  int threads = getNumThreads();
-  if (tooMany(threads)) threads = idealNumThreads();
   OmpInitLock ompInit(&lock_);
 
+  int threads = getNumThreads();
+  if (tooMany(threads))
+    threads = idealNumThreads();
   if (threads == 1)
     PrimeSieve::sieve();
   else {
-    double time = omp_get_wtime();
     reset();
-    uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
     uint64_t threadInterval = getThreadInterval(threads);
+    uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
+    double time = omp_get_wtime();
 
 #if _OPENMP >= 200800 /* OpenMP >= 3.0 (2008) */
 
