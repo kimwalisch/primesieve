@@ -64,8 +64,8 @@ PrimeSieve::PrimeSieve() :
   stop_(0),
   counts_(7),
   flags_(COUNT_PRIMES),
-  threadNum_(0),
-  parent_(NULL)
+  parent_(NULL),
+  threadNum_(0)
 {
   setPreSieve(config::PRESIEVE);
   setSieveSize(config::SIEVESIZE);
@@ -78,8 +78,8 @@ PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
   preSieve_(parent.preSieve_),
   sieveSize_(parent.sieveSize_),
   flags_(parent.flags_),
-  threadNum_(threadNum),
   parent_(&parent),
+  threadNum_(threadNum),
   callback32_(parent.callback32_),
   callback64_(parent.callback64_),
   callback32_obj_(parent.callback32_obj_),

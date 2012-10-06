@@ -200,16 +200,10 @@ private:
   int sieveSize_;
   /// Flags (settings) for PrimeSieve e.g. COUNT_PRIMES, PRINT_TWINS, ...
   int flags_;
-  /// ParallelPrimeSieve thread number
-  int threadNum_;
   /// Pointer to the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
-  /// Sum of all processed segments
-  uint64_t processed_;
-  /// Sum of recently processed segments
-  uint64_t toUpdate_;
-  /// Status in percent of sieve()
-  double status_;
+  /// ParallelPrimeSieve thread number
+  int threadNum_;
   /// Callback functions for use with generatePrimes()
   void (*callback32_)(uint32_t);
   void (*callback64_)(uint64_t);
@@ -218,6 +212,12 @@ private:
   void (*callback64_int_)(uint64_t, int);
   /// Callback object
   void* obj_;
+  /// Sum of all processed segments
+  uint64_t processed_;
+  /// Sum of recently processed segments
+  uint64_t toUpdate_;
+  /// Status in percent of sieve()
+  double status_;
   bool isFlag(int, int) const;
   bool isPublicFlags(int) const;
   bool isStatus() const;
