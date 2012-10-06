@@ -10,8 +10,6 @@ Contents
   3. How to link against libprimesieve   (Unix-like OSes)
   4. Build primesieve.lib                (Windows, Visual C++)
   5. How to link against primesieve.lib  (Windows, Visual C++)
-  6. Build and install libprimesieve     (Windows, MinGW & Cygwin)
-  7. How to link against libprimesieve   (Windows, MinGW & Cygwin)
 
 1. About libprimesieve
 ======================
@@ -99,17 +97,3 @@ Contents
 
   primesieve.lib is a static Windows library so it causes no
   dependency if you link against it.
-
-6. Build and install libprimesieve (MinGW, Cygwin)
-==================================================
-
-  For MinGW with MSYS or Cygwin with GNU g++ you can build and install
-  libprimesieve using:
-
-  $ make lib
-  $ make install
-
-7. How to link against libprimesieve (MinGW, Cygwin)
-====================================================
-
-  Same as (3.).
