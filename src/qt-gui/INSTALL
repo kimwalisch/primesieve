@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010 
-# Last modified: 22 September 2012
+# Last modified: 6 October 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -18,12 +18,6 @@ I. About
 
 II. How to build primesieve (All operating systems)
 ===================================================
-
-  Requirement
-  -----------
-  The primesieve GUI application requires a compiler that supports
-  OpenMP 3.0 or later (2008). The Qt SDK includes a recent version of
-  g++ which works fine.
 
   1. For Windows download and install the latest Qt 4 SDK:
      ftp://ftp.trolltech.com/qt/source/qt-win-opensource-4.8.1-mingw.exe

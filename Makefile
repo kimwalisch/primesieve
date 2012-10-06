@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   2 October 2012
+# Last modified:   6 October 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -64,14 +64,14 @@ TEST_DEPENDENCIES := \
   src/soe/ParallelPrimeSieve.h
 
 #-----------------------------------------------------------------------------
-# Add -fopenmp if GCC version >= 4.4
+# Add -fopenmp if GCC version >= 4.2
 #-----------------------------------------------------------------------------
 
 ifneq ($(shell $(CXX) --version $(NO_STDERR) | head -1 | grep -iE 'GCC|G\+\+'),)
   MAJOR := $(shell $(CXX) -dumpversion | cut -d'.' -f1)
   MINOR := $(shell $(CXX) -dumpversion | cut -d'.' -f2)
-  ifneq ($(shell expr $(MAJOR) '*' 100 '+' $(MINOR) '>=' 404 $(NO_OUTPUT) && \
-                 echo 'GCC >= 4.4'),)
+  ifneq ($(shell expr $(MAJOR) '*' 100 '+' $(MINOR) '>=' 402 $(NO_OUTPUT) && \
+                 echo 'GCC >= 4.2'),)
     CXXFLAGS += -fopenmp
   endif
 endif

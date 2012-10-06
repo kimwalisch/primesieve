@@ -3,8 +3,8 @@
 #
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
-# Created:       05 December 2010
-# Last modified: 29 September 2012
+# Created:       5 December 2010
+# Last modified: 6 October 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -72,7 +72,7 @@ Contents
   primesieve is written in C++03, it compiles with every standard
   compliant C++ compiler and runs on both little-endian (x86, x86-64)
   and big-endian (PowerPC, SPARC, ...) CPUs. The parallelization
-  (optional) is implemented using OpenMP 3.0 (2008) or later.
+  (optional) is implemented using OpenMP 2.0 or later.
 
   primesieve has been optimized for CPUs with 15 or more integer
   registers, so if you have a x86-64 CPU make sure to use a 64-bit

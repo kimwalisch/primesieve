@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   1 October 2012
+# Last modified:   6 October 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -88,11 +88,10 @@ TEST_DEPENDENCIES = \
   src\soe\ParallelPrimeSieve.h
 
 #-----------------------------------------------------------------------------
-# Add /openmp if MSVC supports OpenMP 3.0 or later
+# Add /openmp if MSVC supports OpenMP
 #-----------------------------------------------------------------------------
 
-!IF ([$(CXX) /? 2>&1 | findstr /I "OpenMP" > nul ] == 0) && \
-    ([$(CXX) /? 2>&1 | findstr /I /C:"OpenMP 2" > nul ] != 0)
+!IF ([$(CXX) /? 2>&1 | findstr /I "OpenMP" > nul ] == 0)
 CXXFLAGS = $(CXXFLAGS) /openmp
 !ENDIF
 

@@ -1,4 +1,4 @@
-October 1, 2012
+October 6, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -99,15 +99,6 @@ Contents
 
   primesieve.lib is a static Windows library so it causes no
   dependency if you link against it.
-
-  OpenMP multi-threading
-  ----------------------
-  Since version 3.5 primesieve requires OpenMP 3.0 or later which is
-  currently (October 2012) not supported by Microsoft Visual C++.
-  You can either switch to primesieve 3.4:
-  http://primesieve.googlecode.com/files/primesieve-3.4-src.zip
-  which builds with OpenMP using Microsoft Visual C++ >= 2005 or use
-  an alternative compiler e.g. MinGW or the Intel C++ Compiler.
 
 6. Build and install libprimesieve (MinGW, Cygwin)
 ==================================================

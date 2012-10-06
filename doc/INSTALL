@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 16 September 2012
+# Last modified: 6 October 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -13,9 +13,8 @@ I. About
 ========
 
   This file explains how to compile and use the primesieve console
-  (terminal) application, to compile the primesieve GUI application
-  please refer to src/qt-gui/INSTALL. If you want to use primesieve as
-  a library in your own C++ program read LIBPRIMESIEVE.
+  (terminal) application. If you want to use primesieve as a library
+  in your own C++ program read LIBPRIMESIEVE.
 
   Precompiled binaries for Windows, Linux and Mac OS X are available
   at: http://code.google.com/p/primesieve/downloads/list
@@ -41,9 +40,9 @@ II. How to build primesieve
 
   OpenMP (multi-threading)
   ------------------------
-  If your compiler supports OpenMP 3.0 (2008) or later you can add the
-  corresponding flag to CXXFLAGS, for g++ and Microsoft Visual C++
-  this is done automatically.
+  If your compiler supports OpenMP you can add the corresponding flag
+  to CXXFLAGS, for g++ and Microsoft Visual C++ this is done
+  automatically.
 
   Makefile help menu
   ------------------
@@ -58,7 +57,7 @@ III. Target a specific CPU
 
   > nmake -f Makefile.msvc L1_DCACHE_SIZE=64
 
-  On most Unix-like OSes (Linux, Mac OS X) this is done automatically.
+  On Linux and Mac OS X this is done automatically.
 
 IV. How to use it
 =================
