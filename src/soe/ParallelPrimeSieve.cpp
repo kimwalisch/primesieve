@@ -57,7 +57,6 @@ ParallelPrimeSieve::ParallelPrimeSieve() :
   numThreads_(DEFAULT_NUM_THREADS)
 { }
 
-/// API for the primesieve GUI application
 void ParallelPrimeSieve::init(SharedMemory& shm)
 {
   setStart(shm.start);
@@ -132,7 +131,7 @@ int ParallelPrimeSieve::getMaxThreads()
   return omp_get_max_threads();
 }
 
-/// Sieve the primes and prime k-tuplets within [start, stop]
+/// Sieve the primes and prime k-tuplets within [start_, stop_]
 /// in parallel using OpenMP multi-threading.
 ///
 void ParallelPrimeSieve::sieve()
@@ -154,10 +153,6 @@ void ParallelPrimeSieve::sieve()
 
 #if _OPENMP >= 200800 /* OpenMP >= 3.0 (2008) */
 
-    // The sieve interval [start_, stop_] is subdivided into chunks of
-    // size 'threadInterval' that are sieved in parallel using
-    // multiple threads. This scales well as each thread sieves using
-    // its own private memory without need of synchronization.
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
       reduction(+: count0, count1, count2, count3, count4, count5, count6)
     for (uint64_t n = start_; n < stop_; n += threadInterval) {
@@ -176,14 +171,15 @@ void ParallelPrimeSieve::sieve()
 
 #else /* OpenMP 2.x */
 
-    int64_t iters = 1 + ((getInterval() - 1) / threadInterval);
+    int64_t iters = 1 + (getInterval() - 1) / threadInterval;
 
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
       reduction(+: count0, count1, count2, count3, count4, count5, count6)
     for (int64_t i = 0; i < iters; i++) {
       PrimeSieve ps(*this, omp_get_thread_num());
-      uint64_t threadStart = align(start_ +  i * threadInterval);
-      uint64_t threadStop  = align(start_ + (i + 1) * threadInterval);
+      uint64_t n = start_ + i * threadInterval;
+      uint64_t threadStart = align(n);
+      uint64_t threadStop  = align(n + threadInterval);
       ps.sieve(threadStart, threadStop);
       count0 += ps.getCount(0);
       count1 += ps.getCount(1);
@@ -215,7 +211,7 @@ void ParallelPrimeSieve::sieve()
 }
 
 /// Calculate the sieving status (in percent).
-/// @param processed Sum of recently processed segments.
+/// @param processed  Sum of recently processed segments.
 ///
 bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
 {
