@@ -68,11 +68,14 @@ private:
   enum {
     DEFAULT_NUM_THREADS = -1
   };
-  SharedMemory* shm_;
-  /// Number of threads for sieving
-  int numThreads_;
+  /// Pad at least 1 cache line to avoid false sharing
+  char pad_[256];
   /// Used to synchronize threads
   void* lock_;
+  /// Number of threads for sieving
+  int numThreads_;
+  /// @see SharedMemory
+  SharedMemory* shm_;
   bool tooMany(int) const;
   int idealNumThreads() const;
   uint64_t getThreadInterval(int) const;
