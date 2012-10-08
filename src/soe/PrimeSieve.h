@@ -216,11 +216,12 @@ private:
   uint64_t toUpdate_;
   /// Sum of all processed segments
   uint64_t processed_;
-  /// Status in percent of sieve()
-  double status_;
+  /// Status of sieve() in percent
+  double percent_;
   bool isFlag(int, int) const;
   bool isPublicFlags(int) const;
   bool isStatus() const;
+  void printStatus(double, double) const;
   void doSmallPrime(const SmallPrime&);
 };
 

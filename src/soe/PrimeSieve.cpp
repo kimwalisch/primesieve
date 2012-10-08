@@ -102,7 +102,7 @@ uint64_t    PrimeSieve::getQuintupletCount()        const { return counts_[4]; }
 uint64_t    PrimeSieve::getSextupletCount()         const { return counts_[5]; }
 uint64_t    PrimeSieve::getSeptupletCount()         const { return counts_[6]; }
 uint64_t    PrimeSieve::getCount(int index)         const { return counts_.at(index); }
-double      PrimeSieve::getStatus()                 const { return status_; }
+double      PrimeSieve::getStatus()                 const { return percent_; }
 double      PrimeSieve::getSeconds()                const { return seconds_; }
 int         PrimeSieve::getPreSieve()               const { return preSieve_; }
 int         PrimeSieve::getSieveSize()              const { return sieveSize_; }
@@ -173,10 +173,10 @@ void PrimeSieve::reset()
   seconds_   = 0.0;
   toUpdate_  = 0;
   processed_ = 0;
-  status_    = -1.0;
+  percent_   = -1.0;
 }
 
-/// Synchronizes ParallelPrimeSieve threads
+/// Synchronize ParallelPrimeSieve threads
 void PrimeSieve::setLock()
 {
   if (parent_ != NULL)
@@ -201,24 +201,28 @@ bool PrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
   } else {
     processed_ += processed;
     double percent = processed_ * 100.0 / (getInterval() + 1);
-    double old = status_;
-    status_ = std::min(percent, 100.0);
-    if (isFlag(PRINT_STATUS)) {
-      int status = static_cast<int>(status_);
-      if (status > static_cast<int>(old)) {
-        std::cout << '\r' << status << '%' << std::flush;
-        if (status == 100)
-          std::cout << std::endl;
-      }
-    }
+    double old = percent_;
+    percent_ = std::min(percent, 100.0);
+    if (isFlag(PRINT_STATUS))
+      printStatus(old, percent_);
   }
   return true;
+}
+
+void PrimeSieve::printStatus(double old, double current) const
+{
+  int percent = static_cast<int>(current);
+  if (percent > static_cast<int>(old)) {
+    std::cout << '\r' << percent << '%' << std::flush;
+    if (percent == 100)
+      std::cout << std::endl;
+  }
 }
 
 void PrimeSieve::doSmallPrime(const SmallPrime& sp)
 {
   if (sp.firstPrime >= start_ && sp.lastPrime <= stop_) {
-    // callback small prime number
+    // callback prime numbers
     if (sp.index == 0) {
       if (isFlag(CALLBACK32)) callback32_(sp.firstPrime);
       if (isFlag(CALLBACK64)) callback64_(sp.firstPrime);
