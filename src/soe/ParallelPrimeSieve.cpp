@@ -53,8 +53,8 @@
 using namespace soe;
 
 ParallelPrimeSieve::ParallelPrimeSieve() :
-  shm_(NULL),
-  numThreads_(DEFAULT_NUM_THREADS)
+  numThreads_(DEFAULT_NUM_THREADS),
+  shm_(NULL)
 { }
 
 void ParallelPrimeSieve::init(SharedMemory& shm)
