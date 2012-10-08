@@ -184,7 +184,7 @@ void PrimeNumberFinder::callback64_obj(uint64_t prime) const
 
 void PrimeNumberFinder::callback64_int(uint64_t prime) const
 {
-  ps_.callback64_int_(prime, ps_.threadNum_);
+  ps_.callback64_int_(prime, ps_.threadNumber_);
 }
 
 } // namespace soe

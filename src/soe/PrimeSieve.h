@@ -200,10 +200,10 @@ private:
   int sieveSize_;
   /// Flags (settings) for PrimeSieve e.g. COUNT_PRIMES, PRINT_TWINS, ...
   int flags_;
+  /// ParallelPrimeSieve thread number
+  int threadNumber_;
   /// Pointer to the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
-  /// ParallelPrimeSieve thread number
-  int threadNum_;
   /// Callback functions for use with generatePrimes()
   void (*callback32_)(uint32_t);
   void (*callback64_)(uint64_t);

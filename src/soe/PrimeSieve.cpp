@@ -64,8 +64,8 @@ PrimeSieve::PrimeSieve() :
   stop_(0),
   counts_(7),
   flags_(COUNT_PRIMES),
-  parent_(NULL),
-  threadNum_(0)
+  threadNumber_(0),
+  parent_(NULL)
 {
   setPreSieve(config::PRESIEVE);
   setSieveSize(config::SIEVESIZE);
@@ -73,13 +73,13 @@ PrimeSieve::PrimeSieve() :
 }
 
 /// API for ParallelPrimeSieve
-PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
+PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNumber) :
   counts_(7),
   preSieve_(parent.preSieve_),
   sieveSize_(parent.sieveSize_),
   flags_(parent.flags_),
+  threadNumber_(threadNumber),
   parent_(&parent),
-  threadNum_(threadNum),
   callback32_(parent.callback32_),
   callback64_(parent.callback64_),
   callback32_obj_(parent.callback32_obj_),
@@ -118,15 +118,17 @@ bool        PrimeSieve::isStatus()                  const { return isFlag(PRINT_
 bool        PrimeSieve::isGenerate()                const { return isFlag(CALLBACK32, CALLBACK64_INT) || isPrint(); }
 
 /// Set a start number (lower bound) for sieving
-void PrimeSieve::setStart(uint64_t start) {
+void PrimeSieve::setStart(uint64_t start)
+{
   start_ = start;
 }
 
 /// Set a stop number (upper bound) for sieving.
 /// @pre stop <= 2^64 - 2^32 * 10
 ///
-void PrimeSieve::setStop(uint64_t stop) {
-  const uint64_t maxStop = PrimeNumberFinder::getMaxStop();
+void PrimeSieve::setStop(uint64_t stop)
+{
+  uint64_t maxStop = PrimeNumberFinder::getMaxStop();
   if (stop > maxStop)
     throw primesieve_error("stop must be <= " + PrimeNumberFinder::getMaxStopString());
   stop_ = stop;
@@ -137,7 +139,8 @@ void PrimeSieve::setStop(uint64_t stop) {
 /// sieve size of the CPU's L1 data cache size per core.
 /// @pre sieveSize >= 1 && <= 4096
 ///
-void PrimeSieve::setSieveSize(int sieveSize) {
+void PrimeSieve::setSieveSize(int sieveSize)
+{
   sieveSize_ = getInBetween(1, floorPowerOf2(sieveSize), 4096);
 }
 
@@ -145,23 +148,27 @@ void PrimeSieve::setSieveSize(int sieveSize) {
 /// to speed up the sieve of Eratosthenes.
 /// @pre preSieve >= 13 && <= 23
 ///
-void PrimeSieve::setPreSieve(int preSieve) {
+void PrimeSieve::setPreSieve(int preSieve)
+{
   preSieve_ = getInBetween(13, preSieve, 23);
 }
 
-void PrimeSieve::setFlags(int flags) {
+void PrimeSieve::setFlags(int flags)
+{
   if (!isPublicFlags(flags))
     throw primesieve_error("invalid flags");
   flags_ = flags;
 }
 
-void PrimeSieve::addFlags(int flags) {
+void PrimeSieve::addFlags(int flags)
+{
   if (!isPublicFlags(flags))
     throw primesieve_error("invalid flags");
   flags_ |= flags;
 }
 
-void PrimeSieve::reset() {
+void PrimeSieve::reset()
+{
   std::fill(counts_.begin(), counts_.end(), 0);
   processed_ = 0;
   toUpdate_ = 0;
@@ -172,18 +179,21 @@ void PrimeSieve::reset() {
 }
 
 /// Used to synchronize ParallelPrimeSieve threads
-void PrimeSieve::setLock() {
+void PrimeSieve::setLock()
+{
   if (parent_ != NULL) parent_->setLock();
 }
 
-void PrimeSieve::unsetLock() {
+void PrimeSieve::unsetLock()
+{
   if (parent_ != NULL) parent_->unsetLock();
 }
 
 /// Calculate the sieving status (in percent).
 /// @param processed  Sum of recently processed segments.
 ///
-bool PrimeSieve::updateStatus(uint64_t processed, bool waitForLock) {
+bool PrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
+{
   if (parent_ != NULL) {
     toUpdate_ += processed;
     if (parent_->updateStatus(toUpdate_, waitForLock))
@@ -214,7 +224,7 @@ void PrimeSieve::doSmallPrime(const SmallPrime& sp)
       if (isFlag(CALLBACK64)) callback64_(sp.firstPrime);
       if (isFlag(CALLBACK32_OBJ)) callback32_obj_(sp.firstPrime, obj_);
       if (isFlag(CALLBACK64_OBJ)) callback64_obj_(sp.firstPrime, obj_);
-      if (isFlag(CALLBACK64_INT)) callback64_int_(sp.firstPrime, threadNum_);
+      if (isFlag(CALLBACK64_INT)) callback64_int_(sp.firstPrime, threadNumber_);
     }
     if (isCount(sp.index)) counts_[sp.index]++;
     if (isPrint(sp.index)) std::cout << sp.str << '\n';
@@ -224,7 +234,8 @@ void PrimeSieve::doSmallPrime(const SmallPrime& sp)
 /// Sieve the primes and prime k-tuplets (twin primes, prime
 /// triplets, ...) within the interval [start, stop].
 ///
-void PrimeSieve::sieve() {
+void PrimeSieve::sieve()
+{
   if (start_ > stop_)
     throw primesieve_error("start must be <= stop");
   clock_t t1 = std::clock();
@@ -268,13 +279,15 @@ void PrimeSieve::sieve() {
     updateStatus(10, /* waitForLock = */ true);
 }
 
- void PrimeSieve::sieve(uint64_t start, uint64_t stop) {
+void PrimeSieve::sieve(uint64_t start, uint64_t stop)
+{
   setStart(start);
   setStop(stop);
   sieve();
 }
 
-void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags) {
+void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags)
+{
   setStart(start);
   setStop(stop);
   setFlags(flags);
@@ -286,7 +299,8 @@ void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags) {
 ///
 void PrimeSieve::generatePrimes(uint32_t start,
                                 uint32_t stop,
-                                void (*callback)(uint32_t)) {
+                                void (*callback)(uint32_t))
+{
   if (callback == NULL)
     throw primesieve_error("callback must not be NULL");
   callback32_ = callback;
@@ -300,7 +314,8 @@ void PrimeSieve::generatePrimes(uint32_t start,
 ///
 void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
-                                void (*callback)(uint64_t)) {
+                                void (*callback)(uint64_t))
+{
   if (callback == NULL)
     throw primesieve_error("callback must not be NULL");
   callback64_ = callback;
@@ -314,7 +329,8 @@ void PrimeSieve::generatePrimes(uint64_t start,
 ///
 void PrimeSieve::generatePrimes(uint32_t start,
                                 uint32_t stop,
-                                void (*callback)(uint32_t, void*), void* obj) {
+                                void (*callback)(uint32_t, void*), void* obj)
+{
   if (callback == NULL)
     throw primesieve_error("callback must not be NULL");
   callback32_obj_ = callback;
@@ -329,7 +345,8 @@ void PrimeSieve::generatePrimes(uint32_t start,
 ///
 void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
-                                void (*callback)(uint64_t, void*), void* obj) {
+                                void (*callback)(uint64_t, void*), void* obj)
+{
   if (callback == NULL)
     throw primesieve_error("callback must not be NULL");
   callback64_obj_ = callback;
@@ -344,7 +361,8 @@ void PrimeSieve::generatePrimes(uint64_t start,
 ///
 void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
-                                void (*callback)(uint64_t, int)) {
+                                void (*callback)(uint64_t, int))
+{
   if (callback == NULL)
     throw primesieve_error("callback must not be NULL");
   callback64_int_ = callback;
@@ -355,67 +373,81 @@ void PrimeSieve::generatePrimes(uint64_t start,
 
 // Print member functions
 
-void PrimeSieve::printPrimes(uint64_t start, uint64_t stop) {
+void PrimeSieve::printPrimes(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, PRINT_PRIMES);
 }
 
-void PrimeSieve::printTwins(uint64_t start, uint64_t stop) {
+void PrimeSieve::printTwins(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, PRINT_TWINS);
 }
 
-void PrimeSieve::printTriplets(uint64_t start, uint64_t stop) {
+void PrimeSieve::printTriplets(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, PRINT_TRIPLETS);
 }
 
-void PrimeSieve::printQuadruplets(uint64_t start, uint64_t stop) {
+void PrimeSieve::printQuadruplets(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, PRINT_QUADRUPLETS);
 }
 
-void PrimeSieve::printQuintuplets(uint64_t start, uint64_t stop) {
+void PrimeSieve::printQuintuplets(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, PRINT_QUINTUPLETS);
 }
 
-void PrimeSieve::printSextuplets(uint64_t start, uint64_t stop) {
+void PrimeSieve::printSextuplets(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, PRINT_SEXTUPLETS);
 }
 
-void PrimeSieve::printSeptuplets(uint64_t start, uint64_t stop) {
+void PrimeSieve::printSeptuplets(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, PRINT_SEPTUPLETS);
 }
 
 // Count member functions
 
-uint64_t PrimeSieve::countPrimes(uint64_t start, uint64_t stop) {
+uint64_t PrimeSieve::countPrimes(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, COUNT_PRIMES);
   return getPrimeCount();
 }
 
-uint64_t PrimeSieve::countTwins(uint64_t start, uint64_t stop) {
+uint64_t PrimeSieve::countTwins(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, COUNT_TWINS);
   return getTwinCount();
 }
 
-uint64_t PrimeSieve::countTriplets(uint64_t start, uint64_t stop) {
+uint64_t PrimeSieve::countTriplets(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, COUNT_TRIPLETS);
   return getTripletCount();
 }
 
-uint64_t PrimeSieve::countQuadruplets(uint64_t start, uint64_t stop) {
+uint64_t PrimeSieve::countQuadruplets(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, COUNT_QUADRUPLETS);
   return getQuadrupletCount();
 }
 
-uint64_t PrimeSieve::countQuintuplets(uint64_t start, uint64_t stop) {
+uint64_t PrimeSieve::countQuintuplets(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, COUNT_QUINTUPLETS);
   return getQuintupletCount();
 }
 
-uint64_t PrimeSieve::countSextuplets(uint64_t start, uint64_t stop) {
+uint64_t PrimeSieve::countSextuplets(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, COUNT_SEXTUPLETS);
   return getSextupletCount();
 }
 
-uint64_t PrimeSieve::countSeptuplets(uint64_t start, uint64_t stop) {
+uint64_t PrimeSieve::countSeptuplets(uint64_t start, uint64_t stop)
+{
   sieve(start, stop, COUNT_SEPTUPLETS);
   return getSeptupletCount();
 }
