@@ -134,6 +134,15 @@ void PrimeSieve::setStop(uint64_t stop)
   stop_ = stop;
 }
 
+/// Pre-sieve multiples of small primes <= preSieve (default = 19)
+/// to speed up the sieve of Eratosthenes.
+/// @pre preSieve >= 13 && <= 23
+///
+void PrimeSieve::setPreSieve(int preSieve)
+{
+  preSieve_ = getInBetween(13, preSieve, 23);
+}
+
 /// Set the size of the sieve of Eratosthenes array in kilobytes
 /// (default = 32). The best sieving performance is achieved with a
 /// sieve size of the CPU's L1 data cache size per core.
@@ -142,15 +151,6 @@ void PrimeSieve::setStop(uint64_t stop)
 void PrimeSieve::setSieveSize(int sieveSize)
 {
   sieveSize_ = getInBetween(1, floorPowerOf2(sieveSize), 4096);
-}
-
-/// Pre-sieve multiples of small primes <= preSieve (default = 19)
-/// to speed up the sieve of Eratosthenes.
-/// @pre preSieve >= 13 && <= 23
-///
-void PrimeSieve::setPreSieve(int preSieve)
-{
-  preSieve_ = getInBetween(13, preSieve, 23);
 }
 
 void PrimeSieve::setFlags(int flags)
@@ -170,10 +170,10 @@ void PrimeSieve::addFlags(int flags)
 void PrimeSieve::reset()
 {
   std::fill(counts_.begin(), counts_.end(), 0);
+  seconds_   = 0.0;
+  toUpdate_  = 0;
   processed_ = 0;
-  toUpdate_ = 0;
-  seconds_ = 0.0;
-  status_ = -1.0;
+  status_    = -1.0;
 }
 
 /// Used to synchronize ParallelPrimeSieve threads
