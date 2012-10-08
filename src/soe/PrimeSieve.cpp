@@ -174,19 +174,19 @@ void PrimeSieve::reset()
   toUpdate_ = 0;
   seconds_ = 0.0;
   status_ = -1.0;
-  if (isStatus())
-    updateStatus(0, false);
 }
 
 /// Used to synchronize ParallelPrimeSieve threads
 void PrimeSieve::setLock()
 {
-  if (parent_ != NULL) parent_->setLock();
+  if (parent_ != NULL)
+    parent_->setLock();
 }
 
 void PrimeSieve::unsetLock()
 {
-  if (parent_ != NULL) parent_->unsetLock();
+  if (parent_ != NULL)
+    parent_->unsetLock();
 }
 
 /// Calculate the sieving status (in percent).
@@ -240,8 +240,10 @@ void PrimeSieve::sieve()
     throw primesieve_error("start must be <= stop");
   clock_t t1 = std::clock();
   reset();
+  if (isStatus())
+    updateStatus(0, false);
 
-  // Small primes and prime k-tuplets (first prime <= 5)
+  // Small primes and k-tuplets (first prime <= 5)
   // are checked manually
   if (start_ <= 5) {
     LockGuard lock(*this);
@@ -276,7 +278,7 @@ void PrimeSieve::sieve()
 
   seconds_ = static_cast<double>(std::clock() - t1) / CLOCKS_PER_SEC;
   if (isStatus())
-    updateStatus(10, /* waitForLock = */ true);
+    updateStatus(10, true);
 }
 
 void PrimeSieve::sieve(uint64_t start, uint64_t stop)
