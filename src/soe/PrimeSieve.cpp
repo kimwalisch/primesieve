@@ -189,7 +189,7 @@ void PrimeSieve::unsetLock()
     parent_->unsetLock();
 }
 
-/// Calculate the sieving status (in percent).
+/// Calculate the sieving status.
 /// @param processed  Sum of recently processed segments.
 ///
 bool PrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
