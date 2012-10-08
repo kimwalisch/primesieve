@@ -68,7 +68,7 @@ private:
   enum {
     DEFAULT_NUM_THREADS = -1
   };
-  /// Pad at least 1 cache line to avoid false sharing
+  /// Prevents false sharing of lock_ and PrimeSieve::status_
   char pad_[256];
   /// Used to synchronize threads
   void* lock_;
