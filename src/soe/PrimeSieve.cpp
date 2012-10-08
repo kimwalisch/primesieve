@@ -176,7 +176,7 @@ void PrimeSieve::reset()
   status_    = -1.0;
 }
 
-/// Used to synchronize ParallelPrimeSieve threads
+/// Synchronizes ParallelPrimeSieve threads
 void PrimeSieve::setLock()
 {
   if (parent_ != NULL)
