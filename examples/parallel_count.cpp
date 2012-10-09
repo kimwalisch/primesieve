@@ -14,6 +14,7 @@ int main()
   ParallelPrimeSieve pps;
   pps.countTriplets(start, stop);
   std::cout << "Prime triplets in [10^14, 10^14+10^11] = "
-            << pps.getTripletCount() << std::endl;
+            << pps.getTripletCount()
+            << std::endl;
   return 0;
 }
