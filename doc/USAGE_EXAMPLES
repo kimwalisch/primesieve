@@ -116,14 +116,6 @@ Contents
   uint64_t PrimeSieve::countSextuplets (uint64_t start, uint64_t stop);
   uint64_t PrimeSieve::countSeptuplets (uint64_t start, uint64_t stop);
 
-  uint64_t PrimeSieve::getPrimeCount()      const;
-  uint64_t PrimeSieve::getTwinCount()       const;
-  uint64_t PrimeSieve::getTripletCount()    const;
-  uint64_t PrimeSieve::getQuadrupletCount() const;
-  uint64_t PrimeSieve::getQuintupletCount() const;
-  uint64_t PrimeSieve::getSextupletCount()  const;
-  uint64_t PrimeSieve::getSeptupletCount()  const;
-
   ////////////////////////////////////////////////////////////////////
   // count_primes.cpp
   // Count the primes up to 1000.
