@@ -55,9 +55,10 @@ public:
   { }
 };
 
-namespace soe { class PrimeNumberFinder; }
-
-using soe::PrimeNumberFinder;
+namespace soe {
+  class PrimeNumberFinder;
+  class SynchronizeThreads;
+}
 
 /// PrimeSieve is a highly optimized C++ implementation of the
 /// segmented sieve of Eratosthenes that generates primes and prime
@@ -66,7 +67,8 @@ using soe::PrimeNumberFinder;
 /// detail and doc/USAGE_EXAMPLES contains source code examples.
 ///
 class PrimeSieve {
-  friend class PrimeNumberFinder;
+  friend class soe::PrimeNumberFinder;
+  friend class soe::SynchronizeThreads;
 public:
   /// Public flags for use with setFlags(int)
   /// @pre flag < (1 << 20)
@@ -90,7 +92,7 @@ public:
   };
   PrimeSieve();
   PrimeSieve(PrimeSieve&, int);
-  virtual ~PrimeSieve() { }
+  virtual ~PrimeSieve();
   // Getters
   uint64_t getStart() const;
   uint64_t getStop() const;
@@ -177,18 +179,8 @@ private:
     CALLBACK64_INT = 1 << 24
   };
   enum {
-    INIT_STATUS   = 0,
+      INIT_STATUS = 0,
     FINISH_STATUS = 10
-  };
-  /// Synchronize threads
-  class LockGuard {
-  public:
-    LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.setLock(); }
-    ~LockGuard()                        { ps_.unsetLock(); }
-  private:
-    PrimeSieve& ps_;
-    LockGuard(const LockGuard&);
-    LockGuard& operator=(const LockGuard&);
   };
   struct SmallPrime
   {

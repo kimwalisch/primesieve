@@ -38,6 +38,7 @@
 #include "PrimeSieve.h"
 #include "GENERATE.h"
 #include "config.h"
+#include "SynchronizeThreads.h"
 
 #include <stdint.h>
 #include <algorithm>
@@ -159,12 +160,12 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) const
     }
   }
   // callback prime numbers
-  if (ps_.isFlag(ps_.PRINT_PRIMES))   { PrimeSieve::LockGuard lock(ps_); GENERATE_PRIMES(print,           uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK32))     { PrimeSieve::LockGuard lock(ps_); GENERATE_PRIMES(ps_.callback32_, uint32_t) }
-  if (ps_.isFlag(ps_.CALLBACK64))     { PrimeSieve::LockGuard lock(ps_); GENERATE_PRIMES(ps_.callback64_, uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK32_OBJ)) { PrimeSieve::LockGuard lock(ps_); GENERATE_PRIMES(callback32_obj,  uint32_t) }
-  if (ps_.isFlag(ps_.CALLBACK64_OBJ)) { PrimeSieve::LockGuard lock(ps_); GENERATE_PRIMES(callback64_obj,  uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK64_INT)) {                                  GENERATE_PRIMES(callback64_int,  uint64_t) }
+  if (ps_.isFlag(ps_.PRINT_PRIMES))   { SynchronizeThreads lock(ps_); GENERATE_PRIMES(print,           uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK32))     { SynchronizeThreads lock(ps_); GENERATE_PRIMES(ps_.callback32_, uint32_t) }
+  if (ps_.isFlag(ps_.CALLBACK64))     { SynchronizeThreads lock(ps_); GENERATE_PRIMES(ps_.callback64_, uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK32_OBJ)) { SynchronizeThreads lock(ps_); GENERATE_PRIMES(callback32_obj,  uint32_t) }
+  if (ps_.isFlag(ps_.CALLBACK64_OBJ)) { SynchronizeThreads lock(ps_); GENERATE_PRIMES(callback64_obj,  uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK64_INT)) {                               GENERATE_PRIMES(callback64_int,  uint64_t) }
 }
 
 void PrimeNumberFinder::print(uint64_t prime)

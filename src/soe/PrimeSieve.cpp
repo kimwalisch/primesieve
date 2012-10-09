@@ -35,6 +35,7 @@
 #include "PrimeSieve.h"
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
+#include "SynchronizeThreads.h"
 #include "imath.h"
 #include "config.h"
 
@@ -86,6 +87,9 @@ PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNumber) :
   callback64_obj_(parent.callback64_obj_),
   callback64_int_(parent.callback64_int_),
   obj_(parent.obj_)
+{ }
+
+PrimeSieve::~PrimeSieve()
 { }
 
 std::string PrimeSieve::getVersion()                      { return PRIMESIEVE_VERSION; }
@@ -250,7 +254,7 @@ void PrimeSieve::sieve()
   // Small primes and k-tuplets (first prime <= 5)
   // are checked manually
   if (start_ <= 5) {
-    LockGuard lock(*this);
+    SynchronizeThreads lock(*this);
     for (int i = 0; i < 8; i++)
       doSmallPrime(smallPrimes_[i]);
   }
