@@ -32,12 +32,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/// @file   openmp_RAII.h
+/// @file   openmp_lock.h
 /// @brief  The OmpInitLock and OmpLockGuard classes are RAII-style
 ///         wrappers for OpenMP locks.
 
-#ifndef OPENMP_RAII_H
-#define OPENMP_RAII_H
+#ifndef OPENMP_LOCK_H
+#define OPENMP_LOCK_H
 
 #include <omp.h>
 

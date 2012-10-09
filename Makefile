@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   6 October 2012
+# Last modified:   9 October 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -40,7 +40,7 @@ SOE_HEADERS := \
   src/soe/EratSmall.h \
   src/soe/GENERATE.h \
   src/soe/imath.h \
-  src/soe/openmp_RAII.h \
+  src/soe/openmp_lock.h \
   src/soe/ParallelPrimeSieve.h \
   src/soe/popcount.h \
   src/soe/PreSieve.h \

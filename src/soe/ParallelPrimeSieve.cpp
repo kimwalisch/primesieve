@@ -47,7 +47,7 @@
 
 #ifdef _OPENMP
   #include <omp.h>
-  #include "openmp_RAII.h"
+  #include "openmp_lock.h"
 #endif
 
 using namespace soe;
