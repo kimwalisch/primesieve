@@ -176,7 +176,11 @@ private:
     CALLBACK64_OBJ = 1 << 23,
     CALLBACK64_INT = 1 << 24
   };
-  /// Synchronizes threads
+  enum {
+    INIT_STATUS   = 0,
+    FINISH_STATUS = 10
+  };
+  /// Synchronize threads
   class LockGuard {
   public:
     LockGuard(PrimeSieve& ps) : ps_(ps) { ps_.setLock(); }

@@ -245,7 +245,7 @@ void PrimeSieve::sieve()
   clock_t t1 = std::clock();
   reset();
   if (isStatus())
-    updateStatus(0, false);
+    updateStatus(INIT_STATUS, false);
 
   // Small primes and k-tuplets (first prime <= 5)
   // are checked manually
@@ -282,7 +282,7 @@ void PrimeSieve::sieve()
 
   seconds_ = static_cast<double>(std::clock() - t1) / CLOCKS_PER_SEC;
   if (isStatus())
-    updateStatus(10, true);
+    updateStatus(FINISH_STATUS, true);
 }
 
 void PrimeSieve::sieve(uint64_t start, uint64_t stop)
