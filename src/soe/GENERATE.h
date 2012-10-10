@@ -41,54 +41,54 @@
 /// Reconstruct prime numbers from 1 bits of the sieve array and call
 /// a callback function for each prime.
 ///
-#define GENERATE_PRIMES(callback, uintX)                        \
-{                                                               \
-  for (uint_t i = 0; i < sieveSize; i += 4) {                   \
-    /* big-endian safe, reinterpret_cast won't work */          \
-    uint_t dword = sieve[i] |                                   \
-                  (sieve[i+1] << 8) |                           \
-                  (sieve[i+2] << 16) |                          \
-                  (sieve[i+3] << 24);                           \
-    while (dword != 0)                                          \
-      callback (static_cast<uintX>( getNextPrime(i, &dword) )); \
-  }                                                             \
+#define GENERATE_PRIMES(callback, uintX)                         \
+{                                                                \
+  for (uint_t i = 0; i < sieveSize; i += 4) {                    \
+    /* big-endian safe, reinterpret_cast won't work */           \
+    uint_t word32 = sieve[i] |                                   \
+                   (sieve[i+1] << 8) |                           \
+                   (sieve[i+2] << 16) |                          \
+                   (sieve[i+3] << 24);                           \
+    while (word32 != 0)                                          \
+      callback (static_cast<uintX>( getNextPrime(&word32, i) )); \
+  }                                                              \
 }
 
 /// Reconstruct twin primes from 11 bit patterns of the sieve array.
 /// For each twin prime pair (p1, p2) the first prime p1 is called
 /// back i.e. callback( p1 ).
 ///
-#define GENERATE_TWINS(callback, uintX)                         \
-{                                                               \
-  for (uint_t i = 0; i < sieveSize; i += 4) {                   \
-    uint_t dword = sieve[i] |                                   \
-                  (sieve[i+1] << 8) |                           \
-                  (sieve[i+2] << 16) |                          \
-                  (sieve[i+3] << 24);                           \
-    /* leave 1 bit for each 11 twin prime pattern */            \
-    dword &= (dword >> 1) & 0x4A4A4A4A;                         \
-    while (dword != 0)                                          \
-      callback (static_cast<uintX>( getNextPrime(i, &dword) )); \
-  }                                                             \
+#define GENERATE_TWINS(callback, uintX)                          \
+{                                                                \
+  for (uint_t i = 0; i < sieveSize; i += 4) {                    \
+    uint_t word32 = sieve[i] |                                   \
+                   (sieve[i+1] << 8) |                           \
+                   (sieve[i+2] << 16) |                          \
+                   (sieve[i+3] << 24);                           \
+    /* leave 1 bit for each 11 twin prime pattern */             \
+    word32 &= (word32 >> 1) & 0x4A4A4A4A;                        \
+    while (word32 != 0)                                          \
+      callback (static_cast<uintX>( getNextPrime(&word32, i) )); \
+  }                                                              \
 }
 
 /// Reconstruct prime triplets from 111 bit patterns of the sieve
 /// array. For each prime triplet (p1, p2, p3) the first prime p1 is
 /// called back i.e. callback( p1 ).
 ///
-#define GENERATE_TRIPLETS(callback, uintX)                      \
-{                                                               \
-  for (uint_t i = 0; i < sieveSize; i += 4) {                   \
-    uint_t dword = sieve[i] |                                   \
-                  (sieve[i+1] << 8) |                           \
-                  (sieve[i+2] << 16) |                          \
-                  (sieve[i+3] << 24);                           \
-    /* leave 1 bit for each 111 triplet pattern */              \
-    dword &= (dword >> 1);                                      \
-    dword &= (dword >> 1) & 0x0F0F0F0F;                         \
-    while (dword != 0)                                          \
-      callback (static_cast<uintX>( getNextPrime(i, &dword) )); \
-  }                                                             \
+#define GENERATE_TRIPLETS(callback, uintX)                       \
+{                                                                \
+  for (uint_t i = 0; i < sieveSize; i += 4) {                    \
+    uint_t word32 = sieve[i] |                                   \
+                   (sieve[i+1] << 8) |                           \
+                   (sieve[i+2] << 16) |                          \
+                   (sieve[i+3] << 24);                           \
+    /* leave 1 bit for each 111 triplet pattern */               \
+    word32 &= (word32 >> 1);                                     \
+    word32 &= (word32 >> 1) & 0x0F0F0F0F;                        \
+    while (word32 != 0)                                          \
+      callback (static_cast<uintX>( getNextPrime(&word32, i) )); \
+  }                                                              \
 }
 
 #endif

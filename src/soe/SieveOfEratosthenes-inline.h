@@ -85,18 +85,18 @@ inline void SieveOfEratosthenes::sieve(uint_t prime)
 }
 
 /// Reconstruct the prime number corresponding to the first
-/// set bit of the dword parameter (and unset bit).
+/// set bit of the word32 parameter (and unset bit).
+/// @param word32 The next 4 bytes of the sieve array.
 /// @param index  The current sieve index.
-/// @param dword  The next 4 bytes of the sieve array.
 ///
-inline uint64_t SieveOfEratosthenes::getNextPrime(uint_t index, uint_t* dword) const
+inline uint64_t SieveOfEratosthenes::getNextPrime(uint_t* word32, uint_t index) const
 {
-  // calculate bitValues_[ bitScanForward(*dword) ] using De Bruijn bitscan
-  uint_t firstBit = *dword & -static_cast<int>(*dword);
+  // calculate bitValues_[ bitScanForward(*word32) ] using De Bruijn bitscan
+  uint_t firstBit = *word32 & -static_cast<int>(*word32);
   uint_t byteValue = index * NUMBERS_PER_BYTE;
   uint_t bitValue = bruijnBitValues_[(firstBit * 0x077CB531) >> 27];
   uint64_t prime = segmentLow_ + byteValue + bitValue;
-  *dword ^= firstBit;
+  *word32 ^= firstBit;
   return prime;
 }
 
