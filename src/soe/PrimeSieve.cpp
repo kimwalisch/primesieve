@@ -179,8 +179,6 @@ void PrimeSieve::reset()
   toUpdate_  = 0;
   processed_ = 0;
   percent_   = -1.0;
-  if (isStatus())
-    updateStatus(INIT_STATUS, false);
 }
 
 void PrimeSieve::setLock()
@@ -250,6 +248,8 @@ void PrimeSieve::sieve()
     throw primesieve_error("start must be <= stop");
   clock_t t1 = std::clock();
   reset();
+  if (isStatus())
+    updateStatus(INIT_STATUS, false);
 
   // Small primes and k-tuplets (first prime <= 5)
   // are checked manually
