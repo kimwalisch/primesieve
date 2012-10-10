@@ -214,12 +214,12 @@ private:
   uint64_t processed_;
   /// Status of sieve() in percent
   double percent_;
-  bool isParallelPrimeSieveThread() const;
+  static void printStatus(double, double);
   bool isFlag(int, int) const;
   bool isPublicFlags(int) const;
   bool isStatus() const;
+  bool isParallelPrimeSieveThread() const;
   void doSmallPrime(const SmallPrime&);
-  void printStatus(double, double) const;
 };
 
 #endif
