@@ -58,7 +58,7 @@ private:
   /// List of buckets, holds the sieving primes
   std::list<Bucket> buckets_;
   void store(uint_t, uint_t, uint_t);
-  void crossOff(uint8_t*, uint_t, Bucket&);
+  static void crossOff(uint8_t*, uint_t, Bucket&);
   DISALLOW_COPY_AND_ASSIGN(EratMedium);
 };
 
