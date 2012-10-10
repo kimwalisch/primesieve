@@ -92,34 +92,35 @@ PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNumber) :
 PrimeSieve::~PrimeSieve()
 { }
 
-std::string PrimeSieve::getVersion()                      { return PRIMESIEVE_VERSION; }
-int         PrimeSieve::getMajorVersion()                 { return PRIMESIEVE_MAJOR_VERSION; }
-int         PrimeSieve::getMinorVersion()                 { return PRIMESIEVE_MINOR_VERSION; }
-uint64_t    PrimeSieve::getStart()                  const { return start_; }
-uint64_t    PrimeSieve::getStop()                   const { return stop_; }
-uint64_t    PrimeSieve::getInterval()               const { return stop_ - start_; }
-uint64_t    PrimeSieve::getPrimeCount()             const { return counts_[0]; }
-uint64_t    PrimeSieve::getTwinCount()              const { return counts_[1]; }
-uint64_t    PrimeSieve::getTripletCount()           const { return counts_[2]; }
-uint64_t    PrimeSieve::getQuadrupletCount()        const { return counts_[3]; }
-uint64_t    PrimeSieve::getQuintupletCount()        const { return counts_[4]; }
-uint64_t    PrimeSieve::getSextupletCount()         const { return counts_[5]; }
-uint64_t    PrimeSieve::getSeptupletCount()         const { return counts_[6]; }
-uint64_t    PrimeSieve::getCount(int index)         const { return counts_.at(index); }
-double      PrimeSieve::getStatus()                 const { return percent_; }
-double      PrimeSieve::getSeconds()                const { return seconds_; }
-int         PrimeSieve::getPreSieve()               const { return preSieve_; }
-int         PrimeSieve::getSieveSize()              const { return sieveSize_; }
-int         PrimeSieve::getFlags()                  const { return (flags_ & ((1 << 20) - 1)); }
-bool        PrimeSieve::isPublicFlags(int flags)    const { return (flags >= 0 && flags < (1 << 20)); }
-bool        PrimeSieve::isFlag(int flag)            const { return (flags_ & flag) == flag; }
-bool        PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last * 2 - first)) != 0; }
-bool        PrimeSieve::isCount(int index)          const { return isFlag(COUNT_PRIMES << index); }
-bool        PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRIMES << index); }
-bool        PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEPTUPLETS); }
-bool        PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEPTUPLETS); }
-bool        PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
-bool        PrimeSieve::isGenerate()                const { return isFlag(CALLBACK32, CALLBACK64_INT) || isPrint(); }
+std::string PrimeSieve::getVersion()                       { return PRIMESIEVE_VERSION; }
+int         PrimeSieve::getMajorVersion()                  { return PRIMESIEVE_MAJOR_VERSION; }
+int         PrimeSieve::getMinorVersion()                  { return PRIMESIEVE_MINOR_VERSION; }
+uint64_t    PrimeSieve::getStart()                   const { return start_; }
+uint64_t    PrimeSieve::getStop()                    const { return stop_; }
+uint64_t    PrimeSieve::getInterval()                const { return stop_ - start_; }
+uint64_t    PrimeSieve::getPrimeCount()              const { return counts_[0]; }
+uint64_t    PrimeSieve::getTwinCount()               const { return counts_[1]; }
+uint64_t    PrimeSieve::getTripletCount()            const { return counts_[2]; }
+uint64_t    PrimeSieve::getQuadrupletCount()         const { return counts_[3]; }
+uint64_t    PrimeSieve::getQuintupletCount()         const { return counts_[4]; }
+uint64_t    PrimeSieve::getSextupletCount()          const { return counts_[5]; }
+uint64_t    PrimeSieve::getSeptupletCount()          const { return counts_[6]; }
+uint64_t    PrimeSieve::getCount(int index)          const { return counts_.at(index); }
+double      PrimeSieve::getStatus()                  const { return percent_; }
+double      PrimeSieve::getSeconds()                 const { return seconds_; }
+int         PrimeSieve::getPreSieve()                const { return preSieve_; }
+int         PrimeSieve::getSieveSize()               const { return sieveSize_; }
+int         PrimeSieve::getFlags()                   const { return (flags_ & ((1 << 20) - 1)); }
+bool        PrimeSieve::isPublicFlags(int flags)     const { return (flags >= 0 && flags < (1 << 20)); }
+bool        PrimeSieve::isFlag(int flag)             const { return (flags_ & flag) == flag; }
+bool        PrimeSieve::isFlag(int first, int last)  const { return (flags_ & (last * 2 - first)) != 0; }
+bool        PrimeSieve::isCount(int index)           const { return isFlag(COUNT_PRIMES << index); }
+bool        PrimeSieve::isPrint(int index)           const { return isFlag(PRINT_PRIMES << index); }
+bool        PrimeSieve::isCount()                    const { return isFlag(COUNT_PRIMES, COUNT_SEPTUPLETS); }
+bool        PrimeSieve::isPrint()                    const { return isFlag(PRINT_PRIMES, PRINT_SEPTUPLETS); }
+bool        PrimeSieve::isStatus()                   const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
+bool        PrimeSieve::isGenerate()                 const { return isFlag(CALLBACK32, CALLBACK64_INT) || isPrint(); }
+bool        PrimeSieve::isParallelPrimeSieveThread() const { return parent_ != NULL; }
 
 /// Set a start number (lower bound) for sieving
 void PrimeSieve::setStart(uint64_t start)
@@ -178,18 +179,19 @@ void PrimeSieve::reset()
   toUpdate_  = 0;
   processed_ = 0;
   percent_   = -1.0;
+  if (isStatus())
+    updateStatus(INIT_STATUS, false);
 }
 
-/// Synchronize ParallelPrimeSieve threads
 void PrimeSieve::setLock()
 {
-  if (parent_ != NULL)
+  if (isParallelPrimeSieveThread())
     parent_->setLock();
 }
 
 void PrimeSieve::unsetLock()
 {
-  if (parent_ != NULL)
+  if (isParallelPrimeSieveThread())
     parent_->unsetLock();
 }
 
@@ -198,7 +200,7 @@ void PrimeSieve::unsetLock()
 ///
 bool PrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
 {
-  if (parent_ != NULL) {
+  if (isParallelPrimeSieveThread()) {
     toUpdate_ += processed;
     if (parent_->updateStatus(toUpdate_, waitForLock))
       toUpdate_ = 0;
@@ -248,8 +250,6 @@ void PrimeSieve::sieve()
     throw primesieve_error("start must be <= stop");
   clock_t t1 = std::clock();
   reset();
-  if (isStatus())
-    updateStatus(INIT_STATUS, false);
 
   // Small primes and k-tuplets (first prime <= 5)
   // are checked manually
