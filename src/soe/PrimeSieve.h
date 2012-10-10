@@ -218,7 +218,7 @@ private:
   bool isFlag(int, int) const;
   bool isPublicFlags(int) const;
   bool isStatus() const;
-  bool isParallelPrimeSieveThread() const;
+  bool isParallelPrimeSieveChild() const;
   void doSmallPrime(const SmallPrime&);
 };
 
