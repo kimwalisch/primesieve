@@ -93,8 +93,8 @@ inline uint64_t SieveOfEratosthenes::getNextPrime(uint_t* word32, uint_t index) 
 {
   // calculate bitValues_[ bitScanForward(*word32) ] using De Bruijn bitscan
   uint_t firstBit = *word32 & -static_cast<int>(*word32);
-  uint_t byteValue = index * NUMBERS_PER_BYTE;
   uint_t bitValue = bruijnBitValues_[(firstBit * 0x077CB531) >> 27];
+  uint_t byteValue = index * NUMBERS_PER_BYTE;
   uint64_t prime = segmentLow_ + byteValue + bitValue;
   *word32 ^= firstBit;
   return prime;
