@@ -45,12 +45,12 @@
 {                                                               \
   for (uint_t i = 0; i < sieveSize; i += 4) {                   \
     /* big-endian safe, reinterpret_cast won't work */          \
-    uint_t word32 = sieve[i] |                                  \
+    uint_t bits32 = sieve[i] |                                  \
                    (sieve[i+1] << 8) |                          \
                    (sieve[i+2] << 16) |                         \
                    (sieve[i+3] << 24);                          \
-    while (word32 != 0)                                         \
-      callback (static_cast<type>( getNextPrime(&word32, i) )); \
+    while (bits32 != 0)                                         \
+      callback (static_cast<type>( getNextPrime(&bits32, i) )); \
   }                                                             \
 }
 
@@ -61,14 +61,14 @@
 #define GENERATE_TWINS(callback, type)                          \
 {                                                               \
   for (uint_t i = 0; i < sieveSize; i += 4) {                   \
-    uint_t word32 = sieve[i] |                                  \
+    uint_t bits32 = sieve[i] |                                  \
                    (sieve[i+1] << 8) |                          \
                    (sieve[i+2] << 16) |                         \
                    (sieve[i+3] << 24);                          \
     /* leave 1 bit for each 11 twin prime pattern */            \
-    word32 &= (word32 >> 1) & 0x4A4A4A4A;                       \
-    while (word32 != 0)                                         \
-      callback (static_cast<type>( getNextPrime(&word32, i) )); \
+    bits32 &= (bits32 >> 1) & 0x4A4A4A4A;                       \
+    while (bits32 != 0)                                         \
+      callback (static_cast<type>( getNextPrime(&bits32, i) )); \
   }                                                             \
 }
 
@@ -79,15 +79,15 @@
 #define GENERATE_TRIPLETS(callback, type)                       \
 {                                                               \
   for (uint_t i = 0; i < sieveSize; i += 4) {                   \
-    uint_t word32 = sieve[i] |                                  \
+    uint_t bits32 = sieve[i] |                                  \
                    (sieve[i+1] << 8) |                          \
                    (sieve[i+2] << 16) |                         \
                    (sieve[i+3] << 24);                          \
     /* leave 1 bit for each 111 triplet pattern */              \
-    word32 &= (word32 >> 1);                                    \
-    word32 &= (word32 >> 1) & 0x0F0F0F0F;                       \
-    while (word32 != 0)                                         \
-      callback (static_cast<type>( getNextPrime(&word32, i) )); \
+    bits32 &= (bits32 >> 1);                                    \
+    bits32 &= (bits32 >> 1) & 0x0F0F0F0F;                       \
+    while (bits32 != 0)                                         \
+      callback (static_cast<type>( getNextPrime(&bits32, i) )); \
   }                                                             \
 }
 
