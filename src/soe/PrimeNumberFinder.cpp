@@ -32,13 +32,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "popcount.h"
+#include "config.h"
 #include "PrimeNumberFinder.h"
 #include "SieveOfEratosthenes.h"
 #include "PrimeSieve.h"
-#include "GENERATE.h"
-#include "config.h"
 #include "SynchronizeThreads.h"
+#include "popcount.h"
+#include "GENERATE.h"
 
 #include <stdint.h>
 #include <algorithm>
@@ -149,7 +149,7 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) const
         if ((sieve[j] & *bitmask) == *bitmask) {
           std::ostringstream kTuplet;
           kTuplet << "(";
-          uint_t bits = *bitmask;
+          uint64_t bits = *bitmask;
           while (bits != 0) {
             kTuplet << getNextPrime(&bits, j);
             kTuplet << ((bits != 0) ? ", " : ")\n");

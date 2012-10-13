@@ -35,8 +35,8 @@
 #ifndef SIEVEOFERATOSTHENES_H
 #define SIEVEOFERATOSTHENES_H
 
-#include "PreSieve.h"
 #include "config.h"
+#include "PreSieve.h"
 
 #include <stdint.h>
 #include <string>
@@ -80,10 +80,10 @@ protected:
   SieveOfEratosthenes(uint64_t, uint64_t, uint_t, uint_t);
   virtual ~SieveOfEratosthenes();
   virtual void segmentProcessed(const uint8_t*, uint_t) = 0;
-  uint64_t getNextPrime(uint_t*, uint_t) const;
+  uint64_t getNextPrime(uint64_t*, uint_t) const;
 private:
   static const uint_t bitValues_[8];
-  static const uint_t bruijnBitValues_[32];
+  static const uint_t bruijnBitValues_[64];
   /// Lower bound of the current segment
   uint64_t segmentLow_;
   /// Upper bound of the current segment

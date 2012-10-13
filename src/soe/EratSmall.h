@@ -35,8 +35,8 @@
 #ifndef ERATSMALL_H
 #define ERATSMALL_H
 
-#include "WheelFactorization.h"
 #include "config.h"
+#include "WheelFactorization.h"
 
 #include <stdint.h>
 #include <list>

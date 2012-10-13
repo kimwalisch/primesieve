@@ -35,8 +35,8 @@
 #ifndef ERATBIG_H
 #define ERATBIG_H
 
-#include "WheelFactorization.h"
 #include "config.h"
+#include "WheelFactorization.h"
 
 #include <stdint.h>
 #include <vector>

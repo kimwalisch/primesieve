@@ -44,6 +44,10 @@
 #ifndef CONFIG_PRIMESIEVE_H
 #define CONFIG_PRIMESIEVE_H
 
+/// Enable the UINT64_C() macro from <stdint.h>
+#if !defined(__STDC_CONSTANT_MACROS)
+  #define __STDC_CONSTANT_MACROS
+#endif
 #include <stdint.h>
 
 /// Disable assert() macro

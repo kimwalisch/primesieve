@@ -32,6 +32,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "config.h"
 #include "SieveOfEratosthenes.h"
 #include "PrimeSieve.h"
 #include "PreSieve.h"
@@ -39,7 +40,6 @@
 #include "EratMedium.h"
 #include "EratBig.h"
 #include "imath.h"
-#include "config.h"
 
 #include <stdint.h>
 #include <cstdlib>
@@ -48,13 +48,17 @@ namespace soe {
 
 const uint_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
 
-/// De Bruijn sequence for first set bitValues_
-const uint_t SieveOfEratosthenes::bruijnBitValues_[32] =
+/// De Bruijn bitscan table
+const uint_t SieveOfEratosthenes::bruijnBitValues_[64] =
 {
-    7,  11, 109,  13, 113,  59,  97,  17,
-  119,  89,  79,  61, 101,  71,  19,  37,
-  121, 107,  53,  91,  83,  77,  67,  31,
-  103,  49,  73,  29,  47,  23,  43,  41
+    7,  47,  11,  49,  67, 113,  13,  53, 
+   89,  71, 161, 101, 119, 187,  17, 233, 
+   59,  79,  91,  73, 133, 139, 163, 103, 
+  149, 121, 203, 169, 191, 217,  19, 239, 
+   43,  61, 109,  83, 157,  97, 181, 229, 
+   77, 131, 137, 143, 199, 167, 211,  41, 
+  107, 151, 179, 227, 127, 197, 209,  37, 
+  173, 223, 193,  31, 221,  29,  23, 241
 };
 
 /// @param start      Sieve primes >= start.

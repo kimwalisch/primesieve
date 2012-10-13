@@ -35,10 +35,10 @@
 /// @brief  ParallelPrimeSieve sieves primes in parallel using
 ///         OpenMP 2.0 (2002) or later.
 
+#include "config.h"
 #include "ParallelPrimeSieve.h"
 #include "PrimeSieve.h"
 #include "imath.h"
-#include "config.h"
 
 #include <stdint.h>
 #include <cstdlib>

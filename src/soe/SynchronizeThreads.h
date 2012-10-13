@@ -1,8 +1,8 @@
 #ifndef SYNCHRONIZETHREADS_H
 #define SYNCHRONIZETHREADS_H
 
-#include "PrimeSieve.h"
 #include "config.h"
+#include "PrimeSieve.h"
 
 namespace soe {
 

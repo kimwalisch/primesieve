@@ -35,13 +35,13 @@
 #ifndef SIEVEOFERATOSTHENES_INLINE_H
 #define SIEVEOFERATOSTHENES_INLINE_H
 
+#include "config.h"
 #include "SieveOfEratosthenes.h"
 #include "PreSieve.h"
 #include "EratSmall.h"
 #include "EratMedium.h"
 #include "EratBig.h"
 #include "imath.h"
-#include "config.h"
 
 #include <stdint.h>
 #include <string>
@@ -66,17 +66,14 @@ inline void SieveOfEratosthenes::sieve(uint_t prime)
 {
   assert(prime <= sqrtStop_);
   uint64_t square = isquare<uint64_t>(prime);
-  // This loop segments the sieve of Eratosthenes, it is executed when
-  // all primes <= sqrt(segmentHigh_) required to sieve the next
-  // segment have been stored in the erat* objects below.
+  // This loop is executed once all primes <= sqrt(segmentHigh_)
+  // required to sieve the next segment have been
+  // stored in the erat* objects below.
   while (segmentHigh_ < square) {
     sieveSegment();
     segmentLow_ += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
-  // add prime to eratSmall_  if it has many multiples per segment,
-  // add prime to eratMedium_ if it has a few multiples per segment,
-  // add prime to eratBig_    if it has very few ...
   if (prime > eratSmall_->getLimit())
     if (prime > eratMedium_->getLimit())
             eratBig_->add(prime, segmentLow_);
@@ -84,19 +81,19 @@ inline void SieveOfEratosthenes::sieve(uint_t prime)
   else    eratSmall_->add(prime, segmentLow_);
 }
 
-/// Reconstruct the prime number corresponding to the first
-/// set bit of the word32 parameter (and unset bit).
-/// @param word32 The next 4 bytes of the sieve array.
-/// @param index  The current sieve index.
+/// Reconstruct the prime number corresponding to the first set
+/// bit of the `bits' parameter and unset that bit.
+/// @see GENERATE.h.
 ///
-inline uint64_t SieveOfEratosthenes::getNextPrime(uint_t* word32, uint_t index) const
+inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint_t index) const
 {
-  // calculate bitValues_[ bitScanForward(*word32) ] using De Bruijn bitscan
-  uint_t firstBit = *word32 & -static_cast<int>(*word32);
-  uint_t bitValue = bruijnBitValues_[(firstBit * 0x077CB531) >> 27];
-  uint_t byteValue = index * NUMBERS_PER_BYTE;
+  // calculate bitValues_[ bitScanForward(*bits) ]
+  // using a custom De Bruijn bitscan
+  uint64_t mask = *bits - 1;
+  uint64_t bitValue = bruijnBitValues_[((*bits ^ mask) * UINT64_C(0x3F08A4C6ACB9DBD)) >> 58];
+  uint64_t byteValue = index * NUMBERS_PER_BYTE;
   uint64_t prime = segmentLow_ + byteValue + bitValue;
-  *word32 ^= firstBit;
+  *bits &= mask;
   return prime;
 }
 

@@ -35,11 +35,11 @@
 #ifndef PRIMENUMBERGENERATOR_H
 #define PRIMENUMBERGENERATOR_H
 
+#include "config.h"
 #include "SieveOfEratosthenes.h"
 #include "SieveOfEratosthenes-inline.h"
 #include "PrimeNumberFinder.h"
 #include "GENERATE.h"
-#include "config.h"
 
 #include <stdint.h>
 

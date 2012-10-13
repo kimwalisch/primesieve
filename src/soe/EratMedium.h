@@ -35,8 +35,8 @@
 #ifndef ERATMEDIUM_H
 #define ERATMEDIUM_H
 
-#include "WheelFactorization.h"
 #include "config.h"
+#include "WheelFactorization.h"
 
 #include <stdint.h>
 #include <list>

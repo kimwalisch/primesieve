@@ -32,12 +32,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "config.h"
 #include "PrimeSieve.h"
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
 #include "SynchronizeThreads.h"
 #include "imath.h"
-#include "config.h"
 
 #include <stdint.h>
 #include <iostream>

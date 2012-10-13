@@ -37,12 +37,12 @@
 ///         cache-friendly segmented sieve of Eratosthenes algorithm.
 /// @see    http://www.ieeta.pt/~tos/software/prime_sieve.html
 
+#include "config.h"
 #include "EratBig.h"
 #include "WheelFactorization.h"
 #include "SieveOfEratosthenes.h"
 #include "PrimeSieve.h"
 #include "imath.h"
-#include "config.h"
 
 #include <stdint.h>
 #include <cstdlib>

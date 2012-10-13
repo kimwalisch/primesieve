@@ -32,11 +32,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "config.h"
 #include "EratMedium.h"
 #include "WheelFactorization.h"
 #include "SieveOfEratosthenes.h"
 #include "PrimeSieve.h"
-#include "config.h"
 
 #include <stdint.h>
 #include <cassert>
