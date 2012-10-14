@@ -82,7 +82,7 @@ private:
   uint64_t align(uint64_t) const;
   template <typename T>
   T getLock() {
-    return static_cast<T> (lock_);
+    return static_cast<T>(lock_);
   }
   virtual void setLock();
   virtual void unsetLock();

@@ -59,7 +59,7 @@ private:
 ///
 OmpInitLock::OmpInitLock(void** lockAddress)
 {
-  *lockAddress = static_cast<void*> (&lock_);
+  *lockAddress = static_cast<void*>(&lock_);
   omp_init_lock(&lock_);
 }
 
