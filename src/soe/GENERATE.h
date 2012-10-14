@@ -41,8 +41,8 @@
 
 #include <stdint.h>
 
-/// Reconstruct prime numbers from 1 bits of the sieve array and call
-/// a callback function for each prime.
+/// Reconstruct prime numbers from 1 bits within the sieve array and
+/// call a callback function for each prime.
 ///
 #define GENERATE_PRIMES(callback, type)                       \
 {                                                             \
@@ -53,9 +53,9 @@
   }                                                           \
 }
 
-/// Reconstruct twin primes from 11 bit patterns of the sieve array.
-/// For each twin prime pair (p1, p2) the first prime p1 is called
-/// back i.e. callback( p1 ).
+/// Reconstruct twin primes from 11 bit patterns within the sieve
+/// array. For each twin prime pair (p1, p2) the first prime p1
+/// is called back i.e. callback(p1).
 ///
 #define GENERATE_TWINS(callback, type)                        \
 {                                                             \
@@ -67,9 +67,9 @@
   }                                                           \
 }
 
-/// Reconstruct prime triplets from 111 bit patterns of the sieve
-/// array. For each prime triplet (p1, p2, p3) the first prime p1 is
-/// called back i.e. callback( p1 ).
+/// Reconstruct prime triplets from 111 bit patterns within the sieve
+/// array. For each prime triplet (p1, p2, p3) the first prime p1
+/// is called back i.e. callback(p1).
 ///
 #define GENERATE_TRIPLETS(callback, type)                     \
 {                                                             \
