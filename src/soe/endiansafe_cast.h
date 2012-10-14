@@ -36,7 +36,7 @@ struct accumulate_bytes<T, 0>
 
 /// Cast bytes in ascending address order.
 template <typename T>
-T endiansafe_cast(const uint8_t* array)
+inline T endiansafe_cast(const uint8_t* array)
 {
   return accumulate_bytes<T, sizeof(T) - 1>::do_it(array);
 }
