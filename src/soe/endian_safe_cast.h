@@ -6,6 +6,13 @@
 
 namespace soe {
 
+// Template metaprogramming, recursively accumulate bytes.
+// e.g. endian_safe_cast<int>(array)
+// result  = array[0];
+// result += array[1] << 8;
+// result += array[2] << 16;
+// result += array[3] << 24;
+
 template <typename T, std::size_t INDEX>
 struct accumulate_bytes
 {
@@ -23,15 +30,11 @@ struct accumulate_bytes<T, 0>
 {
   static T do_it(const uint8_t* array)
   {
-    T result = array[0];
-    return result;
+    return array[0];
   }
 };
 
 /// Cast bytes in ascending address order.
-/// endian_safe_cast<T>(array) == reinterpret_cast<T*>(array)[0]
-/// on little endian CPUs.
-///
 template <typename T>
 T endian_safe_cast(const uint8_t* array)
 {
