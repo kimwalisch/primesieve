@@ -1,5 +1,5 @@
-#ifndef ENDIAN_SAFE_CAST_H
-#define ENDIAN_SAFE_CAST_H
+#ifndef ENDIANSAFE_CAST_H
+#define ENDIANSAFE_CAST_H
 
 #include <cstddef>
 #include <stdint.h>
@@ -7,7 +7,7 @@
 namespace soe {
 
 // Template metaprogramming, recursively accumulate bytes.
-// e.g. endian_safe_cast<int>(array)
+// e.g. endiansafe_cast<int>(array)
 // result  = array[0];
 // result += array[1] << 8;
 // result += array[2] << 16;
@@ -36,7 +36,7 @@ struct accumulate_bytes<T, 0>
 
 /// Cast bytes in ascending address order.
 template <typename T>
-T endian_safe_cast(const uint8_t* array)
+T endiansafe_cast(const uint8_t* array)
 {
   return accumulate_bytes<T, sizeof(T) - 1>::do_it(array);
 }

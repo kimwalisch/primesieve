@@ -40,7 +40,7 @@ SOE_HEADERS := \
   src/soe/EratSmall.h \
   src/soe/GENERATE.h \
   src/soe/imath.h \
-  src/soe/endian_safe_cast.h \
+  src/soe/endiansafe_cast.h \
   src/soe/openmp_lock.h \
   src/soe/ParallelPrimeSieve.h \
   src/soe/popcount.h \

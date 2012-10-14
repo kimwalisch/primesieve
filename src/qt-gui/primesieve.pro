@@ -68,7 +68,7 @@ HEADERS += ../soe/EratSmall.h \
     ../soe/config.h \
     ../soe/GENERATE.h \
     ../soe/imath.h \
-    ../soe/endian_safe_cast.h \
+    ../soe/endiansafe_cast.h \
     ../soe/openmp_lock.h \
     ../soe/popcount.h \
     ../soe/toString.h \
