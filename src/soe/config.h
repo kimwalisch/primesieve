@@ -70,16 +70,14 @@ typedef unsigned int uint_t;
 
 namespace config {
 enum {
-  /// Default sieve size in kilobytes of PrimeSieve and
-  /// ParallelPrimeSieve objects. Set SIEVESIZE to your CPUs L1 data
-  /// cache size to get the best performance.
+  /// Default sieve size in kilobytes. Set SIEVESIZE to your CPUs L1
+  /// data cache size to get the best performance.
   /// @pre SIEVESIZE >= 1 && <= 4096
   ///
   SIEVESIZE = L1_DCACHE_SIZE,
 
-  /// Default pre-sieve limit of PrimeSieve and ParallelPrimeSieve
-  /// objects. Multiples of small primes up to this limit are
-  /// pre-sieved to speed up the sieve of Eratosthenes.
+  /// Default pre-sieve limit. Multiples of primes up to this limit
+  /// are pre-sieved to speed up the sieve of Eratosthenes.
   /// @pre PRESIEVE >= 13 && <= 23.
   ///
   PRESIEVE = 19,
