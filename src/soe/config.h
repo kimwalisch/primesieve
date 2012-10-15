@@ -125,12 +125,12 @@ const double FACTOR_ERATMEDIUM = 6;
 /// MIN_THREAD_INTERVAL to reduce the initialization overhead.
 /// @pre MIN_THREAD_INTERVAL >= 100
 ///
-const uint64_t MIN_THREAD_INTERVAL = UINT64_C(10000000);
+const uint64_t MIN_THREAD_INTERVAL = static_cast<uint64_t>(1e7);
 
 /// In ParallelPrimeSieve each thread sieves at most an interval of size
 /// MAX_THREAD_INTERVAL to prevent load imbalance near 99%.
 ///
-const uint64_t MAX_THREAD_INTERVAL = UINT64_C(20000000000);
+const uint64_t MAX_THREAD_INTERVAL = static_cast<uint64_t>(2e10);
 
 } // namespace config
 } // namespace soe
