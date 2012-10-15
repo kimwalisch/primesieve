@@ -39,8 +39,8 @@
 /// multiples of small primes e.g. <= 7 in the sieve of Eratosthenes
 /// using wheel factorization.
 
+#include "config.h"
 #include "WheelFactorization.h"
-#include "bits.h"
 
 namespace soe {
 

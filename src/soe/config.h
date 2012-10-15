@@ -33,13 +33,11 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /// @file   config.h
-/// @brief  Constants that set the size of various arrays and limits
-///         within primesieve.
+/// @brief  Macro definitions and compile time constants that set
+///         various limits within primesieve.
 ///
 /// The constants have been optimized for an Intel Core i7-3770K
-/// 3.5GHz (32K L1 data cache per CPU core) CPU from 2012.
-/// You can set L1_DCACHE_SIZE and BUCKETSIZE according to your CPU
-/// type to get the best performance.
+/// 3.5GHz (32K L1 data cache) CPU from 2012.
 
 #ifndef CONFIG_PRIMESIEVE_H
 #define CONFIG_PRIMESIEVE_H
@@ -51,7 +49,7 @@
 #include <stdint.h>
 
 /// Disable assert() macro
-#if !defined(DEBUG) && !defined(_DEBUG) && !defined(NDEBUG)
+#if !defined(DEBUG) && !defined(NDEBUG)
   #define NDEBUG
 #endif
 
@@ -68,8 +66,6 @@
 #endif
 
 namespace soe {
-typedef unsigned int uint_t;
-
 namespace config {
 
 enum {
@@ -93,51 +89,64 @@ enum {
   ///
   PRESIEVE_GENERATOR = 13,
 
-  /// Number of sieving primes per Bucket in EratSmall, EratMedium and EratBig
-  /// objects. This constant is important for performance.
+  /// Number of sieving primes per Bucket in EratSmall, EratMedium and
+  /// EratBig objects, affects performance by about 3%.
   ///
-  /// - For x86-64 CPUs post 2010 use 1024
+  /// - For x86-64 CPUs post  2010 use 1024
   /// - For x86-64 CPUs prior 2010 use 512
   /// - For PowerPC G4 CPUs (2003) use 256
   ///
   BUCKETSIZE = 1 << 10,
 
-  /// EratBig allocates MEMORY_PER_ALLOC bytes of new memory each time
-  /// it needs more buckets. Default = 4 megabytes.
+  /// EratBig allocates MEMORY_PER_ALLOC bytes of new memory each
+  /// time it needs more buckets. Default = 4 megabytes.
   ///
   MEMORY_PER_ALLOC = (1 << 20) * 4
 };
 
-/// In SieveOfEratosthenes sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
-/// are processed in EratSmall objects.
+/// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
+/// are processed in EratSmall objects, affects performance by about 5%.
 /// @pre FACTOR_ERATSMALL >= 0 && <= 3
 ///
-/// - For x86-64 CPUs post 2010 use 0.5 or 0.3
+/// - For x86-64 CPUs post  2010 use 0.5 or 0.3
 /// - For x86-64 CPUs prior 2010 use 0.8
 /// - For PowerPC G4 CPUs (2003) use 1.0
 ///
 const double FACTOR_ERATSMALL = 0.5;
 
-/// In SieveOfEratosthenes sieving primes <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
-/// and > EratSmall (see above) are processed in EratMedium objects.
+/// Sieving primes <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
+/// (and > EratSmall, see above) are processed in EratMedium objects.
 /// @pre FACTOR_ERATMEDIUM >= 0 && <= 6
 ///
 const double FACTOR_ERATMEDIUM = 6;
 
-/// In ParallelPrimeSieve threads sieve at least an interval of size
+/// In ParallelPrimeSieve each thread sieves at least an interval of size
 /// MIN_THREAD_INTERVAL to reduce the initialization overhead.
 /// @pre MIN_THREAD_INTERVAL >= 100
 ///
-const uint64_t MIN_THREAD_INTERVAL = static_cast<uint64_t>(1E7);
+const uint64_t MIN_THREAD_INTERVAL = UINT64_C(10000000);
 
-/// In ParallelPrimeSieve threads sieve at most an interval of size
-/// MAX_THREAD_INTERVAL to prevent load imbalance when lots of threads
-/// are used. Default = 2E10, this value guarantees that threads
-/// always finish in less than a minute.
+/// In ParallelPrimeSieve each thread sieves at most an interval of size
+/// MAX_THREAD_INTERVAL to prevent load imbalance near 99%.
 ///
-const uint64_t MAX_THREAD_INTERVAL = static_cast<uint64_t>(2E10);
+const uint64_t MAX_THREAD_INTERVAL = UINT64_C(20000000000);
 
 } // namespace config
+
+typedef unsigned int uint_t;
+
+/// Bitmasks to turn off single bits of a byte
+enum {
+  BIT0 = 0xfe, // 11111110
+  BIT1 = 0xfd, // 11111101
+  BIT2 = 0xfb, // 11111011
+  BIT3 = 0xf7, // 11110111
+  BIT4 = 0xef, // 11101111
+  BIT5 = 0xdf, // 11011111
+  BIT6 = 0xbf, // 10111111
+  BIT7 = 0x7f  // 01111111
+};
+
 } // namespace soe
 
 #endif

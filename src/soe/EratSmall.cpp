@@ -37,7 +37,6 @@
 #include "WheelFactorization.h"
 #include "SieveOfEratosthenes.h"
 #include "PrimeSieve.h"
-#include "bits.h"
 
 #include <stdint.h>
 #include <cassert>

@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   14 October 2012
+# Last modified:   15 October 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -33,7 +33,6 @@ SOE_SOURCES:= \
   src/soe/WheelFactorization.cpp
 
 SOE_HEADERS := \
-  src/soe/bits.h \
   src/soe/config.h \
   src/soe/EratBig.h \
   src/soe/EratMedium.h \
