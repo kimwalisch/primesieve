@@ -84,8 +84,8 @@ enum {
   ///
   PRESIEVE = 19,
 
-  /// Pre-sieve limit of PrimeNumberGenerator. Default = 13 (uses 1001 bytes),
-  /// a greater value uses more memory with no speedup.
+  /// Pre-sieve limit of PrimeNumberGenerator. Default = 13, a
+  /// greater value uses more memory with no speedup.
   /// @pre PRESIEVE_GENERATOR >= 13 && <= 23
   ///
   PRESIEVE_GENERATOR = 13,
@@ -106,7 +106,7 @@ enum {
 };
 
 /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
-/// are processed in EratSmall objects, affects performance by about 5%.
+/// are processed in EratSmall objects, affects performance by ~ 5%.
 /// @pre FACTOR_ERATSMALL >= 0 && <= 3
 ///
 /// - For x86-64 CPUs post  2010 use 0.5 or 0.3
@@ -121,8 +121,8 @@ const double FACTOR_ERATSMALL = 0.5;
 ///
 const double FACTOR_ERATMEDIUM = 6;
 
-/// Each thread sieves at least an interval of size MIN_THREAD_INTERVAL
-/// to reduce the initialization overhead.
+/// Each thread sieves at least an interval of size
+/// MIN_THREAD_INTERVAL to reduce the initialization overhead.
 /// @pre MIN_THREAD_INTERVAL >= 100
 ///
 const uint64_t MIN_THREAD_INTERVAL = static_cast<uint64_t>(1e7);
