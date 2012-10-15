@@ -69,23 +69,21 @@ extern const WheelInit wheel210Init[210];
 /// small primes using wheel factorization.
 ///
 struct WheelElement {
-  /// Bitmask used with the bitwise & operator to unset the bit
-  /// corresponding to the current multiple of a WheelPrime object.
+  /// Bitmask used to unset the bit corresponding to the current
+  /// multiple of a WheelPrime object.
   uint8_t unsetBit;
   /// Factor used to calculate the next multiple of a sieving prime
   /// that is not divisible by any of the wheel factors.
   uint8_t nextMultipleFactor;
-  /// Overflow needed to correct the next multiple index,
-  /// due to sievingPrime = prime / 30.
+  /// Overflow needed to correct the next multiple index
+  /// (due to sievingPrime = prime / 30).
   uint8_t correct;
   /// Used to calculate the next wheel index:
   /// wheelIndex += next;
    int8_t next;
 };
 
-/// Modulo 30 wheel array, skips multiples of 2, 3 and 5
 extern const WheelElement wheel30[8*8];
-/// Modulo 210 wheel array, skips multiples of 2, 3, 5 and 7
 extern const WheelElement wheel210[48*8];
 
 /// WheelPrime objects are sieving primes for use with wheel
@@ -96,12 +94,10 @@ extern const WheelElement wheel210[48*8];
 ///
 class WheelPrime {
 public:
-  enum {
-    MAX_MULTIPLE_INDEX = (1 << 23) - 1
-  };
-  uint_t getSievingPrime() const  { return sievingPrime_; }
-  uint_t getMultipleIndex() const { return indexes_ & ((1 << 23) - 1); }
-  uint_t getWheelIndex() const    { return indexes_ >> 23; }
+  static uint_t maxMultipleIndex() { return (1 << 23) - 1; }
+  uint_t getSievingPrime() const   { return sievingPrime_; }
+  uint_t getMultipleIndex() const  { return indexes_ & ((1 << 23) - 1); }
+  uint_t getWheelIndex() const     { return indexes_ >> 23; }
 
   void setMultipleIndex(uint_t multipleIndex)
   {
@@ -128,9 +124,7 @@ private:
   /// multipleIndex = 23 least significant bits of indexes_.
   /// wheelIndex    =  9 most  significant bits of indexes_.
   uint32_t indexes_;
-  /// sievingPrime_ = prime / 30;
-  /// '/ 30' is used as SieveOfEratosthenes objects use a bit array
-  /// with 30 numbers per byte for sieving.
+  /// Used to cross off multiples of itself.
   uint32_t sievingPrime_;
 };
 
@@ -202,15 +196,14 @@ public:
   void add(uint_t prime, uint64_t segmentLow)
   {
     segmentLow += 6;
-    // calculate the first multiple > segmentLow
+    // calculate the first multiple (of prime) > segmentLow
     uint64_t quotient = segmentLow / prime + 1;
     uint64_t multiple = prime * quotient;
-    // prime is not needed for sieving
+    // prime not needed for sieving
     if (multiple > stop_)
       return;
     uint64_t square = isquare<uint64_t>(prime);
     if (multiple < square) {
-      // prime^2 is the first multiple that must be crossed-off
       multiple = square;
       quotient = prime;
     }
@@ -221,7 +214,6 @@ public:
       return;
     uint_t multipleIndex = static_cast<uint_t>((multiple - segmentLow) / 30);
     uint_t wheelIndex = wheelOffsets_[prime % 30] + INIT[quotient % MODULO].wheelIndex;
-    // @see Erat(Small|Medium|Big).cpp
     store(prime, multipleIndex, wheelIndex);
   }
 protected:
@@ -231,7 +223,7 @@ protected:
   WheelFactorization(uint64_t stop, uint_t sieveSize) :
     stop_(stop)
   {
-    const uint_t maxSieveSize = WheelPrime::MAX_MULTIPLE_INDEX + 1;
+    const uint_t maxSieveSize = WheelPrime::maxMultipleIndex() + 1;
     if (sieveSize > maxSieveSize)
       throw primesieve_error("WheelFactorization: sieveSize must be <= " + toString(maxSieveSize));
     if (stop > getMaxStop())
@@ -272,6 +264,7 @@ WheelFactorization<MODULO, SIZE, INIT, WHEEL>::wheelOffsets_[30] =
 
 /// 3rd wheel, skips multiples of 2, 3 and 5
 typedef WheelFactorization<30, 8, wheel30Init, wheel30> Modulo30Wheel_t;
+
 /// 4th wheel, skips multiples of 2, 3, 5 and 7
 typedef WheelFactorization<210, 48, wheel210Init, wheel210> Modulo210Wheel_t;
 

@@ -6,13 +6,13 @@
 
 namespace soe {
 
-// Template metaprogramming, recursively accumulate bytes.
-// e.g. endiansafe_cast<int>(array)
-// result  = array[0];
-// result += array[1] << 8;
-// result += array[2] << 16;
-// result += array[3] << 24;
-
+/// Recursively accumulate bytes using template metaprogramming.
+/// e.g. endiansafe_cast<int>(array)
+/// result  = array[0];
+/// result += array[1] << 8;
+/// result += array[2] << 16;
+/// result += array[3] << 24;
+///
 template <typename T, std::size_t INDEX>
 struct accumulate_bytes
 {
