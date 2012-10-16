@@ -6,31 +6,31 @@
 
 namespace soe {
 
-/// Recursively accumulate bytes using template metaprogramming.
-/// e.g. endiansafe_cast<int>(array)
-/// result  = array[0];
-/// result += array[1] << 8;
-/// result += array[2] << 16;
-/// result += array[3] << 24;
+/// Recursively sum bytes using template metaprogramming.
+/// e.g. endiansafe_cast<int>(array) = 
+/// return (array[0] <<  0) + (array[1] <<  8) + 
+///        (array[2] << 16) + (array[3] << 24) + 0;
 ///
-template <typename T, std::size_t INDEX>
-struct accumulate_bytes
+template <typename T, std::size_t COUNT>
+struct endiansafe_cast_helper
 {
-  static T do_it(const uint8_t* array)
+  enum {
+    INDEX = sizeof(T) - COUNT,
+    SHIFT = INDEX * 8
+  };
+  static T go(const uint8_t* array)
   {
-    T result = accumulate_bytes<T, INDEX - 1>::do_it(array);
     T byte = array[INDEX];
-    result += byte << (INDEX * 8);
-    return result;
+    return (byte << SHIFT) + endiansafe_cast_helper<T, COUNT - 1>::go(array);
   }
 };
 
 template <typename T>
-struct accumulate_bytes<T, 0>
+struct endiansafe_cast_helper<T, 0>
 {
-  static T do_it(const uint8_t* array)
+  static T go(const uint8_t*)
   {
-    return array[0];
+    return 0;
   }
 };
 
@@ -38,7 +38,7 @@ struct accumulate_bytes<T, 0>
 template <typename T>
 inline T endiansafe_cast(const uint8_t* array)
 {
-  return accumulate_bytes<T, sizeof(T) - 1>::do_it(array);
+  return endiansafe_cast_helper<T, sizeof(T)>::go(array);
 }
 
 } // namespace soe
