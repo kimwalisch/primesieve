@@ -93,11 +93,13 @@ TEST_DEPENDENCIES = \
 # Add /openmp if MSVC supports OpenMP
 #-----------------------------------------------------------------------------
 
-!IF ([$(CXX) /? 2>&1 | findstr /I "OpenMP" > nul ] == 0)
-!IF ([$(CXX) /openmp /c src\test\has_openmp.cpp > nul] != 0)
-NO_OPENMP = true
-!ELSE
+!IF EXIST(has_openmp.exe)
 CXXFLAGS = $(CXXFLAGS) /openmp
+!ELSE
+!IF ([$(CXX) /openmp src\test\has_openmp.cpp > nul] == 0)
+CXXFLAGS = $(CXXFLAGS) /openmp
+!ELSE
+NO_OPENMP = true
 !ENDIF
 !ENDIF
 
@@ -121,7 +123,7 @@ CXXFLAGS = $(CXXFLAGS) $(INCPATH)
 # Build the primesieve console application (read doc/INSTALL)
 #-----------------------------------------------------------------------------
 
-bin: bin_dir bin_obj openmp_prerequisite_warning
+bin: bin_dir bin_obj openmp_note
 
 bin_dir:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
@@ -142,7 +144,7 @@ $(BINDIR)\test.obj: src\test\test.cpp $(TEST_DEPENDENCIES)
 # Build a static primesieve.lib (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-lib: lib_dir lib_obj openmp_prerequisite_warning
+lib: lib_dir lib_obj openmp_note
 
 lib_dir:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
@@ -168,7 +170,7 @@ dist_dir:
 # Build the example programs (read examples/INSTALL)
 #-----------------------------------------------------------------------------
 
-examples: $(EXAMPLE_OBJECTS) openmp_prerequisite_warning
+examples: $(EXAMPLE_OBJECTS) openmp_note
 
 $(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
 	$(CXX) $(CXXFLAGS) /I $(DISTDIR) $** /Fo$@ /Fe$(@R).exe /link dist\$(TARGET).lib
@@ -181,7 +183,7 @@ all: bin lib
 
 clean:
 	-rd /Q /S $(BINDIR) $(LIBDIR) $(DISTDIR) 2> /nul
-	-del /Q has_openmp.obj 2> /nul
+	-del /Q has_openmp.* 2> /nul
 	-del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj 2> /nul
 
 #-----------------------------------------------------------------------------
@@ -192,15 +194,14 @@ check test: bin
 	$(BINDIR)\$(TARGET).exe -test
 
 #-----------------------------------------------------------------------------
-# OpenMP prerequisite: Microsoft Visual C++ Redistributable Package
+# OpenMP requires Microsoft Visual C++ Professional or higher
 #-----------------------------------------------------------------------------
 
-openmp_prerequisite_warning:
+openmp_note:
 !IF DEFINED(NO_OPENMP)
-	@echo "                                                                     "
-	@echo "  WARNING: OpenMP is not available! Please download and install the  "
-	@echo "           Microsoft Visual C++ Redistributable Package.             "
-	@echo "           When done recompile.                                      "
+	@echo "                                                                   "
+	@echo "  NOTE: Your MSVC version does not support OpenMP. For OpenMP you  "
+	@echo "        need Microsoft Visual C++ Professional or higher.          "
 !ENDIF
 
 #-----------------------------------------------------------------------------
