@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   14 October 2012
+# Last modified:   16 October 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -13,7 +13,7 @@
 CXX      = cl /nologo
 CXXFLAGS = /W2 /O2 /EHsc
 INCPATH  = /I src\thirdparty
-LINK     = link
+LINK     = link /nologo
 TARGET   = primesieve
 BINDIR   = bin
 LIBDIR   = lib
@@ -94,7 +94,11 @@ TEST_DEPENDENCIES = \
 #-----------------------------------------------------------------------------
 
 !IF ([$(CXX) /? 2>&1 | findstr /I "OpenMP" > nul ] == 0)
+!IF ([$(CXX) /openmp /c src\test\has_openmp.cpp > nul] != 0)
+NO_OPENMP = true
+!ELSE
 CXXFLAGS = $(CXXFLAGS) /openmp
+!ENDIF
 !ENDIF
 
 #-----------------------------------------------------------------------------
@@ -117,7 +121,7 @@ CXXFLAGS = $(CXXFLAGS) $(INCPATH)
 # Build the primesieve console application (read doc/INSTALL)
 #-----------------------------------------------------------------------------
 
-bin: bin_dir bin_obj
+bin: bin_dir bin_obj openmp_prerequisite_warning
 
 bin_dir:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
@@ -138,13 +142,13 @@ $(BINDIR)\test.obj: src\test\test.cpp $(TEST_DEPENDENCIES)
 # Build a static primesieve.lib (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-lib: lib_dir lib_obj
+lib: lib_dir lib_obj openmp_prerequisite_warning
 
 lib_dir:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
 
 lib_obj: $(LIB_OBJECTS)
-	lib.exe /OUT:$(LIBDIR)\$(TARGET).lib $**
+	lib.exe /nologo /OUT:$(LIBDIR)\$(TARGET).lib $**
 
 $(LIB_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\soe\$(@B).cpp /Fo$@
@@ -164,7 +168,7 @@ dist_dir:
 # Build the example programs (read examples/INSTALL)
 #-----------------------------------------------------------------------------
 
-examples: $(EXAMPLE_OBJECTS)
+examples: $(EXAMPLE_OBJECTS) openmp_prerequisite_warning
 
 $(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
 	$(CXX) $(CXXFLAGS) /I $(DISTDIR) $** /Fo$@ /Fe$(@R).exe /link dist\$(TARGET).lib
@@ -177,6 +181,7 @@ all: bin lib
 
 clean:
 	-rd /Q /S $(BINDIR) $(LIBDIR) $(DISTDIR) 2> /nul
+	-del /Q has_openmp.obj 2> /nul
 	-del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj 2> /nul
 
 #-----------------------------------------------------------------------------
@@ -185,6 +190,18 @@ clean:
 
 check test: bin
 	$(BINDIR)\$(TARGET).exe -test
+
+#-----------------------------------------------------------------------------
+# OpenMP prerequisite: Microsoft Visual C++ Redistributable Package
+#-----------------------------------------------------------------------------
+
+openmp_prerequisite_warning:
+!IF DEFINED(NO_OPENMP)
+	@echo "                                                                     "
+	@echo "  WARNING: OpenMP is not available! Please download and install the  "
+	@echo "           Microsoft Visual C++ Redistributable Package.             "
+	@echo "           When done recompile.                                      "
+!ENDIF
 
 #-----------------------------------------------------------------------------
 # Makefile help menu
