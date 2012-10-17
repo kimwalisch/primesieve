@@ -108,6 +108,8 @@ private:
   /// Used to cross-off multiples of big sieving primes
   EratBig* eratBig_;
   static uint64_t getByteRemainder(uint64_t);
+  uint_t maxSmallPrime() const;
+  uint_t maxMediumPrime() const;
   void initEratAlgorithms();
   void preSieve();
   void crossOffMultiples();
