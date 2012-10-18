@@ -16,12 +16,13 @@ Contents
    2. What's in this source archive
    3. Algorithm complexity
    4. Requirements
-   5. Sieve of Eratosthenes implementation
-   6. Further reading
-   7. Motivation
-   8. Thanks
-   9. License
-  10. References
+   5. How to build it
+   6. Sieve of Eratosthenes implementation
+   7. Further reading
+   8. Motivation
+   9. Thanks
+  10. License
+  11. References
 
 1. About primesieve
 ===================
@@ -77,9 +78,12 @@ Contents
   registers, so if you have a x86-64 CPU make sure to use a 64-bit
   version of primesieve (i386 has only 8 registers).
 
-  Read ./INSTALL for compilation instructions.
+5. How to build it
+==================
 
-5. Sieve of Eratosthenes implementation
+  Please refer to ./INSTALL for more information.
+
+6. Sieve of Eratosthenes implementation
 =======================================
 
   General information
@@ -88,7 +92,7 @@ Contents
   code. Files that start with a capital letter contain a class of the
   same name, files in lower case contain inline functions and
   constant definitions. If you are new to prime number sieving I
-  recommend reading some of the papers from section 6.
+  recommend reading some of the papers from section 7.
 
   The doc/API file contains the complete API of the PrimeSieve and
   ParallelPrimeSieve C++ classes. The doc/USAGE_EXAMPLES file contains
@@ -185,7 +189,7 @@ Contents
     within primesieve. You can set these constants according to your
     CPU type to get the best performance.
 
-6. Further reading
+7. Further reading
 ==================
 
   Jonathan Sorenson's papers provide a good introduction to prime
@@ -198,7 +202,7 @@ Contents
   Joerg Richstein in [10] (German language) describes how to pre-sieve
   multiples of small primes to speed up the sieve of Eratosthenes.
 
-7. Motivation
+8. Motivation
 =============
 
   I got my first PC in 1997, it had an Intel 200 mmx CPU and 32
@@ -209,7 +213,7 @@ Contents
   calculating, after about a minute the program printed "is prime" or
   "is not prime". I soon started to invent new faster algorithms ...
 
-8. Thanks
+9. Thanks
 =========
 
   Thanks to Silver Möls for helping me to further optimize EratBig
@@ -221,15 +225,15 @@ Contents
 
   And thanks to everyone who has reported bugs!
 
-9. License
-==========
+10. License
+===========
 
   primesieve is free software, it is licensed under the New BSD
   License see the LICENSE file for more information.
   The primesieve GUI application in src/qt-gui is licensed under the
   GPL as it uses the Qt framework.
 
-10. References
+11. References
 ==============
 
   [1] Richard C. Singleton, "An efficient prime number generator",
