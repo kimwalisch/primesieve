@@ -1,4 +1,4 @@
-October 9, 2012
+October 18, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -33,7 +33,7 @@ Contents
 2. Try it yourself
 ==================
 
-  All of the example programs in this file are also stored as .cpp
+  The example programs presented in this file are also stored as .cpp
   files in the ../examples directory and can easily be compiled using
   the Makefiles. Please refer to ../examples/INSTALL for more
   information.
