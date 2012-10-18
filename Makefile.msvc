@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   16 October 2012
+# Last modified:   18 October 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -120,7 +120,7 @@ CXXFLAGS = $(CXXFLAGS) $(INCPATH)
 !ENDIF
 
 #-----------------------------------------------------------------------------
-# Build the primesieve console application (read doc/INSTALL)
+# Build the primesieve console application (read INSTALL)
 #-----------------------------------------------------------------------------
 
 bin: bin_dir bin_obj openmp_note

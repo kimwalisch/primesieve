@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 6 October 2012
+# Last modified: 18 October 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -38,7 +38,6 @@ Contents
 
   ./doc - Documentation directory
   -------------------------------
-  INSTALL          Explains how to compile primesieve.
   LIBPRIMESIEVE    Explains how to build primesieve as a C++ library
                    for use in your own program.
   USAGE_EXAMPLES   Source code examples that explain how to use
@@ -78,7 +77,7 @@ Contents
   registers, so if you have a x86-64 CPU make sure to use a 64-bit
   version of primesieve (i386 has only 8 registers).
 
-  Read doc/INSTALL for compilation instructions.
+  Read ./INSTALL for compilation instructions.
 
 5. Sieve of Eratosthenes implementation
 =======================================

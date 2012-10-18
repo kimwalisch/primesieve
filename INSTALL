@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 6 October 2012
+# Last modified: 18 October 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -13,8 +13,8 @@ I. About
 ========
 
   This file explains how to compile and use the primesieve console
-  (terminal) application. If you want to use primesieve as a library
-  in your own C++ program read LIBPRIMESIEVE.
+  (terminal) application. The file doc/LIBPRIMESIEVE explains how to
+  build primesieve as a library for use in your own C++ program.
 
   Precompiled binaries for Windows, Linux and Mac OS X are available
   at: http://code.google.com/p/primesieve/downloads/list
@@ -23,10 +23,12 @@ II. How to build primesieve
 ===========================
 
   Unzip the primesieve source archive, open a terminal or 'Visual
-  Studio Command Prompt' and cd into the newly created directory. Then
+  Studio Command Prompt' and cd into the newly created directory. Now
   use one of the following make commands to build primesieve using
   your favorite C++ compiler:
 
+  Default compilers
+  -----------------
   $ make                     GNU g++
   > nmake -f Makefile.msvc   Microsoft Visual C++
 
@@ -38,22 +40,11 @@ II. How to build primesieve
   $ make CXX=pathCC  CXXFLAGS="-Ofast"
   ...
 
-  OpenMP (multi-threading)
-  ------------------------
-  If your compiler supports OpenMP you can add the corresponding flag
-  to CXXFLAGS, for g++ and Microsoft Visual C++ this is done
-  automatically.
-
-  Makefile help menu
-  ------------------
-  $ make help                     Print all build options
-  > nmake -f Makefile.msvc help   ...
-
 III. Target a specific CPU
 ==========================
 
   You can indicate your CPU's L1 data cache size in kilobytes per
-  core to get the best performance. For Windows use e.g.:
+  core to get the best performance. For MSVC use e.g.:
 
   > nmake -f Makefile.msvc L1_DCACHE_SIZE=64
 
