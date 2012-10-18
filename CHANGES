@@ -1,4 +1,4 @@
-Changes in version 4.0, 06/10/2012
+Changes in version 4.0, 18/10/2012
 ==================================
 
 primesieve 4.0 is a major new release. A lot of work has been put into
@@ -15,16 +15,18 @@ changes are documented further down.
     shell e.g. sh, bash, ash, ksh, zsh, ...
  5. The Makefile now supports MinGW (with MSYS) and Cygwin.
  6. Fixed a shared libprimesieve bug (read doc/BUGS).
- 7. New unsynchronized ParallelPrimeSieve::generatePrimes() method
+ 7. Up to 10 percent faster prime number generation due to new
+    internal 64-bit getNextPrime() (previously 32-bit).
+ 8. New unsynchronized ParallelPrimeSieve::generatePrimes() method
     that calls back primes in parallel (read USAGE_EXAMPLES).
- 8. Faster thread synchronization in ParallelPrimeSieve, replaced slow
+ 9. Faster thread synchronization in ParallelPrimeSieve, replaced slow
     OpenMP critical directive with faster omp_test_lock().
- 9. Optimized prime k-tuplet (twin primes, ...) counting for
+10. Optimized prime k-tuplet (twin primes, ...) counting for
     out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
-10. New primesieve_error() exception used for all exceptions within
+11. New primesieve_error() exception used for all exceptions within
     PrimeSieve and ParallelPrimeSieve (read USAGE_EXAMPLES).
-11. New pre-sieve code (src/soe/PreSieve.cpp).
-12. Ported the primesieve GUI application from Qt 4 to Qt 5.
+12. New pre-sieve code (src/soe/PreSieve.cpp).
+13. Ported the primesieve GUI application from Qt 4 to Qt 5.
 
     API changes
     -----------
