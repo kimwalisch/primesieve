@@ -1,4 +1,4 @@
-October 6, 2012
+October 19, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -14,9 +14,8 @@ Contents
 1. About libprimesieve
 ======================
 
-  primesieve has been designed to be usable in other projects, this
-  file explains how to build primesieve as a C++ library a.k.a.
-  libprimesieve and how to link it with your application.
+  This file explains how to build primesieve as a library a.k.a.
+  libprimesieve and how to link it with your C++ application.
   By default libprimesieve is built as a static library which causes
   no dependency, on Unix-like operating systems (Linux, Mac OS X, ...)
   it is also possible to build libprimesieve as a shared library.
@@ -28,35 +27,23 @@ Contents
 2. Build and install libprimesieve (Unix-like OSes)
 ===================================================
 
-  Unzip the primesieve source archive, open a terminal and cd into the
-  newly created directory. The following two make commands build
-  libprimesieve using g++ and install it to /usr/local (Linux) or /usr
-  (Unix).
+  Unzip the primesieve source archive, open a terminal and cd into
+  the newly created directory, then run:
 
-  For a static libprimesieve use:
-  -------------------------------
   $ make lib
   $ sudo make install
 
-  A static libprimesieve causes no dependency when you link against
-  it but it increases your executable size by ~ 100 kilobytes.
-
-  For a shared libprimesieve use:
-  -------------------------------
-  $ make lib SHARED=yes
-  $ sudo make install
-
-  A shared libprimesieve does not increase your executable size and
-  makes it easy to update to new libprimesieve versions but your
-  executable will depend on libprimesieve.
+  The first make command builds a static libprimesieve using g++, the
+  second command installs it to /usr/local (Linux) or to /usr.
 
   More build options
   ------------------
-  $ make lib CXX=icpc CXXFLAGS="-fast -openmp"   Use an alternate C++ compiler, here icpc.
-  $ make dist                                    Create a distribution archive.
-  $ sudo make install PREFIX=/path               Set the installation path.
-  $ sudo make uninstall                          Completely remove libprimesieve.
-  $ make help                                    Print all build options.
+  $ make lib SHARED=yes                        Build a shared libprimesieve.
+  $ make lib CXX=icpc CXXFLAGS="-O2 -openmp"   Use an alternate C++ compiler, here icpc.
+  $ make dist                                  Create a distribution archive.
+  $ sudo make install PREFIX=/path             Set the installation path.
+  $ sudo make uninstall                        Completely remove libprimesieve.
+  $ make help                                  Print all build options.
 
 3. How to link against libprimesieve (Unix-like OSes)
 =====================================================
@@ -65,8 +52,7 @@ Contents
   libprimesieve by specifying -lprimesieve at the end of the linker
   command, e.g.:
 
-  $ g++ examples/count_primes.cpp -o count_primes -lprimesieve
-  $ ./count_primes
+  $ g++ examples/count_primes.cpp -lprimesieve
 
   You must add -fopenmp if:
   -------------------------
