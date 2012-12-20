@@ -1,4 +1,4 @@
-October 18, 2012
+December 20, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -363,14 +363,15 @@ Contents
 
   PrimeSieve and ParallelPrimeSieve objects throw primesieve_error
   exceptions for invalid arguments like start > stop.
-  primesieve_error is defined in PrimeSieve.h and derived from
-  std::runtime_error.
+  primesieve_error is derived from std::runtime_error, it is defined
+  in the primesieve_error.h header file.
 
   ////////////////////////////////////////////////////////////////////
   // primesieve_error.cpp
   // Catch primesieve_error exceptions, start must be <= stop.
 
   #include <primesieve/soe/PrimeSieve.h>
+  #include <primesieve/soe/primesieve_error.h>
   #include <iostream>
 
   int main()

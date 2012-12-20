@@ -38,6 +38,7 @@
 #include "config.h"
 #include "ParallelPrimeSieve.h"
 #include "PrimeSieve.h"
+#include "primesieve_error.h"
 #include "imath.h"
 
 #include <stdint.h>

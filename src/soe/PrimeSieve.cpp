@@ -34,6 +34,7 @@
 
 #include "config.h"
 #include "PrimeSieve.h"
+#include "primesieve_error.h"
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
 #include "SynchronizeThreads.h"

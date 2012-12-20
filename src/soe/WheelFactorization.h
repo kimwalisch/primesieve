@@ -43,9 +43,9 @@
 #define WHEELFACTORIZATION_H
 
 #include "config.h"
-#include "PrimeSieve.h"
 #include "toString.h"
 #include "imath.h"
+#include "primesieve_error.h"
 
 #include <stdint.h>
 #include <string>

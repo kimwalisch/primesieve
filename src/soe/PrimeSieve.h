@@ -35,25 +35,14 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
-#define PRIMESIEVE_VERSION "4.0"
+#define PRIMESIEVE_VERSION "4.1"
 #define PRIMESIEVE_MAJOR_VERSION 4
-#define PRIMESIEVE_MINOR_VERSION 0
+#define PRIMESIEVE_MINOR_VERSION 1
 #define PRIMESIEVE_YEAR 2012
 
 #include <stdint.h>
-#include <stdexcept>
 #include <string>
 #include <vector>
-
-/// PrimeSieve objects throw primesieve_error exceptions for
-/// invalid arguments like start > stop.
-///
-class primesieve_error : public std::runtime_error {
-public:
-  primesieve_error(const std::string& message)
-    : std::runtime_error(message)
-  { }
-};
 
 namespace soe {
   class PrimeNumberFinder;

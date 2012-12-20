@@ -3,6 +3,7 @@
 // Catch primesieve_error exceptions, start must be <= stop.
 
 #include <primesieve/soe/PrimeSieve.h>
+#include <primesieve/soe/primesieve_error.h>
 #include <iostream>
 
 int main()

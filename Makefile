@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   18 October 2012
+# Last modified:   20 December 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -48,6 +48,7 @@ SOE_HEADERS := \
   src/soe/PrimeNumberFinder.h \
   src/soe/PrimeNumberGenerator.h \
   src/soe/PrimeSieve.h \
+  src/soe/primesieve_error.h \
   src/soe/SieveOfEratosthenes.h \
   src/soe/SieveOfEratosthenes-inline.h \
   src/soe/toString.h \
@@ -210,6 +211,7 @@ dist:
 	@mkdir -p $(DISTDIR)/$(TARGET)/soe
 	cp -f $(LIBDIR)/lib$(TARGET).* $(DISTDIR)
 	cp -f src/soe/*PrimeSieve.h $(DISTDIR)/$(TARGET)/soe
+	cp -f src/soe/primesieve_error.h $(DISTDIR)/$(TARGET)/soe
 
 #-----------------------------------------------------------------------------
 # `make check` runs correctness tests
@@ -245,6 +247,7 @@ ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
 	@mkdir -p $(PREFIX)/lib
 	cp -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(PREFIX)/lib
 	cp -f src/soe/*PrimeSieve.h $(PREFIX)/include/primesieve/soe
+	cp -f src/soe/primesieve_error.h $(PREFIX)/include/primesieve/soe
   ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).so),)
     ifneq ($(shell command -v ldconfig $(NO_STDERR)),)
 		ldconfig $(PREFIX)/lib

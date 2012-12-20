@@ -41,7 +41,7 @@
 #include "EratBig.h"
 #include "WheelFactorization.h"
 #include "SieveOfEratosthenes.h"
-#include "PrimeSieve.h"
+#include "primesieve_error.h"
 #include "imath.h"
 
 #include <stdint.h>
