@@ -39,7 +39,6 @@
 
 #include "../parser/ExpressionParser.h"
 #include "../soe/ParallelPrimeSieve.h"
-#include "../test/test.h"
 
 #include <stdint.h>
 #include <exception>
@@ -49,6 +48,9 @@
 #include <vector>
 #include <iomanip>
 #include <algorithm>
+
+// forward declaration (defined in test.cpp)
+bool test_ParallelPrimeSieve();
 
 namespace {
 

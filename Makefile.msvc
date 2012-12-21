@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   20 December 2012
+# Last modified:   21 December 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -79,17 +79,6 @@ SOE_HEADERS = \
   src\soe\WheelFactorization.h \
   src\soe\SynchronizeThreads.h
 
-MAIN_DEPENDENCIES = \
-  src\parser\ExpressionParser.h \
-  src\soe\PrimeSieve.h \
-  src\soe\ParallelPrimeSieve.h \
-  src\test\test.h
-
-TEST_DEPENDENCIES = \
-  src\test\test.h \
-  src\soe\PrimeSieve.h \
-  src\soe\ParallelPrimeSieve.h
-
 #-----------------------------------------------------------------------------
 # Add /openmp if MSVC supports OpenMP
 #-----------------------------------------------------------------------------
@@ -135,10 +124,10 @@ bin_obj: $(BIN_OBJECTS) $(BINDIR)\main.obj $(BINDIR)\test.obj
 $(BIN_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\soe\$(@B).cpp /Fo$@
 
-$(BINDIR)\main.obj: src\application\main.cpp $(MAIN_DEPENDENCIES)
+$(BINDIR)\main.obj: src\application\main.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\application\main.cpp /Fo$@
 
-$(BINDIR)\test.obj: src\test\test.cpp $(TEST_DEPENDENCIES)
+$(BINDIR)\test.obj: src\test\test.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\test\test.cpp /Fo$@
 
 #-----------------------------------------------------------------------------

@@ -37,7 +37,6 @@
 ///         ensure that ParallelPrimeSieve (and PrimeSieve) objects
 ///         produce correct results.
 
-#include "test.h"
 #include "../soe/ParallelPrimeSieve.h"
 
 #include <stdint.h>

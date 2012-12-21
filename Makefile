@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   20 December 2012
+# Last modified:   21 December 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -13,9 +13,6 @@
 TARGET    := primesieve
 CXX       := g++
 CXXFLAGS  := -Wall -O2
-NO_STDOUT := 1> /dev/null
-NO_STDERR := 2> /dev/null
-NO_OUTPUT := $(NO_STDOUT) $(NO_STDERR)
 BINDIR    := bin
 LIBDIR    := lib
 DISTDIR   := dist
@@ -55,16 +52,13 @@ SOE_HEADERS := \
   src/soe/WheelFactorization.h \
   src/soe/SynchronizeThreads.h
 
-MAIN_DEPENDENCIES := \
-  src/parser/ExpressionParser.h \
-  src/soe/PrimeSieve.h \
-  src/soe/ParallelPrimeSieve.h \
-  src/test/test.h
+#-----------------------------------------------------------------------------
+# Needed to suppress output while checking system features
+#-----------------------------------------------------------------------------
 
-TEST_DEPENDENCIES := \
-  src/test/test.h \
-  src/soe/PrimeSieve.h \
-  src/soe/ParallelPrimeSieve.h
+NO_STDOUT := 1> /dev/null
+NO_STDERR := 2> /dev/null
+NO_OUTPUT := $(NO_STDOUT) $(NO_STDERR)
 
 #-----------------------------------------------------------------------------
 # Add -fopenmp if GCC version >= 4.2
@@ -154,10 +148,10 @@ bin_dir:
 bin_obj: $(BIN_OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $^
 
-$(BINDIR)/main.o: src/application/main.cpp $(MAIN_DEPENDENCIES)
+$(BINDIR)/main.o: src/application/main.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BINDIR)/test.o: src/test/test.cpp $(TEST_DEPENDENCIES)
+$(BINDIR)/test.o: src/test/test.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BINDIR)/%.o: src/soe/%.cpp $(SOE_HEADERS)
