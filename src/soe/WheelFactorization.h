@@ -50,6 +50,7 @@
 #include <stdint.h>
 #include <string>
 #include <limits>
+#include <cstddef>
 #include <cassert>
 
 namespace soe {
