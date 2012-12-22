@@ -38,10 +38,12 @@
 ///         https://code.google.com/p/primesieve/downloads/list
 
 #include "../parser/ExpressionParser.h"
+#include "../soe/PrimeSieve.h"
 #include "../soe/ParallelPrimeSieve.h"
 
 #include <stdint.h>
 #include <exception>
+#include <cstddef>
 #include <cstdlib>
 #include <iostream>
 #include <string>
