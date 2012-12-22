@@ -3,9 +3,11 @@ Changes in version 4.1, 22/12/2012
 
 This is a minor new release, the API is backwards compatible.
 
-1. Updated the libprimesieve documentation file: doc/USAGE_EXAMPLES.
+1. Updated the libprimesieve doc/USAGE_EXAMPLES file.
 2. Improved the Makefiles.
-3. The primesieve_error class has been moved into its own file
+3. Fixed header file includes with the clang based
+   ./include-what-you-use tool.
+4. The primesieve_error class has been moved into its own file
    src/soe/primesieve_error.h (previously PrimeSieve.h).
 
 Changes in version 4.0, 18/10/2012
