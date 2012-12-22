@@ -38,7 +38,6 @@
 #include "config.h"
 #include "ParallelPrimeSieve.h"
 #include "PrimeSieve.h"
-#include "primesieve_error.h"
 #include "imath.h"
 
 #include <stdint.h>
@@ -49,6 +48,7 @@
 #ifdef _OPENMP
   #include <omp.h>
   #include "openmp_lock.h"
+  #include "primesieve_error.h"
 #endif
 
 using namespace soe;
