@@ -5,16 +5,16 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   21 December 2012
+# Last modified:   22 December 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
 
+TARGET   = primesieve
 CXX      = cl /nologo
 CXXFLAGS = /W2 /O2 /EHsc
 INCPATH  = /I src\thirdparty
 LINK     = link /nologo
-TARGET   = primesieve
 BINDIR   = bin
 LIBDIR   = lib
 DISTDIR  = dist
@@ -151,7 +151,8 @@ $(LIB_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
 
 dist: dist_dir
 	copy /Y $(LIBDIR)\$(TARGET).lib $(DISTDIR)
-	copy /Y src\soe\*PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
+	copy /Y src\soe\PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
+	copy /Y src\soe\ParallelPrimeSieve.h $(DISTDIR)\$(TARGET)\soe
 	copy /Y src\soe\primesieve_error.h $(DISTDIR)\$(TARGET)\soe
 
 dist_dir:
