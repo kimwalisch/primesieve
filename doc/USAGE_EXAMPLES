@@ -164,12 +164,10 @@ Contents
 =====================
 
   ParallelPrimeSieve uses OpenMP multi-threading to sieve primes in
-  parallel. It scales well even with hundreds of CPU cores! Its main
+  parallel, it scales well even with hundreds of CPU cores! Its main
   use is to count primes and prime k-tuplets, it can also generate
   and print primes and prime k-tuplets in parallel but only in random
-  order.
-
-  The ParallelPrimeSieve class is derived from PrimeSieve so it
+  order. The ParallelPrimeSieve class is derived from PrimeSieve so it
   inherits PrimeSieve's API. The following API methods are exclusive
   to ParallelPrimeSieve:
 
@@ -212,9 +210,9 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-  Synchronized prime number generation
-  ------------------------------------
-  The first four generatePrimes(...) methods from section 1. are
+  Parallel prime number generation
+  --------------------------------
+  The first four generatePrimes() methods from section 3. are
   synchronized i.e. only one thread at a time calls back primes. These
   methods are easy to use but do not scale well beyond 4 CPU cores.
 
@@ -244,15 +242,14 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-  Unsynchronized prime number generation
-  --------------------------------------
-  The last generatePrimes(...) method from section 1. is not
-  synchronized i.e. multiple threads call back primes in parallel.
-  This method scales well even with 100 CPU cores but it is a little
-  harder to use: You must pay attention not to write to (nor read from
-  and write to) the same variable from multiple threads, for a good
-  performance it is also important that multiple threads do not share
-  the same cache line (see below).
+  Parallel prime number generation (2)
+  ------------------------------------
+  The last generatePrimes() method from section 3. is not synchronized
+  i.e. multiple threads call back primes in parallel. This method
+  scales well even with 100 CPU cores but you must pay attention not
+  to write to the same variable from multiple threads. In order to get
+  the best performance you must also ensure that each thread uses its
+  own cache line for memory access (avoids false sharing).
 
   ////////////////////////////////////////////////////////////////////
   // parallel_sum_primes2.cpp
