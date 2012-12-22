@@ -35,6 +35,7 @@
 #include "config.h"
 #include "PrimeNumberFinder.h"
 #include "SieveOfEratosthenes.h"
+#include "SieveOfEratosthenes-inline.h"
 #include "PrimeSieve.h"
 #include "SynchronizeThreads.h"
 #include "popcount.h"
