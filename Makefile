@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   21 December 2012
+# Last modified:   22 December 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -204,7 +204,8 @@ $(EXDIR)/%: $(EXDIR)/%.cpp
 dist:
 	@mkdir -p $(DISTDIR)/$(TARGET)/soe
 	cp -f $(LIBDIR)/lib$(TARGET).* $(DISTDIR)
-	cp -f src/soe/*PrimeSieve.h $(DISTDIR)/$(TARGET)/soe
+	cp -f src/soe/PrimeSieve.h $(DISTDIR)/$(TARGET)/soe
+	cp -f src/soe/ParallelPrimeSieve.h $(DISTDIR)/$(TARGET)/soe
 	cp -f src/soe/primesieve_error.h $(DISTDIR)/$(TARGET)/soe
 
 #-----------------------------------------------------------------------------
@@ -237,11 +238,12 @@ ifneq ($(wildcard $(BINDIR)/$(TARGET)*),)
 	cp -f $(BINDIR)/$(TARGET) $(PREFIX)/bin
 endif
 ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
-	@mkdir -p $(PREFIX)/include/primesieve/soe
+	@mkdir -p $(PREFIX)/include/$(TARGET)/soe
 	@mkdir -p $(PREFIX)/lib
 	cp -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(PREFIX)/lib
-	cp -f src/soe/*PrimeSieve.h $(PREFIX)/include/primesieve/soe
-	cp -f src/soe/primesieve_error.h $(PREFIX)/include/primesieve/soe
+	cp -f src/soe/PrimeSieve.h $(PREFIX)/include/$(TARGET)/soe
+	cp -f src/soe/ParallelPrimeSieve.h $(PREFIX)/include/$(TARGET)/soe
+	cp -f src/soe/primesieve_error.h $(PREFIX)/include/$(TARGET)/soe
   ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).so),)
     ifneq ($(shell command -v ldconfig $(NO_STDERR)),)
 		ldconfig $(PREFIX)/lib
@@ -255,8 +257,8 @@ ifneq ($(wildcard $(PREFIX)/bin/$(TARGET)*),)
 	rm -f $(PREFIX)/bin/$(TARGET)
 	@rm -f $(PREFIX)/bin/$(TARGET).exe
 endif
-ifneq ($(wildcard $(PREFIX)/include/primesieve),)
-	rm -rf $(PREFIX)/include/primesieve
+ifneq ($(wildcard $(PREFIX)/include/$(TARGET)),)
+	rm -rf $(PREFIX)/include/$(TARGET)
 endif
 ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).*),)
   ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).so),)
