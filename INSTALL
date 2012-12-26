@@ -32,9 +32,9 @@ II. How to build primesieve
 
   Other C++ compilers
   -------------------
-  $ make CXX=g++     CXXFLAGS="-O2 -fopenmp"
-  $ make CXX=icpc    CXXFLAGS="-O2 -openmp"
-  $ make CXX=sunCC   CXXFLAGS="-O5 -xopenmp"
+  $ make CXX=g++   CXXFLAGS="-O2 -fopenmp"
+  $ make CXX=icpc  CXXFLAGS="-O2 -openmp"
+  $ make CXX=sunCC CXXFLAGS="-O5 -xopenmp"
   ...
 
 III. Target a specific CPU
