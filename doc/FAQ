@@ -1,11 +1,11 @@
-September 26, 2012
+December 26, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-1. I want to generate primes > 2^64. Is it possible to extend
+Q  I want to generate primes > 2^64, is it possible to extend
    primesieve to 128 bits?
 
-   Technically it is possible but it makes no sense due to the
+A  Technically it is possible but it makes no sense due to the
    enormous memory requirement. primesieve uses the segmented sieve of
    Eratosthenes which uses O(pi(n^0.5)) memory, e.g. near 10^25
    primesieve would need ~ 1300 GB (gigabytes) per thread!
@@ -13,21 +13,17 @@ http://primesieve.googlecode.com
    algorithm that can be used to generate primes up to 33 digits
    using very little memory.
 
-2. What are small, medium and big sieving primes?
 
-   A sieving prime is a prime that is used to cross-off multiples of
-   itself. In primesieve sieving primes fall into 3 categories: small,
-   medium and big sieving primes. These categories correlate with the
-   size of the sieve array. In primesieve small sieving primes are
-   <= (sieve size in bytes) * 0.5 (1), medium sieving primes are > (1) and
+Q  What are small, medium and big sieving primes?
+
+A  In primesieve sieving primes fall into 3 categories: small, medium
+   and big sieving primes, these categories correlate with the size of
+   the sieve array. In primesieve small sieving primes are <= (sieve
+   size in bytes) * 0.5 (1), medium sieving primes are > (1) and
    <= (sieve size in bytes) * 6 (2), and big sieving primes are > (2).
-
-   Why is it necessary to distinguish between small, medium and big
-   sieving primes?
-
-   This is crucial for sieving speed, primesieve uses 3 different
-   algorithms to cross-off multiples: EratSmall is optimized for small
-   sieving primes that have many multiples in each segment
-   (e.g. 1000), EratMedium is optimized for medium sieving primes that
-   have a few multiples per segment (e.g. 10) and EratBig is optimized
-   for sieving primes that have less than 1 multiple per segment.
+   primesieve uses 3 different algorithms to cross-off multiples:
+   EratSmall is optimized for small sieving primes that have many
+   multiples in each segment (e.g. 1000), EratMedium is optimized for
+   medium sieving primes that have a few multiples per segment
+   (e.g. 10) and EratBig is optimized for sieving primes that have
+   less than 1 multiple per segment.
