@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 18 October 2012
+# Last modified: 26 December 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -27,17 +27,14 @@ II. How to build primesieve
   use one of the following make commands to build primesieve using
   your favorite C++ compiler:
 
-  Default compilers
-  -----------------
-  $ make                     GNU g++
+  $ make                     Default C++ compiler (g++, clang++, ...)
   > nmake -f Makefile.msvc   Microsoft Visual C++
 
   Other C++ compilers
   -------------------
+  $ make CXX=g++     CXXFLAGS="-O2 -fopenmp"
   $ make CXX=icpc    CXXFLAGS="-O2 -openmp"
-  $ make CXX=openCC  CXXFLAGS="-O2 -openmp"
-  $ make CXX=clang++ CXXFLAGS="-O2"
-  $ make CXX=sunCC   CXXFLAGS="-fast -xopenmp"
+  $ make CXX=sunCC   CXXFLAGS="-O5 -xopenmp"
   ...
 
 III. Target a specific CPU

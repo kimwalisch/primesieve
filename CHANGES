@@ -1,10 +1,11 @@
-Changes in version 4.1, 22/12/2012
+Changes in version 4.1, 26/12/2012
 ==================================
 
 This is a minor new release, the API is backwards compatible.
 
 1. Updated the libprimesieve doc/USAGE_EXAMPLES file.
-2. Improved the Makefiles.
+2. Improved the Makefiles, the GNU Makefile now uses the system's
+   default C++ compiler instead of GNU g++.
 3. Fixed header file includes with the clang based
    ./include-what-you-use tool.
 4. The primesieve_error class has been moved into its own file

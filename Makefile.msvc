@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   22 December 2012
+# Last modified:   26 December 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -83,14 +83,10 @@ SOE_HEADERS = \
 # Add /openmp if MSVC supports OpenMP
 #-----------------------------------------------------------------------------
 
-!IF EXIST(has_openmp.exe)
-CXXFLAGS = $(CXXFLAGS) /openmp
-!ELSE
-!IF ([$(CXX) /openmp src\test\has_openmp.cpp > nul] == 0)
+!IF ([$(CXX) /openmp /c src\test\has_openmp.cpp /Fonul > nul] == 0)
 CXXFLAGS = $(CXXFLAGS) /openmp
 !ELSE
 NO_OPENMP = true
-!ENDIF
 !ENDIF
 
 #-----------------------------------------------------------------------------
@@ -175,7 +171,6 @@ all: bin lib
 
 clean:
 	-rd /Q /S $(BINDIR) $(LIBDIR) $(DISTDIR) 2> /nul
-	-del /Q has_openmp.* 2> /nul
 	-del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj 2> /nul
 
 #-----------------------------------------------------------------------------

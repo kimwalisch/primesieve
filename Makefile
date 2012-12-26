@@ -5,13 +5,13 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   22 December 2012
+# Last modified:   26 December 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
 TARGET    := primesieve
-CXX       := g++
+CXX       := c++
 CXXFLAGS  := -Wall -O2
 BINDIR    := bin
 LIBDIR    := lib
@@ -61,15 +61,20 @@ NO_STDERR := 2> /dev/null
 NO_OUTPUT := $(NO_STDOUT) $(NO_STDERR)
 
 #-----------------------------------------------------------------------------
-# Add -fopenmp if GCC version >= 4.2
+# Find the compiler's OpenMP flag
 #-----------------------------------------------------------------------------
 
-ifneq ($(shell $(CXX) --version $(NO_STDERR) | head -1 | grep -iE 'GCC|G\+\+'),)
-  MAJOR := $(shell $(CXX) -dumpversion | cut -d'.' -f1)
-  MINOR := $(shell $(CXX) -dumpversion | cut -d'.' -f2)
-  ifneq ($(shell expr $(MAJOR) '*' 100 '+' $(MINOR) '>=' 402 $(NO_OUTPUT) && \
-                 echo 'GCC >= 4.2'),)
-    CXXFLAGS += -fopenmp
+is-openmp = $(shell echo 'int main() { return _OPENMP; }' | \
+                    $(CXX) $(CXXFLAGS) $1 -xc++ -c -o /dev/null - $(NO_STDERR) && \
+                    echo successfully compiled)
+
+ifeq ($(call is-openmp),)
+  ifneq ($(call is-openmp,-openmp),)
+    CXXFLAGS += -openmp
+  else
+    ifneq ($(call is-openmp,-fopenmp),)
+      CXXFLAGS += -fopenmp
+    endif
   endif
 endif
 
@@ -282,7 +287,7 @@ help:
 	@echo ---------- primesieve build options ----------
 	@echo ----------------------------------------------
 	@echo "make                                     Build the primesieve console application using g++ (DEFAULT)"
-	@echo "make CXX=icpc CXXFLAGS=\"-fast -openmp\"   Specify a custom C++ compiler, here icpc"
+	@echo "make CXX=icpc CXXFLAGS=\"-O2 -openmp\"     Specify a custom C++ compiler, here icpc"
 	@echo "make L1_DCACHE_SIZE=32                   Specify the CPU's L1 data cache size, here 32 kilobytes"
 	@echo "make check                               Test primesieve for correctness"
 	@echo "make clean                               Clean the output directories (bin, lib)"
