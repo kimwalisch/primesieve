@@ -18,13 +18,12 @@ template <typename T, std::size_t COUNT>
 struct endiansafe_cast_helper
 {
   enum {
-    INDEX = sizeof(T) - COUNT,
-    SHIFT = INDEX * 8
+    INDEX = sizeof(T) - COUNT
   };
   static T go(const uint8_t* array)
   {
     T byte = array[INDEX];
-    return (byte << SHIFT) + endiansafe_cast_helper<T, COUNT - 1>::go(array);
+    return (byte << INDEX * 8) + endiansafe_cast_helper<T, COUNT - 1>::go(array);
   }
 };
 
