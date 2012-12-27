@@ -52,6 +52,9 @@ inline T isquare(T x)
   return x * x;
 }
 
+/// @brief  Check if an integer is a power of 2.
+/// @see    Book "Hacker's Delight".
+///
 template <typename T>
 inline bool isPowerOf2(T x)
 {
@@ -59,8 +62,7 @@ inline bool isPowerOf2(T x)
 }
 
 /// @brief  Round down to the next power of 2.
-/// @see    Hacker's Delight, p. 47.
-/// @param  x  Integer value.
+/// @see    Book "Hacker's Delight".
 ///
 template <typename T>
 inline T floorPowerOf2(T x)
@@ -71,8 +73,7 @@ inline T floorPowerOf2(T x)
 }
 
 /// @brief  Fast and protable integer log2 function.
-/// @see    Hacker's Delight, p. 215.
-/// @param  x  Integer value.
+/// @see    Book "Hacker's Delight".
 ///
 template <typename T>
 inline T ilog2(T x)
@@ -86,8 +87,7 @@ inline T ilog2(T x)
 }
 
 /// @brief  Integer square root, Newton's method.
-/// @see    Hacker's Delight, p. 203-207.
-/// @param  x  Unsigned integer.
+/// @see    Book "Hacker's Delight".
 ///
 template <typename T>
 inline T isqrt(T x)
