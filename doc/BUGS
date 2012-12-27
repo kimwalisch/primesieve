@@ -1,4 +1,4 @@
-September 29, 2012
+December 27, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -10,6 +10,12 @@ $ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve
 
 List of fixed bugs
 ==================
+
+----------------------------------------------------------------------
+  >> Fixed in version 4.1
+
+  The bit population count algorithm in src/soe/popcount_lauradoux.h
+  is erroneous for sizeof(int) > 4.
 
 ----------------------------------------------------------------------
   >> Fixed in version 4.0
