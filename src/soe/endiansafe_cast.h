@@ -7,9 +7,12 @@
 namespace soe {
 
 /// Recursively sum bytes using template metaprogramming.
-/// e.g. endiansafe_cast<int>(array) = 
-/// return (array[0] <<  0) + (array[1] <<  8) + 
-///        (array[2] << 16) + (array[3] << 24) + 0;
+/// e.g. endiansafe_cast<int32_t>(array) = 
+/// return (array[0] <<  0) +
+///        (array[1] <<  8) + 
+///        (array[2] << 16) +
+///        (array[3] << 24) +
+///        0;
 ///
 template <typename T, std::size_t COUNT>
 struct endiansafe_cast_helper
