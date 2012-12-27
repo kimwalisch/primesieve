@@ -58,22 +58,21 @@ namespace soe {
 /// http://perso.citi.insa-lyon.fr/claurado/ham/overview.pdf
 /// http://perso.citi.insa-lyon.fr/claurado/hamming.html
 ///
-template <typename T>
-inline T popcount_lauradoux(const uint64_t* data, T size) {
-  if (data == 0) return 0;
-
+inline uint64_t popcount_lauradoux(const uint64_t* data, uint64_t size) {
   const uint64_t m1  = UINT64_C(0x5555555555555555);
   const uint64_t m2  = UINT64_C(0x3333333333333333);
   const uint64_t m4  = UINT64_C(0x0F0F0F0F0F0F0F0F);
   const uint64_t m8  = UINT64_C(0x00FF00FF00FF00FF);
-  const uint64_t m16 = UINT64_C(0x0000FFFF0000FFFF);
   const uint64_t h01 = UINT64_C(0x0101010101010101);
 
+  uint64_t limit30 = size - size % 30;
+  uint64_t i, j;
   uint64_t count1, count2, half1, half2, acc;
+  uint64_t bit_count = 0;
   uint64_t x;
-  T bit_count = 0;
-  T i, j;
-  T limit30 = size - size % 30;
+
+  if (data == 0)
+    return 0;
 
   // 64-bit tree merging (merging3)
   for (i = 0; i < limit30; i += 30, data += 30) {
@@ -93,10 +92,10 @@ inline T popcount_lauradoux(const uint64_t* data, T size) {
       count1 += (count2 & m2) + ((count2 >> 2) & m2);
       acc    += (count1 & m4) + ((count1 >> 4) & m4);
     }
-    acc = (acc & m8) + ((acc >>  8)  & m8);
-    acc = (acc       +  (acc >> 16)) & m16;
-    acc =  acc       +  (acc >> 32);
-    bit_count += static_cast<T>(acc);
+    acc = (acc & m8) + ((acc >>  8) & m8);
+    acc = (acc       +  (acc >> 16));
+    acc = (acc       +  (acc >> 32));
+    bit_count += acc & 0xffff;
   }
 
   // Count the bits of the remaining bytes (max 29*8 = 232)
@@ -106,8 +105,10 @@ inline T popcount_lauradoux(const uint64_t* data, T size) {
     x =  x       - ((x >> 1)  & m1);
     x = (x & m2) + ((x >> 2)  & m2);
     x = (x       +  (x >> 4)) & m4;
-    bit_count += static_cast<T>((x * h01) >> 56);
+    x = (x * h01) >> 56;
+    bit_count += x;
   }
+
   return bit_count;
 }
 
