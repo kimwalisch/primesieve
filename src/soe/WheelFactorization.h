@@ -97,7 +97,7 @@ class WheelPrime {
 public:
   enum { MAX_MULTIPLE_INDEX = (1 << 23) - 1 };
   uint_t getSievingPrime() const   { return sievingPrime_; }
-  uint_t getMultipleIndex() const  { return indexes_ & ((1 << 23) - 1); }
+  uint_t getMultipleIndex() const  { return indexes_ & MAX_MULTIPLE_INDEX; }
   uint_t getWheelIndex() const     { return indexes_ >> 23; }
 
   void setMultipleIndex(uint_t multipleIndex)
