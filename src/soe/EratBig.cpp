@@ -178,8 +178,8 @@ void EratBig::crossOff(uint8_t* sieve, Bucket& bucket)
   WheelPrime* wPrime = bucket.begin();
   WheelPrime* end    = bucket.end();
 
-  // process 2 sieving primes per loop iteration to
-  // increase instruction level parallelism
+  // 2 sieving primes are processed per loop iteration
+  // to increase instruction level parallelism
   for (; wPrime + 2 <= end; wPrime += 2) {
     uint_t multipleIndex0 = wPrime[0].getMultipleIndex();
     uint_t wheelIndex0    = wPrime[0].getWheelIndex();
@@ -193,8 +193,8 @@ void EratBig::crossOff(uint8_t* sieve, Bucket& bucket)
     unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
     Bucket*& list0 = getList(&multipleIndex0);
     Bucket*& list1 = getList(&multipleIndex1);
-    // move sievingPrime to the list corresponding
-    // to its next multiple
+    // move the 2 sieving primes to the list related
+    // to their next multiple
     if (!list0->store(sievingPrime0, multipleIndex0, wheelIndex0))
       pushBucket(list0);
     if (!list1->store(sievingPrime1, multipleIndex1, wheelIndex1))
