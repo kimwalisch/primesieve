@@ -6,9 +6,8 @@
 
 namespace soe {
 
-/// Block the current "PrimeSieve" thread until
-/// it can set a lock, then continue execution.
-/// When done release the lock using RAII.
+/// Block the current PrimeSieve thread until it
+/// can set a lock, then continue execution.
 ///
 class SynchronizeThreads {
 public:
