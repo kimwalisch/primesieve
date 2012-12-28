@@ -95,7 +95,7 @@ extern const WheelElement wheel210[48*8];
 ///
 class WheelPrime {
 public:
-  static uint_t maxMultipleIndex() { return (1 << 23) - 1; }
+  enum { MAX_MULTIPLE_INDEX = (1 << 23) - 1 };
   uint_t getSievingPrime() const   { return sievingPrime_; }
   uint_t getMultipleIndex() const  { return indexes_ & ((1 << 23) - 1); }
   uint_t getWheelIndex() const     { return indexes_ >> 23; }
@@ -224,7 +224,7 @@ protected:
   WheelFactorization(uint64_t stop, uint_t sieveSize) :
     stop_(stop)
   {
-    const uint_t maxSieveSize = WheelPrime::maxMultipleIndex() + 1;
+    const uint_t maxSieveSize = WheelPrime::MAX_MULTIPLE_INDEX + 1;
     if (sieveSize > maxSieveSize)
       throw primesieve_error("WheelFactorization: sieveSize must be <= " + toString(maxSieveSize));
     if (stop > getMaxStop())
