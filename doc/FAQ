@@ -1,4 +1,4 @@
-December 26, 2012
+December 29, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -14,6 +14,12 @@ A  Technically it is possible but it makes no sense due to the
    using very little memory.
 
 
+Q  What are the hot spots in primesieve?
+
+A  The two main hot spots are the sieving algorithms in
+   src/soe/EratSmall.cpp and src/soe/EratBig.cpp.
+
+
 Q  What are small, medium and big sieving primes?
 
 A  In primesieve sieving primes fall into 3 categories: small, medium
@@ -27,3 +33,24 @@ A  In primesieve sieving primes fall into 3 categories: small, medium
    medium sieving primes that have a few multiples per segment
    (e.g. 10) and EratBig is optimized for sieving primes that have
    less than 1 multiple per segment.
+
+
+Q  How does the bit array work in primesieve?
+
+A  primesieve uses a bit array for sieving, each byte holds the eight
+   offsets { 7, 11, 13, 17, 19, 23, 29, 31 }. To remove a multiple
+   e.g. 11*11 = 121 from the sieve array one must unset the
+   corresponding bit using:
+
+   sieve[121 / 30] &= bitmasks[121 % 30];
+
+   In order to avoid the slow division and modulo instructions all
+   multiples and sieving primes are '/ 30' by default which allows to
+   unset a bit using:
+
+   sieve[multipleIndex] &= bitmasks[wheelIndex];
+
+   Unfortunately using values divided by 30 also has a drawback, the
+   calculation of the next multiple requires 1 additional add
+   instruction in EratSmall and 2 additional instructions (table
+   lookup, add) in EratMedium and EratBig but this is still faster.
