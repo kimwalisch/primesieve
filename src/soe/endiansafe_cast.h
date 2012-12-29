@@ -1,3 +1,13 @@
+///
+/// @file   endiansafe_cast.h
+/// @brief  Cast bytes in ascending address order.
+///
+/// Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+///
+/// This file is licensed under the New BSD License. See the LICENSE
+/// file in the top-level directory.
+///
+
 #ifndef ENDIANSAFE_CAST_H
 #define ENDIANSAFE_CAST_H
 
@@ -36,7 +46,6 @@ struct endiansafe_cast_helper<T, 0>
   }
 };
 
-/// Cast bytes in ascending address order.
 template <typename T>
 inline T endiansafe_cast(const uint8_t* array)
 {

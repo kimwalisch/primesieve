@@ -1,3 +1,12 @@
+///
+/// @file  SynchronizeThreads.h
+///
+/// Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+///
+/// This file is licensed under the New BSD License. See the LICENSE
+/// file in the top-level directory.
+///
+
 #ifndef SYNCHRONIZETHREADS_H
 #define SYNCHRONIZETHREADS_H
 

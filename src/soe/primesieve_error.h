@@ -1,12 +1,20 @@
+///
+/// @file   primesieve_error.h
+/// @brief  The primesieve_error class is used for all exceptions
+///         within primesieve.
+///
+/// Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+///
+/// This file is licensed under the New BSD License. See the LICENSE
+/// file in the top-level directory.
+///
+
 #ifndef PRIMESIEVE_ERROR_H
 #define PRIMESIEVE_ERROR_H
 
 #include <stdexcept>
 #include <string>
 
-/// PrimeSieve objects throw primesieve_error exceptions for
-/// invalid arguments like start > stop.
-///
 class primesieve_error : public std::runtime_error {
 public:
   primesieve_error(const std::string& message)

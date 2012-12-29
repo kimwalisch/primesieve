@@ -1,7 +1,16 @@
+///
+/// @file   bits.h
+/// @brief  Bitmasks to turn off single bits of a byte.
+///
+/// Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+///
+/// This file is licensed under the New BSD License. See the LICENSE
+/// file in the top-level directory.
+///
+
 #ifndef BITS_PRIMESIEVE_H
 #define BITS_PRIMESIEVE_H
 
-/// Bitmasks to turn off single bits of a byte
 enum {
   BIT0 = 0xfe, // 11111110
   BIT1 = 0xfd, // 11111101

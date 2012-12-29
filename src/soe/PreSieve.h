@@ -1,36 +1,11 @@
-//
-// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
-// All rights reserved.
-//
-// This file is part of primesieve.
-// Homepage: http://primesieve.googlecode.com
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions
-// are met:
-//
-//   * Redistributions of source code must retain the above copyright
-//     notice, this list of conditions and the following disclaimer.
-//   * Redistributions in binary form must reproduce the above
-//     copyright notice, this list of conditions and the following
-//     disclaimer in the documentation and/or other materials provided
-//     with the distribution.
-//   * Neither the name of the author nor the names of its
-//     contributors may be used to endorse or promote products derived
-//     from this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
-// OF THE POSSIBILITY OF SUCH DAMAGE.
+///
+/// @file  PreSieve.h
+///
+/// Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+///
+/// This file is licensed under the New BSD License. See the LICENSE
+/// file in the top-level directory.
+///
 
 #ifndef PRESIEVE_H
 #define PRESIEVE_H
@@ -47,11 +22,10 @@ namespace soe {
 /// e.g. <= 19 to speed up SieveOfEratosthenes. The idea is to
 /// allocate an array (preSieved_) and remove the multiples of small
 /// primes from it at initialization. Then whilst sieving, the
-/// preSieved_ array is copied to the SieveOfEratosthenes sieve array
-/// at the beginning of each new segment to pre-sieve the multiples
-/// of small primes <= limit_.
-/// Pre-sieving speeds up my sieve of Eratosthenes implementation by
-/// about 20 percent when sieving < 10^10.
+/// preSieved_ array is copied to the SieveOfEratosthenes array at the
+/// beginning of each new segment to pre-sieve the multiples of small
+/// primes <= limit_. Pre-sieving speeds up my sieve of Eratosthenes
+/// implementation by about 20 percent when sieving < 10^10.
 ///
 /// <b> Memory Usage </b>
 ///
@@ -73,10 +47,7 @@ private:
   uint_t limit_;
   /// Product of the primes <= limit_
   uint_t primeProduct_;
-  /// Array in which the multiples of small primes <= limit_
-  /// are crossed-off at initialization
   uint8_t* preSieved_;
-  /// Size of the preSieved_ array in bytes
   uint_t size_;
   void init();
   DISALLOW_COPY_AND_ASSIGN(PreSieve);
