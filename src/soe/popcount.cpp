@@ -44,10 +44,10 @@
 namespace soe {
 
 /// This algorithm counts the number of 1 bits (population count) in
-/// an array using 64-bit tree merging. This implementation uses only
-/// 8 operations per 8 bytes on 64-bit CPUs, according to my
-/// benchmarks it is about as fast as the x86 SSE4.2 popcnt_u32
-/// instruction. The 64-bit tree merging popcount algorithm is due to
+/// an array using 64-bit tree merging. To the best of my knowledge
+/// this is the fastest integer arithmetic bit population count
+/// algorithm, it uses only 8 operations for 8 bytes on 64-bit CPUs.
+/// The 64-bit tree merging popcount algorithm is due to
 /// Cédric Lauradoux, it is described in his paper:
 /// http://perso.citi.insa-lyon.fr/claurado/ham/overview.pdf
 /// http://perso.citi.insa-lyon.fr/claurado/hamming.html
