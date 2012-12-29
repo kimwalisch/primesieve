@@ -45,8 +45,8 @@ A  primesieve uses a bit array for sieving, each byte holds the eight
    sieve[121 / 30] &= bitmasks[121 % 30];
 
    In order to avoid the slow division and modulo instructions all
-   multiples and sieving primes are '/ 30' by default which allows to
-   unset a bit using:
+   multiples and sieving primes within primesieve are '/ 30' by
+   default which allows to unset a bit using:
 
    sieve[multipleIndex] &= bitmasks[wheelIndex];
 
