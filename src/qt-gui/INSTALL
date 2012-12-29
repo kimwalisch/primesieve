@@ -3,8 +3,8 @@
 # 
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
-# Created:       5 December 2010 
-# Last modified: 6 October 2012
+# Created:       05 December 2010 
+# Last modified: 29 December 2012
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -16,8 +16,8 @@ I. About
   framework (http://qt-project.org). This file explains how to install
   Qt and how to compile the primesieve GUI application.
 
-II. How to build primesieve (All operating systems)
-===================================================
+II. How to build the primesieve GUI application
+===============================================
 
   1. For Windows download and install the latest Qt 4 SDK:
      ftp://ftp.trolltech.com/qt/source/qt-win-opensource-4.8.1-mingw.exe
@@ -25,11 +25,7 @@ II. How to build primesieve (All operating systems)
      For all other OSes download and install the latest Qt 5 SDK:
      http://qt-project.org/downloads
 
-  2. Launch the primesieve.pro project file with the Qt-Creator IDE
-     and have a look at Qt-Creator-build-settings.png for the
-     compilation steps.
-
-     Alternatively you can also run the following commands from a
-     terminal to directly build a primesieve binary:
+  2. Open a terminal and cd into the current directory,
+     then run the following commands:
 
      $ qmake; make
