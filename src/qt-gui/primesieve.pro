@@ -51,7 +51,8 @@ SOURCES += \
     ../soe/SieveOfEratosthenes.cpp \
     ../soe/EratMedium.cpp \
     ../soe/PreSieve.cpp \
-    ../soe/WheelFactorization.cpp
+    ../soe/WheelFactorization.cpp \
+    ../soe/popcount.cpp
 
 HEADERS += ../soe/EratSmall.h \
     ../soe/EratBig.h \
@@ -87,40 +88,29 @@ macx {
 }
 
 # -------------------------------------------------
-# Compiler options (todo: add clang++ -fopenmp)
+# Add OpenMP compiler flag
 # -------------------------------------------------
 
 *msvc* {
   QMAKE_CXXFLAGS += /openmp /EHsc
-  IS_OPENMP = true
 }
 
 *g++* {
   QMAKE_CXXFLAGS += -fopenmp
   QMAKE_LFLAGS   += -fopenmp
-  IS_OPENMP = true
+}
+
+*clang* {
+  QMAKE_CXXFLAGS += -fopenmp
+  QMAKE_LFLAGS   += -fopenmp
 }
 
 *icc* {
   win* {
     QMAKE_CXXFLAGS += /Qopenmp /EHsc
-    IS_OPENMP = true
   }
   unix {
     QMAKE_CXXFLAGS += -openmp
     QMAKE_LFLAGS   += -openmp
-    IS_OPENMP = true
   }
-}
-
-# clang does not yet support OpenMP (2012)
-
-*clang* {
-  # QMAKE_CXXFLAGS += -fopenmp
-  # QMAKE_LFLAGS   += -fopenmp
-  # IS_OPENMP = true
-}
-
-!contains(IS_OPENMP, true) {
-  error(Add your compilers OpenMP flag to primesieve.pro)
 }

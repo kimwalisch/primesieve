@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   26 December 2012
+# Last modified:   29 December 2012
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -27,7 +27,8 @@ SOE_SOURCES:= \
   src/soe/EratSmall.cpp \
   src/soe/EratMedium.cpp \
   src/soe/EratBig.cpp \
-  src/soe/WheelFactorization.cpp
+  src/soe/WheelFactorization.cpp \
+  src/soe/popcount.cpp
 
 SOE_HEADERS := \
   src/soe/bits.h \

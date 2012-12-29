@@ -111,9 +111,9 @@ void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint_t sieveSize)
 void PrimeNumberFinder::count(const uint8_t* sieve, uint_t sieveSize)
 {
   std::vector<uint64_t>& counts = ps_.counts_;
-  // count prime numbers, see popcount.h
+  // count prime numbers (1 bits), see popcount.cpp
   if (ps_.isFlag(ps_.COUNT_PRIMES))
-    counts[0] += popcount_lauradoux(reinterpret_cast<const uint64_t*>(sieve), (sieveSize + 7) / 8);
+    counts[0] += popcount(reinterpret_cast<const uint64_t*>(sieve), (sieveSize + 7) / 8);
   // count prime k-tuplets (i = 1 twins, i = 2 triplets, ...)
   for (uint_t i = 1; i < counts.size(); i++) {
     if (ps_.isCount(i)) {
