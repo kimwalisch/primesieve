@@ -2,13 +2,13 @@
 /// @file   EratBig.cpp
 /// @brief  Segmented sieve of Eratosthenes optimized for big sieving
 ///         primes. This is my implementation of Tomas Oliveira e
-///         Silva's cache-friendly segmented sieve of Eratosthenes.
+///         Silva's cache-friendly segmented sieve of Eratosthenes:
 /// @see    http://www.ieeta.pt/~tos/software/prime_sieve.html
 ///
 /// Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
 ///
-/// This file is licensed under the New BSD License. See the LICENSE
-/// file in the top-level directory.
+/// This file is distributed under the New BSD License. See the
+/// LICENSE file in the top level directory.
 ///
 
 #include "config.h"
