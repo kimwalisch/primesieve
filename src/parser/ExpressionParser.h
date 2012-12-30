@@ -1,46 +1,21 @@
-//
-// Copyright (c) 2012 Kim Walisch, <kim.walisch@gmail.com>.
-// All rights reserved.
-//
-// This file is part of ExpressionParser.
-// Visit: http://expressionparser.googlecode.com
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions
-// are met:
-//
-//   * Redistributions of source code must retain the above copyright
-//     notice, this list of conditions and the following disclaimer.
-//   * Redistributions in binary form must reproduce the above
-//     copyright notice, this list of conditions and the following
-//     disclaimer in the documentation and/or other materials provided
-//     with the distribution.
-//   * Neither the name of the author nor the names of its
-//     contributors may be used to endorse or promote products derived
-//     from this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
-// OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-/// @warning By default ^ is the bitwise exclusive OR operator in
-///          ExpressionParser. For primesieve I modified ^ to be a
-///          raise to power operator just like **.
+///
+/// @file     ExpressionParser.h
+/// @brief    Simple C++ operator precedence parser with infix notation
+///           for integer arithmetic expressions.
+/// @warning  This file has been patched for primesieve, the ^ operator
+///           is a raise to power operator instead of bitwise XOR.
+/// @see      http://expressionparser.googlecode.com
+///
+/// Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+///
+/// This file is distributed under the New BSD License. See the
+/// LICENSE file in the top level directory.
+///
 
 #ifndef EXPRESSIONPARSER_H
 #define EXPRESSIONPARSER_H
 
-#include <exception>
+#include <stdexcept>
 #include <string>
 #include <sstream>
 #include <stack>
@@ -50,38 +25,30 @@
 /// ExpressionParser throws a parser_error if it fails
 /// to evaluate the expression string.
 ///
-class parser_error : public std::exception {
+class parser_error : public std::runtime_error {
 public:
-  parser_error(const std::string& expr,
-               const std::string& error) :
-    expr_(expr), error_(error) { }
-  parser_error(const std::string& expr, std::size_t index) :
-    expr_(expr)
-  {
-    std::ostringstream error;
-    error << "Syntax error: unexpected token \""
-          << expr.substr(index, expr.size() - index)
-          << "\" at index " << index;
-    error_ = error.str();
+  parser_error(const std::string& expr, const std::string& message)
+    : std::runtime_error(message),
+      expr_(expr)
+  { }
+  ~parser_error() throw() { }
+  std::string expression() const {
+    return expr_;
   }
-  virtual ~parser_error() throw() { }
-  virtual const char* what() const throw() { return error_.c_str(); }
-  std::string expression() const { return expr_; }
 private:
   std::string expr_;
-  std::string error_;
 };
 
-/// ExpressionParser
-/// @brief   ExpressionParser.h is a simple C++ operator precedence
+/// @class   ExpressionParser<T>
+/// @brief   ExpressionParser is a simple C++ operator precedence
 ///          parser with infix notation for integer arithmetic
-///          expressions. Its `T eval(const std::string&)' function
+///          expressions. Its `T eval(const std::string&)' method
 ///          evaluates an arithmetic expression and returns the result.
 ///          Have a look at the homepage for a usage example.
-/// @see     http://expressionparser.googlecode.com
 /// @author  Kim Walisch, <kim.walisch@gmail.com>
-/// @version 2.2
-/// @date    May, 27 2012
+/// @version 2.3 (patched for primesieve)
+/// @license New BSD License
+/// @date    December, 30 2012
 ///
 /// == Supported operators ==
 ///
@@ -134,34 +101,27 @@ public:
   ///
   T eval(const std::string& expr) {
     T result = 0;
+    index_ = 0;
+    expr_ = expr;
     try {
-      if (expr.size() > EXPRESSION_MAX_SIZE) {
-        std::ostringstream error;
-        error << "Parser error: expression exceeds limit of "
-              << EXPRESSION_MAX_SIZE
-              << " characters";
-        throw parser_error(expr_, error.str());
-      }
-      index_ = 0;
-      expr_ = expr;
       result = parseExpr();
-      if (!isEnd()) throw parser_error(expr_, index_);
+      if (!isEnd())
+        unexpected();
     }
-    catch (parser_error& e) {
+    catch (parser_error&) {
       while(!opv_.empty()) opv_.pop();
-      throw e;
+      throw;
     }
     return result;
   }
 
-  /// Get the integer value of a char e.g. 5 for '5'
-  T eval(char c) { std::string expr(1, c); return eval(expr); }
+  /// Get the integer value of a character.
+  T eval(char c) {
+    std::string expr(1, c);
+    return eval(expr);
+  }
 
 private:
-  enum {
-    EXPRESSION_MAX_SIZE = 32767
-  };
-
   enum {
     OPERATOR_NULL,
     OPERATOR_BITWISE_OR,     /// |
@@ -204,12 +164,13 @@ private:
   std::string expr_;
   /// Current expression index, incremented whilst parsing
   std::size_t index_;
-  /// The current operator and its left value are pushed onto the
-  /// stack if the operator on top of the stack has lower precedence.
+  /// The current operator and its left value
+  /// are pushed onto the stack if the operator on
+  /// top of the stack has lower precedence.
   std::stack<OperatorValue> opv_;
 
   /// Exponentiation by squaring, x^n.
-  T pow(T x, T n) const {
+  static T pow(T x, T n) {
     T result = 1;
     while (n != 0) {
       if ((n & 1) != 0) {
@@ -220,6 +181,15 @@ private:
       n /= 2;
     }
     return result;
+  }
+
+  void unexpected() {
+    std::ostringstream error;
+    error << "Syntax error: unexpected token \""
+          << expr_.substr(index_, expr_.size() - index_)
+          << "\" at index "
+          << index_;
+    throw parser_error(expr_, error.str());
   }
 
   T checkZero(T value) {
@@ -275,7 +245,7 @@ private:
   ///
   void expect(const std::string str) {
     if (expr_.compare(index_, str.size(), str) != 0)
-      throw parser_error(expr_, index_);
+      unexpected();
     index_ += str.size();
   }
 
@@ -312,15 +282,12 @@ private:
     return Operator(OPERATOR_NULL, 0, 'L');
   }
 
-  /// Returns the integer value of the character c e.g. 9 for '9' or
-  /// 15 for f (hexadecimal number). If c is not a decimal or
-  /// hexadecimal character a value > 0xf is returned.
-  ///
-  T toInteger(char c) const {
-    if (c >= '0' && c <= '9') return static_cast<T> (c -'0');
-    if (c >= 'a' && c <= 'f') return static_cast<T> (c -'a' + 0xa);
-    if (c >= 'A' && c <= 'F') return static_cast<T> (c -'A' + 0xa);
-    return 0xf + 1;
+  static T toInteger(char c) {
+    T value = 0xF + 1;
+    if (c >= '0' && c <= '9') value = c -'0';
+    if (c >= 'a' && c <= 'f') value = c -'a' + 0xA;
+    if (c >= 'A' && c <= 'F') value = c -'A' + 0xA;
+    return value;
   }
 
   T parseDecimal() {
@@ -341,8 +308,8 @@ private:
   }
 
   /// Parse an integer value (hex or decimal) at the current
-  /// expression index. Also handles the unary `+', `-' and `~'
-  /// operators and opening parentheses `(' using recursion.
+  /// expression index. The unary `+', `-' and `~' operators
+  /// and opening parentheses `(' cause recursion.
   ///
   T parseVal() {
     T val = 0;
@@ -362,7 +329,7 @@ private:
                 eatSpaces();
                 if (getCharacter() != ')') {
                   if (!isEnd())
-                    throw parser_error(expr_, index_);
+                    unexpected();
                   throw parser_error(expr_, "Syntax error: `)' expected at end of expression");
                 }
                 index_++; return  val;
@@ -371,7 +338,7 @@ private:
       case '~': index_++; return ~parseVal();
       default:
         if (!isEnd())
-          throw parser_error(expr_, index_);
+          unexpected();
         throw parser_error(expr_, "Syntax error: value expected at end of expression");
     }
     return 0;
@@ -385,6 +352,7 @@ private:
     opv_.push(OperatorValue(Operator(OPERATOR_NULL, 0, 'L'), 0));
     // first value on the left
     T value = parseVal();
+
     while (!opv_.empty()) {
       // parse an operator (+, -, *, ...)
       Operator op(parseOp());
@@ -400,6 +368,7 @@ private:
         value = calculate(opv_.top().value, value, opv_.top().op);
         opv_.pop();
       }
+
       // store on opv_ and continue parsing ("shift")
       opv_.push(OperatorValue(op, value));
       // value on the right
