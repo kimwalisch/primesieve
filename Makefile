@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   29 December 2012
+# Last modified:   02 January 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -138,11 +138,10 @@ endif
 #-----------------------------------------------------------------------------
 
 BIN_OBJECTS := \
-  $(addprefix $(BINDIR)/, \
-    $(subst .cpp,.o, \
-      $(notdir $(SOE_SOURCES)))) \
   $(BINDIR)/main.o \
-  $(BINDIR)/test.o
+  $(BINDIR)/cmdoptions.o \
+  $(BINDIR)/test.o \
+  $(addprefix $(BINDIR)/, $(subst .cpp,.o, $(notdir $(SOE_SOURCES))))
 
 .PHONY: bin bin_dir bin_obj
 
@@ -154,13 +153,13 @@ bin_dir:
 bin_obj: $(BIN_OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $^
 
-$(BINDIR)/main.o: src/application/main.cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(BINDIR)/test.o: src/test/test.cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 $(BINDIR)/%.o: src/soe/%.cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BINDIR)/%.o: src/application/%.cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BINDIR)/%.o: src/test/%.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 #-----------------------------------------------------------------------------

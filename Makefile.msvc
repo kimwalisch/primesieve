@@ -1,11 +1,11 @@
 ######################################################################
 # Microsoft Visual C++ Makefile for the primesieve console 
 # application and the primesieve C++ library
-# 
+#
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   29 December 2012
+# Last modified:   02 January 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -116,7 +116,7 @@ bin: bin_dir bin_obj openmp_note
 bin_dir:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
 
-bin_obj: $(BIN_OBJECTS) $(BINDIR)\main.obj $(BINDIR)\test.obj
+bin_obj: $(BINDIR)\main.obj $(BINDIR)\cmdoptions.obj $(BINDIR)\test.obj $(BIN_OBJECTS)
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
 
 $(BIN_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
@@ -124,6 +124,9 @@ $(BIN_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
 
 $(BINDIR)\main.obj: src\application\main.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\application\main.cpp /Fo$@
+
+$(BINDIR)\cmdoptions.obj: src\application\cmdoptions.cpp
+	$(CXX) $(CXXFLAGS) /c src\application\cmdoptions.cpp /Fo$@
 
 $(BINDIR)\test.obj: src\test\test.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\test\test.cpp /Fo$@

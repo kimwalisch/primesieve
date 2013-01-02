@@ -3,7 +3,7 @@
 /// @brief  The PrimeSieve class provides an easy API for prime
 ///         sieving (single-threaded).
 ///
-/// Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the New BSD License. See the
 /// LICENSE file in the top level directory.
@@ -15,7 +15,7 @@
 #define PRIMESIEVE_VERSION "4.1"
 #define PRIMESIEVE_MAJOR_VERSION 4
 #define PRIMESIEVE_MINOR_VERSION 1
-#define PRIMESIEVE_YEAR 2012
+#define PRIMESIEVE_YEAR "2013"
 
 #include <stdint.h>
 #include <string>
