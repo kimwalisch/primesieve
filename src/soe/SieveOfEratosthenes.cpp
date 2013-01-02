@@ -2,7 +2,7 @@
 /// @file   SieveOfEratosthenes.cpp
 /// @brief  Implementation of the segmented sieve of Eratosthenes.
 ///
-/// Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the New BSD License. See the
 /// LICENSE file in the top level directory.
@@ -27,13 +27,13 @@ const uint_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 3
 /// De Bruijn bitscan table
 const uint_t SieveOfEratosthenes::bruijnBitValues_[64] =
 {
-    7,  47,  11,  49,  67, 113,  13,  53, 
-   89,  71, 161, 101, 119, 187,  17, 233, 
-   59,  79,  91,  73, 133, 139, 163, 103, 
-  149, 121, 203, 169, 191, 217,  19, 239, 
-   43,  61, 109,  83, 157,  97, 181, 229, 
-   77, 131, 137, 143, 199, 167, 211,  41, 
-  107, 151, 179, 227, 127, 197, 209,  37, 
+    7,  47,  11,  49,  67, 113,  13,  53,
+   89,  71, 161, 101, 119, 187,  17, 233,
+   59,  79,  91,  73, 133, 139, 163, 103,
+  149, 121, 203, 169, 191, 217,  19, 239,
+   43,  61, 109,  83, 157,  97, 181, 229,
+   77, 131, 137, 143, 199, 167, 211,  41,
+  107, 151, 179, 227, 127, 197, 209,  37,
   173, 223, 193,  31, 221,  29,  23, 241
 };
 
