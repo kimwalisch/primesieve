@@ -1,15 +1,13 @@
-Changes in version 4.1, 27/12/2012
+Changes in version 4.1, 06/01/2012
 ==================================
 
-This is a minor new release, the API is backwards compatible.
-
-1. Updated the libprimesieve doc/USAGE_EXAMPLES file.
-2. Improved the Makefiles, the GNU Makefile now uses the system's
-   default C++ compiler instead of GNU g++.
-3. Fixed a bug (if sizeof(int) > 4) in the bit population count
+1. The primesieve console (terminal) application now supports
+   GNU-style long options e.g. --size=256.
+2. Fixed a bug (if sizeof(int) > 4) in the bit population count
    algorithm, read BUGS file.
-4. Fixed header file includes with the clang based
-   ./include-what-you-use tool.
+3. Updated the libprimesieve doc/USAGE_EXAMPLES file.
+4. The Makefile now uses the system's default C++ compiler
+   instead of GNU g++.
 5. The primesieve_error class has been moved into its own file
    src/soe/primesieve_error.h (previously PrimeSieve.h).
 
