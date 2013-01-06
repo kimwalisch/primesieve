@@ -89,8 +89,9 @@ uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const
 ///
 uint64_t ParallelPrimeSieve::align(uint64_t n) const
 {
-  if (n != start_)
-    n = std::min(n + 32 - n % 30, stop_);
+  if (n == start_)
+    return start_;
+  n = std::min(n + 32 - n % 30, stop_);
   return n;
 }
 
