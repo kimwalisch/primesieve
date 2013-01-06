@@ -174,10 +174,10 @@ private:
   void (*callback64_int_)(uint64_t, int);
   /// Callback object
   void* obj_;
-  /// Sum of processed segments that hasn't been updated yet
-  uint64_t toUpdate_;
   /// Sum of all processed segments
   uint64_t processed_;
+  /// Sum of processed segments that hasn't been updated yet
+  uint64_t toUpdate_;
   /// Status of sieve() in percent
   double percent_;
   static void printStatus(double, double);
