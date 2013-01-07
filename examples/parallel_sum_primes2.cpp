@@ -14,9 +14,9 @@ const int NO_FALSE_SHARING = CACHE_LINE / sizeof(uint64_t);
 
 std::vector<uint64_t> sum;
 
-void callback(uint64_t prime, int threadNumber)
+void callback(uint64_t prime, int threadNum)
 {
-  int threadIndex = threadNumber * NO_FALSE_SHARING;
+  int threadIndex = threadNum * NO_FALSE_SHARING;
   sum[threadIndex] += prime;
 }
 
