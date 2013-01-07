@@ -83,7 +83,7 @@ void PrimeNumberFinder::init_kCounts()
 ///
 void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint_t sieveSize)
 {
-  if (ps_.isCallback())
+  if (ps_.isGenerate())
     callback(sieve, sieveSize);
   if (ps_.isCount())
     count(sieve, sieveSize);

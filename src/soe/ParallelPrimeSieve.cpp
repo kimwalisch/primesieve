@@ -46,7 +46,7 @@ int ParallelPrimeSieve::getNumThreads() const
 {
   if (numThreads_ == DEFAULT_NUM_THREADS) {
     // Use 1 thread to generate primes in arithmetic order
-    return (isPrint() || isCallback()) ? 1 : idealNumThreads();
+    return (isPrint() || isGenerate()) ? 1 : idealNumThreads();
   }
   return numThreads_;
 }

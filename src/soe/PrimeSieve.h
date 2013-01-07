@@ -78,7 +78,7 @@ public:
   void addFlags(int);
   // Bool is*
   bool isFlag(int) const;
-  bool isCallback() const;
+  bool isGenerate() const;
   bool isCount() const;
   bool isCount(int) const;
   bool isPrint() const;
