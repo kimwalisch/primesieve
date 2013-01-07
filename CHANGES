@@ -8,10 +8,27 @@ Changes in version 4.1, 07/01/2012
 3. Fixed a bug (if sizeof(int) > 4) in the bit population count
    algorithm, read BUGS file.
 4. Updated the libprimesieve doc/USAGE_EXAMPLES file.
-5. The Makefile now uses the system's default C++ compiler
-   instead of GNU g++.
+5. The Makefile now uses the system's default C++ compiler instead
+   of GNU g++.
 6. The primesieve_error class has been moved into its own file
    src/soe/primesieve_error.h (previously PrimeSieve.h).
+
+   API changes
+   -----------
+
+   The following two overly complex PrimeSieve methods have been
+   removed:
+
+   void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, void (*)(uint32_t, void*), void*);
+   void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*)(uint64_t, void*), void*);
+
+   They are replaced by the following new methods that greatly
+   simplify prime number generation with classes, see the
+   doc/USAGE_EXAMPLES file for more information.
+
+   void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>*);
+   void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t>*);
+   void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t, int>*);
 
 Changes in version 4.0, 18/10/2012
 ==================================
