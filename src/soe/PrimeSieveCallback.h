@@ -14,7 +14,8 @@
 
 #include <stdint.h>
 
-namespace soe {
+namespace soe
+{
   class None { };
 }
 
@@ -22,12 +23,14 @@ template <typename T1, typename T2 = soe::None>
 class PrimeSieveCallback {
 public:
   virtual void callback(T1 prime) = 0;
+  virtual ~PrimeSieveCallback() { }
 };
 
 template <>
 class PrimeSieveCallback<uint64_t, int> {
 public:
   virtual void callback(uint64_t prime, int threadNum) = 0;
+  virtual ~PrimeSieveCallback() { }
 };
 
 #endif
