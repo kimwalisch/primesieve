@@ -7,9 +7,7 @@ TODO for primesieve-4.1
 
 1. Test Makefile with new FreeBSD 9.1 release (clang default compiler?)
 
-2. Update files: API, FAQ, examples, USAGE_EXAMPLES.
-
-3. Wait for the second OpenMP 4.0 release candidate (1st quarter 2013)
+2. Wait for the second OpenMP 4.0 release candidate (1st quarter 2013)
    and have a look at the new error handling features. Evaluate if
    this may be integrated in ParallelPrimeSieve.cpp.
 
