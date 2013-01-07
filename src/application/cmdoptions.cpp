@@ -13,48 +13,20 @@
 #include "../parser/ExpressionParser.h"
 #include "../soe/PrimeSieve.h"
 
-#include <iostream>
+#include <string>
+#include <map>
 #include <exception>
 #include <cstdlib>
 #include <cstddef>
-#include <string>
-#include <map>
 #include <stdint.h>
 
-/// src/test/test.cpp
+void help();
+void version();
 bool test_ParallelPrimeSieve();
 
 using namespace std;
 
 namespace {
-
-const string helpMenu(
-  "Usage: primesieve START STOP [OPTION]...\n"
-  "Use the segmented sieve of Eratosthenes to generate the prime numbers\n"
-  "and prime k-tuplets in the interval [START, STOP] < 2^64\n"
-  "\n"
-  "Options:\n"
-  "  -c<N+>, --count=<N+>     Count primes and prime k-tuplets, 1 <= N <= 7\n"
-  "  -h,     --help           Print this help menu\n"
-  "  -o<N>,  --offset=<N>     Sieve the interval [START, START+N]\n"
-  "  -p<N>,  --print=<N>      Print primes or prime k-tuplets,  1 <= N <= 7\n"
-  "  -q,     --quiet          Quiet mode, prints less output\n"
-  "  -r<N>,  --presieve=<N>   Pre-sieve multiples of small primes <= N <= 23\n"
-  "  -s<N>,  --size=<N>       Set the sieve size in kilobytes,  1 <= N <= 4096\n"
-  "          --test           Run various sieving tests and exit\n"
-  "  -t<N>,  --threads=<N>    Set the number of threads,        1 <= N <= CPU cores\n"
-  "  -v,     --version        Print version and license information\n"
-  "\n"
-  "Example:\n"
-  "  Count the prime numbers and print the twin primes up to 1000\n"
-  "  > primesieve 2 1000 --count=1 -p2\n"
-);
-
-const string versionInfo(
-  "primesieve " PRIMESIEVE_VERSION ", <http://primesieve.googlecode.com>\n"
-  "Copyright (C) " PRIMESIEVE_YEAR " Kim Walisch\n"
-  "primesieve is free software, it is distributed under the New BSD License.\n"
-);
 
 /// e.g. id = "--threads", value = "4"
 struct Option {
@@ -109,18 +81,6 @@ void initCmdOptions()
   cmdOptions["--threads"]  = OPTION_THREADS;
   cmdOptions["-v"]         = OPTION_VERSION;
   cmdOptions["--version"]  = OPTION_VERSION;
-}
-
-void help()
-{
-  cout << helpMenu;
-  exit(1);
-}
-
-void version()
-{
-  cout << versionInfo;
-  exit(1);
 }
 
 void test()

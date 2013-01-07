@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   06 January 2013
+# Last modified:   07 January 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -140,6 +140,7 @@ endif
 BIN_OBJECTS := \
   $(BINDIR)/main.o \
   $(BINDIR)/cmdoptions.o \
+  $(BINDIR)/help.o \
   $(BINDIR)/test.o \
   $(addprefix $(BINDIR)/, $(subst .cpp,.o, $(notdir $(SOE_SOURCES))))
 

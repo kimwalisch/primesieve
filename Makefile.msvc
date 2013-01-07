@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   06 January 2013
+# Last modified:   07 January 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -116,7 +116,7 @@ bin: bin_dir bin_obj openmp_note
 bin_dir:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
 
-bin_obj: $(BINDIR)\main.obj $(BINDIR)\cmdoptions.obj $(BINDIR)\test.obj $(BIN_OBJECTS)
+bin_obj: $(BINDIR)\main.obj $(BINDIR)\cmdoptions.obj $(BINDIR)\help.obj $(BINDIR)\test.obj $(BIN_OBJECTS)
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
 
 $(BIN_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
@@ -127,6 +127,9 @@ $(BINDIR)\main.obj: src\application\main.cpp $(SOE_HEADERS)
 
 $(BINDIR)\cmdoptions.obj: src\application\cmdoptions.cpp
 	$(CXX) $(CXXFLAGS) /c src\application\cmdoptions.cpp /Fo$@
+
+$(BINDIR)\help.obj: src\application\help.cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) /c src\application\help.cpp /Fo$@
 
 $(BINDIR)\test.obj: src\test\test.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\test\test.cpp /Fo$@
