@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 18 October 2012
+# Last modified: 7 January 2013
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -54,6 +54,8 @@ Contents
   src/qt-gui       Contains the primesieve GUI application.
   src/parser       Contains an arithmetic expression parser used to
                    ease number input e.g. 2^32, 1E10, ...
+  src/test         Contains unit tests for the sieve of Eratosthenes
+                   implementation (./primesieve --test).
   src/thirdparty   Contains stdint.h (needed for MSVC prior 2010).
 
 3. Algorithm complexity
@@ -216,14 +218,16 @@ Contents
 9. Thanks
 =========
 
-  Thanks to Silver Möls for helping me to further optimize EratBig
-  for out-of-order execution of modern CPUs in version 3.1.
+  Thanks to everyone who has given valuable feedback or reported bugs!
 
-  Thanks to Andrey Kulsha for benchmarking new primesieve releases on
-  his hexa-core AMD Phenom CPU and also for his help to debug
+  Special thanks go to:
+
+  Silver Möls for helping me to further optimize EratBig for
+  out-of-order execution of modern CPUs in version 3.1.
+
+  Andrey Kulsha for benchmarking new primesieve releases on his
+  hexa-core AMD Phenom CPU and also for his help to debug
   primesieve 1.0.
-
-  And thanks to everyone who has reported bugs!
 
 10. License
 ===========
