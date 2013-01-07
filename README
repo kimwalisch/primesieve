@@ -55,7 +55,7 @@ Contents
   src/parser       Contains an arithmetic expression parser used to
                    ease number input e.g. 2^32, 1E10, ...
   src/test         Contains unit tests for the sieve of Eratosthenes
-                   implementation (./primesieve --test).
+                   implementation (run `make test').
   src/thirdparty   Contains stdint.h (needed for MSVC prior 2010).
 
 3. Algorithm complexity
