@@ -1,4 +1,4 @@
-January 7, 2012
+January 7, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -57,9 +57,10 @@ PrimeSieve API
     -----------------------------------------
     void generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t));
     void generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t));
-    void generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t, void*), void*);
-    void generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, void*), void*);
     void generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int));
+    void generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>*);
+    void generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t>*);
+    void generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t, int>*);
 
     Print methods, Runtime: O(n log log n)
     --------------------------------------
