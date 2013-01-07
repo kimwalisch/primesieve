@@ -1,8 +1,7 @@
 ////////////////////////////////////////////////////////////////////
 // generate_primes_oop.cpp
 // This example shows how to use the generatePrimes()
-// method with classes. The Foo class inherits
-// PrimeSieveCallback<T> with T = uint32_t or uint64_t.
+// methods with classes.
 
 #include <primesieve/soe/PrimeSieve.h>
 #include <primesieve/soe/PrimeSieveCallback.h>
