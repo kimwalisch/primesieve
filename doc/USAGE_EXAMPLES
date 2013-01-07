@@ -1,4 +1,4 @@
-December 22, 2012
+January 7, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -45,9 +45,10 @@ Contents
   -------------------------------
   void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t));
   void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t));
-  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t, void*), void*);
-  void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, void*), void*);
   void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int));
+  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>*);
+  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t>*);
+  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t, int>*);
 
   ////////////////////////////////////////////////////////////////////
   // generate_primes.cpp
@@ -56,7 +57,8 @@ Contents
   #include <primesieve/soe/PrimeSieve.h>
   #include <iostream>
 
-  void callback(unsigned int prime) {
+  void callback(unsigned int prime)
+  {
     std::cout << prime << '\n';
   }
 
@@ -70,28 +72,25 @@ Contents
   ////////////////////////////////////////////////////////////////////
   // generate_primes_oop.cpp
   // This example shows how to use the generatePrimes()
-  // methods with classes, the code stores the primes below
-  // 1000 in the foo.primes_ vector.
+  // methods with classes.
 
   #include <primesieve/soe/PrimeSieve.h>
-  #include <vector>
+  #include <primesieve/soe/PrimeSieveCallback.h>
+  #include <iostream>
 
-  class Foo {
+  class Foo : public PrimeSieveCallback<unsigned int> {
   public:
-    static void callback(unsigned int prime, void* foo)
+    void callback(unsigned int prime)
     {
-      Foo* f = (Foo*) foo;
-      f->primes_.push_back(prime);
+      std::cout << prime << '\n';
     }
-  private:
-    std::vector<unsigned int> primes_;
   };
 
   int main()
   {
     Foo foo;
     PrimeSieve ps;
-    ps.generatePrimes(0, 1000, foo.callback, &foo);
+    ps.generatePrimes(0, 1000, &foo);
     return 0;
   }
 
@@ -210,11 +209,12 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-  Parallel prime number generation
-  --------------------------------
-  The first four generatePrimes() methods from section 3. are
-  synchronized i.e. only one thread at a time calls back primes. These
-  methods are easy to use but do not scale well beyond 4 CPU cores.
+  Parallel prime number generation (1)
+  ------------------------------------
+  The generatePrimes() methods that take a callback with 1 paramter
+  are synchronized i.e. only 1 thread at a time calls back primes.
+  These methods are easy to use but do not scale well beyond 4 CPU
+  cores.
 
   ////////////////////////////////////////////////////////////////////
   // parallel_sum_primes.cpp
@@ -244,12 +244,13 @@ Contents
 
   Parallel prime number generation (2)
   ------------------------------------
-  The last generatePrimes() method from section 3. is not synchronized
-  i.e. multiple threads call back primes in parallel. This method
-  scales well even with 100 CPU cores but you must pay attention not
-  to write to the same variable from multiple threads. In order to get
-  the best performance you must also ensure that each thread uses its
-  own cache line for memory access (avoids false sharing).
+  The generatePrimes() methods that take a callback with 2 paramters
+  are not synchronized i.e. multiple threads call back primes in
+  parallel. This method scales well even with 100 CPU cores but you
+  must pay attention not to write to the same variable from multiple
+  threads. In order to get the best performance you must also ensure
+  that each thread uses its own cache line for memory access (avoids
+  false sharing).
 
   ////////////////////////////////////////////////////////////////////
   // parallel_sum_primes2.cpp
@@ -267,9 +268,9 @@ Contents
 
   std::vector<uint64_t> sum;
 
-  void callback(uint64_t prime, int threadNumber)
+  void callback(uint64_t prime, int threadNum)
   {
-    int threadIndex = threadNumber * NO_FALSE_SHARING;
+    int threadIndex = threadNum * NO_FALSE_SHARING;
     sum[threadIndex] += prime;
   }
 
