@@ -50,7 +50,7 @@ private:
   virtual void segmentProcessed(const uint8_t*, uint_t);
   void count(const uint8_t*, uint_t);
   void print(const uint8_t*, uint_t) const;
-  void callback(const uint8_t*, uint_t) const;
+  void generate(const uint8_t*, uint_t) const;
   void callback64_tn(uint64_t) const;
   void callback64_obj_tn(uint64_t) const;
   static void printPrime(uint64_t);

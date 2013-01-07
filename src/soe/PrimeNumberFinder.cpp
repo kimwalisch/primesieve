@@ -84,7 +84,7 @@ void PrimeNumberFinder::init_kCounts()
 void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint_t sieveSize)
 {
   if (ps_.isGenerate())
-    callback(sieve, sieveSize);
+    generate(sieve, sieveSize);
   if (ps_.isCount())
     count(sieve, sieveSize);
   if (ps_.isPrint())
@@ -155,7 +155,7 @@ void PrimeNumberFinder::print(const uint8_t* sieve, uint_t sieveSize) const
 /// Callback the primes within the current segment.
 /// @note primes < 7 are handled in PrimeSieve::doSmallPrime()
 ///
-void PrimeNumberFinder::callback(const uint8_t* sieve, uint_t sieveSize) const
+void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) const
 {
   if (ps_.isFlag(ps_.CALLBACK32))        { SynchronizeThreads lock(ps_); GENERATE_PRIMES(callback32_,       uint32_t) }
   if (ps_.isFlag(ps_.CALLBACK64))        { SynchronizeThreads lock(ps_); GENERATE_PRIMES(callback64_,       uint64_t) }
