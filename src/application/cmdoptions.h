@@ -16,17 +16,17 @@
 struct PrimeSieveSettings
 {
   std::list<uint64_t> numbers;
-  bool quiet;
   int flags;
   int preSieve;
   int sieveSize;
   int threads;
+  bool quiet;
   PrimeSieveSettings() :
-    quiet(false),
     flags(0),
     preSieve(0),
     sieveSize(0),
-    threads(0)
+    threads(0),
+    quiet(false)
   { }
   uint64_t start() const
   {
