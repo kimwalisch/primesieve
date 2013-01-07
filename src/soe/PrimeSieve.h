@@ -154,8 +154,8 @@ private:
   };
   struct SmallPrime
   {
-    unsigned int firstPrime;
-    unsigned int lastPrime;
+    uint32_t firstPrime;
+    uint32_t lastPrime;
     int index;
     std::string str;
   };
