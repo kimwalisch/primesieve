@@ -3,7 +3,7 @@
 /// @brief  ParallelPrimeSieve sieves primes in parallel using
 ///         OpenMP 2.0 (2002) or later.
 ///
-/// Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the New BSD License. See the
 /// LICENSE file in the top level directory.
