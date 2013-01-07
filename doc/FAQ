@@ -1,4 +1,4 @@
-December 29, 2012
+January 7, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -13,12 +13,26 @@ A  Technically it is possible but it makes no sense due to the
    algorithm that can be used to generate primes up to 33 digits
    using very little memory.
 
+Q  Why does PrimeSieve not offer a getNextPrime() method?
+
+A  PrimeSieve uses callbacks instead of getNextPrime() because:
+   1. Callbacks are faster than getNextPrime()
+   2. Callbacks are easier to implement than getNextPrime()
+   3. Callbacks can be parallelized, getNextPrime() cannot
+
+Q  How can I cancel (abort) prime number generation?
+
+A  You can cancel prime number generation immediately by throwing
+   an exception from within the callback method. This has been
+   thoroughly tested with many different compilers, it is even fast.
+   Have a look at the ../examples/cancel_prime_generation.cpp file
+   for an example. Currently this does not work with
+   ParallelPrimeSieve as OpenMP does not support exceptions yet.
 
 Q  What are the hot spots in primesieve?
 
 A  The two main hot spots are the sieving algorithms in
    src/soe/EratSmall.cpp and src/soe/EratBig.cpp.
-
 
 Q  What are small, medium and big sieving primes?
 
@@ -33,7 +47,6 @@ A  In primesieve sieving primes fall into 3 categories: small, medium
    medium sieving primes that have a few multiples per segment
    (e.g. 10) and EratBig is optimized for sieving primes that have
    less than 1 multiple per segment.
-
 
 Q  How does the bit array work in primesieve?
 
