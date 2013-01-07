@@ -5,15 +5,9 @@ http://primesieve.googlecode.com
 TODO for primesieve-4.1
 -----------------------
 
-1. Test Makefile with new FreeBSD 9.1 release (clang default compiler?)
-
-2. Wait for the second OpenMP 4.0 release candidate (1st quarter 2013)
-   and have a look at the new error handling features. Evaluate if
-   this may be integrated in ParallelPrimeSieve.cpp.
-
-Missing features
-----------------
-Option to cancel sieving in PrimeSieve and ParallelPrimeSieve objects.
+1. Wait for the second OpenMP 4.0 release candidate (February 2013) and
+   have a look at the new error handling features. Evaluate if this
+   may be integrated in ParallelPrimeSieve.cpp.
 
 OpenMP
 ------
