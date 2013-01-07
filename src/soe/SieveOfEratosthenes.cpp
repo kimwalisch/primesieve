@@ -18,6 +18,7 @@
 #include "primesieve_error.h"
 
 #include <stdint.h>
+#include <exception>
 #include <cstdlib>
 
 namespace soe {
@@ -73,34 +74,37 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   sieve_ = new uint8_t[sieveSize_];
 }
 
-SieveOfEratosthenes::~SieveOfEratosthenes() {
+SieveOfEratosthenes::~SieveOfEratosthenes()
+{
   delete eratSmall_;
   delete eratMedium_;
   delete eratBig_;
   delete[] sieve_;
 }
 
-void SieveOfEratosthenes::initEratAlgorithms() {
-  uint_t esLimit = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATSMALL);
-  uint_t emLimit = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATMEDIUM);
+void SieveOfEratosthenes::initEratAlgorithms()
+{
+  limitEratSmall_  = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATSMALL);
+  limitEratMedium_ = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATMEDIUM);
   try {
     if (sqrtStop_ > preSieve_.getLimit()) {
-      eratSmall_ = new EratSmall(stop_, sieveSize_, esLimit);
-      if (sqrtStop_ > eratSmall_->getLimit()) {
-        eratMedium_ = new EratMedium(stop_, sieveSize_, emLimit);
-        if (sqrtStop_ > eratMedium_->getLimit())
+      eratSmall_ = new EratSmall(stop_, sieveSize_, limitEratSmall_);
+      if (sqrtStop_ > limitEratSmall_) {
+        eratMedium_ = new EratMedium(stop_, sieveSize_, limitEratMedium_);
+        if (sqrtStop_ > limitEratMedium_)
           eratBig_ = new EratBig(stop_, sieveSize_, sqrtStop_);
       }
     }
-  } catch (...) {
+  } catch (const std::exception& e) {
     delete eratSmall_;
     delete eratMedium_;
     delete eratBig_;
-    throw;
+    throw e;
   }
 }
 
-uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
+uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n)
+{
   uint64_t remainder = n % NUMBERS_PER_BYTE;
   if (remainder <= 1)
     remainder += NUMBERS_PER_BYTE;
@@ -110,7 +114,8 @@ uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n) {
 /// Pre-sieve multiples of small primes e.g. <= 19
 /// to speed up the sieve of Eratosthenes.
 ///
-void SieveOfEratosthenes::preSieve() {
+void SieveOfEratosthenes::preSieve()
+{
   preSieve_.doIt(sieve_, sieveSize_, segmentLow_);
   // unset bits (numbers) < start_
   if (segmentLow_ <= start_) {
@@ -122,7 +127,8 @@ void SieveOfEratosthenes::preSieve() {
   }
 }
 
-void SieveOfEratosthenes::crossOffMultiples() {
+void SieveOfEratosthenes::crossOffMultiples()
+{
   if (eratSmall_ != NULL) {
     // process small sieving primes with many multiples per segment
     eratSmall_->crossOff(sieve_, &sieve_[sieveSize_]);
@@ -136,7 +142,8 @@ void SieveOfEratosthenes::crossOffMultiples() {
   }
 }
 
-void SieveOfEratosthenes::sieveSegment() {
+void SieveOfEratosthenes::sieveSegment()
+{
   preSieve();
   crossOffMultiples();
   segmentProcessed(sieve_, sieveSize_);
@@ -145,7 +152,8 @@ void SieveOfEratosthenes::sieveSegment() {
 /// Sieve the last segments remaining after that sieve(uint_t)
 /// has been called for all primes up to sqrt(stop).
 ///
-void SieveOfEratosthenes::finish() {
+void SieveOfEratosthenes::finish()
+{
   // sieve all segments left except the last one
   while (segmentHigh_ < stop_) {
     sieveSegment();

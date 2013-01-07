@@ -42,8 +42,8 @@ inline void SieveOfEratosthenes::sieve(uint_t prime)
     segmentLow_  += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
-  if (prime > maxSmallPrime())
-    if (prime > maxMediumPrime())
+  if (prime > limitEratSmall_)
+    if (prime > limitEratMedium_)
             eratBig_->add(prime, segmentLow_);
     else eratMedium_->add(prime, segmentLow_);
   else    eratSmall_->add(prime, segmentLow_);
@@ -71,8 +71,6 @@ inline uint64_t    SieveOfEratosthenes::getStop()        const { return stop_; }
 inline uint_t      SieveOfEratosthenes::getSqrtStop()    const { return sqrtStop_; }
 inline uint_t      SieveOfEratosthenes::getPreSieve()    const { return preSieve_.getLimit(); }
 inline uint_t      SieveOfEratosthenes::getSieveSize()   const { return sieveSize_; }
-inline uint_t      SieveOfEratosthenes::maxSmallPrime()  const { return eratSmall_->getLimit(); }
-inline uint_t      SieveOfEratosthenes::maxMediumPrime() const { return eratMedium_->getLimit(); }
 inline std::string SieveOfEratosthenes::getMaxStopString()     { return EratBig::getMaxStopString(); }
 inline uint64_t    SieveOfEratosthenes::getMaxStop()           { return EratBig::getMaxStop(); }
 
