@@ -1,14 +1,16 @@
-Changes in version 4.1, 06/01/2012
+Changes in version 4.1, 07/01/2012
 ==================================
 
-1. The primesieve console (terminal) application now supports
+1. New PrimeSieveCallback interface class that simplifies prime
+   number generation with classes, see doc/USAGE_EXAMPLES.
+2. The primesieve console (terminal) application now supports
    GNU-style long options e.g. --size=256.
-2. Fixed a bug (if sizeof(int) > 4) in the bit population count
+3. Fixed a bug (if sizeof(int) > 4) in the bit population count
    algorithm, read BUGS file.
-3. Updated the libprimesieve doc/USAGE_EXAMPLES file.
-4. The Makefile now uses the system's default C++ compiler
+4. Updated the libprimesieve doc/USAGE_EXAMPLES file.
+5. The Makefile now uses the system's default C++ compiler
    instead of GNU g++.
-5. The primesieve_error class has been moved into its own file
+6. The primesieve_error class has been moved into its own file
    src/soe/primesieve_error.h (previously PrimeSieve.h).
 
 Changes in version 4.0, 18/10/2012

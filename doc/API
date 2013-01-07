@@ -1,4 +1,4 @@
-October 5, 2012
+January 7, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -47,7 +47,7 @@ PrimeSieve API
     Bool is* methods
     ----------------
     bool isFlag(int)      const;
-    bool isGenerate()     const;
+    bool isCallback()     const;
     bool isCount()        const;
     bool isCount(int)     const;
     bool isPrint()        const;

@@ -17,6 +17,8 @@
 #define PRIMESIEVE_MINOR_VERSION 1
 #define PRIMESIEVE_YEAR "2013"
 
+#include "PrimeSieveCallback.h"
+
 #include <stdint.h>
 #include <string>
 #include <vector>
@@ -76,7 +78,7 @@ public:
   void addFlags(int);
   // Bool is*
   bool isFlag(int) const;
-  bool isGenerate() const;
+  bool isCallback() const;
   bool isCount() const;
   bool isCount(int) const;
   bool isPrint() const;
@@ -88,9 +90,10 @@ public:
   // Generate
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t));
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
-  void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t, void*), void*);
-  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, void*), void*);
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, int));
+  void generatePrimes(uint32_t, uint32_t, PrimeSieveCallback<uint32_t>*);
+  void generatePrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t>*);
+  void generatePrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t, int>*);
   // Print
   void printPrimes(uint64_t, uint64_t);
   void printTwins(uint64_t, uint64_t);
@@ -138,11 +141,12 @@ private:
   /// Private flags
   /// @pre flag >= (1 << 20)
   enum {
-    CALLBACK32     = 1 << 20,
-    CALLBACK64     = 1 << 21,
-    CALLBACK32_OBJ = 1 << 22,
-    CALLBACK64_OBJ = 1 << 23,
-    CALLBACK64_INT = 1 << 24
+    CALLBACK32        = 1 << 20,
+    CALLBACK64        = 1 << 21,
+    CALLBACK64_TN     = 1 << 22,
+    CALLBACK32_OBJ    = 1 << 23,
+    CALLBACK64_OBJ    = 1 << 24,
+    CALLBACK64_OBJ_TN = 1 << 25
   };
   enum {
       INIT_STATUS = 0,
@@ -156,6 +160,12 @@ private:
     std::string str;
   };
   static const SmallPrime smallPrimes_[8];
+  /// Sum of all processed segments
+  uint64_t processed_;
+  /// Sum of processed segments that hasn't been updated yet
+  uint64_t toUpdate_;
+  /// Status of sieve() in percent
+  double percent_;
   /// Pre-sieve multiples of small primes <= preSieve_
   int preSieve_;
   /// Sieve size in kilobytes
@@ -163,23 +173,16 @@ private:
   /// Flags (settings) for PrimeSieve e.g. COUNT_PRIMES, PRINT_TWINS, ...
   int flags_;
   /// ParallelPrimeSieve thread number
-  int threadNumber_;
+  int threadNum_;
   /// Pointer to the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
-  /// Callback functions for use with generatePrimes()
+  /// Callbacks for use with generatePrimes()
   void (*callback32_)(uint32_t);
   void (*callback64_)(uint64_t);
-  void (*callback32_obj_)(uint32_t, void*);
-  void (*callback64_obj_)(uint64_t, void*);
-  void (*callback64_int_)(uint64_t, int);
-  /// Callback object
-  void* obj_;
-  /// Sum of all processed segments
-  uint64_t processed_;
-  /// Sum of processed segments that hasn't been updated yet
-  uint64_t toUpdate_;
-  /// Status of sieve() in percent
-  double percent_;
+  void (*callback64_tn_)(uint64_t, int);
+  PrimeSieveCallback<uint32_t>* psc32_;
+  PrimeSieveCallback<uint64_t>* psc64_;
+  PrimeSieveCallback<uint64_t, int>* psc64_tn_;
   static void printStatus(double, double);
   bool isFlag(int, int) const;
   bool isPublicFlags(int) const;

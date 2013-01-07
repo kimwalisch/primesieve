@@ -58,6 +58,7 @@ HEADERS += ../soe/EratSmall.h \
     ../soe/EratBig.h \
     ../soe/PrimeNumberFinder.h \
     ../soe/PrimeSieve.h \
+    ../soe/PrimeSieveCallback.h \
     ../soe/primesieve_error.h \
     ../soe/ParallelPrimeSieve.h \
     ../soe/SieveOfEratosthenes.h \

@@ -13,10 +13,11 @@
 #include "PrimeNumberFinder.h"
 #include "SieveOfEratosthenes.h"
 #include "SieveOfEratosthenes-inline.h"
-#include "PrimeSieve.h"
 #include "SynchronizeThreads.h"
-#include "popcount.h"
+#include "PrimeSieve.h"
+#include "PrimeSieveCallback.h"
 #include "GENERATE.h"
+#include "popcount.h"
 
 #include <stdint.h>
 #include <algorithm>
@@ -43,7 +44,15 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
     ps.getStop(),
     ps.getSieveSize(),
     ps.getPreSieve()),
-  ps_(ps)
+  ps_(ps),
+  counts_(ps.counts_),
+  threadNum_(ps.threadNum_),
+  callback32_(ps.callback32_),
+  callback64_(ps.callback64_),
+  callback64_tn_(ps.callback64_tn_),
+  psc32_(ps.psc32_),
+  psc64_(ps.psc64_),
+  psc64_tn_(ps.psc64_tn_)
 {
   if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
     init_kCounts();
@@ -54,7 +63,7 @@ PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
 ///
 void PrimeNumberFinder::init_kCounts()
 {
-  for (uint_t i = 1; i < ps_.counts_.size(); i++) {
+  for (uint_t i = 1; i < counts_.size(); i++) {
     if (ps_.isCount(i)) {
       kCounts_[i].resize(256);
       for (uint_t j = 0; j < kCounts_[i].size(); j++) {
@@ -74,10 +83,12 @@ void PrimeNumberFinder::init_kCounts()
 ///
 void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint_t sieveSize)
 {
+  if (ps_.isCallback())
+    callback(sieve, sieveSize);
   if (ps_.isCount())
     count(sieve, sieveSize);
-  if (ps_.isGenerate())
-    generate(sieve, sieveSize);
+  if (ps_.isPrint())
+    print(sieve, sieveSize);
   if (ps_.isStatus())
     ps_.updateStatus(sieveSize * NUMBERS_PER_BYTE, /* waitForLock = */ false);
 }
@@ -87,36 +98,38 @@ void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint_t sieveSize)
 ///
 void PrimeNumberFinder::count(const uint8_t* sieve, uint_t sieveSize)
 {
-  std::vector<uint64_t>& counts = ps_.counts_;
   // count prime numbers (1 bits), see popcount.cpp
   if (ps_.isFlag(ps_.COUNT_PRIMES))
-    counts[0] += popcount(reinterpret_cast<const uint64_t*>(sieve), (sieveSize + 7) / 8);
+    counts_[0] += popcount(reinterpret_cast<const uint64_t*>(sieve), (sieveSize + 7) / 8);
+
   // count prime k-tuplets (i = 1 twins, i = 2 triplets, ...)
-  for (uint_t i = 1; i < counts.size(); i++) {
+  for (uint_t i = 1; i < counts_.size(); i++) {
     if (ps_.isCount(i)) {
-      const std::vector<uint_t>& kCounts = kCounts_[i];
       uint_t sum0 = 0;
       uint_t sum1 = 0;
       uint_t sum2 = 0;
       uint_t sum3 = 0;
       for (uint_t j = 0; j < sieveSize; j += 4) {
-        sum0 += kCounts[sieve[j+0]];
-        sum1 += kCounts[sieve[j+1]];
-        sum2 += kCounts[sieve[j+2]];
-        sum3 += kCounts[sieve[j+3]];
+        sum0 += kCounts_[i][sieve[j+0]];
+        sum1 += kCounts_[i][sieve[j+1]];
+        sum2 += kCounts_[i][sieve[j+2]];
+        sum3 += kCounts_[i][sieve[j+3]];
       }
-      counts[i] += (sum0 + sum1) + (sum2 + sum3);
+      counts_[i] += (sum0 + sum1) + (sum2 + sum3);
     }
   }
 }
 
-/// Generate (print and callback) the primes and prime
-/// k-tuplets within the current segment.
-/// @warning primes < 7 are handled in PrimeSieve::doSmallPrime()
+/// Print primes and prime k-tuplets to cout.
+/// @note primes < 7 are handled in PrimeSieve::doSmallPrime()
 ///
-void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) const
+void PrimeNumberFinder::print(const uint8_t* sieve, uint_t sieveSize) const
 {
-  // print prime k-tuplets to cout
+  if (ps_.isFlag(ps_.PRINT_PRIMES)) {
+    SynchronizeThreads lock(ps_);
+    GENERATE_PRIMES(printPrime, uint64_t)
+  }
+  // print prime k-tuplets
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS)) {
     uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
     for (; !ps_.isPrint(i); i++)
@@ -137,33 +150,34 @@ void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) const
       }
     }
   }
-  // callback prime numbers
-  if (ps_.isFlag(ps_.PRINT_PRIMES))   { SynchronizeThreads lock(ps_); GENERATE_PRIMES(print,           uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK32))     { SynchronizeThreads lock(ps_); GENERATE_PRIMES(ps_.callback32_, uint32_t) }
-  if (ps_.isFlag(ps_.CALLBACK64))     { SynchronizeThreads lock(ps_); GENERATE_PRIMES(ps_.callback64_, uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK32_OBJ)) { SynchronizeThreads lock(ps_); GENERATE_PRIMES(callback32_obj,  uint32_t) }
-  if (ps_.isFlag(ps_.CALLBACK64_OBJ)) { SynchronizeThreads lock(ps_); GENERATE_PRIMES(callback64_obj,  uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK64_INT)) {                               GENERATE_PRIMES(callback64_int,  uint64_t) }
 }
 
-void PrimeNumberFinder::print(uint64_t prime)
+/// Callback the primes within the current segment.
+/// @note primes < 7 are handled in PrimeSieve::doSmallPrime()
+///
+void PrimeNumberFinder::callback(const uint8_t* sieve, uint_t sieveSize) const
+{
+  if (ps_.isFlag(ps_.CALLBACK32))        { SynchronizeThreads lock(ps_); GENERATE_PRIMES(callback32_,       uint32_t) }
+  if (ps_.isFlag(ps_.CALLBACK64))        { SynchronizeThreads lock(ps_); GENERATE_PRIMES(callback64_,       uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK64_TN))     { /* No Synchronization  */     GENERATE_PRIMES(callback64_tn,     uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK32_OBJ))    { SynchronizeThreads lock(ps_); GENERATE_PRIMES(psc32_->callback,  uint32_t) }
+  if (ps_.isFlag(ps_.CALLBACK64_OBJ))    { SynchronizeThreads lock(ps_); GENERATE_PRIMES(psc64_->callback,  uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK64_OBJ_TN)) { /* No Synchronization  */     GENERATE_PRIMES(callback64_obj_tn, uint64_t) }
+}
+
+void PrimeNumberFinder::printPrime(uint64_t prime)
 {
   std::cout << prime << '\n';
 }
 
-void PrimeNumberFinder::callback32_obj(uint32_t prime) const
+void PrimeNumberFinder::callback64_tn(uint64_t prime) const
 {
-  ps_.callback32_obj_(prime, ps_.obj_);
+  callback64_tn_(prime, threadNum_);
 }
 
-void PrimeNumberFinder::callback64_obj(uint64_t prime) const
+void PrimeNumberFinder::callback64_obj_tn(uint64_t prime) const
 {
-  ps_.callback64_obj_(prime, ps_.obj_);
-}
-
-void PrimeNumberFinder::callback64_int(uint64_t prime) const
-{
-  ps_.callback64_int_(prime, ps_.threadNumber_);
+  psc64_tn_->callback(prime, threadNum_);
 }
 
 } // namespace soe

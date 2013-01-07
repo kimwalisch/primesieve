@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   02 January 2013
+# Last modified:   06 January 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -212,6 +212,7 @@ dist:
 	cp -f src/soe/PrimeSieve.h $(DISTDIR)/$(TARGET)/soe
 	cp -f src/soe/ParallelPrimeSieve.h $(DISTDIR)/$(TARGET)/soe
 	cp -f src/soe/primesieve_error.h $(DISTDIR)/$(TARGET)/soe
+	cp -f src/soe/PrimeSieveCallback.h $(DISTDIR)/$(TARGET)/soe
 
 #-----------------------------------------------------------------------------
 # `make check` runs correctness tests
@@ -249,6 +250,7 @@ ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
 	cp -f src/soe/PrimeSieve.h $(PREFIX)/include/$(TARGET)/soe
 	cp -f src/soe/ParallelPrimeSieve.h $(PREFIX)/include/$(TARGET)/soe
 	cp -f src/soe/primesieve_error.h $(PREFIX)/include/$(TARGET)/soe
+	cp -f src/soe/PrimeSieveCallback.h $(PREFIX)/include/$(TARGET)/soe
   ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).so),)
     ifneq ($(shell command -v ldconfig $(NO_STDERR)),)
 		ldconfig $(PREFIX)/lib

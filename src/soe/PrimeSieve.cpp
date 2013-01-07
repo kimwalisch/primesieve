@@ -11,6 +11,7 @@
 
 #include "config.h"
 #include "PrimeSieve.h"
+#include "PrimeSieveCallback.h"
 #include "primesieve_error.h"
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
@@ -45,7 +46,7 @@ PrimeSieve::PrimeSieve() :
   stop_(0),
   counts_(7),
   flags_(COUNT_PRIMES),
-  threadNumber_(0),
+  threadNum_(0),
   parent_(NULL)
 {
   setPreSieve(config::PRESIEVE);
@@ -56,27 +57,27 @@ PrimeSieve::PrimeSieve() :
 /// ParallelPrimeSieve creates one PrimeSieve
 /// child object for each thread.
 ///
-PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNumber) :
+PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
   counts_(7),
   preSieve_(parent.preSieve_),
   sieveSize_(parent.sieveSize_),
   flags_(parent.flags_),
-  threadNumber_(threadNumber),
+  threadNum_(threadNum),
   parent_(&parent),
   callback32_(parent.callback32_),
   callback64_(parent.callback64_),
-  callback32_obj_(parent.callback32_obj_),
-  callback64_obj_(parent.callback64_obj_),
-  callback64_int_(parent.callback64_int_),
-  obj_(parent.obj_)
+  callback64_tn_(parent.callback64_tn_),
+  psc32_(parent.psc32_),
+  psc64_(parent.psc64_),
+  psc64_tn_(parent.psc64_tn_)
 { }
 
 PrimeSieve::~PrimeSieve()
 { }
 
-std::string PrimeSieve::getVersion()                       { return PRIMESIEVE_VERSION; }
-int         PrimeSieve::getMajorVersion()                  { return PRIMESIEVE_MAJOR_VERSION; }
-int         PrimeSieve::getMinorVersion()                  { return PRIMESIEVE_MINOR_VERSION; }
+std::string PrimeSieve::getVersion()                      { return PRIMESIEVE_VERSION; }
+int         PrimeSieve::getMajorVersion()                 { return PRIMESIEVE_MAJOR_VERSION; }
+int         PrimeSieve::getMinorVersion()                 { return PRIMESIEVE_MINOR_VERSION; }
 uint64_t    PrimeSieve::getStart()                  const { return start_; }
 uint64_t    PrimeSieve::getStop()                   const { return stop_; }
 uint64_t    PrimeSieve::getInterval()               const { return stop_ - start_; }
@@ -98,10 +99,10 @@ bool        PrimeSieve::isFlag(int flag)            const { return (flags_ & fla
 bool        PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last * 2 - first)) != 0; }
 bool        PrimeSieve::isCount(int index)          const { return isFlag(COUNT_PRIMES << index); }
 bool        PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRIMES << index); }
+bool        PrimeSieve::isCallback()                const { return isFlag(CALLBACK32, CALLBACK64_OBJ_TN); }
 bool        PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEPTUPLETS); }
 bool        PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEPTUPLETS); }
 bool        PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
-bool        PrimeSieve::isGenerate()                const { return isFlag(CALLBACK32, CALLBACK64_INT) || isPrint(); }
 bool        PrimeSieve::isParallelPrimeSieveChild() const { return parent_ != NULL; }
 
 /// Set a start number (lower bound) for sieving.
@@ -212,9 +213,10 @@ void PrimeSieve::doSmallPrime(const SmallPrime& sp)
     if (sp.index == 0) {
       if (isFlag(CALLBACK32)) callback32_(sp.firstPrime);
       if (isFlag(CALLBACK64)) callback64_(sp.firstPrime);
-      if (isFlag(CALLBACK32_OBJ)) callback32_obj_(sp.firstPrime, obj_);
-      if (isFlag(CALLBACK64_OBJ)) callback64_obj_(sp.firstPrime, obj_);
-      if (isFlag(CALLBACK64_INT)) callback64_int_(sp.firstPrime, threadNumber_);
+      if (isFlag(CALLBACK64_TN)) callback64_tn_(sp.firstPrime, threadNum_);
+      if (isFlag(CALLBACK32_OBJ)) psc32_->callback(sp.firstPrime);
+      if (isFlag(CALLBACK64_OBJ)) psc64_->callback(sp.firstPrime);
+      if (isFlag(CALLBACK64_OBJ_TN)) psc64_tn_->callback(sp.firstPrime, threadNum_);
     }
     if (isCount(sp.index)) counts_[sp.index]++;
     if (isPrint(sp.index)) std::cout << sp.str << '\n';
@@ -316,40 +318,8 @@ void PrimeSieve::generatePrimes(uint64_t start,
   sieve(start, stop);
 }
 
-/// Generate the primes within the interval [start, stop] and call
-/// an OOP-style callback function for each prime.
-///
-void PrimeSieve::generatePrimes(uint32_t start,
-                                uint32_t stop,
-                                void (*callback)(uint32_t, void*), void* obj)
-{
-  if (callback == NULL)
-    throw primesieve_error("callback must not be NULL");
-  callback32_obj_ = callback;
-  obj_ = obj;
-  flags_ = CALLBACK32_OBJ;
-  setPreSieve(17);
-  sieve(start, stop);
-}
-
-/// Generate the primes within the interval [start, stop] and call
-/// an OOP-style callback function for each prime.
-///
-void PrimeSieve::generatePrimes(uint64_t start,
-                                uint64_t stop,
-                                void (*callback)(uint64_t, void*), void* obj)
-{
-  if (callback == NULL)
-    throw primesieve_error("callback must not be NULL");
-  callback64_obj_ = callback;
-  obj_ = obj;
-  flags_ = CALLBACK64_OBJ;
-  setPreSieve(17);
-  sieve(start, stop);
-}
-
-/// Unsynchronized prime generation method for use with
-/// ParallelPrimeSieve.
+/// Massively parallel (unsynchronized) prime generation method for
+/// use with ParallelPrimeSieve.
 ///
 void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
@@ -357,8 +327,53 @@ void PrimeSieve::generatePrimes(uint64_t start,
 {
   if (callback == NULL)
     throw primesieve_error("callback must not be NULL");
-  callback64_int_ = callback;
-  flags_ = CALLBACK64_INT;
+  callback64_tn_ = callback;
+  flags_ = CALLBACK64_TN;
+  setPreSieve(17);
+  sieve(start, stop);
+}
+
+/// Generate the primes within the interval [start, stop] and call
+/// the callback method of the PrimeSieveCallback object.
+///
+void PrimeSieve::generatePrimes(uint32_t start,
+                                uint32_t stop,
+                                PrimeSieveCallback<uint32_t>* callback)
+{
+  if (callback == NULL)
+    throw primesieve_error("callback must not be NULL");
+  psc32_ = callback;
+  flags_ = CALLBACK32_OBJ;
+  setPreSieve(17);
+  sieve(start, stop);
+}
+
+/// Generate the primes within the interval [start, stop] and call
+/// the callback method of the PrimeSieveCallback object.
+///
+void PrimeSieve::generatePrimes(uint64_t start,
+                                uint64_t stop,
+                                PrimeSieveCallback<uint64_t>* callback)
+{
+  if (callback == NULL)
+    throw primesieve_error("callback must not be NULL");
+  psc64_ = callback;
+  flags_ = CALLBACK64_OBJ;
+  setPreSieve(17);
+  sieve(start, stop);
+}
+
+/// Massively parallel (unsynchronized) prime generation method for
+/// use with ParallelPrimeSieve.
+///
+void PrimeSieve::generatePrimes(uint64_t start,
+                                uint64_t stop,
+                                PrimeSieveCallback<uint64_t, int>* callback)
+{
+  if (callback == NULL)
+    throw primesieve_error("callback must not be NULL");
+  psc64_tn_ = callback;
+  flags_ = CALLBACK64_OBJ_TN;
   setPreSieve(17);
   sieve(start, stop);
 }

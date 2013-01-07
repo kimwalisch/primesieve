@@ -1,30 +1,26 @@
-December 22, 2012
+January 7, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
 TODO for primesieve-4.1
 -----------------------
-1. Wait for the second OpenMP 4.0 release candidate (1st quarter 2013)
+
+1. Test Makefile with new FreeBSD 9.1 release (clang default compiler?)
+
+2. Update files: API, FAQ, examples, USAGE_EXAMPLES.
+
+3. Wait for the second OpenMP 4.0 release candidate (1st quarter 2013)
    and have a look at the new error handling features. Evaluate if
    this may be integrated in ParallelPrimeSieve.cpp.
-2. Evaluate if the primesieve program options (e.g. -h, -v) should
-   be changed to use GNU/Linux conventions e.g. --help.
-3. Update year in PrimeSieve.h to 2013.
-4. Update primesieve-4.1 release date in CHANGES.
 
 Missing features
 ----------------
 Option to cancel sieving in PrimeSieve and ParallelPrimeSieve objects.
 
-C++11
------
-In a few years when C++11 is widely supported:
-1. Use std::unique_ptr for dynamic memory allocation.
-
 OpenMP
 ------
 1. Make ParallelPrimeSieve.cpp exception safe once OpenMP supports
    C++ exceptions.
-2. Test if the new OpenMP 4.0 affinity() clause speeds up primesieve.
-3. Once OpenMP supports array reduction I should use it in
+2. Once OpenMP supports array reduction I should use it in
    ParallelPrimeSieve.cpp.
+3. Test if the new OpenMP 4.0 affinity() clause speeds up primesieve.

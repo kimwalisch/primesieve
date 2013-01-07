@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   02 January 2013
+# Last modified:   06 January 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -155,6 +155,7 @@ dist: dist_dir
 	copy /Y src\soe\PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
 	copy /Y src\soe\ParallelPrimeSieve.h $(DISTDIR)\$(TARGET)\soe
 	copy /Y src\soe\primesieve_error.h $(DISTDIR)\$(TARGET)\soe
+	copy /Y src\soe\PrimeSieveCallback.h $(DISTDIR)\$(TARGET)\soe
 
 dist_dir:
 	@if not exist $(DISTDIR)\$(TARGET)\soe mkdir $(DISTDIR)\$(TARGET)\soe
