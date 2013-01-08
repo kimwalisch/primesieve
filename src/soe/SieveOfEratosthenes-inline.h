@@ -42,11 +42,9 @@ inline void SieveOfEratosthenes::sieve(uint_t prime)
     segmentLow_  += sieveSize_ * NUMBERS_PER_BYTE;
     segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
   }
-  if (prime > limitEratSmall_)
-    if (prime > limitEratMedium_)
-            eratBig_->add(prime, segmentLow_);
-    else eratMedium_->add(prime, segmentLow_);
-  else    eratSmall_->add(prime, segmentLow_);
+       if (prime > limitEratMedium_)    eratBig_->add(prime, segmentLow_);
+  else if (prime > limitEratSmall_)  eratMedium_->add(prime, segmentLow_);
+  else                                eratSmall_->add(prime, segmentLow_);
 }
 
 /// Reconstruct the prime number corresponding to the first set
