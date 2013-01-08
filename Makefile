@@ -10,49 +10,51 @@
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
 
-TARGET    := primesieve
-CXX       := c++
-CXXFLAGS  := -Wall -O2
-BINDIR    := bin
-LIBDIR    := lib
-DISTDIR   := dist
-EXDIR     := examples
+TARGET   := primesieve
+CXX      := c++
+CXXFLAGS := -Wall -O2
+BINDIR   := bin
+DISTDIR  := dist
+EXDIR    := examples
+LIBDIR   := lib
+SOEDIR   := src/soe
 
 SOE_SOURCES:= \
-  src/soe/PrimeSieve.cpp \
-  src/soe/ParallelPrimeSieve.cpp \
-  src/soe/SieveOfEratosthenes.cpp \
-  src/soe/PrimeNumberFinder.cpp \
-  src/soe/PrimeNumberGenerator.cpp \
-  src/soe/PreSieve.cpp \
-  src/soe/EratSmall.cpp \
-  src/soe/EratMedium.cpp \
-  src/soe/EratBig.cpp \
-  src/soe/WheelFactorization.cpp \
-  src/soe/popcount.cpp
+  $(SOEDIR)/EratBig.o \
+  $(SOEDIR)/EratMedium.o \
+  $(SOEDIR)/EratSmall.o \
+  $(SOEDIR)/ParallelPrimeSieve.o \
+  $(SOEDIR)/popcount.o \
+  $(SOEDIR)/PreSieve.o \
+  $(SOEDIR)/PrimeNumberFinder.o \
+  $(SOEDIR)/PrimeNumberGenerator.o \
+  $(SOEDIR)/PrimeSieve.o \
+  $(SOEDIR)/SieveOfEratosthenes.o \
+  $(SOEDIR)/WheelFactorization.o
 
 SOE_HEADERS := \
-  src/soe/bits.h \
-  src/soe/config.h \
-  src/soe/EratBig.h \
-  src/soe/EratMedium.h \
-  src/soe/EratSmall.h \
-  src/soe/imath.h \
-  src/soe/endiansafe_cast.h \
-  src/soe/openmp_lock.h \
-  src/soe/ParallelPrimeSieve.h \
-  src/soe/popcount.h \
-  src/soe/PreSieve.h \
-  src/soe/PrimeNumberFinder.h \
-  src/soe/PrimeNumberGenerator.h \
-  src/soe/PrimeSieve.h \
-  src/soe/primesieve_error.h \
-  src/soe/SieveOfEratosthenes.h \
-  src/soe/SieveOfEratosthenes-GENERATE.h \
-  src/soe/SieveOfEratosthenes-inline.h \
-  src/soe/toString.h \
-  src/soe/WheelFactorization.h \
-  src/soe/SynchronizeThreads.h
+  $(SOEDIR)/bits.h \
+  $(SOEDIR)/config.h \
+  $(SOEDIR)/endiansafe_cast.h \
+  $(SOEDIR)/EratBig.h \
+  $(SOEDIR)/EratMedium.h \
+  $(SOEDIR)/EratSmall.h \
+  $(SOEDIR)/imath.h \
+  $(SOEDIR)/openmp_lock.h \
+  $(SOEDIR)/ParallelPrimeSieve.h \
+  $(SOEDIR)/popcount.h \
+  $(SOEDIR)/PreSieve.h \
+  $(SOEDIR)/PrimeNumberFinder.h \
+  $(SOEDIR)/PrimeNumberGenerator.h \
+  $(SOEDIR)/PrimeSieve.h \
+  $(SOEDIR)/primesieve_error.h \
+  $(SOEDIR)/PrimeSieveCallback.h \
+  $(SOEDIR)/SieveOfEratosthenes.h \
+  $(SOEDIR)/SieveOfEratosthenes-GENERATE.h \
+  $(SOEDIR)/SieveOfEratosthenes-inline.h \
+  $(SOEDIR)/SynchronizeThreads.h \
+  $(SOEDIR)/toString.h \
+  $(SOEDIR)/WheelFactorization.h
 
 #-----------------------------------------------------------------------------
 # Needed to suppress output while checking system features
@@ -139,9 +141,9 @@ endif
 #-----------------------------------------------------------------------------
 
 BIN_OBJECTS := \
-  $(BINDIR)/main.o \
   $(BINDIR)/cmdoptions.o \
   $(BINDIR)/help.o \
+  $(BINDIR)/main.o \
   $(BINDIR)/test.o \
   $(addprefix $(BINDIR)/, $(subst .cpp,.o, $(notdir $(SOE_SOURCES))))
 
@@ -155,7 +157,7 @@ bin_dir:
 bin_obj: $(BIN_OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $^
 
-$(BINDIR)/%.o: src/soe/%.cpp $(SOE_HEADERS)
+$(BINDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BINDIR)/%.o: src/application/%.cpp $(SOE_HEADERS)
@@ -188,7 +190,7 @@ else
 	ar rcs $(LIBDIR)/$(LIBRARY) $^
 endif
 
-$(LIBDIR)/%.o: src/soe/%.cpp $(SOE_HEADERS)
+$(LIBDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
 	$(CXX) $(LIB_CXXFLAGS) -c $< -o $@
 
 #-----------------------------------------------------------------------------
@@ -211,10 +213,10 @@ $(EXDIR)/%: $(EXDIR)/%.cpp
 dist:
 	@mkdir -p $(DISTDIR)/$(TARGET)/soe
 	cp -f $(LIBDIR)/lib$(TARGET).* $(DISTDIR)
-	cp -f src/soe/PrimeSieve.h $(DISTDIR)/$(TARGET)/soe
-	cp -f src/soe/ParallelPrimeSieve.h $(DISTDIR)/$(TARGET)/soe
-	cp -f src/soe/primesieve_error.h $(DISTDIR)/$(TARGET)/soe
-	cp -f src/soe/PrimeSieveCallback.h $(DISTDIR)/$(TARGET)/soe
+	cp -f $(SOEDIR)/PrimeSieve.h $(DISTDIR)/$(TARGET)/soe
+	cp -f $(SOEDIR)/ParallelPrimeSieve.h $(DISTDIR)/$(TARGET)/soe
+	cp -f $(SOEDIR)/primesieve_error.h $(DISTDIR)/$(TARGET)/soe
+	cp -f $(SOEDIR)/PrimeSieveCallback.h $(DISTDIR)/$(TARGET)/soe
 
 #-----------------------------------------------------------------------------
 # `make check` runs correctness tests
@@ -223,7 +225,7 @@ dist:
 .PHONY: check test
 
 check test: bin
-	$(BINDIR)/./$(TARGET) -test
+	$(BINDIR)/./$(TARGET) --test
 
 #-----------------------------------------------------------------------------
 # Common targets (all, clean, install, uninstall)
@@ -249,10 +251,10 @@ ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
 	@mkdir -p $(PREFIX)/include/$(TARGET)/soe
 	@mkdir -p $(PREFIX)/lib
 	cp -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(PREFIX)/lib
-	cp -f src/soe/PrimeSieve.h $(PREFIX)/include/$(TARGET)/soe
-	cp -f src/soe/ParallelPrimeSieve.h $(PREFIX)/include/$(TARGET)/soe
-	cp -f src/soe/primesieve_error.h $(PREFIX)/include/$(TARGET)/soe
-	cp -f src/soe/PrimeSieveCallback.h $(PREFIX)/include/$(TARGET)/soe
+	cp -f $(SOEDIR)/PrimeSieve.h $(PREFIX)/include/$(TARGET)/soe
+	cp -f $(SOEDIR)/ParallelPrimeSieve.h $(PREFIX)/include/$(TARGET)/soe
+	cp -f $(SOEDIR)/primesieve_error.h $(PREFIX)/include/$(TARGET)/soe
+	cp -f $(SOEDIR)/PrimeSieveCallback.h $(PREFIX)/include/$(TARGET)/soe
   ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).so),)
     ifneq ($(shell command -v ldconfig $(NO_STDERR)),)
 		ldconfig $(PREFIX)/lib

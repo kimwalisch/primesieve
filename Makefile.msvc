@@ -189,7 +189,7 @@ clean:
 #-----------------------------------------------------------------------------
 
 check test: bin
-	$(BINDIR)\$(TARGET).exe -test
+	$(BINDIR)\$(TARGET).exe --test
 
 #-----------------------------------------------------------------------------
 # OpenMP requires Microsoft Visual C++ Professional or higher
