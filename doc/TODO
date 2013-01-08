@@ -1,18 +1,20 @@
-January 7, 2013
+January 8, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-TODO for primesieve-4.1
------------------------
+Exception handling
+------------------
+1. Idea: Create a new primesieve_cancel() exception class that can be
+   thrown from within the callback method and that is caught in
+   PrimeSieve::sieve(). For ParallelPrimeSieve (if parent_ != NULL)
+   the exception could be rethrown and caught in
+   ParallelPrimeSieve::sieve().
 
+OpenMP 4.0
+----------
 1. Wait for the second OpenMP 4.0 release candidate (February 2013) and
    have a look at the new error handling features. Evaluate if this
    may be integrated in ParallelPrimeSieve.cpp.
-
-OpenMP
-------
-1. Make ParallelPrimeSieve.cpp exception safe once OpenMP supports
-   C++ exceptions.
 2. Once OpenMP supports array reduction I should use it in
    ParallelPrimeSieve.cpp.
 3. Test if the new OpenMP 4.0 affinity() clause speeds up primesieve.
