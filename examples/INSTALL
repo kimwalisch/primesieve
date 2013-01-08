@@ -1,4 +1,4 @@
-October 18, 2012
+January 8, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -27,26 +27,25 @@ How to compile the example programs
   > nmake -f Makefile.msvc dist
   > nmake -f Makefile.msvc examples
 
-  Unix-like OSes (Linux, Mac OS X, ...) and GNU g++
-  -------------------------------------------------
+  Unix-like OSes, default C++ compiler
+  ------------------------------------
 
   $ make lib
   $ sudo make install
   $ make examples
 
-  MinGW (with MSYS) and Cygwin with GNU g++
-  -----------------------------------------
+  MinGW (with MSYS) and Cygwin, default C++ compiler
+  --------------------------------------------------
 
   $ make lib
   $ make install
   $ make examples
 
-Other C++ compilers (e.g. clang++)
-==================================
+  Unix-like OSes, other C++ compilers
+  -----------------------------------
 
-  $ make lib CXX=clang++
+  e.g. Intel C++ compiler
+
+  $ make lib CXX=icpc CXXFLAGS="-O2 -openmp"
   $ sudo make install
-  $ make examples CXX=clang++
-
-  If your compiler supports OpenMP you can enable it using e.g.
-  CXX=g++ CXXFLAGS="-O2 -fopenmp".
+  $ make examples CXX=icpc CXXFLAGS="-O2 -openmp"
