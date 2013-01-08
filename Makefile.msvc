@@ -16,9 +16,10 @@ CXXFLAGS = /W2 /O2 /EHsc
 INCPATH  = /I src\thirdparty
 LINK     = link /nologo
 BINDIR   = bin
-LIBDIR   = lib
 DISTDIR  = dist
 EXDIR    = examples
+LIBDIR   = lib
+SOEDIR   = src\soe
 
 BIN_OBJECTS = \
   $(BINDIR)\EratBig.obj \
@@ -47,9 +48,9 @@ LIB_OBJECTS = \
   $(LIBDIR)\WheelFactorization.obj
 
 APP_OBJECTS = \
-  $(BINDIR)\cmdoptions.cpp \
-  $(BINDIR)\help.cpp \
-  $(BINDIR)\main.cpp
+  $(BINDIR)\cmdoptions.obj \
+  $(BINDIR)\help.obj \
+  $(BINDIR)\main.obj
 
 EXAMPLE_OBJECTS = \
   $(EXDIR)\cancel_prime_generation.obj \
@@ -66,28 +67,28 @@ EXAMPLE_OBJECTS = \
   $(EXDIR)\timing.obj
 
 SOE_HEADERS = \
-  src\soe\bits.h \
-  src\soe\config.h \
-  src\soe\endiansafe_cast.h \
-  src\soe\EratBig.h \
-  src\soe\EratMedium.h \
-  src\soe\EratSmall.h \
-  src\soe\imath.h \
-  src\soe\openmp_lock.h \
-  src\soe\ParallelPrimeSieve.h \
-  src\soe\popcount.h \
-  src\soe\PreSieve.h \
-  src\soe\PrimeNumberFinder.h \
-  src\soe\PrimeNumberGenerator.h \
-  src\soe\PrimeSieve.h \
-  src\soe\primesieve_error.h \
-  src\soe\PrimeSieveCallback.h \
-  src\soe\SieveOfEratosthenes.h \
-  src\soe\SieveOfEratosthenes-GENERATE.h \
-  src\soe\SieveOfEratosthenes-inline.h \
-  src\soe\SynchronizeThreads.h \
-  src\soe\toString.h \
-  src\soe\WheelFactorization.h
+  $(SOEDIR)\bits.h \
+  $(SOEDIR)\config.h \
+  $(SOEDIR)\endiansafe_cast.h \
+  $(SOEDIR)\EratBig.h \
+  $(SOEDIR)\EratMedium.h \
+  $(SOEDIR)\EratSmall.h \
+  $(SOEDIR)\imath.h \
+  $(SOEDIR)\openmp_lock.h \
+  $(SOEDIR)\ParallelPrimeSieve.h \
+  $(SOEDIR)\popcount.h \
+  $(SOEDIR)\PreSieve.h \
+  $(SOEDIR)\PrimeNumberFinder.h \
+  $(SOEDIR)\PrimeNumberGenerator.h \
+  $(SOEDIR)\PrimeSieve.h \
+  $(SOEDIR)\primesieve_error.h \
+  $(SOEDIR)\PrimeSieveCallback.h \
+  $(SOEDIR)\SieveOfEratosthenes.h \
+  $(SOEDIR)\SieveOfEratosthenes-GENERATE.h \
+  $(SOEDIR)\SieveOfEratosthenes-inline.h \
+  $(SOEDIR)\SynchronizeThreads.h \
+  $(SOEDIR)\toString.h \
+  $(SOEDIR)\WheelFactorization.h
 
 #-----------------------------------------------------------------------------
 # Add /openmp if MSVC supports OpenMP
@@ -127,8 +128,8 @@ bin_dir:
 bin_obj: $(APP_OBJECTS) $(BINDIR)\test.obj $(BIN_OBJECTS)
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
 
-$(BIN_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) /c src\soe\$(@B).cpp /Fo$@
+$(BIN_OBJECTS): $(SOEDIR)\$(@B).cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) /c $(SOEDIR)\$(@B).cpp /Fo$@
 
 $(APP_OBJECTS): src\application\$(@B).cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\application\$(@B).cpp /Fo$@
@@ -148,8 +149,8 @@ lib_dir:
 lib_obj: $(LIB_OBJECTS)
 	lib.exe /nologo /OUT:$(LIBDIR)\$(TARGET).lib $**
 
-$(LIB_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) /c src\soe\$(@B).cpp /Fo$@
+$(LIB_OBJECTS): $(SOEDIR)\$(@B).cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) /c $(SOEDIR)\$(@B).cpp /Fo$@
 
 #-----------------------------------------------------------------------------
 # Create a primesieve.lib distribution archive (./dist)
@@ -157,10 +158,10 @@ $(LIB_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
 
 dist: dist_dir
 	copy /Y $(LIBDIR)\$(TARGET).lib $(DISTDIR)
-	copy /Y src\soe\PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
-	copy /Y src\soe\ParallelPrimeSieve.h $(DISTDIR)\$(TARGET)\soe
-	copy /Y src\soe\primesieve_error.h $(DISTDIR)\$(TARGET)\soe
-	copy /Y src\soe\PrimeSieveCallback.h $(DISTDIR)\$(TARGET)\soe
+	copy /Y $(SOEDIR)\PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
+	copy /Y $(SOEDIR)\ParallelPrimeSieve.h $(DISTDIR)\$(TARGET)\soe
+	copy /Y $(SOEDIR)\primesieve_error.h $(DISTDIR)\$(TARGET)\soe
+	copy /Y $(SOEDIR)\PrimeSieveCallback.h $(DISTDIR)\$(TARGET)\soe
 
 dist_dir:
 	@if not exist $(DISTDIR)\$(TARGET)\soe mkdir $(DISTDIR)\$(TARGET)\soe
