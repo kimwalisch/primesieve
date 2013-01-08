@@ -44,7 +44,7 @@ const string helpMenu(
 const string versionInfo(
   "primesieve " PRIMESIEVE_VERSION ", <http://primesieve.googlecode.com>\n"
   "Copyright (C) " PRIMESIEVE_YEAR " Kim Walisch\n"
-  "primesieve is free software, it is distributed under the New BSD License."
+  "License BSD-3: New BSD License <http://opensource.org/licenses/BSD-3-Clause>"
 );
 
 } // end namespace
