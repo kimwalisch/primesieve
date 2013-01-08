@@ -44,7 +44,7 @@ How to compile the example programs
   Unix-like OSes, other C++ compilers
   -----------------------------------
 
-  e.g. Intel C++ compiler
+  e.g. Intel C++ compiler:
 
   $ make lib CXX=icpc CXXFLAGS="-O2 -openmp"
   $ sudo make install
