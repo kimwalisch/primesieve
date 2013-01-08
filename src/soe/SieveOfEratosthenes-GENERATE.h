@@ -1,5 +1,5 @@
 ///
-/// @file   GENERATE.h
+/// @file   SieveOfEratosthenes-GENERATE.h
 /// @brief  Macros to reconstruct primes and prime k-tuplets from 1
 ///         bits of the sieve array.
 ///

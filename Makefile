@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   07 January 2013
+# Last modified:   08 January 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -36,7 +36,6 @@ SOE_HEADERS := \
   src/soe/EratBig.h \
   src/soe/EratMedium.h \
   src/soe/EratSmall.h \
-  src/soe/GENERATE.h \
   src/soe/imath.h \
   src/soe/endiansafe_cast.h \
   src/soe/openmp_lock.h \
@@ -48,6 +47,7 @@ SOE_HEADERS := \
   src/soe/PrimeSieve.h \
   src/soe/primesieve_error.h \
   src/soe/SieveOfEratosthenes.h \
+  src/soe/SieveOfEratosthenes-GENERATE.h \
   src/soe/SieveOfEratosthenes-inline.h \
   src/soe/toString.h \
   src/soe/WheelFactorization.h \

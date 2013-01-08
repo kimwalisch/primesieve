@@ -12,11 +12,11 @@
 #include "config.h"
 #include "PrimeNumberFinder.h"
 #include "SieveOfEratosthenes.h"
+#include "SieveOfEratosthenes-GENERATE.h"
 #include "SieveOfEratosthenes-inline.h"
 #include "SynchronizeThreads.h"
 #include "PrimeSieve.h"
 #include "PrimeSieveCallback.h"
-#include "GENERATE.h"
 #include "popcount.h"
 
 #include <stdint.h>
@@ -134,7 +134,6 @@ void PrimeNumberFinder::print(const uint8_t* sieve, uint_t sieveSize) const
     uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
     for (; !ps_.isPrint(i); i++)
       ;
-    // for more speed see GENERATE.h
     for (uint_t j = 0; j < sieveSize; j++) {
       for (const uint_t* bitmask = kBitmasks_[i]; *bitmask <= sieve[j]; bitmask++) {
         if ((sieve[j] & *bitmask) == *bitmask) {

@@ -62,6 +62,7 @@ HEADERS += ../soe/EratSmall.h \
     ../soe/primesieve_error.h \
     ../soe/ParallelPrimeSieve.h \
     ../soe/SieveOfEratosthenes.h \
+    ../soe/SieveOfEratosthenes-GENERATE.h \
     ../soe/SieveOfEratosthenes-inline.h \
     ../soe/EratMedium.h \
     ../soe/PrimeNumberGenerator.h \
@@ -69,7 +70,6 @@ HEADERS += ../soe/EratSmall.h \
     ../soe/WheelFactorization.h \
     ../soe/bits.h \
     ../soe/config.h \
-    ../soe/GENERATE.h \
     ../soe/imath.h \
     ../soe/endiansafe_cast.h \
     ../soe/openmp_lock.h \

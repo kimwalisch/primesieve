@@ -105,7 +105,8 @@ Contents
   The sieving algorithms are in EratSmall.cpp, EratMedium.cpp and
   EratBig.cpp. The segmented sieve of Eratosthenes is in 
   SieveOfEratosthenes-inline.h. Prime number generation (and counting)
-  is done in PrimeNumberFinder.cpp using a macro from GENERATE.h.
+  is done in PrimeNumberFinder.cpp using a macro from
+  SieveOfEratosthenes-GENERATE.h.
 
   C++ classes
   -----------
@@ -180,7 +181,7 @@ Contents
 
   Macros
   ------
-  * GENERATE.h
+  * SieveOfEratosthenes-GENERATE.h
     Contains macros used to reconstruct primes and prime k-tuplets
     (twins, triplets) from 1 bits of the sieve array.
 
