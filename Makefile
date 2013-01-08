@@ -23,6 +23,7 @@ SOE_SOURCES:= \
   src/soe/ParallelPrimeSieve.cpp \
   src/soe/SieveOfEratosthenes.cpp \
   src/soe/PrimeNumberFinder.cpp \
+  src/soe/PrimeNumberGenerator.cpp \
   src/soe/PreSieve.cpp \
   src/soe/EratSmall.cpp \
   src/soe/EratMedium.cpp \

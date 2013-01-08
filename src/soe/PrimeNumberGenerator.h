@@ -12,36 +12,20 @@
 
 #include "config.h"
 #include "SieveOfEratosthenes.h"
-#include "SieveOfEratosthenes-GENERATE.h"
-#include "SieveOfEratosthenes-inline.h"
-#include "PrimeNumberFinder.h"
 
 #include <stdint.h>
 
 namespace soe {
 
-/// PrimeNumberGenerator generates the primes up to sqrt(n) needed
-/// for sieving by PrimeNumberFinder.
-///
+class PrimeNumberFinder;
+
 class PrimeNumberGenerator : public SieveOfEratosthenes {
 public:
-  PrimeNumberGenerator(PrimeNumberFinder& finder) :
-    SieveOfEratosthenes(
-      finder.getPreSieve() + 1,
-      finder.getSqrtStop(),
-      config::SIEVESIZE,
-      config::PRESIEVE_GENERATOR),
-    finder_(finder)
-  { }
+  PrimeNumberGenerator(PrimeNumberFinder&);
 private:
-  DISALLOW_COPY_AND_ASSIGN(PrimeNumberGenerator);
   PrimeNumberFinder& finder_;
-  /// Generates the primes within the current segment
-  /// and use them to sieve with finder_.
-  ///
-  void segmentProcessed(const uint8_t* sieve, uint_t sieveSize) {
-    GENERATE_PRIMES(finder_.sieve, uint_t);
-  }
+  void segmentProcessed(const uint8_t*, uint_t);
+  DISALLOW_COPY_AND_ASSIGN(PrimeNumberGenerator);
 };
 
 } // namespace soe

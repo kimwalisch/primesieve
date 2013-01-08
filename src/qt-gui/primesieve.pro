@@ -43,13 +43,14 @@ HEADERS += ../parser/ExpressionParser.h
 # -------------------------------------------------
 
 SOURCES += \
-    ../soe/EratBig.cpp \
     ../soe/EratSmall.cpp \
+    ../soe/EratMedium.cpp \
+    ../soe/EratBig.cpp \
     ../soe/PrimeNumberFinder.cpp \
+    ../soe/PrimeNumberGenerator.cpp \
     ../soe/PrimeSieve.cpp \
     ../soe/ParallelPrimeSieve.cpp \
     ../soe/SieveOfEratosthenes.cpp \
-    ../soe/EratMedium.cpp \
     ../soe/PreSieve.cpp \
     ../soe/WheelFactorization.cpp \
     ../soe/popcount.cpp

@@ -21,28 +21,35 @@ DISTDIR  = dist
 EXDIR    = examples
 
 BIN_OBJECTS = \
-  $(BINDIR)\PrimeSieve.obj \
-  $(BINDIR)\ParallelPrimeSieve.obj \
-  $(BINDIR)\SieveOfEratosthenes.obj \
-  $(BINDIR)\PrimeNumberFinder.obj \
-  $(BINDIR)\PreSieve.obj \
-  $(BINDIR)\WheelFactorization.obj \
-  $(BINDIR)\EratSmall.obj \
-  $(BINDIR)\EratMedium.obj \
   $(BINDIR)\EratBig.obj \
-  $(BINDIR)\popcount.obj
+  $(BINDIR)\EratMedium.obj \
+  $(BINDIR)\EratSmall.obj \
+  $(BINDIR)\ParallelPrimeSieve.obj \
+  $(BINDIR)\popcount.obj \
+  $(BINDIR)\PreSieve.obj \
+  $(BINDIR)\PrimeNumberFinder.obj \
+  $(BINDIR)\PrimeNumberGenerator.obj \
+  $(BINDIR)\PrimeSieve.obj \
+  $(BINDIR)\SieveOfEratosthenes.obj \
+  $(BINDIR)\WheelFactorization.obj
 
 LIB_OBJECTS = \
-  $(LIBDIR)\PrimeSieve.obj \
-  $(LIBDIR)\ParallelPrimeSieve.obj \
-  $(LIBDIR)\SieveOfEratosthenes.obj \
-  $(LIBDIR)\PrimeNumberFinder.obj \
-  $(LIBDIR)\PreSieve.obj \
-  $(LIBDIR)\WheelFactorization.obj \
-  $(LIBDIR)\EratSmall.obj \
-  $(LIBDIR)\EratMedium.obj \
   $(LIBDIR)\EratBig.obj \
-  $(LIBDIR)\popcount.obj
+  $(LIBDIR)\EratMedium.obj \
+  $(LIBDIR)\EratSmall.obj \
+  $(LIBDIR)\ParallelPrimeSieve.obj \
+  $(LIBDIR)\popcount.obj \
+  $(LIBDIR)\PreSieve.obj \
+  $(LIBDIR)\PrimeNumberFinder.obj \
+  $(LIBDIR)\PrimeNumberGenerator.obj \
+  $(LIBDIR)\PrimeSieve.obj \
+  $(LIBDIR)\SieveOfEratosthenes.obj \
+  $(LIBDIR)\WheelFactorization.obj
+
+APP_OBJECTS = \
+  $(BINDIR)\cmdoptions.cpp \
+  $(BINDIR)\help.cpp \
+  $(BINDIR)\main.cpp
 
 EXAMPLE_OBJECTS = \
   $(EXDIR)\cancel_prime_generation.obj \
@@ -61,11 +68,11 @@ EXAMPLE_OBJECTS = \
 SOE_HEADERS = \
   src\soe\bits.h \
   src\soe\config.h \
+  src\soe\endiansafe_cast.h \
   src\soe\EratBig.h \
   src\soe\EratMedium.h \
   src\soe\EratSmall.h \
   src\soe\imath.h \
-  src\soe\endiansafe_cast.h \
   src\soe\openmp_lock.h \
   src\soe\ParallelPrimeSieve.h \
   src\soe\popcount.h \
@@ -74,12 +81,13 @@ SOE_HEADERS = \
   src\soe\PrimeNumberGenerator.h \
   src\soe\PrimeSieve.h \
   src\soe\primesieve_error.h \
+  src\soe\PrimeSieveCallback.h \
   src\soe\SieveOfEratosthenes.h \
   src\soe\SieveOfEratosthenes-GENERATE.h \
   src\soe\SieveOfEratosthenes-inline.h \
+  src\soe\SynchronizeThreads.h \
   src\soe\toString.h \
-  src\soe\WheelFactorization.h \
-  src\soe\SynchronizeThreads.h
+  src\soe\WheelFactorization.h
 
 #-----------------------------------------------------------------------------
 # Add /openmp if MSVC supports OpenMP
@@ -116,20 +124,14 @@ bin: bin_dir bin_obj openmp_note
 bin_dir:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
 
-bin_obj: $(BINDIR)\main.obj $(BINDIR)\cmdoptions.obj $(BINDIR)\help.obj $(BINDIR)\test.obj $(BIN_OBJECTS)
+bin_obj: $(APP_OBJECTS) $(BINDIR)\test.obj $(BIN_OBJECTS)
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
 
 $(BIN_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\soe\$(@B).cpp /Fo$@
 
-$(BINDIR)\main.obj: src\application\main.cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) /c src\application\main.cpp /Fo$@
-
-$(BINDIR)\cmdoptions.obj: src\application\cmdoptions.cpp
-	$(CXX) $(CXXFLAGS) /c src\application\cmdoptions.cpp /Fo$@
-
-$(BINDIR)\help.obj: src\application\help.cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) /c src\application\help.cpp /Fo$@
+$(APP_OBJECTS): src\application\$(@B).cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) /c src\application\$(@B).cpp /Fo$@
 
 $(BINDIR)\test.obj: src\test\test.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\test\test.cpp /Fo$@
