@@ -39,11 +39,10 @@ const uint_t PrimeNumberFinder::kBitmasks_[7][5] =
 };
 
 PrimeNumberFinder::PrimeNumberFinder(PrimeSieve& ps) :
-  SieveOfEratosthenes(
-    std::max<uint64_t>(7, ps.getStart()),
-    ps.getStop(),
-    ps.getSieveSize(),
-    ps.getPreSieve()),
+  SieveOfEratosthenes(std::max<uint64_t>(7, ps.getStart()),
+                      ps.getStop(),
+                      ps.getSieveSize(),
+                      ps.getPreSieve()),
   ps_(ps),
   counts_(ps.counts_),
   threadNum_(ps.threadNum_),
