@@ -1,15 +1,15 @@
-Changes in version 4.1, 07/01/2012
+Changes in version 4.1, 08/01/2012
 ==================================
 
 1. New PrimeSieveCallback interface class that simplifies prime
    number generation with classes, see doc/USAGE_EXAMPLES.
 2. The primesieve console (terminal) application now supports
    GNU-style long options e.g. --size=256.
-3. Fixed a bug (if sizeof(int) > 4) in the bit population count
+3. Fixed a bug (for sizeof(int) > 4) in the bit population count
    algorithm, read BUGS file.
 4. Updated the libprimesieve doc/USAGE_EXAMPLES file.
 5. The Makefile now uses the system's default C++ compiler instead
-   of GNU g++.
+   of GNU g++ which makes it more portable.
 6. The primesieve_error class has been moved into its own file
    src/soe/primesieve_error.h (previously PrimeSieve.h).
 
@@ -22,13 +22,12 @@ Changes in version 4.1, 07/01/2012
    void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, void (*)(uint32_t, void*), void*);
    void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*)(uint64_t, void*), void*);
 
-   They are replaced by the following new methods that greatly
-   simplify prime number generation with classes, see the
-   doc/USAGE_EXAMPLES file for more information.
+   They are replaced by the following two new methods that greatly
+   simplify prime number generation with classes, please refer
+   to doc/USAGE_EXAMPLES for more information.
 
    void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>*);
    void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t>*);
-   void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t, int>*);
 
 Changes in version 4.0, 18/10/2012
 ==================================
