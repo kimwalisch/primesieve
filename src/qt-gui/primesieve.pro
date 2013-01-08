@@ -22,15 +22,15 @@ QT_MAJ = $$member(QT_VER, 0)
 # -------------------------------------------------
 
 SOURCES += \
-    src/main.cpp \
-    src/PrimeSieveGUI.cpp \
-    src/PrimeSieveGUI_menu.cpp \
-    src/PrimeSieveProcess.cpp
+  src/main.cpp \
+  src/PrimeSieveGUI.cpp \
+  src/PrimeSieveGUI_menu.cpp \
+  src/PrimeSieveProcess.cpp
 
 HEADERS += \
-    src/PrimeSieveGUI.h \
-    src/PrimeSieveGUI_const.h \
-    src/PrimeSieveProcess.h
+  src/PrimeSieveGUI.h \
+  src/PrimeSieveGUI_const.h \
+  src/PrimeSieveProcess.h
 
 # -------------------------------------------------
 # Arithmetic Expression parser (src/parser)
@@ -43,40 +43,41 @@ HEADERS += ../parser/ExpressionParser.h
 # -------------------------------------------------
 
 SOURCES += \
-    ../soe/EratSmall.cpp \
-    ../soe/EratMedium.cpp \
-    ../soe/EratBig.cpp \
-    ../soe/PrimeNumberFinder.cpp \
-    ../soe/PrimeNumberGenerator.cpp \
-    ../soe/PrimeSieve.cpp \
-    ../soe/ParallelPrimeSieve.cpp \
-    ../soe/SieveOfEratosthenes.cpp \
-    ../soe/PreSieve.cpp \
-    ../soe/WheelFactorization.cpp \
-    ../soe/popcount.cpp
+  ../soe/EratBig.cpp \
+  ../soe/EratMedium.cpp \
+  ../soe/EratSmall.cpp \
+  ../soe/ParallelPrimeSieve.cpp \
+  ../soe/popcount.cpp \
+  ../soe/PreSieve.cpp \
+  ../soe/PrimeNumberFinder.cpp \
+  ../soe/PrimeNumberGenerator.cpp \
+  ../soe/PrimeSieve.cpp \
+  ../soe/SieveOfEratosthenes.cpp \
+  ../soe/WheelFactorization.cpp
 
-HEADERS += ../soe/EratSmall.h \
-    ../soe/EratBig.h \
-    ../soe/PrimeNumberFinder.h \
-    ../soe/PrimeSieve.h \
-    ../soe/PrimeSieveCallback.h \
-    ../soe/primesieve_error.h \
-    ../soe/ParallelPrimeSieve.h \
-    ../soe/SieveOfEratosthenes.h \
-    ../soe/SieveOfEratosthenes-GENERATE.h \
-    ../soe/SieveOfEratosthenes-inline.h \
-    ../soe/EratMedium.h \
-    ../soe/PrimeNumberGenerator.h \
-    ../soe/PreSieve.h \
-    ../soe/WheelFactorization.h \
-    ../soe/bits.h \
-    ../soe/config.h \
-    ../soe/imath.h \
-    ../soe/endiansafe_cast.h \
-    ../soe/openmp_lock.h \
-    ../soe/popcount.h \
-    ../soe/toString.h \
-    ../soe/SynchronizeThreads.h
+HEADERS += \
+  ../soe/bits.h \
+  ../soe/config.h \
+  ../soe/endiansafe_cast.h \
+  ../soe/EratBig.h \
+  ../soe/EratMedium.h \
+  ../soe/EratSmall.h \
+  ../soe/imath.h \
+  ../soe/openmp_lock.h \
+  ../soe/ParallelPrimeSieve.h \
+  ../soe/popcount.h \
+  ../soe/PreSieve.h \
+  ../soe/PrimeNumberFinder.h \
+  ../soe/PrimeNumberGenerator.h \
+  ../soe/PrimeSieve.h \
+  ../soe/primesieve_error.h \
+  ../soe/PrimeSieveCallback.h \
+  ../soe/SieveOfEratosthenes.h \
+  ../soe/SieveOfEratosthenes-GENERATE.h \
+  ../soe/SieveOfEratosthenes-inline.h \
+  ../soe/SynchronizeThreads.h \
+  ../soe/toString.h \
+  ../soe/WheelFactorization.h
 
 # -------------------------------------------------
 # primesieve icon file
