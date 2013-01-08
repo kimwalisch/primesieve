@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 26 December 2012
+# Last modified: 08 January 2013
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -13,8 +13,10 @@ I. About
 ========
 
   This file explains how to compile and use the primesieve console
-  (terminal) application. The file doc/LIBPRIMESIEVE explains how to
-  build primesieve as a library for use in your own C++ program.
+  (terminal) application. If you rather want to compile the primesieve
+  GUI application please refer to src/qt-gui/INSTALL. If you want to
+  build primesieve as a library for use in your own C++ program please
+  refer to doc/LIBPRIMESIEVE.
 
   Precompiled binaries for Windows, Linux and Mac OS X are available
   at: http://code.google.com/p/primesieve/downloads/list
@@ -50,12 +52,12 @@ III. Target a specific CPU
 IV. How to use it
 =================
 
-  > cd bin
-  > primesieve 2 10000         Count the primes up to 10000
-  > primesieve 2 10000 -p1     Print the primes up to 10000
-  > primesieve 1e5 2e5 -p2     Print the twin primes within [10^5, 2*10^5]
-  > primesieve 1e9 -o1e5 -c2   Count the twin primes within [10^9, 10^9+10^5]
-  > primesieve -help           Print the help menu
-  > primesieve -test           Run various sieving tests
+  $ cd bin
+  $ ./primesieve 10000           Count the primes up to 10000
+  $ ./primesieve 10000 -p1       Print the primes up to 10000
+  $ ./primesieve 1e5 2e5 -p2     Print the twin primes within [10^5, 2*10^5]
+  $ ./primesieve 1e9 -o1e5 -c2   Count the twin primes within [10^9, 10^9+10^5]
+  $ ./primesieve --help          Print the help menu
+  $ ./primesieve --test          Run various sieving tests
 
-  For Unix-like operating systems use ./primesieve
+  Note: for Windows use primesieve.exe instead of ./primesieve
