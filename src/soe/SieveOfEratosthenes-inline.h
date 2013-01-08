@@ -36,7 +36,7 @@ inline void SieveOfEratosthenes::sieve(uint_t prime)
   uint64_t square = isquare<uint64_t>(prime);
   // This loop is executed once all primes <= sqrt(segmentHigh_)
   // required to sieve the next segment have been
-  // added to the erat* objects below.
+  // added to the erat* objects further down.
   while (segmentHigh_ < square) {
     sieveSegment();
     segmentLow_  += sieveSize_ * NUMBERS_PER_BYTE;
