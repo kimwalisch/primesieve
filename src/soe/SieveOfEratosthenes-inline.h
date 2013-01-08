@@ -25,6 +25,14 @@
 
 namespace soe {
 
+inline uint64_t    SieveOfEratosthenes::getStart()       const { return start_; }
+inline uint64_t    SieveOfEratosthenes::getStop()        const { return stop_; }
+inline uint_t      SieveOfEratosthenes::getSqrtStop()    const { return sqrtStop_; }
+inline uint_t      SieveOfEratosthenes::getPreSieve()    const { return preSieve_.getLimit(); }
+inline uint_t      SieveOfEratosthenes::getSieveSize()   const { return sieveSize_; }
+inline std::string SieveOfEratosthenes::getMaxStopString()     { return EratBig::getMaxStopString(); }
+inline uint64_t    SieveOfEratosthenes::getMaxStop()           { return EratBig::getMaxStop(); }
+
 /// Sieve primes using the segmented sieve of Eratosthenes.
 /// sieve(uint_t prime) must be called consecutively for all primes
 /// up to sqrt(stop) in order to sieve the primes within the
@@ -63,14 +71,6 @@ inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint_t index) 
   *bits &= mask;
   return prime;
 }
-
-inline uint64_t    SieveOfEratosthenes::getStart()       const { return start_; }
-inline uint64_t    SieveOfEratosthenes::getStop()        const { return stop_; }
-inline uint_t      SieveOfEratosthenes::getSqrtStop()    const { return sqrtStop_; }
-inline uint_t      SieveOfEratosthenes::getPreSieve()    const { return preSieve_.getLimit(); }
-inline uint_t      SieveOfEratosthenes::getSieveSize()   const { return sieveSize_; }
-inline std::string SieveOfEratosthenes::getMaxStopString()     { return EratBig::getMaxStopString(); }
-inline uint64_t    SieveOfEratosthenes::getMaxStop()           { return EratBig::getMaxStop(); }
 
 } // namespace soe
 
