@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 7 January 2013
+# Last modified: 8 January 2013
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -83,7 +83,7 @@ Contents
 5. How to build it
 ==================
 
-  Please refer to ./INSTALL for more information.
+  Please refer to the INSTALL file for more information.
 
 6. Sieve of Eratosthenes implementation
 =======================================
