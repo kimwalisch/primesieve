@@ -292,13 +292,13 @@ help:
 	@echo ----------------------------------------------
 	@echo ---------- primesieve build options ----------
 	@echo ----------------------------------------------
-	@echo "make                                     Build the primesieve console application using g++ (DEFAULT)"
+	@echo "make                                     Build the primesieve console application using c++ (DEFAULT)"
 	@echo "make CXX=icpc CXXFLAGS=\"-O2 -openmp\"     Specify a custom C++ compiler, here icpc"
 	@echo "make L1_DCACHE_SIZE=32                   Specify the CPU's L1 data cache size, here 32 kilobytes"
 	@echo "make check                               Test primesieve for correctness"
 	@echo "make clean                               Clean the output directories (bin, lib)"
-	@echo "make lib                                 Build a static libprimesieve library (using g++)"
-	@echo "make lib SHARED=yes                      Build a shared libprimesieve library (using g++)"
+	@echo "make lib                                 Build a static libprimesieve library (using c++)"
+	@echo "make lib SHARED=yes                      Build a shared libprimesieve library (using c++)"
 	@echo "make dist                                Create a libprimesieve distribution archive (./dist)"
 	@echo "make examples                            Build the example programs in ./examples"
 	@echo "sudo make install                        Install primesieve and libprimesieve to /usr/local (Linux) or /usr (Unix)"
