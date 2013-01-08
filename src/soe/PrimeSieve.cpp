@@ -334,30 +334,30 @@ void PrimeSieve::generatePrimes(uint64_t start,
 }
 
 /// Generate the primes within the interval [start, stop] and call
-/// the callback method of the PrimeSieveCallback object.
+/// the callback method of the callbackObject.
 ///
 void PrimeSieve::generatePrimes(uint32_t start,
                                 uint32_t stop,
-                                PrimeSieveCallback<uint32_t>* callback)
+                                PrimeSieveCallback<uint32_t>* callbackObject)
 {
-  if (callback == NULL)
-    throw primesieve_error("callback must not be NULL");
-  psc32_ = callback;
+  if (callbackObject == NULL)
+    throw primesieve_error("callbackObject must not be NULL");
+  psc32_ = callbackObject;
   flags_ = CALLBACK32_OBJ;
   setPreSieve(17);
   sieve(start, stop);
 }
 
 /// Generate the primes within the interval [start, stop] and call
-/// the callback method of the PrimeSieveCallback object.
+/// the callback method of the callbackObject.
 ///
 void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
-                                PrimeSieveCallback<uint64_t>* callback)
+                                PrimeSieveCallback<uint64_t>* callbackObject)
 {
-  if (callback == NULL)
-    throw primesieve_error("callback must not be NULL");
-  psc64_ = callback;
+  if (callbackObject == NULL)
+    throw primesieve_error("callbackObject must not be NULL");
+  psc64_ = callbackObject;
   flags_ = CALLBACK64_OBJ;
   setPreSieve(17);
   sieve(start, stop);
@@ -368,11 +368,11 @@ void PrimeSieve::generatePrimes(uint64_t start,
 ///
 void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
-                                PrimeSieveCallback<uint64_t, int>* callback)
+                                PrimeSieveCallback<uint64_t, int>* callbackObject)
 {
-  if (callback == NULL)
-    throw primesieve_error("callback must not be NULL");
-  psc64_tn_ = callback;
+  if (callbackObject == NULL)
+    throw primesieve_error("callbackObject must not be NULL");
+  psc64_tn_ = callbackObject;
   flags_ = CALLBACK64_OBJ_TN;
   setPreSieve(17);
   sieve(start, stop);
