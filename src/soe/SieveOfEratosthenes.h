@@ -11,13 +11,13 @@
 #define SIEVEOFERATOSTHENES_H
 
 #include "config.h"
-#include "PreSieve.h"
 
 #include <stdint.h>
 #include <string>
 
 namespace soe {
 
+class PreSieve;
 class EratSmall;
 class EratMedium;
 class EratBig;
@@ -67,26 +67,26 @@ private:
   /// Sieve primes <= stop_
   const uint64_t stop_;
   /// sqrt(stop_)
-  const uint_t sqrtStop_;
-  /// Sieve of Eratosthenes array
-  uint8_t* sieve_;
-  /// @brief Size of the sieve_ array in bytes
-  /// @pre   must be a power of 2
-  uint_t sieveSize_;
-  /// Used to pre-sieve multiples of small primes e.g. <= 19
-  const PreSieve preSieve_;
-  /// Used to cross-off multiples of small sieving primes
-  EratSmall* eratSmall_;
-  /// Used to cross-off multiples of medium sieving primes
-  EratMedium* eratMedium_;
-  /// Used to cross-off multiples of big sieving primes
-  EratBig* eratBig_;
+  uint_t sqrtStop_;
   /// Copy of eratSmall_->getLimit()
   uint_t limitEratSmall_;
   /// Copy of eratMedium_->getLimit()
   uint_t limitEratMedium_;
+  /// Pre-sieve multiples of tiny sieving primes
+  PreSieve* preSieve_;
+  /// Cross-off multiples of small sieving primes
+  EratSmall* eratSmall_;
+  /// cross-off multiples of medium sieving primes
+  EratMedium* eratMedium_;
+  /// cross-off multiples of big sieving primes
+  EratBig* eratBig_;
+  /// Sieve of Eratosthenes array
+  uint8_t* sieve_;
+  /// Size of sieve_ in bytes (must be power of 2)
+  uint_t sieveSize_;
   static uint64_t getByteRemainder(uint64_t);
-  void initEratAlgorithms();
+  void allocate(uint_t);
+  void cleanUp();
   void preSieve();
   void crossOffMultiples();
   void sieveSegment();
