@@ -19,6 +19,7 @@
 
 #include <stdint.h>
 #include <exception>
+#include <string>
 #include <cstdlib>
 
 namespace soe {
@@ -80,6 +81,25 @@ SieveOfEratosthenes::~SieveOfEratosthenes()
   delete eratMedium_;
   delete eratBig_;
   delete[] sieve_;
+}
+
+uint64_t SieveOfEratosthenes::getMaxStop()
+{
+  return EratBig::getMaxStop();
+}
+
+std::string SieveOfEratosthenes::getMaxStopString()
+{
+  return EratBig::getMaxStopString();
+}
+
+uint_t SieveOfEratosthenes::getSqrtStop() const
+{
+  return sqrtStop_;
+}
+uint_t SieveOfEratosthenes::getPreSieve() const
+{
+  return preSieve_.getLimit();
 }
 
 void SieveOfEratosthenes::initEratAlgorithms()

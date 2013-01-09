@@ -13,25 +13,19 @@
 
 #include "config.h"
 #include "SieveOfEratosthenes.h"
-#include "PreSieve.h"
 #include "EratSmall.h"
 #include "EratMedium.h"
 #include "EratBig.h"
 #include "imath.h"
 
 #include <stdint.h>
-#include <string>
 #include <cassert>
 
 namespace soe {
 
-inline uint64_t    SieveOfEratosthenes::getStart()       const { return start_; }
-inline uint64_t    SieveOfEratosthenes::getStop()        const { return stop_; }
-inline uint_t      SieveOfEratosthenes::getSqrtStop()    const { return sqrtStop_; }
-inline uint_t      SieveOfEratosthenes::getPreSieve()    const { return preSieve_.getLimit(); }
-inline uint_t      SieveOfEratosthenes::getSieveSize()   const { return sieveSize_; }
-inline std::string SieveOfEratosthenes::getMaxStopString()     { return EratBig::getMaxStopString(); }
-inline uint64_t    SieveOfEratosthenes::getMaxStop()           { return EratBig::getMaxStop(); }
+inline uint64_t SieveOfEratosthenes::getStart()     const { return start_; }
+inline uint64_t SieveOfEratosthenes::getStop()      const { return stop_; }
+inline uint_t   SieveOfEratosthenes::getSieveSize() const { return sieveSize_; }
 
 /// Sieve primes using the segmented sieve of Eratosthenes.
 /// sieve(uint_t prime) must be called consecutively for all primes

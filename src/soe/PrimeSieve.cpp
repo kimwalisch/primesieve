@@ -15,7 +15,6 @@
 #include "primesieve_error.h"
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
-#include "SieveOfEratosthenes-inline.h"
 #include "SynchronizeThreads.h"
 #include "imath.h"
 
