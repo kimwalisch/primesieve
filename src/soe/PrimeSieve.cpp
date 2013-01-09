@@ -22,7 +22,6 @@
 #include <stdint.h>
 #include <iostream>
 #include <string>
-#include <vector>
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
@@ -250,20 +249,7 @@ void PrimeSieve::sieve()
       // generates the primes up to sqrt(stop)
       // needed for sieving by finder
       PrimeNumberGenerator generator(finder);
-      // tiny sieve of Eratosthenes that generates the primes up
-      // to stop_^0.25 needed for sieving by generator
-      uint_t N = generator.getSqrtStop();
-      std::vector<uint8_t> isPrime(N / 8 + 1, 0xAA);
-      for (uint_t i = 3; i * i <= N; i += 2) {
-        if (isPrime[i >> 3] & (1 << (i & 7)))
-          for (uint_t j = i * i; j <= N; j += i + i)
-            isPrime[j >> 3] &= ~(1 << (j & 7));
-      }
-      for (uint_t i = generator.getPreSieve() + 1; i <= N; i++) {
-        if (isPrime[i >> 3] & (1 << (i & 7)))
-          generator.sieve(i);
-      }
-      generator.finish();
+      generator.doIt();
     }
     finder.finish();
   }

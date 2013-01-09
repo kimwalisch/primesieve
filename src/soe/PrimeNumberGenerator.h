@@ -22,6 +22,7 @@ class PrimeNumberFinder;
 class PrimeNumberGenerator : public SieveOfEratosthenes {
 public:
   PrimeNumberGenerator(PrimeNumberFinder&);
+  void doIt();
 private:
   PrimeNumberFinder& finder_;
   void segmentProcessed(const uint8_t*, uint_t);
