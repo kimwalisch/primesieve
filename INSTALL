@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       10 July 2010
-# Last modified: 08 January 2013
+# Last modified: 10 January 2013
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -29,7 +29,7 @@ II. How to build primesieve
   use one of the following make commands to build primesieve using
   your favorite C++ compiler:
 
-  $ make                     Default C++ compiler (g++, clang++, ...)
+  $ make                     Default C++ compiler (GNU make)
   > nmake -f Makefile.msvc   Microsoft Visual C++
 
   Other C++ compilers
@@ -60,4 +60,4 @@ IV. How to use it
   $ ./primesieve --help          Print the help menu
   $ ./primesieve --test          Run various sieving tests
 
-  Note: for Windows use primesieve.exe instead of ./primesieve
+  For Windows use primesieve.exe instead of ./primesieve
