@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 8 January 2013
+# Last modified: 11 January 2013
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -45,7 +45,7 @@ Contents
                    PrimeSieve objects e.g. for prime number generation.
   API              List of all public member functions of the
                    PrimeSieve and ParallelPrimeSieve C++ classes.
-  Other files:     FAQ, TODO, BUGS, ...
+  FAQ              Frequently asked questions by users.
 
   ./src - Source code directory
   -----------------------------
@@ -103,7 +103,7 @@ Contents
   Quick start
   -----------
   The sieving algorithms are in EratSmall.cpp, EratMedium.cpp and
-  EratBig.cpp. The segmented sieve of Eratosthenes is in 
+  EratBig.cpp. The segmented sieve of Eratosthenes is in
   SieveOfEratosthenes-inline.h. Prime number generation (and counting)
   is done in PrimeNumberFinder.cpp using a macro from
   SieveOfEratosthenes-GENERATE.h.
