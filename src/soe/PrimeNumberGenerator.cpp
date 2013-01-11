@@ -29,13 +29,13 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
   finder_(finder)
 { }
 
-/// Generate the primes up to finder_.getStop()**0.5
+/// Generate the primes up to finder_.getStop()^0.5
 /// and use them to sieve with finder_.
 ///
 void PrimeNumberGenerator::doIt()
 {
   // tiny sieve of Eratosthenes that generates the primes
-  // up to finder_.getStop()**0.25
+  // up to finder_.getStop()^0.25
   uint_t N = getSqrtStop();
   std::vector<uint8_t> isPrime(N / 8 + 1, 0xAA);
   for (uint_t i = 3; i * i <= N; i += 2) {
