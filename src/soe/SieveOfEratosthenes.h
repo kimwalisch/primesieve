@@ -53,7 +53,7 @@ public:
 protected:
   SieveOfEratosthenes(uint64_t, uint64_t, uint_t, uint_t);
   virtual ~SieveOfEratosthenes();
-  virtual void segmentProcessed(const uint8_t*, uint_t) = 0;
+  virtual void segmentProcessed(const byte_t*, uint_t) = 0;
   uint64_t getNextPrime(uint64_t*, uint_t) const;
 private:
   static const uint_t bitValues_[8];
@@ -81,8 +81,8 @@ private:
   /// cross-off multiples of big sieving primes
   EratBig* eratBig_;
   /// Sieve of Eratosthenes array
-  uint8_t* sieve_;
-  /// Size of sieve_ in bytes (must be power of 2)
+  byte_t* sieve_;
+  /// Size of sieve_ (must be power of 2)
   uint_t sieveSize_;
   static uint64_t getByteRemainder(uint64_t);
   void allocate(uint_t);

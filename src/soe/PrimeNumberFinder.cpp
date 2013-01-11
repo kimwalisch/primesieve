@@ -80,7 +80,7 @@ void PrimeNumberFinder::init_kCounts()
 /// Executed after each sieved segment.
 /// @see sieveSegment() in SieveOfEratosthenes.cpp
 ///
-void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint_t sieveSize)
+void PrimeNumberFinder::segmentProcessed(const byte_t* sieve, uint_t sieveSize)
 {
   if (ps_.isGenerate())
     generate(sieve, sieveSize);
@@ -95,7 +95,7 @@ void PrimeNumberFinder::segmentProcessed(const uint8_t* sieve, uint_t sieveSize)
 /// Count the primes and prime k-tuplets within
 /// the current segment.
 ///
-void PrimeNumberFinder::count(const uint8_t* sieve, uint_t sieveSize)
+void PrimeNumberFinder::count(const byte_t* sieve, uint_t sieveSize)
 {
   // count prime numbers (1 bits), see popcount.cpp
   if (ps_.isFlag(ps_.COUNT_PRIMES))
@@ -122,7 +122,7 @@ void PrimeNumberFinder::count(const uint8_t* sieve, uint_t sieveSize)
 /// Print primes and prime k-tuplets to cout.
 /// @note primes < 7 are handled in PrimeSieve::doSmallPrime()
 ///
-void PrimeNumberFinder::print(const uint8_t* sieve, uint_t sieveSize) const
+void PrimeNumberFinder::print(const byte_t* sieve, uint_t sieveSize) const
 {
   if (ps_.isFlag(ps_.PRINT_PRIMES)) {
     SynchronizeThreads lock(ps_);
@@ -153,7 +153,7 @@ void PrimeNumberFinder::print(const uint8_t* sieve, uint_t sieveSize) const
 /// Callback the primes within the current segment.
 /// @note primes < 7 are handled in PrimeSieve::doSmallPrime()
 ///
-void PrimeNumberFinder::generate(const uint8_t* sieve, uint_t sieveSize) const
+void PrimeNumberFinder::generate(const byte_t* sieve, uint_t sieveSize) const
 {
   if (ps_.isFlag(ps_.CALLBACK32))        { SynchronizeThreads lock(ps_); GENERATE_PRIMES(callback32_,       uint32_t) }
   if (ps_.isFlag(ps_.CALLBACK64))        { SynchronizeThreads lock(ps_); GENERATE_PRIMES(callback64_,       uint64_t) }

@@ -27,7 +27,7 @@ class EratBig: public Modulo210Wheel_t {
 public:
   EratBig(uint64_t, uint_t, uint_t);
   ~EratBig();
-  void crossOff(uint8_t*);
+  void crossOff(byte_t*);
 private:
   typedef std::list<Bucket*>::iterator PointerIterator_t;
   enum {
@@ -48,7 +48,7 @@ private:
   static void moveBucket(Bucket&, Bucket*&);
   void pushBucket(Bucket*&);
   void store(uint_t, uint_t, uint_t);
-  void crossOff(uint8_t*, Bucket&);
+  void crossOff(byte_t*, Bucket&);
   Bucket*& getList(uint_t*);
   DISALLOW_COPY_AND_ASSIGN(EratBig);
 };

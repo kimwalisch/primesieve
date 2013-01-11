@@ -48,7 +48,7 @@ void EratSmall::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 /// Cross-off the multiples of small sieving
 /// primes from the sieve array.
 ///
-void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveLimit)
+void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit)
 {
   for (BucketIterator_t iter = buckets_.begin(); iter != buckets_.end(); ++iter)
     crossOff(sieve, sieveLimit, *iter);
@@ -60,7 +60,7 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveLimit)
 /// primes that have many multiples per segment. This algorithm uses a
 /// hardcoded modulo 30 wheel that skips multiples of 2, 3 and 5.
 ///
-void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveLimit, Bucket& bucket)
+void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
 {
   WheelPrime* wPrime = bucket.begin();
   WheelPrime* end    = bucket.end();
@@ -72,8 +72,8 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveLimit, Bucket& bucket)
 
     // pointer to the byte containing the first multiple of
     // sievingPrime within the current segment
-    uint8_t* p = &sieve[multipleIndex];
-    uint8_t* loopLimit = sieveLimit - (sievingPrime * 28 + 27);
+    byte_t* p = &sieve[multipleIndex];
+    byte_t* loopLimit = sieveLimit - (sievingPrime * 28 + 27);
     if (loopLimit > sieveLimit)
       loopLimit = p;
 

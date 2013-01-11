@@ -114,7 +114,7 @@ void EratBig::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 /// Cross-off the multiples of big sieving
 /// primes from the sieve array.
 ///
-void EratBig::crossOff(uint8_t* sieve)
+void EratBig::crossOff(byte_t* sieve)
 {
   // lists_[0] contains the buckets with the sieving primes
   // that have multiples in the current segment
@@ -144,7 +144,7 @@ void EratBig::crossOff(uint8_t* sieve)
 /// primes that have very few multiples per segment. This algorithm
 /// uses a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
 ///
-void EratBig::crossOff(uint8_t* sieve, Bucket& bucket)
+void EratBig::crossOff(byte_t* sieve, Bucket& bucket)
 {
   WheelPrime* wPrime = bucket.begin();
   WheelPrime* end    = bucket.end();

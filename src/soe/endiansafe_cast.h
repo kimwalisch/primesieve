@@ -11,8 +11,8 @@
 #ifndef ENDIANSAFE_CAST_H
 #define ENDIANSAFE_CAST_H
 
+#include "config.h"
 #include <cstddef>
-#include <stdint.h>
 
 namespace soe {
 
@@ -30,7 +30,7 @@ struct endiansafe_cast_helper
   enum {
     INDEX = sizeof(T) - COUNT
   };
-  static T go(const uint8_t* array)
+  static T go(const byte_t* array)
   {
     T byte = array[INDEX];
     return (byte << INDEX * 8) + endiansafe_cast_helper<T, COUNT - 1>::go(array);
@@ -40,14 +40,14 @@ struct endiansafe_cast_helper
 template <typename T>
 struct endiansafe_cast_helper<T, 0>
 {
-  static T go(const uint8_t*)
+  static T go(const byte_t*)
   {
     return 0;
   }
 };
 
 template <typename T>
-inline T endiansafe_cast(const uint8_t* array)
+inline T endiansafe_cast(const byte_t* array)
 {
   return endiansafe_cast_helper<T, sizeof(T)>::go(array);
 }

@@ -32,7 +32,7 @@ PreSieve::PreSieve(int limit)
   for (int i = 0; primes_[i] <= limit_; i++)
     primeProduct_ *= primes_[i];
   size_ = primeProduct_ / 30;
-  preSieved_ = new uint8_t[size_];
+  preSieved_ = new byte_t[size_];
   init();
 }
 
@@ -58,7 +58,7 @@ void PreSieve::init()
 /// Pre-sieve the multiples of small primes <= limit_
 /// in the sieve array.
 ///
-void PreSieve::doIt(uint8_t* sieve, uint_t sieveSize, uint64_t segmentLow) const
+void PreSieve::doIt(byte_t* sieve, uint_t sieveSize, uint64_t segmentLow) const
 {
   // map segmentLow to the preSieved_ array
   uint_t remainder = static_cast<uint_t>(segmentLow % primeProduct_);

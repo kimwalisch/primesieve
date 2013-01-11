@@ -13,8 +13,6 @@
 #include "config.h"
 #include "SieveOfEratosthenes.h"
 
-#include <stdint.h>
-
 namespace soe {
 
 class PrimeNumberFinder;
@@ -25,7 +23,7 @@ public:
   void doIt();
 private:
   PrimeNumberFinder& finder_;
-  void segmentProcessed(const uint8_t*, uint_t);
+  void segmentProcessed(const byte_t*, uint_t);
   DISALLOW_COPY_AND_ASSIGN(PrimeNumberGenerator);
 };
 

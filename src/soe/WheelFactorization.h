@@ -50,7 +50,7 @@ struct WheelElement {
   uint8_t correct;
   /// Used to calculate the next wheel index:
   /// wheelIndex += next;
-   int8_t next;
+  int8_t next;
 };
 
 extern const WheelElement wheel30[8*8];
@@ -94,7 +94,6 @@ private:
   /// multipleIndex = 23 least significant bits of indexes_.
   /// wheelIndex    =  9 most  significant bits of indexes_.
   uint32_t indexes_;
-  /// Used to cross off multiples of itself.
   uint32_t sievingPrime_;
 };
 
@@ -208,7 +207,7 @@ protected:
   /// Cross-off the current multiple (unset bit) of sievingPrime and
   /// calculate its next multiple i.e. multipleIndex.
   ///
-  static void unsetBit(uint8_t* sieve, uint_t sievingPrime, uint_t* multipleIndex, uint_t* wheelIndex)
+  static void unsetBit(byte_t* sieve, uint_t sievingPrime, uint_t* multipleIndex, uint_t* wheelIndex)
   {
     sieve[*multipleIndex] &= WHEEL[*wheelIndex].unsetBit;
     *multipleIndex        += WHEEL[*wheelIndex].nextMultipleFactor * sievingPrime;

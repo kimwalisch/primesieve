@@ -1,6 +1,6 @@
 ///
 /// @file   config.h
-/// @brief  Macro definitions and constants that set various limits
+/// @brief  Macros, typedefs and constants that set various limits
 ///         and array sizes within primesieve.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
@@ -37,7 +37,9 @@
 #endif
 
 namespace soe {
-typedef unsigned int uint_t;
+/// byte_t must be unsigned in primesieve
+typedef unsigned char byte_t;
+typedef unsigned int  uint_t;
 
 namespace config {
 enum {

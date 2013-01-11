@@ -104,7 +104,7 @@ void SieveOfEratosthenes::allocate(uint_t limitPreSieve)
       }
     }
     // allocate the sieve of Eratosthenes array
-    sieve_ = new uint8_t[sieveSize_];
+    sieve_ = new byte_t[sieveSize_];
   }
   catch (const std::exception& e) {
     cleanUp();

@@ -41,13 +41,13 @@ public:
   ~PreSieve();
   /// Multiples of primes up to this limit are pre-sieved
   uint_t getLimit() const { return limit_; }
-  void doIt(uint8_t*, uint_t, uint64_t) const;
+  void doIt(byte_t*, uint_t, uint64_t) const;
 private:
   static const uint_t primes_[10];
   uint_t limit_;
   /// Product of the primes <= limit_
   uint_t primeProduct_;
-  uint8_t* preSieved_;
+  byte_t* preSieved_;
   uint_t size_;
   void init();
   DISALLOW_COPY_AND_ASSIGN(PreSieve);
