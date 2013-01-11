@@ -1,14 +1,6 @@
-January 8, 2013
+January 12, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
-
-Exception handling
-------------------
-1. Idea: Create a new primesieve_cancel() exception class that can be
-   thrown from within the callback method and that is caught in
-   PrimeSieve::sieve(). For ParallelPrimeSieve (if parent_ != NULL)
-   the exception could be rethrown and caught in
-   ParallelPrimeSieve::sieve().
 
 OpenMP 4.0
 ----------
