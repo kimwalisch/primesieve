@@ -1,9 +1,9 @@
 ///
 /// @file   EratBig.cpp
 /// @brief  Segmented sieve of Eratosthenes optimized for big sieving
-///         primes. This is my implementation of Tomas Oliveira e
-///         Silva's cache-friendly segmented sieve of Eratosthenes:
-/// @see    http://www.ieeta.pt/~tos/software/prime_sieve.html
+///         primes. This is an optimized implementation of Tomas
+///         Oliveira e Silva's cache-friendly bucket sieve algorithm:
+///         http://www.ieeta.pt/~tos/software/prime_sieve.html
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
