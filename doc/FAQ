@@ -1,4 +1,4 @@
-January 7, 2013
+January 11, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -13,6 +13,15 @@ A  Technically it is possible but it makes no sense due to the
    algorithm that can be used to generate primes up to 33 digits
    using very little memory.
 
+Q  How can I cancel prime number generation?
+
+A  You can cancel prime number generation immediately by throwing
+   an exception from within the callback method. This has been
+   thoroughly tested with many different compilers, it is even fast.
+   Have a look at ../examples/cancel_prime_generation.cpp for an
+   example. Currently this does not work with ParallelPrimeSieve as
+   OpenMP does not support exceptions yet.
+
 Q  Why does PrimeSieve not offer a getNextPrime() method?
 
 A  PrimeSieve uses callbacks instead of getNextPrime() because:
@@ -20,14 +29,17 @@ A  PrimeSieve uses callbacks instead of getNextPrime() because:
    2. Callbacks are easier to implement than getNextPrime()
    3. Callbacks can be parallelized, getNextPrime() cannot
 
-Q  How can I cancel (abort) prime number generation?
+Q  How can I generate (callback) twin primes?
 
-A  You can cancel prime number generation immediately by throwing
-   an exception from within the callback method. This has been
-   thoroughly tested with many different compilers, it is even fast.
-   Have a look at the ../examples/cancel_prime_generation.cpp file
-   for an example. Currently this does not work with
-   ParallelPrimeSieve as OpenMP does not support exceptions yet.
+A  You have to modify the source code, open a terminal and cd into the
+   src/soe directory, then run the following commands:
+
+   sed -i 's/GENERATE_PRIMES/GENERATE_TWINS/g' PrimeNumberFinder.cpp
+   sed -i 's/sp.index == 0/sp.index == 1/g' PrimeSieve.cpp
+
+   Now, after recompilation the PrimeSieve::generatePrimes(*) methods
+   will generate twin primes instead of primes. For each twin prime
+   pair (p1, p2) the first prime p1 is called back.
 
 Q  What are the hot spots in primesieve?
 
@@ -41,12 +53,6 @@ A  In primesieve sieving primes fall into 3 categories: small, medium
    the sieve array. In primesieve small sieving primes are <= (sieve
    size in bytes) * 0.5 (1), medium sieving primes are > (1) and
    <= (sieve size in bytes) * 6 (2), and big sieving primes are > (2).
-   primesieve uses 3 different algorithms to cross-off multiples:
-   EratSmall is optimized for small sieving primes that have many
-   multiples in each segment (e.g. 1000), EratMedium is optimized for
-   medium sieving primes that have a few multiples per segment
-   (e.g. 10) and EratBig is optimized for sieving primes that have
-   less than 1 multiple per segment.
 
 Q  How does the bit array work in primesieve?
 
@@ -66,4 +72,4 @@ A  primesieve uses a bit array for sieving, each byte holds the eight
    Unfortunately using values divided by 30 also has a drawback, the
    calculation of the next multiple requires 1 additional add
    instruction in EratSmall and 2 additional instructions (table
-   lookup, add) in EratMedium and EratBig but this is still faster.
+   lookup & add) in EratMedium and EratBig but this is still faster.
