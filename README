@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 11 January 2013
+# Last modified: 12 January 2013
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -13,15 +13,15 @@ Contents
 ========
 
    1. About primesieve
-   2. What's in this source archive
-   3. Algorithm complexity
-   4. Requirements
-   5. How to build it
+   2. Algorithm complexity
+   3. Requirements
+   4. How to build it
+   5. What's in this source archive
    6. Sieve of Eratosthenes implementation
-   7. Further reading
-   8. Motivation
-   9. Thanks
-  10. License
+   7. Motivation
+   8. Thanks
+   9. License
+  10. Further reading
   11. References
 
 1. About primesieve
@@ -34,7 +34,34 @@ Contents
 
   Homepage: http://primesieve.googlecode.com
 
-2. What's in this source archive
+2. Algorithm complexity
+=======================
+
+  primesieve uses the segmented sieve of Eratosthenes with wheel
+  factorization, this algorithm has a complexity of O(n log log n)
+  operations and uses O(n^0.5) space.
+
+  primesieve's memory requirement per thread is about:
+  pi(n^0.5) * 8 bytes + 400 kilobytes
+
+3. Requirements
+===============
+
+  primesieve is written in C++03, it compiles with every standard
+  compliant C++ compiler and runs on both little-endian (x86, x86-64)
+  and big-endian (PowerPC, SPARC, ...) CPUs. The parallelization
+  (optional) is implemented using OpenMP 2.0 or later.
+
+  primesieve has been optimized for CPUs with 15 or more integer
+  registers, so if you have a x86-64 CPU make sure to use a 64-bit
+  version of primesieve (i386 has only 8 registers).
+
+4. How to build it
+==================
+
+  Please refer to the INSTALL file for more information.
+
+5. What's in this source archive
 ================================
 
   ./doc - Documentation directory
@@ -58,33 +85,6 @@ Contents
                    implementation (run `make test').
   src/thirdparty   Contains stdint.h (needed for MSVC prior 2010).
 
-3. Algorithm complexity
-=======================
-
-  primesieve uses the segmented sieve of Eratosthenes with wheel
-  factorization, this algorithm has a complexity of O(n log log n)
-  operations and uses O(n^0.5) space.
-
-  primesieve's memory requirement per thread is about:
-  pi(n^0.5) * 8 bytes + 400 kilobytes
-
-4. Requirements
-===============
-
-  primesieve is written in C++03, it compiles with every standard
-  compliant C++ compiler and runs on both little-endian (x86, x86-64)
-  and big-endian (PowerPC, SPARC, ...) CPUs. The parallelization
-  (optional) is implemented using OpenMP 2.0 or later.
-
-  primesieve has been optimized for CPUs with 15 or more integer
-  registers, so if you have a x86-64 CPU make sure to use a 64-bit
-  version of primesieve (i386 has only 8 registers).
-
-5. How to build it
-==================
-
-  Please refer to the INSTALL file for more information.
-
 6. Sieve of Eratosthenes implementation
 =======================================
 
@@ -94,7 +94,7 @@ Contents
   code. Files that start with a capital letter contain a class of the
   same name, files in lower case contain inline functions and
   constant definitions. If you are new to prime number sieving I
-  recommend reading some of the papers from section 7.
+  recommend reading some of the papers from section 10.
 
   The doc/API file contains the complete API of the PrimeSieve and
   ParallelPrimeSieve C++ classes. The doc/USAGE_EXAMPLES file contains
@@ -192,20 +192,7 @@ Contents
     within primesieve. You can set these constants according to your
     CPU type to get the best performance.
 
-7. Further reading
-==================
-
-  Jonathan Sorenson's papers provide a good introduction to prime
-  number sieves, the sieve of Eratosthenes and segmentation are
-  explained in [5], wheel factorization is covered in [6].
-  Tomás Oliveira e Silva on his website [11] explains his improvement
-  to the segmented sieve of Eratosthenes for big sieving primes.
-  A. Járai and E. Vatai's paper "Cache optimized linear sieve" [12]
-  explains many of the optimizations used in primesieve.
-  Joerg Richstein in [10] (German language) describes how to pre-sieve
-  multiples of small primes to speed up the sieve of Eratosthenes.
-
-8. Motivation
+7. Motivation
 =============
 
   I got my first PC in 1997, it had an Intel 200 mmx CPU and 32
@@ -216,7 +203,7 @@ Contents
   calculating, after about a minute the program printed "is prime" or
   "is not prime". I soon started to invent new faster algorithms ...
 
-9. Thanks
+8. Thanks
 =========
 
   Thanks to everyone who has given valuable feedback or reported bugs!
@@ -226,17 +213,33 @@ Contents
   Silver Möls for helping me to further optimize EratBig for
   out-of-order execution of modern CPUs in version 3.1.
 
+  Andrew Ohana for contributing a Makefile patch to build primesieve
+  as a shared library on Unix-like operating systems.
+
   Andrey Kulsha for benchmarking new primesieve releases on his
   hexa-core AMD Phenom CPU and also for his help to debug
   primesieve 1.0.
 
-10. License
-===========
+9. License
+==========
 
   primesieve is free software, it is licensed under the New BSD
   License see the LICENSE file for more information.
   The primesieve GUI application in src/qt-gui is licensed under the
   GPL as it uses the Qt framework.
+
+10. Further reading
+===================
+
+  Jonathan Sorenson's papers provide a good introduction to prime
+  number sieves, the sieve of Eratosthenes and segmentation are
+  explained in [5], wheel factorization is covered in [6].
+  Tomás Oliveira e Silva on his website [11] explains his improvement
+  to the segmented sieve of Eratosthenes for big sieving primes.
+  A. Járai and E. Vatai's paper "Cache optimized linear sieve" [12]
+  explains many of the optimizations used in primesieve.
+  Joerg Richstein in [10] (German language) describes how to pre-sieve
+  multiples of small primes to speed up the sieve of Eratosthenes.
 
 11. References
 ==============
@@ -249,7 +252,7 @@ Contents
   [3] C. Bays and R. Hudson, "The segmented sieve of Eratosthenes and
       primes in arithmetic progressions to 10^12", BIT 17:121 127,
       1977.
-  [4] Paul Pritchard, "Fast compact prime number sieves (among 
+  [4] Paul Pritchard, "Fast compact prime number sieves (among
       others)", Journal of Algorithms 4 (1983), 332-344.
   [5] J. Sorenson, "An Introduction To Prime Number Sieves", Computer
       Science Technical Report Vol. 909, January 1990.
