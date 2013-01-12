@@ -81,10 +81,10 @@ SieveOfEratosthenes::~SieveOfEratosthenes()
 
 void SieveOfEratosthenes::cleanUp()
 {
-  delete preSieve_;
-  delete eratSmall_;
-  delete eratMedium_;
   delete eratBig_;
+  delete eratMedium_;
+  delete eratSmall_;
+  delete preSieve_;
   delete[] sieve_;
 }
 
