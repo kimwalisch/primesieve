@@ -1,11 +1,11 @@
 ######################################################################
-# Microsoft Visual C++ Makefile for the primesieve console 
+# Microsoft Visual C++ Makefile for the primesieve console
 # application and the primesieve C++ library
 #
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   08 January 2013
+# Last modified:   12 January 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################

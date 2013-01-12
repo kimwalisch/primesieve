@@ -1,4 +1,4 @@
-Changes in version 4.1, 08/01/2012
+Changes in version 4.1, 12/01/2012
 ==================================
 
 1. New PrimeSieveCallback interface class that simplifies prime
@@ -35,7 +35,7 @@ Changes in version 4.0, 18/10/2012
 primesieve 4.0 is a major new release. A lot of work has been put into
 documentation and improving primesieve as a library. The API of
 primesieve 4.0 is backward incompatible with primesieve 3.*, the few
-changes are documented further down. 
+changes are documented further down.
 
  1. Added support for OpenMP 2.*, useful for compilers that do
     not support OpenMP >= 3.0, e.g. MSVC, Apple g++.
