@@ -7,7 +7,7 @@ Changes in version 4.1, 12/01/2012
    GNU-style long options e.g. --size=256.
 3. Fixed a bug (for sizeof(int) > 4) in the bit population count
    algorithm, read BUGS file.
-4. Updated the libprimesieve doc/USAGE_EXAMPLES file.
+4. Updated files: README, INSTALL, doc/USAGE_EXAMPLES.
 5. The Makefile now uses the system's default C++ compiler instead
    of GNU g++ which makes it more portable.
 6. The primesieve_error class has been moved into its own file
