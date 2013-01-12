@@ -30,9 +30,6 @@ public:
   void crossOff(byte_t*);
 private:
   typedef std::list<Bucket*>::iterator PointerIterator_t;
-  enum {
-    BUCKETS_PER_ALLOC = config::MEMORY_PER_ALLOC / sizeof(Bucket)
-  };
   const uint_t limit_;
   /// log2 of SieveOfEratosthenes::sieveSize_
   const uint_t log2SieveSize_;

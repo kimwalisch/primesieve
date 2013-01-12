@@ -77,14 +77,15 @@ void EratBig::moveBucket(Bucket& src, Bucket*& dest)
 /// Add an empty bucket to the front of list
 void EratBig::pushBucket(Bucket*& list)
 {
-  /// if the stock_ is empty new buckets are allocated first
+  // if the stock_ is empty allocate new buckets first
   if (stock_ == NULL) {
-    Bucket* more = new Bucket[BUCKETS_PER_ALLOC];
-    stock_ = &more[0];
-    pointers_.push_back(more);
-    for(int i = 0; i < BUCKETS_PER_ALLOC - 1; i++)
-      more[i].setNext(&more[i + 1]);
-    more[BUCKETS_PER_ALLOC - 1].setNext(NULL);
+    const int N = config::MEMORY_PER_ALLOC / sizeof(Bucket);
+    Bucket* buckets = new Bucket[N];
+    for(int i = 0; i < N-1; i++)
+      buckets[i].setNext(&buckets[i + 1]);
+    buckets[N-1].setNext(NULL);
+    pointers_.push_front(buckets);
+    stock_ = buckets;
   }
   Bucket* emptyBucket = stock_;
   stock_ = stock_->next();
