@@ -34,13 +34,6 @@ class EratBig;
 ///
 class SieveOfEratosthenes {
 public:
-  enum {
-    /// SieveOfEratosthenes uses dense bit packing with 30 numbers per
-    /// byte. Each byte of the sieve_ array holds the values
-    /// i * 30 + k  with k = { 7, 11, 13, 17, 19, 23, 29, 31 }, that
-    /// is 8 values per byte and thus one for each bit.
-    NUMBERS_PER_BYTE = 30
-  };
   static uint64_t getMaxStop();
   static std::string getMaxStopString();
   uint64_t getStart() const;

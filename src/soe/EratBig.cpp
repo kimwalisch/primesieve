@@ -14,7 +14,6 @@
 #include "config.h"
 #include "EratBig.h"
 #include "WheelFactorization.h"
-#include "SieveOfEratosthenes.h"
 #include "primesieve_error.h"
 #include "imath.h"
 
@@ -54,7 +53,7 @@ EratBig::~EratBig()
 
 void EratBig::setListsSize(uint_t sieveSize)
 {
-  uint_t maxSievingPrime  = limit_ / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+  uint_t maxSievingPrime  = limit_ / NUMBERS_PER_BYTE;
   uint_t maxNextMultiple  = maxSievingPrime * getMaxFactor() + getMaxFactor();
   uint_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
   uint_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
@@ -106,7 +105,7 @@ Bucket*& EratBig::getList(uint_t* multipleIndex)
 void EratBig::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
   assert(prime <= limit_);
-  uint_t sievingPrime = prime / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+  uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
   Bucket*& list = getList(&multipleIndex);
   if (!list->store(sievingPrime, multipleIndex, wheelIndex))
     pushBucket(list);

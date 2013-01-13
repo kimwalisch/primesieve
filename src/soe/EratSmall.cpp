@@ -12,7 +12,6 @@
 #include "config.h"
 #include "EratSmall.h"
 #include "WheelFactorization.h"
-#include "SieveOfEratosthenes.h"
 #include "primesieve_error.h"
 #include "bits.h"
 
@@ -39,7 +38,7 @@ EratSmall::EratSmall(uint64_t stop, uint_t sieveSize, uint_t limit) :
 void EratSmall::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
   assert(prime <= limit_);
-  uint_t sievingPrime = prime / SieveOfEratosthenes::NUMBERS_PER_BYTE;
+  uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
   Bucket& bucket = buckets_.back();
   if (!bucket.store(sievingPrime, multipleIndex, wheelIndex))
     buckets_.push_back(Bucket());

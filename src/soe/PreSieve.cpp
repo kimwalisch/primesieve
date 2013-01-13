@@ -31,7 +31,7 @@ PreSieve::PreSieve(int limit)
   primeProduct_ = 1;
   for (int i = 0; primes_[i] <= limit_; i++)
     primeProduct_ *= primes_[i];
-  size_ = primeProduct_ / 30;
+  size_ = primeProduct_ / NUMBERS_PER_BYTE;
   preSieved_ = new byte_t[size_];
   init();
 }
@@ -62,19 +62,19 @@ void PreSieve::doIt(byte_t* sieve, uint_t sieveSize, uint64_t segmentLow) const
 {
   // map segmentLow to the preSieved_ array
   uint_t remainder = static_cast<uint_t>(segmentLow % primeProduct_);
-  uint_t offset = remainder / 30;
-  uint_t sizeLeft = size_ - offset;
+  uint_t index = remainder / NUMBERS_PER_BYTE;
+  uint_t sizeLeft = size_ - index;
 
   if (sieveSize <= sizeLeft)
-    std::memcpy(sieve, &preSieved_[offset], sieveSize);
+    std::memcpy(sieve, &preSieved_[index], sieveSize);
   else {
     // copy the last remaining bytes at the end of preSieved_
     // to the beginning of the sieve array
-    std::memcpy(sieve, &preSieved_[offset], sizeLeft);
+    std::memcpy(sieve, &preSieved_[index], sizeLeft);
     // restart copying at the beginning of preSieved_
-    for (offset = sizeLeft; offset + size_ < sieveSize; offset += size_)
-      std::memcpy(&sieve[offset], preSieved_, size_);
-    std::memcpy(&sieve[offset], preSieved_, sieveSize - offset);
+    for (index = sizeLeft; index + size_ < sieveSize; index += size_)
+      std::memcpy(&sieve[index], preSieved_, size_);
+    std::memcpy(&sieve[index], preSieved_, sieveSize - index);
   }
 }
 

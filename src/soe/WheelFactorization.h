@@ -181,8 +181,9 @@ public:
     multiple += static_cast<uint64_t>(prime) * INIT[quotient % MODULO].nextMultipleFactor;
     if (multiple > stop_)
       return;
-    uint_t multipleIndex = static_cast<uint_t>((multiple - segmentLow) / 30);
-    uint_t wheelIndex = wheelOffsets_[prime % 30] + INIT[quotient % MODULO].wheelIndex;
+    uint_t lowOffset = static_cast<uint_t>(multiple - segmentLow);
+    uint_t multipleIndex = lowOffset / NUMBERS_PER_BYTE;
+    uint_t wheelIndex = wheelOffsets_[prime % NUMBERS_PER_BYTE] + INIT[quotient % MODULO].wheelIndex;
     store(prime, multipleIndex, wheelIndex);
   }
 protected:
