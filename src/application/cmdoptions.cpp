@@ -143,12 +143,12 @@ PrimeSieveSettings processOptions(int argc, char** argv)
       Option option = makeOption(argv[i]);
 
       switch (cmdOptions[option.id]) {
-        case OPTION_COUNT:    pss.flags    |= getCountFlags(option.getValue<int>()); break;
-        case OPTION_PRINT:    pss.flags    |= getPrintFlags(option.getValue<int>()); break;
+        case OPTION_COUNT:    pss.flags |= getCountFlags(option.getValue<int>()); break;
+        case OPTION_PRINT:    pss.flags |= getPrintFlags(option.getValue<int>()); pss.quiet = true; break;
         case OPTION_PRESIEVE: pss.preSieve  = option.getValue<int>(); break;
         case OPTION_SIZE:     pss.sieveSize = option.getValue<int>(); break;
         case OPTION_THREADS:  pss.threads   = option.getValue<int>(); break;
-        case OPTION_QUIET:    pss.quiet     = true; break;
+        case OPTION_QUIET:    pss.quiet = true; break;
         case OPTION_NUMBER:   pss.numbers.push_back(option.getValue<uint64_t>()); break;
         case OPTION_OFFSET:   pss.numbers.push_back(option.getValue<uint64_t>() + pss.start()); break;
         case OPTION_TEST:     test();    break;
@@ -160,7 +160,6 @@ PrimeSieveSettings processOptions(int argc, char** argv)
     help();
   }
   if (pss.numbers.size() == 1) pss.numbers.push_front(0);
-  if (pss.numbers.size() != 2)
-    help();
+  if (pss.numbers.size() != 2) help();
   return pss;
 }
