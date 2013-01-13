@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 12 January 2013
+# Last modified: 13 January 2013
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -96,9 +96,9 @@ Contents
   constant definitions. If you are new to prime number sieving I
   recommend reading some of the papers from section 10.
 
-  The doc/API file contains the complete API of the PrimeSieve and
-  ParallelPrimeSieve C++ classes. The doc/USAGE_EXAMPLES file contains
-  C++ source code examples that show how to use PrimeSieve objects.
+  The doc/USAGE_EXAMPLES file contains C++ source code examples that
+  explain how to use PrimeSieve objects. The doc/API file contains the
+  complete API of the PrimeSieve and ParallelPrimeSieve C++ classes. 
 
   Quick start
   -----------
@@ -111,18 +111,17 @@ Contents
   C++ classes
   -----------
   * ParallelPrimeSieve (derived from PrimeSieve)
-    ParallelPrimeSieve uses OpenMP multi-threading to sieve primes in
-    parallel. It scales well even with 100 CPU cores! In
+    ParallelPrimeSieve provides an easy API for multi-threaded prime
+    sieving using OpenMP, it scales well even with 100 CPU cores! In
     ParallelPrimeSieve each OpenMP thread sieves primes using a thread
     private PrimeSieve object. The doc/USAGE_EXAMPLES file explains
     ParallelPrimeSieve in more detail.
 
   * PrimeSieve
-    PrimeSieve objects provide an easy API for prime sieving, the file
-    doc/USAGE_EXAMPLES contains a short tutorial.
-    PrimeSieve::sieve(start, stop) starts sieving the primes within
-    the interval [start, stop]. The following classes are all used
-    directly or indirectly for sieving.
+    PrimeSieve objects provide an easy API for prime sieving,
+    PrimeSieve::sieve(start, stop) sieves the primes within the
+    interval [start, stop]. The classes below are all used directly or
+    indirectly for sieving.
 
   * SieveOfEratosthenes (abstract class)
     Implementation of the segmented sieve of Eratosthenes using a bit
@@ -145,7 +144,7 @@ Contents
 
   * PreSieve
     PreSieve objects are used to pre-sieve multiples of small primes
-    (e.g. <= 19) to speed up the sieve of Eratosthenes.
+    e.g. <= 19 to speed up the sieve of Eratosthenes.
 
   * WheelFactorization (abstract class)
     Wheel factorization is used to skip multiples of small primes e.g.
@@ -160,9 +159,9 @@ Contents
   * EratSmall (derived from WheelFactorization)
     Segmented sieve of Eratosthenes algorithm with a hard-coded
     modulo 30 wheel that skips multiples of 2, 3 and 5. This algorithm
-    is optimized for small sieving primes that have many multiples per
-    segment. EratSmall is a further optimized implementation of Achim
-    Flammenkamp's algorithm.[9]
+    is optimized for small sieving primes that have many multiples in
+    each segment. EratSmall is a further optimized implementation of
+    Achim Flammenkamp's algorithm.[9]
 
   * EratMedium (derived from WheelFactorization)
     Segmented sieve of Eratosthenes algorithm with a fixed modulo 210
@@ -177,7 +176,7 @@ Contents
     wheel that skips multiples of 2, 3, 5 and 7. The wheel is
     implemented using a precomputed lookup table (wheel210 array from
     WheelFactorization.cpp). EratBig is optimized for big sieving
-    primes that have less than one multiple occurrence per segment.
+    primes that have less than one multiple per segment.
 
   Macros
   ------
