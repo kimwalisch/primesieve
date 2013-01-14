@@ -173,8 +173,8 @@ public:
       return;
     uint64_t square = isquare<uint64_t>(prime);
     if (multiple < square) {
-      multiple = square;
       quotient = prime;
+      multiple = square;
     }
     // calculate the next multiple of prime that is not
     // divisible by any of the wheel's factors
