@@ -178,11 +178,12 @@ public:
     }
     // calculate the next multiple of prime that is not
     // divisible by any of the wheel's factors
-    multiple += static_cast<uint64_t>(prime) * INIT[quotient % MODULO].nextMultipleFactor;
+    uint64_t nextMultipleFactor = INIT[quotient % MODULO].nextMultipleFactor;
+    multiple += prime * nextMultipleFactor;
     if (multiple > stop_)
       return;
-    uint_t lowOffset = static_cast<uint_t>(multiple - segmentLow);
-    uint_t multipleIndex = lowOffset / NUMBERS_PER_BYTE;
+    uint64_t lowOffset = multiple - segmentLow;
+    uint_t multipleIndex = static_cast<uint_t>(lowOffset / NUMBERS_PER_BYTE);
     uint_t wheelIndex = wheelOffsets_[prime % NUMBERS_PER_BYTE] + INIT[quotient % MODULO].wheelIndex;
     store(prime, multipleIndex, wheelIndex);
   }
