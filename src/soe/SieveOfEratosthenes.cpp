@@ -94,7 +94,7 @@ void SieveOfEratosthenes::init(uint_t limitPreSieve)
   limitEratMedium_ = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATMEDIUM);
   try {
     // allocate the sieve of Eratosthenes array
-    sieve_ = new byte_t[sieveSize_];    
+    sieve_ = new byte_t[sieveSize_];
     preSieve_ = new PreSieve(limitPreSieve);
 
     if (sqrtStop_ > getPreSieve())    eratSmall_  = new EratSmall (stop_, sieveSize_, limitEratSmall_);
