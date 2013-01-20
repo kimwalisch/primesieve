@@ -65,6 +65,10 @@ private:
   uint_t limitEratSmall_;
   /// Copy of eratMedium_->getLimit()
   uint_t limitEratMedium_;
+  /// Size of sieve_ array (power of 2)
+  uint_t sieveSize_;
+  /// Sieve of Eratosthenes array
+  byte_t* sieve_;
   /// Pre-sieve multiples of tiny sieving primes
   PreSieve* preSieve_;
   /// Cross-off multiples of small sieving primes
@@ -73,10 +77,6 @@ private:
   EratMedium* eratMedium_;
   /// cross-off multiples of big sieving primes
   EratBig* eratBig_;
-  /// Sieve of Eratosthenes array
-  byte_t* sieve_;
-  /// Size of sieve_ (must be power of 2)
-  uint_t sieveSize_;
   static uint64_t getByteRemainder(uint64_t);
   void init(uint_t);
   void cleanUp();

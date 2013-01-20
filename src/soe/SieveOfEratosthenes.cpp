@@ -55,11 +55,11 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
                                          uint_t preSieve) :
   start_(start),
   stop_(stop),
+  sieve_(NULL),
   preSieve_(NULL),
   eratSmall_(NULL),
   eratMedium_(NULL),
-  eratBig_(NULL),
-  sieve_(NULL)
+  eratBig_(NULL)
 {
   if (start_ < 7)
     throw primesieve_error("SieveOfEratosthenes: start must be >= 7");
@@ -81,11 +81,11 @@ SieveOfEratosthenes::~SieveOfEratosthenes()
 
 void SieveOfEratosthenes::cleanUp()
 {
+  delete[] sieve_;
   delete preSieve_;
   delete eratSmall_;
   delete eratMedium_;
   delete eratBig_;
-  delete[] sieve_;
 }
 
 void SieveOfEratosthenes::init(uint_t limitPreSieve)
@@ -93,13 +93,13 @@ void SieveOfEratosthenes::init(uint_t limitPreSieve)
   limitEratSmall_  = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATSMALL);
   limitEratMedium_ = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATMEDIUM);
   try {
+    // allocate the sieve of Eratosthenes array
+    sieve_ = new byte_t[sieveSize_];    
     preSieve_ = new PreSieve(limitPreSieve);
 
     if (sqrtStop_ > getPreSieve())    eratSmall_  = new EratSmall (stop_, sieveSize_, limitEratSmall_);
     if (sqrtStop_ > limitEratSmall_)  eratMedium_ = new EratMedium(stop_, sieveSize_, limitEratMedium_);
     if (sqrtStop_ > limitEratMedium_) eratBig_    = new EratBig   (stop_, sieveSize_, sqrtStop_);
-    // allocate the sieve of Eratosthenes array
-    sieve_ = new byte_t[sieveSize_];
   }
   catch (const std::exception& e) {
     cleanUp();
