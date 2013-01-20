@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
         // initialize the ParallelPrimeSieve object with
         // values from the shared memory segment provided by
         // the primesieve GUI and start sieving
-        if (shm == NULL)
+        if (!shm)
           throw std::runtime_error("sharedMemory.data() must not be NULL");
         ParallelPrimeSieve pps;
         pps.init(*shm);

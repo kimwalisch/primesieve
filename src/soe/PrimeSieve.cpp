@@ -280,7 +280,7 @@ void PrimeSieve::generatePrimes(uint32_t start,
                                 uint32_t stop,
                                 void (*callback)(uint32_t))
 {
-  if (callback == NULL)
+  if (!callback)
     throw primesieve_error("callback must not be NULL");
   callback32_ = callback;
   flags_ = CALLBACK32;
@@ -295,7 +295,7 @@ void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
                                 void (*callback)(uint64_t))
 {
-  if (callback == NULL)
+  if (!callback)
     throw primesieve_error("callback must not be NULL");
   callback64_ = callback;
   flags_ = CALLBACK64;
@@ -310,7 +310,7 @@ void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
                                 void (*callback)(uint64_t, int))
 {
-  if (callback == NULL)
+  if (!callback)
     throw primesieve_error("callback must not be NULL");
   callback64_tn_ = callback;
   flags_ = CALLBACK64_TN;
@@ -325,7 +325,7 @@ void PrimeSieve::generatePrimes(uint32_t start,
                                 uint32_t stop,
                                 PrimeSieveCallback<uint32_t>* callbackObject)
 {
-  if (callbackObject == NULL)
+  if (!callbackObject)
     throw primesieve_error("callbackObject must not be NULL");
   psc32_ = callbackObject;
   flags_ = CALLBACK32_OBJ;
@@ -340,7 +340,7 @@ void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
                                 PrimeSieveCallback<uint64_t>* callbackObject)
 {
-  if (callbackObject == NULL)
+  if (!callbackObject)
     throw primesieve_error("callbackObject must not be NULL");
   psc64_ = callbackObject;
   flags_ = CALLBACK64_OBJ;
@@ -355,7 +355,7 @@ void PrimeSieve::generatePrimes(uint64_t start,
                                 uint64_t stop,
                                 PrimeSieveCallback<uint64_t, int>* callbackObject)
 {
-  if (callbackObject == NULL)
+  if (!callbackObject)
     throw primesieve_error("callbackObject must not be NULL");
   psc64_tn_ = callbackObject;
   flags_ = CALLBACK64_OBJ_TN;

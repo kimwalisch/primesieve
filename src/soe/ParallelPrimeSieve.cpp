@@ -180,7 +180,7 @@ void ParallelPrimeSieve::sieve()
 
   // communicate the sieving results to the
   // primesieve GUI application
-  if (shm_ != NULL) {
+  if (shm_) {
     std::copy(counts_.begin(), counts_.end(), shm_->counts);
     shm_->seconds = seconds_;
   }
@@ -194,7 +194,7 @@ bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
   OmpLockGuard lock(getLock<omp_lock_t*>(), waitForLock);
   if (lock.isSet()) {
     PrimeSieve::updateStatus(processed, false);
-    if (shm_ != NULL)
+    if (shm_)
       shm_->status = getStatus();
   }
   return lock.isSet();

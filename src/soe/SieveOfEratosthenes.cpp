@@ -142,6 +142,13 @@ void SieveOfEratosthenes::sieveSegment()
   segmentProcessed(sieve_, sieveSize_);
 }
 
+void SieveOfEratosthenes::crossOffMultiples()
+{
+  if (eratSmall_)   eratSmall_->crossOff(sieve_, &sieve_[sieveSize_]);
+  if (eratMedium_) eratMedium_->crossOff(sieve_, sieveSize_);
+  if (eratBig_)       eratBig_->crossOff(sieve_);
+}
+
 /// Pre-sieve multiples of small primes e.g. <= 19
 /// to speed up the sieve of Eratosthenes.
 ///
@@ -156,13 +163,6 @@ void SieveOfEratosthenes::preSieve()
     while (bitValues_[i] < getByteRemainder(start_)) i++;
     sieve_[0] &= 0xff << i;
   }
-}
-
-void SieveOfEratosthenes::crossOffMultiples()
-{
-  if (eratSmall_  != NULL)  eratSmall_->crossOff(sieve_, &sieve_[sieveSize_]);
-  if (eratMedium_ != NULL) eratMedium_->crossOff(sieve_, sieveSize_);
-  if (eratBig_    != NULL)    eratBig_->crossOff(sieve_);
 }
 
 /// Sieve the last segments remaining after that sieve(uint_t)

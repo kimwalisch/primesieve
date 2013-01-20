@@ -77,7 +77,7 @@ void EratBig::moveBucket(Bucket& src, Bucket*& dest)
 void EratBig::pushBucket(Bucket*& list)
 {
   // if the stock_ is empty allocate new buckets first
-  if (stock_ == NULL) {
+  if (!stock_) {
     const int N = config::MEMORY_PER_ALLOC / sizeof(Bucket);
     Bucket* buckets = new Bucket[N];
     for(int i = 0; i < N-1; i++)
@@ -130,7 +130,7 @@ void EratBig::crossOff(byte_t* sieve)
       bucket = bucket->next();
       processed->reset();
       moveBucket(*processed, stock_);
-    } while (bucket != NULL);
+    } while (bucket);
   }
 
   // lists_[0] has been processed, thus the list related to
