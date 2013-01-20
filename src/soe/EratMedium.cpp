@@ -41,8 +41,7 @@ void EratMedium::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
   assert(prime <= limit_);
   uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
-  Bucket& bucket = buckets_.back();
-  if (!bucket.store(sievingPrime, multipleIndex, wheelIndex))
+  if (!buckets_.back().store(sievingPrime, multipleIndex, wheelIndex))
     buckets_.push_back(Bucket());
 }
 
