@@ -71,7 +71,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   segmentLow_ = start_ - getByteRemainder(start_);
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   sqrtStop_ = static_cast<uint_t>(isqrt(stop_));
-  allocate(preSieve);
+  init(preSieve);
 }
 
 SieveOfEratosthenes::~SieveOfEratosthenes()
@@ -88,21 +88,16 @@ void SieveOfEratosthenes::cleanUp()
   delete[] sieve_;
 }
 
-void SieveOfEratosthenes::allocate(uint_t limitPreSieve)
+void SieveOfEratosthenes::init(uint_t limitPreSieve)
 {
   limitEratSmall_  = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATSMALL);
   limitEratMedium_ = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATMEDIUM);
   try {
     preSieve_ = new PreSieve(limitPreSieve);
 
-    if (sqrtStop_ > preSieve_->getLimit()) {
-      eratSmall_ = new EratSmall(stop_, sieveSize_, limitEratSmall_);
-      if (sqrtStop_ > limitEratSmall_) {
-        eratMedium_ = new EratMedium(stop_, sieveSize_, limitEratMedium_);
-        if (sqrtStop_ > limitEratMedium_)
-          eratBig_ = new EratBig(stop_, sieveSize_, sqrtStop_);
-      }
-    }
+    if (sqrtStop_ > preSieve_->getLimit()) eratSmall_  = new EratSmall (stop_, sieveSize_, limitEratSmall_);
+    if (sqrtStop_ > limitEratSmall_)       eratMedium_ = new EratMedium(stop_, sieveSize_, limitEratMedium_);
+    if (sqrtStop_ > limitEratMedium_)      eratBig_    = new EratBig   (stop_, sieveSize_, sqrtStop_);
     // allocate the sieve of Eratosthenes array
     sieve_ = new byte_t[sieveSize_];
   }
@@ -122,14 +117,14 @@ uint_t SieveOfEratosthenes::getPreSieve() const
   return preSieve_->getLimit();
 }
 
-uint64_t SieveOfEratosthenes::getMaxStop()
-{
-  return EratBig::getMaxStop();
-}
-
 std::string SieveOfEratosthenes::getMaxStopString()
 {
   return EratBig::getMaxStopString();
+}
+
+uint64_t SieveOfEratosthenes::getMaxStop()
+{
+  return EratBig::getMaxStop();
 }
 
 uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n)
@@ -165,17 +160,9 @@ void SieveOfEratosthenes::preSieve()
 
 void SieveOfEratosthenes::crossOffMultiples()
 {
-  if (eratSmall_ != NULL) {
-    // process small sieving primes with many multiples per segment
-    eratSmall_->crossOff(sieve_, &sieve_[sieveSize_]);
-    if (eratMedium_ != NULL) {
-      // process medium sieving primes with a few multiples per segment
-      eratMedium_->crossOff(sieve_, sieveSize_);
-      if (eratBig_ != NULL)
-        // process big sieving primes with very few ...
-        eratBig_->crossOff(sieve_);
-    }
-  }
+  if (eratSmall_  != NULL)  eratSmall_->crossOff(sieve_, &sieve_[sieveSize_]);
+  if (eratMedium_ != NULL) eratMedium_->crossOff(sieve_, sieveSize_);
+  if (eratBig_    != NULL)    eratBig_->crossOff(sieve_);
 }
 
 /// Sieve the last segments remaining after that sieve(uint_t)

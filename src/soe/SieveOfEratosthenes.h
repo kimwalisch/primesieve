@@ -78,7 +78,7 @@ private:
   /// Size of sieve_ (must be power of 2)
   uint_t sieveSize_;
   static uint64_t getByteRemainder(uint64_t);
-  void allocate(uint_t);
+  void init(uint_t);
   void cleanUp();
   void preSieve();
   void crossOffMultiples();
