@@ -95,9 +95,9 @@ void SieveOfEratosthenes::init(uint_t limitPreSieve)
   try {
     preSieve_ = new PreSieve(limitPreSieve);
 
-    if (sqrtStop_ > preSieve_->getLimit()) eratSmall_  = new EratSmall (stop_, sieveSize_, limitEratSmall_);
-    if (sqrtStop_ > limitEratSmall_)       eratMedium_ = new EratMedium(stop_, sieveSize_, limitEratMedium_);
-    if (sqrtStop_ > limitEratMedium_)      eratBig_    = new EratBig   (stop_, sieveSize_, sqrtStop_);
+    if (sqrtStop_ > getPreSieve())    eratSmall_  = new EratSmall (stop_, sieveSize_, limitEratSmall_);
+    if (sqrtStop_ > limitEratSmall_)  eratMedium_ = new EratMedium(stop_, sieveSize_, limitEratMedium_);
+    if (sqrtStop_ > limitEratMedium_) eratBig_    = new EratBig   (stop_, sieveSize_, sqrtStop_);
     // allocate the sieve of Eratosthenes array
     sieve_ = new byte_t[sieveSize_];
   }
