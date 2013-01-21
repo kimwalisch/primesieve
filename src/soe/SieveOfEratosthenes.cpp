@@ -102,9 +102,9 @@ void SieveOfEratosthenes::init()
     if (sqrtStop_ > limitEratSmall_)  eratMedium_ = new EratMedium(stop_, sieveSize_, limitEratMedium_);
     if (sqrtStop_ > limitEratMedium_) eratBig_    = new EratBig   (stop_, sieveSize_, sqrtStop_);
   }
-  catch (const std::exception& e) {
+  catch (const std::exception&) {
     cleanUp();
-    throw e;
+    throw;
   }
 }
 
