@@ -6,7 +6,7 @@
 ///           is a raise to power operator instead of bitwise XOR.
 /// @see      http://expressionparser.googlecode.com
 ///
-/// Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the New BSD License. See the
 /// LICENSE file in the top level directory.
@@ -46,9 +46,9 @@ private:
 ///          evaluates an arithmetic expression and returns the result.
 ///          Have a look at the homepage for a usage example.
 /// @author  Kim Walisch, <kim.walisch@gmail.com>
-/// @version 2.3 (patched for primesieve)
+/// @version 2.4 (patched for primesieve)
 /// @license New BSD License
-/// @date    December, 30 2012
+/// @date    January 21, 2013
 ///
 /// == Supported operators ==
 ///
@@ -243,7 +243,7 @@ private:
   /// Parse str at the current expression index.
   /// @throw parser_error if parsing fails.
   ///
-  void expect(const std::string str) {
+  void expect(const std::string& str) {
     if (expr_.compare(index_, str.size(), str) != 0)
       unexpected();
     index_ += str.size();
