@@ -226,11 +226,11 @@ template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement*
 const uint_t
 WheelFactorization<MODULO, SIZE, INIT, WHEEL>::wheelOffsets_[30] =
 {
-  0xFF, 7 * SIZE, 0xFF, 0xFF, 0xFF, 0xFF,
-  0xFF, 0 * SIZE, 0xFF, 0xFF, 0xFF, 1 * SIZE,
-  0xFF, 2 * SIZE, 0xFF, 0xFF, 0xFF, 3 * SIZE,
-  0xFF, 4 * SIZE, 0xFF, 0xFF, 0xFF, 5 * SIZE,
-  0xFF, 0xFF,     0xFF, 0xFF, 0xFF, 6 * SIZE
+  0, SIZE * 7, 0, 0, 0, 0,
+  0, SIZE * 0, 0, 0, 0, SIZE * 1,
+  0, SIZE * 2, 0, 0, 0, SIZE * 3,
+  0, SIZE * 4, 0, 0, 0, SIZE * 5,
+  0, 0,        0, 0, 0, SIZE * 6
 };
 
 /// 3rd wheel, skips multiples of 2, 3 and 5
