@@ -1,5 +1,5 @@
 ///
-/// @file   openmp_lock.h
+/// @file   OmpLock.h
 /// @brief  The OmpInitLock and OmpLockGuard classes are RAII-style
 ///         wrappers for OpenMP locks.
 ///
