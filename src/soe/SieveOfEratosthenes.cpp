@@ -161,10 +161,8 @@ void SieveOfEratosthenes::preSieve()
   if (segmentLow_ <= start_) {
     if (start_ <= limitPreSieve_)
       sieve_[0] = 0xff;
-    int i = 0;
-    uint64_t remainder = getByteRemainder(start_);
-    while (bitValues_[i] < remainder) i++;
-    sieve_[0] &= 0xff << i;
+    for (int i = 0; bitValues_[i] < getByteRemainder(start_); i++)
+      sieve_[0] &= 0xfe << i;
   }
 }
 
@@ -190,7 +188,8 @@ void SieveOfEratosthenes::finish()
   for (i = 0; i < 8; i++)
     if (bitValues_[i] > remainder)
       break;
-  sieve_[sieveSize_ - 1] &= ~(0xff << i);
+  int unsetBits = ~(0xff << i);
+  sieve_[sieveSize_ - 1] &= unsetBits;
   for (uint_t j = sieveSize_; j % 8 != 0; j++)
     sieve_[j] = 0;
   segmentProcessed(sieve_, sieveSize_);
