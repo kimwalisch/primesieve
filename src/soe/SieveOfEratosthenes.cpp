@@ -55,6 +55,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
                                          uint_t preSieve) :
   start_(start),
   stop_(stop),
+  limitPreSieve_(preSieve),
   sieve_(NULL),
   preSieve_(NULL),
   eratSmall_(NULL),
@@ -73,7 +74,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
   // allocate the sieve of Eratosthenes array
   sieve_ = new byte_t[sieveSize_];
-  init(preSieve);
+  init();
 }
 
 SieveOfEratosthenes::~SieveOfEratosthenes()
@@ -90,14 +91,14 @@ void SieveOfEratosthenes::cleanUp()
   delete eratBig_;
 }
 
-void SieveOfEratosthenes::init(uint_t preSieve)
+void SieveOfEratosthenes::init()
 {
   limitEratSmall_  = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATSMALL);
   limitEratMedium_ = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATMEDIUM);
   try {
-    preSieve_ = new PreSieve(preSieve);
+    preSieve_ = new PreSieve(limitPreSieve_);
 
-    if (sqrtStop_ > getPreSieve())    eratSmall_  = new EratSmall (stop_, sieveSize_, limitEratSmall_);
+    if (sqrtStop_ > limitPreSieve_)   eratSmall_  = new EratSmall (stop_, sieveSize_, limitEratSmall_);
     if (sqrtStop_ > limitEratSmall_)  eratMedium_ = new EratMedium(stop_, sieveSize_, limitEratMedium_);
     if (sqrtStop_ > limitEratMedium_) eratBig_    = new EratBig   (stop_, sieveSize_, sqrtStop_);
   }
@@ -114,7 +115,7 @@ uint_t SieveOfEratosthenes::getSqrtStop() const
 
 uint_t SieveOfEratosthenes::getPreSieve() const
 {
-  return preSieve_->getLimit();
+  return limitPreSieve_;
 }
 
 std::string SieveOfEratosthenes::getMaxStopString()
@@ -155,12 +156,14 @@ void SieveOfEratosthenes::crossOffMultiples()
 void SieveOfEratosthenes::preSieve()
 {
   preSieve_->doIt(sieve_, sieveSize_, segmentLow_);
+
   // unset bits (numbers) < start_
   if (segmentLow_ <= start_) {
-    if (start_ <= preSieve_->getLimit())
+    if (start_ <= limitPreSieve_)
       sieve_[0] = 0xff;
     int i = 0;
-    while (bitValues_[i] < getByteRemainder(start_)) i++;
+    uint64_t remainder = getByteRemainder(start_);
+    while (bitValues_[i] < remainder) i++;
     sieve_[0] &= 0xff << i;
   }
 }

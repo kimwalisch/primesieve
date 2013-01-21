@@ -61,11 +61,13 @@ private:
   const uint64_t stop_;
   /// sqrt(stop_)
   uint_t sqrtStop_;
+  /// Copy of preSieve_->getLimit()
+  uint_t limitPreSieve_;
   /// Copy of eratSmall_->getLimit()
   uint_t limitEratSmall_;
   /// Copy of eratMedium_->getLimit()
   uint_t limitEratMedium_;
-  /// Size of sieve_ array (power of 2)
+  /// Size of sieve_ in bytes (power of 2)
   uint_t sieveSize_;
   /// Sieve of Eratosthenes array
   byte_t* sieve_;
@@ -78,7 +80,7 @@ private:
   /// cross-off multiples of big sieving primes
   EratBig* eratBig_;
   static uint64_t getByteRemainder(uint64_t);
-  void init(uint_t);
+  void init();
   void cleanUp();
   void preSieve();
   void crossOffMultiples();
