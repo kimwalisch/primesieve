@@ -33,7 +33,7 @@ struct endiansafe_cast_helper
   static T go(const byte_t* array)
   {
     T byte = array[INDEX];
-    return (byte << INDEX * 8) + endiansafe_cast_helper<T, COUNT - 1>::go(array);
+    return (byte << (INDEX * 8)) + endiansafe_cast_helper<T, COUNT - 1>::go(array);
   }
 };
 

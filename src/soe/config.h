@@ -40,7 +40,7 @@ namespace soe {
 
 /// byte_t must be unsigned in primesieve
 typedef unsigned char byte_t;
-typedef unsigned int uint_t;
+typedef unsigned int  uint_t;
 
 enum {
   /// SieveOfEratosthenes objects use a bit array with 30 numbers per
@@ -85,32 +85,32 @@ enum {
   MEMORY_PER_ALLOC = (1 << 20) * 4
 };
 
-/// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
-/// are processed in EratSmall objects, affects performance by ~ 5%.
-/// @pre FACTOR_ERATSMALL >= 0 && <= 3
-///
-/// - For x86-64 CPUs post  2010 use 0.5 (or 0.3)
-/// - For x86-64 CPUs prior 2010 use 0.8
-/// - For PowerPC G4 CPUs   2003 use 1.0
-///
-const double FACTOR_ERATSMALL = 0.5;
+  /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
+  /// are processed in EratSmall objects, speed up ~ 5%.
+  /// @pre FACTOR_ERATSMALL >= 0 && <= 3
+  ///
+  /// - For x86-64 CPUs post  2010 use 0.5 (or 0.3)
+  /// - For x86-64 CPUs prior 2010 use 0.8
+  /// - For PowerPC G4 CPUs   2003 use 1.0
+  ///
+  const double FACTOR_ERATSMALL = 0.5;
 
-/// Sieving primes <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
-/// (and > EratSmall, see above) are processed in EratMedium objects.
-/// @pre FACTOR_ERATMEDIUM >= 0 && <= 6
-///
-const double FACTOR_ERATMEDIUM = 6;
+  /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
+  /// (and > EratSmall see above) are processed in EratMedium objects.
+  /// @pre FACTOR_ERATMEDIUM >= 0 && <= 6
+  ///
+  const double FACTOR_ERATMEDIUM = 6;
 
-/// Each thread sieves at least an interval of size
-/// MIN_THREAD_INTERVAL to reduce the initialization overhead.
-/// @pre MIN_THREAD_INTERVAL >= 100
-///
-const uint64_t MIN_THREAD_INTERVAL = static_cast<uint64_t>(1e7);
+  /// Each thread sieves at least an interval of size
+  /// MIN_THREAD_INTERVAL to reduce the initialization overhead.
+  /// @pre MIN_THREAD_INTERVAL >= 100
+  ///
+  const uint64_t MIN_THREAD_INTERVAL = static_cast<uint64_t>(1e7);
 
-/// Each thread sieves at most an interval of size MAX_THREAD_INTERVAL
-/// to prevent load imbalance near 99%.
-///
-const uint64_t MAX_THREAD_INTERVAL = static_cast<uint64_t>(2e10);
+  /// Each thread sieves at most an interval of size
+  /// MAX_THREAD_INTERVAL to prevent load imbalance near 99%.
+  ///
+  const uint64_t MAX_THREAD_INTERVAL = static_cast<uint64_t>(2e10);
 
 } // namespace config
 } // namespace soe
