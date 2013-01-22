@@ -20,10 +20,9 @@ int main()
 {
   PrimeSieve ps;
   try {
-    ps.generatePrimes(0, 999999, store);
+    ps.generatePrimes(0, 999999999, store);
   }
   catch (std::exception&) { }
-  for (unsigned i = 0; i < primes.size(); i++)
-    std::cout << primes[i] << '\n';
+  std::cout << "1000th prime = " << primes.back() << std::endl;
   return 0;
 }
