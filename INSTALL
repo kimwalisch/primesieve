@@ -32,12 +32,16 @@ II. How to build primesieve
   $ make                     Default `c++' compiler (GNU make)
   > nmake -f Makefile.msvc   Microsoft Visual C++
 
-  Other C++ compilers
-  -------------------
+  Other C++ compilers:
+
   $ make CXX=g++   CXXFLAGS="-O2 -fopenmp"
   $ make CXX=icpc  CXXFLAGS="-O2 -openmp"
   $ make CXX=sunCC CXXFLAGS="-O5 -xopenmp"
   ...
+
+  Additionally you can install primesieve using (as root):
+
+  $ make install
 
 III. Target a specific CPU
 ==========================
