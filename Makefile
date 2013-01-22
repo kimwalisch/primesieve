@@ -71,7 +71,7 @@ NO_OUTPUT := $(NO_STDOUT) $(NO_STDERR)
 is-openmp = $(shell command -v $(CXX) $(NO_OUTPUT) && \
                     echo 'int main() { return _OPENMP; }' | \
                     $(CXX) $(CXXFLAGS) $1 -xc++ -c -o /dev/null - $(NO_STDERR) && \
-                    echo successfully compiled)
+                    echo successfully compiled!)
 
 ifeq ($(call is-openmp),)
   ifneq ($(call is-openmp,-openmp),)
