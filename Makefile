@@ -68,7 +68,8 @@ NO_OUTPUT := $(NO_STDOUT) $(NO_STDERR)
 # Find the compiler's OpenMP flag
 #-----------------------------------------------------------------------------
 
-is-openmp = $(shell echo 'int main() { return _OPENMP; }' | \
+is-openmp = $(shell command -v $(CXX) $(NO_OUTPUT) && \
+                    echo 'int main() { return _OPENMP; }' | \
                     $(CXX) $(CXXFLAGS) $1 -xc++ -c -o /dev/null - $(NO_STDERR) && \
                     echo successfully compiled)
 
@@ -86,14 +87,10 @@ endif
 # Add the CPU's L1 data cache size (in kilobytes) to CXXFLAGS
 #-----------------------------------------------------------------------------
 
-L1_DCACHE_BYTES := $(shell getconf LEVEL1_DCACHE_SIZE $(NO_STDERR))
-
-ifeq ($(L1_DCACHE_BYTES),)
-  ifneq ($(shell command -v sysctl $(NO_STDERR)),)
-    L1_DCACHE_BYTES := $(shell sysctl hw.l1dcachesize $(NO_STDERR) | \
-                               sed -e 's/^.* //')
-  endif
-endif
+L1_DCACHE_BYTES := $(shell getconf LEVEL1_DCACHE_SIZE $(NO_STDERR) || \
+                           command -v sysctl $(NO_OUTPUT) && \
+                           sysctl hw.l1dcachesize $(NO_STDERR) | \
+                           sed -e 's/^.* //')
 
 ifneq ($(shell expr $(L1_DCACHE_BYTES) '-' $(L1_DCACHE_BYTES) '+' 1 $(NO_OUTPUT) && \
                echo is a number),)
