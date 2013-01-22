@@ -1,4 +1,4 @@
-January 8, 2012
+January 22, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -34,7 +34,7 @@ Contents
   $ sudo make install
 
   The first make command builds a static libprimesieve using your
-  system's default C++ compiler, the second command installs
+  system's default `c++' compiler, the second command installs
   libprimesieve to /usr/local (Linux) or to /usr.
 
   More build options
