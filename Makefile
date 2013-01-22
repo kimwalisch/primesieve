@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   21 January 2013
+# Last modified:   22 January 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -86,8 +86,14 @@ endif
 # Add the CPU's L1 data cache size (in kilobytes) to CXXFLAGS
 #-----------------------------------------------------------------------------
 
-L1_DCACHE_BYTES := $(shell getconf LEVEL1_DCACHE_SIZE $(NO_STDERR) || \
-                           sysctl  hw.l1dcachesize    $(NO_STDERR) | sed -e 's/^.* //')
+L1_DCACHE_BYTES := $(shell getconf LEVEL1_DCACHE_SIZE $(NO_STDERR))
+
+ifeq ($(L1_DCACHE_BYTES),)
+  ifneq ($(shell command -v sysctl $(NO_STDERR)),)
+    L1_DCACHE_BYTES := $(shell sysctl hw.l1dcachesize $(NO_STDERR) | \
+                               sed -e 's/^.* //')
+  endif
+endif
 
 ifneq ($(shell expr $(L1_DCACHE_BYTES) '-' $(L1_DCACHE_BYTES) '+' 1 $(NO_OUTPUT) && \
                echo is a number),)
