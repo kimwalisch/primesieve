@@ -39,7 +39,7 @@ II. How to build primesieve
   $ make CXX=sunCC CXXFLAGS="-O5 -xopenmp"
   ...
 
-  Additionally you can install primesieve using (as root):
+  Optionally you can install primesieve using (as root):
 
   $ make install
 
