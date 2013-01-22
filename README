@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       5 December 2010
-# Last modified: 13 January 2013
+# Last modified: 22 January 2013
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -98,7 +98,7 @@ Contents
 
   The doc/USAGE_EXAMPLES file contains C++ source code examples that
   explain how to use PrimeSieve objects. The doc/API file contains the
-  complete API of the PrimeSieve and ParallelPrimeSieve C++ classes. 
+  complete API of the PrimeSieve and ParallelPrimeSieve C++ classes.
 
   Quick start
   -----------
@@ -126,12 +126,11 @@ Contents
   * SieveOfEratosthenes (abstract class)
     Implementation of the segmented sieve of Eratosthenes using a bit
     array with 30 numbers per byte, each byte of the sieve array holds
-    the numbers i*30 + k with k = { 7, 11, 13, 17, 19, 23, 29, 31 }.
-    The main method is SieveOfEratosthenes::sieve(uint_t prime) it
-    must be called consecutively for all primes <= sqrt(n) in order to
-    sieve the primes up to n. Each sieving prime is first stored in
-    one of the Erat(Small|Medium|Big) objects which are then used to
-    cross-off the multiples.
+    the 8 offsets k = { 7, 11, 13, 17, 19, 23, 29, 31 }.
+    Its main methods are addSievingPrime(uint_t) which must be called
+    consecutively for all primes <= sqrt(n) in order to sieve the
+    primes up to n and sieve(). SieveOfEratosthenes uses the
+    EratSmall, EratMedium and EratBig classes to cross-off multiples.
 
   * PrimeNumberFinder (derived from SieveOfEratosthenes)
     Main SieveOfEratosthenes class, used to generate, print and count

@@ -29,33 +29,32 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
 { }
 
 /// Generate the primes up to finder_.getStop()^0.5
-/// and use them to sieve with finder_.
+/// and add them to finder_.
 ///
 void PrimeNumberGenerator::doIt()
 {
-  // tiny sieve of Eratosthenes that generates the primes
-  // up to finder_.getStop()^0.25
+  // first generate the sieving primes up to finder_.getStop()^0.25
   uint_t N = getSqrtStop();
   std::vector<byte_t> isPrime(N / 8 + 1, 0xAA);
   for (uint_t i = 3; i * i <= N; i += 2) {
     if (isPrime[i >> 3] & (1 << (i & 7)))
-      for (uint_t j = i * i; j <= N; j += i + i)
+      for (uint_t j = i * i; j <= N; j += i * 2)
         isPrime[j >> 3] &= ~(1 << (j & 7));
   }
   for (uint_t i = getPreSieve() + 1; i <= N; i++) {
     if (isPrime[i >> 3] & (1 << (i & 7)))
-      sieve(i);
+      addSievingPrime(i);
   }
-  finish();
+  // second generate the primes up to finder_.getStop()^0.5
+  sieve();
 }
 
-/// Executed after each sieved segment, generates the primes
-/// within the current segment and uses them to
-/// sieve with finder_.
+/// Reconstruct the primes from 1 bits of the sieve
+/// array and add them to finder_.
 ///
 void PrimeNumberGenerator::segmentProcessed(const byte_t* sieve, uint_t sieveSize)
 {
-  GENERATE_PRIMES(finder_.sieve, uint_t)
+  GENERATE_PRIMES(finder_.addSievingPrime, uint_t)
 }
 
 } // namespace soe

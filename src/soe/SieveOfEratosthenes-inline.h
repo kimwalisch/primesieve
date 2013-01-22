@@ -27,12 +27,11 @@ inline uint64_t SieveOfEratosthenes::getStart()     const { return start_; }
 inline uint64_t SieveOfEratosthenes::getStop()      const { return stop_; }
 inline uint_t   SieveOfEratosthenes::getSieveSize() const { return sieveSize_; }
 
-/// Sieve primes using the segmented sieve of Eratosthenes.
-/// sieve(uint_t prime) must be called consecutively for all primes
-/// up to sqrt(stop) in order to sieve the primes within the
+/// This method must be called consecutively for all primes up to
+/// sqrt(stop) in order to sieve the primes within the
 /// interval [start, stop].
 ///
-inline void SieveOfEratosthenes::sieve(uint_t prime)
+inline void SieveOfEratosthenes::addSievingPrime(uint_t prime)
 {
   assert(prime <= sqrtStop_);
   uint64_t square = isquare<uint64_t>(prime);

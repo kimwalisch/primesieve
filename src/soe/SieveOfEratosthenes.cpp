@@ -166,12 +166,11 @@ void SieveOfEratosthenes::preSieve()
   }
 }
 
-/// Sieve the last segments remaining after that sieve(uint_t)
+/// Sieve the remaining segments after that addSievingPrime(uint_t)
 /// has been called for all primes up to sqrt(stop).
 ///
-void SieveOfEratosthenes::finish()
+void SieveOfEratosthenes::sieve()
 {
-  // sieve all segments left except the last one
   while (segmentHigh_ < stop_) {
     sieveSegment();
     segmentLow_  += sieveSize_ * NUMBERS_PER_BYTE;

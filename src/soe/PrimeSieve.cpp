@@ -250,7 +250,7 @@ void PrimeSieve::sieve()
       PrimeNumberGenerator generator(finder);
       generator.doIt();
     }
-    finder.finish();
+    finder.sieve();
   }
 
   seconds_ = static_cast<double>(std::clock() - t1) / CLOCKS_PER_SEC;

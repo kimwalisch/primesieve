@@ -27,10 +27,9 @@ class EratBig;
 ///
 /// SieveOfEratosthenes uses 3 different sieve of Eratosthenes
 /// algorithms optimized for small, medium and big sieving primes to
-/// cross-off multiples. Its main method is sieve(uint_t prime) which
-/// must be called consecutively for all primes up to sqrt(n) in order
-/// to sieve the primes up to n. PrimeNumberFinder and
-/// PrimeNumberGenerator are derived from SieveOfEratosthenes.
+/// cross-off multiples. Its main methods are addSievingPrime(uint_t)
+/// and sieve(). PrimeNumberFinder and PrimeNumberGenerator are
+/// derived from SieveOfEratosthenes.
 ///
 class SieveOfEratosthenes {
 public:
@@ -41,8 +40,8 @@ public:
   uint_t getSqrtStop() const;
   uint_t getSieveSize() const;
   uint_t getPreSieve() const;
-  void sieve(uint_t);
-  void finish();
+  void addSievingPrime(uint_t);
+  void sieve();
 protected:
   SieveOfEratosthenes(uint64_t, uint64_t, uint_t, uint_t);
   virtual ~SieveOfEratosthenes();
