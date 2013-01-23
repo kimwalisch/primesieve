@@ -12,33 +12,29 @@
 #define ENDIANSAFE_CAST_H
 
 #include "config.h"
-#include <cstddef>
 
 namespace soe {
 
 /// Recursively sum bytes using template metaprogramming.
 /// e.g. endiansafe_cast<int32_t>(array) = 
-/// return (array[0] <<  0) +
-///        (array[1] <<  8) +
+/// return (array[0] << 0) +
+///        (array[1] << 8) +
 ///        (array[2] << 16) +
 ///        (array[3] << 24) +
 ///        0;
 ///
-template <typename T, std::size_t COUNT>
+template <typename T, int INDEX, int STOP>
 struct endiansafe_cast_helper
 {
-  enum {
-    INDEX = sizeof(T) - COUNT
-  };
   static T go(const byte_t* array)
   {
     T byte = array[INDEX];
-    return (byte << (INDEX * 8)) + endiansafe_cast_helper<T, COUNT - 1>::go(array);
+    return (byte << (INDEX * 8)) + endiansafe_cast_helper<T, INDEX + 1, STOP - 1>::go(array);
   }
 };
 
-template <typename T>
-struct endiansafe_cast_helper<T, 0>
+template <typename T, int INDEX>
+struct endiansafe_cast_helper<T, INDEX, 0>
 {
   static T go(const byte_t*)
   {
@@ -49,7 +45,7 @@ struct endiansafe_cast_helper<T, 0>
 template <typename T>
 inline T endiansafe_cast(const byte_t* array)
 {
-  return endiansafe_cast_helper<T, sizeof(T)>::go(array);
+  return endiansafe_cast_helper<T, 0, sizeof(T)>::go(array);
 }
 
 } // namespace soe
