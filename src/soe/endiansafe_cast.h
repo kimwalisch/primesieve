@@ -15,28 +15,40 @@
 
 namespace soe {
 
+/// http://c-faq.com/misc/endiantest.html
+inline bool isLittleEndian()
+{
+  union {
+    int word;
+    char c[sizeof(int)];
+  } x;
+  x.word = 1;
+  return (x.c[0] == 1);
+}
+
 /// Recursively sum bytes using template metaprogramming.
-/// e.g. endiansafe_cast<int32_t>(array) = 
+/// e.g. endiansafe_cast<int32_t>(array) =
 /// return (array[0] << 0) +
 ///        (array[1] << 8) +
 ///        (array[2] << 16) +
 ///        (array[3] << 24) +
 ///        0;
-///
+
 template <typename T, int INDEX, int STOP>
 struct endiansafe_cast_helper
 {
-  static T go(const byte_t* array)
+  static T sum(const byte_t* array)
   {
     T byte = array[INDEX];
-    return (byte << (INDEX * 8)) + endiansafe_cast_helper<T, INDEX + 1, STOP - 1>::go(array);
+    T rest = endiansafe_cast_helper<T, INDEX + 1, STOP - 1>::sum(array);
+    return (byte << (INDEX * 8)) + rest;
   }
 };
 
 template <typename T, int INDEX>
 struct endiansafe_cast_helper<T, INDEX, 0>
 {
-  static T go(const byte_t*)
+  static T sum(const byte_t*)
   {
     return 0;
   }
@@ -45,7 +57,9 @@ struct endiansafe_cast_helper<T, INDEX, 0>
 template <typename T>
 inline T endiansafe_cast(const byte_t* array)
 {
-  return endiansafe_cast_helper<T, 0, sizeof(T)>::go(array);
+  if (isLittleEndian())
+    return *reinterpret_cast<const T*>(array);
+  return endiansafe_cast_helper<T, 0, sizeof(T)>::sum(array);
 }
 
 } // namespace soe
