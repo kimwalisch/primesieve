@@ -64,28 +64,34 @@ extern const WheelElement wheel210[48*8];
 ///
 class WheelPrime {
 public:
-  enum { MAX_MULTIPLE_INDEX = (1 << 23) - 1 };
+  enum {
+    MAX_MULTIPLE_INDEX = (1 << 23) - 1,
+    MAX_WHEEL_INDEX    = (1 << 9) - 1
+  };
   uint_t getSievingPrime() const  { return sievingPrime_; }
   uint_t getMultipleIndex() const { return indexes_ & MAX_MULTIPLE_INDEX; }
   uint_t getWheelIndex() const    { return indexes_ >> 23; }
 
   void setMultipleIndex(uint_t multipleIndex)
   {
-    assert(multipleIndex < (1u << 23));
+    assert(multipleIndex <= MAX_MULTIPLE_INDEX);
     indexes_ = static_cast<uint32_t>(indexes_ | multipleIndex);
   }
   void setWheelIndex(uint_t wheelIndex)
   {
-    assert(wheelIndex < (1u << 9));
+    assert(wheelIndex <= MAX_WHEEL_INDEX);
     indexes_ = static_cast<uint32_t>(wheelIndex << 23);
   }
-  void set(uint_t multipleIndex, uint_t wheelIndex)
+  void set(uint_t multipleIndex,
+           uint_t wheelIndex)
   {
-    assert(multipleIndex < (1u << 23));
-    assert(wheelIndex    < (1u << 9));
+    assert(multipleIndex <= MAX_MULTIPLE_INDEX);
+    assert(wheelIndex    <= MAX_WHEEL_INDEX);
     indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
   }
-  void set(uint_t sievingPrime, uint_t multipleIndex, uint_t wheelIndex)
+  void set(uint_t sievingPrime,
+           uint_t multipleIndex,
+           uint_t wheelIndex)
   {
     set(multipleIndex, wheelIndex);
     sievingPrime_ = static_cast<uint32_t>(sievingPrime);
