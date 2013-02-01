@@ -41,8 +41,7 @@ EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t limit) :
   // '>> log2SieveSize' requires a power of 2 sieveSize
   if (!isPowerOf2(sieveSize))
     throw primesieve_error("EratBig: sieveSize must be a power of 2");
-  setListsSize(sieveSize);
-  init();
+  init(sieveSize);
 }
 
 EratBig::~EratBig()
@@ -51,7 +50,7 @@ EratBig::~EratBig()
     delete[] *iter;
 }
 
-void EratBig::setListsSize(uint_t sieveSize)
+void EratBig::init(uint_t sieveSize)
 {
   uint_t maxSievingPrime  = limit_ / NUMBERS_PER_BYTE;
   uint_t maxNextMultiple  = maxSievingPrime * getMaxFactor() + getMaxFactor();
@@ -59,11 +58,7 @@ void EratBig::setListsSize(uint_t sieveSize)
   uint_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
   uint_t size = maxSegmentCount + 1;
   lists_.resize(size, NULL);
-}
-
-void EratBig::init()
-{
-  for (uint_t i = 0; i < lists_.size(); i++)
+  for (uint_t i = 0; i < size; i++)
     pushBucket(lists_[i]);
 }
 
@@ -76,7 +71,7 @@ void EratBig::moveBucket(Bucket& src, Bucket*& dest)
 /// Add an empty bucket to the front of list
 void EratBig::pushBucket(Bucket*& list)
 {
-  // if the stock_ is empty allocate new buckets first
+  // if the stock_ is empty allocate new buckets
   if (!stock_) {
     const int N = config::MEMORY_PER_ALLOC / sizeof(Bucket);
     Bucket* buckets = new Bucket[N];
@@ -91,8 +86,8 @@ void EratBig::pushBucket(Bucket*& list)
   moveBucket(*emptyBucket, list);
 }
 
-/// Get the bucket list related to the segment of the next
-/// multiple (multipleIndex) of sievingPrime.
+/// Get the bucket list related to the next multiple
+/// (multipleIndex) of a sievingPrime.
 ///
 Bucket*& EratBig::getList(uint_t* multipleIndex)
 {

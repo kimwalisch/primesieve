@@ -40,8 +40,7 @@ private:
   Bucket* stock_;
   /// Pointers of the allocated buckets
   std::list<Bucket*> pointers_;
-  void setListsSize(uint_t);
-  void init();
+  void init(uint_t);
   static void moveBucket(Bucket&, Bucket*&);
   void pushBucket(Bucket*&);
   void store(uint_t, uint_t, uint_t);
