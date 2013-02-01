@@ -42,10 +42,10 @@ private:
   std::list<Bucket*> pointers_;
   void init(uint_t);
   static void moveBucket(Bucket&, Bucket*&);
-  void pushBucket(Bucket*&);
+  void pushBucket(uint_t);
   void store(uint_t, uint_t, uint_t);
   void crossOff(byte_t*, Bucket&);
-  Bucket*& getList(uint_t*);
+  uint_t getSegment(uint_t*);
   DISALLOW_COPY_AND_ASSIGN(EratBig);
 };
 

@@ -59,7 +59,7 @@ void EratBig::init(uint_t sieveSize)
   uint_t size = maxSegmentCount + 1;
   lists_.resize(size, NULL);
   for (uint_t i = 0; i < size; i++)
-    pushBucket(lists_[i]);
+    pushBucket(i);
 }
 
 void EratBig::moveBucket(Bucket& src, Bucket*& dest)
@@ -68,8 +68,10 @@ void EratBig::moveBucket(Bucket& src, Bucket*& dest)
   dest = &src;
 }
 
-/// Add an empty bucket to the front of list
-void EratBig::pushBucket(Bucket*& list)
+/// Add an empty bucket to the list corresponding to the
+/// segment parameter i.e. lists_[segment].
+///
+void EratBig::pushBucket(uint_t segment)
 {
   // if the stock_ is empty allocate new buckets
   if (!stock_) {
@@ -83,17 +85,17 @@ void EratBig::pushBucket(Bucket*& list)
   }
   Bucket* emptyBucket = stock_;
   stock_ = stock_->next();
-  moveBucket(*emptyBucket, list);
+  moveBucket(*emptyBucket, lists_[segment]);
 }
 
-/// Get the bucket list related to the next multiple
+/// Get the segment corresponding to the next multiple
 /// (multipleIndex) of a sievingPrime.
 ///
-Bucket*& EratBig::getList(uint_t* multipleIndex)
+uint_t EratBig::getSegment(uint_t* multipleIndex)
 {
   uint_t segment = *multipleIndex >> log2SieveSize_;
   *multipleIndex &= moduloSieveSize_;
-  return lists_[segment];
+  return segment;
 }
 
 /// Store a new sieving prime in EratBig
@@ -101,24 +103,22 @@ void EratBig::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
   assert(prime <= limit_);
   uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
-  Bucket*& list = getList(&multipleIndex);
-  if (!list->store(sievingPrime, multipleIndex, wheelIndex))
-    pushBucket(list);
+  uint_t segment = getSegment(&multipleIndex);
+  if (!lists_[segment]->store(sievingPrime, multipleIndex, wheelIndex))
+    pushBucket(segment);
 }
 
-/// Cross-off the multiples of big sieving
-/// primes from the sieve array.
+/// Cross-off the multiples of big sieving primes
+/// from the sieve array.
 ///
 void EratBig::crossOff(byte_t* sieve)
 {
-  // lists_[0] contains the buckets with the sieving primes
-  // that have multiples in the current segment
-  Bucket*& list = lists_[0];
-
-  while (list->hasNext() || !list->empty()) {
-    Bucket* bucket = list;
-    list = NULL;
-    pushBucket(list);
+  // process the buckets in lists_[0] which hold the sieving primes
+  // that have multiple(s) in the current segment
+  while (lists_[0]->hasNext() || !lists_[0]->empty()) {
+    Bucket* bucket = lists_[0];
+    lists_[0] = NULL;
+    pushBucket(0);
     do {
       crossOff(sieve, *bucket);
       Bucket* processed = bucket;
@@ -128,8 +128,8 @@ void EratBig::crossOff(byte_t* sieve)
     } while (bucket);
   }
 
-  // lists_[0] has been processed, thus the list related to
-  // the next segment lists_[1] moves to lists_[0] ...
+  // move the list corresponding to the next segment
+  // i.e. lists_[1] to lists_[0] ...
   std::rotate(lists_.begin(), lists_.begin() + 1, lists_.end());
 }
 
@@ -157,14 +157,14 @@ void EratBig::crossOff(byte_t* sieve, Bucket& bucket)
     // and calculate the next multiple
     unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
     unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
-    Bucket*& list0 = getList(&multipleIndex0);
-    Bucket*& list1 = getList(&multipleIndex1);
+    uint_t segment0 = getSegment(&multipleIndex0);
+    uint_t segment1 = getSegment(&multipleIndex1);
     // move the 2 sieving primes to the list related
     // to their next multiple
-    if (!list0->store(sievingPrime0, multipleIndex0, wheelIndex0))
-      pushBucket(list0);
-    if (!list1->store(sievingPrime1, multipleIndex1, wheelIndex1))
-      pushBucket(list1);
+    if (!lists_[segment0]->store(sievingPrime0, multipleIndex0, wheelIndex0))
+      pushBucket(segment0);
+    if (!lists_[segment1]->store(sievingPrime1, multipleIndex1, wheelIndex1))
+      pushBucket(segment1);
   }
 
   if (wPrime != end) {
@@ -172,9 +172,9 @@ void EratBig::crossOff(byte_t* sieve, Bucket& bucket)
     uint_t wheelIndex    = wPrime->getWheelIndex();
     uint_t sievingPrime  = wPrime->getSievingPrime();
     unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
-    Bucket*& list = getList(&multipleIndex);
-    if (!list->store(sievingPrime, multipleIndex, wheelIndex))
-      pushBucket(list);
+    uint_t segment = getSegment(&multipleIndex);
+    if (!lists_[segment]->store(sievingPrime, multipleIndex, wheelIndex))
+      pushBucket(segment);
   }
 }
 
