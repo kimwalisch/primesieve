@@ -91,7 +91,7 @@ void PrimeSieveGUI::initGUI() {
   this->setWindowTitle(APPLICATION_NAME + " " + PRIMESIEVE_VERSION);
   this->createMenu(primeText_);
 
-  // fill the sieveSizeComboBox with power of 2 values <= "4096 KB"
+  // fill the sieveSizeComboBox with power of 2 values <= "2048 KB"
   for (int i = MINIMUM_SIEVE_SIZE; i <= MAXIMUM_SIEVE_SIZE; i *= 2)
     ui->sieveSizeComboBox->addItem(QString::number(i) + " KB");
   this->setTo(ui->sieveSizeComboBox, DEFAULT_SIEVE_SIZE);
@@ -136,7 +136,7 @@ void PrimeSieveGUI::initConnections() {
 
 /**
  * Get the sieve size in kilobytes from the sieveSizeComboBox.
- * @post sieveSize >= 1 && sieveSize <= 4096.
+ * @post sieveSize >= 1 && sieveSize <= 2048.
  */
 int PrimeSieveGUI::getSieveSize() {
   QString sieveSize(ui->sieveSizeComboBox->currentText());

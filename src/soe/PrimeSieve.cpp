@@ -132,11 +132,11 @@ void PrimeSieve::setPreSieve(int preSieve)
 /// Set the size of the sieve of Eratosthenes array in kilobytes
 /// (default = 32). The best sieving performance is achieved with a
 /// sieve size of the CPU's L1 data cache size per core.
-/// @pre sieveSize >= 1 && <= 4096
+/// @pre sieveSize >= 1 && <= 2048
 ///
 void PrimeSieve::setSieveSize(int sieveSize)
 {
-  sieveSize_ = getInBetween(1, floorPowerOf2(sieveSize), 4096);
+  sieveSize_ = getInBetween(1, floorPowerOf2(sieveSize), 2048);
 }
 
 void PrimeSieve::setFlags(int flags)

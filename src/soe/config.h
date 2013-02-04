@@ -54,7 +54,7 @@ namespace config {
 enum {
   /// Default sieve size in kilobytes. Set SIEVESIZE to your CPUs L1
   /// data cache size to get the best performance.
-  /// @pre SIEVESIZE >= 1 && <= 4096
+  /// @pre SIEVESIZE >= 1 && <= 2048
   ///
   SIEVESIZE = L1_DCACHE_SIZE,
 
@@ -97,9 +97,9 @@ enum {
 
   /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
   /// (and > EratSmall see above) are processed in EratMedium objects.
-  /// @pre FACTOR_ERATMEDIUM >= 0 && <= 6
+  /// @pre FACTOR_ERATMEDIUM >= 0 && <= 9
   ///
-  const double FACTOR_ERATMEDIUM = 6;
+  const double FACTOR_ERATMEDIUM = 7.5;
 
   /// Each thread sieves at least an interval of size
   /// MIN_THREAD_INTERVAL to reduce the initialization overhead.

@@ -46,7 +46,7 @@ const uint_t SieveOfEratosthenes::bruijnBitValues_[64] =
 ///                   to speed up the sieve of Eratosthenes.
 /// @pre   start      >= 7
 /// @pre   stop       <= 2^64 - 2^32 * 10
-/// @pre   sieveSize  >= 1 && <= 4096
+/// @pre   sieveSize  >= 1 && <= 2048
 /// @pre   preSieve   >= 13 && <= 23
 ///
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
@@ -68,7 +68,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
     throw primesieve_error("SieveOfEratosthenes: start must be <= stop");
   sqrtStop_ = static_cast<uint_t>(isqrt(stop_));
   // sieveSize_ must be a power of 2
-  sieveSize_ = getInBetween(1u, floorPowerOf2(sieveSize), 4096u);
+  sieveSize_ = getInBetween(1u, floorPowerOf2(sieveSize), 2048u);
   sieveSize_ *= 1024; // convert to bytes
   segmentLow_ = start_ - getByteRemainder(start_);
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
