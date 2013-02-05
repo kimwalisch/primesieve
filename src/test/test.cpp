@@ -140,7 +140,7 @@ void testRandomIntervals()
   while (pps.getStop() < upperBound) {
     pps.setStart(pps.getStop() + 1);
     pps.setStop(min(pps.getStart() + getRand64(maxInterval), upperBound));
-    pps.setSieveSize(1 << (rand() % 13));
+    pps.setSieveSize(1 << (rand() % 12));
     pps.sieve();
     primeCount += pps.getPrimeCount();
     seconds += pps.getSeconds();
