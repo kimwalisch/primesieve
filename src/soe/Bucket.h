@@ -18,9 +18,9 @@ namespace soe {
 
 class Bucket;
 
-/// The BucketCache class stores sieving primes faster than the Bucket
-/// class. The bucket class requires two pointer accesses to store
-/// a prime in EratBig whereas BucketCache uses only one.
+/// BucketCache objects store sieving primes faster than Bucket*
+/// pointers in EratBig. BucketCache objects require only one pointer
+/// access to store a prime whereas Bucket pointers use two.
 ///
 class BucketCache {
 public:
