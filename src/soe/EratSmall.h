@@ -12,6 +12,7 @@
 
 #include "config.h"
 #include "WheelFactorization.h"
+#include "Bucket.h"
 
 #include <stdint.h>
 #include <list>

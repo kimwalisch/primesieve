@@ -103,45 +103,6 @@ private:
   uint32_t sievingPrime_;
 };
 
-/// The Bucket data structure is used to store sieving primes.
-/// @see http://www.ieeta.pt/~tos/software/prime_sieve.html
-/// The Bucket class is designed as a singly linked list, once there
-/// is no more space in the current Bucket a new Bucket node is
-/// allocated.
-///
-class Bucket {
-public:
-  Bucket(const Bucket&) { reset(); }
-  Bucket()              { reset(); }
-  WheelPrime* begin()   { return &wheelPrimes_[0]; }
-  WheelPrime* last()    { return &wheelPrimes_[config::BUCKETSIZE - 1]; }
-  WheelPrime* end()     { return current_;}
-  Bucket* next()        { return next_; }
-  bool hasNext() const  { return next_ != NULL; }
-  bool empty()          { return begin() == end(); }
-  void reset()          { current_ = begin(); }
-  void setNext(Bucket* next)
-  {
-    next_ = next;
-  }
-  /// Store a WheelPrime in the bucket.
-  /// @return false if the bucket is full else true.
-  ///
-  bool store(uint_t sievingPrime,
-             uint_t multipleIndex,
-             uint_t wheelIndex)
-  {
-    WheelPrime* wPrime = current_;
-    current_++;
-    wPrime->set(sievingPrime, multipleIndex, wheelIndex);
-    return wPrime != last();
-  }
-private:
-  WheelPrime* current_;
-  Bucket* next_;
-  WheelPrime wheelPrimes_[config::BUCKETSIZE];
-};
-
 /// The abstract WheelFactorization class is used skip multiples of
 /// small primes in the sieve of Eratosthenes. The EratSmall,
 /// EratMedium and EratBig classes are derived from

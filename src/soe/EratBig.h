@@ -12,6 +12,7 @@
 
 #include "config.h"
 #include "WheelFactorization.h"
+#include "Bucket.h"
 
 #include <stdint.h>
 #include <vector>
@@ -36,6 +37,7 @@ private:
   const uint_t moduloSieveSize_;
   /// Vector of bucket lists, holds the sieving primes
   std::vector<Bucket*> lists_;
+  std::vector<BucketCache> bucketCache_;
   /// List of empty buckets
   Bucket* stock_;
   /// Pointers of the allocated buckets
@@ -45,6 +47,9 @@ private:
   void pushBucket(uint_t);
   void store(uint_t, uint_t, uint_t);
   void crossOff(byte_t*, Bucket&);
+  void updateCache(Bucket&, uint_t);
+  void cacheWriteBack();
+  void rotate();
   uint_t getSegment(uint_t*);
   DISALLOW_COPY_AND_ASSIGN(EratBig);
 };
