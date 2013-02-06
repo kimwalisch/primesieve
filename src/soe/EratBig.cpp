@@ -58,7 +58,7 @@ void EratBig::init(uint_t sieveSize)
   uint_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
   uint_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
   lists_.resize(maxSegmentCount + 1, NULL);
-  bucketCache_.resize(lists_.size());
+  listsCache_.resize(lists_.size());
   for (uint_t i = 0; i < lists_.size(); i++)
     pushBucket(i);
 }
@@ -79,7 +79,7 @@ void EratBig::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
   assert(prime <= limit_);
   uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
   uint_t segment = getSegment(&multipleIndex);
-  if (!bucketCache_[segment].store(sievingPrime, multipleIndex, wheelIndex))
+  if (!listsCache_[segment].store(sievingPrime, multipleIndex, wheelIndex))
     pushBucket(segment);
 }
 
@@ -114,12 +114,12 @@ void EratBig::updateCache(Bucket& bucket, uint_t segment)
 {
   if (lists_[segment])
     lists_[segment]->setFull();
-  bucketCache_[segment].set(bucket);
+  listsCache_[segment].set(bucket);
 }
 
 void EratBig::cacheWriteBack()
 {
-  lists_[0]->update(bucketCache_[0]);
+  lists_[0]->update(listsCache_[0]);
 }
 
 void EratBig::rotate()
@@ -130,9 +130,9 @@ void EratBig::rotate()
               lists_.begin() + 1,
               lists_.end());
 
-  std::rotate(bucketCache_.begin(),
-              bucketCache_.begin() + 1,
-              bucketCache_.end());
+  std::rotate(listsCache_.begin(),
+              listsCache_.begin() + 1,
+              listsCache_.end());
 }
 
 /// Cross-off the multiples of big sieving primes
@@ -189,9 +189,9 @@ void EratBig::crossOff(byte_t* sieve, Bucket& bucket)
     uint_t segment1 = getSegment(&multipleIndex1);
     // move the 2 sieving primes to the list related
     // to their next multiple
-    if (!bucketCache_[segment0].store(sievingPrime0, multipleIndex0, wheelIndex0))
+    if (!listsCache_[segment0].store(sievingPrime0, multipleIndex0, wheelIndex0))
       pushBucket(segment0);
-    if (!bucketCache_[segment1].store(sievingPrime1, multipleIndex1, wheelIndex1))
+    if (!listsCache_[segment1].store(sievingPrime1, multipleIndex1, wheelIndex1))
       pushBucket(segment1);
   }
 
@@ -201,7 +201,7 @@ void EratBig::crossOff(byte_t* sieve, Bucket& bucket)
     uint_t sievingPrime  = wPrime->getSievingPrime();
     unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
     uint_t segment = getSegment(&multipleIndex);
-    if (!bucketCache_[segment].store(sievingPrime, multipleIndex, wheelIndex))
+    if (!listsCache_[segment].store(sievingPrime, multipleIndex, wheelIndex))
       pushBucket(segment);
   }
 }

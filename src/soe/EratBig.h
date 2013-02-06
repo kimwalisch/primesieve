@@ -37,7 +37,7 @@ private:
   const uint_t moduloSieveSize_;
   /// Vector of bucket lists, holds the sieving primes
   std::vector<Bucket*> lists_;
-  std::vector<BucketCache> bucketCache_;
+  std::vector<CacheBucket> listsCache_;
   /// List of empty buckets
   Bucket* stock_;
   /// Pointers of the allocated buckets

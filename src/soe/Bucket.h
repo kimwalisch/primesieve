@@ -18,11 +18,11 @@ namespace soe {
 
 class Bucket;
 
-/// BucketCache objects store sieving primes faster than Bucket*
-/// pointers in EratBig. BucketCache objects require only one pointer
+/// CacheBucket objects store sieving primes faster than Bucket*
+/// pointers in EratBig. CacheBucket objects require only one pointer
 /// access to store a prime whereas Bucket pointers use two.
 ///
-class BucketCache {
+class CacheBucket {
 public:
   WheelPrime* end()  const { return current_;}
   WheelPrime* last() const { return last_; }
@@ -62,7 +62,7 @@ public:
   {
     next_ = next;
   }
-  void update(BucketCache& bucket)
+  void update(CacheBucket& bucket)
   {
     current_ = bucket.end();
   }
@@ -83,7 +83,7 @@ private:
 };
 
 
-inline void BucketCache::set(Bucket& bucket)
+inline void CacheBucket::set(Bucket& bucket)
 {
   current_ = bucket.begin();
   last_    = bucket.last();
