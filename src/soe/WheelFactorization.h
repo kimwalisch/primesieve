@@ -131,10 +131,8 @@ public:
              uint_t multipleIndex,
              uint_t wheelIndex)
   {
-    WheelPrime* wPrime = current_;
-    current_++;
-    wPrime->set(sievingPrime, multipleIndex, wheelIndex);
-    return wPrime != last();
+    current_->set(sievingPrime, multipleIndex, wheelIndex);
+    return current_++ != last();
   }
 private:
   WheelPrime* current_;
