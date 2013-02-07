@@ -62,15 +62,27 @@ void EratBig::init(uint_t sieveSize)
     pushBucket(i);
 }
 
-void EratBig::moveBucket(Bucket& src, Bucket*& dest)
+/// Store a new sieving prime in EratBig
+void EratBig::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
-  src.setNext(dest);
-  dest = &src;
+  assert(prime <= limit_);
+  uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
+  uint_t segment = getSegment(&multipleIndex);
+  if (!lists_[segment]->store(sievingPrime, multipleIndex, wheelIndex))
+    pushBucket(segment);
 }
 
-/// Add an empty bucket to the list corresponding to the
-/// segment parameter i.e. lists_[segment].
+/// Get the segment corresponding to the next multiple
+/// (multipleIndex) of a sievingPrime.
 ///
+uint_t EratBig::getSegment(uint_t* multipleIndex)
+{
+  uint_t segment = *multipleIndex >> log2SieveSize_;
+  *multipleIndex &= moduloSieveSize_;
+  return segment;
+}
+
+/// Add an empty bucket to the front of lists_[segment].
 void EratBig::pushBucket(uint_t segment)
 {
   // if the stock_ is empty allocate new buckets
@@ -88,24 +100,10 @@ void EratBig::pushBucket(uint_t segment)
   moveBucket(*emptyBucket, lists_[segment]);
 }
 
-/// Get the segment corresponding to the next multiple
-/// (multipleIndex) of a sievingPrime.
-///
-uint_t EratBig::getSegment(uint_t* multipleIndex)
+void EratBig::moveBucket(Bucket& src, Bucket*& dest)
 {
-  uint_t segment = *multipleIndex >> log2SieveSize_;
-  *multipleIndex &= moduloSieveSize_;
-  return segment;
-}
-
-/// Store a new sieving prime in EratBig
-void EratBig::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
-{
-  assert(prime <= limit_);
-  uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
-  uint_t segment = getSegment(&multipleIndex);
-  if (!lists_[segment]->store(sievingPrime, multipleIndex, wheelIndex))
-    pushBucket(segment);
+  src.setNext(dest);
+  dest = &src;
 }
 
 /// Cross-off the multiples of big sieving primes
