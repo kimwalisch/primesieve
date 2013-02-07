@@ -12,7 +12,6 @@
 #include "config.h"
 #include "EratMedium.h"
 #include "WheelFactorization.h"
-#include "Bucket.h"
 #include "primesieve_error.h"
 
 #include <stdint.h>

@@ -99,7 +99,7 @@ enum {
   /// (and > EratSmall see above) are processed in EratMedium objects.
   /// @pre FACTOR_ERATMEDIUM >= 0 && <= 9
   ///
-  const double FACTOR_ERATMEDIUM = 6.0;
+  const double FACTOR_ERATMEDIUM = 7.5;
 
   /// Each thread sieves at least an interval of size
   /// MIN_THREAD_INTERVAL to reduce the initialization overhead.

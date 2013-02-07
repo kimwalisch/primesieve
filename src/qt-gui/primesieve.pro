@@ -57,7 +57,6 @@ SOURCES += \
 
 HEADERS += \
   ../soe/bits.h \
-  ../soe/Bucket.h \
   ../soe/config.h \
   ../soe/endiansafe_cast.h \
   ../soe/EratBig.h \

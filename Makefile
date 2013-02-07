@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   06 February 2013
+# Last modified:   04 February 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -34,7 +34,6 @@ SOE_SOURCES:= \
 
 SOE_HEADERS := \
   $(SOEDIR)/bits.h \
-  $(SOEDIR)/Bucket.h \
   $(SOEDIR)/config.h \
   $(SOEDIR)/endiansafe_cast.h \
   $(SOEDIR)/EratBig.h \

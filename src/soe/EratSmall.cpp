@@ -11,10 +11,9 @@
 
 #include "config.h"
 #include "EratSmall.h"
-#include "bits.h"
 #include "WheelFactorization.h"
-#include "Bucket.h"
 #include "primesieve_error.h"
+#include "bits.h"
 
 #include <stdint.h>
 #include <cassert>
