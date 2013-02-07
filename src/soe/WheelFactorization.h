@@ -115,11 +115,11 @@ public:
   Bucket()              { reset(); }
   WheelPrime* begin()   { return &wheelPrimes_[0]; }
   WheelPrime* last()    { return &wheelPrimes_[config::BUCKETSIZE - 1]; }
-  WheelPrime* end()     { return current_;}
+  WheelPrime* end()     { return prime_; }
   Bucket* next()        { return next_; }
   bool hasNext() const  { return next_ != NULL; }
   bool empty()          { return begin() == end(); }
-  void reset()          { current_ = begin(); }
+  void reset()          { prime_ = begin(); }
   void setNext(Bucket* next)
   {
     next_ = next;
@@ -131,11 +131,11 @@ public:
              uint_t multipleIndex,
              uint_t wheelIndex)
   {
-    current_->set(sievingPrime, multipleIndex, wheelIndex);
-    return current_++ != last();
+    prime_->set(sievingPrime, multipleIndex, wheelIndex);
+    return prime_++ != last();
   }
 private:
-  WheelPrime* current_;
+  WheelPrime* prime_;
   Bucket* next_;
   WheelPrime wheelPrimes_[config::BUCKETSIZE];
 };
