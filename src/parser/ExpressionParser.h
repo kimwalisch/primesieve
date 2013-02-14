@@ -2,8 +2,6 @@
 /// @file     ExpressionParser.h
 /// @brief    Simple C++ operator precedence parser with infix notation
 ///           for integer arithmetic expressions.
-/// @warning  This file has been patched for primesieve, the ^ operator
-///           is a raise to power operator instead of bitwise XOR.
 /// @see      http://expressionparser.googlecode.com
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
@@ -46,9 +44,9 @@ private:
 ///          evaluates an arithmetic expression and returns the result.
 ///          Have a look at the homepage for a usage example.
 /// @author  Kim Walisch, <kim.walisch@gmail.com>
-/// @version 2.4 (patched for primesieve)
+/// @version 2.5 patched: `^' is raise to power instead of XOR.
 /// @license New BSD License
-/// @date    January 21, 2013
+/// @date    February 14, 2013
 ///
 /// == Supported operators ==
 ///
@@ -142,22 +140,28 @@ private:
     /// Operator, one of the OPERATOR_* enum definitions
     int op;
     int precedence;
-    /// Associativity, 'L' = left or 'R' = right
-    int assoc;
-    Operator(int op, int precedence, int assoc) :
-      op(op),
+    /// 'L' = left or 'R' = right
+    int associativity;
+    Operator(int opr, int precedence, int associativity) :
+      op(opr),
       precedence(precedence),
-      assoc(assoc) { }
+      associativity(associativity)
+    { }
   };
 
   struct OperatorValue {
     Operator op;
     T value;
-    OperatorValue(const Operator& op, T value) :
-      op(op),
-      value(value) { }
-    int getPrecedence()   const { return op.precedence; }
-    bool isOperatorNULL() const { return op.op == OPERATOR_NULL; }
+    OperatorValue(const Operator& opr, T value) :
+      op(opr),
+      value(value)
+    { }
+    int getPrecedence() const {
+      return op.precedence;
+    }
+    bool isOperatorNULL() const {
+      return op.op == OPERATOR_NULL;
+    }
   };
 
   /// Expression string
@@ -319,11 +323,13 @@ private:
                     std::tolower(expr_[index_ + 1]) == 'x' &&
                        toInteger(expr_[index_ + 2]) <= 0xf) {
                   index_ += 2;
-                  return parseHexadecimal();
+                  val = parseHexadecimal();
+                  break;
                 }
       case '1': case '2': case '3': case '4': case '5':
       case '6': case '7': case '8': case '9':
-                return parseDecimal();
+                val = parseDecimal();
+                break;
       case '(': index_++;
                 val = parseExpr();
                 eatSpaces();
@@ -332,16 +338,17 @@ private:
                     unexpected();
                   throw parser_error(expr_, "Syntax error: `)' expected at end of expression");
                 }
-                index_++; return  val;
-      case '+': index_++; return  parseVal();
-      case '-': index_++; return  parseVal() * static_cast<T> (-1);
-      case '~': index_++; return ~parseVal();
+                index_++; break;
+      case '~': index_++; val = ~parseVal(); break;
+      case '+': index_++; val =  parseVal(); break;
+      case '-': index_++; val =  parseVal() * static_cast<T>(-1);
+                break;
       default:
         if (!isEnd())
           unexpected();
         throw parser_error(expr_, "Syntax error: value expected at end of expression");
     }
-    return 0;
+    return val;
   }
 
   /// Parse all operations of the current parenthesis level and
@@ -356,9 +363,9 @@ private:
     while (!opv_.empty()) {
       // parse an operator (+, -, *, ...)
       Operator op(parseOp());
-      while (op.precedence < opv_.top().getPrecedence() || (
+      while (op.precedence  < opv_.top().getPrecedence() || (
              op.precedence == opv_.top().getPrecedence() &&
-             op.assoc == 'L')) {
+             op.associativity == 'L')) {
         // end reached
         if (opv_.top().isOperatorNULL()) {
           opv_.pop();
