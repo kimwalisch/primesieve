@@ -1,8 +1,8 @@
 ///
-/// @file     ExpressionParser.h
-/// @brief    Simple C++ operator precedence parser with infix notation
-///           for integer arithmetic expressions.
-/// @see      http://expressionparser.googlecode.com
+/// @file   ExpressionParser.h
+/// @brief  Simple C++ operator precedence parser with infix notation
+///         for integer arithmetic expressions.
+/// @see    http://expressionparser.googlecode.com
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -46,7 +46,7 @@ private:
 /// @author  Kim Walisch, <kim.walisch@gmail.com>
 /// @version 2.5 patched: `^' is raise to power instead of XOR.
 /// @license New BSD License
-/// @date    February 14, 2013
+/// @date    February 15, 2013
 ///
 /// == Supported operators ==
 ///
@@ -187,16 +187,7 @@ private:
     return result;
   }
 
-  void unexpected() {
-    std::ostringstream error;
-    error << "Syntax error: unexpected token \""
-          << expr_.substr(index_, expr_.size() - index_)
-          << "\" at index "
-          << index_;
-    throw parser_error(expr_, error.str());
-  }
-
-  T checkZero(T value) {
+  T checkZero(T value) const {
     if (value == 0) {
       std::string divOperators("/%");
       std::size_t division = expr_.find_last_of(divOperators, index_ - 2);
@@ -214,7 +205,7 @@ private:
   /// Atomic calculation with two operands and a given operator.
   /// @return Result (int, long, ...) of the calculation.
   ///
-  T calculate(T v1, T v2, const Operator& op) {
+  T calculate(T v1, T v2, const Operator& op) const {
     switch (op.op) {
       case OPERATOR_BITWISE_OR:     return v1 | v2;
       case OPERATOR_BITWISE_XOR:    return v1 ^ v2;
@@ -228,8 +219,8 @@ private:
       case OPERATOR_MODULO:         return v1 % checkZero(v2);
       case OPERATOR_POWER:          return pow(v1, v2);
       case OPERATOR_EXPONENT:       return v1 * pow(10, v2);
+      default:                      return 0;
     }
-    return 0;
   }
 
   bool isEnd() const {
@@ -240,7 +231,8 @@ private:
   /// 0 if the end of the expression is reached.
   ///
   char getCharacter() const {
-    if (!isEnd()) return expr_[index_];
+    if (!isEnd())
+      return expr_[index_];
     return 0;
   }
 
@@ -251,6 +243,15 @@ private:
     if (expr_.compare(index_, str.size(), str) != 0)
       unexpected();
     index_ += str.size();
+  }
+
+  void unexpected() const {
+    std::ostringstream error;
+    error << "Syntax error: unexpected token \""
+          << expr_.substr(index_, expr_.size() - index_)
+          << "\" at index "
+          << index_;
+    throw parser_error(expr_, error.str());
   }
 
   /// Eat all white space characters at the current expression index.
@@ -278,20 +279,16 @@ private:
       case '^': index_++;     return Operator(OPERATOR_POWER,          30, 'R');
       case 'e': index_++;     return Operator(OPERATOR_EXPONENT,       40, 'R');
       case 'E': index_++;     return Operator(OPERATOR_EXPONENT,       40, 'R');
+      default :               return Operator(OPERATOR_NULL,            0, 'L');
     }
-    // OPERATOR_NULL used for:
-    // 1. End of expression (char) 0
-    // 2. Closing parentheses `)'
-    // 3. Invalid characters (errors)
-    return Operator(OPERATOR_NULL, 0, 'L');
   }
 
   static T toInteger(char c) {
-    T value = 0xF + 1;
-    if (c >= '0' && c <= '9') value = c -'0';
-    if (c >= 'a' && c <= 'f') value = c -'a' + 0xA;
-    if (c >= 'A' && c <= 'F') value = c -'A' + 0xA;
-    return value;
+    if (c >= '0' && c <= '9') return c -'0';
+    if (c >= 'a' && c <= 'f') return c -'a' + 0xA;
+    if (c >= 'A' && c <= 'F') return c -'A' + 0xA;
+    T noDigit = 0xF + 1;
+    return noDigit;
   }
 
   T parseDecimal() {
@@ -301,29 +298,33 @@ private:
     return value;
   }
 
-  /// Parse a hexadecimal number, i.e. 0x7fff.
-  /// @pre "0x" has already been consumed.
-  ///
-  T parseHexadecimal() {
+  T parseHex() {
+    index_ = index_ + 2;
     T value = 0;
     for (T h; (h = toInteger(getCharacter())) <= 0xf; index_++)
       value = value * 16 + h;
     return value;
   }
 
-  /// Parse an integer value (hex or decimal) at the current
-  /// expression index. The unary `+', `-' and `~' operators
-  /// and opening parentheses `(' cause recursion.
+  bool isHex() const {
+    if (index_ + 2 < expr_.size()) {
+      char x = expr_[index_ + 1];
+      char h = expr_[index_ + 2];
+      return (std::tolower(x) == 'x' && toInteger(h) <= 0xf);
+    }
+    return false;
+  }
+
+  /// Parse an integer value at the current expression index.
+  /// The unary `+', `-' and `~' operators and opening
+  /// parentheses `(' cause recursion.
   ///
-  T parseVal() {
+  T parseValue() {
     T val = 0;
     eatSpaces();
     switch (getCharacter()) {
-      case '0': if (index_ + 2 < expr_.size() &&
-                    std::tolower(expr_[index_ + 1]) == 'x' &&
-                       toInteger(expr_[index_ + 2]) <= 0xf) {
-                  index_ += 2;
-                  val = parseHexadecimal();
+      case '0': if (isHex()) {
+                  val = parseHex();
                   break;
                 }
       case '1': case '2': case '3': case '4': case '5':
@@ -339,26 +340,25 @@ private:
                   throw parser_error(expr_, "Syntax error: `)' expected at end of expression");
                 }
                 index_++; break;
-      case '~': index_++; val = ~parseVal(); break;
-      case '+': index_++; val =  parseVal(); break;
-      case '-': index_++; val =  parseVal() * static_cast<T>(-1);
+      case '~': index_++; val = ~parseValue(); break;
+      case '+': index_++; val =  parseValue(); break;
+      case '-': index_++; val =  parseValue() * static_cast<T>(-1);
                 break;
-      default:
-        if (!isEnd())
-          unexpected();
-        throw parser_error(expr_, "Syntax error: value expected at end of expression");
+      default : if (!isEnd())
+                  unexpected();
+                throw parser_error(expr_, "Syntax error: value expected at end of expression");
     }
     return val;
   }
 
-  /// Parse all operations of the current parenthesis level and
-  /// the levels above (parseVal() causes recursion).
-  /// @return The combined result of the parsed operations.
+  /// Parse all operations of the current parenthesis
+  /// level and the levels above, when done
+  /// return the result (value).
   ///
   T parseExpr() {
     opv_.push(OperatorValue(Operator(OPERATOR_NULL, 0, 'L'), 0));
     // first value on the left
-    T value = parseVal();
+    T value = parseValue();
 
     while (!opv_.empty()) {
       // parse an operator (+, -, *, ...)
@@ -378,8 +378,8 @@ private:
 
       // store on opv_ and continue parsing ("shift")
       opv_.push(OperatorValue(op, value));
-      // value on the right
-      value = parseVal();
+      // parse value on the right
+      value = parseValue();
     }
     return 0;
   }
