@@ -107,7 +107,7 @@ public:
         unexpected();
     }
     catch (parser_error&) {
-      while(!opv_.empty()) opv_.pop();
+      while(!stack_.empty()) stack_.pop();
       throw;
     }
     return result;
@@ -159,7 +159,7 @@ private:
     int getPrecedence() const {
       return op.precedence;
     }
-    bool isOperatorNULL() const {
+    bool isNull() const {
       return op.op == OPERATOR_NULL;
     }
   };
@@ -171,7 +171,7 @@ private:
   /// The current operator and its left value
   /// are pushed onto the stack if the operator on
   /// top of the stack has lower precedence.
-  std::stack<OperatorValue> opv_;
+  std::stack<OperatorValue> stack_;
 
   /// Exponentiation by squaring, x^n.
   static T pow(T x, T n) {
@@ -356,28 +356,28 @@ private:
   /// return the result (value).
   ///
   T parseExpr() {
-    opv_.push(OperatorValue(Operator(OPERATOR_NULL, 0, 'L'), 0));
-    // first value on the left
+    stack_.push(OperatorValue(Operator(OPERATOR_NULL, 0, 'L'), 0));
+    // first parse value on the left
     T value = parseValue();
 
-    while (!opv_.empty()) {
+    while (!stack_.empty()) {
       // parse an operator (+, -, *, ...)
       Operator op(parseOp());
-      while (op.precedence  < opv_.top().getPrecedence() || (
-             op.precedence == opv_.top().getPrecedence() &&
+      while (op.precedence  < stack_.top().getPrecedence() || (
+             op.precedence == stack_.top().getPrecedence() &&
              op.associativity == 'L')) {
         // end reached
-        if (opv_.top().isOperatorNULL()) {
-          opv_.pop();
+        if (stack_.top().isNull()) {
+          stack_.pop();
           return value;
         }
         // do the calculation ("reduce"), producing a new value
-        value = calculate(opv_.top().value, value, opv_.top().op);
-        opv_.pop();
+        value = calculate(stack_.top().value, value, stack_.top().op);
+        stack_.pop();
       }
 
-      // store on opv_ and continue parsing ("shift")
-      opv_.push(OperatorValue(op, value));
+      // store on stack_ and continue parsing ("shift")
+      stack_.push(OperatorValue(op, value));
       // parse value on the right
       value = parseValue();
     }
