@@ -1,7 +1,7 @@
 ///
 /// @file  PrimeNumberGenerator.cpp
-///        PrimeNumberGenerator generates the primes up to sqrt(n)
-///        needed for sieving by PrimeFinder.
+///        Generate the prime numbers up to sqrt(n) needed for sieving
+///        by PrimeFinder.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -28,7 +28,7 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeFinder& finder) :
   finder_(finder)
 { }
 
-/// Generate the primes up to finder_.getStop()^0.5
+/// Generate the primes up to sqrt( finder_.getStop() )
 /// and add them to finder_.
 ///
 void PrimeNumberGenerator::doIt()
@@ -45,7 +45,7 @@ void PrimeNumberGenerator::doIt()
     if (isPrime[i >> 3] & (1 << (i & 7)))
       addSievingPrime(i);
   }
-  // second sieve up to finder_.getStop()^0.5
+  // second sieve up to sqrt( finder_.getStop() )
   sieve();
 }
 
