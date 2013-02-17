@@ -1,4 +1,4 @@
-January 11, 2013
+February 17, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -34,7 +34,7 @@ Q  How can I generate (callback) twin primes?
 A  You have to modify the source code, open a terminal and cd into the
    src/soe directory, then run the following commands:
 
-   sed -i 's/GENERATE_PRIMES/GENERATE_TWINS/g' PrimeNumberFinder.cpp
+   sed -i 's/GENERATE_PRIMES/GENERATE_TWINS/g' PrimeFinder.cpp
    sed -i 's/sp.index == 0/sp.index == 1/g' PrimeSieve.cpp
 
    Now, after recompilation the PrimeSieve::generatePrimes(*) methods

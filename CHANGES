@@ -1,8 +1,8 @@
-Changes in version 4.2, 15/02/2012
+Changes in version 4.2, 17/02/2012
 ==================================
 
 1. libprimesieve generates (callback) primes up to 5% faster on
-   little-endian CPUs due to improved endiansafe_cast.h. 
+   little-endian CPUs due to improved endiansafe_cast.h.
 2. The Makefile now supports the Solaris OS.
 3. Updated ExpressionParser.h (src/parser) to version 2.5.
 4. Added nth prime example program (./examples).

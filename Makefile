@@ -26,7 +26,7 @@ SOE_SOURCES:= \
   $(SOEDIR)/ParallelPrimeSieve.o \
   $(SOEDIR)/popcount.o \
   $(SOEDIR)/PreSieve.o \
-  $(SOEDIR)/PrimeNumberFinder.o \
+  $(SOEDIR)/PrimeFinder.o \
   $(SOEDIR)/PrimeNumberGenerator.o \
   $(SOEDIR)/PrimeSieve.o \
   $(SOEDIR)/SieveOfEratosthenes.o \
@@ -44,7 +44,7 @@ SOE_HEADERS := \
   $(SOEDIR)/ParallelPrimeSieve-lock.h \
   $(SOEDIR)/popcount.h \
   $(SOEDIR)/PreSieve.h \
-  $(SOEDIR)/PrimeNumberFinder.h \
+  $(SOEDIR)/PrimeFinder.h \
   $(SOEDIR)/PrimeNumberGenerator.h \
   $(SOEDIR)/PrimeSieve.h \
   $(SOEDIR)/primesieve_error.h \

@@ -14,8 +14,8 @@
 #include "primesieve_error.h"
 #include "PrimeSieveCallback.h"
 #include "PrimeSieve-lock.h"
+#include "PrimeFinder.h"
 #include "PrimeNumberGenerator.h"
-#include "PrimeNumberFinder.h"
 #include "imath.h"
 
 #include <stdint.h>
@@ -114,9 +114,9 @@ void PrimeSieve::setStart(uint64_t start)
 ///
 void PrimeSieve::setStop(uint64_t stop)
 {
-  uint64_t maxStop = PrimeNumberFinder::getMaxStop();
+  uint64_t maxStop = PrimeFinder::getMaxStop();
   if (stop > maxStop)
-    throw primesieve_error("stop must be <= " + PrimeNumberFinder::getMaxStopString());
+    throw primesieve_error("stop must be <= " + PrimeFinder::getMaxStopString());
   stop_ = stop;
 }
 
@@ -243,7 +243,7 @@ void PrimeSieve::sieve()
   if (stop_ >= 7) {
     // fast segmented SieveOfEratosthenes object that sieves
     // the primes within the interval [start, stop]
-    PrimeNumberFinder finder(*this);
+    PrimeFinder finder(*this);
     if (finder.getSqrtStop() > finder.getPreSieve()) {
       // generates the primes up to sqrt(stop)
       // needed for sieving by finder

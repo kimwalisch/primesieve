@@ -28,7 +28,7 @@ BIN_OBJECTS = \
   $(BINDIR)\ParallelPrimeSieve.obj \
   $(BINDIR)\popcount.obj \
   $(BINDIR)\PreSieve.obj \
-  $(BINDIR)\PrimeNumberFinder.obj \
+  $(BINDIR)\PrimeFinder.obj \
   $(BINDIR)\PrimeNumberGenerator.obj \
   $(BINDIR)\PrimeSieve.obj \
   $(BINDIR)\SieveOfEratosthenes.obj \
@@ -41,7 +41,7 @@ LIB_OBJECTS = \
   $(LIBDIR)\ParallelPrimeSieve.obj \
   $(LIBDIR)\popcount.obj \
   $(LIBDIR)\PreSieve.obj \
-  $(LIBDIR)\PrimeNumberFinder.obj \
+  $(LIBDIR)\PrimeFinder.obj \
   $(LIBDIR)\PrimeNumberGenerator.obj \
   $(LIBDIR)\PrimeSieve.obj \
   $(LIBDIR)\SieveOfEratosthenes.obj \
@@ -79,7 +79,7 @@ SOE_HEADERS = \
   $(SOEDIR)\ParallelPrimeSieve-lock.h \
   $(SOEDIR)\popcount.h \
   $(SOEDIR)\PreSieve.h \
-  $(SOEDIR)\PrimeNumberFinder.h \
+  $(SOEDIR)\PrimeFinder.h \
   $(SOEDIR)\PrimeNumberGenerator.h \
   $(SOEDIR)\PrimeSieve.h \
   $(SOEDIR)\primesieve_error.h \

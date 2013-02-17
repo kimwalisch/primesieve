@@ -3,8 +3,8 @@
 #
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
-# Created:       5 December 2010
-# Last modified: 22 January 2013
+# Created:       05 December 2010
+# Last modified: 17 February 2013
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -104,9 +104,8 @@ Contents
   -----------
   The segmented sieve of Eratosthenes is in SieveOfEratosthenes.cpp.
   Multiples are crossed off in EratSmall.cpp, EratMedium.cpp and
-  EratBig.cpp. Prime numbers are called back, printed and counted in
-  PrimeNumberFinder.cpp using a macro from
-  SieveOfEratosthenes-GENERATE.h.
+  EratBig.cpp. Prime numbers are called back and printed in
+  PrimeFinder.cpp using a macro from SieveOfEratosthenes-GENERATE.h.
 
   C++ classes
   -----------
@@ -132,14 +131,14 @@ Contents
     primes up to n and sieve(). SieveOfEratosthenes uses the
     EratSmall, EratMedium and EratBig classes to cross-off multiples.
 
-  * PrimeNumberFinder (derived from SieveOfEratosthenes)
-    Main SieveOfEratosthenes class, used to generate, print and count
-    the primes and prime k-tuplets (twins, triplets, ...) within the
-    interval [start_, stop_] of the associated PrimeSieve object.
+  * PrimeFinder (derived from SieveOfEratosthenes)
+    Main SieveOfEratosthenes class: PrimeFinder is used to callback,
+    print and count the primes and prime k-tuplets within the interval
+    [start_, stop_] of the associated PrimeSieve object.
 
   * PrimeNumberGenerator (derived from SieveOfEratosthenes)
     Generates the primes up to sqrt(n) needed for sieving by the
-    PrimeNumberFinder.
+    PrimeFinder class.
 
   * PreSieve
     PreSieve objects are used to pre-sieve multiples of small primes

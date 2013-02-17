@@ -49,7 +49,7 @@ SOURCES += \
   ../soe/ParallelPrimeSieve.cpp \
   ../soe/popcount.cpp \
   ../soe/PreSieve.cpp \
-  ../soe/PrimeNumberFinder.cpp \
+  ../soe/PrimeFinder.cpp \
   ../soe/PrimeNumberGenerator.cpp \
   ../soe/PrimeSieve.cpp \
   ../soe/SieveOfEratosthenes.cpp \
@@ -67,7 +67,7 @@ HEADERS += \
   ../soe/ParallelPrimeSieve-lock.h \
   ../soe/popcount.h \
   ../soe/PreSieve.h \
-  ../soe/PrimeNumberFinder.h \
+  ../soe/PrimeFinder.h \
   ../soe/PrimeNumberGenerator.h \
   ../soe/PrimeSieve.h \
   ../soe/primesieve_error.h \

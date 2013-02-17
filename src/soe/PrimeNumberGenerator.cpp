@@ -1,7 +1,7 @@
 ///
 /// @file  PrimeNumberGenerator.cpp
 ///        PrimeNumberGenerator generates the primes up to sqrt(n)
-///        needed for sieving by PrimeNumberFinder.
+///        needed for sieving by PrimeFinder.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -11,7 +11,7 @@
 
 #include "config.h"
 #include "PrimeNumberGenerator.h"
-#include "PrimeNumberFinder.h"
+#include "PrimeFinder.h"
 #include "SieveOfEratosthenes.h"
 #include "SieveOfEratosthenes-GENERATE.h"
 #include "SieveOfEratosthenes-inline.h"
@@ -20,7 +20,7 @@
 
 namespace soe {
 
-PrimeNumberGenerator::PrimeNumberGenerator(PrimeNumberFinder& finder) :
+PrimeNumberGenerator::PrimeNumberGenerator(PrimeFinder& finder) :
   SieveOfEratosthenes(finder.getPreSieve() + 1,
                       finder.getSqrtStop(),
                       config::SIEVESIZE,
@@ -45,7 +45,7 @@ void PrimeNumberGenerator::doIt()
     if (isPrime[i >> 3] & (1 << (i & 7)))
       addSievingPrime(i);
   }
-  // second generate the primes up to finder_.getStop()^0.5
+  // second sieve up to finder_.getStop()^0.5
   sieve();
 }
 

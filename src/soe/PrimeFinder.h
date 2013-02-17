@@ -1,5 +1,5 @@
 ///
-/// @file  PrimeNumberFinder.h
+/// @file  PrimeFinder.h
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -7,8 +7,8 @@
 /// LICENSE file in the top level directory.
 ///
 
-#ifndef PRIMENUMBERFINDER_H
-#define PRIMENUMBERFINDER_H
+#ifndef PRIMEFINDER_H
+#define PRIMEFINDER_H
 
 #include "config.h"
 #include "SieveOfEratosthenes.h"
@@ -21,13 +21,13 @@ class PrimeSieve;
 
 namespace soe {
 
-/// PrimeNumberFinder is a SieveOfEratosthenes class that is used to
-/// generate, count and print primes and prime k-tuplets
+/// PrimeFinder is a SieveOfEratosthenes class that is used to
+/// callback, print and count primes and prime k-tuplets
 /// (twin primes, prime triplets, ...).
 ///
-class PrimeNumberFinder : public SieveOfEratosthenes {
+class PrimeFinder : public SieveOfEratosthenes {
 public:
-  PrimeNumberFinder(PrimeSieve&);
+  PrimeFinder(PrimeSieve&);
 private:
   enum { END = 0xff + 1 };
   static const uint_t kBitmasks_[7][5];
@@ -54,7 +54,7 @@ private:
   void callback64_tn(uint64_t) const;
   void callback64_obj_tn(uint64_t) const;
   static void printPrime(uint64_t);
-  DISALLOW_COPY_AND_ASSIGN(PrimeNumberFinder);
+  DISALLOW_COPY_AND_ASSIGN(PrimeFinder);
 };
 
 } // namespace soe

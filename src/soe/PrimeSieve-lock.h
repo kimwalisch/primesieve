@@ -7,8 +7,8 @@
 /// LICENSE file in the top level directory.
 ///
 
-#ifndef PRIMESIEVE_LOCKGUARD_H
-#define PRIMESIEVE_LOCKGUARD_H
+#ifndef PRIMESIEVE_LOCK_H
+#define PRIMESIEVE_LOCK_H
 
 #include "config.h"
 #include "PrimeSieve.h"

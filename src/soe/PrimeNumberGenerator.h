@@ -15,14 +15,14 @@
 
 namespace soe {
 
-class PrimeNumberFinder;
+class PrimeFinder;
 
 class PrimeNumberGenerator : public SieveOfEratosthenes {
 public:
-  PrimeNumberGenerator(PrimeNumberFinder&);
+  PrimeNumberGenerator(PrimeFinder&);
   void doIt();
 private:
-  PrimeNumberFinder& finder_;
+  PrimeFinder& finder_;
   void segmentProcessed(const byte_t*, uint_t);
   DISALLOW_COPY_AND_ASSIGN(PrimeNumberGenerator);
 };

@@ -27,9 +27,8 @@ class EratBig;
 ///
 /// SieveOfEratosthenes uses 3 different sieve of Eratosthenes
 /// algorithms optimized for small, medium and big sieving primes to
-/// cross-off multiples. Its main methods are addSievingPrime(uint_t)
-/// and sieve(). PrimeNumberFinder and PrimeNumberGenerator are
-/// derived from SieveOfEratosthenes.
+/// cross-off multiples. The PrimeFinder and PrimeNumberGenerator
+/// classes are derived from SieveOfEratosthenes.
 ///
 class SieveOfEratosthenes {
 public:

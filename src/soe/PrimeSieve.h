@@ -24,7 +24,7 @@
 #include <vector>
 
 namespace soe {
-  class PrimeNumberFinder;
+  class PrimeFinder;
   class LockGuard;
 }
 
@@ -35,7 +35,7 @@ namespace soe {
 /// detail and doc/USAGE_EXAMPLES contains source code examples.
 ///
 class PrimeSieve {
-  friend class soe::PrimeNumberFinder;
+  friend class soe::PrimeFinder;
   friend class soe::LockGuard;
 public:
   /// Public flags for use with setFlags(int)
