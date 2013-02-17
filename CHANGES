@@ -6,6 +6,7 @@ Changes in version 4.2, 17/02/2012
 2. The Makefile now supports the Solaris OS.
 3. Updated ExpressionParser.h (src/parser) to version 2.5.
 4. Added nth prime example program (./examples).
+5. Lots of refactoring to make the code easier to understand.
 
 Changes in version 4.1, 12/01/2012
 ==================================
