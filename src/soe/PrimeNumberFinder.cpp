@@ -14,9 +14,9 @@
 #include "SieveOfEratosthenes.h"
 #include "SieveOfEratosthenes-GENERATE.h"
 #include "SieveOfEratosthenes-inline.h"
-#include "SynchronizeThreads.h"
 #include "PrimeSieve.h"
 #include "PrimeSieveCallback.h"
+#include "PrimeSieve-lock.h"
 #include "popcount.h"
 
 #include <stdint.h>
@@ -125,7 +125,7 @@ void PrimeNumberFinder::count(const byte_t* sieve, uint_t sieveSize)
 void PrimeNumberFinder::print(const byte_t* sieve, uint_t sieveSize) const
 {
   if (ps_.isFlag(ps_.PRINT_PRIMES)) {
-    SynchronizeThreads lock(ps_);
+    LockGuard lock(ps_);
     GENERATE_PRIMES(printPrime, uint64_t)
   }
   // print prime k-tuplets
@@ -155,12 +155,12 @@ void PrimeNumberFinder::print(const byte_t* sieve, uint_t sieveSize) const
 ///
 void PrimeNumberFinder::generate(const byte_t* sieve, uint_t sieveSize) const
 {
-  if (ps_.isFlag(ps_.CALLBACK32))        { SynchronizeThreads lock(ps_); GENERATE_PRIMES(callback32_,       uint32_t) }
-  if (ps_.isFlag(ps_.CALLBACK64))        { SynchronizeThreads lock(ps_); GENERATE_PRIMES(callback64_,       uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK64_TN))     { /* No Synchronization  */     GENERATE_PRIMES(callback64_tn,     uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK32_OBJ))    { SynchronizeThreads lock(ps_); GENERATE_PRIMES(psc32_->callback,  uint32_t) }
-  if (ps_.isFlag(ps_.CALLBACK64_OBJ))    { SynchronizeThreads lock(ps_); GENERATE_PRIMES(psc64_->callback,  uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK64_OBJ_TN)) { /* No Synchronization  */     GENERATE_PRIMES(callback64_obj_tn, uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK32))        { LockGuard lock(ps_); GENERATE_PRIMES(callback32_,       uint32_t) }
+  if (ps_.isFlag(ps_.CALLBACK64))        { LockGuard lock(ps_); GENERATE_PRIMES(callback64_,       uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK64_TN))     { /* No Locking */     GENERATE_PRIMES(callback64_tn,     uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK32_OBJ))    { LockGuard lock(ps_); GENERATE_PRIMES(psc32_->callback,  uint32_t) }
+  if (ps_.isFlag(ps_.CALLBACK64_OBJ))    { LockGuard lock(ps_); GENERATE_PRIMES(psc64_->callback,  uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK64_OBJ_TN)) { /* No Locking */     GENERATE_PRIMES(callback64_obj_tn, uint64_t) }
 }
 
 void PrimeNumberFinder::printPrime(uint64_t prime)

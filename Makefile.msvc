@@ -84,10 +84,10 @@ SOE_HEADERS = \
   $(SOEDIR)\PrimeSieve.h \
   $(SOEDIR)\primesieve_error.h \
   $(SOEDIR)\PrimeSieveCallback.h \
+  $(SOEDIR)\PrimeSieve-lock.h \
   $(SOEDIR)\SieveOfEratosthenes.h \
   $(SOEDIR)\SieveOfEratosthenes-GENERATE.h \
   $(SOEDIR)\SieveOfEratosthenes-inline.h \
-  $(SOEDIR)\SynchronizeThreads.h \
   $(SOEDIR)\toString.h \
   $(SOEDIR)\WheelFactorization.h
 

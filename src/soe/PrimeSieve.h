@@ -25,7 +25,7 @@
 
 namespace soe {
   class PrimeNumberFinder;
-  class SynchronizeThreads;
+  class LockGuard;
 }
 
 /// PrimeSieve is a highly optimized C++ implementation of the
@@ -36,7 +36,7 @@ namespace soe {
 ///
 class PrimeSieve {
   friend class soe::PrimeNumberFinder;
-  friend class soe::SynchronizeThreads;
+  friend class soe::LockGuard;
 public:
   /// Public flags for use with setFlags(int)
   /// @pre flag < (1 << 20)

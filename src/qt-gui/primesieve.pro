@@ -72,10 +72,10 @@ HEADERS += \
   ../soe/PrimeSieve.h \
   ../soe/primesieve_error.h \
   ../soe/PrimeSieveCallback.h \
+  ../soe/PrimeSieve-lock.h \
   ../soe/SieveOfEratosthenes.h \
   ../soe/SieveOfEratosthenes-GENERATE.h \
   ../soe/SieveOfEratosthenes-inline.h \
-  ../soe/SynchronizeThreads.h \
   ../soe/toString.h \
   ../soe/WheelFactorization.h
 

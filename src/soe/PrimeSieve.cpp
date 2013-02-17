@@ -11,11 +11,11 @@
 
 #include "config.h"
 #include "PrimeSieve.h"
-#include "PrimeSieveCallback.h"
 #include "primesieve_error.h"
+#include "PrimeSieveCallback.h"
+#include "PrimeSieve-lock.h"
 #include "PrimeNumberGenerator.h"
 #include "PrimeNumberFinder.h"
-#include "SynchronizeThreads.h"
 #include "imath.h"
 
 #include <stdint.h>
@@ -236,7 +236,7 @@ void PrimeSieve::sieve()
   // Small primes and k-tuplets (first prime <= 5)
   // are checked manually
   if (start_ <= 5) {
-    SynchronizeThreads lock(*this);
+    LockGuard lock(*this);
     for (int i = 0; i < 8; i++)
       doSmallPrime(smallPrimes_[i]);
   }
