@@ -63,8 +63,8 @@ HEADERS += \
   ../soe/EratMedium.h \
   ../soe/EratSmall.h \
   ../soe/imath.h \
-  ../soe/OmpLock.h \
   ../soe/ParallelPrimeSieve.h \
+  ../soe/ParallelPrimeSieve-lock.h \
   ../soe/popcount.h \
   ../soe/PreSieve.h \
   ../soe/PrimeNumberFinder.h \

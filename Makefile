@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   04 February 2013
+# Last modified:   17 February 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -40,8 +40,8 @@ SOE_HEADERS := \
   $(SOEDIR)/EratMedium.h \
   $(SOEDIR)/EratSmall.h \
   $(SOEDIR)/imath.h \
-  $(SOEDIR)/OmpLock.h \
   $(SOEDIR)/ParallelPrimeSieve.h \
+  $(SOEDIR)/ParallelPrimeSieve-lock.h \
   $(SOEDIR)/popcount.h \
   $(SOEDIR)/PreSieve.h \
   $(SOEDIR)/PrimeNumberFinder.h \

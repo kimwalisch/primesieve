@@ -1,5 +1,5 @@
 ///
-/// @file   OmpLock.h
+/// @file   ParallelPrimeSieve-lock.h
 /// @brief  The OmpInitLock and OmpLockGuard classes are RAII-style
 ///         wrappers for OpenMP locks.
 ///
@@ -9,8 +9,8 @@
 /// LICENSE file in the top level directory.
 ///
 
-#ifndef OPENMP_LOCK_H
-#define OPENMP_LOCK_H
+#ifndef PARALLELPRIMESIEVE_LOCK_H
+#define PARALLELPRIMESIEVE_LOCK_H
 
 #include <omp.h>
 
@@ -27,8 +27,8 @@ private:
   omp_lock_t lock_;
 };
 
-/// @param lockAdress  Allocate a new lock_ on the stack and store
-///                    its address to lockAdress.
+/// @param lockAdress  Allocate a new lock_ on the stack and
+///                    store its address to lockAdress.
 ///
 OmpInitLock::OmpInitLock(void** lockAddress)
 {
@@ -54,8 +54,8 @@ private:
   bool isSet_;
 };
 
-/// @param waitForLock  If false do not block the current thread if
-///                     the lock is not available.
+/// @param waitForLock  If false do not block the current thread
+///                     if the lock is not available.
 ///
 OmpLockGuard::OmpLockGuard(omp_lock_t* lock, bool waitForLock = true) :
   lock_(lock)

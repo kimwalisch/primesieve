@@ -21,7 +21,7 @@
 
 #ifdef _OPENMP
   #include <omp.h>
-  #include "OmpLock.h"
+  #include "ParallelPrimeSieve-lock.h"
   #include "primesieve_error.h"
 #endif
 
