@@ -140,7 +140,7 @@ void SieveOfEratosthenes::sieveSegment()
 {
   preSieve();
   crossOffMultiples();
-  segmentProcessed(sieve_, sieveSize_);
+  segmentFinished(sieve_, sieveSize_);
 }
 
 void SieveOfEratosthenes::crossOffMultiples()
@@ -191,7 +191,7 @@ void SieveOfEratosthenes::sieve()
   sieve_[sieveSize_ - 1] &= unsetBits;
   for (uint_t j = sieveSize_; j % 8 != 0; j++)
     sieve_[j] = 0;
-  segmentProcessed(sieve_, sieveSize_);
+  segmentFinished(sieve_, sieveSize_);
 }
 
 } // namespace soe

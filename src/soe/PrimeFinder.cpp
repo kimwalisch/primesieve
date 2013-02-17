@@ -80,7 +80,7 @@ void PrimeFinder::init_kCounts()
 /// Executed after each sieved segment.
 /// @see sieveSegment() in SieveOfEratosthenes.cpp
 ///
-void PrimeFinder::segmentProcessed(const byte_t* sieve, uint_t sieveSize)
+void PrimeFinder::segmentFinished(const byte_t* sieve, uint_t sieveSize)
 {
   if (ps_.isGenerate())
     generate(sieve, sieveSize);

@@ -52,7 +52,7 @@ void PrimeNumberGenerator::doIt()
 /// Reconstruct the primes from 1 bits of the sieve
 /// array and add them to finder_.
 ///
-void PrimeNumberGenerator::segmentProcessed(const byte_t* sieve, uint_t sieveSize)
+void PrimeNumberGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
 {
   GENERATE_PRIMES(finder_.addSievingPrime, uint_t)
 }

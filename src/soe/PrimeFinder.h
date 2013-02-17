@@ -47,7 +47,7 @@ private:
   PrimeSieveCallback<uint64_t>* psc64_;
   PrimeSieveCallback<uint64_t, int>* psc64_tn_;
   void init_kCounts();
-  virtual void segmentProcessed(const byte_t*, uint_t);
+  virtual void segmentFinished(const byte_t*, uint_t);
   void count(const byte_t*, uint_t);
   void print(const byte_t*, uint_t) const;
   void generate(const byte_t*, uint_t) const;

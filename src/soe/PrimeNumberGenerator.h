@@ -23,7 +23,7 @@ public:
   void doIt();
 private:
   PrimeFinder& finder_;
-  void segmentProcessed(const byte_t*, uint_t);
+  void segmentFinished(const byte_t*, uint_t);
   DISALLOW_COPY_AND_ASSIGN(PrimeNumberGenerator);
 };
 
