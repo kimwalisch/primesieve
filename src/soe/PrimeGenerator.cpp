@@ -1,7 +1,7 @@
 ///
 /// @file  PrimeGenerator.cpp
-///        Generate the prime numbers up to sqrt(n) needed for sieving
-///        by PrimeFinder.
+///        Generate the sieving primes up to sqrt(stop) and add
+///        them to finder_ (PrimeFinder).
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -28,12 +28,10 @@ PrimeGenerator::PrimeGenerator(PrimeFinder& finder) :
   finder_(finder)
 { }
 
-/// Generate the primes up to sqrt( finder_.getStop() )
-/// and add them to finder_.
-///
 void PrimeGenerator::doIt()
 {
-  // first generate the sieving primes up to finder_.getStop()^0.25
+  // tiny sieve of Eratosthenes that generates the primes
+  // up to sqrt( sqrt( finder_.getStop() ) )
   uint_t N = getSqrtStop();
   std::vector<byte_t> isPrime(N / 8 + 1, 0xAA);
   for (uint_t i = 3; i * i <= N; i += 2) {
@@ -41,11 +39,12 @@ void PrimeGenerator::doIt()
       for (uint_t j = i * i; j <= N; j += i * 2)
         isPrime[j >> 3] &= ~(1 << (j & 7));
   }
+  // add sieving primes to this PrimeGenerator
   for (uint_t i = getPreSieve() + 1; i <= N; i++) {
     if (isPrime[i >> 3] & (1 << (i & 7)))
       addSievingPrime(i);
   }
-  // second sieve up to sqrt( finder_.getStop() )
+  // sieve up to sqrt( finder_.getStop() )
   sieve();
 }
 
