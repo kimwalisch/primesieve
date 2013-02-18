@@ -97,7 +97,8 @@ bool        PrimeSieve::isFlag(int flag)            const { return (flags_ & fla
 bool        PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last * 2 - first)) != 0; }
 bool        PrimeSieve::isCount(int index)          const { return isFlag(COUNT_PRIMES << index); }
 bool        PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRIMES << index); }
-bool        PrimeSieve::isGenerate()                const { return isFlag(CALLBACK32, CALLBACK64_OBJ_TN); }
+bool        PrimeSieve::isCallback()                const { return isFlag(CALLBACK32, CALLBACK64_OBJ_TN); }
+bool        PrimeSieve::isGenerate()                const { return isCallback(); }
 bool        PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEPTUPLETS); }
 bool        PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEPTUPLETS); }
 bool        PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
