@@ -34,7 +34,7 @@ HEADERS += \
 
 # -------------------------------------------------
 # Arithmetic Expression parser (src/parser)
-# -------------------------------------------------    
+# -------------------------------------------------
 
 HEADERS += ../parser/ExpressionParser.h
 
@@ -50,7 +50,7 @@ SOURCES += \
   ../soe/popcount.cpp \
   ../soe/PreSieve.cpp \
   ../soe/PrimeFinder.cpp \
-  ../soe/PrimeNumberGenerator.cpp \
+  ../soe/PrimeGenerator.cpp \
   ../soe/PrimeSieve.cpp \
   ../soe/SieveOfEratosthenes.cpp \
   ../soe/WheelFactorization.cpp
@@ -68,7 +68,7 @@ HEADERS += \
   ../soe/popcount.h \
   ../soe/PreSieve.h \
   ../soe/PrimeFinder.h \
-  ../soe/PrimeNumberGenerator.h \
+  ../soe/PrimeGenerator.h \
   ../soe/PrimeSieve.h \
   ../soe/primesieve_error.h \
   ../soe/PrimeSieveCallback.h \

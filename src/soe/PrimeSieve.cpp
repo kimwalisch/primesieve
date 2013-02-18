@@ -15,7 +15,7 @@
 #include "PrimeSieveCallback.h"
 #include "PrimeSieve-lock.h"
 #include "PrimeFinder.h"
-#include "PrimeNumberGenerator.h"
+#include "PrimeGenerator.h"
 #include "imath.h"
 
 #include <stdint.h>
@@ -241,13 +241,13 @@ void PrimeSieve::sieve()
       doSmallPrime(smallPrimes_[i]);
   }
   if (stop_ >= 7) {
-    // fast segmented SieveOfEratosthenes object that sieves
-    // the primes within the interval [start, stop]
+    // SieveOfEratosthenes object that sieves the primes
+    // within the interval [start, stop]
     PrimeFinder finder(*this);
+    // First generate the sieving primes up to
+    // sqrt(stop) and add them to finder
     if (finder.getSqrtStop() > finder.getPreSieve()) {
-      // generates the primes up to sqrt(stop)
-      // needed for sieving by finder
-      PrimeNumberGenerator generator(finder);
+      PrimeGenerator generator(finder);
       generator.doIt();
     }
     finder.sieve();

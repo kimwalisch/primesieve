@@ -1,5 +1,5 @@
 ///
-/// @file  PrimeNumberGenerator.h
+/// @file  PrimeGenerator.h
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -7,8 +7,8 @@
 /// LICENSE file in the top level directory.
 ///
 
-#ifndef PRIMENUMBERGENERATOR_H
-#define PRIMENUMBERGENERATOR_H
+#ifndef PRIMEGENERATOR_H
+#define PRIMEGENERATOR_H
 
 #include "config.h"
 #include "SieveOfEratosthenes.h"
@@ -17,14 +17,14 @@ namespace soe {
 
 class PrimeFinder;
 
-class PrimeNumberGenerator : public SieveOfEratosthenes {
+class PrimeGenerator : public SieveOfEratosthenes {
 public:
-  PrimeNumberGenerator(PrimeFinder&);
+  PrimeGenerator(PrimeFinder&);
   void doIt();
 private:
   PrimeFinder& finder_;
   void segmentFinished(const byte_t*, uint_t);
-  DISALLOW_COPY_AND_ASSIGN(PrimeNumberGenerator);
+  DISALLOW_COPY_AND_ASSIGN(PrimeGenerator);
 };
 
 } // namespace soe

@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   17 February 2013
+# Last modified:   18 February 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -29,7 +29,7 @@ BIN_OBJECTS = \
   $(BINDIR)\popcount.obj \
   $(BINDIR)\PreSieve.obj \
   $(BINDIR)\PrimeFinder.obj \
-  $(BINDIR)\PrimeNumberGenerator.obj \
+  $(BINDIR)\PrimeGenerator.obj \
   $(BINDIR)\PrimeSieve.obj \
   $(BINDIR)\SieveOfEratosthenes.obj \
   $(BINDIR)\WheelFactorization.obj
@@ -42,7 +42,7 @@ LIB_OBJECTS = \
   $(LIBDIR)\popcount.obj \
   $(LIBDIR)\PreSieve.obj \
   $(LIBDIR)\PrimeFinder.obj \
-  $(LIBDIR)\PrimeNumberGenerator.obj \
+  $(LIBDIR)\PrimeGenerator.obj \
   $(LIBDIR)\PrimeSieve.obj \
   $(LIBDIR)\SieveOfEratosthenes.obj \
   $(LIBDIR)\WheelFactorization.obj
@@ -80,7 +80,7 @@ SOE_HEADERS = \
   $(SOEDIR)\popcount.h \
   $(SOEDIR)\PreSieve.h \
   $(SOEDIR)\PrimeFinder.h \
-  $(SOEDIR)\PrimeNumberGenerator.h \
+  $(SOEDIR)\PrimeGenerator.h \
   $(SOEDIR)\PrimeSieve.h \
   $(SOEDIR)\primesieve_error.h \
   $(SOEDIR)\PrimeSieveCallback.h \

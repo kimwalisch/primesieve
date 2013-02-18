@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   17 February 2013
+# Last modified:   18 February 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -27,7 +27,7 @@ SOE_SOURCES:= \
   $(SOEDIR)/popcount.o \
   $(SOEDIR)/PreSieve.o \
   $(SOEDIR)/PrimeFinder.o \
-  $(SOEDIR)/PrimeNumberGenerator.o \
+  $(SOEDIR)/PrimeGenerator.o \
   $(SOEDIR)/PrimeSieve.o \
   $(SOEDIR)/SieveOfEratosthenes.o \
   $(SOEDIR)/WheelFactorization.o
@@ -45,7 +45,7 @@ SOE_HEADERS := \
   $(SOEDIR)/popcount.h \
   $(SOEDIR)/PreSieve.h \
   $(SOEDIR)/PrimeFinder.h \
-  $(SOEDIR)/PrimeNumberGenerator.h \
+  $(SOEDIR)/PrimeGenerator.h \
   $(SOEDIR)/PrimeSieve.h \
   $(SOEDIR)/primesieve_error.h \
   $(SOEDIR)/PrimeSieveCallback.h \

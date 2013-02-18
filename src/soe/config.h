@@ -64,8 +64,8 @@ enum {
   ///
   PRESIEVE = 19,
 
-  /// Pre-sieve limit of PrimeNumberGenerator. Default = 13, a
-  /// greater value uses more memory with no speedup.
+  /// Pre-sieve limit of PrimeGenerator. Default = 13, a larger value
+  /// uses more memory with no speedup.
   /// @pre PRESIEVE_GENERATOR >= 13 && <= 23
   ///
   PRESIEVE_GENERATOR = 13,

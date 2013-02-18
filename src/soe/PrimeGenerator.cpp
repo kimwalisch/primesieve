@@ -1,5 +1,5 @@
 ///
-/// @file  PrimeNumberGenerator.cpp
+/// @file  PrimeGenerator.cpp
 ///        Generate the prime numbers up to sqrt(n) needed for sieving
 ///        by PrimeFinder.
 ///
@@ -10,7 +10,7 @@
 ///
 
 #include "config.h"
-#include "PrimeNumberGenerator.h"
+#include "PrimeGenerator.h"
 #include "PrimeFinder.h"
 #include "SieveOfEratosthenes.h"
 #include "SieveOfEratosthenes-GENERATE.h"
@@ -20,7 +20,7 @@
 
 namespace soe {
 
-PrimeNumberGenerator::PrimeNumberGenerator(PrimeFinder& finder) :
+PrimeGenerator::PrimeGenerator(PrimeFinder& finder) :
   SieveOfEratosthenes(finder.getPreSieve() + 1,
                       finder.getSqrtStop(),
                       config::SIEVESIZE,
@@ -31,7 +31,7 @@ PrimeNumberGenerator::PrimeNumberGenerator(PrimeFinder& finder) :
 /// Generate the primes up to sqrt( finder_.getStop() )
 /// and add them to finder_.
 ///
-void PrimeNumberGenerator::doIt()
+void PrimeGenerator::doIt()
 {
   // first generate the sieving primes up to finder_.getStop()^0.25
   uint_t N = getSqrtStop();
@@ -52,7 +52,7 @@ void PrimeNumberGenerator::doIt()
 /// Reconstruct the primes from 1 bits of the sieve
 /// array and add them to finder_.
 ///
-void PrimeNumberGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
+void PrimeGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
 {
   GENERATE_PRIMES(finder_.addSievingPrime, uint_t)
 }
