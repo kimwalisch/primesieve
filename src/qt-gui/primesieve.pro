@@ -65,7 +65,6 @@ HEADERS += \
   ../soe/imath.h \
   ../soe/ParallelPrimeSieve.h \
   ../soe/ParallelPrimeSieve-lock.h \
-  ../soe/popcount.h \
   ../soe/PreSieve.h \
   ../soe/PrimeFinder.h \
   ../soe/PrimeGenerator.h \

@@ -17,7 +17,6 @@
 #include "PrimeSieve.h"
 #include "PrimeSieveCallback.h"
 #include "PrimeSieve-lock.h"
-#include "popcount.h"
 
 #include <stdint.h>
 #include <algorithm>
@@ -26,6 +25,9 @@
 #include <sstream>
 
 namespace soe {
+
+/// forward declaration
+uint64_t popcount(const uint64_t* array, uint64_t size);
 
 const uint_t PrimeFinder::kBitmasks_[7][5] =
 {

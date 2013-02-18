@@ -42,7 +42,6 @@ SOE_HEADERS := \
   $(SOEDIR)/imath.h \
   $(SOEDIR)/ParallelPrimeSieve.h \
   $(SOEDIR)/ParallelPrimeSieve-lock.h \
-  $(SOEDIR)/popcount.h \
   $(SOEDIR)/PreSieve.h \
   $(SOEDIR)/PrimeFinder.h \
   $(SOEDIR)/PrimeGenerator.h \
