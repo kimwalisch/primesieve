@@ -30,8 +30,8 @@ PrimeGenerator::PrimeGenerator(PrimeFinder& finder) :
 
 void PrimeGenerator::doIt()
 {
-  // tiny sieve of Eratosthenes that generates the primes
-  // up to sqrt( sqrt( finder_.getStop() ) )
+  // tiny sieve of Eratosthenes that generates the sieving
+  // primes up to sqrt( sqrt(stop) )
   uint_t N = getSqrtStop();
   std::vector<byte_t> isPrime(N / 8 + 1, 0xAA);
   for (uint_t i = 3; i * i <= N; i += 2) {
@@ -39,12 +39,12 @@ void PrimeGenerator::doIt()
       for (uint_t j = i * i; j <= N; j += i * 2)
         isPrime[j >> 3] &= ~(1 << (j & 7));
   }
-  // add sieving primes to this PrimeGenerator
+  // add primes to this PrimeGenerator
   for (uint_t i = getPreSieve() + 1; i <= N; i++) {
     if (isPrime[i >> 3] & (1 << (i & 7)))
       addSievingPrime(i);
   }
-  // sieve up to sqrt( finder_.getStop() )
+  // sieve up to sqrt(stop)
   sieve();
 }
 
