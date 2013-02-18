@@ -1,7 +1,7 @@
 ///
 /// @file  PrimeGenerator.cpp
-///        Generate the sieving primes up to sqrt(stop) and add
-///        them to finder_ (PrimeFinder).
+///        Generates the sieving primes up to sqrt(stop) and adds
+///        them to PrimeFinder (finder_).
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
