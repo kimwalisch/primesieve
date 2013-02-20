@@ -62,18 +62,18 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize)
 ///
 void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize, Bucket& bucket)
 {
-  WheelPrime* wPrime = bucket.begin();
-  WheelPrime* end    = bucket.end();
+  SievingPrime* sPrime = bucket.begin();
+  SievingPrime* end = bucket.end();
 
   // process 2 sieving primes per loop iteration to
   // increase instruction level parallelism
-  for (; wPrime + 2 <= end; wPrime += 2) {
-    uint_t multipleIndex0 = wPrime[0].getMultipleIndex();
-    uint_t wheelIndex0    = wPrime[0].getWheelIndex();
-    uint_t sievingPrime0  = wPrime[0].getSievingPrime();
-    uint_t multipleIndex1 = wPrime[1].getMultipleIndex();
-    uint_t wheelIndex1    = wPrime[1].getWheelIndex();
-    uint_t sievingPrime1  = wPrime[1].getSievingPrime();
+  for (; sPrime + 2 <= end; sPrime += 2) {
+    uint_t multipleIndex0 = sPrime[0].getMultipleIndex();
+    uint_t wheelIndex0    = sPrime[0].getWheelIndex();
+    uint_t sievingPrime0  = sPrime[0].getSievingPrime();
+    uint_t multipleIndex1 = sPrime[1].getMultipleIndex();
+    uint_t wheelIndex1    = sPrime[1].getWheelIndex();
+    uint_t sievingPrime1  = sPrime[1].getSievingPrime();
     // cross-off the multiples (unset bits) of sievingPrime
     // @see unsetBit() in WheelFactorization.h
     while (multipleIndex0 < sieveSize) {
@@ -85,18 +85,18 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize, Bucket& bucket)
     while (multipleIndex1 < sieveSize) unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
     multipleIndex0 -= sieveSize;
     multipleIndex1 -= sieveSize;
-    wPrime[0].set(multipleIndex0, wheelIndex0);
-    wPrime[1].set(multipleIndex1, wheelIndex1);
+    sPrime[0].set(multipleIndex0, wheelIndex0);
+    sPrime[1].set(multipleIndex1, wheelIndex1);
   }
 
-  if (wPrime != end) {
-    uint_t multipleIndex = wPrime->getMultipleIndex();
-    uint_t wheelIndex    = wPrime->getWheelIndex();
-    uint_t sievingPrime  = wPrime->getSievingPrime();
+  if (sPrime != end) {
+    uint_t multipleIndex = sPrime->getMultipleIndex();
+    uint_t wheelIndex    = sPrime->getWheelIndex();
+    uint_t sievingPrime  = sPrime->getSievingPrime();
     while (multipleIndex < sieveSize)
       unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
     multipleIndex -= sieveSize;
-    wPrime->set(multipleIndex, wheelIndex);
+    sPrime->set(multipleIndex, wheelIndex);
   }
 }
 

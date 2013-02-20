@@ -56,13 +56,12 @@ struct WheelElement {
 extern const WheelElement wheel30[8*8];
 extern const WheelElement wheel210[48*8];
 
-/// WheelPrime objects are sieving primes for use with wheel
-/// factorization (skips multiples of small primes).
-/// Each WheelPrime contains a sieving prime, the position of the next
-/// multiple within the SieveOfEratosthenes array (multipleIndex)
-/// and a wheelIndex.
+/// Sieving primes are used to cross-off multiples (of itself).
+/// Each SievingPrime object contains a sieving prime and the position
+/// of its next multiple within the SieveOfEratosthenes array
+/// (i.e. multipleIndex) and a wheelIndex.
 ///
-class WheelPrime {
+class SievingPrime {
 public:
   enum {
     MAX_MULTIPLEINDEX = (1 << 23) - 1,
@@ -113,9 +112,9 @@ class Bucket {
 public:
   Bucket(const Bucket&) { reset(); }
   Bucket()              { reset(); }
-  WheelPrime* begin()   { return &wheelPrimes_[0]; }
-  WheelPrime* last()    { return &wheelPrimes_[config::BUCKETSIZE - 1]; }
-  WheelPrime* end()     { return prime_; }
+  SievingPrime* begin() { return &sievingPrimes_[0]; }
+  SievingPrime* last()  { return &sievingPrimes_[config::BUCKETSIZE - 1]; }
+  SievingPrime* end()   { return prime_; }
   Bucket* next()        { return next_; }
   bool hasNext() const  { return next_ != NULL; }
   bool empty()          { return begin() == end(); }
@@ -124,7 +123,7 @@ public:
   {
     next_ = next;
   }
-  /// Store a WheelPrime in the bucket.
+  /// Store a sieving prime in the bucket.
   /// @return false if the bucket is full else true.
   ///
   bool store(uint_t sievingPrime,
@@ -135,9 +134,9 @@ public:
     return prime_++ != last();
   }
 private:
-  WheelPrime* prime_;
+  SievingPrime* prime_;
   Bucket* next_;
-  WheelPrime wheelPrimes_[config::BUCKETSIZE];
+  SievingPrime sievingPrimes_[config::BUCKETSIZE];
 };
 
 /// The abstract WheelFactorization class is used skip multiples of
@@ -198,7 +197,7 @@ protected:
   WheelFactorization(uint64_t stop, uint_t sieveSize) :
     stop_(stop)
   {
-    const uint_t maxSieveSize = WheelPrime::MAX_MULTIPLEINDEX + 1;
+    const uint_t maxSieveSize = SievingPrime::MAX_MULTIPLEINDEX + 1;
     if (sieveSize > maxSieveSize)
       throw primesieve_error("WheelFactorization: sieveSize must be <= " + toString(maxSieveSize));
     if (stop > getMaxStop())
