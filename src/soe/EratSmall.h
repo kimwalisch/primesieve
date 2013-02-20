@@ -32,7 +32,7 @@ private:
   const uint_t limit_;
   /// List of buckets, holds the sieving primes
   std::list<Bucket> buckets_;
-  void store(uint_t, uint_t, uint_t);
+  void storeSievingPrime(uint_t, uint_t, uint_t);
   static void crossOff(byte_t*, byte_t*, Bucket&);
   DISALLOW_COPY_AND_ASSIGN(EratSmall);
 };

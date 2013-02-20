@@ -49,11 +49,12 @@ PreSieve::~PreSieve()
 void PreSieve::init()
 {
   std::memset(preSieved_, 0xff, size_);
-  uint_t start = primeProduct_;
-  uint_t stop  = primeProduct_ * 2;
+  uint_t stop = primeProduct_ * 2;
   EratSmall eratSmall(stop, size_, limit_);
+
   for (int i = 3; primes_[i] <= limit_; i++)
-    eratSmall.add(primes_[i], start);
+    eratSmall.addSievingPrime(primes_[i], primeProduct_);
+
   eratSmall.crossOff(preSieved_, &preSieved_[size_]);
 }
 

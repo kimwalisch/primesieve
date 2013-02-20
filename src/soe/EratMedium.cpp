@@ -36,8 +36,8 @@ EratMedium::EratMedium(uint64_t stop, uint_t sieveSize, uint_t limit) :
   buckets_.push_back(Bucket());
 }
 
-/// Store a new sieving prime in EratMedium
-void EratMedium::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
+/// Add a new sieving prime to EratMedium
+void EratMedium::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
   assert(prime <= limit_);
   uint_t sievingPrime = prime / NUMBERS_PER_BYTE;

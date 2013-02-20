@@ -62,8 +62,8 @@ void EratBig::init(uint_t sieveSize)
     pushBucket(i);
 }
 
-/// Store a new sieving prime in EratBig
-void EratBig::store(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
+/// Add a new sieving prime to EratBig
+void EratBig::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
   assert(prime <= limit_);
   uint_t sievingPrime = prime / NUMBERS_PER_BYTE;

@@ -166,7 +166,7 @@ public:
   /// position within the SieveOfEratosthenes array of that multiple
   /// and its wheel index. When done store the sieving prime.
   ///
-  void add(uint_t prime, uint64_t segmentLow)
+  void addSievingPrime(uint_t prime, uint64_t segmentLow)
   {
     segmentLow += 6;
     // calculate the first multiple (of prime) > segmentLow
@@ -189,7 +189,7 @@ public:
     uint64_t lowOffset = multiple - segmentLow;
     uint_t multipleIndex = static_cast<uint_t>(lowOffset / NUMBERS_PER_BYTE);
     uint_t wheelIndex = wheelOffsets_[prime % NUMBERS_PER_BYTE] + INIT[quotient % MODULO].wheelIndex;
-    store(prime, multipleIndex, wheelIndex);
+    storeSievingPrime(prime, multipleIndex, wheelIndex);
   }
 protected:
   /// @param stop       Upper bound for sieving.
@@ -205,7 +205,7 @@ protected:
       throw primesieve_error("WheelFactorization: stop must be <= " + getMaxStopString());
   }
   virtual ~WheelFactorization() { }
-  virtual void store(uint_t, uint_t, uint_t) = 0;
+  virtual void storeSievingPrime(uint_t, uint_t, uint_t) = 0;
   static uint_t getMaxFactor()
   {
     return WHEEL[0].nextMultipleFactor;
