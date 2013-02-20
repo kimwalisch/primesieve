@@ -40,7 +40,7 @@ extern const WheelInit wheel210Init[210];
 ///
 struct WheelElement {
   /// Bitmask used to unset the bit corresponding to the current
-  /// multiple of a WheelPrime object.
+  /// multiple of a SievingPrime object.
   uint8_t unsetBit;
   /// Factor used to calculate the next multiple of a sieving prime
   /// that is not divisible by any of the wheel factors.
