@@ -48,10 +48,15 @@ void PrimeGenerator::doIt()
   sieve();
 }
 
+void PrimeGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
+{
+  generate(sieve, sieveSize);
+}
+
 /// Reconstruct the primes from 1 bits of the sieve
 /// array and add them to finder_.
 ///
-void PrimeGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
+void PrimeGenerator::generate(const byte_t* sieve, uint_t sieveSize)
 {
   GENERATE_PRIMES(finder_.addSievingPrime, uint_t)
 }

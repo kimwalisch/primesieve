@@ -50,7 +50,7 @@ private:
   virtual void segmentFinished(const byte_t*, uint_t);
   void count(const byte_t*, uint_t);
   void print(const byte_t*, uint_t) const;
-  void callback(const byte_t*, uint_t) const;
+  void generate(const byte_t*, uint_t) const;
   void callback64_tn(uint64_t) const;
   void callback64_obj_tn(uint64_t) const;
   static void printPrime(uint64_t);

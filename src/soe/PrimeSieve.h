@@ -186,7 +186,6 @@ private:
   static void printStatus(double, double);
   bool isFlag(int, int) const;
   bool isPublicFlags(int) const;
-  bool isCallback() const;
   bool isStatus() const;
   bool isParallelPrimeSieveChild() const;
   void doSmallPrime(const SmallPrime&);

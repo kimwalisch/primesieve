@@ -24,6 +24,7 @@ public:
 private:
   PrimeFinder& finder_;
   void segmentFinished(const byte_t*, uint_t);
+  void generate(const byte_t*, uint_t);
   DISALLOW_COPY_AND_ASSIGN(PrimeGenerator);
 };
 
