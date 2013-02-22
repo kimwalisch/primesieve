@@ -72,9 +72,9 @@ Contents
 5. How to link against primesieve.lib (Windows, MSVC)
 =====================================================
 
-  After having created a primesieve.lib distribution archive you can
-  link against primesieve.lib by specifying primesieve.lib to the
-  linker and including (/I) the PrimeSieve header files:
+  After having build primesieve.lib you can link against it by
+  specifying primesieve.lib to the linker and including (/I"include")
+  the PrimeSieve header files:
 
   > cl examples\count_primes.cpp /EHsc /I"include" /link "lib\primesieve.lib"
   > count_primes.exe
