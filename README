@@ -77,13 +77,11 @@ Contents
   ./src - Source code directory
   -----------------------------
   src/soe          Contains the sieve of Eratosthenes implementation.
-  src/application  Contains the primesieve console application.
-  src/qt-gui       Contains the primesieve GUI application.
+  src/apps         Contains the primesieve console and gui Apps.
   src/parser       Contains an arithmetic expression parser used to
                    ease number input e.g. 2^32, 1E10, ...
   src/test         Contains unit tests for the sieve of Eratosthenes
                    implementation (run `make test').
-  src/msvc_compat  Contains stdint.h (needed for MSVC prior 2010).
 
 6. Sieve of Eratosthenes implementation
 =======================================
@@ -222,8 +220,8 @@ Contents
 
   primesieve is free software, it is licensed under the New BSD
   License see the LICENSE file for more information.
-  The primesieve GUI application in src/qt-gui is licensed under the
-  GPL as it uses the Qt framework.
+  The primesieve GUI application in src/apps/qt-gui is licensed under
+  the GPL as it uses the Qt framework.
 
 10. Further reading
 ===================

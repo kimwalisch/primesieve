@@ -18,7 +18,7 @@
  */
 
 #include "PrimeSieveGUI.h"
-#include "../soe/ParallelPrimeSieve.h"
+#include "../../soe/ParallelPrimeSieve.h"
 
 #if QT_VERSION >= 0x050000
   #include <QtWidgets/QApplication>

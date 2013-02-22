@@ -131,8 +131,8 @@ bin_obj: $(APP_OBJECTS) $(BINDIR)\test.obj $(BIN_OBJECTS)
 $(BIN_OBJECTS): $(SOEDIR)\$(@B).cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c $(SOEDIR)\$(@B).cpp /Fo$@
 
-$(APP_OBJECTS): src\application\$(@B).cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) /c src\application\$(@B).cpp /Fo$@
+$(APP_OBJECTS): src\apps\console\$(@B).cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) /c src\apps\console\$(@B).cpp /Fo$@
 
 $(BINDIR)\test.obj: src\test\test.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\test\test.cpp /Fo$@

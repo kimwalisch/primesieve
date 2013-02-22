@@ -18,7 +18,7 @@
  */
 
 #include "PrimeSieveProcess.h"
-#include "../soe/ParallelPrimeSieve.h"
+#include "../../soe/ParallelPrimeSieve.h"
 
 #include <QtGlobal>
 #include <QStringList>

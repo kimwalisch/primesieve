@@ -9,7 +9,7 @@
 /// LICENSE file in the top level directory.
 ///
 
-#include "../soe/PrimeSieve.h"
+#include "../../soe/PrimeSieve.h"
 
 #include <iostream>
 #include <cstdlib>

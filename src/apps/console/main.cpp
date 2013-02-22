@@ -11,7 +11,7 @@
 ///
 
 #include "cmdoptions.h"
-#include "../soe/ParallelPrimeSieve.h"
+#include "../../soe/ParallelPrimeSieve.h"
 
 #include <iostream>
 #include <exception>

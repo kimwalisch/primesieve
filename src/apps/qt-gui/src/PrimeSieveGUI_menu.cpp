@@ -20,7 +20,7 @@
 #include "PrimeSieveGUI.h"
 #include "ui_PrimeSieveGUI.h"
 
-#include "../soe/ParallelPrimeSieve.h"
+#include "../../soe/ParallelPrimeSieve.h"
 
 #if QT_VERSION >= 0x050000
   #include <QTextStream>

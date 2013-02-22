@@ -45,7 +45,7 @@ const QString APPLICATION_HOMEPAGE("http://primesieve.googlecode.com");
 const QString APPLICATION_ABOUT(
     "primesieve generates prime numbers and prime k-tuplets using a highly "
     "optimized implementation of the sieve of Eratosthenes. By the date "
-    "of release this is the fastest publicly available prime sieving software."
+    "of release this is the fastest publicly available prime generation software."
     "<br><br>"
     "This is free software: you can redistribute it and/or modify "
     "it under the terms of the GNU General Public License as published by "
