@@ -238,7 +238,7 @@ check test: bin
 all: bin lib
 
 EXAMPLE_PROGRAMS = $(shell find $(EXDIR) -type f -maxdepth 1 \
-  ! -name '*.cpp' ! -name INSTALL $(NO_STDERR))
+  ! -name '*.cpp' ! -name README $(NO_STDERR))
 
 clean:
 	rm -rf $(BINDIR) $(LIBDIR) $(DISTDIR) $(EXAMPLE_PROGRAMS)
