@@ -20,8 +20,9 @@
 #include "PrimeSieveGUI.h"
 #include "ui_PrimeSieveGUI.h"
 #include "PrimeSieveProcess.h"
+#include "ExpressionParser.h"
+
 #include "../../soe/ParallelPrimeSieve.h"
-#include "../../parser/ExpressionParser.h"
 
 #if QT_VERSION >= 0x050000
   #include <QtGlobal>

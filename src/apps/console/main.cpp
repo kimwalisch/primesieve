@@ -72,7 +72,7 @@ void printResults(const ParallelPrimeSieve& pps)
     "Prime sextuplets",
     "Prime septuplets"
   };
-  
+
   // get maximum label size
   int size = 0;
   for (int i = 0; i < 7; i++) {

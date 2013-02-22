@@ -10,7 +10,7 @@
 ///
 
 #include "cmdoptions.h"
-#include "../../parser/ExpressionParser.h"
+#include "ExpressionParser.h"
 #include "../../soe/PrimeSieve.h"
 
 #include <string>

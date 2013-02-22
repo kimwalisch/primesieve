@@ -77,9 +77,8 @@ Contents
   ./src - Source code directory
   -----------------------------
   src/soe          Contains the sieve of Eratosthenes implementation.
-  src/apps         Contains the primesieve console and gui Apps.
-  src/parser       Contains an arithmetic expression parser used to
-                   ease number input e.g. 2^32, 1E10, ...
+  src/apps         Contains the primesieve console and qt-gui
+                   applications.
   src/test         Contains unit tests for the sieve of Eratosthenes
                    implementation (run `make test').
 
