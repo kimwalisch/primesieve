@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   18 February 2013
+# Last modified:   22 February 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -13,7 +13,7 @@
 TARGET   = primesieve
 CXX      = cl /nologo
 CXXFLAGS = /W2 /O2 /EHsc
-INCPATH  = /I src\thirdparty
+INCPATH  = /I src\msvc_compat
 LINK     = link /nologo
 BINDIR   = bin
 DISTDIR  = dist
