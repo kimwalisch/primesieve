@@ -41,7 +41,6 @@ Contents
   ------------------
   $ make lib SHARED=yes                        Build a shared libprimesieve.
   $ make lib CXX=icpc CXXFLAGS="-O2 -openmp"   Use an alternate C++ compiler, here icpc.
-  $ make dist                                  Create a distribution archive.
   $ sudo make install PREFIX=/path             Set the installation path.
   $ sudo make uninstall                        Completely remove libprimesieve.
   $ make help                                  Print all build options.
