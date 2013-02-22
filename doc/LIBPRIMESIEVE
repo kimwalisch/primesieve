@@ -1,4 +1,4 @@
-January 22, 2012
+February 22, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -66,11 +66,9 @@ Contents
   Prompt and cd into the newly created directory, then run:
 
   > nmake -f Makefile.msvc lib
-  > nmake -f Makefile.msvc dist
 
-  This builds a static primesieve.lib library using Microsoft's
-  Visual C++ compiler and creates a distribution archive ./dist with
-  primesieve.lib and the PrimeSieve header files.
+  This builds a static primesieve.lib to ./lib and copies the
+  PrimeSieve header files to ./include.
 
 5. How to link against primesieve.lib (Windows, MSVC)
 =====================================================
@@ -79,7 +77,7 @@ Contents
   link against primesieve.lib by specifying primesieve.lib to the
   linker and including (/I) the PrimeSieve header files:
 
-  > cl examples\count_primes.cpp /EHsc /I "dist" /link "dist\primesieve.lib"
+  > cl examples\count_primes.cpp /EHsc /I"include" /link "lib\primesieve.lib"
   > count_primes.exe
 
   primesieve.lib is a static Windows library so it causes no

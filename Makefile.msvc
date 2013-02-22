@@ -13,11 +13,11 @@
 TARGET   = primesieve
 CXX      = cl /nologo
 CXXFLAGS = /W2 /O2 /EHsc
-INCPATH  = /I src\msvc_compat
+INCPATH  = /I"src\msvc_compat"
 LINK     = link /nologo
 BINDIR   = bin
-DISTDIR  = dist
 EXDIR    = examples
+INCDIR   = include
 LIBDIR   = lib
 SOEDIR   = src\soe
 
@@ -141,7 +141,7 @@ $(BINDIR)\test.obj: src\test\test.cpp $(SOE_HEADERS)
 # Build a static primesieve.lib (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-lib: lib_dir lib_obj openmp_note
+lib: lib_dir lib_obj include_dir openmp_note
 
 lib_dir:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
@@ -152,19 +152,12 @@ lib_obj: $(LIB_OBJECTS)
 $(LIB_OBJECTS): $(SOEDIR)\$(@B).cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c $(SOEDIR)\$(@B).cpp /Fo$@
 
-#-----------------------------------------------------------------------------
-# Create a primesieve.lib distribution archive (./dist)
-#-----------------------------------------------------------------------------
-
-dist: dist_dir
-	copy /Y $(LIBDIR)\$(TARGET).lib $(DISTDIR)
-	copy /Y $(SOEDIR)\PrimeSieve.h $(DISTDIR)\$(TARGET)\soe
-	copy /Y $(SOEDIR)\ParallelPrimeSieve.h $(DISTDIR)\$(TARGET)\soe
-	copy /Y $(SOEDIR)\primesieve_error.h $(DISTDIR)\$(TARGET)\soe
-	copy /Y $(SOEDIR)\PrimeSieveCallback.h $(DISTDIR)\$(TARGET)\soe
-
-dist_dir:
-	@if not exist $(DISTDIR)\$(TARGET)\soe mkdir $(DISTDIR)\$(TARGET)\soe
+include_dir:
+	@if not exist $(INCDIR)\$(TARGET)\soe mkdir $(INCDIR)\$(TARGET)\soe
+	copy /Y $(SOEDIR)\PrimeSieve.h $(INCDIR)\$(TARGET)\soe
+	copy /Y $(SOEDIR)\ParallelPrimeSieve.h $(INCDIR)\$(TARGET)\soe
+	copy /Y $(SOEDIR)\primesieve_error.h $(INCDIR)\$(TARGET)\soe
+	copy /Y $(SOEDIR)\PrimeSieveCallback.h $(INCDIR)\$(TARGET)\soe
 
 #-----------------------------------------------------------------------------
 # Build the example programs (read examples/README)
@@ -173,7 +166,7 @@ dist_dir:
 examples: $(EXAMPLE_OBJECTS) openmp_note
 
 $(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
-	$(CXX) $(CXXFLAGS) /I $(DISTDIR) $** /Fo$@ /Fe$(@R).exe /link dist\$(TARGET).lib
+	$(CXX) $(CXXFLAGS) /I"$(INCDIR)" $** /Fo$@ /Fe$(@R).exe /link $(LIBDIR)\$(TARGET).lib
 
 #-----------------------------------------------------------------------------
 # Common targets (all, clean)
@@ -182,7 +175,7 @@ $(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
 all: bin lib
 
 clean:
-	-rd /Q /S $(BINDIR) $(LIBDIR) $(DISTDIR) 2> /nul
+	-rd /Q /S $(BINDIR) $(LIBDIR) $(INCDIR) 2> /nul
 	-del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj 2> /nul
 
 #-----------------------------------------------------------------------------
@@ -215,7 +208,6 @@ help:
 	@echo "nmake -f Makefile.msvc L1_DCACHE_SIZE=64  Set CPU L1 data cache, here 64 KB"
 	@echo "nmake -f Makefile.msvc check              Test the primesieve binary"
 	@echo "nmake -f Makefile.msvc lib                Build a static primesieve.lib"
-	@echo "nmake -f Makefile.msvc dist               Create a lib distribution archive"
 	@echo "nmake -f Makefile.msvc examples           Build the example programs"
 	@echo "nmake -f Makefile.msvc clean              Clean the output directories"
 	@echo "nmake -f Makefile.msvc help               Print this help menu"

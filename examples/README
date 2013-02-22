@@ -24,7 +24,6 @@ How to compile the example programs
   --------------------
 
   > nmake -f Makefile.msvc lib
-  > nmake -f Makefile.msvc dist
   > nmake -f Makefile.msvc examples
 
   Unix-like OSes, `c++' compiler
