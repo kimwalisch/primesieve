@@ -1,4 +1,4 @@
-January 22, 2013
+February 22, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -35,7 +35,7 @@ Contents
 
   The example programs presented in this file are also stored as .cpp
   files in the ../examples directory and can easily be compiled using
-  the Makefiles. Please refer to ../examples/INSTALL for more
+  the Makefiles. Please refer to ../examples/README for more
   information.
 
 3. Prime number generation
