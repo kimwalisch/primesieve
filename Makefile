@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   22 February 2013
+# Last modified:   23 February 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -14,8 +14,8 @@ TARGET   := primesieve
 CXX      := c++
 CXXFLAGS := -Wall -O2
 BINDIR   := bin
-DISTDIR  := dist
 EXDIR    := examples
+INCDIR   := include
 LIBDIR   := lib
 SOEDIR   := src/soe
 
@@ -178,9 +178,9 @@ LIB_OBJECTS  := \
     $(subst .cpp,.o, \
       $(notdir $(SOE_SOURCES))))
 
-.PHONY: lib lib_dir lib_obj
+.PHONY: lib lib_dir lib_obj include_dir
 
-lib: lib_dir lib_obj
+lib: lib_dir lib_obj include_dir
 
 lib_dir:
 	@mkdir -p $(LIBDIR)
@@ -195,6 +195,13 @@ endif
 $(LIBDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
 	$(CXX) $(LIB_CXXFLAGS) -c $< -o $@
 
+include_dir:
+	@mkdir -p $(INCDIR)/$(TARGET)/soe
+	cp -f $(SOEDIR)/PrimeSieve.h $(INCDIR)/$(TARGET)/soe
+	cp -f $(SOEDIR)/ParallelPrimeSieve.h $(INCDIR)/$(TARGET)/soe
+	cp -f $(SOEDIR)/primesieve_error.h $(INCDIR)/$(TARGET)/soe
+	cp -f $(SOEDIR)/PrimeSieveCallback.h $(INCDIR)/$(TARGET)/soe
+
 #-----------------------------------------------------------------------------
 # Compile the example programs (./examples)
 #-----------------------------------------------------------------------------
@@ -205,20 +212,6 @@ examples: $(basename $(wildcard $(EXDIR)/*.cpp))
 
 $(EXDIR)/%: $(EXDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $< -o $@ -l$(TARGET)
-
-#-----------------------------------------------------------------------------
-# Create a libprimesieve distribution archive (./dist)
-#-----------------------------------------------------------------------------
-
-.PHONY: dist
-
-dist:
-	@mkdir -p $(DISTDIR)/$(TARGET)/soe
-	cp -f $(LIBDIR)/lib$(TARGET).* $(DISTDIR)
-	cp -f $(SOEDIR)/PrimeSieve.h $(DISTDIR)/$(TARGET)/soe
-	cp -f $(SOEDIR)/ParallelPrimeSieve.h $(DISTDIR)/$(TARGET)/soe
-	cp -f $(SOEDIR)/primesieve_error.h $(DISTDIR)/$(TARGET)/soe
-	cp -f $(SOEDIR)/PrimeSieveCallback.h $(DISTDIR)/$(TARGET)/soe
 
 #-----------------------------------------------------------------------------
 # `make check` runs correctness tests
@@ -241,7 +234,7 @@ EXAMPLE_PROGRAMS = $(shell find $(EXDIR) -type f -maxdepth 1 \
   ! -name '*.cpp' ! -name README $(NO_STDERR))
 
 clean:
-	rm -rf $(BINDIR) $(LIBDIR) $(DISTDIR) $(EXAMPLE_PROGRAMS)
+	rm -rf $(BINDIR) $(LIBDIR) $(INCDIR) $(EXAMPLE_PROGRAMS)
 
 # requires sudo privileges
 install:
@@ -250,13 +243,9 @@ ifneq ($(wildcard $(BINDIR)/$(TARGET)*),)
 	cp -f $(BINDIR)/$(TARGET) $(PREFIX)/bin
 endif
 ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
-	@mkdir -p $(PREFIX)/include/$(TARGET)/soe
 	@mkdir -p $(PREFIX)/lib
 	cp -f $(wildcard $(LIBDIR)/lib$(TARGET).*) $(PREFIX)/lib
-	cp -f $(SOEDIR)/PrimeSieve.h $(PREFIX)/include/$(TARGET)/soe
-	cp -f $(SOEDIR)/ParallelPrimeSieve.h $(PREFIX)/include/$(TARGET)/soe
-	cp -f $(SOEDIR)/primesieve_error.h $(PREFIX)/include/$(TARGET)/soe
-	cp -f $(SOEDIR)/PrimeSieveCallback.h $(PREFIX)/include/$(TARGET)/soe
+	cp -Rf $(INCDIR) $(PREFIX)
   ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).so),)
     ifneq ($(shell command -v ldconfig $(NO_STDERR)),)
 		ldconfig $(PREFIX)/lib
@@ -301,7 +290,6 @@ help:
 	@echo "make clean                               Clean the output directories (bin, lib)"
 	@echo "make lib                                 Build a static libprimesieve library (using c++)"
 	@echo "make lib SHARED=yes                      Build a shared libprimesieve library (using c++)"
-	@echo "make dist                                Create a libprimesieve distribution archive (./dist)"
 	@echo "make examples                            Build the example programs in ./examples"
 	@echo "sudo make install                        Install primesieve and libprimesieve to /usr/local (Linux) or /usr (Unix)"
 	@echo "sudo make install PREFIX=/path           Specify a custom installation path"
