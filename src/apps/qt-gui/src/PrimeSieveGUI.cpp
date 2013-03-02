@@ -160,7 +160,7 @@ quint64 PrimeSieveGUI::getNumber(const QString& str) {
   ExpressionParser<quint64> parser;
   quint64 result = 0;
   try {
-    result = parser.eval(str.toAscii().data());
+    result = parser.eval(str.toLatin1().data());
   }
   catch (parser_error& e) {
     throw std::invalid_argument(e.what());
