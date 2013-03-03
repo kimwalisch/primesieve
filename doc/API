@@ -1,4 +1,4 @@
-January 7, 2013
+March 03, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -7,8 +7,8 @@ About
 
   This file contains a list of the public member functions of the
   PrimeSieve and ParallelPrimeSieve C++ classes (src/soe).
-  Most of these member functions are documented in the USAGE_EXAMPLES
-  file in the current directory.
+  Most of these member functions are documented in the EXAMPLES file
+  in the current directory.
 
 PrimeSieve API
 ==============

@@ -66,21 +66,21 @@ Contents
 
   ./doc - Documentation directory
   -------------------------------
-  LIBPRIMESIEVE    Explains how to build primesieve as a C++ library
-                   for use in your own program.
-  USAGE_EXAMPLES   Source code examples that explain how to use
-                   PrimeSieve objects e.g. for prime number generation.
-  API              List of all public member functions of the
-                   PrimeSieve and ParallelPrimeSieve C++ classes.
-  FAQ              Frequently asked questions by users.
+  LIBPRIMESIEVE   Explains how to build primesieve as a C++ library
+                  for use in your own program.
+  EXAMPLES        Contains source code examples that explain how to
+                  generate primes using libprimesieve.
+  API             List of all public member functions of the
+                  PrimeSieve and ParallelPrimeSieve C++ classes.
+  FAQ             Frequently asked questions.
 
   ./src - Source code directory
   -----------------------------
-  src/soe          Contains the sieve of Eratosthenes implementation.
-  src/apps         Contains the primesieve console and gui
-                   applications.
-  src/test         Contains unit tests for the sieve of Eratosthenes
-                   implementation (run `make test').
+  ./src/soe       Contains the sieve of Eratosthenes implementation.
+  ./src/apps      Contains the primesieve console and gui
+                  applications.
+  ./src/test      Contains unit tests for the sieve of Eratosthenes
+                  implementation (run `make test').
 
 6. Sieve of Eratosthenes implementation
 =======================================
@@ -93,8 +93,8 @@ Contents
   constant definitions. If you are new to prime number sieving I
   recommend reading some of the papers from section 10.
 
-  The doc/USAGE_EXAMPLES file contains C++ source code examples that
-  explain how to use PrimeSieve objects. The doc/API file contains the
+  The doc/EXAMPLES file contains C++ source code examples that explain
+  how to use PrimeSieve objects. The doc/API file contains the
   complete API of the PrimeSieve and ParallelPrimeSieve C++ classes.
 
   Quick start
@@ -110,7 +110,7 @@ Contents
     ParallelPrimeSieve provides an easy API for multi-threaded prime
     sieving using OpenMP, it scales well even with 100 CPU cores! In
     ParallelPrimeSieve each OpenMP thread sieves primes using a thread
-    private PrimeSieve object. The doc/USAGE_EXAMPLES file explains
+    private PrimeSieve object. The doc/EXAMPLES file explains
     ParallelPrimeSieve in more detail.
 
   * PrimeSieve

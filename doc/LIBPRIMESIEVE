@@ -1,4 +1,4 @@
-February 22, 2012
+March 03, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -20,9 +20,9 @@ Contents
   no dependency, on Unix-like operating systems (Linux, Mac OS X, ...)
   it is also possible to build libprimesieve as a shared library.
 
-  The file USAGE_EXAMPLES contains C++ source code examples that show
-  how to generate, count and print primes and prime k-tuplets (twin
-  primes, ...) using libprimesieve.
+  The EXAMPLES file in the current directory contains C++ source code
+  examples that show how to generate, count and print primes and
+  prime k-tuplets (twin primes, ...) using libprimesieve.
 
 2. Build and install libprimesieve (Unix-like OSes)
 ===================================================

@@ -32,7 +32,7 @@ namespace soe {
 /// segmented sieve of Eratosthenes that generates primes and prime
 /// k-tuplets (twin primes, prime triplets, ...) in order up to 2^64
 /// maximum. The README file describes the algorithms used in more
-/// detail and doc/USAGE_EXAMPLES contains source code examples.
+/// detail and doc/EXAMPLES contains source code examples.
 ///
 class PrimeSieve {
   friend class soe::PrimeFinder;

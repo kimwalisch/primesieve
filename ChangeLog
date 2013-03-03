@@ -13,12 +13,12 @@ Changes in version 4.1, 12/01/2013
 ==================================
 
 1. New PrimeSieveCallback interface class that simplifies prime
-   number generation with classes, see doc/USAGE_EXAMPLES.
+   number generation with classes, see doc/EXAMPLES.
 2. The primesieve console (terminal) application now supports
    GNU-style long options e.g. --size=256.
 3. Fixed a bug (for sizeof(int) > 4) in the bit population count
    algorithm, read BUGS file.
-4. Updated files: README, INSTALL, doc/USAGE_EXAMPLES.
+4. Updated files: README, INSTALL, doc/EXAMPLES.
 5. The Makefile now uses the system's default C++ compiler instead
    of GNU g++ which makes it more portable.
 6. The primesieve_error class has been moved into its own file
@@ -35,7 +35,7 @@ Changes in version 4.1, 12/01/2013
 
    They are replaced by the following two new methods that greatly
    simplify prime number generation with classes, please refer
-   to doc/USAGE_EXAMPLES for more information.
+   to doc/EXAMPLES for more information.
 
    void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>*);
    void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t>*);
@@ -60,13 +60,13 @@ changes are documented further down.
  7. Up to 10 percent faster prime number generation due to new
     internal 64-bit getNextPrime() (previously 32-bit).
  8. New unsynchronized ParallelPrimeSieve::generatePrimes() method
-    that calls back primes in parallel (read USAGE_EXAMPLES).
+    that calls back primes in parallel (read EXAMPLES).
  9. Faster thread synchronization in ParallelPrimeSieve, replaced slow
     OpenMP critical directive with faster omp_test_lock().
 10. Optimized prime k-tuplet (twin primes, ...) counting for
     out-of-order CPUs (src/soe/PrimeNumberFinder.cpp).
 11. New primesieve_error() exception used for all exceptions within
-    PrimeSieve and ParallelPrimeSieve (read USAGE_EXAMPLES).
+    PrimeSieve and ParallelPrimeSieve (read EXAMPLES).
 12. New pre-sieve code (src/soe/PreSieve.cpp).
 13. Ported the primesieve GUI application from Qt 4 to Qt 5.
 
@@ -105,7 +105,7 @@ Changes in version 3.8, 13/07/2012
     size on Unix-like OSes (Linux, Mac OS X).
  7. Renamed ./docs to ./doc
  8. Revised README.txt, added 7. Motivation.
- 9. Updated INSTALL, LIBPRIMESIEVE and USAGE_EXAMPLES.
+ 9. Updated INSTALL, LIBPRIMESIEVE and EXAMPLES.
 10. Added version #defines to PrimeSieve.h, e.g. for this release:
 
     #define PRIMESIEVE_VERSION       "3.8"
@@ -131,7 +131,7 @@ Changes in version 3.7, 31/05/2012
  9. New int API for PrimeSieve and ParallelPrimeSieve objects, getters
     and setters now use int instead of uint32_t.
 10. Updated documentation files: README, INSTALL, LIBPRIMESIEVE,
-    USAGE_EXAMPLES, VALGRIND, TODO, BUGS.
+    EXAMPLES, VALGRIND, TODO, BUGS.
 
 Changes in version 3.6, 22/04/2012
 ==================================
@@ -141,7 +141,7 @@ Changes in version 3.6, 22/04/2012
 2. Removed unused source code. The deprecated API of
    PrimeSieve <= 3.4 is not supported anymore, use
    PrimeSieve::getStart() instead of PrimeSieve::getStartNumber() ...
-   The file USAGE_EXAMPLES contains the up-to-date API.
+   The file EXAMPLES contains the up-to-date API.
 3. src/soe/EratSmall.cpp has been enhanced to better take advantage of
    Instruction-Level Parallelism.
 
@@ -152,7 +152,7 @@ Changes in version 3.5, 07/02/2012
 2. The GNU Makefile now provides an option to build primesieve as
    a shared library e.g. `make lib SHARED=yes`.
 3. I have rewritten the main documentation files docs/LIBPRIMESIEVE
-   and docs/USAGE_EXAMPLES.
+   and docs/EXAMPLES.
 4. I have added convenience functions to the PrimeSieve class:
 
    void printPrimes     (uint64_t start, uint64_t stop);
@@ -201,7 +201,7 @@ Changes in version 3.4, 05/01/2012
    2048 kilobytes).
 3. I revised the Makefiles and INSTALL file.
 4. Added docs/LIBPRIMESIEVE and updated README and
-   docs/USAGE_EXAMPLES.
+   docs/EXAMPLES.
 
 Changes in version 3.3, 19/12/2011
 ==================================
@@ -219,7 +219,7 @@ Changes in version 3.2, 13/11/2011
 1. Fixed a bug in src/soe/ParallelPrimeSieve.cpp, see ../docs/BUGS.
 2. Added 32-bit prime number generation methods to PrimeSieve.
 3. Added a PrimeSieve::cancel_sieving exception that allows to cancel
-   sieving at run time (see docs/USAGE_EXAMPLES).
+   sieving at run time (see docs/EXAMPLES).
 4. ParallelPrimeSieve is now able to generate prime numbers using
    multiple threads (previously only multi-threaded counting).
 5. The code readability and documentation of WheelFactorization.h/.cpp
@@ -272,7 +272,7 @@ Changes in version 3.0, 09/07/2011
 Changes in version 2.2, 26/05/2011
 ==================================
 
-1. Added the file docs/USAGE_EXAMPLES which shows how to use
+1. Added the file docs/EXAMPLES which shows how to use
    PrimeSieve and ParallelPrimeSieve objects.
 2. Fixed 4 minor bugs (see BUGS).
 3. 10% initialization speedup due to enhancement in

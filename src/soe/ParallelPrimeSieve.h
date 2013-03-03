@@ -17,7 +17,7 @@
 
 /// ParallelPrimeSieve sieves primes in parallel, it is
 /// derived from PrimeSieve so it has the same API.
-/// Please refer to doc/USAGE_EXAMPLES for more information.
+/// Please refer to doc/EXAMPLES for more information.
 ///
 class ParallelPrimeSieve : public PrimeSieve {
 public:
