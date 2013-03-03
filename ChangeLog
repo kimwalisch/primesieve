@@ -1,4 +1,4 @@
-Changes in version 4.2, 03/03/2012
+Changes in version 4.2, 03/03/2013
 ==================================
 
 1. libprimesieve generates (callback) primes up to 5% faster on
@@ -9,7 +9,7 @@ Changes in version 4.2, 03/03/2012
 5. Added nth prime example program (./examples).
 6. Lots of refactoring to make the code easier to understand.
 
-Changes in version 4.1, 12/01/2012
+Changes in version 4.1, 12/01/2013
 ==================================
 
 1. New PrimeSieveCallback interface class that simplifies prime
