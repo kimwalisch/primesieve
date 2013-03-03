@@ -1,25 +1,25 @@
-December 28, 2012
+March 03, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
 About
 =====
 
-  primesieve does not use any assembly language but if the following
-  ASM instructions ever become part of standard C++ they would be
-  useful and provide minor speed ups:
+  primesieve does not use any assembly but if the following ASM
+  instructions ever become part of standard C++ they would be useful
+  and provide minor speed ups:
 
   1. POPCNT
   ---------
   The POPCNT instruction can be used to count primes (1 bits in the
   sieve array), x86 CPUs support POPCNT since 2010 (SSE4.2).
   Currently primesieve counts primes using an "integer arithmetic" bit
-  population count algorithm, see src/soe/popcount_lauradoux.h.
+  population count algorithm, see src/soe/popcount.cpp.
 
   2. BSF
   ------
   The BSF (bit scan forward) instruction is available on x86 CPUs
   since 1985 but unfortunately not available in standard C++. On other
   CPU architectures this instruction is sometimes called CTZ (count
-  trailing zeros). The BSF instruction can be used to speed up the
-  getNextPrime() method in src/soe/SieveOfEratosthenes-inline.h.
+  trailing zeros). The BSF instruction can be used to quickly find the
+  next prime i.e. 1 bit in the sieve array.
