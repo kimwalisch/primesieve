@@ -18,7 +18,7 @@ QT_MAJ = $$member(QT_VER, 0)
 }
 
 # ---------------------------------------------------------
-# primesieve GUI application sources (src/apps/qt-gui)
+# primesieve GUI application sources
 # ---------------------------------------------------------
 
 SOURCES += \

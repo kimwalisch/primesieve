@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       05 December 2010
-# Last modified: 22 February 2013
+# Last modified: 03 March 2013
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -77,7 +77,7 @@ Contents
   ./src - Source code directory
   -----------------------------
   src/soe          Contains the sieve of Eratosthenes implementation.
-  src/apps         Contains the primesieve console and qt-gui
+  src/apps         Contains the primesieve console and gui
                    applications.
   src/test         Contains unit tests for the sieve of Eratosthenes
                    implementation (run `make test').
@@ -219,8 +219,8 @@ Contents
 
   primesieve is free software, it is licensed under the New BSD
   License see the LICENSE file for more information.
-  The primesieve GUI application in src/apps/qt-gui is licensed under
-  the GPL as it uses the Qt framework.
+  The primesieve GUI application in src/apps/gui is licensed under the
+  GPL as it uses the Qt framework.
 
 10. Further reading
 ===================

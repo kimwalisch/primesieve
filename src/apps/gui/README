@@ -4,7 +4,7 @@
 # Author:        Kim Walisch
 # Contact:       kim.walisch@gmail.com
 # Created:       11 April 2011
-# Last modified: 22 September 2012
+# Last modified: 03 March 2013
 #
 # Project home:  http://primesieve.googlecode.com
 ######################################################################
@@ -14,8 +14,8 @@ I. About
 
   This directory contains the primesieve GUI application developed
   with the Qt framework (http://qt-project.org).
-  The INSTALL file in the current directory explains how to compile
-  the primesieve GUI application.
+  The INSTALL file in the current directory explains how to build the
+  primesieve GUI application.
 
 II. Project file
 ================
