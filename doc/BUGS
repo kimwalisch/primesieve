@@ -1,4 +1,4 @@
-December 27, 2012
+March 03, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -10,6 +10,12 @@ $ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve
 
 List of fixed bugs
 ==================
+
+----------------------------------------------------------------------
+  >> Fixed in version 4.2
+
+  In the primesieve GUI application: use QString::toLatin1() instead
+  of QString::toAscii() which is deprecated in Qt5.
 
 ----------------------------------------------------------------------
   >> Fixed in version 4.1
