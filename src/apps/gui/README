@@ -1,15 +1,9 @@
-######################################################################
-# primesieve, Qt GUI Documentation
-#
-# Author:        Kim Walisch
-# Contact:       kim.walisch@gmail.com
-# Created:       11 April 2011
-# Last modified: 03 March 2013
-#
-# Project home:  http://primesieve.googlecode.com
-######################################################################
 
-I. About
+                 ================================
+                 =  primesieve GUI application  =
+                 ================================
+
+1. About
 ========
 
   This directory contains the primesieve GUI application developed
@@ -17,14 +11,14 @@ I. About
   The INSTALL file in the current directory explains how to build the
   primesieve GUI application.
 
-II. Project file
-================
+2. Project file
+===============
 
   * primesieve.pro
     Project file for use with the Qt-Creator IDE.
 
-III. Source files
-=================
+3. Source files
+===============
 
   * src/PrimeSieveGUI.cpp & .h
     Contains the graphical user interface code.

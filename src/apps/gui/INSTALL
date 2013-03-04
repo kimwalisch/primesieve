@@ -1,22 +1,16 @@
-######################################################################
-# Compilation guide for the primesieve GUI application
-#
-# Author:        Kim Walisch
-# Contact:       kim.walisch@gmail.com
-# Created:       05 December 2010
-# Last modified: 03 March 2013
-#
-# Project home:  http://primesieve.googlecode.com
-######################################################################
 
-About
-=====
+           =============================================
+           =  Compilation instructions for primesieve  =
+           =============================================
+
+1. About
+========
 
   The primesieve GUI application has been developed with the Qt
   framework (http://qt-project.org). This file explains how to install
   Qt and build the primesieve GUI application.
 
-1. Download and install Qt
+2. Download and install Qt
 ==========================
 
   For Windows download and install the latest Qt 4 SDK:
@@ -29,7 +23,7 @@ About
   ---------------
   After the installation add /path-to-qt/bin to the PATH variable.
 
-2. Build the primesieve GUI application
+3. Build the primesieve GUI application
 =======================================
 
   After having installed Qt, open a terminal and cd into the current
