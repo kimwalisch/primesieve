@@ -1,0 +1,22 @@
+primesieve THANKS file
+
+primesieve has originally been written by Kim Wailsch.
+
+Many people have further contributed to primesieve by reporting
+problems, suggesting various improvements, or submitting actual code.
+Here is a list of these people. Help me keep it complete and exempt
+of errors.
+
+
+  * Mark Rodenkirch for his idea to add a PrimeSieveCallback class.
+
+  * Silver Möls for helping me to further optimize EratBig for
+    out-of-order execution of modern CPUs in version 3.1.
+
+  * Andrew Ohana for contributing a Makefile patch to build primesieve
+    as a shared library on Unix-like operating systems.
+
+  * Andrey Kulsha for benchmarking new primesieve releases on his
+    hexa-core AMD Phenom CPU.
+
+  * Huang Yuanbing for feedback and suggestions.
