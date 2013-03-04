@@ -5,7 +5,7 @@
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the New BSD License. See the
-/// LICENSE file in the top level directory.
+/// COPYING file in the top level directory.
 ///
 
 #ifndef ENDIANSAFE_CAST_H

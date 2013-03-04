@@ -1,15 +1,8 @@
-######################################################################
-# Compilation guide for primesieve (console version)
-#
-# Author:        Kim Walisch
-# Contact:       kim.walisch@gmail.com
-# Created:       10 July 2010
-# Last modified: 03 March 2013
-#
-# Project home:  http://primesieve.googlecode.com
-######################################################################
 
-I. About
+   Compilation instructions for primesieve
+   =======================================
+
+1. About
 ========
 
   This file explains how to compile and use the primesieve console
@@ -21,8 +14,8 @@ I. About
   Precompiled binaries for Windows, Linux and Mac OS X are available
   at: http://code.google.com/p/primesieve/downloads/list
 
-II. How to build primesieve
-===========================
+2. How to build primesieve
+==========================
 
   Unzip the primesieve source archive, open a terminal or 'Visual
   Studio Command Prompt' and cd into the newly created directory. Now
@@ -43,8 +36,8 @@ II. How to build primesieve
 
   $ make install
 
-III. Target a specific CPU
-==========================
+3. Target a specific CPU
+========================
 
   You can indicate your CPU's L1 data cache size in kilobytes per
   core to get the best performance. For MSVC use e.g.:
@@ -53,8 +46,8 @@ III. Target a specific CPU
 
   On Linux and Mac OS X this is done automatically.
 
-IV. How to use it
-=================
+4. How to use it
+================
 
   $ cd bin
   $ ./primesieve 10000           Count the primes up to 10000

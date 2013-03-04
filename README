@@ -1,28 +1,22 @@
-######################################################################
-# primesieve, optimized sieve of Eratosthenes implementation
-#
-# Author:        Kim Walisch
-# Contact:       kim.walisch@gmail.com
-# Created:       05 December 2010
-# Last modified: 03 March 2013
-#
-# Project home:  http://primesieve.googlecode.com
-######################################################################
+
+   =================================================================
+   =  primesieve - optimized sieve of Eratosthenes implementation  =
+   =                                                               =
+   =               http://primesieve.googlecode.com                =
+   =================================================================
 
 Contents
 ========
 
-   1. About primesieve
-   2. Algorithm complexity
-   3. Requirements
-   4. How to build it
-   5. What's in this source archive
-   6. Sieve of Eratosthenes implementation
-   7. Motivation
-   8. Thanks
-   9. License
-  10. Further reading
-  11. References
+  1. About primesieve
+  2. Algorithm complexity
+  3. Requirements
+  4. What's in this source archive
+  5. Sieve of Eratosthenes implementation
+  6. Motivation
+  7. Further reading
+  8. Reporting bugs
+  9. References
 
 1. About primesieve
 ===================
@@ -56,12 +50,9 @@ Contents
   registers, so if you have a x86-64 CPU make sure to use a 64-bit
   version of primesieve (i386 has only 8 registers).
 
-4. How to build it
-==================
+  For compilation instructions please refer to INSTALL.
 
-  Please refer to the INSTALL file for more information.
-
-5. What's in this source archive
+4. What's in this source archive
 ================================
 
   ./doc - Documentation directory
@@ -76,13 +67,13 @@ Contents
 
   ./src - Source code directory
   -----------------------------
-  ./src/soe       Contains the sieve of Eratosthenes implementation.
-  ./src/apps      Contains the primesieve console and gui
+  src/soe         Contains the sieve of Eratosthenes implementation.
+  src/apps        Contains the primesieve console and gui
                   applications.
-  ./src/test      Contains unit tests for the sieve of Eratosthenes
+  src/test        Contains unit tests for the sieve of Eratosthenes
                   implementation (run `make test').
 
-6. Sieve of Eratosthenes implementation
+5. Sieve of Eratosthenes implementation
 =======================================
 
   General information
@@ -91,7 +82,7 @@ Contents
   code. Files that start with a capital letter contain a class of the
   same name, files in lower case contain inline functions and
   constant definitions. If you are new to prime number sieving I
-  recommend reading some of the papers from section 10.
+  recommend reading some of the papers from section 7.
 
   The doc/EXAMPLES file contains C++ source code examples that explain
   how to use PrimeSieve objects. The doc/API file contains the
@@ -173,57 +164,27 @@ Contents
     WheelFactorization.cpp). EratBig is optimized for big sieving
     primes that have less than one multiple per segment.
 
-  Macros
-  ------
-  * SieveOfEratosthenes-GENERATE.h
-    Contains macros used to reconstruct primes and prime k-tuplets
-    (twins, triplets) from 1 bits of the sieve array.
-
-  Configuration file
-  ------------------
+  Miscellaneous
+  -------------
   * config.h
-    Contains constants that set the size of various arrays and limits
-    within primesieve. You can set these constants according to your
-    CPU type to get the best performance.
+    Contains compile time constants that set the size of various
+    arrays and limits within primesieve. You can set these constants
+    according to your CPU type to get the best performance.
 
-7. Motivation
+6. Motivation
 =============
 
-  I got my first PC in 1997, it had an Intel 200 mmx CPU and 32
-  megabytes of memory. I was 14 years old then and bought the book
-  "C++ for Kids" because I wanted to program a computer game :-) The
-  book also contained a trial division prime number checker which I
-  found amazing, one entered a positive integer and the PC started
-  calculating, after about a minute the program printed "is prime" or
-  "is not prime". I soon started to invent new faster algorithms ...
+  I (the author, <kim.walisch@gmail.com>) got my first PC in 1997, it
+  had an Intel 200 mmx CPU and 32 megabytes of memory. I was 14 years
+  old then and bought the book "C++ for Kids" because I wanted to
+  program a computer game :-) Besides a simple graphic game the book
+  also contained a trial division prime checker which I found amazing,
+  one entered a positive integer and the PC started calculating, after
+  about a minute the program printed "is prime" or "is not prime". I
+  soon started to invent new faster algorithms ...
 
-8. Thanks
-=========
-
-  Thanks to everyone who has given valuable feedback or reported bugs!
-
-  Special thanks go to:
-
-  Silver Möls for helping me to further optimize EratBig for
-  out-of-order execution of modern CPUs in version 3.1.
-
-  Andrew Ohana for contributing a Makefile patch to build primesieve
-  as a shared library on Unix-like operating systems.
-
-  Andrey Kulsha for benchmarking new primesieve releases on his
-  hexa-core AMD Phenom CPU and also for his help to debug
-  primesieve 1.0.
-
-9. License
-==========
-
-  primesieve is free software, it is licensed under the New BSD
-  License see the LICENSE file for more information.
-  The primesieve GUI application in src/apps/gui is licensed under the
-  GPL as it uses the Qt framework.
-
-10. Further reading
-===================
+7. Further reading
+==================
 
   Jonathan Sorenson's papers provide a good introduction to prime
   number sieves, the sieve of Eratosthenes and segmentation are
@@ -235,8 +196,14 @@ Contents
   Joerg Richstein in [10] (German language) describes how to pre-sieve
   multiples of small primes to speed up the sieve of Eratosthenes.
 
-11. References
-==============
+8. Reporting bugs
+=================
+
+  To report a bug or give feedback please send an email to the author
+  Kim Walisch, <kim.walisch@gmail.com>.
+
+9. References
+=============
 
   [1] Richard C. Singleton, "An efficient prime number generator",
       Communications of the ACM 12, 563-564, 1969.
