@@ -8,15 +8,15 @@ Here is a list of these people. Help me keep it complete and exempt
 of errors.
 
 
-  * Mark Rodenkirch for his idea to add a PrimeSieveCallback class.
+  * Mark Rodenkirch suggested adding a PrimeSieveCallback class.
 
-  * Silver Möls for helping me to further optimize EratBig for
-    out-of-order execution of modern CPUs in version 3.1.
+  * Silver Möls has helped to increase instruction level parallelism
+    in src/soe/EratBig.cpp in primesieve 3.1.
 
-  * Andrew Ohana for contributing a Makefile patch to build primesieve
+  * Andrew Ohana has contributed a Makefile patch to build primesieve
     as a shared library on Unix-like operating systems.
 
-  * Andrey Kulsha for benchmarking new primesieve releases on his
-    hexa-core AMD Phenom CPU.
+  * Huang Yuanbing has given feedback and suggestions.
 
-  * Huang Yuanbing for feedback and suggestions.
+  * Andrey Kulsha has benchmarked new primesieve releases on his
+    hexa-core AMD Phenom CPU.
