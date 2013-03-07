@@ -65,7 +65,6 @@ public:
   uint64_t getStart() const;
   uint64_t getStop() const;
   int getSieveSize() const;
-  int getPreSieve() const;
   int getFlags() const;
   double getStatus() const;
   double getSeconds() const;
@@ -73,7 +72,6 @@ public:
   void setStart(uint64_t);
   void setStop(uint64_t);
   void setSieveSize(int);
-  void setPreSieve(int);
   void setFlags(int);
   void addFlags(int);
   // Bool is*
@@ -166,8 +164,6 @@ private:
   uint64_t toUpdate_;
   /// Status of sieve() in percent
   double percent_;
-  /// Pre-sieve multiples of small primes <= preSieve_
-  int preSieve_;
   /// Sieve size in kilobytes
   int sieveSize_;
   /// Flags (settings) for PrimeSieve e.g. COUNT_PRIMES, PRINT_TWINS, ...

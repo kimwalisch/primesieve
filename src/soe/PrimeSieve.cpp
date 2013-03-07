@@ -47,7 +47,6 @@ PrimeSieve::PrimeSieve() :
   threadNum_(0),
   parent_(NULL)
 {
-  setPreSieve(config::PRESIEVE);
   setSieveSize(config::SIEVESIZE);
   reset();
 }
@@ -57,7 +56,6 @@ PrimeSieve::PrimeSieve() :
 ///
 PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
   counts_(7),
-  preSieve_(parent.preSieve_),
   sieveSize_(parent.sieveSize_),
   flags_(parent.flags_),
   threadNum_(threadNum),
@@ -89,7 +87,6 @@ uint64_t    PrimeSieve::getSeptupletCount()         const { return counts_[6]; }
 uint64_t    PrimeSieve::getCount(int index)         const { return counts_.at(index); }
 double      PrimeSieve::getStatus()                 const { return percent_; }
 double      PrimeSieve::getSeconds()                const { return seconds_; }
-int         PrimeSieve::getPreSieve()               const { return preSieve_; }
 int         PrimeSieve::getSieveSize()              const { return sieveSize_; }
 int         PrimeSieve::getFlags()                  const { return (flags_ & ((1 << 20) - 1)); }
 bool        PrimeSieve::isPublicFlags(int flags)    const { return (flags >= 0 && flags < (1 << 20)); }
@@ -118,15 +115,6 @@ void PrimeSieve::setStop(uint64_t stop)
   if (stop > maxStop)
     throw primesieve_error("stop must be <= " + PrimeFinder::getMaxStopString());
   stop_ = stop;
-}
-
-/// Pre-sieve multiples of small primes <= preSieve (default = 19)
-/// to speed up the sieve of Eratosthenes.
-/// @pre preSieve >= 13 && <= 23
-///
-void PrimeSieve::setPreSieve(int preSieve)
-{
-  preSieve_ = getInBetween(13, preSieve, 23);
 }
 
 /// Set the size of the sieve of Eratosthenes array in kilobytes
@@ -233,11 +221,10 @@ void PrimeSieve::sieve()
   if (isStatus())
     updateStatus(INIT_STATUS, false);
 
-  // choose the best presieve setting
-  if (getInterval() >= config::PRESIEVE_THRESHOLD)
-    setPreSieve(config::PRESIEVE);
-  else
-    setPreSieve(13);
+  // choose the fastest pre-sieve limit
+  int preSieve = config::PRESIEVE;
+  if (getInterval() < config::PRESIEVE_THRESHOLD)
+    preSieve = 13;
 
   // Small primes and k-tuplets (first prime <= 5)
   // are checked manually
@@ -247,15 +234,14 @@ void PrimeSieve::sieve()
       doSmallPrime(smallPrimes_[i]);
   }
   if (stop_ >= 7) {
-    // SieveOfEratosthenes object that sieves the primes
-    // within the interval [start, stop]
-    PrimeFinder finder(*this);
+    PrimeFinder finder(*this, preSieve);
     // First generate the sieving primes up to
     // sqrt(stop) and add them to finder
     if (finder.getSqrtStop() > finder.getPreSieve()) {
       PrimeGenerator generator(finder);
       generator.doIt();
     }
+    // sieve the primes within [start, stop]
     finder.sieve();
   }
 
