@@ -233,6 +233,12 @@ void PrimeSieve::sieve()
   if (isStatus())
     updateStatus(INIT_STATUS, false);
 
+  // choose the best presieve setting
+  if (getInterval() >= config::PRESIEVE_THRESHOLD)
+    setPreSieve(config::PRESIEVE);
+  else
+    setPreSieve(13);
+
   // Small primes and k-tuplets (first prime <= 5)
   // are checked manually
   if (start_ <= 5) {
@@ -284,7 +290,6 @@ void PrimeSieve::generatePrimes(uint32_t start,
     throw primesieve_error("callback must not be NULL");
   callback32_ = callback;
   flags_ = CALLBACK32;
-  setPreSieve(17);
   sieve(start, stop);
 }
 
@@ -299,7 +304,6 @@ void PrimeSieve::generatePrimes(uint64_t start,
     throw primesieve_error("callback must not be NULL");
   callback64_ = callback;
   flags_ = CALLBACK64;
-  setPreSieve(17);
   sieve(start, stop);
 }
 
@@ -314,7 +318,6 @@ void PrimeSieve::generatePrimes(uint64_t start,
     throw primesieve_error("callback must not be NULL");
   callback64_tn_ = callback;
   flags_ = CALLBACK64_TN;
-  setPreSieve(17);
   sieve(start, stop);
 }
 
@@ -329,7 +332,6 @@ void PrimeSieve::generatePrimes(uint32_t start,
     throw primesieve_error("callbackObject must not be NULL");
   psc32_ = callbackObject;
   flags_ = CALLBACK32_OBJ;
-  setPreSieve(17);
   sieve(start, stop);
 }
 
@@ -344,7 +346,6 @@ void PrimeSieve::generatePrimes(uint64_t start,
     throw primesieve_error("callbackObject must not be NULL");
   psc64_ = callbackObject;
   flags_ = CALLBACK64_OBJ;
-  setPreSieve(17);
   sieve(start, stop);
 }
 
@@ -359,7 +360,6 @@ void PrimeSieve::generatePrimes(uint64_t start,
     throw primesieve_error("callbackObject must not be NULL");
   psc64_tn_ = callbackObject;
   flags_ = CALLBACK64_OBJ_TN;
-  setPreSieve(17);
   sieve(start, stop);
 }
 

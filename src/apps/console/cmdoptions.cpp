@@ -48,7 +48,6 @@ enum PrimeSieveOptions {
   OPTION_OFFSET,
   OPTION_PRINT,
   OPTION_QUIET,
-  OPTION_PRESIEVE,
   OPTION_SIZE,
   OPTION_TEST,
   OPTION_THREADS,
@@ -72,8 +71,6 @@ void initCmdOptions()
   cmdOptions["--print"]    = OPTION_PRINT;
   cmdOptions["-q"]         = OPTION_QUIET;
   cmdOptions["--quiet"]    = OPTION_QUIET;
-  cmdOptions["-r"]         = OPTION_PRESIEVE;
-  cmdOptions["--presieve"] = OPTION_PRESIEVE;
   cmdOptions["-s"]         = OPTION_SIZE;
   cmdOptions["--size"]     = OPTION_SIZE;
   cmdOptions["--test"]     = OPTION_TEST;
@@ -145,7 +142,6 @@ PrimeSieveSettings processOptions(int argc, char** argv)
       switch (cmdOptions[option.id]) {
         case OPTION_COUNT:    pss.flags |= getCountFlags(option.getValue<int>()); break;
         case OPTION_PRINT:    pss.flags |= getPrintFlags(option.getValue<int>()); pss.quiet = true; break;
-        case OPTION_PRESIEVE: pss.preSieve  = option.getValue<int>(); break;
         case OPTION_SIZE:     pss.sieveSize = option.getValue<int>(); break;
         case OPTION_THREADS:  pss.threads   = option.getValue<int>(); break;
         case OPTION_QUIET:    pss.quiet = true; break;

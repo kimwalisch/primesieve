@@ -38,13 +38,11 @@ int main(int argc, char** argv)
 
     if (settings.flags     != 0) pps.setFlags(settings.flags);
     if (settings.sieveSize != 0) pps.setSieveSize(settings.sieveSize);
-    if (settings.preSieve  != 0) pps.setPreSieve(settings.preSieve);
     if (settings.threads   != 0) pps.setNumThreads(settings.threads);
 
     if (!settings.quiet) {
-      cout << setw(10) << "Pre-sieve"  << " = " << pps.getPreSieve()                  << endl;
-      cout << setw(10) << "Sieve size" << " = " << pps.getSieveSize() << " kilobytes" << endl;
-      cout << setw(10) << "Threads"    << " = " << pps.getNumThreads()                << endl;
+      cout << "Sieve size = " << pps.getSieveSize() << " kilobytes" << endl;
+      cout << "Threads    = " << pps.getNumThreads()                << endl;
       if (!pps.isPrint())
         pps.addFlags(pps.PRINT_STATUS);
     }

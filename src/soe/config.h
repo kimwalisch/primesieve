@@ -64,8 +64,12 @@ enum {
   ///
   PRESIEVE = 19,
 
-  /// Pre-sieve limit of PrimeGenerator. Default = 13, a larger value
-  /// uses more memory with no speedup.
+  /// Pre-sieving is not used unless the sieving interval is >=
+  /// PRESIEVE_THRESHOLD. (Pre-sieving is expensive to initialize.)
+  ///
+  PRESIEVE_THRESHOLD = 100000000,
+
+  /// Pre-sieve limit of PrimeGenerator.
   /// @pre PRESIEVE_GENERATOR >= 13 && <= 23
   ///
   PRESIEVE_GENERATOR = 13,
