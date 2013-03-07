@@ -27,7 +27,7 @@ namespace soe {
 ///
 class PrimeFinder : public SieveOfEratosthenes {
 public:
-  PrimeFinder(PrimeSieve&, int);
+  PrimeFinder(PrimeSieve&);
 private:
   enum { END = 0xff + 1 };
   static const uint_t kBitmasks_[7][5];

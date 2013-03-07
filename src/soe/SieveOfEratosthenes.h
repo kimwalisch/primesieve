@@ -42,7 +42,7 @@ public:
   void addSievingPrime(uint_t);
   void sieve();
 protected:
-  SieveOfEratosthenes(uint64_t, uint64_t, uint_t, uint_t);
+  SieveOfEratosthenes(uint64_t, uint64_t, uint_t);
   virtual ~SieveOfEratosthenes();
   virtual void segmentFinished(const byte_t*, uint_t) = 0;
   uint64_t getNextPrime(uint64_t*, uint_t) const;

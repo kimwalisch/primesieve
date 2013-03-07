@@ -221,11 +221,6 @@ void PrimeSieve::sieve()
   if (isStatus())
     updateStatus(INIT_STATUS, false);
 
-  // choose the fastest pre-sieve limit
-  int preSieve = config::PRESIEVE;
-  if (getInterval() < config::PRESIEVE_THRESHOLD)
-    preSieve = 13;
-
   // Small primes and k-tuplets (first prime <= 5)
   // are checked manually
   if (start_ <= 5) {
@@ -234,7 +229,7 @@ void PrimeSieve::sieve()
       doSmallPrime(smallPrimes_[i]);
   }
   if (stop_ >= 7) {
-    PrimeFinder finder(*this, preSieve);
+    PrimeFinder finder(*this);
     // First generate the sieving primes up to
     // sqrt(stop) and add them to finder
     if (finder.getSqrtStop() > finder.getPreSieve()) {

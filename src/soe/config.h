@@ -69,11 +69,6 @@ enum {
   ///
   PRESIEVE_THRESHOLD = 100000000,
 
-  /// Pre-sieve limit of PrimeGenerator.
-  /// @pre PRESIEVE_GENERATOR >= 13 && <= 23
-  ///
-  PRESIEVE_GENERATOR = 13,
-
   /// Number of sieving primes per Bucket in EratSmall, EratMedium and
   /// EratBig objects, affects performance by about 3%.
   ///

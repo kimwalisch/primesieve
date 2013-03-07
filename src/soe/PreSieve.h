@@ -39,13 +39,12 @@ class PreSieve {
 public:
   PreSieve(int);
   ~PreSieve();
-  /// Multiples of primes up to this limit are pre-sieved
   uint_t getLimit() const { return limit_; }
   void doIt(byte_t*, uint_t, uint64_t) const;
 private:
   static const uint_t primes_[10];
+  /// Pre-sieve multiples of primes <= limit_ (>= 13 && <= 23)
   uint_t limit_;
-  /// Product of the primes <= limit_
   uint_t primeProduct_;
   byte_t* preSieved_;
   uint_t size_;

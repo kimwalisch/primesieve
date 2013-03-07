@@ -40,11 +40,10 @@ const uint_t PrimeFinder::kBitmasks_[7][5] =
   { 0xfe, END }                    // Prime septuplet  bitmasks
 };
 
-PrimeFinder::PrimeFinder(PrimeSieve& ps, int preSieve) :
-  SieveOfEratosthenes(std::max(static_cast<uint64_t>(7), ps.getStart()),
+PrimeFinder::PrimeFinder(PrimeSieve& ps) :
+  SieveOfEratosthenes(std::max<uint64_t>(7, ps.getStart()),
                       ps.getStop(),
-                      ps.getSieveSize(),
-                      preSieve),
+                      ps.getSieveSize()),
   ps_(ps),
   counts_(ps.counts_),
   threadNum_(ps.threadNum_),

@@ -42,20 +42,15 @@ const uint_t SieveOfEratosthenes::bruijnBitValues_[64] =
 /// @param start      Sieve primes >= start.
 /// @param stop       Sieve primes <= stop.
 /// @param sieveSize  A sieve size in kilobytes.
-/// @param preSieve   Pre-sieve multiples of small primes <= preSieve
-///                   to speed up the sieve of Eratosthenes.
 /// @pre   start      >= 7
 /// @pre   stop       <= 2^64 - 2^32 * 10
 /// @pre   sieveSize  >= 1 && <= 2048
-/// @pre   preSieve   >= 13 && <= 23
 ///
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
                                          uint64_t stop,
-                                         uint_t sieveSize,
-                                         uint_t preSieve) :
+                                         uint_t sieveSize) :
   start_(start),
   stop_(stop),
-  limitPreSieve_(preSieve),
   sieve_(NULL),
   preSieve_(NULL),
   eratSmall_(NULL),
@@ -66,6 +61,10 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
     throw primesieve_error("SieveOfEratosthenes: start must be >= 7");
   if (start_ > stop_)
     throw primesieve_error("SieveOfEratosthenes: start must be <= stop");
+  // choose the fastest pre-sieve limit
+  limitPreSieve_ = config::PRESIEVE;
+  if ((stop_ - start_) < config::PRESIEVE_THRESHOLD)
+    limitPreSieve_ = 13;
   sqrtStop_ = static_cast<uint_t>(isqrt(stop_));
   // sieveSize_ must be a power of 2
   sieveSize_ = getInBetween(1u, floorPowerOf2(sieveSize), 2048u);

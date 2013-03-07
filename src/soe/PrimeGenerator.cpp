@@ -23,8 +23,7 @@ namespace soe {
 PrimeGenerator::PrimeGenerator(PrimeFinder& finder) :
   SieveOfEratosthenes(finder.getPreSieve() + 1,
                       finder.getSqrtStop(),
-                      config::SIEVESIZE,
-                      config::PRESIEVE_GENERATOR),
+                      config::SIEVESIZE),
   finder_(finder)
 { }
 
