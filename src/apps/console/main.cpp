@@ -42,7 +42,7 @@ int main(int argc, char** argv)
 
     if (!settings.quiet) {
       cout << "Sieve size = " << pps.getSieveSize() << " kilobytes" << endl;
-      cout << "Threads    = " << pps.getNumThreads()                << endl;
+      cout << "Threads    = " << pps.getNumThreads() << endl;
       if (!pps.isPrint())
         pps.addFlags(pps.PRINT_STATUS);
     }
@@ -52,7 +52,7 @@ int main(int argc, char** argv)
     printResults(pps);
 
   } catch (exception& e) {
-    cerr << "Error: " << e.what() << "."                    << endl
+    cerr << "Error: " << e.what() << "." << endl
          << "Try `primesieve --help' for more information." << endl;
     return 1;
   }
