@@ -6,8 +6,8 @@
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
-/// This file is distributed under the New BSD License. See the
-/// COPYING file in the top level directory.
+/// This file is distributed under the BSD License. See the COPYING
+/// file in the top level directory.
 ///
 
 #ifndef EXPRESSIONPARSER_H
@@ -45,8 +45,7 @@ private:
 ///          Have a look at the homepage for a usage example.
 /// @author  Kim Walisch, <kim.walisch@gmail.com>
 /// @version 2.5 patched: `^' is raise to power instead of XOR.
-/// @license New BSD License
-/// @date    February 15, 2013
+/// @date    March 07, 2013
 ///
 /// == Supported operators ==
 ///
