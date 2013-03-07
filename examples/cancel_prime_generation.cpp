@@ -7,12 +7,13 @@
 #include <exception>
 #include <vector>
 
+class stop_primesieve : public std::exception { };
+
 std::vector<unsigned int> primes;
 
 void store(unsigned int prime)
 {
-  // cancel by throwing an exception
-  if (primes.size() == 1000) throw std::exception();
+  if (primes.size() == 1000) throw stop_primesieve();
   primes.push_back(prime);
 }
 
@@ -22,7 +23,7 @@ int main()
   try {
     ps.generatePrimes(0, 999999999, store);
   }
-  catch (std::exception&) { }
-  std::cout << "1000th prime = " << primes.back() << std::endl;
+  catch (stop_primesieve&) { }
+  std::cout << primes.size() << " primes stored!" << std::endl;
   return 0;
 }
