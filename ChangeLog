@@ -1,4 +1,4 @@
-Changes in version 4.2, 04/03/2013
+Changes in version 4.2, 07/03/2013
 ==================================
 
 1. libprimesieve generates (callback) primes up to 5% faster on
@@ -8,7 +8,8 @@ Changes in version 4.2, 04/03/2013
    THANKS and AUTHORS files. 
 4. Fixed a bug in the primesieve GUI code (doc/BUGS).
 5. Updated ExpressionParser.h (src/apps/*) to version 2.5.
-6. Added nth prime example program (./examples).
+6. Added more example programs: examples/store_primes_in_array.cpp
+   and examples/nth_prime.cpp.
 7. Lots of refactoring to make the code easier to understand.
 
 Changes in version 4.1, 12/01/2013
