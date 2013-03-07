@@ -400,7 +400,7 @@ Contents
 
   class stop_primesieve : public std::exception { };
 
-  std::vector<unsigned int> primes;
+  std::vector<int> primes;
 
   void store(unsigned int prime)
   {

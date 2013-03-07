@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   22 February 2013
+# Last modified:   07 March 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -65,6 +65,7 @@ EXAMPLE_OBJECTS = \
   $(EXDIR)\primesieve_error.obj \
   $(EXDIR)\print_twins.obj \
   $(EXDIR)\sieve_size.obj \
+  $(EXDIR)\store_primes_in_array.obj \
   $(EXDIR)\timing.obj
 
 SOE_HEADERS = \
