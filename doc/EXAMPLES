@@ -107,7 +107,8 @@ Contents
     PrimeSieveVector<int> primes;
     PrimeSieve ps;
     ps.generatePrimes(0, 1000, &primes);
-    std::cout << primes.size() << " primes stored!" << std::endl;
+    for (std::size_t i = 0; i < primes.size(); i++)
+      std::cout << primes[i] << std::endl;
     return 0;
   }
 
