@@ -43,7 +43,7 @@ const string helpMenu(
 const string versionInfo(
   "primesieve " PRIMESIEVE_VERSION ", <http://primesieve.googlecode.com>\n"
   "Copyright (C) " PRIMESIEVE_YEAR " Kim Walisch\n"
-  "License BSD-3: New BSD License <http://opensource.org/licenses/BSD-3-Clause>"
+  "BSD 2-Clause License <http://opensource.org/licenses/BSD-2-Clause>"
 );
 
 } // end namespace
