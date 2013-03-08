@@ -11,6 +11,7 @@ class stop_primesieve : public std::exception { };
 
 std::vector<int> primes;
 
+// callback
 void store(unsigned int prime)
 {
   if (primes.size() == 1000) throw stop_primesieve();
