@@ -1,4 +1,4 @@
-Changes in version 4.2, 07/03/2013
+Changes in version 4.2, 09/03/2013
 ==================================
 
 1. libprimesieve generates (callback) primes up to 5% faster on
@@ -6,11 +6,11 @@ Changes in version 4.2, 07/03/2013
 2. The best pre-sieve setting is now automatically chosen at
    runtime, this speeds up sieving small intervals.
 3. The Makefile now supports the Solaris OS.
-4. Updated README, INSTALL and doc/LIBPRIMESIEVE files, added new
-   THANKS and AUTHORS files.
+4. Updated files: README, INSTALL, doc/EXAMPLES, doc/LIBPRIMESIEVE,
+   added new files: THANKS and AUTHORS.
 5. Fixed a bug in the primesieve GUI code (doc/BUGS).
 6. Updated ExpressionParser.h (src/apps/*) to version 2.5.
-7. Added more example programs: examples/store_primes_in_array.cpp
+7. Added more example programs: examples/store_primes_in_vector.cpp
    and examples/nth_prime.cpp.
 8. Lots of refactoring to make the code easier to understand.
 

@@ -9,7 +9,7 @@ Here is a list of these people. Help me keep it complete and exempt
 of errors.
 
   * Dana Jacobsen has provided feedback
-    (added examples/store_primes_in_array.cpp)
+    (added examples/store_primes_in_vector.cpp)
 
   * Mark Rodenkirch suggested adding a PrimeSieveCallback class.
 
