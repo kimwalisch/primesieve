@@ -94,8 +94,7 @@ Contents
 
   template <typename T>
   struct PrimeSieveVector final : public std::vector<T>,
-                                  public PrimeSieveCallback<uint64_t>
-  {
+                                  public PrimeSieveCallback<uint64_t> {
     void callback(uint64_t prime)
     {
       this->push_back( static_cast<T>(prime) );
