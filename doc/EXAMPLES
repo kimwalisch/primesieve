@@ -6,8 +6,8 @@ Contents
 ========
 
    1. About
-   2. Try it yourself
-   3. Prime number generation
+   2. Generate primes
+   3. Generate primes OOP
    4. Count primes
    5. Print primes
    6. ParallelPrimeSieve
@@ -30,25 +30,21 @@ Contents
   LIBPRIMESIEVE file. The complete PrimeSieve and ParallelPrimeSieve
   API is presented in the doc/API file.
 
-2. Try it yourself
-==================
-
+  Try it yourself!
+  ----------------
   The example programs presented in this file are also stored as .cpp
   files in the ../examples directory and can easily be compiled using
   the Makefiles. Please refer to ../examples/README for more
   information.
 
-3. Prime number generation
-==========================
+2. Generate primes
+==================
 
-  API for prime number generation
-  -------------------------------
+  API for prime generation
+  ------------------------
   void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t));
   void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t));
   void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int));
-  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>*);
-  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t>*);
-  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t, int>*);
 
   ////////////////////////////////////////////////////////////////////
   // generate_primes.cpp
@@ -70,28 +66,48 @@ Contents
   }
 
   ////////////////////////////////////////////////////////////////////
-  // generate_primes_oop.cpp
-  // This example shows how to use the generatePrimes() methods
-  // with classes. Your class must inherit from
-  // PrimeSieveCallback<T> and define a callback method.
+
+3. Generate primes OOP
+======================
+
+  If your class is derived from PrimeSieveCallback<T> and implements
+  a callback(T) method then you can pass instances of your class to
+  one of the generatePrimes() methods below and your callback method
+  will be executed for all the primes in the range [start, stop].
+
+  API for prime generation
+  ------------------------
+  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>*);
+  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t>*);
+  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t, int>*);
+
+  ////////////////////////////////////////////////////////////////////
+  // store_primes_in_vector.cpp
+  // Store the primes below 1000 in a PrimeSieveVector that is
+  // derived from PrimeSieveCallback and std::vector.
 
   #include <primesieve/soe/PrimeSieve.h>
   #include <primesieve/soe/PrimeSieveCallback.h>
+  #include <stdint.h>
+  #include <vector>
   #include <iostream>
 
-  class Foo : public PrimeSieveCallback<unsigned int> {
-  public:
-    void callback(unsigned int prime)
+  template <typename T>
+  struct PrimeSieveVector final : public std::vector<T>,
+                                  public PrimeSieveCallback<uint64_t>
+  {
+    void callback(uint64_t prime)
     {
-      std::cout << prime << '\n';
+      this->push_back( static_cast<T>(prime) );
     }
   };
 
   int main()
   {
-    Foo foo;
+    PrimeSieveVector<int> primes;
     PrimeSieve ps;
-    ps.generatePrimes(0, 1000, &foo);
+    ps.generatePrimes(0, 1000, &primes);
+    std::cout << primes.size() << " primes stored!" << std::endl;
     return 0;
   }
 
