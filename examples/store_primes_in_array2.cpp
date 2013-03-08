@@ -11,15 +11,15 @@
 template <typename T>
 struct PrimeSieveVector : public PrimeSieveCallback<T>
 {
-  void callback(T prime) { buffer.push_back(prime); }
-  std::vector<T> buffer;
+  void callback(T prime) { primes.push_back(prime); }
+  std::vector<T> primes;
 };
 
 int main()
 {
-  PrimeSieveVector<uint64_t> primes;
+  PrimeSieveVector<uint64_t> vect;
   PrimeSieve ps;
-  ps.generatePrimes(0, 1000, &primes);
-  std::cout << primes.buffer.size() << " primes stored!" << std::endl;
+  ps.generatePrimes(0, 1000, &vect);
+  std::cout << vect.primes.size() << " primes stored!" << std::endl;
   return 0;
 }
