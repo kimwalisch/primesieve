@@ -1,6 +1,7 @@
 ////////////////////////////////////////////////////////////////////
 // cancel_prime_generation.cpp
-// Store the first 1000 primes in a vector.
+// Cancel prime number generation (callback) by throwing
+// a stop_primesieve() exception.
 
 #include <primesieve/soe/PrimeSieve.h>
 #include <iostream>
