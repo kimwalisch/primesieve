@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   08 March 2013
+# Last modified:   09 March 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -57,7 +57,6 @@ EXAMPLE_OBJECTS = \
   $(EXDIR)\count_primes.obj \
   $(EXDIR)\flags.obj \
   $(EXDIR)\generate_primes.obj \
-  $(EXDIR)\generate_primes_oop.obj \
   $(EXDIR)\nth_prime.obj \
   $(EXDIR)\parallel_count.obj \
   $(EXDIR)\parallel_sum_primes.obj \
