@@ -1,4 +1,4 @@
-March 08, 2013
+March 09, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -93,8 +93,9 @@ Contents
   #include <iostream>
 
   template <typename T>
-  struct PrimeSieveVector final : public std::vector<T>,
-                                  public PrimeSieveCallback<uint64_t> {
+  struct PrimeSieveVector : public std::vector<T>,
+                            public PrimeSieveCallback<uint64_t>
+  {
     void callback(uint64_t prime)
     {
       this->push_back( static_cast<T>(prime) );
