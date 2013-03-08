@@ -65,7 +65,8 @@ EXAMPLE_OBJECTS = \
   $(EXDIR)\primesieve_error.obj \
   $(EXDIR)\print_twins.obj \
   $(EXDIR)\sieve_size.obj \
-  $(EXDIR)\store_primes_in_array.obj \
+  $(EXDIR)\store_primes_in_vector.obj \
+  $(EXDIR)\store_primes_in_vector2.obj \
   $(EXDIR)\timing.obj
 
 SOE_HEADERS = \

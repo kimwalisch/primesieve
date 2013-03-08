@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-// store_primes_in_array.cpp
+// store_primes_in_vector.cpp
 // Store the first 1000 primes in a vector.
 
 #include <primesieve/soe/PrimeSieve.h>

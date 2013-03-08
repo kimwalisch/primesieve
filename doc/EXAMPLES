@@ -82,7 +82,7 @@ Contents
   void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t, int>*);
 
   ////////////////////////////////////////////////////////////////////
-  // store_primes_in_vector.cpp
+  // store_primes_in_vector2.cpp
   // Store the primes below 1000 in a PrimeSieveVector that is
   // derived from PrimeSieveCallback and std::vector.
 
