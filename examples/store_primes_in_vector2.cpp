@@ -10,7 +10,6 @@
 #include <iostream>
 
 template <typename T>
-// make final for C++11 or later
 struct PrimeSieveVector : public std::vector<T>,
                           public PrimeSieveCallback<uint64_t>
 {
