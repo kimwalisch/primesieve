@@ -1,30 +1,28 @@
-March 03, 2013
+March 09, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-Please contact the author if you find a new bug, the latest primesieve
-source code can be retrieved from its Subversion repository:
-
-$ svn checkout http://primesieve.googlecode.com/svn/trunk/ primesieve
+This is a list of bugs that have been fixed in primesieve. Please
+contact the author if you have found a new bug, thanks.
 
 
 List of fixed bugs
 ==================
 
 ----------------------------------------------------------------------
-  >> Fixed in version 4.2
+  >> Fixed in primesieve-4.2
 
   In the primesieve GUI application: use QString::toLatin1() instead
-  of QString::toAscii() which is deprecated in Qt5.
+  of QString::toAscii() which has been deprecated in Qt5.
 
 ----------------------------------------------------------------------
-  >> Fixed in version 4.1
+  >> Fixed in primesieve-4.1
 
-  The bit population count algorithm in src/soe/popcount_lauradoux.h
-  is erroneous for sizeof(int) > 4.
+  The bit population count algorithm in src/soe/popcount.cpp is
+  erroneous for sizeof(int) > 4.
 
 ----------------------------------------------------------------------
-  >> Fixed in version 4.0
+  >> Fixed in primesieve-4.0
 
   g++ parallel.cpp -o parallel -lprimesieve
 
@@ -33,7 +31,7 @@ List of fixed bugs
   been fixed and -fopenmp is not needed anymore.
 
 ----------------------------------------------------------------------
-  >> Fixed in version 4.0
+  >> Fixed in primesieve-4.0
 
   uint8_t* loopLimit = std::max(sieve, sieveLimit - (sievingPrime * 28 + 27));
 
@@ -43,7 +41,7 @@ List of fixed bugs
   which would lead to a segmentation fault later in the code.
 
 ----------------------------------------------------------------------
-  >> Fixed in version 3.7
+  >> Fixed in primesieve-3.7
 
   The isqrt() function defined in src/soe/imath.h might return a
   square root that is too large by 1. This is due to isqrt() being a
@@ -55,7 +53,7 @@ List of fixed bugs
   the square root using integer arithmetic.
 
 ----------------------------------------------------------------------
-  >> Fixed in version 3.5
+  >> Fixed in primesieve-3.5
 
   primesieve 3.0 to 3.4 produces incorrect results and/or
   segmentation faults on big-endian CPUs (PowerPC, SPARC). The bug is
@@ -63,7 +61,7 @@ List of fixed bugs
   reinterpret_cast.
 
 ----------------------------------------------------------------------
-  >> Fixed in version 3.2
+  >> Fixed in primesieve-3.2
 
   ParallelPrimeSieve::sieve() might create PrimeSieve objects with
   START > STOP and throw an invalid_argument exception:
@@ -72,7 +70,7 @@ List of fixed bugs
   $ ./primesieve -test; ./primesieve -test; ./primesieve -test;
 
 ----------------------------------------------------------------------
-  >> Fixed in version 3.1
+  >> Fixed in primesieve-3.1
 
   SieveIndex overflow (> 2^23) in src/soe/EratMedium.cpp when using a
   sieve size >= 4096 kilobytes past 1E15:
@@ -84,7 +82,7 @@ List of fixed bugs
   Prime numbers : 271425366
 
 ----------------------------------------------------------------------
-  >> Fixed in version 2.2
+  >> Fixed in primesieve-2.2
 
   The following options caused a segmentation fault in the console
   version of primesieve:
@@ -94,26 +92,26 @@ List of fixed bugs
   Error in console/main.cpp, processOptions(int, char**)
 
 ----------------------------------------------------------------------
-  >> Fixed in version 2.2
+  >> Fixed in primesieve-2.2
 
   PrimeSieve::sieve() was not declared virtual which caused
   ParallelPrimeSieve to run single-threaded in some cases.
 
 ----------------------------------------------------------------------
-  >> Fixed in version 2.2
+  >> Fixed in primesieve-2.2
 
   Fixed an OpenMP race condition in ParallelPrimeSieve.cpp which did
   only show up with the sunCC compiler.
 
 ----------------------------------------------------------------------
-  >> Fixed in version 2.2
+  >> Fixed in primesieve-2.2
 
   The -test option of the console version of primesieve might cause an
   infinite loop when compiled with MSVC (Windows). The error was
   related to 64-bit random number generation in test.cpp.
 
 ----------------------------------------------------------------------
-  >> Fixed in version 1.05
+  >> Fixed in primesieve-1.05
   >> Thanks to Andrey Kulsha for bug reporting
 
   Primes preceding the startNumber might be counted and printed e.g.:
@@ -125,7 +123,7 @@ List of fixed bugs
   Time elapsed: 0.03 sec
 
 ----------------------------------------------------------------------
-  >> Fixed in version 1.01
+  >> Fixed in primesieve-1.01
 
   The console version of primesieve 1.0 produces wrong status output
   in some cases e.g.:
