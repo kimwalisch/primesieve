@@ -83,8 +83,8 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
   // store_primes_in_vector2.cpp
-  // Store the primes below 1000 in a PrimeSieveVector that is
-  // derived from PrimeSieveCallback and std::vector.
+  // Instances of classes that derive from PrimeSieveCallback<T>
+  // can be passed to the generatePrimes() methods.
 
   #include <primesieve/soe/PrimeSieve.h>
   #include <primesieve/soe/PrimeSieveCallback.h>
