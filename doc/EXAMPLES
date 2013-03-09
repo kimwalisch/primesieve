@@ -14,7 +14,7 @@ Contents
    7. Timing
    8. Performance tuning
    9. C++ Exceptions
-  10. Cancel prime number generation
+  10. Cancel prime generation
   11. Flags
 
 1. About
@@ -400,8 +400,8 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-10. Cancel prime number generation
-==================================
+10. Cancel prime generation
+===========================
 
   PrimeSieve objects are exception safe so it is possible to throw an
   exception to cancel prime number generation.
