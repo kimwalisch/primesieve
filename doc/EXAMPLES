@@ -266,12 +266,12 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-  Parallel prime number generation (1)
-  ------------------------------------
-  The generatePrimes() methods that take a callback with 1 parameter
-  are synchronized i.e. only 1 thread at a time calls back primes.
-  These methods are easy to use but do not scale well beyond 4 CPU
-  cores.
+  Parallel prime number generation
+  --------------------------------
+  The generatePrimes() methods (section 2. & 3.) that take a callback
+  with 1 parameter are synchronized i.e. only 1 thread at a time
+  calls back primes. These methods are easy to use but do not scale
+  well beyond 4 CPU cores.
 
   ////////////////////////////////////////////////////////////////////
   // parallel_sum_primes.cpp
@@ -299,15 +299,13 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-  Parallel prime number generation (2)
-  ------------------------------------
-  The generatePrimes() methods that take a callback with 2 parameters
-  are not synchronized i.e. multiple threads call back primes in
-  parallel. This method scales well even with 100 CPU cores but you
-  must pay attention not to write to the same variable from multiple
-  threads. In order to get the best performance you must also ensure
-  that each thread uses its own cache line for memory access (avoids
-  false sharing).
+  The generatePrimes() methods (section 2. & 3.) that take a callback
+  with 2 parameters are not synchronized i.e. multiple threads call
+  back primes in parallel. This method scales well even with 100 CPU
+  cores but you must pay attention not to write to the same variable
+  from multiple threads. In order to get the best performance you must
+  also ensure that each thread uses its own cache line for memory
+  access (avoids false sharing).
 
   ////////////////////////////////////////////////////////////////////
   // parallel_sum_primes2.cpp
