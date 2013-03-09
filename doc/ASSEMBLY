@@ -1,4 +1,4 @@
-March 03, 2013
+March 09, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -6,8 +6,8 @@ About
 =====
 
   primesieve does not use any assembly but if the following ASM
-  instructions ever become part of standard C++ they would be useful
-  and provide minor speed ups:
+  instructions ever become accessible in standard C++ they would be
+  useful and provide minor speed ups:
 
   1. POPCNT
   ---------
