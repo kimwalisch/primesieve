@@ -25,6 +25,6 @@ int main()
   PrimeSieve ps;
   ps.generatePrimes(0, 1000, &primes);
   for (std::size_t i = 0; i < primes.size(); i++)
-    std::cout << primes[i] << std::endl;
+    std::cout << primes[i] << ", ";
   return 0;
 }
