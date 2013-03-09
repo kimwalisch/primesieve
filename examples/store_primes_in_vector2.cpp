@@ -10,9 +10,9 @@
 #include <iostream>
 
 template <typename T>
-struct PrimeSieveVector : public std::vector<T>,
-                          public PrimeSieveCallback<uint64_t>
-{
+class PrimeSieveVector : public std::vector<T>,
+                         public PrimeSieveCallback<uint64_t> {
+public:
   void callback(uint64_t prime)
   {
     this->push_back( static_cast<T>(prime) );
