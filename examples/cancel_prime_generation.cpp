@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////
 // cancel_prime_generation.cpp
-// Cancel prime number generation (callback) by throwing
-// a stop_primesieve() exception.
+// Cancel prime generation by throwing a stop_primesieve()
+// exception. (stores 1000 primes in a vector).
 
 #include <primesieve/soe/PrimeSieve.h>
 #include <iostream>
@@ -12,7 +12,7 @@ class stop_primesieve : public std::exception { };
 
 std::vector<int> primes;
 
-void store(unsigned int prime)
+void callback(unsigned int prime)
 {
   if (primes.size() == 1000) throw stop_primesieve();
   primes.push_back(prime);
@@ -22,7 +22,7 @@ int main()
 {
   PrimeSieve ps;
   try {
-    ps.generatePrimes(0, 999999999, store);
+    ps.generatePrimes(0, 999999999, callback);
   }
   catch (stop_primesieve&) { }
   std::cout << primes.size() << " primes stored!" << std::endl;

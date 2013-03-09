@@ -8,13 +8,13 @@ Contents
    1. About
    2. Generate primes
    3. Generate primes OOP
-   4. Count primes
-   5. Print primes
-   6. ParallelPrimeSieve
-   7. Timing
-   8. Performance tuning
-   9. C++ Exceptions
-  10. Cancel prime generation
+   4. Cancel prime generation
+   5. Count primes
+   6. Print primes
+   7. ParallelPrimeSieve
+   8. Timing
+   9. Performance tuning
+  10. C++ Exceptions
   11. Flags
 
 1. About
@@ -114,7 +114,46 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-4. Count primes
+4. Cancel prime generation
+==========================
+
+  PrimeSieve objects are exception safe so it is possible to throw an
+  exception to cancel prime generation (callback).
+
+  ////////////////////////////////////////////////////////////////////
+  // cancel_prime_generation.cpp
+  // Cancel prime generation by throwing a stop_primesieve()
+  // exception. (stores 1000 primes in a vector).
+
+  #include <primesieve/soe/PrimeSieve.h>
+  #include <iostream>
+  #include <exception>
+  #include <vector>
+
+  class stop_primesieve : public std::exception { };
+
+  std::vector<int> primes;
+
+  void callback(unsigned int prime)
+  {
+    if (primes.size() == 1000) throw stop_primesieve();
+    primes.push_back(prime);
+  }
+
+  int main()
+  {
+    PrimeSieve ps;
+    try {
+      ps.generatePrimes(0, 999999999, callback);
+    }
+    catch (stop_primesieve&) { }
+    std::cout << primes.size() << " primes stored!" << std::endl;
+    return 0;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+
+5. Count primes
 ===============
 
   API for counting
@@ -145,7 +184,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-5. Print primes
+6. Print primes
 ===============
 
   API for printing (to std::cout)
@@ -177,7 +216,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-6. ParallelPrimeSieve
+7. ParallelPrimeSieve
 =====================
 
   ParallelPrimeSieve uses OpenMP multi-threading to sieve primes in
@@ -306,7 +345,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-7. Timing
+8. Timing
 =========
 
   API for timing
@@ -331,7 +370,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-8. Performance tuning
+9. Performance tuning
 =====================
 
   The best sieving performance is achieved if the sieve array fits
@@ -368,8 +407,8 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-9. C++ Exceptions
-=================
+10. C++ Exceptions
+==================
 
   PrimeSieve and ParallelPrimeSieve objects throw primesieve_error
   exceptions for invalid arguments like start > stop.
@@ -395,45 +434,6 @@ Contents
     catch (primesieve_error& e) {
       std::cerr << "Error: " << e.what() << std::endl;
     }
-    return 0;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-
-10. Cancel prime generation
-===========================
-
-  PrimeSieve objects are exception safe so it is possible to throw an
-  exception to cancel prime number generation.
-
-  ////////////////////////////////////////////////////////////////////
-  // cancel_prime_generation.cpp
-  // Cancel prime number generation (callback) by throwing
-  // a stop_primesieve() exception.
-
-  #include <primesieve/soe/PrimeSieve.h>
-  #include <iostream>
-  #include <exception>
-  #include <vector>
-
-  class stop_primesieve : public std::exception { };
-
-  std::vector<int> primes;
-
-  void store(unsigned int prime)
-  {
-    if (primes.size() == 1000) throw stop_primesieve();
-    primes.push_back(prime);
-  }
-
-  int main()
-  {
-    PrimeSieve ps;
-    try {
-      ps.generatePrimes(0, 999999999, store);
-    }
-    catch (stop_primesieve&) { }
-    std::cout << primes.size() << " primes stored!" << std::endl;
     return 0;
   }
 
