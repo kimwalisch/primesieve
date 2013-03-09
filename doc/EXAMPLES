@@ -32,10 +32,9 @@ Contents
 
   Try it yourself!
   ----------------
-  The example programs presented in this file are also stored as .cpp
-  files in the ../examples directory and can easily be compiled using
-  the Makefiles. Please refer to ../examples/README for more
-  information.
+  The example programs presented in this file are also stored in the
+  ../examples directory and can easily be compiled using the
+  Makefiles. Please read ../examples/README for more information.
 
 2. Generate primes
 ==================
