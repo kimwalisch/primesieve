@@ -12,11 +12,11 @@
 class stop_primesieve : public std::exception { };
 
 int n = 100000000;
-int count = 0;
+int i = 0;
 
 void nthprime(unsigned int prime)
 {
-  if (++count == n) {
+  if (++i == n) {
     std::cout << n << "th prime = " << prime << std::endl;
     throw stop_primesieve();
   }
