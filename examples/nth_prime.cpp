@@ -11,8 +11,8 @@
 
 class stop_primesieve : public std::exception { };
 
-int n = 100000000;
 int i = 0;
+int n = 100000000;
 
 void nthprime(unsigned int prime)
 {
