@@ -1,0 +1,11 @@
+March 10, 2013
+Kim Walisch, <kim.walisch@gmail.com>
+http://primesieve.googlecode.com
+
+1. Make ParallelPrimeSieve exception safe and implement cancellation.
+
+   This requires OpenMP 4.0 which will be released in the coming
+   months. More precisely I plan the following design: if an exception
+   is caught in one thread this thread cancels all other threads using
+   the new `#pragma omp cancel' clause from OpenMP 4.0 (and then
+   probably rethrow the exception).
