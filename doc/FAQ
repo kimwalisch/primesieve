@@ -10,10 +10,10 @@ A  Please have a look at these two examples programs:
    ../examples/store_primes_in_vector.cpp
    ../examples/store_primes_in_vector2.cpp
 
-   The first example shows the default way of storing primes in a
-   std::vector, the second example shows a more advanced solution and
-   is more convenient to use. Also read sections 2. and 3. of
-   doc/EXAMPLES.
+   The 1st example shows the default way of storing primes in a
+   std::vector. The 2nd example shows a more advanced solution that is
+   more convenient to use in some cases. Also read sections 2. and
+   3. of doc/EXAMPLES.
 
 Q  How do I cancel prime generation (libprimesive)?
 
