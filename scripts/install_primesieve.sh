@@ -5,6 +5,7 @@
 # This file is distributed under the BSD License.
 # Usage: $ sh install_primesieve.sh [GNU make arguments]
 
+
 # Check prerequisites (SVN, GNU make, c++ compiler)
 command -v svn > /dev/null 2> /dev/null
 if [ $? -ne 0 ]; then
