@@ -12,9 +12,9 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
-#define PRIMESIEVE_VERSION "4.2"
+#define PRIMESIEVE_VERSION "4.3"
 #define PRIMESIEVE_MAJOR_VERSION 4
-#define PRIMESIEVE_MINOR_VERSION 2
+#define PRIMESIEVE_MINOR_VERSION 3
 #define PRIMESIEVE_YEAR "2013"
 
 #include "PrimeSieveCallback.h"
@@ -22,6 +22,8 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <exception>
+#include <cmath>
 
 namespace soe {
   class PrimeFinder;
@@ -86,6 +88,22 @@ public:
   void sieve(uint64_t, uint64_t);
   void sieve(uint64_t, uint64_t, int);
   // Generate
+  template <typename T>
+  void generatePrimes(uint64_t start, uint64_t stop, std::vector<T>* vect)
+  {
+    if (vect) {
+      PushBackPrimes1<T> pbp(*vect);
+      pbp.generatePrimes(start, stop, *this);
+    }
+  }
+  template <typename T>
+  void generate_N_Primes(uint64_t start, uint64_t n, std::vector<T>* vect)
+  {
+    if (vect) {
+      PushBackPrimes2<T> pbp(*vect);
+      pbp.generate_N_Primes(start, n, *this);
+    }
+  }
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t));
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, int));
@@ -136,20 +154,6 @@ protected:
   virtual void setLock();
   virtual void unsetLock();
 private:
-  /// Private flags
-  /// @pre flag >= (1 << 20)
-  enum {
-    CALLBACK32        = 1 << 20,
-    CALLBACK64        = 1 << 21,
-    CALLBACK64_TN     = 1 << 22,
-    CALLBACK32_OBJ    = 1 << 23,
-    CALLBACK64_OBJ    = 1 << 24,
-    CALLBACK64_OBJ_TN = 1 << 25
-  };
-  enum {
-      INIT_STATUS = 0,
-    FINISH_STATUS = 10
-  };
   struct SmallPrime
   {
     uint32_t firstPrime;
@@ -185,6 +189,88 @@ private:
   bool isStatus() const;
   bool isParallelPrimeSieveChild() const;
   void doSmallPrime(const SmallPrime&);
+  ////////////////////////////////////////////////////////////////////
+  ///                      Private inner classes
+  ////////////////////////////////////////////////////////////////////
+  enum {
+      INIT_STATUS = 0,
+    FINISH_STATUS = 10
+  };
+  /// Private flags
+  /// @pre flag >= (1 << 20)
+  enum {
+    CALLBACK32        = 1 << 20,
+    CALLBACK64        = 1 << 21,
+    CALLBACK64_TN     = 1 << 22,
+    CALLBACK32_OBJ    = 1 << 23,
+    CALLBACK64_OBJ    = 1 << 24,
+    CALLBACK64_OBJ_TN = 1 << 25
+  };
+  template <typename T>
+  class PushBackPrimes1 : public PrimeSieveCallback<uint64_t> {
+  public:
+    PushBackPrimes1(std::vector<T>& primes)
+      : primes_(primes)
+    { }
+    /// Generate the primes in the interval [start, stop]
+    /// store them in the primes vector.
+    void generatePrimes(uint64_t start, uint64_t stop, PrimeSieve& ps)
+    {
+      primes_.reserve(primes_.size() + approxPrimeCount(start, stop));
+      ps.generatePrimes(start, stop, this);
+    }
+    void callback(uint64_t prime)
+    {
+      primes_.push_back( static_cast<T>(prime) );
+    }
+  private:
+    std::vector<T>& primes_;
+    static uint64_t approxPrimeCount(uint64_t start, uint64_t stop)
+    {
+      double count = 0;
+
+      if (start > stop)
+        return 0;
+      if (stop > 10)
+        count += stop / (std::log(stop) - 1.1);
+      if (start > 10)
+        count -= (start / std::log(start) - 1.1);
+
+      return static_cast<uint64_t>(count);      
+    }
+  };
+  template <typename T>
+  class PushBackPrimes2 : public PrimeSieveCallback<uint64_t> {
+  public:
+    PushBackPrimes2(std::vector<T>& primes)
+      : primes_(primes)
+    { }
+    /// Generate the next n primes >= start and
+    /// store them in the primes vector.
+    void generate_N_Primes(uint64_t start, uint64_t n, PrimeSieve& ps)
+    {
+      n_ = n;
+      primes_.reserve(primes_.size() + n_);
+      try {
+        while (n_ > 0)
+        {
+          uint64_t stop = start + n_ * 50 + 10000;
+          ps.generatePrimes(start, stop, this);
+          start = stop + 1;
+        }
+      } catch (stop_primesieve&) { }
+    }
+    void callback(uint64_t prime)
+    {
+      primes_.push_back( static_cast<T>(prime) );
+      if (--n_ == 0)
+        throw stop_primesieve();
+    }
+  private:
+    std::vector<T>& primes_;
+    uint64_t n_;
+    class stop_primesieve : public std::exception { };
+  };
 };
 
 #endif
