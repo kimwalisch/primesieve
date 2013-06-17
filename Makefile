@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   23 February 2013
+# Last modified:   17 June 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -19,7 +19,7 @@ INCDIR   := include
 LIBDIR   := lib
 SOEDIR   := src/soe
 
-SOE_SOURCES:= \
+SOE_OBJECTS:= \
   $(SOEDIR)/EratBig.o \
   $(SOEDIR)/EratMedium.o \
   $(SOEDIR)/EratSmall.o \
@@ -147,7 +147,7 @@ BIN_OBJECTS := \
   $(BINDIR)/help.o \
   $(BINDIR)/main.o \
   $(BINDIR)/test.o \
-  $(addprefix $(BINDIR)/, $(subst .cpp,.o, $(notdir $(SOE_SOURCES))))
+  $(addprefix $(BINDIR)/, $(notdir $(SOE_OBJECTS)))
 
 .PHONY: bin bin_dir bin_obj
 
@@ -173,10 +173,7 @@ $(BINDIR)/%.o: src/test/%.cpp $(SOE_HEADERS)
 #-----------------------------------------------------------------------------
 
 LIB_CXXFLAGS := $(strip $(CXXFLAGS) $(FPIC))
-LIB_OBJECTS  := \
-  $(addprefix $(LIBDIR)/, \
-    $(subst .cpp,.o, \
-      $(notdir $(SOE_SOURCES))))
+LIB_OBJECTS  := $(addprefix $(LIBDIR)/, $(notdir $(SOE_OBJECTS)))
 
 .PHONY: lib lib_dir lib_obj include_dir
 
