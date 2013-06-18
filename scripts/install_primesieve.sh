@@ -51,7 +51,7 @@ else
   if [ $? -eq 0 ]; then gmake install; else make install; fi
 fi
 if [ $? -eq 0 ]; then
-  echo "primesieve and libprimesieve successfully installed!";
+  echo "Successfully installed primesieve and libprimesieve!";
 else
   echo "Error: Failed to install primesieve!";
   exit 1;
