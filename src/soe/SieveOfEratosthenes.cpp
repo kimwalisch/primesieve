@@ -61,16 +61,21 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
     throw primesieve_error("SieveOfEratosthenes: start must be >= 7");
   if (start_ > stop_)
     throw primesieve_error("SieveOfEratosthenes: start must be <= stop");
-  // choose the fastest pre-sieve limit
-  limitPreSieve_ = config::PRESIEVE;
-  if ((stop_ - start_) < config::PRESIEVE_THRESHOLD)
+
+  // choose the fastest pre-sieve setting
+  limitPreSieve_ = 11;
+  if ((stop_ - start_) >= (7 * 11 * 13) * NUMBERS_PER_BYTE)
     limitPreSieve_ = 13;
+  if ((stop_ - start_) >= config::PRESIEVE_THRESHOLD)
+    limitPreSieve_ = config::PRESIEVE;
+
   sqrtStop_ = static_cast<uint_t>(isqrt(stop_));
   // sieveSize_ must be a power of 2
   sieveSize_ = getInBetween(1u, floorPowerOf2(sieveSize), 2048u);
   sieveSize_ *= 1024; // convert to bytes
   segmentLow_ = start_ - getByteRemainder(start_);
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
+
   // allocate the sieve of Eratosthenes array
   sieve_ = new byte_t[sieveSize_];
   init();

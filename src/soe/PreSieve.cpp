@@ -22,13 +22,13 @@ namespace soe {
 const uint_t PreSieve::primes_[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 };
 
 /// PreSieve multiples of small primes <= limit.
-/// @pre limit >= 13 && <= 23
+/// @pre limit >= 11 && <= 23
 ///
 PreSieve::PreSieve(int limit)
 {
   // limit <= 23 prevents 32-bit overflows
-  if (limit < 13 || limit > 23)
-    throw primesieve_error("PreSieve limit must be >= 13 && <= 23");
+  if (limit < 11 || limit > 23)
+    throw primesieve_error("PreSieve limit must be >= 11 && <= 23");
   limit_ = limit;
   primeProduct_ = 1;
   for (int i = 0; primes_[i] <= limit_; i++)
