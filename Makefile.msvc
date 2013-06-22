@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   09 March 2013
+# Last modified:   22 July 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -159,6 +159,7 @@ include_dir:
 	copy /Y $(SOEDIR)\ParallelPrimeSieve.h $(INCDIR)\$(TARGET)\soe
 	copy /Y $(SOEDIR)\primesieve_error.h $(INCDIR)\$(TARGET)\soe
 	copy /Y $(SOEDIR)\PrimeSieveCallback.h $(INCDIR)\$(TARGET)\soe
+	copy /Y $(SOEDIR)\stop_primesieve.h $(INCDIR)\$(TARGET)\soe
 
 #-----------------------------------------------------------------------------
 # Build the example programs (read examples/README)
