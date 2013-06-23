@@ -110,6 +110,9 @@ public:
   void generatePrimes(uint32_t, uint32_t, PrimeSieveCallback<uint32_t>*);
   void generatePrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t>*);
   void generatePrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t, int>*);
+  // nth prime
+  uint64_t nthPrime(uint64_t);
+  uint64_t nthPrime(uint64_t, uint64_t);
   // Print
   void printPrimes(uint64_t, uint64_t);
   void printTwins(uint64_t, uint64_t);

@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   22 June 2013
+# Last modified:   23 June 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -28,6 +28,7 @@ SOE_OBJECTS:= \
   $(SOEDIR)/PreSieve.o \
   $(SOEDIR)/PrimeFinder.o \
   $(SOEDIR)/PrimeGenerator.o \
+  $(SOEDIR)/PrimeSieve-nthPrime.o \
   $(SOEDIR)/PrimeSieve.o \
   $(SOEDIR)/SieveOfEratosthenes.o \
   $(SOEDIR)/WheelFactorization.o
@@ -52,6 +53,7 @@ SOE_HEADERS := \
   $(SOEDIR)/SieveOfEratosthenes.h \
   $(SOEDIR)/SieveOfEratosthenes-GENERATE.h \
   $(SOEDIR)/SieveOfEratosthenes-inline.h \
+  $(SOEDIR)/stop_primesieve.h \
   $(SOEDIR)/toString.h \
   $(SOEDIR)/WheelFactorization.h
 
