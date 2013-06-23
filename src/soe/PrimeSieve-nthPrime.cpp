@@ -46,7 +46,7 @@ void NthPrime::findNthPrime(uint64_t start, uint64_t stop, uint64_t n)
   try {
     ps.generatePrimes(start, stop, this);
     ps.generatePrimes(stop + 1, maxStop, this);
-    throw primesieve_error("nth prime > PrimeSieve limit!");
+    throw primesieve_error("nth prime is too large > 2^64 - 2^32 * 10");
   }
   catch (stop_primesieve&) { }
 }
@@ -96,6 +96,13 @@ uint64_t nthPrimeDistance(uint64_t start, uint64_t n, double factor = 1.0, doubl
   return static_cast<uint64_t>(dist * factor + offset);
 }
 
+void checkOverflow(uint64_t start, uint64_t dist)
+{
+  uint64_t maxStop = SieveOfEratosthenes::getMaxStop();
+  if (maxStop - start < dist)
+    throw primesieve_error("nth prime is too large > 2^64 - 2^32 * 11");
+}
+
 } // end namespace
 
 uint64_t PrimeSieve::nthPrime(uint64_t n)
@@ -108,14 +115,18 @@ uint64_t PrimeSieve::nthPrime(uint64_t start, uint64_t n)
   if (n < 1)
     return 0;
 
-  uint64_t count = 0;
+  setStart(start);
   uint64_t stop = 0;
+  uint64_t count = 0;
+  uint64_t dist = 0;
 
   // Count the primes up to an approximate nth prime, this step
   // is multi-threaded if ParallelPrimeSieve is used
   while (count < n && (n - count) > 1000000)
   {
-    stop = start + nthPrimeDistance(start, n - count);
+    dist = nthPrimeDistance(start, n - count);
+    checkOverflow(start, dist);
+    stop = start + dist;
     count += countPrimes(start, stop);
     start = stop + 1;
   }
@@ -123,14 +134,18 @@ uint64_t PrimeSieve::nthPrime(uint64_t start, uint64_t n)
   // We have counted more than n primes so rollback
   while (count >= n)
   {
-    start = stop - nthPrimeDistance(start, count - n, 1.2, 10000);
+    dist = nthPrimeDistance(start, count - n, 1.2, 10000);
+    dist = std::min(dist, stop);
+    start = stop - dist;
     count -= countPrimes(start, stop);
     stop = start - 1;
   }
 
   // Sieve the small remaining distance in arithmetic
   // order using a single thread
-  stop = start + nthPrimeDistance(start, n - count, 2.0, 10000);
+  dist = nthPrimeDistance(start, n - count, 2.0, 10000);
+  checkOverflow(start, dist);
+  stop = start + dist;
   NthPrime np;
   np.findNthPrime(start, stop, n - count);
 

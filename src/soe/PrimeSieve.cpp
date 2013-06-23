@@ -101,8 +101,13 @@ bool        PrimeSieve::isStatus()                  const { return isFlag(PRINT_
 bool        PrimeSieve::isParallelPrimeSieveChild() const { return parent_ != NULL; }
 
 /// Set a start number (lower bound) for sieving.
+/// @pre start <= 2^64 - 2^32 * 10
+///
 void PrimeSieve::setStart(uint64_t start)
 {
+  uint64_t maxStop = PrimeFinder::getMaxStop();
+  if (start > maxStop)
+    throw primesieve_error("start must be <= " + PrimeFinder::getMaxStopString());
   start_ = start;
 }
 
