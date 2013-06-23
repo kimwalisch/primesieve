@@ -8,7 +8,7 @@ completely backwards compatible.
 1. New multi-threaded algorithm to find the nth prime:
    (Parallel)PrimeSieve::nthPrime(n);
    (Parallel)PrimeSieve::nthPrime(start, n);
-2. PrimeSieve now supports std::vector<T> as callback object which
+2. PrimeSieve now supports std::vector<T> as callback objects which
    greatly simplifies storing primes in a vector:
    PrimeSieve::generatePrimes   (start, stop, std::vector<T>*);
    PrimeSieve::generate_N_Primes(start, n,    std::vector<T>*);
