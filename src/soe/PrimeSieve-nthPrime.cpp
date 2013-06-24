@@ -42,11 +42,10 @@ void NthPrime::findNthPrime(uint64_t start, uint64_t stop, uint64_t n)
   n_ = n;
   PrimeSieve ps;
   uint64_t maxStop = SieveOfEratosthenes::getMaxStop();
-  stop = min(stop, maxStop - 1);
   try {
     ps.generatePrimes(start, stop, this);
     ps.generatePrimes(stop + 1, maxStop, this);
-    throw primesieve_error("nth prime is too large > 2^64 - 2^32 * 10");
+    throw primesieve_error("nth prime is too large > 2^64 - 2^32 * 11");
   }
   catch (stop_primesieve&) { }
 }
@@ -96,7 +95,7 @@ uint64_t nthPrimeDistance(uint64_t start, uint64_t n, double factor = 1.0, doubl
   return static_cast<uint64_t>(dist * factor + offset);
 }
 
-void checkOverflow(uint64_t start, uint64_t dist)
+void checkLimit(uint64_t start, uint64_t dist)
 {
   uint64_t maxStop = SieveOfEratosthenes::getMaxStop();
   if (maxStop - start < dist)
@@ -125,7 +124,7 @@ uint64_t PrimeSieve::nthPrime(uint64_t start, uint64_t n)
   while (count < n && (n - count) > 1000000)
   {
     dist = nthPrimeDistance(start, n - count);
-    checkOverflow(start, dist);
+    checkLimit(start, dist);
     stop = start + dist;
     count += countPrimes(start, stop);
     start = stop + 1;
@@ -144,7 +143,7 @@ uint64_t PrimeSieve::nthPrime(uint64_t start, uint64_t n)
   // Sieve the small remaining distance in arithmetic
   // order using a single thread
   dist = nthPrimeDistance(start, n - count, 2.0, 10000);
-  checkOverflow(start, dist);
+  checkLimit(start, dist);
   stop = start + dist;
   NthPrime np;
   np.findNthPrime(start, stop, n - count);
