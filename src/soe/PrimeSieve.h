@@ -219,7 +219,8 @@ private:
     /// store them in the primes vector.
     void generatePrimes(uint64_t start, uint64_t stop, PrimeSieve& ps)
     {
-      primes_.reserve(primes_.size() + approxPrimeCount(start, stop));
+      uint64_t count = expectedPrimeCount(start, stop);
+      primes_.reserve(primes_.size() + count);
       ps.generatePrimes(start, stop, this);
     }
     void callback(uint64_t prime)
@@ -228,18 +229,15 @@ private:
     }
   private:
     std::vector<T>& primes_;
-    static uint64_t approxPrimeCount(uint64_t start, uint64_t stop)
+    static uint64_t expectedPrimeCount(uint64_t start, uint64_t stop)
     {
-      double count = 0;
-
-      if (start > stop)
+      if (start > stop || stop < 10)
         return 0;
-      if (stop > 10)
-        count += stop / (std::log(stop) - 1.1);
-      if (start > 10)
-        count -= (start / std::log(start) - 1.1);
 
-      return static_cast<uint64_t>(count);      
+      double a = static_cast<double>(start);
+      double b = static_cast<double>(stop);
+
+      return static_cast<uint64_t>((b - a) / (std::log(b) - 1.1));
     }
   };
   template <typename T>
@@ -257,7 +255,8 @@ private:
       try {
         while (n_ > 0)
         {
-          uint64_t stop = start + n_ * 50 + 10000;
+          uint64_t logn = 50;
+          uint64_t stop = start + n_ * logn + 10000;
           ps.generatePrimes(start, stop, this);
           start = stop + 1;
         }
