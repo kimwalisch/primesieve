@@ -21,7 +21,7 @@
 namespace {
 
 using soe::SieveOfEratosthenes;
-using namespace std;
+using std::log;
 
 /// This class is used to generate n primes and
 /// then stop by throwing an exception.
