@@ -234,6 +234,8 @@ private:
     }
   private:
     std::vector<T>& primes_;
+    PushBackPrimes1(const PushBackPrimes1&);
+    void operator=(const PushBackPrimes1&);
     static uint64_t expectedPrimeCount(uint64_t start, uint64_t stop)
     {
       if (start > stop || stop < 10)
@@ -277,6 +279,8 @@ private:
     std::vector<T>& primes_;
     uint64_t n_;
     class stop_primesieve : public std::exception { };
+    PushBackPrimes2(const PushBackPrimes2&);
+    void operator=(const PushBackPrimes2&);
   };
 };
 
