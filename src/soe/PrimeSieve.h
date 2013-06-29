@@ -89,20 +89,25 @@ public:
   void sieve(uint64_t, uint64_t, int);
   // Generate
   template <typename T>
-  void generatePrimes(uint64_t start, uint64_t stop, std::vector<T>* vect)
+  void generatePrimes(uint64_t start, uint64_t stop, std::vector<T>* primes)
   {
-    if (vect) {
-      PushBackPrimes1<T> pbp(*vect);
+    if (primes) {
+      PushBackPrimes1<T> pbp(*primes);
       pbp.generatePrimes(start, stop, *this);
     }
   }
   template <typename T>
-  void generate_N_Primes(uint64_t start, uint64_t n, std::vector<T>* vect)
+  void generate_N_Primes(uint64_t start, uint64_t n, std::vector<T>* primes)
   {
-    if (vect) {
-      PushBackPrimes2<T> pbp(*vect);
+    if (primes) {
+      PushBackPrimes2<T> pbp(*primes);
       pbp.generate_N_Primes(start, n, *this);
     }
+  }
+  template <typename T>
+  void generate_N_Primes(uint64_t n, std::vector<T>* primes)
+  {
+    this->generate_N_Primes(0, n, primes);
   }
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t));
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
