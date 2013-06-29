@@ -1,19 +1,6 @@
-June 22, 2013
+June 29, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
-
-For primesieve-4.3
-
-+ Document (ChangeLog) new std::vector<T> functionality.
-+ Document (ChangeLog) new stop_primesieve exception class.
-+ Document (ChangeLog) improved pre-sieving.
-+ Rewrite some of the source code examples e.g. using the new
-  std::vector<T> functionality and stop_primesieve.h.
-+ Update doc/Examples, doc/FAQ, doc/API.
-+ Silence MSVC /W4 warnings.
-+ Add version 1.0 to scripts/install_primesieve.sh
-
----------------------------------------------------
 
 1. Make ParallelPrimeSieve exception safe and implement cancellation.
 

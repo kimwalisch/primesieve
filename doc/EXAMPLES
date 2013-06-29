@@ -1,4 +1,4 @@
-March 09, 2013
+June 29, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -6,16 +6,17 @@ Contents
 ========
 
    1. About
-   2. Generate primes
-   3. Generate primes OOP
-   4. Cancel prime generation
-   5. Count primes
-   6. Print primes
-   7. ParallelPrimeSieve
-   8. Timing
-   9. Performance tuning
-  10. C++ Exceptions
-  11. Flags
+   2. Store primes in a std::vector
+   3. Count primes
+   4. Print primes
+   5. Callback primes
+   6. Callback primes OOP
+   7. Cancel callback
+   8. ParallelPrimeSieve
+   9. Timing
+  10. Performance tuning
+  11. C++ Exceptions
+  12. Flags
 
 1. About
 ========
@@ -32,128 +33,47 @@ Contents
 
   Try it yourself!
   ----------------
-  The example programs presented in this file are also stored in the
-  ../examples directory and can easily be compiled using the
-  Makefiles. Please read ../examples/README for more information.
+  Most of the example programs presented in this file are also stored
+  in the ../examples directory. Please read ../examples/README for
+  compilation instructions.
 
-2. Generate primes
-==================
+2. Store primes in a std::vector
+================================
 
-  API for prime generation
-  ------------------------
-  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t));
-  void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t));
-  void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int));
+  API for std::vector
+  -------------------
+  void generatePrimes(uint64_t start, uint64_t stop, std::vector<T>*);
+  void generate_N_Primes(uint64_t n, std::vector<T>*);
+  void generate_N_Primes(uint64_t start, uint64_t n, std::vector<T>*);
 
   ////////////////////////////////////////////////////////////////////
-  // generate_primes.cpp
-  // The callback function will be executed for each prime
-  // in the interval [2, 1000].
+  // store_primes_in_vector.cpp
+  // Store primes in a vector using PrimeSieve.
 
   #include <primesieve/soe/PrimeSieve.h>
-  #include <iostream>
-
-  void callback(unsigned int prime)
-  {
-    std::cout << prime << ", ";
-  }
-
-  int main()
-  {
-    PrimeSieve ps;
-    ps.generatePrimes(2, 1000, callback);
-    return 0;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-
-3. Generate primes OOP
-======================
-
-  If your class is derived from PrimeSieveCallback<T> and implements
-  a callback(T) method then you can pass instances of your class to
-  one of the generatePrimes() methods below and your callback method
-  will be executed for all the primes in the range [start, stop].
-
-  API for prime generation
-  ------------------------
-  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>*);
-  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t>*);
-  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t, int>*);
-
-  ////////////////////////////////////////////////////////////////////
-  // store_primes_in_vector2.cpp
-  // Instances of classes that derive from PrimeSieveCallback<T>
-  // can be passed to the generatePrimes() methods.
-
-  #include <primesieve/soe/PrimeSieve.h>
-  #include <primesieve/soe/PrimeSieveCallback.h>
-  #include <stdint.h>
-  #include <vector>
-  #include <iostream>
-
-  template <typename T>
-  class PrimeSieveVector : public std::vector<T>,
-                           public PrimeSieveCallback<uint64_t> {
-  public:
-    void callback(uint64_t prime)
-    {
-      this->push_back( static_cast<T>(prime) );
-    }
-  };
-
-  int main()
-  {
-    PrimeSieveVector<int> primes;
-    PrimeSieve ps;
-    ps.generatePrimes(0, 1000, &primes);
-    for (std::size_t i = 0; i < primes.size(); i++)
-      std::cout << primes[i] << ", ";
-    return 0;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-
-4. Cancel prime generation
-==========================
-
-  PrimeSieve objects are exception safe so it is possible to throw an
-  exception to cancel prime generation (callback).
-
-  ////////////////////////////////////////////////////////////////////
-  // cancel_prime_generation.cpp
-  // Cancel prime generation by throwing a stop_primesieve()
-  // exception. (stores 1000 primes in a vector).
-
-  #include <primesieve/soe/PrimeSieve.h>
-  #include <iostream>
-  #include <exception>
   #include <vector>
 
-  class stop_primesieve : public std::exception { };
-
-  std::vector<int> primes;
-
-  void callback(unsigned int prime)
-  {
-    if (primes.size() == 1000) throw stop_primesieve();
-    primes.push_back(prime);
-  }
-
   int main()
   {
+    std::vector<int> primes;
     PrimeSieve ps;
-    try {
-      ps.generatePrimes(0, 999999999, callback);
-    }
-    catch (stop_primesieve&) { }
-    std::cout << primes.size() << " primes stored!" << std::endl;
+
+    // Store primes between 100 and 200
+    int start = 100, stop = 200;
+    ps.generatePrimes(start, stop, &primes);
+
+    primes.clear();
+
+    // Store first 100 primes
+    int n = 100;
+    ps.generate_N_Primes(n, &primes);
+
     return 0;
   }
 
   ////////////////////////////////////////////////////////////////////
 
-5. Count primes
+3. Count primes
 ===============
 
   API for counting
@@ -184,7 +104,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-6. Print primes
+4. Print primes
 ===============
 
   API for printing (to std::cout)
@@ -216,7 +136,117 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-7. ParallelPrimeSieve
+5. Callback primes
+==================
+
+  API for prime callback
+  ----------------------
+  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, void (*callback)(uint32_t));
+  void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t));
+  void PrimeSieve::generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int));
+
+  ////////////////////////////////////////////////////////////////////
+  // callback_primes.cpp
+  // The callback function will be executed for each prime
+  // in the interval [2, 1000].
+
+  #include <primesieve/soe/PrimeSieve.h>
+  #include <iostream>
+
+  void callback(unsigned int prime)
+  {
+    std::cout << prime << ", ";
+  }
+
+  int main()
+  {
+    PrimeSieve ps;
+    ps.generatePrimes(2, 1000, callback);
+    return 0;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+
+6. Callback primes OOP
+======================
+
+  If your class is derived from PrimeSieveCallback<T> and implements a
+  callback(T) method then you can pass instances of your class to one
+  of the generatePrimes() methods below.
+
+  API for oop callback
+  --------------------
+  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>*);
+  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t>*);
+  void PrimeSieve::generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t, int>*);
+
+  ////////////////////////////////////////////////////////////////////
+  // callback_primes_oop.cpp
+  // Instances of classes that derive from PrimeSieveCallback<T>
+  // can be passed to the generatePrimes() methods.
+
+  #include <primesieve/soe/PrimeSieve.h>
+  #include <primesieve/soe/PrimeSieveCallback.h>
+  #include <stdint.h>
+  #include <list>
+
+  struct PrimeList : std::list<uint64_t>,
+                     PrimeSieveCallback<uint64_t> {
+    void callback(uint64_t prime)
+    {
+      this->push_back(prime);
+    }
+  };
+
+  int main()
+  {
+    PrimeList primeList;
+    PrimeSieve ps;
+    ps.generatePrimes(0, 1000, &primeList);
+    return 0;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+
+7. Cancel callback
+==================
+
+  PrimeSieve objects are exception safe so it is possible to throw an
+  exception to cancel prime generation (callback).
+
+  ////////////////////////////////////////////////////////////////////
+  // cancel_callback.cpp
+  // Cancel prime generation by throwing a stop_primesieve()
+  // exception. Find the 10^7th prime.
+
+  #include <primesieve/soe/PrimeSieve.h>
+  #include <primesieve/soe/stop_primesieve.h>
+  #include <iostream>
+
+  int i = 0;
+  int n = 10000000;
+
+  void callback(unsigned int prime)
+  {
+    if (++i == n) {
+      std::cout << n << "th prime = " << prime << std::endl;
+      throw stop_primesieve();
+    }
+  }
+
+  int main()
+  {
+    try {
+      PrimeSieve ps;
+      ps.generatePrimes(0, n * 50, callback);
+    }
+    catch (stop_primesieve&) { }
+    return 0;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+
+8. ParallelPrimeSieve
 =====================
 
   ParallelPrimeSieve uses OpenMP multi-threading to sieve primes in
@@ -240,8 +270,8 @@ Contents
   prime k-tuplets in arithmetic order using a single thread.
   To generate or print primes in parallel use setNumThreads(int).
 
-  Examples
-  --------
+  Example
+  -------
 
   ////////////////////////////////////////////////////////////////////
   // parallel_count.cpp
@@ -257,93 +287,14 @@ Contents
     uint64_t start = (uint64_t) 1E14;
     uint64_t stop  = (uint64_t) (1E14+1E11);
     ParallelPrimeSieve pps;
-    pps.countTriplets(start, stop);
-    std::cout << "Prime triplets in [10^14, 10^14+10^11] = "
-              << pps.getTripletCount()
-              << std::endl;
+    uint64_t count = pps.countTriplets(start, stop);
+    std::cout << "Prime triplets in [10^14, 10^14+10^11] = " << count << std::endl;
     return 0;
   }
 
   ////////////////////////////////////////////////////////////////////
 
-  Parallel prime number generation
-  --------------------------------
-  The generatePrimes() methods (section 2. & 3.) that take a callback
-  with 1 parameter are synchronized i.e. only 1 thread at a time
-  calls back primes. These methods are easy to use but do not scale
-  well beyond 4 CPU cores.
-
-  ////////////////////////////////////////////////////////////////////
-  // parallel_sum_primes.cpp
-  // Sum the primes below 10^10 using 4 threads.
-
-  #include <primesieve/soe/ParallelPrimeSieve.h>
-  #include <stdint.h>
-  #include <iostream>
-
-  uint64_t sum = 0;
-
-  void callback(uint64_t prime) {
-    sum += prime;
-  }
-
-  int main()
-  {
-    uint64_t stop = (uint64_t) 1E10;
-    ParallelPrimeSieve pps;
-    pps.setNumThreads(4);
-    pps.generatePrimes(0, stop, callback);
-    std::cout << "Sum of the primes below 10^10 = " << sum << std::endl;
-    return 0;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-
-  The generatePrimes() methods (section 2. & 3.) that take a callback
-  with 2 parameters are not synchronized i.e. multiple threads call
-  back primes in parallel. This method scales well even with 100 CPU
-  cores but you must pay attention not to write to the same variable
-  from multiple threads. In order to get the best performance you must
-  also ensure that each thread uses its own cache line for memory
-  access (avoids false sharing).
-
-  ////////////////////////////////////////////////////////////////////
-  // parallel_sum_primes2.cpp
-  // Sum the primes below 10^11 using all CPU cores.
-
-  #include <primesieve/soe/ParallelPrimeSieve.h>
-  #include <stdint.h>
-  #include <iostream>
-  #include <vector>
-  #include <numeric>
-
-  const int THREADS = ParallelPrimeSieve::getMaxThreads();
-  const int CACHE_LINE = 256;
-  const int NO_FALSE_SHARING = CACHE_LINE / sizeof(uint64_t);
-
-  std::vector<uint64_t> sum;
-
-  void callback(uint64_t prime, int threadNum)
-  {
-    int threadIndex = threadNum * NO_FALSE_SHARING;
-    sum[threadIndex] += prime;
-  }
-
-  int main()
-  {
-    sum.resize(THREADS * NO_FALSE_SHARING, 0);
-    ParallelPrimeSieve pps;
-    pps.setNumThreads(THREADS);
-    pps.generatePrimes(0, (uint64_t) 1E11, callback);
-    std::cout << "Sum of the primes below 10^11 = "
-              << std::accumulate(sum.begin(), sum.end(), 0ull)
-              << std::endl;
-    return 0;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-
-8. Timing
+9. Timing
 =========
 
   API for timing
@@ -367,8 +318,8 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-9. Performance tuning
-=====================
+10. Performance tuning
+======================
 
   The best sieving performance is achieved if the sieve array fits
   into the CPU's L1 data cache (usually 32 or 64 KB) when
@@ -395,16 +346,14 @@ Contents
     uint64_t stop  = (uint64_t) (1E19+1E10);
     PrimeSieve ps;
     ps.setSieveSize(512);
-    ps.countTwins(start, stop);
-    std::cout << "Twin primes in [10^19, 10^19+10^10] = "
-              << ps.getTwinCount()
-              << std::endl;
+    uint64_t count = ps.countTwins(start, stop);
+    std::cout << "Twin primes in [10^19, 10^19+10^10] = "<< count << std::endl;
     return 0;
   }
 
   ////////////////////////////////////////////////////////////////////
 
-10. C++ Exceptions
+11. C++ Exceptions
 ==================
 
   PrimeSieve and ParallelPrimeSieve objects throw primesieve_error
@@ -436,7 +385,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-11. Flags
+12. Flags
 =========
 
   Flags are settings for PrimeSieve and ParallelPrimeSieve objects.
@@ -469,7 +418,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
   // flags.cpp
-  // Count prime numbers and twin primes using flags.
+  // Count primes and print the status whilst sieving.
 
   #include <primesieve/soe/PrimeSieve.h>
   #include <stdint.h>
@@ -478,12 +427,11 @@ Contents
   int main()
   {
     PrimeSieve ps;
-    int flags = ps.COUNT_PRIMES | ps.COUNT_TWINS | ps.PRINT_STATUS;
+    int flags = ps.COUNT_PRIMES | ps.PRINT_STATUS;
     uint64_t start = 0;
     uint64_t stop  = (uint64_t) 1E11;
     ps.sieve(start, stop, flags);
-    std::cout << "Primes below 10^11: " << ps.getPrimeCount() << std::endl
-              << "Twins  below 10^11: " << ps.getTwinCount()  << std::endl;
+    std::cout << "Primes below 10^11: " << ps.getPrimeCount() << std::endl;
     return 0;
   }
 

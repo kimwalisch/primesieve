@@ -1,4 +1,4 @@
-March 07, 2013
+June 29, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -57,8 +57,17 @@ PrimeSieve API
     void generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t));
     void generatePrimes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int));
     void generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>*);
-    void generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t>*);
-    void generatePrimes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint64_t, int>*);
+    void generatePrimes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t>*);
+    void generatePrimes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t, int>*);
+    void generatePrimes(uint64_t start, uint64_t stop, std::vector<T>*);
+
+    void generate_N_Primes(uint64_t n, std::vector<T>*);
+    void generate_N_Primes(uint64_t start, uint64_t n, std::vector<T>*);
+
+    Nth prime methods, Runtime: O(n log log n)
+    ------------------------------------------
+    uint64_t nthPrime(uint64_t n);
+    uint64_t nthPrime(uint64_t start, uint64_t n);
 
     Print methods, Runtime: O(n log log n)
     --------------------------------------

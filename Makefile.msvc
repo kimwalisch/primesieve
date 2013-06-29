@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   23 July 2013
+# Last modified:   29 July 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -55,10 +55,11 @@ APP_OBJECTS = \
   $(BINDIR)\main.obj
 
 EXAMPLE_OBJECTS = \
-  $(EXDIR)\cancel_prime_generation.obj \
+  $(EXDIR)\callback_primes.obj \
+  $(EXDIR)\callback_primes_oop.obj \
+  $(EXDIR)\cancel_callback.obj \
   $(EXDIR)\count_primes.obj \
   $(EXDIR)\flags.obj \
-  $(EXDIR)\generate_primes.obj \
   $(EXDIR)\nth_prime.obj \
   $(EXDIR)\parallel_count.obj \
   $(EXDIR)\parallel_sum_primes.obj \
@@ -67,7 +68,6 @@ EXAMPLE_OBJECTS = \
   $(EXDIR)\print_twins.obj \
   $(EXDIR)\sieve_size.obj \
   $(EXDIR)\store_primes_in_vector.obj \
-  $(EXDIR)\store_primes_in_vector2.obj \
   $(EXDIR)\timing.obj
 
 SOE_HEADERS = \

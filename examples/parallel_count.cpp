@@ -12,9 +12,7 @@ int main()
   uint64_t start = (uint64_t) 1E14;
   uint64_t stop  = (uint64_t) (1E14+1E11);
   ParallelPrimeSieve pps;
-  pps.countTriplets(start, stop);
-  std::cout << "Prime triplets in [10^14, 10^14+10^11] = "
-            << pps.getTripletCount()
-            << std::endl;
+  uint64_t count = pps.countTriplets(start, stop);
+  std::cout << "Prime triplets in [10^14, 10^14+10^11] = " << count << std::endl;
   return 0;
 }
