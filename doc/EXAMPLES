@@ -250,28 +250,19 @@ Contents
 =====================
 
   ParallelPrimeSieve uses OpenMP multi-threading to sieve primes in
-  parallel, it scales well even with hundreds of CPU cores! Its main
-  use is to count primes and prime k-tuplets, it can also generate
-  and print primes and prime k-tuplets in parallel but only in random
-  order. The ParallelPrimeSieve class is derived from PrimeSieve so it
-  inherits PrimeSieve's API. The following API methods are exclusive
-  to ParallelPrimeSieve:
+  parallel, it scales well even with hundreds of CPU cores!
+  ParallelPrimeSieve objects can be used as drop in replacement for
+  PrimeSieve objects because ParallelPrimeSieve is derived from
+  PrimeSieve and by default only uses multi-threading if the
+  arithmetic order is not important e.g. for counting primes or for
+  calculating the nth prime. If you do not care about arithmetic order
+  you can force the number of threads using setNumThreads(int).
 
   API
   ---
   void       ParallelPrimeSieve::setNumThreads(int);
   int        ParallelPrimeSieve::getNumThreads() const;
   static int ParallelPrimeSieve::getMaxThreads();
-
-  Threading behavior
-  ------------------
-  By default ParallelPrimeSieve counts primes and prime k-tuplets
-  using all available CPU cores but generates and prints primes and
-  prime k-tuplets in arithmetic order using a single thread.
-  To generate or print primes in parallel use setNumThreads(int).
-
-  Example
-  -------
 
   ////////////////////////////////////////////////////////////////////
   // parallel_count.cpp
