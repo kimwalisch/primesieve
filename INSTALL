@@ -6,11 +6,11 @@
 1. About
 ========
 
-  This file explains how to compile and use the primesieve console
-  (terminal) application. If you rather want to build primesieve as a
-  library for use in your own C++ program please refer to
-  doc/LIBPRIMESIEVE. (If you want to build the primesieve GUI
-  application please refer to src/apps/gui/INSTALL.)
+  This file explains how to compile primesieve and how to use the
+  primesieve console (terminal) application. For more information on
+  the primesieve C++ library please refer to doc/LIBPRIMESIEVE.
+  (If you want to build the primesieve GUI application please refer to
+  src/apps/gui/INSTALL.)
 
   Precompiled binaries for Windows, Linux and Mac OS X are available
   at: http://code.google.com/p/primesieve/downloads/list

@@ -1,4 +1,4 @@
-March 03, 2012
+June 30, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -7,37 +7,26 @@ About
 
   This directory contains simple example programs that show how to use
   libprimesieve to generate, count and print primes and prime
-  k-tuplets.
-
-  The example programs are documented in ../doc/EXAMPLES,
+  k-tuplets. The example programs are documented in ../doc/EXAMPLES,
   ../doc/LIBPRIMESIEVE explains how to build libprimesieve in more
   detail.
 
-How to compile the example programs
-===================================
+Build the example programs
+==========================
 
   Open a terminal or 'Visual Studio Command Prompt' and cd into the
   primesieve directory. The following commands build and install
   libprimesieve and then compile the example programs.
 
-  Microsoft Visual C++
-  --------------------
-
-  > nmake -f Makefile.msvc lib
-  > nmake -f Makefile.msvc examples
-
   Unix-like OSes, `c++' compiler
   ------------------------------
 
-  $ make lib
+  $ make
   $ sudo make install
   $ make examples
 
-  Unix-like OSes, other C++ compilers
-  -----------------------------------
+  Microsoft Visual C++
+  --------------------
 
-  e.g. Intel C++ compiler:
-
-  $ make lib CXX=icpc CXXFLAGS="-O2 -openmp"
-  $ sudo make install
-  $ make examples CXX=icpc CXXFLAGS="-O2 -openmp"
+  > nmake -f Makefile.msvc
+  > nmake -f Makefile.msvc examples

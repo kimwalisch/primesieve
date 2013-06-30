@@ -1,4 +1,4 @@
-March 03, 2013
+June 30, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -30,7 +30,7 @@ Contents
   Unzip the primesieve source archive, open a terminal and cd into
   the newly created directory, then run:
 
-  $ make lib
+  $ make
   $ sudo make install
 
   The first make command builds a static libprimesieve using your
@@ -39,11 +39,11 @@ Contents
 
   More build options
   ------------------
-  $ make lib SHARED=yes                        Build a shared libprimesieve.
-  $ make lib CXX=icpc CXXFLAGS="-O2 -openmp"   Use an alternate C++ compiler, here icpc.
-  $ sudo make install PREFIX=/path             Set the installation path.
-  $ sudo make uninstall                        Completely remove libprimesieve.
-  $ make help                                  Print all build options.
+  $ make SHARED=yes                        Build a shared libprimesieve.
+  $ make CXX=icpc CXXFLAGS="-O2 -openmp"   Use an alternate C++ compiler, here icpc.
+  $ sudo make install PREFIX=/path         Set the installation path.
+  $ sudo make uninstall                    Completely remove libprimesieve.
+  $ make help                              Print all build options.
 
 3. How to link against libprimesieve (Unix-like OSes)
 =====================================================
@@ -64,7 +64,7 @@ Contents
   Unzip the primesieve source archive, open a Visual Studio Command
   Prompt and cd into the newly created directory, then run:
 
-  > nmake -f Makefile.msvc lib
+  > nmake -f Makefile.msvc
 
   This builds a static primesieve.lib to ./lib and copies the
   PrimeSieve header files to ./include.
