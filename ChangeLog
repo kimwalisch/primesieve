@@ -1,4 +1,4 @@
-Changes in version 4.3, 23/06/2013
+Changes in version 4.3, 30/06/2013
 ==================================
 
 This release improves primesieve as a library and adds an algorithm
@@ -6,15 +6,16 @@ to find the nth prime. The API and ABI of primesieve 4.3 are
 completely backwards compatible.
 
 1. New multi-threaded algorithm to find the nth prime:
-   (Parallel)PrimeSieve::nthPrime(n);
-   (Parallel)PrimeSieve::nthPrime(start, n);
+   PrimeSieve::nthPrime(n);
+   PrimeSieve::nthPrime(start, n);
 2. PrimeSieve now supports std::vector<T> as callback objects which
    greatly simplifies storing primes in a vector:
    PrimeSieve::generatePrimes   (start, stop, std::vector<T>*);
    PrimeSieve::generate_N_Primes(start, n,    std::vector<T>*);
-3. Added a <primesieve/soe/stop_primesieve.h> header for
+3. The Makefiles now build primesieve and libprimesieve by default.
+4. Added a <primesieve/soe/stop_primesieve.h> header for
    this commonly used exception to abort sieving.
-4. Added the scripts/install_primesieve.sh shell script that
+5. Added the scripts/install_primesieve.sh shell script that
    automatically downloads, builds and installs the latest primesieve
    and libprimesieve version.
 
