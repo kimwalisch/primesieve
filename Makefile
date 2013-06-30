@@ -70,8 +70,10 @@ NO_OUTPUT := $(NO_STDOUT) $(NO_STDERR)
 # Find the compiler's OpenMP flag
 #-----------------------------------------------------------------------------
 
+OPENMP_PROGRAM := '\#include <omp.h>\n int main() { return _OPENMP; }'
+
 is-openmp = $(shell command -v $(CXX) $(NO_OUTPUT) && \
-                    echo 'int main() { return _OPENMP; }' | \
+                    printf $(OPENMP_PROGRAM) | \
                     $(CXX) $(CXXFLAGS) $1 -xc++ -c -o /dev/null - $(NO_STDERR) && \
                     echo successfully compiled!)
 
