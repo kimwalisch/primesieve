@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   29 July 2013
+# Last modified:   30 July 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -19,56 +19,22 @@ BINDIR   = bin
 EXDIR    = examples
 INCDIR   = include
 LIBDIR   = lib
+OBJDIR   = obj
 SOEDIR   = src\soe
 
-BIN_OBJECTS = \
-  $(BINDIR)\EratBig.obj \
-  $(BINDIR)\EratMedium.obj \
-  $(BINDIR)\EratSmall.obj \
-  $(BINDIR)\ParallelPrimeSieve.obj \
-  $(BINDIR)\popcount.obj \
-  $(BINDIR)\PreSieve.obj \
-  $(BINDIR)\PrimeFinder.obj \
-  $(BINDIR)\PrimeGenerator.obj \
-  $(BINDIR)\PrimeSieve-nthPrime.obj \
-  $(BINDIR)\PrimeSieve.obj \
-  $(BINDIR)\SieveOfEratosthenes.obj \
-  $(BINDIR)\WheelFactorization.obj
-
-LIB_OBJECTS = \
-  $(LIBDIR)\EratBig.obj \
-  $(LIBDIR)\EratMedium.obj \
-  $(LIBDIR)\EratSmall.obj \
-  $(LIBDIR)\ParallelPrimeSieve.obj \
-  $(LIBDIR)\popcount.obj \
-  $(LIBDIR)\PreSieve.obj \
-  $(LIBDIR)\PrimeFinder.obj \
-  $(LIBDIR)\PrimeGenerator.obj \
-  $(LIBDIR)\PrimeSieve-nthPrime.obj \
-  $(LIBDIR)\PrimeSieve.obj \
-  $(LIBDIR)\SieveOfEratosthenes.obj \
-  $(LIBDIR)\WheelFactorization.obj
-
-APP_OBJECTS = \
-  $(BINDIR)\cmdoptions.obj \
-  $(BINDIR)\help.obj \
-  $(BINDIR)\main.obj
-
-EXAMPLE_OBJECTS = \
-  $(EXDIR)\callback_primes.obj \
-  $(EXDIR)\callback_primes_oop.obj \
-  $(EXDIR)\cancel_callback.obj \
-  $(EXDIR)\count_primes.obj \
-  $(EXDIR)\flags.obj \
-  $(EXDIR)\nth_prime.obj \
-  $(EXDIR)\parallel_count.obj \
-  $(EXDIR)\parallel_sum_primes.obj \
-  $(EXDIR)\parallel_sum_primes2.obj \
-  $(EXDIR)\primesieve_error.obj \
-  $(EXDIR)\print_twins.obj \
-  $(EXDIR)\sieve_size.obj \
-  $(EXDIR)\store_primes_in_vector.obj \
-  $(EXDIR)\timing.obj
+SOE_OBJECTS = \
+  $(OBJDIR)\EratBig.obj \
+  $(OBJDIR)\EratMedium.obj \
+  $(OBJDIR)\EratSmall.obj \
+  $(OBJDIR)\ParallelPrimeSieve.obj \
+  $(OBJDIR)\popcount.obj \
+  $(OBJDIR)\PreSieve.obj \
+  $(OBJDIR)\PrimeFinder.obj \
+  $(OBJDIR)\PrimeGenerator.obj \
+  $(OBJDIR)\PrimeSieve-nthPrime.obj \
+  $(OBJDIR)\PrimeSieve.obj \
+  $(OBJDIR)\SieveOfEratosthenes.obj \
+  $(OBJDIR)\WheelFactorization.obj
 
 SOE_HEADERS = \
   $(SOEDIR)\bits.h \
@@ -93,6 +59,27 @@ SOE_HEADERS = \
   $(SOEDIR)\stop_primesieve.h \
   $(SOEDIR)\toString.h \
   $(SOEDIR)\WheelFactorization.h
+
+APP_OBJECTS = \
+  $(OBJDIR)\cmdoptions.obj \
+  $(OBJDIR)\help.obj \
+  $(OBJDIR)\main.obj
+
+EXAMPLE_OBJECTS = \
+  $(EXDIR)\callback_primes.obj \
+  $(EXDIR)\callback_primes_oop.obj \
+  $(EXDIR)\cancel_callback.obj \
+  $(EXDIR)\count_primes.obj \
+  $(EXDIR)\flags.obj \
+  $(EXDIR)\nth_prime.obj \
+  $(EXDIR)\parallel_count.obj \
+  $(EXDIR)\parallel_sum_primes.obj \
+  $(EXDIR)\parallel_sum_primes2.obj \
+  $(EXDIR)\primesieve_error.obj \
+  $(EXDIR)\print_twins.obj \
+  $(EXDIR)\sieve_size.obj \
+  $(EXDIR)\store_primes_in_vector.obj \
+  $(EXDIR)\timing.obj
 
 #-----------------------------------------------------------------------------
 # Add /openmp if MSVC supports OpenMP
@@ -121,40 +108,51 @@ CXXFLAGS = $(CXXFLAGS) $(INCPATH)
 !ENDIF
 
 #-----------------------------------------------------------------------------
+# Default targets
+#-----------------------------------------------------------------------------
+
+all: bin lib
+
+#-----------------------------------------------------------------------------
+# Compile files in src/soe
+#-----------------------------------------------------------------------------
+
+soe_obj: $(SOE_OBJECTS)
+
+$(SOE_OBJECTS): $(SOEDIR)\$(@B).cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) /c $(SOEDIR)\$(@B).cpp /Fo$@
+
+#-----------------------------------------------------------------------------
 # Build the primesieve console application (read INSTALL)
 #-----------------------------------------------------------------------------
 
-bin: bin_dir bin_obj openmp_note
+bin: bin_dir soe_obj bin_obj openmp_note
 
 bin_dir:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
+	@if not exist $(OBJDIR) mkdir $(OBJDIR)
 
-bin_obj: $(APP_OBJECTS) $(BINDIR)\test.obj $(BIN_OBJECTS)
+bin_obj: $(APP_OBJECTS) $(OBJDIR)\test.obj $(SOE_OBJECTS)
 	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
-
-$(BIN_OBJECTS): $(SOEDIR)\$(@B).cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) /c $(SOEDIR)\$(@B).cpp /Fo$@
 
 $(APP_OBJECTS): src\apps\console\$(@B).cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\apps\console\$(@B).cpp /Fo$@
 
-$(BINDIR)\test.obj: src\test\test.cpp $(SOE_HEADERS)
+$(OBJDIR)\test.obj: src\test\test.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\test\test.cpp /Fo$@
 
 #-----------------------------------------------------------------------------
 # Build a static primesieve.lib (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-lib: lib_dir lib_obj include_dir openmp_note
+lib: lib_dir soe_obj lib_obj include_dir openmp_note
 
 lib_dir:
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
+	@if not exist $(OBJDIR) mkdir $(OBJDIR)
 
-lib_obj: $(LIB_OBJECTS)
+lib_obj: $(SOE_OBJECTS)
 	lib.exe /nologo /OUT:$(LIBDIR)\$(TARGET).lib $**
-
-$(LIB_OBJECTS): $(SOEDIR)\$(@B).cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) /c $(SOEDIR)\$(@B).cpp /Fo$@
 
 include_dir:
 	@if not exist $(INCDIR)\$(TARGET)\soe mkdir $(INCDIR)\$(TARGET)\soe
@@ -174,13 +172,11 @@ $(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
 	$(CXX) $(CXXFLAGS) /I"$(INCDIR)" $** /Fo$@ /Fe$(@R).exe /link $(LIBDIR)\$(TARGET).lib
 
 #-----------------------------------------------------------------------------
-# Common targets (all, clean)
+# Clean target
 #-----------------------------------------------------------------------------
 
-all: bin lib
-
 clean:
-	-rd /Q /S $(BINDIR) $(LIBDIR) $(INCDIR) 2> /nul
+	-rd /Q /S $(BINDIR) $(LIBDIR) $(INCDIR) $(OBJDIR) 2> /nul
 	-del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj 2> /nul
 
 #-----------------------------------------------------------------------------
@@ -209,10 +205,9 @@ help:
 	@echo ------------------------------------------------------
 	@echo -------------- primesieve build options --------------
 	@echo ------------------------------------------------------
-	@echo "nmake -f Makefile.msvc                    Build the primesieve application"
+	@echo "nmake -f Makefile.msvc                    Build primesieve and primesieve.lib"
 	@echo "nmake -f Makefile.msvc L1_DCACHE_SIZE=64  Set CPU L1 data cache, here 64 KB"
 	@echo "nmake -f Makefile.msvc check              Test the primesieve binary"
-	@echo "nmake -f Makefile.msvc lib                Build a static primesieve.lib"
-	@echo "nmake -f Makefile.msvc examples           Build the example programs"
 	@echo "nmake -f Makefile.msvc clean              Clean the output directories"
+	@echo "nmake -f Makefile.msvc examples           Build the example programs"
 	@echo "nmake -f Makefile.msvc help               Print this help menu"
