@@ -2,7 +2,7 @@
 # This shell script downloads, compiles and installs the
 # latest primesieve and libprimesieve version.
 # Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
-# This file is distributed under the BSD License.
+# Version 1.0, distributed under the BSD License.
 # Usage: $ sh install_primesieve.sh [GNU make arguments]
 
 
@@ -33,7 +33,7 @@ fi
 # Compile primesieve and libprimesieve
 cd primesieve
 command -v gmake > /dev/null 2> /dev/null
-if [ $? -eq 0 ]; then gmake bin lib "$@"; else make bin lib "$@"; fi
+if [ $? -eq 0 ]; then gmake "$@"; else make "$@"; fi
 if [ $? -ne 0 ]; then
   echo "Error: Failed to build primesieve!";
   exit 1;
