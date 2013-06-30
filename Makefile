@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   23 June 2013
+# Last modified:   30 June 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -17,6 +17,7 @@ BINDIR   := bin
 EXDIR    := examples
 INCDIR   := include
 LIBDIR   := lib
+OBJDIR   := obj
 SOEDIR   := src/soe
 
 SOE_OBJECTS:= \
@@ -141,48 +142,63 @@ else
 endif
 
 #-----------------------------------------------------------------------------
+# Default make behaviour
+#-----------------------------------------------------------------------------
+
+.PHONY: all
+
+all: bin lib
+
+#-----------------------------------------------------------------------------
 # Build the primesieve console application
 #-----------------------------------------------------------------------------
 
 BIN_OBJECTS := \
-  $(BINDIR)/cmdoptions.o \
-  $(BINDIR)/help.o \
-  $(BINDIR)/main.o \
-  $(BINDIR)/test.o \
-  $(addprefix $(BINDIR)/, $(notdir $(SOE_OBJECTS)))
+  $(OBJDIR)/cmdoptions.o \
+  $(OBJDIR)/help.o \
+  $(OBJDIR)/main.o \
+  $(OBJDIR)/test.o \
+  $(addprefix $(OBJDIR)/, $(notdir $(SOE_OBJECTS)))
 
 .PHONY: bin bin_dir bin_obj
 
 bin: bin_dir bin_obj
 
 bin_dir:
-	@mkdir -p $(BINDIR)
+	@mkdir -p $(OBJDIR) $(BINDIR)
 
 bin_obj: $(BIN_OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $^
 
-$(BINDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
+$(OBJDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BINDIR)/%.o: src/apps/console/%.cpp $(SOE_HEADERS)
+$(OBJDIR)/%.o: src/apps/console/%.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BINDIR)/%.o: src/test/%.cpp $(SOE_HEADERS)
+$(OBJDIR)/%.o: src/test/%.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 #-----------------------------------------------------------------------------
 # Build libprimesieve
 #-----------------------------------------------------------------------------
 
-LIB_CXXFLAGS := $(strip $(CXXFLAGS) $(FPIC))
-LIB_OBJECTS  := $(addprefix $(LIBDIR)/, $(notdir $(SOE_OBJECTS)))
+ifneq ($(FPIC),)
+  LIB_CXXFLAGS := $(strip $(CXXFLAGS) $(FPIC))
+  LIB_OBJDIR := $(LIBDIR)
+else
+  LIB_CXXFLAGS := $(CXXFLAGS)
+  LIB_OBJDIR := $(OBJDIR)
+endif
+
+LIB_OBJECTS  := $(addprefix $(LIB_OBJDIR)/, $(notdir $(SOE_OBJECTS)))
 
 .PHONY: lib lib_dir lib_obj include_dir
 
 lib: lib_dir lib_obj include_dir
 
 lib_dir:
-	@mkdir -p $(LIBDIR)
+	@mkdir -p $(OBJDIR) $(LIBDIR)
 
 lib_obj: $(LIB_OBJECTS)
 ifneq ($(SHARED),)
@@ -191,7 +207,7 @@ else
 	ar rcs $(LIBDIR)/$(LIBRARY) $^
 endif
 
-$(LIBDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
+$(LIB_OBJDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
 	$(CXX) $(LIB_CXXFLAGS) -c $< -o $@
 
 include_dir:
@@ -223,18 +239,22 @@ check test: bin
 	$(BINDIR)/./$(TARGET) --test
 
 #-----------------------------------------------------------------------------
-# Common targets (all, clean, install, uninstall)
+# Clean target
 #-----------------------------------------------------------------------------
 
-.PHONY: all clean install uninstall
-
-all: bin lib
+.PHONY: clean
 
 EXAMPLE_PROGRAMS = $(shell find $(EXDIR) -type f -maxdepth 1 \
   ! -name '*.cpp' ! -name README $(NO_STDERR))
 
 clean:
-	rm -rf $(BINDIR) $(LIBDIR) $(INCDIR) $(EXAMPLE_PROGRAMS)
+	rm -rf $(BINDIR) $(LIBDIR) $(INCDIR) $(OBJDIR) $(EXAMPLE_PROGRAMS)
+
+#-----------------------------------------------------------------------------
+# Install & uninstall targets
+#-----------------------------------------------------------------------------
+
+.PHONY: install uninstall
 
 # requires sudo privileges
 install:
@@ -283,13 +303,12 @@ help:
 	@echo ----------------------------------------------
 	@echo ---------- primesieve build options ----------
 	@echo ----------------------------------------------
-	@echo "make                                     Build the primesieve console application (using c++)"
+	@echo "make                                     Build primesieve using the default c++ compiler"
 	@echo "make CXX=icpc CXXFLAGS=\"-O2 -openmp\"     Specify a custom C++ compiler, here icpc"
 	@echo "make L1_DCACHE_SIZE=32                   Specify the CPU's L1 data cache size, here 32 kilobytes"
 	@echo "make check                               Test primesieve for correctness"
 	@echo "make clean                               Clean the output directories (bin, lib, ...)"
-	@echo "make lib                                 Build a static libprimesieve library (using c++)"
-	@echo "make lib SHARED=yes                      Build a shared libprimesieve library (using c++)"
+	@echo "make lib SHARED=yes                      Build a shared libprimesieve library"
 	@echo "make examples                            Build the example programs in ./examples"
 	@echo "sudo make install                        Install primesieve and libprimesieve to /usr/local or /usr"
 	@echo "sudo make install PREFIX=/path           Specify a custom installation path"
