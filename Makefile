@@ -170,7 +170,7 @@ bin_dir:
 bin_obj: $(BIN_OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $^
 
-$(OBJDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
+$(OBJDIR)/%.o:: $(SOEDIR)/%.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(OBJDIR)/%.o: src/apps/console/%.cpp $(SOE_HEADERS)
@@ -207,7 +207,7 @@ else
 	ar rcs $(LIBDIR)/$(LIBRARY) $^
 endif
 
-$(LIB_OBJDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
+$(LIB_OBJDIR)/%.o:: $(SOEDIR)/%.cpp $(SOE_HEADERS)
 	$(CXX) $(LIB_CXXFLAGS) -c $< -o $@
 
 include_dir:
