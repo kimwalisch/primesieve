@@ -36,7 +36,7 @@ Contents
   operations and uses O(n^0.5) space.
 
   primesieve's memory requirement per thread is about:
-  pi(n^0.5) * 8 bytes + 400 kilobytes
+  pi(n^0.5) * 8 bytes + 32 kilobytes
 
 3. Requirements
 ===============
