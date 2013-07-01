@@ -125,6 +125,7 @@ make_dir:
 
 clean:
 	-rd /Q /S $(BINDIR) $(LIBDIR) $(OBJDIR) $(INCDIR) 2> /nul
+	-del $(EXDIR)\*.obj 2> /nul
 
 #-----------------------------------------------------------------------------
 # Compilation rules
