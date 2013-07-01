@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   30 June 2013
+# Last modified:   01 July 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -77,7 +77,7 @@ is-openmp = $(shell command -v $(CXX) $(NO_OUTPUT) && \
                     $(CXX) $(CXXFLAGS) $1 -xc++ -c -o /dev/null - $(NO_STDERR) && \
                     echo successfully compiled!)
 
-ifeq ($(call is-openmp),)
+ifeq ($(call is-openmp,),)
   ifneq ($(call is-openmp,-openmp),)
     CXXFLAGS += -openmp
   else
@@ -124,8 +124,8 @@ ifneq ($(shell uname | grep -i mingw),)
 endif
 
 #-----------------------------------------------------------------------------
-# `make lib`            -> libprimesieve.a
-# `make lib SHARED=yes` -> libprimesieve.(so|dylib)
+# make            -> libprimesieve.a
+# make SHARED=yes -> libprimesieve.(so|dylib)
 #-----------------------------------------------------------------------------
 
 ifeq ($(SHARED),)
@@ -152,15 +152,34 @@ endif
 all: bin lib
 
 #-----------------------------------------------------------------------------
-# Build the primesieve console application
+# Compilation rules
 #-----------------------------------------------------------------------------
 
-BIN_OBJECTS := \
+$(OBJDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(LIBDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) $(FPIC) -c $< -o $@
+
+$(OBJDIR)/%.o: src/apps/console/%.cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJDIR)/%.o: src/test/%.cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BINDIR)/%: $(EXDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $< -o $(BINDIR)/$(notdir $@) -l$(TARGET)
+
+#-----------------------------------------------------------------------------
+# Build the console application
+#-----------------------------------------------------------------------------
+
+BIN_OBJECTS = \
+  $(addprefix $(OBJDIR)/, $(notdir $(SOE_OBJECTS))) \
   $(OBJDIR)/cmdoptions.o \
   $(OBJDIR)/help.o \
   $(OBJDIR)/main.o \
-  $(OBJDIR)/test.o \
-  $(addprefix $(OBJDIR)/, $(notdir $(SOE_OBJECTS)))
+  $(OBJDIR)/test.o
 
 .PHONY: bin bin_dir bin_obj
 
@@ -172,28 +191,9 @@ bin_dir:
 bin_obj: $(BIN_OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $^
 
-$(OBJDIR)/%.o:: $(SOEDIR)/%.cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(OBJDIR)/%.o: src/apps/console/%.cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(OBJDIR)/%.o: src/test/%.cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 #-----------------------------------------------------------------------------
 # Build libprimesieve
 #-----------------------------------------------------------------------------
-
-ifneq ($(FPIC),)
-  LIB_CXXFLAGS := $(strip $(CXXFLAGS) $(FPIC))
-  LIB_OBJDIR := $(LIBDIR)
-else
-  LIB_CXXFLAGS := $(CXXFLAGS)
-  LIB_OBJDIR := $(OBJDIR)
-endif
-
-LIB_OBJECTS  := $(addprefix $(LIB_OBJDIR)/, $(notdir $(SOE_OBJECTS)))
 
 .PHONY: lib lib_dir lib_obj include_dir
 
@@ -202,15 +202,16 @@ lib: lib_dir lib_obj include_dir
 lib_dir:
 	@mkdir -p $(OBJDIR) $(LIBDIR)
 
+LIB_OBJECTS = $(addprefix \
+                $(if $(FPIC),$(LIBDIR)/,$(OBJDIR)/), \
+                  $(notdir $(SOE_OBJECTS)))
+
 lib_obj: $(LIB_OBJECTS)
 ifneq ($(SHARED),)
-	$(CXX) $(LIB_CXXFLAGS) $(SOFLAG) -o $(LIBDIR)/$(LIBRARY) $^
+	$(CXX) $(strip $(CXXFLAGS) $(FPIC) $(SOFLAG)) -o $(LIBDIR)/$(LIBRARY) $^
 else
 	ar rcs $(LIBDIR)/$(LIBRARY) $^
 endif
-
-$(LIB_OBJDIR)/%.o:: $(SOEDIR)/%.cpp $(SOE_HEADERS)
-	$(CXX) $(LIB_CXXFLAGS) -c $< -o $@
 
 include_dir:
 	@mkdir -p $(INCDIR)/$(TARGET)/soe
@@ -226,10 +227,10 @@ include_dir:
 
 .PHONY: examples
 
-examples: $(basename $(wildcard $(EXDIR)/*.cpp))
-
-$(EXDIR)/%: $(EXDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $< -o $@ -l$(TARGET)
+examples: $(addprefix $(BINDIR)/, \
+            $(notdir \
+              $(basename \
+                $(wildcard $(EXDIR)/*.cpp))))
 
 #-----------------------------------------------------------------------------
 # `make check` runs correctness tests
@@ -246,11 +247,8 @@ check test: bin
 
 .PHONY: clean
 
-EXAMPLE_PROGRAMS = $(shell find $(EXDIR) -type f -maxdepth 1 \
-  ! -name '*.cpp' ! -name README $(NO_STDERR))
-
 clean:
-	rm -rf $(BINDIR) $(LIBDIR) $(INCDIR) $(OBJDIR) $(EXAMPLE_PROGRAMS)
+	rm -rf $(BINDIR) $(LIBDIR) $(INCDIR) $(OBJDIR)
 
 #-----------------------------------------------------------------------------
 # Install & uninstall targets
@@ -310,7 +308,7 @@ help:
 	@echo "make L1_DCACHE_SIZE=32                   Specify the CPU's L1 data cache size, here 32 kilobytes"
 	@echo "make check                               Test primesieve for correctness"
 	@echo "make clean                               Clean the output directories (bin, lib, ...)"
-	@echo "make lib SHARED=yes                      Build a shared libprimesieve library"
+	@echo "make SHARED=yes                          Build a shared libprimesieve library"
 	@echo "make examples                            Build the example programs in ./examples"
 	@echo "sudo make install                        Install primesieve and libprimesieve to /usr/local or /usr"
 	@echo "sudo make install PREFIX=/path           Specify a custom installation path"
