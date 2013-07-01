@@ -187,11 +187,11 @@ $(BINDIR)/%: $(EXDIR)/%.cpp
 #-----------------------------------------------------------------------------
 
 BIN_OBJECTS = \
-  $(subst $(SOEDIR),$(OBJDIR),$(SOE_OBJECTS)) \
   $(OBJDIR)/cmdoptions.o \
   $(OBJDIR)/help.o \
   $(OBJDIR)/main.o \
-  $(OBJDIR)/test.o
+  $(OBJDIR)/test.o \
+  $(subst $(SOEDIR),$(OBJDIR),$(SOE_OBJECTS))
 
 .PHONY: bin bin_obj
 
