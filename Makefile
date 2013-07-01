@@ -225,7 +225,7 @@ else
 endif
 
 #-----------------------------------------------------------------------------
-# Compile the example programs (./examples)
+# Compile the example programs
 #-----------------------------------------------------------------------------
 
 .PHONY: examples
