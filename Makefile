@@ -152,6 +152,18 @@ endif
 all: bin lib
 
 #-----------------------------------------------------------------------------
+# Create and clean output directories
+#-----------------------------------------------------------------------------
+
+.PHONY: make_dir clean
+
+make_dir:
+	@mkdir -p $(BINDIR) $(LIBDIR) $(OBJDIR) $(INCDIR)/$(TARGET)/soe
+
+clean:
+	rm -rf $(BINDIR) $(LIBDIR) $(OBJDIR) $(INCDIR)
+
+#-----------------------------------------------------------------------------
 # Compilation rules
 #-----------------------------------------------------------------------------
 
@@ -175,18 +187,15 @@ $(BINDIR)/%: $(EXDIR)/%.cpp
 #-----------------------------------------------------------------------------
 
 BIN_OBJECTS = \
-  $(addprefix $(OBJDIR)/, $(notdir $(SOE_OBJECTS))) \
+  $(subst $(SOEDIR),$(OBJDIR),$(SOE_OBJECTS)) \
   $(OBJDIR)/cmdoptions.o \
   $(OBJDIR)/help.o \
   $(OBJDIR)/main.o \
   $(OBJDIR)/test.o
 
-.PHONY: bin bin_dir bin_obj
+.PHONY: bin bin_obj
 
-bin: bin_dir bin_obj
-
-bin_dir:
-	@mkdir -p $(OBJDIR) $(BINDIR)
+bin: make_dir bin_obj
 
 bin_obj: $(BIN_OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(TARGET) $^
@@ -195,16 +204,18 @@ bin_obj: $(BIN_OBJECTS)
 # Build libprimesieve
 #-----------------------------------------------------------------------------
 
-.PHONY: lib lib_dir lib_obj include_dir
-
-lib: lib_dir lib_obj include_dir
-
-lib_dir:
-	@mkdir -p $(OBJDIR) $(LIBDIR)
-
 LIB_OBJECTS = $(addprefix \
                 $(if $(FPIC),$(LIBDIR)/,$(OBJDIR)/), \
                   $(notdir $(SOE_OBJECTS)))
+
+.PHONY: lib lib_obj
+
+lib: make_dir lib_obj
+	cp -f $(SOEDIR)/PrimeSieve.h $(INCDIR)/$(TARGET)/soe
+	cp -f $(SOEDIR)/ParallelPrimeSieve.h $(INCDIR)/$(TARGET)/soe
+	cp -f $(SOEDIR)/primesieve_error.h $(INCDIR)/$(TARGET)/soe
+	cp -f $(SOEDIR)/PrimeSieveCallback.h $(INCDIR)/$(TARGET)/soe
+	cp -f $(SOEDIR)/stop_primesieve.h $(INCDIR)/$(TARGET)/soe
 
 lib_obj: $(LIB_OBJECTS)
 ifneq ($(SHARED),)
@@ -213,24 +224,15 @@ else
 	ar rcs $(LIBDIR)/$(LIBRARY) $^
 endif
 
-include_dir:
-	@mkdir -p $(INCDIR)/$(TARGET)/soe
-	cp -f $(SOEDIR)/PrimeSieve.h $(INCDIR)/$(TARGET)/soe
-	cp -f $(SOEDIR)/ParallelPrimeSieve.h $(INCDIR)/$(TARGET)/soe
-	cp -f $(SOEDIR)/primesieve_error.h $(INCDIR)/$(TARGET)/soe
-	cp -f $(SOEDIR)/PrimeSieveCallback.h $(INCDIR)/$(TARGET)/soe
-	cp -f $(SOEDIR)/stop_primesieve.h $(INCDIR)/$(TARGET)/soe
-
 #-----------------------------------------------------------------------------
 # Compile the example programs (./examples)
 #-----------------------------------------------------------------------------
 
 .PHONY: examples
 
-examples: $(addprefix $(BINDIR)/, \
-            $(notdir \
-              $(basename \
-                $(wildcard $(EXDIR)/*.cpp))))
+examples: make_dir $(subst $(EXDIR),$(BINDIR), \
+                     $(basename \
+                       $(wildcard $(EXDIR)/*.cpp)))
 
 #-----------------------------------------------------------------------------
 # `make check` runs correctness tests
@@ -240,15 +242,6 @@ examples: $(addprefix $(BINDIR)/, \
 
 check test: bin
 	$(BINDIR)/./$(TARGET) --test
-
-#-----------------------------------------------------------------------------
-# Clean target
-#-----------------------------------------------------------------------------
-
-.PHONY: clean
-
-clean:
-	rm -rf $(BINDIR) $(LIBDIR) $(INCDIR) $(OBJDIR)
 
 #-----------------------------------------------------------------------------
 # Install & uninstall targets
