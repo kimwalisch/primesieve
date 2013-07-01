@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   30 July 2013
+# Last modified:   01 July 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -114,26 +114,24 @@ CXXFLAGS = $(CXXFLAGS) $(INCPATH)
 all: bin lib
 
 #-----------------------------------------------------------------------------
-# Compile files in src/soe
+# Create and clean output directories
 #-----------------------------------------------------------------------------
 
-soe_obj: $(SOE_OBJECTS)
+make_dir:
+	@if not exist $(BINDIR) mkdir $(BINDIR)
+	@if not exist $(LIBDIR) mkdir $(LIBDIR)
+	@if not exist $(OBJDIR) mkdir $(OBJDIR)
+	@if not exist $(INCDIR)\$(TARGET)\soe mkdir $(INCDIR)\$(TARGET)\soe
+
+clean:
+	-rd /Q /S $(BINDIR) $(LIBDIR) $(OBJDIR) $(INCDIR) 2> /nul
+
+#-----------------------------------------------------------------------------
+# Compilation rules
+#-----------------------------------------------------------------------------
 
 $(SOE_OBJECTS): $(SOEDIR)\$(@B).cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c $(SOEDIR)\$(@B).cpp /Fo$@
-
-#-----------------------------------------------------------------------------
-# Build the primesieve console application (read INSTALL)
-#-----------------------------------------------------------------------------
-
-bin: bin_dir soe_obj bin_obj openmp_note
-
-bin_dir:
-	@if not exist $(BINDIR) mkdir $(BINDIR)
-	@if not exist $(OBJDIR) mkdir $(OBJDIR)
-
-bin_obj: $(APP_OBJECTS) $(OBJDIR)\test.obj $(SOE_OBJECTS)
-	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
 
 $(APP_OBJECTS): src\apps\console\$(@B).cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\apps\console\$(@B).cpp /Fo$@
@@ -142,20 +140,24 @@ $(OBJDIR)\test.obj: src\test\test.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\test\test.cpp /Fo$@
 
 #-----------------------------------------------------------------------------
+# Build the primesieve console application (read INSTALL)
+#-----------------------------------------------------------------------------
+
+bin: make_dir bin_obj openmp_note
+
+bin_obj: $(APP_OBJECTS) $(OBJDIR)\test.obj $(SOE_OBJECTS)
+	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
+
+#-----------------------------------------------------------------------------
 # Build a static primesieve.lib (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
 
-lib: lib_dir soe_obj lib_obj include_dir openmp_note
-
-lib_dir:
-	@if not exist $(LIBDIR) mkdir $(LIBDIR)
-	@if not exist $(OBJDIR) mkdir $(OBJDIR)
+lib: make_dir lib_obj copy_headers openmp_note
 
 lib_obj: $(SOE_OBJECTS)
 	lib.exe /nologo /OUT:$(LIBDIR)\$(TARGET).lib $**
 
-include_dir:
-	@if not exist $(INCDIR)\$(TARGET)\soe mkdir $(INCDIR)\$(TARGET)\soe
+copy_headers:
 	copy /Y $(SOEDIR)\PrimeSieve.h $(INCDIR)\$(TARGET)\soe
 	copy /Y $(SOEDIR)\ParallelPrimeSieve.h $(INCDIR)\$(TARGET)\soe
 	copy /Y $(SOEDIR)\primesieve_error.h $(INCDIR)\$(TARGET)\soe
@@ -166,18 +168,10 @@ include_dir:
 # Build the example programs (read examples/README)
 #-----------------------------------------------------------------------------
 
-examples: $(EXAMPLE_OBJECTS) openmp_note
+examples: make_dir $(EXAMPLE_OBJECTS) openmp_note
 
 $(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
-	$(CXX) $(CXXFLAGS) /I"$(INCDIR)" $** /Fo$@ /Fe$(@R).exe /link $(LIBDIR)\$(TARGET).lib
-
-#-----------------------------------------------------------------------------
-# Clean target
-#-----------------------------------------------------------------------------
-
-clean:
-	-rd /Q /S $(BINDIR) $(LIBDIR) $(INCDIR) $(OBJDIR) 2> /nul
-	-del /Q $(EXDIR)\*.exe $(EXDIR)\*.obj 2> /nul
+	$(CXX) $(CXXFLAGS) /I"$(INCDIR)" $** /Fo$@ /Fe$(BINDIR)/$(@B).exe /link $(LIBDIR)\$(TARGET).lib
 
 #-----------------------------------------------------------------------------
 # `nmake -f Makefile.msvc check` runs correctness tests
