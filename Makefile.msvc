@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   01 July 2013
+# Last modified:   02 July 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -66,20 +66,20 @@ APP_OBJECTS = \
   $(OBJDIR)\main.obj
 
 EXAMPLE_OBJECTS = \
-  $(EXDIR)\callback_primes.obj \
-  $(EXDIR)\callback_primes_oop.obj \
-  $(EXDIR)\cancel_callback.obj \
-  $(EXDIR)\count_primes.obj \
-  $(EXDIR)\flags.obj \
-  $(EXDIR)\nth_prime.obj \
-  $(EXDIR)\parallel_count.obj \
-  $(EXDIR)\parallel_sum_primes.obj \
-  $(EXDIR)\parallel_sum_primes2.obj \
-  $(EXDIR)\primesieve_error.obj \
-  $(EXDIR)\print_twins.obj \
-  $(EXDIR)\sieve_size.obj \
-  $(EXDIR)\store_primes_in_vector.obj \
-  $(EXDIR)\timing.obj
+  $(OBJDIR)\$(EXDIR)\callback_primes.obj \
+  $(OBJDIR)\$(EXDIR)\callback_primes_oop.obj \
+  $(OBJDIR)\$(EXDIR)\cancel_callback.obj \
+  $(OBJDIR)\$(EXDIR)\count_primes.obj \
+  $(OBJDIR)\$(EXDIR)\flags.obj \
+  $(OBJDIR)\$(EXDIR)\nth_prime.obj \
+  $(OBJDIR)\$(EXDIR)\parallel_count.obj \
+  $(OBJDIR)\$(EXDIR)\parallel_sum_primes.obj \
+  $(OBJDIR)\$(EXDIR)\parallel_sum_primes2.obj \
+  $(OBJDIR)\$(EXDIR)\primesieve_error.obj \
+  $(OBJDIR)\$(EXDIR)\print_twins.obj \
+  $(OBJDIR)\$(EXDIR)\sieve_size.obj \
+  $(OBJDIR)\$(EXDIR)\store_primes_in_vector.obj \
+  $(OBJDIR)\$(EXDIR)\timing.obj
 
 #-----------------------------------------------------------------------------
 # Add /openmp if MSVC supports OpenMP
@@ -121,11 +121,11 @@ make_dir:
 	@if not exist $(BINDIR) mkdir $(BINDIR)
 	@if not exist $(LIBDIR) mkdir $(LIBDIR)
 	@if not exist $(OBJDIR) mkdir $(OBJDIR)
+	@if not exist $(OBJDIR)\$(EXDIR) mkdir $(OBJDIR)\$(EXDIR)
 	@if not exist $(INCDIR)\$(TARGET)\soe mkdir $(INCDIR)\$(TARGET)\soe
 
 clean:
 	-rd /Q /S $(BINDIR) $(LIBDIR) $(OBJDIR) $(INCDIR) 2> /nul
-	-del $(EXDIR)\*.obj 2> /nul
 
 #-----------------------------------------------------------------------------
 # Compilation rules
@@ -140,6 +140,9 @@ $(APP_OBJECTS): src\apps\console\$(@B).cpp $(SOE_HEADERS)
 $(OBJDIR)\test.obj: src\test\test.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\test\test.cpp /Fo$@
 
+$(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
+	$(CXX) $(CXXFLAGS) /I"$(INCDIR)" $** /Fo$@ /Fe$(BINDIR)/$(@B).exe /link $(LIBDIR)\$(TARGET).lib
+
 #-----------------------------------------------------------------------------
 # Build the primesieve console application (read INSTALL)
 #-----------------------------------------------------------------------------
@@ -152,6 +155,8 @@ bin_obj: $(APP_OBJECTS) $(OBJDIR)\test.obj $(SOE_OBJECTS)
 #-----------------------------------------------------------------------------
 # Build a static primesieve.lib (read doc/LIBPRIMESIEVE)
 #-----------------------------------------------------------------------------
+
+static: lib
 
 lib: make_dir lib_obj copy_headers openmp_note
 
@@ -170,9 +175,6 @@ copy_headers:
 #-----------------------------------------------------------------------------
 
 examples: make_dir $(EXAMPLE_OBJECTS) openmp_note
-
-$(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
-	$(CXX) $(CXXFLAGS) /I"$(INCDIR)" $** /Fo$@ /Fe$(BINDIR)/$(@B).exe /link $(LIBDIR)\$(TARGET).lib
 
 #-----------------------------------------------------------------------------
 # `nmake -f Makefile.msvc check` runs correctness tests
@@ -202,7 +204,7 @@ help:
 	@echo ------------------------------------------------------
 	@echo "nmake -f Makefile.msvc                    Build primesieve and primesieve.lib"
 	@echo "nmake -f Makefile.msvc L1_DCACHE_SIZE=64  Set CPU L1 data cache, here 64 KB"
-	@echo "nmake -f Makefile.msvc check              Test the primesieve binary"
+	@echo "nmake -f Makefile.msvc check              Run integration tests"
 	@echo "nmake -f Makefile.msvc clean              Clean the output directories"
 	@echo "nmake -f Makefile.msvc examples           Build the example programs"
 	@echo "nmake -f Makefile.msvc help               Print this help menu"
