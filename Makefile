@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   01 July 2013
+# Last modified:   02 July 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -18,21 +18,22 @@ EXDIR    := examples
 INCDIR   := include
 LIBDIR   := lib
 OBJDIR   := obj
+FPICDIR  := obj/fpic
 SOEDIR   := src/soe
 
 SOE_OBJECTS:= \
-  $(SOEDIR)/EratBig.o \
-  $(SOEDIR)/EratMedium.o \
-  $(SOEDIR)/EratSmall.o \
-  $(SOEDIR)/ParallelPrimeSieve.o \
-  $(SOEDIR)/popcount.o \
-  $(SOEDIR)/PreSieve.o \
-  $(SOEDIR)/PrimeFinder.o \
-  $(SOEDIR)/PrimeGenerator.o \
-  $(SOEDIR)/PrimeSieve-nthPrime.o \
-  $(SOEDIR)/PrimeSieve.o \
-  $(SOEDIR)/SieveOfEratosthenes.o \
-  $(SOEDIR)/WheelFactorization.o
+  $(OBJDIR)/EratBig.o \
+  $(OBJDIR)/EratMedium.o \
+  $(OBJDIR)/EratSmall.o \
+  $(OBJDIR)/ParallelPrimeSieve.o \
+  $(OBJDIR)/popcount.o \
+  $(OBJDIR)/PreSieve.o \
+  $(OBJDIR)/PrimeFinder.o \
+  $(OBJDIR)/PrimeGenerator.o \
+  $(OBJDIR)/PrimeSieve-nthPrime.o \
+  $(OBJDIR)/PrimeSieve.o \
+  $(OBJDIR)/SieveOfEratosthenes.o \
+  $(OBJDIR)/WheelFactorization.o
 
 SOE_HEADERS := \
   $(SOEDIR)/bits.h \
@@ -57,6 +58,13 @@ SOE_HEADERS := \
   $(SOEDIR)/stop_primesieve.h \
   $(SOEDIR)/toString.h \
   $(SOEDIR)/WheelFactorization.h
+
+INC_HEADERS := \
+  $(SOEDIR)/ParallelPrimeSieve.h \
+  $(SOEDIR)/PrimeSieve.h \
+  $(SOEDIR)/primesieve_error.h \
+  $(SOEDIR)/PrimeSieveCallback.h \
+  $(SOEDIR)/stop_primesieve.h
 
 #-----------------------------------------------------------------------------
 # Needed to suppress output while checking system features
@@ -129,27 +137,31 @@ endif
 #-----------------------------------------------------------------------------
 
 ifeq ($(SHARED),)
-  LIBRARY := lib$(TARGET).a
+  STATIC := yes
+endif
+
+ifneq ($(shell uname | grep -i darwin),)
+  SOFLAG := -dynamiclib
+  SHARED_LIBRARY := lib$(TARGET).dylib
 else
-  ifneq ($(shell uname | grep -i darwin),)
-    SOFLAG := -dynamiclib
-    LIBRARY := lib$(TARGET).dylib
-  else
-    SOFLAG := -shared
-    LIBRARY := lib$(TARGET).so
-    ifeq ($(shell uname | egrep -i 'mingw|cygwin'),)
-      FPIC := -fPIC
-    endif
+  SOFLAG := -shared
+  SHARED_LIBRARY := lib$(TARGET).so
+  ifeq ($(shell uname | egrep -i 'mingw|cygwin'),)
+    FPIC := -fPIC
   endif
 endif
 
 #-----------------------------------------------------------------------------
-# Default targets
+# Top level targets
 #-----------------------------------------------------------------------------
 
-.PHONY: all
+.PHONY: default all lib
 
-all: bin lib
+default: bin static
+
+all: bin static shared
+
+lib: $(if $(STATIC),static,) $(if $(SHARED),shared,)
 
 #-----------------------------------------------------------------------------
 # Create and clean output directories
@@ -158,7 +170,8 @@ all: bin lib
 .PHONY: make_dir clean
 
 make_dir:
-	@mkdir -p $(BINDIR) $(LIBDIR) $(OBJDIR) $(INCDIR)/$(TARGET)/soe
+	@mkdir -p $(BINDIR) $(LIBDIR) $(OBJDIR) $(FPICDIR)
+	@mkdir -p  $(INCDIR)/$(TARGET)/soe
 
 clean:
 	rm -rf $(BINDIR) $(LIBDIR) $(OBJDIR) $(INCDIR)
@@ -170,7 +183,7 @@ clean:
 $(OBJDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(LIBDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
+$(FPICDIR)/%.o: $(SOEDIR)/%.cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) $(FPIC) -c $< -o $@
 
 $(OBJDIR)/%.o: src/apps/console/%.cpp $(SOE_HEADERS)
@@ -191,7 +204,7 @@ BIN_OBJECTS = \
   $(OBJDIR)/help.o \
   $(OBJDIR)/main.o \
   $(OBJDIR)/test.o \
-  $(subst $(SOEDIR),$(OBJDIR),$(SOE_OBJECTS))
+  $(SOE_OBJECTS)
 
 .PHONY: bin bin_obj
 
@@ -204,28 +217,26 @@ bin_obj: $(BIN_OBJECTS)
 # Build libprimesieve
 #-----------------------------------------------------------------------------
 
-LIB_OBJECTS = $(addprefix \
-                $(if $(FPIC),$(LIBDIR)/,$(OBJDIR)/), \
-                  $(notdir $(SOE_OBJECTS)))
+SHARED_OBJECTS = $(if $(FPIC), \
+                   $(subst $(OBJDIR),$(FPICDIR),$(SOE_OBJECTS)), \
+                     $(SOE_OBJECTS))
 
-.PHONY: lib lib_obj
+.PHONY: static shared static_obj shared_obj
 
-lib: make_dir lib_obj
-	cp -f $(SOEDIR)/PrimeSieve.h $(INCDIR)/$(TARGET)/soe
-	cp -f $(SOEDIR)/ParallelPrimeSieve.h $(INCDIR)/$(TARGET)/soe
-	cp -f $(SOEDIR)/primesieve_error.h $(INCDIR)/$(TARGET)/soe
-	cp -f $(SOEDIR)/PrimeSieveCallback.h $(INCDIR)/$(TARGET)/soe
-	cp -f $(SOEDIR)/stop_primesieve.h $(INCDIR)/$(TARGET)/soe
+static: make_dir static_obj
+	cp -f $(INC_HEADERS) $(INCDIR)/$(TARGET)/soe
 
-lib_obj: $(LIB_OBJECTS)
-ifneq ($(SHARED),)
-	$(CXX) $(strip $(CXXFLAGS) $(FPIC) $(SOFLAG)) -o $(LIBDIR)/$(LIBRARY) $^
-else
-	ar rcs $(LIBDIR)/$(LIBRARY) $^
-endif
+shared: make_dir shared_obj
+	cp -f $(INC_HEADERS) $(INCDIR)/$(TARGET)/soe
+
+static_obj: $(SOE_OBJECTS)
+	$(AR) rcs $(LIBDIR)/lib$(TARGET).a $^
+
+shared_obj: $(SHARED_OBJECTS)
+	$(CXX) $(strip $(CXXFLAGS) $(FPIC) $(SOFLAG)) -o $(LIBDIR)/$(SHARED_LIBRARY) $^
 
 #-----------------------------------------------------------------------------
-# Compile the example programs
+# Build the example programs
 #-----------------------------------------------------------------------------
 
 .PHONY: examples
@@ -235,7 +246,7 @@ examples: make_dir $(subst $(EXDIR),$(BINDIR), \
                        $(wildcard $(EXDIR)/*.cpp)))
 
 #-----------------------------------------------------------------------------
-# `make check` runs correctness tests
+# Run integration tests
 #-----------------------------------------------------------------------------
 
 .PHONY: check test
@@ -249,7 +260,6 @@ check test: bin
 
 .PHONY: install uninstall
 
-# requires sudo privileges
 install:
 ifneq ($(wildcard $(BINDIR)/$(TARGET)*),)
 	@mkdir -p $(PREFIX)/bin
@@ -266,7 +276,6 @@ ifneq ($(wildcard $(LIBDIR)/lib$(TARGET).*),)
   endif
 endif
 
-# requires sudo privileges
 uninstall:
 ifneq ($(wildcard $(PREFIX)/bin/$(TARGET)*),)
 	rm -f $(PREFIX)/bin/$(TARGET)
@@ -277,7 +286,7 @@ ifneq ($(wildcard $(PREFIX)/include/$(TARGET)),)
 endif
 ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).*),)
   ifneq ($(wildcard $(PREFIX)/lib/lib$(TARGET).so),)
-		rm -f $(wildcard $(PREFIX)/lib/lib$(TARGET).so)
+		rm -f $(wildcard $(PREFIX)/lib/lib$(TARGET).*)
     ifneq ($(shell command -v ldconfig $(NO_STDERR)),)
 		ldconfig $(PREFIX)/lib
     endif
@@ -296,14 +305,16 @@ help:
 	@echo ----------------------------------------------
 	@echo ---------- primesieve build options ----------
 	@echo ----------------------------------------------
-	@echo "make                                     Build primesieve using the default c++ compiler"
+	@echo "make                                     Build primesieve and static libprimesieve"
+	@echo "make all                                 Build primesieve and static & shared libprimesieve"
 	@echo "make CXX=icpc CXXFLAGS=\"-O2 -openmp\"     Specify a custom C++ compiler, here icpc"
 	@echo "make L1_DCACHE_SIZE=32                   Specify the CPU's L1 data cache size, here 32 kilobytes"
-	@echo "make check                               Test primesieve for correctness"
-	@echo "make clean                               Clean the output directories (bin, lib, ...)"
-	@echo "make SHARED=yes                          Build a shared libprimesieve library"
+	@echo "make static                              Build only static libprimesieve"
+	@echo "make shared                              Build only shared libprimesieve"
 	@echo "make examples                            Build the example programs in ./examples"
-	@echo "sudo make install                        Install primesieve and libprimesieve to /usr/local or /usr"
+	@echo "make check                               Test primesieve for correctness"
+	@echo "sudo make install                        Install primesieve and libprimesieve to /usr[/local]"
 	@echo "sudo make install PREFIX=/path           Specify a custom installation path"
 	@echo "sudo make uninstall                      Completely remove primesieve and libprimesieve"
+	@echo "make clean                               Clean the output directories (bin, lib, ...)"
 	@echo "make help                                Print this help menu"
