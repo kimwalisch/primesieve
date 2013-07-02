@@ -132,8 +132,8 @@ ifneq ($(shell uname | grep -i mingw),)
 endif
 
 #-----------------------------------------------------------------------------
-# make            -> libprimesieve.a
-# make SHARED=yes -> libprimesieve.(so|dylib)
+# make        -> libprimesieve.a
+# make shared -> libprimesieve.(so|dylib)
 #-----------------------------------------------------------------------------
 
 ifeq ($(SHARED),)
