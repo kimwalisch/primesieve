@@ -1,4 +1,4 @@
-June 30, 2013
+July 2, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -33,13 +33,12 @@ Contents
   $ make
   $ sudo make install
 
-  The first make command builds a static libprimesieve using your
-  system's default `c++' compiler, the second command installs
-  libprimesieve to /usr/local (Linux) or to /usr.
+  This builds a static libprimesieve using your system's default `c++'
+  compiler and installs it to /usr[/local].
 
   More build options
   ------------------
-  $ make SHARED=yes                        Build a shared libprimesieve.
+  $ make shared                            Build a shared libprimesieve.
   $ make CXX=icpc CXXFLAGS="-O2 -openmp"   Use an alternate C++ compiler, here icpc.
   $ sudo make install PREFIX=/path         Set the installation path.
   $ sudo make uninstall                    Completely remove libprimesieve.
