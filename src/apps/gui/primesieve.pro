@@ -46,6 +46,7 @@ SOURCES += \
   ../../soe/PreSieve.cpp \
   ../../soe/PrimeFinder.cpp \
   ../../soe/PrimeGenerator.cpp \
+  ../../soe/PrimeSieve-nthPrime.o \
   ../../soe/PrimeSieve.cpp \
   ../../soe/SieveOfEratosthenes.cpp \
   ../../soe/WheelFactorization.cpp
@@ -70,6 +71,7 @@ HEADERS += \
   ../../soe/SieveOfEratosthenes.h \
   ../../soe/SieveOfEratosthenes-GENERATE.h \
   ../../soe/SieveOfEratosthenes-inline.h \
+  ../../soe/stop_primesieve.h \
   ../../soe/toString.h \
   ../../soe/WheelFactorization.h
 
