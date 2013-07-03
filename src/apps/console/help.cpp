@@ -27,6 +27,7 @@ const string helpMenu(
   "Options:\n"
   "  -c<N+>, --count=<N+>     Count primes and prime k-tuplets, 1 <= N <= 7\n"
   "  -h,     --help           Print this help menu\n"
+  "  -n,     --nthprime       Calculate the nth prime\n"
   "  -o<N>,  --offset=<N>     Sieve the interval [START, START+N]\n"
   "  -p<N>,  --print=<N>      Print primes or prime k-tuplets,  1 <= N <= 7\n"
   "  -q,     --quiet          Quiet mode, prints less output\n"

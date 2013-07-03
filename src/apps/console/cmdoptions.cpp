@@ -41,10 +41,11 @@ struct Option {
   }
 };
 
-enum PrimeSieveOptions {
-  OPTION_NUMBER,
+enum OptionValues {
   OPTION_COUNT,
   OPTION_HELP,
+  OPTION_NTHPRIME,
+  OPTION_NUMBER,
   OPTION_OFFSET,
   OPTION_PRINT,
   OPTION_QUIET,
@@ -55,29 +56,30 @@ enum PrimeSieveOptions {
 };
 
 /// Command-line options
-map<string, PrimeSieveOptions> cmdOptions;
+map<string, OptionValues> optionMap;
 
 void initCmdOptions()
 {
-  cmdOptions["-n"]         = OPTION_NUMBER;
-  cmdOptions["--number"]   = OPTION_NUMBER;
-  cmdOptions["-c"]         = OPTION_COUNT;
-  cmdOptions["--count"]    = OPTION_COUNT;
-  cmdOptions["-h"]         = OPTION_HELP;
-  cmdOptions["--help"]     = OPTION_HELP;
-  cmdOptions["-o"]         = OPTION_OFFSET;
-  cmdOptions["--offset"]   = OPTION_OFFSET;
-  cmdOptions["-p"]         = OPTION_PRINT;
-  cmdOptions["--print"]    = OPTION_PRINT;
-  cmdOptions["-q"]         = OPTION_QUIET;
-  cmdOptions["--quiet"]    = OPTION_QUIET;
-  cmdOptions["-s"]         = OPTION_SIZE;
-  cmdOptions["--size"]     = OPTION_SIZE;
-  cmdOptions["--test"]     = OPTION_TEST;
-  cmdOptions["-t"]         = OPTION_THREADS;
-  cmdOptions["--threads"]  = OPTION_THREADS;
-  cmdOptions["-v"]         = OPTION_VERSION;
-  cmdOptions["--version"]  = OPTION_VERSION;
+  optionMap["-c"]         = OPTION_COUNT;
+  optionMap["--count"]    = OPTION_COUNT;
+  optionMap["-h"]         = OPTION_HELP;
+  optionMap["--help"]     = OPTION_HELP;
+  optionMap["-n"]         = OPTION_NTHPRIME;
+  optionMap["--nthprime"] = OPTION_NTHPRIME;
+  optionMap["--number"]   = OPTION_NUMBER;
+  optionMap["-o"]         = OPTION_OFFSET;
+  optionMap["--offset"]   = OPTION_OFFSET;
+  optionMap["-p"]         = OPTION_PRINT;
+  optionMap["--print"]    = OPTION_PRINT;
+  optionMap["-q"]         = OPTION_QUIET;
+  optionMap["--quiet"]    = OPTION_QUIET;
+  optionMap["-s"]         = OPTION_SIZE;
+  optionMap["--size"]     = OPTION_SIZE;
+  optionMap["--test"]     = OPTION_TEST;
+  optionMap["-t"]         = OPTION_THREADS;
+  optionMap["--threads"]  = OPTION_THREADS;
+  optionMap["-v"]         = OPTION_VERSION;
+  optionMap["--version"]  = OPTION_VERSION;
 }
 
 void test()
@@ -122,31 +124,32 @@ Option makeOption(const string& str)
   }
   if (option.id.empty() && !option.value.empty())
     option.id = "--number";
-  if (cmdOptions.count(option.id) == 0)
+  if (optionMap.count(option.id) == 0)
     option.id = "--help";
   return option;
 }
 
 } // end namespace
 
-PrimeSieveSettings processOptions(int argc, char** argv)
+PrimeSieveOptions parseOptions(int argc, char** argv)
 {
   // skip program name in argv[0]
   argc--; argv++;
-  PrimeSieveSettings pss;
+  PrimeSieveOptions pso;
   initCmdOptions();
   try {
     for (int i = 0; i < argc; i++) {
       Option option = makeOption(argv[i]);
 
-      switch (cmdOptions[option.id]) {
-        case OPTION_COUNT:    pss.flags |= getCountFlags(option.getValue<int>()); break;
-        case OPTION_PRINT:    pss.flags |= getPrintFlags(option.getValue<int>()); pss.quiet = true; break;
-        case OPTION_SIZE:     pss.sieveSize = option.getValue<int>(); break;
-        case OPTION_THREADS:  pss.threads   = option.getValue<int>(); break;
-        case OPTION_QUIET:    pss.quiet = true; break;
-        case OPTION_NUMBER:   pss.numbers.push_back(option.getValue<uint64_t>()); break;
-        case OPTION_OFFSET:   pss.numbers.push_back(option.getValue<uint64_t>() + pss.start()); break;
+      switch (optionMap[option.id]) {
+        case OPTION_COUNT:    pso.flags |= getCountFlags(option.getValue<int>()); break;
+        case OPTION_PRINT:    pso.flags |= getPrintFlags(option.getValue<int>()); pso.quiet = true; break;
+        case OPTION_SIZE:     pso.sieveSize = option.getValue<int>(); break;
+        case OPTION_THREADS:  pso.threads   = option.getValue<int>(); break;
+        case OPTION_QUIET:    pso.quiet = true; break;
+        case OPTION_NTHPRIME: pso.nthPrime = true; break;
+        case OPTION_NUMBER:   pso.n.push_back(option.getValue<uint64_t>()); break;
+        case OPTION_OFFSET:   pso.n.push_back(option.getValue<uint64_t>() + pso.n.front()); break;
         case OPTION_TEST:     test();    break;
         case OPTION_VERSION:  version(); break;
         case OPTION_HELP:     help();    break;
@@ -155,7 +158,7 @@ PrimeSieveSettings processOptions(int argc, char** argv)
   } catch (exception&) {
     help();
   }
-  if (pss.numbers.size() == 1) pss.numbers.push_front(0);
-  if (pss.numbers.size() != 2) help();
-  return pss;
+  if (pso.n.size() == 1) pso.n.push_front(0);
+  if (pso.n.size() != 2) help();
+  return pso;
 }

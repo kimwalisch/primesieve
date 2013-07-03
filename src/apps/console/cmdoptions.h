@@ -10,32 +10,26 @@
 #ifndef PRIMESIEVE_CMDOPTIONS_H
 #define PRIMESIEVE_CMDOPTIONS_H
 
-#include <list>
+#include <deque>
 #include <stdint.h>
 
-struct PrimeSieveSettings
+struct PrimeSieveOptions
 {
-  std::list<uint64_t> numbers;
+  std::deque<uint64_t> n;
   int flags;
   int sieveSize;
   int threads;
   bool quiet;
-  PrimeSieveSettings() :
+  bool nthPrime;
+  PrimeSieveOptions() :
     flags(0),
     sieveSize(0),
     threads(0),
-    quiet(false)
+    quiet(false),
+    nthPrime(false)
   { }
-  uint64_t start() const
-  {
-    return numbers.front();
-  }
-  uint64_t stop() const
-  {
-    return numbers.back();
-  }
 };
 
-PrimeSieveSettings processOptions(int, char**);
+PrimeSieveOptions parseOptions(int, char**);
 
 #endif
