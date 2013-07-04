@@ -58,7 +58,7 @@ enum OptionValues {
 /// Command-line options
 map<string, OptionValues> optionMap;
 
-void initCmdOptions()
+void initOptionMap()
 {
   optionMap["-c"]         = OPTION_COUNT;
   optionMap["--count"]    = OPTION_COUNT;
@@ -136,7 +136,7 @@ PrimeSieveOptions parseOptions(int argc, char** argv)
   // skip program name in argv[0]
   argc--; argv++;
   PrimeSieveOptions pso;
-  initCmdOptions();
+  initOptionMap();
   try {
     for (int i = 0; i < argc; i++) {
       Option option = makeOption(argv[i]);
