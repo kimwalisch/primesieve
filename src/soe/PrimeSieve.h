@@ -158,9 +158,10 @@ protected:
   double seconds_;
   uint64_t getInterval() const;
   void reset();
-  virtual bool updateStatus(uint64_t, bool);
+  virtual double getWallTime() const;
   virtual void setLock();
   virtual void unsetLock();
+  virtual bool updateStatus(uint64_t, bool);
 private:
   struct SmallPrime
   {

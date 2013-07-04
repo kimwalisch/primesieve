@@ -107,6 +107,11 @@ int ParallelPrimeSieve::getMaxThreads()
   return omp_get_max_threads();
 }
 
+double ParallelPrimeSieve::getWallTime() const
+{
+  return omp_get_wtime();
+}
+
 /// Sieve the primes and prime k-tuplets within [start_, stop_]
 /// in parallel using OpenMP multi-threading.
 ///
@@ -119,13 +124,14 @@ void ParallelPrimeSieve::sieve()
   int threads = getNumThreads();
   if (tooMany(threads))
     threads = idealNumThreads();
+
   if (threads == 1)
     PrimeSieve::sieve();
   else {
     reset();
     uint64_t threadInterval = getThreadInterval(threads);
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
-    double time = omp_get_wtime();
+    double t1 = getWallTime();
 
 #if _OPENMP >= 200800 /* OpenMP >= 3.0 (2008) */
 
@@ -168,7 +174,7 @@ void ParallelPrimeSieve::sieve()
 
 #endif
 
-    seconds_ = omp_get_wtime() - time;
+    seconds_ = getWallTime() - t1;
     counts_[0] = count0;
     counts_[1] = count1;
     counts_[2] = count2;
@@ -229,6 +235,11 @@ int ParallelPrimeSieve::getMaxThreads()
 void ParallelPrimeSieve::sieve()
 {
   PrimeSieve::sieve();
+}
+
+double ParallelPrimeSieve::getWallTime() const
+{
+  return PrimeSieve::getWallTime();
 }
 
 bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)

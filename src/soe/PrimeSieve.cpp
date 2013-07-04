@@ -155,6 +155,11 @@ void PrimeSieve::reset()
   percent_   = -1.0;
 }
 
+double PrimeSieve::getWallTime() const
+{
+  return static_cast<double>(std::clock()) / CLOCKS_PER_SEC;
+}
+
 void PrimeSieve::setLock()
 {
   if (isParallelPrimeSieveChild())
@@ -221,7 +226,7 @@ void PrimeSieve::sieve()
 {
   if (start_ > stop_)
     throw primesieve_error("start must be <= stop");
-  clock_t t1 = std::clock();
+  double t1 = getWallTime();
   reset();
   if (isStatus())
     updateStatus(INIT_STATUS, false);
@@ -245,7 +250,7 @@ void PrimeSieve::sieve()
     finder.sieve();
   }
 
-  seconds_ = static_cast<double>(std::clock() - t1) / CLOCKS_PER_SEC;
+  seconds_ = getWallTime() - t1;
   if (isStatus())
     updateStatus(FINISH_STATUS, true);
 }

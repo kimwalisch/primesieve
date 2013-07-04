@@ -115,6 +115,8 @@ uint64_t PrimeSieve::nthPrime(uint64_t start, uint64_t n)
     return 0;
 
   setStart(start);
+  double t1 = getWallTime();
+
   uint64_t stop = 0;
   uint64_t count = 0;
   uint64_t dist = 0;
@@ -147,6 +149,7 @@ uint64_t PrimeSieve::nthPrime(uint64_t start, uint64_t n)
   stop = start + dist;
   NthPrime np;
   np.findNthPrime(start, stop, n - count);
+  seconds_ = getWallTime() - t1;
 
   return np.getNthPrime();
 }

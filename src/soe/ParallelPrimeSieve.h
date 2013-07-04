@@ -58,6 +58,7 @@ private:
   T getLock() {
     return static_cast<T>(lock_);
   }
+  virtual double getWallTime() const;
   virtual void setLock();
   virtual void unsetLock();
   virtual bool updateStatus(uint64_t, bool);
