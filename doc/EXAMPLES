@@ -1,4 +1,4 @@
-June 29, 2013
+July 5, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -9,14 +9,15 @@ Contents
    2. Store primes in a std::vector
    3. Count primes
    4. Print primes
-   5. Callback primes
-   6. Callback primes OOP
-   7. Cancel callback
-   8. ParallelPrimeSieve
-   9. Timing
-  10. Performance tuning
-  11. C++ Exceptions
-  12. Flags
+   5. Nth prime
+   6. Callback primes
+   7. Callback primes OOP
+   8. Cancel callback
+   9. ParallelPrimeSieve
+  10. Timing
+  11. Performance tuning
+  12. C++ Exceptions
+  13. Flags
 
 1. About
 ========
@@ -136,7 +137,38 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-5. Callback primes
+5. Nth prime
+============
+
+  API to find the nth prime
+  -------------------------
+  uint64_t PrimeSieve::nthPrime(uint64_t n);
+  uint64_t PrimeSieve::nthPrime(uint64_t start, uint64_t n);
+
+  ////////////////////////////////////////////////////////////////////
+  // nth_prime.cpp
+  // Usage: $ ./nth_prime 999
+
+  #include <primesieve/soe/ParallelPrimeSieve.h>
+  #include <stdint.h>
+  #include <iostream>
+  #include <cstdlib>
+
+  int main(int, char** argv)
+  {
+    uint64_t n = 1000;
+    if (argv[1])
+      n = atol(argv[1]);
+
+    ParallelPrimeSieve pps;
+    uint64_t nthPrime = pps.nthPrime(n);
+    std::cout << n << "th prime = " << nthPrime << std::endl;
+    return 0;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+
+6. Callback primes
 ==================
 
   API for prime callback
@@ -167,7 +199,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-6. Callback primes OOP
+7. Callback primes OOP
 ======================
 
   If your class is derived from PrimeSieveCallback<T> and implements a
@@ -208,7 +240,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-7. Cancel callback
+8. Cancel callback
 ==================
 
   PrimeSieve objects are exception safe so it is possible to throw an
@@ -246,7 +278,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-8. ParallelPrimeSieve
+9. ParallelPrimeSieve
 =====================
 
   ParallelPrimeSieve uses OpenMP multi-threading to sieve primes in
@@ -285,8 +317,8 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-9. Timing
-=========
+10. Timing
+==========
 
   API for timing
   --------------
@@ -309,7 +341,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-10. Performance tuning
+11. Performance tuning
 ======================
 
   The best sieving performance is achieved if the sieve array fits
@@ -344,7 +376,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-11. C++ Exceptions
+12. C++ Exceptions
 ==================
 
   PrimeSieve and ParallelPrimeSieve objects throw primesieve_error
@@ -376,7 +408,7 @@ Contents
 
   ////////////////////////////////////////////////////////////////////
 
-12. Flags
+13. Flags
 =========
 
   Flags are settings for PrimeSieve and ParallelPrimeSieve objects.
