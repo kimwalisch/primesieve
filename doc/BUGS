@@ -1,13 +1,20 @@
-March 09, 2013
+September 05, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
 This is a list of bugs that have been fixed in primesieve. Please
 contact the author if you have found a new bug, thanks.
 
-
 List of fixed bugs
 ==================
+
+----------------------------------------------------------------------
+  >> Fixed in primesieve-4.4
+
+  $ make shared && make install PREFIX=/user-path
+
+  Installing a shared library in a user specified path failed
+  if sudo was not used.
 
 ----------------------------------------------------------------------
   >> Fixed in primesieve-4.2

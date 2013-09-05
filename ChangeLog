@@ -1,3 +1,13 @@
+Changes in version 4.4, 05/09/2013
+==================================
+
+This is a minor release whose sole purpose is to fix a bug in the
+Makefile which is required for integrating primesieve into
+Sage (http://www.sagemath.org).
+
+1. Fixed the following bug:
+   $ make shared && make install PREFIX=/user-path
+
 Changes in version 4.3, 05/07/2013
 ==================================
 
