@@ -116,9 +116,10 @@ Option makeOption(const string& str)
 {
   Option option;
   size_t delimiter = str.find_first_of("=0123456789");
-  if (delimiter == string::npos) {
+  if (delimiter == string::npos)
     option.id = str;
-  } else {
+  else
+  {
     option.id = str.substr(0, delimiter);
     option.value = str.substr(delimiter + (str.at(delimiter) == '=' ? 1 : 0));
   }
@@ -133,15 +134,15 @@ Option makeOption(const string& str)
 
 PrimeSieveOptions parseOptions(int argc, char** argv)
 {
-  // skip program name in argv[0]
-  argc--; argv++;
   PrimeSieveOptions pso;
   initOptionMap();
-  try {
-    for (int i = 0; i < argc; i++) {
+  try
+  {
+    for (int i = 1; i < argc; i++)
+    {
       Option option = makeOption(argv[i]);
-
-      switch (optionMap[option.id]) {
+      switch (optionMap[option.id])
+      {
         case OPTION_COUNT:    pso.flags |= getCountFlags(option.getValue<int>()); break;
         case OPTION_PRINT:    pso.flags |= getPrintFlags(option.getValue<int>()); pso.quiet = true; break;
         case OPTION_SIZE:     pso.sieveSize = option.getValue<int>(); break;
@@ -155,7 +156,9 @@ PrimeSieveOptions parseOptions(int argc, char** argv)
         case OPTION_HELP:     help();    break;
       }
     }
-  } catch (exception&) {
+  }
+  catch (exception&)
+  {
     help();
   }
   if (pso.n.size() == 1) pso.n.push_front(0);
