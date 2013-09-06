@@ -1,4 +1,4 @@
-September 05, 2013
+September 06, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -7,6 +7,19 @@ contact the author if you have found a new bug, thanks.
 
 List of fixed bugs
 ==================
+
+----------------------------------------------------------------------
+  >> Fixed in primesieve-4.4
+
+  ParallelPrimeSieve::getNumThreads() must return 1 for invalid input
+  numbers and not: 
+
+  ParallelPrimeSieve pps;
+  pps.setStart(100);
+  pps.setStop (0);
+  std::cout << pps.getNumThreads() << std::endl;
+
+  Output: 8
 
 ----------------------------------------------------------------------
   >> Fixed in primesieve-4.4

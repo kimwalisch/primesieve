@@ -1,4 +1,4 @@
-Changes in version 4.4, 05/09/2013
+Changes in version 4.4, 06/09/2013
 ==================================
 
 This is a minor release whose sole purpose is to fix a bug in the
@@ -7,6 +7,8 @@ Sage (http://www.sagemath.org).
 
 1. Fixed the following bug:
    $ make shared && make install PREFIX=/user-path
+2. PrimeSieve does not throw an exception anymore if (start > stop)
+   instead it simply ignores the invalid input.
 
 Changes in version 4.3, 05/07/2013
 ==================================

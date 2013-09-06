@@ -89,7 +89,7 @@ double      PrimeSieve::getStatus()                 const { return percent_; }
 double      PrimeSieve::getSeconds()                const { return seconds_; }
 int         PrimeSieve::getSieveSize()              const { return sieveSize_; }
 int         PrimeSieve::getFlags()                  const { return (flags_ & ((1 << 20) - 1)); }
-bool        PrimeSieve::isPublicFlags(int flags)    const { return (flags >= 0 && flags < (1 << 20)); }
+bool        PrimeSieve::isValidFlags(int flags)     const { return (flags >= 0 && flags < (1 << 20)); }
 bool        PrimeSieve::isFlag(int flag)            const { return (flags_ & flag) == flag; }
 bool        PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last * 2 - first)) != 0; }
 bool        PrimeSieve::isCount(int index)          const { return isFlag(COUNT_PRIMES << index); }
@@ -134,16 +134,14 @@ void PrimeSieve::setSieveSize(int sieveSize)
 
 void PrimeSieve::setFlags(int flags)
 {
-  if (!isPublicFlags(flags))
-    throw primesieve_error("invalid flags");
-  flags_ = flags;
+  if (isValidFlags(flags))
+    flags_ = flags;
 }
 
 void PrimeSieve::addFlags(int flags)
 {
-  if (!isPublicFlags(flags))
-    throw primesieve_error("invalid flags");
-  flags_ |= flags;
+  if (isValidFlags(flags))
+    flags_ |= flags;
 }
 
 void PrimeSieve::reset()
@@ -224,10 +222,10 @@ void PrimeSieve::doSmallPrime(const SmallPrime& sp)
 ///
 void PrimeSieve::sieve()
 {
-  if (start_ > stop_)
-    throw primesieve_error("start must be <= stop");
-  double t1 = getWallTime();
   reset();
+  if (start_ > stop_)
+    return;
+  double t1 = getWallTime();
   if (isStatus())
     updateStatus(INIT_STATUS, false);
 

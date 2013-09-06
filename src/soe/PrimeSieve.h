@@ -25,7 +25,8 @@
 #include <exception>
 #include <cmath>
 
-namespace soe {
+namespace soe
+{
   class PrimeFinder;
   class LockGuard;
 }
@@ -194,7 +195,7 @@ private:
   PrimeSieveCallback<uint64_t, int>* psc64_tn_;
   static void printStatus(double, double);
   bool isFlag(int, int) const;
-  bool isPublicFlags(int) const;
+  bool isValidFlags(int) const;
   bool isStatus() const;
   bool isParallelPrimeSieveChild() const;
   void doSmallPrime(const SmallPrime&);
@@ -222,12 +223,14 @@ private:
       : primes_(primes)
     { }
     /// Generate the primes in the interval [start, stop]
-    /// store them in the primes vector.
+    /// and store them in the primes vector.
     void generatePrimes(uint64_t start, uint64_t stop, PrimeSieve& ps)
     {
-      uint64_t count = expectedPrimeCount(start, stop);
-      primes_.reserve(primes_.size() + count);
-      ps.generatePrimes(start, stop, this);
+      if (start <= stop)
+      {
+        primes_.reserve(primes_.size() + expectedPrimeCount(start, stop));
+        ps.generatePrimes(start, stop, this);
+      }
     }
     void callback(uint64_t prime)
     {
@@ -239,7 +242,7 @@ private:
     void operator=(const PushBackPrimes1&);
     static uint64_t expectedPrimeCount(uint64_t start, uint64_t stop)
     {
-      if (start > stop || stop < 10)
+      if (stop < 10)
         return 0;
 
       double a = static_cast<double>(start);

@@ -22,7 +22,6 @@
 #ifdef _OPENMP
   #include <omp.h>
   #include "ParallelPrimeSieve-lock.h"
-  #include "primesieve_error.h"
 #endif
 
 using namespace soe;
@@ -61,6 +60,8 @@ void ParallelPrimeSieve::setNumThreads(int threads)
 ///
 int ParallelPrimeSieve::idealNumThreads() const
 {
+  if (start_ > stop_)
+    return 1;
   uint64_t threshold = std::max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
   uint64_t threads = getInterval() / threshold;
   threads = getInBetween<uint64_t>(1, threads, getMaxThreads());
@@ -117,8 +118,9 @@ double ParallelPrimeSieve::getWallTime() const
 ///
 void ParallelPrimeSieve::sieve()
 {
+  reset();
   if (start_ > stop_)
-    throw primesieve_error("start must be <= stop");
+    return;
   OmpInitLock ompInit(&lock_);
 
   int threads = getNumThreads();
@@ -128,7 +130,6 @@ void ParallelPrimeSieve::sieve()
   if (threads == 1)
     PrimeSieve::sieve();
   else {
-    reset();
     uint64_t threadInterval = getThreadInterval(threads);
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
     double t1 = getWallTime();
