@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   06 September 2013
+# Last modified:   16 September 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -39,7 +39,7 @@ SOE_OBJECTS = \
 SOE_HEADERS = \
   $(SOEDIR)\bits.h \
   $(SOEDIR)\config.h \
-  $(SOEDIR)\endiansafe_cast.h \
+  $(SOEDIR)\littleendian_cast.h \
   $(SOEDIR)\EratBig.h \
   $(SOEDIR)\EratMedium.h \
   $(SOEDIR)\EratSmall.h \

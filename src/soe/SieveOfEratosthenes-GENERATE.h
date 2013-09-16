@@ -14,7 +14,7 @@
 
 #include "config.h"
 #include "SieveOfEratosthenes-inline.h"
-#include "endiansafe_cast.h"
+#include "littleendian_cast.h"
 
 #include <stdint.h>
 
@@ -24,7 +24,7 @@
 #define GENERATE_PRIMES(callback, type)                       \
 {                                                             \
   for (uint_t i = 0; i < sieveSize; i += 8) {                 \
-    uint64_t bits = endiansafe_cast<uint64_t>(&sieve[i]);     \
+    uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);   \
     while (bits != 0)                                         \
       callback (static_cast<type>( getNextPrime(&bits, i) )); \
   }                                                           \
@@ -37,7 +37,7 @@
 #define GENERATE_TWINS(callback, type)                        \
 {                                                             \
   for (uint_t i = 0; i < sieveSize; i += 8) {                 \
-    uint64_t bits = endiansafe_cast<uint64_t>(&sieve[i]);     \
+    uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);   \
     bits &= (bits >> 1) & 0x4A4A4A4A4A4A4A4Aull;              \
     while (bits != 0)                                         \
       callback (static_cast<type>( getNextPrime(&bits, i) )); \
@@ -51,7 +51,7 @@
 #define GENERATE_TRIPLETS(callback, type)                     \
 {                                                             \
   for (uint_t i = 0; i < sieveSize; i += 8) {                 \
-    uint64_t bits = endiansafe_cast<uint64_t>(&sieve[i]);     \
+    uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);   \
     bits &= (bits >> 1);                                      \
     bits &= (bits >> 1) & 0x0F0F0F0F0F0F0F0Full;              \
     while (bits != 0)                                         \

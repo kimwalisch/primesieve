@@ -54,7 +54,7 @@ SOURCES += \
 HEADERS += \
   ../../soe/bits.h \
   ../../soe/config.h \
-  ../../soe/endiansafe_cast.h \
+  ../../soe/littleendian_cast.h \
   ../../soe/EratBig.h \
   ../../soe/EratMedium.h \
   ../../soe/EratSmall.h \

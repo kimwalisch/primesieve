@@ -1,5 +1,5 @@
 ///
-/// @file   endiansafe_cast.h
+/// @file   littleendian_cast.h
 /// @brief  Cast bytes in ascending address order.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
@@ -8,15 +8,15 @@
 /// file in the top level directory.
 ///
 
-#ifndef ENDIANSAFE_CAST_H
-#define ENDIANSAFE_CAST_H
+#ifndef LITTLEENDIAN_CAST_H
+#define LITTLEENDIAN_CAST_H
 
 #include "config.h"
 
 namespace soe {
 
 /// http://c-faq.com/misc/endiantest.html
-inline bool isLittleEndian()
+inline bool is_littleendian()
 {
   union {
     int word;
@@ -27,39 +27,37 @@ inline bool isLittleEndian()
 }
 
 /// Recursively sum bytes using template metaprogramming.
-/// e.g. endiansafe_cast<int32_t>(array) =
-/// return (array[0] << 0) +
-///        (array[1] << 8) +
+/// e.g. littleendian_cast<int32_t>(array) =
+/// return (array[0] <<  0) +
+///        (array[1] <<  8) +
 ///        (array[2] << 16) +
-///        (array[3] << 24) +
-///        0;
-
+///        (array[3] << 24);
+///
 template <typename T, int INDEX, int STOP>
-struct endiansafe_cast_helper
+struct littleendian_cast_helper
 {
-  static T sum(const byte_t* array)
+  static T sum(const byte_t* array, T n)
   {
-    T byte = array[INDEX];
-    T rest = endiansafe_cast_helper<T, INDEX + 1, STOP - 1>::sum(array);
-    return (byte << (INDEX * 8)) + rest;
+    n += static_cast<T>(array[INDEX]) << (INDEX * 8);
+    return littleendian_cast_helper<T, INDEX + 1, STOP - 1>::sum(array, n);
   }
 };
 
 template <typename T, int INDEX>
-struct endiansafe_cast_helper<T, INDEX, 0>
+struct littleendian_cast_helper<T, INDEX, 0>
 {
-  static T sum(const byte_t*)
+  static T sum(const byte_t*, T n)
   {
-    return 0;
+    return n;
   }
 };
 
 template <typename T>
-inline T endiansafe_cast(const byte_t* array)
+inline T littleendian_cast(const byte_t* array)
 {
-  if (isLittleEndian())
+  if (is_littleendian())
     return *reinterpret_cast<const T*>(array);
-  return endiansafe_cast_helper<T, 0, sizeof(T)>::sum(array);
+  return littleendian_cast_helper<T, 0, sizeof(T)>::sum(array, 0);
 }
 
 } // namespace soe
