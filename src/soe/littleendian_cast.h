@@ -1,6 +1,7 @@
 ///
 /// @file   littleendian_cast.h
-/// @brief  Cast bytes in ascending address order.
+/// @brief  Cast bytes in ascending address order on both little and
+///         big endian CPUs.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
