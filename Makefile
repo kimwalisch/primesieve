@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   16 September 2013
+# Last modified:   17 September 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ##############################################################################
@@ -134,13 +134,8 @@ ifneq ($(shell uname | grep -i mingw),)
 endif
 
 #-----------------------------------------------------------------------------
-# make        -> libprimesieve.a
-# make shared -> libprimesieve.(so|dylib)
+# libprimesieve flags
 #-----------------------------------------------------------------------------
-
-ifeq ($(SHARED),)
-  STATIC := yes
-endif
 
 ifneq ($(shell uname | grep -i darwin),)
   SOFLAG := -dynamiclib
@@ -159,11 +154,11 @@ endif
 
 .PHONY: default all lib
 
-default: bin static
+default: bin lib
 
 all: bin static shared
 
-lib: $(if $(STATIC),static,) $(if $(SHARED),shared,)
+lib: static
 
 #-----------------------------------------------------------------------------
 # Create and clean output directories
