@@ -14,7 +14,7 @@
 namespace soe {
 
 template <typename T>
-inline T getNumberOfBits(T)
+inline T numberOfBits(T)
 {
   return static_cast<T>(sizeof(T) * 8);
 }
@@ -40,7 +40,7 @@ inline bool isPowerOf2(T x)
 template <typename T>
 inline T floorPowerOf2(T x)
 {
-  for (T i = 1; i < getNumberOfBits(x); i += i)
+  for (T i = 1; i < numberOfBits(x); i += i)
     x |= (x >> i);
   return x - (x >> 1);
 }
@@ -51,11 +51,13 @@ inline T floorPowerOf2(T x)
 template <typename T>
 inline T ilog2(T x)
 {
-  const T bits = getNumberOfBits(x);
+  const T bits = numberOfBits(x);
   const T one = 1;
   T log2 = 0;
-  for (T i = bits / 2; i != 0; i /= 2) {
-    if (x >= one << i) {
+  for (T i = bits / 2; i != 0; i /= 2)
+  {
+    if (x >= (one << i))
+    {
       x >>= i;
       log2 += i;
     }
@@ -69,8 +71,10 @@ inline T ilog2(T x)
 template <typename T>
 inline T isqrt(T x)
 {
-  if (x <= 1) return x;
-  const T bits = getNumberOfBits(x);
+  if (x <= 1)
+    return x;
+
+  const T bits = numberOfBits(x);
   const T one = 1;
 
   // s      = bits / 2 - nlz(x - 1) / 2
@@ -81,7 +85,8 @@ inline T isqrt(T x)
   T g0 = one << s;
   T g1 = (g0 + (x >> s)) >> 1;
 
-  while (g1 < g0) {
+  while (g1 < g0)
+  {
     g0 = g1;
     g1 = (g0 + (x / g0)) >> 1;
   }
