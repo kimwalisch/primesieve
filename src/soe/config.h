@@ -12,6 +12,8 @@
 #ifndef CONFIG_PRIMESIEVE_H
 #define CONFIG_PRIMESIEVE_H
 
+#include "autoconfig.h"
+
 /// Enable the UINT64_C() macro from <stdint.h>
 #if !defined(__STDC_CONSTANT_MACROS)
   #define __STDC_CONSTANT_MACROS
@@ -29,11 +31,6 @@
 #define DISALLOW_COPY_AND_ASSIGN(ClassName) \
   ClassName(const ClassName&); \
   void operator=(const ClassName&)
-#endif
-
-/// Default CPU L1 data cache size in kilobytes (per core)
-#ifndef L1_DCACHE_SIZE
-  #define L1_DCACHE_SIZE 32
 #endif
 
 namespace soe {

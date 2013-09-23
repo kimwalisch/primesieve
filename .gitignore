@@ -15,5 +15,7 @@ Makefile.in
 /ltmain.sh
 /m4/
 /missing
+stamp-*
 .deps/
 .libs/
+*~

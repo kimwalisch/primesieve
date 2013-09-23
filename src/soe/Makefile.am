@@ -14,6 +14,8 @@ libprimesieve_la_SOURCES = \
 	SieveOfEratosthenes.cpp \
 	WheelFactorization.cpp
 
+libprimesieve_la_CXXFLAGS = $(OPENMP_CXXFLAGS)
+
 pkginclude_HEADERS = \
 	ParallelPrimeSieve.h \
 	PrimeSieve.h \
