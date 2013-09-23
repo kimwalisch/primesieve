@@ -1,0 +1,2 @@
+SUBDIRS = src
+ACLOCAL_AMFLAGS = -Im4
