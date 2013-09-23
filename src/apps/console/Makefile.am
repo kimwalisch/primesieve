@@ -8,3 +8,7 @@ primesieve_SOURCES = \
 
 primesieve_LDADD = \
 	../../soe/libprimesieve.la
+
+noinst_HEADERS = \
+	ExpressionParser.h \
+	cmdoptions.h
