@@ -16,6 +16,7 @@ libprimesieve_la_SOURCES = \
 	WheelFactorization.cpp
 
 libprimesieve_la_CXXFLAGS = $(OPENMP_CXXFLAGS)
+libprimesieve_la_LDFLAGS = $(OPENMP_CXXFLAGS)
 
 pkginclude_HEADERS = \
 	ParallelPrimeSieve.h \

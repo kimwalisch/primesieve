@@ -9,6 +9,8 @@ primesieve_SOURCES = \
 primesieve_LDADD = \
 	../../soe/libprimesieve.la
 
+primesieve_LDFLAGS = $(OPENMP_CXXFLAGS)
+
 noinst_HEADERS = \
 	ExpressionParser.h \
 	cmdoptions.h
