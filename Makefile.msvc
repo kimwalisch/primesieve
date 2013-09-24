@@ -5,7 +5,7 @@
 # Author:          Kim Walisch
 # Contact:         kim.walisch@gmail.com
 # Created:         10 July 2010
-# Last modified:   16 September 2013
+# Last modified:   24 September 2013
 #
 # Project home:    http://primesieve.googlecode.com
 ######################################################################
@@ -63,7 +63,8 @@ SOE_HEADERS = \
 APP_OBJECTS = \
   $(OBJDIR)\cmdoptions.obj \
   $(OBJDIR)\help.obj \
-  $(OBJDIR)\main.obj
+  $(OBJDIR)\main.obj \
+  $(OBJDIR)\test.obj
 
 EXAMPLE_OBJECTS = \
   $(OBJDIR)\$(EXDIR)\callback_primes.obj \
@@ -136,9 +137,6 @@ $(SOE_OBJECTS): $(SOEDIR)\$(@B).cpp $(SOE_HEADERS)
 
 $(APP_OBJECTS): src\apps\console\$(@B).cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\apps\console\$(@B).cpp /Fo$@
-
-$(OBJDIR)\test.obj: src\test\test.cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) /c src\test\test.cpp /Fo$@
 
 $(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
 	$(CXX) $(CXXFLAGS) /I"$(INCDIR)" $** /Fo$@ /Fe$(BINDIR)/$(@B).exe /link $(LIBDIR)\$(TARGET).lib
