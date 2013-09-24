@@ -54,7 +54,7 @@ AC_DEFINE_UNQUOTED([L1_DCACHE_SIZE], [$L1_DCACHE_SIZE], [CPU L1 data cache size 
 
 AC_OPENMP
 
-AC_CONFIG_HEADERS([src/soe/autoconfig.h])
+AC_CONFIG_HEADERS([src/soe/autoconf.h])
 AC_CONFIG_FILES([
 	Makefile
 	src/Makefile
