@@ -18,8 +18,10 @@ libprimesieve_la_CXXFLAGS = $(OPENMP_CXXFLAGS)
 
 pkginclude_HEADERS = \
 	ParallelPrimeSieve.h \
+    primesieve_error.h \
 	PrimeSieve.h \
-	PrimeSieveCallback.h
+	PrimeSieveCallback.h \
+    stop_primesieve.h
 
 noinst_HEADERS = \
 	EratBig.h \
