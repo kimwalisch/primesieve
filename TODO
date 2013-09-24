@@ -1,8 +1,28 @@
-June 29, 2013
+September 24, 2013
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
-1. Make ParallelPrimeSieve exception safe and implement cancellation.
+1. Is 'src/soe/PrimeSieve.h' needed in configure.ac?
+
+ AC_CONFIG_FILES([
+  Makefile
+  src/Makefile
+  src/apps/Makefile
+  src/apps/console/Makefile
+  src/soe/Makefile
+
+  src/soe/PrimeSieve.h
+  ])
+
+2. Is the section below needed in configure.ac?
+
+PACKAGE_VERSION_MAJOR=patsubst(AC_PACKAGE_VERSION, [\..*$], [])
+PACKAGE_VERSION_MINOR=patsubst(AC_PACKAGE_VERSION, [^.*\.], [])
+AC_SUBST(PACKAGE_VERSION_MAJOR)
+AC_SUBST(PACKAGE_VERSION_MINOR)
+AC_SUBST(PACKAGE_YEAR) 
+
+3. Make ParallelPrimeSieve exception safe and implement cancellation.
 
    This requires OpenMP 4.0 which will be released in the coming
    months. More precisely I plan the following design: if an exception
