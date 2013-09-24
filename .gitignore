@@ -20,3 +20,4 @@ stamp-*
 .libs/
 *~
 .project
+autoconf.h*
