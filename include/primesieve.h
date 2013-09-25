@@ -183,11 +183,11 @@ namespace primesieve
   {
     if (primes)
     {
-	  ParallelPrimeSieve pps;
-	  pps.setNumThreads(threads);
-	  pps.generate_N_Primes(n, primes);
-	  std::sort(primes->begin(), primes->end());
-	}
+      ParallelPrimeSieve pps;
+      pps.setNumThreads(threads);
+      pps.generate_N_Primes(n, primes);
+      std::sort(primes->begin(), primes->end());
+    }
   }
 
   /// Generate the first n primes larger than or equal to start
