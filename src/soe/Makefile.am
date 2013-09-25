@@ -11,6 +11,7 @@ libprimesieve_la_SOURCES = \
 	PrimeGenerator.cpp \
 	PrimeSieve-nthPrime.cpp \
 	PrimeSieve.cpp \
+	primesieve-api.cpp \
 	SieveOfEratosthenes.cpp \
 	WheelFactorization.cpp
 

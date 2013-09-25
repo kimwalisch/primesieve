@@ -109,7 +109,7 @@ uint64_t PrimeSieve::nthPrime(uint64_t n)
   return nthPrime(0, n);
 }
 
-uint64_t PrimeSieve::nthPrime(uint64_t start, uint64_t n)
+uint64_t PrimeSieve::nthPrime(uint64_t n, uint64_t start)
 {
   if (n < 1)
     return 0;

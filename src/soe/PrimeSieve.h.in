@@ -98,17 +98,17 @@ public:
     }
   }
   template <typename T>
-  void generate_N_Primes(uint64_t start, uint64_t n, std::vector<T>* primes)
+  void generate_N_Primes(uint64_t n, uint64_t start, std::vector<T>* primes)
   {
     if (primes) {
       PushBackPrimes2<T> pbp(*primes);
-      pbp.generate_N_Primes(start, n, *this);
+      pbp.generate_N_Primes(n, start, *this);
     }
   }
   template <typename T>
   void generate_N_Primes(uint64_t n, std::vector<T>* primes)
   {
-    this->generate_N_Primes(0, n, primes);
+    this->generate_N_Primes(n, 0, primes);
   }
   void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t));
   void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
@@ -259,7 +259,7 @@ private:
     { }
     /// Generate the next n primes >= start and
     /// store them in the primes vector.
-    void generate_N_Primes(uint64_t start, uint64_t n, PrimeSieve& ps)
+    void generate_N_Primes(uint64_t n, uint64_t start, PrimeSieve& ps)
     {
       n_ = n;
       primes_.reserve(primes_.size() + n_);
