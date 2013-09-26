@@ -42,8 +42,8 @@ const string helpMenu(
 );
 
 const string versionInfo(
-  "primesieve " PRIMESIEVE_VERSION ", <http://primesieve.googlecode.com>\n"
-  "Copyright (C) " PRIMESIEVE_YEAR " Kim Walisch\n"
+  "primesieve @PACKAGE_VERSION@", <https://github.com/kimwalisch/primesieve>\n"
+  "Copyright (C) @PACKAGE_YEAR@ Kim Walisch\n"
   "BSD 2-Clause License <http://opensource.org/licenses/BSD-2-Clause>"
 );
 
