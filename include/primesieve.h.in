@@ -11,6 +11,12 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
+#define PRIMESIEVE_VERSION "@PACKAGE_VERSION@"
+#define PRIMESIEVE_VERSION_MAJOR @PACKAGE_VERSION_MAJOR@
+#define PRIMESIEVE_VERSION_MINOR @PACKAGE_VERSION_MINOR@
+#define PRIMESIEVE_VERSION_PATCH @PACKAGE_VERSION_PATCH@
+#define PRIMESIEVE_YEAR "@PACKAGE_YEAR@"
+
 #include "primesieve/soe/PrimeSieve.h"
 #include "primesieve/soe/ParallelPrimeSieve.h"
 #include "primesieve/soe/primesieve_error.h"
