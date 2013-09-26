@@ -71,9 +71,6 @@ PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
 PrimeSieve::~PrimeSieve()
 { }
 
-std::string PrimeSieve::getVersion()                      { return PRIMESIEVE_VERSION; }
-int         PrimeSieve::getMajorVersion()                 { return PRIMESIEVE_MAJOR_VERSION; }
-int         PrimeSieve::getMinorVersion()                 { return PRIMESIEVE_MINOR_VERSION; }
 uint64_t    PrimeSieve::getStart()                  const { return start_; }
 uint64_t    PrimeSieve::getStop()                   const { return stop_; }
 uint64_t    PrimeSieve::getInterval()               const { return stop_ - start_; }

@@ -9,13 +9,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMESIEVE_H
-#define PRIMESIEVE_H
-
-#define PRIMESIEVE_VERSION "@PACKAGE_VERSION@"
-#define PRIMESIEVE_MAJOR_VERSION @PACKAGE_VERSION_MAJOR@
-#define PRIMESIEVE_MINOR_VERSION @PACKAGE_VERSION_MINOR@
-#define PRIMESIEVE_YEAR "@PACKAGE_YEAR@"
+#ifndef PRIMESIEVE_CLASS_H
+#define PRIMESIEVE_CLASS_H
 
 #include "PrimeSieveCallback.h"
 
@@ -144,10 +139,6 @@ public:
   uint64_t getSextupletCount() const;
   uint64_t getSeptupletCount() const;
   uint64_t getCount(int) const;
-  // Version
-  static std::string getVersion();
-  static int getMajorVersion();
-  static int getMinorVersion();
 protected:
   /// Sieve primes >= start_
   uint64_t start_;
