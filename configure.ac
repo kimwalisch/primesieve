@@ -60,7 +60,7 @@ AC_CONFIG_FILES([
 	src/apps/console/Makefile
 	src/soe/Makefile
 
-	src/soe/PrimeSieve.h
+	include/primesieve.h
 	])
 
 AC_OUTPUT
