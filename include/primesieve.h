@@ -11,12 +11,12 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
-#include <primesieve/soe/PrimeSieve.h>
-#include <primesieve/soe/ParallelPrimeSieve.h>
-#include <primesieve/soe/primesieve_error.h>
-#include <primesieve/soe/PrimeSieveCallback.h>
-#include <primesieve/soe/stop_primesieve.h>
-#include <algorithm>
+#include "primesieve/soe/PrimeSieve.h"
+#include "primesieve/soe/ParallelPrimeSieve.h"
+#include "primesieve/soe/primesieve_error.h"
+#include "primesieve/soe/PrimeSieveCallback.h"
+#include "primesieve/soe/stop_primesieve.h"
+
 #include <stdint.h>
 
 namespace primesieve
@@ -26,61 +26,25 @@ namespace primesieve
     MAX_THREADS = -1
   };
 
-  /// Callback the primes within the interval [start, stop].
+  /// Call back the primes within the interval [start, stop].
   /// @param callback  A callback function.
   ///
   void callback_primes(uint32_t start, uint32_t stop, void (*callback)(uint32_t prime));
 
-  /// Callback the primes within the interval [start, stop].
+  /// Call back the primes within the interval [start, stop].
   /// @param callback  A callback function.
   ///
   void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
 
-  /// Callback the primes within the interval [start, stop].
+  /// Call back the primes within the interval [start, stop].
   /// @param callback  An object derived from PrimeSieveCallback<uint32_t>.
   ///
   void callback_primes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>* callback);
 
-  /// Callback the primes within the interval [start, stop].
+  /// Call back the primes within the interval [start, stop].
   /// @param callback  An object derived from PrimeSieveCallback<uint64_t>.
   ///
   void callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t>* callback);
-
-  /// Callback the primes within the interval [start, stop].
-  /// @param threads   Number of threads.
-  /// @param callback  A callback function.
-  ///
-  void callback_primes(uint32_t start, uint32_t stop, int threads, void (*callback)(uint32_t prime));
-
-  /// Callback the primes within the interval [start, stop].
-  /// @param threads   Number of threads.
-  /// @param callback  A callback function.
-  ///
-  void callback_primes(uint64_t start, uint64_t stop, int threads, void (*callback)(uint64_t prime));
-
-  /// Callback the primes within the interval [start, stop].
-  /// @param threads   Number of threads.
-  /// @param callback  A callback function.
-  ///
-  void callback_primes(uint64_t start, uint64_t stop, int threads, void (*callback)(uint64_t prime, int thread_id));
-
-  /// Callback the primes within the interval [start, stop].
-  /// @param threads   Number of threads.
-  /// @param callback  An object derived from PrimeSieveCallback<uint32_t>.
-  ///
-  void callback_primes(uint32_t start, uint32_t stop, int threads, PrimeSieveCallback<uint32_t>* callback);
-
-  /// Callback the primes within the interval [start, stop].
-  /// @param threads   Number of threads.
-  /// @param callback  An object derived from PrimeSieveCallback<uint64_t>.
-  ///
-  void callback_primes(uint64_t start, uint64_t stop, int threads, PrimeSieveCallback<uint64_t>* callback);
-
-  /// Callback the primes within the interval [start, stop].
-  /// @param threads   Number of threads.
-  /// @param callback  An object derived from PrimeSieveCallback<uint64_t, int>.
-  ///
-  void callback_primes(uint64_t start, uint64_t stop, int threads, PrimeSieveCallback<uint64_t, int>* callback);
 
   /// Count the primes within the interval [start, stop].
   uint64_t count_primes(uint64_t start, uint64_t stop);
@@ -103,40 +67,15 @@ namespace primesieve
   /// Count the prime septuplets within the interval [start, stop].
   uint64_t count_septuplets(uint64_t start, uint64_t stop);
 
-  /// Count the primes within the interval [start, stop].
-  /// @param threads  Number of threads.
+  /// Generate the primes <= stop and store
+  /// them in the primes vector.
   ///
-  uint64_t count_primes(uint64_t start, uint64_t stop, int threads);
-
-  /// Count the twin primes within the interval [start, stop].
-  /// @param threads  Number of threads.
-  ///
-  uint64_t count_twins(uint64_t start, uint64_t stop, int threads);
-
-  /// Count the prime  within the interval [start, stop].
-  /// @param threads  Number of threads.
-  ///
-  uint64_t count_triplets(uint64_t start, uint64_t stop, int threads);
-
-  /// Count the prime  within the interval [start, stop].
-  /// @param threads  Number of threads.
-  ///
-  uint64_t count_quadruplets(uint64_t start, uint64_t stop, int threads);
-
-  /// Count the prime  within the interval [start, stop].
-  /// @param threads  Number of threads.
-  ///
-  uint64_t count_quintuplets(uint64_t start, uint64_t stop, int threads);
-
-  /// Count the prime  within the interval [start, stop].
-  /// @param threads  Number of threads.
-  ///
-  uint64_t count_sextuplets(uint64_t start, uint64_t stop, int threads);
-
-  /// Count the prime  within the interval [start, stop].
-  /// @param threads  Number of threads.
-  ///
-  uint64_t count_septuplets(uint64_t start, uint64_t stop, int threads);
+  template <typename T>
+  inline void generate_primes(uint64_t stop, std::vector<T>* primes)
+  {
+    PrimeSieve ps;
+    ps.generatePrimes(0, stop, primes);
+  }
 
   /// Generate the primes within the interval [start, stop]
   /// and store them in the primes vector.
@@ -148,23 +87,6 @@ namespace primesieve
     ps.generatePrimes(start, stop, primes);
   }
 
-  /// Generate the primes within the interval [start, stop]
-  /// and store them in the primes vector. The primes vector will
-  /// be sorted at the end to restore arithmetic order
-  /// (multi-threading generates primes in random order).
-  ///
-  template <typename T>
-  inline void generate_primes(uint64_t start, uint64_t stop, int threads, std::vector<T>* primes)
-  {
-    if (primes)
-    {
-      ParallelPrimeSieve pps;
-      pps.setNumThreads(threads);
-      pps.generatePrimes(start, stop, primes);
-      std::sort(primes->begin(), primes->end());
-    }
-  }
-
   /// Generate the first n primes and store them in the primes vector.
   template <typename T>
   inline void generate_n_primes(uint64_t n, std::vector<T>* primes)
@@ -173,52 +95,20 @@ namespace primesieve
     ps.generate_N_Primes(n, primes);
   }
 
-  /// Generate the first n primes and store them in the primes
-  /// vector. The primes vector will be sorted at the end to
-  /// restore arithmetic order (multi-threading generates primes
-  /// in random order).
+  /// Generate the first n primes >= start and store them
+  /// in the primes vector.
   ///
   template <typename T>
-  inline void generate_n_primes(uint64_t n, int threads, std::vector<T>* primes)
+  inline void generate_n_primes(uint64_t n, uint64_t start, std::vector<T>* primes)
   {
-    if (primes)
-    {
-      ParallelPrimeSieve pps;
-      pps.setNumThreads(threads);
-      pps.generate_N_Primes(n, primes);
-      std::sort(primes->begin(), primes->end());
-    }
-  }
-
-  /// Generate the first n primes larger than or equal to start
-  /// and store them in the primes vector. The primes vector will be
-  /// sorted at the end to restore arithmetic order
-  /// (multi-threading generates primes in random order).
-  ///
-  template <typename T>
-  inline void generate_n_primes(uint64_t n, uint64_t start, int threads, std::vector<T>* primes)
-  {
-    if (primes)
-    {
-      ParallelPrimeSieve pps;
-      pps.setNumThreads(threads);
-      pps.generate_N_Primes(n, start, primes);
-      std::sort(primes->begin(), primes->end());
-    }
+    PrimeSieve ps;
+    ps.generate_N_Primes(n, start, primes);
   }
 
   /// Find the nth prime.
-  uint64_t nth_prime(uint64_t n);
-
-  /// Find the nth prime.
-  /// @param threads  Number of threads.
+  /// @param start  Start nth prime search at this offset.
   ///
-  uint64_t nth_prime(uint64_t n, int threads);
-
-  /// Find the nth prime larger than or equal to start.
-  /// @param threads  Number of threads.
-  ///
-  uint64_t nth_prime(uint64_t n, uint64_t start, int threads);
+  uint64_t nth_prime(uint64_t n, uint64_t start = 0);
 
   /// Print the primes within the interval [start, stop]
   /// to the standard output.
@@ -255,47 +145,100 @@ namespace primesieve
   ///
   void print_septuplets(uint64_t start, uint64_t stop);
 
-  /// Print the primes within the interval [start, stop]
-  /// to the standard output.
-  /// @warning Primes are printed in random order if threads > 1.
+  /// Call back the primes within the interval [start, stop].
+  /// This function is synchronized, only one thread at a time calls
+  /// back primes.
+  /// @warning         Primes are not called back in arithmetic order.
+  /// @param callback  A callback function.
+  /// @param threads   Number of threads.
   ///
-  void print_primes(uint64_t start, uint64_t stop, int threads);
+  void parallel_callback_primes(uint32_t start, uint32_t stop, void (*callback)(uint32_t prime), int threads = MAX_THREADS);
 
-  /// Print the twin primes within the interval [start, stop]
-  /// to the standard output.
-  /// @warning Twin primes are printed in random order if threads > 1.
+  /// Call back the primes within the interval [start, stop].
+  /// This function is synchronized, only one thread at a time calls
+  /// back primes.
+  /// @warning         Primes are not called back in arithmetic order.
+  /// @param callback  A callback function.
+  /// @param threads   Number of threads.
   ///
-  void print_twins(uint64_t start, uint64_t stop, int threads);
+  void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime), int threads = MAX_THREADS);
 
-  /// Print the prime triplets within the interval [start, stop]
-  /// to the standard output.
-  /// @warning Prime triplets are printed in random order if threads > 1.
+  /// Call back the primes within the interval [start, stop].
+  /// This function is not synchronized, multiple threads call back
+  /// primes in parallel.
+  /// @warning         Primes are not called back in arithmetic order.
+  /// @param callback  A callback function.
+  /// @param threads   Number of threads.
   ///
-  void print_triplets(uint64_t start, uint64_t stop, int threads);
+  void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime, int thread_id), int threads = MAX_THREADS);
 
-  /// Print the prime quadruplets within the interval [start, stop]
-  /// to the standard output.
-  /// @warning Prime quadruplets are printed in random order if threads > 1.
+  /// Call back the primes within the interval [start, stop].
+  /// This function is synchronized, only one thread at a time calls
+  /// back primes.
+  /// @warning         Primes are not called back in arithmetic order.
+  /// @param callback  An object derived from PrimeSieveCallback<uint32_t>.
+  /// @param threads   Number of threads.
   ///
-  void print_quadruplets(uint64_t start, uint64_t stop, int threads);
+  void parallel_callback_primes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>* callback, int threads = MAX_THREADS);
 
-  /// Print the prime quintuplets within the interval [start, stop]
-  /// to the standard output.
-  /// @warning Prime quintuplets are printed in random order if threads > 1.
+  /// Call back the primes within the interval [start, stop].
+  /// This function is synchronized, only one thread at a time calls
+  /// back primes.
+  /// @warning         Primes are not called back in arithmetic order.
+  /// @param callback  An object derived from PrimeSieveCallback<uint64_t>.
+  /// @param threads   Number of threads.
   ///
-  void print_quintuplets(uint64_t start, uint64_t stop, int threads);
+  void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t>* callback, int threads = MAX_THREADS);
 
-  /// Print the prime sextuplets within the interval [start, stop]
-  /// to the standard output.
-  /// @warning Prime sextuplets are printed in random order if threads > 1.
+  /// Call back the primes within the interval [start, stop].
+  /// This function is not synchronized, multiple threads call back
+  /// primes in parallel.
+  /// @warning         Primes are not called back in arithmetic order.
+  /// @param callback  An object derived from PrimeSieveCallback<uint64_t, int>.
+  /// @param threads   Number of threads.
   ///
-  void print_sextuplets(uint64_t start, uint64_t stop, int threads);
+  void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t, int>* callback, int threads = MAX_THREADS);
 
-  /// Print the prime septuplets within the interval [start, stop]
-  /// to the standard output.
-  /// @warning Prime septuplets are printed in random order if threads > 1.
+  /// Count the primes within the interval [start, stop].
+  /// @param threads  Number of threads.
   ///
-  void print_septuplets(uint64_t start, uint64_t stop, int threads);
+  uint64_t parallel_count_primes(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+
+  /// Count the twin primes within the interval [start, stop].
+  /// @param threads  Number of threads.
+  ///
+  uint64_t parallel_count_twins(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+
+  /// Count the prime triplets within the interval [start, stop].
+  /// @param threads  Number of threads.
+  ///
+  uint64_t parallel_count_triplets(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+
+  /// Count the prime quadruplets within the interval [start, stop].
+  /// @param threads  Number of threads.
+  ///
+  uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+
+  /// Count the prime quintuplets within the interval [start, stop].
+  /// @param threads  Number of threads.
+  ///
+  uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+
+  /// Count the prime sextuplets within the interval [start, stop].
+  /// @param threads  Number of threads.
+  ///
+  uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+
+  /// Count the prime septuplets within the interval [start, stop].
+  /// @param threads  Number of threads.
+  ///
+  uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+
+  /// Find the nth prime.
+  /// @param start    Start nth prime search at this offset.
+  /// @param threads  Number of threads.
+  ///
+  uint64_t parallel_nth_prime(uint64_t n, uint64_t start = 0, int threads = MAX_THREADS);
 }
 
 #endif
