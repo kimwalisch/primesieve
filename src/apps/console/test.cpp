@@ -57,8 +57,10 @@ double seconds = 0.0;
 uint64_t ipow(uint64_t x, int n)
 {
   uint64_t result = 1;
-  while (n != 0) {
-    if ((n & 1) != 0) {
+  while (n != 0)
+  {
+    if ((n & 1) != 0)
+    {
       result *= x;
       n -= 1;
     }
@@ -94,7 +96,8 @@ void testPix()
   uint64_t primeCount = 0;
 
   // pi(x) with x = 10^i for i = 1 to 10
-  for (int i = 1; i <= 10; i++) {
+  for (int i = 1; i <= 10; i++)
+  {
     primeCount += pps.countPrimes(pps.getStop() + 1, ipow(10, i));
     seconds += pps.getSeconds();
     cout << "pi(10^" << i << (i < 10 ? ")  = " : ") = ") << setw(12) << primeCount;
@@ -109,7 +112,8 @@ void testBigPrimes()
   ParallelPrimeSieve pps;
   pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
 
-  for (int i = 12; i <= 19; i++) {
+  for (int i = 12; i <= 19; i++)
+  {
     cout << "Sieving the primes within [10^" << i << ", 10^" << i << "+2^32]" << endl;
     pps.setStart(ipow(10, i));
     pps.setStop(pps.getStart() + ipow(2, 32));
@@ -137,7 +141,8 @@ void testRandomIntervals()
   pps.setStart(lowerBound - 1);
   pps.setStop(lowerBound - 1);
 
-  while (pps.getStop() < upperBound) {
+  while (pps.getStop() < upperBound)
+  {
     pps.setStart(pps.getStop() + 1);
     pps.setStop(min(pps.getStart() + getRand64(maxInterval), upperBound));
     pps.setSieveSize(1 << (rand() % 12));
@@ -164,12 +169,14 @@ void testRandomIntervals()
 bool test_ParallelPrimeSieve()
 {
   cout << left;
-  try {
+  try
+  {
     testPix();
     testBigPrimes();
     testRandomIntervals();
   }
-  catch (exception& e) {
+  catch (exception& e)
+  {
     cerr << endl << "Error: " << e.what() << endl;
     return false;
   }
@@ -177,3 +184,12 @@ bool test_ParallelPrimeSieve()
        << "All tests passed successfully!"      << endl;
   return true;
 }
+
+#ifdef STANDALONE
+
+int main()
+{
+  return (test_ParallelPrimeSieve() == true) ? 0 : 1;
+}
+
+#endif
