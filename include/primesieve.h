@@ -24,6 +24,7 @@
 #include "primesieve/soe/stop_primesieve.h"
 
 #include <stdint.h>
+#include <vector>
 
 namespace primesieve
 {
