@@ -7,12 +7,12 @@
 /// file in the top level directory.
 ///
 
-#include "config.h"
-#include "PrimeSieve.h"
-#include "PrimeSieveCallback.h"
-#include "primesieve_error.h"
-#include "stop_primesieve.h"
-#include "SieveOfEratosthenes.h"
+#include <primesieve/soe/config.h>
+#include <primesieve/soe/PrimeSieve.h>
+#include <primesieve/soe/PrimeSieveCallback.h>
+#include <primesieve/soe/primesieve_error.h>
+#include <primesieve/soe/stop_primesieve.h>
+#include <primesieve/soe/SieveOfEratosthenes.h>
 
 #include <stdint.h>
 #include <algorithm>

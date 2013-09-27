@@ -8,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#include "WheelFactorization.h"
-#include "bits.h"
+#include <primesieve/soe/WheelFactorization.h>
+#include <primesieve/soe/bits.h>
 
 namespace soe {
 

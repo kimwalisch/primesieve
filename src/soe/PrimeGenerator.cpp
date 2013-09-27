@@ -9,12 +9,12 @@
 /// file in the top level directory.
 ///
 
-#include "config.h"
-#include "PrimeGenerator.h"
-#include "PrimeFinder.h"
-#include "SieveOfEratosthenes.h"
-#include "SieveOfEratosthenes-GENERATE.h"
-#include "SieveOfEratosthenes-inline.h"
+#include <primesieve/soe/config.h>
+#include <primesieve/soe/PrimeGenerator.h>
+#include <primesieve/soe/PrimeFinder.h>
+#include <primesieve/soe/SieveOfEratosthenes.h>
+#include <primesieve/soe/SieveOfEratosthenes-GENERATE.h>
+#include <primesieve/soe/SieveOfEratosthenes-inline.h>
 
 #include <vector>
 #include <cassert>

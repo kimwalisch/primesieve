@@ -9,10 +9,10 @@
 /// file in the top level directory.
 ///
 
-#include "config.h"
-#include "EratMedium.h"
-#include "WheelFactorization.h"
-#include "primesieve_error.h"
+#include <primesieve/soe/config.h>
+#include <primesieve/soe/EratMedium.h>
+#include <primesieve/soe/WheelFactorization.h>
+#include <primesieve/soe/primesieve_error.h>
 
 #include <stdint.h>
 #include <cassert>

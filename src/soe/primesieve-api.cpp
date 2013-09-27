@@ -10,9 +10,9 @@
 /// file in the top level directory.
 ///
 
-#include "PrimeSieve.h"
-#include "ParallelPrimeSieve.h"
-#include "PrimeSieveCallback.h"
+#include <primesieve/soe/PrimeSieve.h>
+#include <primesieve/soe/ParallelPrimeSieve.h>
+#include <primesieve/soe/PrimeSieveCallback.h>
 
 #include <stdint.h>
 

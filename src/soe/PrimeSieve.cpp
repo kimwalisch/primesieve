@@ -9,14 +9,14 @@
 /// file in the top level directory.
 ///
 
-#include "config.h"
-#include "PrimeSieve.h"
-#include "primesieve_error.h"
-#include "PrimeSieveCallback.h"
-#include "PrimeSieve-lock.h"
-#include "PrimeFinder.h"
-#include "PrimeGenerator.h"
-#include "imath.h"
+#include <primesieve/soe/config.h>
+#include <primesieve/soe/PrimeSieve.h>
+#include <primesieve/soe/primesieve_error.h>
+#include <primesieve/soe/PrimeSieveCallback.h>
+#include <primesieve/soe/PrimeSieve-lock.h>
+#include <primesieve/soe/PrimeFinder.h>
+#include <primesieve/soe/PrimeGenerator.h>
+#include <primesieve/soe/imath.h>
 
 #include <stdint.h>
 #include <iostream>

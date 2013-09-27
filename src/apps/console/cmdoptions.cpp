@@ -9,9 +9,9 @@
 /// file in the top level directory.
 ///
 
+#include <primesieve/soe/PrimeSieve.h>
 #include "cmdoptions.h"
 #include "ExpressionParser.h"
-#include "../../soe/PrimeSieve.h"
 
 #include <string>
 #include <map>

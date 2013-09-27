@@ -9,8 +9,7 @@
 /// file in the top level directory.
 ///
 
-// TODO
-//#include "../../soe/PrimeSieve.h"
+#include <primesieve.h>
 
 #include <iostream>
 #include <cstdlib>
@@ -43,8 +42,8 @@ const string helpMenu(
 );
 
 const string versionInfo(
-  "primesieve TODO, <https://github.com/kimwalisch/primesieve>\n"
-  "Copyright (C) TODO Kim Walisch\n"
+  "primesieve " PRIMESIEVE_VERSION ", <https://github.com/kimwalisch/primesieve>\n"
+  "Copyright (C) " PRIMESIEVE_YEAR " Kim Walisch\n"
   "BSD 2-Clause License <http://opensource.org/licenses/BSD-2-Clause>"
 );
 

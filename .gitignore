@@ -1,9 +1,10 @@
 *.o
 *.lo
 *.la
-
+*~
 Makefile
 Makefile.in
+autoconf.h*
 /aclocal.m4
 /ar-lib
 /autom4te.cache/
@@ -18,6 +19,4 @@ Makefile.in
 stamp-*
 .deps/
 .libs/
-*~
 .project
-autoconf.h*

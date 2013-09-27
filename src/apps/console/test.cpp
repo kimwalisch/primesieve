@@ -10,7 +10,7 @@
 /// file in the top level directory.
 ///
 
-#include "../../soe/ParallelPrimeSieve.h"
+#include <primesieve/soe/ParallelPrimeSieve.h>
 
 #include <iostream>
 #include <iomanip>
