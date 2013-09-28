@@ -1,6 +1,6 @@
 ///
 /// @file   test.cpp
-/// @brief  bool soe::test(); runs sieving tests to ensure that
+/// @brief  bool soe::test(); runs prime sieving tests to ensure that
 ///         ParallelPrimeSieve objects produce correct results.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
@@ -154,8 +154,8 @@ void testRandomIntervals()
 
 /// Run various sieving tests to ensure that ParallelPrimeSieve
 /// (and PrimeSieve) objects produce correct results.
-/// The tests use up to 1 GB of memory and take about 3 minutes to
-/// complete on a dual core CPU from 2011.
+/// The tests use up to 1 gigabyte of memory and take about
+/// 1 minute to complete on a quad core CPU from 2013.
 /// @return true  If no error occurred else false.
 ///
 bool test()
