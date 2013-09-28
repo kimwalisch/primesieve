@@ -246,6 +246,13 @@ namespace primesieve
   /// @param threads  Number of threads.
   ///
   uint64_t parallel_nth_prime(uint64_t n, uint64_t start = 0, int threads = MAX_THREADS);
+
+  /// Run extensive correctness tests.
+  /// The tests last about one minute on a quad core CPU from
+  /// 2013 and use up to 1 gigabyte of memory.
+  /// @return true  If no error occurred else false.
+  ///
+  bool test();
 }
 
 #endif

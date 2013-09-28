@@ -16,7 +16,13 @@
 
 #include <stdint.h>
 
-namespace primesieve {
+namespace soe
+{
+  bool test();
+}
+
+namespace primesieve
+{
 
 void callback_primes(uint32_t start, uint32_t stop, void (*callback)(uint32_t))
 {
@@ -234,6 +240,11 @@ void print_septuplets(uint64_t start, uint64_t stop)
 {
   PrimeSieve ps;
   ps.printSeptuplets(start, stop);
+}
+
+bool test()
+{
+  return soe::test();
 }
 
 } // end namespace

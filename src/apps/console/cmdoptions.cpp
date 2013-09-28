@@ -9,6 +9,7 @@
 /// file in the top level directory.
 ///
 
+#include <primesieve.h>
 #include <primesieve/soe/PrimeSieve.h>
 #include "cmdoptions.h"
 #include "ExpressionParser.h"
@@ -22,7 +23,6 @@
 
 void help();
 void version();
-bool test_ParallelPrimeSieve();
 
 using namespace std;
 
@@ -41,7 +41,8 @@ struct Option {
   }
 };
 
-enum OptionValues {
+enum OptionValues
+{
   OPTION_COUNT,
   OPTION_HELP,
   OPTION_NTHPRIME,
@@ -84,7 +85,7 @@ void initOptionMap()
 
 void test()
 {
-  bool ok = test_ParallelPrimeSieve();
+  bool ok = primesieve::test();
   exit(ok ? 0 : 1);
 }
 
