@@ -56,20 +56,15 @@ APP_OBJECTS = \
   $(OBJDIR)\main.obj
 
 EXAMPLE_OBJECTS = \
+  $(OBJDIR)\examples\callback_cancel.obj \
   $(OBJDIR)\examples\callback_primes.obj \
   $(OBJDIR)\examples\callback_primes_oop.obj \
-  $(OBJDIR)\examples\cancel_callback.obj \
   $(OBJDIR)\examples\count_primes.obj \
-  $(OBJDIR)\examples\flags.obj \
   $(OBJDIR)\examples\nth_prime.obj \
   $(OBJDIR)\examples\parallel_callback.obj \
   $(OBJDIR)\examples\parallel_callback_faster.obj \
-  $(OBJDIR)\examples\parallel_count.obj \
-  $(OBJDIR)\examples\print_twins.obj \
-  $(OBJDIR)\examples\sieve_size.obj \
-  $(OBJDIR)\examples\store_primes_in_vector.obj \
-  $(OBJDIR)\examples\sum_primes.obj \
-  $(OBJDIR)\examples\timing.obj
+  $(OBJDIR)\examples\print_primes.obj \
+  $(OBJDIR)\examples\store_primes_in_vector.obj
 
 #-----------------------------------------------------------------------------
 # Add /openmp if MSVC supports OpenMP

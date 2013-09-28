@@ -4,7 +4,7 @@
 // This version scales well using many threads because
 // prime callback is not synchronized.
 
-#include <primesieve/soe/ParallelPrimeSieve.h>
+#include <primesieve.h>
 #include <stdint.h>
 #include <cstdlib>
 #include <iostream>
@@ -28,12 +28,8 @@ int main(int, char** argv)
   if (argv[1])
     n = atol(argv[1]);
 
-  int threads = ParallelPrimeSieve::getMaxThreads();
   sums.resize(threads * NO_FALSE_SHARING, 0);
-
-  ParallelPrimeSieve pps;
-  pps.setNumThreads(threads);
-  pps.generatePrimes(0, n, callback);
+  primesieve::parallel_callback_primes(0, n, callback);
 
   uint64_t sum = 0;
   for (uint64_t i = 0; i < sums.size(); i += NO_FALSE_SHARING)

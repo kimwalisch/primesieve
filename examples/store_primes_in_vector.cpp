@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////
 // store_primes_in_vector.cpp
-// Store primes in a vector using PrimeSieve.
+// Store primes in a vector using primesieve.
 
-#include <primesieve/soe/PrimeSieve.h>
+#include <primesieve.h>
 #include <vector>
 
 int main()
@@ -10,15 +10,17 @@ int main()
   std::vector<int> primes;
   PrimeSieve ps;
 
-  // Store primes between 100 and 200
-  int start = 100, stop = 200;
-  ps.generatePrimes(start, stop, &primes);
-
+  // Store the primes below 1000
   primes.clear();
+  primesieve::generate_primes(1000, &primes);
 
-  // Store first 100 primes
-  int n = 100;
-  ps.generate_N_Primes(n, &primes);
+  // Store the primes within the interval [1000, 2000]
+  primes.clear();
+  primesieve::generate_primes(1000, 2000, &primes);
+
+  // Store first 1000 primes
+  primes.clear();
+  primesieve::generate_n_primes(1000, &primes);
 
   return 0;
 }

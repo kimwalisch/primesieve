@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////
 // parallel_callback.cpp
-// Sum the primes below n using 4 threads.
-// This version does not scale well using many threads because
-// prime callback is synchronized.
+// Sum the primes below n using 4 threads. This version
+// does not scale well using many threads because prime
+// callback is synchronized.
 
-#include <primesieve/soe/ParallelPrimeSieve.h>
+#include <primesieve.h>
 #include <stdint.h>
 #include <cstdlib>
 #include <iostream>
@@ -21,10 +21,8 @@ int main(int, char** argv)
   if (argv[1])
     n = atol(argv[1]);
 
-  ParallelPrimeSieve pps;
-  pps.setNumThreads(4);
-  pps.generatePrimes(0, n, callback);
-
+  int threads = 4;
+  primesieve::parallel_callback_primes(0, n, callback, threads);
   std::cout << "Sum of the primes below " << n << " = " << sum << std::endl;
   return 0;
 }

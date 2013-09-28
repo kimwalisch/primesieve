@@ -2,7 +2,7 @@
 // nth_prime.cpp
 // Usage: $ ./nth_prime 999
 
-#include <primesieve/soe/ParallelPrimeSieve.h>
+#include <primesieve.h>
 #include <stdint.h>
 #include <iostream>
 #include <cstdlib>
@@ -13,8 +13,7 @@ int main(int, char** argv)
   if (argv[1])
     n = atol(argv[1]);
 
-  ParallelPrimeSieve pps;
-  uint64_t nthPrime = pps.nthPrime(n);
-  std::cout << n << "th prime = " << nthPrime << std::endl;
+  uint64_t nth_prime = primesieve::nth_prime(n);
+  std::cout << n << "th prime = " << nth_prime << std::endl;
   return 0;
 }

@@ -1,9 +1,10 @@
 ////////////////////////////////////////////////////////////////////
 // cancel_callback.cpp
-// Cancel prime generation by throwing a stop_primesieve()
-// exception. Find the 10^7th prime.
+// Cancel prime callback by throwing a stop_primesieve()
+// exception. Note that multi-threaded callback can currently
+// not be canceled. This code finds the 10^7th prime.
 
-#include <primesieve/soe/PrimeSieve.h>
+#include <primesieve.h>
 #include <primesieve/soe/stop_primesieve.h>
 #include <iostream>
 
@@ -20,9 +21,9 @@ void callback(unsigned int prime)
 
 int main()
 {
-  try {
-    PrimeSieve ps;
-    ps.generatePrimes(0, n * 50, callback);
+  try
+  {
+    primesieve::callback_primes(0, n * 50, callback);
   }
   catch (stop_primesieve&) { }
   return 0;

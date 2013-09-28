@@ -3,7 +3,7 @@
 // The callback function will be executed for each prime
 // in the interval [2, 1000].
 
-#include <primesieve/soe/PrimeSieve.h>
+#include <primesieve.h>
 #include <iostream>
 
 void callback(unsigned int prime)
@@ -13,7 +13,6 @@ void callback(unsigned int prime)
 
 int main()
 {
-  PrimeSieve ps;
-  ps.generatePrimes(2, 1000, callback);
+  primesieve::callback_primes(2, 1000, callback);
   return 0;
 }
