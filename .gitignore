@@ -1,7 +1,9 @@
+*.exe
 *.o
 *.lo
 *.la
 *~
+primesieve
 Makefile
 Makefile.in
 autoconf.h*
@@ -18,5 +20,8 @@ autoconf.h*
 /missing
 stamp-*
 .deps/
+.dirstamp
+.DS_Store
 .libs/
 .project
+test-driver
