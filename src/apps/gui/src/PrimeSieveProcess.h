@@ -20,7 +20,7 @@
 #ifndef PRIMESIEVEPROCESS_H
 #define PRIMESIEVEPROCESS_H
 
-#include "../../soe/ParallelPrimeSieve.h"
+#include <primesieve/soe/ParallelPrimeSieve.h>
 
 #include <QProcess>
 #include <QSharedMemory>

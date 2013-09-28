@@ -21,7 +21,7 @@
 #define PRIMESIEVEGUI_H
 
 #include "PrimeSieveGUI_const.h"
-#include "../../soe/ParallelPrimeSieve.h"
+#include <primesieve/soe/ParallelPrimeSieve.h>
 
 #if QT_VERSION >= 0x050000
   #include <QtGlobal>

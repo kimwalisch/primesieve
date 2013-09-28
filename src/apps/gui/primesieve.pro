@@ -37,6 +37,8 @@ HEADERS += \
 # Sieve of Eratosthenes sources (src/soe)
 # ---------------------------------------------------------
 
+INCLUDEPATH += ../../../include
+
 SOURCES += \
   ../../soe/EratBig.cpp \
   ../../soe/EratMedium.cpp \
@@ -50,30 +52,6 @@ SOURCES += \
   ../../soe/PrimeSieve.cpp \
   ../../soe/SieveOfEratosthenes.cpp \
   ../../soe/WheelFactorization.cpp
-
-HEADERS += \
-  ../../soe/bits.h \
-  ../../soe/config.h \
-  ../../soe/littleendian_cast.h \
-  ../../soe/EratBig.h \
-  ../../soe/EratMedium.h \
-  ../../soe/EratSmall.h \
-  ../../soe/imath.h \
-  ../../soe/ParallelPrimeSieve.h \
-  ../../soe/ParallelPrimeSieve-lock.h \
-  ../../soe/PreSieve.h \
-  ../../soe/PrimeFinder.h \
-  ../../soe/PrimeGenerator.h \
-  ../../soe/PrimeSieve.h \
-  ../../soe/primesieve_error.h \
-  ../../soe/PrimeSieveCallback.h \
-  ../../soe/PrimeSieve-lock.h \
-  ../../soe/SieveOfEratosthenes.h \
-  ../../soe/SieveOfEratosthenes-GENERATE.h \
-  ../../soe/SieveOfEratosthenes-inline.h \
-  ../../soe/stop_primesieve.h \
-  ../../soe/toString.h \
-  ../../soe/WheelFactorization.h
 
 # ---------------------------------------------------------
 # primesieve icon file

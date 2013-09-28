@@ -22,7 +22,8 @@
 #include "PrimeSieveProcess.h"
 #include "ExpressionParser.h"
 
-#include "../../soe/ParallelPrimeSieve.h"
+#include <primesieve.h>
+#include <primesieve/soe/ParallelPrimeSieve.h>
 
 #if QT_VERSION >= 0x050000
   #include <QtGlobal>

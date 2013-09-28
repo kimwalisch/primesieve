@@ -1,26 +1,14 @@
 ######################################################################
 # Microsoft Visual C++ Makefile for the primesieve console
 # application and the primesieve C++ library
-#
-# Author:          Kim Walisch
-# Contact:         kim.walisch@gmail.com
-# Created:         10 July 2010
-# Last modified:   24 September 2013
-#
-# Project home:    http://primesieve.googlecode.com
 ######################################################################
 
 TARGET   = primesieve
 CXX      = cl /nologo
-CXXFLAGS = /W2 /O2 /EHsc
-INCPATH  = /I"src\msvc_compat"
+CXXFLAGS = /W4 /O2 /EHsc
+INCPATH  = /I"include" /I"src\msvc_compat"
 LINK     = link /nologo
-BINDIR   = bin
-EXDIR    = examples
-INCDIR   = include
-LIBDIR   = lib
 OBJDIR   = obj
-SOEDIR   = src\soe
 
 SOE_OBJECTS = \
   $(OBJDIR)\EratBig.obj \
@@ -31,62 +19,63 @@ SOE_OBJECTS = \
   $(OBJDIR)\PreSieve.obj \
   $(OBJDIR)\PrimeFinder.obj \
   $(OBJDIR)\PrimeGenerator.obj \
+  $(OBJDIR)\primesieve-api.obj \
   $(OBJDIR)\PrimeSieve-nthPrime.obj \
   $(OBJDIR)\PrimeSieve.obj \
   $(OBJDIR)\SieveOfEratosthenes.obj \
-  $(OBJDIR)\WheelFactorization.obj
+  $(OBJDIR)\WheelFactorization.obj \
+  $(OBJDIR)\test.obj
 
 SOE_HEADERS = \
-  $(SOEDIR)\bits.h \
-  $(SOEDIR)\config.h \
-  $(SOEDIR)\littleendian_cast.h \
-  $(SOEDIR)\EratBig.h \
-  $(SOEDIR)\EratMedium.h \
-  $(SOEDIR)\EratSmall.h \
-  $(SOEDIR)\imath.h \
-  $(SOEDIR)\ParallelPrimeSieve.h \
-  $(SOEDIR)\ParallelPrimeSieve-lock.h \
-  $(SOEDIR)\PreSieve.h \
-  $(SOEDIR)\PrimeFinder.h \
-  $(SOEDIR)\PrimeGenerator.h \
-  $(SOEDIR)\PrimeSieve.h \
-  $(SOEDIR)\primesieve_error.h \
-  $(SOEDIR)\PrimeSieveCallback.h \
-  $(SOEDIR)\PrimeSieve-lock.h \
-  $(SOEDIR)\SieveOfEratosthenes.h \
-  $(SOEDIR)\SieveOfEratosthenes-GENERATE.h \
-  $(SOEDIR)\SieveOfEratosthenes-inline.h \
-  $(SOEDIR)\stop_primesieve.h \
-  $(SOEDIR)\toString.h \
-  $(SOEDIR)\WheelFactorization.h
+  include\primesieve\soe\bits.h \
+  include\primesieve\soe\config.h \
+  include\primesieve\soe\littleendian_cast.h \
+  include\primesieve\soe\EratBig.h \
+  include\primesieve\soe\EratMedium.h \
+  include\primesieve\soe\EratSmall.h \
+  include\primesieve\soe\imath.h \
+  include\primesieve\soe\ParallelPrimeSieve.h \
+  include\primesieve\soe\ParallelPrimeSieve-lock.h \
+  include\primesieve\soe\PreSieve.h \
+  include\primesieve\soe\PrimeFinder.h \
+  include\primesieve\soe\PrimeGenerator.h \
+  include\primesieve\soe\PrimeSieve.h \
+  include\primesieve\soe\primesieve_error.h \
+  include\primesieve\soe\PrimeSieveCallback.h \
+  include\primesieve\soe\PrimeSieve-lock.h \
+  include\primesieve\soe\SieveOfEratosthenes.h \
+  include\primesieve\soe\SieveOfEratosthenes-GENERATE.h \
+  include\primesieve\soe\SieveOfEratosthenes-inline.h \
+  include\primesieve\soe\stop_primesieve.h \
+  include\primesieve\soe\toString.h \
+  include\primesieve\soe\WheelFactorization.h
 
 APP_OBJECTS = \
   $(OBJDIR)\cmdoptions.obj \
   $(OBJDIR)\help.obj \
-  $(OBJDIR)\main.obj \
-  $(OBJDIR)\test.obj
+  $(OBJDIR)\main.obj
 
 EXAMPLE_OBJECTS = \
-  $(OBJDIR)\$(EXDIR)\callback_primes.obj \
-  $(OBJDIR)\$(EXDIR)\callback_primes_oop.obj \
-  $(OBJDIR)\$(EXDIR)\cancel_callback.obj \
-  $(OBJDIR)\$(EXDIR)\count_primes.obj \
-  $(OBJDIR)\$(EXDIR)\flags.obj \
-  $(OBJDIR)\$(EXDIR)\nth_prime.obj \
-  $(OBJDIR)\$(EXDIR)\parallel_callback.obj \
-  $(OBJDIR)\$(EXDIR)\parallel_callback_faster.obj \
-  $(OBJDIR)\$(EXDIR)\parallel_count.obj \
-  $(OBJDIR)\$(EXDIR)\print_twins.obj \
-  $(OBJDIR)\$(EXDIR)\sieve_size.obj \
-  $(OBJDIR)\$(EXDIR)\store_primes_in_vector.obj \
-  $(OBJDIR)\$(EXDIR)\sum_primes.obj \
-  $(OBJDIR)\$(EXDIR)\timing.obj
+  $(OBJDIR)\examples\callback_primes.obj \
+  $(OBJDIR)\examples\callback_primes_oop.obj \
+  $(OBJDIR)\examples\cancel_callback.obj \
+  $(OBJDIR)\examples\count_primes.obj \
+  $(OBJDIR)\examples\flags.obj \
+  $(OBJDIR)\examples\nth_prime.obj \
+  $(OBJDIR)\examples\parallel_callback.obj \
+  $(OBJDIR)\examples\parallel_callback_faster.obj \
+  $(OBJDIR)\examples\parallel_count.obj \
+  $(OBJDIR)\examples\print_twins.obj \
+  $(OBJDIR)\examples\sieve_size.obj \
+  $(OBJDIR)\examples\store_primes_in_vector.obj \
+  $(OBJDIR)\examples\sum_primes.obj \
+  $(OBJDIR)\examples\timing.obj
 
 #-----------------------------------------------------------------------------
 # Add /openmp if MSVC supports OpenMP
 #-----------------------------------------------------------------------------
 
-!IF ([$(CXX) /openmp /c src\test\has_openmp.cpp /Fonul > nul] == 0)
+!IF ([$(CXX) /openmp /c src\msvc_compat\has_openmp.cpp /Fonul > nul] == 0)
 CXXFLAGS = $(CXXFLAGS) /openmp
 !ELSE
 NO_OPENMP = true
@@ -112,64 +101,53 @@ CXXFLAGS = $(CXXFLAGS) $(INCPATH)
 # Default targets
 #-----------------------------------------------------------------------------
 
-all: bin lib
+all: lib bin
 
 #-----------------------------------------------------------------------------
 # Create and clean output directories
 #-----------------------------------------------------------------------------
 
 make_dir:
-	@if not exist $(BINDIR) mkdir $(BINDIR)
-	@if not exist $(LIBDIR) mkdir $(LIBDIR)
 	@if not exist $(OBJDIR) mkdir $(OBJDIR)
-	@if not exist $(OBJDIR)\$(EXDIR) mkdir $(OBJDIR)\$(EXDIR)
-	@if not exist $(INCDIR)\$(TARGET)\soe mkdir $(INCDIR)\$(TARGET)\soe
+	@if not exist $(OBJDIR)\examples mkdir $(OBJDIR)\examples
 
 clean:
-	-rd /Q /S $(BINDIR) $(LIBDIR) $(OBJDIR) $(INCDIR) 2> /nul
+	-del *.exe primesieve.lib
+	-rd /Q /S $(OBJDIR) 2> /nul
 
 #-----------------------------------------------------------------------------
 # Compilation rules
 #-----------------------------------------------------------------------------
 
-$(SOE_OBJECTS): $(SOEDIR)\$(@B).cpp $(SOE_HEADERS)
-	$(CXX) $(CXXFLAGS) /c $(SOEDIR)\$(@B).cpp /Fo$@
+$(SOE_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
+	$(CXX) $(CXXFLAGS) /c src\soe\$(@B).cpp /Fo$@
 
 $(APP_OBJECTS): src\apps\console\$(@B).cpp $(SOE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\apps\console\$(@B).cpp /Fo$@
 
-$(EXAMPLE_OBJECTS): $(EXDIR)\$(@B).cpp
-	$(CXX) $(CXXFLAGS) /I"$(INCDIR)" $** /Fo$@ /Fe$(BINDIR)/$(@B).exe /link $(LIBDIR)\$(TARGET).lib
+$(EXAMPLE_OBJECTS): examples\$(@B).cpp
+	$(CXX) $(CXXFLAGS) $** /Fo$@ /Fe$(@B).exe /link $(TARGET).lib
 
 #-----------------------------------------------------------------------------
-# Build the primesieve console application (read INSTALL)
+# Build the primesieve console application
 #-----------------------------------------------------------------------------
 
 bin: make_dir bin_obj openmp_note
 
-bin_obj: $(APP_OBJECTS) $(OBJDIR)\test.obj $(SOE_OBJECTS)
-	$(LINK) /OUT:$(BINDIR)\$(TARGET).exe $**
+bin_obj: lib $(APP_OBJECTS)
+	$(LINK) /OUT:$(TARGET).exe $(APP_OBJECTS) $(TARGET).lib
 
 #-----------------------------------------------------------------------------
-# Build a static primesieve.lib (read doc/LIBPRIMESIEVE)
+# Build a static primesieve.lib
 #-----------------------------------------------------------------------------
 
-static: lib
-
-lib: make_dir lib_obj copy_headers openmp_note
+lib: make_dir lib_obj openmp_note
 
 lib_obj: $(SOE_OBJECTS)
-	lib.exe /nologo /OUT:$(LIBDIR)\$(TARGET).lib $**
-
-copy_headers:
-	copy /Y $(SOEDIR)\PrimeSieve.h $(INCDIR)\$(TARGET)\soe
-	copy /Y $(SOEDIR)\ParallelPrimeSieve.h $(INCDIR)\$(TARGET)\soe
-	copy /Y $(SOEDIR)\primesieve_error.h $(INCDIR)\$(TARGET)\soe
-	copy /Y $(SOEDIR)\PrimeSieveCallback.h $(INCDIR)\$(TARGET)\soe
-	copy /Y $(SOEDIR)\stop_primesieve.h $(INCDIR)\$(TARGET)\soe
+	lib.exe /nologo /OUT:$(TARGET).lib $**
 
 #-----------------------------------------------------------------------------
-# Build the example programs (read examples/README)
+# Build the example programs
 #-----------------------------------------------------------------------------
 
 examples: make_dir $(EXAMPLE_OBJECTS) openmp_note
@@ -179,7 +157,7 @@ examples: make_dir $(EXAMPLE_OBJECTS) openmp_note
 #-----------------------------------------------------------------------------
 
 check test: bin
-	$(BINDIR)\$(TARGET).exe --test
+	$(TARGET).exe --test
 
 #-----------------------------------------------------------------------------
 # OpenMP requires Microsoft Visual C++ Professional or higher
