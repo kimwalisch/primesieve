@@ -43,16 +43,17 @@ void ParallelPrimeSieve::init(SharedMemory& shm)
 
 int ParallelPrimeSieve::getNumThreads() const
 {
-  if (numThreads_ == DEFAULT_NUM_THREADS) {
-    // Use 1 thread to generate primes in arithmetic order
+  // Use 1 thread if arithmetic order is important
+  if (numThreads_ == DEFAULT_NUM_THREADS)
     return (isPrint() || isGenerate()) ? 1 : idealNumThreads();
-  }
   return numThreads_;
 }
 
 void ParallelPrimeSieve::setNumThreads(int threads)
 {
-  numThreads_ = getInBetween(1, threads, getMaxThreads());
+  numThreads_ = threads;
+  if (numThreads_ != DEFAULT_NUM_THREADS)
+  	numThreads_ = getInBetween(1, numThreads_, getMaxThreads());
 }
 
 /// Get an ideal number of threads for the current
