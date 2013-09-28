@@ -177,12 +177,3 @@ bool test()
 }
 
 } // end namespace
-
-#ifdef STANDALONE
-
-int main()
-{
-  return (soe::test() == true) ? 0 : 1;
-}
-
-#endif

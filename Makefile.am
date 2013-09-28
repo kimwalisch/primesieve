@@ -8,6 +8,9 @@ bin_PROGRAMS = primesieve
 primesieve_LDADD = libprimesieve.la
 primesieve_LDFLAGS = $(OPENMP_CXXFLAGS)
 
+check: primesieve
+	libtool execute primesieve --test
+
 include_HEADERS = \
 	include/primesieve.h
 
@@ -33,6 +36,7 @@ libprimesieve_la_SOURCES = \
 	src/soe/primesieve-api.cpp \
 	src/soe/SieveOfEratosthenes.cpp \
 	src/soe/WheelFactorization.cpp \
+	src/soe/test.cpp \
 	include/primesieve/soe/bits.h \
 	include/primesieve/soe/config.h \
 	include/primesieve/soe/EratBig.h \
@@ -56,5 +60,4 @@ primesieve_SOURCES = \
 	src/apps/console/help.cpp \
 	src/apps/console/cmdoptions.cpp \
 	src/apps/console/cmdoptions.h \
-	src/apps/console/test.cpp \
 	src/apps/console/ExpressionParser.h
