@@ -76,6 +76,7 @@ int main(int argc, char** argv)
     if (options.flags     != 0) pps.setFlags(options.flags);
     if (options.sieveSize != 0) pps.setSieveSize(options.sieveSize);
     if (options.threads   != 0) pps.setNumThreads(options.threads);
+    else if (pps.isPrint())     pps.setNumThreads(1);
 
     if (!options.quiet)
     {

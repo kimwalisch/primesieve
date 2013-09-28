@@ -27,7 +27,7 @@
 using namespace soe;
 
 ParallelPrimeSieve::ParallelPrimeSieve() :
-  numThreads_(DEFAULT_NUM_THREADS),
+  numThreads_(IDEAL_NUM_THREADS),
   shm_(NULL)
 { }
 
@@ -43,16 +43,15 @@ void ParallelPrimeSieve::init(SharedMemory& shm)
 
 int ParallelPrimeSieve::getNumThreads() const
 {
-  // Use 1 thread if arithmetic order is important
-  if (numThreads_ == DEFAULT_NUM_THREADS)
-    return (isPrint() || isGenerate()) ? 1 : idealNumThreads();
+  if (numThreads_ == IDEAL_NUM_THREADS)
+    return idealNumThreads();
   return numThreads_;
 }
 
 void ParallelPrimeSieve::setNumThreads(int threads)
 {
   numThreads_ = threads;
-  if (numThreads_ != DEFAULT_NUM_THREADS)
+  if (numThreads_ != IDEAL_NUM_THREADS)
   	numThreads_ = getInBetween(1, numThreads_, getMaxThreads());
 }
 
