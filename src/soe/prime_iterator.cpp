@@ -29,7 +29,7 @@ enum {
 uint64_t get_interval_size(uint64_t n, std::size_t primes)
 {
   const uint64_t MIN_INTERVAL = 1 << 16;
-  n = std::max(n, static_cast<uint64_t>(primes * 20));
+  n = std::max(n, static_cast<uint64_t>(primes) * 20);
   double dn = static_cast<double>(n);
   double logn = std::log(dn);
   uint64_t interval_size = static_cast<uint64_t>(primes * logn);
@@ -48,8 +48,8 @@ prime_iterator::prime_iterator(uint64_t start, std::size_t cache_size) :
 {
   if (cache_size_ < 1)
     cache_size_ = 1;
-  if (cache_size_ > 128)
-    cache_size_ = 128;
+  if (cache_size_ > 1024)
+    cache_size_ = 1024;
 
   max_size_ = (cache_size_ * MEGABYTE) / sizeof(uint64_t);
   uint64_t interval_size = get_interval_size(start_, max_size_);
