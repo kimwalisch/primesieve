@@ -1,6 +1,6 @@
 ///
 /// @file   test.cpp
-/// @brief  bool soe::test(); runs prime sieving tests to ensure that
+/// @brief  bool primesieve::test(); runs sieving tests to ensure that
 ///         ParallelPrimeSieve objects produce correct results.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
@@ -22,7 +22,7 @@
 
 using namespace std;
 
-namespace soe {
+namespace primesieve {
 
 /// Correct values to compare with test results
 const unsigned int primeCounts[19] =
