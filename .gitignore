@@ -3,7 +3,7 @@
 *.lo
 *.la
 *~
-primesieve
+/primesieve
 Makefile
 Makefile.in
 autoconf.h*
@@ -24,4 +24,4 @@ stamp-*
 .DS_Store
 .libs/
 .project
-test-driver
+/test-driver
