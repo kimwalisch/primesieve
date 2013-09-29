@@ -9,27 +9,25 @@
 
 #include <primesieve.h>
 #include <primesieve/soe/prime_iterator.h>
-
 #include <algorithm>
-#include <cassert>
 #include <cmath>
-#include <cstddef>
 #include <vector>
 
 namespace {
 
-enum {
-  MEGABYTE = 1 << 20
-};
+uint64_t megabytes(uint64_t n)
+{
+  return n << 20;
+}
 
 /// Estimate interval size based on number of primes.
 /// @param n       start or stop number.
 /// @param primes  Number of primes to generate.
 ///
-uint64_t get_interval_size(uint64_t n, std::size_t primes)
+uint64_t get_interval_size(uint64_t n, uint64_t primes)
 {
   const uint64_t MIN_INTERVAL = 1 << 16;
-  n = std::max(n, static_cast<uint64_t>(primes) * 20);
+  n = std::max(n, primes * 20);
   double dn = static_cast<double>(n);
   double logn = std::log(dn);
   uint64_t interval_size = static_cast<uint64_t>(primes * logn);
@@ -40,30 +38,36 @@ uint64_t get_interval_size(uint64_t n, std::size_t primes)
 
 namespace primesieve {
 
-prime_iterator::prime_iterator(uint64_t start, std::size_t cache_size) :
-  i_(0),
-  cache_size_(cache_size),
+prime_iterator::prime_iterator(uint64_t start) :
   start_(start),
   first_(true)
 {
-  if (cache_size_ < 1)
-    cache_size_ = 1;
-  if (cache_size_ > 1024)
-    cache_size_ = 1024;
-
-  max_size_ = (cache_size_ * MEGABYTE) / sizeof(uint64_t);
-  uint64_t interval_size = get_interval_size(start_, max_size_);
+  set_cache_size(start_);
+  uint64_t interval_size = get_interval_size(start_, cache_size_);
   uint64_t mid = interval_size / 2;
   uint64_t begin = (start_ > mid) ? start_ - mid : 0;
 
-  generate_n_primes(max_size_, begin, &primes_);
-  size_ = primes_.size();
+  generate_n_primes(cache_size_, begin, &primes_);
+  cache_size_ = primes_.size();
   i_ = std::lower_bound(primes_.begin(), primes_.end(), start_) - primes_.begin();
 }
 
-std::size_t prime_iterator::get_cache_size() const
+/// Each time new primes have to be generated the cache
+/// size is dynamically grown or shrunk.
+///
+void prime_iterator::set_cache_size(uint64_t n)
 {
-  return cache_size_;
+  // estimate number of primes <= sqrt(n)
+  double dn = std::max(static_cast<double>(n), 100.0);
+  cache_size_ = static_cast<uint64_t>(std::sqrt(dn) / (std::log(dn) - 1.0));
+
+  // lower limit = 2 megabytes
+  if (cache_size_ * sizeof(uint64_t) < megabytes(2))
+   cache_size_ = megabytes(2) / sizeof(uint64_t);
+
+  // upper limit = 1 gigabyte
+  if (cache_size_ * sizeof(uint64_t) > megabytes(1024))
+   cache_size_ = megabytes(1024) / sizeof(uint64_t);
 }
 
 uint64_t prime_iterator::first_prime()
@@ -94,10 +98,11 @@ uint64_t prime_iterator::first_previous_prime()
 
 void prime_iterator::generate_next_primes()
 {
+  set_cache_size(primes_.back());
   uint64_t start = primes_.back() + 1;
   primes_.clear();
-  generate_n_primes(max_size_, start, &primes_);
-  size_ = primes_.size();
+  generate_n_primes(cache_size_, start, &primes_);
+  cache_size_ = primes_.size();
   i_ = 0;
 }
 
@@ -107,7 +112,8 @@ void prime_iterator::generate_previous_primes()
   if (stop > 1)
     stop--;
 
-  uint64_t interval_size = get_interval_size(stop, max_size_);
+  set_cache_size(primes_.front());
+  uint64_t interval_size = get_interval_size(stop, cache_size_);
   uint64_t start = 0;
   if (stop > interval_size)
     start = stop - interval_size;
@@ -117,7 +123,7 @@ void prime_iterator::generate_previous_primes()
 
   if (primes_.empty())
     primes_.push_back(0);
-  i_ = size_ = primes_.size();
+  i_ = cache_size_ = primes_.size();
 }
 
 } // end namespace

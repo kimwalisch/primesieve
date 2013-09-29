@@ -13,7 +13,6 @@
 #define PRIME_ITERATOR_h
 
 #include <vector>
-#include <cstddef>
 
 namespace primesieve {
 
@@ -25,18 +24,11 @@ class prime_iterator
 {
 public:
   /// Create a new prime_iterator object.
-  /// @param start       Start iterating at this number. If start is a
-  ///                    prime then first calling either next_prime()
-  ///                    or previous_prime() will return start.
-  /// @param cache_size  Size of the cache in megabytes.
+  /// @param start  Start iterating at this number. If start is a
+  ///               prime then first calling either next_prime()
+  ///               or previous_prime() will return start.
   ///
-  prime_iterator(uint64_t start = 0, std::size_t cache_size = 2);
-
-  /// Get the cache size in megabytes.
-  /// The cache size can only be set in the constructor and
-  /// cannot be modified during the object's lifetime.
-  ///
-  std::size_t get_cache_size() const;
+  prime_iterator(uint64_t start = 0);
 
   /// Get the current prime.
   /// @warning Returns 0 for undefined behavior e.g.:
@@ -55,7 +47,7 @@ public:
   {
     if (first_)
       return first_next_prime();
-    if (++i_ == size_)
+    if (++i_ == primes_.size())
       generate_next_primes();
     return primes_[i_];
   }
@@ -75,13 +67,12 @@ public:
     return primes_[--i_];
   }
 private:
-  std::size_t i_;
-  std::size_t size_;
-  std::size_t max_size_;
-  std::size_t cache_size_;
+  uint64_t i_;
+  uint64_t cache_size_;
   uint64_t start_;
   bool first_;
   std::vector<uint64_t> primes_;
+  void set_cache_size(uint64_t);
   uint64_t first_prime();
   uint64_t first_next_prime();
   uint64_t first_previous_prime();
