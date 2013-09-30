@@ -63,7 +63,7 @@ public:
   ///
   uint64_t next_prime()
   {
-    if (!first_ && ++i_ < size_)
+    if (!first_ && ++i_ < primes_.size())
       return primes_[i_];
     uint64_t next_prime = generate_next_primes();
     return next_prime;
@@ -82,7 +82,6 @@ public:
   }
 private:
   uint64_t i_;
-  uint64_t size_;
   uint64_t start_;
   bool first_;
   bool adjust_skip_to_;

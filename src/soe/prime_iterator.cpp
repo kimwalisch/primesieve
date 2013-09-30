@@ -37,7 +37,7 @@ uint64_t get_interval_size(uint64_t n)
   // lower limit = 2 megabytes
   if (primes * sizeof(uint64_t) < MEGABYTE * 2)
    primes = MEGABYTE * 2 / sizeof(uint64_t);
-  // upper limit = 1 gigabyte
+  // upper limit = 512 megabytes
   if (primes * sizeof(uint64_t) > MEGABYTE * 512)
    primes = MEGABYTE * 512 / sizeof(uint64_t);
 
@@ -110,7 +110,6 @@ uint64_t prime_iterator::generate_next_primes()
     i_ = 0;
   }
   first_ = false;
-  size_ = primes_.size();
   return primes_[i_];
 }
 
@@ -140,7 +139,6 @@ uint64_t prime_iterator::generate_previous_primes()
     i_ = primes_.size() - 1;
   }
   first_ = false;
-  size_ = primes_.size();
   return primes_[i_];
 }
 
