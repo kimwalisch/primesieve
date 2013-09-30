@@ -75,7 +75,7 @@ public:
   ///
   uint64_t previous_prime()
   {
-    if (!first_ && i_ != 0)
+    if (!first_ && i_ > 0)
       return primes_[--i_];
     uint64_t previous_prime = generate_previous_primes();
     return previous_prime;
