@@ -5,7 +5,7 @@
 
 TARGET   = primesieve
 CXX      = cl /nologo
-CXXFLAGS = /W4 /O2 /EHsc
+CXXFLAGS = /W2 /O2 /EHsc
 INCPATH  = /I"include" /I"src\msvc_compat"
 LINK     = link /nologo
 OBJDIR   = obj
@@ -22,6 +22,7 @@ SOE_OBJECTS = \
   $(OBJDIR)\primesieve-api.obj \
   $(OBJDIR)\PrimeSieve-nthPrime.obj \
   $(OBJDIR)\PrimeSieve.obj \
+  $(OBJDIR)\prime_iterator.obj \
   $(OBJDIR)\SieveOfEratosthenes.obj \
   $(OBJDIR)\WheelFactorization.obj \
   $(OBJDIR)\test.obj
@@ -29,23 +30,24 @@ SOE_OBJECTS = \
 SOE_HEADERS = \
   include\primesieve\soe\bits.h \
   include\primesieve\soe\config.h \
-  include\primesieve\soe\littleendian_cast.h \
   include\primesieve\soe\EratBig.h \
   include\primesieve\soe\EratMedium.h \
   include\primesieve\soe\EratSmall.h \
   include\primesieve\soe\imath.h \
+  include\primesieve\soe\littleendian_cast.h \
   include\primesieve\soe\ParallelPrimeSieve.h \
   include\primesieve\soe\ParallelPrimeSieve-lock.h \
   include\primesieve\soe\PreSieve.h \
   include\primesieve\soe\PrimeFinder.h \
   include\primesieve\soe\PrimeGenerator.h \
-  include\primesieve\soe\PrimeSieve.h \
-  include\primesieve\soe\primesieve_error.h \
-  include\primesieve\soe\PrimeSieveCallback.h \
   include\primesieve\soe\PrimeSieve-lock.h \
-  include\primesieve\soe\SieveOfEratosthenes.h \
+  include\primesieve\soe\PrimeSieve.h \
+  include\primesieve\soe\PrimeSieveCallback.h \
+  include\primesieve\soe\primesieve_error.h \
+  include\primesieve\soe\prime_iterator.h \
   include\primesieve\soe\SieveOfEratosthenes-GENERATE.h \
   include\primesieve\soe\SieveOfEratosthenes-inline.h \
+  include\primesieve\soe\SieveOfEratosthenes.h \
   include\primesieve\soe\stop_primesieve.h \
   include\primesieve\soe\toString.h \
   include\primesieve\soe\WheelFactorization.h
@@ -60,10 +62,9 @@ EXAMPLE_OBJECTS = \
   $(OBJDIR)\examples\callback_primes.obj \
   $(OBJDIR)\examples\callback_primes_oop.obj \
   $(OBJDIR)\examples\count_primes.obj \
+  $(OBJDIR)\examples\next_prime.obj \
   $(OBJDIR)\examples\nth_prime.obj \
-  $(OBJDIR)\examples\parallel_callback.obj \
-  $(OBJDIR)\examples\parallel_callback_faster.obj \
-  $(OBJDIR)\examples\print_primes.obj \
+  $(OBJDIR)\examples\previous_prime.obj \
   $(OBJDIR)\examples\store_primes_in_vector.obj
 
 #-----------------------------------------------------------------------------

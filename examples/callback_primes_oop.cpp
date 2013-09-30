@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////
 // callback_primes_oop.cpp
-// Instances of classes that derive from PrimeSieveCallback<T>
-// can be passed to the callback_primes() function.
+// Objects derived from PrimeSieveCallback<T> can be
+// passed to the callback_primes() function.
 
 #include <primesieve.h>
 #include <primesieve/soe/PrimeSieveCallback.h>
@@ -10,8 +10,7 @@
 
 struct PrimeList : std::list<uint64_t>, PrimeSieveCallback<uint64_t>
 {
-  void callback(uint64_t prime)
-  {
+  void callback(uint64_t prime) {
     this->push_back(prime);
   }
 };

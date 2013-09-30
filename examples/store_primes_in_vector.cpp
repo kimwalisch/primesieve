@@ -8,7 +8,6 @@
 int main()
 {
   std::vector<int> primes;
-  PrimeSieve ps;
 
   // Store the primes below 1000
   primes.clear();
