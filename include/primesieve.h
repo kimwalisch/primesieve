@@ -91,7 +91,7 @@ namespace primesieve
   ///
   uint64_t count_septuplets(uint64_t start, uint64_t stop);
 
-  /// Generate the primes <= stop and store and
+  /// Generate the primes <= stop and store
   /// them in the primes vector.
   /// @pre stop <= 2^64 - 2^32 * 10.
   ///
