@@ -1,4 +1,3 @@
-June 30, 2012
 Kim Walisch, <kim.walisch@gmail.com>
 http://primesieve.googlecode.com
 
@@ -7,9 +6,7 @@ About
 
   This directory contains simple example programs that show how to use
   libprimesieve to generate, count and print primes and prime
-  k-tuplets. The example programs are documented in ../doc/EXAMPLES,
-  ../doc/LIBPRIMESIEVE explains how to build libprimesieve in more
-  detail.
+  k-tuplets.
 
 Build the example programs
 ==========================
@@ -21,9 +18,7 @@ Build the example programs
   Unix-like OSes, `c++' compiler
   ------------------------------
 
-  $ make
-  $ sudo make install
-  $ make examples
+  TODO
 
   Microsoft Visual C++
   --------------------
