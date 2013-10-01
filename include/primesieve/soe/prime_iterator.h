@@ -17,11 +17,11 @@
 namespace primesieve {
 
 /// Iterate over prime numbers.
-/// This class contains 3 useful methods: prime(),
+/// This class provides 3 useful methods: prime(),
 /// next_prime() and previous_prime().
-/// @note  prime_iterator objects are very convenient to use but they
-///        are usually slower and use more memory (up to 2x) than
-///        the callback_primes() methods.
+/// @note  prime_iterator objects are very convenient to use at
+///        the cost of being slightly slower than the
+///        callback_primes() functions.
 ///
 class prime_iterator
 {
