@@ -42,10 +42,16 @@ AS_IF([test "x$L1_DCACHE_SIZE" = x], [[
     then
         L1_DCACHE_SIZE=$(expr $L1_DCACHE_BYTES '/' 1024)
     fi]])
-AC_DEFINE_UNQUOTED([L1_DCACHE_SIZE], [$L1_DCACHE_SIZE], [CPU L1 data cache size in kilobytes])
+AC_DEFINE_UNQUOTED([L1_DCACHE_SIZE],
+    [$L1_DCACHE_SIZE],
+    [CPU L1 data cache size in kilobytes])
+
+AC_ARG_ENABLE(examples,
+    [--enable-examples Compile the examples programs],
+    ENABLE_EXAMPLES="yes")
+AM_CONDITIONAL(COMPILE_EXAMPLES, test "$ENABLE_EXAMPLES" = "yes")
 
 AC_OPENMP
-
 AC_CONFIG_HEADERS([src/soe/autoconf.h])
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

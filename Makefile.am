@@ -12,6 +12,50 @@ primesieve_LDFLAGS = $(OPENMP_CXXFLAGS)
 check: primesieve
 	libtool execute primesieve --test
 
+if COMPILE_EXAMPLES
+
+bin_PROGRAMS += callback_cancel
+callback_cancel_LDADD = libprimesieve.la
+callback_cancel_LDFLAGS = $(OPENMP_CXXFLAGS)
+callback_cancel_SOURCES = examples/callback_cancel.cpp
+
+bin_PROGRAMS += callback_primes
+callback_primes_LDADD = libprimesieve.la
+callback_primes_LDFLAGS = $(OPENMP_CXXFLAGS)
+callback_primes_SOURCES = examples/callback_primes.cpp
+
+bin_PROGRAMS += callback_primes_oop
+callback_primes_oop_LDADD = libprimesieve.la
+callback_primes_oop_LDFLAGS = $(OPENMP_CXXFLAGS)
+callback_primes_oop_SOURCES = examples/callback_primes.cpp
+
+bin_PROGRAMS += count_primes
+count_primes_LDADD = libprimesieve.la
+count_primes_LDFLAGS = $(OPENMP_CXXFLAGS)
+count_primes_SOURCES = examples/count_primes.cpp
+
+bin_PROGRAMS += next_prime
+next_prime_LDADD = libprimesieve.la
+next_prime_LDFLAGS = $(OPENMP_CXXFLAGS)
+next_prime_SOURCES = examples/next_prime.cpp
+
+bin_PROGRAMS += nth_prime
+nth_prime_LDADD = libprimesieve.la
+nth_prime_LDFLAGS = $(OPENMP_CXXFLAGS)
+nth_prime_SOURCES = examples/nth_prime.cpp
+
+bin_PROGRAMS += previous_prime
+previous_prime_LDADD = libprimesieve.la
+previous_prime_LDFLAGS = $(OPENMP_CXXFLAGS)
+previous_prime_SOURCES = examples/previous_prime.cpp
+
+bin_PROGRAMS += store_primes_in_vector
+store_primes_in_vector_LDADD = libprimesieve.la
+store_primes_in_vector_LDFLAGS = $(OPENMP_CXXFLAGS)
+store_primes_in_vector_SOURCES = examples/store_primes_in_vector.cpp
+
+endif
+
 include_HEADERS = \
 	include/primesieve.h
 

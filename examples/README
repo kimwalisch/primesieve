@@ -1,6 +1,3 @@
-Kim Walisch, <kim.walisch@gmail.com>
-http://primesieve.googlecode.com
-
 About
 =====
 
@@ -12,13 +9,13 @@ Build the example programs
 ==========================
 
   Open a terminal or 'Visual Studio Command Prompt' and cd into the
-  primesieve directory. The following commands build and install
-  libprimesieve and then compile the example programs.
+  primesieve directory. Then run the commands below:
 
-  Unix-like OSes, `c++' compiler
-  ------------------------------
+  Unix-like OSes
+  --------------
 
-  TODO
+  $ ./configure --enable-examples
+  $ make
 
   Microsoft Visual C++
   --------------------
