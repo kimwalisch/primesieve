@@ -80,9 +80,11 @@ public:
 private:
   uint64_t i_;
   uint64_t start_;
+  uint64_t count_;
   bool first_;
   bool adjust_skip_to_;
   std::vector<uint64_t> primes_;
+  uint64_t get_interval_size(uint64_t);
   void check_out_of_range();
   void generate_next_primes();
   void generate_previous_primes();

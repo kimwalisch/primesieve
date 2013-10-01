@@ -17,35 +17,14 @@
 #include <string>
 #include <vector>
 
+using namespace std;
 using soe::PrimeFinder;
 
 namespace {
 
-// MAX_STOP = 2^64 - 2^32 * 10
 const uint64_t MAX_STOP = PrimeFinder::getMaxStop();
 
-/// Calculate an interval size that ensures a good load balance.
-/// @param n  start or stop number.
-///
-uint64_t get_interval_size(uint64_t n)
-{
-  const uint64_t MEGABYTE = 1 << 20;
-  double dn = std::max(static_cast<double>(n), 100.0);
-  double sqrtn = std::sqrt(dn);
-  uint64_t primes = static_cast<uint64_t>(sqrtn / (std::log(sqrtn) - 1.0));
-
-  // lower limit = 1 megabyte
-  if (primes * sizeof(uint64_t) < MEGABYTE * 1)
-    primes = MEGABYTE * 1 / sizeof(uint64_t);
-  // upper limit = 512 megabytes
-  if (primes * sizeof(uint64_t) > MEGABYTE * 512)
-    primes = MEGABYTE * 512 / sizeof(uint64_t);
-
-  uint64_t interval_size = static_cast<uint64_t>(primes * std::log(dn));
-  return interval_size;
 }
-
-} // end namespace
 
 namespace primesieve {
 
@@ -57,20 +36,22 @@ prime_iterator::prime_iterator(uint64_t start)
 void prime_iterator::skip_to(uint64_t start)
 {
   i_ = 0;
+  count_ = 0;
   start_ = start;
   first_ = true;
   adjust_skip_to_ = false;
 
   if (start_ > MAX_STOP)
-    throw primesieve_error("start must be <= " + PrimeFinder::getMaxStopString());
-
+  {
+    string msg("start must be <= " + PrimeFinder::getMaxStopString());
+    throw primesieve_error(msg);
+  }
   if (!primes_.empty() &&
        primes_.front() <= start_ &&
        primes_.back() >= start_)
   {
     adjust_skip_to_ = true;
-    i_ = std::lower_bound(primes_.begin(), primes_.end(), start_)
-        - primes_.begin();
+    i_ = lower_bound(primes_.begin(), primes_.end(), start_) - primes_.begin();
   }
 }
 
@@ -83,6 +64,27 @@ void prime_iterator::check_out_of_range()
 {
   if (primes_.empty())
     primes_.push_back(0);
+}
+
+/// Calculate an interval size that ensures a good load balance.
+/// @param n  Start or stop number.
+///
+uint64_t prime_iterator::get_interval_size(uint64_t n)
+{
+  count_++;
+  uint64_t KILOBYTE = 1 << 10;
+  uint64_t MEGABYTE = 1 << 20;
+  uint64_t primes = (count_ < 10) ? (KILOBYTE * 32) / sizeof(uint64_t)
+      : (MEGABYTE * 4) / sizeof(uint64_t);
+
+  double dn = max(static_cast<double>(n), 100.0);
+  double sqrtn = sqrt(dn);
+  uint64_t sqrtn_primes = static_cast<uint64_t>(sqrtn / (log(sqrtn) - 1.0));
+  uint64_t MAX_PRIMES = (MEGABYTE * 512) / sizeof(uint64_t);
+
+  primes = max(primes, sqrtn_primes);
+  primes = min(primes, MAX_PRIMES);
+  return static_cast<uint64_t>(primes * log(dn));
 }
 
 void prime_iterator::generate_next_primes()
