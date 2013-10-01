@@ -51,10 +51,9 @@ public:
   ///
   uint64_t prime()
   {
-    if (!first_)
-      return primes_[i_];
-    uint64_t next_prime = generate_next_primes();
-    return next_prime;
+    if (first_)
+      generate_next_primes();
+    return primes_[i_];
   }
 
   /// Get the next prime.
@@ -63,10 +62,9 @@ public:
   ///
   uint64_t next_prime()
   {
-    if (!first_ && ++i_ < primes_.size())
-      return primes_[i_];
-    uint64_t next_prime = generate_next_primes();
-    return next_prime;
+    if (++i_ >= primes_.size() || first_)
+      generate_next_primes();
+    return primes_[i_];
   }
 
   /// Get the previous prime.
@@ -75,10 +73,9 @@ public:
   ///
   uint64_t previous_prime()
   {
-    if (!first_ && i_ > 0)
-      return primes_[--i_];
-    uint64_t previous_prime = generate_previous_primes();
-    return previous_prime;
+    if (i_ == 0 || first_)
+      generate_previous_primes();
+    return primes_[--i_];
   }
 private:
   uint64_t i_;
@@ -87,8 +84,8 @@ private:
   bool adjust_skip_to_;
   std::vector<uint64_t> primes_;
   void check_out_of_range();
-  uint64_t generate_next_primes();
-  uint64_t generate_previous_primes();
+  void generate_next_primes();
+  void generate_previous_primes();
 };
 
 } // end namespace
