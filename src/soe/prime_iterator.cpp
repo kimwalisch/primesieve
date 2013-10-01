@@ -22,6 +22,7 @@ using soe::PrimeFinder;
 
 namespace {
 
+// MAX_STOP = 2^64 - 2^32 * 10
 const uint64_t MAX_STOP = PrimeFinder::getMaxStop();
 
 }
