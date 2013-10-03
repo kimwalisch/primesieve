@@ -1,5 +1,4 @@
 PROJECT_NAME           = "primesieve"
-PROJECT_BRIEF          = "Fast prime number generator (C++)"
 PROJECT_NUMBER         = 4.9.9
 USE_MDFILE_AS_MAINPAGE =
 JAVADOC_AUTOBRIEF      = YES
