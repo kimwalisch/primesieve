@@ -1,0 +1,17 @@
+PROJECT_NAME           = "primesieve"
+PROJECT_BRIEF          = "Fast prime number generator (C++)"
+PROJECT_NUMBER         = 4.9.9
+USE_MDFILE_AS_MAINPAGE =
+JAVADOC_AUTOBRIEF      = YES
+MULTILINE_CPP_IS_BRIEF = NO
+HTML_INDEX_NUM_ENTRIES = 3
+EXTRACT_ALL            = NO
+SHOW_NAMESPACES        = YES
+VERBATIM_HEADERS       = NO
+INPUT                  = examples/callback_primes.cpp examples/count_primes.cpp examples/next_prime.cpp examples/nth_prime.cpp examples/previous_prime.cpp examples/store_primes_in_vector.cpp include/primesieve.h include/primesieve/soe/prime_iterator.h
+FILE_PATTERNS          = *.cpp *.h
+RECURSIVE              = NO
+EXAMPLE_PATH           = examples
+EXAMPLE_PATTERNS       = *.cpp
+EXAMPLE_RECURSIVE      = NO
+GENERATE_LATEX         = NO
