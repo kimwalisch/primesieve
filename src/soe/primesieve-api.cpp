@@ -13,8 +13,10 @@
 #include <primesieve/soe/PrimeSieve.h>
 #include <primesieve/soe/ParallelPrimeSieve.h>
 #include <primesieve/soe/PrimeSieveCallback.h>
+#include <primesieve/soe/PrimeFinder.h>
 
 #include <stdint.h>
+#include <string>
 
 namespace primesieve
 {
@@ -85,10 +87,14 @@ uint64_t count_septuplets(uint64_t start, uint64_t stop)
   return ps.countSeptuplets(start, stop);
 }
 
-uint64_t nth_prime(uint64_t n)
+uint64_t max_stop()
 {
-  PrimeSieve ps;
-  return ps.nthPrime(n);
+  return soe::PrimeFinder::getMaxStop();
+}
+
+std::string max_stop_string()
+{
+  return soe::PrimeFinder::getMaxStopString();
 }
 
 uint64_t nth_prime(uint64_t n, uint64_t start)

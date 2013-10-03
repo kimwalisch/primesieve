@@ -27,6 +27,7 @@
 
 #include <stdint.h>
 #include <vector>
+#include <string>
 
 /// All of primesieve's functions and classes are declared
 /// inside this namespace.
@@ -135,6 +136,16 @@ namespace primesieve
     PrimeSieve ps;
     ps.generate_N_Primes(n, start, primes);
   }
+
+  /// Returns the largest valid stop number for primesieve.
+  /// @return 2^64 - 2^32 * 10.
+  ///
+  uint64_t max_stop();
+
+  /// Returns the largest valid stop number for primesieve.
+  /// @return "2^64 - 2^32 * 10".
+  ///
+  std::string max_stop_string();
 
   /// Find the nth prime.
   /// @param start  Start nth prime search at this offset.

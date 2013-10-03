@@ -10,7 +10,6 @@
 #include <primesieve.h>
 #include <primesieve/soe/prime_iterator.h>
 #include <primesieve/soe/primesieve_error.h>
-#include <primesieve/soe/PrimeFinder.h>
 
 #include <algorithm>
 #include <cmath>
@@ -18,14 +17,6 @@
 #include <vector>
 
 using namespace std;
-using soe::PrimeFinder;
-
-namespace {
-
-// MAX_STOP = 2^64 - 2^32 * 10
-const uint64_t MAX_STOP = PrimeFinder::getMaxStop();
-
-}
 
 namespace primesieve {
 
@@ -42,11 +33,9 @@ void prime_iterator::skip_to(uint64_t start)
   first_ = true;
   adjust_skip_to_ = false;
 
-  if (start_ > MAX_STOP)
-  {
-    string msg("start must be <= " + PrimeFinder::getMaxStopString());
-    throw primesieve_error(msg);
-  }
+  if (start_ > max_stop())
+    throw primesieve_error("start must be <= " + max_stop_string());
+
   if (!primes_.empty() &&
        primes_.front() <= start_ &&
        primes_.back() >= start_)
@@ -73,18 +62,18 @@ void prime_iterator::check_out_of_range()
 uint64_t prime_iterator::get_interval_size(uint64_t n)
 {
   count_++;
-  uint64_t KILOBYTE = 1 << 10;
-  uint64_t MEGABYTE = 1 << 20;
-  uint64_t primes = (count_ < 10) ? (KILOBYTE * 32) / sizeof(uint64_t)
-      : (MEGABYTE * 4) / sizeof(uint64_t);
+  uint64_t kilobyte = 1 << 10;
+  uint64_t megabyte = 1 << 20;
+  uint64_t primes = (count_ < 10) ? (kilobyte * 32) / sizeof(uint64_t)
+      : (megabyte * 4) / sizeof(uint64_t);
 
   double dn = max(static_cast<double>(n), 100.0);
   double sqrtn = sqrt(dn);
   uint64_t sqrtn_primes = static_cast<uint64_t>(sqrtn / (log(sqrtn) - 1.0));
-  uint64_t MAX_PRIMES = (MEGABYTE * 512) / sizeof(uint64_t);
+  uint64_t max_primes = (megabyte * 512) / sizeof(uint64_t);
 
   primes = max(primes, sqrtn_primes);
-  primes = min(primes, MAX_PRIMES);
+  primes = min(primes, max_primes);
   return static_cast<uint64_t>(primes * log(dn));
 }
 
@@ -98,13 +87,9 @@ void prime_iterator::generate_next_primes()
   }
   else
   {
-    uint64_t start = start_;
-    if (!first_)
-      start = primes_.back() + 1;
+    uint64_t start = (first_) ? start_ : primes_.back() + 1;
     uint64_t interval_size = get_interval_size(start);
-    uint64_t stop = MAX_STOP;
-    if (start < MAX_STOP - interval_size)
-      stop = start + interval_size;
+    uint64_t stop = (start < max_stop() - interval_size) ? start + interval_size : max_stop();
     primes_.clear();
     generate_primes(start, stop, &primes_);
     check_out_of_range();
@@ -127,9 +112,7 @@ void prime_iterator::generate_previous_primes()
     if (!first_)
       stop = (primes_.front() > 1) ? primes_.front() - 1 : 0;
     uint64_t interval_size = get_interval_size(stop);
-    uint64_t start = 0;
-    if (stop > interval_size)
-      start = stop - interval_size;
+    uint64_t start = (stop > interval_size) ? stop - interval_size : 0;
     primes_.clear();
     generate_primes(start, stop, &primes_);
     check_out_of_range();
