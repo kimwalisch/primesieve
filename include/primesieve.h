@@ -1,6 +1,7 @@
 ///
 /// @file   primesieve.h
-/// @brief  C++ API of the primesieve library.
+/// @brief  primesieve is a fast prime number generator. This header
+///         provides access to primesieve's C++ API.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -27,11 +28,14 @@
 #include <stdint.h>
 #include <vector>
 
+/// All of primesieve's functions and classes are declared
+/// inside this namespace.
+///
 namespace primesieve
 {
   enum {
     /// Use all CPU cores for prime sieving.
-    MAX_THREADS = -1
+    MAX_THREADS
   };
 
   /// Call back the primes within the interval [start, stop].

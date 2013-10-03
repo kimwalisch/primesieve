@@ -1,6 +1,5 @@
-////////////////////////////////////////////////////////////////////
-// count_primes.cpp
-// Count the primes up to 1000.
+/// @example count_primes.cpp
+/// This example shows how to count primes.
 
 #include <primesieve.h>
 #include <stdint.h>
@@ -10,5 +9,11 @@ int main()
 {
   uint64_t count = primesieve::count_primes(0, 1000);
   std::cout << "Primes below 1000 = " << count << std::endl;
+
+  // use multi-threading for large intervals
+  uint64_t stop = 1ull << 32;
+  count = primesieve::parallel_count_primes(0, stop);
+  std::cout << "Primes below 2^32 = " << count << std::endl;
+
   return 0;
 }

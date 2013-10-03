@@ -1,7 +1,5 @@
-////////////////////////////////////////////////////////////////////
-// callback_primes.cpp
-// The callback function will be executed for each prime
-// in the interval [2, 1000].
+/// @example callback_primes.cpp
+/// This example shows how to use callback functions.
 
 #include <primesieve.h>
 #include <iostream>

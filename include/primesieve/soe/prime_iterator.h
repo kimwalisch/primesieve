@@ -16,7 +16,7 @@
 
 namespace primesieve {
 
-/// Iterate over prime numbers.
+/// Easily iterate over prime numbers.
 /// This class provides 3 useful methods: prime(),
 /// next_prime() and previous_prime().
 /// @note  prime_iterator objects are very convenient to use at
@@ -56,7 +56,7 @@ public:
     return primes_[i_];
   }
 
-  /// Get the next prime.
+  /// Advance the prime_iterator by one position.
   /// @return  Returns the next prime (returns 0 if
   ///          next_prime() > 2^64 - 2^32 * 10).
   ///
@@ -67,7 +67,7 @@ public:
     return primes_[i_];
   }
 
-  /// Get the previous prime.
+  /// Decrease the prime_iterator by one position.
   /// @return  Returns the previous prime (returns 0 if
   ///          previous_prime() < 2).
   ///

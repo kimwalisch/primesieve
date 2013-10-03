@@ -1,5 +1,5 @@
-////////////////////////////////////////////////////////////////////
-// Backwards print the primes between 1000 and 2000.
+/// @example previous_prime.cpp
+/// This example shows how to iterate backwards over primes.
 
 #include <primesieve.h>
 #include <iostream>
@@ -9,9 +9,9 @@ int main()
   primesieve::prime_iterator pi;
   pi.skip_to(2000);
 
-  uint64_t prime;
-  while ((prime = pi.previous_prime()) > 1000)
-    std::cout << prime << std::endl;
+  // backwards print the primes between 1000 and 2000  
+  while (pi.previous_prime() > 1000)
+    std::cout << pi.prime() << std::endl;
 
   return 0;
 }

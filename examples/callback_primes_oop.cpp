@@ -1,7 +1,6 @@
-////////////////////////////////////////////////////////////////////
-// callback_primes_oop.cpp
-// Objects derived from PrimeSieveCallback<T> can be
-// passed to the callback_primes() function.
+/// @example callback_primes_oop.cpp
+/// Objects derived from PrimeSieveCallback<T> can be
+/// passed to the callback_primes() function.
 
 #include <primesieve.h>
 #include <primesieve/soe/PrimeSieveCallback.h>

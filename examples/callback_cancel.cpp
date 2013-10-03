@@ -1,8 +1,7 @@
-////////////////////////////////////////////////////////////////////
-// cancel_callback.cpp
-// Cancel prime callback by throwing a stop_primesieve()
-// exception. This code finds the 10^6th prime.
-// Note that multi-threaded callback can currently not be canceled.
+/// @example cancel_callback.cpp
+/// Cancel prime callback by throwing a stop_primesieve()
+/// exception. This code finds the 10^6th prime.
+/// Note that multi-threaded callback can currently not be canceled.
 
 #include <primesieve.h>
 #include <primesieve/soe/stop_primesieve.h>

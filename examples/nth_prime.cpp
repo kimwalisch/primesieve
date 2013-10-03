@@ -1,6 +1,5 @@
-////////////////////////////////////////////////////////////////////
-// nth_prime.cpp
-// Usage: $ ./nth_prime 999
+/// @example nth_prime.cpp
+/// Find the nth prime.
 
 #include <primesieve.h>
 #include <stdint.h>
@@ -15,5 +14,6 @@ int main(int, char** argv)
 
   uint64_t nth_prime = primesieve::nth_prime(n);
   std::cout << n << "th prime = " << nth_prime << std::endl;
+
   return 0;
 }

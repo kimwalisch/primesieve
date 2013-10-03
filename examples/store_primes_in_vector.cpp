@@ -1,6 +1,5 @@
-////////////////////////////////////////////////////////////////////
-// store_primes_in_vector.cpp
-// Store primes in a vector using primesieve.
+/// @example store_primes_in_vector.cpp
+/// Store primes in a std::vector using primesieve.
 
 #include <primesieve.h>
 #include <vector>

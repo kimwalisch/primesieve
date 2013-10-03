@@ -43,7 +43,7 @@ public:
   virtual void sieve();
 private:
   enum {
-    IDEAL_NUM_THREADS = -1
+    IDEAL_NUM_THREADS
   };
   /// Used to synchronize threads
   void* lock_;
