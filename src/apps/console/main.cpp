@@ -60,16 +60,20 @@ int main(int argc, char** argv)
 
   try
   {
+    // needed to print the number of threads
     if (options.nthPrime)
     {
-      // used to print the number of threads
-      pps.setStart(options.n[0]);
-      pps.setStop (options.n[1] * 30);
+      if (options.n.size() == 1)
+        options.n.push_back(0);
+      pps.setStart(options.n[1]);
+      pps.setStop(options.n[1]+ options.n[0] * 30);
     }
     else
     {
+      if (options.n.size() == 1)
+        options.n.push_front(0);
       pps.setStart(options.n[0]);
-      pps.setStop (options.n[1]);
+      pps.setStop(options.n[1]);
     }
 
     if (options.flags     != 0) pps.setFlags(options.flags);
@@ -87,7 +91,7 @@ int main(int argc, char** argv)
 
     if (options.nthPrime)
     {
-      uint64_t nthPrime = pps.nthPrime(options.n[1]);
+      uint64_t nthPrime = pps.nthPrime(options.n[0], options.n[1]);
       cout << "Nth prime    : " << nthPrime << endl;
       cout << "Time elapsed : " << pps.getSeconds() << " sec" << endl;
     }

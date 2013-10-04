@@ -162,7 +162,7 @@ PrimeSieveOptions parseOptions(int argc, char** argv)
   {
     help();
   }
-  if (pso.n.size() == 1) pso.n.push_front(0);
-  if (pso.n.size() != 2) help();
+  if (pso.n.size() < 1 || pso.n.size() > 2)
+    help();
   return pso;
 }
