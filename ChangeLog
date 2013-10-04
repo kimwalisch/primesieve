@@ -1,3 +1,33 @@
+Changes in version 5.0, 04/10/2013
+==================================
+
+This is a major new release. primesieve-5.0 uses GNU Autotools and
+Libtool as its build system which is more reliable than the hand
+written Makefile I used previously.
+
+I moved primesieve from Google Code to GitHub, the primesieve
+repository is now hosted at:
+
+https://github.com/kimwalisch/primesieve
+
+primesieve-5.0 features a new API completely written from scratch that
+is easier to use and that will not break binary compatibility with
+every new release. The new API is mostly backwards compatible one
+exception being the signature of PrimeSieve::nthPrime(n, start). You
+can explore primesieve's new API online at:
+
+http://kimwalisch.github.io/primesieve/doxygen
+
+1. Moved build system to GNU Autotools and Libtool.
+2. New C++ API documented using Doxygen:
+   http://kimwalisch.github.io/primesieve/doxygen
+3. New prime_iterator class that provides next_prime() and
+   previous_prime() methods.
+4. ParallelPrimeSieve now uses multi-threading by default, it does not
+   care about arithmetic order anymore. Please do not use
+   ParallelPrimeSieve directly anymore instead use the new API.
+5. Moved most header files to include/primesieve/soe.
+
 Changes in version 4.4, 19/09/2013
 ==================================
 
