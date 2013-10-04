@@ -1,8 +1,7 @@
 ///
 /// @file   main.cpp
-/// @brief  This is the primesieve console (terminal) application.
-///         Precompiled binaries are available at:
-/// @see    https://code.google.com/p/primesieve/downloads/list
+/// @brief  This file contains the main() function of the primesieve
+///         console (terminal) application.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
