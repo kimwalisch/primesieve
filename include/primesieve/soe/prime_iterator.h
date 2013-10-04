@@ -16,9 +16,10 @@
 
 namespace primesieve {
 
-/// Easily iterate over prime numbers.
-/// This class provides 3 useful methods: prime(),
-/// next_prime() and previous_prime().
+/// Iterate over prime numbers.
+/// The @link next_prime.cpp next_prime.cpp @endlink
+/// and @link previous_prime.cpp previous_prime.cpp @endlink
+/// examples show how to use prime_iterator objects.
 /// @note  prime_iterator objects are very convenient to use at
 ///        the cost of being slightly slower than the
 ///        callback_primes() functions.
