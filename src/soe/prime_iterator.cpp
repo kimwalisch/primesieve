@@ -82,8 +82,8 @@ void prime_iterator::generate_next_primes()
   if (adjust_skip_to_)
   {
     adjust_skip_to_ = false;
-    if (i_ + 1 < primes_.size() && primes_[i_] < start_)
-      i_++;
+    if (i_ > 0 && primes_[i_ - 1] >= start_)
+      i_--;
   }
   else
   {

@@ -25,3 +25,4 @@ stamp-*
 .libs/
 .project
 /test-driver
+.c9revisions
