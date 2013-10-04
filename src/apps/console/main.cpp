@@ -66,7 +66,7 @@ int main(int argc, char** argv)
       if (options.n.size() == 1)
         options.n.push_back(0);
       pps.setStart(options.n[1]);
-      pps.setStop(options.n[1]+ options.n[0] * 30);
+      pps.setStop(options.n[1] + options.n[0] * 30);
     }
     else
     {
