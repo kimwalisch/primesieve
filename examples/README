@@ -1,24 +1,23 @@
 About
 =====
 
-  This directory contains simple example programs that show how to use
-  libprimesieve to generate, count and print primes and prime
-  k-tuplets.
+This directory contains simple example programs that show how
+to use libprimesieve to generate primes.
 
-Build the example programs
-==========================
+Examples build instructions
+===========================
 
-  Open a terminal or 'Visual Studio Command Prompt' and cd into the
-  primesieve directory. Then run the commands below:
+Open a terminal or Visual Studio Command Prompt and `cd' into
+the primesieve directory. Then run the commands below:
 
-  Unix-like OSes
-  --------------
+Unix-like OSes
+--------------
 
-  $ ./configure --enable-examples
-  $ make
+$ ./configure --enable-examples
+$ make
 
-  Microsoft Visual C++
-  --------------------
+Microsoft Visual C++
+--------------------
 
-  > nmake -f Makefile.msvc
-  > nmake -f Makefile.msvc examples
+> nmake -f Makefile.msvc
+> nmake -f Makefile.msvc examples
