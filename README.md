@@ -9,8 +9,9 @@ up to 2^64.
 ### Algorithm complexity
 primesieve generates primes using the segmented sieve of Eratosthenes
 with wheel factorization, this algorithm has a complexity of
-O(n log log n) operations and uses O(sqrt(n)) space. primesieve's memory
-requirement per thread is about pi(sqrt(n)) * 8 bytes + 32 kilobytes.
+O(n log log n) operations and uses O(sqrt(n)) space. primesieve's
+memory requirement per thread is about pi(sqrt(n)) * 8 bytes + 32
+kilobytes.
 
 ### Requirements
 primesieve is written in C++03, it compiles with every standard
@@ -54,7 +55,7 @@ $ ./primesieve 1e10 2e10 --count=3
 ### primesieve C++ library
 After having built and installed primesieve you can use it in your C++
 program to easily generate primes as shown in the primes.cpp example
-program below. You can explore primesieve's entire API online at:
+program below. You can explore primesieve's entire API online at
 http://kimwalisch.github.io/primesieve/doxygen.
 
 ```C++
