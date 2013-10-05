@@ -1,5 +1,5 @@
 primesieve
-========
+==========
 primesieve is a software program and C++ library for fast prime number
 generation. It generates the primes below 10^9 in just 0.2 seconds on
 a single core of an Intel Core i7-4770 CPU from 2013. primesieve can
