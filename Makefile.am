@@ -1,4 +1,4 @@
-ACLOCAL_AMFLAGS = -Im4
+ACLOCAL_AMFLAGS = -I m4
 AM_CPPFLAGS = -Iinclude
 EXTRA_DIST = \
 	Doxyfile \
@@ -16,6 +16,11 @@ libprimesieve_la_CXXFLAGS = $(OPENMP_CXXFLAGS)
 bin_PROGRAMS = primesieve
 primesieve_LDADD = libprimesieve.la
 primesieve_LDFLAGS = $(OPENMP_CXXFLAGS)
+
+# If installation directory is /usr/local/lib
+# execute ldconfig after installation
+install-exec-hook:
+	test "$(prefix)" = "/usr/local" && command -v ldconfig 2>/dev/null && ldconfig /usr/local/lib 2>/dev/null || true
 
 check: primesieve
 	libtool execute primesieve --test
