@@ -24,7 +24,7 @@ use a 64-bit version of primesieve (i386 has only 8 registers).
 Please download the latest release tarball from
 https://github.com/kimwalisch/primesieve/releases. Then open a
 terminal uncompress the source archive, cd into the newly created
-directory and run the commands below:
+directory and run:
 ```
 $ ./configure
 $ make
