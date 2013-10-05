@@ -1,6 +1,14 @@
 ACLOCAL_AMFLAGS = -Im4
 AM_CPPFLAGS = -Iinclude
-EXTRA_DIST = Makefile.msvc src/msvc_compat src/apps/gui
+EXTRA_DIST = \
+	Doxyfile \
+	mainpage.dox \
+	README.md \
+	Makefile.msvc \
+	examples/README \
+	src/apps/gui \
+	src/msvc_compat \
+	src/soe/README
 
 lib_LTLIBRARIES = libprimesieve.la
 libprimesieve_la_CXXFLAGS = $(OPENMP_CXXFLAGS)
