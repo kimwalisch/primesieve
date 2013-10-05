@@ -1,4 +1,4 @@
-AC_INIT([primesieve], [4.9.9], [kim.walisch@gmail.com])
+AC_INIT([primesieve], [5.0.0], [kim.walisch@gmail.com])
 PACKAGE_YEAR=2013
 
 AC_PREREQ([2.62])
