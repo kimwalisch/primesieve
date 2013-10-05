@@ -20,29 +20,32 @@ using namespace std;
 namespace {
 
 const string helpMenu(
-  "Usage: primesieve START STOP [OPTION]...\n"
-  "Use the segmented sieve of Eratosthenes to generate the prime numbers\n"
-  "and prime k-tuplets in the interval [START, STOP] < 2^64\n"
+  "Usage: primesieve [START] STOP [OPTION]...\n"
+  "Use the segmented sieve of Eratosthenes to generate the primes and\n"
+  "prime k-tuplets in the interval [START, STOP] < 2^64\n"
   "\n"
   "Options:\n"
   "  -c<N+>, --count=<N+>     Count primes and prime k-tuplets, 1 <= N <= 7\n"
+  "                           <N> 1=primes, 2=twins, 3=triplets, ...\n"
   "  -h,     --help           Print this help menu\n"
   "  -n,     --nthprime       Calculate the nth prime\n"
-  "  -o<N>,  --offset=<N>     Sieve the interval [START, START+N]\n"
-  "  -p<N>,  --print=<N>      Print primes or prime k-tuplets,  1 <= N <= 7\n"
+  "                           e.g. 1 100 -n finds the first prime >= 100\n"
+  "  -o<N>,  --offset=<N>     Sieve the interval [START, START + N]\n"
+  "  -p<N>,  --print=<N>      Print primes or prime k-tuplets, 1 <= N <= 7\n"
+  "                           <N> 1=primes, 2=twins, 3=triplets, ...\n"
   "  -q,     --quiet          Quiet mode, prints less output\n"
-  "  -s<N>,  --size=<N>       Set the sieve size in kilobytes,  1 <= N <= 2048\n"
+  "  -s<N>,  --size=<N>       Set the sieve size in kilobytes, 1 <= N <= 2048\n"
   "          --test           Run various sieving tests and exit\n"
-  "  -t<N>,  --threads=<N>    Set the number of threads,        1 <= N <= CPU cores\n"
+  "  -t<N>,  --threads=<N>    Set the number of threads, 1 <= N <= CPU cores\n"
   "  -v,     --version        Print version and license information\n"
   "\n"
   "Example:\n"
-  "  Count the prime numbers and print the twin primes up to 1000\n"
-  "  > primesieve 2 1000 --count=1 -p2"
+  "  Count the primes and print the twin primes below 1000\n"
+  "  > primesieve 1000 --count=1 -p2"
 );
 
 const string versionInfo(
-  "primesieve " PRIMESIEVE_VERSION ", <https://github.com/kimwalisch/primesieve>\n"
+  "primesieve " PRIMESIEVE_VERSION ", <http://kimwalisch.github.io/primesieve>\n"
   "Copyright (C) " PRIMESIEVE_YEAR " Kim Walisch\n"
   "BSD 2-Clause License <http://opensource.org/licenses/BSD-2-Clause>"
 );
