@@ -10,7 +10,7 @@ up to 2^64.
 primesieve generates primes using the segmented sieve of Eratosthenes
 with wheel factorization, this algorithm has a complexity of
 O(n log log n) operations and uses O(n^0.5) space. primesieve's memory
-requirement per thread is about: pi(n^0.5) * 8 bytes + 32 kilobytes.
+requirement per thread is about pi(n^0.5) * 8 bytes + 32 kilobytes.
 
 ### Requirements
 primesieve is written in C++03, it compiles with every standard
@@ -22,18 +22,36 @@ Please download the latest release tarball from
 https://github.com/kimwalisch/primesieve/releases. Then open a
 terminal uncompress the source archive, cd into the newly created
 directory and run:
+
 ```
 $ ./configure
 $ make
 $ sudo make install
 ```
+
 On Windows (MSVC) open a Visual Studio Command Prompt and cd into the
 primesieve directory. Then execute the following command:
+
 ```
 > nmake -f Makefile.msvc
 ```
 
-### C++ library
+### primesieve console application
+The primesieve console application can print and count primes and
+prime k-tuplets and find the nth prime. Below are two examples, to
+print an option summary use the ```--help``` flag.
+
+Print the primes below 1000 to the standard output:
+```
+$ ./primesieve 1000 --print=1
+```
+
+Count the prime triplets inside the interval [1e10, 2e10]:
+```
+$ ./primesieve 1e10 2e10 --count=3
+```
+
+### primesieve C++ library
 After having built and installed primesieve you can use it in your C++
 program to easily generate primes as shown in the primes.cpp example
 program below. You can explore primesieve's entire API online at:
