@@ -21,9 +21,9 @@ using OpenMP 2.0 or later. primesieve has been optimized for CPUs with
 use a 64-bit version of primesieve (i386 has only 8 registers).
 
 ### C++ library
-After having built and installed primesieve (read INSTALL) you can use
-it in your C++ program to easily generate primes as shown in the code
-snippet below. You can explore primesieve's entire API online at:
+After having built and installed primesieve you can use it in your C++
+program to easily generate primes as shown in the primes.cpp example
+program below. You can explore primesieve's entire API online at:
 http://kimwalisch.github.io/primesieve/doxygen.
 
 ```C++
@@ -44,6 +44,16 @@ int main()
 
   return 0;
 }
+```
+
+On Unix-like operating systems compile using:
+```
+$ c++ -O2 primes.cpp -lprimesieve
+```
+
+On Windows (MSVC) compile using:
+```
+> cl /O2 primes.cpp /EHsc /Iinclude /link primesieve.lib
 ```
 
 ### Reporting bugs
