@@ -39,8 +39,8 @@ primesieve directory. Then execute the following command:
 
 ### primesieve console application
 The primesieve console application can print and count primes and
-prime k-tuplets and find the nth prime. Below are two examples, to
-print an option summary use the ```--help``` flag.
+prime k-tuplets and find the nth prime. Below are two usage examples,
+to print an option summary use the ```--help``` flag.
 
 Print the primes below 1000 to the standard output:
 ```
