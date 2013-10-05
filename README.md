@@ -14,9 +14,8 @@ requirement per thread is about: pi(n^0.5) * 8 bytes + 32 kilobytes.
 
 ### Requirements
 primesieve is written in C++03, it compiles with every standard
-compliant C++ compiler and runs on both little-endian (x86) and
-big-endian (PowerPC, SPARC) CPUs. The parallelization is implemented
-using OpenMP 2.0 or later.
+compliant C++ compiler and runs on both little and big endian CPUs.
+The parallelization is implemented using OpenMP 2.0 or later.
 
 ### Build instructions
 Please download the latest release tarball from
