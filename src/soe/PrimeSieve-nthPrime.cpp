@@ -37,7 +37,7 @@ private:
   uint64_t nthPrime_;
 };
 
-void NthPrime::findNthPrime(uint64_t start, uint64_t stop, uint64_t n)
+void NthPrime::findNthPrime(uint64_t n, uint64_t start, uint64_t stop)
 {
   n_ = n;
   PrimeSieve ps;
@@ -66,15 +66,15 @@ void NthPrime::callback(uint64_t prime)
 
 uint64_t pixApproximation(uint64_t n)
 {
-  if (n < 2) return 0;
-  if (n < 3) return 1;
+  if (n <= 1) return 0;
+  if (n <= 2) return 1;
 
   double x = static_cast<double>(n);
   double logx = log(x);
   return static_cast<uint64_t>(x / (logx - 1));
 }
 
-uint64_t nthPrimeDistance(uint64_t start, uint64_t n, double factor = 1.0, double offset = 0.0)
+uint64_t nthPrimeDistance(uint64_t n, uint64_t start, double factor = 1.0, double offset = 0.0)
 {
   if (n < 1)
     return 0;
@@ -125,17 +125,17 @@ uint64_t PrimeSieve::nthPrime(uint64_t n, uint64_t start)
   // is multi-threaded if ParallelPrimeSieve is used
   while (count < n && (n - count) > 1000000)
   {
-    dist = nthPrimeDistance(start, n - count);
+    dist = nthPrimeDistance(n - count, start);
     checkLimit(start, dist);
     stop = start + dist;
     count += countPrimes(start, stop);
     start = stop + 1;
   }
 
-  // We have counted more than n primes so rollback
+  // We have counted more than n primes so go back
   while (count >= n)
   {
-    dist = nthPrimeDistance(start, count - n, 1.2, 10000);
+    dist = nthPrimeDistance(count - n, start, 1.2, 10000);
     dist = std::min(dist, stop);
     start = stop - dist;
     count -= countPrimes(start, stop);
@@ -144,11 +144,11 @@ uint64_t PrimeSieve::nthPrime(uint64_t n, uint64_t start)
 
   // Sieve the small remaining distance in arithmetic
   // order using a single thread
-  dist = nthPrimeDistance(start, n - count, 2.0, 10000);
+  dist = nthPrimeDistance(n - count, start, 2.0, 10000);
   checkLimit(start, dist);
   stop = start + dist;
   NthPrime np;
-  np.findNthPrime(start, stop, n - count);
+  np.findNthPrime(n - count, start, stop);
   seconds_ = getWallTime() - t1;
 
   return np.getNthPrime();
