@@ -9,8 +9,8 @@ up to 2^64.
 ### Algorithm complexity
 primesieve generates primes using the segmented sieve of Eratosthenes
 with wheel factorization, this algorithm has a complexity of
-O(n log log n) operations and uses O(n^0.5) space. primesieve's memory
-requirement per thread is about pi(n^0.5) * 8 bytes + 32 kilobytes.
+O(n log log n) operations and uses O(sqrt(n)) space. primesieve's memory
+requirement per thread is about pi(sqrt(n)) * 8 bytes + 32 kilobytes.
 
 ### Requirements
 primesieve is written in C++03, it compiles with every standard
