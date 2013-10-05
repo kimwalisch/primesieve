@@ -89,5 +89,5 @@ On Windows (MSVC) compile using:
 ```
 
 ### Reporting bugs
-To report a bug or give feedback please send an email to Kim Walisch
+To report a bug or give feedback please send an email to
 <<kim.walisch@gmail.com>>.
