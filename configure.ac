@@ -49,7 +49,7 @@ AC_DEFINE_UNQUOTED([L1_DCACHE_SIZE],
 AC_ARG_ENABLE(examples,
     [--enable-examples Compile the examples programs],
     ENABLE_EXAMPLES="yes")
-AM_CONDITIONAL(COMPILE_EXAMPLES, test "$ENABLE_EXAMPLES" = "yes")
+AM_CONDITIONAL(MAKE_EXAMPLES, test "$ENABLE_EXAMPLES" = "yes")
 
 AC_OPENMP
 AC_CONFIG_HEADERS([src/soe/autoconf.h])

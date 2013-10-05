@@ -20,7 +20,7 @@ primesieve_LDFLAGS = $(OPENMP_CXXFLAGS)
 check: primesieve
 	libtool execute primesieve --test
 
-if COMPILE_EXAMPLES
+if MAKE_EXAMPLES
 
 bin_PROGRAMS += callback_cancel
 callback_cancel_LDADD = libprimesieve.la
