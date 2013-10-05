@@ -20,6 +20,22 @@ using OpenMP 2.0 or later. primesieve has been optimized for CPUs with
 15 or more integer registers, so if you have a x86-64 CPU make sure to
 use a 64-bit version of primesieve (i386 has only 8 registers).
 
+### Build instructions
+Please download the latest release tarball from
+https://github.com/kimwalisch/primesieve/releases. Then open a
+terminal uncompress the source archive, cd into the newly created
+directory and run the commands below:
+```
+$ ./configure
+$ make
+$ sudo make install
+```
+On Windows (MSVC) open a Visual Studio Command Prompt and cd into the
+primesieve directory. Then execute the following command:
+```
+> nmake -f Makefile.msvc
+```
+
 ### C++ library
 After having built and installed primesieve you can use it in your C++
 program to easily generate primes as shown in the primes.cpp example
