@@ -33,4 +33,4 @@ int main()
 ```
 
 ### Reporting bugs
-To report a bug or give feedback please send an email to the author Kim Walisch <kim.walisch@gmail.com>.
+To report a bug or give feedback please send an email to the author Kim Walisch <<kim.walisch@gmail.com>>.
