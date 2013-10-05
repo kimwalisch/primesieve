@@ -12,14 +12,14 @@ primesieve is written in C++03, it compiles with every standard compliant C++ co
 
 After having built and installed primesieve (read INSTALL) you can use it in your C++ program to easily generate primes as shown in the code snippet below. You can explore primesieve's entire API online at: http://kimwalisch.github.io/primesieve/doxygen.
 
-```
-&#35;incldue &lt;primesieve.h&gt;
-&#35;include &lt;iostream&gt;
-&#35;include &lt;vector&gt;
+```C++
+#incldue <primesieve.h>
+#include <iostream>
+#include <vector>
 
 int main()
 {
-  std::vector&lt;int&gt; primes;
+  std::vector<int> primes;
   // store the primes below 1000
   primesieve::generate_primes(1000, &primes);
 
