@@ -67,14 +67,14 @@ uint64_t prime_iterator::get_interval_size(uint64_t n)
   uint64_t primes = (count_ < 10) ? (kilobyte * 32) / sizeof(uint64_t)
       : (megabyte * 4) / sizeof(uint64_t);
 
-  double dn = max(static_cast<double>(n), 100.0);
-  double sqrtn = sqrt(dn);
-  uint64_t sqrtn_primes = static_cast<uint64_t>(sqrtn / (log(sqrtn) - 1.0));
+  double x = max(static_cast<double>(n), 100.0);
+  double sqrtx = sqrt(x);
+  uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (log(sqrtx) - 1.0));
   uint64_t max_primes = (megabyte * 512) / sizeof(uint64_t);
 
-  primes = max(primes, sqrtn_primes);
+  primes = max(primes, sqrtx_primes);
   primes = min(primes, max_primes);
-  return static_cast<uint64_t>(primes * log(dn));
+  return static_cast<uint64_t>(primes * log(x));
 }
 
 void prime_iterator::generate_next_primes()
