@@ -15,11 +15,11 @@
 #include "PrimeSieveCallback.h"
 
 #include <stdint.h>
+#include <cmath>
+#include <exception>
+#include <limits>
 #include <string>
 #include <vector>
-#include <exception>
-#include <cmath>
-#include <limits>
 
 namespace soe
 {
@@ -239,9 +239,11 @@ private:
 
       double a = static_cast<double>(start);
       double b = static_cast<double>(stop);
-      double limit = std::numeric_limits<std::size_t>::max();
 
-      return static_cast<std::size_t>(std::min((b - a) / (std::log(b) - 1.1), limit));
+      uint64_t primeCount = static_cast<uint64_t>((b - a) / (std::log(b) - 1.1));
+      uint64_t limit = std::numeric_limits<std::size_t>::max();
+
+      return static_cast<std::size_t>(std::min(primeCount, limit));
     }
   };
   template <typename T>
