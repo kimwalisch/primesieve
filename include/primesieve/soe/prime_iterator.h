@@ -13,6 +13,7 @@
 #define PRIME_ITERATOR_H
 
 #include <vector>
+#include <cstddef>
 
 namespace primesieve {
 
@@ -79,7 +80,7 @@ public:
     return primes_[--i_];
   }
 private:
-  uint64_t i_;
+  std::size_t i_;
   uint64_t start_;
   uint64_t count_;
   bool first_;

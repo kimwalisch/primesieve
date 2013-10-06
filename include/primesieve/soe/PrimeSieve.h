@@ -19,6 +19,7 @@
 #include <vector>
 #include <exception>
 #include <cmath>
+#include <limits>
 
 namespace soe
 {
@@ -231,15 +232,16 @@ private:
     std::vector<T>& primes_;
     PushBackPrimes1(const PushBackPrimes1&);
     void operator=(const PushBackPrimes1&);
-    static uint64_t expectedPrimeCount(uint64_t start, uint64_t stop)
+    static std::size_t expectedPrimeCount(uint64_t start, uint64_t stop)
     {
       if (stop < 10)
         return 0;
 
       double a = static_cast<double>(start);
       double b = static_cast<double>(stop);
+      double limit = std::numeric_limits<std::size_t>::max();
 
-      return static_cast<uint64_t>((b - a) / (std::log(b) - 1.1));
+      return static_cast<std::size_t>(std::min((b - a) / (std::log(b) - 1.1), limit));
     }
   };
   template <typename T>
