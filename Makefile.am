@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4
-AM_CPPFLAGS = -Iinclude
+AM_CPPFLAGS = -I$(top_srcdir)/include
 EXTRA_DIST = \
 	Doxyfile \
 	mainpage.dox \
@@ -22,8 +22,8 @@ primesieve_LDFLAGS = $(OPENMP_CXXFLAGS)
 install-exec-hook:
 	test "$(prefix)" = "/usr/local" && command -v ldconfig 2>/dev/null && ldconfig /usr/local/lib 2>/dev/null || true
 
-check: primesieve
-	libtool execute primesieve --test
+check: all
+	./primesieve --test
 
 if MAKE_EXAMPLES
 
