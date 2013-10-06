@@ -15,6 +15,7 @@
 #include "PrimeSieveCallback.h"
 
 #include <stdint.h>
+#include <algorithm>
 #include <cmath>
 #include <exception>
 #include <limits>
