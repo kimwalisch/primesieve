@@ -87,7 +87,7 @@ $ c++ -O2 primes.cpp -lprimesieve
 
 On Windows (MSVC) compile using:
 ```
-> cl /O2 primes.cpp /EHsc /Iinclude /link primesieve.lib
+> cl /O2 /EHsc /Iinclude primes.cpp /link primesieve.lib
 ```
 
 ### Reporting bugs
