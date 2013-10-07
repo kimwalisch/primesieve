@@ -20,9 +20,8 @@ The parallelization is implemented using OpenMP 2.0 or later.
 
 ### Build instructions
 Please download the latest release tarball from
-https://github.com/kimwalisch/primesieve/releases. Then open a
-terminal uncompress the source archive, cd into the newly created
-directory and run:
+https://github.com/kimwalisch/primesieve/releases. On Unix-like
+operating systems you can then build and install primesieve using:
 
 ```
 $ ./configure
