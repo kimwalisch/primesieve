@@ -1,0 +1,51 @@
+                =================================
+                = primesieve build instructions =
+                =================================
+
+Unix-like operating systems
+===========================
+
+If you downloaded a release tarball from
+https://github.com/kimwalisch/primesieve/releases
+you can build and install primesieve using:
+
+$ ./configure
+$ make
+$ sudo make install
+
+If you cloned primesieve's git repository or downloaded its master
+branch then you need to first generate the configure script yourself.
+In order to do this you need to have installed GNU Autotools and 
+Libtool. You can then generate the configure script using:
+
+$ ./autogen.sh
+
+By default the example programs are not built. If you also want to
+build the example programs then you have to enable them in the
+configure step:
+
+$ ./configure --enable-examples
+
+If you want to build primesieve using a specific compiler or if you
+want to use custom compiler flags you can do this using:
+
+$ export CXX=compiler CXXFLAGS="-O2 -fopenmp"
+$ ./configure
+
+Microsoft Visual C++
+====================
+
+Unzip the primesieve source archive, open a Visual Studio Command
+Prompt and `cd' into the newly created directory. Then run:
+
+> nmake -f Makefile.msvc
+> nmake -f Makefile.msvc examples
+
+The second command is optional, it builds the example programs.
+
+On Windows the CPU's L1 data cache size can not be detected
+automatically, the default L1 data cache size in primesieve is 32
+kilobytes. If your CPU has a different L1 data cache size then you
+should indicate it in order to get the best performance:
+
+> nmake -f Makefile.msvc L1_DCACHE_SIZE=64
