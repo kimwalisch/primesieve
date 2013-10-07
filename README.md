@@ -37,7 +37,8 @@ primesieve directory. Then execute the following command:
 > nmake -f Makefile.msvc
 ```
 
-Building primesieve is covered in more detail in the [INSTALL](INSTALL) file.
+Building primesieve is covered in more detail in the
+[INSTALL](INSTALL) file.
 
 ### primesieve console application
 The primesieve console application can print and count primes and
