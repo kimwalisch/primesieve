@@ -43,7 +43,7 @@ Prompt and `cd' into the newly created directory. Then run:
 
 The second command is optional, it builds the example programs.
 
-On Windows the CPU's L1 data cache size can not be detected
+On Windows your CPU's L1 data cache size cannot be detected
 automatically, the default L1 data cache size in primesieve is 32
 kilobytes. If your CPU has a different L1 data cache size then you
 should indicate it in order to get the best performance:
