@@ -27,7 +27,7 @@ check: all
 
 if MAKE_EXAMPLES
 
-noinst_PROGRAMS += callback_cancel
+noinst_PROGRAMS = callback_cancel
 callback_cancel_LDADD = libprimesieve.la
 callback_cancel_LDFLAGS = $(OPENMP_CXXFLAGS)
 callback_cancel_SOURCES = examples/callback_cancel.cpp
