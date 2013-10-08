@@ -87,7 +87,7 @@ private:
   bool adjust_skip_to_;
   std::vector<uint64_t> primes_;
   uint64_t get_interval_size(uint64_t);
-  void check_out_of_range();
+  void generate_primes(uint64_t, uint64_t);
   void generate_next_primes();
   void generate_previous_primes();
 };
