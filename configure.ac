@@ -7,7 +7,7 @@ AC_PREREQ([2.62])
 AC_LANG([C++])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([subdir-objects nostdinc foreign -Wall -Werror ])
+AM_INIT_AUTOMAKE([subdir-objects foreign -Wall -Werror ])
 
 AC_PROG_CXX
 AM_PROG_AR 
@@ -45,6 +45,6 @@ AC_ARG_ENABLE(examples,
 AM_CONDITIONAL(MAKE_EXAMPLES, test "$ENABLE_EXAMPLES" = "yes")
 
 AC_OPENMP
-AC_CONFIG_HEADERS([include/primesieve/soe/autoconf.h])
+AC_CONFIG_HEADERS([src/soe/autoconf.h])
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
