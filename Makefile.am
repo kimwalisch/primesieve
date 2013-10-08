@@ -12,7 +12,7 @@ EXTRA_DIST = \
 
 lib_LTLIBRARIES = libprimesieve.la
 libprimesieve_la_CXXFLAGS = $(OPENMP_CXXFLAGS)
-libprimesieve_la_LDFLAGS = -version-info 1:0:0
+libprimesieve_la_LDFLAGS = -version-info @primesieve_lib_version@
 
 bin_PROGRAMS = primesieve
 primesieve_LDADD = libprimesieve.la
