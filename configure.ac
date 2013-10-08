@@ -1,4 +1,4 @@
-AC_INIT([primesieve], [5.0.0], [kim.walisch@gmail.com])
+AC_INIT([primesieve], [5.0], [kim.walisch@gmail.com])
 AC_SUBST([primesieve_lib_version], [1:0:0])
 PACKAGE_YEAR=2013
 
@@ -7,20 +7,12 @@ AC_PREREQ([2.62])
 AC_LANG([C++])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([subdir-objects foreign -Wall -Werror])
+AM_INIT_AUTOMAKE([subdir-objects nostdinc foreign -Wall -Werror ])
 
 AC_PROG_CXX
 AM_PROG_AR 
 
 LT_INIT
-
-PACKAGE_VERSION_MAJOR=$(echo AC_PACKAGE_VERSION | cut -d'.' -f1)
-PACKAGE_VERSION_MINOR=$(echo AC_PACKAGE_VERSION | cut -d'.' -f2)
-PACKAGE_VERSION_PATCH=$(echo AC_PACKAGE_VERSION | cut -d'.' -f3)
-AC_SUBST(PACKAGE_VERSION_MAJOR)
-AC_SUBST(PACKAGE_VERSION_MINOR)
-AC_SUBST(PACKAGE_VERSION_PATCH)
-AC_SUBST(PACKAGE_YEAR)
 
 AC_ARG_VAR([L1_DCACHE_SIZE], [CPU L1 data cache size in kilobytes])
 AS_IF([test "x$L1_DCACHE_SIZE" = x], [[
@@ -53,6 +45,6 @@ AC_ARG_ENABLE(examples,
 AM_CONDITIONAL(MAKE_EXAMPLES, test "$ENABLE_EXAMPLES" = "yes")
 
 AC_OPENMP
-AC_CONFIG_HEADERS([src/soe/autoconf.h])
+AC_CONFIG_HEADERS([include/primesieve/soe/autoconf.h])
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
