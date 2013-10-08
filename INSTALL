@@ -5,9 +5,9 @@
 Unix-like operating systems
 ===========================
 
-If you downloaded a release tarball from
-https://github.com/kimwalisch/primesieve/releases
-you can build and install primesieve using:
+Download the latest release tarball from
+https://github.com/kimwalisch/primesieve/releases and uncompress it.
+Then open a terminal and build and install primesieve using:
 
 $ ./configure
 $ make
@@ -35,8 +35,10 @@ $ ./configure
 Microsoft Visual C++
 ====================
 
-Unzip the primesieve source archive, open a Visual Studio Command
-Prompt and `cd' into the newly created directory. Then run:
+Download the latest primesieve source archive from
+https://github.com/kimwalisch/primesieve/releases and uncompress it.
+Then open a Visual Studio Command Prompt and `cd' into the newly
+created directory and run:
 
 > nmake -f Makefile.msvc
 > nmake -f Makefile.msvc examples
