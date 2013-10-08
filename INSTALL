@@ -27,10 +27,9 @@ configure step:
 $ ./configure --enable-examples
 
 If you want to build primesieve using a specific compiler or if you
-want to use custom compiler flags you can do this using:
+want to use custom compiler flags you can do this using e.g.:
 
-$ export CXX=compiler CXXFLAGS="-O2 -fopenmp"
-$ ./configure
+$ ./configure CXX=icpc CXXFLAGS="-O2 -openmp"
 
 Microsoft Visual C++
 ====================
@@ -48,6 +47,6 @@ The second command is optional, it builds the example programs.
 On Windows your CPU's L1 data cache size cannot be detected
 automatically, the default L1 data cache size in primesieve is 32
 kilobytes. If your CPU has a different L1 data cache size then you
-should indicate it in order to get the best performance:
+should indicate it in order to get the best performance e.g.:
 
 > nmake -f Makefile.msvc L1_DCACHE_SIZE=64
