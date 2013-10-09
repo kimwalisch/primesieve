@@ -3,12 +3,12 @@
 /// passed to the callback_primes() function.
 
 #include <primesieve.h>
-#include <stdint.h>
 #include <list>
 
-struct PrimeList : std::list<uint64_t>, PrimeSieveCallback<uint64_t>
+struct PrimeList : std::list<int>,
+                   PrimeSieveCallback<int>
 {
-  void callback(uint64_t prime) {
+  void callback(int prime) {
     this->push_back(prime);
   }
 };
