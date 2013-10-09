@@ -10,7 +10,6 @@
 ///
 
 #include <primesieve.h>
-#include <primesieve/soe/PrimeSieve.h>
 #include "cmdoptions.h"
 #include "ExpressionParser.h"
 
@@ -144,17 +143,24 @@ PrimeSieveOptions parseOptions(int argc, char** argv)
       Option option = makeOption(argv[i]);
       switch (optionMap[option.id])
       {
-        case OPTION_COUNT:    pso.flags |= getCountFlags(option.getValue<int>()); break;
-        case OPTION_PRINT:    pso.flags |= getPrintFlags(option.getValue<int>()); pso.quiet = true; break;
+        case OPTION_COUNT:    if (option.value.empty())
+                                option.value = "1";
+                              pso.flags |= getCountFlags(option.getValue<int>());
+                              break;
+        case OPTION_PRINT:    if (option.value.empty())
+                                option.value = "1";
+                              pso.flags |= getPrintFlags(option.getValue<int>());
+                              pso.quiet = true;
+                              break;
         case OPTION_SIZE:     pso.sieveSize = option.getValue<int>(); break;
-        case OPTION_THREADS:  pso.threads   = option.getValue<int>(); break;
+        case OPTION_THREADS:  pso.threads = option.getValue<int>(); break;
         case OPTION_QUIET:    pso.quiet = true; break;
         case OPTION_NTHPRIME: pso.nthPrime = true; break;
         case OPTION_NUMBER:   pso.n.push_back(option.getValue<uint64_t>()); break;
         case OPTION_OFFSET:   pso.n.push_back(option.getValue<uint64_t>() + pso.n.front()); break;
-        case OPTION_TEST:     test();    break;
+        case OPTION_TEST:     test(); break;
         case OPTION_VERSION:  version(); break;
-        case OPTION_HELP:     help();    break;
+        case OPTION_HELP:     help(); break;
       }
     }
   }
