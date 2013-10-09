@@ -19,7 +19,7 @@ compliant C++ compiler and runs on both little and big endian CPUs.
 The parallelization is implemented using OpenMP 2.0 or later.
 
 ### Build instructions
-Please download the latest release tarball from
+Download the latest release tarball from
 https://github.com/kimwalisch/primesieve/releases. On Unix-like
 operating systems you can then build and install primesieve using:
 
@@ -30,7 +30,7 @@ $ sudo make install
 ```
 
 On Windows (MSVC) open a Visual Studio Command Prompt and cd into the
-primesieve directory. Then execute the following command:
+primesieve directory. Then build primesieve using the following command:
 
 ```
 > nmake -f Makefile.msvc
