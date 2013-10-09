@@ -4,11 +4,12 @@
 /// Note that multi-threaded callback can currently not be canceled.
 
 #include <primesieve.h>
+#include <stdint.h>
 #include <iostream>
 
 int i = 0;
 
-void callback(unsigned int prime)
+void callback(uint64_t prime)
 {
   if (++i == 1000000) {
     std::cout << "10^6th prime = " << prime << std::endl;
