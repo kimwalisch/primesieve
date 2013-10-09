@@ -3,7 +3,6 @@
 /// passed to the callback_primes() function.
 
 #include <primesieve.h>
-#include <primesieve/soe/PrimeSieveCallback.h>
 #include <stdint.h>
 #include <list>
 
