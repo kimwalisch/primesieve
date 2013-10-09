@@ -46,7 +46,7 @@ to print an option summary use the ```--help``` flag.
 
 Print the primes below 1000 to the standard output:
 ```
-$ ./primesieve 1000 --print=1
+$ ./primesieve 1000 --print
 ```
 
 Count the prime triplets inside the interval [1e10, 2e10]:
