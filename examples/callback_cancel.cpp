@@ -4,7 +4,6 @@
 /// Note that multi-threaded callback can currently not be canceled.
 
 #include <primesieve.h>
-#include <primesieve/soe/stop_primesieve.h>
 #include <iostream>
 
 int i = 0;
