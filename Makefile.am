@@ -1,14 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
 AM_CPPFLAGS = -I$(top_srcdir)/include
-EXTRA_DIST = \
-	Doxyfile \
-	mainpage.dox \
-	README.md \
-	Makefile.msvc \
-	examples/README \
-	src/apps/gui \
-	src/msvc_compat \
-	src/soe/README
+AM_LDFLAGS = $(OPENMP_CXXFLAGS)
 
 lib_LTLIBRARIES = libprimesieve.la
 libprimesieve_la_CXXFLAGS = $(OPENMP_CXXFLAGS)
@@ -16,7 +8,6 @@ libprimesieve_la_LDFLAGS = -version-info @primesieve_lib_version@
 
 bin_PROGRAMS = primesieve
 primesieve_LDADD = libprimesieve.la
-primesieve_LDFLAGS = $(OPENMP_CXXFLAGS)
 
 # If installation directory is /usr/local/lib
 # execute ldconfig after installation
@@ -30,42 +21,34 @@ if MAKE_EXAMPLES
 
 noinst_PROGRAMS = callback_cancel
 callback_cancel_LDADD = libprimesieve.la
-callback_cancel_LDFLAGS = $(OPENMP_CXXFLAGS)
 callback_cancel_SOURCES = examples/callback_cancel.cpp
 
 noinst_PROGRAMS += callback_primes
 callback_primes_LDADD = libprimesieve.la
-callback_primes_LDFLAGS = $(OPENMP_CXXFLAGS)
 callback_primes_SOURCES = examples/callback_primes.cpp
 
 noinst_PROGRAMS += callback_primes_oop
 callback_primes_oop_LDADD = libprimesieve.la
-callback_primes_oop_LDFLAGS = $(OPENMP_CXXFLAGS)
-callback_primes_oop_SOURCES = examples/callback_primes.cpp
+callback_primes_oop_SOURCES = examples/callback_primes_oop.cpp
 
 noinst_PROGRAMS += count_primes
 count_primes_LDADD = libprimesieve.la
-count_primes_LDFLAGS = $(OPENMP_CXXFLAGS)
 count_primes_SOURCES = examples/count_primes.cpp
 
 noinst_PROGRAMS += next_prime
 next_prime_LDADD = libprimesieve.la
-next_prime_LDFLAGS = $(OPENMP_CXXFLAGS)
 next_prime_SOURCES = examples/next_prime.cpp
 
 noinst_PROGRAMS += nth_prime
 nth_prime_LDADD = libprimesieve.la
-nth_prime_LDFLAGS = $(OPENMP_CXXFLAGS)
 nth_prime_SOURCES = examples/nth_prime.cpp
 
 noinst_PROGRAMS += previous_prime
 previous_prime_LDADD = libprimesieve.la
-previous_prime_LDFLAGS = $(OPENMP_CXXFLAGS)
 previous_prime_SOURCES = examples/previous_prime.cpp
 
 noinst_PROGRAMS += store_primes_in_vector
 store_primes_in_vector_LDADD = libprimesieve.la
-store_primes_in_vector_LDFLAGS = $(OPENMP_CXXFLAGS)
 store_primes_in_vector_SOURCES = examples/store_primes_in_vector.cpp
 
 endif
@@ -81,6 +64,16 @@ otherinclude_HEADERS = \
 	include/primesieve/soe/prime_iterator.h \
 	include/primesieve/soe/PrimeSieveCallback.h \
 	include/primesieve/soe/stop_primesieve.h
+
+EXTRA_DIST = \
+	Doxyfile \
+	mainpage.dox \
+	README.md \
+	Makefile.msvc \
+	examples/README \
+	src/apps/gui \
+	src/msvc_compat \
+	src/soe/README
 
 libprimesieve_la_SOURCES = \
 	src/soe/EratBig.cpp \
