@@ -43,19 +43,9 @@ namespace primesieve
 
   /// Call back the primes within the interval [start, stop].
   /// @param callback  A callback function.
-  ///
-  void callback_primes(uint32_t start, uint32_t stop, void (*callback)(uint32_t prime));
-
-  /// Call back the primes within the interval [start, stop].
-  /// @param callback  A callback function.
   /// @pre   stop <= 2^64 - 2^32 * 10.
   ///
   void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
-
-  /// Call back the primes within the interval [start, stop].
-  /// @param callback  An object derived from PrimeSieveCallback<uint32_t>.
-  ///
-  void callback_primes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>* callback);
 
   /// Call back the primes within the interval [start, stop].
   /// @param callback  An object derived from PrimeSieveCallback<uint64_t>.
@@ -203,15 +193,6 @@ namespace primesieve
   /// @warning         Primes are not called back in arithmetic order.
   /// @param callback  A callback function.
   /// @param threads   Number of threads.
-  ///
-  void parallel_callback_primes(uint32_t start, uint32_t stop, void (*callback)(uint32_t prime), int threads = MAX_THREADS);
-
-  /// Call back the primes within the interval [start, stop].
-  /// This function is synchronized, only one thread at a time calls
-  /// back primes.
-  /// @warning         Primes are not called back in arithmetic order.
-  /// @param callback  A callback function.
-  /// @param threads   Number of threads.
   /// @pre   stop      <= 2^64 - 2^32 * 10.
   ///
   void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime), int threads = MAX_THREADS);
@@ -225,15 +206,6 @@ namespace primesieve
   /// @pre   stop      <= 2^64 - 2^32 * 10.
   ///
   void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime, int thread_id), int threads = MAX_THREADS);
-
-  /// Call back the primes within the interval [start, stop].
-  /// This function is synchronized, only one thread at a time calls
-  /// back primes.
-  /// @warning         Primes are not called back in arithmetic order.
-  /// @param callback  An object derived from PrimeSieveCallback<uint32_t>.
-  /// @param threads   Number of threads.
-  ///
-  void parallel_callback_primes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>* callback, int threads = MAX_THREADS);
 
   /// Call back the primes within the interval [start, stop].
   /// This function is synchronized, only one thread at a time calls
