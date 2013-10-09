@@ -2,11 +2,12 @@
 /// This example shows how to use callback functions.
 
 #include <primesieve.h>
+#include <stdint.h>
 #include <iostream>
 
-void callback(unsigned int prime)
+void callback(uint64_t prime)
 {
-  std::cout << prime << ", ";
+  std::cout << prime << std::endl;
 }
 
 int main()
