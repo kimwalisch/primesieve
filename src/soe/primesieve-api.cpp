@@ -21,19 +21,7 @@
 namespace primesieve
 {
 
-void callback_primes(uint32_t start, uint32_t stop, void (*callback)(uint32_t))
-{
-  PrimeSieve ps;
-  ps.generatePrimes(start, stop, callback);
-}
-
 void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
-{
-  PrimeSieve ps;
-  ps.generatePrimes(start, stop, callback);
-}
-
-void callback_primes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>* callback)
 {
   PrimeSieve ps;
   ps.generatePrimes(start, stop, callback);
@@ -103,13 +91,6 @@ uint64_t nth_prime(uint64_t n, uint64_t start)
   return ps.nthPrime(n, start);
 }
 
-void parallel_callback_primes(uint32_t start, uint32_t stop, void (*callback)(uint32_t), int threads)
-{
-  ParallelPrimeSieve pps;
-  pps.setNumThreads(threads);
-  pps.generatePrimes(start, stop, callback);
-}
-
 void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t), int threads)
 {
   ParallelPrimeSieve pps;
@@ -118,13 +99,6 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(ui
 }
 
 void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int), int threads)
-{
-  ParallelPrimeSieve pps;
-  pps.setNumThreads(threads);
-  pps.generatePrimes(start, stop, callback);
-}
-
-void parallel_callback_primes(uint32_t start, uint32_t stop, PrimeSieveCallback<uint32_t>* callback, int threads)
 {
   ParallelPrimeSieve pps;
   pps.setNumThreads(threads);
