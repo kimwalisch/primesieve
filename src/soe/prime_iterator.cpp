@@ -43,26 +43,6 @@ void prime_iterator::skip_to(uint64_t start)
   }
 }
 
-/// Calculate an interval size that ensures a good load balance.
-/// @param n  Start or stop number.
-///
-uint64_t prime_iterator::get_interval_size(uint64_t n)
-{
-  count_++;
-  const uint64_t KILOBYTE = 1 << 10;
-  const uint64_t MEGABYTE = 1 << 20;
-
-  double x = std::max(static_cast<double>(n), 10.0);
-  double sqrtx = std::sqrt(x);
-  uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (std::log(sqrtx) - 1));
-
-  uint64_t max_primes = (MEGABYTE * 512) / sizeof(uint64_t);
-  uint64_t primes = ((count_ < 10) ? (KILOBYTE * 32) : (MEGABYTE * 4))  / sizeof(uint64_t);
-  primes = std::min(std::max(primes, sqrtx_primes), max_primes);
-
-  return static_cast<uint64_t>(primes * std::log(x));
-}
-
 void prime_iterator::generate_primes(uint64_t start, uint64_t stop)
 {
   primes_.clear();
@@ -109,6 +89,26 @@ void prime_iterator::generate_previous_primes()
     i_ = primes_.size();
   }
   first_ = false;
+}
+
+/// Calculate an interval size that ensures a good load balance.
+/// @param n  Start or stop number.
+///
+uint64_t prime_iterator::get_interval_size(uint64_t n)
+{
+  count_++;
+  const uint64_t KILOBYTE = 1 << 10;
+  const uint64_t MEGABYTE = 1 << 20;
+
+  double x = std::max(static_cast<double>(n), 10.0);
+  double sqrtx = std::sqrt(x);
+  uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (std::log(sqrtx) - 1));
+
+  uint64_t max_primes = (MEGABYTE * 512) / sizeof(uint64_t);
+  uint64_t primes = ((count_ < 10) ? (KILOBYTE * 32) : (MEGABYTE * 4))  / sizeof(uint64_t);
+  primes = std::min(std::max(primes, sqrtx_primes), max_primes);
+
+  return static_cast<uint64_t>(primes * std::log(x));
 }
 
 } // end namespace
