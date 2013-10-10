@@ -16,8 +16,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 namespace primesieve {
 
 prime_iterator::prime_iterator(uint64_t start)
@@ -27,11 +25,11 @@ prime_iterator::prime_iterator(uint64_t start)
 
 void prime_iterator::skip_to(uint64_t start)
 {
+  first_ = true;
+  adjust_skip_to_ = false;
   i_ = 0;
   count_ = 0;
   start_ = start;
-  first_ = true;
-  adjust_skip_to_ = false;
 
   if (start_ > max_stop())
     throw primesieve_error("start must be <= " + max_stop_string());
@@ -41,7 +39,7 @@ void prime_iterator::skip_to(uint64_t start)
        primes_.back() >= start_)
   {
     adjust_skip_to_ = true;
-    i_ = lower_bound(primes_.begin(), primes_.end(), start_) - primes_.begin();
+    i_ = std::lower_bound(primes_.begin(), primes_.end(), start_) - primes_.begin();
   }
 }
 
@@ -51,19 +49,18 @@ void prime_iterator::skip_to(uint64_t start)
 uint64_t prime_iterator::get_interval_size(uint64_t n)
 {
   count_++;
-  uint64_t kilobyte = 1 << 10;
-  uint64_t megabyte = 1 << 20;
-  uint64_t primes = (count_ < 10) ? (kilobyte * 32) / sizeof(uint64_t)
-      : (megabyte * 4) / sizeof(uint64_t);
+  const uint64_t KILOBYTE = 1 << 10;
+  const uint64_t MEGABYTE = 1 << 20;
 
-  double x = max(static_cast<double>(n), 100.0);
-  double sqrtx = sqrt(x);
-  uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (log(sqrtx) - 1.0));
-  uint64_t max_primes = (megabyte * 512) / sizeof(uint64_t);
+  double x = std::max(static_cast<double>(n), 10.0);
+  double sqrtx = std::sqrt(x);
+  uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (std::log(sqrtx) - 1));
 
-  primes = max(primes, sqrtx_primes);
-  primes = min(primes, max_primes);
-  return static_cast<uint64_t>(primes * log(x));
+  uint64_t max_primes = (MEGABYTE * 512) / sizeof(uint64_t);
+  uint64_t primes = ((count_ < 10) ? (KILOBYTE * 32) : (MEGABYTE * 4))  / sizeof(uint64_t);
+  primes = std::min(std::max(primes, sqrtx_primes), max_primes);
+
+  return static_cast<uint64_t>(primes * std::log(x));
 }
 
 void prime_iterator::generate_primes(uint64_t start, uint64_t stop)
