@@ -84,7 +84,7 @@ void initOptionMap()
 
 void test()
 {
-  bool ok = primesieve::test();
+  int ok = primesieve::test();
   exit(ok ? 0 : 1);
 }
 
