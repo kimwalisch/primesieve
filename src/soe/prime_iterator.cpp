@@ -105,7 +105,7 @@ uint64_t prime_iterator::get_interval_size(uint64_t n)
   uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (std::log(sqrtx) - 1));
 
   uint64_t max_primes = (MEGABYTE * 512) / sizeof(uint64_t);
-  uint64_t primes = ((count_ < 10) ? (KILOBYTE * 32) : (MEGABYTE * 4))  / sizeof(uint64_t);
+  uint64_t primes = ((count_ < 10) ? (KILOBYTE * 32) : (MEGABYTE * 4)) / sizeof(uint64_t);
   primes = std::min(std::max(primes, sqrtx_primes), max_primes);
 
   return static_cast<uint64_t>(primes * std::log(x));
