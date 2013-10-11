@@ -11,9 +11,9 @@ int main()
   std::cout << "Primes below 1000 = " << count << std::endl;
 
   // use multi-threading for large intervals
-  uint64_t stop = 1ull << 32;
+  uint64_t stop = 1000000000;
   count = primesieve::parallel_count_primes(0, stop);
-  std::cout << "Primes below 2^32 = " << count << std::endl;
+  std::cout << "Primes below 10^9 = " << count << std::endl;
 
   return 0;
 }
