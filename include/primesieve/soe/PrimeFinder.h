@@ -40,19 +40,17 @@ private:
   /// Copy ps_.threadNum_
   int threadNum_;
   /// Copy of ps_ callback functions and objects
-  void (*callback32_)(uint32_t);
-  void (*callback64_)(uint64_t);
-  void (*callback64_tn_)(uint64_t, int);
-  PrimeSieveCallback<uint32_t>* psc32_;
-  PrimeSieveCallback<uint64_t>* psc64_;
-  PrimeSieveCallback<uint64_t, int>* psc64_tn_;
+  void (*callback_)(uint64_t);
+  void (*callback_tn_)(uint64_t, int);
+  PrimeSieveCallback<uint64_t>* psc_;
+  PrimeSieveCallback<uint64_t, int>* psc_tn_;
   void init_kCounts();
   virtual void segmentFinished(const byte_t*, uint_t);
   void count(const byte_t*, uint_t);
   void print(const byte_t*, uint_t) const;
-  void generate(const byte_t*, uint_t) const;
-  void callback64_tn(uint64_t) const;
-  void callback64_obj_tn(uint64_t) const;
+  void callback(const byte_t*, uint_t) const;
+  void callback_tn(uint64_t) const;
+  void callback_obj_tn(uint64_t) const;
   static void printPrime(uint64_t);
   DISALLOW_COPY_AND_ASSIGN(PrimeFinder);
 };

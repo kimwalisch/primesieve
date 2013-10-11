@@ -43,8 +43,8 @@ void NthPrime::findNthPrime(uint64_t n, uint64_t start, uint64_t stop)
   PrimeSieve ps;
   uint64_t maxStop = SieveOfEratosthenes::getMaxStop();
   try {
-    ps.generatePrimes(start, stop, this);
-    ps.generatePrimes(stop + 1, maxStop, this);
+    ps.callbackPrimes(start, stop, this);
+    ps.callbackPrimes(stop + 1, maxStop, this);
     throw primesieve_error("nth prime is too large > 2^64 - 2^32 * 11");
   }
   catch (stop_primesieve&) { }

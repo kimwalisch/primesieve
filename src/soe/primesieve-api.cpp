@@ -24,13 +24,13 @@ namespace primesieve
 void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
 {
   PrimeSieve ps;
-  ps.generatePrimes(start, stop, callback);
+  ps.callbackPrimes(start, stop, callback);
 }
 
 void callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t>* callback)
 {
   PrimeSieve ps;
-  ps.generatePrimes(start, stop, callback);
+  ps.callbackPrimes(start, stop, callback);
 }
 
 uint64_t count_primes(uint64_t start, uint64_t stop)
@@ -95,28 +95,28 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(ui
 {
   ParallelPrimeSieve pps;
   pps.setNumThreads(threads);
-  pps.generatePrimes(start, stop, callback);
+  pps.callbackPrimes(start, stop, callback);
 }
 
 void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int), int threads)
 {
   ParallelPrimeSieve pps;
   pps.setNumThreads(threads);
-  pps.generatePrimes(start, stop, callback);
+  pps.callbackPrimes(start, stop, callback);
 }
 
 void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t>* callback, int threads)
 {
   ParallelPrimeSieve pps;
   pps.setNumThreads(threads);
-  pps.generatePrimes(start, stop, callback);
+  pps.callbackPrimes(start, stop, callback);
 }
 
 void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t, int>* callback, int threads)
 {
   ParallelPrimeSieve pps;
   pps.setNumThreads(threads);
-  pps.generatePrimes(start, stop, callback);
+  pps.callbackPrimes(start, stop, callback);
 }
 
 uint64_t parallel_count_primes(uint64_t start, uint64_t stop, int threads)

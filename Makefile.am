@@ -63,6 +63,7 @@ otherinclude_HEADERS = \
 	include/primesieve/soe/PrimeSieve.h \
 	include/primesieve/soe/prime_iterator.h \
 	include/primesieve/soe/PrimeSieveCallback.h \
+	include/primesieve/soe/PushBackPrimes.h \
 	include/primesieve/soe/stop_primesieve.h
 
 EXTRA_DIST = \
@@ -104,7 +105,7 @@ libprimesieve_la_SOURCES = \
 	include/primesieve/soe/PrimeGenerator.h \
 	include/primesieve/soe/PrimeSieve-lock.h \
 	include/primesieve/soe/SieveOfEratosthenes.h \
-	include/primesieve/soe/SieveOfEratosthenes-GENERATE.h \
+	include/primesieve/soe/SieveOfEratosthenes-CALLBACK.h \
 	include/primesieve/soe/SieveOfEratosthenes-inline.h \
 	include/primesieve/soe/toString.h \
 	include/primesieve/soe/WheelFactorization.h

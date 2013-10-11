@@ -28,7 +28,7 @@ inline uint_t   SieveOfEratosthenes::getSieveSize() const { return sieveSize_; }
 
 /// Reconstruct the prime number corresponding to the first set
 /// bit of the `bits' parameter and unset that bit.
-/// @see SieveOfEratosthenes-GENERATE.h
+/// @see SieveOfEratosthenes-CALLBACK.h
 ///
 inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint_t index) const
 {

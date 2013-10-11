@@ -13,7 +13,7 @@
 #include <primesieve/soe/PrimeGenerator.h>
 #include <primesieve/soe/PrimeFinder.h>
 #include <primesieve/soe/SieveOfEratosthenes.h>
-#include <primesieve/soe/SieveOfEratosthenes-GENERATE.h>
+#include <primesieve/soe/SieveOfEratosthenes-CALLBACK.h>
 #include <primesieve/soe/SieveOfEratosthenes-inline.h>
 
 #include <vector>
@@ -56,15 +56,15 @@ void PrimeGenerator::doIt()
 
 void PrimeGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
 {
-  generate(sieve, sieveSize);
+  callback(sieve, sieveSize);
 }
 
 /// Reconstruct the primes from 1 bits of the sieve
 /// array and add them to finder_.
 ///
-void PrimeGenerator::generate(const byte_t* sieve, uint_t sieveSize)
+void PrimeGenerator::callback(const byte_t* sieve, uint_t sieveSize)
 {
-  GENERATE_PRIMES(finder_.addSievingPrime, uint_t)
+  CALLBACK_PRIMES(finder_.addSievingPrime, uint_t)
 }
 
 } // namespace soe

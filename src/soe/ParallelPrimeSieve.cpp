@@ -52,7 +52,7 @@ void ParallelPrimeSieve::setNumThreads(int threads)
 {
   numThreads_ = threads;
   if (numThreads_ != IDEAL_NUM_THREADS)
-  	numThreads_ = getInBetween(1, numThreads_, getMaxThreads());
+    numThreads_ = getInBetween(1, numThreads_, getMaxThreads());
 }
 
 /// Get an ideal number of threads for the current

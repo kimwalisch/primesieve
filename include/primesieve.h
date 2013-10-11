@@ -25,6 +25,7 @@
 #include "primesieve/soe/primesieve_error.h"
 #include "primesieve/soe/prime_iterator.h"
 #include "primesieve/soe/PrimeSieveCallback.h"
+#include "primesieve/soe/PushBackPrimes.h"
 #include "primesieve/soe/stop_primesieve.h"
 
 #include <stdint.h>
@@ -95,8 +96,11 @@ namespace primesieve
   template <typename T>
   inline void generate_primes(uint64_t stop, std::vector<T>* primes)
   {
-    PrimeSieve ps;
-    ps.generatePrimes(0, stop, primes);
+    if (primes)
+    {
+      soe::PushBackPrimes<T> pb(*primes);
+      pb.pushBackPrimes(0, stop);
+    }
   }
 
   /// Generate the primes within the interval [start, stop]
@@ -106,16 +110,22 @@ namespace primesieve
   template <typename T>
   inline void generate_primes(uint64_t start, uint64_t stop, std::vector<T>* primes)
   {
-    PrimeSieve ps;
-    ps.generatePrimes(start, stop, primes);
+    if (primes)
+    {
+      soe::PushBackPrimes<T> pb(*primes);
+      pb.pushBackPrimes(start, stop);
+    }
   }
 
   /// Generate the first n primes and store them in the primes vector.
   template <typename T>
   inline void generate_n_primes(uint64_t n, std::vector<T>* primes)
   {
-    PrimeSieve ps;
-    ps.generate_N_Primes(n, primes);
+    if (primes)
+    {
+      soe::PushBack_N_Primes<T> pb(*primes);
+      pb.pushBack_N_Primes(n, 0);
+    }
   }
 
   /// Generate the first n primes >= start and store them
@@ -125,8 +135,11 @@ namespace primesieve
   template <typename T>
   inline void generate_n_primes(uint64_t n, uint64_t start, std::vector<T>* primes)
   {
-    PrimeSieve ps;
-    ps.generate_N_Primes(n, start, primes);
+    if (primes)
+    {
+      soe::PushBack_N_Primes<T> pb(*primes);
+      pb.pushBack_N_Primes(n, start);
+    }
   }
 
   /// Returns the largest valid stop number for primesieve.

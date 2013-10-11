@@ -15,10 +15,6 @@
 #include "PrimeSieveCallback.h"
 
 #include <stdint.h>
-#include <algorithm>
-#include <cmath>
-#include <exception>
-#include <limits>
 #include <string>
 #include <vector>
 
@@ -76,7 +72,7 @@ public:
   void addFlags(int);
   // Bool is*
   bool isFlag(int) const;
-  bool isGenerate() const;
+  bool isCallback() const;
   bool isCount() const;
   bool isCount(int) const;
   bool isPrint() const;
@@ -85,34 +81,11 @@ public:
   virtual void sieve();
   void sieve(uint64_t, uint64_t);
   void sieve(uint64_t, uint64_t, int);
-  // Generate
-  template <typename T>
-  void generatePrimes(uint64_t start, uint64_t stop, std::vector<T>* primes)
-  {
-    if (primes) {
-      PushBackPrimes1<T> pbp(*primes);
-      pbp.generatePrimes(start, stop, *this);
-    }
-  }
-  template <typename T>
-  void generate_N_Primes(uint64_t n, uint64_t start, std::vector<T>* primes)
-  {
-    if (primes) {
-      PushBackPrimes2<T> pbp(*primes);
-      pbp.generate_N_Primes(n, start, *this);
-    }
-  }
-  template <typename T>
-  void generate_N_Primes(uint64_t n, std::vector<T>* primes)
-  {
-    this->generate_N_Primes(n, 0, primes);
-  }
-  void generatePrimes(uint32_t, uint32_t, void (*)(uint32_t));
-  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t));
-  void generatePrimes(uint64_t, uint64_t, void (*)(uint64_t, int));
-  void generatePrimes(uint32_t, uint32_t, PrimeSieveCallback<uint32_t>*);
-  void generatePrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t>*);
-  void generatePrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t, int>*);
+  // Callback
+  void callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t));
+  void callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t, int));
+  void callbackPrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t>*);
+  void callbackPrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t, int>*);
   // nth prime
   uint64_t nthPrime(uint64_t);
   uint64_t nthPrime(uint64_t, uint64_t);
@@ -179,22 +152,17 @@ private:
   int threadNum_;
   /// Pointer to the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
-  /// Callbacks for use with generatePrimes()
-  void (*callback32_)(uint32_t);
-  void (*callback64_)(uint64_t);
-  void (*callback64_tn_)(uint64_t, int);
-  PrimeSieveCallback<uint32_t>* psc32_;
-  PrimeSieveCallback<uint64_t>* psc64_;
-  PrimeSieveCallback<uint64_t, int>* psc64_tn_;
+  /// Callbacks for use with callbackPrimes()
+  void (*callback_)(uint64_t);
+  void (*callback_tn_)(uint64_t, int);
+  PrimeSieveCallback<uint64_t>* psc_;
+  PrimeSieveCallback<uint64_t, int>* psc_tn_;
   static void printStatus(double, double);
   bool isFlag(int, int) const;
   bool isValidFlags(int) const;
   bool isStatus() const;
   bool isParallelPrimeSieveChild() const;
   void doSmallPrime(const SmallPrime&);
-  ////////////////////////////////////////////////////////////////////
-  ///                      Private inner classes
-  ////////////////////////////////////////////////////////////////////
   enum {
       INIT_STATUS = 0,
     FINISH_STATUS = 10
@@ -202,85 +170,10 @@ private:
   /// Private flags
   /// @pre flag >= (1 << 20)
   enum {
-    CALLBACK32        = 1 << 20,
-    CALLBACK64        = 1 << 21,
-    CALLBACK64_TN     = 1 << 22,
-    CALLBACK32_OBJ    = 1 << 23,
-    CALLBACK64_OBJ    = 1 << 24,
-    CALLBACK64_OBJ_TN = 1 << 25
-  };
-  template <typename T>
-  class PushBackPrimes1 : public PrimeSieveCallback<uint64_t> {
-  public:
-    PushBackPrimes1(std::vector<T>& primes)
-      : primes_(primes)
-    { }
-    /// Generate the primes in the interval [start, stop]
-    /// and store them in the primes vector.
-    void generatePrimes(uint64_t start, uint64_t stop, PrimeSieve& ps)
-    {
-      if (start <= stop)
-      {
-        primes_.reserve(primes_.size() + expectedPrimeCount(start, stop));
-        ps.generatePrimes(start, stop, this);
-      }
-    }
-    void callback(uint64_t prime)
-    {
-      primes_.push_back( static_cast<T>(prime) );
-    }
-  private:
-    std::vector<T>& primes_;
-    PushBackPrimes1(const PushBackPrimes1&);
-    void operator=(const PushBackPrimes1&);
-    static std::size_t expectedPrimeCount(uint64_t start, uint64_t stop)
-    {
-      if (stop < 10)
-        return 0;
-
-      double a = static_cast<double>(start);
-      double b = static_cast<double>(stop);
-
-      uint64_t primeCount = static_cast<uint64_t>((b - a) / (std::log(b) - 1.1));
-      uint64_t limit = std::numeric_limits<std::size_t>::max();
-
-      return static_cast<std::size_t>(std::min(primeCount, limit));
-    }
-  };
-  template <typename T>
-  class PushBackPrimes2 : public PrimeSieveCallback<uint64_t> {
-  public:
-    PushBackPrimes2(std::vector<T>& primes)
-      : primes_(primes)
-    { }
-    /// Generate the next n primes >= start and
-    /// store them in the primes vector.
-    void generate_N_Primes(uint64_t n, uint64_t start, PrimeSieve& ps)
-    {
-      n_ = n;
-      primes_.reserve(primes_.size() + n_);
-      try {
-        while (n_ > 0)
-        {
-          uint64_t logn = 50;
-          uint64_t stop = start + n_ * logn + 10000;
-          ps.generatePrimes(start, stop, this);
-          start = stop + 1;
-        }
-      } catch (stop_primesieve&) { }
-    }
-    void callback(uint64_t prime)
-    {
-      primes_.push_back( static_cast<T>(prime) );
-      if (--n_ == 0)
-        throw stop_primesieve();
-    }
-  private:
-    std::vector<T>& primes_;
-    uint64_t n_;
-    class stop_primesieve : public std::exception { };
-    PushBackPrimes2(const PushBackPrimes2&);
-    void operator=(const PushBackPrimes2&);
+    CALLBACK        = 1 << 20,
+    CALLBACK_TN     = 1 << 21,
+    CALLBACK_OBJ    = 1 << 22,
+    CALLBACK_OBJ_TN = 1 << 23
   };
 };
 
