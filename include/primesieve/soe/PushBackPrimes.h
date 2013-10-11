@@ -33,7 +33,7 @@ inline uint64_t approximate_prime_count(uint64_t start, uint64_t stop)
   if (stop < 10)
   {
     uint64_t pi[10] = { 0, 0, 1, 2, 2, 3, 3, 4, 4, 4 };
-    return pi[stop - start];
+    return (pi[stop] - pi[start]) + 1;
   }
   return static_cast<uint64_t>((stop - start) / (std::log(static_cast<double>(stop)) - 1.1));
 }
