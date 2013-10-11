@@ -5,6 +5,9 @@ Many people have further contributed to primesieve by reporting
 problems, suggesting various improvements, or submitting actual code.
 Here is a list of these people.
 
+  * Andrew Ohana has ported primesieve-5.0's build system to GNU
+    Autotools and Libtool.
+
   * Dana Jacobsen has provided feedback
     (added examples/store_primes_in_vector.cpp)
 
@@ -12,9 +15,6 @@ Here is a list of these people.
 
   * Silver Möls has helped to increase instruction level parallelism
     in src/soe/EratBig.cpp in primesieve 3.1.
-
-  * Andrew Ohana has contributed a Makefile patch to build primesieve
-    as a shared library on Unix-like operating systems.
 
   * Huang Yuanbing has given feedback and suggestions.
 
