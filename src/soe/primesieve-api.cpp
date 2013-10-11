@@ -10,9 +10,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/PrimeSieve.h>
-#include <primesieve/soe/ParallelPrimeSieve.h>
-#include <primesieve/soe/PrimeSieveCallback.h>
+#include <primesieve.h>
 #include <primesieve/soe/PrimeFinder.h>
 
 #include <stdint.h>
@@ -91,6 +89,11 @@ uint64_t nth_prime(uint64_t n, uint64_t start)
   return ps.nthPrime(n, start);
 }
 
+uint64_t nth_prime(uint64_t n)
+{
+  return nth_prime(n, 0);
+}
+
 void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t), int threads)
 {
   ParallelPrimeSieve pps;
@@ -103,6 +106,10 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(ui
   ParallelPrimeSieve pps;
   pps.setNumThreads(threads);
   pps.callbackPrimes(start, stop, callback);
+}
+
+void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int)) {
+  parallel_callback_primes(start, stop, callback, MAX_THREADS);
 }
 
 void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t>* callback, int threads)
@@ -126,11 +133,21 @@ uint64_t parallel_count_primes(uint64_t start, uint64_t stop, int threads)
   return pps.countPrimes(start, stop);
 }
 
+uint64_t parallel_count_primes(uint64_t start, uint64_t stop)
+{
+  return parallel_count_primes(start, stop, MAX_THREADS);
+}
+
 uint64_t parallel_count_twins(uint64_t start, uint64_t stop, int threads)
 {
   ParallelPrimeSieve pps;
   pps.setNumThreads(threads);
   return pps.countTwins(start, stop);
+}
+
+uint64_t parallel_count_twins(uint64_t start, uint64_t stop)
+{
+  return parallel_count_twins(start, stop, MAX_THREADS);
 }
 
 uint64_t parallel_count_triplets(uint64_t start, uint64_t stop, int threads)
@@ -140,11 +157,21 @@ uint64_t parallel_count_triplets(uint64_t start, uint64_t stop, int threads)
   return pps.countTriplets(start, stop);
 }
 
+uint64_t parallel_count_triplets(uint64_t start, uint64_t stop)
+{
+  return parallel_count_triplets(start, stop, MAX_THREADS);
+}
+
 uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop, int threads)
 {
   ParallelPrimeSieve pps;
   pps.setNumThreads(threads);
   return pps.countQuadruplets(start, stop);
+}
+
+uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop)
+{
+  return parallel_count_quadruplets(start, stop, MAX_THREADS);
 }
 
 uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop, int threads)
@@ -154,11 +181,21 @@ uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop, int threads)
   return pps.countQuintuplets(start, stop);
 }
 
+uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop)
+{
+  return parallel_count_quintuplets(start, stop, MAX_THREADS);
+}
+
 uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop, int threads)
 {
   ParallelPrimeSieve pps;
   pps.setNumThreads(threads);
   return pps.countSextuplets(start, stop);
+}
+
+uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop)
+{
+  return parallel_count_sextuplets(start, stop, MAX_THREADS);
 }
 
 uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop, int threads)
@@ -168,11 +205,21 @@ uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop, int threads)
   return pps.countSeptuplets(start, stop);
 }
 
+uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop)
+{
+  return parallel_count_septuplets(start, stop, MAX_THREADS);
+}
+
 uint64_t parallel_nth_prime(uint64_t n, uint64_t start, int threads)
 {
   ParallelPrimeSieve pps;
   pps.setNumThreads(threads);
   return pps.nthPrime(n, start);
+}
+
+uint64_t parallel_nth_prime(uint64_t n, uint64_t start)
+{
+  return parallel_nth_prime(n, start, MAX_THREADS);
 }
 
 void print_primes(uint64_t start, uint64_t stop)

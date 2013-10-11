@@ -9,7 +9,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/ParallelPrimeSieve.h>
+#include <primesieve.h>
 
 #include <iostream>
 #include <iomanip>
@@ -158,7 +158,7 @@ void testRandomIntervals()
 /// 1 minute to complete on a quad core CPU from 2013.
 /// @return true  If no error occurred else false.
 ///
-bool test()
+int test()
 {
   cout << left;
   try
@@ -170,10 +170,10 @@ bool test()
   catch (exception& e)
   {
     cerr << endl << "Error: " << e.what() << endl;
-    return false;
+    return 0;
   }
   cout << "All tests passed successfully!" << endl;
-  return true;
+  return 1;
 }
 
 } // end namespace

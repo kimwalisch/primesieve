@@ -27,3 +27,4 @@ stamp-*
 .project
 /test-driver
 .c9revisions
+/compile

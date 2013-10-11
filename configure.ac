@@ -9,8 +9,12 @@ AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([subdir-objects foreign -Wall -Werror ])
 
+AC_PROG_CC
 AC_PROG_CXX
-AM_PROG_AR 
+AM_PROG_AR
+
+# this is no longer needed for the very new automake 1.14:
+AM_PROG_CC_C_O
 
 LT_INIT
 
