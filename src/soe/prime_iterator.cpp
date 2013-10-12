@@ -11,12 +11,11 @@
 
 #include <algorithm>
 #include <cmath>
+#include <sstream>
 #include <string>
 #include <vector>
 
 namespace primesieve {
-
-std::string max_stop_string();
 
 prime_iterator::prime_iterator(uint64_t start)
 {
@@ -32,7 +31,11 @@ void prime_iterator::skip_to(uint64_t start)
   start_ = start;
 
   if (start_ > max_stop())
-    throw primesieve_error("start must be <= " + max_stop_string());
+  {
+    std::ostringstream oss;
+    oss << "start must be <= " << max_stop();
+    throw primesieve_error(oss.str());
+  }
 
   if (!primes_.empty() &&
        primes_.front() <= start_ &&
