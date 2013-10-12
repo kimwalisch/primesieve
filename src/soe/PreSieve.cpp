@@ -28,7 +28,7 @@ PreSieve::PreSieve(int limit)
 {
   // limit <= 23 prevents 32-bit overflows
   if (limit < 11 || limit > 23)
-    throw primesieve_error("PreSieve limit must be >= 11 && <= 23");
+    throw primesieve_error("PreSieve: limit must be >= 11 && <= 23");
   limit_ = limit;
   primeProduct_ = 1;
   for (int i = 0; primes_[i] <= limit_; i++)
