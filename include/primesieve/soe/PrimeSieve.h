@@ -172,8 +172,8 @@ private:
   enum {
     CALLBACK        = 1 << 20,
     CALLBACK_TN     = 1 << 21,
-    CALLBACK_OBJ    = 1 << 22,
-    CALLBACK_OBJ_TN = 1 << 23
+    CALLBACK_PSC    = 1 << 22,
+    CALLBACK_PSC_TN = 1 << 23
   };
 };
 

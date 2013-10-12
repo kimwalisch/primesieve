@@ -156,8 +156,8 @@ void PrimeFinder::callback(const byte_t* sieve, uint_t sieveSize) const
 {
   if (ps_.isFlag(ps_.CALLBACK))        { LockGuard lock(ps_); CALLBACK_PRIMES(callback_,       uint64_t) }
   if (ps_.isFlag(ps_.CALLBACK_TN))     { /* No Locking */     CALLBACK_PRIMES(callback_tn,     uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK_OBJ))    { LockGuard lock(ps_); CALLBACK_PRIMES(psc_->callback,  uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK_OBJ_TN)) { /* No Locking */     CALLBACK_PRIMES(callback_obj_tn, uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK_PSC))    { LockGuard lock(ps_); CALLBACK_PRIMES(psc_->callback,  uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK_PSC_TN)) { /* No Locking */     CALLBACK_PRIMES(callback_psc_tn, uint64_t) }
 }
 
 void PrimeFinder::printPrime(uint64_t prime)
@@ -170,7 +170,7 @@ void PrimeFinder::callback_tn(uint64_t prime) const
   callback_tn_(prime, threadNum_);
 }
 
-void PrimeFinder::callback_obj_tn(uint64_t prime) const
+void PrimeFinder::callback_psc_tn(uint64_t prime) const
 {
   psc_tn_->callback(prime, threadNum_);
 }

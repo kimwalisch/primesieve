@@ -50,7 +50,7 @@ private:
   void print(const byte_t*, uint_t) const;
   void callback(const byte_t*, uint_t) const;
   void callback_tn(uint64_t) const;
-  void callback_obj_tn(uint64_t) const;
+  void callback_psc_tn(uint64_t) const;
   static void printPrime(uint64_t);
   DISALLOW_COPY_AND_ASSIGN(PrimeFinder);
 };
