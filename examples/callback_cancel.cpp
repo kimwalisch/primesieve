@@ -1,6 +1,6 @@
 /// @example cancel_callback.cpp
-/// Cancel prime callback by throwing a stop_primesieve()
-/// exception. This code finds the 10^6th prime.
+/// Cancel callback of primes by throwing a stop_primesieve()
+/// exception (no need to catch it).
 /// Note that multi-threaded callback can currently not be canceled.
 
 #include <primesieve.h>
@@ -19,9 +19,6 @@ void callback(uint64_t prime)
 
 int main()
 {
-  try {
-    primesieve::callback_primes(0, 999999999, callback);
-  }
-  catch (stop_primesieve&) { }
+  primesieve::callback_primes(0, 999999999, callback);
   return 0;
 }

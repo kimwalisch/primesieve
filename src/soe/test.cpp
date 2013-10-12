@@ -169,7 +169,7 @@ int primesieve_test()
   }
   catch (exception& e)
   {
-    cerr << endl << "Error: " << e.what() << endl;
+    cerr << endl << "primesieve error: " << e.what() << endl;
     return 0;
   }
   cout << "All tests passed successfully!" << endl;

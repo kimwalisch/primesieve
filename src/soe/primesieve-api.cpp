@@ -15,77 +15,189 @@
 
 #include <stdint.h>
 #include <iostream>
+#include <exception>
 
-namespace primesieve
-{
+namespace primesieve {
+
+//////////////////////////////////////////////////////////////////////
+//                Functions with C++ linkage
+//////////////////////////////////////////////////////////////////////
 
 uint64_t nth_prime(uint64_t n)
 {
-  return nth_prime(n, 0);
+  uint64_t result = 0;
+  try
+  {
+    result = nth_prime(n, 0);
+  }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
+  return result;
 }
 
 uint64_t parallel_nth_prime(uint64_t n, uint64_t start)
 {
-  return parallel_nth_prime(n, start, MAX_THREADS);
+  uint64_t result = 0;
+  try
+  {
+    result = parallel_nth_prime(n, start, MAX_THREADS);
+  }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
+  return result;
 }
 
 uint64_t parallel_count_primes(uint64_t start, uint64_t stop)
 {
-  return parallel_count_primes(start, stop, MAX_THREADS);
+  uint64_t result = 0;
+  try
+  {
+    result = parallel_count_primes(start, stop, MAX_THREADS);
+  }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
+  return result;
 }
 
 uint64_t parallel_count_twins(uint64_t start, uint64_t stop)
 {
-  return parallel_count_twins(start, stop, MAX_THREADS);
+  uint64_t result = 0;
+  try
+  {
+    result = parallel_count_twins(start, stop, MAX_THREADS);
+  }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
+  return result;
 }
 
 uint64_t parallel_count_triplets(uint64_t start, uint64_t stop)
 {
-  return parallel_count_triplets(start, stop, MAX_THREADS);
+  uint64_t result = 0;
+  try
+  {
+    result = parallel_count_triplets(start, stop, MAX_THREADS);
+  }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
+  return result;
 }
 
 uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop)
 {
-  return parallel_count_quadruplets(start, stop, MAX_THREADS);
+  uint64_t result = 0;
+  try
+  {
+    result = parallel_count_quadruplets(start, stop, MAX_THREADS);
+  }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
+  return result;
 }
 
 uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop)
 {
-  return parallel_count_quintuplets(start, stop, MAX_THREADS);
+  uint64_t result = 0;
+  try
+  {
+    result = parallel_count_quintuplets(start, stop, MAX_THREADS);
+  }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
+  return result;
 }
 
 uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop)
 {
-  return parallel_count_sextuplets(start, stop, MAX_THREADS);
+  uint64_t result = 0;
+  try
+  {
+    result = parallel_count_sextuplets(start, stop, MAX_THREADS);
+  }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
+  return result;
 }
 
 uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop)
 {
-  return parallel_count_septuplets(start, stop, MAX_THREADS);
+  uint64_t result = 0;
+  try
+  {
+    result = parallel_count_septuplets(start, stop, MAX_THREADS);
+  }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
+  return result;
 }
 
 void callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t>* callback)
 {
-  PrimeSieve ps;
-  ps.callbackPrimes(start, stop, callback);
+  try
+  {
+    PrimeSieve ps;
+    ps.callbackPrimes(start, stop, callback);
+  }
+  catch (stop_primesieve&)
+  { }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
 }
 
 void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t>* callback, int threads)
 {
-  ParallelPrimeSieve pps;
-  pps.setNumThreads(threads);
-  pps.callbackPrimes(start, stop, callback);
+  try
+  {
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(threads);
+    pps.callbackPrimes(start, stop, callback);
+  }
+  catch (stop_primesieve&)
+  { }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
 }
 
 void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t, int>* callback, int threads)
 {
-  ParallelPrimeSieve pps;
-  pps.setNumThreads(threads);
-  pps.callbackPrimes(start, stop, callback);
+  try
+  {
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(threads);
+    pps.callbackPrimes(start, stop, callback);
+  }
+  catch (stop_primesieve&)
+  { }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
 }
 
 //////////////////////////////////////////////////////////////////////
-//          Below are functions with extern "C" linkage
+//               Functions with extern "C" linkage
 //////////////////////////////////////////////////////////////////////
 
 uint64_t nth_prime(uint64_t n, uint64_t start)
@@ -301,27 +413,65 @@ void print_septuplets(uint64_t start, uint64_t stop)
 
 void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
 {
-  PrimeSieve ps;
-  ps.callbackPrimes(start, stop, callback);
+  try
+  {
+    PrimeSieve ps;
+    ps.callbackPrimes(start, stop, callback);
+  }
+  catch (stop_primesieve&)
+  { }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
 }
 
 void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t), int threads)
 {
-  ParallelPrimeSieve pps;
-  pps.setNumThreads(threads);
-  pps.callbackPrimes(start, stop, callback);
+  try
+  {
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(threads);
+    pps.callbackPrimes(start, stop, callback);
+  }
+  catch (stop_primesieve&)
+  { }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
 }
 
 void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int), int threads)
 {
-  ParallelPrimeSieve pps;
-  pps.setNumThreads(threads);
-  pps.callbackPrimes(start, stop, callback);
+  try
+  {
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(threads);
+    pps.callbackPrimes(start, stop, callback);
+  }
+  catch (stop_primesieve&)
+  { }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
 }
 
 void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int))
 {
-  parallel_callback_primes(start, stop, callback, MAX_THREADS);
+  try
+  {
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(MAX_THREADS);
+    pps.callbackPrimes(start, stop, callback);
+  }
+  catch (stop_primesieve&)
+  { }
+  catch (std::exception& e)
+  {
+    std::cerr << "primesieve error: " << e.what() << std::endl;
+  }
 }
 
 uint64_t parallel_count_primes(uint64_t start, uint64_t stop, int threads)
