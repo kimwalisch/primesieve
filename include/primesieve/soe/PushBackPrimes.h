@@ -17,9 +17,10 @@
 
 #include "PrimeSieve.h"
 #include "PrimeSieveCallback.h"
-#include "stop_primesieve.h"
+#include "cancel_callback.h"
 
 #include <stdint.h>
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <vector>
@@ -89,13 +90,13 @@ public:
         start = stop + 1;
       }
     }
-    catch (stop_primesieve&) { }
+    catch (cancel_callback&) { }
   }
   void callback(uint64_t prime)
   {
     primes_.push_back(static_cast<T>(prime));
     if (--n_ == 0)
-      throw stop_primesieve();
+      throw cancel_callback();
   }
   private:
     PushBack_N_Primes(const PushBack_N_Primes&);

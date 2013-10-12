@@ -11,7 +11,7 @@
 #include <primesieve/soe/PrimeSieve.h>
 #include <primesieve/soe/PrimeSieveCallback.h>
 #include <primesieve/soe/primesieve_error.h>
-#include <primesieve/soe/stop_primesieve.h>
+#include <primesieve/soe/cancel_callback.h>
 #include <primesieve/soe/SieveOfEratosthenes.h>
 
 #include <stdint.h>
@@ -47,7 +47,7 @@ void NthPrime::findNthPrime(uint64_t n, uint64_t start, uint64_t stop)
     ps.callbackPrimes(stop + 1, maxStop, this);
     throw primesieve_error("nth prime is too large > 2^64 - 2^32 * 11");
   }
-  catch (stop_primesieve&) { }
+  catch (cancel_callback&) { }
 }
 
 uint64_t NthPrime::getNthPrime() const
@@ -60,7 +60,7 @@ void NthPrime::callback(uint64_t prime)
   if (--n_ == 0)
   {
     nthPrime_ = prime;
-    throw stop_primesieve();
+    throw cancel_callback();
   }
 }
 

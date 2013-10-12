@@ -49,7 +49,7 @@ SOE_HEADERS = \
   include\primesieve\soe\SieveOfEratosthenes-CALLBACK.h \
   include\primesieve\soe\SieveOfEratosthenes-inline.h \
   include\primesieve\soe\SieveOfEratosthenes.h \
-  include\primesieve\soe\stop_primesieve.h \
+  include\primesieve\soe\cancel_callback.h \
   include\primesieve\soe\toString.h \
   include\primesieve\soe\WheelFactorization.h
 

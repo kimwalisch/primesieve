@@ -1,5 +1,5 @@
 ///
-/// @file  stop_primesieve.h
+/// @file  cancel_callback.h
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -7,11 +7,11 @@
 /// file in the top level directory.
 ///
 
-#ifndef STOP_PRIMESIEVE_H
-#define STOP_PRIMESIEVE_H
+#ifndef CANCEL_CALLBACK_H
+#define CANCEL_CALLBACK_H
 
 #include <exception>
 
-class stop_primesieve : public std::exception { };
+class cancel_callback : public std::exception { };
 
 #endif

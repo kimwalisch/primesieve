@@ -156,7 +156,7 @@ void callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t>
     PrimeSieve ps;
     ps.callbackPrimes(start, stop, callback);
   }
-  catch (stop_primesieve&)
+  catch (cancel_callback&)
   { }
   catch (std::exception& e)
   {
@@ -172,7 +172,7 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<
     pps.setNumThreads(threads);
     pps.callbackPrimes(start, stop, callback);
   }
-  catch (stop_primesieve&)
+  catch (cancel_callback&)
   { }
   catch (std::exception& e)
   {
@@ -188,7 +188,7 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<
     pps.setNumThreads(threads);
     pps.callbackPrimes(start, stop, callback);
   }
-  catch (stop_primesieve&)
+  catch (cancel_callback&)
   { }
   catch (std::exception& e)
   {
@@ -418,7 +418,7 @@ void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
     PrimeSieve ps;
     ps.callbackPrimes(start, stop, callback);
   }
-  catch (stop_primesieve&)
+  catch (cancel_callback&)
   { }
   catch (std::exception& e)
   {
@@ -434,7 +434,7 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(ui
     pps.setNumThreads(threads);
     pps.callbackPrimes(start, stop, callback);
   }
-  catch (stop_primesieve&)
+  catch (cancel_callback&)
   { }
   catch (std::exception& e)
   {
@@ -450,7 +450,7 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(ui
     pps.setNumThreads(threads);
     pps.callbackPrimes(start, stop, callback);
   }
-  catch (stop_primesieve&)
+  catch (cancel_callback&)
   { }
   catch (std::exception& e)
   {
@@ -466,7 +466,7 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(ui
     pps.setNumThreads(MAX_THREADS);
     pps.callbackPrimes(start, stop, callback);
   }
-  catch (stop_primesieve&)
+  catch (cancel_callback&)
   { }
   catch (std::exception& e)
   {

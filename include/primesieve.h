@@ -25,7 +25,7 @@
 #include "primesieve/soe/prime_iterator.h"
 #include "primesieve/soe/PrimeSieveCallback.h"
 #include "primesieve/soe/PushBackPrimes.h"
-#include "primesieve/soe/stop_primesieve.h"
+#include "primesieve/soe/cancel_callback.h"
 
 #include <stdint.h>
 #include <vector>
