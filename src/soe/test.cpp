@@ -9,7 +9,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/ParallelPrimeSieve.h>
+#include <primesieve.h>
 
 #include <iostream>
 #include <iomanip>
@@ -156,13 +156,13 @@ void testRandomIntervals()
 /// (and PrimeSieve) objects produce correct results.
 /// The tests use up to 1 gigabyte of memory and take about
 /// 1 minute to complete on a quad core CPU from 2013.
-/// @return true  If no error occurred else false.
+/// @return 1 if success, 0 if error.
 ///
-bool test()
+int primesieve_test()
 {
-  cout << left;
   try
   {
+    cout << left;
     testPix();
     testBigPrimes();
     testRandomIntervals();
@@ -170,10 +170,10 @@ bool test()
   catch (exception& e)
   {
     cerr << endl << "Error: " << e.what() << endl;
-    return false;
+    return 0;
   }
   cout << "All tests passed successfully!" << endl;
-  return true;
+  return 1;
 }
 
 } // end namespace

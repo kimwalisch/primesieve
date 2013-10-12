@@ -8,8 +8,6 @@
 ///
 
 #include <primesieve.h>
-#include <primesieve/soe/prime_iterator.h>
-#include <primesieve/soe/primesieve_error.h>
 
 #include <algorithm>
 #include <cmath>
@@ -17,6 +15,8 @@
 #include <vector>
 
 namespace primesieve {
+
+std::string max_stop_string();
 
 prime_iterator::prime_iterator(uint64_t start)
 {
