@@ -17,6 +17,13 @@
 #include <iostream>
 #include <exception>
 
+namespace {
+
+/// Return -1 if any exception is caught
+const uint64_t ERROR_CODE = static_cast<uint64_t>(-1);
+
+}
+
 namespace primesieve {
 
 //////////////////////////////////////////////////////////////////////
@@ -25,10 +32,11 @@ namespace primesieve {
 
 uint64_t nth_prime(uint64_t n)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
-    result = nth_prime(n, 0);
+    PrimeSieve ps;
+    result = ps.nthPrime(n, 0);
   }
   catch (std::exception& e)
   {
@@ -39,10 +47,12 @@ uint64_t nth_prime(uint64_t n)
 
 uint64_t parallel_nth_prime(uint64_t n, uint64_t start)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
-    result = parallel_nth_prime(n, start, MAX_THREADS);
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(MAX_THREADS);
+    result = pps.nthPrime(n, start);
   }
   catch (std::exception& e)
   {
@@ -53,10 +63,12 @@ uint64_t parallel_nth_prime(uint64_t n, uint64_t start)
 
 uint64_t parallel_count_primes(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
-    result = parallel_count_primes(start, stop, MAX_THREADS);
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(MAX_THREADS);
+    result = pps.countPrimes(start, stop);
   }
   catch (std::exception& e)
   {
@@ -67,10 +79,12 @@ uint64_t parallel_count_primes(uint64_t start, uint64_t stop)
 
 uint64_t parallel_count_twins(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
-    result = parallel_count_twins(start, stop, MAX_THREADS);
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(MAX_THREADS);
+    result = pps.countTwins(start, stop);
   }
   catch (std::exception& e)
   {
@@ -81,10 +95,12 @@ uint64_t parallel_count_twins(uint64_t start, uint64_t stop)
 
 uint64_t parallel_count_triplets(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
-    result = parallel_count_triplets(start, stop, MAX_THREADS);
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(MAX_THREADS);
+    result = pps.countTriplets(start, stop);
   }
   catch (std::exception& e)
   {
@@ -95,10 +111,12 @@ uint64_t parallel_count_triplets(uint64_t start, uint64_t stop)
 
 uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
-    result = parallel_count_quadruplets(start, stop, MAX_THREADS);
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(MAX_THREADS);
+    result = pps.countQuadruplets(start, stop);
   }
   catch (std::exception& e)
   {
@@ -109,10 +127,12 @@ uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop)
 
 uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
-    result = parallel_count_quintuplets(start, stop, MAX_THREADS);
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(MAX_THREADS);
+    result = pps.countQuintuplets(start, stop);
   }
   catch (std::exception& e)
   {
@@ -123,10 +143,12 @@ uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop)
 
 uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
-    result = parallel_count_sextuplets(start, stop, MAX_THREADS);
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(MAX_THREADS);
+    result = pps.countSextuplets(start, stop);
   }
   catch (std::exception& e)
   {
@@ -137,10 +159,12 @@ uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop)
 
 uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
-    result = parallel_count_septuplets(start, stop, MAX_THREADS);
+    ParallelPrimeSieve pps;
+    pps.setNumThreads(MAX_THREADS);
+    result = pps.countSeptuplets(start, stop);
   }
   catch (std::exception& e)
   {
@@ -202,7 +226,7 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<
 
 uint64_t nth_prime(uint64_t n, uint64_t start)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     PrimeSieve ps;
@@ -217,7 +241,7 @@ uint64_t nth_prime(uint64_t n, uint64_t start)
 
 uint64_t count_primes(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     PrimeSieve ps;
@@ -232,7 +256,7 @@ uint64_t count_primes(uint64_t start, uint64_t stop)
 
 uint64_t count_twins(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     PrimeSieve ps;
@@ -247,7 +271,7 @@ uint64_t count_twins(uint64_t start, uint64_t stop)
 
 uint64_t count_triplets(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     PrimeSieve ps;
@@ -262,7 +286,7 @@ uint64_t count_triplets(uint64_t start, uint64_t stop)
 
 uint64_t count_quadruplets(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     PrimeSieve ps;
@@ -277,7 +301,7 @@ uint64_t count_quadruplets(uint64_t start, uint64_t stop)
 
 uint64_t count_quintuplets(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     PrimeSieve ps;
@@ -292,7 +316,7 @@ uint64_t count_quintuplets(uint64_t start, uint64_t stop)
 
 uint64_t count_sextuplets(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     PrimeSieve ps;
@@ -307,7 +331,7 @@ uint64_t count_sextuplets(uint64_t start, uint64_t stop)
 
 uint64_t count_septuplets(uint64_t start, uint64_t stop)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     PrimeSieve ps;
@@ -476,7 +500,7 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(ui
 
 uint64_t parallel_count_primes(uint64_t start, uint64_t stop, int threads)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     ParallelPrimeSieve pps;
@@ -492,7 +516,7 @@ uint64_t parallel_count_primes(uint64_t start, uint64_t stop, int threads)
 
 uint64_t parallel_count_twins(uint64_t start, uint64_t stop, int threads)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     ParallelPrimeSieve pps;
@@ -508,7 +532,7 @@ uint64_t parallel_count_twins(uint64_t start, uint64_t stop, int threads)
 
 uint64_t parallel_count_triplets(uint64_t start, uint64_t stop, int threads)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     ParallelPrimeSieve pps;
@@ -524,7 +548,7 @@ uint64_t parallel_count_triplets(uint64_t start, uint64_t stop, int threads)
 
 uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop, int threads)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     ParallelPrimeSieve pps;
@@ -540,7 +564,7 @@ uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop, int threads)
 
 uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop, int threads)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     ParallelPrimeSieve pps;
@@ -556,7 +580,7 @@ uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop, int threads)
 
 uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop, int threads)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     ParallelPrimeSieve pps;
@@ -572,7 +596,7 @@ uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop, int threads)
 
 uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop, int threads)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     ParallelPrimeSieve pps;
@@ -588,7 +612,7 @@ uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop, int threads)
 
 uint64_t parallel_nth_prime(uint64_t n, uint64_t start, int threads)
 {
-  uint64_t result = 0;
+  uint64_t result = ERROR_CODE;
   try
   {
     ParallelPrimeSieve pps;
