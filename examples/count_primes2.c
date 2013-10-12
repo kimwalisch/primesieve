@@ -1,5 +1,6 @@
-/// @example count_primes2.c
-/// This example shows how to count primes.
+/** @example count_primes2.c
+ *  C program that shows how to count primes.
+ */
 
 #include <primesieve-c.h>
 #include <stdint.h>
@@ -11,9 +12,9 @@ int main()
   printf("Primes below 1000 = %llu\n", count);
 
   // use multi-threading for large intervals
-  uint64_t stop = 1ull << 32;
+  uint64_t stop = 1000000000;
   count = parallel_count_primes(0, stop, MAX_THREADS);
-  printf("Primes below 2^32 = %llu\n", count);
+  printf("Primes below 10^9 = %llu\n", count);
 
   return 0;
 }
