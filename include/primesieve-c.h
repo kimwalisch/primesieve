@@ -21,6 +21,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum {
   /** Use all CPU cores for prime sieving. */
   MAX_THREADS
@@ -31,6 +35,13 @@ enum {
  *  @pre   start  <= 2^64 - 2^32 * 10.
  */
 uint64_t nth_prime(uint64_t n, uint64_t start);
+
+/** Find the nth prime.
+ *  @param start    Start nth prime search at this offset.
+ *  @param threads  Number of threads.
+ *  @pre   start    <= 2^64 - 2^32 * 10.
+ */
+uint64_t parallel_nth_prime(uint64_t n, uint64_t start, int threads);
 
 /** Count the primes within the interval [start, stop].
  *  @pre stop <= 2^64 - 2^32 * 10.
@@ -66,6 +77,48 @@ uint64_t count_sextuplets(uint64_t start, uint64_t stop);
  *  @pre stop <= 2^64 - 2^32 * 10.
  */
 uint64_t count_septuplets(uint64_t start, uint64_t stop);
+
+/** Count the primes within the interval [start, stop].
+ *  @param threads  Number of threads.
+ *  @pre   stop     <= 2^64 - 2^32 * 10.
+ */
+uint64_t parallel_count_primes(uint64_t start, uint64_t stop, int threads);
+
+/** Count the twin primes within the interval [start, stop].
+ *  @param threads  Number of threads.
+ *  @pre   stop     <= 2^64 - 2^32 * 10.
+ */
+uint64_t parallel_count_twins(uint64_t start, uint64_t stop, int threads);
+
+/** Count the prime triplets within the interval [start, stop].
+ *  @param threads  Number of threads.
+ *  @pre   stop     <= 2^64 - 2^32 * 10.
+ */
+uint64_t parallel_count_triplets(uint64_t start, uint64_t stop, int threads);
+
+/** Count the prime quadruplets within the interval [start, stop].
+ *  @param threads  Number of threads.
+ *  @pre   stop     <= 2^64 - 2^32 * 10.
+ */
+uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop, int threads);
+
+/** Count the prime quintuplets within the interval [start, stop].
+ *  @param threads  Number of threads.
+ *  @pre   stop     <= 2^64 - 2^32 * 10.
+ */
+uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop, int threads);
+
+/** Count the prime sextuplets within the interval [start, stop].
+ *  @param threads  Number of threads.
+ *  @pre   stop     <= 2^64 - 2^32 * 10.
+ */
+uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop, int threads);
+
+/** Count the prime septuplets within the interval [start, stop].
+ *  @param threads  Number of threads.
+ *  @pre   stop     <= 2^64 - 2^32 * 10.
+ */
+uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop, int threads);
 
 /** Print the primes within the interval [start, stop]
  *  to the standard output.
@@ -125,65 +178,20 @@ void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t pr
  */
 void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime, int thread_id), int threads);
 
-/** Find the nth prime.
- *  @param start    Start nth prime search at this offset.
- *  @param threads  Number of threads.
- *  @pre   start    <= 2^64 - 2^32 * 10.
- */
-uint64_t parallel_nth_prime(uint64_t n, uint64_t start, int threads);
-
-/** Count the primes within the interval [start, stop].
- *  @param threads  Number of threads.
- *  @pre   stop     <= 2^64 - 2^32 * 10.
- */
-uint64_t parallel_count_primes(uint64_t start, uint64_t stop, int threads);
-
-/** Count the twin primes within the interval [start, stop].
- *  @param threads  Number of threads.
- *  @pre   stop     <= 2^64 - 2^32 * 10.
- */
-uint64_t parallel_count_twins(uint64_t start, uint64_t stop, int threads);
-
-/** Count the prime triplets within the interval [start, stop].
- *  @param threads  Number of threads.
- *  @pre   stop     <= 2^64 - 2^32 * 10.
- */
-uint64_t parallel_count_triplets(uint64_t start, uint64_t stop, int threads);
-
-/** Count the prime quadruplets within the interval [start, stop].
- *  @param threads  Number of threads.
- *  @pre   stop     <= 2^64 - 2^32 * 10.
- */
-uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop, int threads);
-
-/** Count the prime quintuplets within the interval [start, stop].
- *  @param threads  Number of threads.
- *  @pre   stop     <= 2^64 - 2^32 * 10.
- */
-uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop, int threads);
-
-/** Count the prime sextuplets within the interval [start, stop].
- *  @param threads  Number of threads.
- *  @pre   stop     <= 2^64 - 2^32 * 10.
- */
-uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop, int threads);
-
-/** Count the prime septuplets within the interval [start, stop].
- *  @param threads  Number of threads.
- *  @pre   stop     <= 2^64 - 2^32 * 10.
- */
-uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop, int threads);
-
 /** Returns the largest valid stop number for primesieve.
- *  @return 2^64 - 2^32 * 10.
+ *  @return (2^64-1) - (2^32-1) * 10.
  */
-uint64_t max_stop();
+uint64_t primesieve_max_stop();
 
 /** Run extensive correctness tests.
  *  The tests last about one minute on a quad core CPU from
  *  2013 and use up to 1 gigabyte of memory.
- *  @return 0 if success, 1 if error.
+ *  @return 0 if success else 1.
  */
 int primesieve_test();
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif

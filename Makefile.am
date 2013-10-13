@@ -98,6 +98,7 @@ libprimesieve_la_SOURCES = \
 	src/soe/PrimeSieve-nthPrime.cpp \
 	src/soe/PrimeSieve.cpp \
 	src/soe/primesieve-api.cpp \
+	src/soe/primesieve-api-c.cpp \
 	src/soe/SieveOfEratosthenes.cpp \
 	src/soe/WheelFactorization.cpp \
 	src/soe/test.cpp \

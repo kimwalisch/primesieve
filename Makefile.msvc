@@ -10,7 +10,7 @@ INCPATH  = /I"include" /I"src\msvc_compat"
 LINK     = link /nologo
 OBJDIR   = obj
 
-SOE_OBJECTS = \
+PRIMESIEVE_OBJECTS = \
   $(OBJDIR)\EratBig.obj \
   $(OBJDIR)\EratMedium.obj \
   $(OBJDIR)\EratSmall.obj \
@@ -20,6 +20,7 @@ SOE_OBJECTS = \
   $(OBJDIR)\PrimeFinder.obj \
   $(OBJDIR)\PrimeGenerator.obj \
   $(OBJDIR)\primesieve-api.obj \
+  $(OBJDIR)\primesieve-api-c.obj \
   $(OBJDIR)\PrimeSieve-nthPrime.obj \
   $(OBJDIR)\PrimeSieve.obj \
   $(OBJDIR)\prime_iterator.obj \
@@ -27,7 +28,9 @@ SOE_OBJECTS = \
   $(OBJDIR)\WheelFactorization.obj \
   $(OBJDIR)\test.obj
 
-SOE_HEADERS = \
+PRIMESIEVE_HEADERS = \
+  include\primesieve.h \
+  include\primesieve-c.h \
   include\primesieve\soe\bits.h \
   include\primesieve\soe\config.h \
   include\primesieve\soe\EratBig.h \
@@ -116,10 +119,10 @@ clean:
 # Compilation rules
 #-----------------------------------------------------------------------------
 
-$(SOE_OBJECTS): src\soe\$(@B).cpp $(SOE_HEADERS)
+$(PRIMESIEVE_OBJECTS): src\soe\$(@B).cpp $(PRIMESIEVE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\soe\$(@B).cpp /Fo$@
 
-$(APP_OBJECTS): src\apps\console\$(@B).cpp $(SOE_HEADERS)
+$(APP_OBJECTS): src\apps\console\$(@B).cpp $(PRIMESIEVE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\apps\console\$(@B).cpp /Fo$@
 
 $(EXAMPLE_OBJECTS): examples\$(@B).cpp
@@ -140,7 +143,7 @@ bin_obj: lib $(APP_OBJECTS)
 
 lib: make_dir lib_obj openmp_note
 
-lib_obj: $(SOE_OBJECTS)
+lib_obj: $(PRIMESIEVE_OBJECTS)
 	lib.exe /nologo /OUT:$(TARGET).lib $**
 
 #-----------------------------------------------------------------------------
