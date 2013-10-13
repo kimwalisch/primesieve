@@ -40,8 +40,7 @@ namespace primesieve
     MAX_THREADS
   };
 
-  /// Generate the primes <= stop and store
-  /// them in the primes vector.
+  /// Store the primes <= stop in the primes vector.
   /// @pre stop <= 2^64 - 2^32 * 10.
   ///
   template <typename T>
@@ -54,8 +53,8 @@ namespace primesieve
     }
   }
 
-  /// Generate the primes within the interval [start, stop]
-  /// and store them in the primes vector.
+  /// Store the primes within the interval [start, stop]
+  /// in the primes vector.
   /// @pre stop <= 2^64 - 2^32 * 10.
   ///
   template <typename T>
@@ -68,7 +67,7 @@ namespace primesieve
     }
   }
 
-  /// Generate the first n primes and store them in the primes vector.
+  /// Store the first n primes in the primes vector.
   template <typename T>
   inline void generate_n_primes(uint64_t n, std::vector<T>* primes)
   {
@@ -79,8 +78,7 @@ namespace primesieve
     }
   }
 
-  /// Generate the first n primes >= start and store them
-  /// in the primes vector.
+  /// Store the first n primes >= start in the primes vector.
   /// @pre start <= 2^64 - 2^32 * 10.
   ///
   template <typename T>

@@ -22,6 +22,5 @@
 ///
 /// @li @link primesieve.h primesieve.h @endlink - C++ API.
 /// @li @link primesieve-c.h primesieve-c.h @endlink - C API.
-/// @li @link store_primes_in_vector.cpp store_primes_in_vector.cpp @endlink - Example that shows how to store primes in a std::vector.
 /// @li @link primesieve::iterator primesieve::iterator @endlink - Iterate over primes using next_prime() or previous_prime().
 ///
