@@ -8,6 +8,7 @@
 /// file in the top level directory.
 ///
 
+#include <primesieve/soe/config.h>
 #include <primesieve.h>
 #include <primesieve-c.h>
 
@@ -19,7 +20,7 @@
 
 namespace {
 
-/// Convert raw pointer to std::vector
+/// Convert pimpl pointer to std::vector
 std::vector<uint64_t>& to_vector(uint64_t* primes_pimpl)
 {
   std::vector<uint64_t>* primes = reinterpret_cast<std::vector<uint64_t>*>(primes_pimpl);
@@ -49,16 +50,17 @@ void generate_primes(primesieve_iterator* pi, uint64_t start, uint64_t stop)
 ///
 uint64_t get_interval_size(primesieve_iterator* pi, uint64_t n)
 {
-  pi->count_++;
-  uint64_t KILOBYTE = 1 << 10;
-  uint64_t MEGABYTE = 1 << 20;
+  using soe::config::ITERATOR_CACHE_SMALL;
+  using soe::config::ITERATOR_CACHE_MEDIUM;
+  using soe::config::ITERATOR_CACHE_LARGE;
 
+  pi->count_++;
   double x = std::max(static_cast<double>(n), 10.0);
   double sqrtx = std::sqrt(x);
   uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (std::log(sqrtx) - 1));
 
-  uint64_t max_primes = (MEGABYTE * 512) / sizeof(uint64_t);
-  uint64_t primes = ((pi->count_ < 10) ? (KILOBYTE * 32) : (MEGABYTE * 4)) / sizeof(uint64_t);
+  uint64_t max_primes = ITERATOR_CACHE_LARGE / sizeof(uint64_t);
+  uint64_t primes = ((pi->count_ < 10) ? ITERATOR_CACHE_SMALL : ITERATOR_CACHE_MEDIUM) / sizeof(uint64_t);
   primes = std::min(std::max(primes, sqrtx_primes), max_primes);
 
   return static_cast<uint64_t>(primes * std::log(x));

@@ -7,6 +7,7 @@
 /// file in the top level directory.
 ///
 
+#include <primesieve/soe/config.h>
 #include <primesieve.h>
 
 #include <algorithm>
@@ -99,16 +100,17 @@ void iterator::generate_previous_primes()
 ///
 uint64_t iterator::get_interval_size(uint64_t n)
 {
-  count_++;
-  const uint64_t KILOBYTE = 1 << 10;
-  const uint64_t MEGABYTE = 1 << 20;
+  using soe::config::ITERATOR_CACHE_SMALL;
+  using soe::config::ITERATOR_CACHE_MEDIUM;
+  using soe::config::ITERATOR_CACHE_LARGE;
 
+  count_++;
   double x = std::max(static_cast<double>(n), 10.0);
   double sqrtx = std::sqrt(x);
   uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (std::log(sqrtx) - 1));
 
-  uint64_t max_primes = (MEGABYTE * 512) / sizeof(uint64_t);
-  uint64_t primes = ((count_ < 10) ? (KILOBYTE * 32) : (MEGABYTE * 4)) / sizeof(uint64_t);
+  uint64_t max_primes = ITERATOR_CACHE_LARGE / sizeof(uint64_t);
+  uint64_t primes = ((count_ < 10) ? ITERATOR_CACHE_SMALL : ITERATOR_CACHE_MEDIUM) / sizeof(uint64_t);
   primes = std::min(std::max(primes, sqrtx_primes), max_primes);
 
   return static_cast<uint64_t>(primes * std::log(x));

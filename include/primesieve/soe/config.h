@@ -86,7 +86,22 @@ enum {
   /// EratBig allocates MEMORY_PER_ALLOC bytes of new memory each
   /// time it needs more buckets. Default = 4 megabytes.
   ///
-  MEMORY_PER_ALLOC = (1 << 20) * 4
+  MEMORY_PER_ALLOC = (1 << 20) * 4,
+
+  /// primesieve::iterator objects cache ITERATOR_CACHE_SMALL bytes
+  /// if a small number of new primes is generated.
+  //
+  ITERATOR_CACHE_SMALL = (1 << 10) * 32,
+
+  /// primesieve::iterator objects cache ITERATOR_CACHE_MEDIUM bytes
+  /// if a medium number of new primes is generated.
+  //
+  ITERATOR_CACHE_MEDIUM = (1 << 20) * 4,
+
+  /// primesieve::iterator objects cache ITERATOR_CACHE_LARGE bytes
+  /// if a large number of new primes is generated.
+  //
+  ITERATOR_CACHE_LARGE = (1 << 30) * 1
 };
 
   /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
