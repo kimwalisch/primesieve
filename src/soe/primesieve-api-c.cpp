@@ -406,7 +406,7 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(ui
 //                        Other functions
 //////////////////////////////////////////////////////////////////////
 
-uint64_t primesieve_max_stop()
+uint64_t max_stop()
 {
   return primesieve::max_stop();
 }

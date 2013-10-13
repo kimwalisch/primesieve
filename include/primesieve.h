@@ -1,7 +1,7 @@
 ///
 /// @file   primesieve.h
-/// @brief  C++ API of primesieve. primesieve is a library fast for
-///         prime number generation. This header contains all of
+/// @brief  primesieve C++ API. primesieve is a library for fast prime
+///         number generation. This header contains all of
 ///         primesieve's function declarations and must be included in
 ///         your C++ source code in order to use primesieve.
 ///

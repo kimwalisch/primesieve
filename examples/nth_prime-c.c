@@ -1,6 +1,5 @@
-/** @example nth_prime2.c
- *  C program that finds the nth prime.
- */
+/** @example nth_prime-c.c
+ *  C program that finds the nth prime. */
 
 #include <primesieve-c.h>
 #include <stdint.h>

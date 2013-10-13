@@ -1,14 +1,28 @@
 PROJECT_NAME           = "primesieve"
 PROJECT_NUMBER         = 5.0
-USE_MDFILE_AS_MAINPAGE =
+INPUT                  = mainpage.dox \
+                         examples/callback_primes.cpp \
+                         examples/count_primes.cpp \
+                         examples/count_primes-c.c \
+                         examples/next_prime.cpp \
+                         examples/next_prime-c.c \
+                         examples/nth_prime.cpp \
+                         examples/nth_prime-c.c \
+                         examples/previous_prime.cpp \
+                         examples/store_primes_in_vector.cpp \
+                         include/primesieve.h \
+                         include/primesieve-c.h \
+                         include/primesieve/soe/prime_iterator.h \
+                         include/primesieve/soe/primesieve_iterator-c.h
+HTML_INDEX_NUM_ENTRIES = 3
 JAVADOC_AUTOBRIEF      = YES
 MULTILINE_CPP_IS_BRIEF = NO
-HTML_INDEX_NUM_ENTRIES = 3
-EXTRACT_ALL            = NO
 SHOW_NAMESPACES        = YES
 VERBATIM_HEADERS       = NO
-INPUT                  = mainpage.dox examples/callback_primes.cpp examples/count_primes.cpp examples/count_primes2.c examples/next_prime.cpp examples/nth_prime.cpp examples/nth_prime2.c examples/previous_prime.cpp examples/store_primes_in_vector.cpp include/primesieve.h include/primesieve-c.h include/primesieve/soe/prime_iterator.h
+EXTRACT_ALL            = NO
+EXTRACT_STATIC         = YES
 FILE_PATTERNS          = *.cpp *.c *.h
+EXCLUDE_SYMBOLS        = generate_next_primes generate_previous_primes
 RECURSIVE              = NO
 EXAMPLE_PATH           = examples
 EXAMPLE_PATTERNS       = *.cpp *.c

@@ -1,9 +1,9 @@
 /**
  *  @file   primesieve-c.h
- *  @brief  C API of primesieve. primesieve is a library for fast
- *          prime number generation. This header contains all of
- *          primesieve's function declarations and must be included in
- *          your C source code in order to use primesieve.
+ *  @brief  primesieve C API. primesieve is a library for fast prime
+ *          number generation. This header contains all of
+ *          primesieve's function declarations and must be included
+ *          in your C source code in order to use primesieve.
  * 
  *  Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
  * 
@@ -19,6 +19,7 @@
 #define PRIMESIEVE_VERSION_MINOR 0
 #define PRIMESIEVE_YEAR "2013"
 
+#include <primesieve/soe/primesieve_iterator-c.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -181,7 +182,7 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(ui
 /** Returns the largest valid stop number for primesieve.
  *  @return (2^64-1) - (2^32-1) * 10.
  */
-uint64_t primesieve_max_stop();
+uint64_t max_stop();
 
 /** Run extensive correctness tests.
  *  The tests last about one minute on a quad core CPU from
