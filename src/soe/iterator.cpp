@@ -19,13 +19,13 @@ namespace primesieve {
 
 iterator::iterator(uint64_t start)
 {
-  skip_to(start);
+  skipto(start);
 }
 
-void iterator::skip_to(uint64_t start)
+void iterator::skipto(uint64_t start)
 {
   first_ = true;
-  adjust_skip_to_ = false;
+  adjust_skipto_ = false;
   i_ = 0;
   count_ = 0;
   start_ = start;
@@ -41,7 +41,7 @@ void iterator::skip_to(uint64_t start)
        primes_.front() <= start_ &&
        primes_.back() >= start_)
   {
-    adjust_skip_to_ = true;
+    adjust_skipto_ = true;
     i_ = std::lower_bound(primes_.begin(), primes_.end(), start_) - primes_.begin();
   }
 }
@@ -56,9 +56,9 @@ void iterator::generate_primes(uint64_t start, uint64_t stop)
 
 void iterator::generate_next_primes()
 {
-  if (adjust_skip_to_)
+  if (adjust_skipto_)
   {
-    adjust_skip_to_ = false;
+    adjust_skipto_ = false;
     if (i_ > 0 && primes_[i_ - 1] >= start_)
       i_--;
   }
@@ -75,9 +75,9 @@ void iterator::generate_next_primes()
 
 void iterator::generate_previous_primes()
 {
-  if (adjust_skip_to_)
+  if (adjust_skipto_)
   {
-    adjust_skip_to_ = false;
+    adjust_skipto_ = false;
     if (i_ > 0 && primes_[i_] > start_)
       i_--;
   }

@@ -42,7 +42,7 @@ public:
   ///               or previous_prime() will return start.
   /// @pre          start <= 2^64 - 2^32 * 10
   ///
-  void skip_to(uint64_t start);
+  void skipto(uint64_t start);
 
   /// Get the current prime.
   uint64_t prime()
@@ -77,7 +77,7 @@ private:
   uint64_t start_;
   uint64_t count_;
   bool first_;
-  bool adjust_skip_to_;
+  bool adjust_skipto_;
   uint64_t get_interval_size(uint64_t);
   void generate_primes(uint64_t, uint64_t);
   void generate_next_primes();
