@@ -71,7 +71,7 @@ int main()
   // store the primes below 1000
   primesieve::generate_primes(1000, &primes);
 
-  primesieve::prime_iterator pi;
+  primesieve::iterator pi;
   // iterate over the primes below 1000
   while (pi.next_prime() < 1000)
     std::cout << pi.prime() << std::endl;

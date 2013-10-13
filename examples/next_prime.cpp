@@ -1,12 +1,12 @@
 /// @example next_prime.cpp
-/// Iterate over primes using a prime_iterator object.
+/// Iterate over primes using a primesieve::iterator object.
 
 #include <primesieve.h>
 #include <iostream>
 
 int main()
 {
-  primesieve::prime_iterator pi;
+  primesieve::iterator pi;
   uint64_t sum = 0;
 
   // iterate over primes below 10^10

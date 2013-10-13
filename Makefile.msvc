@@ -23,7 +23,7 @@ PRIMESIEVE_OBJECTS = \
   $(OBJDIR)\primesieve-api-c.obj \
   $(OBJDIR)\PrimeSieve-nthPrime.obj \
   $(OBJDIR)\PrimeSieve.obj \
-  $(OBJDIR)\prime_iterator.obj \
+  $(OBJDIR)\iterator.obj \
   $(OBJDIR)\SieveOfEratosthenes.obj \
   $(OBJDIR)\WheelFactorization.obj \
   $(OBJDIR)\test.obj
@@ -47,7 +47,7 @@ PRIMESIEVE_HEADERS = \
   include\primesieve\soe\PrimeSieve.h \
   include\primesieve\soe\PrimeSieveCallback.h \
   include\primesieve\soe\primesieve_error.h \
-  include\primesieve\soe\prime_iterator.h \
+  include\primesieve\soe\iterator.h \
   include\primesieve\soe\PushBackPrimes.h \
   include\primesieve\soe\SieveOfEratosthenes-CALLBACK.h \
   include\primesieve\soe\SieveOfEratosthenes-inline.h \

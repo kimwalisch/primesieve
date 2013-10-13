@@ -74,7 +74,7 @@ otherinclude_HEADERS = \
 	include/primesieve/soe/ParallelPrimeSieve.h \
 	include/primesieve/soe/primesieve_error.h \
 	include/primesieve/soe/PrimeSieve.h \
-	include/primesieve/soe/prime_iterator.h \
+	include/primesieve/soe/iterator.h \
 	include/primesieve/soe/primesieve_iterator-c.h \
 	include/primesieve/soe/PrimeSieveCallback.h \
 	include/primesieve/soe/PushBackPrimes.h \
@@ -99,7 +99,7 @@ libprimesieve_la_SOURCES = \
 	src/soe/PreSieve.cpp \
 	src/soe/PrimeFinder.cpp \
 	src/soe/PrimeGenerator.cpp \
-	src/soe/prime_iterator.cpp \
+	src/soe/iterator.cpp \
 	src/soe/primesieve_iterator-c.cpp \
 	src/soe/PrimeSieve-nthPrime.cpp \
 	src/soe/PrimeSieve.cpp \

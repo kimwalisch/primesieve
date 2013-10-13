@@ -1,5 +1,5 @@
 ///
-/// @file  prime_iterator.cpp
+/// @file  iterator.cpp
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -17,12 +17,12 @@
 
 namespace primesieve {
 
-prime_iterator::prime_iterator(uint64_t start)
+iterator::iterator(uint64_t start)
 {
   skip_to(start);
 }
 
-void prime_iterator::skip_to(uint64_t start)
+void iterator::skip_to(uint64_t start)
 {
   first_ = true;
   adjust_skip_to_ = false;
@@ -46,7 +46,7 @@ void prime_iterator::skip_to(uint64_t start)
   }
 }
 
-void prime_iterator::generate_primes(uint64_t start, uint64_t stop)
+void iterator::generate_primes(uint64_t start, uint64_t stop)
 {
   primes_.clear();
   primesieve::generate_primes(start, stop, &primes_);
@@ -54,7 +54,7 @@ void prime_iterator::generate_primes(uint64_t start, uint64_t stop)
     primes_.push_back(0);
 }
 
-void prime_iterator::generate_next_primes()
+void iterator::generate_next_primes()
 {
   if (adjust_skip_to_)
   {
@@ -73,7 +73,7 @@ void prime_iterator::generate_next_primes()
   first_ = false;
 }
 
-void prime_iterator::generate_previous_primes()
+void iterator::generate_previous_primes()
 {
   if (adjust_skip_to_)
   {
@@ -97,7 +97,7 @@ void prime_iterator::generate_previous_primes()
 /// Calculate an interval size that ensures a good load balance.
 /// @param n  Start or stop number.
 ///
-uint64_t prime_iterator::get_interval_size(uint64_t n)
+uint64_t iterator::get_interval_size(uint64_t n)
 {
   count_++;
   const uint64_t KILOBYTE = 1 << 10;

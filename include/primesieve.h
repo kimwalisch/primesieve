@@ -22,7 +22,7 @@
 #include "primesieve/soe/PrimeSieve.h"
 #include "primesieve/soe/ParallelPrimeSieve.h"
 #include "primesieve/soe/primesieve_error.h"
-#include "primesieve/soe/prime_iterator.h"
+#include "primesieve/soe/iterator.h"
 #include "primesieve/soe/PrimeSieveCallback.h"
 #include "primesieve/soe/PushBackPrimes.h"
 #include "primesieve/soe/cancel_callback.h"

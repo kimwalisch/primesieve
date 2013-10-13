@@ -75,10 +75,10 @@ C++ classes
   WheelFactorization.cpp). EratBig is optimized for big sieving
   primes that have less than one multiple per segment.
 
-* prime_iterator
-  The prime_iterator class has been introduced in primesieve-5.0
-  and allows to easily iterate over primes. It provides next_prime()
-  and previous_prime() methods.
+* iterator
+  The iterator class has been introduced in primesieve-5.0 and allows
+  to easily iterate over primes. It provides next_prime() and
+  previous_prime() methods.
 
 Other files
 -----------
