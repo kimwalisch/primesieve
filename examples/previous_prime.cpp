@@ -7,7 +7,7 @@
 int main()
 {
   primesieve::iterator pi;
-  pi.skip_to(2000);
+  pi.skipto(2000);
 
   // backwards print the primes between 1000 and 2000  
   while (pi.previous_prime() > 1000)
