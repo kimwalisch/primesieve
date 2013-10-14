@@ -100,9 +100,9 @@ void iterator::generate_previous_primes()
 ///
 uint64_t iterator::get_interval_size(uint64_t n)
 {
-  using soe::config::ITERATOR_CACHE_SMALL;
-  using soe::config::ITERATOR_CACHE_MEDIUM;
-  using soe::config::ITERATOR_CACHE_LARGE;
+  using config::ITERATOR_CACHE_SMALL;
+  using config::ITERATOR_CACHE_MEDIUM;
+  using config::ITERATOR_CACHE_LARGE;
 
   count_++;
   double x = std::max(static_cast<double>(n), 10.0);

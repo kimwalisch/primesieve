@@ -45,7 +45,7 @@ namespace soe {
 
 /// byte_t must be unsigned in primesieve
 typedef unsigned char byte_t;
-typedef unsigned int  uint_t;
+typedef unsigned int uint_t;
 
 enum {
   /// SieveOfEratosthenes objects use a bit array with 30 numbers per
@@ -55,7 +55,10 @@ enum {
   NUMBERS_PER_BYTE = 30
 };
 
+} // namespace soe
+
 namespace config {
+
 enum {
   /// Default sieve size in kilobytes. Set SIEVESIZE to your CPUs L1
   /// data cache size to get the best performance.
@@ -132,6 +135,5 @@ enum {
   const uint64_t MAX_THREAD_INTERVAL = static_cast<uint64_t>(2e10);
 
 } // namespace config
-} // namespace soe
 
 #endif

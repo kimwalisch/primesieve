@@ -50,9 +50,9 @@ void generate_primes(primesieve_iterator* pi, uint64_t start, uint64_t stop)
 ///
 uint64_t get_interval_size(primesieve_iterator* pi, uint64_t n)
 {
-  using soe::config::ITERATOR_CACHE_SMALL;
-  using soe::config::ITERATOR_CACHE_MEDIUM;
-  using soe::config::ITERATOR_CACHE_LARGE;
+  using config::ITERATOR_CACHE_SMALL;
+  using config::ITERATOR_CACHE_MEDIUM;
+  using config::ITERATOR_CACHE_LARGE;
 
   pi->count_++;
   double x = std::max(static_cast<double>(n), 10.0);
