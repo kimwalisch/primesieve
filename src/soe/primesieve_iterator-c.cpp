@@ -20,29 +20,14 @@
 
 namespace {
 
+/// primesieve_iterator returns UINT64_MAX for errors
+const uint64_t ERROR_CODE = std::numeric_limits<uint64_t>::max();
+
 /// Convert pimpl pointer to std::vector
 std::vector<uint64_t>& to_vector(uint64_t* primes_pimpl)
 {
   std::vector<uint64_t>* primes = reinterpret_cast<std::vector<uint64_t>*>(primes_pimpl);
   return *primes;
-}
-
-/// Generate the primes inside [start, stop] and
-/// store them in the primes vector.
-///
-void generate_primes(primesieve_iterator* pi, uint64_t start, uint64_t stop)
-{
-  std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
-  primes.clear();
-  primesieve::generate_primes(start, stop, &primes);
-  if (primes.empty())
-  {
-    uint64_t ERROR = std::numeric_limits<uint64_t>::max();
-    primes.resize(1024, ERROR);
-    errno = EDOM;
-  }
-  pi->primes_ = &primes.front();
-  pi->size_ = primes.size();
 }
 
 /// Calculate an interval size that ensures a good load balance.
@@ -66,34 +51,31 @@ uint64_t get_interval_size(primesieve_iterator* pi, uint64_t n)
   return static_cast<uint64_t>(primes * std::log(x));
 }
 
-} // end namespace
-
-void primesieve_skipto(primesieve_iterator* pi, uint64_t start)
+/// Generate the primes inside [start, stop] and
+/// store them in the primes vector.
+///
+void generate_primes(primesieve_iterator* pi, uint64_t start, uint64_t stop)
 {
-  pi->first_ = true;
-  pi->adjust_skipto_ = false;
-  pi->i_ = 0;
-  pi->count_ = 0;
-  pi->start_ = start;
-
-  if (pi->start_ > max_stop())
-  {
-    generate_primes(pi, /* start = */ 0, /* stop = */ 0);
-    pi->i_ = pi->size_ / 2;
-    pi->first_ = false;
-    return;
-  }
-
   std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
 
-  if (!primes.empty() &&
-       primes.front() <= pi->start_ &&
-       primes.back()  >= pi->start_)
+  if (primes.empty() || primes[0] != ERROR_CODE)
   {
-    pi->adjust_skipto_ = true;
-    pi->i_ = std::lower_bound(primes.begin(), primes.end(), pi->start_) - primes.begin();
+    try {
+      primes.clear();
+      primesieve::generate_primes(start, stop, &primes);
+    }
+    catch (std::exception&) { }
   }
+  if (primes.empty())
+  {
+    primes.resize(64, ERROR_CODE);
+    errno = EDOM;
+  }
+  pi->primes_ = &primes[0];
+  pi->size_    = primes.size();
 }
+
+} // end anonymous namespace
 
 /// C constructor
 void primesieve_init(primesieve_iterator* pi)
@@ -107,6 +89,28 @@ void primesieve_destroy(primesieve_iterator* pi)
 {
   std::vector<uint64_t>* primes = &to_vector(pi->primes_pimpl_);
   delete primes;
+}
+
+/// Set primesieve_iterator to start
+void primesieve_skipto(primesieve_iterator* pi, uint64_t start)
+{
+  pi->first_ = true;
+  pi->adjust_skipto_ = false;
+  pi->i_ = 0;
+  pi->count_ = 0;
+  pi->start_ = start;
+
+  std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
+
+  if (!primes.empty() &&
+       primes.front() <= pi->start_ &&
+       primes.back()  >= pi->start_)
+  {
+    pi->adjust_skipto_ = true;
+    pi->i_ = std::lower_bound(primes.begin(), primes.end(), pi->start_) - primes.begin();
+  }
+  else
+    primes.clear();
 }
 
 /// Generate new next primes

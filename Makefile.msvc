@@ -5,7 +5,7 @@
 
 TARGET   = primesieve
 CXX      = cl /nologo
-CXXFLAGS = /W2 /O2 /EHsc
+CXXFLAGS = /W4 /O2 /EHsc
 INCPATH  = /I"include" /I"src\msvc_compat"
 LINK     = link /nologo
 OBJDIR   = obj
@@ -19,6 +19,7 @@ PRIMESIEVE_OBJECTS = \
   $(OBJDIR)\PreSieve.obj \
   $(OBJDIR)\PrimeFinder.obj \
   $(OBJDIR)\PrimeGenerator.obj \
+  $(OBJDIR)\primesieve_iterator-c.obj \
   $(OBJDIR)\primesieve-api.obj \
   $(OBJDIR)\primesieve-api-c.obj \
   $(OBJDIR)\PrimeSieve-nthPrime.obj \
