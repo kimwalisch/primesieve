@@ -72,7 +72,7 @@ void generate_primes(primesieve_iterator* pi, uint64_t start, uint64_t stop)
     errno = EDOM;
   }
   pi->primes_ = &primes[0];
-  pi->size_    = primes.size();
+  pi->size_   =  primes.size();
 }
 
 } // end anonymous namespace
