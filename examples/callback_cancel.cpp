@@ -22,7 +22,7 @@ int main()
 {
   try
   {
-    primesieve::callback_primes(0, 999999999, callback);
+    primesieve::callback_primes(0, 1000000000, callback);
   }
   catch (cancel_callback&) { }
   return 0;
