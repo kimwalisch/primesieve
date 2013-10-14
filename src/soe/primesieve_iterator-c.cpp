@@ -1,6 +1,6 @@
 ///
 /// @file   primesieve_iterator-c.cpp
-/// @brief  C binding primesieve iterator.
+/// @brief  C port of primesieve::iterator.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
