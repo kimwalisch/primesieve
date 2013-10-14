@@ -91,7 +91,7 @@ Other files
   This file contains the implementations of the functions declared
   in include/primesieve.h.
 
-* config.h
+* include/primesieve/soe/config.h
   Contains compile time constants that set the size of various
   arrays and limits within primesieve. You can set these constants
   according to your CPU type to get the best performance.
