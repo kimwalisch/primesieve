@@ -82,7 +82,7 @@ void primesieve_init(primesieve_iterator* pi)
 }
 
 /// C destructor
-void primesieve_destroy(primesieve_iterator* pi)
+void primesieve_free(primesieve_iterator* pi)
 {
   std::vector<uint64_t>* primes = &to_vector(pi->primes_pimpl_);
   delete primes;
