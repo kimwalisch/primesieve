@@ -45,6 +45,8 @@ void iterator::skipto(uint64_t start)
     adjust_skipto_ = true;
     i_ = std::lower_bound(primes_.begin(), primes_.end(), start_) - primes_.begin();
   }
+  else
+    primes_.clear();
 }
 
 void iterator::generate_primes(uint64_t start, uint64_t stop)
