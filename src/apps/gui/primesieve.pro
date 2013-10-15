@@ -28,10 +28,10 @@ SOURCES += \
   src/PrimeSieveProcess.cpp
 
 HEADERS += \
-  src/ExpressionParser.h \
-  src/PrimeSieveGUI.h \
-  src/PrimeSieveGUI_const.h \
-  src/PrimeSieveProcess.h
+  src/ExpressionParser.hpp \
+  src/PrimeSieveGUI.hpp \
+  src/PrimeSieveGUI_const.hpp \
+  src/PrimeSieveProcess.hpp
 
 # ---------------------------------------------------------
 # Sieve of Eratosthenes sources (src/soe)

@@ -66,19 +66,19 @@ store_primes_in_vector_SOURCES = examples/store_primes_in_vector.cpp
 endif
 
 include_HEADERS = \
-	include/primesieve.h \
+	include/primesieve.hpp \
 	include/primesieve-c.h
 
 otherincludedir = $(includedir)/primesieve/soe
 otherinclude_HEADERS = \
-	include/primesieve/soe/ParallelPrimeSieve.h \
-	include/primesieve/soe/primesieve_error.h \
-	include/primesieve/soe/PrimeSieve.h \
-	include/primesieve/soe/iterator.h \
+	include/primesieve/soe/ParallelPrimeSieve.hpp \
+	include/primesieve/soe/primesieve_error.hpp \
+	include/primesieve/soe/PrimeSieve.hpp \
+	include/primesieve/soe/iterator.hpp \
 	include/primesieve/soe/primesieve_iterator-c.h \
-	include/primesieve/soe/PrimeSieveCallback.h \
-	include/primesieve/soe/PushBackPrimes.h \
-	include/primesieve/soe/cancel_callback.h
+	include/primesieve/soe/PrimeSieveCallback.hpp \
+	include/primesieve/soe/PushBackPrimes.hpp \
+	include/primesieve/soe/cancel_callback.hpp
 
 EXTRA_DIST = \
 	Doxyfile \
@@ -108,27 +108,27 @@ libprimesieve_la_SOURCES = \
 	src/soe/SieveOfEratosthenes.cpp \
 	src/soe/WheelFactorization.cpp \
 	src/soe/test.cpp \
-	include/primesieve/soe/bits.h \
-	include/primesieve/soe/config.h \
-	include/primesieve/soe/EratBig.h \
-	include/primesieve/soe/EratMedium.h \
-	include/primesieve/soe/EratSmall.h \
-	include/primesieve/soe/imath.h \
-	include/primesieve/soe/littleendian_cast.h \
-	include/primesieve/soe/ParallelPrimeSieve-lock.h \
-	include/primesieve/soe/PreSieve.h \
-	include/primesieve/soe/PrimeFinder.h \
-	include/primesieve/soe/PrimeGenerator.h \
-	include/primesieve/soe/PrimeSieve-lock.h \
-	include/primesieve/soe/SieveOfEratosthenes.h \
-	include/primesieve/soe/SieveOfEratosthenes-CALLBACK.h \
-	include/primesieve/soe/SieveOfEratosthenes-inline.h \
-	include/primesieve/soe/toString.h \
-	include/primesieve/soe/WheelFactorization.h
+	include/primesieve/soe/bits.hpp \
+	include/primesieve/soe/config.hpp \
+	include/primesieve/soe/EratBig.hpp \
+	include/primesieve/soe/EratMedium.hpp \
+	include/primesieve/soe/EratSmall.hpp \
+	include/primesieve/soe/imath.hpp \
+	include/primesieve/soe/littleendian_cast.hpp \
+	include/primesieve/soe/ParallelPrimeSieve-lock.hpp \
+	include/primesieve/soe/PreSieve.hpp \
+	include/primesieve/soe/PrimeFinder.hpp \
+	include/primesieve/soe/PrimeGenerator.hpp \
+	include/primesieve/soe/PrimeSieve-lock.hpp \
+	include/primesieve/soe/SieveOfEratosthenes.hpp \
+	include/primesieve/soe/SieveOfEratosthenes-CALLBACK.hpp \
+	include/primesieve/soe/SieveOfEratosthenes-inline.hpp \
+	include/primesieve/soe/toString.hpp \
+	include/primesieve/soe/WheelFactorization.hpp
 
 primesieve_SOURCES = \
 	src/apps/console/main.cpp \
 	src/apps/console/help.cpp \
 	src/apps/console/cmdoptions.cpp \
-	src/apps/console/cmdoptions.h \
-	src/apps/console/ExpressionParser.h
+	src/apps/console/cmdoptions.hpp \
+	src/apps/console/ExpressionParser.hpp

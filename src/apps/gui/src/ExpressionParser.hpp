@@ -1,5 +1,5 @@
 ///
-/// @file   ExpressionParser.h
+/// @file   ExpressionParser.hpp
 /// @brief  Simple C++ operator precedence parser with infix notation
 ///         for integer arithmetic expressions.
 /// @see    http://expressionparser.googlecode.com

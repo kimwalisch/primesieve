@@ -1,5 +1,5 @@
 ///
-/// @file   ParallelPrimeSieve.h
+/// @file   ParallelPrimeSieve.hpp
 /// @brief  The ParallelPrimeSieve class provides an easy API for
 ///         multi-threaded prime sieving.
 ///
@@ -12,7 +12,7 @@
 #ifndef PARALLELPRIMESIEVE_H
 #define PARALLELPRIMESIEVE_H
 
-#include "PrimeSieve.h"
+#include "PrimeSieve.hpp"
 #include <stdint.h>
 
 /// ParallelPrimeSieve sieves primes in parallel, it is

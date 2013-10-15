@@ -8,14 +8,14 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/config.h>
-#include <primesieve/soe/SieveOfEratosthenes.h>
-#include <primesieve/soe/PreSieve.h>
-#include <primesieve/soe/EratSmall.h>
-#include <primesieve/soe/EratMedium.h>
-#include <primesieve/soe/EratBig.h>
-#include <primesieve/soe/imath.h>
-#include <primesieve/soe/primesieve_error.h>
+#include <primesieve/soe/config.hpp>
+#include <primesieve/soe/SieveOfEratosthenes.hpp>
+#include <primesieve/soe/PreSieve.hpp>
+#include <primesieve/soe/EratSmall.hpp>
+#include <primesieve/soe/EratMedium.hpp>
+#include <primesieve/soe/EratBig.hpp>
+#include <primesieve/soe/imath.hpp>
+#include <primesieve/soe/primesieve_error.hpp>
 
 #include <stdint.h>
 #include <exception>

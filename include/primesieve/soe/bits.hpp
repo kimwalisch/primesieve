@@ -1,5 +1,5 @@
 ///
-/// @file   bits.h
+/// @file   bits.hpp
 /// @brief  Bitmasks to turn off single bits of a byte.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>

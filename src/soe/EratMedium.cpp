@@ -9,10 +9,10 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/config.h>
-#include <primesieve/soe/EratMedium.h>
-#include <primesieve/soe/WheelFactorization.h>
-#include <primesieve/soe/primesieve_error.h>
+#include <primesieve/soe/config.hpp>
+#include <primesieve/soe/EratMedium.hpp>
+#include <primesieve/soe/WheelFactorization.hpp>
+#include <primesieve/soe/primesieve_error.hpp>
 
 #include <stdint.h>
 #include <cassert>
@@ -75,7 +75,7 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize, Bucket& bucket)
     uint_t wheelIndex1    = sPrime[1].getWheelIndex();
     uint_t sievingPrime1  = sPrime[1].getSievingPrime();
     // cross-off the multiples (unset bits) of sievingPrime
-    // @see unsetBit() in WheelFactorization.h
+    // @see unsetBit() in WheelFactorization.hpp
     while (multipleIndex0 < sieveSize) {
       unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
       if (multipleIndex1 >= sieveSize) break;

@@ -1,5 +1,5 @@
 ///
-/// @file   iterator.h
+/// @file   iterator.hpp
 /// @brief  The iterator class allows to easily iterate (forward and
 ///         backward) over prime numbers.
 ///

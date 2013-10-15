@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include "PrimeSieveGUI.h"
-#include "ui_PrimeSieveGUI.h"
+#include "PrimeSieveGUI.hpp"
+#include "ui_PrimeSieveGUI.hpp"
 
-#include <primesieve.h>
-#include <primesieve/soe/ParallelPrimeSieve.h>
+#include <primesieve.hpp>
+#include <primesieve/soe/ParallelPrimeSieve.hpp>
 
 #if QT_VERSION >= 0x050000
   #include <QTextStream>

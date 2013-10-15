@@ -1,5 +1,5 @@
 ///
-/// @file  PrimeGenerator.h
+/// @file  PrimeGenerator.hpp
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -10,8 +10,8 @@
 #ifndef PRIMEGENERATOR_H
 #define PRIMEGENERATOR_H
 
-#include "config.h"
-#include "SieveOfEratosthenes.h"
+#include "config.hpp"
+#include "SieveOfEratosthenes.hpp"
 
 namespace soe {
 

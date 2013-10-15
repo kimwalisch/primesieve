@@ -1,5 +1,5 @@
 ///
-/// @file   SieveOfEratosthenes-CALLBACK.h
+/// @file   SieveOfEratosthenes-CALLBACK.hpp
 /// @brief  Macros to reconstruct primes and prime k-tuplets from 1
 ///         bits of the sieve array.
 ///
@@ -12,9 +12,9 @@
 #ifndef SIEVEOFERATOSTHENES_CALLBACK_H
 #define SIEVEOFERATOSTHENES_CALLBACK_H
 
-#include "config.h"
-#include "SieveOfEratosthenes-inline.h"
-#include "littleendian_cast.h"
+#include "config.hpp"
+#include "SieveOfEratosthenes-inline.hpp"
+#include "littleendian_cast.hpp"
 
 #include <stdint.h>
 

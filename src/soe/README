@@ -82,16 +82,16 @@ C++ classes
 
 Other files
 -----------
-* include/primesieve.h
+* include/primesieve.hpp
   This header contains primesieve's new API first released in
   primesieve-5.0. It is mostly a wrapper around the methods of the
   PrimeSieve and ParallelPrimeSieve classes.
 
 * primesieve-api.cpp
   This file contains the implementations of the functions declared
-  in include/primesieve.h.
+  in include/primesieve.hpp.
 
-* include/primesieve/soe/config.h
+* include/primesieve/soe/config.hpp
   Contains compile time constants that set the size of various
   arrays and limits within primesieve. You can set these constants
   according to your CPU type to get the best performance.

@@ -7,12 +7,12 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/config.h>
-#include <primesieve/soe/PrimeSieve.h>
-#include <primesieve/soe/PrimeSieveCallback.h>
-#include <primesieve/soe/primesieve_error.h>
-#include <primesieve/soe/cancel_callback.h>
-#include <primesieve/soe/SieveOfEratosthenes.h>
+#include <primesieve/soe/config.hpp>
+#include <primesieve/soe/PrimeSieve.hpp>
+#include <primesieve/soe/PrimeSieveCallback.hpp>
+#include <primesieve/soe/primesieve_error.hpp>
+#include <primesieve/soe/cancel_callback.hpp>
+#include <primesieve/soe/SieveOfEratosthenes.hpp>
 
 #include <stdint.h>
 #include <algorithm>

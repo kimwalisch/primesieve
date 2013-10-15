@@ -9,12 +9,12 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/config.h>
-#include <primesieve/soe/PrimeGenerator.h>
-#include <primesieve/soe/PrimeFinder.h>
-#include <primesieve/soe/SieveOfEratosthenes.h>
-#include <primesieve/soe/SieveOfEratosthenes-CALLBACK.h>
-#include <primesieve/soe/SieveOfEratosthenes-inline.h>
+#include <primesieve/soe/config.hpp>
+#include <primesieve/soe/PrimeGenerator.hpp>
+#include <primesieve/soe/PrimeFinder.hpp>
+#include <primesieve/soe/SieveOfEratosthenes.hpp>
+#include <primesieve/soe/SieveOfEratosthenes-CALLBACK.hpp>
+#include <primesieve/soe/SieveOfEratosthenes-inline.hpp>
 
 #include <vector>
 #include <cassert>

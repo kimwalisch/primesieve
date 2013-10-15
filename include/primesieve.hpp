@@ -1,5 +1,5 @@
 ///
-/// @file   primesieve.h
+/// @file   primesieve.hpp
 /// @brief  primesieve C++ API. primesieve is a library for fast prime
 ///         number generation. This header contains all of
 ///         primesieve's function declarations and must be included in
@@ -19,13 +19,13 @@
 #define PRIMESIEVE_VERSION_MINOR 0
 #define PRIMESIEVE_YEAR "2013"
 
-#include "primesieve/soe/PrimeSieve.h"
-#include "primesieve/soe/ParallelPrimeSieve.h"
-#include "primesieve/soe/primesieve_error.h"
-#include "primesieve/soe/iterator.h"
-#include "primesieve/soe/PrimeSieveCallback.h"
-#include "primesieve/soe/PushBackPrimes.h"
-#include "primesieve/soe/cancel_callback.h"
+#include "primesieve/soe/PrimeSieve.hpp"
+#include "primesieve/soe/ParallelPrimeSieve.hpp"
+#include "primesieve/soe/primesieve_error.hpp"
+#include "primesieve/soe/iterator.hpp"
+#include "primesieve/soe/PrimeSieveCallback.hpp"
+#include "primesieve/soe/PushBackPrimes.hpp"
+#include "primesieve/soe/cancel_callback.hpp"
 
 #include <stdint.h>
 #include <vector>

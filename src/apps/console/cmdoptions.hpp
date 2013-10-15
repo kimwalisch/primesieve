@@ -1,5 +1,5 @@
 ///
-/// @file  cmdoptions.h
+/// @file  cmdoptions.hpp
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///

@@ -1,5 +1,5 @@
 ///
-/// @file   littleendian_cast.h
+/// @file   littleendian_cast.hpp
 /// @brief  Cast bytes in ascending address order on both little and
 ///         big endian CPUs.
 ///
@@ -12,7 +12,7 @@
 #ifndef LITTLEENDIAN_CAST_H
 #define LITTLEENDIAN_CAST_H
 
-#include "config.h"
+#include "config.hpp"
 
 namespace soe {
 

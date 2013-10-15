@@ -8,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/config.h>
-#include <primesieve.h>
+#include <primesieve/soe/config.hpp>
+#include <primesieve.hpp>
 #include <primesieve-c.h>
 
 #include <algorithm>

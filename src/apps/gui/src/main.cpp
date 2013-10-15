@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include "PrimeSieveGUI.h"
-#include <primesieve/soe/ParallelPrimeSieve.h>
+#include "PrimeSieveGUI.hpp"
+#include <primesieve/soe/ParallelPrimeSieve.hpp>
 
 #if QT_VERSION >= 0x050000
   #include <QtWidgets/QApplication>

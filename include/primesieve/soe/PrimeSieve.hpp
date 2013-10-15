@@ -1,5 +1,5 @@
 ///
-/// @file   PrimeSieve.h
+/// @file   PrimeSieve.hpp
 /// @brief  The PrimeSieve class provides an easy API for prime
 ///         sieving (single-threaded).
 ///
@@ -12,7 +12,7 @@
 #ifndef PRIMESIEVE_CLASS_H
 #define PRIMESIEVE_CLASS_H
 
-#include "PrimeSieveCallback.h"
+#include "PrimeSieveCallback.hpp"
 
 #include <stdint.h>
 #include <string>

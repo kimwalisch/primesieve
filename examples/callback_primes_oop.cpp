@@ -2,7 +2,7 @@
 /// Objects derived from PrimeSieveCallback<uint64_t> can be
 /// passed to the callback_primes() function.
 
-#include <primesieve.h>
+#include <primesieve.hpp>
 #include <stdint.h>
 #include <list>
 

@@ -1,5 +1,5 @@
 ///
-/// @file   primesieve_error.h
+/// @file   primesieve_error.hpp
 /// @brief  The primesieve_error class is used for all exceptions
 ///         within primesieve.
 ///

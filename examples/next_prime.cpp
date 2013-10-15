@@ -1,7 +1,7 @@
 /// @example next_prime.cpp
 /// Iterate over primes using a primesieve::iterator object.
 
-#include <primesieve.h>
+#include <primesieve.hpp>
 #include <iostream>
 
 int main()

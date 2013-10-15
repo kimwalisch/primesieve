@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include "PrimeSieveProcess.h"
-#include <primesieve/soe/ParallelPrimeSieve.h>
+#include "PrimeSieveProcess.hpp"
+#include <primesieve/soe/ParallelPrimeSieve.hpp>
 
 #include <QtGlobal>
 #include <QStringList>

@@ -9,7 +9,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve.h>
+#include <primesieve.hpp>
 
 #include <iostream>
 #include <iomanip>

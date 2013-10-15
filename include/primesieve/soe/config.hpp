@@ -1,5 +1,5 @@
 ///
-/// @file   config.h
+/// @file   config.hpp
 /// @brief  Macros, typedefs and constants that set various limits
 ///         and array sizes within primesieve.
 ///

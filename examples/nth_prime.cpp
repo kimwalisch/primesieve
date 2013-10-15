@@ -1,7 +1,7 @@
 /// @example nth_prime.cpp
 /// Find the nth prime.
 
-#include <primesieve.h>
+#include <primesieve.hpp>
 #include <stdint.h>
 #include <iostream>
 #include <cstdlib>

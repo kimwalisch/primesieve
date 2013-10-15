@@ -1,5 +1,5 @@
 ///
-/// @file  toString.h
+/// @file  toString.hpp
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///

@@ -1,5 +1,5 @@
 ///
-/// @file  cancel_callback.h
+/// @file  cancel_callback.hpp
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///

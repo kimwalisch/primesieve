@@ -11,11 +11,11 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/config.h>
-#include <primesieve/soe/EratBig.h>
-#include <primesieve/soe/WheelFactorization.h>
-#include <primesieve/soe/primesieve_error.h>
-#include <primesieve/soe/imath.h>
+#include <primesieve/soe/config.hpp>
+#include <primesieve/soe/EratBig.hpp>
+#include <primesieve/soe/WheelFactorization.hpp>
+#include <primesieve/soe/primesieve_error.hpp>
+#include <primesieve/soe/imath.hpp>
 
 #include <stdint.h>
 #include <cstdlib>

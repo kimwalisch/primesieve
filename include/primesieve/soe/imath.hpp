@@ -1,5 +1,5 @@
 ///
-/// @file   imath.h
+/// @file   imath.hpp
 /// @brief  Auxiliary integer math functions needed in primesieve.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>

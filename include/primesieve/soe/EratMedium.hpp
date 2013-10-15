@@ -1,5 +1,5 @@
 ///
-/// @file  EratSmall.h
+/// @file  EratMedium.hpp
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -7,34 +7,34 @@
 /// file in the top level directory.
 ///
 
-#ifndef ERATSMALL_H
-#define ERATSMALL_H
+#ifndef ERATMEDIUM_H
+#define ERATMEDIUM_H
 
-#include "config.h"
-#include "WheelFactorization.h"
+#include "config.hpp"
+#include "WheelFactorization.hpp"
 
 #include <stdint.h>
 #include <list>
 
 namespace soe {
 
-/// EratSmall is an implementation of the segmented sieve of
-/// Eratosthenes optimized for small sieving primes that have many
+/// EratMedium is an implementation of the segmented sieve of
+/// Eratosthenes optimized for medium sieving primes that have a few
 /// multiples per segment.
 ///
-class EratSmall : public Modulo30Wheel_t {
+class EratMedium : public Modulo210Wheel_t {
 public:
-  EratSmall(uint64_t, uint_t, uint_t);
+  EratMedium(uint64_t, uint_t, uint_t);
   uint_t getLimit() const { return limit_; }
-  void crossOff(byte_t*, byte_t*);
+  void crossOff(byte_t*, uint_t);
 private:
   typedef std::list<Bucket>::iterator BucketIterator_t;
   const uint_t limit_;
   /// List of buckets, holds the sieving primes
   std::list<Bucket> buckets_;
   void storeSievingPrime(uint_t, uint_t, uint_t);
-  static void crossOff(byte_t*, byte_t*, Bucket&);
-  DISALLOW_COPY_AND_ASSIGN(EratSmall);
+  static void crossOff(byte_t*, uint_t, Bucket&);
+  DISALLOW_COPY_AND_ASSIGN(EratMedium);
 };
 
 } // namespace soe

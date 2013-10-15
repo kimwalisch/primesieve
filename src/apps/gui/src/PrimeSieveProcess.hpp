@@ -1,5 +1,5 @@
 /*
- * PrimeSieveProcess.h -- This file is part of primesieve
+ * PrimeSieveProcess.hpp -- This file is part of primesieve
  *
  * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
  *
@@ -20,7 +20,7 @@
 #ifndef PRIMESIEVEPROCESS_H
 #define PRIMESIEVEPROCESS_H
 
-#include <primesieve/soe/ParallelPrimeSieve.h>
+#include <primesieve/soe/ParallelPrimeSieve.hpp>
 
 #include <QProcess>
 #include <QSharedMemory>

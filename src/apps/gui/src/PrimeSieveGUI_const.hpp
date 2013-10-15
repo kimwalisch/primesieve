@@ -1,5 +1,5 @@
 /*
- * PrimeSieveGUI_const.h -- This file is part of primesieve
+ * PrimeSieveGUI_const.hpp -- This file is part of primesieve
  *
  * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
  *
@@ -18,7 +18,7 @@
  */
 
 /**
- * @file  PrimeSieveGUI_const.h
+ * @file  PrimeSieveGUI_const.hpp
  * @brief Various constants used in PrimeSieveGUI.
  *        The values are optimized for CPUs with 32 to 64 kilobytes of
  *        L1 Data Cache (set in 2010).

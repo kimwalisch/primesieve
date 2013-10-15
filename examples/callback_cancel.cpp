@@ -3,7 +3,7 @@
 /// exception. Note that multi-threaded callback can currently not
 /// be canceled.
 
-#include <primesieve.h>
+#include <primesieve.hpp>
 #include <stdint.h>
 #include <iostream>
 

@@ -1,5 +1,5 @@
 ///
-/// @file  PrimeSieve-lock.h
+/// @file  PrimeSieve-lock.hpp
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -10,8 +10,8 @@
 #ifndef PRIMESIEVE_LOCK_H
 #define PRIMESIEVE_LOCK_H
 
-#include "config.h"
-#include "PrimeSieve.h"
+#include "config.hpp"
+#include "PrimeSieve.hpp"
 
 namespace soe {
 

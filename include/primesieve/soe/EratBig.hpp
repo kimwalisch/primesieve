@@ -1,5 +1,5 @@
 ///
-/// @file  EratBig.h
+/// @file  EratBig.hpp
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -10,8 +10,8 @@
 #ifndef ERATBIG_H
 #define ERATBIG_H
 
-#include "config.h"
-#include "WheelFactorization.h"
+#include "config.hpp"
+#include "WheelFactorization.hpp"
 
 #include <stdint.h>
 #include <vector>

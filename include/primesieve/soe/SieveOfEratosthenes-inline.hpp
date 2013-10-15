@@ -1,5 +1,5 @@
 ///
-/// @file   SieveOfEratosthenes-inline.h
+/// @file   SieveOfEratosthenes-inline.hpp
 /// @brief  Inline methods of the SieveOfEratosthenes class.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
@@ -11,12 +11,12 @@
 #ifndef SIEVEOFERATOSTHENES_INLINE_H
 #define SIEVEOFERATOSTHENES_INLINE_H
 
-#include "config.h"
-#include "SieveOfEratosthenes.h"
-#include "EratSmall.h"
-#include "EratMedium.h"
-#include "EratBig.h"
-#include "imath.h"
+#include "config.hpp"
+#include "SieveOfEratosthenes.hpp"
+#include "EratSmall.hpp"
+#include "EratMedium.hpp"
+#include "EratBig.hpp"
+#include "imath.hpp"
 
 #include <stdint.h>
 
@@ -28,7 +28,7 @@ inline uint_t   SieveOfEratosthenes::getSieveSize() const { return sieveSize_; }
 
 /// Reconstruct the prime number corresponding to the first set
 /// bit of the `bits' parameter and unset that bit.
-/// @see SieveOfEratosthenes-CALLBACK.h
+/// @see SieveOfEratosthenes-CALLBACK.hpp
 ///
 inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint_t index) const
 {

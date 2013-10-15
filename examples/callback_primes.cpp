@@ -1,7 +1,7 @@
 /// @example callback_primes.cpp
 /// This example shows how to use callback functions.
 
-#include <primesieve.h>
+#include <primesieve.hpp>
 #include <stdint.h>
 #include <iostream>
 

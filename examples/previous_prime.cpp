@@ -1,7 +1,7 @@
 /// @example previous_prime.cpp
 /// This example shows how to iterate backwards over primes.
 
-#include <primesieve.h>
+#include <primesieve.hpp>
 #include <iostream>
 
 int main()

@@ -1,5 +1,5 @@
 ///
-/// @file  SieveOfEratosthenes.h
+/// @file  SieveOfEratosthenes.hpp
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -10,7 +10,7 @@
 #ifndef SIEVEOFERATOSTHENES_H
 #define SIEVEOFERATOSTHENES_H
 
-#include "config.h"
+#include "config.hpp"
 
 #include <stdint.h>
 #include <string>

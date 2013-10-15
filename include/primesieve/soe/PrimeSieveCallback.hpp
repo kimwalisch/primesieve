@@ -1,5 +1,5 @@
 ///
-/// @file   PrimeSieveCallback.h
+/// @file   PrimeSieveCallback.hpp
 /// @brief  Callback interface class for PrimeSieve and
 ///         ParallelPrimeSieve objects.
 ///

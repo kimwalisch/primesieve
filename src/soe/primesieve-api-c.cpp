@@ -10,9 +10,9 @@
 ///
 
 #include <primesieve-c.h>
-#include <primesieve/soe/PrimeSieve.h>
-#include <primesieve/soe/ParallelPrimeSieve.h>
-#include <primesieve/soe/cancel_callback.h>
+#include <primesieve/soe/PrimeSieve.hpp>
+#include <primesieve/soe/ParallelPrimeSieve.hpp>
+#include <primesieve/soe/cancel_callback.hpp>
 
 #include <stdint.h>
 #include <exception>

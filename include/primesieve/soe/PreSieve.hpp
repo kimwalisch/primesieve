@@ -1,5 +1,5 @@
 ///
-/// @file  PreSieve.h
+/// @file  PreSieve.hpp
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -10,7 +10,7 @@
 #ifndef PRESIEVE_H
 #define PRESIEVE_H
 
-#include "config.h"
+#include "config.hpp"
 #include <stdint.h>
 
 namespace soe {

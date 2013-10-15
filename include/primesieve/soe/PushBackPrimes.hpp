@@ -1,5 +1,5 @@
 ///
-/// @file   PushBackPrimes.h
+/// @file   PushBackPrimes.hpp
 /// @brief  This file contains classes needed to store primes in
 ///         std::vector objects. These classes derive from
 ///         PrimeSieveCallback and call PrimeSieve's callbackPrimes()
@@ -15,9 +15,9 @@
 #ifndef PUSHBACKPRIMES_H
 #define PUSHBACKPRIMES_H
 
-#include "PrimeSieve.h"
-#include "PrimeSieveCallback.h"
-#include "cancel_callback.h"
+#include "PrimeSieve.hpp"
+#include "PrimeSieveCallback.hpp"
+#include "cancel_callback.hpp"
 
 #include <stdint.h>
 #include <algorithm>

@@ -61,7 +61,7 @@ program below. You can explore primesieve's entire API online at
 http://kimwalisch.github.io/primesieve/doxygen.
 
 ```C++
-#include <primesieve.h>
+#include <primesieve.hpp>
 #include <iostream>
 #include <vector>
 

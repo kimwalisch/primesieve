@@ -1,5 +1,5 @@
 /*
- * PrimeSieveGUI.h -- This file is part of primesieve
+ * PrimeSieveGUI.hpp -- This file is part of primesieve
  *
  * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
  *
@@ -20,8 +20,8 @@
 #ifndef PRIMESIEVEGUI_H
 #define PRIMESIEVEGUI_H
 
-#include "PrimeSieveGUI_const.h"
-#include <primesieve/soe/ParallelPrimeSieve.h>
+#include "PrimeSieveGUI_const.hpp"
+#include <primesieve/soe/ParallelPrimeSieve.hpp>
 
 #if QT_VERSION >= 0x050000
   #include <QtGlobal>

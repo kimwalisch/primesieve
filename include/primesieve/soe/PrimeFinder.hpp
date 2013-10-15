@@ -1,5 +1,5 @@
 ///
-/// @file  PrimeFinder.h
+/// @file  PrimeFinder.hpp
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -10,9 +10,9 @@
 #ifndef PRIMEFINDER_H
 #define PRIMEFINDER_H
 
-#include "config.h"
-#include "SieveOfEratosthenes.h"
-#include "PrimeSieveCallback.h"
+#include "config.hpp"
+#include "SieveOfEratosthenes.hpp"
+#include "PrimeSieveCallback.hpp"
 
 #include <stdint.h>
 #include <vector>

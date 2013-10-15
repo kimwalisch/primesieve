@@ -1,5 +1,5 @@
 ///
-/// @file   WheelFactorization.h
+/// @file   WheelFactorization.hpp
 /// @brief  Classes and structs related to wheel factorization.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
@@ -11,10 +11,10 @@
 #ifndef WHEELFACTORIZATION_H
 #define WHEELFACTORIZATION_H
 
-#include "config.h"
-#include "toString.h"
-#include "imath.h"
-#include "primesieve_error.h"
+#include "config.hpp"
+#include "toString.hpp"
+#include "imath.hpp"
+#include "primesieve_error.hpp"
 
 #include <stdint.h>
 #include <string>
