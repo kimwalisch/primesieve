@@ -1,9 +1,9 @@
 /**
  *  @file   primesieve-c.h
  *  @brief  primesieve C API. primesieve is a library for fast prime
- *          number generation. This header contains all of
- *          primesieve's function declarations and must be included
- *          in your C source code in order to use primesieve.
+ *          number generation. In case of an error all functions set
+ *          errno to EDOM and functions that have a uint64_t return
+ *          type return UINT64_MAX (= PRIMESIEVE_ERROR).
  * 
  *  Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
  * 
