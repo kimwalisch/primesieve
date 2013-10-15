@@ -19,13 +19,6 @@
 #include <limits>
 #include <cerrno>
 
-namespace
-{
-  /// primesieve's C binding functions return
-  /// UINT64_MAX if any error occurs
-  const uint64_t ERROR_CODE = std::numeric_limits<uint64_t>::max();
-}
-
 namespace primesieve
 {
   uint64_t max_stop();
@@ -47,7 +40,7 @@ uint64_t nth_prime(uint64_t n, uint64_t start)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t parallel_nth_prime(uint64_t n, uint64_t start, int threads)
@@ -62,7 +55,7 @@ uint64_t parallel_nth_prime(uint64_t n, uint64_t start, int threads)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -80,7 +73,7 @@ uint64_t count_primes(uint64_t start, uint64_t stop)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t count_twins(uint64_t start, uint64_t stop)
@@ -94,7 +87,7 @@ uint64_t count_twins(uint64_t start, uint64_t stop)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t count_triplets(uint64_t start, uint64_t stop)
@@ -108,7 +101,7 @@ uint64_t count_triplets(uint64_t start, uint64_t stop)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t count_quadruplets(uint64_t start, uint64_t stop)
@@ -122,7 +115,7 @@ uint64_t count_quadruplets(uint64_t start, uint64_t stop)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t count_quintuplets(uint64_t start, uint64_t stop)
@@ -136,7 +129,7 @@ uint64_t count_quintuplets(uint64_t start, uint64_t stop)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t count_sextuplets(uint64_t start, uint64_t stop)
@@ -150,7 +143,7 @@ uint64_t count_sextuplets(uint64_t start, uint64_t stop)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t count_septuplets(uint64_t start, uint64_t stop)
@@ -164,7 +157,7 @@ uint64_t count_septuplets(uint64_t start, uint64_t stop)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -183,7 +176,7 @@ uint64_t parallel_count_primes(uint64_t start, uint64_t stop, int threads)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t parallel_count_twins(uint64_t start, uint64_t stop, int threads)
@@ -198,7 +191,7 @@ uint64_t parallel_count_twins(uint64_t start, uint64_t stop, int threads)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t parallel_count_triplets(uint64_t start, uint64_t stop, int threads)
@@ -213,7 +206,7 @@ uint64_t parallel_count_triplets(uint64_t start, uint64_t stop, int threads)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop, int threads)
@@ -228,7 +221,7 @@ uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop, int threads)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop, int threads)
@@ -243,7 +236,7 @@ uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop, int threads)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop, int threads)
@@ -258,7 +251,7 @@ uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop, int threads)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop, int threads)
@@ -273,7 +266,7 @@ uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop, int threads)
   {
     errno = EDOM;
   }
-  return ERROR_CODE;
+  return PRIMESIEVE_ERROR;
 }
 
 //////////////////////////////////////////////////////////////////////
