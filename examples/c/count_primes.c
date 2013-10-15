@@ -1,4 +1,4 @@
-/** @example count_primes-c.c
+/** @example count_primes.c
  *  C program that shows how to count primes. */
 
 #include <primesieve.h>

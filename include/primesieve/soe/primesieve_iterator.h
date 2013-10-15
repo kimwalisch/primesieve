@@ -1,8 +1,8 @@
 /**
  *  @file   primesieve_iterator.h
  *  @brief  Fast prime iterator for use in C code. The @link
- *          next_prime-c.c next_prime-c.c @endlink example shows how
- *          to use primesieve_iterator. If any error occurs errno
+ *          next_prime.c next_prime.c @endlink example shows how to
+ *          use primesieve_iterator. If any error occurs errno is
  *          is set to EDOM and primesieve_prime(), primesieve_next()
  *          and primesieve_previous() return UINT64_MAX.
  * 
