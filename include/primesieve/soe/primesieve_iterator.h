@@ -27,10 +27,10 @@ extern "C" {
  */
 typedef struct
 {
-  size_t i_;
-  size_t size_;
   uint64_t* primes_;
   uint64_t* primes_pimpl_;
+  size_t i_;
+  size_t size_;
   uint64_t start_;
   uint64_t count_;
   int first_;
