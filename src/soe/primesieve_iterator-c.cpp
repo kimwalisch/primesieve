@@ -59,8 +59,7 @@ void generate_primes(primesieve_iterator* pi, uint64_t start, uint64_t stop)
     try {
       primes.clear();
       primesieve::generate_primes(start, stop, &primes);
-    }
-    catch (std::exception&) { }
+    } catch (std::exception&) { }
   }
   if (primes.empty())
   {
