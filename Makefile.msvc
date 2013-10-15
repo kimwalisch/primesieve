@@ -31,7 +31,7 @@ PRIMESIEVE_OBJECTS = \
 
 PRIMESIEVE_HEADERS = \
   include\primesieve.hpp \
-  include\primesieve-c.h \
+  include\primesieve.h \
   include\primesieve\soe\bits.hpp \
   include\primesieve\soe\config.hpp \
   include\primesieve\soe\EratBig.hpp \
@@ -48,6 +48,7 @@ PRIMESIEVE_HEADERS = \
   include\primesieve\soe\PrimeSieve.hpp \
   include\primesieve\soe\PrimeSieveCallback.hpp \
   include\primesieve\soe\primesieve_error.hpp \
+  include\primesieve\soe\primesieve_iterator.h \
   include\primesieve\soe\iterator.hpp \
   include\primesieve\soe\PushBackPrimes.hpp \
   include\primesieve\soe\SieveOfEratosthenes-CALLBACK.hpp \

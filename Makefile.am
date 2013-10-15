@@ -67,7 +67,7 @@ endif
 
 include_HEADERS = \
 	include/primesieve.hpp \
-	include/primesieve-c.h
+	include/primesieve.h
 
 otherincludedir = $(includedir)/primesieve/soe
 otherinclude_HEADERS = \
@@ -75,7 +75,7 @@ otherinclude_HEADERS = \
 	include/primesieve/soe/primesieve_error.hpp \
 	include/primesieve/soe/PrimeSieve.hpp \
 	include/primesieve/soe/iterator.hpp \
-	include/primesieve/soe/primesieve_iterator-c.h \
+	include/primesieve/soe/primesieve_iterator.h \
 	include/primesieve/soe/PrimeSieveCallback.hpp \
 	include/primesieve/soe/PushBackPrimes.hpp \
 	include/primesieve/soe/cancel_callback.hpp
@@ -100,7 +100,7 @@ libprimesieve_la_SOURCES = \
 	src/soe/PrimeFinder.cpp \
 	src/soe/PrimeGenerator.cpp \
 	src/soe/iterator.cpp \
-	src/soe/primesieve_iterator-c.cpp \
+	src/soe/primesieve_iterator.cpp \
 	src/soe/PrimeSieve-nthPrime.cpp \
 	src/soe/PrimeSieve.cpp \
 	src/soe/primesieve-api.cpp \

@@ -1,7 +1,7 @@
 /** @example next_prime-c.c
  *  Iterate over primes using C primesieve_iterator. */
 
-#include <primesieve-c.h>
+#include <primesieve.h>
 #include <stdio.h>
 
 int main()

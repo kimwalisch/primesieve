@@ -2,9 +2,9 @@ PROJECT_NAME           = "primesieve"
 PROJECT_NUMBER         = 5.0
 INPUT                  = mainpage.dox \
                          include/primesieve.hpp \
-                         include/primesieve-c.h \
+                         include/primesieve.h \
                          include/primesieve/soe/iterator.hpp \
-                         include/primesieve/soe/primesieve_iterator-c.h \
+                         include/primesieve/soe/primesieve_iterator.h \
                          examples/callback_primes.cpp \
                          examples/count_primes.cpp \
                          examples/count_primes-c.c \

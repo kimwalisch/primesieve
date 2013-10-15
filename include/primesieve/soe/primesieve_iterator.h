@@ -1,5 +1,5 @@
 /**
- *  @file   primesieve_iterator-c.h
+ *  @file   primesieve_iterator.h
  *  @brief  Fast prime iterator for use in C code. The @link
  *          next_prime-c.c next_prime-c.c @endlink example shows how
  *          to use primesieve_iterator. If any error occurs errno
@@ -22,8 +22,8 @@
 extern "C" {
 #endif
 
-/** C data structure. Please refer to @link primesieve_iterator-c.h
- *  primesieve_iterator-c.h @endlink for more information.
+/** C data structure. Please refer to @link primesieve_iterator.h
+ *  primesieve_iterator.h @endlink for more information.
  */
 typedef struct
 {

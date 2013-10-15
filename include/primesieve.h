@@ -1,5 +1,5 @@
 /**
- *  @file   primesieve-c.h
+ *  @file   primesieve.h
  *  @brief  primesieve C API. primesieve is a library for fast prime
  *          number generation. In case of an error all functions set
  *          errno to EDOM and functions that have a uint64_t return
@@ -19,7 +19,7 @@
 #define PRIMESIEVE_VERSION_MINOR 0
 #define PRIMESIEVE_YEAR "2013"
 
-#include <primesieve/soe/primesieve_iterator-c.h>
+#include <primesieve/soe/primesieve_iterator.h>
 #include <stdint.h>
 
 /// primesieve functions return UINT64_MAX if any error occurs.

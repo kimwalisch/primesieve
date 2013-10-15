@@ -21,6 +21,6 @@
 /// @section API API documentation
 ///
 /// @li @link primesieve.hpp primesieve.hpp @endlink - C++ API.
-/// @li @link primesieve-c.h primesieve-c.h @endlink - C API.
+/// @li @link primesieve.h primesieve.h @endlink - C API.
 /// @li @link primesieve::iterator primesieve::iterator @endlink - Iterate over primes using next_prime() or previous_prime().
 ///

@@ -1,5 +1,5 @@
 ///
-/// @file   primesieve_iterator-c.cpp
+/// @file   primesieve_iterator.cpp
 /// @brief  C port of primesieve::iterator.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
@@ -10,7 +10,7 @@
 
 #include <primesieve/soe/config.hpp>
 #include <primesieve.hpp>
-#include <primesieve-c.h>
+#include <primesieve.h>
 
 #include <algorithm>
 #include <cerrno>

@@ -1,7 +1,7 @@
 ///
 /// @file   primesieve-api-c.cpp
 /// @brief  Contains the implementations of the functions declared in
-///         the primesieve-c.h header file.
+///         the primesieve.h header file.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -9,7 +9,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve-c.h>
+#include <primesieve.h>
 #include <primesieve/soe/PrimeSieve.hpp>
 #include <primesieve/soe/ParallelPrimeSieve.hpp>
 #include <primesieve/soe/cancel_callback.hpp>
