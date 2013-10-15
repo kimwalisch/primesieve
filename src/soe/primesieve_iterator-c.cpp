@@ -54,7 +54,6 @@ uint64_t get_interval_size(primesieve_iterator* pi, uint64_t n)
 void generate_primes(primesieve_iterator* pi, uint64_t start, uint64_t stop)
 {
   std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
-
   if (primes.empty() || primes[0] != PRIMESIEVE_ERROR)
   {
     try {
