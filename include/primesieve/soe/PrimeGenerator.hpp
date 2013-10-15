@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMEGENERATOR_H
-#define PRIMEGENERATOR_H
+#ifndef PRIMEGENERATOR_HPP
+#define PRIMEGENERATOR_HPP
 
 #include "config.hpp"
 #include "SieveOfEratosthenes.hpp"

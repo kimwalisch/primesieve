@@ -12,8 +12,8 @@
  *  file in the top level directory.
  */
 
-#ifndef PRIMESIEVE_ITERATOR_C_H
-#define PRIMESIEVE_ITERATOR_C_H
+#ifndef PRIMESIEVE_ITERATOR_H
+#define PRIMESIEVE_ITERATOR_H
 
 #include <stdint.h>
 #include <stddef.h>

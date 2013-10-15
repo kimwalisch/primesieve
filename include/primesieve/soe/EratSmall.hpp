@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef ERATSMALL_H
-#define ERATSMALL_H
+#ifndef ERATSMALL_HPP
+#define ERATSMALL_HPP
 
 #include "config.hpp"
 #include "WheelFactorization.hpp"

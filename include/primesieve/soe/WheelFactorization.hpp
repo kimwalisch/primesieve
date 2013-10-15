@@ -8,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef WHEELFACTORIZATION_H
-#define WHEELFACTORIZATION_H
+#ifndef WHEELFACTORIZATION_HPP
+#define WHEELFACTORIZATION_HPP
 
 #include "config.hpp"
 #include "toString.hpp"

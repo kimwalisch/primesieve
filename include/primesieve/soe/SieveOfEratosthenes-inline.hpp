@@ -8,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef SIEVEOFERATOSTHENES_INLINE_H
-#define SIEVEOFERATOSTHENES_INLINE_H
+#ifndef SIEVEOFERATOSTHENES_INLINE_HPP
+#define SIEVEOFERATOSTHENES_INLINE_HPP
 
 #include "config.hpp"
 #include "SieveOfEratosthenes.hpp"

@@ -9,8 +9,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PARALLELPRIMESIEVE_H
-#define PARALLELPRIMESIEVE_H
+#ifndef PARALLELPRIMESIEVE_HPP
+#define PARALLELPRIMESIEVE_HPP
 
 #include "PrimeSieve.hpp"
 #include <stdint.h>

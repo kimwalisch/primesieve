@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef ERATMEDIUM_H
-#define ERATMEDIUM_H
+#ifndef ERATMEDIUM_HPP
+#define ERATMEDIUM_HPP
 
 #include "config.hpp"
 #include "WheelFactorization.hpp"

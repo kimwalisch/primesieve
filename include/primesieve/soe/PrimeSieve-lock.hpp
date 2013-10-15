@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMESIEVE_LOCK_H
-#define PRIMESIEVE_LOCK_H
+#ifndef PRIMESIEVE_LOCK_HPP
+#define PRIMESIEVE_LOCK_HPP
 
 #include "config.hpp"
 #include "PrimeSieve.hpp"

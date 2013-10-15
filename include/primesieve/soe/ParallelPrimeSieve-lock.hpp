@@ -9,8 +9,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PARALLELPRIMESIEVE_LOCK_H
-#define PARALLELPRIMESIEVE_LOCK_H
+#ifndef PARALLELPRIMESIEVE_LOCK_HPP
+#define PARALLELPRIMESIEVE_LOCK_HPP
 
 #include <omp.h>
 

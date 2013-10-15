@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRESIEVE_H
-#define PRESIEVE_H
+#ifndef PRESIEVE_HPP
+#define PRESIEVE_HPP
 
 #include "config.hpp"
 #include <stdint.h>

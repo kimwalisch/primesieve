@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef TOSTRING_PRIMESIEVE_H
-#define TOSTRING_PRIMESIEVE_H
+#ifndef TOSTRING_PRIMESIEVE_HPP
+#define TOSTRING_PRIMESIEVE_HPP
 
 #include <string>
 #include <sstream>

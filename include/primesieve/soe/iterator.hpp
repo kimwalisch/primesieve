@@ -9,8 +9,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMESIEVE_ITERATOR_H
-#define PRIMESIEVE_ITERATOR_H
+#ifndef PRIMESIEVE_ITERATOR_HPP
+#define PRIMESIEVE_ITERATOR_HPP
 
 #include <vector>
 #include <cstddef>

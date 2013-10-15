@@ -24,8 +24,8 @@
  *        L1 Data Cache (set in 2010).
  */
 
-#ifndef PRIMESIEVEGUI_CONST_H
-#define PRIMESIEVEGUI_CONST_H
+#ifndef PRIMESIEVEGUI_CONST_HPP
+#define PRIMESIEVEGUI_CONST_HPP
 
 #include <QString>
 #include <QtGlobal>

@@ -9,8 +9,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMESIEVE_ERROR_H
-#define PRIMESIEVE_ERROR_H
+#ifndef PRIMESIEVE_ERROR_HPP
+#define PRIMESIEVE_ERROR_HPP
 
 #include <stdexcept>
 #include <string>

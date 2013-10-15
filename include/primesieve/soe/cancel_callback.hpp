@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef CANCEL_CALLBACK_H
-#define CANCEL_CALLBACK_H
+#ifndef CANCEL_CALLBACK_HPP
+#define CANCEL_CALLBACK_HPP
 
 #include <exception>
 

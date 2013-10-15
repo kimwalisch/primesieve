@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PRIMESIEVEPROCESS_H
-#define PRIMESIEVEPROCESS_H
+#ifndef PRIMESIEVEPROCESS_HPP
+#define PRIMESIEVEPROCESS_HPP
 
 #include <primesieve/soe/ParallelPrimeSieve.hpp>
 

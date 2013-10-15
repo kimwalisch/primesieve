@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMESIEVE_CMDOPTIONS_H
-#define PRIMESIEVE_CMDOPTIONS_H
+#ifndef PRIMESIEVE_CMDOPTIONS_HPP
+#define PRIMESIEVE_CMDOPTIONS_HPP
 
 #include <deque>
 #include <stdint.h>

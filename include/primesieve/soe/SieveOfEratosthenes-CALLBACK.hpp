@@ -9,8 +9,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef SIEVEOFERATOSTHENES_CALLBACK_H
-#define SIEVEOFERATOSTHENES_CALLBACK_H
+#ifndef SIEVEOFERATOSTHENES_CALLBACK_HPP
+#define SIEVEOFERATOSTHENES_CALLBACK_HPP
 
 #include "config.hpp"
 #include "SieveOfEratosthenes-inline.hpp"

@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef ERATBIG_H
-#define ERATBIG_H
+#ifndef ERATBIG_HPP
+#define ERATBIG_HPP
 
 #include "config.hpp"
 #include "WheelFactorization.hpp"

@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PRIMESIEVEGUI_H
-#define PRIMESIEVEGUI_H
+#ifndef PRIMESIEVEGUI_HPP
+#define PRIMESIEVEGUI_HPP
 
 #include "PrimeSieveGUI_const.hpp"
 #include <primesieve/soe/ParallelPrimeSieve.hpp>

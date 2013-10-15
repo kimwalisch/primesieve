@@ -9,8 +9,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMESIEVECALLBACK_H
-#define PRIMESIEVECALLBACK_H
+#ifndef PRIMESIEVECALLBACK_HPP
+#define PRIMESIEVECALLBACK_HPP
 
 #include <stdint.h>
 

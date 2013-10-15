@@ -9,8 +9,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef LITTLEENDIAN_CAST_H
-#define LITTLEENDIAN_CAST_H
+#ifndef LITTLEENDIAN_CAST_HPP
+#define LITTLEENDIAN_CAST_HPP
 
 #include "config.hpp"
 

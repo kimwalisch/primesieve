@@ -9,8 +9,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMESIEVE_CLASS_H
-#define PRIMESIEVE_CLASS_H
+#ifndef PRIMESIEVE_CLASS_HPP
+#define PRIMESIEVE_CLASS_HPP
 
 #include "PrimeSieveCallback.hpp"
 

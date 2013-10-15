@@ -10,8 +10,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef EXPRESSIONPARSER_H
-#define EXPRESSIONPARSER_H
+#ifndef EXPRESSIONPARSER_HPP
+#define EXPRESSIONPARSER_HPP
 
 #include <stdexcept>
 #include <string>

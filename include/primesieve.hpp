@@ -11,8 +11,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMESIEVE_H
-#define PRIMESIEVE_H
+#ifndef PRIMESIEVE_HPP
+#define PRIMESIEVE_HPP
 
 #define PRIMESIEVE_VERSION "5.0.0"
 #define PRIMESIEVE_VERSION_MAJOR 5

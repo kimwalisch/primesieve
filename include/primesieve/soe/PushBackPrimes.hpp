@@ -12,8 +12,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PUSHBACKPRIMES_H
-#define PUSHBACKPRIMES_H
+#ifndef PUSHBACKPRIMES_HPP
+#define PUSHBACKPRIMES_HPP
 
 #include "PrimeSieve.hpp"
 #include "PrimeSieveCallback.hpp"
