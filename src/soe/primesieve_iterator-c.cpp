@@ -20,9 +20,6 @@
 
 namespace {
 
-/// primesieve_iterator returns UINT64_MAX for errors
-const uint64_t ERROR_CODE = std::numeric_limits<uint64_t>::max();
-
 /// Convert pimpl pointer to std::vector
 std::vector<uint64_t>& to_vector(uint64_t* primes_pimpl)
 {
@@ -58,7 +55,7 @@ void generate_primes(primesieve_iterator* pi, uint64_t start, uint64_t stop)
 {
   std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
 
-  if (primes.empty() || primes[0] != ERROR_CODE)
+  if (primes.empty() || primes[0] != PRIMESIEVE_ERROR)
   {
     try {
       primes.clear();
@@ -68,7 +65,7 @@ void generate_primes(primesieve_iterator* pi, uint64_t start, uint64_t stop)
   }
   if (primes.empty())
   {
-    primes.resize(64, ERROR_CODE);
+    primes.resize(64, PRIMESIEVE_ERROR);
     errno = EDOM;
   }
   pi->primes_ = &primes[0];
