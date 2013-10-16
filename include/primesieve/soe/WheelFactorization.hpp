@@ -67,10 +67,18 @@ public:
     MAX_MULTIPLEINDEX = (1 << 23) - 1,
     MAX_WHEELINDEX    = (1 <<  9) - 1
   };
-  uint_t getSievingPrime() const  { return sievingPrime_; }
-  uint_t getMultipleIndex() const { return indexes_ & MAX_MULTIPLEINDEX; }
-  uint_t getWheelIndex() const    { return indexes_ >> 23; }
-
+  uint_t getSievingPrime() const
+  {
+    return sievingPrime_;
+  }
+  uint_t getMultipleIndex() const
+  {
+    return indexes_ & MAX_MULTIPLEINDEX;
+  }
+  uint_t getWheelIndex() const
+  {
+    return indexes_ >> 23;
+  }
   void setMultipleIndex(uint_t multipleIndex)
   {
     assert(multipleIndex <= MAX_MULTIPLEINDEX);
@@ -97,7 +105,7 @@ public:
   }
 private:
   /// multipleIndex = 23 least significant bits of indexes_.
-  /// wheelIndex    =  9 most  significant bits of indexes_.
+  /// wheelIndex = 9 most significant bits of indexes_.
   uint32_t indexes_;
   uint32_t sievingPrime_;
 };
