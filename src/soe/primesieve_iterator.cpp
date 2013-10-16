@@ -56,13 +56,10 @@ void generate_primes(primesieve_iterator* pi, uint64_t start, uint64_t stop)
   std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
   if (primes.empty() || primes[0] != PRIMESIEVE_ERROR)
   {
-    try
-    {
+    try {
       primes.clear();
       primesieve::generate_primes(start, stop, &primes);
-    }
-    catch (std::exception&)
-    {
+    } catch (std::exception&) {
       primes.clear();
     }
     if (primes.empty())
@@ -71,7 +68,7 @@ void generate_primes(primesieve_iterator* pi, uint64_t start, uint64_t stop)
       errno = EDOM;
     }
     pi->primes_ = &primes[0];
-    pi->size_   =  primes.size();
+    pi->size_ = primes.size();
   }
 }
 
