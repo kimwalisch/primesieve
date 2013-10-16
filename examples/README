@@ -2,7 +2,7 @@ About
 =====
 
 This directory contains simple example programs that show how
-to use libprimesieve to generate primes.
+to use the primesieve library to generate primes.
 
 Examples build instructions
 ===========================
