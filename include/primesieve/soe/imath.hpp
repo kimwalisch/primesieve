@@ -8,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef IMATH_PRIMESIEVE_HPP
-#define IMATH_PRIMESIEVE_HPP
+#ifndef IMATH_HPP
+#define IMATH_HPP
 
 namespace soe {
 
