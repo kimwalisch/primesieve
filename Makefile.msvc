@@ -5,7 +5,7 @@
 
 TARGET   = primesieve
 CXX      = cl /nologo
-CXXFLAGS = /W4 /O2 /EHsc
+CXXFLAGS = /W2 /O2 /EHsc
 INCPATH  = /I"include" /I"src\msvc_compat"
 LINK     = link /nologo
 OBJDIR   = obj
@@ -19,7 +19,7 @@ PRIMESIEVE_OBJECTS = \
   $(OBJDIR)\PreSieve.obj \
   $(OBJDIR)\PrimeFinder.obj \
   $(OBJDIR)\PrimeGenerator.obj \
-  $(OBJDIR)\primesieve_iterator-c.obj \
+  $(OBJDIR)\primesieve_iterator.obj \
   $(OBJDIR)\primesieve-api.obj \
   $(OBJDIR)\primesieve-api-c.obj \
   $(OBJDIR)\PrimeSieve-nthPrime.obj \
@@ -68,7 +68,7 @@ EXAMPLE_OBJECTS = \
   $(OBJDIR)\examples\callback_primes.obj \
   $(OBJDIR)\examples\callback_primes_oop.obj \
   $(OBJDIR)\examples\count_primes.obj \
-  $(OBJDIR)\examples\next_prime.obj \
+  $(OBJDIR)\examples\primesieve_iterator.obj \
   $(OBJDIR)\examples\nth_prime.obj \
   $(OBJDIR)\examples\previous_prime.obj \
   $(OBJDIR)\examples\store_primes_in_vector.obj

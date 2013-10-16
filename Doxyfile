@@ -7,12 +7,12 @@ INPUT                  = mainpage.dox \
                          include/primesieve/soe/primesieve_iterator.h \
                          examples/callback_primes.cpp \
                          examples/count_primes.cpp \
-                         examples/next_prime.cpp \
+                         examples/primesieve_iterator.cpp \
                          examples/nth_prime.cpp \
                          examples/previous_prime.cpp \
                          examples/store_primes_in_vector.cpp \
                          examples/c/count_primes.c \
-                         examples/c/next_prime.c \
+                         examples/c/primesieve_iterator.c \
                          examples/c/nth_prime.c
 HTML_INDEX_NUM_ENTRIES = 3
 JAVADOC_AUTOBRIEF      = YES
@@ -26,5 +26,5 @@ EXCLUDE_SYMBOLS        = generate_next_primes generate_previous_primes
 RECURSIVE              = NO
 EXAMPLE_PATH           = examples
 EXAMPLE_PATTERNS       = *.cpp *.c
-EXAMPLE_RECURSIVE      = NO
+EXAMPLE_RECURSIVE      = YES
 GENERATE_LATEX         = NO
