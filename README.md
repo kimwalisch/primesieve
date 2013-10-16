@@ -108,7 +108,7 @@ int main()
   uint64_t sum = 0;
   uint64_t prime = 0;
 
-  /* iterate over primes below 10^9 */
+  /* iterate over the primes below 10^9 */
   while ((prime = primesieve_next(&pi)) < 1000000000)
     sum += prime;
 
