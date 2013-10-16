@@ -90,6 +90,35 @@ On Windows (MSVC) compile using:
 > cl /O2 /EHsc /Iinclude primes.cpp /link primesieve.lib
 ```
 
+### primesieve C bindings
+Most functions of the primesieve library are also exposed as C API
+via the primesieve.h header. You can explore primesieve's C API online
+at http://kimwalisch.github.io/primesieve/doxygen.
+
+```C
+#include <primesieve.h>
+#include <stdint.h>
+#include <stdio.h>
+
+int main()
+{
+  primesieve_iterator pi;
+  primesieve_init(&pi);
+
+  uint64_t sum = 0;
+  uint64_t prime = 0;
+
+  /* iterate over primes below 10^10 */
+  while ((prime = primesieve_next(&pi)) < 10000000000ull)
+    sum += prime;
+
+  primesieve_free(&pi);
+  printf("Sum of the primes below 10^10 = %llu\n", sum);
+  return 0;
+}
+
+```
+
 ### Reporting bugs
 To report a bug or give feedback please send an email to
 <<kim.walisch@gmail.com>>.
