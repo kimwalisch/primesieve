@@ -8,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef BITS_PRIMESIEVE_HPP
-#define BITS_PRIMESIEVE_HPP
+#ifndef BITS_HPP
+#define BITS_HPP
 
 enum {
   BIT0 = 0xfe, // 11111110
