@@ -12,7 +12,7 @@ int main()
   uint64_t sum = 0;
   uint64_t prime = 0;
 
-  /* iterate over primes below 10^10 */
+  /* iterate over the primes below 10^10 */
   while ((prime = primesieve_next(&pi)) < 10000000000ull)
     sum += prime;
 
