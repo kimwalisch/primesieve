@@ -119,6 +119,11 @@ int main()
 
 ```
 
+You can link your C program against libprimesieve using:
+```
+$ cc -O2 primes.c -lprimesieve
+```
+
 ### Reporting bugs
 To report a bug or give feedback please send an email to
 <<kim.walisch@gmail.com>>.
