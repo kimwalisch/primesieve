@@ -108,12 +108,12 @@ int main()
   uint64_t sum = 0;
   uint64_t prime = 0;
 
-  /* iterate over primes below 10^10 */
-  while ((prime = primesieve_next(&pi)) < 10000000000ull)
+  /* iterate over primes below 10^9 */
+  while ((prime = primesieve_next(&pi)) < 1000000000)
     sum += prime;
 
   primesieve_free(&pi);
-  printf("Sum of the primes below 10^10 = %llu\n", sum);
+  printf("Sum of the primes below 10^9 = %llu\n", sum);
   return 0;
 }
 
