@@ -8,15 +8,17 @@
 ///
 
 #include <primesieve/soe/config.hpp>
+#include <primesieve/soe/PrimeFinder.hpp>
 #include <primesieve.hpp>
 
 #include <algorithm>
 #include <cmath>
-#include <sstream>
 #include <string>
 #include <vector>
 
 namespace primesieve {
+
+const std::string max_stop_string = soe::PrimeFinder::getMaxStopString();
 
 iterator::iterator(uint64_t start)
 {
@@ -32,11 +34,7 @@ void iterator::skipto(uint64_t start)
   start_ = start;
 
   if (start_ > max_stop())
-  {
-    std::ostringstream oss;
-    oss << "start must be <= " << max_stop();
-    throw primesieve_error(oss.str());
-  }
+    throw primesieve_error("start must be <= " + max_stop_string);
 
   if (!primes_.empty() &&
        primes_.front() <= start_ &&
@@ -54,7 +52,12 @@ void iterator::generate_primes(uint64_t start, uint64_t stop)
   primes_.clear();
   primesieve::generate_primes(start, stop, &primes_);
   if (primes_.empty())
-    primes_.push_back(0);
+  {
+    if (stop < 2)
+      throw primesieve_error("previous_prime(): smallest prime is 2");
+    else
+      throw primesieve_error("next_prime() > " + max_stop_string);
+  }
 }
 
 void iterator::generate_next_primes()
