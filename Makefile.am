@@ -1,6 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4
 AM_CPPFLAGS = -I$(top_srcdir)/include
-AM_LDFLAGS = $(OPENMP_CXXFLAGS)
 
 lib_LTLIBRARIES = libprimesieve.la
 libprimesieve_la_CXXFLAGS = $(OPENMP_CXXFLAGS)
@@ -18,7 +17,6 @@ check: all
 	./primesieve --test
 
 if MAKE_EXAMPLES
-
 noinst_PROGRAMS = callback_cancel
 callback_cancel_LDADD = libprimesieve.la
 callback_cancel_SOURCES = examples/callback_cancel.cpp
@@ -62,7 +60,6 @@ previous_prime_SOURCES = examples/previous_prime.cpp
 noinst_PROGRAMS += store_primes_in_vector
 store_primes_in_vector_LDADD = libprimesieve.la
 store_primes_in_vector_SOURCES = examples/store_primes_in_vector.cpp
-
 endif
 
 include_HEADERS = \
