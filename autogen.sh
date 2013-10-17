@@ -15,8 +15,7 @@ then
     if [ "$libtool_f3" != "" ]; then libtool_nr=$(expr "$libtool_nr" '+' "$libtool_f3" 2>/dev/null); fi
     if [ "$libtool_nr" -lt 2004002 2>/dev/null ]
     then
-        sed 's/|-threads)/-threads|-fopenmp|-openmp|-mp|-xopenmp|-omp|-qsmp=*)/g' ltmain.sh > ltmain2.sh
+        sed 's/|-threads)/-threads|-fopenmp|-openmp|-mp|-xopenmp|-omp)/g' ltmain.sh > ltmain2.sh
         mv -f ltmain2.sh ltmain.sh
-        find . -exec touch {} \;
     fi
 fi
