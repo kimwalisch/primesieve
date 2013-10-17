@@ -18,7 +18,7 @@
  */
 
 #include "PrimeSieveGUI.hpp"
-#include "ui_PrimeSieveGUI.hpp"
+#include "ui_PrimeSieveGUI.h"
 #include "PrimeSieveProcess.hpp"
 #include "ExpressionParser.hpp"
 
