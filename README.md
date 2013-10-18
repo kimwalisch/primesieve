@@ -91,8 +91,8 @@ On Windows (MSVC) compile using:
 ```
 
 ### primesieve C bindings
-Most functions of the primesieve library are also exposed as C API
-via the primesieve.h header. You can explore primesieve's C API online
+All of primesieve's functions are also exposed as C API via the
+primesieve.h header. You can explore primesieve's C API online
 at http://kimwalisch.github.io/primesieve/doxygen.
 
 ```C
@@ -102,6 +102,15 @@ at http://kimwalisch.github.io/primesieve/doxygen.
 
 int main()
 {
+  uint64_t start = 0;
+  uint64_t stop = 10000;
+  size_t size;
+  int* primes = (int*) generate_primes(start, stop, &size, INT_PRIMES);
+
+  for (size_t i = 0; i < size; i++)
+    printf("%i\n", primes[i]);
+
+  primesieve_free_array(primes);
   primesieve_iterator pi;
   primesieve_init(&pi);
 
