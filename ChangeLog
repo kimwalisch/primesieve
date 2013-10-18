@@ -1,9 +1,9 @@
-Changes in version 5.0, 18/10/2013
+Changes in version 5.0, 19/10/2013
 ==================================
 
 primesieve-5.0 is a major new release that makes using the primesieve
 library much more convenient. primesieve now includes C bindings for
-most of its functions so that it can easily be used in languages other
+all of its functions so that it can easily be used in languages other
 than C++. I moved primesieve's build system to GNU Autotools and
 Libtool which is more reliable than the hand written Makefile I used
 previously.
