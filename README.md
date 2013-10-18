@@ -105,6 +105,7 @@ int main()
   uint64_t start = 0;
   uint64_t stop = 10000;
   size_t size;
+  /* store the primes below 10000 */
   int* primes = (int*) generate_primes(start, stop, &size, INT_PRIMES);
 
   for (size_t i = 0; i < size; i++)
