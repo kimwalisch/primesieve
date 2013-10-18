@@ -12,11 +12,15 @@ AM_INIT_AUTOMAKE([subdir-objects foreign -Wall -Werror ])
 AC_PROG_CC
 AC_PROG_CXX
 AM_PROG_AR
-
 # this is no longer needed for the very new automake 1.14:
 AM_PROG_CC_C_O
-
 LT_INIT
+AC_CANONICAL_HOST
+
+case "$host_os" in
+    *solaris*) AM_CONDITIONAL(SOLARIS, true);;
+    *)         AM_CONDITIONAL(SOLARIS, false);;
+esac
 
 AC_ARG_VAR([L1_DCACHE_SIZE], [CPU L1 data cache size in kilobytes])
 AS_IF([test "x$L1_DCACHE_SIZE" = x], [[
@@ -39,6 +43,7 @@ AS_IF([test "x$L1_DCACHE_SIZE" = x], [[
     then
         L1_DCACHE_SIZE=$(expr $L1_DCACHE_BYTES '/' 1024)
     fi]])
+
 AC_DEFINE_UNQUOTED([L1_DCACHE_SIZE],
     [$L1_DCACHE_SIZE],
     [CPU L1 data cache size in kilobytes])
