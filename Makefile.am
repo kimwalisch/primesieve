@@ -3,7 +3,11 @@ AM_CPPFLAGS = -I$(top_srcdir)/include
 
 lib_LTLIBRARIES = libprimesieve.la
 libprimesieve_la_CXXFLAGS = $(OPENMP_CXXFLAGS)
-libprimesieve_la_LDFLAGS = -no-undefined -version-info @primesieve_lib_version@
+libprimesieve_la_LDFLAGS = -version-info @primesieve_lib_version@
+
+if !SOLARIS
+libprimesieve_la_LDFLAGS += -no-undefined 
+endif
 
 bin_PROGRAMS = primesieve
 primesieve_LDADD = libprimesieve.la
