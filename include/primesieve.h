@@ -21,8 +21,9 @@
 
 #include <primesieve/soe/primesieve_iterator.h>
 #include <stdint.h>
+#include <stddef.h>
 
-/// primesieve functions return UINT64_MAX if any error occurs.
+/** primesieve functions return UINT64_MAX if any error occurs. */
 #define PRIMESIEVE_ERROR ((uint64_t)~((uint64_t)0))
 
 #ifdef __cplusplus
@@ -31,8 +32,54 @@ extern "C" {
 
 enum {
   /** Use all CPU cores for prime sieving. */
-  MAX_THREADS
+  MAX_THREADS,
+  /** Generate primes of short type. */
+  SHORT_PRIMES,
+  /** Generate primes of unsigned short type. */
+  USHORT_PRIMES,
+  /** Generate primes of int type. */
+  INT_PRIMES,
+  /** Generate primes of unsigned int type. */
+  UINT_PRIMES,
+  /** Generate primes of long type. */
+  LONG_PRIMES,
+  /** Generate primes of unsigned long type. */
+  ULONG_PRIMES,
+  /** Generate primes of long long type. */
+  LONGLONG_PRIMES,
+  /** Generate primes of unsigned long long type. */
+  ULONGLONG_PRIMES,
+  /** Generate primes of int16_t type. */
+  INT16_PRIMES,
+  /** Generate primes of uint16_t type. */
+  UINT16_PRIMES,
+  /** Generate primes of int32_t type. */
+  INT32_PRIMES,
+  /** Generate primes of uint32_t type. */
+  UINT32_PRIMES,
+  /** Generate primes of int64_t type. */
+  INT64_PRIMES,
+  /** Generate primes of uint64_t type. */
+  UINT64_PRIMES
 };
+
+/** Get an array with the primes inside the interval [start, stop].
+ *  @param size  The size of the returned primes array.
+ *  @param type  The type of the primes to generate, e.g. INT_PRIMES.
+ *  @pre stop <= 2^64 - 2^32 * 10.
+ */
+void* generate_primes(uint64_t start, uint64_t stop, size_t* size, int type);
+
+/** Get an array with the first n primes >= start.
+ *  @param type  The type of the primes to generate, e.g. INT_PRIMES.
+ *  @pre stop <= 2^64 - 2^32 * 10.
+ */
+void* generate_n_primes(uint64_t n, uint64_t start, int type);
+
+/** Deallocate a primes array created using the generate_primes()
+ *  or generate_n_primes() functions.
+ */
+void primesieve_free_array(void* primes);
 
 /** Find the nth prime.
  *  @param start  Start nth prime search at this offset.
