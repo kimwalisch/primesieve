@@ -1,6 +1,6 @@
 primesieve
 ==========
-primesieve is a software program and C++ library for fast prime number
+primesieve is a software program and library for fast prime number
 generation. It generates the primes below 10^9 in just 0.2 seconds on
 a single core of an Intel Core i7-4770 CPU from 2013. primesieve can
 generate primes and prime k-tuplets (twin primes, prime triplets, ...)
@@ -14,9 +14,11 @@ memory requirement per thread is about pi(sqrt(n)) * 8 bytes + 32
 kilobytes.
 
 ### Requirements
-primesieve is written in C++03, it compiles with every standard
-compliant C++ compiler and runs on both little and big endian CPUs.
-The parallelization is implemented using OpenMP 2.0 or later.
+primesieve is written in C++03 and includes C bindings for all of its
+functions so that it can easily be used in languages other than C++.
+primesieve compiles with every standard compliant C++ compiler and runs
+on both little and big endian CPUs. The parallelization is implemented
+using OpenMP 2.0 or later.
 
 ### Build instructions
 Download the latest release tarball from
@@ -91,7 +93,7 @@ On Windows (MSVC) compile using:
 ```
 
 ### primesieve C bindings
-All of primesieve's functions are also exposed as C API via the
+All of primesieve's functions are exposed as C API via the
 primesieve.h header. You can explore primesieve's C API online
 at http://kimwalisch.github.io/primesieve/doxygen.
 
