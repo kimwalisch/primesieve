@@ -1,10 +1,10 @@
 primesieve
 ==========
-primesieve is a software program and library for fast prime number
-generation. It generates the primes below 10^9 in just 0.2 seconds on
-a single core of an Intel Core i7-4770 CPU from 2013. primesieve can
-generate primes and prime k-tuplets (twin primes, prime triplets, ...)
-up to 2^64.
+primesieve is a software program and C/C++ library for fast prime
+number generation. It generates the primes below 10^9 in just 0.2
+seconds on a single core of an Intel Core i7-4770 CPU from 2013.
+primesieve can generate primes and prime k-tuplets (twin primes, prime
+triplets, ...) up to 2^64.
 
 ### Algorithm complexity
 primesieve generates primes using the segmented sieve of Eratosthenes
@@ -16,9 +16,9 @@ kilobytes.
 ### Requirements
 primesieve is written in C++03 and includes C bindings for all of its
 functions so that it can easily be used in languages other than C++.
-primesieve compiles with every standard compliant C++ compiler and runs
-on both little and big endian CPUs. The parallelization is implemented
-using OpenMP 2.0 or later.
+primesieve compiles with every standard compliant C++ compiler and
+runs on both little and big endian CPUs. The parallelization is
+implemented using OpenMP 2.0 or later.
 
 ### Build instructions
 Download the latest release tarball from
@@ -32,7 +32,8 @@ $ sudo make install
 ```
 
 On Windows (MSVC) open a Visual Studio Command Prompt and cd into the
-primesieve directory. Then build primesieve using the following command:
+primesieve directory. Then build primesieve using the following
+command:
 
 ```
 > nmake -f Makefile.msvc
