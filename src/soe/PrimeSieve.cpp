@@ -17,6 +17,7 @@
 #include <primesieve/soe/PrimeFinder.hpp>
 #include <primesieve/soe/PrimeGenerator.hpp>
 #include <primesieve/soe/imath.hpp>
+#include <primesieve/soe/c_callback.h>
 
 #include <stdint.h>
 #include <iostream>
@@ -63,7 +64,9 @@ PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
   callback_(parent.callback_),
   callback_tn_(parent.callback_tn_),
   psc_(parent.psc_),
-  psc_tn_(parent.psc_tn_)
+  psc_tn_(parent.psc_tn_),
+  c_callback_(parent.c_callback_),
+  c_callback_tn_(parent.c_callback_tn_)
 { }
 
 PrimeSieve::~PrimeSieve()
@@ -89,7 +92,7 @@ bool     PrimeSieve::isFlag(int flag)            const { return (flags_ & flag) 
 bool     PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last * 2 - first)) != 0; }
 bool     PrimeSieve::isCount(int index)          const { return isFlag(COUNT_PRIMES << index); }
 bool     PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRIMES << index); }
-bool     PrimeSieve::isCallback()                const { return isFlag(CALLBACK, CALLBACK_PSC_TN); }
+bool     PrimeSieve::isCallback()                const { return isFlag(CALLBACK, C_CALLBACK_TN); }
 bool     PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEPTUPLETS); }
 bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEPTUPLETS); }
 bool     PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
@@ -202,8 +205,10 @@ void PrimeSieve::doSmallPrime(const SmallPrime& sp)
     if (sp.index == 0) {
       if (isFlag(CALLBACK)) callback_(sp.firstPrime);
       if (isFlag(CALLBACK_TN)) callback_tn_(sp.firstPrime, threadNum_);
-      if (isFlag(CALLBACK_PSC)) psc_->callback(sp.firstPrime);
-      if (isFlag(CALLBACK_PSC_TN)) psc_tn_->callback(sp.firstPrime, threadNum_);
+      if (isFlag(PSC_CALLBACK)) psc_->callback(sp.firstPrime);
+      if (isFlag(PSC_CALLBACK_TN)) psc_tn_->callback(sp.firstPrime, threadNum_);
+      if (isFlag(C_CALLBACK)) c_callback_(sp.firstPrime);
+      if (isFlag(C_CALLBACK_TN)) c_callback_tn_(sp.firstPrime, threadNum_);
     }
     if (isCount(sp.index)) counts_[sp.index]++;
     if (isPrint(sp.index)) std::cout << sp.str << '\n';
@@ -299,7 +304,7 @@ void PrimeSieve::callbackPrimes(uint64_t start,
   if (!psc)
     throw primesieve_error("PrimeSieveCallback pointer is NULL");
   psc_ = psc;
-  flags_ = CALLBACK_PSC;
+  flags_ = PSC_CALLBACK;
   sieve(start, stop);
 }
 
@@ -313,7 +318,35 @@ void PrimeSieve::callbackPrimes(uint64_t start,
   if (!psc)
     throw primesieve_error("PrimeSieveCallback pointer is NULL");
   psc_tn_ = psc;
-  flags_ = CALLBACK_PSC_TN;
+  flags_ = PSC_CALLBACK_TN;
+  sieve(start, stop);
+}
+
+/// Generate the primes within the interval [start, stop] and call a
+/// callback function with extern "C" linkage for each prime.
+///
+void PrimeSieve::c_callbackPrimes(uint64_t start,
+                                  uint64_t stop,
+                                  c_callback_t callback)
+{
+  if (!callback)
+    throw primesieve_error("callback is NULL");
+  c_callback_ = callback;
+  flags_ = C_CALLBACK;
+  sieve(start, stop);
+}
+
+/// Massively parallel (unsynchronized) prime generation method for
+/// use with ParallelPrimeSieve. 
+///
+void PrimeSieve::c_callbackPrimes(uint64_t start,
+                                  uint64_t stop,
+                                  c_callback_tn_t callback)
+{
+  if (!callback)
+    throw primesieve_error("callback is NULL");
+  c_callback_tn_ = callback;
+  flags_ = C_CALLBACK_TN;
   sieve(start, stop);
 }
 

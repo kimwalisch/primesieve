@@ -17,6 +17,7 @@
 #include <primesieve/soe/PrimeSieve.hpp>
 #include <primesieve/soe/PrimeSieveCallback.hpp>
 #include <primesieve/soe/PrimeSieve-lock.hpp>
+#include <primesieve/soe/c_callback.h>
 
 #include <stdint.h>
 #include <algorithm>
@@ -50,7 +51,9 @@ PrimeFinder::PrimeFinder(PrimeSieve& ps) :
   callback_(ps.callback_),
   callback_tn_(ps.callback_tn_),
   psc_(ps.psc_),
-  psc_tn_(ps.psc_tn_)
+  psc_tn_(ps.psc_tn_),
+  c_callback_(ps.c_callback_),
+  c_callback_tn_(ps.c_callback_tn_)
 {
   if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
     init_kCounts();
@@ -154,10 +157,12 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
 ///
 void PrimeFinder::callback(const byte_t* sieve, uint_t sieveSize) const
 {
+  if (ps_.isFlag(ps_.PSC_CALLBACK))    { LockGuard lock(ps_); CALLBACK_PRIMES(psc_->callback,  uint64_t) }
+  if (ps_.isFlag(ps_.PSC_CALLBACK_TN)) { /* No Locking */     CALLBACK_PRIMES(psc_callback_tn, uint64_t) }
   if (ps_.isFlag(ps_.CALLBACK))        { LockGuard lock(ps_); CALLBACK_PRIMES(callback_,       uint64_t) }
   if (ps_.isFlag(ps_.CALLBACK_TN))     { /* No Locking */     CALLBACK_PRIMES(callback_tn,     uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK_PSC))    { LockGuard lock(ps_); CALLBACK_PRIMES(psc_->callback,  uint64_t) }
-  if (ps_.isFlag(ps_.CALLBACK_PSC_TN)) { /* No Locking */     CALLBACK_PRIMES(callback_psc_tn, uint64_t) }
+  if (ps_.isFlag(ps_.C_CALLBACK))      { LockGuard lock(ps_); CALLBACK_PRIMES(c_callback_,     uint64_t) }
+  if (ps_.isFlag(ps_.C_CALLBACK_TN))   { /* No Locking */     CALLBACK_PRIMES(c_callback_tn,   uint64_t) }
 }
 
 void PrimeFinder::printPrime(uint64_t prime)
@@ -170,9 +175,14 @@ void PrimeFinder::callback_tn(uint64_t prime) const
   callback_tn_(prime, threadNum_);
 }
 
-void PrimeFinder::callback_psc_tn(uint64_t prime) const
+void PrimeFinder::psc_callback_tn(uint64_t prime) const
 {
   psc_tn_->callback(prime, threadNum_);
+}
+
+void PrimeFinder::c_callback_tn(uint64_t prime) const
+{
+  c_callback_tn_(prime, threadNum_);
 }
 
 } // namespace soe

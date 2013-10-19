@@ -13,6 +13,7 @@
 #define PRIMESIEVE_CLASS_HPP
 
 #include "PrimeSieveCallback.hpp"
+#include "c_callback.h"
 
 #include <stdint.h>
 #include <string>
@@ -86,6 +87,8 @@ public:
   void callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t, int));
   void callbackPrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t>*);
   void callbackPrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t, int>*);
+  void c_callbackPrimes(uint64_t, uint64_t, c_callback_t);
+  void c_callbackPrimes(uint64_t, uint64_t, c_callback_tn_t);
   // nth prime
   uint64_t nthPrime(uint64_t);
   uint64_t nthPrime(uint64_t, uint64_t);
@@ -152,11 +155,13 @@ private:
   int threadNum_;
   /// Pointer to the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
-  /// Callbacks for use with callbackPrimes()
+  /// Callbacks for use with *callbackPrimes()
   void (*callback_)(uint64_t);
   void (*callback_tn_)(uint64_t, int);
   PrimeSieveCallback<uint64_t>* psc_;
   PrimeSieveCallback<uint64_t, int>* psc_tn_;
+  c_callback_t c_callback_;
+  c_callback_tn_t c_callback_tn_;
   static void printStatus(double, double);
   bool isFlag(int, int) const;
   bool isValidFlags(int) const;
@@ -172,8 +177,10 @@ private:
   enum {
     CALLBACK        = 1 << 20,
     CALLBACK_TN     = 1 << 21,
-    CALLBACK_PSC    = 1 << 22,
-    CALLBACK_PSC_TN = 1 << 23
+    PSC_CALLBACK    = 1 << 22,
+    PSC_CALLBACK_TN = 1 << 23,
+    C_CALLBACK      = 1 << 24,
+    C_CALLBACK_TN   = 1 << 25
   };
 };
 

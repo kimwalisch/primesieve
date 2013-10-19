@@ -13,6 +13,7 @@
 #include "config.hpp"
 #include "SieveOfEratosthenes.hpp"
 #include "PrimeSieveCallback.hpp"
+#include "c_callback.h"
 
 #include <stdint.h>
 #include <vector>
@@ -44,13 +45,16 @@ private:
   void (*callback_tn_)(uint64_t, int);
   PrimeSieveCallback<uint64_t>* psc_;
   PrimeSieveCallback<uint64_t, int>* psc_tn_;
+  c_callback_t c_callback_;
+  c_callback_tn_t c_callback_tn_;
   void init_kCounts();
   virtual void segmentFinished(const byte_t*, uint_t);
   void count(const byte_t*, uint_t);
   void print(const byte_t*, uint_t) const;
   void callback(const byte_t*, uint_t) const;
   void callback_tn(uint64_t) const;
-  void callback_psc_tn(uint64_t) const;
+  void psc_callback_tn(uint64_t) const;
+  void c_callback_tn(uint64_t) const;
   static void printPrime(uint64_t);
   DISALLOW_COPY_AND_ASSIGN(PrimeFinder);
 };

@@ -14,6 +14,7 @@
 #include <primesieve/soe/PrimeSieve.hpp>
 #include <primesieve/soe/ParallelPrimeSieve.hpp>
 #include <primesieve/soe/cancel_callback.hpp>
+#include <primesieve/soe/c_callback.h>
 
 #include <stdint.h>
 #include <stddef.h>
@@ -88,7 +89,12 @@ void* generate_n_primes_helper(uint64_t n, uint64_t start, int type)
   return NULL;
 }
 
-}
+} // namespace
+
+/// All C API functions declared in primesieve.h
+/// have extern "C" linkage.
+extern "C"
+{
 
 //////////////////////////////////////////////////////////////////////
 //                    Return an array of primes
@@ -508,12 +514,12 @@ void print_septuplets(uint64_t start, uint64_t stop)
 //                      Callback functions
 //////////////////////////////////////////////////////////////////////
 
-void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
+void callback_primes(uint64_t start, uint64_t stop, c_callback_t callback)
 {
   try
   {
     PrimeSieve ps;
-    ps.callbackPrimes(start, stop, callback);
+    ps.c_callbackPrimes(start, stop, callback);
   }
   catch (std::exception&)
   {
@@ -521,13 +527,13 @@ void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
   }
 }
 
-void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int), int threads)
+void parallel_callback_primes(uint64_t start, uint64_t stop, c_callback_tn_t callback, int threads)
 {
   try
   {
     ParallelPrimeSieve pps;
     pps.setNumThreads(threads);
-    pps.callbackPrimes(start, stop, callback);
+    pps.c_callbackPrimes(start, stop, callback);
   }
   catch (std::exception&)
   {
@@ -548,3 +554,5 @@ int primesieve_test()
 {
   return (primesieve::test() == true) ? 1 : 0;
 }
+
+} // extern "C"
