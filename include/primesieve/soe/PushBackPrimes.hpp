@@ -18,6 +18,7 @@
 #include "PrimeSieve.hpp"
 #include "PrimeSieveCallback.hpp"
 #include "cancel_callback.hpp"
+#include "primesieve_error.hpp"
 
 #include <stdint.h>
 #include <algorithm>
@@ -49,8 +50,9 @@ public:
     if (start <= stop)
     {
       uint64_t prime_count = approximate_prime_count(start, stop);
-      uint64_t limit = std::numeric_limits<std::size_t>::max();
-      primes_.reserve(primes_.size() + static_cast<std::size_t>(std::min(prime_count, limit)));
+      if (prime_count > std::numeric_limits<std::size_t>::max())
+        throw primesieve_error("cannot generate number of primes > SIZE_MAX (max(size_t))");
+      primes_.reserve(primes_.size() + static_cast<std::size_t>(prime_count));
       PrimeSieve ps;
       ps.callbackPrimes(start, stop, this);
     }
@@ -75,7 +77,9 @@ public:
   void pushBack_N_Primes(uint64_t n, uint64_t start)
   {
     n_ = n;
-    primes_.reserve(primes_.size() + n_);
+    if (n_ > std::numeric_limits<std::size_t>::max())
+      throw primesieve_error("cannot generate number of primes > SIZE_MAX (max(size_t))");
+    primes_.reserve(primes_.size() + static_cast<std::size_t>(n_));
     PrimeSieve ps;
     try
     {
