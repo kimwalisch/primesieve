@@ -37,25 +37,13 @@ noinst_PROGRAMS += count_primes
 count_primes_LDADD = libprimesieve.la
 count_primes_SOURCES = examples/count_primes.cpp
 
-noinst_PROGRAMS += count_primes_c
-count_primes_c_LDADD = libprimesieve.la
-count_primes_c_SOURCES = examples/c/count_primes.c
-
 noinst_PROGRAMS += primesieve_iterator
 primesieve_iterator_LDADD = libprimesieve.la
 primesieve_iterator_SOURCES = examples/primesieve_iterator.cpp
 
-noinst_PROGRAMS += primesieve_iterator_c
-primesieve_iterator_c_LDADD = libprimesieve.la
-primesieve_iterator_c_SOURCES = examples/c/primesieve_iterator.c
-
 noinst_PROGRAMS += nth_prime
 nth_prime_LDADD = libprimesieve.la
 nth_prime_SOURCES = examples/nth_prime.cpp
-
-noinst_PROGRAMS += nth_prime_c
-nth_prime_c_LDADD = libprimesieve.la
-nth_prime_c_SOURCES = examples/c/nth_prime.c
 
 noinst_PROGRAMS += previous_prime
 previous_prime_LDADD = libprimesieve.la
@@ -64,6 +52,22 @@ previous_prime_SOURCES = examples/previous_prime.cpp
 noinst_PROGRAMS += store_primes_in_vector
 store_primes_in_vector_LDADD = libprimesieve.la
 store_primes_in_vector_SOURCES = examples/store_primes_in_vector.cpp
+
+noinst_PROGRAMS += count_primes_c
+count_primes_c_LDADD = libprimesieve.la
+count_primes_c_SOURCES = examples/c/count_primes.c
+
+noinst_PROGRAMS += primesieve_iterator_c
+primesieve_iterator_c_LDADD = libprimesieve.la
+primesieve_iterator_c_SOURCES = examples/c/primesieve_iterator.c
+
+noinst_PROGRAMS += nth_prime_c
+nth_prime_c_LDADD = libprimesieve.la
+nth_prime_c_SOURCES = examples/c/nth_prime.c
+
+noinst_PROGRAMS += store_primes_in_array_c
+store_primes_in_array_c_LDADD = libprimesieve.la
+store_primes_in_array_c_SOURCES = examples/c/store_primes_in_array.c
 endif
 
 include_HEADERS = \

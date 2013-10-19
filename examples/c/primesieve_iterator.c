@@ -16,7 +16,7 @@ int main()
   while ((prime = primesieve_next(&pi)) < 10000000000ull)
     sum += prime;
 
-  primesieve_free(&pi);
+  primesieve_free_iterator(&pi);
   printf("Sum of the primes below 10^10 = %llu\n", sum);
   return 0;
 }

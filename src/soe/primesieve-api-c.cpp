@@ -141,7 +141,7 @@ void* generate_n_primes(uint64_t n, uint64_t start, int type)
   return NULL;
 }
 
-void primesieve_free_array(void* array)
+void primesieve_free(void* array)
 {
   uintptr_t type  = reinterpret_cast<uintptr_t*>(array)[-1];
   uintptr_t pimpl = reinterpret_cast<uintptr_t*>(array)[-2];

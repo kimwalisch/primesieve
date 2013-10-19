@@ -113,7 +113,9 @@ int main()
   for (size_t i = 0; i < size; i++)
     printf("%i\n", primes[i]);
 
-  primesieve_free_array(primes);
+  /* deallocate primes array created using generate_primes() */
+  primesieve_free(primes);
+
   primesieve_iterator pi;
   primesieve_init(&pi);
 
@@ -124,7 +126,7 @@ int main()
   while ((prime = primesieve_next(&pi)) < 1000000000)
     sum += prime;
 
-  primesieve_free(&pi);
+  primesieve_free_iterator(&pi);
   printf("Sum of the primes below 10^9 = %llu\n", sum);
   return 0;
 }

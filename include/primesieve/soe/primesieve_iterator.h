@@ -46,7 +46,7 @@ void generate_previous_primes(primesieve_iterator*);
 void primesieve_init(primesieve_iterator* pi);
 
 /** Free all memory. */
-void primesieve_free(primesieve_iterator* pi);
+void primesieve_free_iterator(primesieve_iterator* pi);
 
 /** Set the primesieve iterator to start.
  *  @pre  start <= 2^64 - 2^32 * 10

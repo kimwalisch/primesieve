@@ -79,7 +79,7 @@ void* generate_n_primes(uint64_t n, uint64_t start, int type);
 /** Deallocate a primes array created using the generate_primes()
  *  or generate_n_primes() functions.
  */
-void primesieve_free_array(void* primes);
+void primesieve_free(void* primes);
 
 /** Find the nth prime.
  *  @param start  Start nth prime search at this offset.
