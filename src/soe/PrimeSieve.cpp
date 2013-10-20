@@ -10,6 +10,7 @@
 ///
 
 #include <primesieve/soe/config.hpp>
+#include <primesieve/soe/callback_t.hpp>
 #include <primesieve/soe/PrimeSieve.hpp>
 #include <primesieve/soe/primesieve_error.hpp>
 #include <primesieve/soe/PrimeSieveCallback.hpp>
@@ -17,7 +18,6 @@
 #include <primesieve/soe/PrimeFinder.hpp>
 #include <primesieve/soe/PrimeGenerator.hpp>
 #include <primesieve/soe/imath.hpp>
-#include <primesieve/soe/c_callback.h>
 
 #include <stdint.h>
 #include <iostream>
@@ -64,9 +64,7 @@ PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
   callback_(parent.callback_),
   callback_tn_(parent.callback_tn_),
   psc_(parent.psc_),
-  psc_tn_(parent.psc_tn_),
-  c_callback_(parent.c_callback_),
-  c_callback_tn_(parent.c_callback_tn_)
+  psc_tn_(parent.psc_tn_)
 { }
 
 PrimeSieve::~PrimeSieve()
@@ -200,18 +198,30 @@ void PrimeSieve::printStatus(double old, double current)
 
 void PrimeSieve::doSmallPrime(const SmallPrime& sp)
 {
-  if (sp.firstPrime >= start_ && sp.lastPrime <= stop_) {
+  if (sp.firstPrime >= start_ && sp.lastPrime <= stop_)
+  {
     // callback prime numbers
-    if (sp.index == 0) {
-      if (isFlag(CALLBACK)) callback_(sp.firstPrime);
-      if (isFlag(CALLBACK_TN)) callback_tn_(sp.firstPrime, threadNum_);
-      if (isFlag(PSC_CALLBACK)) psc_->callback(sp.firstPrime);
-      if (isFlag(PSC_CALLBACK_TN)) psc_tn_->callback(sp.firstPrime, threadNum_);
-      if (isFlag(C_CALLBACK)) c_callback_(sp.firstPrime);
-      if (isFlag(C_CALLBACK_TN)) c_callback_tn_(sp.firstPrime, threadNum_);
+    if (sp.index == 0)
+    {
+      if (isFlag(PSC_CALLBACK))
+        psc_->callback(sp.firstPrime);
+      if (isFlag(PSC_CALLBACK_TN))
+        psc_tn_->callback(sp.firstPrime, threadNum_);
+      if (isFlag(CALLBACK))
+        callback_(sp.firstPrime);
+      if (isFlag(CALLBACK_TN))
+        callback_tn_(sp.firstPrime, threadNum_);
+      c_callback_t c_callback = reinterpret_cast<c_callback_t>(callback_);
+      if (isFlag(C_CALLBACK))
+        c_callback(sp.firstPrime);
+      c_callback_tn_t c_callback_tn = reinterpret_cast<c_callback_tn_t>(callback_tn_);
+      if (isFlag(C_CALLBACK_TN))
+        c_callback_tn(sp.firstPrime, threadNum_);
     }
-    if (isCount(sp.index)) counts_[sp.index]++;
-    if (isPrint(sp.index)) std::cout << sp.str << '\n';
+    if (isCount(sp.index))
+      counts_[sp.index]++;
+    if (isPrint(sp.index))
+      std::cout << sp.str << '\n';
   }
 }
 
@@ -327,11 +337,11 @@ void PrimeSieve::callbackPrimes(uint64_t start,
 ///
 void PrimeSieve::c_callbackPrimes(uint64_t start,
                                   uint64_t stop,
-                                  c_callback_t callback)
+                                  void (*callback)(uint64_t))
 {
   if (!callback)
     throw primesieve_error("callback is NULL");
-  c_callback_ = callback;
+  callback_ = callback;
   flags_ = C_CALLBACK;
   sieve(start, stop);
 }
@@ -341,11 +351,11 @@ void PrimeSieve::c_callbackPrimes(uint64_t start,
 ///
 void PrimeSieve::c_callbackPrimes(uint64_t start,
                                   uint64_t stop,
-                                  c_callback_tn_t callback)
+                                  void (*callback)(uint64_t, int))
 {
   if (!callback)
     throw primesieve_error("callback is NULL");
-  c_callback_tn_ = callback;
+  callback_tn_ = callback;
   flags_ = C_CALLBACK_TN;
   sieve(start, stop);
 }

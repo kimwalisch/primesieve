@@ -10,6 +10,7 @@
 ///
 
 #include <primesieve/soe/config.hpp>
+#include <primesieve/soe/callback_t.hpp>
 #include <primesieve/soe/PrimeFinder.hpp>
 #include <primesieve/soe/SieveOfEratosthenes.hpp>
 #include <primesieve/soe/SieveOfEratosthenes-CALLBACK.hpp>
@@ -17,7 +18,6 @@
 #include <primesieve/soe/PrimeSieve.hpp>
 #include <primesieve/soe/PrimeSieveCallback.hpp>
 #include <primesieve/soe/PrimeSieve-lock.hpp>
-#include <primesieve/soe/c_callback.h>
 
 #include <stdint.h>
 #include <algorithm>
@@ -51,9 +51,7 @@ PrimeFinder::PrimeFinder(PrimeSieve& ps) :
   callback_(ps.callback_),
   callback_tn_(ps.callback_tn_),
   psc_(ps.psc_),
-  psc_tn_(ps.psc_tn_),
-  c_callback_(ps.c_callback_),
-  c_callback_tn_(ps.c_callback_tn_)
+  psc_tn_(ps.psc_tn_)
 {
   if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
     init_kCounts();
@@ -157,11 +155,13 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
 ///
 void PrimeFinder::callback(const byte_t* sieve, uint_t sieveSize) const
 {
+  c_callback_t c_callback = reinterpret_cast<c_callback_t>(callback_);
+
   if (ps_.isFlag(ps_.PSC_CALLBACK))    { LockGuard lock(ps_); CALLBACK_PRIMES(psc_->callback,  uint64_t) }
   if (ps_.isFlag(ps_.PSC_CALLBACK_TN)) { /* No Locking */     CALLBACK_PRIMES(psc_callback_tn, uint64_t) }
   if (ps_.isFlag(ps_.CALLBACK))        { LockGuard lock(ps_); CALLBACK_PRIMES(callback_,       uint64_t) }
   if (ps_.isFlag(ps_.CALLBACK_TN))     { /* No Locking */     CALLBACK_PRIMES(callback_tn,     uint64_t) }
-  if (ps_.isFlag(ps_.C_CALLBACK))      { LockGuard lock(ps_); CALLBACK_PRIMES(c_callback_,     uint64_t) }
+  if (ps_.isFlag(ps_.C_CALLBACK))      { LockGuard lock(ps_); CALLBACK_PRIMES(c_callback,      uint64_t) }
   if (ps_.isFlag(ps_.C_CALLBACK_TN))   { /* No Locking */     CALLBACK_PRIMES(c_callback_tn,   uint64_t) }
 }
 
@@ -182,7 +182,8 @@ void PrimeFinder::psc_callback_tn(uint64_t prime) const
 
 void PrimeFinder::c_callback_tn(uint64_t prime) const
 {
-  c_callback_tn_(prime, threadNum_);
+  c_callback_tn_t c_callback_tn2 = reinterpret_cast<c_callback_tn_t>(callback_tn_);
+  c_callback_tn2(prime, threadNum_);
 }
 
 } // namespace soe

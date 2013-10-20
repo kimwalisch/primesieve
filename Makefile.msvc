@@ -33,7 +33,7 @@ PRIMESIEVE_HEADERS = \
   include\primesieve.hpp \
   include\primesieve.h \
   include\primesieve\soe\bits.hpp \
-  include\primesieve\soe\c_callback.h \
+  include\primesieve\soe\callback_t.hpp \
   include\primesieve\soe\config.hpp \
   include\primesieve\soe\EratBig.hpp \
   include\primesieve\soe\EratMedium.hpp \

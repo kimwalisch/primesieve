@@ -13,7 +13,6 @@
 #define PRIMESIEVE_CLASS_HPP
 
 #include "PrimeSieveCallback.hpp"
-#include "c_callback.h"
 
 #include <stdint.h>
 #include <string>
@@ -87,8 +86,8 @@ public:
   void callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t, int));
   void callbackPrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t>*);
   void callbackPrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t, int>*);
-  void c_callbackPrimes(uint64_t, uint64_t, c_callback_t);
-  void c_callbackPrimes(uint64_t, uint64_t, c_callback_tn_t);
+  void c_callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t));
+  void c_callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t, int));
   // nth prime
   uint64_t nthPrime(uint64_t);
   uint64_t nthPrime(uint64_t, uint64_t);
@@ -160,8 +159,6 @@ private:
   void (*callback_tn_)(uint64_t, int);
   PrimeSieveCallback<uint64_t>* psc_;
   PrimeSieveCallback<uint64_t, int>* psc_tn_;
-  c_callback_t c_callback_;
-  c_callback_tn_t c_callback_tn_;
   static void printStatus(double, double);
   bool isFlag(int, int) const;
   bool isValidFlags(int) const;

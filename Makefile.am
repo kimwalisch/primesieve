@@ -83,7 +83,6 @@ otherinclude_HEADERS = \
 	include/primesieve/soe/PrimeSieve.hpp \
 	include/primesieve/soe/PrimeSieveCallback.hpp \
 	include/primesieve/soe/PushBackPrimes.hpp \
-	include/primesieve/soe/c_callback.h \
 	include/primesieve/soe/primesieve_iterator.h
 
 EXTRA_DIST = \
@@ -115,6 +114,7 @@ libprimesieve_la_SOURCES = \
 	src/soe/WheelFactorization.cpp \
 	src/soe/test.cpp \
 	include/primesieve/soe/bits.hpp \
+	include/primesieve/soe/callback_t.hpp \
 	include/primesieve/soe/config.hpp \
 	include/primesieve/soe/EratBig.hpp \
 	include/primesieve/soe/EratMedium.hpp \
