@@ -14,11 +14,13 @@ $ make
 $ sudo make install
 
 If you cloned primesieve's git repository or downloaded its master
-branch then you need to first generate the configure script yourself.
-In order to do this you need to have installed GNU Autotools and 
-Libtool. You can then generate the configure script using:
+branch then you need to have installed GNU Autotools and Libtool
+to build it:
 
 $ ./autogen.sh
+$ ./configure
+$ make
+$ sudo make install
 
 By default the example programs are not built. If you also want to
 build the example programs then you have to enable them in the
