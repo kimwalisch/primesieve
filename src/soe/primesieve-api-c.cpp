@@ -52,13 +52,15 @@ void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size, int ty
     reinterpret_cast<uintptr_t*>(reinterpret_cast<uint8_t*>(&primes[0]) + 128)[-1] = type;
     reinterpret_cast<uintptr_t*>(reinterpret_cast<uint8_t*>(&primes[0]) + 128)[-2] = reinterpret_cast<uintptr_t>(&primes);
     primesieve::generate_primes(start, stop, &primes);
-    *size = primes.size() - 128 / sizeof(T);
+    if (size)
+      *size = primes.size() - 128 / sizeof(T);
     return reinterpret_cast<void*>(reinterpret_cast<uint8_t*>(&primes[0]) + 128);
   }
   catch (std::exception&)
   {
     errno = EDOM;
-    *size = 0;
+    if (size)
+      *size = 0;
     delete &primes;
   }
   return NULL;
@@ -120,7 +122,8 @@ void* generate_primes(uint64_t start, uint64_t stop, size_t* size, int type)
     case UINT64_PRIMES:    return generate_primes_helper<uint64_t>(start, stop, size, type);
   }
   errno = EDOM;
-  *size = 0;
+  if (size)
+    *size = 0;
   return NULL;
 }
 
@@ -149,25 +152,28 @@ void* generate_n_primes(uint64_t n, uint64_t start, int type)
 
 void primesieve_free(void* array)
 {
-  uintptr_t type  = reinterpret_cast<uintptr_t*>(array)[-1];
-  uintptr_t pimpl = reinterpret_cast<uintptr_t*>(array)[-2];
-  switch (type)
+  if (array)
   {
-    case SHORT_PRIMES:     delete reinterpret_cast<std::vector<short>* >(pimpl); break;
-    case USHORT_PRIMES:    delete reinterpret_cast<std::vector<unsigned short>* >(pimpl); break;
-    case INT_PRIMES:       delete reinterpret_cast<std::vector<int>* >(pimpl); break;
-    case UINT_PRIMES:      delete reinterpret_cast<std::vector<unsigned int>* >(pimpl); break;
-    case LONG_PRIMES:      delete reinterpret_cast<std::vector<long>* >(pimpl); break;
-    case ULONG_PRIMES:     delete reinterpret_cast<std::vector<unsigned long>* >(pimpl); break;
-    case LONGLONG_PRIMES:  delete reinterpret_cast<std::vector<long long>* >(pimpl); break;
-    case ULONGLONG_PRIMES: delete reinterpret_cast<std::vector<unsigned long long>* >(pimpl); break;
-    case INT16_PRIMES:     delete reinterpret_cast<std::vector<int16_t>* >(pimpl); break;
-    case UINT16_PRIMES:    delete reinterpret_cast<std::vector<uint16_t>* >(pimpl); break;
-    case INT32_PRIMES:     delete reinterpret_cast<std::vector<int32_t>* >(pimpl); break;
-    case UINT32_PRIMES:    delete reinterpret_cast<std::vector<uint32_t>* >(pimpl); break;
-    case INT64_PRIMES:     delete reinterpret_cast<std::vector<int64_t>* >(pimpl); break;
-    case UINT64_PRIMES:    delete reinterpret_cast<std::vector<uint64_t>* >(pimpl); break;
-    default :              errno = EDOM;
+    uintptr_t type  = reinterpret_cast<uintptr_t*>(array)[-1];
+    uintptr_t pimpl = reinterpret_cast<uintptr_t*>(array)[-2];
+    switch (type)
+    {
+      case SHORT_PRIMES:     delete reinterpret_cast<std::vector<short>* >(pimpl); break;
+      case USHORT_PRIMES:    delete reinterpret_cast<std::vector<unsigned short>* >(pimpl); break;
+      case INT_PRIMES:       delete reinterpret_cast<std::vector<int>* >(pimpl); break;
+      case UINT_PRIMES:      delete reinterpret_cast<std::vector<unsigned int>* >(pimpl); break;
+      case LONG_PRIMES:      delete reinterpret_cast<std::vector<long>* >(pimpl); break;
+      case ULONG_PRIMES:     delete reinterpret_cast<std::vector<unsigned long>* >(pimpl); break;
+      case LONGLONG_PRIMES:  delete reinterpret_cast<std::vector<long long>* >(pimpl); break;
+      case ULONGLONG_PRIMES: delete reinterpret_cast<std::vector<unsigned long long>* >(pimpl); break;
+      case INT16_PRIMES:     delete reinterpret_cast<std::vector<int16_t>* >(pimpl); break;
+      case UINT16_PRIMES:    delete reinterpret_cast<std::vector<uint16_t>* >(pimpl); break;
+      case INT32_PRIMES:     delete reinterpret_cast<std::vector<int32_t>* >(pimpl); break;
+      case UINT32_PRIMES:    delete reinterpret_cast<std::vector<uint32_t>* >(pimpl); break;
+      case INT64_PRIMES:     delete reinterpret_cast<std::vector<int64_t>* >(pimpl); break;
+      case UINT64_PRIMES:    delete reinterpret_cast<std::vector<uint64_t>* >(pimpl); break;
+      default :              errno = EDOM;
+    }
   }
 }
 
