@@ -22,7 +22,7 @@ implemented using OpenMP 2.0 or later.
 
 ### Build instructions
 Download the latest release tarball from
-https://github.com/kimwalisch/primesieve/releases. On Unix-like
+https://code.google.com/p/primesieve/downloads/list. On Unix-like
 operating systems you can then build and install primesieve using:
 
 ```
