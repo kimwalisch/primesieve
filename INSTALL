@@ -31,6 +31,18 @@ want to use custom compiler flags you can do this using e.g.:
 
 $ ./configure CXX=my_compiler CXXFLAGS="-O2"
 
+Cygwin & MinGW
+==============
+
+$ ./configure
+$ make
+$ make install
+
+After that you need to add /usr/local/lib to the library path:
+
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
+
 Microsoft Visual C++
 ====================
 
