@@ -20,6 +20,7 @@
 #include <stddef.h>
 #include <exception>
 #include <limits>
+#include <cassert>
 #include <cerrno>
 
 namespace primesieve
@@ -37,10 +38,12 @@ bool test();
 namespace
 {
 
+const int BUFFER_BYTES = 128;
+
 /// This is the C array's memory layout:
-/// array[-2] = memory address of corresponding std::vector object.
-/// array[-1] = integer type, e.g. INT_PRIMES.
 /// array[ 0] = first prime.
+/// array[-1] = memory address of corresponding std::vector object.
+/// array[-2] = integer type, e.g. INT_PRIMES.
 ///
 template <typename T>
 void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size, int type)
@@ -48,13 +51,16 @@ void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size, int ty
   std::vector<T>& primes = *(new std::vector<T>);
   try
   {
-    primes.resize(128 / sizeof(T), 0);
-    reinterpret_cast<uintptr_t*>(reinterpret_cast<uint8_t*>(&primes[0]) + 128)[-1] = type;
-    reinterpret_cast<uintptr_t*>(reinterpret_cast<uint8_t*>(&primes[0]) + 128)[-2] = reinterpret_cast<uintptr_t>(&primes);
+    assert(BUFFER_BYTES % sizeof(T) == 0);
+    size_t index_c = BUFFER_BYTES / sizeof(T);
+    primes.resize(index_c, 0);
+    uintptr_t* primes_c = reinterpret_cast<uintptr_t*>(&primes[index_c]);
+    primes_c[-1] = reinterpret_cast<uintptr_t>(&primes);
+    primes_c[-2] = type;
     primesieve::generate_primes(start, stop, &primes);
     if (size)
-      *size = primes.size() - 128 / sizeof(T);
-    return reinterpret_cast<void*>(reinterpret_cast<uint8_t*>(&primes[0]) + 128);
+      *size = primes.size() - index_c;
+    return reinterpret_cast<void*>(primes_c);
   }
   catch (std::exception&)
   {
@@ -67,9 +73,9 @@ void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size, int ty
 }
 
 /// This is the C array's memory layout:
-/// array[-2] = memory address of corresponding std::vector object.
-/// array[-1] = integer type, e.g. INT_PRIMES.
 /// array[ 0] = first prime.
+/// array[-1] = memory address of corresponding std::vector object.
+/// array[-2] = integer type, e.g. INT_PRIMES.
 ///
 template <typename T>
 void* generate_n_primes_helper(uint64_t n, uint64_t start, int type)
@@ -77,11 +83,14 @@ void* generate_n_primes_helper(uint64_t n, uint64_t start, int type)
   std::vector<T>& primes = *(new std::vector<T>);
   try
   {
-    primes.resize(128 / sizeof(T), 0);
-    reinterpret_cast<uintptr_t*>(reinterpret_cast<uint8_t*>(&primes[0]) + 128)[-1] = type;
-    reinterpret_cast<uintptr_t*>(reinterpret_cast<uint8_t*>(&primes[0]) + 128)[-2] = reinterpret_cast<uintptr_t>(&primes);
+    assert(BUFFER_BYTES % sizeof(T) == 0);
+    size_t index_c = BUFFER_BYTES / sizeof(T);
+    primes.resize(index_c, 0);
+    uintptr_t* primes_c = reinterpret_cast<uintptr_t*>(&primes[index_c]);
+    primes_c[-1] = reinterpret_cast<uintptr_t>(&primes);
+    primes_c[-2] = type;
     primesieve::generate_n_primes(n, start, &primes);
-    return reinterpret_cast<void*>(reinterpret_cast<uint8_t*>(&primes[0]) + 128);
+    return reinterpret_cast<void*>(primes_c);
   }
   catch (std::exception&)
   {
@@ -154,8 +163,8 @@ void primesieve_free(void* array)
 {
   if (array)
   {
-    uintptr_t type  = reinterpret_cast<uintptr_t*>(array)[-1];
-    uintptr_t pimpl = reinterpret_cast<uintptr_t*>(array)[-2];
+    uintptr_t pimpl = reinterpret_cast<uintptr_t*>(array)[-1];
+    uintptr_t type  = reinterpret_cast<uintptr_t*>(array)[-2];
     switch (type)
     {
       case SHORT_PRIMES:     delete reinterpret_cast<std::vector<short>* >(pimpl); break;
