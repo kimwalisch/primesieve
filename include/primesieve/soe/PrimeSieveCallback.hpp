@@ -14,23 +14,26 @@
 
 #include <stdint.h>
 
-namespace soe
-{
-  class None { };
-}
+namespace primesieve {
 
-template <typename T1, typename T2 = soe::None>
-class PrimeSieveCallback {
+class None { };
+
+template <typename T1, typename T2 = None>
+class PrimeSieveCallback
+{
 public:
   virtual void callback(T1 prime) = 0;
   virtual ~PrimeSieveCallback() { }
 };
 
 template <>
-class PrimeSieveCallback<uint64_t, int> {
+class PrimeSieveCallback<uint64_t, int>
+{
 public:
   virtual void callback(uint64_t prime, int threadNum) = 0;
   virtual ~PrimeSieveCallback() { }
 };
+
+} // namespace primesieve
 
 #endif

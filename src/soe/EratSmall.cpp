@@ -19,7 +19,7 @@
 #include <cassert>
 #include <list>
 
-namespace soe {
+namespace primesieve {
 
 /// @param stop       Upper bound for sieving.
 /// @param sieveSize  Sieve size in bytes.
@@ -324,4 +324,4 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
   }
 }
 
-} // namespace soe
+} // namespace primesieve

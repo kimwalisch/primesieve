@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <string>
 
-namespace soe {
+namespace primesieve {
 
 class PreSieve;
 class EratSmall;
@@ -86,6 +86,6 @@ private:
   DISALLOW_COPY_AND_ASSIGN(SieveOfEratosthenes);
 };
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

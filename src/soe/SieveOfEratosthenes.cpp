@@ -22,7 +22,7 @@
 #include <string>
 #include <cstdlib>
 
-namespace soe {
+namespace primesieve {
 
 const uint_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
 
@@ -198,4 +198,4 @@ void SieveOfEratosthenes::sieve()
   segmentFinished(sieve_, sieveSize_);
 }
 
-} // namespace soe
+} // namespace primesieve

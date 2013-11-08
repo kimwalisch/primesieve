@@ -70,7 +70,7 @@ void PrimeSieveProcess::createSharedMemory() {
         "Interprocess communication error, could not allocate shared memory.");
   }
   // map the attached shared memory to the shm_ segment
-  shm_ = static_cast<ParallelPrimeSieve::SharedMemory*>(sharedMemory_.data());
+  shm_ = static_cast<primesieve::ParallelPrimeSieve::SharedMemory*>(sharedMemory_.data());
 }
 
 /**

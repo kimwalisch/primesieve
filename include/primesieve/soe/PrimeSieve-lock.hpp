@@ -13,7 +13,7 @@
 #include "config.hpp"
 #include "PrimeSieve.hpp"
 
-namespace soe {
+namespace primesieve {
 
 /// Block the current PrimeSieve (or ParallelPrimeSieve) thread
 /// until it can set a lock, then continue execution.
@@ -27,6 +27,6 @@ private:
   DISALLOW_COPY_AND_ASSIGN(LockGuard);
 };
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

@@ -15,11 +15,16 @@
 #include <stdexcept>
 #include <string>
 
-class primesieve_error : public std::runtime_error {
+namespace primesieve {
+
+class primesieve_error : public std::runtime_error
+{
 public:
   primesieve_error(const std::string& message)
     : std::runtime_error(message)
   { }
 };
+
+} // namespace primesieve
 
 #endif

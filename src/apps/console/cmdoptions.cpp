@@ -24,6 +24,7 @@ void help();
 void version();
 
 using namespace std;
+using primesieve::PrimeSieve;
 
 namespace {
 

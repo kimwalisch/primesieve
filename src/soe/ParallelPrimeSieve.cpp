@@ -24,7 +24,7 @@
   #include <primesieve/soe/ParallelPrimeSieve-lock.hpp>
 #endif
 
-using namespace soe;
+namespace primesieve {
 
 ParallelPrimeSieve::ParallelPrimeSieve() :
   numThreads_(IDEAL_NUM_THREADS),
@@ -253,3 +253,5 @@ void ParallelPrimeSieve::setLock() { }
 void ParallelPrimeSieve::unsetLock() { }
 
 #endif
+
+} // namespace primesieve

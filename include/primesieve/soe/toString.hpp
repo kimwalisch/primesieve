@@ -13,7 +13,7 @@
 #include <string>
 #include <sstream>
 
-namespace soe {
+namespace primesieve {
 
 template <typename T>
 inline std::string toString(T t)
@@ -23,6 +23,6 @@ inline std::string toString(T t)
   return oss.str();
 }
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

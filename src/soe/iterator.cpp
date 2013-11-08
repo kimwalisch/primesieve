@@ -18,8 +18,6 @@
 
 namespace primesieve {
 
-const std::string max_stop_string = soe::PrimeFinder::getMaxStopString();
-
 iterator::iterator(uint64_t start)
 {
   skipto(start);
@@ -34,7 +32,7 @@ void iterator::skipto(uint64_t start)
   start_ = start;
 
   if (start_ > max_stop())
-    throw primesieve_error("start must be <= " + max_stop_string);
+    throw primesieve_error("start must be <= " + PrimeFinder::getMaxStopString());
 
   if (!primes_.empty() &&
        primes_.front() <= start_ &&
@@ -56,7 +54,7 @@ void iterator::generate_primes(uint64_t start, uint64_t stop)
     if (stop < 2)
       throw primesieve_error("previous_prime(): smallest prime is 2");
     else
-      throw primesieve_error("next_prime() > " + max_stop_string);
+      throw primesieve_error("next_prime() > " + PrimeFinder::getMaxStopString());
   }
 }
 

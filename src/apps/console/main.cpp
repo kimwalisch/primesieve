@@ -19,6 +19,7 @@
 #include <string>
 
 using namespace std;
+using primesieve::ParallelPrimeSieve;
 
 void printResults(const ParallelPrimeSieve& pps)
 {

@@ -40,32 +40,38 @@
  * @param argv[2] [Shared memory identifier]
  * @see   PrimeSieveProcess.cpp
  */
-int main(int argc, char *argv[]) {
-  if (argc == 3) {
+int main(int argc, char *argv[])
+{
+  if (argc == 3)
+  {
     QString psp("PrimeSieveProcess");
     QString parent(argv[1]);
-    if (parent.compare(psp) == 0) {
+    if (parent.compare(psp) == 0)
+    {
       // open an existing and initialized shared memory
       QString id(argv[2]);
       QSharedMemory sharedMemory(id);
-      if (!sharedMemory.attach()) {
+      if (!sharedMemory.attach())
+      {
         std::cerr << "Unable to attach shared memory " << argv[2] << std::endl;
         exit(EXIT_FAILURE);
       }
       // map the attached shared memory to the shm segment
-      ParallelPrimeSieve::SharedMemory* shm =
-          static_cast<ParallelPrimeSieve::SharedMemory*>(sharedMemory.data());
-      try {
+      primesieve::ParallelPrimeSieve::SharedMemory* shm =
+          static_cast<primesieve::ParallelPrimeSieve::SharedMemory*>(sharedMemory.data());
+      try
+      {
         // initialize the ParallelPrimeSieve object with
         // values from the shared memory segment provided by
         // the primesieve GUI and start sieving
         if (!shm)
           throw std::runtime_error("sharedMemory.data() must not be NULL");
-        ParallelPrimeSieve pps;
+        primesieve::ParallelPrimeSieve pps;
         pps.init(*shm);
         pps.sieve();
       }
-      catch (std::exception& e) {
+      catch (std::exception& e)
+      {
         sharedMemory.detach();
         std::cerr << "ParallelPrimeSieve error: " << e.what() << std::endl;
         exit(EXIT_FAILURE);

@@ -19,7 +19,7 @@
 #include <vector>
 #include <cassert>
 
-namespace soe {
+namespace primesieve {
 
 PrimeGenerator::PrimeGenerator(PrimeFinder& finder) :
   SieveOfEratosthenes(finder.getPreSieve() + 1,
@@ -67,4 +67,4 @@ void PrimeGenerator::callback(const byte_t* sieve, uint_t sieveSize)
   CALLBACK_PRIMES(finder_.addSievingPrime, uint_t)
 }
 
-} // namespace soe
+} // namespace primesieve

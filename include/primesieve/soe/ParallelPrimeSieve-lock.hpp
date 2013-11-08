@@ -14,7 +14,7 @@
 
 #include <omp.h>
 
-namespace soe {
+namespace primesieve {
 
 /// RAII-style wrapper for OpenMP locks.
 /// Initialize lock -> destroy lock.
@@ -79,6 +79,6 @@ bool OmpLockGuard::isSet() const
   return isSet_;
 }
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

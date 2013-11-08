@@ -41,7 +41,7 @@
   #define L1_DCACHE_SIZE 32
 #endif
 
-namespace soe {
+namespace primesieve {
 
 /// byte_t must be unsigned in primesieve
 typedef unsigned char byte_t;
@@ -55,7 +55,7 @@ enum {
   NUMBERS_PER_BYTE = 30
 };
 
-} // namespace soe
+} // namespace primesieve
 
 namespace config {
 

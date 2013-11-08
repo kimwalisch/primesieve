@@ -12,6 +12,10 @@
 
 #include <exception>
 
+namespace primesieve {
+
 class cancel_callback : public std::exception { };
+
+} // namespace primesieve
 
 #endif

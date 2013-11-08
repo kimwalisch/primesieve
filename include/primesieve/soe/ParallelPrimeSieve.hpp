@@ -15,15 +15,19 @@
 #include "PrimeSieve.hpp"
 #include <stdint.h>
 
+namespace primesieve {
+
 /// ParallelPrimeSieve sieves primes in parallel, it is
 /// derived from PrimeSieve so it has the same API.
 /// Please refer to doc/EXAMPLES for more information.
 ///
-class ParallelPrimeSieve : public PrimeSieve {
+class ParallelPrimeSieve : public PrimeSieve
+{
 public:
   /// Used for inter-process communication with the
   /// primesieve GUI application.
-  struct SharedMemory {
+  struct SharedMemory
+  {
     uint64_t start;
     uint64_t stop;
     uint64_t counts[7];
@@ -42,7 +46,8 @@ public:
   using PrimeSieve::sieve;
   virtual void sieve();
 private:
-  enum {
+  enum
+  {
     IDEAL_NUM_THREADS
   };
   /// Used to synchronize threads
@@ -55,7 +60,8 @@ private:
   uint64_t getThreadInterval(int) const;
   uint64_t align(uint64_t) const;
   template <typename T>
-  T getLock() {
+  T getLock()
+  {
     return static_cast<T>(lock_);
   }
   virtual double getWallTime() const;
@@ -63,5 +69,7 @@ private:
   virtual void unsetLock();
   virtual bool updateStatus(uint64_t, bool);
 };
+
+} // namespace primesieve
 
 #endif

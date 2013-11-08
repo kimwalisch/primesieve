@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include <list>
 
-namespace soe {
+namespace primesieve {
 
 /// EratSmall is an implementation of the segmented sieve of
 /// Eratosthenes optimized for small sieving primes that have many
@@ -37,6 +37,6 @@ private:
   DISALLOW_COPY_AND_ASSIGN(EratSmall);
 };
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

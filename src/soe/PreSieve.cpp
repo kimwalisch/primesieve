@@ -17,7 +17,7 @@
 #include <stdint.h>
 #include <cstring>
 
-namespace soe {
+namespace primesieve {
 
 const uint_t PreSieve::primes_[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 };
 
@@ -81,4 +81,4 @@ void PreSieve::doIt(byte_t* sieve, uint_t sieveSize, uint64_t segmentLow) const
   }
 }
 
-} // namespace soe
+} // namespace primesieve

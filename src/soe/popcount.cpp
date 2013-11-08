@@ -14,7 +14,7 @@
 
 #include <stdint.h>
 
-namespace soe {
+namespace primesieve {
 
 /// This algorithm counts the number of 1 bits (population count) in
 /// an array using 64-bit tree merging. To the best of my knowledge
@@ -80,4 +80,4 @@ uint64_t popcount(const uint64_t* array, uint64_t size)
   return bit_count;
 }
 
-} // namespace soe
+} // namespace primesieve

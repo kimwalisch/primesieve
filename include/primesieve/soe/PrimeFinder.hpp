@@ -17,9 +17,9 @@
 #include <stdint.h>
 #include <vector>
 
-class PrimeSieve;
+namespace primesieve {
 
-namespace soe {
+class PrimeSieve;
 
 /// PrimeFinder is a SieveOfEratosthenes class that is used to
 /// callback, print and count primes and prime k-tuplets
@@ -56,6 +56,6 @@ private:
   DISALLOW_COPY_AND_ASSIGN(PrimeFinder);
 };
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

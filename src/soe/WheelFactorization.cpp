@@ -11,7 +11,7 @@
 #include <primesieve/soe/WheelFactorization.hpp>
 #include <primesieve/soe/bits.hpp>
 
-namespace soe {
+namespace primesieve {
 
 const WheelInit wheel30Init[30] = {
   {1,  0}, {0,  0}, {5,  1}, {4,  1}, {3,  1}, {2,  1}, {1,  1}, {0,  1},
@@ -168,4 +168,4 @@ const WheelElement wheel210[48*8] = {
   { BIT2,  4, 0, 1 }, { BIT3, 2, 0, 1 }, { BIT4, 10, 0, 1 }, { BIT6, 2, 0, -47 }
 };
 
-} // namespace soe
+} // namespace primesieve

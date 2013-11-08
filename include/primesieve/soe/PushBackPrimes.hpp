@@ -26,7 +26,7 @@
 #include <limits>
 #include <vector>
 
-namespace soe {
+namespace primesieve {
 
 /// approximate_prime_count(x) > pi(x)
 inline uint64_t approximate_prime_count(uint64_t start, uint64_t stop)
@@ -107,6 +107,6 @@ public:
     uint64_t n_;
 };
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

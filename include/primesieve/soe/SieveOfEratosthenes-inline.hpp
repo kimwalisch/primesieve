@@ -20,7 +20,7 @@
 
 #include <stdint.h>
 
-namespace soe {
+namespace primesieve {
 
 inline uint64_t SieveOfEratosthenes::getStart()     const { return start_; }
 inline uint64_t SieveOfEratosthenes::getStop()      const { return stop_; }
@@ -63,6 +63,6 @@ inline void SieveOfEratosthenes::addSievingPrime(uint_t prime)
   else /* (prime > limitPreSieve) */ eratSmall_->addSievingPrime(prime, segmentLow_);
 }
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

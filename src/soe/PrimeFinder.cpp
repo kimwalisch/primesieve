@@ -25,7 +25,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace soe {
+namespace primesieve {
 
 /// forward declaration
 uint64_t popcount(const uint64_t* array, uint64_t size);
@@ -186,4 +186,4 @@ void PrimeFinder::c_callback_tn(uint64_t prime) const
   c_callback_tn2(prime, threadNum_);
 }
 
-} // namespace soe
+} // namespace primesieve

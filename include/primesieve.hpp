@@ -48,7 +48,7 @@ namespace primesieve
   {
     if (primes)
     {
-      soe::PushBackPrimes<T> pb(*primes);
+      PushBackPrimes<T> pb(*primes);
       pb.pushBackPrimes(0, stop);
     }
   }
@@ -62,7 +62,7 @@ namespace primesieve
   {
     if (primes)
     {
-      soe::PushBackPrimes<T> pb(*primes);
+      PushBackPrimes<T> pb(*primes);
       pb.pushBackPrimes(start, stop);
     }
   }
@@ -73,7 +73,7 @@ namespace primesieve
   {
     if (primes)
     {
-      soe::PushBack_N_Primes<T> pb(*primes);
+      PushBack_N_Primes<T> pb(*primes);
       pb.pushBack_N_Primes(n, 0);
     }
   }
@@ -86,7 +86,7 @@ namespace primesieve
   {
     if (primes)
     {
-      soe::PushBack_N_Primes<T> pb(*primes);
+      PushBack_N_Primes<T> pb(*primes);
       pb.pushBack_N_Primes(n, start);
     }
   }

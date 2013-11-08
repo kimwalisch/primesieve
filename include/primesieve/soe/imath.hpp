@@ -11,7 +11,7 @@
 #ifndef IMATH_HPP
 #define IMATH_HPP
 
-namespace soe {
+namespace primesieve {
 
 template <typename T>
 inline T numberOfBits(T)
@@ -101,6 +101,6 @@ inline T getInBetween(T min, T value, T max)
   return value;
 }
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

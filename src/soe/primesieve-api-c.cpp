@@ -23,6 +23,9 @@
 #include <cassert>
 #include <cerrno>
 
+using primesieve::PrimeSieve;
+using primesieve::ParallelPrimeSieve;
+
 namespace primesieve
 {
 

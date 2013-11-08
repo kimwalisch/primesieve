@@ -13,7 +13,7 @@
 #include "config.hpp"
 #include <stdint.h>
 
-namespace soe {
+namespace primesieve {
 
 /// @brief  Pre-sieve multiples of small primes to speed up the sieve
 ///         of Eratosthenes.
@@ -53,6 +53,6 @@ private:
   DISALLOW_COPY_AND_ASSIGN(PreSieve);
 };
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

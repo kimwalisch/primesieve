@@ -18,11 +18,7 @@
 #include <string>
 #include <vector>
 
-namespace soe
-{
-  class PrimeFinder;
-  class LockGuard;
-}
+namespace primesieve {
 
 /// PrimeSieve is a highly optimized C++ implementation of the
 /// segmented sieve of Eratosthenes that generates primes and prime
@@ -30,13 +26,15 @@ namespace soe
 /// maximum. The README file describes the algorithms used in more
 /// detail and doc/EXAMPLES contains source code examples.
 ///
-class PrimeSieve {
-  friend class soe::PrimeFinder;
-  friend class soe::LockGuard;
+class PrimeSieve
+{
+  friend class PrimeFinder;
+  friend class LockGuard;
 public:
   /// Public flags for use with setFlags(int)
   /// @pre flag < (1 << 20)
-  enum {
+  enum
+  {
     COUNT_PRIMES      = 1 << 0,
     COUNT_TWINS       = 1 << 1,
     COUNT_TRIPLETS    = 1 << 2,
@@ -165,13 +163,15 @@ private:
   bool isStatus() const;
   bool isParallelPrimeSieveChild() const;
   void doSmallPrime(const SmallPrime&);
-  enum {
+  enum
+  {
       INIT_STATUS = 0,
     FINISH_STATUS = 10
   };
   /// Private flags
   /// @pre flag >= (1 << 20)
-  enum {
+  enum
+  {
     CALLBACK        = 1 << 20,
     CALLBACK_TN     = 1 << 21,
     PSC_CALLBACK    = 1 << 22,
@@ -180,5 +180,7 @@ private:
     C_CALLBACK_TN   = 1 << 25
   };
 };
+
+} // namespace primesieve
 
 #endif

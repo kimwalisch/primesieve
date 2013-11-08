@@ -24,7 +24,7 @@
 #include <vector>
 #include <list>
 
-namespace soe {
+namespace primesieve {
 
 /// @param stop       Upper bound for sieving.
 /// @param sieveSize  Sieve size in bytes.
@@ -176,4 +176,4 @@ void EratBig::crossOff(byte_t* sieve, Bucket& bucket)
   }
 }
 
-} // namespace soe
+} // namespace primesieve

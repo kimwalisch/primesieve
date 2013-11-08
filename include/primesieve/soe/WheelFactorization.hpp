@@ -22,7 +22,7 @@
 #include <cstddef>
 #include <cassert>
 
-namespace soe {
+namespace primesieve {
 
 /// The WheelInit data structure is used to calculate the first
 /// multiple >= start of each sieving prime.
@@ -250,6 +250,6 @@ typedef WheelFactorization<30, 8, wheel30Init, wheel30> Modulo30Wheel_t;
 /// 4th wheel, skips multiples of 2, 3, 5 and 7
 typedef WheelFactorization<210, 48, wheel210Init, wheel210> Modulo210Wheel_t;
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

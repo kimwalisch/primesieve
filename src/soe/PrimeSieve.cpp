@@ -26,7 +26,7 @@
 #include <ctime>
 #include <algorithm>
 
-using namespace soe;
+namespace primesieve {
 
 const PrimeSieve::SmallPrime PrimeSieve::smallPrimes_[8] =
 {
@@ -440,3 +440,5 @@ uint64_t PrimeSieve::countSeptuplets(uint64_t start, uint64_t stop)
   sieve(start, stop, COUNT_SEPTUPLETS);
   return getSeptupletCount();
 }
+
+} // namespace primesieve

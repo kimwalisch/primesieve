@@ -18,10 +18,9 @@
 #include <algorithm>
 #include <cmath>
 
-namespace {
-
-using soe::SieveOfEratosthenes;
 using std::log;
+
+namespace primesieve {
 
 /// This class is used to generate n primes and
 /// then stop by throwing an exception.
@@ -102,8 +101,6 @@ void checkLimit(uint64_t start, uint64_t dist)
     throw primesieve_error("nth prime is too large > 2^64 - 2^32 * 11");
 }
 
-} // end namespace
-
 uint64_t PrimeSieve::nthPrime(uint64_t n)
 {
   return nthPrime(0, n);
@@ -153,3 +150,5 @@ uint64_t PrimeSieve::nthPrime(uint64_t n, uint64_t start)
 
   return np.getNthPrime();
 }
+
+} // namespace primesieve

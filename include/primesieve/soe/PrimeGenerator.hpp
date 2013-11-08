@@ -13,7 +13,7 @@
 #include "config.hpp"
 #include "SieveOfEratosthenes.hpp"
 
-namespace soe {
+namespace primesieve {
 
 class PrimeFinder;
 
@@ -29,6 +29,6 @@ private:
   DISALLOW_COPY_AND_ASSIGN(PrimeGenerator);
 };
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

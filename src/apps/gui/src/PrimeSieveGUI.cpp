@@ -47,6 +47,8 @@
   #include <stdexcept>
 #endif
 
+using primesieve::ParallelPrimeSieve;
+
 PrimeSieveGUI::PrimeSieveGUI(QWidget *parent) :
   QMainWindow(parent), ui(new Ui::PrimeSieveGUI), validator_(0),
   primeSieveProcess_(0), saveAct_(0), quitAct_(0), aboutAct_(0),

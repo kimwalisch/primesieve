@@ -235,7 +235,7 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<
 
 uint64_t max_stop()
 {
-  return soe::PrimeFinder::getMaxStop();
+  return PrimeFinder::getMaxStop();
 }
 
 } // end namespace

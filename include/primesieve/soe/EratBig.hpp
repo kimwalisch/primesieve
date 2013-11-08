@@ -17,7 +17,7 @@
 #include <vector>
 #include <list>
 
-namespace soe {
+namespace primesieve {
 
 /// EratBig is an implementation of the segmented sieve of
 /// Eratosthenes optimized for big sieving primes that have very few
@@ -49,6 +49,6 @@ private:
   DISALLOW_COPY_AND_ASSIGN(EratBig);
 };
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

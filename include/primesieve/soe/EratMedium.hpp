@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include <list>
 
-namespace soe {
+namespace primesieve {
 
 /// EratMedium is an implementation of the segmented sieve of
 /// Eratosthenes optimized for medium sieving primes that have a few
@@ -37,6 +37,6 @@ private:
   DISALLOW_COPY_AND_ASSIGN(EratMedium);
 };
 
-} // namespace soe
+} // namespace primesieve
 
 #endif

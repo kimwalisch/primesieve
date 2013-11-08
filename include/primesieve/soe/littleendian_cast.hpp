@@ -14,7 +14,7 @@
 
 #include "config.hpp"
 
-namespace soe {
+namespace primesieve {
 
 /// http://c-faq.com/misc/endiantest.html
 inline bool is_littleendian()
@@ -61,6 +61,6 @@ inline T littleendian_cast(const byte_t* array)
   return littleendian_cast_helper<T, 0, sizeof(T)>::sum(array, 0);
 }
 
-} // namespace soe
+} // namespace primesieve
 
 #endif
