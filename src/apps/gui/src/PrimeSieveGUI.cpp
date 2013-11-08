@@ -20,7 +20,7 @@
 #include "PrimeSieveGUI.hpp"
 #include "ui_PrimeSieveGUI.h"
 #include "PrimeSieveProcess.hpp"
-#include "ExpressionParser.hpp"
+#include "calculator.hpp"
 
 #include <primesieve.hpp>
 #include <primesieve/soe/ParallelPrimeSieve.hpp>
@@ -158,12 +158,11 @@ quint64 PrimeSieveGUI::getNumber(const QString& str) {
   if (str.isEmpty())
     throw std::invalid_argument("Please enter a lower and upper bound for prime sieving.");
 
-  ExpressionParser<quint64> parser;
   quint64 result = 0;
   try {
-    result = parser.eval(str.toLatin1().data());
+    result = calculator::eval<quint64>(str.toLatin1().data());
   }
-  catch (parser_error& e) {
+  catch (calculator::error& e) {
     throw std::invalid_argument(e.what());
   }
 
