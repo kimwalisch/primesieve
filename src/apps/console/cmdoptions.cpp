@@ -11,7 +11,7 @@
 
 #include <primesieve.hpp>
 #include "cmdoptions.hpp"
-#include "ExpressionParser.hpp"
+#include "calculator.hpp"
 
 #include <string>
 #include <map>
@@ -28,15 +28,14 @@ using namespace std;
 namespace {
 
 /// e.g. id = "--threads", value = "4"
-struct Option {
+struct Option
+{
   string id;
   string value;
   template <typename T>
   T getValue() const
   {
-    ExpressionParser<T> parser;
-    T result = parser.eval(value);
-    return result;
+    return calculator::eval<T>(value);
   }
 };
 
