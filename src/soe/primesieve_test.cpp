@@ -1,6 +1,6 @@
 ///
-/// @file   test.cpp
-/// @brief  bool primesieve::test(); runs sieving tests to ensure that
+/// @file   primesieve_test.cpp
+/// @brief  int primesieve_test(); runs sieving tests to ensure that
 ///         ParallelPrimeSieve objects produce correct results.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
@@ -156,9 +156,9 @@ void testRandomIntervals()
 /// (and PrimeSieve) objects produce correct results.
 /// The tests use up to 1 gigabyte of memory and take about
 /// 1 minute to complete on a quad core CPU from 2013.
-/// @return true if success, false if error.
+/// @return 1 if success, 0 if error.
 ///
-bool test()
+int primesieve_test()
 {
   try
   {
@@ -170,10 +170,10 @@ bool test()
   catch (exception& e)
   {
     cerr << endl << "primesieve error: " << e.what() << endl;
-    return false;
+    return 0;
   }
   cout << "All tests passed successfully!" << endl;
-  return true;
+  return 1;
 }
 
 } // end namespace

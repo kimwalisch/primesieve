@@ -237,7 +237,7 @@ uint64_t max_stop();
 /** Run extensive correctness tests.
  *  The tests last about one minute on a quad core CPU from
  *  2013 and use up to 1 gigabyte of memory.
- *  @return 0 if success else 1.
+ *  @return 1 if success, 0 if error.
  */
 int primesieve_test();
 

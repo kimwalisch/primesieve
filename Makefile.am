@@ -106,13 +106,13 @@ libprimesieve_la_SOURCES = \
 	src/soe/PrimeGenerator.cpp \
 	src/soe/iterator.cpp \
 	src/soe/primesieve_iterator.cpp \
+	src/soe/primesieve_test.cpp \
 	src/soe/PrimeSieve-nthPrime.cpp \
 	src/soe/PrimeSieve.cpp \
 	src/soe/primesieve-api.cpp \
 	src/soe/primesieve-api-c.cpp \
 	src/soe/SieveOfEratosthenes.cpp \
 	src/soe/WheelFactorization.cpp \
-	src/soe/test.cpp \
 	include/primesieve/soe/bits.hpp \
 	include/primesieve/soe/callback_t.hpp \
 	include/primesieve/soe/config.hpp \

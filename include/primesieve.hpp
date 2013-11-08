@@ -283,9 +283,9 @@ namespace primesieve
   /// Run extensive correctness tests.
   /// The tests last about one minute on a quad core CPU from
   /// 2013 and use up to 1 gigabyte of memory.
-  /// @return true if success else false.
+  /// @return 1 if success, 0 if error.
   ///
-  bool test();
+  int primesieve_test();
 }
 
 #endif

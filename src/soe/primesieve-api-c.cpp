@@ -26,11 +26,10 @@
 using primesieve::PrimeSieve;
 using primesieve::ParallelPrimeSieve;
 
-namespace primesieve
-{
+namespace primesieve {
 
 uint64_t max_stop();
-bool test();
+int      primesieve_test();
 
 }
 
@@ -38,15 +37,14 @@ bool test();
 //                    Internal helper functions
 //////////////////////////////////////////////////////////////////////
 
-namespace
-{
+namespace {
 
 const int BUFFER_BYTES = 128;
 
 /// This is the C array's memory layout:
-/// array[ 0] = first prime.
-/// array[-1] = memory address of corresponding std::vector object.
-/// array[-2] = integer type, e.g. INT_PRIMES.
+/// primes_c[ 0] = first prime.
+/// primes_c[-1] = memory address of corresponding std::vector object.
+/// primes_c[-2] = integer type, e.g. INT_PRIMES.
 ///
 template <typename T>
 void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size, int type)
@@ -76,9 +74,9 @@ void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size, int ty
 }
 
 /// This is the C array's memory layout:
-/// array[ 0] = first prime.
-/// array[-1] = memory address of corresponding std::vector object.
-/// array[-2] = integer type, e.g. INT_PRIMES.
+/// primes_c[ 0] = first prime.
+/// primes_c[-1] = memory address of corresponding std::vector object.
+/// primes_c[-2] = integer type, e.g. INT_PRIMES.
 ///
 template <typename T>
 void* generate_n_primes_helper(uint64_t n, uint64_t start, int type)
@@ -162,12 +160,12 @@ void* generate_n_primes(uint64_t n, uint64_t start, int type)
   return NULL;
 }
 
-void primesieve_free(void* array)
+void primesieve_free(void* primes_c)
 {
-  if (array)
+  if (primes_c)
   {
-    uintptr_t pimpl = reinterpret_cast<uintptr_t*>(array)[-1];
-    uintptr_t type  = reinterpret_cast<uintptr_t*>(array)[-2];
+    uintptr_t pimpl = reinterpret_cast<uintptr_t*>(primes_c)[-1];
+    uintptr_t type  = reinterpret_cast<uintptr_t*>(primes_c)[-2];
     switch (type)
     {
       case SHORT_PRIMES:     delete reinterpret_cast<std::vector<short>* >(pimpl); break;
@@ -572,7 +570,7 @@ uint64_t max_stop()
 
 int primesieve_test()
 {
-  return (primesieve::test() == true) ? 1 : 0;
+  return primesieve::primesieve_test();
 }
 
 } // extern "C"
