@@ -111,11 +111,11 @@ public:
       if (!isEnd())
         unexpected();
     }
-    catch (error&)
+    catch (const calculator::error& e)
     {
       while(!stack_.empty())
         stack_.pop();
-      throw;
+      throw e;
     }
     return result;
   }
@@ -215,7 +215,7 @@ private:
         msg << " (error token is \""
             << expr_.substr(division, expr_.size() - division)
             << "\")";
-      throw error(expr_, msg.str());
+      throw calculator::error(expr_, msg.str());
     }
     return value;
   }
@@ -272,7 +272,7 @@ private:
         << expr_.substr(index_, expr_.size() - index_)
         << "\" at index "
         << index_;
-    throw error(expr_, msg.str());
+    throw calculator::error(expr_, msg.str());
   }
 
   /// Eat all white space characters at the
@@ -377,7 +377,7 @@ private:
                 {
                   if (!isEnd())
                     unexpected();
-                  throw error(expr_, "Syntax error: `)' expected at end of expression");
+                  throw calculator::error(expr_, "Syntax error: `)' expected at end of expression");
                 }
                 index_++; break;
       case '~': index_++; val = ~parseValue(); break;
@@ -386,7 +386,7 @@ private:
                 break;
       default : if (!isEnd())
                   unexpected();
-                throw error(expr_, "Syntax error: value expected at end of expression");
+                throw calculator::error(expr_, "Syntax error: value expected at end of expression");
     }
     return val;
   }
