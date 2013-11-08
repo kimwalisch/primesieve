@@ -14,7 +14,7 @@ Here is a list of these people.
   * Mark Rodenkirch suggested adding a PrimeSieveCallback class.
 
   * Silver Möls has helped to increase instruction level parallelism
-    in src/soe/EratBig.cpp in primesieve 3.1.
+    in src/primesieve/EratBig.cpp in primesieve 3.1.
 
   * Huang Yuanbing has given feedback and suggestions.
 

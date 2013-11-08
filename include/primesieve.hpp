@@ -19,13 +19,13 @@
 #define PRIMESIEVE_VERSION_MINOR 0
 #define PRIMESIEVE_YEAR "2013"
 
-#include "primesieve/soe/PrimeSieve.hpp"
-#include "primesieve/soe/ParallelPrimeSieve.hpp"
-#include "primesieve/soe/primesieve_error.hpp"
-#include "primesieve/soe/iterator.hpp"
-#include "primesieve/soe/PrimeSieveCallback.hpp"
-#include "primesieve/soe/PushBackPrimes.hpp"
-#include "primesieve/soe/cancel_callback.hpp"
+#include "primesieve/PrimeSieve.hpp"
+#include "primesieve/ParallelPrimeSieve.hpp"
+#include "primesieve/primesieve_error.hpp"
+#include "primesieve/iterator.hpp"
+#include "primesieve/PrimeSieveCallback.hpp"
+#include "primesieve/PushBackPrimes.hpp"
+#include "primesieve/cancel_callback.hpp"
 
 #include <stdint.h>
 #include <vector>

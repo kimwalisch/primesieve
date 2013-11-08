@@ -1,11 +1,11 @@
 About
 =====
 
-This directory (src/soe) contains primesieve's sieve of Eratosthenes
-implementation. Most files that start with a capital letter contain
-a class of the same name. The header files of these classes are stored
-in include/primesive/soe. Below is a short explanation of the most
-important classes and files.
+This directory (src/primesieve) contains primesieve's sieve of
+Eratosthenes implementation. Most files that start with a capital
+letter contain a class of the same name. The header files of these
+classes are stored in include/primesive/soe. Below is a short
+explanation of the most important classes and files.
 
 C++ classes
 -----------
@@ -91,7 +91,7 @@ Other files
   This file contains the implementations of the functions declared
   in include/primesieve.hpp.
 
-* include/primesieve/soe/config.hpp
+* include/primesieve/config.hpp
   Contains compile time constants that set the size of various
   arrays and limits within primesieve. You can set these constants
   according to your CPU type to get the best performance.

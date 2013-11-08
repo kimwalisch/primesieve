@@ -9,10 +9,10 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/config.hpp>
-#include <primesieve/soe/ParallelPrimeSieve.hpp>
-#include <primesieve/soe/PrimeSieve.hpp>
-#include <primesieve/soe/imath.hpp>
+#include <primesieve/config.hpp>
+#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/PrimeSieve.hpp>
+#include <primesieve/imath.hpp>
 
 #include <stdint.h>
 #include <cstdlib>
@@ -21,7 +21,7 @@
 
 #ifdef _OPENMP
   #include <omp.h>
-  #include <primesieve/soe/ParallelPrimeSieve-lock.hpp>
+  #include <primesieve/ParallelPrimeSieve-lock.hpp>
 #endif
 
 namespace primesieve {

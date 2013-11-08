@@ -9,10 +9,10 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/PrimeSieve.hpp>
-#include <primesieve/soe/ParallelPrimeSieve.hpp>
-#include <primesieve/soe/PrimeSieveCallback.hpp>
-#include <primesieve/soe/PrimeFinder.hpp>
+#include <primesieve/PrimeSieve.hpp>
+#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/PrimeSieveCallback.hpp>
+#include <primesieve/PrimeFinder.hpp>
 
 #include <stdint.h>
 

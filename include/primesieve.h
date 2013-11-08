@@ -19,7 +19,7 @@
 #define PRIMESIEVE_VERSION_MINOR 0
 #define PRIMESIEVE_YEAR "2013"
 
-#include <primesieve/soe/primesieve_iterator.h>
+#include <primesieve/primesieve_iterator.h>
 #include <stdint.h>
 #include <stddef.h>
 

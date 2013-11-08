@@ -9,10 +9,10 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/config.hpp>
-#include <primesieve/soe/PreSieve.hpp>
-#include <primesieve/soe/EratSmall.hpp>
-#include <primesieve/soe/primesieve_error.hpp>
+#include <primesieve/config.hpp>
+#include <primesieve/PreSieve.hpp>
+#include <primesieve/EratSmall.hpp>
+#include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
 #include <cstring>

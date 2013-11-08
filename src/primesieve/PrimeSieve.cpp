@@ -9,15 +9,15 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/config.hpp>
-#include <primesieve/soe/callback_t.hpp>
-#include <primesieve/soe/PrimeSieve.hpp>
-#include <primesieve/soe/primesieve_error.hpp>
-#include <primesieve/soe/PrimeSieveCallback.hpp>
-#include <primesieve/soe/PrimeSieve-lock.hpp>
-#include <primesieve/soe/PrimeFinder.hpp>
-#include <primesieve/soe/PrimeGenerator.hpp>
-#include <primesieve/soe/imath.hpp>
+#include <primesieve/config.hpp>
+#include <primesieve/callback_t.hpp>
+#include <primesieve/PrimeSieve.hpp>
+#include <primesieve/primesieve_error.hpp>
+#include <primesieve/PrimeSieveCallback.hpp>
+#include <primesieve/PrimeSieve-lock.hpp>
+#include <primesieve/PrimeFinder.hpp>
+#include <primesieve/PrimeGenerator.hpp>
+#include <primesieve/imath.hpp>
 
 #include <stdint.h>
 #include <iostream>

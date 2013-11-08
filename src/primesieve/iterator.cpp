@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/config.hpp>
-#include <primesieve/soe/PrimeFinder.hpp>
+#include <primesieve/config.hpp>
+#include <primesieve/PrimeFinder.hpp>
 #include <primesieve.hpp>
 
 #include <algorithm>

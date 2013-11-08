@@ -32,32 +32,32 @@ PRIMESIEVE_OBJECTS = \
 PRIMESIEVE_HEADERS = \
   include\primesieve.hpp \
   include\primesieve.h \
-  include\primesieve\soe\bits.hpp \
-  include\primesieve\soe\callback_t.hpp \
-  include\primesieve\soe\config.hpp \
-  include\primesieve\soe\EratBig.hpp \
-  include\primesieve\soe\EratMedium.hpp \
-  include\primesieve\soe\EratSmall.hpp \
-  include\primesieve\soe\imath.hpp \
-  include\primesieve\soe\littleendian_cast.hpp \
-  include\primesieve\soe\ParallelPrimeSieve.hpp \
-  include\primesieve\soe\ParallelPrimeSieve-lock.hpp \
-  include\primesieve\soe\PreSieve.hpp \
-  include\primesieve\soe\PrimeFinder.hpp \
-  include\primesieve\soe\PrimeGenerator.hpp \
-  include\primesieve\soe\PrimeSieve-lock.hpp \
-  include\primesieve\soe\PrimeSieve.hpp \
-  include\primesieve\soe\PrimeSieveCallback.hpp \
-  include\primesieve\soe\primesieve_error.hpp \
-  include\primesieve\soe\primesieve_iterator.h \
-  include\primesieve\soe\iterator.hpp \
-  include\primesieve\soe\PushBackPrimes.hpp \
-  include\primesieve\soe\SieveOfEratosthenes-CALLBACK.hpp \
-  include\primesieve\soe\SieveOfEratosthenes-inline.hpp \
-  include\primesieve\soe\SieveOfEratosthenes.hpp \
-  include\primesieve\soe\cancel_callback.hpp \
-  include\primesieve\soe\toString.hpp \
-  include\primesieve\soe\WheelFactorization.hpp
+  include\primesieve\bits.hpp \
+  include\primesieve\callback_t.hpp \
+  include\primesieve\config.hpp \
+  include\primesieve\EratBig.hpp \
+  include\primesieve\EratMedium.hpp \
+  include\primesieve\EratSmall.hpp \
+  include\primesieve\imath.hpp \
+  include\primesieve\littleendian_cast.hpp \
+  include\primesieve\ParallelPrimeSieve.hpp \
+  include\primesieve\ParallelPrimeSieve-lock.hpp \
+  include\primesieve\PreSieve.hpp \
+  include\primesieve\PrimeFinder.hpp \
+  include\primesieve\PrimeGenerator.hpp \
+  include\primesieve\PrimeSieve-lock.hpp \
+  include\primesieve\PrimeSieve.hpp \
+  include\primesieve\PrimeSieveCallback.hpp \
+  include\primesieve\primesieve_error.hpp \
+  include\primesieve\primesieve_iterator.h \
+  include\primesieve\iterator.hpp \
+  include\primesieve\PushBackPrimes.hpp \
+  include\primesieve\SieveOfEratosthenes-CALLBACK.hpp \
+  include\primesieve\SieveOfEratosthenes-inline.hpp \
+  include\primesieve\SieveOfEratosthenes.hpp \
+  include\primesieve\cancel_callback.hpp \
+  include\primesieve\toString.hpp \
+  include\primesieve\WheelFactorization.hpp
 
 APP_OBJECTS = \
   $(OBJDIR)\cmdoptions.obj \
@@ -122,8 +122,8 @@ clean:
 # Compilation rules
 #-----------------------------------------------------------------------------
 
-$(PRIMESIEVE_OBJECTS): src\soe\$(@B).cpp $(PRIMESIEVE_HEADERS)
-	$(CXX) $(CXXFLAGS) /c src\soe\$(@B).cpp /Fo$@
+$(PRIMESIEVE_OBJECTS): src\primesieve\$(@B).cpp $(PRIMESIEVE_HEADERS)
+	$(CXX) $(CXXFLAGS) /c src\primesieve\$(@B).cpp /Fo$@
 
 $(APP_OBJECTS): src\apps\console\$(@B).cpp $(PRIMESIEVE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\apps\console\$(@B).cpp /Fo$@

@@ -54,6 +54,6 @@ AC_ARG_ENABLE(examples,
 AM_CONDITIONAL(MAKE_EXAMPLES, test "$ENABLE_EXAMPLES" = "yes")
 
 AC_OPENMP
-AC_CONFIG_HEADERS([src/soe/autoconf.h])
+AC_CONFIG_HEADERS([src/primesieve/autoconf.h])
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

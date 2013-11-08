@@ -34,24 +34,24 @@ HEADERS += \
   src/PrimeSieveProcess.hpp
 
 # ---------------------------------------------------------
-# Sieve of Eratosthenes sources (src/soe)
+# Sieve of Eratosthenes sources (src/primesieve)
 # ---------------------------------------------------------
 
 INCLUDEPATH += ../../../include
 
 SOURCES += \
-  ../../soe/EratBig.cpp \
-  ../../soe/EratMedium.cpp \
-  ../../soe/EratSmall.cpp \
-  ../../soe/ParallelPrimeSieve.cpp \
-  ../../soe/popcount.cpp \
-  ../../soe/PreSieve.cpp \
-  ../../soe/PrimeFinder.cpp \
-  ../../soe/PrimeGenerator.cpp \
-  ../../soe/PrimeSieve-nthPrime.cpp \
-  ../../soe/PrimeSieve.cpp \
-  ../../soe/SieveOfEratosthenes.cpp \
-  ../../soe/WheelFactorization.cpp
+  ../../primesieve/EratBig.cpp \
+  ../../primesieve/EratMedium.cpp \
+  ../../primesieve/EratSmall.cpp \
+  ../../primesieve/ParallelPrimeSieve.cpp \
+  ../../primesieve/popcount.cpp \
+  ../../primesieve/PreSieve.cpp \
+  ../../primesieve/PrimeFinder.cpp \
+  ../../primesieve/PrimeGenerator.cpp \
+  ../../primesieve/PrimeSieve-nthPrime.cpp \
+  ../../primesieve/PrimeSieve.cpp \
+  ../../primesieve/SieveOfEratosthenes.cpp \
+  ../../primesieve/WheelFactorization.cpp
 
 # ---------------------------------------------------------
 # primesieve icon file

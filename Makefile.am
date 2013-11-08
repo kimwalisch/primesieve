@@ -74,16 +74,16 @@ include_HEADERS = \
 	include/primesieve.hpp \
 	include/primesieve.h
 
-otherincludedir = $(includedir)/primesieve/soe
+otherincludedir = $(includedir)/primesieve
 otherinclude_HEADERS = \
-	include/primesieve/soe/cancel_callback.hpp \
-	include/primesieve/soe/iterator.hpp \
-	include/primesieve/soe/ParallelPrimeSieve.hpp \
-	include/primesieve/soe/primesieve_error.hpp \
-	include/primesieve/soe/PrimeSieve.hpp \
-	include/primesieve/soe/PrimeSieveCallback.hpp \
-	include/primesieve/soe/PushBackPrimes.hpp \
-	include/primesieve/soe/primesieve_iterator.h
+	include/primesieve/cancel_callback.hpp \
+	include/primesieve/iterator.hpp \
+	include/primesieve/ParallelPrimeSieve.hpp \
+	include/primesieve/primesieve_error.hpp \
+	include/primesieve/PrimeSieve.hpp \
+	include/primesieve/PrimeSieveCallback.hpp \
+	include/primesieve/PushBackPrimes.hpp \
+	include/primesieve/primesieve_iterator.h
 
 EXTRA_DIST = \
 	Doxyfile \
@@ -93,44 +93,44 @@ EXTRA_DIST = \
 	examples/README \
 	src/apps/gui \
 	src/msvc_compat \
-	src/soe/README
+	src/primesieve/README
 
 libprimesieve_la_SOURCES = \
-	src/soe/EratBig.cpp \
-	src/soe/EratMedium.cpp \
-	src/soe/EratSmall.cpp \
-	src/soe/ParallelPrimeSieve.cpp \
-	src/soe/popcount.cpp \
-	src/soe/PreSieve.cpp \
-	src/soe/PrimeFinder.cpp \
-	src/soe/PrimeGenerator.cpp \
-	src/soe/iterator.cpp \
-	src/soe/primesieve_iterator.cpp \
-	src/soe/primesieve_test.cpp \
-	src/soe/PrimeSieve-nthPrime.cpp \
-	src/soe/PrimeSieve.cpp \
-	src/soe/primesieve-api.cpp \
-	src/soe/primesieve-api-c.cpp \
-	src/soe/SieveOfEratosthenes.cpp \
-	src/soe/WheelFactorization.cpp \
-	include/primesieve/soe/bits.hpp \
-	include/primesieve/soe/callback_t.hpp \
-	include/primesieve/soe/config.hpp \
-	include/primesieve/soe/EratBig.hpp \
-	include/primesieve/soe/EratMedium.hpp \
-	include/primesieve/soe/EratSmall.hpp \
-	include/primesieve/soe/imath.hpp \
-	include/primesieve/soe/littleendian_cast.hpp \
-	include/primesieve/soe/ParallelPrimeSieve-lock.hpp \
-	include/primesieve/soe/PreSieve.hpp \
-	include/primesieve/soe/PrimeFinder.hpp \
-	include/primesieve/soe/PrimeGenerator.hpp \
-	include/primesieve/soe/PrimeSieve-lock.hpp \
-	include/primesieve/soe/SieveOfEratosthenes.hpp \
-	include/primesieve/soe/SieveOfEratosthenes-CALLBACK.hpp \
-	include/primesieve/soe/SieveOfEratosthenes-inline.hpp \
-	include/primesieve/soe/toString.hpp \
-	include/primesieve/soe/WheelFactorization.hpp
+	src/primesieve/EratBig.cpp \
+	src/primesieve/EratMedium.cpp \
+	src/primesieve/EratSmall.cpp \
+	src/primesieve/ParallelPrimeSieve.cpp \
+	src/primesieve/popcount.cpp \
+	src/primesieve/PreSieve.cpp \
+	src/primesieve/PrimeFinder.cpp \
+	src/primesieve/PrimeGenerator.cpp \
+	src/primesieve/iterator.cpp \
+	src/primesieve/primesieve_iterator.cpp \
+	src/primesieve/primesieve_test.cpp \
+	src/primesieve/PrimeSieve-nthPrime.cpp \
+	src/primesieve/PrimeSieve.cpp \
+	src/primesieve/primesieve-api.cpp \
+	src/primesieve/primesieve-api-c.cpp \
+	src/primesieve/SieveOfEratosthenes.cpp \
+	src/primesieve/WheelFactorization.cpp \
+	include/primesieve/bits.hpp \
+	include/primesieve/callback_t.hpp \
+	include/primesieve/config.hpp \
+	include/primesieve/EratBig.hpp \
+	include/primesieve/EratMedium.hpp \
+	include/primesieve/EratSmall.hpp \
+	include/primesieve/imath.hpp \
+	include/primesieve/littleendian_cast.hpp \
+	include/primesieve/ParallelPrimeSieve-lock.hpp \
+	include/primesieve/PreSieve.hpp \
+	include/primesieve/PrimeFinder.hpp \
+	include/primesieve/PrimeGenerator.hpp \
+	include/primesieve/PrimeSieve-lock.hpp \
+	include/primesieve/SieveOfEratosthenes.hpp \
+	include/primesieve/SieveOfEratosthenes-CALLBACK.hpp \
+	include/primesieve/SieveOfEratosthenes-inline.hpp \
+	include/primesieve/toString.hpp \
+	include/primesieve/WheelFactorization.hpp
 
 primesieve_SOURCES = \
 	src/apps/console/main.cpp \

@@ -9,7 +9,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/soe/ParallelPrimeSieve.hpp>
+#include <primesieve/ParallelPrimeSieve.hpp>
 #include "cmdoptions.hpp"
 
 #include <iostream>

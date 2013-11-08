@@ -11,10 +11,10 @@
 
 #include <primesieve.h>
 #include <primesieve.hpp>
-#include <primesieve/soe/PrimeSieve.hpp>
-#include <primesieve/soe/ParallelPrimeSieve.hpp>
-#include <primesieve/soe/cancel_callback.hpp>
-#include <primesieve/soe/callback_t.hpp>
+#include <primesieve/PrimeSieve.hpp>
+#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/cancel_callback.hpp>
+#include <primesieve/callback_t.hpp>
 
 #include <stdint.h>
 #include <stddef.h>

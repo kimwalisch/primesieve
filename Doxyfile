@@ -3,9 +3,9 @@ PROJECT_NUMBER         = 5.0
 INPUT                  = mainpage.dox \
                          include/primesieve.hpp \
                          include/primesieve.h \
-                         include/primesieve/soe/iterator.hpp \
-                         include/primesieve/soe/primesieve_error.hpp \
-                         include/primesieve/soe/primesieve_iterator.h \
+                         include/primesieve/iterator.hpp \
+                         include/primesieve/primesieve_error.hpp \
+                         include/primesieve/primesieve_iterator.h \
                          examples/callback_primes.cpp \
                          examples/count_primes.cpp \
                          examples/primesieve_iterator.cpp \
