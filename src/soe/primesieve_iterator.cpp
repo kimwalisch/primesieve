@@ -48,6 +48,24 @@ uint64_t get_interval_size(primesieve_iterator* pi, uint64_t n)
   return static_cast<uint64_t>(primes * std::log(x));
 }
 
+void generate_primes(uint64_t start, uint64_t stop, std::vector<uint64_t>& primes)
+{
+  try
+  {
+    primes.clear();
+    primesieve::generate_primes(start, stop, &primes);
+  }
+  catch (std::exception&)
+  {
+    primes.clear();
+  }
+  if (primes.empty())
+  {
+    primes.resize(64, PRIMESIEVE_ERROR);
+    errno = EDOM;
+  }
+}
+
 /// Generate the primes inside [start, stop] and
 /// store them in the primes vector.
 ///
@@ -56,17 +74,7 @@ void generate_primes(primesieve_iterator* pi, uint64_t start, uint64_t stop)
   std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
   if (primes.empty() || primes[0] != PRIMESIEVE_ERROR)
   {
-    try {
-      primes.clear();
-      primesieve::generate_primes(start, stop, &primes);
-    } catch (std::exception&) {
-      primes.clear();
-    }
-    if (primes.empty())
-    {
-      primes.resize(64, PRIMESIEVE_ERROR);
-      errno = EDOM;
-    }
+    generate_primes(start, stop, primes);
     pi->primes_ = &primes[0];
     pi->size_   =  primes.size();
   }
