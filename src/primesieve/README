@@ -4,8 +4,8 @@ About
 This directory (src/primesieve) contains primesieve's sieve of
 Eratosthenes implementation. Most files that start with a capital
 letter contain a class of the same name. The header files of these
-classes are stored in include/primesive/soe. Below is a short
-explanation of the most important classes and files.
+classes are stored in include/primesive. Below is a short explanation
+of the most important classes and files.
 
 C++ classes
 -----------
