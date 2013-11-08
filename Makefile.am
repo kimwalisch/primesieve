@@ -137,4 +137,4 @@ primesieve_SOURCES = \
 	src/apps/console/help.cpp \
 	src/apps/console/cmdoptions.cpp \
 	src/apps/console/cmdoptions.hpp \
-	src/apps/console/ExpressionParser.hpp
+	src/apps/console/calculator.hpp
