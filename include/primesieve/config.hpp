@@ -55,8 +55,6 @@ enum {
   NUMBERS_PER_BYTE = 30
 };
 
-} // namespace primesieve
-
 namespace config {
 
 enum {
@@ -135,5 +133,6 @@ enum {
   const uint64_t MAX_THREAD_INTERVAL = static_cast<uint64_t>(2e10);
 
 } // namespace config
+} // namespace primesieve
 
 #endif

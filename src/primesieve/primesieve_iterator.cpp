@@ -18,6 +18,10 @@
 #include <vector>
 #include <limits>
 
+using primesieve::config::ITERATOR_CACHE_SMALL;
+using primesieve::config::ITERATOR_CACHE_MEDIUM;
+using primesieve::config::ITERATOR_CACHE_LARGE;
+
 namespace {
 
 /// Convert pimpl pointer to std::vector
@@ -32,10 +36,6 @@ std::vector<uint64_t>& to_vector(uint64_t* primes_pimpl)
 ///
 uint64_t get_interval_size(primesieve_iterator* pi, uint64_t n)
 {
-  using config::ITERATOR_CACHE_SMALL;
-  using config::ITERATOR_CACHE_MEDIUM;
-  using config::ITERATOR_CACHE_LARGE;
-
   pi->count_++;
   double x = std::max(static_cast<double>(n), 10.0);
   double sqrtx = std::sqrt(x);
