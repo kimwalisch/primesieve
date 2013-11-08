@@ -111,11 +111,11 @@ public:
       if (!isEnd())
         unexpected();
     }
-    catch (const calculator::error& e)
+    catch (const calculator::error&)
     {
       while(!stack_.empty())
         stack_.pop();
-      throw e;
+      throw;
     }
     return result;
   }
