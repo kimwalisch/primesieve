@@ -28,7 +28,7 @@ SOURCES += \
   src/PrimeSieveProcess.cpp
 
 HEADERS += \
-  src/ExpressionParser.hpp \
+  src/calculator.hpp \
   src/PrimeSieveGUI.hpp \
   src/PrimeSieveGUI_const.hpp \
   src/PrimeSieveProcess.hpp
