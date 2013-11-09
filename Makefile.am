@@ -81,7 +81,7 @@ otherinclude_HEADERS = \
 	include/primesieve/ParallelPrimeSieve.hpp \
 	include/primesieve/primesieve_error.hpp \
 	include/primesieve/PrimeSieve.hpp \
-	include/primesieve/PrimeSieveCallback.hpp \
+	include/primesieve/Callback.hpp \
 	include/primesieve/PushBackPrimes.hpp \
 	include/primesieve/primesieve_iterator.h
 

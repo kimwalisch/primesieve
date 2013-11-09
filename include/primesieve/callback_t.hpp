@@ -19,8 +19,8 @@ typedef void (*callback_tn_t)(uint64_t, int);
 
 extern "C"
 {
-typedef void (*c_callback_t)(uint64_t);
-typedef void (*c_callback_tn_t)(uint64_t, int);
+typedef void (*callback_c_t)(uint64_t);
+typedef void (*callback_c_tn_t)(uint64_t, int);
 }
 
 #endif

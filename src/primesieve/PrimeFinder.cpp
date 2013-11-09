@@ -10,14 +10,14 @@
 ///
 
 #include <primesieve/config.hpp>
-#include <primesieve/callback_t.hpp>
 #include <primesieve/PrimeFinder.hpp>
+#include <primesieve/PrimeSieve.hpp>
+#include <primesieve/PrimeSieve-lock.hpp>
+#include <primesieve/Callback.hpp>
+#include <primesieve/callback_t.hpp>
 #include <primesieve/SieveOfEratosthenes.hpp>
 #include <primesieve/SieveOfEratosthenes-CALLBACK.hpp>
 #include <primesieve/SieveOfEratosthenes-inline.hpp>
-#include <primesieve/PrimeSieve.hpp>
-#include <primesieve/PrimeSieveCallback.hpp>
-#include <primesieve/PrimeSieve-lock.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -50,8 +50,8 @@ PrimeFinder::PrimeFinder(PrimeSieve& ps) :
   threadNum_(ps.threadNum_),
   callback_(ps.callback_),
   callback_tn_(ps.callback_tn_),
-  psc_(ps.psc_),
-  psc_tn_(ps.psc_tn_)
+  cobj_(ps.cobj_),
+  cobj_tn_(ps.cobj_tn_)
 {
   if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
     init_kCounts();
@@ -155,14 +155,14 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
 ///
 void PrimeFinder::callback(const byte_t* sieve, uint_t sieveSize) const
 {
-  c_callback_t c_callback = reinterpret_cast<c_callback_t>(callback_);
+  callback_c_t callback_c = reinterpret_cast<callback_c_t>(callback_);
 
-  if (ps_.isFlag(ps_.PSC_CALLBACK))    { LockGuard lock(ps_); CALLBACK_PRIMES(psc_->callback,  uint64_t) }
-  if (ps_.isFlag(ps_.PSC_CALLBACK_TN)) { /* No Locking */     CALLBACK_PRIMES(psc_callback_tn, uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK_OBJ))    { LockGuard lock(ps_); CALLBACK_PRIMES(cobj_->callback, uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK_OBJ_TN)) { /* No Locking */     CALLBACK_PRIMES(callback_obj_tn, uint64_t) }
   if (ps_.isFlag(ps_.CALLBACK))        { LockGuard lock(ps_); CALLBACK_PRIMES(callback_,       uint64_t) }
   if (ps_.isFlag(ps_.CALLBACK_TN))     { /* No Locking */     CALLBACK_PRIMES(callback_tn,     uint64_t) }
-  if (ps_.isFlag(ps_.C_CALLBACK))      { LockGuard lock(ps_); CALLBACK_PRIMES(c_callback,      uint64_t) }
-  if (ps_.isFlag(ps_.C_CALLBACK_TN))   { /* No Locking */     CALLBACK_PRIMES(c_callback_tn,   uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK_C))      { LockGuard lock(ps_); CALLBACK_PRIMES(callback_c,      uint64_t) }
+  if (ps_.isFlag(ps_.CALLBACK_C_TN))   { /* No Locking */     CALLBACK_PRIMES(callback_c_tn,   uint64_t) }
 }
 
 void PrimeFinder::printPrime(uint64_t prime)
@@ -175,15 +175,15 @@ void PrimeFinder::callback_tn(uint64_t prime) const
   callback_tn_(prime, threadNum_);
 }
 
-void PrimeFinder::psc_callback_tn(uint64_t prime) const
+void PrimeFinder::callback_obj_tn(uint64_t prime) const
 {
-  psc_tn_->callback(prime, threadNum_);
+  cobj_tn_->callback(prime, threadNum_);
 }
 
-void PrimeFinder::c_callback_tn(uint64_t prime) const
+void PrimeFinder::callback_c_tn(uint64_t prime) const
 {
-  c_callback_tn_t c_callback_tn2 = reinterpret_cast<c_callback_tn_t>(callback_tn_);
-  c_callback_tn2(prime, threadNum_);
+  callback_c_tn_t callback_c_tn2 = reinterpret_cast<callback_c_tn_t>(callback_tn_);
+  callback_c_tn2(prime, threadNum_);
 }
 
 } // namespace primesieve

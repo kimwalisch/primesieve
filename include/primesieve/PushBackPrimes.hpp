@@ -1,10 +1,10 @@
 ///
 /// @file   PushBackPrimes.hpp
 /// @brief  This file contains classes needed to store primes in
-///         std::vector objects. These classes derive from
-///         PrimeSieveCallback and call PrimeSieve's callbackPrimes()
-///         method, the primes are then pushed back into the vector
-///         inside the callback method.
+///         std::vector objects. These classes derive from Callback
+///         and call PrimeSieve's callbackPrimes() method, the
+///         primes are then pushed back onto the vector inside the
+///         callback method.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -16,7 +16,7 @@
 #define PUSHBACKPRIMES_HPP
 
 #include "PrimeSieve.hpp"
-#include "PrimeSieveCallback.hpp"
+#include "Callback.hpp"
 #include "cancel_callback.hpp"
 #include "primesieve_error.hpp"
 
@@ -39,7 +39,7 @@ inline uint64_t approximate_prime_count(uint64_t start, uint64_t stop)
 }
 
 template <typename T>
-class PushBackPrimes : public PrimeSieveCallback<uint64_t>
+class PushBackPrimes : public Callback<uint64_t>
 {
 public:
   PushBackPrimes(std::vector<T>& primes)
@@ -68,7 +68,7 @@ private:
 };
 
 template <typename T>
-class PushBack_N_Primes : public PrimeSieveCallback<uint64_t>
+class PushBack_N_Primes : public Callback<uint64_t>
 {
 public:
   PushBack_N_Primes(std::vector<T>& primes) 

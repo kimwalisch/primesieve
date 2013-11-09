@@ -11,7 +11,7 @@ Here is a list of these people.
   * Dana Jacobsen has provided feedback
     (added examples/store_primes_in_vector.cpp)
 
-  * Mark Rodenkirch suggested adding a PrimeSieveCallback class.
+  * Mark Rodenkirch suggested adding a Callback class.
 
   * Silver Möls has helped to increase instruction level parallelism
     in src/primesieve/EratBig.cpp in primesieve 3.1.

@@ -12,7 +12,7 @@
 #ifndef PRIMESIEVE_CLASS_HPP
 #define PRIMESIEVE_CLASS_HPP
 
-#include "PrimeSieveCallback.hpp"
+#include "Callback.hpp"
 
 #include <stdint.h>
 #include <string>
@@ -82,10 +82,10 @@ public:
   // Callback
   void callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t));
   void callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t, int));
-  void callbackPrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t>*);
-  void callbackPrimes(uint64_t, uint64_t, PrimeSieveCallback<uint64_t, int>*);
-  void c_callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t));
-  void c_callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t, int));
+  void callbackPrimes(uint64_t, uint64_t, Callback<uint64_t>*);
+  void callbackPrimes(uint64_t, uint64_t, Callback<uint64_t, int>*);
+  void callbackPrimes_c(uint64_t, uint64_t, void (*)(uint64_t));
+  void callbackPrimes_c(uint64_t, uint64_t, void (*)(uint64_t, int));
   // nth prime
   uint64_t nthPrime(uint64_t);
   uint64_t nthPrime(uint64_t, uint64_t);
@@ -155,8 +155,8 @@ private:
   /// Callbacks for use with *callbackPrimes()
   void (*callback_)(uint64_t);
   void (*callback_tn_)(uint64_t, int);
-  PrimeSieveCallback<uint64_t>* psc_;
-  PrimeSieveCallback<uint64_t, int>* psc_tn_;
+  Callback<uint64_t>* cobj_;
+  Callback<uint64_t, int>* cobj_tn_;
   static void printStatus(double, double);
   bool isFlag(int, int) const;
   bool isValidFlags(int) const;
@@ -174,10 +174,10 @@ private:
   {
     CALLBACK        = 1 << 20,
     CALLBACK_TN     = 1 << 21,
-    PSC_CALLBACK    = 1 << 22,
-    PSC_CALLBACK_TN = 1 << 23,
-    C_CALLBACK      = 1 << 24,
-    C_CALLBACK_TN   = 1 << 25
+    CALLBACK_OBJ    = 1 << 22,
+    CALLBACK_OBJ_TN = 1 << 23,
+    CALLBACK_C      = 1 << 24,
+    CALLBACK_C_TN   = 1 << 25
   };
 };
 

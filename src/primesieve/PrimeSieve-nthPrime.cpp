@@ -9,10 +9,10 @@
 
 #include <primesieve/config.hpp>
 #include <primesieve/PrimeSieve.hpp>
-#include <primesieve/PrimeSieveCallback.hpp>
-#include <primesieve/primesieve_error.hpp>
-#include <primesieve/cancel_callback.hpp>
 #include <primesieve/SieveOfEratosthenes.hpp>
+#include <primesieve/Callback.hpp>
+#include <primesieve/cancel_callback.hpp>
+#include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -25,7 +25,7 @@ namespace primesieve {
 /// This class is used to generate n primes and
 /// then stop by throwing an exception.
 ///
-class NthPrime : public PrimeSieveCallback<uint64_t> {
+class NthPrime : public Callback<uint64_t> {
 public:
   NthPrime() : n_(0), nthPrime_(0) { }
   void findNthPrime(uint64_t, uint64_t, uint64_t);

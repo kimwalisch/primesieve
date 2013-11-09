@@ -1,5 +1,5 @@
 ///
-/// @file   PrimeSieveCallback.hpp
+/// @file   Callback.hpp
 /// @brief  Callback interface class for PrimeSieve and
 ///         ParallelPrimeSieve objects.
 ///
@@ -9,8 +9,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMESIEVECALLBACK_HPP
-#define PRIMESIEVECALLBACK_HPP
+#ifndef CALLBACK_PRIMESIEVE_HPP
+#define CALLBACK_PRIMESIEVE_HPP
 
 #include <stdint.h>
 
@@ -19,19 +19,19 @@ namespace primesieve {
 class None { };
 
 template <typename T1, typename T2 = None>
-class PrimeSieveCallback
+class Callback
 {
 public:
   virtual void callback(T1 prime) = 0;
-  virtual ~PrimeSieveCallback() { }
+  virtual ~Callback() { }
 };
 
 template <>
-class PrimeSieveCallback<uint64_t, int>
+class Callback<uint64_t, int>
 {
 public:
-  virtual void callback(uint64_t prime, int threadNum) = 0;
-  virtual ~PrimeSieveCallback() { }
+  virtual void callback(uint64_t prime, int thread_num) = 0;
+  virtual ~Callback() { }
 };
 
 } // namespace primesieve

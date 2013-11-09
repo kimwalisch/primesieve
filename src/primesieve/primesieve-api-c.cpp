@@ -536,7 +536,7 @@ void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
   {
     PrimeSieve ps;
     // temporarily cast away extern "C" linkage
-    ps.c_callbackPrimes(start, stop, reinterpret_cast<callback_t>(callback));
+    ps.callbackPrimes_c(start, stop, reinterpret_cast<callback_t>(callback));
   }
   catch (std::exception&)
   {
@@ -551,7 +551,7 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(ui
     ParallelPrimeSieve pps;
     pps.setNumThreads(threads);
     // temporarily cast away extern "C" linkage
-    pps.c_callbackPrimes(start, stop, reinterpret_cast<callback_tn_t>(callback));
+    pps.callbackPrimes_c(start, stop, reinterpret_cast<callback_tn_t>(callback));
   }
   catch (std::exception&)
   {

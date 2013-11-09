@@ -11,7 +11,7 @@
 
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
-#include <primesieve/PrimeSieveCallback.hpp>
+#include <primesieve/Callback.hpp>
 #include <primesieve/PrimeFinder.hpp>
 
 #include <stdint.h>
@@ -191,7 +191,7 @@ void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
   ps.callbackPrimes(start, stop, callback);
 }
 
-void callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t>* callback)
+void callback_primes(uint64_t start, uint64_t stop, Callback<uint64_t>* callback)
 {
   PrimeSieve ps;
   ps.callbackPrimes(start, stop, callback);
@@ -215,14 +215,14 @@ void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(ui
   pps.callbackPrimes(start, stop, callback);
 }
 
-void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t>* callback, int threads)
+void parallel_callback_primes(uint64_t start, uint64_t stop, Callback<uint64_t>* callback, int threads)
 {
   ParallelPrimeSieve pps;
   pps.setNumThreads(threads);
   pps.callbackPrimes(start, stop, callback);
 }
 
-void parallel_callback_primes(uint64_t start, uint64_t stop, PrimeSieveCallback<uint64_t, int>* callback, int threads)
+void parallel_callback_primes(uint64_t start, uint64_t stop, Callback<uint64_t, int>* callback, int threads)
 {
   ParallelPrimeSieve pps;
   pps.setNumThreads(threads);
