@@ -32,7 +32,8 @@ https://github.com/kimwalisch/primesieve
    care about arithmetic order anymore. Please do not use
    ParallelPrimeSieve directly anymore instead use the new API.
 6. Renamed src/soe to src/primesieve.
-7. Moved most header files to include/primesieve.
+7. Renamed PrimeSieveCallback<T> class to Callback<T>.
+8. Moved most header files to include/primesieve.
 
 Changes in version 4.4, 19/09/2013
 ==================================
