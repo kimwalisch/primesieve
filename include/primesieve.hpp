@@ -2,8 +2,9 @@
 /// @file   primesieve.hpp
 /// @brief  primesieve C++ API. primesieve is a library for fast prime
 ///         number generation. In case an error occurs the functions
-///         declared in this header will throw a primesieve_error
-///         exception (derived form std::runtime_error).
+///         declared in this header will throw a
+///         primesieve::primesieve_error exception (derived form
+///         std::runtime_error).
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -230,10 +231,10 @@ namespace primesieve
   void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
 
   /// Call back the primes within the interval [start, stop].
-  /// @param callback  An object derived from Callback<uint64_t>.
+  /// @param callback  An object derived from primesieve::Callback<uint64_t>.
   /// @pre   stop <= 2^64 - 2^32 * 10.
   ///
-  void callback_primes(uint64_t start, uint64_t stop, Callback<uint64_t>* callback);
+  void callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t>* callback);
 
   /// Call back the primes within the interval [start, stop].
   /// This function is synchronized, only one thread at a time calls
@@ -259,21 +260,21 @@ namespace primesieve
   /// This function is synchronized, only one thread at a time calls
   /// back primes.
   /// @warning         Primes are not called back in arithmetic order.
-  /// @param callback  An object derived from Callback<uint64_t>.
+  /// @param callback  An object derived from primesieve::Callback<uint64_t>.
   /// @param threads   Number of threads.
   /// @pre   stop      <= 2^64 - 2^32 * 10.
   ///
-  void parallel_callback_primes(uint64_t start, uint64_t stop, Callback<uint64_t>* callback, int threads = MAX_THREADS);
+  void parallel_callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t>* callback, int threads = MAX_THREADS);
 
   /// Call back the primes within the interval [start, stop].
   /// This function is not synchronized, multiple threads call back
   /// primes in parallel.
   /// @warning         Primes are not called back in arithmetic order.
-  /// @param callback  An object derived from Callback<uint64_t, int>.
+  /// @param callback  An object derived from primesieve::Callback<uint64_t, int>.
   /// @param threads   Number of threads.
   /// @pre   stop      <= 2^64 - 2^32 * 10.
   ///
-  void parallel_callback_primes(uint64_t start, uint64_t stop, Callback<uint64_t, int>* callback, int threads = MAX_THREADS);
+  void parallel_callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t, int>* callback, int threads = MAX_THREADS);
 
   /// Returns the largest valid stop number for primesieve.
   /// @return (2^64-1) - (2^32-1) * 10.

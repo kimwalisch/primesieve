@@ -17,11 +17,15 @@
 
 namespace primesieve {
 
+/// primesieve throws a primesieve_error exception
+/// if an error occurs that cannot be handled
+/// e.g. stop > primesieve::max_stop().
+///
 class primesieve_error : public std::runtime_error
 {
 public:
-  primesieve_error(const std::string& message)
-    : std::runtime_error(message)
+  primesieve_error(const std::string& msg)
+    : std::runtime_error(msg)
   { }
 };
 

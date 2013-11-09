@@ -1,7 +1,6 @@
 ///
 /// @file   Callback.hpp
-/// @brief  Callback interface class for PrimeSieve and
-///         ParallelPrimeSieve objects.
+/// @brief  Callback interface classes.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -16,16 +15,25 @@
 
 namespace primesieve {
 
+/// Internal class.
 class None { };
 
-template <typename T1, typename T2 = None>
+/// callback interface class. Objects derived from this class can be
+/// passed to the primesieve::generate_primes() functions.
+/// @param T  must be uint64_t.
+///
+template <typename T, typename T2 = None>
 class Callback
 {
 public:
-  virtual void callback(T1 prime) = 0;
+  virtual void callback(T prime) = 0;
   virtual ~Callback() { }
 };
 
+/// Parallel callback interface class. Objects derived from this
+/// class can be passed to the primesieve::parallel_generate_primes()
+/// functions.
+///
 template <>
 class Callback<uint64_t, int>
 {
