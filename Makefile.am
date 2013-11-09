@@ -76,14 +76,14 @@ include_HEADERS = \
 
 otherincludedir = $(includedir)/primesieve
 otherinclude_HEADERS = \
+	include/primesieve/Callback.hpp \
 	include/primesieve/cancel_callback.hpp \
 	include/primesieve/iterator.hpp \
 	include/primesieve/ParallelPrimeSieve.hpp \
 	include/primesieve/primesieve_error.hpp \
 	include/primesieve/PrimeSieve.hpp \
-	include/primesieve/Callback.hpp \
-	include/primesieve/PushBackPrimes.hpp \
-	include/primesieve/primesieve_iterator.h
+	include/primesieve/primesieve_iterator.h \
+	include/primesieve/PushBackPrimes.hpp
 
 EXTRA_DIST = \
 	Doxyfile \
