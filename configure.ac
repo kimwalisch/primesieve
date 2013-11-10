@@ -14,23 +14,20 @@ AM_PROG_CC_C_O
 LT_INIT
 
 AC_ARG_VAR([L1_DCACHE_SIZE], [CPU L1 data cache size in kilobytes])
+
 AS_IF([test "x$L1_DCACHE_SIZE" = x], [[
+    L1_DCACHE_SIZE=32
     command -v getconf >/dev/null 2>/dev/null
-    if [ $? -eq 0 ]
-    then
+    if [ $? -eq 0 ]; then
         L1_DCACHE_BYTES=$(getconf LEVEL1_DCACHE_SIZE 2>/dev/null)
     fi
-    if [ "$L1_DCACHE_BYTES" == "" ]
-    then
+    if [ "$L1_DCACHE_BYTES" == "" ]; then
         command -v sysctl >/dev/null 2>/dev/null
-        if [ $? -eq 0 ]
-        then
+        if [ $? -eq 0 ]; then
             L1_DCACHE_BYTES=$(sysctl hw.l1dcachesize 2>/dev/null | sed -e 's/^.* //')
         fi
     fi
-    L1_DCACHE_SIZE=32
-    if [ "$L1_DCACHE_BYTES" != "" ]
-    then
+    if [ "$L1_DCACHE_BYTES" != "" ]; then
         L1_DCACHE_SIZE=$(expr $L1_DCACHE_BYTES '/' 1024)
     fi]])
 
