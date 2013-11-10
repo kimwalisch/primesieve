@@ -20,7 +20,6 @@
 #include <stddef.h>
 #include <exception>
 #include <limits>
-#include <cassert>
 #include <cerrno>
 
 using primesieve::PrimeSieve;
@@ -49,10 +48,12 @@ const int BUFFER_BYTES = 128;
 template <typename T>
 void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size, int type)
 {
+#if __cplusplus >= 201103L
+  static_assert(BUFFER_BYTES % sizeof(T) == 0, "Prime type sizeof must be a power of 2.");
+#endif
   std::vector<T>& primes = *(new std::vector<T>);
   try
   {
-    assert(BUFFER_BYTES % sizeof(T) == 0);
     size_t index_c = BUFFER_BYTES / sizeof(T);
     primes.resize(index_c, 0);
     uintptr_t* primes_c = reinterpret_cast<uintptr_t*>(&primes[index_c]);
@@ -81,10 +82,12 @@ void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size, int ty
 template <typename T>
 void* generate_n_primes_helper(uint64_t n, uint64_t start, int type)
 {
+#if __cplusplus >= 201103L
+  static_assert(BUFFER_BYTES % sizeof(T) == 0, "Prime type sizeof must be a power of 2.");
+#endif
   std::vector<T>& primes = *(new std::vector<T>);
   try
   {
-    assert(BUFFER_BYTES % sizeof(T) == 0);
     size_t index_c = BUFFER_BYTES / sizeof(T);
     primes.resize(index_c, 0);
     uintptr_t* primes_c = reinterpret_cast<uintptr_t*>(&primes[index_c]);
