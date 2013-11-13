@@ -30,8 +30,8 @@ cache size in kilobytes manually using e.g.:
 $ ./configure L1_DCACHE_SIZE=64
 
 By default the configure script sets the sieve size to your CPU's L1
-data cache size. You can set the sieve size to another value using
-e.g.:
+data cache size. You can set the sieve size to another value (in
+kilobytes) using e.g.:
 
 $ ./configure SIEVESIZE=256
 
