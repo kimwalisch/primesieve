@@ -48,7 +48,7 @@ PrimeSieve::PrimeSieve() :
   threadNum_(0),
   parent_(NULL)
 {
-  setSieveSize(config::SIEVESIZE);
+  setSieveSize(config::PRIMESIEVE_SIEVESIZE);
   reset();
 }
 
