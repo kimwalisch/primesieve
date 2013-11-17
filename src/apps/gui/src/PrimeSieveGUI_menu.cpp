@@ -143,8 +143,7 @@ void PrimeSieveGUI::saveToFile() {
 void PrimeSieveGUI::showAboutDialog() {
   QString title = "About " + APPLICATION_NAME;
   QString message = "<h2>" + APPLICATION_NAME + " " + PRIMESIEVE_VERSION + "</h2>"
-      + "<p>Copyright &copy; " + PRIMESIEVE_YEAR + " Kim Walisch</p>"
-      + "<p>" + APPLICATION_ABOUT + "</p>"
+      + APPLICATION_ABOUT +
       + "<a href=\"" + APPLICATION_HOMEPAGE + "\">" + APPLICATION_HOMEPAGE + "</a>";
   QMessageBox::about(this, title, message);
 }

@@ -17,7 +17,6 @@
 #define PRIMESIEVE_VERSION "5.0"
 #define PRIMESIEVE_VERSION_MAJOR 5
 #define PRIMESIEVE_VERSION_MINOR 0
-#define PRIMESIEVE_YEAR "2013"
 
 #include <primesieve/primesieve_iterator.h>
 #include <stdint.h>

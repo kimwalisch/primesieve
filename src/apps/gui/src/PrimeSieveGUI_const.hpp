@@ -41,16 +41,17 @@
 #include <stdint.h>
 
 const QString APPLICATION_NAME("primesieve");
-const QString APPLICATION_HOMEPAGE("http://primesieve.googlecode.com");
+const QString APPLICATION_HOMEPAGE("http://www.primesieve.org");
 const QString APPLICATION_ABOUT(
-    "primesieve generates prime numbers and prime k-tuplets using a highly "
+    "<p>Copyright &copy; 2013 Kim Walisch</p>"
+    "<p>primesieve generates prime numbers and prime k-tuplets using a highly "
     "optimized implementation of the sieve of Eratosthenes. By the date "
     "of release this is the fastest publicly available prime generation software."
     "<br><br>"
     "This is free software: you can redistribute it and/or modify "
     "it under the terms of the GNU General Public License as published by "
     "the Free Software Foundation; either version 3 of the License, or "
-    "(at your option) any later version.");
+    "(at your option) any later version.</p>");
 
 /**
  * Minimum sieve size in kilobytes.
