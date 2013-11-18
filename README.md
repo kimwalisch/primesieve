@@ -61,7 +61,7 @@ $ ./primesieve 1e10 2e10 --count=3
 After having built and installed primesieve you can use it in your C++
 program to easily generate primes as shown in the primes.cpp example
 program below. You can explore primesieve's entire API online at
-http://primesieve.org/doxygen.
+http://primesieve.org/api.
 
 ```C++
 #include <primesieve.hpp>
@@ -96,7 +96,7 @@ On Windows (MSVC) compile using:
 ### primesieve C bindings
 All of primesieve's functions are exposed as C API via the
 primesieve.h header. You can explore primesieve's C API online
-at http://primesieve.org/doxygen.
+at http://primesieve.org/api.
 
 ```C
 #include <primesieve.h>

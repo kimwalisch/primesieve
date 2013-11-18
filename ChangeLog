@@ -1,4 +1,4 @@
-Changes in version 5.0, 09/17/2013
+Changes in version 5.0, 09/18/2013
 ==================================
 
 primesieve-5.0 is a major new release that makes using the primesieve
@@ -12,28 +12,24 @@ primesieve-5.0 features a new API completely written from scratch that
 is easier to use and that will not break binary compatibility with
 every new release. The new API is not backwards compatible but porting
 your code to the new API should be done quickly. You can explore
-primesieve's new API online at:
+primesieve's new API online at: http://primesieve.org/api.
 
-http://kimwalisch.github.io/primesieve/doxygen
+I bought a domain for primesieve and moved primesieve's repository
+from Google Code (SVN) to GitHub (git):
 
-I moved primesieve from Google Code to GitHub, the primesieve
-repository is now hosted at:
+http://primesieve.org
+http://github.com/kimwalisch/primesieve
 
-https://github.com/kimwalisch/primesieve
+Other changes:
 
-1. Moved build system to GNU Autotools and Libtool.
-2. New C++ API documented using Doxygen:
-   http://kimwalisch.github.io/primesieve/doxygen
-3. New C bindings documented using Doxygen:
-   http://kimwalisch.github.io/primesieve/doxygen
-4. New primesieve::iterator class that provides next_prime() and
+1. New primesieve::iterator class that provides next_prime() and
    previous_prime() methods.
-5. ParallelPrimeSieve now uses multi-threading by default, it does not
+2. ParallelPrimeSieve now uses multi-threading by default, it does not
    care about arithmetic order anymore. Please do not use
    ParallelPrimeSieve directly anymore instead use the new API.
-6. Renamed src/soe to src/primesieve.
-7. Renamed PrimeSieveCallback<T> class to Callback<T>.
-8. Moved most header files to include/primesieve.
+3. Renamed src/soe to src/primesieve.
+4. Renamed PrimeSieveCallback<T> class to Callback<T>.
+5. Moved most header files to include/primesieve.
 
 Changes in version 4.4, 19/09/2013
 ==================================
