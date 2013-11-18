@@ -22,8 +22,8 @@ implemented using OpenMP 2.0 or later.
 
 ### Build instructions
 Download the latest release tarball from
-https://code.google.com/p/primesieve/downloads/list. On Unix-like
-operating systems you can then build and install primesieve using:
+http://primesieve.org/downloads. On Unix-like operating systems you
+can then build and install primesieve using:
 
 ```
 $ ./configure
@@ -61,7 +61,7 @@ $ ./primesieve 1e10 2e10 --count=3
 After having built and installed primesieve you can use it in your C++
 program to easily generate primes as shown in the primes.cpp example
 program below. You can explore primesieve's entire API online at
-http://kimwalisch.github.io/primesieve/doxygen.
+http://primesieve.org/doxygen.
 
 ```C++
 #include <primesieve.hpp>
@@ -96,7 +96,7 @@ On Windows (MSVC) compile using:
 ### primesieve C bindings
 All of primesieve's functions are exposed as C API via the
 primesieve.h header. You can explore primesieve's C API online
-at http://kimwalisch.github.io/primesieve/doxygen.
+at http://primesieve.org/doxygen.
 
 ```C
 #include <primesieve.h>
