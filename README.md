@@ -6,6 +6,11 @@ seconds on a single core of an Intel Core i7-4770 CPU from 2013.
 primesieve can generate primes and prime k-tuplets (twin primes, prime
 triplets, ...) up to 2^64.
 
+* Homepage: http://primesieve.org
+* Downloads: http://primesieve.org/downloads
+* API: http://primesieve.org/api
+* Screenshots: http://primesieve.org/screenshots
+
 ### Algorithm complexity
 primesieve generates primes using the segmented sieve of Eratosthenes
 with wheel factorization, this algorithm has a complexity of
