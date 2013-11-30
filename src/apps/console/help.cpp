@@ -45,7 +45,7 @@ const string helpMenu(
 );
 
 const string versionInfo(
-  "primesieve " PRIMESIEVE_VERSION ", <http://www.primesieve.org>\n"
+  "primesieve " PRIMESIEVE_VERSION ", <http://primesieve.org>\n"
   "Copyright (C) 2013 Kim Walisch\n"
   "BSD 2-Clause License <http://opensource.org/licenses/BSD-2-Clause>"
 );
