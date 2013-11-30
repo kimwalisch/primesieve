@@ -6,7 +6,7 @@
 ///            <https://github.com/kimwalisch/calculator>
 /// @author    Kim Walisch, <kim.walisch@gmail.com>
 /// @copyright Copyright (C) 2013 Kim Walisch
-/// @date      November 8, 2013
+/// @date      November 30, 2013
 /// @license   BSD 2-Clause, http://opensource.org/licenses/BSD-2-Clause
 /// @version   1.0 patched: `^' is raise to power instead of XOR.
 ///
@@ -152,10 +152,10 @@ private:
     int precedence;
     /// 'L' = left or 'R' = right
     int associativity;
-    Operator(int opr, int precedence, int associativity) :
+    Operator(int opr, int prec, int assoc) :
       op(opr),
-      precedence(precedence),
-      associativity(associativity)
+      precedence(prec),
+      associativity(assoc)
     { }
   };
 
@@ -163,9 +163,9 @@ private:
   {
     Operator op;
     T value;
-    OperatorValue(const Operator& opr, T value) :
+    OperatorValue(const Operator& opr, T val) :
       op(opr),
-      value(value)
+      value(val)
     { }
     int getPrecedence() const
     {
