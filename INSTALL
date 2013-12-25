@@ -46,17 +46,32 @@ want to use custom compiler flags you can do this using e.g.:
 
 $ make CXX=my_compiler CXXFLAGS="-O2"
 
-Cygwin & MinGW
-==============
+Linking
+=======
 
-$ ./configure
-$ make
-$ make install
+By default libprimesieve is installed to /usr/local/lib. Most linkers
+do not search this path by default so you must indicate it using
+e.g. the -L flag:
 
-After that you need to add /usr/local/lib to the library path:
+$ c++ -O2 my_program.cpp -lprimesieve -L/usr/local/lib
+
+Alternatively you can add /usr/local/lib to your library path using:
 
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
+
+I suggest adding these two export statements to your ~/.bashrc file
+(if you use the bash shell). After this you can link against
+libprimesieve without the -L flag:
+
+$ c++ -O2 my_program.cpp -lprimesieve
+
+Another possibility is to install primesieve to /usr in this case the
+export statements and the -L flag are not needed:
+
+$ ./configure --prefix=/usr
+$ make
+$ sudo make install
 
 Microsoft Visual C++
 ====================
