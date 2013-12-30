@@ -38,7 +38,8 @@ $ ./configure --enable-examples
 If you want to build primesieve using a specific compiler or if you
 want to use custom compiler flags you can do this using e.g.:
 
-$ make CXX=my_compiler CXXFLAGS="-O2"
+$ ./configure CXX=my_compiler CXXFLAGS="-O2"
+$ make
 
 Linking (Unix-like OSes)
 ========================
