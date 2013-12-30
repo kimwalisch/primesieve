@@ -26,8 +26,8 @@ PRIMESIEVE_OBJECTS = \
   $(OBJDIR)\PrimeSieve.obj \
   $(OBJDIR)\iterator.obj \
   $(OBJDIR)\SieveOfEratosthenes.obj \
-  $(OBJDIR)\test.obj \
-  $(OBJDIR)\WheelFactorization.obj
+  $(OBJDIR)\WheelFactorization.obj \
+  $(OBJDIR)\test.obj
 
 PRIMESIEVE_HEADERS = \
   include\primesieve.hpp \
