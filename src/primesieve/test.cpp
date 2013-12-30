@@ -88,6 +88,7 @@ void testPix()
 {
   cout << "pi(x) : Prime-counting function test" << endl;
   ParallelPrimeSieve pps;
+  pps.setNumThreads(get_num_threads());
   pps.setStart(0);
   pps.setStop(0);
   uint64_t primeCount = 0;
@@ -106,6 +107,7 @@ void testPix()
 void testBigPrimes()
 {
   ParallelPrimeSieve pps;
+  pps.setNumThreads(get_num_threads());
   pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
 
   for (int i = 12; i <= 19; i++)
@@ -133,6 +135,7 @@ void testRandomIntervals()
   uint64_t primeCount = 0;
   srand(static_cast<unsigned int>(time(0)));
   ParallelPrimeSieve pps;
+  pps.setNumThreads(get_num_threads());
   pps.setStart(lowerBound - 1);
   pps.setStop(lowerBound - 1);
 
