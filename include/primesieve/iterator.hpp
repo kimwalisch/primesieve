@@ -44,14 +44,6 @@ public:
   ///
   void skipto(uint64_t start);
 
-  /// Get the current prime.
-  uint64_t prime()
-  {
-    if (first_)
-      generate_next_primes();
-    return primes_[i_];
-  }
-
   /// Advance the iterator by one position.
   /// @return  The next prime.
   ///

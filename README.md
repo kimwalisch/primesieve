@@ -80,9 +80,11 @@ int main()
   primesieve::generate_primes(1000, &primes);
 
   primesieve::iterator pi;
-  // iterate over the primes below 1000
-  while (pi.next_prime() < 1000)
-    std::cout << pi.prime() << std::endl;
+  uint64_t prime;
+
+  // iterate over the primes below 10^9
+  while ((prime = pi.next_prime()) < 1000000000)
+    std::cout << prime << std::endl;
 
   return 0;
 }
@@ -116,12 +118,12 @@ int main()
   size_t size;
 
   /* store the primes below 10000 */
-  int* primes = (int*) generate_primes(start, stop, &size, INT_PRIMES);
+  int* primes = (int*) primesieve_generate_primes(start, stop, &size, INT_PRIMES);
 
   for (i = 0; i < size; i++)
     printf("%i\n", primes[i]);
 
-  /* deallocate primes array created using generate_primes() */
+  /* deallocate primes array generated using primesieve */
   primesieve_free(primes);
 
   primesieve_iterator pi;
@@ -131,7 +133,7 @@ int main()
   uint64_t prime = 0;
 
   /* iterate over the primes below 10^9 */
-  while ((prime = primesieve_next(&pi)) < 1000000000)
+  while ((prime = primesieve_next_prime(&pi)) < 1000000000)
     sum += prime;
 
   primesieve_free_iterator(&pi);

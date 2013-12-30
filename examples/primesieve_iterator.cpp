@@ -8,10 +8,11 @@ int main()
 {
   primesieve::iterator pi;
   uint64_t sum = 0;
+  uint64_t prime;
 
   // iterate over primes below 10^10
-  while (pi.next_prime() < 10000000000ull)
-    sum += pi.prime();
+  while ((prime = pi.next_prime()) < 10000000000ull)
+    sum += prime;
 
   std::cout << "Sum of the primes below 10^10 = " << sum << std::endl;
   return 0;

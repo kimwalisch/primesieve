@@ -12,7 +12,7 @@ int main(int argc, char** argv)
   if (argv[1])
     n = atol(argv[1]);
 
-  uint64_t prime = nth_prime(n, 0);
+  uint64_t prime = primesieve_nth_prime(n, 0);
   printf("%lluth prime = %llu\n", n, prime);
 
   return 0;

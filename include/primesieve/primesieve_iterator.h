@@ -3,9 +3,8 @@
  *  @brief  Fast prime iterator for use in C code. The @link
  *          primesieve_iterator.c primesieve_iterator.c @endlink
  *          example shows how to use primesieve_iterator. If any error
- *          occurs errno is is set to EDOM and primesieve_prime(),
- *          primesieve_next() and primesieve_previous() return
- *          UINT64_MAX.
+ *          occurs errno is is set to EDOM and primesieve_next_prime()
+ *          and primesieve_previous_prime() return UINT64_MAX.
  * 
  *  Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
  * 
@@ -38,10 +37,6 @@ typedef struct
   int adjust_skipto_;
 } primesieve_iterator;
 
-/** Internal use only. */
-void generate_next_primes(primesieve_iterator*);
-void generate_previous_primes(primesieve_iterator*);
-
 /** Initialize the primesieve iterator before first using it. */
 void primesieve_init(primesieve_iterator* pi);
 
@@ -53,18 +48,16 @@ void primesieve_free_iterator(primesieve_iterator* pi);
  */
 void primesieve_skipto(primesieve_iterator* pi, uint64_t start);
 
-/** Get the current prime. */
-static inline uint64_t primesieve_prime(primesieve_iterator* pi)
-{
-  if (pi->first_)
-    generate_next_primes(pi);
-  return pi->primes_[pi->i_];
-}
+/** Internal use only. */
+void generate_next_primes(primesieve_iterator*);
+
+/** Internal use only. */
+void generate_previous_primes(primesieve_iterator*);
 
 /** Advance the primesieve iterator by one position.
  *  @return  The next prime.
  */
-static inline uint64_t primesieve_next(primesieve_iterator* pi)
+static inline uint64_t primesieve_next_prime(primesieve_iterator* pi)
 {
   if (++pi->i_ >= pi->size_ || pi->first_)
     generate_next_primes(pi);
@@ -74,7 +67,7 @@ static inline uint64_t primesieve_next(primesieve_iterator* pi)
 /** Decrease the primesieve iterator by one position.
  *  @return  The previous prime.
  */
-static inline uint64_t primesieve_previous(primesieve_iterator* pi)
+static inline uint64_t primesieve_previous_prime(primesieve_iterator* pi)
 {
   if (pi->i_ == 0 || pi->first_)
     generate_previous_primes(pi);

@@ -20,13 +20,13 @@ PRIMESIEVE_OBJECTS = \
   $(OBJDIR)\PrimeFinder.obj \
   $(OBJDIR)\PrimeGenerator.obj \
   $(OBJDIR)\primesieve_iterator.obj \
-  $(OBJDIR)\primesieve_test.obj \
   $(OBJDIR)\primesieve-api.obj \
   $(OBJDIR)\primesieve-api-c.obj \
   $(OBJDIR)\PrimeSieve-nthPrime.obj \
   $(OBJDIR)\PrimeSieve.obj \
   $(OBJDIR)\iterator.obj \
   $(OBJDIR)\SieveOfEratosthenes.obj \
+  $(OBJDIR)\test.obj \
   $(OBJDIR)\WheelFactorization.obj
 
 PRIMESIEVE_HEADERS = \

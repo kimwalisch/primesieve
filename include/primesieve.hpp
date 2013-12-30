@@ -37,7 +37,7 @@ namespace primesieve
 {
   enum {
     /// Use all CPU cores for prime sieving.
-    MAX_THREADS
+    MAX_THREADS = -1
   };
 
   /// Store the primes <= stop in the primes vector.
@@ -92,17 +92,19 @@ namespace primesieve
   }
 
   /// Find the nth prime.
-  /// @param start  Start nth prime search at this offset.
-  /// @pre   start  <= 2^64 - 2^32 * 10.
+  /// @param start Start nth prime search at this offset.
+  /// @pre   start <= 2^64 - 2^32 * 10.
   ///
   uint64_t nth_prime(uint64_t n, uint64_t start = 0);
 
-  /// Find the nth prime.
-  /// @param start    Start nth prime search at this offset.
-  /// @param threads  Number of threads.
-  /// @pre   start    <= 2^64 - 2^32 * 10.
+  /// Find the nth prime in parallel.
+  /// By default all CPU cores are used, use
+  /// primesieve::set_num_threads(int) to change the number of
+  /// threads.
+  /// @param start Start nth prime search at this offset.
+  /// @pre   start <= 2^64 - 2^32 * 10.
   ///
-  uint64_t parallel_nth_prime(uint64_t n, uint64_t start = 0, int threads = MAX_THREADS);
+  uint64_t parallel_nth_prime(uint64_t n, uint64_t start = 0);
 
   /// Count the primes within the interval [start, stop].
   /// @pre stop <= 2^64 - 2^32 * 10.
@@ -139,47 +141,61 @@ namespace primesieve
   ///
   uint64_t count_septuplets(uint64_t start, uint64_t stop);
 
-  /// Count the primes within the interval [start, stop].
-  /// @param threads  Number of threads.
-  /// @pre   stop     <= 2^64 - 2^32 * 10.
+  /// Count the primes within the interval [start, stop] in
+  /// parallel. By default all CPU cores are used, use
+  /// primesieve::set_num_threads(int) to change the number of
+  /// threads.
+  /// @pre stop <= 2^64 - 2^32 * 10.
   ///
-  uint64_t parallel_count_primes(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+  uint64_t parallel_count_primes(uint64_t start, uint64_t stop);
 
-  /// Count the twin primes within the interval [start, stop].
-  /// @param threads  Number of threads.
-  /// @pre   stop     <= 2^64 - 2^32 * 10.
+  /// Count the twin primes within the interval [start, stop] in
+  /// parallel. By default all CPU cores are used, use
+  /// primesieve::set_num_threads(int) to change the number of
+  /// threads.
+  /// @pre stop <= 2^64 - 2^32 * 10.
   ///
-  uint64_t parallel_count_twins(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+  uint64_t parallel_count_twins(uint64_t start, uint64_t stop);
 
-  /// Count the prime triplets within the interval [start, stop].
-  /// @param threads  Number of threads.
-  /// @pre   stop     <= 2^64 - 2^32 * 10.
+  /// Count the prime triplets within the interval [start, stop] in
+  /// parallel. By default all CPU cores are used, use
+  /// primesieve::set_num_threads(int) to change the number of
+  /// threads.
+  /// @pre stop <= 2^64 - 2^32 * 10.
   ///
-  uint64_t parallel_count_triplets(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+  uint64_t parallel_count_triplets(uint64_t start, uint64_t stop);
 
-  /// Count the prime quadruplets within the interval [start, stop].
-  /// @param threads  Number of threads.
-  /// @pre   stop     <= 2^64 - 2^32 * 10.
+  /// Count the prime quadruplets within the interval [start, stop] in
+  /// parallel. By default all CPU cores are used, use
+  /// primesieve::set_num_threads(int) to change the number of
+  /// threads.
+  /// @pre stop <= 2^64 - 2^32 * 10.
   ///
-  uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+  uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop);
 
-  /// Count the prime quintuplets within the interval [start, stop].
-  /// @param threads  Number of threads.
-  /// @pre   stop     <= 2^64 - 2^32 * 10.
+  /// Count the prime quintuplets within the interval [start, stop] in
+  /// parallel. By default all CPU cores are used, use
+  /// primesieve::set_num_threads(int) to change the number of
+  /// threads.
+  /// @pre stop <= 2^64 - 2^32 * 10.
   ///
-  uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+  uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop);
 
-  /// Count the prime sextuplets within the interval [start, stop].
-  /// @param threads  Number of threads.
-  /// @pre   stop     <= 2^64 - 2^32 * 10.
+  /// Count the prime sextuplets within the interval [start, stop] in
+  /// parallel. By default all CPU cores are used, use
+  /// primesieve::set_num_threads(int) to change the number of
+  /// threads.
+  /// @pre stop <= 2^64 - 2^32 * 10.
   ///
-  uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+  uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop);
 
-  /// Count the prime septuplets within the interval [start, stop].
-  /// @param threads  Number of threads.
-  /// @pre   stop     <= 2^64 - 2^32 * 10.
+  /// Count the prime septuplets within the interval [start, stop] in
+  /// parallel. By default all CPU cores are used, use
+  /// primesieve::set_num_threads(int) to change the number of
+  /// threads.
+  /// @pre stop <= 2^64 - 2^32 * 10.
   ///
-  uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop, int threads = MAX_THREADS);
+  uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop);
 
   /// Print the primes within the interval [start, stop]
   /// to the standard output.
@@ -237,55 +253,85 @@ namespace primesieve
 
   /// Call back the primes within the interval [start, stop].
   /// This function is synchronized, only one thread at a time calls
-  /// back primes.
+  /// back primes. By default all CPU cores are used, use
+  /// primesieve::set_num_threads(int) to change the number of
+  /// threads.
   /// @warning         Primes are not called back in arithmetic order.
   /// @param callback  A callback function.
-  /// @param threads   Number of threads.
   /// @pre   stop      <= 2^64 - 2^32 * 10.
   ///
-  void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime), int threads = MAX_THREADS);
-
-  /// Call back the primes within the interval [start, stop].
-  /// This function is not synchronized, multiple threads call back
-  /// primes in parallel.
-  /// @warning         Primes are not called back in arithmetic order.
-  /// @param callback  A callback function.
-  /// @param threads   Number of threads.
-  /// @pre   stop      <= 2^64 - 2^32 * 10.
-  ///
-  void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime, int thread_id), int threads = MAX_THREADS);
+  void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
 
   /// Call back the primes within the interval [start, stop].
   /// This function is synchronized, only one thread at a time calls
-  /// back primes.
+  /// back primes. By default all CPU cores are used, use
+  /// primesieve::set_num_threads(int) to change the number of
+  /// threads.
   /// @warning         Primes are not called back in arithmetic order.
   /// @param callback  An object derived from primesieve::Callback<uint64_t>.
-  /// @param threads   Number of threads.
   /// @pre   stop      <= 2^64 - 2^32 * 10.
   ///
-  void parallel_callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t>* callback, int threads = MAX_THREADS);
+  void parallel_callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t>* callback);
 
   /// Call back the primes within the interval [start, stop].
   /// This function is not synchronized, multiple threads call back
-  /// primes in parallel.
+  /// primes in parallel. By default all CPU cores are used, use
+  /// primesieve::set_num_threads(int) to change the number of
+  /// threads.
   /// @warning         Primes are not called back in arithmetic order.
-  /// @param callback  An object derived from primesieve::Callback<uint64_t, int>.
-  /// @param threads   Number of threads.
+  /// @param callback  A callback function.
   /// @pre   stop      <= 2^64 - 2^32 * 10.
   ///
-  void parallel_callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t, int>* callback, int threads = MAX_THREADS);
+  void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime, int thread_id));
+
+  /// Call back the primes within the interval [start, stop].
+  /// This function is not synchronized, multiple threads call back
+  /// primes in parallel. By default all CPU cores are used, use
+  /// primesieve::set_num_threads(int) to change the number of
+  /// threads.
+  /// @warning         Primes are not called back in arithmetic order.
+  /// @param callback  An object derived from primesieve::Callback<uint64_t, int>.
+  /// @pre   stop      <= 2^64 - 2^32 * 10.
+  ///
+  void parallel_callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t, int>* callback);
+
+  /// Get the current set sieve size in kilobytes.
+  int get_sieve_size();
+
+  /// Get the current set number of threads.
+  /// @note By default MAX_THREADS (-1) is returned.
+  ///
+  int get_num_threads();
 
   /// Returns the largest valid stop number for primesieve.
   /// @return (2^64-1) - (2^32-1) * 10.
   ///
-  uint64_t max_stop();
+  uint64_t get_max_stop();
+
+  /// Set the sieve size in kilobytes.
+  /// The best sieving performance is achieved with a sieve size of
+  /// your CPU's L1 data cache size (per core). For sieving >= 10^17 a
+  /// sieve size of your CPU's L2 cache size sometimes performs
+  /// better.
+  /// @param sieve_size Sieve size in kilobytes.
+  /// @pre   sieve_size >= 1 && sieve_size <= 2048.
+  ///
+  void set_sieve_size(int sieve_size);
+
+  /// Set the number of threads for sieving. This causes all
+  /// primesieve::parallel_* functions to use num_threads. Note that
+  /// the number of threads of currently running tasks is not changed.
+  /// @param num_threads  Number of threads for sieving
+  ///                     or MAX_THREADS to use all CPU cores.
+  ///
+  void set_num_threads(int num_threads);
 
   /// Run extensive correctness tests.
   /// The tests last about one minute on a quad core CPU from
   /// 2013 and use up to 1 gigabyte of memory.
-  /// @return 1 if success, 0 if error.
+  /// @return true if success else false.
   ///
-  int primesieve_test();
+  bool test();
 }
 
 #endif

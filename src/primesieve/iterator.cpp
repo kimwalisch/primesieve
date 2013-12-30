@@ -31,7 +31,7 @@ void iterator::skipto(uint64_t start)
   count_ = 0;
   start_ = start;
 
-  if (start_ > max_stop())
+  if (start_ > get_max_stop())
     throw primesieve_error("start must be <= " + PrimeFinder::getMaxStopString());
 
   if (!primes_.empty() &&
@@ -69,8 +69,9 @@ void iterator::generate_next_primes()
   else
   {
     uint64_t start = (first_) ? start_ : primes_.back() + 1;
+    uint64_t max_stop = get_max_stop();
     uint64_t interval_size = get_interval_size(start);
-    uint64_t stop = (start < max_stop() - interval_size) ? start + interval_size : max_stop();
+    uint64_t stop = (start < max_stop - interval_size) ? start + interval_size : max_stop;
     generate_primes(start, stop);
     i_ = 0;
   }

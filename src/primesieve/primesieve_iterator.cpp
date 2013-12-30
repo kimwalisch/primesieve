@@ -131,8 +131,9 @@ void generate_next_primes(primesieve_iterator* pi)
   else
   {
     uint64_t start = (pi->first_) ? pi->start_ : primes.back() + 1;
+    uint64_t max_stop = primesieve_get_max_stop();
     uint64_t interval_size = get_interval_size(pi, start);
-    uint64_t stop = (start < max_stop() - interval_size) ? start + interval_size : max_stop();
+    uint64_t stop = (start < max_stop - interval_size) ? start + interval_size : max_stop;
     generate_primes(pi, start, stop);
     pi->i_ = 0;
   }

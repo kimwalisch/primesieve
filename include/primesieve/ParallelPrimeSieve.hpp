@@ -46,10 +46,7 @@ public:
   using PrimeSieve::sieve;
   virtual void sieve();
 private:
-  enum
-  {
-    IDEAL_NUM_THREADS
-  };
+  enum { IDEAL_NUM_THREADS = -1 };
   /// Used to synchronize threads
   void* lock_;
   /// Number of threads for sieving

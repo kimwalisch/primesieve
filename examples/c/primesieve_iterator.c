@@ -13,7 +13,7 @@ int main()
   uint64_t prime = 0;
 
   /* iterate over the primes below 10^10 */
-  while ((prime = primesieve_next(&pi)) < 10000000000ull)
+  while ((prime = primesieve_next_prime(&pi)) < 10000000000ull)
     sum += prime;
 
   primesieve_free_iterator(&pi);

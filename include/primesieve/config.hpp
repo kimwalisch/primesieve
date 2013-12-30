@@ -110,9 +110,9 @@ enum {
   ITERATOR_CACHE_MEDIUM = (1 << 20) * 4,
 
   /// primesieve::iterator objects cache ITERATOR_CACHE_LARGE bytes
-  /// if a large number of new primes is generated.
+  /// of primes for large start and stop numbers.
   //
-  ITERATOR_CACHE_LARGE = (1 << 30) * 1
+  ITERATOR_CACHE_LARGE = (1 << 20) * 512
 };
 
   /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
