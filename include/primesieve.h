@@ -124,7 +124,9 @@ uint64_t primesieve_count_sextuplets(uint64_t start, uint64_t stop);
  */
 uint64_t primesieve_count_septuplets(uint64_t start, uint64_t stop);
 
-/** Count the primes within the interval [start, stop].
+/** Count the primes within the interval [start, stop] in
+ *  parallel. By default all CPU cores are used, use
+ *  primesieve_set_num_threads(int) to change the number of threads.
  *  @pre stop <= 2^64 - 2^32 * 10.
  */
 uint64_t primesieve_parallel_count_primes(uint64_t start, uint64_t stop);
@@ -219,9 +221,9 @@ void primesieve_print_septuplets(uint64_t start, uint64_t stop);
  */
 void primesieve_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
 
-/** Call back the primes within the interval [start, stop].
- *  This function is not synchronized, multiple threads call back
- *  primes in parallel. By default all CPU cores are used, use
+/** Call back the primes within the interval [start, stop] in
+ *  parallel. This function is not synchronized, multiple threads call
+ *  back primes in parallel. By default all CPU cores are used, use
  *  primesieve_set_num_threads(int) to change the number of threads.
  *  @warning         Primes are not called back in arithmetic order.
  *  @param callback  A callback function.
