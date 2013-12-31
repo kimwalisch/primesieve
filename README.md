@@ -63,10 +63,9 @@ $ ./primesieve 1e10 2e10 --count=3
 ```
 
 ### primesieve C++ library
-After having built and installed primesieve you can use it in your C++
-program to easily generate primes as shown in the primes.cpp example
-program below. You can explore primesieve's entire API online at
-http://primesieve.org/api.
+After having built and installed primesieve you can easily use it in
+your C++ program, below is an example. primesieve's API is documented
+online at http://primesieve.org/api.
 
 ```C++
 #include <primesieve.hpp>
