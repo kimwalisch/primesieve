@@ -49,8 +49,7 @@ Building primesieve is covered in more detail in the
 
 ### primesieve console application
 The primesieve console application can print and count primes and
-prime k-tuplets and find the nth prime. Below are two usage examples,
-to print an option summary use the ```--help``` flag.
+prime k-tuplets and find the nth prime. Below are a few usage examples:
 
 Print the primes below 1000 to the standard output:
 ```
@@ -60,6 +59,11 @@ $ ./primesieve 1000 --print
 Count the prime triplets inside the interval [1e10, 2e10]:
 ```
 $ ./primesieve 1e10 2e10 --count=3
+```
+
+Print the help menu:
+```
+$ ./primesieve --help
 ```
 
 ### primesieve C++ library
