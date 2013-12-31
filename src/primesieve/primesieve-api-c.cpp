@@ -31,9 +31,9 @@ namespace {
 const int BUFFER_BYTES = 128;
 
 /// This is the C array's memory layout:
-/// primes_c[ 0] = first prime.
-/// primes_c[-1] = memory address of corresponding std::vector object.
-/// primes_c[-2] = integer type, e.g. INT_PRIMES.
+/// primes[index]   = first prime.
+/// primes[index-1] = memory address of corresponding std::vector object.
+/// primes[index-2] = integer type, e.g. INT_PRIMES.
 ///
 template <typename T>
 void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size, int type)
@@ -44,15 +44,15 @@ void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size, int ty
   std::vector<T>& primes = *(new std::vector<T>);
   try
   {
-    size_t index_c = BUFFER_BYTES / sizeof(T);
-    primes.resize(index_c, 0);
-    uintptr_t* primes_c = reinterpret_cast<uintptr_t*>(&primes[index_c]);
-    primes_c[-1] = reinterpret_cast<uintptr_t>(&primes);
-    primes_c[-2] = type;
+    size_t index = BUFFER_BYTES / sizeof(T);
+    primes.resize(index, 0);
+    reinterpret_cast<uintptr_t*>(&primes[index])[-1] = reinterpret_cast<uintptr_t>(&primes);
+    reinterpret_cast<uintptr_t*>(&primes[index])[-2] = type;
+
     primesieve::generate_primes(start, stop, &primes);
     if (size)
-      *size = primes.size() - index_c;
-    return reinterpret_cast<void*>(primes_c);
+      *size = primes.size() - index;
+    return reinterpret_cast<void*>(&primes[index]);
   }
   catch (std::exception&)
   {
@@ -65,9 +65,9 @@ void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size, int ty
 }
 
 /// This is the C array's memory layout:
-/// primes_c[ 0] = first prime.
-/// primes_c[-1] = memory address of corresponding std::vector object.
-/// primes_c[-2] = integer type, e.g. INT_PRIMES.
+/// primes[index]   = first prime.
+/// primes[index-1] = memory address of corresponding std::vector object.
+/// primes[index-2] = integer type, e.g. INT_PRIMES.
 ///
 template <typename T>
 void* generate_n_primes_helper(uint64_t n, uint64_t start, int type)
@@ -78,13 +78,14 @@ void* generate_n_primes_helper(uint64_t n, uint64_t start, int type)
   std::vector<T>& primes = *(new std::vector<T>);
   try
   {
-    size_t index_c = BUFFER_BYTES / sizeof(T);
-    primes.resize(index_c, 0);
-    uintptr_t* primes_c = reinterpret_cast<uintptr_t*>(&primes[index_c]);
-    primes_c[-1] = reinterpret_cast<uintptr_t>(&primes);
-    primes_c[-2] = type;
+    size_t index = BUFFER_BYTES / sizeof(T);
+    primes.resize(index, 0);
+    reinterpret_cast<uintptr_t*>(&primes[index])[-1] = reinterpret_cast<uintptr_t>(&primes);
+    reinterpret_cast<uintptr_t*>(&primes[index])[-2] = type;
+
     primesieve::generate_n_primes(n, start, &primes);
-    return reinterpret_cast<void*>(primes_c);
+
+    return reinterpret_cast<void*>(&primes[index]);
   }
   catch (std::exception&)
   {
