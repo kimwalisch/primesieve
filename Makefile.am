@@ -5,7 +5,7 @@ lib_LTLIBRARIES = libprimesieve.la
 libprimesieve_la_CXXFLAGS = $(OPENMP_CXXFLAGS)
 libprimesieve_la_LDFLAGS = -version-info @primesieve_lib_version@
 
-if !SOLARIS
+if FORCE_SHARED_LIBRARY
 libprimesieve_la_LDFLAGS += -no-undefined 
 endif
 

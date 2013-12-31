@@ -19,8 +19,13 @@ AC_ARG_ENABLE(examples,
     ENABLE_EXAMPLES="yes")
 AM_CONDITIONAL(MAKE_EXAMPLES, test "x$ENABLE_EXAMPLES" = "xyes")
 
-AM_CONDITIONAL([SOLARIS],
-    [AS_CASE([$host_os], [solaris*], [true], [false])])
+# Force building shared library on Windows
+# Reference: <http://article.gmane.org/gmane.comp.gnu.mingw.user/18727>
+case "$host_os" in
+    cygwin*) AM_CONDITIONAL(FORCE_SHARED_LIBRARY, true);;
+    mingw*)  AM_CONDITIONAL(FORCE_SHARED_LIBRARY, true);;
+    *)       AM_CONDITIONAL(FORCE_SHARED_LIBRARY, false);;
+esac
 
 AC_ARG_VAR([L1_DCACHE_SIZE],
     [CPU L1 data cache size in kilobytes])
