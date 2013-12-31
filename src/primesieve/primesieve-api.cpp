@@ -10,6 +10,7 @@
 ///
 
 #include <primesieve.hpp>
+#include <primesieve/imath.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
 #include <primesieve/Callback.hpp>
@@ -291,8 +292,9 @@ int get_num_threads()
 
 void set_sieve_size(int kilobytes)
 {
+  kilobytes = getInBetween(1, kilobytes, 2048);
 #ifdef _OPENMP
-  #pragma omp atomic write
+  #pragma omp critical (set_sieve_size)
 #endif
   sieve_size = kilobytes;
 }
@@ -300,7 +302,7 @@ void set_sieve_size(int kilobytes)
 void set_num_threads(int threads)
 {
 #ifdef _OPENMP
-  #pragma omp atomic write
+  #pragma omp critical (set_num_threads)
 #endif
   num_threads = threads;
 }
