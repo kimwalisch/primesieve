@@ -44,13 +44,16 @@ $ make
 Linking (Unix-like OSes)
 ========================
 
+Link against libprimesieve:
+
+$ c++ -O2 my_program.cpp -lprimesieve
+
 By default libprimesieve is installed to /usr/local/lib. If your
 operating system misses the `ldconfig' program (e.g. Mac OS X, MinGW)
-linking against libprimesieve is likely to fail. Use one of the
+linking against libprimesieve is likely to fail. Then use one of the
 workarounds below:
 
-1) Add -L/usr/local/lib and -I/usr/local/include to the
-compiler options:
+1) Add -L/usr/local/lib and -I/usr/local/include:
 
 $ c++ -O2 my_program.cpp -lprimesieve -L/usr/local/lib -I/usr/local/include
 
