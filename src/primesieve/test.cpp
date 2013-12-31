@@ -88,6 +88,7 @@ void testPix()
 {
   cout << "pi(x) : Prime-counting function test" << endl;
   ParallelPrimeSieve pps;
+  pps.setSieveSize(get_sieve_size());
   pps.setNumThreads(get_num_threads());
   pps.setStart(0);
   pps.setStop(0);
@@ -107,6 +108,7 @@ void testPix()
 void testBigPrimes()
 {
   ParallelPrimeSieve pps;
+  pps.setSieveSize(get_sieve_size());
   pps.setNumThreads(get_num_threads());
   pps.setFlags(pps.COUNT_PRIMES | pps.PRINT_STATUS);
 
