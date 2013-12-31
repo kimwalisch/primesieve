@@ -18,6 +18,10 @@
 
 #include <stdint.h>
 
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
+
 namespace
 {
 /// Number of threads used for sieving in parallel
@@ -294,7 +298,7 @@ void set_sieve_size(int kilobytes)
 {
   kilobytes = getInBetween(1, kilobytes, 2048);
 #ifdef _OPENMP
-  #pragma omp critical (set_sieve_size)
+  #pragma omp critical (sieve_size)
 #endif
   sieve_size = kilobytes;
 }
@@ -302,7 +306,16 @@ void set_sieve_size(int kilobytes)
 void set_num_threads(int threads)
 {
 #ifdef _OPENMP
-  #pragma omp critical (set_num_threads)
+  int max_threads = omp_get_max_threads();
+#else
+  int max_threads = 1;
+#endif
+
+  if (threads != MAX_THREADS)
+    threads = getInBetween(1, threads, max_threads);
+
+#ifdef _OPENMP
+  #pragma omp critical (num_threads)
 #endif
   num_threads = threads;
 }
