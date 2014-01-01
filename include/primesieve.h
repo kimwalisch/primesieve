@@ -5,7 +5,7 @@
  *          errno to EDOM and functions that have a uint64_t return
  *          type return UINT64_MAX (= PRIMESIEVE_ERROR).
  * 
- *  Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+ *  Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
  * 
  *  This file is distributed under the BSD License. See the COPYING
  *  file in the top level directory.
@@ -254,9 +254,9 @@ uint64_t primesieve_get_max_stop();
  */
 void primesieve_set_sieve_size(int sieve_size);
 
-/** Set the number of threads for sieving. This causes all
- *  primesieve_parallel_* functions to use num_threads. Note that
- *  the number of threads of currently running tasks is not changed.
+/** Set the number of threads for use in subsequent
+ *  primesieve_parallel_* function calls. Note that this only
+ *  changes the number of threads for the current process.
  *  @param num_threads  Number of threads for sieving
  *                      or MAX_THREADS to use all CPU cores.
  */
