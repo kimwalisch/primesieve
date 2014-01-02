@@ -305,14 +305,16 @@ void set_sieve_size(int kilobytes)
 
 void set_num_threads(int threads)
 {
-#ifdef _OPENMP
-  int max_threads = omp_get_max_threads();
-#else
-  int max_threads = 1;
-#endif
-
   if (threads != MAX_THREADS)
+  {
+#ifdef _OPENMP
+    int max_threads = omp_get_max_threads();
     threads = getInBetween(1, threads, max_threads);
+#else
+    // no multi-threading
+    threads = 1;
+#endif
+  }
 
 #ifdef _OPENMP
   #pragma omp critical (num_threads)
