@@ -1,10 +1,12 @@
+.*
+*~
+!/.gitignore
 *.exe
 *.obj
 *.lib
 *.o
 *.lo
 *.la
-*~
 /primesieve
 Makefile
 Makefile.in
@@ -22,11 +24,5 @@ autoconf.h*
 /m4/
 /missing
 stamp-*
-.deps/
-.dirstamp
-.DS_Store
-.libs/
-.project
 /test-driver
-.c9revisions
 /compile
