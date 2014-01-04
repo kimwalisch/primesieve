@@ -10,7 +10,7 @@ int main(int, char** argv)
 {
   uint64_t n = 1000;
   if (argv[1])
-    n = atol(argv[1]);
+    n = std::atol(argv[1]);
 
   uint64_t nth_prime = primesieve::nth_prime(n);
   std::cout << n << "th prime = " << nth_prime << std::endl;
