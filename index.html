@@ -63,8 +63,8 @@ the sieve of Eratosthenes. Instead of sieving the interval
 2<sup><i>n</i></sup> at once one subdivides the sieve interval into a
 number of equal sized segments that are then sieved consecutively.
 Segmentation drops the memory requirement of the sieve of Eratosthenes
-from <img src="http://chart.apis.google.com/chart?cht=tx&chl=O(n)&nonsense=something_that_ends_with2.png" align="top" alt="O(n)"/>
-to <img src="http://chart.apis.google.com/chart?cht=tx&chl=O(\sqrt{n})&nonsense=something_that_ends_with2.png" align="top" alt="O(sqrt(n))"/>.
+from <img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=O(n)&nonsense=something_that_ends_with2.png" alt="O(n)"/>
+to <img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=O(\sqrt{n})&nonsense=something_that_ends_with2.png" alt="O(sqrt(n))"/>.
 The segment size is usually chosen to fit into the CPU's fast L1 or L2
 cache memory which significantly speeds up sieving. A segmented
 version of the sieve of Eratosthenes was first published by Singleton
@@ -80,8 +80,8 @@ primes are skipped. The 1st wheel considers only odd numbers, the 2nd
 wheel (modulo 6) skips multiples of 2 and 3, the 3rd wheel (modulo 30)
 skips multiples of 2, 3, 5 and so on. Pritchard has shown in [3] that
 the running time of the sieve of Eratosthenes can be reduced by a
-factor of <img src="http://chart.apis.google.com/chart?cht=tx&chl=\log{\log{n}}&nonsense=something_that_ends_with4.png" align="top" alt="log log n"/>
-if the wheel size is <img src="http://chart.apis.google.com/chart?cht=tx&chl=\approx \sqrt{n}&nonsense=something_that_ends_with2.png" align="top" alt="sqrt(n)"/>
+factor of <img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=\log{\log{n}}&nonsense=something_that_ends_with4.png" alt="log log n"/>
+if the wheel size is <img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=\approx \sqrt{n}&nonsense=something_that_ends_with2.png" alt="sqrt(n)"/>
 but for cache reasons the sieve of Eratosthenes usually performs best
 with a modulo 30 or 210 wheel. Sorenson explains wheels in [4].</p>
 
@@ -98,7 +98,7 @@ the primes of the related list are used for sieving and each prime is
 reassigned to the list responsible for its next multiple when
 processed. The benefit of this approach is that it is now possible to
 use segments (i.e. sieve arrays) smaller than
-<img src="http://chart.apis.google.com/chart?cht=tx&chl=\sqrt{n}&nonsense=something_that_ends_with3.png" align="top" alt="sqrt(n)"/>
+<img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=\sqrt{n}&nonsense=something_that_ends_with3.png" alt="sqrt(n)"/>
 without deteriorating efficiency, this is important as only small
 segments that fit into the CPU's L1 or L2 cache provide fast memory
 access.</p>
