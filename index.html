@@ -135,6 +135,71 @@ fastest sieve of Atkin implementation on the web. Here is a list of
 fast sieve of Eratosthenes implementations.</p>
 
 <h2>
+<a name="timings" class="anchor" href="#timings"><span class="octicon octicon-link"></span></a>Timings</h2>
+<p>
+<table style="width: 550px;">
+<tr>
+<td style="text-align: right; font-weight: bold; padding: 5px;">x</td>
+    <td style="font-weight: bold; padding: 5px;">Prime Count</td>
+    <td style="font-weight: bold; padding: 5px;">Intel Core i5-670</td>
+    <td style="font-weight: bold; padding: 5px;">Intel Core i7-4770</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 5px;">10^7</td>
+    <td style="text-align: right; padding: 5px;">664,579</td>
+    <td style="text-align: right; padding: 5px;">0.00s</td>
+    <td style="text-align: right; padding: 5px;">0.00s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 5px;">10^8</td>
+    <td style="text-align: right; padding: 5px;">5,761,455</td>
+    <td style="text-align: right; padding: 5px;">0.01s</td>
+    <td style="text-align: right; padding: 5px;">0.01s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 5px;">10^9</td>
+    <td style="text-align: right; padding: 5px;">50,847,534</td>
+    <td style="text-align: right; padding: 5px;">0.11s</td>
+    <td style="text-align: right; padding: 5px;">0.03s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 5px;">2^32</td>
+    <td style="text-align: right; padding: 5px;">203,280,221</td>
+    <td style="text-align: right; padding: 5px;">0.54s</td>
+    <td style="text-align: right; padding: 5px;">0.12s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 5px;">10^10</td>
+    <td style="text-align: right; padding: 5px;">455,052,511</td>
+    <td style="text-align: right; padding: 5px;">1.29s</td>
+    <td style="text-align: right; padding: 5px;">0.32s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 5px;">10^11</td>
+    <td style="text-align: right; padding: 5px;">4,118,054,813</td>
+    <td style="text-align: right; padding: 5px;">16.11s</td>
+    <td style="text-align: right; padding: 5px;">3.94s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 5px;">10^12</td>
+    <td style="text-align: right; padding: 5px;">37,607,912,018</td>
+    <td style="text-align: right; padding: 5px;">208.63s</td>
+    <td style="text-align: right; padding: 5px;">53.95s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 5px;">10^13</td>
+    <td style="text-align: right; padding: 5px;">346,065,536,839</td>
+    <td style="text-align: right; padding: 5px;">2629.84s</td>
+    <td style="text-align: right; padding: 5px;">709.96s</td>
+  </tr>
+</table>
+</p>
+<p>The Intel Core i5-670 is a CPU from 2010 (2 x 3.47GHz, 32KB L1 data
+cache). The Intel Core i7-4770 is a CPU from 2013 (4 x 3.4GHz, 32KB L1
+data cache). This benchmark was run on a 64-bit Linux operating system
+and primesieve was compiled using GCC 4.8.</p>
+
+<h2>
 <a name="references" class="anchor" href="#references"><span class="octicon octicon-link"></span></a>References and notes</h2>
 <p><ol>
   <li>Richard C. Singleton, "An efficient prime number generator", Communications of the ACM 12, 563-564, 1969.</li>
