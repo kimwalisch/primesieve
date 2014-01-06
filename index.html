@@ -33,22 +33,21 @@
       <div class="inner clearfix">
         <section id="main-content">
 
-          <div id="container" style="width: 750px; margin-bottom: 30px;">
-            <nav id="navigation">
-              <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="downloads">Downloads</a></li>
-                <li><a href="screenshots">Screenshots</a></li>
-                <li><a href="api">API Documentation</a></li>
-                <li><a href="build">Build From Source</a></li>
-                <li><a href="mailto:kim.walisch@gmail.com">Contact</a></li>
-              </ul>
-            </nav>
-          </div>
+<div id="container" style="width: 750px; margin-bottom: 30px;">
+  <nav id="navigation">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="downloads">Downloads</a></li>
+      <li><a href="screenshots">Screenshots</a></li>
+      <li><a href="api">API Documentation</a></li>
+      <li><a href="build">Build From Source</a></li>
+      <li><a href="mailto:kim.walisch@gmail.com">Contact</a></li>
+    </ul>
+  </nav>
+</div>
 
 <h2>
 <a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>About</h2>
-
 <p>primesieve is a free software program and C/C++ library for fast
 prime number generation. It generates the primes below 10^9 in just
 0.2 seconds on a single core of an Intel Core i7-4770 CPU from 2013.
@@ -57,7 +56,6 @@ triplets, ...) up to 2^64.</p>
 
 <h2>
 <a name="algorithm-complexity" class="anchor" href="#algorithm-complexity"><span class="octicon octicon-link"></span></a>Algorithm complexity</h2>
-
 <p>Segmentation is currently the best known practical improvement to
 the sieve of Eratosthenes. Instead of sieving the interval
 2<sup><i>n</i></sup> at once one subdivides the sieve interval into a
@@ -102,6 +100,39 @@ use segments (i.e. sieve arrays) smaller than
 without deteriorating efficiency, this is important as only small
 segments that fit into the CPU's L1 or L2 cache provide fast memory
 access.</p>
+
+<h2>
+<a name="implementation" class="anchor" href="#implementation"><span class="octicon octicon-link"></span></a>Implementation</h2>
+<p>primesieve is written entirely in C++ and does not depend on
+external libraries [6]. Its speed is mainly due to the segmentation of
+the sieve of Eratosthenes which prevents cache misses when crossing
+off multiples in the sieve array and the use of a bit array instead of
+the more widely used boolean array. Below is a list of the
+optimizations used in primesieve:
+<ul>
+  <li>Uses a bit array with 8 flags each 30 numbers for sieving</li>
+  <li>Pre-sieves multiples of small primes ≤ 19</li>
+  <li>The sieving primes are being compressed to improve cache efficiency [7]</li>
+  <li>Starts crossing off multiples at the square</li>
+  <li>Uses a modolo 210 wheel that skips multiples of 2, 3, 5 and 7</li>
+  <li>Uses specialized algorithms for small, medium and big sieving primes</li>
+  <li>Two sieving primes are processed per loop iteration to increase instruction-level parallelism</li>
+  <li>Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
+</ul></p>
+
+<h2>
+<a name="performance" class="anchor" href="#performance"><span class="octicon octicon-link"></span></a>Performance</h2>
+<p>primesieve generates the first 50,847,534 primes up to 10^9 in just
+0.2 seconds on a single core of an Intel Core i7-4770 3.40GHz (year
+2013), this is about 50 times faster than an ordinary C/C++ sieve of
+Eratosthenes implementation and about 10,000 times faster than
+trial-division. primesieve outperforms the author's older
+<a href="http://primzahlen.de/referenten/Kim_Walisch/index2.htm">ecprime</a>
+(fastest from 2002 to 2010) by about 30 percent and also substantially
+outperforms <a href="http://cr.yp.to/primegen.html">primegen</a> the
+fastest sieve of Atkin implementation on the web. Here is a list of
+<a href="https://code.google.com/p/primesieve/wiki/Links">other</a>
+fast sieve of Eratosthenes implementations.</p>
 
         </section>
 
