@@ -22,7 +22,9 @@
 #include <stdint.h>
 #include <stddef.h>
 
-/** primesieve functions return UINT64_MAX if any error occurs. */
+/** primesieve functions return PRIMESIEVE_ERROR
+ *  (UINT64_MAX) if any error occurs.
+ */
 #define PRIMESIEVE_ERROR ((uint64_t)~((uint64_t)0))
 
 #ifdef __cplusplus

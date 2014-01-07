@@ -4,9 +4,10 @@
  *          primesieve_iterator.c primesieve_iterator.c @endlink
  *          example shows how to use primesieve_iterator. If any error
  *          occurs errno is is set to EDOM and primesieve_next_prime()
- *          and primesieve_previous_prime() return UINT64_MAX.
+ *          and primesieve_previous_prime() return PRIMESIEVE_ERROR
+ *          (UINT64_MAX).
  * 
- *  Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+ *  Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
  * 
  *  This file is distributed under the BSD License. See the COPYING
  *  file in the top level directory.
