@@ -23,6 +23,11 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 
+sup {
+	font-size: xx-small;
+	vertical-align: super;
+}
+
 img.formula {
 	margin: 0;
 	padding: 0;
