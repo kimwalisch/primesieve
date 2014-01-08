@@ -9,7 +9,6 @@ triplets, ...) up to 2^64.
 * Homepage: http://primesieve.org
 * Downloads: http://primesieve.org/downloads
 * API: http://primesieve.org/api
-* Screenshots: http://primesieve.org/screenshots
 
 ### Algorithm complexity
 primesieve generates primes using the segmented sieve of Eratosthenes
