@@ -44,7 +44,7 @@ $ make
 Linking (Unix-like OSes)
 ========================
 
-Link against libprimesieve:
+Link against libprimesieve using:
 
 $ c++ -O2 my_program.cpp -lprimesieve
 
