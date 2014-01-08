@@ -48,14 +48,34 @@
 
 <h2>
 <a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>Segmented sieve of Eratosthenes implementation</h2>
-<p>Below is a simple C++ implementation of the segmented sieve of
-Eratosthenes with a few optimizations. It runs substantially faster
+<p>Further down is a simple C++ implementation of the segmented sieve
+of Eratosthenes with a few optimizations. It runs substantially faster
 than "traditional" sieve of Eratosthenes implementations due to its
 more efficient CPU cache usage i.e. it uses the CPU's L1 data cache
 size (per core) as its sieve array size. This ensures that less then
 1 percent of the memory accesses will be cache misses. This implementation generates the primes below 10^9 in
 just 0.8 seconds (single-threaded) on an Intel Core i7-4770 CPU
 (3.4 GHz) from 2013.</p>
+
+<h2>
+<a name="how" class="anchor" href="#how"><span class="octicon octicon-link"></span></a>How it works</h2>
+<p>Suppose we want to sieve the primes up to 10^9. We chose the size
+of the sieve array to be the same size as the CPU's L1 data cache size (per
+core) e.g. 32768 bytes. We first generate the sieving primes below
+sqrt(10^10) which are needed to cross-off multiples. Then we start
+crossing-off the multiples of the first prime 2 until we reach a
+multiple of 2 >= sieve_size, if this happens we calculate the index of
+that multiple in the next segment using (multiple - sieve_size) and
+store it in a separate array (next[]). We then restart crossing-off
+multiples using the next prime and so on. Once we have crossed-off the
+multiples of all primes in the first segment we iterate over the sieve
+array and print out (or count) the primes.</p>
+
+<p>In order to sieve the next segment we reset the sieve array and we
+increment the lower offset by the sieve size (here 32768). Then we
+start crossing-off multiples again, for each sieving prime we retrieve
+the sieve index from the next array an we start crossing-off multiples
+from there on.</p>
 
           <div class="highlight highlight-C++"><pre><span class="c1">/// @file   segmented_sieve.cpp</span>
 <span class="c1">/// @author Kim Walisch, &lt;kim.walisch@gmail.com&gt; </span>
