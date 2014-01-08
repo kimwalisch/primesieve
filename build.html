@@ -74,8 +74,11 @@ This builds the primesieve command-line program and primesieve.lib.
 </p>
 
 <h2>
-<a name="usage_examples" class="anchor" href="#usage_examples"><span class="octicon octicon-link"></span></a>Usage examples</h2>
-<p>
+<a name="primesieve-console-application" class="anchor" href="#primesieve-console-application"><span class="octicon octicon-link"></span></a>primesieve console application</h2>
+
+<p>The primesieve console application can print and count primes and
+prime k-tuplets and find the nth prime. Below are a few usage examples:</p>
+
 <div class="highlight highlight-bash"><pre><span class="c"># Print the primes below 1000000 to the standard output</span>
 <span class="nv">$ </span>primesieve 1000000 --print
 
@@ -91,7 +94,81 @@ This builds the primesieve command-line program and primesieve.lib.
 <span class="c"># Print an option summary</span>
 <span class="nv">$ </span>primesieve --help
 </pre></div>
-</p>
+
+<h2>
+<a name="primesieve-cpp-library" class="anchor" href="#primesieve-cpp-library"><span class="octicon octicon-link"></span></a>primesieve C++ library</h2>
+
+<p>After having built and installed primesieve you can easily use it in
+your C++ program, below is an example. <br/>primesieve's API is documented
+online at <a href="http://primesieve.org/api">http://primesieve.org/api</a>.</p>
+
+<div class="highlight highlight-C++"><pre><span class="cp">#include &lt;primesieve.hpp&gt;</span>
+<span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;vector&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">primes</span><span class="p">;</span>
+  <span class="c1">// store the primes below 1000</span>
+  <span class="n">primesieve</span><span class="o">::</span><span class="n">generate_primes</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">primes</span><span class="p">);</span>
+
+  <span class="n">primesieve</span><span class="o">::</span><span class="n">iterator</span> <span class="n">pi</span><span class="p">;</span>
+  <span class="kt">uint64_t</span> <span class="n">prime</span><span class="p">;</span>
+
+  <span class="c1">// iterate over the primes below 10^9</span>
+  <span class="k">while</span> <span class="p">((</span><span class="n">prime</span> <span class="o">=</span> <span class="n">pi</span><span class="p">.</span><span class="n">next_prime</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mi">1000000000</span><span class="p">)</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">prime</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Please read the linking section in the <a href="https://github.com/kimwalisch/primesieve/blob/master/INSTALL">INSTALL</a> file for build instructions.</p>
+
+<h2>
+<a name="primesieve-c-bindings" class="anchor" href="#primesieve-c-bindings"><span class="octicon octicon-link"></span></a>primesieve C bindings</h2>
+
+<p>All of primesieve's functions are exposed as C API via the
+primesieve.h header. You can browse primesieve's C API online
+at <a href="http://primesieve.org/api">http://primesieve.org/api</a>.</p>
+
+<div class="highlight highlight-C"><pre><span class="cp">#include &lt;primesieve.h&gt;</span>
+<span class="cp">#include &lt;stdint.h&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="kt">uint64_t</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kt">uint64_t</span> <span class="n">stop</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">size</span><span class="p">;</span>
+
+  <span class="cm">/* store the primes below 10000 */</span>
+  <span class="kt">int</span><span class="o">*</span> <span class="n">primes</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">primesieve_generate_primes</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">size</span><span class="p">,</span> <span class="n">INT_PRIMES</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%i</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">primes</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+
+  <span class="cm">/* deallocate primes array generated using primesieve */</span>
+  <span class="n">primesieve_free</span><span class="p">(</span><span class="n">primes</span><span class="p">);</span>
+
+  <span class="n">primesieve_iterator</span> <span class="n">pi</span><span class="p">;</span>
+  <span class="n">primesieve_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pi</span><span class="p">);</span>
+
+  <span class="kt">uint64_t</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kt">uint64_t</span> <span class="n">prime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="cm">/* iterate over the primes below 10^9 */</span>
+  <span class="k">while</span> <span class="p">((</span><span class="n">prime</span> <span class="o">=</span> <span class="n">primesieve_next_prime</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pi</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">1000000000</span><span class="p">)</span>
+    <span class="n">sum</span> <span class="o">+=</span> <span class="n">prime</span><span class="p">;</span>
+
+  <span class="n">primesieve_free_iterator</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pi</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Sum of the primes below 10^9 = %llu</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">sum</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Please read the linking section in the <a href="https://github.com/kimwalisch/primesieve/blob/master/INSTALL">INSTALL</a> file for build instructions.</p>
 
         </section>
 
