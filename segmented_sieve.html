@@ -69,9 +69,9 @@ multiples. Then we start crossing-off the multiples of the first prime
 happens we calculate the index of that multiple in the next segment
 using (multiple&nbsp;-&nbsp;segment_size) and store it in a separate
 array (next[]). We then cross-off the multiples of the next sieving
-prime. Once we have crossed-off the multiples of all sieving primes in
-the first segment we iterate over the sieve array and print out (or
-count) the primes.</p>
+prime using the same procedure. Once we have crossed-off the multiples
+of all sieving primes in the first segment we iterate over the sieve array
+and print out (or count) the primes.</p>
 
 <p>In order to sieve the next segment we reset the sieve array and we
 increment the lower offset by the segment_size. Then we start
