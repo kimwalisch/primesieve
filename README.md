@@ -29,7 +29,7 @@ Download the latest release tarball from
 http://primesieve.org/downloads. On Unix-like operating systems you
 can then build and install primesieve using:
 
-```
+```bash
 $ ./configure
 $ make
 $ sudo make install
@@ -39,7 +39,7 @@ On Windows (MSVC) open a Visual Studio Command Prompt and cd into the
 primesieve directory. Then build primesieve using the following
 command:
 
-```
+```bash
 > nmake -f Makefile.msvc
 ```
 
@@ -50,19 +50,21 @@ Building primesieve is covered in more detail in the
 The primesieve console application can print and count primes and
 prime k-tuplets and find the nth prime. Below are a few usage examples:
 
-Print the primes below 1000 to the standard output:
-```
-$ ./primesieve 1000 --print
-```
+```bash
+# Print the primes below 1000000 to the standard output
+$ primesieve 1000000 --print
 
-Count the prime triplets inside the interval [1e10, 2e10]:
-```
-$ ./primesieve 1e10 2e10 --count=3
-```
+# Print the twin primes below 1000000 to the standard output
+$ primesieve 1000000 --print=2
 
-Print the help menu:
-```
-$ ./primesieve --help
+# Count the primes below 1e10 using all CPU cores
+$ primesieve 1e10 --count
+
+# Count the primes within [1e10, 2e10] using 4 threads
+$ primesieve 1e10 2e10 --count --threads=4
+
+# Print an option summary
+$ primesieve --help
 ```
 
 ### primesieve C++ library
@@ -93,12 +95,12 @@ int main()
 ```
 
 On Unix-like operating systems compile using:
-```
+```bash
 $ c++ -O2 primes.cpp -lprimesieve
 ```
 
 On Windows (MSVC) compile using:
-```
+```bash
 > cl /O2 /EHsc /Iinclude primes.cpp /link primesieve.lib
 ```
 
@@ -145,7 +147,7 @@ int main()
 ```
 
 On Unix-like operating systems compile using:
-```
+```bash
 $ cc -O2 primes.c -lprimesieve
 ```
 
