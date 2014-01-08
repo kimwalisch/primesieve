@@ -67,8 +67,7 @@ to <img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=O(\sq
 The segment size is usually chosen to fit into the CPU's fast L1 or L2
 cache memory which significantly speeds up sieving. A segmented
 version of the sieve of Eratosthenes was first published by Singleton
-in 1969 [1], Bays and Hudson in [2] describe the algorithm in more
-detail. Here is a <a href="segmented_sieve.html">simple implementation</a>
+in 1969 [1]. Here is a <a href="segmented_sieve.html">simple implementation</a>
 of the segmented sieve of Eratosthenes.</p>
 
 <p>Wheel factorization is used to skip multiples of small primes. If a
@@ -77,16 +76,16 @@ multiples are crossed off that are coprime to the first <i>k</i>
 primes, i.e. multiples that are divisible by any of the first <i>k</i>
 primes are skipped. The 1st wheel considers only odd numbers, the 2nd
 wheel (modulo 6) skips multiples of 2 and 3, the 3rd wheel (modulo 30)
-skips multiples of 2, 3, 5 and so on. Pritchard has shown in [3] that
+skips multiples of 2, 3, 5 and so on. Pritchard has shown in [2] that
 the running time of the sieve of Eratosthenes can be reduced by a
 factor of <img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=\log{\log{n}}&nonsense=something_that_ends_with4.png" alt="log log n"/>
 if the wheel size is <img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=\approx \sqrt{n}&nonsense=something_that_ends_with2.png" alt="sqrt(n)"/>
 but for cache reasons the sieve of Eratosthenes usually performs best
-with a modulo 30 or 210 wheel. Sorenson explains wheels in [4].</p>
+with a modulo 30 or 210 wheel. Sorenson explains wheels in [3].</p>
 
 <p>Additionally primesieve uses Tomás Oliveira e Silva's
 <a href="http://www.ieeta.pt/~tos/software/prime_sieve.html">cache-friendly bucket list algorithm</a>
-if needed [5]. This algorithm is relatively new it has
+if needed [4]. This algorithm is relatively new it has
 been devised by Tomás Oliveira e Silva in 2001 in order to speed up
 the segmented sieve of Eratosthenes for prime numbers past 32 bits.
 The idea is to store the sieving primes into lists of buckets with
@@ -105,7 +104,7 @@ access.</p>
 <h2>
 <a name="implementation" class="anchor" href="#implementation"><span class="octicon octicon-link"></span></a>Implementation</h2>
 <p>primesieve is written entirely in C++ and does not depend on
-external libraries [6]. Its speed is mainly due to the segmentation of
+external libraries [5]. Its speed is mainly due to the segmentation of
 the sieve of Eratosthenes which prevents cache misses when crossing
 off multiples in the sieve array and the use of a bit array instead of
 the more widely used boolean array. Below is a list of the
@@ -113,13 +112,14 @@ optimizations used in primesieve:
 <ul>
   <li>Uses a bit array with 8 flags each 30 numbers for sieving</li>
   <li>Pre-sieves multiples of small primes ≤ 19</li>
-  <li>The sieving primes are being compressed to improve cache efficiency [7]</li>
+  <li>The sieving primes are being compressed to improve cache efficiency [6]</li>
   <li>Starts crossing off multiples at the square</li>
   <li>Uses a modolo 210 wheel that skips multiples of 2, 3, 5 and 7</li>
   <li>Uses specialized algorithms for small, medium and big sieving primes</li>
   <li>Two sieving primes are processed per loop iteration to increase instruction-level parallelism</li>
   <li>Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
-</ul></p>
+</ul>
+</p>
 
 <h2>
 <a name="performance" class="anchor" href="#performance"><span class="octicon octicon-link"></span></a>Performance</h2>
@@ -212,14 +212,16 @@ kilobytes).</p>
 
 <h2>
 <a name="references" class="anchor" href="#references"><span class="octicon octicon-link"></span></a>References and notes</h2>
-<p><ol>
-  <li style="white-space: nowrap;">Richard C. Singleton, "An efficient prime number generator", Communications of the ACM 12, 563-564, 1969.</li>
-  <li style="white-space: nowrap;">Paul Pritchard, "Fast compact prime number sieves (among others)", Journal of Algorithms 4 (1983), 332-344.</li>
-  <li style="white-space: nowrap;">J. Sorenson, <a href="ftp://ftp.cs.wisc.edu/pub/techreports/1991/TR1028.pdf">"An analysis of two prime number sieves"</a>, Computer Science Technical Report Vol. 1028, 1991.</li>
-  <li style="white-space: nowrap;">Tomás Oliveira e Silva, <a href="http://www.ieeta.pt/~tos/software/prime_sieve.html">"Fast implementation of the segmented sieve of Eratosthenes"</a>, 2002.</li>
-  <li style="white-space: nowrap;">The primesieve GUI application (screenshot) depends on the <a href="http://qt-project.org/">Qt framework</a>.</li>
-  <li style="white-space: nowrap;">Actually it is not the sieving primes that are being compressed but their sieve and wheel indexes.</li>
-</ol></p>
+<p>
+  <ol>
+    <li style="white-space: nowrap;">Richard C. Singleton, "An efficient prime number generator", Communications of the ACM 12, 563-564, 1969.</li>
+    <li style="white-space: nowrap;">Paul Pritchard, "Fast compact prime number sieves (among others)", Journal of Algorithms 4 (1983), 332-344.</li>
+    <li style="white-space: nowrap;">J. Sorenson, <a href="ftp://ftp.cs.wisc.edu/pub/techreports/1991/TR1028.pdf">"An analysis of two prime number sieves"</a>, Computer Science Technical Report Vol. 1028, 1991.</li>
+    <li style="white-space: nowrap;">Tomás Oliveira e Silva, <a href="http://www.ieeta.pt/~tos/software/prime_sieve.html">"Fast implementation of the segmented sieve of Eratosthenes"</a>, 2002.</li>
+    <li style="white-space: nowrap;">The primesieve GUI application (screenshot) depends on the <a href="http://qt-project.org/">Qt framework</a>.</li>
+    <li style="white-space: nowrap;">Actually it is not the sieving primes that are being compressed but their sieve and wheel indexes.</li>
+  </ol>
+</p>
 
         </section>
 
