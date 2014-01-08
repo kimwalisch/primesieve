@@ -47,6 +47,7 @@ Linking (Unix-like OSes)
 Link against libprimesieve using:
 
 $ c++ -O2 my_program.cpp -lprimesieve
+$ cc  -O2 my_program.c   -lprimesieve
 
 By default libprimesieve is installed to /usr/local/lib. If your
 operating system misses the `ldconfig' program (e.g. Mac OS X, MinGW)
