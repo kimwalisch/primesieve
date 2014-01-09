@@ -79,7 +79,7 @@ crossing-off multiples again, for each sieving prime we retrieve the
 sieve index from the next array an we start crossing-off multiples
 from there on...</p>
 
-          <div class="highlight highlight-C++"><pre><span class="c1">/// @file   segmented_sieve.cpp</span>
+<div class="highlight highlight-C++"><pre><span class="c1">/// @file   segmented_sieve.cpp</span>
 <span class="c1">/// @author Kim Walisch, &lt;kim.walisch@gmail.com&gt; </span>
 <span class="c1">/// @brief  This is a simple implementation of the segmented sieve of</span>
 <span class="c1">///         Eratosthenes with a few optimizations. It generates the</span>
@@ -95,7 +95,6 @@ from there on...</p>
 <span class="cp">#include &lt;stdint.h&gt;</span>
 
 <span class="k">const</span> <span class="kt">int</span> <span class="n">L1D_CACHE_SIZE</span> <span class="o">=</span> <span class="mi">32768</span><span class="p">;</span>
-
 
 <span class="c1">/// Generate primes using the segmented sieve of Eratosthenes.</span>
 <span class="c1">/// This algorithm uses O(n log log n) operations and O(sqrt(n)) space.</span>
@@ -153,6 +152,10 @@ from there on...</p>
   <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">count</span> <span class="o">&lt;&lt;</span> <span class="s">" primes found."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 <span class="p">}</span>
 
+<span class="c1">/// Usage: ./segmented_sieve n size</span>
+<span class="c1">/// @param n     Sieve the primes up to n.</span>
+<span class="c1">/// @param size  Size of the sieve array in bytes.</span>
+<span class="c1">///</span>
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="c1">// generate the primes below this number</span>
