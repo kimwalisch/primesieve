@@ -79,8 +79,8 @@ online at http://primesieve.org/api.
 
 int main()
 {
-  std::vector<int> primes;
   // store the primes below 1000
+  std::vector<int> primes;
   primesieve::generate_primes(1000, &primes);
 
   primesieve::iterator pi;
@@ -105,8 +105,8 @@ On Windows (MSVC) compile using:
 ```
 
 ### primesieve C bindings
-All of primesieve's functions are exposed as C API via the
-primesieve.h header. You can explore primesieve's C API online
+All of primesieve's functions are exposed as C API (C99 or later) via
+the primesieve.h header. You can explore primesieve's C API online
 at http://primesieve.org/api.
 
 ```C
@@ -129,19 +129,6 @@ int main()
 
   /* deallocate primes array generated using primesieve */
   primesieve_free(primes);
-
-  primesieve_iterator pi;
-  primesieve_init(&pi);
-
-  uint64_t sum = 0;
-  uint64_t prime = 0;
-
-  /* iterate over the primes below 10^9 */
-  while ((prime = primesieve_next_prime(&pi)) < 1000000000)
-    sum += prime;
-
-  primesieve_free_iterator(&pi);
-  printf("Sum of the primes below 10^9 = %llu\n", sum);
   return 0;
 }
 ```
