@@ -3,7 +3,7 @@
 /// @brief  Pre-sieve multiples of small primes to speed up the
 ///         sieve of Eratosthenes.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -30,11 +30,6 @@ PreSieve::PreSieve(int limit)
   if (limit < 11 || limit > 23)
     throw primesieve_error("PreSieve: limit must be >= 11 && <= 23");
   limit_ = limit;
-  primeProduct_ = 1;
-  for (int i = 0; primes_[i] <= limit_; i++)
-    primeProduct_ *= primes_[i];
-  size_ = primeProduct_ / NUMBERS_PER_BYTE;
-  preSieved_ = new byte_t[size_];
   init();
 }
 
@@ -48,13 +43,19 @@ PreSieve::~PreSieve()
 ///
 void PreSieve::init()
 {
+  primeProduct_ = 1;
+  for (int i = 0; primes_[i] <= limit_; i++)
+    primeProduct_ *= primes_[i];
+
+  size_ = primeProduct_ / NUMBERS_PER_BYTE;
+  preSieved_ = new byte_t[size_];
   std::memset(preSieved_, 0xff, size_);
+
   uint_t stop = primeProduct_ * 2;
   EratSmall eratSmall(stop, size_, limit_);
 
   for (int i = 3; primes_[i] <= limit_; i++)
     eratSmall.addSievingPrime(primes_[i], primeProduct_);
-
   eratSmall.crossOff(preSieved_, &preSieved_[size_]);
 }
 
