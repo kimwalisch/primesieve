@@ -16,6 +16,7 @@
 
 #include <stdint.h>
 #include <cstring>
+#include <cstdlib>
 
 namespace primesieve {
 
@@ -24,12 +25,13 @@ const uint_t PreSieve::primes_[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 };
 /// PreSieve multiples of small primes <= limit.
 /// @pre limit >= 11 && <= 23
 ///
-PreSieve::PreSieve(int limit)
+PreSieve::PreSieve(int limit) :
+  limit_(limit),
+  preSieved_(NULL)
 {
-  // limit <= 23 prevents 32-bit overflows
-  if (limit < 11 || limit > 23)
+  // limit_ <= 23 prevents 32-bit overflows
+  if (limit_ < 11 || limit_ > 23)
     throw primesieve_error("PreSieve: limit must be >= 11 && <= 23");
-  limit_ = limit;
   init();
 }
 
