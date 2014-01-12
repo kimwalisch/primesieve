@@ -144,8 +144,9 @@ from there on...</p>
         <span class="n">segment</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
       <span class="n">next</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="n">segment_size</span><span class="p">;</span>
     <span class="p">}</span>
+
     <span class="k">for</span> <span class="p">(;</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">;</span> <span class="n">n</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">)</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">segment</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">low</span><span class="p">])</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">segment</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">low</span><span class="p">]) <span class="c1">// n is a prime</span></span>
         <span class="n">count</span><span class="o">++</span><span class="p">;</span>
   <span class="p">}</span>
 
