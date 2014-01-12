@@ -52,8 +52,9 @@
 <p>primesieve is a free software program and C/C++ library for fast
 prime number generation. It generates the primes below 10^9 in just
 0.2 seconds on a single core of an Intel Core i7-4770 CPU from 2013.
-primesieve can generate primes and prime k-tuplets (twin primes, prime
-triplets, ...) up to 2^64.</p>
+primesieve can generate primes and
+<a href="http://en.wikipedia.org/wiki/Prime_k-tuple">prime k-tuplets</a>
+(twin primes, prime triplets, ...) up to 2^64.</p>
 
 <h2>
 <a name="screenshot" class="anchor" href="#screenshot"><span class="octicon octicon-link"></span></a>Screenshot</h2>
@@ -75,8 +76,8 @@ to <img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=O(\sq
 The segment size is usually chosen to fit into the CPU's fast L1 or L2
 cache memory which significantly speeds up sieving. A segmented
 version of the sieve of Eratosthenes was first published by Singleton
-in 1969 [1]. Here is a <a href="segmented_sieve.html">simple implementation</a>
-of the segmented sieve of Eratosthenes.</p>
+in 1969 [1]. Here is a <a href="segmented_sieve.html">simple implementation
+of the segmented sieve of Eratosthenes</a>.</p>
 
 <p>Wheel factorization is used to skip multiples of small primes. If a
 <i>k</i>th wheel is added to the sieve of Eratosthenes then only those
