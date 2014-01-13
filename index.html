@@ -8,19 +8,24 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <link href="stylesheets/navigation_menu.css" type="text/css" rel="stylesheet">
+
+    <script src="javascripts/jquery-1.7.1.min.js" type="text/javascript"></script> 
+    <script src="javascripts/modernizr-2.0.6.min.js" type="text/javascript"></script>
+    <script src="javascripts/download.js" type="text/javascript"></script>
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <title>Primesieve by kimwalisch</title>
+    <title>primesieve</title>
   </head>
 
   <body>
     <header>
       <div class="inner">
-        <h1>Primesieve</h1>
-        <h2>Fast C++ prime number generator</h2>
+        <h1>primesieve</h1>
+        <h2>Fast C/C++ prime number generator</h2>
         <a href="https://github.com/kimwalisch/primesieve" class="button"><small>View project on</small>GitHub</a>
       </div>
     </header>
@@ -28,30 +33,215 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <h3>
-<a name="sha1-checksums" class="anchor" href="#sha1-checksums"><span class="octicon octicon-link"></span></a>SHA1 checksums</h3>
 
-<div class="highlight highlight-bash"><pre>2ffdf45dfd243f456cf6f07f9660fc92eebf9603  primesieve-5.0.tar.gz
-ce0a75f242efd466dd37563c85b0f8dd2de56413  primesieve-5.0.zip
-ac82e1fd4c10e2aecc129439a1813e9dd090a8a1  primesieve-5.0-win64.zip
-df698d3b91d15b4e52d4a13269db112790637430  primesieve-5.0-win64-console.zip
-174c72950ac15d31842674792713c312fef15d78  primesieve-5.0-linux-x64.tar.gz
-f4f1afe60d65b54fe6896d52ce7454ea96795eb9  primesieve-5.0-linux-x64-console.tar.gz
-dc685d4f87767a41044ae4cac1cbab9638203cf8  primesieve-4.2-macosx-x64.dmg
-3310a42f96856d82227ea148c2e4a3adc16d2a8b  primesieve-4.2-macosx-x64-console.zip
-da7a99173692da005ace827b0df17cb3e7ab1356  primesieve-3.6-win32.zip
-9d16566558aee0b71139f5f95dff23d808d2d886  primesieve-3.6-win32-console.zip
-223c59d50036a5c515e17cc69f2cff43ac066352  primesieve-3.6-linux-x86.tar.gz
-b31d04154f3fc08a66f05231fa3f98aa5d99fe48  primesieve-3.6-linux-x86-console.tar.gz
-</pre></div>
+<div id="container" style="width: 100%; margin-bottom: 35px;">
+  <nav id="navigation">
+    <ul>
+      <li><a href=".">Home</a></li>
+      <li><a href="downloads">Downloads</a></li>
+      <li><a href="build.html">Build From Source</a></li>
+      <li><a href="segmented_sieve.html">Segmented Sieve</a></li>
+      <li><a href="api">API Documentation</a></li>
+      <li><a href="links.html">Links</a></li>
+    </ul>
+  </nav>
+</div>
+
+<h2>
+<a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>About</h2>
+<p>primesieve is a free software program and C/C++ library for fast
+prime number generation. It generates the primes below 10^9 in just
+0.2 seconds on a single core of an Intel Core i7-4770 CPU from 2013.
+primesieve can generate primes and
+<a href="http://en.wikipedia.org/wiki/Prime_k-tuple">prime k-tuplets</a>
+(twin primes, prime triplets, ...) up to 2^64.</p>
+
+<h2>
+<a name="screenshot" class="anchor" href="#screenshot"><span class="octicon octicon-link"></span></a>Screenshot</h2>
+<img src="screenshots/primesieve_osx_terminal.png" style="padding-top: 5px;  padding-bottom: 10px;"/>
+<p>The above screenshot shows the first 16 prime septuplets
+(7-tuplets) generated using the primesieve console application. Here
+are <a href="screenshots.html">screenshots of the primesieve GUI
+application</a>.</p>
+
+<h2>
+<a name="algorithm-complexity" class="anchor" href="#algorithm-complexity"><span class="octicon octicon-link"></span></a>Algorithm complexity</h2>
+<p>Segmentation is currently the best known practical improvement to
+the sieve of Eratosthenes. Instead of sieving the interval
+2<sup><i>n</i></sup> at once one subdivides the sieve interval into a
+number of equal sized segments that are then sieved consecutively.
+Segmentation drops the memory requirement of the sieve of Eratosthenes
+from <img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=O(n)&nonsense=something_that_ends_with2.png" alt="O(n)"/>
+to <img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=O(\sqrt{n})&nonsense=something_that_ends_with2.png" alt="O(sqrt(n))"/>.
+The segment size is usually chosen to fit into the CPU's fast L1 or L2
+cache memory which significantly speeds up sieving. A segmented
+version of the sieve of Eratosthenes was first published by Singleton
+in 1969 [1]. Here is a <a href="segmented_sieve.html">simple implementation
+of the segmented sieve of Eratosthenes</a>.</p>
+
+<p>Wheel factorization is used to skip multiples of small primes. If a
+<i>k</i>th wheel is added to the sieve of Eratosthenes then only those
+multiples are crossed off that are coprime to the first <i>k</i>
+primes, i.e. multiples that are divisible by any of the first <i>k</i>
+primes are skipped. The 1st wheel considers only odd numbers, the 2nd
+wheel (modulo 6) skips multiples of 2 and 3, the 3rd wheel (modulo 30)
+skips multiples of 2, 3, 5 and so on. Pritchard has shown in [2] that
+the running time of the sieve of Eratosthenes can be reduced by a
+factor of <img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=\log{\log{n}}&nonsense=something_that_ends_with4.png" alt="log log n"/>
+if the wheel size is <img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=\approx \sqrt{n}&nonsense=something_that_ends_with2.png" alt="sqrt(n)"/>
+but for cache reasons the sieve of Eratosthenes usually performs best
+with a modulo 30 or 210 wheel. Sorenson explains wheels in [3].</p>
+
+<p>Additionally primesieve uses Tomás Oliveira e Silva's
+<a href="http://www.ieeta.pt/~tos/software/prime_sieve.html">cache-friendly bucket list algorithm</a>
+if needed [4]. This algorithm is relatively new it has
+been devised by Tomás Oliveira e Silva in 2001 in order to speed up
+the segmented sieve of Eratosthenes for prime numbers past 32 bits.
+The idea is to store the sieving primes into lists of buckets with
+each list being associated with a segment. A list of sieving primes
+related to a specific segment contains only those primes that have
+multiple occurrence(s) in that segment. Whilst sieving a segment only
+the primes of the related list are used for sieving and each prime is
+reassigned to the list responsible for its next multiple when
+processed. The benefit of this approach is that it is now possible to
+use segments (i.e. sieve arrays) smaller than
+<img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=\sqrt{n}&nonsense=something_that_ends_with3.png" alt="sqrt(n)"/>
+without deteriorating efficiency, this is important as only small
+segments that fit into the CPU's L1 or L2 cache provide fast memory
+access.</p>
+
+<h2>
+<a name="implementation" class="anchor" href="#implementation"><span class="octicon octicon-link"></span></a>Implementation</h2>
+<p>primesieve is written entirely in C++ and does not depend on
+external libraries [5]. Its speed is mainly due to the segmentation of
+the sieve of Eratosthenes which prevents cache misses when crossing
+off multiples in the sieve array and the use of a bit array instead of
+the more widely used boolean array. Below is a list of the
+optimizations used in primesieve:
+<ul>
+  <li>Uses a bit array with 8 flags each 30 numbers for sieving</li>
+  <li>Pre-sieves multiples of small primes ≤ 19</li>
+  <li>The sieving primes are being compressed to improve cache efficiency [6]</li>
+  <li>Starts crossing off multiples at the square</li>
+  <li>Uses a modolo 210 wheel that skips multiples of 2, 3, 5 and 7</li>
+  <li>Uses specialized algorithms for small, medium and big sieving primes</li>
+  <li>Two sieving primes are processed per loop iteration to increase instruction-level parallelism</li>
+  <li>Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
+</ul>
+</p>
+<p>The <a href="build.html">Build From Source</a> page contains more
+technical implementation details.</p>
+
+<h2>
+<a name="performance" class="anchor" href="#performance"><span class="octicon octicon-link"></span></a>Performance</h2>
+<p>primesieve generates the first 50,847,534 primes up to 10^9 in just
+0.2 seconds on a single core of an Intel Core i7-4770 3.40GHz (year
+2013), this is about 50 times faster than an ordinary C/C++ sieve of
+Eratosthenes implementation and about 10,000 times faster than
+trial-division. primesieve outperforms the author's older
+<a href="http://primzahlen.de/referenten/Kim_Walisch/index2.htm">ecprime</a>
+(fastest from 2002 to 2010) by about 30 percent and also substantially
+outperforms <a href="http://cr.yp.to/primegen.html">primegen</a> the
+fastest sieve of Atkin implementation on the web. Here is a list of
+<a href="links.html">other</a> fast sieve of Eratosthenes
+implementations.</p>
+
+<h2>
+<a name="timings" class="anchor" href="#timings"><span class="octicon octicon-link"></span></a>Timings</h2>
+<p>
+<table style="width: 750px;">
+<tr>
+    <td style="text-align: center; font-weight: bold; padding: 6px 12px;">x</td>
+    <td style="text-align: center; font-weight: bold; padding: 6px 12px;">Prime&nbsp;Count</td>
+    <td style="text-align: center; font-weight: bold; padding: 6px 12px;">Intel&nbsp;Core&nbsp;i5-670<br><font size="1">(2&nbsp;x&nbsp;3.47GHz,&nbsp;32K&nbsp;L1&nbsp;Data&nbsp;Cache)</font></td>
+    <td style="text-align: center; font-weight: bold; padding: 6px 12px;">AMD&nbsp;Phenom&nbsp;II&nbsp;X4&nbsp;945<br><font size="1">(4&nbsp;x&nbsp;3.0GHz,&nbsp;64K&nbsp;L1&nbsp;Data&nbsp;Cache)</font></td>
+    <td style="text-align: center; font-weight: bold; padding: 6px 12px;">Intel&nbsp;Core&nbsp;i7-4770<br><font size="1">(4&nbsp;x&nbsp;3.4GHz,&nbsp;32K&nbsp;L1&nbsp;Data&nbsp;Cache)</font></td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 6px 12px;">10<sup>7</sup></td>
+    <td style="text-align: right; padding: 6px 12px;">664,579</td>
+    <td style="text-align: right; padding: 6px 12px;">0.00s</td>
+    <td style="text-align: right; padding: 6px 12px;">0.00s</td>
+    <td style="text-align: right; padding: 6px 12px;">0.00s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 6px 12px;">10<sup>8</sup></td>
+    <td style="text-align: right; padding: 6px 12px;">5,761,455</td>
+    <td style="text-align: right; padding: 6px 12px;">0.01s</td>
+    <td style="text-align: right; padding: 6px 12px;">0.01s</td>
+    <td style="text-align: right; padding: 6px 12px;">0.01s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 6px 12px;">10<sup>9</sup></td>
+    <td style="text-align: right; padding: 6px 12px;">50,847,534</td>
+    <td style="text-align: right; padding: 6px 12px;">0.11s</td>
+    <td style="text-align: right; padding: 6px 12px;">0.06s</td>
+    <td style="text-align: right; padding: 6px 12px;">0.03s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 6px 12px;">2<sup>32</sup></td>
+    <td style="text-align: right; padding: 6px 12px;">203,280,221</td>
+    <td style="text-align: right; padding: 6px 12px;">0.54s</td>
+    <td style="text-align: right; padding: 6px 12px;">0.26s</td>
+    <td style="text-align: right; padding: 6px 12px;">0.12s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 6px 12px;">10<sup>10</sup></td>
+    <td style="text-align: right; padding: 6px 12px;">455,052,511</td>
+    <td style="text-align: right; padding: 6px 12px;">1.29s</td>
+    <td style="text-align: right; padding: 6px 12px;">0.66s</td>
+    <td style="text-align: right; padding: 6px 12px;">0.32s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 6px 12px;">10<sup>11</sup></td>
+    <td style="text-align: right; padding: 6px 12px;">4,118,054,813</td>
+    <td style="text-align: right; padding: 6px 12px;">16.11s</td>
+    <td style="text-align: right; padding: 6px 12px;">8.57s</td>
+    <td style="text-align: right; padding: 6px 12px;">3.94s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 6px 12px;">10<sup>12</sup></td>
+    <td style="text-align: right; padding: 6px 12px;">37,607,912,018</td>
+    <td style="text-align: right; padding: 6px 12px;">208.63s</td>
+    <td style="text-align: right; padding: 6px 12px;">122.02s</td>
+    <td style="text-align: right; padding: 6px 12px;">53.95s</td>
+  </tr>
+<tr>
+<td style="text-align: right; padding: 6px 12px;">10<sup>13</sup></td>
+    <td style="text-align: right; padding: 6px 12px;">346,065,536,839</td>
+    <td style="text-align: right; padding: 6px 12px;">2629.84s</td>
+    <td style="text-align: right; padding: 6px 12px;">1664.68s</td>
+    <td style="text-align: right; padding: 6px 12px;">709.96s</td>
+  </tr>
+</table>
+</p>
+<p>The above benchmarks were run on a 64-bit Linux operating system
+and primesieve was compiled using GCC&nbsp;4.8. For each benchmark
+primesieve used all available CPU cores and the sieve size was set
+to the CPU's L1 data cache size per core (Intel: 32 kilobytes, AMD: 64
+kilobytes).</p>
+
+<h2>
+<a name="references" class="anchor" href="#references"><span class="octicon octicon-link"></span></a>References and notes</h2>
+<p>
+  <ol>
+    <li style="white-space: nowrap;">R. C. Singleton, "An efficient prime number generator", Communications of the ACM 12, 563-564, 1969.</li>
+    <li style="white-space: nowrap;">Paul Pritchard, "Fast compact prime number sieves (among others)", Journal of Algorithms 4 (1983), 332-344.</li>
+    <li style="white-space: nowrap;">Jonathan Sorenson, <a href="ftp://ftp.cs.wisc.edu/pub/techreports/1991/TR1028.pdf">"An analysis of two prime number sieves"</a>, Computer Science Technical Report Vol. 1028, 1991.</li>
+    <li style="white-space: nowrap;">Tomás Oliveira e Silva, <a href="http://www.ieeta.pt/~tos/software/prime_sieve.html">"Fast implementation of the segmented sieve of Eratosthenes"</a>, 2002.</li>
+    <li style="white-space: nowrap;">The primesieve GUI application (screenshot) depends on the <a href="http://qt-project.org/">Qt framework</a>.</li>
+    <li style="white-space: nowrap;">Actually it is not the sieving primes that are being compressed but their sieve and wheel indexes.</li>
+  </ol>
+</p>
+
         </section>
 
         <aside id="sidebar">
-          <a href="https://github.com/kimwalisch/primesieve/zipball/master" class="button">
+          <a href="https://github.com/kimwalisch/primesieve/zipball/master" id="download_zip" class="button">
             <small>Download</small>
             .zip file
           </a>
-          <a href="https://github.com/kimwalisch/primesieve/tarball/master" class="button">
+          <a href="https://github.com/kimwalisch/primesieve/tarball/master" id="download_targz" class="button">
             <small>Download</small>
             .tar.gz file
           </a>
