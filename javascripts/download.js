@@ -1,8 +1,8 @@
 $(document).ready(function() {
-	var primesieve_download_url = "http://dl.bintray.com/kimwalisch/primesieve/primesieve-";
 	var primesieve_version = "5.0";
-	$("a#download_zip").attr("href", primesieve_download_url + primesieve_version + ".zip");
-	$("a#download_targz").attr("href", primesieve_download_url + primesieve_version + ".tar.gz");
+	var download_url = "http://dl.bintray.com/kimwalisch/primesieve/primesieve-";
+	$("a.download_zip").attr("href", download_url + primesieve_version + ".zip");
+	$("a.download_targz").attr("href", download_url + primesieve_version + ".tar.gz");
 });
 
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

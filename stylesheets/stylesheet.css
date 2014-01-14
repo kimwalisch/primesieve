@@ -143,6 +143,10 @@ aside#sidebar p.repo-owner a {
   margin-bottom: 40px;
 }
 
+a.download_zip { }
+
+a.download_targz { }
+
 a.button {
   width: 134px;
   height: 58px;
