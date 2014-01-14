@@ -58,7 +58,7 @@ just 0.2 seconds on a single core of an Intel Core i7-4770 CPU from
 
 <h2>
 <a name="screenshot" class="anchor" href="#screenshot"><span class="octicon octicon-link"></span></a>Screenshot</h2>
-<img src="screenshots/primesieve_osx_terminal.png" style="padding-top: 5px;  padding-bottom: 10px;"/>
+<img src="screenshots/primesieve_osx_terminal.png" alt="primesieve console application" style="padding-top: 5px;  padding-bottom: 10px;"/>
 <p>The above screenshot shows the first 16 prime septuplets
 (7-tuplets) generated using the primesieve console application. Here
 are <a href="screenshots.html">screenshots of the primesieve GUI
@@ -117,7 +117,7 @@ external libraries [5]. Its speed is mainly due to the segmentation of
 the sieve of Eratosthenes which prevents cache misses when crossing
 off multiples in the sieve array and the use of a bit array instead of
 the more widely used boolean array. Below is a list of the
-optimizations used in primesieve:
+optimizations used in primesieve:</p>
 <ul>
   <li>Uses a bit array with 8 flags each 30 numbers for sieving</li>
   <li>Pre-sieves multiples of small primes ≤ 19</li>
@@ -128,7 +128,6 @@ optimizations used in primesieve:
   <li>Two sieving primes are processed per loop iteration to increase instruction-level parallelism</li>
   <li>Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
 </ul>
-</p>
 <p>The <a href="build.html">Build From Source</a> page contains more
 technical implementation details.</p>
 
