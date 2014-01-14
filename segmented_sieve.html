@@ -51,16 +51,17 @@
 <a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>Segmented sieve of Eratosthenes implementation</h2>
 <p>Further down is a simple C++ implementation of the segmented sieve
 of Eratosthenes with a few optimizations. It runs substantially faster
-than "traditional" sieve of Eratosthenes implementations due to its
-more efficient CPU cache usage i.e. it uses the CPU's L1 data cache
-size (per core) as its sieve array size. This ensures that less then
-2 percent of the memory accesses will be cache misses. This
-implementation generates the primes below 10^9 in just 0.8 seconds
-(single-threaded) on an Intel Core i7-4770 CPU (3.4 GHz) from 2013.</p>
+than <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">"traditional"
+sieve of Eratosthenes</a> implementations due to its more efficient
+CPU cache usage i.e. it uses the CPU's L1 data cache size (per core)
+as its sieve array size. This ensures that less then 2 percent of the
+memory accesses will be cache misses. This implementation generates
+the primes below 10^9 in just 0.8 seconds (single-threaded) on an
+Intel Core i7-4770 CPU (3.4 GHz) from 2013.</p>
 
 <h2>
 <a name="how" class="anchor" href="#how"><span class="octicon octicon-link"></span></a>How it works</h2>
-<p>Suppose we want to sieve the primes up to 10^9. We chose the size
+<p>Suppose we want to sieve the primes below 10^9. We chose the size
 of the sieve array (named segment_size) to be the same size as the CPU's L1
 data cache size per core e.g. 32768 bytes. We first generate the
 sieving primes below sqrt(10^10) which are needed to cross-off

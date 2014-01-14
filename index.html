@@ -65,7 +65,17 @@ just 0.2 seconds on a single core of an Intel Core i7-4770 CPU from
 pictures.</p>
 
 <h2>
-<a name="algorithm-complexity" class="anchor" href="#algorithm-complexity"><span class="octicon octicon-link"></span></a>Algorithm complexity</h2>
+<a name="algorithms" class="anchor" href="#algorithms"><span class="octicon octicon-link"></span></a>Algorithms</h2>
+<p>primesieve generates primes using the segmented
+<a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">sieve of
+Eratosthenes</a> with
+<a href="http://en.wikipedia.org/wiki/Wheel_factorization">wheel
+factorization</a>, this algorithm has a complexity of
+<img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=O(n\log{\log{n}})&nonsense=something_that_ends_with4.png" alt="O(n log log n)"/>
+operations and uses
+<img class="formula" src="http://chart.apis.google.com/chart?cht=tx&chl=O(\sqrt{n})&nonsense=something_that_ends_with2.png" alt="O(sqrt(n))"/>
+space.</p>
+
 <p>Segmentation is currently the best known practical improvement to
 the sieve of Eratosthenes. Instead of sieving the interval
 2<sup><i>n</i></sup> at once one subdivides the sieve interval into a
