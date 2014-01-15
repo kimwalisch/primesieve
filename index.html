@@ -126,14 +126,14 @@ off multiples in the sieve array and the use of a bit array instead of
 the more widely used boolean array. Below is a list of the
 optimizations used in primesieve:</p>
 <ul>
-  <li>Uses a bit array with 8 flags each 30 numbers for sieving</li>
-  <li>Pre-sieves multiples of small primes ≤ 19</li>
-  <li>The sieving primes are being compressed to improve cache efficiency [6]</li>
-  <li>Starts crossing off multiples at the square</li>
-  <li>Uses a modolo 210 wheel that skips multiples of 2, 3, 5 and 7</li>
-  <li>Uses specialized algorithms for small, medium and big sieving primes</li>
-  <li>Two sieving primes are processed per loop iteration to increase instruction-level parallelism</li>
-  <li>Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
+  <li style="white-space: nowrap;">Uses a bit array with 8 flags each 30 numbers for sieving</li>
+  <li style="white-space: nowrap;">Pre-sieves multiples of small primes ≤ 19</li>
+  <li style="white-space: nowrap;">The sieving primes are being compressed to improve cache efficiency [6]</li>
+  <li style="white-space: nowrap;">Starts crossing off multiples at the square</li>
+  <li style="white-space: nowrap;">Uses a modolo 210 wheel that skips multiples of 2, 3, 5 and 7</li>
+  <li style="white-space: nowrap;">Uses specialized algorithms for small, medium and big sieving primes</li>
+  <li style="white-space: nowrap;">Two sieving primes are processed per loop iteration to increase instruction-level parallelism</li>
+  <li style="white-space: nowrap;">Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
 </ul>
 <p>The <a href="build.html">Build From Source</a> page contains more
 technical implementation details.</p>
