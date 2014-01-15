@@ -138,6 +138,60 @@ optimizations used in primesieve:</p>
 <p>The <a href="build.html">Build From Source</a> page contains more
 technical implementation details.</p>
 
+<h3>
+<a name="cpp-library" class="anchor" href="#cpp-library"><span class="octicon octicon-link"></span></a>C++ library</h3>
+<p>Below is an example that shows how to generate primes in C++ using
+libprimesieve. The <a href="api">API is documented online</a> and the
+<a href="build.html">Build From Source</a> page explains how to build
+and install libprimesieve and how to link against it.</p>
+
+<div class="highlight highlight-C++"><pre><span class="cp">#include &lt;primesieve.hpp&gt;</span>
+<span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;vector&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="c1">// store the primes below 1000</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">primes</span><span class="p">;</span>
+  <span class="n">primesieve</span><span class="o">::</span><span class="n">generate_primes</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">primes</span><span class="p">);</span>
+
+  <span class="n">primesieve</span><span class="o">::</span><span class="n">iterator</span> <span class="n">pi</span><span class="p">;</span>
+  <span class="kt">uint64_t</span> <span class="n">prime</span><span class="p">;</span>
+
+  <span class="c1">// iterate over the primes below 10^9</span>
+  <span class="k">while</span> <span class="p">((</span><span class="n">prime</span> <span class="o">=</span> <span class="n">pi</span><span class="p">.</span><span class="n">next_prime</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mi">1000000000</span><span class="p">)</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">prime</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="c-bindings" class="anchor" href="#c-bindings"><span class="octicon octicon-link"></span></a>C bindings</h3>
+<p>primesieve provides C bindings for all its functions. The
+<a href="api">C API is documented online</a> and the
+<a href="build.html">Build From Source</a> page explains how to build
+and install libprimesieve and how to link against it.</p>
+
+<div class="highlight highlight-C"><pre><span class="cp">#include &lt;primesieve.h&gt;</span>
+<span class="cp">#include &lt;stdint.h&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">primesieve_iterator</span> <span class="n">pi</span><span class="p">;</span>
+  <span class="n">primesieve_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pi</span><span class="p">);</span>
+  <span class="kt">uint64_t</span> <span class="n">prime</span><span class="p">;</span>
+
+  <span class="cm">/* iterate over the primes below 10^9 */</span>
+  <span class="k">while</span> <span class="p">((</span><span class="n">prime</span> <span class="o">=</span> <span class="n">primesieve_next_prime</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pi</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">1000000000</span><span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%llu</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">prime</span><span class="p">);</span>
+
+  <span class="n">primesieve_free_iterator</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pi</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
 <h2>
 <a name="performance" class="anchor" href="#performance"><span class="octicon octicon-link"></span></a>Performance</h2>
 <p>primesieve generates the first 50,847,534 primes up to 10^9 in just
