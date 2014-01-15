@@ -65,7 +65,7 @@ Intel Core i7-4770 CPU (3.4 GHz) from 2013.</p>
 <p>Suppose we want to sieve the primes below 10^9. We chose the size
 of the sieve array (named segment_size) to be the same size as the CPU's L1
 data cache size per core e.g. 32768 bytes. We first generate the
-sieving primes below sqrt(10^10) which are needed to cross-off
+sieving primes below sqrt(10^9) which are needed to cross-off
 multiples. Then we start crossing-off the multiples of the first prime
 2 until we reach a multiple of 2&nbsp;&gt;=&nbsp;segment_size, if this
 happens we calculate the index of that multiple in the next segment
