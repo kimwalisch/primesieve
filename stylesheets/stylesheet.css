@@ -194,7 +194,7 @@ pre {
   background: #fff;
   text-shadow: none;
   overflow: auto;
-  border: solid 1px #E4E4E4;
+  border: solid 1px #DBDBDB;
 }
 pre code {
   color: #2879d0;
@@ -229,7 +229,7 @@ th {
 }
 
 td {
-  border: 1px solid #ebebeb;
+  border: 1px solid #DBDBDB;
   text-align: center; 
   font-weight: 300;
 }
