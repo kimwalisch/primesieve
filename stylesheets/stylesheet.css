@@ -92,7 +92,7 @@ span.cpu_details {
 	font-weight: normal;
 }
 
-li.links_papers {
+li.hide_overflow {
   overflow: hidden; 
   text-overflow: ellipsis;
   white-space: nowrap;
