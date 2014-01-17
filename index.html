@@ -126,14 +126,14 @@ off multiples in the sieve array and the use of a bit array instead of
 the more widely used boolean array. Below is a list of the
 optimizations used in primesieve:</p>
 <ul>
-  <li style="white-space: nowrap;">Uses a bit array with 8 flags each 30 numbers for sieving</li>
-  <li style="white-space: nowrap;">Pre-sieves multiples of small primes ≤ 19</li>
-  <li style="white-space: nowrap;">The sieving primes are being compressed to improve cache efficiency [6]</li>
-  <li style="white-space: nowrap;">Starts crossing off multiples at the square</li>
-  <li style="white-space: nowrap;">Uses a modolo 210 wheel that skips multiples of 2, 3, 5 and 7</li>
-  <li style="white-space: nowrap;">Uses specialized algorithms for small, medium and big sieving primes</li>
-  <li style="white-space: nowrap;">Two sieving primes are processed per loop iteration to increase instruction-level parallelism</li>
-  <li style="white-space: nowrap;">Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
+  <li>Uses a bit array with 8 flags each 30 numbers for sieving</li>
+  <li>Pre-sieves multiples of small primes ≤ 19</li>
+  <li>The sieving primes are being compressed to improve cache efficiency [6]</li>
+  <li>Starts crossing off multiples at the square</li>
+  <li>Uses a modolo 210 wheel that skips multiples of 2, 3, 5 and 7</li>
+  <li>Uses specialized algorithms for small, medium and big sieving primes</li>
+  <li>Two sieving primes are processed per loop iteration to increase instruction-level parallelism</li>
+  <li>Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
 </ul>
 <p>The <a href="build.html">Build From Source</a> page contains more
 technical implementation details.</p>
@@ -190,78 +190,78 @@ implementations</a>.</p>
 <a name="timings" class="anchor" href="#timings"><span class="octicon octicon-link"></span></a>Timings</h2>
 <table style="width: 750px;">
 <tr>
-    <td style="text-align: center; font-weight: bold; padding: 6px 12px;">x</td>
-    <td style="text-align: center; font-weight: bold; padding: 6px 12px;">
+    <td class="timing_title">x</td>
+    <td class="timing_title">
       <span style="white-space: nowrap;">Prime Count</span>
     </td>
-    <td style="text-align: center; font-weight: bold; padding: 6px 12px;">
+    <td class="timing_title">
       <span style="white-space: nowrap;">Intel Core i5-670</span><br/>
-      <span style="white-space: nowrap; font-size: x-small;">(2 x 3.47GHz, 32K L1 Data Cache)</span>
+      <span class="cpu_details">(2 x 3.47GHz, 32K L1 Data Cache)</span>
     </td>
-    <td style="text-align: center; font-weight: bold; padding: 6px 12px;">
+    <td class="timing_title">
       <span style="white-space: nowrap;">AMD Phenom II X4 945</span><br/>
-      <span style="white-space: nowrap; font-size: x-small;">(4 x 3.0GHz, 64K L1 Data Cache)</span>
+      <span class="cpu_details">(4 x 3.0GHz, 64K L1 Data Cache)</span>
     </td>
-    <td style="text-align: center; font-weight: bold; padding: 6px 12px;">
+    <td class="timing_title">
       <span style="white-space: nowrap;">Intel Core i7-4770</span><br/>
-      <span style="white-space: nowrap; font-size: x-small;">(4 x 3.4GHz, 32K L1 Data Cache)</span>
+      <span class="cpu_details">(4 x 3.4GHz, 32K L1 Data Cache)</span>
     </td>
   </tr>
 <tr>
-<td style="text-align: right; padding: 6px 12px;">10<sup>7</sup></td>
-    <td style="text-align: right; padding: 6px 12px;">664,579</td>
-    <td style="text-align: right; padding: 6px 12px;">0.00s</td>
-    <td style="text-align: right; padding: 6px 12px;">0.00s</td>
-    <td style="text-align: right; padding: 6px 12px;">0.00s</td>
+    <td class="timing">10<sup>7</sup></td>
+    <td class="timing">664,579</td>
+    <td class="timing">0.00s</td>
+    <td class="timing">0.00s</td>
+    <td class="timing">0.00s</td>
   </tr>
 <tr>
-<td style="text-align: right; padding: 6px 12px;">10<sup>8</sup></td>
-    <td style="text-align: right; padding: 6px 12px;">5,761,455</td>
-    <td style="text-align: right; padding: 6px 12px;">0.01s</td>
-    <td style="text-align: right; padding: 6px 12px;">0.01s</td>
-    <td style="text-align: right; padding: 6px 12px;">0.01s</td>
+    <td class="timing">10<sup>8</sup></td>
+    <td class="timing">5,761,455</td>
+    <td class="timing">0.01s</td>
+    <td class="timing">0.01s</td>
+    <td class="timing">0.01s</td>
   </tr>
 <tr>
-<td style="text-align: right; padding: 6px 12px;">10<sup>9</sup></td>
-    <td style="text-align: right; padding: 6px 12px;">50,847,534</td>
-    <td style="text-align: right; padding: 6px 12px;">0.11s</td>
-    <td style="text-align: right; padding: 6px 12px;">0.06s</td>
-    <td style="text-align: right; padding: 6px 12px;">0.03s</td>
+    <td class="timing">10<sup>9</sup></td>
+    <td class="timing">50,847,534</td>
+    <td class="timing">0.11s</td>
+    <td class="timing">0.06s</td>
+    <td class="timing">0.03s</td>
   </tr>
 <tr>
-<td style="text-align: right; padding: 6px 12px;">2<sup>32</sup></td>
-    <td style="text-align: right; padding: 6px 12px;">203,280,221</td>
-    <td style="text-align: right; padding: 6px 12px;">0.54s</td>
-    <td style="text-align: right; padding: 6px 12px;">0.26s</td>
-    <td style="text-align: right; padding: 6px 12px;">0.12s</td>
+    <td class="timing">2<sup>32</sup></td>
+    <td class="timing">203,280,221</td>
+    <td class="timing">0.54s</td>
+    <td class="timing">0.26s</td>
+    <td class="timing">0.12s</td>
   </tr>
 <tr>
-<td style="text-align: right; padding: 6px 12px;">10<sup>10</sup></td>
-    <td style="text-align: right; padding: 6px 12px;">455,052,511</td>
-    <td style="text-align: right; padding: 6px 12px;">1.29s</td>
-    <td style="text-align: right; padding: 6px 12px;">0.66s</td>
-    <td style="text-align: right; padding: 6px 12px;">0.32s</td>
+<td class="timing">10<sup>10</sup></td>
+    <td class="timing">455,052,511</td>
+    <td class="timing">1.29s</td>
+    <td class="timing">0.66s</td>
+    <td class="timing">0.32s</td>
   </tr>
 <tr>
-<td style="text-align: right; padding: 6px 12px;">10<sup>11</sup></td>
-    <td style="text-align: right; padding: 6px 12px;">4,118,054,813</td>
-    <td style="text-align: right; padding: 6px 12px;">16.11s</td>
-    <td style="text-align: right; padding: 6px 12px;">8.57s</td>
-    <td style="text-align: right; padding: 6px 12px;">3.94s</td>
+    <td class="timing">10<sup>11</sup></td>
+    <td class="timing">4,118,054,813</td>
+    <td class="timing">16.11s</td>
+    <td class="timing">8.57s</td>
+    <td class="timing">3.94s</td>
   </tr>
 <tr>
-<td style="text-align: right; padding: 6px 12px;">10<sup>12</sup></td>
-    <td style="text-align: right; padding: 6px 12px;">37,607,912,018</td>
-    <td style="text-align: right; padding: 6px 12px;">208.63s</td>
-    <td style="text-align: right; padding: 6px 12px;">122.02s</td>
-    <td style="text-align: right; padding: 6px 12px;">53.95s</td>
+    <td class="timing">10<sup>12</sup></td>
+    <td class="timing">37,607,912,018</td>
+    <td class="timing">208.63s</td>
+    <td class="timing">122.02s</td>
+    <td class="timing">53.95s</td>
   </tr>
 <tr>
-<td style="text-align: right; padding: 6px 12px;">10<sup>13</sup></td>
-    <td style="text-align: right; padding: 6px 12px;">346,065,536,839</td>
-    <td style="text-align: right; padding: 6px 12px;">2629.84s</td>
-    <td style="text-align: right; padding: 6px 12px;">1664.68s</td>
-    <td style="text-align: right; padding: 6px 12px;">709.96s</td>
+    <td class="timing">10<sup>13</sup></td>
+    <td class="timing">346,065,536,839</td>
+    <td class="timing">2629.84s</td>
+    <td class="timing">1664.68s</td>
+    <td class="timing">709.96s</td>
   </tr>
 </table>
 <p><br/>The above benchmarks were run on a 64-bit Linux operating
@@ -283,12 +283,12 @@ well if the interval is sufficiently large.</p>
 <h2>
 <a name="references" class="anchor" href="#references"><span class="octicon octicon-link"></span></a>References and notes</h2>
 <ol>
-  <li style="white-space: nowrap;">R. C. Singleton, "An efficient prime number generator", Communications of the ACM 12, 563-564, 1969.</li>
-  <li style="white-space: nowrap;">Paul Pritchard, "Fast compact prime number sieves (among others)", Journal of Algorithms 4 (1983), 332-344.</li>
-  <li style="white-space: nowrap;">Jonathan Sorenson, <a href="ftp://ftp.cs.wisc.edu/pub/techreports/1991/TR1028.pdf">"An analysis of two prime number sieves"</a>, Computer Science Technical Report Vol. 1028, 1991.</li>
-  <li style="white-space: nowrap;">Tomás Oliveira e Silva, <a href="http://www.ieeta.pt/~tos/software/prime_sieve.html">"Fast implementation of the segmented sieve of Eratosthenes"</a>, 2002.</li>
-  <li style="white-space: nowrap;">The primesieve GUI application (screenshot) depends on the <a href="http://qt-project.org/">Qt framework</a>.</li>
-  <li style="white-space: nowrap;">Actually it is not the sieving primes that are being compressed but their sieve and wheel indexes.</li>
+  <li>R. C. Singleton, "An efficient prime number generator", Communications of the ACM 12, 563-564, 1969.</li>
+  <li>Paul Pritchard, "Fast compact prime number sieves (among others)", Journal of Algorithms 4 (1983), 332-344.</li>
+  <li>Jonathan Sorenson, <a href="ftp://ftp.cs.wisc.edu/pub/techreports/1991/TR1028.pdf">"An analysis of two prime number sieves"</a>, Computer Science Technical Report Vol. 1028, 1991.</li>
+  <li>Tomás Oliveira e Silva, <a href="http://www.ieeta.pt/~tos/software/prime_sieve.html">"Fast implementation of the segmented sieve of Eratosthenes"</a>, 2002.</li>
+  <li>The primesieve GUI application (screenshot) depends on the <a href="http://qt-project.org/">Qt framework</a>.</li>
+  <li>Actually it is not the sieving primes that are being compressed but their sieve and wheel indexes.</li>
 </ol>
 
         </section>
