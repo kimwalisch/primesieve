@@ -92,6 +92,12 @@ span.cpu_details {
 	font-weight: normal;
 }
 
+li.links_papers {
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 a {
   color: #2879d0;
 }
