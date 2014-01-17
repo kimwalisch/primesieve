@@ -71,6 +71,27 @@ body {
   color: #454545;
 }
 
+li {
+	white-space: nowrap;
+}
+
+td.timing {
+	text-align: right;
+	padding: 6px 12px;
+}
+
+td.timing_title {
+	text-align: center;
+	font-weight: bold;
+	padding: 6px 12px;
+}
+
+span.cpu_details {
+	white-space: nowrap;
+	font-size: x-small;
+	font-weight: normal;
+}
+
 a {
   color: #2879d0;
 }
