@@ -49,7 +49,7 @@ const int popcnt[256] =
 };
 
 /// Generate primes using the segmented sieve of Eratosthenes.
-/// This implementation uses a bit array with 16 numbers per bytes.
+/// This implementation uses a bit array with 16 numbers per byte.
 /// @param limit       Sieve primes <= limit.
 /// @param sieve_size  Size of the sieve array in bytes.
 ///
