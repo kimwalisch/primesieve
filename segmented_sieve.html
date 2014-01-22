@@ -46,14 +46,19 @@
 <h2>
 <a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>Segmented sieve of Eratosthenes</h2>
 <p>Further down is a simple C++ implementation of the segmented sieve
-of Eratosthenes with a few optimizations. It runs substantially faster
-than a <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes#Implementation">traditional
+of Eratosthenes that generates the primes below n using O(n log log n)
+operations and O(sqrt(n)) space. It runs significantly faster than a
+<a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes#Implementation">traditional
 sieve of Eratosthenes implementation</a> due to its more efficient
-CPU cache usage i.e. it uses the CPU's L1 data cache size (per core)
-as its sieve array size. This ensures that less than 2 percent of the
-memory accesses will be cache misses. This implementation generates
-the primes below 10^9 in just 0.9 seconds (single-threaded) on an
-Intel Core i7-4770 CPU (3.4 GHz) from 2013.</p>
+CPU cache usage i.e. it uses the CPU's L1 data cache size as its sieve
+array size. This ensures that less than 2 percent of the memory
+accesses will be cache misses. This implementation generates the
+primes below 10^9 in just 0.9 seconds (single-threaded) on an Intel
+Core i7-4770 CPU (3.4 GHz) from 2013.</p>
+
+</p>Any code on this page is free software released into the public
+domain. At the end of each code section, you will find instructions on
+how to download, compile and run the implementations.<p>
 
 <h2>
 <a name="how" class="anchor" href="#how"><span class="octicon octicon-link"></span></a>How it works</h2>
@@ -76,24 +81,7 @@ crossing-off multiples again, for each sieving prime we retrieve the
 sieve index from the next array and we start crossing-off multiples
 from there on...</p>
 
-<div class="highlight highlight-C++"><pre><span class="c1">/// @file   segmented_sieve.cpp</span>
-<span class="c1">/// @author Kim Walisch, &lt;kim.walisch@gmail.com&gt; </span>
-<span class="c1">/// @brief  This is a simple implementation of the segmented sieve of</span>
-<span class="c1">///         Eratosthenes with a few optimizations. It generates the</span>
-<span class="c1">///         primes below 10^9 in 0.9 seconds (single-threaded) on an</span>
-<span class="c1">///         Intel Core i7-4770 CPU (3.4 GHz) from 2013.</span>
-<span class="c1">///         This is free software released into the public domain.</span>
-
-<span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;algorithm&gt;</span>
-<span class="cp">#include &lt;cmath&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
-<span class="cp">#include &lt;cstdlib&gt;</span>
-<span class="cp">#include &lt;stdint.h&gt;</span>
-
-<span class="k">const</span> <span class="kt">int</span> <span class="n">L1D_CACHE_SIZE</span> <span class="o">=</span> <span class="mi">32768</span><span class="p">;</span>
-
-<span class="c1">/// Generate primes using the segmented sieve of Eratosthenes.</span>
+<div class="highlight highlight-C++"><pre><span class="c1">/// Generate primes using the segmented sieve of Eratosthenes.</span>
 <span class="c1">/// This algorithm uses O(n log log n) operations and O(sqrt(n)) space.</span>
 <span class="c1">/// @param limit         Sieve primes &lt;= limit.</span>
 <span class="c1">/// @param segment_size  Size of the sieve array in bytes.</span>
@@ -149,25 +137,6 @@ from there on...</p>
   <span class="p">}</span>
 
   <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">count</span> <span class="o">&lt;&lt;</span> <span class="s">" primes found."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="c1">/// Usage: ./segmented_sieve n size</span>
-<span class="c1">/// @param n     Sieve the primes up to n.</span>
-<span class="c1">/// @param size  Size of the sieve array in bytes.</span>
-<span class="c1">///</span>
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="c1">// generate the primes below this number</span>
-  <span class="kt">int64_t</span> <span class="n">limit</span> <span class="o">=</span> <span class="mi">100000000</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">limit</span> <span class="o">=</span> <span class="n">atol</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
-
-  <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">L1D_CACHE_SIZE</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">size</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
-
-  <span class="n">segmented_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 
