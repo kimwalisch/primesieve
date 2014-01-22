@@ -218,7 +218,7 @@ above 10^9.</p>
   <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">is_prime</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
     <span class="p">{</span>
-    <span class="n">primes</span><span class="p">.</span><span class="n">push_back</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">s</span><span class="p">);</span>
+      <span class="n">primes</span><span class="p">.</span><span class="n">push_back</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">s</span><span class="p">);</span>
       <span class="n">next</span><span class="p">.</span><span class="n">push_back</span><span class="p">((</span><span class="kt">int</span><span class="p">)(</span><span class="n">s</span> <span class="o">*</span> <span class="n">s</span> <span class="o">-</span> <span class="n">low</span><span class="p">));</span>
     <span class="p">}</span>
   <span class="p">}</span>
@@ -227,7 +227,7 @@ above 10^9.</p>
   <span class="p">{</span>
     <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">next</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">primes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">segment_size</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="n">k</span><span class="p">)</span>
-    <span class="n">sieve</span><span class="p">[</span><span class="n">j</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">]</span> <span class="o">&amp;=</span> <span class="n">bitmasks</span><span class="p">[</span><span class="n">j</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">];</span>
+      <span class="n">sieve</span><span class="p">[</span><span class="n">j</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">]</span> <span class="o">&amp;=</span> <span class="n">bitmasks</span><span class="p">[</span><span class="n">j</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">];</span>
     <span class="n">next</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="n">segment_size</span><span class="p">;</span>
   <span class="p">}</span>
 
