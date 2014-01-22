@@ -52,7 +52,7 @@ sieve of Eratosthenes implementation</a> due to its more efficient
 CPU cache usage i.e. it uses the CPU's L1 data cache size (per core)
 as its sieve array size. This ensures that less than 2 percent of the
 memory accesses will be cache misses. This implementation generates
-the primes below 10^9 in just 0.8 seconds (single-threaded) on an
+the primes below 10^9 in just 0.9 seconds (single-threaded) on an
 Intel Core i7-4770 CPU (3.4 GHz) from 2013.</p>
 
 <h2>
@@ -80,7 +80,7 @@ from there on...</p>
 <span class="c1">/// @author Kim Walisch, &lt;kim.walisch@gmail.com&gt; </span>
 <span class="c1">/// @brief  This is a simple implementation of the segmented sieve of</span>
 <span class="c1">///         Eratosthenes with a few optimizations. It generates the</span>
-<span class="c1">///         primes below 10^9 in 0.8 seconds (single-threaded) on an</span>
+<span class="c1">///         primes below 10^9 in 0.9 seconds (single-threaded) on an</span>
 <span class="c1">///         Intel Core i7-4770 CPU (3.4 GHz) from 2013.</span>
 <span class="c1">///         This is free software released into the public domain.</span>
 
@@ -127,12 +127,13 @@ from there on...</p>
 
     <span class="c1">// store small primes needed to cross off multiples</span>
     <span class="k">for</span> <span class="p">(;</span> <span class="n">s</span> <span class="o">*</span> <span class="n">s</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">;</span> <span class="n">s</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="n">is_prime</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
       <span class="p">{</span>
         <span class="n">primes</span><span class="p">.</span><span class="n">push_back</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">s</span><span class="p">);</span>
           <span class="n">next</span><span class="p">.</span><span class="n">push_back</span><span class="p">((</span><span class="kt">int</span><span class="p">)(</span><span class="n">s</span> <span class="o">*</span> <span class="n">s</span> <span class="o">-</span> <span class="n">low</span><span class="p">));</span>
       <span class="p">}</span>
-
+    <span class="p">}</span>
     <span class="c1">// segmented sieve of Eratosthenes</span>
     <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">primes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
     <span class="p">{</span>
@@ -252,10 +253,10 @@ from there on...</p>
   <span class="kt">int64_t</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
   <span class="c1">// vector used for sieving</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">&gt;</span> <span class="n">sieve</span><span class="p">(</span><span class="n">sieve_size</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span> <span class="n">sieve</span><span class="p">(</span><span class="n">sieve_size</span><span class="p">);</span>
 
   <span class="c1">// generate small primes &lt;= sqrt</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">is_prime</span><span class="p">(</span><span class="n">sqrt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">is_prime</span><span class="p">(</span><span class="n">sqrt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">*</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">sqrt</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">is_prime</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">sqrt</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="n">i</span><span class="p">)</span>
