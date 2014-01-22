@@ -62,10 +62,10 @@ void segmented_bit_sieve(int64_t limit, int sieve_size = L1D_CACHE_SIZE)
   int64_t n = 0;
 
   // vector used for sieving
-  std::vector<unsigned char> sieve(sieve_size);
+  std::vector<uint8_t> sieve(sieve_size);
 
   // generate small primes <= sqrt
-  std::vector<bool> is_prime(sqrt + 1, 1);
+  std::vector<bool> is_prime(sqrt + 1, true);
   for (int i = 2; i * i <= sqrt; i++)
     if (is_prime[i])
       for (int j = i * i; j <= sqrt; j += i)
