@@ -166,7 +166,7 @@ segmented sieve of Eratosthenes implementation which uses a bit array
 with 16 numbers per byte for sieving. Each bit corresponds to an odd
 integer, the bits of the i-th byte correspond to the numbers (i * 16)
 + k, with k  = { 1, 3, 5, 7, 9, 11, 13, 15 }. This implementation runs
-up to twice as fast as the version with the byte array (further up)
+at least twice as fast as the segmented byte sieve (further up)
 when sieving up to 10^11 because the latter's performance deteriorates
 above 10^9.</p>
 
