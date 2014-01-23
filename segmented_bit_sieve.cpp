@@ -94,7 +94,7 @@ void segmented_bit_sieve(int64_t limit, int sieve_size = L1D_CACHE_SIZE)
           next.push_back((int)(s * s - low));
       }
     }
-    // segmented sieve of Eratosthenes
+    // sieve the current segment
     for (std::size_t i = 1; i < primes.size(); i++)
     {
       int j = next[i];
