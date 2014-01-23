@@ -15,8 +15,8 @@
 
 const int L1D_CACHE_SIZE = 32768;
 
-/// Bitmasks needed to map numbers to bits in the sieve array
-const int bitmasks[16] =
+/// Bitmasks needed to unset bits corresponding to multiples
+const int unset_bit[16] =
 {
   ~(1 << 0), ~(1 << 0),
   ~(1 << 1), ~(1 << 1),
@@ -99,7 +99,7 @@ void segmented_bit_sieve(int64_t limit, int sieve_size = L1D_CACHE_SIZE)
     {
       int j = next[i];
       for (int k = primes[i] * 2; j < segment_size; j += k)
-        sieve[j >> 4] &= bitmasks[j & 15];
+        sieve[j >> 4] &= unset_bit[j & 15];
       next[i] = j - segment_size;
     }
 
