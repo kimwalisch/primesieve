@@ -46,8 +46,10 @@
 <h2>
 <a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>Segmented sieve of Eratosthenes</h2>
 <p>Further down is a simple C++ implementation of the segmented sieve
-of Eratosthenes that generates the primes below n using O(n log log n)
-operations and O(sqrt(n)) space. It runs significantly faster than a
+of Eratosthenes that generates the primes below n using
+<img src="images/Onloglogn.png" alt="O(n log log n)" class="formula"/>
+operations and <img src="images/Osqrtn.png" alt="O(sqrt(n))" class="formula"/>
+space. It runs significantly faster than a
 <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes#Implementation">traditional
 sieve of Eratosthenes implementation</a> due to its more efficient
 CPU cache usage i.e. it uses the CPU's L1 data cache size as its sieve
