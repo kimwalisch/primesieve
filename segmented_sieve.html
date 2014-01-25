@@ -47,8 +47,9 @@
 <a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>Segmented sieve of Eratosthenes</h2>
 <p>Further down is a simple C++ implementation of the segmented sieve
 of Eratosthenes that generates the primes below n using
-<img src="images/Onloglogn.png" alt="O(n log log n)" class="formula"/>
-operations and <img src="images/Osqrtn.png" alt="O(sqrt(n))" class="formula"/>
+<img src="images/Onloglogn.svg" onerror="this.src=images/Onloglogn.png" alt="O(n log log n)" class="formula"/>
+operations and
+<img src="images/Osqrtn.svg" onerror="this.src=images/Osqrtn.png" alt="O(sqrt(n))" class="formula"/>
 space. It runs significantly faster than a
 <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes#Implementation">traditional
 sieve of Eratosthenes implementation</a> due to its more efficient
@@ -156,17 +157,19 @@ from there on...</p>
 <a name="using-a-bit-array" class="anchor" href="#using-a-bit-array"><span class="octicon octicon-link"></span></a>Using a bit array</h2>
 
 <p>One issue with the segmented sieve of Eratosthenes when sieving the
-primes below n is that the performance and run-time complexity deteriorate if
-the segment size is smaller than sqrt(n). But ideally one wants to use
-a sieve array size that matches the CPU's L1 data cache size. By using
-a bit array it is possible to use a larger segment size without
-changing the sieve array size. Below is an implementation of the
-segmented sieve of Eratosthenes which uses a bit array with 16 numbers
-per byte for sieving. Each bit corresponds to an odd integer, the bits
-of the i-th byte correspond to the numbers (i * 16) + k, with k =
-{ 1, 3, 5, 7, 9, 11, 13, 15 }. This implementation runs at least twice
-as fast as the segmented byte sieve (further up) when sieving up to
-10^11 because the latter's performance deteriorates above 10^9.</p>
+primes below n is that the performance and run-time complexity
+deteriorate if the segment size is smaller than
+<img src="images/sqrtn.svg" onerror="this.src=images/sqrtn.png" alt="sqrt(n)" class="formula"/>.
+But ideally one wants to use a sieve array size that matches the CPU's
+L1 data cache size. By using a bit array it is possible to use a
+larger segment size without changing the sieve array size. Below is an
+implementation of the segmented sieve of Eratosthenes which uses a bit
+array with 16 numbers per byte for sieving. Each bit corresponds to an
+odd integer, the bits of the i-th byte correspond to the numbers
+(i * 16) + k, with k = { 1, 3, 5, 7, 9, 11, 13, 15 }. This
+implementation runs at least twice as fast as the segmented byte sieve
+(further up) when sieving up to 10^11 because the latter's performance
+deteriorates above 10^9.</p>
 
 <div class="highlight highlight-C++"><pre><span class="c1">/// Generate primes using the segmented sieve of Eratosthenes.</span>
 <span class="c1">/// This implementation uses a bit array with 16 numbers per byte.</span>
