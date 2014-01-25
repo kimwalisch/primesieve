@@ -47,9 +47,9 @@
 <a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>Segmented sieve of Eratosthenes</h2>
 <p>Further down is a simple C++ implementation of the segmented sieve
 of Eratosthenes that generates the primes below n using
-<img src="images/Onloglogn.svg" onerror="this.src=images/Onloglogn.png" alt="O(n log log n)" class="formula"/>
+<img src="images/Onloglogn.svg" alt="O(n log log n)" class="formula"/>
 operations and
-<img src="images/Osqrtn.svg" onerror="this.src=images/Osqrtn.png" alt="O(sqrt(n))" class="formula"/>
+<img src="images/Osqrtn.svg" alt="O(sqrt(n))" class="formula"/>
 space. It runs significantly faster than a
 <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes#Implementation">traditional
 sieve of Eratosthenes implementation</a> due to its more efficient
@@ -159,7 +159,7 @@ from there on...</p>
 <p>One issue with the segmented sieve of Eratosthenes when sieving the
 primes below n is that the performance and run-time complexity
 deteriorate if the segment size is smaller than
-<img src="images/sqrtn.svg" onerror="this.src=images/sqrtn.png" alt="sqrt(n)" class="formula"/>.
+<img src="images/sqrtn.svg" alt="sqrt(n)" class="formula"/>.
 But ideally one wants to use a sieve array size that matches the CPU's
 L1 data cache size. By using a bit array it is possible to use a
 larger segment size without changing the sieve array size. Below is an
@@ -266,6 +266,6 @@ deteriorates above 10^9.</p>
 
     <script src="javascripts/jquery-1.7.1.min.js" type="text/javascript"></script> 
     <script src="javascripts/modernizr-2.0.6.min.js" type="text/javascript"></script>
-    <script src="javascripts/download.js" type="text/javascript"></script>
+    <script src="javascripts/custom.js" type="text/javascript"></script>
   </body>
 </html>

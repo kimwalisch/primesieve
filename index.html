@@ -68,9 +68,9 @@ page</a> contains pictures of it.</p>
 Eratosthenes</a> with
 <a href="http://en.wikipedia.org/wiki/Wheel_factorization">wheel
 factorization</a>, this algorithm has a complexity of
-<img src="images/Onloglogn.svg" onerror="this.src=images/Onloglogn.png" alt="O(n log log n)" class="formula"/>
+<img src="images/Onloglogn.svg" alt="O(n log log n)" class="formula"/>
 operations and uses
-<img src="images/Osqrtn.svg" onerror="this.src=images/Osqrtn.png" alt="O(sqrt(n))" class="formula"/>
+<img src="images/Osqrtn.svg" alt="O(sqrt(n))" class="formula"/>
 space.</p>
 
 <p>Segmentation is currently the best known practical improvement to
@@ -78,8 +78,8 @@ the sieve of Eratosthenes. Instead of sieving the interval
 2<sup><i>n</i></sup> at once one subdivides the sieve interval into a
 number of equal sized segments that are then sieved consecutively.
 Segmentation drops the memory requirement of the sieve of Eratosthenes from
-<img src="images/On.svg" onerror="this.src=images/On.png" alt="O(n)" class="formula"/> to
-<img src="images/Osqrtn.svg" onerror="this.src=images/Osqrtn.png" alt="O(sqrt(n))" class="formula"/>.
+<img src="images/On.svg" alt="O(n)" class="formula"/> to
+<img src="images/Osqrtn.svg" alt="O(sqrt(n))" class="formula"/>.
 The segment size is usually chosen to fit into the CPU's fast L1 or L2
 cache memory which significantly speeds up sieving. A segmented
 version of the sieve of Eratosthenes was first published by Singleton
@@ -94,9 +94,9 @@ primes are skipped. The 1st wheel considers only odd numbers, the 2nd
 wheel (modulo 6) skips multiples of 2 and 3, the 3rd wheel (modulo 30)
 skips multiples of 2, 3, 5 and so on. Pritchard has shown in [2] that
 the running time of the sieve of Eratosthenes can be reduced by a factor of
-<img src="images/loglogn.svg" onerror="this.src=images/loglogn.png" alt="log log n" class="formula"/>
+<img src="images/loglogn.svg" alt="log log n" class="formula"/>
 if the wheel size is
-<img src="images/propsqrtn.svg" onerror="this.src=images/propsqrtn.png" alt="sqrt(n)" class="formula"/>
+<img src="images/propsqrtn.svg" alt="sqrt(n)" class="formula"/>
 but for cache reasons the sieve of Eratosthenes usually performs best
 with a modulo 30 or 210 wheel. Sorenson explains wheels in [3].</p>
 
@@ -113,7 +113,7 @@ the primes of the related list are used for sieving and each prime is
 reassigned to the list responsible for its next multiple when
 processed. The benefit of this approach is that it is now possible to
 use segments (i.e. sieve arrays) smaller than
-<img src="images/sqrtn.svg" onerror="this.src=images/sqrtn.png" alt="sqrt(n)" class="formula"/>
+<img src="images/sqrtn.svg" alt="sqrt(n)" class="formula"/>
 without deteriorating efficiency, this is important as only small
 segments that fit into the CPU's L1 or L2 cache provide fast memory
 access.</p>
@@ -314,6 +314,6 @@ well if the interval is sufficiently large.</p>
 
     <script src="javascripts/jquery-1.7.1.min.js" type="text/javascript"></script> 
     <script src="javascripts/modernizr-2.0.6.min.js" type="text/javascript"></script>
-    <script src="javascripts/download.js" type="text/javascript"></script>
+    <script src="javascripts/custom.js" type="text/javascript"></script>
   </body>
 </html>
