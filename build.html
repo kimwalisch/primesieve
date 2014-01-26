@@ -5,7 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="description" content="Build instructions for the primesieve console application and the primesieve C/C++ library.">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+
+    <!-- For Mac use stylesheet_mac.css, for other OSes use stylesheet.css -->
+    <script type="text/javascript">
+      var osId = "";
+      if (navigator.appVersion.indexOf("Mac") != -1) {
+        osId = "_mac";
+      }
+      var el = document.createElement("link");
+      el.type  = "text/css";
+      el.rel   = "stylesheet";
+      el.media = "screen";
+      el.href  = "stylesheets/stylesheet" + osId + ".css";
+      document.getElementsByTagName("head")[0].appendChild(el);
+    </script>
+
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
     <link rel="stylesheet" type="text/css" href="stylesheets/navigation_menu.css">
