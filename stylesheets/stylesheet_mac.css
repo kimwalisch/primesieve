@@ -298,7 +298,7 @@ form {
   content: "//";
   color: #9ddcff;
   padding-right: 0.3em;
-  margin-left: -1.31em; /* OS X workaround */
+  margin-left: -1.33em; /* OS X workaround */
 }
 
 #main-content h3 {
