@@ -293,12 +293,21 @@ form {
   font-weight: bold;
   margin-bottom: 8px;
   color: #474747;
-} 
+}
+
 #main-content h2:before {
   content: "//";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -1.33em; /* OS X workaround */
+}
+
+/* Slightly less margin-left for characters like A, S, T, ... */
+#main-content h2.align2:before {
+  content: "//";
+  color: #9ddcff;
+  padding-right: 0.3em;
+  margin-left: -1.28em; /* OS X workaround */
 }
 
 #main-content h3 {
