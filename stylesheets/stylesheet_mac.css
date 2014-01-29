@@ -65,7 +65,6 @@ table {
 
 /* LAYOUT STYLES */
 body {
-  -webkit-font-smoothing: antialiased; /* OS X workaround */
   font-size: 15px;
   line-height: 1.5; 
   background: #fafafa url(../images/body-bg.jpg) 0 0 repeat;
