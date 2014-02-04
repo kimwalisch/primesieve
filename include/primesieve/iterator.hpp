@@ -74,9 +74,9 @@ public:
   ///
   uint64_t previous_prime()
   {
-    if (i_ == 0 || first_)
+    if (i_-- == 0 || first_)
       generate_previous_primes();
-    return primes_[--i_];
+    return primes_[i_];
   }
 private:
   std::size_t i_;
