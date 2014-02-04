@@ -59,8 +59,6 @@ void iterator::generate_next_primes()
     first_ = false;
     is_binary_search_ = false;
     i_ = std::lower_bound(primes_.begin(), primes_.end(), start_) - primes_.begin();
-    if (i_ > 0 && primes_[i_ - 1] >= start_)
-      i_--;
   }
   else
   {
@@ -92,8 +90,6 @@ void iterator::generate_previous_primes()
     first_ = false;
     is_binary_search_ = false;
     i_ = std::lower_bound(primes_.begin(), primes_.end(), start_) - primes_.begin();
-    if (i_ > 0 && primes_[i_] > start_)
-      i_--;
   }
   else
   {
@@ -128,7 +124,7 @@ uint64_t iterator::get_interval_size(uint64_t n)
   uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (std::log(sqrtx) - 1));
 
   uint64_t cache_max_primes = config::ITERATOR_CACHE_LARGE / sizeof(uint64_t);
-  uint64_t cache_bytes = (count_ < 10) ? config::ITERATOR_CACHE_SMALL : config::ITERATOR_CACHE_MEDIUM;
+  uint64_t cache_bytes = (count_ < 10) ? 1024 << count_ : config::ITERATOR_CACHE_MEDIUM;
   uint64_t cache_primes = cache_bytes / sizeof(uint64_t);
   uint64_t primes = std::min(std::max(cache_primes, sqrtx_primes), cache_max_primes);
 
