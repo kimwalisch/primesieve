@@ -16,6 +16,18 @@
 #include <string>
 #include <vector>
 
+namespace {
+
+uint64_t max_prime_gap(uint64_t n)
+{
+  // log(n)^2 is an approximation of the maximum prime gap near n
+  double logn = std::log(static_cast<double>(n));
+  double prime_gap = logn * logn;
+  return static_cast<uint64_t>(prime_gap);
+}
+
+}
+
 namespace primesieve {
 
 iterator::iterator(uint64_t start, uint64_t stop_hint)
@@ -52,6 +64,17 @@ void iterator::skipto(uint64_t start, uint64_t stop_hint)
     primes_.clear();
 }
 
+uint64_t add_overflow_safe(uint64_t a, uint64_t b)
+{
+  uint64_t max_stop = get_max_stop();
+  return (a < max_stop - b) ? a + b : max_stop;
+}
+
+uint64_t subtract_underflow_safe(uint64_t a, uint64_t b)
+{
+  return (a > b) ? a - b : 0;
+}
+
 void iterator::generate_next_primes()
 {
   if (is_binary_search_)
@@ -68,12 +91,11 @@ void iterator::generate_next_primes()
     while (primes_.empty())
     {
       if (!first_)
-        start_ = (stop_ + 1 <= max_stop) ? stop_ + 1 : max_stop;
+        start_ = add_overflow_safe(stop_, 1);
       first_ = false;
-      uint64_t interval_size = get_interval_size(start_);
-      stop_ = (start_ < max_stop - interval_size) ? start_ + interval_size : max_stop;
+      stop_ = add_overflow_safe(start_, get_interval_size(start_));
       if (start_ <= stop_hint_ && stop_ >= stop_hint_)
-        stop_ = stop_hint_;
+        stop_ = add_overflow_safe(stop_hint_, max_prime_gap(stop_hint_));
       primesieve::generate_primes(start_, stop_, &primes_);
       if (primes_.empty() && stop_ >= max_stop)
         throw primesieve_error("next_prime() > " + PrimeFinder::getMaxStopString());
@@ -98,12 +120,12 @@ void iterator::generate_previous_primes()
     while (primes_.empty())
     {
       if (!first_)
-        stop_ = (start_ > 1) ? start_ - 1 : 0;
+        stop_ = subtract_underflow_safe(start_, 1);
       first_ = false;
       uint64_t interval_size = get_interval_size(stop_);
-      start_ = (stop_ > interval_size) ? stop_ - interval_size : 0;
+      start_ = subtract_underflow_safe(stop_, interval_size);
       if (start_ <= stop_hint_ && stop_ >= stop_hint_)
-        start_ = stop_hint_;
+        start_ = subtract_underflow_safe(stop_hint_, max_prime_gap(stop_hint_));
       primesieve::generate_primes(start_, stop_, &primes_);
       if (primes_.empty() && start_ < 2)
         throw primesieve_error("previous_prime(): smallest prime is 2");
