@@ -112,6 +112,8 @@ void iterator::generate_previous_primes()
     first_ = false;
     is_binary_search_ = false;
     i_ = std::lower_bound(primes_.begin(), primes_.end(), start_) - primes_.begin();
+    if (i_ > 0 && primes_[i_] > start_)
+      i_--;
   }
   else
   {
@@ -131,7 +133,7 @@ void iterator::generate_previous_primes()
         throw primesieve_error("previous_prime(): smallest prime is 2");
     }
 
-    i_ = primes_.size();
+    i_ = primes_.size() - 1;
   }
 }
 
