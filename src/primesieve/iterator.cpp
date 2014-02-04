@@ -86,8 +86,8 @@ void iterator::generate_next_primes()
   }
   else
   {
-    uint64_t max_stop = get_max_stop();
     primes_.clear();
+    uint64_t max_stop = get_max_stop();
 
     while (primes_.empty())
     {
