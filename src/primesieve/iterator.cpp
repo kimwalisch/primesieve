@@ -35,11 +35,6 @@ iterator::iterator(uint64_t start, uint64_t stop_hint)
   skipto(start, stop_hint);
 }
 
-uint64_t iterator::get_stop_hint()
-{
-  return stop_hint_;
-}
-
 void iterator::set_stop_hint(uint64_t stop_hint)
 {
   stop_hint_ = stop_hint;
@@ -62,6 +57,12 @@ void iterator::skipto(uint64_t start, uint64_t stop_hint)
 
   if (!is_binary_search_)
     primes_.clear();
+}
+
+void iterator::clear()
+{
+  primes_.clear();
+  skipto(0);
 }
 
 uint64_t add_overflow_safe(uint64_t a, uint64_t b)
