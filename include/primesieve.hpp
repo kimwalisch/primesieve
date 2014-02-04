@@ -15,9 +15,9 @@
 #ifndef PRIMESIEVE_HPP
 #define PRIMESIEVE_HPP
 
-#define PRIMESIEVE_VERSION "5.0"
+#define PRIMESIEVE_VERSION "5.1"
 #define PRIMESIEVE_VERSION_MAJOR 5
-#define PRIMESIEVE_VERSION_MINOR 0
+#define PRIMESIEVE_VERSION_MINOR 1
 
 #include "primesieve/PrimeSieve.hpp"
 #include "primesieve/ParallelPrimeSieve.hpp"
