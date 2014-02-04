@@ -50,9 +50,6 @@ public:
   ///
   void skipto(uint64_t start, uint64_t stop_hint = get_max_stop());
 
-  /// Get the current set stop number optimization hint.
-  uint64_t get_stop_hint();
-
   /// Set a stop number optimization hint. Setting stop_hint gives
   /// a significant speed up if only few primes are generated.
   /// @pre  stop_hint <= 2^64 - 2^32 * 10
@@ -78,6 +75,9 @@ public:
       generate_previous_primes();
     return primes_[i_];
   }
+
+  /// Free all memory, same as skipto(0).
+  void clear();
 private:
   std::size_t i_;
   std::vector<uint64_t> primes_;
