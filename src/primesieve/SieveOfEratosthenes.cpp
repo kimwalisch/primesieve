@@ -14,7 +14,7 @@
 #include <primesieve/EratSmall.hpp>
 #include <primesieve/EratMedium.hpp>
 #include <primesieve/EratBig.hpp>
-#include <primesieve/imath.hpp>
+#include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>

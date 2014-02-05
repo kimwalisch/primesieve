@@ -1,5 +1,5 @@
 ///
-/// @file   imath.hpp
+/// @file   pmath.hpp
 /// @brief  Auxiliary math functions needed in primesieve.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
@@ -8,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef IMATH_HPP
-#define IMATH_HPP
+#ifndef PMATH_HPP
+#define PMATH_HPP
 
 #include <cmath>
 

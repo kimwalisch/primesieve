@@ -10,7 +10,7 @@
 ///
 
 #include <primesieve.hpp>
-#include <primesieve/imath.hpp>
+#include <primesieve/pmath.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
 #include <primesieve/Callback.hpp>

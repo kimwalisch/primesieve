@@ -8,7 +8,7 @@
 ///
 
 #include <primesieve/config.hpp>
-#include <primesieve/imath.hpp>
+#include <primesieve/pmath.hpp>
 #include <primesieve/PrimeFinder.hpp>
 #include <primesieve.hpp>
 

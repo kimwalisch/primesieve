@@ -13,7 +13,7 @@
 
 #include "config.hpp"
 #include "toString.hpp"
-#include "imath.hpp"
+#include "pmath.hpp"
 #include "primesieve_error.hpp"
 
 #include <stdint.h>

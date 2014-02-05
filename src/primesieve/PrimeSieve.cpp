@@ -17,7 +17,7 @@
 #include <primesieve/PrimeSieve-lock.hpp>
 #include <primesieve/PrimeFinder.hpp>
 #include <primesieve/PrimeGenerator.hpp>
-#include <primesieve/imath.hpp>
+#include <primesieve/pmath.hpp>
 
 #include <stdint.h>
 #include <iostream>
