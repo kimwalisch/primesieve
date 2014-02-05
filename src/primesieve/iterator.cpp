@@ -8,6 +8,7 @@
 ///
 
 #include <primesieve/config.hpp>
+#include <primesieve/imath.hpp>
 #include <primesieve/PrimeFinder.hpp>
 #include <primesieve.hpp>
 
@@ -15,18 +16,6 @@
 #include <cmath>
 #include <string>
 #include <vector>
-
-namespace {
-
-// log(n)^2 is an approximation of the maximum prime gap near n
-uint64_t max_prime_gap(uint64_t n)
-{
-  double logn = std::log(static_cast<double>(n));
-  double prime_gap = logn * logn;
-  return static_cast<uint64_t>(prime_gap);
-}
-
-}
 
 namespace primesieve {
 
