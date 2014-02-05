@@ -101,7 +101,7 @@ enum {
 
   /// primesieve::iterator objects cache up to ITERATOR_CACHE_SMALL
   /// bytes of primes when generating primes below 10^10. Either
-  /// L2_CACHE_SIZE or L2_CACHE_SIZE / 2 are good values.
+  /// L3_CACHE_SIZE or L3_CACHE_SIZE / 2 are good values.
   //
   ITERATOR_CACHE_SMALL = (1 << 20) * 4,
 
