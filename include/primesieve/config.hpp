@@ -3,7 +3,7 @@
 /// @brief  Macros, typedefs and constants that set various limits
 ///         and array sizes within primesieve.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -99,15 +99,11 @@ enum {
   ///
   MEMORY_PER_ALLOC = (1 << 20) * 4,
 
-  /// primesieve::iterator objects cache ITERATOR_CACHE_SMALL bytes
-  /// if a small number of new primes is generated.
+  /// primesieve::iterator objects cache up to ITERATOR_CACHE_SMALL
+  /// bytes of primes when generating primes below 10^10. Either
+  /// L2_CACHE_SIZE or L2_CACHE_SIZE / 2 are good values.
   //
-  ITERATOR_CACHE_SMALL = (1 << 10) * 32,
-
-  /// primesieve::iterator objects cache ITERATOR_CACHE_MEDIUM bytes
-  /// if a medium number of new primes is generated.
-  //
-  ITERATOR_CACHE_MEDIUM = (1 << 20) * 4,
+  ITERATOR_CACHE_SMALL = (1 << 20) * 4,
 
   /// primesieve::iterator objects cache ITERATOR_CACHE_LARGE bytes
   /// of primes for large start and stop numbers.

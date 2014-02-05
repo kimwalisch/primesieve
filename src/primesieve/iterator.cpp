@@ -111,7 +111,7 @@ uint64_t iterator::get_interval_size(uint64_t n)
   double x = std::max(static_cast<double>(n), 10.0);
   double sqrtx = std::sqrt(x);
   uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (std::log(sqrtx) - 1));
-  uint64_t cache_bytes = (count_++ < 10) ? 1024 << count_ : config::ITERATOR_CACHE_MEDIUM;
+  uint64_t cache_bytes = (count_++ < 10) ? 1024 << count_ : config::ITERATOR_CACHE_SMALL;
   uint64_t cache_primes = cache_bytes / sizeof(uint64_t);
   uint64_t cache_max_primes = config::ITERATOR_CACHE_LARGE / sizeof(uint64_t);
   uint64_t primes = std::min(std::max(cache_primes, sqrtx_primes), cache_max_primes);
