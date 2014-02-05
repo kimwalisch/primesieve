@@ -61,7 +61,7 @@ public:
   ///
   uint64_t next_prime()
   {
-    if (++i_ >= primes_.size() || first_)
+    if (i_++ == last_idx_)
       generate_next_primes();
     return primes_[i_];
   }
@@ -71,7 +71,7 @@ public:
   ///
   uint64_t previous_prime()
   {
-    if (i_-- == 0 || first_)
+    if (i_-- == 0)
       generate_previous_primes();
     return primes_[i_];
   }
@@ -80,13 +80,12 @@ public:
   void clear();
 private:
   std::size_t i_;
+  std::size_t last_idx_;
   std::vector<uint64_t> primes_;
   uint64_t start_;
   uint64_t stop_;
   uint64_t stop_hint_;
   uint64_t count_;
-  bool first_;
-  bool is_binary_search_;
   uint64_t get_interval_size(uint64_t);
   void generate_primes(uint64_t, uint64_t);
   void generate_next_primes();
