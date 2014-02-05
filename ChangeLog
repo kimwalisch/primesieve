@@ -11,8 +11,8 @@ Changes:
 
 1. Fixed bug in primesieve::iterator::previous_prime().
 2. Fixed bug in primesieve_previous_prime().
-3. Added stop_hint optimization to primesieve::iterator which gives
-   a significant speed up if only few primes are generated.
+3. Added stop_hint optimization to primesieve::iterator which gives a
+   significant speed up if only few primes are generated.
 
 Changes in version 5.0, 11/01/2014
 ==================================
