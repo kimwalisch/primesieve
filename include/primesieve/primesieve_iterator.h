@@ -28,14 +28,14 @@ extern "C" {
  */
 typedef struct
 {
+  size_t i_;
+  size_t last_idx_;
   uint64_t* primes_;
   uint64_t* primes_pimpl_;
-  size_t i_;
-  size_t size_;
   uint64_t start_;
+  uint64_t stop_;
+  uint64_t stop_hint_;
   uint64_t count_;
-  int first_;
-  int adjust_skipto_;
 } primesieve_iterator;
 
 /** Initialize the primesieve iterator before first using it. */
@@ -45,23 +45,27 @@ void primesieve_init(primesieve_iterator* pi);
 void primesieve_free_iterator(primesieve_iterator* pi);
 
 /** Set the primesieve iterator to start.
- *  @pre  start <= 2^64 - 2^32 * 10
+ *  @param start      Start generating primes at this number.
+ *  @param stop_hint  Stop number optimization hint, e.g. if you want
+ *                    to generate the primes below 1000 use
+ *                    stop_hint = 1000.
+ *  @pre   start      <= 2^64 - 2^32 * 10
  */
-void primesieve_skipto(primesieve_iterator* pi, uint64_t start);
+void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hint);
 
-/** Internal use only. */
-void generate_next_primes(primesieve_iterator*);
+/** Internal use. */
+void primesieve_generate_next_primes(primesieve_iterator*);
 
-/** Internal use only. */
-void generate_previous_primes(primesieve_iterator*);
+/** Internal use. */
+void primesieve_generate_previous_primes(primesieve_iterator*);
 
 /** Advance the primesieve iterator by one position.
  *  @return  The next prime.
  */
 static inline uint64_t primesieve_next_prime(primesieve_iterator* pi)
 {
-  if (++pi->i_ >= pi->size_ || pi->first_)
-    generate_next_primes(pi);
+  if (pi->i_++ == pi->last_idx_)
+    primesieve_generate_next_primes(pi);
   return pi->primes_[pi->i_];
 }
 
@@ -70,9 +74,9 @@ static inline uint64_t primesieve_next_prime(primesieve_iterator* pi)
  */
 static inline uint64_t primesieve_previous_prime(primesieve_iterator* pi)
 {
-  if (pi->i_ == 0 || pi->first_)
-    generate_previous_primes(pi);
-  return pi->primes_[--pi->i_];
+  if (pi->i_-- == 0)
+    primesieve_generate_previous_primes(pi);
+  return pi->primes_[pi->i_];
 }
 
 #ifdef __cplusplus
