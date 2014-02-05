@@ -62,7 +62,6 @@ uint64_t subtract_underflow_safe(uint64_t a, uint64_t b)
 void iterator::generate_next_primes()
 {
   bool first = primes_.empty();
-  uint64_t max_stop = get_max_stop();
   primes_.clear();
 
   while (primes_.empty())
@@ -74,7 +73,7 @@ void iterator::generate_next_primes()
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
       stop_ = add_overflow_safe(stop_hint_, max_prime_gap(stop_hint_));
     primesieve::generate_primes(start_, stop_, &primes_);
-    if (primes_.empty() && stop_ >= max_stop)
+    if (primes_.empty() && stop_ >= get_max_stop())
       throw primesieve_error("next_prime() > " + PrimeFinder::getMaxStopString());
   }
 
@@ -92,8 +91,7 @@ void iterator::generate_previous_primes()
     if (!first)
       stop_ = subtract_underflow_safe(start_, 1);
     first = false;
-    uint64_t interval_size = get_interval_size(stop_);
-    start_ = subtract_underflow_safe(stop_, interval_size);
+    start_ = subtract_underflow_safe(stop_, get_interval_size(stop_));
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
       start_ = subtract_underflow_safe(stop_hint_, max_prime_gap(stop_hint_));
     primesieve::generate_primes(start_, stop_, &primes_);
