@@ -1,6 +1,6 @@
 ///
 /// @file   imath.hpp
-/// @brief  Auxiliary integer math functions needed in primesieve.
+/// @brief  Auxiliary math functions needed in primesieve.
 ///
 /// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -10,6 +10,8 @@
 
 #ifndef IMATH_HPP
 #define IMATH_HPP
+
+#include <cmath>
 
 namespace primesieve {
 
@@ -99,6 +101,16 @@ inline T getInBetween(T min, T value, T max)
   if (value < min) return min;
   if (value > max) return max;
   return value;
+}
+
+/// @brief   Get an approximation of the maximum prime gap near n.
+/// @return  log(n)^2
+///
+inline uint64_t max_prime_gap(uint64_t n)
+{
+  double logn = std::log(static_cast<double>(n));
+  double prime_gap = logn * logn;
+  return static_cast<uint64_t>(prime_gap);
 }
 
 } // namespace primesieve
