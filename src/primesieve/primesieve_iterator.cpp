@@ -74,7 +74,6 @@ void primesieve_free_iterator(primesieve_iterator* pi)
   delete primes;
 }
 
-/// Set primesieve_iterator to start
 void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hint)
 {
   std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
@@ -85,34 +84,40 @@ void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hi
   pi->i_ = 0;
   pi->last_idx_ = 0;
   pi->count_ = 0;
+  pi->is_error_ = false;
 }
 
 void primesieve_generate_next_primes(primesieve_iterator* pi)
 {
   std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
-  try
-  {
-    bool first = primes.empty();
-    primes.clear();
 
-    while (primes.empty())
-    {
-      if (!first)
-        pi->start_ = add_overflow_safe(pi->stop_, 1);
-      first = false;
-      pi->stop_ = add_overflow_safe(pi->start_, get_interval_size(pi, pi->start_));
-      if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
-        pi->stop_ = add_overflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
-      primesieve::generate_primes(pi->start_, pi->stop_, &primes);
-      if (primes.empty() && pi->stop_ >= get_max_stop())
-        throw primesieve_error("next_prime() > primesieve_get_max_stop()");
-    }
-  }
-  catch (std::exception&)
+  if (!pi->is_error_)
   {
-    primes.clear();
-    primes.resize(64, PRIMESIEVE_ERROR);
-    errno = EDOM;
+    try
+    {
+      bool first = primes.empty();
+      primes.clear();
+
+      while (primes.empty())
+      {
+        if (!first)
+          pi->start_ = add_overflow_safe(pi->stop_, 1);
+        first = false;
+        pi->stop_ = add_overflow_safe(pi->start_, get_interval_size(pi, pi->start_));
+        if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
+          pi->stop_ = add_overflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
+        primesieve::generate_primes(pi->start_, pi->stop_, &primes);
+        if (primes.empty() && pi->stop_ >= get_max_stop())
+          throw primesieve_error("next_prime() > primesieve_get_max_stop()");
+      }
+    }
+    catch (std::exception&)
+    {
+      primes.clear();
+      primes.resize(64, PRIMESIEVE_ERROR);
+      pi->is_error_ = true;
+      errno = EDOM;
+    }
   }
 
   pi->primes_ = &primes[0];
@@ -123,29 +128,34 @@ void primesieve_generate_next_primes(primesieve_iterator* pi)
 void primesieve_generate_previous_primes(primesieve_iterator* pi)
 {
   std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
-  try
-  {
-    bool first = primes.empty();
-    primes.clear();
 
-    while (primes.empty())
-    {
-      if (!first)
-        pi->stop_ = subtract_underflow_safe(pi->start_, 1);
-      first = false;
-      pi->start_ = subtract_underflow_safe(pi->stop_, get_interval_size(pi, pi->stop_));
-      if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
-        pi->start_ = subtract_underflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
-      primesieve::generate_primes(pi->start_, pi->stop_, &primes);
-      if (primes.empty() && pi->start_ < 2)
-        throw primesieve_error("previous_prime(): smallest prime is 2");
-    }
-  }
-  catch (std::exception&)
+  if (!pi->is_error_)
   {
-    primes.clear();
-    primes.resize(64, PRIMESIEVE_ERROR);
-    errno = EDOM;
+    try
+    {
+      bool first = primes.empty();
+      primes.clear();
+
+      while (primes.empty())
+      {
+        if (!first)
+          pi->stop_ = subtract_underflow_safe(pi->start_, 1);
+        first = false;
+        pi->start_ = subtract_underflow_safe(pi->stop_, get_interval_size(pi, pi->stop_));
+        if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
+          pi->start_ = subtract_underflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
+        primesieve::generate_primes(pi->start_, pi->stop_, &primes);
+        if (primes.empty() && pi->start_ < 2)
+          throw primesieve_error("previous_prime(): smallest prime is 2");
+      }
+    }
+    catch (std::exception&)
+    {
+      primes.clear();
+      primes.resize(64, PRIMESIEVE_ERROR);
+      pi->is_error_ = true;
+      errno = EDOM;
+    }
   }
 
   pi->primes_ = &primes[0];
