@@ -49,7 +49,8 @@ void primesieve_free_iterator(primesieve_iterator* pi);
  *  @param start      Start generating primes at this number.
  *  @param stop_hint  Stop number optimization hint, e.g. if you want
  *                    to generate the primes below 1000 use
- *                    stop_hint = 1000.
+ *                    stop_hint = 1000, if you don't know use
+ *                    primesieve_get_max_stop().
  *  @pre   start      <= 2^64 - 2^32 * 10
  */
 void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hint);
