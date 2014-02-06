@@ -24,11 +24,6 @@ iterator::iterator(uint64_t start, uint64_t stop_hint)
   skipto(start, stop_hint);
 }
 
-void iterator::set_stop_hint(uint64_t stop_hint)
-{
-  stop_hint_ = stop_hint;
-}
-
 void iterator::clear()
 {
   skipto(0);
