@@ -36,6 +36,7 @@ typedef struct
   uint64_t stop_;
   uint64_t stop_hint_;
   uint64_t count_;
+  int is_error_;
 } primesieve_iterator;
 
 /** Initialize the primesieve iterator before first using it. */
