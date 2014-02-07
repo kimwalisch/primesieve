@@ -1,7 +1,7 @@
 ///
 /// @file  PrimeGenerator.hpp
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -25,7 +25,6 @@ private:
   PrimeFinder& finder_;
   void segmentFinished(const byte_t*, uint_t);
   void generateTinyPrimes();
-  void callback(const byte_t*, uint_t);
   DISALLOW_COPY_AND_ASSIGN(PrimeGenerator);
 };
 

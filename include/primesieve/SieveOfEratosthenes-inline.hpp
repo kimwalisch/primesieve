@@ -2,7 +2,7 @@
 /// @file   SieveOfEratosthenes-inline.hpp
 /// @brief  Inline methods of the SieveOfEratosthenes class.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -22,13 +22,23 @@
 
 namespace primesieve {
 
-inline uint64_t SieveOfEratosthenes::getStart()     const { return start_; }
-inline uint64_t SieveOfEratosthenes::getStop()      const { return stop_; }
-inline uint_t   SieveOfEratosthenes::getSieveSize() const { return sieveSize_; }
+inline uint64_t SieveOfEratosthenes::getStart() const
+{
+  return start_;
+}
+
+inline uint64_t SieveOfEratosthenes::getStop() const
+{
+  return stop_;
+}
+
+inline uint_t SieveOfEratosthenes::getSieveSize() const
+{
+  return sieveSize_;
+}
 
 /// Reconstruct the prime number corresponding to the first set
 /// bit of the `bits' parameter and unset that bit.
-/// @see SieveOfEratosthenes-CALLBACK.hpp
 ///
 inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint_t index) const
 {

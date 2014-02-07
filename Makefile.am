@@ -127,7 +127,6 @@ libprimesieve_la_SOURCES = \
 	include/primesieve/PrimeGenerator.hpp \
 	include/primesieve/PrimeSieve-lock.hpp \
 	include/primesieve/SieveOfEratosthenes.hpp \
-	include/primesieve/SieveOfEratosthenes-CALLBACK.hpp \
 	include/primesieve/SieveOfEratosthenes-inline.hpp \
 	include/primesieve/toString.hpp \
 	include/primesieve/WheelFactorization.hpp
