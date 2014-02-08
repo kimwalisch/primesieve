@@ -172,12 +172,12 @@ private:
   /// @pre flag >= (1 << 20)
   enum
   {
-    CALLBACK        = 1 << 20,
-    CALLBACK_TN     = 1 << 21,
-    CALLBACK_OBJ    = 1 << 22,
-    CALLBACK_OBJ_TN = 1 << 23,
-    CALLBACK_C      = 1 << 24,
-    CALLBACK_C_TN   = 1 << 25
+    CALLBACK_PRIMES        = 1 << 20,
+    CALLBACK_PRIMES_TN     = 1 << 21,
+    CALLBACK_PRIMES_OBJ    = 1 << 22,
+    CALLBACK_PRIMES_OBJ_TN = 1 << 23,
+    CALLBACK_PRIMES_C      = 1 << 24,
+    CALLBACK_PRIMES_C_TN   = 1 << 25
   };
 };
 

@@ -90,7 +90,7 @@ bool     PrimeSieve::isFlag(int flag)            const { return (flags_ & flag) 
 bool     PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last * 2 - first)) != 0; }
 bool     PrimeSieve::isCount(int index)          const { return isFlag(COUNT_PRIMES << index); }
 bool     PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRIMES << index); }
-bool     PrimeSieve::isCallback()                const { return isFlag(CALLBACK, CALLBACK_C_TN); }
+bool     PrimeSieve::isCallback()                const { return isFlag(CALLBACK_PRIMES, CALLBACK_PRIMES_C_TN); }
 bool     PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEPTUPLETS); }
 bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEPTUPLETS); }
 bool     PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
@@ -203,19 +203,19 @@ void PrimeSieve::doSmallPrime(const SmallPrime& sp)
     // callback prime numbers
     if (sp.index == 0)
     {
-      if (isFlag(CALLBACK_OBJ))
+      if (isFlag(CALLBACK_PRIMES_OBJ))
         cobj_->callback(sp.firstPrime);
-      if (isFlag(CALLBACK_OBJ_TN))
+      if (isFlag(CALLBACK_PRIMES_OBJ_TN))
         cobj_tn_->callback(sp.firstPrime, threadNum_);
-      if (isFlag(CALLBACK))
+      if (isFlag(CALLBACK_PRIMES))
         callback_(sp.firstPrime);
-      if (isFlag(CALLBACK_TN))
+      if (isFlag(CALLBACK_PRIMES_TN))
         callback_tn_(sp.firstPrime, threadNum_);
       callback_c_t callback_c = reinterpret_cast<callback_c_t>(callback_);
-      if (isFlag(CALLBACK_C))
+      if (isFlag(CALLBACK_PRIMES_C))
         callback_c(sp.firstPrime);
       callback_c_tn_t callback_c_tn = reinterpret_cast<callback_c_tn_t>(callback_tn_);
-      if (isFlag(CALLBACK_C_TN))
+      if (isFlag(CALLBACK_PRIMES_C_TN))
         callback_c_tn(sp.firstPrime, threadNum_);
     }
     if (isCount(sp.index))
@@ -286,7 +286,7 @@ void PrimeSieve::callbackPrimes(uint64_t start,
   if (!callback)
     throw primesieve_error("callback is NULL");
   callback_ = callback;
-  flags_ = CALLBACK;
+  flags_ = CALLBACK_PRIMES;
   sieve(start, stop);
 }
 
@@ -300,7 +300,7 @@ void PrimeSieve::callbackPrimes(uint64_t start,
   if (!callback)
     throw primesieve_error("callback is NULL");
   callback_tn_ = callback;
-  flags_ = CALLBACK_TN;
+  flags_ = CALLBACK_PRIMES_TN;
   sieve(start, stop);
 }
 
@@ -314,7 +314,7 @@ void PrimeSieve::callbackPrimes(uint64_t start,
   if (!cobj)
     throw primesieve_error("Callback pointer is NULL");
   cobj_ = cobj;
-  flags_ = CALLBACK_OBJ;
+  flags_ = CALLBACK_PRIMES_OBJ;
   sieve(start, stop);
 }
 
@@ -328,7 +328,7 @@ void PrimeSieve::callbackPrimes(uint64_t start,
   if (!cobj)
     throw primesieve_error("Callback pointer is NULL");
   cobj_tn_ = cobj;
-  flags_ = CALLBACK_OBJ_TN;
+  flags_ = CALLBACK_PRIMES_OBJ_TN;
   sieve(start, stop);
 }
 
@@ -342,7 +342,7 @@ void PrimeSieve::callbackPrimes_c(uint64_t start,
   if (!callback)
     throw primesieve_error("callback is NULL");
   callback_ = callback;
-  flags_ = CALLBACK_C;
+  flags_ = CALLBACK_PRIMES_C;
   sieve(start, stop);
 }
 
@@ -356,7 +356,7 @@ void PrimeSieve::callbackPrimes_c(uint64_t start,
   if (!callback)
     throw primesieve_error("callback is NULL");
   callback_tn_ = callback;
-  flags_ = CALLBACK_C_TN;
+  flags_ = CALLBACK_PRIMES_C_TN;
   sieve(start, stop);
 }
 
