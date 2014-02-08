@@ -162,7 +162,8 @@ void PrimeFinder::count(const byte_t* sieve, uint_t sieveSize)
   // count prime k-tuplets (i = 1 twins, i = 2 triplets, ...)
   for (uint_t i = 1; i < ps_.counts_.size(); i++)
   {
-    if (ps_.isCount(i)) {
+    if (ps_.isCount(i))
+    {
       uint_t sum0 = 0;
       uint_t sum1 = 0;
       uint_t sum2 = 0;
