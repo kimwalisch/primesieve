@@ -1,20 +1,26 @@
 Changes in version 5.1, 08/02/2014
 ==================================
 
-Work in progress.
+primesieve-5.1 is minor new release with mostly bug fixes. There is
+also one API change in the C bindings documented further down.
 
-TODO:
-+ primesieve.hpp is not compatible with <windows.h> header.
-+ Update online API documentation.
-
-Changes:
-
-1. Fixed bug in primesieve::iterator::previous_prime().
-2. Fixed bug in primesieve_previous_prime().
-3. Added stop_hint optimization to primesieve::iterator which gives a
+1. <primesieve.hpp> and <primesieve.h> are now compatible with
+   <windows.h>, fixed CALLBACK and max() issues.
+2. Fixed bug in primesieve::iterator::previous_prime().
+3. Fixed bug in primesieve_previous_prime().
+4. Added stop_hint optimization to primesieve::iterator which gives a
    significant speed up if only few primes are generated.
-4. Replaced GENERATE_PRIMES() macro by templatized callbackPrimes()
+5. Replaced GENERATE_PRIMES() macro by templatized callbackPrimes()
    method (src/primesieve/PrimeFinder.cpp).
+
+C bindings API change:
+
+void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hint);
+
+The signature of the primesieve_skipto() function has changed, a new
+'stop_hint' parameter has been added. Please refer to
+http://primesieve.org/api/primesieve__iterator_8h.html for more
+information.
 
 Changes in version 5.0, 11/01/2014
 ==================================
