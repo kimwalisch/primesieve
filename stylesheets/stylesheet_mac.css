@@ -276,7 +276,7 @@ form {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 2.8em;
   letter-spacing: -1px;
-  color: #474747;
+  color: #454545;
 } 
 
 #main-content h1:before {
@@ -291,7 +291,7 @@ form {
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 8px;
-  color: #474747;
+  color: #454545;
 }
 
 #main-content h2:before {
@@ -315,7 +315,7 @@ form {
   font-weight: bold;
   margin-top: 24px;
   margin-bottom: 8px;
-  color: #474747;
+  color: #454545;
 } 
  
 #main-content h3:before {
@@ -329,7 +329,7 @@ form {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 15px;
   font-weight: bold;
-  color: #474747;
+  color: #454545;
 } 
 
 h4:before {
@@ -342,7 +342,7 @@ h4:before {
 #main-content h5 {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 14px;
-  color: #474747;
+  color: #454545;
 } 
 h5:before {
   content: "/////";
@@ -354,7 +354,7 @@ h5:before {
 #main-content h6 {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: .8em;
-  color: #474747;
+  color: #454545;
 } 
 h6:before {
   content: "//////";
