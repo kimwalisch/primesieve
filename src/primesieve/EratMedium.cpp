@@ -3,7 +3,7 @@
 /// @brief  Segmented sieve of Eratosthenes optimized for medium
 ///         sieving primes.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -63,11 +63,12 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize)
 void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize, Bucket& bucket)
 {
   SievingPrime* sPrime = bucket.begin();
-  SievingPrime* end = bucket.end();
+  SievingPrime* sEnd = bucket.end();
 
   // process 2 sieving primes per loop iteration to
   // increase instruction level parallelism
-  for (; sPrime + 2 <= end; sPrime += 2) {
+  for (; sPrime + 2 <= sEnd; sPrime += 2)
+  {
     uint_t multipleIndex0 = sPrime[0].getMultipleIndex();
     uint_t wheelIndex0    = sPrime[0].getWheelIndex();
     uint_t sievingPrime0  = sPrime[0].getSievingPrime();
@@ -76,7 +77,8 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize, Bucket& bucket)
     uint_t sievingPrime1  = sPrime[1].getSievingPrime();
     // cross-off the multiples (unset bits) of sievingPrime
     // @see unsetBit() in WheelFactorization.hpp
-    while (multipleIndex0 < sieveSize) {
+    while (multipleIndex0 < sieveSize)
+    {
       unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
       if (multipleIndex1 >= sieveSize) break;
       unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
@@ -89,7 +91,8 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize, Bucket& bucket)
     sPrime[1].set(multipleIndex1, wheelIndex1);
   }
 
-  if (sPrime != end) {
+  if (sPrime != sEnd)
+  {
     uint_t multipleIndex = sPrime->getMultipleIndex();
     uint_t wheelIndex    = sPrime->getWheelIndex();
     uint_t sievingPrime  = sPrime->getSievingPrime();
