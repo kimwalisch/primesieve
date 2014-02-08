@@ -6,7 +6,7 @@
 ///         primes are then pushed back onto the vector inside the
 ///         callback method.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -18,12 +18,9 @@
 #include "PrimeSieve.hpp"
 #include "Callback.hpp"
 #include "cancel_callback.hpp"
-#include "primesieve_error.hpp"
 
 #include <stdint.h>
-#include <algorithm>
 #include <cmath>
-#include <limits>
 #include <vector>
 
 namespace primesieve {
@@ -50,8 +47,6 @@ public:
     if (start <= stop)
     {
       uint64_t prime_count = approximate_prime_count(start, stop);
-      if (prime_count > std::numeric_limits<std::size_t>::max())
-        throw primesieve_error("cannot generate number of primes > SIZE_MAX (max(size_t))");
       primes_.reserve(primes_.size() + static_cast<std::size_t>(prime_count));
       PrimeSieve ps;
       ps.callbackPrimes(start, stop, this);
@@ -77,8 +72,6 @@ public:
   void pushBack_N_Primes(uint64_t n, uint64_t start)
   {
     n_ = n;
-    if (n_ > std::numeric_limits<std::size_t>::max())
-      throw primesieve_error("cannot generate number of primes > SIZE_MAX (max(size_t))");
     primes_.reserve(primes_.size() + static_cast<std::size_t>(n_));
     PrimeSieve ps;
     try
