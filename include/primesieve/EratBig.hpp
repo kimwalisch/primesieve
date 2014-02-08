@@ -1,7 +1,7 @@
 ///
 /// @file  EratBig.hpp
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -15,7 +15,6 @@
 
 #include <stdint.h>
 #include <vector>
-#include <list>
 
 namespace primesieve {
 
@@ -29,7 +28,6 @@ public:
   ~EratBig();
   void crossOff(byte_t*);
 private:
-  typedef std::list<Bucket*>::iterator PointerIterator_t;
   const uint_t limit_;
   /// log2 of SieveOfEratosthenes::sieveSize_
   const uint_t log2SieveSize_;
@@ -39,7 +37,7 @@ private:
   /// List of empty buckets
   Bucket* stock_;
   /// Pointers of the allocated buckets
-  std::list<Bucket*> pointers_;
+  std::vector<Bucket*> pointers_;
   void init(uint_t);
   static void moveBucket(Bucket&, Bucket*&);
   void pushBucket(uint_t);

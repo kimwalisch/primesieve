@@ -5,7 +5,7 @@
 ///         Oliveira e Silva's cache-friendly bucket sieve algorithm:
 ///         http://www.ieeta.pt/~tos/software/prime_sieve.html
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -22,7 +22,6 @@
 #include <cassert>
 #include <algorithm>
 #include <vector>
-#include <list>
 
 namespace primesieve {
 
@@ -46,8 +45,8 @@ EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t limit) :
 
 EratBig::~EratBig()
 {
-  for (PointerIterator_t iter = pointers_.begin(); iter != pointers_.end(); ++iter)
-    delete[] *iter;
+  for (std::size_t i = 0; i < pointers_.size(); i++)
+    delete[] pointers_[i];
 }
 
 void EratBig::init(uint_t sieveSize)
@@ -57,6 +56,10 @@ void EratBig::init(uint_t sieveSize)
   uint_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
   uint_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
   uint_t size = maxSegmentCount + 1;
+
+  // EratBig uses up to 1.6 gigabytes of memory near 2^64
+  pointers_.reserve(((1u << 30) * 2) / config::MEMORY_PER_ALLOC);
+
   lists_.resize(size, NULL);
   for (uint_t i = 0; i < size; i++)
     pushBucket(i);
@@ -92,7 +95,7 @@ void EratBig::pushBucket(uint_t segment)
     for(int i = 0; i < N-1; i++)
       buckets[i].setNext(&buckets[i + 1]);
     buckets[N-1].setNext(NULL);
-    pointers_.push_front(buckets);
+    pointers_.push_back(buckets);
     stock_ = buckets;
   }
   Bucket* emptyBucket = stock_;
