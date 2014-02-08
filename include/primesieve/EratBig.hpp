@@ -42,8 +42,7 @@ private:
   static void moveBucket(Bucket&, Bucket*&);
   void pushBucket(uint_t);
   void storeSievingPrime(uint_t, uint_t, uint_t);
-  void crossOff(byte_t*, Bucket&);
-  uint_t getSegment(uint_t*);
+  void crossOff(byte_t*, SievingPrime*, SievingPrime*);
   DISALLOW_COPY_AND_ASSIGN(EratBig);
 };
 

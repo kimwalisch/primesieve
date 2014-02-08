@@ -70,26 +70,18 @@ void EratBig::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheel
 {
   assert(prime <= limit_);
   uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
-  uint_t segment = getSegment(&multipleIndex);
+  uint_t segment = multipleIndex >> log2SieveSize_;
+  multipleIndex &= moduloSieveSize_;
   if (!lists_[segment]->store(sievingPrime, multipleIndex, wheelIndex))
     pushBucket(segment);
-}
-
-/// Get the segment corresponding to the next multiple
-/// (multipleIndex) of a sievingPrime.
-///
-uint_t EratBig::getSegment(uint_t* multipleIndex)
-{
-  uint_t segment = *multipleIndex >> log2SieveSize_;
-  *multipleIndex &= moduloSieveSize_;
-  return segment;
 }
 
 /// Add an empty bucket to the front of lists_[segment].
 void EratBig::pushBucket(uint_t segment)
 {
   // if the stock_ is empty allocate new buckets
-  if (!stock_) {
+  if (!stock_)
+  {
     const int N = config::MEMORY_PER_ALLOC / sizeof(Bucket);
     Bucket* buckets = new Bucket[N];
     for(int i = 0; i < N-1; i++)
@@ -116,12 +108,13 @@ void EratBig::crossOff(byte_t* sieve)
 {
   // process the buckets in lists_[0] which hold the sieving primes
   // that have multiple(s) in the current segment
-  while (lists_[0]->hasNext() || !lists_[0]->empty()) {
+  while (lists_[0]->hasNext() || !lists_[0]->empty())
+  {
     Bucket* bucket = lists_[0];
     lists_[0] = NULL;
     pushBucket(0);
     do {
-      crossOff(sieve, *bucket);
+      crossOff(sieve, bucket->begin(), bucket->end());
       Bucket* processed = bucket;
       bucket = bucket->next();
       processed->reset();
@@ -140,41 +133,52 @@ void EratBig::crossOff(byte_t* sieve)
 /// primes that have very few multiples per segment. This algorithm
 /// uses a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
 ///
-void EratBig::crossOff(byte_t* sieve, Bucket& bucket)
+void EratBig::crossOff(byte_t* sieve, SievingPrime* sPrime, SievingPrime* sEnd)
 {
-  SievingPrime* sPrime = bucket.begin();
-  SievingPrime* end = bucket.end();
+  std::vector<Bucket*>& lists = lists_;
+  uint_t moduloSieveSize = moduloSieveSize_;
+  uint_t log2SieveSize = log2SieveSize_;
 
   // 2 sieving primes are processed per loop iteration
   // to increase instruction level parallelism
-  for (; sPrime + 2 <= end; sPrime += 2) {
+  for (; sPrime + 2 <= sEnd; sPrime += 2)
+  { 
     uint_t multipleIndex0 = sPrime[0].getMultipleIndex();
     uint_t wheelIndex0    = sPrime[0].getWheelIndex();
     uint_t sievingPrime0  = sPrime[0].getSievingPrime();
     uint_t multipleIndex1 = sPrime[1].getMultipleIndex();
     uint_t wheelIndex1    = sPrime[1].getWheelIndex();
     uint_t sievingPrime1  = sPrime[1].getSievingPrime();
+
     // cross-off the current multiple (unset bit)
     // and calculate the next multiple
     unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
     unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
-    uint_t segment0 = getSegment(&multipleIndex0);
-    uint_t segment1 = getSegment(&multipleIndex1);
+
+    uint_t segment0 = multipleIndex0 >> log2SieveSize;
+    uint_t segment1 = multipleIndex1 >> log2SieveSize;
+    multipleIndex0 &= moduloSieveSize;
+    multipleIndex1 &= moduloSieveSize;
+
     // move the 2 sieving primes to the list related
     // to their next multiple
-    if (!lists_[segment0]->store(sievingPrime0, multipleIndex0, wheelIndex0))
+    if (!lists[segment0]->store(sievingPrime0, multipleIndex0, wheelIndex0))
       pushBucket(segment0);
-    if (!lists_[segment1]->store(sievingPrime1, multipleIndex1, wheelIndex1))
+    if (!lists[segment1]->store(sievingPrime1, multipleIndex1, wheelIndex1))
       pushBucket(segment1);
   }
 
-  if (sPrime != end) {
+  if (sPrime != sEnd)
+  {
     uint_t multipleIndex = sPrime->getMultipleIndex();
     uint_t wheelIndex    = sPrime->getWheelIndex();
     uint_t sievingPrime  = sPrime->getSievingPrime();
+
     unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
-    uint_t segment = getSegment(&multipleIndex);
-    if (!lists_[segment]->store(sievingPrime, multipleIndex, wheelIndex))
+    uint_t segment = multipleIndex >> log2SieveSize;
+    multipleIndex &= moduloSieveSize;
+
+    if (!lists[segment]->store(sievingPrime, multipleIndex, wheelIndex))
       pushBucket(segment);
   }
 }
