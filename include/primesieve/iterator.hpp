@@ -35,7 +35,9 @@ public:
   ///                   prime then first calling either next_prime()
   ///                   or previous_prime() will return start.
   /// @param stop_hint  Stop number optimization hint, gives significant
-  ///                   speed up if few primes are generated.
+  ///                   speed up if few primes are generated. E.g. if
+  ///                   you want to generate the primes below 1000 use
+  ///                   stop_hint = 1000.
   /// @pre              start <= 2^64 - 2^32 * 10
   ///
   iterator(uint64_t start = 0, uint64_t stop_hint = get_max_stop());
@@ -45,7 +47,9 @@ public:
   ///                   prime then first calling either next_prime()
   ///                   or previous_prime() will return start.
   /// @param stop_hint  Stop number optimization hint, gives significant
-  ///                   speed up if few primes are generated.
+  ///                   speed up if few primes are generated. E.g. if
+  ///                   you want to generate the primes below 1000 use
+  ///                   stop_hint = 1000.
   /// @pre              start <= 2^64 - 2^32 * 10
   ///
   void skipto(uint64_t start, uint64_t stop_hint = get_max_stop());
