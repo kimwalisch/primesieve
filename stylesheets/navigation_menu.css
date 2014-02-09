@@ -24,7 +24,7 @@ nav {
 #navigation {
 	font: bold 12px/18px "Helvetica Neue", Helvetica, Arial, sans-serif;
 	text-transform: uppercase;
-	color: #444;
+	color: #373737;
 	width: 1000px;
 	margin-bottom: 35px;
 }
@@ -87,7 +87,7 @@ nav {
 #navigation a {
 	display: block;
 	padding: 11px 19px;
-	color: #444;
+	color: #373737;
 	text-decoration: none;
 	text-shadow: 0 1px #FFF;
 }
