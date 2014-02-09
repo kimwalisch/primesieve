@@ -211,12 +211,10 @@ void PrimeSieve::doSmallPrime(const SmallPrime& sp)
         callback_(sp.firstPrime);
       if (isFlag(CALLBACK_PRIMES_TN))
         callback_tn_(sp.firstPrime, threadNum_);
-      callback_c_t callback_c = reinterpret_cast<callback_c_t>(callback_);
       if (isFlag(CALLBACK_PRIMES_C))
-        callback_c(sp.firstPrime);
-      callback_c_tn_t callback_c_tn = reinterpret_cast<callback_c_tn_t>(callback_tn_);
+        reinterpret_cast<callback_c_t>(callback_)(sp.firstPrime);
       if (isFlag(CALLBACK_PRIMES_C_TN))
-        callback_c_tn(sp.firstPrime, threadNum_);
+        reinterpret_cast<callback_c_tn_t>(callback_tn_)(sp.firstPrime, threadNum_);
     }
     if (isCount(sp.index))
       counts_[sp.index]++;
