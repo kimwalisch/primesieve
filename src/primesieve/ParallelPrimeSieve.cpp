@@ -28,6 +28,7 @@ namespace primesieve {
 
 ParallelPrimeSieve::ParallelPrimeSieve() :
   numThreads_(IDEAL_NUM_THREADS),
+  lock_(NULL),
   shm_(NULL)
 { }
 
