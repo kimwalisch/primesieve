@@ -3,7 +3,7 @@
 /// @brief  ParallelPrimeSieve sieves primes in parallel using
 ///         OpenMP 2.0 (2002) or later.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -27,9 +27,9 @@
 namespace primesieve {
 
 ParallelPrimeSieve::ParallelPrimeSieve() :
-  numThreads_(IDEAL_NUM_THREADS),
   lock_(NULL),
-  shm_(NULL)
+  shm_(NULL),
+  numThreads_(IDEAL_NUM_THREADS)
 { }
 
 void ParallelPrimeSieve::init(SharedMemory& shm)
