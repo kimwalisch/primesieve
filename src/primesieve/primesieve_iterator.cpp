@@ -70,8 +70,11 @@ void primesieve_init(primesieve_iterator* pi)
 /// C destructor
 void primesieve_free_iterator(primesieve_iterator* pi)
 {
-  std::vector<uint64_t>* primes = &to_vector(pi->primes_pimpl_);
-  delete primes;
+  if (pi)
+  {
+    std::vector<uint64_t>* primes = &to_vector(pi->primes_pimpl_);
+    delete primes;
+  }
 }
 
 void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hint)
