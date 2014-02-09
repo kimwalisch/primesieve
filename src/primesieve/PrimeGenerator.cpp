@@ -51,13 +51,19 @@ void PrimeGenerator::generateTinyPrimes()
 void PrimeGenerator::doIt()
 {
   generateTinyPrimes();
+  // calls segmentFinished() after each sieved segment
   sieve();
+}
+
+void PrimeGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
+{
+  generateSievingPrimes(sieve, sieveSize);
 }
 
 /// Reconstruct primes from 1 bits of the sieve array
 /// and use them for sieving in finder_.
 ///
-void PrimeGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
+void PrimeGenerator::generateSievingPrimes(const byte_t* sieve, uint_t sieveSize)
 {
   for (uint_t i = 0; i < sieveSize; i += 8)
   {
