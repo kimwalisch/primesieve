@@ -4,7 +4,7 @@
 .highlight .k { font-weight: bold } /* Keyword */
 .highlight .o { font-weight: bold } /* Operator */
 .highlight .cm { color: #999988; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #707070; } /* Comment.Preproc */
+.highlight .cp { color: #909090; font-weight: bold } /* Comment.Preproc */
 .highlight .c1 { color: #909090; font-style: italic } /* Comment.Single */
 .highlight .cs { color: #999999; font-weight: bold; font-style: italic } /* Comment.Special */
 .highlight .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
