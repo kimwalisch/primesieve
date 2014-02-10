@@ -135,7 +135,7 @@ void EratBig::crossOff(byte_t* sieve)
 ///
 void EratBig::crossOff(byte_t* sieve, SievingPrime* sPrime, SievingPrime* sEnd)
 {
-  std::vector<Bucket*>& lists = lists_;
+  Bucket** lists = &lists_[0];
   uint_t moduloSieveSize = moduloSieveSize_;
   uint_t log2SieveSize = log2SieveSize_;
 
