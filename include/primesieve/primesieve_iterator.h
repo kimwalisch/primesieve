@@ -11,7 +11,7 @@
  *        
  *          The @link primesieve_iterator.c primesieve_iterator.c
  *          @endlink example shows how to use primesieve_iterator. If
- *          any error occurs errno is is set to EDOM and
+ *          any error occurs errno is set to EDOM and
  *          primesieve_next_prime() and primesieve_previous_prime()
  *          return PRIMESIEVE_ERROR (UINT64_MAX).
  * 
