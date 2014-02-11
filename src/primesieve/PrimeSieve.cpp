@@ -63,8 +63,8 @@ PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
   parent_(&parent),
   callback_(parent.callback_),
   callback_tn_(parent.callback_tn_),
-  cobj_(parent.cobj_),
-  cobj_tn_(parent.cobj_tn_)
+  cb_(parent.cb_),
+  cb_tn_(parent.cb_tn_)
 { }
 
 PrimeSieve::~PrimeSieve()
@@ -204,9 +204,9 @@ void PrimeSieve::doSmallPrime(const SmallPrime& sp)
     if (sp.index == 0)
     {
       if (isFlag(CALLBACK_PRIMES_OBJ))
-        cobj_->callback(sp.firstPrime);
+        cb_->callback(sp.firstPrime);
       if (isFlag(CALLBACK_PRIMES_OBJ_TN))
-        cobj_tn_->callback(sp.firstPrime, threadNum_);
+        cb_tn_->callback(sp.firstPrime, threadNum_);
       if (isFlag(CALLBACK_PRIMES))
         callback_(sp.firstPrime);
       if (isFlag(CALLBACK_PRIMES_TN))
@@ -303,15 +303,15 @@ void PrimeSieve::callbackPrimes(uint64_t start,
 }
 
 /// Generate the primes within the interval [start, stop] and call
-/// the callback method of the cobj object.
+/// the callback method of the cb object.
 ///
 void PrimeSieve::callbackPrimes(uint64_t start,
                                 uint64_t stop,
-                                Callback<uint64_t>* cobj)
+                                Callback<uint64_t>* cb)
 {
-  if (!cobj)
+  if (!cb)
     throw primesieve_error("Callback pointer is NULL");
-  cobj_ = cobj;
+  cb_ = cb;
   flags_ = CALLBACK_PRIMES_OBJ;
   sieve(start, stop);
 }
@@ -321,11 +321,11 @@ void PrimeSieve::callbackPrimes(uint64_t start,
 ///
 void PrimeSieve::callbackPrimes(uint64_t start,
                                 uint64_t stop,
-                                Callback<uint64_t, int>* cobj)
+                                Callback<uint64_t, int>* cb)
 {
-  if (!cobj)
+  if (!cb)
     throw primesieve_error("Callback pointer is NULL");
-  cobj_tn_ = cobj;
+  cb_tn_ = cb;
   flags_ = CALLBACK_PRIMES_OBJ_TN;
   sieve(start, stop);
 }

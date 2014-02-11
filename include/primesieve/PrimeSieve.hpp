@@ -155,8 +155,8 @@ private:
   /// Callbacks for use with *callbackPrimes()
   void (*callback_)(uint64_t);
   void (*callback_tn_)(uint64_t, int);
-  Callback<uint64_t>* cobj_;
-  Callback<uint64_t, int>* cobj_tn_;
+  Callback<uint64_t>* cb_;
+  Callback<uint64_t, int>* cb_tn_;
   static void printStatus(double, double);
   bool isFlag(int, int) const;
   bool isValidFlags(int) const;
