@@ -1,11 +1,19 @@
 /**
  *  @file   primesieve_iterator.h
- *  @brief  Fast prime iterator for use in C code. The @link
- *          primesieve_iterator.c primesieve_iterator.c @endlink
- *          example shows how to use primesieve_iterator. If any error
- *          occurs errno is is set to EDOM and primesieve_next_prime()
- *          and primesieve_previous_prime() return PRIMESIEVE_ERROR
- *          (UINT64_MAX).
+ *  @brief  primesieve_iterator allows to easily iterate over primes
+ *          both forwards and backwards. Note that generating the
+ *          first prime uses O(n^0.5 log log n^0.5) operations, after
+ *          that any additional prime is generated in amortized
+ *          O(log n) operations. The memory usage is about
+ *          pi(sqrt(n)) * 16 bytes. primesieve_iterator objects are
+ *          very convenient to use at the cost of being slightly
+ *          slower than the primesieve_callback_primes() functions.
+ *        
+ *          The @link primesieve_iterator.c primesieve_iterator.c
+ *          @endlink example shows how to use primesieve_iterator. If
+ *          any error occurs errno is is set to EDOM and
+ *          primesieve_next_prime() and primesieve_previous_prime()
+ *          return PRIMESIEVE_ERROR (UINT64_MAX).
  * 
  *  Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
  * 
