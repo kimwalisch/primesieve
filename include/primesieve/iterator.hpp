@@ -19,7 +19,6 @@ namespace primesieve {
 
 uint64_t get_max_stop();
 
-/// Iterate over prime numbers.
 /// primesieve::iterator allows to easily iterate over primes both
 /// forwards and backwards. Generating the first prime uses
 /// O(n^0.5 log n^0.5) operations, after that any additional prime is
