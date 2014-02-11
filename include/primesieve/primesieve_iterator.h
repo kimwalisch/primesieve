@@ -1,13 +1,13 @@
 /**
  *  @file   primesieve_iterator.h
  *  @brief  primesieve_iterator allows to easily iterate over primes
- *          both forwards and backwards. Note that generating the
- *          first prime uses O(n^0.5 log log n^0.5) operations, after
- *          that any additional prime is generated in amortized
- *          O(log n) operations. The memory usage is about
- *          pi(sqrt(n)) * 16 bytes. primesieve_iterator objects are
- *          very convenient to use at the cost of being slightly
- *          slower than the primesieve_callback_primes() functions.
+ *          both forwards and backwards. Generating the first prime
+ *          uses O(r log log r) operations with r = n^0.5, after that
+ *          any additional prime is generated in amortized
+ *          O(log n log log n) operations. The memory usage is about
+ *          pi(n^0.5) * 16 bytes. primesieve_iterator objects are very
+ *          convenient to use at the cost of being slightly slower than
+ *          the primesieve_callback_primes() functions.
  *        
  *          The @link primesieve_iterator.c primesieve_iterator.c
  *          @endlink example shows how to use primesieve_iterator. If
