@@ -21,12 +21,12 @@ uint64_t get_max_stop();
 
 /// Iterate over prime numbers.
 /// primesieve::iterator allows to easily iterate over primes both
-/// forwards and backwards. Note that generating the first prime uses
-/// O(n^0.5 log log n^0.5) operations, after that any additional
-/// prime is generated in amortized O(log n) operations. The memory
-/// usage is about pi(sqrt(n)) * 16 bytes. primesieve::iterator
-/// objects are very convenient to use at the cost of being slightly
-/// slower than the callback_primes() functions.
+/// forwards and backwards. Generating the first prime uses
+/// O(n^0.5 log n^0.5) operations, after that any additional prime is
+/// generated in amortized O(log n) operations. The memory usage is
+/// about pi(n^0.5) * 16 bytes. primesieve::iterator objects are very
+/// convenient to use at the cost of being slightly slower than the
+/// callback_primes() functions.
 ///
 class iterator
 {
