@@ -20,12 +20,13 @@ namespace primesieve {
 uint64_t get_max_stop();
 
 /// Iterate over prime numbers.
-/// The @link primesieve_iterator.cpp primesieve_iterator.cpp @endlink
-/// and @link previous_prime.cpp previous_prime.cpp @endlink examples
-/// show how to use primesieve::iterator objects.
-/// @note  primesieve::iterator objects are very convenient to use at
-///        the cost of being slightly slower than the
-///        callback_primes() functions.
+/// primesieve::iterator allows to easily iterate over primes both
+/// forwards and backwards. Note that generating the first prime uses
+/// O(n^0.5 log log n^0.5) operations, after that any additional
+/// prime is generated in amortized O(log n) operations. The memory
+/// usage is about pi(sqrt(n)) * 16 bytes. primesieve::iterator
+/// objects are very convenient to use at the cost of being slightly
+/// slower than the callback_primes() functions.
 ///
 class iterator
 {
