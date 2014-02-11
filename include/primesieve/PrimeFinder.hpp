@@ -39,7 +39,7 @@ private:
   void count(const byte_t*, uint_t);
   void print(const byte_t*, uint_t) const;
   template <typename T> void callbackPrimes(T, const byte_t*, uint_t) const;
-  template <typename T> void callbackPrimes(T, int, const byte_t*, uint_t) const;
+  template <typename T> void callbackPrimes(T, const byte_t*, uint_t, int) const;
   void callbackPrimes(const byte_t*, uint_t) const;
   static void printPrime(uint64_t);
   DISALLOW_COPY_AND_ASSIGN(PrimeFinder);

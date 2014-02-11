@@ -65,14 +65,16 @@ void PrimeGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
 ///
 void PrimeGenerator::generateSievingPrimes(const byte_t* sieve, uint_t sieveSize)
 {
+  uint64_t base = getSegmentLow();
   for (uint_t i = 0; i < sieveSize; i += 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
     while (bits != 0)
     {
-      uint_t prime = static_cast<uint_t>(getNextPrime(&bits, i));
+      uint_t prime = static_cast<uint_t>(getNextPrime(&bits, base));
       finder_.addSievingPrime(prime);
     }
+    base += NUMBERS_PER_BYTE * 8;
   }
 }
 

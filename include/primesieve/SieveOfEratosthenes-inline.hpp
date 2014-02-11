@@ -32,6 +32,11 @@ inline uint64_t SieveOfEratosthenes::getStop() const
   return stop_;
 }
 
+inline uint64_t SieveOfEratosthenes::getSegmentLow() const
+{
+  return segmentLow_;
+}
+
 inline uint_t SieveOfEratosthenes::getSieveSize() const
 {
   return sieveSize_;
@@ -40,15 +45,14 @@ inline uint_t SieveOfEratosthenes::getSieveSize() const
 /// Reconstruct the prime number corresponding to the first set
 /// bit of the `bits' parameter and unset that bit.
 ///
-inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint_t index) const
+inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint64_t base)
 {
   // calculate bitValues_[ bitScanForward(*bits) ]
   // using a custom De Bruijn bitscan
   uint64_t debruijn64 = UINT64_C(0x3F08A4C6ACB9DBD);
   uint64_t mask = *bits - 1;
   uint64_t bitValue = bruijnBitValues_[((*bits ^ mask) * debruijn64) >> 58];
-  uint64_t byteValue = index * NUMBERS_PER_BYTE;
-  uint64_t prime = segmentLow_ + byteValue + bitValue;
+  uint64_t prime = base + bitValue;
   *bits &= mask;
   return prime;
 }

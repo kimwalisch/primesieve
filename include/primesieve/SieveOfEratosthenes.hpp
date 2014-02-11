@@ -45,7 +45,8 @@ protected:
   SieveOfEratosthenes(uint64_t, uint64_t, uint_t);
   virtual ~SieveOfEratosthenes();
   virtual void segmentFinished(const byte_t*, uint_t) = 0;
-  uint64_t getNextPrime(uint64_t*, uint_t) const;
+  static uint64_t getNextPrime(uint64_t*, uint64_t);
+  uint64_t getSegmentLow() const;
 private:
   static const uint_t bitValues_[8];
   static const uint_t bruijnBitValues_[64];

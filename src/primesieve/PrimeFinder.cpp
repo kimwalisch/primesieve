@@ -96,44 +96,60 @@ void PrimeFinder::segmentFinished(const byte_t* sieve, uint_t sieveSize)
 template <typename T>
 inline void PrimeFinder::callbackPrimes(T callback, const byte_t* sieve, uint_t sieveSize) const
 {
-  for (uint_t i = 0; i < sieveSize; i += 8)
+  uint64_t base = getSegmentLow();
+  for (uint_t i = 0; i < sieveSize; i += 8, base += NUMBERS_PER_BYTE * 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
     while (bits != 0)
-      callback(getNextPrime(&bits, i));
+    {
+      uint64_t prime = getNextPrime(&bits, base);
+      callback(prime);
+    }
   }
 }
 
 template <>
 inline void PrimeFinder::callbackPrimes(Callback<uint64_t>* cobj, const byte_t* sieve, uint_t sieveSize) const
 {
-  for (uint_t i = 0; i < sieveSize; i += 8)
+  uint64_t base = getSegmentLow();
+  for (uint_t i = 0; i < sieveSize; i += 8, base += NUMBERS_PER_BYTE * 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
     while (bits != 0)
-      cobj->callback(getNextPrime(&bits, i));
+    {
+      uint64_t prime = getNextPrime(&bits, base);
+      cobj->callback(prime);
+    }
   }
 }
 
 template <typename T>
-inline void PrimeFinder::callbackPrimes(T callback, int threadNum, const byte_t* sieve, uint_t sieveSize) const
+inline void PrimeFinder::callbackPrimes(T callback, const byte_t* sieve, uint_t sieveSize, int threadNum) const
 {
-  for (uint_t i = 0; i < sieveSize; i += 8)
+  uint64_t base = getSegmentLow();
+  for (uint_t i = 0; i < sieveSize; i += 8, base += NUMBERS_PER_BYTE * 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
     while (bits != 0)
-      callback(getNextPrime(&bits, i), threadNum);
+    {
+      uint64_t prime = getNextPrime(&bits, base);
+      callback(prime, threadNum);
+    }
   }
 }
 
 template <>
-inline void PrimeFinder::callbackPrimes(Callback<uint64_t, int>* cobj_tn, int threadNum, const byte_t* sieve, uint_t sieveSize) const
+inline void PrimeFinder::callbackPrimes(Callback<uint64_t, int>* cobj, const byte_t* sieve, uint_t sieveSize, int threadNum) const
 {
-  for (uint_t i = 0; i < sieveSize; i += 8)
+  uint64_t base = getSegmentLow();
+  for (uint_t i = 0; i < sieveSize; i += 8, base += NUMBERS_PER_BYTE * 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
     while (bits != 0)
-      cobj_tn->callback(getNextPrime(&bits, i), threadNum);
+    {
+      uint64_t prime = getNextPrime(&bits, base);
+      cobj->callback(prime, threadNum);
+    }
   }
 }
 
@@ -143,11 +159,11 @@ inline void PrimeFinder::callbackPrimes(Callback<uint64_t, int>* cobj_tn, int th
 void PrimeFinder::callbackPrimes(const byte_t* sieve, uint_t sieveSize) const
 {
   if (ps_.isFlag(ps_.CALLBACK_PRIMES_OBJ))    { LockGuard lock(ps_); callbackPrimes(ps_.cobj_, sieve, sieveSize); }
-  if (ps_.isFlag(ps_.CALLBACK_PRIMES_OBJ_TN)) { /* No Locking */     callbackPrimes(ps_.cobj_tn_, ps_.threadNum_, sieve, sieveSize); }
+  if (ps_.isFlag(ps_.CALLBACK_PRIMES_OBJ_TN)) { /* No Locking */     callbackPrimes(ps_.cobj_tn_, sieve, sieveSize, ps_.threadNum_); }
   if (ps_.isFlag(ps_.CALLBACK_PRIMES))        { LockGuard lock(ps_); callbackPrimes(ps_.callback_, sieve, sieveSize); }
-  if (ps_.isFlag(ps_.CALLBACK_PRIMES_TN))     { /* No Locking */     callbackPrimes(ps_.callback_tn_, ps_.threadNum_, sieve, sieveSize); }
+  if (ps_.isFlag(ps_.CALLBACK_PRIMES_TN))     { /* No Locking */     callbackPrimes(ps_.callback_tn_, sieve, sieveSize, ps_.threadNum_); }
   if (ps_.isFlag(ps_.CALLBACK_PRIMES_C))      { LockGuard lock(ps_); callbackPrimes(reinterpret_cast<callback_c_t>(ps_.callback_), sieve, sieveSize); }
-  if (ps_.isFlag(ps_.CALLBACK_PRIMES_C_TN))   { /* No Locking */     callbackPrimes(reinterpret_cast<callback_c_tn_t>(ps_.callback_tn_), ps_.threadNum_, sieve, sieveSize); }
+  if (ps_.isFlag(ps_.CALLBACK_PRIMES_C_TN))   { /* No Locking */     callbackPrimes(reinterpret_cast<callback_c_tn_t>(ps_.callback_tn_), sieve, sieveSize, ps_.threadNum_); }
 }
 
 /// Count the primes and prime k-tuplets within
