@@ -1,9 +1,9 @@
 /// @mainpage
 /// @section About
 ///
-/// primesieve is a C/C++ library for fast prime number generation.
-/// Its repository is hosted on GitHub: 
-/// https://github.com/kimwalisch/primesieve.
+/// primesieve is a C/C++ library for fast prime number generation,
+/// http://primesieve.org/build.html explains how to build and install
+/// primesieve.
 ///
 /// primesieve is written in C++03 and includes C bindings for all of
 /// its functions so that it can easily be used in languages other
@@ -15,10 +15,10 @@
 /// primesieve generates primes using a highly optimized
 /// implementation of the segmented sieve of Eratosthenes. It
 /// generates the primes below 10^9 in just 0.2 seconds on a single
-/// core of an Intel Core i7-4770 CPU from 2013. primesieve can
-/// generate primes up to 2^64 - 2^32 * 10. primesieve's memory
-/// requirement is about pi(sqrt(n)) * 8 bytes per thread (pi(x) is
-/// the prime counting function).
+/// core of an Intel Core i7-4770 3.4GHz CPU from 2013. primesieve can
+/// generate primes and prime k-tuplets up to 2^64 - 2^32 * 10.
+/// primesieve's memory requirement is about pi(sqrt(n)) * 8 bytes per
+/// thread, its run-time complexity is O(n log log n) operations.
 ///
 /// @section CPP_API C++ API
 ///
