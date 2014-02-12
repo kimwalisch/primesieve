@@ -17,8 +17,8 @@ CPU from 2013. primesieve can generate primes and
 primesieve generates primes using the segmented sieve of Eratosthenes
 with <a href="http://en.wikipedia.org/wiki/Wheel_factorization">wheel
 factorization</a>, this algorithm has a complexity of O(n log log n)
-operations and uses O(sqrt(n)) space. primesieve's memory requirement
-per thread is about pi(sqrt(n)) * 8 bytes.
+operations and uses O(n^0.5) space. primesieve's memory requirement
+per thread is about pi(n^0.5) * 8 bytes.
 
 ### Requirements
 primesieve is written in C++03 and includes C bindings for all of its
