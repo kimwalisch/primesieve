@@ -39,7 +39,7 @@ void iterator::skipto(uint64_t start, uint64_t stop_hint)
   stop_hint_ = stop_hint;
   i_ = 0;
   last_idx_ = 0;
-  count_ = 0;
+  tiny_cache_size_ = 1 << 11;
   primes_.clear();
 }
 
@@ -103,12 +103,19 @@ void iterator::generate_previous_primes()
 ///
 uint64_t iterator::get_interval_size(uint64_t n)
 {
-  double x = std::max(static_cast<double>(n), 10.0);
+  n = (n > 10) ? n : 10;
+  uint64_t cache_size = config::ITERATOR_CACHE_SMALL;
+  if (tiny_cache_size_ < cache_size)
+  {
+    cache_size = tiny_cache_size_;
+    tiny_cache_size_ *= 2;
+  }
+
+  double x = static_cast<double>(n);
   double sqrtx = std::sqrt(x);
   uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (std::log(sqrtx) - 1));
-  uint64_t cache_bytes = (count_++ < 10) ? 1024 << count_ : config::ITERATOR_CACHE_SMALL;
-  uint64_t cache_primes = cache_bytes / sizeof(uint64_t);
-  uint64_t cache_max_primes = config::ITERATOR_CACHE_LARGE / sizeof(uint64_t);
+  uint64_t cache_primes = cache_size / sizeof(uint64_t);
+  uint64_t cache_max_primes = config::ITERATOR_CACHE_MAX / sizeof(uint64_t);
   uint64_t primes = std::min(std::max(cache_primes, sqrtx_primes), cache_max_primes);
 
   return static_cast<uint64_t>(primes * std::log(x));

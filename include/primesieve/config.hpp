@@ -102,13 +102,13 @@ enum {
   /// primesieve::iterator objects cache up to ITERATOR_CACHE_SMALL
   /// bytes of primes when generating primes below 10^10. Either
   /// L3_CACHE_SIZE or L3_CACHE_SIZE / 2 are good values.
-  //
+  ///
   ITERATOR_CACHE_SMALL = (1 << 20) * 4,
 
-  /// primesieve::iterator objects cache ITERATOR_CACHE_LARGE bytes
-  /// of primes for large start and stop numbers.
-  //
-  ITERATOR_CACHE_LARGE = (1 << 20) * 512
+  /// primesieve::iterator maximum cache size (in bytes), used if
+  /// pi(sqrt(n)) * 8 bytes > ITERATOR_CACHE_MAX.
+  ///
+  ITERATOR_CACHE_MAX = (1 << 20) * 512
 };
 
   /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)

@@ -45,14 +45,21 @@ uint64_t subtract_underflow_safe(uint64_t a, uint64_t b)
 /// Calculate an interval size that ensures a good load balance.
 /// @param n  Start or stop number.
 ///
-uint64_t get_interval_size(primesieve_iterator* pi, uint64_t n)
+uint64_t get_interval_size(uint64_t n, uint64_t& tiny_cache_size)
 {
-  double x = std::max(static_cast<double>(n), 10.0);
+  n = (n > 10) ? n : 10;
+  uint64_t cache_size = config::ITERATOR_CACHE_SMALL;
+  if (tiny_cache_size < cache_size)
+  {
+    cache_size = tiny_cache_size;
+    tiny_cache_size *= 2;
+  }
+
+  double x = static_cast<double>(n);
   double sqrtx = std::sqrt(x);
   uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (std::log(sqrtx) - 1));
-  uint64_t cache_bytes = (pi->count_++ < 10) ? 1024 << pi->count_ : config::ITERATOR_CACHE_SMALL;
-  uint64_t cache_primes = cache_bytes / sizeof(uint64_t);
-  uint64_t cache_max_primes = config::ITERATOR_CACHE_LARGE / sizeof(uint64_t);
+  uint64_t cache_primes = cache_size / sizeof(uint64_t);
+  uint64_t cache_max_primes = config::ITERATOR_CACHE_MAX / sizeof(uint64_t);
   uint64_t primes = std::min(std::max(cache_primes, sqrtx_primes), cache_max_primes);
 
   return static_cast<uint64_t>(primes * std::log(x));
@@ -86,7 +93,7 @@ void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hi
   pi->stop_hint_ = stop_hint;
   pi->i_ = 0;
   pi->last_idx_ = 0;
-  pi->count_ = 0;
+  pi->tiny_cache_size_ = 1 << 11;
   pi->is_error_ = false;
 }
 
@@ -106,7 +113,7 @@ void primesieve_generate_next_primes(primesieve_iterator* pi)
         if (!first)
           pi->start_ = add_overflow_safe(pi->stop_, 1);
         first = false;
-        pi->stop_ = add_overflow_safe(pi->start_, get_interval_size(pi, pi->start_));
+        pi->stop_ = add_overflow_safe(pi->start_, get_interval_size(pi->start_, pi->tiny_cache_size_));
         if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
           pi->stop_ = add_overflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
         primesieve::generate_primes(pi->start_, pi->stop_, &primes);
@@ -144,7 +151,7 @@ void primesieve_generate_previous_primes(primesieve_iterator* pi)
         if (!first)
           pi->stop_ = subtract_underflow_safe(pi->start_, 1);
         first = false;
-        pi->start_ = subtract_underflow_safe(pi->stop_, get_interval_size(pi, pi->stop_));
+        pi->start_ = subtract_underflow_safe(pi->stop_, get_interval_size(pi->stop_, pi->tiny_cache_size_));
         if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
           pi->start_ = subtract_underflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
         primesieve::generate_primes(pi->start_, pi->stop_, &primes);

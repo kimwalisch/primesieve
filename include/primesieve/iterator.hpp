@@ -84,7 +84,7 @@ private:
   uint64_t start_;
   uint64_t stop_;
   uint64_t stop_hint_;
-  uint64_t count_;
+  uint64_t tiny_cache_size_;
   uint64_t get_interval_size(uint64_t);
   void generate_primes(uint64_t, uint64_t);
   void generate_next_primes();

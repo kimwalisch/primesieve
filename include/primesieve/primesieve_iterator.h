@@ -43,7 +43,7 @@ typedef struct
   uint64_t start_;
   uint64_t stop_;
   uint64_t stop_hint_;
-  uint64_t count_;
+  uint64_t tiny_cache_size_;
   int is_error_;
 } primesieve_iterator;
 
