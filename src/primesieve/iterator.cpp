@@ -24,11 +24,6 @@ iterator::iterator(uint64_t start, uint64_t stop_hint)
   skipto(start, stop_hint);
 }
 
-void iterator::clear()
-{
-  skipto(0);
-}
-
 void iterator::skipto(uint64_t start, uint64_t stop_hint)
 {
   if (start_ > get_max_stop())
