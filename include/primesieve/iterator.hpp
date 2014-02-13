@@ -55,9 +55,6 @@ public:
   ///
   void skipto(uint64_t start, uint64_t stop_hint = get_max_stop());
 
-  /// Free all memory, same as skipto(0).
-  void clear();
-
   /// Advance the iterator by one position.
   /// @return  The next prime.
   ///
