@@ -18,7 +18,6 @@
 #include <cerrno>
 #include <cmath>
 #include <vector>
-#include <limits>
 
 using namespace primesieve;
 
