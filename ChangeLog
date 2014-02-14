@@ -1,7 +1,7 @@
-Changes in version 5.1, 13/02/2014
+Changes in version 5.1, 14/02/2014
 ==================================
 
-primesieve-5.1 is minor new release with mostly bug fixes. There is
+primesieve-5.1 is a minor new release with mostly bug fixes. There is
 also one API change in the C bindings documented further down.
 
 1. <primesieve.hpp> and <primesieve.h> are now compatible with
