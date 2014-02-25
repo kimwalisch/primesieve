@@ -153,11 +153,11 @@ optimizations used in primesieve:</p>
 <ul>
   <li>Uses a bit array with 8 flags each 30 numbers for sieving</li>
   <li>Pre-sieves multiples of small primes ≤ 19</li>
-  <li>The sieving primes are being compressed to improve cache efficiency [6]</li>
+  <li>Compresses the sieving primes in order to improve cache efficiency [6]</li>
   <li>Starts crossing off multiples at the square</li>
   <li>Uses a modolo 210 wheel that skips multiples of 2, 3, 5 and 7</li>
   <li>Uses specialized algorithms for small, medium and big sieving primes</li>
-  <li>Two sieving primes are processed per loop iteration to increase instruction-level parallelism</li>
+  <li>Processes two sieving primes per loop iteration to increase instruction-level parallelism</li>
   <li>Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
 </ul>
 <p>This
