@@ -309,6 +309,13 @@ form {
   margin-left: -1.28em; /* OS X workaround */
 }
 
+#main-content h2.chrome_bug_workaround:before {
+  content: "//";
+  color: #9ddcff;
+  padding-right: 0.3em;
+  margin-left: -1.0em;
+}
+
 #main-content h3 {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 18px;
