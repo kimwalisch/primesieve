@@ -297,16 +297,16 @@ form {
 #main-content h2:before {
   content: "//";
   color: #9ddcff;
-  padding-right: 0.3em;
-  margin-left: -1.165em;
+  padding-right: 0.2em;
+  margin-left: -1.065em;
 }
 
 /* Slightly less margin-left for characters like A, S, T, ... */
 #main-content h2.align2:before {
   content: "//";
   color: #9ddcff;
-  padding-right: 0.3em;
-  margin-left: -1.115em;
+  padding-right: 0.2em;
+  margin-left: -1.015em;
 }
 
 #main-content h3 {
