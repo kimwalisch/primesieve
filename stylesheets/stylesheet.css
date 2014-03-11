@@ -223,7 +223,7 @@ pre {
   background: #fff;
   text-shadow: none;
   overflow: auto;
-  border: solid 1px #d9d9d9;
+  border: solid 1px #d3d3d3;
 }
 pre code {
   color: #2879d0;
@@ -250,7 +250,7 @@ hr {
 
 table {
   width: 100%;
-  border: 1px solid #ebebeb;
+  border: 1px solid #cccccc;
 }
 
 th {
@@ -258,7 +258,7 @@ th {
 }
 
 td {
-  border: 1px solid #d9d9d9;
+  border: 1px solid #cccccc;
   text-align: center; 
   font-weight: 300;
 }
