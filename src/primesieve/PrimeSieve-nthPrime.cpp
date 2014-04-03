@@ -47,10 +47,11 @@ uint64_t nthPrimeDistance(uint64_t n, uint64_t start, int direction = 1, double 
   double pix = x * log(x);
   double log1 = log(max(1.0, s / pix));
   double log2 = log(max(1.0, s + x * max(1.0, log1) * direction));
+  double loglog2 = log(max(1.0, log2));
   double dist = x * log2;
 
   // Make sure start + dist <= nth prime
-  dist += sqrt(dist) * (log(max(1.0, log2)) + 3.0) * -direction;
+  dist += sqrt(dist) * (loglog2 + 3.0) * -direction;
   dist = max(1E4, dist) * factor;
 
   return static_cast<uint64_t>(dist);
