@@ -37,22 +37,23 @@ uint64_t nthPrimeDistance(uint64_t n, uint64_t start, int direction = 1, double 
   double x = static_cast<double>(n);
   double s = static_cast<double>(start);
 
-  // Avoids log log x < 1
+  // Avoids log(0) = NaN
   x = max(10.0, x);
+  s = max(10.0, s);
 
   // For a given x and start find dist such that
   // start + dist ~= nthPrime(x).
-  // Uses a combination of the 3 formulas
-  // x * log(x), x * (log x + log log x - 1)
-  // and x * log(start)
-  double nthPrimeGuess = x * (log(x) + log(log(x)) - 1);
-  double log1 = log(max(1.0, s / nthPrimeGuess));
-  double log2 = log(max(1.0, s + x * max(1.0, log1) * direction));
-  double loglog2 = log(max(1.0, log2));
-  double dist = max(nthPrimeGuess, x * log2);
+  // Uses a combination of the 2 formulas
+  // x * (log x + log log x - 1) and x * log(start)
+  //
+  double logx = log(x);
+  double loglogx = log(logx);
+  double pix = x * (logx + loglogx - 1);
+  double logStartPix = log(max(10.0, s + pix / loglogx * direction));
+  double dist = max(pix, x * logStartPix);
 
   // Make sure start + dist <= nth prime
-  dist += sqrt(dist) * (loglog2 + 3.0) * -direction;
+  dist += sqrt(dist) * log(logStartPix) * 2.0 * -direction;
   dist = max(1E4, dist) * factor;
 
   return static_cast<uint64_t>(dist);
