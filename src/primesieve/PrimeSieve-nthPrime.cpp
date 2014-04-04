@@ -37,18 +37,19 @@ uint64_t nthPrimeDistance(uint64_t n, uint64_t start, int direction = 1, double 
   double x = static_cast<double>(n);
   double s = static_cast<double>(start);
 
-  // Avoids log(x) < 1
-  x = max(3.0, x);
+  // Avoids log log x < 1
+  x = max(10.0, x);
 
-  // For a given x find dist such that:
-  // count_primes(start, start + dist) ~= x
-  // This code uses a combination of the two formulas
-  // x * log(x) and x * log(start)
-  double pix = x * log(x);
-  double log1 = log(max(1.0, s / pix));
+  // For a given x and start find dist such that
+  // start + dist ~= nthPrime(x).
+  // Uses a combination of the 3 formulas
+  // x * log(x), x * (log x + log log x - 1)
+  // and x * log(start)
+  double nthPrimeGuess = x * (log(x) + log(log(x)) - 1);
+  double log1 = log(max(1.0, s / nthPrimeGuess));
   double log2 = log(max(1.0, s + x * max(1.0, log1) * direction));
   double loglog2 = log(max(1.0, log2));
-  double dist = x * log2;
+  double dist = max(nthPrimeGuess, x * log2);
 
   // Make sure start + dist <= nth prime
   dist += sqrt(dist) * (loglog2 + 3.0) * -direction;
@@ -151,7 +152,7 @@ uint64_t PrimeSieve::nthPrime(uint64_t n, uint64_t start)
 
   // Sieve the small remaining distance in arithmetic
   // order using a single thread
-  dist = nthPrimeDistance(n - count, start, /* forwards */ 1, /* safety factor */ 1.5);
+  dist = nthPrimeDistance(n - count, start, 1, /* safety factor */ 1.5);
   checkLimit(start, dist);
   stop = start + dist;
   NthPrime np;
