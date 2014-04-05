@@ -86,6 +86,7 @@ td.timing_title {
 	text-align: center;
 	font-weight: bold;
 	padding: 6px 12px;
+	color: #454545;
 }
 
 span.cpu_details {
