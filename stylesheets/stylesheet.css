@@ -70,7 +70,7 @@ body {
   background: #fafafa url(../images/body-bg.jpg) 0 0 repeat;
   font-family: 'Helvetica Neue', Helvetica, Arial, serif;
   font-weight: 400;
-  color: #373737;
+  color: #303030;
 }
 
 li {
@@ -101,10 +101,11 @@ li.hide_overflow {
 }
 
 a {
-  color: #2879d0;
+  color: #2476BD;
 }
+
 a:hover {
-  color: #2268b2;
+  color: #1F5EA0;
 }
 
 header {
@@ -281,7 +282,7 @@ form {
 
 #main-content h1:before {
   content: "/";
-  color: #9ddcff;
+  color: #9CD6FF;
   padding-right: 0.3em;
   margin-left: -0.9em;
 }
@@ -296,7 +297,7 @@ form {
 
 #main-content h2:before {
   content: "//";
-  color: #9ddcff;
+  color: #9CD6FF;
   padding-right: 0.2em;
   margin-left: -1.065em;
 }
@@ -304,7 +305,7 @@ form {
 /* Slightly less margin-left for characters like A, S, T, ... */
 #main-content h2.align2:before {
   content: "//";
-  color: #9ddcff;
+  color: #9CD6FF;
   padding-right: 0.2em;
   margin-left: -1.015em;
 }
@@ -320,7 +321,7 @@ form {
  
 #main-content h3:before {
   content: "///";
-  color: #9ddcff;
+  color: #9CD6FF;
   padding-right: 0.3em;
   margin-left: -1.7em;
 }
@@ -334,7 +335,7 @@ form {
 
 h4:before {
   content: "////";
-  color: #9ddcff;
+  color: #9CD6FF;
   padding-right: 0.3em;
   margin-left: -2.8em;
 }
@@ -346,7 +347,7 @@ h4:before {
 } 
 h5:before {
   content: "/////";
-  color: #9ddcff;
+  color: #9CD6FF;
   padding-right: 0.3em;
   margin-left: -3.2em;
 }
@@ -358,7 +359,7 @@ h5:before {
 } 
 h6:before {
   content: "//////";
-  color: #9ddcff;
+  color: #9CD6FF;
   padding-right: 0.3em;
   margin-left: -3.7em;
 }
@@ -407,7 +408,7 @@ footer {
 }
 
 footer a {
-  color: #373737;
+  color: #303030;
 }
 footer a:hover {
   color: #444;
@@ -492,7 +493,7 @@ footer a:hover {
     text-align: center;
     font-size: 13px;
     line-height: 1;
-    background-color: #9ddcff;
+    background-color: #9CD6FF;
     color: #2879d0;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;                     
