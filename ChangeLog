@@ -1,9 +1,12 @@
-Changes in version 5.2, 03/04/2014
-==================================
+Changes in version 5.2-beta1, 06/04/2014
+========================================
 
-Work in progress.
+This is a beta version of primesieve-5.2.
 
-1. Faster nth prime implementation. More accurate guessing of the nth
+1. Added backwards nth prime search, if n < 0 
+   primesieve::nth_prime(int64_t n, uint64_t start);
+   will find the nth prime preceding start.
+2. Faster nth prime implementation. More accurate guessing of the nth
    prime gives up to 20% speed up if n < 10^8.
 
 Changes in version 5.1, 14/02/2014
