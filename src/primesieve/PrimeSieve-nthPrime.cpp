@@ -10,9 +10,6 @@
 #include <primesieve/config.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/SieveOfEratosthenes.hpp>
-#include <primesieve/Callback.hpp>
-#include <primesieve/cancel_callback.hpp>
-#include <primesieve/primesieve_error.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve.hpp>
 
@@ -72,7 +69,7 @@ uint64_t nthPrimeDistance(int64_t n, uint64_t start, int64_t direction = 1)
   double loglogx = log(logx);
   double pix = x * (logx + loglogx - 1);
 
-  // Correct s if sieving backwards
+  // Correct start if sieving backwards
   if (direction < 0)
     s -= pix;
 
