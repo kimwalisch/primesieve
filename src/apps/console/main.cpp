@@ -3,7 +3,7 @@
 /// @brief  This file contains the main() function of the primesieve
 ///         console (terminal) application.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -61,15 +61,7 @@ int main(int argc, char** argv)
 
   try
   {
-    // needed to print the number of threads
-    if (options.nthPrime)
-    {
-      if (options.n.size() == 1)
-        options.n.push_back(0);
-      pps.setStart(options.n[1]);
-      pps.setStop(options.n[1] + options.n[0] * 30);
-    }
-    else
+    if (!options.nthPrime)
     {
       if (options.n.size() == 1)
         options.n.push_front(0);
@@ -82,7 +74,7 @@ int main(int argc, char** argv)
     if (options.threads   != 0) pps.setNumThreads(options.threads);
     else if (pps.isPrint())     pps.setNumThreads(1);
 
-    if (!options.quiet)
+    if (!options.quiet && !options.nthPrime)
     {
       cout << "Sieve size = " << pps.getSieveSize() << " kilobytes" << endl;
       cout << "Threads    = " << pps.getNumThreads() << endl;
@@ -92,7 +84,8 @@ int main(int argc, char** argv)
 
     if (options.nthPrime)
     {
-      uint64_t nthPrime = pps.nthPrime(options.n[0], options.n[1]);
+      uint64_t start = (options.n.size() > 1) ? options.n[1] : 0;
+      uint64_t nthPrime = pps.nthPrime(options.n[0], start);
       cout << "Nth prime    : " << nthPrime << endl;
       cout << "Time elapsed : " << pps.getSeconds() << " sec" << endl;
     }
