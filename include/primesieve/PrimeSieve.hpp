@@ -88,7 +88,7 @@ public:
   void callbackPrimes_c(uint64_t, uint64_t, void (*)(uint64_t, int));
   // nth prime
   uint64_t nthPrime(uint64_t);
-  uint64_t nthPrime(uint64_t, uint64_t);
+  uint64_t nthPrime(int64_t, uint64_t);
   // Print
   void printPrimes(uint64_t, uint64_t);
   void printTwins(uint64_t, uint64_t);

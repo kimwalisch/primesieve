@@ -78,18 +78,22 @@ void* primesieve_generate_primes(uint64_t start, uint64_t stop, size_t* size, in
 void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type);
 
 /** Find the nth prime.
- *  @param start Start nth prime search at this offset.
+ *  @param n  if n > 0 finds the nth prime >= start,
+ *            if n < 0 finds the nth prime <= start (backwards).
+ *  @param start  Start nth prime search at this offset.
  *  @pre   start <= 2^64 - 2^32 * 10.
  */
-uint64_t primesieve_nth_prime(uint64_t n, uint64_t start);
+uint64_t primesieve_nth_prime(int64_t n, uint64_t start);
 
 /** Find the nth prime in parallel.
  *  By default all CPU cores are used, use
  *  primesieve_set_num_threads(int) to change the number of threads.
+ *  @param n  if n > 0 finds the nth prime >= start,
+ *            if n < 0 finds the nth prime <= start (backwards).
  *  @param start  Start nth prime search at this offset.
  *  @pre   start <= 2^64 - 2^32 * 10.
  */
-uint64_t primesieve_parallel_nth_prime(uint64_t n, uint64_t start);
+uint64_t primesieve_parallel_nth_prime(int64_t n, uint64_t start);
 
 /** Count the primes within the interval [start, stop].
  *  @pre stop <= 2^64 - 2^32 * 10.

@@ -92,19 +92,23 @@ namespace primesieve
   }
 
   /// Find the nth prime.
+  /// @param n  if n > 0 finds the nth prime >= start,
+  ///           if n < 0 finds the nth prime <= start (backwards).
   /// @param start Start nth prime search at this offset.
   /// @pre   start <= 2^64 - 2^32 * 10.
   ///
-  uint64_t nth_prime(uint64_t n, uint64_t start = 0);
+  uint64_t nth_prime(int64_t n, uint64_t start = 0);
 
   /// Find the nth prime in parallel.
   /// By default all CPU cores are used, use
   /// primesieve::set_num_threads(int) to change the number of
   /// threads.
+  /// @param n  if n > 0 finds the nth prime >= start,
+  ///           if n < 0 finds the nth prime <= start (backwards).
   /// @param start Start nth prime search at this offset.
   /// @pre   start <= 2^64 - 2^32 * 10.
   ///
-  uint64_t parallel_nth_prime(uint64_t n, uint64_t start = 0);
+  uint64_t parallel_nth_prime(int64_t n, uint64_t start = 0);
 
   /// Count the primes within the interval [start, stop].
   /// @pre stop <= 2^64 - 2^32 * 10.

@@ -185,7 +185,7 @@ void primesieve_free(void* primes_c)
 //                     Nth prime functions
 //////////////////////////////////////////////////////////////////////
 
-uint64_t primesieve_nth_prime(uint64_t n, uint64_t start)
+uint64_t primesieve_nth_prime(int64_t n, uint64_t start)
 {
   try
   {
@@ -200,7 +200,7 @@ uint64_t primesieve_nth_prime(uint64_t n, uint64_t start)
   return PRIMESIEVE_ERROR;
 }
 
-uint64_t primesieve_parallel_nth_prime(uint64_t n, uint64_t start)
+uint64_t primesieve_parallel_nth_prime(int64_t n, uint64_t start)
 {
   try
   {

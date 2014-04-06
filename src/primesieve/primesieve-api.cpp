@@ -38,14 +38,14 @@ namespace primesieve
 //                     Nth prime functions
 //////////////////////////////////////////////////////////////////////
 
-uint64_t nth_prime(uint64_t n, uint64_t start)
+uint64_t nth_prime(int64_t n, uint64_t start)
 {
   PrimeSieve ps;
   ps.setSieveSize(get_sieve_size());
   return ps.nthPrime(n, start);
 }
 
-uint64_t parallel_nth_prime(uint64_t n, uint64_t start)
+uint64_t parallel_nth_prime(int64_t n, uint64_t start)
 {
   ParallelPrimeSieve pps;
   pps.setSieveSize(get_sieve_size());

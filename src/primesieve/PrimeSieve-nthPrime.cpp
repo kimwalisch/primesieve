@@ -14,6 +14,7 @@
 #include <primesieve/cancel_callback.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -21,40 +22,67 @@
 
 namespace {
 
+using namespace primesieve;
 using namespace std;
 
-uint64_t pixGuess(uint64_t stop)
+void checkLimit(uint64_t start, uint64_t dist)
 {
-  double x = static_cast<double>(stop);
-  double logx = log(max(3.0, x));
-  double pix = x / logx;
-
-  return static_cast<uint64_t>(pix);
+  if (dist > get_max_stop() - start)
+    throw primesieve_error("nth prime is too large > 2^64 - 2^32 * 11");
 }
 
-uint64_t nthPrimeDistance(uint64_t n, uint64_t start, int direction = 1, double factor = 1.0)
+void checkLowerLimit(uint64_t stop)
+{
+  if (stop == 0)
+    throw primesieve_error("nth prime < 2 is impossible, negative n is too small");
+}
+
+void checkLowerLimit(uint64_t start, double dist)
+{
+  double s = static_cast<double>(start);
+  s = max(1E4, s);
+  if (s / dist < 0.9)
+    throw primesieve_error("nth prime < 2 is impossible, negative n is too small");
+}
+
+int64_t pix(int64_t n)
+{
+  double x = static_cast<double>(n);
+  double logx = log(max(4.0, x));
+  double pix = x / logx;
+
+  return static_cast<int64_t>(pix);
+}
+
+uint64_t nthPrimeDistance(int64_t n, uint64_t start, int64_t direction = 1)
 {
   double x = static_cast<double>(n);
   double s = static_cast<double>(start);
 
-  // Avoids log(0) = NaN
-  x = max(10.0, x);
-  s = max(10.0, s);
+  x = abs(x);
+  x = max(4.0, x);
+  s = max(4.0, s);
 
-  // For a given x and start find dist such that
-  // start + dist ~= nthPrime(x).
-  // Uses a combination of the 2 formulas
-  // x * (log x + log log x - 1) and x * log(start)
-  //
   double logx = log(x);
   double loglogx = log(logx);
   double pix = x * (logx + loglogx - 1);
-  double logStartPix = log(max(10.0, s + pix / loglogx * direction));
+
+  // Correct s if sieving backwards
+  if (direction < 0)
+    s -= pix;
+
+  // Approximate the nth prime using
+  // start + n * log(start + pi(n) / log log n))
+  double logStartPix = log(max(4.0, s + pix / loglogx));
   double dist = max(pix, x * logStartPix);
+  double maxPrimeGap = logStartPix * logStartPix;
 
   // Make sure start + dist <= nth prime
   dist += sqrt(dist) * log(logStartPix) * 2.0 * -direction;
-  dist = max(1E4, dist) * factor;
+  dist = max(dist, maxPrimeGap);
+
+  if (direction < 0)
+    checkLowerLimit(start, dist);
 
   return static_cast<uint64_t>(dist);
 }
@@ -81,10 +109,9 @@ void NthPrime::findNthPrime(uint64_t n, uint64_t start, uint64_t stop)
 {
   n_ = n;
   PrimeSieve ps;
-  uint64_t maxStop = SieveOfEratosthenes::getMaxStop();
   try {
     ps.callbackPrimes(start, stop, this);
-    ps.callbackPrimes(stop + 1, maxStop, this);
+    ps.callbackPrimes(stop + 1, get_max_stop(), this);
     throw primesieve_error("nth prime is too large > 2^64 - 2^32 * 11");
   }
   catch (cancel_callback&) { }
@@ -104,56 +131,50 @@ void NthPrime::callback(uint64_t prime)
   }
 }
 
-void checkLimit(uint64_t start, uint64_t dist)
-{
-  uint64_t maxStop = SieveOfEratosthenes::getMaxStop();
-  if (maxStop - start < dist)
-    throw primesieve_error("nth prime is too large > 2^64 - 2^32 * 11");
-}
-
 uint64_t PrimeSieve::nthPrime(uint64_t n)
 {
   return nthPrime(0, n);
 }
 
-uint64_t PrimeSieve::nthPrime(uint64_t n, uint64_t start)
+uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 {
-  if (n < 1)
+  if (n == 0)
     return 0;
 
   setStart(start);
   double t1 = getWallTime();
 
-  uint64_t stop = start + nthPrimeDistance(n, start);
-  uint64_t bruteForceMin = 10000;
-  uint64_t bruteForceThreshold = std::max(pixGuess(isqrt(stop)), bruteForceMin);
-  uint64_t count = 0;
-  uint64_t dist = 0;
+  uint64_t stop = start;
+  uint64_t dist = nthPrimeDistance(n, start);
+  uint64_t nthPrimeGuess = start + dist;
 
-  // Count the primes up to an approximate nth prime, this step is
-  // multi-threaded if ParallelPrimeSieve is used
-  while (count < n && (n - count) > bruteForceThreshold)
+  int64_t pixSqrtNthPrime = pix(isqrt(nthPrimeGuess));
+  int64_t count = 0;
+  int64_t bruteForceMin = 10000;
+  int64_t bruteForceThreshold = std::max(bruteForceMin, pixSqrtNthPrime);
+
+  while (count >= n || (n - count) > bruteForceThreshold)
   {
-    dist = nthPrimeDistance(n - count, start);
-    checkLimit(start, dist);
-    stop = start + dist;
-    count += countPrimes(start, stop);
-    start = stop + 1;
+    if (count < n)
+    {
+      dist = nthPrimeDistance(n - count, start);
+      checkLimit(start, dist);
+      stop = start + dist;
+      count += countPrimes(start, stop);
+      start = stop + 1;
+    }
+    if (count >= n)
+    {
+      checkLowerLimit(stop);
+      dist = nthPrimeDistance(count - n, stop, /* backwards */ -1);
+      start = (start > dist) ? start - dist : 1;
+      count -= countPrimes(start, stop);
+      stop = start - 1;
+    }
   }
 
-  // Go back
-  while (count >= n)
-  {
-    dist = nthPrimeDistance(count - n, start, /* backwards */ -1);
-    dist = std::min(dist, stop);
-    start = stop - dist;
-    count -= countPrimes(start, stop);
-    stop = start - 1;
-  }
-
-  // Sieve the small remaining distance in arithmetic
-  // order using a single thread
-  dist = nthPrimeDistance(n - count, start, 1, /* safety factor */ 1.5);
+  if (n < 0) count--;
+  dist = nthPrimeDistance(n - count, start) * 2;
   checkLimit(start, dist);
   stop = start + dist;
   NthPrime np;
