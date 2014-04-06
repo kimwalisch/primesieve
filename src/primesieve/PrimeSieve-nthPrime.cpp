@@ -20,10 +20,10 @@
 #include <algorithm>
 #include <cmath>
 
-namespace {
-
 using namespace primesieve;
 using namespace std;
+
+namespace {
 
 void checkLimit(uint64_t start, uint64_t dist)
 {
@@ -52,6 +52,11 @@ int64_t pix(int64_t n)
   double pix = x / logx;
 
   return static_cast<int64_t>(pix);
+}
+
+bool sieveBackwards(int64_t n, int64_t count, uint64_t stop)
+{
+  return (count >= n) && !(count == n && stop < 2);
 }
 
 uint64_t nthPrimeDistance(int64_t n, uint64_t start, int64_t direction = 1)
@@ -149,11 +154,11 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   uint64_t nthPrimeGuess = start + dist;
 
   int64_t pixSqrtNthPrime = pix(isqrt(nthPrimeGuess));
-  int64_t count = 0;
   int64_t bruteForceMin = 10000;
-  int64_t bruteForceThreshold = std::max(bruteForceMin, pixSqrtNthPrime);
+  int64_t bruteForceThreshold = max(bruteForceMin, pixSqrtNthPrime);
+  int64_t count = 0;
 
-  while (count >= n || (n - count) > bruteForceThreshold)
+  while (sieveBackwards(n, count, stop) || (n - count) > bruteForceThreshold)
   {
     if (count < n)
     {
@@ -163,7 +168,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
       count += countPrimes(start, stop);
       start = stop + 1;
     }
-    if (count >= n)
+    if (sieveBackwards(n, count, stop))
     {
       checkLowerLimit(stop);
       dist = nthPrimeDistance(count - n, stop, /* backwards */ -1);
