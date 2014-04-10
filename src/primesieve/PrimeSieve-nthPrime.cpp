@@ -89,10 +89,6 @@ uint64_t nthPrimeDistance(int64_t n, uint64_t start, int64_t direction = 1)
   return static_cast<uint64_t>(dist);
 }
 
-} // namespace
-
-namespace primesieve {
-
 /// This class is used to generate n primes and
 /// then stop by throwing an exception.
 ///
@@ -133,6 +129,10 @@ void NthPrime::callback(uint64_t prime)
   }
 }
 
+} // namespace
+
+namespace primesieve {
+
 uint64_t PrimeSieve::nthPrime(uint64_t n)
 {
   return nthPrime(0, n);
@@ -141,7 +141,7 @@ uint64_t PrimeSieve::nthPrime(uint64_t n)
 uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 {
   if (n == 0)
-    return 0;
+    throw primesieve_error("0th prime is undefined, n must not be 0");
 
   setStart(start);
   double t1 = getWallTime();
