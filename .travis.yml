@@ -1,0 +1,18 @@
+language: cpp
+
+compiler:
+  - gcc
+  - clang
+
+branches:
+  only:
+    - master
+
+env:
+  global:
+    - OMP_NUM_THREADS=4
+
+before_script:
+  - ./autogen.sh
+
+script: ./configure --enable-examples && make && make check
