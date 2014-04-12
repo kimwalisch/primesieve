@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">primesieve
-   &#160;<span id="projectnumber">5.1</span>
+   &#160;<span id="projectnumber">5.2</span>
    </div>
   </td>
  </tr>
@@ -104,13 +104,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aefdd13bcd657eb6778799e8e2dd72b19"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;5.1&quot;</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;5.2&quot;</td></tr>
 <tr class="separator:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acf3a768a4fbf9c2ddd8d26421b452298"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MAJOR</b>&#160;&#160;&#160;5</td></tr>
 <tr class="separator:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae49659380a65afba42223665c77241d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae49659380a65afba42223665c77241d1"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;1</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;2</td></tr>
 <tr class="separator:ae49659380a65afba42223665c77241d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa15f4d1456167707e37c0d6de61a86e3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa15f4d1456167707e37c0d6de61a86e3"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#aa15f4d1456167707e37c0d6de61a86e3">PRIMESIEVE_ERROR</a>&#160;&#160;&#160;((uint64_t)~((uint64_t)0))</td></tr>
@@ -150,12 +150,12 @@ Functions</h2></td></tr>
 <tr class="memitem:af185be0fe6e189344680b9458d426bd4"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#af185be0fe6e189344680b9458d426bd4">primesieve_generate_n_primes</a> (uint64_t n, uint64_t start, int type)</td></tr>
 <tr class="memdesc:af185be0fe6e189344680b9458d426bd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an array with the first n primes &gt;= start.  <a href="#af185be0fe6e189344680b9458d426bd4">More...</a><br/></td></tr>
 <tr class="separator:af185be0fe6e189344680b9458d426bd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afef95a1e983429f9c2abd5528de60645"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#afef95a1e983429f9c2abd5528de60645">primesieve_nth_prime</a> (uint64_t n, uint64_t start)</td></tr>
-<tr class="memdesc:afef95a1e983429f9c2abd5528de60645"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the nth prime.  <a href="#afef95a1e983429f9c2abd5528de60645">More...</a><br/></td></tr>
-<tr class="separator:afef95a1e983429f9c2abd5528de60645"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3394715eb14030031b06f1cfe277baa1"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#a3394715eb14030031b06f1cfe277baa1">primesieve_parallel_nth_prime</a> (uint64_t n, uint64_t start)</td></tr>
-<tr class="memdesc:a3394715eb14030031b06f1cfe277baa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the nth prime in parallel.  <a href="#a3394715eb14030031b06f1cfe277baa1">More...</a><br/></td></tr>
-<tr class="separator:a3394715eb14030031b06f1cfe277baa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a272b54509075a0ed1dafe9858ae90d02"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#a272b54509075a0ed1dafe9858ae90d02">primesieve_nth_prime</a> (int64_t n, uint64_t start)</td></tr>
+<tr class="memdesc:a272b54509075a0ed1dafe9858ae90d02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the nth prime.  <a href="#a272b54509075a0ed1dafe9858ae90d02">More...</a><br/></td></tr>
+<tr class="separator:a272b54509075a0ed1dafe9858ae90d02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2311a208075515df416126e7f79e565c"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#a2311a208075515df416126e7f79e565c">primesieve_parallel_nth_prime</a> (int64_t n, uint64_t start)</td></tr>
+<tr class="memdesc:a2311a208075515df416126e7f79e565c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the nth prime in parallel.  <a href="#a2311a208075515df416126e7f79e565c">More...</a><br/></td></tr>
+<tr class="separator:a2311a208075515df416126e7f79e565c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0555d30a24a8828ee584c7b2f6083d3"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#af0555d30a24a8828ee584c7b2f6083d3">primesieve_count_primes</a> (uint64_t start, uint64_t stop)</td></tr>
 <tr class="memdesc:af0555d30a24a8828ee584c7b2f6083d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count the primes within the interval [start, stop].  <a href="#af0555d30a24a8828ee584c7b2f6083d3">More...</a><br/></td></tr>
 <tr class="separator:af0555d30a24a8828ee584c7b2f6083d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -703,14 +703,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="prim
 
 </div>
 </div>
-<a class="anchor" id="afef95a1e983429f9c2abd5528de60645"></a>
+<a class="anchor" id="a272b54509075a0ed1dafe9858ae90d02"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">uint64_t primesieve_nth_prime </td>
           <td>(</td>
-          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramtype">int64_t&#160;</td>
           <td class="paramname"><em>n</em>, </td>
         </tr>
         <tr>
@@ -730,11 +730,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="prim
 <p>Find the nth prime. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">start</td><td>Start nth prime search at this offset. </td></tr>
+    <tr><td class="paramname">n</td><td>if n = 0 finds the 1st prime &gt;= start, <br/>
+ if n &gt; 0 finds the nth prime &gt; start, <br/>
+ if n &lt; 0 finds the nth prime &lt; start (backwards). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section pre"><dt>Precondition</dt><dd>start &lt;= 2^64 - 2^32 * 10. </dd></dl>
+<dl class="section pre"><dt>Precondition</dt><dd>start &lt;= 2^64 - 2^32 * 11. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="nth_prime_8c-example.html#a0">nth_prime.c</a>.</dd>
 </dl>
 </div>
@@ -993,14 +995,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="prim
 
 </div>
 </div>
-<a class="anchor" id="a3394715eb14030031b06f1cfe277baa1"></a>
+<a class="anchor" id="a2311a208075515df416126e7f79e565c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">uint64_t primesieve_parallel_nth_prime </td>
           <td>(</td>
-          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramtype">int64_t&#160;</td>
           <td class="paramname"><em>n</em>, </td>
         </tr>
         <tr>
@@ -1021,11 +1023,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="prim
 <p>By default all CPU cores are used, use <a class="el" href="primesieve_8h.html#ac75933075b832eb2996adc5e72d6cd0f" title="Set the number of threads for use in subsequent primesieve_parallel_* function calls. ">primesieve_set_num_threads(int)</a> to change the number of threads. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">start</td><td>Start nth prime search at this offset. </td></tr>
+    <tr><td class="paramname">n</td><td>if n = 0 finds the 1st prime &gt;= start, <br/>
+ if n &gt; 0 finds the nth prime &gt; start, <br/>
+ if n &lt; 0 finds the nth prime &lt; start (backwards). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section pre"><dt>Precondition</dt><dd>start &lt;= 2^64 - 2^32 * 10. </dd></dl>
+<dl class="section pre"><dt>Precondition</dt><dd>start &lt;= 2^64 - 2^32 * 11. </dd></dl>
 
 </div>
 </div>
@@ -1305,7 +1309,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="prim
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 12 2014 22:21:55 for primesieve by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Apr 12 2014 22:14:12 for primesieve by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

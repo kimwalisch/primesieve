@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">primesieve
-   &#160;<span id="projectnumber">5.1</span>
+   &#160;<span id="projectnumber">5.2</span>
    </div>
   </td>
  </tr>
@@ -114,13 +114,13 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aefdd13bcd657eb6778799e8e2dd72b19"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;5.1&quot;</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;5.2&quot;</td></tr>
 <tr class="separator:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acf3a768a4fbf9c2ddd8d26421b452298"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MAJOR</b>&#160;&#160;&#160;5</td></tr>
 <tr class="separator:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae49659380a65afba42223665c77241d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae49659380a65afba42223665c77241d1"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;1</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;2</td></tr>
 <tr class="separator:ae49659380a65afba42223665c77241d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
@@ -148,12 +148,12 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:af4539998c9236b024990f01da1e28f57"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#af4539998c9236b024990f01da1e28f57">primesieve::generate_n_primes</a> (uint64_t n, uint64_t start, std::vector&lt; T &gt; *primes)</td></tr>
 <tr class="memdesc:af4539998c9236b024990f01da1e28f57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store the first n primes &gt;= start in the primes vector.  <a href="namespaceprimesieve.html#af4539998c9236b024990f01da1e28f57">More...</a><br/></td></tr>
 <tr class="separator:af4539998c9236b024990f01da1e28f57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a861cb0cbc2696bf5e2ee2c73b12abdbd"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a861cb0cbc2696bf5e2ee2c73b12abdbd">primesieve::nth_prime</a> (uint64_t n, uint64_t start=0)</td></tr>
-<tr class="memdesc:a861cb0cbc2696bf5e2ee2c73b12abdbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the nth prime.  <a href="namespaceprimesieve.html#a861cb0cbc2696bf5e2ee2c73b12abdbd">More...</a><br/></td></tr>
-<tr class="separator:a861cb0cbc2696bf5e2ee2c73b12abdbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a866da74f424fa252193b5b9f712e418b"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a866da74f424fa252193b5b9f712e418b">primesieve::parallel_nth_prime</a> (uint64_t n, uint64_t start=0)</td></tr>
-<tr class="memdesc:a866da74f424fa252193b5b9f712e418b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the nth prime in parallel.  <a href="namespaceprimesieve.html#a866da74f424fa252193b5b9f712e418b">More...</a><br/></td></tr>
-<tr class="separator:a866da74f424fa252193b5b9f712e418b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a559e8ba0e9b3b9c8b3a75ca9419a1afb"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a559e8ba0e9b3b9c8b3a75ca9419a1afb">primesieve::nth_prime</a> (int64_t n, uint64_t start=0)</td></tr>
+<tr class="memdesc:a559e8ba0e9b3b9c8b3a75ca9419a1afb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the nth prime.  <a href="namespaceprimesieve.html#a559e8ba0e9b3b9c8b3a75ca9419a1afb">More...</a><br/></td></tr>
+<tr class="separator:a559e8ba0e9b3b9c8b3a75ca9419a1afb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3b2f0ba0f6f9b5698120827b412d0f4"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#aa3b2f0ba0f6f9b5698120827b412d0f4">primesieve::parallel_nth_prime</a> (int64_t n, uint64_t start=0)</td></tr>
+<tr class="memdesc:aa3b2f0ba0f6f9b5698120827b412d0f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the nth prime in parallel.  <a href="namespaceprimesieve.html#aa3b2f0ba0f6f9b5698120827b412d0f4">More...</a><br/></td></tr>
+<tr class="separator:aa3b2f0ba0f6f9b5698120827b412d0f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e8caa0de4a20596b0fe8b4a9f0f3f1a"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a6e8caa0de4a20596b0fe8b4a9f0f3f1a">primesieve::count_primes</a> (uint64_t start, uint64_t stop)</td></tr>
 <tr class="memdesc:a6e8caa0de4a20596b0fe8b4a9f0f3f1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count the primes within the interval [start, stop].  <a href="namespaceprimesieve.html#a6e8caa0de4a20596b0fe8b4a9f0f3f1a">More...</a><br/></td></tr>
 <tr class="separator:a6e8caa0de4a20596b0fe8b4a9f0f3f1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -263,7 +263,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="names
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 12 2014 22:21:55 for primesieve by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Apr 12 2014 22:14:12 for primesieve by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
