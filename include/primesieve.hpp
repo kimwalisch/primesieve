@@ -95,6 +95,7 @@ namespace primesieve
   /// @param n  if n > 0 finds the nth prime >= start,
   ///           if n < 0 finds the nth prime <= start (backwards).
   /// @param start Start nth prime search at this offset.
+  /// @pre   n != 0.
   /// @pre   start <= 2^64 - 2^32 * 10.
   ///
   uint64_t nth_prime(int64_t n, uint64_t start = 0);
@@ -106,6 +107,7 @@ namespace primesieve
   /// @param n  if n > 0 finds the nth prime >= start,
   ///           if n < 0 finds the nth prime <= start (backwards).
   /// @param start Start nth prime search at this offset.
+  /// @pre   n != 0.
   /// @pre   start <= 2^64 - 2^32 * 10.
   ///
   uint64_t parallel_nth_prime(int64_t n, uint64_t start = 0);
