@@ -1,4 +1,4 @@
-Changes in version 5.2, 11/04/2014
+Changes in version 5.2, 12/04/2014
 ==================================
 
 primesieve-5.2 is a minor new release which adds backwards nth prime
@@ -9,6 +9,8 @@ search.
    will find the nth prime preceding start.
 2. Faster nth prime implementation, more accurate guessing of the nth
    prime gives up to 20% speed up if n < 10^8.
+3. Added continuous integration testing with Travis (travis-ci.org),
+   files: .travis.yml, Readme.md (shows build status).
 
 Changes in version 5.1, 14/02/2014
 ==================================
