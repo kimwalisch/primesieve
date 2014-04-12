@@ -140,11 +140,15 @@ uint64_t PrimeSieve::nthPrime(uint64_t n)
 
 uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 {
-  if (n == 0)
-    throw primesieve_error("0th prime is undefined, n must not be 0");
-
   setStart(start);
   double t1 = getWallTime();
+
+  if (n != 0)
+    // Find nth prime > start (or < start)
+    start += (n > 0) ? 1 : ((start > 0) ? -1 : 0);
+  else
+    // Mathematica convention
+    n = 1;
 
   uint64_t stop = start;
   uint64_t dist = nthPrimeDistance(n, start);
