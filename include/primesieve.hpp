@@ -92,8 +92,8 @@ namespace primesieve
   }
 
   /// Find the nth prime.
-  /// @param n  if n = 0 finds the 1st prime >= start,
-  ///           if n > 0 finds the nth prime > start,
+  /// @param n  if n = 0 finds the 1st prime >= start, <br/>
+  ///           if n > 0 finds the nth prime > start, <br/>
   ///           if n < 0 finds the nth prime < start (backwards).
   /// @pre   start <= 2^64 - 2^32 * 11.
   ///
@@ -103,8 +103,8 @@ namespace primesieve
   /// By default all CPU cores are used, use
   /// primesieve::set_num_threads(int) to change the number of
   /// threads.
-  /// @param n  if n = 0 finds the 1st prime >= start,
-  ///           if n > 0 finds the nth prime > start,
+  /// @param n  if n = 0 finds the 1st prime >= start, <br/>
+  ///           if n > 0 finds the nth prime > start, <br/>
   ///           if n < 0 finds the nth prime < start (backwards).
   /// @pre   start <= 2^64 - 2^32 * 11.
   ///
