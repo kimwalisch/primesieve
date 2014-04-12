@@ -1,16 +1,24 @@
 Changes in version 5.2, 12/04/2014
 ==================================
 
-primesieve-5.2 is a minor new release which adds backwards nth prime
-search.
-
 1. Added backwards nth prime search, if n < 0 
    primesieve::nth_prime(int64_t n, uint64_t start);
-   will find the nth prime preceding start.
+   will find the nth prime < start.
 2. Faster nth prime implementation, more accurate guessing of the nth
    prime gives up to 20% speed up if n < 10^8.
 3. Added continuous integration testing with Travis (travis-ci.org),
    files: .travis.yml, Readme.md (shows build status).
+
+API changes!!!
+
+   In order to be compatible with other mathematical software like
+   Mathematica, Maple and SymPy the functions below have been modified
+   to return a prime > start (or < start), previously these functions
+   returned a prime >= start (or <= start).
+
+   uint64_t primesieve::nth_prime(int64_t n, uint64_t start);
+   uint64_t primesieve::iterator::next_prime();
+   uint64_t primesieve::iterator::previous_prime();
 
 Changes in version 5.1, 14/02/2014
 ==================================
