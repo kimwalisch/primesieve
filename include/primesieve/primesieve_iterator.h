@@ -54,7 +54,7 @@ void primesieve_init(primesieve_iterator* pi);
 void primesieve_free_iterator(primesieve_iterator* pi);
 
 /** Set the primesieve iterator to start.
- *  @param start      Start generating primes at this number.
+ *  @param start      Generate primes > start (or < start).
  *  @param stop_hint  Stop number optimization hint. E.g. if you want
  *                    to generate the primes below 1000 use
  *                    stop_hint = 1000, if you don't know use

@@ -104,14 +104,11 @@ void primesieve_generate_next_primes(primesieve_iterator* pi)
   {
     try
     {
-      bool first = primes.empty();
       primes.clear();
 
       while (primes.empty())
       {
-        if (!first)
-          pi->start_ = add_overflow_safe(pi->stop_, 1);
-        first = false;
+        pi->start_ = add_overflow_safe(pi->stop_, 1);
         pi->stop_ = add_overflow_safe(pi->start_, get_interval_size(pi->start_, pi->tiny_cache_size_));
         if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
           pi->stop_ = add_overflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
@@ -142,14 +139,11 @@ void primesieve_generate_previous_primes(primesieve_iterator* pi)
   {
     try
     {
-      bool first = primes.empty();
       primes.clear();
 
       while (primes.empty())
       {
-        if (!first)
-          pi->stop_ = subtract_underflow_safe(pi->start_, 1);
-        first = false;
+        pi->stop_ = subtract_underflow_safe(pi->start_, 1);
         pi->start_ = subtract_underflow_safe(pi->stop_, get_interval_size(pi->stop_, pi->tiny_cache_size_));
         if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
           pi->start_ = subtract_underflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));

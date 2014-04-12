@@ -51,14 +51,11 @@ uint64_t subtract_underflow_safe(uint64_t a, uint64_t b)
 
 void iterator::generate_next_primes()
 {
-  bool first = primes_.empty();
   primes_.clear();
 
   while (primes_.empty())
   {
-    if (!first)
-      start_ = add_overflow_safe(stop_, 1);
-    first = false;
+    start_ = add_overflow_safe(stop_, 1);
     stop_ = add_overflow_safe(start_, get_interval_size(start_));
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
       stop_ = add_overflow_safe(stop_hint_, max_prime_gap(stop_hint_));
@@ -73,14 +70,11 @@ void iterator::generate_next_primes()
 
 void iterator::generate_previous_primes()
 {
-  bool first = primes_.empty();
   primes_.clear();
 
   while (primes_.empty())
   {
-    if (!first)
-      stop_ = subtract_underflow_safe(start_, 1);
-    first = false;
+    stop_ = subtract_underflow_safe(start_, 1);
     start_ = subtract_underflow_safe(stop_, get_interval_size(stop_));
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
       start_ = subtract_underflow_safe(stop_hint_, max_prime_gap(stop_hint_));

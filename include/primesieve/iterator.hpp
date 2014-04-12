@@ -32,9 +32,7 @@ class iterator
 {
 public:
   /// Create a new iterator object.
-  /// @param start      Start iterating at this number. If start is a
-  ///                   prime then first calling either next_prime()
-  ///                   or previous_prime() will return start.
+  /// @param start      Generate primes > start (or < start).
   /// @param stop_hint  Stop number optimization hint, gives significant
   ///                   speed up if few primes are generated. E.g. if
   ///                   you want to generate the primes below 1000 use
@@ -44,9 +42,7 @@ public:
   iterator(uint64_t start = 0, uint64_t stop_hint = get_max_stop());
 
   /// Reinitialize this iterator object to start.
-  /// @param start      Start iterating at this number. If start is a
-  ///                   prime then first calling either next_prime()
-  ///                   or previous_prime() will return start.
+  /// @param start      Generate primes > start (or < start).
   /// @param stop_hint  Stop number optimization hint, gives significant
   ///                   speed up if few primes are generated. E.g. if
   ///                   you want to generate the primes below 1000 use
