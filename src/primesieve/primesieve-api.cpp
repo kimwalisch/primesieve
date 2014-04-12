@@ -3,7 +3,7 @@
 /// @brief  Contains the implementations of the functions declared in
 ///         the primesieve.hpp header file.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -284,23 +284,17 @@ uint64_t get_max_stop()
 
 int get_sieve_size()
 {
-  /// @warning This assumes reading an integer is an atomic operation.
   return sieve_size;
 }
 
 int get_num_threads()
 {
-  /// @warning This assumes reading an integer is an atomic operation.
   return num_threads;
 }
 
 void set_sieve_size(int kilobytes)
 {
-  kilobytes = getInBetween(1, kilobytes, 2048);
-#ifdef _OPENMP
-  #pragma omp critical (sieve_size)
-#endif
-  sieve_size = kilobytes;
+  sieve_size = getInBetween(1, kilobytes, 2048);
 }
 
 void set_num_threads(int threads)
@@ -316,9 +310,6 @@ void set_num_threads(int threads)
 #endif
   }
 
-#ifdef _OPENMP
-  #pragma omp critical (num_threads)
-#endif
   num_threads = threads;
 }
 
