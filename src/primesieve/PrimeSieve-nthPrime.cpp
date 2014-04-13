@@ -56,9 +56,9 @@ bool sieveBackwards(int64_t n, int64_t count, uint64_t stop)
   return (count >= n) && !(count == n && stop < 2);
 }
 
-uint64_t nthPrimeDistance(int64_t n, uint64_t start, int64_t direction = 1)
+uint64_t nthPrimeDistance(int64_t n, int64_t count, uint64_t start, bool bruteForce = false)
 {
-  double x = static_cast<double>(n);
+  double x = static_cast<double>(n - count);
   double s = static_cast<double>(start);
 
   x = abs(x);
@@ -70,7 +70,7 @@ uint64_t nthPrimeDistance(int64_t n, uint64_t start, int64_t direction = 1)
   double pix = x * (logx + loglogx - 1);
 
   // Correct start if sieving backwards
-  if (direction < 0)
+  if (count >= n)
     s -= pix;
 
   // Approximate the nth prime using
@@ -78,12 +78,13 @@ uint64_t nthPrimeDistance(int64_t n, uint64_t start, int64_t direction = 1)
   double logStartPix = log(max(4.0, s + pix / loglogx));
   double dist = max(pix, x * logStartPix);
   double maxPrimeGap = logStartPix * logStartPix;
+  double safetyFactor = (count >= n || bruteForce) ? 2 : -2;
 
   // Make sure start + dist <= nth prime
-  dist += sqrt(dist) * log(logStartPix) * 2.0 * -direction;
+  dist += sqrt(dist) * log(logStartPix) * safetyFactor;
   dist = max(dist, maxPrimeGap);
 
-  if (direction < 0)
+  if (count >= n)
     checkLowerLimit(start, dist);
 
   return static_cast<uint64_t>(dist);
@@ -151,7 +152,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     n = 1;
 
   uint64_t stop = start;
-  uint64_t dist = nthPrimeDistance(n, start);
+  uint64_t dist = nthPrimeDistance(n, 0, start);
   uint64_t nthPrimeGuess = start + dist;
 
   int64_t pixSqrtNthPrime = pix(isqrt(nthPrimeGuess));
@@ -163,7 +164,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   {
     if (count < n)
     {
-      dist = nthPrimeDistance(n - count, start);
+      dist = nthPrimeDistance(n, count, start);
       checkLimit(start, dist);
       stop = start + dist;
       count += countPrimes(start, stop);
@@ -172,7 +173,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     if (sieveBackwards(n, count, stop))
     {
       checkLowerLimit(stop);
-      dist = nthPrimeDistance(count - n, stop, /* backwards */ -1);
+      dist = nthPrimeDistance(n, count, stop);
       start = (start > dist) ? start - dist : 1;
       count -= countPrimes(start, stop);
       stop = start - 1;
@@ -180,7 +181,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   }
 
   if (n < 0) count--;
-  dist = nthPrimeDistance(n - count, start) * 2;
+  dist = nthPrimeDistance(n, count, start, true) * 2;
   checkLimit(start, dist);
   stop = start + dist;
   NthPrime np;
