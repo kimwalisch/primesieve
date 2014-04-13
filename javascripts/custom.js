@@ -2,7 +2,7 @@ $(document).ready(function() {
 	// Workaround for Safari and Chrome CSS alignment bug (2014).
 	$("h2").hide().fadeIn('fast');
 
-	var primesieve_version = "5.1";
+	var primesieve_version = "5.2";
 	var download_url = "http://dl.bintray.com/kimwalisch/primesieve/primesieve-";
 	$("a.download_zip").attr("href", download_url + primesieve_version + ".zip");
 	$("a.download_targz").attr("href", download_url + primesieve_version + ".tar.gz");
