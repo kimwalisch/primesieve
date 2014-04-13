@@ -48,7 +48,6 @@ SOURCES += \
   ../../primesieve/PreSieve.cpp \
   ../../primesieve/PrimeFinder.cpp \
   ../../primesieve/PrimeGenerator.cpp \
-  ../../primesieve/PrimeSieve-nthPrime.cpp \
   ../../primesieve/PrimeSieve.cpp \
   ../../primesieve/SieveOfEratosthenes.cpp \
   ../../primesieve/WheelFactorization.cpp
