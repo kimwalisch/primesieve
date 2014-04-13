@@ -1,6 +1,7 @@
 .*
 *~
 !/.gitignore
+!/.travis.yml
 *.exe
 *.obj
 *.lib
