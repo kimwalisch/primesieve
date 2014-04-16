@@ -16,4 +16,9 @@ env:
 before_script:
   - ./autogen.sh
 
-script: ./configure --enable-examples && make && make check
+script:
+  - ./configure --enable-examples CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
+  - make
+  - sudo make install
+  - make dist
+  - make distcheck
