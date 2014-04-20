@@ -90,7 +90,7 @@ EXTRA_DIST = \
 	mainpage.dox \
 	README.md \
 	Makefile.msvc \
-	examples/README \
+	examples/README.md \
 	src/apps/gui \
 	src/msvc_compat \
 	src/primesieve/README
