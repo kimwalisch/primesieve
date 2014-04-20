@@ -102,10 +102,10 @@ li.hide_overflow {
 }
 
 a {
-  color: #2879d0;
+  color: #4085C9;
 }
 a:hover {
-  color: #2268b2;
+  text-decoration: underline;
 }
 
 header {
