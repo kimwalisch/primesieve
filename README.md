@@ -19,11 +19,11 @@ CPU from 2013. primesieve can generate primes and
 primesieve generates primes using the segmented sieve of Eratosthenes
 with <a href="http://en.wikipedia.org/wiki/Wheel_factorization">wheel
 factorization</a>, this algorithm has a complexity of
-<img src="http://primesieve.org/images/Onloglogn.svg" alt="O(n log log n)" height="20" align="absmiddle"/>
+<img src="http://primesieve.org/images/Onloglogn.svg" height="20" align="absmiddle"/>
 operations and uses
-<img src="http://primesieve.org/images/Osqrtn.svg" alt="O(n^(1/2))" height="20" align="absmiddle"/>
+<img src="http://primesieve.org/images/Osqrtn.svg" height="20" align="absmiddle"/>
 space. primesieve's memory requirement per thread is about
-<img src="http://primesieve.org/images/primesieve_memory_usage.svg" alt="pi(n^(1/2)) * 8" height="20" align="absmiddle"/>
+<img src="http://primesieve.org/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
 bytes.
 
 ### Requirements
