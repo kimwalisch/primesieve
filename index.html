@@ -149,17 +149,21 @@ access.</p>
 <h2>
 <a name="implementation" class="anchor" href="#implementation"><span class="octicon octicon-link"></span></a>Implementation</h2>
 <p>primesieve is written entirely in C++ and does not depend on
-external libraries. It combines and improves ideas from other great
-sieve of Eratosthenes implementations, namely Achim Flammenkamp's
+external libraries. It's speed is mainly due to the segmentation of
+the sieve of Eratosthenes which prevents cache misses when crossing
+off multiples in the sieve array and the use of a bit array instead of
+the more widely used boolean array. primesieve combines and improves
+ideas from other great sieve of Eratosthenes implementations, namely
+Achim Flammenkamp's
 <a href="http://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html">prime_sieve.c</a>,
 Tomás Oliveira e Silva's
 <a href="http://sweet.ua.pt/tos/software/prime_sieve.html#s">A1 implementation</a>
 and the author's older
 <a href="http://primzahlen.de/referenten/Kim_Walisch/index2.htm">ecprime</a>
-all written in the late '90s and '00s. primesieve's speed is mainly
-due to the segmentation of the sieve of Eratosthenes which prevents
-cache misses when crossing off multiples in the sieve array and the
-use of a bit array instead of the more widely used boolean array.</p>
+all written in the late '90s and '00s. Furthermore primesieve includes
+novel optimizations for today's
+<a href="http://en.wikipedia.org/wiki/Superscalar">superscalar CPUs</a>
+with a larger number of registers.</p>
 <p class="optimizations_title">Optimizations used in primesieve</p>
 <ul>
   <li>Uses a bit array with 8 flags each 30 numbers for sieving</li>
@@ -171,8 +175,7 @@ use of a bit array instead of the more widely used boolean array.</p>
   <li>Processes two sieving primes per loop iteration to increase instruction-level parallelism</li>
   <li>Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
 </ul>
-<p>This
-<a href="https://github.com/kimwalisch/primesieve/blob/master/src/primesieve/README">README</a>
+<p>This <a href="https://github.com/kimwalisch/primesieve/blob/master/src/primesieve/README">README</a>
 file contains more technical implementation details.</p>
 
 <h2>
