@@ -89,6 +89,12 @@ td.timing_title {
 	color: #454545;
 }
 
+p.optimizations_title {
+	font-weight: bold;
+	font-size: 17px;
+	color: #454545;
+}
+
 span.cpu_details {
 	white-space: nowrap;
 	font-size: x-small;
