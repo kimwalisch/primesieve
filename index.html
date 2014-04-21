@@ -152,18 +152,19 @@ access.</p>
 external libraries. It's speed is mainly due to the segmentation of
 the sieve of Eratosthenes which prevents cache misses when crossing
 off multiples in the sieve array and the use of a bit array instead of
-the more widely used boolean array. primesieve combines and improves
-ideas from other great sieve of Eratosthenes implementations, namely
-Achim Flammenkamp's
+a boolean sieve array. primesieve combines and improves ideas from
+other great sieve of Eratosthenes implementations, namely Achim
+Flammenkamp's
 <a href="http://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html">prime_sieve.c</a>,
 Tomás Oliveira e Silva's
 <a href="http://sweet.ua.pt/tos/software/prime_sieve.html#s">A1 implementation</a>
 and the author's older
 <a href="http://primzahlen.de/referenten/Kim_Walisch/index2.htm">ecprime</a>
 all written in the late '90s and '00s. Furthermore primesieve contains
-new optimizations for today's
-<a href="http://en.wikipedia.org/wiki/Superscalar">superscalar CPUs</a>
-with a larger number of registers.</p>
+new optimizations to increase
+<a href="http://en.wikipedia.org/wiki/Superscalar">instruction-level parallelism</a>
+and efficiently uses the larger number of registers available in
+today's CPUs.</p>
 <p class="optimizations_title">Optimizations used in primesieve</p>
 <ul>
   <li>Uses a bit array with 8 flags each 30 numbers for sieving</li>
