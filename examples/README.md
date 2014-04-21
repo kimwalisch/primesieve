@@ -1,5 +1,5 @@
 Example programs
-================
+----------------
 
 This directory contains simple example programs that show how to use
 the primesieve library to generate primes. Below is a list of the
