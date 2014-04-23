@@ -88,6 +88,7 @@ otherinclude_HEADERS = \
 EXTRA_DIST = \
 	Doxyfile \
 	mainpage.dox \
+	HACKING.md \
 	README.md \
 	Makefile.msvc \
 	examples/README.md \
