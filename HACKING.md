@@ -6,7 +6,7 @@ Hacking on primesieve
 * The sieve of Eratosthenes implementation lives in [src/primesieve](src/primesieve)
 * The sieve of Eratosthenes header files live in [include/primesieve](include/primesieve)
 * The primesieve console application lives in [src/apps/console](src/apps/console)
-* The primesieve GUI application (uses Qt) lives in [src/apps/gui](src/apps/console/gui)
+* The primesieve GUI application (uses Qt) lives in [src/apps/gui](src/apps/gui)
 
 ### Understanding the source code
 
