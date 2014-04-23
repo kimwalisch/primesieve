@@ -8,7 +8,7 @@ Hacking on primesieve
 * The primesieve console application lives in [src/apps/console](src/apps/console)
 * The primesieve GUI application (uses Qt) lives in [src/apps/gui](src/apps/console/gui)
 
-### To understand the source code
+### Understanding the source code
 
 * Read _**Algorithms**_ and _**Implementation**_ sections from [http://primesieve.org](http://primesieve.org)
 * Then read [src/primesieve/README](src/primesieve/README)
