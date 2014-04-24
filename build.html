@@ -132,22 +132,22 @@ prime k-tuplets and find the nth prime. Below are a few usage examples:</p>
 <h2 style="padding-bottom: 8px">
 <a name="linking-unix" class="anchor" href="#linking-unix"><span class="octicon octicon-link"></span></a>Linking against libprimesieve (Unix-like OSes)</h2>
 <div class="highlight highlight-bash"><pre>
+<span class="c"># Only needed if your operating system misses the ldconfig program</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">LIBRARY_PATH</span><span class="o">=</span>/usr/local/lib:<span class="nv">$LIBRARY_PATH</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+
 <span class="nv">$ </span>c++ -O2 my_program.cpp -lprimesieve
 <span class="nv">$ </span>cc  -O2 my_program.c   -lprimesieve
 </pre></div>
-<p>If linking fails then it is most likely because /usr/local/lib is
-not in your library path. The linking section in the
-<a href="https://github.com/kimwalisch/primesieve/blob/master/INSTALL">INSTALL</a>
-file explains how to fix this.</p>
 
 <h2 style="padding-bottom: 8px">
 <a name="linking-msvc" class="anchor" href="#linking-msvc"><span class="octicon octicon-link"></span></a>Linking against primesieve.lib (MSVC)</h2>
 <div class="highlight highlight-bash"><pre>
-<span class="nv">> </span>cl /O2 /EHsc my_program.cpp /I "include" /link primesieve.lib
+<span class="nv">> </span>cl /O2 /EHsc my_program.cpp /I include /link primesieve.lib
 </pre></div>
-<p>On Windows (Visual C++) you need to copy primesieve.lib and primesieve's
-include directory to your program's source tree. Then open e.g. a
-'Visual Studio Command Prompt' and compile using the command above.</p>
+<p>On Windows using Visual C++ you need to copy primesieve.lib and primesieve's
+include directory to your program's source tree. Then open a Visual Studio
+Command Prompt and compile using the command above.</p>
 
         </section>
 
