@@ -47,9 +47,9 @@ $ make
 $ sudo make install
 ```
 
-The GNU Build System (a.k.a. Autotools) needs to be installed if you
-have cloned primesieve or downloaded a zip archive from GitHub. To
-install the GNU Build System install
+The GNU Build System (a.k.a. Autotools) must be installed if you have
+cloned primesieve or downloaded a zip archive from GitHub. To install
+the GNU Build System install
 [GNU Autoconf](http://www.gnu.org/software/autoconf/),
 [GNU Automake](http://www.gnu.org/software/automake/) and
 [GNU Libtool](http://www.gnu.org/software/libtool/)
