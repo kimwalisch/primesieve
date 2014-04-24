@@ -72,8 +72,8 @@ $ make
 
 ### Build instructions (Microsoft Visual C++)
 
-Open a Visual Studio Command Prompt and cd into the primesieve
-directory. Then build primesieve using:
+Open a Visual Studio Command Prompt, cd into the primesieve directory
+and build primesieve using:
 
 ```bash
 > nmake -f Makefile.msvc
