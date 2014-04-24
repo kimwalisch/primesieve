@@ -64,10 +64,9 @@ $ ./configure
 $ make
 ```
 
-To build the example programs use:
+To enable building the example programs use:
 ```sh
 $ ./configure --enable-examples
-$ make
 ```
 
 ### Build instructions (Microsoft Visual C++)
