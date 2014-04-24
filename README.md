@@ -43,7 +43,7 @@ Download the latest release tarball from
 http://primesieve.org/downloads, extract it and cd into the newly
 created directory. Then build and install primesieve using:
 
-```bash
+```sh
 $ ./configure
 $ make
 $ sudo make install
@@ -57,7 +57,7 @@ install
 [GNU Libtool](http://www.gnu.org/software/libtool/) using your packet
 manager.
 
-```bash
+```sh
 $ git clone https://github.com/kimwalisch/primesieve.git && cd primesieve
 $ ./autogen.sh
 $ ./configure
@@ -65,7 +65,7 @@ $ make
 ```
 
 The example programs in the ./examples directory can be built using:
-```bash
+```sh
 $ ./configure --enable-examples
 $ make
 ```
@@ -75,7 +75,7 @@ $ make
 Open a Visual Studio Command Prompt, cd into the primesieve directory
 and build primesieve using:
 
-```bash
+```sh
 > nmake -f Makefile.msvc
 ```
 
@@ -83,12 +83,12 @@ In order to get the best performance you can indicate your CPU's L1
 data cache size in kilobytes per core (default 32), e.g. for a CPU
 with 64 kilobytes L1 data cache use:
 
-```bash
+```sh
 > nmake -f Makefile.msvc L1_DCACHE_SIZE=64
 ```
 
 The example programs in the examples directory can be built using:
-```bash
+```sh
 > nmake -f Makefile.msvc
 > nmake -f Makefile.msvc examples
 ```
@@ -99,7 +99,7 @@ The primesieve console application can print and count primes and
 prime k-tuplets and find the nth prime. Below are a few usage
 examples:
 
-```bash
+```sh
 # Print the primes below 1000000 to the standard output
 $ primesieve 1000000 --print
 
@@ -145,12 +145,16 @@ int main()
 ```
 
 On Unix-like operating systems compile using:
-```bash
+```sh
+# Only needed if your operating system misses the ldconfig program
+export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
 $ c++ -O2 primes.cpp -lprimesieve
 ```
 
 On Windows (MSVC) compile using:
-```bash
+```sh
 > cl /O2 /EHsc /Iinclude primes.cpp /link primesieve.lib
 ```
 
@@ -185,7 +189,11 @@ int main()
 ```
 
 On Unix-like operating systems compile using:
-```bash
+```sh
+# Only needed if your operating system misses the ldconfig program
+export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
 $ cc -O2 primes.c -lprimesieve
 ```
 
