@@ -34,8 +34,8 @@ functions so that it can easily be used in languages other than C++.
 primesieve compiles with every standard compliant C++ compiler and
 runs on both little and big endian CPUs. The parallelization is
 implemented using OpenMP (2.0 or later). If you have cloned or forked
-primesieve then you need to have installed the GNU Build System to
-build it.
+primesieve then the GNU Build System is a prerequisite for building
+primesieve.
 
 ### Build instructions (Unix-like OSes)
 
@@ -58,7 +58,7 @@ install
 manager.
 
 ```sh
-$ git clone https://github.com/kimwalisch/primesieve.git && cd primesieve
+$ git clone git://github.com/kimwalisch/primesieve.git && cd primesieve
 $ ./autogen.sh
 $ ./configure
 $ make
