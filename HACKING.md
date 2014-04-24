@@ -30,6 +30,7 @@ Hacking on primesieve
 
 ### Release process
 
+* Run tests using ```make check```
 * Increase version number (see <a href="#versioning">Versioning</a>)
 * Build statically linked primesieve binaries and upload them to [https://bintray.com](https://bintray.com)
 * Update [ChangeLog](ChangeLog)
