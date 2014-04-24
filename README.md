@@ -33,9 +33,7 @@ primesieve is written in C++03 and includes C bindings for all of its
 functions so that it can easily be used in languages other than C++.
 primesieve compiles with every standard compliant C++ compiler and
 runs on both little and big endian CPUs. The parallelization is
-implemented using OpenMP (2.0 or later). If you have cloned or forked
-primesieve then the GNU Build System is a prerequisite for building
-primesieve.
+implemented using OpenMP (2.0 or later).
 
 ### Build instructions (Unix-like OSes)
 
@@ -49,13 +47,13 @@ $ make
 $ sudo make install
 ```
 
-In order to clone and build primesieve you need to have installed the
-GNU Build System (a.k.a. Autotools). To install the GNU Build System
-install
+The GNU Build System (a.k.a. Autotools) needs to be installed if you
+have cloned primesieve or downloaded a zip archive from GitHub. To
+install the GNU Build System install
 [GNU Autoconf](http://www.gnu.org/software/autoconf/),
 [GNU Automake](http://www.gnu.org/software/automake/) and
-[GNU Libtool](http://www.gnu.org/software/libtool/) using your packet
-manager.
+[GNU Libtool](http://www.gnu.org/software/libtool/)
+using your packet manager.
 
 ```sh
 $ git clone git://github.com/kimwalisch/primesieve.git && cd primesieve
