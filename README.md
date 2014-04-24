@@ -8,8 +8,8 @@ library that generates primes using a highly optimized
 Eratosthenes</a> implementation. It generates the primes below 10^9
 in just 0.2 seconds on a single core of an Intel Core i7-4770 3.4GHz
 CPU from 2013. primesieve can generate primes and
-<a href="http://en.wikipedia.org/wiki/Prime_k-tuple">prime&#160;k&#8209;tuplets
-</a> up to 2^64.
+<a href="http://en.wikipedia.org/wiki/Prime_k-tuple">prime&#160;k&#8209;tuplets</a>
+up to 2^64.
 
 * Homepage: http://primesieve.org
 * Downloads: http://primesieve.org/downloads
