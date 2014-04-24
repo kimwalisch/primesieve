@@ -155,7 +155,7 @@ $ c++ -O2 primes.cpp -lprimesieve
 
 On Windows (MSVC) compile using:
 ```
-> cl /O2 /EHsc /Iprimesieve\include primes.cpp /link primesieve\primesieve.lib
+> cl /O2 /EHsc /I primesieve\include primes.cpp /link primesieve\primesieve.lib
 ```
 
 ### primesieve C bindings
