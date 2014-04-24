@@ -50,7 +50,7 @@ $ sudo make install
 ```
 
 In order to clone and build primesieve you need to have installed the
-GNU Build System (a.k.a Autotools). To install the GNU Build System
+GNU Build System (a.k.a. Autotools). To install the GNU Build System
 install
 [GNU Autoconf](http://www.gnu.org/software/autoconf/),
 [GNU Automake](http://www.gnu.org/software/automake/) and
