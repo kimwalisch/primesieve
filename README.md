@@ -4,11 +4,11 @@ primesieve
 
 primesieve is a free (BSD-licensed) software program and C/C++
 library that generates primes using a highly optimized
-<a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">sieve of
-Eratosthenes</a> implementation. It generates the primes below 10^9
-in just 0.2 seconds on a single core of an Intel Core i7-4770 3.4GHz
-CPU from 2013. primesieve can generate primes and
-<a href="http://en.wikipedia.org/wiki/Prime_k-tuple">prime&#160;k&#8209;tuplets</a>
+[sieve of Eratosthenes](http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes)
+implementation. It generates the primes below 10^9 in just 0.2 seconds
+on a single core of an Intel Core i7-4770 3.4GHz CPU from 2013.
+primesieve can generate primes and
+[prime&#160;k&#8209;tuplets](http://en.wikipedia.org/wiki/Prime_k-tuple)
 up to 2^64.
 
 * Homepage: http://primesieve.org
@@ -17,9 +17,9 @@ up to 2^64.
 
 ### Algorithm complexity
 
-primesieve generates primes using the segmented sieve of Eratosthenes
-with <a href="http://en.wikipedia.org/wiki/Wheel_factorization">wheel
-factorization</a>, this algorithm has a complexity of
+primesieve generates primes using the segmented sieve of Eratosthenes with
+[wheel factorization](http://en.wikipedia.org/wiki/Wheel_factorization),
+this algorithm has a complexity of
 <img src="http://primesieve.org/images/Onloglogn.svg" height="20" align="absmiddle"/>
 operations and uses
 <img src="http://primesieve.org/images/Osqrtn.svg" height="20" align="absmiddle"/>
