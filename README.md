@@ -87,7 +87,7 @@ with 64 kilobytes L1 data cache use:
 > nmake -f Makefile.msvc L1_DCACHE_SIZE=64
 ```
 
-The example programs in the examples directory can be built using:
+To build the example programs use:
 ```sh
 > nmake -f Makefile.msvc
 > nmake -f Makefile.msvc examples
