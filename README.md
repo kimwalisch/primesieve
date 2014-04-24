@@ -16,6 +16,7 @@ CPU from 2013. primesieve can generate primes and
 * API: http://primesieve.org/api
 
 ### Algorithm complexity
+
 primesieve generates primes using the segmented sieve of Eratosthenes
 with <a href="http://en.wikipedia.org/wiki/Wheel_factorization">wheel
 factorization</a>, this algorithm has a complexity of
@@ -27,13 +28,17 @@ space. primesieve's memory requirement per thread is about
 bytes.
 
 ### Requirements
+
 primesieve is written in C++03 and includes C bindings for all of its
 functions so that it can easily be used in languages other than C++.
 primesieve compiles with every standard compliant C++ compiler and
 runs on both little and big endian CPUs. The parallelization is
-implemented using OpenMP 2.0 or later.
+implemented using OpenMP (2.0 or later). If you have cloned or forked
+primesieve then you need to have installed the GNU Build System to
+build it.
 
-### Build instructions
+### Build instructions (Unix-like OSes)
+
 Download the latest release tarball from
 http://primesieve.org/downloads. On Unix-like operating systems you
 can then build and install primesieve using:
@@ -44,20 +49,55 @@ $ make
 $ sudo make install
 ```
 
-On Windows (MSVC) open a Visual Studio Command Prompt and cd into the
-primesieve directory. Then build primesieve using the following
-command:
+In order to clone and build primesieve you need to have installed the
+GNU Build System (a.k.a Autotools). To install the GNU Build System
+install
+[GNU Autoconf](http://www.gnu.org/software/autoconf/),
+[GNU Automake](http://www.gnu.org/software/automake/) and
+[GNU Libtool](http://www.gnu.org/software/libtool/) using your packet
+manager.
+
+```bash
+$ git clone https://github.com/kimwalisch/primesieve.git && cd primesieve
+$ ./autogen.sh
+$ ./configure
+$ make
+```
+
+The example programs in the ./examples directory can be built using:
+```bash
+$ ./configure --enable-examples
+$ make
+```
+
+### Build instructions (Microsoft Visual C++)
+
+Open a Visual Studio Command Prompt and cd into the primesieve
+directory. Then build primesieve using:
 
 ```bash
 > nmake -f Makefile.msvc
 ```
 
-Building primesieve is covered in more detail in the
-[INSTALL](INSTALL) file.
+In order to get the best performance you can indicate your CPU's L1
+data cache size in kilobytes per core (default 32), e.g. for a CPU
+with 64 kilobytes L1 data cache use:
+
+```bash
+> nmake -f Makefile.msvc L1_DCACHE_SIZE=64
+```
+
+The example programs in the examples directory can be built using:
+```bash
+> nmake -f Makefile.msvc
+> nmake -f Makefile.msvc examples
+```
 
 ### primesieve console application
+
 The primesieve console application can print and count primes and
-prime k-tuplets and find the nth prime. Below are a few usage examples:
+prime k-tuplets and find the nth prime. Below are a few usage
+examples:
 
 ```bash
 # Print the primes below 1000000 to the standard output
@@ -77,6 +117,7 @@ $ primesieve --help
 ```
 
 ### primesieve C++ library
+
 After having built and installed primesieve you can easily use it in
 your C++ program, below is an example. primesieve's API is documented
 online at http://primesieve.org/api.
@@ -114,6 +155,7 @@ On Windows (MSVC) compile using:
 ```
 
 ### primesieve C bindings
+
 All of primesieve's functions are exposed as C API (C99 or later) via
 the primesieve.h header. You can explore primesieve's C API online
 at http://primesieve.org/api.
@@ -148,5 +190,6 @@ $ cc -O2 primes.c -lprimesieve
 ```
 
 ### Reporting bugs
+
 To report a bug or give feedback please send an email to
 <<kim.walisch@gmail.com>>.
