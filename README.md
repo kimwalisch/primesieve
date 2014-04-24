@@ -23,7 +23,7 @@ factorization</a>, this algorithm has a complexity of
 <img src="http://primesieve.org/images/Onloglogn.svg" height="20" align="absmiddle"/>
 operations and uses
 <img src="http://primesieve.org/images/Osqrtn.svg" height="20" align="absmiddle"/>
-space. primesieve's memory usage per thread is about
+space, more precisely primesieve's memory usage per thread is about
 <img src="http://primesieve.org/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
 bytes.
 
