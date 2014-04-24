@@ -40,8 +40,8 @@ build it.
 ### Build instructions (Unix-like OSes)
 
 Download the latest release tarball from
-http://primesieve.org/downloads. On Unix-like operating systems you
-can then build and install primesieve using:
+http://primesieve.org/downloads, extract it and cd into the newly
+created directory. Then build and install primesieve using:
 
 ```bash
 $ ./configure
