@@ -5,11 +5,11 @@ Hacking on primesieve
 
 Clone or fork primesieve:
 ```sh
-$ git clone https://github.com/kimwalisch/primesieve.git
+$ git clone git://github.com/kimwalisch/primesieve.git
 ```
 
 In order to hack primesieve you need to have installed a C++ compiler
-and the GNU Build System (a.k.a Autotools). To install the GNU Build
+and the GNU Build System (a.k.a. Autotools). To install the GNU Build
 System install
 [GNU Autoconf](http://www.gnu.org/software/autoconf/),
 [GNU Automake](http://www.gnu.org/software/automake/) and
