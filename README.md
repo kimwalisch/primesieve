@@ -64,7 +64,7 @@ $ ./configure
 $ make
 ```
 
-The example programs in the ./examples directory can be built using:
+To build the example programs use:
 ```sh
 $ ./configure --enable-examples
 $ make
