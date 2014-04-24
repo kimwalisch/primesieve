@@ -45,6 +45,7 @@ $ make
 
 * Increase version number in [include/primesieve.hpp](include/primesieve.hpp)
 * Increase version number in [include/primesieve.h](include/primesieve.h)
+* Increase version number in [Doxyfile](Doxyfile)
 * Increase version number in [configure.ac](configure.ac) in ```AC_INIT```
 * [Increase Libtool version](http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html) number in [configure.ac](configure.ac) in ```AC_SUBST```
 * Update current year in [src/apps/console/help.cpp](src/apps/console/help.cpp)
@@ -58,3 +59,5 @@ $ make
 * Update [ChangeLog](ChangeLog)
 * Tag the new release in git
 * Create a new release tarball using ```make dist``` and upload it to [https://bintray.com](https://bintray.com)
+* Update http://primesieve.org
+* Update http://primesieve.org/api
