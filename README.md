@@ -146,8 +146,8 @@ int main()
 On Unix-like operating systems compile using:
 ```sh
 # Only needed if your operating system misses the ldconfig program
-export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+$ export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
+$ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 $ c++ -O2 primes.cpp -lprimesieve
 ```
@@ -190,8 +190,8 @@ int main()
 On Unix-like operating systems compile using:
 ```sh
 # Only needed if your operating system misses the ldconfig program
-export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+$ export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
+$ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 $ cc -O2 primes.c -lprimesieve
 ```
