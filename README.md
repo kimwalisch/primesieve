@@ -29,7 +29,7 @@ bytes.
 
 ### Requirements
 
-primesieve is written in C++03 and includes C bindings for all of its
+primesieve is written in C++03 and includes C bindings for all its
 functions so that it can easily be used in languages other than C++.
 primesieve compiles with every standard compliant C++ compiler and
 runs on both little and big endian CPUs. The parallelization is
