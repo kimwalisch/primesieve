@@ -57,10 +57,10 @@ System install
 using your packet manager.
 
 ```sh
-$ git clone git://github.com/kimwalisch/primesieve.git && cd primesieve
 $ ./autogen.sh
 $ ./configure
 $ make
+$ sudo make install
 ```
 
 To enable building the example programs use:
