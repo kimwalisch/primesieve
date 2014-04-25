@@ -1,30 +1,20 @@
 Hacking on primesieve
 =====================
 
-### Hacking on Unix-like OSes
-
-Clone or fork primesieve:
+Benchmark code changes using e.g.:
 ```sh
-$ git clone git://github.com/kimwalisch/primesieve.git
+$ time ./primesieve 10**13 --offset=10**11
 ```
 
-In order to hack primesieve you need to have installed a C++ compiler
-and the GNU Build System (a.k.a. Autotools). To install the GNU Build
-System install
-[GNU Autoconf](http://www.gnu.org/software/autoconf/),
-[GNU Automake](http://www.gnu.org/software/automake/) and
-[GNU Libtool](http://www.gnu.org/software/libtool/) using your packet
-manager.
-
-Generate configure script (only once):
+Fix all warnings:
 ```sh
-$ ./autogen.sh
+$ make clean
+$ make CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
 ```
 
-Then build primecount using:
+Run integration tests using:
 ```sh
-$ ./configure
-$ make
+$ make check
 ```
 
 ### Where the source code lives
