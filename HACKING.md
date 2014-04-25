@@ -45,9 +45,9 @@ $ make check
 
 * Run tests using ```make check```
 * Increase version number (see <a href="#versioning">Versioning</a>)
-* Build statically linked primesieve binaries and upload them to [https://bintray.com/kimwalisch/primesieve](https://bintray.com/kimwalisch/primesieve)
 * Update [ChangeLog](ChangeLog)
 * Tag the new release in git
-* Create a new release tarball using ```make dist``` and upload it to [https://bintray.com/kimwalisch/primesieve](https://bintray.com/kimwalisch/primesieve)
+* Build statically linked primesieve binaries and upload them to [https://bintray.com/kimwalisch/primesieve](https://bintray.com/kimwalisch/primesieve)
+* Create new release tarball using ```make dist``` and upload it to [https://bintray.com/kimwalisch/primesieve](https://bintray.com/kimwalisch/primesieve)
 * Update http://primesieve.org
 * Update http://primesieve.org/api
