@@ -1,9 +1,9 @@
 Hacking on primesieve
 =====================
 
-Benchmark code changes using e.g.:
+Benchmark code changes:
 ```sh
-$ time ./primesieve 10**13 --offset=10**11
+$ time ./primesieve 1e13 --offset=1e11
 ```
 
 Fix all warnings:
@@ -12,7 +12,7 @@ $ make clean
 $ make CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
 ```
 
-Run integration tests using:
+Run integration tests:
 ```sh
 $ make check
 ```
