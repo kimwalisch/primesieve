@@ -1,7 +1,7 @@
 Hacking on primesieve
 =====================
 
-Benchmark code changes:
+Benchmark your code changes:
 ```sh
 $ time ./primesieve 1e13 --offset=1e11
 ```
