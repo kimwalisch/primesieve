@@ -48,8 +48,9 @@ $ sudo make install
 ```
 
 If you have cloned primesieve or downloaded a zip archive from GitHub
-then the GNU Build System (a.k.a. Autotools) must be installed. To
-install the GNU Build System install
+then the GNU Build System (a.k.a. Autotools) must be installed and
+```autogen.sh``` must be executed once. To install the GNU Build
+System install
 [GNU&#160;Autoconf](http://www.gnu.org/software/autoconf/),
 [GNU&#160;Automake](http://www.gnu.org/software/automake/) and
 [GNU&#160;Libtool](http://www.gnu.org/software/libtool/)
