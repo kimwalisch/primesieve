@@ -221,9 +221,9 @@ code, pre {
 }
 
 code {
-  background-color: #f2f8fc;
-  border: solid 1px #dbe7f3;
-  padding: 0 3px;
+  background-color: #fff;
+  border: solid 1px #d3d3d3;
+  padding: 2px 3px;
 }
 
 pre {
