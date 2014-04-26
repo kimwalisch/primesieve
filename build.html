@@ -146,6 +146,9 @@ prime k-tuplets and find the nth prime. Below are a few usage examples:</p>
 <div class="highlight highlight-bash"><pre>
 <span class="nv">> </span>cl /O2 /EHsc my_program.cpp /I primesieve\include /link primesieve\primesieve.lib
 </pre></div>
+<p>Windows does not support ```nmake install``` therefore you must
+specify primesieve's include path (/I option) and the path to
+primesieve.lib (/link option).</p>
 
         </section>
 
