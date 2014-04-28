@@ -39,9 +39,12 @@ const string helpMenu(
   "  -t<N>,  --threads=<N>    Set the number of threads, 1 <= N <= CPU cores\n"
   "  -v,     --version        Print version and license information\n"
   "\n"
-  "Example:\n"
-  "  Print and count the twin primes below 1000000\n"
-  "  > primesieve 10**6 --print=2 -c2"
+  "Examples:\n"
+  "  Count and print the twin primes below 1000000\n"
+  "  > primesieve 1e6 --count=2 -p2\n"
+  "\n"
+  "  Count the primes inside the interval [10^9, 10^9+2^32]\n"
+  "  > primesieve 1e9 1e9+2**32 --count"
 );
 
 const string versionInfo(
