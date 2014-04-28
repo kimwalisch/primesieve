@@ -25,13 +25,13 @@ const string helpMenu(
   "prime k-tuplets in the interval [START, STOP] < 2^64\n"
   "\n"
   "Options:\n"
-  "  -c<N+>, --count=<N+>     Count primes and prime k-tuplets, 1 <= N <= 7\n"
+  "  -c<N*>, --count=<N*>     Count primes and prime k-tuplets, 1 <= N <= 7\n"
   "                           <N> 1=primes, 2=twins, 3=triplets, ...\n"
   "  -h,     --help           Print this help menu\n"
   "  -n,     --nthprime       Calculate the nth prime\n"
-  "                           e.g. 1 100 -n finds the first prime >= 100\n"
+  "                           e.g. 1 100 -n finds the first prime > 100\n"
   "  -o<N>,  --offset=<N>     Sieve the interval [START, START + N]\n"
-  "  -p<N>,  --print=<N>      Print primes or prime k-tuplets, 1 <= N <= 7\n"
+  "  -p<N?>, --print=<N?>     Print primes or prime k-tuplets, 1 <= N <= 7\n"
   "                           <N> 1=primes, 2=twins, 3=triplets, ...\n"
   "  -q,     --quiet          Quiet mode, prints less output\n"
   "  -s<N>,  --size=<N>       Set the sieve size in kilobytes, 1 <= N <= 2048\n"
@@ -40,8 +40,8 @@ const string helpMenu(
   "  -v,     --version        Print version and license information\n"
   "\n"
   "Example:\n"
-  "  Count the primes and print the twin primes below 1000\n"
-  "  > primesieve 1000 --count=1 -p2"
+  "  Print and count the twin primes below 1000000\n"
+  "  > primesieve 10**6 --print=2 -c2"
 );
 
 const string versionInfo(
