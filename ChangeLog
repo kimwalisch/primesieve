@@ -1,3 +1,14 @@
+Changes in version 5.3, 07/05/2014
+==================================
+
+This is a minor new release with an important bugfix and improved
+documentation, the API and ABI are backwards compatible.
+
+1. Fix use of uninitialized variable bug in primesieve::iterator:
+   https://github.com/kimwalisch/primesieve/commit/006d572ea8fa4958eaf46c1db24c983b1ce27e1b
+2. README.md update: Explain how to build from master-branch.
+3. New file HACKING.md: Explains source tree, useful for developers.
+
 Changes in version 5.2, 13/04/2014
 ==================================
 
