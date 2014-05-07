@@ -26,7 +26,7 @@ iterator::iterator(uint64_t start, uint64_t stop_hint)
 
 void iterator::skipto(uint64_t start, uint64_t stop_hint)
 {
-  if (start_ > get_max_stop())
+  if (start > get_max_stop())
     throw primesieve_error("start must be <= " + PrimeFinder::getMaxStopString());
 
   start_ = start;
