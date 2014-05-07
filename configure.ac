@@ -1,4 +1,4 @@
-AC_INIT([primesieve], [5.2], [kim.walisch@gmail.com])
+AC_INIT([primesieve], [5.3], [kim.walisch@gmail.com])
 AC_SUBST([primesieve_lib_version], [3:0:0])
 
 AC_PREREQ([2.62])
