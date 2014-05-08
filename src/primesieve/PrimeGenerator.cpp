@@ -43,7 +43,7 @@ void PrimeGenerator::generateTinyPrimes()
         isPrime[j] = false;
 
   assert(P > 5);
-  for (uint_t i = P + ~P & 1; i <= N; i += 2)
+  for (uint_t i = P + (~P & 1); i <= N; i += 2)
     if (isPrime[i])
       addSievingPrime(i);
 }
