@@ -442,7 +442,7 @@ Changes in version 2.0, 15/02/2011
 ==================================
 
 1. Added soe/ParallelPrimeSieve.cpp which counts primes in parallel
-   using OpenMP. 
+   using OpenMP.
 2. Added an arithmetic expression parser (./expr) to ease number input.
 3. Added a test suite to the console version of primesieve
    (option: -test) which runs various correctness tests.
