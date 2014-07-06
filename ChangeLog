@@ -1,7 +1,7 @@
 Changes in version 5.3, 06/07/2014
 ==================================
 
-This is a minor new release with an important bugfix and improved
+This is a minor new release with an important bug fix and improved
 documentation, the API and ABI are backwards compatible.
 
 1. Fix use of uninitialized variable bug in primesieve::iterator:
