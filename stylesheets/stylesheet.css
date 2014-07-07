@@ -192,7 +192,8 @@ a.button {
   color: #fff;
   padding-left: 68px;
   padding-top: 22px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
+  font-family: 'Helvetica Neue', Helvetica, Arial, serif;
+  text-decoration: none;
 }
 a.button small {
   display: block;
