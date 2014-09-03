@@ -214,9 +214,10 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEXTUPLETS))
   {
     uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
-    for (; !ps_.isPrint(i); i++)
-      ;
-    for (uint_t j = 0; j < sieveSize; j++)
+    uint64_t base = getSegmentLow();
+
+    for (; !ps_.isPrint(i); i++);
+    for (uint_t j = 0; j < sieveSize; j++, base += NUMBERS_PER_BYTE)
     {
       for (const uint_t* bitmask = kBitmasks_[i]; *bitmask <= sieve[j]; bitmask++)
       {
@@ -227,7 +228,7 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
           uint64_t bits = *bitmask;
           while (bits != 0)
           {
-            kTuplet << getNextPrime(&bits, j);
+            kTuplet << getNextPrime(&bits, base);
             kTuplet << ((bits != 0) ? ", " : ")\n");
           }
           std::cout << kTuplet.str();
