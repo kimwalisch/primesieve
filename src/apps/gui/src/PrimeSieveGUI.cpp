@@ -60,7 +60,6 @@ PrimeSieveGUI::PrimeSieveGUI(QWidget *parent) :
   primeText_.push_back("Prime quadruplets");
   primeText_.push_back("Prime quintuplets");
   primeText_.push_back("Prime sextuplets");
-  primeText_.push_back("Prime septuplets");
   this->initGUI();
   this->initConnections();
 }
@@ -339,7 +338,7 @@ void PrimeSieveGUI::printResults() {
 
   // hack to get the count results aligned using tabs
   QString maxSizeText;
-  for (int i = 0; i < 7; i++) {
+  for (int i = 0; i < primeText_.size(); i++) {
     if ((flags_ & (COUNT_PRIMES << i)) && maxSizeText.size() < primeText_[i].size())
       maxSizeText = primeText_[i];
   }
@@ -350,7 +349,7 @@ void PrimeSieveGUI::printResults() {
   ui->textEdit->setTabStopWidth(maxWidth);
 
   // print prime counts & time elapsed
-  for (int i = 0; i < 7; i++) {
+  for (int i = 0; i < primeText_.size(); i++) {
     if (flags_ & (COUNT_PRIMES << i))
       ui->textEdit->appendPlainText(primeText_[i] + ":\t" + QString::number(primeSieveProcess_->getCount(i)));
   }

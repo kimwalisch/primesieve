@@ -41,16 +41,14 @@ public:
     COUNT_QUADRUPLETS = 1 << 3,
     COUNT_QUINTUPLETS = 1 << 4,
     COUNT_SEXTUPLETS  = 1 << 5,
-    COUNT_SEPTUPLETS  = 1 << 6,
-    PRINT_PRIMES      = 1 << 7,
-    PRINT_TWINS       = 1 << 8,
-    PRINT_TRIPLETS    = 1 << 9,
-    PRINT_QUADRUPLETS = 1 << 10,
-    PRINT_QUINTUPLETS = 1 << 11,
-    PRINT_SEXTUPLETS  = 1 << 12,
-    PRINT_SEPTUPLETS  = 1 << 13,
-    PRINT_STATUS      = 1 << 14,
-    CALCULATE_STATUS  = 1 << 15
+    PRINT_PRIMES      = 1 << 6,
+    PRINT_TWINS       = 1 << 7,
+    PRINT_TRIPLETS    = 1 << 8,
+    PRINT_QUADRUPLETS = 1 << 9,
+    PRINT_QUINTUPLETS = 1 << 10,
+    PRINT_SEXTUPLETS  = 1 << 11,
+    PRINT_STATUS      = 1 << 12,
+    CALCULATE_STATUS  = 1 << 13
   };
   PrimeSieve();
   PrimeSieve(PrimeSieve&, int);
@@ -96,7 +94,6 @@ public:
   void printQuadruplets(uint64_t, uint64_t);
   void printQuintuplets(uint64_t, uint64_t);
   void printSextuplets(uint64_t, uint64_t);
-  void printSeptuplets(uint64_t, uint64_t);
   // Count
   uint64_t countPrimes(uint64_t, uint64_t);
   uint64_t countTwins(uint64_t, uint64_t);
@@ -104,7 +101,6 @@ public:
   uint64_t countQuadruplets(uint64_t, uint64_t);
   uint64_t countQuintuplets(uint64_t, uint64_t);
   uint64_t countSextuplets(uint64_t, uint64_t);
-  uint64_t countSeptuplets(uint64_t, uint64_t);
   // Count getters
   uint64_t getPrimeCount() const;
   uint64_t getTwinCount() const;
@@ -112,7 +108,6 @@ public:
   uint64_t getQuadrupletCount() const;
   uint64_t getQuintupletCount() const;
   uint64_t getSextupletCount() const;
-  uint64_t getSeptupletCount() const;
   uint64_t getCount(int) const;
 protected:
   /// Sieve primes >= start_

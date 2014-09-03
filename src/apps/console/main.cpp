@@ -23,24 +23,23 @@ using primesieve::ParallelPrimeSieve;
 
 void printResults(const ParallelPrimeSieve& pps)
 {
-  const string primeLabels[7] =
+  const string primeLabels[6] =
   {
     "Prime numbers",
     "Twin primes",
     "Prime triplets",
     "Prime quadruplets",
     "Prime quintuplets",
-    "Prime sextuplets",
-    "Prime septuplets"
+    "Prime sextuplets"
   };
 
   int size = 0;
-  for (int i = 0; i < 7; i++) {
+  for (int i = 0; i < 6; i++) {
     if (pps.isCount(i))
       size = max(size, static_cast<int>(primeLabels[i].size()));
   }
 
-  for (int i = 0; i < 7; i++) {
+  for (int i = 0; i < 6; i++) {
     if (pps.isCount(i))
       cout << setw(size) << primeLabels[i] << " : "
            << pps.getCount(i)

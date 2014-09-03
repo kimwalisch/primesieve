@@ -30,7 +30,7 @@ public:
   {
     uint64_t start;
     uint64_t stop;
-    uint64_t counts[7];
+    uint64_t counts[6];
     double status;
     double seconds;
     int flags;

@@ -43,7 +43,7 @@ const PrimeSieve::SmallPrime PrimeSieve::smallPrimes_[8] =
 PrimeSieve::PrimeSieve() :
   start_(0),
   stop_(0),
-  counts_(7),
+  counts_(6),
   flags_(COUNT_PRIMES),
   threadNum_(0),
   parent_(NULL)
@@ -56,7 +56,7 @@ PrimeSieve::PrimeSieve() :
 /// child object for each thread.
 ///
 PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
-  counts_(7),
+  counts_(6),
   sieveSize_(parent.sieveSize_),
   flags_(parent.flags_),
   threadNum_(threadNum),
@@ -79,7 +79,6 @@ uint64_t PrimeSieve::getTripletCount()           const { return counts_[2]; }
 uint64_t PrimeSieve::getQuadrupletCount()        const { return counts_[3]; }
 uint64_t PrimeSieve::getQuintupletCount()        const { return counts_[4]; }
 uint64_t PrimeSieve::getSextupletCount()         const { return counts_[5]; }
-uint64_t PrimeSieve::getSeptupletCount()         const { return counts_[6]; }
 uint64_t PrimeSieve::getCount(int index)         const { return counts_.at(index); }
 double   PrimeSieve::getStatus()                 const { return percent_; }
 double   PrimeSieve::getSeconds()                const { return seconds_; }
@@ -91,8 +90,8 @@ bool     PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last 
 bool     PrimeSieve::isCount(int index)          const { return isFlag(COUNT_PRIMES << index); }
 bool     PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRIMES << index); }
 bool     PrimeSieve::isCallback()                const { return isFlag(CALLBACK_PRIMES, CALLBACK_PRIMES_C_TN); }
-bool     PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEPTUPLETS); }
-bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEPTUPLETS); }
+bool     PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEXTUPLETS); }
+bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEXTUPLETS); }
 bool     PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
 bool     PrimeSieve::isParallelPrimeSieveChild() const { return parent_ != NULL; }
 
@@ -390,11 +389,6 @@ void PrimeSieve::printSextuplets(uint64_t start, uint64_t stop)
   sieve(start, stop, PRINT_SEXTUPLETS);
 }
 
-void PrimeSieve::printSeptuplets(uint64_t start, uint64_t stop)
-{
-  sieve(start, stop, PRINT_SEPTUPLETS);
-}
-
 // Count member functions
 
 uint64_t PrimeSieve::countPrimes(uint64_t start, uint64_t stop)
@@ -431,12 +425,6 @@ uint64_t PrimeSieve::countSextuplets(uint64_t start, uint64_t stop)
 {
   sieve(start, stop, COUNT_SEXTUPLETS);
   return getSextupletCount();
-}
-
-uint64_t PrimeSieve::countSeptuplets(uint64_t start, uint64_t stop)
-{
-  sieve(start, stop, COUNT_SEPTUPLETS);
-  return getSeptupletCount();
 }
 
 } // namespace primesieve

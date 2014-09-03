@@ -85,9 +85,9 @@ private:
 
   enum {
     COUNT_PRIMES     = primesieve::ParallelPrimeSieve::COUNT_PRIMES,
-    COUNT_KTUPLETS   = primesieve::ParallelPrimeSieve::COUNT_SEPTUPLETS * 2 - primesieve::ParallelPrimeSieve::COUNT_TWINS,
-    COUNT_FLAGS      = primesieve::ParallelPrimeSieve::COUNT_SEPTUPLETS * 2 - primesieve::ParallelPrimeSieve::COUNT_PRIMES,
-    PRINT_FLAGS      = primesieve::ParallelPrimeSieve::PRINT_SEPTUPLETS * 2 - primesieve::ParallelPrimeSieve::PRINT_PRIMES,
+    COUNT_KTUPLETS   = primesieve::ParallelPrimeSieve::COUNT_SEXTUPLETS * 2 - primesieve::ParallelPrimeSieve::COUNT_TWINS,
+    COUNT_FLAGS      = primesieve::ParallelPrimeSieve::COUNT_SEXTUPLETS * 2 - primesieve::ParallelPrimeSieve::COUNT_PRIMES,
+    PRINT_FLAGS      = primesieve::ParallelPrimeSieve::PRINT_SEXTUPLETS * 2 - primesieve::ParallelPrimeSieve::PRINT_PRIMES,
     PRINT_PRIMES     = primesieve::ParallelPrimeSieve::PRINT_PRIMES,
     CALCULATE_STATUS = primesieve::ParallelPrimeSieve::CALCULATE_STATUS
   };

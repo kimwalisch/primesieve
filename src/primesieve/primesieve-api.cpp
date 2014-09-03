@@ -99,13 +99,6 @@ uint64_t count_sextuplets(uint64_t start, uint64_t stop)
   return ps.countSextuplets(start, stop);
 }
 
-uint64_t count_septuplets(uint64_t start, uint64_t stop)
-{
-  PrimeSieve ps;
-  ps.setSieveSize(get_sieve_size());
-  return ps.countSeptuplets(start, stop);
-}
-
 //////////////////////////////////////////////////////////////////////
 //                   Parallel count functions
 //////////////////////////////////////////////////////////////////////
@@ -158,14 +151,6 @@ uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop)
   return pps.countSextuplets(start, stop);
 }
 
-uint64_t parallel_count_septuplets(uint64_t start, uint64_t stop)
-{
-  ParallelPrimeSieve pps;
-  pps.setSieveSize(get_sieve_size());
-  pps.setNumThreads(get_num_threads());
-  return pps.countSeptuplets(start, stop);
-}
-
 //////////////////////////////////////////////////////////////////////
 //                      Print functions
 //////////////////////////////////////////////////////////////////////
@@ -210,13 +195,6 @@ void print_sextuplets(uint64_t start, uint64_t stop)
   PrimeSieve ps;
   ps.setSieveSize(get_sieve_size());
   ps.printSextuplets(start, stop);
-}
-
-void print_septuplets(uint64_t start, uint64_t stop)
-{
-  PrimeSieve ps;
-  ps.setSieveSize(get_sieve_size());
-  ps.printSeptuplets(start, stop);
 }
 
 //////////////////////////////////////////////////////////////////////

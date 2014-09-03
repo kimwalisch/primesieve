@@ -29,9 +29,9 @@ public:
   PrimeFinder(PrimeSieve&);
 private:
   enum { END = 0xff + 1 };
-  static const uint_t kBitmasks_[7][5];
+  static const uint_t kBitmasks_[6][5];
   /// Count lookup tables for prime k-tuplets
-  std::vector<uint_t> kCounts_[7];
+  std::vector<uint_t> kCounts_[6];
   /// Reference to the associated PrimeSieve object
   PrimeSieve& ps_;
   void init_kCounts();

@@ -88,7 +88,7 @@ void PrimeSieveProcess::start(quint64 start, quint64 stop,
   shm_->threads = threads;
   shm_->status = 0.0;
   shm_->seconds = 0.0;
-  for (int i = 0; i < 7; i++)
+  for (int i = 0; i < 6; i++)
     shm_->counts[i] = 0;
   // path + file name of the aplication
   QString path = QCoreApplication::applicationFilePath();
@@ -106,7 +106,7 @@ bool PrimeSieveProcess::isFinished() {
 
 /**
  * @return The count of primes/k-tuplets within [start, stop].
- * @pre index <= 6
+ * @pre index < 6
  */
 quint64 PrimeSieveProcess::getCount(unsigned int index) const {
   return shm_->counts[index];

@@ -14,9 +14,9 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
-#define PRIMESIEVE_VERSION "5.3"
+#define PRIMESIEVE_VERSION "5.4"
 #define PRIMESIEVE_VERSION_MAJOR 5
-#define PRIMESIEVE_VERSION_MINOR 3
+#define PRIMESIEVE_VERSION_MINOR 4
 
 #include <primesieve/primesieve_iterator.h>
 #include <stdint.h>
@@ -125,11 +125,6 @@ uint64_t primesieve_count_quintuplets(uint64_t start, uint64_t stop);
  */
 uint64_t primesieve_count_sextuplets(uint64_t start, uint64_t stop);
 
-/** Count the prime septuplets within the interval [start, stop].
- *  @pre stop <= 2^64 - 2^32 * 10.
- */
-uint64_t primesieve_count_septuplets(uint64_t start, uint64_t stop);
-
 /** Count the primes within the interval [start, stop] in
  *  parallel. By default all CPU cores are used, use
  *  primesieve_set_num_threads(int) to change the number of threads.
@@ -172,13 +167,6 @@ uint64_t primesieve_parallel_count_quintuplets(uint64_t start, uint64_t stop);
  */
 uint64_t primesieve_parallel_count_sextuplets(uint64_t start, uint64_t stop);
 
-/** Count the prime septuplets within the interval [start, stop] in
- *  parallel. By default all CPU cores are used, use
- *  primesieve_set_num_threads(int) to change the number of threads.
- *  @pre stop <= 2^64 - 2^32 * 10.
- */
-uint64_t primesieve_parallel_count_septuplets(uint64_t start, uint64_t stop);
-
 /** Print the primes within the interval [start, stop]
  *  to the standard output.
  *  @pre stop <= 2^64 - 2^32 * 10.
@@ -214,12 +202,6 @@ void primesieve_print_quintuplets(uint64_t start, uint64_t stop);
  *  @pre stop <= 2^64 - 2^32 * 10.
  */
 void primesieve_print_sextuplets(uint64_t start, uint64_t stop);
-
-/** Print the prime septuplets within the interval [start, stop]
- *  to the standard output.
- *  @pre stop <= 2^64 - 2^32 * 10.
- */
-void primesieve_print_septuplets(uint64_t start, uint64_t stop);
 
 /** Call back the primes within the interval [start, stop].
  *  @param callback  A callback function.

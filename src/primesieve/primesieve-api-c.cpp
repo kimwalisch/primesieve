@@ -310,21 +310,6 @@ uint64_t primesieve_count_sextuplets(uint64_t start, uint64_t stop)
   return PRIMESIEVE_ERROR;
 }
 
-uint64_t primesieve_count_septuplets(uint64_t start, uint64_t stop)
-{
-  try
-  {
-    primesieve::PrimeSieve ps;
-    ps.setSieveSize(primesieve::get_sieve_size());
-    return ps.countSeptuplets(start, stop);
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-  return PRIMESIEVE_ERROR;
-}
-
 //////////////////////////////////////////////////////////////////////
 //                   Parallel count functions
 //////////////////////////////////////////////////////////////////////
@@ -425,22 +410,6 @@ uint64_t primesieve_parallel_count_sextuplets(uint64_t start, uint64_t stop)
   return PRIMESIEVE_ERROR;
 }
 
-uint64_t primesieve_parallel_count_septuplets(uint64_t start, uint64_t stop)
-{
-  try
-  {
-    primesieve::ParallelPrimeSieve pps;
-    pps.setSieveSize (primesieve::get_sieve_size());
-    pps.setNumThreads(primesieve::get_num_threads());
-    return pps.countSeptuplets(start, stop);
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-  return PRIMESIEVE_ERROR;
-}
-
 //////////////////////////////////////////////////////////////////////
 //                      Print functions
 //////////////////////////////////////////////////////////////////////
@@ -522,20 +491,6 @@ void primesieve_print_sextuplets(uint64_t start, uint64_t stop)
     primesieve::PrimeSieve ps;
     ps.setSieveSize(primesieve::get_sieve_size());
     ps.printSextuplets(start, stop);
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-}
-
-void primesieve_print_septuplets(uint64_t start, uint64_t stop)
-{
-  try
-  {
-    primesieve::PrimeSieve ps;
-    ps.setSieveSize(primesieve::get_sieve_size());
-    ps.printSeptuplets(start, stop);
   }
   catch (std::exception&)
   {

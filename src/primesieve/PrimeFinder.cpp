@@ -30,15 +30,14 @@ namespace primesieve {
 /// forward declaration
 uint64_t popcount(const uint64_t* array, uint64_t size);
 
-const uint_t PrimeFinder::kBitmasks_[7][5] =
+const uint_t PrimeFinder::kBitmasks_[6][5] =
 {
   { END },
   { 0x06, 0x18, 0xc0, END },       // Twin prime       bitmasks, i.e. b00000110, b00011000, b11000000
   { 0x07, 0x0e, 0x1c, 0x38, END }, // Prime triplet    bitmasks, i.e. b00000111, b00001110, ...
   { 0x1e, END },                   // Prime quadruplet bitmasks
   { 0x1f, 0x3e, END },             // Prime quintuplet bitmasks
-  { 0x3f, END },                   // Prime sextuplet  bitmasks
-  { 0xfe, END }                    // Prime septuplet  bitmasks
+  { 0x3f, END }                    // Prime sextuplet  bitmasks
 };
 
 PrimeFinder::PrimeFinder(PrimeSieve& ps) :
@@ -47,7 +46,7 @@ PrimeFinder::PrimeFinder(PrimeSieve& ps) :
                       ps.getSieveSize()),
   ps_(ps)
 {
-  if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEPTUPLETS))
+  if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEXTUPLETS))
     init_kCounts();
 }
 
@@ -212,7 +211,7 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
     callbackPrimes(printPrime, sieve, sieveSize);
   }
   // print prime k-tuplets
-  if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEPTUPLETS))
+  if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEXTUPLETS))
   {
     uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
     for (; !ps_.isPrint(i); i++)

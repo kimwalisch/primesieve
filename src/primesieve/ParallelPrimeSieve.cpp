@@ -150,7 +150,6 @@ void ParallelPrimeSieve::sieve()
       count3 += ps.getCount(3);
       count4 += ps.getCount(4);
       count5 += ps.getCount(5);
-      count6 += ps.getCount(6);
     }
 
 #else /* OpenMP 2.x */
@@ -171,7 +170,6 @@ void ParallelPrimeSieve::sieve()
       count3 += ps.getCount(3);
       count4 += ps.getCount(4);
       count5 += ps.getCount(5);
-      count6 += ps.getCount(6);
     }
 
 #endif
@@ -183,7 +181,6 @@ void ParallelPrimeSieve::sieve()
     counts_[3] = count3;
     counts_[4] = count4;
     counts_[5] = count5;
-    counts_[6] = count6;
   }
 
   // communicate the sieving results to the

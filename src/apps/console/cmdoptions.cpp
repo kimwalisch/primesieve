@@ -91,7 +91,7 @@ void test()
 int check(int primeType)
 {
   primeType--;
-  if (primeType < 0 || primeType > 6)
+  if (primeType < 0 || primeType > 5)
     help();
   return primeType;
 }
