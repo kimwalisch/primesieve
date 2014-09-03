@@ -1,3 +1,43 @@
+Changes in version 5.4, 03/09/2014
+==================================
+
+This is a minor new release which fixes two bugs in the computation of
+prime k-tuplets (twin primes, prime triplets, ...).
+
+1. The primesieve::print_*() functions for prime k-tuplets have been
+   fixed, they were broken since primesieve-5.1.
+   https://github.com/kimwalisch/primesieve/commit/ff2fb6f7acfb7c83827803dbb09a73f4a47ab222
+
+2. Prime 7-tuplets have been removed from primesieve (see API changes
+   further down). Below are the two modulo 30 patterns for prime
+   7-tuplets:
+
+   1) 30*k + { 7, 11, 13, 17, 19, 23, 29}
+   2) 30*k + {29, 31, 37, 41, 43, 47, 49}
+
+   Up until now primesieve only found prime 7-tuplets of the first
+   pattern e.g. it missed 5610 + {29, 31, ...}. Unfortunately this bug
+   cannot be fixed because of implementation constraints. Thus I have
+   decided to completely remove prime 7-tuplets from primesieve.
+
+   C++ API changes
+   ---------------
+
+   All functions related to prime 7-tuplets have been removed:
+
+   uint64_t primesieve::print_septuplets(uint64_t start, uint64_t stop);
+   uint64_t primesieve::count_septuplets(uint64_t start, uint64_t stop);
+   uint64_t primesieve::parallel_count_septuplets(uint64_t start, uint64_t stop);
+
+   C API changes
+   -------------
+
+   All functions related to prime 7-tuplets have been removed:
+
+   uint64_t primesieve_print_septuplets(uint64_t start, uint64_t stop);
+   uint64_t primesieve_count_septuplets(uint64_t start, uint64_t stop);
+   uint64_t primesieve_parallel_count_septuplets(uint64_t start, uint64_t stop);
+
 Changes in version 5.3, 06/07/2014
 ==================================
 
