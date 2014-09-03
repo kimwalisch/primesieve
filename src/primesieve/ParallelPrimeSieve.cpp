@@ -132,13 +132,13 @@ void ParallelPrimeSieve::sieve()
     PrimeSieve::sieve();
   else {
     uint64_t threadInterval = getThreadInterval(threads);
-    uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0;
+    uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0;
     double t1 = getWallTime();
 
 #if _OPENMP >= 200800 /* OpenMP >= 3.0 (2008) */
 
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
-      reduction(+: count0, count1, count2, count3, count4, count5, count6)
+      reduction(+: count0, count1, count2, count3, count4, count5)
     for (uint64_t n = start_; n < stop_; n += threadInterval) {
       PrimeSieve ps(*this, omp_get_thread_num());
       uint64_t threadStart = align(n);
@@ -157,7 +157,7 @@ void ParallelPrimeSieve::sieve()
     int64_t iters = 1 + (getInterval() - 1) / threadInterval;
 
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
-      reduction(+: count0, count1, count2, count3, count4, count5, count6)
+      reduction(+: count0, count1, count2, count3, count4, count5)
     for (int64_t i = 0; i < iters; i++) {
       PrimeSieve ps(*this, omp_get_thread_num());
       uint64_t n = start_ + i * threadInterval;
