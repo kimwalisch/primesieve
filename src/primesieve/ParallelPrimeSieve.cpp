@@ -250,7 +250,10 @@ double ParallelPrimeSieve::getWallTime() const
 
 bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
 {
-  return PrimeSieve::updateStatus(processed, waitForLock);
+  bool isUpdate = PrimeSieve::updateStatus(processed, waitForLock);
+  if (shm_)
+    shm_->status = getStatus();
+  return isUpdate;
 }
 
 void ParallelPrimeSieve::setLock() { }
