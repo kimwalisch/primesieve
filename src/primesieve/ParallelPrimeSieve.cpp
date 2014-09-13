@@ -234,6 +234,13 @@ int ParallelPrimeSieve::getMaxThreads()
 void ParallelPrimeSieve::sieve()
 {
   PrimeSieve::sieve();
+
+  // communicate the sieving results to the
+  // primesieve GUI application
+  if (shm_) {
+    std::copy(counts_.begin(), counts_.end(), shm_->counts);
+    shm_->seconds = seconds_;
+  }
 }
 
 double ParallelPrimeSieve::getWallTime() const
