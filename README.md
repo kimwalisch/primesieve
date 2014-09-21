@@ -147,6 +147,7 @@ On Unix-like operating systems compile using:
 # Only needed if your operating system misses the ldconfig program
 $ export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
 $ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+$ export CPLUS_INCLUDE_PATH=/usr/local/include:$CPLUS_INCLUDE_PATH
 
 $ c++ -O2 primes.cpp -lprimesieve
 ```
@@ -191,6 +192,7 @@ On Unix-like operating systems compile using:
 # Only needed if your operating system misses the ldconfig program
 $ export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
 $ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+$ export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
 
 $ cc -O2 primes.c -lprimesieve
 ```
