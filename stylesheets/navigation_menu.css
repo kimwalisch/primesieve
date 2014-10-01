@@ -57,7 +57,7 @@ nav {
 	float: left;
 	border-style: solid; 
 	border-width: 1px;
-	border-color: #BABABA #BABABA #BABABA #FFF;
+	border-color: #AAAAAA #AAAAAA #AAAAAA #FFF;
 	box-shadow: 0 1px rgba(255,255,255,1) inset;
 	-webkit-box-shadow: 0 1px rgba(255,255,255,1) inset;
 	background: #F7F7F7; /* Old browsers */
@@ -87,7 +87,7 @@ nav {
 #navigation a {
 	display: block;
 	padding: 11px 19px;
-	color: #373737;
+	color: #303030;
 	text-decoration: none;
 	text-shadow: 0 1px #FFF;
 }
@@ -98,7 +98,7 @@ nav {
 }
 
 #navigation li:first-child {
-	border-left-color: #BABABA;
+	border-left-color: #AAAAAA;
 	border-radius: 100px 0 0 100px;
 }
 
