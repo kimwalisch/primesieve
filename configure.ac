@@ -1,4 +1,4 @@
-AC_INIT([primesieve], [5.4], [kim.walisch@gmail.com])
+AC_INIT([primesieve], [5.5], [kim.walisch@gmail.com])
 AC_SUBST([primesieve_lib_version], [4:0:0])
 
 AC_PREREQ([2.62])
@@ -44,8 +44,10 @@ AS_IF([test "x$L1_DCACHE_SIZE" = "x"],
         fi
     fi
     if test "x$L1_DCACHE_BYTES" != "x"; then
-        L1_DETECTED="yes"
-        L1_DCACHE_SIZE=$(expr $L1_DCACHE_BYTES '/' 1024)
+        if [ $L1_DCACHE_BYTES -ge 2048 ]; then
+            L1_DETECTED="yes"
+            L1_DCACHE_SIZE=$(expr $L1_DCACHE_BYTES '/' 1024)
+        fi
     fi]])
 
 AC_DEFINE_UNQUOTED([L1_DCACHE_SIZE],
