@@ -170,6 +170,7 @@ CPUs.</p>
   <li>Starts crossing off multiples at the square</li>
   <li>Uses a modolo 210 wheel that skips multiples of 2, 3, 5 and 7</li>
   <li>Uses specialized algorithms for small, medium and big sieving primes</li>
+  <li>Uses a custom memory pool (for big sieving primes)</li>
   <li>Processes two sieving primes per loop iteration to increase instruction-level parallelism</li>
   <li>Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
 </ul>
@@ -234,16 +235,16 @@ of Atkin implementation on the web. Here is a list of
       <span style="white-space: nowrap;">Prime Count</span>
     </td>
     <td class="timing_title">
-      <span style="white-space: nowrap;">Intel Core i5-670</span><br/>
-      <span class="cpu_details">(2 x 3.47GHz, 32K L1 Data Cache)</span>
-    </td>
-    <td class="timing_title">
       <span style="white-space: nowrap;">AMD Phenom II X4 945</span><br/>
       <span class="cpu_details">(4 x 3.0GHz, 64K L1 Data Cache)</span>
     </td>
     <td class="timing_title">
       <span style="white-space: nowrap;">Intel Core i7-4770</span><br/>
       <span class="cpu_details">(4 x 3.4GHz, 32K L1 Data Cache)</span>
+    </td>
+    <td class="timing_title">
+      <span style="white-space: nowrap;">IBM POWER8</span><br/>
+      <span class="cpu_details">(22 x 3.0GHz, 64K L1 Data Cache)</span>
     </td>
   </tr>
 <tr>
@@ -263,52 +264,52 @@ of Atkin implementation on the web. Here is a list of
 <tr>
     <td class="timing">10<sup>9</sup></td>
     <td class="timing">50,847,534</td>
-    <td class="timing">0.11s</td>
     <td class="timing">0.06s</td>
     <td class="timing">0.05s</td>
+    <td class="timing">0.07s</td>
   </tr>
 <tr>
     <td class="timing">2<sup>32</sup></td>
     <td class="timing">203,280,221</td>
     <td class="timing">0.54s</td>
     <td class="timing">0.26s</td>
-    <td class="timing">0.23s</td>
+    <td class="timing">0.19s</td>
   </tr>
 <tr>
 <td class="timing">10<sup>10</sup></td>
     <td class="timing">455,052,511</td>
-    <td class="timing">1.29s</td>
     <td class="timing">0.66s</td>
     <td class="timing">0.57s</td>
+    <td class="timing">0.30s</td>
   </tr>
 <tr>
     <td class="timing">10<sup>11</sup></td>
     <td class="timing">4,118,054,813</td>
-    <td class="timing">16.11s</td>
     <td class="timing">8.57s</td>
     <td class="timing">6.63s</td>
+    <td class="timing">1.88s</td>
   </tr>
 <tr>
     <td class="timing">10<sup>12</sup></td>
     <td class="timing">37,607,912,018</td>
-    <td class="timing">208.63s</td>
     <td class="timing">122.02s</td>
     <td class="timing">77.79s</td>
+    <td class="timing">20.23s</td>
   </tr>
 <tr>
     <td class="timing">10<sup>13</sup></td>
     <td class="timing">346,065,536,839</td>
-    <td class="timing">2629.84s</td>
     <td class="timing">1664.68s</td>
     <td class="timing">926.83</td>
+    <td class="timing">242.35s</td>
   </tr>
 </table>
 <p><br/>The above benchmarks were run on a 64-bit Linux operating
 system and primesieve was compiled using
 <span style="white-space: nowrap;">GCC 4.8.</span> For each benchmark
-primesieve used all available CPU cores and the sieve size was set to
-the CPU's L1 data cache size per core (Intel: 32 kilobytes, AMD: 64
-kilobytes).</p>
+primesieve used all available CPU cores (AMD: 4 threads, Intel: 8 threads,
+IBM: 176 threads) and the sieve size was set to the CPU's L1 data cache
+size per core.</p>
 
 <h2 style="padding-bottom: 5px">
 <a name="cpu-scaling" class="anchor" href="#cpu-scaling"><span class="octicon octicon-link"></span></a>CPU scaling</h2>
