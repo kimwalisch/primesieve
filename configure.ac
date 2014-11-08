@@ -44,7 +44,7 @@ AS_IF([test "x$L1_DCACHE_SIZE" = "x"],
         L1_DCACHE_BYTES=$(getconf LEVEL1_DCACHE_SIZE 2>/dev/null)
     fi
 
-    if test "x$L1_DCACHE_BYTES" = "x" || test "x$L1_DCACHE_BYTES" = "x0";
+    if test "x$L1_DCACHE_BYTES" = "x" || test "$L1_DCACHE_BYTES" = "0";
     then
         # Returns L1 cache size like e.g. 32K, 1M
         L1_DCACHE_BYTES=$(cat /sys/devices/system/cpu/cpu0/cache/index0/size 2>/dev/null)
