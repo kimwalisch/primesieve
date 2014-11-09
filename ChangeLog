@@ -1,10 +1,12 @@
-Changes in version 5.5, 08/11/2014
-==================================
+Changes in version 5.4.1, 09/11/2014
+====================================
 
 This is a minor new release, the API and ABI are backwards compatible.
 
-1. Fixed a bug in the configure script which used SIEVESIZE=0 instead
-   of SIEVESIZE=32 on QEMU virtual machines.
+1. Fixed a bug in the configure.ac script which used SIEVESIZE=0
+   instead of SIEVESIZE=32 on QEMU virtual machines.
+2. Introduce patch version (3rd version number) in order not to
+   increase the minor version for bug fix only releases.
 
 Changes in version 5.4, 14/09/2014
 ==================================
