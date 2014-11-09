@@ -57,7 +57,7 @@ AS_IF([test "x$L1_DCACHE_SIZE" = "x"],
                 L1_DCACHE_BYTES=$(expr $(echo $L1_DCACHE_BYTES | sed -e s'/K$//') '*' 1024)
             fi
             is_megabytes=$(echo $L1_DCACHE_BYTES | grep M)
-            if test "x$megabytes" != "x";
+            if test "x$is_megabytes" != "x";
             then
                 L1_DCACHE_BYTES=$(expr $(echo $L1_DCACHE_BYTES | sed -e s'/M$//') '*' 1024 '*' 1024)
             fi
