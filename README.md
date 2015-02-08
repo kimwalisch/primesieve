@@ -15,6 +15,10 @@ up to 2^64.
 * Downloads: http://primesieve.org/downloads
 * API: http://primesieve.org/api
 
+### Screenshot
+
+![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve_win7.png)
+
 ### Algorithm complexity
 
 primesieve generates primes using the segmented sieve of Eratosthenes with
