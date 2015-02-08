@@ -3,12 +3,12 @@ primesieve
 [![Build Status](https://travis-ci.org/kimwalisch/primesieve.svg)](https://travis-ci.org/kimwalisch/primesieve)
 
 primesieve is a free (BSD-licensed) software program and C/C++
-library that generates primes using a highly optimized
-[sieve of Eratosthenes](http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes)
-implementation. It generates the primes below 10^9 in just 0.2 seconds
-on a single core of an Intel Core i7-4770 3.4GHz CPU from 2013.
+library that generates primes using a
+<a href="http://primesieve.org/#implementation">highly optimized sieve
+of Eratosthenes implementation</a>. It counts the primes below 10^10 in
+just 0.57 seconds on an Intel Core i7-4770 3.4GHz CPU from 2013.
 primesieve can generate primes and
-[prime&#160;k&#8209;tuplets](http://en.wikipedia.org/wiki/Prime_k-tuple)
+<a href="http://en.wikipedia.org/wiki/Prime_k-tuple">prime k-tuplets</a>
 up to 2^64.
 
 * Homepage: http://primesieve.org
