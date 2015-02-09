@@ -36,7 +36,10 @@ bytes.
 primesieve is written in C++03 and includes C bindings for all its
 functions. primesieve compiles with every standard compliant C++
 compiler and runs on both little and big endian CPUs. The
-parallelization is implemented using OpenMP (2.0 or later).
+parallelization is implemented using
+[OpenMP](http://en.wikipedia.org/wiki/OpenMP) (2.0 or later). The
+primesieve GUI application (not built by default) uses the
+[Qt framework](http://qt-project.org).
 
 ### Build instructions (Unix-like OSes)
 
@@ -117,7 +120,7 @@ $ ./primesieve 1e10 2e10 --count --threads=4
 $ ./primesieve --help
 ```
 
-### primesieve C++ library
+### C++ library
 
 After having built and installed primesieve you can easily use it in
 your C++ program, below is an example. primesieve's API is documented
@@ -160,7 +163,7 @@ On Windows (MSVC) compile using:
 > cl /O2 /EHsc primes.cpp /I primesieve\include /link primesieve\primesieve.lib
 ```
 
-### primesieve C bindings
+### C bindings
 
 All of primesieve's functions are exposed as C API (C99 or later) via
 the primesieve.h header. You can explore primesieve's C API online
