@@ -101,7 +101,7 @@ To build the example programs use:
 > nmake -f Makefile.msvc examples
 ```
 
-### primesieve console application
+### Console application
 
 The primesieve console application can print and count primes and
 prime k-tuplets and find the nth prime. Below are a few usage
