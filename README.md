@@ -11,9 +11,9 @@ primesieve can generate primes and
 <a href="http://en.wikipedia.org/wiki/Prime_k-tuple">prime k-tuplets</a>
 up to 2^64.
 
-* Homepage: http://primesieve.org
-* Downloads: http://primesieve.org/downloads
-* API: http://primesieve.org/api
+- **Homepage:** http://primesieve.org
+- **Binaries:** http://primesieve.org/downloads
+- **API:** http://primesieve.org/api
 
 ### Screenshot
 
