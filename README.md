@@ -19,6 +19,8 @@ up to 2^64.
 
 ![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve_win7.png)
 
+The screenshot shows the primesieve GUI application running on Windows. There is also a primesieve console  application available. Binaries for Windows, Mac OS X and Linux can be downloaded from [http://primesieve.org/downloads](http://primesieve.org/downloads).
+
 ### Algorithm complexity
 
 primesieve generates primes using the segmented sieve of Eratosthenes with
