@@ -1,5 +1,6 @@
-primesieve [![Build Status](https://travis-ci.org/kimwalisch/primesieve.svg)](https://travis-ci.org/kimwalisch/primesieve)
+primesieve
 ==========
+[![Build Status](https://travis-ci.org/kimwalisch/primesieve.svg)](https://travis-ci.org/kimwalisch/primesieve)
 
 primesieve is a software program and C/C++ library that generates
 primes using a highly optimized
