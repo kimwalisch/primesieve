@@ -24,7 +24,7 @@ There is also a primesieve console  application available. Binaries for
 Windows, Mac OS X and Linux can be downloaded from
 [http://primesieve.org/downloads](http://primesieve.org/downloads).
 
-### Algorithm
+### Algorithm complexity
 
 primesieve generates primes using the segmented sieve of Eratosthenes with
 [wheel factorization](http://en.wikipedia.org/wiki/Wheel_factorization),
