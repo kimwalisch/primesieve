@@ -1,11 +1,73 @@
 $(document).ready(function() {
 	// Workaround for Safari and Chrome CSS alignment bug (2014).
 	$("h2").hide().fadeIn('fast');
+  
+  var download_url = "http://dl.bintray.com/kimwalisch/primesieve/";
+  var primesieve_version = "";
+  var download_file_extension = ".zip";
+  var is64bit = false;
+  
+  is64bitOS = function(s)
+  {
+    return window.navigator.userAgent.indexOf(s) > -1;
+  }
 
-	var primesieve_version = "5.4.1";
-	var download_url = "http://dl.bintray.com/kimwalisch/primesieve/primesieve-";
-	$("a.download_zip").attr("href", download_url + primesieve_version + ".zip");
-	$("a.download_targz").attr("href", download_url + primesieve_version + ".tar.gz");
+  // https://github.com/peterhurford/64or32
+  if (is64bitOS('x86_64') ||
+      is64bitOS('x86-64') ||
+      is64bitOS('Win64') ||
+      is64bitOS('x64;') ||
+      is64bitOS('amd64') ||
+      is64bitOS('AMD64') ||
+      is64bitOS('WOW64') ||
+      is64bitOS('x64_64') ||
+      window.navigator.platform === 'MacIntel' ||
+      window.navigator.platform === 'Linux x86_64')
+  {
+    is64bit = true;
+  }
+
+  if (navigator.appVersion.indexOf("Win") != -1)
+  {
+    if (is64bit)
+      primesieve_version = "primesieve-5.4-win64.zip";
+    else
+      primesieve_version = "primesieve-3.6-win32.zip";
+  }
+  else if (navigator.appVersion.indexOf("Mac") != -1)
+  {
+    if (is64bit)
+      primesieve_version = "primesieve-5.4-macosx-x64.zip";
+  }
+  else if (navigator.appVersion.indexOf("Linux") !=-1)
+  {
+    if (is64bit) {
+      primesieve_version = "primesieve-5.4-linux-x64.tar.gz";
+    }
+    else if (window.navigator.platform == "Linux i686" ||
+             window.navigator.platform == "Linux i686 X11" ||
+             window.navigator.platform == "Linux x86")
+      primesieve_version = "primesieve-3.6-linux-x86.tar.gz";
+    
+    download_file_extension = ".tar.gz";
+  }
+
+  // fallback mode, offer source code for download
+  if (primesieve_version != "") {
+	  $("a.download_zip").attr("href", download_url + primesieve_version);
+  }
+  else
+  {
+    // use .tar.gz for all OSes except Windows
+    if (navigator.appVersion.indexOf("Win") == -1)
+      download_file_extension = ".tar.gz";
+
+    primesieve_version = "primesieve-5.4.1";
+    $("a.download_zip").attr("href", download_url + primesieve_version + download_file_extension);
+  }
+
+  // update file extension in download button
+  $("a.download_zip span").html(download_file_extension);
 });
 
 if(!Modernizr.svg) {
