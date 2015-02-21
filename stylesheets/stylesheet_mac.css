@@ -222,7 +222,7 @@ code, pre {
 
 code {
   background-color: #fff;
-  border: solid 1px #d0d0d0;
+  border: solid 1px #c9c9c9;
   padding: 0 3px;
 }
 
@@ -231,7 +231,7 @@ pre {
   background: #fff;
   text-shadow: none;
   overflow: auto;
-  border: solid 1px #d0d0d0;
+  border: solid 1px #c9c9c9;
 }
 pre code {
   color: #2879d0;
