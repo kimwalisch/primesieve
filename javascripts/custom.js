@@ -2,8 +2,9 @@ $(document).ready(function() {
 	// Workaround for Safari and Chrome CSS alignment bug (2014).
 	$("h2").hide().fadeIn('fast');
   
+  var primesieve_version = "5.4.1";
+  var primesieve_os_file_name = "";
   var download_url = "http://dl.bintray.com/kimwalisch/primesieve/";
-  var primesieve_version = "";
   var download_button_text = ".zip file";
   var is64bit = false;
   
@@ -31,12 +32,12 @@ $(document).ready(function() {
   {
     if (is64bit)
     {
-      primesieve_version = "primesieve-5.4-win64.zip";
+      primesieve_os_file_name = "primesieve-5.4-win64.zip";
       download_button_text = "Win64 .zip";
     }
     else
     {
-      primesieve_version = "primesieve-3.6-win32.zip";
+      primesieve_os_file_name = "primesieve-3.6-win32.zip";
       download_button_text = "Win32 .zip";
     }
   }
@@ -44,7 +45,7 @@ $(document).ready(function() {
   {
     if (is64bit)
     {
-      primesieve_version = "primesieve-5.4-macosx-x64.zip";
+      primesieve_os_file_name = "primesieve-5.4-macosx-x64.zip";
       download_button_text = "OS X .zip";
     }
   }
@@ -52,35 +53,36 @@ $(document).ready(function() {
   {
     if (is64bit)
     {
-      primesieve_version = "primesieve-5.4-linux-x64.tar.gz";
+      primesieve_os_file_name = "primesieve-5.4-linux-x64.tar.gz";
       download_button_text = "Linux-x64";
     }
     else if (window.navigator.platform == "Linux i686" ||
              window.navigator.platform == "Linux i686 X11" ||
              window.navigator.platform == "Linux x86")
     {
-      primesieve_version = "primesieve-3.6-linux-x86.tar.gz";
+      primesieve_os_file_name = "primesieve-3.6-linux-x86.tar.gz";
       download_button_text = "Linux-x86";
     }
   }
 
   // fallback mode, offer source code for download
-  if (primesieve_version != "") {
-    $("a.download_zip").attr("href", download_url + primesieve_version);
+  if (primesieve_os_file_name != "") {
+    $("a.download_button").attr("href", download_url + primesieve_os_file_name);
   }
   else
   {
     // use .tar.gz for all OSes except Windows
-    var download_file_extension = ".zip";
+    var file_extension = ".zip";
     if (navigator.appVersion.indexOf("Win") == -1)
-      download_file_extension = ".tar.gz";
+      file_extension = ".tar.gz";
 
     download_button_text = download_file_extension + " file";
-    $("a.download_zip").attr("href", download_url + "primesieve-5.4.1" + download_file_extension);
+    $("a.download_button").attr("href", download_url + "primesieve-" + primesieve_version + file_extension);
   }
 
-  // update file extension in download button
-  $("a.download_zip span").html(download_button_text);
+  $("a.download_button span").html(download_button_text);
+  $("a.download_zip").attr("href", download_url + "primesieve-" + primesieve_version + ".zip");
+	$("a.download_targz").attr("href", download_url + "primesieve-" + primesieve_version + ".tar.gz");
 });
 
 if(!Modernizr.svg) {
