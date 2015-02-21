@@ -258,7 +258,7 @@ hr {
 
 table {
   width: 100%;
-  border: 1px solid #c6c6c6;
+  border: 1px solid #c3c3c3;
 }
 
 th {
@@ -266,7 +266,7 @@ th {
 }
 
 td {
-  border: 1px solid #c6c6c6;
+  border: 1px solid #c3c3c3;
   text-align: center; 
   font-weight: 300;
 }
