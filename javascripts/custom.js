@@ -1,95 +1,104 @@
 $(document).ready(function() {
 	// Workaround for Safari and Chrome CSS alignment bug (2014).
-	$("h2").hide().fadeIn('fast');
+	$('h2').hide().fadeIn('fast');
 
-  var primesieve_version = "5.4.1";
-  var primesieve_win64_binary = "primesieve-5.4-win64.zip";
-  var primesieve_win32_binary = "primesieve-3.6-win32.zip";
-  var primesieve_macosx_x64_binary = "primesieve-5.4-macosx-x64.zip";
-  var primesieve_linux_x64_binary = "primesieve-5.4-linux-x64.tar.gz";
-  var primesieve_linux_x86_binary = "primesieve-3.6-linux-x86.tar.gz";
-  var primesieve_os_binary = "";
+  var primesieve_version = '5.4.1';
+  var primesieve_win64_binary = 'primesieve-5.4-win64.zip';
+  var primesieve_win32_binary = 'primesieve-3.6-win32.zip';
+  var primesieve_macosx_x64_binary = 'primesieve-5.4-macosx-x64.zip';
+  var primesieve_linux_x64_binary = 'primesieve-5.4-linux-x64.tar.gz';
+  var primesieve_linux_x86_binary = 'primesieve-3.6-linux-x86.tar.gz';
+  var primesieve_os_binary = '';
 
-  var download_url = "http://dl.bintray.com/kimwalisch/primesieve/";
-  var download_button_text = ".zip file";
+  var download_url = 'http://dl.bintray.com/kimwalisch/primesieve/';
+  var download_button_text = '.zip file';
   var is64bit = false;
   
-  is64bitOS = function(s)
+  isUserAgent = function(s)
   {
-    return window.navigator.userAgent.indexOf(s) > -1;
+    return navigator.userAgent.indexOf(s) > -1;
+  }
+
+  isPlatform = function(s)
+  {
+    return navigator.platform.indexOf(s) > -1;
+  }
+
+  isAppVersion = function(s)
+  {
+    return navigator.appVersion.indexOf(s) > -1;
   }
 
   // https://github.com/peterhurford/64or32
-  if (is64bitOS('x86_64') ||
-      is64bitOS('x86-64') ||
-      is64bitOS('Win64') ||
-      is64bitOS('x64;') ||
-      is64bitOS('amd64') ||
-      is64bitOS('AMD64') ||
-      is64bitOS('WOW64') ||
-      is64bitOS('x64_64') ||
-      window.navigator.platform === 'MacIntel' ||
-      window.navigator.platform === 'Linux x86_64')
+  if (isUserAgent('x86_64') ||
+      isUserAgent('x86-64') ||
+      isUserAgent('Win64') ||
+      isUserAgent('x64;') ||
+      isUserAgent('amd64') ||
+      isUserAgent('AMD64') ||
+      isUserAgent('WOW64') ||
+      isUserAgent('x64_64') ||
+      isPlatform('MacIntel') ||
+      isPlatform('Linux x86_64'))
   {
     is64bit = true;
   }
 
-  if (navigator.appVersion.indexOf("Win") != -1)
+  if (isAppVersion('Win'))
   {
     if (is64bit)
     {
       primesieve_os_binary = primesieve_win64_binary;
-      download_button_text = "Win64 .zip";
+      download_button_text = 'Win64 .zip';
     }
     else
     {
       primesieve_os_binary = primesieve_win32_binary;
-      download_button_text = "Win32 .zip";
+      download_button_text = 'Win32 .zip';
     }
   }
-  else if (navigator.appVersion.indexOf("Mac") != -1)
+  else if (isAppVersion('Mac'))
   {
     if (is64bit)
     {
       primesieve_os_binary = primesieve_macosx_x64_binary;
-      download_button_text = "OS X .zip";
+      download_button_text = 'OS X .zip';
     }
   }
-  else if (navigator.appVersion.indexOf("Linux") != -1 ||
-           navigator.userAgent.indexOf("Linux") != -1)
+  else if (isAppVersion('Linux') ||
+           isPlatform('Linux'))
   {
     if (is64bit)
     {
       primesieve_os_binary = primesieve_linux_x64_binary;
-      download_button_text = "Linux x64";
+      download_button_text = 'Linux x64';
     }
-    else if (window.navigator.platform == "Linux i686" ||
-             window.navigator.platform == "Linux i686 X11" ||
-             window.navigator.platform == "Linux x86")
+    else if (isPlatform('i686') ||
+             isPlatform('x86;'))
     {
       primesieve_os_binary = primesieve_linux_x86_binary;
-      download_button_text = "Linux x86";
+      download_button_text = 'Linux x86';
     }
   }
 
   // fallback mode, offer source code for download
-  if (primesieve_os_binary != "") {
-    $("a.download_button").attr("href", download_url + primesieve_os_binary);
+  if (primesieve_os_binary != '') {
+    $('a.download_button').attr('href', download_url + primesieve_os_binary);
   }
   else
   {
     // use .tar.gz for all OSes except Windows
-    var file_extension = ".zip";
-    if (navigator.appVersion.indexOf("Win") == -1)
-      file_extension = ".tar.gz";
+    var file_extension = '.zip';
+    if (isAppVersion('Win') == -1)
+      file_extension = '.tar.gz';
 
-    download_button_text = file_extension + " file";
-    $("a.download_button").attr("href", download_url + "primesieve-" + primesieve_version + file_extension);
+    download_button_text = file_extension + ' file';
+    $('a.download_button').attr('href', download_url + 'primesieve-' + primesieve_version + file_extension);
   }
 
-  $("a.download_button span").html(download_button_text);
-  $("a.download_zip").attr("href", download_url + "primesieve-" + primesieve_version + ".zip");
-	$("a.download_targz").attr("href", download_url + "primesieve-" + primesieve_version + ".tar.gz");
+  $('a.download_button span').html(download_button_text);
+  $('a.download_zip').attr('href', download_url + 'primesieve-' + primesieve_version + '.zip');
+	$('a.download_targz').attr('href', download_url + 'primesieve-' + primesieve_version + '.tar.gz');
 });
 
 if(!Modernizr.svg) {
