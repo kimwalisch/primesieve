@@ -1,9 +1,15 @@
 $(document).ready(function() {
 	// Workaround for Safari and Chrome CSS alignment bug (2014).
 	$("h2").hide().fadeIn('fast');
-  
+
   var primesieve_version = "5.4.1";
-  var primesieve_os_file_name = "";
+  var primesieve_win64_binary = "primesieve-5.4-win64.zip";
+  var primesieve_win32_binary = "primesieve-3.6-win32.zip";
+  var primesieve_macosx_x64_binary = "primesieve-5.4-macosx-x64.zip";
+  var primesieve_linux_x64_binary = "primesieve-5.4-linux-x64.tar.gz";
+  var primesieve_linux_x86_binary = "primesieve-3.6-linux-x86.tar.gz";
+  var primesieve_os_binary = "";
+
   var download_url = "http://dl.bintray.com/kimwalisch/primesieve/";
   var download_button_text = ".zip file";
   var is64bit = false;
@@ -32,12 +38,12 @@ $(document).ready(function() {
   {
     if (is64bit)
     {
-      primesieve_os_file_name = "primesieve-5.4-win64.zip";
+      primesieve_os_binary = primesieve_win64_binary;
       download_button_text = "Win64 .zip";
     }
     else
     {
-      primesieve_os_file_name = "primesieve-3.6-win32.zip";
+      primesieve_os_binary = primesieve_win32_binary;
       download_button_text = "Win32 .zip";
     }
   }
@@ -45,29 +51,30 @@ $(document).ready(function() {
   {
     if (is64bit)
     {
-      primesieve_os_file_name = "primesieve-5.4-macosx-x64.zip";
+      primesieve_os_binary = primesieve_macosx_x64_binary;
       download_button_text = "OS X .zip";
     }
   }
-  else if (navigator.appVersion.indexOf("Linux") !=-1)
+  else if (navigator.appVersion.indexOf("Linux") != -1 ||
+           navigator.userAgent.indexOf("Linux") != -1)
   {
     if (is64bit)
     {
-      primesieve_os_file_name = "primesieve-5.4-linux-x64.tar.gz";
-      download_button_text = "Linux-x64";
+      primesieve_os_binary = primesieve_linux_x64_binary;
+      download_button_text = "Linux x64";
     }
     else if (window.navigator.platform == "Linux i686" ||
              window.navigator.platform == "Linux i686 X11" ||
              window.navigator.platform == "Linux x86")
     {
-      primesieve_os_file_name = "primesieve-3.6-linux-x86.tar.gz";
-      download_button_text = "Linux-x86";
+      primesieve_os_binary = primesieve_linux_x86_binary;
+      download_button_text = "Linux x86";
     }
   }
 
   // fallback mode, offer source code for download
-  if (primesieve_os_file_name != "") {
-    $("a.download_button").attr("href", download_url + primesieve_os_file_name);
+  if (primesieve_os_binary != "") {
+    $("a.download_button").attr("href", download_url + primesieve_os_binary);
   }
   else
   {
