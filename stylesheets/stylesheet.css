@@ -223,7 +223,7 @@ code, pre {
 
 code {
   background-color: #fff;
-  border: solid 1px #d3d3d3;
+  border: solid 1px #d0d0d0;
   padding: 1px 3px;
 }
 
@@ -232,7 +232,7 @@ pre {
   background: #fff;
   text-shadow: none;
   overflow: auto;
-  border: solid 1px #d3d3d3;
+  border: solid 1px #d0d0d0;
 }
 pre code {
   color: #2879d0;
@@ -259,7 +259,7 @@ hr {
 
 table {
   width: 100%;
-  border: 1px solid #cccccc;
+  border: 1px solid #c6c6c6;
 }
 
 th {
@@ -267,7 +267,7 @@ th {
 }
 
 td {
-  border: 1px solid #cccccc;
+  border: 1px solid #c6c6c6;
   text-align: center; 
   font-weight: 300;
 }
