@@ -4,7 +4,7 @@ $(document).ready(function() {
   
   var download_url = "http://dl.bintray.com/kimwalisch/primesieve/";
   var primesieve_version = "";
-  var download_file_extension = ".zip";
+  var download_button_text = ".zip file";
   var is64bit = false;
   
   is64bitOS = function(s)
@@ -30,44 +30,57 @@ $(document).ready(function() {
   if (navigator.appVersion.indexOf("Win") != -1)
   {
     if (is64bit)
+    {
       primesieve_version = "primesieve-5.4-win64.zip";
+      download_button_text = "Win64 .zip";
+    }
     else
+    {
       primesieve_version = "primesieve-3.6-win32.zip";
+      download_button_text = "Win32 .zip";
+    }
   }
   else if (navigator.appVersion.indexOf("Mac") != -1)
   {
     if (is64bit)
+    {
       primesieve_version = "primesieve-5.4-macosx-x64.zip";
+      download_button_text = "OS X .zip";
+    }
   }
   else if (navigator.appVersion.indexOf("Linux") !=-1)
   {
-    if (is64bit) {
+    if (is64bit)
+    {
       primesieve_version = "primesieve-5.4-linux-x64.tar.gz";
+      download_button_text = "Linux-x64";
     }
     else if (window.navigator.platform == "Linux i686" ||
              window.navigator.platform == "Linux i686 X11" ||
              window.navigator.platform == "Linux x86")
+    {
       primesieve_version = "primesieve-3.6-linux-x86.tar.gz";
-    
-    download_file_extension = ".tar.gz";
+      download_button_text = "Linux-x86";
+    }
   }
 
   // fallback mode, offer source code for download
   if (primesieve_version != "") {
-	  $("a.download_zip").attr("href", download_url + primesieve_version);
+    $("a.download_zip").attr("href", download_url + primesieve_version);
   }
   else
   {
     // use .tar.gz for all OSes except Windows
+    var download_file_extension = ".zip";
     if (navigator.appVersion.indexOf("Win") == -1)
       download_file_extension = ".tar.gz";
 
-    primesieve_version = "primesieve-5.4.1";
-    $("a.download_zip").attr("href", download_url + primesieve_version + download_file_extension);
+    download_button_text = download_file_extension + " file";
+    $("a.download_zip").attr("href", download_url + "primesieve-5.4.1" + download_file_extension);
   }
 
   // update file extension in download button
-  $("a.download_zip span").html(download_file_extension);
+  $("a.download_zip span").html(download_button_text);
 });
 
 if(!Modernizr.svg) {
