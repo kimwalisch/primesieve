@@ -169,7 +169,7 @@ On Windows (MSVC) compile using:
 ### C bindings
 
 All of primesieve's functions are exposed as C API (C99 or later) via
-the primesieve.h header. You can explore primesieve's C API online
+the primesieve.h header. You can browse primesieve's C API online
 at http://primesieve.org/api.
 
 ```C
@@ -184,7 +184,7 @@ int main()
   size_t i;
   size_t size;
 
-  /* store the primes below 10000 */
+  /* get an array with primes below 10000 */
   int* primes = (int*) primesieve_generate_primes(start, stop, &size, INT_PRIMES);
 
   for (i = 0; i < size; i++)
