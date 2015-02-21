@@ -83,8 +83,8 @@ $(document).ready(function() {
     if (navigator.appVersion.indexOf("Win") == -1)
       file_extension = ".tar.gz";
 
+    download_button_text = file_extension + " file";
     $("a.download_button").attr("href", download_url + "primesieve-" + primesieve_version + file_extension);
-    download_button_text = download_file_extension + " file";
   }
 
   $("a.download_button span").html(download_button_text);
