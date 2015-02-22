@@ -73,8 +73,7 @@ $(document).ready(function() {
       primesieve_os_binary = primesieve_linux_x64_binary;
       download_button_text = 'Linux x64';
     }
-    else if (isPlatform('i686') ||
-             isPlatform('x86;'))
+    else if (isPlatform('i686'))
     {
       primesieve_os_binary = primesieve_linux_x86_binary;
       download_button_text = 'Linux x86';
