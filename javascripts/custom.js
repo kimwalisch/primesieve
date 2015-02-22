@@ -87,9 +87,9 @@ $(document).ready(function() {
   else
   {
     // use .tar.gz for all OSes except Windows
-    var file_extension = '.zip';
-    if (isAppVersion('Win') == -1)
-      file_extension = '.tar.gz';
+    var file_extension = '.tar.gz';
+    if (isAppVersion('Win') != -1)
+      file_extension = '.zip';
 
     download_button_text = file_extension + ' file';
     $('a.download_button').attr('href', download_url + 'primesieve-' + primesieve_version + file_extension);
