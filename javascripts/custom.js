@@ -1,4 +1,5 @@
-$(document).ready(function() {
+$(document).ready(function()
+{
   // Workaround for Safari and Chrome CSS alignment bug (2014).
   $('h2').hide().fadeIn('fast');
 
@@ -97,7 +98,7 @@ $(document).ready(function() {
 
   $('a.download_button span').html(download_button_text);
   $('a.download_zip').attr('href', download_url + 'primesieve-' + primesieve_version + '.zip');
-	$('a.download_targz').attr('href', download_url + 'primesieve-' + primesieve_version + '.tar.gz');
+  $('a.download_targz').attr('href', download_url + 'primesieve-' + primesieve_version + '.tar.gz');
 });
 
 if(!Modernizr.svg) {
