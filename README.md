@@ -63,7 +63,7 @@ System install
 [GNU&#160;Autoconf](http://www.gnu.org/software/autoconf/),
 [GNU&#160;Automake](http://www.gnu.org/software/automake/) and
 [GNU&#160;Libtool](http://www.gnu.org/software/libtool/)
-using your packet manager.
+using your package manager.
 
 ```sh
 $ ./autogen.sh
