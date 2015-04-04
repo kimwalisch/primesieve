@@ -6,7 +6,7 @@
 ///         primesieve::primesieve_error exception (derived form
 ///         std::runtime_error).
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -15,10 +15,10 @@
 #ifndef PRIMESIEVE_HPP
 #define PRIMESIEVE_HPP
 
-#define PRIMESIEVE_VERSION "5.4.1"
+#define PRIMESIEVE_VERSION "5.4.2"
 #define PRIMESIEVE_VERSION_MAJOR 5
 #define PRIMESIEVE_VERSION_MINOR 4
-#define PRIMESIEVE_VERSION_PATCH 1
+#define PRIMESIEVE_VERSION_PATCH 2
 
 #include "primesieve/PrimeSieve.hpp"
 #include "primesieve/ParallelPrimeSieve.hpp"

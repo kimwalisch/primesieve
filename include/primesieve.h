@@ -5,7 +5,7 @@
  *          errno to EDOM and functions that have a uint64_t return
  *          type return UINT64_MAX (= PRIMESIEVE_ERROR).
  * 
- *  Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+ *  Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
  * 
  *  This file is distributed under the BSD License. See the COPYING
  *  file in the top level directory.
@@ -14,10 +14,10 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
-#define PRIMESIEVE_VERSION "5.4.1"
+#define PRIMESIEVE_VERSION "5.4.2"
 #define PRIMESIEVE_VERSION_MAJOR 5
 #define PRIMESIEVE_VERSION_MINOR 4
-#define PRIMESIEVE_VERSION_PATCH 1
+#define PRIMESIEVE_VERSION_PATCH 2
 
 #include <primesieve/primesieve_iterator.h>
 #include <stdint.h>

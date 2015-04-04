@@ -1,5 +1,5 @@
 PROJECT_NAME           = "primesieve"
-PROJECT_NUMBER         = 5.4.1
+PROJECT_NUMBER         = 5.4.2
 INPUT                  = mainpage.dox \
                          include/primesieve.hpp \
                          include/primesieve.h \

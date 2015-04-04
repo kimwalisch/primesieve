@@ -1,5 +1,5 @@
-AC_INIT([primesieve], [5.4.1], [kim.walisch@gmail.com])
-AC_SUBST([primesieve_lib_version], [4:1:0])
+AC_INIT([primesieve], [5.4.2], [kim.walisch@gmail.com])
+AC_SUBST([primesieve_lib_version], [4:2:0])
 
 AC_PREREQ([2.62])
 AC_LANG([C++])
