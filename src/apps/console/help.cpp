@@ -3,7 +3,7 @@
 /// @brief  help() and version() functions of the primesieve
 ///         console application.
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -49,7 +49,7 @@ const string helpMenu(
 
 const string versionInfo(
   "primesieve " PRIMESIEVE_VERSION ", <http://primesieve.org>\n"
-  "Copyright (C) 2014 Kim Walisch\n"
+  "Copyright (C) 2015 Kim Walisch\n"
   "BSD 2-Clause License <http://opensource.org/licenses/BSD-2-Clause>"
 );
 
