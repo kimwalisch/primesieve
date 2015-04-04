@@ -86,6 +86,7 @@ otherinclude_HEADERS = \
 	include/primesieve/PushBackPrimes.hpp
 
 EXTRA_DIST = \
+	autogen.sh \
 	Doxyfile \
 	mainpage.dox \
 	README.md \
