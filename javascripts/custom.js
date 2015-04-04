@@ -3,7 +3,7 @@ $(document).ready(function()
   // Workaround for Safari and Chrome CSS alignment bug (2014).
   $('h2').hide().fadeIn('fast');
 
-  var primesieve_version = '5.4.1';
+  var primesieve_version = '5.4.2';
   var primesieve_win64_binary = 'primesieve-5.4-win64.zip';
   var primesieve_win32_binary = 'primesieve-3.6-win32.zip';
   var primesieve_macosx_x64_binary = 'primesieve-5.4-macosx-x64.zip';
