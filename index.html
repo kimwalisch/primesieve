@@ -288,7 +288,7 @@ CPUs.</p>
 </ul>
 <p class="optimizations_title">Highly optimized inner loop</p>
 <p>primesieve's inner sieving loop has been optimized using extreme loop
-unrolling, in average crossing off a multiple uses just 1.375 instructions on
+unrolling, on average crossing off a multiple uses just 1.375 instructions on
 x86 CPUs. Below is the assembly GCC generates for primesieve's inner sieving
 loop, each <code>andb</code> instruction unsets a bit (crosses off a multiple)
 in the sieve array.</p>
