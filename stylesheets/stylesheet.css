@@ -24,7 +24,7 @@ time, mark, audio, video {
 }
 
 sup {
-	font-size: xx-small;
+	font-size: x-small;
 	vertical-align: super;
 }
 
@@ -65,12 +65,12 @@ table {
 
 /* LAYOUT STYLES */
 body {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.5; 
-  background: #fafafa url(../images/body-bg.jpg) 0 0 repeat;
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 400;
   color: #272727;
+  background: #fafafa url(../images/body-bg.jpg) 0 0 repeat;
 }
 
 li {
@@ -91,7 +91,7 @@ td.timing_title {
 
 p.optimizations_title {
 	font-weight: bold;
-	font-size: 17px;
+	font-size: 16px;
 	color: #303030;
 }
 
@@ -118,7 +118,7 @@ a:hover {
 header {
   padding-top: 40px;
   padding-bottom: 40px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
   background: #2e7bcf url(../images/header-bg.jpg) 0 0 repeat-x;
   border-bottom: solid 1px #275da1;
 }
@@ -133,7 +133,7 @@ header h1 {
 }
 
 header h2 {
-  font-size: 26px;
+  font-size: 28px;
   color: #9ddcff;
   font-weight: normal;
   line-height: 1.3;
@@ -167,7 +167,7 @@ aside#sidebar {
   min-height: 504px;
   float: right;
   background: transparent url(../images/sidebar-bg.jpg) 0 0 no-repeat;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.3;
 }
 
@@ -197,7 +197,7 @@ a.button {
 }
 a.button small {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
 }
 header a.button {
   position: absolute;
@@ -218,7 +218,7 @@ code, pre {
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   color: #222;
   margin-bottom: 30px;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 code {
@@ -297,7 +297,7 @@ form {
 
 #main-content h2 {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
   margin-bottom: 8px;
   color: #303030;
