@@ -173,7 +173,7 @@ aside#sidebar {
 
 aside#sidebar p.repo-owner,
 aside#sidebar p.repo-owner a {
-  font-weight: bold;
+  font-weight: 500;
 }
 
 #downloads {
