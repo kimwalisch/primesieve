@@ -90,7 +90,7 @@ td.timing_title {
 }
 
 p.optimizations_title {
-	font-weight: bold;
+    font-weight: 500;
 	font-size: 17px;
 	color: #373737;
 }
