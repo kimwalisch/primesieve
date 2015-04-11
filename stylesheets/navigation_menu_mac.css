@@ -22,11 +22,11 @@ nav {
 }
 
 #navigation {
-	font: bold 12px/18px "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font: bold 12px/20px "Helvetica Neue", Helvetica, Arial, sans-serif;
 	text-transform: uppercase;
 	color: #373737; /* different for Mac OS X */
 	width: 1000px;
-	margin-bottom: 35px;
+	margin-bottom: 32px;
 }
 
 #navigation:after {
