@@ -84,14 +84,10 @@ space. It runs significantly faster than a
 <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes#Implementation">traditional
 sieve of Eratosthenes implementation</a> due to its more efficient
 CPU cache usage i.e. it uses the CPU's L1 data cache size as its sieve
-array size. This ensures that less than 2 percent of the memory
+array size. This ensures that less than 1 percent of the memory
 accesses will be cache misses. This implementation generates the
 primes below 10^9 in just 0.9 seconds (single-threaded) on an Intel
 Core i7-4770 3.4GHz CPU from 2013.</p>
-
-</p>Any code on this page is free software released into the public
-domain. At the end of each code section, you will find instructions on
-how to download, compile and run the implementations.<p>
 
 <h2>
 <a name="how" class="anchor" href="#how"><span class="octicon octicon-link"></span></a>How it works</h2>
@@ -102,8 +98,8 @@ sieving primes below sqrt(10^9) which are needed to cross-off
 multiples. Then we start crossing-off the multiples of the first prime
 2 until we reach a multiple of 2&nbsp;&gt;=&nbsp;segment_size, if this
 happens we calculate the index of that multiple in the next segment
-using (multiple&nbsp;-&nbsp;segment_size) and store it in a separate
-array (next[]). We then cross-off the multiples of the next sieving
+using (multiple&nbsp;-&nbsp;segment_size) and store it in the next[]
+array. We then cross-off the multiples of the next sieving
 primes using the same procedure. Once we have crossed-off the multiples
 of all sieving primes in the first segment we iterate over the sieve array
 and print out (or count) the primes.</p>
@@ -111,67 +107,10 @@ and print out (or count) the primes.</p>
 <p>In order to sieve the next segment we reset the sieve array and we
 increment the lower offset by segment_size. Then we start
 crossing-off multiples again, for each sieving prime we retrieve the
-sieve index from the next array and we start crossing-off multiples
-from there on...</p>
+sieve index from the next[] array and we start crossing-off multiples
+from there on.</p>
 
-<div class="highlight highlight-C++"><pre><span class="c1">/// Generate primes using the segmented sieve of Eratosthenes.</span>
-<span class="c1">/// This algorithm uses O(n log log n) operations and O(sqrt(n)) space.</span>
-<span class="c1">/// @param limit         Sieve primes &lt;= limit.</span>
-<span class="c1">/// @param segment_size  Size of the sieve array in bytes.</span>
-<span class="c1">///</span>
-<span class="kt">void</span> <span class="nf">segmented_sieve</span><span class="p">(</span><span class="kt">int64_t</span> <span class="n">limit</span><span class="p">,</span> <span class="kt">int</span> <span class="n">segment_size</span> <span class="o">=</span> <span class="n">L1D_CACHE_SIZE</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="kt">int</span> <span class="n">sqrt</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span> <span class="n">limit</span><span class="p">);</span>
-  <span class="kt">int64_t</span> <span class="n">count</span> <span class="o">=</span> <span class="p">(</span><span class="n">limit</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="kt">int64_t</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-  <span class="kt">int64_t</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-
-  <span class="c1">// vector used for sieving</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">sieve</span><span class="p">(</span><span class="n">segment_size</span><span class="p">);</span>
-
-  <span class="c1">// generate small primes &lt;= sqrt</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">is_prime</span><span class="p">(</span><span class="n">sqrt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">*</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">sqrt</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">is_prime</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">sqrt</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="n">i</span><span class="p">)</span>
-        <span class="n">is_prime</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">primes</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">next</span><span class="p">;</span>
-
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int64_t</span> <span class="n">low</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">low</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">;</span> <span class="n">low</span> <span class="o">+=</span> <span class="n">segment_size</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">sieve</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">sieve</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">1</span><span class="p">);</span>
-
-    <span class="c1">// current segment = interval [low, high]</span>
-    <span class="kt">int64_t</span> <span class="n">high</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">segment_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">limit</span><span class="p">);</span>
-
-    <span class="c1">// store small primes needed to cross off multiples</span>
-    <span class="k">for</span> <span class="p">(;</span> <span class="n">s</span> <span class="o">*</span> <span class="n">s</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">;</span> <span class="n">s</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">is_prime</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
-      <span class="p">{</span>
-        <span class="n">primes</span><span class="p">.</span><span class="n">push_back</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">s</span><span class="p">);</span>
-          <span class="n">next</span><span class="p">.</span><span class="n">push_back</span><span class="p">((</span><span class="kt">int</span><span class="p">)(</span><span class="n">s</span> <span class="o">*</span> <span class="n">s</span> <span class="o">-</span> <span class="n">low</span><span class="p">));</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="c1">// sieve the current segment</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">primes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">next</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">primes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">segment_size</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="n">k</span><span class="p">)</span>
-        <span class="n">sieve</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-      <span class="n">next</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="n">segment_size</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">for</span> <span class="p">(;</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">;</span> <span class="n">n</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">)</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">sieve</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">low</span><span class="p">]) <span class="c1">// n is a prime</span></span>
-        <span class="n">count</span><span class="o">++</span><span class="p">;</span>
-  <span class="p">}</span>
-
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">count</span> <span class="o">&lt;&lt;</span> <span class="s">" primes found."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<script src="https://gist.github.com/kimwalisch/3dc39786fab8d5b34fee.js"></script>
 
 <h2>
 <a name="build-and-run" class="anchor" href="#build-and-run"><span class="octicon octicon-link"></span></a>How to run it</h2>

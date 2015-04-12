@@ -80,6 +80,7 @@ li {
 td.timing {
 	text-align: right;
 	padding: 6px 12px;
+    border: 1px solid #c3c3c3;
 }
 
 td.timing_title {
@@ -87,6 +88,7 @@ td.timing_title {
 	font-weight: bold;
 	padding: 6px 12px;
 	color: #373737;
+    border: 1px solid #c3c3c3;
 }
 
 p.optimizations_title {
@@ -264,12 +266,6 @@ table {
 
 th {
   font-weight: 500;
-}
-
-td {
-  border: 1px solid #c3c3c3;
-  text-align: center; 
-  font-weight: 300;
 }
 
 form {
