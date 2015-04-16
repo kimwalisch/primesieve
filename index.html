@@ -290,11 +290,11 @@ CPUs.</p>
 <p>primesieve's inner sieving loop has been optimized using
 <a href="https://github.com/kimwalisch/primesieve/blob/master/src/primesieve/EratSmall.cpp#L85">extreme loop unrolling</a>,
 on average crossing off a multiple uses just 1.375 instructions on
-x86 CPUs. Below is the assembly GCC generates for primesieve's inner sieving
+x86-64 CPUs. Below is the assembly GCC generates for primesieve's inner sieving
 loop, each <code>andb</code> instruction unsets a bit (crosses off a multiple)
 in the sieve array.</p>
 <div class="highlight highlight-ASM"><pre><span class="pl-c">; primesieve inner sieving loop</span>
-<span class="pl-c">; Uses only 11 instructions (x86-64) to cross-off 8 multiples per loop iteration</span>
+<span class="pl-c">; Uses only 11 instructions (x86-64) to cross-off the next 8 multiples</span>
 <span class="pl-en">.L99:</span>
     <span class="pl-k">andb</span>    $-<span class="pl-c1">3</span>, (%rax)
     <span class="pl-k">andb</span>    $-<span class="pl-c1">9</span>, (%rax,%r14)
