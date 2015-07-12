@@ -314,11 +314,9 @@ file contains more technical implementation details.</p>
 <h2>
 <a name="cpp-library" class="anchor" href="#cpp-library"><span class="octicon octicon-link"></span></a>C/C++ library</h2>
 <p>Below is an example that shows how to generate primes in C++ using
-libprimesieve. primesieve also includes
-<a href="https://github.com/kimwalisch/primesieve#c-bindings">C&#8209;bindings</a>
-for all its functions. You can <a href="api">browse primesieve's API
-online</a>. The <a href="build.html">Build From Source</a> page
-explains how to build libprimesieve and how to link against it.</p>
+libprimesieve. All of primesieve's functions are also exposed as
+<a href="https://github.com/kimwalisch/primesieve#c-api">C API</a>.
+You can <a href="api">browse primesieve's API online</a>.</p>
 
 <div class="highlight highlight-C++"><pre><span class="cp">#include &lt;primesieve.hpp&gt;</span>
 <span class="cp">#include &lt;iostream&gt;</span>
@@ -340,6 +338,9 @@ explains how to build libprimesieve and how to link against it.</p>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
+
+<p>The <a href="build.html">Build From Source</a> page explains how to
+build libprimesieve and how to link against it.</p>
 
 
 <h2>
