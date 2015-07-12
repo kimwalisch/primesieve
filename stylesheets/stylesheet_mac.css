@@ -103,6 +103,10 @@ span.cpu_details {
 	font-weight: normal;
 }
 
+span.programming_language {
+  font-weight: 500;
+}
+
 li.hide_overflow {
   overflow: hidden; 
   text-overflow: ellipsis;
