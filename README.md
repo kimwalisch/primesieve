@@ -224,6 +224,4 @@ a few other languages:
 * __Python:__ [primesieve-python](https://github.com/hickford/primesieve-python)
 * __Ruby:__ [prime_sieve](https://github.com/robertjlooby/prime_sieve)
 
-Many thanks to the developers of these bindings! The
-[author](https://github.com/kimwalisch) gladly supports anybody willing
-to create primesieve bindings for a lanuague which is not supported yet.
+Many thanks to the developers of these bindings!
