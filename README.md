@@ -23,7 +23,8 @@ There is also a primesieve console  application available. Binaries for
 Windows, Mac OS X and Linux can be downloaded from
 [http://primesieve.org/downloads](http://primesieve.org/downloads).
 
-### Algorithm complexity
+Algorithm complexity
+--------------------
 
 primesieve generates primes using the segmented sieve of Eratosthenes with
 [wheel factorization](http://en.wikipedia.org/wiki/Wheel_factorization),
@@ -35,16 +36,20 @@ space, more precisely primesieve's memory usage per thread is about
 <img src="http://primesieve.org/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
 bytes.
 
-### Requirements
+Requirements
+------------
 
-primesieve is written in C++03 and includes C bindings for all its
-functions. primesieve compiles with every C++ compiler and runs on both
-little and big endian CPUs. The parallelization is implemented using
-[OpenMP](http://en.wikipedia.org/wiki/OpenMP). The primesieve GUI
+primesieve is written in C++03, it compiles with every C++ compiler and
+runs on both little and big endian CPUs. The parallelization is implemented
+using [OpenMP](http://en.wikipedia.org/wiki/OpenMP). The primesieve GUI
 application (not built by default) uses the
 [Qt framework](http://qt-project.org).
 
-### Build instructions (Unix-like OSes)
+primesieve is also a library, it supports C++ and C directly. For a few
+other programming languages there exist easy to use [bindings](#bindings-for-other-languages).
+
+Build instructions (Unix-like OSes)
+-----------------------------------
 
 Download the latest release tarball from
 http://primesieve.org/downloads, extract it and cd into the newly
@@ -77,7 +82,8 @@ To enable building the example programs use:
 $ ./configure --enable-examples
 ```
 
-### Build instructions (Microsoft Visual C++)
+Build instructions (Microsoft Visual C++)
+-----------------------------------------
 
 Open a Visual Studio Command Prompt, cd into the primesieve directory
 and build primesieve using:
@@ -100,7 +106,8 @@ To build the example programs use:
 > nmake -f Makefile.msvc examples
 ```
 
-### Console application
+Console application
+-------------------
 
 The primesieve console application can print and count primes and
 prime k-tuplets and find the nth prime. Below are a few usage
@@ -123,7 +130,8 @@ $ ./primesieve 1e10 2e10 --count --threads=4
 $ ./primesieve --help
 ```
 
-### C++ library
+C++ library
+-----------
 
 After having built and installed primesieve you can easily use it in
 your C++ program, below is an example. primesieve's API is documented
@@ -166,7 +174,8 @@ On Windows (MSVC) compile using:
 > cl /O2 /EHsc primes.cpp /I primesieve\include /link primesieve\primesieve.lib
 ```
 
-### C bindings
+C API
+-----
 
 All of primesieve's functions are exposed as C API (C99 or later) via
 the primesieve.h header. You can browse primesieve's C API online
@@ -205,3 +214,16 @@ $ export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
 
 $ cc -O2 primes.c -lprimesieve
 ```
+
+Bindings for other languages
+----------------------------
+
+primesieve supports C++ and C directly, and has bindings available for
+a few other languages:
+
+* __Python:__ [primesieve-python](https://github.com/hickford/primesieve-python)
+* __Ruby:__ [prime_sieve](https://github.com/robertjlooby/prime_sieve)
+
+Many thanks to the developers of these bindings! The
+[author](https://github.com/kimwalisch) gladly supports anybody willing
+to create primesieve bindings for a lanuague which is not supported yet.
