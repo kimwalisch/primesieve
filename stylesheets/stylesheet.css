@@ -438,40 +438,8 @@ footer a:hover {
 /* #Media Queries
 ================================================== */
 
-/* Smaller than standard 960 (devices and browsers) */
-@media only screen and (max-width: 959px) {}
-
-/* Tablet Portrait size to standard 960 (devices and browsers) */
-@media only screen and (min-width: 768px) and (max-width: 959px) {
-  .inner {
-    width: 740px;
-  }
-  header h1, header h2 {
-    width: 340px;
-  }
-  header h1 {
-    font-size: 60px;
-  }
-  header h2 {
-    font-size: 30px;
-  }
-  #main-content {
-    width: 490px;
-  }
-  #main-content h1:before,
-  #main-content h2:before,
-  #main-content h3:before,
-  #main-content h4:before,
-  #main-content h5:before,
-  #main-content h6:before {
-    content: none;
-    padding-right: 0;
-    margin-left: 0;
-  }
-}
-
 /* All Mobile Sizes (devices and browser) */
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 950px) {
   .inner {
     width: 93%;
   }
@@ -504,7 +472,7 @@ footer a:hover {
     background-color: #9CD6FF;
     color: #2879d0;
     -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;                     
+    -webkit-border-radius: 5px;
     border-radius: 5px;    
   }
   header a.button small {
@@ -528,6 +496,7 @@ footer a:hover {
   }
   #main-content h1:before,
   #main-content h2:before,
+  #main-content h2.align2:before,
   #main-content h3:before,
   #main-content h4:before,
   #main-content h5:before,
