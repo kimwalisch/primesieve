@@ -1,8 +1,9 @@
 ///
 /// @file   popcount.cpp
-/// @brief  Fast algorithm to count the number of 1 bits in an array.
+/// @brief  Fast algorithm to count the number of 1 bits in an array
+///         using only integer operations.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -14,70 +15,90 @@
 
 #include <stdint.h>
 
-namespace primesieve {
+namespace {
 
-/// This algorithm counts the number of 1 bits (population count) in
-/// an array using 64-bit tree merging. To the best of my knowledge
-/// this is the fastest integer arithmetic bit population count
-/// algorithm, it uses only 8 operations for 8 bytes on 64-bit CPUs.
-/// The 64-bit tree merging popcount algorithm is due to
-/// Cédric Lauradoux, it is described in his paper:
-/// http://perso.citi.insa-lyon.fr/claurado/ham/overview.pdf
-/// http://perso.citi.insa-lyon.fr/claurado/hamming.html
+/// This uses fewer arithmetic operations than any other known  
+/// implementation on machines with fast multiplication.
+/// It uses 12 arithmetic operations, one of which is a multiply.
+/// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
 ///
-uint64_t popcount(const uint64_t* array, uint64_t size)
+uint64_t popcount_mul(uint64_t x)
 {
   const uint64_t m1  = UINT64_C(0x5555555555555555);
   const uint64_t m2  = UINT64_C(0x3333333333333333);
   const uint64_t m4  = UINT64_C(0x0F0F0F0F0F0F0F0F);
-  const uint64_t m8  = UINT64_C(0x00FF00FF00FF00FF);
   const uint64_t h01 = UINT64_C(0x0101010101010101);
 
-  uint64_t limit30 = size - size % 30;
-  uint64_t i, j;
-  uint64_t count1, count2, half1, half2, acc;
-  uint64_t bit_count = 0;
-  uint64_t x;
+  x -=            (x >> 1)  & m1;
+  x = (x & m2) + ((x >> 2)  & m2);
+  x = (x +        (x >> 4)) & m4;
+  return (x * h01) >> 56;
+}
 
-  if (array == 0)
-    return 0;
+/// Carry-save adder (CSA).
+/// @see Chapter 5 in "Hacker's Delight".
+///
+void CSA(uint64_t& h, uint64_t& l, uint64_t a, uint64_t b, uint64_t c)
+{
+  uint64_t u = a ^ b; 
+  h = (a & b) | (u & c);
+  l = u ^ c;
+}
 
-  // 64-bit tree merging (merging3)
-  for (i = 0; i < limit30; i += 30, array += 30) {
-    acc = 0;
-    for (j = 0; j < 30; j += 3) {
-      count1  =  array[j];
-      count2  =  array[j+1];
-      half1   =  array[j+2];
-      half2   =  array[j+2];
-      half1  &=  m1;
-      half2   = (half2  >> 1) & m1;
-      count1 -= (count1 >> 1) & m1;
-      count2 -= (count2 >> 1) & m1;
-      count1 +=  half1;
-      count2 +=  half2;
-      count1  = (count1 & m2) + ((count1 >> 2) & m2);
-      count1 += (count2 & m2) + ((count2 >> 2) & m2);
-      acc    += (count1 & m4) + ((count1 >> 4) & m4);
-    }
-    acc = (acc & m8) + ((acc >>  8) & m8);
-    acc = (acc       +  (acc >> 16));
-    acc = (acc       +  (acc >> 32));
-    bit_count += acc & 0xffff;
+/// Harley-Seal popcount (4th iteration).
+/// The Harley-Seal popcount algorithm is one of the fastest algorithms
+/// for counting 1 bits in an array using only integer operations.
+/// This implementation uses only 5.69 instructions per 64-bit word.
+/// @see Chapter 5 in "Hacker's Delight" 2nd edition.
+///
+uint64_t popcount_hs4(const uint64_t* array, uint64_t size)
+{
+  uint64_t total = 0;
+  uint64_t ones = 0, twos = 0, fours = 0, eights = 0, sixteens = 0;
+  uint64_t twosA, twosB, foursA, foursB, eightsA, eightsB;
+  uint64_t limit = size - size % 16;
+  uint64_t i = 0;
+
+  for(; i < limit; i += 16)
+  {
+    CSA(twosA, ones, ones, array[i+0], array[i+1]);
+    CSA(twosB, ones, ones, array[i+2], array[i+3]);
+    CSA(foursA, twos, twos, twosA, twosB);    
+    CSA(twosA, ones, ones, array[i+4], array[i+5]);
+    CSA(twosB, ones, ones, array[i+6], array[i+7]);
+    CSA(foursB, twos, twos, twosA, twosB);    
+    CSA(eightsA,fours, fours, foursA, foursB);
+    CSA(twosA, ones, ones, array[i+8], array[i+9]);
+    CSA(twosB, ones, ones, array[i+10], array[i+11]);
+    CSA(foursA, twos, twos, twosA, twosB);
+    CSA(twosA, ones, ones, array[i+12], array[i+13]);
+    CSA(twosB, ones, ones, array[i+14], array[i+15]);
+    CSA(foursB, twos, twos, twosA, twosB);    
+    CSA(eightsB, fours, fours, foursA, foursB);
+    CSA(sixteens, eights, eights, eightsA, eightsB);
+
+    total += popcount_mul(sixteens);
   }
 
-  // Count the bits of the remaining bytes (max 29*8 = 232)
-  // http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
-  for (i = 0; i < size - limit30; i++) {
-    x = array[i];
-    x =  x       - ((x >> 1)  & m1);
-    x = (x & m2) + ((x >> 2)  & m2);
-    x = (x       +  (x >> 4)) & m4;
-    x = (x * h01) >> 56;
-    bit_count += x;
-  }
+  total *= 16;
+  total += 8 * popcount_mul(eights);
+  total += 4 * popcount_mul(fours);
+  total += 2 * popcount_mul(twos);
+  total += 1 * popcount_mul(ones);
 
-  return bit_count;
+  for(; i < size; i++)
+    total += popcount_mul(array[i]);
+
+  return total;
+}
+
+} // namespace
+
+namespace primesieve {
+
+uint64_t popcount(const uint64_t* array, uint64_t size)
+{
+  return popcount_hs4(array, size);
 }
 
 } // namespace primesieve
