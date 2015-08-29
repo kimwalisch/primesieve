@@ -2,6 +2,7 @@
  *  Iterate over primes using C primesieve_iterator. */
 
 #include <primesieve.h>
+#include <inttypes.h>
 #include <stdio.h>
 
 int main()
@@ -17,6 +18,6 @@ int main()
     sum += prime;
 
   primesieve_free_iterator(&pi);
-  printf("Sum of the primes below 10^10 = %llu\n", sum);
+  printf("Sum of the primes below 10^10 = %" PRIu64 "\n", sum);
   return 0;
 }
