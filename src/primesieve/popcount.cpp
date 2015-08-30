@@ -45,13 +45,17 @@ void CSA(uint64_t& h, uint64_t& l, uint64_t a, uint64_t b, uint64_t c)
   l = u ^ c;
 }
 
+} // namespace
+
+namespace primesieve {
+
 /// Harley-Seal popcount (4th iteration).
 /// The Harley-Seal popcount algorithm is one of the fastest algorithms
 /// for counting 1 bits in an array using only integer operations.
 /// This implementation uses only 5.69 instructions per 64-bit word.
 /// @see Chapter 5 in "Hacker's Delight" 2nd edition.
 ///
-uint64_t popcount_hs4(const uint64_t* array, uint64_t size)
+uint64_t popcount(const uint64_t* array, uint64_t size)
 {
   uint64_t total = 0;
   uint64_t ones = 0, twos = 0, fours = 0, eights = 0, sixteens = 0;
@@ -90,15 +94,6 @@ uint64_t popcount_hs4(const uint64_t* array, uint64_t size)
     total += popcount_mul(array[i]);
 
   return total;
-}
-
-} // namespace
-
-namespace primesieve {
-
-uint64_t popcount(const uint64_t* array, uint64_t size)
-{
-  return popcount_hs4(array, size);
 }
 
 } // namespace primesieve
