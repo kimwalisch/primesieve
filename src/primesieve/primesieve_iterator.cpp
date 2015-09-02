@@ -2,7 +2,7 @@
 /// @file   primesieve_iterator.cpp
 /// @brief  C port of primesieve::iterator.
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -47,6 +47,7 @@ uint64_t subtract_underflow_safe(uint64_t a, uint64_t b)
 uint64_t get_interval_size(uint64_t n, uint64_t& tiny_cache_size)
 {
   n = (n > 10) ? n : 10;
+
   uint64_t cache_size = config::ITERATOR_CACHE_SMALL;
   if (tiny_cache_size < cache_size)
   {
@@ -112,7 +113,7 @@ void primesieve_generate_next_primes(primesieve_iterator* pi)
         pi->stop_ = add_overflow_safe(pi->start_, get_interval_size(pi->start_, pi->tiny_cache_size_));
         if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
           pi->stop_ = add_overflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
-        primesieve::generate_primes(pi->start_, pi->stop_, &primes);
+        generate_primes(pi->start_, pi->stop_, &primes);
         if (primes.empty() && pi->stop_ >= get_max_stop())
           throw primesieve_error("next_prime() > primesieve_get_max_stop()");
       }
@@ -147,7 +148,7 @@ void primesieve_generate_previous_primes(primesieve_iterator* pi)
         pi->start_ = subtract_underflow_safe(pi->stop_, get_interval_size(pi->stop_, pi->tiny_cache_size_));
         if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
           pi->start_ = subtract_underflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
-        primesieve::generate_primes(pi->start_, pi->stop_, &primes);
+        generate_primes(pi->start_, pi->stop_, &primes);
         if (primes.empty() && pi->start_ < 2)
           throw primesieve_error("previous_prime(): smallest prime is 2");
       }
