@@ -1,7 +1,7 @@
 ///
 /// @file  iterator.cpp
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -59,7 +59,7 @@ void iterator::generate_next_primes()
     stop_ = add_overflow_safe(start_, get_interval_size(start_));
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
       stop_ = add_overflow_safe(stop_hint_, max_prime_gap(stop_hint_));
-    primesieve::generate_primes(start_, stop_, &primes_);
+    generate_primes(start_, stop_, &primes_);
     if (primes_.empty() && stop_ >= get_max_stop())
       throw primesieve_error("next_prime() > " + PrimeFinder::getMaxStopString());
   }
@@ -78,7 +78,7 @@ void iterator::generate_previous_primes()
     start_ = subtract_underflow_safe(stop_, get_interval_size(stop_));
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
       start_ = subtract_underflow_safe(stop_hint_, max_prime_gap(stop_hint_));
-    primesieve::generate_primes(start_, stop_, &primes_);
+    generate_primes(start_, stop_, &primes_);
     if (primes_.empty() && start_ < 2)
       throw primesieve_error("previous_prime(): smallest prime is 2");
   }
@@ -93,6 +93,7 @@ void iterator::generate_previous_primes()
 uint64_t iterator::get_interval_size(uint64_t n)
 {
   n = (n > 10) ? n : 10;
+
   uint64_t cache_size = config::ITERATOR_CACHE_SMALL;
   if (tiny_cache_size_ < cache_size)
   {
