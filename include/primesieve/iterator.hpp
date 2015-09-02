@@ -3,7 +3,7 @@
 /// @brief  The iterator class allows to easily iterate (forward and
 ///         backward) over prime numbers.
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -79,7 +79,6 @@ private:
   uint64_t stop_hint_;
   uint64_t tiny_cache_size_;
   uint64_t get_interval_size(uint64_t);
-  void generate_primes(uint64_t, uint64_t);
   void generate_next_primes();
   void generate_previous_primes();
 };
