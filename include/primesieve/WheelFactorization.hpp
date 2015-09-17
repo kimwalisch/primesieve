@@ -182,10 +182,11 @@ public:
     // prime not needed for sieving
     if (multiple > stop_)
       return;
-    uint64_t square = isquare<uint64_t>(prime);
-    if (multiple < square) {
+    // ensure multiple >= prime * prime
+    if (quotient < prime)
+    {
+      multiple = isquare<uint64_t>(prime);
       quotient = prime;
-      multiple = square;
     }
     // calculate the next multiple of prime that is not
     // divisible by any of the wheel's factors
