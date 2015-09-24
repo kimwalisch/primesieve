@@ -5,7 +5,7 @@
 ///         Oliveira e Silva's cache-friendly bucket sieve algorithm:
 ///         http://www.ieeta.pt/~tos/software/prime_sieve.html
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -84,7 +84,7 @@ void EratBig::pushBucket(uint_t segment)
   {
     const int N = config::MEMORY_PER_ALLOC / sizeof(Bucket);
     Bucket* buckets = new Bucket[N];
-    for(int i = 0; i < N-1; i++)
+    for (int i = 0; i < N-1; i++)
       buckets[i].setNext(&buckets[i + 1]);
     buckets[N-1].setNext(NULL);
     pointers_.push_back(buckets);
