@@ -94,10 +94,10 @@ enum {
   ///
   BUCKETSIZE = 1 << 10,
 
-  /// EratBig allocates MEMORY_PER_ALLOC bytes of new memory each
-  /// time it needs more buckets. Default = 8 megabytes.
+  /// EratBig allocates BYTES_PER_ALLOC of new memory each time
+  /// it needs more buckets. Default = 8 megabytes.
   ///
-  MEMORY_PER_ALLOC = (1 << 20) * 8,
+  BYTES_PER_ALLOC = (1 << 20) * 8,
 
   /// primesieve::iterator objects cache up to ITERATOR_CACHE_SMALL
   /// bytes of primes when generating primes below 10^10. Either

@@ -58,7 +58,7 @@ void EratBig::init(uint_t sieveSize)
   uint_t size = maxSegmentCount + 1;
 
   // EratBig uses up to 1.6 gigabytes of memory near 2^64
-  pointers_.reserve(((1u << 30) * 2) / config::MEMORY_PER_ALLOC);
+  pointers_.reserve(((1u << 30) * 2) / config::BYTES_PER_ALLOC);
 
   lists_.resize(size, NULL);
   for (uint_t i = 0; i < size; i++)
@@ -82,7 +82,7 @@ void EratBig::pushBucket(uint_t segment)
   // if the stock_ is empty allocate new buckets
   if (!stock_)
   {
-    const int N = config::MEMORY_PER_ALLOC / sizeof(Bucket);
+    const int N = config::BYTES_PER_ALLOC / sizeof(Bucket);
     Bucket* buckets = new Bucket[N];
     for (int i = 0; i < N-1; i++)
       buckets[i].setNext(&buckets[i + 1]);
