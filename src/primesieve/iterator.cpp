@@ -93,8 +93,8 @@ void iterator::generate_previous_primes()
 uint64_t iterator::get_interval_size(uint64_t n)
 {
   n = (n > 10) ? n : 10;
-
   uint64_t cache_size = config::ITERATOR_CACHE_SMALL;
+
   if (tiny_cache_size_ < cache_size)
   {
     cache_size = tiny_cache_size_;
