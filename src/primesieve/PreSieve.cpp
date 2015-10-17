@@ -16,7 +16,9 @@
 
 #include <stdint.h>
 #include <cstring>
-#include <cstdlib>
+
+using std::memcpy;
+using std::memset;
 
 namespace primesieve {
 
@@ -51,13 +53,15 @@ void PreSieve::init()
 
   size_ = primeProduct_ / NUMBERS_PER_BYTE;
   preSieved_ = new byte_t[size_];
-  std::memset(preSieved_, 0xff, size_);
+  memset(preSieved_, 0xff, size_);
 
   uint_t stop = primeProduct_ * 2;
   EratSmall eratSmall(stop, size_, limit_);
 
   for (int i = 3; primes_[i] <= limit_; i++)
     eratSmall.addSievingPrime(primes_[i], primeProduct_);
+
+  // sieve [primeProduct_, primeProduct_ * 2]
   eratSmall.crossOff(preSieved_, &preSieved_[size_]);
 }
 
@@ -72,15 +76,17 @@ void PreSieve::doIt(byte_t* sieve, uint_t sieveSize, uint64_t segmentLow) const
   uint_t sizeLeft = size_ - index;
 
   if (sieveSize <= sizeLeft)
-    std::memcpy(sieve, &preSieved_[index], sieveSize);
+    memcpy(sieve, &preSieved_[index], sieveSize);
   else {
     // copy the last remaining bytes at the end of preSieved_
     // to the beginning of the sieve array
-    std::memcpy(sieve, &preSieved_[index], sizeLeft);
+    memcpy(sieve, &preSieved_[index], sizeLeft);
+
     // restart copying at the beginning of preSieved_
     for (index = sizeLeft; index + size_ < sieveSize; index += size_)
-      std::memcpy(&sieve[index], preSieved_, size_);
-    std::memcpy(&sieve[index], preSieved_, sieveSize - index);
+      memcpy(&sieve[index], preSieved_, size_);
+
+    memcpy(&sieve[index], preSieved_, sieveSize - index);
   }
 }
 
