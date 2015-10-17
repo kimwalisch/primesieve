@@ -7,5 +7,5 @@ Name: primesieve
 Description: Fast prime number generator
 Version: @VERSION@
 Libs: -L${libdir} -lprimesieve
-Libs.private: @LIBS@
+Libs.private: @OPENMP_CXXFLAGS@
 Cflags: -I${includedir}
