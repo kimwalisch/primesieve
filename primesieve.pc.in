@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: primesieve
+Description: Fast prime number generator
+Version: @VERSION@
+Libs: -L${libdir} -lprimesieve
+Libs.private: @LIBS@
+Cflags: -I${includedir}

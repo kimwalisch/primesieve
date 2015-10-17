@@ -12,13 +12,8 @@ endif
 bin_PROGRAMS = primesieve
 primesieve_LDADD = libprimesieve.la
 
-# If installation directory is /usr/local/lib
-# execute ldconfig after installation
-install-exec-hook:
-	test "$(prefix)" = "/usr/local" && command -v ldconfig 2>/dev/null && ldconfig /usr/local/lib 2>/dev/null || true
-
-check: all
-	./primesieve --test
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = primesieve.pc
 
 if MAKE_EXAMPLES
 noinst_PROGRAMS = callback_cancel
@@ -142,3 +137,11 @@ primesieve_SOURCES = \
 	src/apps/console/cmdoptions.cpp \
 	src/apps/console/cmdoptions.hpp \
 	src/apps/console/calculator.hpp
+
+check: all
+	./primesieve --test
+
+# If installation directory is /usr/local/lib
+# execute ldconfig after installation
+install-exec-hook:
+	test "$(prefix)" = "/usr/local" && command -v ldconfig 2>/dev/null && ldconfig /usr/local/lib 2>/dev/null || true

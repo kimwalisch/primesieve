@@ -93,7 +93,7 @@ AC_DEFINE_UNQUOTED([SIEVESIZE],
     [Default sieve size in kilobytes])
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile primesieve.pc])
 AC_OUTPUT
 
 AS_IF([test "x$L1_DETECTED" != "x"],
