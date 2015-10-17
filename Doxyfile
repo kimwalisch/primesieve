@@ -1,5 +1,5 @@
 PROJECT_NAME           = "primesieve"
-PROJECT_NUMBER         = 5.4.2
+PROJECT_NUMBER         = 5.4.3
 INPUT                  = mainpage.dox \
                          include/primesieve.hpp \
                          include/primesieve.h \
@@ -14,6 +14,7 @@ INPUT                  = mainpage.dox \
                          examples/previous_prime.cpp \
                          examples/store_primes_in_vector.cpp \
                          examples/c/count_primes.c \
+                         examples/c/previous_prime.c \
                          examples/c/primesieve_iterator.c \
                          examples/c/nth_prime.c \
                          examples/c/store_primes_in_array.c

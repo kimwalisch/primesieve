@@ -57,6 +57,10 @@ noinst_PROGRAMS += count_primes_c
 count_primes_c_LDADD = libprimesieve.la
 count_primes_c_SOURCES = examples/c/count_primes.c
 
+noinst_PROGRAMS += previous_prime_c
+previous_prime_c_LDADD = libprimesieve.la
+previous_prime_c_SOURCES = examples/c/previous_prime.c
+
 noinst_PROGRAMS += primesieve_iterator_c
 primesieve_iterator_c_LDADD = libprimesieve.la
 primesieve_iterator_c_SOURCES = examples/c/primesieve_iterator.c
