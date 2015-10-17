@@ -19,14 +19,15 @@
 #include <cmath>
 #include <vector>
 
+using namespace std;
 using namespace primesieve;
 
 namespace {
 
-/// Convert pimpl pointer to std::vector
-std::vector<uint64_t>& to_vector(uint64_t* primes_pimpl)
+/// Convert pimpl pointer to vector
+vector<uint64_t>& to_vector(uint64_t* primes_pimpl)
 {
-  std::vector<uint64_t>* primes = reinterpret_cast<std::vector<uint64_t>*>(primes_pimpl);
+  vector<uint64_t>* primes = reinterpret_cast<vector<uint64_t>*>(primes_pimpl);
   return *primes;
 }
 
@@ -47,8 +48,8 @@ uint64_t subtract_underflow_safe(uint64_t a, uint64_t b)
 uint64_t get_interval_size(uint64_t n, uint64_t& tiny_cache_size)
 {
   n = (n > 10) ? n : 10;
-
   uint64_t cache_size = config::ITERATOR_CACHE_SMALL;
+
   if (tiny_cache_size < cache_size)
   {
     cache_size = tiny_cache_size;
@@ -56,13 +57,13 @@ uint64_t get_interval_size(uint64_t n, uint64_t& tiny_cache_size)
   }
 
   double x = static_cast<double>(n);
-  double sqrtx = std::sqrt(x);
-  uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (std::log(sqrtx) - 1));
-  uint64_t cache_primes = cache_size / sizeof(uint64_t);
+  double sqrtx = sqrt(x);
+  uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (log(sqrtx) - 1));
+  uint64_t cache_min_primes = cache_size / sizeof(uint64_t);
   uint64_t cache_max_primes = config::ITERATOR_CACHE_MAX / sizeof(uint64_t);
-  uint64_t primes = std::min(std::max(cache_primes, sqrtx_primes), cache_max_primes);
+  uint64_t primes = getInBetween(cache_min_primes, sqrtx_primes, cache_max_primes);
 
-  return static_cast<uint64_t>(primes * std::log(x));
+  return static_cast<uint64_t>(primes * log(x));
 }
 
 }
@@ -70,7 +71,7 @@ uint64_t get_interval_size(uint64_t n, uint64_t& tiny_cache_size)
 /// C constructor
 void primesieve_init(primesieve_iterator* pi)
 {
-  pi->primes_pimpl_ = reinterpret_cast<uint64_t*>(new std::vector<uint64_t>);
+  pi->primes_pimpl_ = reinterpret_cast<uint64_t*>(new vector<uint64_t>());
   primesieve_skipto(pi, 0, primesieve_get_max_stop());
 }
 
@@ -79,14 +80,16 @@ void primesieve_free_iterator(primesieve_iterator* pi)
 {
   if (pi)
   {
-    std::vector<uint64_t>* primes = &to_vector(pi->primes_pimpl_);
+    vector<uint64_t>* primes = &to_vector(pi->primes_pimpl_);
     delete primes;
   }
 }
 
-void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hint)
+void primesieve_skipto(primesieve_iterator* pi,
+                       uint64_t start,
+                       uint64_t stop_hint)
 {
-  std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
+  vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
   primes.clear();
   pi->start_ = start;
   pi->stop_ = start;
@@ -99,7 +102,7 @@ void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hi
 
 void primesieve_generate_next_primes(primesieve_iterator* pi)
 {
-  std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
+  vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
 
   if (!pi->is_error_)
   {
@@ -118,7 +121,7 @@ void primesieve_generate_next_primes(primesieve_iterator* pi)
           throw primesieve_error("next_prime() > primesieve_get_max_stop()");
       }
     }
-    catch (std::exception&)
+    catch (exception&)
     {
       primes.clear();
       primes.resize(64, PRIMESIEVE_ERROR);
@@ -134,7 +137,7 @@ void primesieve_generate_next_primes(primesieve_iterator* pi)
 
 void primesieve_generate_previous_primes(primesieve_iterator* pi)
 {
-  std::vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
+  vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
 
   if (!pi->is_error_)
   {
@@ -153,7 +156,7 @@ void primesieve_generate_previous_primes(primesieve_iterator* pi)
           throw primesieve_error("previous_prime(): smallest prime is 2");
       }
     }
-    catch (std::exception&)
+    catch (exception&)
     {
       primes.clear();
       primes.resize(64, PRIMESIEVE_ERROR);
