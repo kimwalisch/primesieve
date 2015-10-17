@@ -2,7 +2,7 @@
 /// @file   SieveOfEratosthenes.cpp
 /// @brief  Implementation of the segmented sieve of Eratosthenes.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -62,7 +62,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   if (start_ > stop_)
     throw primesieve_error("SieveOfEratosthenes: start must be <= stop");
 
-  // choose the fastest pre-sieve setting
+  // choose fastest pre-sieve setting
   limitPreSieve_ = 11;
   if ((stop_ - start_) >= (7 * 11 * 13) * NUMBERS_PER_BYTE)
     limitPreSieve_ = 13;
@@ -76,7 +76,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   segmentLow_ = start_ - getByteRemainder(start_);
   segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
 
-  // allocate the sieve of Eratosthenes array
+  // allocate sieve of Eratosthenes array
   sieve_ = new byte_t[sieveSize_];
   init();
 }
