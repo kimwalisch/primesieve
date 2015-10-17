@@ -10,7 +10,7 @@ int main()
   primesieve_iterator pi;
   primesieve_init(&pi);
 
-  /* primesieve_skipto(primesieve_iterator, start_number, stop_number) */
+  /* primesieve_skipto(primesieve_iterator, start_number, stop_hint) */
   primesieve_skipto(&pi, 2000, 1000);
   uint64_t prime;
 
