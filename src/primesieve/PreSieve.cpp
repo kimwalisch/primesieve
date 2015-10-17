@@ -3,7 +3,7 @@
 /// @brief  Pre-sieve multiples of small primes to speed up the
 ///         sieve of Eratosthenes.
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
