@@ -151,9 +151,9 @@ void primesieve_generate_previous_primes(primesieve_iterator* pi)
         pi->start_ = subtract_underflow_safe(pi->stop_, get_interval_size(pi->stop_, pi->tiny_cache_size_));
         if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
           pi->start_ = subtract_underflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
+        if (pi->start_ <= 2)
+          primes.push_back(0);
         generate_primes(pi->start_, pi->stop_, &primes);
-        if (primes.empty() && pi->start_ < 2)
-          throw primesieve_error("previous_prime(): smallest prime is 2");
       }
     }
     catch (exception&)

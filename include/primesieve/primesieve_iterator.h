@@ -69,9 +69,7 @@ void primesieve_generate_next_primes(primesieve_iterator*);
 /** Internal use. */
 void primesieve_generate_previous_primes(primesieve_iterator*);
 
-/** Advance the primesieve iterator by one position.
- *  @return  The next prime.
- */
+/** Get the next prime. */
 static inline uint64_t primesieve_next_prime(primesieve_iterator* pi)
 {
   if (pi->i_++ == pi->last_idx_)
@@ -79,8 +77,8 @@ static inline uint64_t primesieve_next_prime(primesieve_iterator* pi)
   return pi->primes_[pi->i_];
 }
 
-/** Decrease the primesieve iterator by one position.
- *  @return  The previous prime.
+/** Get the previous prime,
+ *  or 0 if input <= 2 e.g. previous_prime(2) = 0.
  */
 static inline uint64_t primesieve_previous_prime(primesieve_iterator* pi)
 {

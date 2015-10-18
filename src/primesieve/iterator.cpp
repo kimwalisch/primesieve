@@ -78,9 +78,9 @@ void iterator::generate_previous_primes()
     start_ = subtract_underflow_safe(stop_, get_interval_size(stop_));
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
       start_ = subtract_underflow_safe(stop_hint_, max_prime_gap(stop_hint_));
+    if (start_ <= 2)
+      primes_.push_back(0);
     generate_primes(start_, stop_, &primes_);
-    if (primes_.empty() && start_ < 2)
-      throw primesieve_error("previous_prime(): smallest prime is 2");
   }
 
   last_idx_ = primes_.size() - 1;

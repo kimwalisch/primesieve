@@ -52,7 +52,7 @@ public:
   void skipto(uint64_t start, uint64_t stop_hint = get_max_stop());
 
   /// Advance the iterator by one position.
-  /// @return  The next prime.
+  /// @return The next prime.
   ///
   uint64_t next_prime()
   {
@@ -61,8 +61,8 @@ public:
     return primes_[i_];
   }
 
-  /// Decrease the iterator by one position.
-  /// @return  The previous prime.
+  /// Get the previous prime,
+  /// or 0 if input <= 2 e.g. previous_prime(2) = 0.
   ///
   uint64_t previous_prime()
   {
