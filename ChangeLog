@@ -1,3 +1,33 @@
+Changes in version 5.5.0, 18/10/2015
+====================================
+
+This is a major new release. There are 2 minor backwards incompatible
+API changes which are described further down.
+
+1. Added support for pkg-config.
+2. README.md: New "Bindings for other languages" section.
+3. include/WheelFactorization.hpp: Slightly faster initialization.
+4. primesieve_version(): New function which returns version string e.g. "5.5.0".
+5. src/primesieve/popcount.cpp: Faster popcount algorithm.
+6. examples/c/previous_prime.c: Shows how to use primesieve_previous_prime().
+
+C++ API changes
+---------------
+
+primesieve::test() has been renamed to primesieve::primesieve_test()
+in order to prevent naming collisions.
+
+primesieve::iterator::previous_prime() now returns 0 if input <= 2,
+previously an error was thrown. Rationale of this change:
+https://github.com/kimwalisch/primesieve/issues/11#issuecomment-148939336
+
+C API changes
+-------------
+
+primesieve_previous_prime() now returns 0 if input <= 2, previously
+PRIMESIEVE_ERROR was returned. Rationale of this change:
+https://github.com/kimwalisch/primesieve/issues/11#issuecomment-148939336
+
 Changes in version 5.4.2, 04/04/2015
 ====================================
 
