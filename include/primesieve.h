@@ -14,10 +14,10 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
-#define PRIMESIEVE_VERSION "5.4.2"
+#define PRIMESIEVE_VERSION "5.5.0"
 #define PRIMESIEVE_VERSION_MAJOR 5
-#define PRIMESIEVE_VERSION_MINOR 4
-#define PRIMESIEVE_VERSION_PATCH 2
+#define PRIMESIEVE_VERSION_MINOR 5
+#define PRIMESIEVE_VERSION_PATCH 0
 
 #include <primesieve/primesieve_iterator.h>
 #include <stdint.h>
