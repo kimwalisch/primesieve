@@ -6,7 +6,7 @@
 ///         primes are then pushed back onto the vector inside the
 ///         callback method.
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -30,9 +30,11 @@ inline uint64_t approximate_prime_count(uint64_t start, uint64_t stop)
 {
   if (start > stop)
     return 0;
-  if (stop < 10)
-    return 10;
-  return static_cast<uint64_t>((stop - start) / (std::log(static_cast<double>(stop)) - 1.1));
+  if (stop <= 10)
+    return 5;
+  // Dusard 2010: pi(x) < x / (log(x) - 1.1) + 6 for x >= 4
+  double pix = (stop - start) / (std::log(static_cast<double>(stop)) - 1.1) + 6;
+  return static_cast<uint64_t>(pix);
 }
 
 template <typename T>
