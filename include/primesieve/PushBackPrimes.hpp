@@ -25,15 +25,15 @@
 
 namespace primesieve {
 
-/// approximate_prime_count(x) > pi(x)
+/// approximate_prime_count(x) >= pi(x)
 inline uint64_t approximate_prime_count(uint64_t start, uint64_t stop)
 {
   if (start > stop)
     return 0;
   if (stop <= 10)
-    return 5;
-  // Dusard 2010: pi(x) < x / (log(x) - 1.1) + 6 for x >= 4
-  double pix = (stop - start) / (std::log(static_cast<double>(stop)) - 1.1) + 6;
+    return 4;
+  // Dusard 2010: pi(x) <= x / (log(x) - 1.1) + 5 for x >= 4
+  double pix = (stop - start) / (std::log(static_cast<double>(stop)) - 1.1) + 5;
   return static_cast<uint64_t>(pix);
 }
 
