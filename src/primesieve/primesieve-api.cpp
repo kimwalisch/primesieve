@@ -17,6 +17,7 @@
 #include <primesieve/PrimeFinder.hpp>
 
 #include <stdint.h>
+#include <string>
 
 #ifdef _OPENMP
   #include <omp.h>
@@ -289,6 +290,15 @@ void set_num_threads(int threads)
   }
 
   num_threads = threads;
+}
+
+//////////////////////////////////////////////////////////////////////
+//                      Miscellaneous
+//////////////////////////////////////////////////////////////////////
+
+std::string primesieve_version()
+{
+  return PRIMESIEVE_VERSION;
 }
 
 } // end namespace

@@ -3,7 +3,7 @@
 /// @brief  Contains the implementations of the functions declared in
 ///         the primesieve.h header file.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -568,7 +568,12 @@ void primesieve_set_num_threads(int num_threads)
 
 int primesieve_test()
 {
-  return (primesieve::test() == true) ? 1 : 0;
+  return primesieve::primesieve_test();
+}
+
+const char* primesieve_version()
+{
+  return PRIMESIEVE_VERSION;
 }
 
 } // extern "C"

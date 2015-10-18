@@ -30,6 +30,7 @@
 
 #include <stdint.h>
 #include <vector>
+#include <string>
 
 /// All of primesieve's C++ functions and classes are declared
 /// inside this namespace.
@@ -317,7 +318,10 @@ namespace primesieve
   /// 2013 and use up to 1 gigabyte of memory.
   /// @return true if success else false.
   ///
-  bool test();
+  bool primesieve_test();
+
+  /// Get the primesieve version number, in the form “i.j.k”.
+  std::string primesieve_version();
 }
 
 #endif

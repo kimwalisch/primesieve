@@ -264,6 +264,9 @@ void primesieve_free(void* primes);
  */
 int primesieve_test();
 
+/** Get the primesieve version number, in the form “i.j.k”. */
+const char* primesieve_version();
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

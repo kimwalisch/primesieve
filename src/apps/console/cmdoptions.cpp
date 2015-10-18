@@ -3,7 +3,7 @@
 /// @brief  Parse command-line options for the primesieve console
 ///         (terminal) application.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -84,7 +84,7 @@ void initOptionMap()
 
 void test()
 {
-  bool ok = primesieve::test();
+  bool ok = primesieve::primesieve_test();
   exit(ok ? 0 : 1);
 }
 

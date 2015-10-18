@@ -1,9 +1,9 @@
 ///
-/// @file   test.cpp
-/// @brief  bool primesieve::test(); runs sieving tests to ensure that
-///         ParallelPrimeSieve objects produce correct results.
+/// @file   primesieve_test.cpp
+/// @brief  bool primesieve_test(); runs sieving tests to ensure that
+///         ParallelPrimeSieve objects return correct results.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,6 +11,7 @@
 
 #include <primesieve.hpp>
 
+#include <stdint.h>
 #include <iostream>
 #include <iomanip>
 #include <exception>
@@ -18,7 +19,6 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
-#include <stdint.h>
 
 using namespace std;
 
@@ -163,7 +163,7 @@ void testRandomIntervals()
 /// 1 minute to complete on a quad core CPU from 2013.
 /// @return true if success else false.
 ///
-bool test()
+bool primesieve_test()
 {
   try
   {
