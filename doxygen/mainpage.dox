@@ -1,7 +1,7 @@
 /// @mainpage
 /// @section About
 ///
-/// primesieve is a C/C++ library for fast prime number generation,
+/// primesieve is a C/C++ library for fast prime number generation.
 /// http://primesieve.org/build.html explains how to build and install
 /// primesieve.
 ///

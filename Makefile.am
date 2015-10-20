@@ -86,10 +86,10 @@ otherinclude_HEADERS = \
 
 EXTRA_DIST = \
 	autogen.sh \
-	Doxyfile \
-	mainpage.dox \
 	README.md \
 	Makefile.msvc \
+	doxygen/Doxyfile \
+	doxygen/mainpage.dox \
 	examples/README.md \
 	src/apps/gui \
 	src/msvc_compat \

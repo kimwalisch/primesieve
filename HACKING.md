@@ -35,7 +35,7 @@ $ make check
 
 * Increase version number in [include/primesieve.hpp](include/primesieve.hpp)
 * Increase version number in [include/primesieve.h](include/primesieve.h)
-* Increase version number in [Doxyfile](Doxyfile)
+* Increase version number in [doxygen/Doxyfile](doxygen/Doxyfile)
 * Increase version number in [configure.ac](configure.ac) in ```AC_INIT```
 * [Increase Libtool version](http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html) number in [configure.ac](configure.ac) in ```AC_SUBST```
 * Update current year in [src/apps/console/help.cpp](src/apps/console/help.cpp)
