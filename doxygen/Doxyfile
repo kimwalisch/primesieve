@@ -7,12 +7,12 @@ INPUT                  = mainpage.dox \
                          ../include/primesieve/iterator.hpp \
                          ../include/primesieve/primesieve_error.hpp \
                          ../include/primesieve/primesieve_iterator.h \
-                         ../examples/callback_primes.cpp \
-                         ../examples/count_primes.cpp \
-                         ../examples/primesieve_iterator.cpp \
-                         ../examples/nth_prime.cpp \
-                         ../examples/previous_prime.cpp \
-                         ../examples/store_primes_in_vector.cpp \
+                         ../examples/cpp/callback_primes.cpp \
+                         ../examples/cpp/count_primes.cpp \
+                         ../examples/cpp/primesieve_iterator.cpp \
+                         ../examples/cpp/nth_prime.cpp \
+                         ../examples/cpp/previous_prime.cpp \
+                         ../examples/cpp/store_primes_in_vector.cpp \
                          ../examples/c/count_primes.c \
                          ../examples/c/previous_prime.c \
                          ../examples/c/primesieve_iterator.c \
@@ -28,7 +28,7 @@ EXTRACT_STATIC         = YES
 FILE_PATTERNS          = *.cpp *.c *.h *.hpp
 EXCLUDE_SYMBOLS        = primesieve_generate_next_primes primesieve_generate_previous_primes
 RECURSIVE              = NO
-EXAMPLE_PATH           = examples
+EXAMPLE_PATH           = ../examples
 EXAMPLE_PATTERNS       = *.cpp *.c
 EXAMPLE_RECURSIVE      = YES
 GENERATE_LATEX         = NO
