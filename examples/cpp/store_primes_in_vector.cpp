@@ -9,7 +9,6 @@ int main()
   std::vector<int> primes;
 
   // Store the primes below 1000
-  primes.clear();
   primesieve::generate_primes(1000, &primes);
 
   // Store the primes within the interval [1000, 2000]
