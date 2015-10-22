@@ -195,8 +195,8 @@ Linking against libprimesieve
 
 **Unix-like operating systems**
 ```sh
-c++ -O2 primes.cpp -lprimesieve
-cc  -O2 primes.c   -lprimesieve
+$ c++ -O2 primes.cpp -lprimesieve
+$ cc  -O2 primes.c   -lprimesieve
 ```
 
 Note that if you have built primesieve yourself the default installation path
