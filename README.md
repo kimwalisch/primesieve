@@ -130,8 +130,8 @@ $ ./primesieve 1e10 2e10 --count --threads=4
 $ ./primesieve --help
 ```
 
-C++ library
------------
+C++ API
+-------
 
 After having built and installed primesieve you can easily use it in
 your C++ program, below is an example. primesieve's API is documented
@@ -159,27 +159,12 @@ int main()
 }
 ```
 
-On Unix-like operating systems compile using:
-```sh
-# Only needed if your operating system misses the ldconfig program
-$ export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
-$ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-$ export CPLUS_INCLUDE_PATH=/usr/local/include:$CPLUS_INCLUDE_PATH
-
-$ c++ -O2 primes.cpp -lprimesieve
-```
-
-On Windows (MSVC) compile using:
-```
-> cl /O2 /EHsc primes.cpp /I primesieve\include /link primesieve\primesieve.lib
-```
-
 C API
 -----
 
 All of primesieve's functions are exposed as C API (C99 or later) via
-the primesieve.h header. You can browse primesieve's C API online
-at http://primesieve.org/api.
+the ```primesieve.h``` header. You can browse primesieve's C API
+online at http://primesieve.org/api.
 
 ```C
 #include <primesieve.h>
@@ -205,14 +190,29 @@ int main()
 }
 ```
 
-On Unix-like operating systems compile using:
-```sh
-# Only needed if your operating system misses the ldconfig program
+Linking against libprimesieve
+-----------------------------
+
+**Unix-like operating systems:**
+```
+c++ -O2 primes.cpp -lprimesieve
+cc  -O2 primes.c   -lprimesieve
+```
+
+Note that if you built primesieve yourself the default installation path is
+/usr/local/lib which is not part of LD_LIBRARY_PATH on many systems.
+Hence you need to export some additional environment variables:
+
+```
 $ export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
 $ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+$ export CPLUS_INCLUDE_PATH=/usr/local/include:$CPLUS_INCLUDE_PATH
 $ export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
+```
 
-$ cc -O2 primes.c -lprimesieve
+**Microsoft Visual C++ (Windows):**
+```
+> cl /O2 /EHsc primes.cpp /I primesieve\include /link primesieve\primesieve.lib
 ```
 
 Bindings for other languages
