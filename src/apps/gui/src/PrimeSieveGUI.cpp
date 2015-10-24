@@ -48,6 +48,7 @@
 #endif
 
 using primesieve::ParallelPrimeSieve;
+int get_l1d_cache_size();
 
 PrimeSieveGUI::PrimeSieveGUI(QWidget *parent) :
   QMainWindow(parent), ui(new Ui::PrimeSieveGUI), validator_(0),
@@ -97,7 +98,12 @@ void PrimeSieveGUI::initGUI() {
   // fill the sieveSizeComboBox with power of 2 values <= "2048 KB"
   for (int i = MINIMUM_SIEVE_SIZE; i <= MAXIMUM_SIEVE_SIZE; i *= 2)
     ui->sieveSizeComboBox->addItem(QString::number(i) + " KB");
-  this->setTo(ui->sieveSizeComboBox, DEFAULT_SIEVE_SIZE);
+
+  int l1d_cache_size = get_l1d_cache_size();
+  if (l1d_cache_size < 16 || l1d_cache_size > 1024)
+    l1d_cache_size = DEFAULT_L1D_CACHE_SIZE;
+
+  this->setTo(ui->sieveSizeComboBox, QString::number(l1d_cache_size) + " KB");
 
   // fill the threadsComboBox with power of 2 values <= maxThreads_
   maxThreads_ = ParallelPrimeSieve::getMaxThreads();

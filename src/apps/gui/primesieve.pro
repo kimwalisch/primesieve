@@ -23,6 +23,7 @@ QT_MAJ = $$member(QT_VER, 0)
 
 SOURCES += \
   src/main.cpp \
+  src/l1d_cache_size.cpp \
   src/PrimeSieveGUI.cpp \
   src/PrimeSieveGUI_menu.cpp \
   src/PrimeSieveProcess.cpp

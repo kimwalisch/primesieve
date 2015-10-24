@@ -67,12 +67,10 @@ const int MINIMUM_SIEVE_SIZE = 16;
  */
 const int MAXIMUM_SIEVE_SIZE = 2048;
 /**
- * The best performance is achieved with a sieve size of the CPU's
- * L1/L2 cache size. 32 kilobytes is a good choice as most CPUs have a
- * L1 cache size of 16 to 64 kilobytes in 2010.
- * @pre >= MINIMUM_SIEVE_SIZE && <= MAXIMUM_SIEVE_SIZE
+ * @pre DEFAULT_L1D_CACHE_SIZE >= MINIMUM_SIEVE_SIZE &&
+ *      DEFAULT_L1D_CACHE_SIZE <= MAXIMUM_SIEVE_SIZE
  */
-const QString DEFAULT_SIEVE_SIZE = "32 KB";
+const int DEFAULT_L1D_CACHE_SIZE = 32;
 /**
  * PrimeSieve allows numbers up to < (2^64-1)-(2^32-1)*10.
  * @see PrimeSieve.cpp
