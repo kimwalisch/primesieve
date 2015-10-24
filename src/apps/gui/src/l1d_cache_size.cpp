@@ -114,7 +114,7 @@ int get_l1d_cache_size()
   exit_code = WEXITSTATUS(exit_code);
 
   // check if shell script executed without any errors
-  if (exit_code == 1)
+  if (exit_code <= 1)
     return -1;
 
   int l1d_cache_size = 1 << exit_code;
