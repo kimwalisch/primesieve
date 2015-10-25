@@ -59,62 +59,77 @@ int get_l1d_cache_size()
 ///
 int get_l1d_cache_size()
 {
-  // Posix shell script for UNIX like OSes
-  // Returns log2 of L1_DCACHE_SIZE in kilobytes
-  // https://github.com/kimwalisch/primesieve/blob/master/configure.ac
+  // Posix shell script for UNIX like OSes,
+  // Returns log2 of L1_DCACHE_SIZE in kilobytes.
+  // The script tries to get the L1 cache size using 3 different approaches:
+  // 1) getconf LEVEL1_DCACHE_SIZE
+  // 2) cat /sys/devices/system/cpu/cpu0/cache/index0/size
+  // 3) sysctl hw.l1dcachesize
+
   const char* shell_script = 
-    "command -v getconf >/dev/null 2>/dev/null;                                                        "
-    "if [ $? -eq 0 ];                                                                                  "
-    "then                                                                                              "
-    "    L1_DCACHE_BYTES=$(getconf LEVEL1_DCACHE_SIZE 2>/dev/null);                                    "
-    "fi;                                                                                               "
-    "if test \"x$L1_DCACHE_BYTES\" = \"x\" || test \"$L1_DCACHE_BYTES\" = \"0\";                       "
-    "then                                                                                              "
-    "    L1_DCACHE_BYTES=$(cat /sys/devices/system/cpu/cpu0/cache/index0/size 2>/dev/null);            "
-    "    if test \"x$L1_DCACHE_BYTES\" != \"x\";                                                       "
-    "    then                                                                                          "
-    "        is_kilobytes=$(echo $L1_DCACHE_BYTES | grep K);                                           "
-    "        if test \"x$is_kilobytes\" != \"x\";                                                      "
-    "        then                                                                                      "
-    "            L1_DCACHE_BYTES=$(expr $(echo $L1_DCACHE_BYTES | sed -e s'/K$//') '*' 1024);          "
-    "        fi;                                                                                       "
-    "        is_megabytes=$(echo $L1_DCACHE_BYTES | grep M);                                           "
-    "        if test \"x$is_megabytes\" != \"x\";                                                      "
-    "        then                                                                                      "
-    "            L1_DCACHE_BYTES=$(expr $(echo $L1_DCACHE_BYTES | sed -e s'/M$//') '*' 1024 '*' 1024); "
-    "        fi;                                                                                       "
-    "    else                                                                                          "
-    "        command -v sysctl >/dev/null 2>/dev/null;                                                 "
-    "        if [ $? -eq 0 ];                                                                          "
-    "        then                                                                                      "
-    "            L1_DCACHE_BYTES=$(sysctl hw.l1dcachesize 2>/dev/null | sed -e 's/^.* //');            "
-    "        fi;                                                                                       "
-    "    fi;                                                                                           "
-    "fi;                                                                                               "
-    "if test \"x$L1_DCACHE_BYTES\" != \"x\";                                                           "
-    "then                                                                                              "
-    "    if [ $L1_DCACHE_BYTES -ge 1024 2>/dev/null ];                                                 "
-    "    then                                                                                          "
-    "        L1_DCACHE_SIZE=$(expr $L1_DCACHE_BYTES '/' 1024);                                         "
-    "    fi;                                                                                           "
-    "fi;                                                                                               "
-    "if test \"x$L1_DCACHE_SIZE\" = \"x\";                                                             "
-    "then                                                                                              "
-    "   exit 1;                                                                                        "
-    "fi;                                                                                               "
-    "LOG2_L1_DCACHE_SIZE=0;                                                                            "
-    "while [ $L1_DCACHE_SIZE -ge 2 ];                                                                  "
-    "do                                                                                                "
-    "   L1_DCACHE_SIZE=$(expr $L1_DCACHE_SIZE '/' 2);                                                  "
-    "   LOG2_L1_DCACHE_SIZE=$(expr $LOG2_L1_DCACHE_SIZE '+' 1);                                        "
-    "done;                                                                                             "
-    "exit $LOG2_L1_DCACHE_SIZE;                                                                        ";
+    "command -v getconf >/dev/null 2>/dev/null;                                                        \n"
+    "if [ $? -eq 0 ];                                                                                  \n"
+    "then                                                                                              \n"
+    "    # Returns L1 cache size in bytes                                                              \n"
+    "    L1_DCACHE_BYTES=$(getconf LEVEL1_DCACHE_SIZE 2>/dev/null);                                    \n"
+    "fi;                                                                                               \n"
+    "                                                                                                  \n"
+    "if test \"x$L1_DCACHE_BYTES\" = \"x\" || test \"$L1_DCACHE_BYTES\" = \"0\";                       \n"
+    "then                                                                                              \n"
+    "    # Returns L1 cache size like e.g. 32K, 1M                                                     \n"
+    "    L1_DCACHE_BYTES=$(cat /sys/devices/system/cpu/cpu0/cache/index0/size 2>/dev/null);            \n"
+    "                                                                                                  \n"
+    "    if test \"x$L1_DCACHE_BYTES\" != \"x\";                                                       \n"
+    "    then                                                                                          \n"
+    "        is_kilobytes=$(echo $L1_DCACHE_BYTES | grep K);                                           \n"
+    "        if test \"x$is_kilobytes\" != \"x\";                                                      \n"
+    "        then                                                                                      \n"
+    "            L1_DCACHE_BYTES=$(expr $(echo $L1_DCACHE_BYTES | sed -e s'/K$//') '*' 1024);          \n"
+    "        fi;                                                                                       \n"
+    "        is_megabytes=$(echo $L1_DCACHE_BYTES | grep M);                                           \n"
+    "        if test \"x$is_megabytes\" != \"x\";                                                      \n"
+    "        then                                                                                      \n"
+    "            L1_DCACHE_BYTES=$(expr $(echo $L1_DCACHE_BYTES | sed -e s'/M$//') '*' 1024 '*' 1024); \n"
+    "        fi;                                                                                       \n"
+    "    else                                                                                          \n"
+    "        # This method works on OS X                                                               \n"
+    "        command -v sysctl >/dev/null 2>/dev/null;                                                 \n"
+    "        if [ $? -eq 0 ];                                                                          \n"
+    "        then                                                                                      \n"
+    "            # Returns L1 cache size in bytes                                                      \n"
+    "            L1_DCACHE_BYTES=$(sysctl hw.l1dcachesize 2>/dev/null | sed -e 's/^.* //');            \n"
+    "        fi;                                                                                       \n"
+    "    fi;                                                                                           \n"
+    "fi;                                                                                               \n"
+    "                                                                                                  \n"
+    "if test \"x$L1_DCACHE_BYTES\" != \"x\";                                                           \n"
+    "then                                                                                              \n"
+    "    if [ $L1_DCACHE_BYTES -ge 1024 2>/dev/null ];                                                 \n"
+    "    then                                                                                          \n"
+    "        # Convert to kilobytes                                                                    \n"
+    "        L1_DCACHE_SIZE=$(expr $L1_DCACHE_BYTES '/' 1024);                                         \n"
+    "    fi;                                                                                           \n"
+    "fi;                                                                                               \n"
+    "                                                                                                  \n"
+    "if test \"x$L1_DCACHE_SIZE\" = \"x\";                                                             \n"
+    "then                                                                                              \n"
+    "   exit 1;                                                                                        \n"
+    "fi;                                                                                               \n"
+    "                                                                                                  \n"
+    "LOG2_L1_DCACHE_SIZE=0;                                                                            \n"
+    "while [ $L1_DCACHE_SIZE -ge 2 ];                                                                  \n"
+    "do                                                                                                \n"
+    "   L1_DCACHE_SIZE=$(expr $L1_DCACHE_SIZE '/' 2);                                                  \n"
+    "   LOG2_L1_DCACHE_SIZE=$(expr $LOG2_L1_DCACHE_SIZE '+' 1);                                        \n"
+    "done;                                                                                             \n"
+    "                                                                                                  \n"
+    "exit $LOG2_L1_DCACHE_SIZE;                                                                        \n";
 
   int exit_code = std::system(shell_script);
   exit_code = WEXITSTATUS(exit_code);
 
   // check if shell script executed without any errors
-  if (exit_code <= 1)
+  if (exit_code <= 2)
     return -1;
 
   int l1d_cache_size = 1 << exit_code;
