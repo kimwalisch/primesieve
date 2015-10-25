@@ -1,15 +1,16 @@
-Changes in version 5.5.0, 18/10/2015
+Changes in version 5.5.0, 25/10/2015
 ====================================
 
 This is a major new release. There are 2 minor backwards incompatible
 API changes which are described further down.
 
-1. Added support for pkg-config.
-2. README.md: New "Bindings for other languages" section.
-3. include/WheelFactorization.hpp: Slightly faster initialization.
-4. primesieve_version(): New function which returns version string e.g. "5.5.0".
-5. src/primesieve/popcount.cpp: Faster popcount algorithm.
-6. examples/c/previous_prime.c: Shows how to use primesieve_previous_prime().
+1. primesieve GUI app: Runtime detection of CPU L1 cache size.
+2. Added support for pkg-config.
+3. README.md: New "Bindings for other languages" section.
+4. include/WheelFactorization.hpp: Slightly faster initialization.
+5. primesieve_version(): New function which returns version string e.g. "5.5.0".
+7. src/primesieve/popcount.cpp: Faster popcount algorithm.
+8. examples/c/previous_prime.c: Shows how to use primesieve_previous_prime().
 
 C++ API changes
 ---------------
