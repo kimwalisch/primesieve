@@ -19,6 +19,7 @@ INPUT                  = mainpage.dox \
                          ../examples/c/nth_prime.c \
                          ../examples/c/store_primes_in_array.c
 HTML_INDEX_NUM_ENTRIES = 3
+HTML_TIMESTAMP         = NO
 JAVADOC_AUTOBRIEF      = YES
 MULTILINE_CPP_IS_BRIEF = NO
 SHOW_NAMESPACES        = YES
@@ -32,3 +33,4 @@ EXAMPLE_PATH           = ../examples
 EXAMPLE_PATTERNS       = *.cpp *.c
 EXAMPLE_RECURSIVE      = YES
 GENERATE_LATEX         = NO
+FULL_PATH_NAMES        = NO
