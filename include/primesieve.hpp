@@ -1,15 +1,13 @@
 ///
 /// @file   primesieve.hpp
 /// @brief  primesieve C++ API. primesieve is a library for fast prime
-///         number generation. In case an error occurs the functions
-///         declared in this header will throw a
+///         number generation, in case an error occurs a
 ///         primesieve::primesieve_error exception (derived form
-///         std::runtime_error).
+///         std::runtime_error) will be thrown.
 ///
 /// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
-/// This file is distributed under the BSD License. See the COPYING
-/// file in the top level directory.
+/// This file is distributed under the BSD License.
 ///
 
 #ifndef PRIMESIEVE_HPP
