@@ -17,14 +17,15 @@
 #define PRIMESIEVE_VERSION_MINOR 5
 #define PRIMESIEVE_VERSION_PATCH 0
 
-#include <primesieve/primesieve_iterator.h>
+#include "primesieve/primesieve_iterator.h"
+
 #include <stdint.h>
 #include <stddef.h>
 
 /** primesieve functions return PRIMESIEVE_ERROR
  *  (UINT64_MAX) if any error occurs.
  */
-#define PRIMESIEVE_ERROR ((uint64_t)~((uint64_t)0))
+#define PRIMESIEVE_ERROR ((uint64_t) ~((uint64_t) 0))
 
 #ifdef __cplusplus
 extern "C" {
