@@ -18,13 +18,13 @@
 #define PRIMESIEVE_VERSION_MINOR 5
 #define PRIMESIEVE_VERSION_PATCH 0
 
-#include "primesieve/PrimeSieve.hpp"
-#include "primesieve/ParallelPrimeSieve.hpp"
-#include "primesieve/Callback.hpp"
-#include "primesieve/cancel_callback.hpp"
-#include "primesieve/iterator.hpp"
-#include "primesieve/PushBackPrimes.hpp"
-#include "primesieve/primesieve_error.hpp"
+#include <primesieve/PrimeSieve.hpp>
+#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/Callback.hpp>
+#include <primesieve/cancel_callback.hpp>
+#include <primesieve/iterator.hpp>
+#include <primesieve/PushBackPrimes.hpp>
+#include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
 #include <vector>
