@@ -1,7 +1,7 @@
 ///
 /// @file  cmdoptions.hpp
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -21,6 +21,7 @@ struct PrimeSieveOptions
   int threads;
   bool quiet;
   bool nthPrime;
+
   PrimeSieveOptions() :
     flags(0),
     sieveSize(0),
