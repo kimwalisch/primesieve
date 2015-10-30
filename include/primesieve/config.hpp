@@ -88,9 +88,9 @@ enum {
   /// Number of sieving primes per Bucket in EratSmall, EratMedium and
   /// EratBig objects, affects performance by about 3%.
   ///
-  /// - For x86-64 CPUs post  2010 use 1024
-  /// - For x86-64 CPUs prior 2010 use 512
-  /// - For PowerPC G4 CPUs   2003 use 256
+  /// - For x86-64 CPUs after  2010 use 1024
+  /// - For x86-64 CPUs before 2010 use 512
+  /// - For PowerPC G4 CPUs    2003 use 256
   ///
   BUCKETSIZE = 1 << 10,
 
@@ -115,9 +115,9 @@ enum {
   /// are processed in EratSmall objects, speed up ~ 5%.
   /// @pre FACTOR_ERATSMALL >= 0 && <= 3
   ///
-  /// - For x86-64 CPUs post  2010 use 0.5 (or 0.3)
-  /// - For x86-64 CPUs prior 2010 use 0.8
-  /// - For PowerPC G4 CPUs   2003 use 1.0
+  /// - For x86-64 CPUs after  2010 use 0.5
+  /// - For x86-64 CPUs before 2010 use 0.8
+  /// - For PowerPC G4 CPUs    2003 use 1.0
   ///
   const double FACTOR_ERATSMALL = 0.5;
 
