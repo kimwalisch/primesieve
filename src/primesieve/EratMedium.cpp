@@ -3,7 +3,7 @@
 /// @brief  Segmented sieve of Eratosthenes optimized for medium
 ///         sieving primes.
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -65,9 +65,9 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize, Bucket& bucket)
   SievingPrime* sPrime = bucket.begin();
   SievingPrime* sEnd = bucket.end();
 
-  // process 2 sieving primes per loop iteration to
+  // process 3 sieving primes per loop iteration to
   // increase instruction level parallelism
-  for (; sPrime + 2 <= sEnd; sPrime += 2)
+  for (; sPrime + 3 <= sEnd; sPrime += 3)
   {
     uint_t multipleIndex0 = sPrime[0].getMultipleIndex();
     uint_t wheelIndex0    = sPrime[0].getWheelIndex();
@@ -75,6 +75,10 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize, Bucket& bucket)
     uint_t multipleIndex1 = sPrime[1].getMultipleIndex();
     uint_t wheelIndex1    = sPrime[1].getWheelIndex();
     uint_t sievingPrime1  = sPrime[1].getSievingPrime();
+    uint_t multipleIndex2 = sPrime[2].getMultipleIndex();
+    uint_t wheelIndex2    = sPrime[2].getWheelIndex();
+    uint_t sievingPrime2  = sPrime[2].getSievingPrime();
+
     // cross-off the multiples (unset bits) of sievingPrime
     // @see unsetBit() in WheelFactorization.hpp
     while (multipleIndex0 < sieveSize)
@@ -82,16 +86,25 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize, Bucket& bucket)
       unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
       if (multipleIndex1 >= sieveSize) break;
       unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
+      if (multipleIndex2 >= sieveSize) break;
+      unsetBit(sieve, sievingPrime2, &multipleIndex2, &wheelIndex2);
     }
+
     while (multipleIndex0 < sieveSize) unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
     while (multipleIndex1 < sieveSize) unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
+    while (multipleIndex2 < sieveSize) unsetBit(sieve, sievingPrime2, &multipleIndex2, &wheelIndex2);
+
     multipleIndex0 -= sieveSize;
     multipleIndex1 -= sieveSize;
+    multipleIndex2 -= sieveSize;
+
     sPrime[0].set(multipleIndex0, wheelIndex0);
     sPrime[1].set(multipleIndex1, wheelIndex1);
+    sPrime[2].set(multipleIndex2, wheelIndex2);
   }
 
-  if (sPrime != sEnd)
+  // process remaining sieving primes
+  for (; sPrime != sEnd; sPrime++)
   {
     uint_t multipleIndex = sPrime->getMultipleIndex();
     uint_t wheelIndex    = sPrime->getWheelIndex();
