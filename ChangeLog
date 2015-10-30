@@ -1,4 +1,4 @@
-Changes in version 5.5.0, 25/10/2015
+Changes in version 5.5.0, 30/10/2015
 ====================================
 
 This is a major new release. There are 2 minor backwards incompatible
@@ -7,8 +7,9 @@ API changes which are described further down.
 1. primesieve GUI app: Runtime detection of CPU L1 cache size.
 2. Added support for pkg-config.
 3. README.md: New "Bindings for other languages" section.
-4. include/WheelFactorization.hpp: Slightly faster initialization.
-5. primesieve_version(): New function which returns version string e.g. "5.5.0".
+4. include/config.h: tune for Intel Skylake CPUs.
+5. include/WheelFactorization.hpp: Slightly faster initialization.
+6. src/primesieve/EratMedium.cpp: Unroll sieving loop, up to 5% speed up.
 7. src/primesieve/popcount.cpp: Faster popcount algorithm.
 8. examples/c/previous_prime.c: Shows how to use primesieve_previous_prime().
 
