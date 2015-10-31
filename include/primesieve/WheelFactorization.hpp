@@ -2,7 +2,7 @@
 /// @file   WheelFactorization.hpp
 /// @brief  Classes and structs related to wheel factorization.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -27,7 +27,8 @@ namespace primesieve {
 /// The WheelInit data structure is used to calculate the first
 /// multiple >= start of each sieving prime.
 ///
-struct WheelInit {
+struct WheelInit
+{
   uint8_t nextMultipleFactor;
   uint8_t wheelIndex;
 };
@@ -38,7 +39,8 @@ extern const WheelInit wheel210Init[210];
 /// The WheelElement data structure is used to skip multiples of
 /// small primes using wheel factorization.
 ///
-struct WheelElement {
+struct WheelElement
+{
   /// Bitmask used to unset the bit corresponding to the current
   /// multiple of a SievingPrime object.
   uint8_t unsetBit;
@@ -61,41 +63,50 @@ extern const WheelElement wheel210[48*8];
 /// of its next multiple within the SieveOfEratosthenes array
 /// (i.e. multipleIndex) and a wheelIndex.
 ///
-class SievingPrime {
+class SievingPrime
+{
 public:
-  enum {
+  enum
+  {
     MAX_MULTIPLEINDEX = (1 << 23) - 1,
-    MAX_WHEELINDEX    = (1 <<  9) - 1
+    MAX_WHEELINDEX    = (1 << (32 - 23)) - 1
   };
+
   uint_t getSievingPrime() const
   {
     return sievingPrime_;
   }
+
   uint_t getMultipleIndex() const
   {
     return indexes_ & MAX_MULTIPLEINDEX;
   }
+
   uint_t getWheelIndex() const
   {
     return indexes_ >> 23;
   }
+
   void setMultipleIndex(uint_t multipleIndex)
   {
     assert(multipleIndex <= MAX_MULTIPLEINDEX);
     indexes_ = static_cast<uint32_t>(indexes_ | multipleIndex);
   }
+
   void setWheelIndex(uint_t wheelIndex)
   {
     assert(wheelIndex <= MAX_WHEELINDEX);
     indexes_ = static_cast<uint32_t>(wheelIndex << 23);
   }
+
   void set(uint_t multipleIndex,
            uint_t wheelIndex)
   {
     assert(multipleIndex <= MAX_MULTIPLEINDEX);
-    assert(wheelIndex    <= MAX_WHEELINDEX);
+    assert(wheelIndex <= MAX_WHEELINDEX);
     indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
   }
+
   void set(uint_t sievingPrime,
            uint_t multipleIndex,
            uint_t wheelIndex)
@@ -116,7 +127,8 @@ private:
 /// is no more space in the current Bucket a new Bucket node is
 /// allocated.
 ///
-class Bucket {
+class Bucket
+{
 public:
   Bucket(const Bucket&) { reset(); }
   Bucket()              { reset(); }
@@ -153,7 +165,8 @@ private:
 /// WheelFactorization.
 ///
 template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
-class WheelFactorization {
+class WheelFactorization
+{
 public:
   /// Get the maximum upper bound for sieving
   static uint64_t getMaxStop()
@@ -163,10 +176,12 @@ public:
 
     return MAX_UINT64 - MAX_UINT32 * getMaxFactor();
   }
+
   static std::string getMaxStopString()
   {
     return "2^64 - 2^32 * " + toString(getMaxFactor());
   }
+
   /// @brief Add a new sieving prime.
   ///
   /// Calculate the first multiple > segmentLow of prime and the
@@ -199,6 +214,7 @@ public:
     uint_t wheelIndex = wheelOffsets_[prime % NUMBERS_PER_BYTE] + INIT[quotient % MODULO].wheelIndex;
     storeSievingPrime(prime, multipleIndex, wheelIndex);
   }
+
 protected:
   /// @param stop       Upper bound for sieving.
   /// @param sieveSize  Sieve size in bytes.
@@ -207,17 +223,23 @@ protected:
     stop_(stop)
   {
     const uint_t maxSieveSize = SievingPrime::MAX_MULTIPLEINDEX + 1;
+
     if (sieveSize > maxSieveSize)
       throw primesieve_error("WheelFactorization: sieveSize must be <= " + toString(maxSieveSize));
     if (stop > getMaxStop())
       throw primesieve_error("WheelFactorization: stop must be <= " + getMaxStopString());
   }
-  virtual ~WheelFactorization() { }
+
+  virtual ~WheelFactorization()
+  { }
+
   virtual void storeSievingPrime(uint_t, uint_t, uint_t) = 0;
+
   static uint_t getMaxFactor()
   {
     return WHEEL[0].nextMultipleFactor;
   }
+
   /// Cross-off the current multiple (unset bit) of sievingPrime and
   /// calculate its next multiple i.e. multipleIndex.
   ///
