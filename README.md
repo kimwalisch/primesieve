@@ -34,10 +34,10 @@ bytes.
 Requirements
 ------------
 
-primesieve is written in C++03, it compiles with every C++ compiler and
-runs on both little and big endian CPUs. The parallelization is implemented
-using [OpenMP](http://en.wikipedia.org/wiki/OpenMP). The primesieve GUI
-application (not built by default) uses the
+primesieve is entirely written in C++, it compiles with every C++ compiler
+and runs on both little and big endian CPUs. The parallelization is
+implemented using [OpenMP](http://en.wikipedia.org/wiki/OpenMP). The
+primesieve GUI application (not built by default) uses the
 [Qt framework](http://qt-project.org).
 
 primesieve is also a library, it supports C++ and C directly. For a few
