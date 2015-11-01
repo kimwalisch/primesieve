@@ -10,12 +10,12 @@
 #ifndef CMDOPTIONS_HPP
 #define CMDOPTIONS_HPP
 
-#include <deque>
+#include <vector>
 #include <stdint.h>
 
 struct PrimeSieveOptions
 {
-  std::deque<uint64_t> n;
+  std::vector<uint64_t> numbers;
   int flags;
   int sieveSize;
   int threads;

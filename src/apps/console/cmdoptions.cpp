@@ -169,8 +169,8 @@ PrimeSieveOptions parseOptions(int argc, char** argv)
         case OPTION_THREADS:  pso.threads = option.getValue<int>(); break;
         case OPTION_QUIET:    pso.quiet = true; break;
         case OPTION_NTHPRIME: pso.nthPrime = true; break;
-        case OPTION_NUMBER:   pso.n.push_back(option.getValue<uint64_t>()); break;
-        case OPTION_DISTANCE: pso.n.push_back(option.getValue<uint64_t>() + pso.n.front()); break;
+        case OPTION_NUMBER:   pso.numbers.push_back(option.getValue<uint64_t>()); break;
+        case OPTION_DISTANCE: pso.numbers.push_back(option.getValue<uint64_t>() + pso.numbers.front()); break;
         case OPTION_TEST:     test(); break;
         case OPTION_VERSION:  version(); break;
         case OPTION_HELP:     help(); break;
@@ -182,8 +182,8 @@ PrimeSieveOptions parseOptions(int argc, char** argv)
     help();
   }
 
-  if (pso.n.size() < 1 ||
-      pso.n.size() > 2)
+  if (pso.numbers.size() < 1 ||
+      pso.numbers.size() > 2)
     help();
 
   return pso;

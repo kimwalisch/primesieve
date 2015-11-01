@@ -3,7 +3,7 @@
 /// @brief  This file contains the main() function of the primesieve
 ///         console (terminal) application.
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -19,7 +19,7 @@
 #include <string>
 
 using namespace std;
-using primesieve::ParallelPrimeSieve;
+using namespace primesieve;
 
 void printResults(const ParallelPrimeSieve& pps)
 {
@@ -55,17 +55,20 @@ void printResults(const ParallelPrimeSieve& pps)
 int main(int argc, char** argv)
 {
   PrimeSieveOptions options = parseOptions(argc, argv);
+  vector<uint64_t>& numbers = options.numbers;
   ParallelPrimeSieve pps;
   cout << left;
 
   try
   {
+    // for validation purpose don't set for nthPrime
     if (!options.nthPrime)
     {
-      if (options.n.size() == 1)
-        options.n.push_front(0);
-      pps.setStart(options.n[0]);
-      pps.setStop(options.n[1]);
+      if (numbers.size() < 2)
+        numbers.push_front(0);
+
+      pps.setStart(numbers[0]);
+      pps.setStop (numbers[1]);
     }
 
     if (options.flags     != 0) pps.setFlags(options.flags);
@@ -77,14 +80,16 @@ int main(int argc, char** argv)
     {
       cout << "Sieve size = " << pps.getSieveSize() << " kilobytes" << endl;
       cout << "Threads    = " << pps.getNumThreads() << endl;
+
       if (!pps.isPrint())
         pps.addFlags(pps.PRINT_STATUS);
     }
 
     if (options.nthPrime)
     {
-      uint64_t start = (options.n.size() > 1) ? options.n[1] : 0;
-      uint64_t nthPrime = pps.nthPrime(options.n[0], start);
+      uint64_t start = (numbers.size() > 1) ? numbers[1] : 0;
+      uint64_t nthPrime = pps.nthPrime(numbers[0], start);
+
       cout << "Nth prime    : " << nthPrime << endl;
       cout << "Time elapsed : " << pps.getSeconds() << " sec" << endl;
     }
@@ -100,5 +105,6 @@ int main(int argc, char** argv)
          << "Try `primesieve --help' for more information." << endl;
     return 1;
   }
+
   return 0;
 }
