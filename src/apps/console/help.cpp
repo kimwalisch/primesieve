@@ -43,7 +43,7 @@ const string helpMenu(
   "\n"
   "Examples:\n"
   "\n"
-  "  Print the primes primes below 1000000\n"
+  "  Print the primes below 1000000\n"
   "  $ primesieve 1e6 --print\n"
   "\n"
   "  Count the twin primes inside [10^9, 10^9 + 2^32]\n"
