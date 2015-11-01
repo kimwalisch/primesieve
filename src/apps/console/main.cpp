@@ -55,7 +55,7 @@ void printResults(const ParallelPrimeSieve& pps)
 int main(int argc, char** argv)
 {
   PrimeSieveOptions options = parseOptions(argc, argv);
-  vector<uint64_t>& numbers = options.numbers;
+  deque<uint64_t>& numbers = options.numbers;
   ParallelPrimeSieve pps;
   cout << left;
 
