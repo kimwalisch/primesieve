@@ -80,7 +80,7 @@ Build instructions (Microsoft Visual C++)
 -----------------------------------------
 
 Open a Visual Studio Command Prompt, cd into the primesieve directory
-and build primesieve using:
+and run:
 
 ```sh
 > nmake -f Makefile.msvc
