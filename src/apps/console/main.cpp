@@ -23,7 +23,7 @@ using namespace primesieve;
 
 void printResults(const ParallelPrimeSieve& pps)
 {
-  const string primeLabels[6] =
+  const string primeText[6] =
   {
     "Prime numbers",
     "Twin primes",
@@ -34,14 +34,20 @@ void printResults(const ParallelPrimeSieve& pps)
   };
 
   int size = 0;
-  for (int i = 0; i < 6; i++) {
+
+  for (int i = 0; i < 6; i++)
+  {
     if (pps.isCount(i))
-      size = max(size, static_cast<int>(primeLabels[i].size()));
+    {
+      int text_size = static_cast<int>(primeText[i].size());
+      size = max(size, text_size);
+    }
   }
 
-  for (int i = 0; i < 6; i++) {
+  for (int i = 0; i < 6; i++)
+  {
     if (pps.isCount(i))
-      cout << setw(size) << primeLabels[i] << " : "
+      cout << setw(size) << primeText[i] << " : "
            << pps.getCount(i)
            << endl;
   }
