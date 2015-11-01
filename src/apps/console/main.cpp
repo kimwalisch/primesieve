@@ -21,11 +21,16 @@
 using namespace std;
 using namespace primesieve;
 
-void printResults(const ParallelPrimeSieve& pps)
+namespace {
+
+void printResults(ParallelPrimeSieve& pps,
+                  PrimeSieveOptions& options)
 {
-  const string primeText[6] =
+  cout << left;
+
+  const string labels[] =
   {
-    "Prime numbers",
+    "Primes",
     "Twin primes",
     "Prime triplets",
     "Prime quadruplets",
@@ -33,82 +38,111 @@ void printResults(const ParallelPrimeSieve& pps)
     "Prime sextuplets"
   };
 
+  // largest label size, computed below
   int size = 0;
 
   for (int i = 0; i < 6; i++)
   {
     if (pps.isCount(i))
     {
-      int text_size = static_cast<int>(primeText[i].size());
-      size = max(size, text_size);
+      int label_size = (int) labels[i].size();
+      size = max(size, label_size);
     }
   }
 
+  if (options.time)
+  {
+    int label_size = (int) string("Seconds").size();
+    size = max(size, label_size);
+  }
+
+  // print results
   for (int i = 0; i < 6; i++)
   {
     if (pps.isCount(i))
-      cout << setw(size) << primeText[i] << " : "
-           << pps.getCount(i)
-           << endl;
+      cout << setw(size) << labels[i] << " : "
+           << pps.getCount(i) << endl;
   }
 
-  if (!pps.isPrint())
-    cout << setw(size) << "Time elapsed" << " : "
-         << pps.getSeconds() << " sec"
+  if (options.time)
+    cout << setw(size) << "Seconds" << " : "
+         << fixed << setprecision(3) << pps.getSeconds()
          << endl;
 }
+
+/// Used to count and print primes and prime k-tuplets
+void sieve(PrimeSieveOptions& options)
+{
+  ParallelPrimeSieve pps;
+  deque<uint64_t>& numbers = options.numbers;
+
+  if (options.flags     != 0) pps.setFlags(options.flags);
+  if (options.sieveSize != 0) pps.setSieveSize(options.sieveSize);
+  if (options.threads   != 0) pps.setNumThreads(options.threads);
+  else if (pps.isPrint())     pps.setNumThreads(1);
+
+  if (numbers.size() < 2)
+    numbers.push_front(0);
+
+  pps.setStart(numbers[0]);
+  pps.setStop (numbers[1]);
+
+  if (!options.quiet)
+  {
+    cout << "Sieve size = " << pps.getSieveSize() << " kilobytes" << endl;
+    cout << "Threads    = " << pps.getNumThreads() << endl;
+
+    // enable printing status
+    if (!pps.isPrint())
+      pps.addFlags(pps.PRINT_STATUS);
+  }
+
+  pps.sieve();
+  printResults(pps, options);
+}
+
+void nthPrime(PrimeSieveOptions& options)
+{
+  ParallelPrimeSieve pps;
+  deque<uint64_t>& numbers = options.numbers;
+
+  if (options.flags     != 0) pps.setFlags(options.flags);
+  if (options.sieveSize != 0) pps.setSieveSize(options.sieveSize);
+  if (options.threads   != 0) pps.setNumThreads(options.threads);
+
+  if (numbers.size() < 2)
+    numbers.push_back(0);
+
+  uint64_t n = numbers[0];
+  uint64_t start = numbers[1];
+  uint64_t nthPrime = pps.nthPrime(n, start);
+
+  cout << "Nth prime : " << nthPrime << endl;
+
+  if (options.time)
+    cout << "Seconds   : " << fixed << setprecision(3)
+         << pps.getSeconds() << endl;
+}
+
+} // namespace
 
 int main(int argc, char** argv)
 {
   PrimeSieveOptions options = parseOptions(argc, argv);
-  deque<uint64_t>& numbers = options.numbers;
-  ParallelPrimeSieve pps;
-  cout << left;
+  bool isNthPrime = options.nthPrime;
 
   try
   {
-    // for validation purpose don't set for nthPrime
-    if (!options.nthPrime)
-    {
-      if (numbers.size() < 2)
-        numbers.push_front(0);
-
-      pps.setStart(numbers[0]);
-      pps.setStop (numbers[1]);
-    }
-
-    if (options.flags     != 0) pps.setFlags(options.flags);
-    if (options.sieveSize != 0) pps.setSieveSize(options.sieveSize);
-    if (options.threads   != 0) pps.setNumThreads(options.threads);
-    else if (pps.isPrint())     pps.setNumThreads(1);
-
-    if (!options.quiet && !options.nthPrime)
-    {
-      cout << "Sieve size = " << pps.getSieveSize() << " kilobytes" << endl;
-      cout << "Threads    = " << pps.getNumThreads() << endl;
-
-      if (!pps.isPrint())
-        pps.addFlags(pps.PRINT_STATUS);
-    }
-
-    if (options.nthPrime)
-    {
-      uint64_t start = (numbers.size() > 1) ? numbers[1] : 0;
-      uint64_t nthPrime = pps.nthPrime(numbers[0], start);
-
-      cout << "Nth prime    : " << nthPrime << endl;
-      cout << "Time elapsed : " << pps.getSeconds() << " sec" << endl;
-    }
+    if (isNthPrime)
+      nthPrime(options);
     else
-    {
-      pps.sieve();
-      printResults(pps);
-    }
+      sieve(options);
   }
   catch (exception& e)
   {
     cerr << "Error: " << e.what() << "." << endl
          << "Try `primesieve --help' for more information." << endl;
+
     return 1;
   }
 

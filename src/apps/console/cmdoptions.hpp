@@ -21,13 +21,15 @@ struct PrimeSieveOptions
   int threads;
   bool quiet;
   bool nthPrime;
+  bool time;
 
   PrimeSieveOptions() :
     flags(0),
     sieveSize(0),
     threads(0),
     quiet(false),
-    nthPrime(false)
+    nthPrime(false),
+    time(false)
   { }
 };
 

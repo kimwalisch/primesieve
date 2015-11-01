@@ -52,6 +52,7 @@ enum OptionValues
   OPTION_SIZE,
   OPTION_TEST,
   OPTION_THREADS,
+  OPTION_TIME,
   OPTION_VERSION
 };
 
@@ -80,6 +81,7 @@ void initOptionMap()
   optionMap["--test"]     = OPTION_TEST;
   optionMap["-t"]         = OPTION_THREADS;
   optionMap["--threads"]  = OPTION_THREADS;
+  optionMap["--time"]     = OPTION_TIME;
   optionMap["-v"]         = OPTION_VERSION;
   optionMap["--version"]  = OPTION_VERSION;
 }
@@ -169,6 +171,7 @@ PrimeSieveOptions parseOptions(int argc, char** argv)
         case OPTION_THREADS:  pso.threads = option.getValue<int>(); break;
         case OPTION_QUIET:    pso.quiet = true; break;
         case OPTION_NTHPRIME: pso.nthPrime = true; break;
+        case OPTION_TIME:     pso.time = true; break;
         case OPTION_NUMBER:   pso.numbers.push_back(option.getValue<uint64_t>()); break;
         case OPTION_DISTANCE: pso.numbers.push_back(option.getValue<uint64_t>() + pso.numbers.front()); break;
         case OPTION_TEST:     test(); break;
@@ -185,6 +188,9 @@ PrimeSieveOptions parseOptions(int argc, char** argv)
   if (pso.numbers.size() < 1 ||
       pso.numbers.size() > 2)
     help();
+
+  if (!pso.quiet)
+    pso.time = true;
 
   return pso;
 }
