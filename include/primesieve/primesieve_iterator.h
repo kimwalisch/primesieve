@@ -13,9 +13,9 @@
  *          @endlink example shows how to use primesieve_iterator. If
  *          any error occurs errno is set to EDOM and
  *          primesieve_next_prime() and primesieve_previous_prime()
- *          return PRIMESIEVE_ERROR (UINT64_MAX).
+ *          return PRIMESIEVE_ERROR.
  * 
- *  Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+ *  Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
  * 
  *  This file is distributed under the BSD License. See the COPYING
  *  file in the top level directory.
