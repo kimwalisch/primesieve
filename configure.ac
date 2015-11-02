@@ -3,7 +3,7 @@ AC_SUBST([primesieve_lib_version], [5:0:0])
 
 AC_PREREQ([2.62])
 AC_LANG([C++])
-AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIRS([m4])
 AM_INIT_AUTOMAKE([subdir-objects foreign -Wall -Werror])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_PROG_CC
