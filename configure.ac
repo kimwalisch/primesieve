@@ -10,6 +10,8 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_OPENMP
 AC_CANONICAL_HOST
+# Silence warning: ar: 'u' modifier ignored since 'D' is the default
+AC_SUBST(AR_FLAGS, [cr])
 AM_PROG_AR
 # needed for automake <= 1.13:
 AM_PROG_CC_C_O
