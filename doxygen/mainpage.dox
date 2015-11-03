@@ -1,34 +1,33 @@
 /// @mainpage
 /// @section About
 ///
-/// primesieve is a C/C++ library for fast prime number generation.
-/// http://primesieve.org/build.html explains how to build and install
-/// primesieve.
-///
-/// primesieve is written in C++03 and includes C bindings for all of
-/// its functions so that it can easily be used in languages other
-/// than C++. Multi-threading is implemented using OpenMP 2.0 (2002)
-/// or later. primesieve is very portable, it builds on most Unix-like
-/// operating system (GNU Autotools) and Windows (MSVC) is also
-/// supported.
-///
-/// primesieve generates primes using a highly optimized
-/// implementation of the segmented sieve of Eratosthenes. It
+/// primesieve is a C/C++ library for fast prime number generation. It
 /// generates the primes below 10^9 in just 0.2 seconds on a single
-/// core of an Intel Core i7-4770 3.4GHz CPU from 2013. primesieve can
-/// generate primes and prime k-tuplets up to 2^64 - 2^32 * 10.
-/// primesieve's memory requirement is about pi(sqrt(n)) * 8 bytes per
-/// thread, its run-time complexity is O(n log log n) operations.
+/// core of an Intel Core i7-6700 3.4GHz CPU. primesieve can generate
+/// primes and prime k-tuplets up to 2^64. primesieve's memory
+/// requirement is about pi(sqrt(n)) * 8 bytes per thread, its
+/// run-time complexity is O(n log log n) operations.
+///
+/// The recommended way to get started is to first have a look at a
+/// few C/C++ example programs. The most common use cases are storing
+/// primes in a vector (or array) and iterating over primes using
+/// next_prime() or previous_prime().
+///
+/// You can install libprimesieve either using your distribution's
+/// package manager (if it is available) or you can build and install
+/// it yourself. This is explained at http://primesieve.org/build.html.
 ///
 /// @section CPP_API C++ API
 ///
 /// @li @link primesieve.hpp primesieve.hpp @endlink - primesieve C++ header.
-/// @li @link store_primes_in_vector.cpp store_primes_in_vector.cpp @endlink - Example that shows how to store primes in a std::vector object.
-/// @li @link primesieve_iterator.cpp primesieve_iterator.cpp @endlink - Example that shows how to iterate over primes using a primesieve::iterator object.
+/// @li @link store_primes_in_vector.cpp store_primes_in_vector.cpp @endlink - Example that shows how to store primes in a std::vector.
+/// @li @link primesieve_iterator.cpp primesieve_iterator.cpp @endlink - Example that shows how to iterate over primes using primesieve::iterator.
+/// @li @link count_primes.cpp count_primes.cpp @endlink - Example that shows how to count primes.
 ///
 /// @section C_API C API
 ///
 /// @li @link primesieve.h primesieve.h @endlink - primesieve C header.
 /// @li @link store_primes_in_array.c store_primes_in_array.c @endlink - Example that shows how to store primes in an array.
-/// @li @link primesieve_iterator.c primesieve_iterator.c @endlink - Example that shows how to iterate over primes using the @link primesieve_iterator.h primesieve_iterator @endlink C data structure.
+/// @li @link primesieve_iterator.c primesieve_iterator.c @endlink - Example that shows how to iterate over primes using @link primesieve_iterator.h primesieve_iterator @endlink.
+/// @li @link count_primes.c count_primes.c @endlink - Example that shows how to count primes.
 ///
