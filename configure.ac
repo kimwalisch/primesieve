@@ -13,13 +13,17 @@ AC_CANONICAL_HOST
 # Silence warning: ar: 'u' modifier ignored since 'D' is the default
 AC_SUBST(AR_FLAGS, [cr])
 AM_PROG_AR
-# needed for automake <= 1.13:
+# Needed for automake <= 1.13
 AM_PROG_CC_C_O
 LT_INIT
+
+# Check if graphviz is installed (for use with doxygen)
+AC_CHECK_PROG([HAVE_DOT], [dot], [YES], [NO])
 
 AC_ARG_ENABLE(examples,
     [--enable-examples Compile the examples programs],
     ENABLE_EXAMPLES="yes")
+
 AM_CONDITIONAL(MAKE_EXAMPLES, test "x$ENABLE_EXAMPLES" = "xyes")
 
 # Force building shared library on Windows
@@ -30,13 +34,15 @@ case "$host_os" in
     *)       AM_CONDITIONAL(FORCE_SHARED_LIBRARY, false);;
 esac
 
-AC_ARG_VAR([L1_DCACHE_SIZE],
-    [CPU L1 data cache size in kilobytes])
+AC_ARG_VAR([L1_DCACHE_SIZE], [CPU L1 data cache size in kilobytes])
 
-AS_IF([test "x$L1_DCACHE_SIZE" != "x"], [L1_DETECTED="yes"])
+AS_IF([test "x$L1_DCACHE_SIZE" != "x"],
+    [L1_DETECTED="yes"])
+
+# This is a very portable shell script that finds the CPU's L1
+# cache size (in kilobytes) on most Unix-like systems
 AS_IF([test "x$L1_DCACHE_SIZE" = "x"],
     [[
-    # Try to get the CPU's L1 data cache size in kilobytes
     # Default L1 cache size
     L1_DCACHE_SIZE=32
 
@@ -89,13 +95,15 @@ AC_DEFINE_UNQUOTED([L1_DCACHE_SIZE],
     [CPU L1 data cache size in kilobytes])
 
 AC_ARG_VAR([SIEVESIZE], [Default sieve size in kilobytes])
+
 AS_IF([test "x$SIEVESIZE" = "x"], [SIEVESIZE=$L1_DCACHE_SIZE])
+
 AC_DEFINE_UNQUOTED([SIEVESIZE],
     [$SIEVESIZE],
     [Default sieve size in kilobytes])
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile primesieve.pc])
+AC_CONFIG_FILES([Makefile primesieve.pc doxygen/Doxyfile])
 AC_OUTPUT
 
 AS_IF([test "x$L1_DETECTED" != "x"],

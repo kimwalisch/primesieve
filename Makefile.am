@@ -68,6 +68,10 @@ store_primes_in_array_c_LDADD = libprimesieve.la
 store_primes_in_array_c_SOURCES = examples/c/store_primes_in_array.c
 endif
 
+# Additional files to be deleted by 'make distclean'
+DISTCLEANFILES = \
+	doxygen/Doxyfile
+
 include_HEADERS = \
 	include/primesieve.hpp \
 	include/primesieve.h
@@ -87,7 +91,7 @@ EXTRA_DIST = \
 	autogen.sh \
 	README.md \
 	Makefile.msvc \
-	doxygen/Doxyfile \
+	doxygen/Doxyfile.in \
 	doxygen/mainpage.dox \
 	examples/README.md \
 	src/apps/gui \

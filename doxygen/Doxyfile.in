@@ -34,3 +34,4 @@ EXAMPLE_PATTERNS       = *.cpp *.c
 EXAMPLE_RECURSIVE      = YES
 GENERATE_LATEX         = NO
 FULL_PATH_NAMES        = NO
+HAVE_DOT               = @HAVE_DOT@

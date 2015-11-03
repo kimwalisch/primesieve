@@ -10,6 +10,8 @@
 *.la
 *.pc
 /primesieve
+doxygen/Doxyfile
+doxygen/html
 Makefile
 Makefile.in
 autoconf.h*
@@ -19,7 +21,6 @@ autoconf.h*
 /config.*
 /configure
 /depcomp
-/html
 /install-sh
 /libtool
 /ltmain.sh
