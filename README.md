@@ -215,7 +215,15 @@ Bindings for other languages
 primesieve supports C++ and C directly, and has bindings available for
 a few other languages:
 
-* __Python:__ [primesieve-python](https://github.com/hickford/primesieve-python)
-* __Ruby:__ [primesieve-ruby](https://github.com/robertjlooby/primesieve-ruby)
+<table>
+    <tr>
+        <td><b>Python:</b></td>
+        <td><a href="https://github.com/hickford/primesieve-python">primesieve-python</a></td>
+    </tr>
+    <tr>
+        <td><b>Ruby:</b></td>
+        <td><a href="https://github.com/robertjlooby/primesieve-ruby">primesieve-ruby</a></td>
+    </tr>
+</table>
 
 Many thanks to the developers of these bindings!
