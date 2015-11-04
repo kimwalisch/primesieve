@@ -9,6 +9,7 @@
 *.lo
 *.la
 *.pc
+*.tar.gz
 /primesieve
 doxygen/Doxyfile
 doxygen/html
