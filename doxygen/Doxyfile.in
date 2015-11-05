@@ -1,5 +1,5 @@
 PROJECT_NAME           = "primesieve"
-PROJECT_NUMBER         = 5.5.0
+PROJECT_NUMBER         = @PACKAGE_VERSION@
 INPUT                  = mainpage.dox \
                          ../include/primesieve.hpp \
                          ../include/primesieve.h \
