@@ -13,14 +13,13 @@
 #include <primesieve.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
-#include <primesieve/cancel_callback.hpp>
 #include <primesieve/callback_t.hpp>
 
 #include <stdint.h>
 #include <stddef.h>
-#include <exception>
-#include <limits>
 #include <cerrno>
+#include <exception>
+#include <vector>
 
 //////////////////////////////////////////////////////////////////////
 //                    Internal helper functions

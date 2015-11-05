@@ -12,7 +12,6 @@
 #include <primesieve/PrimeFinder.hpp>
 #include <primesieve.hpp>
 
-#include <algorithm>
 #include <cmath>
 #include <string>
 #include <vector>

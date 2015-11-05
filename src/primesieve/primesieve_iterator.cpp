@@ -13,7 +13,6 @@
 #include <primesieve.hpp>
 #include <primesieve.h>
 
-#include <algorithm>
 #include <exception>
 #include <cerrno>
 #include <cmath>

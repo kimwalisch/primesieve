@@ -3,18 +3,19 @@
 /// @brief  Contains the implementations of the functions declared in
 ///         the primesieve.hpp header file.
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
-#include <primesieve.hpp>
+#include <primesieve/config.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
 #include <primesieve/Callback.hpp>
 #include <primesieve/PrimeFinder.hpp>
+#include <primesieve.hpp>
 
 #include <stdint.h>
 #include <string>
