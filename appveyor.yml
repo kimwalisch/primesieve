@@ -11,7 +11,7 @@ configuration:
   - Debug
 
 before_build:
-  "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /%platform%
+  "\"C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Bin\\SetEnv.cmd\" /%platform%"
 
 build_script:
   - nmake /f Makefile.msvc
