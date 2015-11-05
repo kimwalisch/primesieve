@@ -27,7 +27,8 @@ VERBATIM_HEADERS       = NO
 EXTRACT_ALL            = NO
 EXTRACT_STATIC         = YES
 FILE_PATTERNS          = *.cpp *.c *.h *.hpp
-EXCLUDE_SYMBOLS        = primesieve_generate_next_primes primesieve_generate_previous_primes
+EXCLUDE_SYMBOLS        = primesieve_generate_next_primes \
+                         primesieve_generate_previous_primes
 RECURSIVE              = NO
 EXAMPLE_PATH           = ../examples
 EXAMPLE_PATTERNS       = *.cpp *.c
