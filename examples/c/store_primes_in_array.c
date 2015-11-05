@@ -18,8 +18,8 @@ int main()
     printf("%i\n", primes[i]);
 
   primesieve_free(primes);
-
   uint64_t n = 1000;
+
   /* store the first 1000 primes */
   primes = (int*) primesieve_generate_n_primes(n, start, INT_PRIMES);
 
