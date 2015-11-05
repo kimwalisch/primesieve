@@ -20,7 +20,7 @@
 #include <stdint.h>
 #include <exception>
 #include <string>
-#include <cstdlib>
+#include <cstddef>
 
 namespace primesieve {
 
