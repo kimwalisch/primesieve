@@ -1,4 +1,5 @@
 # Automated Windows (MSVC++) testing using appveyor.com
+# https://ci.appveyor.com/projects
 
 version: 1.0.{build}
 
@@ -17,6 +18,8 @@ before_build:
   "\"C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Bin\\SetEnv.cmd\" /%platform%"
 
 build_script:
+  # Build using highest warning level on x64
+  - if "%platform%" == "x64" sed -i 's#/W2#/W4#' Makefile.msvc
   - nmake /f Makefile.msvc
 
 test_script:
