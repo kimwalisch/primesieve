@@ -77,6 +77,24 @@ li {
 	white-space: nowrap;
 }
 
+p.binding {
+	padding-top: 16px;
+}
+
+td.binding_language {
+	font-weight: bold;
+	font-size: 17px;
+	white-space: nowrap;
+	padding: 6px 12px;
+	border: 1px solid #c3c3c3;
+}
+
+td.binding_link {
+	white-space: nowrap;
+	padding: 6px 12px;
+	border: 1px solid #c3c3c3;
+}
+
 td.timing {
 	text-align: right;
 	padding: 6px 12px;
