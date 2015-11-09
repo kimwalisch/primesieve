@@ -181,22 +181,18 @@ sieve implementations</a>.
     <td class="timing">225.92s</td>
   </tr>
 </table>
-<p><br/>The above benchmarks were run on a 64-bit Linux operating
-system and primesieve was compiled using
-<span style="white-space: nowrap;">GCC 4.8.</span> For each benchmark
-primesieve used all available CPU cores (AMD: 4 threads, Intel: 8 threads,
-IBM: 66 threads) and the sieve size was set to the CPU's L1 data cache
-size per core.</p>
+<p><br/>The above benchmarks were run on Linux, for each
+benchmark primesieve used all available CPU cores and the sieve
+size was set to the CPU's L1 data cache size.</p>
 
 <h2 style="padding-bottom: 5px">
 <a name="cpu-scaling" class="anchor" href="#cpu-scaling"><span class="octicon octicon-link"></span></a>CPU scaling</h2>
 <img src="images/primesieve_cpu_scaling.png" alt="primesieve CPU scaling"/>
-<p style="padding-top: 13px">primesieve is multi-threaded and scales
-linearly up to a very large number of CPU cores if the interval is
-sufficiently large. The above benchmark was run on a system with 8
-physical CPU cores and 23 GB of memory. At each start offset the
-primes inside an interval of size 10^11 were counted using different
-numbers of threads.</p>
+<p style="padding-top: 13px">primesieve scales linearly up to a very
+large number of CPU cores (if the interval is sufficiently large). The
+above benchmark was run on a system with 8 physical CPU cores, at each
+start offset the primes inside an interval of size 10^11 were counted
+using different numbers of threads.</p>
 
 <h2 class="align2">
 <a name="algorithms" class="anchor" href="#algorithms"><span class="octicon octicon-link"></span></a>Algorithms</h2>
