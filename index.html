@@ -279,7 +279,7 @@ CPUs.</p>
   <li>Uses a modolo 210 wheel that skips multiples of 2, 3, 5 and 7</li>
   <li>Uses specialized algorithms for small, medium and big sieving primes</li>
   <li>Uses a custom memory pool (for big sieving primes)</li>
-  <li>Processes two sieving primes per loop iteration to increase instruction-level parallelism</li>
+  <li>Processes multiple sieving primes per loop iteration to increase instruction-level parallelism</li>
   <li>Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
 </ul>
 <p class="optimizations_title">Highly optimized inner loop</p>
