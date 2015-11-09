@@ -1,7 +1,7 @@
 /*
  * PrimeSieveGUI.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 
 #include <primesieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/pmath.hpp>
 
 #if QT_VERSION >= 0x050000
   #include <QtGlobal>
@@ -47,8 +48,9 @@
   #include <stdexcept>
 #endif
 
-using primesieve::ParallelPrimeSieve;
 int get_l1d_cache_size();
+
+using namespace primesieve;
 
 PrimeSieveGUI::PrimeSieveGUI(QWidget *parent) :
   QMainWindow(parent), ui(new Ui::PrimeSieveGUI), validator_(0),
@@ -99,11 +101,14 @@ void PrimeSieveGUI::initGUI() {
   for (int i = MINIMUM_SIEVE_SIZE; i <= MAXIMUM_SIEVE_SIZE; i *= 2)
     ui->sieveSizeComboBox->addItem(QString::number(i) + " KB");
 
-  int l1d_cache_size = get_l1d_cache_size();
-  if (l1d_cache_size < 16 || l1d_cache_size > 1024)
-    l1d_cache_size = DEFAULT_L1D_CACHE_SIZE;
+  int l1dCacheSize = get_l1d_cache_size();
+  if (l1dCacheSize < 16 || l1dCacheSize > 1024)
+    l1dCacheSize = DEFAULT_L1D_CACHE_SIZE;
 
-  this->setTo(ui->sieveSizeComboBox, QString::number(l1d_cache_size) + " KB");
+  int defaultSieveSize = floorPowerOf2(l1dCacheSize);
+
+  // default sieve size = CPU L1 data cache size
+  this->setTo(ui->sieveSizeComboBox, QString::number(defaultSieveSize) + " KB");
 
   // fill the threadsComboBox with power of 2 values <= maxThreads_
   maxThreads_ = ParallelPrimeSieve::getMaxThreads();
