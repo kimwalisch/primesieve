@@ -286,23 +286,11 @@ CPUs.</p>
 <p>primesieve's inner sieving loop has been optimized using
 <a href="https://github.com/kimwalisch/primesieve/blob/master/src/primesieve/EratSmall.cpp#L85">extreme loop unrolling</a>,
 on average crossing off a multiple uses just 1.375 instructions on
-x86-64 CPUs. Below is the assembly GCC generates for primesieve's inner sieving
-loop, each <code>andb</code> instruction unsets a bit (crosses off a multiple)
-in the sieve array.</p>
-<div class="highlight highlight-ASM"><pre><span class="pl-c">; primesieve inner sieving loop</span>
-<span class="pl-c">; Uses only 11 instructions (x86-64) to cross-off the next 8 multiples</span>
-<span class="pl-en">.L99:</span>
-    <span class="pl-k">andb</span>    $-<span class="pl-c1">3</span>, (%rax)
-    <span class="pl-k">andb</span>    $-<span class="pl-c1">9</span>, (%rax,%r14)
-    <span class="pl-k">andb</span>    <span class="pl-c1">$127</span>, (%rax,%r12)
-    <span class="pl-k">andb</span>    $-<span class="pl-c1">33</span>, (%rax,%rbp)
-    <span class="pl-k">andb</span>    $-<span class="pl-c1">2</span>, (%rax,%r10)
-    <span class="pl-k">andb</span>    $-<span class="pl-c1">65</span>, (%rax,%rbx)
-    <span class="pl-k">andb</span>    $-<span class="pl-c1">5</span>, (%rax,%r9)
-    <span class="pl-k">andb</span>    $-<span class="pl-c1">17</span>, (%rax,%r11)
-    addq    %r13, %rax
-    cmpq    %rdi, %rax
-    <span class="pl-k">jb</span>  .L99</pre></div>
+x64 CPUs. Below is the assembly GCC generates for primesieve's inner
+sieving loop, each <code>andb</code> instruction unsets a bit (crosses
+off a multiple) in the sieve array.</p>
+
+<script src="https://gist.github.com/kimwalisch/df939440b89081c39f6a.js"></script>
 
 <p>This <a href="https://github.com/kimwalisch/primesieve/blob/master/src/primesieve/README">README</a>
 file contains more technical implementation details.</p>
@@ -314,26 +302,7 @@ libprimesieve. All of primesieve's functions are also exposed as
 <a href="https://github.com/kimwalisch/primesieve#c-api">C API</a>.
 You can <a href="api">browse primesieve's API online</a>.</p>
 
-<div class="highlight highlight-C++"><pre><span class="cp">#include &lt;primesieve.hpp&gt;</span>
-<span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="c1">// store the primes below 1000</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">primes</span><span class="p">;</span>
-    <span class="n">primesieve</span><span class="o">::</span><span class="n">generate_primes</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">primes</span><span class="p">);</span>
-
-    <span class="n">primesieve</span><span class="o">::</span><span class="n">iterator</span> <span class="n">pi</span><span class="p">;</span>
-    <span class="kt">uint64_t</span> <span class="n">prime</span><span class="p">;</span>
-
-    <span class="c1">// iterate over the primes below 10^9</span>
-    <span class="k">while</span> <span class="p">((</span><span class="n">prime</span> <span class="o">=</span> <span class="n">pi</span><span class="p">.</span><span class="n">next_prime</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mi">1000000000</span><span class="p">)</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">prime</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<script src="https://gist.github.com/kimwalisch/afd69bf11daf59795c64.js"></script>
 
 <p>The <a href="build.html">Build From Source</a> page explains how to
 build libprimesieve and how to link against it.</p>
