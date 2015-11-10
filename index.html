@@ -29,6 +29,7 @@
         el.href  = "stylesheets/" + name + osId + ".css";
         document.getElementsByTagName("head")[0].appendChild(el);
       }
+
       appendStylesheetToHead("stylesheet");
       appendStylesheetToHead("navigation_menu");
     </script>
@@ -123,28 +124,28 @@ sieve implementations</a>.
       <span style="white-space: nowrap;">IBM POWER8</span><br/>
       <span class="cpu_details">(22 x 3.0GHz, 64K L1 Data Cache)</span>
     </td>
-  </tr>
+</tr>
 <tr>
     <td class="timing">10<sup>7</sup></td>
     <td class="timing">664,579</td>
     <td class="timing">0.00s</td>
     <td class="timing">0.00s</td>
     <td class="timing">0.00s</td>
-  </tr>
+</tr>
 <tr>
     <td class="timing">10<sup>8</sup></td>
     <td class="timing">5,761,455</td>
     <td class="timing">0.01s</td>
     <td class="timing">0.01s</td>
     <td class="timing">0.01s</td>
-  </tr>
+</tr>
 <tr>
     <td class="timing">10<sup>9</sup></td>
     <td class="timing">50,847,534</td>
     <td class="timing">0.06s</td>
     <td class="timing">0.05s</td>
     <td class="timing">0.07s</td>
-  </tr>
+</tr>
 <tr>
     <td class="timing">2<sup>32</sup></td>
     <td class="timing">203,280,221</td>
@@ -158,28 +159,28 @@ sieve implementations</a>.
     <td class="timing">0.66s</td>
     <td class="timing">0.45s</td>
     <td class="timing">0.24s</td>
-  </tr>
+</tr>
 <tr>
     <td class="timing">10<sup>11</sup></td>
     <td class="timing">4,118,054,813</td>
     <td class="timing">8.57s</td>
     <td class="timing">5.60s</td>
     <td class="timing">1.72s</td>
-  </tr>
+</tr>
 <tr>
     <td class="timing">10<sup>12</sup></td>
     <td class="timing">37,607,912,018</td>
     <td class="timing">122.02s</td>
     <td class="timing">68.55s</td>
     <td class="timing">19.34s</td>
-  </tr>
+</tr>
 <tr>
     <td class="timing">10<sup>13</sup></td>
     <td class="timing">346,065,536,839</td>
     <td class="timing">1664.68s</td>
     <td class="timing">816.62s</td>
     <td class="timing">225.92s</td>
-  </tr>
+</tr>
 </table>
 
 <p><br/>The above benchmarks were run on Linux, for each
@@ -351,6 +352,23 @@ build libprimesieve and how to link against it.</p>
       </div>
     </div>
 
-  <link rel="stylesheet" type="text/css" href="stylesheets/larger_github_gist_font_size.css" media="screen" />
+    <!-- Mac OS X:   include larger_github_gist_font_size_mac.css -->
+    <!-- Other OSes: include larger_github_gist_font_size.css -->
+    <script type="text/javascript">
+      var osId = "";
+
+      if (navigator.appVersion.indexOf("Mac") != -1) {
+        osId = "_mac";
+      }
+
+      var el = document.createElement("link");
+      el.type  = "text/css";
+      el.rel   = "stylesheet";
+      el.media = "screen";
+      el.href  = "stylesheets/" + "larger_github_gist_font_size" + osId + ".css";
+
+      document.getElementsByTagName("body")[0].appendChild(el);
+    </script>
+
   </body>
 </html>
