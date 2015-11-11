@@ -1,23 +1,23 @@
 PROJECT_NAME           = "primesieve"
 PROJECT_NUMBER         = @PACKAGE_VERSION@
-INPUT                  = mainpage.dox \
-                         ../include/primesieve.hpp \
-                         ../include/primesieve.h \
-                         ../include/primesieve/Callback.hpp \
-                         ../include/primesieve/iterator.hpp \
-                         ../include/primesieve/primesieve_error.hpp \
-                         ../include/primesieve/primesieve_iterator.h \
-                         ../examples/cpp/callback_primes.cpp \
-                         ../examples/cpp/count_primes.cpp \
-                         ../examples/cpp/primesieve_iterator.cpp \
-                         ../examples/cpp/nth_prime.cpp \
-                         ../examples/cpp/previous_prime.cpp \
-                         ../examples/cpp/store_primes_in_vector.cpp \
-                         ../examples/c/count_primes.c \
-                         ../examples/c/previous_prime.c \
-                         ../examples/c/primesieve_iterator.c \
-                         ../examples/c/nth_prime.c \
-                         ../examples/c/store_primes_in_array.c
+INPUT                  = @abs_top_srcdir@/doxygen/mainpage.dox \
+                         @abs_top_srcdir@/include/primesieve.hpp \
+                         @abs_top_srcdir@/include/primesieve.h \
+                         @abs_top_srcdir@/include/primesieve/Callback.hpp \
+                         @abs_top_srcdir@/include/primesieve/iterator.hpp \
+                         @abs_top_srcdir@/include/primesieve/primesieve_error.hpp \
+                         @abs_top_srcdir@/include/primesieve/primesieve_iterator.h \
+                         @abs_top_srcdir@/examples/cpp/callback_primes.cpp \
+                         @abs_top_srcdir@/examples/cpp/count_primes.cpp \
+                         @abs_top_srcdir@/examples/cpp/primesieve_iterator.cpp \
+                         @abs_top_srcdir@/examples/cpp/nth_prime.cpp \
+                         @abs_top_srcdir@/examples/cpp/previous_prime.cpp \
+                         @abs_top_srcdir@/examples/cpp/store_primes_in_vector.cpp \
+                         @abs_top_srcdir@/examples/c/count_primes.c \
+                         @abs_top_srcdir@/examples/c/previous_prime.c \
+                         @abs_top_srcdir@/examples/c/primesieve_iterator.c \
+                         @abs_top_srcdir@/examples/c/nth_prime.c \
+                         @abs_top_srcdir@/examples/c/store_primes_in_array.c
 HTML_INDEX_NUM_ENTRIES = 3
 HTML_TIMESTAMP         = NO
 JAVADOC_AUTOBRIEF      = YES
@@ -30,8 +30,8 @@ FILE_PATTERNS          = *.cpp *.c *.h *.hpp
 EXCLUDE_SYMBOLS        = primesieve_generate_next_primes \
                          primesieve_generate_previous_primes
 RECURSIVE              = NO
-EXAMPLE_PATH           = ../examples
 EXAMPLE_PATTERNS       = *.cpp *.c
+EXAMPLE_PATH           = @abs_top_srcdir@/examples
 EXAMPLE_RECURSIVE      = YES
 GENERATE_LATEX         = NO
 FULL_PATH_NAMES        = NO
