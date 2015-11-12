@@ -11,8 +11,8 @@
 *.pc
 *.tar.gz
 /primesieve
-doxygen/Doxyfile
-doxygen/html
+doc/Doxyfile
+doc/html
 Makefile
 Makefile.in
 autoconf.h*

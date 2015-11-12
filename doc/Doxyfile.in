@@ -1,6 +1,6 @@
 PROJECT_NAME           = "primesieve"
 PROJECT_NUMBER         = @PACKAGE_VERSION@
-INPUT                  = @abs_top_srcdir@/doxygen/mainpage.dox \
+INPUT                  = @abs_top_srcdir@/doc/mainpage.dox \
                          @abs_top_srcdir@/include/primesieve.hpp \
                          @abs_top_srcdir@/include/primesieve.h \
                          @abs_top_srcdir@/include/primesieve/Callback.hpp \

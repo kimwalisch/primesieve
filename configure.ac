@@ -103,7 +103,7 @@ AC_DEFINE_UNQUOTED([SIEVESIZE],
     [Default sieve size in kilobytes])
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile primesieve.pc doxygen/Doxyfile])
+AC_CONFIG_FILES([Makefile primesieve.pc doc/Doxyfile])
 AC_OUTPUT
 
 AS_IF([test "x$L1_DETECTED" != "x"],

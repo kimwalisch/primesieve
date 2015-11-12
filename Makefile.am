@@ -91,8 +91,8 @@ EXTRA_DIST = \
 	autogen.sh \
 	README.md \
 	Makefile.msvc \
-	doxygen/Doxyfile.in \
-	doxygen/mainpage.dox \
+	doc/Doxyfile.in \
+	doc/mainpage.dox \
 	examples/README.md \
 	src/apps/gui \
 	src/msvc_compat \
