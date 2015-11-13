@@ -92,6 +92,7 @@ EXTRA_DIST = \
 	README.md \
 	Makefile.msvc \
 	doc/Doxyfile.in \
+	doc/README.md \
 	doc/mainpage.dox \
 	examples/README.md \
 	src/apps/gui \
