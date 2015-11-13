@@ -1,3 +1,14 @@
+Changes in version 5.5.1, 13/11/2015
+====================================
+
+Work in progress.
+
+1. New high resolution icon size for primesieve GUI app.
+2. primesieve GUI app: Bug fix for CPUs with L1 data cache size that is
+   not a power of 2 e.g. Intel Z2480 Atom (24 KB L1 data cache).
+3. Renamed doxygen directory to doc.
+4. doc/Doxyfile.in: Fix out of source builds.
+
 Changes in version 5.5.0, 06/11/2015
 ====================================
 
