@@ -3,7 +3,7 @@ Hacking on primesieve
 
 Benchmark your code changes:
 ```sh
-$ ./primesieve 1e13 --offset=1e11
+$ ./primesieve 1e13 --dist=1e11
 ```
 
 Fix all warnings:
