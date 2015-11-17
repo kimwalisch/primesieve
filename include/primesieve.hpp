@@ -13,10 +13,10 @@
 #ifndef PRIMESIEVE_HPP
 #define PRIMESIEVE_HPP
 
-#define PRIMESIEVE_VERSION "5.5.1"
+#define PRIMESIEVE_VERSION "5.6.0"
 #define PRIMESIEVE_VERSION_MAJOR 5
-#define PRIMESIEVE_VERSION_MINOR 5
-#define PRIMESIEVE_VERSION_PATCH 1
+#define PRIMESIEVE_VERSION_MINOR 6
+#define PRIMESIEVE_VERSION_PATCH 0
 
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
@@ -48,7 +48,7 @@ namespace primesieve
   {
     if (primes)
     {
-      PushBackPrimes<T> pb(*primes);
+      PushBackPrimes<std::vector<T> > pb(*primes);
       pb.pushBackPrimes(0, stop);
     }
   }
@@ -62,7 +62,7 @@ namespace primesieve
   {
     if (primes)
     {
-      PushBackPrimes<T> pb(*primes);
+      PushBackPrimes<std::vector<T> > pb(*primes);
       pb.pushBackPrimes(start, stop);
     }
   }
@@ -73,7 +73,7 @@ namespace primesieve
   {
     if (primes)
     {
-      PushBack_N_Primes<T> pb(*primes);
+      PushBack_N_Primes<std::vector<T> > pb(*primes);
       pb.pushBack_N_Primes(n, 0);
     }
   }
@@ -86,7 +86,7 @@ namespace primesieve
   {
     if (primes)
     {
-      PushBack_N_Primes<T> pb(*primes);
+      PushBack_N_Primes<std::vector<T> > pb(*primes);
       pb.pushBack_N_Primes(n, start);
     }
   }
