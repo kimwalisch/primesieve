@@ -64,16 +64,15 @@ public:
 
   void resize(std::size_t n)
   {
-    capacity_ = std::max(n, (std::size_t) 16);
-    size_ = std::min(size_, capacity_);
-    array_ = (T*) realloc((void*) array_, capacity_ * sizeof(T));
+    n = std::max(n, (std::size_t) 16);
+    T* new_array = (T*) realloc((void*) array_, n * sizeof(T));
 
-    if (!array_)
-    {
-      size_ = 0;
-      capacity_ = 0;
+    if (!new_array)
       throw std::bad_alloc();
-    }
+
+    array_ = new_array;
+    capacity_ = n;
+    size_ = std::min(size_, capacity_);
   }
 
   T& operator[] (T n)
