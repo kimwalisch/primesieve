@@ -11,7 +11,8 @@
 #define MALLOC_VECTOR_HPP
 
 #include <stdlib.h>
-#include <stddef.h>
+#include <algorithm>
+#include <cstddef>
 #include <new>
 
 namespace primesieve {
@@ -29,9 +30,11 @@ public:
       size_(0),
       capacity_(0),
       is_free_(true)
-  { }
+  {
+    resize(16);
+  }
 
-  malloc_vector(size_t n)
+  malloc_vector(std::size_t n)
     : array_(0),
       size_(0),
       capacity_(0),
@@ -48,33 +51,28 @@ public:
 
   void push_back(const T& val)
   {
-    if (size_ >= capacity_)
-      resize((size_ > 0) ? size_ * 2 : 16);
     array_[size_++] = val;
+    if (size_ >= capacity_)
+      resize(size_ * 2);
   }
 
-  void reserve(size_t n)
+  void reserve(std::size_t n)
   {
     if (n > capacity_)
       resize(n);
   }
 
-  void resize(size_t n)
+  void resize(std::size_t n)
   {
-    if (n > 0)
+    capacity_ = std::max(n, (std::size_t) 16);
+    size_ = std::min(size_, capacity_);
+    array_ = (T*) realloc((void*) array_, capacity_ * sizeof(T));
+
+    if (!array_)
     {
-      array_ = (T*) realloc((void*) array_, n * sizeof(T));
-      capacity_ = n;
-
-      if (capacity_ < size_)
-        size_ = capacity_;
-
-      if (!array_)
-      {
-        size_ = 0;
-        capacity_ = 0;
-        throw std::bad_alloc();
-      }
+      size_ = 0;
+      capacity_ = 0;
+      throw std::bad_alloc();
     }
   }
 
@@ -88,7 +86,7 @@ public:
     return array_;
   }
 
-  size_t size() const
+  std::size_t size() const
   {
     return size_;
   }
@@ -103,8 +101,8 @@ public:
 
 private:
   T* array_;
-  size_t size_;
-  size_t capacity_;
+  std::size_t size_;
+  std::size_t capacity_;
   bool is_free_;
 };
 
