@@ -67,7 +67,7 @@ public:
       capacity_ = n;
 
       if (capacity_ < size_)
-        size_ = capacity_ - 1;
+        size_ = capacity_;
 
       if (!array_)
       {
