@@ -457,7 +457,7 @@ void primesieve_print_sextuplets(uint64_t start, uint64_t stop)
 }
 
 //////////////////////////////////////////////////////////////////////
-//                      Callback functions
+//                      Callback function
 //////////////////////////////////////////////////////////////////////
 
 void primesieve_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
@@ -468,22 +468,6 @@ void primesieve_callback_primes(uint64_t start, uint64_t stop, void (*callback)(
     ps.setSieveSize(primesieve::get_sieve_size());
     // temporarily cast away extern "C" linkage
     ps.callbackPrimes_c(start, stop, reinterpret_cast<callback_t>(callback));
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-}
-
-void primesieve_parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int))
-{
-  try
-  {
-    primesieve::ParallelPrimeSieve pps;
-    pps.setSieveSize (primesieve::get_sieve_size());
-    pps.setNumThreads(primesieve::get_num_threads());
-    // temporarily cast away extern "C" linkage
-    pps.callbackPrimes_c(start, stop, reinterpret_cast<callback_tn_t>(callback));
   }
   catch (std::exception&)
   {

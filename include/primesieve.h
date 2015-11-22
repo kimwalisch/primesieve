@@ -209,16 +209,6 @@ void primesieve_print_sextuplets(uint64_t start, uint64_t stop);
  */
 void primesieve_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
 
-/** Call back the primes within the interval [start, stop] in
- *  parallel. This function is not synchronized, multiple threads call
- *  back primes in parallel. By default all CPU cores are used, use
- *  primesieve_set_num_threads(int) to change the number of threads.
- *  @warning         Primes are not called back in arithmetic order.
- *  @param callback  A callback function.
- *  @pre   stop      <= 2^64 - 2^32 * 10.
- */
-void primesieve_parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime, int thread_id));
-
 /** Get the current set sieve size in kilobytes. */
 int primesieve_get_sieve_size();
 

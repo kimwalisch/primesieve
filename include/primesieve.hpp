@@ -236,50 +236,6 @@ namespace primesieve
   ///
   void callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t>* callback);
 
-  /// Call back the primes within the interval [start, stop].
-  /// This function is synchronized, only one thread at a time calls
-  /// back primes. By default all CPU cores are used, use
-  /// primesieve::set_num_threads(int) to change the number of
-  /// threads.
-  /// @warning         Primes are not called back in arithmetic order.
-  /// @param callback  A callback function.
-  /// @pre   stop      <= 2^64 - 2^32 * 10.
-  ///
-  void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
-
-  /// Call back the primes within the interval [start, stop].
-  /// This function is synchronized, only one thread at a time calls
-  /// back primes. By default all CPU cores are used, use
-  /// primesieve::set_num_threads(int) to change the number of
-  /// threads.
-  /// @warning         Primes are not called back in arithmetic order.
-  /// @param callback  An object derived from primesieve::Callback<uint64_t>.
-  /// @pre   stop      <= 2^64 - 2^32 * 10.
-  ///
-  void parallel_callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t>* callback);
-
-  /// Call back the primes within the interval [start, stop].
-  /// This function is not synchronized, multiple threads call back
-  /// primes in parallel. By default all CPU cores are used, use
-  /// primesieve::set_num_threads(int) to change the number of
-  /// threads.
-  /// @warning         Primes are not called back in arithmetic order.
-  /// @param callback  A callback function.
-  /// @pre   stop      <= 2^64 - 2^32 * 10.
-  ///
-  void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime, int thread_id));
-
-  /// Call back the primes within the interval [start, stop].
-  /// This function is not synchronized, multiple threads call back
-  /// primes in parallel. By default all CPU cores are used, use
-  /// primesieve::set_num_threads(int) to change the number of
-  /// threads.
-  /// @warning         Primes are not called back in arithmetic order.
-  /// @param callback  An object derived from primesieve::Callback<uint64_t, int>.
-  /// @pre   stop      <= 2^64 - 2^32 * 10.
-  ///
-  void parallel_callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t, int>* callback);
-
   /// Get the current set sieve size in kilobytes.
   int get_sieve_size();
 

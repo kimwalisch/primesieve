@@ -122,47 +122,14 @@ inline void PrimeFinder::callbackPrimes(Callback<uint64_t>* cb, const byte_t* si
   }
 }
 
-template <typename T>
-inline void PrimeFinder::callbackPrimes(T callback, const byte_t* sieve, uint_t sieveSize, int threadNum) const
-{
-  uint64_t base = getSegmentLow();
-  for (uint_t i = 0; i < sieveSize; i += 8, base += NUMBERS_PER_BYTE * 8)
-  {
-    uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
-    while (bits != 0)
-    {
-      uint64_t prime = getNextPrime(&bits, base);
-      callback(prime, threadNum);
-    }
-  }
-}
-
-template <>
-inline void PrimeFinder::callbackPrimes(Callback<uint64_t, int>* cb, const byte_t* sieve, uint_t sieveSize, int threadNum) const
-{
-  uint64_t base = getSegmentLow();
-  for (uint_t i = 0; i < sieveSize; i += 8, base += NUMBERS_PER_BYTE * 8)
-  {
-    uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
-    while (bits != 0)
-    {
-      uint64_t prime = getNextPrime(&bits, base);
-      cb->callback(prime, threadNum);
-    }
-  }
-}
-
 /// Callback the primes within the current segment.
 /// @note primes < 7 are handled in PrimeSieve::doSmallPrime()
 ///
 void PrimeFinder::callbackPrimes(const byte_t* sieve, uint_t sieveSize) const
 {
-  if (ps_.isFlag(ps_.CALLBACK_PRIMES_OBJ))    { LockGuard lock(ps_); callbackPrimes(ps_.cb_, sieve, sieveSize); }
-  if (ps_.isFlag(ps_.CALLBACK_PRIMES_OBJ_TN)) { /* No Locking */     callbackPrimes(ps_.cb_tn_, sieve, sieveSize, ps_.threadNum_); }
-  if (ps_.isFlag(ps_.CALLBACK_PRIMES))        { LockGuard lock(ps_); callbackPrimes(ps_.callback_, sieve, sieveSize); }
-  if (ps_.isFlag(ps_.CALLBACK_PRIMES_TN))     { /* No Locking */     callbackPrimes(ps_.callback_tn_, sieve, sieveSize, ps_.threadNum_); }
-  if (ps_.isFlag(ps_.CALLBACK_PRIMES_C))      { LockGuard lock(ps_); callbackPrimes(reinterpret_cast<callback_c_t>(ps_.callback_), sieve, sieveSize); }
-  if (ps_.isFlag(ps_.CALLBACK_PRIMES_C_TN))   { /* No Locking */     callbackPrimes(reinterpret_cast<callback_c_tn_t>(ps_.callback_tn_), sieve, sieveSize, ps_.threadNum_); }
+  if (ps_.isFlag(ps_.CALLBACK_PRIMES_OBJ)) callbackPrimes(ps_.cb_, sieve, sieveSize);
+  if (ps_.isFlag(ps_.CALLBACK_PRIMES))     callbackPrimes(ps_.callback_, sieve, sieveSize);
+  if (ps_.isFlag(ps_.CALLBACK_PRIMES_C))   callbackPrimes(reinterpret_cast<callback_c_t>(ps_.callback_), sieve, sieveSize);
 }
 
 /// Count the primes and prime k-tuplets within

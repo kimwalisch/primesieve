@@ -218,42 +218,6 @@ void callback_primes(uint64_t start, uint64_t stop, Callback<uint64_t>* callback
 }
 
 //////////////////////////////////////////////////////////////////////
-//                   Parallel callback functions
-//////////////////////////////////////////////////////////////////////
-
-void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
-{
-  ParallelPrimeSieve pps;
-  pps.setSieveSize(get_sieve_size());
-  pps.setNumThreads(get_num_threads());
-  pps.callbackPrimes(start, stop, callback);
-}
-
-void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int))
-{
-  ParallelPrimeSieve pps;
-  pps.setSieveSize(get_sieve_size());
-  pps.setNumThreads(get_num_threads());
-  pps.callbackPrimes(start, stop, callback);
-}
-
-void parallel_callback_primes(uint64_t start, uint64_t stop, Callback<uint64_t>* callback)
-{
-  ParallelPrimeSieve pps;
-  pps.setSieveSize(get_sieve_size());
-  pps.setNumThreads(get_num_threads());
-  pps.callbackPrimes(start, stop, callback);
-}
-
-void parallel_callback_primes(uint64_t start, uint64_t stop, Callback<uint64_t, int>* callback)
-{
-  ParallelPrimeSieve pps;
-  pps.setSieveSize(get_sieve_size());
-  pps.setNumThreads(get_num_threads());
-  pps.callbackPrimes(start, stop, callback);
-}
-
-//////////////////////////////////////////////////////////////////////
 //                      Getters and Setters
 //////////////////////////////////////////////////////////////////////
 

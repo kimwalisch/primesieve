@@ -3,7 +3,7 @@
 /// @brief  The PrimeSieve class provides an easy API for prime
 ///         sieving (single-threaded).
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -79,11 +79,8 @@ public:
   void sieve(uint64_t, uint64_t, int);
   // Callback
   void callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t));
-  void callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t, int));
   void callbackPrimes(uint64_t, uint64_t, Callback<uint64_t>*);
-  void callbackPrimes(uint64_t, uint64_t, Callback<uint64_t, int>*);
   void callbackPrimes_c(uint64_t, uint64_t, void (*)(uint64_t));
-  void callbackPrimes_c(uint64_t, uint64_t, void (*)(uint64_t, int));
   // nth prime
   uint64_t nthPrime(uint64_t);
   uint64_t nthPrime(int64_t, uint64_t);
@@ -149,9 +146,7 @@ private:
   PrimeSieve* parent_;
   /// Callbacks for use with *callbackPrimes()
   void (*callback_)(uint64_t);
-  void (*callback_tn_)(uint64_t, int);
   Callback<uint64_t>* cb_;
-  Callback<uint64_t, int>* cb_tn_;
   static void printStatus(double, double);
   bool isFlag(int, int) const;
   bool isValidFlags(int) const;
@@ -168,11 +163,8 @@ private:
   enum
   {
     CALLBACK_PRIMES        = 1 << 20,
-    CALLBACK_PRIMES_TN     = 1 << 21,
-    CALLBACK_PRIMES_OBJ    = 1 << 22,
-    CALLBACK_PRIMES_OBJ_TN = 1 << 23,
-    CALLBACK_PRIMES_C      = 1 << 24,
-    CALLBACK_PRIMES_C_TN   = 1 << 25
+    CALLBACK_PRIMES_OBJ    = 1 << 21,
+    CALLBACK_PRIMES_C      = 1 << 22
   };
 };
 
