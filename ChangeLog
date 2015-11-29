@@ -1,13 +1,34 @@
-Changes in version 5.5.1, 13/11/2015
+Changes in version 5.6.0, 29/11/2015
 ====================================
 
 Work in progress.
 
-1. New high resolution icon size for primesieve GUI app.
-2. primesieve GUI app: Bug fix for CPUs with L1 data cache size that is
-   not a power of 2 e.g. Intel Z2480 Atom (24 KB L1 data cache).
-3. Renamed doxygen directory to doc.
-4. doc/Doxyfile.in: Fix out of source builds.
+1. The C API prime generation functions now return true C arrays which
+   can be deallocated using free() in the user's code.
+2. New high resolution icon size for primesieve GUI app.
+3. primesieve GUI app: Bug fix for CPUs with L1 data cache size that
+   is not a power of 2 e.g. Intel Z2480 Atom (24 KB L1 cache).
+4. Renamed doxygen directory to doc.
+5. doc/Doxyfile.in: Fix out of source builds.
+
+C++ API changes
+---------------
+
+All parallel callback functions have been removed. This was just crazy
+functionality which I should never have implemented ...
+
+void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
+void parallel_callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t>* callback);
+void parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime, int thread_id));
+void parallel_callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t, int>* callback);
+
+C API changes
+-------------
+
+All parallel callback functions have been removed:
+
+void primesieve_parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime, int thread_id));
+
 
 Changes in version 5.5.0, 06/11/2015
 ====================================
