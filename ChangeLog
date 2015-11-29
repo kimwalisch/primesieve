@@ -1,8 +1,6 @@
 Changes in version 5.6.0, 29/11/2015
 ====================================
 
-Work in progress.
-
 1. The C API prime generation functions now return true C arrays which
    can be deallocated using free() in the user's code.
 2. New high resolution icon size for primesieve GUI app.
