@@ -123,6 +123,7 @@ libprimesieve_la_SOURCES = \
 	include/primesieve/EratBig.hpp \
 	include/primesieve/EratMedium.hpp \
 	include/primesieve/EratSmall.hpp \
+	include/primesieve/malloc_vector.hpp \
 	include/primesieve/pmath.hpp \
 	include/primesieve/littleendian_cast.hpp \
 	include/primesieve/ParallelPrimeSieve-lock.hpp \

@@ -14,12 +14,13 @@
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
 #include <primesieve/callback_t.hpp>
+#include <primesieve/malloc_vector.hpp>
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <stddef.h>
 #include <cerrno>
 #include <exception>
-#include <vector>
 
 //////////////////////////////////////////////////////////////////////
 //                    Internal helper functions
@@ -27,70 +28,50 @@
 
 namespace {
 
-const int BUFFER_BYTES = 128;
+using namespace primesieve;
 
-/// This is the C array's memory layout:
-/// primes[index]   = first prime.
-/// primes[index-1] = memory address of corresponding std::vector object.
-/// primes[index-2] = integer type, e.g. INT_PRIMES.
-///
 template <typename T>
-void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size, int type)
+void* generate_primes_helper(uint64_t start, uint64_t stop, size_t* size)
 {
-#if __cplusplus >= 201103L
-  static_assert(BUFFER_BYTES % sizeof(T) == 0, "Prime type sizeof must be a power of 2.");
-#endif
-  std::vector<T>& primes = *(new std::vector<T>);
   try
   {
-    size_t index = BUFFER_BYTES / sizeof(T);
-    primes.resize(index, 0);
-    reinterpret_cast<uintptr_t*>(&primes[index])[-1] = reinterpret_cast<uintptr_t>(&primes);
-    reinterpret_cast<uintptr_t*>(&primes[index])[-2] = type;
+    malloc_vector<T> primes;
+    PushBackPrimes<malloc_vector<T> > pb(primes);
+    pb.pushBackPrimes(start, stop);
 
-    primesieve::generate_primes(start, stop, &primes);
     if (size)
-      *size = primes.size() - index;
-    return reinterpret_cast<void*>(&primes[index]);
+      *size = primes.size();
+
+    primes.disable_free();
+    return reinterpret_cast<void*>(primes.data());
   }
   catch (std::exception&)
   {
     errno = EDOM;
     if (size)
       *size = 0;
-    delete &primes;
   }
+
   return NULL;
 }
 
-/// This is the C array's memory layout:
-/// primes[index]   = first prime.
-/// primes[index-1] = memory address of corresponding std::vector object.
-/// primes[index-2] = integer type, e.g. INT_PRIMES.
-///
 template <typename T>
-void* generate_n_primes_helper(uint64_t n, uint64_t start, int type)
+void* generate_n_primes_helper(uint64_t n, uint64_t start)
 {
-#if __cplusplus >= 201103L
-  static_assert(BUFFER_BYTES % sizeof(T) == 0, "Prime type sizeof must be a power of 2.");
-#endif
-  std::vector<T>& primes = *(new std::vector<T>);
   try
   {
-    size_t index = BUFFER_BYTES / sizeof(T);
-    primes.resize(index, 0);
-    reinterpret_cast<uintptr_t*>(&primes[index])[-1] = reinterpret_cast<uintptr_t>(&primes);
-    reinterpret_cast<uintptr_t*>(&primes[index])[-2] = type;
+    malloc_vector<T> primes;
+    PushBack_N_Primes<malloc_vector<T> > pb(primes);
+    pb.pushBack_N_Primes(n, start);
 
-    primesieve::generate_n_primes(n, start, &primes);
-
-    return reinterpret_cast<void*>(&primes[index]);
+    primes.disable_free();
+    return reinterpret_cast<void*>(primes.data());
   }
   catch (std::exception&)
   {
     errno = EDOM;
-    delete &primes;
   }
+
   return NULL;
 }
 
@@ -109,20 +90,20 @@ void* primesieve_generate_primes(uint64_t start, uint64_t stop, size_t* size, in
 {
   switch (type)
   {
-    case SHORT_PRIMES:     return generate_primes_helper<short>(start, stop, size, type);
-    case USHORT_PRIMES:    return generate_primes_helper<unsigned short>(start, stop, size, type);
-    case INT_PRIMES:       return generate_primes_helper<int>(start, stop, size, type);
-    case UINT_PRIMES:      return generate_primes_helper<unsigned int>(start, stop, size, type);
-    case LONG_PRIMES:      return generate_primes_helper<long>(start, stop, size, type);
-    case ULONG_PRIMES:     return generate_primes_helper<unsigned long>(start, stop, size, type);
-    case LONGLONG_PRIMES:  return generate_primes_helper<long long>(start, stop, size, type);
-    case ULONGLONG_PRIMES: return generate_primes_helper<unsigned long long>(start, stop, size, type);
-    case INT16_PRIMES:     return generate_primes_helper<int16_t>(start, stop, size, type);
-    case UINT16_PRIMES:    return generate_primes_helper<uint16_t>(start, stop, size, type);
-    case INT32_PRIMES:     return generate_primes_helper<int32_t>(start, stop, size, type);
-    case UINT32_PRIMES:    return generate_primes_helper<uint32_t>(start, stop, size, type);
-    case INT64_PRIMES:     return generate_primes_helper<int64_t>(start, stop, size, type);
-    case UINT64_PRIMES:    return generate_primes_helper<uint64_t>(start, stop, size, type);
+    case SHORT_PRIMES:     return generate_primes_helper<short>(start, stop, size);
+    case USHORT_PRIMES:    return generate_primes_helper<unsigned short>(start, stop, size);
+    case INT_PRIMES:       return generate_primes_helper<int>(start, stop, size);
+    case UINT_PRIMES:      return generate_primes_helper<unsigned int>(start, stop, size);
+    case LONG_PRIMES:      return generate_primes_helper<long>(start, stop, size);
+    case ULONG_PRIMES:     return generate_primes_helper<unsigned long>(start, stop, size);
+    case LONGLONG_PRIMES:  return generate_primes_helper<long long>(start, stop, size);
+    case ULONGLONG_PRIMES: return generate_primes_helper<unsigned long long>(start, stop, size);
+    case INT16_PRIMES:     return generate_primes_helper<int16_t>(start, stop, size);
+    case UINT16_PRIMES:    return generate_primes_helper<uint16_t>(start, stop, size);
+    case INT32_PRIMES:     return generate_primes_helper<int32_t>(start, stop, size);
+    case UINT32_PRIMES:    return generate_primes_helper<uint32_t>(start, stop, size);
+    case INT64_PRIMES:     return generate_primes_helper<int64_t>(start, stop, size);
+    case UINT64_PRIMES:    return generate_primes_helper<uint64_t>(start, stop, size);
   }
   errno = EDOM;
   if (size)
@@ -134,50 +115,28 @@ void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type)
 {
   switch (type)
   {
-    case SHORT_PRIMES:     return generate_n_primes_helper<short>(n, start, type);
-    case USHORT_PRIMES:    return generate_n_primes_helper<unsigned short>(n, start, type);
-    case INT_PRIMES:       return generate_n_primes_helper<int>(n, start, type);
-    case UINT_PRIMES:      return generate_n_primes_helper<unsigned int>(n, start, type);
-    case LONG_PRIMES:      return generate_n_primes_helper<long>(n, start, type);
-    case ULONG_PRIMES:     return generate_n_primes_helper<unsigned long>(n, start, type);
-    case LONGLONG_PRIMES:  return generate_n_primes_helper<long long>(n, start, type);
-    case ULONGLONG_PRIMES: return generate_n_primes_helper<unsigned long long>(n, start, type);
-    case INT16_PRIMES:     return generate_n_primes_helper<int16_t>(n, start, type);
-    case UINT16_PRIMES:    return generate_n_primes_helper<uint16_t>(n, start, type);
-    case INT32_PRIMES:     return generate_n_primes_helper<int32_t>(n, start, type);
-    case UINT32_PRIMES:    return generate_n_primes_helper<uint32_t>(n, start, type);
-    case INT64_PRIMES:     return generate_n_primes_helper<int64_t>(n, start, type);
-    case UINT64_PRIMES:    return generate_n_primes_helper<uint64_t>(n, start, type);
+    case SHORT_PRIMES:     return generate_n_primes_helper<short>(n, start);
+    case USHORT_PRIMES:    return generate_n_primes_helper<unsigned short>(n, start);
+    case INT_PRIMES:       return generate_n_primes_helper<int>(n, start);
+    case UINT_PRIMES:      return generate_n_primes_helper<unsigned int>(n, start);
+    case LONG_PRIMES:      return generate_n_primes_helper<long>(n, start);
+    case ULONG_PRIMES:     return generate_n_primes_helper<unsigned long>(n, start);
+    case LONGLONG_PRIMES:  return generate_n_primes_helper<long long>(n, start);
+    case ULONGLONG_PRIMES: return generate_n_primes_helper<unsigned long long>(n, start);
+    case INT16_PRIMES:     return generate_n_primes_helper<int16_t>(n, start);
+    case UINT16_PRIMES:    return generate_n_primes_helper<uint16_t>(n, start);
+    case INT32_PRIMES:     return generate_n_primes_helper<int32_t>(n, start);
+    case UINT32_PRIMES:    return generate_n_primes_helper<uint32_t>(n, start);
+    case INT64_PRIMES:     return generate_n_primes_helper<int64_t>(n, start);
+    case UINT64_PRIMES:    return generate_n_primes_helper<uint64_t>(n, start);
   }
   errno = EDOM;
   return NULL;
 }
 
-void primesieve_free(void* primes_c)
+void primesieve_free(void* primes)
 {
-  if (primes_c)
-  {
-    uintptr_t pimpl = reinterpret_cast<uintptr_t*>(primes_c)[-1];
-    uintptr_t type  = reinterpret_cast<uintptr_t*>(primes_c)[-2];
-    switch (type)
-    {
-      case SHORT_PRIMES:     delete reinterpret_cast<std::vector<short>* >(pimpl); break;
-      case USHORT_PRIMES:    delete reinterpret_cast<std::vector<unsigned short>* >(pimpl); break;
-      case INT_PRIMES:       delete reinterpret_cast<std::vector<int>* >(pimpl); break;
-      case UINT_PRIMES:      delete reinterpret_cast<std::vector<unsigned int>* >(pimpl); break;
-      case LONG_PRIMES:      delete reinterpret_cast<std::vector<long>* >(pimpl); break;
-      case ULONG_PRIMES:     delete reinterpret_cast<std::vector<unsigned long>* >(pimpl); break;
-      case LONGLONG_PRIMES:  delete reinterpret_cast<std::vector<long long>* >(pimpl); break;
-      case ULONGLONG_PRIMES: delete reinterpret_cast<std::vector<unsigned long long>* >(pimpl); break;
-      case INT16_PRIMES:     delete reinterpret_cast<std::vector<int16_t>* >(pimpl); break;
-      case UINT16_PRIMES:    delete reinterpret_cast<std::vector<uint16_t>* >(pimpl); break;
-      case INT32_PRIMES:     delete reinterpret_cast<std::vector<int32_t>* >(pimpl); break;
-      case UINT32_PRIMES:    delete reinterpret_cast<std::vector<uint32_t>* >(pimpl); break;
-      case INT64_PRIMES:     delete reinterpret_cast<std::vector<int64_t>* >(pimpl); break;
-      case UINT64_PRIMES:    delete reinterpret_cast<std::vector<uint64_t>* >(pimpl); break;
-      default :              errno = EDOM;
-    }
-  }
+  free(primes);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -498,7 +457,7 @@ void primesieve_print_sextuplets(uint64_t start, uint64_t stop)
 }
 
 //////////////////////////////////////////////////////////////////////
-//                      Callback functions
+//                      Callback function
 //////////////////////////////////////////////////////////////////////
 
 void primesieve_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
@@ -509,22 +468,6 @@ void primesieve_callback_primes(uint64_t start, uint64_t stop, void (*callback)(
     ps.setSieveSize(primesieve::get_sieve_size());
     // temporarily cast away extern "C" linkage
     ps.callbackPrimes_c(start, stop, reinterpret_cast<callback_t>(callback));
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-}
-
-void primesieve_parallel_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t, int))
-{
-  try
-  {
-    primesieve::ParallelPrimeSieve pps;
-    pps.setSieveSize (primesieve::get_sieve_size());
-    pps.setNumThreads(primesieve::get_num_threads());
-    // temporarily cast away extern "C" linkage
-    pps.callbackPrimes_c(start, stop, reinterpret_cast<callback_tn_t>(callback));
   }
   catch (std::exception&)
   {

@@ -21,7 +21,6 @@
 
 #include <stdint.h>
 #include <cmath>
-#include <vector>
 
 namespace primesieve {
 
@@ -32,8 +31,10 @@ inline uint64_t approximate_prime_count(uint64_t start, uint64_t stop)
     return 0;
   if (stop <= 10)
     return 4;
+
   // Dusard 2010: pi(x) <= x / (log(x) - 1.1) + 5 for x >= 4
   double pix = (stop - start) / (std::log(static_cast<double>(stop)) - 1.1) + 5;
+
   return static_cast<uint64_t>(pix);
 }
 
@@ -41,9 +42,16 @@ template <typename T>
 class PushBackPrimes : public Callback<uint64_t>
 {
 public:
-  PushBackPrimes(std::vector<T>& primes)
+  PushBackPrimes(T& primes)
     : primes_(primes)
   { }
+
+  void callback(uint64_t prime)
+  {
+    typedef typename T::value_type V;
+    primes_.push_back(static_cast<V>(prime));
+  }
+
   void pushBackPrimes(uint64_t start, uint64_t stop)
   {
     if (start <= stop)
@@ -54,27 +62,33 @@ public:
       ps.callbackPrimes(start, stop, this);
     }
   }
-  void callback(uint64_t prime)
-  {
-    primes_.push_back(static_cast<T>(prime));
-  }
 private:
   PushBackPrimes(const PushBackPrimes&);
   void operator=(const PushBackPrimes&);
-  std::vector<T>& primes_;
+  T& primes_;
 };
 
 template <typename T>
 class PushBack_N_Primes : public Callback<uint64_t>
 {
 public:
-  PushBack_N_Primes(std::vector<T>& primes) 
+  PushBack_N_Primes(T& primes) 
     : primes_(primes)
   { }
+
+  void callback(uint64_t prime)
+  {
+    typedef typename T::value_type V;
+    primes_.push_back(static_cast<V>(prime));
+    if (--n_ == 0)
+      throw cancel_callback();
+  }
+
   void pushBack_N_Primes(uint64_t n, uint64_t start)
   {
     n_ = n;
-    primes_.reserve(primes_.size() + static_cast<std::size_t>(n_));
+    std::size_t newSize = primes_.size() + static_cast<std::size_t>(n_);
+    primes_.reserve(newSize);
     PrimeSieve ps;
     try
     {
@@ -89,17 +103,11 @@ public:
     }
     catch (cancel_callback&) { }
   }
-  void callback(uint64_t prime)
-  {
-    primes_.push_back(static_cast<T>(prime));
-    if (--n_ == 0)
-      throw cancel_callback();
-  }
-  private:
-    PushBack_N_Primes(const PushBack_N_Primes&);
-    void operator=(const PushBack_N_Primes&);
-    std::vector<T>& primes_;
-    uint64_t n_;
+private:
+  PushBack_N_Primes(const PushBack_N_Primes&);
+  void operator=(const PushBack_N_Primes&);
+  T& primes_;
+  uint64_t n_;
 };
 
 } // namespace primesieve
