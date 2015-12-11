@@ -19,6 +19,7 @@ before_script:
 script:
   - ./configure --enable-examples CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
   - make
+  - make examples
   - sudo make install
   - make dist
   - make distcheck
