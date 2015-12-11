@@ -14,7 +14,7 @@ up to 2^64.
 - **Binaries:** http://primesieve.org/downloads
 - **API:** http://primesieve.org/api
 
-![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve5_win10.png)
+![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve5_win10_2.png)
 
 Algorithm complexity
 --------------------
