@@ -40,9 +40,11 @@ implemented using [OpenMP](http://en.wikipedia.org/wiki/OpenMP). The
 primesieve GUI application (not built by default) uses the
 [Qt framework](http://qt-project.org).
 
-primesieve is also a library, it supports C++ and C directly. There are
-[bindings](#bindings-for-other-languages) available for a few other
-programming languages.
+primesieve is also a library, it supports C++ and C directly and there
+are [bindings](#bindings-for-other-languages) available for a few
+other programming languages. The author's
+[primecount](https://github.com/kimwalisch/primecount) program uses
+libprimesieve extensively.
 
 Build instructions (Unix-like OSes)
 -----------------------------------
