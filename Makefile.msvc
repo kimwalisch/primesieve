@@ -135,7 +135,7 @@ $(PRIMESIEVE_OBJECTS): src\primesieve\$(@B).cpp $(PRIMESIEVE_HEADERS)
 $(APP_OBJECTS): src\apps\console\$(@B).cpp $(PRIMESIEVE_HEADERS)
 	$(CXX) $(CXXFLAGS) /c src\apps\console\$(@B).cpp /Fo$@
 
-$(EXAMPLE_OBJECTS): examples\$(@B).cpp
+$(EXAMPLE_OBJECTS): examples\cpp\$(@B).cpp
 	$(CXX) $(CXXFLAGS) $** /Fo$@ /Fe$(@B).exe /link $(TARGET).lib
 
 #-----------------------------------------------------------------------------
