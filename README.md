@@ -1,6 +1,8 @@
 primesieve
 ==========
 [![Build Status](https://travis-ci.org/kimwalisch/primesieve.svg)](https://travis-ci.org/kimwalisch/primesieve)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/kimwalisch/primesieve?branch=master&svg=true)](https://ci.appveyor.com/project/kimwalisch/primesieve)
+[![GitHub license](https://img.shields.io/badge/license-BSD%202-blue.svg)](https://github.com/kimwalisch/primesieve/blob/master/COPYING)
 
 primesieve is a program and C/C++ library that generates primes using a highly optimized
 <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">sieve of
@@ -14,7 +16,7 @@ up to 2^64.
 - **Binaries:** http://primesieve.org/downloads
 - **API:** http://primesieve.org/api
 
-![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve5_win10_2.png)
+![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve_win10.png)
 
 Algorithm complexity
 --------------------
