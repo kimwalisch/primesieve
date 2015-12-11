@@ -27,21 +27,22 @@ this algorithm has a complexity of
 <img src="http://primesieve.org/images/Onloglogn.svg" height="20" align="absmiddle"/>
 operations and uses
 <img src="http://primesieve.org/images/Osqrtn.svg" height="20" align="absmiddle"/>
-space, more precisely primesieve's memory usage per thread is about
+space. More precisely primesieve's memory usage per thread is about
 <img src="http://primesieve.org/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
 bytes.
 
 Requirements
 ------------
 
-primesieve is entirely written in C++, it compiles with every C++ compiler
-and runs on both little and big endian CPUs. The parallelization is
+primesieve is very portable, it compiles with every C++ compiler and
+runs on most CPU architectures out there. The parallelization is
 implemented using [OpenMP](http://en.wikipedia.org/wiki/OpenMP). The
 primesieve GUI application (not built by default) uses the
 [Qt framework](http://qt-project.org).
 
-primesieve is also a library, it supports C++ and C directly. For a few
-other programming languages there exist easy to use [bindings](#bindings-for-other-languages).
+primesieve is also a library, it supports C++ and C directly. There are
+[bindings](#bindings-for-other-languages) available for a few other
+programming languages.
 
 Build instructions (Unix-like OSes)
 -----------------------------------
@@ -62,7 +63,7 @@ be executed once. To install Autotools install
 [GNU&#160;Autoconf](http://www.gnu.org/software/autoconf/),
 [GNU&#160;Automake](http://www.gnu.org/software/automake/) and
 [GNU&#160;Libtool](http://www.gnu.org/software/libtool/)
-using your package manager.
+using your operating system's package manager.
 
 ```sh
 $ ./autogen.sh
@@ -104,8 +105,7 @@ Console application
 -------------------
 
 The primesieve console application can print and count primes and
-prime k-tuplets and find the nth prime. Below are a few usage
-examples:
+prime k-tuplets and find the nth prime.
 
 ```sh
 # Print the primes below 1000000 to the standard output
