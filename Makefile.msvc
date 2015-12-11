@@ -64,14 +64,14 @@ APP_OBJECTS = \
   $(OBJDIR)\main.obj
 
 EXAMPLE_OBJECTS = \
-  $(OBJDIR)\examples\callback_cancel.obj \
-  $(OBJDIR)\examples\callback_primes.obj \
-  $(OBJDIR)\examples\callback_primes_oop.obj \
-  $(OBJDIR)\examples\count_primes.obj \
-  $(OBJDIR)\examples\primesieve_iterator.obj \
-  $(OBJDIR)\examples\nth_prime.obj \
-  $(OBJDIR)\examples\previous_prime.obj \
-  $(OBJDIR)\examples\store_primes_in_vector.obj
+  $(OBJDIR)\examples\cpp\callback_cancel.obj \
+  $(OBJDIR)\examples\cpp\callback_primes.obj \
+  $(OBJDIR)\examples\cpp\callback_primes_oop.obj \
+  $(OBJDIR)\examples\cpp\count_primes.obj \
+  $(OBJDIR)\examples\cpp\primesieve_iterator.obj \
+  $(OBJDIR)\examples\cpp\nth_prime.obj \
+  $(OBJDIR)\examples\cpp\previous_prime.obj \
+  $(OBJDIR)\examples\cpp\store_primes_in_vector.obj
 
 #-----------------------------------------------------------------------------
 # Add /openmp if MSVC supports OpenMP
