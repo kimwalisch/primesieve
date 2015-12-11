@@ -24,7 +24,6 @@ build_script:
   - nmake /f Makefile.msvc examples
 
 test_script:
-  - nmake /f Makefile.msvc check
   - callback_cancel.exe
   - callback_primes.exe
   - callback_primes_oop.exe
@@ -33,3 +32,4 @@ test_script:
   - nth_prime.exe
   - previous_prime.exe
   - store_primes_in_vector.exe
+  - nmake /f Makefile.msvc check
