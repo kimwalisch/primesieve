@@ -108,10 +108,10 @@ The primesieve console application can print and count primes and
 prime k-tuplets and find the nth prime.
 
 ```sh
-# Print the primes below 1000000 to the standard output
+# Print the primes below 1000000
 $ primesieve 1000000 --print
 
-# Print the twin primes below 1000000 to the standard output
+# Print the twin primes below 1000000
 $ primesieve 1000000 --print=2
 
 # Count the primes below 1e10 using all CPU cores
