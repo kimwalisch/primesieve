@@ -16,7 +16,7 @@ up to 2^64.
 
 ### Screenshot
 
-![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve_win7.png)
+![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve_win10.png)
 
 Algorithm complexity
 --------------------
