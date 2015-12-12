@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['parallel_5fcallback_5fprimes',['parallel_callback_primes',['../namespaceprimesieve.html#a69a427a28e02125566c51f8610298775',1,'primesieve::parallel_callback_primes(uint64_t start, uint64_t stop, void(*callback)(uint64_t prime))'],['../namespaceprimesieve.html#aeb3103f26714aa9b23b7e5628190155b',1,'primesieve::parallel_callback_primes(uint64_t start, uint64_t stop, primesieve::Callback&lt; uint64_t &gt; *callback)'],['../namespaceprimesieve.html#a11f148bc4cd8581fafde2a3a96a6e160',1,'primesieve::parallel_callback_primes(uint64_t start, uint64_t stop, void(*callback)(uint64_t prime, int thread_id))'],['../namespaceprimesieve.html#aa129cf7b129db539262348e63520e2db',1,'primesieve::parallel_callback_primes(uint64_t start, uint64_t stop, primesieve::Callback&lt; uint64_t, int &gt; *callback)']]],
   ['parallel_5fcount_5fprimes',['parallel_count_primes',['../namespaceprimesieve.html#a76f604f1420b6acf32cb1a03ecb1b7ae',1,'primesieve']]],
   ['parallel_5fcount_5fquadruplets',['parallel_count_quadruplets',['../namespaceprimesieve.html#a49c6b18ef1644ac3c1c1e0cfb4441592',1,'primesieve']]],
   ['parallel_5fcount_5fquintuplets',['parallel_count_quintuplets',['../namespaceprimesieve.html#aae25498bb490780cb6a0f0ff9bc000e9',1,'primesieve']]],
@@ -34,7 +33,6 @@ var searchData=
   ['primesieve_5fiterator_2eh',['primesieve_iterator.h',['../primesieve__iterator_8h.html',1,'']]],
   ['primesieve_5fnext_5fprime',['primesieve_next_prime',['../primesieve__iterator_8h.html#a4512ff6ce19e25042f07fe1337bb0dbe',1,'primesieve_iterator.h']]],
   ['primesieve_5fnth_5fprime',['primesieve_nth_prime',['../primesieve_8h.html#a272b54509075a0ed1dafe9858ae90d02',1,'primesieve.h']]],
-  ['primesieve_5fparallel_5fcallback_5fprimes',['primesieve_parallel_callback_primes',['../primesieve_8h.html#a27d0152cf9a96f3f4931d8f81ea08414',1,'primesieve.h']]],
   ['primesieve_5fparallel_5fcount_5fprimes',['primesieve_parallel_count_primes',['../primesieve_8h.html#a3ae86a2e64abd53b85bbb14b9d6cb61e',1,'primesieve.h']]],
   ['primesieve_5fparallel_5fcount_5fquadruplets',['primesieve_parallel_count_quadruplets',['../primesieve_8h.html#a9fb0d41f4d83ae83fe6b57e38c31aa1d',1,'primesieve.h']]],
   ['primesieve_5fparallel_5fcount_5fquintuplets',['primesieve_parallel_count_quintuplets',['../primesieve_8h.html#a04a77f8ef50bda2753bf97f58b1505f2',1,'primesieve.h']]],

@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">primesieve
-   &#160;<span id="projectnumber">5.5.0</span>
+   &#160;<span id="projectnumber">5.6.0</span>
    </div>
   </td>
  </tr>
@@ -126,13 +126,13 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aefdd13bcd657eb6778799e8e2dd72b19"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;5.5.0&quot;</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;5.6.0&quot;</td></tr>
 <tr class="separator:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acf3a768a4fbf9c2ddd8d26421b452298"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MAJOR</b>&#160;&#160;&#160;5</td></tr>
 <tr class="separator:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae49659380a65afba42223665c77241d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae49659380a65afba42223665c77241d1"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;5</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;6</td></tr>
 <tr class="separator:ae49659380a65afba42223665c77241d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ca327f17474c2173cec4ee1618a92d3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6ca327f17474c2173cec4ee1618a92d3"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_PATCH</b>&#160;&#160;&#160;0</td></tr>
@@ -229,18 +229,6 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a32afb0179475d78263f9adce476270b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a32afb0179475d78263f9adce476270b9">primesieve::callback_primes</a> (uint64_t start, uint64_t stop, <a class="el" href="classprimesieve_1_1Callback.html">primesieve::Callback</a>&lt; uint64_t &gt; *callback)</td></tr>
 <tr class="memdesc:a32afb0179475d78263f9adce476270b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call back the primes within the interval [start, stop].  <a href="#a32afb0179475d78263f9adce476270b9">More...</a><br /></td></tr>
 <tr class="separator:a32afb0179475d78263f9adce476270b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69a427a28e02125566c51f8610298775"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a69a427a28e02125566c51f8610298775">primesieve::parallel_callback_primes</a> (uint64_t start, uint64_t stop, void(*callback)(uint64_t prime))</td></tr>
-<tr class="memdesc:a69a427a28e02125566c51f8610298775"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call back the primes within the interval [start, stop].  <a href="#a69a427a28e02125566c51f8610298775">More...</a><br /></td></tr>
-<tr class="separator:a69a427a28e02125566c51f8610298775"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb3103f26714aa9b23b7e5628190155b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#aeb3103f26714aa9b23b7e5628190155b">primesieve::parallel_callback_primes</a> (uint64_t start, uint64_t stop, <a class="el" href="classprimesieve_1_1Callback.html">primesieve::Callback</a>&lt; uint64_t &gt; *callback)</td></tr>
-<tr class="memdesc:aeb3103f26714aa9b23b7e5628190155b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call back the primes within the interval [start, stop].  <a href="#aeb3103f26714aa9b23b7e5628190155b">More...</a><br /></td></tr>
-<tr class="separator:aeb3103f26714aa9b23b7e5628190155b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11f148bc4cd8581fafde2a3a96a6e160"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a11f148bc4cd8581fafde2a3a96a6e160">primesieve::parallel_callback_primes</a> (uint64_t start, uint64_t stop, void(*callback)(uint64_t prime, int thread_id))</td></tr>
-<tr class="memdesc:a11f148bc4cd8581fafde2a3a96a6e160"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call back the primes within the interval [start, stop].  <a href="#a11f148bc4cd8581fafde2a3a96a6e160">More...</a><br /></td></tr>
-<tr class="separator:a11f148bc4cd8581fafde2a3a96a6e160"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa129cf7b129db539262348e63520e2db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#aa129cf7b129db539262348e63520e2db">primesieve::parallel_callback_primes</a> (uint64_t start, uint64_t stop, <a class="el" href="classprimesieve_1_1Callback.html">primesieve::Callback</a>&lt; uint64_t, int &gt; *callback)</td></tr>
-<tr class="memdesc:aa129cf7b129db539262348e63520e2db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call back the primes within the interval [start, stop].  <a href="#aa129cf7b129db539262348e63520e2db">More...</a><br /></td></tr>
-<tr class="separator:aa129cf7b129db539262348e63520e2db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4239a2d00a804cd0f49cc754e8b7c33d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4239a2d00a804cd0f49cc754e8b7c33d"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a4239a2d00a804cd0f49cc754e8b7c33d">primesieve::get_sieve_size</a> ()</td></tr>
 <tr class="memdesc:a4239a2d00a804cd0f49cc754e8b7c33d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current set sieve size in kilobytes. <br /></td></tr>

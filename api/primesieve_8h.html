@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">primesieve
-   &#160;<span id="projectnumber">5.5.0</span>
+   &#160;<span id="projectnumber">5.6.0</span>
    </div>
   </td>
  </tr>
@@ -112,13 +112,13 @@ Include dependency graph for primesieve.h:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aefdd13bcd657eb6778799e8e2dd72b19"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;5.5.0&quot;</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;5.6.0&quot;</td></tr>
 <tr class="separator:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acf3a768a4fbf9c2ddd8d26421b452298"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MAJOR</b>&#160;&#160;&#160;5</td></tr>
 <tr class="separator:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae49659380a65afba42223665c77241d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae49659380a65afba42223665c77241d1"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;5</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;6</td></tr>
 <tr class="separator:ae49659380a65afba42223665c77241d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ca327f17474c2173cec4ee1618a92d3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6ca327f17474c2173cec4ee1618a92d3"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_PATCH</b>&#160;&#160;&#160;0</td></tr>
@@ -224,9 +224,6 @@ Functions</h2></td></tr>
 <tr class="memitem:aa2ce1591ab3cb71849284dd6977585f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#aa2ce1591ab3cb71849284dd6977585f1">primesieve_callback_primes</a> (uint64_t start, uint64_t stop, void(*callback)(uint64_t prime))</td></tr>
 <tr class="memdesc:aa2ce1591ab3cb71849284dd6977585f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call back the primes within the interval [start, stop].  <a href="#aa2ce1591ab3cb71849284dd6977585f1">More...</a><br /></td></tr>
 <tr class="separator:aa2ce1591ab3cb71849284dd6977585f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27d0152cf9a96f3f4931d8f81ea08414"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#a27d0152cf9a96f3f4931d8f81ea08414">primesieve_parallel_callback_primes</a> (uint64_t start, uint64_t stop, void(*callback)(uint64_t prime, int thread_id))</td></tr>
-<tr class="memdesc:a27d0152cf9a96f3f4931d8f81ea08414"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call back the primes within the interval [start, stop] in parallel.  <a href="#a27d0152cf9a96f3f4931d8f81ea08414">More...</a><br /></td></tr>
-<tr class="separator:a27d0152cf9a96f3f4931d8f81ea08414"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cb168947a4832288b4f903618e34af0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#a9cb168947a4832288b4f903618e34af0">primesieve_get_sieve_size</a> ()</td></tr>
 <tr class="memdesc:a9cb168947a4832288b4f903618e34af0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current set sieve size in kilobytes.  <a href="#a9cb168947a4832288b4f903618e34af0">More...</a><br /></td></tr>
 <tr class="separator:a9cb168947a4832288b4f903618e34af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -715,48 +712,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="prim
 <dl class="section pre"><dt>Precondition</dt><dd>start &lt;= 2^64 - 2^32 * 11. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="nth_prime_8c-example.html#a0">nth_prime.c</a>.</dd>
 </dl>
-</div>
-</div>
-<a class="anchor" id="a27d0152cf9a96f3f4931d8f81ea08414"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void primesieve_parallel_callback_primes </td>
-          <td>(</td>
-          <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>start</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint64_t&#160;</td>
-          <td class="paramname"><em>stop</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void(*)(uint64_t prime, int thread_id)&#160;</td>
-          <td class="paramname"><em>callback</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Call back the primes within the interval [start, stop] in parallel. </p>
-<p>This function is not synchronized, multiple threads call back primes in parallel. By default all CPU cores are used, use <a class="el" href="primesieve_8h.html#ac75933075b832eb2996adc5e72d6cd0f" title="Set the number of threads for use in subsequent primesieve_parallel_* function calls. ">primesieve_set_num_threads(int)</a> to change the number of threads. </p><dl class="section warning"><dt>Warning</dt><dd>Primes are not called back in arithmetic order. </dd></dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">callback</td><td>A callback function. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section pre"><dt>Precondition</dt><dd>stop &lt;= 2^64 - 2^32 * 10. </dd></dl>
-
 </div>
 </div>
 <a class="anchor" id="a3ae86a2e64abd53b85bbb14b9d6cb61e"></a>
