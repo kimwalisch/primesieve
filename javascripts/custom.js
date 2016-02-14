@@ -8,7 +8,7 @@ $(document).ready(function()
   var primesieve_linux_x86_binary = 'primesieve-3.6-linux-x86.tar.gz';
   var primesieve_os_binary = '';
 
-  var download_url = 'http://dl.bintray.com/kimwalisch/primesieve/';
+  var download_url = 'https://dl.bintray.com/kimwalisch/primesieve/';
   var download_button_text = '.zip file';
   var is64bit = false;
   
