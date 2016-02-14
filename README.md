@@ -88,17 +88,8 @@ and run:
 > nmake -f Makefile.msvc
 ```
 
-In order to get the best performance you can indicate your CPU's L1
-data cache size in kilobytes per core (default 32), e.g. for a CPU
-with 64 kilobytes L1 data cache use:
-
-```sh
-> nmake -f Makefile.msvc L1_DCACHE_SIZE=64
-```
-
 To build the example programs use:
 ```sh
-> nmake -f Makefile.msvc
 > nmake -f Makefile.msvc examples
 ```
 
