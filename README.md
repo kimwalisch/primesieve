@@ -49,7 +49,7 @@ libprimesieve extensively.
 Build instructions (Unix-like OSes)
 -----------------------------------
 
-Download [primesieve-latest.tar.gz](https://bintray.com/artifact/download/kimwalisch/primesieve/primesieve-latest.tar.gz)
+Download [primesieve-5.6.0.tar.gz](https://bintray.com/artifact/download/kimwalisch/primesieve/primesieve-5.6.0.tar.gz)
 and extract it. Then build primesieve using:
 
 ```sh
