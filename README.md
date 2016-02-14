@@ -49,10 +49,8 @@ libprimesieve extensively.
 Build instructions (Unix-like OSes)
 -----------------------------------
 
-Download the
-[primesieve-latest.tar.gz](https://bintray.com/artifact/download/kimwalisch/primesieve/primesieve-latest.tar.gz)
-release tarball, extract it and cd into the newly created directory.
-Then build and install primesieve using:
+Download [primesieve-latest.tar.gz](https://bintray.com/artifact/download/kimwalisch/primesieve/primesieve-latest.tar.gz)
+and extract it. Then build primesieve using:
 
 ```sh
 $ ./configure
