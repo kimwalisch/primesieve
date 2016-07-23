@@ -46,10 +46,10 @@ uint64_t get_interval_size(uint64_t n, uint64_t& tiny_cache_size)
 
   double x = static_cast<double>(n);
   double sqrtx = sqrt(x);
-  uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (log(sqrtx) - 1));
+  uint64_t primes = static_cast<uint64_t>(sqrtx / (log(sqrtx) - 1));
   uint64_t cache_min_primes = cache_size / sizeof(uint64_t);
   uint64_t cache_max_primes = config::ITERATOR_CACHE_MAX / sizeof(uint64_t);
-  uint64_t primes = getInBetween(cache_min_primes, sqrtx_primes, cache_max_primes);
+  primes = getInBetween(cache_min_primes, primes, cache_max_primes);
 
   return static_cast<uint64_t>(primes * log(x));
 }
