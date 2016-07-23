@@ -102,8 +102,8 @@ uint64_t ParallelPrimeSieve::align(uint64_t n) const
   if (n32 >= stop_)
     return stop_;
 
-  uint64_t aligned = n32 - n % 30;
-  return min(aligned, stop_);
+  n = n32 - n % 30;
+  return min(n, stop_);
 }
 
 bool ParallelPrimeSieve::tooMany(int threads) const
