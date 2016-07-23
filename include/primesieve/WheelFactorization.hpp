@@ -180,7 +180,8 @@ public:
     uint64_t quotient = segmentLow / prime + 1;
     uint64_t multiple = prime * quotient;
     // prime not needed for sieving
-    if (multiple > stop_)
+    if (multiple > stop_ ||
+        multiple < segmentLow)
       return;
     // ensure multiple >= prime * prime
     if (quotient < prime)
