@@ -10,6 +10,7 @@
 *.la
 *.pc
 *.tar.gz
+*.dSYM
 /primesieve
 doc/Doxyfile
 doc/html
