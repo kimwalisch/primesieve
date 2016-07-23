@@ -16,6 +16,8 @@
 #include <string>
 #include <vector>
 
+using namespace std;
+
 namespace primesieve {
 
 iterator::iterator(uint64_t start, uint64_t stop_hint)
@@ -45,7 +47,8 @@ void iterator::generate_next_primes()
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
       stop_ = add_overflow_safe(stop_hint_, max_prime_gap(stop_hint_));
     generate_primes(start_, stop_, &primes_);
-    if (primes_.empty() && stop_ >= get_max_stop())
+    if (primes_.empty() &&
+        stop_ >= get_max_stop())
       throw primesieve_error("next_prime() > 2^64");
   }
 
@@ -87,13 +90,13 @@ uint64_t iterator::get_interval_size(uint64_t n)
   }
 
   double x = static_cast<double>(n);
-  double sqrtx = std::sqrt(x);
-  uint64_t sqrtx_primes = static_cast<uint64_t>(sqrtx / (std::log(sqrtx) - 1));
+  double sqrtx = sqrt(x);
+  uint64_t primes = static_cast<uint64_t>(sqrtx / (log(sqrtx) - 1));
   uint64_t cache_min_primes = cache_size / sizeof(uint64_t);
   uint64_t cache_max_primes = config::ITERATOR_CACHE_MAX / sizeof(uint64_t);
-  uint64_t primes = getInBetween(cache_min_primes, sqrtx_primes, cache_max_primes);
+  primes = getInBetween(cache_min_primes, primes, cache_max_primes);
 
-  return static_cast<uint64_t>(primes * std::log(x));
+  return static_cast<uint64_t>(primes * log(x));
 }
 
 } // end namespace
