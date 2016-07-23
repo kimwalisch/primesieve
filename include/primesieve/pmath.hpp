@@ -2,7 +2,7 @@
 /// @file   pmath.hpp
 /// @brief  Auxiliary math functions needed in primesieve.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -12,8 +12,15 @@
 #define PMATH_HPP
 
 #include <cmath>
+#include <limits>
 
 namespace primesieve {
+
+template <typename A, typename B>
+inline A ceilDiv(A a, B b)
+{
+  return static_cast<A>((a + b - 1) / b);
+}
 
 template <typename T>
 inline T numberOfBits(T)
@@ -79,7 +86,7 @@ inline T isqrt(T x)
   const T bits = numberOfBits(x);
   const T one = 1;
 
-  // s      = bits / 2 - nlz(x - 1) / 2
+  // s = bits / 2 - nlz(x - 1) / 2
   // nlz(x) = bits - 1 - ilog2(x)
   T s = bits / 2 - (bits - 1) / 2 + ilog2(x - 1) / 2;
 
@@ -103,6 +110,19 @@ inline T getInBetween(T min, T value, T max)
   return value;
 }
 
+inline uint64_t add_overflow_safe(uint64_t a, uint64_t b)
+{
+  if (a >= std::numeric_limits<uint64_t>::max() - b)
+    return std::numeric_limits<uint64_t>::max();
+
+  return a + b;
+}
+
+inline uint64_t subtract_underflow_safe(uint64_t a, uint64_t b)
+{
+  return (a > b) ? a - b : 0;
+}
+
 /// @brief   Get an approximation of the maximum prime gap near n.
 /// @return  log(n)^2
 ///
@@ -110,6 +130,7 @@ inline uint64_t max_prime_gap(uint64_t n)
 {
   double logn = std::log(static_cast<double>(n));
   double prime_gap = logn * logn;
+
   return static_cast<uint64_t>(prime_gap);
 }
 

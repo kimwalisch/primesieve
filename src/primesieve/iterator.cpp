@@ -1,7 +1,7 @@
 ///
 /// @file  iterator.cpp
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -25,9 +25,6 @@ iterator::iterator(uint64_t start, uint64_t stop_hint)
 
 void iterator::skipto(uint64_t start, uint64_t stop_hint)
 {
-  if (start > get_max_stop())
-    throw primesieve_error("start must be <= " + PrimeFinder::getMaxStopString());
-
   start_ = start;
   stop_ = start;
   stop_hint_ = stop_hint;
@@ -35,17 +32,6 @@ void iterator::skipto(uint64_t start, uint64_t stop_hint)
   last_idx_ = 0;
   tiny_cache_size_ = 1 << 11;
   primes_.clear();
-}
-
-uint64_t add_overflow_safe(uint64_t a, uint64_t b)
-{
-  uint64_t max_stop = get_max_stop();
-  return (a < max_stop - b) ? a + b : max_stop;
-}
-
-uint64_t subtract_underflow_safe(uint64_t a, uint64_t b)
-{
-  return (a > b) ? a - b : 0;
 }
 
 void iterator::generate_next_primes()
@@ -60,7 +46,7 @@ void iterator::generate_next_primes()
       stop_ = add_overflow_safe(stop_hint_, max_prime_gap(stop_hint_));
     generate_primes(start_, stop_, &primes_);
     if (primes_.empty() && stop_ >= get_max_stop())
-      throw primesieve_error("next_prime() > " + PrimeFinder::getMaxStopString());
+      throw primesieve_error("next_prime() > 2^64");
   }
 
   last_idx_ = primes_.size() - 1;

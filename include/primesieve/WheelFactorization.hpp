@@ -2,7 +2,7 @@
 /// @file   WheelFactorization.hpp
 /// @brief  Classes and structs related to wheel factorization.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -17,7 +17,6 @@
 #include "primesieve_error.hpp"
 
 #include <stdint.h>
-#include <string>
 #include <limits>
 #include <cstddef>
 #include <cassert>
@@ -168,20 +167,6 @@ template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement*
 class WheelFactorization
 {
 public:
-  /// Get the maximum upper bound for sieving
-  static uint64_t getMaxStop()
-  {
-    const uint64_t MAX_UINT32 = std::numeric_limits<uint32_t>::max();
-    const uint64_t MAX_UINT64 = std::numeric_limits<uint64_t>::max();
-
-    return MAX_UINT64 - MAX_UINT32 * getMaxFactor();
-  }
-
-  static std::string getMaxStopString()
-  {
-    return "2^64 - 2^32 * " + toString(getMaxFactor());
-  }
-
   /// @brief Add a new sieving prime.
   ///
   /// Calculate the first multiple > segmentLow of prime and the
@@ -206,10 +191,10 @@ public:
     // calculate the next multiple of prime that is not
     // divisible by any of the wheel's factors
     uint64_t nextMultipleFactor = INIT[quotient % MODULO].nextMultipleFactor;
-    multiple += prime * nextMultipleFactor;
-    if (multiple > stop_)
+    if (multiple > stop_ - prime * nextMultipleFactor)
       return;
     uint64_t lowOffset = multiple - segmentLow;
+    lowOffset += prime * nextMultipleFactor;
     uint_t multipleIndex = static_cast<uint_t>(lowOffset / NUMBERS_PER_BYTE);
     uint_t wheelIndex = wheelOffsets_[prime % NUMBERS_PER_BYTE] + INIT[quotient % MODULO].wheelIndex;
     storeSievingPrime(prime, multipleIndex, wheelIndex);
@@ -226,8 +211,6 @@ protected:
 
     if (sieveSize > maxSieveSize)
       throw primesieve_error("WheelFactorization: sieveSize must be <= " + toString(maxSieveSize));
-    if (stop > getMaxStop())
-      throw primesieve_error("WheelFactorization: stop must be <= " + getMaxStopString());
   }
 
   virtual ~WheelFactorization()

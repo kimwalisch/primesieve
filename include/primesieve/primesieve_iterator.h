@@ -1,24 +1,24 @@
-/**
- *  @file   primesieve_iterator.h
- *  @brief  primesieve_iterator allows to easily iterate over primes
- *          both forwards and backwards. Generating the first prime
- *          has a complexity of O(r log log r) operations with
- *          r = n^0.5, after that any additional prime is generated in
- *          amortized O(log n log log n) operations. The memory usage
- *          is about pi(n^0.5) * 16 bytes. primesieve_iterator objects
- *          are very convenient to use at the cost of being slightly
- *          slower than the primesieve_callback_primes() functions.
+/*
+ * @file   primesieve_iterator.h
+ * @brief  primesieve_iterator allows to easily iterate over primes
+ *         both forwards and backwards. Generating the first prime
+ *         has a complexity of O(r log log r) operations with
+ *         r = n^0.5, after that any additional prime is generated in
+ *         amortized O(log n log log n) operations. The memory usage
+ *         is about pi(n^0.5) * 16 bytes. primesieve_iterator objects
+ *         are very convenient to use at the cost of being slightly
+ *         slower than the primesieve_callback_primes() functions.
+ *
+ *         The @link primesieve_iterator.c primesieve_iterator.c
+ *         @endlink example shows how to use primesieve_iterator. If
+ *         any error occurs errno is set to EDOM and
+ *         primesieve_next_prime() and primesieve_previous_prime()
+ *         return PRIMESIEVE_ERROR.
  * 
- *          The @link primesieve_iterator.c primesieve_iterator.c
- *          @endlink example shows how to use primesieve_iterator. If
- *          any error occurs errno is set to EDOM and
- *          primesieve_next_prime() and primesieve_previous_prime()
- *          return PRIMESIEVE_ERROR.
- * 
- *  Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
- * 
- *  This file is distributed under the BSD License. See the COPYING
- *  file in the top level directory.
+ * Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+ *
+ * This file is distributed under the BSD License. See the COPYING
+ * file in the top level directory.
  */
 
 #ifndef PRIMESIEVE_ITERATOR_H
@@ -31,8 +31,9 @@
 extern "C" {
 #endif
 
-/** C prime iterator, please refer to @link primesieve_iterator.h
- *  primesieve_iterator.h @endlink for more information.
+/*
+ * C prime iterator, please refer to @link primesieve_iterator.h
+ * primesieve_iterator.h @endlink for more information.
  */
 typedef struct
 {
@@ -47,29 +48,29 @@ typedef struct
   int is_error_;
 } primesieve_iterator;
 
-/** Initialize the primesieve iterator before first using it. */
+/* Initialize the primesieve iterator before first using it */
 void primesieve_init(primesieve_iterator* pi);
 
-/** Free all memory. */
+/* Free all memory */
 void primesieve_free_iterator(primesieve_iterator* pi);
 
-/** Set the primesieve iterator to start.
- *  @param start      Generate primes > start (or < start).
- *  @param stop_hint  Stop number optimization hint. E.g. if you want
- *                    to generate the primes below 1000 use
- *                    stop_hint = 1000, if you don't know use
- *                    primesieve_get_max_stop().
- *  @pre   start      <= 2^64 - 2^32 * 10
+/*
+ * Set the primesieve iterator to start.
+ * @param start      Generate primes > start (or < start).
+ * @param stop_hint  Stop number optimization hint. E.g. if you want
+ *                   to generate the primes below 1000 use
+ *                   stop_hint = 1000, if you don't know use
+ *                   primesieve_get_max_stop().
  */
 void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hint);
 
-/** Internal use. */
+/* Internal use */
 void primesieve_generate_next_primes(primesieve_iterator*);
 
-/** Internal use. */
+/* Internal use */
 void primesieve_generate_previous_primes(primesieve_iterator*);
 
-/** Get the next prime. */
+/* Get the next prime */
 static inline uint64_t primesieve_next_prime(primesieve_iterator* pi)
 {
   if (pi->i_++ == pi->last_idx_)
@@ -77,8 +78,9 @@ static inline uint64_t primesieve_next_prime(primesieve_iterator* pi)
   return pi->primes_[pi->i_];
 }
 
-/** Get the previous prime,
- *  or 0 if input <= 2 e.g. previous_prime(2) = 0.
+/*
+ * Get the previous prime,
+ * or 0 if input <= 2 e.g. previous_prime(2) = 0.
  */
 static inline uint64_t primesieve_previous_prime(primesieve_iterator* pi)
 {

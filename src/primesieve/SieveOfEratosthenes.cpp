@@ -2,7 +2,7 @@
 /// @file   SieveOfEratosthenes.cpp
 /// @brief  Implementation of the segmented sieve of Eratosthenes.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -19,7 +19,6 @@
 
 #include <stdint.h>
 #include <exception>
-#include <string>
 #include <cstddef>
 
 namespace primesieve {
@@ -43,7 +42,6 @@ const uint_t SieveOfEratosthenes::bruijnBitValues_[64] =
 /// @param stop       Sieve primes <= stop.
 /// @param sieveSize  A sieve size in kilobytes.
 /// @pre   start      >= 7
-/// @pre   stop       <= 2^64 - 2^32 * 10
 /// @pre   sieveSize  >= 1 && <= 2048
 ///
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
@@ -69,12 +67,13 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   if ((stop_ - start_) >= config::PRESIEVE_THRESHOLD)
     limitPreSieve_ = config::PRESIEVE;
 
-  sqrtStop_ = static_cast<uint_t>(isqrt(stop_));
   // sieveSize_ must be a power of 2
   sieveSize_ = getInBetween(1u, floorPowerOf2(sieveSize), 2048u);
   sieveSize_ *= 1024; // convert to bytes
+  uint64_t distance = sieveSize_ * NUMBERS_PER_BYTE + 1;
   segmentLow_ = start_ - getByteRemainder(start_);
-  segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
+  segmentHigh_ = add_overflow_safe(segmentLow_, distance);
+  sqrtStop_ = static_cast<uint_t>(isqrt(stop_));
 
   // allocate sieve of Eratosthenes array
   sieve_ = new byte_t[sieveSize_];
@@ -122,16 +121,6 @@ uint_t SieveOfEratosthenes::getPreSieve() const
   return limitPreSieve_;
 }
 
-std::string SieveOfEratosthenes::getMaxStopString()
-{
-  return EratBig::getMaxStopString();
-}
-
-uint64_t SieveOfEratosthenes::getMaxStop()
-{
-  return EratBig::getMaxStop();
-}
-
 uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n)
 {
   uint64_t r = n % NUMBERS_PER_BYTE;
@@ -162,7 +151,8 @@ void SieveOfEratosthenes::preSieve()
   preSieve_->doIt(sieve_, sieveSize_, segmentLow_);
 
   // unset bits (numbers) < start_
-  if (segmentLow_ <= start_) {
+  if (segmentLow_ <= start_)
+  {
     if (start_ <= limitPreSieve_)
       sieve_[0] = 0xff;
     for (int i = 0; bitValues_[i] < getByteRemainder(start_); i++)
@@ -175,17 +165,24 @@ void SieveOfEratosthenes::preSieve()
 ///
 void SieveOfEratosthenes::sieve()
 {
-  while (segmentHigh_ < stop_) {
+  while (segmentHigh_ < stop_)
+  {
     sieveSegment();
-    segmentLow_  += sieveSize_ * NUMBERS_PER_BYTE;
-    segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
+    uint64_t distance = sieveSize_ * NUMBERS_PER_BYTE;
+    segmentLow_ = add_overflow_safe(segmentLow_, distance);
+    segmentHigh_ = add_overflow_safe(segmentHigh_, distance);
   }
-  // sieve the last segment
+
   uint64_t remainder = getByteRemainder(stop_);
-  sieveSize_ = static_cast<uint_t>((stop_ - remainder) - segmentLow_) / NUMBERS_PER_BYTE + 1;
-  segmentHigh_ = segmentLow_ + sieveSize_ * NUMBERS_PER_BYTE + 1;
+  uint64_t distance = stop_ - segmentLow_ - remainder;
+  sieveSize_ = static_cast<uint_t>(distance) / NUMBERS_PER_BYTE + 1;
+  distance = sieveSize_ * NUMBERS_PER_BYTE + 1;
+  segmentHigh_ = add_overflow_safe(segmentLow_, distance);
+
+  // sieve the last segment
   preSieve();
   crossOffMultiples();
+
   int i;
   // unset bits (numbers) > stop_
   for (i = 0; i < 8; i++)
@@ -193,9 +190,12 @@ void SieveOfEratosthenes::sieve()
       break;
   int unsetBits = ~(0xff << i);
   sieve_[sieveSize_ - 1] &= unsetBits;
+
+  // unset bytes (numbers) > stop_
   for (uint_t j = sieveSize_; j % 8 != 0; j++)
     sieve_[j] = 0;
+
   segmentFinished(sieve_, sieveSize_);
 }
 
-} // namespace primesieve
+} // namespace

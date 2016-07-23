@@ -1,7 +1,7 @@
 ///
 /// @file  SieveOfEratosthenes.hpp
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,9 +11,7 @@
 #define SIEVEOFERATOSTHENES_HPP
 
 #include "config.hpp"
-
 #include <stdint.h>
-#include <string>
 
 namespace primesieve {
 
@@ -32,8 +30,6 @@ class EratBig;
 ///
 class SieveOfEratosthenes {
 public:
-  static uint64_t getMaxStop();
-  static std::string getMaxStopString();
   uint64_t getStart() const;
   uint64_t getStop() const;
   uint_t getSqrtStop() const;

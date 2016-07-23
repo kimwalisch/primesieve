@@ -3,7 +3,7 @@
 /// @brief  The iterator class allows to easily iterate (forward and
 ///         backward) over prime numbers.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -37,7 +37,6 @@ public:
   ///                   speed up if few primes are generated. E.g. if
   ///                   you want to generate the primes below 1000 use
   ///                   stop_hint = 1000.
-  /// @pre              start <= 2^64 - 2^32 * 10
   ///
   iterator(uint64_t start = 0, uint64_t stop_hint = get_max_stop());
 
@@ -47,7 +46,6 @@ public:
   ///                   speed up if few primes are generated. E.g. if
   ///                   you want to generate the primes below 1000 use
   ///                   stop_hint = 1000.
-  /// @pre              start <= 2^64 - 2^32 * 10
   ///
   void skipto(uint64_t start, uint64_t stop_hint = get_max_stop());
 
@@ -83,6 +81,6 @@ private:
   void generate_previous_primes();
 };
 
-} // end namespace
+} // namespace
 
 #endif

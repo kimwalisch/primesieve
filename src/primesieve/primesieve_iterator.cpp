@@ -2,7 +2,7 @@
 /// @file   primesieve_iterator.cpp
 /// @brief  C port of primesieve::iterator.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -28,17 +28,6 @@ vector<uint64_t>& to_vector(uint64_t* primes_pimpl)
 {
   vector<uint64_t>* primes = reinterpret_cast<vector<uint64_t>*>(primes_pimpl);
   return *primes;
-}
-
-uint64_t add_overflow_safe(uint64_t a, uint64_t b)
-{
-  uint64_t max_stop = get_max_stop();
-  return (a < max_stop - b) ? a + b : max_stop;
-}
-
-uint64_t subtract_underflow_safe(uint64_t a, uint64_t b)
-{
-  return (a > b) ? a - b : 0;
 }
 
 /// Calculate an interval size that ensures a good load balance.

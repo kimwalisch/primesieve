@@ -3,7 +3,7 @@
 /// @brief  Contains the implementations of the functions declared in
 ///         the primesieve.hpp header file.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -24,17 +24,17 @@
   #include <omp.h>
 #endif
 
-namespace
-{
+namespace {
+
 /// Number of threads used for sieving in parallel
 int num_threads = primesieve::MAX_THREADS;
 
 /// Sieve size in kilobytes used for sieving
 int sieve_size = SIEVESIZE;
+
 }
 
-namespace primesieve
-{
+namespace primesieve {
 
 //////////////////////////////////////////////////////////////////////
 //                     Nth prime functions
@@ -223,7 +223,7 @@ void callback_primes(uint64_t start, uint64_t stop, Callback<uint64_t>* callback
 
 uint64_t get_max_stop()
 {
-  return PrimeFinder::getMaxStop();
+  return UINT64_MAX;
 }
 
 int get_sieve_size()

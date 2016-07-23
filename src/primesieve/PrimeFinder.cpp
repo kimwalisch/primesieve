@@ -3,7 +3,7 @@
 /// @brief  Callback, print and count primes and prime k-tuplets
 ///         (twin primes, prime triplets, ...).
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -139,7 +139,7 @@ void PrimeFinder::count(const byte_t* sieve, uint_t sieveSize)
 {
   // count prime numbers (1 bits), see popcount.cpp
   if (ps_.isFlag(ps_.COUNT_PRIMES))
-    ps_.counts_[0] += popcount(reinterpret_cast<const uint64_t*>(sieve), (sieveSize + 7) / 8);
+    ps_.counts_[0] += popcount(reinterpret_cast<const uint64_t*>(sieve), ceilDiv(sieveSize, 8));
 
   // count prime k-tuplets (i = 1 twins, i = 2 triplets, ...)
   for (uint_t i = 1; i < ps_.counts_.size(); i++)
@@ -205,4 +205,4 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
   }
 }
 
-} // namespace primesieve
+} // namespace

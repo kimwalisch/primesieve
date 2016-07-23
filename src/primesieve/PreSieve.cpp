@@ -3,7 +3,7 @@
 /// @brief  Pre-sieve multiples of small primes to speed up the
 ///         sieve of Eratosthenes.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -17,8 +17,7 @@
 #include <stdint.h>
 #include <cstring>
 
-using std::memcpy;
-using std::memset;
+using namespace std;
 
 namespace primesieve {
 
@@ -90,4 +89,4 @@ void PreSieve::doIt(byte_t* sieve, uint_t sieveSize, uint64_t segmentLow) const
   }
 }
 
-} // namespace primesieve
+} // namespace

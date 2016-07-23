@@ -24,7 +24,7 @@ namespace {
 void checkLimit(uint64_t start, uint64_t dist)
 {
   if (dist > get_max_stop() - start)
-    throw primesieve_error("nth prime is too large > 2^64 - 2^32 * 11");
+    throw primesieve_error("nth prime is too large > 2^64");
 }
 
 void checkLowerLimit(uint64_t stop)

@@ -1,13 +1,13 @@
 /*
  * PrimeSieveGUI.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
-
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -177,14 +177,6 @@ quint64 PrimeSieveGUI::getNumber(const QString& str) {
   catch (calculator::error& e) {
     throw std::invalid_argument(e.what());
   }
-
-  int digits = str.count(QRegExp("[0-9]"));
-  if (result >= UPPER_BOUND_LIMIT || (
-      digits == str.size() && (
-      digits >  UPPER_BOUND_STR.size() || (
-      digits == UPPER_BOUND_STR.size() &&
-      str    >= UPPER_BOUND_STR))))
-    throw std::invalid_argument("Please use positive integers < 2^64 - 2^32*10.");
 
   return result;
 }

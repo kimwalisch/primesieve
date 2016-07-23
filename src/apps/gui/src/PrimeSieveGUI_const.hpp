@@ -1,13 +1,13 @@
 /*
  * PrimeSieveGUI_const.hpp -- This file is part of primesieve
  *
- * Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
-
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,13 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
-
-/**
- * @file  PrimeSieveGUI_const.hpp
- * @brief Various constants used in PrimeSieveGUI.
- *        The values are optimized for CPUs with 32 to 64 kilobytes of
- *        L1 Data Cache (set in 2010).
  */
 
 #ifndef PRIMESIEVEGUI_CONST_HPP
@@ -43,7 +36,7 @@
 const QString APPLICATION_NAME("primesieve");
 const QString APPLICATION_HOMEPAGE("http://primesieve.org");
 const QString APPLICATION_ABOUT(
-    "<p>Copyright &copy; 2015 Kim Walisch</p>"
+    "<p>Copyright &copy; 2016 Kim Walisch</p>"
     "<p>primesieve generates prime numbers and prime k-tuplets using a highly "
     "optimized implementation of the sieve of Eratosthenes. By the date "
     "of release this is the fastest publicly available prime generation software."
@@ -61,22 +54,19 @@ const QString APPLICATION_ABOUT(
  * @see PrimeSieve.cpp
  */
 const int MINIMUM_SIEVE_SIZE = 16;
+
 /**
  * @pre MAXIMUM_SIEVE_SIZE <= 2048
  * @see PrimeSieve.cpp
  */
 const int MAXIMUM_SIEVE_SIZE = 2048;
+
 /**
  * @pre DEFAULT_L1D_CACHE_SIZE >= MINIMUM_SIEVE_SIZE &&
  *      DEFAULT_L1D_CACHE_SIZE <= MAXIMUM_SIEVE_SIZE
  */
 const int DEFAULT_L1D_CACHE_SIZE = 32;
-/**
- * PrimeSieve allows numbers up to < (2^64-1)-(2^32-1)*10.
- * @see PrimeSieve.cpp
- */
-const quint64 UPPER_BOUND_LIMIT = UINT64_MAX - UINT32_MAX * Q_UINT64_C(10);
-const QString UPPER_BOUND_STR = QString::number(UPPER_BOUND_LIMIT);
+
 /**
  * Print chunks of PRINT_BUFFER_SIZE bytes to the TextEdit.
  */

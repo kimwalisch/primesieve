@@ -3,7 +3,7 @@
 /// @brief  The PrimeSieve class provides an easy API for prime
 ///         sieving (single-threaded).
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -94,24 +94,14 @@ bool     PrimeSieve::isStatus()                  const { return isFlag(PRINT_STA
 bool     PrimeSieve::isParallelPrimeSieveChild() const { return parent_ != NULL; }
 
 /// Set a start number (lower bound) for sieving.
-/// @pre start <= 2^64 - 2^32 * 10
-///
 void PrimeSieve::setStart(uint64_t start)
 {
-  uint64_t maxStop = PrimeFinder::getMaxStop();
-  if (start > maxStop)
-    throw primesieve_error("start must be <= " + PrimeFinder::getMaxStopString());
   start_ = start;
 }
 
 /// Set a stop number (upper bound) for sieving.
-/// @pre stop <= 2^64 - 2^32 * 10
-///
 void PrimeSieve::setStop(uint64_t stop)
 {
-  uint64_t maxStop = PrimeFinder::getMaxStop();
-  if (stop > maxStop)
-    throw primesieve_error("stop must be <= " + PrimeFinder::getMaxStopString());
   stop_ = stop;
 }
 
@@ -140,10 +130,10 @@ void PrimeSieve::addFlags(int flags)
 void PrimeSieve::reset()
 {
   std::fill(counts_.begin(), counts_.end(), 0);
-  seconds_   = 0.0;
-  toUpdate_  = 0;
+  seconds_ = 0.0;
+  toUpdate_ = 0;
   processed_ = 0;
-  percent_   = -1.0;
+  percent_ = -1.0;
 }
 
 double PrimeSieve::getWallTime() const
@@ -177,7 +167,9 @@ bool PrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
   else
   {
     processed_ += processed;
-    double percent = processed_ * 100.0 / (getInterval() + 1);
+    double percent = 100;
+    if (getInterval() > 0)
+      percent = processed_ * 100.0 / getInterval();
     double old = percent_;
     percent_ = std::min(percent, 100.0);
     if (isFlag(PRINT_STATUS))
