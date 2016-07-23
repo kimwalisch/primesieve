@@ -2,7 +2,7 @@
 /// @file   SieveOfEratosthenes-inline.hpp
 /// @brief  Inline methods of the SieveOfEratosthenes class.
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -64,14 +64,13 @@ inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint64_t base)
 inline void SieveOfEratosthenes::addSievingPrime(uint_t prime)
 {
   uint64_t square = isquare<uint64_t>(prime);
+
   // This loop is executed once all primes <= sqrt(segmentHigh_)
   // required to sieve the next segment have been
   // added to the erat* objects further down.
-  while (segmentHigh_ < square) {
+  while (segmentHigh_ < square)
     sieveSegment();
-    segmentLow_  += sieveSize_ * NUMBERS_PER_BYTE;
-    segmentHigh_ += sieveSize_ * NUMBERS_PER_BYTE;
-  }
+
        if (prime > limitEratMedium_)   eratBig_->addSievingPrime(prime, segmentLow_);
   else if (prime > limitEratSmall_) eratMedium_->addSievingPrime(prime, segmentLow_);
   else /* (prime > limitPreSieve) */ eratSmall_->addSievingPrime(prime, segmentLow_);
