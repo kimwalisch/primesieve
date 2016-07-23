@@ -6,7 +6,7 @@
 ///         primes are then pushed back onto the vector inside the
 ///         callback method.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -86,22 +86,15 @@ public:
 
   void pushBack_N_Primes(uint64_t n, uint64_t start)
   {
-    n_ = n;
-    std::size_t newSize = primes_.size() + static_cast<std::size_t>(n_);
-    primes_.reserve(newSize);
-    PrimeSieve ps;
-    try
+    if (n > 0)
     {
-      while (n_ > 0)
-      {
-        uint64_t logn = 50;
-        // choose stop > nth prime
-        uint64_t stop = start + n_ * logn + 10000;
-        ps.callbackPrimes(start, stop, this);
-        start = stop + 1;
-      }
+      n_ = n;
+      std::size_t newSize = primes_.size() + static_cast<std::size_t>(n_);
+      primes_.reserve(newSize);
+      PrimeSieve ps;
+      try { ps.callbackPrimes(start, get_max_stop(), this); }
+      catch (cancel_callback&) { }
     }
-    catch (cancel_callback&) { }
   }
 private:
   PushBack_N_Primes(const PushBack_N_Primes&);
