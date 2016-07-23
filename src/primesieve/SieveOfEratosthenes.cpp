@@ -98,14 +98,16 @@ void SieveOfEratosthenes::init()
 {
   limitEratSmall_  = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATSMALL);
   limitEratMedium_ = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATMEDIUM);
-  try {
+  try
+  {
     preSieve_ = new PreSieve(limitPreSieve_);
 
     if (sqrtStop_ > limitPreSieve_)   eratSmall_  = new EratSmall (stop_, sieveSize_, limitEratSmall_);
     if (sqrtStop_ > limitEratSmall_)  eratMedium_ = new EratMedium(stop_, sieveSize_, limitEratMedium_);
     if (sqrtStop_ > limitEratMedium_) eratBig_    = new EratBig   (stop_, sieveSize_, sqrtStop_);
   }
-  catch (const std::exception&) {
+  catch (std::exception&)
+  {
     cleanUp();
     throw;
   }
