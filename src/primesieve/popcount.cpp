@@ -3,7 +3,7 @@
 /// @brief  Fast algorithm to count the number of 1 bits in an array
 ///         using only integer operations.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -17,7 +17,7 @@
 
 namespace {
 
-/// This uses fewer arithmetic operations than any other known  
+/// This uses fewer arithmetic operations than any other known
 /// implementation on machines with fast multiplication.
 /// It uses 12 arithmetic operations, one of which is a multiply.
 /// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
@@ -29,9 +29,9 @@ uint64_t popcount_mul(uint64_t x)
   const uint64_t m4  = UINT64_C(0x0F0F0F0F0F0F0F0F);
   const uint64_t h01 = UINT64_C(0x0101010101010101);
 
-  x -=            (x >> 1)  & m1;
-  x = (x & m2) + ((x >> 2)  & m2);
-  x = (x +        (x >> 4)) & m4;
+  x -= (x >> 1) & m1;
+  x = (x & m2) + ((x >> 2) & m2);
+  x = (x + (x >> 4)) & m4;
   return (x * h01) >> 56;
 }
 
@@ -67,17 +67,17 @@ uint64_t popcount(const uint64_t* array, uint64_t size)
   {
     CSA(twosA, ones, ones, array[i+0], array[i+1]);
     CSA(twosB, ones, ones, array[i+2], array[i+3]);
-    CSA(foursA, twos, twos, twosA, twosB);    
+    CSA(foursA, twos, twos, twosA, twosB);
     CSA(twosA, ones, ones, array[i+4], array[i+5]);
     CSA(twosB, ones, ones, array[i+6], array[i+7]);
-    CSA(foursB, twos, twos, twosA, twosB);    
+    CSA(foursB, twos, twos, twosA, twosB);
     CSA(eightsA,fours, fours, foursA, foursB);
     CSA(twosA, ones, ones, array[i+8], array[i+9]);
     CSA(twosB, ones, ones, array[i+10], array[i+11]);
     CSA(foursA, twos, twos, twosA, twosB);
     CSA(twosA, ones, ones, array[i+12], array[i+13]);
     CSA(twosB, ones, ones, array[i+14], array[i+15]);
-    CSA(foursB, twos, twos, twosA, twosB);    
+    CSA(foursB, twos, twos, twosA, twosB);
     CSA(eightsB, fours, fours, foursA, foursB);
     CSA(sixteens, eights, eights, eightsA, eightsB);
 
