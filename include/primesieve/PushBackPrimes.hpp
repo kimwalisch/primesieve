@@ -18,6 +18,7 @@
 #include "PrimeSieve.hpp"
 #include "Callback.hpp"
 #include "cancel_callback.hpp"
+#include "primesieve_error.hpp"
 
 #include <stdint.h>
 #include <cmath>
@@ -25,17 +26,20 @@
 namespace primesieve {
 
 /// approximate_prime_count(x) >= pi(x)
-inline uint64_t approximate_prime_count(uint64_t start, uint64_t stop)
+inline std::size_t approximate_prime_count(uint64_t start, uint64_t stop)
 {
   if (start > stop)
     return 0;
   if (stop <= 10)
     return 4;
 
-  // Dusard 2010: pi(x) <= x / (log(x) - 1.1) + 5 for x >= 4
-  double pix = (stop - start) / (std::log(static_cast<double>(stop)) - 1.1) + 5;
+  // pi(x) <= x / (log(x) - 1.1) + 5, for x >= 4
+  double x = static_cast<double>(stop);
+  double logx = std::log(x);
+  double div = logx - 1.1;
+  double pix = (stop - start) / div + 5;
 
-  return static_cast<uint64_t>(pix);
+  return static_cast<std::size_t>(pix);
 }
 
 template <typename T>
@@ -56,8 +60,8 @@ public:
   {
     if (start <= stop)
     {
-      uint64_t prime_count = approximate_prime_count(start, stop);
-      primes_.reserve(primes_.size() + static_cast<std::size_t>(prime_count));
+      std::size_t prime_count = approximate_prime_count(start, stop);
+      primes_.reserve(primes_.size() + prime_count);
       PrimeSieve ps;
       ps.callbackPrimes(start, stop, this);
     }
@@ -86,15 +90,31 @@ public:
 
   void pushBack_N_Primes(uint64_t n, uint64_t start)
   {
-    if (n > 0)
+    n_ = n;
+    PrimeSieve ps;
+    std::size_t newSize = primes_.size() + static_cast<std::size_t>(n_);
+    primes_.reserve(newSize);
+    try
     {
-      n_ = n;
-      std::size_t newSize = primes_.size() + static_cast<std::size_t>(n_);
-      primes_.reserve(newSize);
-      PrimeSieve ps;
-      try { ps.callbackPrimes(start, get_max_stop(), this); }
-      catch (cancel_callback&) { }
+      while (n_ > 0)
+      {
+        // choose stop > nth prime
+        uint64_t logx = 50;
+        uint64_t dist = n_ * logx + 10000;
+        uint64_t stop = start + dist;
+
+        // fix integer overflow
+        if (stop < start)
+          stop = get_max_stop();
+
+        ps.callbackPrimes(start, stop, this);
+        start = stop + 1;
+
+        if (stop >= get_max_stop())
+          throw primesieve_error("cannot generate primes > 2^64");
+      }
     }
+    catch (cancel_callback&) { }
   }
 private:
   PushBack_N_Primes(const PushBack_N_Primes&);
