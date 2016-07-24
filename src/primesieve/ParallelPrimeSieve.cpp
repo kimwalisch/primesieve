@@ -95,10 +95,8 @@ uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const
 ///
 uint64_t ParallelPrimeSieve::align(uint64_t n) const
 {
-  if (n == start_)
-    return start_;
-
   uint64_t n32 = add_overflow_safe(n, 32);
+
   if (n32 >= stop_)
     return stop_;
 
@@ -151,9 +149,9 @@ void ParallelPrimeSieve::sieve()
       reduction(+: count0, count1, count2, count3, count4, count5)
     for (int64_t i = 0; i < iters; i++)
     {
-      uint64_t n = start_ + i * threadInterval;
-      uint64_t threadStart = align(n);
-      uint64_t threadStop = add_overflow_safe(n, threadInterval);
+      uint64_t threadStart = start_ + i * threadInterval;
+      uint64_t threadStop = add_overflow_safe(threadStart, threadInterval);
+      if (i > 0) threadStart = align(threadStart) + 1;
       threadStop = align(threadStop);
 
       PrimeSieve ps(*this, omp_get_thread_num());
