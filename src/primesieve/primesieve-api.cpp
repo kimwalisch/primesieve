@@ -18,6 +18,7 @@
 #include <primesieve.hpp>
 
 #include <stdint.h>
+#include <limits>
 #include <string>
 
 #ifdef _OPENMP
@@ -223,7 +224,7 @@ void callback_primes(uint64_t start, uint64_t stop, Callback<uint64_t>* callback
 
 uint64_t get_max_stop()
 {
-  return UINT64_MAX;
+  return std::numeric_limits<uint64_t>::max();
 }
 
 int get_sieve_size()
