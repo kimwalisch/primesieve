@@ -118,7 +118,7 @@ inline uint64_t add_overflow_safe(uint64_t a, uint64_t b)
   return a + b;
 }
 
-inline uint64_t subtract_underflow_safe(uint64_t a, uint64_t b)
+inline uint64_t sub_underflow_safe(uint64_t a, uint64_t b)
 {
   return (a > b) ? a - b : 0;
 }

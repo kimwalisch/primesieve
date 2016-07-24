@@ -62,10 +62,10 @@ void iterator::generate_previous_primes()
 
   while (primes_.empty())
   {
-    stop_ = subtract_underflow_safe(start_, 1);
-    start_ = subtract_underflow_safe(stop_, get_interval_size(stop_));
+    stop_ = sub_underflow_safe(start_, 1);
+    start_ = sub_underflow_safe(stop_, get_interval_size(stop_));
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
-      start_ = subtract_underflow_safe(stop_hint_, max_prime_gap(stop_hint_));
+      start_ = sub_underflow_safe(stop_hint_, max_prime_gap(stop_hint_));
     if (start_ <= 2)
       primes_.push_back(0);
     generate_primes(start_, stop_, &primes_);

@@ -135,10 +135,10 @@ void primesieve_generate_previous_primes(primesieve_iterator* pi)
 
       while (primes.empty())
       {
-        pi->stop_ = subtract_underflow_safe(pi->start_, 1);
-        pi->start_ = subtract_underflow_safe(pi->stop_, get_interval_size(pi->stop_, pi->tiny_cache_size_));
+        pi->stop_ = sub_underflow_safe(pi->start_, 1);
+        pi->start_ = sub_underflow_safe(pi->stop_, get_interval_size(pi->stop_, pi->tiny_cache_size_));
         if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
-          pi->start_ = subtract_underflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
+          pi->start_ = sub_underflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
         if (pi->start_ <= 2)
           primes.push_back(0);
         generate_primes(pi->start_, pi->stop_, &primes);
