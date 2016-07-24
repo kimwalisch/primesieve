@@ -115,7 +115,6 @@ void NthPrime::findNthPrime(uint64_t n, uint64_t start, uint64_t stop)
     ps.callbackPrimes(start, stop, this);
     if (stop < get_max_stop())
       ps.callbackPrimes(stop + 1, get_max_stop(), this);
-
     throw primesieve_error("nth prime > 2^64");
   }
   catch (cancel_callback&) { }
@@ -185,9 +184,12 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     }
   }
 
-  if (n < 0) count -= 1;
+  if (n < 0)
+    count -= 1;
+
   checkLimit(start);
-  dist = nthPrimeDist(n, count, start) * 3;
+  uint64_t overValue = 3;
+  dist = nthPrimeDist(n, count, start) * overValue;
   stop = add_overflow_safe(start, dist);
   NthPrime np;
   np.findNthPrime(n - count, start, stop);
