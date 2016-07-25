@@ -167,8 +167,7 @@ template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement*
 class WheelFactorization
 {
 public:
-  /// @brief Add a new sieving prime.
-  ///
+  /// Add a new sieving prime to the sieving algorithm.
   /// Calculate the first multiple > segmentLow of prime and the
   /// position within the SieveOfEratosthenes array of that multiple
   /// and its wheel index. When done store the sieving prime.
