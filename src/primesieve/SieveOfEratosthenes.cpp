@@ -177,7 +177,7 @@ void SieveOfEratosthenes::sieve()
     sieveSegment();
 
   uint64_t remainder = getByteRemainder(stop_);
-  uint64_t dist = stop_ - segmentLow_ - remainder;
+  uint64_t dist = (stop_ - remainder) - segmentLow_;
   sieveSize_ = static_cast<uint_t>(dist) / NUMBERS_PER_BYTE + 1;
   dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
   segmentHigh_ = add_overflow_safe(segmentLow_, dist);
