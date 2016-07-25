@@ -70,6 +70,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   // sieveSize_ must be a power of 2
   sieveSize_ = getInBetween(1u, floorPowerOf2(sieveSize), 2048u);
   sieveSize_ *= 1024; // convert to bytes
+
   uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
   segmentLow_ = start_ - getByteRemainder(start_);
   segmentHigh_ = add_overflow_safe(segmentLow_, dist);
