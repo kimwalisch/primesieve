@@ -191,11 +191,11 @@ public:
     // calculate the next multiple of prime that is not
     // divisible by any of the wheel's factors
     uint64_t nextMultipleFactor = INIT[quotient % MODULO].nextMultipleFactor;
-    uint64_t multipleDist = prime * nextMultipleFactor;
-    if (multipleDist > stop_ - multiple)
+    uint64_t nextMultiple = prime * nextMultipleFactor;
+    if (nextMultiple > stop_ - multiple)
       return;
-    multipleDist += multiple - segmentLow;
-    uint_t multipleIndex = static_cast<uint_t>(multipleDist / NUMBERS_PER_BYTE);
+    nextMultiple += multiple - segmentLow;
+    uint_t multipleIndex = static_cast<uint_t>(nextMultiple / NUMBERS_PER_BYTE);
     uint_t wheelIndex = wheelOffsets_[prime % NUMBERS_PER_BYTE] + INIT[quotient % MODULO].wheelIndex;
     storeSievingPrime(prime, multipleIndex, wheelIndex);
   }
