@@ -193,7 +193,7 @@ public:
     // divisible by any of the wheel's factors
     uint64_t nextMultipleFactor = INIT[quotient % MODULO].nextMultipleFactor;
     uint64_t multipleDist = prime * nextMultipleFactor;
-    if (multiple > stop_ - multipleDist)
+    if (multipleDist > stop_ - multiple)
       return;
     multipleDist += multiple - segmentLow;
     uint_t multipleIndex = static_cast<uint_t>(multipleDist / NUMBERS_PER_BYTE);
