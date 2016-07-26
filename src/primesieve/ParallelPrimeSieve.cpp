@@ -67,7 +67,7 @@ int ParallelPrimeSieve::idealNumThreads() const
 
   uint64_t threshold = max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
   uint64_t threads = getInterval() / threshold;
-  threads = getInBetween<uint64_t>(1, threads, getMaxThreads());
+  threads = getInBetween(1, threads, getMaxThreads());
   return static_cast<int>(threads);
 }
 
