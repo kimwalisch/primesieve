@@ -54,7 +54,7 @@ void ParallelPrimeSieve::setNumThreads(int threads)
 {
   numThreads_ = threads;
   if (numThreads_ != IDEAL_NUM_THREADS)
-    numThreads_ = getInBetween(1, numThreads_, getMaxThreads());
+    numThreads_ = inBetween(1, numThreads_, getMaxThreads());
 }
 
 /// Get an ideal number of threads for the current
@@ -67,7 +67,7 @@ int ParallelPrimeSieve::idealNumThreads() const
 
   uint64_t threshold = max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
   uint64_t threads = getInterval() / threshold;
-  threads = getInBetween(1, threads, getMaxThreads());
+  threads = inBetween(1, threads, getMaxThreads());
   return static_cast<int>(threads);
 }
 
@@ -80,7 +80,7 @@ uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const
   uint64_t unbalanced = getInterval() / threads;
   uint64_t balanced = isqrt(stop_) * 1000;
   uint64_t fastest = min(balanced, unbalanced);
-  uint64_t threadInterval = getInBetween(config::MIN_THREAD_INTERVAL, fastest, config::MAX_THREAD_INTERVAL);
+  uint64_t threadInterval = inBetween(config::MIN_THREAD_INTERVAL, fastest, config::MAX_THREAD_INTERVAL);
   uint64_t chunks = getInterval() / threadInterval;
 
   if (chunks < threads * 5u)

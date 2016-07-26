@@ -112,7 +112,7 @@ void PrimeSieve::setStop(uint64_t stop)
 ///
 void PrimeSieve::setSieveSize(int sieveSize)
 {
-  sieveSize_ = getInBetween(1, floorPowerOf2(sieveSize), 2048);
+  sieveSize_ = inBetween(1, floorPowerOf2(sieveSize), 2048);
 }
 
 void PrimeSieve::setFlags(int flags)

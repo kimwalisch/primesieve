@@ -16,10 +16,10 @@
 
 namespace primesieve {
 
-template <typename A, typename B>
-inline A ceilDiv(A a, B b)
+template <typename X, typename Y>
+inline X ceilDiv(X x, Y y)
 {
-  return static_cast<A>((a + b - 1) / b);
+  return static_cast<X>((x + y - 1) / y);
 }
 
 template <typename T>
@@ -95,36 +95,35 @@ inline T isqrt(T x)
 }
 
 template <typename T1, typename T2, typename T3>
-inline T2 getInBetween(T1 min, T2 x, T3 max)
+inline T2 inBetween(T1 min, T2 x, T3 max)
 {
-  if (x < min)
-    return (T2) min;
-  if (x > max)
-    return (T2) max;
+  if (x < (T2) min) return (T2) min;
+  if (x > (T2) max) return (T2) max;
 
   return x;
 }
 
 /// Returns a+b or 2^64-1 if the result overflows
-inline uint64_t add_overflow_safe(uint64_t a, uint64_t b)
+inline uint64_t add_overflow_safe(uint64_t x, uint64_t y)
 {
-  if (a >= std::numeric_limits<uint64_t>::max() - b)
+  if (x >= std::numeric_limits<uint64_t>::max() - y)
     return std::numeric_limits<uint64_t>::max();
 
-  return a + b;
+  return x + y;
 }
 
 /// Returns a-b or 0 if the result underflows
-inline uint64_t sub_underflow_safe(uint64_t a, uint64_t b)
+inline uint64_t sub_underflow_safe(uint64_t x, uint64_t y)
 {
-  return (a > b) ? a - b : 0;
+  return (x > y) ? x - y : 0;
 }
 
 /// Get an approximation of the maximum prime gap near n
 inline uint64_t max_prime_gap(uint64_t n)
 {
-  double logn = std::log(static_cast<double>(n));
-  double prime_gap = logn * logn;
+  double x = static_cast<double>(n);
+  double logx = std::log(x);
+  double prime_gap = logx * logx;
   return static_cast<uint64_t>(prime_gap);
 }
 

@@ -239,7 +239,7 @@ int get_num_threads()
 
 void set_sieve_size(int kilobytes)
 {
-  sieve_size = getInBetween(1, kilobytes, 2048);
+  sieve_size = inBetween(1, kilobytes, 2048);
 }
 
 void set_num_threads(int threads)
@@ -247,8 +247,7 @@ void set_num_threads(int threads)
   if (threads != MAX_THREADS)
   {
 #ifdef _OPENMP
-    int max_threads = omp_get_max_threads();
-    threads = getInBetween(1, threads, max_threads);
+    threads = inBetween(1, threads, omp_get_max_threads());
 #else
     // no multi-threading
     threads = 1;
