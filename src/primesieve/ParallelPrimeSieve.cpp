@@ -95,12 +95,10 @@ uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const
 ///
 uint64_t ParallelPrimeSieve::align(uint64_t n) const
 {
-  uint64_t n32 = add_overflow_safe(n, 32);
-
-  if (n32 >= stop_)
+  if (add_overflow_safe(n, 32) >= stop_)
     return stop_;
 
-  n = n32 - n % 30;
+  n = add_overflow_safe(n, 32) - n % 30;
   return min(n, stop_);
 }
 
