@@ -68,7 +68,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
     limitPreSieve_ = config::PRESIEVE;
 
   // sieveSize_ must be a power of 2
-  sieveSize_ = getInBetween(1u, floorPowerOf2(sieveSize), 2048u);
+  sieveSize_ = getInBetween(1, floorPowerOf2(sieveSize), 2048);
   sieveSize_ *= 1024; // convert to bytes
 
   uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
