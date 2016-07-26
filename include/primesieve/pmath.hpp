@@ -34,18 +34,14 @@ inline T isquare(T x)
   return x * x;
 }
 
-/// @brief  Check if an integer is a power of 2.
-/// @see    Book "Hacker's Delight".
-///
+/// Check if an integer is a power of 2
 template <typename T>
 inline bool isPowerOf2(T x)
 {
   return (x != 0 && (x & (x - 1)) == 0);
 }
 
-/// @brief  Round down to the next power of 2.
-/// @see    Book "Hacker's Delight".
-///
+/// Round down to the next power of 2
 template <typename T>
 inline T floorPowerOf2(T x)
 {
@@ -54,9 +50,7 @@ inline T floorPowerOf2(T x)
   return x - (x >> 1);
 }
 
-/// @brief  Fast and protable integer log2 function.
-/// @see    Book "Hacker's Delight".
-///
+/// Fast and protable integer log2 function
 template <typename T>
 inline T ilog2(T x)
 {
@@ -74,9 +68,7 @@ inline T ilog2(T x)
   return log2;
 }
 
-/// @brief  Integer square root, Newton's method.
-/// @see    Book "Hacker's Delight".
-///
+/// Integer square root, Newton's method
 template <typename T>
 inline T isqrt(T x)
 {
@@ -102,14 +94,18 @@ inline T isqrt(T x)
   return g0;
 }
 
-template <typename T>
-inline T getInBetween(T min, T value, T max)
+template <typename T1, typename T2, typename T3>
+inline T2 getInBetween(T1 min, T2 x, T3 max)
 {
-  if (value < min) return min;
-  if (value > max) return max;
-  return value;
+  if (x < min)
+    return (T2) min;
+  if (x > max)
+    return (T2) max;
+
+  return x;
 }
 
+/// Returns a+b or 2^64-1 if the result overflows
 inline uint64_t add_overflow_safe(uint64_t a, uint64_t b)
 {
   if (a >= std::numeric_limits<uint64_t>::max() - b)
@@ -118,14 +114,13 @@ inline uint64_t add_overflow_safe(uint64_t a, uint64_t b)
   return a + b;
 }
 
+/// Returns a-b or 0 if the result underflows
 inline uint64_t sub_underflow_safe(uint64_t a, uint64_t b)
 {
   return (a > b) ? a - b : 0;
 }
 
-/// @brief   Get an approximation of the maximum prime gap near n.
-/// @return  log(n)^2
-///
+/// Get an approximation of the maximum prime gap near n
 inline uint64_t max_prime_gap(uint64_t n)
 {
   double logn = std::log(static_cast<double>(n));
