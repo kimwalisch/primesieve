@@ -178,6 +178,13 @@ quint64 PrimeSieveGUI::getNumber(const QString& str) {
     throw std::invalid_argument(e.what());
   }
 
+  int digits = str.count(QRegExp("[0-9]"));
+  if (digits == str.size() && (
+      digits >  UPPER_BOUND_STR.size() || (
+      digits == UPPER_BOUND_STR.size() &&
+      str    >= UPPER_BOUND_STR)))
+    throw std::invalid_argument("primesieve is limited to primes < 2^64.");
+
   return result;
 }
 
