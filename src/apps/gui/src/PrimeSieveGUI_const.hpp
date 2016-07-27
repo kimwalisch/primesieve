@@ -68,6 +68,12 @@ const int MAXIMUM_SIEVE_SIZE = 2048;
 const int DEFAULT_L1D_CACHE_SIZE = 32;
 
 /**
+ * PrimeSieve allows numbers up to < 2^64.
+ */
+const quint64 UPPER_BOUND_LIMIT = UINT64_MAX;
+const QString UPPER_BOUND_STR = QString::number(UPPER_BOUND_LIMIT);
+
+/**
  * Print chunks of PRINT_BUFFER_SIZE bytes to the TextEdit.
  */
 const int PRINT_BUFFER_SIZE = 1024;
