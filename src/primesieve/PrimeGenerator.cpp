@@ -35,17 +35,18 @@ PrimeGenerator::PrimeGenerator(PrimeFinder& finder, const PreSieve& preSieve) :
 ///
 void PrimeGenerator::generateTinyPrimes()
 {
-  uint_t P = getStart();
-  uint_t N = getSqrtStop();
-  std::vector<char> isPrime(N + 1, true);
+  uint_t s = (uint_t) getStart();
+  uint_t n = getSqrtStop();
 
-  for (uint_t i = 3; i * i <= N; i += 2)
+  std::vector<char> isPrime(n + 1, true);
+
+  for (uint_t i = 3; i * i <= n; i += 2)
     if (isPrime[i])
-      for (uint_t j = i * i; j <= N; j += i * 2)
+      for (uint_t j = i * i; j <= n; j += i * 2)
         isPrime[j] = false;
 
-  assert(P > 5);
-  for (uint_t i = P + (~P & 1); i <= N; i += 2)
+  assert(s > 5);
+  for (uint_t i = s + (~s & 1); i <= n; i += 2)
     if (isPrime[i])
       addSievingPrime(i);
 }
@@ -73,7 +74,7 @@ void PrimeGenerator::generateSievingPrimes(const byte_t* sieve, uint_t sieveSize
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
     while (bits != 0)
     {
-      uint_t prime = static_cast<uint_t>(getNextPrime(&bits, base));
+      uint_t prime = (uint_t) getNextPrime(&bits, base);
       finder_.addSievingPrime(prime);
     }
     base += NUMBERS_PER_BYTE * 8;
