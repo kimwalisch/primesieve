@@ -6,13 +6,13 @@
 
 int main()
 {
-  primesieve::iterator pi;
-  pi.skipto(2000);
+  primesieve::iterator it;
+  it.skipto(2000);
 
   uint64_t prime;
 
   // iterate backwards over the primes between 2000 and 1000
-  while ((prime = pi.previous_prime()) >= 1000)
+  while ((prime = it.previous_prime()) >= 1000)
     std::cout << prime << std::endl;
 
   return 0;
