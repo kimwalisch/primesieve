@@ -27,7 +27,7 @@ class PreSieve;
 ///
 class PrimeFinder : public SieveOfEratosthenes {
 public:
-  PrimeFinder(PrimeSieve&, PreSieve&);
+  PrimeFinder(PrimeSieve&, const PreSieve&);
 private:
   enum { END = 0xff + 1 };
   static const uint_t kBitmasks_[6][5];

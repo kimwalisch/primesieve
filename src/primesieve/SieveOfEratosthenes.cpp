@@ -47,7 +47,7 @@ const uint_t SieveOfEratosthenes::bruijnBitValues_[64] =
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
                                          uint64_t stop,
                                          uint_t sieveSize,
-                                         PreSieve& preSieve) :
+                                         const PreSieve& preSieve) :
   start_(start),
   stop_(stop),
   preSieve_(preSieve),

@@ -35,7 +35,7 @@ public:
   void addSievingPrime(uint_t);
   void sieve();
 protected:
-  SieveOfEratosthenes(uint64_t, uint64_t, uint_t, PreSieve&);
+  SieveOfEratosthenes(uint64_t, uint64_t, uint_t, const PreSieve&);
   virtual ~SieveOfEratosthenes();
   virtual void segmentFinished(const byte_t*, uint_t) = 0;
   static uint64_t getNextPrime(uint64_t*, uint64_t);
@@ -51,6 +51,7 @@ private:
   const uint64_t start_;
   /// Sieve primes <= stop_
   const uint64_t stop_;
+  const PreSieve& preSieve_;
   /// sqrt(stop_)
   uint_t sqrtStop_;
   uint_t limitPreSieve_;
@@ -60,7 +61,6 @@ private:
   uint_t sieveSize_;
   /// Sieve of Eratosthenes array
   byte_t* sieve_;
-  PreSieve& preSieve_;
   EratSmall* eratSmall_;
   EratMedium* eratMedium_;
   EratBig* eratBig_;

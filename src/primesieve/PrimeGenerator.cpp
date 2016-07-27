@@ -22,7 +22,7 @@
 
 namespace primesieve {
 
-PrimeGenerator::PrimeGenerator(PrimeFinder& finder, PreSieve& preSieve) :
+PrimeGenerator::PrimeGenerator(PrimeFinder& finder, const PreSieve& preSieve) :
   SieveOfEratosthenes(preSieve.getLimit() + 1,
                       finder.getSqrtStop(),
                       config::PRIMEGENERATOR_SIEVESIZE,

@@ -20,7 +20,7 @@ class PreSieve;
 
 class PrimeGenerator : public SieveOfEratosthenes {
 public:
-  PrimeGenerator(PrimeFinder&, PreSieve&);
+  PrimeGenerator(PrimeFinder&, const PreSieve&);
   void doIt();
 private:
   PrimeFinder& finder_;
