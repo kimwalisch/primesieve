@@ -207,7 +207,7 @@ protected:
   WheelFactorization(uint64_t stop, uint_t sieveSize) :
     stop_(stop)
   {
-    const uint_t maxSieveSize = SievingPrime::MAX_MULTIPLEINDEX + 1;
+    uint_t maxSieveSize = SievingPrime::MAX_MULTIPLEINDEX + 1;
 
     if (sieveSize > maxSieveSize)
       throw primesieve_error("WheelFactorization: sieveSize must be <= " + toString(maxSieveSize));
