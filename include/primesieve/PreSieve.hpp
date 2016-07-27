@@ -30,6 +30,7 @@ namespace primesieve {
 /// <b> Memory Usage </b>
 ///
 /// - PreSieve objects use: primeProduct(limit_) / 30 bytes of memory
+/// - PreSieve multiples of primes <=  7 uses    7    bytes
 /// - PreSieve multiples of primes <= 11 uses   77    bytes
 /// - PreSieve multiples of primes <= 13 uses 1001    bytes
 /// - PreSieve multiples of primes <= 17 uses   16.62 kilobytes
@@ -38,16 +39,14 @@ namespace primesieve {
 ///
 class PreSieve {
 public:
-  PreSieve(int);
+  PreSieve(uint64_t start, uint64_t stop);
   ~PreSieve();
   uint_t getLimit() const { return limit_; }
-  void doIt(byte_t*, uint_t, uint64_t) const;
+  void doIt(byte_t* sieve, uint_t sieveSize, uint64_t segmentLow) const;
 private:
-  static const uint_t primes_[10];
-  /// Pre-sieve multiples of primes <= limit_ (>= 11 && <= 23)
   uint_t limit_;
   uint_t primeProduct_;
-  byte_t* preSieved_;
+  byte_t* preSieve_;
   uint_t size_;
   void init();
   DISALLOW_COPY_AND_ASSIGN(PreSieve);

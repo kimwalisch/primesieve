@@ -14,6 +14,7 @@
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/Callback.hpp>
+#include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeSieve-lock.hpp>
 #include <primesieve/PrimeFinder.hpp>
 #include <primesieve/PrimeGenerator.hpp>
@@ -223,8 +224,7 @@ void PrimeSieve::sieve()
   if (isStatus())
     updateStatus(INIT_STATUS, false);
 
-  // Small primes and k-tuplets (first prime <= 5)
-  // are checked manually
+  // small primes and k-tuplets (first prime <= 5)
   if (start_ <= 5)
   {
     LockGuard lock(*this);
@@ -234,14 +234,16 @@ void PrimeSieve::sieve()
 
   if (stop_ >= 7)
   {
-    PrimeFinder finder(*this);
-    // First generate the sieving primes up to
-    // sqrt(stop) and add them to finder
-    if (finder.getSqrtStop() > finder.getPreSieve())
+    PreSieve preSieve(start_, stop_);
+    PrimeFinder finder(*this, preSieve);
+
+    if (finder.getSqrtStop() > preSieve.getLimit())
     {
-      PrimeGenerator generator(finder);
+      // first generate the sieving primes <= sqrt(stop)
+      PrimeGenerator generator(finder, preSieve);
       generator.doIt();
     }
+
     // sieve the primes within [start, stop]
     finder.sieve();
   }

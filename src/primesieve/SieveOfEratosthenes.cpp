@@ -46,11 +46,12 @@ const uint_t SieveOfEratosthenes::bruijnBitValues_[64] =
 ///
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
                                          uint64_t stop,
-                                         uint_t sieveSize) :
+                                         uint_t sieveSize,
+                                         PreSieve& preSieve) :
   start_(start),
   stop_(stop),
+  preSieve_(preSieve),
   sieve_(NULL),
-  preSieve_(NULL),
   eratSmall_(NULL),
   eratMedium_(NULL),
   eratBig_(NULL)
@@ -60,24 +61,19 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   if (start_ > stop_)
     throw primesieve_error("SieveOfEratosthenes: start must be <= stop");
 
-  // choose fastest pre-sieve setting
-  limitPreSieve_ = 11;
-  if ((stop_ - start_) >= (7 * 11 * 13) * NUMBERS_PER_BYTE)
-    limitPreSieve_ = 13;
-  if ((stop_ - start_) >= config::PRESIEVE_THRESHOLD)
-    limitPreSieve_ = config::PRESIEVE;
-
   // sieveSize_ must be a power of 2
   sieveSize_ = inBetween(1, floorPowerOf2(sieveSize), 2048);
   sieveSize_ *= 1024; // convert to bytes
+
+  // allocate sieve of Eratosthenes array
+  sieve_ = new byte_t[sieveSize_];
 
   uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
   segmentLow_ = start_ - getByteRemainder(start_);
   segmentHigh_ = add_overflow_safe(segmentLow_, dist);
   sqrtStop_ = static_cast<uint_t>(isqrt(stop_));
+  limitPreSieve_ = preSieve_.getLimit();
 
-  // allocate sieve of Eratosthenes array
-  sieve_ = new byte_t[sieveSize_];
   init();
 }
 
@@ -89,7 +85,6 @@ SieveOfEratosthenes::~SieveOfEratosthenes()
 void SieveOfEratosthenes::cleanUp()
 {
   delete[] sieve_;
-  delete preSieve_;
   delete eratSmall_;
   delete eratMedium_;
   delete eratBig_;
@@ -101,8 +96,6 @@ void SieveOfEratosthenes::init()
   limitEratMedium_ = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATMEDIUM);
   try
   {
-    preSieve_ = new PreSieve(limitPreSieve_);
-
     if (sqrtStop_ > limitPreSieve_)   eratSmall_  = new EratSmall (stop_, sieveSize_, limitEratSmall_);
     if (sqrtStop_ > limitEratSmall_)  eratMedium_ = new EratMedium(stop_, sieveSize_, limitEratMedium_);
     if (sqrtStop_ > limitEratMedium_) eratBig_    = new EratBig   (stop_, sieveSize_, sqrtStop_);
@@ -119,11 +112,6 @@ uint_t SieveOfEratosthenes::getSqrtStop() const
   return sqrtStop_;
 }
 
-uint_t SieveOfEratosthenes::getPreSieve() const
-{
-  return limitPreSieve_;
-}
-
 uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n)
 {
   uint64_t r = n % NUMBERS_PER_BYTE;
@@ -137,7 +125,7 @@ uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n)
 ///
 void SieveOfEratosthenes::preSieve()
 {
-  preSieve_->doIt(sieve_, sieveSize_, segmentLow_);
+  preSieve_.doIt(sieve_, sieveSize_, segmentLow_);
 
   // unset bits (numbers) < start_
   if (segmentLow_ <= start_)

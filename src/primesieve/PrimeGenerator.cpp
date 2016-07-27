@@ -3,7 +3,7 @@
 ///        Generates the sieving primes up to sqrt(stop) and adds
 ///        them to PrimeFinder.
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -12,6 +12,7 @@
 #include <primesieve/config.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/PrimeFinder.hpp>
+#include <primesieve/PreSieve.hpp>
 #include <primesieve/SieveOfEratosthenes.hpp>
 #include <primesieve/SieveOfEratosthenes-inline.hpp>
 #include <primesieve/littleendian_cast.hpp>
@@ -21,10 +22,11 @@
 
 namespace primesieve {
 
-PrimeGenerator::PrimeGenerator(PrimeFinder& finder) :
-  SieveOfEratosthenes(finder.getPreSieve() + 1,
+PrimeGenerator::PrimeGenerator(PrimeFinder& finder, PreSieve& preSieve) :
+  SieveOfEratosthenes(preSieve.getLimit() + 1,
                       finder.getSqrtStop(),
-                      config::PRIMEGENERATOR_SIEVESIZE),
+                      config::PRIMEGENERATOR_SIEVESIZE,
+                      preSieve),
   finder_(finder)
 { }
 
@@ -33,7 +35,7 @@ PrimeGenerator::PrimeGenerator(PrimeFinder& finder) :
 ///
 void PrimeGenerator::generateTinyPrimes()
 {
-  uint_t P = getPreSieve() + 1;
+  uint_t P = getStart();
   uint_t N = getSqrtStop();
   std::vector<char> isPrime(N + 1, true);
 
@@ -51,7 +53,7 @@ void PrimeGenerator::generateTinyPrimes()
 void PrimeGenerator::doIt()
 {
   generateTinyPrimes();
-  // calls segmentFinished() after each sieved segment
+  // calls segmentFinished() when done
   sieve();
 }
 

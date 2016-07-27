@@ -27,7 +27,8 @@
 
 namespace primesieve {
 
-/// forward declaration
+class PreSieve;
+
 uint64_t popcount(const uint64_t* array, uint64_t size);
 
 const uint_t PrimeFinder::kBitmasks_[6][5] =
@@ -40,10 +41,11 @@ const uint_t PrimeFinder::kBitmasks_[6][5] =
   { 0x3f, END }                    // Prime sextuplet  bitmasks
 };
 
-PrimeFinder::PrimeFinder(PrimeSieve& ps) :
+PrimeFinder::PrimeFinder(PrimeSieve& ps, PreSieve& preSieve) :
   SieveOfEratosthenes(std::max<uint64_t>(7, ps.getStart()),
                       ps.getStop(),
-                      ps.getSieveSize()),
+                      ps.getSieveSize(),
+                      preSieve),
   ps_(ps)
 {
   if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEXTUPLETS))

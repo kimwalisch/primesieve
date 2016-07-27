@@ -1,7 +1,7 @@
 ///
 /// @file  PrimeFinder.hpp
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -19,6 +19,7 @@
 namespace primesieve {
 
 class PrimeSieve;
+class PreSieve;
 
 /// PrimeFinder is a SieveOfEratosthenes class that is used to
 /// callback, print and count primes and prime k-tuplets
@@ -26,7 +27,7 @@ class PrimeSieve;
 ///
 class PrimeFinder : public SieveOfEratosthenes {
 public:
-  PrimeFinder(PrimeSieve&);
+  PrimeFinder(PrimeSieve&, PreSieve&);
 private:
   enum { END = 0xff + 1 };
   static const uint_t kBitmasks_[6][5];
@@ -44,6 +45,6 @@ private:
   DISALLOW_COPY_AND_ASSIGN(PrimeFinder);
 };
 
-} // namespace primesieve
+} // namespace
 
 #endif
