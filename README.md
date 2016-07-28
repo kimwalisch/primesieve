@@ -172,6 +172,7 @@ int main()
 
   /* deallocate primes array generated using primesieve */
   primesieve_free(primes);
+
   return 0;
 }
 ```
