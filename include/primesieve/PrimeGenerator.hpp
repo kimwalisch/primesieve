@@ -21,7 +21,7 @@ class PreSieve;
 class PrimeGenerator : public SieveOfEratosthenes {
 public:
   PrimeGenerator(PrimeFinder&, const PreSieve&);
-  void doIt();
+  void generateSievingPrimes();
 private:
   PrimeFinder& finder_;
   void segmentFinished(const byte_t*, uint_t);
