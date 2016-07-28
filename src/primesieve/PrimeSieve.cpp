@@ -239,9 +239,9 @@ void PrimeSieve::sieve()
 
     if (finder.getSqrtStop() > preSieve.getLimit())
     {
-      // first generate the sieving primes <= sqrt(stop)
-      PrimeGenerator generator(finder, preSieve);
-      generator.doIt();
+      // generate the sieving primes <= sqrt(stop)
+      PrimeGenerator pg(finder, preSieve);
+      pg.generateSievingPrimes();
     }
 
     // sieve the primes within [start, stop]
