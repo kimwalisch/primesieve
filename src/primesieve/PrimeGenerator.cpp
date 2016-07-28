@@ -17,8 +17,8 @@
 #include <primesieve/SieveOfEratosthenes-inline.hpp>
 #include <primesieve/littleendian_cast.hpp>
 
+#include <stdint.h>
 #include <vector>
-#include <cassert>
 
 namespace primesieve {
 
@@ -30,8 +30,15 @@ PrimeGenerator::PrimeGenerator(PrimeFinder& finder, const PreSieve& preSieve) :
   finder_(finder)
 { }
 
-/// Generate the primes up to finder.stop_^0.25 using
-/// the sieve of Eratosthenes.
+void PrimeGenerator::generateSievingPrimes()
+{
+  generateTinyPrimes();
+  // calls segmentFinished() when done
+  sieve();
+}
+
+/// Generate the primes up to finder.getSqrtStop()
+/// using the sieve of Eratosthenes.
 ///
 void PrimeGenerator::generateTinyPrimes()
 {
@@ -45,17 +52,11 @@ void PrimeGenerator::generateTinyPrimes()
       for (uint_t j = i * i; j <= n; j += i * 2)
         isPrime[j] = false;
 
-  assert(s > 5);
-  for (uint_t i = s + (~s & 1); i <= n; i += 2)
+  // make sure s is odd
+  s += (~s & 1);
+  for (uint_t i = s; i <= n; i += 2)
     if (isPrime[i])
       addSievingPrime(i);
-}
-
-void PrimeGenerator::doIt()
-{
-  generateTinyPrimes();
-  // calls segmentFinished() when done
-  sieve();
 }
 
 void PrimeGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
@@ -69,14 +70,14 @@ void PrimeGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
 void PrimeGenerator::generateSievingPrimes(const byte_t* sieve, uint_t sieveSize)
 {
   uint64_t base = getSegmentLow();
+
   for (uint_t i = 0; i < sieveSize; i += 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
+
     while (bits != 0)
-    {
-      uint_t prime = (uint_t) getNextPrime(&bits, base);
-      finder_.addSievingPrime(prime);
-    }
+      finder_.addSievingPrime((uint_t) getNextPrime(&bits, base));
+
     base += NUMBERS_PER_BYTE * 8;
   }
 }
