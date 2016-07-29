@@ -162,12 +162,12 @@ private:
   /// @pre flag >= (1 << 20)
   enum
   {
-    CALLBACK_PRIMES        = 1 << 20,
-    CALLBACK_PRIMES_OBJ    = 1 << 21,
-    CALLBACK_PRIMES_C      = 1 << 22
+    CALLBACK_PRIMES     = 1 << 20,
+    CALLBACK_PRIMES_OBJ = 1 << 21,
+    CALLBACK_PRIMES_C   = 1 << 22
   };
 };
 
-} // namespace primesieve
+} // namespace
 
 #endif
