@@ -33,12 +33,13 @@ PreSieve::PreSieve(uint64_t start, uint64_t stop) :
   limit_(7),
   preSieve_(NULL)
 {
+  // only use a large preSieve_ buffer if the
+  // sieve interval is sufficiently large
   uint64_t interval = stop - start;
+  uint64_t threshold = max(isqrt(stop), interval) / 10;
 
-  // only use a large preSieve_ buffer if the sieve
-  // interval is sufficiently large
   for (int i = 4; i < 8; i++)
-    if (interval / 10 > primeProduct[i])
+    if (threshold > primeProduct[i])
       limit_ = primes[i];
 
   init();
