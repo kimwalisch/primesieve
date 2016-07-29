@@ -14,6 +14,7 @@
 #include <primesieve/EratSmall.hpp>
 
 #include <stdint.h>
+#include <algorithm>
 #include <cstring>
 
 using namespace std;
