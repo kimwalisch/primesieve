@@ -3,7 +3,7 @@
 /// @brief  Macros, typedefs and constants that set various limits
 ///         and array sizes within primesieve.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -73,17 +73,6 @@ enum {
   /// @pre PRIMEGENERATOR_SIEVESIZE >= 1 && <= 2048
   ///
   PRIMEGENERATOR_SIEVESIZE = L1_DCACHE_SIZE,
-
-  /// Default pre-sieve limit. Multiples of primes up to this limit
-  /// are pre-sieved to speed up the sieve of Eratosthenes.
-  /// @pre PRESIEVE >= 13 && <= 19.
-  ///
-  PRESIEVE = 19,
-
-  /// Pre-sieving is not used unless the sieving interval is >=
-  /// PRESIEVE_THRESHOLD. (Pre-sieving is expensive to initialize.)
-  ///
-  PRESIEVE_THRESHOLD = 100000000,
 
   /// Number of sieving primes per Bucket in EratSmall, EratMedium and
   /// EratBig objects, affects performance by about 3%.
