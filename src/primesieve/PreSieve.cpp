@@ -12,7 +12,6 @@
 #include <primesieve/config.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/EratSmall.hpp>
-#include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
 #include <cstring>
