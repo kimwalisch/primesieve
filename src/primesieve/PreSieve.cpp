@@ -36,16 +36,11 @@ PreSieve::PreSieve(uint64_t start, uint64_t stop) :
 {
   uint64_t interval = stop - start;
 
-  // use a large preSieve_ buffer if the sieving interval is large
-  if (interval >= config::PRESIEVE_THRESHOLD)
-    limit_ = config::PRESIEVE;
-  else if (interval >= primeProduct[5])
-    limit_ = primes[5];
-  else if (interval >= primeProduct[4])
-    limit_ = primes[4];
-
-  if (limit_ < 7 || limit_ > 19)
-    throw primesieve_error("PreSieve: limit outside [7, 19]");
+  // only use a large preSieve_ buffer if the sieve
+  // interval is sufficiently large
+  for (int i = 4; i < 8; i++)
+    if (interval / 10 < primeProduct[i])
+      limit_ = primes_[i];
 
   init();
 }
