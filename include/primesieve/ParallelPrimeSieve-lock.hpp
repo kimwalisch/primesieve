@@ -3,7 +3,7 @@
 /// @brief  The OmpInitLock and OmpLockGuard classes are RAII-style
 ///         wrappers for OpenMP locks.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -57,7 +57,7 @@ private:
 /// @param waitForLock  If false do not block the current thread
 ///                     if the lock is not available.
 ///
-OmpLockGuard::OmpLockGuard(omp_lock_t* lock, bool waitForLock = true) :
+OmpLockGuard::OmpLockGuard(omp_lock_t* lock, bool waitForLock) :
   lock_(lock)
 {
   if (!waitForLock)
@@ -79,6 +79,6 @@ bool OmpLockGuard::isSet() const
   return isSet_;
 }
 
-} // namespace primesieve
+} // namespace
 
 #endif
