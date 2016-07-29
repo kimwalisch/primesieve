@@ -22,7 +22,9 @@ using namespace primesieve;
 
 namespace {
 
-const uint_t primes[10] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 };
+const uint_t primes[] = { 2, 3, 5, 7, 11, 13, 17, 19, 23 };
+
+const uint_t primeProduct[] = { 2, 6, 30, 210, 2310, 30030, 510510, 9699690, 223092870 };
 
 }
 
@@ -37,14 +39,13 @@ PreSieve::PreSieve(uint64_t start, uint64_t stop) :
   // use a large preSieve_ buffer if the sieving interval is large
   if (interval >= config::PRESIEVE_THRESHOLD)
     limit_ = config::PRESIEVE;
-  else if (interval >= 2 * 3 * 5 * 7 * 11 * 13)
-    limit_ = 13;
-  else if (interval >= 2 * 3 * 5 * 7 * 11)
-    limit_ = 11;
+  else if (interval >= primeProduct[5])
+    limit_ = primes[5];
+  else if (interval >= primeProduct[4])
+    limit_ = primes[4];
 
-  // limit_ <= 23 prevents 32-bit overflows
-  if (limit_ < 5 || limit_ > 23)
-    throw primesieve_error("PreSieve: limit must be >= 5 && <= 23");
+  if (limit_ < 7 || limit_ > 19)
+    throw primesieve_error("PreSieve: limit outside [7, 19]");
 
   init();
 }
@@ -59,9 +60,8 @@ PreSieve::~PreSieve()
 ///
 void PreSieve::init()
 {
-  primeProduct_ = 1;
   for (int i = 0; primes[i] <= limit_; i++)
-    primeProduct_ *= primes[i];
+    primeProduct_ = primeProduct[i];
 
   size_ = primeProduct_ / NUMBERS_PER_BYTE;
   preSieve_ = new byte_t[size_];
