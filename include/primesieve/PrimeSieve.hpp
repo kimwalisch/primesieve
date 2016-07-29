@@ -3,7 +3,7 @@
 /// @brief  The PrimeSieve class provides an easy API for prime
 ///         sieving (single-threaded).
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -120,7 +120,7 @@ protected:
   virtual double getWallTime() const;
   virtual void setLock();
   virtual void unsetLock();
-  virtual bool updateStatus(uint64_t, bool);
+  virtual bool updateStatus(uint64_t, bool waitForLock = false);
 private:
   struct SmallPrime
   {
