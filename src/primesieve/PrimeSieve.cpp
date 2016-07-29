@@ -222,7 +222,7 @@ void PrimeSieve::sieve()
 
   double t1 = getWallTime();
   if (isStatus())
-    updateStatus(INIT_STATUS, false);
+    updateStatus(INIT_STATUS);
 
   // small primes and k-tuplets (first prime <= 5)
   if (start_ <= 5)
