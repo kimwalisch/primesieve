@@ -188,7 +188,7 @@ bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
   OmpLockGuard lock(getLock<omp_lock_t*>(), waitForLock);
   if (lock.isSet())
   {
-    PrimeSieve::updateStatus(processed, false);
+    PrimeSieve::updateStatus(processed);
     if (shm_)
       shm_->status = getStatus();
   }
