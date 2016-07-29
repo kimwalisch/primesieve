@@ -88,7 +88,7 @@ void PrimeFinder::segmentFinished(const byte_t* sieve, uint_t sieveSize)
   if (ps_.isPrint())
     print(sieve, sieveSize);
   if (ps_.isStatus())
-    ps_.updateStatus(sieveSize * NUMBERS_PER_BYTE, /* waitForLock = */ false);
+    ps_.updateStatus(sieveSize * NUMBERS_PER_BYTE);
 }
 
 /// Reconstruct prime numbers from 1 bits of the sieve array and
