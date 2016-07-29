@@ -15,14 +15,11 @@
 
 namespace primesieve {
 
-/// @brief  Pre-sieve multiples of small primes to speed up the sieve
-///         of Eratosthenes.
-///
 /// PreSieve objects are used to pre-sieve multiples of small primes
 /// e.g. <= 19 to speed up SieveOfEratosthenes. The idea is to
-/// allocate an array (preSieved_) and remove the multiples of small
+/// allocate an array (preSieve_) and remove the multiples of small
 /// primes from it at initialization. Then whilst sieving, the
-/// preSieved_ array is copied to the SieveOfEratosthenes array at the
+/// preSieve_ array is copied to the SieveOfEratosthenes array at the
 /// beginning of each new segment to pre-sieve the multiples of small
 /// primes <= limit_. Pre-sieving speeds up my sieve of Eratosthenes
 /// implementation by about 20 percent when sieving < 10^10.
@@ -52,6 +49,6 @@ private:
   DISALLOW_COPY_AND_ASSIGN(PreSieve);
 };
 
-} // namespace primesieve
+} // namespace
 
 #endif
