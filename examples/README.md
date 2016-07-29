@@ -25,8 +25,8 @@ Below are the most important C example programs.
 Build instructions (Unix-like OSes)
 -----------------------------------
 
-Open a terminal and `cd' into the primesieve (parent) directory. Then
-run the commands below:
+Open a terminal and `cd' into the primesieve (parent) directory,
+then run the commands:
 
 ```sh
 $ ./configure --enable-examples
@@ -37,7 +37,7 @@ Build instructions (Microsoft Visual C++)
 -----------------------------------------
 
 Open a Visual Studio Command Prompt and `cd' into the primesieve
-(parent) directory. Then run the commands below:
+(parent) directory, then run the commands:
 
 ```sh
 > nmake -f Makefile.msvc
