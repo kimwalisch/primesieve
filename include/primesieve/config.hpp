@@ -76,7 +76,7 @@ enum {
 
   /// Default pre-sieve limit. Multiples of primes up to this limit
   /// are pre-sieved to speed up the sieve of Eratosthenes.
-  /// @pre PRESIEVE >= 13 && <= 23.
+  /// @pre PRESIEVE >= 13 && <= 19.
   ///
   PRESIEVE = 19,
 
