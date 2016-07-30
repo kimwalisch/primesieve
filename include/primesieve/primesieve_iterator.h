@@ -1,4 +1,4 @@
-/*
+/**
  * @file   primesieve_iterator.h
  * @brief  primesieve_iterator allows to easily iterate over primes
  *         both forwards and backwards. Generating the first prime
@@ -31,7 +31,7 @@
 extern "C" {
 #endif
 
-/*
+/**
  * C prime iterator, please refer to @link primesieve_iterator.h
  * primesieve_iterator.h @endlink for more information.
  */
@@ -48,13 +48,13 @@ typedef struct
   int is_error_;
 } primesieve_iterator;
 
-/* Initialize the primesieve iterator before first using it */
+/** Initialize the primesieve iterator before first using it */
 void primesieve_init(primesieve_iterator* pi);
 
-/* Free all memory */
+/** Free all memory */
 void primesieve_free_iterator(primesieve_iterator* pi);
 
-/*
+/**
  * Set the primesieve iterator to start.
  * @param start      Generate primes > start (or < start).
  * @param stop_hint  Stop number optimization hint. E.g. if you want
@@ -64,13 +64,13 @@ void primesieve_free_iterator(primesieve_iterator* pi);
  */
 void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hint);
 
-/* Internal use */
+/** Internal use */
 void primesieve_generate_next_primes(primesieve_iterator*);
 
-/* Internal use */
+/** Internal use */
 void primesieve_generate_previous_primes(primesieve_iterator*);
 
-/* Get the next prime */
+/** Get the next prime */
 static inline uint64_t primesieve_next_prime(primesieve_iterator* pi)
 {
   if (pi->i_++ == pi->last_idx_)
@@ -78,7 +78,7 @@ static inline uint64_t primesieve_next_prime(primesieve_iterator* pi)
   return pi->primes_[pi->i_];
 }
 
-/*
+/**
  * Get the previous prime,
  * or 0 if input <= 2 e.g. previous_prime(2) = 0.
  */
