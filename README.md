@@ -27,9 +27,9 @@ this algorithm has a complexity of
 <img src="http://primesieve.org/images/Onloglogn.svg" height="20" align="absmiddle"/>
 operations and uses
 <img src="http://primesieve.org/images/Osqrtn.svg" height="20" align="absmiddle"/>
-space. More precisely primesieve's memory usage per thread is about
+space. More precisely primesieve's memory usage is about
 <img src="http://primesieve.org/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
-bytes.
+bytes per thread.
 
 Requirements
 ------------
@@ -50,12 +50,12 @@ Build instructions (Unix-like OSes)
 -----------------------------------
 
 Download [primesieve-5.6.0.tar.gz](https://bintray.com/artifact/download/kimwalisch/primesieve/primesieve-5.6.0.tar.gz)
-and extract it. Then build primesieve using:
+and extract it, then build primesieve using:
 
 ```sh
-$ ./configure
-$ make
-$ sudo make install
+./configure
+make
+sudo make install
 ```
 
 If you have downloaded a zip archive from GitHub then Autotools
@@ -67,15 +67,15 @@ be executed once. To install Autotools install
 using your operating system's package manager.
 
 ```sh
-$ ./autogen.sh
-$ ./configure
-$ make
-$ sudo make install
+./autogen.sh
+./configure
+make
+sudo make install
 ```
 
 To enable building the example programs use:
 ```sh
-$ ./configure --enable-examples
+./configure --enable-examples
 ```
 
 Build instructions (Microsoft Visual C++)
@@ -85,12 +85,12 @@ Open a Visual Studio Command Prompt, cd into the primesieve directory
 and run:
 
 ```sh
-> nmake -f Makefile.msvc
+nmake -f Makefile.msvc
 ```
 
 To build the example programs use:
 ```sh
-> nmake -f Makefile.msvc examples
+nmake -f Makefile.msvc examples
 ```
 
 Console application
@@ -101,19 +101,19 @@ prime k-tuplets and find the nth prime.
 
 ```sh
 # Print the primes below 1000000
-$ primesieve 1000000 --print
+./primesieve 1000000 --print
 
 # Print the twin primes below 1000000
-$ primesieve 1000000 --print=2
+./primesieve 1000000 --print=2
 
 # Count the primes below 1e10 using all CPU cores
-$ primesieve 1e10 --count
+./primesieve 1e10 --count
 
 # Count the primes within [1e10, 2e10] using 4 threads
-$ primesieve 1e10 2e10 --count --threads=4
+./primesieve 1e10 2e10 --count --threads=4
 
 # Print an option summary
-$ primesieve --help
+./primesieve --help
 ```
 
 C++ API
@@ -182,24 +182,24 @@ Linking against libprimesieve
 
 **Unix-like operating systems**
 ```sh
-$ c++ -O2 primes.cpp -lprimesieve
-$ cc  -O2 primes.c   -lprimesieve
+c++ -O2 primes.cpp -lprimesieve
+cc  -O2 primes.c   -lprimesieve
 ```
 
-Note that if you have built primesieve yourself the default installation path
-is ```/usr/local/lib``` which is not part of ```LD_LIBRARY_PATH``` on many
+If you have built primesieve yourself then the default installation path is
+```/usr/local/lib``` which is not part of ```LD_LIBRARY_PATH``` on many
 systems. Hence you need to export some additional environment variables:
 
 ```sh
-$ export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
-$ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-$ export CPLUS_INCLUDE_PATH=/usr/local/include:$CPLUS_INCLUDE_PATH
-$ export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
+export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+export CPLUS_INCLUDE_PATH=/usr/local/include:$CPLUS_INCLUDE_PATH
+export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
 ```
 
 **Microsoft Visual C++ (Windows)**
 ```
-> cl /O2 /EHsc primes.cpp /I primesieve\include /link primesieve\primesieve.lib
+cl /O2 /EHsc primes.cpp /I primesieve\include /link primesieve\primesieve.lib
 ```
 
 Bindings for other languages
