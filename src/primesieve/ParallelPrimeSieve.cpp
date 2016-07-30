@@ -14,9 +14,9 @@
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
-#include <cstddef>
-#include <cassert>
 #include <algorithm>
+#include <cassert>
+#include <cstddef>
 
 #ifdef _OPENMP
   #include <omp.h>
@@ -30,7 +30,7 @@ namespace primesieve {
 ParallelPrimeSieve::ParallelPrimeSieve() :
   lock_(NULL),
   shm_(NULL),
-  numThreads_(IDEAL_NUM_THREADS)
+  numThreads_(getMaxThreads())
 { }
 
 void ParallelPrimeSieve::init(SharedMemory& shm)
@@ -45,16 +45,15 @@ void ParallelPrimeSieve::init(SharedMemory& shm)
 
 int ParallelPrimeSieve::getNumThreads() const
 {
-  if (numThreads_ == IDEAL_NUM_THREADS)
+  if (numThreads_ == getMaxThreads())
     return idealNumThreads();
+
   return numThreads_;
 }
 
 void ParallelPrimeSieve::setNumThreads(int threads)
 {
-  numThreads_ = threads;
-  if (numThreads_ != IDEAL_NUM_THREADS)
-    numThreads_ = inBetween(1, numThreads_, getMaxThreads());
+  numThreads_ = inBetween(1, threads, getMaxThreads());
 }
 
 /// Get an ideal number of threads for the current
@@ -112,7 +111,7 @@ bool ParallelPrimeSieve::tooMany(int threads) const
 
 int ParallelPrimeSieve::getMaxThreads()
 {
-  return omp_get_max_threads();
+  return max(1, omp_get_max_threads());
 }
 
 double ParallelPrimeSieve::getWallTime() const

@@ -32,11 +32,6 @@
 
 namespace primesieve {
 
-enum {
-  /// Use all CPU cores for prime sieving.
-  MAX_THREADS = -1
-};
-
 /// Store the primes <= stop in the primes vector.
 template <typename T>
 inline void generate_primes(uint64_t stop, std::vector<T>* primes)
@@ -204,8 +199,6 @@ void callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_
 int get_sieve_size();
 
 /// Get the current set number of threads.
-/// @note By default MAX_THREADS (-1) is returned.
-///
 int get_num_threads();
 
 /// Returns the largest valid stop number for primesieve.
@@ -224,10 +217,7 @@ uint64_t get_max_stop();
 void set_sieve_size(int sieve_size);
 
 /// Set the number of threads for use in subsequent
-/// primesieve::parallel_* function calls. Note that this only
-/// changes the number of threads for the current process.
-/// @param num_threads  Number of threads for sieving
-///                     or MAX_THREADS to use all CPU cores.
+/// primesieve::parallel_* function calls.
 ///
 void set_num_threads(int num_threads);
 

@@ -21,14 +21,9 @@
 #include <limits>
 #include <string>
 
-#ifdef _OPENMP
-  #include <omp.h>
-#endif
-
 namespace {
 
-/// Number of threads used for sieving in parallel
-int num_threads = primesieve::MAX_THREADS;
+int num_threads = primesieve::ParallelPrimeSieve::getMaxThreads();
 
 /// Sieve size in kilobytes used for sieving
 int sieve_size = SIEVESIZE;
@@ -244,17 +239,10 @@ void set_sieve_size(int kilobytes)
 
 void set_num_threads(int threads)
 {
-  if (threads != MAX_THREADS)
-  {
-#ifdef _OPENMP
-    threads = inBetween(1, threads, omp_get_max_threads());
-#else
-    // no multi-threading
-    threads = 1;
-#endif
-  }
-
-  num_threads = threads;
+  if (threads == -1)
+    num_threads = ParallelPrimeSieve::getMaxThreads();
+  else
+    num_threads = inBetween(1, threads, ParallelPrimeSieve::getMaxThreads());
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -266,4 +254,4 @@ std::string primesieve_version()
   return PRIMESIEVE_VERSION;
 }
 
-} // end namespace
+} // namespace

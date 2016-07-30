@@ -3,7 +3,7 @@
 /// @brief  The ParallelPrimeSieve class provides an easy API for
 ///         multi-threaded prime sieving.
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -17,9 +17,8 @@
 
 namespace primesieve {
 
-/// ParallelPrimeSieve sieves primes in parallel, it is
-/// derived from PrimeSieve so it has the same API.
-/// Please refer to doc/EXAMPLES for more information.
+/// ParallelPrimeSieve sieves primes in parallel using OpenMP. It
+/// is derived from PrimeSieve so it has the same API.
 ///
 class ParallelPrimeSieve : public PrimeSieve
 {
@@ -46,7 +45,6 @@ public:
   using PrimeSieve::sieve;
   virtual void sieve();
 private:
-  enum { IDEAL_NUM_THREADS = -1 };
   void* lock_;
   SharedMemory* shm_;
   int numThreads_;
@@ -61,6 +59,6 @@ private:
   virtual bool updateStatus(uint64_t, bool);
 };
 
-} // namespace primesieve
+} // namespace
 
 #endif

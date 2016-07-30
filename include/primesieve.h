@@ -33,8 +33,6 @@ extern "C" {
 #endif
 
 enum {
-  /* Use all CPU cores for prime sieving */
-  MAX_THREADS = - 1,
   /* Generate primes of short type */
   SHORT_PRIMES,
   /* Generate primes of unsigned short type */
@@ -201,10 +199,7 @@ void primesieve_callback_primes(uint64_t start, uint64_t stop, void (*callback)(
 /* Get the current set sieve size in kilobytes */
 int primesieve_get_sieve_size();
 
-/*
- * Get the current set number of threads.
- * @note By default MAX_THREADS (-1) is returned.
- */
+/* Get the current set number of threads */
 int primesieve_get_num_threads();
 
 /*
@@ -226,10 +221,7 @@ void primesieve_set_sieve_size(int sieve_size);
 
 /*
  * Set the number of threads for use in subsequent
- * primesieve_parallel_* function calls. Note that this only
- * changes the number of threads for the current process.
- * @param num_threads  Number of threads for sieving
- *                     or MAX_THREADS to use all CPU cores.
+ * primesieve_parallel_* function calls.
  */
 void primesieve_set_num_threads(int num_threads);
 
