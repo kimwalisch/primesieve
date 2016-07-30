@@ -1,13 +1,16 @@
 Changes in version 5.7.0, 29/07/2016
 ====================================
 
-This is a minor new release, the API and ABI are backwards compatible.
-
 1. primesieve can now find primes up to 2^64-1 (UINT64_MAX), the
    previous limit was 2^64 - 2^32 * 10. Thanks to Huang Yuanbing
    (author of ktprime) for submitting the patch.
 2. Cleaned up pre-sieving: uses less memory + faster initialization.
 3. Faster primesieve::iterator initialization.
+
+C/C++ API changes
+-----------------
+
+The MAX_THREADS constant has been removed.
 
 Changes in version 5.6.0, 29/11/2015
 ====================================
