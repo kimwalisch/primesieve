@@ -204,7 +204,7 @@ void PrimeSieveGUI::autoSetThreads() {
       ParallelPrimeSieve pps;
       pps.setStart(lowerBound);
       pps.setStop(upperBound);
-      int idealNumThreads = pps.getNumThreads();
+      int idealNumThreads = pps.idealNumThreads();
       if (idealNumThreads < maxThreads_) {
         // floor to the next power of 2 value
         int p = 1;

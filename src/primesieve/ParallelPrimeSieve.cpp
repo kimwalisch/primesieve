@@ -45,7 +45,7 @@ void ParallelPrimeSieve::init(SharedMemory& shm)
 
 int ParallelPrimeSieve::getNumThreads() const
 {
-  return idealNumThreads();
+  return numThreads_;
 }
 
 void ParallelPrimeSieve::setNumThreads(int threads)
@@ -117,17 +117,17 @@ double ParallelPrimeSieve::getWallTime() const
 void ParallelPrimeSieve::sieve()
 {
   reset();
+  OmpInitLock ompInit(&lock_);
 
   if (start_ > stop_)
     return;
 
-  int threads = getNumThreads();
+  int threads = idealNumThreads();
 
   if (threads == 1)
     PrimeSieve::sieve();
   else
   {
-    OmpInitLock ompInit(&lock_);
     uint64_t threadDistance = getThreadDistance(threads);
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0;
     int64_t iters = 1 + (getDistance() - 1) / threadDistance;

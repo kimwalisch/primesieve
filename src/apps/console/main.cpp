@@ -90,7 +90,7 @@ void sieve(PrimeSieveOptions& options)
   if (!options.quiet)
   {
     cout << "Sieve size = " << pps.getSieveSize() << " kilobytes" << endl;
-    cout << "Threads    = " << pps.getNumThreads() << endl;
+    cout << "Threads    = " << pps.idealNumThreads() << endl;
 
     // enable printing status
     if (!pps.isPrint())

@@ -41,6 +41,7 @@ public:
   void init(SharedMemory&);
   static int getMaxThreads();
   int getNumThreads() const;
+  int idealNumThreads() const;
   void setNumThreads(int numThreads);
   using PrimeSieve::sieve;
   virtual void sieve();
@@ -48,7 +49,6 @@ private:
   void* lock_;
   SharedMemory* shm_;
   int numThreads_;
-  int idealNumThreads() const;
   uint64_t getThreadDistance(int) const;
   uint64_t align(uint64_t) const;
   template <typename T> T getLock() { return static_cast<T>(lock_); }
