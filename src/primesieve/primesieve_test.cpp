@@ -3,7 +3,7 @@
 /// @brief  bool primesieve_test(); runs sieving tests to ensure that
 ///         ParallelPrimeSieve objects return correct results.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -131,7 +131,7 @@ void testBigPrimes()
 void testRandomIntervals()
 {
   cout << "Sieving the primes within [10^15, 10^15+10^11] randomly" << endl;
-  uint64_t maxInterval = ipow(10, 9);
+  uint64_t maxDistance = ipow(10, 9);
   uint64_t lowerBound = ipow(10, 15);
   uint64_t upperBound = lowerBound + ipow(10, 11);
   uint64_t primeCount = 0;
@@ -144,7 +144,7 @@ void testRandomIntervals()
   while (pps.getStop() < upperBound)
   {
     pps.setStart(pps.getStop() + 1);
-    pps.setStop(min(pps.getStart() + getRand64(maxInterval), upperBound));
+    pps.setStop(min(pps.getStart() + getRand64(maxDistance), upperBound));
     pps.setSieveSize(1 << (rand() % 12));
     pps.sieve();
     primeCount += pps.getPrimeCount();
@@ -181,4 +181,4 @@ bool primesieve_test()
   return true;
 }
 
-} // end namespace
+} // namespace

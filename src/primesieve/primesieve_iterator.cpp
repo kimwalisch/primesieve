@@ -31,7 +31,7 @@ vector<uint64_t>& to_vector(uint64_t* primes_pimpl)
   return *primes;
 }
 
-/// Calculate an interval size that ensures a good load balance.
+/// Get a sieving distance which ensures a good load balance.
 /// @param n  Start or stop number.
 ///
 uint64_t get_distance(uint64_t n, uint64_t& tiny_cache_size)

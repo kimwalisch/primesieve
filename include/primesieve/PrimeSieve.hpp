@@ -115,7 +115,7 @@ protected:
   std::vector<uint64_t> counts_;
   /// Time elapsed of sieve()
   double seconds_;
-  uint64_t getInterval() const;
+  uint64_t getDistance() const;
   void reset();
   virtual double getWallTime() const;
   virtual void setLock();

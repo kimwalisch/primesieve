@@ -76,7 +76,7 @@ void iterator::generate_previous_primes()
   i_ = last_idx_;
 }
 
-/// Calculate an interval size that ensures a good load balance.
+/// Get a sieving distance which ensures a good load balance.
 /// @param n  Start or stop number.
 ///
 uint64_t iterator::get_distance(uint64_t n)

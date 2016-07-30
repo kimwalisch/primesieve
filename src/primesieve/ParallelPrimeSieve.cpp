@@ -64,29 +64,29 @@ int ParallelPrimeSieve::idealNumThreads() const
   if (start_ > stop_)
     return 1;
 
-  uint64_t threshold = max(config::MIN_THREAD_INTERVAL, isqrt(stop_) / 5);
-  uint64_t threads = getInterval() / threshold;
+  uint64_t threshold = max(config::MIN_THREAD_DISTANCE, isqrt(stop_) / 5);
+  uint64_t threads = getDistance() / threshold;
   threads = inBetween(1, threads, getMaxThreads());
   return static_cast<int>(threads);
 }
 
-/// Get an interval size that ensures a good load
+/// Get a thread distance which ensures a good load
 /// balance when using multiple threads.
 ///
-uint64_t ParallelPrimeSieve::getThreadInterval(int threads) const
+uint64_t ParallelPrimeSieve::getThreadDistance(int threads) const
 {
   assert(threads > 0);
-  uint64_t unbalanced = getInterval() / threads;
+  uint64_t unbalanced = getDistance() / threads;
   uint64_t balanced = isqrt(stop_) * 1000;
   uint64_t fastest = min(balanced, unbalanced);
-  uint64_t threadInterval = inBetween(config::MIN_THREAD_INTERVAL, fastest, config::MAX_THREAD_INTERVAL);
-  uint64_t chunks = getInterval() / threadInterval;
+  uint64_t threadDistance = inBetween(config::MIN_THREAD_DISTANCE, fastest, config::MAX_THREAD_DISTANCE);
+  uint64_t chunks = getDistance() / threadDistance;
 
   if (chunks < threads * 5u)
-    threadInterval = max(config::MIN_THREAD_INTERVAL, unbalanced);
+    threadDistance = max(config::MIN_THREAD_DISTANCE, unbalanced);
 
-  threadInterval += 30 - threadInterval % 30;
-  return threadInterval;
+  threadDistance += 30 - threadDistance % 30;
+  return threadDistance;
 }
 
 /// Align n to modulo 30 + 2 to prevent prime k-tuplet
@@ -103,8 +103,8 @@ uint64_t ParallelPrimeSieve::align(uint64_t n) const
 
 bool ParallelPrimeSieve::tooMany(int threads) const
 {
-  uint64_t threadInterval = getInterval() / threads;
-  return (threads > 1 && threadInterval < config::MIN_THREAD_INTERVAL);
+  uint64_t threadDistance = getDistance() / threads;
+  return (threads > 1 && threadDistance < config::MIN_THREAD_DISTANCE);
 }
 
 #ifdef _OPENMP
@@ -137,17 +137,17 @@ void ParallelPrimeSieve::sieve()
     PrimeSieve::sieve();
   else
   {
-    uint64_t threadInterval = getThreadInterval(threads);
+    uint64_t threadDistance = getThreadDistance(threads);
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0;
-    int64_t iters = 1 + (getInterval() - 1) / threadInterval;
+    int64_t iters = 1 + (getDistance() - 1) / threadDistance;
     double t1 = getWallTime();
 
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
         reduction(+: count0, count1, count2, count3, count4, count5)
     for (int64_t i = 0; i < iters; i++)
     {
-      uint64_t threadStart = start_ + i * threadInterval;
-      uint64_t threadStop = add_overflow_safe(threadStart, threadInterval);
+      uint64_t threadStart = start_ + i * threadDistance;
+      uint64_t threadStop = add_overflow_safe(threadStart, threadDistance);
       if (i > 0) threadStart = align(threadStart) + 1;
       threadStop = align(threadStop);
 

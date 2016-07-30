@@ -120,16 +120,16 @@ enum {
   ///
   const double FACTOR_ERATMEDIUM = 2.5;
 
-  /// Each thread sieves at least an interval of size
-  /// MIN_THREAD_INTERVAL to reduce the initialization overhead.
-  /// @pre MIN_THREAD_INTERVAL >= 100
+  /// Each thread sieves at least a distance of MIN_THREAD_DISTANCE
+  /// in order to reduce the initialization overhead.
+  /// @pre MIN_THREAD_DISTANCE >= 100
   ///
-  const uint64_t MIN_THREAD_INTERVAL = (uint64_t) 1e7;
+  const uint64_t MIN_THREAD_DISTANCE = (uint64_t) 1e7;
 
-  /// Each thread sieves at most an interval of size
-  /// MAX_THREAD_INTERVAL to prevent load imbalance near 99%.
+  /// Each thread sieves at most a distance of MAX_THREAD_DISTANCE
+  /// in order to prevent load imbalance near 99%.
   ///
-  const uint64_t MAX_THREAD_INTERVAL = (uint64_t) 2e10;
+  const uint64_t MAX_THREAD_DISTANCE = (uint64_t) 2e10;
 
 } // namespace config
 } // namespace primesieve

@@ -50,7 +50,7 @@ private:
   int numThreads_;
   bool tooMany(int) const;
   int idealNumThreads() const;
-  uint64_t getThreadInterval(int) const;
+  uint64_t getThreadDistance(int) const;
   uint64_t align(uint64_t) const;
   template <typename T> T getLock() { return static_cast<T>(lock_); }
   virtual double getWallTime() const;

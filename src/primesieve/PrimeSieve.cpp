@@ -71,7 +71,7 @@ PrimeSieve::~PrimeSieve()
 
 uint64_t PrimeSieve::getStart()                  const { return start_; }
 uint64_t PrimeSieve::getStop()                   const { return stop_; }
-uint64_t PrimeSieve::getInterval()               const { return stop_ - start_; }
+uint64_t PrimeSieve::getDistance()               const { return stop_ - start_; }
 uint64_t PrimeSieve::getPrimeCount()             const { return counts_[0]; }
 uint64_t PrimeSieve::getTwinCount()              const { return counts_[1]; }
 uint64_t PrimeSieve::getTripletCount()           const { return counts_[2]; }
@@ -169,8 +169,8 @@ bool PrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
   {
     processed_ += processed;
     double percent = 100;
-    if (getInterval() > 0)
-      percent = processed_ * 100.0 / getInterval();
+    if (getDistance() > 0)
+      percent = processed_ * 100.0 / getDistance();
     double old = percent_;
     percent_ = std::min(percent, 100.0);
     if (isFlag(PRINT_STATUS))
