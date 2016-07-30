@@ -48,7 +48,6 @@ private:
   void* lock_;
   SharedMemory* shm_;
   int numThreads_;
-  bool tooMany(int) const;
   int idealNumThreads() const;
   uint64_t getThreadDistance(int) const;
   uint64_t align(uint64_t) const;

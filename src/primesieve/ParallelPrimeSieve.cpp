@@ -45,10 +45,7 @@ void ParallelPrimeSieve::init(SharedMemory& shm)
 
 int ParallelPrimeSieve::getNumThreads() const
 {
-  if (numThreads_ == getMaxThreads())
-    return idealNumThreads();
-
-  return numThreads_;
+  return idealNumThreads();
 }
 
 void ParallelPrimeSieve::setNumThreads(int threads)
@@ -56,8 +53,8 @@ void ParallelPrimeSieve::setNumThreads(int threads)
   numThreads_ = inBetween(1, threads, getMaxThreads());
 }
 
-/// Get an ideal number of threads for the current
-/// set start_ and stop_ numbers.
+/// Get an ideal number of threads for
+/// the start_ and stop_ numbers.
 ///
 int ParallelPrimeSieve::idealNumThreads() const
 {
@@ -66,7 +63,8 @@ int ParallelPrimeSieve::idealNumThreads() const
 
   uint64_t threshold = max(config::MIN_THREAD_DISTANCE, isqrt(stop_) / 5);
   uint64_t threads = getDistance() / threshold;
-  threads = inBetween(1, threads, getMaxThreads());
+  threads = inBetween(1, threads, numThreads_);
+
   return static_cast<int>(threads);
 }
 
@@ -101,11 +99,6 @@ uint64_t ParallelPrimeSieve::align(uint64_t n) const
   return min(n, stop_);
 }
 
-bool ParallelPrimeSieve::tooMany(int threads) const
-{
-  return (threads > 1 && (getDistance() / threads) < config::MIN_THREAD_DISTANCE);
-}
-
 #ifdef _OPENMP
 
 int ParallelPrimeSieve::getMaxThreads()
@@ -124,18 +117,17 @@ double ParallelPrimeSieve::getWallTime() const
 void ParallelPrimeSieve::sieve()
 {
   reset();
+
   if (start_ > stop_)
     return;
-  OmpInitLock ompInit(&lock_);
 
   int threads = getNumThreads();
-  if (tooMany(threads))
-    threads = idealNumThreads();
 
   if (threads == 1)
     PrimeSieve::sieve();
   else
   {
+    OmpInitLock ompInit(&lock_);
     uint64_t threadDistance = getThreadDistance(threads);
     uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0;
     int64_t iters = 1 + (getDistance() - 1) / threadDistance;
