@@ -103,8 +103,7 @@ uint64_t ParallelPrimeSieve::align(uint64_t n) const
 
 bool ParallelPrimeSieve::tooMany(int threads) const
 {
-  uint64_t threadDistance = getDistance() / threads;
-  return (threads > 1 && threadDistance < config::MIN_THREAD_DISTANCE);
+  return (threads > 1 && (getDistance() / threads) < config::MIN_THREAD_DISTANCE);
 }
 
 #ifdef _OPENMP
