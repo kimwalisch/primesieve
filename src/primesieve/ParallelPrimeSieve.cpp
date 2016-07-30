@@ -96,7 +96,9 @@ uint64_t ParallelPrimeSieve::align(uint64_t n) const
     return stop_;
 
   n = add_overflow_safe(n, 32) - n % 30;
-  return min(n, stop_);
+  n = min(n, stop_);
+
+  return n;
 }
 
 #ifdef _OPENMP
