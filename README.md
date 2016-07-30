@@ -22,8 +22,8 @@ Algorithm complexity
 --------------------
 
 primesieve generates primes using the segmented sieve of Eratosthenes with
-[wheel factorization](http://en.wikipedia.org/wiki/Wheel_factorization),
-this algorithm has a complexity of
+[wheel factorization](http://en.wikipedia.org/wiki/Wheel_factorization).
+This algorithm has a run time complexity of
 <img src="http://primesieve.org/images/Onloglogn.svg" height="20" align="absmiddle"/>
 operations and uses
 <img src="http://primesieve.org/images/Osqrtn.svg" height="20" align="absmiddle"/>
@@ -38,7 +38,7 @@ primesieve is very portable, it compiles with every C++ compiler and
 runs on most CPU architectures out there. The parallelization is
 implemented using [OpenMP](http://en.wikipedia.org/wiki/OpenMP). The
 primesieve GUI application (not built by default) uses the
-[Qt framework](http://qt-project.org).
+[Qt&nbsp;framework](http://qt-project.org).
 
 primesieve is also a library, it supports C++ and C directly and there
 are [bindings](#bindings-for-other-languages) available for a few
