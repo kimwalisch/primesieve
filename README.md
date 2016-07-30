@@ -96,8 +96,8 @@ nmake -f Makefile.msvc examples
 Console application
 -------------------
 
-The primesieve console application can print and count primes and
-prime k-tuplets and find the nth prime.
+The primesieve console application can generate primes and prime
+k-tuplets.
 
 ```sh
 # Print the primes below 1000000
