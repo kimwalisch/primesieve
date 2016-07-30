@@ -120,7 +120,7 @@ C++ API
 -------
 
 After having installed primesieve you can easily use it in your C++
-program, below is an example. primesieve's API is documented
+program, below is an example. You can browse primesieve's C++ API
 online at http://primesieve.org/api.
 
 ```C++
