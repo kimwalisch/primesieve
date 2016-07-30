@@ -44,7 +44,7 @@ void iterator::generate_next_primes()
   while (primes_.empty())
   {
     start_ = add_overflow_safe(stop_, 1);
-    stop_ = add_overflow_safe(start_, get_interval_size(start_));
+    stop_ = add_overflow_safe(start_, get_distance(start_));
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
       stop_ = add_overflow_safe(stop_hint_, max_prime_gap(stop_hint_));
     generate_primes(start_, stop_, &primes_);
@@ -64,7 +64,7 @@ void iterator::generate_previous_primes()
   while (primes_.empty())
   {
     stop_ = sub_underflow_safe(start_, 1);
-    start_ = sub_underflow_safe(stop_, get_interval_size(stop_));
+    start_ = sub_underflow_safe(stop_, get_distance(stop_));
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
       start_ = sub_underflow_safe(stop_hint_, max_prime_gap(stop_hint_));
     if (start_ <= 2)
@@ -79,7 +79,7 @@ void iterator::generate_previous_primes()
 /// Calculate an interval size that ensures a good load balance.
 /// @param n  Start or stop number.
 ///
-uint64_t iterator::get_interval_size(uint64_t n)
+uint64_t iterator::get_distance(uint64_t n)
 {
   uint64_t cache_size = config::ITERATOR_CACHE_SMALL;
 
@@ -96,9 +96,9 @@ uint64_t iterator::get_interval_size(uint64_t n)
   uint64_t cache_min_primes = cache_size / sizeof(uint64_t);
   uint64_t cache_max_primes = config::ITERATOR_CACHE_MAX / sizeof(uint64_t);
   primes = inBetween(cache_min_primes, primes, cache_max_primes);
-  double interval = primes * log(x);
+  double distance = primes * log(x);
 
-  return static_cast<uint64_t>(interval);
+  return static_cast<uint64_t>(distance);
 }
 
 } // namespace
