@@ -144,7 +144,7 @@ void ParallelPrimeSieve::sieve()
     double t1 = getWallTime();
 
     #pragma omp parallel for schedule(dynamic) num_threads(threads) \
-      reduction(+: count0, count1, count2, count3, count4, count5)
+        reduction(+: count0, count1, count2, count3, count4, count5)
     for (int64_t i = 0; i < iters; i++)
     {
       uint64_t threadStart = start_ + i * threadInterval;
@@ -154,6 +154,7 @@ void ParallelPrimeSieve::sieve()
 
       PrimeSieve ps(*this, omp_get_thread_num());
       ps.sieve(threadStart, threadStop);
+
       count0 += ps.getCount(0);
       count1 += ps.getCount(1);
       count2 += ps.getCount(2);
@@ -163,6 +164,7 @@ void ParallelPrimeSieve::sieve()
     }
 
     seconds_ = getWallTime() - t1;
+
     counts_[0] = count0;
     counts_[1] = count1;
     counts_[2] = count2;
