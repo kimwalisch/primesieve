@@ -1,4 +1,4 @@
-Changes in version 5.7.0, 29/07/2016
+Changes in version 5.7.0, 31/07/2016
 ====================================
 
 1. primesieve can now find primes up to 2^64-1 (UINT64_MAX), the
