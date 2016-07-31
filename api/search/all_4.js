@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['max_5fthreads',['MAX_THREADS',['../namespaceprimesieve.html#ab4fe4e8dd14cad38d0b355aeb326d74ca99b05a897b89cdd2425b498d41e93918',1,'primesieve::MAX_THREADS()'],['../primesieve_8h.html#adf764cbdea00d65edcd07bb9953ad2b7a10425a75a96eb068c8f4cbd7f8540745',1,'MAX_THREADS():&#160;primesieve.h']]]
+  ['next_5fprime',['next_prime',['../classprimesieve_1_1iterator.html#a78a262b57c6125b7cf1550e757589cbe',1,'primesieve::iterator']]],
+  ['nth_5fprime',['nth_prime',['../namespaceprimesieve.html#a559e8ba0e9b3b9c8b3a75ca9419a1afb',1,'primesieve']]]
 ];

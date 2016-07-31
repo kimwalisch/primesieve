@@ -1,11 +1,11 @@
 var indexSectionsWithContent =
 {
-  0: "cgilmnpsu",
+  0: "cgilnpsu",
   1: "cip",
   2: "p",
   3: "cip",
   4: "cginps",
-  5: "ilmsu",
+  5: "ilsu",
   6: "p"
 };
 

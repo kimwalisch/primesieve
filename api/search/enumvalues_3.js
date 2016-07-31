@@ -1,4 +1,10 @@
 var searchData=
 [
-  ['short_5fprimes',['SHORT_PRIMES',['../primesieve_8h.html#adf764cbdea00d65edcd07bb9953ad2b7ab7448409fcfa6db6af17659bb8f5dd62',1,'primesieve.h']]]
+  ['uint16_5fprimes',['UINT16_PRIMES',['../primesieve_8h.html#a06fc87d81c62e9abb8790b6e5713c55baed5a4ad1817fb9d050ab8241044eef0b',1,'primesieve.h']]],
+  ['uint32_5fprimes',['UINT32_PRIMES',['../primesieve_8h.html#a06fc87d81c62e9abb8790b6e5713c55bad00ba1d8e0f31f25511dc961b315d8ea',1,'primesieve.h']]],
+  ['uint64_5fprimes',['UINT64_PRIMES',['../primesieve_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba2b45172ef49ade5df3cf6511063be80b',1,'primesieve.h']]],
+  ['uint_5fprimes',['UINT_PRIMES',['../primesieve_8h.html#a06fc87d81c62e9abb8790b6e5713c55baeeb8508540b88a4aa0d5b1bd9a7cb4fa',1,'primesieve.h']]],
+  ['ulong_5fprimes',['ULONG_PRIMES',['../primesieve_8h.html#a06fc87d81c62e9abb8790b6e5713c55baca663154b6cdf69becdb4e31d6ce745f',1,'primesieve.h']]],
+  ['ulonglong_5fprimes',['ULONGLONG_PRIMES',['../primesieve_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba3d800bfc55293c94a734e3016e7410ca',1,'primesieve.h']]],
+  ['ushort_5fprimes',['USHORT_PRIMES',['../primesieve_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba40e5d4c178bde0a748e6f192dc785ce5',1,'primesieve.h']]]
 ];

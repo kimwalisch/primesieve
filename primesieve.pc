@@ -1,0 +1,12 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+bindir=${exec_prefix}/bin
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: primesieve
+Description: Fast C/C++ prime number generator
+Version: 5.7.0
+Libs: -L${libdir} -lprimesieve
+Libs.private: 
+Cflags: -I${includedir}

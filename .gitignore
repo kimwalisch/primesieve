@@ -8,6 +8,7 @@
 *.o
 *.lo
 *.la
+*.dSYM
 /primesieve
 Makefile
 Makefile.in

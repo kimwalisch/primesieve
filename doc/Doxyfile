@@ -1,0 +1,38 @@
+PROJECT_NAME           = "primesieve"
+PROJECT_NUMBER         = 5.7.0
+INPUT                  = /Users/kim/primesieve/doc/mainpage.dox \
+                         /Users/kim/primesieve/include/primesieve.hpp \
+                         /Users/kim/primesieve/include/primesieve.h \
+                         /Users/kim/primesieve/include/primesieve/Callback.hpp \
+                         /Users/kim/primesieve/include/primesieve/iterator.hpp \
+                         /Users/kim/primesieve/include/primesieve/primesieve_error.hpp \
+                         /Users/kim/primesieve/include/primesieve/primesieve_iterator.h \
+                         /Users/kim/primesieve/examples/cpp/callback_primes.cpp \
+                         /Users/kim/primesieve/examples/cpp/count_primes.cpp \
+                         /Users/kim/primesieve/examples/cpp/primesieve_iterator.cpp \
+                         /Users/kim/primesieve/examples/cpp/nth_prime.cpp \
+                         /Users/kim/primesieve/examples/cpp/previous_prime.cpp \
+                         /Users/kim/primesieve/examples/cpp/store_primes_in_vector.cpp \
+                         /Users/kim/primesieve/examples/c/count_primes.c \
+                         /Users/kim/primesieve/examples/c/previous_prime.c \
+                         /Users/kim/primesieve/examples/c/primesieve_iterator.c \
+                         /Users/kim/primesieve/examples/c/nth_prime.c \
+                         /Users/kim/primesieve/examples/c/store_primes_in_array.c
+HTML_INDEX_NUM_ENTRIES = 3
+HTML_TIMESTAMP         = NO
+JAVADOC_AUTOBRIEF      = YES
+MULTILINE_CPP_IS_BRIEF = NO
+SHOW_NAMESPACES        = YES
+VERBATIM_HEADERS       = NO
+EXTRACT_ALL            = NO
+EXTRACT_STATIC         = YES
+FILE_PATTERNS          = *.cpp *.c *.h *.hpp
+EXCLUDE_SYMBOLS        = primesieve_generate_next_primes \
+                         primesieve_generate_previous_primes
+RECURSIVE              = NO
+EXAMPLE_PATTERNS       = *.cpp *.c
+EXAMPLE_PATH           = /Users/kim/primesieve/examples
+EXAMPLE_RECURSIVE      = YES
+GENERATE_LATEX         = NO
+FULL_PATH_NAMES        = NO
+HAVE_DOT               = NO
