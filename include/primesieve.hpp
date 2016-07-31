@@ -30,6 +30,7 @@
 #include <vector>
 #include <string>
 
+/// Contains primesieve's C++ functions and classes.
 namespace primesieve {
 
 /// Store the primes <= stop in the primes vector.
