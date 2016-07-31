@@ -26,7 +26,7 @@ nav {
 	text-transform: uppercase;
 	color: #373737; /* different for Mac OS X */
 	width: 1000px;
-	margin-bottom: 32px;
+	margin-bottom: 28px;
 }
 
 #navigation:after {
