@@ -317,7 +317,8 @@ form {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 8px;
+  padding-top: 4px;
+  margin-bottom: 10px;
   color: #303030;
 }
 
