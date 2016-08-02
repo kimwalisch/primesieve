@@ -13,6 +13,9 @@ env:
   global:
     - OMP_NUM_THREADS=4
 
+install:
+  - sudo apt-get install -y cppcheck
+
 before_script:
   - ./autogen.sh
 
@@ -22,3 +25,4 @@ script:
   - sudo make install
   - make dist
   - make distcheck
+  - cppcheck . --error-exitcode=1 -iexamples/cpp/previous_prime.cpp -iexamples/cpp/primesieve_iterator.cpp
