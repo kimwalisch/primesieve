@@ -19,7 +19,7 @@ before_build:
 
 build_script:
   # Build using highest warning level on x64
-  - if "%platform%" == "x64" sed -i 's#/W2#/W4#' Makefile.msvc
+  - if "%platform%" == "x64" sed -i 's#/W2#/W4 /WX#' Makefile.msvc
   - nmake /f Makefile.msvc
   - nmake /f Makefile.msvc examples
 
