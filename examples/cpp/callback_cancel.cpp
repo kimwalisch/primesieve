@@ -6,6 +6,7 @@
 #include <primesieve.hpp>
 #include <stdint.h>
 #include <iostream>
+#include <string.h>
 
 int i = 0;
 
