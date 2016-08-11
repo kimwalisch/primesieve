@@ -27,12 +27,30 @@ This algorithm has a run time complexity of
 <img src="http://primesieve.org/images/Onloglogn.svg" height="20" align="absmiddle"/>
 operations and uses
 <img src="http://primesieve.org/images/Osqrtn.svg" height="20" align="absmiddle"/>
-space. More precisely primesieve's memory usage is about
+memory. Furthermore primesieve uses the
+[bucket sieve](http://sweet.ua.pt/tos/software/prime_sieve.html)
+algorithm for large sieving primes which reduces the memory usage to
 <img src="http://primesieve.org/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
 bytes per thread.
 
-Requirements
-------------
+Package managers
+----------------
+
+The primesieve console application can be installed using your operating
+system's package manager. The primesieve GUI application can be
+downloaded from
+[http://primesieve.org/downloads](http://primesieve.org/downloads).
+
+```sh
+# Debian/Ubuntu
+sudo apt-get install primesieve
+
+# macOS
+brew install primesieve
+```
+
+Build requirements
+------------------
 
 primesieve is very portable, it compiles with every C++ compiler and
 runs on most CPU architectures out there. The parallelization is
@@ -101,19 +119,19 @@ k-tuplets.
 
 ```sh
 # Print the primes below 1000000
-./primesieve 1000000 --print
+primesieve 1000000 --print
 
 # Print the twin primes below 1000000
-./primesieve 1000000 --print=2
+primesieve 1000000 --print=2
 
 # Count the primes below 1e10 using all CPU cores
-./primesieve 1e10 --count
+primesieve 1e10 --count
 
 # Count the primes within [1e10, 2e10] using 4 threads
-./primesieve 1e10 2e10 --count --threads=4
+primesieve 1e10 2e10 --count --threads=4
 
 # Print an option summary
-./primesieve --help
+primesieve --help
 ```
 
 C++ API
