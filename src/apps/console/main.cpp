@@ -54,6 +54,11 @@ void printResults(ParallelPrimeSieve& pps, CmdOptions& opts)
     size = max(size, label_size);
   }
 
+  if (opts.time)
+    cout << setw(size) << "Seconds" << " : "
+         << fixed << setprecision(3) << pps.getSeconds()
+         << endl;
+
   // print results
   for (int i = 0; i < 6; i++)
   {
@@ -61,11 +66,6 @@ void printResults(ParallelPrimeSieve& pps, CmdOptions& opts)
       cout << setw(size) << labels[i] << " : "
            << pps.getCount(i) << endl;
   }
-
-  if (opts.time)
-    cout << setw(size) << "Seconds" << " : "
-         << fixed << setprecision(3) << pps.getSeconds()
-         << endl;
 }
 
 /// Used to count and print primes and prime k-tuplets
@@ -88,7 +88,7 @@ void sieve(CmdOptions& opts)
   if (!opts.quiet)
   {
     cout << "Sieve size = " << pps.getSieveSize() << " kilobytes" << endl;
-    cout << "Threads    = " << pps.idealNumThreads() << endl;
+    cout << "Threads = " << pps.idealNumThreads() << endl;
   }
 
   if (opts.status)
@@ -114,11 +114,11 @@ void nthPrime(CmdOptions& opts)
   uint64_t start = numbers[1];
   uint64_t nthPrime = pps.nthPrime(n, start);
 
-  cout << "Nth prime : " << nthPrime << endl;
-
   if (opts.time)
     cout << "Seconds   : " << fixed << setprecision(3)
          << pps.getSeconds() << endl;
+
+  cout << "Nth prime : " << nthPrime << endl;
 }
 
 } // namespace
