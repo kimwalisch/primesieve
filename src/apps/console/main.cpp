@@ -1,9 +1,8 @@
 ///
 /// @file   main.cpp
-/// @brief  This file contains the main() function of the primesieve
-///         console (terminal) application.
+/// @brief  primesieve console application.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -23,8 +22,7 @@ using namespace primesieve;
 
 namespace {
 
-void printResults(ParallelPrimeSieve& pps,
-                  PrimeSieveOptions& options)
+void printResults(ParallelPrimeSieve& pps, CmdOptions& opts)
 {
   cout << left;
 
@@ -50,7 +48,7 @@ void printResults(ParallelPrimeSieve& pps,
     }
   }
 
-  if (options.time)
+  if (opts.time)
   {
     int label_size = (int) string("Seconds").size();
     size = max(size, label_size);
@@ -64,51 +62,50 @@ void printResults(ParallelPrimeSieve& pps,
            << pps.getCount(i) << endl;
   }
 
-  if (options.time)
+  if (opts.time)
     cout << setw(size) << "Seconds" << " : "
          << fixed << setprecision(3) << pps.getSeconds()
          << endl;
 }
 
 /// Used to count and print primes and prime k-tuplets
-void sieve(PrimeSieveOptions& options)
+void sieve(CmdOptions& opts)
 {
   ParallelPrimeSieve pps;
-  deque<uint64_t>& numbers = options.numbers;
+  deque<uint64_t>& numbers = opts.numbers;
 
-  if (options.flags     != 0) pps.setFlags(options.flags);
-  if (options.sieveSize != 0) pps.setSieveSize(options.sieveSize);
-  if (options.threads   != 0) pps.setNumThreads(options.threads);
-  else if (pps.isPrint())     pps.setNumThreads(1);
+  if (opts.flags     != 0) pps.setFlags(opts.flags);
+  if (opts.sieveSize != 0) pps.setSieveSize(opts.sieveSize);
+  if (opts.threads   != 0) pps.setNumThreads(opts.threads);
+  else if (pps.isPrint())  pps.setNumThreads(1);
 
   if (numbers.size() < 2)
     numbers.push_front(0);
 
   pps.setStart(numbers[0]);
-  pps.setStop (numbers[1]);
+  pps.setStop(numbers[1]);
 
-  if (!options.quiet)
+  if (!opts.quiet)
   {
     cout << "Sieve size = " << pps.getSieveSize() << " kilobytes" << endl;
     cout << "Threads    = " << pps.idealNumThreads() << endl;
-
-    // enable printing status
-    if (!pps.isPrint())
-      pps.addFlags(pps.PRINT_STATUS);
   }
 
+  if (opts.status)
+    pps.addFlags(pps.PRINT_STATUS);
+
   pps.sieve();
-  printResults(pps, options);
+  printResults(pps, opts);
 }
 
-void nthPrime(PrimeSieveOptions& options)
+void nthPrime(CmdOptions& opts)
 {
   ParallelPrimeSieve pps;
-  deque<uint64_t>& numbers = options.numbers;
+  deque<uint64_t>& numbers = opts.numbers;
 
-  if (options.flags     != 0) pps.setFlags(options.flags);
-  if (options.sieveSize != 0) pps.setSieveSize(options.sieveSize);
-  if (options.threads   != 0) pps.setNumThreads(options.threads);
+  if (opts.flags     != 0) pps.setFlags(opts.flags);
+  if (opts.sieveSize != 0) pps.setSieveSize(opts.sieveSize);
+  if (opts.threads   != 0) pps.setNumThreads(opts.threads);
 
   if (numbers.size() < 2)
     numbers.push_back(0);
@@ -119,7 +116,7 @@ void nthPrime(PrimeSieveOptions& options)
 
   cout << "Nth prime : " << nthPrime << endl;
 
-  if (options.time)
+  if (opts.time)
     cout << "Seconds   : " << fixed << setprecision(3)
          << pps.getSeconds() << endl;
 }
@@ -128,15 +125,14 @@ void nthPrime(PrimeSieveOptions& options)
 
 int main(int argc, char** argv)
 {
-  PrimeSieveOptions options = parseOptions(argc, argv);
-  bool isNthPrime = options.nthPrime;
+  CmdOptions opts = parseOptions(argc, argv);
 
   try
   {
-    if (isNthPrime)
-      nthPrime(options);
+    if (opts.nthPrime)
+      nthPrime(opts);
     else
-      sieve(options);
+      sieve(opts);
   }
   catch (exception& e)
   {

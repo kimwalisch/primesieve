@@ -3,7 +3,7 @@
 /// @brief  Parse command-line options for the primesieve console
 ///         (terminal) application.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -28,6 +28,7 @@ using namespace primesieve;
 
 namespace {
 
+/// Command-line option
 /// e.g. id = "--threads", value = "4"
 struct Option
 {
@@ -45,6 +46,7 @@ enum OptionValues
   OPTION_COUNT,
   OPTION_HELP,
   OPTION_NTHPRIME,
+  OPTION_NO_STATUS,
   OPTION_NUMBER,
   OPTION_DISTANCE,
   OPTION_PRINT,
@@ -61,29 +63,30 @@ map<string, OptionValues> optionMap;
 
 void initOptionMap()
 {
-  optionMap["-c"]         = OPTION_COUNT;
-  optionMap["--count"]    = OPTION_COUNT;
-  optionMap["-h"]         = OPTION_HELP;
-  optionMap["--help"]     = OPTION_HELP;
-  optionMap["-n"]         = OPTION_NTHPRIME;
-  optionMap["--nthprime"] = OPTION_NTHPRIME;
-  optionMap["--number"]   = OPTION_NUMBER;
-  optionMap["-d"]         = OPTION_DISTANCE;
-  optionMap["--dist"]     = OPTION_DISTANCE;
-  optionMap["-o"]         = OPTION_DISTANCE;
-  optionMap["--offset"]   = OPTION_DISTANCE;
-  optionMap["-p"]         = OPTION_PRINT;
-  optionMap["--print"]    = OPTION_PRINT;
-  optionMap["-q"]         = OPTION_QUIET;
-  optionMap["--quiet"]    = OPTION_QUIET;
-  optionMap["-s"]         = OPTION_SIZE;
-  optionMap["--size"]     = OPTION_SIZE;
-  optionMap["--test"]     = OPTION_TEST;
-  optionMap["-t"]         = OPTION_THREADS;
-  optionMap["--threads"]  = OPTION_THREADS;
-  optionMap["--time"]     = OPTION_TIME;
-  optionMap["-v"]         = OPTION_VERSION;
-  optionMap["--version"]  = OPTION_VERSION;
+  optionMap["-c"]          = OPTION_COUNT;
+  optionMap["--count"]     = OPTION_COUNT;
+  optionMap["-h"]          = OPTION_HELP;
+  optionMap["--help"]      = OPTION_HELP;
+  optionMap["-n"]          = OPTION_NTHPRIME;
+  optionMap["--nthprime"]  = OPTION_NTHPRIME;
+  optionMap["--no-status"] = OPTION_NO_STATUS;
+  optionMap["--number"]    = OPTION_NUMBER;
+  optionMap["-d"]          = OPTION_DISTANCE;
+  optionMap["--dist"]      = OPTION_DISTANCE;
+  optionMap["-o"]          = OPTION_DISTANCE;
+  optionMap["--offset"]    = OPTION_DISTANCE;
+  optionMap["-p"]          = OPTION_PRINT;
+  optionMap["--print"]     = OPTION_PRINT;
+  optionMap["-q"]          = OPTION_QUIET;
+  optionMap["--quiet"]     = OPTION_QUIET;
+  optionMap["-s"]          = OPTION_SIZE;
+  optionMap["--size"]      = OPTION_SIZE;
+  optionMap["--test"]      = OPTION_TEST;
+  optionMap["-t"]          = OPTION_THREADS;
+  optionMap["--threads"]   = OPTION_THREADS;
+  optionMap["--time"]      = OPTION_TIME;
+  optionMap["-v"]          = OPTION_VERSION;
+  optionMap["--version"]   = OPTION_VERSION;
 }
 
 void test()
@@ -143,12 +146,12 @@ Option makeOption(const string& str)
   return option;
 }
 
-} // end namespace
+} // namespace
 
-PrimeSieveOptions parseOptions(int argc, char** argv)
+CmdOptions parseOptions(int argc, char** argv)
 {
   initOptionMap();
-  PrimeSieveOptions pso;
+  CmdOptions opts;
 
   try
   {
@@ -158,25 +161,26 @@ PrimeSieveOptions parseOptions(int argc, char** argv)
 
       switch (optionMap[option.id])
       {
-        case OPTION_COUNT:    if (option.value.empty())
-                                option.value = "1";
-                              pso.flags |= getCountFlags(option.getValue<int>());
-                              break;
-        case OPTION_PRINT:    if (option.value.empty())
-                                option.value = "1";
-                              pso.flags |= getPrintFlags(option.getValue<int>());
-                              pso.quiet = true;
-                              break;
-        case OPTION_SIZE:     pso.sieveSize = option.getValue<int>(); break;
-        case OPTION_THREADS:  pso.threads = option.getValue<int>(); break;
-        case OPTION_QUIET:    pso.quiet = true; break;
-        case OPTION_NTHPRIME: pso.nthPrime = true; break;
-        case OPTION_TIME:     pso.time = true; break;
-        case OPTION_NUMBER:   pso.numbers.push_back(option.getValue<uint64_t>()); break;
-        case OPTION_DISTANCE: pso.numbers.push_back(option.getValue<uint64_t>() + pso.numbers.front()); break;
-        case OPTION_TEST:     test(); break;
-        case OPTION_VERSION:  version(); break;
-        case OPTION_HELP:     help(); break;
+        case OPTION_COUNT:     if (option.value.empty())
+                                 option.value = "1";
+                               opts.flags |= getCountFlags(option.getValue<int>());
+                               break;
+        case OPTION_PRINT:     if (option.value.empty())
+                                 option.value = "1";
+                               opts.flags |= getPrintFlags(option.getValue<int>());
+                               opts.quiet = true;
+                               break;
+        case OPTION_SIZE:      opts.sieveSize = option.getValue<int>(); break;
+        case OPTION_THREADS:   opts.threads = option.getValue<int>(); break;
+        case OPTION_QUIET:     opts.quiet = true; break;
+        case OPTION_NTHPRIME:  opts.nthPrime = true; break;
+        case OPTION_NO_STATUS: opts.status = false; break;
+        case OPTION_TIME:      opts.time = true; break;
+        case OPTION_NUMBER:    opts.numbers.push_back(option.getValue<uint64_t>()); break;
+        case OPTION_DISTANCE:  opts.numbers.push_back(option.getValue<uint64_t>() + opts.numbers.front()); break;
+        case OPTION_TEST:      test(); break;
+        case OPTION_VERSION:   version(); break;
+        case OPTION_HELP:      help(); break;
       }
     }
   }
@@ -185,12 +189,14 @@ PrimeSieveOptions parseOptions(int argc, char** argv)
     help();
   }
 
-  if (pso.numbers.size() < 1 ||
-      pso.numbers.size() > 2)
+  if (opts.numbers.size() < 1 ||
+      opts.numbers.size() > 2)
     help();
 
-  if (!pso.quiet)
-    pso.time = true;
+  if (opts.quiet)
+    opts.status = false;
+  else
+    opts.time = true;
 
-  return pso;
+  return opts;
 }
