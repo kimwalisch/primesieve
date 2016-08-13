@@ -1,3 +1,12 @@
+Changes in version 5.7.1, 13/08/2016
+====================================
+
+The API and ABI are backwards compatible.
+
+1. New --no-status command-line option to turn off the progressing
+   status while counting primes or prime k-tuplets.
+2. README.md: New "Package managers" section.
+
 Changes in version 5.7.0, 31/07/2016
 ====================================
 
