@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">primesieve
-   &#160;<span id="projectnumber">5.7.0</span>
+   &#160;<span id="projectnumber">5.7.1</span>
    </div>
   </td>
  </tr>
@@ -100,7 +100,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;primesieve/PrimeSieve.hpp&gt;</code><br />
 <code>#include &lt;primesieve/ParallelPrimeSieve.hpp&gt;</code><br />
-<code>#include &lt;<a class="el" href="Callback_8hpp.html">primesieve/Callback.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="_callback_8hpp.html">primesieve/Callback.hpp</a>&gt;</code><br />
 <code>#include &lt;primesieve/cancel_callback.hpp&gt;</code><br />
 <code>#include &lt;<a class="el" href="iterator_8hpp.html">primesieve/iterator.hpp</a>&gt;</code><br />
 <code>#include &lt;primesieve/PushBackPrimes.hpp&gt;</code><br />
@@ -113,9 +113,9 @@ Include dependency graph for primesieve.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="primesieve_8hpp__incl.png" border="0" usemap="#primesieve_8hpp" alt=""/></div>
 <map name="primesieve_8hpp" id="primesieve_8hpp">
-<area shape="rect" id="node4" href="Callback_8hpp.html" title="Callback interface classes. " alt="" coords="403,87,568,114"/>
-<area shape="rect" id="node7" href="iterator_8hpp.html" title="The iterator class allows to easily iterate (forward and backward) over prime numbers. " alt="" coords="925,87,1080,114"/>
-<area shape="rect" id="node11" href="primesieve__error_8hpp.html" title="The primesieve_error class is used for all exceptions within primesieve. " alt="" coords="1344,80,1496,121"/>
+<area shape="rect" id="node4" href="_callback_8hpp.html" title="Callback interface classes. " alt="" coords="406,85,572,111"/>
+<area shape="rect" id="node7" href="iterator_8hpp.html" title="The iterator class allows to easily iterate (forward and backward) over prime numbers. " alt="" coords="932,85,1089,111"/>
+<area shape="rect" id="node11" href="primesieve__error_8hpp.html" title="The primesieve_error class is used for all exceptions within primesieve. " alt="" coords="1353,79,1507,117"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -128,7 +128,7 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aefdd13bcd657eb6778799e8e2dd72b19"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;5.7.0&quot;</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;5.7.1&quot;</td></tr>
 <tr class="separator:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acf3a768a4fbf9c2ddd8d26421b452298"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MAJOR</b>&#160;&#160;&#160;5</td></tr>
@@ -137,7 +137,7 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;7</td></tr>
 <tr class="separator:ae49659380a65afba42223665c77241d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ca327f17474c2173cec4ee1618a92d3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6ca327f17474c2173cec4ee1618a92d3"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_PATCH</b>&#160;&#160;&#160;0</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_PATCH</b>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:a6ca327f17474c2173cec4ee1618a92d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -237,7 +237,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="name
 <tr class="memitem:a12f86ad1b5a5c0aac724c35ff02ad49f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a12f86ad1b5a5c0aac724c35ff02ad49f">primesieve::callback_primes</a> (uint64_t start, uint64_t stop, void(*callback)(uint64_t prime))</td></tr>
 <tr class="memdesc:a12f86ad1b5a5c0aac724c35ff02ad49f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call back the primes within the interval [start, stop].  <a href="namespaceprimesieve.html#a12f86ad1b5a5c0aac724c35ff02ad49f">More...</a><br /></td></tr>
 <tr class="separator:a12f86ad1b5a5c0aac724c35ff02ad49f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32afb0179475d78263f9adce476270b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a32afb0179475d78263f9adce476270b9">primesieve::callback_primes</a> (uint64_t start, uint64_t stop, <a class="el" href="classprimesieve_1_1Callback.html">primesieve::Callback</a>&lt; uint64_t &gt; *callback)</td></tr>
+<tr class="memitem:a32afb0179475d78263f9adce476270b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a32afb0179475d78263f9adce476270b9">primesieve::callback_primes</a> (uint64_t start, uint64_t stop, <a class="el" href="classprimesieve_1_1_callback.html">primesieve::Callback</a>&lt; uint64_t &gt; *callback)</td></tr>
 <tr class="memdesc:a32afb0179475d78263f9adce476270b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call back the primes within the interval [start, stop].  <a href="namespaceprimesieve.html#a32afb0179475d78263f9adce476270b9">More...</a><br /></td></tr>
 <tr class="separator:a32afb0179475d78263f9adce476270b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4239a2d00a804cd0f49cc754e8b7c33d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4239a2d00a804cd0f49cc754e8b7c33d"></a>

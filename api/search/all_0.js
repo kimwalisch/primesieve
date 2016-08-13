@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['callback',['Callback',['../classprimesieve_1_1Callback.html',1,'primesieve']]],
-  ['callback_2ehpp',['Callback.hpp',['../Callback_8hpp.html',1,'']]],
+  ['callback',['Callback',['../classprimesieve_1_1_callback.html',1,'primesieve']]],
+  ['callback_2ehpp',['Callback.hpp',['../_callback_8hpp.html',1,'']]],
   ['callback_5fprimes',['callback_primes',['../namespaceprimesieve.html#a12f86ad1b5a5c0aac724c35ff02ad49f',1,'primesieve::callback_primes(uint64_t start, uint64_t stop, void(*callback)(uint64_t prime))'],['../namespaceprimesieve.html#a32afb0179475d78263f9adce476270b9',1,'primesieve::callback_primes(uint64_t start, uint64_t stop, primesieve::Callback&lt; uint64_t &gt; *callback)']]],
   ['count_5fprimes',['count_primes',['../namespaceprimesieve.html#a6e8caa0de4a20596b0fe8b4a9f0f3f1a',1,'primesieve']]],
   ['count_5fquadruplets',['count_quadruplets',['../namespaceprimesieve.html#aa5122db2b01e8495d80b19d14d309d04',1,'primesieve']]],
