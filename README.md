@@ -115,6 +115,7 @@ sudo make install
 ```
 
 To enable building the example programs use:
+
 ```sh
 ./configure --enable-examples
 ```
@@ -137,9 +138,7 @@ nmake -f Makefile.msvc examples
 C++ API
 -------
 
-After having installed primesieve you can easily use it in your C++
-program, below is an example. You can browse primesieve's C++ API
-online at http://primesieve.org/api.
+Below is an example with the most common libprimesieve use cases.
 
 ```C++
 #include <primesieve.hpp>
@@ -163,12 +162,14 @@ int main()
 }
 ```
 
+* [More C++ examples](examples/cpp)
+* Browse [primesieve's C++ API](http://primesieve.org/api/primesieve_8hpp.html) online
+
 C API
 -----
 
-All of primesieve's functions are exposed as C API (C99 or later) via
-the ```primesieve.h``` header. You can browse primesieve's C API
-online at http://primesieve.org/api.
+primesieve's functions are exposed as C API via the ```primesieve.h```
+header.
 
 ```C
 #include <primesieve.h>
@@ -194,6 +195,9 @@ int main()
   return 0;
 }
 ```
+
+* [More C examples](examples/c)
+* Browse [primesieve's C API](http://primesieve.org/api/primesieve_8h.html) online
 
 Linking against libprimesieve
 -----------------------------
