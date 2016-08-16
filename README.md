@@ -152,10 +152,10 @@ int main()
   primesieve::generate_primes(1000, &primes);
 
   primesieve::iterator it;
-  uint64_t prime;
+  uint64_t prime = it.next_prime();
 
   // iterate over the primes below 10^9
-  while ((prime = it.next_prime()) < 1000000000)
+  for (; prime < 1000000000; prime = it.next_prime())
     std::cout << prime << std::endl;
 
   return 0;
