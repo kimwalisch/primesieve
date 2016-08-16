@@ -56,17 +56,17 @@ The primesieve console application can generate primes and prime
 k-tuplets.
 
 ```sh
+# Count the primes below 1e10 using all CPU cores
+primesieve 1e10
+
 # Print the primes below 1000000
 primesieve 1000000 --print
 
 # Print the twin primes below 1000000
 primesieve 1000000 --print=2
 
-# Count the primes below 1e10 using all CPU cores
-primesieve 1e10 --count
-
 # Count the primes within [1e10, 2e10] using 4 threads
-primesieve 1e10 2e10 --count --threads=4
+primesieve 1e10 2e10 --threads=4
 
 # Print an option summary
 primesieve --help
