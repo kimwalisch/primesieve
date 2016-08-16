@@ -173,25 +173,19 @@ header.
 
 ```C
 #include <primesieve.h>
-#include <stdint.h>
 #include <stdio.h>
 
 int main()
 {
-  uint64_t start = 0;
-  uint64_t stop = 10000;
-  size_t i;
-  size_t size;
+  primesieve_iterator it;
+  primesieve_init(&it);
+  uint64_t prime;
 
-  /* get an array with primes below 10000 */
-  int* primes = (int*) primesieve_generate_primes(start, stop, &size, INT_PRIMES);
+  /* iterate over the primes below 10^6 */
+  while ((prime = primesieve_next_prime(&it)) < 1000000)
+    printf("%llu\n", prime);
 
-  for (i = 0; i < size; i++)
-    printf("%i\n", primes[i]);
-
-  /* deallocate primes array generated using primesieve */
-  primesieve_free(primes);
-
+  primesieve_free_iterator(&it);
   return 0;
 }
 ```
