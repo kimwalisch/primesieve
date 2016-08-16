@@ -170,7 +170,7 @@ int main()
 C API
 -----
 
-primesieve's functions are exposed as C API via the ```primesieve.h```
+libprimesieve's functions are exposed as C API via the ```primesieve.h```
 header.
 
 ```C
