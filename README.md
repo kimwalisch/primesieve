@@ -123,8 +123,10 @@ To enable building the example programs use:
 Build instructions (Microsoft Visual C++)
 -----------------------------------------
 
-Open a Visual Studio Command Prompt, cd into the primesieve directory
-and run:
+Download
+[primesieve-5.7.1.zip](https://bintray.com/artifact/download/kimwalisch/primesieve/primesieve-5.7.1.zip)
+and extract it. Then open a Visual Studio Command Prompt, cd into
+the primesieve directory and run:
 
 ```sh
 nmake -f Makefile.msvc
