@@ -13,6 +13,7 @@ Ordered by importance.
 * [primesieve_iterator.cpp](cpp/primesieve_iterator.cpp)
 * [previous_prime.cpp](cpp/previous_prime.cpp)
 * [count_primes.cpp](cpp/count_primes.cpp)
+* [More C++ examples](cpp/)
 
 C examples
 ----------
@@ -23,6 +24,7 @@ Ordered by importance.
 * [primesieve_iterator.c](c/primesieve_iterator.c)
 * [previous_prime.c](c/previous_prime.c)
 * [count_primes.c](c/count_primes.c)
+* [More C examples](c/)
 
 Build instructions (Unix-like OSes)
 -----------------------------------
