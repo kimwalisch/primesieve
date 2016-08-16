@@ -10,11 +10,11 @@ int main()
   primesieve_iterator it;
   primesieve_init(&it);
 
-  /* primesieve_skipto(primesieve_iterator, start_number, stop_hint) */
+  /* primesieve_skipto(&it, start_number, stop_hint) */
   primesieve_skipto(&it, 2000, 1000);
   uint64_t prime;
 
-  /* iterate backwards over the primes between 2000 and 1000 */
+  /* iterate over the primes from 2000 to 1000 */
   while ((prime = primesieve_previous_prime(&it)) >= 1000)
     printf("%" PRIu64 "\n", prime);
 
