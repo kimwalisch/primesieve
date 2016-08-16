@@ -1,5 +1,5 @@
 /// @example previous_prime.cpp
-/// This example shows how to iterate backwards over primes.
+/// Iterate backwards over primes using primesieve::iterator.
 
 #include <primesieve.hpp>
 #include <iostream>
@@ -8,11 +8,10 @@ int main()
 {
   primesieve::iterator it;
   it.skipto(2000);
+  uint64_t prime = it.previous_prime();
 
-  uint64_t prime;
-
-  // iterate backwards over the primes between 2000 and 1000
-  while ((prime = it.previous_prime()) >= 1000)
+  // iterate over the primes from 2000 to 1000
+  for (; prime >= 1000;  prime = it.previous_prime())
     std::cout << prime << std::endl;
 
   return 0;
