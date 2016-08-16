@@ -165,7 +165,7 @@ int main()
 ```
 
 * [More C++ examples](examples/cpp)
-* Browse [primesieve's C++ API](http://primesieve.org/api/primesieve_8hpp.html) online
+* [Browse primesieve's C++ API online](http://primesieve.org/api/primesieve_8hpp.html)
 
 C API
 -----
@@ -193,7 +193,7 @@ int main()
 ```
 
 * [More C examples](examples/c)
-* Browse [primesieve's C API](http://primesieve.org/api/primesieve_8h.html) online
+* [Browse primesieve's C API online](http://primesieve.org/api/primesieve_8h.html)
 
 Linking against libprimesieve
 -----------------------------
