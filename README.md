@@ -100,7 +100,7 @@ sudo make install
 ```
 
 If you have downloaded a zip archive from GitHub then Autotools
-(a.k.a. GNU Build System) must be installed and ```autogen.sh``` must
+(a.k.a. the GNU Build System) must be installed and ```autogen.sh``` must
 be executed once. To install Autotools install
 [GNU&#160;Autoconf](http://www.gnu.org/software/autoconf/),
 [GNU&#160;Automake](http://www.gnu.org/software/automake/) and
@@ -170,7 +170,7 @@ int main()
 C API
 -----
 
-libprimesieve's functions are exposed as C API via the ```primesieve.h```
+primesieve's functions are exposed as C API via the ```primesieve.h```
 header.
 
 ```C
