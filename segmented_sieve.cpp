@@ -1,10 +1,10 @@
-/// @file   segmented_sieve.cpp
-/// @author Kim Walisch, <kim.walisch@gmail.com> 
-/// @brief  This is a simple implementation of the segmented sieve of
-///         Eratosthenes with a few optimizations. It generates the
-///         primes below 10^9 in 0.9 seconds (single-threaded) on an
-///         Intel Core i7-4770 CPU (3.4 GHz) from 2013.
-///         This is free software released into the public domain.
+/// @file     segmented_sieve.cpp
+/// @author   Kim Walisch, <kim.walisch@gmail.com> 
+/// @brief    This is a simple implementation of the segmented sieve of
+///           Eratosthenes with a few optimizations. It generates the
+///           primes below 10^9 in 0.9 seconds (single-threaded) on an
+///           Intel Core i7-4770 CPU (3.4 GHz) from 2013.
+/// @license  Public domain.
 
 #include <iostream>
 #include <algorithm>
@@ -13,18 +13,20 @@
 #include <cstdlib>
 #include <stdint.h>
 
+/// Set your CPU's L1 data cache size (in bytes) here
 const int L1D_CACHE_SIZE = 32768;
 
 /// Generate primes using the segmented sieve of Eratosthenes.
 /// This algorithm uses O(n log log n) operations and O(sqrt(n)) space.
-/// @param limit         Sieve primes <= limit.
-/// @param segment_size  Size of the sieve array in bytes.
+/// @param limit  Sieve primes <= limit.
 ///
-void segmented_sieve(int64_t limit, int segment_size = L1D_CACHE_SIZE)
+void segmented_sieve(int64_t limit)
 {
   int sqrt = (int) std::sqrt((double) limit);
+  int segment_size = std::max(sqrt, L1D_CACHE_SIZE);
+
   int64_t count = (limit < 2) ? 0 : 1;
-  int64_t s = 2;
+  int64_t s = 3;
   int64_t n = 3;
 
   // vector used for sieving
@@ -47,8 +49,8 @@ void segmented_sieve(int64_t limit, int segment_size = L1D_CACHE_SIZE)
     // current segment = interval [low, high]
     int64_t high = std::min(low + segment_size - 1, limit);
 
-    // store small primes needed to cross off multiples
-    for (; s * s <= high; s++)
+    // add new sieving primes <= sqrt(high)
+    for (; s * s <= high; s += 2)
     {
       if (is_prime[s])
       {
@@ -56,8 +58,9 @@ void segmented_sieve(int64_t limit, int segment_size = L1D_CACHE_SIZE)
           next.push_back((int)(s * s - low));
       }
     }
+    
     // sieve the current segment
-    for (std::size_t i = 1; i < primes.size(); i++)
+    for (std::size_t i = 0; i < primes.size(); i++)
     {
       int j = next[i];
       for (int k = primes[i] * 2; j < segment_size; j += k)
@@ -73,21 +76,16 @@ void segmented_sieve(int64_t limit, int segment_size = L1D_CACHE_SIZE)
   std::cout << count << " primes found." << std::endl;
 }
 
-/// Usage: ./segmented_sieve n size
-/// @param n     Sieve the primes up to n.
-/// @param size  Size of the sieve array in bytes.
+/// Usage: ./segmented_sieve n
+/// @param n  Sieve the primes up to n.
 ///
 int main(int argc, char** argv)
 {
-  // generate the primes below this number
-  int64_t limit = 100000000;
+  int64_t limit = 1000000000;
   if (argc >= 2)
     limit = atol(argv[1]);
 
-  int size = L1D_CACHE_SIZE;
-  if (argc >= 3)
-    size = atoi(argv[2]);
+  segmented_sieve(limit);
 
-  segmented_sieve(limit, size);
   return 0;
 }
