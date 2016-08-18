@@ -43,12 +43,10 @@ const string helpMenu(
   "  -v,     --version       Print version and license information\n"
   "\n"
   "Examples:\n"
-  "\n"
-  "  # Print the primes below 1000000\n"
-  "  primesieve 1e6 --print\n"
-  "\n"
-  "  # Count the twin primes inside [10^9, 10^9 + 2^32]\n"
-  "  primesieve 1e9 --dist=2**32 -c2"
+  "Print the primes below 1000000\n"
+  "  $ primesieve 1e6 --print\n"
+  "Count the twin primes inside [10^9, 10^9 + 2^32]\n"
+  "  $ primesieve 1e9 --dist=2**32 -c2"
 );
 
 } // namespace
@@ -63,7 +61,8 @@ void version()
 {
   cout << "primesieve " << primesieve::primesieve_version();
   cout << ", <http://primesieve.org>" << endl;
-  cout << "Copyright (C) 2016 Kim Walisch" << endl;
+  cout << "Copyright (C) 2010-2016 Kim Walisch" << endl;
+	cout << endl;
   cout << "BSD 2-Clause License <http://opensource.org/licenses/BSD-2-Clause>" << endl;
 
   exit(1);
