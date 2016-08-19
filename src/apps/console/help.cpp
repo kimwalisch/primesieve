@@ -47,7 +47,7 @@ const string helpMenu(
   "  primesieve 1000         Count the primes below 1000\n"
   "  primesieve 1000 -c2     Count the twin primes below 1000\n"
   "  primesieve 1e6 --print  Print the primes below 10^6\n"
-  "  primesieve 1e6 --p2     Print the twin primes below 10^6\n"
+  "  primesieve 100 200 -p   Print the primes inside [100, 200]\n"
 );
 
 } // namespace
