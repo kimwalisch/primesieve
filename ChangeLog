@@ -1,3 +1,13 @@
+Changes in version 5.7.2, 20/08/2016
+====================================
+
+The API and ABI are backwards compatible.
+
+1. doc/primesieve.1: Add primesieve man page.
+2. doc/README.md: How to build primesieve man page.
+3. configure.ac: Add --with-help2man option to regenerate man page.
+4. Makefile.am: Add help2man support.
+
 Changes in version 5.7.1, 13/08/2016
 ====================================
 
