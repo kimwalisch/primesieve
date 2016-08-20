@@ -29,12 +29,14 @@ otherinclude_HEADERS = \
 EXTRA_DIST = \
 	autogen.sh \
 	README.md \
+	RELEASE.md \
 	Makefile.msvc \
 	doc/Doxyfile.in \
 	doc/primesieve.1 \
 	doc/README.md \
 	doc/mainpage.dox \
 	examples/README.md \
+	scripts/increase_version.sh \
 	src/apps/gui \
 	src/msvc_compat \
 	src/primesieve/README

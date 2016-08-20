@@ -1,7 +1,7 @@
-Hacking on primesieve
-=====================
+Release process
+===============
 
-Benchmark your code changes:
+Benchmark code changes:
 ```sh
 $ ./primesieve 1e13 --dist=1e11
 ```
@@ -33,18 +33,17 @@ $ make check
 
 ### Versioning
 
-* Increase version number in [README.md](README.md)
-* Increase version number in [include/primesieve.hpp](include/primesieve.hpp)
-* Increase version number in [include/primesieve.h](include/primesieve.h)
-* Increase version number in [configure.ac](configure.ac) in ```AC_INIT```
-* [Increase Libtool version](http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html) number in [configure.ac](configure.ac) in ```AC_SUBST```
-* Generate new man page with latest version number:
+Increase the primesieve version and the primesieve libtool version.
+[This page](https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html)
+explains libtool versioning.
+
 ```sh
-./configure --with-help2man
-make man
+cd scripts
+
+# Increase primesieve version to 1.2.3 and 
+# increase primesieve libtool version to 7:0:0
+./increase_version.sh 1.2.3 7:0:0
 ```
-* Update current year in [src/apps/console/help.cpp](src/apps/console/help.cpp)
-* Update current year in [src/apps/gui/src/PrimeSieveGUI_const.hpp](src/apps/gui/src/PrimeSieveGUI_const.hpp)
 
 ### Release process
 
