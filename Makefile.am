@@ -11,8 +11,91 @@ endif
 bin_PROGRAMS = primesieve
 primesieve_LDADD = libprimesieve.la
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = primesieve.pc
+include_HEADERS = \
+	include/primesieve.hpp \
+	include/primesieve.h
+
+otherincludedir = $(includedir)/primesieve
+otherinclude_HEADERS = \
+	include/primesieve/Callback.hpp \
+	include/primesieve/cancel_callback.hpp \
+	include/primesieve/iterator.hpp \
+	include/primesieve/ParallelPrimeSieve.hpp \
+	include/primesieve/primesieve_error.hpp \
+	include/primesieve/PrimeSieve.hpp \
+	include/primesieve/primesieve_iterator.h \
+	include/primesieve/PushBackPrimes.hpp
+
+EXTRA_DIST = \
+	autogen.sh \
+	README.md \
+	Makefile.msvc \
+	doc/Doxyfile.in \
+	doc/primesieve.1 \
+	doc/README.md \
+	doc/mainpage.dox \
+	examples/README.md \
+	src/apps/gui \
+	src/msvc_compat \
+	src/primesieve/README
+
+DISTCLEANFILES = \
+	doc/Doxyfile
+
+man_MANS = \
+	doc/primesieve.1
+
+libprimesieve_la_SOURCES = \
+	src/primesieve/EratBig.cpp \
+	src/primesieve/EratMedium.cpp \
+	src/primesieve/EratSmall.cpp \
+	src/primesieve/ParallelPrimeSieve.cpp \
+	src/primesieve/popcount.cpp \
+	src/primesieve/PreSieve.cpp \
+	src/primesieve/PrimeFinder.cpp \
+	src/primesieve/PrimeGenerator.cpp \
+	src/primesieve/iterator.cpp \
+	src/primesieve/primesieve_iterator.cpp \
+	src/primesieve/primesieve_test.cpp \
+	src/primesieve/PrimeSieve-nthPrime.cpp \
+	src/primesieve/PrimeSieve.cpp \
+	src/primesieve/primesieve-api.cpp \
+	src/primesieve/primesieve-api-c.cpp \
+	src/primesieve/SieveOfEratosthenes.cpp \
+	src/primesieve/WheelFactorization.cpp \
+	include/primesieve/bits.hpp \
+	include/primesieve/callback_t.hpp \
+	include/primesieve/config.hpp \
+	include/primesieve/EratBig.hpp \
+	include/primesieve/EratMedium.hpp \
+	include/primesieve/EratSmall.hpp \
+	include/primesieve/malloc_vector.hpp \
+	include/primesieve/pmath.hpp \
+	include/primesieve/littleendian_cast.hpp \
+	include/primesieve/ParallelPrimeSieve-lock.hpp \
+	include/primesieve/PreSieve.hpp \
+	include/primesieve/PrimeFinder.hpp \
+	include/primesieve/PrimeGenerator.hpp \
+	include/primesieve/PrimeSieve-lock.hpp \
+	include/primesieve/SieveOfEratosthenes.hpp \
+	include/primesieve/SieveOfEratosthenes-inline.hpp \
+	include/primesieve/toString.hpp \
+	include/primesieve/WheelFactorization.hpp
+
+primesieve_SOURCES = \
+	src/apps/console/main.cpp \
+	src/apps/console/help.cpp \
+	src/apps/console/cmdoptions.cpp \
+	src/apps/console/cmdoptions.hpp \
+	src/apps/console/calculator.hpp
+
+check: all
+	./primesieve --test
+
+# If installation directory is /usr/local/lib
+# execute ldconfig after installation
+install-exec-hook:
+	test "$(prefix)" = "/usr/local" && command -v ldconfig 2>/dev/null && ldconfig /usr/local/lib 2>/dev/null || true
 
 if MAKE_EXAMPLES
 noinst_PROGRAMS = callback_cancel
@@ -68,85 +151,24 @@ store_primes_in_array_c_LDADD = libprimesieve.la
 store_primes_in_array_c_SOURCES = examples/c/store_primes_in_array.c
 endif
 
-# Additional files to be deleted by 'make distclean'
-DISTCLEANFILES = \
-	doxygen/Doxyfile
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = primesieve.pc
 
-include_HEADERS = \
-	include/primesieve.hpp \
-	include/primesieve.h
+if HAVE_DOXYGEN
+doxygen:
+	cd doc && $(DOXYGEN)
+endif
 
-otherincludedir = $(includedir)/primesieve
-otherinclude_HEADERS = \
-	include/primesieve/Callback.hpp \
-	include/primesieve/cancel_callback.hpp \
-	include/primesieve/iterator.hpp \
-	include/primesieve/ParallelPrimeSieve.hpp \
-	include/primesieve/primesieve_error.hpp \
-	include/primesieve/PrimeSieve.hpp \
-	include/primesieve/primesieve_iterator.h \
-	include/primesieve/PushBackPrimes.hpp
+if HAVE_HELP2MAN
+help2man: doc/primesieve.1
 
-EXTRA_DIST = \
-	autogen.sh \
-	README.md \
-	Makefile.msvc \
-	doc/Doxyfile.in \
-	doc/README.md \
-	doc/mainpage.dox \
-	examples/README.md \
-	src/apps/gui \
-	src/msvc_compat \
-	src/primesieve/README
+doc/primesieve.1: primesieve
+	$(HELP2MAN) --manual="primesieve" \
+         --source="primesieve @PACKAGE_VERSION@" \
+         -n "efficient prime number generator" \
+         -s 1 --no-info \
+         -o doc/primesieve.1 primesieve
+endif
 
-libprimesieve_la_SOURCES = \
-	src/primesieve/EratBig.cpp \
-	src/primesieve/EratMedium.cpp \
-	src/primesieve/EratSmall.cpp \
-	src/primesieve/ParallelPrimeSieve.cpp \
-	src/primesieve/popcount.cpp \
-	src/primesieve/PreSieve.cpp \
-	src/primesieve/PrimeFinder.cpp \
-	src/primesieve/PrimeGenerator.cpp \
-	src/primesieve/iterator.cpp \
-	src/primesieve/primesieve_iterator.cpp \
-	src/primesieve/primesieve_test.cpp \
-	src/primesieve/PrimeSieve-nthPrime.cpp \
-	src/primesieve/PrimeSieve.cpp \
-	src/primesieve/primesieve-api.cpp \
-	src/primesieve/primesieve-api-c.cpp \
-	src/primesieve/SieveOfEratosthenes.cpp \
-	src/primesieve/WheelFactorization.cpp \
-	include/primesieve/bits.hpp \
-	include/primesieve/callback_t.hpp \
-	include/primesieve/config.hpp \
-	include/primesieve/EratBig.hpp \
-	include/primesieve/EratMedium.hpp \
-	include/primesieve/EratSmall.hpp \
-	include/primesieve/malloc_vector.hpp \
-	include/primesieve/pmath.hpp \
-	include/primesieve/littleendian_cast.hpp \
-	include/primesieve/ParallelPrimeSieve-lock.hpp \
-	include/primesieve/PreSieve.hpp \
-	include/primesieve/PrimeFinder.hpp \
-	include/primesieve/PrimeGenerator.hpp \
-	include/primesieve/PrimeSieve-lock.hpp \
-	include/primesieve/SieveOfEratosthenes.hpp \
-	include/primesieve/SieveOfEratosthenes-inline.hpp \
-	include/primesieve/toString.hpp \
-	include/primesieve/WheelFactorization.hpp
-
-primesieve_SOURCES = \
-	src/apps/console/main.cpp \
-	src/apps/console/help.cpp \
-	src/apps/console/cmdoptions.cpp \
-	src/apps/console/cmdoptions.hpp \
-	src/apps/console/calculator.hpp
-
-check: all
-	./primesieve --test
-
-# If installation directory is /usr/local/lib
-# execute ldconfig after installation
-install-exec-hook:
-	test "$(prefix)" = "/usr/local" && command -v ldconfig 2>/dev/null && ldconfig /usr/local/lib 2>/dev/null || true
+man: $(HELP2MAN)
+doc: man $(DOXYGEN)

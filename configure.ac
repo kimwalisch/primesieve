@@ -1,5 +1,5 @@
-AC_INIT([primesieve], [5.7.1], [kim.walisch@gmail.com])
-AC_SUBST([primesieve_lib_version], [7:1:0])
+AC_INIT([primesieve], [5.7.2], [kim.walisch@gmail.com])
+AC_SUBST([primesieve_lib_version], [7:2:0])
 
 AC_PREREQ([2.62])
 AC_LANG([C++])
@@ -17,11 +17,33 @@ AM_PROG_AR
 AM_PROG_CC_C_O
 LT_INIT
 
-# Check if graphviz is installed (for use with doxygen)
-AC_CHECK_PROG([HAVE_DOT], [dot], [YES], [NO])
+AC_ARG_WITH([help2man],
+    [AS_HELP_STRING([--with-help2man], [Use help2man to generate man pages])],
+    WITH_HELP2MAN="yes")
+
+AS_IF([test "x$WITH_HELP2MAN" = "xyes"], [
+    AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
+    test -z "$HELP2MAN" && AC_MSG_ERROR([help2man not found])
+])
+
+AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
+
+AC_ARG_WITH([doxygen],
+    [AS_HELP_STRING([--with-doxygen], [Use doxygen to generate API documentation])],
+    WITH_DOXYGEN="yes")
+
+AS_IF([test "x$WITH_DOXYGEN" = "xyes"], [
+    AC_CHECK_PROG([DOXYGEN], [doxygen], [doxygen])
+    test -z "$DOXYGEN" && AC_MSG_ERROR([doxygen not found])
+    # Check if graphviz is installed
+    AC_CHECK_PROG([HAVE_DOT], [dot], [YES], [NO])
+    DOXYFILE=doc/Doxyfile
+])
+
+AM_CONDITIONAL([HAVE_DOXYGEN], [test x$DOXYGEN = xdoxygen])
 
 AC_ARG_ENABLE(examples,
-    [--enable-examples Compile the examples programs],
+    [AS_HELP_STRING([--enable-examples], [Compile the examples programs])],
     ENABLE_EXAMPLES="yes")
 
 AM_CONDITIONAL(MAKE_EXAMPLES, test "x$ENABLE_EXAMPLES" = "xyes")
@@ -103,7 +125,10 @@ AC_DEFINE_UNQUOTED([SIEVESIZE],
     [Default sieve size in kilobytes])
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile primesieve.pc doc/Doxyfile])
+AC_CONFIG_FILES([
+    Makefile
+    primesieve.pc
+    $DOXYFILE])
 AC_OUTPUT
 
 AS_IF([test "x$L1_DETECTED" != "x"],
