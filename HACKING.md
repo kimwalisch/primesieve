@@ -33,10 +33,16 @@ $ make check
 
 ### Versioning
 
+* Increase version number in [README.md](README.md)
 * Increase version number in [include/primesieve.hpp](include/primesieve.hpp)
 * Increase version number in [include/primesieve.h](include/primesieve.h)
 * Increase version number in [configure.ac](configure.ac) in ```AC_INIT```
 * [Increase Libtool version](http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html) number in [configure.ac](configure.ac) in ```AC_SUBST```
+* Generate new man page with latest version number:
+```sh
+./configure --with-help2man
+make man
+```
 * Update current year in [src/apps/console/help.cpp](src/apps/console/help.cpp)
 * Update current year in [src/apps/gui/src/PrimeSieveGUI_const.hpp](src/apps/gui/src/PrimeSieveGUI_const.hpp)
 
