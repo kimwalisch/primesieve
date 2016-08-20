@@ -17,6 +17,14 @@ AM_PROG_AR
 AM_PROG_CC_C_O
 LT_INIT
 
+# doxygen is used to generate C/C++ API documentation
+AC_CHECK_PROG([DOXYGEN], [doxygen], [doxygen])
+
+AM_CONDITIONAL([HAVE_DOXYGEN], [test x$DOXYGEN = xdoxygen])
+
+# Check if graphviz is installed
+AC_CHECK_PROG([HAVE_DOT], [dot], [YES], [NO])
+
 AC_ARG_WITH([help2man],
     [AS_HELP_STRING([--with-help2man], [Use help2man to generate man pages])],
     WITH_HELP2MAN="yes")
@@ -27,20 +35,6 @@ AS_IF([test "x$WITH_HELP2MAN" = "xyes"], [
 ])
 
 AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
-
-AC_ARG_WITH([doxygen],
-    [AS_HELP_STRING([--with-doxygen], [Use doxygen to generate API documentation])],
-    WITH_DOXYGEN="yes")
-
-AS_IF([test "x$WITH_DOXYGEN" = "xyes"], [
-    AC_CHECK_PROG([DOXYGEN], [doxygen], [doxygen])
-    test -z "$DOXYGEN" && AC_MSG_ERROR([doxygen not found])
-    # Check if graphviz is installed
-    AC_CHECK_PROG([HAVE_DOT], [dot], [YES], [NO])
-    DOXYFILE=doc/Doxyfile
-])
-
-AM_CONDITIONAL([HAVE_DOXYGEN], [test x$DOXYGEN = xdoxygen])
 
 AC_ARG_ENABLE(examples,
     [AS_HELP_STRING([--enable-examples], [Compile the examples programs])],
@@ -128,7 +122,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
     Makefile
     primesieve.pc
-    $DOXYFILE])
+    doc/Doxyfile])
 AC_OUTPUT
 
 AS_IF([test "x$L1_DETECTED" != "x"],
