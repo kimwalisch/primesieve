@@ -7,7 +7,7 @@ documentation you need to have installed the ```help2man``` and
 directory.
 
 ```bash
-$ ./configure --with-help2man --with-doxygen
+$ ./configure --with-help2man
 $ make man
 $ make doxygen
 ```
