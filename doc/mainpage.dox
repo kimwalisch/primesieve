@@ -6,17 +6,13 @@
 /// core of an Intel Core i7-6700 3.4GHz CPU. primesieve can generate
 /// primes and prime k-tuplets up to 2^64. primesieve's memory
 /// requirement is about pi(sqrt(n)) * 8 bytes per thread, its
-/// run-time complexity is O(n log log n) operations. For more
-/// information please visit http://primesieve.org.
+/// run-time complexity is O(n log log n) operations. The recommended
+/// way to get started is to first have a look at a few C or C++
+/// example programs. The most common use cases are storing primes in
+/// a vector (or array) and iterating over primes using next_prime()
+/// or previous_prime().
 ///
-/// The recommended way to get started is to first have a look at a
-/// few C/C++ example programs. The most common use cases are storing
-/// primes in a vector (or array) and iterating over primes using
-/// next_prime() or previous_prime().
-///
-/// You can install libprimesieve either using your distribution's
-/// package manager (if it is available) or you can build and install
-/// it yourself, this is explained at http://primesieve.org/build.html.
+/// For more information please visit http://primesieve.org.
 ///
 /// @section CPP_API C++ API
 ///
