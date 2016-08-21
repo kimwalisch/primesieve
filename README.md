@@ -90,7 +90,7 @@ libprimesieve extensively.
 Build instructions (Unix-like OSes)
 -----------------------------------
 
-Download [primesieve-5.7.1.tar.gz](https://bintray.com/artifact/download/kimwalisch/primesieve/primesieve-5.7.1.tar.gz)
+Download [primesieve-5.7.2.tar.gz](https://bintray.com/artifact/download/kimwalisch/primesieve/primesieve-5.7.2.tar.gz)
 and extract it, then build primesieve using:
 
 ```sh
@@ -124,7 +124,7 @@ Build instructions (Microsoft Visual C++)
 -----------------------------------------
 
 Download
-[primesieve-5.7.1.zip](https://bintray.com/artifact/download/kimwalisch/primesieve/primesieve-5.7.1.zip)
+[primesieve-5.7.2.zip](https://bintray.com/artifact/download/kimwalisch/primesieve/primesieve-5.7.2.zip)
 and extract it. Then open a Visual Studio Command Prompt and run:
 
 ```sh
