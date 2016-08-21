@@ -33,17 +33,19 @@ $ make check
 
 ### Versioning
 
-Increase the primesieve version and the primesieve libtool version.
-[This page](https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html)
-explains libtool versioning.
+Increase the primesieve version and the primesieve libtool version before
+each new release. The ```increase_version.sh``` script automatically increases
+the version in all source files, below is an example.
 
 ```sh
 cd scripts
 
-# Increase primesieve version to 1.2.3 and 
-# increase primesieve libtool version to 7:0:0
+# Increases primesieve version to 1.2.3 and 
+# increases primesieve libtool version to 7:0:0
 ./increase_version.sh 1.2.3 7:0:0
 ```
+[This page](https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html)
+explains libtool versioning.
 
 ### Release process
 
