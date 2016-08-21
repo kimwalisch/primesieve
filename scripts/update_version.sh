@@ -2,10 +2,11 @@
 
 if [ $# -ne 2 ]
 then
-    echo "Usage example: ./update_version.sh 1.2.3 7:0:0"
+    echo "Usage example:"
+    echo "$ ./update_version.sh 1.2.3 7:0:0"
     echo ""
-    echo "Increases the primesieve version number to 1.2.3 in all source files"
-    echo "and sets the libtool library version number to 7:0:0"
+    echo "Updates the primesieve version to 1.2.3 in all files and"
+    echo "updates the libtool library version to 7:0:0"
 
     exit 1
 fi
@@ -54,7 +55,7 @@ for i in $(echo README.md \
                 include/primesieve.hpp \
                 include/primesieve.h)
 do
-    echo "Increase version in $i"
+    echo "Update version in $i"
     sed "s/$old_major\.$old_minor\.$old_patch/$new_version/g" $i > $i.tmp
     mv -f $i.tmp $i
 done
