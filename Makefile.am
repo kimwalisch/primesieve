@@ -36,7 +36,7 @@ EXTRA_DIST = \
 	doc/README.md \
 	doc/mainpage.dox \
 	examples/README.md \
-	scripts/increase_version.sh \
+	scripts/update_version.sh \
 	src/apps/gui \
 	src/msvc_compat \
 	src/primesieve/README
