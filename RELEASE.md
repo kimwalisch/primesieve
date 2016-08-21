@@ -35,7 +35,7 @@ $ make check
 
 Increase the primesieve version and the primesieve libtool version before
 each new release. The ```update_version.sh``` script automatically
-increases the version in all files.
+updates the version (and release date) in all files.
 
 ```sh
 cd scripts
