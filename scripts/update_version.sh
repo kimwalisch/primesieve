@@ -79,7 +79,8 @@ mv -f configure.ac.tmp configure.ac
 echo ""
 
 # Update year
-for i in $(echo src/apps/console/help.cpp \
+for i in $(echo COPYING \
+                src/apps/console/help.cpp \
                 src/apps/gui/src/PrimeSieveGUI_const.hpp)
 do
     echo "Update year in $i"
