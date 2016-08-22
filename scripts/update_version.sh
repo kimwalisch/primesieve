@@ -32,10 +32,6 @@ old_libtool_version=$(grep primesieve_lib_version configure.ac | \
                       cut -f2 -d'[' | \
                       cut -f1 -d']')
 
-libtool_major=$(echo $old_libtool_version | cut -f1 -d':')
-libtool_minor=$(echo $old_libtool_version | cut -f2 -d':')
-libtool_patch=$(echo $old_libtool_version | cut -f3 -d':')
-
 new_year=$(date +'%Y')
 old_year=$(grep "Copyright (C)" src/apps/gui/src/PrimeSieveGUI_const.hpp | cut -f5 -d' ')
 
