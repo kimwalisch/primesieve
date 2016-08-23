@@ -22,15 +22,12 @@ const int L1D_CACHE_SIZE = 32768;
 ///
 void segmented_sieve(int64_t limit)
 {
-  int sqrt = (int) std::sqrt((double) limit);
+  int sqrt = (int) std::sqrt(limit);
   int segment_size = std::max(sqrt, L1D_CACHE_SIZE);
 
   int64_t count = (limit < 2) ? 0 : 1;
   int64_t s = 3;
   int64_t n = 3;
-
-  // vector used for sieving
-  std::vector<char> sieve(segment_size);
 
   // generate small primes <= sqrt
   std::vector<char> is_prime(sqrt + 1, 1);
@@ -39,6 +36,8 @@ void segmented_sieve(int64_t limit)
       for (int j = i * i; j <= sqrt; j += i)
         is_prime[j] = 0;
 
+  // vector used for sieving
+  std::vector<char> sieve(segment_size);
   std::vector<int> primes;
   std::vector<int> next;
 
@@ -81,11 +80,10 @@ void segmented_sieve(int64_t limit)
 ///
 int main(int argc, char** argv)
 {
-  int64_t limit = 1000000000;
   if (argc >= 2)
-    limit = atol(argv[1]);
-
-  segmented_sieve(limit);
+    segmented_sieve(std::atol(argv[1]));
+  else
+    segmented_sieve(1000000000);
 
   return 0;
 }
