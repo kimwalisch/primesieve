@@ -279,6 +279,8 @@ CPUs.</p>
   <li>Processes multiple sieving primes per loop iteration to increase instruction-level parallelism</li>
   <li>Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
 </ul>
+
+<div id="inner_loop">
 <p class="optimizations_title">Highly optimized inner loop</p>
 <p>primesieve's inner sieving loop has been optimized using
 <a href="https://github.com/kimwalisch/primesieve/blob/master/src/primesieve/EratSmall.cpp#L85">extreme loop unrolling</a>,
@@ -286,21 +288,23 @@ on average crossing off a multiple uses just 1.375 instructions on
 x64 CPUs. Below is the assembly GCC generates for primesieve's inner
 sieving loop, each <code>andb</code> instruction unsets a bit (crosses
 off a multiple) in the sieve array.</p>
-
 <script src="https://gist.github.com/kimwalisch/df939440b89081c39f6a.js"></script>
+</div>
 
 <p>This <a href="https://github.com/kimwalisch/primesieve/blob/master/src/primesieve/README">README</a>
 file contains more technical implementation details.</p>
 
 <h2>
 <a name="cpp-library" class="anchor" href="#cpp-library"><span class="octicon octicon-link"></span></a>C/C++ library</h2>
-<p>Below is a C++ example with the most common libprimesieve use cases.
 
+<div id="libprimesieve_script">
+<p>Below is a C++ example with the most common libprimesieve use cases.</p>
 <script src="https://gist.github.com/kimwalisch/afd69bf11daf59795c64.js"></script>
+</div>
 
 <p>libprimesieve natively supports C and C++, there are many
 <a href="https://github.com/kimwalisch/primesieve/tree/master/examples">
-C and C++ examples on GitHub</a>.
+C and C++ examples on GitHub</a>.</p>
 
 <ul>
   <li><a href="https://github.com/kimwalisch/primesieve#build-requirements">How to install libprimesieve</a></li>
