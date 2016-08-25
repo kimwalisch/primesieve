@@ -185,6 +185,12 @@ header h2 {
   }
 }
 
+@media screen and (max-width: 850px) {
+  #timings {
+    display: none;
+  }
+}
+
 #main-content {
   width: 800px;
   float: left;
