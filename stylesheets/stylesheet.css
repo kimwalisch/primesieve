@@ -191,6 +191,18 @@ header h2 {
   }
 }
 
+@media screen and (max-width: 700px) {
+  #inner_loop {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  #libprimesieve_script {
+    display: none;
+  }
+}
+
 #main-content {
   width: 800px;
   float: left;
