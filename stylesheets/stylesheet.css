@@ -203,6 +203,12 @@ header h2 {
   }
 }
 
+@media screen and (max-width: 950px) {
+  #references {
+    display: none;
+  }
+}
+
 #main-content {
   width: 800px;
   float: left;
