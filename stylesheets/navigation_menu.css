@@ -11,6 +11,18 @@ License: MIT License
 License URI: http://www.opensource.org/licenses/mit-license.php
 ------------------------------------------------------------------------- */
 
+@media screen and (max-width: 1100px) {
+    #nav_div {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    #nav_ul {
+        display: none;
+    }
+}
+
 nav {
 	display: block;
 }
