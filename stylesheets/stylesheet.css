@@ -171,9 +171,18 @@ header h2 {
   margin: 0 auto;
 }
 
-#content-wrapper {
-  border-top: solid 1px #fff;
-  padding-top: 30px;
+@media screen and (max-width: 1100px) {
+  #content-wrapper {
+    border-top: solid 1px #fff;
+    padding-top: 20px;
+  }
+}
+
+@media screen and (min-width: 1101px) {
+  #content-wrapper {
+    border-top: solid 1px #fff;
+    padding-top: 30px;
+  }
 }
 
 #main-content {
