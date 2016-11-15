@@ -2,7 +2,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/include
 
 lib_LTLIBRARIES = libprimesieve.la
 libprimesieve_la_CXXFLAGS = $(OPENMP_CXXFLAGS)
-libprimesieve_la_LDFLAGS = -version-info @primesieve_lib_version@
+libprimesieve_la_LDFLAGS = -version-info $(primesieve_lib_version)
 
 if FORCE_SHARED_LIBRARY
 libprimesieve_la_LDFLAGS += -no-undefined 
@@ -45,7 +45,7 @@ DISTCLEANFILES = \
 	doc/Doxyfile
 
 man_MANS = \
-	doc/primesieve.1
+	primesieve.1
 
 libprimesieve_la_SOURCES = \
 	src/primesieve/EratBig.cpp \
@@ -161,16 +161,25 @@ doxygen:
 	cd doc && $(DOXYGEN)
 endif
 
+if MAINTAINER_MODE
 if HAVE_HELP2MAN
-help2man: doc/primesieve.1
 
-doc/primesieve.1: primesieve
-	$(HELP2MAN) --manual="primesieve" \
-         --source="primesieve @PACKAGE_VERSION@" \
-         -n "efficient prime number generator" \
-         -s 1 --no-info \
-         -o doc/primesieve.1 primesieve
+H2MFLAGS = \
+	--manual="primesieve" \
+	--source="primesieve $(PACKAGE_VERSION)" \
+	--locale=C.UTF-8 \
+	--libtool \
+	--no-info
+
+primesieve.1: primesieve
+	$(HELP2MAN) \
+			-s 1 \
+			$(H2MFLAGS) \
+			-n "efficient prime number generator" \
+			-o $@ \
+		./$<
+
+endif
 endif
 
-man: $(HELP2MAN)
-doc: man $(DOXYGEN)
+doc: $(DOXYGEN)
