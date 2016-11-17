@@ -3,18 +3,18 @@ Release process
 
 Benchmark code changes:
 ```sh
-$ ./primesieve 1e13 --dist=1e11
+./primesieve 1e13 --dist=1e11
 ```
 
 Fix all warnings:
 ```sh
-$ make clean
-$ make CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
+make clean
+make CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
 ```
 
 Run integration tests:
 ```sh
-$ make check
+make check
 ```
 
 ### Where the source code lives
