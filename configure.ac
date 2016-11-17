@@ -24,7 +24,7 @@ AM_CONDITIONAL([HAVE_DOXYGEN], [test x$DOXYGEN = xdoxygen])
 
 # help2man is used to generate manpages (maintainer mode)
 AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
-AC_CHECK_PROG([HELP2MAN_LOCALE], [scripts/gettext.pl], [--locale=C.UTF-8])
+AC_CHECK_PROG([HELP2MAN_LOCALE], [gettext.pl], [--locale=C.UTF-8],[],[scripts])
 AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
 
 # Check if graphviz is installed
