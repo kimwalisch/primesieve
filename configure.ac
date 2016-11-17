@@ -30,11 +30,6 @@ AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
 # Check if graphviz is installed
 AC_CHECK_PROG([HAVE_DOT], [dot], [YES], [NO])
 
-AC_ARG_WITH([help2man],
-    [AS_HELP_STRING([--with-help2man], [Use help2man to generate man pages])],
-    WITH_HELP2MAN="yes")
-
-
 AC_ARG_ENABLE(examples,
     [AS_HELP_STRING([--enable-examples], [Compile the examples programs])],
     ENABLE_EXAMPLES="yes")
