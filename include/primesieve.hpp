@@ -13,10 +13,10 @@
 #ifndef PRIMESIEVE_HPP
 #define PRIMESIEVE_HPP
 
-#define PRIMESIEVE_VERSION "5.7.2"
+#define PRIMESIEVE_VERSION "5.7.3"
 #define PRIMESIEVE_VERSION_MAJOR 5
 #define PRIMESIEVE_VERSION_MINOR 7
-#define PRIMESIEVE_VERSION_PATCH 2
+#define PRIMESIEVE_VERSION_PATCH 3
 
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>

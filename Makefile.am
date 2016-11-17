@@ -36,6 +36,7 @@ EXTRA_DIST = \
 	doc/README.md \
 	doc/mainpage.dox \
 	examples/README.md \
+	scripts/gettext.pl \
 	scripts/update_version.sh \
 	src/apps/gui \
 	src/msvc_compat \
@@ -167,7 +168,7 @@ if HAVE_HELP2MAN
 H2MFLAGS = \
 	--manual="primesieve" \
 	--source="primesieve $(PACKAGE_VERSION)" \
-	--locale=C.UTF-8 \
+	$(HELP2MAN_LOCALE) \
 	--libtool \
 	--no-info
 

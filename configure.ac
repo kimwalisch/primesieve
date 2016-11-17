@@ -1,5 +1,5 @@
-AC_INIT([primesieve], [5.7.2], [kim.walisch@gmail.com])
-AC_SUBST([primesieve_lib_version], [7:2:0])
+AC_INIT([primesieve], [5.7.3], [kim.walisch@gmail.com])
+AC_SUBST([primesieve_lib_version], [7:3:0])
 
 AC_PREREQ([2.62])
 AC_LANG([C++])
@@ -24,6 +24,7 @@ AM_CONDITIONAL([HAVE_DOXYGEN], [test x$DOXYGEN = xdoxygen])
 
 # help2man is used to generate manpages (maintainer mode)
 AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
+AC_CHECK_PROG([HELP2MAN_LOCALE], [scripts/gettext.pl], [--locale=C.UTF-8])
 AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
 
 # Check if graphviz is installed
