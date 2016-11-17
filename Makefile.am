@@ -45,7 +45,7 @@ DISTCLEANFILES = \
 	doc/Doxyfile
 
 man_MANS = \
-	primesieve.1
+	doc/primesieve.1
 
 libprimesieve_la_SOURCES = \
 	src/primesieve/EratBig.cpp \
@@ -171,15 +171,16 @@ H2MFLAGS = \
 	--libtool \
 	--no-info
 
-primesieve.1: primesieve
+doc/primesieve.1: primesieve
 	$(HELP2MAN) \
-			-s 1 \
-			$(H2MFLAGS) \
-			-n "efficient prime number generator" \
-			-o $@ \
+		-s 1 \
+		$(H2MFLAGS) \
+		-n "efficient prime number generator" \
+		-o $@ \
 		./$<
 
 endif
 endif
 
 doc: $(DOXYGEN)
+man: doc/primesieve.1
