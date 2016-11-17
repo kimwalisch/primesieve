@@ -36,7 +36,6 @@ EXTRA_DIST = \
 	doc/README.md \
 	doc/mainpage.dox \
 	examples/README.md \
-	scripts/gettext.pl \
 	scripts/update_version.sh \
 	src/apps/gui \
 	src/msvc_compat \

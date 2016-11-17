@@ -31,9 +31,17 @@ AC_CHECK_PROG([HAVE_DOT], [dot], [YES], [NO])
 # -------------------------------------------------------------------
 
 AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
-AC_CHECK_PROG([HELP2MAN_LOCALE], 
-    [gettext.pl], [--locale=C.UTF-8], [], [scripts])
 AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
+AC_ARG_VAR([HELP2MAN_LOCALE], [help2man locale option])
+
+AS_IF([test "x$HELP2MAN" != "x"],
+    [[
+    perl -e 'use Locale::gettext;' >/dev/null 2>/dev/null
+    if [ $? -eq 0 ];
+    then
+        HELP2MAN_LOCALE="--locale=C.UTF-8"
+    fi
+    ]])
 
 # --------------------------------------------------------------------
 # Check if we should build the C/C++ example programs
@@ -142,6 +150,9 @@ AC_OUTPUT
 # --------------------------------------------------------------------
 # Print the CPU's L1 cache size and the sieve size 
 # --------------------------------------------------------------------
+
+AS_IF([test "x$HELP2MAN" != "x"],
+    [AC_MSG_NOTICE([NOTICE: HELP2MAN_LOCALE="$HELP2MAN_LOCALE"])])
 
 AS_IF([test "x$L1_DETECTED" != "x"],
     [AC_MSG_NOTICE([NOTICE: using L1_DCACHE_SIZE=$L1_DCACHE_SIZE (kilobytes)])])
