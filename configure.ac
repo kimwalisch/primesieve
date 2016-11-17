@@ -18,39 +18,54 @@ AM_PROG_AR
 AM_PROG_CC_C_O
 LT_INIT
 
+# --------------------------------------------------------------------
 # doxygen is used to generate C/C++ API documentation
+# --------------------------------------------------------------------
+
 AC_CHECK_PROG([DOXYGEN], [doxygen], [doxygen])
 AM_CONDITIONAL([HAVE_DOXYGEN], [test x$DOXYGEN = xdoxygen])
-
-# help2man is used to generate manpages (maintainer mode)
-AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
-AC_CHECK_PROG([HELP2MAN_LOCALE], [gettext.pl], [--locale=C.UTF-8],[],[scripts])
-AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
-
-# Check if graphviz is installed
 AC_CHECK_PROG([HAVE_DOT], [dot], [YES], [NO])
 
+# --------------------------------------------------------------------
+# help2man is used to generate manpages (maintainer mode)
+# -------------------------------------------------------------------
+
+AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
+AC_CHECK_PROG([HELP2MAN_LOCALE], 
+    [gettext.pl], [--locale=C.UTF-8], [], [scripts])
+AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
+
+# --------------------------------------------------------------------
+# Check if we should build the C/C++ example programs
+# --------------------------------------------------------------------
+
 AC_ARG_ENABLE(examples,
-    [AS_HELP_STRING([--enable-examples], [Compile the examples programs])],
+    [AS_HELP_STRING([--enable-examples], 
+        [Compile the examples programs])],
     ENABLE_EXAMPLES="yes")
 
 AM_CONDITIONAL(MAKE_EXAMPLES, test "x$ENABLE_EXAMPLES" = "xyes")
 
+# --------------------------------------------------------------------
 # Force building shared library on Windows
 # Reference: <http://article.gmane.org/gmane.comp.gnu.mingw.user/18727>
+# --------------------------------------------------------------------
+
 case "$host_os" in
     cygwin*) AM_CONDITIONAL(FORCE_SHARED_LIBRARY, true);;
     mingw*)  AM_CONDITIONAL(FORCE_SHARED_LIBRARY, true);;
     *)       AM_CONDITIONAL(FORCE_SHARED_LIBRARY, false);;
 esac
 
-AC_ARG_VAR([L1_DCACHE_SIZE], [CPU L1 data cache size in kilobytes])
-
-AS_IF([test "x$L1_DCACHE_SIZE" != "x"],
-    [L1_DETECTED="yes"])
-
+# --------------------------------------------------------------------
+# Find the CPU's L1 cache size
 # This is a very portable shell script that finds the CPU's L1
 # cache size (in kilobytes) on most Unix-like systems
+# --------------------------------------------------------------------
+
+AC_ARG_VAR([L1_DCACHE_SIZE], [CPU L1 data cache size in kilobytes])
+AS_IF([test "x$L1_DCACHE_SIZE" != "x"], [L1_DETECTED="yes"])
+
 AS_IF([test "x$L1_DCACHE_SIZE" = "x"],
     [[
     # Default L1 cache size
@@ -104,13 +119,18 @@ AC_DEFINE_UNQUOTED([L1_DCACHE_SIZE],
     [$L1_DCACHE_SIZE],
     [CPU L1 data cache size in kilobytes])
 
-AC_ARG_VAR([SIEVESIZE], [Default sieve size in kilobytes])
+# --------------------------------------------------------------------
+# Set the sieve array size to the CPU's L1 cache size
+# --------------------------------------------------------------------
 
+AC_ARG_VAR([SIEVESIZE], [Default sieve size in kilobytes])
 AS_IF([test "x$SIEVESIZE" = "x"], [SIEVESIZE=$L1_DCACHE_SIZE])
 
 AC_DEFINE_UNQUOTED([SIEVESIZE],
     [$SIEVESIZE],
     [Default sieve size in kilobytes])
+
+# --------------------------------------------------------------------
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
@@ -118,6 +138,10 @@ AC_CONFIG_FILES([
     primesieve.pc
     doc/Doxyfile])
 AC_OUTPUT
+
+# --------------------------------------------------------------------
+# Print the CPU's L1 cache size and the sieve size 
+# --------------------------------------------------------------------
 
 AS_IF([test "x$L1_DETECTED" != "x"],
     [AC_MSG_NOTICE([NOTICE: using L1_DCACHE_SIZE=$L1_DCACHE_SIZE (kilobytes)])])
