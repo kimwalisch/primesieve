@@ -7,7 +7,7 @@ documentation you need to have installed the ```help2man``` and
 directory.
 
 ```bash
-$ ./configure --enable-maintainer-mode
-$ make man
-$ make doxygen
+./configure --enable-maintainer-mode
+make man
+make doxygen
 ```
