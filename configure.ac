@@ -120,7 +120,7 @@ AC_DEFINE_UNQUOTED([L1_DCACHE_SIZE],
     [CPU L1 data cache size in kilobytes])
 
 # --------------------------------------------------------------------
-# Set the sieve array size to the CPU's L1 cache size
+# Set the sieve size to the CPU's L1 cache size
 # --------------------------------------------------------------------
 
 AC_ARG_VAR([SIEVESIZE], [Default sieve size in kilobytes])
