@@ -87,7 +87,7 @@ done
 
 # Update version number in man page
 echo ""
-./configure --enable-maintainer-mode
+./configure
 make man -j8
 echo ""
 
