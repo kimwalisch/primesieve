@@ -20,7 +20,7 @@ before_script:
   - ./autogen.sh
 
 script:
-  - ./configure --enable-examples CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
+  - ./configure --enable-examples --enable-maintainer-mode CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
   - make
   - sudo make install
   - make dist
