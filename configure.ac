@@ -151,9 +151,6 @@ AC_OUTPUT
 # Print the CPU's L1 cache size and the sieve size 
 # --------------------------------------------------------------------
 
-AS_IF([test "x$HELP2MAN" != "x"],
-    [AC_MSG_NOTICE([NOTICE: HELP2MAN_LOCALE="$HELP2MAN_LOCALE"])])
-
 AS_IF([test "x$L1_DETECTED" != "x"],
     [AC_MSG_NOTICE([NOTICE: using L1_DCACHE_SIZE=$L1_DCACHE_SIZE (kilobytes)])])
 
