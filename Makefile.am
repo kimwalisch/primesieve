@@ -171,7 +171,7 @@ H2MFLAGS = \
 	--libtool \
 	--no-info
 
-doc/primesieve.1: $(bin_PROGRAMS)
+doc/primesieve.1: primesieve$(EXEEXT)
 	$(HELP2MAN) \
 		-s 1 \
 		$(H2MFLAGS) \
