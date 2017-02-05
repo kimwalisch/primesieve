@@ -65,12 +65,12 @@ table {
 
 /* LAYOUT STYLES */
 body {
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.5; 
   background: #fafafa url(../images/body-bg.jpg) 0 0 repeat;
   font-family: 'Helvetica Neue', Helvetica, Arial, serif;
-  font-weight: 300;
-  color: #373737;
+  font-weight: 200;
+  color: #282828;
 }
 
 li {
@@ -105,14 +105,14 @@ td.timing_title {
 	text-align: center;
 	font-weight: bold;
 	padding: 6px 12px;
-	color: #373737;
+	color: #282828;
 	border: 1px solid #c3c3c3;
 }
 
 p.optimizations_title {
 	font-weight: 500;
 	font-size: 17px;
-	color: #373737;
+	color: #282828;
 }
 
 span.cpu_details {
@@ -336,7 +336,7 @@ form {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 2.8em;
   letter-spacing: -1px;
-  color: #373737;
+  color: #282828;
 } 
 
 #main-content h1:before {
@@ -352,7 +352,7 @@ form {
   font-weight: 500;
   padding-top: 4px;
   margin-bottom: 10px;
-  color: #373737;
+  color: #282828;
 }
 
 #main-content h2:before {
@@ -376,7 +376,7 @@ form {
   font-weight: bold;
   margin-top: 24px;
   margin-bottom: 8px;
-  color: #373737;
+  color: #282828;
 } 
  
 #main-content h3:before {
@@ -390,7 +390,7 @@ form {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 15px;
   font-weight: bold;
-  color: #373737;
+  color: #282828;
 } 
 
 h4:before {
@@ -403,7 +403,7 @@ h4:before {
 #main-content h5 {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 14px;
-  color: #373737;
+  color: #282828;
 } 
 h5:before {
   content: "/////";
@@ -415,7 +415,7 @@ h5:before {
 #main-content h6 {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: .8em;
-  color: #373737;
+  color: #282828;
 } 
 h6:before {
   content: "//////";
@@ -433,7 +433,7 @@ a {
 }
 
 p a {
-  font-weight: 300;
+  font-weight: 200;
 }
 
 blockquote {
@@ -468,7 +468,7 @@ footer {
 }
 
 footer a {
-  color: #373737;
+  color: #282828;
 }
 footer a:hover {
   color: #444;
