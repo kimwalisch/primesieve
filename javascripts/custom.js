@@ -1,14 +1,14 @@
 $(document).ready(function()
 {
   var primesieve_version = '5.7.3';
-  var primesieve_win64_binary = 'primesieve-5.7.0-win64.zip';
-  var primesieve_win32_binary = 'primesieve-3.6-win32.zip';
-  var primesieve_macosx_x64_binary = 'primesieve-5.5.0-macosx-x64.zip';
-  var primesieve_linux_x64_binary = 'primesieve-5.5.0-linux-x64.tar.gz';
-  var primesieve_linux_x86_binary = 'primesieve-3.6-linux-x86.tar.gz';
+  var primesieve_win64_binary = 'v5.7.0/primesieve-5.7.0-win64.zip';
+  var primesieve_win32_binary = 'v3.6/primesieve-3.6-win32.zip';
+  var primesieve_macosx_x64_binary = 'v5.5.0/primesieve-5.5.0-macosx-x64.zip';
+  var primesieve_linux_x64_binary = 'v5.5.0/primesieve-5.5.0-linux-x64.tar.gz';
+  var primesieve_linux_x86_binary = 'v3.6/primesieve-3.6-linux-x86.tar.gz';
   var primesieve_os_binary = '';
 
-  var download_url = 'https://dl.bintray.com/kimwalisch/primesieve/';
+  var download_url = 'https://github.com/kimwalisch/primesieve/releases/download/';
   var download_button_text = '.zip file';
   var is64bit = false;
   
@@ -90,12 +90,12 @@ $(document).ready(function()
       file_extension = '.zip';
 
     download_button_text = file_extension + ' file';
-    $('a.download_button').attr('href', download_url + 'primesieve-' + primesieve_version + file_extension);
+    $('a.download_button').attr('href', download_url + 'v' + primesieve_version + '/primesieve-' + primesieve_version + file_extension);
   }
 
   $('a.download_button span').html(download_button_text);
-  $('a.download_zip').attr('href', download_url + 'primesieve-' + primesieve_version + '.zip');
-  $('a.download_targz').attr('href', download_url + 'primesieve-' + primesieve_version + '.tar.gz');
+  $('a.download_zip').attr('href', download_url + 'v' + primesieve_version + '/primesieve-' + primesieve_version + '.zip');
+  $('a.download_targz').attr('href', download_url + 'v' + primesieve_version + '/primesieve-' + primesieve_version + '.tar.gz');
 });
 
 if(!Modernizr.svg) {
