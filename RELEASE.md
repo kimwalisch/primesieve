@@ -53,7 +53,7 @@ explains libtool versioning.
 * Increase version number (see <a href="#versioning">Versioning</a>)
 * Update [ChangeLog](ChangeLog)
 * Tag the new release in git
-* Build statically linked primesieve binaries and upload them to [https://bintray.com/kimwalisch/primesieve](https://bintray.com/kimwalisch/primesieve)
-* Create new release tarball using ```make dist``` and upload it to [https://bintray.com/kimwalisch/primesieve](https://bintray.com/kimwalisch/primesieve)
+* Upload new primesieve binaries to [https://github.com/kimwalisch/primesieve/releases](https://github.com/kimwalisch/primesieve/releases)
+* Upload new release tarballs (```make dist```) to [https://github.com/kimwalisch/primesieve/releases](https://github.com/kimwalisch/primesieve/releases)
 * Update http://primesieve.org
 * Update http://primesieve.org/api
