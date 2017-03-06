@@ -24,7 +24,7 @@ otherinclude_HEADERS = \
 	include/primesieve/primesieve_error.hpp \
 	include/primesieve/PrimeSieve.hpp \
 	include/primesieve/primesieve_iterator.h \
-	include/primesieve/PushBackPrimes.hpp
+	include/primesieve/StorePrimes.hpp
 
 EXTRA_DIST = \
 	autogen.sh \

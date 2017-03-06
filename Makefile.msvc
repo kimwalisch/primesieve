@@ -51,7 +51,7 @@ PRIMESIEVE_HEADERS = \
   include\primesieve\primesieve_error.hpp \
   include\primesieve\primesieve_iterator.h \
   include\primesieve\iterator.hpp \
-  include\primesieve\PushBackPrimes.hpp \
+  include\primesieve\StorePrimes.hpp \
   include\primesieve\SieveOfEratosthenes-inline.hpp \
   include\primesieve\SieveOfEratosthenes.hpp \
   include\primesieve\cancel_callback.hpp \

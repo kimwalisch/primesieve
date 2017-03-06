@@ -1,5 +1,5 @@
 ///
-/// @file   PushBackPrimes.hpp
+/// @file   StorePrimes.hpp
 /// @brief  This file contains classes needed to store primes in
 ///         std::vector objects. These classes derive from Callback
 ///         and call PrimeSieve's callbackPrimes() method, the
@@ -43,10 +43,10 @@ inline std::size_t approximate_prime_count(uint64_t start, uint64_t stop)
 }
 
 template <typename T>
-class PushBackPrimes : public Callback<uint64_t>
+class StorePrimes : public Callback<uint64_t>
 {
 public:
-  PushBackPrimes(T& primes)
+  StorePrimes(T& primes)
     : primes_(primes)
   { }
 
@@ -56,7 +56,7 @@ public:
     primes_.push_back(static_cast<V>(prime));
   }
 
-  void pushBackPrimes(uint64_t start, uint64_t stop)
+  void storePrimes(uint64_t start, uint64_t stop)
   {
     if (start <= stop)
     {
@@ -67,16 +67,16 @@ public:
     }
   }
 private:
-  PushBackPrimes(const PushBackPrimes&);
-  void operator=(const PushBackPrimes&);
+  StorePrimes(const StorePrimes&);
+  void operator=(const StorePrimes&);
   T& primes_;
 };
 
 template <typename T>
-class PushBack_N_Primes : public Callback<uint64_t>
+class Store_N_Primes : public Callback<uint64_t>
 {
 public:
-  PushBack_N_Primes(T& primes) 
+  Store_N_Primes(T& primes) 
     : primes_(primes)
   { }
 
@@ -88,7 +88,7 @@ public:
       throw cancel_callback();
   }
 
-  void pushBack_N_Primes(uint64_t n, uint64_t start)
+  void store_N_Primes(uint64_t n, uint64_t start)
   {
     n_ = n;
     PrimeSieve ps;
@@ -117,12 +117,12 @@ public:
     catch (cancel_callback&) { }
   }
 private:
-  PushBack_N_Primes(const PushBack_N_Primes&);
-  void operator=(const PushBack_N_Primes&);
+  Store_N_Primes(const Store_N_Primes&);
+  void operator=(const Store_N_Primes&);
   T& primes_;
   uint64_t n_;
 };
 
-} // namespace primesieve
+} // namespace
 
 #endif

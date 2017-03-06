@@ -23,7 +23,7 @@
 #include <primesieve/Callback.hpp>
 #include <primesieve/cancel_callback.hpp>
 #include <primesieve/iterator.hpp>
-#include <primesieve/PushBackPrimes.hpp>
+#include <primesieve/StorePrimes.hpp>
 #include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
@@ -39,8 +39,8 @@ inline void generate_primes(uint64_t stop, std::vector<T>* primes)
 {
   if (primes)
   {
-    PushBackPrimes<std::vector<T> > pb(*primes);
-    pb.pushBackPrimes(0, stop);
+    StorePrimes<std::vector<T> > sp(*primes);
+    sp.storePrimes(0, stop);
   }
 }
 
@@ -52,8 +52,8 @@ inline void generate_primes(uint64_t start, uint64_t stop, std::vector<T>* prime
 {
   if (primes)
   {
-    PushBackPrimes<std::vector<T> > pb(*primes);
-    pb.pushBackPrimes(start, stop);
+    StorePrimes<std::vector<T> > sp(*primes);
+    sp.storePrimes(start, stop);
   }
 }
 
@@ -63,8 +63,8 @@ inline void generate_n_primes(uint64_t n, std::vector<T>* primes)
 {
   if (primes)
   {
-    PushBack_N_Primes<std::vector<T> > pb(*primes);
-    pb.pushBack_N_Primes(n, 0);
+    Store_N_Primes<std::vector<T> > sp(*primes);
+    sp.store_N_Primes(n, 0);
   }
 }
 
@@ -74,8 +74,8 @@ inline void generate_n_primes(uint64_t n, uint64_t start, std::vector<T>* primes
 {
   if (primes)
   {
-    PushBack_N_Primes<std::vector<T> > pb(*primes);
-    pb.pushBack_N_Primes(n, start);
+    Store_N_Primes<std::vector<T> > sp(*primes);
+    sp.store_N_Primes(n, start);
   }
 }
 
