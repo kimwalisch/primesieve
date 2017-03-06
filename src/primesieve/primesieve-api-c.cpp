@@ -139,30 +139,15 @@ void primesieve_free(void* primes)
 }
 
 //////////////////////////////////////////////////////////////////////
-//                     Nth prime functions
+//                     Nth prime function
 //////////////////////////////////////////////////////////////////////
 
 uint64_t primesieve_nth_prime(int64_t n, uint64_t start)
 {
   try
   {
-    primesieve::PrimeSieve ps;
-    ps.setSieveSize(primesieve::get_sieve_size());
-    return ps.nthPrime(n, start);
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-  return PRIMESIEVE_ERROR;
-}
-
-uint64_t primesieve_parallel_nth_prime(int64_t n, uint64_t start)
-{
-  try
-  {
     primesieve::ParallelPrimeSieve pps;
-    pps.setSieveSize (primesieve::get_sieve_size());
+    pps.setSieveSize(primesieve::get_sieve_size());
     pps.setNumThreads(primesieve::get_num_threads());
     return pps.nthPrime(n, start);
   }
@@ -181,9 +166,10 @@ uint64_t primesieve_count_primes(uint64_t start, uint64_t stop)
 {
   try
   {
-    primesieve::PrimeSieve ps;
-    ps.setSieveSize(primesieve::get_sieve_size());
-    return ps.countPrimes(start, stop);
+    primesieve::ParallelPrimeSieve pps;
+    pps.setSieveSize(primesieve::get_sieve_size());
+    pps.setNumThreads(primesieve::get_num_threads());
+    return pps.countPrimes(start, stop);
   }
   catch (std::exception&)
   {
@@ -196,9 +182,10 @@ uint64_t primesieve_count_twins(uint64_t start, uint64_t stop)
 {
   try
   {
-    primesieve::PrimeSieve ps;
-    ps.setSieveSize(primesieve::get_sieve_size());
-    return ps.countTwins(start, stop);
+    primesieve::ParallelPrimeSieve pps;
+    pps.setSieveSize(primesieve::get_sieve_size());
+    pps.setNumThreads(primesieve::get_num_threads());
+    return pps.countTwins(start, stop);
   }
   catch (std::exception&)
   {
@@ -211,9 +198,10 @@ uint64_t primesieve_count_triplets(uint64_t start, uint64_t stop)
 {
   try
   {
-    primesieve::PrimeSieve ps;
-    ps.setSieveSize(primesieve::get_sieve_size());
-    return ps.countTriplets(start, stop);
+    primesieve::ParallelPrimeSieve pps;
+    pps.setSieveSize(primesieve::get_sieve_size());
+    pps.setNumThreads(primesieve::get_num_threads());
+    return pps.countTriplets(start, stop);
   }
   catch (std::exception&)
   {
@@ -226,9 +214,10 @@ uint64_t primesieve_count_quadruplets(uint64_t start, uint64_t stop)
 {
   try
   {
-    primesieve::PrimeSieve ps;
-    ps.setSieveSize(primesieve::get_sieve_size());
-    return ps.countQuadruplets(start, stop);
+    primesieve::ParallelPrimeSieve pps;
+    pps.setSieveSize(primesieve::get_sieve_size());
+    pps.setNumThreads(primesieve::get_num_threads());
+    return pps.countQuadruplets(start, stop);
   }
   catch (std::exception&)
   {
@@ -241,9 +230,10 @@ uint64_t primesieve_count_quintuplets(uint64_t start, uint64_t stop)
 {
   try
   {
-    primesieve::PrimeSieve ps;
-    ps.setSieveSize(primesieve::get_sieve_size());
-    return ps.countQuintuplets(start, stop);
+    primesieve::ParallelPrimeSieve pps;
+    pps.setSieveSize(primesieve::get_sieve_size());
+    pps.setNumThreads(primesieve::get_num_threads());
+    return pps.countQuintuplets(start, stop);
   }
   catch (std::exception&)
   {
@@ -256,107 +246,8 @@ uint64_t primesieve_count_sextuplets(uint64_t start, uint64_t stop)
 {
   try
   {
-    primesieve::PrimeSieve ps;
-    ps.setSieveSize(primesieve::get_sieve_size());
-    return ps.countSextuplets(start, stop);
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-  return PRIMESIEVE_ERROR;
-}
-
-//////////////////////////////////////////////////////////////////////
-//                   Parallel count functions
-//////////////////////////////////////////////////////////////////////
-
-uint64_t primesieve_parallel_count_primes(uint64_t start, uint64_t stop)
-{
-  try
-  {
     primesieve::ParallelPrimeSieve pps;
-    pps.setSieveSize (primesieve::get_sieve_size());
-    pps.setNumThreads(primesieve::get_num_threads());
-    return pps.countPrimes(start, stop);
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-  return PRIMESIEVE_ERROR;
-}
-
-uint64_t primesieve_parallel_count_twins(uint64_t start, uint64_t stop)
-{
-  try
-  {
-    primesieve::ParallelPrimeSieve pps;
-    pps.setSieveSize (primesieve::get_sieve_size());
-    pps.setNumThreads(primesieve::get_num_threads());
-    return pps.countTwins(start, stop);
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-  return PRIMESIEVE_ERROR;
-}
-
-uint64_t primesieve_parallel_count_triplets(uint64_t start, uint64_t stop)
-{
-  try
-  {
-    primesieve::ParallelPrimeSieve pps;
-    pps.setSieveSize (primesieve::get_sieve_size());
-    pps.setNumThreads(primesieve::get_num_threads());
-    return pps.countTriplets(start, stop);
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-  return PRIMESIEVE_ERROR;
-}
-
-uint64_t primesieve_parallel_count_quadruplets(uint64_t start, uint64_t stop)
-{
-  try
-  {
-    primesieve::ParallelPrimeSieve pps;
-    pps.setSieveSize (primesieve::get_sieve_size());
-    pps.setNumThreads(primesieve::get_num_threads());
-    return pps.countQuadruplets(start, stop);
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-  return PRIMESIEVE_ERROR;
-}
-
-uint64_t primesieve_parallel_count_quintuplets(uint64_t start, uint64_t stop)
-{
-  try
-  {
-    primesieve::ParallelPrimeSieve pps;
-    pps.setSieveSize (primesieve::get_sieve_size());
-    pps.setNumThreads(primesieve::get_num_threads());
-    return pps.countQuintuplets(start, stop);
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-  return PRIMESIEVE_ERROR;
-}
-
-uint64_t primesieve_parallel_count_sextuplets(uint64_t start, uint64_t stop)
-{
-  try
-  {
-    primesieve::ParallelPrimeSieve pps;
-    pps.setSieveSize (primesieve::get_sieve_size());
+    pps.setSieveSize(primesieve::get_sieve_size());
     pps.setNumThreads(primesieve::get_num_threads());
     return pps.countSextuplets(start, stop);
   }
@@ -469,11 +360,6 @@ int primesieve_get_num_threads()
   return primesieve::get_num_threads();
 }
 
-uint64_t primesieve_get_max_stop()
-{
-  return primesieve::get_max_stop();
-}
-
 void primesieve_set_sieve_size(int sieve_size)
 {
   primesieve::set_sieve_size(sieve_size);
@@ -482,6 +368,11 @@ void primesieve_set_sieve_size(int sieve_size)
 void primesieve_set_num_threads(int num_threads)
 {
   primesieve::set_num_threads(num_threads);
+}
+
+uint64_t primesieve_get_max_stop()
+{
+  return primesieve::get_max_stop();
 }
 
 //////////////////////////////////////////////////////////////////////

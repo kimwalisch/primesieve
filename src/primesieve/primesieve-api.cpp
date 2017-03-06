@@ -18,7 +18,6 @@
 #include <primesieve.hpp>
 
 #include <stdint.h>
-#include <limits>
 #include <string>
 
 namespace {
@@ -33,17 +32,10 @@ int sieve_size = SIEVESIZE;
 namespace primesieve {
 
 //////////////////////////////////////////////////////////////////////
-//                     Nth prime functions
+//                     Nth prime function
 //////////////////////////////////////////////////////////////////////
 
 uint64_t nth_prime(int64_t n, uint64_t start)
-{
-  PrimeSieve ps;
-  ps.setSieveSize(get_sieve_size());
-  return ps.nthPrime(n, start);
-}
-
-uint64_t parallel_nth_prime(int64_t n, uint64_t start)
 {
   ParallelPrimeSieve pps;
   pps.setSieveSize(get_sieve_size());
@@ -57,59 +49,13 @@ uint64_t parallel_nth_prime(int64_t n, uint64_t start)
 
 uint64_t count_primes(uint64_t start, uint64_t stop)
 {
-  PrimeSieve ps;
-  ps.setSieveSize(get_sieve_size());
-  return ps.countPrimes(start, stop);
-}
-
-uint64_t count_twins(uint64_t start, uint64_t stop)
-{
-  PrimeSieve ps;
-  ps.setSieveSize(get_sieve_size());
-  return ps.countTwins(start, stop);
-}
-
-uint64_t count_triplets(uint64_t start, uint64_t stop)
-{
-  PrimeSieve ps;
-  ps.setSieveSize(get_sieve_size());
-  return ps.countTriplets(start, stop);
-}
-
-uint64_t count_quadruplets(uint64_t start, uint64_t stop)
-{
-  PrimeSieve ps;
-  ps.setSieveSize(get_sieve_size());
-  return ps.countQuadruplets(start, stop);
-}
-
-uint64_t count_quintuplets(uint64_t start, uint64_t stop)
-{
-  PrimeSieve ps;
-  ps.setSieveSize(get_sieve_size());
-  return ps.countQuintuplets(start, stop);
-}
-
-uint64_t count_sextuplets(uint64_t start, uint64_t stop)
-{
-  PrimeSieve ps;
-  ps.setSieveSize(get_sieve_size());
-  return ps.countSextuplets(start, stop);
-}
-
-//////////////////////////////////////////////////////////////////////
-//                   Parallel count functions
-//////////////////////////////////////////////////////////////////////
-
-uint64_t parallel_count_primes(uint64_t start, uint64_t stop)
-{
   ParallelPrimeSieve pps;
   pps.setSieveSize(get_sieve_size());
   pps.setNumThreads(get_num_threads());
   return pps.countPrimes(start, stop);
 }
 
-uint64_t parallel_count_twins(uint64_t start, uint64_t stop)
+uint64_t count_twins(uint64_t start, uint64_t stop)
 {
   ParallelPrimeSieve pps;
   pps.setSieveSize(get_sieve_size());
@@ -117,7 +63,7 @@ uint64_t parallel_count_twins(uint64_t start, uint64_t stop)
   return pps.countTwins(start, stop);
 }
 
-uint64_t parallel_count_triplets(uint64_t start, uint64_t stop)
+uint64_t count_triplets(uint64_t start, uint64_t stop)
 {
   ParallelPrimeSieve pps;
   pps.setSieveSize(get_sieve_size());
@@ -125,7 +71,7 @@ uint64_t parallel_count_triplets(uint64_t start, uint64_t stop)
   return pps.countTriplets(start, stop);
 }
 
-uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop)
+uint64_t count_quadruplets(uint64_t start, uint64_t stop)
 {
   ParallelPrimeSieve pps;
   pps.setSieveSize(get_sieve_size());
@@ -133,7 +79,7 @@ uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop)
   return pps.countQuadruplets(start, stop);
 }
 
-uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop)
+uint64_t count_quintuplets(uint64_t start, uint64_t stop)
 {
   ParallelPrimeSieve pps;
   pps.setSieveSize(get_sieve_size());
@@ -141,7 +87,7 @@ uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop)
   return pps.countQuintuplets(start, stop);
 }
 
-uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop)
+uint64_t count_sextuplets(uint64_t start, uint64_t stop)
 {
   ParallelPrimeSieve pps;
   pps.setSieveSize(get_sieve_size());
@@ -199,11 +145,6 @@ void print_sextuplets(uint64_t start, uint64_t stop)
 //                      Getters and Setters
 //////////////////////////////////////////////////////////////////////
 
-uint64_t get_max_stop()
-{
-  return std::numeric_limits<uint64_t>::max();
-}
-
 int get_sieve_size()
 {
   return sieve_size;
@@ -225,6 +166,11 @@ void set_num_threads(int threads)
     num_threads = ParallelPrimeSieve::getMaxThreads();
   else
     num_threads = inBetween(1, threads, ParallelPrimeSieve::getMaxThreads());
+}
+
+uint64_t get_max_stop()
+{
+  return std::numeric_limits<uint64_t>::max();
 }
 
 //////////////////////////////////////////////////////////////////////
