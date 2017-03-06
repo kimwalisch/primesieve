@@ -20,8 +20,6 @@
 
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
-#include <primesieve/Callback.hpp>
-#include <primesieve/cancel_callback.hpp>
 #include <primesieve/iterator.hpp>
 #include <primesieve/StorePrimes.hpp>
 #include <primesieve/primesieve_error.hpp>
@@ -185,16 +183,6 @@ void print_quintuplets(uint64_t start, uint64_t stop);
 /// to the standard output.
 ///
 void print_sextuplets(uint64_t start, uint64_t stop);
-
-/// Call back the primes within the interval [start, stop].
-/// @param callback  A callback function.
-///
-void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
-
-/// Call back the primes within the interval [start, stop].
-/// @param callback  An object derived from primesieve::Callback<uint64_t>.
-///
-void callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t>* callback);
 
 /// Get the current set sieve size in kilobytes.
 int get_sieve_size();

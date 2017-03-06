@@ -3,7 +3,7 @@
 /// @brief  Contains the implementations of the functions declared in
 ///         the primesieve.hpp header file.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -193,24 +193,6 @@ void print_sextuplets(uint64_t start, uint64_t stop)
   PrimeSieve ps;
   ps.setSieveSize(get_sieve_size());
   ps.printSextuplets(start, stop);
-}
-
-//////////////////////////////////////////////////////////////////////
-//                      Callback functions
-//////////////////////////////////////////////////////////////////////
-
-void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
-{
-  PrimeSieve ps;
-  ps.setSieveSize(get_sieve_size());
-  ps.callbackPrimes(start, stop, callback);
-}
-
-void callback_primes(uint64_t start, uint64_t stop, Callback<uint64_t>* callback)
-{
-  PrimeSieve ps;
-  ps.setSieveSize(get_sieve_size());
-  ps.callbackPrimes(start, stop, callback);
 }
 
 //////////////////////////////////////////////////////////////////////

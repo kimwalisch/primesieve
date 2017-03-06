@@ -1,7 +1,7 @@
 ///
 /// @file  PrimeSieve-nthPrime.cpp
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -95,7 +95,7 @@ uint64_t nthPrimeDist(int64_t n, int64_t count, uint64_t start)
 /// This class is used to generate n primes and
 /// then stop by throwing an exception.
 ///
-class NthPrime : public Callback<uint64_t> {
+class NthPrime : public Callback {
 public:
   NthPrime() : n_(0), nthPrime_(0) { }
   void findNthPrime(uint64_t, uint64_t, uint64_t);

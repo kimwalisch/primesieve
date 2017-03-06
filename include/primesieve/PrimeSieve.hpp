@@ -3,7 +3,7 @@
 /// @brief  The PrimeSieve class provides an easy API for prime
 ///         sieving (single-threaded).
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -48,7 +48,8 @@ public:
     PRINT_QUINTUPLETS = 1 << 10,
     PRINT_SEXTUPLETS  = 1 << 11,
     PRINT_STATUS      = 1 << 12,
-    CALCULATE_STATUS  = 1 << 13
+    CALCULATE_STATUS  = 1 << 13,
+    CALLBACK_PRIMES   = 1 << 14
   };
   PrimeSieve();
   PrimeSieve(PrimeSieve&, int);
@@ -78,9 +79,7 @@ public:
   void sieve(uint64_t, uint64_t);
   void sieve(uint64_t, uint64_t, int);
   // Callback
-  void callbackPrimes(uint64_t, uint64_t, void (*)(uint64_t));
-  void callbackPrimes(uint64_t, uint64_t, Callback<uint64_t>*);
-  void callbackPrimes_c(uint64_t, uint64_t, void (*)(uint64_t));
+  void callbackPrimes(uint64_t, uint64_t, Callback*);
   // nth prime
   uint64_t nthPrime(uint64_t);
   uint64_t nthPrime(int64_t, uint64_t);
@@ -144,9 +143,7 @@ private:
   int threadNum_;
   /// Pointer to the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
-  /// Callbacks for use with *callbackPrimes()
-  void (*callback_)(uint64_t);
-  Callback<uint64_t>* cb_;
+  Callback* cb_;
   static void printStatus(double, double);
   bool isFlag(int, int) const;
   bool isValidFlags(int) const;
@@ -157,14 +154,6 @@ private:
   {
       INIT_STATUS = 0,
     FINISH_STATUS = 10
-  };
-  /// Private flags
-  /// @pre flag >= (1 << 20)
-  enum
-  {
-    CALLBACK_PRIMES     = 1 << 20,
-    CALLBACK_PRIMES_OBJ = 1 << 21,
-    CALLBACK_PRIMES_C   = 1 << 22
   };
 };
 

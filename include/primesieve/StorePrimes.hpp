@@ -6,7 +6,7 @@
 ///         primes are then pushed back onto the vector inside the
 ///         callback method.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -43,7 +43,7 @@ inline std::size_t approximate_prime_count(uint64_t start, uint64_t stop)
 }
 
 template <typename T>
-class StorePrimes : public Callback<uint64_t>
+class StorePrimes : public Callback
 {
 public:
   StorePrimes(T& primes)
@@ -73,7 +73,7 @@ private:
 };
 
 template <typename T>
-class Store_N_Primes : public Callback<uint64_t>
+class Store_N_Primes : public Callback
 {
 public:
   Store_N_Primes(T& primes) 

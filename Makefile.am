@@ -66,7 +66,6 @@ libprimesieve_la_SOURCES = \
 	src/primesieve/SieveOfEratosthenes.cpp \
 	src/primesieve/WheelFactorization.cpp \
 	include/primesieve/bits.hpp \
-	include/primesieve/callback_t.hpp \
 	include/primesieve/config.hpp \
 	include/primesieve/EratBig.hpp \
 	include/primesieve/EratMedium.hpp \
@@ -100,19 +99,8 @@ install-exec-hook:
 	test "$(prefix)" = "/usr/local" && command -v ldconfig 2>/dev/null && ldconfig /usr/local/lib 2>/dev/null || true
 
 if MAKE_EXAMPLES
-noinst_PROGRAMS = callback_cancel
-callback_cancel_LDADD = libprimesieve.la
-callback_cancel_SOURCES = examples/cpp/callback_cancel.cpp
 
-noinst_PROGRAMS += callback_primes
-callback_primes_LDADD = libprimesieve.la
-callback_primes_SOURCES = examples/cpp/callback_primes.cpp
-
-noinst_PROGRAMS += callback_primes_oop
-callback_primes_oop_LDADD = libprimesieve.la
-callback_primes_oop_SOURCES = examples/cpp/callback_primes_oop.cpp
-
-noinst_PROGRAMS += count_primes
+noinst_PROGRAMS = count_primes
 count_primes_LDADD = libprimesieve.la
 count_primes_SOURCES = examples/cpp/count_primes.cpp
 

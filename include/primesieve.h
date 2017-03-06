@@ -190,12 +190,6 @@ void primesieve_print_quintuplets(uint64_t start, uint64_t stop);
  */
 void primesieve_print_sextuplets(uint64_t start, uint64_t stop);
 
-/**
- * Call back the primes within the interval [start, stop].
- * @param callback  A callback function.
- */
-void primesieve_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
-
 /** Get the current set sieve size in kilobytes */
 int primesieve_get_sieve_size();
 

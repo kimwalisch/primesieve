@@ -3,7 +3,7 @@
 /// @brief  Contains the implementations of the functions declared in
 ///         the primesieve.h header file.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -13,7 +13,6 @@
 #include <primesieve.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
-#include <primesieve/callback_t.hpp>
 #include <primesieve/malloc_vector.hpp>
 
 #include <stdint.h>
@@ -449,25 +448,6 @@ void primesieve_print_sextuplets(uint64_t start, uint64_t stop)
     primesieve::PrimeSieve ps;
     ps.setSieveSize(primesieve::get_sieve_size());
     ps.printSextuplets(start, stop);
-  }
-  catch (std::exception&)
-  {
-    errno = EDOM;
-  }
-}
-
-//////////////////////////////////////////////////////////////////////
-//                      Callback function
-//////////////////////////////////////////////////////////////////////
-
-void primesieve_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t))
-{
-  try
-  {
-    primesieve::PrimeSieve ps;
-    ps.setSieveSize(primesieve::get_sieve_size());
-    // temporarily cast away extern "C" linkage
-    ps.callbackPrimes_c(start, stop, reinterpret_cast<callback_t>(callback));
   }
   catch (std::exception&)
   {

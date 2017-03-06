@@ -3,14 +3,13 @@
 /// @brief  The PrimeSieve class provides an easy API for prime
 ///         sieving (single-threaded).
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
 #include <primesieve/config.hpp>
-#include <primesieve/callback_t.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/Callback.hpp>
@@ -62,7 +61,6 @@ PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
   flags_(parent.flags_),
   threadNum_(threadNum),
   parent_(&parent),
-  callback_(parent.callback_),
   cb_(parent.cb_)
 { }
 
@@ -88,7 +86,7 @@ bool     PrimeSieve::isFlag(int flag)            const { return (flags_ & flag) 
 bool     PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last * 2 - first)) != 0; }
 bool     PrimeSieve::isCount(int index)          const { return isFlag(COUNT_PRIMES << index); }
 bool     PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRIMES << index); }
-bool     PrimeSieve::isCallback()                const { return isFlag(CALLBACK_PRIMES, CALLBACK_PRIMES_C); }
+bool     PrimeSieve::isCallback()                const { return isFlag(CALLBACK_PRIMES); }
 bool     PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEXTUPLETS); }
 bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEXTUPLETS); }
 bool     PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
@@ -192,18 +190,11 @@ void PrimeSieve::printStatus(double old, double current)
 
 void PrimeSieve::doSmallPrime(const SmallPrime& sp)
 {
-  if (sp.firstPrime >= start_ && sp.lastPrime <= stop_)
+  if (sp.firstPrime >= start_ &&
+      sp.lastPrime <= stop_)
   {
-    // callback prime numbers
-    if (sp.index == 0)
-    {
-      if (isFlag(CALLBACK_PRIMES_OBJ))
-        cb_->callback(sp.firstPrime);
-      if (isFlag(CALLBACK_PRIMES))
-        callback_(sp.firstPrime);
-      if (isFlag(CALLBACK_PRIMES_C))
-        reinterpret_cast<callback_c_t>(callback_)(sp.firstPrime);
-    }
+    if (sp.index == 0 && isFlag(CALLBACK_PRIMES))
+      cb_->callback(sp.firstPrime);
     if (isCount(sp.index))
       counts_[sp.index]++;
     if (isPrint(sp.index))
@@ -269,44 +260,16 @@ void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags)
 }
 
 /// Generate the primes within the interval [start, stop] and call
-/// a callback function for each prime.
-///
-void PrimeSieve::callbackPrimes(uint64_t start,
-                                uint64_t stop,
-                                void (*callback)(uint64_t))
-{
-  if (!callback)
-    throw primesieve_error("callback is NULL");
-  callback_ = callback;
-  flags_ = CALLBACK_PRIMES;
-  sieve(start, stop);
-}
-
-/// Generate the primes within the interval [start, stop] and call
 /// the callback method of the cb object.
 ///
 void PrimeSieve::callbackPrimes(uint64_t start,
                                 uint64_t stop,
-                                Callback<uint64_t>* cb)
-{
-  if (!cb)
-    throw primesieve_error("Callback pointer is NULL");
-  cb_ = cb;
-  flags_ = CALLBACK_PRIMES_OBJ;
-  sieve(start, stop);
-}
-
-/// Generate the primes within the interval [start, stop] and call a
-/// callback function with extern "C" linkage for each prime.
-///
-void PrimeSieve::callbackPrimes_c(uint64_t start,
-                                  uint64_t stop,
-                                  void (*callback)(uint64_t))
+                                Callback* callback)
 {
   if (!callback)
-    throw primesieve_error("callback is NULL");
-  callback_ = callback;
-  flags_ = CALLBACK_PRIMES_C;
+    throw primesieve_error("Callback pointer is NULL");
+  cb_ = callback;
+  flags_ = CALLBACK_PRIMES;
   sieve(start, stop);
 }
 
@@ -380,4 +343,4 @@ uint64_t PrimeSieve::countSextuplets(uint64_t start, uint64_t stop)
   return getSextupletCount();
 }
 
-} // namespace primesieve
+} // namespace
