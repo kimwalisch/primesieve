@@ -129,7 +129,6 @@ private:
 class Bucket
 {
 public:
-  Bucket(const Bucket&) { reset(); }
   Bucket()              { reset(); }
   SievingPrime* begin() { return &sievingPrimes_[0]; }
   SievingPrime* last()  { return &sievingPrimes_[config::BUCKETSIZE - 1]; }

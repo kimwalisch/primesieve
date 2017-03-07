@@ -3,7 +3,7 @@
 /// @brief  Segmented sieve of Eratosthenes optimized for medium
 ///         sieving primes.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -22,7 +22,7 @@ namespace primesieve {
 
 /// @param stop       Upper bound for sieving.
 /// @param sieveSize  Sieve size in bytes.
-/// @param limit      Sieving primes in EratMedium must be <= limit.
+/// @param limit      Sieving primes must be <= limit.
 ///
 EratMedium::EratMedium(uint64_t stop, uint_t sieveSize, uint_t limit) :
   Modulo210Wheel_t(stop, sieveSize),
@@ -33,7 +33,7 @@ EratMedium::EratMedium(uint64_t stop, uint_t sieveSize, uint_t limit) :
     throw primesieve_error("EratMedium: sieveSize must be <= 2^21, 2048 kilobytes");
   if (limit > sieveSize * 9)
     throw primesieve_error("EratMedium: limit must be <= sieveSize * 9");
-  buckets_.push_back(Bucket());
+  buckets_.emplace_back();
 }
 
 /// Add a new sieving prime to EratMedium
@@ -42,7 +42,7 @@ void EratMedium::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wh
   assert(prime <= limit_);
   uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
   if (!buckets_.back().store(sievingPrime, multipleIndex, wheelIndex))
-    buckets_.push_back(Bucket());
+    buckets_.emplace_back();
 }
 
 /// Cross-off the multiples of medium sieving
@@ -116,4 +116,4 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize, Bucket& bucket)
   }
 }
 
-} // namespace primesieve
+} // namespace

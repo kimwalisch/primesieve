@@ -3,7 +3,7 @@
 /// @brief  Segmented sieve of Eratosthenes optimized for small
 ///         sieving primes.
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -23,7 +23,7 @@ namespace primesieve {
 
 /// @param stop       Upper bound for sieving.
 /// @param sieveSize  Sieve size in bytes.
-/// @param limit      Sieving primes in EratSmall must be <= limit.
+/// @param limit      Sieving primes must be <= limit.
 ///
 EratSmall::EratSmall(uint64_t stop, uint_t sieveSize, uint_t limit) :
   Modulo30Wheel_t(stop, sieveSize),
@@ -31,7 +31,7 @@ EratSmall::EratSmall(uint64_t stop, uint_t sieveSize, uint_t limit) :
 {
   if (limit > sieveSize * 3)
     throw primesieve_error("EratSmall: limit must be <= sieveSize * 3");
-  buckets_.push_back(Bucket());
+  buckets_.emplace_back();
 }
 
 /// Add a new sieving prime to EratSmall
@@ -40,7 +40,7 @@ void EratSmall::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t whe
   assert(prime <= limit_);
   uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
   if (!buckets_.back().store(sievingPrime, multipleIndex, wheelIndex))
-    buckets_.push_back(Bucket());
+    buckets_.emplace_back();
 }
 
 /// Cross-off the multiples of small sieving
@@ -330,8 +330,8 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
       break;
     }
     // set multipleIndex for the next segment
-    sPrime->setMultipleIndex(static_cast<uint_t>(p - sieveLimit));
+    sPrime->setMultipleIndex((uint_t)(p - sieveLimit));
   }
 }
 
-} // namespace primesieve
+} // namespace
