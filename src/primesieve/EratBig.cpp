@@ -18,9 +18,10 @@
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
+#include <algorithm>
 #include <cstddef>
 #include <cassert>
-#include <algorithm>
+#include <memory>
 #include <utility>
 #include <vector>
 

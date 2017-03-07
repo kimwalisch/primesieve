@@ -14,6 +14,7 @@
 #include "WheelFactorization.hpp"
 
 #include <stdint.h>
+#include <memory>
 #include <vector>
 
 namespace primesieve {

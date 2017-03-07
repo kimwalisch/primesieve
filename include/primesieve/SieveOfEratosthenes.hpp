@@ -16,6 +16,7 @@
 #include "EratBig.hpp"
 
 #include <stdint.h>
+#include <memory>
 
 namespace primesieve {
 
