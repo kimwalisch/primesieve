@@ -81,6 +81,7 @@ void iterator::generate_previous_primes()
 ///
 uint64_t iterator::get_distance(uint64_t n)
 {
+  n = max<uint64_t>(n, 10);
   uint64_t cache_size = config::ITERATOR_CACHE_SMALL;
 
   if (tiny_cache_size_ < cache_size)
@@ -89,7 +90,6 @@ uint64_t iterator::get_distance(uint64_t n)
     tiny_cache_size_ *= 4;
   }
 
-  n = max<uint64_t>(n, 10);
   double x = (double) n;
   double sqrtx = sqrt(x);
   uint64_t primes = (uint64_t)(sqrtx / (log(sqrtx) - 1));
