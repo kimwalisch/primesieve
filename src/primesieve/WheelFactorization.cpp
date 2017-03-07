@@ -2,7 +2,7 @@
 /// @file   WheelFactorization.cpp
 /// @brief  Precomputed arrays for wheel factorization.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -168,4 +168,4 @@ const WheelElement wheel210[48*8] = {
   { BIT2,  4, 0, 1 }, { BIT3, 2, 0, 1 }, { BIT4, 10, 0, 1 }, { BIT6, 2, 0, -47 }
 };
 
-} // namespace primesieve
+} // namespace
