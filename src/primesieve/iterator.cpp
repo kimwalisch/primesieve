@@ -57,7 +57,7 @@ void iterator::generate_next_primes()
   i_ = 0;
 }
 
-void iterator::generate_previous_primes()
+void iterator::generate_prev_primes()
 {
   primes_.clear();
 

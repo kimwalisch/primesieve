@@ -125,7 +125,7 @@ void primesieve_generate_next_primes(primesieve_iterator* pi)
   pi->i_ = 0;
 }
 
-void primesieve_generate_previous_primes(primesieve_iterator* pi)
+void primesieve_generate_prev_primes(primesieve_iterator* pi)
 {
   vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
 
