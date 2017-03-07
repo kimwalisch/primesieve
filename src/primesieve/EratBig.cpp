@@ -5,7 +5,7 @@
 ///         Oliveira e Silva's cache-friendly bucket sieve algorithm:
 ///         http://www.ieeta.pt/~tos/software/prime_sieve.html
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -21,7 +21,10 @@
 #include <cstddef>
 #include <cassert>
 #include <algorithm>
+#include <utility>
 #include <vector>
+
+using namespace std;
 
 namespace primesieve {
 
@@ -35,18 +38,12 @@ EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t limit) :
   limit_(limit),
   log2SieveSize_(ilog2(sieveSize)),
   moduloSieveSize_(sieveSize - 1),
-  stock_(NULL)
+  stock_(nullptr)
 {
   // '>> log2SieveSize' requires a power of 2 sieveSize
   if (!isPowerOf2(sieveSize))
     throw primesieve_error("EratBig: sieveSize must be a power of 2");
   init(sieveSize);
-}
-
-EratBig::~EratBig()
-{
-  for (std::size_t i = 0; i < pointers_.size(); i++)
-    delete[] pointers_[i];
 }
 
 void EratBig::init(uint_t sieveSize)
@@ -57,10 +54,10 @@ void EratBig::init(uint_t sieveSize)
   uint_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
   uint_t size = maxSegmentCount + 1;
 
-  // EratBig uses up to 1.6 gigabytes of memory near 2^64
-  pointers_.reserve(((1u << 30) * 2) / config::BYTES_PER_ALLOC);
+  // EratBig uses up to 1.6 gigabytes of memory
+  deleter_.reserve(((1u << 30) * 2) / config::BYTES_PER_ALLOC);
 
-  lists_.resize(size, NULL);
+  lists_.resize(size, nullptr);
   for (uint_t i = 0; i < size; i++)
     pushBucket(i);
 }
@@ -76,18 +73,18 @@ void EratBig::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheel
     pushBucket(segment);
 }
 
-/// Add an empty bucket to the front of lists_[segment].
+/// Add an empty bucket to the front of lists_[segment]
 void EratBig::pushBucket(uint_t segment)
 {
-  // if the stock_ is empty allocate new buckets
+  // allocate new buckets
   if (!stock_)
   {
-    const int N = config::BYTES_PER_ALLOC / sizeof(Bucket);
+    int N = config::BYTES_PER_ALLOC / sizeof(Bucket);
     Bucket* buckets = new Bucket[N];
+    deleter_.emplace_back(move(buckets));
     for (int i = 0; i < N-1; i++)
       buckets[i].setNext(&buckets[i + 1]);
-    buckets[N-1].setNext(NULL);
-    pointers_.push_back(buckets);
+    buckets[N-1].setNext(nullptr);
     stock_ = buckets;
   }
   Bucket* emptyBucket = stock_;
@@ -111,7 +108,7 @@ void EratBig::crossOff(byte_t* sieve)
   while (lists_[0]->hasNext() || !lists_[0]->empty())
   {
     Bucket* bucket = lists_[0];
-    lists_[0] = NULL;
+    lists_[0] = nullptr;
     pushBucket(0);
     do {
       crossOff(sieve, bucket->begin(), bucket->end());
@@ -124,7 +121,7 @@ void EratBig::crossOff(byte_t* sieve)
 
   // move the list corresponding to the next segment
   // i.e. lists_[1] to lists_[0] ...
-  std::rotate(lists_.begin(), lists_.begin() + 1, lists_.end());
+  rotate(lists_.begin(), lists_.begin() + 1, lists_.end());
 }
 
 /// Cross-off the next multiple of each sieving prime within the
@@ -183,4 +180,4 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* sPrime, SievingPrime* sEnd)
   }
 }
 
-} // namespace primesieve
+} // namespace
