@@ -1,4 +1,4 @@
-AM_CPPFLAGS = -I$(top_srcdir)/include
+AM_CPPFLAGS = -I$(top_srcdir)/include -std=c++11
 
 lib_LTLIBRARIES = libprimesieve.la
 libprimesieve_la_CXXFLAGS = $(OPENMP_CXXFLAGS)
