@@ -89,13 +89,13 @@ public:
   void setMultipleIndex(uint_t multipleIndex)
   {
     assert(multipleIndex <= MAX_MULTIPLEINDEX);
-    indexes_ = static_cast<uint32_t>(indexes_ | multipleIndex);
+    indexes_ = (uint32_t)(indexes_ | multipleIndex);
   }
 
   void setWheelIndex(uint_t wheelIndex)
   {
     assert(wheelIndex <= MAX_WHEELINDEX);
-    indexes_ = static_cast<uint32_t>(wheelIndex << 23);
+    indexes_ = (uint32_t)(wheelIndex << 23);
   }
 
   void set(uint_t multipleIndex,
@@ -103,7 +103,7 @@ public:
   {
     assert(multipleIndex <= MAX_MULTIPLEINDEX);
     assert(wheelIndex <= MAX_WHEELINDEX);
-    indexes_ = static_cast<uint32_t>(multipleIndex | (wheelIndex << 23));
+    indexes_ = (uint32_t)(multipleIndex | (wheelIndex << 23));
   }
 
   void set(uint_t sievingPrime,
@@ -111,7 +111,7 @@ public:
            uint_t wheelIndex)
   {
     set(multipleIndex, wheelIndex);
-    sievingPrime_ = static_cast<uint32_t>(sievingPrime);
+    sievingPrime_ = (uint32_t) sievingPrime;
   }
 private:
   /// multipleIndex = 23 least significant bits of indexes_.
@@ -194,7 +194,7 @@ public:
     if (nextMultiple > stop_ - multiple)
       return;
     nextMultiple += multiple - segmentLow;
-    uint_t multipleIndex = static_cast<uint_t>(nextMultiple / NUMBERS_PER_BYTE);
+    uint_t multipleIndex = (uint_t)(nextMultiple / NUMBERS_PER_BYTE);
     uint_t wheelIndex = wheelOffsets_[prime % NUMBERS_PER_BYTE] + INIT[quotient % MODULO].wheelIndex;
     storeSievingPrime(prime, multipleIndex, wheelIndex);
   }
