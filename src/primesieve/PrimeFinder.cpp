@@ -111,7 +111,7 @@ void PrimeFinder::count(const byte_t* sieve, uint_t sieveSize)
 {
   // count prime numbers (1 bits), see popcount.cpp
   if (ps_.isFlag(ps_.COUNT_PRIMES))
-    ps_.counts_[0] += popcount(reinterpret_cast<const uint64_t*>(sieve), ceilDiv(sieveSize, 8));
+    ps_.counts_[0] += popcount((const uint64_t*) sieve, ceilDiv(sieveSize, 8));
 
   // count prime k-tuplets (i = 1 twins, i = 2 triplets, ...)
   for (uint_t i = 1; i < ps_.counts_.size(); i++)
