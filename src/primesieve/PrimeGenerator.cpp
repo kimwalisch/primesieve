@@ -3,7 +3,7 @@
 ///        Generates the sieving primes up to sqrt(stop) and adds
 ///        them to PrimeFinder.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -82,4 +82,4 @@ void PrimeGenerator::generateSievingPrimes(const byte_t* sieve, uint_t sieveSize
   }
 }
 
-} // namespace primesieve
+} // namespace
