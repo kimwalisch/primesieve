@@ -31,7 +31,7 @@ namespace primesieve {
 
 /// @param stop       Upper bound for sieving.
 /// @param sieveSize  Sieve size in bytes.
-/// @param limit      Sieving primes in EratBig must be <= limit,
+/// @param limit      Sieving primes must be <= limit,
 ///                   usually limit = sqrt(stop).
 ///
 EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t limit) :
