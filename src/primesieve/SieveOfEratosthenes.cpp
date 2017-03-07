@@ -2,7 +2,7 @@
 /// @file   SieveOfEratosthenes.cpp
 /// @brief  Implementation of the segmented sieve of Eratosthenes.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -19,7 +19,7 @@
 
 #include <stdint.h>
 #include <exception>
-#include <cstddef>
+#include <utility>
 
 namespace primesieve {
 
@@ -51,10 +51,8 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   start_(start),
   stop_(stop),
   preSieve_(preSieve),
-  sieve_(NULL),
-  eratSmall_(NULL),
-  eratMedium_(NULL),
-  eratBig_(NULL)
+  limitPreSieve_(preSieve.getLimit()),
+  sieve_(nullptr)
 {
   if (start_ < 7)
     throw primesieve_error("SieveOfEratosthenes: start must be >= 7");
@@ -65,46 +63,26 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   sieveSize_ = inBetween(1, floorPowerOf2(sieveSize), 2048);
   sieveSize_ *= 1024; // convert to bytes
 
-  // allocate sieve of Eratosthenes array
-  sieve_ = new byte_t[sieveSize_];
-
   uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
   segmentLow_ = start_ - getByteRemainder(start_);
   segmentHigh_ = add_overflow_safe(segmentLow_, dist);
-  sqrtStop_ = static_cast<uint_t>(isqrt(stop_));
-  limitPreSieve_ = preSieve_.getLimit();
+  sqrtStop_ = (uint_t) isqrt(stop_);
 
-  init();
+  allocate();
 }
 
-SieveOfEratosthenes::~SieveOfEratosthenes()
+void SieveOfEratosthenes::allocate()
 {
-  cleanUp();
-}
+  // sieving array
+  sieve_ = new byte_t[sieveSize_];
+  deleteSieve_.reset(std::move(sieve_));
 
-void SieveOfEratosthenes::cleanUp()
-{
-  delete[] sieve_;
-  delete eratSmall_;
-  delete eratMedium_;
-  delete eratBig_;
-}
+  limitEratSmall_  = (uint_t) sieveSize_ * config::FACTOR_ERATSMALL;
+  limitEratMedium_ = (uint_t) sieveSize_ * config::FACTOR_ERATMEDIUM;
 
-void SieveOfEratosthenes::init()
-{
-  limitEratSmall_  = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATSMALL);
-  limitEratMedium_ = static_cast<uint_t>(sieveSize_ * config::FACTOR_ERATMEDIUM);
-  try
-  {
-    if (sqrtStop_ > limitPreSieve_)   eratSmall_  = new EratSmall (stop_, sieveSize_, limitEratSmall_);
-    if (sqrtStop_ > limitEratSmall_)  eratMedium_ = new EratMedium(stop_, sieveSize_, limitEratMedium_);
-    if (sqrtStop_ > limitEratMedium_) eratBig_    = new EratBig   (stop_, sieveSize_, sqrtStop_);
-  }
-  catch (std::exception&)
-  {
-    cleanUp();
-    throw;
-  }
+  if (sqrtStop_ > limitPreSieve_)   eratSmall_.reset(new EratSmall (stop_, sieveSize_, limitEratSmall_));
+  if (sqrtStop_ > limitEratSmall_) eratMedium_.reset(new EratMedium(stop_, sieveSize_, limitEratMedium_));
+  if (sqrtStop_ > limitEratMedium_)   eratBig_.reset(new EratBig   (stop_, sieveSize_, sqrtStop_));
 }
 
 uint_t SieveOfEratosthenes::getSqrtStop() const
@@ -166,7 +144,7 @@ void SieveOfEratosthenes::sieve()
 
   uint64_t remainder = getByteRemainder(stop_);
   uint64_t dist = (stop_ - remainder) - segmentLow_;
-  sieveSize_ = static_cast<uint_t>(dist) / NUMBERS_PER_BYTE + 1;
+  sieveSize_ = ((uint_t) dist) / NUMBERS_PER_BYTE + 1;
   dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
   segmentHigh_ = add_overflow_safe(segmentLow_, dist);
 
