@@ -2,7 +2,7 @@
 /// @file   WheelFactorization.hpp
 /// @brief  Classes and structs related to wheel factorization.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -12,14 +12,14 @@
 #define WHEELFACTORIZATION_HPP
 
 #include "config.hpp"
-#include "toString.hpp"
 #include "pmath.hpp"
 #include "primesieve_error.hpp"
 
 #include <stdint.h>
-#include <limits>
 #include <cstddef>
 #include <cassert>
+#include <string>
+#include <limits>
 
 namespace primesieve {
 
@@ -209,7 +209,7 @@ protected:
     uint_t maxSieveSize = SievingPrime::MAX_MULTIPLEINDEX + 1;
 
     if (sieveSize > maxSieveSize)
-      throw primesieve_error("WheelFactorization: sieveSize must be <= " + toString(maxSieveSize));
+      throw primesieve_error("WheelFactorization: sieveSize must be <= " + std::to_string(maxSieveSize));
   }
 
   virtual ~WheelFactorization()

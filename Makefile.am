@@ -80,7 +80,6 @@ libprimesieve_la_SOURCES = \
 	include/primesieve/PrimeSieve-lock.hpp \
 	include/primesieve/SieveOfEratosthenes.hpp \
 	include/primesieve/SieveOfEratosthenes-inline.hpp \
-	include/primesieve/toString.hpp \
 	include/primesieve/WheelFactorization.hpp
 
 primesieve_SOURCES = \
