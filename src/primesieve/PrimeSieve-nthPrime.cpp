@@ -8,6 +8,7 @@
 ///
 
 #include <primesieve/config.hpp>
+#include <primesieve/cancel_callback.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve.hpp>
