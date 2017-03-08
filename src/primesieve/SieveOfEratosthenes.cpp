@@ -19,7 +19,7 @@
 
 #include <stdint.h>
 #include <exception>
-#include <utility>
+#include <memory>
 
 namespace primesieve {
 
@@ -73,12 +73,11 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
 
 void SieveOfEratosthenes::allocate()
 {
-  // sieving array
-  sieve_ = new byte_t[sieveSize_];
-  deleteSieve_.reset(std::move(sieve_));
+  deleteSieve_.reset(new byte_t[sieveSize_]);
+  sieve_ = deleteSieve_.get();
 
-  limitEratSmall_  = (uint_t) sieveSize_ * config::FACTOR_ERATSMALL;
-  limitEratMedium_ = (uint_t) sieveSize_ * config::FACTOR_ERATMEDIUM;
+  limitEratSmall_  = (uint_t)(sieveSize_ * config::FACTOR_ERATSMALL);
+  limitEratMedium_ = (uint_t)(sieveSize_ * config::FACTOR_ERATMEDIUM);
 
   if (sqrtStop_ > limitPreSieve_)   eratSmall_.reset(new EratSmall (stop_, sieveSize_, limitEratSmall_));
   if (sqrtStop_ > limitEratSmall_) eratMedium_.reset(new EratMedium(stop_, sieveSize_, limitEratMedium_));

@@ -38,7 +38,7 @@ private:
   /// List of empty buckets
   Bucket* stock_;
   /// Pointers of the allocated buckets
-  std::vector<std::unique_ptr<Bucket[]>> deleter_;
+  std::vector<std::unique_ptr<Bucket[]>> memory_;
   void init(uint_t);
   static void moveBucket(Bucket&, Bucket*&);
   void pushBucket(uint_t);

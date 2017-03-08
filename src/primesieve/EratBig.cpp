@@ -22,10 +22,7 @@
 #include <cstddef>
 #include <cassert>
 #include <memory>
-#include <utility>
 #include <vector>
-
-using namespace std;
 
 namespace primesieve {
 
@@ -56,7 +53,7 @@ void EratBig::init(uint_t sieveSize)
   uint_t size = maxSegmentCount + 1;
 
   // EratBig uses up to 1.6 gigabytes of memory
-  deleter_.reserve(((1u << 30) * 2) / config::BYTES_PER_ALLOC);
+  memory_.reserve(((1u << 30) * 2) / config::BYTES_PER_ALLOC);
 
   lists_.resize(size, nullptr);
   for (uint_t i = 0; i < size; i++)
@@ -81,12 +78,13 @@ void EratBig::pushBucket(uint_t segment)
   if (!stock_)
   {
     int N = config::BYTES_PER_ALLOC / sizeof(Bucket);
-    Bucket* buckets = new Bucket[N];
-    deleter_.emplace_back(move(buckets));
-    for (int i = 0; i < N-1; i++)
-      buckets[i].setNext(&buckets[i + 1]);
-    buckets[N-1].setNext(nullptr);
-    stock_ = buckets;
+    memory_.emplace_back(std::unique_ptr<Bucket[]>(new Bucket[N]));
+    Bucket* bucket = memory_.back().get();
+
+    for (int i = 0; i < N - 1; i++)
+      bucket[i].setNext(&bucket[i + 1]);
+    bucket[N-1].setNext(nullptr);
+    stock_ = bucket;
   }
   Bucket* emptyBucket = stock_;
   stock_ = stock_->next();
@@ -122,7 +120,7 @@ void EratBig::crossOff(byte_t* sieve)
 
   // move the list corresponding to the next segment
   // i.e. lists_[1] to lists_[0] ...
-  rotate(lists_.begin(), lists_.begin() + 1, lists_.end());
+  std::rotate(lists_.begin(), lists_.begin() + 1, lists_.end());
 }
 
 /// Cross-off the next multiple of each sieving prime within the

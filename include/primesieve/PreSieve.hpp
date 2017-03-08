@@ -46,7 +46,7 @@ private:
   uint_t limit_;
   uint_t primeProduct_;
   byte_t* buffer_;
-  std::unique_ptr<byte_t[]> deleteBuffer_;
+  std::unique_ptr<byte_t[]> deleter_;
   uint_t size_;
   void allocate();
 };

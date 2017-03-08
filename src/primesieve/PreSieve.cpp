@@ -17,7 +17,6 @@
 #include <algorithm>
 #include <cstring>
 #include <memory>
-#include <utility>
 
 using namespace std;
 using namespace primesieve;
@@ -54,8 +53,8 @@ PreSieve::PreSieve(uint64_t start, uint64_t stop) :
 void PreSieve::allocate()
 {
   size_ = primeProduct_ / NUMBERS_PER_BYTE;
-  buffer_ = new byte_t[size_];
-  deleteBuffer_.reset(move(buffer_));
+  deleter_.reset(new byte_t[size_]);
+  buffer_ = deleter_.get();
   memset(buffer_, 0xff, size_);
 
   uint_t stop = primeProduct_ * 2;
