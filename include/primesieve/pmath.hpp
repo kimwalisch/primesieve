@@ -2,7 +2,7 @@
 /// @file   pmath.hpp
 /// @brief  Auxiliary math functions needed in primesieve.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -19,13 +19,13 @@ namespace primesieve {
 template <typename X, typename Y>
 inline X ceilDiv(X x, Y y)
 {
-  return static_cast<X>((x + y - 1) / y);
+  return (X) ((x + y - 1) / y);
 }
 
 template <typename T>
 inline T numberOfBits(T)
 {
-  return static_cast<T>(sizeof(T) * 8);
+  return (T) (sizeof(T) * 8);
 }
 
 template <typename T>
@@ -121,10 +121,10 @@ inline uint64_t sub_underflow_safe(uint64_t x, uint64_t y)
 /// Get an approximation of the maximum prime gap near n
 inline uint64_t max_prime_gap(uint64_t n)
 {
-  double x = static_cast<double>(n);
+  double x = (double) n;
   double logx = std::log(x);
   double prime_gap = logx * logx;
-  return static_cast<uint64_t>(prime_gap);
+  return (uint64_t) prime_gap;
 }
 
 } // namespace
