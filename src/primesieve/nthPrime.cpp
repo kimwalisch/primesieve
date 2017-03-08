@@ -1,5 +1,5 @@
 ///
-/// @file  PrimeSieve-nthPrime.cpp
+/// @file  nthPrime.cpp
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -8,7 +8,6 @@
 ///
 
 #include <primesieve/config.hpp>
-#include <primesieve/cancel_callback.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve.hpp>
@@ -31,108 +30,60 @@ void checkLimit(uint64_t start)
 void checkLowerLimit(uint64_t stop)
 {
   if (stop == 0)
-    throw primesieve_error("nth prime < 2 is impossible, negative n is too small");
-}
-
-void checkLowerLimit(uint64_t start, double dist)
-{
-  double s = static_cast<double>(start);
-
-  if (max(1E4, s) / dist < 0.9)
-    throw primesieve_error("nth prime < 2 is impossible, negative n is too small");
+    throw primesieve_error("nth prime < 2 is impossible, n is too small");
 }
 
 // Prime count approximation
 int64_t pix(int64_t n)
 {
-  double x = static_cast<double>(n);
+  double x = (double) n;
   double logx = log(max(4.0, x));
   double pix = x / logx;
+  return (int64_t) pix;
+}
 
-  return static_cast<int64_t>(pix);
+uint64_t nthPrimeDist(int64_t n, int64_t count, uint64_t start)
+{
+  double x = (double) (n - count);
+
+  x = abs(x);
+  x = max(x, 4.0);
+
+  double logx = log(x);
+  double loglogx = log(logx);
+  double pix = x * (logx + loglogx - 1);
+
+  // correct start if sieving backwards to get
+  // a more accurate approximation
+  if (count >= n)
+    start -= (uint64_t) pix;
+
+  // approximate the nth prime using:
+  // start + n * log(start + pi(n) / loglog(n))
+  double startPix = start + pix / loglogx;
+  startPix = max(4.0, startPix);
+  double logStartPix = log(startPix);
+  double dist = max(pix, x * logStartPix);
+
+  // ensure (start + dist) <= nth prime
+  if (count < n)
+    dist -= sqrt(dist) * log(logStartPix) * 2;
+
+  // ensure (start + dist) >= nth prime
+  if (count > n)
+    dist += sqrt(dist) * log(logStartPix) * 2;
+
+  // ensure (start + dist) >= nth prime
+  // if n is very small
+  double maxPrimeGap = logStartPix * logStartPix;
+  dist = max(dist, maxPrimeGap);
+  return (uint64_t) dist;
 }
 
 bool sieveBackwards(int64_t n, int64_t count, uint64_t stop)
 {
   return (count >= n) &&
         !(count == n && stop < 2);
-}
-
-uint64_t nthPrimeDist(int64_t n, int64_t count, uint64_t start)
-{
-  double x = static_cast<double>(n - count);
-  double s = static_cast<double>(start);
-
-  x = abs(x);
-  x = max(4.0, x);
-  s = max(4.0, s);
-
-  double logx = log(x);
-  double loglogx = log(logx);
-  double pix = x * (logx + loglogx - 1);
-
-  // Correct start if sieving backwards
-  if (count >= n)
-    s -= pix;
-
-  // Approximate the nth prime using
-  // start + n * log(start + pi(n) / loglog(n))
-  double startPix = s + pix / loglogx;
-  double logStartPix = log(max(4.0, startPix));
-  double dist = max(pix, x * logStartPix);
-  double maxPrimeGap = logStartPix * logStartPix;
-  double sign = (count < n) ? -2 : 2;
-
-  // Make sure start + dist <= nth prime
-  dist += sqrt(dist) * log(logStartPix) * sign;
-  dist = max(dist, maxPrimeGap);
-
-  if (count >= n)
-    checkLowerLimit(start, dist);
-
-  return static_cast<uint64_t>(dist);
-}
-
-/// This class is used to generate n primes and
-/// then stop by throwing an exception.
-///
-class NthPrime : public Callback {
-public:
-  NthPrime() : n_(0), nthPrime_(0) { }
-  void findNthPrime(uint64_t, uint64_t, uint64_t);
-  void callback(uint64_t);
-  uint64_t getNthPrime() const;
-private:
-  uint64_t n_;
-  uint64_t nthPrime_;
-};
-
-void NthPrime::findNthPrime(uint64_t n, uint64_t start, uint64_t stop)
-{
-  n_ = n;
-  PrimeSieve ps;
-  try
-  {
-    ps.callbackPrimes(start, stop, this);
-    if (stop < get_max_stop())
-      ps.callbackPrimes(stop + 1, get_max_stop(), this);
-    throw primesieve_error("nth prime > 2^64");
-  }
-  catch (cancel_callback&) { }
-}
-
-uint64_t NthPrime::getNthPrime() const
-{
-  return nthPrime_;
-}
-
-void NthPrime::callback(uint64_t prime)
-{
-  if (--n_ == 0)
-  {
-    nthPrime_ = prime;
-    throw cancel_callback();
-  }
 }
 
 } // namespace
@@ -161,7 +112,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   uint64_t nthPrimeGuess = add_overflow_safe(start, dist);
 
   int64_t count = 0;
-  int64_t tinyN = 10000;
+  int64_t tinyN = 100000;
   tinyN = max(tinyN, pix(isqrt(nthPrimeGuess)));
 
   while ((n - count) > tinyN ||
@@ -185,18 +136,21 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     }
   }
 
-  if (n < 0)
-    count -= 1;
+  try
+  {
+    checkLimit(start);
+    if (n < 0) count -= 1;
+    dist = nthPrimeDist(n, count, start) * 2;
+    stop = add_overflow_safe(start, dist);
+    uint64_t prime;
+    for (primesieve::iterator it(start, stop); count < n; count++)
+      prime = it.next_prime();
+    seconds_ = getWallTime() - t1;
+    return prime;
+  }
+  catch (primesieve_error&) { }
 
-  checkLimit(start);
-  uint64_t overValue = 3;
-  dist = nthPrimeDist(n, count, start) * overValue;
-  stop = add_overflow_safe(start, dist);
-  NthPrime np;
-  np.findNthPrime(n - count, start, stop);
-  seconds_ = getWallTime() - t1;
-
-  return np.getNthPrime();
+  throw primesieve_error("nth prime > 2^64");
 }
 
 } // namespace
