@@ -14,6 +14,7 @@
 
 #include <stdint.h>
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 
 using namespace std;
@@ -33,6 +34,12 @@ void checkLowerLimit(uint64_t stop)
     throw primesieve_error("nth prime < 2 is impossible, n is too small");
 }
 
+bool sieveBackwards(int64_t n, int64_t count, uint64_t stop)
+{
+  return (count >= n) &&
+        !(count == n && stop < 2);
+}
+
 // Prime count approximation
 int64_t pix(int64_t n)
 {
@@ -49,6 +56,7 @@ uint64_t nthPrimeDist(int64_t n, int64_t count, uint64_t start)
   x = abs(x);
   x = max(x, 4.0);
 
+  // rough pi(x) approximation
   double logx = log(x);
   double loglogx = log(logx);
   double pix = x * (logx + loglogx - 1);
@@ -66,24 +74,16 @@ uint64_t nthPrimeDist(int64_t n, int64_t count, uint64_t start)
   double dist = max(pix, x * logStartPix);
 
   // ensure (start + dist) <= nth prime
-  if (count < n)
-    dist -= sqrt(dist) * log(logStartPix) * 2;
-
+  if (count < n) dist -= sqrt(dist) * log(logStartPix) * 2;
   // ensure (start + dist) >= nth prime
-  if (count > n)
-    dist += sqrt(dist) * log(logStartPix) * 2;
+  if (count > n) dist += sqrt(dist) * log(logStartPix) * 2;
 
+  // if n is very small:
   // ensure (start + dist) >= nth prime
-  // if n is very small
   double maxPrimeGap = logStartPix * logStartPix;
   dist = max(dist, maxPrimeGap);
-  return (uint64_t) dist;
-}
 
-bool sieveBackwards(int64_t n, int64_t count, uint64_t stop)
-{
-  return (count >= n) &&
-        !(count == n && stop < 2);
+  return (uint64_t) dist;
 }
 
 } // namespace
@@ -135,6 +135,11 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
       stop = sub_underflow_safe(start, 1);
     }
   }
+
+  // here start < nth prime,
+  // hence we can sieve forward the remaining
+  // distance and find the nth prime
+  assert(count < n);
 
   try
   {
