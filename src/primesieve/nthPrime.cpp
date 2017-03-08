@@ -101,7 +101,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   double t1 = getWallTime();
 
   if (n == 0)
-    n = 1; // Like Mathematica
+    n = 1; // like Mathematica
   else if (n > 0)
     start = add_overflow_safe(start, 1);
   else if (n < 0)
@@ -136,6 +136,9 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     }
   }
 
+  if (n < 0)
+    count -= 1;
+
   // here start < nth prime,
   // hence we can sieve forward the remaining
   // distance and find the nth prime
@@ -144,7 +147,6 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   try
   {
     checkLimit(start);
-    if (n < 0) count -= 1;
     dist = nthPrimeDist(n, count, start) * 2;
     stop = add_overflow_safe(start, dist);
     uint64_t prime;
