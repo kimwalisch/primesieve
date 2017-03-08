@@ -1,5 +1,5 @@
 ///
-/// @file   WheelFactorization.hpp
+/// @file   Wheel.hpp
 /// @brief  Classes and structs related to wheel factorization.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
@@ -8,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef WHEELFACTORIZATION_HPP
-#define WHEELFACTORIZATION_HPP
+#ifndef WHEEL_HPP
+#define WHEEL_HPP
 
 #include "config.hpp"
 #include "pmath.hpp"
@@ -200,9 +200,6 @@ public:
   }
 
 protected:
-  /// @param stop       Upper bound for sieving.
-  /// @param sieveSize  Sieve size in bytes.
-  ///
   WheelFactorization(uint64_t stop, uint_t sieveSize) :
     stop_(stop)
   {
@@ -255,6 +252,6 @@ typedef WheelFactorization<30, 8, wheel30Init, wheel30> Modulo30Wheel_t;
 /// 4th wheel, skips multiples of 2, 3, 5 and 7
 typedef WheelFactorization<210, 48, wheel210Init, wheel210> Modulo210Wheel_t;
 
-} // namespace primesieve
+} // namespace
 
 #endif

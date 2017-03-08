@@ -64,7 +64,7 @@ libprimesieve_la_SOURCES = \
 	src/primesieve/primesieve-api.cpp \
 	src/primesieve/primesieve-api-c.cpp \
 	src/primesieve/SieveOfEratosthenes.cpp \
-	src/primesieve/WheelFactorization.cpp \
+	src/primesieve/Wheel.cpp \
 	include/primesieve/bits.hpp \
 	include/primesieve/config.hpp \
 	include/primesieve/EratBig.hpp \
@@ -80,7 +80,7 @@ libprimesieve_la_SOURCES = \
 	include/primesieve/PrimeSieve-lock.hpp \
 	include/primesieve/SieveOfEratosthenes.hpp \
 	include/primesieve/SieveOfEratosthenes-inline.hpp \
-	include/primesieve/WheelFactorization.hpp
+	include/primesieve/Wheel.hpp
 
 primesieve_SOURCES = \
 	src/apps/console/main.cpp \

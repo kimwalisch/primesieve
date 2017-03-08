@@ -13,9 +13,9 @@
 
 #include <primesieve/config.hpp>
 #include <primesieve/EratBig.hpp>
-#include <primesieve/WheelFactorization.hpp>
-#include <primesieve/primesieve_error.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/primesieve_error.hpp>
+#include <primesieve/Wheel.hpp>
 
 #include <stdint.h>
 #include <algorithm>

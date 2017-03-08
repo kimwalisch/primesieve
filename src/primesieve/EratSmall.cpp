@@ -11,9 +11,9 @@
 
 #include <primesieve/config.hpp>
 #include <primesieve/EratSmall.hpp>
-#include <primesieve/WheelFactorization.hpp>
-#include <primesieve/primesieve_error.hpp>
 #include <primesieve/bits.hpp>
+#include <primesieve/primesieve_error.hpp>
+#include <primesieve/Wheel.hpp>
 
 #include <stdint.h>
 #include <cassert>

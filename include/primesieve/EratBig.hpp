@@ -11,7 +11,7 @@
 #define ERATBIG_HPP
 
 #include "config.hpp"
-#include "WheelFactorization.hpp"
+#include "Wheel.hpp"
 
 #include <stdint.h>
 #include <memory>

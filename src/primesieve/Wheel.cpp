@@ -1,5 +1,5 @@
 ///
-/// @file   WheelFactorization.cpp
+/// @file   Wheel.cpp
 /// @brief  Precomputed arrays for wheel factorization.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
@@ -8,7 +8,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/WheelFactorization.hpp>
+#include <primesieve/Wheel.hpp>
 #include <primesieve/bits.hpp>
 
 namespace primesieve {
