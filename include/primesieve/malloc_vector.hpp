@@ -1,7 +1,7 @@
 ///
 /// @file  malloc_vector
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -105,6 +105,6 @@ private:
   bool is_free_;
 };
 
-} // namespace primesieve
+} // namespace
 
 #endif
