@@ -147,8 +147,9 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   try
   {
     checkLimit(start);
-    dist = nthPrimeDist(n, count, start);
-    stop = add_overflow_safe(start, dist * 2);
+    dist = nthPrimeDist(n, count, start) * 2;
+    start = sub_underflow_safe(start, 1);
+    stop = add_overflow_safe(start, dist);
     uint64_t prime;
     for (primesieve::iterator it(start, stop); count < n; count++)
       prime = it.next_prime();
