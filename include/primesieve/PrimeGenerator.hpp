@@ -27,7 +27,6 @@ private:
   void segmentFinished(const byte_t*, uint_t);
   void generateSievingPrimes(const byte_t*, uint_t);
   void generateTinyPrimes();
-  DISALLOW_COPY_AND_ASSIGN(PrimeGenerator);
 };
 
 } // namespace

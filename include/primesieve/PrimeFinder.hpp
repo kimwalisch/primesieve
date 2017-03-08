@@ -42,7 +42,6 @@ private:
   void print(const byte_t*, uint_t) const;
   void callbackPrimes(Callback&, const byte_t*, uint_t) const;
   static void printPrime(uint64_t);
-  DISALLOW_COPY_AND_ASSIGN(PrimeFinder);
 };
 
 } // namespace

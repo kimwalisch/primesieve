@@ -231,8 +231,7 @@ protected:
   }
 private:
   static const uint_t wheelOffsets_[30];
-  const uint64_t stop_;
-  DISALLOW_COPY_AND_ASSIGN(WheelFactorization);
+  uint64_t stop_;
 };
 
 template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement* WHEEL>

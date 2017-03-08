@@ -24,7 +24,6 @@ public:
   ~LockGuard() { ps_.unsetLock(); }
 private:
   PrimeSieve& ps_;
-  DISALLOW_COPY_AND_ASSIGN(LockGuard);
 };
 
 } // namespace
