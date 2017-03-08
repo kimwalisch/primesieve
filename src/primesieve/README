@@ -87,9 +87,15 @@ Other files
   primesieve-5.0. It is mostly a wrapper around the methods of the
   PrimeSieve and ParallelPrimeSieve classes.
 
-* primesieve-api.cpp
+* api.cpp
+  primesieve C++ API.
   This file contains the implementations of the functions declared
   in include/primesieve.hpp.
+
+* api-c.cpp
+  primesieve C API.
+  This file contains the implementations of the functions declared
+  in include/primesieve.h.
 
 * include/primesieve/config.hpp
   Contains compile time constants that set the size of various
