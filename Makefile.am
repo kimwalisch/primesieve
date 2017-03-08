@@ -18,7 +18,6 @@ include_HEADERS = \
 otherincludedir = $(includedir)/primesieve
 otherinclude_HEADERS = \
 	include/primesieve/Callback.hpp \
-	include/primesieve/cancel_callback.hpp \
 	include/primesieve/iterator.hpp \
 	include/primesieve/ParallelPrimeSieve.hpp \
 	include/primesieve/primesieve_error.hpp \
