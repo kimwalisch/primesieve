@@ -1,7 +1,8 @@
 ///
-/// @file   primesieve-api.cpp
-/// @brief  Contains the implementations of the functions declared in
-///         the primesieve.hpp header file.
+/// @file   api.cpp
+/// @brief  primesieve C++ API.
+///         Contains the implementations of the functions declared
+///         in the primesieve.hpp header file.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///

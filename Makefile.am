@@ -48,6 +48,8 @@ man_MANS = \
 	doc/primesieve.1
 
 libprimesieve_la_SOURCES = \
+	src/primesieve/api.cpp \
+	src/primesieve/api-c.cpp \
 	src/primesieve/EratBig.cpp \
 	src/primesieve/EratMedium.cpp \
 	src/primesieve/EratSmall.cpp \
@@ -61,8 +63,6 @@ libprimesieve_la_SOURCES = \
 	src/primesieve/primesieve_test.cpp \
 	src/primesieve/PrimeSieve-nthPrime.cpp \
 	src/primesieve/PrimeSieve.cpp \
-	src/primesieve/primesieve-api.cpp \
-	src/primesieve/primesieve-api-c.cpp \
 	src/primesieve/SieveOfEratosthenes.cpp \
 	src/primesieve/Wheel.cpp \
 	include/primesieve/bits.hpp \
