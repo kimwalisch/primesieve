@@ -61,7 +61,7 @@ libprimesieve_la_SOURCES = \
 	src/primesieve/iterator.cpp \
 	src/primesieve/primesieve_iterator.cpp \
 	src/primesieve/primesieve_test.cpp \
-	src/primesieve/PrimeSieve-nthPrime.cpp \
+	src/primesieve/nthPrime.cpp \
 	src/primesieve/PrimeSieve.cpp \
 	src/primesieve/SieveOfEratosthenes.cpp \
 	src/primesieve/Wheel.cpp \
