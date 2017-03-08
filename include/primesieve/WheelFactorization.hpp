@@ -134,7 +134,7 @@ public:
   SievingPrime* last()  { return &sievingPrimes_[config::BUCKETSIZE - 1]; }
   SievingPrime* end()   { return prime_; }
   Bucket* next()        { return next_; }
-  bool hasNext() const  { return next_ != NULL; }
+  bool hasNext() const  { return next_ != nullptr; }
   bool empty()          { return begin() == end(); }
   void reset()          { prime_ = begin(); }
   void setNext(Bucket* next)
