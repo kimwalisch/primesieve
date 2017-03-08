@@ -3,7 +3,7 @@
 /// @brief  The OmpInitLock and OmpLockGuard classes are RAII-style
 ///         wrappers for OpenMP locks.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -27,12 +27,12 @@ private:
   omp_lock_t lock_;
 };
 
-/// @param lockAdress  Allocate a new lock_ on the stack and
-///                    store its address to lockAdress.
+/// Create a new lock_ and store its
+/// address to lockAdress.
 ///
 OmpInitLock::OmpInitLock(void** lockAddress)
 {
-  *lockAddress = static_cast<void*>(&lock_);
+  *lockAddress = (void*) &lock_;
   omp_init_lock(&lock_);
 }
 
