@@ -1,8 +1,8 @@
 libprimesieve examples
 ======================
 
-This directory contains example programs that show how to generate
-primes using libprimesieve.
+This directory contains C/C++ example programs that show how to
+generate primes using libprimesieve.
 
 Build instructions
 ==================
