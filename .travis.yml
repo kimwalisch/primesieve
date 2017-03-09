@@ -32,5 +32,7 @@ install:
 
 script:
   - cmake .
-  - make VERBOSE=1
+  - make
   - ./primesieve --test
+  - cppcheck . --error-exitcode=1 -iexamples/cpp/previous_prime.cpp -iexamples/cpp/primesieve_iterator.cpp
+
