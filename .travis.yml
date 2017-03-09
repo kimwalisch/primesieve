@@ -38,4 +38,4 @@ script:
   - cmake .
   - make
   - ./primesieve --test
-  - cppcheck . --error-exitcode=1 -iexamples/cpp/previous_prime.cpp -iexamples/cpp/primesieve_iterator.cpp
+  - cppcheck . --error-exitcode=1 -iCMakeFiles -icmake-* -iexamples/cpp/previous_prime.cpp -iexamples/cpp/primesieve_iterator.cpp
