@@ -8,6 +8,8 @@
 *.obj
 *.lib
 *.o
+*.pc
+*.dSYM
 CMakeCache.txt
 CMakeFiles
 CMakeScripts
@@ -15,10 +17,7 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 CTestTestfile.cmake
-*.pc
-*.dSYM
 /primesieve*
 /libprimesieve*
 doc/Doxyfile
 doc/html
-
