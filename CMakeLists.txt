@@ -5,7 +5,15 @@ set(PRIMESIEVE_VERSION_MINOR 0)
 set(PRIMESIEVE_VERSION "${PRIMESIEVE_VERSION_MAJOR}.${PRIMESIEVE_VERSION_MINOR}")
 include_directories(include)
 set(CMAKE_BUILD_TYPE Release)
+
+# Compiler must support C++11 or later ###############################
+
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Build options ######################################################
+
+option(BUILD_EXAMPLES "Build example programs" OFF)
 
 # primesieve binary source files #####################################
 
@@ -15,25 +23,23 @@ set(BIN_SRC src/apps/console/cmdoptions.cpp
 
 # primesieve library source files ####################################
 
-set(PRIMESIEVE_PATH src/primesieve)
-
-set(LIB_SRC ${PRIMESIEVE_PATH}/EratBig.cpp
-            ${PRIMESIEVE_PATH}/EratMedium.cpp
-            ${PRIMESIEVE_PATH}/EratSmall.cpp
-            ${PRIMESIEVE_PATH}/ParallelPrimeSieve.cpp
-            ${PRIMESIEVE_PATH}/PreSieve.cpp
-            ${PRIMESIEVE_PATH}/PrimeFinder.cpp
-            ${PRIMESIEVE_PATH}/PrimeGenerator.cpp
-            ${PRIMESIEVE_PATH}/PrimeSieve.cpp
-            ${PRIMESIEVE_PATH}/SieveOfEratosthenes.cpp
-            ${PRIMESIEVE_PATH}/Wheel.cpp
-            ${PRIMESIEVE_PATH}/api-c.cpp
-            ${PRIMESIEVE_PATH}/api.cpp
-            ${PRIMESIEVE_PATH}/iterator.cpp
-            ${PRIMESIEVE_PATH}/nthPrime.cpp
-            ${PRIMESIEVE_PATH}/popcount.cpp
-            ${PRIMESIEVE_PATH}/primesieve_iterator.cpp
-            ${PRIMESIEVE_PATH}/primesieve_test.cpp)
+set(LIB_SRC src/primesieve/EratBig.cpp
+            src/primesieve/EratMedium.cpp
+            src/primesieve/EratSmall.cpp
+            src/primesieve/ParallelPrimeSieve.cpp
+            src/primesieve/PreSieve.cpp
+            src/primesieve/PrimeFinder.cpp
+            src/primesieve/PrimeGenerator.cpp
+            src/primesieve/PrimeSieve.cpp
+            src/primesieve/SieveOfEratosthenes.cpp
+            src/primesieve/Wheel.cpp
+            src/primesieve/api-c.cpp
+            src/primesieve/api.cpp
+            src/primesieve/iterator.cpp
+            src/primesieve/nthPrime.cpp
+            src/primesieve/popcount.cpp
+            src/primesieve/primesieve_iterator.cpp
+            src/primesieve/primesieve_test.cpp)
 
 # Check for OpenMP ###################################################
 
@@ -75,3 +81,9 @@ install(FILES include/primesieve/primesieve_error.hpp DESTINATION include)
 
 install(FILES include/primesieve.h DESTINATION include)
 install(FILES include/primesieve/primesieve_iterator.h DESTINATION include)
+
+# Build libprimesieve example programs ###############################
+
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
