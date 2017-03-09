@@ -1,11 +1,11 @@
-libprimesieve code examples
-===========================
+libprimesieve examples
+======================
 
-This directory contains examples programs that show how to generate
+This directory contains example programs that show how to generate
 primes using libprimesieve.
 
 Build instructions
-------------------
+==================
 
 Open a terminal and cd into the primesieve (parent) directory,
 then run the commands:
