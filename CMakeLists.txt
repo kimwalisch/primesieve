@@ -16,6 +16,19 @@ option(BUILD_TESTS    "Build test programs"    ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Build libprimesieve example programs ###############################
+
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
+
+# Add test programs ##################################################
+
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif()
+
 # primesieve binary source files #####################################
 
 set(BIN_SRC src/apps/console/cmdoptions.cpp
@@ -96,22 +109,3 @@ install(FILES include/primesieve.hpp
 install(FILES include/primesieve.h
               include/primesieve/primesieve_iterator.h
               DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
-
-# Build libprimesieve example programs ###############################
-
-if(BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif()
-
-# Add test programs ##################################################
-
-if(BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(test)
-
-    file(GLOB files "test/*.cpp" "test/*.c")
-    foreach(file ${files})
-        get_filename_component(binary_name ${file} NAME_WE)
-        add_test(NAME ${binary_name} COMMAND ${binary_name})
-    endforeach()
-endif()
