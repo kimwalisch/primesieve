@@ -93,9 +93,12 @@ target_link_libraries(primesieve shared_libprimesieve)
 
 # Install primesieve #################################################
 
-install(TARGETS primesieve DESTINATION bin)
-install(TARGETS static_libprimesieve DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
-install(TARGETS shared_libprimesieve DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+install(TARGETS primesieve
+                DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+install(TARGETS static_libprimesieve
+                shared_libprimesieve
+                DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 
 install(FILES include/primesieve.hpp
               include/primesieve/PrimeSieve.hpp
@@ -109,3 +112,6 @@ install(FILES include/primesieve.hpp
 install(FILES include/primesieve.h
               include/primesieve/primesieve_iterator.h
               DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+
+install(FILES doc/primesieve.1
+              DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
