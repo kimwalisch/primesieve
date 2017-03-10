@@ -6,15 +6,15 @@ set(PRIMESIEVE_VERSION "${PRIMESIEVE_VERSION_MAJOR}.${PRIMESIEVE_VERSION_MINOR}"
 include_directories(include)
 set(CMAKE_BUILD_TYPE Release)
 
-# Compiler must support C++11 or later ###############################
-
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 # Build options ######################################################
 
 option(BUILD_EXAMPLES "Build example programs" OFF)
 option(BUILD_TESTS    "Build test programs"    ON)
+
+# Compiler must support C++11 or later ###############################
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # primesieve binary source files #####################################
 
@@ -63,7 +63,7 @@ set_target_properties(shared_libprimesieve PROPERTIES VERSION ${PRIMESIEVE_VERSI
 # Build binary #######################################################
 
 add_executable(primesieve ${BIN_SRC})
-target_link_libraries(primesieve static_libprimesieve)
+target_link_libraries(primesieve shared_libprimesieve)
 
 # Install primesieve #################################################
 
