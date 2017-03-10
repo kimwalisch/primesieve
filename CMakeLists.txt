@@ -48,6 +48,18 @@ if(OPENMP_FOUND)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
+# Detect CPU L1 cache size ###########################################
+
+execute_process(COMMAND sh ${PROJECT_SOURCE_DIR}/scripts/L1_cache_size.sh
+                        RESULT_VARIABLE L1_FAILED
+                        OUTPUT_VARIABLE L1_CACHE_SIZE)
+
+if(NOT L1_FAILED)
+    string(STRIP ${L1_CACHE_SIZE} L1_CACHE_SIZE)
+    message(STATUS "CPU L1 data cache size: ${L1_CACHE_SIZE} KB")
+    add_definitions(-DL1_DCACHE_SIZE=${L1_CACHE_SIZE})
+endif()
+
 # Build static library ###############################################
 
 add_library(static_libprimesieve STATIC ${LIB_SRC})
