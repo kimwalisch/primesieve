@@ -3,7 +3,7 @@
 /// @brief  help() and version() functions of the primesieve
 ///         console application.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -37,7 +37,6 @@ const string helpMenu(
   "                          e.g. -p1 primes, -p2 twins, -p3 triplets, ...\n"
   "  -q,     --quiet         Quiet mode, prints less output\n"
   "  -s<N>,  --size=<N>      Set the sieve size in kilobytes, N <= 2048\n"
-  "          --test          Run various sieving tests and exit\n"
   "  -t<N>,  --threads=<N>   Set the number of threads, N <= CPU cores\n"
   "          --time          Print the time elapsed in seconds\n"
   "  -v,     --version       Print version and license information\n"
@@ -62,7 +61,7 @@ void version()
 {
   cout << "primesieve " << primesieve::primesieve_version();
   cout << ", <http://primesieve.org>" << endl;
-  cout << "Copyright (C) 2010-2016 Kim Walisch" << endl;
+  cout << "Copyright (C) 2010 - 2017 Kim Walisch" << endl;
   cout << endl;
 
   cout << "BSD 2-Clause License <http://opensource.org/licenses/BSD-2-Clause>" << endl;
