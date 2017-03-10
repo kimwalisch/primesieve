@@ -14,6 +14,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Build options ######################################################
 
 option(BUILD_EXAMPLES "Build example programs" OFF)
+option(BUILD_TESTS    "Build test programs"    ON)
 
 # primesieve binary source files #####################################
 
@@ -38,8 +39,7 @@ set(LIB_SRC src/primesieve/EratBig.cpp
             src/primesieve/iterator.cpp
             src/primesieve/nthPrime.cpp
             src/primesieve/popcount.cpp
-            src/primesieve/primesieve_iterator.cpp
-            src/primesieve/primesieve_test.cpp)
+            src/primesieve/primesieve_iterator.cpp)
 
 # Check for OpenMP ###################################################
 
@@ -86,4 +86,17 @@ install(FILES include/primesieve/primesieve_iterator.h DESTINATION include)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
+endif()
+
+# Add test programs ##################################################
+
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+
+    file(GLOB files "test/*.cpp" "test/*.c")
+    foreach(file ${files})
+        get_filename_component(binary_name ${file} NAME_WE)
+        add_test(NAME ${binary_name} COMMAND ${binary_name})
+    endforeach()
 endif()

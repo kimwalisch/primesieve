@@ -21,8 +21,7 @@
 #include <ctime>
 
 using namespace std;
-
-namespace primesieve {
+using namespace primesieve;
 
 /// Correct values to compare with test results
 const unsigned int primeCounts[19] =
@@ -163,7 +162,7 @@ void testRandomIntervals()
 /// 1 minute to complete on a quad core CPU from 2013.
 /// @return true if success else false.
 ///
-bool primesieve_test()
+int main()
 {
   try
   {
@@ -175,10 +174,8 @@ bool primesieve_test()
   catch (exception& e)
   {
     cerr << endl << "primesieve error: " << e.what() << endl;
-    return false;
+    return 1;
   }
   cout << "All tests passed successfully!" << endl;
-  return true;
+  return 0;
 }
-
-} // namespace

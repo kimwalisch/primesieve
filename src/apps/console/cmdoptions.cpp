@@ -3,7 +3,7 @@
 /// @brief  Parse command-line options for the primesieve console
 ///         (terminal) application.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -16,7 +16,6 @@
 #include <string>
 #include <map>
 #include <exception>
-#include <cstdlib>
 #include <cstddef>
 #include <stdint.h>
 
@@ -52,7 +51,6 @@ enum OptionValues
   OPTION_PRINT,
   OPTION_QUIET,
   OPTION_SIZE,
-  OPTION_TEST,
   OPTION_THREADS,
   OPTION_TIME,
   OPTION_VERSION
@@ -81,18 +79,11 @@ void initOptionMap()
   optionMap["--quiet"]     = OPTION_QUIET;
   optionMap["-s"]          = OPTION_SIZE;
   optionMap["--size"]      = OPTION_SIZE;
-  optionMap["--test"]      = OPTION_TEST;
   optionMap["-t"]          = OPTION_THREADS;
   optionMap["--threads"]   = OPTION_THREADS;
   optionMap["--time"]      = OPTION_TIME;
   optionMap["-v"]          = OPTION_VERSION;
   optionMap["--version"]   = OPTION_VERSION;
-}
-
-void test()
-{
-  bool ok = primesieve_test();
-  exit(ok ? 0 : 1);
 }
 
 int check(int primeType)
@@ -178,7 +169,6 @@ CmdOptions parseOptions(int argc, char** argv)
         case OPTION_TIME:      opts.time = true; break;
         case OPTION_NUMBER:    opts.numbers.push_back(option.getValue<uint64_t>()); break;
         case OPTION_DISTANCE:  opts.numbers.push_back(option.getValue<uint64_t>() + opts.numbers.front()); break;
-        case OPTION_TEST:      test(); break;
         case OPTION_VERSION:   version(); break;
         case OPTION_HELP:      help(); break;
       }

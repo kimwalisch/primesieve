@@ -12,10 +12,9 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
-#define PRIMESIEVE_VERSION "5.7.3"
-#define PRIMESIEVE_VERSION_MAJOR 5
-#define PRIMESIEVE_VERSION_MINOR 7
-#define PRIMESIEVE_VERSION_PATCH 3
+#define PRIMESIEVE_VERSION "6.0"
+#define PRIMESIEVE_VERSION_MAJOR 6
+#define PRIMESIEVE_VERSION_MINOR 0
 
 #include <primesieve/primesieve_iterator.h>
 
@@ -206,14 +205,6 @@ void primesieve_set_num_threads(int num_threads);
  * functions.
  */
 void primesieve_free(void* primes);
-
-/**
- * Run extensive correctness tests.
- * The tests last about one minute on a quad core CPU from
- * 2013 and use up to 1 gigabyte of memory.
- * @return 1 if success, 0 if error.
- */
-int primesieve_test();
 
 /** Get the primesieve version number, in the form “i.j.k” */
 const char* primesieve_version();

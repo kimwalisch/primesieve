@@ -380,11 +380,6 @@ uint64_t primesieve_get_max_stop()
 //                           Miscellaneous
 //////////////////////////////////////////////////////////////////////
 
-int primesieve_test()
-{
-  return primesieve::primesieve_test();
-}
-
 const char* primesieve_version()
 {
   return PRIMESIEVE_VERSION;

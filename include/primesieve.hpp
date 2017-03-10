@@ -13,10 +13,9 @@
 #ifndef PRIMESIEVE_HPP
 #define PRIMESIEVE_HPP
 
-#define PRIMESIEVE_VERSION "5.7.3"
-#define PRIMESIEVE_VERSION_MAJOR 5
-#define PRIMESIEVE_VERSION_MINOR 7
-#define PRIMESIEVE_VERSION_PATCH 3
+#define PRIMESIEVE_VERSION "6.0"
+#define PRIMESIEVE_VERSION_MAJOR 6
+#define PRIMESIEVE_VERSION_MINOR 0
 
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
@@ -184,13 +183,6 @@ void set_sieve_size(int sieve_size);
 /// primesieve::parallel_* function calls.
 ///
 void set_num_threads(int num_threads);
-
-/// Run extensive correctness tests.
-/// The tests last about one minute on a quad core CPU from
-/// 2013 and use up to 1 gigabyte of memory.
-/// @return true if success else false.
-///
-bool primesieve_test();
 
 /// Get the primesieve version number, in the form “i.j.k”.
 std::string primesieve_version();
