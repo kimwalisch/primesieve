@@ -113,5 +113,13 @@ install(FILES include/primesieve.h
               include/primesieve/primesieve_iterator.h
               DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 
+# Install man page ###################################################
+
 install(FILES doc/primesieve.1
               DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
+
+# Install primesieve.pc (pkg-config) #################################
+
+configure_file(primesieve.pc.in primesieve.pc @ONLY)
+install(FILES primesieve.pc
+              DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
