@@ -119,16 +119,18 @@ find_program(HELP2MAN help2man)
 
 if(HELP2MAN)
     message(STATUS "Found help2man: ${HELP2MAN}")
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${HELP2MAN}
-                       ARGS -s 1
-                            --manual="primesieve"
-                            --source="primesieve ${PRIMESIEVE_VERSION}"
-                            --no-info
-                            -n "efficient prime number generator"
-                            -o ${PROJECT_SOURCE_DIR}/doc/primesieve.1
-                            ./primesieve
-                       VERBATIM)
+
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${HELP2MAN}
+        ARGS -s 1
+             --manual="primesieve"
+             --source="primesieve ${PRIMESIEVE_VERSION}"
+             --no-info
+             -n "efficient prime number generator"
+             -o ${PROJECT_SOURCE_DIR}/doc/primesieve.1
+             ./primesieve
+        VERBATIM)
 endif()
 
 # Install man page ###################################################
