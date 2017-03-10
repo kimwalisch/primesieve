@@ -80,19 +80,21 @@ target_link_libraries(primesieve shared_libprimesieve)
 # Install primesieve #################################################
 
 install(TARGETS primesieve DESTINATION bin)
-install(TARGETS static_libprimesieve DESTINATION lib)
-install(TARGETS shared_libprimesieve DESTINATION lib)
+install(TARGETS static_libprimesieve DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+install(TARGETS shared_libprimesieve DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 
-install(FILES include/primesieve.hpp DESTINATION include)
-install(FILES include/primesieve/PrimeSieve.hpp DESTINATION include)
-install(FILES include/primesieve/ParallelPrimeSieve.hpp DESTINATION include)
-install(FILES include/primesieve/Callback.hpp DESTINATION include)
-install(FILES include/primesieve/StorePrimes.hpp DESTINATION include)
-install(FILES include/primesieve/iterator.hpp DESTINATION include)
-install(FILES include/primesieve/primesieve_error.hpp DESTINATION include)
+install(FILES include/primesieve.hpp
+              include/primesieve/PrimeSieve.hpp
+              include/primesieve/ParallelPrimeSieve.hpp
+              include/primesieve/Callback.hpp
+              include/primesieve/StorePrimes.hpp
+              include/primesieve/iterator.hpp
+              include/primesieve/primesieve_error.hpp
+              DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 
-install(FILES include/primesieve.h DESTINATION include)
-install(FILES include/primesieve/primesieve_iterator.h DESTINATION include)
+install(FILES include/primesieve.h
+              include/primesieve/primesieve_iterator.h
+              DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 
 # Build libprimesieve example programs ###############################
 
