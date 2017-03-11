@@ -26,7 +26,7 @@ env:
     - OMP_NUM_THREADS=4
 
 install:
-  - sudo apt-get install -y cppcheck doxygen help2man texlive graphviz
+  - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive graphviz
   - wget --no-check-certificate http://cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.tar.gz
   - tar -xzf cmake-3.1.3-Linux-x86_64.tar.gz
   - export CXX="g++-4.8"
@@ -35,8 +35,17 @@ install:
   - export PATH=$PWD/cmake-3.1.3-Linux-x86_64/bin:$PATH   
 
 script:
-  - cmake -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON .
-  - make
+  - mkdir build
+  - cd build
+  - cmake -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
+  - make -j4
   - make doc
-  - make test
+  - cd ..
+  - rm -rf build
+  - mkdir build
+  - cd build
+  - cmake -GNinja -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
+  - ninja
+  - ninja doc
+  - ninja test
   - cppcheck . --error-exitcode=1 -iCMakeFiles -icmake-3.1.3-Linux-x86_64 -iexamples/cpp/previous_prime.cpp -iexamples/cpp/primesieve_iterator.cpp
