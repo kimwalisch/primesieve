@@ -3,8 +3,8 @@ Build API documentation
 
 To build the primesieve C/C++ API documentation in format html/PDF
 you need to have installed ```doxygen```, ```graphviz (dot)```
-and ```texlive (latex)``` programs. Run the commands below from the
-parent directory.
+and ```texlive (latex)```. Run the commands below from the parent
+directory.
 
 ```bash
 # Build C/C++ API documentation
