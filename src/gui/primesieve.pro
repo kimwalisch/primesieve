@@ -73,13 +73,13 @@ macx {
 }
 
 *g++* {
-  QMAKE_CXXFLAGS += -fopenmp
-  QMAKE_LFLAGS   += -fopenmp
+  QMAKE_CXXFLAGS += -fopenmp -std=c++11
+  QMAKE_LFLAGS   += -fopenmp -std=c++11
 }
 
 *clang* {
-  QMAKE_CXXFLAGS += -fopenmp
-  QMAKE_LFLAGS   += -fopenmp
+  QMAKE_CXXFLAGS += -fopenmp -std=c++11
+  QMAKE_LFLAGS   += -fopenmp -std=c++11
 }
 
 *icc* {
