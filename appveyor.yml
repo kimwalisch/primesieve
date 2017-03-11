@@ -6,6 +6,7 @@ version: 1.0.{build}
 branches:
   only:
   - master
+  - 6.0
 
 platform:
   - x86
@@ -14,22 +15,16 @@ platform:
 configuration:
   - Debug
 
+os: Visual Studio 2015
+
 before_build:
-  "\"C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Bin\\SetEnv.cmd\" /%platform%"
+  - if "%platform%" == "x86" call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+  - if "%platform%" == "x64" call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
 
 build_script:
-  # Build using highest warning level on x64
-  - if "%platform%" == "x64" sed -i 's#/W2#/W4 /WX#' Makefile.msvc
-  - nmake /f Makefile.msvc
-  - nmake /f Makefile.msvc examples
+  - if "%platform%" == "x86" cmake -G "Visual Studio 14 2015 Win32" .
+  - if "%platform%" == "x64" cmake -G "Visual Studio 14 2015 Win64" .
+  - cmake --build .
 
 test_script:
-  - callback_cancel.exe
-  - callback_primes.exe
-  - callback_primes_oop.exe
-  - count_primes.exe
-  - primesieve_iterator.exe
-  - nth_prime.exe
-  - previous_prime.exe
-  - store_primes_in_vector.exe
-  - nmake /f Makefile.msvc check
+  - ctest
