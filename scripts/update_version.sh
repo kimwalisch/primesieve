@@ -34,7 +34,6 @@ echo ""
 
 # Update version
 for i in $(echo README.md \
-                CMakeLists.txt \
                 include/primesieve.hpp \
                 include/primesieve.h)
 do
