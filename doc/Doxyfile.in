@@ -32,6 +32,6 @@ RECURSIVE              = NO
 EXAMPLE_PATTERNS       = *.cpp *.c
 EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@/examples
 EXAMPLE_RECURSIVE      = YES
-GENERATE_LATEX         = NO
+GENERATE_LATEX         = @HAVE_LATEX@
 FULL_PATH_NAMES        = NO
 HAVE_DOT               = @HAVE_DOT@
