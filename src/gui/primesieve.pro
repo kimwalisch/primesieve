@@ -38,20 +38,20 @@ HEADERS += \
 # Sieve of Eratosthenes sources (src/primesieve)
 # ---------------------------------------------------------
 
-INCLUDEPATH += ../../../include
+INCLUDEPATH += ../../include
 
 SOURCES += \
-  ../../primesieve/EratBig.cpp \
-  ../../primesieve/EratMedium.cpp \
-  ../../primesieve/EratSmall.cpp \
-  ../../primesieve/ParallelPrimeSieve.cpp \
-  ../../primesieve/popcount.cpp \
-  ../../primesieve/PreSieve.cpp \
-  ../../primesieve/PrimeFinder.cpp \
-  ../../primesieve/PrimeGenerator.cpp \
-  ../../primesieve/PrimeSieve.cpp \
-  ../../primesieve/SieveOfEratosthenes.cpp \
-  ../../primesieve/Wheel.cpp
+  ../primesieve/EratBig.cpp \
+  ../primesieve/EratMedium.cpp \
+  ../primesieve/EratSmall.cpp \
+  ../primesieve/ParallelPrimeSieve.cpp \
+  ../primesieve/popcount.cpp \
+  ../primesieve/PreSieve.cpp \
+  ../primesieve/PrimeFinder.cpp \
+  ../primesieve/PrimeGenerator.cpp \
+  ../primesieve/PrimeSieve.cpp \
+  ../primesieve/SieveOfEratosthenes.cpp \
+  ../primesieve/Wheel.cpp
 
 # ---------------------------------------------------------
 # primesieve icon file
