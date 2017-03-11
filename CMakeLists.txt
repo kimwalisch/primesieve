@@ -66,11 +66,12 @@ endif()
 
 execute_process(COMMAND sh ${PROJECT_SOURCE_DIR}/scripts/L1_cache_size.sh
                         RESULT_VARIABLE L1_FAILED
-                        OUTPUT_VARIABLE L1_CACHE_SIZE)
+                        OUTPUT_VARIABLE L1_CACHE_SIZE
+                        ERROR_QUIET)
 
 if(NOT L1_FAILED)
     string(STRIP ${L1_CACHE_SIZE} L1_CACHE_SIZE)
-    message(STATUS "CPU L1 data cache size: ${L1_CACHE_SIZE} KB")
+    message(STATUS "Found CPU L1 cache size: ${L1_CACHE_SIZE} KB")
     add_definitions(-DL1_DCACHE_SIZE=${L1_CACHE_SIZE})
 endif()
 
@@ -120,6 +121,15 @@ find_program(HELP2MAN help2man)
 if(HELP2MAN)
     message(STATUS "Found help2man: ${HELP2MAN}")
 
+    execute_process(COMMAND perl -e "use Locale::gettext;"
+                    RESULT_VARIABLE LOCALE_FAILED
+                    OUTPUT_QUIET ERROR_QUIET)
+
+    if(NOT LOCALE_FAILED)
+        message(STATUS "Found help2man option: --locale=C.UTF-8")
+        set(HELP2MAN_LOCALE "--locale=C.UTF-8")
+    endif()
+
     add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${HELP2MAN}
@@ -127,6 +137,7 @@ if(HELP2MAN)
              --manual="primesieve"
              --source="primesieve ${PRIMESIEVE_VERSION}"
              --no-info
+             ${HELP2MAN_LOCALE}
              -n "efficient prime number generator"
              -o ${PROJECT_SOURCE_DIR}/doc/primesieve.1
              ./primesieve
