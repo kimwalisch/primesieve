@@ -51,7 +51,7 @@ SOURCES += \
   ../../primesieve/PrimeGenerator.cpp \
   ../../primesieve/PrimeSieve.cpp \
   ../../primesieve/SieveOfEratosthenes.cpp \
-  ../../primesieve/WheelFactorization.cpp
+  ../../primesieve/Wheel.cpp
 
 # ---------------------------------------------------------
 # primesieve icon file
