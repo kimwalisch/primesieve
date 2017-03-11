@@ -26,12 +26,12 @@ env:
     - OMP_NUM_THREADS=4
 
 install:
-  - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive graphviz libqt4-dev qt4-qmake
+  - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive graphviz
   - wget --no-check-certificate http://cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.tar.gz
   - tar -xzf cmake-3.1.3-Linux-x86_64.tar.gz
   - export CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
   - export PATH=$PWD/cmake-3.1.3-Linux-x86_64/bin:$PATH
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; export CC="gcc-4.8"; export QMAKE_CXX="g++-4.8"; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; export CC="gcc-4.8"; fi
 
 script:
   # Test using GNU make
@@ -53,7 +53,3 @@ script:
   - rm -rf build
   # Test using cppcheck (static code analysis)
   - cppcheck . --error-exitcode=1 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp
-  # Build primesieve GUI app
-  - cd src/gui
-  - qmake 
-  - make -j4
