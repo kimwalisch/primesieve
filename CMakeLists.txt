@@ -82,10 +82,13 @@ set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
 
 # Build shared library ###############################################
 
+MATH(EXPR PRIMESIEVE_SOVERSION_MAJOR "${PRIMESIEVE_VERSION_MAJOR}+2")
+set(PRIMESIEVE_SOVERSION "${PRIMESIEVE_SOVERSION_MAJOR}.${PRIMESIEVE_VERSION_MINOR}")
+
 add_library(shared_libprimesieve SHARED ${LIB_SRC})
 set_target_properties(shared_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
-set_target_properties(shared_libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_VERSION_MAJOR})
-set_target_properties(shared_libprimesieve PROPERTIES VERSION ${PRIMESIEVE_VERSION})
+set_target_properties(shared_libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
+set_target_properties(shared_libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
 # Build binary #######################################################
 
@@ -152,5 +155,6 @@ install(FILES doc/primesieve.1
 # Install primesieve.pc (pkg-config) #################################
 
 configure_file(primesieve.pc.in primesieve.pc @ONLY)
+
 install(FILES primesieve.pc
               DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
