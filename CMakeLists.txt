@@ -31,9 +31,9 @@ endif()
 
 # primesieve binary source files #####################################
 
-set(BIN_SRC src/apps/console/cmdoptions.cpp
-            src/apps/console/help.cpp
-            src/apps/console/main.cpp)
+set(BIN_SRC src/console/cmdoptions.cpp
+            src/console/help.cpp
+            src/console/main.cpp)
 
 # primesieve library source files ####################################
 
