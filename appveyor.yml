@@ -8,22 +8,16 @@ branches:
   - master
   - 6.0
 
-platform:
-  - x86
-  - x64
-
 configuration:
   - Debug
 
 os: Visual Studio 2015
 
 before_build:
-  - if "%platform%" == "x86" call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-  - if "%platform%" == "x64" call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
 
 build_script:
-  - if "%platform%" == "x86" cmake -G "Visual Studio 14 2015 Win32" .
-  - if "%platform%" == "x64" cmake -G "Visual Studio 14 2015 Win64" .
+  - cmake -G "Visual Studio 14 2015 Win64" .
   - cmake --build .
 
 test_script:
