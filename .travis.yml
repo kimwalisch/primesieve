@@ -26,7 +26,7 @@ env:
     - OMP_NUM_THREADS=4
 
 install:
-  - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive graphviz
+  - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive graphviz libqt4-dev qt4-qmake
   - wget --no-check-certificate http://cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.tar.gz
   - tar -xzf cmake-3.1.3-Linux-x86_64.tar.gz
   - export CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
@@ -54,3 +54,7 @@ script:
   - rm -rf build
   # Test using cppcheck (static code analysis)
   - cppcheck . --error-exitcode=1 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp
+  # Build primesieve GUI app
+  - cd src/gui
+  - qmake QMAKE_CXX="g++-4.8" QMAKE_CC="gcc-4.8"
+  - make -j4
