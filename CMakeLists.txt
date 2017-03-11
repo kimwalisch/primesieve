@@ -9,20 +9,20 @@ set(CMAKE_BUILD_TYPE Release)
 # Build options ######################################################
 
 option(BUILD_EXAMPLES "Build example programs" OFF)
-option(BUILD_TESTS    "Build test programs"    ON)
+option(BUILD_TESTS    "Build test programs"    OFF)
 
 # Compiler must support C++11 or later ###############################
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Build libprimesieve example programs ###############################
+# Add subdirectories #################################################
+
+add_subdirectory(doc)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
-
-# Add test programs ##################################################
 
 if(BUILD_TESTS)
     enable_testing()
