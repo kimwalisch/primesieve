@@ -8,23 +8,19 @@ branches:
   - master
   - 6.0
 
+platform:
+  - x86
+  - x64
+
 configuration:
   - Debug
 
-environment:
-  matrix:
-  - cmake_generator: "Visual Studio 14 2015"
-    platform: x86
-  - cmake_generator: "Visual Studio 14 2015 Win64"
-    platform: x64
-
 before_build:
-  - "\"C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Bin\\SetEnv.cmd\" /%platform%"
-  - "\"C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat\" %platform%"
+  "\"C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Bin\\SetEnv.cmd\" /%platform%"
 
 build_script:
-  - cmake -G "%cmake_generator%" .
-  - cmake --build .
+  - cmake -G "NMake Makefiles" .
+  - nmake
 
 test_script:
   - ctest
