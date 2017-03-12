@@ -14,6 +14,7 @@ platform:
 
 build_script:
   - cmake -G "Visual Studio 15 2017 Win64" .
+  - cmake --build . --target static_libprimesieve
   - cmake --build .
 
 test_script:
