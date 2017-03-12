@@ -15,19 +15,6 @@ option(BUILD_TESTS    "Build test programs"    OFF)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Add subdirectories #################################################
-
-add_subdirectory(doc)
-
-if(BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif()
-
-if(BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(test)
-endif()
-
 # primesieve binary source files #####################################
 
 set(BIN_SRC src/console/cmdoptions.cpp
@@ -74,39 +61,46 @@ if(L1_RES EQUAL 0)
     add_definitions(-DL1_DCACHE_SIZE=${L1_CACHE_SIZE})
 endif()
 
-# Build static library ###############################################
+# Static libprimesieve ###############################################
 
 add_library(static_libprimesieve STATIC ${LIB_SRC})
 set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
 
-# Build shared library ###############################################
+install(TARGETS static_libprimesieve
+                DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 
-string(REPLACE "." ";" SOVERSION_LIST ${PRIMESIEVE_SOVERSION})
-list(GET SOVERSION_LIST 0 PRIMESIEVE_SOVERSION_MAJOR)
+# Shared libprimesieve ###############################################
 
-add_library(shared_libprimesieve SHARED ${LIB_SRC})
-set_target_properties(shared_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
-set_target_properties(shared_libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
-set_target_properties(shared_libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
+if(NOT WIN32)
+    string(REPLACE "." ";" SOVERSION_LIST ${PRIMESIEVE_SOVERSION})
+    list(GET SOVERSION_LIST 0 PRIMESIEVE_SOVERSION_MAJOR)
 
-# Build binary #######################################################
+    add_library(shared_libprimesieve SHARED ${LIB_SRC})
+    set_target_properties(shared_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
+    set_target_properties(shared_libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
+    set_target_properties(shared_libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
-add_executable(primesieve ${BIN_SRC})
-
-if(WIN32)
-    target_link_libraries(primesieve static_libprimesieve)
-else()
-    target_link_libraries(primesieve shared_libprimesieve)
+    install(TARGETS shared_libprimesieve
+                    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 endif()
 
-# Install primesieve #################################################
+# Default libprimesieve (for linking) ################################
+
+if(NOT WIN32)
+    set(LIBPRIMESIEVE shared_libprimesieve)
+else()
+    set(LIBPRIMESIEVE static_libprimesieve)
+endif()
+
+# primesieve binary ##################################################
+
+add_executable(primesieve ${BIN_SRC})
+target_link_libraries(primesieve ${LIBPRIMESIEVE})
 
 install(TARGETS primesieve
                 DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
-install(TARGETS static_libprimesieve
-                shared_libprimesieve
-                DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+# Install headers ####################################################
 
 install(FILES include/primesieve.hpp
               include/primesieve/PrimeSieve.hpp
@@ -162,3 +156,16 @@ configure_file(primesieve.pc.in primesieve.pc @ONLY)
 
 install(FILES primesieve.pc
               DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
+
+# Add subdirectories #################################################
+
+add_subdirectory(doc)
+
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
+
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif()
