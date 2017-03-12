@@ -92,7 +92,12 @@ set_target_properties(shared_libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVER
 # Build binary #######################################################
 
 add_executable(primesieve ${BIN_SRC})
-target_link_libraries(primesieve shared_libprimesieve)
+
+if(WIN32)
+    target_link_libraries(primesieve static_libprimesieve)
+else()
+    target_link_libraries(primesieve shared_libprimesieve)
+endif()
 
 # Install primesieve #################################################
 
