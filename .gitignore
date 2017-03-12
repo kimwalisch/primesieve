@@ -21,3 +21,4 @@ CTestTestfile.cmake
 /libprimesieve*
 doc/Doxyfile
 doc/html
+doc/latex
