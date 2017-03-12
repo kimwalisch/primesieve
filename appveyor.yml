@@ -10,10 +10,12 @@ branches:
 os: Visual Studio 2017
 
 platform:
+  - x86
   - x64
 
 build_script:
-  - cmake -G "Visual Studio 15 2017 Win64" .
+  - if "%platform%" == "x86" cmake -G "Visual Studio 15 2017" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON .
+  - if "%platform%" == "x64" cmake -G "Visual Studio 15 2017 Win64" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON .
   - cmake --build . --target static_libprimesieve
   - cmake --build .
 
