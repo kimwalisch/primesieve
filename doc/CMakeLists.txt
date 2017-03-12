@@ -1,7 +1,6 @@
 find_package(Doxygen)
 
 if(DOXYGEN_FOUND)
-
     find_package(LATEX)
     if(LATEX_COMPILER)
         set(HAVE_LATEX "YES")
