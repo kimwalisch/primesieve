@@ -11,13 +11,19 @@ branches:
 configuration:
   - Debug
 
-os: Visual Studio 2015
+environment:
+  matrix:
+  - cmake_generator: "Visual Studio 14"
+    platform: x86
+  - cmake_generator: "Visual Studio 14 Win64"
+    platform: x64
 
 before_build:
-  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+  - "\"C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Bin\\SetEnv.cmd\" /%platform%"
+  - "\"C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat\" %platform%"
 
 build_script:
-  - cmake -G "Visual Studio 14 2015 Win64" .
+  - cmake -G "%cmake_generator%" .
   - cmake --build .
 
 test_script:
