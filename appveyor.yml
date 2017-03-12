@@ -14,7 +14,7 @@ platform:
 
 build_script:
   - cmake -G "Visual Studio 14 2015 Win64" .
-  - nmake
+  - cmake --build .
 
 test_script:
   - ctest
