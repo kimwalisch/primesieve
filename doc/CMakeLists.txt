@@ -1,12 +1,13 @@
 find_package(Doxygen)
 
 if(DOXYGEN_FOUND)
-		find_package(LATEX)
-		if(LATEX_COMPILER)
+
+    find_package(LATEX)
+    if(LATEX_COMPILER)
         set(HAVE_LATEX "YES")
-		else()
+    else()
         set(HAVE_LATEX "NO")
-		endif()
+    endif()
 
     find_program(DOT_FONUD dot)
     if(DOT_FONUD)
@@ -19,7 +20,7 @@ if(DOXYGEN_FOUND)
     configure_file(Doxyfile.in Doxyfile @ONLY)
     add_custom_target(doc COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile)
 
-		if(LATEX_COMPILER)
+    if(LATEX_COMPILER)
         find_program(MAKE_FONUD make)
 
         # LaTeX doc (PDF) must be built using make
@@ -29,5 +30,5 @@ if(DOXYGEN_FOUND)
                                COMMAND "${MAKE_FONUD}"
                                WORKING_DIRECTORY "latex")
         endif()
-		endif()
+    endif()
 endif()
