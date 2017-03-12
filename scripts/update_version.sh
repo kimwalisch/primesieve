@@ -5,7 +5,7 @@ then
     echo "Usage example:"
     echo "$ ./update_version.sh 1.2"
     echo ""
-    echo "Updates the primesieve version to 1.2^ in all files"
+    echo "Updates the primesieve version to 1.2 in all files"
 
     exit 1
 fi
@@ -34,6 +34,7 @@ echo ""
 
 # Update version
 for i in $(echo README.md \
+                CMakeLists.txt \
                 include/primesieve.hpp \
                 include/primesieve.h)
 do
@@ -43,8 +44,7 @@ do
 done
 
 # Update version
-for i in $(echo CMakeLists.txt \
-                include/primesieve.hpp \
+for i in $(echo include/primesieve.hpp \
                 include/primesieve.h)
 do
     sed "s/PRIMESIEVE_VERSION_MAJOR $old_major/PRIMESIEVE_VERSION_MAJOR $new_major/g" $i > $i.tmp
