@@ -51,9 +51,9 @@ endif()
 # Detect CPU L1 cache size ###########################################
 
 execute_process(COMMAND sh ${PROJECT_SOURCE_DIR}/scripts/L1_cache_size.sh
-                        RESULT_VARIABLE L1_RES
-                        OUTPUT_VARIABLE L1_CACHE_SIZE
-                        ERROR_QUIET)
+                RESULT_VARIABLE L1_RES
+                OUTPUT_VARIABLE L1_CACHE_SIZE
+                ERROR_QUIET)
 
 if(L1_RES EQUAL 0)
     string(STRIP ${L1_CACHE_SIZE} L1_CACHE_SIZE)
@@ -67,7 +67,7 @@ add_library(static_libprimesieve STATIC ${LIB_SRC})
 set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
 
 install(TARGETS static_libprimesieve
-                DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 
 # Shared libprimesieve ###############################################
 
@@ -81,7 +81,7 @@ if(NOT WIN32)
     set_target_properties(shared_libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
     install(TARGETS shared_libprimesieve
-                    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 endif()
 
 # Default libprimesieve (for linking) ################################
@@ -98,7 +98,7 @@ add_executable(primesieve ${BIN_SRC})
 target_link_libraries(primesieve ${LIBPRIMESIEVE})
 
 install(TARGETS primesieve
-                DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
 # Install headers ####################################################
 
@@ -148,14 +148,14 @@ endif()
 # Install man page ###################################################
 
 install(FILES doc/primesieve.1
-              DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
 
 # Install primesieve.pc (pkg-config) #################################
 
 configure_file(primesieve.pc.in primesieve.pc @ONLY)
 
 install(FILES primesieve.pc
-              DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
 
 # Add subdirectories #################################################
 
