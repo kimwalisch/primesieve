@@ -7,17 +7,13 @@ branches:
   except:
     - gh-pages
 
-os: Previous Visual Studio 2015
+os: Visual Studio 2015
 
 platform:
-  - x86
   - x64
 
-configuration:
-  - Debug
-
 build_script:
-  - cmake -G "NMake Makefiles" .
+  - cmake -G "Visual Studio 14 2015 Win64" .
   - nmake
 
 test_script:
