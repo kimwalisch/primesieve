@@ -13,9 +13,9 @@ configuration:
 
 environment:
   matrix:
-  - cmake_generator: "Visual Studio 14"
+  - cmake_generator: "Visual Studio 14 2015"
     platform: x86
-  - cmake_generator: "Visual Studio 14 Win64"
+  - cmake_generator: "Visual Studio 14 2015 Win64"
     platform: x64
 
 before_build:
