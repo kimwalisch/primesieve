@@ -7,7 +7,7 @@ branches:
   except:
     - gh-pages
 
-os: Visual Studio 2017 RC
+os: Visual Studio 2017
 
 platform:
   - x64
