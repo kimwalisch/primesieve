@@ -3,6 +3,7 @@ project(primesieve)
 set(PRIMESIEVE_VERSION_MAJOR 6)
 set(PRIMESIEVE_VERSION_MINOR 0)
 set(PRIMESIEVE_VERSION "${PRIMESIEVE_VERSION_MAJOR}.${PRIMESIEVE_VERSION_MINOR}")
+set(PRIMESIEVE_SOVERSION "8.0.0")
 include_directories(include)
 set(CMAKE_BUILD_TYPE Release)
 
@@ -82,8 +83,8 @@ set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
 
 # Build shared library ###############################################
 
-MATH(EXPR PRIMESIEVE_SOVERSION_MAJOR "${PRIMESIEVE_VERSION_MAJOR}+2")
-set(PRIMESIEVE_SOVERSION "${PRIMESIEVE_SOVERSION_MAJOR}.${PRIMESIEVE_VERSION_MINOR}")
+string(REPLACE "." ";" SOVERSION_LIST ${PRIMESIEVE_SOVERSION})
+list(GET SOVERSION_LIST 0 PRIMESIEVE_SOVERSION_MAJOR)
 
 add_library(shared_libprimesieve SHARED ${LIB_SRC})
 set_target_properties(shared_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
