@@ -23,10 +23,10 @@
 
 namespace {
 
-int num_threads = primesieve::ParallelPrimeSieve::getMaxThreads();
-
 /// Sieve size in kilobytes used for sieving
 int sieve_size = SIEVESIZE;
+
+int num_threads = 0;
 
 }
 
@@ -153,7 +153,10 @@ int get_sieve_size()
 
 int get_num_threads()
 {
-  return num_threads;
+  if (num_threads)
+    return num_threads;
+  else
+    return ParallelPrimeSieve::getMaxThreads();
 }
 
 void set_sieve_size(int kilobytes)
@@ -163,10 +166,7 @@ void set_sieve_size(int kilobytes)
 
 void set_num_threads(int threads)
 {
-  if (threads == -1)
-    num_threads = ParallelPrimeSieve::getMaxThreads();
-  else
-    num_threads = inBetween(1, threads, ParallelPrimeSieve::getMaxThreads());
+  num_threads = inBetween(1, threads, ParallelPrimeSieve::getMaxThreads());
 }
 
 uint64_t get_max_stop()
