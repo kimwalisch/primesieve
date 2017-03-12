@@ -14,7 +14,7 @@ platform:
   - x64
 
 before_build:
-  - if "%platform%" == "x64" sed -i 's|set(CMAKE_CXX_FLAGS|set(CMAKE_CXX_FLAGS /W4 /WX|' CMakeLists.txt
+  - if "%platform%" == "x64" sed -i 's|CMAKE_CXX_FLAGS |CMAKE_CXX_FLAGS /W4 /WX |' CMakeLists.txt
 
 build_script:
   - if "%platform%" == "x86" cmake -G "Visual Studio 15 2017" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON .
