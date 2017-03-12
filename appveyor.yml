@@ -12,6 +12,9 @@ os: Visual Studio 2015
 platform:
   - x64
 
+configuration:
+  - Release
+
 build_script:
   - cmake -G "Visual Studio 14 2015 Win64" .
   - cmake --build .
