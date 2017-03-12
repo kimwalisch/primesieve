@@ -17,6 +17,7 @@ configuration:
 
 build_script:
   - cmake -G "Visual Studio 14 2015 Win64" .
+  - for i in $(fgrep -R --files-with-matches ' /INCREMENTAL ' .); do sed -i 's# /INCREMENTAL ##g' $i; done 
   - cmake --build .
 
 test_script:
