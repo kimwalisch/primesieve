@@ -64,11 +64,11 @@ endif()
 # Detect CPU L1 cache size ###########################################
 
 execute_process(COMMAND sh ${PROJECT_SOURCE_DIR}/scripts/L1_cache_size.sh
-                        RESULT_VARIABLE L1_FAILED
+                        RESULT_VARIABLE L1_RES
                         OUTPUT_VARIABLE L1_CACHE_SIZE
                         ERROR_QUIET)
 
-if(NOT L1_FAILED)
+if(L1_RES EQUAL 0)
     string(STRIP ${L1_CACHE_SIZE} L1_CACHE_SIZE)
     message(STATUS "Found CPU L1 cache size: ${L1_CACHE_SIZE} KB")
     add_definitions(-DL1_DCACHE_SIZE=${L1_CACHE_SIZE})
@@ -124,10 +124,10 @@ if(HELP2MAN)
     message(STATUS "Found help2man: ${HELP2MAN}")
 
     execute_process(COMMAND perl -e "use Locale::gettext;"
-                    RESULT_VARIABLE LOCALE_FAILED
+                    RESULT_VARIABLE LOCALE_RES
                     OUTPUT_QUIET ERROR_QUIET)
 
-    if(NOT LOCALE_FAILED)
+    if(LOCALE_RES EQUAL 0)
         message(STATUS "Found help2man option: --locale=C.UTF-8")
         set(HELP2MAN_LOCALE "--locale=C.UTF-8")
     endif()
