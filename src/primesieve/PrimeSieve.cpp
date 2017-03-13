@@ -42,7 +42,6 @@ const PrimeSieve::SmallPrime PrimeSieve::smallPrimes_[8] =
 PrimeSieve::PrimeSieve() :
   start_(0),
   stop_(0),
-  counts_(6),
   flags_(COUNT_PRIMES),
   threadNum_(0),
   parent_(nullptr)
@@ -55,7 +54,6 @@ PrimeSieve::PrimeSieve() :
 /// child object for each thread.
 ///
 PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
-  counts_(6),
   sieveSize_(parent.sieveSize_),
   flags_(parent.flags_),
   threadNum_(threadNum),
@@ -79,7 +77,6 @@ uint64_t PrimeSieve::getCount(int index)         const { return counts_.at(index
 double   PrimeSieve::getStatus()                 const { return percent_; }
 double   PrimeSieve::getSeconds()                const { return seconds_; }
 int      PrimeSieve::getSieveSize()              const { return sieveSize_; }
-int      PrimeSieve::getFlags()                  const { return (flags_ & ((1 << 20) - 1)); }
 bool     PrimeSieve::isValidFlags(int flags)     const { return (flags >= 0 && flags < (1 << 20)); }
 bool     PrimeSieve::isFlag(int flag)            const { return (flags_ & flag) == flag; }
 bool     PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last * 2 - first)) != 0; }

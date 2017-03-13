@@ -15,17 +15,11 @@
 #include "Callback.hpp"
 
 #include <stdint.h>
+#include <array>
 #include <string>
-#include <vector>
 
 namespace primesieve {
 
-/// PrimeSieve is a highly optimized C++ implementation of the
-/// segmented sieve of Eratosthenes that generates primes and prime
-/// k-tuplets (twin primes, prime triplets, ...) in order up to 2^64
-/// maximum. The README file describes the algorithms used in more
-/// detail and doc/EXAMPLES contains source code examples.
-///
 class PrimeSieve
 {
   friend class PrimeFinder;
@@ -58,7 +52,6 @@ public:
   uint64_t getStart() const;
   uint64_t getStop() const;
   int getSieveSize() const;
-  int getFlags() const;
   double getStatus() const;
   double getSeconds() const;
   // Setters
@@ -111,7 +104,7 @@ protected:
   /// Sieve primes <= stop_
   uint64_t stop_;
   /// Prime number and prime k-tuplet counts
-  std::vector<uint64_t> counts_;
+  std::array<uint64_t, 6> counts_;
   /// Time elapsed of sieve()
   double seconds_;
   uint64_t getDistance() const;
@@ -137,7 +130,7 @@ private:
   double percent_;
   /// Sieve size in kilobytes
   int sieveSize_;
-  /// Flags (settings) for PrimeSieve e.g. COUNT_PRIMES, PRINT_TWINS, ...
+  /// Setter methods set flags e.g. COUNT_PRIMES
   int flags_;
   /// ParallelPrimeSieve thread number
   int threadNum_;
