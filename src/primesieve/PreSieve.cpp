@@ -15,7 +15,6 @@
 
 #include <stdint.h>
 #include <algorithm>
-#include <array>
 #include <cstring>
 #include <memory>
 
@@ -24,9 +23,9 @@ using namespace primesieve;
 
 namespace {
 
-const array<uint_t, 9> primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23 };
+const uint_t primes[] = { 2, 3, 5, 7, 11, 13, 17, 19, 23 };
 
-const array<uint_t, 9> primeProduct = { 2, 6, 30, 210, 2310, 30030, 510510, 9699690, 223092870 };
+const uint_t primeProduct[] = { 2, 6, 30, 210, 2310, 30030, 510510, 9699690, 223092870 };
 
 }
 
