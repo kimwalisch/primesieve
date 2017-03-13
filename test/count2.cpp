@@ -45,8 +45,6 @@ int main()
   {
     cout << left;
     ParallelPrimeSieve p;
-    p.setSieveSize(get_sieve_size());
-    p.setNumThreads(get_num_threads());
     p.setFlags(p.COUNT_PRIMES | p.PRINT_STATUS);
 
     for (int i = 0; i <= 7; i++)
@@ -54,7 +52,7 @@ int main()
       int j = i + 12;
       cout << "Sieving the primes within [10^" << j << ", 10^" << j << "+10^9]" << endl;
       p.setStart((uint64_t) pow(10.0, j));
-      p.setStop(p.getStart() + (uint64_t) pow(10.0, 9));
+      p.setStop(p.getStart() + (uint64_t) 1e9);
       p.sieve();
       cout << "\rPrime count: " << setw(11) << p.getPrimeCount();
       check(p.getPrimeCount() == primeCounts[i]);
