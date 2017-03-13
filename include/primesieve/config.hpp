@@ -1,7 +1,6 @@
 ///
 /// @file   config.hpp
-/// @brief  Macros, typedefs and constants that set various limits
-///         and array sizes within primesieve.
+/// @brief  Constants that set various limits within primesieve.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -51,11 +50,6 @@ enum {
   /// @pre PRIMESIEVE_SIEVESIZE >= 1 && <= 2048
   ///
   PRIMESIEVE_SIEVESIZE = SIEVESIZE,
-
-  /// Sieve size in kilobytes of the PrimeGenerator class.
-  /// @pre PRIMEGENERATOR_SIEVESIZE >= 1 && <= 2048
-  ///
-  PRIMEGENERATOR_SIEVESIZE = L1_DCACHE_SIZE,
 
   /// Number of sieving primes per Bucket in EratSmall, EratMedium and
   /// EratBig objects, affects performance by about 3%.
