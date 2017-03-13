@@ -184,7 +184,7 @@ void set_sieve_size(int sieve_size);
 ///
 void set_num_threads(int num_threads);
 
-/// Get the primesieve version number, in the form “i.j.k”.
+/// Get the primesieve version number, in the form “i.j”.
 std::string primesieve_version();
 
 }

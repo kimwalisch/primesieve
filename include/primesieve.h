@@ -206,7 +206,7 @@ void primesieve_set_num_threads(int num_threads);
  */
 void primesieve_free(void* primes);
 
-/** Get the primesieve version number, in the form “i.j.k” */
+/** Get the primesieve version number, in the form “i.j” */
 const char* primesieve_version();
 
 #ifdef __cplusplus
