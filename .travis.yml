@@ -1,25 +1,31 @@
 # Test configuration for Travis CI. See <https://travis-ci.org/>.
-language: cpp
+language: generic
+os: linux
 
 branches:
-  only:
-    - master
-    - 6.0
+  except:
+    - gh-pages
 
-compiler:
-  - gcc
-  - clang
-
-os:
-  - linux
-
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-4.8
-    - g++-4.8
+# This is a workaround which installs recent GCC and Clang
+# compilers that support C++11
+matrix:
+  include:
+    - os: linux
+      env: COMPILER_NAME=gcc CXX=g++-5 CC=gcc-5
+      addons:
+        apt:
+          packages:
+            - g++-5
+          sources: &sources
+            - llvm-toolchain-precise-3.8
+            - ubuntu-toolchain-r-test
+    - os: linux
+      env: COMPILER_NAME=clang CXX=clang++-3.8 CC=clang-3.8
+      addons:
+        apt:
+          packages:
+            - clang-3.8
+          sources: *sources
 
 env:
   global:
@@ -31,8 +37,6 @@ install:
   - tar -xzf cmake-3.1.3-Linux-x86_64.tar.gz
   - export CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
   - export PATH=$PWD/cmake-3.1.3-Linux-x86_64/bin:$PATH
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
-  - if [ "$CC" = "gcc" ]; then export CC="gcc-4.8"; fi
 
 script:
   # Test using GNU make
@@ -56,5 +60,5 @@ script:
   - cppcheck . --error-exitcode=1 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp
   # Build primesieve GUI app
   - cd src/gui
-  - qmake QMAKE_CXX="g++-4.8" QMAKE_CC="gcc-4.8"
+  - qmake QMAKE_CXX="$CXX" QMAKE_CC="$CC"
   - make -j4
