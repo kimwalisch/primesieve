@@ -25,8 +25,6 @@
 
 namespace primesieve {
 
-class PreSieve;
-
 uint64_t popcount(const uint64_t* array, uint64_t size);
 
 const uint_t PrimeFinder::kBitmasks_[6][5] =

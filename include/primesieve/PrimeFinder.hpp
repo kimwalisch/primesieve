@@ -26,7 +26,8 @@ class Callback;
 /// callback, print and count primes and prime k-tuplets
 /// (twin primes, prime triplets, ...).
 ///
-class PrimeFinder : public SieveOfEratosthenes {
+class PrimeFinder : public SieveOfEratosthenes
+{
 public:
   PrimeFinder(PrimeSieve&, const PreSieve&);
 private:
