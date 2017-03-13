@@ -41,7 +41,7 @@ class PreSieve
 public:
   PreSieve(uint64_t start, uint64_t stop);
   uint_t getLimit() const { return limit_; }
-  void doIt(byte_t* sieve, uint_t sieveSize, uint64_t segmentLow) const;
+  void copy(byte_t* sieve, uint_t sieveSize, uint64_t segmentLow) const;
 private:
   uint_t limit_;
   uint_t primeProduct_;

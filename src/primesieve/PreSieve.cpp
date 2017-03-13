@@ -71,7 +71,7 @@ void PreSieve::allocate()
 /// Pre-sieve the multiples of small primes <= limit_
 /// by copying buffer_ to sieve.
 ///
-void PreSieve::doIt(byte_t* sieve,
+void PreSieve::copy(byte_t* sieve,
                     uint_t sieveSize,
                     uint64_t segmentLow) const
 {

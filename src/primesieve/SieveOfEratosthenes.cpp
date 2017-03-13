@@ -102,7 +102,7 @@ uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n)
 ///
 void SieveOfEratosthenes::preSieve()
 {
-  preSieve_.doIt(sieve_, sieveSize_, segmentLow_);
+  preSieve_.copy(sieve_, sieveSize_, segmentLow_);
 
   // unset bits (numbers) < start_
   if (segmentLow_ <= start_)
