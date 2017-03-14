@@ -1,6 +1,6 @@
 ///
-/// @file   generate_primes.cpp
-/// @brief  Test prime number generation
+/// @file   generate_primes1.cpp
+/// @brief  Test prime number generation.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
