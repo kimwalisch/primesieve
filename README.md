@@ -72,68 +72,31 @@ primesieve 1e10 2e10 --threads=4
 primesieve --help
 ```
 
-Build requirements
+Build instructions
 ------------------
 
-primesieve is very portable, it compiles with every C++ compiler and
-runs on most CPU architectures out there. The parallelization is
-implemented using [OpenMP](http://en.wikipedia.org/wiki/OpenMP). The
-primesieve GUI application (not built by default) uses the
-[Qt&nbsp;framework](http://qt-project.org).
-
-primesieve is also a library, it natively supports C and C++ and there
-are [bindings](#bindings-for-other-languages) available for a few
-other programming languages. The author's
-[primecount](https://github.com/kimwalisch/primecount) program uses
-libprimesieve extensively.
-
-Build instructions (Unix-like OSes)
------------------------------------
-
-Download [primesieve-5.7.3.tar.gz](https://github.com/kimwalisch/primesieve/releases/download/v5.7.3/primesieve-5.7.3.tar.gz)
-and extract it, then build primesieve using:
+Building primesieve requires CMake ≥ 3.1 and a compiler which supports
+C++11 or later.
 
 ```sh
-./configure
-make
+cmake .
+make -j8
 sudo make install
 ```
 
-If you have downloaded a zip archive from GitHub then Autotools
-(a.k.a. the GNU Build System) must be installed and ```autogen.sh``` must
-be executed once. To install Autotools install
-[GNU&#160;Autoconf](http://www.gnu.org/software/autoconf/),
-[GNU&#160;Automake](http://www.gnu.org/software/automake/) and
-[GNU&#160;Libtool](http://www.gnu.org/software/libtool/)
-using your operating system's package manager.
+To build the C/C++ examples programs use:
 
 ```sh
-./autogen.sh
-./configure
-make
-sudo make install
+cmake -DBUILD_EXAMPLES=ON .
+make -j8
 ```
 
-To enable building the example programs use:
+To build and run the primesieve tests use:
 
 ```sh
-./configure --enable-examples
-```
-
-Build instructions (Microsoft Visual C++)
------------------------------------------
-
-Download
-[primesieve-5.7.3.zip](https://github.com/kimwalisch/primesieve/releases/download/v5.7.3/primesieve-5.7.3.zip)
-and extract it. Then open a Visual Studio Command Prompt and run:
-
-```sh
-nmake -f Makefile.msvc
-```
-
-To build the example programs use:
-```sh
-nmake -f Makefile.msvc examples
+cmake -DBUILD_TESTS=ON .
+make -j8
+make test
 ```
 
 C++ API
