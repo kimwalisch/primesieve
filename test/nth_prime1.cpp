@@ -1,6 +1,6 @@
 ///
 /// @file   nth_prime1.cpp
-/// @brief  Test nth_prime edge cases
+/// @brief  Test nth_prime for |n| <= 9592
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -14,6 +14,7 @@
 #include <iostream>
 #include <exception>
 #include <stdexcept>
+#include <vector>
 
 using namespace std;
 using namespace primesieve;
@@ -30,12 +31,13 @@ int main()
   try
   {
     uint64_t upperBound = (uint64_t) 1e5;
-    primesieve::iterator it;
-    uint64_t prime = it.next_prime();
-    int64_t n;
+    vector<uint64_t> primes;
+    generate_primes(upperBound, &primes);
+    int64_t i = primes.size() - 1;
+    int64_t n = 0;
 
     // nth_prime(n) forwards
-    for (n = 0; prime < upperBound; prime = it.next_prime())
+    for (uint64_t prime : primes)
     {
       n++;
       uint64_t res = nth_prime(n);
@@ -43,15 +45,13 @@ int main()
       check(res == prime);
     }
 
-    prime = it.prev_prime();
-
     // nth_prime(-n, start) backwards
-    for (n = 0; prime > 0; prime = it.prev_prime())
+    for (n = 0; i >= 0; i--)
     {
       n--;
       uint64_t res = nth_prime(n, upperBound);
       cout << "nth_prime(" << n << ", " << upperBound << ") = " << res;
-      check(res == prime);
+      check(res == primes[i]);
     }
 
     cout << endl;
