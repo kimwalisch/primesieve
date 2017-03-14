@@ -209,7 +209,7 @@ void PrimeSieve::processSmallPrimes()
     if (p.first >= start_ &&
         p.last <= stop_)
     {
-      if (p.index == 0 && isCallback())
+      if (isCallback() && p.index == 0)
         cb_->callback(p.first);
       if (isCount(p.index))
         counts_[p.index]++;
