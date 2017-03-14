@@ -18,9 +18,9 @@
 
 namespace primesieve {
 
+class Callback;
 class PrimeSieve;
 class PreSieve;
-class Callback;
 
 /// PrimeFinder is a SieveOfEratosthenes class that is used to
 /// callback, print and count primes and prime k-tuplets
