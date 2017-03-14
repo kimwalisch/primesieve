@@ -86,19 +86,19 @@ make -j8
 sudo make install
 ```
 
-To build the C/C++ examples programs use:
-
-```sh
-cmake -DBUILD_EXAMPLES=ON .
-make -j8
-```
-
 To build and run the primesieve tests use:
 
 ```sh
 cmake -DBUILD_TESTS=ON .
 make -j8
 make test
+```
+
+To build the C/C++ examples programs use:
+
+```sh
+cmake -DBUILD_EXAMPLES=ON .
+make -j8
 ```
 
 C++ API
