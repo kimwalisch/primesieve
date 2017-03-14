@@ -1,6 +1,6 @@
 ///
 /// @file   count2.cpp
-/// @brief  Count the primes within [10^i, 10^i+10^9] for i = 12 to 19
+/// @brief  Count the primes within [10^i, 10^i + 10^9] for i = 12 to 19
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -50,7 +50,7 @@ int main()
     for (int i = 0; i <= 7; i++)
     {
       int j = i + 12;
-      cout << "Sieving the primes within [10^" << j << ", 10^" << j << "+10^9]" << endl;
+      cout << "Sieving the primes within [10^" << j << ", 10^" << j << " + 10^9]" << endl;
       p.setStart((uint64_t) pow(10.0, j));
       p.setStop(p.getStart() + (uint64_t) 1e9);
       p.sieve();

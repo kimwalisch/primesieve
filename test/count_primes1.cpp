@@ -21,7 +21,7 @@ using namespace std;
 using namespace primesieve;
 
 /// Correct pi(x) values to compare with test results
-const uint64_t primeCounts[9] =
+const uint64_t pix[9] =
 {
   4,        // pi(10^1)
   25,       // pi(10^2)
@@ -50,15 +50,14 @@ int main()
     ParallelPrimeSieve pps;
     pps.setStart(0);
     pps.setStop(0);
-    uint64_t primeCount = 0;
+    uint64_t count = 0;
 
     // pi(x) with x = 10^i for i = 1 to 9
     for (int i = 1; i <= 9; i++)
     {
-      uint64_t nextStop = (uint64_t) pow(10.0, i);
-      primeCount += pps.countPrimes(pps.getStop() + 1, nextStop);
-      cout << "pi(10^" << i << ") = " << setw(12) << primeCount;
-      check(primeCount == primeCounts[i - 1]);
+      count += pps.countPrimes(pps.getStop() + 1, (uint64_t) pow(10.0, i));
+      cout << "pi(10^" << i << ") = " << setw(12) << count;
+      check(count == pix[i - 1]);
     }
     cout << endl;
     cout << "All tests passed successfully!" << endl;
