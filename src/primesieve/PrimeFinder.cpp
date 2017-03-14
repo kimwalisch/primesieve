@@ -77,7 +77,7 @@ void PrimeFinder::init_kCounts()
 ///
 void PrimeFinder::segmentFinished(const byte_t* sieve, uint_t sieveSize)
 {
-  if (ps_.isFlag(ps_.CALLBACK_PRIMES))
+  if (ps_.isCallback())
     callbackPrimes(*ps_.cb_, sieve, sieveSize);
   if (ps_.isCount())
     count(sieve, sieveSize);
