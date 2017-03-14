@@ -66,6 +66,8 @@ int main()
   {
     vector<uint64_t> primes;
     generate_primes(100, &primes);
+    cout << "primes.size() = " << primes.size();
+    check(primes.size() == 25);
 
     for (uint64_t i = 0; i < primes.size(); i++)
     {
@@ -75,6 +77,8 @@ int main()
 
     primes.clear();
     generate_primes(18446744073709550672ull, 18446744073709551556ull, &primes);
+    cout << "primes.size() = " << primes.size();
+    check(primes.size() == 19);
 
     for (uint64_t i = 0; i < primes.size(); i++)
     {
