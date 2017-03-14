@@ -76,7 +76,9 @@ Build instructions
 ------------------
 
 Building primesieve requires CMake ≥ 3.1 and a compiler which supports
-C++11 or later.
+C++11 or later. If your compiler does not yet support C++11 you can
+fall back to [primesieve-5.x](https://github.com/kimwalisch/primesieve/tree/v5.7.3)
+which is written in C++98.
 
 ```sh
 cmake .
