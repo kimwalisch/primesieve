@@ -19,7 +19,7 @@ using namespace primesieve;
 
 void nth_prime_test(int64_t n, int64_t start, int64_t iters)
 {
-  for (uint64_t i = 1; i <= iters; i++)
+  for (int64_t i = 1; i <= iters; i++)
   {
     int64_t i_start = (i * start) + 1;
     int64_t prime = nth_prime(-n, i_start);
@@ -41,8 +41,8 @@ int main()
   {
     for (int j = 10; j <= 13; j++)
     {
-      int64_t n = (uint64_t) pow(10.0, i);
-      int64_t start = (uint64_t) pow(10.0, j);
+      int64_t n = (int64_t) pow(10.0, i);
+      int64_t start = (int64_t) pow(10.0, j);
       int64_t iters = 5;
       
       cout << "nth_prime_test(" << n << ", " << start << ", " << iters << ")";
