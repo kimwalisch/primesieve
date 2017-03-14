@@ -75,8 +75,8 @@ primesieve --help
 Build instructions
 ------------------
 
-Building primesieve requires CMake ≥ 3.1 and a compiler which supports
-C++11 or later. If your compiler does not yet support C++11 you can
+Building primesieve requires a compiler which supports C++11 (or later)
+and CMake ≥ 3.1. If your compiler does not yet support C++11 you can
 fall back to [primesieve-5.x](https://github.com/kimwalisch/primesieve/tree/v5.7.3)
 which is written in C++98.
 
@@ -86,19 +86,19 @@ make -j8
 sudo make install
 ```
 
+To build the C/C++ examples programs use:
+
+```sh
+cmake -DBUILD_EXAMPLES=ON .
+make -j8
+```
+
 To build and run the primesieve tests use:
 
 ```sh
 cmake -DBUILD_TESTS=ON .
 make -j8
 make test
-```
-
-To build the C/C++ examples programs use:
-
-```sh
-cmake -DBUILD_EXAMPLES=ON .
-make -j8
 ```
 
 C++ API
