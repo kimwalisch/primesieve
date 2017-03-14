@@ -63,12 +63,13 @@ void check(int isCorrect)
 
 int main()
 {
+  size_t i;
   size_t size = 0;
   uint64_t* primes = (uint64_t*) primesieve_generate_primes(0, 100, &size, UINT64_PRIMES);
   printf("primes.size = %zu", size);
   check(size == 25);
 
-  for (size_t i = 0; i < size; i++)
+  for (i = 0; i < size; i++)
   {
     printf("primes[%zu] = %" PRIu64, i, primes[i]);
     check(primes[i] == small_primes[i]);
@@ -79,7 +80,7 @@ int main()
   printf("primes.size = %zu", size);
   check(size == 19);
 
-  for (size_t i = 0; i < size; i++)
+  for (i = 0; i < size; i++)
   {
     printf("primes[%zu] = %" PRIu64, i, primes[i]);
     check(primes[i] == large_primes[i]);
