@@ -15,8 +15,7 @@
 #include "Callback.hpp"
 
 #include <stdint.h>
-#include <array>
-#include <string>
+#include <vector>
 
 namespace primesieve {
 
@@ -104,7 +103,7 @@ protected:
   /// Sieve primes <= stop_
   uint64_t stop_;
   /// Prime number and prime k-tuplet counts
-  std::array<uint64_t, 6> counts_;
+  std::vector<uint64_t> counts_;
   /// Time elapsed of sieve()
   double seconds_;
   uint64_t getDistance() const;
@@ -114,17 +113,9 @@ protected:
   virtual void unsetLock();
   virtual bool updateStatus(uint64_t, bool waitForLock = false);
 private:
-  struct SmallPrime
-  {
-    uint32_t firstPrime;
-    uint32_t lastPrime;
-    int index;
-    std::string str;
-  };
-  static const SmallPrime smallPrimes_[8];
   /// Sum of all processed segments
   uint64_t processed_;
-  /// Sum of processed segments that hasn't been updated yet
+  /// Sum of processed segments to update
   uint64_t toUpdate_;
   /// Status of sieve() in percent
   double percent_;
@@ -142,7 +133,7 @@ private:
   bool isValidFlags(int) const;
   bool isStatus() const;
   bool isParallelPrimeSieveChild() const;
-  void doSmallPrime(const SmallPrime&);
+  void processSmallPrimes();
   enum
   {
       INIT_STATUS = 0,

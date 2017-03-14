@@ -25,9 +25,17 @@
 #include <ctime>
 #include <algorithm>
 
-namespace primesieve {
+namespace {
 
-const PrimeSieve::SmallPrime PrimeSieve::smallPrimes_[8] =
+struct SmallPrime
+{
+  uint64_t first;
+  uint64_t last;
+  int index;
+  std::string str;
+};
+
+const SmallPrime smallPrimes[8] =
 {
   { 2,  2, 0, "2" },
   { 3,  3, 0, "3" },
@@ -39,9 +47,14 @@ const PrimeSieve::SmallPrime PrimeSieve::smallPrimes_[8] =
   { 5, 17, 4, "(5, 7, 11, 13, 17)" }
 };
 
+} // namespace
+
+namespace primesieve {
+
 PrimeSieve::PrimeSieve() :
   start_(0),
   stop_(0),
+  counts_(6),
   flags_(COUNT_PRIMES),
   threadNum_(0),
   parent_(nullptr)
@@ -54,6 +67,7 @@ PrimeSieve::PrimeSieve() :
 /// child object for each thread.
 ///
 PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
+  counts_(6),
   sieveSize_(parent.sieveSize_),
   flags_(parent.flags_),
   threadNum_(threadNum),
@@ -103,7 +117,6 @@ void PrimeSieve::setStop(uint64_t stop)
 /// Set the size of the sieve of Eratosthenes array in kilobytes
 /// (default = 32). The best sieving performance is achieved with a
 /// sieve size of the CPU's L1 data cache size per core.
-/// @pre sieveSize >= 1 && <= 2048
 ///
 void PrimeSieve::setSieveSize(int sieveSize)
 {
@@ -184,17 +197,24 @@ void PrimeSieve::printStatus(double old, double current)
   }
 }
 
-void PrimeSieve::doSmallPrime(const SmallPrime& sp)
+/// Process small primes and k-tuplets <= 17.
+void PrimeSieve::processSmallPrimes()
 {
-  if (sp.firstPrime >= start_ &&
-      sp.lastPrime <= stop_)
+  LockGuard lock(*this);
+
+  for (int i = 0; i < 8; i++)
   {
-    if (isCallback() && sp.index == 0)
-      cb_->callback(sp.firstPrime);
-    if (isCount(sp.index))
-      counts_[sp.index]++;
-    if (isPrint(sp.index))
-      std::cout << sp.str << '\n';
+    auto& p = smallPrimes[i];
+
+    if (p.first >= start_ && p.last <= stop_)
+    {
+      if (isCallback())
+        cb_->callback(p.first);
+      if (isCount(p.index))
+        counts_[p.index]++;
+      if (isPrint(p.index))
+        std::cout << p.str << '\n';
+    }
   }
 }
 
@@ -213,11 +233,7 @@ void PrimeSieve::sieve()
 
   // process small primes and k-tuplets
   if (start_ <= 5)
-  {
-    LockGuard lock(*this);
-    for (int i = 0; i < 8; i++)
-      doSmallPrime(smallPrimes_[i]);
-  }
+    processSmallPrimes();
 
   if (stop_ >= 7)
   {
