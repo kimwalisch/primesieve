@@ -93,7 +93,7 @@ cmake -DBUILD_EXAMPLES=ON .
 make -j8
 ```
 
-To build and run the primesieve tests use:
+To build and run the tests use:
 
 ```sh
 cmake -DBUILD_TESTS=ON .
