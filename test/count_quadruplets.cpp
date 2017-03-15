@@ -12,20 +12,22 @@
 
 #include <stdint.h>
 #include <iostream>
-#include <stdexcept>
+#include <cstdlib>
 
 using namespace std;
 
-void check(bool isCorrect)
+void check(bool OK)
 {
-  cout << "   " << (isCorrect ? "OK" : "ERROR") << "\n";
-  if (!isCorrect)
-    throw runtime_error("Test failed!");
+  cout << "   " << (OK ? "OK" : "ERROR") << "\n";
+  if (!OK)
+    exit(1);
 }
 
 int main()
 {
-  uint64_t count = primesieve::count_quadruplets((uint64_t) 1e12, (uint64_t)(1e12 + 1e9));
+  uint64_t start = (uint64_t) 1e12;
+  uint64_t stop = (uint64_t)(1e12 + 1e9);
+  uint64_t count = primesieve::count_quadruplets(start, stop);
   cout << "Prime quadruplets inside [10^12, 10^12 + 10^9] = " << count;
   check(count == 7171);
 
