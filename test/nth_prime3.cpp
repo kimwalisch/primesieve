@@ -26,7 +26,7 @@ void nth_prime_test(int64_t n, int64_t start, int64_t iters)
     int64_t smaller = nth_prime(n, prime - 1);
     int64_t larger = nth_prime(n, prime);
 
-    if (smaller >= i_start || larger < i_start)
+    if (i_start <= smaller || i_start > larger)
     {
       cerr << endl;
       cerr << "nth_prime(" << -n << ", " << i_start << ") = " << prime << "   ERROR" << endl;
