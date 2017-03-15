@@ -78,8 +78,9 @@ inline T isqrt(T x)
     return x;
 
   T bits = numberOfBits(x);
+  T nlz = (bits - 1) - ilog2(x - 1);
+  T s = bits / 2 - nlz / 2;
   T one = 1;
-  T s = (1 + ilog2(x - 1)) / 2;
 
   // first guess: least power of 2 >= sqrt(x)
   T g0 = one << s;
