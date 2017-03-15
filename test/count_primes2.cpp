@@ -13,14 +13,13 @@
 #include <stdint.h>
 #include <iostream>
 #include <iomanip>
-#include <exception>
-#include <stdexcept>
+#include <cstdlib>
 #include <cmath>
 
 using namespace std;
 using namespace primesieve;
 
-const uint64_t primeCounts[19] =
+const uint64_t pix[8] =
 {
   36190991, // pi[10^12, 10^12+10^9]
   33405006, // pi[10^13, 10^13+10^9]
@@ -32,39 +31,32 @@ const uint64_t primeCounts[19] =
   22854258  // pi[10^19, 10^19+10^9]
 };
 
-void check(bool isCorrect)
+void check(bool OK)
 {
-  cout << (isCorrect ? "OK" : "ERROR") << endl;
-  if (!isCorrect)
-    throw runtime_error("test failed!");
+  cout << "   " << (OK ? "OK" : "ERROR") << "\n";
+  if (!OK)
+    exit(1);
 }
 
 int main()
 {
-  try
-  {
-    cout << left;
-    ParallelPrimeSieve p;
-    p.setFlags(p.COUNT_PRIMES | p.PRINT_STATUS);
+  cout << left;
+  ParallelPrimeSieve p;
+  p.setFlags(p.COUNT_PRIMES | p.PRINT_STATUS);
 
-    for (int i = 0; i <= 7; i++)
-    {
-      int j = i + 12;
-      cout << "Sieving the primes within [10^" << j << ", 10^" << j << " + 10^9]" << endl;
-      p.setStart((uint64_t) pow(10.0, j));
-      p.setStop(p.getStart() + (uint64_t) 1e9);
-      p.sieve();
-      cout << "\rPrime count: " << setw(11) << p.getPrimeCount();
-      check(p.getPrimeCount() == primeCounts[i]);
-    }
-    cout << endl;
-    cout << "All tests passed successfully!" << endl;
-  }
-  catch (exception& e)
+  for (int i = 0; i <= 7; i++)
   {
-    cerr << endl << "primesieve error: " << e.what() << endl;
-    return 1;
+    int j = i + 12;
+    cout << "Sieving the primes within [10^" << j << ", 10^" << j << " + 10^9]" << endl;
+    p.setStart((uint64_t) pow(10.0, j));
+    p.setStop(p.getStart() + (uint64_t) 1e9);
+    p.sieve();
+    cout << "\rPrime count: " << setw(11) << p.getPrimeCount();
+    check(p.getPrimeCount() == pix[i]);
   }
+
+  cout << endl;
+  cout << "All tests passed successfully!" << endl;
 
   return 0;
 }

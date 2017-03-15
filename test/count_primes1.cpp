@@ -13,8 +13,7 @@
 #include <stdint.h>
 #include <iostream>
 #include <iomanip>
-#include <exception>
-#include <stdexcept>
+#include <cstdlib>
 #include <cmath>
 
 using namespace std;
@@ -34,39 +33,31 @@ const uint64_t pix[9] =
   50847534  // pi(10^9)
 };
 
-void check(bool isCorrect)
+void check(bool OK)
 {
-  cout << (isCorrect ? "OK" : "ERROR") << endl;
-  if (!isCorrect)
-    throw runtime_error("test failed!");
+  cout << "   " << (OK ? "OK" : "ERROR") << "\n";
+  if (!OK)
+    exit(1);
 }
 
 int main()
 {
-  try
-  {
-    cout << left;
-    cout << "pi(x) : Prime-counting function test" << endl;
-    ParallelPrimeSieve pps;
-    pps.setStart(0);
-    pps.setStop(0);
-    uint64_t count = 0;
+  cout << left;
+  ParallelPrimeSieve pps;
+  pps.setStart(0);
+  pps.setStop(0);
+  uint64_t count = 0;
 
-    // pi(x) with x = 10^i for i = 1 to 9
-    for (int i = 1; i <= 9; i++)
-    {
-      count += pps.countPrimes(pps.getStop() + 1, (uint64_t) pow(10.0, i));
-      cout << "pi(10^" << i << ") = " << setw(12) << count;
-      check(count == pix[i - 1]);
-    }
-    cout << endl;
-    cout << "All tests passed successfully!" << endl;
-  }
-  catch (exception& e)
+  // pi(x) with x = 10^i for i = 1 to 9
+  for (int i = 1; i <= 9; i++)
   {
-    cerr << endl << "primesieve error: " << e.what() << endl;
-    return 1;
+    count += pps.countPrimes(pps.getStop() + 1, (uint64_t) pow(10.0, i));
+    cout << "pi(10^" << i << ") = " << setw(12) << count;
+    check(count == pix[i - 1]);
   }
+
+  cout << endl;
+  cout << "All tests passed successfully!" << endl;
 
   return 0;
 }
