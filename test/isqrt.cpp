@@ -31,7 +31,7 @@ int main()
   uint64_t res1;
   double res2;
 
-  for (n = 0; n < 1000; n++)
+  for (n = 0; n < 100000; n++)
   {
     res1 = isqrt(n);
     res2 = sqrt((double) n);

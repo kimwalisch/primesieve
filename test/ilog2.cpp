@@ -36,7 +36,7 @@ int main()
   uint64_t res1;
   uint64_t res2;
 
-  for (n = 1; n < 1000; n++)
+  for (n = 1; n < 100000; n++)
   {
     res1 = ilog2(n);
     res2 = log2_cmath(n);
