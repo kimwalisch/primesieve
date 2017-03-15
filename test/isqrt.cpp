@@ -57,20 +57,15 @@ int main()
   cout << "isqrt(" << n << ") = " << res1;
   check(res1 == (uint64_t) res2);
 
-  n = 9223372037000250000ull - 1;
+  n = 1000000000000000000ull - 1;
   res1 = isqrt(n);
   cout << "isqrt(" << n << ") = " << res1;
-  check(res1 == 3037000499ull);
+  check(res1 == 999999999);
 
-  n = 9223372037000250000ull;
+  n = 1000000000000000000ull;
   res1 = isqrt(n);
   cout << "isqrt(" << n << ") = " << res1;
-  check(res1 == 3037000500ull);
-
-  n = 9223372037000250000ull + 1;
-  res1 = isqrt(n);
-  cout << "isqrt(" << n << ") = " << res1;
-  check(res1 == 3037000500ull);
+  check(res1 == 1000000000);
 
   n = 18446744073709551615ull;
   res1 = isqrt(n);
