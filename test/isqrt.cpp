@@ -51,12 +51,6 @@ int main()
   cout << "isqrt(" << n << ") = " << res1;
   check(res1 == (uint64_t) res2);
 
-  n = (1ull << 32) + 1;
-  res1 = isqrt(n);
-  res2 = sqrt((double) n);
-  cout << "isqrt(" << n << ") = " << res1;
-  check(res1 == (uint64_t) res2);
-
   n = 1000000000000000000ull - 1;
   res1 = isqrt(n);
   cout << "isqrt(" << n << ") = " << res1;
