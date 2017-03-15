@@ -11,6 +11,7 @@
 #ifndef PMATH_HPP
 #define PMATH_HPP
 
+#include <stdint.h>
 #include <cmath>
 #include <limits>
 
