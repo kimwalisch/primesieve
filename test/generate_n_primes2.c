@@ -15,7 +15,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 // primes inside [0, 100]
 const uint64_t small_primes[25] =
 {
@@ -50,9 +49,9 @@ const uint64_t large_primes[19] =
   18446744073709551533ull
 };
 
-void check(int isCorrect)
+void check(int OK)
 {
-  if (isCorrect)
+  if (OK)
     printf("   OK\n");
   else
   {

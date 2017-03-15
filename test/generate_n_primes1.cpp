@@ -12,8 +12,7 @@
 
 #include <stdint.h>
 #include <iostream>
-#include <exception>
-#include <stdexcept>
+#include <cstdlib>
 #include <vector>
 
 using namespace std;
@@ -53,44 +52,37 @@ const uint64_t large_primes[19] =
   18446744073709551533ull
 };
 
-void check(bool isCorrect)
+void check(bool OK)
 {
-  cout << "   " << (isCorrect ? "OK" : "ERROR") << "\n";
-  if (!isCorrect)
-    throw runtime_error("test failed!");
+  cout << "   " << (OK ? "OK" : "ERROR") << "\n";
+  if (!OK)
+    exit(1);
 }
 
 int main()
 {
-  try
+  vector<uint64_t> primes;
+
+  generate_n_primes(25, &primes);
+  cout << "primes.size() = " << primes.size();
+  check(primes.size() == 25);
+
+  for (uint64_t i = 0; i < primes.size(); i++)
   {
-    vector<uint64_t> primes;
-    generate_n_primes(25, &primes);
-    cout << "primes.size() = " << primes.size();
-    check(primes.size() == 25);
-
-    for (uint64_t i = 0; i < primes.size(); i++)
-    {
-      cout << "primes[" << i << "] = " << primes[i];
-      check(primes[i] == small_primes[i]);
-    }
-
-    primes.clear();
-    generate_n_primes(19, 18446744073709550672ull, &primes);
-    cout << "primes.size() = " << primes.size();
-    check(primes.size() == 19);
-
-    for (uint64_t i = 0; i < primes.size(); i++)
-    {
-      cout << "primes[" << i << "] = " << primes[i];
-      check(primes[i] == large_primes[i]);
-    }
+    cout << "primes[" << i << "] = " << primes[i];
+    check(primes[i] == small_primes[i]);
   }
-  catch (exception& e)
+
+  primes.clear();
+
+  generate_n_primes(19, 18446744073709550672ull, &primes);
+  cout << "primes.size() = " << primes.size();
+  check(primes.size() == 19);
+
+  for (uint64_t i = 0; i < primes.size(); i++)
   {
-    cerr << endl;
-    cerr << "Error: " << e.what() << endl;
-    return 1;
+    cout << "primes[" << i << "] = " << primes[i];
+    check(primes[i] == large_primes[i]);
   }
 
   cout << endl;
