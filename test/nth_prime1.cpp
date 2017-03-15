@@ -12,56 +12,47 @@
 
 #include <stdint.h>
 #include <iostream>
-#include <exception>
-#include <stdexcept>
 #include <vector>
+#include <cstdlib>
 
 using namespace std;
 using namespace primesieve;
 
-void check(bool isCorrect)
+void check(bool OK)
 {
-  cout << "   " << (isCorrect ? "OK" : "ERROR") << "\n";
-  if (!isCorrect)
-    throw runtime_error("test failed!");
+  cout << "   " << (OK ? "OK" : "ERROR") << "\n";
+  if (!OK)
+    exit(1);
 }
 
 int main()
 {
-  try
+  uint64_t upperBound = (uint64_t) 1e5;
+  vector<uint64_t> primes;
+  generate_primes(upperBound, &primes);
+  int64_t i = primes.size() - 1;
+  int64_t n = 0;
+
+  // nth_prime(n) forwards
+  for (uint64_t prime : primes)
   {
-    uint64_t upperBound = (uint64_t) 1e5;
-    vector<uint64_t> primes;
-    generate_primes(upperBound, &primes);
-    int64_t i = primes.size() - 1;
-    int64_t n = 0;
-
-    // nth_prime(n) forwards
-    for (uint64_t prime : primes)
-    {
-      n++;
-      uint64_t res = nth_prime(n);
-      cout << "nth_prime(" << n << ") = " << res;
-      check(res == prime);
-    }
-
-    // nth_prime(-n, start) backwards
-    for (n = 0; i >= 0; i--)
-    {
-      n--;
-      uint64_t res = nth_prime(n, upperBound);
-      cout << "nth_prime(" << n << ", " << upperBound << ") = " << res;
-      check(res == primes[i]);
-    }
-
-    cout << endl;
-    cout << "All tests passed successfully!" << endl;
+    n++;
+    uint64_t res = nth_prime(n);
+    cout << "nth_prime(" << n << ") = " << res;
+    check(res == prime);
   }
-  catch (exception& e)
+
+  // nth_prime(-n, start) backwards
+  for (n = 0; i >= 0; i--)
   {
-    cerr << endl << "primesieve error: " << e.what() << endl;
-    return 1;
+    n--;
+    uint64_t res = nth_prime(n, upperBound);
+    cout << "nth_prime(" << n << ", " << upperBound << ") = " << res;
+    check(res == primes[i]);
   }
+
+  cout << endl;
+  cout << "All tests passed successfully!" << endl;
 
   return 0;
 }
