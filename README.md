@@ -49,8 +49,8 @@ sudo apt-get install primesieve
 brew install primesieve
 ```
 
-Console application
--------------------
+Usage examples
+--------------
 
 The primesieve console application can generate primes and prime
 k-tuplets.
