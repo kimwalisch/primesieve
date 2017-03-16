@@ -1,5 +1,5 @@
 ///
-/// @file   next_prime1.cpp
+/// @file   next_prime2.c
 /// @brief  Test primesieve_next_prime().
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
@@ -38,7 +38,7 @@ int main()
   uint64_t max_prime = primes[size - 1];
   uint64_t sum = 0;
 
-  for (i = 0; i < size - i; i++)
+  for (i = 0; i < size - 1; i++)
   {
     primesieve_skipto(&it, primes[i] - 1, max_prime);
     prime = primesieve_next_prime(&it);
