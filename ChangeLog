@@ -1,3 +1,60 @@
+Changes in version 6.0, 16/03/2017
+==================================
+
+Work in progress.
+
+primesieve-6.0 is a major new release with many changes. The API and
+ABI are not backwards compatible, see the "API changes" sections
+further down for more information.
+
+1. Use CMake build system instead of Autotools.
+2. Use C++11 instead of C++98.
+3. C/C++ API is now parallel by default.
+4. Add many C/C++ libprimesieve tests (./test).
+
+C++ API changes
+---------------
+
+The C++ API is now parallel by default i.e. the
+primesieve::count_*() and primesieve::nth_prime() functions use all
+CPU cores. Hence the old primesieve::parallel_*() functions have been
+removed.
+
+Removed from C++ API:
+
+uint64_t parallel_count_primes(uint64_t start, uint64_t stop);
+uint64_t parallel_count_twins(uint64_t start, uint64_t stop);
+uint64_t parallel_count_triplets(uint64_t start, uint64_t stop);
+uint64_t parallel_count_quadruplets(uint64_t start, uint64_t stop);
+uint64_t parallel_count_quintuplets(uint64_t start, uint64_t stop);
+uint64_t parallel_count_sextuplets(uint64_t start, uint64_t stop);
+uint64_t parallel_nth_prime(int64_t n, uint64_t start = 0);
+
+void callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
+void callback_primes(uint64_t start, uint64_t stop, primesieve::Callback<uint64_t>* callback);
+bool primesieve_test();
+
+C API changes
+-------------
+
+The C API is now parallel by default i.e. the
+primesieve_count_*() and primesieve_nth_prime() functions use all
+CPU cores. Hence the old primesieve_parallel_*() functions have been
+removed.
+
+Removed from C API:
+
+uint64_t primesieve_parallel_count_primes(uint64_t start, uint64_t stop);
+uint64_t primesieve_parallel_count_twins(uint64_t start, uint64_t stop);
+uint64_t primesieve_parallel_count_triplets(uint64_t start, uint64_t stop);
+uint64_t primesieve_parallel_count_quadruplets(uint64_t start, uint64_t stop);
+uint64_t primesieve_parallel_count_quintuplets(uint64_t start, uint64_t stop);
+uint64_t primesieve_parallel_count_sextuplets(uint64_t start, uint64_t stop);
+uint64_t primesieve_parallel_nth_prime(int64_t n, uint64_t start);
+
+void primesieve_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
+int primesieve_test();
+
 Changes in version 5.7.3, 19/11/2016
 ====================================
 
