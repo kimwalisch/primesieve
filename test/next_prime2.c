@@ -60,6 +60,17 @@ int main()
   printf("Sum of the primes below 10^9 = %" PRIu64, sum);
   check(sum == 24739512092254535ull);
 
+  uint64_t p1 = primes[size - 1];
+  uint64_t p2 = primes[size - 2];
+  primesieve_skipto(&it, p1, p2);
+  prime = primesieve_prev_prime(&it);
+  printf("prev_prime(%" PRIu64 ") = %" PRIu64, p1, prime);
+  check(prime == p2);
+
+  prime = primesieve_next_prime(&it);
+  printf("next_prime(%" PRIu64 ") = %" PRIu64, p2, prime);
+  check(prime == p1);
+
   primesieve_skipto(&it, 18446744073709551533ull, 0);
   prime = primesieve_next_prime(&it);
   printf("next_prime(%" PRIu64 ") = %" PRIu64, 18446744073709551533ull, prime);
