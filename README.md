@@ -86,14 +86,14 @@ make -j8
 sudo make install
 ```
 
-To build the C/C++ examples programs use:
+#### Build C/C++ examples
 
 ```sh
 cmake -DBUILD_EXAMPLES=ON .
 make -j8
 ```
 
-To run the tests use:
+#### Run the tests
 
 ```sh
 cmake -DBUILD_TESTS=ON .
@@ -162,7 +162,8 @@ int main()
 Linking against libprimesieve
 -----------------------------
 
-**Unix-like operating systems**
+#### Unix-like OSes
+
 ```sh
 c++ -O2 primes.cpp -lprimesieve
 cc  -O2 primes.c   -lprimesieve
@@ -179,7 +180,8 @@ export CPLUS_INCLUDE_PATH=/usr/local/include:$CPLUS_INCLUDE_PATH
 export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
 ```
 
-**Microsoft Visual C++ (Windows)**
+#### Microsoft Visual C++
+
 ```
 cl /O2 /EHsc primes.cpp /I primesieve\include /link primesieve\primesieve.lib
 ```
