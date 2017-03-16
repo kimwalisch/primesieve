@@ -1,5 +1,5 @@
 ///
-/// @file   count3.cpp
+/// @file   count_primes3.cpp
 /// @brief  Count the primes within [10^13, 10^13 + 5*10^9] randomly
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>

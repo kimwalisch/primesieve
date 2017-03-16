@@ -1,5 +1,5 @@
 ///
-/// @file   count2.cpp
+/// @file   count_primes2.cpp
 /// @brief  Count the primes within [10^i, 10^i + 10^9] for i = 12 to 19
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>

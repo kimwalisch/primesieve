@@ -1,5 +1,5 @@
 ///
-/// @file   count1.cpp
+/// @file   count_primes1.cpp
 /// @brief  Count the primes up to 10^9.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>

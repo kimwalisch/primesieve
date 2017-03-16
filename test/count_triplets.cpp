@@ -1,5 +1,5 @@
 ///
-/// @file   count_twins.cpp
+/// @file   count_triplets.cpp
 /// @brief  Count prime triplets inside [10^12, 10^12 + 10^9].
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>

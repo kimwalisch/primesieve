@@ -1,5 +1,5 @@
 ///
-/// @file   count_twins.cpp
+/// @file   count_sextuplets.cpp
 /// @brief  Count prime sextuplets inside [10^12, 10^12 + 10^9].
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
