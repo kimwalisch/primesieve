@@ -3,7 +3,7 @@
 /// @brief  Cast bytes in ascending address order on both little and
 ///         big endian CPUs.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -61,6 +61,6 @@ inline T littleendian_cast(const byte_t* array)
   return littleendian_cast_helper<T, 0, sizeof(T)>::sum(array, 0);
 }
 
-} // namespace primesieve
+} // namespace
 
 #endif

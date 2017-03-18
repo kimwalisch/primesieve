@@ -1,9 +1,9 @@
 ///
 /// @file   primesieve_error.hpp
-/// @brief  The primesieve_error class is used for all exceptions
-///         within primesieve.
+/// @brief  The primesieve_error class is used for all
+///         exceptions within primesieve.
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -18,8 +18,7 @@
 namespace primesieve {
 
 /// primesieve throws a primesieve_error exception
-/// if an error occurs that cannot be handled
-/// e.g. stop > primesieve::max_stop().
+/// if an error occurs e.g. prime > 2^64.
 ///
 class primesieve_error : public std::runtime_error
 {
@@ -29,6 +28,6 @@ public:
   { }
 };
 
-} // namespace primesieve
+} // namespace
 
 #endif

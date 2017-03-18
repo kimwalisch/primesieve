@@ -1,8 +1,8 @@
 ///
 /// @file   Callback.hpp
-/// @brief  Callback interface classes.
+/// @brief  Callback interface class.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -15,18 +15,13 @@
 
 namespace primesieve {
 
-/// callback interface class. Objects derived from this class can be
-/// passed to the primesieve::generate_primes() functions.
-/// @param T  must be uint64_t.
-///
-template <typename T>
 class Callback
 {
 public:
-  virtual void callback(T prime) = 0;
+  virtual void callback(uint64_t prime) = 0;
   virtual ~Callback() { }
 };
 
-} // namespace primesieve
+} // namespace
 
 #endif

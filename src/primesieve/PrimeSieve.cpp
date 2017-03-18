@@ -3,14 +3,13 @@
 /// @brief  The PrimeSieve class provides an easy API for prime
 ///         sieving (single-threaded).
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
 #include <primesieve/config.hpp>
-#include <primesieve/callback_t.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/Callback.hpp>
@@ -23,13 +22,20 @@
 #include <stdint.h>
 #include <iostream>
 #include <string>
-#include <cstddef>
 #include <ctime>
 #include <algorithm>
 
-namespace primesieve {
+namespace {
 
-const PrimeSieve::SmallPrime PrimeSieve::smallPrimes_[8] =
+struct SmallPrime
+{
+  uint64_t first;
+  uint64_t last;
+  int index;
+  std::string str;
+};
+
+const SmallPrime smallPrimes[8] =
 {
   { 2,  2, 0, "2" },
   { 3,  3, 0, "3" },
@@ -41,13 +47,17 @@ const PrimeSieve::SmallPrime PrimeSieve::smallPrimes_[8] =
   { 5, 17, 4, "(5, 7, 11, 13, 17)" }
 };
 
+} // namespace
+
+namespace primesieve {
+
 PrimeSieve::PrimeSieve() :
   start_(0),
   stop_(0),
   counts_(6),
   flags_(COUNT_PRIMES),
   threadNum_(0),
-  parent_(NULL)
+  parent_(nullptr)
 {
   setSieveSize(config::PRIMESIEVE_SIEVESIZE);
   reset();
@@ -62,7 +72,6 @@ PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
   flags_(parent.flags_),
   threadNum_(threadNum),
   parent_(&parent),
-  callback_(parent.callback_),
   cb_(parent.cb_)
 { }
 
@@ -82,17 +91,16 @@ uint64_t PrimeSieve::getCount(int index)         const { return counts_.at(index
 double   PrimeSieve::getStatus()                 const { return percent_; }
 double   PrimeSieve::getSeconds()                const { return seconds_; }
 int      PrimeSieve::getSieveSize()              const { return sieveSize_; }
-int      PrimeSieve::getFlags()                  const { return (flags_ & ((1 << 20) - 1)); }
 bool     PrimeSieve::isValidFlags(int flags)     const { return (flags >= 0 && flags < (1 << 20)); }
 bool     PrimeSieve::isFlag(int flag)            const { return (flags_ & flag) == flag; }
 bool     PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last * 2 - first)) != 0; }
 bool     PrimeSieve::isCount(int index)          const { return isFlag(COUNT_PRIMES << index); }
 bool     PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRIMES << index); }
-bool     PrimeSieve::isCallback()                const { return isFlag(CALLBACK_PRIMES, CALLBACK_PRIMES_C); }
+bool     PrimeSieve::isCallback()                const { return isFlag(CALLBACK_PRIMES); }
 bool     PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEXTUPLETS); }
 bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEXTUPLETS); }
 bool     PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
-bool     PrimeSieve::isParallelPrimeSieveChild() const { return parent_ != NULL; }
+bool     PrimeSieve::isParallelPrimeSieveChild() const { return parent_ != nullptr; }
 
 /// Set a start number (lower bound) for sieving.
 void PrimeSieve::setStart(uint64_t start)
@@ -109,7 +117,6 @@ void PrimeSieve::setStop(uint64_t stop)
 /// Set the size of the sieve of Eratosthenes array in kilobytes
 /// (default = 32). The best sieving performance is achieved with a
 /// sieve size of the CPU's L1 data cache size per core.
-/// @pre sieveSize >= 1 && <= 2048
 ///
 void PrimeSieve::setSieveSize(int sieveSize)
 {
@@ -139,7 +146,7 @@ void PrimeSieve::reset()
 
 double PrimeSieve::getWallTime() const
 {
-  return static_cast<double>(std::clock()) / CLOCKS_PER_SEC;
+  return (double) std::clock() / CLOCKS_PER_SEC;
 }
 
 void PrimeSieve::setLock()
@@ -181,8 +188,8 @@ bool PrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
 
 void PrimeSieve::printStatus(double old, double current)
 {
-  int percent = static_cast<int>(current);
-  if (percent > static_cast<int>(old))
+  int percent = (int) current;
+  if (percent > (int) old)
   {
     std::cout << '\r' << percent << '%' << std::flush;
     if (percent == 100)
@@ -190,29 +197,30 @@ void PrimeSieve::printStatus(double old, double current)
   }
 }
 
-void PrimeSieve::doSmallPrime(const SmallPrime& sp)
+/// Process small primes and k-tuplets <= 17.
+void PrimeSieve::processSmallPrimes()
 {
-  if (sp.firstPrime >= start_ && sp.lastPrime <= stop_)
+  LockGuard lock(*this);
+
+  for (int i = 0; i < 8; i++)
   {
-    // callback prime numbers
-    if (sp.index == 0)
+    auto& p = smallPrimes[i];
+
+    if (p.first >= start_ &&
+        p.last <= stop_)
     {
-      if (isFlag(CALLBACK_PRIMES_OBJ))
-        cb_->callback(sp.firstPrime);
-      if (isFlag(CALLBACK_PRIMES))
-        callback_(sp.firstPrime);
-      if (isFlag(CALLBACK_PRIMES_C))
-        reinterpret_cast<callback_c_t>(callback_)(sp.firstPrime);
+      if (isCallback() && p.index == 0)
+        cb_->callback(p.first);
+      if (isCount(p.index))
+        counts_[p.index]++;
+      if (isPrint(p.index))
+        std::cout << p.str << '\n';
     }
-    if (isCount(sp.index))
-      counts_[sp.index]++;
-    if (isPrint(sp.index))
-      std::cout << sp.str << '\n';
   }
 }
 
 /// Sieve the primes and prime k-tuplets (twin primes, prime
-/// triplets, ...) within the interval [start, stop].
+/// triplets, ...) within [start, stop].
 ///
 void PrimeSieve::sieve()
 {
@@ -224,13 +232,9 @@ void PrimeSieve::sieve()
   if (isStatus())
     updateStatus(INIT_STATUS);
 
-  // small primes and k-tuplets (first prime <= 5)
+  // process small primes and k-tuplets
   if (start_ <= 5)
-  {
-    LockGuard lock(*this);
-    for (int i = 0; i < 8; i++)
-      doSmallPrime(smallPrimes_[i]);
-  }
+    processSmallPrimes();
 
   if (stop_ >= 7)
   {
@@ -239,12 +243,12 @@ void PrimeSieve::sieve()
 
     if (finder.getSqrtStop() > preSieve.getLimit())
     {
-      // generate the sieving primes <= sqrt(stop)
+      // generate sieving primes <= sqrt(stop)
       PrimeGenerator pg(finder, preSieve);
       pg.generateSievingPrimes();
     }
 
-    // sieve the primes within [start, stop]
+    // sieve [start, stop]
     finder.sieve();
   }
 
@@ -268,45 +272,14 @@ void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags)
   sieve();
 }
 
-/// Generate the primes within the interval [start, stop] and call
-/// a callback function for each prime.
-///
 void PrimeSieve::callbackPrimes(uint64_t start,
                                 uint64_t stop,
-                                void (*callback)(uint64_t))
+                                Callback* callback)
 {
   if (!callback)
-    throw primesieve_error("callback is NULL");
-  callback_ = callback;
+    throw primesieve_error("Callback pointer is nullptr");
+  cb_ = callback;
   flags_ = CALLBACK_PRIMES;
-  sieve(start, stop);
-}
-
-/// Generate the primes within the interval [start, stop] and call
-/// the callback method of the cb object.
-///
-void PrimeSieve::callbackPrimes(uint64_t start,
-                                uint64_t stop,
-                                Callback<uint64_t>* cb)
-{
-  if (!cb)
-    throw primesieve_error("Callback pointer is NULL");
-  cb_ = cb;
-  flags_ = CALLBACK_PRIMES_OBJ;
-  sieve(start, stop);
-}
-
-/// Generate the primes within the interval [start, stop] and call a
-/// callback function with extern "C" linkage for each prime.
-///
-void PrimeSieve::callbackPrimes_c(uint64_t start,
-                                  uint64_t stop,
-                                  void (*callback)(uint64_t))
-{
-  if (!callback)
-    throw primesieve_error("callback is NULL");
-  callback_ = callback;
-  flags_ = CALLBACK_PRIMES_C;
   sieve(start, stop);
 }
 
@@ -380,4 +353,4 @@ uint64_t PrimeSieve::countSextuplets(uint64_t start, uint64_t stop)
   return getSextupletCount();
 }
 
-} // namespace primesieve
+} // namespace

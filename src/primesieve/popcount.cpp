@@ -3,15 +3,11 @@
 /// @brief  Fast algorithm to count the number of 1 bits in an array
 ///         using only integer operations.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
-
-#if !defined(__STDC_CONSTANT_MACROS)
-  #define __STDC_CONSTANT_MACROS
-#endif
 
 #include <stdint.h>
 
@@ -22,12 +18,12 @@ namespace {
 /// It uses 12 arithmetic operations, one of which is a multiply.
 /// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
 ///
-uint64_t popcount_mul(uint64_t x)
+uint64_t popcount64c(uint64_t x)
 {
-  const uint64_t m1  = UINT64_C(0x5555555555555555);
-  const uint64_t m2  = UINT64_C(0x3333333333333333);
-  const uint64_t m4  = UINT64_C(0x0F0F0F0F0F0F0F0F);
-  const uint64_t h01 = UINT64_C(0x0101010101010101);
+  const uint64_t m1 = 0x5555555555555555ull;
+  const uint64_t m2 = 0x3333333333333333ull;
+  const uint64_t m4 = 0x0F0F0F0F0F0F0F0Full;
+  const uint64_t h01 = 0x0101010101010101ull;
 
   x -= (x >> 1) & m1;
   x = (x & m2) + ((x >> 2) & m2);
@@ -81,19 +77,19 @@ uint64_t popcount(const uint64_t* array, uint64_t size)
     CSA(eightsB, fours, fours, foursA, foursB);
     CSA(sixteens, eights, eights, eightsA, eightsB);
 
-    total += popcount_mul(sixteens);
+    total += popcount64c(sixteens);
   }
 
   total *= 16;
-  total += 8 * popcount_mul(eights);
-  total += 4 * popcount_mul(fours);
-  total += 2 * popcount_mul(twos);
-  total += 1 * popcount_mul(ones);
+  total += 8 * popcount64c(eights);
+  total += 4 * popcount64c(fours);
+  total += 2 * popcount64c(twos);
+  total += 1 * popcount64c(ones);
 
   for(; i < size; i++)
-    total += popcount_mul(array[i]);
+    total += popcount64c(array[i]);
 
   return total;
 }
 
-} // namespace primesieve
+} // namespace

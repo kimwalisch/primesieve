@@ -2,7 +2,7 @@
 /// @file   ParallelPrimeSieve.cpp
 /// @brief  Sieve primes in parallel using OpenMP.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -16,7 +16,6 @@
 #include <stdint.h>
 #include <algorithm>
 #include <cassert>
-#include <cstddef>
 
 #ifdef _OPENMP
   #include <omp.h>
@@ -28,8 +27,8 @@ using namespace std;
 namespace primesieve {
 
 ParallelPrimeSieve::ParallelPrimeSieve() :
-  lock_(NULL),
-  shm_(NULL),
+  lock_(nullptr),
+  shm_(nullptr),
   numThreads_(getMaxThreads())
 { }
 
@@ -65,7 +64,7 @@ int ParallelPrimeSieve::idealNumThreads() const
   uint64_t threads = getDistance() / threshold;
   threads = inBetween(1, threads, numThreads_);
 
-  return static_cast<int>(threads);
+  return (int) threads;
 }
 
 /// Get a thread distance which ensures a good load
@@ -188,8 +187,6 @@ bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
   }
   return lock.isSet();
 }
-
-/// Used to synchronize threads for prime number generation
 
 void ParallelPrimeSieve::setLock()
 {

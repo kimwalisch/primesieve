@@ -2,7 +2,7 @@
 /// @file   SieveOfEratosthenes-inline.hpp
 /// @brief  Inline methods of the SieveOfEratosthenes class.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -49,7 +49,7 @@ inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint64_t base)
 {
   // calculate bitValues_[ bitScanForward(*bits) ]
   // using a custom De Bruijn bitscan
-  uint64_t debruijn64 = UINT64_C(0x3F08A4C6ACB9DBD);
+  uint64_t debruijn64 = 0x3F08A4C6ACB9DBDull;
   uint64_t mask = *bits - 1;
   uint64_t bitValue = bruijnBitValues_[((*bits ^ mask) * debruijn64) >> 58];
   uint64_t prime = base + bitValue;
@@ -57,9 +57,8 @@ inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint64_t base)
   return prime;
 }
 
-/// This method must be called consecutively for all primes up to
-/// sqrt(stop) in order to sieve the primes within the
-/// interval [start, stop].
+/// This method is called consecutively for all
+/// sieving primes up to sqrt(stop).
 ///
 inline void SieveOfEratosthenes::addSievingPrime(uint_t prime)
 {
@@ -67,7 +66,7 @@ inline void SieveOfEratosthenes::addSievingPrime(uint_t prime)
 
   // This loop is executed once all primes <= sqrt(segmentHigh_)
   // required to sieve the next segment have been
-  // added to the erat* objects further down.
+  // added to the erat* objects further down
   while (segmentHigh_ < square)
     sieveSegment();
 
@@ -76,6 +75,6 @@ inline void SieveOfEratosthenes::addSievingPrime(uint_t prime)
   else /* (prime > limitPreSieve) */ eratSmall_->addSievingPrime(prime, segmentLow_);
 }
 
-} // namespace primesieve
+} // namespace
 
 #endif

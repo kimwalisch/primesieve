@@ -3,7 +3,7 @@
 /// @brief  The ParallelPrimeSieve class provides an easy API for
 ///         multi-threaded prime sieving.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -51,7 +51,7 @@ private:
   int numThreads_;
   uint64_t getThreadDistance(int) const;
   uint64_t align(uint64_t) const;
-  template <typename T> T getLock() { return static_cast<T>(lock_); }
+  template <typename T> T getLock() { return (T) lock_; }
   virtual double getWallTime() const;
   virtual void setLock();
   virtual void unsetLock();

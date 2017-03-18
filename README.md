@@ -49,8 +49,8 @@ sudo apt-get install primesieve
 brew install primesieve
 ```
 
-Console application
--------------------
+Usage examples
+--------------
 
 The primesieve console application can generate primes and prime
 k-tuplets.
@@ -72,68 +72,33 @@ primesieve 1e10 2e10 --threads=4
 primesieve --help
 ```
 
-Build requirements
+Build instructions
 ------------------
 
-primesieve is very portable, it compiles with every C++ compiler and
-runs on most CPU architectures out there. The parallelization is
-implemented using [OpenMP](http://en.wikipedia.org/wiki/OpenMP). The
-primesieve GUI application (not built by default) uses the
-[Qt&nbsp;framework](http://qt-project.org).
-
-primesieve is also a library, it natively supports C and C++ and there
-are [bindings](#bindings-for-other-languages) available for a few
-other programming languages. The author's
-[primecount](https://github.com/kimwalisch/primecount) program uses
-libprimesieve extensively.
-
-Build instructions (Unix-like OSes)
------------------------------------
-
-Download [primesieve-5.7.3.tar.gz](https://github.com/kimwalisch/primesieve/releases/download/v5.7.3/primesieve-5.7.3.tar.gz)
-and extract it, then build primesieve using:
+Building primesieve requires a compiler which supports C++11 (or later)
+and CMake ≥ 3.1. If your compiler does not support C++11 you can fall back 
+to [primesieve-5.x](https://github.com/kimwalisch/primesieve/tree/v5.7.3)
+which is written in C++98.
 
 ```sh
-./configure
-make
+cmake .
+make -j8
 sudo make install
 ```
 
-If you have downloaded a zip archive from GitHub then Autotools
-(a.k.a. the GNU Build System) must be installed and ```autogen.sh``` must
-be executed once. To install Autotools install
-[GNU&#160;Autoconf](http://www.gnu.org/software/autoconf/),
-[GNU&#160;Automake](http://www.gnu.org/software/automake/) and
-[GNU&#160;Libtool](http://www.gnu.org/software/libtool/)
-using your operating system's package manager.
+#### Build C/C++ examples
 
 ```sh
-./autogen.sh
-./configure
-make
-sudo make install
+cmake -DBUILD_EXAMPLES=ON .
+make -j8
 ```
 
-To enable building the example programs use:
+#### Run the tests
 
 ```sh
-./configure --enable-examples
-```
-
-Build instructions (Microsoft Visual C++)
------------------------------------------
-
-Download
-[primesieve-5.7.3.zip](https://github.com/kimwalisch/primesieve/releases/download/v5.7.3/primesieve-5.7.3.zip)
-and extract it. Then open a Visual Studio Command Prompt and run:
-
-```sh
-nmake -f Makefile.msvc
-```
-
-To build the example programs use:
-```sh
-nmake -f Makefile.msvc examples
+cmake -DBUILD_TESTS=ON .
+make -j8
+make test
 ```
 
 C++ API
@@ -197,7 +162,8 @@ int main()
 Linking against libprimesieve
 -----------------------------
 
-**Unix-like operating systems**
+#### Unix-like OSes
+
 ```sh
 c++ -O2 primes.cpp -lprimesieve
 cc  -O2 primes.c   -lprimesieve
@@ -214,7 +180,8 @@ export CPLUS_INCLUDE_PATH=/usr/local/include:$CPLUS_INCLUDE_PATH
 export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
 ```
 
-**Microsoft Visual C++ (Windows)**
+#### Microsoft Visual C++
+
 ```
 cl /O2 /EHsc primes.cpp /I primesieve\include /link primesieve\primesieve.lib
 ```

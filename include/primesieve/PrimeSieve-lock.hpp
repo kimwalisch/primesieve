@@ -1,7 +1,7 @@
 ///
 /// @file  PrimeSieve-lock.hpp
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -24,9 +24,8 @@ public:
   ~LockGuard() { ps_.unsetLock(); }
 private:
   PrimeSieve& ps_;
-  DISALLOW_COPY_AND_ASSIGN(LockGuard);
 };
 
-} // namespace primesieve
+} // namespace
 
 #endif

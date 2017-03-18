@@ -1,7 +1,7 @@
 ///
 /// @file  SieveOfEratosthenes.hpp
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,14 +11,16 @@
 #define SIEVEOFERATOSTHENES_HPP
 
 #include "config.hpp"
+#include "EratSmall.hpp"
+#include "EratMedium.hpp"
+#include "EratBig.hpp"
+
 #include <stdint.h>
+#include <memory>
 
 namespace primesieve {
 
 class PreSieve;
-class EratSmall;
-class EratMedium;
-class EratBig;
 
 /// The abstract SieveOfEratosthenes class sieves primes using the
 /// segmented sieve of Eratosthenes. It uses a bit array for sieving,
@@ -26,7 +28,8 @@ class EratBig;
 /// uses three different sieve of Eratosthenes algorithms optimized
 /// for small, medium and big sieving primes to cross-off multiples.
 ///
-class SieveOfEratosthenes {
+class SieveOfEratosthenes
+{
 public:
   uint64_t getStart() const;
   uint64_t getStop() const;
@@ -36,7 +39,7 @@ public:
   void sieve();
 protected:
   SieveOfEratosthenes(uint64_t, uint64_t, uint_t, const PreSieve&);
-  virtual ~SieveOfEratosthenes();
+  virtual ~SieveOfEratosthenes() { };
   virtual void segmentFinished(const byte_t*, uint_t) = 0;
   static uint64_t getNextPrime(uint64_t*, uint64_t);
   uint64_t getSegmentLow() const;
@@ -48,9 +51,9 @@ private:
   /// Upper bound of the current segment
   uint64_t segmentHigh_;
   /// Sieve primes >= start_
-  const uint64_t start_;
+  uint64_t start_;
   /// Sieve primes <= stop_
-  const uint64_t stop_;
+  uint64_t stop_;
   const PreSieve& preSieve_;
   /// sqrt(stop_)
   uint_t sqrtStop_;
@@ -61,16 +64,15 @@ private:
   uint_t sieveSize_;
   /// Sieve of Eratosthenes array
   byte_t* sieve_;
-  EratSmall* eratSmall_;
-  EratMedium* eratMedium_;
-  EratBig* eratBig_;
+  std::unique_ptr<byte_t> deleteSieve_;
+  std::unique_ptr<EratSmall> eratSmall_;
+  std::unique_ptr<EratMedium> eratMedium_;
+  std::unique_ptr<EratBig> eratBig_;
   static uint64_t getByteRemainder(uint64_t);
-  void init();
-  void cleanUp();
+  void allocate();
   void preSieve();
   void crossOffMultiples();
   void sieveSegment();
-  DISALLOW_COPY_AND_ASSIGN(SieveOfEratosthenes);
 };
 
 } // namespace

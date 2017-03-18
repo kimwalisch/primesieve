@@ -1,7 +1,7 @@
 ///
 /// @file  EratBig.hpp
 ///
-/// Copyright (C) 2014 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,9 +11,10 @@
 #define ERATBIG_HPP
 
 #include "config.hpp"
-#include "WheelFactorization.hpp"
+#include "Wheel.hpp"
 
 #include <stdint.h>
+#include <memory>
 #include <vector>
 
 namespace primesieve {
@@ -22,30 +23,29 @@ namespace primesieve {
 /// Eratosthenes optimized for big sieving primes that have very few
 /// multiples per segment.
 ///
-class EratBig: public Modulo210Wheel_t {
+class EratBig : public Modulo210Wheel_t
+{
 public:
   EratBig(uint64_t, uint_t, uint_t);
-  ~EratBig();
   void crossOff(byte_t*);
 private:
-  const uint_t limit_;
+  uint_t limit_;
   /// log2 of SieveOfEratosthenes::sieveSize_
-  const uint_t log2SieveSize_;
-  const uint_t moduloSieveSize_;
+  uint_t log2SieveSize_;
+  uint_t moduloSieveSize_;
   /// Vector of bucket lists, holds the sieving primes
   std::vector<Bucket*> lists_;
   /// List of empty buckets
   Bucket* stock_;
   /// Pointers of the allocated buckets
-  std::vector<Bucket*> pointers_;
+  std::vector<std::unique_ptr<Bucket[]>> memory_;
   void init(uint_t);
   static void moveBucket(Bucket&, Bucket*&);
   void pushBucket(uint_t);
   void storeSievingPrime(uint_t, uint_t, uint_t);
   void crossOff(byte_t*, SievingPrime*, SievingPrime*);
-  DISALLOW_COPY_AND_ASSIGN(EratBig);
 };
 
-} // namespace primesieve
+} // namespace
 
 #endif

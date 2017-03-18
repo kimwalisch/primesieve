@@ -12,10 +12,9 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
-#define PRIMESIEVE_VERSION "5.7.3"
-#define PRIMESIEVE_VERSION_MAJOR 5
-#define PRIMESIEVE_VERSION_MINOR 7
-#define PRIMESIEVE_VERSION_PATCH 3
+#define PRIMESIEVE_VERSION "6.0"
+#define PRIMESIEVE_VERSION_MAJOR 6
+#define PRIMESIEVE_VERSION_MINOR 0
 
 #include <primesieve/primesieve_iterator.h>
 
@@ -78,6 +77,9 @@ void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type);
 
 /**
  * Find the nth prime.
+ * By default all CPU cores are used, use
+ * primesieve_set_num_threads(int threads) to change the
+ * number of threads.
  * @param n  if n = 0 finds the 1st prime >= start, <br/>
  *           if n > 0 finds the nth prime > start, <br/>
  *           if n < 0 finds the nth prime < start (backwards).
@@ -85,74 +87,52 @@ void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type);
 uint64_t primesieve_nth_prime(int64_t n, uint64_t start);
 
 /**
- * Find the nth prime in parallel.
+ * Count the primes within the interval [start, stop]. 
  * By default all CPU cores are used, use
- * primesieve_set_num_threads(int) to change the number of threads.
- * @param n  if n = 0 finds the 1st prime >= start, <br/>
- *           if n > 0 finds the nth prime > start, <br/>
- *           if n < 0 finds the nth prime < start (backwards).
+ * primesieve_set_num_threads(int threads) to change the
+ * number of threads.
  */
-uint64_t primesieve_parallel_nth_prime(int64_t n, uint64_t start);
-
-/** Count the primes within the interval [start, stop] */
 uint64_t primesieve_count_primes(uint64_t start, uint64_t stop);
 
-/** Count the twin primes within the interval [start, stop] */
+/**
+ * Count the twin primes within the interval [start, stop]. 
+ * By default all CPU cores are used, use
+ * primesieve_set_num_threads(int threads) to change the
+ * number of threads.
+ */
 uint64_t primesieve_count_twins(uint64_t start, uint64_t stop);
 
-/** Count the prime triplets within the interval [start, stop] */
+/**
+ * Count the prime triplets within the interval [start, stop]. 
+ * By default all CPU cores are used, use
+ * primesieve_set_num_threads(int threads) to change the
+ * number of threads.
+ */
 uint64_t primesieve_count_triplets(uint64_t start, uint64_t stop);
 
-/** Count the prime quadruplets within the interval [start, stop] */
+/**
+ * Count the prime quadruplets within the interval [start, stop]. 
+ * By default all CPU cores are used, use
+ * primesieve_set_num_threads(int threads) to change the
+ * number of threads.
+ */
 uint64_t primesieve_count_quadruplets(uint64_t start, uint64_t stop);
 
-/** Count the prime quintuplets within the interval [start, stop] */
+/**
+ * Count the prime quintuplets within the interval [start, stop]. 
+ * By default all CPU cores are used, use
+ * primesieve_set_num_threads(int threads) to change the
+ * number of threads.
+ */
 uint64_t primesieve_count_quintuplets(uint64_t start, uint64_t stop);
 
-/** Count the prime sextuplets within the interval [start, stop] */
+/**
+ * Count the prime sextuplets within the interval [start, stop]. 
+ * By default all CPU cores are used, use
+ * primesieve_set_num_threads(int threads) to change the
+ * number of threads.
+ */
 uint64_t primesieve_count_sextuplets(uint64_t start, uint64_t stop);
-
-/**
- * Count the primes within the interval [start, stop] in
- * parallel. By default all CPU cores are used, use
- * primesieve_set_num_threads(int) to change the number of threads.
- */
-uint64_t primesieve_parallel_count_primes(uint64_t start, uint64_t stop);
-
-/**
- * Count the twin primes within the interval [start, stop]
- * in parallel. By default all CPU cores are used, use
- * primesieve_set_num_threads(int) to change the number of threads.
- */
-uint64_t primesieve_parallel_count_twins(uint64_t start, uint64_t stop);
-
-/**
- * Count the prime triplets within the interval [start, stop]
- * in parallel. By default all CPU cores are used, use
- * primesieve_set_num_threads(int) to change the number of threads.
- */
-uint64_t primesieve_parallel_count_triplets(uint64_t start, uint64_t stop);
-
-/**
- * Count the prime quadruplets within the interval [start, stop]
- * in parallel. By default all CPU cores are used, use
- * primesieve_set_num_threads(int) to change the number of threads.
- */
-uint64_t primesieve_parallel_count_quadruplets(uint64_t start, uint64_t stop);
-
-/**
- * Count the prime quintuplets within the interval [start, stop]
- * in parallel. By default all CPU cores are used, use
- * primesieve_set_num_threads(int) to change the number of threads.
- */
-uint64_t primesieve_parallel_count_quintuplets(uint64_t start, uint64_t stop);
-
-/**
- * Count the prime sextuplets within the interval [start, stop]
- * in parallel. By default all CPU cores are used, use
- * primesieve_set_num_threads(int) to change the number of threads.
- */
-uint64_t primesieve_parallel_count_sextuplets(uint64_t start, uint64_t stop);
 
 /**
  * Print the primes within the interval [start, stop]
@@ -191,22 +171,16 @@ void primesieve_print_quintuplets(uint64_t start, uint64_t stop);
 void primesieve_print_sextuplets(uint64_t start, uint64_t stop);
 
 /**
- * Call back the primes within the interval [start, stop].
- * @param callback  A callback function.
+ * Returns the largest valid stop number for primesieve.
+ * @return 2^64-1 (UINT64_MAX).
  */
-void primesieve_callback_primes(uint64_t start, uint64_t stop, void (*callback)(uint64_t prime));
+uint64_t primesieve_get_max_stop();
 
 /** Get the current set sieve size in kilobytes */
 int primesieve_get_sieve_size();
 
 /** Get the current set number of threads */
 int primesieve_get_num_threads();
-
-/**
- * Returns the largest valid stop number for primesieve.
- * @return 2^64-1 (UINT64_MAX).
- */
-uint64_t primesieve_get_max_stop();
 
 /**
  * Set the sieve size in kilobytes.
@@ -221,7 +195,7 @@ void primesieve_set_sieve_size(int sieve_size);
 
 /**
  * Set the number of threads for use in subsequent
- * primesieve_parallel_* function calls.
+ * primesieve_count_* function calls.
  */
 void primesieve_set_num_threads(int num_threads);
 
@@ -232,15 +206,7 @@ void primesieve_set_num_threads(int num_threads);
  */
 void primesieve_free(void* primes);
 
-/**
- * Run extensive correctness tests.
- * The tests last about one minute on a quad core CPU from
- * 2013 and use up to 1 gigabyte of memory.
- * @return 1 if success, 0 if error.
- */
-int primesieve_test();
-
-/** Get the primesieve version number, in the form “i.j.k” */
+/** Get the primesieve version number, in the form “i.j” */
 const char* primesieve_version();
 
 #ifdef __cplusplus

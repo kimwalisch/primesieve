@@ -2,7 +2,7 @@
 /// @file   primesieve_iterator.cpp
 /// @brief  C port of primesieve::iterator.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -36,6 +36,7 @@ vector<uint64_t>& to_vector(uint64_t* primes_pimpl)
 ///
 uint64_t get_distance(uint64_t n, uint64_t& tiny_cache_size)
 {
+  n = max<uint64_t>(n, 10);
   uint64_t cache_size = config::ITERATOR_CACHE_SMALL;
 
   if (tiny_cache_size < cache_size)
@@ -44,16 +45,15 @@ uint64_t get_distance(uint64_t n, uint64_t& tiny_cache_size)
     tiny_cache_size *= 4;
   }
 
-  n = max<uint64_t>(n, 10);
-  double x = static_cast<double>(n);
+  double x = (double) n;
   double sqrtx = sqrt(x);
-  uint64_t primes = static_cast<uint64_t>(sqrtx / (log(sqrtx) - 1));
+  uint64_t primes = (uint64_t)(sqrtx / (log(sqrtx) - 1));
   uint64_t cache_min_primes = cache_size / sizeof(uint64_t);
   uint64_t cache_max_primes = config::ITERATOR_CACHE_MAX / sizeof(uint64_t);
   primes = inBetween(cache_min_primes, primes, cache_max_primes);
   double distance = primes * log(x);
 
-  return static_cast<uint64_t>(distance);
+  return (uint64_t) distance;
 }
 
 }
@@ -125,7 +125,7 @@ void primesieve_generate_next_primes(primesieve_iterator* pi)
   pi->i_ = 0;
 }
 
-void primesieve_generate_previous_primes(primesieve_iterator* pi)
+void primesieve_generate_prev_primes(primesieve_iterator* pi)
 {
   vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
 

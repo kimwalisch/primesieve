@@ -1,23 +1,22 @@
 PROJECT_NAME           = "primesieve"
-PROJECT_NUMBER         = @PACKAGE_VERSION@
-INPUT                  = @abs_top_srcdir@/doc/mainpage.dox \
-                         @abs_top_srcdir@/include/primesieve.hpp \
-                         @abs_top_srcdir@/include/primesieve.h \
-                         @abs_top_srcdir@/include/primesieve/Callback.hpp \
-                         @abs_top_srcdir@/include/primesieve/iterator.hpp \
-                         @abs_top_srcdir@/include/primesieve/primesieve_error.hpp \
-                         @abs_top_srcdir@/include/primesieve/primesieve_iterator.h \
-                         @abs_top_srcdir@/examples/cpp/callback_primes.cpp \
-                         @abs_top_srcdir@/examples/cpp/count_primes.cpp \
-                         @abs_top_srcdir@/examples/cpp/primesieve_iterator.cpp \
-                         @abs_top_srcdir@/examples/cpp/nth_prime.cpp \
-                         @abs_top_srcdir@/examples/cpp/previous_prime.cpp \
-                         @abs_top_srcdir@/examples/cpp/store_primes_in_vector.cpp \
-                         @abs_top_srcdir@/examples/c/count_primes.c \
-                         @abs_top_srcdir@/examples/c/previous_prime.c \
-                         @abs_top_srcdir@/examples/c/primesieve_iterator.c \
-                         @abs_top_srcdir@/examples/c/nth_prime.c \
-                         @abs_top_srcdir@/examples/c/store_primes_in_array.c
+PROJECT_NUMBER         = @PRIMESIEVE_VERSION@
+INPUT                  = @PROJECT_SOURCE_DIR@/doc/mainpage.dox \
+                         @PROJECT_SOURCE_DIR@/include/primesieve.hpp \
+                         @PROJECT_SOURCE_DIR@/include/primesieve.h \
+                         @PROJECT_SOURCE_DIR@/include/primesieve/Callback.hpp \
+                         @PROJECT_SOURCE_DIR@/include/primesieve/iterator.hpp \
+                         @PROJECT_SOURCE_DIR@/include/primesieve/primesieve_error.hpp \
+                         @PROJECT_SOURCE_DIR@/include/primesieve/primesieve_iterator.h \
+                         @PROJECT_SOURCE_DIR@/examples/cpp/count_primes.cpp \
+                         @PROJECT_SOURCE_DIR@/examples/cpp/primesieve_iterator.cpp \
+                         @PROJECT_SOURCE_DIR@/examples/cpp/nth_prime.cpp \
+                         @PROJECT_SOURCE_DIR@/examples/cpp/prev_prime.cpp \
+                         @PROJECT_SOURCE_DIR@/examples/cpp/store_primes_in_vector.cpp \
+                         @PROJECT_SOURCE_DIR@/examples/c/count_primes.c \
+                         @PROJECT_SOURCE_DIR@/examples/c/prev_prime.c \
+                         @PROJECT_SOURCE_DIR@/examples/c/primesieve_iterator.c \
+                         @PROJECT_SOURCE_DIR@/examples/c/nth_prime.c \
+                         @PROJECT_SOURCE_DIR@/examples/c/store_primes_in_array.c
 HTML_INDEX_NUM_ENTRIES = 3
 HTML_TIMESTAMP         = NO
 JAVADOC_AUTOBRIEF      = YES
@@ -28,11 +27,11 @@ EXTRACT_ALL            = NO
 EXTRACT_STATIC         = YES
 FILE_PATTERNS          = *.cpp *.c *.h *.hpp
 EXCLUDE_SYMBOLS        = primesieve_generate_next_primes \
-                         primesieve_generate_previous_primes
+                         primesieve_generate_prev_primes
 RECURSIVE              = NO
 EXAMPLE_PATTERNS       = *.cpp *.c
-EXAMPLE_PATH           = @abs_top_srcdir@/examples
+EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@/examples
 EXAMPLE_RECURSIVE      = YES
-GENERATE_LATEX         = NO
+GENERATE_LATEX         = @HAVE_LATEX@
 FULL_PATH_NAMES        = NO
 HAVE_DOT               = @HAVE_DOT@

@@ -12,10 +12,10 @@
  *         The @link primesieve_iterator.c primesieve_iterator.c
  *         @endlink example shows how to use primesieve_iterator. If
  *         any error occurs errno is set to EDOM and
- *         primesieve_next_prime() and primesieve_previous_prime()
+ *         primesieve_next_prime() and primesieve_prev_prime()
  *         return PRIMESIEVE_ERROR.
  * 
- * Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This file is distributed under the BSD License. See the COPYING
  * file in the top level directory.
@@ -68,7 +68,7 @@ void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hi
 void primesieve_generate_next_primes(primesieve_iterator*);
 
 /** Internal use */
-void primesieve_generate_previous_primes(primesieve_iterator*);
+void primesieve_generate_prev_primes(primesieve_iterator*);
 
 /** Get the next prime */
 static inline uint64_t primesieve_next_prime(primesieve_iterator* pi)
@@ -80,12 +80,12 @@ static inline uint64_t primesieve_next_prime(primesieve_iterator* pi)
 
 /**
  * Get the previous prime,
- * or 0 if input <= 2 e.g. previous_prime(2) = 0.
+ * or 0 if input <= 2 e.g. prev_prime(2) = 0.
  */
-static inline uint64_t primesieve_previous_prime(primesieve_iterator* pi)
+static inline uint64_t primesieve_prev_prime(primesieve_iterator* pi)
 {
   if (pi->i_-- == 0)
-    primesieve_generate_previous_primes(pi);
+    primesieve_generate_prev_primes(pi);
   return pi->primes_[pi->i_];
 }
 

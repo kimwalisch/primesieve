@@ -1,13 +1,26 @@
-Build manpage & API documentation
-=================================
+Build API documentation
+=======================
 
-In order to build the primesieve manpage and the html API
-documentation you need to have installed the ```help2man``` and
-```doxygen``` programs. Run the commands below from the parent
+To build the primesieve C/C++ API documentation in format html/PDF
+you need to have installed ```doxygen```, ```graphviz (dot)```
+and ```texlive (latex)```. Run the commands below from the parent
 directory.
 
 ```bash
-./configure --enable-maintainer-mode
-make man
-make doxygen
+# Build C/C++ API documentation
+cmake .
+make doc
+```
+
+Build man page
+==============
+
+To regenerate the primesieve man page you need to have installed
+the ```help2man``` program. Run the commands below from the parent
+directory.
+
+```bash
+# Build man page
+cmake .
+make
 ```

@@ -3,7 +3,7 @@
 ///        Generates the sieving primes up to sqrt(stop) and adds
 ///        them to PrimeFinder.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -25,7 +25,7 @@ namespace primesieve {
 PrimeGenerator::PrimeGenerator(PrimeFinder& finder, const PreSieve& preSieve) :
   SieveOfEratosthenes(preSieve.getLimit() + 1,
                       finder.getSqrtStop(),
-                      config::PRIMEGENERATOR_SIEVESIZE,
+                      config::PRIMESIEVE_SIEVESIZE,
                       preSieve),
   finder_(finder)
 { }
@@ -33,12 +33,11 @@ PrimeGenerator::PrimeGenerator(PrimeFinder& finder, const PreSieve& preSieve) :
 void PrimeGenerator::generateSievingPrimes()
 {
   generateTinyPrimes();
-  // calls segmentFinished() when done
   sieve();
 }
 
-/// Generate the primes up to finder.getSqrtStop()
-/// using the sieve of Eratosthenes.
+/// Generate the primes up to n^0.25 using
+/// the sieve of Eratosthenes.
 ///
 void PrimeGenerator::generateTinyPrimes()
 {
@@ -61,16 +60,11 @@ void PrimeGenerator::generateTinyPrimes()
 
 void PrimeGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
 {
-  generateSievingPrimes(sieve, sieveSize);
-}
-
-/// Reconstruct primes from 1 bits of the sieve array
-/// and use them for sieving in finder_.
-///
-void PrimeGenerator::generateSievingPrimes(const byte_t* sieve, uint_t sieveSize)
-{
   uint64_t base = getSegmentLow();
-
+  
+  // Reconstruct primes <= n^0.5 from 1 bits of the sieve
+  // array and use them for sieving in finder_
+  //
   for (uint_t i = 0; i < sieveSize; i += 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
@@ -82,4 +76,4 @@ void PrimeGenerator::generateSievingPrimes(const byte_t* sieve, uint_t sieveSize
   }
 }
 
-} // namespace primesieve
+} // namespace

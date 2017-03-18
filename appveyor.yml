@@ -4,32 +4,19 @@
 version: 1.0.{build}
 
 branches:
-  only:
-  - master
+  except:
+    - gh-pages
+
+os: Visual Studio 2017
 
 platform:
   - x86
   - x64
 
-configuration:
-  - Debug
-
-before_build:
-  "\"C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Bin\\SetEnv.cmd\" /%platform%"
-
 build_script:
-  # Build using highest warning level on x64
-  - if "%platform%" == "x64" sed -i 's#/W2#/W4 /WX#' Makefile.msvc
-  - nmake /f Makefile.msvc
-  - nmake /f Makefile.msvc examples
+  - if "%platform%" == "x86" cmake -G "Visual Studio 15 2017" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON .
+  - if "%platform%" == "x64" cmake -G "Visual Studio 15 2017 Win64" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON .
+  - cmake --build .
 
 test_script:
-  - callback_cancel.exe
-  - callback_primes.exe
-  - callback_primes_oop.exe
-  - count_primes.exe
-  - primesieve_iterator.exe
-  - nth_prime.exe
-  - previous_prime.exe
-  - store_primes_in_vector.exe
-  - nmake /f Makefile.msvc check
+  - ctest -C Debug
