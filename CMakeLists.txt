@@ -154,7 +154,7 @@ install(FILES doc/primesieve.1
 
 configure_file(primesieve.pc.in primesieve.pc @ONLY)
 
-install(FILES primesieve.pc
+install(FILES ${CMAKE_BINARY_DIR}/primesieve.pc
         DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
 
 # Add subdirectories #################################################
