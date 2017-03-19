@@ -19,6 +19,9 @@ if(DOXYGEN_FOUND)
     configure_file(Doxyfile.in Doxyfile @ONLY)
     add_custom_target(doc COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile)
 
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/primesieve)
+
     if(LATEX_COMPILER)
         find_program(MAKE_FONUD make)
 
@@ -28,6 +31,9 @@ if(DOXYGEN_FOUND)
                                POST_BUILD
                                COMMAND "${MAKE_FONUD}"
                                WORKING_DIRECTORY "latex")
+
+            install(FILES ${CMAKE_CURRENT_BINARY_DIR}/latex/refman.pdf
+                    DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/primesieve)
         endif()
     endif()
 endif()
