@@ -64,7 +64,7 @@ private:
   uint_t sieveSize_;
   /// Sieve of Eratosthenes array
   byte_t* sieve_;
-  std::unique_ptr<byte_t> deleteSieve_;
+  std::unique_ptr<byte_t[]> deleteSieve_;
   std::unique_ptr<EratSmall> eratSmall_;
   std::unique_ptr<EratMedium> eratMedium_;
   std::unique_ptr<EratBig> eratBig_;
