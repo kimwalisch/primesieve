@@ -7,6 +7,7 @@ set(CMAKE_BUILD_TYPE Release)
 
 # Build options ######################################################
 
+option(BUILD_DOC      "Build documentation"    OFF)
 option(BUILD_EXAMPLES "Build example programs" OFF)
 option(BUILD_TESTS    "Build test programs"    OFF)
 
@@ -159,7 +160,9 @@ install(FILES ${CMAKE_BINARY_DIR}/primesieve.pc
 
 # Add subdirectories #################################################
 
-add_subdirectory(doc)
+if(BUILD_DOC)
+    add_subdirectory(doc)
+endif()
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
