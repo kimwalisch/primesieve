@@ -102,18 +102,18 @@ install(TARGETS primesieve
 
 # Install headers ####################################################
 
-install(FILES include/primesieve.hpp
-              include/primesieve/PrimeSieve.hpp
+install(FILES include/primesieve.h
+              include/primesieve.hpp        
+              DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+
+install(FILES include/primesieve/PrimeSieve.hpp
               include/primesieve/ParallelPrimeSieve.hpp
               include/primesieve/Callback.hpp
               include/primesieve/StorePrimes.hpp
               include/primesieve/iterator.hpp
               include/primesieve/primesieve_error.hpp
-              DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
-
-install(FILES include/primesieve.h
               include/primesieve/primesieve_iterator.h
-              DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+              DESTINATION ${CMAKE_INSTALL_PREFIX}/include/primesieve)
 
 # Regenerate man page ################################################
 
