@@ -3,7 +3,7 @@
 /// @brief  Get the L1 cache size in kilobytes on Windows
 ///         and most Unix-like operating systems.
 ///
-/// Copyright (C) 2015 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License.
 ///
@@ -46,7 +46,7 @@ int get_l1d_cache_size()
     }
   }
 
-  delete buffer;
+  delete[] buffer;
 
   return cache_size / 1024;
 }
