@@ -1,4 +1,4 @@
-/// @example previous_prime.cpp
+/// @example prev_prime.cpp
 /// Iterate backwards over primes using primesieve::iterator.
 
 #include <primesieve.hpp>

@@ -78,7 +78,7 @@ C++ classes
 * iterator
   The iterator class has been introduced in primesieve-5.0 and allows
   to easily iterate over primes. It provides next_prime() and
-  previous_prime() methods.
+  prev_prime() methods.
 
 Other files
 -----------
