@@ -49,10 +49,10 @@ typedef struct
 } primesieve_iterator;
 
 /** Initialize the primesieve iterator before first using it */
-void primesieve_init(primesieve_iterator* pi);
+void primesieve_init(primesieve_iterator* it);
 
 /** Free all memory */
-void primesieve_free_iterator(primesieve_iterator* pi);
+void primesieve_free_iterator(primesieve_iterator* it);
 
 /**
  * Set the primesieve iterator to start.
@@ -62,7 +62,7 @@ void primesieve_free_iterator(primesieve_iterator* pi);
  *                   stop_hint = 1000, if you don't know use
  *                   primesieve_get_max_stop().
  */
-void primesieve_skipto(primesieve_iterator* pi, uint64_t start, uint64_t stop_hint);
+void primesieve_skipto(primesieve_iterator* it, uint64_t start, uint64_t stop_hint);
 
 /** Internal use */
 void primesieve_generate_next_primes(primesieve_iterator*);
@@ -71,22 +71,22 @@ void primesieve_generate_next_primes(primesieve_iterator*);
 void primesieve_generate_prev_primes(primesieve_iterator*);
 
 /** Get the next prime */
-static inline uint64_t primesieve_next_prime(primesieve_iterator* pi)
+static inline uint64_t primesieve_next_prime(primesieve_iterator* it)
 {
-  if (pi->i_++ == pi->last_idx_)
-    primesieve_generate_next_primes(pi);
-  return pi->primes_[pi->i_];
+  if (it->i_++ == it->last_idx_)
+    primesieve_generate_next_primes(it);
+  return it->primes_[it->i_];
 }
 
 /**
  * Get the previous prime,
  * or 0 if input <= 2 e.g. prev_prime(2) = 0.
  */
-static inline uint64_t primesieve_prev_prime(primesieve_iterator* pi)
+static inline uint64_t primesieve_prev_prime(primesieve_iterator* it)
 {
-  if (pi->i_-- == 0)
-    primesieve_generate_prev_primes(pi);
-  return pi->primes_[pi->i_];
+  if (it->i_-- == 0)
+    primesieve_generate_prev_primes(it);
+  return it->primes_[it->i_];
 }
 
 #ifdef __cplusplus

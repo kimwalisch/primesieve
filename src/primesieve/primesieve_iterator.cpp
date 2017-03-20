@@ -59,42 +59,42 @@ uint64_t get_distance(uint64_t n, uint64_t& tiny_cache_size)
 }
 
 /// C constructor
-void primesieve_init(primesieve_iterator* pi)
+void primesieve_init(primesieve_iterator* it)
 {
-  pi->primes_pimpl_ = reinterpret_cast<uint64_t*>(new vector<uint64_t>());
-  primesieve_skipto(pi, 0, primesieve_get_max_stop());
+  it->primes_pimpl_ = reinterpret_cast<uint64_t*>(new vector<uint64_t>());
+  primesieve_skipto(it, 0, primesieve_get_max_stop());
 }
 
 /// C destructor
-void primesieve_free_iterator(primesieve_iterator* pi)
+void primesieve_free_iterator(primesieve_iterator* it)
 {
-  if (pi)
+  if (it)
   {
-    vector<uint64_t>* primes = &to_vector(pi->primes_pimpl_);
+    vector<uint64_t>* primes = &to_vector(it->primes_pimpl_);
     delete primes;
   }
 }
 
-void primesieve_skipto(primesieve_iterator* pi,
+void primesieve_skipto(primesieve_iterator* it,
                        uint64_t start,
                        uint64_t stop_hint)
 {
-  vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
+  vector<uint64_t>& primes = to_vector(it->primes_pimpl_);
   primes.clear();
-  pi->start_ = start;
-  pi->stop_ = start;
-  pi->stop_hint_ = stop_hint;
-  pi->i_ = 0;
-  pi->last_idx_ = 0;
-  pi->tiny_cache_size_ = 1 << 10;
-  pi->is_error_ = false;
+  it->start_ = start;
+  it->stop_ = start;
+  it->stop_hint_ = stop_hint;
+  it->i_ = 0;
+  it->last_idx_ = 0;
+  it->tiny_cache_size_ = 1 << 10;
+  it->is_error_ = false;
 }
 
-void primesieve_generate_next_primes(primesieve_iterator* pi)
+void primesieve_generate_next_primes(primesieve_iterator* it)
 {
-  vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
+  vector<uint64_t>& primes = to_vector(it->primes_pimpl_);
 
-  if (!pi->is_error_)
+  if (!it->is_error_)
   {
     try
     {
@@ -102,12 +102,12 @@ void primesieve_generate_next_primes(primesieve_iterator* pi)
 
       while (primes.empty())
       {
-        pi->start_ = add_overflow_safe(pi->stop_, 1);
-        pi->stop_ = add_overflow_safe(pi->start_, get_distance(pi->start_, pi->tiny_cache_size_));
-        if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
-          pi->stop_ = add_overflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
-        generate_primes(pi->start_, pi->stop_, &primes);
-        if (primes.empty() && pi->stop_ >= get_max_stop())
+        it->start_ = add_overflow_safe(it->stop_, 1);
+        it->stop_ = add_overflow_safe(it->start_, get_distance(it->start_, it->tiny_cache_size_));
+        if (it->start_ <= it->stop_hint_ && it->stop_ >= it->stop_hint_)
+          it->stop_ = add_overflow_safe(it->stop_hint_, max_prime_gap(it->stop_hint_));
+        generate_primes(it->start_, it->stop_, &primes);
+        if (primes.empty() && it->stop_ >= get_max_stop())
           throw primesieve_error("next_prime() > primesieve_get_max_stop()");
       }
     }
@@ -115,21 +115,21 @@ void primesieve_generate_next_primes(primesieve_iterator* pi)
     {
       primes.clear();
       primes.resize(64, PRIMESIEVE_ERROR);
-      pi->is_error_ = true;
+      it->is_error_ = true;
       errno = EDOM;
     }
   }
 
-  pi->primes_ = &primes[0];
-  pi->last_idx_ = primes.size() - 1;
-  pi->i_ = 0;
+  it->primes_ = &primes[0];
+  it->last_idx_ = primes.size() - 1;
+  it->i_ = 0;
 }
 
-void primesieve_generate_prev_primes(primesieve_iterator* pi)
+void primesieve_generate_prev_primes(primesieve_iterator* it)
 {
-  vector<uint64_t>& primes = to_vector(pi->primes_pimpl_);
+  vector<uint64_t>& primes = to_vector(it->primes_pimpl_);
 
-  if (!pi->is_error_)
+  if (!it->is_error_)
   {
     try
     {
@@ -137,25 +137,25 @@ void primesieve_generate_prev_primes(primesieve_iterator* pi)
 
       while (primes.empty())
       {
-        pi->stop_ = sub_underflow_safe(pi->start_, 1);
-        pi->start_ = sub_underflow_safe(pi->stop_, get_distance(pi->stop_, pi->tiny_cache_size_));
-        if (pi->start_ <= pi->stop_hint_ && pi->stop_ >= pi->stop_hint_)
-          pi->start_ = sub_underflow_safe(pi->stop_hint_, max_prime_gap(pi->stop_hint_));
-        if (pi->start_ <= 2)
+        it->stop_ = sub_underflow_safe(it->start_, 1);
+        it->start_ = sub_underflow_safe(it->stop_, get_distance(it->stop_, it->tiny_cache_size_));
+        if (it->start_ <= it->stop_hint_ && it->stop_ >= it->stop_hint_)
+          it->start_ = sub_underflow_safe(it->stop_hint_, max_prime_gap(it->stop_hint_));
+        if (it->start_ <= 2)
           primes.push_back(0);
-        generate_primes(pi->start_, pi->stop_, &primes);
+        generate_primes(it->start_, it->stop_, &primes);
       }
     }
     catch (exception&)
     {
       primes.clear();
       primes.resize(64, PRIMESIEVE_ERROR);
-      pi->is_error_ = true;
+      it->is_error_ = true;
       errno = EDOM;
     }
   }
 
-  pi->primes_ = &primes[0];
-  pi->last_idx_ = primes.size() - 1;
-  pi->i_ = pi->last_idx_;
+  it->primes_ = &primes[0];
+  it->last_idx_ = primes.size() - 1;
+  it->i_ = it->last_idx_;
 }
