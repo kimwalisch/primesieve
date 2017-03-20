@@ -25,16 +25,17 @@ env:
     - OMP_NUM_THREADS=4
 
 install:
-  - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive graphviz libqt4-dev qt4-qmake
+  - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive graphviz libqt4-dev qt4-qmake valgrind
   - wget --no-check-certificate http://cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.tar.gz
   - tar -xzf cmake-3.1.3-Linux-x86_64.tar.gz
   - export CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
   - export PATH=$PWD/cmake-3.1.3-Linux-x86_64/bin:$PATH
+  - if [ "$CXX" = "g++" ]; then export OPENMP_FLAG=-fopenmp; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
   - if [ "$CC" = "gcc" ]; then export CC="gcc-4.8"; fi
 
 script:
-  # Test using GNU make
+  # 1) Build using GNU make
   - mkdir build
   - cd build
   - cmake -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
@@ -42,18 +43,23 @@ script:
   - make doc >/dev/null
   - cd ..
   - rm -rf build
-  # Test using ninja (build system)
+  # 2) Build primesieve GUI app
+  - cd src/gui
+  - qmake QMAKE_CXX="g++-4.8" QMAKE_CC="gcc-4.8"
+  - make -j4
+  - cd ../..
+  # 3) Build using ninja
   - mkdir build
   - cd build
   - cmake -GNinja -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
   - ninja
   - ninja doc >/dev/null
+  # 4) Run integration tests
   - ninja test
   - cd ..
+  # 5) Test using valgrind
+  - $CXX -Iinclude -O2 -g $OPENMP_FLAG examples/cpp/nth_prime.cpp -o nth_prime build/libprimesieve.a
+  - valgrind --error-exitcode=1 ./nth_prime 500000000
+  # 6) Test using cppcheck
   - rm -rf build
-  # Test using cppcheck (static code analysis)
   - cppcheck . -q --error-exitcode=1 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp -itest/next_prime1.cpp -itest/prev_prime1.cpp
-  # Build primesieve GUI app
-  - cd src/gui
-  - qmake QMAKE_CXX="g++-4.8" QMAKE_CC="gcc-4.8"
-  - make -j4
