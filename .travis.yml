@@ -39,7 +39,7 @@ script:
   - cd build
   - cmake -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
   - make -j4
-  - make doc
+  - make doc >/dev/null
   - cd ..
   - rm -rf build
   # Test using ninja (build system)
@@ -47,12 +47,12 @@ script:
   - cd build
   - cmake -GNinja -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
   - ninja
-  - ninja doc
+  - ninja doc >/dev/null
   - ninja test
   - cd ..
   - rm -rf build
   # Test using cppcheck (static code analysis)
-  - cppcheck . --error-exitcode=1 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp
+  - cppcheck . -q --error-exitcode=1 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp -itest/next_prime1.cpp -itest/prev_prime1.cpp
   # Build primesieve GUI app
   - cd src/gui
   - qmake QMAKE_CXX="g++-4.8" QMAKE_CC="gcc-4.8"
