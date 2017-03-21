@@ -1,7 +1,5 @@
-Changes in version 6.0, 16/03/2017
+Changes in version 6.0, 21/03/2017
 ==================================
-
-Work in progress.
 
 primesieve-6.0 is a major new release with many changes. The API and
 ABI are not backwards compatible, see the "API changes" sections
