@@ -4,7 +4,7 @@
  *         number generation. In case an error occurs errno is set to
  *         EDOM and PRIMESIEVE_ERROR is returned.
  * 
- * Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
  * 
  * This file is distributed under the BSD License.
  */
@@ -194,8 +194,9 @@ int primesieve_get_num_threads();
 void primesieve_set_sieve_size(int sieve_size);
 
 /**
- * Set the number of threads for use in subsequent
- * primesieve_count_* function calls.
+ * Set the number of threads for use in
+ * primesieve_count_*() and primesieve_nth_prime().
+ * By default all CPU cores are used.
  */
 void primesieve_set_num_threads(int num_threads);
 
