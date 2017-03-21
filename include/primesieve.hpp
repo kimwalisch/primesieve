@@ -179,8 +179,9 @@ int get_num_threads();
 ///
 void set_sieve_size(int sieve_size);
 
-/// Set the number of threads for use in subsequent
-/// primesieve::parallel_* function calls.
+/// Set the number of threads for use in
+/// primesieve::count_*() and primesieve::nth_prime().
+/// By default all CPU cores are used.
 ///
 void set_num_threads(int num_threads);
 
