@@ -43,10 +43,10 @@ void iterator::generate_next_primes()
 
   while (primes_.empty())
   {
-    start_ = add_overflow_safe(stop_, 1);
-    stop_ = add_overflow_safe(start_, get_distance(start_));
+    start_ = checkedAdd(stop_, 1);
+    stop_ = checkedAdd(start_, get_distance(start_));
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
-      stop_ = add_overflow_safe(stop_hint_, max_prime_gap(stop_hint_));
+      stop_ = checkedAdd(stop_hint_, max_prime_gap(stop_hint_));
     generate_primes(start_, stop_, &primes_);
     if (primes_.empty() &&
         stop_ >= get_max_stop())
@@ -63,10 +63,10 @@ void iterator::generate_prev_primes()
 
   while (primes_.empty())
   {
-    stop_ = sub_underflow_safe(start_, 1);
-    start_ = sub_underflow_safe(stop_, get_distance(stop_));
+    stop_ = checkedSub(start_, 1);
+    start_ = checkedSub(stop_, get_distance(stop_));
     if (start_ <= stop_hint_ && stop_ >= stop_hint_)
-      start_ = sub_underflow_safe(stop_hint_, max_prime_gap(stop_hint_));
+      start_ = checkedSub(stop_hint_, max_prime_gap(stop_hint_));
     if (start_ <= 2)
       primes_.push_back(0);
     generate_primes(start_, stop_, &primes_);

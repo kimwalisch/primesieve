@@ -103,13 +103,13 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   if (n == 0)
     n = 1; // like Mathematica
   else if (n > 0)
-    start = add_overflow_safe(start, 1);
+    start = checkedAdd(start, 1);
   else if (n < 0)
-    start = sub_underflow_safe(start, 1);
+    start = checkedSub(start, 1);
 
   uint64_t stop = start;
   uint64_t dist = nthPrimeDist(n, 0, start);
-  uint64_t nthPrimeGuess = add_overflow_safe(start, dist);
+  uint64_t nthPrimeGuess = checkedAdd(start, dist);
 
   int64_t count = 0;
   int64_t tinyN = 100000;
@@ -122,17 +122,17 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     {
       checkLimit(start);
       dist = nthPrimeDist(n, count, start);
-      stop = add_overflow_safe(start, dist);
+      stop = checkedAdd(start, dist);
       count += countPrimes(start, stop);
-      start = add_overflow_safe(stop, 1);
+      start = checkedAdd(stop, 1);
     }
     if (sieveBackwards(n, count, stop))
     {
       checkLowerLimit(stop);
       dist = nthPrimeDist(n, count, stop);
-      start = sub_underflow_safe(start, dist);
+      start = checkedSub(start, dist);
       count -= countPrimes(start, stop);
-      stop = sub_underflow_safe(start, 1);
+      stop = checkedSub(start, 1);
     }
   }
 
@@ -148,8 +148,8 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   {
     checkLimit(start);
     dist = nthPrimeDist(n, count, start) * 2;
-    start = sub_underflow_safe(start, 1);
-    stop = add_overflow_safe(start, dist);
+    start = checkedSub(start, 1);
+    stop = checkedAdd(start, dist);
     uint64_t prime = 0;
     for (primesieve::iterator it(start, stop); count < n; count++)
       prime = it.next_prime();

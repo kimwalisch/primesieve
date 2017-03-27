@@ -91,10 +91,10 @@ uint64_t ParallelPrimeSieve::getThreadDistance(int threads) const
 ///
 uint64_t ParallelPrimeSieve::align(uint64_t n) const
 {
-  if (add_overflow_safe(n, 32) >= stop_)
+  if (checkedAdd(n, 32) >= stop_)
     return stop_;
 
-  n = add_overflow_safe(n, 32) - n % 30;
+  n = checkedAdd(n, 32) - n % 30;
   n = min(n, stop_);
 
   return n;
@@ -139,7 +139,7 @@ void ParallelPrimeSieve::sieve()
     for (int64_t i = 0; i < iters; i++)
     {
       uint64_t threadStart = start_ + i * threadDistance;
-      uint64_t threadStop = add_overflow_safe(threadStart, threadDistance);
+      uint64_t threadStop = checkedAdd(threadStart, threadDistance);
       if (i > 0) threadStart = align(threadStart) + 1;
       threadStop = align(threadStop);
 

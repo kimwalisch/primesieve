@@ -16,7 +16,6 @@
 #include <cstdlib>
 
 using namespace std;
-using namespace primesieve;
 
 uint64_t log2_cmath(uint64_t n)
 {

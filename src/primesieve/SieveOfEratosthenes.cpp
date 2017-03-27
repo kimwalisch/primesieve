@@ -65,7 +65,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
 
   uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
   segmentLow_ = start_ - getByteRemainder(start_);
-  segmentHigh_ = add_overflow_safe(segmentLow_, dist);
+  segmentHigh_ = checkedAdd(segmentLow_, dist);
   sqrtStop_ = (uint_t) isqrt(stop_);
 
   allocate();
@@ -129,8 +129,8 @@ void SieveOfEratosthenes::sieveSegment()
 
   // update for next segment
   uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE;
-  segmentLow_ = add_overflow_safe(segmentLow_, dist);
-  segmentHigh_ = add_overflow_safe(segmentHigh_, dist);
+  segmentLow_ = checkedAdd(segmentLow_, dist);
+  segmentHigh_ = checkedAdd(segmentHigh_, dist);
 }
 
 /// Sieve the remaining segments after that addSievingPrime(uint_t)
@@ -145,7 +145,7 @@ void SieveOfEratosthenes::sieve()
   uint64_t dist = (stop_ - remainder) - segmentLow_;
   sieveSize_ = ((uint_t) dist) / NUMBERS_PER_BYTE + 1;
   dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
-  segmentHigh_ = add_overflow_safe(segmentLow_, dist);
+  segmentHigh_ = checkedAdd(segmentLow_, dist);
 
   // sieve the last segment
   preSieve();

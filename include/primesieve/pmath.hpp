@@ -15,7 +15,7 @@
 #include <cmath>
 #include <limits>
 
-namespace primesieve {
+namespace {
 
 template <typename X, typename Y>
 inline X ceilDiv(X x, Y y)
@@ -95,8 +95,8 @@ inline T isqrt(T x)
   return g0;
 }
 
-/// Returns UINT64_MAX if x + y >= 2^64-1
-inline uint64_t add_overflow_safe(uint64_t x, uint64_t y)
+/// Returns 2^64-1 if x + y >= 2^64-1
+inline uint64_t checkedAdd(uint64_t x, uint64_t y)
 {
   if (x >= std::numeric_limits<uint64_t>::max() - y)
     return std::numeric_limits<uint64_t>::max();
@@ -105,7 +105,7 @@ inline uint64_t add_overflow_safe(uint64_t x, uint64_t y)
 }
 
 /// Returns 0 if x - y <= 0
-inline uint64_t sub_underflow_safe(uint64_t x, uint64_t y)
+inline uint64_t checkedSub(uint64_t x, uint64_t y)
 {
   return (x > y) ? x - y : 0;
 }
