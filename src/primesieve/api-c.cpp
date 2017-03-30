@@ -77,11 +77,6 @@ void* n_primes_helper(uint64_t n, uint64_t start)
 
 } // namespace
 
-/// All C API functions declared in primesieve.h
-/// have extern "C" linkage.
-extern "C"
-{
-
 //////////////////////////////////////////////////////////////////////
 //                    Return an array of primes
 //////////////////////////////////////////////////////////////////////
@@ -384,5 +379,3 @@ const char* primesieve_version()
 {
   return PRIMESIEVE_VERSION;
 }
-
-} // extern "C"
