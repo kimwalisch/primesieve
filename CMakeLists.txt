@@ -7,8 +7,13 @@ set(CMAKE_BUILD_TYPE Release)
 
 # Build options ######################################################
 
-option(BUILD_EXAMPLES "Build example programs" OFF)
-option(BUILD_TESTS    "Build test programs"    OFF)
+option(BUILD_SHARED_LIBS "Build shared libprimesieve" ON)
+option(BUILD_EXAMPLES    "Build example programs"     OFF)
+option(BUILD_TESTS       "Build test programs"        OFF)
+
+if(WIN32)
+    set(BUILD_SHARED_LIBS OFF)
+endif()
 
 # Compiler must support C++11 or later ###############################
 
@@ -61,41 +66,39 @@ if(L1_RES EQUAL 0)
     add_definitions(-DL1_DCACHE_SIZE=${L1_CACHE_SIZE})
 endif()
 
-# Static libprimesieve ###############################################
-
-add_library(static_libprimesieve STATIC ${LIB_SRC})
-set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
-
-install(TARGETS static_libprimesieve
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
-
 # Shared libprimesieve ###############################################
 
-if(NOT WIN32)
+if(BUILD_SHARED_LIBS)
     string(REPLACE "." ";" SOVERSION_LIST ${PRIMESIEVE_SOVERSION})
     list(GET SOVERSION_LIST 0 PRIMESIEVE_SOVERSION_MAJOR)
 
-    add_library(shared_libprimesieve SHARED ${LIB_SRC})
-    set_target_properties(shared_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
-    set_target_properties(shared_libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
-    set_target_properties(shared_libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
+    add_library(libprimesieve ${LIB_SRC})
+    set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
+    set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
+    set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
-    install(TARGETS shared_libprimesieve
+    install(TARGETS libprimesieve
             DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 endif()
 
-# Default libprimesieve (for linking) ################################
+# Static libprimesieve ###############################################
 
-if(NOT WIN32)
-    set(LIBPRIMESIEVE shared_libprimesieve)
+if(BUILD_SHARED_LIBS)
+    add_library(static_libprimesieve STATIC ${LIB_SRC})
+    set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
+    install(TARGETS static_libprimesieve
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 else()
-    set(LIBPRIMESIEVE static_libprimesieve)
+    add_library(libprimesieve ${LIB_SRC})
+    set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
+    install(TARGETS libprimesieve
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 endif()
 
 # primesieve binary ##################################################
 
 add_executable(primesieve ${BIN_SRC})
-target_link_libraries(primesieve ${LIBPRIMESIEVE})
+target_link_libraries(primesieve libprimesieve)
 
 install(TARGETS primesieve
         DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
