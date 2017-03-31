@@ -8,7 +8,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve.hpp>
+#include <primesieve/ParallelPrimeSieve.hpp>
 
 #include <stdint.h>
 #include <iostream>

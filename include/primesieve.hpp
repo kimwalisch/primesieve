@@ -18,7 +18,6 @@
 #define PRIMESIEVE_VERSION_MINOR 0
 
 #include <primesieve/PrimeSieve.hpp>
-#include <primesieve/ParallelPrimeSieve.hpp>
 #include <primesieve/iterator.hpp>
 #include <primesieve/StorePrimes.hpp>
 #include <primesieve/primesieve_error.hpp>
