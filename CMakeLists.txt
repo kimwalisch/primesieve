@@ -93,7 +93,6 @@ endif()
 
 add_executable(primesieve ${BIN_SRC})
 target_link_libraries(primesieve libprimesieve)
-
 install(TARGETS primesieve
         DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
