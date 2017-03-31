@@ -136,14 +136,14 @@ if(HELP2MAN)
              --no-info
              ${HELP2MAN_LOCALE}
              -n "efficient prime number generator"
-             -o doc/primesieve.1
+             -o ${PROJECT_SOURCE_DIR}/doc/primesieve.1
              ./primesieve
         VERBATIM)
 endif()
 
 # Install man page ###################################################
 
-install(FILES ${CMAKE_BINARY_DIR}/doc/primesieve.1
+install(FILES ${PROJECT_SOURCE_DIR}/doc/primesieve.1
         DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
 
 # Install primesieve.pc (pkg-config) #################################
