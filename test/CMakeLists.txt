@@ -1,3 +1,4 @@
+enable_language(C)
 file(GLOB files "*.cpp" "*.c")
 foreach(file ${files})
     get_filename_component(binary_name ${file} NAME_WE)
