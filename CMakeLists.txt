@@ -7,6 +7,7 @@ include_directories(include)
 
 # Build options ######################################################
 
+option(WITH_OPENMP       "Enable OpenMP support"      ON)
 option(BUILD_SHARED_LIBS "Build shared libprimesieve" ON)
 option(BUILD_EXAMPLES    "Build example programs"     OFF)
 option(BUILD_TESTS       "Build test programs"        OFF)
@@ -47,10 +48,12 @@ set(LIB_SRC src/primesieve/EratBig.cpp
 
 # Check for OpenMP ###################################################
 
-find_package(OpenMP QUIET)
-if(OPENMP_FOUND)
-    message(STATUS "Found OpenMP: ${OpenMP_CXX_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+if(WITH_OPENMP)
+    find_package(OpenMP QUIET)
+    if(OPENMP_FOUND)
+        message(STATUS "Found OpenMP: ${OpenMP_CXX_FLAGS}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    endif()
 endif()
 
 # Detect CPU L1 cache size ###########################################
