@@ -82,7 +82,7 @@ which is written in C++98.
 
 ```sh
 cmake .
-make -j8
+make -j
 sudo make install
 ```
 
@@ -90,14 +90,14 @@ sudo make install
 
 ```sh
 cmake -DBUILD_EXAMPLES=ON .
-make -j8
+make -j
 ```
 
 #### Run the tests
 
 ```sh
 cmake -DBUILD_TESTS=ON .
-make -j8
+make -j
 make test
 ```
 
