@@ -66,7 +66,7 @@ done
 # Update version number in man page
 echo ""
 cmake .
-make -j8
+make -j
 echo ""
 
 echo "Version has been updated!"
