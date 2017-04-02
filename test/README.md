@@ -1,10 +1,10 @@
 primesieve testing
 ==================
 
-Run the commands below from the parent directory.
+Run the commands below from the root primesieve directory.
 
 ```bash
 cmake -DBUILD_TESTS=ON .
-make
+make -j
 make test
 ```

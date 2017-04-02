@@ -7,10 +7,9 @@ generate primes using libprimesieve.
 Build instructions
 ==================
 
-Open a terminal and cd into the primesieve (parent) directory,
-then run the commands:
+Run the commands below from the root primesieve directory.
 
 ```sh
 cmake -DBUILD_EXAMPLES=ON .
-make
+make -j
 ```
