@@ -15,7 +15,6 @@
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
 #include <primesieve/Callback.hpp>
-#include <primesieve/PrimeFinder.hpp>
 #include <primesieve.hpp>
 
 #include <stdint.h>

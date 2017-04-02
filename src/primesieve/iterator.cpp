@@ -9,7 +9,6 @@
 
 #include <primesieve/config.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/PrimeFinder.hpp>
 #include <primesieve.hpp>
 
 #include <algorithm>
