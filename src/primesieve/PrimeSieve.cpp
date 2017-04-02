@@ -14,7 +14,6 @@
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/Callback.hpp>
 #include <primesieve/PreSieve.hpp>
-#include <primesieve/PrimeSieve-lock.hpp>
 #include <primesieve/PrimeFinder.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
@@ -149,18 +148,6 @@ double PrimeSieve::getWallTime() const
   return (double) std::clock() / CLOCKS_PER_SEC;
 }
 
-void PrimeSieve::setLock()
-{
-  if (isParallelPrimeSieveChild())
-    parent_->setLock();
-}
-
-void PrimeSieve::unsetLock()
-{
-  if (isParallelPrimeSieveChild())
-    parent_->unsetLock();
-}
-
 /// Calculate the sieving status.
 /// @param processed  Sum of recently processed segments.
 ///
@@ -200,8 +187,6 @@ void PrimeSieve::printStatus(double old, double current)
 /// Process small primes and k-tuplets <= 17.
 void PrimeSieve::processSmallPrimes()
 {
-  LockGuard lock(*this);
-
   for (int i = 0; i < 8; i++)
   {
     auto& p = smallPrimes[i];

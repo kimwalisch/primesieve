@@ -2,7 +2,7 @@
 /// @file   main.cpp
 /// @brief  primesieve console application.
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -77,7 +77,7 @@ void sieve(CmdOptions& opts)
   if (opts.flags     != 0) pps.setFlags(opts.flags);
   if (opts.sieveSize != 0) pps.setSieveSize(opts.sieveSize);
   if (opts.threads   != 0) pps.setNumThreads(opts.threads);
-  else if (pps.isPrint())  pps.setNumThreads(1);
+  if (pps.isPrint()) pps.setNumThreads(1);
 
   if (numbers.size() < 2)
     numbers.push_front(0);

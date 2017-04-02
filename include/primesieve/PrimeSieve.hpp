@@ -22,7 +22,6 @@ namespace primesieve {
 class PrimeSieve
 {
   friend class PrimeFinder;
-  friend class LockGuard;
 public:
   /// Public flags for use with setFlags(int)
   /// @pre flag < (1 << 20)
@@ -109,8 +108,6 @@ protected:
   uint64_t getDistance() const;
   void reset();
   virtual double getWallTime() const;
-  virtual void setLock();
-  virtual void unsetLock();
   virtual bool updateStatus(uint64_t, bool waitForLock = false);
 private:
   /// Sum of all processed segments

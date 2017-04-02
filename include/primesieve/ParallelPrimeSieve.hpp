@@ -53,8 +53,6 @@ private:
   uint64_t align(uint64_t) const;
   template <typename T> T getLock() { return (T) lock_; }
   virtual double getWallTime() const;
-  virtual void setLock();
-  virtual void unsetLock();
   virtual bool updateStatus(uint64_t, bool);
 };
 

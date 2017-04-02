@@ -12,7 +12,6 @@
 #include <primesieve/config.hpp>
 #include <primesieve/PrimeFinder.hpp>
 #include <primesieve/PrimeSieve.hpp>
-#include <primesieve/PrimeSieve-lock.hpp>
 #include <primesieve/Callback.hpp>
 #include <primesieve/SieveOfEratosthenes.hpp>
 #include <primesieve/SieveOfEratosthenes-inline.hpp>
@@ -140,7 +139,6 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
 {
   if (ps_.isFlag(ps_.PRINT_PRIMES))
   {
-    LockGuard lock(ps_);
     uint64_t base = getSegmentLow();
     for (uint_t i = 0; i < sieveSize; i += 8, base += NUMBERS_PER_BYTE * 8)
     {

@@ -188,18 +188,6 @@ bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
   return lock.isSet();
 }
 
-void ParallelPrimeSieve::setLock()
-{
-  omp_lock_t* lock = getLock<omp_lock_t*>();
-  omp_set_lock(lock);
-}
-
-void ParallelPrimeSieve::unsetLock()
-{
-  omp_lock_t* lock = getLock<omp_lock_t*>();
-  omp_unset_lock(lock);
-}
-
 #endif /* _OPENMP */
 
 /// If OpenMP is disabled then ParallelPrimeSieve behaves like
@@ -237,10 +225,6 @@ bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
     shm_->status = getStatus();
   return isUpdate;
 }
-
-void ParallelPrimeSieve::setLock() { }
-
-void ParallelPrimeSieve::unsetLock() { }
 
 #endif
 
