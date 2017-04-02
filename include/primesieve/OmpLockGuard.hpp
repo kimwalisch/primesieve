@@ -1,5 +1,5 @@
 ///
-/// @file   ParallelPrimeSieve-lock.hpp
+/// @file   OmpLockGuard.hpp
 /// @brief  The OmpInitLock and OmpLockGuard classes are RAII-style
 ///         wrappers for OpenMP locks.
 ///
@@ -9,8 +9,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PARALLELPRIMESIEVE_LOCK_HPP
-#define PARALLELPRIMESIEVE_LOCK_HPP
+#ifndef OMPLOCKGUARD_HPP
+#define OMPLOCKGUARD_HPP
 
 #include <omp.h>
 

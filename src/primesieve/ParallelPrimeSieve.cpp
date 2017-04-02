@@ -19,7 +19,7 @@
 
 #ifdef _OPENMP
   #include <omp.h>
-  #include <primesieve/ParallelPrimeSieve-lock.hpp>
+  #include <primesieve/OmpLockGuard.hpp>
 #endif
 
 using namespace std;
