@@ -39,12 +39,12 @@ set(LIB_SRC src/primesieve/EratBig.cpp
             src/primesieve/PrimeSieve.cpp
             src/primesieve/SieveOfEratosthenes.cpp
             src/primesieve/Wheel.cpp
-            src/primesieve/api-c.cpp
             src/primesieve/api.cpp
+            src/primesieve/api-c.cpp
             src/primesieve/iterator.cpp
+            src/primesieve/iterator-c.cpp
             src/primesieve/nthPrime.cpp
-            src/primesieve/popcount.cpp
-            src/primesieve/primesieve_iterator.cpp)
+            src/primesieve/popcount.cpp)
 
 # Check for OpenMP ###################################################
 
@@ -108,9 +108,9 @@ install(FILES include/primesieve.h
 install(FILES include/primesieve/PrimeSieve.hpp
               include/primesieve/Callback.hpp
               include/primesieve/StorePrimes.hpp
+              include/primesieve/iterator.h
               include/primesieve/iterator.hpp
               include/primesieve/primesieve_error.hpp
-              include/primesieve/primesieve_iterator.h
               DESTINATION ${CMAKE_INSTALL_PREFIX}/include/primesieve)
 
 # Regenerate man page ################################################

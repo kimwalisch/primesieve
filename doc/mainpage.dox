@@ -25,6 +25,6 @@
 ///
 /// @li @link primesieve.h primesieve.h @endlink - primesieve C header.
 /// @li @link store_primes_in_array.c store_primes_in_array.c @endlink - Example that shows how to store primes in an array.
-/// @li @link primesieve_iterator.c primesieve_iterator.c @endlink - Example that shows how to iterate over primes using @link primesieve_iterator.h primesieve_iterator @endlink.
+/// @li @link primesieve_iterator.c primesieve_iterator.c @endlink - Example that shows how to iterate over primes using @link iterator.h primesieve_iterator @endlink.
 /// @li @link count_primes.c count_primes.c @endlink - Example that shows how to count primes.
 ///

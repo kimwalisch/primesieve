@@ -1,5 +1,5 @@
 ///
-/// @file   primesieve_iterator.cpp
+/// @file   iterator-c.cpp
 /// @brief  C port of primesieve::iterator.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>

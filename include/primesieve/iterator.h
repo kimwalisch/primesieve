@@ -1,5 +1,5 @@
 /**
- * @file   primesieve_iterator.h
+ * @file   iterator.h
  * @brief  primesieve_iterator allows to easily iterate over primes
  *         both forwards and backwards. Generating the first prime
  *         has a complexity of O(r log log r) operations with
@@ -32,8 +32,8 @@ extern "C" {
 #endif
 
 /**
- * C prime iterator, please refer to @link primesieve_iterator.h
- * primesieve_iterator.h @endlink for more information.
+ * C prime iterator, please refer to @link iterator.h iterator.h
+ * @endlink for more information.
  */
 typedef struct
 {

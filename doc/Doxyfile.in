@@ -4,9 +4,9 @@ INPUT                  = @PROJECT_SOURCE_DIR@/doc/mainpage.dox \
                          @PROJECT_SOURCE_DIR@/include/primesieve.hpp \
                          @PROJECT_SOURCE_DIR@/include/primesieve.h \
                          @PROJECT_SOURCE_DIR@/include/primesieve/Callback.hpp \
+                         @PROJECT_SOURCE_DIR@/include/primesieve/iterator.h \
                          @PROJECT_SOURCE_DIR@/include/primesieve/iterator.hpp \
                          @PROJECT_SOURCE_DIR@/include/primesieve/primesieve_error.hpp \
-                         @PROJECT_SOURCE_DIR@/include/primesieve/primesieve_iterator.h \
                          @PROJECT_SOURCE_DIR@/examples/cpp/count_primes.cpp \
                          @PROJECT_SOURCE_DIR@/examples/cpp/primesieve_iterator.cpp \
                          @PROJECT_SOURCE_DIR@/examples/cpp/nth_prime.cpp \
