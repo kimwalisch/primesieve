@@ -18,7 +18,7 @@ namespace {
 /// It uses 12 arithmetic operations, one of which is a multiply.
 /// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
 ///
-uint64_t popcount64c(uint64_t x)
+uint64_t popcount64(uint64_t x)
 {
   const uint64_t m1 = 0x5555555555555555ull;
   const uint64_t m2 = 0x3333333333333333ull;
@@ -77,17 +77,17 @@ uint64_t popcount(const uint64_t* array, uint64_t size)
     CSA(eightsB, fours, fours, foursA, foursB);
     CSA(sixteens, eights, eights, eightsA, eightsB);
 
-    total += popcount64c(sixteens);
+    total += popcount64(sixteens);
   }
 
   total *= 16;
-  total += 8 * popcount64c(eights);
-  total += 4 * popcount64c(fours);
-  total += 2 * popcount64c(twos);
-  total += 1 * popcount64c(ones);
+  total += 8 * popcount64(eights);
+  total += 4 * popcount64(fours);
+  total += 2 * popcount64(twos);
+  total += 1 * popcount64(ones);
 
   for(; i < size; i++)
-    total += popcount64c(array[i]);
+    total += popcount64(array[i]);
 
   return total;
 }
