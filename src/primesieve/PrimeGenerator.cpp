@@ -14,7 +14,6 @@
 #include <primesieve/PrimeFinder.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/SieveOfEratosthenes.hpp>
-#include <primesieve/SieveOfEratosthenes-inline.hpp>
 #include <primesieve/littleendian_cast.hpp>
 
 #include <stdint.h>
