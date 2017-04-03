@@ -113,20 +113,17 @@ void PrimeFinder::count(const byte_t* sieve, uint_t sieveSize)
   {
     if (ps_.isCount(i))
     {
-      uint_t sum0 = 0;
-      uint_t sum1 = 0;
-      uint_t sum2 = 0;
-      uint_t sum3 = 0;
+      uint_t sum = 0;
 
       for (uint_t j = 0; j < sieveSize; j += 4)
       {
-        sum0 += kCounts_[i][sieve[j+0]];
-        sum1 += kCounts_[i][sieve[j+1]];
-        sum2 += kCounts_[i][sieve[j+2]];
-        sum3 += kCounts_[i][sieve[j+3]];
+        sum += kCounts_[i][sieve[j+0]];
+        sum += kCounts_[i][sieve[j+1]];
+        sum += kCounts_[i][sieve[j+2]];
+        sum += kCounts_[i][sieve[j+3]];
       }
 
-      ps_.counts_[i] += sum0 + sum1 + sum2 + sum3;
+      ps_.counts_[i] += sum;
     }
   }
 }
