@@ -8,6 +8,7 @@ include_directories(include)
 # Build options ######################################################
 
 option(WITH_OPENMP       "Enable OpenMP support"      ON)
+option(BUILD_PRIMESIEVE  "Build primesieve binary"    ON)
 option(BUILD_SHARED_LIBS "Build shared libprimesieve" ON)
 option(BUILD_EXAMPLES    "Build example programs"     OFF)
 option(BUILD_TESTS       "Build test programs"        OFF)
@@ -94,10 +95,12 @@ endif()
 
 # primesieve binary ##################################################
 
-add_executable(primesieve ${BIN_SRC})
-target_link_libraries(primesieve libprimesieve)
-install(TARGETS primesieve
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+if(BUILD_PRIMESIEVE)
+    add_executable(primesieve ${BIN_SRC})
+    target_link_libraries(primesieve libprimesieve)
+    install(TARGETS primesieve
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+endif()
 
 # Install headers ####################################################
 
@@ -115,7 +118,9 @@ install(FILES include/primesieve/PrimeSieve.hpp
 
 # Regenerate man page ################################################
 
-find_program(HELP2MAN help2man)
+if(BUILD_PRIMESIEVE)
+    find_program(HELP2MAN help2man)
+endif()
 
 if(HELP2MAN)
     message(STATUS "Found help2man: ${HELP2MAN}")
@@ -145,8 +150,10 @@ endif()
 
 # Install man page ###################################################
 
-install(FILES ${PROJECT_SOURCE_DIR}/doc/primesieve.1
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
+if(BUILD_PRIMESIEVE)
+    install(FILES ${PROJECT_SOURCE_DIR}/doc/primesieve.1
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
+endif()
 
 # Install primesieve.pc (pkg-config) #################################
 
