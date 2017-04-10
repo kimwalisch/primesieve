@@ -3,7 +3,6 @@ project(primesieve CXX)
 set(PRIMESIEVE_VERSION "6.0")
 set(PRIMESIEVE_SOVERSION "8.0.0")
 set(CMAKE_BUILD_TYPE Release)
-include_directories(include)
 
 # Build options ######################################################
 
@@ -74,8 +73,10 @@ endif()
 
 add_library(libprimesieve ${LIB_SRC})
 set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
-install(TARGETS libprimesieve
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+
+target_include_directories(libprimesieve PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
 
 if(BUILD_SHARED_LIBS)
     string(REPLACE "." ";" SOVERSION_LIST ${PRIMESIEVE_SOVERSION})
@@ -84,11 +85,19 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 endif()
 
+install(TARGETS libprimesieve
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+
 # static_libprimesieve ###############################################
 
 if(BUILD_SHARED_LIBS)
     add_library(static_libprimesieve STATIC ${LIB_SRC})
     set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
+
+    target_include_directories(static_libprimesieve PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>)
+
     install(TARGETS static_libprimesieve
             DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 endif()
