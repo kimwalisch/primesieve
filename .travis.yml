@@ -38,7 +38,7 @@ script:
   # 1) Build using GNU make
   - mkdir build
   - cd build
-  - cmake -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_INSTALL_PREFIX=$(pwd) ..
+  - cmake -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON -DCMAKE_INSTALL_PREFIX=$(pwd) ..
   - make -j4
   - make doc >/dev/null
   - make install
@@ -52,7 +52,7 @@ script:
   # 3) Build using ninja
   - mkdir build
   - cd build
-  - cmake -GNinja -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
+  - cmake -GNinja -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..
   - ninja
   - ninja doc >/dev/null
   # 4) Run integration tests

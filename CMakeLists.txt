@@ -9,6 +9,8 @@ set(CMAKE_BUILD_TYPE Release)
 option(WITH_OPENMP       "Enable OpenMP support"      ON)
 option(BUILD_PRIMESIEVE  "Build primesieve binary"    ON)
 option(BUILD_SHARED_LIBS "Build shared libprimesieve" ON)
+option(BUILD_STATIC_LIBS "Build static libprimesieve" ON)
+option(BUILD_DOC         "Build documentation"        OFF)
 option(BUILD_EXAMPLES    "Build example programs"     OFF)
 option(BUILD_TESTS       "Build test programs"        OFF)
 
@@ -90,7 +92,7 @@ install(TARGETS libprimesieve
 
 # static_libprimesieve ###############################################
 
-if(BUILD_SHARED_LIBS)
+if(BUILD_STATIC_LIBS AND BUILD_SHARED_LIBS)
     add_library(static_libprimesieve STATIC ${LIB_SRC})
     set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
 
@@ -173,7 +175,9 @@ install(FILES ${CMAKE_BINARY_DIR}/primesieve.pc
 
 # Add subdirectories #################################################
 
-add_subdirectory(doc)
+if(BUILD_DOC)
+    add_subdirectory(doc)
+endif()
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
