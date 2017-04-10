@@ -8,7 +8,7 @@ directory.
 
 ```bash
 # Build C/C++ API documentation
-cmake . -DBUILD_DOC=ON
+cmake -DBUILD_DOC=ON .
 make doc
 ```
 
