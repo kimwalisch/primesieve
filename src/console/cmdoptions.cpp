@@ -35,6 +35,8 @@ struct Option
   template <typename T>
   T getValue() const
   {
+    if (value.empty())
+      throw primesieve_error("missing value for option " + str);
     return calculator::eval<T>(value);
   }
 };
@@ -139,8 +141,9 @@ Option makeOption(const string& str)
 
   if (opt.str.empty() && !opt.value.empty())
     opt.str = "--number";
+
   if (!optionMap.count(opt.str))
-    opt.str = "--help";
+    throw primesieve_error("unknown option " + opt.str);
 
   return opt;
 }
