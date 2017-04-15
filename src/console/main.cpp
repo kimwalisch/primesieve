@@ -23,7 +23,7 @@ using namespace primesieve;
 
 namespace {
 
-void printResults(ParallelPrimeSieve& ps, CmdOptions& opts)
+void printResults(ParallelPrimeSieve& ps, CmdOptions& opt)
 {
   cout << left;
 
@@ -49,13 +49,13 @@ void printResults(ParallelPrimeSieve& ps, CmdOptions& opts)
     }
   }
 
-  if (opts.time)
+  if (opt.time)
   {
     int label_size = (int) string("Seconds").size();
     size = max(size, label_size);
   }
 
-  if (opts.time)
+  if (opt.time)
     cout << setw(size) << "Seconds" << " : "
          << fixed << setprecision(3) << ps.getSeconds()
          << endl;
@@ -70,17 +70,17 @@ void printResults(ParallelPrimeSieve& ps, CmdOptions& opts)
 }
 
 /// Used to count and print primes and prime k-tuplets
-void sieve(CmdOptions& opts)
+void sieve(CmdOptions& opt)
 {
   ParallelPrimeSieve ps;
-  auto& numbers = opts.numbers;
+  auto& numbers = opt.numbers;
 
-  if (opts.flags)
-    ps.setFlags(opts.flags);
-  if (opts.sieveSize)
-    ps.setSieveSize(opts.sieveSize);
-  if (opts.threads)
-    ps.setNumThreads(opts.threads);
+  if (opt.flags)
+    ps.setFlags(opt.flags);
+  if (opt.sieveSize)
+    ps.setSieveSize(opt.sieveSize);
+  if (opt.threads)
+    ps.setNumThreads(opt.threads);
   if (ps.isPrint())
     ps.setNumThreads(1);
 
@@ -90,30 +90,30 @@ void sieve(CmdOptions& opts)
   ps.setStart(numbers[0]);
   ps.setStop(numbers[1]);
 
-  if (!opts.quiet)
+  if (!opt.quiet)
   {
     cout << "Sieve size = " << ps.getSieveSize() << " kilobytes" << endl;
     cout << "Threads = " << ps.idealNumThreads() << endl;
   }
 
-  if (opts.status)
+  if (opt.status)
     ps.addFlags(ps.PRINT_STATUS);
 
   ps.sieve();
-  printResults(ps, opts);
+  printResults(ps, opt);
 }
 
-void nthPrime(CmdOptions& opts)
+void nthPrime(CmdOptions& opt)
 {
   ParallelPrimeSieve ps;
-  auto& numbers = opts.numbers;
+  auto& numbers = opt.numbers;
 
-  if (opts.flags)
-    ps.setFlags(opts.flags);
-  if (opts.sieveSize)
-    ps.setSieveSize(opts.sieveSize);
-  if (opts.threads)
-    ps.setNumThreads(opts.threads);
+  if (opt.flags)
+    ps.setFlags(opt.flags);
+  if (opt.sieveSize)
+    ps.setSieveSize(opt.sieveSize);
+  if (opt.threads)
+    ps.setNumThreads(opt.threads);
 
   if (numbers.size() < 2)
     numbers.push_back(0);
@@ -122,7 +122,7 @@ void nthPrime(CmdOptions& opts)
   uint64_t start = numbers[1];
   uint64_t nthPrime = ps.nthPrime(n, start);
 
-  if (opts.time)
+  if (opt.time)
     cout << "Seconds   : " << fixed << setprecision(3)
          << ps.getSeconds() << endl;
 
@@ -131,16 +131,16 @@ void nthPrime(CmdOptions& opts)
 
 } // namespace
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
   try
   {
-    CmdOptions opts = parseOptions(argc, argv);
+    CmdOptions opt = parseOptions(argc, argv);
 
-    if (opts.nthPrime)
-      nthPrime(opts);
+    if (opt.nthPrime)
+      nthPrime(opt);
     else
-      sieve(opts);
+      sieve(opt);
   }
   catch (calculator::error& e)
   {
