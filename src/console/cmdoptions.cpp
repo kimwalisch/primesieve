@@ -57,34 +57,30 @@ enum OptionValues
 };
 
 /// Command-line options
-map<string, OptionValues> optionMap;
-
-void initOptionMap()
+const map<string, OptionValues> optionMap =
 {
-  optionMap["-c"]          = OPTION_COUNT;
-  optionMap["--count"]     = OPTION_COUNT;
-  optionMap["-h"]          = OPTION_HELP;
-  optionMap["--help"]      = OPTION_HELP;
-  optionMap["-n"]          = OPTION_NTHPRIME;
-  optionMap["--nthprime"]  = OPTION_NTHPRIME;
-  optionMap["--no-status"] = OPTION_NO_STATUS;
-  optionMap["--number"]    = OPTION_NUMBER;
-  optionMap["-d"]          = OPTION_DISTANCE;
-  optionMap["--dist"]      = OPTION_DISTANCE;
-  optionMap["-o"]          = OPTION_DISTANCE;
-  optionMap["--offset"]    = OPTION_DISTANCE;
-  optionMap["-p"]          = OPTION_PRINT;
-  optionMap["--print"]     = OPTION_PRINT;
-  optionMap["-q"]          = OPTION_QUIET;
-  optionMap["--quiet"]     = OPTION_QUIET;
-  optionMap["-s"]          = OPTION_SIZE;
-  optionMap["--size"]      = OPTION_SIZE;
-  optionMap["-t"]          = OPTION_THREADS;
-  optionMap["--threads"]   = OPTION_THREADS;
-  optionMap["--time"]      = OPTION_TIME;
-  optionMap["-v"]          = OPTION_VERSION;
-  optionMap["--version"]   = OPTION_VERSION;
-}
+  { "-c",          OPTION_COUNT },
+  { "--count",     OPTION_COUNT },
+  { "-h",          OPTION_HELP },
+  { "--help",      OPTION_HELP },
+  { "-n",          OPTION_NTHPRIME },
+  { "--nthprime",  OPTION_NTHPRIME },
+  { "--no-status", OPTION_NO_STATUS },
+  { "--number",    OPTION_NUMBER },
+  { "-d",          OPTION_DISTANCE },
+  { "--dist",      OPTION_DISTANCE },
+  { "-p",          OPTION_PRINT },
+  { "--print",     OPTION_PRINT },
+  { "-q",          OPTION_QUIET },
+  { "--quiet",     OPTION_QUIET },
+  { "-s",          OPTION_SIZE },
+  { "--size",      OPTION_SIZE },
+  { "-t",          OPTION_THREADS },
+  { "--threads",   OPTION_THREADS },
+  { "--time",      OPTION_TIME },
+  { "-v",          OPTION_VERSION },
+  { "--version",   OPTION_VERSION }
+};
 
 int check(int primeType)
 {
@@ -141,7 +137,6 @@ Option makeOption(const string& str)
 
 CmdOptions parseOptions(int argc, char** argv)
 {
-  initOptionMap();
   CmdOptions opts;
 
   try
