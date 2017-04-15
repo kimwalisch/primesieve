@@ -108,7 +108,8 @@ int getCountFlags(int n)
 
 int getPrintFlags(int n)
 {
-  return PrimeSieve::PRINT_PRIMES << check(n);
+  n = check(n);
+  return PrimeSieve::PRINT_PRIMES << n;
 }
 
 /// e.g. "--threads=8" -> (id = "--threads", value = "8")
@@ -139,39 +140,32 @@ CmdOptions parseOptions(int argc, char** argv)
 {
   CmdOptions opts;
 
-  try
+  for (int i = 1; i < argc; i++)
   {
-    for (int i = 1; i < argc; i++)
-    {
-      Option option = makeOption(argv[i]);
+    Option option = makeOption(argv[i]);
 
-      switch (optionMap[option.id])
-      {
-        case OPTION_COUNT:     if (option.value.empty())
-                                 option.value = "1";
-                               opts.flags |= getCountFlags(option.getValue<int>());
-                               break;
-        case OPTION_PRINT:     if (option.value.empty())
-                                 option.value = "1";
-                               opts.flags |= getPrintFlags(option.getValue<int>());
-                               opts.quiet = true;
-                               break;
-        case OPTION_SIZE:      opts.sieveSize = option.getValue<int>(); break;
-        case OPTION_THREADS:   opts.threads = option.getValue<int>(); break;
-        case OPTION_QUIET:     opts.quiet = true; break;
-        case OPTION_NTHPRIME:  opts.nthPrime = true; break;
-        case OPTION_NO_STATUS: opts.status = false; break;
-        case OPTION_TIME:      opts.time = true; break;
-        case OPTION_NUMBER:    opts.numbers.push_back(option.getValue<uint64_t>()); break;
-        case OPTION_DISTANCE:  opts.numbers.push_back(option.getValue<uint64_t>() + opts.numbers.front()); break;
-        case OPTION_VERSION:   version(); break;
-        case OPTION_HELP:      help(); break;
-      }
+    switch (optionMap[option.id])
+    {
+      case OPTION_COUNT:     if (option.value.empty())
+                               option.value = "1";
+                             opts.flags |= getCountFlags(option.getValue<int>());
+                             break;
+      case OPTION_PRINT:     if (option.value.empty())
+                               option.value = "1";
+                             opts.flags |= getPrintFlags(option.getValue<int>());
+                             opts.quiet = true;
+                             break;
+      case OPTION_SIZE:      opts.sieveSize = option.getValue<int>(); break;
+      case OPTION_THREADS:   opts.threads = option.getValue<int>(); break;
+      case OPTION_QUIET:     opts.quiet = true; break;
+      case OPTION_NTHPRIME:  opts.nthPrime = true; break;
+      case OPTION_NO_STATUS: opts.status = false; break;
+      case OPTION_TIME:      opts.time = true; break;
+      case OPTION_NUMBER:    opts.numbers.push_back(option.getValue<uint64_t>()); break;
+      case OPTION_DISTANCE:  opts.numbers.push_back(option.getValue<uint64_t>() + opts.numbers.front()); break;
+      case OPTION_VERSION:   version(); break;
+      case OPTION_HELP:      help(); break;
     }
-  }
-  catch (exception&)
-  {
-    help();
   }
 
   if (opts.numbers.size() < 1 ||

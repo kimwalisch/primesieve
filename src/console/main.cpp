@@ -9,6 +9,7 @@
 ///
 
 #include <primesieve/ParallelPrimeSieve.hpp>
+#include "calculator.hpp"
 #include "cmdoptions.hpp"
 
 #include <iostream>
@@ -125,20 +126,25 @@ void nthPrime(CmdOptions& opts)
 
 int main(int argc, char** argv)
 {
-  CmdOptions opts = parseOptions(argc, argv);
-
   try
   {
+    CmdOptions opts = parseOptions(argc, argv);
+
     if (opts.nthPrime)
       nthPrime(opts);
     else
       sieve(opts);
   }
+  catch (calculator::error& e)
+  {
+    cerr << e.what() << "." << endl
+         << "Try `primesieve --help' for more information." << endl;
+    return 1;
+  }
   catch (exception& e)
   {
     cerr << "Error: " << e.what() << "." << endl
          << "Try `primesieve --help' for more information." << endl;
-
     return 1;
   }
 
