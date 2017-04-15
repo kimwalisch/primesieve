@@ -57,7 +57,7 @@ enum OptionValues
 };
 
 /// Command-line options
-const map<string, OptionValues> optionMap =
+map<string, OptionValues> optionMap =
 {
   { "-c",          OPTION_COUNT },
   { "--count",     OPTION_COUNT },
