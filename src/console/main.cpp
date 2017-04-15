@@ -27,7 +27,7 @@ void printResults(ParallelPrimeSieve& ps, CmdOptions& opt)
 {
   cout << left;
 
-  const string labels[] =
+  const string text[] =
   {
     "Primes",
     "Twin primes",
@@ -37,26 +37,20 @@ void printResults(ParallelPrimeSieve& ps, CmdOptions& opt)
     "Prime sextuplets"
   };
 
-  // largest label size, computed below
-  int size = 0;
+  // largest text size
+  size_t size = 0;
+
+  if (opt.time)
+    size = max(size, string("Seconds").size());
 
   for (int i = 0; i < 6; i++)
-  {
     if (ps.isCount(i))
-    {
-      int label_size = (int) labels[i].size();
-      size = max(size, label_size);
-    }
-  }
+      size = max(size, text[i].size());
+
+  int width = (int) size;
 
   if (opt.time)
-  {
-    int label_size = (int) string("Seconds").size();
-    size = max(size, label_size);
-  }
-
-  if (opt.time)
-    cout << setw(size) << "Seconds" << " : "
+    cout << setw(width) << "Seconds" << " : "
          << fixed << setprecision(3) << ps.getSeconds()
          << endl;
 
@@ -64,7 +58,7 @@ void printResults(ParallelPrimeSieve& ps, CmdOptions& opt)
   for (int i = 0; i < 6; i++)
   {
     if (ps.isCount(i))
-      cout << setw(size) << labels[i] << " : "
+      cout << setw(width) << text[i] << " : "
            << ps.getCount(i) << endl;
   }
 }
