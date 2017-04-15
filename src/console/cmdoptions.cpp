@@ -15,7 +15,6 @@
 
 #include <string>
 #include <map>
-#include <exception>
 #include <cstddef>
 #include <stdint.h>
 
