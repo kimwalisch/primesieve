@@ -27,10 +27,10 @@ using namespace primesieve;
 namespace {
 
 /// Command-line option
-/// e.g. id = "--threads", value = "4"
+/// e.g. str = "--threads", value = "4"
 struct Option
 {
-  string id;
+  string str;
   string value;
   template <typename T>
   T getValue() const
@@ -39,7 +39,7 @@ struct Option
   }
 };
 
-enum OptionValues
+enum OptionID
 {
   OPTION_COUNT,
   OPTION_HELP,
@@ -56,7 +56,7 @@ enum OptionValues
 };
 
 /// Command-line options
-map<string, OptionValues> optionMap =
+map<string, OptionID> optionMap =
 {
   { "-c",          OPTION_COUNT },
   { "--count",     OPTION_COUNT },
@@ -92,76 +92,81 @@ int check(int primeType)
   return primeType;
 }
 
-int getCountFlags(int n)
+void optionPrint(Option& opt,
+                 CmdOptions& opts)
 {
-  int flags = 0;
+  opts.quiet = true;
 
-  do {
-    int primeType = check(n % 10);
-    flags |= PrimeSieve::COUNT_PRIMES << primeType;
-    n /= 10;
-  } while (n > 0);
+  if (opt.value.empty())
+   opt.value = "1";
 
-  return flags;
+  int i = opt.getValue<int>();
+  i = check(i);
+  opts.flags |= PrimeSieve::PRINT_PRIMES << i;
 }
 
-int getPrintFlags(int n)
+void optionCount(Option& opt,
+                 CmdOptions& opts)
 {
-  n = check(n);
-  return PrimeSieve::PRINT_PRIMES << n;
+  if (opt.value.empty())
+    opt.value = "1";
+
+  int n = opt.getValue<int>();
+
+  for (; n > 0; n /= 10)
+  {
+    int i = check(n % 10);
+    opts.flags |= PrimeSieve::COUNT_PRIMES << i;
+  }
 }
 
-/// e.g. "--threads=8" -> (id = "--threads", value = "8")
+/// e.g. "--threads=8"
+/// -> option.str = "--threads"
+/// -> option.value = "8"
+///
 Option makeOption(const string& str)
 {
   Option option;
   size_t delimiter = str.find_first_of("=0123456789");
 
   if (delimiter == string::npos)
-    option.id = str;
+    option.str = str;
   else
   {
-    option.id = str.substr(0, delimiter);
+    option.str = str.substr(0, delimiter);
     option.value = str.substr(delimiter + (str.at(delimiter) == '=' ? 1 : 0));
   }
 
-  if (option.id.empty() && !option.value.empty())
-    option.id = "--number";
-  if (optionMap.count(option.id) == 0)
-    option.id = "--help";
+  if (option.str.empty() && !option.value.empty())
+    option.str = "--number";
+  if (optionMap.count(option.str) == 0)
+    option.str = "--help";
 
   return option;
 }
 
 } // namespace
 
-CmdOptions parseOptions(int argc, char** argv)
+CmdOptions parseOptions(int argc, char* argv[])
 {
   CmdOptions opts;
 
   for (int i = 1; i < argc; i++)
   {
-    Option option = makeOption(argv[i]);
+    Option opt = makeOption(argv[i]);
 
-    switch (optionMap[option.id])
+    switch (optionMap[opt.str])
     {
-      case OPTION_COUNT:     if (option.value.empty())
-                               option.value = "1";
-                             opts.flags |= getCountFlags(option.getValue<int>());
-                             break;
-      case OPTION_PRINT:     if (option.value.empty())
-                               option.value = "1";
-                             opts.flags |= getPrintFlags(option.getValue<int>());
-                             opts.quiet = true;
-                             break;
-      case OPTION_SIZE:      opts.sieveSize = option.getValue<int>(); break;
-      case OPTION_THREADS:   opts.threads = option.getValue<int>(); break;
+      case OPTION_COUNT:     optionCount(opt, opts); break;
+      case OPTION_PRINT:     optionPrint(opt, opts); break;
+      case OPTION_SIZE:      opts.sieveSize = opt.getValue<int>(); break;
+      case OPTION_THREADS:   opts.threads = opt.getValue<int>(); break;
       case OPTION_QUIET:     opts.quiet = true; break;
       case OPTION_NTHPRIME:  opts.nthPrime = true; break;
       case OPTION_NO_STATUS: opts.status = false; break;
       case OPTION_TIME:      opts.time = true; break;
-      case OPTION_NUMBER:    opts.numbers.push_back(option.getValue<uint64_t>()); break;
-      case OPTION_DISTANCE:  opts.numbers.push_back(option.getValue<uint64_t>() + opts.numbers.front()); break;
+      case OPTION_NUMBER:    opts.numbers.push_back(opt.getValue<uint64_t>()); break;
+      case OPTION_DISTANCE:  opts.numbers.push_back(opt.getValue<uint64_t>() + opts.numbers[0]); break;
       case OPTION_VERSION:   version(); break;
       case OPTION_HELP:      help(); break;
     }
