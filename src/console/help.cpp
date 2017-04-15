@@ -19,7 +19,8 @@ using namespace std;
 
 namespace {
 
-const string helpMenu(
+const string helpMenu
+(
   "Usage: primesieve [START] STOP [OPTION]...\n"
   "Generate the primes and/or prime k-tuplets in the interval [START, STOP]\n"
   "(< 2^64) using the segmented sieve of Eratosthenes.\n"
