@@ -98,7 +98,7 @@ void optionPrint(Option& opt,
   opts.quiet = true;
 
   if (opt.value.empty())
-   opt.value = "1";
+    opt.value = "1";
 
   int i = opt.getValue<int>();
   i = check(i);
