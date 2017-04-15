@@ -121,28 +121,28 @@ void optionCount(Option& opt,
 }
 
 /// e.g. "--threads=8"
-/// -> option.str = "--threads"
-/// -> option.value = "8"
+/// -> opt.str = "--threads"
+/// -> opt.value = "8"
 ///
 Option makeOption(const string& str)
 {
-  Option option;
+  Option opt;
   size_t delimiter = str.find_first_of("=0123456789");
 
   if (delimiter == string::npos)
-    option.str = str;
+    opt.str = str;
   else
   {
-    option.str = str.substr(0, delimiter);
-    option.value = str.substr(delimiter + (str.at(delimiter) == '=' ? 1 : 0));
+    opt.str = str.substr(0, delimiter);
+    opt.value = str.substr(delimiter + (str.at(delimiter) == '=' ? 1 : 0));
   }
 
-  if (option.str.empty() && !option.value.empty())
-    option.str = "--number";
-  if (optionMap.count(option.str) == 0)
-    option.str = "--help";
+  if (opt.str.empty() && !opt.value.empty())
+    opt.str = "--number";
+  if (!optionMap.count(opt.str))
+    opt.str = "--help";
 
-  return option;
+  return opt;
 }
 
 } // namespace
