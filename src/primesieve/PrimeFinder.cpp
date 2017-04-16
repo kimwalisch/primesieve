@@ -10,11 +10,12 @@
 ///
 
 #include <primesieve/config.hpp>
+#include <primesieve/Callback.hpp>
+#include <primesieve/littleendian_cast.hpp>
+#include <primesieve/pmath.hpp>
 #include <primesieve/PrimeFinder.hpp>
 #include <primesieve/PrimeSieve.hpp>
-#include <primesieve/Callback.hpp>
 #include <primesieve/SieveOfEratosthenes.hpp>
-#include <primesieve/littleendian_cast.hpp>
 
 #include <stdint.h>
 #include <algorithm>

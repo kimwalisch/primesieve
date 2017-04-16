@@ -14,10 +14,10 @@
 #include <primesieve/pmath.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
-#include <primesieve/Callback.hpp>
 #include <primesieve.hpp>
 
 #include <stdint.h>
+#include <limits>
 #include <string>
 
 namespace {

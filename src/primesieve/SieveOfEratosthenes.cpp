@@ -18,7 +18,6 @@
 #include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
-#include <exception>
 #include <memory>
 
 namespace primesieve {

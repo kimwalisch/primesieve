@@ -12,6 +12,7 @@
 #include <primesieve/config.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/EratSmall.hpp>
+#include <primesieve/pmath.hpp>
 
 #include <stdint.h>
 #include <algorithm>

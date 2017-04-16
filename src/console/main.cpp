@@ -12,6 +12,8 @@
 #include "calculator.hpp"
 #include "cmdoptions.hpp"
 
+#include <stdint.h>
+#include <cstddef>
 #include <iostream>
 #include <exception>
 #include <iomanip>

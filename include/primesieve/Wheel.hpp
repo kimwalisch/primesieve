@@ -16,10 +16,8 @@
 #include "primesieve_error.hpp"
 
 #include <stdint.h>
-#include <cstddef>
 #include <cassert>
 #include <string>
-#include <limits>
 
 namespace primesieve {
 
