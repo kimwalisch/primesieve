@@ -45,6 +45,9 @@ downloaded from
 # Debian/Ubuntu
 sudo apt-get install primesieve
 
+# Windows Bash
+sudo apt-get install primesieve
+
 # macOS
 brew install primesieve
 ```
@@ -61,9 +64,6 @@ primesieve 1e10
 
 # Print the primes below 1000000
 primesieve 1000000 --print
-
-# Print the twin primes below 1000000
-primesieve 1000000 --print=2
 
 # Count the primes within [1e10, 2e10] using 4 threads
 primesieve 1e10 2e10 --threads=4
