@@ -1,5 +1,5 @@
-primesieve
-==========
+# primesieve
+
 [![Build Status](https://travis-ci.org/kimwalisch/primesieve.svg)](https://travis-ci.org/kimwalisch/primesieve)
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/kimwalisch/primesieve?branch=master&svg=true)](https://ci.appveyor.com/project/kimwalisch/primesieve)
 [![Github Releases](https://img.shields.io/github/release/kimwalisch/primesieve.svg)](https://github.com/kimwalisch/primesieve/releases)
@@ -18,8 +18,7 @@ up to 2^64.
 
 ![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve_win10.png)
 
-Algorithm complexity
---------------------
+## Algorithm complexity
 
 primesieve generates primes using the segmented sieve of Eratosthenes with
 [wheel factorization](http://en.wikipedia.org/wiki/Wheel_factorization).
@@ -33,8 +32,7 @@ algorithm for large sieving primes which reduces the memory usage to
 <img src="http://primesieve.org/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
 bytes per thread.
 
-Installation
-------------
+## Installation
 
 The primesieve console application can be installed using your operating
 system's package manager. The primesieve GUI application can be
@@ -52,8 +50,7 @@ sudo apt-get install primesieve
 brew install primesieve
 ```
 
-Usage examples
---------------
+## Usage examples
 
 The primesieve console application can generate primes and prime
 k-tuplets.
@@ -72,8 +69,7 @@ primesieve 1e10 2e10 --threads=4
 primesieve --help
 ```
 
-Build instructions
-------------------
+## Build instructions
 
 Building primesieve requires a compiler which supports C++11 (or later)
 and CMake ≥ 3.1. If your compiler does not support C++11 you can fall back 
@@ -101,8 +97,7 @@ make -j
 make test
 ```
 
-C++ API
--------
+## C++ API
 
 Below is an example with the most common libprimesieve use cases.
 
@@ -131,8 +126,7 @@ int main()
 * [More C++ examples](examples/cpp)
 * [Browse primesieve's C++ API online](http://primesieve.org/api/primesieve_8hpp.html)
 
-C API
------
+## C API
 
 primesieve's functions are exposed as C API via the ```primesieve.h```
 header.
@@ -159,8 +153,7 @@ int main()
 * [More C examples](examples/c)
 * [Browse primesieve's C API online](http://primesieve.org/api/primesieve_8h.html)
 
-Linking against libprimesieve
------------------------------
+## Linking against libprimesieve
 
 #### Unix-like OSes
 
@@ -169,8 +162,8 @@ c++ -O2 primes.cpp -lprimesieve
 cc  -O2 primes.c   -lprimesieve
 ```
 
-If you have built primesieve yourself then the default installation path is
-```/usr/local/lib``` which is not part of ```LD_LIBRARY_PATH``` on many
+If you have built primesieve yourself then the default installation path
+is ```/usr/local/lib``` which is not part of ```LD_LIBRARY_PATH``` on many
 OSes. Hence you need to export some environment variables:
 
 ```sh
@@ -182,12 +175,11 @@ export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
 
 #### Microsoft Visual C++
 
-```
+```sh
 cl /O2 /EHsc primes.cpp /I primesieve\include /link primesieve\primesieve.lib
 ```
 
-Bindings for other languages
-----------------------------
+## Bindings for other languages
 
 primesieve supports C++ and C directly, and has bindings available for
 a few other languages:
