@@ -33,8 +33,8 @@ algorithm for large sieving primes which reduces the memory usage to
 <img src="http://primesieve.org/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
 bytes per thread.
 
-Package managers
-----------------
+Installation
+------------
 
 The primesieve console application can be installed using your operating
 system's package manager. The primesieve GUI application can be
