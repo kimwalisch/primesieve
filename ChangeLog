@@ -1,4 +1,4 @@
-Changes in version 6.0, 21/03/2017
+Changes in version 6.0, 17/04/2017
 ==================================
 
 primesieve-6.0 is a major new release with many changes. The API and
@@ -9,6 +9,7 @@ further down for more information.
 2. Use C++11 instead of C++98.
 3. C/C++ API is now parallel by default.
 4. Add many C/C++ libprimesieve tests (./test).
+5. Improved error messages.
 
 C++ API changes
 ---------------
