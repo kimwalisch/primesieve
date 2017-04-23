@@ -55,7 +55,6 @@ PrimeSieve::PrimeSieve() :
   stop_(0),
   counts_(6),
   flags_(COUNT_PRIMES),
-  threadNum_(0),
   parent_(nullptr)
 {
   setSieveSize(config::PRIMESIEVE_SIEVESIZE);
@@ -65,11 +64,10 @@ PrimeSieve::PrimeSieve() :
 /// ParallelPrimeSieve creates one PrimeSieve
 /// child object for each thread.
 ///
-PrimeSieve::PrimeSieve(PrimeSieve& parent, int threadNum) :
+PrimeSieve::PrimeSieve(PrimeSieve& parent) :
   counts_(6),
   sieveSize_(parent.sieveSize_),
   flags_(parent.flags_),
-  threadNum_(threadNum),
   parent_(&parent),
   cb_(parent.cb_)
 { }

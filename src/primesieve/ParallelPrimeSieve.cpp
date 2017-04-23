@@ -143,7 +143,7 @@ void ParallelPrimeSieve::sieve()
       if (i > 0) threadStart = align(threadStart) + 1;
       threadStop = align(threadStop);
 
-      PrimeSieve ps(*this, omp_get_thread_num());
+      PrimeSieve ps(*this);
       ps.sieve(threadStart, threadStop);
 
       count0 += ps.getCount(0);

@@ -44,7 +44,7 @@ public:
     CALLBACK_PRIMES   = 1 << 14
   };
   PrimeSieve();
-  PrimeSieve(PrimeSieve&, int);
+  PrimeSieve(PrimeSieve&);
   virtual ~PrimeSieve();
   // Getters
   uint64_t getStart() const;
@@ -120,8 +120,6 @@ private:
   int sieveSize_;
   /// Setter methods set flags e.g. COUNT_PRIMES
   int flags_;
-  /// ParallelPrimeSieve thread number
-  int threadNum_;
   /// Pointer to the parent ParallelPrimeSieve object
   PrimeSieve* parent_;
   Callback* cb_;
