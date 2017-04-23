@@ -19,7 +19,8 @@ namespace primesieve {
 /// RAII-style wrapper for OpenMP locks.
 /// Initialize lock -> destroy lock.
 ///
-class OmpInitLock {
+class OmpInitLock
+{
 public:
   OmpInitLock(void**);
   ~OmpInitLock();
@@ -44,7 +45,8 @@ OmpInitLock::~OmpInitLock()
 /// RAII-style wrapper for OpenMP locks.
 /// Set lock -> unset lock.
 ///
-class OmpLockGuard {
+class OmpLockGuard
+{
 public:
   OmpLockGuard(omp_lock_t*, bool);
   ~OmpLockGuard();
@@ -54,8 +56,8 @@ private:
   bool isSet_;
 };
 
-/// @param waitForLock  If false do not block the current thread
-///                     if the lock is not available.
+/// If waitForLock=false do not block the current
+/// thread if the lock is not available.
 ///
 OmpLockGuard::OmpLockGuard(omp_lock_t* lock, bool waitForLock) :
   lock_(lock)
