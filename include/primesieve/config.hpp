@@ -54,15 +54,15 @@ enum {
   ///
   BYTES_PER_ALLOC = (1 << 20) * 8,
 
-  /// primesieve::iterator caches at least ITERATOR_CACHE_SMALL
+  /// primesieve::iterator caches at least MIN_CACHE_ITERATOR
   /// bytes of primes. L3_CACHE_SIZE is a good value.
   ///
-  ITERATOR_CACHE_SMALL = (1 << 20) * 8,
+  MIN_CACHE_ITERATOR = (1 << 20) * 8,
 
   /// primesieve::iterator maximum cache size in bytes, used if
-  /// pi(sqrt(n)) * 8 bytes > ITERATOR_CACHE_MAX.
+  /// pi(sqrt(n)) * 8 bytes > MAX_CACHE_ITERATOR.
   ///
-  ITERATOR_CACHE_MAX = (1 << 20) * 1024
+  MAX_CACHE_ITERATOR = (1 << 20) * 1024
 };
 
   /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
