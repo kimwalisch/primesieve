@@ -22,8 +22,7 @@
 
 namespace {
 
-/// Sieve size in kilobytes used for sieving
-int sieve_size = SIEVESIZE;
+int sieve_size = L1_DCACHE_SIZE;
 
 int num_threads = 0;
 

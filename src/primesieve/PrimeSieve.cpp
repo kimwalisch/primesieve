@@ -57,7 +57,7 @@ PrimeSieve::PrimeSieve() :
   flags_(COUNT_PRIMES),
   parent_(nullptr)
 {
-  setSieveSize(config::PRIMESIEVE_SIEVESIZE);
+  setSieveSize(L1_DCACHE_SIZE);
   reset();
 }
 

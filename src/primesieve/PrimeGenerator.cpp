@@ -24,7 +24,7 @@ namespace primesieve {
 PrimeGenerator::PrimeGenerator(PrimeFinder& finder, const PreSieve& preSieve) :
   SieveOfEratosthenes(preSieve.getLimit() + 1,
                       finder.getSqrtStop(),
-                      config::PRIMESIEVE_SIEVESIZE,
+                      L1_DCACHE_SIZE,
                       preSieve),
   finder_(finder)
 { }
