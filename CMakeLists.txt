@@ -6,7 +6,6 @@ set(CMAKE_BUILD_TYPE Release)
 
 # Build options ######################################################
 
-option(WITH_OPENMP       "Enable OpenMP support"      ON)
 option(BUILD_PRIMESIEVE  "Build primesieve binary"    ON)
 option(BUILD_SHARED_LIBS "Build shared libprimesieve" ON)
 option(BUILD_STATIC_LIBS "Build static libprimesieve" ON)
@@ -48,15 +47,9 @@ set(LIB_SRC src/primesieve/EratBig.cpp
             src/primesieve/nthPrime.cpp
             src/primesieve/popcount.cpp)
 
-# Check for OpenMP ###################################################
+# Find system multi-threading library ################################
 
-if(WITH_OPENMP)
-    find_package(OpenMP QUIET)
-    if(OPENMP_FOUND)
-        message(STATUS "Found OpenMP: ${OpenMP_CXX_FLAGS}")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    endif()
-endif()
+find_package(Threads REQUIRED)
 
 # Detect CPU L1 cache size ###########################################
 
@@ -75,6 +68,7 @@ endif()
 
 add_library(libprimesieve ${LIB_SRC})
 set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
+target_link_libraries(libprimesieve Threads::Threads)
 
 target_include_directories(libprimesieve PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -95,6 +89,7 @@ install(TARGETS libprimesieve
 if(BUILD_STATIC_LIBS AND BUILD_SHARED_LIBS)
     add_library(static_libprimesieve STATIC ${LIB_SRC})
     set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
+    target_link_libraries(static_libprimesieve Threads::Threads)
 
     target_include_directories(static_libprimesieve PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
