@@ -59,7 +59,7 @@ script:
   - ninja test
   - cd ..
   # 5) Test using valgrind
-  - $CXX -Iinclude -O2 -g $OPENMP_FLAG examples/cpp/nth_prime.cpp -o nth_prime build/libprimesieve.a
+  - $CXX -Iinclude -O2 -g $OPENMP_FLAG examples/cpp/nth_prime.cpp -o nth_prime build/libprimesieve.a -pthread
   - valgrind --error-exitcode=1 ./nth_prime 500000000
   # 6) Test using cppcheck
   - rm -rf build

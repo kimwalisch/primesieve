@@ -49,7 +49,6 @@ set(LIB_SRC src/primesieve/EratBig.cpp
 
 # Find system multi-threading library ################################
 
-set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 # Detect CPU L1 cache size ###########################################
