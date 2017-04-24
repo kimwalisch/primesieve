@@ -7,7 +7,6 @@ branches:
 
 compiler:
   - gcc
-  - clang
 
 os:
   - linux
