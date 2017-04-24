@@ -169,7 +169,7 @@ void ParallelPrimeSieve::sieve()
     for (int64_t t = 0; t < threads; t++)
       pool.emplace_back(task);
 
-		for (thread &t : pool)
+    for (thread &t : pool)
       t.join();
 
     seconds_ = getWallTime() - t1;
