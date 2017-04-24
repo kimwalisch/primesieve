@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(primesieve CXX)
+project(primesieve)
 set(PRIMESIEVE_VERSION "6.0")
 set(PRIMESIEVE_SOVERSION "8.0.0")
 set(CMAKE_BUILD_TYPE Release)
