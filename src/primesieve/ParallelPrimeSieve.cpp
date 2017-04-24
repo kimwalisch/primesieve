@@ -128,51 +128,49 @@ void ParallelPrimeSieve::sieve()
     uint64_t threadDistance = getThreadDistance(threads);
     int64_t iters = ((getDistance() - 1) / threadDistance) + 1;
     int64_t i = 0;
-
-    threads = min(threads, iters);
-    vector<thread> workers;
-    workers.reserve(threads);
     mutex lock;
 
-    for(int64_t t = 0; t < threads; t++)
+    auto task = [&]()
     {
-      workers.emplace_back(
-        thread([&]()
+      vector<uint64_t> counts(6, 0);
+
+      while (true)
       {
-        vector<uint64_t> counts(counts_.size(), 0);
-
-        while (true)
+        uint64_t start;
         {
-          uint64_t start;
-          {
-            lock_guard<mutex> guard(lock);
-            if (i >= iters)
-              break;
-            start = start_ + i * threadDistance;
-            i += 1;
-          }
-
-          uint64_t stop = checkedAdd(start, threadDistance);
-          stop = align(stop);
-          if (start > start_)
-            start = align(start) + 1;
-
-          PrimeSieve ps(*this);
-          ps.sieve(start, stop);
-
-          for (size_t j = 0; j < counts.size(); j++)
-            counts[j] += ps.getCount(j);
+          lock_guard<mutex> guard(lock);
+          if (i >= iters)
+            break;
+          start = start_ + i * threadDistance;
+          i += 1;
         }
 
-        lock_guard<mutex> guard(lock);
-        for (size_t j = 0; j < counts.size(); j++)
-          counts_[j] += counts[j];
-      }));
-    }
+        uint64_t stop = checkedAdd(start, threadDistance);
+        stop = align(stop);
+        if (start > start_)
+          start = align(start) + 1;
 
-		for (auto &t : workers)
-			if (t.joinable())
-				t.join();
+        PrimeSieve ps(*this);
+        ps.sieve(start, stop);
+
+        for (size_t j = 0; j < counts.size(); j++)
+          counts[j] += ps.getCount(j);
+      }
+
+      lock_guard<mutex> guard(lock);
+      for (size_t j = 0; j < counts.size(); j++)
+        counts_[j] += counts[j];
+    };
+
+    threads = min(threads, iters);
+    vector<thread> pool;
+    pool.reserve(threads);
+
+    for (int64_t t = 0; t < threads; t++)
+      pool.emplace_back(task);
+
+		for (thread &t : pool)
+      t.join();
 
     seconds_ = getWallTime() - t1;
   }
