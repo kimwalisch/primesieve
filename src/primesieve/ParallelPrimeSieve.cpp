@@ -1,6 +1,6 @@
 ///
 /// @file   ParallelPrimeSieve.cpp
-/// @brief  Multi-threaded prime sieve.
+/// @brief  Multi-threaded prime sieve using std::thread.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -38,6 +38,11 @@ void ParallelPrimeSieve::init(SharedMemory& shm)
   setFlags(shm.flags);
   setNumThreads(shm.threads);
   shm_ = &shm;
+}
+
+int ParallelPrimeSieve::getMaxThreads()
+{
+  return max<int>(1, thread::hardware_concurrency());
 }
 
 int ParallelPrimeSieve::getNumThreads() const
@@ -96,11 +101,6 @@ uint64_t ParallelPrimeSieve::align(uint64_t n) const
   n = min(n, stop_);
 
   return n;
-}
-
-int ParallelPrimeSieve::getMaxThreads()
-{
-  return max<int>(1, thread::hardware_concurrency());
 }
 
 /// Sieve the primes and prime k-tuplets within [start_, stop_]
