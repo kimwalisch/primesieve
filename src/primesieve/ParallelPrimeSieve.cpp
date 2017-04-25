@@ -126,11 +126,13 @@ void ParallelPrimeSieve::sieve()
     threads = inBetween(1, threads, iters);
     mutex lock;
 
+    // each thread executes a task
     auto task = [&]()
     {
       PrimeSieve ps(this);
       vector<uint64_t> counts(6, 0);
 
+      // while i < iters
       while (true)
       {
         auto start = start_;
@@ -147,6 +149,7 @@ void ParallelPrimeSieve::sieve()
         if (start > start_)
           start = align(start) + 1;
 
+        // sieve the range [start, stop]
         ps.sieve(start, stop);
         counts += ps.counts_;
       }
