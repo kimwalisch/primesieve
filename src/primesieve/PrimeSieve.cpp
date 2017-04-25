@@ -102,16 +102,26 @@ bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRI
 bool     PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
 bool     PrimeSieve::isParallelPrimeSieveChild() const { return parent_ != nullptr; }
 
-/// Set a start number (lower bound) for sieving.
+/// Set a start number (lower bound) for sieving
 void PrimeSieve::setStart(uint64_t start)
 {
   start_ = start;
 }
 
-/// Set a stop number (upper bound) for sieving.
+/// Set a stop number (upper bound) for sieving
 void PrimeSieve::setStop(uint64_t stop)
 {
   stop_ = stop;
+}
+
+Callback& PrimeSieve::getCallback()
+{
+  return *cb_;
+}
+
+PrimeSieve::counts_t& PrimeSieve::getCounts()
+{
+  return counts_;
 }
 
 /// Set the size of the sieve of Eratosthenes array in kilobytes
@@ -145,7 +155,7 @@ void PrimeSieve::reset()
 }
 
 /// Calculate the sieving status.
-/// @processed:  Sum of recently processed segments.
+/// @processed:  Sum of recently processed segments
 ///
 bool PrimeSieve::updateStatus(uint64_t processed, bool wait)
 {

@@ -124,7 +124,6 @@ void ParallelPrimeSieve::sieve()
     uint64_t i = 0;
 
     threads = inBetween(1, threads, iters);
-    using counts_t = vector<uint64_t>;
     mutex lock;
 
     // each thread executes 1 task
@@ -152,7 +151,7 @@ void ParallelPrimeSieve::sieve()
 
         // sieve the range [start, stop]
         ps.sieve(start, stop);
-        counts += ps.counts_;
+        counts += ps.getCounts();
       }
 
       return counts;

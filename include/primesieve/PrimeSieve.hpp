@@ -14,7 +14,6 @@
 #define PRIMESIEVE_CLASS_HPP
 
 #include "Callback.hpp"
-
 #include <stdint.h>
 #include <vector>
 
@@ -22,8 +21,6 @@ namespace primesieve {
 
 class PrimeSieve
 {
-  friend class PrimeFinder;
-  friend class ParallelPrimeSieve;
 public:
   enum
   {
@@ -52,6 +49,7 @@ public:
   int getSieveSize() const;
   double getStatus() const;
   double getSeconds() const;
+  Callback& getCallback();
   // Setters
   void setStart(uint64_t);
   void setStop(uint64_t);
@@ -65,6 +63,8 @@ public:
   bool isCount(int) const;
   bool isPrint() const;
   bool isPrint(int) const;
+  bool isFlag(int, int) const;
+  bool isStatus() const;
   // Sieve
   virtual void sieve();
   void sieve(uint64_t, uint64_t);
@@ -89,6 +89,8 @@ public:
   uint64_t countQuintuplets(uint64_t, uint64_t);
   uint64_t countSextuplets(uint64_t, uint64_t);
   // Count getters
+  typedef std::vector<uint64_t> counts_t;
+  counts_t& getCounts();
   uint64_t getPrimeCount() const;
   uint64_t getTwinCount() const;
   uint64_t getTripletCount() const;
@@ -96,18 +98,18 @@ public:
   uint64_t getQuintupletCount() const;
   uint64_t getSextupletCount() const;
   uint64_t getCount(int) const;
+  virtual bool updateStatus(uint64_t, bool wait = false);
 protected:
   /// Sieve primes >= start_
   uint64_t start_;
   /// Sieve primes <= stop_
   uint64_t stop_;
   /// Prime number and prime k-tuplet counts
-  std::vector<uint64_t> counts_;
+  counts_t counts_;
   /// Time elapsed of sieve()
   double seconds_;
   uint64_t getDistance() const;
   void reset();
-  virtual bool updateStatus(uint64_t, bool wait = false);
 private:
   /// Sum of all processed segments
   uint64_t processed_;
@@ -123,9 +125,7 @@ private:
   PrimeSieve* parent_;
   Callback* cb_;
   static void printStatus(double, double);
-  bool isFlag(int, int) const;
   bool isValidFlags(int) const;
-  bool isStatus() const;
   bool isParallelPrimeSieveChild() const;
   void processSmallPrimes();
   enum

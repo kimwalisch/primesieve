@@ -12,6 +12,7 @@
 
 #include "config.hpp"
 #include "SieveOfEratosthenes.hpp"
+#include "PrimeSieve.hpp"
 
 #include <stdint.h>
 #include <vector>
@@ -24,7 +25,7 @@ class PreSieve;
 
 /// PrimeFinder is a SieveOfEratosthenes class that is used to
 /// callback, print and count primes and prime k-tuplets
-/// (twin primes, prime triplets, ...).
+/// e.g. twin primes, prime triplets.
 ///
 class PrimeFinder : public SieveOfEratosthenes
 {
@@ -37,6 +38,7 @@ private:
   std::vector<uint_t> kCounts_[6];
   /// Reference to the associated PrimeSieve object
   PrimeSieve& ps_;
+  PrimeSieve::counts_t& counts_;
   void init_kCounts();
   virtual void segmentFinished(const byte_t*, uint_t);
   void count(const byte_t*, uint_t);
