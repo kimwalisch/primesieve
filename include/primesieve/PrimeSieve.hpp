@@ -108,7 +108,7 @@ protected:
   uint64_t getDistance() const;
   void reset();
   virtual double getWallTime() const;
-  virtual bool updateStatus(uint64_t, bool waitForLock = false);
+  virtual bool updateStatus(uint64_t, bool wait = false);
 private:
   /// Sum of all processed segments
   uint64_t processed_;

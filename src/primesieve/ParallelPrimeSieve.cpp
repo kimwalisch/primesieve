@@ -11,6 +11,7 @@
 #include <primesieve/config.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
 #include <primesieve/PrimeSieve.hpp>
+#include <primesieve/LockGuard.hpp>
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
@@ -187,24 +188,18 @@ void ParallelPrimeSieve::sieve()
 /// Calculate the sieving status.
 /// @param processed  Sum of recently processed segments.
 ///
-bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
+bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool wait)
 {
-  bool isSet = true;
+  LockGuard lock(lock_, wait);
 
-  if (waitForLock)
-    lock_.lock();
-  else
-    isSet = lock_.try_lock();
-
-  if (isSet)
+  if (lock.isSet())
   {
     PrimeSieve::updateStatus(processed);
     if (shm_)
       shm_->status = getStatus();
-    lock_.unlock();
   }
 
-  return isSet;
+  return lock.isSet();
 }
 
 } // namespace

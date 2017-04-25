@@ -149,12 +149,12 @@ double PrimeSieve::getWallTime() const
 /// Calculate the sieving status.
 /// @param processed  Sum of recently processed segments.
 ///
-bool PrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
+bool PrimeSieve::updateStatus(uint64_t processed, bool wait)
 {
   if (isParallelPrimeSieveChild())
   {
     toUpdate_ += processed;
-    if (parent_->updateStatus(toUpdate_, waitForLock))
+    if (parent_->updateStatus(toUpdate_, wait))
       toUpdate_ = 0;
   }
   else
