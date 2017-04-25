@@ -66,12 +66,12 @@ PrimeSieve::PrimeSieve() :
 /// ParallelPrimeSieve creates one PrimeSieve
 /// child object for each thread.
 ///
-PrimeSieve::PrimeSieve(PrimeSieve& parent) :
+PrimeSieve::PrimeSieve(PrimeSieve* parent) :
   counts_(6),
-  sieveSize_(parent.sieveSize_),
-  flags_(parent.flags_),
-  parent_(&parent),
-  cb_(parent.cb_)
+  sieveSize_(parent->sieveSize_),
+  flags_(parent->flags_),
+  parent_(parent),
+  cb_(parent->cb_)
 { }
 
 PrimeSieve::~PrimeSieve()

@@ -44,7 +44,7 @@ public:
     CALLBACK_PRIMES   = 1 << 14
   };
   PrimeSieve();
-  PrimeSieve(PrimeSieve&);
+  PrimeSieve(PrimeSieve*);
   virtual ~PrimeSieve();
   // Getters
   uint64_t getStart() const;

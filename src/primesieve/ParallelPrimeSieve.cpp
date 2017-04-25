@@ -131,12 +131,12 @@ void ParallelPrimeSieve::sieve()
 
       while (true)
       {
-        uint64_t start;
+        uint64_t start = start_;
         {
           lock_guard<mutex> guard(lock);
           if (i >= iters)
             break;
-          start = start_ + i * threadDistance;
+          start += i * threadDistance;
           i += 1;
         }
 
@@ -145,7 +145,7 @@ void ParallelPrimeSieve::sieve()
         if (start > start_)
           start = align(start) + 1;
 
-        PrimeSieve ps(*this);
+        PrimeSieve ps(this);
         ps.sieve(start, stop);
 
         for (size_t j = 0; j < counts.size(); j++)
@@ -153,8 +153,7 @@ void ParallelPrimeSieve::sieve()
       }
 
       lock_guard<mutex> guard(lock);
-      for (size_t j = 0; j < counts.size(); j++)
-        counts_[j] += counts[j];
+      counts += counts_;
     };
 
     threads = min(threads, iters);
