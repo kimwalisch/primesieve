@@ -19,10 +19,12 @@
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
+#include <chrono>
 #include <iostream>
 #include <string>
-#include <ctime>
 #include <algorithm>
+
+using namespace std;
 
 namespace {
 
@@ -31,7 +33,7 @@ struct SmallPrime
   uint64_t first;
   uint64_t last;
   int index;
-  std::string str;
+  string str;
 };
 
 const SmallPrime smallPrimes[8] =
@@ -134,16 +136,11 @@ void PrimeSieve::addFlags(int flags)
 
 void PrimeSieve::reset()
 {
-  std::fill(counts_.begin(), counts_.end(), 0);
+  fill(counts_.begin(), counts_.end(), 0);
   seconds_ = 0.0;
   toUpdate_ = 0;
   processed_ = 0;
   percent_ = -1.0;
-}
-
-double PrimeSieve::getWallTime() const
-{
-  return (double) std::clock() / CLOCKS_PER_SEC;
 }
 
 /// Calculate the sieving status.
@@ -164,7 +161,7 @@ bool PrimeSieve::updateStatus(uint64_t processed, bool wait)
     if (getDistance() > 0)
       percent = processed_ * 100.0 / getDistance();
     double old = percent_;
-    percent_ = std::min(percent, 100.0);
+    percent_ = min(percent, 100.0);
     if (isFlag(PRINT_STATUS))
       printStatus(old, percent_);
   }
@@ -176,9 +173,9 @@ void PrimeSieve::printStatus(double old, double current)
   int percent = (int) current;
   if (percent > (int) old)
   {
-    std::cout << '\r' << percent << '%' << std::flush;
+    cout << '\r' << percent << '%' << flush;
     if (percent == 100)
-      std::cout << std::endl;
+      cout << endl;
   }
 }
 
@@ -197,7 +194,7 @@ void PrimeSieve::processSmallPrimes()
       if (isCount(p.index))
         counts_[p.index]++;
       if (isPrint(p.index))
-        std::cout << p.str << '\n';
+        cout << p.str << '\n';
     }
   }
 }
@@ -211,7 +208,8 @@ void PrimeSieve::sieve()
   if (start_ > stop_)
     return;
 
-  double t1 = getWallTime();
+  auto t1 = chrono::system_clock::now();
+
   if (isStatus())
     updateStatus(INIT_STATUS);
 
@@ -235,7 +233,10 @@ void PrimeSieve::sieve()
     finder.sieve();
   }
 
-  seconds_ = getWallTime() - t1;
+  auto t2 = chrono::system_clock::now();
+  chrono::duration<double> seconds = t2 - t1;
+  seconds_ = seconds.count();
+
   if (isStatus())
     updateStatus(FINISH_STATUS, true);
 }

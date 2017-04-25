@@ -49,7 +49,6 @@ private:
   int numThreads_;
   uint64_t getThreadDistance(int) const;
   uint64_t align(uint64_t) const;
-  virtual double getWallTime() const;
   virtual bool updateStatus(uint64_t, bool);
 };
 

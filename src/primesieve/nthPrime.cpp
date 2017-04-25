@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <algorithm>
 #include <cassert>
+#include <chrono>
 #include <cmath>
 
 using namespace std;
@@ -98,7 +99,7 @@ uint64_t PrimeSieve::nthPrime(uint64_t n)
 uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 {
   setStart(start);
-  double t1 = getWallTime();
+  auto t1 = chrono::system_clock::now();
 
   if (n == 0)
     n = 1; // like Mathematica
@@ -153,7 +154,11 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     uint64_t prime = 0;
     for (primesieve::iterator it(start, stop); count < n; count++)
       prime = it.next_prime();
-    seconds_ = getWallTime() - t1;
+
+    auto t2 = chrono::system_clock::now();
+    chrono::duration<double> seconds = t2 - t1;
+    seconds_ = seconds.count();
+
     return prime;
   }
   catch (primesieve_error&) { }

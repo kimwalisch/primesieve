@@ -103,12 +103,6 @@ int ParallelPrimeSieve::getMaxThreads()
   return max(1, (int) thread::hardware_concurrency());
 }
 
-double ParallelPrimeSieve::getWallTime() const
-{
-  return chrono::duration_cast<chrono::milliseconds>
-        (chrono::system_clock::now().time_since_epoch()).count() / 1000.0;
-}
-
 /// Sieve the primes and prime k-tuplets within [start_, stop_]
 /// in parallel using multi-threading.
 ///
@@ -125,7 +119,7 @@ void ParallelPrimeSieve::sieve()
     PrimeSieve::sieve();
   else
   {
-    double t1 = getWallTime();
+    auto t1 = chrono::system_clock::now();
     uint64_t threadDistance = getThreadDistance(threads);
     int64_t iters = ((getDistance() - 1) / threadDistance) + 1;
     int64_t i = 0;
@@ -173,7 +167,9 @@ void ParallelPrimeSieve::sieve()
     for (thread &t : pool)
       t.join();
 
-    seconds_ = getWallTime() - t1;
+    auto t2 = chrono::system_clock::now();
+    chrono::duration<double> seconds = t2 - t1;
+    seconds_ = seconds.count();
   }
 
   if (shm_)
