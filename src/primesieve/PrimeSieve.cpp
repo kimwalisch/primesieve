@@ -1,7 +1,8 @@
 ///
-/// @file   PrimeSieve.cpp
-/// @brief  The PrimeSieve class provides an easy API for prime
-///         sieving (single-threaded).
+/// @file   PrimeSieve.hpp
+/// @brief  The PrimeSieve class is a high level class that
+///         orchestrates prime sieving using the PrimeGenerator
+///         and PrimeFinder classes.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -144,7 +145,7 @@ void PrimeSieve::reset()
 }
 
 /// Calculate the sieving status.
-/// @param processed  Sum of recently processed segments.
+/// @processed:  Sum of recently processed segments.
 ///
 bool PrimeSieve::updateStatus(uint64_t processed, bool wait)
 {
@@ -205,6 +206,7 @@ void PrimeSieve::processSmallPrimes()
 void PrimeSieve::sieve()
 {
   reset();
+
   if (start_ > stop_)
     return;
 
