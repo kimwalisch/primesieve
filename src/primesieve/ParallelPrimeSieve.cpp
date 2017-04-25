@@ -85,7 +85,7 @@ uint64_t ParallelPrimeSieve::getThreadDistance(int threads) const
 }
 
 /// Align n to modulo 30 + 2 to prevent prime k-tuplet
-/// (twin primes, prime triplets, ...) gaps.
+/// (twin primes, prime triplets) gaps.
 ///
 uint64_t ParallelPrimeSieve::align(uint64_t n) const
 {
@@ -127,11 +127,12 @@ void ParallelPrimeSieve::sieve()
 
     auto task = [&]()
     {
+      PrimeSieve ps(this);
       vector<uint64_t> counts(6, 0);
 
       while (true)
       {
-        uint64_t start = start_;
+        auto start = start_;
         {
           lock_guard<mutex> guard(lock);
           if (i >= iters)
@@ -145,11 +146,8 @@ void ParallelPrimeSieve::sieve()
         if (start > start_)
           start = align(start) + 1;
 
-        PrimeSieve ps(this);
         ps.sieve(start, stop);
-
-        for (size_t j = 0; j < counts.size(); j++)
-          counts[j] += ps.getCount(j);
+        counts += ps.counts_;
       }
 
       lock_guard<mutex> guard(lock);
@@ -181,7 +179,7 @@ void ParallelPrimeSieve::sieve()
 }
 
 /// Calculate the sieving status.
-/// @param processed  Sum of recently processed segments.
+/// @processed:  Sum of recently processed segments.
 ///
 bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool wait)
 {

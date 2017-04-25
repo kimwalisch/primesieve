@@ -1,7 +1,8 @@
 ///
 /// @file   PrimeSieve.hpp
-/// @brief  The PrimeSieve class provides an easy API for prime
-///         sieving (single-threaded).
+/// @brief  The PrimeSieve class is a high level class that
+///         orchestrates prime sieving using the PrimeGenerator
+///         and PrimeFinder classes.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -22,9 +23,8 @@ namespace primesieve {
 class PrimeSieve
 {
   friend class PrimeFinder;
+  friend class ParallelPrimeSieve;
 public:
-  /// Public flags for use with setFlags(int)
-  /// @pre flag < (1 << 20)
   enum
   {
     COUNT_PRIMES      = 1 << 0,
@@ -119,7 +119,7 @@ private:
   int sieveSize_;
   /// Setter methods set flags e.g. COUNT_PRIMES
   int flags_;
-  /// Pointer to the parent ParallelPrimeSieve object
+  /// parent ParallelPrimeSieve object
   PrimeSieve* parent_;
   Callback* cb_;
   static void printStatus(double, double);
