@@ -20,6 +20,7 @@
 #include <chrono>
 #include <mutex>
 #include <thread>
+#include <vector>
 
 using namespace std;
 
@@ -89,18 +90,16 @@ uint64_t ParallelPrimeSieve::getThreadDistance(int threads) const
   return threadDistance;
 }
 
-/// Align n to modulo 30 + 2 to prevent prime k-tuplet
+/// Align n to modulo (30 + 2) to prevent prime k-tuplet
 /// (twin primes, prime triplets) gaps.
 ///
 uint64_t ParallelPrimeSieve::align(uint64_t n) const
 {
-  if (checkedAdd(n, 32) >= stop_)
+  uint64_t n32 = checkedAdd(n, 32);
+  if (n32 >= stop_)
     return stop_;
 
-  n = checkedAdd(n, 32) - n % 30;
-  n = min(n, stop_);
-
-  return n;
+  return n32 - n % 30;
 }
 
 /// Sieve the primes and prime k-tuplets within [start_, stop_]
