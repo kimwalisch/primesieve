@@ -74,10 +74,12 @@ uint64_t nthPrimeDist(int64_t n, int64_t count, uint64_t start)
   double logStartPix = log(startPix);
   double dist = max(pix, x * logStartPix);
 
-  // ensure (start + dist) <= nth prime
-  if (count < n) dist -= sqrt(dist) * log(logStartPix) * 2;
-  // ensure (start + dist) >= nth prime
-  if (count > n) dist += sqrt(dist) * log(logStartPix) * 2;
+  // ensure start + dist <= nth prime
+  if (count < n)
+    dist -= sqrt(dist) * log(logStartPix) * 2;
+  // ensure start + dist >= nth prime
+  if (count > n)
+    dist += sqrt(dist) * log(logStartPix) * 2;
 
   // if n is very small:
   // ensure (start + dist) >= nth prime
