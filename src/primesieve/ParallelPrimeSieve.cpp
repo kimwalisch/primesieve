@@ -1,6 +1,6 @@
 ///
 /// @file   ParallelPrimeSieve.cpp
-/// @brief  Multi-threaded prime sieve using std::thread.
+/// @brief  Multi-threaded prime sieve using std::async.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -18,8 +18,8 @@
 #include <algorithm>
 #include <cassert>
 #include <chrono>
+#include <future>
 #include <mutex>
-#include <thread>
 #include <vector>
 
 using namespace std;
@@ -124,13 +124,14 @@ void ParallelPrimeSieve::sieve()
     uint64_t i = 0;
 
     threads = inBetween(1, threads, iters);
+    using counts_t = vector<uint64_t>;
     mutex lock;
 
-    // each thread executes a task
+    // each thread executes 1 task
     auto task = [&]()
     {
       PrimeSieve ps(this);
-      vector<uint64_t> counts(6, 0);
+      counts_t counts(counts_.size(), 0);
 
       // while i < iters
       while (true)
@@ -154,18 +155,17 @@ void ParallelPrimeSieve::sieve()
         counts += ps.counts_;
       }
 
-      lock_guard<mutex> guard(lock);
-      counts_ += counts;
+      return counts;
     };
 
-    vector<thread> pool;
-    pool.reserve(threads);
+    vector<future<counts_t>> futures;
+    futures.reserve(threads);
 
     for (int t = 0; t < threads; t++)
-      pool.emplace_back(task);
+      futures.emplace_back(async(launch::async, task));
 
-    for (thread &t : pool)
-      t.join();
+    for (auto &f : futures)
+      counts_ += f.get();
 
     auto t2 = chrono::system_clock::now();
     chrono::duration<double> seconds = t2 - t1;
