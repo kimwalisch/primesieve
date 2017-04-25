@@ -100,7 +100,7 @@ uint64_t ParallelPrimeSieve::align(uint64_t n) const
 
 int ParallelPrimeSieve::getMaxThreads()
 {
-  return max(1, (int) thread::hardware_concurrency());
+  return max<int>(1, thread::hardware_concurrency());
 }
 
 /// Sieve the primes and prime k-tuplets within [start_, stop_]
