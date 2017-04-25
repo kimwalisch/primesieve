@@ -153,7 +153,7 @@ void ParallelPrimeSieve::sieve()
       }
 
       lock_guard<mutex> guard(lock);
-      counts += counts_;
+      counts_ += counts;
     };
 
     threads = min(threads, iters);
