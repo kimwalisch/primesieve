@@ -113,7 +113,7 @@ void ParallelPrimeSieve::sieve()
   if (start_ > stop_)
     return;
 
-  int64_t threads = idealNumThreads();
+  int threads = idealNumThreads();
 
   if (threads == 1)
     PrimeSieve::sieve();
@@ -121,8 +121,10 @@ void ParallelPrimeSieve::sieve()
   {
     auto t1 = chrono::system_clock::now();
     uint64_t threadDistance = getThreadDistance(threads);
-    int64_t iters = ((getDistance() - 1) / threadDistance) + 1;
-    int64_t i = 0;
+    uint64_t iters = ((getDistance() - 1) / threadDistance) + 1;
+    uint64_t i = 0;
+
+    threads = inBetween(1, threads, iters);
     mutex lock;
 
     auto task = [&]()
@@ -154,11 +156,10 @@ void ParallelPrimeSieve::sieve()
       counts_ += counts;
     };
 
-    threads = min(threads, iters);
     vector<thread> pool;
     pool.reserve(threads);
 
-    for (int64_t t = 0; t < threads; t++)
+    for (int t = 0; t < threads; t++)
       pool.emplace_back(task);
 
     for (thread &t : pool)
