@@ -47,10 +47,6 @@ set(LIB_SRC src/primesieve/EratBig.cpp
             src/primesieve/nthPrime.cpp
             src/primesieve/popcount.cpp)
 
-# Find system multi-threading library ################################
-
-find_package(Threads REQUIRED)
-
 # Detect CPU L1 cache size ###########################################
 
 execute_process(COMMAND sh ${PROJECT_SOURCE_DIR}/scripts/L1_cache_size.sh
@@ -68,6 +64,7 @@ endif()
 
 add_library(libprimesieve ${LIB_SRC})
 set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
+find_package(Threads REQUIRED)
 target_link_libraries(libprimesieve Threads::Threads)
 
 target_include_directories(libprimesieve PUBLIC
