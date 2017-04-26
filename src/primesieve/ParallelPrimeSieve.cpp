@@ -70,7 +70,7 @@ void ParallelPrimeSieve::setNumThreads(int threads)
 }
 
 /// Get an ideal number of threads for
-/// the start_ and stop_ numbers.
+/// the start_ and stop_ numbers
 ///
 int ParallelPrimeSieve::idealNumThreads() const
 {
@@ -86,7 +86,7 @@ int ParallelPrimeSieve::idealNumThreads() const
 }
 
 /// Get a thread distance which ensures a good load
-/// balance when using multiple threads.
+/// balance when using multiple threads
 ///
 uint64_t ParallelPrimeSieve::getThreadDistance(int threads) const
 {
@@ -105,7 +105,7 @@ uint64_t ParallelPrimeSieve::getThreadDistance(int threads) const
 }
 
 /// Align n to modulo (30 + 2) to prevent prime k-tuplet
-/// (twin primes, prime triplets) gaps.
+/// (twin primes, prime triplets) gaps
 ///
 uint64_t ParallelPrimeSieve::align(uint64_t n) const
 {
@@ -116,8 +116,8 @@ uint64_t ParallelPrimeSieve::align(uint64_t n) const
   return n32 - n % 30;
 }
 
-/// Sieve the primes and prime k-tuplets within [start_, stop_]
-/// in parallel using multi-threading.
+/// Sieve the primes and prime k-tuplets in [start_, stop_]
+/// in parallel using multi-threading
 ///
 void ParallelPrimeSieve::sieve()
 {
@@ -184,9 +184,9 @@ void ParallelPrimeSieve::sieve()
   }
 }
 
-/// Print status in percent to stdout.
-/// @processed:  Sum of recently processed segments.
-/// @tryLock:    Do not block if tryLock = true.
+/// Print status in percent to stdout
+/// @processed:  Sum of recently processed segments
+/// @tryLock:    Do not block if tryLock = true
 ///
 bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool tryLock)
 {
