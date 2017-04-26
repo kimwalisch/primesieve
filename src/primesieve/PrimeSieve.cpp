@@ -154,7 +154,7 @@ void PrimeSieve::reset()
   percent_ = -1.0;
 }
 
-/// Calculate the sieving status.
+/// Print status in percent to stdout.
 /// @processed:  Sum of recently processed segments
 ///
 bool PrimeSieve::updateStatus(uint64_t processed, bool wait)
