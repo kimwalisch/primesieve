@@ -77,7 +77,8 @@ int ParallelPrimeSieve::idealNumThreads() const
   if (start_ > stop_)
     return 1;
 
-  uint64_t threshold = max(config::MIN_THREAD_DISTANCE, isqrt(stop_) / 5);
+  uint64_t threshold = isqrt(stop_) / 5;
+  threshold = max(threshold, config::MIN_THREAD_DISTANCE);
   uint64_t threads = getDistance() / threshold;
   threads = inBetween(1, threads, numThreads_);
 
@@ -113,6 +114,24 @@ uint64_t ParallelPrimeSieve::align(uint64_t n) const
     return stop_;
 
   return n32 - n % 30;
+}
+
+/// Print status in percent to stdout.
+/// @processed:  Sum of recently processed segments.
+/// @wait:       Do not block if wait = false.
+///
+bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool wait)
+{
+  LockGuard lock(lock_, wait);
+
+  if (lock.isSet())
+  {
+    PrimeSieve::updateStatus(processed);
+    if (shm_)
+      shm_->status = getStatus();
+  }
+
+  return lock.isSet();
 }
 
 /// Sieve the primes and prime k-tuplets within [start_, stop_]
@@ -181,23 +200,6 @@ void ParallelPrimeSieve::sieve()
     copy(counts_.begin(), counts_.end(), shm_->counts);
     shm_->seconds = seconds_;
   }
-}
-
-/// Calculate the sieving status.
-/// @processed:  Sum of recently processed segments.
-///
-bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool wait)
-{
-  LockGuard lock(lock_, wait);
-
-  if (lock.isSet())
-  {
-    PrimeSieve::updateStatus(processed);
-    if (shm_)
-      shm_->status = getStatus();
-  }
-
-  return lock.isSet();
 }
 
 } // namespace
