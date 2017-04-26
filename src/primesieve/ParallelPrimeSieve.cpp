@@ -144,11 +144,8 @@ void ParallelPrimeSieve::sieve()
       counts_t counts(counts_.size(), 0);
       uint64_t j;
 
-      while (true)
+      while ((j = i++) < iters)
       {
-        if ((j = i++) >= iters)
-          return counts;
-
         uint64_t start = start_ + j * threadDistance;
         uint64_t stop = checkedAdd(start, threadDistance);
         stop = align(stop);
@@ -159,6 +156,8 @@ void ParallelPrimeSieve::sieve()
         ps.sieve(start, stop);
         counts += ps.getCounts();
       }
+
+      return counts;
     };
 
     vector<future<counts_t>> futures;
