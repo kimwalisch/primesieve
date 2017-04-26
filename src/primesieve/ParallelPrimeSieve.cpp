@@ -116,29 +116,6 @@ uint64_t ParallelPrimeSieve::align(uint64_t n) const
   return n32 - n % 30;
 }
 
-/// Print status in percent to stdout.
-/// @processed:  Sum of recently processed segments.
-/// @tryLock:    Do not block if tryLock = true.
-///
-bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool tryLock)
-{
-  unique_lock<mutex> lock(lock_, defer_lock);
-
-  if (tryLock)
-    lock.try_lock();
-  else
-    lock.lock();
-
-  if (lock.owns_lock())
-  {
-    PrimeSieve::updateStatus(processed);
-    if (shm_)
-      shm_->status = getStatus();
-  }
-
-  return lock.owns_lock();
-}
-
 /// Sieve the primes and prime k-tuplets within [start_, stop_]
 /// in parallel using multi-threading.
 ///
@@ -205,6 +182,30 @@ void ParallelPrimeSieve::sieve()
     copy(counts_.begin(), counts_.end(), shm_->counts);
     shm_->seconds = seconds_;
   }
+}
+
+/// Print status in percent to stdout.
+/// @processed:  Sum of recently processed segments.
+/// @tryLock:    Do not block if tryLock = true.
+///
+bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool tryLock)
+{
+  unique_lock<mutex> lock(lock_, defer_lock);
+
+  if (tryLock)
+    lock.try_lock();
+  else
+    lock.lock();
+
+  if (lock.owns_lock())
+  {
+    PrimeSieve::updateStatus(processed);
+    if (shm_)
+      shm_->status = getStatus();
+    return true;
+  }
+
+  return false;
 }
 
 } // namespace
