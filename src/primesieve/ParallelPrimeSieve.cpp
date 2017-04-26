@@ -16,13 +16,26 @@
 
 #include <stdint.h>
 #include <algorithm>
+#include <atomic>
 #include <cassert>
 #include <chrono>
 #include <future>
-#include <mutex>
 #include <vector>
 
 using namespace std;
+
+namespace {
+
+template <typename T>
+vector<T>& operator+=(vector<T>& v1, const vector<T>& v2)
+{
+  assert(v1.size() == v2.size());
+  for (size_t i = 0; i < v1.size(); i++)
+    v1[i] += v2[i];
+  return v1;
+}
+
+} // namespace
 
 namespace primesieve {
 
@@ -121,29 +134,22 @@ void ParallelPrimeSieve::sieve()
     auto t1 = chrono::system_clock::now();
     uint64_t threadDistance = getThreadDistance(threads);
     uint64_t iters = ((getDistance() - 1) / threadDistance) + 1;
-    uint64_t i = 0;
-
     threads = inBetween(1, threads, iters);
-    mutex lock;
+    atomic<uint64_t> i(0);
 
     // each thread executes 1 task
     auto task = [&]()
     {
       PrimeSieve ps(this);
       counts_t counts(counts_.size(), 0);
+      uint64_t j;
 
-      // while i < iters
       while (true)
       {
-        auto start = start_;
-        {
-          lock_guard<mutex> guard(lock);
-          if (i >= iters)
-            break;
-          start += i * threadDistance;
-          i += 1;
-        }
+        if ((j = i++) >= iters)
+          return counts;
 
+        uint64_t start = start_ + j * threadDistance;
         uint64_t stop = checkedAdd(start, threadDistance);
         stop = align(stop);
         if (start > start_)
@@ -153,8 +159,6 @@ void ParallelPrimeSieve::sieve()
         ps.sieve(start, stop);
         counts += ps.getCounts();
       }
-
-      return counts;
     };
 
     vector<future<counts_t>> futures;

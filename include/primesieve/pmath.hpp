@@ -12,10 +12,8 @@
 #define PMATH_HPP
 
 #include <stdint.h>
-#include <algorithm>
 #include <cmath>
 #include <limits>
-#include <vector>
 
 namespace {
 
@@ -130,15 +128,6 @@ inline uint64_t max_prime_gap(uint64_t n)
   double logx = std::log(x);
   double prime_gap = logx * logx;
   return (uint64_t) prime_gap;
-}
-
-template <typename T>
-inline std::vector<T>& operator+=(std::vector<T>& v1, const std::vector<T>& v2)
-{
-  std::size_t size = std::min(v1.size(), v2.size());
-  for (std::size_t i = 0; i < size; i++)
-    v1[i] += v2[i];
-  return v1;
 }
 
 } // namespace
