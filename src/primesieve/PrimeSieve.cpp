@@ -225,7 +225,6 @@ void PrimeSieve::sieve()
   if (isStatus())
     updateStatus(INIT_STATUS);
 
-  // process small primes and k-tuplets
   if (start_ <= 5)
     processSmallPrimes();
 

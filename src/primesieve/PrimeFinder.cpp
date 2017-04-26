@@ -101,12 +101,11 @@ void PrimeFinder::callbackPrimes(Callback& cb, const byte_t* sieve, uint_t sieve
   }
 }
 
-/// Count the primes and prime k-tuplets within
+/// Count the primes and prime k-tuplets in
 /// the current segment.
 ///
 void PrimeFinder::count(const byte_t* sieve, uint_t sieveSize)
 {
-  // count prime numbers (1 bits), see popcount.cpp
   if (ps_.isFlag(ps_.COUNT_PRIMES))
     counts_[0] += popcount((const uint64_t*) sieve, ceilDiv(sieveSize, 8));
 
@@ -131,7 +130,7 @@ void PrimeFinder::count(const byte_t* sieve, uint_t sieveSize)
 }
 
 /// Print primes and prime k-tuplets to cout.
-/// primes < 7 are handled in PrimeSieve::doSmallPrime()
+/// primes <= 5 are handled in processSmallPrimes().
 ///
 void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
 {
