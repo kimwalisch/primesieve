@@ -28,7 +28,7 @@ const uint_t primes[] = { 2, 3, 5, 7, 11, 13, 17, 19, 23 };
 
 const uint_t primeProduct[] = { 2, 6, 30, 210, 2310, 30030, 510510, 9699690, 223092870 };
 
-}
+} // namespace
 
 namespace primesieve {
 
@@ -65,18 +65,18 @@ void PreSieve::allocate()
     eratSmall.addSievingPrime(primes[i], primeProduct_);
 
   // cross-off the multiples of small
-  // primes <= limit in buffer_
+  // primes <= limit in buffer
   eratSmall.crossOff(buffer_, &buffer_[size_]);
 }
 
-/// Pre-sieve the multiples of small primes <= limit_
-/// by copying buffer_ to sieve.
+/// Pre-sieve multiples of small primes <= limit
+/// by copying buffer_ to sieve
 ///
 void PreSieve::copy(byte_t* sieve,
                     uint_t sieveSize,
                     uint64_t segmentLow) const
 {
-  // map segmentLow to the buffer_ array
+  // map segmentLow to the buffer array
   uint_t remainder = (uint_t)(segmentLow % primeProduct_);
   uint_t index = remainder / NUMBERS_PER_BYTE;
   uint_t sizeLeft = size_ - index;
@@ -85,11 +85,11 @@ void PreSieve::copy(byte_t* sieve,
     memcpy(sieve, &buffer_[index], sieveSize);
   else
   {
-    // copy the last remaining bytes at the end of buffer_
+    // copy the last remaining bytes at the end of buffer
     // to the beginning of the sieve array
     memcpy(sieve, &buffer_[index], sizeLeft);
 
-    // restart copying at the beginning of buffer_
+    // restart copying at the beginning of buffer
     for (index = sizeLeft; index + size_ < sieveSize; index += size_)
       memcpy(&sieve[index], buffer_, size_);
 
