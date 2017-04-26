@@ -23,6 +23,8 @@
 #include <memory>
 #include <vector>
 
+using namespace std;
+
 namespace primesieve {
 
 /// @stop:       Upper bound for sieving
