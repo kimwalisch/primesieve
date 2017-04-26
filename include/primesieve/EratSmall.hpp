@@ -18,9 +18,9 @@
 
 namespace primesieve {
 
-/// EratSmall is an implementation of the segmented sieve of
-/// Eratosthenes optimized for small sieving primes that have many
-/// multiples per segment.
+/// EratSmall is an implementation of the segmented sieve
+/// of Eratosthenes optimized for small sieving primes that
+/// have many multiples per segment
 ///
 class EratSmall : public Modulo30Wheel_t
 {
@@ -30,7 +30,6 @@ public:
   void crossOff(byte_t*, byte_t*);
 private:
   uint_t limit_;
-  /// List of buckets, holds the sieving primes
   std::list<Bucket> buckets_;
   void storeSievingPrime(uint_t, uint_t, uint_t);
   static void crossOff(byte_t*, byte_t*, Bucket&);
