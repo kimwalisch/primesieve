@@ -98,7 +98,7 @@ public:
   uint64_t getQuintupletCount() const;
   uint64_t getSextupletCount() const;
   uint64_t getCount(int) const;
-  virtual bool updateStatus(uint64_t, bool wait = false);
+  virtual bool updateStatus(uint64_t, bool tryLock = true);
 protected:
   /// Sieve primes >= start_
   uint64_t start_;
@@ -126,7 +126,7 @@ private:
   Callback* cb_;
   static void printStatus(double, double);
   bool isValidFlags(int) const;
-  bool isParallelPrimeSieveChild() const;
+  bool isParallelPrimeSieve() const;
   void processSmallPrimes();
   enum
   {

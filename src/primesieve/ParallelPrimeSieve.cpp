@@ -11,7 +11,6 @@
 #include <primesieve/config.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
 #include <primesieve/PrimeSieve.hpp>
-#include <primesieve/LockGuard.hpp>
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
@@ -20,6 +19,7 @@
 #include <cassert>
 #include <chrono>
 #include <future>
+#include <mutex>
 #include <vector>
 
 using namespace std;
@@ -118,20 +118,25 @@ uint64_t ParallelPrimeSieve::align(uint64_t n) const
 
 /// Print status in percent to stdout.
 /// @processed:  Sum of recently processed segments.
-/// @wait:       Do not block if wait = false.
+/// @tryLock:    Do not block if tryLock = true.
 ///
-bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool wait)
+bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool tryLock)
 {
-  LockGuard lock(lock_, wait);
+  unique_lock<mutex> lock(lock_, defer_lock);
 
-  if (lock.isSet())
+  if (tryLock)
+    lock.try_lock();
+  else
+    lock.lock();
+
+  if (lock.owns_lock())
   {
     PrimeSieve::updateStatus(processed);
     if (shm_)
       shm_->status = getStatus();
   }
 
-  return lock.isSet();
+  return lock.owns_lock();
 }
 
 /// Sieve the primes and prime k-tuplets within [start_, stop_]

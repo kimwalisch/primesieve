@@ -100,7 +100,7 @@ bool     PrimeSieve::isCallback()                const { return isFlag(CALLBACK_
 bool     PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEXTUPLETS); }
 bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEXTUPLETS); }
 bool     PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
-bool     PrimeSieve::isParallelPrimeSieveChild() const { return parent_ != nullptr; }
+bool     PrimeSieve::isParallelPrimeSieve()      const { return parent_ != nullptr; }
 
 /// Set a start number (lower bound) for sieving
 void PrimeSieve::setStart(uint64_t start)
@@ -157,12 +157,12 @@ void PrimeSieve::reset()
 /// Print status in percent to stdout.
 /// @processed:  Sum of recently processed segments
 ///
-bool PrimeSieve::updateStatus(uint64_t processed, bool wait)
+bool PrimeSieve::updateStatus(uint64_t processed, bool tryLock)
 {
-  if (isParallelPrimeSieveChild())
+  if (isParallelPrimeSieve())
   {
     toUpdate_ += processed;
-    if (parent_->updateStatus(toUpdate_, wait))
+    if (parent_->updateStatus(toUpdate_, tryLock))
       toUpdate_ = 0;
   }
   else
@@ -250,7 +250,7 @@ void PrimeSieve::sieve()
   seconds_ = seconds.count();
 
   if (isStatus())
-    updateStatus(FINISH_STATUS, true);
+    updateStatus(FINISH_STATUS, false);
 }
 
 void PrimeSieve::sieve(uint64_t start, uint64_t stop)
