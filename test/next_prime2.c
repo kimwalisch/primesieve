@@ -73,11 +73,11 @@ int main()
 
   primesieve_skipto(&it, 18446744073709551533ull, 0);
   prime = primesieve_next_prime(&it);
-  printf("next_prime(%" PRIu64 ") = %" PRIu64, 18446744073709551533ull, prime);
+  printf("next_prime(%" PRIu64 ") = %" PRIu64, UINT64_C(18446744073709551533), prime);
   check(prime == 18446744073709551557ull);
 
   prime = primesieve_next_prime(&it);
-  printf("next_prime(%" PRIu64 ") = %" PRIu64, 18446744073709551533ull, prime);
+  printf("next_prime(%" PRIu64 ") = %" PRIu64, UINT64_C(18446744073709551533), prime);
   check(prime == 18446744073709551615ull);
 
   primesieve_free(primes);
