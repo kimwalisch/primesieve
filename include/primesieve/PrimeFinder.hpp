@@ -25,7 +25,7 @@ class PreSieve;
 
 /// PrimeFinder is a SieveOfEratosthenes class that is used to
 /// callback, print and count primes and prime k-tuplets
-/// e.g. twin primes, prime triplets.
+/// e.g. twin primes, prime triplets
 ///
 class PrimeFinder : public SieveOfEratosthenes
 {
