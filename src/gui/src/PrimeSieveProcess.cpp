@@ -59,7 +59,7 @@ int PrimeSieveProcess::getProcessId() {
 }
 
 /**
- * Create a shared memory segement for communication with the
+ * Create a shared memory segment for communication with the
  * ParallelPrimeSieve process.
  */
 void PrimeSieveProcess::createSharedMemory() {
