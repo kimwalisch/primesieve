@@ -41,7 +41,7 @@ script:
   - rm -rf build
   # 2) Build primesieve GUI app
   - cd src/gui
-  - qmake
+  - qmake QMAKE_CXX=$CXX QMAKE_CC=$CC
   - make -j4
   - cd ../..
   # 3) Build using ninja
