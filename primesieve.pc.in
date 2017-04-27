@@ -8,5 +8,5 @@ Name: primesieve
 Description: Fast C/C++ prime number generator
 Version: @PRIMESIEVE_VERSION@
 Libs: -L${libdir} -lprimesieve
-Libs.private: @OpenMP_CXX_FLAGS@
+Libs.private: @CMAKE_THREAD_LIBS_INIT@
 Cflags: -I${includedir}
