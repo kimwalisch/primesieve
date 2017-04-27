@@ -26,7 +26,7 @@ public:
 private:
   PrimeFinder& finder_;
   void segmentFinished(const byte_t*, uint_t);
-  void generateTinyPrimes();
+  void tinyPrimes();
 };
 
 } // namespace

@@ -19,6 +19,8 @@
 #include <stdint.h>
 #include <vector>
 
+using namespace std;
+
 namespace primesieve {
 
 SievingPrimes::SievingPrimes(PrimeFinder& finder, const PreSieve& preSieve) :
@@ -31,27 +33,26 @@ SievingPrimes::SievingPrimes(PrimeFinder& finder, const PreSieve& preSieve) :
 
 void SievingPrimes::generate()
 {
-  generateTinyPrimes();
+  tinyPrimes();
   sieve();
 }
 
 /// Generate the primes up to sqrt(sqrt(stop))
 /// using the sieve of Eratosthenes
 ///
-void SievingPrimes::generateTinyPrimes()
+void SievingPrimes::tinyPrimes()
 {
-  uint_t s = (uint_t) getStart();
   uint_t n = getSqrtStop();
-
-  std::vector<char> isPrime(n + 1, true);
+  vector<char> isPrime(n + 1, true);
 
   for (uint_t i = 3; i * i <= n; i += 2)
     if (isPrime[i])
       for (uint_t j = i * i; j <= n; j += i * 2)
         isPrime[j] = false;
 
-  // make sure s is odd
+  uint_t s = (uint_t) getStart();
   s += (~s & 1);
+
   for (uint_t i = s; i <= n; i += 2)
     if (isPrime[i])
       addSievingPrime(i);
