@@ -20,8 +20,8 @@
 namespace primesieve {
 
 /// EratBig is an implementation of the segmented sieve of
-/// Eratosthenes optimized for big sieving primes that have very few
-/// multiples per segment.
+/// Eratosthenes optimized for big sieving primes that have
+/// very few multiples per segment
 ///
 class EratBig : public Modulo210Wheel_t
 {

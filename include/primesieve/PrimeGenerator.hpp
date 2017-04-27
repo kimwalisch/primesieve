@@ -12,21 +12,38 @@
 
 #include "config.hpp"
 #include "SieveOfEratosthenes.hpp"
+#include "PrimeSieve.hpp"
+
+#include <stdint.h>
+#include <vector>
 
 namespace primesieve {
 
-class PrimeFinder;
+class Callback;
 class PreSieve;
 
+/// After a segment has been sieved PrimeGenerator is
+/// used to reconstruct primes and prime k-tuplets from
+/// 1 bits of the sieve array
+///
 class PrimeGenerator : public SieveOfEratosthenes
 {
 public:
-  PrimeGenerator(PrimeFinder&, const PreSieve&);
-  void generateSievingPrimes();
+  PrimeGenerator(PrimeSieve&, const PreSieve&);
 private:
-  PrimeFinder& finder_;
-  void segmentFinished(const byte_t*, uint_t);
-  void generateTinyPrimes();
+  enum { END = 0xff + 1 };
+  static const uint_t kBitmasks_[6][5];
+  /// Count lookup tables for prime k-tuplets
+  std::vector<uint_t> kCounts_[6];
+  /// Reference to the associated PrimeSieve object
+  PrimeSieve& ps_;
+  PrimeSieve::counts_t& counts_;
+  void init_kCounts();
+  virtual void generatePrimes(const byte_t*, uint_t);
+  void count(const byte_t*, uint_t);
+  void print(const byte_t*, uint_t) const;
+  void callbackPrimes(Callback&, const byte_t*, uint_t) const;
+  static void printPrime(uint64_t);
 };
 
 } // namespace

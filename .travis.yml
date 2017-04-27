@@ -20,17 +20,12 @@ addons:
     - gcc-4.8
     - g++-4.8
 
-env:
-  global:
-    - OMP_NUM_THREADS=4
-
 install:
   - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive graphviz libqt4-dev qt4-qmake valgrind
   - wget --no-check-certificate http://cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.tar.gz
   - tar -xzf cmake-3.1.3-Linux-x86_64.tar.gz
   - export CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
   - export PATH=$PWD/cmake-3.1.3-Linux-x86_64/bin:$PATH
-  - if [ "$CXX" = "g++" ]; then export OPENMP_FLAG=-fopenmp; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
   - if [ "$CC" = "gcc" ]; then export CC="gcc-4.8"; fi
 
@@ -46,7 +41,7 @@ script:
   - rm -rf build
   # 2) Build primesieve GUI app
   - cd src/gui
-  - qmake QMAKE_CXX="g++-4.8" QMAKE_CC="gcc-4.8"
+  - qmake QMAKE_CXX=$CXX QMAKE_CC=$CC
   - make -j4
   - cd ../..
   # 3) Build using ninja
@@ -59,7 +54,7 @@ script:
   - ninja test
   - cd ..
   # 5) Test using valgrind
-  - $CXX -Iinclude -O2 -g $OPENMP_FLAG examples/cpp/nth_prime.cpp -o nth_prime build/libprimesieve.a
+  - $CXX -Iinclude -O2 -g examples/cpp/nth_prime.cpp -o nth_prime build/libprimesieve.a -lpthread
   - valgrind --error-exitcode=1 ./nth_prime 500000000
   # 6) Test using cppcheck
   - rm -rf build

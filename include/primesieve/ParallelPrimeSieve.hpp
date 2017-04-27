@@ -14,12 +14,10 @@
 
 #include "PrimeSieve.hpp"
 #include <stdint.h>
+#include <mutex>
 
 namespace primesieve {
 
-/// ParallelPrimeSieve sieves primes in parallel using OpenMP. It
-/// is derived from PrimeSieve so it has the same API.
-///
 class ParallelPrimeSieve : public PrimeSieve
 {
 public:
@@ -46,13 +44,11 @@ public:
   using PrimeSieve::sieve;
   virtual void sieve();
 private:
-  void* lock_;
+  std::mutex lock_;
   SharedMemory* shm_;
   int numThreads_;
   uint64_t getThreadDistance(int) const;
   uint64_t align(uint64_t) const;
-  template <typename T> T getLock() { return (T) lock_; }
-  virtual double getWallTime() const;
   virtual bool updateStatus(uint64_t, bool);
 };
 

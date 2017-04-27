@@ -74,8 +74,8 @@ void iterator::generate_prev_primes()
   i_ = last_idx_;
 }
 
-/// Get a distance which ensures a good load balance.
-/// @param n  Start or stop number.
+/// Get a distance which ensures a good load balance
+/// @n:  Start or stop number
 ///
 uint64_t iterator::get_distance(uint64_t n)
 {

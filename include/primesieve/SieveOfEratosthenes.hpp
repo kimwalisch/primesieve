@@ -27,7 +27,7 @@ class PreSieve;
 /// segmented sieve of Eratosthenes. It uses a bit array for sieving,
 /// the bit array uses 8 flags for 30 numbers. SieveOfEratosthenes
 /// uses three different sieve of Eratosthenes algorithms optimized
-/// for small, medium and big sieving primes to cross-off multiples.
+/// for small, medium and big sieving primes to cross-off multiples
 ///
 class SieveOfEratosthenes
 {
@@ -41,8 +41,8 @@ public:
 protected:
   SieveOfEratosthenes(uint64_t, uint64_t, uint_t, const PreSieve&);
   virtual ~SieveOfEratosthenes() { };
-  virtual void segmentFinished(const byte_t*, uint_t) = 0;
-  static uint64_t getNextPrime(uint64_t*, uint64_t);
+  virtual void generatePrimes(const byte_t*, uint_t) = 0;
+  static uint64_t nextPrime(uint64_t*, uint64_t);
   uint64_t getSegmentLow() const;
 private:
   static const uint_t bitValues_[8];
@@ -76,29 +76,29 @@ private:
   void sieveSegment();
 };
 
-/// Reconstruct the prime number corresponding to the first set
-/// bit of the `bits' parameter and unset that bit.
+/// Reconstruct the prime number corresponding to
+/// the first set bit and unset that bit
 ///
-inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint64_t base)
+inline uint64_t SieveOfEratosthenes::nextPrime(uint64_t* bits, uint64_t low)
 {
-  // calculate bitValues_[ bitScanForward(*bits) ]
+  // calculate bitValues_[bitScanForward(*bits)]
   // using a custom De Bruijn bitscan
   uint64_t debruijn64 = 0x3F08A4C6ACB9DBDull;
   uint64_t mask = *bits - 1;
   uint64_t bitValue = bruijnBitValues_[((*bits ^ mask) * debruijn64) >> 58];
-  uint64_t prime = base + bitValue;
+  uint64_t prime = low + bitValue;
   *bits &= mask;
   return prime;
 }
 
 /// This method is called consecutively for all
-/// sieving primes up to sqrt(stop).
+/// sieving primes up to sqrt(stop)
 ///
 inline void SieveOfEratosthenes::addSievingPrime(uint_t prime)
 {
   uint64_t square = isquare<uint64_t>(prime);
 
-  // This loop is executed once all primes <= sqrt(segmentHigh_)
+  // This loop is executed once all primes <= sqrt(segmentHigh)
   // required to sieve the next segment have been
   // added to the erat* objects further down
   while (segmentHigh_ < square)

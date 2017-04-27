@@ -47,8 +47,8 @@ SOURCES += \
   ../primesieve/ParallelPrimeSieve.cpp \
   ../primesieve/popcount.cpp \
   ../primesieve/PreSieve.cpp \
-  ../primesieve/PrimeFinder.cpp \
   ../primesieve/PrimeGenerator.cpp \
+  ../primesieve/SievingPrimes.cpp \
   ../primesieve/PrimeSieve.cpp \
   ../primesieve/SieveOfEratosthenes.cpp \
   ../primesieve/Wheel.cpp
@@ -65,29 +65,23 @@ macx {
 }
 
 # ---------------------------------------------------------
-# Add OpenMP compiler flag
+# Add compiler flags
 # ---------------------------------------------------------
 
 *msvc* {
-  QMAKE_CXXFLAGS += /openmp /EHsc
+  QMAKE_CXXFLAGS += /EHsc
 }
 
 *g++* {
-  QMAKE_CXXFLAGS += -fopenmp -std=c++11
-  QMAKE_LFLAGS   += -fopenmp -std=c++11
+  QMAKE_CXXFLAGS += -std=c++11
 }
 
 *clang* {
-  QMAKE_CXXFLAGS += -fopenmp -std=c++11
-  QMAKE_LFLAGS   += -fopenmp -std=c++11
+  QMAKE_CXXFLAGS += -std=c++11
 }
 
 *icc* {
   win* {
-    QMAKE_CXXFLAGS += /Qopenmp /EHsc
-  }
-  unix {
-    QMAKE_CXXFLAGS += -openmp
-    QMAKE_LFLAGS   += -openmp
+    QMAKE_CXXFLAGS += /EHsc
   }
 }

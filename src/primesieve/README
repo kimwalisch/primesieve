@@ -16,32 +16,33 @@ C++ classes
   indirectly for sieving.
 
 * ParallelPrimeSieve (derived from PrimeSieve)
-  ParallelPrimeSieve provides an easy API for multi-threaded prime
-  sieving using OpenMP, it scales well even with 100 CPU cores! In
-  ParallelPrimeSieve each OpenMP thread sieves primes using a thread
-  private PrimeSieve object.
+  ParallelPrimeSieve launches multiple threads using std::async and
+  each thread sieves a part of the range [start, stop] using a
+  PrimeSieve object. At the end all partial results are combined to
+  get the final result.
 
 * SieveOfEratosthenes (abstract class)
   Implementation of the segmented sieve of Eratosthenes using a bit
   array with 30 numbers per byte, each byte of the sieve array holds
   the 8 offsets k = { 7, 11, 13, 17, 19, 23, 29, 31 }.
-  Its main methods are addSievingPrime(uint_t) which must be called
-  consecutively for all primes <= sqrt(n) in order to sieve the
-  primes up to n and sieve(). SieveOfEratosthenes uses the
+  Its main methods are addSievingPrime(uint_t) which is called
+  consecutively for all primes <= sqrt(n) and sieve() which sieves
+  the primes in [start, stop]. SieveOfEratosthenes uses the
   EratSmall, EratMedium and EratBig classes to cross-off multiples.
 
-* PrimeFinder (derived from SieveOfEratosthenes)
-  Main SieveOfEratosthenes class: PrimeFinder is used to callback,
-  print and count the primes and prime k-tuplets within the interval
-  [start_, stop_] of the associated PrimeSieve object.
-
 * PrimeGenerator (derived from SieveOfEratosthenes)
-  Generates the primes up to sqrt(n) needed for sieving by the
-  PrimeFinder class.
+  After a segment has been sieved (using SieveOfEratosthenes)
+  PrimeGenerator is used to reconstruct primes and prime k-tuplets
+  from 1 bits of the sieve array.
+
+* SievingPrimes (derived from SieveOfEratosthenes)
+  Generates the sieving primes <= sqrt(stop) for PrimeGenerator.
 
 * PreSieve
-  PreSieve objects are used to pre-sieve multiples of small primes
-  e.g. <= 19 to speed up the sieve of Eratosthenes.
+  Pre-sieve multiples of small primes e.g. <= 19 to speed up the
+  sieve of Eratosthenes. Upon creation the multiples of small primes
+  are removed from a buffer. Later this buffer is simply copied to the
+  sieve array to remove (pre-sieve) the multiples of small primes.
 
 * WheelFactorization (abstract class)
   Wheel factorization is used to skip multiples of small primes e.g.
@@ -64,21 +65,23 @@ C++ classes
   Segmented sieve of Eratosthenes algorithm with a fixed modulo 210
   wheel that skips multiples of 2, 3, 5 and 7. The wheel is
   implemented using a precomputed lookup table (wheel210 array from
-  WheelFactorization.cpp). This algorithm is optimized for medium
-  sieving primes with a few multiples per segment.
+  Wheel.cpp). This algorithm is optimized for medium sieving primes
+  with a few multiples per segment.
 
 * EratBig (derived from WheelFactorization)
   Segmented sieve of Eratosthenes algorithm with Tomás Oliveira's
   improvement for big sieving primes [11] and a fixed modulo 210
   wheel that skips multiples of 2, 3, 5 and 7. The wheel is
   implemented using a precomputed lookup table (wheel210 array from
-  WheelFactorization.cpp). EratBig is optimized for big sieving
-  primes that have less than one multiple per segment.
+  Wheel.cpp). EratBig is optimized for big sieving primes that have
+  less than one multiple per segment.
 
 * iterator
-  The iterator class has been introduced in primesieve-5.0 and allows
-  to easily iterate over primes. It provides next_prime() and
-  prev_prime() methods.
+  primesieve::iterator allows to easily iterate over primes. It
+  provides next_prime() and prev_prime() methods. primesieve::iterator
+  works using a cache of primes of size sqrt(stop), once there are
+  no more primes available in the cache primesieve::iterator will
+  reload the cache with new primes.
 
 Other files
 -----------

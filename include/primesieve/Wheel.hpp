@@ -21,8 +21,8 @@
 
 namespace primesieve {
 
-/// The WheelInit data structure is used to calculate the first
-/// multiple >= start of each sieving prime.
+/// The WheelInit data structure is used to calculate the
+/// first multiple >= start of each sieving prime
 ///
 struct WheelInit
 {
@@ -33,19 +33,19 @@ struct WheelInit
 extern const WheelInit wheel30Init[30];
 extern const WheelInit wheel210Init[210];
 
-/// The WheelElement data structure is used to skip multiples of
-/// small primes using wheel factorization.
+/// The WheelElement data structure is used to skip multiples
+/// of small primes using wheel factorization
 ///
 struct WheelElement
 {
   /// Bitmask used to unset the bit corresponding to the current
-  /// multiple of a SievingPrime object.
+  /// multiple of a SievingPrime object
   uint8_t unsetBit;
   /// Factor used to calculate the next multiple of a sieving prime
-  /// that is not divisible by any of the wheel factors.
+  /// that is not divisible by any of the wheel factors
   uint8_t nextMultipleFactor;
   /// Overflow needed to correct the next multiple index
-  /// (due to sievingPrime = prime / 30).
+  /// (due to sievingPrime = prime / 30)
   uint8_t correct;
   /// Used to calculate the next wheel index:
   /// wheelIndex += next;
@@ -56,9 +56,9 @@ extern const WheelElement wheel30[8*8];
 extern const WheelElement wheel210[48*8];
 
 /// Sieving primes are used to cross-off multiples (of itself).
-/// Each SievingPrime object contains a sieving prime and the position
-/// of its next multiple within the SieveOfEratosthenes array
-/// (i.e. multipleIndex) and a wheelIndex.
+/// Each SievingPrime object contains a sieving prime and the
+/// position of its next multiple within the SieveOfEratosthenes
+/// array (i.e. multipleIndex) and a wheelIndex.
 ///
 class SievingPrime
 {
@@ -112,8 +112,8 @@ public:
     sievingPrime_ = (uint32_t) sievingPrime;
   }
 private:
-  /// multipleIndex = 23 least significant bits of indexes_.
-  /// wheelIndex = 9 most significant bits of indexes_.
+  /// multipleIndex = 23 least significant bits of indexes_
+  /// wheelIndex = 9 most significant bits of indexes_
   uint32_t indexes_;
   uint32_t sievingPrime_;
 };
@@ -139,8 +139,8 @@ public:
   {
     next_ = next;
   }
-  /// Store a sieving prime in the bucket.
-  /// @return false if the bucket is full else true.
+  /// Store a sieving prime in the bucket
+  /// @return false if the bucket is full else true
   ///
   bool store(uint_t sievingPrime,
              uint_t multipleIndex,
@@ -155,8 +155,8 @@ private:
   SievingPrime sievingPrimes_[config::BUCKETSIZE];
 };
 
-/// The abstract WheelFactorization class is used skip multiples of
-/// small primes in the sieve of Eratosthenes. The EratSmall,
+/// The abstract WheelFactorization class is used skip multiples
+/// of small primes in the sieve of Eratosthenes. The EratSmall,
 /// EratMedium and EratBig classes are derived from
 /// WheelFactorization.
 ///
@@ -217,8 +217,8 @@ protected:
     return WHEEL[0].nextMultipleFactor;
   }
 
-  /// Cross-off the current multiple (unset bit) of sievingPrime and
-  /// calculate its next multiple i.e. multipleIndex.
+  /// Cross-off the current multiple of sievingPrime
+  /// and calculate its next multiple
   ///
   static void unsetBit(byte_t* sieve, uint_t sievingPrime, uint_t* multipleIndex, uint_t* wheelIndex)
   {

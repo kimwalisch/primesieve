@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 3.1)
-project(primesieve CXX)
+project(primesieve)
 set(PRIMESIEVE_VERSION "6.0")
 set(PRIMESIEVE_SOVERSION "8.0.0")
 set(CMAKE_BUILD_TYPE Release)
 
 # Build options ######################################################
 
-option(WITH_OPENMP       "Enable OpenMP support"      ON)
 option(BUILD_PRIMESIEVE  "Build primesieve binary"    ON)
 option(BUILD_SHARED_LIBS "Build shared libprimesieve" ON)
 option(BUILD_STATIC_LIBS "Build static libprimesieve" ON)
@@ -31,32 +30,22 @@ set(BIN_SRC src/console/cmdoptions.cpp
 
 # primesieve library source files ####################################
 
-set(LIB_SRC src/primesieve/EratBig.cpp
+set(LIB_SRC src/primesieve/api-c.cpp
+            src/primesieve/api.cpp
+            src/primesieve/EratBig.cpp
             src/primesieve/EratMedium.cpp
             src/primesieve/EratSmall.cpp
+            src/primesieve/iterator-c.cpp
+            src/primesieve/iterator.cpp
+            src/primesieve/nthPrime.cpp
             src/primesieve/ParallelPrimeSieve.cpp
+            src/primesieve/popcount.cpp
             src/primesieve/PreSieve.cpp
-            src/primesieve/PrimeFinder.cpp
             src/primesieve/PrimeGenerator.cpp
             src/primesieve/PrimeSieve.cpp
             src/primesieve/SieveOfEratosthenes.cpp
-            src/primesieve/Wheel.cpp
-            src/primesieve/api.cpp
-            src/primesieve/api-c.cpp
-            src/primesieve/iterator.cpp
-            src/primesieve/iterator-c.cpp
-            src/primesieve/nthPrime.cpp
-            src/primesieve/popcount.cpp)
-
-# Check for OpenMP ###################################################
-
-if(WITH_OPENMP)
-    find_package(OpenMP QUIET)
-    if(OPENMP_FOUND)
-        message(STATUS "Found OpenMP: ${OpenMP_CXX_FLAGS}")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    endif()
-endif()
+            src/primesieve/SievingPrimes.cpp
+            src/primesieve/Wheel.cpp)
 
 # Detect CPU L1 cache size ###########################################
 
@@ -75,6 +64,8 @@ endif()
 
 add_library(libprimesieve ${LIB_SRC})
 set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
+find_package(Threads REQUIRED)
+target_link_libraries(libprimesieve Threads::Threads)
 
 target_include_directories(libprimesieve PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -95,6 +86,7 @@ install(TARGETS libprimesieve
 if(BUILD_STATIC_LIBS AND BUILD_SHARED_LIBS)
     add_library(static_libprimesieve STATIC ${LIB_SRC})
     set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
+    target_link_libraries(static_libprimesieve Threads::Threads)
 
     target_include_directories(static_libprimesieve PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

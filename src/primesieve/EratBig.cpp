@@ -23,12 +23,14 @@
 #include <memory>
 #include <vector>
 
+using namespace std;
+
 namespace primesieve {
 
-/// @param stop       Upper bound for sieving.
-/// @param sieveSize  Sieve size in bytes.
-/// @param limit      Sieving primes must be <= limit,
-///                   usually limit = sqrt(stop).
+/// @stop:       Upper bound for sieving
+/// @sieveSize:  Sieve size in bytes
+/// @limit:      Sieving primes must be <= limit,
+///              usually limit = sqrt(stop)
 ///
 EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t limit) :
   Modulo210Wheel_t(stop, sieveSize),
@@ -37,7 +39,7 @@ EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t limit) :
   moduloSieveSize_(sieveSize - 1),
   stock_(nullptr)
 {
-  // '>> log2SieveSize' requires a power of 2 sieveSize
+  // '>> log2SieveSize' requires power of 2 sieveSize
   if (!isPowerOf2(sieveSize))
     throw primesieve_error("EratBig: sieveSize must be a power of 2");
   init(sieveSize);
@@ -77,7 +79,7 @@ void EratBig::pushBucket(uint_t segment)
   if (!stock_)
   {
     int N = config::BYTES_PER_ALLOC / sizeof(Bucket);
-    memory_.emplace_back(std::unique_ptr<Bucket[]>(new Bucket[N]));
+    memory_.emplace_back(unique_ptr<Bucket[]>(new Bucket[N]));
     Bucket* bucket = memory_.back().get();
 
     for (int i = 0; i < N - 1; i++)
@@ -96,13 +98,11 @@ void EratBig::moveBucket(Bucket& src, Bucket*& dest)
   dest = &src;
 }
 
-/// Cross-off the multiples of big sieving primes
-/// from the sieve array.
+/// Cross-off the multiples of big sieving
+/// primes from the sieve array
 ///
 void EratBig::crossOff(byte_t* sieve)
 {
-  // process the buckets in lists_[0] which hold the sieving primes
-  // that have multiple(s) in the current segment
   while (lists_[0]->hasNext() || !lists_[0]->empty())
   {
     Bucket* bucket = lists_[0];
@@ -117,16 +117,13 @@ void EratBig::crossOff(byte_t* sieve)
     } while (bucket);
   }
 
-  // move the list corresponding to the next segment
-  // i.e. lists_[1] to lists_[0] ...
-  std::rotate(lists_.begin(), lists_.begin() + 1, lists_.end());
+  rotate(lists_.begin(), lists_.begin() + 1, lists_.end());
 }
 
-/// Cross-off the next multiple of each sieving prime within the
-/// current bucket. This is an implementation of the segmented sieve
-/// of Eratosthenes with wheel factorization optimized for big sieving
-/// primes that have very few multiples per segment. This algorithm
-/// uses a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
+/// Cross-off the next multiple of each sieving prime in the
+/// current bucket. This is an implementation of the segmented
+/// sieve of Eratosthenes with wheel factorization optimized for
+/// big sieving primes that have very few multiples per segment
 ///
 void EratBig::crossOff(byte_t* sieve, SievingPrime* sPrime, SievingPrime* sEnd)
 {

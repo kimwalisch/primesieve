@@ -29,7 +29,7 @@ int main()
 {
   uint64_t res;
   uint64_t start;
-  uint64_t n;
+  int64_t n;
 
   n = 1;
   start = 1;
@@ -55,23 +55,17 @@ int main()
   cout << "nth_prime(" << n << ", " << start << ") = " << res;
   check(res == 97);
 
-  n = 2;
-  start = 18446744073709551521ull;
+  n = -9592;
+  start = 100000;
   res = nth_prime(n, start);
   cout << "nth_prime(" << n << ", " << start << ") = " << res;
-  check(res == 18446744073709551557ull);
+  check(res == 2);
 
-  n = -1;
-  start = 18446744073709551558ull;
+  n = -9591;
+  start = 100000;
   res = nth_prime(n, start);
   cout << "nth_prime(" << n << ", " << start << ") = " << res;
-  check(res == 18446744073709551557ull);
-
-  n = -1;
-  start = 18446744073709551557ull;
-  res = nth_prime(n, start);
-  cout << "nth_prime(" << n << ", " << start << ") = " << res;
-  check(res == 18446744073709551533ull);
+  check(res == 3);
 
   try
   {
@@ -80,7 +74,7 @@ int main()
     res = nth_prime(n, start);
     return 1;
   }
-  catch (exception& e)
+  catch (primesieve_error& e)
   {
     cout << "OK: " << e.what() << endl;
   }
@@ -92,7 +86,7 @@ int main()
     res = nth_prime(n, start);
     return 1;
   }
-  catch (exception& e)
+  catch (primesieve_error& e)
   {
     cout << "OK: " << e.what() << endl;
   }

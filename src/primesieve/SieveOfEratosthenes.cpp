@@ -37,11 +37,10 @@ const uint_t SieveOfEratosthenes::bruijnBitValues_[64] =
   173, 223, 193,  31, 221,  29,  23, 241
 };
 
-/// @param start      Sieve primes >= start.
-/// @param stop       Sieve primes <= stop.
-/// @param sieveSize  A sieve size in kilobytes.
-/// @pre   start      >= 7
-/// @pre   sieveSize  >= 1 && <= 2048
+/// @start:      Sieve primes >= start
+/// @stop:       Sieve primes <= stop
+/// @sieveSize:  Sieve size in kilobytes
+/// @preSieve:   Pre-sieve primes <= preSieve.getLimit()
 ///
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
                                          uint64_t stop,
@@ -97,13 +96,13 @@ uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n)
 }
 
 /// Pre-sieve multiples of small primes e.g. <= 19
-/// to speed up the sieve of Eratosthenes.
+/// to speed up the sieve of Eratosthenes
 ///
 void SieveOfEratosthenes::preSieve()
 {
   preSieve_.copy(sieve_, sieveSize_, segmentLow_);
 
-  // unset bits (numbers) < start_
+  // unset bits (numbers) < start
   if (segmentLow_ <= start_)
   {
     if (start_ <= limitPreSieve_)
@@ -124,7 +123,7 @@ void SieveOfEratosthenes::sieveSegment()
 {
   preSieve();
   crossOffMultiples();
-  segmentFinished(sieve_, sieveSize_);
+  generatePrimes(sieve_, sieveSize_);
 
   // update for next segment
   uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE;
@@ -132,8 +131,8 @@ void SieveOfEratosthenes::sieveSegment()
   segmentHigh_ = checkedAdd(segmentHigh_, dist);
 }
 
-/// Sieve the remaining segments after that addSievingPrime(uint_t)
-/// has been called for all primes up to sqrt(stop).
+/// Sieve the remaining segments, most segments
+/// are sieved in addSievingPrime()
 ///
 void SieveOfEratosthenes::sieve()
 {
@@ -162,7 +161,7 @@ void SieveOfEratosthenes::sieve()
   for (uint_t j = sieveSize_; j % 8 != 0; j++)
     sieve_[j] = 0;
 
-  segmentFinished(sieve_, sieveSize_);
+  generatePrimes(sieve_, sieveSize_);
 }
 
 } // namespace

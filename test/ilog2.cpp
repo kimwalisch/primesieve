@@ -19,7 +19,8 @@ using namespace std;
 
 uint64_t log2_cmath(uint64_t n)
 {
-  return log((double) n) / log(2.0);
+  double x = (double) n;
+  return (uint64_t) (log(x) / log(2.0));
 }
 
 void check(bool OK)

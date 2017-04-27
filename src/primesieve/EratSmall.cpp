@@ -21,9 +21,9 @@
 
 namespace primesieve {
 
-/// @param stop       Upper bound for sieving.
-/// @param sieveSize  Sieve size in bytes.
-/// @param limit      Sieving primes must be <= limit.
+/// @stop:       Upper bound for sieving
+/// @sieveSize:  Sieve size in bytes
+/// @limit:      Sieving primes must be <= limit
 ///
 EratSmall::EratSmall(uint64_t stop, uint_t sieveSize, uint_t limit) :
   Modulo30Wheel_t(stop, sieveSize),
@@ -44,7 +44,7 @@ void EratSmall::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t whe
 }
 
 /// Cross-off the multiples of small sieving
-/// primes from the sieve array.
+/// primes from the sieve array
 ///
 void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit)
 {
@@ -52,11 +52,11 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit)
     crossOff(sieve, sieveLimit, bucket);
 }
 
-/// Cross-off the multiples of the sieving primes within the current
+/// Cross-off the multiples of the sieving primes in the current
 /// bucket. This is an implementation of the segmented sieve of
 /// Eratosthenes with wheel factorization optimized for small sieving
 /// primes that have many multiples per segment. This algorithm uses a
-/// hardcoded modulo 30 wheel that skips multiples of 2, 3 and 5.
+/// hardcoded modulo 30 wheel that skips multiples of 2, 3 and 5
 ///
 void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
 {

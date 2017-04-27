@@ -1,6 +1,6 @@
 ///
 /// @file   ParallelPrimeSieve.cpp
-/// @brief  Sieve primes in parallel using OpenMP.
+/// @brief  Multi-threaded prime sieve using std::async.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -15,19 +15,31 @@
 
 #include <stdint.h>
 #include <algorithm>
+#include <atomic>
 #include <cassert>
-
-#ifdef _OPENMP
-  #include <omp.h>
-  #include <primesieve/OmpLockGuard.hpp>
-#endif
+#include <chrono>
+#include <future>
+#include <mutex>
+#include <vector>
 
 using namespace std;
+
+namespace {
+
+template <typename T>
+vector<T>& operator+=(vector<T>& v1, const vector<T>& v2)
+{
+  assert(v1.size() == v2.size());
+  for (size_t i = 0; i < v1.size(); i++)
+    v1[i] += v2[i];
+  return v1;
+}
+
+} // namespace
 
 namespace primesieve {
 
 ParallelPrimeSieve::ParallelPrimeSieve() :
-  lock_(nullptr),
   shm_(nullptr),
   numThreads_(getMaxThreads())
 { }
@@ -42,6 +54,11 @@ void ParallelPrimeSieve::init(SharedMemory& shm)
   shm_ = &shm;
 }
 
+int ParallelPrimeSieve::getMaxThreads()
+{
+  return max<int>(1, thread::hardware_concurrency());
+}
+
 int ParallelPrimeSieve::getNumThreads() const
 {
   return numThreads_;
@@ -53,14 +70,15 @@ void ParallelPrimeSieve::setNumThreads(int threads)
 }
 
 /// Get an ideal number of threads for
-/// the start_ and stop_ numbers.
+/// the start_ and stop_ numbers
 ///
 int ParallelPrimeSieve::idealNumThreads() const
 {
   if (start_ > stop_)
     return 1;
 
-  uint64_t threshold = max(config::MIN_THREAD_DISTANCE, isqrt(stop_) / 5);
+  uint64_t threshold = isqrt(stop_) / 5;
+  threshold = max(threshold, config::MIN_THREAD_DISTANCE);
   uint64_t threads = getDistance() / threshold;
   threads = inBetween(1, threads, numThreads_);
 
@@ -68,7 +86,7 @@ int ParallelPrimeSieve::idealNumThreads() const
 }
 
 /// Get a thread distance which ensures a good load
-/// balance when using multiple threads.
+/// balance when using multiple threads
 ///
 uint64_t ParallelPrimeSieve::getThreadDistance(int threads) const
 {
@@ -86,39 +104,24 @@ uint64_t ParallelPrimeSieve::getThreadDistance(int threads) const
   return threadDistance;
 }
 
-/// Align n to modulo 30 + 2 to prevent prime k-tuplet
-/// (twin primes, prime triplets, ...) gaps.
+/// Align n to modulo (30 + 2) to prevent prime k-tuplet
+/// (twin primes, prime triplets) gaps
 ///
 uint64_t ParallelPrimeSieve::align(uint64_t n) const
 {
-  if (checkedAdd(n, 32) >= stop_)
+  uint64_t n32 = checkedAdd(n, 32);
+  if (n32 >= stop_)
     return stop_;
 
-  n = checkedAdd(n, 32) - n % 30;
-  n = min(n, stop_);
-
-  return n;
+  return n32 - n % 30;
 }
 
-#ifdef _OPENMP
-
-int ParallelPrimeSieve::getMaxThreads()
-{
-  return max(1, omp_get_max_threads());
-}
-
-double ParallelPrimeSieve::getWallTime() const
-{
-  return omp_get_wtime();
-}
-
-/// Sieve the primes and prime k-tuplets within [start_, stop_]
-/// in parallel using OpenMP multi-threading.
+/// Sieve the primes and prime k-tuplets in [start_, stop_]
+/// in parallel using multi-threading
 ///
 void ParallelPrimeSieve::sieve()
 {
   reset();
-  OmpInitLock ompInit(&lock_);
 
   if (start_ > stop_)
     return;
@@ -129,39 +132,47 @@ void ParallelPrimeSieve::sieve()
     PrimeSieve::sieve();
   else
   {
+    auto t1 = chrono::system_clock::now();
     uint64_t threadDistance = getThreadDistance(threads);
-    uint64_t count0 = 0, count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0;
-    int64_t iters = 1 + (getDistance() - 1) / threadDistance;
-    double t1 = getWallTime();
+    uint64_t iters = ((getDistance() - 1) / threadDistance) + 1;
+    threads = inBetween(1, threads, iters);
+    atomic<uint64_t> i(0);
 
-    #pragma omp parallel for schedule(dynamic) num_threads(threads) \
-        reduction(+: count0, count1, count2, count3, count4, count5)
-    for (int64_t i = 0; i < iters; i++)
+    // each thread executes 1 task
+    auto task = [&]()
     {
-      uint64_t threadStart = start_ + i * threadDistance;
-      uint64_t threadStop = checkedAdd(threadStart, threadDistance);
-      if (i > 0) threadStart = align(threadStart) + 1;
-      threadStop = align(threadStop);
+      PrimeSieve ps(this);
+      counts_t counts(counts_.size(), 0);
+      uint64_t j;
 
-      PrimeSieve ps(*this);
-      ps.sieve(threadStart, threadStop);
+      while ((j = i++) < iters)
+      {
+        uint64_t start = start_ + j * threadDistance;
+        uint64_t stop = checkedAdd(start, threadDistance);
+        stop = align(stop);
+        if (start > start_)
+          start = align(start) + 1;
 
-      count0 += ps.getCount(0);
-      count1 += ps.getCount(1);
-      count2 += ps.getCount(2);
-      count3 += ps.getCount(3);
-      count4 += ps.getCount(4);
-      count5 += ps.getCount(5);
-    }
+        // sieve the range [start, stop]
+        ps.sieve(start, stop);
+        counts += ps.getCounts();
+      }
 
-    seconds_ = getWallTime() - t1;
+      return counts;
+    };
 
-    counts_[0] = count0;
-    counts_[1] = count1;
-    counts_[2] = count2;
-    counts_[3] = count3;
-    counts_[4] = count4;
-    counts_[5] = count5;
+    vector<future<counts_t>> futures;
+    futures.reserve(threads);
+
+    for (int t = 0; t < threads; t++)
+      futures.emplace_back(async(launch::async, task));
+
+    for (auto &f : futures)
+      counts_ += f.get();
+
+    auto t2 = chrono::system_clock::now();
+    chrono::duration<double> seconds = t2 - t1;
+    seconds_ = seconds.count();
   }
 
   if (shm_)
@@ -173,59 +184,28 @@ void ParallelPrimeSieve::sieve()
   }
 }
 
-/// Calculate the sieving status.
-/// @param processed  Sum of recently processed segments.
+/// Print status in percent to stdout
+/// @processed:  Sum of recently processed segments
+/// @tryLock:    Do not block if tryLock = true
 ///
-bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
+bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool tryLock)
 {
-  OmpLockGuard lock(getLock<omp_lock_t*>(), waitForLock);
-  if (lock.isSet())
+  unique_lock<mutex> lock(lock_, defer_lock);
+
+  if (tryLock)
+    lock.try_lock();
+  else
+    lock.lock();
+
+  if (lock.owns_lock())
   {
     PrimeSieve::updateStatus(processed);
     if (shm_)
       shm_->status = getStatus();
+    return true;
   }
-  return lock.isSet();
+
+  return false;
 }
-
-#endif /* _OPENMP */
-
-/// If OpenMP is disabled then ParallelPrimeSieve behaves like
-/// the single threaded PrimeSieve.
-///
-#if !defined(_OPENMP)
-
-int ParallelPrimeSieve::getMaxThreads()
-{
-  return 1;
-}
-
-void ParallelPrimeSieve::sieve()
-{
-  PrimeSieve::sieve();
-
-  if (shm_)
-  {
-    // communicate the sieving results to the
-    // primesieve GUI application
-    copy(counts_.begin(), counts_.end(), shm_->counts);
-    shm_->seconds = seconds_;
-  }
-}
-
-double ParallelPrimeSieve::getWallTime() const
-{
-  return PrimeSieve::getWallTime();
-}
-
-bool ParallelPrimeSieve::updateStatus(uint64_t processed, bool waitForLock)
-{
-  bool isUpdate = PrimeSieve::updateStatus(processed, waitForLock);
-  if (shm_)
-    shm_->status = getStatus();
-  return isUpdate;
-}
-
-#endif
 
 } // namespace

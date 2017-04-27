@@ -113,8 +113,10 @@ inline uint64_t checkedSub(uint64_t x, uint64_t y)
 template <typename A, typename B, typename C>
 inline B inBetween(A min, B x, C max)
 {
-  if (x < (B) min) return (B) min;
-  if (x > (B) max) return (B) max;
+  if (x < (B) min)
+    return (B) min;
+  if ((C) x > max)
+    return (B) max;
 
   return x;
 }
