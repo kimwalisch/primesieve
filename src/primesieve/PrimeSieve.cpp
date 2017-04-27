@@ -1,7 +1,7 @@
 ///
 /// @file   PrimeSieve.hpp
 /// @brief  The PrimeSieve class is a high level class that
-///         orchestrates prime sieving using the PrimeGenerator
+///         orchestrates prime sieving using the SievingPrimes
 ///         and PrimeFinder classes.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
@@ -16,7 +16,7 @@
 #include <primesieve/Callback.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeFinder.hpp>
-#include <primesieve/PrimeGenerator.hpp>
+#include <primesieve/SievingPrimes.hpp>
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
@@ -236,7 +236,7 @@ void PrimeSieve::sieve()
     if (finder.getSqrtStop() > preSieve.getLimit())
     {
       // generate sieving primes <= sqrt(stop)
-      PrimeGenerator pg(finder, preSieve);
+      SievingPrimes pg(finder, preSieve);
       pg.generateSievingPrimes();
     }
 

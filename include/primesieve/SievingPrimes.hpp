@@ -1,5 +1,5 @@
 ///
-/// @file  PrimeGenerator.hpp
+/// @file  SievingPrimes.hpp
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMEGENERATOR_HPP
-#define PRIMEGENERATOR_HPP
+#ifndef SIEVINGPRIMES_HPP
+#define SIEVINGPRIMES_HPP
 
 #include "config.hpp"
 #include "SieveOfEratosthenes.hpp"
@@ -18,10 +18,10 @@ namespace primesieve {
 class PrimeFinder;
 class PreSieve;
 
-class PrimeGenerator : public SieveOfEratosthenes
+class SievingPrimes : public SieveOfEratosthenes
 {
 public:
-  PrimeGenerator(PrimeFinder&, const PreSieve&);
+  SievingPrimes(PrimeFinder&, const PreSieve&);
   void generateSievingPrimes();
 private:
   PrimeFinder& finder_;

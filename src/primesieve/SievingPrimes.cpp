@@ -1,5 +1,5 @@
 ///
-/// @file  PrimeGenerator.cpp
+/// @file  SievingPrimes.cpp
 ///        Generates the sieving primes up to sqrt(stop) and adds
 ///        them to PrimeFinder.
 ///
@@ -10,7 +10,7 @@
 ///
 
 #include <primesieve/config.hpp>
-#include <primesieve/PrimeGenerator.hpp>
+#include <primesieve/SievingPrimes.hpp>
 #include <primesieve/PrimeFinder.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/SieveOfEratosthenes.hpp>
@@ -21,7 +21,7 @@
 
 namespace primesieve {
 
-PrimeGenerator::PrimeGenerator(PrimeFinder& finder, const PreSieve& preSieve) :
+SievingPrimes::SievingPrimes(PrimeFinder& finder, const PreSieve& preSieve) :
   SieveOfEratosthenes(preSieve.getLimit() + 1,
                       finder.getSqrtStop(),
                       L1_DCACHE_SIZE,
@@ -29,7 +29,7 @@ PrimeGenerator::PrimeGenerator(PrimeFinder& finder, const PreSieve& preSieve) :
   finder_(finder)
 { }
 
-void PrimeGenerator::generateSievingPrimes()
+void SievingPrimes::generateSievingPrimes()
 {
   generateTinyPrimes();
   sieve();
@@ -38,7 +38,7 @@ void PrimeGenerator::generateSievingPrimes()
 /// Generate the primes up to n^0.25 using
 /// the sieve of Eratosthenes.
 ///
-void PrimeGenerator::generateTinyPrimes()
+void SievingPrimes::generateTinyPrimes()
 {
   uint_t s = (uint_t) getStart();
   uint_t n = getSqrtStop();
@@ -57,7 +57,7 @@ void PrimeGenerator::generateTinyPrimes()
       addSievingPrime(i);
 }
 
-void PrimeGenerator::segmentFinished(const byte_t* sieve, uint_t sieveSize)
+void SievingPrimes::segmentFinished(const byte_t* sieve, uint_t sieveSize)
 {
   uint64_t base = getSegmentLow();
   

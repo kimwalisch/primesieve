@@ -35,7 +35,7 @@ C++ classes
   print and count the primes and prime k-tuplets within the interval
   [start_, stop_] of the associated PrimeSieve object.
 
-* PrimeGenerator (derived from SieveOfEratosthenes)
+* SievingPrimes (derived from SieveOfEratosthenes)
   Generates the primes up to sqrt(n) needed for sieving by the
   PrimeFinder class.
 
