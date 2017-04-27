@@ -69,7 +69,7 @@ void SievingPrimes::generatePrimes(const byte_t* sieve, uint_t sieveSize)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
     while (bits)
-      primeGen_.addSievingPrime((uint_t) getNextPrime(&bits, low));
+      primeGen_.addSievingPrime((uint_t) nextPrime(&bits, low));
 
     low += NUMBERS_PER_BYTE * 8;
   }

@@ -98,7 +98,7 @@ void PrimeGenerator::callbackPrimes(Callback& cb, const byte_t* sieve, uint_t si
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
     while (bits)
-      cb.callback(getNextPrime(&bits, low));
+      cb.callback(nextPrime(&bits, low));
   }
 }
 
@@ -142,7 +142,7 @@ void PrimeGenerator::print(const byte_t* sieve, uint_t sieveSize) const
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
       while (bits)
-        cout << getNextPrime(&bits, low) << '\n';
+        cout << nextPrime(&bits, low) << '\n';
     }
   }
 
@@ -164,7 +164,7 @@ void PrimeGenerator::print(const byte_t* sieve, uint_t sieveSize) const
           uint64_t bits = *bitmask;
           while (bits != 0)
           {
-            kTuplet << getNextPrime(&bits, low);
+            kTuplet << nextPrime(&bits, low);
             kTuplet << ((bits != 0) ? ", " : ")\n");
           }
           cout << kTuplet.str();
