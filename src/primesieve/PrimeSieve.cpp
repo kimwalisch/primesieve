@@ -2,7 +2,7 @@
 /// @file   PrimeSieve.hpp
 /// @brief  The PrimeSieve class is a high level class that
 ///         orchestrates prime sieving using the SievingPrimes
-///         and PrimeFinder classes.
+///         and PrimeGenerator classes.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -15,7 +15,7 @@
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/Callback.hpp>
 #include <primesieve/PreSieve.hpp>
-#include <primesieve/PrimeFinder.hpp>
+#include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/SievingPrimes.hpp>
 #include <primesieve/pmath.hpp>
 
@@ -190,7 +190,7 @@ void PrimeSieve::printStatus(double old, double current)
   }
 }
 
-/// Process small primes and k-tuplets <= 17.
+/// Process small primes and k-tuplets <= 17
 void PrimeSieve::processSmallPrimes()
 {
   for (int i = 0; i < 8; i++)
@@ -210,8 +210,8 @@ void PrimeSieve::processSmallPrimes()
   }
 }
 
-/// Sieve the primes and prime k-tuplets (twin primes, prime
-/// triplets, ...) within [start, stop].
+/// Sieve the primes and prime k-tuplets (twin primes,
+/// prime triplets, ...) in [start, stop]
 ///
 void PrimeSieve::sieve()
 {
@@ -231,17 +231,17 @@ void PrimeSieve::sieve()
   if (stop_ >= 7)
   {
     PreSieve preSieve(start_, stop_);
-    PrimeFinder finder(*this, preSieve);
+    PrimeGenerator primeGen(*this, preSieve);
 
-    if (finder.getSqrtStop() > preSieve.getLimit())
+    // generate sieving primes for primeGen
+    if (primeGen.getSqrtStop() > preSieve.getLimit())
     {
-      // generate sieving primes <= sqrt(stop)
-      SievingPrimes sp(finder, preSieve);
+      SievingPrimes sp(primeGen, preSieve);
       sp.generate();
     }
 
     // sieve [start, stop]
-    finder.sieve();
+    primeGen.sieve();
   }
 
   auto t2 = chrono::system_clock::now();

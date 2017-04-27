@@ -1,7 +1,7 @@
 ///
 /// @file  SievingPrimes.cpp
 ///        Generates the sieving primes up to sqrt(stop)
-///        and adds them to PrimeFinder.
+///        and adds them to PrimeGenerator.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -11,7 +11,7 @@
 
 #include <primesieve/config.hpp>
 #include <primesieve/SievingPrimes.hpp>
-#include <primesieve/PrimeFinder.hpp>
+#include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/SieveOfEratosthenes.hpp>
 #include <primesieve/littleendian_cast.hpp>
@@ -23,12 +23,12 @@ using namespace std;
 
 namespace primesieve {
 
-SievingPrimes::SievingPrimes(PrimeFinder& finder, const PreSieve& preSieve) :
+SievingPrimes::SievingPrimes(PrimeGenerator& primeGen, const PreSieve& preSieve) :
   SieveOfEratosthenes(preSieve.getLimit() + 1,
-                      finder.getSqrtStop(),
+                      primeGen.getSqrtStop(),
                       L1_DCACHE_SIZE,
                       preSieve),
-  finder_(finder)
+  primeGen_(primeGen)
 { }
 
 void SievingPrimes::generate()
@@ -59,7 +59,7 @@ void SievingPrimes::tinyPrimes()
 }
 
 /// Reconstruct primes <= sqrt(stop) from 1 bits of the
-/// sieve array and add them to PrimeFinder
+/// sieve array and add them to PrimeGen
 ///
 void SievingPrimes::generatePrimes(const byte_t* sieve, uint_t sieveSize)
 {
@@ -68,9 +68,8 @@ void SievingPrimes::generatePrimes(const byte_t* sieve, uint_t sieveSize)
   for (uint_t i = 0; i < sieveSize; i += 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
-
-    while (bits != 0)
-      finder_.addSievingPrime((uint_t) getNextPrime(&bits, low));
+    while (bits)
+      primeGen_.addSievingPrime((uint_t) getNextPrime(&bits, low));
 
     low += NUMBERS_PER_BYTE * 8;
   }

@@ -47,7 +47,7 @@ SOURCES += \
   ../primesieve/ParallelPrimeSieve.cpp \
   ../primesieve/popcount.cpp \
   ../primesieve/PreSieve.cpp \
-  ../primesieve/PrimeFinder.cpp \
+  ../primesieve/PrimeGenerator.cpp \
   ../primesieve/SievingPrimes.cpp \
   ../primesieve/PrimeSieve.cpp \
   ../primesieve/SieveOfEratosthenes.cpp \

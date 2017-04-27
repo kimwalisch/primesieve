@@ -1,7 +1,8 @@
 ///
-/// @file   PrimeFinder.cpp
-/// @brief  Callback, print and count primes and prime k-tuplets
-///         (twin primes, prime triplets, ...).
+/// @file   PrimeGenerator.cpp
+/// @brief  After a segment has been sieved PrimeGenerator is
+///         used to reconstruct primes and prime k-tuplets from
+///         1 bits of the sieve array.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -13,7 +14,7 @@
 #include <primesieve/Callback.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/PrimeFinder.hpp>
+#include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/SieveOfEratosthenes.hpp>
 
@@ -22,11 +23,14 @@
 #include <iostream>
 #include <sstream>
 
+using namespace std;
+
 namespace primesieve {
 
+// popcount.cpp
 uint64_t popcount(const uint64_t* array, uint64_t size);
 
-const uint_t PrimeFinder::kBitmasks_[6][5] =
+const uint_t PrimeGenerator::kBitmasks_[6][5] =
 {
   { END },
   { 0x06, 0x18, 0xc0, END },       // Twin prime       bitmasks, i.e. b00000110, b00011000, b11000000
@@ -36,8 +40,8 @@ const uint_t PrimeFinder::kBitmasks_[6][5] =
   { 0x3f, END }                    // Prime sextuplet  bitmasks
 };
 
-PrimeFinder::PrimeFinder(PrimeSieve& ps, const PreSieve& preSieve) :
-  SieveOfEratosthenes(std::max<uint64_t>(7, ps.getStart()),
+PrimeGenerator::PrimeGenerator(PrimeSieve& ps, const PreSieve& preSieve) :
+  SieveOfEratosthenes(max<uint64_t>(7, ps.getStart()),
                       ps.getStop(),
                       ps.getSieveSize(),
                       preSieve),
@@ -49,9 +53,9 @@ PrimeFinder::PrimeFinder(PrimeSieve& ps, const PreSieve& preSieve) :
 }
 
 /// Calculate the number of twins, triplets, ...
-/// for each possible byte value 0 - 255.
+/// for each possible byte value
 ///
-void PrimeFinder::init_kCounts()
+void PrimeGenerator::init_kCounts()
 {
   for (uint_t i = 1; i < counts_.size(); i++)
   {
@@ -75,7 +79,7 @@ void PrimeFinder::init_kCounts()
 /// Executed after each sieved segment.
 /// @see sieveSegment() in SieveOfEratosthenes.cpp
 ///
-void PrimeFinder::generatePrimes(const byte_t* sieve, uint_t sieveSize)
+void PrimeGenerator::generatePrimes(const byte_t* sieve, uint_t sieveSize)
 {
   if (ps_.isCallback())
     callbackPrimes(ps_.getCallback(), sieve, sieveSize);
@@ -87,24 +91,21 @@ void PrimeFinder::generatePrimes(const byte_t* sieve, uint_t sieveSize)
     ps_.updateStatus(sieveSize * NUMBERS_PER_BYTE);
 }
 
-void PrimeFinder::callbackPrimes(Callback& cb, const byte_t* sieve, uint_t sieveSize) const
+void PrimeGenerator::callbackPrimes(Callback& cb, const byte_t* sieve, uint_t sieveSize) const
 {
   uint64_t low = getSegmentLow();
   for (uint_t i = 0; i < sieveSize; i += 8, low += NUMBERS_PER_BYTE * 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
-    while (bits != 0)
-    {
-      uint64_t prime = getNextPrime(&bits, low);
-      cb.callback(prime);
-    }
+    while (bits)
+      cb.callback(getNextPrime(&bits, low));
   }
 }
 
-/// Count the primes and prime k-tuplets in
-/// the current segment.
+/// Count the primes and prime k-tuplets
+/// in the current segment
 ///
-void PrimeFinder::count(const byte_t* sieve, uint_t sieveSize)
+void PrimeGenerator::count(const byte_t* sieve, uint_t sieveSize)
 {
   if (ps_.isFlag(ps_.COUNT_PRIMES))
     counts_[0] += popcount((const uint64_t*) sieve, ceilDiv(sieveSize, 8));
@@ -132,7 +133,7 @@ void PrimeFinder::count(const byte_t* sieve, uint_t sieveSize)
 /// Print primes and prime k-tuplets to cout.
 /// primes <= 5 are handled in processSmallPrimes().
 ///
-void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
+void PrimeGenerator::print(const byte_t* sieve, uint_t sieveSize) const
 {
   if (ps_.isFlag(ps_.PRINT_PRIMES))
   {
@@ -140,11 +141,8 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
     for (uint_t i = 0; i < sieveSize; i += 8, low += NUMBERS_PER_BYTE * 8)
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
-      while (bits != 0)
-      {
-        uint64_t prime = getNextPrime(&bits, low);
-        std::cout << prime << '\n';
-      }
+      while (bits)
+        cout << getNextPrime(&bits, low) << '\n';
     }
   }
 
@@ -161,7 +159,7 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
       {
         if ((sieve[j] & *bitmask) == *bitmask)
         {
-          std::ostringstream kTuplet;
+          ostringstream kTuplet;
           kTuplet << "(";
           uint64_t bits = *bitmask;
           while (bits != 0)
@@ -169,7 +167,7 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
             kTuplet << getNextPrime(&bits, low);
             kTuplet << ((bits != 0) ? ", " : ")\n");
           }
-          std::cout << kTuplet.str();
+          cout << kTuplet.str();
         }
       }
     }

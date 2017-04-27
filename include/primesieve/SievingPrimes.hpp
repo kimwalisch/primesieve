@@ -15,16 +15,16 @@
 
 namespace primesieve {
 
-class PrimeFinder;
+class PrimeGenerator;
 class PreSieve;
 
 class SievingPrimes : public SieveOfEratosthenes
 {
 public:
-  SievingPrimes(PrimeFinder&, const PreSieve&);
+  SievingPrimes(PrimeGenerator&, const PreSieve&);
   void generate();
 private:
-  PrimeFinder& finder_;
+  PrimeGenerator& primeGen_;
   void generatePrimes(const byte_t*, uint_t);
   void tinyPrimes();
 };

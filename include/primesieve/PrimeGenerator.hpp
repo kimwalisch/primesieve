@@ -1,5 +1,5 @@
 ///
-/// @file  PrimeFinder.hpp
+/// @file  PrimeGenerator.hpp
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -22,14 +22,14 @@ namespace primesieve {
 class Callback;
 class PreSieve;
 
-/// PrimeFinder is a SieveOfEratosthenes class that is used to
-/// callback, print and count primes and prime k-tuplets
-/// e.g. twin primes, prime triplets
+/// After a segment has been sieved PrimeGenerator is
+/// used to reconstruct primes and prime k-tuplets from
+/// 1 bits of the sieve array
 ///
-class PrimeFinder : public SieveOfEratosthenes
+class PrimeGenerator : public SieveOfEratosthenes
 {
 public:
-  PrimeFinder(PrimeSieve&, const PreSieve&);
+  PrimeGenerator(PrimeSieve&, const PreSieve&);
 private:
   enum { END = 0xff + 1 };
   static const uint_t kBitmasks_[6][5];

@@ -35,7 +35,7 @@ set(LIB_SRC src/primesieve/EratBig.cpp
             src/primesieve/EratSmall.cpp
             src/primesieve/ParallelPrimeSieve.cpp
             src/primesieve/PreSieve.cpp
-            src/primesieve/PrimeFinder.cpp
+            src/primesieve/PrimeGenerator.cpp
             src/primesieve/SievingPrimes.cpp
             src/primesieve/PrimeSieve.cpp
             src/primesieve/SieveOfEratosthenes.cpp

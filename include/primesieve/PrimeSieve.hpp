@@ -2,7 +2,7 @@
 /// @file   PrimeSieve.hpp
 /// @brief  The PrimeSieve class is a high level class that
 ///         orchestrates prime sieving using the SievingPrimes
-///         and PrimeFinder classes.
+///         and PrimeGenerator classes.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
