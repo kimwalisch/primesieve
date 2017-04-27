@@ -30,22 +30,22 @@ set(BIN_SRC src/console/cmdoptions.cpp
 
 # primesieve library source files ####################################
 
-set(LIB_SRC src/primesieve/EratBig.cpp
+set(LIB_SRC src/primesieve/api-c.cpp
+            src/primesieve/api.cpp
+            src/primesieve/EratBig.cpp
             src/primesieve/EratMedium.cpp
             src/primesieve/EratSmall.cpp
+            src/primesieve/iterator-c.cpp
+            src/primesieve/iterator.cpp
+            src/primesieve/nthPrime.cpp
             src/primesieve/ParallelPrimeSieve.cpp
+            src/primesieve/popcount.cpp
             src/primesieve/PreSieve.cpp
             src/primesieve/PrimeGenerator.cpp
-            src/primesieve/SievingPrimes.cpp
             src/primesieve/PrimeSieve.cpp
             src/primesieve/SieveOfEratosthenes.cpp
-            src/primesieve/Wheel.cpp
-            src/primesieve/api.cpp
-            src/primesieve/api-c.cpp
-            src/primesieve/iterator.cpp
-            src/primesieve/iterator-c.cpp
-            src/primesieve/nthPrime.cpp
-            src/primesieve/popcount.cpp)
+            src/primesieve/SievingPrimes.cpp
+            src/primesieve/Wheel.cpp)
 
 # Detect CPU L1 cache size ###########################################
 
