@@ -68,22 +68,6 @@ int main()
   cout << "next_prime(" << p2 << ") = " << prime;
   check(prime == p1);
 
-  it.skipto(18446744073709551533ull);
-  prime = it.next_prime();
-  cout << "next_prime(" << 18446744073709551533ull << ") = " << prime;
-  check(prime == 18446744073709551557ull);
-
-  try
-  {
-    prime = it.next_prime();
-    cerr << "next_prime(" << 18446744073709551557ull << ") = " << prime << "   ERROR" << endl;
-    return 1;
-  }
-  catch (exception& e)
-  {
-    cout << "OK: " << e.what() << endl;
-  }
-
   cout << endl;
   cout << "All tests passed successfully!" << endl;
 
