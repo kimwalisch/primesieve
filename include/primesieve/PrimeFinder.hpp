@@ -20,7 +20,6 @@
 namespace primesieve {
 
 class Callback;
-class PrimeSieve;
 class PreSieve;
 
 /// PrimeFinder is a SieveOfEratosthenes class that is used to
