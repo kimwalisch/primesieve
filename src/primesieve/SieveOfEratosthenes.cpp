@@ -123,7 +123,7 @@ void SieveOfEratosthenes::sieveSegment()
 {
   preSieve();
   crossOffMultiples();
-  segmentFinished(sieve_, sieveSize_);
+  generatePrimes(sieve_, sieveSize_);
 
   // update for next segment
   uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE;
@@ -161,7 +161,7 @@ void SieveOfEratosthenes::sieve()
   for (uint_t j = sieveSize_; j % 8 != 0; j++)
     sieve_[j] = 0;
 
-  segmentFinished(sieve_, sieveSize_);
+  generatePrimes(sieve_, sieveSize_);
 }
 
 } // namespace

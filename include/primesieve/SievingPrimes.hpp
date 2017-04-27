@@ -25,7 +25,7 @@ public:
   void generate();
 private:
   PrimeFinder& finder_;
-  void segmentFinished(const byte_t*, uint_t);
+  void generatePrimes(const byte_t*, uint_t);
   void tinyPrimes();
 };
 

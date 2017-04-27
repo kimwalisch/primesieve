@@ -41,7 +41,7 @@ public:
 protected:
   SieveOfEratosthenes(uint64_t, uint64_t, uint_t, const PreSieve&);
   virtual ~SieveOfEratosthenes() { };
-  virtual void segmentFinished(const byte_t*, uint_t) = 0;
+  virtual void generatePrimes(const byte_t*, uint_t) = 0;
   static uint64_t getNextPrime(uint64_t*, uint64_t);
   uint64_t getSegmentLow() const;
 private:

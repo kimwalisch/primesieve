@@ -58,7 +58,7 @@ void SievingPrimes::tinyPrimes()
       addSievingPrime(i);
 }
 
-void SievingPrimes::segmentFinished(const byte_t* sieve, uint_t sieveSize)
+void SievingPrimes::generatePrimes(const byte_t* sieve, uint_t sieveSize)
 {
   uint64_t base = getSegmentLow();
   

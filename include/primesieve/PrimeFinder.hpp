@@ -39,7 +39,7 @@ private:
   PrimeSieve& ps_;
   PrimeSieve::counts_t& counts_;
   void init_kCounts();
-  virtual void segmentFinished(const byte_t*, uint_t);
+  virtual void generatePrimes(const byte_t*, uint_t);
   void count(const byte_t*, uint_t);
   void print(const byte_t*, uint_t) const;
   void callbackPrimes(Callback&, const byte_t*, uint_t) const;
