@@ -22,7 +22,7 @@ class SievingPrimes : public SieveOfEratosthenes
 {
 public:
   SievingPrimes(PrimeFinder&, const PreSieve&);
-  void generateSievingPrimes();
+  void generate();
 private:
   PrimeFinder& finder_;
   void segmentFinished(const byte_t*, uint_t);

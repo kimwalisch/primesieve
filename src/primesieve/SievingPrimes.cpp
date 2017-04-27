@@ -1,7 +1,7 @@
 ///
 /// @file  SievingPrimes.cpp
-///        Generates the sieving primes up to sqrt(stop) and adds
-///        them to PrimeFinder.
+///        Generates the sieving primes up to sqrt(stop)
+///        and adds them to PrimeFinder.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -29,14 +29,14 @@ SievingPrimes::SievingPrimes(PrimeFinder& finder, const PreSieve& preSieve) :
   finder_(finder)
 { }
 
-void SievingPrimes::generateSievingPrimes()
+void SievingPrimes::generate()
 {
   generateTinyPrimes();
   sieve();
 }
 
-/// Generate the primes up to n^0.25 using
-/// the sieve of Eratosthenes.
+/// Generate the primes up to sqrt(sqrt(stop))
+/// using the sieve of Eratosthenes
 ///
 void SievingPrimes::generateTinyPrimes()
 {

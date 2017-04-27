@@ -236,8 +236,8 @@ void PrimeSieve::sieve()
     if (finder.getSqrtStop() > preSieve.getLimit())
     {
       // generate sieving primes <= sqrt(stop)
-      SievingPrimes pg(finder, preSieve);
-      pg.generateSievingPrimes();
+      SievingPrimes sp(finder, preSieve);
+      sp.generate();
     }
 
     // sieve [start, stop]
