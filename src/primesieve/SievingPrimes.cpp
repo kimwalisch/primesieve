@@ -58,21 +58,21 @@ void SievingPrimes::tinyPrimes()
       addSievingPrime(i);
 }
 
+/// Reconstruct primes <= sqrt(stop) from 1 bits of the
+/// sieve array and add them to PrimeFinder
+///
 void SievingPrimes::generatePrimes(const byte_t* sieve, uint_t sieveSize)
 {
-  uint64_t base = getSegmentLow();
-  
-  // Reconstruct primes <= n^0.5 from 1 bits of the sieve
-  // array and use them for sieving in finder_
-  //
+  uint64_t low = getSegmentLow();
+
   for (uint_t i = 0; i < sieveSize; i += 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
 
     while (bits != 0)
-      finder_.addSievingPrime((uint_t) getNextPrime(&bits, base));
+      finder_.addSievingPrime((uint_t) getNextPrime(&bits, low));
 
-    base += NUMBERS_PER_BYTE * 8;
+    low += NUMBERS_PER_BYTE * 8;
   }
 }
 

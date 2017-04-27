@@ -89,13 +89,13 @@ void PrimeFinder::generatePrimes(const byte_t* sieve, uint_t sieveSize)
 
 void PrimeFinder::callbackPrimes(Callback& cb, const byte_t* sieve, uint_t sieveSize) const
 {
-  uint64_t base = getSegmentLow();
-  for (uint_t i = 0; i < sieveSize; i += 8, base += NUMBERS_PER_BYTE * 8)
+  uint64_t low = getSegmentLow();
+  for (uint_t i = 0; i < sieveSize; i += 8, low += NUMBERS_PER_BYTE * 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
     while (bits != 0)
     {
-      uint64_t prime = getNextPrime(&bits, base);
+      uint64_t prime = getNextPrime(&bits, low);
       cb.callback(prime);
     }
   }
@@ -136,13 +136,13 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
 {
   if (ps_.isFlag(ps_.PRINT_PRIMES))
   {
-    uint64_t base = getSegmentLow();
-    for (uint_t i = 0; i < sieveSize; i += 8, base += NUMBERS_PER_BYTE * 8)
+    uint64_t low = getSegmentLow();
+    for (uint_t i = 0; i < sieveSize; i += 8, low += NUMBERS_PER_BYTE * 8)
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
       while (bits != 0)
       {
-        uint64_t prime = getNextPrime(&bits, base);
+        uint64_t prime = getNextPrime(&bits, low);
         std::cout << prime << '\n';
       }
     }
@@ -152,10 +152,10 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEXTUPLETS))
   {
     uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
-    uint64_t base = getSegmentLow();
+    uint64_t low = getSegmentLow();
 
     for (; !ps_.isPrint(i); i++);
-    for (uint_t j = 0; j < sieveSize; j++, base += NUMBERS_PER_BYTE)
+    for (uint_t j = 0; j < sieveSize; j++, low += NUMBERS_PER_BYTE)
     {
       for (const uint_t* bitmask = kBitmasks_[i]; *bitmask <= sieve[j]; bitmask++)
       {
@@ -166,7 +166,7 @@ void PrimeFinder::print(const byte_t* sieve, uint_t sieveSize) const
           uint64_t bits = *bitmask;
           while (bits != 0)
           {
-            kTuplet << getNextPrime(&bits, base);
+            kTuplet << getNextPrime(&bits, low);
             kTuplet << ((bits != 0) ? ", " : ")\n");
           }
           std::cout << kTuplet.str();

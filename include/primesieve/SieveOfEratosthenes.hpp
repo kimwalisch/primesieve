@@ -79,14 +79,14 @@ private:
 /// Reconstruct the prime number corresponding to
 /// the first set bit and unset that bit
 ///
-inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint64_t base)
+inline uint64_t SieveOfEratosthenes::getNextPrime(uint64_t* bits, uint64_t low)
 {
   // calculate bitValues_[bitScanForward(*bits)]
   // using a custom De Bruijn bitscan
   uint64_t debruijn64 = 0x3F08A4C6ACB9DBDull;
   uint64_t mask = *bits - 1;
   uint64_t bitValue = bruijnBitValues_[((*bits ^ mask) * debruijn64) >> 58];
-  uint64_t prime = base + bitValue;
+  uint64_t prime = low + bitValue;
   *bits &= mask;
   return prime;
 }
