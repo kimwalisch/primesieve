@@ -9,7 +9,6 @@
 ///
 
 #include <primesieve/ParallelPrimeSieve.hpp>
-#include "calculator.hpp"
 #include "cmdoptions.hpp"
 
 #include <stdint.h>
