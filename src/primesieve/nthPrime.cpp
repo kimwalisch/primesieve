@@ -45,8 +45,8 @@ bool sieveBackwards(int64_t n, int64_t count, uint64_t stop)
 int64_t pix(int64_t n)
 {
   double x = (double) n;
-  double logx = log(max(4.0, x));
-  double pix = x / logx;
+  x = max(4.0, x);
+  double pix = x / log(x);
   return (int64_t) pix;
 }
 
