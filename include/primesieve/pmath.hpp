@@ -125,13 +125,14 @@ inline B inBetween(A min, B x, C max)
 }
 
 /// Get an approximation of the maximum prime gap near n
-inline uint64_t max_prime_gap(uint64_t n)
+template <typename T>
+inline T max_prime_gap(T n)
 {
   double x = (double) n;
   x = std::max(1.0, x);
   double logx = std::log(x);
   double prime_gap = logx * logx;
-  return (uint64_t) prime_gap;
+  return (T) prime_gap;
 }
 
 } // namespace

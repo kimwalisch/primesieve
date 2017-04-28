@@ -87,7 +87,7 @@ uint64_t nthPrimeDist(int64_t n, int64_t count, uint64_t start)
 
   // if n is very small:
   // ensure (start + dist) >= nth prime
-  double maxPrimeGap = logStartPix * logStartPix;
+  double maxPrimeGap = max_prime_gap(startPix);
   dist = max(dist, maxPrimeGap);
 
   return (uint64_t) dist;
