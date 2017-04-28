@@ -32,7 +32,7 @@ void checkLimit(uint64_t start)
 void checkLowerLimit(uint64_t stop)
 {
   if (stop == 0)
-    throw primesieve_error("nth prime < 2 is impossible, n is too small");
+    throw primesieve_error("nth prime < 2 is impossible");
 }
 
 bool sieveBackwards(int64_t n, int64_t count, uint64_t stop)
