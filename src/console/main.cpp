@@ -138,16 +138,10 @@ int main(int argc, char* argv[])
     else
       sieve(opt);
   }
-  catch (calculator::error& e)
-  {
-    cerr << e.what() << "." << endl
-         << "Try `primesieve --help' for more information." << endl;
-    return 1;
-  }
   catch (exception& e)
   {
-    cerr << "Error: " << e.what() << "." << endl
-         << "Try `primesieve --help' for more information." << endl;
+    cerr << "primesieve: " << e.what() << endl
+         << "Try: primesieve --help"   << endl;
     return 1;
   }
 
