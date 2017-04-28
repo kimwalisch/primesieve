@@ -65,7 +65,11 @@ uint64_t nthPrimeDist(int64_t n, int64_t count, uint64_t start)
   // correct start if sieving backwards to get
   // a more accurate approximation
   if (count >= n)
-    start -= (uint64_t) pix;
+  {
+    double st = start - pix;
+    st = max(0.0, st);
+    start = (uint64_t) st;
+  }
 
   // approximate the nth prime using:
   // start + n * log(start + pi(n) / loglog(n))
