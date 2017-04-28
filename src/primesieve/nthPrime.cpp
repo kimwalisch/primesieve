@@ -62,8 +62,8 @@ uint64_t nthPrimeDist(int64_t n, int64_t count, uint64_t start)
   double loglogx = log(logx);
   double pix = x * (logx + loglogx - 1);
 
-  // correct start if sieving backwards to get
-  // a more accurate approximation
+  // correct start if sieving backwards to
+  // get more accurate approximation
   if (count >= n)
   {
     double st = start - pix;
