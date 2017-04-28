@@ -134,7 +134,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
       checkLowerLimit(stop);
       dist = nthPrimeDist(n, count, stop);
       start = checkedSub(start, dist);
-      count -= countPrimes(start, stop);
+      count -= (int64_t) countPrimes(start, stop);
       stop = checkedSub(start, 1);
     }
   }
