@@ -55,20 +55,21 @@ double test_atomic(int threads)
 
   auto t2 = chrono::system_clock::now();
   chrono::duration<double> seconds = t2 - t1;
+  double ops = total / seconds.count();
 
   cout << "Total atomic iters = " << total;
   check(total == iters);
 
-  cout << "Atomic operations per seccond = " << (int) (total / seconds.count()) << endl;
+  cout << "Atomic operations per seccond = " << (int) ops << endl;
 
-  return seconds.count();
+  return ops;
 }
 
 double test_mutex(int threads)
 {
   mutex lock;
   int i = 0;
-  int iters = 1 << 18;
+  int iters = 1 << 19;
   int total = 0;
 
   // each thread executes 1 task
@@ -98,13 +99,14 @@ double test_mutex(int threads)
 
   auto t2 = chrono::system_clock::now();
   chrono::duration<double> seconds = t2 - t1;
+  double ops = total / seconds.count();
 
   cout << "Total mutex iters = " << total;
   check(total == iters);
 
-  cout << "Mutex operations per seccond = " << (int) (total / seconds.count()) << endl;
+  cout << "Mutex operations per seccond = " << (int) ops << endl;
 
-  return seconds.count();
+  return ops;
 }
 
 int main()
@@ -112,11 +114,10 @@ int main()
   int threads = thread::hardware_concurrency();
   threads = max(1, threads);
 
-  double sec1 = test_atomic(threads);
-  double sec2 = test_mutex(threads);
-  sec1 /= 1 << (23 - 18);
+  double ops1 = test_atomic(threads);
+  double ops2 = test_mutex(threads);
 
-  cout << "Mutex/Atomic ratio: " << sec2 / sec1 << endl << endl;
+  cout << "Atomic/Mutex speedup: " << ops1 / ops2 << endl << endl;
   cout << "All tests passed successfully!" << endl;
 
   return 0;
