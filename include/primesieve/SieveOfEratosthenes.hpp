@@ -23,11 +23,12 @@ namespace primesieve {
 
 class PreSieve;
 
-/// The abstract SieveOfEratosthenes class sieves primes using the
-/// segmented sieve of Eratosthenes. It uses a bit array for sieving,
-/// the bit array uses 8 flags for 30 numbers. SieveOfEratosthenes
-/// uses three different sieve of Eratosthenes algorithms optimized
-/// for small, medium and big sieving primes to cross-off multiples
+/// The abstract SieveOfEratosthenes class sieves primes using
+/// the segmented sieve of Eratosthenes. It uses a bit array
+/// for sieving, the bit array uses 8 flags for 30 numbers.
+/// SieveOfEratosthenes uses 3 different sieve of Eratosthenes
+/// algorithms optimized for small, medium and big sieving primes
+/// to cross-off multiples.
 ///
 class SieveOfEratosthenes
 {
