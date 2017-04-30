@@ -217,9 +217,11 @@ void PrimeSieve::sieve()
     return;
 
   auto t1 = chrono::system_clock::now();
+  int initStatus = 0;
+  int finishStatus = 10;
 
   if (isStatus())
-    updateStatus(INIT_STATUS);
+    updateStatus(initStatus);
 
   if (start_ <= 5)
     processSmallPrimes();
@@ -245,7 +247,7 @@ void PrimeSieve::sieve()
   seconds_ = seconds.count();
 
   if (isStatus())
-    updateStatus(FINISH_STATUS, false);
+    updateStatus(finishStatus, false);
 }
 
 void PrimeSieve::sieve(uint64_t start, uint64_t stop)

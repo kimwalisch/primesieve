@@ -126,11 +126,6 @@ private:
   static void printStatus(double, double);
   bool isParallelPrimeSieve() const;
   void processSmallPrimes();
-  enum
-  {
-      INIT_STATUS = 0,
-    FINISH_STATUS = 10
-  };
 };
 
 } // namespace
