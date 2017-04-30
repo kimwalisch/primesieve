@@ -1,10 +1,9 @@
 ///
 /// @file   StorePrimes.hpp
-/// @brief  This file contains classes needed to store primes in
-///         std::vector objects. These classes derive from Callback
-///         and call PrimeSieve's callbackPrimes() method, the
-///         primes are then pushed back onto the vector inside the
-///         callback method.
+/// @brief  The StorePrimes and Store_N_Primes classes are used to
+///         store primes in std::vector objects. These classes
+///         implement a callback function which is called
+///         consecutively for all primes in [start, stop].
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
