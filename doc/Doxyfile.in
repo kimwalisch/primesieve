@@ -3,7 +3,6 @@ PROJECT_NUMBER         = @PRIMESIEVE_VERSION@
 INPUT                  = @PROJECT_SOURCE_DIR@/doc/mainpage.dox \
                          @PROJECT_SOURCE_DIR@/include/primesieve.hpp \
                          @PROJECT_SOURCE_DIR@/include/primesieve.h \
-                         @PROJECT_SOURCE_DIR@/include/primesieve/Callback.hpp \
                          @PROJECT_SOURCE_DIR@/include/primesieve/iterator.h \
                          @PROJECT_SOURCE_DIR@/include/primesieve/iterator.hpp \
                          @PROJECT_SOURCE_DIR@/include/primesieve/primesieve_error.hpp \

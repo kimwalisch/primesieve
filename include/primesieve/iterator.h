@@ -5,9 +5,7 @@
  *         has a complexity of O(r log log r) operations with
  *         r = n^0.5, after that any additional prime is generated in
  *         amortized O(log n log log n) operations. The memory usage
- *         is about pi(n^0.5) * 16 bytes. primesieve_iterator objects
- *         are very convenient to use at the cost of being slightly
- *         slower than the primesieve_callback_primes() functions.
+ *         is about pi(n^0.5) * 16 bytes.
  *
  *         The @link primesieve_iterator.c primesieve_iterator.c
  *         @endlink example shows how to use primesieve_iterator. If

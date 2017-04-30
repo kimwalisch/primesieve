@@ -18,9 +18,9 @@
 #define PRIMESIEVE_VERSION_MINOR 0
 
 #include <primesieve/PrimeSieve.hpp>
+#include <primesieve/primesieve_error.hpp>
 #include <primesieve/iterator.hpp>
 #include <primesieve/StorePrimes.hpp>
-#include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
 #include <vector>
@@ -60,7 +60,7 @@ inline void generate_n_primes(uint64_t n, std::vector<T>* primes)
   if (primes)
   {
     Store_N_Primes<std::vector<T> > sp(*primes);
-    sp.store_N_Primes(n, 0);
+    sp.storePrimes(n, 0);
   }
 }
 
@@ -71,7 +71,7 @@ inline void generate_n_primes(uint64_t n, uint64_t start, std::vector<T>* primes
   if (primes)
   {
     Store_N_Primes<std::vector<T> > sp(*primes);
-    sp.store_N_Primes(n, start);
+    sp.storePrimes(n, start);
   }
 }
 

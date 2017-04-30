@@ -19,8 +19,8 @@
 
 namespace primesieve {
 
-class Callback;
 class PreSieve;
+class Store;
 
 /// After a segment has been sieved PrimeGenerator is
 /// used to reconstruct primes and prime k-tuplets from
@@ -42,7 +42,7 @@ private:
   virtual void generatePrimes(const byte_t*, uint_t);
   void count(const byte_t*, uint_t);
   void print(const byte_t*, uint_t) const;
-  void callbackPrimes(Callback&, const byte_t*, uint_t) const;
+  void storePrimes(Store&, const byte_t*, uint_t) const;
   static void printPrime(uint64_t);
 };
 

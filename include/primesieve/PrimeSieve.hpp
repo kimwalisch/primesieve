@@ -13,11 +13,12 @@
 #ifndef PRIMESIEVE_CLASS_HPP
 #define PRIMESIEVE_CLASS_HPP
 
-#include "Callback.hpp"
 #include <stdint.h>
 #include <vector>
 
 namespace primesieve {
+
+class Store;
 
 class PrimeSieve
 {
@@ -37,8 +38,7 @@ public:
     PRINT_QUINTUPLETS = 1 << 10,
     PRINT_SEXTUPLETS  = 1 << 11,
     PRINT_STATUS      = 1 << 12,
-    CALCULATE_STATUS  = 1 << 13,
-    CALLBACK_PRIMES   = 1 << 14
+    CALCULATE_STATUS  = 1 << 13
   };
   PrimeSieve();
   PrimeSieve(PrimeSieve*);
@@ -49,7 +49,7 @@ public:
   int getSieveSize() const;
   double getStatus() const;
   double getSeconds() const;
-  Callback& getCallback();
+  Store& getStore();
   // Setters
   void setStart(uint64_t);
   void setStop(uint64_t);
@@ -57,20 +57,19 @@ public:
   void setFlags(int);
   void addFlags(int);
   // Bool is*
-  bool isFlag(int) const;
-  bool isCallback() const;
   bool isCount() const;
   bool isCount(int) const;
   bool isPrint() const;
   bool isPrint(int) const;
+  bool isFlag(int) const;
   bool isFlag(int, int) const;
   bool isStatus() const;
+  bool isStore() const;
   // Sieve
   virtual void sieve();
   void sieve(uint64_t, uint64_t);
   void sieve(uint64_t, uint64_t, int);
-  // Callback
-  void callbackPrimes(uint64_t, uint64_t, Callback*);
+  void storePrimes(uint64_t, uint64_t, Store*);
   // nth prime
   uint64_t nthPrime(uint64_t);
   uint64_t nthPrime(int64_t, uint64_t);
@@ -123,9 +122,8 @@ private:
   int flags_;
   /// parent ParallelPrimeSieve object
   PrimeSieve* parent_;
-  Callback* cb_;
+  Store* store_;
   static void printStatus(double, double);
-  bool isValidFlags(int) const;
   bool isParallelPrimeSieve() const;
   void processSmallPrimes();
   enum

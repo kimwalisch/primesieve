@@ -62,7 +62,7 @@ void* n_primes_helper(uint64_t n, uint64_t start)
   {
     malloc_vector<T> primes;
     Store_N_Primes<malloc_vector<T>> sp(primes);
-    sp.store_N_Primes(n, start);
+    sp.storePrimes(n, start);
 
     primes.disable_free();
     return (void*) primes.data();

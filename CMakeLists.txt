@@ -112,7 +112,6 @@ install(FILES include/primesieve.h
               DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 
 install(FILES include/primesieve/PrimeSieve.hpp
-              include/primesieve/Callback.hpp
               include/primesieve/StorePrimes.hpp
               include/primesieve/iterator.h
               include/primesieve/iterator.hpp

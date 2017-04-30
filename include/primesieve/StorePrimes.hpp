@@ -11,11 +11,10 @@
 /// file in the top level directory.
 ///
 
-#ifndef PUSHBACKPRIMES_HPP
-#define PUSHBACKPRIMES_HPP
+#ifndef STOREPRIMES_HPP
+#define STOREPRIMES_HPP
 
 #include "PrimeSieve.hpp"
-#include "Callback.hpp"
 #include "primesieve_error.hpp"
 
 #include <stdint.h>
@@ -24,8 +23,10 @@
 
 namespace primesieve {
 
-/// approximate_prime_count(x) >= pi(x)
-inline std::size_t approximate_prime_count(uint64_t start, uint64_t stop)
+uint64_t get_max_stop();
+
+/// prime_count_approx(x) >= pi(x)
+inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
 {
   if (start > stop)
     return 0;
@@ -41,28 +42,35 @@ inline std::size_t approximate_prime_count(uint64_t start, uint64_t stop)
   return (std::size_t) pix;
 }
 
+class Store
+{
+public:
+  virtual void operator()(uint64_t prime) = 0;
+  virtual ~Store() { }
+};
+
 template <typename T>
-class StorePrimes : public Callback
+class StorePrimes : public Store
 {
 public:
   StorePrimes(T& primes)
     : primes_(primes)
   { }
 
-  void callback(uint64_t prime)
+  // callback function
+  void operator()(uint64_t prime)
   {
-    typedef typename T::value_type V;
-    primes_.push_back((V) prime);
+    primes_.push_back((typename T::value_type) prime);
   }
 
   void storePrimes(uint64_t start, uint64_t stop)
   {
     if (start <= stop)
     {
-      std::size_t prime_count = approximate_prime_count(start, stop);
-      primes_.reserve(primes_.size() + prime_count);
+      std::size_t size = primes_.size() + prime_count_approx(start, stop);
+      primes_.reserve(size);
       PrimeSieve ps;
-      ps.callbackPrimes(start, stop, this);
+      ps.storePrimes(start, stop, this);
     }
   }
 private:
@@ -70,27 +78,27 @@ private:
 };
 
 template <typename T>
-class Store_N_Primes : public Callback
+class Store_N_Primes : public Store
 {
 public:
   Store_N_Primes(T& primes) 
     : primes_(primes)
   { }
 
-  void callback(uint64_t prime)
+  // callback function
+  void operator()(uint64_t prime)
   {
-    typedef typename T::value_type V;
-    primes_.push_back((V) prime);
+    primes_.push_back((typename T::value_type) prime);
     if (--n_ == 0)
-      throw stop_callback();
+      throw stop_store();
   }
 
-  void store_N_Primes(uint64_t n, uint64_t start)
+  void storePrimes(uint64_t n, uint64_t start)
   {
     n_ = n;
     PrimeSieve ps;
-    std::size_t newSize = primes_.size() + (std::size_t) n_;
-    primes_.reserve(newSize);
+    std::size_t size = primes_.size() + (std::size_t) n_;
+    primes_.reserve(size);
     try
     {
       while (n_ > 0)
@@ -104,17 +112,17 @@ public:
         if (stop < start)
           stop = get_max_stop();
 
-        ps.callbackPrimes(start, stop, this);
+        ps.storePrimes(start, stop, this);
         start = stop + 1;
 
         if (stop >= get_max_stop())
           throw primesieve_error("cannot generate primes > 2^64");
       }
     }
-    catch (stop_callback&) { }
+    catch (stop_store&) { }
   }
 private:
-  class stop_callback : public std::exception { };
+  class stop_store : public std::exception { };
   T& primes_;
   uint64_t n_;
 };

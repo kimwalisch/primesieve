@@ -11,12 +11,12 @@
 ///
 
 #include <primesieve/config.hpp>
-#include <primesieve/Callback.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/SieveOfEratosthenes.hpp>
+#include <primesieve/StorePrimes.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -81,8 +81,8 @@ void PrimeGenerator::init_kCounts()
 ///
 void PrimeGenerator::generatePrimes(const byte_t* sieve, uint_t sieveSize)
 {
-  if (ps_.isCallback())
-    callbackPrimes(ps_.getCallback(), sieve, sieveSize);
+  if (ps_.isStore())
+    storePrimes(ps_.getStore(), sieve, sieveSize);
   if (ps_.isCount())
     count(sieve, sieveSize);
   if (ps_.isPrint())
@@ -91,14 +91,14 @@ void PrimeGenerator::generatePrimes(const byte_t* sieve, uint_t sieveSize)
     ps_.updateStatus(sieveSize * NUMBERS_PER_BYTE);
 }
 
-void PrimeGenerator::callbackPrimes(Callback& cb, const byte_t* sieve, uint_t sieveSize) const
+void PrimeGenerator::storePrimes(Store& store, const byte_t* sieve, uint_t sieveSize) const
 {
   uint64_t low = getSegmentLow();
   for (uint_t i = 0; i < sieveSize; i += 8, low += NUMBERS_PER_BYTE * 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
     while (bits)
-      cb.callback(nextPrime(&bits, low));
+      store(nextPrime(&bits, low));
   }
 }
 
