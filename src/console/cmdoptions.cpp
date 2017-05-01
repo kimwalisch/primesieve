@@ -84,34 +84,31 @@ map<string, OptionID> optionMap =
   { "--version",   OPTION_VERSION }
 };
 
-int check(Option& opt,
-          int primeType)
-{
-  primeType--;
-
-  if (primeType < 0 ||
-      primeType > 5)
-    throw primesieve_error("invalid option " + opt.argv);
-
-  return primeType;
-}
-
 void optionPrint(Option& opt,
                  CmdOptions& opts)
 {
   opts.quiet = true;
 
+  // by default print primes
   if (opt.value.empty())
     opt.value = "1";
 
-  int i = opt.getValue<int>();
-  i = check(opt, i);
-  opts.flags |= PrimeSieve::PRINT_PRIMES << i;
+  switch (opt.getValue<int>())
+  {
+    case 1: opts.flags |= PrimeSieve::PRINT_PRIMES; break;
+    case 2: opts.flags |= PrimeSieve::PRINT_TWINS; break;
+    case 3: opts.flags |= PrimeSieve::PRINT_TRIPLETS; break;
+    case 4: opts.flags |= PrimeSieve::PRINT_QUADRUPLETS; break;
+    case 5: opts.flags |= PrimeSieve::PRINT_QUINTUPLETS; break;
+    case 6: opts.flags |= PrimeSieve::PRINT_SEXTUPLETS; break;
+    default: throw primesieve_error("invalid option " + opt.argv);
+  }
 }
 
 void optionCount(Option& opt,
                  CmdOptions& opts)
 {
+  // by default count primes
   if (opt.value.empty())
     opt.value = "1";
 
@@ -119,8 +116,16 @@ void optionCount(Option& opt,
 
   for (; n > 0; n /= 10)
   {
-    int i = check(opt, n % 10);
-    opts.flags |= PrimeSieve::COUNT_PRIMES << i;
+    switch (n % 10)
+    {
+      case 1: opts.flags |= PrimeSieve::COUNT_PRIMES; break;
+      case 2: opts.flags |= PrimeSieve::COUNT_TWINS; break;
+      case 3: opts.flags |= PrimeSieve::COUNT_TRIPLETS; break;
+      case 4: opts.flags |= PrimeSieve::COUNT_QUADRUPLETS; break;
+      case 5: opts.flags |= PrimeSieve::COUNT_QUINTUPLETS; break;
+      case 6: opts.flags |= PrimeSieve::COUNT_SEXTUPLETS; break;
+      default: throw primesieve_error("invalid option " + opt.argv);
+    }
   }
 }
 
