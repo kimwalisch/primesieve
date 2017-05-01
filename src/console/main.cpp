@@ -12,7 +12,7 @@
 #include "cmdoptions.hpp"
 
 #include <stdint.h>
-#include <cstddef>
+#include <cstdlib>
 #include <iostream>
 #include <exception>
 #include <iomanip>
@@ -30,41 +30,23 @@ void printResults(ParallelPrimeSieve& ps, CmdOptions& opt)
 
   const string text[] =
   {
-    "Primes",
-    "Twin primes",
-    "Prime triplets",
-    "Prime quadruplets",
-    "Prime quintuplets",
-    "Prime sextuplets"
+    "Primes: ",
+    "Twin primes: ",
+    "Prime triplets: ",
+    "Prime quadruplets: ",
+    "Prime quintuplets: ",
+    "Prime sextuplets: "
   };
 
-  // largest text size
-  size_t size = 0;
-
-  if (opt.time)
-    size = max(size, string("Seconds").size());
-
   for (int i = 0; i < 6; i++)
     if (ps.isCount(i))
-      size = max(size, text[i].size());
-
-  int width = (int) size;
+      cout << text[i] << ps.getCount(i) << endl;
 
   if (opt.time)
-    cout << setw(width) << "Seconds" << " : "
-         << fixed << setprecision(3) << ps.getSeconds()
-         << endl;
-
-  // print results
-  for (int i = 0; i < 6; i++)
-  {
-    if (ps.isCount(i))
-      cout << setw(width) << text[i] << " : "
-           << ps.getCount(i) << endl;
-  }
+    cout << "Seconds: " << fixed << setprecision(3) << ps.getSeconds() << endl;
 }
 
-/// Used to count and print primes and prime k-tuplets
+/// Count & print primes and prime k-tuplets
 void sieve(CmdOptions& opt)
 {
   ParallelPrimeSieve ps;
@@ -78,7 +60,6 @@ void sieve(CmdOptions& opt)
     ps.setNumThreads(opt.threads);
   if (ps.isPrint())
     ps.setNumThreads(1);
-
   if (numbers.size() < 2)
     numbers.push_front(0);
 
@@ -109,19 +90,26 @@ void nthPrime(CmdOptions& opt)
     ps.setSieveSize(opt.sieveSize);
   if (opt.threads)
     ps.setNumThreads(opt.threads);
-
   if (numbers.size() < 2)
     numbers.push_back(0);
 
-  uint64_t n = numbers[0];
+  int64_t n = numbers[0];
   uint64_t start = numbers[1];
-  uint64_t nthPrime = ps.nthPrime(n, start);
+  uint64_t nthPrime = 0;
+  ps.setStart(start);
+  ps.setStop(start + abs(n * 20));
+
+  if (!opt.quiet)
+  {
+    cout << "Sieve size = " << ps.getSieveSize() << " kilobytes" << endl;
+    cout << "Threads = " << ps.idealNumThreads() << endl;
+  }
+
+  nthPrime = ps.nthPrime(n, start);
+  cout << "Nth prime: " << nthPrime << endl;
 
   if (opt.time)
-    cout << "Seconds   : " << fixed << setprecision(3)
-         << ps.getSeconds() << endl;
-
-  cout << "Nth prime : " << nthPrime << endl;
+    cout << "Seconds: " << fixed << setprecision(3) << ps.getSeconds() << endl;
 }
 
 } // namespace
