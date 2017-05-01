@@ -55,7 +55,7 @@ const string helpMenu
 void help()
 {
   cout << helpMenu << endl;
-  exit(1);
+  exit(0);
 }
 
 void version()
@@ -68,5 +68,5 @@ void version()
   cout << "BSD 2-Clause License <http://opensource.org/licenses/BSD-2-Clause>" << endl;
   cout << endl;
 
-  exit(1);
+  exit(0);
 }
