@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['callback',['Callback',['../classprimesieve_1_1_callback.html',1,'primesieve']]]
+  ['iterator',['iterator',['../classprimesieve_1_1iterator.html',1,'primesieve']]]
 ];

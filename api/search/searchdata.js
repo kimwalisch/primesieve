@@ -1,9 +1,9 @@
 var indexSectionsWithContent =
 {
   0: "cgilnpsu",
-  1: "cip",
+  1: "ip",
   2: "p",
-  3: "cip",
+  3: "ip",
   4: "cginps",
   5: "ilsu",
   6: "p"

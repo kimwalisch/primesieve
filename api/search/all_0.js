@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['callback',['Callback',['../classprimesieve_1_1_callback.html',1,'primesieve']]],
-  ['callback_2ehpp',['Callback.hpp',['../_callback_8hpp.html',1,'']]],
   ['count_5fprimes',['count_primes',['../namespaceprimesieve.html#a6e8caa0de4a20596b0fe8b4a9f0f3f1a',1,'primesieve']]],
   ['count_5fquadruplets',['count_quadruplets',['../namespaceprimesieve.html#aa5122db2b01e8495d80b19d14d309d04',1,'primesieve']]],
   ['count_5fquintuplets',['count_quintuplets',['../namespaceprimesieve.html#a2659c2cae674ff90d23af133a05b2fd2',1,'primesieve']]],
