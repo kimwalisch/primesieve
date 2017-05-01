@@ -27,18 +27,18 @@ using namespace primesieve;
 namespace {
 
 /// Command-line option
-/// e.g. str = "--threads", value = "4"
+/// e.g. opt = "--threads", val = "4"
 struct Option
 {
-  string argv;
   string str;
-  string value;
+  string opt;
+  string val;
   template <typename T>
   T getValue() const
   {
-    if (value.empty())
-      throw primesieve_error("missing value for option " + argv);
-    return calculator::eval<T>(value);
+    if (val.empty())
+      throw primesieve_error("missing value for option " + str);
+    return calculator::eval<T>(val);
   }
 };
 
@@ -90,8 +90,8 @@ void optionPrint(Option& opt,
   opts.quiet = true;
 
   // by default print primes
-  if (opt.value.empty())
-    opt.value = "1";
+  if (opt.val.empty())
+    opt.val = "1";
 
   switch (opt.getValue<int>())
   {
@@ -101,7 +101,7 @@ void optionPrint(Option& opt,
     case 4: opts.flags |= PrimeSieve::PRINT_QUADRUPLETS; break;
     case 5: opts.flags |= PrimeSieve::PRINT_QUINTUPLETS; break;
     case 6: opts.flags |= PrimeSieve::PRINT_SEXTUPLETS; break;
-    default: throw primesieve_error("invalid option " + opt.argv);
+    default: throw primesieve_error("invalid option " + opt.str);
   }
 }
 
@@ -109,8 +109,8 @@ void optionCount(Option& opt,
                  CmdOptions& opts)
 {
   // by default count primes
-  if (opt.value.empty())
-    opt.value = "1";
+  if (opt.val.empty())
+    opt.val = "1";
 
   int n = opt.getValue<int>();
 
@@ -124,34 +124,50 @@ void optionCount(Option& opt,
       case 4: opts.flags |= PrimeSieve::COUNT_QUADRUPLETS; break;
       case 5: opts.flags |= PrimeSieve::COUNT_QUINTUPLETS; break;
       case 6: opts.flags |= PrimeSieve::COUNT_SEXTUPLETS; break;
-      default: throw primesieve_error("invalid option " + opt.argv);
+      default: throw primesieve_error("invalid option " + opt.str);
     }
   }
 }
 
+/// e.g. "--thread=4" -> return "--thread"
+string getOption(string str)
+{
+  size_t pos = str.find_first_of("=0123456789");
+
+  if (pos == string::npos)
+    return str;
+  else
+    return str.substr(0, pos);
+}
+
+/// e.g. "--thread=4" -> return "4"
+string getValue(string str)
+{
+  size_t pos = str.find_first_of("0123456789");
+
+  if (pos == string::npos)
+    return string();
+  else
+    return str.substr(pos);
+}
+
 /// e.g. "--threads=8"
-/// -> opt.str = "--threads"
-/// -> opt.value = "8"
+/// -> opt.opt = "--threads"
+/// -> opt.val = "8"
 ///
-Option makeOption(const string& argv)
+Option makeOption(const string& str)
 {
   Option opt;
-  opt.argv = argv;
-  size_t delimiter = argv.find_first_of("=0123456789");
 
-  if (delimiter == string::npos)
-    opt.str = argv;
-  else
-  {
-    opt.str = argv.substr(0, delimiter);
-    opt.value = argv.substr(delimiter + (argv.at(delimiter) == '=' ? 1 : 0));
-  }
+  opt.str = str;
+  opt.opt = getOption(str);
+  opt.val = getValue(str);
 
-  if (opt.str.empty() && !opt.value.empty())
-    opt.str = "--number";
+  if (opt.opt.empty() && !opt.val.empty())
+    opt.opt = "--number";
 
-  if (!optionMap.count(opt.str))
-    throw primesieve_error("unknown option " + argv);
+  if (!optionMap.count(opt.opt))
+    throw primesieve_error("unknown option " + str);
 
   return opt;
 }
@@ -166,7 +182,7 @@ CmdOptions parseOptions(int argc, char* argv[])
   {
     Option opt = makeOption(argv[i]);
 
-    switch (optionMap[opt.str])
+    switch (optionMap[opt.opt])
     {
       case OPTION_COUNT:     optionCount(opt, opts); break;
       case OPTION_PRINT:     optionPrint(opt, opts); break;
