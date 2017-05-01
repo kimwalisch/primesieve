@@ -30,13 +30,14 @@ namespace {
 /// e.g. str = "--threads", value = "4"
 struct Option
 {
+  string argv;
   string str;
   string value;
   template <typename T>
   T getValue() const
   {
     if (value.empty())
-      throw primesieve_error("missing value for option " + str);
+      throw primesieve_error("missing value for option " + argv);
     return calculator::eval<T>(value);
   }
 };
@@ -83,13 +84,14 @@ map<string, OptionID> optionMap =
   { "--version",   OPTION_VERSION }
 };
 
-int check(int primeType)
+int check(Option& opt,
+          int primeType)
 {
   primeType--;
 
   if (primeType < 0 ||
       primeType > 5)
-    help();
+    throw primesieve_error("invalid option " + opt.argv);
 
   return primeType;
 }
@@ -103,7 +105,7 @@ void optionPrint(Option& opt,
     opt.value = "1";
 
   int i = opt.getValue<int>();
-  i = check(i);
+  i = check(opt, i);
   opts.flags |= PrimeSieve::PRINT_PRIMES << i;
 }
 
@@ -117,7 +119,7 @@ void optionCount(Option& opt,
 
   for (; n > 0; n /= 10)
   {
-    int i = check(n % 10);
+    int i = check(opt, n % 10);
     opts.flags |= PrimeSieve::COUNT_PRIMES << i;
   }
 }
@@ -126,24 +128,25 @@ void optionCount(Option& opt,
 /// -> opt.str = "--threads"
 /// -> opt.value = "8"
 ///
-Option makeOption(const string& str)
+Option makeOption(const string& argv)
 {
   Option opt;
-  size_t delimiter = str.find_first_of("=0123456789");
+  opt.argv = argv;
+  size_t delimiter = argv.find_first_of("=0123456789");
 
   if (delimiter == string::npos)
-    opt.str = str;
+    opt.str = argv;
   else
   {
-    opt.str = str.substr(0, delimiter);
-    opt.value = str.substr(delimiter + (str.at(delimiter) == '=' ? 1 : 0));
+    opt.str = argv.substr(0, delimiter);
+    opt.value = argv.substr(delimiter + (argv.at(delimiter) == '=' ? 1 : 0));
   }
 
   if (opt.str.empty() && !opt.value.empty())
     opt.str = "--number";
 
   if (!optionMap.count(opt.str))
-    throw primesieve_error("unknown option " + opt.str);
+    throw primesieve_error("unknown option " + argv);
 
   return opt;
 }
@@ -175,9 +178,8 @@ CmdOptions parseOptions(int argc, char* argv[])
     }
   }
 
-  if (opts.numbers.size() < 1 ||
-      opts.numbers.size() > 2)
-    help();
+  if (opts.numbers.empty())
+    throw primesieve_error("missing STOP number");
 
   if (opts.quiet)
     opts.status = false;
