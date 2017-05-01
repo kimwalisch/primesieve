@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
   catch (exception& e)
   {
     cerr << "primesieve: " << e.what() << endl
-         << "Try: primesieve --help"   << endl;
+         << "Try 'primesieve --help' for more information." << endl;
     return 1;
   }
 
