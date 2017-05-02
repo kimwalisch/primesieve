@@ -277,7 +277,7 @@ CPUs.</p>
   <li>Uses specialized algorithms for small, medium and big sieving primes</li>
   <li>Uses a custom memory pool (for big sieving primes)</li>
   <li>Processes multiple sieving primes per loop iteration to increase instruction-level parallelism</li>
-  <li>Parallelized (multi-threaded) using <a href="http://openmp.org/">OpenMP</a></li>
+  <li>Multi-threaded using C++11 std::async</li>
 </ul>
 
 <div id="inner_loop">
