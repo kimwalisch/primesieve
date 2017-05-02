@@ -79,11 +79,11 @@
 <p>primesieve is a free software program and C/C++ library that
 generates primes using a
 <a href="#implementation">highly optimized sieve of Eratosthenes
-implementation</a>. It counts the primes below 10^10 in just 0.45
-seconds on an Intel Core i7-6700 CPU (4&nbsp;x&nbsp;3.4GHz).
+implementation</a>. It counts the primes below 10<sup>10</sup> in just
+0.45 seconds on an Intel Core i7-6700 CPU (4&nbsp;x&nbsp;3.4GHz).
 primesieve can generate primes and
 <a href="http://en.wikipedia.org/wiki/Prime_k-tuple">prime k-tuplets</a>
-up to 2^64.</p>
+up to 2<sup>64</sup>.</p>
 
 <a href="screenshots/primesieve_large.png" alt="Large screenshot">
 <img src="screenshots/primesieve_osx_macpro.png" alt="primesieve Mac OS X application" style="padding-top: 15px;  padding-bottom: 10px;"/>
@@ -188,8 +188,8 @@ size was set to the CPU's L1 data cache size.</p>
 <p style="padding-top: 13px">primesieve scales linearly up to a very
 large number of CPU cores (if the interval is sufficiently large). The
 above benchmark was run on a system with 8 physical CPU cores, at each
-start offset the primes inside an interval of size 10^11 were counted
-using different numbers of threads.</p>
+start offset the primes inside an interval of size 10<sup>11</sup>
+were counted using different numbers of threads.</p>
 
 <h2 class="align2">
 <a name="algorithms" class="anchor" href="#algorithms"><span class="octicon octicon-link"></span></a>Algorithms</h2>
@@ -302,12 +302,13 @@ file contains more technical implementation details.</p>
 <script src="https://gist.github.com/kimwalisch/afd69bf11daf59795c64.js"></script>
 </div>
 
-<p>libprimesieve natively supports C and C++, there are many
-<a href="https://github.com/kimwalisch/primesieve/tree/master/examples">
-C and C++ examples on GitHub</a>.</p>
+<p>libprimesieve natively supports C and C++. For generating an array
+(or vector) of primes and iterating over primes&nbsp;<&nbsp;2<sup>64</sup>
+libprimesieve is easily the fastest library on the web!</p>
 
 <ul>
-  <li><a href="https://github.com/kimwalisch/primesieve#build-instructions">How to install libprimesieve</a></li>
+  <li><a href="https://github.com/kimwalisch/primesieve/tree/master/examples">More C/C++ examples</a></li>
+  <li><a href="https://github.com/kimwalisch/primesieve#build-instructions">Install libprimesieve</a></li>
   <li><a href="api">Browse primesieve's API online</a></li>
 </ul>
 
