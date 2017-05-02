@@ -176,7 +176,7 @@ export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
 #### Microsoft Visual C++
 
 ```sh
-cl /O2 /EHsc primes.cpp /I primesieve\include /link primesieve\primesieve.lib
+cl /O2 /EHsc primes.cpp /I primesieve\include /link primesieve.lib
 ```
 
 ## Bindings for other languages
