@@ -444,8 +444,8 @@ blockquote {
 }
 
 ul {
-  list-style: disc inside;
-  padding-left: 20px;
+  list-style: disc outside none;
+  padding-left: 37px;
 }
 
 ol {
