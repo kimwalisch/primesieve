@@ -181,8 +181,7 @@ cl /O2 /EHsc primes.cpp /I primesieve\include /link primesieve.lib
 
 ## Bindings for other languages
 
-primesieve supports C++ and C directly, and has bindings available for
-a few other languages:
+primesieve natively supports C and C++ and has bindings available for:
 
 <table>
     <tr>
