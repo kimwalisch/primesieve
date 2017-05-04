@@ -190,8 +190,16 @@ a few other languages:
         <td><a href="https://github.com/hickford/primesieve-python">primesieve-python</a></td>
     </tr>
     <tr>
+        <td><b>Perl:</b></td>
+        <td><a href="https://github.com/CurtTilmes/perl6-primesieve">perl6-primesieve</a></td>
+    </tr>
+    <tr>
         <td><b>Ruby:</b></td>
         <td><a href="https://github.com/robertjlooby/primesieve-ruby">primesieve-ruby</a></td>
+    </tr>
+    <tr>
+        <td><b>Rust:</b></td>
+        <td><a href="https://github.com/pthariensflame/primesieve.rs">primesieve.rs</a></td>
     </tr>
 </table>
 
