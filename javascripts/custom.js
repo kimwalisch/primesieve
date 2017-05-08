@@ -60,7 +60,7 @@ $(document).ready(function()
     if (is64bit)
     {
       primesieve_os_binary = primesieve_macosx_x64_binary;
-      download_button_text = 'OS X .zip';
+      download_button_text = 'macOS .zip';
     }
   }
   else if (isAppVersion('Linux') ||
