@@ -260,9 +260,12 @@ void CpuCache::initL1Cache()
 {
   int log2CacheSize = std::system(l1Script_.c_str());
   log2CacheSize = WEXITSTATUS(log2CacheSize);
-  log2CacheSize = max(0, log2CacheSize);
 
-  l1CacheSize_ = 1 << log2CacheSize;
+  if (log2CacheSize > 10 &&
+      log2CacheSize < 22)
+    l2CacheSize_ = 1 << log2CacheSize;
+
+  // sieve size limits
   l1CacheSize_ = inBetween(16 << 10, l1CacheSize_, 2048 << 10);
   l1CacheSize_ = floorPower2(l1CacheSize_);
 }
@@ -271,9 +274,12 @@ void CpuCache::initL2Cache()
 {
   int log2CacheSize = std::system(l2Script_.c_str());
   log2CacheSize = WEXITSTATUS(log2CacheSize);
-  log2CacheSize = max(0, log2CacheSize);
 
-  l2CacheSize_ = 1 << log2CacheSize;
+  if (log2CacheSize > 10 &&
+      log2CacheSize < 22)
+    l2CacheSize_ = 1 << log2CacheSize;
+
+  // sieve size limits
   l2CacheSize_ = inBetween(16 << 10, l2CacheSize_, 2048 << 10);
   l2CacheSize_ = floorPower2(l2CacheSize_);
 }
