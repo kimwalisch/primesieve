@@ -32,35 +32,30 @@
 
 #else // all other OSes
 
-#include <array>
-#include <cstdio>
-#include <memory>
+#include <fstream>
+#include <sstream>
 #include <string>
 
 using namespace std;
 
 namespace {
 
-string getCacheStr(const char* filename)
+string getCacheStr(const string& filename)
 {
-  shared_ptr<FILE> file(
-      fopen(filename, "r"), fclose);
-  array<char, 64> buffer;
+  ifstream file(filename);
   string cacheStr;
 
   if (file)
   {
-    while (!feof(file.get()))
-    {
-      if (fgets(buffer.data(), buffer.size(), file.get()))
-        cacheStr += buffer.data();
-    }
+    ostringstream oss;
+    oss << file.rdbuf();
+    cacheStr = oss.str();
   }
 
   return cacheStr;
 }
 
-size_t getCacheSize(const char* filename)
+size_t getCacheSize(const string& filename)
 {
   size_t cacheSize = 0;
   string cacheStr = getCacheStr(filename);
