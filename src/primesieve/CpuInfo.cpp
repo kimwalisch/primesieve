@@ -15,10 +15,15 @@
 #include <vector>
 
 #if defined(_WIN32)
-#include <windows.h>
-#endif
 
-#if defined(__linux__)
+#include <windows.h>
+
+#elif defined(__APPLE__)
+
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
+#elif defined(__linux__)
 
 #include <array>
 #include <cstdio>
@@ -118,9 +123,20 @@ void CpuInfo::initCache()
   l3CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index3/size");
 }
 
-#endif
+#elif defined(__APPLE__)
 
-#if defined(_WIN32)
+void CpuInfo::initCache()
+{
+  size_t l1Length = sizeof(l1CacheSize_);
+  size_t l2Length = sizeof(l2CacheSize_);
+  size_t l3Length = sizeof(l3CacheSize_);
+
+  sysctlbyname("hw.l1dcachesize", &l1CacheSize_, &l1Length, NULL, 0);
+  sysctlbyname("hw.l2cachesize" , &l2CacheSize_, &l2Length, NULL, 0);
+  sysctlbyname("hw.l3cachesize" , &l3CacheSize_, &l3Length, NULL, 0);
+}
+
+#elif defined(_WIN32)
 
 typedef BOOL (WINAPI *LPFN_GLPI)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
 
@@ -149,6 +165,15 @@ void CpuInfo::initCache()
       }
     }
   }
+}
+
+#else // Unkown operating system
+
+void CpuInfo::initCache()
+{
+  l1CacheSize_ = 0;
+  l2CacheSize_ = 0;
+  l3CacheSize_ = 0;
 }
 
 #endif
