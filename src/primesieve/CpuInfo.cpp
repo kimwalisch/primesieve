@@ -73,11 +73,11 @@ size_t getCacheSize(string stdout, string cacheId)
       if (!cacheStr.empty())
         cacheSize = stol(cacheStr);
 
-      if (cacheStr[n2] == 'K')
+      if (stdout[n2] == 'K')
         cacheSize *= 1024;
-      if (cacheStr[n2] == 'M')
+      if (stdout[n2] == 'M')
         cacheSize *= 1024 * 1024;
-      if (cacheStr[n2] == 'G')
+      if (stdout[n2] == 'G')
         cacheSize *= 1024 * 1024 * 1024;
     }
   }
