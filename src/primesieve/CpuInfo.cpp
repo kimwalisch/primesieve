@@ -14,11 +14,20 @@
 #include <string>
 #include <vector>
 
+#if defined(__APPLE__) && \
+  (!defined(__has_include) || \
+  (__has_include(<sys/types.h>) && \
+   __has_include(<sys/sysctl.h>)))
+
+#define APPLE_SYSCTL
+
+#endif
+
 #if defined(_WIN32)
 
 #include <windows.h>
 
-#elif defined(__APPLE__)
+#elif defined(APPLE_SYSCTL)
 
 #include <sys/types.h>
 #include <sys/sysctl.h>
@@ -114,7 +123,7 @@ size_t CpuInfo::l3CacheSize() const
   return l3CacheSize_;
 }
 
-#if defined(__APPLE__)
+#if defined(APPLE_SYSCTL)
 
 void CpuInfo::initCache()
 {
