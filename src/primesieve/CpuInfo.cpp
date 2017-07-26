@@ -18,7 +18,7 @@
 #include <windows.h>
 #endif
 
-#if !defined(_WIN32)
+#if defined(__linux__)
 
 #include <array>
 #include <cstdio>
@@ -28,56 +28,49 @@ using namespace std;
 
 namespace {
 
-/// Execute command and return its stdout.
-/// @see https://stackoverflow.com/a/478960/363778
-///
-string exec(string cmd)
+string getCacheStr(const char* filename)
 {
-  shared_ptr<FILE> file(popen(cmd.c_str(), "r"), pclose);
-  string stdout;
+  shared_ptr<FILE> file(fopen(filename, "r"), fclose);
+  string cacheStr;
 
   if (file)
   {
-    array<char, 128> buffer;
+    array<char, 32> buffer;
 
     while (!feof(file.get()))
     {
       if (fgets(buffer.data(), buffer.size(), file.get()))
-        stdout += buffer.data();
+        cacheStr += buffer.data();
     }
   }
 
-  return stdout;
+  return cacheStr;
 }
 
-/// Find cacheId in string and return its size.
-/// Example: "L1_CACHE_SIZE=32768;"
-///
-size_t getCacheSize(string stdout, string cacheId)
+size_t getCacheSize(const char* filename)
 {
-  size_t pos = stdout.find(cacheId);
   size_t cacheSize = 0;
-  string cacheStr;
+  string cacheStr = getCacheStr(filename);
+  size_t pos = cacheStr.find_first_of("0123456789");
 
   if (pos != string::npos)
   {
-    size_t n1 = stdout.find_first_of('=', pos) + 1;
-    size_t n2 = stdout.find_first_not_of("0123456789", n1);
+    // first character after number
+    size_t idx = 0;
+    cacheSize = stol(cacheStr.substr(pos), &idx);
 
-    if (n1 != string::npos &&
-        n2 != string::npos)
+    if (idx < cacheStr.size())
     {
-      size_t length = n2 - n1;
-      cacheStr = stdout.substr(n1, length);
+      // Last character may be:
+      // 'K' = kilobytes
+      // 'M' = megabytes
+      // 'G' = gigabytes
 
-      if (!cacheStr.empty())
-        cacheSize = stol(cacheStr);
-
-      if (stdout[n2] == 'K')
+      if (cacheStr[idx] == 'K')
         cacheSize *= 1024;
-      if (stdout[n2] == 'M')
+      if (cacheStr[idx] == 'M')
         cacheSize *= 1024 * 1024;
-      if (stdout[n2] == 'G')
+      if (cacheStr[idx] == 'G')
         cacheSize *= 1024 * 1024 * 1024;
     }
   }
@@ -116,6 +109,17 @@ size_t CpuInfo::l3CacheSize() const
   return l3CacheSize_;
 }
 
+#if defined(__linux__)
+
+void CpuInfo::initCache()
+{
+  l1CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index0/size");
+  l2CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index2/size");
+  l3CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index3/size");
+}
+
+#endif
+
 #if defined(_WIN32)
 
 typedef BOOL (WINAPI *LPFN_GLPI)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
@@ -145,79 +149,6 @@ void CpuInfo::initCache()
       }
     }
   }
-}
-
-#else
-
-void CpuInfo::initCache()
-{
-  // Posix shell script for UNIX like OSes
-  // The script tries to get the cache size using 3 different approaches:
-  // 1) getconf LEVEL*_CACHE_SIZE
-  // 2) sysctl hw.l*cachesize
-  // 3) cat /sys/devices/system/cpu/cpu0/cache/index*/size
-  //
-  const string cacheSizeScript = R"(
-      command -v getconf >/dev/null 2>/dev/null;
-
-      if [ $? -eq 0 ];
-      then
-          L1_CACHE_SIZE=$(getconf LEVEL1_DCACHE_SIZE 2>/dev/null);
-          L2_CACHE_SIZE=$(getconf LEVEL2_CACHE_SIZE 2>/dev/null);
-          L3_CACHE_SIZE=$(getconf LEVEL3_CACHE_SIZE 2>/dev/null);
-      fi;
-
-      command -v sysctl >/dev/null 2>/dev/null;
-
-      if [ $? -eq 0 ];
-      then
-          if [ "x$L1_CACHE_SIZE" = "x" ] || \
-             [ "$L1_CACHE_SIZE" = "0" ];
-          then
-              L1_CACHE_SIZE=$(sysctl -n hw.l1dcachesize 2>/dev/null);
-          fi;
-
-          if [ "x$L2_CACHE_SIZE" = "x" ] || \
-             [ "$L2_CACHE_SIZE" = "0" ];
-          then
-              L2_CACHE_SIZE=$(sysctl -n hw.l2cachesize 2>/dev/null);
-          fi;
-
-          if [ "x$L3_CACHE_SIZE" = "x" ] || \
-             [ "$L3_CACHE_SIZE" = "0" ];
-          then
-              L3_CACHE_SIZE=$(sysctl -n hw.l3cachesize 2>/dev/null);
-          fi;
-      fi;
-
-      if [ "x$L1_CACHE_SIZE" = "x" ] || \
-         [ "$L1_CACHE_SIZE" = "0" ];
-      then
-          L1_CACHE_SIZE=$(cat /sys/devices/system/cpu/cpu0/cache/index0/size 2>/dev/null);
-      fi;
-
-      if [ "x$L2_CACHE_SIZE" = "x" ] || \
-         [ "$L2_CACHE_SIZE" = "0" ];
-      then
-          L2_CACHE_SIZE=$(cat /sys/devices/system/cpu/cpu0/cache/index2/size 2>/dev/null);
-      fi;
-
-      if [ "x$L3_CACHE_SIZE" = "x" ] || \
-         [ "$L3_CACHE_SIZE" = "0" ];
-      then
-          L3_CACHE_SIZE=$(cat /sys/devices/system/cpu/cpu0/cache/index3/size 2>/dev/null);
-      fi;
-
-      echo "L1_CACHE_SIZE=$L1_CACHE_SIZE; \
-            L2_CACHE_SIZE=$L2_CACHE_SIZE; \
-            L3_CACHE_SIZE=$L3_CACHE_SIZE;"
-  )";
-
-  string stdout = exec(cacheSizeScript);
-
-  l1CacheSize_ = getCacheSize(stdout, "L1_CACHE_SIZE");
-  l2CacheSize_ = getCacheSize(stdout, "L2_CACHE_SIZE");
-  l3CacheSize_ = getCacheSize(stdout, "L3_CACHE_SIZE");
 }
 
 #endif
