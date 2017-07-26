@@ -23,7 +23,7 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-#elif defined(__linux__)
+#else // all other OSes
 
 #include <array>
 #include <cstdio>
@@ -35,13 +35,13 @@ namespace {
 
 string getCacheStr(const char* filename)
 {
-  shared_ptr<FILE> file(fopen(filename, "r"), fclose);
+  shared_ptr<FILE> file(
+      fopen(filename, "r"), fclose);
+  array<char, 64> buffer;
   string cacheStr;
 
   if (file)
   {
-    array<char, 32> buffer;
-
     while (!feof(file.get()))
     {
       if (fgets(buffer.data(), buffer.size(), file.get()))
@@ -114,16 +114,7 @@ size_t CpuInfo::l3CacheSize() const
   return l3CacheSize_;
 }
 
-#if defined(__linux__)
-
-void CpuInfo::initCache()
-{
-  l1CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index0/size");
-  l2CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index2/size");
-  l3CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index3/size");
-}
-
-#elif defined(__APPLE__)
+#if defined(__APPLE__)
 
 void CpuInfo::initCache()
 {
@@ -167,13 +158,16 @@ void CpuInfo::initCache()
   }
 }
 
-#else // Unkown operating system
+#else
 
+/// This works on Linux, we also use this for
+/// all unkown OSes, it might work.
+///
 void CpuInfo::initCache()
 {
-  l1CacheSize_ = 0;
-  l2CacheSize_ = 0;
-  l3CacheSize_ = 0;
+  l1CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index0/size");
+  l2CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index2/size");
+  l3CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index3/size");
 }
 
 #endif
