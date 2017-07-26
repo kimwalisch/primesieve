@@ -164,7 +164,7 @@ void CpuInfo::initCache()
 #else
 
 /// This works on Linux, we also use this for
-/// all unkown OSes, it might work.
+/// all unknown OSes, it might work.
 ///
 void CpuInfo::initCache()
 {
