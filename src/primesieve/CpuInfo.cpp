@@ -9,10 +9,7 @@
 ///
 
 #include <primesieve/CpuInfo.hpp>
-
 #include <cstddef>
-#include <string>
-#include <vector>
 
 #if defined(__APPLE__) && \
   (!defined(__has_include) || \
@@ -26,6 +23,7 @@
 #if defined(_WIN32)
 
 #include <windows.h>
+#include <vector>
 
 #elif defined(APPLE_SYSCTL)
 
@@ -37,6 +35,7 @@
 #include <array>
 #include <cstdio>
 #include <memory>
+#include <string>
 
 using namespace std;
 
