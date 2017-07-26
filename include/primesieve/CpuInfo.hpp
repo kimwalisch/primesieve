@@ -27,9 +27,7 @@ private:
   std::size_t l1CacheSize_;
   std::size_t l2CacheSize_;
   std::size_t l3CacheSize_;
-  void initL1Cache();
-  void initL2Cache();
-  void initL3Cache();
+  void initCache();
 };
 
 // Singleton
