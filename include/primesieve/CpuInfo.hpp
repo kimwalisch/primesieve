@@ -1,6 +1,6 @@
 ///
 /// @file  CpuInfo.hpp
-/// @brief Get the CPUs L1 & L2 cache sizes in bytes.
+/// @brief Get the CPUs cache sizes in bytes.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -11,20 +11,25 @@
 #ifndef CPUINFO_HPP
 #define CPUINFO_HPP
 
+#include <cstddef>
+
 namespace primesieve {
 
 class CpuInfo
 {
 public:
   CpuInfo();
-  int l1CacheSize() const;
-  int l2CacheSize() const;
+  std::size_t l1CacheSize() const;
+  std::size_t l2CacheSize() const;
+  std::size_t l3CacheSize() const;
 
 private:
-  int l1CacheSize_;
-  int l2CacheSize_;
+  std::size_t l1CacheSize_;
+  std::size_t l2CacheSize_;
+  std::size_t l3CacheSize_;
   void initL1Cache();
   void initL2Cache();
+  void initL3Cache();
 };
 
 // Singleton
