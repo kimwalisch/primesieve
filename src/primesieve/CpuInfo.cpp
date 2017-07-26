@@ -11,13 +11,13 @@
 #include <primesieve/CpuInfo.hpp>
 #include <cstddef>
 
-#if defined(__APPLE__) && \
-  (!defined(__has_include) || \
-  (__has_include(<sys/types.h>) && \
-   __has_include(<sys/sysctl.h>)))
-
-#define APPLE_SYSCTL
-
+#if defined(__APPLE__)
+  #if !defined(__has_include)
+    #define APPLE_SYSCTL
+  #elif __has_include(<sys/types.h>) && \
+        __has_include(<sys/sysctl.h>)
+    #define APPLE_SYSCTL
+  #endif
 #endif
 
 #if defined(_WIN32)
