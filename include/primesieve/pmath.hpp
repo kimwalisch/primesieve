@@ -1,6 +1,6 @@
 ///
 /// @file   pmath.hpp
-/// @brief  Auxiliary math functions needed in primesieve.
+/// @brief  Auxiliary math functions for primesieve.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
