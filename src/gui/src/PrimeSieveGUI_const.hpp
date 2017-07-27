@@ -62,12 +62,6 @@ const int MINIMUM_SIEVE_SIZE = 16;
 const int MAXIMUM_SIEVE_SIZE = 2048;
 
 /**
- * @pre DEFAULT_L1D_CACHE_SIZE >= MINIMUM_SIEVE_SIZE &&
- *      DEFAULT_L1D_CACHE_SIZE <= MAXIMUM_SIEVE_SIZE
- */
-const int DEFAULT_L1D_CACHE_SIZE = 32;
-
-/**
  * PrimeSieve allows numbers up to < 2^64.
  */
 const quint64 UPPER_BOUND_LIMIT = UINT64_MAX;
