@@ -1,6 +1,8 @@
 ///
 /// @file   SieveOfEratosthenes.cpp
-/// @brief  Implementation of the segmented sieve of Eratosthenes.
+/// @brief  The SieveOfEratosthenes class manages prime sieving
+///         using the PreSieve, EratSmall, EratMedium and
+///         EratBig classes.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -40,7 +42,7 @@ const uint_t SieveOfEratosthenes::bruijnBitValues_[64] =
 /// @start:      Sieve primes >= start
 /// @stop:       Sieve primes <= stop
 /// @sieveSize:  Sieve size in kilobytes
-/// @preSieve:   Pre-sieve primes <= preSieve.getLimit()
+/// @preSieve:   Pre-sieve primes
 ///
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
                                          uint64_t stop,
