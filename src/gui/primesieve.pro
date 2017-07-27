@@ -40,6 +40,7 @@ HEADERS += \
 INCLUDEPATH += ../../include
 
 SOURCES += \
+  ../primesieve/api.cpp \
   ../primesieve/CpuInfo.cpp \
   ../primesieve/EratBig.cpp \
   ../primesieve/EratMedium.cpp \
