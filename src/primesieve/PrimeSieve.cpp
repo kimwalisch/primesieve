@@ -62,7 +62,8 @@ PrimeSieve::PrimeSieve() :
   parent_(nullptr),
   store_(nullptr)
 {
-  setSieveSize(L1_DCACHE_SIZE);
+  int get_sieve_size();
+  setSieveSize(get_sieve_size());
   reset();
 }
 
