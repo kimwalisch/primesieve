@@ -58,7 +58,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
     throw primesieve_error("SieveOfEratosthenes: start must be <= stop");
 
   // sieveSize_ must be a power of 2
-  sieveSize_ = inBetween(1, floorPowerOf2(sieveSize), 2048);
+  sieveSize_ = inBetween(1, floorPow2(sieveSize), 2048);
   sieveSize_ *= 1024; // convert to bytes
 
   uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 1;

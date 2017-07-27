@@ -105,7 +105,7 @@ void PrimeSieveGUI::initGUI() {
   if (l1dCacheSize < 16 || l1dCacheSize > 1024)
     l1dCacheSize = DEFAULT_L1D_CACHE_SIZE;
 
-  int defaultSieveSize = floorPowerOf2(l1dCacheSize);
+  int defaultSieveSize = floorPow2(l1dCacheSize);
 
   // default sieve size = CPU L1 data cache size
   this->setTo(ui->sieveSizeComboBox, QString::number(defaultSieveSize) + " KB");

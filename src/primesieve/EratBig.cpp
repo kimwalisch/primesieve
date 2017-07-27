@@ -40,7 +40,7 @@ EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t limit) :
   stock_(nullptr)
 {
   // '>> log2SieveSize' requires power of 2 sieveSize
-  if (!isPowerOf2(sieveSize))
+  if (!isPow2(sieveSize))
     throw primesieve_error("EratBig: sieveSize must be a power of 2");
   init(sieveSize);
 }

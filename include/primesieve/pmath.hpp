@@ -37,13 +37,13 @@ inline T isquare(T x)
 }
 
 template <typename T>
-inline bool isPowerOf2(T x)
+inline bool isPow2(T x)
 {
   return x != 0 && (x & (x - 1)) == 0;
 }
 
 template <typename T>
-inline T floorPowerOf2(T x)
+inline T floorPow2(T x)
 {
   for (T i = 1; i < numberOfBits(x); i += i)
     x |= (x >> i);

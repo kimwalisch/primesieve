@@ -488,7 +488,7 @@ Changes in version 3.7, 31/05/2012
  2. Reduced header file dependencies, libprimesieve now only depends on
     PrimeSieve.h or ParallelPrimeSieve.h (and PrimeSieve.h).
  3. Updated Makefiles.
- 4. New template imath.h functions: isqrt(), ilog2(), isPowerOf2(), ...
+ 4. New template imath.h functions: isqrt(), ilog2(), isPow2(), ...
     isqrt() has been rewritten using Newton's algorithm in order to
     avoid rounding errors of (int)sqrt((double)n) if n > 10^15.
  5. New internal SieveOfEratosthenes::getNextPrime(...) member function.

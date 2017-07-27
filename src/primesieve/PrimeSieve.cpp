@@ -54,6 +54,8 @@ const array<SmallPrime, 8> smallPrimes
 
 namespace primesieve {
 
+int get_sieve_size();
+
 PrimeSieve::PrimeSieve() :
   start_(0),
   stop_(0),
@@ -62,7 +64,6 @@ PrimeSieve::PrimeSieve() :
   parent_(nullptr),
   store_(nullptr)
 {
-  int get_sieve_size();
   setSieveSize(get_sieve_size());
   reset();
 }
@@ -131,7 +132,7 @@ void PrimeSieve::setStop(uint64_t stop)
 ///
 void PrimeSieve::setSieveSize(int sieveSize)
 {
-  sieveSize_ = inBetween(1, floorPowerOf2(sieveSize), 2048);
+  sieveSize_ = inBetween(1, floorPow2(sieveSize), 2048);
 }
 
 Store& PrimeSieve::getStore()

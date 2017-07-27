@@ -182,7 +182,7 @@ int get_sieve_size()
       l3CacheSize > 0)
   {
     l2CacheSize = inBetween(32, l2CacheSize, 2048);
-    l2CacheSize = floorPowerOf2(l2CacheSize);
+    l2CacheSize = floorPow2(l2CacheSize);
     return l2CacheSize;
   }
   else
@@ -196,7 +196,7 @@ int get_sieve_size()
     // set the sieve size to the CPU's L1 cache size.
 
     l1CacheSize = inBetween(8, l1CacheSize, 2048);
-    l1CacheSize = floorPowerOf2(l1CacheSize);
+    l1CacheSize = floorPow2(l1CacheSize);
     return l1CacheSize;
   }
 }
