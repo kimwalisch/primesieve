@@ -1,7 +1,7 @@
 ///
 /// @file   EratSmall.cpp
-/// @brief  Segmented sieve of Eratosthenes optimized for small
-///         sieving primes.
+/// @brief  Segmented sieve of Eratosthenes optimized for
+///         small sieving primes.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///

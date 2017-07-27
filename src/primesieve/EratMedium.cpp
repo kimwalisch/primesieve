@@ -1,7 +1,7 @@
 ///
 /// @file   EratMedium.cpp
-/// @brief  Segmented sieve of Eratosthenes optimized for medium
-///         sieving primes.
+/// @brief  Segmented sieve of Eratosthenes optimized for
+///         medium sieving primes.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
