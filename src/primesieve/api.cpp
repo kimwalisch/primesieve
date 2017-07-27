@@ -156,6 +156,7 @@ std::string primesieve_version()
 void set_sieve_size(int kilobytes)
 {
   sieve_size = inBetween(1, kilobytes, 2048);
+  sieve_size = floorPow2(sieve_size);
 }
 
 int get_sieve_size()
@@ -183,7 +184,7 @@ int get_sieve_size()
   {
     l2CacheSize = inBetween(32, l2CacheSize, 2048);
     l2CacheSize = floorPow2(l2CacheSize);
-    return l2CacheSize;
+    return (int) l2CacheSize;
   }
   else
   {
@@ -197,7 +198,7 @@ int get_sieve_size()
 
     l1CacheSize = inBetween(8, l1CacheSize, 2048);
     l1CacheSize = floorPow2(l1CacheSize);
-    return l1CacheSize;
+    return (int) l1CacheSize;
   }
 }
 
