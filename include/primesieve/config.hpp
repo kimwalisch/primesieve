@@ -18,11 +18,6 @@
   #define NDEBUG
 #endif
 
-/// Default CPU L1 data cache size in kilobytes (per core)
-#ifndef L1_DCACHE_SIZE
-  #define L1_DCACHE_SIZE 32
-#endif
-
 namespace primesieve {
 
 /// byte_t must be unsigned in primesieve
