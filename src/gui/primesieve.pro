@@ -45,6 +45,7 @@ SOURCES += \
   ../primesieve/EratBig.cpp \
   ../primesieve/EratMedium.cpp \
   ../primesieve/EratSmall.cpp \
+  ../primesieve/nthPrime.cpp \
   ../primesieve/ParallelPrimeSieve.cpp \
   ../primesieve/popcount.cpp \
   ../primesieve/PreSieve.cpp \
