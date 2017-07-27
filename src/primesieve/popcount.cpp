@@ -1,7 +1,7 @@
 ///
 /// @file   popcount.cpp
-/// @brief  Fast algorithm to count the number of 1 bits in an array
-///         using only integer operations.
+/// @brief  Fast algorithm to count the number of 1 bits in an
+///         array using only integer operations.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///

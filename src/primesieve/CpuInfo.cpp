@@ -1,6 +1,6 @@
 ///
-/// @file  CpuInfo.cpp
-/// @brief Get the CPUs cache sizes in bytes.
+/// @file   CpuInfo.cpp
+/// @brief  Get the CPUs cache sizes in bytes.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
