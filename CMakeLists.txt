@@ -104,6 +104,7 @@ install(FILES include/primesieve/PrimeSieve.hpp
               include/primesieve/iterator.h
               include/primesieve/iterator.hpp
               include/primesieve/primesieve_error.hpp
+              include/primesieve/pmath.hpp
               DESTINATION ${CMAKE_INSTALL_PREFIX}/include/primesieve)
 
 # Regenerate man page ################################################
