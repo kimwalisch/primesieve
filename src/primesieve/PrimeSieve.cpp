@@ -132,7 +132,8 @@ void PrimeSieve::setStop(uint64_t stop)
 ///
 void PrimeSieve::setSieveSize(int sieveSize)
 {
-  sieveSize_ = inBetween(1, floorPow2(sieveSize), 2048);
+  sieveSize_ = inBetween(8, sieveSize, 2048);
+  sieveSize_ = floorPow2(sieveSize_);
 }
 
 Store& PrimeSieve::getStore()

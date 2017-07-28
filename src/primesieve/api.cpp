@@ -155,7 +155,7 @@ std::string primesieve_version()
 
 void set_sieve_size(int kilobytes)
 {
-  sieve_size = inBetween(1, kilobytes, 2048);
+  sieve_size = inBetween(8, kilobytes, 2048);
   sieve_size = floorPow2(sieve_size);
 }
 
