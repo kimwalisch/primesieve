@@ -15,7 +15,7 @@
 
 #include <stdint.h>
 #include <cstddef>
-#include <list>
+#include <vector>
 
 namespace primesieve {
 
@@ -27,14 +27,13 @@ class EratSmall : public Modulo30Wheel_t
 {
 public:
   EratSmall(uint64_t, uint_t, uint_t);
-  uint_t getLimit() const { return limit_; }
-  void crossOff(byte_t*, byte_t*);
+  void crossOff(byte_t*, uint_t);
 private:
-  uint_t limit_;
+  uint_t maxPrime_;
   size_t l1CacheSize_;
-  std::list<Bucket> buckets_;
+  std::vector<SievingPrime> primes_;
   void storeSievingPrime(uint_t, uint_t, uint_t);
-  static void crossOff(byte_t*, byte_t*, Bucket&);
+  void crossOff(byte_t*, byte_t*);
 };
 
 } // namespace

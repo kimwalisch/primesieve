@@ -69,6 +69,16 @@ public:
     MAX_WHEELINDEX    = (1 << (32 - 23)) - 1
   };
 
+  SievingPrime() { }
+
+  SievingPrime(uint_t sievingPrime,
+               uint_t multipleIndex,
+               uint_t wheelIndex)
+  {
+    set(multipleIndex, wheelIndex);
+    sievingPrime_ = (uint32_t) sievingPrime;
+  }
+
   uint_t getSievingPrime() const
   {
     return sievingPrime_;

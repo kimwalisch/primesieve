@@ -116,7 +116,7 @@ void SieveOfEratosthenes::preSieve()
 
 void SieveOfEratosthenes::crossOffMultiples()
 {
-  if (eratSmall_)   eratSmall_->crossOff(sieve_, &sieve_[sieveSize_]);
+  if (eratSmall_)   eratSmall_->crossOff(sieve_, sieveSize_);
   if (eratMedium_) eratMedium_->crossOff(sieve_, sieveSize_);
   if (eratBig_)       eratBig_->crossOff(sieve_);
 }

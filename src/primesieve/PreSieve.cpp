@@ -66,7 +66,7 @@ void PreSieve::allocate()
 
   // cross-off the multiples of small
   // primes <= limit in buffer
-  eratSmall.crossOff(buffer_, &buffer_[size_]);
+  eratSmall.crossOff(buffer_, size_);
 }
 
 /// Pre-sieve multiples of small primes <= limit

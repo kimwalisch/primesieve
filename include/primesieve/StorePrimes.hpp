@@ -16,6 +16,7 @@
 
 #include "PrimeSieve.hpp"
 #include "primesieve_error.hpp"
+#include "pmath.hpp"
 
 #include <stdint.h>
 #include <exception>
@@ -24,23 +25,6 @@
 namespace primesieve {
 
 uint64_t get_max_stop();
-
-/// prime_count_approx(x) >= pi(x)
-inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
-{
-  if (start > stop)
-    return 0;
-  if (stop <= 10)
-    return 4;
-
-  // pi(x) <= x / (log(x) - 1.1) + 5, for x >= 4
-  double x = (double) stop;
-  double logx = std::log(x);
-  double div = logx - 1.1;
-  double pix = (stop - start) / div + 5;
-
-  return (std::size_t) pix;
-}
 
 class Store
 {
