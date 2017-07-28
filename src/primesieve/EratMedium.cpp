@@ -12,71 +12,63 @@
 #include <primesieve/config.hpp>
 #include <primesieve/EratMedium.hpp>
 #include <primesieve/primesieve_error.hpp>
+#include <primesieve/pmath.hpp>
 #include <primesieve/Wheel.hpp>
 
 #include <stdint.h>
 #include <cassert>
-#include <list>
+#include <vector>
 
 namespace primesieve {
 
 /// @stop:       Upper bound for sieving
 /// @sieveSize:  Sieve size in bytes
-/// @limit:      Sieving primes must be <= limit
+/// @maxPrime:   Sieving primes <= maxPrime
 ///
-EratMedium::EratMedium(uint64_t stop, uint_t sieveSize, uint_t limit) :
+EratMedium::EratMedium(uint64_t stop, uint_t sieveSize, uint_t maxPrime) :
   Modulo210Wheel_t(stop, sieveSize),
-  limit_(limit)
+  maxPrime_(maxPrime)
 {
   // ensure multipleIndex < 2^23 in crossOff()
   if (sieveSize > (1u << 21))
     throw primesieve_error("EratMedium: sieveSize must be <= 2^21, 2048 kilobytes");
-  if (limit > sieveSize * 9)
-    throw primesieve_error("EratMedium: limit must be <= sieveSize * 9");
-  buckets_.emplace_back();
+  if (maxPrime > sieveSize * 9)
+    throw primesieve_error("EratMedium: maxPrime must be <= sieveSize * 9");
+
+  size_t size = prime_count_approx(maxPrime);
+  primes_.reserve(size);
 }
 
 /// Add a new sieving prime to EratMedium
 void EratMedium::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
-  assert(prime <= limit_);
+  assert(prime <= maxPrime_);
   uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
-  if (!buckets_.back().store(sievingPrime, multipleIndex, wheelIndex))
-    buckets_.emplace_back();
+  primes_.emplace_back(sievingPrime, multipleIndex, wheelIndex);
 }
 
-/// Cross-off the multiples of medium sieving
-/// primes from the sieve array
+/// Segmented sieve of Eratosthenes with wheel factorization
+/// optimized for medium sieving primes that have a
+/// few multiples per segment.
 ///
 void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize)
 {
-  for (auto& bucket : buckets_)
-    crossOff(sieve, sieveSize, bucket);
-}
-
-/// Cross-off the multiples of the sieving primes in the
-/// current bucket. This is an implementation of the segmented
-/// sieve of Eratosthenes with wheel factorization optimized for
-/// medium sieving primes that have a few multiples per segment
-///
-void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize, Bucket& bucket)
-{
-  SievingPrime* sPrime = bucket.begin();
-  SievingPrime* sEnd = bucket.end();
+  SievingPrime* primes = &primes_[0];
+  SievingPrime* back = &primes_.back();
 
   // process 3 sieving primes per loop iteration to
   // increase instruction level parallelism
-  for (; sPrime + 3 <= sEnd; sPrime += 3)
+  for (; primes + 3 <= back; primes += 3)
   {
-    uint_t multipleIndex0 = sPrime[0].getMultipleIndex();
-    uint_t wheelIndex0    = sPrime[0].getWheelIndex();
-    uint_t sievingPrime0  = sPrime[0].getSievingPrime();
-    uint_t multipleIndex1 = sPrime[1].getMultipleIndex();
-    uint_t wheelIndex1    = sPrime[1].getWheelIndex();
-    uint_t sievingPrime1  = sPrime[1].getSievingPrime();
-    uint_t multipleIndex2 = sPrime[2].getMultipleIndex();
-    uint_t wheelIndex2    = sPrime[2].getWheelIndex();
-    uint_t sievingPrime2  = sPrime[2].getSievingPrime();
+    uint_t multipleIndex0 = primes[0].getMultipleIndex();
+    uint_t wheelIndex0    = primes[0].getWheelIndex();
+    uint_t sievingPrime0  = primes[0].getSievingPrime();
+    uint_t multipleIndex1 = primes[1].getMultipleIndex();
+    uint_t wheelIndex1    = primes[1].getWheelIndex();
+    uint_t sievingPrime1  = primes[1].getSievingPrime();
+    uint_t multipleIndex2 = primes[2].getMultipleIndex();
+    uint_t wheelIndex2    = primes[2].getWheelIndex();
+    uint_t sievingPrime2  = primes[2].getSievingPrime();
 
     while (multipleIndex0 < sieveSize)
     {
@@ -95,21 +87,23 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize, Bucket& bucket)
     multipleIndex1 -= sieveSize;
     multipleIndex2 -= sieveSize;
 
-    sPrime[0].set(multipleIndex0, wheelIndex0);
-    sPrime[1].set(multipleIndex1, wheelIndex1);
-    sPrime[2].set(multipleIndex2, wheelIndex2);
+    primes[0].set(multipleIndex0, wheelIndex0);
+    primes[1].set(multipleIndex1, wheelIndex1);
+    primes[2].set(multipleIndex2, wheelIndex2);
   }
 
   // process remaining sieving primes
-  for (; sPrime != sEnd; sPrime++)
+  for (; primes <= back; primes++)
   {
-    uint_t multipleIndex = sPrime->getMultipleIndex();
-    uint_t wheelIndex    = sPrime->getWheelIndex();
-    uint_t sievingPrime  = sPrime->getSievingPrime();
+    uint_t multipleIndex = primes->getMultipleIndex();
+    uint_t wheelIndex    = primes->getWheelIndex();
+    uint_t sievingPrime  = primes->getSievingPrime();
+
     while (multipleIndex < sieveSize)
       unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
+
     multipleIndex -= sieveSize;
-    sPrime->set(multipleIndex, wheelIndex);
+    primes->set(multipleIndex, wheelIndex);
   }
 }
 
