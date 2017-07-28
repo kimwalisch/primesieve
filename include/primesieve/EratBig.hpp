@@ -29,7 +29,7 @@ public:
   EratBig(uint64_t, uint_t, uint_t);
   void crossOff(byte_t*);
 private:
-  uint_t limit_;
+  uint_t maxPrime_;
   /// log2 of SieveOfEratosthenes::sieveSize_
   uint_t log2SieveSize_;
   uint_t moduloSieveSize_;

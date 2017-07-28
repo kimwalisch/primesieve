@@ -29,12 +29,11 @@ namespace primesieve {
 
 /// @stop:       Upper bound for sieving
 /// @sieveSize:  Sieve size in bytes
-/// @limit:      Sieving primes must be <= limit,
-///              usually limit = sqrt(stop)
+/// @maxPrime:   Sieving primes <= maxPrime
 ///
-EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t limit) :
+EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t maxPrime) :
   Modulo210Wheel_t(stop, sieveSize),
-  limit_(limit),
+  maxPrime_(maxPrime),
   log2SieveSize_(ilog2(sieveSize)),
   moduloSieveSize_(sieveSize - 1),
   stock_(nullptr)
@@ -47,7 +46,7 @@ EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t limit) :
 
 void EratBig::init(uint_t sieveSize)
 {
-  uint_t maxSievingPrime  = limit_ / NUMBERS_PER_BYTE;
+  uint_t maxSievingPrime  = maxPrime_ / NUMBERS_PER_BYTE;
   uint_t maxNextMultiple  = maxSievingPrime * getMaxFactor() + getMaxFactor();
   uint_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
   uint_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
@@ -64,7 +63,7 @@ void EratBig::init(uint_t sieveSize)
 /// Add a new sieving prime to EratBig
 void EratBig::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
-  assert(prime <= limit_);
+  assert(prime <= maxPrime_);
   uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
   uint_t segment = multipleIndex >> log2SieveSize_;
   multipleIndex &= moduloSieveSize_;
