@@ -26,7 +26,7 @@ namespace primesieve {
 SievingPrimes::SievingPrimes(PrimeGenerator& primeGen, const PreSieve& preSieve) :
   SieveOfEratosthenes(preSieve.getMaxPrime() + 1,
                       primeGen.getSqrtStop(),
-                      primeGen.getSieveSize(),
+                      primeGen.getSieveSize() / 1024,
                       preSieve),
   primeGen_(primeGen)
 { }
