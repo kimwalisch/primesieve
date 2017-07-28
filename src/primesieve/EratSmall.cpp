@@ -13,7 +13,6 @@
 #include <primesieve/CpuInfo.hpp>
 #include <primesieve/EratSmall.hpp>
 #include <primesieve/bits.hpp>
-#include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/Wheel.hpp>
 
@@ -26,34 +25,39 @@ using namespace std;
 
 namespace primesieve {
 
-/// @stop:       Upper bound for sieving
-/// @sieveSize:  Sieve size in bytes
-/// @maxPrime:   Sieving primes <= maxPrime
+/// @stop:      Upper bound for sieving
+/// @l1Size:    Sieve size in bytes
+/// @maxPrime:  Sieving primes <= maxPrime
 ///
-EratSmall::EratSmall(uint64_t stop, uint_t sieveSize, uint_t maxPrime) :
-  Modulo30Wheel_t(stop, sieveSize),
-  maxPrime_(maxPrime)
+EratSmall::EratSmall(uint64_t stop, uint_t l1Size, uint_t maxPrime) :
+  Modulo30Wheel_t(stop, l1Size),
+  maxPrime_(maxPrime),
+  l1Size_(l1Size)
 {
-  if (maxPrime_ > sieveSize * 3)
-    throw primesieve_error("EratSmall: maxPrime must be <= sieveSize * 3");
+  if (maxPrime_ > l1Size * 3)
+    throw primesieve_error("EratSmall: maxPrime must be <= l1Size * 3");
 
-  size_t size = prime_count_approx(maxPrime);
-  primes_.reserve(size);
+  size_t count = prime_count_approx(maxPrime);
+  primes_.reserve(count);
+}
 
-  // the sieve size is usually set to the CPU's L2 cache
-  // size, but EratSmall runs faster using a sieve
-  // size that fits into the CPU's L1 cache
-  l1CacheSize_ = cpuInfo.l1CacheSize();
+/// Usually sieve size = L2 cache size,
+/// but EratSmall runs faster using
+/// sieve size = L1 cache size
+///
+uint_t EratSmall::getL1Size(uint_t sieveSize)
+{
+  size_t size = cpuInfo.l1CacheSize();
 
   // failed to detect L1 cache size
-  if (l1CacheSize_ == 0)
-    l1CacheSize_ = sieveSize;
-  else
-  {
-    size_t minL1CacheSize = 8 << 10;
-    l1CacheSize_ = max(l1CacheSize_, minL1CacheSize);
-    l1CacheSize_ = floorPow2(l1CacheSize_);
-  }
+  if (size == 0)
+    return sieveSize;
+
+  size_t minSize = 8 << 10;
+  size_t maxSize = 2048 << 10;
+  size = inBetween(minSize, size, maxSize);
+
+  return (uint_t) size;
 }
 
 /// Add a new sieving prime to EratSmall
@@ -71,9 +75,9 @@ void EratSmall::crossOff(byte_t* sieve, uint_t sieveSize)
 {
   byte_t* sieveEnd = &sieve[sieveSize];
 
-  for (; sieve < sieveEnd; sieve += l1CacheSize_)
+  for (; sieve < sieveEnd; sieve += l1Size_)
   {
-    byte_t* end = &sieve[l1CacheSize_];
+    byte_t* end = &sieve[l1Size_];
     end = min(end, sieveEnd);
     crossOff(sieve, end);
   }

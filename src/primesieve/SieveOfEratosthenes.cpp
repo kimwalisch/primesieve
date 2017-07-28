@@ -59,14 +59,14 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   if (start_ > stop_)
     throw primesieve_error("SieveOfEratosthenes: start must be <= stop");
 
-  // sieveSize_ must be a power of 2
-  sieveSize_ = inBetween(1, floorPow2(sieveSize), 2048);
-  sieveSize_ *= 1024; // convert to bytes
+  sieveSize_ = floorPow2(sieveSize);
+  sieveSize_ = inBetween(8, sieveSize_, 2048);
+  sieveSize_ *= 1024;
 
-  uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
-  segmentLow_ = start_ - getByteRemainder(start_);
-  segmentHigh_ = checkedAdd(segmentLow_, dist);
   sqrtStop_ = (uint_t) isqrt(stop_);
+  segmentLow_ = start_ - getByteRemainder(start_);
+  uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
+  segmentHigh_ = checkedAdd(segmentLow_, dist);
 
   allocate();
 }
@@ -76,10 +76,11 @@ void SieveOfEratosthenes::allocate()
   deleteSieve_.reset(new byte_t[sieveSize_]);
   sieve_ = deleteSieve_.get();
 
-  maxEratSmall_  = (uint_t)(sieveSize_ * config::FACTOR_ERATSMALL);
-  maxEratMedium_ = (uint_t)(sieveSize_ * config::FACTOR_ERATMEDIUM);
+  size_t l1Size = EratSmall::getL1Size(sieveSize_);
+  maxEratSmall_  = (uint_t) (l1Size     * config::FACTOR_ERATSMALL);
+  maxEratMedium_ = (uint_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
 
-  if (sqrtStop_ > maxPreSieve_)   eratSmall_.reset(new EratSmall (stop_, sieveSize_, maxEratSmall_));
+  if (sqrtStop_ > maxPreSieve_)   eratSmall_.reset(new EratSmall (stop_, l1Size, maxEratSmall_));
   if (sqrtStop_ > maxEratSmall_) eratMedium_.reset(new EratMedium(stop_, sieveSize_, maxEratMedium_));
   if (sqrtStop_ > maxEratMedium_)   eratBig_.reset(new EratBig   (stop_, sieveSize_, sqrtStop_));
 }

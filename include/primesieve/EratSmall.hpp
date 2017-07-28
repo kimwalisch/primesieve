@@ -27,10 +27,11 @@ class EratSmall : public Modulo30Wheel_t
 {
 public:
   EratSmall(uint64_t, uint_t, uint_t);
+  static uint_t getL1Size(uint_t);
   void crossOff(byte_t*, uint_t);
 private:
   uint_t maxPrime_;
-  size_t l1CacheSize_;
+  uint_t l1Size_;
   std::vector<SievingPrime> primes_;
   void storeSievingPrime(uint_t, uint_t, uint_t);
   void crossOff(byte_t*, byte_t*);
