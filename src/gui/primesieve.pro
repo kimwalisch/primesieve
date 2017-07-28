@@ -23,7 +23,6 @@ QT_MAJ = $$member(QT_VER, 0)
 
 SOURCES += \
   src/main.cpp \
-  src/l1d_cache_size.cpp \
   src/PrimeSieveGUI.cpp \
   src/PrimeSieveGUI_menu.cpp \
   src/PrimeSieveProcess.cpp
@@ -41,9 +40,13 @@ HEADERS += \
 INCLUDEPATH += ../../include
 
 SOURCES += \
+  ../primesieve/api.cpp \
+  ../primesieve/CpuInfo.cpp \
   ../primesieve/EratBig.cpp \
   ../primesieve/EratMedium.cpp \
   ../primesieve/EratSmall.cpp \
+  ../primesieve/iterator.cpp \
+  ../primesieve/nthPrime.cpp \
   ../primesieve/ParallelPrimeSieve.cpp \
   ../primesieve/popcount.cpp \
   ../primesieve/PreSieve.cpp \

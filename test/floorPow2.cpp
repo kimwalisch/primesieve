@@ -1,5 +1,5 @@
 ///
-/// @file   floorPowerOf2.cpp
+/// @file   floorPow2.cpp
 /// @brief  Round down to nearest power of 2.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
@@ -16,6 +16,7 @@
 #include <cstdlib>
 
 using namespace std;
+using namespace primesieve;
 
 void check(bool OK)
 {
@@ -24,7 +25,7 @@ void check(bool OK)
     exit(1);
 }
 
-uint64_t floorPowerOf2_cmath(uint64_t n)
+uint64_t floorPow2_cmath(uint64_t n)
 {
   return 1ull << (uint64_t) (log((double) n) / log(2.0));
 }
@@ -37,37 +38,37 @@ int main()
 
   for (n = 1; n < 100000; n++)
   {
-    res1 = floorPowerOf2(n);
-    res2 = floorPowerOf2_cmath(n);
-    cout << "floorPowerOf2(" << n << ") = " << res1;
+    res1 = floorPow2(n);
+    res2 = floorPow2_cmath(n);
+    cout << "floorPow2(" << n << ") = " << res1;
     check(res1 == res2);
   }
 
   n = (1ull << 32) - 1;
-  res1 = floorPowerOf2(n);
-  res2 = floorPowerOf2_cmath(n);
-  cout << "floorPowerOf2(" << n << ") = " << res1;
+  res1 = floorPow2(n);
+  res2 = floorPow2_cmath(n);
+  cout << "floorPow2(" << n << ") = " << res1;
   check(res1 == res2);
 
   n = 1ull << 32;
-  res1 = floorPowerOf2(n);
-  res2 = floorPowerOf2_cmath(n);
-  cout << "floorPowerOf2(" << n << ") = " << res1;
+  res1 = floorPow2(n);
+  res2 = floorPow2_cmath(n);
+  cout << "floorPow2(" << n << ") = " << res1;
   check(res1 == res2);
 
   n = (1ull << 63) - 1;
-  res1 = floorPowerOf2(n);
-  cout << "floorPowerOf2(" << n << ") = " << res1;
+  res1 = floorPow2(n);
+  cout << "floorPow2(" << n << ") = " << res1;
   check(res1 == (1ull << 62));
 
   n = 1ull << 63;
-  res1 = floorPowerOf2(n);
-  cout << "floorPowerOf2(" << n << ") = " << res1;
+  res1 = floorPow2(n);
+  cout << "floorPow2(" << n << ") = " << res1;
   check(res1 == (1ull << 63));
 
   n = 18446744073709551615ull;
-  res1 = floorPowerOf2(n);
-  cout << "floorPowerOf2(" << n << ") = " << res1;
+  res1 = floorPow2(n);
+  cout << "floorPow2(" << n << ") = " << res1;
   check(res1 == (1ull << 63));
 
   cout << endl;

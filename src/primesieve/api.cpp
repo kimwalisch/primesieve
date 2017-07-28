@@ -11,28 +11,26 @@
 ///
 
 #include <primesieve/config.hpp>
+#include <primesieve/CpuInfo.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
 #include <primesieve.hpp>
 
 #include <stdint.h>
+#include <cstddef>
 #include <limits>
 #include <string>
 
 namespace {
 
-int sieve_size = L1_DCACHE_SIZE;
+int sieve_size = 0;
 
 int num_threads = 0;
 
 }
 
 namespace primesieve {
-
-//////////////////////////////////////////////////////////////////////
-//                      Nth prime function
-//////////////////////////////////////////////////////////////////////
 
 uint64_t nth_prime(int64_t n, uint64_t start)
 {
@@ -41,10 +39,6 @@ uint64_t nth_prime(int64_t n, uint64_t start)
   pps.setNumThreads(get_num_threads());
   return pps.nthPrime(n, start);
 }
-
-//////////////////////////////////////////////////////////////////////
-//                      Count functions
-//////////////////////////////////////////////////////////////////////
 
 uint64_t count_primes(uint64_t start, uint64_t stop)
 {
@@ -94,10 +88,6 @@ uint64_t count_sextuplets(uint64_t start, uint64_t stop)
   return pps.countSextuplets(start, stop);
 }
 
-//////////////////////////////////////////////////////////////////////
-//                      Print functions
-//////////////////////////////////////////////////////////////////////
-
 void print_primes(uint64_t start, uint64_t stop)
 {
   PrimeSieve ps;
@@ -140,26 +130,12 @@ void print_sextuplets(uint64_t start, uint64_t stop)
   ps.printSextuplets(start, stop);
 }
 
-//////////////////////////////////////////////////////////////////////
-//                      Getters and Setters
-//////////////////////////////////////////////////////////////////////
-
-int get_sieve_size()
-{
-  return sieve_size;
-}
-
 int get_num_threads()
 {
   if (num_threads)
     return num_threads;
   else
     return ParallelPrimeSieve::getMaxThreads();
-}
-
-void set_sieve_size(int kilobytes)
-{
-  sieve_size = inBetween(1, kilobytes, 2048);
 }
 
 void set_num_threads(int threads)
@@ -172,13 +148,58 @@ uint64_t get_max_stop()
   return std::numeric_limits<uint64_t>::max();
 }
 
-//////////////////////////////////////////////////////////////////////
-//                      Miscellaneous
-//////////////////////////////////////////////////////////////////////
-
 std::string primesieve_version()
 {
   return PRIMESIEVE_VERSION;
+}
+
+void set_sieve_size(int kilobytes)
+{
+  sieve_size = inBetween(8, kilobytes, 2048);
+  sieve_size = floorPow2(sieve_size);
+}
+
+int get_sieve_size()
+{
+  // user specified sieve size
+  if (sieve_size)
+    return sieve_size;
+
+  size_t l1CacheSize = cpuInfo.l1CacheSize();
+  size_t l2CacheSize = cpuInfo.l2CacheSize();
+  size_t l3CacheSize = cpuInfo.l3CacheSize();
+
+  // convert to kilobytes
+  l1CacheSize /= 1024;
+  l2CacheSize /= 1024;
+  l3CacheSize /= 1024;
+
+  // we set the sieve size to the CPU's L2 cache size
+  // if the L2 cache is private. If the CPU has both
+  // an L2 and L3 cache we assume that each CPU
+  // core has a private L2 cache.
+  if (l2CacheSize > l1CacheSize &&
+      l2CacheSize > 0 &&
+      l3CacheSize > 0)
+  {
+    l2CacheSize = inBetween(32, l2CacheSize, 2048);
+    l2CacheSize = floorPow2(l2CacheSize);
+    return (int) l2CacheSize;
+  }
+  else
+  {
+    // failed to detect the CPU's L1 cache size
+    if (l1CacheSize == 0)
+      l1CacheSize = 32;
+
+    // if the CPU does not have an L2 cache or if the
+    // cache is shared between all CPU cores we
+    // set the sieve size to the CPU's L1 cache size.
+
+    l1CacheSize = inBetween(8, l1CacheSize, 2048);
+    l1CacheSize = floorPow2(l1CacheSize);
+    return (int) l1CacheSize;
+  }
 }
 
 } // namespace

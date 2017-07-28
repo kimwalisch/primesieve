@@ -55,7 +55,7 @@ struct WheelElement
 extern const WheelElement wheel30[8*8];
 extern const WheelElement wheel210[48*8];
 
-/// Sieving primes are used to cross-off multiples (of itself).
+/// Sieving primes are used to cross-off multiples.
 /// Each SievingPrime object contains a sieving prime and the
 /// position of its next multiple within the SieveOfEratosthenes
 /// array (i.e. multipleIndex) and a wheelIndex.
@@ -68,6 +68,32 @@ public:
     MAX_MULTIPLEINDEX = (1 << 23) - 1,
     MAX_WHEELINDEX    = (1 << (32 - 23)) - 1
   };
+
+  SievingPrime() { }
+
+  SievingPrime(uint_t sievingPrime,
+               uint_t multipleIndex,
+               uint_t wheelIndex)
+  {
+    set(multipleIndex, wheelIndex);
+    sievingPrime_ = (uint32_t) sievingPrime;
+  }
+
+  void set(uint_t multipleIndex,
+           uint_t wheelIndex)
+  {
+    assert(multipleIndex <= MAX_MULTIPLEINDEX);
+    assert(wheelIndex <= MAX_WHEELINDEX);
+    indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 23));
+  }
+
+  void set(uint_t sievingPrime,
+           uint_t multipleIndex,
+           uint_t wheelIndex)
+  {
+    set(multipleIndex, wheelIndex);
+    sievingPrime_ = (uint32_t) sievingPrime;
+  }
 
   uint_t getSievingPrime() const
   {
@@ -87,29 +113,13 @@ public:
   void setMultipleIndex(uint_t multipleIndex)
   {
     assert(multipleIndex <= MAX_MULTIPLEINDEX);
-    indexes_ = (uint32_t)(indexes_ | multipleIndex);
+    indexes_ = (uint32_t) (indexes_ | multipleIndex);
   }
 
   void setWheelIndex(uint_t wheelIndex)
   {
     assert(wheelIndex <= MAX_WHEELINDEX);
-    indexes_ = (uint32_t)(wheelIndex << 23);
-  }
-
-  void set(uint_t multipleIndex,
-           uint_t wheelIndex)
-  {
-    assert(multipleIndex <= MAX_MULTIPLEINDEX);
-    assert(wheelIndex <= MAX_WHEELINDEX);
-    indexes_ = (uint32_t)(multipleIndex | (wheelIndex << 23));
-  }
-
-  void set(uint_t sievingPrime,
-           uint_t multipleIndex,
-           uint_t wheelIndex)
-  {
-    set(multipleIndex, wheelIndex);
-    sievingPrime_ = (uint32_t) sievingPrime;
+    indexes_ = (uint32_t) (wheelIndex << 23);
   }
 private:
   /// multipleIndex = 23 least significant bits of indexes_

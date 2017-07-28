@@ -14,7 +14,7 @@
 #include "Wheel.hpp"
 
 #include <stdint.h>
-#include <list>
+#include <vector>
 
 namespace primesieve {
 
@@ -26,13 +26,11 @@ class EratMedium : public Modulo210Wheel_t
 {
 public:
   EratMedium(uint64_t, uint_t, uint_t);
-  uint_t getLimit() const { return limit_; }
   void crossOff(byte_t*, uint_t);
 private:
-  uint_t limit_;
-  std::list<Bucket> buckets_;
+  uint_t maxPrime_;
+  std::vector<SievingPrime> primes_;
   void storeSievingPrime(uint_t, uint_t, uint_t);
-  static void crossOff(byte_t*, uint_t, Bucket&);
 };
 
 } // namespace

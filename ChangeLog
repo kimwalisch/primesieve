@@ -1,3 +1,20 @@
+Changes in version 6.1, 28/07/2017
+==================================
+
+primesieve-6.1 features run-time CPU cache size detection and
+an L2 cache size optimization (contributed by Huang YuanBing)
+which speeds up sieving by up to 20% on recent CPUs (>= 2012).
+By default primesieve now uses a sieve size that fits into the
+CPU's L1 cache for small sieving primes and a sieve size that
+fits into the CPU's L2 cache for medium and big sieving
+primes.
+
+The API and ABI are backwards compatible.
+
+1. CpuInfo.cpp: Runtime CPU cache size detection.
+2. api.cpp: sieve size = L2 cache size.
+3. EratSmall: L1 cache size optimization.
+
 Changes in version 6.0, 01/05/2017
 ==================================
 
@@ -488,7 +505,7 @@ Changes in version 3.7, 31/05/2012
  2. Reduced header file dependencies, libprimesieve now only depends on
     PrimeSieve.h or ParallelPrimeSieve.h (and PrimeSieve.h).
  3. Updated Makefiles.
- 4. New template imath.h functions: isqrt(), ilog2(), isPowerOf2(), ...
+ 4. New template imath.h functions: isqrt(), ilog2(), isPow2(), ...
     isqrt() has been rewritten using Newton's algorithm in order to
     avoid rounding errors of (int)sqrt((double)n) if n > 10^15.
  5. New internal SieveOfEratosthenes::getNextPrime(...) member function.

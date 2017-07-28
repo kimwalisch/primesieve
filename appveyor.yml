@@ -20,3 +20,4 @@ build_script:
 
 test_script:
   - ctest -C Release
+  - test\Release\cpu_info.exe

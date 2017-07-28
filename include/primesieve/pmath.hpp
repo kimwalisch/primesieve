@@ -1,6 +1,6 @@
 ///
 /// @file   pmath.hpp
-/// @brief  Auxiliary math functions needed in primesieve.
+/// @brief  Auxiliary math functions for primesieve.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -13,10 +13,11 @@
 
 #include <stdint.h>
 #include <algorithm>
+#include <cstddef>
 #include <cmath>
 #include <limits>
 
-namespace {
+namespace primesieve {
 
 template <typename X, typename Y>
 inline X ceilDiv(X x, Y y)
@@ -37,13 +38,13 @@ inline T isquare(T x)
 }
 
 template <typename T>
-inline bool isPowerOf2(T x)
+inline bool isPow2(T x)
 {
   return x != 0 && (x & (x - 1)) == 0;
 }
 
 template <typename T>
-inline T floorPowerOf2(T x)
+inline T floorPow2(T x)
 {
   for (T i = 1; i < numberOfBits(x); i += i)
     x |= (x >> i);
@@ -83,7 +84,6 @@ inline T isqrt(T x)
   T s = bits / 2 - nlz / 2;
   T one = 1;
 
-  // first guess: least power of 2 >= sqrt(x)
   T g0 = one << s;
   T g1 = (g0 + (x >> s)) >> 1;
 
@@ -124,7 +124,29 @@ inline B inBetween(A min, B x, C max)
   return x;
 }
 
-/// Get an approximation of the maximum prime gap near n
+/// prime_count_approx(x) >= pi(x)
+inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
+{
+  if (start > stop)
+    return 0;
+  if (stop <= 10)
+    return 4;
+
+  // pi(x) <= x / (log(x) - 1.1) + 5, for x >= 4
+  double x = (double) stop;
+  double logx = std::log(x);
+  double div = logx - 1.1;
+  double pix = (stop - start) / div + 5;
+
+  return (std::size_t) pix;
+}
+
+inline std::size_t prime_count_approx(uint64_t stop)
+{
+  return prime_count_approx(0, stop);
+}
+
+/// Approximation of the maximum prime gap near n
 template <typename T>
 inline T max_prime_gap(T n)
 {

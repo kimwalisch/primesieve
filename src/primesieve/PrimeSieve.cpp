@@ -54,6 +54,8 @@ const array<SmallPrime, 8> smallPrimes
 
 namespace primesieve {
 
+int get_sieve_size();
+
 PrimeSieve::PrimeSieve() :
   start_(0),
   stop_(0),
@@ -62,7 +64,7 @@ PrimeSieve::PrimeSieve() :
   parent_(nullptr),
   store_(nullptr)
 {
-  setSieveSize(L1_DCACHE_SIZE);
+  setSieveSize(get_sieve_size());
   reset();
 }
 
@@ -124,13 +126,14 @@ void PrimeSieve::setStop(uint64_t stop)
   stop_ = stop;
 }
 
-/// Set the size of the sieve of Eratosthenes array in kilobytes
-/// (default = 32). The best sieving performance is achieved with a
-/// sieve size of the CPU's L1 data cache size per core.
+/// Set the size of the sieve array in kilobytes.
+/// The best sieving performance is usually achieved if the
+/// sieve size is set to the CPU's L1 or L2 cache size.
 ///
 void PrimeSieve::setSieveSize(int sieveSize)
 {
-  sieveSize_ = inBetween(1, floorPowerOf2(sieveSize), 2048);
+  sieveSize_ = inBetween(8, sieveSize, 2048);
+  sieveSize_ = floorPow2(sieveSize_);
 }
 
 Store& PrimeSieve::getStore()
@@ -232,7 +235,7 @@ void PrimeSieve::sieve()
     PrimeGenerator primeGen(*this, preSieve);
 
     // generate sieving primes for primeGen
-    if (primeGen.getSqrtStop() > preSieve.getLimit())
+    if (primeGen.getSqrtStop() > preSieve.getMaxPrime())
     {
       SievingPrimes sp(primeGen, preSieve);
       sp.generate();

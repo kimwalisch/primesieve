@@ -12,9 +12,9 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
-#define PRIMESIEVE_VERSION "6.0"
+#define PRIMESIEVE_VERSION "6.1"
 #define PRIMESIEVE_VERSION_MAJOR 6
-#define PRIMESIEVE_VERSION_MINOR 0
+#define PRIMESIEVE_VERSION_MINOR 1
 
 #include <primesieve/iterator.h>
 
@@ -184,12 +184,10 @@ int primesieve_get_num_threads();
 
 /**
  * Set the sieve size in kilobytes.
- * The best sieving performance is achieved with a sieve size of
- * your CPU's L1 data cache size (per core). For sieving >= 10^17 a
- * sieve size of your CPU's L2 cache size sometimes performs
- * better.
+ * The best sieving performance is achieved with a sieve size
+ * of your CPU's L1 or L2 cache size (per core).
  * @param sieve_size Sieve size in kilobytes.
- * @pre   sieve_size >= 1 && <= 2048.
+ * @pre   sieve_size >= 8 && <= 2048.
  */
 void primesieve_set_sieve_size(int sieve_size);
 

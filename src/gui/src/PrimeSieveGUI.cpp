@@ -23,6 +23,7 @@
 #include "calculator.hpp"
 
 #include <primesieve.hpp>
+#include <primesieve/CpuInfo.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
 #include <primesieve/pmath.hpp>
 
@@ -47,8 +48,6 @@
   #include <QTextCursor>
   #include <stdexcept>
 #endif
-
-int get_l1d_cache_size();
 
 using namespace primesieve;
 
@@ -101,14 +100,8 @@ void PrimeSieveGUI::initGUI() {
   for (int i = MINIMUM_SIEVE_SIZE; i <= MAXIMUM_SIEVE_SIZE; i *= 2)
     ui->sieveSizeComboBox->addItem(QString::number(i) + " KB");
 
-  int l1dCacheSize = get_l1d_cache_size();
-  if (l1dCacheSize < 16 || l1dCacheSize > 1024)
-    l1dCacheSize = DEFAULT_L1D_CACHE_SIZE;
-
-  int defaultSieveSize = floorPowerOf2(l1dCacheSize);
-
-  // default sieve size = CPU L1 data cache size
-  this->setTo(ui->sieveSizeComboBox, QString::number(defaultSieveSize) + " KB");
+  int sieveSize = get_sieve_size();
+  this->setTo(ui->sieveSizeComboBox, QString::number(sieveSize) + " KB");
 
   // fill the threadsComboBox with power of 2 values <= maxThreads_
   maxThreads_ = ParallelPrimeSieve::getMaxThreads();

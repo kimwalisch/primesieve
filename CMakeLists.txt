@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(primesieve)
-set(PRIMESIEVE_VERSION "6.0")
-set(PRIMESIEVE_SOVERSION "8.0.0")
+set(PRIMESIEVE_VERSION "6.1")
+set(PRIMESIEVE_SOVERSION "8.1.0")
 set(CMAKE_BUILD_TYPE Release)
 
 # Build options ######################################################
@@ -32,6 +32,7 @@ set(BIN_SRC src/console/cmdoptions.cpp
 
 set(LIB_SRC src/primesieve/api-c.cpp
             src/primesieve/api.cpp
+            src/primesieve/CpuInfo.cpp
             src/primesieve/EratBig.cpp
             src/primesieve/EratMedium.cpp
             src/primesieve/EratSmall.cpp
@@ -46,19 +47,6 @@ set(LIB_SRC src/primesieve/api-c.cpp
             src/primesieve/SieveOfEratosthenes.cpp
             src/primesieve/SievingPrimes.cpp
             src/primesieve/Wheel.cpp)
-
-# Detect CPU L1 cache size ###########################################
-
-execute_process(COMMAND sh ${PROJECT_SOURCE_DIR}/scripts/L1_cache_size.sh
-                RESULT_VARIABLE L1_RES
-                OUTPUT_VARIABLE L1_CACHE_SIZE
-                ERROR_QUIET)
-
-if(L1_RES EQUAL 0)
-    string(STRIP ${L1_CACHE_SIZE} L1_CACHE_SIZE)
-    message(STATUS "Found CPU L1 cache size: ${L1_CACHE_SIZE} KB")
-    add_definitions(-DL1_DCACHE_SIZE=${L1_CACHE_SIZE})
-endif()
 
 # libprimesieve ######################################################
 
@@ -116,6 +104,7 @@ install(FILES include/primesieve/PrimeSieve.hpp
               include/primesieve/iterator.h
               include/primesieve/iterator.hpp
               include/primesieve/primesieve_error.hpp
+              include/primesieve/pmath.hpp
               DESTINATION ${CMAKE_INSTALL_PREFIX}/include/primesieve)
 
 # Regenerate man page ################################################

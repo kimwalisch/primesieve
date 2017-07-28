@@ -1,7 +1,7 @@
 ///
 /// @file   EratSmall.cpp
-/// @brief  Segmented sieve of Eratosthenes optimized for small
-///         sieving primes.
+/// @brief  Segmented sieve of Eratosthenes optimized for
+///         small sieving primes.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -10,70 +10,97 @@
 ///
 
 #include <primesieve/config.hpp>
+#include <primesieve/CpuInfo.hpp>
 #include <primesieve/EratSmall.hpp>
 #include <primesieve/bits.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/Wheel.hpp>
 
 #include <stdint.h>
+#include <algorithm>
 #include <cassert>
-#include <list>
+#include <vector>
+
+using namespace std;
 
 namespace primesieve {
 
-/// @stop:       Upper bound for sieving
-/// @sieveSize:  Sieve size in bytes
-/// @limit:      Sieving primes must be <= limit
+/// @stop:      Upper bound for sieving
+/// @l1Size:    Sieve size in bytes
+/// @maxPrime:  Sieving primes <= maxPrime
 ///
-EratSmall::EratSmall(uint64_t stop, uint_t sieveSize, uint_t limit) :
-  Modulo30Wheel_t(stop, sieveSize),
-  limit_(limit)
+EratSmall::EratSmall(uint64_t stop, uint_t l1Size, uint_t maxPrime) :
+  Modulo30Wheel_t(stop, l1Size),
+  maxPrime_(maxPrime),
+  l1Size_(l1Size)
 {
-  if (limit > sieveSize * 3)
-    throw primesieve_error("EratSmall: limit must be <= sieveSize * 3");
-  buckets_.emplace_back();
+  if (maxPrime_ > l1Size * 3)
+    throw primesieve_error("EratSmall: maxPrime must be <= l1Size * 3");
+
+  size_t count = prime_count_approx(maxPrime);
+  primes_.reserve(count);
+}
+
+/// Usually sieve size = L2 cache size,
+/// but EratSmall runs faster using
+/// sieve size = L1 cache size
+///
+uint_t EratSmall::getL1Size(uint_t sieveSize)
+{
+  size_t size = cpuInfo.l1CacheSize();
+
+  // failed to detect L1 cache size
+  if (size == 0)
+    return sieveSize;
+
+  size_t minSize = 8 << 10;
+  size_t maxSize = 2048 << 10;
+  size = inBetween(minSize, size, maxSize);
+
+  return (uint_t) size;
 }
 
 /// Add a new sieving prime to EratSmall
 void EratSmall::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
 {
-  assert(prime <= limit_);
+  assert(prime <= maxPrime_);
   uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
-  if (!buckets_.back().store(sievingPrime, multipleIndex, wheelIndex))
-    buckets_.emplace_back();
+  primes_.emplace_back(sievingPrime, multipleIndex, wheelIndex);
 }
 
 /// Cross-off the multiples of small sieving
 /// primes from the sieve array
 ///
-void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit)
+void EratSmall::crossOff(byte_t* sieve, uint_t sieveSize)
 {
-  for (auto& bucket : buckets_)
-    crossOff(sieve, sieveLimit, bucket);
+  byte_t* sieveEnd = &sieve[sieveSize];
+
+  for (; sieve < sieveEnd; sieve += l1Size_)
+  {
+    byte_t* end = &sieve[l1Size_];
+    end = min(end, sieveEnd);
+    crossOff(sieve, end);
+  }
 }
 
-/// Cross-off the multiples of the sieving primes in the current
-/// bucket. This is an implementation of the segmented sieve of
-/// Eratosthenes with wheel factorization optimized for small sieving
-/// primes that have many multiples per segment. This algorithm uses a
-/// hardcoded modulo 30 wheel that skips multiples of 2, 3 and 5
+/// Segmented sieve of Eratosthenes with wheel factorization
+/// optimized for small sieving primes that have many multiples
+/// per segment. This algorithm uses a hardcoded modulo 30
+/// wheel that skips multiples of 2, 3 and 5
 ///
-void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
+void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
 {
-  SievingPrime* sPrime = bucket.begin();
-  SievingPrime* sEnd   = bucket.end();
-
-  for (; sPrime != sEnd; sPrime++)
+  for (auto& prime : primes_)
   {
-    uint_t sievingPrime  = sPrime->getSievingPrime();
-    uint_t multipleIndex = sPrime->getMultipleIndex();
-    uint_t wheelIndex    = sPrime->getWheelIndex();
+    uint_t sievingPrime  = prime.getSievingPrime();
+    uint_t multipleIndex = prime.getMultipleIndex();
+    uint_t wheelIndex    = prime.getWheelIndex();
 
     // pointer to the byte containing the first multiple
     // of sievingPrime within the current segment
     byte_t* p = &sieve[multipleIndex];
-    byte_t* loopLimit = sieveLimit - (sievingPrime * 28 + 27);
-    if (loopLimit > sieveLimit)
+    byte_t* loopLimit = sieveEnd - (sievingPrime * 28 + 27);
+    if (loopLimit > sieveEnd)
       loopLimit = p;
 
     switch (wheelIndex)
@@ -93,21 +120,21 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
                   p[sievingPrime * 22 + 5] &= BIT1;
                   p[sievingPrime * 28 + 6] &= BIT5;
                 }
-                if (p >= sieveLimit) { sPrime->setWheelIndex(0); break; }
+                if (p >= sieveEnd) { prime.setWheelIndex(0); break; }
                 *p &= BIT0; p += sievingPrime * 6 + 1;
-        case 1: if (p >= sieveLimit) { sPrime->setWheelIndex(1); break; }
+        case 1: if (p >= sieveEnd) { prime.setWheelIndex(1); break; }
                 *p &= BIT4; p += sievingPrime * 4 + 1;
-        case 2: if (p >= sieveLimit) { sPrime->setWheelIndex(2); break; }
+        case 2: if (p >= sieveEnd) { prime.setWheelIndex(2); break; }
                 *p &= BIT3; p += sievingPrime * 2 + 0;
-        case 3: if (p >= sieveLimit) { sPrime->setWheelIndex(3); break; }
+        case 3: if (p >= sieveEnd) { prime.setWheelIndex(3); break; }
                 *p &= BIT7; p += sievingPrime * 4 + 1;
-        case 4: if (p >= sieveLimit) { sPrime->setWheelIndex(4); break; }
+        case 4: if (p >= sieveEnd) { prime.setWheelIndex(4); break; }
                 *p &= BIT6; p += sievingPrime * 2 + 1;
-        case 5: if (p >= sieveLimit) { sPrime->setWheelIndex(5); break; }
+        case 5: if (p >= sieveEnd) { prime.setWheelIndex(5); break; }
                 *p &= BIT2; p += sievingPrime * 4 + 1;
-        case 6: if (p >= sieveLimit) { sPrime->setWheelIndex(6); break; }
+        case 6: if (p >= sieveEnd) { prime.setWheelIndex(6); break; }
                 *p &= BIT1; p += sievingPrime * 6 + 1;
-        case 7: if (p >= sieveLimit) { sPrime->setWheelIndex(7); break; }
+        case 7: if (p >= sieveEnd) { prime.setWheelIndex(7); break; }
                 *p &= BIT5; p += sievingPrime * 2 + 1;
       }
       break;
@@ -124,21 +151,21 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
                    p[sievingPrime * 22 +  8] &= BIT2;
                    p[sievingPrime * 28 + 10] &= BIT4;
                  }
-                 if (p >= sieveLimit) { sPrime->setWheelIndex(8);  break; }
+                 if (p >= sieveEnd) { prime.setWheelIndex(8);  break; }
                  *p &= BIT1; p += sievingPrime * 6 + 2;
-        case  9: if (p >= sieveLimit) { sPrime->setWheelIndex(9);  break; }
+        case  9: if (p >= sieveEnd) { prime.setWheelIndex(9);  break; }
                  *p &= BIT3; p += sievingPrime * 4 + 1;
-        case 10: if (p >= sieveLimit) { sPrime->setWheelIndex(10); break; }
+        case 10: if (p >= sieveEnd) { prime.setWheelIndex(10); break; }
                  *p &= BIT7; p += sievingPrime * 2 + 1;
-        case 11: if (p >= sieveLimit) { sPrime->setWheelIndex(11); break; }
+        case 11: if (p >= sieveEnd) { prime.setWheelIndex(11); break; }
                  *p &= BIT5; p += sievingPrime * 4 + 2;
-        case 12: if (p >= sieveLimit) { sPrime->setWheelIndex(12); break; }
+        case 12: if (p >= sieveEnd) { prime.setWheelIndex(12); break; }
                  *p &= BIT0; p += sievingPrime * 2 + 0;
-        case 13: if (p >= sieveLimit) { sPrime->setWheelIndex(13); break; }
+        case 13: if (p >= sieveEnd) { prime.setWheelIndex(13); break; }
                  *p &= BIT6; p += sievingPrime * 4 + 2;
-        case 14: if (p >= sieveLimit) { sPrime->setWheelIndex(14); break; }
+        case 14: if (p >= sieveEnd) { prime.setWheelIndex(14); break; }
                  *p &= BIT2; p += sievingPrime * 6 + 2;
-        case 15: if (p >= sieveLimit) { sPrime->setWheelIndex(15); break; }
+        case 15: if (p >= sieveEnd) { prime.setWheelIndex(15); break; }
                  *p &= BIT4; p += sievingPrime * 2 + 1;
       }
       break;
@@ -155,21 +182,21 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
                    p[sievingPrime * 22 +  9] &= BIT6;
                    p[sievingPrime * 28 + 12] &= BIT3;
                  }
-                 if (p >= sieveLimit) { sPrime->setWheelIndex(16); break; }
+                 if (p >= sieveEnd) { prime.setWheelIndex(16); break; }
                  *p &= BIT2; p += sievingPrime * 6 + 2;
-        case 17: if (p >= sieveLimit) { sPrime->setWheelIndex(17); break; }
+        case 17: if (p >= sieveEnd) { prime.setWheelIndex(17); break; }
                  *p &= BIT7; p += sievingPrime * 4 + 2;
-        case 18: if (p >= sieveLimit) { sPrime->setWheelIndex(18); break; }
+        case 18: if (p >= sieveEnd) { prime.setWheelIndex(18); break; }
                  *p &= BIT5; p += sievingPrime * 2 + 1;
-        case 19: if (p >= sieveLimit) { sPrime->setWheelIndex(19); break; }
+        case 19: if (p >= sieveEnd) { prime.setWheelIndex(19); break; }
                  *p &= BIT4; p += sievingPrime * 4 + 2;
-        case 20: if (p >= sieveLimit) { sPrime->setWheelIndex(20); break; }
+        case 20: if (p >= sieveEnd) { prime.setWheelIndex(20); break; }
                  *p &= BIT1; p += sievingPrime * 2 + 1;
-        case 21: if (p >= sieveLimit) { sPrime->setWheelIndex(21); break; }
+        case 21: if (p >= sieveEnd) { prime.setWheelIndex(21); break; }
                  *p &= BIT0; p += sievingPrime * 4 + 1;
-        case 22: if (p >= sieveLimit) { sPrime->setWheelIndex(22); break; }
+        case 22: if (p >= sieveEnd) { prime.setWheelIndex(22); break; }
                  *p &= BIT6; p += sievingPrime * 6 + 3;
-        case 23: if (p >= sieveLimit) { sPrime->setWheelIndex(23); break; }
+        case 23: if (p >= sieveEnd) { prime.setWheelIndex(23); break; }
                  *p &= BIT3; p += sievingPrime * 2 + 1;
       }
       break;
@@ -186,21 +213,21 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
                    p[sievingPrime * 22 + 12] &= BIT7;
                    p[sievingPrime * 28 + 16] &= BIT2;
                  }
-                 if (p >= sieveLimit) { sPrime->setWheelIndex(24); break; }
+                 if (p >= sieveEnd) { prime.setWheelIndex(24); break; }
                  *p &= BIT3; p += sievingPrime * 6 + 3;
-        case 25: if (p >= sieveLimit) { sPrime->setWheelIndex(25); break; }
+        case 25: if (p >= sieveEnd) { prime.setWheelIndex(25); break; }
                  *p &= BIT6; p += sievingPrime * 4 + 3;
-        case 26: if (p >= sieveLimit) { sPrime->setWheelIndex(26); break; }
+        case 26: if (p >= sieveEnd) { prime.setWheelIndex(26); break; }
                  *p &= BIT0; p += sievingPrime * 2 + 1;
-        case 27: if (p >= sieveLimit) { sPrime->setWheelIndex(27); break; }
+        case 27: if (p >= sieveEnd) { prime.setWheelIndex(27); break; }
                  *p &= BIT1; p += sievingPrime * 4 + 2;
-        case 28: if (p >= sieveLimit) { sPrime->setWheelIndex(28); break; }
+        case 28: if (p >= sieveEnd) { prime.setWheelIndex(28); break; }
                  *p &= BIT4; p += sievingPrime * 2 + 1;
-        case 29: if (p >= sieveLimit) { sPrime->setWheelIndex(29); break; }
+        case 29: if (p >= sieveEnd) { prime.setWheelIndex(29); break; }
                  *p &= BIT5; p += sievingPrime * 4 + 2;
-        case 30: if (p >= sieveLimit) { sPrime->setWheelIndex(30); break; }
+        case 30: if (p >= sieveEnd) { prime.setWheelIndex(30); break; }
                  *p &= BIT7; p += sievingPrime * 6 + 4;
-        case 31: if (p >= sieveLimit) { sPrime->setWheelIndex(31); break; }
+        case 31: if (p >= sieveEnd) { prime.setWheelIndex(31); break; }
                  *p &= BIT2; p += sievingPrime * 2 + 1;
       }
       break;
@@ -217,21 +244,21 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
                    p[sievingPrime * 22 + 14] &= BIT3;
                    p[sievingPrime * 28 + 18] &= BIT1;
                  }
-                 if (p >= sieveLimit) { sPrime->setWheelIndex(32); break; }
+                 if (p >= sieveEnd) { prime.setWheelIndex(32); break; }
                  *p &= BIT4; p += sievingPrime * 6 + 4;
-        case 33: if (p >= sieveLimit) { sPrime->setWheelIndex(33); break; }
+        case 33: if (p >= sieveEnd) { prime.setWheelIndex(33); break; }
                  *p &= BIT2; p += sievingPrime * 4 + 2;
-        case 34: if (p >= sieveLimit) { sPrime->setWheelIndex(34); break; }
+        case 34: if (p >= sieveEnd) { prime.setWheelIndex(34); break; }
                  *p &= BIT6; p += sievingPrime * 2 + 2;
-        case 35: if (p >= sieveLimit) { sPrime->setWheelIndex(35); break; }
+        case 35: if (p >= sieveEnd) { prime.setWheelIndex(35); break; }
                  *p &= BIT0; p += sievingPrime * 4 + 2;
-        case 36: if (p >= sieveLimit) { sPrime->setWheelIndex(36); break; }
+        case 36: if (p >= sieveEnd) { prime.setWheelIndex(36); break; }
                  *p &= BIT5; p += sievingPrime * 2 + 1;
-        case 37: if (p >= sieveLimit) { sPrime->setWheelIndex(37); break; }
+        case 37: if (p >= sieveEnd) { prime.setWheelIndex(37); break; }
                  *p &= BIT7; p += sievingPrime * 4 + 3;
-        case 38: if (p >= sieveLimit) { sPrime->setWheelIndex(38); break; }
+        case 38: if (p >= sieveEnd) { prime.setWheelIndex(38); break; }
                  *p &= BIT3; p += sievingPrime * 6 + 4;
-        case 39: if (p >= sieveLimit) { sPrime->setWheelIndex(39); break; }
+        case 39: if (p >= sieveEnd) { prime.setWheelIndex(39); break; }
                  *p &= BIT1; p += sievingPrime * 2 + 1;
       }
       break;
@@ -248,21 +275,21 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
                    p[sievingPrime * 22 + 17] &= BIT4;
                    p[sievingPrime * 28 + 22] &= BIT0;
                  }
-                 if (p >= sieveLimit) { sPrime->setWheelIndex(40); break; }
+                 if (p >= sieveEnd) { prime.setWheelIndex(40); break; }
                  *p &= BIT5; p += sievingPrime * 6 + 5;
-        case 41: if (p >= sieveLimit) { sPrime->setWheelIndex(41); break; }
+        case 41: if (p >= sieveEnd) { prime.setWheelIndex(41); break; }
                  *p &= BIT1; p += sievingPrime * 4 + 3;
-        case 42: if (p >= sieveLimit) { sPrime->setWheelIndex(42); break; }
+        case 42: if (p >= sieveEnd) { prime.setWheelIndex(42); break; }
                  *p &= BIT2; p += sievingPrime * 2 + 1;
-        case 43: if (p >= sieveLimit) { sPrime->setWheelIndex(43); break; }
+        case 43: if (p >= sieveEnd) { prime.setWheelIndex(43); break; }
                  *p &= BIT6; p += sievingPrime * 4 + 3;
-        case 44: if (p >= sieveLimit) { sPrime->setWheelIndex(44); break; }
+        case 44: if (p >= sieveEnd) { prime.setWheelIndex(44); break; }
                  *p &= BIT7; p += sievingPrime * 2 + 2;
-        case 45: if (p >= sieveLimit) { sPrime->setWheelIndex(45); break; }
+        case 45: if (p >= sieveEnd) { prime.setWheelIndex(45); break; }
                  *p &= BIT3; p += sievingPrime * 4 + 3;
-        case 46: if (p >= sieveLimit) { sPrime->setWheelIndex(46); break; }
+        case 46: if (p >= sieveEnd) { prime.setWheelIndex(46); break; }
                  *p &= BIT4; p += sievingPrime * 6 + 5;
-        case 47: if (p >= sieveLimit) { sPrime->setWheelIndex(47); break; }
+        case 47: if (p >= sieveEnd) { prime.setWheelIndex(47); break; }
                  *p &= BIT0; p += sievingPrime * 2 + 1;
       }
       break;
@@ -279,21 +306,21 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
                    p[sievingPrime * 22 + 22] &= BIT0;
                    p[sievingPrime * 28 + 27] &= BIT7;
                  }
-                 if (p >= sieveLimit) { sPrime->setWheelIndex(48); break; }
+                 if (p >= sieveEnd) { prime.setWheelIndex(48); break; }
                  *p &= BIT6; p += sievingPrime * 6 + 6;
-        case 49: if (p >= sieveLimit) { sPrime->setWheelIndex(49); break; }
+        case 49: if (p >= sieveEnd) { prime.setWheelIndex(49); break; }
                  *p &= BIT5; p += sievingPrime * 4 + 4;
-        case 50: if (p >= sieveLimit) { sPrime->setWheelIndex(50); break; }
+        case 50: if (p >= sieveEnd) { prime.setWheelIndex(50); break; }
                  *p &= BIT4; p += sievingPrime * 2 + 2;
-        case 51: if (p >= sieveLimit) { sPrime->setWheelIndex(51); break; }
+        case 51: if (p >= sieveEnd) { prime.setWheelIndex(51); break; }
                  *p &= BIT3; p += sievingPrime * 4 + 4;
-        case 52: if (p >= sieveLimit) { sPrime->setWheelIndex(52); break; }
+        case 52: if (p >= sieveEnd) { prime.setWheelIndex(52); break; }
                  *p &= BIT2; p += sievingPrime * 2 + 2;
-        case 53: if (p >= sieveLimit) { sPrime->setWheelIndex(53); break; }
+        case 53: if (p >= sieveEnd) { prime.setWheelIndex(53); break; }
                  *p &= BIT1; p += sievingPrime * 4 + 4;
-        case 54: if (p >= sieveLimit) { sPrime->setWheelIndex(54); break; }
+        case 54: if (p >= sieveEnd) { prime.setWheelIndex(54); break; }
                  *p &= BIT0; p += sievingPrime * 6 + 5;
-        case 55: if (p >= sieveLimit) { sPrime->setWheelIndex(55); break; }
+        case 55: if (p >= sieveEnd) { prime.setWheelIndex(55); break; }
                  *p &= BIT7; p += sievingPrime * 2 + 2;
       }
       break;
@@ -310,27 +337,27 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveLimit, Bucket& bucket)
                    p[sievingPrime * 22 + 1] &= BIT5;
                    p[sievingPrime * 28 + 1] &= BIT6;
                  }
-                 if (p >= sieveLimit) { sPrime->setWheelIndex(56); break; }
+                 if (p >= sieveEnd) { prime.setWheelIndex(56); break; }
                  *p &= BIT7; p += sievingPrime * 6 + 1;
-        case 57: if (p >= sieveLimit) { sPrime->setWheelIndex(57); break; }
+        case 57: if (p >= sieveEnd) { prime.setWheelIndex(57); break; }
                  *p &= BIT0; p += sievingPrime * 4 + 0;
-        case 58: if (p >= sieveLimit) { sPrime->setWheelIndex(58); break; }
+        case 58: if (p >= sieveEnd) { prime.setWheelIndex(58); break; }
                  *p &= BIT1; p += sievingPrime * 2 + 0;
-        case 59: if (p >= sieveLimit) { sPrime->setWheelIndex(59); break; }
+        case 59: if (p >= sieveEnd) { prime.setWheelIndex(59); break; }
                  *p &= BIT2; p += sievingPrime * 4 + 0;
-        case 60: if (p >= sieveLimit) { sPrime->setWheelIndex(60); break; }
+        case 60: if (p >= sieveEnd) { prime.setWheelIndex(60); break; }
                  *p &= BIT3; p += sievingPrime * 2 + 0;
-        case 61: if (p >= sieveLimit) { sPrime->setWheelIndex(61); break; }
+        case 61: if (p >= sieveEnd) { prime.setWheelIndex(61); break; }
                  *p &= BIT4; p += sievingPrime * 4 + 0;
-        case 62: if (p >= sieveLimit) { sPrime->setWheelIndex(62); break; }
+        case 62: if (p >= sieveEnd) { prime.setWheelIndex(62); break; }
                  *p &= BIT5; p += sievingPrime * 6 + 0;
-        case 63: if (p >= sieveLimit) { sPrime->setWheelIndex(63); break; }
+        case 63: if (p >= sieveEnd) { prime.setWheelIndex(63); break; }
                  *p &= BIT6; p += sievingPrime * 2 + 0;
       }
       break;
     }
     // set multipleIndex for the next segment
-    sPrime->setMultipleIndex((uint_t)(p - sieveLimit));
+    prime.setMultipleIndex((uint_t)(p - sieveEnd));
   }
 }
 
