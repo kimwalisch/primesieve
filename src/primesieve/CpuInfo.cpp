@@ -32,6 +32,7 @@
 
 #else // all other OSes
 
+#include <exception>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -40,50 +41,50 @@ using namespace std;
 
 namespace {
 
-string getCacheStr(const string& filename)
+string getString(const string& filename)
 {
   ifstream file(filename);
-  string cacheStr;
+  string str;
 
   if (file)
   {
     ostringstream oss;
     oss << file.rdbuf();
-    cacheStr = oss.str();
+    str = oss.str();
   }
 
-  return cacheStr;
+  return str;
 }
 
-size_t getCacheSize(const string& filename)
+size_t getValue(const string& filename)
 {
-  size_t cacheSize = 0;
-  string cacheStr = getCacheStr(filename);
-  size_t pos = cacheStr.find_first_of("0123456789");
-
-  if (pos != string::npos)
+  try
   {
     // first character after number
     size_t idx = 0;
-    cacheSize = stol(cacheStr.substr(pos), &idx);
+    string str = getString(filename);
+    size_t val = stol(str, &idx);
 
-    if (idx < cacheStr.size())
+    if (idx < str.size())
     {
       // Last character may be:
       // 'K' = kilobytes
       // 'M' = megabytes
       // 'G' = gigabytes
-
-      if (cacheStr[idx] == 'K')
-        cacheSize *= 1024;
-      if (cacheStr[idx] == 'M')
-        cacheSize *= 1024 * 1024;
-      if (cacheStr[idx] == 'G')
-        cacheSize *= 1024 * 1024 * 1024;
+      if (str[idx] == 'K')
+        val *= 1024;
+      if (str[idx] == 'M')
+        val *= 1024 * 1024;
+      if (str[idx] == 'G')
+        val *= 1024 * 1024 * 1024;
     }
-  }
 
-  return cacheSize;
+    return val;
+  }
+  catch (exception&)
+  {
+    return 0;
+  }
 }
 
 } // namespace
@@ -115,6 +116,29 @@ size_t CpuInfo::l2CacheSize() const
 size_t CpuInfo::l3CacheSize() const
 {
   return l3CacheSize_;
+}
+
+bool CpuInfo::hasL1Cache() const
+{
+  return l1CacheSize_ >= (1 << 12) &&
+         l1CacheSize_ <= (1 << 30);
+}
+
+bool CpuInfo::hasL2Cache() const
+{
+  return l2CacheSize_ >= (1 << 12) &&
+         l2CacheSize_ <= (1 << 30);
+}
+
+bool CpuInfo::hasL3Cache() const
+{
+  return l3CacheSize_ >= (1 << 16) &&
+         l3CacheSize_ <= (1ull << 40);
+}
+
+bool CpuInfo::isPrivateL2Cache() const
+{
+  return hasL2Cache() && (!hasL1Cache() || hasL3Cache());
 }
 
 #if defined(APPLE_SYSCTL)
@@ -163,14 +187,25 @@ void CpuInfo::initCache()
 
 #else
 
-/// This works on Linux, we also use this for
-/// all unknown OSes, it might work.
+/// This works on Linux, we also use this for all
+/// unknown OSes, it might work.
 ///
 void CpuInfo::initCache()
 {
-  l1CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index0/size");
-  l2CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index2/size");
-  l3CacheSize_ = getCacheSize("/sys/devices/system/cpu/cpu0/cache/index3/size");
+  for (int i = 0; i <= 4; i++)
+  {
+    string filename = "/sys/devices/system/cpu/cpu0/cache/index" + to_string(i);
+    string cacheLevel = filename + "/level";
+    string cacheSize = filename + "/size";
+
+    switch (getValue(cacheLevel))
+    {
+      case 1: l1CacheSize_ = getValue(cacheSize); break;
+      case 2: l2CacheSize_ = getValue(cacheSize); break;
+      case 3: l3CacheSize_ = getValue(cacheSize); break;
+      default:;
+    }
+  }
 }
 
 #endif

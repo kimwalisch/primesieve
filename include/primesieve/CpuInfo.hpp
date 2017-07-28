@@ -19,6 +19,11 @@ class CpuInfo
 {
 public:
   CpuInfo();
+  bool hasL1Cache() const;
+  bool hasL2Cache() const;
+  bool hasL3Cache() const;
+  bool isPrivateL2Cache() const;
+
   std::size_t l1CacheSize() const;
   std::size_t l2CacheSize() const;
   std::size_t l3CacheSize() const;
