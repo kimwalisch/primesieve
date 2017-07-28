@@ -122,7 +122,7 @@ void EratBig::crossOff(byte_t* sieve)
 /// Segmented sieve of Eratosthenes with wheel factorization
 /// optimized for big sieving primes that have very few
 /// multiples per segment. Cross-off the next multiple of
-/// each sieving prime in the current bucket.
+/// each sieving prime in the current bucket
 ///
 void EratBig::crossOff(byte_t* sieve, SievingPrime* primes, SievingPrime* end)
 {

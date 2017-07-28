@@ -49,7 +49,7 @@ void EratMedium::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wh
 
 /// Segmented sieve of Eratosthenes with wheel factorization
 /// optimized for medium sieving primes that have a
-/// few multiples per segment.
+/// few multiples per segment
 ///
 void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize)
 {
