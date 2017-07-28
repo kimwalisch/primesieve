@@ -76,7 +76,7 @@ void SieveOfEratosthenes::allocate()
   deleteSieve_.reset(new byte_t[sieveSize_]);
   sieve_ = deleteSieve_.get();
 
-  size_t l1Size = EratSmall::getL1Size(sieveSize_);
+  uint_t l1Size = EratSmall::getL1Size(sieveSize_);
   maxEratSmall_  = (uint_t) (l1Size     * config::FACTOR_ERATSMALL);
   maxEratMedium_ = (uint_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
 
