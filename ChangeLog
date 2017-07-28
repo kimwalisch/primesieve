@@ -1,13 +1,13 @@
 Changes in version 6.1, 28/07/2017
 ==================================
 
-primesieve-6.1 features run-time CPU cache size detection
-and an L2 cache size optimization which speeds up sieving
-by 20% on new CPUs (>= 2015) with higher L2 cache bandwidth.
-By default primesieve now uses a sieve size of the CPU's L2
-cache size, on older CPUs there may be a minor slowdown.
-Thanks to Huang YuanBing for contributing the L2 cache size
-optimization!
+primesieve-6.1 features run-time CPU cache size detection and
+an L2 cache size optimization (contributed by Huang YuanBing)
+which speeds up sieving by 10% on recent CPUs (>= 2012). By
+default primesieve now uses a sieve size that fits into the
+CPU's L1 cache for small sieving primes and a sieve size that
+fits into the CPU's L2 cache for medium and big sieving
+primes.
 
 The API and ABI are backwards compatible.
 
