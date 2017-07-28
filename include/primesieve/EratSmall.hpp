@@ -14,6 +14,7 @@
 #include "Wheel.hpp"
 
 #include <stdint.h>
+#include <cstddef>
 #include <list>
 
 namespace primesieve {
@@ -30,6 +31,7 @@ public:
   void crossOff(byte_t*, byte_t*);
 private:
   uint_t limit_;
+  size_t l1CacheSize_;
   std::list<Bucket> buckets_;
   void storeSievingPrime(uint_t, uint_t, uint_t);
   static void crossOff(byte_t*, byte_t*, Bucket&);
