@@ -44,9 +44,16 @@ EratSmall::EratSmall(uint64_t stop, uint_t sieveSize, uint_t maxPrime) :
   // size, but EratSmall runs faster using a sieve
   // size that fits into the CPU's L1 cache
   l1CacheSize_ = cpuInfo.l1CacheSize();
-  size_t minL1CacheSize = 8 << 10;
-  l1CacheSize_ = max(l1CacheSize_, minL1CacheSize);
-  l1CacheSize_ = floorPow2(l1CacheSize_);
+
+  // failed to detect L1 cache size
+  if (l1CacheSize_ == 0)
+    l1CacheSize_ = sieveSize;
+  else
+  {
+    size_t minL1CacheSize = 8 << 10;
+    l1CacheSize_ = max(l1CacheSize_, minL1CacheSize);
+    l1CacheSize_ = floorPow2(l1CacheSize_);
+  }
 }
 
 /// Add a new sieving prime to EratSmall
@@ -75,7 +82,7 @@ void EratSmall::crossOff(byte_t* sieve, uint_t sieveSize)
 /// Segmented sieve of Eratosthenes with wheel factorization
 /// optimized for small sieving primes that have many multiples
 /// per segment. This algorithm uses a hardcoded modulo 30
-/// wheel that skips multiples of 2, 3 and 5.
+/// wheel that skips multiples of 2, 3 and 5
 ///
 void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
 {
