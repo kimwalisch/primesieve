@@ -120,12 +120,12 @@ void EratBig::crossOff(byte_t* sieve)
   rotate(lists_.begin(), lists_.begin() + 1, lists_.end());
 }
 
-/// Cross-off the next multiple of each sieving prime in the
-/// current bucket. This is an implementation of the segmented
-/// sieve of Eratosthenes with wheel factorization optimized for
-/// big sieving primes that have very few multiples per segment
+/// Segmented sieve of Eratosthenes with wheel factorization
+/// optimized for big sieving primes that have very few
+/// multiples per segment. Cross-off the next multiple of
+/// each sieving prime in the current bucket.
 ///
-void EratBig::crossOff(byte_t* sieve, SievingPrime* sPrime, SievingPrime* sEnd)
+void EratBig::crossOff(byte_t* sieve, SievingPrime* primes, SievingPrime* end)
 {
   Bucket** lists = &lists_[0];
   uint_t moduloSieveSize = moduloSieveSize_;
@@ -133,14 +133,14 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* sPrime, SievingPrime* sEnd)
 
   // 2 sieving primes are processed per loop iteration
   // to increase instruction level parallelism
-  for (; sPrime + 2 <= sEnd; sPrime += 2)
+  for (; primes + 2 <= end; primes += 2)
   { 
-    uint_t multipleIndex0 = sPrime[0].getMultipleIndex();
-    uint_t wheelIndex0    = sPrime[0].getWheelIndex();
-    uint_t sievingPrime0  = sPrime[0].getSievingPrime();
-    uint_t multipleIndex1 = sPrime[1].getMultipleIndex();
-    uint_t wheelIndex1    = sPrime[1].getWheelIndex();
-    uint_t sievingPrime1  = sPrime[1].getSievingPrime();
+    uint_t multipleIndex0 = primes[0].getMultipleIndex();
+    uint_t wheelIndex0    = primes[0].getWheelIndex();
+    uint_t sievingPrime0  = primes[0].getSievingPrime();
+    uint_t multipleIndex1 = primes[1].getMultipleIndex();
+    uint_t wheelIndex1    = primes[1].getWheelIndex();
+    uint_t sievingPrime1  = primes[1].getSievingPrime();
 
     // cross-off the current multiple (unset bit)
     // and calculate the next multiple
@@ -160,11 +160,11 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* sPrime, SievingPrime* sEnd)
       pushBucket(segment1);
   }
 
-  if (sPrime != sEnd)
+  if (primes != end)
   {
-    uint_t multipleIndex = sPrime->getMultipleIndex();
-    uint_t wheelIndex    = sPrime->getWheelIndex();
-    uint_t sievingPrime  = sPrime->getSievingPrime();
+    uint_t multipleIndex = primes->getMultipleIndex();
+    uint_t wheelIndex    = primes->getWheelIndex();
+    uint_t sievingPrime  = primes->getSievingPrime();
 
     unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
     uint_t segment = multipleIndex >> log2SieveSize;
