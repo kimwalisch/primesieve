@@ -20,7 +20,7 @@
 #include <stdint.h>
 #include <algorithm>
 #include <cassert>
-#include <list>
+#include <vector>
 
 using namespace std;
 
@@ -34,7 +34,7 @@ EratSmall::EratSmall(uint64_t stop, uint_t sieveSize, uint_t maxPrime) :
   Modulo30Wheel_t(stop, sieveSize),
   maxPrime_(maxPrime)
 {
-  if (maxPrime > sieveSize * 3)
+  if (maxPrime_ > sieveSize * 3)
     throw primesieve_error("EratSmall: maxPrime must be <= sieveSize * 3");
 
   size_t size = prime_count_approx(maxPrime);
