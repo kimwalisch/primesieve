@@ -234,7 +234,7 @@ void PrimeSieve::sieve()
     PrimeGenerator primeGen(*this, preSieve);
 
     // generate sieving primes for primeGen
-    if (primeGen.getSqrtStop() > preSieve.getLimit())
+    if (primeGen.getSqrtStop() > preSieve.getMaxPrime())
     {
       SievingPrimes sp(primeGen, preSieve);
       sp.generate();

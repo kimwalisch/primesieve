@@ -24,7 +24,7 @@ using namespace std;
 namespace primesieve {
 
 SievingPrimes::SievingPrimes(PrimeGenerator& primeGen, const PreSieve& preSieve) :
-  SieveOfEratosthenes(preSieve.getLimit() + 1,
+  SieveOfEratosthenes(preSieve.getMaxPrime() + 1,
                       primeGen.getSqrtStop(),
                       primeGen.getSieveSize(),
                       preSieve),

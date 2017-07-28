@@ -23,12 +23,12 @@ namespace primesieve {
 /// primes from it at initialization. Then whilst sieving, the
 /// buffer_ array is copied to the SieveOfEratosthenes array at the
 /// beginning of each new segment to pre-sieve the multiples of small
-/// primes <= limit_. Pre-sieving speeds up my sieve of Eratosthenes
+/// primes <= maxPrime_. Pre-sieving speeds up my sieve of Eratosthenes
 /// implementation by about 20 percent when sieving < 10^10.
 ///
 /// <b> Memory Usage </b>
 ///
-/// - PreSieve objects use: primeProduct(limit_) / 30 bytes of memory
+/// - PreSieve objects use: primeProduct(maxPrime_) / 30 bytes of memory
 /// - PreSieve multiples of primes <=  7 uses    7    bytes
 /// - PreSieve multiples of primes <= 11 uses   77    bytes
 /// - PreSieve multiples of primes <= 13 uses 1001    bytes
@@ -40,15 +40,15 @@ class PreSieve
 {
 public:
   PreSieve(uint64_t start, uint64_t stop);
-  uint_t getLimit() const { return limit_; }
+  uint_t getMaxPrime() const { return maxPrime_; }
   void copy(byte_t* sieve, uint_t sieveSize, uint64_t segmentLow) const;
 private:
-  uint_t limit_;
+  uint_t maxPrime_;
   uint_t primeProduct_;
   byte_t* buffer_;
   std::unique_ptr<byte_t[]> deleter_;
   uint_t size_;
-  void allocate();
+  void init();
 };
 
 } // namespace
