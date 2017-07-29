@@ -185,9 +185,16 @@ void CpuInfo::initCache()
     {
       if (info[i].Relationship == RelationCache)
       {
-        if (info[i].Cache.Level == 1)
+        if (info[i].Cache.Level == 1 &&
+            (info[i].Cache.Type == CacheData ||
+             info[i].Cache.Type == CacheUnified))
+        {
           l1CacheSize_ = info[i].Cache.Size;
-        if (info[i].Cache.Level == 2)
+        }
+
+        if (info[i].Cache.Level == 2 &&
+            (info[i].Cache.Type == CacheData ||
+             info[i].Cache.Type == CacheUnified))
         {
           // Using the Windows API it is not possible to find out
           // whether the L2 cache is private or shared hence
