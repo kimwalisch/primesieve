@@ -191,23 +191,48 @@ void CpuInfo::initCache()
 
 #else
 
-/// This works on Linux, we also use this for all
+/// This works on Linux. We also use this for all
 /// unknown OSes, it might work.
 ///
 void CpuInfo::initCache()
 {
+  string l1CacheMap;
+  string l2CacheMap;
+
   for (int i = 0; i <= 3; i++)
   {
     string filename = "/sys/devices/system/cpu/cpu0/cache/index" + to_string(i);
+
     string cacheLevel = filename + "/level";
     string cacheSize = filename + "/size";
+    string cacheMap = filename + "/shared_cpu_map";
+    string cacheType = filename + "/type";
 
-    switch (getValue(cacheLevel))
+    size_t level = getValue(cacheLevel);
+    string type = getString(cacheType);
+
+    if (level == 1 &&
+        (type == "Data" ||
+         type == "Unified"))
     {
-      case 1: l1CacheSize_ = getValue(cacheSize); break;
-      case 2: l2CacheSize_ = getValue(cacheSize); break;
-      default:;
+      l1CacheSize_ = getValue(cacheSize);
+      l1CacheMap = getString(cacheMap);
     }
+
+    if (level == 2 &&
+        (type == "Data" ||
+         type == "Unified"))
+    {
+      l2CacheSize_ = getValue(cacheSize);
+      l2CacheMap = getString(cacheMap);
+    }
+  }
+
+  if (hasL2Cache() &&
+      !l2CacheMap.empty() &&
+      l2CacheMap == l1CacheMap)
+  {
+    privateL2Cache_ = true;
   }
 }
 
