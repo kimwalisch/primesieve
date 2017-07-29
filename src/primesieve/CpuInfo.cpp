@@ -149,6 +149,7 @@ void CpuInfo::initCache()
     vector<size_t> values(n);
     sysctlbyname("hw.cacheconfig" , &values[0], &size, NULL, 0);
 
+    // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
     size_t l1CacheConfig = values[1];
     size_t l2CacheConfig = values[2];
 
@@ -183,7 +184,13 @@ void CpuInfo::initCache()
         if (info[i].Cache.Level == 1)
           l1CacheSize_ = info[i].Cache.Size;
         if (info[i].Cache.Level == 2)
+        {
+          // Using the Windows API it is not possible to find out
+          // whether the L2 cache is private or shared hence
+          // we assume the L2 cache is private
+          privateL2Cache_ = true;
           l2CacheSize_ = info[i].Cache.Size;
+        }
       }
     }
   }
@@ -191,8 +198,8 @@ void CpuInfo::initCache()
 
 #else
 
-/// This works on Linux. We also use this for all
-/// unknown OSes, it might work.
+/// This works on Linux and Android. We also use this
+/// for all unknown OSes, it might work.
 ///
 void CpuInfo::initCache()
 {
