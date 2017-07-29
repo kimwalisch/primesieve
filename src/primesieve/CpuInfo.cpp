@@ -29,6 +29,7 @@
 
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#include <vector>
 
 #else // all other OSes
 
@@ -98,7 +99,7 @@ namespace primesieve {
 CpuInfo::CpuInfo()
   : l1CacheSize_(0),
     l2CacheSize_(0),
-    l3CacheSize_(0)
+    privateL2Cache_(false)
 {
   initCache();
 }
@@ -113,32 +114,21 @@ size_t CpuInfo::l2CacheSize() const
   return l2CacheSize_;
 }
 
-size_t CpuInfo::l3CacheSize() const
+bool CpuInfo::privateL2Cache() const
 {
-  return l3CacheSize_;
+  return privateL2Cache_;
 }
 
 bool CpuInfo::hasL1Cache() const
 {
   return l1CacheSize_ >= (1 << 12) &&
-         l1CacheSize_ <= (1 << 30);
+         l1CacheSize_ <= (1ull << 40);
 }
 
 bool CpuInfo::hasL2Cache() const
 {
   return l2CacheSize_ >= (1 << 12) &&
-         l2CacheSize_ <= (1 << 30);
-}
-
-bool CpuInfo::hasL3Cache() const
-{
-  return l3CacheSize_ >= (1 << 16) &&
-         l3CacheSize_ <= (1ull << 40);
-}
-
-bool CpuInfo::isPrivateL2Cache() const
-{
-  return hasL2Cache() && (!hasL1Cache() || hasL3Cache());
+         l2CacheSize_ <= (1ull << 40);
 }
 
 #if defined(APPLE_SYSCTL)
@@ -147,11 +137,27 @@ void CpuInfo::initCache()
 {
   size_t l1Length = sizeof(l1CacheSize_);
   size_t l2Length = sizeof(l2CacheSize_);
-  size_t l3Length = sizeof(l3CacheSize_);
 
   sysctlbyname("hw.l1dcachesize", &l1CacheSize_, &l1Length, NULL, 0);
   sysctlbyname("hw.l2cachesize" , &l2CacheSize_, &l2Length, NULL, 0);
-  sysctlbyname("hw.l3cachesize" , &l3CacheSize_, &l3Length, NULL, 0);
+
+  size_t size = 0;
+
+  if (!sysctlbyname("hw.cacheconfig", NULL, &size, NULL, 0))
+  {
+    size_t n = size / sizeof(size_t);
+    vector<size_t> values(n);
+    sysctlbyname("hw.cacheconfig" , &values[0], &size, NULL, 0);
+
+    size_t l1CacheConfig = values[1];
+    size_t l2CacheConfig = values[2];
+
+    if (l2CacheConfig > 0 &&
+        l1CacheConfig == l2CacheConfig)
+    {
+      privateL2Cache_ = true;
+    }
+  }
 }
 
 #elif defined(_WIN32)
@@ -178,8 +184,6 @@ void CpuInfo::initCache()
           l1CacheSize_ = info[i].Cache.Size;
         if (info[i].Cache.Level == 2)
           l2CacheSize_ = info[i].Cache.Size;
-        if (info[i].Cache.Level == 3)
-          l3CacheSize_ = info[i].Cache.Size;
       }
     }
   }
@@ -192,7 +196,7 @@ void CpuInfo::initCache()
 ///
 void CpuInfo::initCache()
 {
-  for (int i = 0; i <= 4; i++)
+  for (int i = 0; i <= 3; i++)
   {
     string filename = "/sys/devices/system/cpu/cpu0/cache/index" + to_string(i);
     string cacheLevel = filename + "/level";
@@ -202,7 +206,6 @@ void CpuInfo::initCache()
     {
       case 1: l1CacheSize_ = getValue(cacheSize); break;
       case 2: l2CacheSize_ = getValue(cacheSize); break;
-      case 3: l3CacheSize_ = getValue(cacheSize); break;
       default:;
     }
   }
