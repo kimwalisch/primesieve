@@ -47,11 +47,10 @@ EratSmall::EratSmall(uint64_t stop, uint_t l1Size, uint_t maxPrime) :
 ///
 uint_t EratSmall::getL1Size(uint_t sieveSize)
 {
-  size_t size = cpuInfo.l1CacheSize();
-
-  // failed to detect L1 cache size
-  if (size == 0)
+  if (!cpuInfo.hasL1Cache())
     return sieveSize;
+
+  size_t size = cpuInfo.l1CacheSize();
 
   size_t minSize = 8 << 10;
   size_t maxSize = 2048 << 10;
