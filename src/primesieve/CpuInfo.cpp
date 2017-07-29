@@ -212,16 +212,16 @@ void CpuInfo::initCache()
     string type = getString(cacheType);
 
     if (level == 1 &&
-        (type == "Data" ||
-         type == "Unified"))
+        (type.find("Data") != string::npos ||
+         type.find("Unified") != string::npos))
     {
       l1CacheSize_ = getValue(cacheSize);
       l1CacheMap = getString(cacheMap);
     }
 
     if (level == 2 &&
-        (type == "Data" ||
-         type == "Unified"))
+        (type.find("Data") != string::npos ||
+         type.find("Unified") != string::npos))
     {
       l2CacheSize_ = getValue(cacheSize);
       l2CacheMap = getString(cacheMap);
