@@ -16,7 +16,15 @@ using namespace primesieve;
 
 int main()
 {
-  int exit_code = 0;
+  auto errors = cpuInfo.errorMsg();
+
+  if (!errors.empty())
+  {
+    for (auto& msg : errors)
+      cerr << "Error: " << msg << endl;
+
+    return 1;
+  }
 
   cout << "L1 cache size: " << cpuInfo.l1CacheSize() / 1024 << " KB" << endl;
   cout << "L2 cache size: " << cpuInfo.l2CacheSize() / 1024 << " KB" << endl;
@@ -29,19 +37,5 @@ int main()
       cout << "L2 cache: shared"  << endl;
   }
 
-  if (!cpuInfo.hasL1Cache() &&
-       cpuInfo.l1CacheSize() > 0)
-  {
-    cerr << "Error: L1 cache size does not look right!" << endl;
-    exit_code = 1;
-  }
-
-  if (!cpuInfo.hasL2Cache() &&
-       cpuInfo.l2CacheSize() > 0)
-  {
-    cerr << "Error: L2 cache size does not look right!" << endl;
-    exit_code = 1;
-  }
-
-  return exit_code;
+  return 0;
 }

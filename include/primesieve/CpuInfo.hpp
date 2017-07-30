@@ -12,6 +12,8 @@
 #define CPUINFO_HPP
 
 #include <cstddef>
+#include <string>
+#include <vector>
 
 namespace primesieve {
 
@@ -22,6 +24,7 @@ public:
   bool hasL1Cache() const;
   bool hasL2Cache() const;
   bool privateL2Cache() const;
+  std::vector<std::string> errorMsg() const;
   std::size_t l1CacheSize() const;
   std::size_t l2CacheSize() const;
 
@@ -29,6 +32,7 @@ private:
   std::size_t l1CacheSize_;
   std::size_t l2CacheSize_;
   bool privateL2Cache_;
+  std::vector<std::string> errorMsg_;
   void initCache();
 };
 

@@ -10,6 +10,8 @@
 
 #include <primesieve/CpuInfo.hpp>
 #include <cstddef>
+#include <exception>
+#include <vector>
 
 #if defined(__APPLE__)
   #if !defined(__has_include)
@@ -23,17 +25,14 @@
 #if defined(_WIN32)
 
 #include <windows.h>
-#include <vector>
 
 #elif defined(APPLE_SYSCTL)
 
 #include <sys/types.h>
 #include <sys/sysctl.h>
-#include <vector>
 
 #else // all other OSes
 
-#include <exception>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -59,33 +58,26 @@ string getString(const string& filename)
 
 size_t getValue(const string& filename)
 {
-  try
-  {
-    // first character after number
-    size_t idx = 0;
-    string str = getString(filename);
-    size_t val = stol(str, &idx);
+  // first character after number
+  size_t idx = 0;
+  string str = getString(filename);
+  size_t val = stol(str, &idx);
 
-    if (idx < str.size())
-    {
-      // Last character may be:
-      // 'K' = kilobytes
-      // 'M' = megabytes
-      // 'G' = gigabytes
-      if (str[idx] == 'K')
-        val *= 1024;
-      if (str[idx] == 'M')
-        val *= 1024 * 1024;
-      if (str[idx] == 'G')
-        val *= 1024 * 1024 * 1024;
-    }
-
-    return val;
-  }
-  catch (exception&)
+  if (idx < str.size())
   {
-    return 0;
+    // Last character may be:
+    // 'K' = kilobytes
+    // 'M' = megabytes
+    // 'G' = gigabytes
+    if (str[idx] == 'K')
+      val *= 1024;
+    if (str[idx] == 'M')
+      val *= 1024 * 1024;
+    if (str[idx] == 'G')
+      val *= 1024 * 1024 * 1024;
   }
+
+  return val;
 }
 
 } // namespace
@@ -101,7 +93,28 @@ CpuInfo::CpuInfo()
     l2CacheSize_(0),
     privateL2Cache_(false)
 {
-  initCache();
+  try
+  {
+    initCache();
+
+    if (!hasL1Cache() &&
+        l1CacheSize_ > 0)
+    {
+      string msg = "invalid L1 cache size: " + to_string(l1CacheSize_);
+      errorMsg_.push_back(msg);
+    }
+
+    if (!hasL2Cache() &&
+        l2CacheSize_ > 0)
+    {
+      string msg = "invalid L2 cache size: " + to_string(l2CacheSize_);
+      errorMsg_.push_back(msg);
+    }
+  }
+  catch (exception& e)
+  {
+    errorMsg_.push_back(e.what());
+  }
 }
 
 size_t CpuInfo::l1CacheSize() const
@@ -117,6 +130,11 @@ size_t CpuInfo::l2CacheSize() const
 bool CpuInfo::privateL2Cache() const
 {
   return privateL2Cache_;
+}
+
+vector<string> CpuInfo::errorMsg() const
+{
+  return errorMsg_;
 }
 
 bool CpuInfo::hasL1Cache() const
@@ -173,35 +191,41 @@ void CpuInfo::initCache()
 
   LPFN_GLPI glpi = (LPFN_GLPI) GetProcAddress(GetModuleHandle(TEXT("kernel32")), "GetLogicalProcessorInformation");
 
-  if (glpi)
+  if (!glpi)
+    return;
+
+  DWORD bytes = 0;
+  glpi(0, &bytes);
+
+  if (!bytes)
+    return;
+
+  size_t size = bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
+  vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> info(size);
+
+  if (!glpi(info.data(), &bytes))
+    return;
+
+  for (size_t i = 0; i < size; i++)
   {
-    DWORD bytes = 0;
-    glpi(0, &bytes);
-    size_t size = bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
-    vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> info(size);
-    glpi(info.data(), &bytes);
-
-    for (size_t i = 0; i < size; i++)
+    if (info[i].Relationship == RelationCache)
     {
-      if (info[i].Relationship == RelationCache)
+      if (info[i].Cache.Level == 1 &&
+          (info[i].Cache.Type == CacheData ||
+           info[i].Cache.Type == CacheUnified))
       {
-        if (info[i].Cache.Level == 1 &&
-            (info[i].Cache.Type == CacheData ||
-             info[i].Cache.Type == CacheUnified))
-        {
-          l1CacheSize_ = info[i].Cache.Size;
-        }
+        l1CacheSize_ = info[i].Cache.Size;
+      }
 
-        if (info[i].Cache.Level == 2 &&
-            (info[i].Cache.Type == CacheData ||
-             info[i].Cache.Type == CacheUnified))
-        {
-          // Using the Windows API it is not possible to find out
-          // whether the L2 cache is private or shared hence
-          // we assume the L2 cache is private
-          privateL2Cache_ = true;
-          l2CacheSize_ = info[i].Cache.Size;
-        }
+      if (info[i].Cache.Level == 2 &&
+          (info[i].Cache.Type == CacheData ||
+           info[i].Cache.Type == CacheUnified))
+      {
+        // Using GetLogicalProcessorInformation it is not possible
+        // to find out whether the L2 cache is private or shared
+        // hence we assume the L2 cache is private
+        privateL2Cache_ = true;
+        l2CacheSize_ = info[i].Cache.Size;
       }
     }
   }
