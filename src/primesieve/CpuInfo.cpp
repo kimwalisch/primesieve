@@ -164,20 +164,30 @@ void CpuInfo::initCache()
   if (!sysctlbyname("hw.cacheconfig", NULL, &size, NULL, 0))
   {
     size_t n = size / sizeof(size);
-    vector<size_t> values(n);
+    vector<size_t> cacheconfig(n);
 
-    if (values.size() > 2)
+    if (cacheconfig.size() > 2)
     {
       // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
-      sysctlbyname("hw.cacheconfig" , &values[0], &size, NULL, 0);
+      sysctlbyname("hw.cacheconfig" , &cacheconfig[0], &size, NULL, 0);
+      size_t l2CpuSharing = cacheconfig[2];
 
-      size_t l1CacheConfig = values[1];
-      size_t l2CacheConfig = values[2];
-
-      if (l2CacheConfig > 0 &&
-          l1CacheConfig == l2CacheConfig)
-      {
+      if (l2CpuSharing <= 1)
         privateL2Cache_ = true;
+      else
+      {
+        size_t logicalcpu = 1;
+        size = sizeof(size);
+        sysctlbyname("hw.logicalcpu", &logicalcpu, &size, NULL, 0);
+        logicalcpu = max<size_t>(1, logicalcpu);
+
+        size_t physicalcpu = 1;
+        size = sizeof(size);
+        sysctlbyname("hw.physicalcpu", &physicalcpu, &size, NULL, 0);
+        physicalcpu = max<size_t>(1, physicalcpu);
+
+        if (l2CpuSharing <= logicalcpu / physicalcpu)
+          privateL2Cache_ = true;
       }
     }
   }
