@@ -252,10 +252,11 @@ void CpuInfo::initCache()
   for (int i = 0; i <= 3; i++)
   {
     string filename = "/sys/devices/system/cpu/cpu0/cache/index" + to_string(i);
+    string threadSiblingsList = "/sys/devices/system/cpu/cpu0/topology/thread_siblings_list";
 
     string cacheLevel = filename + "/level";
     string cacheSize = filename + "/size";
-    string cacheMap = filename + "/shared_cpu_map";
+    string sharedCpuList = filename + "/shared_cpu_list";
     string cacheType = filename + "/type";
 
     size_t level = getValue(cacheLevel);
@@ -273,12 +274,13 @@ void CpuInfo::initCache()
          type == "Unified"))
     {
       l2CacheSize_ = getValue(cacheSize);
-      string shared_cpu_map = getString(cacheMap);
+      sharedCpuList = getString(sharedCpuList);
+      threadSiblingsList = getString(threadSiblingsList);
 
       // https://lwn.net/Articles/254445/
-      if (shared_cpu_map.empty())
+      if (sharedCpuList.empty())
         privateL2Cache_ = true;
-      else if (shared_cpu_map.find_first_of("3579abcdef") == string::npos)
+      else if (sharedCpuList == threadSiblingsList)
         privateL2Cache_ = true;
     }
   }
