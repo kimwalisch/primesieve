@@ -48,9 +48,10 @@ string getString(const string& filename)
 
   if (file)
   {
-    ostringstream oss;
-    oss << file.rdbuf();
-    str = oss.str();
+    // https://stackoverflow.com/a/3177560/363778
+    stringstream trimmer;
+    trimmer << file.rdbuf();
+    trimmer >> str;
   }
 
   return str;
@@ -248,9 +249,6 @@ void CpuInfo::initCache()
 ///
 void CpuInfo::initCache()
 {
-  string l1CacheMap;
-  string l2CacheMap;
-
   for (int i = 0; i <= 3; i++)
   {
     string filename = "/sys/devices/system/cpu/cpu0/cache/index" + to_string(i);
@@ -264,27 +262,25 @@ void CpuInfo::initCache()
     string type = getString(cacheType);
 
     if (level == 1 &&
-        (type.find("Data") != string::npos ||
-         type.find("Unified") != string::npos))
+        (type == "Data" ||
+         type == "Unified"))
     {
       l1CacheSize_ = getValue(cacheSize);
-      l1CacheMap = getString(cacheMap);
     }
 
     if (level == 2 &&
-        (type.find("Data") != string::npos ||
-         type.find("Unified") != string::npos))
+        (type == "Data" ||
+         type == "Unified"))
     {
       l2CacheSize_ = getValue(cacheSize);
-      l2CacheMap = getString(cacheMap);
-    }
-  }
+      string shared_cpu_map = getString(cacheMap);
 
-  if (hasL2Cache() &&
-      !l2CacheMap.empty() &&
-      l2CacheMap == l1CacheMap)
-  {
-    privateL2Cache_ = true;
+      // https://lwn.net/Articles/254445/
+      if (shared_cpu_map.empty())
+        privateL2Cache_ = true;
+      else if (shared_cpu_map.find_first_of("3579abcdef") == string::npos)
+        privateL2Cache_ = true;
+    }
   }
 }
 
