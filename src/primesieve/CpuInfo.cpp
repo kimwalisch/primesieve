@@ -59,22 +59,20 @@ string getString(const string& filename)
 
 size_t getValue(const string& filename)
 {
-  // first character after number
-  size_t idx = 0;
   string str = getString(filename);
-  size_t val = stol(str, &idx);
+  size_t val = stol(str);
 
-  if (idx < str.size())
+  if (!str.empty())
   {
     // Last character may be:
     // 'K' = kilobytes
     // 'M' = megabytes
     // 'G' = gigabytes
-    if (str[idx] == 'K')
+    if (str.back() == 'K')
       val *= 1024;
-    if (str[idx] == 'M')
+    if (str.back() == 'M')
       val *= 1024 * 1024;
-    if (str[idx] == 'G')
+    if (str.back() == 'G')
       val *= 1024 * 1024 * 1024;
   }
 
