@@ -100,19 +100,19 @@ CpuInfo::CpuInfo()
         l1CacheSize_ > 0)
     {
       string msg = "invalid L1 cache size: " + to_string(l1CacheSize_);
-      errorMsg_.push_back(msg);
+      errors_.push_back(msg);
     }
 
     if (!hasL2Cache() &&
         l2CacheSize_ > 0)
     {
       string msg = "invalid L2 cache size: " + to_string(l2CacheSize_);
-      errorMsg_.push_back(msg);
+      errors_.push_back(msg);
     }
   }
   catch (exception& e)
   {
-    errorMsg_.push_back(e.what());
+    errors_.push_back(e.what());
   }
 }
 
@@ -131,9 +131,9 @@ bool CpuInfo::privateL2Cache() const
   return privateL2Cache_;
 }
 
-vector<string> CpuInfo::errorMsg() const
+vector<string> CpuInfo::getErrors() const
 {
-  return errorMsg_;
+  return errors_;
 }
 
 bool CpuInfo::hasL1Cache() const

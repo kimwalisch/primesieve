@@ -16,7 +16,7 @@ using namespace primesieve;
 
 int main()
 {
-  auto errors = cpuInfo.errorMsg();
+  auto errors = cpuInfo.getErrors();
 
   if (!errors.empty())
   {
