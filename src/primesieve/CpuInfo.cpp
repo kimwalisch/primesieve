@@ -9,9 +9,11 @@
 ///
 
 #include <primesieve/CpuInfo.hpp>
+
 #include <cstddef>
 #include <exception>
 #include <vector>
+#include <string>
 
 #if defined(__APPLE__)
   #if !defined(__has_include)
@@ -35,7 +37,6 @@
 
 #include <fstream>
 #include <sstream>
-#include <string>
 
 using namespace std;
 
