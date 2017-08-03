@@ -231,7 +231,8 @@ void CpuInfo::initCache()
       // is private. This is more reliable than using
       // GetLogicalProcessorInformationEx() and
       // GROUP_AFFINITY.Mask
-      if (info[i].Cache.Level == 3)
+      if (info[i].Cache.Level == 3 &&
+          info[i].Cache.Size > 0)
         privateL2Cache_ = true;
     }
   }
