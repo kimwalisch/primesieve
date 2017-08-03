@@ -213,30 +213,26 @@ void CpuInfo::initCache()
   size_t size = bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
   vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> info(size);
 
-  if (!glpi(info.data(), &bytes))
+  if (!glpi(&info[0], &bytes))
     return;
 
   for (size_t i = 0; i < size; i++)
   {
-    if (info[i].Relationship == RelationCache)
+    if (info[i].Relationship == RelationCache &&
+        (info[i].Cache.Type == CacheData ||
+         info[i].Cache.Type == CacheUnified))
     {
-      if (info[i].Cache.Level == 1 &&
-          (info[i].Cache.Type == CacheData ||
-           info[i].Cache.Type == CacheUnified))
-      {
+      if (info[i].Cache.Level == 1)
         l1CacheSize_ = info[i].Cache.Size;
-      }
-
-      if (info[i].Cache.Level == 2 &&
-          (info[i].Cache.Type == CacheData ||
-           info[i].Cache.Type == CacheUnified))
-      {
-        // Using GetLogicalProcessorInformation it is not possible
-        // to find out whether the L2 cache is private or shared
-        // hence we assume the L2 cache is private
-        privateL2Cache_ = true;
+      if (info[i].Cache.Level == 2)
         l2CacheSize_ = info[i].Cache.Size;
-      }
+
+      // If the CPU has an L3 cache we assume the L2 cache
+      // is private. This is more reliable than using
+      // GetLogicalProcessorInformationEx() and
+      // GROUP_AFFINITY.Mask
+      if (info[i].Cache.Level == 3)
+        privateL2Cache_ = true;
     }
   }
 }
