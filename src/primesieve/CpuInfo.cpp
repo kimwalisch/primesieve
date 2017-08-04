@@ -60,11 +60,13 @@ string getString(const string& filename)
 
 size_t getValue(const string& filename)
 {
+  size_t val = 0;
   string str = getString(filename);
-  size_t val = stol(str);
 
   if (!str.empty())
   {
+    val = stol(str);
+
     // Last character may be:
     // 'K' = kilobytes
     // 'M' = megabytes
