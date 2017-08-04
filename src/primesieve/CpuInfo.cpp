@@ -249,6 +249,8 @@ void CpuInfo::initCache()
     }
   }
 
+// for Windows 7 (2009) or later we are able to
+// detect if the L2 cache is private
 #if _WIN32_WINNT >= 0x0601
 
   typedef BOOL (WINAPI *LPFN_GLPIEX)(LOGICAL_PROCESSOR_RELATIONSHIP, PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX, PDWORD);
@@ -294,7 +296,6 @@ void CpuInfo::initCache()
   }
 
 #endif
-
 }
 
 #else
