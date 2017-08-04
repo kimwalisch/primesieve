@@ -1,6 +1,6 @@
 ///
 /// @file  CpuInfo.hpp
-/// @brief Get the CPUs cache sizes in bytes.
+/// @brief Get the CPUs' cache sizes in bytes
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -13,7 +13,6 @@
 
 #include <cstddef>
 #include <string>
-#include <vector>
 
 namespace primesieve {
 
@@ -24,7 +23,7 @@ public:
   bool hasL1Cache() const;
   bool hasL2Cache() const;
   bool privateL2Cache() const;
-  std::vector<std::string> getErrors() const;
+  std::string getError() const;
   std::size_t l1CacheSize() const;
   std::size_t l2CacheSize() const;
 
@@ -32,7 +31,7 @@ private:
   std::size_t l1CacheSize_;
   std::size_t l2CacheSize_;
   bool privateL2Cache_;
-  std::vector<std::string> errors_;
+  std::string error_;
   void initCache();
 };
 

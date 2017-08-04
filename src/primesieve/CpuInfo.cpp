@@ -1,6 +1,6 @@
 ///
 /// @file   CpuInfo.cpp
-/// @brief  Get the CPUs cache sizes in bytes.
+/// @brief  Get the CPUs' cache sizes in bytes
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -12,7 +12,6 @@
 
 #include <cstddef>
 #include <exception>
-#include <vector>
 #include <string>
 
 #if defined(__APPLE__)
@@ -27,11 +26,13 @@
 #if defined(_WIN32)
 
 #include <windows.h>
+#include <vector>
 
 #elif defined(APPLE_SYSCTL)
 
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#include <vector>
 
 #else // all other OSes
 
@@ -98,24 +99,10 @@ CpuInfo::CpuInfo()
   try
   {
     initCache();
-
-    if (!hasL1Cache() &&
-        l1CacheSize_ > 0)
-    {
-      string msg = "invalid L1 cache size: " + to_string(l1CacheSize_);
-      errors_.push_back(msg);
-    }
-
-    if (!hasL2Cache() &&
-        l2CacheSize_ > 0)
-    {
-      string msg = "invalid L2 cache size: " + to_string(l2CacheSize_);
-      errors_.push_back(msg);
-    }
   }
   catch (exception& e)
   {
-    errors_.push_back(e.what());
+    error_ = e.what();
   }
 }
 
@@ -134,9 +121,9 @@ bool CpuInfo::privateL2Cache() const
   return privateL2Cache_;
 }
 
-vector<string> CpuInfo::getErrors() const
+string CpuInfo::getError() const
 {
-  return errors_;
+  return error_;
 }
 
 bool CpuInfo::hasL1Cache() const

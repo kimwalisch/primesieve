@@ -1,6 +1,6 @@
 ///
 /// @file   cpu_info.cpp
-/// @brief  Detect the CPUs' L1 & L2 cache sizes
+/// @brief  Detect the CPUs' cache sizes
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -16,13 +16,25 @@ using namespace primesieve;
 
 int main()
 {
-  auto errors = cpuInfo.getErrors();
+  string error = cpuInfo.getError();
 
-  if (!errors.empty())
+  if (!error.empty())
   {
-    for (auto& msg : errors)
-      cerr << "Error: " << msg << endl;
+    cerr << "Error: " << error << endl;
+    return 1;
+  }
 
+  if (cpuInfo.hasL1Cache() &&
+      cpuInfo.l1CacheSize() > 0)
+  {
+    cerr << "Invalid L1 cache size: " << cpuInfo.l1CacheSize() << endl;
+    return 1;
+  }
+
+  if (cpuInfo.hasL2Cache() &&
+      cpuInfo.l2CacheSize() > 0)
+  {
+    cerr << "Invalid L2 cache size: " << cpuInfo.l2CacheSize() << endl;
     return 1;
   }
 
