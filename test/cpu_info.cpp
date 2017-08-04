@@ -24,14 +24,14 @@ int main()
     return 1;
   }
 
-  if (cpuInfo.hasL1Cache() &&
+  if (!cpuInfo.hasL1Cache() &&
       cpuInfo.l1CacheSize() > 0)
   {
     cerr << "Invalid L1 cache size: " << cpuInfo.l1CacheSize() << endl;
     return 1;
   }
 
-  if (cpuInfo.hasL2Cache() &&
+  if (!cpuInfo.hasL2Cache() &&
       cpuInfo.l2CacheSize() > 0)
   {
     cerr << "Invalid L2 cache size: " << cpuInfo.l2CacheSize() << endl;
