@@ -210,6 +210,7 @@ void CpuInfo::initCache()
   if (!bytes)
     return;
 
+  size_t threadsPerCore = 0;
   size_t size = bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
   vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> info(size);
 
@@ -218,6 +219,17 @@ void CpuInfo::initCache()
 
   for (size_t i = 0; i < size; i++)
   {
+    if (info[i].Relationship == RelationProcessorCore)
+    {
+      auto mask = info[i].ProcessorMask;
+
+      // ProcessorMask contains one bit set for
+      // each logical CPU core related to the
+      // current physical CPU core
+      for (threadsPerCore = 0; mask > 0; threadsPerCore++)
+        mask &= mask - 1;
+    }
+
     if (info[i].Relationship == RelationCache &&
         (info[i].Cache.Type == CacheData ||
          info[i].Cache.Type == CacheUnified))
@@ -227,15 +239,60 @@ void CpuInfo::initCache()
       if (info[i].Cache.Level == 2)
         l2CacheSize_ = info[i].Cache.Size;
 
-      // If the CPU has an L3 cache we assume the L2 cache
-      // is private. This is more reliable than using
-      // GetLogicalProcessorInformationEx() and
-      // GROUP_AFFINITY.Mask
+      // if the CPU has an L3 cache we assume
+      // the L2 cache is private
       if (info[i].Cache.Level == 3 &&
           info[i].Cache.Size > 0)
         privateL2Cache_ = true;
     }
   }
+
+#if _WIN32_WINNT >= 0x0601
+
+  typedef BOOL (WINAPI *LPFN_GLPIEX)(LOGICAL_PROCESSOR_RELATIONSHIP, PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX, PDWORD);
+
+  LPFN_GLPIEX glpiex = (LPFN_GLPIEX) GetProcAddress(
+      GetModuleHandle(TEXT("kernel32")), "GetLogicalProcessorInformationEx");
+
+  if (!glpiex)
+    return;
+
+  bytes = 0;
+  glpiex(RelationAll, 0, &bytes);
+  vector<char> buffer(bytes);
+  SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* proc;
+
+  if (!glpiex(RelationAll, (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[0], &bytes))
+    return;
+
+  for (size_t i = 0; i < bytes; i += proc->Size)
+  {
+    proc = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[i];
+
+    // check if L2 cache is private
+    if (proc->Relationship == RelationCache &&
+        proc->Cache.GroupMask.Group == 0 &&
+        proc->Cache.Level == 2 &&
+        (proc->Cache.Type == CacheData ||
+         proc->Cache.Type == CacheUnified))
+    {
+      auto mask = proc->Cache.GroupMask.Mask;
+      size_t threads = 0;
+
+      // Cache.GroupMask.Mask contains one bit set for
+      // each logical CPU core sharing the cache
+      for (; mask > 0; threads++)
+        mask &= mask - 1;
+
+      // the L2 cache is private if it is tied to a physical CPU core
+      privateL2Cache_ = (threads <= threadsPerCore);
+
+      break;
+    }
+  }
+
+#endif
+
 }
 
 #else
