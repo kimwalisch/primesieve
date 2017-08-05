@@ -53,7 +53,6 @@ script:
   # 4) Run integration tests
   - ninja test
   - test/cpu_info
-  - test/atomic
   - cd ..
   # 5) Test using valgrind
   - $CXX -Iinclude -O2 -g examples/cpp/nth_prime.cpp -o nth_prime build/libprimesieve.a -lpthread
