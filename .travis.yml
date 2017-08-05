@@ -35,7 +35,7 @@ script:
   - cd build
   - cmake -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON -DCMAKE_INSTALL_PREFIX=$(pwd) ..
   - make -j4
-  - make doc >/dev/null
+  - make doc #>/dev/null
   - make install
   - cd ..
   - rm -rf build
