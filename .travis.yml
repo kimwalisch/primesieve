@@ -21,7 +21,7 @@ addons:
     - g++-4.8
 
 install:
-  - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive graphviz libqt4-dev qt4-qmake valgrind
+  - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive-full graphviz libqt4-dev qt4-qmake valgrind
   - wget --no-check-certificate http://cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.tar.gz
   - tar -xzf cmake-3.1.3-Linux-x86_64.tar.gz
   - export CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
@@ -35,7 +35,7 @@ script:
   - cd build
   - cmake -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON -DCMAKE_INSTALL_PREFIX=$(pwd) ..
   - make -j4
-  - make doc #>/dev/null
+  - make doc >/dev/null
   - make install
   - cd ..
   - rm -rf build
