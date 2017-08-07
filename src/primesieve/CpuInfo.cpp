@@ -236,8 +236,7 @@ void CpuInfo::initCache()
     }
   }
 
-// for Windows 7 (2009) or later we are able to
-// detect if the L2 cache is private
+// Windows 7 (2009) or later
 #if _WIN32_WINNT >= 0x0601
 
   typedef BOOL (WINAPI *LPFN_GLPIEX)(LOGICAL_PROCESSOR_RELATIONSHIP, PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX, PDWORD);
@@ -251,23 +250,28 @@ void CpuInfo::initCache()
   bytes = 0;
   glpiex(RelationAll, 0, &bytes);
   vector<char> buffer(bytes);
-  SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* proc;
+  SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* cpu;
 
   if (!glpiex(RelationAll, (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[0], &bytes))
     return;
 
-  for (size_t i = 0; i < bytes; i += proc->Size)
+  for (size_t i = 0; i < bytes; i += cpu->Size)
   {
-    proc = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[i];
+    cpu = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[i];
 
-    // check if L2 cache is private
-    if (proc->Relationship == RelationCache &&
-        proc->Cache.GroupMask.Group == 0 &&
-        proc->Cache.Level == 2 &&
-        (proc->Cache.Type == CacheData ||
-         proc->Cache.Type == CacheUnified))
+    // check L2 cache
+    if (cpu->Relationship == RelationCache &&
+        cpu->Cache.GroupMask.Group == 0 &&
+        cpu->Cache.Level == 2 &&
+        (cpu->Cache.Type == CacheData ||
+         cpu->Cache.Type == CacheUnified))
     {
-      auto mask = proc->Cache.GroupMask.Mask;
+      // @warning: GetLogicalProcessorInformationEx() reports
+      // incorrect data when Windows is run inside a virtual
+      // machine. Specifically the GROUP_AFFINITY.Mask will
+      // only have 1 or 2 bits set for each CPU cache (L1, L2 and
+      // L3) even if more logical CPU cores share the cache
+      auto mask = cpu->Cache.GroupMask.Mask;
       size_t threads = 0;
 
       // Cache.GroupMask.Mask contains one bit set for
