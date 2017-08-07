@@ -37,7 +37,7 @@ const string helpMenu
   "  -p[N],  --print[=N]     Print primes or prime k-tuplets, N <= 6,\n"
   "                          e.g. -p1 primes, -p2 twins, -p3 triplets, ...\n"
   "  -q,     --quiet         Quiet mode, prints less output\n"
-  "  -s<N>,  --size=<N>      Set the sieve size in kilobytes, N <= 2048\n"
+  "  -s<N>,  --size=<N>      Set the sieve size in kilobytes, N <= 4096\n"
   "  -t<N>,  --threads=<N>   Set the number of threads, N <= CPU cores\n"
   "          --time          Print the time elapsed in seconds\n"
   "  -v,     --version       Print version and license information\n"

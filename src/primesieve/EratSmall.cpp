@@ -53,7 +53,7 @@ uint_t EratSmall::getL1Size(uint_t sieveSize)
   size_t size = cpuInfo.l1CacheSize();
 
   size_t minSize = 8 << 10;
-  size_t maxSize = 2048 << 10;
+  size_t maxSize = 4096 << 10;
   size = inBetween(minSize, size, maxSize);
 
   return (uint_t) size;

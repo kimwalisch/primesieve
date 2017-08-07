@@ -30,10 +30,10 @@ EratMedium::EratMedium(uint64_t stop, uint_t sieveSize, uint_t maxPrime) :
   maxPrime_(maxPrime)
 {
   // ensure multipleIndex < 2^23 in crossOff()
-  if (sieveSize > (1u << 21))
-    throw primesieve_error("EratMedium: sieveSize must be <= 2^21, 2048 kilobytes");
-  if (maxPrime_ > sieveSize * 9)
-    throw primesieve_error("EratMedium: maxPrime must be <= sieveSize * 9");
+  if (sieveSize > (4096u << 10))
+    throw primesieve_error("EratMedium: sieveSize must be <= 4096 kilobytes");
+  if (maxPrime_ > sieveSize * 5)
+    throw primesieve_error("EratMedium: maxPrime must be <= sieveSize * 5");
 
   size_t size = prime_count_approx(maxPrime);
   primes_.reserve(size);

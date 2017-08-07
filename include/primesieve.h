@@ -187,7 +187,7 @@ int primesieve_get_num_threads();
  * The best sieving performance is achieved with a sieve size
  * of your CPU's L1 or L2 cache size (per core).
  * @param sieve_size Sieve size in kilobytes.
- * @pre   sieve_size >= 8 && <= 2048.
+ * @pre   sieve_size >= 8 && <= 4096.
  */
 void primesieve_set_sieve_size(int sieve_size);
 

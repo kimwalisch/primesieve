@@ -415,7 +415,7 @@
          <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
         </property>
         <property name="maximumBlockCount">
-         <number>2048</number>
+         <number>4096</number>
         </property>
        </widget>
       </item>

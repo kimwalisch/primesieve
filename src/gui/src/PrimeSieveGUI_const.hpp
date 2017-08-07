@@ -56,10 +56,10 @@ const QString APPLICATION_ABOUT(
 const int MINIMUM_SIEVE_SIZE = 16;
 
 /**
- * @pre MAXIMUM_SIEVE_SIZE <= 2048
+ * @pre MAXIMUM_SIEVE_SIZE <= 4096
  * @see PrimeSieve.cpp
  */
-const int MAXIMUM_SIEVE_SIZE = 2048;
+const int MAXIMUM_SIEVE_SIZE = 4096;
 
 /**
  * PrimeSieve allows numbers up to < 2^64.

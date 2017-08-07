@@ -60,7 +60,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
     throw primesieve_error("SieveOfEratosthenes: start must be <= stop");
 
   sieveSize_ = floorPow2(sieveSize);
-  sieveSize_ = inBetween(8, sieveSize_, 2048);
+  sieveSize_ = inBetween(8, sieveSize_, 4096);
   sieveSize_ *= 1024;
 
   sqrtStop_ = (uint_t) isqrt(stop_);

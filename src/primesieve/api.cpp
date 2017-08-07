@@ -155,7 +155,7 @@ std::string primesieve_version()
 
 void set_sieve_size(int kilobytes)
 {
-  sieve_size = inBetween(8, kilobytes, 2048);
+  sieve_size = inBetween(8, kilobytes, 4096);
   sieve_size = floorPow2(sieve_size);
 }
 
@@ -177,7 +177,7 @@ int get_sieve_size()
       cpuInfo.privateL2Cache() &&
       l2CacheSize > l1CacheSize)
   {
-    l2CacheSize = inBetween(32, l2CacheSize, 2048);
+    l2CacheSize = inBetween(32, l2CacheSize, 4096);
     l2CacheSize = floorPow2(l2CacheSize);
     return (int) l2CacheSize;
   }
@@ -190,7 +190,7 @@ int get_sieve_size()
     // cache is shared between all CPU cores we
     // set the sieve size to the CPU's L1 cache size
 
-    l1CacheSize = inBetween(8, l1CacheSize, 2048);
+    l1CacheSize = inBetween(8, l1CacheSize, 4096);
     l1CacheSize = floorPow2(l1CacheSize);
     return (int) l1CacheSize;
   }
