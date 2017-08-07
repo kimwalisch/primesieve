@@ -47,7 +47,7 @@ int main()
   {
     p.setStart(p.getStop() + 1);
     p.setStop(min(p.getStart() + dist(gen), upperBound));
-    p.setSieveSize(1 << (dist(gen) % 12));
+    p.setSieveSize(1 << (dist(gen) % 13));
     p.sieve();
     count += p.getPrimeCount();
 
