@@ -20,14 +20,41 @@
 #include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
+#include <array>
+#include <cstring>
 #include <memory>
+
+using namespace std;
+using namespace primesieve;
+
+namespace {
+
+/// unset bits < start
+const array<byte_t, 32> unsetSmaller =
+{
+  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+  0xff, 0xfe, 0xfe, 0xfe, 0xfe, 0xfc, 0xfc,
+  0xf8, 0xf8, 0xf8, 0xf8, 0xf0, 0xf0, 0xe0,
+  0xe0, 0xe0, 0xe0, 0xc0, 0xc0, 0xc0, 0xc0,
+  0xc0, 0xc0, 0x80, 0x80
+};
+
+/// unset bits > stop
+const array<byte_t, 32> unsetLarger =
+{
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x01, 0x01, 0x01, 0x01, 0x03, 0x03, 0x07,
+  0x07, 0x07, 0x07, 0x0f, 0x0f, 0x1f, 0x1f,
+  0x1f, 0x1f, 0x3f, 0x3f, 0x3f, 0x3f, 0x3f,
+  0x3f, 0x7f, 0x7f, 0xff
+};
+
+} // namespace
 
 namespace primesieve {
 
-const uint_t SieveOfEratosthenes::bitValues_[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
-
 /// De Bruijn bitscan table
-const uint_t SieveOfEratosthenes::bruijnBitValues_[64] =
+const array<byte_t, 64> SieveOfEratosthenes::bruijnBitValues_ =
 {
     7,  47,  11,  49,  67, 113,  13,  53,
    89,  71, 161, 101, 119, 187,  17, 233,
@@ -105,13 +132,13 @@ void SieveOfEratosthenes::preSieve()
 {
   preSieve_.copy(sieve_, sieveSize_, segmentLow_);
 
-  // unset bits (numbers) < start
+  // unset bits < start
   if (segmentLow_ <= start_)
   {
     if (start_ <= maxPreSieve_)
       sieve_[0] = 0xff;
-    for (int i = 0; bitValues_[i] < getByteRemainder(start_); i++)
-      sieve_[0] &= 0xfe << i;
+    uint64_t rem = getByteRemainder(start_);
+    sieve_[0] &= unsetSmaller[rem];
   }
 }
 
@@ -142,27 +169,22 @@ void SieveOfEratosthenes::sieve()
   while (segmentHigh_ < stop_)
     sieveSegment();
 
-  uint64_t remainder = getByteRemainder(stop_);
-  uint64_t dist = (stop_ - remainder) - segmentLow_;
+  uint64_t rem = getByteRemainder(stop_);
+  uint64_t dist = (stop_ - rem) - segmentLow_;
   sieveSize_ = ((uint_t) dist) / NUMBERS_PER_BYTE + 1;
   dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
   segmentHigh_ = checkedAdd(segmentLow_, dist);
 
-  // sieve the last segment
+  // sieve last segment
   preSieve();
   crossOffMultiples();
 
-  int i;
-  // unset bits (numbers) > stop_
-  for (i = 0; i < 8; i++)
-    if (bitValues_[i] > remainder)
-      break;
-  int unsetBits = ~(0xff << i);
-  sieve_[sieveSize_ - 1] &= unsetBits;
+  // unset bits > stop
+  sieve_[sieveSize_ - 1] &= unsetLarger[rem];
 
-  // unset bytes (numbers) > stop_
-  for (uint_t j = sieveSize_; j % 8 != 0; j++)
-    sieve_[j] = 0;
+  // unset bytes > stop
+  if (sieveSize_ % 8)
+    memset(&sieve_[sieveSize_], 0, 8 - sieveSize_ % 8);
 
   generatePrimes(sieve_, sieveSize_);
 }
