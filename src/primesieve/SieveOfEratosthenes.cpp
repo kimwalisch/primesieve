@@ -53,7 +53,7 @@ const byte_t unsetLarger[32] =
 namespace primesieve {
 
 /// De Bruijn bitscan table
-const byte_t SieveOfEratosthenes::bruijnBitValues_[64] =
+const uint64_t SieveOfEratosthenes::bruijnBitValues_[64] =
 {
     7,  47,  11,  49,  67, 113,  13,  53,
    89,  71, 161, 101, 119, 187,  17, 233,
