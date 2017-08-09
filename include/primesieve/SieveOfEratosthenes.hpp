@@ -18,7 +18,6 @@
 
 #include <stdint.h>
 #include <memory>
-#include <array>
 
 namespace primesieve {
 
@@ -47,7 +46,7 @@ protected:
   static uint64_t nextPrime(uint64_t*, uint64_t);
   uint64_t getSegmentLow() const;
 private:
-  static const std::array<byte_t, 64> bruijnBitValues_;
+  static const byte_t bruijnBitValues_[64];
   /// Lower bound of the current segment
   uint64_t segmentLow_;
   /// Upper bound of the current segment

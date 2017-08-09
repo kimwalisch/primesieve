@@ -20,7 +20,6 @@
 #include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
-#include <array>
 #include <cstring>
 #include <memory>
 
@@ -30,7 +29,7 @@ using namespace primesieve;
 namespace {
 
 /// unset bits < start
-const array<byte_t, 32> unsetSmaller =
+const byte_t unsetSmaller[32] =
 {
   0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
   0xff, 0xfe, 0xfe, 0xfe, 0xfe, 0xfc, 0xfc,
@@ -40,7 +39,7 @@ const array<byte_t, 32> unsetSmaller =
 };
 
 /// unset bits > stop
-const array<byte_t, 32> unsetLarger =
+const byte_t unsetLarger[32] =
 {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   0x01, 0x01, 0x01, 0x01, 0x03, 0x03, 0x07,
@@ -54,7 +53,7 @@ const array<byte_t, 32> unsetLarger =
 namespace primesieve {
 
 /// De Bruijn bitscan table
-const array<byte_t, 64> SieveOfEratosthenes::bruijnBitValues_ =
+const byte_t SieveOfEratosthenes::bruijnBitValues_[64] =
 {
     7,  47,  11,  49,  67, 113,  13,  53,
    89,  71, 161, 101, 119, 187,  17, 233,
