@@ -90,9 +90,10 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   sieveSize_ = inBetween(8, sieveSize_, 4096);
   sieveSize_ *= 1024;
 
-  sqrtStop_ = (uint_t) isqrt(stop_);
-  segmentLow_ = start_ - getByteRemainder(start_);
+  uint64_t rem = getByteRemainder(start_);
   uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
+  sqrtStop_ = (uint_t) isqrt(stop_);
+  segmentLow_ = start_ - rem;
   segmentHigh_ = checkedAdd(segmentLow_, dist);
 
   allocate();
