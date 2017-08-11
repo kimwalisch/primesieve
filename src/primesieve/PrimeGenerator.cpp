@@ -114,8 +114,8 @@ void PrimeGenerator::count(const byte_t* sieve, uint64_t sieveSize)
   if (ps_.isFlag(ps_.COUNT_PRIMES))
     counts_[0] += popcount((const uint64_t*) sieve, ceilDiv(sieveSize, 8));
 
-  // count prime k-tuplets (i = 1 twins, i = 2 triplets, ...)
-  for (uint64_t i = 1; i < counts_.size(); i++)
+  // i = 1 twins, i = 2 triplets, ...
+  for (uint_t i = 1; i < counts_.size(); i++)
   {
     if (ps_.isCount(i))
     {
@@ -156,7 +156,7 @@ void PrimeGenerator::print(const byte_t* sieve, uint64_t sieveSize) const
   // print prime k-tuplets
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEXTUPLETS))
   {
-    uint64_t i = 1; // i = 1 twins, i = 2 triplets, ...
+    uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
     uint64_t low = getSegmentLow();
 
     for (; !ps_.isPrint(i); i++);

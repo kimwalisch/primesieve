@@ -76,9 +76,9 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
                                          const PreSieve& preSieve) :
   start_(start),
   stop_(stop),
+  sqrtStop_(isqrt(stop)),
   preSieve_(preSieve),
   maxPreSieve_(preSieve.getMaxPrime()),
-  sqrtStop_(isqrt(stop_)),
   sieve_(nullptr)
 {
   if (start_ < 7)

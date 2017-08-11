@@ -55,9 +55,8 @@ private:
   uint64_t start_;
   /// Sieve primes <= stop_
   uint64_t stop_;
-  const PreSieve& preSieve_;
-  /// sqrt(stop_)
   uint64_t sqrtStop_;
+  const PreSieve& preSieve_;
   uint64_t maxPreSieve_;
   uint64_t maxEratSmall_;
   uint64_t maxEratMedium_;
