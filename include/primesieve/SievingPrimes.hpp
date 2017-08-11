@@ -25,7 +25,7 @@ public:
   void generate();
 private:
   PrimeGenerator& primeGen_;
-  void generatePrimes(const byte_t*, uint_t);
+  void generatePrimes(const byte_t*, uint64_t);
   void tinyPrimes();
 };
 

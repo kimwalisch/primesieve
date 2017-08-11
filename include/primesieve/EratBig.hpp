@@ -26,23 +26,22 @@ namespace primesieve {
 class EratBig : public Modulo210Wheel_t
 {
 public:
-  EratBig(uint64_t, uint_t, uint_t);
+  EratBig(uint64_t, uint64_t, uint64_t);
   void crossOff(byte_t*);
 private:
-  uint_t maxPrime_;
-  /// log2 of SieveOfEratosthenes::sieveSize_
-  uint_t log2SieveSize_;
-  uint_t moduloSieveSize_;
+  uint64_t maxPrime_;
+  uint64_t log2SieveSize_;
+  uint64_t moduloSieveSize_;
   /// Vector of bucket lists, holds the sieving primes
   std::vector<Bucket*> lists_;
   /// List of empty buckets
   Bucket* stock_;
   /// Pointers of the allocated buckets
   std::vector<std::unique_ptr<Bucket[]>> memory_;
-  void init(uint_t);
+  void init(uint64_t);
   static void moveBucket(Bucket&, Bucket*&);
-  void pushBucket(uint_t);
-  void storeSievingPrime(uint_t, uint_t, uint_t);
+  void pushBucket(uint64_t);
+  void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   void crossOff(byte_t*, SievingPrime*, SievingPrime*);
 };
 

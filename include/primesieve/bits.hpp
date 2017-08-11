@@ -1,8 +1,8 @@
 ///
 /// @file   bits.hpp
-/// @brief  Bitmasks to turn off single bits of a byte.
+/// @brief  Bitmasks to unset bits in the sieve array
 ///
-/// Copyright (C) 2013 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,7 +11,8 @@
 #ifndef BITS_HPP
 #define BITS_HPP
 
-enum {
+enum
+{
   BIT0 = 0xfe, // 11111110
   BIT1 = 0xfd, // 11111101
   BIT2 = 0xfb, // 11111011

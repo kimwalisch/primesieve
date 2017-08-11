@@ -42,18 +42,18 @@ void SievingPrimes::generate()
 ///
 void SievingPrimes::tinyPrimes()
 {
-  uint_t n = getSqrtStop();
+  uint64_t n = getSqrtStop();
   vector<char> isPrime(n + 1, true);
 
-  for (uint_t i = 3; i * i <= n; i += 2)
+  for (uint64_t i = 3; i * i <= n; i += 2)
     if (isPrime[i])
-      for (uint_t j = i * i; j <= n; j += i * 2)
+      for (uint64_t j = i * i; j <= n; j += i * 2)
         isPrime[j] = false;
 
-  uint_t s = (uint_t) getStart();
+  uint64_t s = getStart();
   s += (~s & 1);
 
-  for (uint_t i = s; i <= n; i += 2)
+  for (uint64_t i = s; i <= n; i += 2)
     if (isPrime[i])
       addSievingPrime(i);
 }
@@ -61,15 +61,15 @@ void SievingPrimes::tinyPrimes()
 /// Reconstruct primes <= sqrt(stop) from 1 bits of the
 /// sieve array and add them to PrimeGen
 ///
-void SievingPrimes::generatePrimes(const byte_t* sieve, uint_t sieveSize)
+void SievingPrimes::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
 {
   uint64_t low = getSegmentLow();
 
-  for (uint_t i = 0; i < sieveSize; i += 8)
+  for (uint64_t i = 0; i < sieveSize; i += 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
     while (bits)
-      primeGen_.addSievingPrime((uint_t) nextPrime(&bits, low));
+      primeGen_.addSievingPrime(nextPrime(&bits, low));
 
     low += NUMBERS_PER_BYTE * 8;
   }

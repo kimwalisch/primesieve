@@ -25,7 +25,7 @@ C++ classes
   Implementation of the segmented sieve of Eratosthenes using a bit
   array with 30 numbers per byte, each byte of the sieve array holds
   the 8 offsets k = { 7, 11, 13, 17, 19, 23, 29, 31 }.
-  Its main methods are addSievingPrime(uint_t) which is called
+  Its main methods are addSievingPrime(uint64_t) which is called
   consecutively for all primes <= sqrt(n) and sieve() which sieves
   the primes in [start, stop]. SieveOfEratosthenes uses the
   EratSmall, EratMedium and EratBig classes to cross-off multiples.

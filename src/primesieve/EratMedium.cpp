@@ -25,7 +25,7 @@ namespace primesieve {
 /// @sieveSize:  Sieve size in bytes
 /// @maxPrime:   Sieving primes <= maxPrime
 ///
-EratMedium::EratMedium(uint64_t stop, uint_t sieveSize, uint_t maxPrime) :
+EratMedium::EratMedium(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime) :
   Modulo210Wheel_t(stop, sieveSize),
   maxPrime_(maxPrime)
 {
@@ -40,10 +40,10 @@ EratMedium::EratMedium(uint64_t stop, uint_t sieveSize, uint_t maxPrime) :
 }
 
 /// Add a new sieving prime to EratMedium
-void EratMedium::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
+void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t wheelIndex)
 {
   assert(prime <= maxPrime_);
-  uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
+  uint64_t sievingPrime = prime / NUMBERS_PER_BYTE;
   primes_.emplace_back(sievingPrime, multipleIndex, wheelIndex);
 }
 
@@ -51,7 +51,7 @@ void EratMedium::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wh
 /// optimized for medium sieving primes that have a
 /// few multiples per segment
 ///
-void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize)
+void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)
 {
   SievingPrime* primes = &primes_[0];
   SievingPrime* back = &primes_.back();
@@ -60,15 +60,15 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize)
   // increase instruction level parallelism
   for (; primes + 3 <= back; primes += 3)
   {
-    uint_t multipleIndex0 = primes[0].getMultipleIndex();
-    uint_t wheelIndex0    = primes[0].getWheelIndex();
-    uint_t sievingPrime0  = primes[0].getSievingPrime();
-    uint_t multipleIndex1 = primes[1].getMultipleIndex();
-    uint_t wheelIndex1    = primes[1].getWheelIndex();
-    uint_t sievingPrime1  = primes[1].getSievingPrime();
-    uint_t multipleIndex2 = primes[2].getMultipleIndex();
-    uint_t wheelIndex2    = primes[2].getWheelIndex();
-    uint_t sievingPrime2  = primes[2].getSievingPrime();
+    uint64_t multipleIndex0 = primes[0].getMultipleIndex();
+    uint64_t wheelIndex0    = primes[0].getWheelIndex();
+    uint64_t sievingPrime0  = primes[0].getSievingPrime();
+    uint64_t multipleIndex1 = primes[1].getMultipleIndex();
+    uint64_t wheelIndex1    = primes[1].getWheelIndex();
+    uint64_t sievingPrime1  = primes[1].getSievingPrime();
+    uint64_t multipleIndex2 = primes[2].getMultipleIndex();
+    uint64_t wheelIndex2    = primes[2].getWheelIndex();
+    uint64_t sievingPrime2  = primes[2].getSievingPrime();
 
     while (multipleIndex0 < sieveSize)
     {
@@ -95,9 +95,9 @@ void EratMedium::crossOff(byte_t* sieve, uint_t sieveSize)
   // process remaining sieving primes
   for (; primes <= back; primes++)
   {
-    uint_t multipleIndex = primes->getMultipleIndex();
-    uint_t wheelIndex    = primes->getWheelIndex();
-    uint_t sievingPrime  = primes->getSievingPrime();
+    uint64_t multipleIndex = primes->getMultipleIndex();
+    uint64_t wheelIndex    = primes->getWheelIndex();
+    uint64_t sievingPrime  = primes->getSievingPrime();
 
     while (multipleIndex < sieveSize)
       unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);

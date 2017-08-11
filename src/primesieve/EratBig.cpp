@@ -31,7 +31,7 @@ namespace primesieve {
 /// @sieveSize:  Sieve size in bytes
 /// @maxPrime:   Sieving primes <= maxPrime
 ///
-EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t maxPrime) :
+EratBig::EratBig(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime) :
   Modulo210Wheel_t(stop, sieveSize),
   maxPrime_(maxPrime),
   log2SieveSize_(ilog2(sieveSize)),
@@ -44,35 +44,36 @@ EratBig::EratBig(uint64_t stop, uint_t sieveSize, uint_t maxPrime) :
   init(sieveSize);
 }
 
-void EratBig::init(uint_t sieveSize)
+void EratBig::init(uint64_t sieveSize)
 {
-  uint_t maxSievingPrime  = maxPrime_ / NUMBERS_PER_BYTE;
-  uint_t maxNextMultiple  = maxSievingPrime * getMaxFactor() + getMaxFactor();
-  uint_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
-  uint_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
-  uint_t size = maxSegmentCount + 1;
+  uint64_t maxSievingPrime  = maxPrime_ / NUMBERS_PER_BYTE;
+  uint64_t maxNextMultiple  = maxSievingPrime * getMaxFactor() + getMaxFactor();
+  uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
+  uint64_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
+  uint64_t size = maxSegmentCount + 1;
 
   // EratBig uses up to 1.6 gigabytes of memory
   memory_.reserve(((1u << 30) * 2) / config::BYTES_PER_ALLOC);
 
   lists_.resize(size, nullptr);
-  for (uint_t i = 0; i < size; i++)
+  for (uint64_t i = 0; i < size; i++)
     pushBucket(i);
 }
 
 /// Add a new sieving prime to EratBig
-void EratBig::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
+void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t wheelIndex)
 {
   assert(prime <= maxPrime_);
-  uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
-  uint_t segment = multipleIndex >> log2SieveSize_;
+  uint64_t sievingPrime = prime / NUMBERS_PER_BYTE;
+  uint64_t segment = multipleIndex >> log2SieveSize_;
   multipleIndex &= moduloSieveSize_;
+
   if (!lists_[segment]->store(sievingPrime, multipleIndex, wheelIndex))
     pushBucket(segment);
 }
 
 /// Add an empty bucket to the front of lists_[segment]
-void EratBig::pushBucket(uint_t segment)
+void EratBig::pushBucket(uint64_t segment)
 {
   // allocate new buckets
   if (!stock_)
@@ -127,27 +128,28 @@ void EratBig::crossOff(byte_t* sieve)
 void EratBig::crossOff(byte_t* sieve, SievingPrime* primes, SievingPrime* end)
 {
   Bucket** lists = &lists_[0];
-  uint_t moduloSieveSize = moduloSieveSize_;
-  uint_t log2SieveSize = log2SieveSize_;
+  uint64_t moduloSieveSize = moduloSieveSize_;
+  uint64_t log2SieveSize = log2SieveSize_;
 
   // 2 sieving primes are processed per loop iteration
   // to increase instruction level parallelism
   for (; primes + 2 <= end; primes += 2)
   { 
-    uint_t multipleIndex0 = primes[0].getMultipleIndex();
-    uint_t wheelIndex0    = primes[0].getWheelIndex();
-    uint_t sievingPrime0  = primes[0].getSievingPrime();
-    uint_t multipleIndex1 = primes[1].getMultipleIndex();
-    uint_t wheelIndex1    = primes[1].getWheelIndex();
-    uint_t sievingPrime1  = primes[1].getSievingPrime();
+    uint64_t multipleIndex0 = primes[0].getMultipleIndex();
+    uint64_t wheelIndex0    = primes[0].getWheelIndex();
+    uint64_t sievingPrime0  = primes[0].getSievingPrime();
+    uint64_t multipleIndex1 = primes[1].getMultipleIndex();
+    uint64_t wheelIndex1    = primes[1].getWheelIndex();
+    uint64_t sievingPrime1  = primes[1].getSievingPrime();
 
     // cross-off the current multiple (unset bit)
     // and calculate the next multiple
     unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
     unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
 
-    uint_t segment0 = multipleIndex0 >> log2SieveSize;
-    uint_t segment1 = multipleIndex1 >> log2SieveSize;
+    uint64_t segment0 = multipleIndex0 >> log2SieveSize;
+    uint64_t segment1 = multipleIndex1 >> log2SieveSize;
+
     multipleIndex0 &= moduloSieveSize;
     multipleIndex1 &= moduloSieveSize;
 
@@ -161,12 +163,12 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* primes, SievingPrime* end)
 
   if (primes != end)
   {
-    uint_t multipleIndex = primes->getMultipleIndex();
-    uint_t wheelIndex    = primes->getWheelIndex();
-    uint_t sievingPrime  = primes->getSievingPrime();
+    uint64_t multipleIndex = primes->getMultipleIndex();
+    uint64_t wheelIndex    = primes->getWheelIndex();
+    uint64_t sievingPrime  = primes->getSievingPrime();
 
     unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
-    uint_t segment = multipleIndex >> log2SieveSize;
+    uint64_t segment = multipleIndex >> log2SieveSize;
     multipleIndex &= moduloSieveSize;
 
     if (!lists[segment]->store(sievingPrime, multipleIndex, wheelIndex))

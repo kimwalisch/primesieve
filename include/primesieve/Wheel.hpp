@@ -71,52 +71,52 @@ public:
 
   SievingPrime() { }
 
-  SievingPrime(uint_t sievingPrime,
-               uint_t multipleIndex,
-               uint_t wheelIndex)
+  SievingPrime(uint64_t sievingPrime,
+               uint64_t multipleIndex,
+               uint64_t wheelIndex)
   {
     set(multipleIndex, wheelIndex);
     sievingPrime_ = (uint32_t) sievingPrime;
   }
 
-  void set(uint_t multipleIndex,
-           uint_t wheelIndex)
+  void set(uint64_t multipleIndex,
+           uint64_t wheelIndex)
   {
     assert(multipleIndex <= MAX_MULTIPLEINDEX);
     assert(wheelIndex <= MAX_WHEELINDEX);
     indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 23));
   }
 
-  void set(uint_t sievingPrime,
-           uint_t multipleIndex,
-           uint_t wheelIndex)
+  void set(uint64_t sievingPrime,
+           uint64_t multipleIndex,
+           uint64_t wheelIndex)
   {
     set(multipleIndex, wheelIndex);
     sievingPrime_ = (uint32_t) sievingPrime;
   }
 
-  uint_t getSievingPrime() const
+  uint64_t getSievingPrime() const
   {
     return sievingPrime_;
   }
 
-  uint_t getMultipleIndex() const
+  uint64_t getMultipleIndex() const
   {
     return indexes_ & MAX_MULTIPLEINDEX;
   }
 
-  uint_t getWheelIndex() const
+  uint64_t getWheelIndex() const
   {
     return indexes_ >> 23;
   }
 
-  void setMultipleIndex(uint_t multipleIndex)
+  void setMultipleIndex(uint64_t multipleIndex)
   {
     assert(multipleIndex <= MAX_MULTIPLEINDEX);
     indexes_ = (uint32_t) (indexes_ | multipleIndex);
   }
 
-  void setWheelIndex(uint_t wheelIndex)
+  void setWheelIndex(uint64_t wheelIndex)
   {
     assert(wheelIndex <= MAX_WHEELINDEX);
     indexes_ = (uint32_t) (wheelIndex << 23);
@@ -152,9 +152,9 @@ public:
   /// Store a sieving prime in the bucket
   /// @return false if the bucket is full else true
   ///
-  bool store(uint_t sievingPrime,
-             uint_t multipleIndex,
-             uint_t wheelIndex)
+  bool store(uint64_t sievingPrime,
+             uint64_t multipleIndex,
+             uint64_t wheelIndex)
   {
     prime_->set(sievingPrime, multipleIndex, wheelIndex);
     return prime_++ != last();
@@ -170,7 +170,7 @@ private:
 /// EratMedium and EratBig classes are derived from
 /// WheelFactorization.
 ///
-template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
+template <int MODULO, int SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
 class WheelFactorization
 {
 public:
@@ -179,7 +179,7 @@ public:
   /// position within the SieveOfEratosthenes array of that multiple
   /// and its wheel index. When done store the sieving prime.
   ///
-  void addSievingPrime(uint_t prime, uint64_t segmentLow)
+  void addSievingPrime(uint64_t prime, uint64_t segmentLow)
   {
     segmentLow += 6;
     // calculate the first multiple (of prime) > segmentLow
@@ -192,7 +192,7 @@ public:
     // ensure multiple >= prime * prime
     if (quotient < prime)
     {
-      multiple = isquare<uint64_t>(prime);
+      multiple = prime * prime;
       quotient = prime;
     }
     // calculate the next multiple of prime that is not
@@ -202,16 +202,16 @@ public:
     if (nextMultiple > stop_ - multiple)
       return;
     nextMultiple += multiple - segmentLow;
-    uint_t multipleIndex = (uint_t)(nextMultiple / NUMBERS_PER_BYTE);
-    uint_t wheelIndex = wheelOffsets_[prime % NUMBERS_PER_BYTE] + INIT[quotient % MODULO].wheelIndex;
+    uint64_t multipleIndex = nextMultiple / NUMBERS_PER_BYTE;
+    uint64_t wheelIndex = wheelOffsets_[prime % NUMBERS_PER_BYTE] + INIT[quotient % MODULO].wheelIndex;
     storeSievingPrime(prime, multipleIndex, wheelIndex);
   }
 
 protected:
-  WheelFactorization(uint64_t stop, uint_t sieveSize) :
+  WheelFactorization(uint64_t stop, uint64_t sieveSize) :
     stop_(stop)
   {
-    uint_t maxSieveSize = SievingPrime::MAX_MULTIPLEINDEX + 1;
+    uint64_t maxSieveSize = SievingPrime::MAX_MULTIPLEINDEX + 1;
 
     if (sieveSize > maxSieveSize)
       throw primesieve_error("WheelFactorization: sieveSize must be <= " + std::to_string(maxSieveSize));
@@ -220,9 +220,9 @@ protected:
   virtual ~WheelFactorization()
   { }
 
-  virtual void storeSievingPrime(uint_t, uint_t, uint_t) = 0;
+  virtual void storeSievingPrime(uint64_t, uint64_t, uint64_t) = 0;
 
-  static uint_t getMaxFactor()
+  static uint64_t getMaxFactor()
   {
     return WHEEL[0].nextMultipleFactor;
   }
@@ -230,7 +230,10 @@ protected:
   /// Cross-off the current multiple of sievingPrime
   /// and calculate its next multiple
   ///
-  static void unsetBit(byte_t* sieve, uint_t sievingPrime, uint_t* multipleIndex, uint_t* wheelIndex)
+  static void unsetBit(byte_t* sieve,
+                       uint64_t sievingPrime,
+                       uint64_t* multipleIndex,
+                       uint64_t* wheelIndex)
   {
     sieve[*multipleIndex] &= WHEEL[*wheelIndex].unsetBit;
     *multipleIndex        += WHEEL[*wheelIndex].nextMultipleFactor * sievingPrime;
@@ -238,12 +241,12 @@ protected:
     *wheelIndex           += WHEEL[*wheelIndex].next;
   }
 private:
-  static const uint_t wheelOffsets_[30];
+  static const uint64_t wheelOffsets_[30];
   uint64_t stop_;
 };
 
-template <uint_t MODULO, uint_t SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
-const uint_t
+template <int MODULO, int SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
+const uint64_t
 WheelFactorization<MODULO, SIZE, INIT, WHEEL>::wheelOffsets_[30] =
 {
   0, SIZE * 7, 0, 0, 0, 0,

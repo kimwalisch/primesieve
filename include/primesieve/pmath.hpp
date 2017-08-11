@@ -32,12 +32,6 @@ inline T numberOfBits(T)
 }
 
 template <typename T>
-inline T isquare(T x)
-{
-  return x * x;
-}
-
-template <typename T>
 inline bool isPow2(T x)
 {
   return x != 0 && (x & (x - 1)) == 0;

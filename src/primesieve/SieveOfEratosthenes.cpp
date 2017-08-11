@@ -72,12 +72,13 @@ const uint64_t SieveOfEratosthenes::bruijnBitValues_[64] =
 ///
 SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
                                          uint64_t stop,
-                                         uint_t sieveSize,
+                                         uint64_t sieveSize,
                                          const PreSieve& preSieve) :
   start_(start),
   stop_(stop),
   preSieve_(preSieve),
   maxPreSieve_(preSieve.getMaxPrime()),
+  sqrtStop_(isqrt(stop_)),
   sieve_(nullptr)
 {
   if (start_ < 7)
@@ -91,7 +92,6 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
 
   uint64_t rem = getByteRemainder(start_);
   uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
-  sqrtStop_ = (uint_t) isqrt(stop_);
   segmentLow_ = start_ - rem;
   segmentHigh_ = checkedAdd(segmentLow_, dist);
 
@@ -103,16 +103,16 @@ void SieveOfEratosthenes::allocate()
   deleteSieve_.reset(new byte_t[sieveSize_]);
   sieve_ = deleteSieve_.get();
 
-  uint_t l1Size = EratSmall::getL1Size(sieveSize_);
-  maxEratSmall_  = (uint_t) (l1Size     * config::FACTOR_ERATSMALL);
-  maxEratMedium_ = (uint_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
+  uint64_t l1Size = EratSmall::getL1Size(sieveSize_);
+  maxEratSmall_  = (uint64_t) (l1Size     * config::FACTOR_ERATSMALL);
+  maxEratMedium_ = (uint64_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
 
   if (sqrtStop_ > maxPreSieve_)   eratSmall_.reset(new EratSmall (stop_, l1Size, maxEratSmall_));
   if (sqrtStop_ > maxEratSmall_) eratMedium_.reset(new EratMedium(stop_, sieveSize_, maxEratMedium_));
   if (sqrtStop_ > maxEratMedium_)   eratBig_.reset(new EratBig   (stop_, sieveSize_, sqrtStop_));
 }
 
-uint_t SieveOfEratosthenes::getSqrtStop() const
+uint64_t SieveOfEratosthenes::getSqrtStop() const
 {
   return sqrtStop_;
 }
@@ -171,7 +171,7 @@ void SieveOfEratosthenes::sieve()
 
   uint64_t rem = getByteRemainder(stop_);
   uint64_t dist = (stop_ - rem) - segmentLow_;
-  sieveSize_ = ((uint_t) dist) / NUMBERS_PER_BYTE + 1;
+  sieveSize_ = dist / NUMBERS_PER_BYTE + 1;
   dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
   segmentHigh_ = checkedAdd(segmentLow_, dist);
 

@@ -29,7 +29,7 @@ namespace primesieve {
 /// @l1Size:    Sieve size in bytes
 /// @maxPrime:  Sieving primes <= maxPrime
 ///
-EratSmall::EratSmall(uint64_t stop, uint_t l1Size, uint_t maxPrime) :
+EratSmall::EratSmall(uint64_t stop, uint64_t l1Size, uint64_t maxPrime) :
   Modulo30Wheel_t(stop, l1Size),
   maxPrime_(maxPrime),
   l1Size_(l1Size)
@@ -45,32 +45,32 @@ EratSmall::EratSmall(uint64_t stop, uint_t l1Size, uint_t maxPrime) :
 /// but EratSmall runs faster using
 /// sieve size = L1 cache size
 ///
-uint_t EratSmall::getL1Size(uint_t sieveSize)
+uint64_t EratSmall::getL1Size(uint64_t sieveSize)
 {
   if (!cpuInfo.hasL1Cache())
     return sieveSize;
 
-  size_t size = cpuInfo.l1CacheSize();
+  uint64_t size = cpuInfo.l1CacheSize();
+  uint64_t minSize = 8 << 10;
+  uint64_t maxSize = 4096 << 10;
 
-  size_t minSize = 8 << 10;
-  size_t maxSize = 4096 << 10;
   size = inBetween(minSize, size, maxSize);
 
-  return (uint_t) size;
+  return size;
 }
 
 /// Add a new sieving prime to EratSmall
-void EratSmall::storeSievingPrime(uint_t prime, uint_t multipleIndex, uint_t wheelIndex)
+void EratSmall::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t wheelIndex)
 {
   assert(prime <= maxPrime_);
-  uint_t sievingPrime = prime / NUMBERS_PER_BYTE;
+  uint64_t sievingPrime = prime / NUMBERS_PER_BYTE;
   primes_.emplace_back(sievingPrime, multipleIndex, wheelIndex);
 }
 
 /// Cross-off the multiples of small sieving
 /// primes from the sieve array
 ///
-void EratSmall::crossOff(byte_t* sieve, uint_t sieveSize)
+void EratSmall::crossOff(byte_t* sieve, uint64_t sieveSize)
 {
   byte_t* sieveEnd = &sieve[sieveSize];
 
@@ -91,9 +91,9 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
 {
   for (auto& prime : primes_)
   {
-    uint_t sievingPrime  = prime.getSievingPrime();
-    uint_t multipleIndex = prime.getMultipleIndex();
-    uint_t wheelIndex    = prime.getWheelIndex();
+    uint64_t sievingPrime  = prime.getSievingPrime();
+    uint64_t multipleIndex = prime.getMultipleIndex();
+    uint64_t wheelIndex    = prime.getWheelIndex();
 
     // pointer to the byte containing the first multiple
     // of sievingPrime within the current segment
@@ -355,8 +355,8 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
       }
       break;
     }
-    // set multipleIndex for the next segment
-    prime.setMultipleIndex((uint_t)(p - sieveEnd));
+    // set multipleIndex for next segment
+    prime.setMultipleIndex((uint64_t) (p - sieveEnd));
   }
 }
 

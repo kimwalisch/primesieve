@@ -26,14 +26,14 @@ namespace primesieve {
 class EratSmall : public Modulo30Wheel_t
 {
 public:
-  EratSmall(uint64_t, uint_t, uint_t);
-  static uint_t getL1Size(uint_t);
-  void crossOff(byte_t*, uint_t);
+  EratSmall(uint64_t, uint64_t, uint64_t);
+  static uint64_t getL1Size(uint64_t);
+  void crossOff(byte_t*, uint64_t);
 private:
-  uint_t maxPrime_;
-  uint_t l1Size_;
+  uint64_t maxPrime_;
+  uint64_t l1Size_;
   std::vector<SievingPrime> primes_;
-  void storeSievingPrime(uint_t, uint_t, uint_t);
+  void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   void crossOff(byte_t*, byte_t*);
 };
 

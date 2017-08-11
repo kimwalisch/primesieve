@@ -30,14 +30,14 @@ namespace primesieve {
 // popcount.cpp
 uint64_t popcount(const uint64_t* array, uint64_t size);
 
-const uint_t PrimeGenerator::kBitmasks_[6][5] =
+const uint64_t PrimeGenerator::bitmasks_[6][5] =
 {
   { END },
-  { 0x06, 0x18, 0xc0, END },       // Twin prime       bitmasks, i.e. b00000110, b00011000, b11000000
-  { 0x07, 0x0e, 0x1c, 0x38, END }, // Prime triplet    bitmasks, i.e. b00000111, b00001110, ...
-  { 0x1e, END },                   // Prime quadruplet bitmasks
-  { 0x1f, 0x3e, END },             // Prime quintuplet bitmasks
-  { 0x3f, END }                    // Prime sextuplet  bitmasks
+  { 0x06, 0x18, 0xc0, END },       // Twin primes:       b00000110, b00011000, b11000000
+  { 0x07, 0x0e, 0x1c, 0x38, END }, // Prime triplets:    b00000111, b00001110, ...
+  { 0x1e, END },                   // Prime quadruplets: b00011110
+  { 0x1f, 0x3e, END },             // Prime quintuplets
+  { 0x3f, END }                    // Prime sextuplets
 };
 
 PrimeGenerator::PrimeGenerator(PrimeSieve& ps, const PreSieve& preSieve) :
@@ -57,20 +57,21 @@ PrimeGenerator::PrimeGenerator(PrimeSieve& ps, const PreSieve& preSieve) :
 ///
 void PrimeGenerator::init_kCounts()
 {
-  for (uint_t i = 1; i < counts_.size(); i++)
+  for (uint64_t i = 1; i < counts_.size(); i++)
   {
     if (ps_.isCount(i))
     {
       kCounts_[i].resize(256);
-      for (uint_t j = 0; j < kCounts_[i].size(); j++)
+
+      for (uint64_t j = 0; j < 256; j++)
       {
-        uint_t bitmaskCount = 0;
-        for (const uint_t* b = kBitmasks_[i]; *b <= j; b++)
+        byte_t count = 0;
+        for (const uint64_t* b = bitmasks_[i]; *b <= j; b++)
         {
           if ((j & *b) == *b)
-            bitmaskCount++;
+            count++;
         }
-        kCounts_[i][j] = bitmaskCount;
+        kCounts_[i][j] = count;
       }
     }
   }
@@ -79,7 +80,7 @@ void PrimeGenerator::init_kCounts()
 /// Executed after each sieved segment.
 /// @see sieveSegment() in SieveOfEratosthenes.cpp
 ///
-void PrimeGenerator::generatePrimes(const byte_t* sieve, uint_t sieveSize)
+void PrimeGenerator::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
 {
   if (ps_.isStore())
     storePrimes(ps_.getStore(), sieve, sieveSize);
@@ -91,33 +92,36 @@ void PrimeGenerator::generatePrimes(const byte_t* sieve, uint_t sieveSize)
     ps_.updateStatus(sieveSize * NUMBERS_PER_BYTE);
 }
 
-void PrimeGenerator::storePrimes(Store& store, const byte_t* sieve, uint_t sieveSize) const
+void PrimeGenerator::storePrimes(Store& store, const byte_t* sieve, uint64_t sieveSize) const
 {
   uint64_t low = getSegmentLow();
-  for (uint_t i = 0; i < sieveSize; i += 8, low += NUMBERS_PER_BYTE * 8)
+
+  for (uint64_t i = 0; i < sieveSize; i += 8)
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
     while (bits)
       store(nextPrime(&bits, low));
+
+    low += NUMBERS_PER_BYTE * 8;
   }
 }
 
 /// Count the primes and prime k-tuplets
 /// in the current segment
 ///
-void PrimeGenerator::count(const byte_t* sieve, uint_t sieveSize)
+void PrimeGenerator::count(const byte_t* sieve, uint64_t sieveSize)
 {
   if (ps_.isFlag(ps_.COUNT_PRIMES))
     counts_[0] += popcount((const uint64_t*) sieve, ceilDiv(sieveSize, 8));
 
   // count prime k-tuplets (i = 1 twins, i = 2 triplets, ...)
-  for (uint_t i = 1; i < counts_.size(); i++)
+  for (uint64_t i = 1; i < counts_.size(); i++)
   {
     if (ps_.isCount(i))
     {
-      uint_t sum = 0;
+      uint64_t sum = 0;
 
-      for (uint_t j = 0; j < sieveSize; j += 4)
+      for (uint64_t j = 0; j < sieveSize; j += 4)
       {
         sum += kCounts_[i][sieve[j+0]];
         sum += kCounts_[i][sieve[j+1]];
@@ -133,29 +137,32 @@ void PrimeGenerator::count(const byte_t* sieve, uint_t sieveSize)
 /// Print primes and prime k-tuplets to cout.
 /// primes <= 5 are handled in processSmallPrimes().
 ///
-void PrimeGenerator::print(const byte_t* sieve, uint_t sieveSize) const
+void PrimeGenerator::print(const byte_t* sieve, uint64_t sieveSize) const
 {
   if (ps_.isFlag(ps_.PRINT_PRIMES))
   {
     uint64_t low = getSegmentLow();
-    for (uint_t i = 0; i < sieveSize; i += 8, low += NUMBERS_PER_BYTE * 8)
+
+    for (uint64_t i = 0; i < sieveSize; i += 8)
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
       while (bits)
         cout << nextPrime(&bits, low) << '\n';
+
+      low += NUMBERS_PER_BYTE * 8;
     }
   }
 
   // print prime k-tuplets
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEXTUPLETS))
   {
-    uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
+    uint64_t i = 1; // i = 1 twins, i = 2 triplets, ...
     uint64_t low = getSegmentLow();
 
     for (; !ps_.isPrint(i); i++);
-    for (uint_t j = 0; j < sieveSize; j++, low += NUMBERS_PER_BYTE)
+    for (uint64_t j = 0; j < sieveSize; j++, low += NUMBERS_PER_BYTE)
     {
-      for (const uint_t* bitmask = kBitmasks_[i]; *bitmask <= sieve[j]; bitmask++)
+      for (const uint64_t* bitmask = bitmasks_[i]; *bitmask <= sieve[j]; bitmask++)
       {
         if ((sieve[j] & *bitmask) == *bitmask)
         {

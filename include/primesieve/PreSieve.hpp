@@ -40,14 +40,14 @@ class PreSieve
 {
 public:
   PreSieve(uint64_t start, uint64_t stop);
-  uint_t getMaxPrime() const { return maxPrime_; }
-  void copy(byte_t* sieve, uint_t sieveSize, uint64_t segmentLow) const;
+  uint64_t getMaxPrime() const { return maxPrime_; }
+  void copy(byte_t*, uint64_t, uint64_t) const;
 private:
-  uint_t maxPrime_;
-  uint_t primeProduct_;
+  uint64_t maxPrime_;
+  uint64_t primeProduct_;
   byte_t* buffer_;
   std::unique_ptr<byte_t[]> deleter_;
-  uint_t size_;
+  uint64_t size_;
   void init();
 };
 

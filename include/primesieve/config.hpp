@@ -22,7 +22,6 @@ namespace primesieve {
 
 /// byte_t must be unsigned in primesieve
 typedef unsigned char byte_t;
-typedef unsigned int uint_t;
 
 enum {
   /// SieveOfEratosthenes objects use a bit array with 30 numbers per
