@@ -48,6 +48,15 @@ set(LIB_SRC src/primesieve/api-c.cpp
             src/primesieve/SievingPrimes.cpp
             src/primesieve/Wheel.cpp)
 
+# Silence GCC switch fall through warnings ###########################
+
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag(-Wno-implicit-fallthrough no_fallthrough)
+
+if(no_fallthrough)
+    set_source_files_properties(src/primesieve/EratSmall.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+endif()
+
 # libprimesieve ######################################################
 
 add_library(libprimesieve ${LIB_SRC})
