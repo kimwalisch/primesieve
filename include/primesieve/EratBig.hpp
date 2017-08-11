@@ -23,7 +23,7 @@ namespace primesieve {
 /// Eratosthenes optimized for big sieving primes that have
 /// very few multiples per segment
 ///
-class EratBig : public Modulo210Wheel_t
+class EratBig : public Wheel210_t
 {
 public:
   EratBig(uint64_t, uint64_t, uint64_t);

@@ -165,13 +165,12 @@ private:
   SievingPrime sievingPrimes_[config::BUCKETSIZE];
 };
 
-/// The abstract WheelFactorization class is used skip multiples
-/// of small primes in the sieve of Eratosthenes. The EratSmall,
-/// EratMedium and EratBig classes are derived from
-/// WheelFactorization.
+/// The abstract Wheel class is used skip multiples of small
+/// primes in the sieve of Eratosthenes. The EratSmall,
+/// EratMedium and EratBig classes are derived from Wheel.
 ///
-template <int MODULO, int SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
-class WheelFactorization
+template <int MODULO, int SIZE, const WheelElement* WHEEL, const WheelInit* INIT>
+class Wheel
 {
 public:
   /// Add a new sieving prime to the sieving algorithm.
@@ -208,16 +207,16 @@ public:
   }
 
 protected:
-  WheelFactorization(uint64_t stop, uint64_t sieveSize) :
+  Wheel(uint64_t stop, uint64_t sieveSize) :
     stop_(stop)
   {
     uint64_t maxSieveSize = SievingPrime::MAX_MULTIPLEINDEX + 1;
 
     if (sieveSize > maxSieveSize)
-      throw primesieve_error("WheelFactorization: sieveSize must be <= " + std::to_string(maxSieveSize));
+      throw primesieve_error("Wheel: sieveSize must be <= " + std::to_string(maxSieveSize));
   }
 
-  virtual ~WheelFactorization()
+  virtual ~Wheel()
   { }
 
   virtual void storeSievingPrime(uint64_t, uint64_t, uint64_t) = 0;
@@ -240,14 +239,15 @@ protected:
     *multipleIndex        += WHEEL[*wheelIndex].correct;
     *wheelIndex           += WHEEL[*wheelIndex].next;
   }
+
 private:
   static const uint64_t wheelOffsets_[30];
   uint64_t stop_;
 };
 
-template <int MODULO, int SIZE, const WheelInit* INIT, const WheelElement* WHEEL>
+template <int MODULO, int SIZE, const WheelElement* WHEEL, const WheelInit* INIT>
 const uint64_t
-WheelFactorization<MODULO, SIZE, INIT, WHEEL>::wheelOffsets_[30] =
+Wheel<MODULO, SIZE, WHEEL, INIT>::wheelOffsets_[30] =
 {
   0, SIZE * 7, 0, 0, 0, 0,
   0, SIZE * 0, 0, 0, 0, SIZE * 1,
@@ -257,10 +257,10 @@ WheelFactorization<MODULO, SIZE, INIT, WHEEL>::wheelOffsets_[30] =
 };
 
 /// 3rd wheel, skips multiples of 2, 3 and 5
-typedef WheelFactorization<30, 8, wheel30Init, wheel30> Modulo30Wheel_t;
+typedef Wheel<30, 8, wheel30, wheel30Init> Wheel30_t;
 
 /// 4th wheel, skips multiples of 2, 3, 5 and 7
-typedef WheelFactorization<210, 48, wheel210Init, wheel210> Modulo210Wheel_t;
+typedef Wheel<210, 48, wheel210, wheel210Init> Wheel210_t;
 
 } // namespace
 

@@ -22,7 +22,7 @@ namespace primesieve {
 /// of Eratosthenes optimized for medium sieving primes that
 /// have a few multiples per segment
 ///
-class EratMedium : public Modulo210Wheel_t
+class EratMedium : public Wheel210_t
 {
 public:
   EratMedium(uint64_t, uint64_t, uint64_t);

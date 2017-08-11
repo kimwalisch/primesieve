@@ -30,7 +30,7 @@ namespace primesieve {
 /// @maxPrime:  Sieving primes <= maxPrime
 ///
 EratSmall::EratSmall(uint64_t stop, uint64_t l1Size, uint64_t maxPrime) :
-  Modulo30Wheel_t(stop, l1Size),
+  Wheel30_t(stop, l1Size),
   maxPrime_(maxPrime),
   l1Size_(l1Size)
 {

@@ -26,7 +26,7 @@ namespace primesieve {
 /// @maxPrime:   Sieving primes <= maxPrime
 ///
 EratMedium::EratMedium(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime) :
-  Modulo210Wheel_t(stop, sieveSize),
+  Wheel210_t(stop, sieveSize),
   maxPrime_(maxPrime)
 {
   // ensure multipleIndex < 2^23 in crossOff()

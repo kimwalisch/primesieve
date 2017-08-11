@@ -32,7 +32,7 @@ namespace primesieve {
 /// @maxPrime:   Sieving primes <= maxPrime
 ///
 EratBig::EratBig(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime) :
-  Modulo210Wheel_t(stop, sieveSize),
+  Wheel210_t(stop, sieveSize),
   maxPrime_(maxPrime),
   log2SieveSize_(ilog2(sieveSize)),
   moduloSieveSize_(sieveSize - 1),
