@@ -5,10 +5,9 @@
 ///            occurs a calculator::error exception is thrown.
 ///            <https://github.com/kimwalisch/calculator>
 /// @author    Kim Walisch, <kim.walisch@gmail.com>
-/// @copyright Copyright (C) 2013 Kim Walisch
-/// @date      November 30, 2013
+/// @copyright Copyright (C) 2017 Kim Walisch
 /// @license   BSD 2-Clause, http://opensource.org/licenses/BSD-2-Clause
-/// @version   1.0 patched: `^' is raise to power instead of XOR.
+/// @version   1.1 patched: `^' is raise to power instead of XOR.
 ///
 /// == Supported operators ==
 ///
