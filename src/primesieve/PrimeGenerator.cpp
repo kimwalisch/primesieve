@@ -27,9 +27,6 @@ using namespace std;
 
 namespace primesieve {
 
-// popcount.cpp
-uint64_t popcount(const uint64_t* array, uint64_t size);
-
 const uint64_t PrimeGenerator::bitmasks_[6][5] =
 {
   { END },
@@ -111,6 +108,9 @@ void PrimeGenerator::storePrimes(Store& store, const byte_t* sieve, uint64_t sie
 ///
 void PrimeGenerator::count(const byte_t* sieve, uint64_t sieveSize)
 {
+  // defined in popcount.cpp
+  uint64_t popcount(const uint64_t* array, uint64_t size);
+
   if (ps_.isFlag(ps_.COUNT_PRIMES))
     counts_[0] += popcount((const uint64_t*) sieve, ceilDiv(sieveSize, 8));
 
