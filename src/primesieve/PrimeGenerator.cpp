@@ -57,7 +57,7 @@ PrimeGenerator::PrimeGenerator(PrimeSieve& ps, const PreSieve& preSieve) :
 ///
 void PrimeGenerator::init_kCounts()
 {
-  for (uint64_t i = 1; i < counts_.size(); i++)
+  for (uint_t i = 1; i < counts_.size(); i++)
   {
     if (ps_.isCount(i))
     {
