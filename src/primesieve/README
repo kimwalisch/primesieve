@@ -44,31 +44,31 @@ C++ classes
   are removed from a buffer. Later this buffer is simply copied to the
   sieve array to remove (pre-sieve) the multiples of small primes.
 
-* WheelFactorization (abstract class)
+* Wheel (abstract class)
   Wheel factorization is used to skip multiples of small primes e.g.
-  <= 7 to speed up the sieve of Eratosthenes. The abstract
-  WheelFactorization class is used to initialize sieving primes i.e.
-  addSievingPrime() calculates the first multiple >= start of each
-  sieving prime and the position within the SieveOfEratosthenes
-  array of that multiple (multipleIndex). The unsetBit() method is
-  used to cross-off a multiple (unset a bit) and to calculate the
-  sieving prime's next multiple.
+  <= 7 to speed up the sieve of Eratosthenes. The abstract Wheel
+  class is used to initialize sieving primes i.e. addSievingPrime()
+  calculates the first multiple >= start of each sieving prime and
+  the position within the SieveOfEratosthenes array of that multiple
+  (multipleIndex). The unsetBit() method is used to cross-off a
+  multiple (unset a bit) and to calculate the sieving prime's next
+  multiple.
 
-* EratSmall (derived from WheelFactorization)
+* EratSmall (derived from Wheel)
   Segmented sieve of Eratosthenes algorithm with a hard-coded
   modulo 30 wheel that skips multiples of 2, 3 and 5. This algorithm
   is optimized for small sieving primes that have many multiples in
   each segment. EratSmall is a further optimized implementation of
   Achim Flammenkamp's algorithm.[9]
 
-* EratMedium (derived from WheelFactorization)
+* EratMedium (derived from Wheel)
   Segmented sieve of Eratosthenes algorithm with a fixed modulo 210
   wheel that skips multiples of 2, 3, 5 and 7. The wheel is
   implemented using a precomputed lookup table (wheel210 array from
   Wheel.cpp). This algorithm is optimized for medium sieving primes
   with a few multiples per segment.
 
-* EratBig (derived from WheelFactorization)
+* EratBig (derived from Wheel)
   Segmented sieve of Eratosthenes algorithm with Tomás Oliveira's
   improvement for big sieving primes [11] and a fixed modulo 210
   wheel that skips multiples of 2, 3, 5 and 7. The wheel is
