@@ -1,6 +1,7 @@
 ///
 /// @file   Wheel.hpp
-/// @brief  Classes and structs related to wheel factorization.
+/// @brief  Wheel factorization is used to skip multiles of
+///         small primes in the sieve of Eratosthenes.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -12,10 +13,11 @@
 #define WHEEL_HPP
 
 #include "config.hpp"
-#include "pmath.hpp"
 #include "primesieve_error.hpp"
+#include "Bucket.hpp"
 
 #include <stdint.h>
+#include <algorithm>
 #include <cassert>
 #include <string>
 
@@ -55,116 +57,6 @@ struct WheelElement
 extern const WheelElement wheel30[8*8];
 extern const WheelElement wheel210[48*8];
 
-/// Sieving primes are used to cross-off multiples.
-/// Each SievingPrime object contains a sieving prime and the
-/// position of its next multiple within the SieveOfEratosthenes
-/// array (i.e. multipleIndex) and a wheelIndex.
-///
-class SievingPrime
-{
-public:
-  enum
-  {
-    MAX_MULTIPLEINDEX = (1 << 23) - 1,
-    MAX_WHEELINDEX    = (1 << (32 - 23)) - 1
-  };
-
-  SievingPrime() { }
-
-  SievingPrime(uint64_t sievingPrime,
-               uint64_t multipleIndex,
-               uint64_t wheelIndex)
-  {
-    set(multipleIndex, wheelIndex);
-    sievingPrime_ = (uint32_t) sievingPrime;
-  }
-
-  void set(uint64_t multipleIndex,
-           uint64_t wheelIndex)
-  {
-    assert(multipleIndex <= MAX_MULTIPLEINDEX);
-    assert(wheelIndex <= MAX_WHEELINDEX);
-    indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 23));
-  }
-
-  void set(uint64_t sievingPrime,
-           uint64_t multipleIndex,
-           uint64_t wheelIndex)
-  {
-    set(multipleIndex, wheelIndex);
-    sievingPrime_ = (uint32_t) sievingPrime;
-  }
-
-  uint64_t getSievingPrime() const
-  {
-    return sievingPrime_;
-  }
-
-  uint64_t getMultipleIndex() const
-  {
-    return indexes_ & MAX_MULTIPLEINDEX;
-  }
-
-  uint64_t getWheelIndex() const
-  {
-    return indexes_ >> 23;
-  }
-
-  void setMultipleIndex(uint64_t multipleIndex)
-  {
-    assert(multipleIndex <= MAX_MULTIPLEINDEX);
-    indexes_ = (uint32_t) (indexes_ | multipleIndex);
-  }
-
-  void setWheelIndex(uint64_t wheelIndex)
-  {
-    assert(wheelIndex <= MAX_WHEELINDEX);
-    indexes_ = (uint32_t) (wheelIndex << 23);
-  }
-private:
-  /// multipleIndex = 23 least significant bits of indexes_
-  /// wheelIndex = 9 most significant bits of indexes_
-  uint32_t indexes_;
-  uint32_t sievingPrime_;
-};
-
-/// The Bucket data structure is used to store sieving primes.
-/// @see http://www.ieeta.pt/~tos/software/prime_sieve.html
-/// The Bucket class is designed as a singly linked list, once there
-/// is no more space in the current Bucket a new Bucket node is
-/// allocated.
-///
-class Bucket
-{
-public:
-  Bucket()              { reset(); }
-  SievingPrime* begin() { return &sievingPrimes_[0]; }
-  SievingPrime* last()  { return &sievingPrimes_[config::BUCKETSIZE - 1]; }
-  SievingPrime* end()   { return prime_; }
-  Bucket* next()        { return next_; }
-  bool hasNext() const  { return next_ != nullptr; }
-  bool empty()          { return begin() == end(); }
-  void reset()          { prime_ = begin(); }
-  void setNext(Bucket* next)
-  {
-    next_ = next;
-  }
-  /// Store a sieving prime in the bucket
-  /// @return false if the bucket is full else true
-  ///
-  bool store(uint64_t sievingPrime,
-             uint64_t multipleIndex,
-             uint64_t wheelIndex)
-  {
-    prime_->set(sievingPrime, multipleIndex, wheelIndex);
-    return prime_++ != last();
-  }
-private:
-  SievingPrime* prime_;
-  Bucket* next_;
-  SievingPrime sievingPrimes_[config::BUCKETSIZE];
-};
-
 /// The abstract Wheel class is used skip multiples of small
 /// primes in the sieve of Eratosthenes. The EratSmall,
 /// EratMedium and EratBig classes are derived from Wheel.
@@ -180,20 +72,16 @@ public:
   ///
   void addSievingPrime(uint64_t prime, uint64_t segmentLow)
   {
+    assert(segmentLow % 30 == 0);
     segmentLow += 6;
     // calculate the first multiple (of prime) > segmentLow
-    uint64_t quotient = segmentLow / prime + 1;
+    uint64_t quotient = (segmentLow / prime) + 1;
+    quotient = std::max(prime, quotient);
     uint64_t multiple = prime * quotient;
     // prime not needed for sieving
     if (multiple > stop_ ||
         multiple < segmentLow)
       return;
-    // ensure multiple >= prime * prime
-    if (quotient < prime)
-    {
-      multiple = prime * prime;
-      quotient = prime;
-    }
     // calculate the next multiple of prime that is not
     // divisible by any of the wheel's factors
     uint64_t nextMultipleFactor = INIT[quotient % MODULO].nextMultipleFactor;

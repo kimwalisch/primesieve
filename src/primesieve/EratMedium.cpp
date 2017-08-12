@@ -13,6 +13,7 @@
 #include <primesieve/EratMedium.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/Bucket.hpp>
 #include <primesieve/Wheel.hpp>
 
 #include <stdint.h>

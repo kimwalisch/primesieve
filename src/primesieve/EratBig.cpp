@@ -15,6 +15,7 @@
 #include <primesieve/EratBig.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
+#include <primesieve/Bucket.hpp>
 #include <primesieve/Wheel.hpp>
 
 #include <stdint.h>
