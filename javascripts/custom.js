@@ -1,10 +1,10 @@
 $(document).ready(function()
 {
-  var primesieve_version = '6.0';
-  var primesieve_win64_binary = 'v5.7.0/primesieve-5.7.0-win64.zip';
+  var primesieve_version = '6.1';
+  var primesieve_win64_binary = 'v6.1/primesieve-6.1-win64.zip';
   var primesieve_win32_binary = 'v3.6/primesieve-3.6-win32.zip';
   var primesieve_macosx_x64_binary = 'v5.5.0/primesieve-5.5.0-macOS-x64.zip';
-  var primesieve_linux_x64_binary = 'v5.5.0/primesieve-5.5.0-linux-x64.tar.gz';
+  var primesieve_linux_x64_binary = 'v6.1/primesieve-6.1-linux-x64.tar.gz';
   var primesieve_linux_x86_binary = 'v3.6/primesieve-3.6-linux-x86.tar.gz';
   var primesieve_os_binary = '';
 
