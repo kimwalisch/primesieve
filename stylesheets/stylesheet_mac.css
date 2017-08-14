@@ -337,13 +337,6 @@ form {
   font-size: 2.8em;
   letter-spacing: -1px;
   color: #282828;
-} 
-
-#main-content h1:before {
-  content: "/";
-  color: #9ddcff;
-  padding-right: 0.3em;
-  margin-left: -0.9em;
 }
 
 #main-content h2 {
@@ -355,21 +348,6 @@ form {
   color: #282828;
 }
 
-#main-content h2:before {
-  content: "//";
-  color: #9ddcff;
-  padding-right: 0.2em;
-  margin-left: -1.23em; /* OS X workaround */
-}
-
-/* Slightly less margin-left for characters like A, S, T, ... */
-#main-content h2.align2:before {
-  content: "//";
-  color: #9ddcff;
-  padding-right: 0.2em;
-  margin-left: -1.18em; /* OS X workaround */
-}
-
 #main-content h3 {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 18px;
@@ -377,13 +355,6 @@ form {
   margin-top: 24px;
   margin-bottom: 8px;
   color: #282828;
-} 
- 
-#main-content h3:before {
-  content: "///";
-  color: #9ddcff;
-  padding-right: 0.3em;
-  margin-left: -1.7em;
 }
 
 #main-content h4 {
@@ -391,37 +362,18 @@ form {
   font-size: 15px;
   font-weight: bold;
   color: #282828;
-} 
-
-h4:before {
-  content: "////";
-  color: #9ddcff;
-  padding-right: 0.3em;
-  margin-left: -2.8em;
 }
 
 #main-content h5 {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 14px;
   color: #282828;
-} 
-h5:before {
-  content: "/////";
-  color: #9ddcff;
-  padding-right: 0.3em;
-  margin-left: -3.2em;
 }
 
 #main-content h6 {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: .8em;
   color: #282828;
-} 
-h6:before {
-  content: "//////";
-  color: #9ddcff;
-  padding-right: 0.3em;
-  margin-left: -3.7em;
 }
 
 p {
@@ -545,17 +497,6 @@ footer a:hover {
   }
   aside#sidebar a.button {
     display: none;
-  }
-  #main-content h1:before,
-  #main-content h2:before,
-  #main-content h2.align2:before,
-  #main-content h3:before,
-  #main-content h4:before,
-  #main-content h5:before,
-  #main-content h6:before {
-    content: none;
-    padding-right: 0;
-    margin-left: 0;
   }
 }
 
