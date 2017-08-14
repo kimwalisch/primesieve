@@ -283,7 +283,7 @@ CPUs.</p>
 <div id="inner_loop">
 <p class="optimizations_title">Highly optimized inner loop</p>
 <p>primesieve's inner sieving loop has been optimized using
-<a href="https://github.com/kimwalisch/primesieve/blob/master/src/primesieve/EratSmall.cpp#L85">extreme loop unrolling</a>,
+<a href="https://github.com/kimwalisch/primesieve/blob/master/src/primesieve/EratSmall.cpp#L111">extreme loop unrolling</a>,
 on average crossing off a multiple uses just 1.375 instructions on
 x64 CPUs. Below is the assembly GCC generates for primesieve's inner
 sieving loop, each <code>andb</code> instruction unsets a bit (crosses
