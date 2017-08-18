@@ -91,13 +91,14 @@ int ParallelPrimeSieve::idealNumThreads() const
 uint64_t ParallelPrimeSieve::getThreadDistance(int threads) const
 {
   assert(threads > 0);
-  uint64_t unbalanced = getDistance() / threads;
-  uint64_t balanced = isqrt(stop_) * 1000;
-  uint64_t fastest = min(balanced, unbalanced);
-  uint64_t threadDistance = inBetween(config::MIN_THREAD_DISTANCE, fastest, config::MAX_THREAD_DISTANCE);
-  uint64_t chunks = getDistance() / threadDistance;
 
-  if (chunks < threads * 5u)
+  uint64_t balanced = isqrt(stop_) * 1000;
+  uint64_t unbalanced = getDistance() / threads;
+  uint64_t fastest = min(balanced, unbalanced);
+  uint64_t threadDistance = max(config::MIN_THREAD_DISTANCE, fastest);
+  uint64_t iters = getDistance() / threadDistance;
+
+  if (iters < threads * 5u)
     threadDistance = max(config::MIN_THREAD_DISTANCE, unbalanced);
 
   threadDistance += 30 - threadDistance % 30;
