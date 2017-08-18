@@ -1,6 +1,6 @@
 ///
 /// @file   config.hpp
-/// @brief  Constants that set various limits within primesieve.
+/// @brief  primesieve compile time constants.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
