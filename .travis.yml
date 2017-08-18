@@ -56,7 +56,7 @@ script:
   - test/atomic
   - cd ..
   # 5) Test using valgrind
-  - $CXX -Iinclude -O2 -g examples/cpp/nth_prime.cpp -o nth_prime build/libprimesieve.a -lpthread
+  - $CXX -Iinclude -O2 -std=c++11 -g examples/cpp/nth_prime.cpp -o nth_prime build/libprimesieve.a -lpthread
   - valgrind --error-exitcode=1 ./nth_prime 500000000
   # 6) Test using cppcheck
   - rm -rf build
