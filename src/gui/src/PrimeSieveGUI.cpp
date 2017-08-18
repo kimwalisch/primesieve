@@ -1,7 +1,7 @@
 /*
  * PrimeSieveGUI.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@
   #include <QtWidgets/QMessageBox>
   #include <QTextCursor>
   #include <stdexcept>
+  #include <set>
 #else
   #include <QtGlobal>
   #include <QCoreApplication>
@@ -47,6 +48,7 @@
   #include <QMessageBox>
   #include <QTextCursor>
   #include <stdexcept>
+  #include <set>
 #endif
 
 using namespace primesieve;
@@ -103,11 +105,21 @@ void PrimeSieveGUI::initGUI() {
   int sieveSize = get_sieve_size();
   this->setTo(ui->sieveSizeComboBox, QString::number(sieveSize) + " KB");
 
-  // fill the threadsComboBox with power of 2 values <= maxThreads_
   maxThreads_ = ParallelPrimeSieve::getMaxThreads();
+
+  std::set<int> threads;
+  threads.insert(maxThreads_);
+
+  if (maxThreads_ >= 2)
+    threads.insert(maxThreads_ / 2);
+
   for (int i = 1; i < maxThreads_; i *= 2)
-    ui->threadsComboBox->addItem(QString::number(i));
-  ui->threadsComboBox->addItem(QString::number(maxThreads_));
+    threads.insert(i);
+
+  // fill ComboBox with thread values
+  for (int n : threads)
+    ui->threadsComboBox->addItem(QString::number(n));
+
   this->setTo(ui->threadsComboBox, "1");
 
   // set an ideal ComboBox width
