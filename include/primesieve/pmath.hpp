@@ -13,9 +13,10 @@
 
 #include <stdint.h>
 #include <algorithm>
-#include <cstddef>
 #include <cmath>
+#include <cstddef>
 #include <limits>
+#include <type_traits>
 
 namespace primesieve {
 
@@ -110,9 +111,11 @@ inline uint64_t checkedSub(uint64_t x, uint64_t y)
 template <typename A, typename B, typename C>
 inline B inBetween(A min, B x, C max)
 {
-  if (x < (B) min)
+  using T = typename std::common_type<A, B, C>::type;
+
+  if ((T) x < (T) min)
     return (B) min;
-  if ((C) x > max)
+  if ((T) x > (T) max)
     return (B) max;
 
   return x;
