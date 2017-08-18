@@ -19,8 +19,8 @@
 #include "pmath.hpp"
 
 #include <stdint.h>
+#include <cstddef>
 #include <exception>
-#include <cmath>
 
 namespace primesieve {
 
