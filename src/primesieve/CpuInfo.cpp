@@ -325,9 +325,8 @@ void CpuInfo::initCache()
       threadSiblingsList = getString(threadSiblingsList);
 
       // https://lwn.net/Articles/254445/
-      if (sharedCpuList.empty())
-        privateL2Cache_ = true;
-      else if (sharedCpuList == threadSiblingsList)
+      if (!sharedCpuList.empty() &&
+          sharedCpuList == threadSiblingsList)
         privateL2Cache_ = true;
     }
   }
