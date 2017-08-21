@@ -115,15 +115,15 @@ sieve implementations</a>.
     </td>
     <td class="timing_title">
       <span style="white-space: nowrap;">Intel Core i7-6700</span><br/>
-      <span class="cpu_details">(4 x 3.4GHz, 32K L1 Data Cache)</span>
+      <span class="cpu_details">(4 x 3.4GHz, 256 KB L2 cache)</span>
     </td>
     <td class="timing_title">
       <span style="white-space: nowrap;">AMD Ryzen 7 1700</span><br/>
-      <span class="cpu_details">(8 x 3.0GHz, 64K L1 Data Cache)</span>
+      <span class="cpu_details">(8 x 3.0GHz, 512 KB L2 cache)</span>
     </td>
     <td class="timing_title">
       <span style="white-space: nowrap;">IBM POWER8</span><br/>
-      <span class="cpu_details">(22 x 3.0GHz, 64K L1 Data Cache)</span>
+      <span class="cpu_details">(22 x 3.0GHz, 512 KB L2 cache)</span>
     </td>
 </tr>
 <tr style="background-color: white">
@@ -136,42 +136,42 @@ sieve implementations</a>.
 <tr>
     <td class="timing">10<sup>9</sup></td>
     <td class="timing">50,847,534</td>
-    <td class="timing">0.05s</td>
+    <td class="timing">0.04s</td>
     <td class="timing">0.03s</td>
     <td class="timing">0.07s</td>
 </tr>
 <tr style="background-color: white">
     <td class="timing">2<sup>32</sup></td>
     <td class="timing">203,280,221</td>
-    <td class="timing">0.19s</td>
+    <td class="timing">0.18s</td>
     <td class="timing">0.11s</td>
     <td class="timing">0.15s</td>
   </tr>
 <tr>
 <td class="timing">10<sup>10</sup></td>
     <td class="timing">455,052,511</td>
-    <td class="timing">0.45s</td>
+    <td class="timing">0.44s</td>
     <td class="timing">0.27s</td>
     <td class="timing">0.24s</td>
 </tr>
 <tr style="background-color: white">
     <td class="timing">10<sup>11</sup></td>
     <td class="timing">4,118,054,813</td>
-    <td class="timing">5.60s</td>
+    <td class="timing">5.06s</td>
     <td class="timing">3.00s</td>
     <td class="timing">1.72s</td>
 </tr>
 <tr>
     <td class="timing">10<sup>12</sup></td>
     <td class="timing">37,607,912,018</td>
-    <td class="timing">68.55s</td>
+    <td class="timing">61.03s</td>
     <td class="timing">35.20s</td>
     <td class="timing">19.34s</td>
 </tr>
 <tr style="background-color: white">
     <td class="timing">10<sup>13</sup></td>
     <td class="timing">346,065,536,839</td>
-    <td class="timing">816.62s</td>
+    <td class="timing">753.21s</td>
     <td class="timing">413.91s</td>
     <td class="timing">225.92s</td>
 </tr>
@@ -179,7 +179,7 @@ sieve implementations</a>.
 
 <p><br/>The above benchmarks were run on Linux, for each
 benchmark primesieve used all available CPU cores and the sieve
-size was set to the CPU's L1 data cache size.</p>
+size was set to the CPU's L2 cache size.</p>
 </div>
 
 <h2 style="padding-bottom: 5px">
