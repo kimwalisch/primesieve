@@ -76,11 +76,11 @@ macx {
 }
 
 *g++* {
-  QMAKE_CXXFLAGS += -std=c++11
+  QMAKE_CXXFLAGS += -std=c++11 -Wno-implicit-fallthrough
 }
 
 *clang* {
-  QMAKE_CXXFLAGS += -std=c++11
+  QMAKE_CXXFLAGS += -std=c++11 -Wno-implicit-fallthrough
 }
 
 *icc* {

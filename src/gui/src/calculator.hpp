@@ -5,10 +5,9 @@
 ///            occurs a calculator::error exception is thrown.
 ///            <https://github.com/kimwalisch/calculator>
 /// @author    Kim Walisch, <kim.walisch@gmail.com>
-/// @copyright Copyright (C) 2013 Kim Walisch
-/// @date      November 30, 2013
+/// @copyright Copyright (C) 2017 Kim Walisch
 /// @license   BSD 2-Clause, http://opensource.org/licenses/BSD-2-Clause
-/// @version   1.0 patched: `^' is raise to power instead of XOR.
+/// @version   1.1 patched: `^' is raise to power instead of XOR.
 ///
 /// == Supported operators ==
 ///
@@ -302,6 +301,7 @@ private:
       case '%': index_++;     return Operator(OPERATOR_MODULO,         20, 'L');
       case '*': index_++; if (getCharacter() != '*')
                               return Operator(OPERATOR_MULTIPLICATION, 20, 'L');
+                index_++;     return Operator(OPERATOR_POWER,          30, 'R');
       case '^': index_++;     return Operator(OPERATOR_POWER,          30, 'R');
       case 'e': index_++;     return Operator(OPERATOR_EXPONENT,       40, 'R');
       case 'E': index_++;     return Operator(OPERATOR_EXPONENT,       40, 'R');
@@ -362,10 +362,10 @@ private:
     switch (getCharacter())
     {
       case '0': if (isHex())
-                {
                   val = parseHex();
-                  break;
-                }
+                else
+                  val = parseDecimal();
+                break;
       case '1': case '2': case '3': case '4': case '5':
       case '6': case '7': case '8': case '9':
                 val = parseDecimal();
