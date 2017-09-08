@@ -200,6 +200,10 @@ primesieve natively supports C and C++ and has bindings available for:
         <td><b>Rust:</b></td>
         <td><a href="https://github.com/pthariensflame/primesieve.rs">primesieve.rs</a></td>
     </tr>
+    <tr>
+        <td><b>Haskell:</b></td>
+        <td><a href="http://hackage.haskell.org/package/primesieve">primesieve-haskell</a></td>
+    </tr>
 </table>
 
 Many thanks to the developers of these bindings!
