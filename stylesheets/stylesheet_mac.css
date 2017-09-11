@@ -40,7 +40,7 @@ img.formula {
 }
 
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
@@ -271,33 +271,6 @@ aside a.button {
   font-size: 21px;
 }
 
-code, pre {
-  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
-  color: #222;
-  margin-bottom: 30px;
-  font-size: 14px;
-}
-
-code {
-  background-color: #fff;
-  border: solid 1px #c9c9c9;
-  padding: 0 3px;
-}
-
-pre {
-  padding: 20px;
-  background: #fff;
-  text-shadow: none;
-  overflow: auto;
-  border: solid 1px #c9c9c9;
-}
-pre code {
-  color: #2879d0;
-  background-color: #fff;
-  border: none;
-  padding: 0;
-}
-
 ul, ol, dl {
   margin-bottom: 20px;
 }
@@ -498,6 +471,72 @@ footer a:hover {
   aside#sidebar a.button {
     display: none;
   }
+}
+
+/*!
+ * Modified by Kim Walisch 2017
+ * for use at http://primesieve.org
+ *
+ * Made Mistakes 12.0.1
+ * Copyright 2017 Michael Rose - mademistakes | @mmistakes
+ * https://github.com/mmistakes/made-mistakes-jekyll/blob/master/LICENSE
+ *
+ * Lity - v2.1.0 - 2016-09-19
+ * http://sorgalla.com/lity/
+ * Copyright (c) 2015-2016 Jan Sorgalla; Licensed MIT */
+
+figure {
+    margin: 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    background: #fff;
+    color: #222831;
+    box-sizing: border-box;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+code {
+    font-size: 1em;
+    font-family: Menlo, Consolas, Monaco, Courier New, Courier, monospace;
+}
+
+.terminal {
+    position: relative;
+    margin-bottom: 1.5em;
+    padding: calc(30px + 1em) 1em 1em;
+    border: 1px solid #d7d8da;
+    border-radius: .25em;
+    box-shadow: 0 .25em 1em rgba(57, 62, 70, .25);
+    background-color: #393e46;
+}
+
+.terminal:before {
+    font-family: Courier, Consolas, Menlo;
+    content: "\2022 \2022 \2022";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    margin: 0;
+    padding: 15px 0;
+    background: #cecfd1;
+    color: #9c9fa3;
+    font-size: 40px;
+    line-height: 0;
+    text-indent: 12px;
+    box-sizing: inherit;
+}
+
+.terminal .highlight {
+    margin: 0;
+    padding: 0;
+    background-color: initial;
+    color: #f2f2f2;
+    font-size: 0.8em;
 }
 
 /* Mobile Landscape Size to Tablet Portrait (devices and browsers) */

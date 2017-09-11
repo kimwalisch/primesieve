@@ -192,6 +192,45 @@ start offset the primes inside an interval of size 10<sup>11</sup>
 were counted using different numbers of threads.</p>
 
 <h2>
+<a name="installing-primesieve" class="anchor" href="#installing-primesieve"><span class="octicon octicon-link"></span></a>Installing primesieve</h2>
+<p>The primesieve console application can be installed using your operating
+system's package manager. The primesieve GUI application can be downloaded
+from <a href="http://primesieve.org/downloads">http://primesieve.org/downloads</a>.</p>
+
+<figure class="terminal" style="width: 550px">
+<pre class="highlight">
+<code><font color="#49b2ff"># Debian/Ubuntu</font>
+sudo apt-get install primesieve
+
+<font color="#49b2ff"># Windows Bash</font>
+sudo apt-get install primesieve
+
+<font color="#49b2ff"># macOS</font>
+brew install primesieve</code>
+</pre>
+</figure>
+
+<h2>
+<a name="usage-examples" class="anchor" href="#usage-examples"><span class="octicon octicon-link"></span></a>Usage examples</h2>
+<p>The primesieve console application can generate primes and prime k-tuplets and find the nth prime.</p>
+
+<figure class="terminal" style="width: 550px">
+<pre class="highlight">
+<code><font color="#49b2ff"># Count the primes below 1e10 using all CPU cores</font>
+primesieve 1e10
+
+<font color="#49b2ff"># Print the primes below 1000000</font>
+primesieve 1000000 --print
+
+<font color="#49b2ff"># Count the primes within [1e10, 2e10] using 4 threads</font>
+primesieve 1e10 2e10 --threads=4
+
+<font color="#49b2ff"># Print an option summary</font>
+primesieve --help</code>
+</pre>
+</figure>
+
+<h2>
 <a name="algorithms" class="anchor" href="#algorithms"><span class="octicon octicon-link"></span></a>Algorithms</h2>
 <p>primesieve generates primes using the segmented
 <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">sieve of
