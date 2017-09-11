@@ -514,7 +514,7 @@ code {
 }
 
 .terminal:before {
-    font-family: Courier, Consolas, Menlo;
+    font-family: Terminal, Consolas, Menlo, monospace;
     content: "\2022 \2022 \2022";
     position: absolute;
     top: 0;
@@ -522,7 +522,7 @@ code {
     width: 100%;
     height: 30px;
     margin: 0;
-    padding: 15px 0;
+    padding: 12px 0;
     background: #cecfd1;
     color: #9c9fa3;
     font-size: 40px;
