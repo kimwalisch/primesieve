@@ -19,7 +19,7 @@
       function appendStylesheetToHead(name)
       {
         var osId = "";
-        if (navigator.appVersion.indexOf("Mac") != -1) {
+        if (navigator.appVersion.indexOf("Mac") != -1 || navigator.appVersion.indexOf("iOS") != -1) {
           osId = "_mac";
         }
         var el = document.createElement("link");
