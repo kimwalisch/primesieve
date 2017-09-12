@@ -508,8 +508,8 @@ code {
     margin-bottom: 1.5em;
     padding: calc(30px + 1em) 1em 1em;
     border: 1px solid #d7d8da;
-    border-radius: .25em;
-    box-shadow: 0 .25em 1em rgba(57, 62, 70, .25);
+    border-radius: .4em;
+    box-shadow: 0 .4em 1em rgba(57, 62, 70, .25);
     background-color: #393e46;
 }
 
@@ -522,14 +522,15 @@ code {
     width: 100%;
     height: 30px;
     margin: 0;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 15px 0;
     background: #cecfd1;
     color: #9c9fa3;
     font-size: 40px;
     line-height: 0;
     text-indent: 12px;
     box-sizing: inherit;
+    border-top-left-radius: .1em;
+    border-top-right-radius: .1em;
 }
 
 .terminal .highlight {
