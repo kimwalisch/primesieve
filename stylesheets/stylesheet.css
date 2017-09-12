@@ -522,7 +522,8 @@ code {
     width: 100%;
     height: 30px;
     margin: 0;
-    padding: 12px 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
     background: #cecfd1;
     color: #9c9fa3;
     font-size: 40px;
