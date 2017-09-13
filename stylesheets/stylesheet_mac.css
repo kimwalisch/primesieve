@@ -487,7 +487,7 @@ footer a:hover {
 
 figure {
     margin: 0;
-    line-height: 1.0;
+    line-height: 1.1;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
