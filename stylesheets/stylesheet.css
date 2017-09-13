@@ -487,7 +487,7 @@ footer a:hover {
 
 figure {
     margin: 0;
-    line-height: 1.2;
+    line-height: 1.0;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -499,46 +499,50 @@ figure {
 }
 
 code {
-    font-size: 1.1em;
+    font-size: .87em;
     font-family: Menlo, Consolas, Monaco, Courier New, Courier, monospace;
 }
 
-.terminal {
-    position: relative;
-    margin-bottom: 1.5em;
-    padding: calc(30px + 1em) 1em 1em;
+.terminal_header {
+    letter-spacing: .2em;
+    font-weight: bold;
+    width: 550px;
+    font-size: 40px;
+    text-indent: .4em;
+    color: #9c9fa3;
+    background: #cecfd1;
+    line-height: 31px;
+    height: 31px;
+    border-top-left-radius: .15em;
+    border-top-right-radius: .15em;
     border: 1px solid #d7d8da;
-    border-radius: .4em;
+    border-bottom: none;
+    box-shadow: 0 .4em 1em rgba(57, 62, 70, .25);
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer & Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+.terminal_body {
+    width: 550px;
+    margin-bottom: 1.5em;
+    padding: 1em 1em 1.1em;
+    border: 1px solid #d7d8da;
+    border-bottom-left-radius: .4em;
+    border-bottom-right-radius: .4em;
+    border-top: none;
     box-shadow: 0 .4em 1em rgba(57, 62, 70, .25);
     background-color: #393e46;
 }
 
-.terminal:before {
-    font-family: Terminal, Consolas, Menlo, monospace;
-    content: "\2022 \2022 \2022";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 30px;
-    margin: 0;
-    padding: 12px 0;
-    background: #cecfd1;
-    color: #9c9fa3;
-    font-size: 40px;
-    line-height: 0;
-    text-indent: 12px;
-    box-sizing: inherit;
-    border-top-left-radius: .1em;
-    border-top-right-radius: .1em;
-}
-
-.terminal .highlight {
+.terminal_body .highlight {
     margin: 0;
     padding: 0;
     background-color: initial;
     color: #f2f2f2;
-    font-size: 0.8em;
 }
 
 /* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
