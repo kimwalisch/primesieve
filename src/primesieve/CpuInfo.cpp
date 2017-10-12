@@ -249,6 +249,10 @@ void CpuInfo::initCache()
 
   bytes = 0;
   glpiex(RelationAll, 0, &bytes);
+
+  if (!bytes)
+    return;
+
   vector<char> buffer(bytes);
   SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* cpu;
 
