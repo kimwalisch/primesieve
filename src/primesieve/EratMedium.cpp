@@ -54,22 +54,22 @@ void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint6
 ///
 void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)
 {
-  SievingPrime* primes = &primes_[0];
-  SievingPrime* back = &primes_.back();
+  size_t i = 0;
+  size_t size = primes_.size();
 
   // process 3 sieving primes per loop iteration to
   // increase instruction level parallelism
-  for (; primes + 3 <= back; primes += 3)
+  for (; i < size - size % 3; i += 3)
   {
-    uint64_t multipleIndex0 = primes[0].getMultipleIndex();
-    uint64_t wheelIndex0    = primes[0].getWheelIndex();
-    uint64_t sievingPrime0  = primes[0].getSievingPrime();
-    uint64_t multipleIndex1 = primes[1].getMultipleIndex();
-    uint64_t wheelIndex1    = primes[1].getWheelIndex();
-    uint64_t sievingPrime1  = primes[1].getSievingPrime();
-    uint64_t multipleIndex2 = primes[2].getMultipleIndex();
-    uint64_t wheelIndex2    = primes[2].getWheelIndex();
-    uint64_t sievingPrime2  = primes[2].getSievingPrime();
+    uint64_t multipleIndex0 = primes_[i + 0].getMultipleIndex();
+    uint64_t wheelIndex0    = primes_[i + 0].getWheelIndex();
+    uint64_t sievingPrime0  = primes_[i + 0].getSievingPrime();
+    uint64_t multipleIndex1 = primes_[i + 1].getMultipleIndex();
+    uint64_t wheelIndex1    = primes_[i + 1].getWheelIndex();
+    uint64_t sievingPrime1  = primes_[i + 1].getSievingPrime();
+    uint64_t multipleIndex2 = primes_[i + 2].getMultipleIndex();
+    uint64_t wheelIndex2    = primes_[i + 2].getWheelIndex();
+    uint64_t sievingPrime2  = primes_[i + 2].getSievingPrime();
 
     while (multipleIndex0 < sieveSize)
     {
@@ -88,23 +88,23 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)
     multipleIndex1 -= sieveSize;
     multipleIndex2 -= sieveSize;
 
-    primes[0].set(multipleIndex0, wheelIndex0);
-    primes[1].set(multipleIndex1, wheelIndex1);
-    primes[2].set(multipleIndex2, wheelIndex2);
+    primes_[i + 0].set(multipleIndex0, wheelIndex0);
+    primes_[i + 1].set(multipleIndex1, wheelIndex1);
+    primes_[i + 2].set(multipleIndex2, wheelIndex2);
   }
 
   // process remaining sieving primes
-  for (; primes <= back; primes++)
+  for (; i < size; i++)
   {
-    uint64_t multipleIndex = primes->getMultipleIndex();
-    uint64_t wheelIndex    = primes->getWheelIndex();
-    uint64_t sievingPrime  = primes->getSievingPrime();
+    uint64_t multipleIndex = primes_[i].getMultipleIndex();
+    uint64_t wheelIndex    = primes_[i].getWheelIndex();
+    uint64_t sievingPrime  = primes_[i].getSievingPrime();
 
     while (multipleIndex < sieveSize)
       unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
 
     multipleIndex -= sieveSize;
-    primes->set(multipleIndex, wheelIndex);
+    primes_[i].set(multipleIndex, wheelIndex);
   }
 }
 
