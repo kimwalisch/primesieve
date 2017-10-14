@@ -159,9 +159,9 @@ void CpuInfo::initCache()
     {
       // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
       sysctlbyname("hw.cacheconfig" , &cacheconfig[0], &size, NULL, 0);
-      size_t l2CpuSharing = cacheconfig[2];
+      size_t l2Sharing = cacheconfig[2];
 
-      if (l2CpuSharing <= 1)
+      if (l2Sharing <= 1)
         privateL2Cache_ = true;
       else
       {
@@ -175,7 +175,7 @@ void CpuInfo::initCache()
         sysctlbyname("hw.physicalcpu", &physicalcpu, &size, NULL, 0);
         physicalcpu = max<size_t>(1, physicalcpu);
 
-        if (l2CpuSharing <= logicalcpu / physicalcpu)
+        if (l2Sharing <= logicalcpu / physicalcpu)
           privateL2Cache_ = true;
       }
     }
@@ -276,15 +276,15 @@ void CpuInfo::initCache()
       // only have 1 or 2 bits set for each CPU cache (L1, L2 and
       // L3) even if more logical CPU cores share the cache
       auto mask = cpu->Cache.GroupMask.Mask;
-      size_t threads = 0;
+      size_t l2Sharing = 0;
 
       // Cache.GroupMask.Mask contains one bit set for
       // each logical CPU core sharing the cache
-      for (; mask > 0; threads++)
+      for (; mask > 0; l2Sharing++)
         mask &= mask - 1;
 
       // the L2 cache is private if it is tied to a physical CPU core
-      privateL2Cache_ = (threads <= threadsPerCore);
+      privateL2Cache_ = (l2Sharing <= threadsPerCore);
 
       break;
     }
