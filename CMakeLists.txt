@@ -76,7 +76,7 @@ if(BUILD_SHARED_LIBS)
 endif()
 
 install(TARGETS libprimesieve
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_LIBRARY_MULTIARCH})
 
 # static_libprimesieve ###############################################
 
@@ -90,7 +90,7 @@ if(BUILD_STATIC_LIBS AND BUILD_SHARED_LIBS)
         $<INSTALL_INTERFACE:include>)
 
     install(TARGETS static_libprimesieve
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_LIBRARY_MULTIARCH})
 endif()
 
 # primesieve binary ##################################################
@@ -162,7 +162,7 @@ endif()
 configure_file(primesieve.pc.in primesieve.pc @ONLY)
 
 install(FILES ${CMAKE_BINARY_DIR}/primesieve.pc
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_LIBRARY_MULTIARCH}/pkgconfig)
 
 # Add subdirectories #################################################
 
