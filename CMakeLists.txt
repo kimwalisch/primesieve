@@ -105,7 +105,8 @@ endif()
 # Install headers ####################################################
 
 install(FILES include/primesieve.h
-              include/primesieve.hpp        
+              include/primesieve.hpp
+              COMPONENT libprimesieve-headers
               DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 
 install(FILES include/primesieve/PrimeSieve.hpp
@@ -114,6 +115,7 @@ install(FILES include/primesieve/PrimeSieve.hpp
               include/primesieve/iterator.hpp
               include/primesieve/primesieve_error.hpp
               include/primesieve/pmath.hpp
+              COMPONENT libprimesieve-headers
               DESTINATION ${CMAKE_INSTALL_PREFIX}/include/primesieve)
 
 # Regenerate man page ################################################
