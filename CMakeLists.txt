@@ -57,12 +57,21 @@ if(no_fallthrough)
     set_source_files_properties(src/primesieve/EratSmall.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
+# Find optional atomic library #######################################
+
+find_library(ATOMIC atomic)
+
+if(ATOMIC)
+    set(LIBATOMIC ${ATOMIC})
+    message(STATUS "Found libatomic: TRUE")
+endif()
+
 # libprimesieve ######################################################
 
 add_library(libprimesieve ${LIB_SRC})
 set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
 find_package(Threads REQUIRED)
-target_link_libraries(libprimesieve Threads::Threads)
+target_link_libraries(libprimesieve Threads::Threads ${LIBATOMIC})
 
 target_include_directories(libprimesieve PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -83,7 +92,7 @@ install(TARGETS libprimesieve
 if(BUILD_STATIC_LIBS AND BUILD_SHARED_LIBS)
     add_library(static_libprimesieve STATIC ${LIB_SRC})
     set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
-    target_link_libraries(static_libprimesieve Threads::Threads)
+    target_link_libraries(static_libprimesieve Threads::Threads ${LIBATOMIC})
 
     target_include_directories(static_libprimesieve PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
