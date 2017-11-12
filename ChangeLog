@@ -1,3 +1,14 @@
+Changes in version 6.3, 12/11/2017
+==================================
+
+This is a minor new release, the API and ABI are
+backwards compatible.
+
+ * test/ilog2.cpp: Fix Linux i386 bug.
+ * test/floorPower2.cpp: Fix Linux i386 bug.
+ * CMakeLists.txt: Link against libatomic if needed.
+ * CMakeLists.txt: Add Debian Multiarch support.
+
 Changes in version 6.2, 12/10/2017
 ==================================
 
