@@ -53,7 +53,7 @@ inline T ilog2(T x)
   T one = 1;
   T log2 = 0;
 
-  for (T i = bits / 2; i != 0; i /= 2)
+  for (T i = bits / 2; i > 0; i /= 2)
   {
     if (x >= (one << i))
     {

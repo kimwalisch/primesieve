@@ -1,6 +1,8 @@
 ///
 /// @file   ilog2.cpp
-/// @brief  Test integer log2 function.
+/// @brief  Test ilog2(x) function.
+///         Note that the log2(x) function from <cmath> is not
+///         accurate enough near 2^64.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -18,12 +20,6 @@
 using namespace std;
 using namespace primesieve;
 
-uint64_t log2_cmath(uint64_t n)
-{
-  double x = (double) n;
-  return (uint64_t) (log(x) / log(2.0));
-}
-
 void check(bool OK)
 {
   cout << "   " << (OK ? "OK" : "ERROR") << "\n";
@@ -40,20 +36,20 @@ int main()
   for (n = 1; n < 100000; n++)
   {
     res1 = ilog2(n);
-    res2 = log2_cmath(n);
+    res2 = (uint64_t) log2(n);
     cout << "ilog2(" << n << ") = " << res1;
     check(res1 == res2);
   }
 
   n = (1ull << 32) - 1;
   res1 = ilog2(n);
-  res2 = log2_cmath(n);
+  res2 = (uint64_t) log2(n);
   cout << "ilog2(" << n << ") = " << res1;
   check(res1 == (uint64_t) res2);
 
   n = 1ull << 32;
   res1 = ilog2(n);
-  res2 = log2_cmath(n);
+  res2 = (uint64_t) log2(n);
   cout << "ilog2(" << n << ") = " << res1;
   check(res1 == (uint64_t) res2);
 
