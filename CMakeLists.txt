@@ -61,6 +61,9 @@ endif()
 
 include(CheckCXXSourceCompiles)
 
+set(CMAKE_OLD_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS})
+set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_CXX11_STANDARD_COMPILE_OPTION})
+
 check_cxx_source_compiles("
     #include <atomic>
     int main() {
@@ -71,8 +74,10 @@ check_cxx_source_compiles("
     }"
     HAVE_ATOMIC)
 
-if(not HAVE_ATOMIC)
-    find_library(ATOMIC NAMES atomic libatomic.so.1)
+set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_OLD_DEFINITIONS})
+
+if(NOT HAVE_ATOMIC)
+    find_library(ATOMIC NAMES atomic libatomic.so libatomic.so.1)
     if(ATOMIC)
         set(LIBATOMIC ${ATOMIC})
         message(STATUS "Found libatomic: TRUE")
