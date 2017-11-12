@@ -61,8 +61,8 @@ endif()
 
 include(CheckCXXSourceCompiles)
 
-set(CMAKE_OLD_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS})
-set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_CXX11_STANDARD_COMPILE_OPTION})
+set(CMAKE_OLD_FLAGS ${CMAKE_REQUIRED_FLAGS})
+set(CMAKE_REQUIRED_FLAGS ${CMAKE_CXX11_STANDARD_COMPILE_OPTION})
 
 check_cxx_source_compiles("
     #include <atomic>
@@ -74,7 +74,7 @@ check_cxx_source_compiles("
     }"
     have_atomic)
 
-set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_OLD_DEFINITIONS})
+set(CMAKE_REQUIRED_FLAGS ${CMAKE_OLD_FLAGS})
 
 if(NOT have_atomic)
     find_library(ATOMIC NAMES atomic libatomic.so libatomic.so.1)
