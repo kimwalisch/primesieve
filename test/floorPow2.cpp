@@ -27,7 +27,7 @@ void check(bool OK)
 
 uint64_t floorPow2_cmath(uint64_t n)
 {
-  return 1ull << (uint64_t) (log((double) n) / log(2.0));
+  return 1ull << (uint64_t) log2(n);
 }
 
 int main()
