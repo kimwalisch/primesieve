@@ -57,13 +57,26 @@ if(no_fallthrough)
     set_source_files_properties(src/primesieve/EratSmall.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
-# Find optional atomic library #######################################
+# Check if libatomic is needed #######################################
 
-find_library(ATOMIC atomic)
+include(CheckCXXSourceCompiles)
 
-if(ATOMIC)
-    set(LIBATOMIC ${ATOMIC})
-    message(STATUS "Found libatomic: TRUE")
+check_cxx_source_compiles("
+    #include <atomic>
+    int main() {
+        std::atomic<int> x;
+        x = 1;
+        x--;
+        return x;
+    }"
+    HAVE_ATOMIC)
+
+if(not HAVE_ATOMIC)
+    find_library(ATOMIC NAMES atomic libatomic.so.1)
+    if(ATOMIC)
+        set(LIBATOMIC ${ATOMIC})
+        message(STATUS "Found libatomic: TRUE")
+    endif()
 endif()
 
 # libprimesieve ######################################################
