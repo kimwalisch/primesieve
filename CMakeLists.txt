@@ -72,11 +72,11 @@ check_cxx_source_compiles("
         x--;
         return x;
     }"
-    HAVE_ATOMIC)
+    have_atomic)
 
 set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_OLD_DEFINITIONS})
 
-if(NOT HAVE_ATOMIC)
+if(NOT have_atomic)
     find_library(ATOMIC NAMES atomic libatomic.so libatomic.so.1)
     if(ATOMIC)
         set(LIBATOMIC ${ATOMIC})
