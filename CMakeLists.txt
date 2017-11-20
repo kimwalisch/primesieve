@@ -78,11 +78,10 @@ check_cxx_source_compiles("
 set(CMAKE_REQUIRED_FLAGS ${CMAKE_OLD_FLAGS})
 
 if(NOT have_atomic)
-    find_library(LIBATOMIC NAMES atomic libatomic.so libatomic.so.1)
-    if(LIBATOMIC)
+    find_library(ATOMIC NAMES atomic libatomic.so.1)
+    if(ATOMIC)
+        set(LIBATOMIC ${ATOMIC})
         message(STATUS "Found libatomic: ${LIBATOMIC}")
-    else()
-        message(FATAL_ERROR "Failed to find libatomic!")
     endif()
 endif()
 
