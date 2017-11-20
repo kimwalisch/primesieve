@@ -74,9 +74,9 @@ check_cxx_source_compiles("
         x--;
         return (int) x;
     }"
-    atomic_int64)
+    atomic64)
 
-if(NOT atomic_int64)
+if(NOT atomic64)
     find_library(ATOMIC NAMES atomic libatomic.so.1)
 
     if(ATOMIC)
@@ -85,15 +85,16 @@ if(NOT atomic_int64)
     else()
         check_cxx_source_compiles("
             #include <atomic>
+            #include <stdint.h>
             int main() {
-                std::atomic<int> x;
+                std::atomic<int32_t> x;
                 x = 1;
                 x--;
-                return x;
+                return (int) x;
             }"
-            atomic_int)
+            atomic32)
 
-        if(atomic_int)
+        if(atomic32)
             message(FATAL_ERROR "Failed to find libatomic!")
         endif()
     endif()
