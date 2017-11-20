@@ -82,7 +82,7 @@ if(NOT have_atomic)
     if(LIBATOMIC)
         message(STATUS "Found libatomic: ${LIBATOMIC}")
     else()
-        message(FATAL_ERROR "Failed to find libatomic")
+        message(FATAL_ERROR "Failed to find libatomic!")
     endif()
 endif()
 
