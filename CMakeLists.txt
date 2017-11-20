@@ -66,11 +66,12 @@ set(CMAKE_REQUIRED_FLAGS ${CMAKE_CXX11_STANDARD_COMPILE_OPTION})
 
 check_cxx_source_compiles("
     #include <atomic>
+    #include <stdint.h>
     int main() {
-        std::atomic<int> x;
+        std::atomic<int64_t> x;
         x = 1;
         x--;
-        return x;
+        return (int) x;
     }"
     have_atomic)
 
