@@ -1,3 +1,8 @@
+Changes in version 6.4, 25/11/2017
+==================================
+
+ * CMakeLists.txt: Fix libatomic detection.
+
 Changes in version 6.3, 12/11/2017
 ==================================
 
