@@ -41,13 +41,13 @@ downloaded from
 
 ```sh
 # Debian/Ubuntu
-sudo apt-get install primesieve
-
-# Windows Bash
-sudo apt-get install primesieve
+sudo apt install primesieve
 
 # macOS
 brew install primesieve
+
+# Windows using Chocolatey package manager
+choco install primesieve
 ```
 
 ## Usage examples
