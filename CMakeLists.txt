@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(primesieve)
+project(primesieve CXX)
 set(PRIMESIEVE_VERSION "6.3")
 set(PRIMESIEVE_SOVERSION "8.3.0")
 set(CMAKE_BUILD_TYPE Release)
@@ -51,9 +51,9 @@ set(LIB_SRC src/primesieve/api-c.cpp
 # Silence GCC switch fall through warnings ###########################
 
 include(CheckCXXCompilerFlag)
-check_cxx_compiler_flag(-Wno-implicit-fallthrough no_fallthrough)
+check_cxx_compiler_flag(-Wno-implicit-fallthrough Wno_fallthrough)
 
-if(no_fallthrough)
+if(Wno_fallthrough)
     set_source_files_properties(src/primesieve/EratSmall.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 

@@ -2,13 +2,14 @@ find_package(Doxygen)
 
 if(DOXYGEN_FOUND)
     find_package(LATEX)
+    find_program(DOT_FONUD dot)
+
     if(LATEX_COMPILER)
         set(HAVE_LATEX "YES")
     else()
         set(HAVE_LATEX "NO")
     endif()
 
-    find_program(DOT_FONUD dot)
     if(DOT_FONUD)
         message(STATUS "Found dot (graphviz): ${DOT_FONUD}")
         set(HAVE_DOT "YES")
