@@ -3,15 +3,15 @@
 /// @brief  Parse command-line options for the primesieve console
 ///         (terminal) application.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
 #include <primesieve.hpp>
+#include <primesieve/calculator.hpp>
 #include "cmdoptions.hpp"
-#include "calculator.hpp"
 
 #include <string>
 #include <map>

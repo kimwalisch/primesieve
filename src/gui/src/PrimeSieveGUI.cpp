@@ -1,7 +1,7 @@
 /*
  * PrimeSieveGUI.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@
 #include "PrimeSieveGUI.hpp"
 #include "ui_PrimeSieveGUI.h"
 #include "PrimeSieveProcess.hpp"
-#include "calculator.hpp"
 
 #include <primesieve.hpp>
+#include <primesieve/calculator.hpp>
 #include <primesieve/CpuInfo.hpp>
 #include <primesieve/ParallelPrimeSieve.hpp>
 #include <primesieve/pmath.hpp>
