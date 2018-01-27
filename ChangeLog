@@ -1,7 +1,9 @@
-Changes in version 6.4, 25/11/2017
+Changes in version 6.4, 27/01/2018
 ==================================
 
  * CMakeLists.txt: Fix libatomic detection.
+ * calculator.hpp: Fix integer overflow.
+ * test/calculator.cpp: Add test for expression parser.
 
 Changes in version 6.3, 12/11/2017
 ==================================
