@@ -1,7 +1,7 @@
 /*
  * PrimeSieveGUI_const.hpp -- This file is part of primesieve
  *
- * Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@
 const QString APPLICATION_NAME("primesieve");
 const QString APPLICATION_HOMEPAGE("http://primesieve.org");
 const QString APPLICATION_ABOUT(
-    "<p>Copyright &copy; 2017 Kim Walisch</p>"
+    "<p>Copyright &copy; 2018 Kim Walisch</p>"
     "<p>primesieve generates prime numbers and prime k-tuplets using a highly "
     "optimized implementation of the sieve of Eratosthenes. By the date "
     "of release this is the fastest publicly available prime generation software."
