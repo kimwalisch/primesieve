@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(primesieve)
-set(PRIMESIEVE_VERSION "6.3")
-set(PRIMESIEVE_SOVERSION "8.3.0")
+set(PRIMESIEVE_VERSION "6.4")
+set(PRIMESIEVE_SOVERSION "8.4.0")
 set(CMAKE_BUILD_TYPE Release)
 
 # Build options ######################################################
