@@ -1,6 +1,10 @@
-Changes in version 6.4, 27/01/2018
+Changes in version 6.4, 29/01/2018
 ==================================
 
+This is a minor new release, the API and ABI are
+backwards compatible.
+
+ * CMakeLists.txt: Add support for RPM packages.
  * CMakeLists.txt: Fix libatomic detection.
  * calculator.hpp: Fix integer overflow.
  * test/calculator.cpp: Add test for expression parser.
