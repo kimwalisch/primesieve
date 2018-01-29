@@ -48,6 +48,26 @@ set(LIB_SRC src/primesieve/api-c.cpp
             src/primesieve/SievingPrimes.cpp
             src/primesieve/Wheel.cpp)
 
+# These variables are needed for rpm builds ##########################
+
+if(NOT LIB_INSTALL_DIR)
+    set(LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+endif()
+
+if(NOT INCLUDE_INSTALL_DIR)
+    set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include")
+endif()
+
+if(NOT SHARE_INSTALL_PREFIX)
+    set(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share")
+endif()
+
+# Multiarch support for Debian/Ubuntu ################################
+
+if(CMAKE_LIBRARY_ARCHITECTURE)
+    set(LIB_INSTALL_DIR "${LIB_INSTALL_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}")
+endif()
+
 # Silence GCC switch fall through warnings ###########################
 
 include(CheckCXXCompilerFlag)
@@ -120,8 +140,7 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 endif()
 
-install(TARGETS libprimesieve
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_LIBRARY_ARCHITECTURE})
+install(TARGETS libprimesieve DESTINATION ${LIB_INSTALL_DIR})
 
 # static_libprimesieve ###############################################
 
@@ -134,8 +153,7 @@ if(BUILD_STATIC_LIBS AND BUILD_SHARED_LIBS)
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>)
 
-    install(TARGETS static_libprimesieve
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_LIBRARY_ARCHITECTURE})
+    install(TARGETS static_libprimesieve DESTINATION ${LIB_INSTALL_DIR})
 endif()
 
 # primesieve binary ##################################################
@@ -143,8 +161,7 @@ endif()
 if(BUILD_PRIMESIEVE)
     add_executable(primesieve ${BIN_SRC})
     target_link_libraries(primesieve libprimesieve)
-    install(TARGETS primesieve
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+    install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 endif()
 
 # Install headers ####################################################
@@ -152,7 +169,7 @@ endif()
 install(FILES include/primesieve.h
               include/primesieve.hpp
               COMPONENT libprimesieve-headers
-              DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+              DESTINATION ${INCLUDE_INSTALL_DIR})
 
 install(FILES include/primesieve/PrimeSieve.hpp
               include/primesieve/StorePrimes.hpp
@@ -161,7 +178,7 @@ install(FILES include/primesieve/PrimeSieve.hpp
               include/primesieve/primesieve_error.hpp
               include/primesieve/pmath.hpp
               COMPONENT libprimesieve-headers
-              DESTINATION ${CMAKE_INSTALL_PREFIX}/include/primesieve)
+              DESTINATION ${INCLUDE_INSTALL_DIR}/primesieve)
 
 # Regenerate man page ################################################
 
@@ -199,7 +216,7 @@ endif()
 
 if(BUILD_PRIMESIEVE)
     install(FILES ${PROJECT_SOURCE_DIR}/doc/primesieve.1
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
+            DESTINATION ${SHARE_INSTALL_PREFIX}/man/man1)
 endif()
 
 # Install primesieve.pc (pkg-config) #################################
@@ -207,7 +224,7 @@ endif()
 configure_file(primesieve.pc.in primesieve.pc @ONLY)
 
 install(FILES ${CMAKE_BINARY_DIR}/primesieve.pc
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_LIBRARY_ARCHITECTURE}/pkgconfig)
+        DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
 
 # Add subdirectories #################################################
 
