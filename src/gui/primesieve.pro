@@ -34,27 +34,27 @@ HEADERS += \
   src/PrimeSieveProcess.hpp
 
 # ---------------------------------------------------------
-# Sieve of Eratosthenes sources (src/primesieve)
+# Sieve of Eratosthenes source code
 # ---------------------------------------------------------
 
 INCLUDEPATH += ../../include
 
 SOURCES += \
-  ../primesieve/api.cpp \
-  ../primesieve/CpuInfo.cpp \
-  ../primesieve/EratBig.cpp \
-  ../primesieve/EratMedium.cpp \
-  ../primesieve/EratSmall.cpp \
-  ../primesieve/iterator.cpp \
-  ../primesieve/nthPrime.cpp \
-  ../primesieve/ParallelPrimeSieve.cpp \
-  ../primesieve/popcount.cpp \
-  ../primesieve/PreSieve.cpp \
-  ../primesieve/PrimeGenerator.cpp \
-  ../primesieve/SievingPrimes.cpp \
-  ../primesieve/PrimeSieve.cpp \
-  ../primesieve/SieveOfEratosthenes.cpp \
-  ../primesieve/Wheel.cpp
+  ../api.cpp \
+  ../CpuInfo.cpp \
+  ../EratBig.cpp \
+  ../EratMedium.cpp \
+  ../EratSmall.cpp \
+  ../iterator.cpp \
+  ../nthPrime.cpp \
+  ../ParallelPrimeSieve.cpp \
+  ../popcount.cpp \
+  ../PreSieve.cpp \
+  ../PrimeGenerator.cpp \
+  ../SievingPrimes.cpp \
+  ../PrimeSieve.cpp \
+  ../SieveOfEratosthenes.cpp \
+  ../Wheel.cpp
 
 # ---------------------------------------------------------
 # primesieve icon file

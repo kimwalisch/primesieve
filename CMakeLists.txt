@@ -30,23 +30,23 @@ set(BIN_SRC src/console/cmdoptions.cpp
 
 # primesieve library source files ####################################
 
-set(LIB_SRC src/primesieve/api-c.cpp
-            src/primesieve/api.cpp
-            src/primesieve/CpuInfo.cpp
-            src/primesieve/EratBig.cpp
-            src/primesieve/EratMedium.cpp
-            src/primesieve/EratSmall.cpp
-            src/primesieve/iterator-c.cpp
-            src/primesieve/iterator.cpp
-            src/primesieve/nthPrime.cpp
-            src/primesieve/ParallelPrimeSieve.cpp
-            src/primesieve/popcount.cpp
-            src/primesieve/PreSieve.cpp
-            src/primesieve/PrimeGenerator.cpp
-            src/primesieve/PrimeSieve.cpp
-            src/primesieve/SieveOfEratosthenes.cpp
-            src/primesieve/SievingPrimes.cpp
-            src/primesieve/Wheel.cpp)
+set(LIB_SRC src/api-c.cpp
+            src/api.cpp
+            src/CpuInfo.cpp
+            src/EratBig.cpp
+            src/EratMedium.cpp
+            src/EratSmall.cpp
+            src/iterator-c.cpp
+            src/iterator.cpp
+            src/nthPrime.cpp
+            src/ParallelPrimeSieve.cpp
+            src/popcount.cpp
+            src/PreSieve.cpp
+            src/PrimeGenerator.cpp
+            src/PrimeSieve.cpp
+            src/SieveOfEratosthenes.cpp
+            src/SievingPrimes.cpp
+            src/Wheel.cpp)
 
 # These variables are needed for rpm builds ##########################
 
@@ -74,7 +74,7 @@ include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag(-Wno-implicit-fallthrough no_fallthrough)
 
 if(no_fallthrough)
-    set_source_files_properties(src/primesieve/EratSmall.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+    set_source_files_properties(src/EratSmall.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
 # Check if libatomic is needed #######################################
