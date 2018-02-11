@@ -5,23 +5,21 @@
 [![Github Releases](https://img.shields.io/github/release/kimwalisch/primesieve.svg)](https://github.com/kimwalisch/primesieve/releases)
 
 primesieve is a program and C/C++ library that generates primes using a highly optimized
-<a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">sieve of
-Eratosthenes</a> implementation. It counts the primes below 10^10 in
-just 0.45 seconds on an Intel Core i7-6700 CPU (4 x 3.4GHz).
-primesieve can generate primes and
-<a href="http://en.wikipedia.org/wiki/Prime_k-tuple">prime k-tuplets</a>
-up to 2^64.
+[sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes)
+implementation. It counts the primes below 10^10 in just 0.45 seconds on an
+Intel Core i7-6700 CPU (4 x 3.4GHz). primesieve can generate primes and
+[prime k-tuplets](https://en.wikipedia.org/wiki/Prime_k-tuple) up to 2^64.
 
-- **Homepage:** http://primesieve.org
-- **Binaries:** http://primesieve.org/downloads
-- **API:** http://primesieve.org/api
+* **Homepage:** http://primesieve.org
+* **Binaries:** http://primesieve.org/downloads
+* **API:** http://primesieve.org/api
 
 ![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve_win10.png)
 
 ## Algorithm complexity
 
 primesieve generates primes using the segmented sieve of Eratosthenes with
-[wheel factorization](http://en.wikipedia.org/wiki/Wheel_factorization).
+[wheel factorization](https://en.wikipedia.org/wiki/Wheel_factorization).
 This algorithm has a run time complexity of
 <img src="http://primesieve.org/images/Onloglogn.svg" height="20" align="absmiddle"/>
 operations and uses
@@ -35,8 +33,7 @@ bytes per thread.
 ## Installation
 
 The primesieve console application can be installed using your operating
-system's package manager. The primesieve GUI application can be
-downloaded from
+system's package manager. The primesieve GUI application can be downloaded from
 [http://primesieve.org/downloads](http://primesieve.org/downloads).
 
 ```sh
@@ -52,8 +49,7 @@ choco install primesieve
 
 ## Usage examples
 
-The primesieve console application can generate primes and prime
-k-tuplets.
+The primesieve console application can generate primes and prime k-tuplets.
 
 ```sh
 # Count the primes below 1e10 using all CPU cores
@@ -128,8 +124,7 @@ int main()
 
 ## C API
 
-primesieve's functions are exposed as C API via the ```primesieve.h```
-header.
+primesieve's functions are exposed as C API via the ```primesieve.h``` header.
 
 ```C
 #include <primesieve.h>
@@ -162,9 +157,9 @@ c++ -O2 primes.cpp -lprimesieve
 cc  -O2 primes.c   -lprimesieve
 ```
 
-If you have built primesieve yourself then the default installation path
-is ```/usr/local/lib``` which is not part of ```LD_LIBRARY_PATH``` on many
-OSes. Hence you need to export some environment variables:
+If you have built primesieve yourself then the default installation path is 
+```/usr/local/lib``` which is not part of ```LD_LIBRARY_PATH``` on many OSes.
+Hence you need to export some environment variables:
 
 ```sh
 export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
