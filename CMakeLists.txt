@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.1)
 project(primesieve)
 set(PRIMESIEVE_VERSION "6.4")
 set(PRIMESIEVE_SOVERSION "8.4.0")
-set(CMAKE_BUILD_TYPE Release)
 
 # Build options ######################################################
 
@@ -16,11 +15,6 @@ option(BUILD_TESTS       "Build test programs"        OFF)
 if(WIN32)
     set(BUILD_SHARED_LIBS OFF)
 endif()
-
-# Compiler must support C++11 or later ###############################
-
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # primesieve binary source files #####################################
 
@@ -48,14 +42,27 @@ set(LIB_SRC src/api-c.cpp
             src/SievingPrimes.cpp
             src/Wheel.cpp)
 
-# These variables are needed for rpm builds ##########################
+# Compiler must support C++11 or later ###############################
 
-if(NOT LIB_INSTALL_DIR)
-    set(LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Set default build type to Release ##################################
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING
+        "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+        FORCE)
 endif()
+
+# These variables are needed for rpm builds ##########################
 
 if(NOT INCLUDE_INSTALL_DIR)
     set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include")
+endif()
+
+if(NOT LIB_INSTALL_DIR)
+    set(LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 endif()
 
 if(NOT SHARE_INSTALL_PREFIX)
@@ -71,9 +78,9 @@ endif()
 # Silence GCC switch fall through warnings ###########################
 
 include(CheckCXXCompilerFlag)
-check_cxx_compiler_flag(-Wno-implicit-fallthrough no_fallthrough)
+check_cxx_compiler_flag(-Wno-implicit-fallthrough Wno_fallthrough)
 
-if(no_fallthrough)
+if(Wno_fallthrough)
     set_source_files_properties(src/EratSmall.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
