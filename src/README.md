@@ -57,7 +57,7 @@
   for small sieving primes that have many multiples in each
   segment. EratSmall is a further optimized implementation of Achim
   Flammenkamp's algorithm
-  [[1]](https://github.com/kimwalisch/pi1e28#references).
+  [[1]](https://github.com/kimwalisch/primesieve/tree/master/src#references).
 
 * **EratMedium** is derived from Wheel. EratMedium is a segmented
   sieve of Eratosthenes algorithm with a modulo 210 wheel that skips
@@ -68,7 +68,7 @@
 
 * **EratBig** is derived from Wheel. EratBig is a segmented sieve of
   Eratosthenes algorithm with Tomás Oliveira's improvement for big
-  sieving primes [[2]](https://github.com/kimwalisch/pi1e28#references)
+  sieving primes [[2]](https://github.com/kimwalisch/primesieve/tree/master/src#references)
   and a modulo 210 wheel that skips multiples of 2, 3, 5 and 7. The
   wheel is implemented using a precomputed lookup table (```wheel210```
   array from ```Wheel.cpp```). EratBig is optimized for big sieving
