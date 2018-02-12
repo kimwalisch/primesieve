@@ -155,6 +155,7 @@ if(BUILD_STATIC_LIBS AND BUILD_SHARED_LIBS)
     add_library(static_libprimesieve STATIC ${LIB_SRC})
     set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(static_libprimesieve Threads::Threads ${LIBATOMIC})
+    add_dependencies(static_libprimesieve libprimesieve)
 
     target_include_directories(static_libprimesieve PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -169,6 +170,11 @@ if(BUILD_PRIMESIEVE)
     add_executable(primesieve ${BIN_SRC})
     target_link_libraries(primesieve libprimesieve)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+    # primesieve should build after static_libprimesieve
+    if(BUILD_STATIC_LIBS AND BUILD_SHARED_LIBS)
+        add_dependencies(primesieve static_libprimesieve)
+    endif()
 endif()
 
 # Install headers ####################################################
