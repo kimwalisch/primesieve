@@ -49,11 +49,6 @@ include(CMakePushCheckState)
 include(CheckCXXCompilerFlag)
 include(CheckCXXSourceCompiles)
 
-# Compiler must support C++11 or later ###############################
-
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 # Set default build type to Release ##################################
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -119,6 +114,16 @@ set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
 find_package(Threads REQUIRED)
 target_link_libraries(libprimesieve Threads::Threads ${LIBATOMIC})
 
+target_compile_features(libprimesieve
+PUBLIC
+    cxx_alias_templates
+PRIVATE
+    cxx_auto_type
+    cxx_lambdas
+    cxx_nullptr
+    cxx_range_for
+    cxx_uniform_initialization)
+
 target_include_directories(libprimesieve PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
@@ -140,6 +145,16 @@ if(BUILD_STATIC_LIBS AND BUILD_SHARED_LIBS)
     target_link_libraries(static_libprimesieve Threads::Threads ${LIBATOMIC})
     add_dependencies(static_libprimesieve libprimesieve)
 
+    target_compile_features(static_libprimesieve
+    PUBLIC
+        cxx_alias_templates
+    PRIVATE
+        cxx_auto_type
+        cxx_lambdas
+        cxx_nullptr
+        cxx_range_for
+        cxx_uniform_initialization)
+
     target_include_directories(static_libprimesieve PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>)
@@ -152,6 +167,7 @@ endif()
 if(BUILD_PRIMESIEVE)
     add_executable(primesieve ${BIN_SRC})
     target_link_libraries(primesieve libprimesieve)
+    target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
 
     # primesieve should build after static_libprimesieve
