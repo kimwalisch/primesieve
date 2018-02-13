@@ -16,8 +16,8 @@ if(WIN32)
     set(BUILD_SHARED_LIBS OFF)
 endif()
 
-# If BUILD_SHARED_LIBS is disabled the static libprimesieve will be
-# built using the libprimesieve target instead of the
+# If BUILD_SHARED_LIBS is disabled the static libprimesieve will
+# be built using the libprimesieve target instead of the
 # static_libprimesieve target
 
 if(BUILD_STATIC_LIBS)
