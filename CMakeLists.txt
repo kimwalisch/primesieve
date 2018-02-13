@@ -16,6 +16,14 @@ if(WIN32)
     set(BUILD_SHARED_LIBS OFF)
 endif()
 
+# If BUILD_SHARED_LIBS is disabled the static libprimesieve will be
+# built using the libprimesieve target instead of the
+# static_libprimesieve target
+
+if(BUILD_STATIC_LIBS)
+    set(BUILD_STATIC_LIBPRIMESIEVE ${BUILD_SHARED_LIBS})
+endif()
+
 # primesieve binary source files #####################################
 
 set(BIN_SRC src/console/cmdoptions.cpp
@@ -68,7 +76,10 @@ endif()
 # Check if libatomic is needed #######################################
 
 cmake_push_check_state()
-set(CMAKE_REQUIRED_FLAGS ${CMAKE_CXX11_STANDARD_COMPILE_OPTION})
+
+if(CMAKE_CXX11_STANDARD_COMPILE_OPTION)
+    set(CMAKE_REQUIRED_FLAGS ${CMAKE_CXX11_STANDARD_COMPILE_OPTION})
+endif()
 
 check_cxx_source_compiles("
     #include <atomic>
@@ -139,7 +150,7 @@ install(TARGETS libprimesieve DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 # static_libprimesieve ###############################################
 
-if(BUILD_STATIC_LIBS AND BUILD_SHARED_LIBS)
+if(BUILD_STATIC_LIBPRIMESIEVE)
     add_library(static_libprimesieve STATIC ${LIB_SRC})
     set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(static_libprimesieve Threads::Threads ${LIBATOMIC})
@@ -170,8 +181,7 @@ if(BUILD_PRIMESIEVE)
     target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-    # primesieve should build after static_libprimesieve
-    if(BUILD_STATIC_LIBS AND BUILD_SHARED_LIBS)
+    if(BUILD_STATIC_LIBPRIMESIEVE)
         add_dependencies(primesieve static_libprimesieve)
     endif()
 endif()
