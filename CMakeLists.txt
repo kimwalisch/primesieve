@@ -123,7 +123,7 @@ cmake_pop_check_state()
 add_library(libprimesieve ${LIB_SRC})
 set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
 find_package(Threads REQUIRED)
-target_link_libraries(libprimesieve Threads::Threads ${LIBATOMIC})
+target_link_libraries(libprimesieve PRIVATE Threads::Threads ${LIBATOMIC})
 
 target_compile_features(libprimesieve
 PUBLIC
@@ -153,7 +153,7 @@ install(TARGETS libprimesieve DESTINATION ${CMAKE_INSTALL_LIBDIR})
 if(BUILD_STATIC_LIBPRIMESIEVE)
     add_library(static_libprimesieve STATIC ${LIB_SRC})
     set_target_properties(static_libprimesieve PROPERTIES OUTPUT_NAME primesieve)
-    target_link_libraries(static_libprimesieve Threads::Threads ${LIBATOMIC})
+    target_link_libraries(static_libprimesieve PRIVATE Threads::Threads ${LIBATOMIC})
     add_dependencies(static_libprimesieve libprimesieve)
 
     target_compile_features(static_libprimesieve
