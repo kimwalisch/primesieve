@@ -153,6 +153,15 @@ if(BUILD_STATIC_LIBS)
     set_target_properties(libprimesieve-static PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${LIBATOMIC})
 
+    if(BUILD_SHARED_LIBS)
+        add_dependencies(libprimesieve-static libprimesieve)
+    endif()
+
+    if(NOT BUILD_SHARED_LIBS)
+        # make sure libprimesieve is always defined
+        add_library(libprimesieve ALIAS libprimesieve-static)
+    endif()
+
     target_compile_features(libprimesieve-static
     PUBLIC
         cxx_alias_templates
@@ -172,18 +181,6 @@ if(BUILD_STATIC_LIBS)
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-endif()
-
-# libprimesieve-static should build after libprimesieve ##############
-
-if(BUILD_SHARED_LIBS)
-    add_dependencies(libprimesieve-static libprimesieve)
-endif()
-
-# libprimesieve target should always be defined ######################
-
-if(NOT BUILD_SHARED_LIBS)
-    add_library(libprimesieve ALIAS libprimesieve-static)
 endif()
 
 # primesieve binary ##################################################
