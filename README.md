@@ -181,10 +181,10 @@ Since primesieve-6.4 you can easily link against libprimesieve in your
 
 ```CMake
 find_package(primesieve REQUIRED)
-target_link_libraries(<your target> primesieve::libprimesieve)
+target_link_libraries(your_target primesieve::libprimesieve)
 
 # Or link against the static libprimesieve
-target_link_libraries(<your target> primesieve::libprimesieve-static)
+target_link_libraries(your_target primesieve::libprimesieve-static)
 ```
 
 ## Bindings for other languages
