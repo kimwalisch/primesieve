@@ -21,6 +21,7 @@ addons:
     - g++-4.9
 
 install:
+  - sudo apt-get update -qq
   - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive texlive-latex-extra graphviz libqt4-dev qt4-qmake valgrind
   - wget --no-check-certificate http://cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.tar.gz
   - tar -xzf cmake-3.1.3-Linux-x86_64.tar.gz
