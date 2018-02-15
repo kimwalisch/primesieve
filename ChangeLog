@@ -1,10 +1,11 @@
-Changes in version 6.4, 11/02/2018
+Changes in version 6.4, 15/02/2018
 ==================================
 
 This is a minor new release, the API and ABI are
 backwards compatible.
 
- * CMakeLists.txt: Add support for RPM packages.
+ * CMakeLists.txt: Support find_package(primesieve).
+ * CMakeLists.txt: Support RPM packages.
  * CMakeLists.txt: Fix libatomic detection.
  * calculator.hpp: Fix integer overflow.
  * Move libprimesieve sources from ./src/primesieve to ./src.
