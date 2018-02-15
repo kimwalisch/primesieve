@@ -140,7 +140,7 @@ if(BUILD_SHARED_LIBS)
         $<INSTALL_INTERFACE:include>)
 
     install(TARGETS libprimesieve
-            EXPORT PrimesieveTargets
+            EXPORT primesieveTargets
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -177,7 +177,7 @@ if(BUILD_STATIC_LIBS)
         $<INSTALL_INTERFACE:include>)
 
     install(TARGETS libprimesieve-static
-            EXPORT PrimesieveTargets
+            EXPORT primesieveTargets
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -212,25 +212,25 @@ install(FILES include/primesieve/PrimeSieve.hpp
               COMPONENT libprimesieve-headers
               DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/primesieve)
 
-# CMake find_package(Primesieve) support #############################
+# CMake find_package(primesieve) support #############################
 
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/PrimesieveConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/primesieveConfigVersion.cmake"
     VERSION ${PRIMESIEVE_VERSION}
     COMPATIBILITY SameMajorVersion)
 
 configure_package_config_file(
-    "${PROJECT_SOURCE_DIR}/cmake/PrimesieveConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/PrimesieveConfig.cmake"
-    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Primesieve")
+    "${PROJECT_SOURCE_DIR}/cmake/primesieveConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/primesieveConfig.cmake"
+    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/primesieve")
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/PrimesieveConfig.cmake"
-              "${CMAKE_CURRENT_BINARY_DIR}/PrimesieveConfigVersion.cmake"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Primesieve")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/primesieveConfig.cmake"
+              "${CMAKE_CURRENT_BINARY_DIR}/primesieveConfigVersion.cmake"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/primesieve")
 
-install(EXPORT PrimesieveTargets
-        NAMESPACE Primesieve::
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Primesieve")
+install(EXPORT primesieveTargets
+        NAMESPACE primesieve::
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/primesieve")
 
 # Regenerate man page ################################################
 
