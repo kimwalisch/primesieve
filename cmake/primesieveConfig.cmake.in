@@ -1,9 +1,48 @@
+# ====================================================================
+# The primesieve CMake configuration file
+#
+# Usage from an external project:
+#     In your CMakeLists.txt, add these lines:
+#
+#     find_package(primesieve REQUIRED)
+#     target_link_libraries(your_target primesieve::primesieve)
+#
+#     To link against the static libprimesieve use:
+#
+#     find_package(primesieve REQUIRED static)
+#     target_link_libraries(your_target primesieve::primesieve)
+#
+# ====================================================================
+
 include(CMakeFindDependencyMacro)
 find_dependency(Threads)
-include("${CMAKE_CURRENT_LIST_DIR}/primesieveTargets.cmake")
 
-# Make sure primesieve::libprimesieve is always defined
-if(NOT @BUILD_SHARED_LIBS@)
-    add_library(primesieve::libprimesieve INTERFACE IMPORTED)
-    set_target_properties(primesieve::libprimesieve PROPERTIES INTERFACE_LINK_LIBRARIES "primesieve::libprimesieve-static")
+if(@BUILD_SHARED_LIBS@ AND @BUILD_STATIC_LIBS@)
+
+    if(primesieve_FIND_COMPONENTS)
+        string(TOUPPER "${primesieve_FIND_COMPONENTS}" UPPER_COMPONENTS)
+        list(FIND UPPER_COMPONENTS "STATIC" FOUND_STATIC)
+        if(FOUND_STATIC GREATER -1)
+            set(USE_STATIC_LIBPRIMESIEVE "ON")
+        endif()
+    endif()
+
+    if(USE_STATIC_LIBPRIMESIEVE)
+        include("${CMAKE_CURRENT_LIST_DIR}/primesieveStatic.cmake")
+        add_library(primesieve::primesieve INTERFACE IMPORTED)
+        set_target_properties(primesieve::primesieve PROPERTIES INTERFACE_LINK_LIBRARIES "primesieve::libprimesieve-static")
+    else()
+        include("${CMAKE_CURRENT_LIST_DIR}/primesieveShared.cmake")
+        add_library(primesieve::primesieve INTERFACE IMPORTED)
+        set_target_properties(primesieve::primesieve PROPERTIES INTERFACE_LINK_LIBRARIES "primesieve::libprimesieve")
+    endif()
+
+elseif(@BUILD_STATIC_LIBS@)
+    include("${CMAKE_CURRENT_LIST_DIR}/primesieveStatic.cmake")
+    add_library(primesieve::primesieve INTERFACE IMPORTED)
+    set_target_properties(primesieve::primesieve PROPERTIES INTERFACE_LINK_LIBRARIES "primesieve::libprimesieve-static")
+else()
+    include("${CMAKE_CURRENT_LIST_DIR}/primesieveShared.cmake")
+    add_library(primesieve::primesieve INTERFACE IMPORTED)
+    set_target_properties(primesieve::primesieve PROPERTIES INTERFACE_LINK_LIBRARIES "primesieve::libprimesieve")
 endif()
