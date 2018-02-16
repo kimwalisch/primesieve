@@ -22,3 +22,8 @@ foreach(FILENAME "primesieveShared.cmake" "primesieveStatic.cmake")
         include("${CMAKE_CURRENT_LIST_DIR}/${FILENAME}")
     endif()
 endforeach()
+
+if(NOT @BUILD_SHARED_LIBS@)
+    add_library(primesieve::libprimesieve INTERFACE IMPORTED)
+    set_target_properties(primesieve::libprimesieve PROPERTIES INTERFACE_LINK_LIBRARIES "primesieve::libprimesieve-static")
+endif()
