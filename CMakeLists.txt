@@ -140,7 +140,7 @@ if(BUILD_SHARED_LIBS)
         $<INSTALL_INTERFACE:include>)
 
     install(TARGETS libprimesieve
-            EXPORT primesieveTargets
+            EXPORT primesieveShared
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -177,7 +177,7 @@ if(BUILD_STATIC_LIBS)
         $<INSTALL_INTERFACE:include>)
 
     install(TARGETS libprimesieve-static
-            EXPORT primesieveTargets
+            EXPORT primesieveStatic
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -228,9 +228,17 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/primesieveConfig.cmake"
               "${CMAKE_CURRENT_BINARY_DIR}/primesieveConfigVersion.cmake"
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/primesieve")
 
-install(EXPORT primesieveTargets
-        NAMESPACE primesieve::
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/primesieve")
+if(BUILD_SHARED_LIBS)
+    install(EXPORT primesieveShared
+            NAMESPACE primesieve::
+            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/primesieve")
+endif()
+
+if(BUILD_STATIC_LIBS)
+    install(EXPORT primesieveStatic
+            NAMESPACE primesieve::
+            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/primesieve")
+endif()
 
 # Regenerate man page ################################################
 
