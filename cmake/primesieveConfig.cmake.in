@@ -1,40 +1,24 @@
-# ====================================================================
+# ========================================================================
 # The primesieve CMake configuration file
 #
 # Usage from an external project:
 #     In your CMakeLists.txt, add these lines:
 #
 #     find_package(primesieve REQUIRED)
-#     target_link_libraries(your_target primesieve::primesieve)
+#     target_link_libraries(your_target primesieve::libprimesieve)
 #
 #     To link against the static libprimesieve use:
 #
-#     find_package(primesieve REQUIRED static)
-#     target_link_libraries(your_target primesieve::primesieve)
+#     find_package(primesieve REQUIRED)
+#     target_link_libraries(your_target primesieve::libprimesieve-static)
 #
-# ====================================================================
+# ========================================================================
 
 include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 
-if(@BUILD_STATIC_LIBS@ AND @BUILD_SHARED_LIBS@)
-    if(primesieve_FIND_COMPONENTS)
-        string(TOUPPER "${primesieve_FIND_COMPONENTS}" UPPER_COMPONENTS)
-        list(FIND UPPER_COMPONENTS "STATIC" FOUND_STATIC)
-        if(FOUND_STATIC GREATER -1)
-            set(USE_STATIC_LIBPRIMESIEVE "ON")
-        endif()
+foreach(FILENAME "primesieveShared.cmake" "primesieveStatic.cmake")
+    if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/${FILENAME}")
+        include("${CMAKE_CURRENT_LIST_DIR}/${FILENAME}")
     endif()
-elseif(@BUILD_STATIC_LIBS@)
-    set(USE_STATIC_LIBPRIMESIEVE "ON")
-endif()
-
-if(USE_STATIC_LIBPRIMESIEVE)
-    include("${CMAKE_CURRENT_LIST_DIR}/primesieveStatic.cmake")
-    add_library(primesieve::primesieve INTERFACE IMPORTED)
-    set_target_properties(primesieve::primesieve PROPERTIES INTERFACE_LINK_LIBRARIES "primesieve::libprimesieve-static")
-else()
-    include("${CMAKE_CURRENT_LIST_DIR}/primesieveShared.cmake")
-    add_library(primesieve::primesieve INTERFACE IMPORTED)
-    set_target_properties(primesieve::primesieve PROPERTIES INTERFACE_LINK_LIBRARIES "primesieve::libprimesieve")
-endif()
+endforeach()
