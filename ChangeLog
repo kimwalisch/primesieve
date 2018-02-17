@@ -1,15 +1,23 @@
-Changes in version 6.4, 15/02/2018
+Changes in version 6.4, 17/02/2018
 ==================================
 
-This is a minor new release, the API and ABI are
-backwards compatible.
+This is a minor new release, the API and ABI are backwards compatible.
 
  * CMakeLists.txt: Support find_package(primesieve).
- * CMakeLists.txt: Support RPM packages.
+ * CMakeLists.txt: Add Fedora multiarch support.
  * CMakeLists.txt: Fix libatomic detection.
+ * CMakeLists.txt: Fix make install issue.
  * calculator.hpp: Fix integer overflow.
- * Move libprimesieve sources from ./src/primesieve to ./src.
  * test/calculator.cpp: Add test for expression parser.
+
+## Breaking Changes:
+
+The 2 changes below may potentially break the build of projects that
+have hardcoded the src/primesieve path and/or the
+src/primesieve/README.txt filename in their build script.
+
+ * Move libprimesieve sources from ./src/primesieve to ./src.
+ * Rename src/primesieve/README.txt to src/README.md.
 
 Changes in version 6.3, 12/11/2017
 ==================================
