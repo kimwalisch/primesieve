@@ -14,10 +14,10 @@ This is a minor new release, the API and ABI are backwards compatible.
 
 The 2 changes below may potentially break the build of projects that
 have hardcoded the src/primesieve path and/or the
-src/primesieve/README.txt filename in their build script.
+src/primesieve/README filename in their build script.
 
  * Move libprimesieve sources from ./src/primesieve to ./src.
- * Rename src/primesieve/README.txt to src/README.md.
+ * Rename src/primesieve/README to src/README.md.
 
 Changes in version 6.3, 12/11/2017
 ==================================
