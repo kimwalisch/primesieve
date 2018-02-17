@@ -283,7 +283,7 @@ endif()
 
 configure_file(primesieve.pc.in primesieve.pc @ONLY)
 
-install(FILES ${CMAKE_BINARY_DIR}/primesieve.pc
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/primesieve.pc
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # Add subdirectories #################################################
