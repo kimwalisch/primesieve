@@ -9,26 +9,19 @@ compiler:
   - gcc
   - clang
 
-os:
-  - linux
+env:
+  global:
+    - CXXFLAGS="-O3 -Wall -Wextra -Werror -pedantic"
+    - OMP_NUM_THREADS=4
 
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-4.9
-    - g++-4.9
+before_install:
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -qq
 
 install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive texlive-latex-extra graphviz libqt4-dev qt4-qmake valgrind
-  - wget --no-check-certificate https://cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz
-  - tar -xzf cmake-3.4.3-Linux-x86_64.tar.gz
-  - export PATH=$PWD/cmake-3.4.3-Linux-x86_64/bin:$PATH
-  - export CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9"; fi
-  - if [ "$CC" = "gcc" ]; then export CC="gcc-4.9"; fi
+  - sudo apt-get install -y make cmake ninja-build cppcheck doxygen doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind
+  - sudo rm -f /usr/bin/g++
+  - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
 
 script:
   # 1) Build using GNU make
@@ -61,4 +54,4 @@ script:
   - valgrind --error-exitcode=1 ./nth_prime 500000000
   # 6) Test using cppcheck
   - rm -rf build
-  - cppcheck . -q --error-exitcode=1 -icmake-3.4.3-Linux-x86_64 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp -itest/next_prime1.cpp -itest/prev_prime1.cpp
+  - cppcheck . -q --error-exitcode=1 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp -itest/next_prime1.cpp -itest/prev_prime1.cpp
