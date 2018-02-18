@@ -23,10 +23,10 @@ addons:
 install:
   - sudo apt-get update -qq
   - sudo apt-get install -y ninja-build cppcheck doxygen help2man texlive texlive-latex-extra graphviz libqt4-dev qt4-qmake valgrind
-  - wget --no-check-certificate http://cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.tar.gz
-  - tar -xzf cmake-3.1.3-Linux-x86_64.tar.gz
+  - wget --no-check-certificate https://cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz
+  - tar -xzf cmake-3.4.3-Linux-x86_64.tar.gz
+  - export PATH=$PWD/cmake-3.4.3-Linux-x86_64/bin:$PATH
   - export CXXFLAGS="-Wall -Wextra -Werror -Wno-long-long -pedantic -O2"
-  - export PATH=$PWD/cmake-3.1.3-Linux-x86_64/bin:$PATH
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9"; fi
   - if [ "$CC" = "gcc" ]; then export CC="gcc-4.9"; fi
 
@@ -61,4 +61,4 @@ script:
   - valgrind --error-exitcode=1 ./nth_prime 500000000
   # 6) Test using cppcheck
   - rm -rf build
-  - cppcheck . -q --error-exitcode=1 -icmake-3.1.3-Linux-x86_64 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp -itest/next_prime1.cpp -itest/prev_prime1.cpp
+  - cppcheck . -q --error-exitcode=1 -icmake-3.4.3-Linux-x86_64 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp -itest/next_prime1.cpp -itest/prev_prime1.cpp

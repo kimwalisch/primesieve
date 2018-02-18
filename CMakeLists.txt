@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.1)
-project(primesieve)
+cmake_minimum_required(VERSION 3.4)
+project(primesieve CXX)
 set(PRIMESIEVE_VERSION "6.4")
 set(PRIMESIEVE_SOVERSION "8.4.0")
 

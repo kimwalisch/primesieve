@@ -1,3 +1,4 @@
+enable_language(C)
 file(GLOB files "*.cpp" "*.c")
 
 foreach(file ${files})
