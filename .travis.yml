@@ -19,8 +19,10 @@ before_install:
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get install -y make cmake ninja-build cppcheck doxygen doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind
+  - sudo apt-get install -y gcc-5 g++-5 make cmake ninja-build cppcheck doxygen doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind
+  - sudo rm -f /usr/bin/gcc
   - sudo rm -f /usr/bin/g++
+  - sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
   - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
 
 script:
