@@ -2,6 +2,8 @@
    v2.0 | 20110126
    License: none (public domain)
 */
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:100);
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -65,11 +67,11 @@ table {
 
 /* LAYOUT STYLES */
 body {
-  font-size: 17px;
-  line-height: 1.5; 
+  font-size: 1.1em;
+  line-height: 1.55em;
   background: #fafafa url(../images/body-bg.jpg) 0 0 repeat;
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif;
-  font-weight: 200;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 100;
   color: #282828;
 }
 
@@ -110,8 +112,9 @@ td.timing_title {
 }
 
 p.optimizations_title {
+  font-family: 'Helvetica Neue', Helvetica, Arial, serif;
 	font-weight: 500;
-	font-size: 17px;
+	font-size: 1.15em;
 	color: #282828;
 }
 
@@ -250,6 +253,7 @@ a.button {
   padding-left: 68px;
   padding-top: 22px;
   font-family: 'Helvetica Neue', Helvetica, Arial, serif;
+  font-weight: 400;
   text-decoration: none;
 }
 a.button small {
@@ -302,7 +306,6 @@ form {
   
 }
 
-
 /* GENERAL ELEMENT TYPE STYLES */
 
 #main-content h1 {
@@ -314,10 +317,10 @@ form {
 
 #main-content h2 {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
-  font-size: 26px;
+  font-size: 1.7em;
   font-weight: 500;
-  padding-top: 10px;
-  margin-bottom: 10px;
+  padding-top: 0.5em;
+  margin-bottom: 0.6em;
   color: #282828;
 }
 

@@ -79,11 +79,11 @@
 <p>primesieve is a free software program and C/C++ library that
 generates primes using a
 <a href="#implementation">highly optimized sieve of Eratosthenes
-implementation</a>. It counts the primes below 10<sup>10</sup> in just
+implementation</a>. It counts the primes below 10^10 in just
 0.45 seconds on an Intel Core i7-6700 CPU (4&nbsp;x&nbsp;3.4GHz).
 primesieve can generate primes and
-<a href="http://en.wikipedia.org/wiki/Prime_k-tuple">prime k-tuplets</a>
-up to 2<sup>64</sup>.</p>
+<a href="http://en.wikipedia.org/wiki/Prime_k-tuple">prime&nbsp;k&#8209;tuplets</a>
+up to 2^64.</p>
 
 <a href="screenshots/primesieve_large.png" alt="Large screenshot">
 <img src="screenshots/primesieve_osx_macpro.png" alt="primesieve Mac OS X application" style="padding-top: 15px;  padding-bottom: 10px;"/>
@@ -188,7 +188,7 @@ size was set to the CPU's L2 cache size.</p>
 <p style="padding-top: 13px">primesieve scales linearly up to a very
 large number of CPU cores (if the interval is sufficiently large). The
 above benchmark was run on a system with 8 physical CPU cores, at each
-start offset the primes inside an interval of size 10<sup>11</sup>
+start offset the primes inside an interval of size 10^11
 were counted using different numbers of threads.</p>
 
 <h2>
@@ -258,8 +258,9 @@ Segmentation drops the memory requirement of the sieve of Eratosthenes from
 The segment size is usually chosen to fit into the CPU's fast L1 or L2
 cache memory which significantly speeds up sieving. A segmented
 version of the sieve of Eratosthenes was first published by Singleton
-in 1969 [1]. Here is a <a href="segmented_sieve.html">simple implementation
-of the segmented sieve of Eratosthenes</a>.</p>
+in 1969 <a href="#references">[1]</a>. Here is a
+<a href="segmented_sieve.html">simple implementation of the segmented
+sieve of Eratosthenes</a>.</p>
 
 <p>Wheel factorization is used to skip multiples of small primes. If a
 <i>k</i>th wheel is added to the sieve of Eratosthenes then only those
@@ -267,25 +268,27 @@ multiples are crossed off that are coprime to the first <i>k</i>
 primes, i.e. multiples that are divisible by any of the first <i>k</i>
 primes are skipped. The 1st wheel considers only odd numbers, the 2nd
 wheel (modulo 6) skips multiples of 2 and 3, the 3rd wheel (modulo 30)
-skips multiples of 2, 3, 5 and so on. Pritchard has shown in [2] that
-the running time of the sieve of Eratosthenes can be reduced by a factor of
+skips multiples of 2, 3, 5 and so on. Pritchard has shown in
+<a href="#references">[2]</a> that the running time of the sieve of
+Eratosthenes can be reduced by a factor of
 <img src="images/loglogn.svg" alt="log log n" class="formula"/>
 if the wheel size is
 <img src="images/propsqrtn.svg" alt="sqrt(n)" class="formula"/>
 but for cache reasons the sieve of Eratosthenes usually performs best
-with a modulo 30 or 210 wheel. Sorenson explains wheels in [3].</p>
+with a modulo 30 or 210 wheel. Sorenson explains wheels in
+<a href="#references">[3]</a>.</p>
 
 <p>Additionally primesieve uses Tomás Oliveira e Silva's
 <a href="http://www.ieeta.pt/~tos/software/prime_sieve.html">cache-friendly bucket list algorithm</a>
-if needed [4]. This algorithm is relatively new, it has
-been devised by Tomás Oliveira e Silva in 2001 in order to speed up
-the segmented sieve of Eratosthenes for prime numbers past 32 bits.
-The idea is to store the sieving primes into lists of buckets with
-each list being associated with a segment. A list of sieving primes
-related to a specific segment contains only those primes that have
-multiple occurrence(s) in that segment. Whilst sieving a segment only
-the primes of the related list are used for sieving and each prime is
-reassigned to the list responsible for its next multiple when
+if needed <a href="#references">[4]</a>. This algorithm is relatively
+new, it has been devised by Tomás Oliveira e Silva in 2001 in order to
+speed up the segmented sieve of Eratosthenes for prime numbers past 32
+bits. The idea is to store the sieving primes into lists of buckets
+with each list being associated with a segment. A list of sieving
+primes related to a specific segment contains only those primes that
+have multiple occurrence(s) in that segment. Whilst sieving a segment
+only the primes of the related list are used for sieving and each
+prime is reassigned to the list responsible for its next multiple when
 processed. The benefit of this approach is that it is now possible to
 use segments (i.e. sieve arrays) smaller than
 <img src="images/sqrtn.svg" alt="sqrt(n)" class="formula"/>
@@ -316,7 +319,7 @@ CPUs.</p>
 <ul>
   <li>Uses a bit array with 8 flags each 30 numbers for sieving</li>
   <li>Pre-sieves multiples of small primes ≤ 19</li>
-  <li>Compresses the sieving primes in order to improve cache efficiency [5]</li>
+  <li>Compresses the sieving primes in order to improve cache efficiency <a href="#references">[5]</a></li>
   <li>Starts crossing off multiples at the square</li>
   <li>Uses a modulo 210 wheel that skips multiples of 2, 3, 5 and 7</li>
   <li>Uses specialized algorithms for small, medium and big sieving primes</li>
@@ -348,7 +351,7 @@ file contains more technical implementation details.</p>
 </div>
 
 <p>libprimesieve natively supports C and C++. For generating an array
-(or vector) of primes and iterating over primes&nbsp;<&nbsp;2<sup>64</sup>
+(or vector) of primes and iterating over primes&nbsp;<&nbsp;2^64
 libprimesieve is easily the fastest library on the web!</p>
 
 <ul>
