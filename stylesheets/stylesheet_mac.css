@@ -85,9 +85,8 @@ p.binding {
 
 td.binding_language {
 	font-weight: 500;
-	font-size: 17px;
 	white-space: nowrap;
-	padding: 6px 12px;
+	padding: 0.2em 0.8em;
 	border: 1px solid #c3c3c3;
 }
 
