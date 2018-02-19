@@ -106,7 +106,8 @@ td.timing {
 td.timing_title {
 	text-align: center;
 	font-weight: bold;
-	padding: 6px 12px;
+  line-height: 1.3em;
+	padding: 0.8em 0.8em;
 	color: #282828;
 	border: 1px solid #c3c3c3;
 }
@@ -120,7 +121,7 @@ p.optimizations_title {
 
 span.cpu_details {
 	white-space: nowrap;
-	font-size: x-small;
+	font-size: 0.6em;
 	font-weight: normal;
 }
 
