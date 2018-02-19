@@ -247,8 +247,8 @@ a.download_targz { }
 a.button {
   width: 134px;
   height: 58px;
-  line-height: 1.2;
-  font-size: 23px;
+  line-height: 1.25;
+  font-size: 1.3em;
   color: #fff;
   padding-left: 68px;
   padding-top: 22px;
@@ -258,7 +258,7 @@ a.button {
 }
 a.button small {
   display: block;
-  font-size: 12px;
+  font-size: 0.6em;
 }
 header a.button {
   position: absolute;
