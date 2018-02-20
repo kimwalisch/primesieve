@@ -489,6 +489,8 @@ footer a:hover {
  * Copyright (c) 2015-2016 Jan Sorgalla; Licensed MIT */
 
 figure {
+    box-sizing: border-box;
+    width: 580px;
     margin: 0;
     line-height: 1.1;
     display: -webkit-box;
@@ -496,7 +498,6 @@ figure {
     display: flex;
     background: #fff;
     color: #222831;
-    box-sizing: border-box;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
 }
@@ -509,7 +510,6 @@ code {
 .terminal_header {
     letter-spacing: .2em;
     font-weight: bold;
-    width: 550px;
     font-size: 40px;
     text-indent: .4em;
     color: #9c9fa3;
@@ -532,7 +532,6 @@ code {
 .terminal_body {
     font-family: 'Open Sans', sans-serif;
     font-size: 1.05em;
-    width: 550px;
     margin-bottom: 1.5em;
     padding: 1em 1em 1.4em;
     border: 1px solid #d7d8da;
