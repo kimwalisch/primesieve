@@ -104,7 +104,7 @@ primes using the same procedure. Once we have crossed-off the multiples
 of all sieving primes in the first segment we iterate over the sieve array
 and print out (or count) the primes.</p>
 
-<p>In order to sieve the next segment we reset the sieve array and we
+<p style="padding-bottom: 0.6em">In order to sieve the next segment we reset the sieve array and we
 increment the lower offset by segment_size. Then we start
 crossing-off multiples again, for each sieving prime we retrieve the
 sieve index from the next[] array and we start crossing-off multiples
@@ -138,12 +138,30 @@ time ./segmented_sieve 1000000000</code>
           </a>
 
           <iframe src="http://ghbtns.com/github-btn.html?user=kimwalisch&repo=primesieve&type=watch&count=true&size=large" height="30" width="170" frameborder="0" scrolling="0" style="width:170px; height: 30px;" allowTransparency="true"></iframe>
-          <p class="repo-owner" style="padding-top: 14px;"><a href="https://github.com/kimwalisch/primesieve"></a> is maintained by <a href="https://github.com/kimwalisch">kimwalisch</a>.</p>
+          <p class="repo-owner" style="padding-top: 1.5em;"><a href="https://github.com/kimwalisch/primesieve"></a> is maintained by <a href="https://github.com/kimwalisch">kimwalisch</a>.</p>
 
           <p>This page was published with <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
         </aside>
       </div>
     </div>
+
+    <!-- Mac OS X:   include larger_github_gist_font_size_mac.css -->
+    <!-- Other OSes: include larger_github_gist_font_size.css -->
+    <script type="text/javascript">
+      var osId = "";
+
+      if (navigator.appVersion.indexOf("Mac") != -1) {
+        osId = "_mac";
+      }
+
+      var el = document.createElement("link");
+      el.type  = "text/css";
+      el.rel   = "stylesheet";
+      el.media = "screen";
+      el.href  = "stylesheets/" + "larger_github_gist_font_size" + osId + ".css";
+
+      document.getElementsByTagName("body")[0].appendChild(el);
+    </script>
 
   </body>
 </html>

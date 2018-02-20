@@ -2,6 +2,9 @@
    v2.0 | 20110126
    License: none (public domain)
 */
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -65,11 +68,11 @@ table {
 
 /* LAYOUT STYLES */
 body {
-  font-size: 16px;
-  line-height: 1.5; 
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 400;
-  color: #272727;
+  font-size: 1.1em;
+  line-height: 1.55;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 100;
+  color: #0d0d0d;
   background: #fafafa url(../images/body-bg.jpg) 0 0 repeat;
 }
 
@@ -104,20 +107,20 @@ td.timing {
 td.timing_title {
 	text-align: center;
 	font-weight: bold;
-	padding: 6px 12px;
+  line-height: 1.3em;
+	padding: 0.8em 0.8em;
 	color: #303030;
 	border: 1px solid #c6c6c6;
 }
 
 p.optimizations_title {
 	font-weight: bold;
-	font-size: 17px;
 	color: #303030;
 }
 
 span.cpu_details {
 	white-space: nowrap;
-	font-size: x-small;
+	font-size: 0.6em;
 	font-weight: normal;
 }
 
@@ -148,8 +151,9 @@ header {
 }
 
 header h1 {
+  font-size: 4.1em;
+  font-weight: 500;
   letter-spacing: -1px;
-  font-size: 72px;
   color: #fff;
   line-height: 1;
   margin-bottom: 0.2em;
@@ -157,9 +161,9 @@ header h1 {
 }
 
 header h2 {
-  font-size: 27px;
+  font-size: 1.6em;
+  font-weight: 500;
   color: #9ddcff;
-  font-weight: normal;
   line-height: 1.2;
   width: 540px;
   letter-spacing: 0;
@@ -313,11 +317,10 @@ form {
 }
 
 #main-content h2 {
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
-  font-size: 24px;
+  font-size: 1.5em;
   font-weight: bold;
-  padding-top: 10px;
-  margin-bottom: 10px;
+  padding-top: 0.5em;
+  margin-bottom: 0.5em;
   color: #303030;
 }
 
@@ -393,7 +396,7 @@ footer {
 }
 
 footer a {
-  color: #272727;
+  color: #0d0d0d;
 }
 footer a:hover {
   color: #444;
@@ -527,9 +530,11 @@ code {
 }
 
 .terminal_body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.05em;
     width: 550px;
     margin-bottom: 1.5em;
-    padding: 1em 1em 1.1em;
+    padding: 1em 1em 1.4em;
     border: 1px solid #d7d8da;
     border-bottom-left-radius: .4em;
     border-bottom-right-radius: .4em;
