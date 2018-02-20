@@ -68,7 +68,7 @@ table {
 /* LAYOUT STYLES */
 body {
   font-size: 1.1em;
-  line-height: 1.55em;
+  line-height: 1.55;
   background: #fafafa url(../images/body-bg.jpg) 0 0 repeat;
   font-family: 'Open Sans', sans-serif;
   font-weight: 100;
@@ -319,8 +319,8 @@ form {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 1.7em;
   font-weight: 500;
-  padding-top: 0.5em;
-  margin-bottom: 0.6em;
+  padding-top: 0.25em;
+  margin-bottom: 0.26em;
   color: #282828;
 }
 
