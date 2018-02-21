@@ -6,269 +6,182 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
 
+
 <url>
   <loc>http://primesieve.org/</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>1.00</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/./</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/.</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
   <loc>http://primesieve.org/downloads/</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/segmented_sieve.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/links.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
   <loc>http://primesieve.org/screenshots.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/index.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/segmented_sieve.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/namespaces.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/api/</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/annotated.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/links.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/files.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/downloads/.</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.64</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/examples.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/cpu_usage_screenshot.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.64</priority>
 </url>
 <url>
   <loc>http://primesieve.org/api/primesieve_8hpp.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.64</priority>
 </url>
 <url>
   <loc>http://primesieve.org/api/store_primes_in_vector_8cpp-example.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.64</priority>
 </url>
 <url>
   <loc>http://primesieve.org/api/primesieve_iterator_8cpp-example.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.64</priority>
 </url>
 <url>
   <loc>http://primesieve.org/api/classprimesieve_1_1iterator.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/primesieve_8h.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/store_primes_in_array_8c-example.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/primesieve_iterator_8c-example.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/primesieve__iterator_8h.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/namespacemembers.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/namespaceprimesieve.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/classes.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/hierarchy.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/functions.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/classprimesieve_1_1None.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/classprimesieve_1_1Callback.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/classprimesieve_1_1Callback_3_01uint64__t_00_01int_01_4.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/classprimesieve_1_1primesieve__error.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/structprimesieve__iterator.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/globals.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/dir_d44c64559bbebec7f509842c48db8b23.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/dir_a43d274c3334f915c19c9d9f24d59868.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/Callback_8hpp.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/iterator_8hpp.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/primesieve__error_8hpp.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/callback_primes_8cpp-example.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/count_primes_8c-example.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.64</priority>
 </url>
 <url>
   <loc>http://primesieve.org/api/count_primes_8cpp-example.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.64</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/nth_prime_8c-example.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/api/primesieve_8h.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.64</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/nth_prime_8cpp-example.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/api/store_primes_in_array_8c-example.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.64</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/previous_prime_8cpp-example.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/api/primesieve_iterator_8c-example.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://primesieve.org/api/iterator_8h.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://primesieve.org/api/count_primes_8c-example.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://primesieve.org/api/dir_d44c64559bbebec7f509842c48db8b23.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://primesieve.org/api/primesieve__error_8hpp.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://primesieve.org/api/iterator_8hpp.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://primesieve.org/api/namespaceprimesieve.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://primesieve.org/api/classprimesieve_1_1primesieve__error.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.51</priority>
 </url>
 <url>
   <loc>http://primesieve.org/api/classprimesieve_1_1iterator-members.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.51</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/namespacemembers_func.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/api/prev_prime_8cpp-example.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.51</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/namespacemembers_eval.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/api/nth_prime_8c-example.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.51</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/functions_func.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/api/structprimesieve__iterator.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.51</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/classprimesieve_1_1Callback-members.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/api/dir_a43d274c3334f915c19c9d9f24d59868.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.51</priority>
 </url>
 <url>
-  <loc>http://primesieve.org/api/classprimesieve_1_1Callback_3_01uint64__t_00_01int_01_4-members.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <loc>http://primesieve.org/api/prev_prime_8c-example.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://primesieve.org/api/dir_000003_000004.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>http://primesieve.org/api/nth_prime_8cpp-example.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.41</priority>
 </url>
 <url>
   <loc>http://primesieve.org/api/classprimesieve_1_1primesieve__error-members.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>http://primesieve.org/api/graph_legend.html</loc>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.41</priority>
 </url>
 <url>
   <loc>http://primesieve.org/api/structprimesieve__iterator-members.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2018-02-21T12:54:33+00:00</lastmod>
+  <priority>0.41</priority>
 </url>
-<url>
-  <loc>http://primesieve.org/api/globals_func.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/globals_eval.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
-<url>
-  <loc>http://primesieve.org/api/globals_defs.html</loc>
-  <lastmod>2014-01-14T20:56:04+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-</url>
+
+
 </urlset>
