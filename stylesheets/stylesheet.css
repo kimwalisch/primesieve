@@ -87,19 +87,19 @@ p.binding {
 td.binding_language {
 	font-weight: bold;
 	white-space: nowrap;
-	padding: 0.3em 0.7em;
+	padding: 0.35em 0.7em;
 	border: 1px solid #c3c3c3;
 }
 
 td.binding_link {
 	white-space: nowrap;
-	padding: 0.3em 0.7em;
+	padding: 0.35em 0.7em;
 	border: 1px solid #c3c3c3;
 }
 
 td.timing {
 	text-align: right;
-	padding: 0.3em 0.7em;
+	padding: 0.35em 0.7em;
 	border: 1px solid #c6c6c6;
 }
 
