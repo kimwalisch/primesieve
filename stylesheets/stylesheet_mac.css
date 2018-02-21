@@ -84,6 +84,7 @@ p.binding {
 }
 
 td.binding_language {
+  font-family: 'Helvetica Neue', Helvetica, Arial, serif;
 	font-weight: 500;
 	white-space: nowrap;
   padding: 0.35em 0.7em;
