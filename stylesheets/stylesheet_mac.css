@@ -80,25 +80,25 @@ li {
 }
 
 p.binding {
-	padding-top: 16px;
+	padding-top: 1em;
 }
 
 td.binding_language {
 	font-weight: 500;
 	white-space: nowrap;
-	padding: 0.2em 0.8em;
+  padding: 0.35em 0.7em;
 	border: 1px solid #c3c3c3;
 }
 
 td.binding_link {
 	white-space: nowrap;
-	padding: 6px 12px;
+  padding: 0.35em 0.7em;
 	border: 1px solid #c3c3c3;
 }
 
 td.timing {
 	text-align: right;
-	padding: 6px 12px;
+  padding: 0.35em 0.7em;
 	border: 1px solid #c3c3c3;
 }
 
