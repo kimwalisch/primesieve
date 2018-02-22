@@ -1,11 +1,11 @@
 /* The standard CSS for doxygen 1.8.13 */
 
 body, table, div, p, dl {
-	font: 400 14px/22px Roboto,sans-serif;
+	font: 400 1.0em/1.6em Roboto,sans-serif;
 }
 
 p.reference, p.definition {
-	font: 400 14px/22px Roboto,sans-serif;
+	font: 400 1.0em/1.6em Roboto,sans-serif;
 }
 
 /* @group Heading Levels */
@@ -15,7 +15,7 @@ h1.groupheader {
 }
 
 .title {
-	font: 400 14px/28px Roboto,sans-serif;
+	font: 400 1.0em/1.6em Roboto,sans-serif;
 	font-size: 150%;
 	font-weight: bold;
 	margin: 10px 2px;
@@ -185,8 +185,8 @@ div.fragment {
 
 div.line {
 	font-family: monospace, fixed;
-        font-size: 13px;
-	min-height: 13px;
+	font-size: 1.0em;
+	min-height: 1.0em;
 	line-height: 1.0;
 	text-wrap: unrestricted;
 	white-space: -moz-pre-wrap; /* Moz */
@@ -196,7 +196,7 @@ div.line {
 	word-wrap: break-word;      /* IE 5.5+ */
 	text-indent: -53px;
 	padding-left: 53px;
-	padding-bottom: 0px;
+	padding-bottom: 0.1em;
 	margin: 0px;
 	-webkit-transition-property: background-color, box-shadow;
 	-webkit-transition-duration: 0.5s;
@@ -658,7 +658,7 @@ dl.reflist dd {
 	font-style: normal;
 }
 .paramname code {
-        line-height: 14px;
+        line-height: 1.0em;
 }
 
 .params, .retval, .exception, .tparams {
@@ -774,7 +774,7 @@ div.directory {
         white-space: nowrap;
         width: 100%;
         text-align: right;
-        font-size: 9pt;
+        font-size: 0.8em;
 }
 
 .directory .levels span {
@@ -801,9 +801,9 @@ div.directory {
 .icon {
     font-family: Arial, Helvetica;
     font-weight: bold;
-    font-size: 12px;
-    height: 14px;
-    width: 16px;
+    font-size: 0.75em;
+    height: 1.15em;
+    width: 1.25em;
     display: inline-block;
     background-color: #728DC1;
     color: white;
@@ -853,7 +853,7 @@ div.directory {
 }
 
 table.directory {
-    font: 400 14px Roboto,sans-serif;
+    font: 400 1.0em Roboto,sans-serif;
 }
 
 /* @end */
