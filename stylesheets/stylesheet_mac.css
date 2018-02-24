@@ -191,7 +191,7 @@ header h2 {
 }
 
 @media screen and (max-width: 700px) {
-  #libprimesieve_script {
+  .github_gist_script {
     display: none;
   }
 }
