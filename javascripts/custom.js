@@ -78,24 +78,17 @@ $(document).ready(function()
     }
   }
 
-  // fallback mode, offer source code for download
-  if (primesieve_os_binary != '') {
+  if (primesieve_os_binary != '')
+  {
     $('a.download_button').attr('href', download_url + primesieve_os_binary);
+    $('a.download_button span').html(download_button_text);
   }
   else
   {
-    // use .tar.gz for all OSes except Windows
-    var file_extension = '.tar.gz';
-    if (isAppVersion('Win') != -1)
-      file_extension = '.zip';
-
-    download_button_text = file_extension + ' file';
-    $('a.download_button').attr('href', download_url + 'v' + primesieve_version + '/primesieve-' + primesieve_version + file_extension);
+    // fallback mode, offer source code for download
+    $('a.download_button').attr('href', 'https://github.com/kimwalisch/primesieve/archive/v' + primesieve_version + '.zip');
+    $('a.download_button span').html(download_button_text);
   }
-
-  $('a.download_button span').html(download_button_text);
-  $('a.download_zip').attr('href', download_url + 'v' + primesieve_version + '/primesieve-' + primesieve_version + '.zip');
-  $('a.download_targz').attr('href', download_url + 'v' + primesieve_version + '/primesieve-' + primesieve_version + '.tar.gz');
 });
 
 <!-- Google Analytics -->
