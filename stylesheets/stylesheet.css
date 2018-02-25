@@ -133,7 +133,7 @@ a:hover {
 header {
   padding-top: 40px;
   padding-bottom: 40px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: #2e7bcf url(../images/header-bg.jpg) 0 0 repeat-x;
   border-bottom: solid 1px #275da1;
 }
@@ -431,7 +431,9 @@ footer a:hover {
     padding: 5px 10px;
     position: relative;
     text-align: center;
+    font-family: 'Open Sans', sans-serif;
     font-size: 13px;
+    font-weight: 300;
     line-height: 1;
     background-color: #9CD6FF;
     color: #2879d0;
@@ -440,7 +442,9 @@ footer a:hover {
     border-radius: 5px;    
   }
   header a.button small {
+    font-family: 'Open Sans', sans-serif;
     font-size: 13px;
+    font-weight: 300;
     display: inline;
   }
   #main-content,
