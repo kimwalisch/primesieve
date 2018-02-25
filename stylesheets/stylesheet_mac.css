@@ -238,15 +238,12 @@ a.button {
   color: #fff;
   padding-left: 68px;
   padding-top: 22px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif;
   font-weight: 400;
   text-decoration: none;
 }
 a.button small {
   display: block;
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 100;
-  font-size: 0.6em;
+  font-size: 0.61em;
 }
 header a.button {
   position: absolute;
