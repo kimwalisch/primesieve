@@ -433,7 +433,7 @@ footer a:hover {
     text-align: center;
     font-family: 'Open Sans', sans-serif;
     font-size: 13px;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1;
     background-color: #9CD6FF;
     color: #2879d0;
@@ -444,7 +444,7 @@ footer a:hover {
   header a.button small {
     font-family: 'Open Sans', sans-serif;
     font-size: 13px;
-    font-weight: 300;
+    font-weight: 400;
     display: inline;
   }
   #main-content,
