@@ -6,7 +6,7 @@
 ///            <https://github.com/kimwalisch/calculator>
 /// @author    Kim Walisch, <kim.walisch@gmail.com>
 /// @copyright Copyright (C) 2013-2018 Kim Walisch
-/// @license   BSD 2-Clause, http://opensource.org/licenses/BSD-2-Clause
+/// @license   BSD 2-Clause, https://opensource.org/licenses/BSD-2-Clause
 /// @version   1.2 patched: `^' is raise to power instead of XOR.
 ///
 /// == Supported operators ==
@@ -27,7 +27,7 @@
 /// ~           Unary complement        Left              99
 ///
 /// The operator precedence has been set according to (uses the C and
-/// C++ operator precedence): http://en.wikipedia.org/wiki/Order_of_operations
+/// C++ operator precedence): https://en.wikipedia.org/wiki/Order_of_operations
 /// Operators with higher precedence are evaluated before operators
 /// with relatively lower precedence. Unary operators are set to have
 /// the highest precedence, this is not strictly correct for the power
