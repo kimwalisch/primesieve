@@ -242,7 +242,8 @@ a.button {
 }
 a.button small {
   display: block;
-  font-size: 12px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 100;
 }
 header a.button {
   position: absolute;

@@ -244,6 +244,8 @@ a.button {
 }
 a.button small {
   display: block;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 100;
   font-size: 0.6em;
 }
 header a.button {
