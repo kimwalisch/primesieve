@@ -84,7 +84,7 @@
 # References
 
 1. Achim Flammenkamp, "The Art of Prime Sieving", 1998. <br/>
-   http://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html
+   https://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html
 2. Tomás Oliveira e Silva, "Fast implementation of the segmented
    sieve of Eratosthenes", 2002. <br/>
    http://www.ieeta.pt/~tos/software/prime_sieve.html

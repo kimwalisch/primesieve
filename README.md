@@ -214,7 +214,7 @@ primesieve natively supports C and C++ and has bindings available for:
     </tr>
     <tr>
         <td><b>Haskell:</b></td>
-        <td><a href="http://hackage.haskell.org/package/primesieve">primesieve-haskell</a></td>
+        <td><a href="https://hackage.haskell.org/package/primesieve">primesieve-haskell</a></td>
     </tr>
 </table>
 
