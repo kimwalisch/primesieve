@@ -60,7 +60,7 @@ body {
   font-size: 1.1em;
   line-height: 1.55;
   font-family: 'Open Sans', sans-serif;
-  font-weight: 100;
+  font-weight: 200;
   color: #0d0d0d;
   background: #fafafa url(../images/body-bg.jpg) 0 0 repeat;
 }
@@ -366,7 +366,7 @@ ol {
 
 dl dd {
   font-style: italic;
-  font-weight: 100;
+  font-weight: 200;
 }
 
 footer {
