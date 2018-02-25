@@ -34,7 +34,7 @@
 #include <stdint.h>
 
 const QString APPLICATION_NAME("primesieve");
-const QString APPLICATION_HOMEPAGE("http://primesieve.org");
+const QString APPLICATION_HOMEPAGE("https://primesieve.org");
 const QString APPLICATION_ABOUT(
     "<p>Copyright &copy; 2018 Kim Walisch</p>"
     "<p>primesieve generates prime numbers and prime k-tuplets using a highly "

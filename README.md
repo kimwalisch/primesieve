@@ -10,9 +10,9 @@ implementation. It counts the primes below 10^10 in just 0.45 seconds on an
 Intel Core i7-6700 CPU (4 x 3.4GHz). primesieve can generate primes and
 [prime k-tuplets](https://en.wikipedia.org/wiki/Prime_k-tuple) up to 2^64.
 
-* **Homepage:** http://primesieve.org
-* **Binaries:** http://primesieve.org/downloads
-* **API:** http://primesieve.org/api
+* **Homepage:** https://primesieve.org
+* **Binaries:** https://primesieve.org/downloads
+* **API:** https://primesieve.org/api
 
 ![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve_win10.png)
 
@@ -21,20 +21,20 @@ Intel Core i7-6700 CPU (4 x 3.4GHz). primesieve can generate primes and
 primesieve generates primes using the segmented sieve of Eratosthenes with
 [wheel factorization](https://en.wikipedia.org/wiki/Wheel_factorization).
 This algorithm has a run time complexity of
-<img src="http://primesieve.org/images/Onloglogn.svg" height="20" align="absmiddle"/>
+<img src="https://primesieve.org/images/Onloglogn.svg" height="20" align="absmiddle"/>
 operations and uses
-<img src="http://primesieve.org/images/Osqrtn.svg" height="20" align="absmiddle"/>
+<img src="https://primesieve.org/images/Osqrtn.svg" height="20" align="absmiddle"/>
 memory. Furthermore primesieve uses the
 [bucket sieve](http://sweet.ua.pt/tos/software/prime_sieve.html)
 algorithm for large sieving primes which reduces the memory usage to
-<img src="http://primesieve.org/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
+<img src="https://primesieve.org/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
 bytes per thread.
 
 ## Installation
 
 The primesieve console application can be installed using your operating
 system's package manager. The primesieve GUI application can be downloaded from
-[http://primesieve.org/downloads](http://primesieve.org/downloads).
+[https://primesieve.org/downloads](https://primesieve.org/downloads).
 
 ```sh
 # Debian/Ubuntu
@@ -120,7 +120,7 @@ int main()
 ```
 
 * [More C++ examples](examples/cpp)
-* [Browse primesieve's C++ API online](http://primesieve.org/api/primesieve_8hpp.html)
+* [Browse primesieve's C++ API online](https://primesieve.org/api/primesieve_8hpp.html)
 
 ## C API
 
@@ -146,7 +146,7 @@ int main()
 ```
 
 * [More C examples](examples/c)
-* [Browse primesieve's C API online](http://primesieve.org/api/primesieve_8h.html)
+* [Browse primesieve's C API online](https://primesieve.org/api/primesieve_8h.html)
 
 ## Linking against libprimesieve
 
