@@ -391,7 +391,8 @@ footer a:hover {
     color: #2879d0;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-    border-radius: 5px;    
+    border-radius: 5px;   
+    top: 0; 
   }
   header a.button small {
     font-family: 'Open Sans', sans-serif;
