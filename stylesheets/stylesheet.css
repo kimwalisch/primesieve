@@ -487,11 +487,6 @@ figure {
     -webkit-text-size-adjust: 100%;
 }
 
-code {
-    font-size: .87em;
-    font-family: Menlo, Consolas, Monaco, Courier New, Courier, monospace;
-}
-
 .terminal_header {
     letter-spacing: .2em;
     font-weight: bold;
@@ -515,10 +510,11 @@ code {
 }
 
 .terminal_body {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.05em;
+    font-family: Menlo, Consolas, Monaco, Courier New, Courier, monospace;
+    font-size: 0.93em;
+    line-height: 1.3;
     margin-bottom: 1.5em;
-    padding: 1em 1em 1.4em;
+    padding: 1.2em 1.15em 1.5em;
     border: 1px solid #d7d8da;
     border-bottom-left-radius: .4em;
     border-bottom-right-radius: .4em;

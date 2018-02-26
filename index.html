@@ -166,14 +166,14 @@ from <a href="https://primesieve.org/downloads" style="white-space: nowrap">http
 </figure>
 <figure class="terminal_body">
 <pre class="highlight">
-<code><span style="color: #49b2ff;"># Debian/Ubuntu</span>
+<span style="color: #49b2ff;"># Debian/Ubuntu</span>
 sudo apt install primesieve
 
 <span style="color: #49b2ff;"># macOS</span>
 brew install primesieve
 
 <span style="color: #49b2ff;"># Windows using Chocolatey package manager</span>
-choco install primesieve</code>
+choco install primesieve
 </pre>
 </figure>
 
@@ -186,7 +186,7 @@ choco install primesieve</code>
 </figure>
 <figure class="terminal_body">
 <pre class="highlight">
-<code><span style="color: #49b2ff;"># Count the primes below 1e10 using all CPU cores</span>
+<span style="color: #49b2ff;"># Count the primes below 1e10 using all CPU cores</span>
 primesieve 1e10
 
 <span style="color: #49b2ff;"># Print the primes below 1000000</span>
@@ -196,7 +196,7 @@ primesieve 1000000 --print
 primesieve 1e10 2e10 --threads=4
 
 <span style="color: #49b2ff;"># Print an option summary</span>
-primesieve --help</code>
+primesieve --help
 </pre>
 </figure>
 
@@ -298,8 +298,8 @@ CPUs.</p>
 <a href="https://github.com/kimwalisch/primesieve/blob/master/src/EratSmall.cpp#L111">extreme loop unrolling</a>,
 on average crossing off a multiple uses just 1.375 instructions on
 x64 CPUs. Below is the assembly GCC generates for primesieve's inner
-sieving loop, each <code>andb</code> instruction unsets a bit (crosses
-off a multiple) in the sieve array.</p>
+sieving loop, each andb instruction unsets a bit (crosses off a
+multiple) in the sieve array.</p>
 <div class="github_gist_script" style="padding-top: 0.4em; padding-bottom: 0.4em">
 <script src="https://gist.github.com/kimwalisch/df939440b89081c39f6a.js"></script>
 </div>

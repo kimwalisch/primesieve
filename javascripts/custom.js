@@ -1,10 +1,11 @@
 $(document).ready(function()
 {
-  // Update GitHub gist font size
+  // Update font sizes
 
   if (navigator.appVersion.indexOf("Mac") != -1 || navigator.appVersion.indexOf("iOS") != -1)
   {
-    $('.gist .blob-code-inner').css('font-size', '1.15em');
+    $('.gist .blob-code-inner').css('font-size', '1.2em');
+    $('.terminal_body').css('font-size', '1.0em');
   }
   else
   {
