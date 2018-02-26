@@ -5,7 +5,8 @@ $(document).ready(function()
   if (navigator.appVersion.indexOf("Mac") != -1 || navigator.appVersion.indexOf("iOS") != -1)
   {
     $('.gist .blob-code-inner').css('font-size', '1.2em');
-    $('.terminal_body').css('font-size', '1.0em');
+    $('.terminal_body').css('font-size', '0.85em');
+    $('.terminal_body').css('line-height', '1.4em');
   }
   else
   {
