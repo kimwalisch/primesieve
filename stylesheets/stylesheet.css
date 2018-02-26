@@ -36,20 +36,25 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+
 body {
 	line-height: 1;
 }
+
 ol, ul {
 	list-style: none;
 }
+
 blockquote, q {
 	quotes: none;
 }
+
 blockquote:before, blockquote:after,
 q:before, q:after {
 	content: '';
 	content: none;
 }
+
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
@@ -232,24 +237,29 @@ aside#sidebar p.repo-owner a {
 a.button {
   width: 134px;
   height: 58px;
-  line-height: 1.2;
+  line-height: 1.25;
+  font-weight: 400;
   font-size: 23px;
   color: #fff;
   padding-left: 68px;
-  padding-top: 22px;
+  padding-top: 20px;
+  padding-bottom: 2px;
   text-decoration: none;
 }
+
 a.button small {
   display: block;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 0.6em;
 }
+
 header a.button {
   position: absolute;
   right: 0;
   top: 0;
   background: transparent url(../images/github-button.png) 0 0 no-repeat;
 }
+
 aside a.button {
   width: 138px;
   padding-left: 64px;
@@ -261,18 +271,6 @@ aside a.button {
 
 ul, ol, dl {
   margin-bottom: 20px;
-}
-
-
-/* COMMON STYLES */
-
-hr {
-  height: 1px;
-  line-height: 1px;
-  margin-top: 1em;
-  padding-bottom: 1em;
-  border: none;
-  background: transparent url('../images/hr.png') 0 0 no-repeat;
 }
 
 table {
@@ -289,7 +287,6 @@ form {
   padding: 20px;
   
 }
-
 
 /* GENERAL ELEMENT TYPE STYLES */
 
