@@ -75,6 +75,7 @@ p.binding {
 
 td.binding_language {
 	font-weight: bold;
+  color: #303030;
 	white-space: nowrap;
 	padding: 0.35em 0.7em;
 	border: 1px solid #c3c3c3;
