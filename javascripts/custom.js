@@ -1,5 +1,18 @@
 $(document).ready(function()
 {
+  // Update GitHub gist font size
+
+  if (navigator.appVersion.indexOf("Mac") != -1 || navigator.appVersion.indexOf("iOS") != -1)
+  {
+    $('.gist .blob-code-inner').css('font-size', '1.15em');
+  }
+  else
+  {
+    $('.gist .blob-code-inner').css('font-size', '1.3em');
+  }
+
+  // Update download links
+
   var primesieve_version = '6.3';
   var primesieve_win64_binary = 'v6.2/primesieve-6.2-win64.zip';
   var primesieve_win32_binary = 'v3.6/primesieve-3.6-win32.zip';
@@ -91,7 +104,8 @@ $(document).ready(function()
   }
 });
 
-<!-- Google Analytics -->
+// Google Analytics
+
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -99,4 +113,5 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 
 ga('create', 'UA-47069346-1', 'primesieve.org');
 ga('send', 'pageview');
-<!-- End Google Analytics -->
+
+// End Google Analytics
