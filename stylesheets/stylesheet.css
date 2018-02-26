@@ -24,19 +24,17 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 
-sup {
-	font-size: x-small;
-	vertical-align: super;
-}
-
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 
-body {
-	line-height: 1;
+/* LAYOUT STYLES */
+
+sup {
+	font-size: x-small;
+	vertical-align: super;
 }
 
 ol, ul {
@@ -58,7 +56,6 @@ table {
 	border-spacing: 0;
 }
 
-/* LAYOUT STYLES */
 body {
   font-size: 1.1em;
   line-height: 1.55;
@@ -226,10 +223,6 @@ aside#sidebar p.repo-owner a {
   font-weight: bold;
 }
 
-#downloads {
-  margin-bottom: 40px;
-}
-
 a.button {
   width: 134px;
   height: 58px;
@@ -286,46 +279,11 @@ form {
 
 /* GENERAL ELEMENT TYPE STYLES */
 
-#main-content h1 {
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
-  font-size: 2.8em;
-  letter-spacing: -1px;
-  color: #303030;
-}
-
 #main-content h2 {
   font-size: 1.7em;
   font-weight: bold;
   padding-top: 0.5em;
   margin-bottom: 0.5em;
-  color: #303030;
-}
-
-#main-content h3 {
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 24px;
-  margin-bottom: 8px;
-  color: #303030;
-}
-
-#main-content h4 {
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
-  font-size: 15px;
-  font-weight: bold;
-  color: #303030;
-}
-
-#main-content h5 {
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
-  font-size: 14px;
-  color: #303030;
-}
-
-#main-content h6 {
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif; 
-  font-size: .8em;
   color: #303030;
 }
 
