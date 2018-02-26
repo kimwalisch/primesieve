@@ -134,17 +134,15 @@ a:hover {
 }
 
 header {
-  padding-top: 40px;
-  padding-bottom: 40px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  padding-top: 37px;
+  padding-bottom: 43px;
+  font-weight: 500;
   background: #2e7bcf url(../images/header-bg.jpg) 0 0 repeat-x;
   border-bottom: solid 1px #275da1;
 }
 
 header h1 {
-  font-size: 4.1em;
-  font-weight: 500;
-  letter-spacing: -1px;
+  font-size: 4.0em;
   color: #fff;
   line-height: 1;
   margin-bottom: 0.2em;
@@ -254,7 +252,7 @@ a.button small {
 header a.button {
   position: absolute;
   right: 0;
-  top: 0;
+  top: 20px;
   background: transparent url(../images/github-button.png) 0 0 no-repeat;
 }
 
