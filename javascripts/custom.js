@@ -7,7 +7,6 @@ $(document).ready(function()
     $('.gist .blob-code-inner').css('font-size', '1.2em');
     $('.terminal_body').css('font-size', '0.85em');
     $('.terminal_body').css('line-height', '1.4em');
-    $('#navigation a').css('padding', '0.8em 1.07em');
   }
   else
   {
