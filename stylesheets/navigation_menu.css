@@ -33,7 +33,9 @@ nav {
 }
 
 #navigation {
-	font: bold 0.8em/1.5em "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.82em;
+  font-weight: bold;
 	text-transform: uppercase;
 	color: #303030;
 	width: 1000px;
@@ -97,7 +99,7 @@ nav {
 
 #navigation a {
 	display: block;
-	padding: 0.8em 1.1em;
+	padding: 0.75em 1.05em;
 	color: #303030;
 	text-decoration: none;
 	text-shadow: 0 1px #FFF;
