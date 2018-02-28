@@ -39,8 +39,7 @@
   </nav>
 </div>
 
-<h2>
-<a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>Segmented sieve of Eratosthenes</h2>
+<h2><a id="segmented-sieve"></a>Segmented sieve of Eratosthenes</h2>
 <p>Further down is a simple C++ implementation of the segmented sieve
 of Eratosthenes that generates the primes below n using
 <img src="images/Onloglogn.svg" alt="O(n log log n)" style="height: 1.1em; width: auto; vertical-align: middle;"/>
@@ -55,8 +54,7 @@ accesses will be cache misses. This implementation generates the
 primes below 10^9 in just 0.9 seconds (single-threaded) on an Intel
 Core i7-4770 3.4GHz CPU from 2013.</p>
 
-<h2>
-<a name="how" class="anchor" href="#how"><span class="octicon octicon-link"></span></a>How it works</h2>
+<h2><a id="how-it-works"></a>How it works</h2>
 <p>Suppose we want to sieve the primes below 10^9. We chose the size
 of the sieve array (named segment_size) to be the same size as the CPU's L1
 data cache size per core e.g. 32768 bytes. We first generate the
@@ -78,13 +76,10 @@ from there on.</p>
 
 <script src="https://gist.github.com/kimwalisch/3dc39786fab8d5b34fee.js"></script>
 
-<h2>
-<a name="build-and-run" class="anchor" href="#build-and-run"><span class="octicon octicon-link"></span></a>How to run it</h2>
+<h2><a id="build-and-run"></a>How to run it</h2>
 <p>Download <a href="segmented_sieve.cpp" download>segmented_sieve.cpp</a>, open a terminal and run:</p>
 
-<figure class="terminal_header">
-&#8226;&#8226;&#8226;
-</figure>
+<figure class="terminal_header">&#8226;&#8226;&#8226;</figure>
 <figure class="terminal_body">
 <pre class="highlight">
 <span style="color: #49b2ff;"># Compile using default C++ compiler</span>
