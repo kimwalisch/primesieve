@@ -176,13 +176,13 @@ header h2 {
 }
 
 @media screen and (max-width: 850px) {
-  #timings {
+  #timings_div {
     display: none;
   }
 }
 
 @media screen and (max-width: 700px) {
-  #inner_loop {
+  #inner_loop_div {
     display: none;
   }
 }
@@ -194,7 +194,7 @@ header h2 {
 }
 
 @media screen and (max-width: 950px) {
-  #references {
+  #references_div {
     display: none;
   }
 }
