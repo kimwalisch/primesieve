@@ -214,8 +214,8 @@ aside#sidebar {
   min-height: 504px;
   float: right;
   background: transparent url(../images/sidebar-bg.jpg) 0 0 no-repeat;
-  font-size: 13px;
-  line-height: 1.3;
+  font-size: 0.75em;
+  line-height: 1.4;
 }
 
 aside#sidebar p.repo-owner,
