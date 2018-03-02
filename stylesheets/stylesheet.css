@@ -211,7 +211,7 @@ header h2 {
 aside#sidebar {
   width: 200px;
   padding-left: 20px;
-  min-height: 504px;
+  min-height: 500px;
   float: right;
   background: transparent url(../images/sidebar-bg.jpg) 0 0 no-repeat;
   font-size: 0.75em;
@@ -254,8 +254,8 @@ aside a.button {
   padding-left: 64px;
   display: block;
   background: transparent url(../images/download-button.png) 0 0 no-repeat;
-  margin-bottom: 20px;
   font-size: 21px;
+  margin-bottom: 1.0em;
 }
 
 ul, ol, dl {
