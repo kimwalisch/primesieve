@@ -14,14 +14,14 @@
 </g>
 </defs>
 <g id="surface1">
-<g style="fill:rgb(17.651367%,17.651367%,17.651367%);fill-opacity:1;">
+<g style="fill:rgb(13%,13%,13%);fill-opacity:1;">
   <use xlink:href="#glyph0-0" x="0.228906" y="8.71797"/>
 </g>
-<g style="fill:rgb(17.651367%,17.651367%,17.651367%);fill-opacity:1;">
+<g style="fill:rgb(13%,13%,13%);fill-opacity:1;">
   <use xlink:href="#glyph0-1" x="10.741006" y="1.05899"/>
 </g>
-<path style="fill:none;stroke-width:4.05;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(17.651367%,17.651367%,17.651367%);stroke-opacity:1;stroke-miterlimit:10;" d="M 190.390625 101.445312 L 250.234375 101.445312 " transform="matrix(0.1,0,0,-0.1,0,11)"/>
-<g style="fill:rgb(17.651367%,17.651367%,17.651367%);fill-opacity:1;">
+<path style="fill:none;stroke-width:4.05;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(13%,13%,13%);stroke-opacity:1;stroke-miterlimit:10;" d="M 190.390625 101.445312 L 250.234375 101.445312 " transform="matrix(0.1,0,0,-0.1,0,11)"/>
+<g style="fill:rgb(13%,13%,13%);fill-opacity:1;">
   <use xlink:href="#glyph1-0" x="19.0391" y="8.71797"/>
 </g>
 </g>

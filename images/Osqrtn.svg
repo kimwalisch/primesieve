@@ -20,20 +20,20 @@
 </g>
 </defs>
 <g id="surface1">
-<g style="fill:rgb(17.651367%,17.651367%,17.651367%);fill-opacity:1;">
+<g style="fill:rgb(13%,13%,13%);fill-opacity:1;">
   <use xlink:href="#glyph0-0" x="-0.326953" y="8.71797"/>
 </g>
-<g style="fill:rgb(17.651367%,17.651367%,17.651367%);fill-opacity:1;">
+<g style="fill:rgb(13%,13%,13%);fill-opacity:1;">
   <use xlink:href="#glyph1-0" x="7.548047" y="8.71797"/>
 </g>
-<g style="fill:rgb(17.651367%,17.651367%,17.651367%);fill-opacity:1;">
+<g style="fill:rgb(13%,13%,13%);fill-opacity:1;">
   <use xlink:href="#glyph2-0" x="11.417967" y="1.05899"/>
 </g>
-<path style="fill:none;stroke-width:4.05;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(17.651367%,17.651367%,17.651367%);stroke-opacity:1;stroke-miterlimit:10;" d="M 197.265625 111.445312 L 257.109375 111.445312 " transform="matrix(0.1,0,0,-0.1,0,12)"/>
-<g style="fill:rgb(17.651367%,17.651367%,17.651367%);fill-opacity:1;">
+<path style="fill:none;stroke-width:4.05;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(13%,13%,13%);stroke-opacity:1;stroke-miterlimit:10;" d="M 197.265625 111.445312 L 257.109375 111.445312 " transform="matrix(0.1,0,0,-0.1,0,12)"/>
+<g style="fill:rgb(13%,13%,13%);fill-opacity:1;">
   <use xlink:href="#glyph0-1" x="19.725" y="8.71797"/>
 </g>
-<g style="fill:rgb(17.651367%,17.651367%,17.651367%);fill-opacity:1;">
+<g style="fill:rgb(13%,13%,13%);fill-opacity:1;">
   <use xlink:href="#glyph1-1" x="25.70117" y="8.71797"/>
 </g>
 </g>

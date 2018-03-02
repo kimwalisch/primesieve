@@ -11,11 +11,11 @@
 </g>
 </defs>
 <g id="surface1">
-<g style="fill:rgb(17.651367%,17.651367%,17.651367%);fill-opacity:1;">
+<g style="fill:rgb(13%,13%,13%);fill-opacity:1;">
   <use xlink:href="#glyph0-0" x="-0.514844" y="1.05898"/>
 </g>
-<path style="fill:none;stroke-width:4.05;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(17.651367%,17.651367%,17.651367%);stroke-opacity:1;stroke-miterlimit:10;" d="M 77.8125 101.445312 L 137.695312 101.445312 " transform="matrix(0.1,0,0,-0.1,0,11)"/>
-<g style="fill:rgb(17.651367%,17.651367%,17.651367%);fill-opacity:1;">
+<path style="fill:none;stroke-width:4.05;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(13%,13%,13%);stroke-opacity:1;stroke-miterlimit:10;" d="M 77.8125 101.445312 L 137.695312 101.445312 " transform="matrix(0.1,0,0,-0.1,0,11)"/>
+<g style="fill:rgb(13%,13%,13%);fill-opacity:1;">
   <use xlink:href="#glyph1-0" x="7.7832" y="8.71797"/>
 </g>
 </g>
