@@ -62,7 +62,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-weight: 100;
   color: #0d0d0d;
-  background: #fafafa url(../images/body-bg.jpg) 0 0 repeat;
+  background: #fafafa;
 }
 
 li {
@@ -322,7 +322,6 @@ dl dd {
 }
 
 footer {
-  background: transparent url('../images/hr.png') 0 0 no-repeat;
   margin-top: 40px;
   padding-top: 20px;
   padding-bottom: 30px;
