@@ -69,7 +69,7 @@ License URI: http://www.opensource.org/licenses/mit-license.php
 	background: -webkit-linear-gradient(top, #F7F7F7 0%,#EDEDED 100%); /* Chrome10+,Safari5.1+ */
 	background: -o-linear-gradient(top, #F7F7F7 0%,#EDEDED 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top, #F7F7F7 0%,#EDEDED 100%); /* IE10+ */
-	background: linear-gradient(top, #F7F7F7 0%,#EDEDED 100%); /* W3C */
+	background: linear-gradient(to bottom, #F7F7F7 0%,#EDEDED 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F7F7F7', endColorstr='#EDEDED',GradientType=0 ); /* IE6-9 */
 }
 
@@ -83,7 +83,7 @@ License URI: http://www.opensource.org/licenses/mit-license.php
 	background: -webkit-linear-gradient(top, #4D4D4D 0%,#262626 100%); /* Chrome10+,Safari5.1+ */
 	background: -o-linear-gradient(top, #4D4D4D 0%,#262626 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top, #4D4D4D 0%,#262626 100%); /* IE10+ */
-	background: linear-gradient(top, #4D4D4D 0%,#262626 100%); /* W3C */
+	background: linear-gradient(to bottom, #4D4D4D 0%,#262626 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4D4D4D', endColorstr='#262626',GradientType=0 ); /* IE6-9 */
 }
 
