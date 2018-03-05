@@ -167,7 +167,39 @@ multiple in the sieve array.</p>
 corresponds to a prime. Instead of iterating over each bit and checking
 whether it is set or not we will use a precomputed popcnt lookup table
 that tells us how many bits are set in each byte, this is much faster.</p>
-<script src="https://gist.github.com/kimwalisch/77553c9dbd2e67e3961a722c9d23e958.js"></script>
+<p>We also need to unset the bits in the sieve array that correspond to
+numbers > sieving limit. These are the most significant bits in the
+last byte of the sieve array.</p>
+<script src="https://gist.github.com/kimwalisch/4c0703e97f3594dcb9b9ed83e55852a4.js"></script>
+
+<h2><a id="faster-bit-sieving"></a>Why is bit sieving faster?</h2>
+<p>The performance of the segmented sieve of Eratosthenes mainly
+depends on CPU caching. If the sieve array fits into the CPU's L1 or
+L2 cache sieving will be extremely fast, if however the sieve array
+is larger than the CPU's L2 cache size the sieving performance
+will deteriorate by up to 2 orders of magnitude. As the size of the
+sieve array is set to the square root of the sieving limit the sieve
+array will not fit into the CPU's cache if the sieving limit is
+sufficiently large e.g. 10^10.</p>
+<p>By using a bit array for sieving the sieve array uses less
+memory and hence it will fit into the CPU's caches even for larger
+sieving limits. Actually the bit sieving array will fit into the CPU's
+L1 cache up to ~&nbsp;10^11.4 and into the CPU's L2 cache up to
+~&nbsp;10^13.8.</p>
+
+<h2><a id="build-and-run"></a>Run the segmented bit sieve</h2>
+<p>Download <a href="segmented_bit_sieve.cpp" download>segmented_bit_sieve.cpp</a>, open a terminal and run:</p>
+
+<figure class="terminal_header">&#8226;&#8226;&#8226;</figure>
+<figure class="terminal_body">
+<pre class="highlight">
+<span style="color: #49b2ff;"># Compile using default C++ compiler</span>
+c++ -O3 segmented_bit_sieve -o segmented_bit_sieve
+
+<span style="color: #49b2ff;"># Count the primes below 10^9</span>
+time ./segmented_bit_sieve 1000000000
+</pre>
+</figure>
 
 </section>
 
