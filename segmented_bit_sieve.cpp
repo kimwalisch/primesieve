@@ -105,8 +105,8 @@ void segmented_sieve(int64_t limit)
     }
 
     // unset bits > limit
-    if (high >= limit)
-      sieve[sieve_size - 1] &= ~(0xff << ((limit + 1) % 16 / 2));
+    if (low + segment_size > limit)
+      sieve[(limit + 1 - low) / 16] &= ~(0xff << ((limit + 1) % 16 / 2));
 
     for (int64_t n = 0; n < sieve_size; n++)
       count += popcnt[sieve[n]];
