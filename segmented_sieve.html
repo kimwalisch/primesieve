@@ -140,6 +140,28 @@ time ./segmented_sieve 1000000000
 </pre>
 </figure>
 
+<h2><a id="bit-array"></a>Using a bit array</h2>
+<p>The segmented sieve of Eratosthenes implementation presented before
+is both simple and fast. But what if we wanted to further optimize it so that
+it runs even faster? Well the next step is to change our implementation
+so that it uses a bit array instead of a byte array for sieving.</p>
+<p>The idea is to map numbers to bits in the sieve array e.g.
+we define that each bit in the sieve array corresponds to an odd
+number. Hence bit0&nbsp;=&nbsp;1, bit1&nbsp;=&nbsp;3, bit2&nbsp;=&nbsp;5,
+bit3&nbsp;=&nbsp;7 and so forth. This also means that each byte of the sieve
+array corresponds to a interval, as each byte has 8 bits
+byte0&nbsp;=&nbsp;[0,&nbsp;15], byte1&nbsp;=&nbsp;[16,&nbsp;31],
+byte2&nbsp;=&nbsp;[32,&nbsp;47] and so forth.</p>
+
+<h2><a id="segmented-bit-sieve"></a>Segmented bit sieving</h2>
+<p>This loop is very similar to the segmented byte sieving loop. But
+here when we cross off a multiple we unset the corresponding bit instead
+of setting the corresponding byte to false. We divide the multiple by
+16 (right shift by 4) to find the corresponding byte and we use the
+unset_bit look up table to mask off the bit corresponding to the
+multiple in the sieve array.</p>
+<script src="https://gist.github.com/kimwalisch/77553c9dbd2e67e3961a722c9d23e958.js"></script>
+
 </section>
 
         <aside id="sidebar">
