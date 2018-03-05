@@ -162,6 +162,13 @@ unset_bit look up table to mask off the bit corresponding to the
 multiple in the sieve array.</p>
 <script src="https://gist.github.com/kimwalisch/77553c9dbd2e67e3961a722c9d23e958.js"></script>
 
+<h2><a id="counting-bits"></a>Counting bits</h2>
+<p>Each 1 bit that remains in our sieve array after the sieving step
+corresponds to a prime. Instead of iterating over each bit and checking
+whether it is set or not we will use a precomputed popcnt lookup table
+that tells us how many bits are set in each byte, this is much faster.</p>
+<script src="https://gist.github.com/kimwalisch/77553c9dbd2e67e3961a722c9d23e958.js"></script>
+
 </section>
 
         <aside id="sidebar">
