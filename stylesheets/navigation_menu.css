@@ -22,16 +22,6 @@ License URI: http://www.opensource.org/licenses/mit-license.php
     }
 }
 
-nav {
-	display: block;
-}
-
-* {
-	margin: 0;
-	padding: 0;
-	outline: none;
-}
-
 #navigation {
   font-family: 'Open Sans', sans-serif;
   font-size: 0.82em;
