@@ -95,7 +95,7 @@ void segmented_sieve(int64_t limit)
       }
     }
 
-    // segmented sieve using bit array
+    // sieve segment using bit array
     for (std::size_t i = 0; i < primes.size(); i++)
     {
       int64_t j = multiples[i];

@@ -60,7 +60,7 @@ void segmented_sieve(int64_t limit)
       }
     }
 
-    // segmented sieve
+    // sieve the current segment
     for (std::size_t i = 0; i < primes.size(); i++)
     {
       int64_t j = multiples[i];
