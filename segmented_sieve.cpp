@@ -2,8 +2,8 @@
 /// @author   Kim Walisch, <kim.walisch@gmail.com> 
 /// @brief    This is a simple implementation of the segmented sieve of
 ///           Eratosthenes with a few optimizations. It generates the
-///           primes below 10^9 in 0.9 seconds (single-threaded) on an
-///           Intel Core i7-4770 CPU (3.4 GHz) from 2013.
+///           primes below 10^9 in 0.8 seconds (single-threaded) on an
+///           Intel Core i7-6700 3.4 GHz CPU.
 /// @license  Public domain.
 
 #include <iostream>
