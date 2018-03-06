@@ -104,9 +104,9 @@ void segmented_sieve(int64_t limit)
     }
 
     // unset bits > limit
-    if (high == limit && limit % 16 < 15)
+    if (high == limit)
     {
-      int64_t bits = 0xff << ((limit + 1) % 16 / 2);
+      int64_t bits = 0xff << (limit % 16 + 1) / 2;
       sieve[sieve_size - 1] &= ~bits;
     }
 
