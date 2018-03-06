@@ -41,7 +41,8 @@ void segmented_sieve(int64_t limit)
     std::fill(sieve.begin(), sieve.end(), true);
 
     // current segment = [low, high]
-    int64_t high = std::min(low + segment_size - 1, limit);
+    int64_t high = low + segment_size - 1;
+    high = std::min(high, limit);
 
     // generate sieving primes using simple sieve of Eratosthenes
     for (; i * i <= high; i += 2)
