@@ -42,16 +42,15 @@ void segmented_sieve(int64_t limit)
 
     // current segment = [low, high]
     int64_t high = std::min(low + segment_size - 1, limit);
-    int64_t sqrt_high = (int64_t) std::sqrt(high);
 
     // generate sieving primes using simple sieve of Eratosthenes
-    for (; i <= sqrt_high; i += 2)
+    for (; i * i <= high; i += 2)
       if (is_prime[i])
         for (int64_t j = i * i; j <= sqrt; j += i)
           is_prime[j] = false;
 
     // initialize sieving primes for segmented sieve
-    for (; s <= sqrt_high; s += 2)
+    for (; s * s <= high; s += 2)
     {
       if (is_prime[s])
       {
