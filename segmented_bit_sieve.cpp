@@ -2,8 +2,8 @@
 /// @author   Kim Walisch, <kim.walisch@gmail.com> 
 /// @brief    This is an implementation of the segmented sieve of
 ///           Eratosthenes which uses a bit array with 16 numbers per
-///           byte. It generates the primes below 10^10 in 8.21 seconds
-///           on an Intel Core i7-4770 CPU (3.4 GHz) from 2013.
+///           byte. It generates the primes below 10^10 in 7.25 seconds
+///           on an Intel Core i7-6700 3.4 GHz CPU.
 /// @license  Public domain.
 
 #include <iostream>
