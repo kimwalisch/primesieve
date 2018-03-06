@@ -67,8 +67,8 @@ sieve of Eratosthenes implementation</a> due to its more efficient
 CPU cache usage i.e. it uses the CPU's L1 data cache size as its sieve
 array size. This ensures that less than 1 percent of the memory
 accesses will be cache misses. This implementation generates the
-primes below 10^9 in just 0.9 seconds (single-threaded) on an Intel
-Core i7-4770 3.4GHz CPU from 2013.</p>
+primes below 10^9 in just 0.8 seconds (single-threaded) on an Intel
+Core i7-6700 3.4GHz CPU.</p>
 
 <h2><a id="initialization"></a>Initialization</h2>
 <p>We set the size of the sieve array named segment_size to be the
@@ -176,21 +176,6 @@ last byte of the sieve array.</p>
 document.write('<div id=\"gist87808872\" class=\"gist\">\n    <div class=\"gist-file\">\n      <div class=\"gist-data\">\n        <div class=\"js-gist-file-update-container js-task-list-container file-box\">\n  <div id=\"file-segmented_bit_sieve2-cpp\" class=\"file\">\n    \n\n  <div itemprop=\"text\" class=\"blob-wrapper data type-c\">\n      <table class=\"highlight tab-size js-file-line-container\" data-tab-size=\"8\">\n      <tr>\n        <td id=\"file-segmented_bit_sieve2-cpp-L1\" class=\"blob-num js-line-number\" data-line-number=\"1\"><\/td>\n        <td id=\"file-segmented_bit_sieve2-cpp-LC1\" class=\"blob-code blob-code-inner js-file-line\"><span class=\"pl-c\"><span class=\"pl-c\">//<\/span> unset bits &gt; limit<\/span><\/td>\n      <\/tr>\n      <tr>\n        <td id=\"file-segmented_bit_sieve2-cpp-L2\" class=\"blob-num js-line-number\" data-line-number=\"2\"><\/td>\n        <td id=\"file-segmented_bit_sieve2-cpp-LC2\" class=\"blob-code blob-code-inner js-file-line\"><span class=\"pl-k\">if<\/span> (high == limit)<\/td>\n      <\/tr>\n      <tr>\n        <td id=\"file-segmented_bit_sieve2-cpp-L3\" class=\"blob-num js-line-number\" data-line-number=\"3\"><\/td>\n        <td id=\"file-segmented_bit_sieve2-cpp-LC3\" class=\"blob-code blob-code-inner js-file-line\">{<\/td>\n      <\/tr>\n      <tr>\n        <td id=\"file-segmented_bit_sieve2-cpp-L4\" class=\"blob-num js-line-number\" data-line-number=\"4\"><\/td>\n        <td id=\"file-segmented_bit_sieve2-cpp-LC4\" class=\"blob-code blob-code-inner js-file-line\">  <span class=\"pl-c1\">int64_t<\/span> bits = <span class=\"pl-c1\">0xff<\/span> &lt;&lt; (limit % <span class=\"pl-c1\">16<\/span> + <span class=\"pl-c1\">1<\/span>) / <span class=\"pl-c1\">2<\/span>;<\/td>\n      <\/tr>\n      <tr>\n        <td id=\"file-segmented_bit_sieve2-cpp-L5\" class=\"blob-num js-line-number\" data-line-number=\"5\"><\/td>\n        <td id=\"file-segmented_bit_sieve2-cpp-LC5\" class=\"blob-code blob-code-inner js-file-line\">  sieve[sieve_size - <span class=\"pl-c1\">1<\/span>] &amp;= ~bits;<\/td>\n      <\/tr>\n      <tr>\n        <td id=\"file-segmented_bit_sieve2-cpp-L6\" class=\"blob-num js-line-number\" data-line-number=\"6\"><\/td>\n        <td id=\"file-segmented_bit_sieve2-cpp-LC6\" class=\"blob-code blob-code-inner js-file-line\">}<\/td>\n      <\/tr>\n      <tr>\n        <td id=\"file-segmented_bit_sieve2-cpp-L7\" class=\"blob-num js-line-number\" data-line-number=\"7\"><\/td>\n        <td id=\"file-segmented_bit_sieve2-cpp-LC7\" class=\"blob-code blob-code-inner js-file-line\">\n<\/td>\n      <\/tr>\n      <tr>\n        <td id=\"file-segmented_bit_sieve2-cpp-L8\" class=\"blob-num js-line-number\" data-line-number=\"8\"><\/td>\n        <td id=\"file-segmented_bit_sieve2-cpp-LC8\" class=\"blob-code blob-code-inner js-file-line\"><span class=\"pl-c\"><span class=\"pl-c\">//<\/span> count primes<\/span><\/td>\n      <\/tr>\n      <tr>\n        <td id=\"file-segmented_bit_sieve2-cpp-L9\" class=\"blob-num js-line-number\" data-line-number=\"9\"><\/td>\n        <td id=\"file-segmented_bit_sieve2-cpp-LC9\" class=\"blob-code blob-code-inner js-file-line\"><span class=\"pl-k\">for<\/span> (<span class=\"pl-c1\">int64_t<\/span> n = <span class=\"pl-c1\">0<\/span>; n &lt; sieve_size; n++)<\/td>\n      <\/tr>\n      <tr>\n        <td id=\"file-segmented_bit_sieve2-cpp-L10\" class=\"blob-num js-line-number\" data-line-number=\"10\"><\/td>\n        <td id=\"file-segmented_bit_sieve2-cpp-LC10\" class=\"blob-code blob-code-inner js-file-line\">  count += popcnt[sieve[n]];<\/td>\n      <\/tr>\n<\/table>\n\n\n  <\/div>\n\n  <\/div>\n  \n<\/div>\n\n      <\/div>\n      <div class=\"gist-meta\">\n        <a href=\"https://gist.github.com/kimwalisch/4c0703e97f3594dcb9b9ed83e55852a4/raw/e726f21fca8bf06487a63eba967fab1a24dc9326/segmented_bit_sieve2.cpp\" style=\"float:right\">view raw<\/a>\n        <a href=\"https://gist.github.com/kimwalisch/4c0703e97f3594dcb9b9ed83e55852a4#file-segmented_bit_sieve2-cpp\">segmented_bit_sieve2.cpp<\/a>\n        hosted with &#10084; by <a href=\"https://github.com\">GitHub<\/a>\n      <\/div>\n    <\/div>\n<\/div>\n')
 </script>
 
-<h2><a id="faster-bit-sieving"></a>Why is bit sieving faster?</h2>
-<p>The performance of the segmented sieve of Eratosthenes mainly
-depends on CPU caching. If the sieve array fits into the CPU's L1 or
-L2 cache sieving will be extremely fast, if however the sieve array
-is larger than the CPU's L2 cache size the sieving performance
-will deteriorate by up to 2 orders of magnitude. As the size of the
-sieve array is set to the square root of the sieving limit the sieve
-array will not fit into the CPU's cache if the sieving limit is
-sufficiently large e.g. 10^10.</p>
-<p>By using a bit array for sieving the sieve array uses less
-memory and hence it will fit into the CPU's caches even for larger
-sieving limits. Actually the bit sieving array will fit into the CPU's
-L1 cache up to ~&nbsp;10^11.4 and into the CPU's L2 cache up to
-~&nbsp;10^13.8.</p>
-
 <h2><a id="run-segmented-bit-sieve"></a>Run the segmented bit sieve</h2>
 <p>Download <a href="segmented_bit_sieve.cpp" download>segmented_bit_sieve.cpp</a>, open a terminal and run:</p>
 
@@ -204,6 +189,75 @@ c++ -O3 segmented_bit_sieve.cpp -o segmented_bit_sieve
 time ./segmented_bit_sieve 1000000000
 </pre>
 </figure>
+
+<h2><a id="faster-bit-sieving"></a>Why is bit sieving faster?</h2>
+<p>The performance of the segmented sieve of Eratosthenes mainly
+depends on CPU caching. If the sieve array fits into the CPU's L1 or
+L2 cache sieving will be extremely fast, if however the sieve array
+is larger than the CPU's cache size the sieving performance
+will deteriorate by up to 2 orders of magnitude. As the size of the
+sieve array is set to the square root of the sieving limit the sieve
+array will not fit into the CPU's cache if the sieving limit is
+sufficiently large e.g. 10^10.</p>
+<p>By using a bit array for sieving the sieve array uses less
+memory and hence it will fit into the CPU's caches even for larger
+sieving limits. Actually the bit sieving array will fit into the CPU's
+L1 cache up to ~&nbsp;10^11.4 and into the CPU's L2 cache up to
+~&nbsp;10^13.8.</p>
+
+<h2 style="padding-bottom: 0.2em"><a id="timings"></a>Timings</h2>
+<table style="width: 750px;">
+<tr>
+    <td class="timing_title">x</td>
+    <td class="timing_title">
+      <span style="white-space: nowrap;">Prime Count</span>
+    </td>
+    <td class="timing_title">
+      <span style="white-space: nowrap;">Segmented byte sieve</span><br/>
+      <span class="cpu_details">Intel Core i7-6700, 3.4GHz, 32 KB L1 cache</span>
+    </td>
+    <td class="timing_title">
+      <span style="white-space: nowrap;">Segmented bit sieve</span><br/>
+      <span class="cpu_details">Intel Core i7-6700, 3.4GHz, 32 KB L1 cache</span>
+    </td>
+</tr>
+<tr style="background-color: white">
+    <td class="timing">10<sup>7</sup></td>
+    <td class="timing">664,579</td>
+    <td class="timing">0.03s</td>
+    <td class="timing">0.03s</td>
+</tr>
+<tr>
+    <td class="timing">10<sup>8</sup></td>
+    <td class="timing">5,761,455</td>
+    <td class="timing">0.11s</td>
+    <td class="timing">0.11s</td>
+</tr>
+<tr style="background-color: white">
+    <td class="timing">10<sup>9</sup></td>
+    <td class="timing">50,847,534</td>
+    <td class="timing">0.80s</td>
+    <td class="timing">0.67s</td>
+</tr>
+<tr>
+    <td class="timing">10<sup>10</sup></td>
+    <td class="timing">455,052,511</td>
+    <td class="timing">11.10s</td>
+    <td class="timing">7.25s</td>
+</tr>
+<tr style="background-color: white">
+    <td class="timing">10<sup>11</sup></td>
+    <td class="timing">4,118,054,813</td>
+    <td class="timing">141.88s</td>
+    <td class="timing">90.47s</td>
+</tr>
+<tr>
+    <td class="timing">10<sup>12</sup></td>
+    <td class="timing">37,607,912,018</td>
+    <td class="timing">1742.95s</td>
+    <td class="timing">1126.81s</td>
+</tr>
+</table>
 
 </section>
 
