@@ -83,7 +83,7 @@ void segmented_sieve(int64_t limit)
 int main(int argc, char** argv)
 {
   if (argc >= 2)
-    segmented_sieve(std::atol(argv[1]));
+    segmented_sieve(std::atoll(argv[1]));
   else
     segmented_sieve(1000000000);
 
