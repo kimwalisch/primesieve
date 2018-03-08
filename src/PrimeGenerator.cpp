@@ -4,7 +4,7 @@
 ///         used to reconstruct primes and prime k-tuplets from
 ///         1 bits of the sieve array.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -142,15 +142,18 @@ void PrimeGenerator::print(const byte_t* sieve, uint64_t sieveSize) const
   if (ps_.isFlag(ps_.PRINT_PRIMES))
   {
     uint64_t low = getSegmentLow();
+    ostringstream primes;
 
     for (uint64_t i = 0; i < sieveSize; i += 8)
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
       while (bits)
-        cout << nextPrime(&bits, low) << '\n';
+        primes << nextPrime(&bits, low) << '\n';
 
       low += NUMBERS_PER_BYTE * 8;
     }
+
+    cout << primes.str();
   }
 
   // print prime k-tuplets
@@ -158,6 +161,7 @@ void PrimeGenerator::print(const byte_t* sieve, uint64_t sieveSize) const
   {
     uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
     uint64_t low = getSegmentLow();
+    ostringstream kTuplets;
 
     for (; !ps_.isPrint(i); i++);
     for (uint64_t j = 0; j < sieveSize; j++, low += NUMBERS_PER_BYTE)
@@ -166,18 +170,18 @@ void PrimeGenerator::print(const byte_t* sieve, uint64_t sieveSize) const
       {
         if ((sieve[j] & *bitmask) == *bitmask)
         {
-          ostringstream kTuplet;
-          kTuplet << "(";
+          kTuplets << "(";
           uint64_t bits = *bitmask;
           while (bits != 0)
           {
-            kTuplet << nextPrime(&bits, low);
-            kTuplet << ((bits != 0) ? ", " : ")\n");
+            kTuplets << nextPrime(&bits, low);
+            kTuplets << ((bits != 0) ? ", " : ")\n");
           }
-          cout << kTuplet.str();
         }
       }
     }
+
+    cout << kTuplets.str();
   }
 }
 
