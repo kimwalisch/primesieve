@@ -2,7 +2,7 @@
 /// @file   CpuInfo.cpp
 /// @brief  Get the CPUs' cache sizes in bytes
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -129,13 +129,13 @@ string CpuInfo::getError() const
 bool CpuInfo::hasL1Cache() const
 {
   return l1CacheSize_ >= (1 << 12) &&
-         l1CacheSize_ <= (1ull << 40);
+         l1CacheSize_ <= (1 << 30);
 }
 
 bool CpuInfo::hasL2Cache() const
 {
   return l2CacheSize_ >= (1 << 12) &&
-         l2CacheSize_ <= (1ull << 40);
+         l2CacheSize_ <= (1 << 30);
 }
 
 #if defined(APPLE_SYSCTL)
