@@ -2,7 +2,7 @@
 /// @file   config.hpp
 /// @brief  primesieve compile time constants.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -20,8 +20,8 @@
 
 namespace primesieve {
 
-/// byte_t must be unsigned in primesieve
-typedef unsigned char byte_t;
+/// in primesieve bytes must have 8-bits
+typedef uint8_t byte_t;
 typedef unsigned int uint_t;
 
 enum {
