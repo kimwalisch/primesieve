@@ -3,7 +3,7 @@
 /// @brief  Fast algorithm to count the number of 1 bits in an
 ///         array using only integer operations.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -16,7 +16,7 @@ namespace {
 /// This uses fewer arithmetic operations than any other known
 /// implementation on machines with fast multiplication.
 /// It uses 12 arithmetic operations, one of which is a multiply.
-/// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
+/// https://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
 ///
 uint64_t popcount64(uint64_t x)
 {
