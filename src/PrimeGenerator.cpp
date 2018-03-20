@@ -141,19 +141,25 @@ void PrimeGenerator::print(const byte_t* sieve, uint64_t sieveSize) const
 {
   if (ps_.isFlag(ps_.PRINT_PRIMES))
   {
+    uint64_t i = 0;
     uint64_t low = getSegmentLow();
-    ostringstream primes;
 
-    for (uint64_t i = 0; i < sieveSize; i += 8)
+    while (i < sieveSize)
     {
-      uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
-      while (bits)
-        primes << nextPrime(&bits, low) << '\n';
+      uint64_t size = min(i + (1 << 16), sieveSize);
+      ostringstream primes;
 
-      low += NUMBERS_PER_BYTE * 8;
+      for (; i < size; i += 8)
+      {
+        uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
+        while (bits)
+          primes << nextPrime(&bits, low) << '\n';
+
+        low += NUMBERS_PER_BYTE * 8;
+      }
+
+      cout << primes.str();
     }
-
-    cout << primes.str();
   }
 
   // print prime k-tuplets
