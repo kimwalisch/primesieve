@@ -121,6 +121,7 @@ find_package(Threads REQUIRED)
 
 if(BUILD_SHARED_LIBS)
     add_library(libprimesieve SHARED ${LIB_SRC})
+    add_library(primesieve::primesieve ALIAS libprimesieve)
     set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve PRIVATE Threads::Threads ${LIBATOMIC})
 
@@ -164,6 +165,7 @@ if(BUILD_STATIC_LIBS)
     if(NOT BUILD_SHARED_LIBS)
         # make sure libprimesieve is always defined
         add_library(libprimesieve ALIAS libprimesieve-static)
+        add_library(primesieve::primesieve ALIAS libprimesieve-static)
     endif()
 
     target_compile_features(libprimesieve-static
