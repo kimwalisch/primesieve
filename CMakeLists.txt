@@ -117,7 +117,7 @@ cmake_pop_check_state()
 
 # libprimesieve (shared library) #####################################
 
-find_package(Threads REQUIRED)
+find_package(Threads REQUIRED QUIET)
 
 if(BUILD_SHARED_LIBS)
     add_library(libprimesieve SHARED ${LIB_SRC})

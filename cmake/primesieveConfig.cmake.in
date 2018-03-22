@@ -15,7 +15,7 @@
 # ====================================================================
 
 include(CMakeFindDependencyMacro)
-find_dependency(Threads)
+find_dependency(Threads QUIET)
 
 if(@BUILD_STATIC_LIBS@ AND @BUILD_SHARED_LIBS@)
     if(primesieve_FIND_COMPONENTS)
