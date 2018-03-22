@@ -160,11 +160,7 @@ if(BUILD_STATIC_LIBS)
 
     if(BUILD_SHARED_LIBS)
         add_dependencies(libprimesieve-static libprimesieve)
-    endif()
-
-    if(NOT BUILD_SHARED_LIBS)
-        # make sure libprimesieve is always defined
-        add_library(libprimesieve ALIAS libprimesieve-static)
+    else()
         add_library(primesieve::primesieve ALIAS libprimesieve-static)
     endif()
 
@@ -193,7 +189,7 @@ endif()
 
 if(BUILD_PRIMESIEVE)
     add_executable(primesieve ${BIN_SRC})
-    target_link_libraries(primesieve libprimesieve)
+    target_link_libraries(primesieve primesieve::primesieve)
     target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
 
