@@ -1,20 +1,15 @@
 $(document).ready(function()
 {
   // Update font sizes
+  $('.gist .blob-code-inner').css('font-size', '1.2em');
 
   if (navigator.appVersion.indexOf("Mac") != -1 || navigator.appVersion.indexOf("iOS") != -1)
   {
-    $('.gist .blob-code-inner').css('font-size', '1.2em');
     $('.terminal_body').css('font-size', '0.85em');
     $('.terminal_body').css('line-height', '1.4em');
   }
-  else
-  {
-    $('.gist .blob-code-inner').css('font-size', '1.3em');
-  }
 
   // Update download links
-
   var primesieve_version = '6.4';
   var primesieve_win64_binary = 'v6.2/primesieve-6.2-win64.zip';
   var primesieve_win32_binary = 'v3.6/primesieve-3.6-win32.zip';
