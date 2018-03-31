@@ -233,12 +233,15 @@ void PrimeSieve::sieve()
   {
     PreSieve preSieve(start_, stop_);
     PrimeGenerator primeGen(*this, preSieve);
+    uint64_t sqrtStop = primeGen.getSqrtStop();
 
     // generate sieving primes for primeGen
-    if (primeGen.getSqrtStop() > preSieve.getMaxPrime())
+    if (sqrtStop > preSieve.getMaxPrime())
     {
       SievingPrimes sp(primeGen, preSieve);
-      sp.generate();
+      uint64_t prime = sp.next_prime();
+      for (; prime <= sqrtStop; prime = sp.next_prime())
+        primeGen.sieve(prime);
     }
 
     // sieve [start, stop]

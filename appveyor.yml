@@ -6,6 +6,7 @@ version: 1.0.{build}
 branches:
   except:
     - gh-pages
+    - experimental
 
 os: Visual Studio 2017
 

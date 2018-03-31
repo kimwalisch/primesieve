@@ -29,50 +29,66 @@ SievingPrimes::SievingPrimes(PrimeGenerator& primeGen, const PreSieve& preSieve)
                       primeGen.getSieveSize() / 1024,
                       preSieve),
   primeGen_(primeGen)
-{ }
-
-void SievingPrimes::generate()
 {
+  low_ = getSegmentLow();
+  sieveIdx_ = 0;
+  num_ = 0;
+
   tinyPrimes();
-  sieve();
 }
 
-/// Generate the primes up to sqrt(sqrt(stop))
-/// using the sieve of Eratosthenes
-///
+uint64_t SievingPrimes::next_prime()
+{
+  while (!num_)
+    fill();
+
+  return primes_[--num_];
+}
+
+void SievingPrimes::fill()
+{
+  if (sieveIdx_ >= sieveSize_)
+    sieveOneSegment();
+
+  uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
+
+  while (bits)
+    primes_[num_++] = nextPrime(&bits, low_);
+
+  low_ += NUMBERS_PER_BYTE * 8;
+  sieveIdx_++;
+}
+
 void SievingPrimes::tinyPrimes()
 {
+  // we need to sieve up to the first prime > sqrt(stop)
   uint64_t n = getSqrtStop();
-  vector<char> isPrime(n + 1, true);
+  uint64_t maxPrimeGap = max_prime_gap(n + 10);
+  n += maxPrimeGap;
+
+  isPrime_.resize(n + 1, true);
 
   for (uint64_t i = 3; i * i <= n; i += 2)
-    if (isPrime[i])
+    if (isPrime_[i])
       for (uint64_t j = i * i; j <= n; j += i * 2)
-        isPrime[j] = false;
+        isPrime_[j] = false;
 
-  uint64_t s = getStart();
-  s += (~s & 1);
-
-  for (uint64_t i = s; i <= n; i += 2)
-    if (isPrime[i])
-      addSievingPrime(i);
+  tinyIdx_ = getStart();
+  tinyIdx_ += ~tinyIdx_ & 1;
 }
 
-/// Reconstruct primes <= sqrt(stop) from 1 bits of the
-/// sieve array and add them to PrimeGen
-///
-void SievingPrimes::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
+void SievingPrimes::sieveOneSegment()
 {
-  uint64_t low = getSegmentLow();
+  sieveIdx_ = 0;
+  uint64_t high = getSegmentHigh();
+  uint64_t max = isPrime_.size() - 1;
+  high = std::min(high, max);
 
-  for (uint64_t i = 0; i < sieveSize; i += 8)
-  {
-    uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
-    while (bits)
-      primeGen_.addSievingPrime(nextPrime(&bits, low));
+  for (uint64_t& i = tinyIdx_; i * i <= high; i += 2)
+    if (isPrime_[i])
+      addSievingPrime(i);
 
-    low += NUMBERS_PER_BYTE * 8;
-  }
+  sieveSegment();
 }
 
 } // namespace
