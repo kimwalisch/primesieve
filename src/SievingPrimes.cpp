@@ -1,9 +1,8 @@
 ///
 /// @file  SievingPrimes.cpp
-///        Generates the sieving primes up to sqrt(stop)
-///        and adds them to PrimeGenerator.
+///        Generates the sieving primes up n^(1/2).
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -27,68 +26,74 @@ SievingPrimes::SievingPrimes(PrimeGenerator& primeGen, const PreSieve& preSieve)
   SieveOfEratosthenes(preSieve.getMaxPrime() + 1,
                       primeGen.getSqrtStop(),
                       primeGen.getSieveSize() / 1024,
-                      preSieve),
-  primeGen_(primeGen)
+                      preSieve)
 {
-  low_ = getSegmentLow();
-  sieveIdx_ = 0;
+  low_ = 0;
   num_ = 0;
+  i_ = 0;
+  sieveIdx_ = ~0ull;
 
-  tinyPrimes();
+  tinySieve();
 }
 
-uint64_t SievingPrimes::next_prime()
+/// Sieve up to n^(1/4)
+void SievingPrimes::tinySieve()
 {
-  while (!num_)
-    fill();
+  uint64_t n = sqrtStop_;
+  tinySieve_.resize(n + 1, true);
 
-  return primes_[--num_];
+  for (uint64_t i = 3; i * i <= n; i += 2)
+    if (tinySieve_[i])
+      for (uint64_t j = i * i; j <= n; j += i * 2)
+        tinySieve_[j] = false;
+
+  tinyIdx_ = start_;
+  tinyIdx_ += ~tinyIdx_ & 1;
 }
 
 void SievingPrimes::fill()
 {
+  i_ = 0;
+
   if (sieveIdx_ >= sieveSize_)
-    sieveOneSegment();
+    if (!sieveSegment())
+      return;
 
   uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
+  uint64_t num = 0;
 
-  while (bits)
-    primes_[num_++] = nextPrime(&bits, low_);
+  for (; bits != 0; num++)
+    primes_[num] = nextPrime(&bits, low_);
 
+  num_ = num;
   low_ += NUMBERS_PER_BYTE * 8;
-  sieveIdx_++;
+  sieveIdx_ += 8;
 }
 
-void SievingPrimes::tinyPrimes()
+bool SievingPrimes::sieveSegment()
 {
-  // we need to sieve up to the first prime > sqrt(stop)
-  uint64_t n = getSqrtStop();
-  uint64_t maxPrimeGap = max_prime_gap(n + 10);
-  n += maxPrimeGap;
+  if (low_ < stop_)
+  {
+    uint64_t high = segmentHigh_;
+    uint64_t max = std::min(high, stop_);
 
-  isPrime_.resize(n + 1, true);
+    for (uint64_t& i = tinyIdx_; i * i <= max; i += 2)
+      if (tinySieve_[i])
+        addSievingPrime(i);
 
-  for (uint64_t i = 3; i * i <= n; i += 2)
-    if (isPrime_[i])
-      for (uint64_t j = i * i; j <= n; j += i * 2)
-        isPrime_[j] = false;
+    SieveOfEratosthenes::sieveSegment();
+    sieveIdx_ = 0;
 
-  tinyIdx_ = getStart();
-  tinyIdx_ += ~tinyIdx_ & 1;
-}
+    return true;
+  }
+  else
+  {
+    num_ = 1;
+    sieveIdx_ = ~0ull;
+    primes_[0] = ~0ull;
 
-void SievingPrimes::sieveOneSegment()
-{
-  sieveIdx_ = 0;
-  uint64_t high = getSegmentHigh();
-  uint64_t max = isPrime_.size() - 1;
-  high = std::min(high, max);
-
-  for (uint64_t& i = tinyIdx_; i * i <= high; i += 2)
-    if (isPrime_[i])
-      addSievingPrime(i);
-
-  sieveSegment();
+    return false;
+  }
 }
 
 } // namespace

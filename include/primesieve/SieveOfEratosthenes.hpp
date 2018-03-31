@@ -45,15 +45,6 @@ protected:
   byte_t* sieve_;
   /// Size of sieve_ in bytes (power of 2)
   uint64_t sieveSize_;
-  SieveOfEratosthenes(uint64_t, uint64_t, uint64_t, const PreSieve&);
-  virtual ~SieveOfEratosthenes() { }
-  virtual void generatePrimes(const byte_t*, uint64_t) = 0;
-  static uint64_t nextPrime(uint64_t*, uint64_t);
-  uint64_t getSegmentLow() const;
-  uint64_t getSegmentHigh() const;
-  void sieveSegment();
-private:
-  static const uint64_t bruijnBitValues_[64];
   /// Lower bound of the current segment
   uint64_t segmentLow_;
   /// Upper bound of the current segment
@@ -63,6 +54,15 @@ private:
   /// Sieve primes <= stop_
   uint64_t stop_;
   uint64_t sqrtStop_;
+  SieveOfEratosthenes(uint64_t, uint64_t, uint64_t, const PreSieve&);
+  virtual ~SieveOfEratosthenes() { }
+  virtual void generatePrimes(const byte_t*, uint64_t) = 0;
+  static uint64_t nextPrime(uint64_t*, uint64_t);
+  uint64_t getSegmentLow() const;
+  uint64_t getSegmentHigh() const;
+  void sieveSegment();
+private:
+  static const uint64_t bruijnBitValues_[64];
   const PreSieve& preSieve_;
   uint64_t maxPreSieve_;
   uint64_t maxEratSmall_;
@@ -97,12 +97,10 @@ inline uint64_t SieveOfEratosthenes::nextPrime(uint64_t* bits, uint64_t low)
 ///
 inline void SieveOfEratosthenes::sieve(uint64_t prime)
 {
-  uint64_t square = prime * prime;
-
   // This loop is executed once all primes <= sqrt(segmentHigh)
   // required to sieve the next segment have been
   // added to the erat* objects further down
-  while (segmentHigh_ < square)
+  while (prime * prime > segmentHigh_)
     sieveSegment();
 
   addSievingPrime(prime);
