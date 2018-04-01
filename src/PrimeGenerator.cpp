@@ -60,8 +60,8 @@ void PrimeGenerator::sieve()
   {
     // generate sieving primes
     SievingPrimes sievingPrimes(*this, preSieve_);
-    uint64_t prime = sievingPrimes.next_prime();
-    for (; prime <= sqrtStop_; prime = sievingPrimes.next_prime())
+    uint64_t prime = sievingPrimes.nextPrime();
+    for (; prime <= sqrtStop_; prime = sievingPrimes.nextPrime())
       Erat::sieve(prime);
   }
 
@@ -116,7 +116,7 @@ void PrimeGenerator::storePrimes(Store& store, const byte_t* sieve, uint64_t sie
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
     while (bits)
-      store(nextPrime(&bits, low));
+      store(getPrime(&bits, low));
 
     low += NUMBERS_PER_BYTE * 8;
   }
@@ -169,7 +169,7 @@ void PrimeGenerator::print(const byte_t* sieve, uint64_t sieveSize) const
       {
         uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
         while (bits)
-          primes << nextPrime(&bits, low) << '\n';
+          primes << getPrime(&bits, low) << '\n';
 
         low += NUMBERS_PER_BYTE * 8;
       }
@@ -196,7 +196,7 @@ void PrimeGenerator::print(const byte_t* sieve, uint64_t sieveSize) const
           uint64_t bits = *bitmask;
           while (bits != 0)
           {
-            kTuplets << nextPrime(&bits, low);
+            kTuplets << getPrime(&bits, low);
             kTuplets << ((bits != 0) ? ", " : ")\n");
           }
         }

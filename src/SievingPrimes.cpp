@@ -63,7 +63,7 @@ void SievingPrimes::fill()
   uint64_t num = 0;
 
   for (; bits != 0; num++)
-    primes_[num] = nextPrime(&bits, low_);
+    primes_[num] = getPrime(&bits, low_);
 
   num_ = num;
   low_ += NUMBERS_PER_BYTE * 8;

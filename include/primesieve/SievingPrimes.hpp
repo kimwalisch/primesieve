@@ -24,7 +24,7 @@ class SievingPrimes : public Erat
 {
 public:
   SievingPrimes(PrimeGenerator&, const PreSieve&);
-  uint64_t next_prime();
+  uint64_t nextPrime();
 private:
   uint64_t i_;
   uint64_t num_;
@@ -38,7 +38,7 @@ private:
   bool sieveSegment();
 };
 
-inline uint64_t SievingPrimes::next_prime()
+inline uint64_t SievingPrimes::nextPrime()
 {
   while (i_ >= num_)
     fill();

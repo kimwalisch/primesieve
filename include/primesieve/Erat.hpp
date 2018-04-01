@@ -57,7 +57,7 @@ protected:
   Erat(uint64_t, uint64_t, uint64_t, const PreSieve&);
   virtual ~Erat() { }
   virtual void generatePrimes(const byte_t*, uint64_t) { }
-  static uint64_t nextPrime(uint64_t*, uint64_t);
+  static uint64_t getPrime(uint64_t*, uint64_t);
   bool hasNextSegment() const;
   void sieveSegment();
 private:
@@ -79,7 +79,7 @@ private:
 /// Reconstruct the prime number corresponding to
 /// the first set bit and unset that bit
 ///
-inline uint64_t Erat::nextPrime(uint64_t* bits, uint64_t low)
+inline uint64_t Erat::getPrime(uint64_t* bits, uint64_t low)
 {
   // calculate bitValues_[bitScanForward(*bits)]
   // using a custom De Bruijn bitscan
