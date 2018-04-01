@@ -88,7 +88,6 @@ bool SievingPrimes::sieveSegment()
   else
   {
     num_ = 1;
-    sieveIdx_ = ~0ull;
     primes_[0] = ~0ull;
     return false;
   }
