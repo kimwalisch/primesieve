@@ -13,9 +13,11 @@
 #include <primesieve/config.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/SieveOfEratosthenes.hpp>
+#include <primesieve/SievingPrimes.hpp>
 #include <primesieve/StorePrimes.hpp>
 
 #include <stdint.h>
@@ -50,6 +52,20 @@ PrimeGenerator::PrimeGenerator(PrimeSieve& ps, const PreSieve& preSieve) :
 {
   if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEXTUPLETS))
     init_kCounts();
+}
+
+void PrimeGenerator::sieve()
+{
+  if (sqrtStop_ > preSieve_.getMaxPrime())
+  {
+    // generate sieving primes
+    SievingPrimes sievingPrimes(*this, preSieve_);
+    uint64_t prime = sievingPrimes.next_prime();
+    for (; prime <= sqrtStop_; prime = sievingPrimes.next_prime())
+      SieveOfEratosthenes::sieve(prime);
+  }
+
+  SieveOfEratosthenes::sieve();
 }
 
 /// Calculate the number of twins, triplets, ...

@@ -1,7 +1,7 @@
 ///
 /// @file  SieveOfEratosthenes.hpp
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -54,6 +54,7 @@ protected:
   /// Sieve primes <= stop_
   uint64_t stop_;
   uint64_t sqrtStop_;
+  const PreSieve& preSieve_;
   SieveOfEratosthenes(uint64_t, uint64_t, uint64_t, const PreSieve&);
   virtual ~SieveOfEratosthenes() { }
   virtual void generatePrimes(const byte_t*, uint64_t) = 0;
@@ -63,7 +64,6 @@ protected:
   void sieveSegment();
 private:
   static const uint64_t bruijnBitValues_[64];
-  const PreSieve& preSieve_;
   uint64_t maxPreSieve_;
   uint64_t maxEratSmall_;
   uint64_t maxEratMedium_;

@@ -15,7 +15,6 @@
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
-#include <primesieve/SievingPrimes.hpp>
 #include <primesieve/StorePrimes.hpp>
 #include <primesieve/pmath.hpp>
 
@@ -233,18 +232,6 @@ void PrimeSieve::sieve()
   {
     PreSieve preSieve(start_, stop_);
     PrimeGenerator primeGen(*this, preSieve);
-    uint64_t sqrtStop = primeGen.getSqrtStop();
-
-    // generate sieving primes for primeGen
-    if (sqrtStop > preSieve.getMaxPrime())
-    {
-      SievingPrimes sp(primeGen, preSieve);
-      uint64_t prime = sp.next_prime();
-      for (; prime <= sqrtStop; prime = sp.next_prime())
-        primeGen.sieve(prime);
-    }
-
-    // sieve [start, stop]
     primeGen.sieve();
   }
 

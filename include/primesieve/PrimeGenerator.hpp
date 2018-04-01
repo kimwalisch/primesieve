@@ -30,6 +30,7 @@ class PrimeGenerator : public SieveOfEratosthenes
 {
 public:
   PrimeGenerator(PrimeSieve&, const PreSieve&);
+  void sieve();
 private:
   enum { END = 0xff + 1 };
   static const uint64_t bitmasks_[6][5];
