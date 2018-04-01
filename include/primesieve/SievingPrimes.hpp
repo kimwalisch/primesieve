@@ -33,8 +33,6 @@ private:
   uint64_t sieveIdx_;
   uint64_t primes_[64];
   std::vector<char> tinySieve_;
-
-  void generatePrimes(const byte_t*, uint64_t) { }
   void tinySieve();
   void fill();
   bool sieveSegment();

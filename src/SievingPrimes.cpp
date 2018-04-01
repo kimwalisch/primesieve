@@ -72,8 +72,9 @@ void SievingPrimes::fill()
 
 bool SievingPrimes::sieveSegment()
 {
-  if (low_ < stop_)
+  if (hasNextSegment())
   {
+    sieveIdx_ = 0;
     uint64_t high = segmentHigh_;
     uint64_t max = std::min(high, stop_);
 
@@ -82,8 +83,6 @@ bool SievingPrimes::sieveSegment()
         addSievingPrime(i);
 
     Erat::sieveSegment();
-    sieveIdx_ = 0;
-
     return true;
   }
   else
@@ -91,7 +90,6 @@ bool SievingPrimes::sieveSegment()
     num_ = 1;
     sieveIdx_ = ~0ull;
     primes_[0] = ~0ull;
-
     return false;
   }
 }

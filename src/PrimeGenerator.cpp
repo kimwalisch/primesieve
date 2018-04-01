@@ -110,7 +110,7 @@ void PrimeGenerator::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
 
 void PrimeGenerator::storePrimes(Store& store, const byte_t* sieve, uint64_t sieveSize) const
 {
-  uint64_t low = getSegmentLow();
+  uint64_t low = segmentLow_;
 
   for (uint64_t i = 0; i < sieveSize; i += 8)
   {
@@ -158,7 +158,7 @@ void PrimeGenerator::print(const byte_t* sieve, uint64_t sieveSize) const
   if (ps_.isFlag(ps_.PRINT_PRIMES))
   {
     uint64_t i = 0;
-    uint64_t low = getSegmentLow();
+    uint64_t low = segmentLow_;
 
     while (i < sieveSize)
     {
@@ -182,7 +182,7 @@ void PrimeGenerator::print(const byte_t* sieve, uint64_t sieveSize) const
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEXTUPLETS))
   {
     uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
-    uint64_t low = getSegmentLow();
+    uint64_t low = segmentLow_;
     ostringstream kTuplets;
 
     for (; !ps_.isPrint(i); i++);

@@ -56,10 +56,9 @@ protected:
   const PreSieve& preSieve_;
   Erat(uint64_t, uint64_t, uint64_t, const PreSieve&);
   virtual ~Erat() { }
-  virtual void generatePrimes(const byte_t*, uint64_t) = 0;
+  virtual void generatePrimes(const byte_t*, uint64_t) { }
   static uint64_t nextPrime(uint64_t*, uint64_t);
-  uint64_t getSegmentLow() const;
-  uint64_t getSegmentHigh() const;
+  bool hasNextSegment() const;
   void sieveSegment();
 private:
   static const uint64_t bruijnBitValues_[64];
@@ -74,6 +73,7 @@ private:
   void init();
   void preSieve();
   void crossOff();
+  void sieveLastSegment();
 };
 
 /// Reconstruct the prime number corresponding to
@@ -120,16 +120,6 @@ inline uint64_t Erat::getStart() const
 inline uint64_t Erat::getStop() const
 {
   return stop_;
-}
-
-inline uint64_t Erat::getSegmentLow() const
-{
-  return segmentLow_;
-}
-
-inline uint64_t Erat::getSegmentHigh() const
-{
-  return segmentHigh_;
 }
 
 inline uint64_t Erat::getSieveSize() const

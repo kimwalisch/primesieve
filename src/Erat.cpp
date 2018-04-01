@@ -28,21 +28,23 @@ using namespace primesieve;
 namespace {
 
 /// unset bits < start
-const byte_t unsetSmaller[32] =
+const byte_t unsetSmaller[37] =
 {
   0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
   0xfe, 0xfe, 0xfe, 0xfe, 0xfc, 0xfc, 0xf8, 0xf8,
   0xf8, 0xf8, 0xf0, 0xf0, 0xe0, 0xe0, 0xe0, 0xe0,
-  0xc0, 0xc0, 0xc0, 0xc0, 0xc0, 0xc0, 0x80, 0x80
+  0xc0, 0xc0, 0xc0, 0xc0, 0xc0, 0xc0, 0x80, 0x80,
+  0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 /// unset bits > stop
-const byte_t unsetLarger[32] =
+const byte_t unsetLarger[37] =
 {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
   0x01, 0x01, 0x01, 0x03, 0x03, 0x07, 0x07, 0x07,
   0x07, 0x0f, 0x0f, 0x1f, 0x1f, 0x1f, 0x1f, 0x3f,
-  0x3f, 0x3f, 0x3f, 0x3f, 0x3f, 0x7f, 0x7f, 0xff
+  0x3f, 0x3f, 0x3f, 0x3f, 0x3f, 0x7f, 0x7f, 0xff,
+  0xff, 0xff, 0xff, 0xff, 0xff
 };
 
 } // namespace
@@ -88,7 +90,7 @@ Erat::Erat(uint64_t start,
   sieveSize_ *= 1024;
 
   uint64_t rem = getByteRemainder(start_);
-  uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
+  uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 6;
   segmentLow_ = start_ - rem;
   segmentHigh_ = checkedAdd(segmentLow_, dist);
 
@@ -117,10 +119,15 @@ uint64_t Erat::getSqrtStop() const
   return sqrtStop_;
 }
 
+bool Erat::hasNextSegment() const
+{
+  return segmentLow_ < stop_;
+}
+
 uint64_t Erat::getByteRemainder(uint64_t n)
 {
   uint64_t r = n % NUMBERS_PER_BYTE;
-  if (r <= 1)
+  if (r <= 6)
     r += NUMBERS_PER_BYTE;
   return r;
 }
@@ -152,33 +159,37 @@ void Erat::crossOff()
     eratBig_.crossOff(sieve_);
 }
 
-void Erat::sieveSegment()
-{
-  preSieve();
-  crossOff();
-  generatePrimes(sieve_, sieveSize_);
-
-  // update for next segment
-  uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE;
-  segmentLow_ = checkedAdd(segmentLow_, dist);
-  segmentHigh_ = checkedAdd(segmentHigh_, dist);
-}
-
-/// Sieve the remaining segments, most segments
-/// are sieved in addSievingPrime()
-///
 void Erat::sieve()
 {
-  while (segmentHigh_ < stop_)
+  while (hasNextSegment())
     sieveSegment();
+}
 
+void Erat::sieveSegment()
+{
+  if (segmentHigh_ >= stop_)
+    sieveLastSegment();
+  else
+  {
+    preSieve();
+    crossOff();
+    generatePrimes(sieve_, sieveSize_);
+
+    // update for next segment
+    uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE;
+    segmentLow_ = checkedAdd(segmentLow_, dist);
+    segmentHigh_ = checkedAdd(segmentHigh_, dist);
+  }
+}
+
+void Erat::sieveLastSegment()
+{
   uint64_t rem = getByteRemainder(stop_);
   uint64_t dist = (stop_ - rem) - segmentLow_;
   sieveSize_ = dist / NUMBERS_PER_BYTE + 1;
-  dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
+  dist = sieveSize_ * NUMBERS_PER_BYTE + 6;
   segmentHigh_ = checkedAdd(segmentLow_, dist);
 
-  // sieve last segment
   preSieve();
   crossOff();
 
@@ -190,6 +201,8 @@ void Erat::sieve()
     memset(&sieve_[sieveSize_], 0, 8 - sieveSize_ % 8);
 
   generatePrimes(sieve_, sieveSize_);
+  segmentLow_ = stop_;
+  segmentHigh_ = stop_;
 }
 
 } // namespace
