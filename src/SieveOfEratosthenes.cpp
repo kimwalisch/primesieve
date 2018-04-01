@@ -149,48 +149,44 @@ void SieveOfEratosthenes::crossOffMultiples()
   if (eratBig_)       eratBig_->crossOff(sieve_);
 }
 
-void SieveOfEratosthenes::sieve()
-{
-  while (segmentLow_ < stop_)
-    sieveSegment();
-}
-
 void SieveOfEratosthenes::sieveSegment()
 {
-  bool lastSegment = false;
-  uint64_t rem = 0;
-
-  if (segmentHigh_ > stop_)
-  {
-    lastSegment = true;
-    rem = getByteRemainder(stop_);
-    if (segmentLow_ > (stop_ - rem)) return; // evil hack
-    uint64_t dist = (stop_ - rem) - segmentLow_;
-    sieveSize_ = dist / NUMBERS_PER_BYTE + 1;
-    dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
-    segmentHigh_ = checkedAdd(segmentLow_, dist);
-  }
-
-  // sieve last segment
   preSieve();
   crossOffMultiples();
-
-  if (lastSegment)
-  {
-    // unset bits > stop
-    sieve_[sieveSize_ - 1] &= unsetLarger[rem];
-
-    // unset bytes > stop
-    if (sieveSize_ % 8)
-      memset(&sieve_[sieveSize_], 0, 8 - sieveSize_ % 8);
-  }
-
   generatePrimes(sieve_, sieveSize_);
 
   // update for next segment
   uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE;
   segmentLow_ = checkedAdd(segmentLow_, dist);
   segmentHigh_ = checkedAdd(segmentHigh_, dist);
+}
+
+/// Sieve the remaining segments, most segments
+/// are sieved in addSievingPrime()
+///
+void SieveOfEratosthenes::sieve()
+{
+  while (segmentHigh_ < stop_)
+    sieveSegment();
+
+  uint64_t rem = getByteRemainder(stop_);
+  uint64_t dist = (stop_ - rem) - segmentLow_;
+  sieveSize_ = dist / NUMBERS_PER_BYTE + 1;
+  dist = sieveSize_ * NUMBERS_PER_BYTE + 1;
+  segmentHigh_ = checkedAdd(segmentLow_, dist);
+
+  // sieve last segment
+  preSieve();
+  crossOffMultiples();
+
+  // unset bits > stop
+  sieve_[sieveSize_ - 1] &= unsetLarger[rem];
+
+  // unset bytes > stop
+  if (sieveSize_ % 8)
+    memset(&sieve_[sieveSize_], 0, 8 - sieveSize_ % 8);
+
+  generatePrimes(sieve_, sieveSize_);
 }
 
 } // namespace
