@@ -12,7 +12,7 @@
 #include <primesieve/SievingPrimes.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/PreSieve.hpp>
-#include <primesieve/SieveOfEratosthenes.hpp>
+#include <primesieve/Erat.hpp>
 #include <primesieve/littleendian_cast.hpp>
 
 #include <stdint.h>
@@ -23,10 +23,10 @@ using namespace std;
 namespace primesieve {
 
 SievingPrimes::SievingPrimes(PrimeGenerator& primeGen, const PreSieve& preSieve) :
-  SieveOfEratosthenes(preSieve.getMaxPrime() + 1,
-                      primeGen.getSqrtStop(),
-                      primeGen.getSieveSize() / 1024,
-                      preSieve)
+  Erat(preSieve.getMaxPrime() + 1,
+       primeGen.getSqrtStop(),
+       primeGen.getSieveSize() / 1024,
+       preSieve)
 {
   low_ = 0;
   num_ = 0;
@@ -81,7 +81,7 @@ bool SievingPrimes::sieveSegment()
       if (tinySieve_[i])
         addSievingPrime(i);
 
-    SieveOfEratosthenes::sieveSegment();
+    Erat::sieveSegment();
     sieveIdx_ = 0;
 
     return true;

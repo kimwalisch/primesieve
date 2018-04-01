@@ -11,7 +11,7 @@
 #define SIEVINGPRIMES_HPP
 
 #include "config.hpp"
-#include "SieveOfEratosthenes.hpp"
+#include "Erat.hpp"
 
 #include <vector>
 
@@ -20,7 +20,7 @@ namespace primesieve {
 class PrimeGenerator;
 class PreSieve;
 
-class SievingPrimes : public SieveOfEratosthenes
+class SievingPrimes : public Erat
 {
 public:
   SievingPrimes(PrimeGenerator&, const PreSieve&);

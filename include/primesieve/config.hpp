@@ -25,8 +25,8 @@ typedef uint8_t byte_t;
 typedef unsigned int uint_t;
 
 enum {
-  /// SieveOfEratosthenes objects use a bit array with 30 numbers per
-  /// byte for sieving, the 8 bits of each byte correspond to the
+  /// primesieve uses a bit array with 30 numbers per byte for
+  /// sieving, the 8 bits of each byte correspond to the
   /// offsets { 7, 11, 13, 17, 19, 23, 29, 31 }.
   ///
   NUMBERS_PER_BYTE = 30

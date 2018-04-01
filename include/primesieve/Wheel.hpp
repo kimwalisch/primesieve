@@ -67,7 +67,7 @@ class Wheel
 public:
   /// Add a new sieving prime to the sieving algorithm.
   /// Calculate the first multiple > segmentLow of prime and the
-  /// position within the SieveOfEratosthenes array of that multiple
+  /// position within the sieve array of that multiple
   /// and its wheel index. When done store the sieving prime.
   ///
   void addSievingPrime(uint64_t prime, uint64_t segmentLow)

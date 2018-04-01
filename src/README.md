@@ -12,13 +12,13 @@
   [start, stop] using a PrimeSieve object. At the end all partial
   results are combined to get the final result.
 
-* **SieveOfEratosthenes** is an implementation of the segmented
+* **Erat** is an implementation of the segmented
   sieve of Eratosthenes using a bit array with 30 numbers per
   byte, each byte of the sieve array holds the 8 offsets
   ```k = { 7, 11, 13, 17, 19, 23, 29, 31 }```. Its main methods are
   ```addSievingPrime(prime)``` which is called consecutively for
   all primes ≤ sqrt(n) and ```sieve()``` which sieves the primes
-  inside [start, stop]. SieveOfEratosthenes uses the EratSmall,
+  inside [start, stop]. Erat uses the EratSmall,
   EratMedium and EratBig classes to cross-off multiples.
 
 * **CpuInfo** is used to get the CPU's L1 and L2 cache sizes. The
@@ -26,13 +26,13 @@
   size that matches the CPU's L1 or L2 cache size (depending on the
   CPU type).
 
-* **PrimeGenerator** is derived from SieveOfEratosthenes. After a
-  segment has been sieved (using SieveOfEratosthenes) PrimeGenerator
+* **PrimeGenerator** is derived from Erat. After a
+  segment has been sieved (using Erat) PrimeGenerator
   is used to reconstruct primes and prime k-tuplets from 1 bits of
   the sieve array. It is also used for counting primes and prime
   k-tuplets in the sieve array.
 
-* **SievingPrimes** is derived from SieveOfEratosthenes. The
+* **SievingPrimes** is derived from Erat. The
   SievingPrimes class is used to generates the sieving
   primes ≤ sqrt(stop) for PrimeGenerator.
 
@@ -47,7 +47,7 @@
   **Wheel** class is used to initialize sieving primes i.e.
   ```Wheel::addSievingPrime()``` calculates the first
   multiple >= start of each sieving prime and the position
-  within the SieveOfEratosthenes array of that
+  within the Erat array of that
   multiple. ```Wheel::unsetBit()``` is used to cross-off a multiple
   (unset a bit) and to calculate the sieving prime's next multiple.
 

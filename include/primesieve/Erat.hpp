@@ -1,5 +1,5 @@
 ///
-/// @file  SieveOfEratosthenes.hpp
+/// @file   Erat.hpp
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef SIEVEOFERATOSTHENES_HPP
-#define SIEVEOFERATOSTHENES_HPP
+#ifndef ERAT_HPP
+#define ERAT_HPP
 
 #include "config.hpp"
 #include "EratSmall.hpp"
@@ -23,14 +23,13 @@ namespace primesieve {
 
 class PreSieve;
 
-/// The abstract SieveOfEratosthenes class sieves primes using
-/// the segmented sieve of Eratosthenes. It uses a bit array
-/// for sieving, the bit array uses 8 flags for 30 numbers.
-/// SieveOfEratosthenes uses 3 different sieve of Eratosthenes
-/// algorithms optimized for small, medium and big sieving primes
-/// to cross-off multiples.
+/// The abstract Erat class sieves primes using the segmented sieve
+/// of Eratosthenes. It uses a bit array for sieving, the bit array
+/// uses 8 flags for 30 numbers. Erat uses 3 different sieve of
+/// Eratosthenes algorithms optimized for small, medium and big
+/// sieving primes to cross-off multiples.
 ///
-class SieveOfEratosthenes
+class Erat
 {
 public:
   uint64_t getStart() const;
@@ -55,8 +54,8 @@ protected:
   uint64_t stop_;
   uint64_t sqrtStop_;
   const PreSieve& preSieve_;
-  SieveOfEratosthenes(uint64_t, uint64_t, uint64_t, const PreSieve&);
-  virtual ~SieveOfEratosthenes() { }
+  Erat(uint64_t, uint64_t, uint64_t, const PreSieve&);
+  virtual ~Erat() { }
   virtual void generatePrimes(const byte_t*, uint64_t) = 0;
   static uint64_t nextPrime(uint64_t*, uint64_t);
   uint64_t getSegmentLow() const;
@@ -80,7 +79,7 @@ private:
 /// Reconstruct the prime number corresponding to
 /// the first set bit and unset that bit
 ///
-inline uint64_t SieveOfEratosthenes::nextPrime(uint64_t* bits, uint64_t low)
+inline uint64_t Erat::nextPrime(uint64_t* bits, uint64_t low)
 {
   // calculate bitValues_[bitScanForward(*bits)]
   // using a custom De Bruijn bitscan
@@ -95,7 +94,7 @@ inline uint64_t SieveOfEratosthenes::nextPrime(uint64_t* bits, uint64_t low)
 /// This method is called consecutively for
 /// all sieving primes up to sqrt(stop)
 ///
-inline void SieveOfEratosthenes::sieve(uint64_t prime)
+inline void Erat::sieve(uint64_t prime)
 {
   // This loop is executed once all primes <= sqrt(segmentHigh)
   // required to sieve the next segment have been
@@ -106,34 +105,34 @@ inline void SieveOfEratosthenes::sieve(uint64_t prime)
   addSievingPrime(prime);
 }
 
-inline void SieveOfEratosthenes::addSievingPrime(uint64_t prime)
+inline void Erat::addSievingPrime(uint64_t prime)
 {
        if (prime > maxEratMedium_)   eratBig_->addSievingPrime(prime, segmentLow_);
   else if (prime > maxEratSmall_) eratMedium_->addSievingPrime(prime, segmentLow_);
   else /* (prime > maxPreSieve) */ eratSmall_->addSievingPrime(prime, segmentLow_);
 }
 
-inline uint64_t SieveOfEratosthenes::getStart() const
+inline uint64_t Erat::getStart() const
 {
   return start_;
 }
 
-inline uint64_t SieveOfEratosthenes::getStop() const
+inline uint64_t Erat::getStop() const
 {
   return stop_;
 }
 
-inline uint64_t SieveOfEratosthenes::getSegmentLow() const
+inline uint64_t Erat::getSegmentLow() const
 {
   return segmentLow_;
 }
 
-inline uint64_t SieveOfEratosthenes::getSegmentHigh() const
+inline uint64_t Erat::getSegmentHigh() const
 {
   return segmentHigh_;
 }
 
-inline uint64_t SieveOfEratosthenes::getSieveSize() const
+inline uint64_t Erat::getSieveSize() const
 {
   return sieveSize_;
 }

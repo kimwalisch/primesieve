@@ -5,7 +5,7 @@
 ///         once there is no more space in the current Bucket
 ///         a new Bucket is allocated.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -22,10 +22,10 @@
 namespace primesieve {
 
 /// Each SievingPrime object contains a sieving prime and the
-/// position of its next multiple within the SieveOfEratosthenes
-/// array i.e. multipleIndex and a wheelIndex. In order to
-/// reduce memory usage the multipleIndex and wheelIndex are
-/// packed into a single 32-bit variable.
+/// position of its next multiple inside the sieve array i.e.
+/// multipleIndex and a wheelIndex. In order to reduce the memory
+/// usage the multipleIndex and wheelIndex are packed into a
+/// single 32-bit variable.
 ///
 class SievingPrime
 {

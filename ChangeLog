@@ -535,7 +535,7 @@ Changes in version 3.8, 13/07/2012
     only 12 asm instructions (previously 16).
  4. Improved OpenMP load balance in src/soe/ParallelPrimeSieve.cpp.
  5. Improved code readability of EratSmall.cpp, EratMedium.cpp,
-    EratBig.cpp, SieveOfEratosthenes.cpp and others.
+    EratBig.cpp, Erat.cpp and others.
  6. The Makefile now automatically detects the CPU's L1 data cache
     size on Unix-like OSes (Linux, Mac OS X).
  7. Renamed ./docs to ./doc
@@ -559,7 +559,7 @@ Changes in version 3.7, 31/05/2012
  4. New template imath.h functions: isqrt(), ilog2(), isPow2(), ...
     isqrt() has been rewritten using Newton's algorithm in order to
     avoid rounding errors of (int)sqrt((double)n) if n > 10^15.
- 5. New internal SieveOfEratosthenes::getNextPrime(...) member function.
+ 5. New internal Erat::getNextPrime(...) member function.
  6. Replaced old C-style comments with C++ comments.
  7. Updated ExpressionParser to version 2.2.
  8. uin32_t has been replaced by uint_t in src/soe/*.

@@ -1,8 +1,7 @@
 ///
-/// @file   SieveOfEratosthenes.cpp
-/// @brief  The SieveOfEratosthenes class manages prime sieving
-///         using the PreSieve, EratSmall, EratMedium and
-///         EratBig classes.
+/// @file   Erat.cpp
+/// @brief  The Erat class manages prime sieving using the
+///         EratSmall, EratMedium and EratBig classes.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -11,11 +10,11 @@
 ///
 
 #include <primesieve/config.hpp>
-#include <primesieve/SieveOfEratosthenes.hpp>
-#include <primesieve/PreSieve.hpp>
+#include <primesieve/Erat.hpp>
 #include <primesieve/EratSmall.hpp>
 #include <primesieve/EratMedium.hpp>
 #include <primesieve/EratBig.hpp>
+#include <primesieve/PreSieve.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
 
@@ -53,7 +52,7 @@ const byte_t unsetLarger[32] =
 namespace primesieve {
 
 /// De Bruijn bitscan table
-const uint64_t SieveOfEratosthenes::bruijnBitValues_[64] =
+const uint64_t Erat::bruijnBitValues_[64] =
 {
     7,  47,  11,  49,  67, 113,  13,  53,
    89,  71, 161, 101, 119, 187,  17, 233,
@@ -70,10 +69,10 @@ const uint64_t SieveOfEratosthenes::bruijnBitValues_[64] =
 /// @sieveSize:  Sieve size in kilobytes
 /// @preSieve:   Pre-sieve primes
 ///
-SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
-                                         uint64_t stop,
-                                         uint64_t sieveSize,
-                                         const PreSieve& preSieve) :
+Erat::Erat(uint64_t start,
+           uint64_t stop,
+           uint64_t sieveSize,
+           const PreSieve& preSieve) :
   start_(start),
   stop_(stop),
   sqrtStop_(isqrt(stop)),
@@ -82,9 +81,9 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   sieve_(nullptr)
 {
   if (start_ < 7)
-    throw primesieve_error("SieveOfEratosthenes: start must be >= 7");
+    throw primesieve_error("Erat: start must be >= 7");
   if (start_ > stop_)
-    throw primesieve_error("SieveOfEratosthenes: start must be <= stop");
+    throw primesieve_error("Erat: start must be <= stop");
 
   sieveSize_ = floorPow2(sieveSize);
   sieveSize_ = inBetween(8, sieveSize_, 4096);
@@ -98,7 +97,7 @@ SieveOfEratosthenes::SieveOfEratosthenes(uint64_t start,
   allocate();
 }
 
-void SieveOfEratosthenes::allocate()
+void Erat::allocate()
 {
   deleteSieve_.reset(new byte_t[sieveSize_]);
   sieve_ = deleteSieve_.get();
@@ -112,12 +111,12 @@ void SieveOfEratosthenes::allocate()
   if (sqrtStop_ > maxEratMedium_)   eratBig_.reset(new EratBig   (stop_, sieveSize_, sqrtStop_));
 }
 
-uint64_t SieveOfEratosthenes::getSqrtStop() const
+uint64_t Erat::getSqrtStop() const
 {
   return sqrtStop_;
 }
 
-uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n)
+uint64_t Erat::getByteRemainder(uint64_t n)
 {
   uint64_t r = n % NUMBERS_PER_BYTE;
   if (r <= 1)
@@ -128,7 +127,7 @@ uint64_t SieveOfEratosthenes::getByteRemainder(uint64_t n)
 /// Pre-sieve multiples of small primes e.g. <= 19
 /// to speed up the sieve of Eratosthenes
 ///
-void SieveOfEratosthenes::preSieve()
+void Erat::preSieve()
 {
   preSieve_.copy(sieve_, sieveSize_, segmentLow_);
 
@@ -142,14 +141,14 @@ void SieveOfEratosthenes::preSieve()
   }
 }
 
-void SieveOfEratosthenes::crossOffMultiples()
+void Erat::crossOffMultiples()
 {
   if (eratSmall_)   eratSmall_->crossOff(sieve_, sieveSize_);
   if (eratMedium_) eratMedium_->crossOff(sieve_, sieveSize_);
   if (eratBig_)       eratBig_->crossOff(sieve_);
 }
 
-void SieveOfEratosthenes::sieveSegment()
+void Erat::sieveSegment()
 {
   preSieve();
   crossOffMultiples();
@@ -164,7 +163,7 @@ void SieveOfEratosthenes::sieveSegment()
 /// Sieve the remaining segments, most segments
 /// are sieved in addSievingPrime()
 ///
-void SieveOfEratosthenes::sieve()
+void Erat::sieve()
 {
   while (segmentHigh_ < stop_)
     sieveSegment();

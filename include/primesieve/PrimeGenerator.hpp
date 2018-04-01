@@ -11,7 +11,7 @@
 #define PRIMEGENERATOR_HPP
 
 #include "config.hpp"
-#include "SieveOfEratosthenes.hpp"
+#include "Erat.hpp"
 #include "PrimeSieve.hpp"
 
 #include <stdint.h>
@@ -26,7 +26,7 @@ class Store;
 /// used to reconstruct primes and prime k-tuplets from
 /// 1 bits of the sieve array
 ///
-class PrimeGenerator : public SieveOfEratosthenes
+class PrimeGenerator : public Erat
 {
 public:
   PrimeGenerator(PrimeSieve&, const PreSieve&);

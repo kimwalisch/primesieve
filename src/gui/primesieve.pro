@@ -53,7 +53,7 @@ SOURCES += \
   ../PrimeGenerator.cpp \
   ../SievingPrimes.cpp \
   ../PrimeSieve.cpp \
-  ../SieveOfEratosthenes.cpp \
+  ../Erat.cpp \
   ../Wheel.cpp
 
 # ---------------------------------------------------------

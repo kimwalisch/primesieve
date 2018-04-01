@@ -42,7 +42,7 @@ set(LIB_SRC src/api-c.cpp
             src/PreSieve.cpp
             src/PrimeGenerator.cpp
             src/PrimeSieve.cpp
-            src/SieveOfEratosthenes.cpp
+            src/Erat.cpp
             src/SievingPrimes.cpp
             src/Wheel.cpp)
 

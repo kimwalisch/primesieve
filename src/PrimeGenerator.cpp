@@ -16,7 +16,7 @@
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/PrimeSieve.hpp>
-#include <primesieve/SieveOfEratosthenes.hpp>
+#include <primesieve/Erat.hpp>
 #include <primesieve/SievingPrimes.hpp>
 #include <primesieve/StorePrimes.hpp>
 
@@ -43,10 +43,10 @@ const uint64_t PrimeGenerator::bitmasks_[6][5] =
 };
 
 PrimeGenerator::PrimeGenerator(PrimeSieve& ps, const PreSieve& preSieve) :
-  SieveOfEratosthenes(max<uint64_t>(7, ps.getStart()),
-                      ps.getStop(),
-                      ps.getSieveSize(),
-                      preSieve),
+  Erat(max<uint64_t>(7, ps.getStart()),
+       ps.getStop(),
+       ps.getSieveSize(),
+       preSieve),
   ps_(ps),
   counts_(ps_.getCounts())
 {
@@ -62,10 +62,10 @@ void PrimeGenerator::sieve()
     SievingPrimes sievingPrimes(*this, preSieve_);
     uint64_t prime = sievingPrimes.next_prime();
     for (; prime <= sqrtStop_; prime = sievingPrimes.next_prime())
-      SieveOfEratosthenes::sieve(prime);
+      Erat::sieve(prime);
   }
 
-  SieveOfEratosthenes::sieve();
+  Erat::sieve();
 }
 
 /// Calculate the number of twins, triplets, ...
@@ -94,7 +94,7 @@ void PrimeGenerator::init_kCounts()
 }
 
 /// Executed after each sieved segment.
-/// @see sieveSegment() in SieveOfEratosthenes.cpp
+/// @see sieveSegment() in Erat.cpp
 ///
 void PrimeGenerator::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
 {
