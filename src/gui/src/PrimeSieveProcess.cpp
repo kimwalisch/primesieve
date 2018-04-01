@@ -18,7 +18,7 @@
  */
 
 #include "PrimeSieveProcess.hpp"
-#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/ParallelSieve.hpp>
 
 #include <QtGlobal>
 #include <QStringList>
@@ -60,7 +60,7 @@ int PrimeSieveProcess::getProcessId() {
 
 /**
  * Create a shared memory segment for communication with the
- * ParallelPrimeSieve process.
+ * ParallelSieve process.
  */
 void PrimeSieveProcess::createSharedMemory() {
   // attach the shared memory
@@ -70,11 +70,11 @@ void PrimeSieveProcess::createSharedMemory() {
         "Interprocess communication error, could not allocate shared memory.");
   }
   // map the attached shared memory to the shm_ segment
-  shm_ = static_cast<primesieve::ParallelPrimeSieve::SharedMemory*>(sharedMemory_.data());
+  shm_ = static_cast<primesieve::ParallelSieve::SharedMemory*>(sharedMemory_.data());
 }
 
 /**
- * Start a new ParallelPrimeSieve process that sieves
+ * Start a new ParallelSieve process that sieves
  * the primes within [start, stop].
  */
 void PrimeSieveProcess::start(quint64 start, quint64 stop,
@@ -95,7 +95,7 @@ void PrimeSieveProcess::start(quint64 start, quint64 stop,
   // process arguments, see main.cpp
   QStringList args;
   args << "PrimeSieveProcess" << sharedMemory_.key();
-  /// start a new ParallelPrimeSieve process
+  /// start a new ParallelSieve process
   /// @see main.cpp
   QProcess::start(path, args, QIODevice::ReadOnly);
 }

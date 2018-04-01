@@ -67,7 +67,7 @@ PrimeSieve::PrimeSieve() :
   reset();
 }
 
-/// ParallelPrimeSieve creates one PrimeSieve
+/// ParallelSieve creates one PrimeSieve
 /// child object for each thread.
 ///
 PrimeSieve::PrimeSieve(PrimeSieve* parent) :
@@ -111,7 +111,7 @@ bool     PrimeSieve::isCount()                   const { return isFlag(COUNT_PRI
 bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEXTUPLETS); }
 bool     PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
 bool     PrimeSieve::isStore()                   const { return store_ != nullptr; }
-bool     PrimeSieve::isParallelPrimeSieve()      const { return parent_ != nullptr; }
+bool     PrimeSieve::isParallelSieve()           const { return parent_ != nullptr; }
 
 /// Set a start number (lower bound) for sieving
 void PrimeSieve::setStart(uint64_t start)
@@ -160,7 +160,7 @@ void PrimeSieve::addFlags(int flags)
 ///
 bool PrimeSieve::updateStatus(uint64_t processed, bool tryLock)
 {
-  if (isParallelPrimeSieve())
+  if (isParallelSieve())
   {
     toUpdate_ += processed;
     if (parent_->updateStatus(toUpdate_, tryLock))

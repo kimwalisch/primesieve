@@ -120,11 +120,11 @@ private:
   int sieveSize_;
   /// Setter methods set flags e.g. COUNT_PRIMES
   int flags_;
-  /// parent ParallelPrimeSieve object
+  /// parent ParallelSieve object
   PrimeSieve* parent_;
   Store* store_;
   static void printStatus(double, double);
-  bool isParallelPrimeSieve() const;
+  bool isParallelSieve() const;
   void processSmallPrimes();
 };
 

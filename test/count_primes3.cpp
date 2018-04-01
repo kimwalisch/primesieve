@@ -8,7 +8,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/ParallelSieve.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -35,7 +35,7 @@ int main()
   uint64_t upperBound = lowerBound + (uint64_t) 5e9;
   uint64_t count = 0;
 
-  ParallelPrimeSieve p;
+  ParallelSieve p;
   p.setStart(lowerBound - 1);
   p.setStop(lowerBound - 1);
 

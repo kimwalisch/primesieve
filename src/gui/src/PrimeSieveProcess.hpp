@@ -20,7 +20,7 @@
 #ifndef PRIMESIEVEPROCESS_HPP
 #define PRIMESIEVEPROCESS_HPP
 
-#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/ParallelSieve.hpp>
 
 #include <QProcess>
 #include <QSharedMemory>
@@ -31,7 +31,7 @@
 /**
  * QProcess class used for prime sieving, using a separate process
  * for sieving allows to easily cancel a multi-threaded
- * ParallelPrimeSieve instance.
+ * ParallelSieve instance.
  */
 class PrimeSieveProcess : public QProcess {
 public:
@@ -44,11 +44,11 @@ public:
   double getSeconds() const;
 private:
   /// Shared memory for interprocess communication between the
-  /// Qt GUI process and the ParallelPrimeSieve process.
+  /// Qt GUI process and the ParallelSieve process.
   QSharedMemory sharedMemory_;
   /// Contains the settings (start, stop, sieveSize, ...)
   /// for sieving, will be mapped to sharedMemory_
-  primesieve::ParallelPrimeSieve::SharedMemory* shm_;
+  primesieve::ParallelSieve::SharedMemory* shm_;
   void createSharedMemory();
   int getProcessId();
 };

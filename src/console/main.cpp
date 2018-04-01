@@ -8,7 +8,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/ParallelSieve.hpp>
 #include "cmdoptions.hpp"
 
 #include <stdint.h>
@@ -23,7 +23,7 @@ using namespace primesieve;
 
 namespace {
 
-void printResults(ParallelPrimeSieve& ps, CmdOptions& opt)
+void printResults(ParallelSieve& ps, CmdOptions& opt)
 {
   cout << left;
 
@@ -48,7 +48,7 @@ void printResults(ParallelPrimeSieve& ps, CmdOptions& opt)
 /// Count & print primes and prime k-tuplets
 void sieve(CmdOptions& opt)
 {
-  ParallelPrimeSieve ps;
+  ParallelSieve ps;
   auto& numbers = opt.numbers;
 
   if (opt.flags)
@@ -80,7 +80,7 @@ void sieve(CmdOptions& opt)
 
 void nthPrime(CmdOptions& opt)
 {
-  ParallelPrimeSieve ps;
+  ParallelSieve ps;
   auto& numbers = opt.numbers;
 
   if (opt.flags)

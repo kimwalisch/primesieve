@@ -1,16 +1,16 @@
 ///
-/// @file   ParallelPrimeSieve.hpp
-/// @brief  The ParallelPrimeSieve class provides an easy API for
+/// @file   ParallelSieve.hpp
+/// @brief  The ParallelSieve class provides an easy API for
 ///         multi-threaded prime sieving.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
-#ifndef PARALLELPRIMESIEVE_HPP
-#define PARALLELPRIMESIEVE_HPP
+#ifndef PARALLELSIEVE_HPP
+#define PARALLELSIEVE_HPP
 
 #include "PrimeSieve.hpp"
 #include <stdint.h>
@@ -18,7 +18,7 @@
 
 namespace primesieve {
 
-class ParallelPrimeSieve : public PrimeSieve
+class ParallelSieve : public PrimeSieve
 {
 public:
   /// Used for inter-process communication with the
@@ -34,8 +34,8 @@ public:
     int sieveSize;
     int threads;
   };
-  ParallelPrimeSieve();
-  virtual ~ParallelPrimeSieve() { }
+  ParallelSieve();
+  virtual ~ParallelSieve() { }
   void init(SharedMemory&);
   static int getMaxThreads();
   int getNumThreads() const;

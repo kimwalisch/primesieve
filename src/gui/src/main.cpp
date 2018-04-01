@@ -1,7 +1,7 @@
 /*
  * main.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  */
 
 #include "PrimeSieveGUI.hpp"
-#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/ParallelSieve.hpp>
 
 #if QT_VERSION >= 0x050000
   #include <QtWidgets/QApplication>
@@ -57,23 +57,23 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
       }
       // map the attached shared memory to the shm segment
-      primesieve::ParallelPrimeSieve::SharedMemory* shm =
-          static_cast<primesieve::ParallelPrimeSieve::SharedMemory*>(sharedMemory.data());
+      primesieve::ParallelSieve::SharedMemory* shm =
+          static_cast<primesieve::ParallelSieve::SharedMemory*>(sharedMemory.data());
       try
       {
-        // initialize the ParallelPrimeSieve object with
+        // initialize the ParallelSieve object with
         // values from the shared memory segment provided by
         // the primesieve GUI and start sieving
         if (!shm)
           throw std::runtime_error("sharedMemory.data() must not be NULL");
-        primesieve::ParallelPrimeSieve pps;
-        pps.init(*shm);
-        pps.sieve();
+        primesieve::ParallelSieve ps;
+        ps.init(*shm);
+        ps.sieve();
       }
       catch (std::exception& e)
       {
         sharedMemory.detach();
-        std::cerr << "ParallelPrimeSieve error: " << e.what() << std::endl;
+        std::cerr << "ParallelSieve error: " << e.what() << std::endl;
         exit(EXIT_FAILURE);
       }
       sharedMemory.detach();

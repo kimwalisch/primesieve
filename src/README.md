@@ -7,7 +7,7 @@
   the interval [start, stop]. libprimesieve's C and C++ APIs are
   simple wrappers around the PrimeSieve class.
 
-* **ParallelPrimeSieve** launches multiple threads using
+* **ParallelSieve** launches multiple threads using
   ```std::async``` and each thread sieves a part of the interval
   [start, stop] using a PrimeSieve object. At the end all partial
   results are combined to get the final result.

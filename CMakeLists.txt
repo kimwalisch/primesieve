@@ -37,7 +37,7 @@ set(LIB_SRC src/api-c.cpp
             src/iterator-c.cpp
             src/iterator.cpp
             src/nthPrime.cpp
-            src/ParallelPrimeSieve.cpp
+            src/ParallelSieve.cpp
             src/popcount.cpp
             src/PreSieve.cpp
             src/PrimeGenerator.cpp

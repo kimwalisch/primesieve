@@ -2,7 +2,7 @@
 /// @file   atomic.cpp
 /// @brief  Test std::atomic thread synchronization.
 ///         We use std::atomic for thread synchronization in
-///         ParallelPrimeSieve.cpp.
+///         ParallelSieve.cpp.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
