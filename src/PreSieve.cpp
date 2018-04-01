@@ -3,7 +3,7 @@
 /// @brief  Pre-sieve multiples of small primes to speed up the
 ///         sieve of Eratosthenes.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -59,7 +59,8 @@ void PreSieve::init()
   memset(buffer_, 0xff, size_);
 
   uint64_t stop = primeProduct_ * 2;
-  EratSmall eratSmall(stop, size_, maxPrime_);
+  EratSmall eratSmall;
+  eratSmall.init(stop, size_, maxPrime_);
 
   for (int i = 3; primes[i] <= maxPrime_; i++)
     eratSmall.addSievingPrime(primes[i], primeProduct_);

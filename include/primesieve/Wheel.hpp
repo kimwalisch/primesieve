@@ -95,9 +95,9 @@ public:
   }
 
 protected:
-  Wheel(uint64_t stop, uint64_t sieveSize) :
-    stop_(stop)
+  void initWheel(uint64_t stop, uint64_t sieveSize)
   {
+    stop_ = stop;
     uint64_t maxSieveSize = SievingPrime::MAX_MULTIPLEINDEX + 1;
 
     if (sieveSize > maxSieveSize)

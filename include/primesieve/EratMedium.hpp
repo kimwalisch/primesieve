@@ -1,7 +1,7 @@
 ///
 /// @file  EratMedium.hpp
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -26,10 +26,12 @@ namespace primesieve {
 class EratMedium : public Wheel210_t
 {
 public:
-  EratMedium(uint64_t, uint64_t, uint64_t);
+  void init(uint64_t, uint64_t, uint64_t);
   void crossOff(byte_t*, uint64_t);
+  bool enabled() const { return enabled_; }
 private:
   uint64_t maxPrime_;
+  bool enabled_ = false;
   std::vector<SievingPrime> primes_;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
 };

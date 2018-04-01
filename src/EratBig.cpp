@@ -5,7 +5,7 @@
 ///         Oliveira e Silva's cache-friendly bucket sieve algorithm:
 ///         http://www.ieeta.pt/~tos/software/prime_sieve.html
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -32,16 +32,19 @@ namespace primesieve {
 /// @sieveSize:  Sieve size in bytes
 /// @maxPrime:   Sieving primes <= maxPrime
 ///
-EratBig::EratBig(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime) :
-  Wheel210_t(stop, sieveSize),
-  maxPrime_(maxPrime),
-  log2SieveSize_(ilog2(sieveSize)),
-  moduloSieveSize_(sieveSize - 1),
-  stock_(nullptr)
+void EratBig::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 {
   // '>> log2SieveSize' requires power of 2 sieveSize
   if (!isPow2(sieveSize))
     throw primesieve_error("EratBig: sieveSize must be a power of 2");
+
+  enabled_ = true;
+  maxPrime_ = maxPrime;
+  log2SieveSize_ = ilog2(sieveSize);
+  moduloSieveSize_ = sieveSize - 1;
+  stock_ = nullptr;
+
+  initWheel(stop, sieveSize);
   init(sieveSize);
 }
 

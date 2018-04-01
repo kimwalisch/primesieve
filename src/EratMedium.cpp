@@ -26,15 +26,16 @@ namespace primesieve {
 /// @sieveSize:  Sieve size in bytes
 /// @maxPrime:   Sieving primes <= maxPrime
 ///
-EratMedium::EratMedium(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime) :
-  Wheel210_t(stop, sieveSize),
-  maxPrime_(maxPrime)
+void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 {
-  // ensure multipleIndex < 2^23 in crossOff()
   if (sieveSize > (4096u << 10))
     throw primesieve_error("EratMedium: sieveSize must be <= 4096 kilobytes");
-  if (maxPrime_ > sieveSize * 5)
+  if (maxPrime > sieveSize * 5)
     throw primesieve_error("EratMedium: maxPrime must be <= sieveSize * 5");
+
+  enabled_ = true;
+  maxPrime_ = maxPrime;
+  initWheel(stop, sieveSize);
 
   size_t size = prime_count_approx(maxPrime);
   primes_.reserve(size);

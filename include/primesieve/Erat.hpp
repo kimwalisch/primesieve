@@ -67,13 +67,13 @@ private:
   uint64_t maxEratSmall_;
   uint64_t maxEratMedium_;
   std::unique_ptr<byte_t[]> deleteSieve_;
-  std::unique_ptr<EratSmall> eratSmall_;
-  std::unique_ptr<EratMedium> eratMedium_;
-  std::unique_ptr<EratBig> eratBig_;
+  EratSmall eratSmall_;
+  EratMedium eratMedium_;
+  EratBig eratBig_;
   static uint64_t getByteRemainder(uint64_t);
-  void allocate();
+  void init();
   void preSieve();
-  void crossOffMultiples();
+  void crossOff();
 };
 
 /// Reconstruct the prime number corresponding to
@@ -107,9 +107,9 @@ inline void Erat::sieve(uint64_t prime)
 
 inline void Erat::addSievingPrime(uint64_t prime)
 {
-       if (prime > maxEratMedium_)   eratBig_->addSievingPrime(prime, segmentLow_);
-  else if (prime > maxEratSmall_) eratMedium_->addSievingPrime(prime, segmentLow_);
-  else /* (prime > maxPreSieve) */ eratSmall_->addSievingPrime(prime, segmentLow_);
+       if (prime > maxEratMedium_)   eratBig_.addSievingPrime(prime, segmentLow_);
+  else if (prime > maxEratSmall_) eratMedium_.addSievingPrime(prime, segmentLow_);
+  else /* (prime > maxPreSieve) */ eratSmall_.addSievingPrime(prime, segmentLow_);
 }
 
 inline uint64_t Erat::getStart() const

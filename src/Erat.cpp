@@ -94,21 +94,24 @@ Erat::Erat(uint64_t start,
   segmentLow_ = start_ - rem;
   segmentHigh_ = checkedAdd(segmentLow_, dist);
 
-  allocate();
+  init();
 }
 
-void Erat::allocate()
+void Erat::init()
 {
   deleteSieve_.reset(new byte_t[sieveSize_]);
   sieve_ = deleteSieve_.get();
 
   uint64_t l1Size = EratSmall::getL1Size(sieveSize_);
-  maxEratSmall_  = (uint64_t) (l1Size     * config::FACTOR_ERATSMALL);
+  maxEratSmall_  = (uint64_t) (l1Size * config::FACTOR_ERATSMALL);
   maxEratMedium_ = (uint64_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
 
-  if (sqrtStop_ > maxPreSieve_)   eratSmall_.reset(new EratSmall (stop_, l1Size, maxEratSmall_));
-  if (sqrtStop_ > maxEratSmall_) eratMedium_.reset(new EratMedium(stop_, sieveSize_, maxEratMedium_));
-  if (sqrtStop_ > maxEratMedium_)   eratBig_.reset(new EratBig   (stop_, sieveSize_, sqrtStop_));
+  if (sqrtStop_ > maxPreSieve_)
+    eratSmall_.init(stop_, l1Size, maxEratSmall_);
+  if (sqrtStop_ > maxEratSmall_)
+    eratMedium_.init(stop_, sieveSize_, maxEratMedium_);
+  if (sqrtStop_ > maxEratMedium_)
+    eratBig_.init(stop_, sieveSize_, sqrtStop_);
 }
 
 uint64_t Erat::getSqrtStop() const
@@ -141,17 +144,20 @@ void Erat::preSieve()
   }
 }
 
-void Erat::crossOffMultiples()
+void Erat::crossOff()
 {
-  if (eratSmall_)   eratSmall_->crossOff(sieve_, sieveSize_);
-  if (eratMedium_) eratMedium_->crossOff(sieve_, sieveSize_);
-  if (eratBig_)       eratBig_->crossOff(sieve_);
+  if (eratSmall_.enabled())
+    eratSmall_.crossOff(sieve_, sieveSize_);
+  if (eratMedium_.enabled())
+    eratMedium_.crossOff(sieve_, sieveSize_);
+  if (eratBig_.enabled())
+    eratBig_.crossOff(sieve_);
 }
 
 void Erat::sieveSegment()
 {
   preSieve();
-  crossOffMultiples();
+  crossOff();
   generatePrimes(sieve_, sieveSize_);
 
   // update for next segment
@@ -176,7 +182,7 @@ void Erat::sieve()
 
   // sieve last segment
   preSieve();
-  crossOffMultiples();
+  crossOff();
 
   // unset bits > stop
   sieve_[sieveSize_ - 1] &= unsetLarger[rem];

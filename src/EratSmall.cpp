@@ -3,7 +3,7 @@
 /// @brief  Segmented sieve of Eratosthenes optimized for
 ///         small sieving primes.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -31,13 +31,15 @@ namespace primesieve {
 /// @l1Size:    Sieve size in bytes
 /// @maxPrime:  Sieving primes <= maxPrime
 ///
-EratSmall::EratSmall(uint64_t stop, uint64_t l1Size, uint64_t maxPrime) :
-  Wheel30_t(stop, l1Size),
-  maxPrime_(maxPrime),
-  l1Size_(l1Size)
+void EratSmall::init(uint64_t stop, uint64_t l1Size, uint64_t maxPrime)
 {
-  if (maxPrime_ > l1Size * 3)
+  if (maxPrime > l1Size * 3)
     throw primesieve_error("EratSmall: maxPrime must be <= l1Size * 3");
+
+  enabled_ = true;
+  maxPrime_ = maxPrime;
+  l1Size_ = l1Size;
+  initWheel(stop, l1Size);
 
   size_t count = prime_count_approx(maxPrime);
   primes_.reserve(count);
