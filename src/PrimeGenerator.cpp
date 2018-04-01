@@ -51,7 +51,32 @@ PrimeGenerator::PrimeGenerator(PrimeSieve& ps, const PreSieve& preSieve) :
   counts_(ps_.getCounts())
 {
   if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEXTUPLETS))
-    init_kCounts();
+    initCounts();
+}
+
+/// Initialize the lookup tables to count the number
+/// of twins, triplets, ... per byte
+///
+void PrimeGenerator::initCounts()
+{
+  for (uint_t i = 1; i < counts_.size(); i++)
+  {
+    if (!ps_.isCount(i))
+      continue;
+
+    kCounts_[i].resize(256);
+
+    for (uint64_t j = 0; j < 256; j++)
+    {
+      byte_t count = 0;
+      for (const uint64_t* b = bitmasks_[i]; *b <= j; b++)
+      {
+        if ((j & *b) == *b)
+          count++;
+      }
+      kCounts_[i][j] = count;
+    }
+  }
 }
 
 void PrimeGenerator::sieve()
@@ -68,42 +93,19 @@ void PrimeGenerator::sieve()
   Erat::sieve();
 }
 
-/// Calculate the number of twins, triplets, ...
-/// for each possible byte value
-///
-void PrimeGenerator::init_kCounts()
-{
-  for (uint_t i = 1; i < counts_.size(); i++)
-  {
-    if (ps_.isCount(i))
-    {
-      kCounts_[i].resize(256);
-
-      for (uint64_t j = 0; j < 256; j++)
-      {
-        byte_t count = 0;
-        for (const uint64_t* b = bitmasks_[i]; *b <= j; b++)
-        {
-          if ((j & *b) == *b)
-            count++;
-        }
-        kCounts_[i][j] = count;
-      }
-    }
-  }
-}
-
-/// Executed after each sieved segment.
-/// @see sieveSegment() in Erat.cpp
-///
+/// Executed after each sieved segment
 void PrimeGenerator::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
 {
   if (ps_.isStore())
     storePrimes(ps_.getStore(), sieve, sieveSize);
-  if (ps_.isCount())
-    count(sieve, sieveSize);
-  if (ps_.isPrint())
-    print(sieve, sieveSize);
+  if (ps_.isFlag(ps_.COUNT_PRIMES))
+    countPrimes(sieve, sieveSize);
+  if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEXTUPLETS))
+    countkTuplets(sieve, sieveSize);
+  if (ps_.isFlag(ps_.PRINT_PRIMES))
+    printPrimes(sieve, sieveSize);
+  if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEXTUPLETS))
+    printkTuplets(sieve, sieveSize);
   if (ps_.isStatus())
     ps_.updateStatus(sieveSize * NUMBERS_PER_BYTE);
 }
@@ -122,89 +124,86 @@ void PrimeGenerator::storePrimes(Store& store, const byte_t* sieve, uint64_t sie
   }
 }
 
-/// Count the primes and prime k-tuplets
-/// in the current segment
-///
-void PrimeGenerator::count(const byte_t* sieve, uint64_t sieveSize)
+void PrimeGenerator::countPrimes(const byte_t* sieve, uint64_t sieveSize)
 {
-  if (ps_.isFlag(ps_.COUNT_PRIMES))
-    counts_[0] += popcount((const uint64_t*) sieve, ceilDiv(sieveSize, 8));
+  uint64_t size = ceilDiv(sieveSize, 8);
+  counts_[0] += popcount((const uint64_t*) sieve, size);
+}
 
+void PrimeGenerator::countkTuplets(const byte_t* sieve, uint64_t sieveSize)
+{
   // i = 1 twins, i = 2 triplets, ...
   for (uint_t i = 1; i < counts_.size(); i++)
   {
-    if (ps_.isCount(i))
+    if (!ps_.isCount(i))
+      continue;
+
+    uint64_t sum = 0;
+
+    for (uint64_t j = 0; j < sieveSize; j += 4)
     {
-      uint64_t sum = 0;
-
-      for (uint64_t j = 0; j < sieveSize; j += 4)
-      {
-        sum += kCounts_[i][sieve[j+0]];
-        sum += kCounts_[i][sieve[j+1]];
-        sum += kCounts_[i][sieve[j+2]];
-        sum += kCounts_[i][sieve[j+3]];
-      }
-
-      counts_[i] += sum;
+      sum += kCounts_[i][sieve[j+0]];
+      sum += kCounts_[i][sieve[j+1]];
+      sum += kCounts_[i][sieve[j+2]];
+      sum += kCounts_[i][sieve[j+3]];
     }
+
+    counts_[i] += sum;
   }
 }
 
-/// Print primes and prime k-tuplets to cout.
-/// primes <= 5 are handled in processSmallPrimes().
-///
-void PrimeGenerator::print(const byte_t* sieve, uint64_t sieveSize) const
+/// Print primes to stdout
+void PrimeGenerator::printPrimes(const byte_t* sieve, uint64_t sieveSize) const
 {
-  if (ps_.isFlag(ps_.PRINT_PRIMES))
+  uint64_t i = 0;
+  uint64_t low = segmentLow_;
+
+  while (i < sieveSize)
   {
-    uint64_t i = 0;
-    uint64_t low = segmentLow_;
+    uint64_t size = min(i + (1 << 16), sieveSize);
+    ostringstream primes;
 
-    while (i < sieveSize)
+    for (; i < size; i += 8)
     {
-      uint64_t size = min(i + (1 << 16), sieveSize);
-      ostringstream primes;
+      uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
+      while (bits)
+        primes << getPrime(&bits, low) << '\n';
 
-      for (; i < size; i += 8)
-      {
-        uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
-        while (bits)
-          primes << getPrime(&bits, low) << '\n';
-
-        low += NUMBERS_PER_BYTE * 8;
-      }
-
-      cout << primes.str();
+      low += NUMBERS_PER_BYTE * 8;
     }
+
+    cout << primes.str();
   }
+}
 
-  // print prime k-tuplets
-  if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEXTUPLETS))
+/// Print prime k-tuplets to stdout
+void PrimeGenerator::printkTuplets(const byte_t* sieve, uint64_t sieveSize) const
+{
+  // i = 1 twins, i = 2 triplets, ...
+  uint_t i = 1;
+  uint64_t low = segmentLow_;
+  ostringstream kTuplets;
+
+  for (; !ps_.isPrint(i); i++);
+
+  for (uint64_t j = 0; j < sieveSize; j++, low += NUMBERS_PER_BYTE)
   {
-    uint_t i = 1; // i = 1 twins, i = 2 triplets, ...
-    uint64_t low = segmentLow_;
-    ostringstream kTuplets;
-
-    for (; !ps_.isPrint(i); i++);
-    for (uint64_t j = 0; j < sieveSize; j++, low += NUMBERS_PER_BYTE)
+    for (const uint64_t* bitmask = bitmasks_[i]; *bitmask <= sieve[j]; bitmask++)
     {
-      for (const uint64_t* bitmask = bitmasks_[i]; *bitmask <= sieve[j]; bitmask++)
+      if ((sieve[j] & *bitmask) == *bitmask)
       {
-        if ((sieve[j] & *bitmask) == *bitmask)
+        kTuplets << "(";
+        uint64_t bits = *bitmask;
+        while (bits != 0)
         {
-          kTuplets << "(";
-          uint64_t bits = *bitmask;
-          while (bits != 0)
-          {
-            kTuplets << getPrime(&bits, low);
-            kTuplets << ((bits != 0) ? ", " : ")\n");
-          }
+          kTuplets << getPrime(&bits, low);
+          kTuplets << ((bits != 0) ? ", " : ")\n");
         }
       }
     }
-
-    cout << kTuplets.str();
   }
+
+  cout << kTuplets.str();
 }
 
 } // namespace

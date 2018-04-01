@@ -39,10 +39,12 @@ private:
   /// Reference to the associated PrimeSieve object
   PrimeSieve& ps_;
   PrimeSieve::counts_t& counts_;
-  void init_kCounts();
+  void initCounts();
   virtual void generatePrimes(const byte_t*, uint64_t);
-  void count(const byte_t*, uint64_t);
-  void print(const byte_t*, uint64_t) const;
+  void countPrimes(const byte_t*, uint64_t);
+  void countkTuplets(const byte_t*, uint64_t);
+  void printPrimes(const byte_t*, uint64_t) const;
+  void printkTuplets(const byte_t*, uint64_t) const;
   void storePrimes(Store&, const byte_t*, uint64_t) const;
   static void printPrime(uint64_t);
 };
