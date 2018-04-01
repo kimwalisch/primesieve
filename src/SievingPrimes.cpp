@@ -60,6 +60,7 @@ void SievingPrimes::fill()
       return;
 
   uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
+  sieveIdx_ += 8;
   uint64_t num = 0;
 
   for (; bits != 0; num++)
@@ -67,7 +68,6 @@ void SievingPrimes::fill()
 
   num_ = num;
   low_ += NUMBERS_PER_BYTE * 8;
-  sieveIdx_ += 8;
 }
 
 bool SievingPrimes::sieveSegment()
