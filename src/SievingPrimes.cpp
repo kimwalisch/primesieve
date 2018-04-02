@@ -22,7 +22,8 @@ using namespace std;
 
 namespace primesieve {
 
-SievingPrimes::SievingPrimes(PrimeGenerator& primeGen, const PreSieve& preSieve)
+SievingPrimes::SievingPrimes(const PrimeGenerator& primeGen,
+                             const PreSieve& preSieve)
 {
   Erat::init(preSieve.getMaxPrime() + 1,
              primeGen.getSqrtStop(),

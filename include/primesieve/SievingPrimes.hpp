@@ -21,7 +21,7 @@ class PreSieve;
 class SievingPrimes : public Erat
 {
 public:
-  SievingPrimes(PrimeGenerator&, const PreSieve&);
+  SievingPrimes(const PrimeGenerator&, const PreSieve&);
   uint64_t nextPrime();
 private:
   uint64_t i_ = 0;
@@ -31,8 +31,8 @@ private:
   uint64_t sieveIdx_ = ~0ull;
   uint64_t primes_[64];
   std::vector<char> tinySieve_;
-  void tinySieve();
   void fill();
+  void tinySieve();
   bool sieveSegment();
 };
 
