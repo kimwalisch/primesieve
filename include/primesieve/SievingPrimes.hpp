@@ -11,12 +11,14 @@
 #define SIEVINGPRIMES_HPP
 
 #include "Erat.hpp"
+
+#include <stdint.h>
 #include <vector>
 
 namespace primesieve {
 
-class PrimeGenerator;
 class PreSieve;
+class PrimeGenerator;
 
 class SievingPrimes : public Erat
 {

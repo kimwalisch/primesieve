@@ -31,8 +31,8 @@ public:
   bool enabled() const { return enabled_; }
 private:
   uint64_t maxPrime_;
-  bool enabled_ = false;
   std::vector<SievingPrime> primes_;
+  bool enabled_ = false;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
 };
 

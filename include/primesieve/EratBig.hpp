@@ -42,10 +42,10 @@ private:
   std::vector<std::unique_ptr<Bucket[]>> memory_;
   bool enabled_ = false;
   void init(uint64_t);
-  static void moveBucket(Bucket&, Bucket*&);
   void pushBucket(uint64_t);
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   void crossOff(byte_t*, SievingPrime*, SievingPrime*);
+  static void moveBucket(Bucket&, Bucket*&);
 };
 
 } // namespace

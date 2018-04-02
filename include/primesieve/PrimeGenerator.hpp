@@ -40,8 +40,8 @@ private:
   PreSieve preSieve_;
   PrimeSieve::counts_t& counts_;
   PrimeSieve& ps_;
-  void initCounts();
   virtual void generatePrimes(const byte_t*, uint64_t);
+  void initCounts();
   void countPrimes(const byte_t*, uint64_t);
   void countkTuplets(const byte_t*, uint64_t);
   void printPrimes(const byte_t*, uint64_t) const;
