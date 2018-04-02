@@ -115,11 +115,6 @@ void Erat::init()
     eratBig_.init(stop_, sieveSize_, sqrtStop_);
 }
 
-uint64_t Erat::getSqrtStop() const
-{
-  return sqrtStop_;
-}
-
 bool Erat::hasNextSegment() const
 {
   return segmentLow_ < stop_;

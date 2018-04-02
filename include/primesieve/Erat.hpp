@@ -32,13 +32,8 @@ class PreSieve;
 class Erat
 {
 public:
-  uint64_t getStart() const;
-  uint64_t getStop() const;
   uint64_t getSqrtStop() const;
   uint64_t getSieveSize() const;
-  void addSievingPrime(uint64_t);
-  void sieve(uint64_t);
-  void sieve();
 protected:
   /// Sieve of Eratosthenes array
   byte_t* sieve_ = nullptr;
@@ -54,12 +49,15 @@ protected:
   uint64_t stop_;
   uint64_t sqrtStop_;
   const PreSieve* preSieve_;
-  void init(uint64_t, uint64_t, uint64_t, const PreSieve&);
   virtual ~Erat() { }
+  void init(uint64_t, uint64_t, uint64_t, const PreSieve&);
+  void addSievingPrime(uint64_t);
+  void sieve(uint64_t);
+  void sieve();
+  void sieveSegment();
+  bool hasNextSegment() const;
   virtual void generatePrimes(const byte_t*, uint64_t) { }
   static uint64_t getPrime(uint64_t*, uint64_t);
-  bool hasNextSegment() const;
-  void sieveSegment();
 private:
   static const uint64_t bruijnBitValues_[64];
   uint64_t maxPreSieve_;
@@ -112,14 +110,9 @@ inline void Erat::addSievingPrime(uint64_t prime)
   else /* (prime > maxPreSieve) */ eratSmall_.addSievingPrime(prime, segmentLow_);
 }
 
-inline uint64_t Erat::getStart() const
+inline uint64_t Erat::getSqrtStop() const
 {
-  return start_;
-}
-
-inline uint64_t Erat::getStop() const
-{
-  return stop_;
+  return sqrtStop_;
 }
 
 /// Sieve size in kilobytes
