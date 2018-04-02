@@ -41,7 +41,7 @@ public:
   void sieve();
 protected:
   /// Sieve of Eratosthenes array
-  byte_t* sieve_;
+  byte_t* sieve_ = nullptr;
   /// Size of sieve_ in bytes (power of 2)
   uint64_t sieveSize_;
   /// Lower bound of the current segment

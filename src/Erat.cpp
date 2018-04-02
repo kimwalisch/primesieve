@@ -77,8 +77,7 @@ Erat::Erat(uint64_t start,
   stop_(stop),
   sqrtStop_(isqrt(stop)),
   preSieve_(preSieve),
-  maxPreSieve_(preSieve.getMaxPrime()),
-  sieve_(nullptr)
+  maxPreSieve_(preSieve.getMaxPrime())
 {
   if (start_ < 7)
     throw primesieve_error("Erat: start must be >= 7");
