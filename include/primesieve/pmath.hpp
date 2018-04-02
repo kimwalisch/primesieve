@@ -2,7 +2,7 @@
 /// @file   pmath.hpp
 /// @brief  Auxiliary math functions for primesieve.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -16,6 +16,7 @@
 #include <cmath>
 #include <cstddef>
 #include <limits>
+#include <climits>
 #include <type_traits>
 
 namespace primesieve {
@@ -29,7 +30,9 @@ inline X ceilDiv(X x, Y y)
 template <typename T>
 inline T numberOfBits(T)
 {
-  return (T) (sizeof(T) * 8);
+  static_assert(sizeof(uint64_t) * CHAR_BIT == 64, "numberOfBits() is broken");
+
+  return (T) (sizeof(T) * CHAR_BIT);
 }
 
 template <typename T>
@@ -43,6 +46,7 @@ inline T floorPow2(T x)
 {
   for (T i = 1; i < numberOfBits(x); i += i)
     x |= (x >> i);
+
   return x - (x >> 1);
 }
 
@@ -151,6 +155,7 @@ inline T max_prime_gap(T n)
   x = std::max(1.0, x);
   double logx = std::log(x);
   double prime_gap = logx * logx;
+
   return (T) prime_gap;
 }
 
