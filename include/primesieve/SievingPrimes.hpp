@@ -24,11 +24,11 @@ public:
   SievingPrimes(PrimeGenerator&, const PreSieve&);
   uint64_t nextPrime();
 private:
-  uint64_t i_;
-  uint64_t num_;
-  uint64_t low_;
+  uint64_t i_ = 0;
+  uint64_t num_ = 0;
+  uint64_t low_ = 0;
   uint64_t tinyIdx_;
-  uint64_t sieveIdx_;
+  uint64_t sieveIdx_ = ~0ull;
   uint64_t primes_[64];
   std::vector<char> tinySieve_;
   void tinySieve();

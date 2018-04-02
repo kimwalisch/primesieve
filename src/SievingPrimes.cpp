@@ -26,14 +26,7 @@ SievingPrimes::SievingPrimes(PrimeGenerator& primeGen, const PreSieve& preSieve)
        primeGen.getSqrtStop(),
        primeGen.getSieveSize() / 1024,
        preSieve)
-{
-  low_ = 0;
-  num_ = 0;
-  i_ = 0;
-  sieveIdx_ = ~0ull;
-
-  tinySieve();
-}
+{ }
 
 /// Sieve up to n^(1/4)
 void SievingPrimes::tinySieve()
@@ -76,6 +69,9 @@ bool SievingPrimes::sieveSegment()
     sieveIdx_ = 0;
     uint64_t high = segmentHigh_;
     uint64_t max = std::min(high, stop_);
+
+    if (tinySieve_.empty())
+      tinySieve();
 
     for (uint64_t& i = tinyIdx_; i * i <= max; i += 2)
       if (tinySieve_[i])
