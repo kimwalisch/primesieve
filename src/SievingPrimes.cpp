@@ -15,6 +15,7 @@
 #include <primesieve/littleendian_cast.hpp>
 
 #include <stdint.h>
+#include <algorithm>
 #include <vector>
 
 using namespace std;
