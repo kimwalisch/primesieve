@@ -4,7 +4,6 @@ language: cpp
 branches:
   except:
     - gh-pages
-    - experimental
 
 compiler:
   - gcc
