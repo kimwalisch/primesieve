@@ -90,7 +90,7 @@ Erat::Erat(uint64_t start,
   sieveSize_ *= 1024;
 
   uint64_t rem = getByteRemainder(start_);
-  uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE + 6;
+  uint64_t dist = sieveSize_ * 30 + 6;
   segmentLow_ = start_ - rem;
   segmentHigh_ = checkedAdd(segmentLow_, dist);
 
@@ -126,10 +126,9 @@ bool Erat::hasNextSegment() const
 
 uint64_t Erat::getByteRemainder(uint64_t n)
 {
-  uint64_t r = n % NUMBERS_PER_BYTE;
-  if (r <= 6)
-    r += NUMBERS_PER_BYTE;
-  return r;
+  n %= 30;
+  if (n <= 6) n += 30;
+  return n;
 }
 
 /// Pre-sieve multiples of small primes e.g. <= 19
@@ -175,8 +174,7 @@ void Erat::sieveSegment()
     crossOff();
     generatePrimes(sieve_, sieveSize_);
 
-    // update for next segment
-    uint64_t dist = sieveSize_ * NUMBERS_PER_BYTE;
+    uint64_t dist = sieveSize_ * 30;
     segmentLow_ = checkedAdd(segmentLow_, dist);
     segmentHigh_ = checkedAdd(segmentHigh_, dist);
   }
@@ -186,8 +184,8 @@ void Erat::sieveLastSegment()
 {
   uint64_t rem = getByteRemainder(stop_);
   uint64_t dist = (stop_ - rem) - segmentLow_;
-  sieveSize_ = dist / NUMBERS_PER_BYTE + 1;
-  dist = sieveSize_ * NUMBERS_PER_BYTE + 6;
+  sieveSize_ = dist / 30 + 1;
+  dist = sieveSize_ * 30 + 6;
   segmentHigh_ = checkedAdd(segmentLow_, dist);
 
   preSieve();

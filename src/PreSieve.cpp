@@ -53,7 +53,7 @@ PreSieve::PreSieve(uint64_t start, uint64_t stop) :
 
 void PreSieve::init()
 {
-  size_ = primeProduct_ / NUMBERS_PER_BYTE;
+  size_ = primeProduct_ / 30;
   deleter_.reset(new byte_t[size_]);
   buffer_ = deleter_.get();
   memset(buffer_, 0xff, size_);
@@ -76,7 +76,7 @@ void PreSieve::copy(byte_t* sieve,
 {
   // find segmentLow index
   uint64_t remainder = segmentLow % primeProduct_;
-  uint64_t index = remainder / NUMBERS_PER_BYTE;
+  uint64_t index = remainder / 30;
   uint64_t sizeLeft = size_ - index;
 
   if (sieveSize <= sizeLeft)

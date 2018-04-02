@@ -50,7 +50,7 @@ void EratBig::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 
 void EratBig::init(uint64_t sieveSize)
 {
-  uint64_t maxSievingPrime  = maxPrime_ / NUMBERS_PER_BYTE;
+  uint64_t maxSievingPrime  = maxPrime_ / 30;
   uint64_t maxNextMultiple  = maxSievingPrime * getMaxFactor() + getMaxFactor();
   uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
   uint64_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
@@ -68,7 +68,7 @@ void EratBig::init(uint64_t sieveSize)
 void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t wheelIndex)
 {
   assert(prime <= maxPrime_);
-  uint64_t sievingPrime = prime / NUMBERS_PER_BYTE;
+  uint64_t sievingPrime = prime / 30;
   uint64_t segment = multipleIndex >> log2SieveSize_;
   multipleIndex &= moduloSieveSize_;
 

@@ -45,7 +45,7 @@ void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t wheelIndex)
 {
   assert(prime <= maxPrime_);
-  uint64_t sievingPrime = prime / NUMBERS_PER_BYTE;
+  uint64_t sievingPrime = prime / 30;
   primes_.emplace_back(sievingPrime, multipleIndex, wheelIndex);
 }
 

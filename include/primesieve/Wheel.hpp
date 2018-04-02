@@ -89,8 +89,8 @@ public:
     if (nextMultiple > stop_ - multiple)
       return;
     nextMultiple += multiple - segmentLow;
-    uint64_t multipleIndex = nextMultiple / NUMBERS_PER_BYTE;
-    uint64_t wheelIndex = wheelOffsets_[prime % NUMBERS_PER_BYTE] + INIT[quotient % MODULO].wheelIndex;
+    uint64_t multipleIndex = nextMultiple / 30;
+    uint64_t wheelIndex = wheelOffsets_[prime % 30] + INIT[quotient % MODULO].wheelIndex;
     storeSievingPrime(prime, multipleIndex, wheelIndex);
   }
 

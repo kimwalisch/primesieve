@@ -107,7 +107,7 @@ void PrimeGenerator::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
   if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEXTUPLETS))
     printkTuplets(sieve, sieveSize);
   if (ps_.isStatus())
-    ps_.updateStatus(sieveSize * NUMBERS_PER_BYTE);
+    ps_.updateStatus(sieveSize * 30);
 }
 
 void PrimeGenerator::storePrimes(Store& store, const byte_t* sieve, uint64_t sieveSize) const
@@ -120,7 +120,7 @@ void PrimeGenerator::storePrimes(Store& store, const byte_t* sieve, uint64_t sie
     while (bits)
       store(getPrime(&bits, low));
 
-    low += NUMBERS_PER_BYTE * 8;
+    low += 30 * 8;
   }
 }
 
@@ -169,7 +169,7 @@ void PrimeGenerator::printPrimes(const byte_t* sieve, uint64_t sieveSize) const
       while (bits)
         primes << getPrime(&bits, low) << '\n';
 
-      low += NUMBERS_PER_BYTE * 8;
+      low += 30 * 8;
     }
 
     cout << primes.str();
@@ -186,7 +186,7 @@ void PrimeGenerator::printkTuplets(const byte_t* sieve, uint64_t sieveSize) cons
 
   for (; !ps_.isPrint(i); i++);
 
-  for (uint64_t j = 0; j < sieveSize; j++, low += NUMBERS_PER_BYTE)
+  for (uint64_t j = 0; j < sieveSize; j++, low += 30)
   {
     for (const uint64_t* bitmask = bitmasks_[i]; *bitmask <= sieve[j]; bitmask++)
     {

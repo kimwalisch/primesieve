@@ -8,7 +8,6 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/config.hpp>
 #include <primesieve/SievingPrimes.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/PreSieve.hpp>
@@ -67,7 +66,7 @@ void SievingPrimes::fill()
     primes_[num] = getPrime(&bits, low_);
 
   num_ = num;
-  low_ += NUMBERS_PER_BYTE * 8;
+  low_ += 30 * 8;
 }
 
 bool SievingPrimes::sieveSegment()

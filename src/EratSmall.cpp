@@ -67,7 +67,7 @@ uint64_t EratSmall::getL1Size(uint64_t sieveSize)
 void EratSmall::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t wheelIndex)
 {
   assert(prime <= maxPrime_);
-  uint64_t sievingPrime = prime / NUMBERS_PER_BYTE;
+  uint64_t sievingPrime = prime / 30;
   primes_.emplace_back(sievingPrime, multipleIndex, wheelIndex);
 }
 

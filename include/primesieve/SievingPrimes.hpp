@@ -10,9 +10,7 @@
 #ifndef SIEVINGPRIMES_HPP
 #define SIEVINGPRIMES_HPP
 
-#include "config.hpp"
 #include "Erat.hpp"
-
 #include <vector>
 
 namespace primesieve {
