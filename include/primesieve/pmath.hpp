@@ -16,7 +16,6 @@
 #include <cmath>
 #include <cstddef>
 #include <limits>
-#include <climits>
 #include <type_traits>
 
 namespace primesieve {
@@ -28,17 +27,16 @@ inline X ceilDiv(X x, Y y)
 }
 
 template <typename T>
-inline T numberOfBits(T)
-{
-  static_assert(sizeof(uint64_t) * CHAR_BIT == 64, "numberOfBits() is broken");
-
-  return (T) (sizeof(T) * CHAR_BIT);
-}
-
-template <typename T>
 inline bool isPow2(T x)
 {
   return x != 0 && (x & (x - 1)) == 0;
+}
+
+template <typename T>
+inline T numberOfBits(T)
+{
+  return (T) std::numeric_limits<
+      typename std::make_unsigned<T>::type>::digits;
 }
 
 template <typename T>
