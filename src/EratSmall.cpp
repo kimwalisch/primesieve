@@ -39,7 +39,7 @@ void EratSmall::init(uint64_t stop, uint64_t l1Size, uint64_t maxPrime)
   enabled_ = true;
   maxPrime_ = maxPrime;
   l1Size_ = l1Size;
-  initWheel(stop, l1Size);
+  Wheel::init(stop, l1Size);
 
   size_t count = prime_count_approx(maxPrime);
   primes_.reserve(count);

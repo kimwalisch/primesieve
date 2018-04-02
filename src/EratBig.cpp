@@ -44,7 +44,7 @@ void EratBig::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
   moduloSieveSize_ = sieveSize - 1;
   stock_ = nullptr;
 
-  initWheel(stop, sieveSize);
+  Wheel::init(stop, sieveSize);
   init(sieveSize);
 }
 

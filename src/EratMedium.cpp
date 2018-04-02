@@ -35,7 +35,7 @@ void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 
   enabled_ = true;
   maxPrime_ = maxPrime;
-  initWheel(stop, sieveSize);
+  Wheel::init(stop, sieveSize);
 
   size_t size = prime_count_approx(maxPrime);
   primes_.reserve(size);
