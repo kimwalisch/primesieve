@@ -53,8 +53,8 @@ protected:
   /// Sieve primes <= stop_
   uint64_t stop_;
   uint64_t sqrtStop_;
-  const PreSieve& preSieve_;
-  Erat(uint64_t, uint64_t, uint64_t, const PreSieve&);
+  const PreSieve* preSieve_;
+  void init(uint64_t, uint64_t, uint64_t, const PreSieve&);
   virtual ~Erat() { }
   virtual void generatePrimes(const byte_t*, uint64_t) { }
   static uint64_t getPrime(uint64_t*, uint64_t);
@@ -122,9 +122,10 @@ inline uint64_t Erat::getStop() const
   return stop_;
 }
 
+/// Sieve size in kilobytes
 inline uint64_t Erat::getSieveSize() const
 {
-  return sieveSize_;
+  return sieveSize_ / 1024;
 }
 
 } // namespace

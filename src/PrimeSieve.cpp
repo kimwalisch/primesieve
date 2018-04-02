@@ -13,7 +13,6 @@
 #include <primesieve/config.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/primesieve_error.hpp>
-#include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/StorePrimes.hpp>
 #include <primesieve/pmath.hpp>
@@ -230,9 +229,8 @@ void PrimeSieve::sieve()
 
   if (stop_ >= 7)
   {
-    PreSieve preSieve(start_, stop_);
-    PrimeGenerator primeGen(*this, preSieve);
-    primeGen.sieve();
+    PrimeGenerator primeGenerator(*this);
+    primeGenerator.sieve();
   }
 
   auto t2 = chrono::system_clock::now();

@@ -42,14 +42,17 @@ const uint64_t PrimeGenerator::bitmasks_[6][5] =
   { 0x3f, END }                    // Prime sextuplets
 };
 
-PrimeGenerator::PrimeGenerator(PrimeSieve& ps, const PreSieve& preSieve) :
-  Erat(max<uint64_t>(7, ps.getStart()),
-       ps.getStop(),
-       ps.getSieveSize(),
-       preSieve),
-  ps_(ps),
-  counts_(ps_.getCounts())
+PrimeGenerator::PrimeGenerator(PrimeSieve& ps) :
+  preSieve_(ps.getStart(), ps.getStop()),
+  counts_(ps.getCounts()),
+  ps_(ps)
 {
+  uint64_t start = max<uint64_t>(7, ps.getStart());
+  uint64_t stop = ps.getStop();
+  uint64_t sieveSize = ps.getSieveSize();
+
+  Erat::init(start, stop, sieveSize, preSieve_);
+
   if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEXTUPLETS))
     initCounts();
 }

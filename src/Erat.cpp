@@ -69,20 +69,22 @@ const uint64_t Erat::bruijnBitValues_[64] =
 /// @sieveSize:  Sieve size in kilobytes
 /// @preSieve:   Pre-sieve primes
 ///
-Erat::Erat(uint64_t start,
-           uint64_t stop,
-           uint64_t sieveSize,
-           const PreSieve& preSieve) :
-  start_(start),
-  stop_(stop),
-  sqrtStop_(isqrt(stop)),
-  preSieve_(preSieve),
-  maxPreSieve_(preSieve.getMaxPrime())
+void Erat::init(uint64_t start,
+                uint64_t stop,
+                uint64_t sieveSize,
+                const PreSieve& preSieve)
 {
+  start_ = start;
+  stop_ = stop;
+  sqrtStop_ = isqrt(stop);
+
   if (start_ < 7)
     throw primesieve_error("Erat: start must be >= 7");
   if (start_ > stop_)
     throw primesieve_error("Erat: start must be <= stop");
+
+  preSieve_ = &preSieve;
+  maxPreSieve_ = preSieve.getMaxPrime();
 
   sieveSize_ = floorPow2(sieveSize);
   sieveSize_ = inBetween(8, sieveSize_, 4096);
@@ -135,7 +137,7 @@ uint64_t Erat::getByteRemainder(uint64_t n)
 ///
 void Erat::preSieve()
 {
-  preSieve_.copy(sieve_, sieveSize_, segmentLow_);
+  preSieve_->copy(sieve_, sieveSize_, segmentLow_);
 
   // unset bits < start
   if (segmentLow_ <= start_)

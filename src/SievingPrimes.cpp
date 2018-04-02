@@ -21,12 +21,13 @@ using namespace std;
 
 namespace primesieve {
 
-SievingPrimes::SievingPrimes(PrimeGenerator& primeGen, const PreSieve& preSieve) :
-  Erat(preSieve.getMaxPrime() + 1,
-       primeGen.getSqrtStop(),
-       primeGen.getSieveSize() / 1024,
-       preSieve)
-{ }
+SievingPrimes::SievingPrimes(PrimeGenerator& primeGen, const PreSieve& preSieve)
+{
+  Erat::init(preSieve.getMaxPrime() + 1,
+             primeGen.getSqrtStop(),
+             primeGen.getSieveSize(),
+             preSieve);
+}
 
 /// Sieve up to n^(1/4)
 void SievingPrimes::tinySieve()

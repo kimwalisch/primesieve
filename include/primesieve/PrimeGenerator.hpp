@@ -1,7 +1,7 @@
 ///
 /// @file  PrimeGenerator.hpp
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -13,13 +13,13 @@
 #include "config.hpp"
 #include "Erat.hpp"
 #include "PrimeSieve.hpp"
+#include "PreSieve.hpp"
 
 #include <stdint.h>
 #include <vector>
 
 namespace primesieve {
 
-class PreSieve;
 class Store;
 
 /// After a segment has been sieved PrimeGenerator is
@@ -29,7 +29,7 @@ class Store;
 class PrimeGenerator : public Erat
 {
 public:
-  PrimeGenerator(PrimeSieve&, const PreSieve&);
+  PrimeGenerator(PrimeSieve&);
   void sieve();
 private:
   enum { END = 0xff + 1 };
@@ -37,8 +37,9 @@ private:
   /// Count lookup tables for prime k-tuplets
   std::vector<byte_t> kCounts_[6];
   /// Reference to the associated PrimeSieve object
-  PrimeSieve& ps_;
+  PreSieve preSieve_;
   PrimeSieve::counts_t& counts_;
+  PrimeSieve& ps_;
   void initCounts();
   virtual void generatePrimes(const byte_t*, uint64_t);
   void countPrimes(const byte_t*, uint64_t);
