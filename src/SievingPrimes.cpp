@@ -21,8 +21,7 @@ using namespace std;
 
 namespace primesieve {
 
-SievingPrimes::SievingPrimes(const Erat* erat,
-                             const PreSieve& preSieve)
+SievingPrimes::SievingPrimes(Erat* erat, PreSieve& preSieve)
 {
   Erat::init(preSieve.getMaxPrime() + 1,
              erat->getSqrtStop(),
@@ -30,8 +29,7 @@ SievingPrimes::SievingPrimes(const Erat* erat,
              preSieve);
 }
 
-void SievingPrimes::init(const Erat* erat,
-                         const PreSieve& preSieve)
+void SievingPrimes::init(Erat* erat, PreSieve& preSieve)
 {
   Erat::init(preSieve.getMaxPrime() + 1,
              erat->getSqrtStop(),

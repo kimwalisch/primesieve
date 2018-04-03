@@ -72,7 +72,7 @@ const uint64_t Erat::bruijnBitValues_[64] =
 void Erat::init(uint64_t start,
                 uint64_t stop,
                 uint64_t sieveSize,
-                const PreSieve& preSieve)
+                PreSieve& preSieve)
 {
   start_ = start;
   stop_ = stop;

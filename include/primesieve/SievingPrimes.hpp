@@ -23,8 +23,8 @@ class SievingPrimes : public Erat
 {
 public:
   SievingPrimes() { }
-  SievingPrimes(const Erat*, const PreSieve&);
-  void init(const Erat*, const PreSieve&);
+  SievingPrimes(Erat*, PreSieve&);
+  void init(Erat*, PreSieve&);
   uint64_t nextPrime();
 private:
   uint64_t i_ = 0;

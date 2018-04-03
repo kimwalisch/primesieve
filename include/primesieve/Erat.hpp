@@ -48,9 +48,9 @@ protected:
   /// Sieve primes <= stop_
   uint64_t stop_;
   uint64_t sqrtStop_;
-  const PreSieve* preSieve_;
+  PreSieve* preSieve_;
   virtual ~Erat() { }
-  void init(uint64_t, uint64_t, uint64_t, const PreSieve&);
+  void init(uint64_t, uint64_t, uint64_t, PreSieve&);
   void addSievingPrime(uint64_t);
   void sieve(uint64_t);
   void sieve();
