@@ -36,7 +36,7 @@ const std::array<uint64_t, 53> smallPrimes =
 };
 
 /// Number of primes <= n
-const std::array<size_t, 242> primePi =
+const std::array<uint8_t, 242> primePi =
 {
    0,  0,  1,  2,  2,  3,  3,  4,  4,  4,
    4,  5,  5,  6,  6,  6,  6,  7,  7,  8,
