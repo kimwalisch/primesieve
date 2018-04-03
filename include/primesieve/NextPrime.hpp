@@ -32,6 +32,7 @@ private:
   PreSieve preSieve_;
   SievingPrimes sievingPrimes_;
   uint64_t primes_[64];
+  void initSmallPrimes(uint64_t, uint64_t);
   void fill();
   bool sieveSegment();
 };
