@@ -111,9 +111,9 @@ void NextPrime::fill()
     if (!sieveSegment())
       return;
 
+  uint64_t num = 0;
   uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
   sieveIdx_ += 8;
-  uint64_t num = 0;
 
   for (; bits != 0; num++)
     primes_[num] = getPrime(&bits, low_);
