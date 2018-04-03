@@ -123,7 +123,7 @@ void PrimeGenerator::storePrimes(Store& store, const byte_t* sieve, uint64_t sie
     while (bits)
       store(getPrime(&bits, low));
 
-    low += 30 * 8;
+    low += 8 * 30;
   }
 }
 
@@ -172,7 +172,7 @@ void PrimeGenerator::printPrimes(const byte_t* sieve, uint64_t sieveSize) const
       while (bits)
         primes << getPrime(&bits, low) << '\n';
 
-      low += 30 * 8;
+      low += 8 * 30;
     }
 
     cout << primes.str();
