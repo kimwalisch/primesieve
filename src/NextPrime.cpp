@@ -96,7 +96,9 @@ void NextPrime::initSmallPrimes(uint64_t start, uint64_t stop)
     if (stop < smallPrimes.back())
       stopIdx = primePi[stop];
 
-    copy(&smallPrimes[startIdx], &smallPrimes[stopIdx], primes_);
+    for (size_t i = startIdx; i < stopIdx; i++)
+      primes_[i] = smallPrimes[i];
+
     num_ = stopIdx - startIdx;
   }
 }
@@ -117,7 +119,7 @@ void NextPrime::fill()
     primes_[num] = getPrime(&bits, low_);
 
   num_ = num;
-  low_ += 30 * 8;
+  low_ += 8 * 30;
 }
 
 bool NextPrime::sieveSegment()

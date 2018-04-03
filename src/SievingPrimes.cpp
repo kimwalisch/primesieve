@@ -68,7 +68,7 @@ void SievingPrimes::fill()
     primes_[num] = getPrime(&bits, low_);
 
   num_ = num;
-  low_ += 30 * 8;
+  low_ += 8 * 30;
 }
 
 bool SievingPrimes::sieveSegment()
