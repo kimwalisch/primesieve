@@ -82,7 +82,6 @@ NextPrime::NextPrime(uint64_t start, uint64_t stop, uint64_t sieveSize)
 
   Erat::init(start, stop, sieveSize, preSieve_);
   sievingPrimes_.init(this, preSieve_);
-  low_ = segmentLow_;
 }
 
 void NextPrime::initSmallPrimes(uint64_t start, uint64_t stop)
@@ -126,6 +125,8 @@ bool NextPrime::sieveSegment()
   if (hasNextSegment())
   {
     sieveIdx_ = 0;
+    low_ = segmentLow_;
+
     uint64_t high = min(segmentHigh_, stop_);
     uint64_t sqrtHigh = isqrt(high);
 
