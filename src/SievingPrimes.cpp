@@ -9,7 +9,6 @@
 ///
 
 #include <primesieve/SievingPrimes.hpp>
-#include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/Erat.hpp>
 #include <primesieve/littleendian_cast.hpp>
@@ -22,12 +21,21 @@ using namespace std;
 
 namespace primesieve {
 
-SievingPrimes::SievingPrimes(const PrimeGenerator& primeGen,
+SievingPrimes::SievingPrimes(const Erat* erat,
                              const PreSieve& preSieve)
 {
   Erat::init(preSieve.getMaxPrime() + 1,
-             primeGen.getSqrtStop(),
-             primeGen.getSieveSize(),
+             erat->getSqrtStop(),
+             erat->getSieveSize(),
+             preSieve);
+}
+
+void SievingPrimes::init(const Erat* erat,
+                         const PreSieve& preSieve)
+{
+  Erat::init(preSieve.getMaxPrime() + 1,
+             erat->getSqrtStop(),
+             erat->getSieveSize(),
              preSieve);
 }
 
@@ -70,13 +78,12 @@ bool SievingPrimes::sieveSegment()
   if (hasNextSegment())
   {
     sieveIdx_ = 0;
-    uint64_t high = segmentHigh_;
-    uint64_t max = std::min(high, stop_);
+    uint64_t high = min(segmentHigh_, stop_);
 
     if (tinySieve_.empty())
       tinySieve();
 
-    for (uint64_t& i = tinyIdx_; i * i <= max; i += 2)
+    for (uint64_t& i = tinyIdx_; i * i <= high; i += 2)
       if (tinySieve_[i])
         addSievingPrime(i);
 

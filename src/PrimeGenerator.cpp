@@ -87,7 +87,7 @@ void PrimeGenerator::sieve()
   if (sqrtStop_ > preSieve_.getMaxPrime())
   {
     // generate sieving primes
-    SievingPrimes sievingPrimes(*this, preSieve_);
+    SievingPrimes sievingPrimes(this, preSieve_);
     uint64_t prime = sievingPrimes.nextPrime();
     for (; prime <= sqrtStop_; prime = sievingPrimes.nextPrime())
       Erat::sieve(prime);
