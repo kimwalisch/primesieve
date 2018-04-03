@@ -11,7 +11,7 @@ compiler:
 
 env:
   global:
-    - CXXFLAGS="-O3 -Wall -Wextra -Werror -pedantic"
+    - CXXFLAGS="-O3 -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
     - OMP_NUM_THREADS=4
 
 before_install:
