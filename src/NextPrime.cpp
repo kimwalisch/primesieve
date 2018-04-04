@@ -9,6 +9,7 @@
 /// file in the top level directory.
 ///
 
+#include <primesieve.hpp>
 #include <primesieve/NextPrime.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/Erat.hpp>
@@ -69,7 +70,7 @@ const std::array<uint8_t, 242> primePi =
 
 namespace primesieve {
 
-NextPrime::NextPrime(uint64_t start, uint64_t stop, uint64_t sieveSize)
+NextPrime::NextPrime(uint64_t start, uint64_t stop)
   : preSieve_(start, stop)
 {
   initSmallPrimes(start, stop);
@@ -77,6 +78,8 @@ NextPrime::NextPrime(uint64_t start, uint64_t stop, uint64_t sieveSize)
   // small primes < 247 are stored in lookup table,
   // sieving is only used if stop >= 247
   uint64_t minStart = 247;
+  uint64_t sieveSize = get_sieve_size();
+
   start = max(start, minStart);
   stop = max(start, stop);
 

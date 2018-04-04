@@ -21,7 +21,7 @@ namespace primesieve {
 class NextPrime : public Erat
 {
 public:
-  NextPrime(uint64_t, uint64_t, uint64_t);
+  NextPrime(uint64_t, uint64_t);
   uint64_t nextPrime();
 private:
   uint64_t i_ = 0;

@@ -98,7 +98,7 @@ CpuInfo::CpuInfo()
 {
   try
   {
-    initCache();
+    init();
   }
   catch (exception& e)
   {
@@ -140,7 +140,7 @@ bool CpuInfo::hasL2Cache() const
 
 #if defined(APPLE_SYSCTL)
 
-void CpuInfo::initCache()
+void CpuInfo::init()
 {
   size_t l1Length = sizeof(l1CacheSize_);
   size_t l2Length = sizeof(l2CacheSize_);
@@ -184,7 +184,7 @@ void CpuInfo::initCache()
 
 #elif defined(_WIN32)
 
-void CpuInfo::initCache()
+void CpuInfo::init()
 {
   typedef BOOL (WINAPI *LPFN_GLPI)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
 
@@ -298,7 +298,7 @@ void CpuInfo::initCache()
 /// This works on Linux and Android. We also use this
 /// for all unknown OSes, it might work.
 ///
-void CpuInfo::initCache()
+void CpuInfo::init()
 {
   for (int i = 0; i <= 3; i++)
   {
