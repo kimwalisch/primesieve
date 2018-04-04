@@ -36,7 +36,8 @@ template <typename T>
 inline T numberOfBits(T)
 {
   return (T) std::numeric_limits<
-      typename std::make_unsigned<T>::type>::digits;
+      typename std::make_unsigned<T>::type
+          >::digits;
 }
 
 template <typename T>
