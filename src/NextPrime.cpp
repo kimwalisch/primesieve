@@ -98,13 +98,11 @@ void NextPrime::initSmallPrimes(uint64_t* primes, size_t* size)
   size_t stopIdx = smallPrimes.size();
 
   if (start_ > 1)
-    startIdx = primePi[start_] - 1;
+    startIdx = primePi[start_ - 1];
   if (stop_ < smallPrimes.back())
     stopIdx = primePi[stop_];
 
-  for (size_t i = startIdx; i < stopIdx; i++)
-    primes[i] = smallPrimes[i];
-
+  copy(&smallPrimes[startIdx], &smallPrimes[stopIdx], primes);
   *size = stopIdx - startIdx;
 }
 
