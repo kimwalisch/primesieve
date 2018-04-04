@@ -150,7 +150,7 @@ template <typename T>
 inline T max_prime_gap(T n)
 {
   double x = (double) n;
-  x = std::max(1.0, x);
+  x = std::max(8.0, x);
   double logx = std::log(x);
   double prime_gap = logx * logx;
 
