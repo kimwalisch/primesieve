@@ -22,7 +22,7 @@ using namespace primesieve;
 
 namespace {
 
-const
+const uint64_t uint64_max = numeric_limits<uint64_t>::max();
 
 void clear(NextPrimes*& ptr)
 {
@@ -32,14 +32,20 @@ void clear(NextPrimes*& ptr)
   ptr = nullptr;
 }
 
-uint64_t get_next_distance(uint64_t n, uint64_t& dist)
+bool newNextPrimes(uint64_t prime, uint64_t stop)
+{
+  return prime == uint64_max &&
+          stop != uint64_max;
+}
+
+uint64_t get_next_distance(uint64_t n, uint64_t dist)
 {
   double x = (double) n;
   x = max(x, 16.0);
   x = sqrt(x) / log(log(x));
 
   uint64_t min_dist = (uint64_t) x;
-  uint64_t limit = numeric_limits<uint64_t>::max() / 4;
+  uint64_t limit = uint64_max / 4;
   dist = max(dist, min_dist);
 
   if (dist < limit)
@@ -48,10 +54,18 @@ uint64_t get_next_distance(uint64_t n, uint64_t& dist)
   return dist;
 }
 
-bool newNextPrimes(uint64_t prime, uint64_t stop)
+uint64_t get_next_stop(uint64_t start, uint64_t stop_hint, uint64_t* dist)
 {
-  return prime == numeric_limits<uint64_t>::max() &&
-      stop < numeric_limits<uint64_t>::max();
+  // check if stop_hint is reasonable
+  if (stop_hint >= start &&
+      stop_hint < uint64_max)
+  {
+    uint64_t max_gap = max_prime_gap(stop_hint);
+    return checkedAdd(stop_hint, max_gap);
+  }
+
+  *dist = get_next_distance(start, *dist);
+  return checkedAdd(start, *dist);
 }
 
 } // namespace
@@ -92,9 +106,7 @@ void iterator::generate_next_primes()
   {
     primes_.resize(64);
     start_ = checkedAdd(stop_, 1);
-    stop_ = checkedAdd(start_, get_next_distance(start_, tiny_cache_size_));
-    if (start_ <= stop_hint_ && stop_ >= stop_hint_)
-      stop_ = checkedAdd(stop_hint_, max_prime_gap(stop_hint_));
+    stop_ = get_next_stop(start_, stop_hint_, &tiny_cache_size_);
     nextPrimes_ = new NextPrimes(start_, stop_);
   }
 
@@ -105,9 +117,7 @@ void iterator::generate_next_primes()
   {
     clear(nextPrimes_);
     start_ = checkedAdd(stop_, 1);
-    stop_ = checkedAdd(start_, get_next_distance(start_, tiny_cache_size_));
-    if (start_ <= stop_hint_ && stop_ >= stop_hint_)
-      stop_ = checkedAdd(stop_hint_, max_prime_gap(stop_hint_));
+    stop_ = get_next_stop(start_, stop_hint_, &tiny_cache_size_);
     nextPrimes_ = new NextPrimes(start_, stop_);
 
     for (last_idx_ = 0; !last_idx_;)
