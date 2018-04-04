@@ -1,7 +1,7 @@
 ///
 /// @file  nthPrime.cpp
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -151,25 +151,23 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   // distance and find the nth prime
   assert(count < n);
 
-  try
-  {
-    checkLimit(start);
-    dist = nthPrimeDist(n, count, start) * 2;
-    start = checkedSub(start, 1);
-    stop = checkedAdd(start, dist);
-    uint64_t prime = 0;
-    for (primesieve::iterator it(start, stop); count < n; count++)
-      prime = it.next_prime();
+  checkLimit(start);
+  dist = nthPrimeDist(n, count, start) * 2;
+  start = checkedSub(start, 1);
+  stop = checkedAdd(start, dist);
+  uint64_t prime = 0;
 
-    auto t2 = chrono::system_clock::now();
-    chrono::duration<double> seconds = t2 - t1;
-    seconds_ = seconds.count();
+  for (primesieve::iterator it(start, stop); count < n; count++)
+    prime = it.next_prime();
 
-    return prime;
-  }
-  catch (primesieve_error&) { }
+  if (~prime == 0)
+    throw primesieve_error("nth prime > 2^64");
 
-  throw primesieve_error("nth prime > 2^64");
+  auto t2 = chrono::system_clock::now();
+  chrono::duration<double> seconds = t2 - t1;
+  seconds_ = seconds.count();
+
+  return prime;
 }
 
 } // namespace
