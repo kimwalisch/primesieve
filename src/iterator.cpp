@@ -1,7 +1,7 @@
 ///
 /// @file  iterator.cpp
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -21,7 +21,7 @@ using namespace primesieve;
 
 namespace {
 
-void clear(NextPrime* ptr)
+void clear(NextPrime*& ptr)
 {
   if (ptr)
     delete ptr;
