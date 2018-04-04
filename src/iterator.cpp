@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <limits>
 #include <vector>
 
 using namespace std;
@@ -21,12 +22,36 @@ using namespace primesieve;
 
 namespace {
 
+const
+
 void clear(NextPrimes*& ptr)
 {
   if (ptr)
     delete ptr;
 
   ptr = nullptr;
+}
+
+uint64_t get_next_distance(uint64_t n, uint64_t& dist)
+{
+  double x = (double) n;
+  x = max(x, 16.0);
+  x = sqrt(x) / log(log(x));
+
+  uint64_t min_dist = (uint64_t) x;
+  uint64_t limit = numeric_limits<uint64_t>::max() / 4;
+  dist = max(dist, min_dist);
+
+  if (dist < limit)
+    dist *= 4;
+
+  return dist;
+}
+
+bool newNextPrimes(uint64_t prime, uint64_t stop)
+{
+  return prime == numeric_limits<uint64_t>::max() &&
+      stop < numeric_limits<uint64_t>::max();
 }
 
 } // namespace
@@ -67,18 +92,29 @@ void iterator::generate_next_primes()
   {
     primes_.resize(64);
     start_ = checkedAdd(stop_, 1);
-    stop_ = get_max_stop();
-    if (start_ <= stop_hint_ && stop_ > stop_hint_)
+    stop_ = checkedAdd(start_, get_next_distance(start_, tiny_cache_size_));
+    if (start_ <= stop_hint_ && stop_ >= stop_hint_)
       stop_ = checkedAdd(stop_hint_, max_prime_gap(stop_hint_));
     nextPrimes_ = new NextPrimes(start_, stop_);
   }
 
-  i_ = 0;
-  last_idx_ = 0;
-
-  while (!last_idx_)
+  for (last_idx_ = 0; !last_idx_;)
     nextPrimes_->fill(&primes_, &last_idx_);
 
+  if (newNextPrimes(primes_[0], stop_))
+  {
+    clear(nextPrimes_);
+    start_ = checkedAdd(stop_, 1);
+    stop_ = checkedAdd(start_, get_next_distance(start_, tiny_cache_size_));
+    if (start_ <= stop_hint_ && stop_ >= stop_hint_)
+      stop_ = checkedAdd(stop_hint_, max_prime_gap(stop_hint_));
+    nextPrimes_ = new NextPrimes(start_, stop_);
+
+    for (last_idx_ = 0; !last_idx_;)
+      nextPrimes_->fill(&primes_, &last_idx_);
+  }
+
+  i_ = 0;
   last_idx_--;
 }
 
