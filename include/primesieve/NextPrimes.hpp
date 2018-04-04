@@ -1,5 +1,5 @@
 ///
-/// @file  NextPrime.hpp
+/// @file  NextPrimes.hpp
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef NEXTPRIME_HPP
-#define NEXTPRIME_HPP
+#ifndef NEXTPRIMES_HPP
+#define NEXTPRIMES_HPP
 
 #include "Erat.hpp"
 #include "PreSieve.hpp"
@@ -20,11 +20,10 @@
 
 namespace primesieve {
 
-class NextPrime : public Erat
+class NextPrimes : public Erat
 {
 public:
-  NextPrime(uint64_t, uint64_t);
-
+  NextPrimes(uint64_t, uint64_t);
   void fill(std::vector<uint64_t>* primes, std::size_t* size)
   {
     fill(primes->data(), size);
@@ -39,6 +38,8 @@ private:
   void init();
   void initSmallPrimes(uint64_t*, std::size_t*);
   bool sieveSegment(uint64_t*, std::size_t*);
+  std::size_t getStartIdx() const;
+  std::size_t getStopIdx() const;
 
   void fill(uint64_t* primes, std::size_t* size)
   {

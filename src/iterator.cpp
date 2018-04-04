@@ -8,7 +8,7 @@
 ///
 
 #include <primesieve/config.hpp>
-#include <primesieve/NextPrime.hpp>
+#include <primesieve/NextPrimes.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve.hpp>
 
@@ -21,7 +21,7 @@ using namespace primesieve;
 
 namespace {
 
-void clear(NextPrime*& ptr)
+void clear(NextPrimes*& ptr)
 {
   if (ptr)
     delete ptr;
@@ -41,7 +41,7 @@ iterator::iterator(uint64_t start, uint64_t stop_hint)
   i_ = 0;
   last_idx_ = 0;
   tiny_cache_size_ = 1 << 10;
-  nextPrime_ = nullptr;
+  nextPrimes_ = nullptr;
 }
 
 void iterator::skipto(uint64_t start, uint64_t stop_hint)
@@ -53,31 +53,31 @@ void iterator::skipto(uint64_t start, uint64_t stop_hint)
   last_idx_ = 0;
   tiny_cache_size_ = 1 << 10;
   primes_.clear();
-  clear(nextPrime_);
+  clear(nextPrimes_);
 }
 
 iterator::~iterator()
 {
-  clear(nextPrime_);
+  clear(nextPrimes_);
 }
 
 void iterator::generate_next_primes()
 {
-  if (!nextPrime_)
+  if (!nextPrimes_)
   {
     primes_.resize(64);
     start_ = checkedAdd(stop_, 1);
     stop_ = get_max_stop();
     if (start_ <= stop_hint_ && stop_ > stop_hint_)
       stop_ = checkedAdd(stop_hint_, max_prime_gap(stop_hint_));
-    nextPrime_ = new NextPrime(start_, stop_);
+    nextPrimes_ = new NextPrimes(start_, stop_);
   }
 
   i_ = 0;
   last_idx_ = 0;
 
   while (!last_idx_)
-    nextPrime_->fill(&primes_, &last_idx_);
+    nextPrimes_->fill(&primes_, &last_idx_);
 
   last_idx_--;
 }
@@ -85,7 +85,7 @@ void iterator::generate_next_primes()
 void iterator::generate_prev_primes()
 {
   primes_.clear();
-  clear(nextPrime_);
+  clear(nextPrimes_);
 
   while (primes_.empty())
   {

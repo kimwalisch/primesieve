@@ -1,5 +1,5 @@
 ///
-/// @file  NextPrime.cpp
+/// @file  NextPrimes.cpp
 ///        Fill an array with primes.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
@@ -9,7 +9,7 @@
 ///
 
 #include <primesieve.hpp>
-#include <primesieve/NextPrime.hpp>
+#include <primesieve/NextPrimes.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/Erat.hpp>
 #include <primesieve/SievingPrimes.hpp>
@@ -35,7 +35,7 @@ const std::array<uint64_t, 53> smallPrimes =
 };
 
 /// Number of primes <= n
-const std::array<uint8_t, 242> primePi =
+const std::array<uint8_t, 247> primePi =
 {
    0,  0,  1,  2,  2,  3,  3,  4,  4,  4,
    4,  5,  5,  6,  6,  6,  6,  7,  7,  8,
@@ -61,25 +61,24 @@ const std::array<uint8_t, 242> primePi =
   46, 47, 47, 47, 47, 47, 47, 47, 47, 47,
   47, 47, 47, 48, 48, 48, 48, 49, 49, 50,
   50, 50, 50, 51, 51, 51, 51, 51, 51, 52,
-  52, 53
+  52, 53, 53, 53, 53, 53, 53
 };
 
 } // namespace
 
 namespace primesieve {
 
-NextPrime::NextPrime(uint64_t start, uint64_t stop) :
+NextPrimes::NextPrimes(uint64_t start, uint64_t stop) :
   preSieve_(start, stop)
 {
   start_ = start;
   stop_ = stop;
 }
 
-void NextPrime::init()
+void NextPrimes::init()
 {
-  // small primes < 247 are stored in lookup table,
-  // sieving is only used if stop >= 247
-  uint64_t minStart = 247;
+  // sieving is only used if stop > maxSmallPrime
+  uint64_t minStart = primePi.size();
   uint64_t sieveSize = get_sieve_size();
 
   start_ = max(start_, minStart);
@@ -89,24 +88,41 @@ void NextPrime::init()
   sievingPrimes_.init(this, preSieve_);
 }
 
-void NextPrime::initSmallPrimes(uint64_t* primes, size_t* size)
+size_t NextPrimes::getStartIdx() const
+{
+  size_t startIdx = 0;
+
+  if (start_ > 1)
+    startIdx = primePi[start_ - 1];
+
+  return startIdx;
+}
+
+size_t NextPrimes::getStopIdx() const
+{
+  size_t stopIdx = 0;
+
+  if (stop_ < smallPrimes.back())
+    stopIdx = primePi[stop_];
+  else
+    stopIdx = smallPrimes.size();
+
+  return stopIdx;
+}
+
+void NextPrimes::initSmallPrimes(uint64_t* primes, size_t* size)
 {
   if (start_ > smallPrimes.back())
     return;
 
-  size_t startIdx = 0;
-  size_t stopIdx = smallPrimes.size();
+  size_t a = getStartIdx();
+  size_t b = getStopIdx();
+  *size = b - a;
 
-  if (start_ > 1)
-    startIdx = primePi[start_ - 1];
-  if (stop_ < smallPrimes.back())
-    stopIdx = primePi[stop_];
-
-  copy(&smallPrimes[startIdx], &smallPrimes[stopIdx], primes);
-  *size = stopIdx - startIdx;
+  copy(&smallPrimes[a], &smallPrimes[b], primes);
 }
 
-bool NextPrime::sieveSegment(uint64_t* primes, size_t* size)
+bool NextPrimes::sieveSegment(uint64_t* primes, size_t* size)
 {
   if (!isInit_)
   {

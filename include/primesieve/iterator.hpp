@@ -18,7 +18,7 @@
 
 namespace primesieve {
 
-class NextPrime;
+class NextPrimes;
 
 uint64_t get_max_stop();
 
@@ -26,7 +26,7 @@ uint64_t get_max_stop();
 /// forwards and backwards. Generating the first prime has a
 /// complexity of O(r log log r) operations with r = n^0.5, after that
 /// any additional prime is generated in amortized O(log n log log n)
-/// operations. The memory usage is about pi(n^0.5) * 16 bytes.
+/// operations. The memory usage is PrimePi(n^0.5) * 8 bytes.
 ///
 class iterator
 {
@@ -78,7 +78,7 @@ private:
   uint64_t stop_;
   uint64_t stop_hint_;
   uint64_t tiny_cache_size_;
-  NextPrime* nextPrime_;
+  NextPrimes* nextPrimes_;
   uint64_t get_distance(uint64_t);
   void generate_next_primes();
   void generate_prev_primes();
