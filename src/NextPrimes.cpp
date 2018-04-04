@@ -73,6 +73,7 @@ NextPrimes::NextPrimes(uint64_t start, uint64_t stop) :
 {
   start_ = start;
   stop_ = stop;
+  sieveSize_ = 0;
 }
 
 void NextPrimes::init()
