@@ -1,7 +1,6 @@
 ///
 /// @file  NextPrime.cpp
-///        This class implements a nextPrime() method
-///        for iterating over primes.
+///        Fill an array with primes.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -13,7 +12,6 @@
 #include <primesieve/NextPrime.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/Erat.hpp>
-#include <primesieve/littleendian_cast.hpp>
 #include <primesieve/SievingPrimes.hpp>
 
 #include <stdint.h>
@@ -70,89 +68,81 @@ const std::array<uint8_t, 242> primePi =
 
 namespace primesieve {
 
-NextPrime::NextPrime(uint64_t start, uint64_t stop)
-  : preSieve_(start, stop)
+NextPrime::NextPrime(uint64_t start, uint64_t stop) :
+  preSieve_(start, stop)
 {
-  initSmallPrimes(start, stop);
+  start_ = start;
+  stop_ = stop;
+}
 
+void NextPrime::init()
+{
   // small primes < 247 are stored in lookup table,
   // sieving is only used if stop >= 247
   uint64_t minStart = 247;
   uint64_t sieveSize = get_sieve_size();
 
-  start = max(start, minStart);
-  stop = max(start, stop);
+  start_ = max(start_, minStart);
+  stop_ = max(start_, stop_);
 
-  Erat::init(start, stop, sieveSize, preSieve_);
+  Erat::init(start_, stop_, sieveSize, preSieve_);
   sievingPrimes_.init(this, preSieve_);
 }
 
-void NextPrime::initSmallPrimes(uint64_t start, uint64_t stop)
+void NextPrime::initSmallPrimes(uint64_t* primes, size_t* size)
 {
-  if (start <= smallPrimes.back())
-  {
-    size_t startIdx = 0;
-    size_t stopIdx = smallPrimes.size();
+  if (start_ > smallPrimes.back())
+    return;
 
-    if (start > 1)
-      startIdx = primePi[start] - 1;
-    if (stop < smallPrimes.back())
-      stopIdx = primePi[stop];
+  size_t startIdx = 0;
+  size_t stopIdx = smallPrimes.size();
 
-    for (size_t i = startIdx; i < stopIdx; i++)
-      primes_[i] = smallPrimes[i];
+  if (start_ > 1)
+    startIdx = primePi[start_] - 1;
+  if (stop_ < smallPrimes.back())
+    stopIdx = primePi[stop_];
 
-    num_ = stopIdx - startIdx;
-  }
+  for (size_t i = startIdx; i < stopIdx; i++)
+    primes[i] = smallPrimes[i];
+
+  *size = stopIdx - startIdx;
 }
 
-void NextPrime::fill()
+bool NextPrime::sieveSegment(uint64_t* primes, size_t* size)
 {
-  i_ = 0;
-
-  if (sieveIdx_ >= sieveSize_)
-    if (!sieveSegment())
-      return;
-
-  uint64_t num = 0;
-  uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
-  sieveIdx_ += 8;
-
-  for (; bits != 0; num++)
-    primes_[num] = getPrime(&bits, low_);
-
-  num_ = num;
-  low_ += 8 * 30;
-}
-
-bool NextPrime::sieveSegment()
-{
-  if (hasNextSegment())
+  if (!isInit_)
   {
-    sieveIdx_ = 0;
-    low_ = segmentLow_;
-
-    uint64_t high = min(segmentHigh_, stop_);
-    uint64_t sqrtHigh = isqrt(high);
-
-    if (!sievingPrime_)
-      sievingPrime_ = sievingPrimes_.nextPrime();
-
-    while (sievingPrime_ <= sqrtHigh)
-    {
-      addSievingPrime(sievingPrime_);
-      sievingPrime_ = sievingPrimes_.nextPrime();
-    }
-
-    Erat::sieveSegment();
-    return true;
+    isInit_ = true;
+    initSmallPrimes(primes, size);
+    init();
+    if (*size > 0)
+      return false;
   }
-  else
+
+  if (!hasNextSegment())
   {
-    num_ = 1;
-    primes_[0] = ~0ull;
+    *size = 1;
+    primes[0] = ~0ull;
     return false;
   }
+
+  sieveIdx_ = 0;
+  low_ = segmentLow_;
+
+  uint64_t high = min(segmentHigh_, stop_);
+  uint64_t sqrtHigh = isqrt(high);
+
+  if (!sievingPrime_)
+    sievingPrime_ = sievingPrimes_.nextPrime();
+
+  while (sievingPrime_ <= sqrtHigh)
+  {
+    addSievingPrime(sievingPrime_);
+    sievingPrime_ = sievingPrimes_.nextPrime();
+  }
+
+  Erat::sieveSegment();
+  return true;
 }
 
 } // namespace

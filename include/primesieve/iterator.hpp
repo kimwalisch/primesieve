@@ -12,11 +12,13 @@
 #ifndef PRIMESIEVE_ITERATOR_HPP
 #define PRIMESIEVE_ITERATOR_HPP
 
-#include <vector>
-#include <cstddef>
 #include <stdint.h>
+#include <cstddef>
+#include <vector>
 
 namespace primesieve {
+
+class NextPrime;
 
 uint64_t get_max_stop();
 
@@ -66,6 +68,8 @@ public:
       generate_prev_primes();
     return primes_[i_];
   }
+
+  ~iterator();
 private:
   std::size_t i_;
   std::size_t last_idx_;
@@ -74,6 +78,7 @@ private:
   uint64_t stop_;
   uint64_t stop_hint_;
   uint64_t tiny_cache_size_;
+  NextPrime* nextPrime_;
   uint64_t get_distance(uint64_t);
   void generate_next_primes();
   void generate_prev_primes();

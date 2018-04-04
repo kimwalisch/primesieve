@@ -8,6 +8,7 @@
 ///
 
 #include <primesieve/config.hpp>
+#include <primesieve/NextPrime.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve.hpp>
 
@@ -16,12 +17,31 @@
 #include <vector>
 
 using namespace std;
+using namespace primesieve;
+
+namespace {
+
+void clear(NextPrime* ptr)
+{
+  if (ptr)
+    delete ptr;
+
+  ptr = nullptr;
+}
+
+} // namespace
 
 namespace primesieve {
 
 iterator::iterator(uint64_t start, uint64_t stop_hint)
 {
-  skipto(start, stop_hint);
+  start_ = start;
+  stop_ = start;
+  stop_hint_ = stop_hint;
+  i_ = 0;
+  last_idx_ = 0;
+  tiny_cache_size_ = 1 << 10;
+  nextPrime_ = nullptr;
 }
 
 void iterator::skipto(uint64_t start, uint64_t stop_hint)
@@ -33,31 +53,39 @@ void iterator::skipto(uint64_t start, uint64_t stop_hint)
   last_idx_ = 0;
   tiny_cache_size_ = 1 << 10;
   primes_.clear();
+  clear(nextPrime_);
+}
+
+iterator::~iterator()
+{
+  clear(nextPrime_);
 }
 
 void iterator::generate_next_primes()
 {
-  primes_.clear();
-
-  while (primes_.empty())
+  if (!nextPrime_)
   {
+    primes_.resize(64);
     start_ = checkedAdd(stop_, 1);
-    stop_ = checkedAdd(start_, get_distance(start_));
-    if (start_ <= stop_hint_ && stop_ >= stop_hint_)
+    stop_ = get_max_stop();
+    if (start_ <= stop_hint_ && stop_ > stop_hint_)
       stop_ = checkedAdd(stop_hint_, max_prime_gap(stop_hint_));
-    generate_primes(start_, stop_, &primes_);
-    if (primes_.empty() &&
-        stop_ >= get_max_stop())
-      throw primesieve_error("next_prime() > 2^64");
+    nextPrime_ = new NextPrime(start_, stop_);
   }
 
-  last_idx_ = primes_.size() - 1;
   i_ = 0;
+  last_idx_ = 0;
+
+  while (!last_idx_)
+    nextPrime_->fill(&primes_, &last_idx_);
+
+  last_idx_--;
 }
 
 void iterator::generate_prev_primes()
 {
   primes_.clear();
+  clear(nextPrime_);
 
   while (primes_.empty())
   {
