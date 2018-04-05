@@ -69,12 +69,9 @@ const std::array<uint8_t, 247> primePi =
 namespace primesieve {
 
 NextPrimes::NextPrimes(uint64_t start, uint64_t stop) :
+  Erat(start, stop),
   preSieve_(start, stop)
-{
-  start_ = start;
-  stop_ = stop;
-  sieveSize_ = 0;
-}
+{ }
 
 void NextPrimes::init()
 {

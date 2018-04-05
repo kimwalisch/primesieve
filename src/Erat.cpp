@@ -64,6 +64,12 @@ const uint64_t Erat::bruijnBitValues_[64] =
   173, 223, 193,  31, 221,  29,  23, 241
 };
 
+Erat::Erat(uint64_t start, uint64_t stop) :
+  start_(start),
+  stop_(stop),
+  sieveSize_(0)
+{ }
+
 /// @start:      Sieve primes >= start
 /// @stop:       Sieve primes <= stop
 /// @sieveSize:  Sieve size in kilobytes

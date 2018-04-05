@@ -49,6 +49,8 @@ protected:
   uint64_t stop_;
   uint64_t sqrtStop_;
   PreSieve* preSieve_;
+  Erat() { }
+  Erat(uint64_t, uint64_t);
   virtual ~Erat() { }
   void init(uint64_t, uint64_t, uint64_t, PreSieve&);
   void addSievingPrime(uint64_t);
