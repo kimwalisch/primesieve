@@ -148,7 +148,7 @@ inline std::size_t prime_count_approx(uint64_t stop)
 
 /// Approximation of the maximum prime gap near n
 template <typename T>
-inline T max_prime_gap(T n)
+inline T maxPrimeGap(T n)
 {
   double x = (double) n;
   x = std::max(8.0, x);

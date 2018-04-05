@@ -105,7 +105,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
         it->start_ = checkedAdd(it->stop_, 1);
         it->stop_ = checkedAdd(it->start_, get_distance(it->start_, it->tiny_cache_size_));
         if (it->start_ <= it->stop_hint_ && it->stop_ >= it->stop_hint_)
-          it->stop_ = checkedAdd(it->stop_hint_, max_prime_gap(it->stop_hint_));
+          it->stop_ = checkedAdd(it->stop_hint_, maxPrimeGap(it->stop_hint_));
         generate_primes(it->start_, it->stop_, &primes);
         if (primes.empty() && it->stop_ >= get_max_stop())
           throw primesieve_error("next_prime() > primesieve_get_max_stop()");
@@ -140,7 +140,7 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
         it->stop_ = checkedSub(it->start_, 1);
         it->start_ = checkedSub(it->stop_, get_distance(it->stop_, it->tiny_cache_size_));
         if (it->start_ <= it->stop_hint_ && it->stop_ >= it->stop_hint_)
-          it->start_ = checkedSub(it->stop_hint_, max_prime_gap(it->stop_hint_));
+          it->start_ = checkedSub(it->stop_hint_, maxPrimeGap(it->stop_hint_));
         if (it->start_ <= 2)
           primes.push_back(0);
         generate_primes(it->start_, it->stop_, &primes);

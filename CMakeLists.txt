@@ -36,6 +36,7 @@ set(LIB_SRC src/api-c.cpp
             src/EratSmall.cpp
             src/iterator-c.cpp
             src/iterator.cpp
+            src/IteratorHelper.cpp
             src/NextPrimes.cpp
             src/nthPrime.cpp
             src/ParallelSieve.cpp
