@@ -2,7 +2,7 @@
 /// @file   iterator-c.cpp
 /// @brief  C port of primesieve::iterator.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -22,23 +22,25 @@ using namespace primesieve;
 
 namespace {
 
-void clearNextPrimes(primesieve_iterator* it)
-{
-  if (it->nextPrimes_)
-    delete (NextPrimes*) it->nextPrimes_;
-
-  it->nextPrimes_ = nullptr;
-}
-
 NextPrimes* getNextPrimes(primesieve_iterator* it)
 {
+  // nextPrimes_ is a pimpl
   return (NextPrimes*) it->nextPrimes_;
 }
 
 vector<uint64_t>& getPrimes(primesieve_iterator* it)
 {
-  // Convert pimpl pointer to vector
-  return *(vector<uint64_t>*) it->primes_pimpl_;
+  // Convert pimpl to vector
+  using T = vector<uint64_t>;
+  T* primes = (T*) it->primes_pimpl_;
+  return *primes;
+}
+
+void clearNextPrimes(primesieve_iterator* it)
+{
+  if (it->nextPrimes_)
+    delete (NextPrimes*) it->nextPrimes_;
+  it->nextPrimes_ = nullptr;
 }
 
 } // namespace
