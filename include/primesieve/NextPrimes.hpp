@@ -16,6 +16,7 @@
 #include "SievingPrimes.hpp"
 
 #include <stdint.h>
+#include <array>
 #include <vector>
 
 namespace primesieve {
@@ -23,7 +24,16 @@ namespace primesieve {
 class NextPrimes : public Erat
 {
 public:
-  NextPrimes(uint64_t, uint64_t);
+  NextPrimes(uint64_t start, uint64_t stop) :
+    Erat(start, stop),
+    preSieve_(start, stop)
+  { }
+
+  static uint64_t maxCachedPrime()
+  {
+    return smallPrimes.back();
+  }
+
   void fill(std::vector<uint64_t>* primes, std::size_t* size)
   {
     fill(primes->data(), size);
@@ -35,6 +45,8 @@ private:
   PreSieve preSieve_;
   SievingPrimes sievingPrimes_;
   bool isInit_ = false;
+  static const std::array<uint64_t, 53> smallPrimes;
+  static const std::array<uint8_t, 247> primePi;
   void init();
   void initSmallPrimes(uint64_t*, std::size_t*);
   bool sieveSegment(uint64_t*, std::size_t*);
