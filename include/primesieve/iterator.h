@@ -37,12 +37,13 @@ typedef struct
 {
   size_t i_;
   size_t last_idx_;
-  uint64_t* primes_;
-  uint64_t* primes_pimpl_;
   uint64_t start_;
   uint64_t stop_;
   uint64_t stop_hint_;
-  uint64_t tiny_cache_size_;
+  uint64_t dist_;
+  uint64_t* primes_;
+  uint64_t* primes_pimpl_;
+  uint64_t* nextPrimes_;
   int is_error_;
 } primesieve_iterator;
 

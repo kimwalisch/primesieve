@@ -8,21 +8,32 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/config.hpp>
-#include <primesieve/pmath.hpp>
+#include <primesieve/IteratorHelper.hpp>
+#include <primesieve/NextPrimes.hpp>
 #include <primesieve.hpp>
 #include <primesieve.h>
 
-#include <algorithm>
 #include <exception>
 #include <cerrno>
-#include <cmath>
 #include <vector>
 
 using namespace std;
 using namespace primesieve;
 
 namespace {
+
+void clearNextPrimes(primesieve_iterator* it)
+{
+  if (it->nextPrimes_)
+    delete (NextPrimes*) it->nextPrimes_;
+
+  it->nextPrimes_ = nullptr;
+}
+
+NextPrimes* getNextPrimes(primesieve_iterator* it)
+{
+  return (NextPrimes*) it->nextPrimes_;
+}
 
 /// Convert pimpl pointer to vector
 vector<uint64_t>& to_vector(uint64_t* primes_pimpl)
@@ -31,38 +42,20 @@ vector<uint64_t>& to_vector(uint64_t* primes_pimpl)
   return *primes;
 }
 
-/// Get a distance which ensures a good load balance
-/// @n:  Start or stop number
-///
-uint64_t get_distance(uint64_t n, uint64_t& tiny_cache_size)
-{
-  n = max<uint64_t>(n, 10);
-  uint64_t cache_size = config::MIN_CACHE_ITERATOR;
-
-  if (tiny_cache_size < cache_size)
-  {
-    cache_size = tiny_cache_size;
-    tiny_cache_size *= 4;
-  }
-
-  double x = (double) n;
-  double sqrtx = sqrt(x);
-  uint64_t primes = (uint64_t)(sqrtx / (log(sqrtx) - 1));
-  uint64_t min_primes = cache_size / sizeof(uint64_t);
-  uint64_t max_primes = config::MAX_CACHE_ITERATOR / sizeof(uint64_t);
-  primes = inBetween(min_primes, primes, max_primes);
-  double distance = primes * log(x);
-
-  return (uint64_t) distance;
-}
-
-}
+} // namespace
 
 /// C constructor
 void primesieve_init(primesieve_iterator* it)
 {
-  it->primes_pimpl_ = reinterpret_cast<uint64_t*>(new vector<uint64_t>());
-  primesieve_skipto(it, 0, primesieve_get_max_stop());
+  it->start_ = 0;
+  it->stop_ = 0;
+  it->stop_hint_ = primesieve_get_max_stop();
+  it->i_ = 0;
+  it->last_idx_ = 0;
+  it->dist_ = NextPrimes::maxCachedPrime();
+  it->is_error_ = false;
+  it->primes_pimpl_ = (uint64_t*) new vector<uint64_t>();
+  it->nextPrimes_ = nullptr;
 }
 
 /// C destructor
@@ -70,6 +63,7 @@ void primesieve_free_iterator(primesieve_iterator* it)
 {
   if (it)
   {
+    clearNextPrimes(it);
     vector<uint64_t>* primes = &to_vector(it->primes_pimpl_);
     delete primes;
   }
@@ -79,50 +73,63 @@ void primesieve_skipto(primesieve_iterator* it,
                        uint64_t start,
                        uint64_t stop_hint)
 {
-  vector<uint64_t>& primes = to_vector(it->primes_pimpl_);
-  primes.clear();
   it->start_ = start;
   it->stop_ = start;
   it->stop_hint_ = stop_hint;
   it->i_ = 0;
   it->last_idx_ = 0;
-  it->tiny_cache_size_ = 1 << 10;
+  it->dist_ = NextPrimes::maxCachedPrime();
   it->is_error_ = false;
+
+  vector<uint64_t>& primes = to_vector(it->primes_pimpl_);
+  primes.clear();
+  clearNextPrimes(it);
 }
 
 void primesieve_generate_next_primes(primesieve_iterator* it)
 {
   vector<uint64_t>& primes = to_vector(it->primes_pimpl_);
+  auto nextPrimes = getNextPrimes(it);
 
   if (!it->is_error_)
   {
     try
     {
-      primes.clear();
-
-      while (primes.empty())
+      if (!nextPrimes)
       {
-        it->start_ = checkedAdd(it->stop_, 1);
-        it->stop_ = checkedAdd(it->start_, get_distance(it->start_, it->tiny_cache_size_));
-        if (it->start_ <= it->stop_hint_ && it->stop_ >= it->stop_hint_)
-          it->stop_ = checkedAdd(it->stop_hint_, maxPrimeGap(it->stop_hint_));
-        generate_primes(it->start_, it->stop_, &primes);
-        if (primes.empty() && it->stop_ >= get_max_stop())
-          throw primesieve_error("next_prime() > primesieve_get_max_stop()");
+        primes.resize(64);
+        it->primes_ = &primes[0];
+        IteratorHelper::next(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
+        it->nextPrimes_ = (uint64_t*) new NextPrimes(it->start_, it->stop_);
+        nextPrimes = (NextPrimes*) it->nextPrimes_;
       }
+
+      for (it->last_idx_ = 0; !it->last_idx_;)
+        nextPrimes->fill(&primes, &it->last_idx_);
+
+      if (primes[0] > it->stop_)
+      {
+        clearNextPrimes(it);
+        IteratorHelper::next(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
+        it->nextPrimes_ = (uint64_t*) new NextPrimes(it->start_, it->stop_);
+        nextPrimes = (NextPrimes*) it->nextPrimes_;
+
+        for (it->last_idx_ = 0; !it->last_idx_;)
+          nextPrimes->fill(&primes, &it->last_idx_);
+      }
+
+      it->i_ = 0;
+      it->last_idx_--;
     }
     catch (exception&)
     {
-      primes.clear();
-      primes.resize(64, PRIMESIEVE_ERROR);
+      primes[0] = PRIMESIEVE_ERROR;
+      it->i_ = 1;
+      it->last_idx_ = 1;
       it->is_error_ = true;
       errno = EDOM;
     }
   }
-
-  it->primes_ = &primes[0];
-  it->last_idx_ = primes.size() - 1;
-  it->i_ = 0;
 }
 
 void primesieve_generate_prev_primes(primesieve_iterator* it)
@@ -134,13 +141,11 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     try
     {
       primes.clear();
+      clearNextPrimes(it);
 
       while (primes.empty())
       {
-        it->stop_ = checkedSub(it->start_, 1);
-        it->start_ = checkedSub(it->stop_, get_distance(it->stop_, it->tiny_cache_size_));
-        if (it->start_ <= it->stop_hint_ && it->stop_ >= it->stop_hint_)
-          it->start_ = checkedSub(it->stop_hint_, maxPrimeGap(it->stop_hint_));
+        IteratorHelper::prev(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
         if (it->start_ <= 2)
           primes.push_back(0);
         generate_primes(it->start_, it->stop_, &primes);
