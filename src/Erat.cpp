@@ -1,7 +1,7 @@
 ///
 /// @file   Erat.cpp
 /// @brief  The Erat class manages prime sieving using the
-///         EratSmall, EratMedium and EratBig classes.
+///         EratSmall, EratMedium, EratBig classes.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
