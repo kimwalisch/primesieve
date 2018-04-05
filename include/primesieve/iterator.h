@@ -5,7 +5,7 @@
  *         has a complexity of O(r log log r) operations with
  *         r = n^0.5, after that any additional prime is generated in
  *         amortized O(log n log log n) operations. The memory usage
- *         is about pi(n^0.5) * 16 bytes.
+ *         is about PrimePi(n^0.5) * 8 bytes.
  *
  *         The @link primesieve_iterator.c primesieve_iterator.c
  *         @endlink example shows how to use primesieve_iterator. If
@@ -13,7 +13,7 @@
  *         primesieve_next_prime() and primesieve_prev_prime()
  *         return PRIMESIEVE_ERROR.
  * 
- * Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This file is distributed under the BSD License. See the COPYING
  * file in the top level directory.
