@@ -77,7 +77,7 @@ private:
   uint64_t start_;
   uint64_t stop_;
   uint64_t stop_hint_;
-  uint64_t tiny_cache_size_;
+  uint64_t dist_;
   NextPrimes* nextPrimes_;
   uint64_t get_distance(uint64_t);
   void generate_next_primes();

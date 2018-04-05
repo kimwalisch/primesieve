@@ -79,7 +79,7 @@ iterator::iterator(uint64_t start, uint64_t stop_hint)
   stop_hint_ = stop_hint;
   i_ = 0;
   last_idx_ = 0;
-  tiny_cache_size_ = 1 << 10;
+  dist_ = NextPrimes::maxCachedPrime();
   nextPrimes_ = nullptr;
 }
 
@@ -90,7 +90,7 @@ void iterator::skipto(uint64_t start, uint64_t stop_hint)
   stop_hint_ = stop_hint;
   i_ = 0;
   last_idx_ = 0;
-  tiny_cache_size_ = 1 << 10;
+  dist_ = NextPrimes::maxCachedPrime();
   primes_.clear();
   clear(nextPrimes_);
 }
@@ -106,7 +106,7 @@ void iterator::generate_next_primes()
   {
     primes_.resize(64);
     start_ = checkedAdd(stop_, 1);
-    stop_ = get_next_stop(start_, stop_hint_, &tiny_cache_size_);
+    stop_ = get_next_stop(start_, stop_hint_, &dist_);
     nextPrimes_ = new NextPrimes(start_, stop_);
   }
 
@@ -117,7 +117,7 @@ void iterator::generate_next_primes()
   {
     clear(nextPrimes_);
     start_ = checkedAdd(stop_, 1);
-    stop_ = get_next_stop(start_, stop_hint_, &tiny_cache_size_);
+    stop_ = get_next_stop(start_, stop_hint_, &dist_);
     nextPrimes_ = new NextPrimes(start_, stop_);
 
     for (last_idx_ = 0; !last_idx_;)
@@ -156,10 +156,10 @@ uint64_t iterator::get_distance(uint64_t n)
   n = max<uint64_t>(n, 10);
   uint64_t cache_size = config::MIN_CACHE_ITERATOR;
 
-  if (tiny_cache_size_ < cache_size)
+  if (dist_ < cache_size)
   {
-    cache_size = tiny_cache_size_;
-    tiny_cache_size_ *= 4;
+    cache_size = dist_;
+    dist_ *= 4;
   }
 
   double x = (double) n;

@@ -64,6 +64,11 @@ const array<uint8_t, 247> NextPrimes::primePi =
   52, 53, 53, 53, 53, 53, 53
 };
 
+NextPrimes::NextPrimes(uint64_t start, uint64_t stop) :
+  Erat(start, stop),
+  preSieve_(start, stop)
+{ }
+
 void NextPrimes::init()
 {
   // sieving is only used if stop > maxSmallPrime

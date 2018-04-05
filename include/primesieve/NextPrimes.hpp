@@ -24,10 +24,7 @@ namespace primesieve {
 class NextPrimes : public Erat
 {
 public:
-  NextPrimes(uint64_t start, uint64_t stop) :
-    Erat(start, stop),
-    preSieve_(start, stop)
-  { }
+  NextPrimes(uint64_t start, uint64_t stop);
 
   static uint64_t maxCachedPrime()
   {
