@@ -46,6 +46,7 @@ SOURCES += \
   ../EratMedium.cpp \
   ../EratSmall.cpp \
   ../iterator.cpp \
+  ../IteratorHelper.cpp \
   ../NextPrimes.cpp \
   ../nthPrime.cpp \
   ../ParallelSieve.cpp \
