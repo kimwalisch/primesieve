@@ -50,8 +50,8 @@ void iterator::skipto(uint64_t start, uint64_t stop_hint)
   i_ = 0;
   last_idx_ = 0;
   dist_ = NextPrimes::maxCachedPrime();
-  primes_.clear();
   clear(nextPrimes_);
+  primes_.clear();
 }
 
 iterator::~iterator()
@@ -87,8 +87,8 @@ void iterator::generate_next_primes()
 
 void iterator::generate_prev_primes()
 {
-  primes_.clear();
   clear(nextPrimes_);
+  primes_.clear();
 
   while (primes_.empty())
   {
