@@ -35,19 +35,19 @@ public:
   uint64_t getSqrtStop() const;
   uint64_t getSieveSize() const;
 protected:
-  /// Sieve of Eratosthenes array
-  byte_t* sieve_ = nullptr;
+  /// Sieve primes >= start_
+  uint64_t start_;
+  /// Sieve primes <= stop_
+  uint64_t stop_;
+  uint64_t sqrtStop_;
   /// Size of sieve_ in bytes (power of 2)
   uint64_t sieveSize_;
   /// Lower bound of the current segment
   uint64_t segmentLow_;
   /// Upper bound of the current segment
   uint64_t segmentHigh_;
-  /// Sieve primes >= start_
-  uint64_t start_;
-  /// Sieve primes <= stop_
-  uint64_t stop_;
-  uint64_t sqrtStop_;
+  /// Sieve of Eratosthenes array
+  byte_t* sieve_ = nullptr;
   PreSieve* preSieve_;
   Erat() { }
   Erat(uint64_t, uint64_t);
