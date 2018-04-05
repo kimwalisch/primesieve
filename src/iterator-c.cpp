@@ -28,19 +28,19 @@ NextPrimes* getNextPrimes(primesieve_iterator* it)
   return (NextPrimes*) it->nextPrimes_;
 }
 
+void clearNextPrimes(primesieve_iterator* it)
+{
+  if (it->nextPrimes_)
+    delete (NextPrimes*) it->nextPrimes_;
+  it->nextPrimes_ = nullptr;
+}
+
 vector<uint64_t>& getPrimes(primesieve_iterator* it)
 {
   // Convert pimpl to vector
   using T = vector<uint64_t>;
   T* primes = (T*) it->primes_pimpl_;
   return *primes;
-}
-
-void clearNextPrimes(primesieve_iterator* it)
-{
-  if (it->nextPrimes_)
-    delete (NextPrimes*) it->nextPrimes_;
-  it->nextPrimes_ = nullptr;
 }
 
 } // namespace
@@ -101,7 +101,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
         it->primes_ = &primes[0];
         IteratorHelper::next(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
         it->nextPrimes_ = (uint64_t*) new NextPrimes(it->start_, it->stop_);
-        nextPrimes = (NextPrimes*) it->nextPrimes_;
+        nextPrimes = getNextPrimes(it);
       }
 
       for (it->last_idx_ = 0; !it->last_idx_;)
@@ -112,24 +112,23 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
         clearNextPrimes(it);
         IteratorHelper::next(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
         it->nextPrimes_ = (uint64_t*) new NextPrimes(it->start_, it->stop_);
-        nextPrimes = (NextPrimes*) it->nextPrimes_;
+        nextPrimes = getNextPrimes(it);
 
         for (it->last_idx_ = 0; !it->last_idx_;)
           nextPrimes->fill(&primes, &it->last_idx_);
       }
-
-      it->i_ = 0;
-      it->last_idx_--;
     }
     catch (exception&)
     {
       primes[0] = PRIMESIEVE_ERROR;
-      it->i_ = 0;
-      it->last_idx_ = 0;
+      it->last_idx_ = 1;
       it->is_error_ = true;
       errno = EDOM;
     }
   }
+
+  it->i_ = 0;
+  it->last_idx_--;
 }
 
 void primesieve_generate_prev_primes(primesieve_iterator* it)
