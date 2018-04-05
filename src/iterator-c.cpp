@@ -35,11 +35,10 @@ NextPrimes* getNextPrimes(primesieve_iterator* it)
   return (NextPrimes*) it->nextPrimes_;
 }
 
-/// Convert pimpl pointer to vector
-vector<uint64_t>& to_vector(uint64_t* primes_pimpl)
+vector<uint64_t>& getPrimes(primesieve_iterator* it)
 {
-  vector<uint64_t>* primes = reinterpret_cast<vector<uint64_t>*>(primes_pimpl);
-  return *primes;
+  // Convert pimpl pointer to vector
+  return *(vector<uint64_t>*) it->primes_pimpl_;
 }
 
 } // namespace
@@ -49,24 +48,13 @@ void primesieve_init(primesieve_iterator* it)
 {
   it->start_ = 0;
   it->stop_ = 0;
-  it->stop_hint_ = primesieve_get_max_stop();
+  it->stop_hint_ = get_max_stop();
   it->i_ = 0;
   it->last_idx_ = 0;
   it->dist_ = NextPrimes::maxCachedPrime();
   it->is_error_ = false;
-  it->primes_pimpl_ = (uint64_t*) new vector<uint64_t>();
+  it->primes_pimpl_ = (uint64_t*) new vector<uint64_t>;
   it->nextPrimes_ = nullptr;
-}
-
-/// C destructor
-void primesieve_free_iterator(primesieve_iterator* it)
-{
-  if (it)
-  {
-    clearNextPrimes(it);
-    vector<uint64_t>* primes = &to_vector(it->primes_pimpl_);
-    delete primes;
-  }
 }
 
 void primesieve_skipto(primesieve_iterator* it,
@@ -80,15 +68,25 @@ void primesieve_skipto(primesieve_iterator* it,
   it->last_idx_ = 0;
   it->dist_ = NextPrimes::maxCachedPrime();
   it->is_error_ = false;
-
-  vector<uint64_t>& primes = to_vector(it->primes_pimpl_);
+  auto& primes = getPrimes(it);
   primes.clear();
   clearNextPrimes(it);
 }
 
+/// C destructor
+void primesieve_free_iterator(primesieve_iterator* it)
+{
+  if (it)
+  {
+    clearNextPrimes(it);
+    auto* primes = &getPrimes(it);
+    delete primes;
+  }
+}
+
 void primesieve_generate_next_primes(primesieve_iterator* it)
 {
-  vector<uint64_t>& primes = to_vector(it->primes_pimpl_);
+  auto& primes = getPrimes(it);
   auto nextPrimes = getNextPrimes(it);
 
   if (!it->is_error_)
@@ -124,8 +122,8 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
     catch (exception&)
     {
       primes[0] = PRIMESIEVE_ERROR;
-      it->i_ = 1;
-      it->last_idx_ = 1;
+      it->i_ = 0;
+      it->last_idx_ = 0;
       it->is_error_ = true;
       errno = EDOM;
     }
@@ -134,14 +132,14 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
 
 void primesieve_generate_prev_primes(primesieve_iterator* it)
 {
-  vector<uint64_t>& primes = to_vector(it->primes_pimpl_);
+  auto& primes = getPrimes(it);
 
   if (!it->is_error_)
   {
     try
     {
-      primes.clear();
       clearNextPrimes(it);
+      primes.clear();
 
       while (primes.empty())
       {
@@ -154,7 +152,7 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     catch (exception&)
     {
       primes.clear();
-      primes.resize(64, PRIMESIEVE_ERROR);
+      primes.push_back(PRIMESIEVE_ERROR);
       it->is_error_ = true;
       errno = EDOM;
     }
