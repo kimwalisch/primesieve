@@ -72,6 +72,8 @@ void SievingPrimes::fill()
 
 bool SievingPrimes::sieveSegment()
 {
+  primes_.resize(64);
+
   if (hasNextSegment())
   {
     sieveIdx_ = 0;
