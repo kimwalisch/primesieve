@@ -23,10 +23,7 @@ namespace primesieve {
 
 SievingPrimes::SievingPrimes(Erat* erat, PreSieve& preSieve)
 {
-  Erat::init(preSieve.getMaxPrime() + 1,
-             erat->getSqrtStop(),
-             erat->getSieveSize(),
-             preSieve);
+  init(erat, preSieve);
 }
 
 void SievingPrimes::init(Erat* erat, PreSieve& preSieve)
@@ -35,6 +32,8 @@ void SievingPrimes::init(Erat* erat, PreSieve& preSieve)
              erat->getSqrtStop(),
              erat->getSieveSize(),
              preSieve);
+
+  tinySieve();
 }
 
 /// Sieve up to n^(1/4)
@@ -72,15 +71,10 @@ void SievingPrimes::fill()
 
 bool SievingPrimes::sieveSegment()
 {
-  primes_.resize(64);
-
   if (hasNextSegment())
   {
     sieveIdx_ = 0;
     uint64_t high = min(segmentHigh_, stop_);
-
-    if (tinySieve_.empty())
-      tinySieve();
 
     for (uint64_t& i = tinyIdx_; i * i <= high; i += 2)
       if (tinySieve_[i])
