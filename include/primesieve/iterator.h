@@ -9,9 +9,9 @@
  *
  *         The @link primesieve_iterator.c primesieve_iterator.c
  *         @endlink example shows how to use primesieve_iterator. If
- *         any error occurs errno is set to EDOM and
- *         primesieve_next_prime() and primesieve_prev_prime()
- *         return PRIMESIEVE_ERROR.
+ *         any error occurs primesieve_next_prime() and
+ *         primesieve_prev_prime() return PRIMESIEVE_ERROR and
+ *         primesieve_iterator.is_error_ is set to 1.
  * 
  * Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
  *
@@ -44,6 +44,10 @@ typedef struct
   uint64_t* primes_;
   uint64_t* primes_pimpl_;
   uint64_t* nextPrimes_;
+  /**
+   * Will be initialized to 0.
+   * Will be set to 1 if any error occurs.
+   */
   int is_error_;
 } primesieve_iterator;
 
