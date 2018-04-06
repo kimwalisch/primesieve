@@ -1,6 +1,7 @@
 ///
 /// @file  NextPrimes.cpp
-///        Fill an array with primes.
+///        Fills an array with the primes inside the next
+///        64-bit word of the sieve array.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
