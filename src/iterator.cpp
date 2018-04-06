@@ -21,9 +21,7 @@ namespace {
 
 void clear(NextPrimes*& ptr)
 {
-  if (ptr)
-    delete ptr;
-
+  delete ptr;
   ptr = nullptr;
 }
 

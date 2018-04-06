@@ -30,8 +30,7 @@ NextPrimes* getNextPrimes(primesieve_iterator* it)
 
 void clearNextPrimes(primesieve_iterator* it)
 {
-  if (it->nextPrimes_)
-    delete (NextPrimes*) it->nextPrimes_;
+  delete (NextPrimes*) it->nextPrimes_;
   it->nextPrimes_ = nullptr;
 }
 
