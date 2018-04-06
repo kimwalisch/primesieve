@@ -54,8 +54,6 @@ void SievingPrimes::tinySieve()
 
 void SievingPrimes::fill()
 {
-  i_ = 0;
-
   if (sieveIdx_ >= sieveSize_)
     if (!sieveSegment())
       return;
@@ -67,6 +65,7 @@ void SievingPrimes::fill()
   for (; bits != 0; num++)
     primes_[num] = getPrime(&bits, low_);
 
+  i_ = 0;
   size_ = num;
   low_ += 8 * 30;
 }
@@ -90,6 +89,7 @@ bool SievingPrimes::sieveSegment()
   }
   else
   {
+    i_ = 0;
     size_ = 1;
     primes_[0] = ~0ull;
     return false;
