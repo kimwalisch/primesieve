@@ -131,6 +131,7 @@ bool NextPrimes::sieveSegment(uint64_t* primes, size_t* size)
   {
     *size = 1;
     primes[0] = ~0ull;
+    finished_ = (primes[0] > stop_);
     return false;
   }
 

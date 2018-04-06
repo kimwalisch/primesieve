@@ -26,6 +26,11 @@ class NextPrimes : public Erat
 public:
   NextPrimes(uint64_t start, uint64_t stop);
 
+  bool finished() const
+  {
+    return finished_;
+  }
+
   static uint64_t maxCachedPrime()
   {
     return smallPrimes.back();
@@ -42,6 +47,7 @@ private:
   PreSieve preSieve_;
   SievingPrimes sievingPrimes_;
   bool isInit_ = false;
+  bool finished_ = false;
   static const std::array<uint64_t, 53> smallPrimes;
   static const std::array<uint8_t, 247> primePi;
   void init();

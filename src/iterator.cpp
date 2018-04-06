@@ -59,24 +59,22 @@ iterator::~iterator()
 
 void iterator::generate_next_primes()
 {
-  if (!nextPrimes_)
+  while (true)
   {
-    primes_.resize(64);
-    IteratorHelper::next(&start_, &stop_, stop_hint_, &dist_);
-    nextPrimes_ = new NextPrimes(start_, stop_);
-  }
-
-  for (last_idx_ = 0; !last_idx_;)
-    nextPrimes_->fill(&primes_, &last_idx_);
-
-  if (primes_[0] > stop_)
-  {
-    clear(nextPrimes_);
-    IteratorHelper::next(&start_, &stop_, stop_hint_, &dist_);
-    nextPrimes_ = new NextPrimes(start_, stop_);
+    if (!nextPrimes_)
+    {
+      primes_.resize(64);
+      IteratorHelper::next(&start_, &stop_, stop_hint_, &dist_);
+      nextPrimes_ = new NextPrimes(start_, stop_);
+    }
 
     for (last_idx_ = 0; !last_idx_;)
       nextPrimes_->fill(&primes_, &last_idx_);
+
+    if (nextPrimes_->finished())
+      clear(nextPrimes_);
+    else
+      break;
   }
 
   i_ = 0;
