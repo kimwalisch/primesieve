@@ -68,7 +68,6 @@ void primesieve_skipto(primesieve_iterator* it,
   it->i_ = 0;
   it->last_idx_ = 0;
   it->dist_ = NextPrimes::maxCachedPrime();
-  it->is_error_ = false;
   auto& primes = getPrimes(it);
   primes.clear();
   clearNextPrimes(it);
@@ -87,13 +86,6 @@ void primesieve_free_iterator(primesieve_iterator* it)
 
 void primesieve_generate_next_primes(primesieve_iterator* it)
 {
-  if (it->is_error_)
-  {
-    it->i_ = 0;
-    it->last_idx_ = 0;
-    return;
-  }
-
   auto& primes = getPrimes(it);
   auto nextPrimes = getNextPrimes(it);
 
@@ -133,13 +125,6 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
 
 void primesieve_generate_prev_primes(primesieve_iterator* it)
 {
-  if (it->is_error_)
-  {
-    it->i_ = 0;
-    it->last_idx_ = 0;
-    return;
-  }
-
   auto& primes = getPrimes(it);
 
   try
