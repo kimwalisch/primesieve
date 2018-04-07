@@ -50,6 +50,8 @@ PreSieve::PreSieve(uint64_t start, uint64_t stop)
   i = min(i, primes.size() - 1);
   maxPrime_ = primes[i];
   primeProduct_ = primeProducts[i];
+
+  init();
 }
 
 /// Pre-sieve a small buffer by removing the
@@ -76,11 +78,8 @@ void PreSieve::init()
 /// Copy pre-sieved buffer to sieve array
 void PreSieve::copy(byte_t* sieve,
                     uint64_t sieveSize,
-                    uint64_t segmentLow)
+                    uint64_t segmentLow) const
 {
-  if (!buffer_)
-    init();
-
   // find segmentLow index
   uint64_t remainder = segmentLow % primeProduct_;
   uint64_t index = remainder / 30;
