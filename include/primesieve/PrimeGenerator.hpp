@@ -46,8 +46,6 @@ private:
   void countkTuplets(const byte_t*, uint64_t);
   void printPrimes(const byte_t*, uint64_t) const;
   void printkTuplets(const byte_t*, uint64_t) const;
-  void storePrimes(Store&, const byte_t*, uint64_t) const;
-  static void printPrime(uint64_t);
 };
 
 } // namespace
