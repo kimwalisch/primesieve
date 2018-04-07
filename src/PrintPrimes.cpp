@@ -1,8 +1,9 @@
 ///
 /// @file   PrintPrimes.cpp
-/// @brief  After a segment has been sieved PrintPrimes is
-///         used to reconstruct primes and prime k-tuplets from
-///         1 bits of the sieve array.
+/// @brief  PrintPrimes is used for printing primes to stdout and
+///         for counting primes. After a segment has been sieved
+///         (using Erat) PrintPrimes is used to reconstruct primes
+///         and prime k-tuplets from 1 bits of the sieve array.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
