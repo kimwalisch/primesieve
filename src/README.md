@@ -1,7 +1,7 @@
 # C++ classes
 
 * **PrimeSieve** coordinates prime sieving, it instantiates
-  the PreSieve, SievingPrimes and PrimeGenerator classes which do
+  the PreSieve, SievingPrimes and PrintPrimes classes which do
   the actual prime sieving. PrimeSieve's main method is
   ```PrimeSieve::sieve(start, stop)``` which sieves the primes inside
   the interval [start, stop]. libprimesieve's C and C++ APIs are
@@ -25,13 +25,13 @@
   size that matches the CPU's L1 or L2 cache size (depending on the
   CPU type).
 
-* **PrimeGenerator** is derived from Erat. After a segment has been
-  sieved (using Erat) PrimeGenerator is used to reconstruct primes and
+* **PrintPrimes** is derived from Erat. After a segment has been
+  sieved (using Erat) PrintPrimes is used to reconstruct primes and
   prime k-tuplets from 1 bits of the sieve array. It is also used for counting
   primes and prime k-tuplets in the sieve array.
 
 * **SievingPrimes** is derived from Erat. The SievingPrimes class is used
-  to generate the sieving primes ≤ sqrt(stop) for PrimeGenerator.
+  to generate the sieving primes ≤ sqrt(stop) for PrintPrimes.
 
 * **PreSieve** is used to pre-sieve multiples of small primes ≤ 19
   to speed up the sieve of Eratosthenes. Upon creation the

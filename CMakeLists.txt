@@ -42,7 +42,7 @@ set(LIB_SRC src/api-c.cpp
             src/ParallelSieve.cpp
             src/popcount.cpp
             src/PreSieve.cpp
-            src/PrimeGenerator.cpp
+            src/PrintPrimes.cpp
             src/PrimeSieve.cpp
             src/Erat.cpp
             src/SievingPrimes.cpp

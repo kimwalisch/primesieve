@@ -52,7 +52,7 @@ SOURCES += \
   ../ParallelSieve.cpp \
   ../popcount.cpp \
   ../PreSieve.cpp \
-  ../PrimeGenerator.cpp \
+  ../PrintPrimes.cpp \
   ../SievingPrimes.cpp \
   ../PrimeSieve.cpp \
   ../Erat.cpp \

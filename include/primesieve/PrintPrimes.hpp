@@ -1,5 +1,5 @@
 ///
-/// @file  PrimeGenerator.hpp
+/// @file  PrintPrimes.hpp
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -22,14 +22,14 @@ namespace primesieve {
 
 class Store;
 
-/// After a segment has been sieved PrimeGenerator is
+/// After a segment has been sieved PrintPrimes is
 /// used to reconstruct primes and prime k-tuplets from
 /// 1 bits of the sieve array
 ///
-class PrimeGenerator : public Erat
+class PrintPrimes : public Erat
 {
 public:
-  PrimeGenerator(PrimeSieve&);
+  PrintPrimes(PrimeSieve&);
   void sieve();
 private:
   enum { END = 0xff + 1 };

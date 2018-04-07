@@ -1,6 +1,6 @@
 ///
-/// @file   PrimeGenerator.cpp
-/// @brief  After a segment has been sieved PrimeGenerator is
+/// @file   PrintPrimes.cpp
+/// @brief  After a segment has been sieved PrintPrimes is
 ///         used to reconstruct primes and prime k-tuplets from
 ///         1 bits of the sieve array.
 ///
@@ -14,7 +14,7 @@
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/PreSieve.hpp>
-#include <primesieve/PrimeGenerator.hpp>
+#include <primesieve/PrintPrimes.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/Erat.hpp>
 #include <primesieve/SievingPrimes.hpp>
@@ -31,7 +31,7 @@ namespace primesieve {
 /// popcount.cpp
 uint64_t popcount(const uint64_t* array, uint64_t size);
 
-const uint64_t PrimeGenerator::bitmasks_[6][5] =
+const uint64_t PrintPrimes::bitmasks_[6][5] =
 {
   { END },
   { 0x06, 0x18, 0xc0, END },       // Twin primes:       b00000110, b00011000, b11000000
@@ -41,7 +41,7 @@ const uint64_t PrimeGenerator::bitmasks_[6][5] =
   { 0x3f, END }                    // Prime sextuplets
 };
 
-PrimeGenerator::PrimeGenerator(PrimeSieve& ps) :
+PrintPrimes::PrintPrimes(PrimeSieve& ps) :
   preSieve_(ps.getStart(), ps.getStop()),
   counts_(ps.getCounts()),
   ps_(ps)
@@ -59,7 +59,7 @@ PrimeGenerator::PrimeGenerator(PrimeSieve& ps) :
 /// Initialize the lookup tables to count the number
 /// of twins, triplets, ... per byte
 ///
-void PrimeGenerator::initCounts()
+void PrintPrimes::initCounts()
 {
   for (uint_t i = 1; i < counts_.size(); i++)
   {
@@ -81,7 +81,7 @@ void PrimeGenerator::initCounts()
   }
 }
 
-void PrimeGenerator::sieve()
+void PrintPrimes::sieve()
 {
   if (sqrtStop_ > preSieve_.getMaxPrime())
   {
@@ -96,7 +96,7 @@ void PrimeGenerator::sieve()
 }
 
 /// Executed after each sieved segment
-void PrimeGenerator::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
+void PrintPrimes::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
 {
   if (ps_.isFlag(ps_.COUNT_PRIMES))
     countPrimes(sieve, sieveSize);
@@ -110,13 +110,13 @@ void PrimeGenerator::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
     ps_.updateStatus(sieveSize * 30);
 }
 
-void PrimeGenerator::countPrimes(const byte_t* sieve, uint64_t sieveSize)
+void PrintPrimes::countPrimes(const byte_t* sieve, uint64_t sieveSize)
 {
   uint64_t size = ceilDiv(sieveSize, 8);
   counts_[0] += popcount((const uint64_t*) sieve, size);
 }
 
-void PrimeGenerator::countkTuplets(const byte_t* sieve, uint64_t sieveSize)
+void PrintPrimes::countkTuplets(const byte_t* sieve, uint64_t sieveSize)
 {
   // i = 1 twins, i = 2 triplets, ...
   for (uint_t i = 1; i < counts_.size(); i++)
@@ -139,7 +139,7 @@ void PrimeGenerator::countkTuplets(const byte_t* sieve, uint64_t sieveSize)
 }
 
 /// Print primes to stdout
-void PrimeGenerator::printPrimes(const byte_t* sieve, uint64_t sieveSize) const
+void PrintPrimes::printPrimes(const byte_t* sieve, uint64_t sieveSize) const
 {
   uint64_t i = 0;
   uint64_t low = segmentLow_;
@@ -163,7 +163,7 @@ void PrimeGenerator::printPrimes(const byte_t* sieve, uint64_t sieveSize) const
 }
 
 /// Print prime k-tuplets to stdout
-void PrimeGenerator::printkTuplets(const byte_t* sieve, uint64_t sieveSize) const
+void PrintPrimes::printkTuplets(const byte_t* sieve, uint64_t sieveSize) const
 {
   // i = 1 twins, i = 2 triplets, ...
   uint_t i = 1;
