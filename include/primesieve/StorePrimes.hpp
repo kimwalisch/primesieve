@@ -33,12 +33,14 @@ void store_primes(uint64_t start, uint64_t stop, T& primes)
 
   if (start <= stop)
   {
+    using V = typename T::value_type;
     std::size_t size = primes.size() + prime_count_approx(start, stop);
     primes.reserve(size);
+
     primesieve::iterator it(start, stop);
     uint64_t prime = it.next_prime();
     for (; prime <= stop; prime = it.next_prime())
-      primes.push_back(prime);
+      primes.push_back((V) prime);
   }
 }
 
@@ -53,11 +55,12 @@ void store_n_primes(uint64_t n, uint64_t start, T& primes)
   uint64_t stop = get_max_stop();
   std::size_t size = primes.size() + (std::size_t) n;
   primes.reserve(size);
+  using V = typename T::value_type;
 
   primesieve::iterator it(start, stop);
   uint64_t prime = it.next_prime();
   for (; n > 0; n--, prime = it.next_prime())
-    primes.push_back(prime);
+    primes.push_back((V) prime);
 
   if (~prime == 0)
     throw primesieve_error("cannot generate primes > 2^64");
