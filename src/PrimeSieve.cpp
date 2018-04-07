@@ -1,8 +1,8 @@
 ///
-/// @file   PrimeSieve.hpp
-/// @brief  The PrimeSieve class is a high level class that
-///         manages prime sieving using the PreSieve, SievingPrimes
-///         and PrimeGenerator classes.
+/// @file   PrimeSieve.cpp
+/// @brief  PrimeSieve is a high level class that manages prime
+///         sieving. It is used for printing and counting primes
+///         and for computing the nth prime.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
