@@ -34,10 +34,7 @@ template <typename T>
 inline void generate_primes(uint64_t stop, std::vector<T>* primes)
 {
   if (primes)
-  {
-    StorePrimes<std::vector<T> > sp(*primes);
-    sp.storePrimes(0, stop);
-  }
+    store_primes(0, stop, *primes);
 }
 
 /// Store the primes within the interval [start, stop]
@@ -47,10 +44,7 @@ template <typename T>
 inline void generate_primes(uint64_t start, uint64_t stop, std::vector<T>* primes)
 {
   if (primes)
-  {
-    StorePrimes<std::vector<T> > sp(*primes);
-    sp.storePrimes(start, stop);
-  }
+    store_primes(start, stop, *primes);
 }
 
 /// Store the first n primes in the primes vector.
@@ -58,10 +52,7 @@ template <typename T>
 inline void generate_n_primes(uint64_t n, std::vector<T>* primes)
 {
   if (primes)
-  {
-    Store_N_Primes<std::vector<T> > sp(*primes);
-    sp.storePrimes(n, 0);
-  }
+    store_n_primes(n, 0, *primes);
 }
 
 /// Store the first n primes >= start in the primes vector.
@@ -69,10 +60,7 @@ template <typename T>
 inline void generate_n_primes(uint64_t n, uint64_t start, std::vector<T>* primes)
 {
   if (primes)
-  {
-    Store_N_Primes<std::vector<T> > sp(*primes);
-    sp.storePrimes(n, start);
-  }
+    store_n_primes(n, start, *primes);
 }
 
 /// Find the nth prime.

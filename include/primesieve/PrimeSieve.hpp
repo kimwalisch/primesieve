@@ -18,8 +18,6 @@
 
 namespace primesieve {
 
-class Store;
-
 class PrimeSieve
 {
 public:
@@ -49,7 +47,6 @@ public:
   int getSieveSize() const;
   double getStatus() const;
   double getSeconds() const;
-  Store& getStore();
   // Setters
   void setStart(uint64_t);
   void setStop(uint64_t);
@@ -64,12 +61,10 @@ public:
   bool isFlag(int) const;
   bool isFlag(int, int) const;
   bool isStatus() const;
-  bool isStore() const;
   // Sieve
   virtual void sieve();
   void sieve(uint64_t, uint64_t);
   void sieve(uint64_t, uint64_t, int);
-  void storePrimes(uint64_t, uint64_t, Store*);
   // nth prime
   uint64_t nthPrime(uint64_t);
   uint64_t nthPrime(int64_t, uint64_t);
@@ -122,7 +117,6 @@ private:
   int flags_;
   /// parent ParallelSieve object
   PrimeSieve* parent_;
-  Store* store_;
   static void printStatus(double, double);
   bool isParallelSieve() const;
   void processSmallPrimes();

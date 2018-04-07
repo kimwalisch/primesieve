@@ -32,8 +32,7 @@ void* primes_helper(uint64_t start, uint64_t stop, size_t* size)
   try
   {
     malloc_vector<T> primes;
-    StorePrimes<malloc_vector<T>> sp(primes);
-    sp.storePrimes(start, stop);
+    store_primes(start, stop, primes);
 
     if (size)
       *size = primes.size();
@@ -57,9 +56,7 @@ void* n_primes_helper(uint64_t n, uint64_t start)
   try
   {
     malloc_vector<T> primes;
-    Store_N_Primes<malloc_vector<T>> sp(primes);
-    sp.storePrimes(n, start);
-
+    store_n_primes(n, start, primes);
     primes.disable_free();
     return (void*) primes.data();
   }

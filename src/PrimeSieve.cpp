@@ -14,7 +14,6 @@
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/PrimeGenerator.hpp>
-#include <primesieve/StorePrimes.hpp>
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
@@ -59,8 +58,7 @@ PrimeSieve::PrimeSieve() :
   stop_(0),
   counts_(6),
   flags_(COUNT_PRIMES),
-  parent_(nullptr),
-  store_(nullptr)
+  parent_(nullptr)
 {
   setSieveSize(get_sieve_size());
   reset();
@@ -73,8 +71,7 @@ PrimeSieve::PrimeSieve(PrimeSieve* parent) :
   counts_(6),
   sieveSize_(parent->sieveSize_),
   flags_(parent->flags_),
-  parent_(parent),
-  store_(parent->store_)
+  parent_(parent)
 { }
 
 PrimeSieve::~PrimeSieve()
@@ -109,7 +106,6 @@ bool     PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRI
 bool     PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEXTUPLETS); }
 bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEXTUPLETS); }
 bool     PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
-bool     PrimeSieve::isStore()                   const { return store_ != nullptr; }
 bool     PrimeSieve::isParallelSieve()           const { return parent_ != nullptr; }
 
 /// Set a start number (lower bound) for sieving
@@ -132,11 +128,6 @@ void PrimeSieve::setSieveSize(int sieveSize)
 {
   sieveSize_ = inBetween(8, sieveSize, 4096);
   sieveSize_ = floorPow2(sieveSize_);
-}
-
-Store& PrimeSieve::getStore()
-{
-  return *store_;
 }
 
 PrimeSieve::counts_t& PrimeSieve::getCounts()
@@ -201,8 +192,6 @@ void PrimeSieve::processSmallPrimes()
         counts_[p.index]++;
       if (isPrint(p.index))
         cout << p.str << '\n';
-      if (isStore() && p.index == 0)
-        (*store_)(p.first);
     }
   }
 }
@@ -254,15 +243,6 @@ void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags)
   setStop(stop);
   setFlags(flags);
   sieve();
-}
-
-void PrimeSieve::storePrimes(uint64_t start, uint64_t stop, Store* store)
-{
-  if (!store)
-    throw primesieve_error("invalid store pointer");
-  store_ = store;
-  flags_ = 0;
-  sieve(start, stop);
 }
 
 // Print methods

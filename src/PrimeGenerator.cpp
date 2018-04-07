@@ -18,7 +18,6 @@
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/Erat.hpp>
 #include <primesieve/SievingPrimes.hpp>
-#include <primesieve/StorePrimes.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -99,8 +98,6 @@ void PrimeGenerator::sieve()
 /// Executed after each sieved segment
 void PrimeGenerator::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
 {
-  if (ps_.isStore())
-    storePrimes(ps_.getStore(), sieve, sieveSize);
   if (ps_.isFlag(ps_.COUNT_PRIMES))
     countPrimes(sieve, sieveSize);
   if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEXTUPLETS))
@@ -111,20 +108,6 @@ void PrimeGenerator::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
     printkTuplets(sieve, sieveSize);
   if (ps_.isStatus())
     ps_.updateStatus(sieveSize * 30);
-}
-
-void PrimeGenerator::storePrimes(Store& store, const byte_t* sieve, uint64_t sieveSize) const
-{
-  uint64_t low = segmentLow_;
-
-  for (uint64_t i = 0; i < sieveSize; i += 8)
-  {
-    uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]); 
-    while (bits)
-      store(getPrime(&bits, low));
-
-    low += 8 * 30;
-  }
 }
 
 void PrimeGenerator::countPrimes(const byte_t* sieve, uint64_t sieveSize)
