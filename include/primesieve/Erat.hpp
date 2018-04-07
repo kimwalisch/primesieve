@@ -49,9 +49,9 @@ protected:
   /// Sieve of Eratosthenes array
   byte_t* sieve_ = nullptr;
   PreSieve* preSieve_;
-  Erat() { }
+  Erat();
   Erat(uint64_t, uint64_t);
-  virtual ~Erat() { }
+  virtual ~Erat();
   void init(uint64_t, uint64_t, uint64_t, PreSieve&);
   void addSievingPrime(uint64_t);
   void sieve(uint64_t);
