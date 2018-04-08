@@ -64,7 +64,7 @@ private:
   bool isInit_ = false;
   bool finished_ = false;
   static const std::array<uint64_t, 53> smallPrimes;
-  static const std::array<uint8_t, 247> primePi;
+  static const std::array<uint8_t, 242> primePi;
   std::size_t getStartIdx() const;
   std::size_t getStopIdx() const;
   void init();

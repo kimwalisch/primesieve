@@ -39,7 +39,7 @@ const array<uint64_t, 53> NextPrimes::smallPrimes =
 };
 
 /// Number of primes <= n
-const array<uint8_t, 247> NextPrimes::primePi =
+const array<uint8_t, 242> NextPrimes::primePi =
 {
    0,  0,  1,  2,  2,  3,  3,  4,  4,  4,
    4,  5,  5,  6,  6,  6,  6,  7,  7,  8,
@@ -65,7 +65,7 @@ const array<uint8_t, 247> NextPrimes::primePi =
   46, 47, 47, 47, 47, 47, 47, 47, 47, 47,
   47, 47, 47, 48, 48, 48, 48, 49, 49, 50,
   50, 50, 50, 51, 51, 51, 51, 51, 51, 52,
-  52, 53, 53, 53, 53, 53, 53
+  52, 53
 };
 
 NextPrimes::NextPrimes(uint64_t start, uint64_t stop) :
@@ -98,7 +98,7 @@ size_t NextPrimes::getStopIdx() const
 void NextPrimes::init()
 {
   // sieving is only used if stop > max(SmallPrime)
-  uint64_t minStart = primePi.size();
+  uint64_t minStart = smallPrimes.back() + 1;
   uint64_t sieveSize = get_sieve_size();
 
   start_ = max(start_, minStart);
