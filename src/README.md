@@ -2,7 +2,8 @@
 
 * **PrimeSieve** is a high level class that coordinates prime sieving.
   It is used for printing and counting primes and for computing the nth
-  prime.
+  prime. PrimeSieve's main method is ```PrimeSieve::sieve(start, stop)```
+  which sieves the primes inside the interval [start, stop].
 
 * **ParallelSieve** launches multiple threads using ```std::async```
   and each thread sieves a part of the interval [start, stop] using a
@@ -13,8 +14,8 @@
   using a bit array with 30 numbers per byte, each byte of the sieve array
   holds the 8 offsets ```k = { 7, 11, 13, 17, 19, 23, 29, 31 }```.
   Its main methods are ```addSievingPrime(prime)``` which is called
-  consecutively for all primes ≤ sqrt(n) and ```sieve()``` which sieves
-  the primes inside [start, stop]. Erat uses the EratSmall, EratMedium and
+  consecutively for all primes ≤ sqrt(n) and ```sieveSegment()``` which
+  sieves the next segment. Erat uses the EratSmall, EratMedium and
   EratBig classes to cross-off multiples.
 
 * **EratSmall** is derived from Wheel. EratSmall is a segmented
