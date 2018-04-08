@@ -57,8 +57,9 @@
   k-tuplets from 1 bits of the sieve array.
 
 * **NextPrimes** is derived from Erat. NextPrimes is used to fill an
-  array with the primes inside the next 64-bit word of the sieve array.
-  NextPrimes is used by primesieve::iterator.
+  array or a vector with the primes inside [start, stop]. It can fill
+  an array gradually or at once. NextPrimes is used by
+  primesieve::iterator.
 
 * **primesieve::iterator** allows to easily iterate over primes. It
   provides ```next_prime()``` and ```prev_prime()``` methods.
