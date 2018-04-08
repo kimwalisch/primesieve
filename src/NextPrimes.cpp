@@ -97,7 +97,7 @@ size_t NextPrimes::getStopIdx() const
 
 void NextPrimes::init()
 {
-  // sieving is only used if stop > maxSmallPrime
+  // sieving is only used if stop > max(SmallPrime)
   uint64_t minStart = primePi.size();
   uint64_t sieveSize = get_sieve_size();
 
