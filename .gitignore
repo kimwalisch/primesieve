@@ -22,4 +22,4 @@ CTestTestfile.cmake
 doc/Doxyfile
 doc/html
 doc/latex
-build
+/build*
