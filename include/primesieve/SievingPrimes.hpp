@@ -1,7 +1,7 @@
 ///
 /// @file  SievingPrimes.hpp
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -10,24 +10,42 @@
 #ifndef SIEVINGPRIMES_HPP
 #define SIEVINGPRIMES_HPP
 
-#include "config.hpp"
-#include "SieveOfEratosthenes.hpp"
+#include "Erat.hpp"
+
+#include <stdint.h>
+#include <vector>
 
 namespace primesieve {
 
-class PrimeGenerator;
 class PreSieve;
 
-class SievingPrimes : public SieveOfEratosthenes
+class SievingPrimes : public Erat
 {
 public:
-  SievingPrimes(PrimeGenerator&, const PreSieve&);
-  void generate();
+  SievingPrimes() { }
+  SievingPrimes(Erat*, PreSieve&);
+  void init(Erat*, PreSieve&);
+  uint64_t nextPrime();
 private:
-  PrimeGenerator& primeGen_;
-  void generatePrimes(const byte_t*, uint64_t);
-  void tinyPrimes();
+  uint64_t i_ = 0;
+  uint64_t size_ = 0;
+  uint64_t low_ = 0;
+  uint64_t tinyIdx_;
+  uint64_t sieveIdx_ = ~0ull;
+  uint64_t primes_[64];
+  std::vector<char> tinySieve_;
+  void fill();
+  void tinySieve();
+  bool sieveSegment();
 };
+
+inline uint64_t SievingPrimes::nextPrime()
+{
+  while (i_ >= size_)
+    fill();
+
+  return primes_[i_++];
+}
 
 } // namespace
 

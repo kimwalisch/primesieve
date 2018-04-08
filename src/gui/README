@@ -28,12 +28,12 @@
 
   * src/PrimeSieveProcess.cpp & .h
     Class that is used for prime sieving. PrimeSieveProcess launches
-    a ParallelPrimeSieve instance in a new process, this approach
+    a ParallelSieve instance in a new process, this approach
     allows to easily cancel sieving by killing the process. The
     inter-process communication between the GUI process
-    (PrimeSieveGUI) and the ParallelPrimeSieve instance is realised
+    (PrimeSieveGUI) and the ParallelSieve instance is realised
     via shared memory.
 
   * src/main.cpp
-    Contains the ParallelPrimeSieve code launched by PrimeSieveProcess
+    Contains the ParallelSieve code launched by PrimeSieveProcess
     objects.

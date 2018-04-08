@@ -2,7 +2,7 @@
 /// @file  CpuInfo.hpp
 /// @brief Get the CPUs' cache sizes in bytes
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -32,7 +32,7 @@ private:
   std::size_t l2CacheSize_;
   bool privateL2Cache_;
   std::string error_;
-  void initCache();
+  void init();
 };
 
 // Singleton

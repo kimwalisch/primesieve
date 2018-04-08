@@ -21,7 +21,7 @@
 #define PRIMESIEVEGUI_HPP
 
 #include "PrimeSieveGUI_const.hpp"
-#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/ParallelSieve.hpp>
 
 #if QT_VERSION >= 0x050000
   #include <QtGlobal>
@@ -84,12 +84,12 @@ private:
   Ui::PrimeSieveGUI* ui;
 
   enum {
-    COUNT_PRIMES     = primesieve::ParallelPrimeSieve::COUNT_PRIMES,
-    COUNT_KTUPLETS   = primesieve::ParallelPrimeSieve::COUNT_SEXTUPLETS * 2 - primesieve::ParallelPrimeSieve::COUNT_TWINS,
-    COUNT_FLAGS      = primesieve::ParallelPrimeSieve::COUNT_SEXTUPLETS * 2 - primesieve::ParallelPrimeSieve::COUNT_PRIMES,
-    PRINT_FLAGS      = primesieve::ParallelPrimeSieve::PRINT_SEXTUPLETS * 2 - primesieve::ParallelPrimeSieve::PRINT_PRIMES,
-    PRINT_PRIMES     = primesieve::ParallelPrimeSieve::PRINT_PRIMES,
-    CALCULATE_STATUS = primesieve::ParallelPrimeSieve::CALCULATE_STATUS
+    COUNT_PRIMES     = primesieve::ParallelSieve::COUNT_PRIMES,
+    COUNT_KTUPLETS   = primesieve::ParallelSieve::COUNT_SEXTUPLETS * 2 - primesieve::ParallelSieve::COUNT_TWINS,
+    COUNT_FLAGS      = primesieve::ParallelSieve::COUNT_SEXTUPLETS * 2 - primesieve::ParallelSieve::COUNT_PRIMES,
+    PRINT_FLAGS      = primesieve::ParallelSieve::PRINT_SEXTUPLETS * 2 - primesieve::ParallelSieve::PRINT_PRIMES,
+    PRINT_PRIMES     = primesieve::ParallelSieve::PRINT_PRIMES,
+    CALCULATE_STATUS = primesieve::ParallelSieve::CALCULATE_STATUS
   };
 
   void initGUI();

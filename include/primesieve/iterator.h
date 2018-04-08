@@ -5,15 +5,15 @@
  *         has a complexity of O(r log log r) operations with
  *         r = n^0.5, after that any additional prime is generated in
  *         amortized O(log n log log n) operations. The memory usage
- *         is about pi(n^0.5) * 16 bytes.
+ *         is about PrimePi(n^0.5) * 8 bytes.
  *
  *         The @link primesieve_iterator.c primesieve_iterator.c
  *         @endlink example shows how to use primesieve_iterator. If
- *         any error occurs errno is set to EDOM and
- *         primesieve_next_prime() and primesieve_prev_prime()
- *         return PRIMESIEVE_ERROR.
+ *         any error occurs primesieve_next_prime() and
+ *         primesieve_prev_prime() return PRIMESIEVE_ERROR and
+ *         primesieve_iterator.is_error_ is set to 1.
  * 
- * Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This file is distributed under the BSD License. See the COPYING
  * file in the top level directory.
@@ -37,12 +37,17 @@ typedef struct
 {
   size_t i_;
   size_t last_idx_;
-  uint64_t* primes_;
-  uint64_t* primes_pimpl_;
   uint64_t start_;
   uint64_t stop_;
   uint64_t stop_hint_;
-  uint64_t tiny_cache_size_;
+  uint64_t dist_;
+  uint64_t* primes_;
+  uint64_t* primes_pimpl_;
+  uint64_t* nextPrimes_;
+  /**
+   * Will be initialized to 0.
+   * Will be set to 1 if any error occurs.
+   */
   int is_error_;
 } primesieve_iterator;
 

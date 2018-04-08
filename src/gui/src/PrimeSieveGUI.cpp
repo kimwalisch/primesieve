@@ -24,7 +24,7 @@
 #include <primesieve.hpp>
 #include <primesieve/calculator.hpp>
 #include <primesieve/CpuInfo.hpp>
-#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/ParallelSieve.hpp>
 #include <primesieve/pmath.hpp>
 
 #if QT_VERSION >= 0x050000
@@ -105,7 +105,7 @@ void PrimeSieveGUI::initGUI() {
   int sieveSize = get_sieve_size();
   this->setTo(ui->sieveSizeComboBox, QString::number(sieveSize) + " KB");
 
-  maxThreads_ = ParallelPrimeSieve::getMaxThreads();
+  maxThreads_ = ParallelSieve::getMaxThreads();
 
   std::set<int> threads;
   threads.insert(maxThreads_);
@@ -206,10 +206,10 @@ void PrimeSieveGUI::autoSetThreads() {
     try {
       quint64 lowerBound = this->getNumber(ui->lowerBoundLineEdit->text());
       quint64 upperBound = this->getNumber(ui->upperBoundLineEdit->text());
-      ParallelPrimeSieve pps;
-      pps.setStart(lowerBound);
-      pps.setStop(upperBound);
-      int idealNumThreads = pps.idealNumThreads();
+      ParallelSieve ps;
+      ps.setStart(lowerBound);
+      ps.setStop(upperBound);
+      int idealNumThreads = ps.idealNumThreads();
       if (idealNumThreads < maxThreads_) {
         // floor to the next power of 2 value
         int p = 1;

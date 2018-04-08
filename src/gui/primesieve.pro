@@ -46,14 +46,16 @@ SOURCES += \
   ../EratMedium.cpp \
   ../EratSmall.cpp \
   ../iterator.cpp \
+  ../IteratorHelper.cpp \
+  ../NextPrimes.cpp \
   ../nthPrime.cpp \
-  ../ParallelPrimeSieve.cpp \
+  ../ParallelSieve.cpp \
   ../popcount.cpp \
   ../PreSieve.cpp \
-  ../PrimeGenerator.cpp \
+  ../PrintPrimes.cpp \
   ../SievingPrimes.cpp \
   ../PrimeSieve.cpp \
-  ../SieveOfEratosthenes.cpp \
+  ../Erat.cpp \
   ../Wheel.cpp
 
 # ---------------------------------------------------------

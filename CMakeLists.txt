@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4)
 project(primesieve CXX)
-set(PRIMESIEVE_VERSION "6.4")
-set(PRIMESIEVE_SOVERSION "8.4.0")
+set(PRIMESIEVE_VERSION "7.0")
+set(PRIMESIEVE_SOVERSION "9.0.0")
 
 # Build options ######################################################
 
@@ -36,13 +36,15 @@ set(LIB_SRC src/api-c.cpp
             src/EratSmall.cpp
             src/iterator-c.cpp
             src/iterator.cpp
+            src/IteratorHelper.cpp
+            src/NextPrimes.cpp
             src/nthPrime.cpp
-            src/ParallelPrimeSieve.cpp
+            src/ParallelSieve.cpp
             src/popcount.cpp
             src/PreSieve.cpp
-            src/PrimeGenerator.cpp
+            src/PrintPrimes.cpp
             src/PrimeSieve.cpp
-            src/SieveOfEratosthenes.cpp
+            src/Erat.cpp
             src/SievingPrimes.cpp
             src/Wheel.cpp)
 

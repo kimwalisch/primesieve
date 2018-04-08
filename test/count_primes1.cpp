@@ -2,13 +2,13 @@
 /// @file   count_primes1.cpp
 /// @brief  Count the primes up to 10^9.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
-#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/ParallelSieve.hpp>
 
 #include <stdint.h>
 #include <iostream>
@@ -43,15 +43,15 @@ void check(bool OK)
 int main()
 {
   cout << left;
-  ParallelPrimeSieve pps;
-  pps.setStart(0);
-  pps.setStop(0);
+  ParallelSieve ps;
+  ps.setStart(0);
+  ps.setStop(0);
   uint64_t count = 0;
 
   // pi(x) with x = 10^i for i = 1 to 9
   for (int i = 1; i <= 9; i++)
   {
-    count += pps.countPrimes(pps.getStop() + 1, (uint64_t) pow(10.0, i));
+    count += ps.countPrimes(ps.getStop() + 1, (uint64_t) pow(10.0, i));
     cout << "pi(10^" << i << ") = " << setw(12) << count;
     check(count == pix[i - 1]);
   }

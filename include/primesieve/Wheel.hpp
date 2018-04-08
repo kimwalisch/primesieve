@@ -67,7 +67,7 @@ class Wheel
 public:
   /// Add a new sieving prime to the sieving algorithm.
   /// Calculate the first multiple > segmentLow of prime and the
-  /// position within the SieveOfEratosthenes array of that multiple
+  /// position within the sieve array of that multiple
   /// and its wheel index. When done store the sieving prime.
   ///
   void addSievingPrime(uint64_t prime, uint64_t segmentLow)
@@ -89,15 +89,15 @@ public:
     if (nextMultiple > stop_ - multiple)
       return;
     nextMultiple += multiple - segmentLow;
-    uint64_t multipleIndex = nextMultiple / NUMBERS_PER_BYTE;
-    uint64_t wheelIndex = wheelOffsets_[prime % NUMBERS_PER_BYTE] + INIT[quotient % MODULO].wheelIndex;
+    uint64_t multipleIndex = nextMultiple / 30;
+    uint64_t wheelIndex = wheelOffsets_[prime % 30] + INIT[quotient % MODULO].wheelIndex;
     storeSievingPrime(prime, multipleIndex, wheelIndex);
   }
 
 protected:
-  Wheel(uint64_t stop, uint64_t sieveSize) :
-    stop_(stop)
+  void init(uint64_t stop, uint64_t sieveSize)
   {
+    stop_ = stop;
     uint64_t maxSieveSize = SievingPrime::MAX_MULTIPLEINDEX + 1;
 
     if (sieveSize > maxSieveSize)

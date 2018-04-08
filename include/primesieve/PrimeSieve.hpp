@@ -1,10 +1,10 @@
 ///
 /// @file   PrimeSieve.hpp
-/// @brief  The PrimeSieve class is a high level class that
-///         manages prime sieving using the PreSieve, SievingPrimes
-///         and PrimeGenerator classes.
+/// @brief  PrimeSieve is a high level class that manages prime
+///         sieving. It is used for printing and counting primes
+///         and for computing the nth prime.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -17,8 +17,6 @@
 #include <vector>
 
 namespace primesieve {
-
-class Store;
 
 class PrimeSieve
 {
@@ -49,7 +47,6 @@ public:
   int getSieveSize() const;
   double getStatus() const;
   double getSeconds() const;
-  Store& getStore();
   // Setters
   void setStart(uint64_t);
   void setStop(uint64_t);
@@ -64,12 +61,10 @@ public:
   bool isFlag(int) const;
   bool isFlag(int, int) const;
   bool isStatus() const;
-  bool isStore() const;
   // Sieve
   virtual void sieve();
   void sieve(uint64_t, uint64_t);
   void sieve(uint64_t, uint64_t, int);
-  void storePrimes(uint64_t, uint64_t, Store*);
   // nth prime
   uint64_t nthPrime(uint64_t);
   uint64_t nthPrime(int64_t, uint64_t);
@@ -120,11 +115,10 @@ private:
   int sieveSize_;
   /// Setter methods set flags e.g. COUNT_PRIMES
   int flags_;
-  /// parent ParallelPrimeSieve object
+  /// parent ParallelSieve object
   PrimeSieve* parent_;
-  Store* store_;
   static void printStatus(double, double);
-  bool isParallelPrimeSieve() const;
+  bool isParallelSieve() const;
   void processSmallPrimes();
 };
 

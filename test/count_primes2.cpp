@@ -2,13 +2,13 @@
 /// @file   count_primes2.cpp
 /// @brief  Count the primes within [10^i, 10^i + 10^8] for i = 12 to 19
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
-#include <primesieve/ParallelPrimeSieve.hpp>
+#include <primesieve/ParallelSieve.hpp>
 
 #include <stdint.h>
 #include <iostream>
@@ -41,7 +41,7 @@ void check(bool OK)
 int main()
 {
   cout << left;
-  ParallelPrimeSieve p;
+  ParallelSieve p;
   p.setFlags(p.COUNT_PRIMES | p.PRINT_STATUS);
 
   for (int i = 0; i <= 7; i++)

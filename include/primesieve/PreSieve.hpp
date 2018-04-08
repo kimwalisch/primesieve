@@ -1,7 +1,7 @@
 ///
 /// @file  PreSieve.hpp
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -18,11 +18,11 @@
 namespace primesieve {
 
 /// PreSieve objects are used to pre-sieve multiples of small primes
-/// e.g. <= 19 to speed up SieveOfEratosthenes. The idea is to
+/// e.g. <= 19 to speed up the sieve of Eratosthenes. The idea is to
 /// allocate an array (buffer_) and remove the multiples of small
 /// primes from it at initialization. Then whilst sieving, the
-/// buffer_ array is copied to the SieveOfEratosthenes array at the
-/// beginning of each new segment to pre-sieve the multiples of small
+/// buffer_ array is copied to the sieve array at the beginning of
+/// each new segment to pre-sieve the multiples of small
 /// primes <= maxPrime_. Pre-sieving speeds up my sieve of Eratosthenes
 /// implementation by about 20 percent when sieving < 10^10.
 ///
@@ -45,9 +45,9 @@ public:
 private:
   uint64_t maxPrime_;
   uint64_t primeProduct_;
+  uint64_t size_;
   byte_t* buffer_;
   std::unique_ptr<byte_t[]> deleter_;
-  uint64_t size_;
   void init();
 };
 

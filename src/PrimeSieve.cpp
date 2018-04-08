@@ -1,10 +1,10 @@
 ///
-/// @file   PrimeSieve.hpp
-/// @brief  The PrimeSieve class is a high level class that
-///         manages prime sieving using the PreSieve, SievingPrimes
-///         and PrimeGenerator classes.
+/// @file   PrimeSieve.cpp
+/// @brief  PrimeSieve is a high level class that manages prime
+///         sieving. It is used for printing and counting primes
+///         and for computing the nth prime.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -13,10 +13,7 @@
 #include <primesieve/config.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/primesieve_error.hpp>
-#include <primesieve/PreSieve.hpp>
-#include <primesieve/PrimeGenerator.hpp>
-#include <primesieve/SievingPrimes.hpp>
-#include <primesieve/StorePrimes.hpp>
+#include <primesieve/PrintPrimes.hpp>
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
@@ -61,22 +58,20 @@ PrimeSieve::PrimeSieve() :
   stop_(0),
   counts_(6),
   flags_(COUNT_PRIMES),
-  parent_(nullptr),
-  store_(nullptr)
+  parent_(nullptr)
 {
   setSieveSize(get_sieve_size());
   reset();
 }
 
-/// ParallelPrimeSieve creates one PrimeSieve
+/// ParallelSieve creates one PrimeSieve
 /// child object for each thread.
 ///
 PrimeSieve::PrimeSieve(PrimeSieve* parent) :
   counts_(6),
   sieveSize_(parent->sieveSize_),
   flags_(parent->flags_),
-  parent_(parent),
-  store_(parent->store_)
+  parent_(parent)
 { }
 
 PrimeSieve::~PrimeSieve()
@@ -111,8 +106,7 @@ bool     PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRI
 bool     PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEXTUPLETS); }
 bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEXTUPLETS); }
 bool     PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
-bool     PrimeSieve::isStore()                   const { return store_ != nullptr; }
-bool     PrimeSieve::isParallelPrimeSieve()      const { return parent_ != nullptr; }
+bool     PrimeSieve::isParallelSieve()           const { return parent_ != nullptr; }
 
 /// Set a start number (lower bound) for sieving
 void PrimeSieve::setStart(uint64_t start)
@@ -136,11 +130,6 @@ void PrimeSieve::setSieveSize(int sieveSize)
   sieveSize_ = floorPow2(sieveSize_);
 }
 
-Store& PrimeSieve::getStore()
-{
-  return *store_;
-}
-
 PrimeSieve::counts_t& PrimeSieve::getCounts()
 {
   return counts_;
@@ -161,7 +150,7 @@ void PrimeSieve::addFlags(int flags)
 ///
 bool PrimeSieve::updateStatus(uint64_t processed, bool tryLock)
 {
-  if (isParallelPrimeSieve())
+  if (isParallelSieve())
   {
     toUpdate_ += processed;
     if (parent_->updateStatus(toUpdate_, tryLock))
@@ -203,8 +192,6 @@ void PrimeSieve::processSmallPrimes()
         counts_[p.index]++;
       if (isPrint(p.index))
         cout << p.str << '\n';
-      if (isStore() && p.index == 0)
-        (*store_)(p.first);
     }
   }
 }
@@ -231,18 +218,8 @@ void PrimeSieve::sieve()
 
   if (stop_ >= 7)
   {
-    PreSieve preSieve(start_, stop_);
-    PrimeGenerator primeGen(*this, preSieve);
-
-    // generate sieving primes for primeGen
-    if (primeGen.getSqrtStop() > preSieve.getMaxPrime())
-    {
-      SievingPrimes sp(primeGen, preSieve);
-      sp.generate();
-    }
-
-    // sieve [start, stop]
-    primeGen.sieve();
+    PrintPrimes printPrimes(*this);
+    printPrimes.sieve();
   }
 
   auto t2 = chrono::system_clock::now();
@@ -266,15 +243,6 @@ void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags)
   setStop(stop);
   setFlags(flags);
   sieve();
-}
-
-void PrimeSieve::storePrimes(uint64_t start, uint64_t stop, Store* store)
-{
-  if (!store)
-    throw primesieve_error("invalid store pointer");
-  store_ = store;
-  flags_ = 0;
-  sieve(start, stop);
 }
 
 // Print methods

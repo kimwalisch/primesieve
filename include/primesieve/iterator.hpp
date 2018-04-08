@@ -12,11 +12,13 @@
 #ifndef PRIMESIEVE_ITERATOR_HPP
 #define PRIMESIEVE_ITERATOR_HPP
 
-#include <vector>
-#include <cstddef>
 #include <stdint.h>
+#include <cstddef>
+#include <vector>
 
 namespace primesieve {
+
+class NextPrimes;
 
 uint64_t get_max_stop();
 
@@ -24,7 +26,7 @@ uint64_t get_max_stop();
 /// forwards and backwards. Generating the first prime has a
 /// complexity of O(r log log r) operations with r = n^0.5, after that
 /// any additional prime is generated in amortized O(log n log log n)
-/// operations. The memory usage is about pi(n^0.5) * 16 bytes.
+/// operations. The memory usage is PrimePi(n^0.5) * 8 bytes.
 ///
 class iterator
 {
@@ -66,6 +68,8 @@ public:
       generate_prev_primes();
     return primes_[i_];
   }
+
+  ~iterator();
 private:
   std::size_t i_;
   std::size_t last_idx_;
@@ -73,8 +77,8 @@ private:
   uint64_t start_;
   uint64_t stop_;
   uint64_t stop_hint_;
-  uint64_t tiny_cache_size_;
-  uint64_t get_distance(uint64_t);
+  uint64_t dist_;
+  NextPrimes* nextPrimes_;
   void generate_next_primes();
   void generate_prev_primes();
 };

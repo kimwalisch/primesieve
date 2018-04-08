@@ -1,3 +1,22 @@
+Changes in version 7.0, 08/04/2018
+==================================
+
+Unreleased, work in progress.
+
+This is a major new release, the API is backwards compatible but the
+ABI (Application binary interface) is not backwards compatible.
+
+primesieve's core algorithms have been rewritten using next_prime()
+instead of callbacks. The benefit of this redesign is a much improved
+primesieve::iterator that runs up to twice as fast and uses only
+half as much memory as before!
+
+ * primesieve::iterator: Faster next_prime().
+ * StorePrimes.hpp: Use primesieve::iterator instead of callbacks.
+ * SievingPrimes.hpp: New next_prime().
+ * NextPrimes.cpp: New class used by primesieve::iterator.
+ * Erat.cpp: Reduce memory allocations.
+
 Changes in version 6.4, 23/03/2018
 ==================================
 
@@ -535,7 +554,7 @@ Changes in version 3.8, 13/07/2012
     only 12 asm instructions (previously 16).
  4. Improved OpenMP load balance in src/soe/ParallelPrimeSieve.cpp.
  5. Improved code readability of EratSmall.cpp, EratMedium.cpp,
-    EratBig.cpp, SieveOfEratosthenes.cpp and others.
+    EratBig.cpp, Erat.cpp and others.
  6. The Makefile now automatically detects the CPU's L1 data cache
     size on Unix-like OSes (Linux, Mac OS X).
  7. Renamed ./docs to ./doc
@@ -559,7 +578,7 @@ Changes in version 3.7, 31/05/2012
  4. New template imath.h functions: isqrt(), ilog2(), isPow2(), ...
     isqrt() has been rewritten using Newton's algorithm in order to
     avoid rounding errors of (int)sqrt((double)n) if n > 10^15.
- 5. New internal SieveOfEratosthenes::getNextPrime(...) member function.
+ 5. New internal Erat::getNextPrime(...) member function.
  6. Replaced old C-style comments with C++ comments.
  7. Updated ExpressionParser to version 2.2.
  8. uin32_t has been replaced by uint_t in src/soe/*.
