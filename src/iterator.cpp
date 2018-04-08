@@ -10,7 +10,6 @@
 #include <primesieve/iterator.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/NextPrimes.hpp>
-#include <primesieve.hpp>
 
 #include <vector>
 
