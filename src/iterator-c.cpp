@@ -103,7 +103,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       }
 
       for (it->last_idx_ = 0; !it->last_idx_;)
-        nextPrimes->fill(&primes, &it->last_idx_);
+        nextPrimes->fill(it->primes_, &it->last_idx_);
 
       if (nextPrimes->finished())
         clearNextPrimes(it);
@@ -113,6 +113,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
   }
   catch (exception&)
   {
+    clearNextPrimes(it);
     primes[0] = PRIMESIEVE_ERROR;
     it->last_idx_ = 1;
     it->is_error_ = true;
@@ -129,20 +130,23 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
 
   try
   {
-    clearNextPrimes(it);
     primes.clear();
+    clearNextPrimes(it);
 
     while (primes.empty())
     {
       IteratorHelper::prev(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
-      if (it->start_ <= 2)
-        primes.push_back(0);
-      generate_primes(it->start_, it->stop_, &primes);
+      it->nextPrimes_ = (uint64_t*) new NextPrimes(it->start_, it->stop_);
+      auto nextPrimes = getNextPrimes(it);
+      if (it->start_ <= 2) primes.push_back(0);
+      nextPrimes->fill(primes);
+      clearNextPrimes(it);
     }
   }
   catch (exception&)
   {
     primes.clear();
+    clearNextPrimes(it);
     primes.push_back(PRIMESIEVE_ERROR);
     it->is_error_ = true;
     errno = EDOM;

@@ -69,7 +69,7 @@ void iterator::generate_next_primes()
     }
 
     for (last_idx_ = 0; !last_idx_;)
-      nextPrimes_->fill(&primes_, &last_idx_);
+      nextPrimes_->fill(primes_.data(), &last_idx_);
 
     if (nextPrimes_->finished())
       clear(nextPrimes_);
@@ -83,15 +83,17 @@ void iterator::generate_next_primes()
 
 void iterator::generate_prev_primes()
 {
-  clear(nextPrimes_);
   primes_.clear();
+  clear(nextPrimes_);
 
   while (primes_.empty())
   {
     IteratorHelper::prev(&start_, &stop_, stop_hint_, &dist_);
     if (start_ <= 2)
       primes_.push_back(0);
-    generate_primes(start_, stop_, &primes_);
+    nextPrimes_ = new NextPrimes(start_, stop_);
+    nextPrimes_->fill(primes_);
+    clear(nextPrimes_);
   }
 
   last_idx_ = primes_.size() - 1;

@@ -1,7 +1,7 @@
 ///
 /// @file  NextPrimes.cpp
-///        Fills an array with the primes inside the next
-///        64-bit word of the sieve array.
+///        Fill an array or a vector with primes. This class is
+///        used by primesieve::iterator.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -10,13 +10,15 @@
 ///
 
 #include <primesieve.hpp>
-#include <primesieve/NextPrimes.hpp>
-#include <primesieve/PreSieve.hpp>
 #include <primesieve/Erat.hpp>
+#include <primesieve/NextPrimes.hpp>
+#include <primesieve/pmath.hpp>
+#include <primesieve/PreSieve.hpp>
 #include <primesieve/SievingPrimes.hpp>
 
 #include <stdint.h>
 #include <algorithm>
+#include <vector>
 #include <array>
 
 using namespace std;
@@ -70,19 +72,6 @@ NextPrimes::NextPrimes(uint64_t start, uint64_t stop) :
   preSieve_(start, stop)
 { }
 
-void NextPrimes::init()
-{
-  // sieving is only used if stop > maxSmallPrime
-  uint64_t minStart = primePi.size();
-  uint64_t sieveSize = get_sieve_size();
-
-  start_ = max(start_, minStart);
-  stop_ = max(start_, stop_);
-
-  Erat::init(start_, stop_, sieveSize, preSieve_);
-  sievingPrimes_.init(this, preSieve_);
-}
-
 size_t NextPrimes::getStartIdx() const
 {
   size_t startIdx = 0;
@@ -105,6 +94,32 @@ size_t NextPrimes::getStopIdx() const
   return stopIdx;
 }
 
+void NextPrimes::init()
+{
+  // sieving is only used if stop > maxSmallPrime
+  uint64_t minStart = primePi.size();
+  uint64_t sieveSize = get_sieve_size();
+
+  start_ = max(start_, minStart);
+  stop_ = max(start_, stop_);
+
+  Erat::init(start_, stop_, sieveSize, preSieve_);
+  sievingPrimes_.init(this, preSieve_);
+}
+
+void NextPrimes::initSmallPrimes(vector<uint64_t>& primes)
+{
+  if (start_ > smallPrimes.back())
+    return;
+
+  size_t a = getStartIdx();
+  size_t b = getStopIdx();
+
+  copy(&smallPrimes[a],
+       &smallPrimes[b],
+       back_inserter(primes));
+}
+
 void NextPrimes::initSmallPrimes(uint64_t* primes, size_t* size)
 {
   if (start_ > smallPrimes.back())
@@ -115,6 +130,29 @@ void NextPrimes::initSmallPrimes(uint64_t* primes, size_t* size)
   *size = b - a;
 
   copy(&smallPrimes[a], &smallPrimes[b], primes);
+}
+
+bool NextPrimes::sieveSegment(vector<uint64_t>& primes)
+{
+  if (!isInit_)
+  {
+    isInit_ = true;
+    size_t size = prime_count_approx(start_, stop_);
+    primes.reserve(size);
+    initSmallPrimes(primes);
+    init();
+    if (!primes.empty())
+      return false;
+  }
+
+  if (!hasNextSegment())
+  {
+    finished_ = true;
+    return false;
+  }
+
+  sieveSegment();
+  return true;
 }
 
 bool NextPrimes::sieveSegment(uint64_t* primes, size_t* size)
@@ -136,6 +174,12 @@ bool NextPrimes::sieveSegment(uint64_t* primes, size_t* size)
     return false;
   }
 
+  sieveSegment();
+  return true;
+}
+
+void NextPrimes::sieveSegment()
+{
   sieveIdx_ = 0;
   low_ = segmentLow_;
 
@@ -152,7 +196,24 @@ bool NextPrimes::sieveSegment(uint64_t* primes, size_t* size)
   }
 
   Erat::sieveSegment();
-  return true;
+}
+
+void NextPrimes::fill(vector<uint64_t>& primes)
+{
+  while (!finished())
+  {
+    if (sieveIdx_ >= sieveSize_)
+      if (!sieveSegment(primes))
+        continue;
+
+    uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
+    sieveIdx_ += 8;
+
+    while (bits != 0)
+      primes.push_back(getPrime(&bits, low_));
+
+    low_ += 8 * 30;
+  }
 }
 
 } // namespace
