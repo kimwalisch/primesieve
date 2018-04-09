@@ -124,8 +124,8 @@ inline B inBetween(A min, B x, C max)
   return x;
 }
 
-/// prime_count_approx(x) >= pi(x)
-inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
+/// primeCountApprox(x) >= pi(x)
+inline std::size_t primeCountApprox(uint64_t start, uint64_t stop)
 {
   if (start > stop)
     return 0;
@@ -141,9 +141,9 @@ inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
   return (std::size_t) pix;
 }
 
-inline std::size_t prime_count_approx(uint64_t stop)
+inline std::size_t primeCountApprox(uint64_t stop)
 {
-  return prime_count_approx(0, stop);
+  return primeCountApprox(0, stop);
 }
 
 /// Approximation of the maximum prime gap near n

@@ -34,7 +34,7 @@ void store_primes(uint64_t start, uint64_t stop, T& primes)
   if (start < stop)
   {
     using V = typename T::value_type;
-    std::size_t size = primes.size() + prime_count_approx(start, stop);
+    std::size_t size = primes.size() + primeCountApprox(start, stop);
     primes.reserve(size);
 
     primesieve::iterator it(start, stop);

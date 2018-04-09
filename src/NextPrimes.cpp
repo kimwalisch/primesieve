@@ -117,7 +117,7 @@ size_t NextPrimes::getStopIdx() const
 
 void NextPrimes::init(vector<uint64_t>& primes)
 {
-  size_t size = prime_count_approx(start_, stop_);
+  size_t size = primeCountApprox(start_, stop_);
   primes.reserve(size);
 
   if (start_ <= smallPrimes.back())
