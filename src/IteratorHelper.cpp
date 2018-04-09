@@ -1,5 +1,7 @@
 ///
 /// @file  IteratorHelper.cpp
+///        Functions used to calculate the next start and stop
+///        numbers for primesieve::iterator.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -60,47 +62,47 @@ uint64_t getPrevDist(uint64_t n, uint64_t* dist)
   return (uint64_t) newDist;
 }
 
-/// check if stopHint is reasonable
-bool isValid(uint64_t start, uint64_t stopHint)
+bool useStopHint(uint64_t start, uint64_t stopHint)
 {
   return stopHint >= start &&
-          stopHint < numeric_limits<uint64_t>::max();
+         stopHint < numeric_limits<uint64_t>::max();
 }
 
-uint64_t getNextStop(uint64_t start, 
-                     uint64_t stopHint, 
-                     uint64_t* dist)
+bool useStopHint(uint64_t start,
+                 uint64_t stop,
+                 uint64_t stopHint)
 {
-  if (isValid(start, stopHint))
-    return checkedAdd(stopHint, maxPrimeGap(stopHint));
-
-  *dist = getNextDist(start, *dist);
-  return checkedAdd(start, *dist);
+  return stopHint >= start &&
+         stopHint <= stop;
 }
 
 } // namespace
 
 namespace primesieve {
 
-void IteratorHelper::next(uint64_t* start, 
-                          uint64_t* stop, 
-                          uint64_t stopHint, 
+void IteratorHelper::next(uint64_t* start,
+                          uint64_t* stop,
+                          uint64_t stopHint,
                           uint64_t* dist)
 {
   *start = checkedAdd(*stop, 1);
-  *stop = getNextStop(*start, stopHint, dist);
+  *dist = getNextDist(*start, *dist);
+  *stop = checkedAdd(*start, *dist);
+
+  if (useStopHint(*start, stopHint))
+    *stop = checkedAdd(stopHint, maxPrimeGap(stopHint));
 }
 
-void IteratorHelper::prev(uint64_t* start, 
-                          uint64_t* stop, 
-                          uint64_t stopHint, 
+void IteratorHelper::prev(uint64_t* start,
+                          uint64_t* stop,
+                          uint64_t stopHint,
                           uint64_t* dist)
 {
   *stop = checkedSub(*start, 1);
   uint64_t prevDist = getPrevDist(*stop, dist);
   *start = checkedSub(*stop, prevDist);
 
-  if (*start <= stopHint && *stop >= stopHint)
+  if (useStopHint(*start, *stop, stopHint))
     *start = checkedSub(stopHint, maxPrimeGap(stopHint));
 }
 
