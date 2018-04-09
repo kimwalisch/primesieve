@@ -17,15 +17,15 @@ namespace primesieve {
 class IteratorHelper
 {
 public:
-    static void next(uint64_t* start, 
-                     uint64_t* stop,
-                     uint64_t stopHint,
-                     uint64_t* dist);
+  static void next(uint64_t* start,
+                   uint64_t* stop,
+                   uint64_t stopHint,
+                   uint64_t* dist);
 
-    static void prev(uint64_t* start,
-                     uint64_t* stop,
-                     uint64_t stopHint,
-                     uint64_t* dist);
+  static void prev(uint64_t* start,
+                   uint64_t* stop,
+                   uint64_t stopHint,
+                   uint64_t* dist);
 };
 
 } // namespace
