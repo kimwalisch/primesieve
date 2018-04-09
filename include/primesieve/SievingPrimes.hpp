@@ -25,7 +25,7 @@ public:
   SievingPrimes() { }
   SievingPrimes(Erat*, PreSieve&);
   void init(Erat*, PreSieve&);
-  uint64_t nextPrime();
+  uint64_t next();
 private:
   uint64_t i_ = 0;
   uint64_t size_ = 0;
@@ -39,7 +39,7 @@ private:
   bool sieveSegment();
 };
 
-inline uint64_t SievingPrimes::nextPrime()
+inline uint64_t SievingPrimes::next()
 {
   while (i_ >= size_)
     fill();

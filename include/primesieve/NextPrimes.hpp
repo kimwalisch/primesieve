@@ -68,8 +68,8 @@ private:
   std::size_t getStartIdx() const;
   std::size_t getStopIdx() const;
   void init();
-  void initSmallPrimes(std::vector<uint64_t>&);
-  void initSmallPrimes(uint64_t*, std::size_t*);
+  void init(std::vector<uint64_t>&);
+  void init(uint64_t*, std::size_t*);
   bool sieveSegment(std::vector<uint64_t>&);
   bool sieveSegment(uint64_t*, std::size_t*);
   void sieveSegment();

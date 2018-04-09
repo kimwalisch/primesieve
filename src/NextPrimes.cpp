@@ -81,6 +81,18 @@ NextPrimes::NextPrimes(uint64_t start, uint64_t stop) :
   preSieve_(start, stop)
 { }
 
+void NextPrimes::init()
+{
+  // sieving is used > max(SmallPrime)
+  uint64_t sieving = smallPrimes.back() + 1;
+  uint64_t sieveSize = get_sieve_size();
+  start_ = max(start_, sieving);
+
+  Erat::init(start_, stop_, sieveSize, preSieve_);
+  sievingPrimes_.init(this, preSieve_);
+  isInit_ = true;
+}
+
 size_t NextPrimes::getStartIdx() const
 {
   size_t startIdx = 0;
@@ -103,60 +115,47 @@ size_t NextPrimes::getStopIdx() const
   return stopIdx;
 }
 
-void NextPrimes::init()
+void NextPrimes::init(vector<uint64_t>& primes)
 {
-  // sieving is only used if stop > max(SmallPrime)
-  uint64_t minStart = smallPrimes.back() + 1;
-  uint64_t sieveSize = get_sieve_size();
-  start_ = max(start_, minStart);
+  size_t size = prime_count_approx(start_, stop_);
+  primes.reserve(size);
 
-  Erat::init(start_, stop_, sieveSize, preSieve_);
-  sievingPrimes_.init(this, preSieve_);
+  if (start_ <= smallPrimes.back())
+  {
+    size_t a = getStartIdx();
+    size_t b = getStopIdx();
+
+    copy(&smallPrimes[a],
+         &smallPrimes[b],
+         back_inserter(primes));
+  }
+
+  init();
 }
 
-void NextPrimes::initSmallPrimes(vector<uint64_t>& primes)
+void NextPrimes::init(uint64_t* primes, size_t* size)
 {
-  if (start_ > smallPrimes.back())
-    return;
+  if (start_ <= smallPrimes.back())
+  {
+    size_t a = getStartIdx();
+    size_t b = getStopIdx();
+    *size = b - a;
 
-  size_t a = getStartIdx();
-  size_t b = getStopIdx();
+    copy(&smallPrimes[a],
+         &smallPrimes[b],
+         primes);
+  }
 
-  copy(&smallPrimes[a],
-       &smallPrimes[b],
-       back_inserter(primes));
-}
-
-void NextPrimes::initSmallPrimes(uint64_t* primes, size_t* size)
-{
-  if (start_ > smallPrimes.back())
-    return;
-
-  size_t a = getStartIdx();
-  size_t b = getStopIdx();
-  *size = b - a;
-
-  copy(&smallPrimes[a], &smallPrimes[b], primes);
+  init();
 }
 
 bool NextPrimes::sieveSegment(vector<uint64_t>& primes)
 {
   if (!isInit_)
-  {
-    isInit_ = true;
-    size_t size = prime_count_approx(start_, stop_);
-    primes.reserve(size);
-    initSmallPrimes(primes);
-    init();
-    if (!primes.empty())
-      return false;
-  }
+    init(primes);
 
   if (!hasNextSegment())
-  {
-    finished_ = true;
     return false;
-  }
 
   sieveSegment();
   return true;
@@ -166,9 +165,7 @@ bool NextPrimes::sieveSegment(uint64_t* primes, size_t* size)
 {
   if (!isInit_)
   {
-    isInit_ = true;
-    initSmallPrimes(primes, size);
-    init();
+    init(primes, size);
     if (*size > 0)
       return false;
   }
@@ -194,12 +191,12 @@ void NextPrimes::sieveSegment()
   uint64_t sqrtHigh = isqrt(high);
 
   if (!sievingPrime_)
-    sievingPrime_ = sievingPrimes_.nextPrime();
+    sievingPrime_ = sievingPrimes_.next();
 
   while (sievingPrime_ <= sqrtHigh)
   {
     addSievingPrime(sievingPrime_);
-    sievingPrime_ = sievingPrimes_.nextPrime();
+    sievingPrime_ = sievingPrimes_.next();
   }
 
   Erat::sieveSegment();
@@ -207,11 +204,11 @@ void NextPrimes::sieveSegment()
 
 void NextPrimes::fill(vector<uint64_t>& primes)
 {
-  while (!finished())
+  while (true)
   {
     if (sieveIdx_ >= sieveSize_)
       if (!sieveSegment(primes))
-        continue;
+        return;
 
     uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
     sieveIdx_ += 8;
