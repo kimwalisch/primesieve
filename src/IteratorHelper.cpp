@@ -45,7 +45,7 @@ uint64_t getPrevDist(uint64_t n, uint64_t* dist)
 
   double logx = log(x);
   double cacheSize = config::MIN_CACHE_ITERATOR;
-  double maxCacheSize = config::MIN_CACHE_ITERATOR;
+  double maxCacheSize = config::MAX_CACHE_ITERATOR;
   double cacheDist = (cacheSize / sizeof(uint64_t)) * logx;
   double maxCacheDist = (maxCacheSize / sizeof(uint64_t)) * logx;
 
@@ -62,7 +62,8 @@ uint64_t getPrevDist(uint64_t n, uint64_t* dist)
   return (uint64_t) newDist;
 }
 
-bool useStopHint(uint64_t start, uint64_t stopHint)
+bool useStopHint(uint64_t start,
+                 uint64_t stopHint)
 {
   return stopHint >= start &&
          stopHint < numeric_limits<uint64_t>::max();
