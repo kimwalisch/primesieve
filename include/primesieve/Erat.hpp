@@ -36,16 +36,16 @@ public:
   uint64_t getSieveSize() const;
 protected:
   /// Sieve primes >= start_
-  uint64_t start_;
+  uint64_t start_ = 0;
   /// Sieve primes <= stop_
-  uint64_t stop_;
-  uint64_t sqrtStop_;
+  uint64_t stop_ = 0;
+  uint64_t sqrtStop_ = 0;
   /// Size of sieve_ in bytes (power of 2)
-  uint64_t sieveSize_;
+  uint64_t sieveSize_ = 0;
   /// Lower bound of the current segment
-  uint64_t segmentLow_;
+  uint64_t segmentLow_ = ~0ull;
   /// Upper bound of the current segment
-  uint64_t segmentHigh_;
+  uint64_t segmentHigh_ = 0;
   /// Sieve of Eratosthenes array
   byte_t* sieve_ = nullptr;
   PreSieve* preSieve_;

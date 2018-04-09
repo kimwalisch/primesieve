@@ -68,8 +68,7 @@ Erat::Erat() { }
 
 Erat::Erat(uint64_t start, uint64_t stop) :
   start_(start),
-  stop_(stop),
-  sieveSize_(0)
+  stop_(stop)
 { }
 
 Erat::~Erat() { }
@@ -84,15 +83,15 @@ void Erat::init(uint64_t start,
                 uint64_t sieveSize,
                 PreSieve& preSieve)
 {
+  if (start > stop)
+    return;
+
+  if (start < 7)
+    throw primesieve_error("Erat: start must be >= 7");
+
   start_ = start;
   stop_ = stop;
   sqrtStop_ = isqrt(stop);
-
-  if (start_ < 7)
-    throw primesieve_error("Erat: start must be >= 7");
-  if (start_ > stop_)
-    throw primesieve_error("Erat: start must be <= stop");
-
   preSieve_ = &preSieve;
   maxPreSieve_ = preSieve.getMaxPrime();
 

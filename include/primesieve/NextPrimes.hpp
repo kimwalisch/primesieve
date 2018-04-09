@@ -63,8 +63,8 @@ private:
   SievingPrimes sievingPrimes_;
   bool isInit_ = false;
   bool finished_ = false;
-  static const std::array<uint64_t, 53> smallPrimes;
-  static const std::array<uint8_t, 242> primePi;
+  static const std::array<uint64_t, 64> smallPrimes;
+  static const std::array<uint8_t, 312> primePi;
   std::size_t getStartIdx() const;
   std::size_t getStopIdx() const;
   void init();

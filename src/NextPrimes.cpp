@@ -26,20 +26,21 @@ using namespace std;
 
 namespace primesieve {
 
-/// First 53 primes
-const array<uint64_t, 53> NextPrimes::smallPrimes =
+/// First 64 primes
+const array<uint64_t, 64> NextPrimes::smallPrimes =
 {
-    2,   3,   5,   7,  11,  13,  17,  19,
-   23,  29,  31,  37,  41,  43,  47,  53,
-   59,  61,  67,  71,  73,  79,  83,  89,
-   97, 101, 103, 107, 109, 113, 127, 131,
-  137, 139, 149, 151, 157, 163, 167, 173,
-  179, 181, 191, 193, 197, 199, 211, 223,
-  227, 229, 233, 239, 241
+      2,   3,   5,   7,  11,  13,  17,  19,
+     23,  29,  31,  37,  41,  43,  47,  53,
+     59,  61,  67,  71,  73,  79,  83,  89,
+     97, 101, 103, 107, 109, 113, 127, 131,
+    137, 139, 149, 151, 157, 163, 167, 173,
+    179, 181, 191, 193, 197, 199, 211, 223,
+    227, 229, 233, 239, 241, 251, 257, 263,
+    269, 271, 277, 281, 283, 293, 307, 311
 };
 
 /// Number of primes <= n
-const array<uint8_t, 242> NextPrimes::primePi =
+const array<uint8_t, 312> NextPrimes::primePi =
 {
    0,  0,  1,  2,  2,  3,  3,  4,  4,  4,
    4,  5,  5,  6,  6,  6,  6,  7,  7,  8,
@@ -65,7 +66,14 @@ const array<uint8_t, 242> NextPrimes::primePi =
   46, 47, 47, 47, 47, 47, 47, 47, 47, 47,
   47, 47, 47, 48, 48, 48, 48, 49, 49, 50,
   50, 50, 50, 51, 51, 51, 51, 51, 51, 52,
-  52, 53
+  52, 53, 53, 53, 53, 53, 53, 53, 53, 53,
+  53, 54, 54, 54, 54, 54, 54, 55, 55, 55,
+  55, 55, 55, 56, 56, 56, 56, 56, 56, 57,
+  57, 58, 58, 58, 58, 58, 58, 59, 59, 59,
+  59, 60, 60, 61, 61, 61, 61, 61, 61, 61,
+  61, 61, 61, 62, 62, 62, 62, 62, 62, 62,
+  62, 62, 62, 62, 62, 62, 62, 63, 63, 63,
+  63, 64
 };
 
 NextPrimes::NextPrimes(uint64_t start, uint64_t stop) :
@@ -100,9 +108,7 @@ void NextPrimes::init()
   // sieving is only used if stop > max(SmallPrime)
   uint64_t minStart = smallPrimes.back() + 1;
   uint64_t sieveSize = get_sieve_size();
-
   start_ = max(start_, minStart);
-  stop_ = max(start_, stop_);
 
   Erat::init(start_, stop_, sieveSize, preSieve_);
   sievingPrimes_.init(this, preSieve_);
