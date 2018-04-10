@@ -10,6 +10,7 @@
 ///
 
 #include <primesieve.hpp>
+#include <primesieve/PrimeSieve.hpp>
 #include <primesieve/calculator.hpp>
 #include "cmdoptions.hpp"
 

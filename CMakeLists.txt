@@ -203,10 +203,9 @@ install(FILES include/primesieve.h
               COMPONENT libprimesieve-headers
               DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-install(FILES include/primesieve/PrimeSieve.hpp
-              include/primesieve/StorePrimes.hpp
-              include/primesieve/iterator.h
+install(FILES include/primesieve/iterator.h
               include/primesieve/iterator.hpp
+              include/primesieve/StorePrimes.hpp
               include/primesieve/primesieve_error.hpp
               COMPONENT libprimesieve-headers
               DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/primesieve)
