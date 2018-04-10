@@ -36,9 +36,8 @@ void clearNextPrimes(primesieve_iterator* it)
 
 vector<uint64_t>& getPrimes(primesieve_iterator* it)
 {
-  // Convert pimpl to vector
   using T = vector<uint64_t>;
-  T* primes = (T*) it->primes_pimpl_;
+  T* primes = (T*) it->primes_vector_;
   return *primes;
 }
 
@@ -53,9 +52,9 @@ void primesieve_init(primesieve_iterator* it)
   it->i_ = 0;
   it->last_idx_ = 0;
   it->dist_ = NextPrimes::maxCachedPrime();
-  it->is_error_ = false;
-  it->primes_pimpl_ = (uint64_t*) new vector<uint64_t>;
+  it->primes_vector_ = (uint64_t*) new vector<uint64_t>;
   it->nextPrimes_ = nullptr;
+  it->is_error_ = false;
 }
 
 void primesieve_skipto(primesieve_iterator* it,

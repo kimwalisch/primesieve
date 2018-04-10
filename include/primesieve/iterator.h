@@ -42,7 +42,7 @@ typedef struct
   uint64_t stop_hint_;
   uint64_t dist_;
   uint64_t* primes_;
-  uint64_t* primes_pimpl_;
+  uint64_t* primes_vector_;
   uint64_t* nextPrimes_;
   /**
    * Will be initialized to 0.
