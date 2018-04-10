@@ -72,6 +72,7 @@ int main()
     n = -1;
     start = 2;
     res = nth_prime(n, start);
+    cerr << "ERROR: nth_prime(" << n << ", " << start << ") = " << res;
     return 1;
   }
   catch (primesieve_error& e)
@@ -84,6 +85,7 @@ int main()
     n = 1;
     start = 18446744073709551557ull;
     res = nth_prime(n, start);
+    cerr << "ERROR: nth_prime(" << n << ", " << start << ") = " << res;
     return 1;
   }
   catch (primesieve_error& e)
