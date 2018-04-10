@@ -68,6 +68,8 @@ inline T ilog2(T x)
   return log2;
 }
 
+#if __cplusplus >= 201402L
+
 /// C++14 compile time square root using binary search
 template <typename T>
 constexpr T ctSqrt(T x, T lo, T hi)
@@ -82,6 +84,20 @@ constexpr T ctSqrt(T x, T lo, T hi)
   else
     return ctSqrt(x, mid, hi);
 }
+
+#else
+
+#define MID ((lo + hi + 1) / 2)
+
+/// C++11 compile time square root using binary search
+template <typename T>
+constexpr T ctSqrt(T x, T lo, T hi)
+{
+  return lo == hi ? lo : ((x / MID < MID)
+      ? ctSqrt<T>(x, lo, MID - 1) : ctSqrt<T>(x, MID, hi));
+}
+
+#endif
 
 template <typename T>
 constexpr T ctSqrt(T x)
