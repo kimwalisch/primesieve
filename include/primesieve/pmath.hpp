@@ -68,47 +68,59 @@ inline T ilog2(T x)
   return log2;
 }
 
-/// Integer square root, Newton's method
-/// @see book "Hacker's Delight"
-///
+/// C++14 compile time square root using binary search
+template <typename T>
+constexpr T ctSqrt(T x, T lo, T hi)
+{
+  if (lo == hi)
+    return lo;
+
+  const T mid = (lo + hi + 1) / 2;
+
+  if (x / mid < mid)
+    return ctSqrt<T>(x, lo, mid - 1);
+  else
+    return ctSqrt(x, mid, hi);
+}
+
+template <typename T>
+constexpr T ctSqrt(T x)
+{
+  return ctSqrt<T>(x, 0, x / 2 + 1);
+}
+
 template <typename T>
 inline T isqrt(T x)
 {
-  if (x <= 1)
-    return x;
+  T r = (T) std::sqrt((double) x);
 
-  T bits = numberOfBits(x);
-  T nlz = (bits - 1) - ilog2(x - 1);
-  T s = bits / 2 - nlz / 2;
-  T one = 1;
+  constexpr T maxSqrt = ctSqrt(std::numeric_limits<T>::max());
+  r = std::min(r, maxSqrt);
 
-  T g0 = one << s;
-  T g1 = (g0 + (x >> s)) >> 1;
+  while (r * r > x)
+    r--;
+  while (x - r * r > r * 2)
+    r++;
 
-  while (g1 < g0)
-  {
-    g0 = g1;
-    g1 = (g0 + (x / g0)) >> 1;
-  }
-
-  return g0;
+  return r;
 }
 
-/// Returns 2^64-1 if x + y >= 2^64-1
+/// Returns 2^64-1 if (x + y) > 2^64-1
 inline uint64_t checkedAdd(uint64_t x, uint64_t y)
 {
-  const uint64_t max = std::numeric_limits<uint64_t>::max();
-
-  if (x >= max - y)
-    return max;
-
-  return x + y;
+  if (x >= std::numeric_limits<uint64_t>::max() - y)
+    return std::numeric_limits<uint64_t>::max();
+  else
+    return x + y;
 }
 
-/// Returns 0 if x - y <= 0
+/// Returns 0 if (x - y) < 0
 inline uint64_t checkedSub(uint64_t x, uint64_t y)
 {
-  return (x > y) ? x - y : 0;
+  if (x > y)
+    return x - y;
+  else
+    return 0;
 }
 
 template <typename A, typename B, typename C>

@@ -136,11 +136,9 @@ if(BUILD_SHARED_LIBS)
     PUBLIC
         cxx_alias_templates
     PRIVATE
-        cxx_auto_type
-        cxx_lambdas
-        cxx_nullptr
-        cxx_range_for
-        cxx_uniform_initialization)
+        cxx_relaxed_constexpr
+        cxx_uniform_initialization
+        cxx_lambdas)
 
     target_include_directories(libprimesieve PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -170,11 +168,9 @@ if(BUILD_STATIC_LIBS)
     PUBLIC
         cxx_alias_templates
     PRIVATE
-        cxx_auto_type
-        cxx_lambdas
-        cxx_nullptr
-        cxx_range_for
-        cxx_uniform_initialization)
+        cxx_relaxed_constexpr
+        cxx_uniform_initialization
+        cxx_lambdas)
 
     target_include_directories(libprimesieve-static PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -212,7 +208,6 @@ install(FILES include/primesieve/PrimeSieve.hpp
               include/primesieve/iterator.h
               include/primesieve/iterator.hpp
               include/primesieve/primesieve_error.hpp
-              include/primesieve/pmath.hpp
               COMPONENT libprimesieve-headers
               DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/primesieve)
 
