@@ -84,10 +84,11 @@ void PrintPrimes::initCounts()
 
 void PrintPrimes::sieve()
 {
-  // generate sieving primes
   SievingPrimes sievingPrimes(this, preSieve_);
+  uint64_t sqrtStop = isqrt(stop_);
   uint64_t prime = sievingPrimes.next();
-  for (; prime <= sqrtStop_; prime = sievingPrimes.next())
+
+  for (; prime <= sqrtStop; prime = sievingPrimes.next())
     Erat::sieve(prime);
 
   Erat::sieve();

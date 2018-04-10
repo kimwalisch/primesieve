@@ -14,7 +14,6 @@
 #include "EratSmall.hpp"
 #include "EratMedium.hpp"
 #include "EratBig.hpp"
-#include "pmath.hpp"
 
 #include <stdint.h>
 #include <memory>
@@ -32,14 +31,13 @@ class PreSieve;
 class Erat
 {
 public:
-  uint64_t getSqrtStop() const;
   uint64_t getSieveSize() const;
+  uint64_t getStop() const;
 protected:
   /// Sieve primes >= start_
   uint64_t start_ = 0;
   /// Sieve primes <= stop_
   uint64_t stop_ = 0;
-  uint64_t sqrtStop_ = 0;
   /// Size of sieve_ in bytes (power of 2)
   uint64_t sieveSize_ = 0;
   /// Lower bound of the current segment
@@ -112,9 +110,9 @@ inline void Erat::addSievingPrime(uint64_t prime)
   else /* (prime > maxPreSieve) */ eratSmall_.addSievingPrime(prime, segmentLow_);
 }
 
-inline uint64_t Erat::getSqrtStop() const
+inline uint64_t Erat::getStop() const
 {
-  return sqrtStop_;
+  return stop_;
 }
 
 /// Sieve size in kilobytes
