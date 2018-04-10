@@ -15,7 +15,6 @@
 #include "Wheel.hpp"
 
 #include <stdint.h>
-#include <cstddef>
 #include <vector>
 
 namespace primesieve {
