@@ -168,7 +168,7 @@ if(BUILD_STATIC_LIBS)
     PUBLIC
         cxx_alias_templates
     PRIVATE
-        cxx_relaxed_constexpr
+        cxx_constexpr
         cxx_uniform_initialization
         cxx_lambdas)
 
