@@ -1,8 +1,11 @@
 ///
 /// @file  PrimeGenerator.hpp
 ///        Generates the primes inside [start, stop] and stores
-///        them in an array or a vector. This class is used
-///        by primesieve::iterator.
+///        them in an array or a vector. After the primes have
+///        been stored in the array primesieve::iterator iterates
+///        over the array and returns the primes. When there are
+///        no more primes left in the array PrimeGenerator is
+///        used to generate new primes.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
