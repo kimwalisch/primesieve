@@ -56,12 +56,12 @@
   sieved (using Erat) PrintPrimes is used to reconstruct primes and prime
   k-tuplets from 1 bits of the sieve array.
 
-* **PrimeGenerator** is derived from Erat. It is used to generate the
-  primes inside [start, stop] and store them in an array or a vector.
-  PrimeGenerator can fill an array gradually or at once. After the
-  primes have been stored in the array primesieve::iterator iterates
-  over the array and returns the primes, when there are no more primes
-  left in the array PrimeGenerator is used to generate new primes.
+* **PrimeGenerator** is derived from Erat. It generates the primes inside
+  [start, stop] and stores them in a vector. PrimeGenerator can fill a
+  vector gradually or at once. After the primes have been stored in the
+  vector primesieve::iterator iterates over the vector and returns the
+  primes. When there are no more primes left in the vector PrimeGenerator
+  generates new primes.
 
 * **primesieve::iterator** allows to easily iterate over primes. It
   provides ```next_prime()``` and ```prev_prime()``` methods.

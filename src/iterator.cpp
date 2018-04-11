@@ -68,7 +68,7 @@ void iterator::generate_next_primes()
     }
 
     for (last_idx_ = 0; !last_idx_;)
-      primeGenerator_->fill(primes_.data(), &last_idx_);
+      primeGenerator_->fill(primes_, &last_idx_);
 
     if (primeGenerator_->finished())
       clear(primeGenerator_);

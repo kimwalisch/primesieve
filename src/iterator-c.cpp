@@ -30,7 +30,7 @@ PrimeGenerator* getPrimeGenerator(primesieve_iterator* it)
 
 void clearPrimeGenerator(primesieve_iterator* it)
 {
-  delete (PrimeGenerator*) it->primeGenerator_;
+  delete getPrimeGenerator(it);
   it->primeGenerator_ = nullptr;
 }
 
@@ -102,7 +102,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       }
 
       for (it->last_idx_ = 0; !it->last_idx_;)
-        primeGenerator->fill(it->primes_, &it->last_idx_);
+        primeGenerator->fill(primes, &it->last_idx_);
 
       if (primeGenerator->finished())
         clearPrimeGenerator(it);
@@ -137,7 +137,8 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
       IteratorHelper::prev(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
       it->primeGenerator_ = (uint64_t*) new PrimeGenerator(it->start_, it->stop_);
       auto primeGenerator = getPrimeGenerator(it);
-      if (it->start_ <= 2) primes.push_back(0);
+      if (it->start_ <= 2)
+        primes.push_back(0);
       primeGenerator->fill(primes);
       clearPrimeGenerator(it);
     }

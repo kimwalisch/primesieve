@@ -1,11 +1,10 @@
 ///
 /// @file  PrimeGenerator.hpp
-///        Generates the primes inside [start, stop] and stores
-///        them in an array or a vector. After the primes have
-///        been stored in the array primesieve::iterator iterates
-///        over the array and returns the primes. When there are
-///        no more primes left in the array PrimeGenerator is
-///        used to generate new primes.
+///        Generates the primes inside [start, stop] and stores them
+///        in a vector. After the primes have been stored in the
+///        vector primesieve::iterator iterates over the vector and
+///        returns the primes. When there are no more primes left in
+///        the vector PrimeGenerator generates new primes.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -43,13 +42,14 @@ public:
     return smallPrimes.back();
   }
 
-  void fill(uint64_t* primes, std::size_t* size)
+  void fill(std::vector<uint64_t>& primes,
+            std::size_t* size)
   {
     if (sieveIdx_ >= sieveSize_)
       if (!sieveSegment(primes, size))
         return;
 
-    uint64_t i = 0;
+    std::size_t i = 0;
     uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
     sieveIdx_ += 8;
 
@@ -73,9 +73,9 @@ private:
   std::size_t getStopIdx() const;
   void init();
   void init(std::vector<uint64_t>&);
-  void init(uint64_t*, std::size_t*);
+  void init(std::vector<uint64_t>&, std::size_t*);
   bool sieveSegment(std::vector<uint64_t>&);
-  bool sieveSegment(uint64_t*, std::size_t*);
+  bool sieveSegment(std::vector<uint64_t>&, std::size_t*);
   void sieveSegment();
 };
 

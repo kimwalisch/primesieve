@@ -1,11 +1,10 @@
 ///
 /// @file  PrimeGenerator.cpp
-///        Generates the primes inside [start, stop] and stores
-///        them in an array or a vector. After the primes have
-///        been stored in the array primesieve::iterator iterates
-///        over the array and returns the primes. When there are
-///        no more primes left in the array PrimeGenerator is
-///        used to generate new primes.
+///        Generates the primes inside [start, stop] and stores them
+///        in a vector. After the primes have been stored in the
+///        vector primesieve::iterator iterates over the vector and
+///        returns the primes. When there are no more primes left in
+///        the vector PrimeGenerator generates new primes.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -137,7 +136,7 @@ void PrimeGenerator::init(vector<uint64_t>& primes)
   init();
 }
 
-void PrimeGenerator::init(uint64_t* primes, size_t* size)
+void PrimeGenerator::init(vector<uint64_t>& primes, size_t* size)
 {
   if (start_ <= smallPrimes.back())
   {
@@ -147,7 +146,7 @@ void PrimeGenerator::init(uint64_t* primes, size_t* size)
 
     copy(&smallPrimes[a],
          &smallPrimes[b],
-         primes);
+         &primes[0]);
   }
 
   init();
@@ -165,7 +164,7 @@ bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes)
   return true;
 }
 
-bool PrimeGenerator::sieveSegment(uint64_t* primes, size_t* size)
+bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes, size_t* size)
 {
   if (!isInit_)
   {
