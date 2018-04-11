@@ -52,12 +52,12 @@ inline T floorPow2(T x)
 template <typename T>
 inline T ilog2(T x)
 {
-  T bits = numberOfBits(x);
-  T one = 1;
   T log2 = 0;
+  T bits = numberOfBits(x);
 
   for (T i = bits / 2; i > 0; i /= 2)
   {
+    T one = 1;
     if (x >= (one << i))
     {
       x >>= i;
