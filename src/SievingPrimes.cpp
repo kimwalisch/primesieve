@@ -9,9 +9,10 @@
 ///
 
 #include <primesieve/SievingPrimes.hpp>
-#include <primesieve/PreSieve.hpp>
 #include <primesieve/Erat.hpp>
+#include <primesieve/PreSieve.hpp>
 #include <primesieve/littleendian_cast.hpp>
+#include <primesieve/pmath.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -29,7 +30,7 @@ SievingPrimes::SievingPrimes(Erat* erat, PreSieve& preSieve)
 void SievingPrimes::init(Erat* erat, PreSieve& preSieve)
 {
   Erat::init(preSieve.getMaxPrime() + 1,
-             erat->getSqrtStop(),
+             isqrt(erat->getStop()),
              erat->getSieveSize(),
              preSieve);
 
@@ -39,7 +40,7 @@ void SievingPrimes::init(Erat* erat, PreSieve& preSieve)
 /// Sieve up to n^(1/4)
 void SievingPrimes::tinySieve()
 {
-  uint64_t n = sqrtStop_;
+  uint64_t n = isqrt(stop_);
   tinySieve_.resize(n + 1, true);
 
   for (uint64_t i = 3; i * i <= n; i += 2)

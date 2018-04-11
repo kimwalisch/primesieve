@@ -91,7 +91,6 @@ void Erat::init(uint64_t start,
 
   start_ = start;
   stop_ = stop;
-  sqrtStop_ = isqrt(stop);
   preSieve_ = &preSieve;
   maxPreSieve_ = preSieve.getMaxPrime();
 
@@ -112,16 +111,18 @@ void Erat::init()
   deleteSieve_.reset(new byte_t[sieveSize_]);
   sieve_ = deleteSieve_.get();
 
+  uint64_t sqrtStop = isqrt(stop_);
   uint64_t l1Size = EratSmall::getL1Size(sieveSize_);
+
   maxEratSmall_  = (uint64_t) (l1Size * config::FACTOR_ERATSMALL);
   maxEratMedium_ = (uint64_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
 
-  if (sqrtStop_ > maxPreSieve_)
+  if (sqrtStop > maxPreSieve_)
     eratSmall_.init(stop_, l1Size, maxEratSmall_);
-  if (sqrtStop_ > maxEratSmall_)
+  if (sqrtStop > maxEratSmall_)
     eratMedium_.init(stop_, sieveSize_, maxEratMedium_);
-  if (sqrtStop_ > maxEratMedium_)
-    eratBig_.init(stop_, sieveSize_, sqrtStop_);
+  if (sqrtStop > maxEratMedium_)
+    eratBig_.init(stop_, sieveSize_, sqrtStop);
 }
 
 bool Erat::hasNextSegment() const

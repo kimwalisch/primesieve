@@ -12,16 +12,33 @@
 #define STOREPRIMES_HPP
 
 #include "iterator.hpp"
-#include "pmath.hpp"
 #include "primesieve_error.hpp"
 
 #include <stdint.h>
 #include <vector>
+#include <cmath>
 #include <cstddef>
 
 namespace primesieve {
 
 uint64_t get_max_stop();
+
+/// primeCountApprox(x) >= pi(x)
+inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
+{
+  if (start > stop)
+    return 0;
+  if (stop <= 10)
+    return 4;
+
+  // pi(x) <= x / (log(x) - 1.1) + 5, for x >= 4
+  double x = (double) stop;
+  double logx = std::log(x);
+  double div = logx - 1.1;
+  double pix = (stop - start) / div + 5;
+
+  return (std::size_t) pix;
+}
 
 template <typename T>
 void store_primes(uint64_t start, uint64_t stop, T& primes)
@@ -34,7 +51,7 @@ void store_primes(uint64_t start, uint64_t stop, T& primes)
   if (start < stop)
   {
     using V = typename T::value_type;
-    std::size_t size = primes.size() + primeCountApprox(start, stop);
+    std::size_t size = primes.size() + prime_count_approx(start, stop);
     primes.reserve(size);
 
     primesieve::iterator it(start, stop);
