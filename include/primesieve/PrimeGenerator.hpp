@@ -1,7 +1,8 @@
 ///
-/// @file  NextPrimes.hpp
-///        Fill an array or a vector with primes. This class is
-///        used by primesieve::iterator.
+/// @file  PrimeGenerator.hpp
+///        Generates the primes inside [start, stop] and stores
+///        them in an array or a vector. This class is used
+///        by primesieve::iterator.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -9,8 +10,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef NEXTPRIMES_HPP
-#define NEXTPRIMES_HPP
+#ifndef PRIMEGENERATOR_HPP
+#define PRIMEGENERATOR_HPP
 
 #include "Erat.hpp"
 #include "PreSieve.hpp"
@@ -23,10 +24,10 @@
 
 namespace primesieve {
 
-class NextPrimes : public Erat
+class PrimeGenerator : public Erat
 {
 public:
-  NextPrimes(uint64_t start, uint64_t stop);
+  PrimeGenerator(uint64_t start, uint64_t stop);
   void fill(std::vector<uint64_t>&);
 
   bool finished() const

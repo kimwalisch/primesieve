@@ -8,13 +8,13 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/IteratorHelper.hpp>
-#include <primesieve/NextPrimes.hpp>
-#include <primesieve.hpp>
 #include <primesieve.h>
+#include <primesieve.hpp>
+#include <primesieve/IteratorHelper.hpp>
+#include <primesieve/PrimeGenerator.hpp>
 
-#include <exception>
 #include <cerrno>
+#include <exception>
 #include <vector>
 
 using namespace std;
@@ -22,16 +22,16 @@ using namespace primesieve;
 
 namespace {
 
-NextPrimes* getNextPrimes(primesieve_iterator* it)
+PrimeGenerator* getPrimeGenerator(primesieve_iterator* it)
 {
-  // nextPrimes_ is a pimpl
-  return (NextPrimes*) it->nextPrimes_;
+  // primeGenerator_ is a pimpl
+  return (PrimeGenerator*) it->primeGenerator_;
 }
 
-void clearNextPrimes(primesieve_iterator* it)
+void clearPrimeGenerator(primesieve_iterator* it)
 {
-  delete (NextPrimes*) it->nextPrimes_;
-  it->nextPrimes_ = nullptr;
+  delete (PrimeGenerator*) it->primeGenerator_;
+  it->primeGenerator_ = nullptr;
 }
 
 vector<uint64_t>& getPrimes(primesieve_iterator* it)
@@ -51,9 +51,9 @@ void primesieve_init(primesieve_iterator* it)
   it->stop_hint_ = get_max_stop();
   it->i_ = 0;
   it->last_idx_ = 0;
-  it->dist_ = NextPrimes::maxCachedPrime();
+  it->dist_ = PrimeGenerator::maxCachedPrime();
   it->primes_vector_ = (uint64_t*) new vector<uint64_t>;
-  it->nextPrimes_ = nullptr;
+  it->primeGenerator_ = nullptr;
   it->is_error_ = false;
 }
 
@@ -66,10 +66,10 @@ void primesieve_skipto(primesieve_iterator* it,
   it->stop_hint_ = stop_hint;
   it->i_ = 0;
   it->last_idx_ = 0;
-  it->dist_ = NextPrimes::maxCachedPrime();
+  it->dist_ = PrimeGenerator::maxCachedPrime();
   auto& primes = getPrimes(it);
   primes.clear();
-  clearNextPrimes(it);
+  clearPrimeGenerator(it);
 }
 
 /// C destructor
@@ -77,7 +77,7 @@ void primesieve_free_iterator(primesieve_iterator* it)
 {
   if (it)
   {
-    clearNextPrimes(it);
+    clearPrimeGenerator(it);
     auto* primes = &getPrimes(it);
     delete primes;
   }
@@ -86,33 +86,33 @@ void primesieve_free_iterator(primesieve_iterator* it)
 void primesieve_generate_next_primes(primesieve_iterator* it)
 {
   auto& primes = getPrimes(it);
-  auto nextPrimes = getNextPrimes(it);
+  auto primeGenerator = getPrimeGenerator(it);
 
   try
   {
     while (true)
     {
-      if (!it->nextPrimes_)
+      if (!it->primeGenerator_)
       {
         primes.resize(64);
         it->primes_ = &primes[0];
         IteratorHelper::next(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
-        it->nextPrimes_ = (uint64_t*) new NextPrimes(it->start_, it->stop_);
-        nextPrimes = getNextPrimes(it);
+        it->primeGenerator_ = (uint64_t*) new PrimeGenerator(it->start_, it->stop_);
+        primeGenerator = getPrimeGenerator(it);
       }
 
       for (it->last_idx_ = 0; !it->last_idx_;)
-        nextPrimes->fill(it->primes_, &it->last_idx_);
+        primeGenerator->fill(it->primes_, &it->last_idx_);
 
-      if (nextPrimes->finished())
-        clearNextPrimes(it);
+      if (primeGenerator->finished())
+        clearPrimeGenerator(it);
       else
         break;
     }
   }
   catch (exception&)
   {
-    clearNextPrimes(it);
+    clearPrimeGenerator(it);
     primes[0] = PRIMESIEVE_ERROR;
     it->last_idx_ = 1;
     it->is_error_ = true;
@@ -130,22 +130,22 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
   try
   {
     primes.clear();
-    clearNextPrimes(it);
+    clearPrimeGenerator(it);
 
     while (primes.empty())
     {
       IteratorHelper::prev(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
-      it->nextPrimes_ = (uint64_t*) new NextPrimes(it->start_, it->stop_);
-      auto nextPrimes = getNextPrimes(it);
+      it->primeGenerator_ = (uint64_t*) new PrimeGenerator(it->start_, it->stop_);
+      auto primeGenerator = getPrimeGenerator(it);
       if (it->start_ <= 2) primes.push_back(0);
-      nextPrimes->fill(primes);
-      clearNextPrimes(it);
+      primeGenerator->fill(primes);
+      clearPrimeGenerator(it);
     }
   }
   catch (exception&)
   {
     primes.clear();
-    clearNextPrimes(it);
+    clearPrimeGenerator(it);
     primes.push_back(PRIMESIEVE_ERROR);
     it->is_error_ = true;
     errno = EDOM;

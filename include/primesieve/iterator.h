@@ -43,7 +43,7 @@ typedef struct
   uint64_t dist_;
   uint64_t* primes_;
   uint64_t* primes_vector_;
-  uint64_t* nextPrimes_;
+  uint64_t* primeGenerator_;
   /**
    * Will be initialized to 0.
    * Will be set to 1 if any error occurs.

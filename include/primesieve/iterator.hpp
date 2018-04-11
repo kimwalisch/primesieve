@@ -18,7 +18,7 @@
 
 namespace primesieve {
 
-class NextPrimes;
+class PrimeGenerator;
 
 uint64_t get_max_stop();
 
@@ -78,7 +78,7 @@ private:
   uint64_t stop_;
   uint64_t stop_hint_;
   uint64_t dist_;
-  NextPrimes* nextPrimes_;
+  PrimeGenerator* primeGenerator_;
   void generate_next_primes();
   void generate_prev_primes();
 };

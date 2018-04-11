@@ -47,7 +47,7 @@ SOURCES += \
   ../EratSmall.cpp \
   ../iterator.cpp \
   ../IteratorHelper.cpp \
-  ../NextPrimes.cpp \
+  ../PrimeGenerator.cpp \
   ../nthPrime.cpp \
   ../ParallelSieve.cpp \
   ../popcount.cpp \

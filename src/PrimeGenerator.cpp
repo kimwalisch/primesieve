@@ -1,7 +1,8 @@
 ///
-/// @file  NextPrimes.cpp
-///        Fill an array or a vector with primes. This class is
-///        used by primesieve::iterator.
+/// @file  PrimeGenerator.cpp
+///        Generates the primes inside [start, stop] and stores
+///        them in an array or a vector. This class is used
+///        by primesieve::iterator.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -11,9 +12,9 @@
 
 #include <primesieve.hpp>
 #include <primesieve/Erat.hpp>
-#include <primesieve/NextPrimes.hpp>
-#include <primesieve/pmath.hpp>
 #include <primesieve/PreSieve.hpp>
+#include <primesieve/PrimeGenerator.hpp>
+#include <primesieve/pmath.hpp>
 #include <primesieve/SievingPrimes.hpp>
 
 #include <stdint.h>
@@ -27,7 +28,7 @@ using namespace std;
 namespace primesieve {
 
 /// First 64 primes
-const array<uint64_t, 64> NextPrimes::smallPrimes =
+const array<uint64_t, 64> PrimeGenerator::smallPrimes =
 {
       2,   3,   5,   7,  11,  13,  17,  19,
      23,  29,  31,  37,  41,  43,  47,  53,
@@ -40,7 +41,7 @@ const array<uint64_t, 64> NextPrimes::smallPrimes =
 };
 
 /// Number of primes <= n
-const array<uint8_t, 312> NextPrimes::primePi =
+const array<uint8_t, 312> PrimeGenerator::primePi =
 {
    0,  0,  1,  2,  2,  3,  3,  4,  4,  4,
    4,  5,  5,  6,  6,  6,  6,  7,  7,  8,
@@ -76,12 +77,12 @@ const array<uint8_t, 312> NextPrimes::primePi =
   63, 64
 };
 
-NextPrimes::NextPrimes(uint64_t start, uint64_t stop) :
+PrimeGenerator::PrimeGenerator(uint64_t start, uint64_t stop) :
   Erat(start, stop),
   preSieve_(start, stop)
 { }
 
-void NextPrimes::init()
+void PrimeGenerator::init()
 {
   // sieving is used > max(SmallPrime)
   uint64_t sieving = smallPrimes.back() + 1;
@@ -93,7 +94,7 @@ void NextPrimes::init()
   isInit_ = true;
 }
 
-size_t NextPrimes::getStartIdx() const
+size_t PrimeGenerator::getStartIdx() const
 {
   size_t startIdx = 0;
 
@@ -103,7 +104,7 @@ size_t NextPrimes::getStartIdx() const
   return startIdx;
 }
 
-size_t NextPrimes::getStopIdx() const
+size_t PrimeGenerator::getStopIdx() const
 {
   size_t stopIdx = 0;
 
@@ -115,7 +116,7 @@ size_t NextPrimes::getStopIdx() const
   return stopIdx;
 }
 
-void NextPrimes::init(vector<uint64_t>& primes)
+void PrimeGenerator::init(vector<uint64_t>& primes)
 {
   size_t size = primeCountApprox(start_, stop_);
   primes.reserve(size);
@@ -133,7 +134,7 @@ void NextPrimes::init(vector<uint64_t>& primes)
   init();
 }
 
-void NextPrimes::init(uint64_t* primes, size_t* size)
+void PrimeGenerator::init(uint64_t* primes, size_t* size)
 {
   if (start_ <= smallPrimes.back())
   {
@@ -149,7 +150,7 @@ void NextPrimes::init(uint64_t* primes, size_t* size)
   init();
 }
 
-bool NextPrimes::sieveSegment(vector<uint64_t>& primes)
+bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes)
 {
   if (!isInit_)
     init(primes);
@@ -161,7 +162,7 @@ bool NextPrimes::sieveSegment(vector<uint64_t>& primes)
   return true;
 }
 
-bool NextPrimes::sieveSegment(uint64_t* primes, size_t* size)
+bool PrimeGenerator::sieveSegment(uint64_t* primes, size_t* size)
 {
   if (!isInit_)
   {
@@ -182,7 +183,7 @@ bool NextPrimes::sieveSegment(uint64_t* primes, size_t* size)
   return true;
 }
 
-void NextPrimes::sieveSegment()
+void PrimeGenerator::sieveSegment()
 {
   sieveIdx_ = 0;
   low_ = segmentLow_;
@@ -202,7 +203,7 @@ void NextPrimes::sieveSegment()
   Erat::sieveSegment();
 }
 
-void NextPrimes::fill(vector<uint64_t>& primes)
+void PrimeGenerator::fill(vector<uint64_t>& primes)
 {
   while (true)
   {

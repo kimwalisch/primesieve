@@ -14,7 +14,7 @@ half as much memory as before!
  * primesieve::iterator: Faster next_prime().
  * StorePrimes.hpp: Use primesieve::iterator instead of callbacks.
  * SievingPrimes.hpp: New next_prime().
- * NextPrimes.cpp: New class used by primesieve::iterator.
+ * PrimeGenerator.cpp: New class used by primesieve::iterator.
  * Erat.cpp: Reduce memory allocations.
 
 Changes in version 6.4, 23/03/2018

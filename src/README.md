@@ -49,17 +49,19 @@
 
 * **SievingPrimes** is derived from Erat. The SievingPrimes class is used
   to generate the sieving primes ≤ sqrt(stop). SievingPrimes is used
-  by the PrintPrimes and NextPrimes classes.
+  by the PrintPrimes and PrimeGenerator classes.
 
 * **PrintPrimes** is derived from Erat. PrintPrimes is used for printing
   primes to stdout and for counting primes. After a segment has been
   sieved (using Erat) PrintPrimes is used to reconstruct primes and prime
   k-tuplets from 1 bits of the sieve array.
 
-* **NextPrimes** is derived from Erat. NextPrimes is used to fill an
-  array or a vector with the primes inside [start, stop]. It can fill
-  an array gradually or at once. NextPrimes is used by
-  primesieve::iterator.
+* **PrimeGenerator** is derived from Erat. It is used to generate the
+  primes inside [start, stop] and store them in an array or a vector.
+  PrimeGenerator can fill an array gradually or at once. After the
+  primes have been stored in the array primesieve::iterator iterates
+  over the array and returns the primes, when there are no more primes
+  left in the array PrimeGenerator is used to generate new primes.
 
 * **primesieve::iterator** allows to easily iterate over primes. It
   provides ```next_prime()``` and ```prev_prime()``` methods.
