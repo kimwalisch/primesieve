@@ -142,6 +142,7 @@ void PrimeGenerator::init(vector<uint64_t>& primes, size_t* size)
   {
     size_t a = getStartIdx();
     size_t b = getStopIdx();
+
     *size = b - a;
 
     copy(&smallPrimes[a],
