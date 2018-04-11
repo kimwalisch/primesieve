@@ -11,9 +11,9 @@
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 
+#include <stdint.h>
 #include <vector>
 
-using namespace std;
 using namespace primesieve;
 
 namespace {
