@@ -38,7 +38,7 @@ void clearPrimeGenerator(primesieve_iterator* it)
 vector<uint64_t>& getPrimes(primesieve_iterator* it)
 {
   using T = vector<uint64_t>;
-  T* primes = (T*) it->primes_vector_;
+  T* primes = (T*) it->vector_;
   return *primes;
 }
 
@@ -53,7 +53,7 @@ void primesieve_init(primesieve_iterator* it)
   it->i_ = 0;
   it->last_idx_ = 0;
   it->dist_ = PrimeGenerator::maxCachedPrime();
-  it->primes_vector_ = (uint64_t*) new vector<uint64_t>;
+  it->vector_ = new vector<uint64_t>;
   it->primeGenerator_ = nullptr;
   it->is_error_ = false;
 }
