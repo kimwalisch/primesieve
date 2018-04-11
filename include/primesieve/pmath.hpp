@@ -33,7 +33,7 @@ inline bool isPow2(T x)
 }
 
 template <typename T>
-inline T numberOfBits(T)
+constexpr T numberOfBits(T)
 {
   return (T) std::numeric_limits<
       typename std::make_unsigned<T>::type
