@@ -17,11 +17,12 @@
 #include <primesieve/malloc_vector.hpp>
 
 #include <stdint.h>
-#include <stdlib.h>
-#include <stddef.h>
+#include <cstdlib>
+#include <cstddef>
 #include <cerrno>
 #include <exception>
 
+using namespace std;
 using namespace primesieve;
 
 namespace {
@@ -38,9 +39,9 @@ void* store_primes(uint64_t start, uint64_t stop, size_t* size)
       *size = primes.size();
 
     primes.disable_free();
-    return (void*) primes.data();
+    return primes.data();
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
     if (size)
@@ -58,9 +59,9 @@ void* store_n_primes(uint64_t n, uint64_t start)
     malloc_vector<T> primes;
     store_n_primes(n, start, primes);
     primes.disable_free();
-    return (void*) primes.data();
+    return primes.data();
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -132,7 +133,7 @@ uint64_t primesieve_nth_prime(int64_t n, uint64_t start)
     ps.setNumThreads(get_num_threads());
     return ps.nthPrime(n, start);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -148,7 +149,7 @@ uint64_t primesieve_count_primes(uint64_t start, uint64_t stop)
     ps.setNumThreads(get_num_threads());
     return ps.countPrimes(start, stop);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -164,7 +165,7 @@ uint64_t primesieve_count_twins(uint64_t start, uint64_t stop)
     ps.setNumThreads(get_num_threads());
     return ps.countTwins(start, stop);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -180,7 +181,7 @@ uint64_t primesieve_count_triplets(uint64_t start, uint64_t stop)
     ps.setNumThreads(get_num_threads());
     return ps.countTriplets(start, stop);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -196,7 +197,7 @@ uint64_t primesieve_count_quadruplets(uint64_t start, uint64_t stop)
     ps.setNumThreads(get_num_threads());
     return ps.countQuadruplets(start, stop);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -212,7 +213,7 @@ uint64_t primesieve_count_quintuplets(uint64_t start, uint64_t stop)
     ps.setNumThreads(get_num_threads());
     return ps.countQuintuplets(start, stop);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -228,7 +229,7 @@ uint64_t primesieve_count_sextuplets(uint64_t start, uint64_t stop)
     ps.setNumThreads(get_num_threads());
     return ps.countSextuplets(start, stop);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -243,7 +244,7 @@ void primesieve_print_primes(uint64_t start, uint64_t stop)
     ps.setSieveSize(get_sieve_size());
     ps.printPrimes(start, stop);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -257,7 +258,7 @@ void primesieve_print_twins(uint64_t start, uint64_t stop)
     ps.setSieveSize(get_sieve_size());
     ps.printTwins(start, stop);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -271,7 +272,7 @@ void primesieve_print_triplets(uint64_t start, uint64_t stop)
     ps.setSieveSize(get_sieve_size());
     ps.printTriplets(start, stop);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -285,7 +286,7 @@ void primesieve_print_quadruplets(uint64_t start, uint64_t stop)
     ps.setSieveSize(get_sieve_size());
     ps.printQuadruplets(start, stop);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -299,7 +300,7 @@ void primesieve_print_quintuplets(uint64_t start, uint64_t stop)
     ps.setSieveSize(get_sieve_size());
     ps.printQuintuplets(start, stop);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
@@ -313,7 +314,7 @@ void primesieve_print_sextuplets(uint64_t start, uint64_t stop)
     ps.setSieveSize(get_sieve_size());
     ps.printSextuplets(start, stop);
   }
-  catch (std::exception&)
+  catch (exception&)
   {
     errno = EDOM;
   }
