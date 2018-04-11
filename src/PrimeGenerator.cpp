@@ -217,7 +217,7 @@ void PrimeGenerator::fill(vector<uint64_t>& primes)
     uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
     sieveIdx_ += 8;
 
-    while (bits != 0)
+    while (bits)
       primes.push_back(getPrime(&bits, low_));
 
     low_ += 8 * 30;
