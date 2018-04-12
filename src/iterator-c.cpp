@@ -98,7 +98,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
         primes.resize(64);
         it->primes_ = &primes[0];
         IteratorHelper::next(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
-        it->primeGenerator_ = (uint64_t*) new PrimeGenerator(it->start_, it->stop_);
+        it->primeGenerator_ = new PrimeGenerator(it->start_, it->stop_);
         primeGenerator = getPrimeGenerator(it);
       }
 
@@ -136,7 +136,7 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     while (primes.empty())
     {
       IteratorHelper::prev(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
-      it->primeGenerator_ = (uint64_t*) new PrimeGenerator(it->start_, it->stop_);
+      it->primeGenerator_ = new PrimeGenerator(it->start_, it->stop_);
       auto primeGenerator = getPrimeGenerator(it);
       if (it->start_ <= 2)
         primes.push_back(0);
