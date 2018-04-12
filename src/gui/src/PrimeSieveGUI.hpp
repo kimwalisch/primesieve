@@ -1,7 +1,7 @@
 /*
  * PrimeSieveGUI.hpp -- This file is part of primesieve
  *
- * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,12 +84,9 @@ private:
   Ui::PrimeSieveGUI* ui;
 
   enum {
-    COUNT_PRIMES     = primesieve::ParallelSieve::COUNT_PRIMES,
-    COUNT_KTUPLETS   = primesieve::ParallelSieve::COUNT_SEXTUPLETS * 2 - primesieve::ParallelSieve::COUNT_TWINS,
-    COUNT_FLAGS      = primesieve::ParallelSieve::COUNT_SEXTUPLETS * 2 - primesieve::ParallelSieve::COUNT_PRIMES,
-    PRINT_FLAGS      = primesieve::ParallelSieve::PRINT_SEXTUPLETS * 2 - primesieve::ParallelSieve::PRINT_PRIMES,
-    PRINT_PRIMES     = primesieve::ParallelSieve::PRINT_PRIMES,
-    CALCULATE_STATUS = primesieve::ParallelSieve::CALCULATE_STATUS
+    COUNT_KTUPLETS = COUNT_SEXTUPLETS * 2 - COUNT_TWINS,
+    COUNT_FLAGS    = COUNT_SEXTUPLETS * 2 - COUNT_PRIMES,
+    PRINT_FLAGS    = PRINT_SEXTUPLETS * 2 - PRINT_PRIMES
   };
 
   void initGUI();
