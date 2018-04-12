@@ -7,7 +7,7 @@
 /// @author    Kim Walisch, <kim.walisch@gmail.com>
 /// @copyright Copyright (C) 2013-2018 Kim Walisch
 /// @license   BSD 2-Clause, https://opensource.org/licenses/BSD-2-Clause
-/// @version   1.2 patched: `^' is raise to power instead of XOR.
+/// @version   1.3 patched: `^' is raise to power instead of XOR.
 ///
 /// == Supported operators ==
 ///
@@ -79,7 +79,8 @@ public:
     : std::runtime_error(message),
       expr_(expr)
   { }
-#if __cplusplus >= 201103L
+#if __cplusplus >= 201103L || \
+    (defined(_MSC_VER) && _MSC_VER >= 1800)
   ~error() { }
 #else
   ~error() throw() { }
