@@ -14,30 +14,15 @@
 #define PRIMESIEVE_CLASS_HPP
 
 #include <stdint.h>
-#include <vector>
+#include <array>
 
 namespace primesieve {
+
+using counts_t = std::array<uint64_t, 6>;
 
 class PrimeSieve
 {
 public:
-  enum
-  {
-    COUNT_PRIMES      = 1 << 0,
-    COUNT_TWINS       = 1 << 1,
-    COUNT_TRIPLETS    = 1 << 2,
-    COUNT_QUADRUPLETS = 1 << 3,
-    COUNT_QUINTUPLETS = 1 << 4,
-    COUNT_SEXTUPLETS  = 1 << 5,
-    PRINT_PRIMES      = 1 << 6,
-    PRINT_TWINS       = 1 << 7,
-    PRINT_TRIPLETS    = 1 << 8,
-    PRINT_QUADRUPLETS = 1 << 9,
-    PRINT_QUINTUPLETS = 1 << 10,
-    PRINT_SEXTUPLETS  = 1 << 11,
-    PRINT_STATUS      = 1 << 12,
-    CALCULATE_STATUS  = 1 << 13
-  };
   PrimeSieve();
   PrimeSieve(PrimeSieve*);
   virtual ~PrimeSieve();
@@ -86,7 +71,6 @@ public:
   uint64_t countQuintuplets(uint64_t, uint64_t);
   uint64_t countSextuplets(uint64_t, uint64_t);
   // Count getters
-  typedef std::vector<uint64_t> counts_t;
   counts_t& getCounts();
   uint64_t getPrimeCount() const;
   uint64_t getTwinCount() const;
@@ -96,6 +80,23 @@ public:
   uint64_t getSextupletCount() const;
   uint64_t getCount(int) const;
   virtual bool updateStatus(uint64_t, bool tryLock = true);
+  enum
+  {
+    COUNT_PRIMES      = 1 << 0,
+    COUNT_TWINS       = 1 << 1,
+    COUNT_TRIPLETS    = 1 << 2,
+    COUNT_QUADRUPLETS = 1 << 3,
+    COUNT_QUINTUPLETS = 1 << 4,
+    COUNT_SEXTUPLETS  = 1 << 5,
+    PRINT_PRIMES      = 1 << 6,
+    PRINT_TWINS       = 1 << 7,
+    PRINT_TRIPLETS    = 1 << 8,
+    PRINT_QUADRUPLETS = 1 << 9,
+    PRINT_QUINTUPLETS = 1 << 10,
+    PRINT_SEXTUPLETS  = 1 << 11,
+    PRINT_STATUS      = 1 << 12,
+    CALCULATE_STATUS  = 1 << 13
+  };
 protected:
   /// Sieve primes >= start_
   uint64_t start_;

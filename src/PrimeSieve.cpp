@@ -55,7 +55,6 @@ int get_sieve_size();
 PrimeSieve::PrimeSieve() :
   start_(0),
   stop_(0),
-  counts_(6),
   flags_(COUNT_PRIMES),
   parent_(nullptr)
 {
@@ -67,7 +66,6 @@ PrimeSieve::PrimeSieve() :
 /// child object for each thread.
 ///
 PrimeSieve::PrimeSieve(PrimeSieve* parent) :
-  counts_(6),
   sieveSize_(parent->sieveSize_),
   flags_(parent->flags_),
   parent_(parent)
@@ -78,7 +76,7 @@ PrimeSieve::~PrimeSieve()
 
 void PrimeSieve::reset()
 {
-  fill(counts_.begin(), counts_.end(), 0);
+  counts_.fill(0);
   seconds_ = 0.0;
   toUpdate_ = 0;
   processed_ = 0;
@@ -147,7 +145,7 @@ int PrimeSieve::getSieveSize() const
   return sieveSize_;
 }
 
-PrimeSieve::counts_t& PrimeSieve::getCounts()
+counts_t& PrimeSieve::getCounts()
 {
   return counts_;
 }

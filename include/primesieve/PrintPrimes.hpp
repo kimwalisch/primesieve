@@ -38,7 +38,7 @@ private:
   std::vector<byte_t> kCounts_[6];
   /// Reference to the associated PrimeSieve object
   PreSieve preSieve_;
-  PrimeSieve::counts_t& counts_;
+  counts_t& counts_;
   PrimeSieve& ps_;
   void initCounts();
   void print();

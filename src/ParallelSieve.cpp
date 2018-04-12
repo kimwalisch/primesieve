@@ -23,13 +23,12 @@
 #include <vector>
 
 using namespace std;
+using namespace primesieve;
 
 namespace {
 
-template <typename T>
-vector<T>& operator+=(vector<T>& v1, const vector<T>& v2)
+counts_t& operator+=(counts_t& v1, const counts_t& v2)
 {
-  assert(v1.size() == v2.size());
   for (size_t i = 0; i < v1.size(); i++)
     v1[i] += v2[i];
   return v1;
@@ -143,8 +142,9 @@ void ParallelSieve::sieve()
     auto task = [&]()
     {
       PrimeSieve ps(this);
-      counts_t counts(counts_.size(), 0);
       uint64_t j;
+      counts_t counts;
+      counts.fill(0);
 
       while ((j = i++) < iters)
       {
