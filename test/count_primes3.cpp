@@ -8,7 +8,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/ParallelSieve.hpp>
+#include <primesieve.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -30,30 +30,27 @@ int main()
 {
   cout << "Sieving the primes within [10^13, 10^13 + 5*10^9] randomly" << endl;
 
+  uint64_t count = 0;
   uint64_t maxDist = (uint64_t) 2e7;
   uint64_t lowerBound = (uint64_t) 1e13;
   uint64_t upperBound = lowerBound + (uint64_t) 5e9;
-  uint64_t count = 0;
-
-  ParallelSieve p;
-  p.setStart(lowerBound - 1);
-  p.setStop(lowerBound - 1);
+  uint64_t start = lowerBound - 1;
+  uint64_t stop = start;
 
   random_device rd;
   mt19937 gen(rd());
   uniform_int_distribution<uint64_t> dist(0, maxDist);
 
-  while (p.getStop() < upperBound)
+  while (stop < upperBound)
   {
-    p.setStart(p.getStop() + 1);
-    p.setStop(min(p.getStart() + dist(gen), upperBound));
-    p.setSieveSize(1 << (dist(gen) % 13));
-    p.sieve();
-    count += p.getPrimeCount();
+    start = stop + 1;
+    stop = min(start + dist(gen), upperBound);
+    set_sieve_size(1 << (dist(gen) % 13));
+    count += count_primes(start, stop);
 
     cout << "\rRemaining chunk:             "
          << "\rRemaining chunk: "
-         << upperBound - p.getStop() << flush;
+         << upperBound - stop << flush;
   }
 
   cout << endl << "Prime count: " << count;

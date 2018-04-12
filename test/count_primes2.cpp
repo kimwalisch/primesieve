@@ -8,7 +8,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/ParallelSieve.hpp>
+#include <primesieve.hpp>
 
 #include <stdint.h>
 #include <iostream>
@@ -41,18 +41,16 @@ void check(bool OK)
 int main()
 {
   cout << left;
-  ParallelSieve p;
-  p.setFlags(p.COUNT_PRIMES | p.PRINT_STATUS);
 
   for (int i = 0; i <= 7; i++)
   {
     int j = i + 12;
     cout << "Sieving the primes within [10^" << j << ", 10^" << j << " + 10^8]" << endl;
-    p.setStart((uint64_t) pow(10.0, j));
-    p.setStop(p.getStart() + (uint64_t) 1e8);
-    p.sieve();
-    cout << "\rPrime count: " << setw(7) << p.getPrimeCount();
-    check(p.getPrimeCount() == pix[i]);
+    uint64_t start = (uint64_t) pow(10.0, j);
+    uint64_t stop = start + (uint64_t) 1e8;
+    uint64_t count = count_primes(start, stop);
+    cout << "\rPrime count: " << setw(7) << count;
+    check(count == pix[i]);
   }
 
   cout << endl;

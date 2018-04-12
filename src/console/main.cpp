@@ -72,7 +72,7 @@ void sieve(CmdOptions& opt)
   }
 
   if (opt.status)
-    ps.addFlags(ps.PRINT_STATUS);
+    ps.addFlags(PRINT_STATUS);
 
   ps.sieve();
   printResults(ps, opt);
