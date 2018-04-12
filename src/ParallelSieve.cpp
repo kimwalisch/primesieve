@@ -2,7 +2,7 @@
 /// @file   ParallelSieve.cpp
 /// @brief  Multi-threaded prime sieve using std::async.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -55,7 +55,8 @@ void ParallelSieve::init(SharedMemory& shm)
 
 int ParallelSieve::getMaxThreads()
 {
-  return max<int>(1, thread::hardware_concurrency());
+  int maxThreads = thread::hardware_concurrency();
+  return max(1, maxThreads);
 }
 
 int ParallelSieve::getNumThreads() const
@@ -110,6 +111,7 @@ uint64_t ParallelSieve::getThreadDistance(int threads) const
 uint64_t ParallelSieve::align(uint64_t n) const
 {
   uint64_t n32 = checkedAdd(n, 32);
+
   if (n32 >= stop_)
     return stop_;
 
