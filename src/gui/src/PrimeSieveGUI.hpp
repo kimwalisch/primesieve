@@ -53,6 +53,12 @@ namespace Ui {
   class PrimeSieveGUI;
 }
 
+enum {
+  COUNT_KTUPLETS = COUNT_SEXTUPLETS * 2 - COUNT_TWINS,
+  COUNT_FLAGS    = COUNT_SEXTUPLETS * 2 - COUNT_PRIMES,
+  PRINT_FLAGS    = PRINT_SEXTUPLETS * 2 - PRINT_PRIMES
+};
+
 class PrimeSieveProcess;
 
 /**
@@ -82,12 +88,6 @@ private slots:
 private:
   /// Qt GUI object
   Ui::PrimeSieveGUI* ui;
-
-  enum {
-    COUNT_KTUPLETS = COUNT_SEXTUPLETS * 2 - COUNT_TWINS,
-    COUNT_FLAGS    = COUNT_SEXTUPLETS * 2 - COUNT_PRIMES,
-    PRINT_FLAGS    = PRINT_SEXTUPLETS * 2 - PRINT_PRIMES
-  };
 
   void initGUI();
   void initConnections();
