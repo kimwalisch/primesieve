@@ -54,10 +54,13 @@ public:
   void setFlags(int);
   void addFlags(int);
   // Bool is*
-  bool isCount() const;
   bool isCount(int) const;
+  bool isCountPrimes() const;
+  bool isCountkTuplets() const;
   bool isPrint() const;
   bool isPrint(int) const;
+  bool isPrintPrimes() const;
+  bool isPrintkTuplets() const;
   bool isFlag(int) const;
   bool isFlag(int, int) const;
   bool isStatus() const;

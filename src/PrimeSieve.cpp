@@ -10,7 +10,6 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/config.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/PrintPrimes.hpp>
@@ -86,27 +85,40 @@ void PrimeSieve::reset()
   percent_ = -1.0;
 }
 
-uint64_t PrimeSieve::getStart()                  const { return start_; }
-uint64_t PrimeSieve::getStop()                   const { return stop_; }
-uint64_t PrimeSieve::getDistance()               const { return stop_ - start_; }
-uint64_t PrimeSieve::getPrimeCount()             const { return counts_[0]; }
-uint64_t PrimeSieve::getTwinCount()              const { return counts_[1]; }
-uint64_t PrimeSieve::getTripletCount()           const { return counts_[2]; }
-uint64_t PrimeSieve::getQuadrupletCount()        const { return counts_[3]; }
-uint64_t PrimeSieve::getQuintupletCount()        const { return counts_[4]; }
-uint64_t PrimeSieve::getSextupletCount()         const { return counts_[5]; }
-uint64_t PrimeSieve::getCount(int index)         const { return counts_.at(index); }
-double   PrimeSieve::getStatus()                 const { return percent_; }
-double   PrimeSieve::getSeconds()                const { return seconds_; }
-int      PrimeSieve::getSieveSize()              const { return sieveSize_; }
-bool     PrimeSieve::isFlag(int flag)            const { return (flags_ & flag) == flag; }
-bool     PrimeSieve::isFlag(int first, int last) const { return (flags_ & (last * 2 - first)) != 0; }
-bool     PrimeSieve::isCount(int index)          const { return isFlag(COUNT_PRIMES << index); }
-bool     PrimeSieve::isPrint(int index)          const { return isFlag(PRINT_PRIMES << index); }
-bool     PrimeSieve::isCount()                   const { return isFlag(COUNT_PRIMES, COUNT_SEXTUPLETS); }
-bool     PrimeSieve::isPrint()                   const { return isFlag(PRINT_PRIMES, PRINT_SEXTUPLETS); }
-bool     PrimeSieve::isStatus()                  const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
-bool     PrimeSieve::isParallelSieve()           const { return parent_ != nullptr; }
+uint64_t PrimeSieve::getStart()           const { return start_; }
+uint64_t PrimeSieve::getStop()            const { return stop_; }
+uint64_t PrimeSieve::getDistance()        const { return stop_ - start_; }
+uint64_t PrimeSieve::getPrimeCount()      const { return counts_[0]; }
+uint64_t PrimeSieve::getTwinCount()       const { return counts_[1]; }
+uint64_t PrimeSieve::getTripletCount()    const { return counts_[2]; }
+uint64_t PrimeSieve::getQuadrupletCount() const { return counts_[3]; }
+uint64_t PrimeSieve::getQuintupletCount() const { return counts_[4]; }
+uint64_t PrimeSieve::getSextupletCount()  const { return counts_[5]; }
+uint64_t PrimeSieve::getCount(int index)  const { return counts_.at(index); }
+
+double PrimeSieve::getStatus()  const { return percent_; }
+double PrimeSieve::getSeconds() const { return seconds_; }
+
+bool PrimeSieve::isFlag(int flag) const
+{
+  return (flags_ & flag) == flag;
+}
+
+bool PrimeSieve::isFlag(int first, int last) const
+{
+  int mask = (last * 2) - first;
+  return (flags_ & mask) != 0;
+}
+
+bool PrimeSieve::isCount(int index) const { return isFlag(COUNT_PRIMES << index); }
+bool PrimeSieve::isPrint(int index) const { return isFlag(PRINT_PRIMES << index); }
+bool PrimeSieve::isCountPrimes()    const { return isFlag(COUNT_PRIMES); }
+bool PrimeSieve::isPrintPrimes()    const { return isFlag(PRINT_PRIMES); }
+bool PrimeSieve::isPrint()          const { return isFlag(PRINT_PRIMES, PRINT_SEXTUPLETS); }
+bool PrimeSieve::isCountkTuplets()  const { return isFlag(COUNT_TWINS, COUNT_SEXTUPLETS); }
+bool PrimeSieve::isPrintkTuplets()  const { return isFlag(PRINT_TWINS, PRINT_SEXTUPLETS); }
+bool PrimeSieve::isStatus()         const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
+bool PrimeSieve::isParallelSieve()  const { return parent_ != nullptr; }
 
 /// Set a start number (lower bound) for sieving
 void PrimeSieve::setStart(uint64_t start)
@@ -128,6 +140,11 @@ void PrimeSieve::setSieveSize(int sieveSize)
 {
   sieveSize_ = inBetween(8, sieveSize, 4096);
   sieveSize_ = floorPow2(sieveSize_);
+}
+
+int PrimeSieve::getSieveSize() const
+{
+  return sieveSize_;
 }
 
 PrimeSieve::counts_t& PrimeSieve::getCounts()

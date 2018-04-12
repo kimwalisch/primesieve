@@ -53,7 +53,7 @@ PrintPrimes::PrintPrimes(PrimeSieve& ps) :
 
   Erat::init(start, stop, sieveSize, preSieve_);
 
-  if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEXTUPLETS))
+  if (ps_.isCountkTuplets())
     initCounts();
 }
 
@@ -95,27 +95,28 @@ void PrintPrimes::sieve()
 }
 
 /// Executed after each sieved segment
-void PrintPrimes::generatePrimes(const byte_t* sieve, uint64_t sieveSize)
+void PrintPrimes::print()
 {
-  if (ps_.isFlag(ps_.COUNT_PRIMES))
-    countPrimes(sieve, sieveSize);
-  if (ps_.isFlag(ps_.COUNT_TWINS, ps_.COUNT_SEXTUPLETS))
-    countkTuplets(sieve, sieveSize);
-  if (ps_.isFlag(ps_.PRINT_PRIMES))
-    printPrimes(sieve, sieveSize);
-  if (ps_.isFlag(ps_.PRINT_TWINS, ps_.PRINT_SEXTUPLETS))
-    printkTuplets(sieve, sieveSize);
+  if (ps_.isCountPrimes())
+    countPrimes();
+  if (ps_.isCountkTuplets())
+    countkTuplets();
+  if (ps_.isPrintPrimes())
+    printPrimes();
+  if (ps_.isPrintkTuplets())
+    printkTuplets();
+
   if (ps_.isStatus())
-    ps_.updateStatus(sieveSize * 30);
+    ps_.updateStatus(sieveSize_ * 30);
 }
 
-void PrintPrimes::countPrimes(const byte_t* sieve, uint64_t sieveSize)
+void PrintPrimes::countPrimes()
 {
-  uint64_t size = ceilDiv(sieveSize, 8);
-  counts_[0] += popcount((const uint64_t*) sieve, size);
+  uint64_t size = ceilDiv(sieveSize_, 8);
+  counts_[0] += popcount((const uint64_t*) sieve_, size);
 }
 
-void PrintPrimes::countkTuplets(const byte_t* sieve, uint64_t sieveSize)
+void PrintPrimes::countkTuplets()
 {
   // i = 1 twins, i = 2 triplets, ...
   for (uint_t i = 1; i < counts_.size(); i++)
@@ -125,12 +126,12 @@ void PrintPrimes::countkTuplets(const byte_t* sieve, uint64_t sieveSize)
 
     uint64_t sum = 0;
 
-    for (uint64_t j = 0; j < sieveSize; j += 4)
+    for (uint64_t j = 0; j < sieveSize_; j += 4)
     {
-      sum += kCounts_[i][sieve[j+0]];
-      sum += kCounts_[i][sieve[j+1]];
-      sum += kCounts_[i][sieve[j+2]];
-      sum += kCounts_[i][sieve[j+3]];
+      sum += kCounts_[i][sieve_[j+0]];
+      sum += kCounts_[i][sieve_[j+1]];
+      sum += kCounts_[i][sieve_[j+2]];
+      sum += kCounts_[i][sieve_[j+3]];
     }
 
     counts_[i] += sum;
@@ -138,19 +139,19 @@ void PrintPrimes::countkTuplets(const byte_t* sieve, uint64_t sieveSize)
 }
 
 /// Print primes to stdout
-void PrintPrimes::printPrimes(const byte_t* sieve, uint64_t sieveSize) const
+void PrintPrimes::printPrimes() const
 {
   uint64_t i = 0;
   uint64_t low = segmentLow_;
 
-  while (i < sieveSize)
+  while (i < sieveSize_)
   {
-    uint64_t size = min(i + (1 << 16), sieveSize);
+    uint64_t size = min(i + (1 << 16), sieveSize_);
     ostringstream primes;
 
     for (; i < size; i += 8)
     {
-      uint64_t bits = littleendian_cast<uint64_t>(&sieve[i]);
+      uint64_t bits = littleendian_cast<uint64_t>(&sieve_[i]);
       while (bits)
         primes << getPrime(&bits, low) << '\n';
 
@@ -162,7 +163,7 @@ void PrintPrimes::printPrimes(const byte_t* sieve, uint64_t sieveSize) const
 }
 
 /// Print prime k-tuplets to stdout
-void PrintPrimes::printkTuplets(const byte_t* sieve, uint64_t sieveSize) const
+void PrintPrimes::printkTuplets() const
 {
   // i = 1 twins, i = 2 triplets, ...
   uint_t i = 1;
@@ -171,11 +172,11 @@ void PrintPrimes::printkTuplets(const byte_t* sieve, uint64_t sieveSize) const
 
   for (; !ps_.isPrint(i); i++);
 
-  for (uint64_t j = 0; j < sieveSize; j++, low += 30)
+  for (uint64_t j = 0; j < sieveSize_; j++, low += 30)
   {
-    for (const uint64_t* bitmask = bitmasks_[i]; *bitmask <= sieve[j]; bitmask++)
+    for (const uint64_t* bitmask = bitmasks_[i]; *bitmask <= sieve_[j]; bitmask++)
     {
-      if ((sieve[j] & *bitmask) == *bitmask)
+      if ((sieve_[j] & *bitmask) == *bitmask)
       {
         kTuplets << "(";
         uint64_t bits = *bitmask;

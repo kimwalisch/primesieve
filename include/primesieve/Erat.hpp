@@ -56,7 +56,7 @@ protected:
   void sieve();
   void sieveSegment();
   bool hasNextSegment() const;
-  virtual void generatePrimes(const byte_t*, uint64_t) { }
+  virtual void print() { }
   static uint64_t getPrime(uint64_t*, uint64_t);
 private:
   static const uint64_t bruijnBitValues_[64];

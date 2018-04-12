@@ -178,7 +178,7 @@ void Erat::sieveSegment()
   {
     preSieve();
     crossOff();
-    generatePrimes(sieve_, sieveSize_);
+    print();
 
     uint64_t dist = sieveSize_ * 30;
     segmentLow_ = checkedAdd(segmentLow_, dist);
@@ -204,7 +204,7 @@ void Erat::sieveLastSegment()
   if (sieveSize_ % 8)
     memset(&sieve_[sieveSize_], 0, 8 - sieveSize_ % 8);
 
-  generatePrimes(sieve_, sieveSize_);
+  print();
   segmentLow_ = stop_;
   segmentHigh_ = stop_;
 }

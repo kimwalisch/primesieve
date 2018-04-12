@@ -41,11 +41,11 @@ private:
   PrimeSieve::counts_t& counts_;
   PrimeSieve& ps_;
   void initCounts();
-  void generatePrimes(const byte_t*, uint64_t);
-  void countPrimes(const byte_t*, uint64_t);
-  void countkTuplets(const byte_t*, uint64_t);
-  void printPrimes(const byte_t*, uint64_t) const;
-  void printkTuplets(const byte_t*, uint64_t) const;
+  void print();
+  void countPrimes();
+  void countkTuplets();
+  void printPrimes() const;
+  void printkTuplets() const;
 };
 
 } // namespace
