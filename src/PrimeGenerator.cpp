@@ -194,13 +194,13 @@ void PrimeGenerator::sieveSegment()
   uint64_t high = min(segmentHigh_, stop_);
   uint64_t sqrtHigh = isqrt(high);
 
-  if (!sievingPrime_)
-    sievingPrime_ = sievingPrimes_.next();
+  if (!prime_)
+    prime_ = sievingPrimes_.next();
 
-  while (sievingPrime_ <= sqrtHigh)
+  while (prime_ <= sqrtHigh)
   {
-    addSievingPrime(sievingPrime_);
-    sievingPrime_ = sievingPrimes_.next();
+    addSievingPrime(prime_);
+    prime_ = sievingPrimes_.next();
   }
 
   Erat::sieveSegment();
