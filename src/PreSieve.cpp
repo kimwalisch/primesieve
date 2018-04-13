@@ -60,8 +60,8 @@ PreSieve::PreSieve(uint64_t start, uint64_t stop)
 void PreSieve::init()
 {
   size_ = primeProduct_ / 30;
-  deleter_.reset(new byte_t[size_]);
-  buffer_ = deleter_.get();
+  buffer_ = new byte_t[size_];
+  deleter_.reset(buffer_);
   memset(buffer_, 0xff, size_);
 
   EratSmall eratSmall;

@@ -57,7 +57,8 @@ void EratBig::init(uint64_t sieveSize)
   uint64_t size = maxSegmentCount + 1;
 
   // EratBig uses up to 1.6 gigabytes of memory
-  memory_.reserve(((1u << 30) * 2) / config::BYTES_PER_ALLOC);
+  uint64_t maxBytes = (1u << 30) * 2;
+  memory_.reserve(maxBytes / config::BYTES_PER_ALLOC);
 
   lists_.resize(size, nullptr);
   for (uint64_t i = 0; i < size; i++)

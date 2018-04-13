@@ -63,7 +63,7 @@ private:
   uint64_t maxPreSieve_;
   uint64_t maxEratSmall_;
   uint64_t maxEratMedium_;
-  std::unique_ptr<byte_t[]> deleteSieve_;
+  std::unique_ptr<byte_t[]> deleter_;
   EratSmall eratSmall_;
   EratMedium eratMedium_;
   EratBig eratBig_;

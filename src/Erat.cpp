@@ -98,6 +98,9 @@ void Erat::init(uint64_t start,
   sieveSize_ = inBetween(8, sieveSize_, 4096);
   sieveSize_ *= 1024;
 
+  sieve_ = new byte_t[sieveSize_];
+  deleter_.reset(sieve_);
+
   uint64_t rem = getByteRemainder(start_);
   uint64_t dist = sieveSize_ * 30 + 6;
   segmentLow_ = start_ - rem;
@@ -108,9 +111,6 @@ void Erat::init(uint64_t start,
 
 void Erat::init()
 {
-  deleteSieve_.reset(new byte_t[sieveSize_]);
-  sieve_ = deleteSieve_.get();
-
   uint64_t sqrtStop = isqrt(stop_);
   uint64_t l1Size = EratSmall::getL1Size(sieveSize_);
 
