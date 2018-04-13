@@ -37,14 +37,18 @@ void nth_prime_test(int64_t n, int64_t start, int64_t iters)
 
 int main()
 {
-  for (int i = 3; i <= 7; i++)
+  // Set a small sieve size in order to
+  // ensure many segments are sieved
+  set_sieve_size(16);
+
+  for (int i = 3; i <= 6; i++)
   {
-    for (int j = 10; j <= 13; j++)
+    for (int j = 8; j <= 10; j++)
     {
       int64_t n = (int64_t) pow(10.0, i);
       int64_t start = (int64_t) pow(10.0, j);
       int64_t iters = 5;
-      
+
       cout << "nth_prime_test(" << n << ", " << start << ", " << iters << ")";
       nth_prime_test(n, start, iters);
       cout << " = OK" << endl;

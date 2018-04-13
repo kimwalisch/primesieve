@@ -46,16 +46,16 @@ int main()
     check(prime == primes[i - 1]);
   }
 
-  it.skipto(1000000000);
+  it.skipto(100000000);
   prime = it.prev_prime();
   uint64_t sum = 0;
 
-  // iterate over the primes below 10^9
+  // iterate over the primes below 10^8
   for (; prime > 0; prime = it.prev_prime())
     sum += prime;
 
-  cout << "Sum of the primes below 10^9 = " << sum;
-  check(sum == 24739512092254535ull);
+  cout << "Sum of the primes below 10^8 = " << sum;
+  check(sum == 279209790387276ull);
 
   uint64_t p1 = primes[primes.size() - 1];
   uint64_t p2 = primes[primes.size() - 2];

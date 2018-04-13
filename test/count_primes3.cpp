@@ -1,6 +1,7 @@
 ///
 /// @file   count_primes3.cpp
-/// @brief  Count the primes within [10^13, 10^13 + 5*10^9] randomly
+/// @brief  Count the primes within [10^12, 10^12 + 10^9]
+///         using random sized intervals.
 ///
 /// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -28,12 +29,12 @@ void check(bool OK)
 
 int main()
 {
-  cout << "Sieving the primes within [10^13, 10^13 + 5*10^9] randomly" << endl;
+  cout << "Sieving the primes within [10^12, 10^12 + 10^9] randomly" << endl;
 
   uint64_t count = 0;
-  uint64_t maxDist = (uint64_t) 2e7;
-  uint64_t lowerBound = (uint64_t) 1e13;
-  uint64_t upperBound = lowerBound + (uint64_t) 5e9;
+  uint64_t maxDist = (uint64_t) 1e7;
+  uint64_t lowerBound = (uint64_t) 1e12;
+  uint64_t upperBound = lowerBound + (uint64_t) 1e9;
   uint64_t start = lowerBound - 1;
   uint64_t stop = start;
 
@@ -54,7 +55,7 @@ int main()
   }
 
   cout << endl << "Prime count: " << count;
-  check(count == 167038410);
+  check(count == 36190991);
 
   cout << endl;
   cout << "Test passed successfully!" << endl;

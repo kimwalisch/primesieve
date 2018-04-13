@@ -1,6 +1,7 @@
 ///
 /// @file   count_primes2.cpp
-/// @brief  Count the primes within [10^i, 10^i + 10^8] for i = 12 to 19
+/// @brief  Count the primes within [10^i, 10^i + 10^8]
+///         for i = 12 to 19
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -11,24 +12,23 @@
 #include <primesieve.hpp>
 
 #include <stdint.h>
-#include <iostream>
-#include <iomanip>
+#include <array>
 #include <cstdlib>
 #include <cmath>
+#include <iostream>
+#include <iomanip>
 
 using namespace std;
 using namespace primesieve;
 
-const uint64_t pix[8] =
+const array<uint64_t, 6> pix =
 {
   3618282, // pi[10^12, 10^12+10^8]
   3342093, // pi[10^13, 10^13+10^8]
   3102679, // pi[10^14, 10^14+10^8]
   2893937, // pi[10^15, 10^15+10^8]
   2714904, // pi[10^16, 10^16+10^8]
-  2555873, // pi[10^17, 10^17+10^8]
-  2414886, // pi[10^18, 10^18+10^8]
-  2285232  // pi[10^19, 10^19+10^8]
+  2555873  // pi[10^17, 10^17+10^8]
 };
 
 void check(bool OK)
@@ -42,9 +42,9 @@ int main()
 {
   cout << left;
 
-  for (int i = 0; i <= 7; i++)
+  for (size_t i = 0; i < pix.size(); i++)
   {
-    int j = i + 12;
+    size_t j = i + 12;
     cout << "Sieving the primes within [10^" << j << ", 10^" << j << " + 10^8]" << endl;
     uint64_t start = (uint64_t) pow(10.0, j);
     uint64_t stop = start + (uint64_t) 1e8;

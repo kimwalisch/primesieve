@@ -50,14 +50,14 @@ int main()
     check(prime == primes[i - 1]);
   }
 
-  primesieve_skipto(&it, 1000000000, 0);
+  primesieve_skipto(&it, 100000000, 0);
 
-  // iterate over the primes below 10^9
+  // iterate over the primes below 10^8
   while ((prime = primesieve_prev_prime(&it)) > 0)
     sum += prime;
 
-  printf("Sum of the primes below 10^9 = %" PRIu64, sum);
-  check(sum == 24739512092254535ull);
+  printf("Sum of the primes below 10^8 = %" PRIu64, sum);
+  check(sum == 279209790387276ull);
 
   uint64_t p1 = primes[size - 1];
   uint64_t p2 = primes[size - 2];
