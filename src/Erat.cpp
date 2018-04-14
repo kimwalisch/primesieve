@@ -20,7 +20,7 @@
 
 #include <stdint.h>
 #include <array>
-#include <cstring>
+#include <algorithm>
 #include <memory>
 
 using namespace std;
@@ -205,8 +205,8 @@ void Erat::sieveLastSegment()
   sieve_[sieveSize_ - 1] &= unsetLarger[rem];
 
   // unset bytes > stop
-  if (sieveSize_ % 8)
-    memset(&sieve_[sieveSize_], 0, 8 - sieveSize_ % 8);
+  uint64_t bytes = 8 - sieveSize_ % 8;
+  fill_n(&sieve_[sieveSize_], bytes % 8, 0);
 
   print();
   segmentLow_ = stop_;
