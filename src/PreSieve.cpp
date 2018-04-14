@@ -17,7 +17,6 @@
 #include <stdint.h>
 #include <algorithm>
 #include <array>
-#include <cstring>
 #include <memory>
 
 using namespace std;
@@ -82,22 +81,22 @@ void PreSieve::copy(byte_t* sieve,
 {
   // find segmentLow index
   uint64_t remainder = segmentLow % primeProduct_;
-  uint64_t index = remainder / 30;
-  uint64_t sizeLeft = size_ - index;
+  uint64_t i = remainder / 30;
+  uint64_t sizeLeft = size_ - i;
 
   if (sieveSize <= sizeLeft)
-    memcpy(sieve, &buffer_[index], sieveSize);
+    copy_n(&buffer_[i], sieveSize, sieve);
   else
   {
-    // copy the last remaining bytes at the end of buffer
+    // copy the last remaining bytes of buffer
     // to the beginning of the sieve array
-    memcpy(sieve, &buffer_[index], sizeLeft);
+    copy_n(&buffer_[i], sizeLeft, sieve);
 
     // restart copying at the beginning of buffer
-    for (index = sizeLeft; index + size_ < sieveSize; index += size_)
-      memcpy(&sieve[index], buffer_, size_);
+    for (i = sizeLeft; i + size_ < sieveSize; i += size_)
+      copy_n(buffer_, size_, &sieve[i]);
 
-    memcpy(&sieve[index], buffer_, sieveSize - index);
+    copy_n(buffer_, sieveSize - i, &sieve[i]);
   }
 }
 
