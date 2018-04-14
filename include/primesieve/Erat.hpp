@@ -16,6 +16,7 @@
 #include "EratBig.hpp"
 
 #include <stdint.h>
+#include <array>
 #include <memory>
 
 namespace primesieve {
@@ -59,7 +60,7 @@ protected:
   virtual void print() { }
   static uint64_t getPrime(uint64_t*, uint64_t);
 private:
-  static const uint64_t bruijnBitValues_[64];
+  static const std::array<uint64_t, 64> bruijnBitValues_;
   uint64_t maxPreSieve_;
   uint64_t maxEratSmall_;
   uint64_t maxEratMedium_;
@@ -67,8 +68,9 @@ private:
   EratSmall eratSmall_;
   EratMedium eratMedium_;
   EratBig eratBig_;
-  static uint64_t getByteRemainder(uint64_t);
-  void init();
+  static uint64_t byteRemainder(uint64_t);
+  void initSieve(uint64_t);
+  void initErat();
   void preSieve();
   void crossOff();
   void sieveLastSegment();

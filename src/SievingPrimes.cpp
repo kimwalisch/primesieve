@@ -75,7 +75,7 @@ bool SievingPrimes::sieveSegment()
   if (hasNextSegment())
   {
     sieveIdx_ = 0;
-    uint64_t high = min(segmentHigh_, stop_);
+    uint64_t high = segmentHigh_;
 
     for (uint64_t& i = tinyIdx_; i * i <= high; i += 2)
       if (tinySieve_[i])

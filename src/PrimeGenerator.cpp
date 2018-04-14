@@ -190,9 +190,7 @@ void PrimeGenerator::sieveSegment()
 {
   sieveIdx_ = 0;
   low_ = segmentLow_;
-
-  uint64_t high = min(segmentHigh_, stop_);
-  uint64_t sqrtHigh = isqrt(high);
+  uint64_t sqrtHigh = isqrt(segmentHigh_);
 
   if (!prime_)
     prime_ = sievingPrimes_.next();
