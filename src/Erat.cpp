@@ -205,8 +205,9 @@ void Erat::sieveLastSegment()
   sieve_[sieveSize_ - 1] &= unsetLarger[rem];
 
   // unset bytes > stop
-  uint64_t bytes = 8 - sieveSize_ % 8;
-  fill_n(&sieve_[sieveSize_], bytes % 8, 0);
+  uint64_t bytes = sieveSize_ % 8;
+  bytes = (8 - bytes) % 8;
+  fill_n(&sieve_[sieveSize_], bytes, 0);
 
   print();
   segmentLow_ = stop_;
