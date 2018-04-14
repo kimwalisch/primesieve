@@ -63,7 +63,7 @@ void SievingPrimes::fill()
   sieveIdx_ += 8;
 
   for (; bits != 0; num++)
-    primes_[num] = getPrime(&bits, low_);
+    primes_[num] = nextPrime(&bits, low_);
 
   i_ = 0;
   size_ = num;

@@ -54,7 +54,7 @@ public:
     sieveIdx_ += 8;
 
     for (; bits != 0; i++)
-      primes[i] = getPrime(&bits, low_);
+      primes[i] = nextPrime(&bits, low_);
 
     *size = i;
     low_ += 8 * 30;
