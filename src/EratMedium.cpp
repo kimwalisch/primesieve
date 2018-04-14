@@ -3,7 +3,7 @@
 /// @brief  Segmented sieve of Eratosthenes optimized for
 ///         medium sieving primes.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -28,7 +28,9 @@ namespace primesieve {
 ///
 void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 {
-  if (sieveSize > (4096u << 10))
+  uint64_t maxSieveSize = 4096 << 10;
+
+  if (sieveSize > maxSieveSize)
     throw primesieve_error("EratMedium: sieveSize must be <= 4096 kilobytes");
   if (maxPrime > sieveSize * 5)
     throw primesieve_error("EratMedium: maxPrime must be <= sieveSize * 5");
