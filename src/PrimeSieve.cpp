@@ -231,6 +231,27 @@ void PrimeSieve::processSmallPrimes()
   }
 }
 
+uint64_t PrimeSieve::countPrimes(uint64_t start, uint64_t stop)
+{
+  sieve(start, stop, COUNT_PRIMES);
+  return getCount(0);
+}
+
+void PrimeSieve::sieve(uint64_t start, uint64_t stop)
+{
+  setStart(start);
+  setStop(stop);
+  sieve();
+}
+
+void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags)
+{
+  setStart(start);
+  setStop(stop);
+  setFlags(flags);
+  sieve();
+}
+
 /// Sieve the primes and prime k-tuplets (twin primes,
 /// prime triplets, ...) in [start, stop]
 ///
@@ -263,27 +284,6 @@ void PrimeSieve::sieve()
 
   if (isStatus())
     updateStatus(finishStatus, false);
-}
-
-void PrimeSieve::sieve(uint64_t start, uint64_t stop)
-{
-  setStart(start);
-  setStop(stop);
-  sieve();
-}
-
-void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags)
-{
-  setStart(start);
-  setStop(stop);
-  setFlags(flags);
-  sieve();
-}
-
-uint64_t PrimeSieve::countPrimes(uint64_t start, uint64_t stop)
-{
-  sieve(start, stop, COUNT_PRIMES);
-  return getCount(0);
 }
 
 } // namespace
