@@ -74,7 +74,7 @@
   CPU type).
 
 * **Wheel** factorization is used to skip multiples of small primes
-  ≤ 7 to speed up the sieve of Eratosthenes. The abstract **Wheel** class
+  ≤ 7 to speed up the sieve of Eratosthenes. The abstract Wheel class
   is used to initialize sieving primes i.e. ```Wheel::addSievingPrime()```
   calculates the first multiple ≥ start of each sieving prime and the position
   within the sieve array of that multiple. ```Wheel::unsetBit()``` is
