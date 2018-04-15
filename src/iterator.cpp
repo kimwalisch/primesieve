@@ -13,33 +13,31 @@
 
 #include <stdint.h>
 #include <vector>
-
-using namespace primesieve;
+#include <memory>
 
 namespace {
 
-void clear(PrimeGenerator*& ptr)
+template <typename T>
+void clear(std::unique_ptr<T>& ptr)
 {
-  delete ptr;
-  ptr = nullptr;
+  ptr.reset(nullptr);
 }
 
 } // namespace
 
 namespace primesieve {
 
-iterator::iterator(uint64_t start, uint64_t stop_hint)
+iterator::~iterator()
+{ }
+
+iterator::iterator(uint64_t start,
+                   uint64_t stop_hint)
 {
-  start_ = start;
-  stop_ = start;
-  stop_hint_ = stop_hint;
-  i_ = 0;
-  last_idx_ = 0;
-  dist_ = PrimeGenerator::maxCachedPrime();
-  primeGenerator_ = nullptr;
+  skipto(start, stop_hint);
 }
 
-void iterator::skipto(uint64_t start, uint64_t stop_hint)
+void iterator::skipto(uint64_t start,
+                      uint64_t stop_hint)
 {
   start_ = start;
   stop_ = start;
@@ -51,11 +49,6 @@ void iterator::skipto(uint64_t start, uint64_t stop_hint)
   primes_.clear();
 }
 
-iterator::~iterator()
-{
-  clear(primeGenerator_);
-}
-
 void iterator::generate_next_primes()
 {
   while (true)
@@ -64,7 +57,8 @@ void iterator::generate_next_primes()
     {
       primes_.resize(64);
       IteratorHelper::next(&start_, &stop_, stop_hint_, &dist_);
-      primeGenerator_ = new PrimeGenerator(start_, stop_);
+      auto p = new PrimeGenerator(start_, stop_);
+      primeGenerator_.reset(p);
     }
 
     for (last_idx_ = 0; !last_idx_;)
@@ -83,14 +77,14 @@ void iterator::generate_next_primes()
 void iterator::generate_prev_primes()
 {
   primes_.clear();
-  clear(primeGenerator_);
 
   while (primes_.empty())
   {
     IteratorHelper::prev(&start_, &stop_, stop_hint_, &dist_);
     if (start_ <= 2)
       primes_.push_back(0);
-    primeGenerator_ = new PrimeGenerator(start_, stop_);
+    auto p = new PrimeGenerator(start_, stop_);
+    primeGenerator_.reset(p);
     primeGenerator_->fill(primes_);
     clear(primeGenerator_);
   }
