@@ -131,7 +131,7 @@ void optionCount(Option& opt,
 }
 
 /// e.g. "--thread=4" -> return "--thread"
-string getOption(string str)
+string getOption(const string& str)
 {
   size_t pos = str.find_first_of("=0123456789");
 
@@ -142,7 +142,7 @@ string getOption(string str)
 }
 
 /// e.g. "--thread=4" -> return "4"
-string getValue(string str)
+string getValue(const string& str)
 {
   size_t pos = str.find_first_of("0123456789");
 
