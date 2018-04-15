@@ -41,7 +41,9 @@ inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
 }
 
 template <typename T>
-void store_primes(uint64_t start, uint64_t stop, T& primes)
+inline void store_primes(uint64_t start,
+                         uint64_t stop,
+                         T& primes)
 {
   if (start > 0)
     start--;
@@ -62,7 +64,9 @@ void store_primes(uint64_t start, uint64_t stop, T& primes)
 }
 
 template <typename T>
-void store_n_primes(uint64_t n, uint64_t start, T& primes)
+inline void store_n_primes(uint64_t n,
+                           uint64_t start,
+                           T& primes)
 {
   if (n == 0)
     return;
