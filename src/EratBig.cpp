@@ -92,9 +92,9 @@ void EratBig::pushBucket(uint64_t segment)
     bucket[N-1].setNext(nullptr);
     stock_ = bucket;
   }
-  Bucket* emptyBucket = stock_;
+  Bucket* empty = stock_;
   stock_ = stock_->next();
-  moveBucket(*emptyBucket, lists_[segment]);
+  moveBucket(*empty, lists_[segment]);
 }
 
 void EratBig::moveBucket(Bucket& src, Bucket*& dest)
