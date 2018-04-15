@@ -44,10 +44,6 @@ typedef struct
   uint64_t* primes_;
   void* vector_;
   void* primeGenerator_;
-  /**
-   * Will be initialized to 0.
-   * Will be set to 1 if any error occurs.
-   */
   int is_error_;
 } primesieve_iterator;
 
