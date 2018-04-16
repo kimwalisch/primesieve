@@ -55,10 +55,10 @@ void iterator::generate_next_primes()
   {
     if (!primeGenerator_)
     {
-      primes_.resize(64);
       IteratorHelper::next(&start_, &stop_, stop_hint_, &dist_);
       auto p = new PrimeGenerator(start_, stop_);
       primeGenerator_.reset(p);
+      primes_.resize(64);
     }
 
     for (last_idx_ = 0; !last_idx_;)

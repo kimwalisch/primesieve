@@ -95,11 +95,11 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
     {
       if (!it->primeGenerator_)
       {
-        primes.resize(64);
-        it->primes_ = &primes[0];
         IteratorHelper::next(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
         it->primeGenerator_ = new PrimeGenerator(it->start_, it->stop_);
         primeGenerator = getPrimeGenerator(it);
+        primes.resize(64);
+        it->primes_ = &primes[0];
       }
 
       for (it->last_idx_ = 0; !it->last_idx_;)
