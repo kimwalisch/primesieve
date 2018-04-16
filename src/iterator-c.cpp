@@ -114,6 +114,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
   catch (exception&)
   {
     clearPrimeGenerator(it);
+    primes.resize(1);
     primes[0] = PRIMESIEVE_ERROR;
     it->last_idx_ = 1;
     it->is_error_ = true;
@@ -146,9 +147,9 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
   }
   catch (exception&)
   {
-    primes.clear();
     clearPrimeGenerator(it);
-    primes.push_back(PRIMESIEVE_ERROR);
+    primes.resize(1);
+    primes[0] = PRIMESIEVE_ERROR;
     it->is_error_ = true;
     errno = EDOM;
   }
