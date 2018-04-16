@@ -76,13 +76,14 @@ void EratSmall::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64
 ///
 void EratSmall::crossOff(byte_t* sieve, uint64_t sieveSize)
 {
-  byte_t* sieveEnd = &sieve[sieveSize];
+  byte_t* sieveEnd = sieve + sieveSize;
 
-  for (; sieve < sieveEnd; sieve += l1Size_)
+  while (sieve < sieveEnd)
   {
-    byte_t* end = &sieve[l1Size_];
-    end = min(end, sieveEnd);
-    crossOff(sieve, end);
+    byte_t* start = sieve;
+    sieve += l1Size_;
+    sieve = min(sieve, sieveEnd);
+    crossOff(start, sieve);
   }
 }
 
