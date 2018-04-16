@@ -25,20 +25,20 @@ namespace {
 
 PrimeGenerator* getPrimeGenerator(primesieve_iterator* it)
 {
-  // primeGenerator_ is a pimpl
-  return (PrimeGenerator*) it->primeGenerator_;
+  // primeGenerator is a pimpl
+  return (PrimeGenerator*) it->primeGenerator;
 }
 
 void clearPrimeGenerator(primesieve_iterator* it)
 {
   delete getPrimeGenerator(it);
-  it->primeGenerator_ = nullptr;
+  it->primeGenerator = nullptr;
 }
 
 vector<uint64_t>& getPrimes(primesieve_iterator* it)
 {
   using T = vector<uint64_t>;
-  T* primes = (T*) it->vector_;
+  T* primes = (T*) it->vector;
   return *primes;
 }
 
@@ -47,27 +47,27 @@ vector<uint64_t>& getPrimes(primesieve_iterator* it)
 /// C constructor
 void primesieve_init(primesieve_iterator* it)
 {
-  it->start_ = 0;
-  it->stop_ = 0;
-  it->stop_hint_ = get_max_stop();
-  it->i_ = 0;
-  it->last_idx_ = 0;
-  it->dist_ = PrimeGenerator::maxCachedPrime();
-  it->vector_ = new vector<uint64_t>;
-  it->primeGenerator_ = nullptr;
-  it->is_error_ = false;
+  it->start = 0;
+  it->stop = 0;
+  it->stop_hint = get_max_stop();
+  it->i = 0;
+  it->last_idx = 0;
+  it->dist = PrimeGenerator::maxCachedPrime();
+  it->vector = new vector<uint64_t>;
+  it->primeGenerator = nullptr;
+  it->is_error = false;
 }
 
 void primesieve_skipto(primesieve_iterator* it,
                        uint64_t start,
                        uint64_t stop_hint)
 {
-  it->start_ = start;
-  it->stop_ = start;
-  it->stop_hint_ = stop_hint;
-  it->i_ = 0;
-  it->last_idx_ = 0;
-  it->dist_ = PrimeGenerator::maxCachedPrime();
+  it->start = start;
+  it->stop = start;
+  it->stop_hint = stop_hint;
+  it->i = 0;
+  it->last_idx = 0;
+  it->dist = PrimeGenerator::maxCachedPrime();
   auto& primes = getPrimes(it);
   primes.clear();
   clearPrimeGenerator(it);
@@ -93,17 +93,17 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
   {
     while (true)
     {
-      if (!it->primeGenerator_)
+      if (!it->primeGenerator)
       {
-        IteratorHelper::next(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
-        it->primeGenerator_ = new PrimeGenerator(it->start_, it->stop_);
+        IteratorHelper::next(&it->start, &it->stop, it->stop_hint, &it->dist);
+        it->primeGenerator = new PrimeGenerator(it->start, it->stop);
         primeGenerator = getPrimeGenerator(it);
         primes.resize(64);
-        it->primes_ = &primes[0];
+        it->primes = &primes[0];
       }
 
-      for (it->last_idx_ = 0; !it->last_idx_;)
-        primeGenerator->fill(primes, &it->last_idx_);
+      for (it->last_idx = 0; !it->last_idx;)
+        primeGenerator->fill(primes, &it->last_idx);
 
       if (primeGenerator->finished())
         clearPrimeGenerator(it);
@@ -116,13 +116,13 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
     clearPrimeGenerator(it);
     primes.resize(1);
     primes[0] = PRIMESIEVE_ERROR;
-    it->last_idx_ = 1;
-    it->is_error_ = true;
+    it->last_idx = 1;
+    it->is_error = true;
     errno = EDOM;
   }
 
-  it->i_ = 0;
-  it->last_idx_--;
+  it->i = 0;
+  it->last_idx--;
 }
 
 void primesieve_generate_prev_primes(primesieve_iterator* it)
@@ -136,10 +136,10 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
 
     while (primes.empty())
     {
-      IteratorHelper::prev(&it->start_, &it->stop_, it->stop_hint_, &it->dist_);
-      it->primeGenerator_ = new PrimeGenerator(it->start_, it->stop_);
+      IteratorHelper::prev(&it->start, &it->stop, it->stop_hint, &it->dist);
+      it->primeGenerator = new PrimeGenerator(it->start, it->stop);
       auto primeGenerator = getPrimeGenerator(it);
-      if (it->start_ <= 2)
+      if (it->start <= 2)
         primes.push_back(0);
       primeGenerator->fill(primes);
       clearPrimeGenerator(it);
@@ -150,11 +150,11 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     clearPrimeGenerator(it);
     primes.resize(1);
     primes[0] = PRIMESIEVE_ERROR;
-    it->is_error_ = true;
+    it->is_error = true;
     errno = EDOM;
   }
 
-  it->primes_ = &primes[0];
-  it->last_idx_ = primes.size() - 1;
-  it->i_ = it->last_idx_;
+  it->primes = &primes[0];
+  it->last_idx = primes.size() - 1;
+  it->i = it->last_idx;
 }

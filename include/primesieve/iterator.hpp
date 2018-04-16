@@ -1,7 +1,7 @@
 ///
 /// @file   iterator.hpp
-/// @brief  The iterator class allows to easily iterate (forward and
-///         backward) over prime numbers.
+/// @brief  The iterator class allows to easily iterate (forwards
+///         and backwards) over prime numbers.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -41,7 +41,7 @@ public:
   ///
   iterator(uint64_t start = 0, uint64_t stop_hint = get_max_stop());
 
-  /// Reinitialize this iterator object to start.
+  /// Reset the primesieve iterator to start.
   /// @param start      Generate primes > start (or < start).
   /// @param stop_hint  Stop number optimization hint, gives significant
   ///                   speed up if few primes are generated. E.g. if
@@ -50,8 +50,8 @@ public:
   ///
   void skipto(uint64_t start, uint64_t stop_hint = get_max_stop());
 
-  /// Advance the iterator by one position.
-  /// @return The next prime.
+  /// Get the next prime.
+  /// Returns UINT64_MAX if next prime > 2^64.
   ///
   uint64_t next_prime()
   {
@@ -60,8 +60,8 @@ public:
     return primes_[i_];
   }
 
-  /// Get the previous prime,
-  /// or 0 if input <= 2 e.g. prev_prime(2) = 0.
+  /// Get the previous prime.
+  /// prev_prime(n) = 0 if n <= 2.
   ///
   uint64_t prev_prime()
   {

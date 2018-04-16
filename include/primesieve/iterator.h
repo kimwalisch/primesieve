@@ -8,10 +8,11 @@
  *         is about PrimePi(n^0.5) * 8 bytes.
  *
  *         The @link primesieve_iterator.c primesieve_iterator.c
- *         @endlink example shows how to use primesieve_iterator. If
- *         any error occurs primesieve_next_prime() and
- *         primesieve_prev_prime() return PRIMESIEVE_ERROR and
- *         primesieve_iterator.is_error_ is set to 1.
+ *         @endlink example shows how to use primesieve_iterator.
+ *         If any error occurs primesieve_next_prime() and
+ *         primesieve_prev_prime() return PRIMESIEVE_ERROR.
+ *         Furthermore primesieve_iterator.is_error is initialized
+ *         to 0 and set to 1 if any error occurs.
  * 
  * Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
  *
@@ -35,16 +36,16 @@ extern "C" {
  */
 typedef struct
 {
-  size_t i_;
-  size_t last_idx_;
-  uint64_t start_;
-  uint64_t stop_;
-  uint64_t stop_hint_;
-  uint64_t dist_;
-  uint64_t* primes_;
-  void* vector_;
-  void* primeGenerator_;
-  int is_error_;
+  size_t i;
+  size_t last_idx;
+  uint64_t start;
+  uint64_t stop;
+  uint64_t stop_hint;
+  uint64_t dist;
+  uint64_t* primes;
+  void* vector;
+  void* primeGenerator;
+  int is_error;
 } primesieve_iterator;
 
 /** Initialize the primesieve iterator before first using it */
@@ -54,7 +55,7 @@ void primesieve_init(primesieve_iterator* it);
 void primesieve_free_iterator(primesieve_iterator* it);
 
 /**
- * Set the primesieve iterator to start.
+ * Reset the primesieve iterator to start.
  * @param start      Generate primes > start (or < start).
  * @param stop_hint  Stop number optimization hint. E.g. if you want
  *                   to generate the primes below 1000 use
@@ -69,23 +70,26 @@ void primesieve_generate_next_primes(primesieve_iterator*);
 /** Internal use */
 void primesieve_generate_prev_primes(primesieve_iterator*);
 
-/** Get the next prime */
+/**
+ * Get the next prime.
+ * Returns UINT64_MAX if next prime > 2^64.
+ */
 static inline uint64_t primesieve_next_prime(primesieve_iterator* it)
 {
-  if (it->i_++ == it->last_idx_)
+  if (it->i++ == it->last_idx)
     primesieve_generate_next_primes(it);
-  return it->primes_[it->i_];
+  return it->primes[it->i];
 }
 
 /**
- * Get the previous prime,
- * or 0 if input <= 2 e.g. prev_prime(2) = 0.
+ * Get the previous prime.
+ * primesieve_prev_prime(n) = 0 if n <= 2.
  */
 static inline uint64_t primesieve_prev_prime(primesieve_iterator* it)
 {
-  if (it->i_-- == 0)
+  if (it->i-- == 0)
     primesieve_generate_prev_primes(it);
-  return it->primes_[it->i_];
+  return it->primes[it->i];
 }
 
 #ifdef __cplusplus
