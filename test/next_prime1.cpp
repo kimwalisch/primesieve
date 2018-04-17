@@ -57,16 +57,20 @@ int main()
   cout << "Sum of the primes below 10^9 = " << sum;
   check(sum == 24739512092254535ull);
 
-  uint64_t p1 = primes[primes.size() - 1];
-  uint64_t p2 = primes[primes.size() - 2];
-  it.skipto(p1);
-  prime = it.prev_prime();
-  cout << "prev_prime(" << p1 << ") = " << prime;
-  check(prime == p2);
-
+  it.skipto(primes.back() - 200, primes.back());
   prime = it.next_prime();
-  cout << "next_prime(" << p2 << ") = " << prime;
-  check(prime == p1);
+
+  while (prime <= primes.back())
+    prime = it.next_prime();
+
+  for (uint64_t i = 1; i < 1000; i++)
+  {
+    uint64_t old = prime;
+    uint64_t p = primes[primes.size() - i];
+    prime = it.prev_prime();
+    cout << "prev_prime(" << old << ") = " << prime;
+    check(prime == p);
+  }
 
   cout << endl;
   cout << "All tests passed successfully!" << endl;
