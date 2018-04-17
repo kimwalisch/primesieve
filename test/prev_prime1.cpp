@@ -57,16 +57,20 @@ int main()
   cout << "Sum of the primes below 10^8 = " << sum;
   check(sum == 279209790387276ull);
 
-  uint64_t p1 = primes[primes.size() - 1];
-  uint64_t p2 = primes[primes.size() - 2];
-  it.skipto(p2);
-  prime = it.next_prime();
-  cout << "next_prime(" << p2 << ") = " << prime;
-  check(prime == p1);
+  for (uint64_t i = 0; i < 1000; i++)
+  {
+    prime = it.prev_prime();
+    cout << "prev_prime(0) = " << prime;
+    check(prime == 0);
+  }
 
-  prime = it.prev_prime();
-  cout << "prev_prime(" << p1 << ") = " << prime;
-  check(prime == p2);
+  for (uint64_t i = 0; i < 1000; i++)
+  {
+    uint64_t old = prime;
+    prime = it.next_prime();
+    cout << "next_prime(" << old << ") = " << prime;
+    check(prime == primes.at(i));
+  }
 
   it.skipto(18446744073709551615ull, 18446744073709551557ull);
   prime = it.prev_prime();
