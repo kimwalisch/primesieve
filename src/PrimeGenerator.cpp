@@ -212,7 +212,7 @@ void PrimeGenerator::fill(vector<uint64_t>& primes)
       if (!sieveSegment(primes))
         return;
 
-    uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
+    auto bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
     sieveIdx_ += 8;
 
     while (bits)
