@@ -2,7 +2,7 @@
 /// @file   prev_prime2.cpp
 /// @brief  Test primesieve_prev_prime().
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -34,9 +34,9 @@ int main()
   primesieve_init(&it);
 
   uint64_t i;
-  uint64_t old;
   uint64_t prime;
   uint64_t sum = 0;
+  uint64_t old, p1, p2;
 
   for (i = size - 1; i > 0; i--)
   {
@@ -73,6 +73,26 @@ int main()
     prime = primesieve_next_prime(&it);
     printf("next_prime(%" PRIu64 ") = %" PRIu64, old, prime);
     check(prime == primes[i]);
+  }
+
+  primesieve_skipto(&it, primes[size - 1], 0);
+
+  for (i = 0; i < 1000; i++)
+  {
+    prime = primesieve_prev_prime(&it);
+    p1 = primes[size - (i + 1)];
+    p2 = primes[size - (i + 2)];
+    printf("prev_prime(%" PRIu64 ") = %" PRIu64, p1, prime);
+    check(prime == p2);
+  }
+
+  for (i = 0; i < 1000; i++)
+  {
+    old = prime;
+    p1 = size - 1000 + i;
+    prime = primesieve_next_prime(&it);
+    printf("next_prime(%" PRIu64 ") = %" PRIu64, old, prime);
+    check(prime == primes[p1]);
   }
 
   primesieve_free(primes);
