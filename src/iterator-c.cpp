@@ -131,7 +131,7 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
 
   try
   {
-    if (!primes.empty())
+    if (it->primeGenerator)
       it->start = primes.front();
 
     primes.clear();

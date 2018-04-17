@@ -76,7 +76,7 @@ void iterator::generate_next_primes()
 
 void iterator::generate_prev_primes()
 {
-  if (!primes_.empty())
+  if (primeGenerator_)
     start_ = primes_.front();
 
   primes_.clear();
