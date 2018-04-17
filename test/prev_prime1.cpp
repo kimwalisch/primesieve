@@ -69,7 +69,7 @@ int main()
     uint64_t old = prime;
     prime = it.next_prime();
     cout << "next_prime(" << old << ") = " << prime;
-    check(prime == primes.at(i));
+    check(prime == primes[i]);
   }
 
   it.skipto(primes.back());
@@ -77,10 +77,10 @@ int main()
   for (uint64_t i = 0; i < 1000; i++)
   {
     prime = it.prev_prime();
-    uint64_t p1 = primes[primes.size() - (i + 1)];
-    uint64_t p2 = primes[primes.size() - (i + 2)];
-    cout << "prev_prime(" << p1 << ") = " << prime;
-    check(prime == p2);
+    uint64_t p1 = primes.size() - (i + 1);
+    uint64_t p2 = primes.size() - (i + 2);
+    cout << "prev_prime(" << primes[p1] << ") = " << prime;
+    check(prime == primes[p2]);
   }
 
   for (uint64_t i = 0; i < 1000; i++)
@@ -89,7 +89,7 @@ int main()
     uint64_t j = primes.size() - 1000 + i;
     prime = it.next_prime();
     cout << "next_prime(" << old << ") = " << prime;
-    check(prime == primes.at(j));
+    check(prime == primes[j]);
   }
 
   it.skipto(18446744073709551615ull, 18446744073709551557ull);
