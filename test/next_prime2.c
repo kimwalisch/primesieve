@@ -75,10 +75,18 @@ int main()
     check(prime == primes[size - i]);
   }
 
-  primesieve_skipto(&it, 18446744073709551557ull, 0);
+  primesieve_skipto(&it, 18446744073709551556ull, 0);
   prime = primesieve_next_prime(&it);
-  printf("next_prime(%" PRIu64 ") = %" PRIu64, UINT64_C(18446744073709551557), prime);
-  check(prime == 18446744073709551615ull);
+  printf("next_prime(18446744073709551556) = %" PRIu64, prime);
+  check(prime == 18446744073709551557ull);
+
+  for (i = 0; i < 100; i++)
+  {
+    old = prime;
+    prime = primesieve_next_prime(&it);
+    printf("next_prime(%" PRIu64 ") = %" PRIu64, old, prime);
+    check(prime == 18446744073709551615ull);
+  }
 
   primesieve_free(primes);
   primesieve_free_iterator(&it);
