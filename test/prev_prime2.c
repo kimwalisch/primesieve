@@ -79,9 +79,9 @@ int main()
 
   for (i = 0; i < 1000; i++)
   {
-    prime = primesieve_prev_prime(&it);
     p1 = primes[size - (i + 1)];
     p2 = primes[size - (i + 2)];
+    prime = primesieve_prev_prime(&it);
     printf("prev_prime(%" PRIu64 ") = %" PRIu64, p1, prime);
     check(prime == p2);
   }
