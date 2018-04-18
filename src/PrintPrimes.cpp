@@ -85,13 +85,18 @@ void PrintPrimes::initCounts()
 void PrintPrimes::sieve()
 {
   SievingPrimes sievingPrimes(this, preSieve_);
-  uint64_t sqrtStop = isqrt(stop_);
   uint64_t prime = sievingPrimes.next();
 
-  for (; prime <= sqrtStop; prime = sievingPrimes.next())
-    Erat::sieve(prime);
+  while (hasNextSegment())
+  {
+    uint64_t sqrtHigh = isqrt(segmentHigh_);
 
-  Erat::sieve();
+    for (; prime <= sqrtHigh; prime = sievingPrimes.next())
+      addSievingPrime(prime);
+
+    sieveSegment();
+    print();
+  }
 }
 
 /// Executed after each sieved segment

@@ -53,11 +53,8 @@ protected:
   virtual ~Erat();
   void init(uint64_t, uint64_t, uint64_t, PreSieve&);
   void addSievingPrime(uint64_t);
-  void sieve(uint64_t);
-  void sieve();
   void sieveSegment();
   bool hasNextSegment() const;
-  virtual void print() { }
   static uint64_t nextPrime(uint64_t*, uint64_t);
 private:
   static const std::array<uint64_t, 64> bruijnBitValues_;
@@ -89,20 +86,6 @@ inline uint64_t Erat::nextPrime(uint64_t* bits, uint64_t low)
   uint64_t prime = low + bitValue;
   *bits &= mask;
   return prime;
-}
-
-/// This method is called consecutively for
-/// all sieving primes up to sqrt(stop)
-///
-inline void Erat::sieve(uint64_t prime)
-{
-  // This loop is executed once all primes <= sqrt(segmentHigh)
-  // required to sieve the next segment have been
-  // added to the erat* objects further down
-  while (prime * prime > segmentHigh_)
-    sieveSegment();
-
-  addSievingPrime(prime);
 }
 
 inline void Erat::addSievingPrime(uint64_t prime)

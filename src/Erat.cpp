@@ -169,12 +169,6 @@ void Erat::crossOff()
     eratBig_.crossOff(sieve_);
 }
 
-void Erat::sieve()
-{
-  while (hasNextSegment())
-    sieveSegment();
-}
-
 void Erat::sieveSegment()
 {
   if (segmentHigh_ == stop_)
@@ -183,7 +177,6 @@ void Erat::sieveSegment()
   {
     preSieve();
     crossOff();
-    print();
 
     uint64_t dist = sieveSize_ * 30;
     segmentLow_ = checkedAdd(segmentLow_, dist);
@@ -209,7 +202,6 @@ void Erat::sieveLastSegment()
   bytes = (8 - bytes) % 8;
   fill_n(&sieve_[sieveSize_], bytes, 0);
 
-  print();
   segmentLow_ = stop_;
 }
 
