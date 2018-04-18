@@ -3,7 +3,7 @@
 /// @brief  Wheel factorization is used to skip multiles of
 ///         small primes in the sieve of Eratosthenes.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -145,10 +145,10 @@ Wheel<MODULO, SIZE, WHEEL, INIT>::wheelOffsets_[30] =
 };
 
 /// 3rd wheel, skips multiples of 2, 3 and 5
-typedef Wheel<30, 8, wheel30, wheel30Init> Wheel30_t;
+using Wheel30_t = Wheel<30, 8, wheel30, wheel30Init>;
 
 /// 4th wheel, skips multiples of 2, 3, 5 and 7
-typedef Wheel<210, 48, wheel210, wheel210Init> Wheel210_t;
+using Wheel210_t = Wheel<210, 48, wheel210, wheel210Init>;
 
 } // namespace
 

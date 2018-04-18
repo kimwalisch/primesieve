@@ -21,8 +21,8 @@
 namespace primesieve {
 
 /// in primesieve bytes must have 8-bits
-typedef uint8_t byte_t;
-typedef unsigned int uint_t;
+using byte_t = uint8_t;
+using uint_t = unsigned int;
 
 namespace config {
 
