@@ -11,7 +11,7 @@ compiler:
 
 env:
   global:
-    - CXXFLAGS="-O3 -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
+    - CXXFLAGS="-O3 -g -DDEBUG -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
     - OMP_NUM_THREADS=4
 
 before_install:
@@ -43,7 +43,7 @@ script:
   # 3) Build using ninja
   - mkdir build
   - cd build
-  - cmake -GNinja -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..
+  - cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..
   - ninja
   - ninja doc >/dev/null
   # 4) Run integration tests
