@@ -1,4 +1,4 @@
-Changes in version 7.0, 08/04/2018
+Changes in version 7.0, 19/04/2018
 ==================================
 
 Unreleased, work in progress.
@@ -12,10 +12,19 @@ primesieve::iterator that runs up to twice as fast and uses only
 half as much memory as before!
 
  * primesieve::iterator: Faster next_prime().
- * StorePrimes.hpp: Use primesieve::iterator instead of callbacks.
- * SievingPrimes.hpp: New next_prime().
  * PrimeGenerator.cpp: New class used by primesieve::iterator.
- * Erat.cpp: Reduce memory allocations.
+ * StorePrimes.hpp: Use primesieve::iterator instead of callbacks.
+ * SievingPrimes.hpp: Use next_prime() instead of callbacks.
+ * Reduce number of memory allocations by up to 30%.
+ * Test suite runs up to twice as fast.
+ * Modernize code base using C++11.
+
+## Breaking ABI Changes:
+
+New variables have been added to the C++ primesieve::iterator class
+and the C primesieve_iterator struct. People that have written
+primesieve bindings for other programming languages are affected
+by these ABI changes and need to update their code.
 
 Changes in version 6.4, 23/03/2018
 ==================================
