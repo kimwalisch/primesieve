@@ -17,8 +17,6 @@
 #include <stdint.h>
 #include <vector>
 
-using namespace std;
-
 namespace primesieve {
 
 SievingPrimes::SievingPrimes(Erat* erat, PreSieve& preSieve)
