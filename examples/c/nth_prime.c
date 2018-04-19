@@ -9,7 +9,8 @@
 int main(int argc, char** argv)
 {
   uint64_t n = 1000;
-  if (argv[1])
+
+  if (argc > 1 && argv[1])
     n = atol(argv[1]);
 
   uint64_t prime = primesieve_nth_prime(n, 0);
