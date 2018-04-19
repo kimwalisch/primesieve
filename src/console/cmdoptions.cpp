@@ -9,10 +9,11 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve.hpp>
-#include <primesieve/PrimeSieve.hpp>
-#include <primesieve/calculator.hpp>
 #include "cmdoptions.hpp"
+
+#include <primesieve/calculator.hpp>
+#include <primesieve/PrimeSieve.hpp>
+#include <primesieve/primesieve_error.hpp>
 
 #include <string>
 #include <map>

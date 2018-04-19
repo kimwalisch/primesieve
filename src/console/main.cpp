@@ -12,7 +12,6 @@
 #include "cmdoptions.hpp"
 
 #include <stdint.h>
-#include <cstdlib>
 #include <iostream>
 #include <exception>
 #include <iomanip>

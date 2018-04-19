@@ -12,7 +12,6 @@
 
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/primesieve_error.hpp>
 #include <primesieve/PrintPrimes.hpp>
 #include <primesieve/types.hpp>
 
