@@ -13,6 +13,7 @@
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/pmath.hpp>
 
+#include <stdint.h>
 #include <algorithm>
 #include <cmath>
 #include <limits>
