@@ -15,6 +15,7 @@
 #include "config.hpp"
 #include "primesieve_error.hpp"
 #include "Bucket.hpp"
+#include "types.hpp"
 
 #include <stdint.h>
 #include <algorithm>

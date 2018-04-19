@@ -12,12 +12,12 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve.hpp>
 #include <primesieve/Erat.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/SievingPrimes.hpp>
+#include <primesieve/types.hpp>
 
 #include <stdint.h>
 #include <algorithm>

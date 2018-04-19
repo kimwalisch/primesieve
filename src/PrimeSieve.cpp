@@ -11,9 +11,10 @@
 ///
 
 #include <primesieve/PrimeSieve.hpp>
+#include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/PrintPrimes.hpp>
-#include <primesieve/pmath.hpp>
+#include <primesieve/types.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -49,8 +50,6 @@ const array<SmallPrime, 8> smallPrimes
 } // namespace
 
 namespace primesieve {
-
-int get_sieve_size();
 
 PrimeSieve::PrimeSieve() :
   start_(0),

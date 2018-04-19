@@ -8,22 +8,17 @@
 /// file in the top level directory.
 ///
 
-#ifndef CONFIG_PRIMESIEVE_HPP
-#define CONFIG_PRIMESIEVE_HPP
+#ifndef CONFIG_HPP
+#define CONFIG_HPP
 
 #include <stdint.h>
 
-/// Disable assert() macro
+/// Disable assert() by default
 #if !defined(DEBUG) && !defined(NDEBUG)
   #define NDEBUG
 #endif
 
 namespace primesieve {
-
-/// in primesieve bytes must have 8-bits
-using byte_t = uint8_t;
-using uint_t = unsigned int;
-
 namespace config {
 
 enum {

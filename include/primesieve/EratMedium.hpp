@@ -10,9 +10,9 @@
 #ifndef ERATMEDIUM_HPP
 #define ERATMEDIUM_HPP
 
-#include "config.hpp"
 #include "Bucket.hpp"
 #include "Wheel.hpp"
+#include "types.hpp"
 
 #include <stdint.h>
 #include <vector>

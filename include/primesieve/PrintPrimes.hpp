@@ -10,10 +10,10 @@
 #ifndef PRIMEGENERATOR_HPP
 #define PRIMEGENERATOR_HPP
 
-#include "config.hpp"
 #include "Erat.hpp"
-#include "PrimeSieve.hpp"
 #include "PreSieve.hpp"
+#include "PrimeSieve.hpp"
+#include "types.hpp"
 
 #include <stdint.h>
 #include <vector>

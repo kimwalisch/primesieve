@@ -10,9 +10,9 @@
 #ifndef ERATBIG_HPP
 #define ERATBIG_HPP
 
-#include "config.hpp"
 #include "Bucket.hpp"
 #include "Wheel.hpp"
+#include "types.hpp"
 
 #include <stdint.h>
 #include <memory>

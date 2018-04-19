@@ -9,11 +9,11 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/config.hpp>
+#include <primesieve/Bucket.hpp>
 #include <primesieve/EratMedium.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/Bucket.hpp>
+#include <primesieve/types.hpp>
 #include <primesieve/Wheel.hpp>
 
 #include <stdint.h>

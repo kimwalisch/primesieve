@@ -10,12 +10,11 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/config.hpp>
+#include <primesieve.hpp>
 #include <primesieve/CpuInfo.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelSieve.hpp>
-#include <primesieve.hpp>
 
 #include <stdint.h>
 #include <cstddef>

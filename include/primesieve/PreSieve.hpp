@@ -10,7 +10,7 @@
 #ifndef PRESIEVE_HPP
 #define PRESIEVE_HPP
 
-#include "config.hpp"
+#include "types.hpp"
 
 #include <stdint.h>
 #include <memory>

@@ -9,13 +9,13 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/config.hpp>
+#include <primesieve/bits.hpp>
+#include <primesieve/Bucket.hpp>
 #include <primesieve/CpuInfo.hpp>
 #include <primesieve/EratSmall.hpp>
-#include <primesieve/bits.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
-#include <primesieve/Bucket.hpp>
+#include <primesieve/types.hpp>
 #include <primesieve/Wheel.hpp>
 
 #include <stdint.h>

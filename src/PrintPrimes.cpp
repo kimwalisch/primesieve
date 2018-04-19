@@ -11,7 +11,6 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/config.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/PreSieve.hpp>
@@ -19,6 +18,7 @@
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/Erat.hpp>
 #include <primesieve/SievingPrimes.hpp>
+#include <primesieve/types.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -28,9 +28,6 @@
 using namespace std;
 
 namespace primesieve {
-
-/// popcount.cpp
-uint64_t popcount(const uint64_t* array, uint64_t size);
 
 const uint64_t PrintPrimes::bitmasks_[6][5] =
 {

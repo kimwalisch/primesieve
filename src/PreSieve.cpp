@@ -9,10 +9,10 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/config.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/EratSmall.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/types.hpp>
 
 #include <stdint.h>
 #include <algorithm>

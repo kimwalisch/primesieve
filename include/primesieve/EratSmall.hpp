@@ -10,9 +10,9 @@
 #ifndef ERATSMALL_HPP
 #define ERATSMALL_HPP
 
-#include "config.hpp"
 #include "Bucket.hpp"
 #include "Wheel.hpp"
+#include "types.hpp"
 
 #include <stdint.h>
 #include <vector>

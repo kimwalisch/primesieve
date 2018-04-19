@@ -1,5 +1,5 @@
 ///
-/// @file   Erat.hpp
+/// @file  Erat.hpp
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -10,10 +10,10 @@
 #ifndef ERAT_HPP
 #define ERAT_HPP
 
-#include "config.hpp"
 #include "EratSmall.hpp"
 #include "EratMedium.hpp"
 #include "EratBig.hpp"
+#include "types.hpp"
 
 #include <stdint.h>
 #include <array>
