@@ -13,7 +13,7 @@ env:
   global:
     - CXXFLAGS="-O3 -g -DDEBUG -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
     - CFLAGS="-O3 -g -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
-    - SANITIZER_FLAGS="-fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fno-omit-frame-pointer"
+    - SANITIZER_FLAGS="-O1 -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fno-omit-frame-pointer"
 
 before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
@@ -44,7 +44,7 @@ script:
   # 3) Build using ninja
   - mkdir build
   - cd build
-  - if [ "$CXX" = "g++" ]; then cmake -GNinja -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
+  - if [ "$CXX" = "g++" ]; then cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
   - if [ "$CXX" = "clang++" ]; then cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
   - ninja -v
   - ninja doc >/dev/null
