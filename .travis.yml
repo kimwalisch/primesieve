@@ -42,10 +42,11 @@ script:
   - make -j4
   - cd ../..
   # 3) Build using ninja
+  - sed -i 's#if(HELP2MAN)#if(DISABLE_HELP2MAN)#g' CMakeLists.txt
   - mkdir build
   - cd build
   - if [ "$CXX" = "g++" ]; then cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
-  - if [ "$CXX" = "clang++" ]; then sudo rm $(which help2man); make -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
+  - if [ "$CXX" = "clang++" ]; then cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
   - ninja -v
   - ninja doc >/dev/null
   # 4) Run integration tests
