@@ -11,9 +11,9 @@ compiler:
 
 env:
   global:
-    - CXXFLAGS="-O3 -g -DDEBUG -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
-    - CFLAGS="-O3 -g -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
-    - LDFLAGS="-fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all"
+    - CXXFLAGS="-O3 -g -DDEBUG -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
+    - CFLAGS="-O3 -g -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
+    - SANITIZER_FLAGS="-fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fno-omit-frame-pointer"
 
 before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
@@ -30,7 +30,7 @@ script:
   # 1) Build using GNU make
   - mkdir build
   - cd build
-  - cmake -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" -DCMAKE_SHARED_LINKER_FLAGS="$LDFLAGS" -DCMAKE_STATIC_LINKER_FLAGS="$LDFLAGS" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON -DCMAKE_INSTALL_PREFIX=$(pwd) ..
+  - cmake -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON -DCMAKE_INSTALL_PREFIX=$(pwd) ..
   - make -j4
   - make doc >/dev/null
   - make install
@@ -44,7 +44,7 @@ script:
   # 3) Build using ninja
   - mkdir build
   - cd build
-  - cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" -DCMAKE_SHARED_LINKER_FLAGS="$LDFLAGS" -DCMAKE_STATIC_LINKER_FLAGS="$LDFLAGS" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..
+  - cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..
   - ninja
   - ninja doc >/dev/null
   # 4) Run integration tests
