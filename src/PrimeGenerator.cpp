@@ -22,7 +22,6 @@
 #include <stdint.h>
 #include <algorithm>
 #include <array>
-#include <iterator>
 #include <vector>
 
 using namespace std;
@@ -128,9 +127,9 @@ void PrimeGenerator::init(vector<uint64_t>& primes)
     size_t a = getStartIdx();
     size_t b = getStopIdx();
 
-    copy(&smallPrimes[a],
-         &smallPrimes[b],
-         back_inserter(primes));
+    primes.insert(primes.end(),
+             smallPrimes.begin() + a,
+             smallPrimes.begin() + b);
   }
 
   init();
@@ -142,12 +141,11 @@ void PrimeGenerator::init(vector<uint64_t>& primes, size_t* size)
   {
     size_t a = getStartIdx();
     size_t b = getStopIdx();
-
     *size = b - a;
 
-    copy(&smallPrimes[a],
-         &smallPrimes[b],
-         &primes[0]);
+    copy(smallPrimes.begin() + a,
+         smallPrimes.begin() + b,
+         primes.begin());
   }
 
   init();
@@ -188,9 +186,10 @@ bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes, size_t* size)
 
 void PrimeGenerator::sieveSegment()
 {
+  uint64_t sqrtHigh = isqrt(segmentHigh_);
+
   sieveIdx_ = 0;
   low_ = segmentLow_;
-  uint64_t sqrtHigh = isqrt(segmentHigh_);
 
   if (!prime_)
     prime_ = sievingPrimes_.next();
