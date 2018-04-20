@@ -20,7 +20,7 @@ before_install:
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get install -y gcc-5 g++-5 make cmake ninja-build cppcheck doxygen doxygen-latex graphviz libqt4-dev qt4-qmake valgrind
+  - sudo apt-get install -y gcc-5 g++-5 make cmake ninja-build cppcheck doxygen doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind
   - sudo rm -f /usr/bin/gcc
   - sudo rm -f /usr/bin/g++
   - sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
@@ -45,9 +45,8 @@ script:
   - mkdir build
   - cd build
   - if [ "$CXX" = "g++" ]; then cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
-  - if [ "$CXX" = "clang++" ]; then cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
+  - if [ "$CXX" = "clang++" ]; then sudo rm $(which help2man); make -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
   - ninja -v
-  - ./primesieve --help
   - ninja doc >/dev/null
   # 4) Run integration tests
   - ninja test
