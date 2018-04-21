@@ -44,21 +44,25 @@ uint64_t getPrevDist(uint64_t n, uint64_t* dist)
   double x = (double) n;
   x = max(x, 10.0);
 
+  double minDist = config::MIN_CACHE_ITERATOR;
+  double maxDist = config::MAX_CACHE_ITERATOR;
   double logx = log(x);
-  double cacheSize = config::MIN_CACHE_ITERATOR;
-  double maxCacheSize = config::MAX_CACHE_ITERATOR;
-  double cacheDist = (cacheSize / sizeof(uint64_t)) * logx;
-  double maxCacheDist = (maxCacheSize / sizeof(uint64_t)) * logx;
 
-  if (*dist < cacheDist)
+  minDist *= logx;
+  maxDist *= logx;
+
+  minDist /= sizeof(uint64_t);
+  maxDist /= sizeof(uint64_t);
+
+  if (*dist < minDist)
   {
-    cacheDist = (double) *dist;
+    minDist = (double) *dist;
     *dist *= 4;
   }
 
-  double sqrtx = sqrt(x);
-  double newDist = max(cacheDist, sqrtx);
-  newDist = min(newDist, maxCacheDist);
+  double defaultDist = sqrt(x) * 2;
+  double newDist = max(minDist, defaultDist);
+  newDist = min(newDist, maxDist);
 
   return (uint64_t) newDist;
 }
