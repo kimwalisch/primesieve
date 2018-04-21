@@ -15,13 +15,12 @@
 #include "primesieve_error.hpp"
 
 #include <stdint.h>
-#include <vector>
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <vector>
 
 namespace primesieve {
-
-uint64_t get_max_stop();
 
 /// primeCountApprox(x) >= pi(x)
 inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
@@ -73,10 +72,15 @@ inline void store_n_primes(uint64_t n,
   if (start > 0)
     start--;
 
-  uint64_t stop = get_max_stop();
   std::size_t size = primes.size() + (std::size_t) n;
   primes.reserve(size);
   using V = typename T::value_type;
+
+  double x = (double) start;
+  x = std::max(10.0, x);
+  uint64_t logx = (uint64_t) std::log(x);
+  uint64_t dist = n * (logx + 1);
+  uint64_t stop = start + dist;
 
   primesieve::iterator it(start, stop);
   uint64_t prime = it.next_prime();
