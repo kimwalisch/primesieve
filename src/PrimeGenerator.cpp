@@ -205,22 +205,17 @@ void PrimeGenerator::sieveSegment()
 
 void PrimeGenerator::fill(vector<uint64_t>& primes)
 {
-  while (true)
+  while (sieveSegment(primes))
   {
-    if (sieveIdx_ >= sieveSize_)
-      if (!sieveSegment(primes))
-        return;
-
-    auto bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
-    sieveIdx_ += 8;
-
-    while (bits)
+    for (; sieveIdx_ < sieveSize_; sieveIdx_ += 8)
     {
-      auto prime = nextPrime(&bits, low_);
-      primes.push_back(prime);
-    }
+      uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
 
-    low_ += 8 * 30;
+      while (bits)
+        primes.push_back(nextPrime(&bits, low_));
+
+      low_ += 8 * 30;
+    }
   }
 }
 
