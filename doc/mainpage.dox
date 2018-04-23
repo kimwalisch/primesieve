@@ -8,23 +8,23 @@
 /// requirement is about pi(sqrt(n)) * 8 bytes per thread, its
 /// run-time complexity is O(n log log n) operations. The recommended
 /// way to get started is to first have a look at a few C or C++
-/// example programs. The most common use cases are storing primes in
-/// a vector (or array) and iterating over primes using next_prime()
-/// or prev_prime().
+/// example programs. The most common use cases are iterating over
+/// primes using next_prime() or prev_prime() and storing primes in
+/// a vector (or array).
 ///
 /// For more information please visit https://primesieve.org.
 ///
 /// @section CPP_API C++ API
 ///
 /// @li @link primesieve.hpp primesieve.hpp @endlink - primesieve C++ header.
-/// @li @link store_primes_in_vector.cpp store_primes_in_vector.cpp @endlink - Example that shows how to store primes in a std::vector.
 /// @li @link primesieve_iterator.cpp primesieve_iterator.cpp @endlink - Example that shows how to iterate over primes using primesieve::iterator.
+/// @li @link store_primes_in_vector.cpp store_primes_in_vector.cpp @endlink - Example that shows how to store primes in a std::vector.
 /// @li @link count_primes.cpp count_primes.cpp @endlink - Example that shows how to count primes.
 ///
 /// @section C_API C API
 ///
 /// @li @link primesieve.h primesieve.h @endlink - primesieve C header.
-/// @li @link store_primes_in_array.c store_primes_in_array.c @endlink - Example that shows how to store primes in an array.
 /// @li @link primesieve_iterator.c primesieve_iterator.c @endlink - Example that shows how to iterate over primes using @link iterator.h primesieve_iterator @endlink.
+/// @li @link store_primes_in_array.c store_primes_in_array.c @endlink - Example that shows how to store primes in an array.
 /// @li @link count_primes.c count_primes.c @endlink - Example that shows how to count primes.
 ///
