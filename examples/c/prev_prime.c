@@ -19,5 +19,6 @@ int main()
     printf("%" PRIu64 "\n", prime);
 
   primesieve_free_iterator(&it);
+
   return 0;
 }
