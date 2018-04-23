@@ -9,6 +9,7 @@
 int main(int, char** argv)
 {
   uint64_t n = 1000;
+
   if (argv[1])
     n = std::atol(argv[1]);
 

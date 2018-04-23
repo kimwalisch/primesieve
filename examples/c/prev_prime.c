@@ -14,7 +14,7 @@ int main()
   primesieve_skipto(&it, 2000, 1000);
   uint64_t prime;
 
-  /* iterate over the primes from 2000 to 1000 */
+  /* iterate over primes from 2000 to 1000 */
   while ((prime = primesieve_prev_prime(&it)) >= 1000)
     printf("%" PRIu64 "\n", prime);
 
