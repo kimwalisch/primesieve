@@ -10,7 +10,7 @@
 /// way to get started is to first have a look at a few C or C++
 /// example programs. The most common use cases are iterating over
 /// primes using next_prime() or prev_prime() and storing primes in
-/// a vector (or array).
+/// a vector or an array.
 ///
 /// For more information please visit https://primesieve.org.
 ///
