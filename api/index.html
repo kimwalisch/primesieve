@@ -72,22 +72,22 @@ $(function() {
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="About"></a>
 About</h1>
-<p>primesieve is a C/C++ library for fast prime number generation. It generates the primes below 10^9 in just 0.2 seconds on a single core of an Intel Core i7-6700 3.4GHz CPU. primesieve can generate primes and prime k-tuplets up to 2^64. primesieve's memory requirement is about pi(sqrt(n)) * 8 bytes per thread, its run-time complexity is O(n log log n) operations. The recommended way to get started is to first have a look at a few C or C++ example programs. The most common use cases are storing primes in a vector (or array) and iterating over primes using next_prime() or prev_prime().</p>
+<p>primesieve is a C/C++ library for fast prime number generation. It generates the primes below 10^9 in just 0.2 seconds on a single core of an Intel Core i7-6700 3.4GHz CPU. primesieve can generate primes and prime k-tuplets up to 2^64. primesieve's memory requirement is about pi(sqrt(n)) * 8 bytes per thread, its run-time complexity is O(n log log n) operations. The recommended way to get started is to first have a look at a few C or C++ example programs. The most common use cases are iterating over primes using next_prime() or prev_prime() and storing primes in a vector or an array.</p>
 <p>For more information please visit <a href="https://primesieve.org">https://primesieve.org</a>.</p>
 <h1><a class="anchor" id="CPP_API"></a>
 C++ API</h1>
 <ul>
 <li><a class="el" href="primesieve_8hpp.html">primesieve.hpp </a> - primesieve C++ header. </li>
-<li><a class="el" href="store_primes_in_vector_8cpp-example.html">store_primes_in_vector.cpp </a> - Example that shows how to store primes in a std::vector. </li>
 <li><a class="el" href="primesieve_iterator_8cpp-example.html">primesieve_iterator.cpp </a> - Example that shows how to iterate over primes using <a class="el" href="classprimesieve_1_1iterator.html" title="primesieve::iterator allows to easily iterate over primes both forwards and backwards. ">primesieve::iterator</a>. </li>
+<li><a class="el" href="store_primes_in_vector_8cpp-example.html">store_primes_in_vector.cpp </a> - Example that shows how to store primes in a std::vector. </li>
 <li><a class="el" href="count_primes_8cpp-example.html">count_primes.cpp </a> - Example that shows how to count primes.</li>
 </ul>
 <h1><a class="anchor" id="C_API"></a>
 C API</h1>
 <ul>
 <li><a class="el" href="primesieve_8h.html">primesieve.h </a> - primesieve C header. </li>
-<li><a class="el" href="store_primes_in_array_8c-example.html">store_primes_in_array.c </a> - Example that shows how to store primes in an array. </li>
 <li><a class="el" href="primesieve_iterator_8c-example.html">primesieve_iterator.c </a> - Example that shows how to iterate over primes using <a class="el" href="iterator_8h.html">primesieve_iterator </a>. </li>
+<li><a class="el" href="store_primes_in_array_8c-example.html">store_primes_in_array.c </a> - Example that shows how to store primes in an array. </li>
 <li><a class="el" href="count_primes_8c-example.html">count_primes.c </a> - Example that shows how to count primes. </li>
 </ul>
 </div></div><!-- contents -->
