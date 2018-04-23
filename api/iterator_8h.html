@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">primesieve
-   &#160;<span id="projectnumber">6.4</span>
+   &#160;<span id="projectnumber">7.0</span>
    </div>
   </td>
  </tr>
@@ -108,23 +108,52 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="iter
 <tr class="memdesc:ad224faa890e078912d276caa058c5092"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free all memory. <br /></td></tr>
 <tr class="separator:ad224faa890e078912d276caa058c5092"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a051ce380dfa56a9cfd6e6c1b6b925c9b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="iterator_8h.html#a051ce380dfa56a9cfd6e6c1b6b925c9b">primesieve_skipto</a> (<a class="el" href="structprimesieve__iterator.html">primesieve_iterator</a> *it, uint64_t start, uint64_t stop_hint)</td></tr>
-<tr class="memdesc:a051ce380dfa56a9cfd6e6c1b6b925c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the primesieve iterator to start.  <a href="#a051ce380dfa56a9cfd6e6c1b6b925c9b">More...</a><br /></td></tr>
+<tr class="memdesc:a051ce380dfa56a9cfd6e6c1b6b925c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the primesieve iterator to start.  <a href="#a051ce380dfa56a9cfd6e6c1b6b925c9b">More...</a><br /></td></tr>
 <tr class="separator:a051ce380dfa56a9cfd6e6c1b6b925c9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2505c348a432d9e1d7ce2ef823f096e7"><td class="memItemLeft" align="right" valign="top"><a id="a2505c348a432d9e1d7ce2ef823f096e7"></a>
-static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="iterator_8h.html#a2505c348a432d9e1d7ce2ef823f096e7">primesieve_next_prime</a> (<a class="el" href="structprimesieve__iterator.html">primesieve_iterator</a> *it)</td></tr>
-<tr class="memdesc:a2505c348a432d9e1d7ce2ef823f096e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next prime. <br /></td></tr>
+<tr class="memitem:a2505c348a432d9e1d7ce2ef823f096e7"><td class="memItemLeft" align="right" valign="top">static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="iterator_8h.html#a2505c348a432d9e1d7ce2ef823f096e7">primesieve_next_prime</a> (<a class="el" href="structprimesieve__iterator.html">primesieve_iterator</a> *it)</td></tr>
+<tr class="memdesc:a2505c348a432d9e1d7ce2ef823f096e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next prime.  <a href="#a2505c348a432d9e1d7ce2ef823f096e7">More...</a><br /></td></tr>
 <tr class="separator:a2505c348a432d9e1d7ce2ef823f096e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6af87fc5f89b298db6aa9b05a74b741e"><td class="memItemLeft" align="right" valign="top">static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="iterator_8h.html#a6af87fc5f89b298db6aa9b05a74b741e">primesieve_prev_prime</a> (<a class="el" href="structprimesieve__iterator.html">primesieve_iterator</a> *it)</td></tr>
-<tr class="memdesc:a6af87fc5f89b298db6aa9b05a74b741e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the previous prime, or 0 if input &lt;= 2 e.g.  <a href="#a6af87fc5f89b298db6aa9b05a74b741e">More...</a><br /></td></tr>
+<tr class="memdesc:a6af87fc5f89b298db6aa9b05a74b741e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the previous prime.  <a href="#a6af87fc5f89b298db6aa9b05a74b741e">More...</a><br /></td></tr>
 <tr class="separator:a6af87fc5f89b298db6aa9b05a74b741e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="structprimesieve__iterator.html" title="C prime iterator, please refer to iterator.h  for more information. ">primesieve_iterator</a> allows to easily iterate over primes both forwards and backwards. </p>
-<p>Generating the first prime has a complexity of O(r log log r) operations with r = n^0.5, after that any additional prime is generated in amortized O(log n log log n) operations. The memory usage is about pi(n^0.5) * 16 bytes.</p>
-<p>The <a class="el" href="primesieve_iterator_8c-example.html">primesieve_iterator.c </a> example shows how to use <a class="el" href="structprimesieve__iterator.html" title="C prime iterator, please refer to iterator.h  for more information. ">primesieve_iterator</a>. If any error occurs errno is set to EDOM and <a class="el" href="iterator_8h.html#a2505c348a432d9e1d7ce2ef823f096e7" title="Get the next prime. ">primesieve_next_prime()</a> and <a class="el" href="iterator_8h.html#a6af87fc5f89b298db6aa9b05a74b741e" title="Get the previous prime, or 0 if input &lt;= 2 e.g. ">primesieve_prev_prime()</a> return PRIMESIEVE_ERROR.</p>
-<p>Copyright (C) 2017 Kim Walisch, <a href="#" onclick="location.href='mai'+'lto:'+'kim'+'.w'+'ali'+'sc'+'h@g'+'ma'+'il.'+'co'+'m'; return false;">kim.w<span style="display: none;">.nosp@m.</span>alis<span style="display: none;">.nosp@m.</span>ch@gm<span style="display: none;">.nosp@m.</span>ail.<span style="display: none;">.nosp@m.</span>com</a></p>
+<p>Generating the first prime has a complexity of O(r log log r) operations with r = n^0.5, after that any additional prime is generated in amortized O(log n log log n) operations. The memory usage is about PrimePi(n^0.5) * 8 bytes.</p>
+<p>The <a class="el" href="primesieve_iterator_8c-example.html">primesieve_iterator.c </a> example shows how to use <a class="el" href="structprimesieve__iterator.html" title="C prime iterator, please refer to iterator.h  for more information. ">primesieve_iterator</a>. If any error occurs <a class="el" href="iterator_8h.html#a2505c348a432d9e1d7ce2ef823f096e7" title="Get the next prime. ">primesieve_next_prime()</a> and <a class="el" href="iterator_8h.html#a6af87fc5f89b298db6aa9b05a74b741e" title="Get the previous prime. ">primesieve_prev_prime()</a> return PRIMESIEVE_ERROR. Furthermore primesieve_iterator.is_error is initialized to 0 and set to 1 if any error occurs.</p>
+<p>Copyright (C) 2018 Kim Walisch, <a href="#" onclick="location.href='mai'+'lto:'+'kim'+'.w'+'ali'+'sc'+'h@g'+'ma'+'il.'+'co'+'m'; return false;">kim.w<span style="display: none;">.nosp@m.</span>alis<span style="display: none;">.nosp@m.</span>ch@gm<span style="display: none;">.nosp@m.</span>ail.<span style="display: none;">.nosp@m.</span>com</a></p>
 <p>This file is distributed under the BSD License. See the COPYING file in the top level directory. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a2505c348a432d9e1d7ce2ef823f096e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2505c348a432d9e1d7ce2ef823f096e7">&#9670;&nbsp;</a></span>primesieve_next_prime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static uint64_t primesieve_next_prime </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structprimesieve__iterator.html">primesieve_iterator</a> *&#160;</td>
+          <td class="paramname"><em>it</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the next prime. </p>
+<p>Returns UINT64_MAX if next prime &gt; 2^64. </p>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="primesieve_iterator_8c-example.html#a2">primesieve_iterator.c</a>.</dd>
+</dl>
+</div>
+</div>
 <a id="a6af87fc5f89b298db6aa9b05a74b741e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6af87fc5f89b298db6aa9b05a74b741e">&#9670;&nbsp;</a></span>primesieve_prev_prime()</h2>
 
@@ -149,8 +178,8 @@ static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el"
 </table>
 </div><div class="memdoc">
 
-<p>Get the previous prime, or 0 if input &lt;= 2 e.g. </p>
-<p>prev_prime(2) = 0. </p>
+<p>Get the previous prime. </p>
+<p>primesieve_prev_prime(n) = 0 if n &lt;= 2. </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="prev_prime_8c-example.html#a3">prev_prime.c</a>.</dd>
 </dl>
 </div>
@@ -187,7 +216,7 @@ static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el"
       </table>
 </div><div class="memdoc">
 
-<p>Set the primesieve iterator to start. </p>
+<p>Reset the primesieve iterator to start. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">start</td><td>Generate primes &gt; start (or &lt; start). </td></tr>

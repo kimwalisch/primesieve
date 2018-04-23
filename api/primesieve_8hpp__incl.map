@@ -1,4 +1,4 @@
 <map id="primesieve.hpp" name="primesieve.hpp">
-<area shape="rect" id="node3" href="$primesieve__error_8hpp.html" title="The primesieve_error class is used for all exceptions within primesieve. " alt="" coords="211,80,363,121"/>
-<area shape="rect" id="node6" href="$iterator_8hpp.html" title="The iterator class allows to easily iterate (forward and backward) over prime numbers. " alt="" coords="488,87,643,114"/>
+<area shape="rect" id="node2" href="$iterator_8hpp.html" title="The iterator class allows to easily iterate (forwards and backwards) over prime numbers. " alt="" coords="105,87,259,114"/>
+<area shape="rect" id="node7" href="$primesieve__error_8hpp.html" title="The primesieve_error class is used for all exceptions within primesieve. " alt="" coords="334,80,486,121"/>
 </map>
