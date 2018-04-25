@@ -53,10 +53,17 @@ script:
   - ninja test
   - test/cpu_info
   - test/atomic
+  # 5) Test printing primes and prime k-tuplets
+  - if [ "$(./primesieve 1e8 -p | md5sum | cut -f1 -d' ')" != "1b83b0d4857a4bba7971bcfc0da907c4" ]; then exit 1; fi
+  - if [ "$(./primesieve 1e8 -p2 | md5sum | cut -f1 -d' ')" != "a5f2ab0c0da4aa8b1d07ee97a30a4f56" ]; then exit 1; fi
+  - if [ "$(./primesieve 1e8 -p3 | md5sum | cut -f1 -d' ')" != "4167bc8f5e2d234cc22429acb33be538" ]; then exit 1; fi
+  - if [ "$(./primesieve 1e8 -p4 | md5sum | cut -f1 -d' ')" != "8a2954fb70c5943e38070b07f69ffb2a" ]; then exit 1; fi
+  - if [ "$(./primesieve 1e8 -p5 | md5sum | cut -f1 -d' ')" != "7e77159c071d0fb67cb2157331be3e34" ]; then exit 1; fi
+  - if [ "$(./primesieve 1e8 -p6 | md5sum | cut -f1 -d' ')" != "028ead7ba3cbcc15809ca06481fc1bac" ]; then exit 1; fi
+  # 6) Test using valgrind
   - cd ..
-  # 5) Test using valgrind
   - $CXX -Iinclude -O2 -std=c++11 -g src/*.cpp examples/cpp/nth_prime.cpp -o nth_prime -lpthread
   - valgrind --error-exitcode=1 ./nth_prime 500000000
-  # 6) Test using cppcheck
+  # 7) Test using cppcheck
   - rm -rf build
   - cppcheck . -q --error-exitcode=1 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp -itest/next_prime1.cpp -itest/prev_prime1.cpp
