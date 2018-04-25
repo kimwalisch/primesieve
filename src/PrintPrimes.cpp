@@ -86,6 +86,7 @@ void PrintPrimes::sieve()
 
   while (hasNextSegment())
   {
+    low_ = segmentLow_;
     uint64_t sqrtHigh = isqrt(segmentHigh_);
 
     for (; prime <= sqrtHigh; prime = sievingPrimes.next())
@@ -144,7 +145,7 @@ void PrintPrimes::countkTuplets()
 void PrintPrimes::printPrimes() const
 {
   uint64_t i = 0;
-  uint64_t low = segmentLow_;
+  uint64_t low = low_;
 
   while (i < sieveSize_)
   {
@@ -167,10 +168,10 @@ void PrintPrimes::printPrimes() const
 /// Print prime k-tuplets to stdout
 void PrintPrimes::printkTuplets() const
 {
+  ostringstream kTuplets;
   // i = 1 twins, i = 2 triplets, ...
   uint_t i = 1;
-  uint64_t low = segmentLow_;
-  ostringstream kTuplets;
+  uint64_t low = low_;
 
   for (; !ps_.isPrint(i); i++);
 

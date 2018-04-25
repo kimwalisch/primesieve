@@ -34,6 +34,7 @@ public:
 private:
   enum { END = 0xff + 1 };
   static const uint64_t bitmasks_[6][5];
+  uint64_t low_ = 0;
   /// Count lookup tables for prime k-tuplets
   std::vector<byte_t> kCounts_[6];
   /// Reference to the associated PrimeSieve object
