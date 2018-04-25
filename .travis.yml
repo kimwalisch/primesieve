@@ -34,26 +34,7 @@ script:
   - make -j4 VERBOSE=1
   - make doc >/dev/null
   - make install
-  - cd ..
-  - rm -rf build
-  # 2) Build primesieve GUI app
-  - cd src/gui
-  - qmake QMAKE_CXX=$CXX QMAKE_CC=$CC
-  - make -j4
-  - cd ../..
-  # 3) Build using ninja
-  - sed -i 's#if(HELP2MAN)#if(DISABLE_HELP2MAN)#g' CMakeLists.txt
-  - mkdir build
-  - cd build
-  - if [ "$CXX" = "g++" ]; then cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
-  - if [ "$CXX" = "clang++" ]; then cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
-  - ninja -v
-  - ninja doc >/dev/null
-  # 4) Run integration tests
-  - ninja test
-  - test/cpu_info
-  - test/atomic
-  # 5) Test printing primes and prime k-tuplets
+  # 2) Test printing primes and prime k-tuplets
   - if [ "$(./primesieve 1e8 -p | md5sum | cut -f1 -d' ')" != "4e2b0027288a27e9c99699364877c9db" ]; then exit 1; fi
   - if [ "$(./primesieve 1e8 -p2 | md5sum | cut -f1 -d' ')" != "5076d235d5b03389034ec107227eab98" ]; then exit 1; fi
   - if [ "$(./primesieve 1e8 -p3 | md5sum | cut -f1 -d' ')" != "1b40d7e67868ccc857df11c3e0f7e0f5" ]; then exit 1; fi
@@ -66,8 +47,27 @@ script:
   - if [ "$(./primesieve 1e10 -d1e8 -p4 | md5sum | cut -f1 -d' ')" != "c2b0818499f77aa35681db3826caf3f6" ]; then exit 1; fi
   - if [ "$(./primesieve 1e10 -d1e8 -p5 | md5sum | cut -f1 -d' ')" != "11b50e4f75899891a62465f6d68fb76e" ]; then exit 1; fi
   - if [ "$(./primesieve 1e10 -d1e8 -p6 | md5sum | cut -f1 -d' ')" != "5a0bc83fdef0bb116d60f356adfde52f" ]; then exit 1; fi
-  # 6) Test using valgrind
   - cd ..
+  - rm -rf build
+  # 3) Build primesieve GUI app
+  - cd src/gui
+  - qmake QMAKE_CXX=$CXX QMAKE_CC=$CC
+  - make -j4
+  - cd ../..
+  # 4) Build using ninja
+  - sed -i 's#if(HELP2MAN)#if(DISABLE_HELP2MAN)#g' CMakeLists.txt
+  - mkdir build
+  - cd build
+  - if [ "$CXX" = "g++" ]; then cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
+  - if [ "$CXX" = "clang++" ]; then cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
+  - ninja -v
+  - ninja doc >/dev/null
+  # 5) Run integration tests
+  - ninja test
+  - test/cpu_info
+  - test/atomic
+  - cd ..
+  # 6) Test using valgrind
   - $CXX -Iinclude -O2 -std=c++11 -g src/*.cpp examples/cpp/nth_prime.cpp -o nth_prime -lpthread
   - valgrind --error-exitcode=1 ./nth_prime 500000000
   # 7) Test using cppcheck
