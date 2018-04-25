@@ -1,8 +1,6 @@
 Changes in version 7.0, 25/04/2018
 ==================================
 
-Unreleased, work in progress.
-
 This is a major new release, the API is backwards compatible but the
 ABI (Application binary interface) is not backwards compatible.
 
