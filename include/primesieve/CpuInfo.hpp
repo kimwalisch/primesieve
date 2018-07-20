@@ -25,10 +25,12 @@ public:
   bool privateL2Cache() const;
   std::string getError() const;
   std::size_t l1CacheSize() const;
+  std::size_t smtThreads() const;
   std::size_t l2CacheSize() const;
 
 private:
   std::size_t l1CacheSize_;
+  std::size_t smtThreads_;
   std::size_t l2CacheSize_;
   bool privateL2Cache_;
   std::string error_;

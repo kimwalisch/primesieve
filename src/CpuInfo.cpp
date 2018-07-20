@@ -93,6 +93,7 @@ namespace primesieve {
 
 CpuInfo::CpuInfo()
   : l1CacheSize_(0),
+    smtThreads_(1),
     l2CacheSize_(0),
     privateL2Cache_(false)
 {
@@ -109,6 +110,11 @@ CpuInfo::CpuInfo()
 size_t CpuInfo::l1CacheSize() const
 {
   return l1CacheSize_;
+}
+
+size_t CpuInfo::smtThreads() const
+{
+  return smtThreads_;
 }
 
 size_t CpuInfo::l2CacheSize() const
@@ -318,6 +324,18 @@ void CpuInfo::init()
          type == "Unified"))
     {
       l1CacheSize_ = getValue(cacheSize);
+      threadSiblingsList = getString(threadSiblingsList);
+      if (!threadSiblingsList.empty())
+      {
+        unsigned int first, last, threads;
+
+        if (sscanf(threadSiblingsList.c_str(), "%u-%u", &first, &last) == 2)
+        {
+          threads = last - first + 1;
+          if (threads > 0)
+            smtThreads_ = threads;
+        }
+      }
     }
 
     if (level == 2 &&
