@@ -54,7 +54,7 @@ uint64_t EratSmall::getL1Size(uint64_t sieveSize)
   if (!cpuInfo.hasL1Cache())
     return sieveSize;
 
-  uint64_t size = cpuInfo.l1CacheSize();
+  uint64_t size = cpuInfo.l1CacheSize() / cpuInfo.smtThreads();
   uint64_t minSize = 8 << 10;
   uint64_t maxSize = 4096 << 10;
 

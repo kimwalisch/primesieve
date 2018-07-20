@@ -49,5 +49,7 @@ int main()
       cout << "L2 cache: shared"  << endl;
   }
 
+  cout << "SMT threads per core " << cpuInfo.smtThreads() << endl;
+
   return 0;
 }
