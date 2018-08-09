@@ -12,8 +12,6 @@
 
 #include <primesieve.h>
 #include <primesieve.hpp>
-#include <primesieve/PrimeSieve.hpp>
-#include <primesieve/ParallelSieve.hpp>
 #include <primesieve/malloc_vector.hpp>
 
 #include <stdint.h>
@@ -43,12 +41,12 @@ void* store_primes(uint64_t start, uint64_t stop, size_t* size)
   }
   catch (exception&)
   {
-    errno = EDOM;
     if (size)
       *size = 0;
-  }
 
-  return NULL;
+    errno = EDOM;
+    return NULL;
+  }
 }
 
 template <typename T>
@@ -64,9 +62,8 @@ void* store_n_primes(uint64_t n, uint64_t start)
   catch (exception&)
   {
     errno = EDOM;
+    return NULL;
   }
-
-  return NULL;
 }
 
 } // namespace
@@ -90,9 +87,11 @@ void* primesieve_generate_primes(uint64_t start, uint64_t stop, size_t* size, in
     case INT64_PRIMES:     return store_primes<int64_t>(start, stop, size);
     case UINT64_PRIMES:    return store_primes<uint64_t>(start, stop, size);
   }
-  errno = EDOM;
+
   if (size)
     *size = 0;
+
+  errno = EDOM;
   return NULL;
 }
 
@@ -115,6 +114,7 @@ void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type)
     case INT64_PRIMES:     return store_n_primes<int64_t>(n, start);
     case UINT64_PRIMES:    return store_n_primes<uint64_t>(n, start);
   }
+
   errno = EDOM;
   return NULL;
 }
@@ -128,127 +128,98 @@ uint64_t primesieve_nth_prime(int64_t n, uint64_t start)
 {
   try
   {
-    ParallelSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.setNumThreads(get_num_threads());
-    return ps.nthPrime(n, start);
+    return nth_prime(n, start);
   }
   catch (exception&)
   {
     errno = EDOM;
+    return PRIMESIEVE_ERROR;
   }
-  return PRIMESIEVE_ERROR;
 }
 
 uint64_t primesieve_count_primes(uint64_t start, uint64_t stop)
 {
   try
   {
-    ParallelSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.setNumThreads(get_num_threads());
-    ps.sieve(start, stop, COUNT_PRIMES);
-    return ps.getCount(0);
+    return count_primes(start, stop);
   }
   catch (exception&)
   {
     errno = EDOM;
+    return PRIMESIEVE_ERROR;
   }
-  return PRIMESIEVE_ERROR;
 }
 
 uint64_t primesieve_count_twins(uint64_t start, uint64_t stop)
 {
   try
   {
-    ParallelSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.setNumThreads(get_num_threads());
-    ps.sieve(start, stop, COUNT_TWINS);
-    return ps.getCount(1);
+    return count_twins(start, stop);
   }
   catch (exception&)
   {
     errno = EDOM;
+    return PRIMESIEVE_ERROR;
   }
-  return PRIMESIEVE_ERROR;
 }
 
 uint64_t primesieve_count_triplets(uint64_t start, uint64_t stop)
 {
   try
   {
-    ParallelSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.setNumThreads(get_num_threads());
-    ps.sieve(start, stop, COUNT_TRIPLETS);
-    return ps.getCount(2);
+    return count_triplets(start, stop);
   }
   catch (exception&)
   {
     errno = EDOM;
+    return PRIMESIEVE_ERROR;
   }
-  return PRIMESIEVE_ERROR;
 }
 
 uint64_t primesieve_count_quadruplets(uint64_t start, uint64_t stop)
 {
   try
   {
-    ParallelSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.setNumThreads(get_num_threads());
-    ps.sieve(start, stop, COUNT_QUADRUPLETS);
-    return ps.getCount(3);
+    return count_quadruplets(start, stop);
   }
   catch (exception&)
   {
     errno = EDOM;
+    return PRIMESIEVE_ERROR;
   }
-  return PRIMESIEVE_ERROR;
 }
 
 uint64_t primesieve_count_quintuplets(uint64_t start, uint64_t stop)
 {
   try
   {
-    ParallelSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.setNumThreads(get_num_threads());
-    ps.sieve(start, stop, COUNT_QUINTUPLETS);
-    return ps.getCount(4);
+    return count_quintuplets(start, stop);
   }
   catch (exception&)
   {
     errno = EDOM;
+    return PRIMESIEVE_ERROR;
   }
-  return PRIMESIEVE_ERROR;
 }
 
 uint64_t primesieve_count_sextuplets(uint64_t start, uint64_t stop)
 {
   try
   {
-    ParallelSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.setNumThreads(get_num_threads());
-    ps.sieve(start, stop, COUNT_SEXTUPLETS);
-    return ps.getCount(5);
+    return count_sextuplets(start, stop);
   }
   catch (exception&)
   {
     errno = EDOM;
+    return PRIMESIEVE_ERROR;
   }
-  return PRIMESIEVE_ERROR;
 }
 
 void primesieve_print_primes(uint64_t start, uint64_t stop)
 {
   try
   {
-    PrimeSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.sieve(start, stop, PRINT_PRIMES);
+    print_primes(start, stop);
   }
   catch (exception&)
   {
@@ -260,9 +231,7 @@ void primesieve_print_twins(uint64_t start, uint64_t stop)
 {
   try
   {
-    PrimeSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.sieve(start, stop, PRINT_TWINS);
+    print_twins(start, stop);
   }
   catch (exception&)
   {
@@ -274,9 +243,7 @@ void primesieve_print_triplets(uint64_t start, uint64_t stop)
 {
   try
   {
-    PrimeSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.sieve(start, stop, PRINT_TRIPLETS);
+    print_triplets(start, stop);
   }
   catch (exception&)
   {
@@ -288,9 +255,7 @@ void primesieve_print_quadruplets(uint64_t start, uint64_t stop)
 {
   try
   {
-    PrimeSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.sieve(start, stop, PRINT_QUADRUPLETS);
+    print_quadruplets(start, stop);
   }
   catch (exception&)
   {
@@ -302,9 +267,7 @@ void primesieve_print_quintuplets(uint64_t start, uint64_t stop)
 {
   try
   {
-    PrimeSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.sieve(start, stop, PRINT_QUINTUPLETS);
+    print_quintuplets(start, stop);
   }
   catch (exception&)
   {
@@ -316,9 +279,7 @@ void primesieve_print_sextuplets(uint64_t start, uint64_t stop)
 {
   try
   {
-    PrimeSieve ps;
-    ps.setSieveSize(get_sieve_size());
-    ps.sieve(start, stop, PRINT_SEXTUPLETS);
+    print_sextuplets(start, stop);
   }
   catch (exception&)
   {

@@ -1,7 +1,7 @@
 ///
 /// @file  cmdoptions.hpp
 ///
-/// Copyright (C) 2016 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -16,23 +16,13 @@
 struct CmdOptions
 {
   std::deque<uint64_t> numbers;
-  int flags;
-  int sieveSize;
-  int threads;
-  bool quiet;
-  bool nthPrime;
-  bool status;
-  bool time;
-
-  CmdOptions() :
-    flags(0),
-    sieveSize(0),
-    threads(0),
-    quiet(false),
-    nthPrime(false),
-    status(true),
-    time(false)
-  { }
+  int flags = 0;
+  int sieveSize = 0;
+  int threads = 0;
+  bool quiet = false;
+  bool nthPrime = false;
+  bool status = true;
+  bool time = false;
 };
 
 CmdOptions parseOptions(int, char**);
