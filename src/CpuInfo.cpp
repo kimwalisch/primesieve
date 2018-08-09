@@ -333,11 +333,9 @@ void trimString(string& str)
   size_t pos = str.find_first_not_of(spaceChars);
   str.erase(0, pos);
 
-  reverse(str.begin(), str.end());
-  pos = str.find_first_not_of(spaceChars);
-  str.erase(0, pos);
-
-  reverse(str.begin(), str.end());
+  pos = str.find_last_not_of(spaceChars);
+  if (pos != string::npos)
+    str.erase(pos + 1);
 }
 
 /// Get the CPU name using CPUID.
@@ -475,11 +473,9 @@ void trimString(string& str)
   size_t pos = str.find_first_not_of(spaceChars);
   str.erase(0, pos);
 
-  reverse(str.begin(), str.end());
-  pos = str.find_first_not_of(spaceChars);
-  str.erase(0, pos);
-
-  reverse(str.begin(), str.end());
+  pos = str.find_last_not_of(spaceChars);
+  if (pos != string::npos)
+    str.erase(pos + 1);
 }
 
 void removeAllSpaces(string& str)
