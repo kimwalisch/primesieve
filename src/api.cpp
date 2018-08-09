@@ -179,7 +179,7 @@ int get_sieve_size()
 
   // check if each CPU core has a private L2 cache
   if (cpuInfo.hasL2Cache() &&
-      cpuInfo.privateL2Cache() &&
+      cpuInfo.hasPrivateL2Cache() &&
       l2CacheSize > l1CacheSize)
   {
     l2CacheSize = inBetween(32, l2CacheSize, 4096);
