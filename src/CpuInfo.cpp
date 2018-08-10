@@ -530,18 +530,19 @@ size_t getCacheSize(const string& filename)
     val = stoul(str);
     char lastChar = str.back();
 
-    // Last character may be:
-    // 'K' = kibibyte
-    // 'M' = mebibyte
-    // 'G' = gibibyte
-    if (lastChar == 'K')
-      val *= 1 << 10;
-    else if (lastChar == 'M')
-      val *= 1 << 20;
-    else if (lastChar == 'G')
-      val *= 1 << 30;
-    else if (!isdigit(lastChar))
-      throw primesieve_error("invalid cache size: " + str);
+    // The last character may be:
+    // 'K' = KiB (kibibyte)
+    // 'M' = MiB (mebibyte)
+    // 'G' = GiB (gibibyte)
+    switch (lastChar)
+    {
+      case 'K': val *= 1 << 10; break;
+      case 'M': val *= 1 << 20; break;
+      case 'G': val *= 1 << 30; break;
+      default:
+        if (!isdigit(lastChar))
+          throw primesieve_error("invalid cache size: " + str);
+    }
   }
 
   return val;
