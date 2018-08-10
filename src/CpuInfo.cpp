@@ -192,6 +192,10 @@ bool CpuInfo::hasPrivateL2Cache() const
 
 namespace {
 
+/// Get CPU information from the operating
+/// system kernel using sysctl.
+/// https://www.freebsd.org/cgi/man.cgi?sysctl(3)
+///
 template <typename T>
 vector<T> getSysctl(const string& name)
 {
@@ -202,9 +206,9 @@ vector<T> getSysctl(const string& name)
   {
     using primesieve::ceilDiv;
     size_t size = ceilDiv(bytes, sizeof(T));
-    vector<T> vect(size, 0);
-    if (!sysctlbyname(name.data(), vect.data(), &bytes, 0, 0))
-      res = vect;
+    vector<T> buffer(size, 0);
+    if (!sysctlbyname(name.data(), buffer.data(), &bytes, 0, 0))
+      res = buffer;
   }
 
   return res;
@@ -340,7 +344,7 @@ void trimString(string& str)
 
 /// Get the CPU name using CPUID.
 /// Example: Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz
-/// https://en.wikipedia.org/wiki/CPUID#EAX=80000002h,80000003h,80000004h:_Processor_Brand_String
+/// https://en.wikipedia.org/wiki/CPUID
 ///
 string getCpuName()
 {
@@ -589,7 +593,6 @@ bool isValid(const string& cpuName)
   return true;
 }
 
-/// Find the CPU name inside /proc/cpuinfo
 string getCpuName()
 {
   ifstream file("/proc/cpuinfo");
