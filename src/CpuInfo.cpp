@@ -454,13 +454,17 @@ void CpuInfo::init()
 
 } // namespace
 
-#else // Linux (and all unknown OSes)
+#else // Linux (and unknown OSes)
+
+#include <primesieve/primesieve_error.hpp>
 
 #include <algorithm>
 #include <cctype>
 #include <fstream>
 #include <set>
 #include <sstream>
+
+using namespace primesieve;
 
 namespace {
 
@@ -486,21 +490,8 @@ void removeAllSpaces(string& str)
   }), str.end());
 }
 
-vector<string> split(const string& str,
-                     char delimiter)
-{
-   vector<string> tokens;
-   string token;
-   istringstream tokenStream(str);
-
-   while (getline(tokenStream, token, delimiter))
-      tokens.push_back(token);
-
-   return tokens;
-}
-
-/// Returns the content of a file as a string
-/// with all whitespaces removed.
+/// Returns file content as a string
+/// with all spaces removed.
 ///
 string getString(const string& filename)
 {
@@ -520,23 +511,37 @@ string getString(const string& filename)
 
 size_t getValue(const string& filename)
 {
-  size_t val = 0;
   string str = getString(filename);
+  size_t val = 0;
+
+  if (!str.empty())
+    val = stoul(str);
+
+  return val;
+}
+
+size_t getCacheSize(const string& filename)
+{
+  string str = getString(filename);
+  size_t val = 0;
 
   if (!str.empty())
   {
     val = stoul(str);
+    char lastChar = str.back();
 
     // Last character may be:
-    // 'K' = kilobytes
-    // 'M' = megabytes
-    // 'G' = gigabytes
-    if (str.back() == 'K')
+    // 'K' = kibibyte
+    // 'M' = mebibyte
+    // 'G' = gibibyte
+    if (lastChar == 'K')
       val *= 1 << 10;
-    if (str.back() == 'M')
+    else if (lastChar == 'M')
       val *= 1 << 20;
-    if (str.back() == 'G')
+    else if (lastChar == 'G')
       val *= 1 << 30;
+    else if (!isdigit(lastChar))
+      throw primesieve_error("invalid cache size: " + str);
   }
 
   return val;
@@ -609,6 +614,19 @@ string getCpuName()
   return notFound;
 }
 
+vector<string> split(const string& str,
+                     char delimiter)
+{
+   vector<string> tokens;
+   string token;
+   istringstream tokenStream(str);
+
+   while (getline(tokenStream, token, delimiter))
+      tokens.push_back(token);
+
+   return tokens;
+}
+
 /// A thread list file contains a human
 /// readable list of thread IDs.
 /// Example: 0-8,18-26
@@ -677,9 +695,6 @@ size_t getThreads(const string& threadList,
 
 namespace primesieve {
 
-/// This works on Linux. We also use this for
-/// all unknown OSes, it might work.
-///
 void CpuInfo::init()
 {
   cpuName_ = getCpuName();
@@ -713,7 +728,7 @@ void CpuInfo::init()
         string cacheSize = path + "/size";
         string sharedCpuList = path + "/shared_cpu_list";
         string sharedCpuMap = path + "/shared_cpu_map";
-        cacheSizes_[level] = getValue(cacheSize);
+        cacheSizes_[level] = getCacheSize(cacheSize);
         cacheSharing_[level] = getThreads(sharedCpuList, sharedCpuMap);
       }
     }
