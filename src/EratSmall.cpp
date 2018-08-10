@@ -27,14 +27,14 @@ using namespace std;
 
 namespace primesieve {
 
-/// @stop:      Upper bound for sieving
-/// @l1Size:    Sieve size in bytes
-/// @maxPrime:  Sieving primes <= maxPrime
+/// @stop:     Upper bound for sieving
+/// @l1Size:   Sieve size in bytes
+/// @maxPrime: Sieving primes <= maxPrime
 ///
 void EratSmall::init(uint64_t stop, uint64_t l1Size, uint64_t maxPrime)
 {
   if (maxPrime > l1Size * 3)
-    throw primesieve_error("EratSmall: maxPrime must be <= l1Size * 3");
+    throw primesieve_error("EratSmall: maxPrime > l1Size * 3");
 
   enabled_ = true;
   maxPrime_ = maxPrime;

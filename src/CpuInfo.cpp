@@ -41,7 +41,7 @@ CpuInfo::CpuInfo() :
     // all CPU information. In case an unexpected error
     // occurs we continue without relying on CpuInfo and
     // primesieve will fallback to using default CPU settings
-    // e.g. 32 KB L1 data cache size.
+    // e.g. 32 KiB L1 data cache size.
     error_ = e.what();
   }
 }

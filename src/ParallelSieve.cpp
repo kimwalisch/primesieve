@@ -188,8 +188,8 @@ void ParallelSieve::sieve()
 }
 
 /// Print status in percent to stdout
-/// @processed:  Sum of recently processed segments
-/// @tryLock:    Do not block if tryLock = true
+/// @processed: Sum of recently processed segments
+/// @tryLock:   Do not block if tryLock = true
 ///
 bool ParallelSieve::updateStatus(uint64_t processed, bool tryLock)
 {

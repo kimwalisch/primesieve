@@ -32,9 +32,9 @@ namespace primesieve {
 /// - PreSieve multiples of primes <=  7 uses    7    bytes
 /// - PreSieve multiples of primes <= 11 uses   77    bytes
 /// - PreSieve multiples of primes <= 13 uses 1001    bytes
-/// - PreSieve multiples of primes <= 17 uses   16.62 kilobytes
-/// - PreSieve multiples of primes <= 19 uses  315.75 kilobytes
-/// - PreSieve multiples of primes <= 23 uses    7.09 megabytes
+/// - PreSieve multiples of primes <= 17 uses   17.02 kilobytes
+/// - PreSieve multiples of primes <= 19 uses  323.32 kilobytes
+/// - PreSieve multiples of primes <= 23 uses    7.44 megabytes
 ///
 class PreSieve
 {

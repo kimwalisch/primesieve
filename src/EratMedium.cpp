@@ -22,18 +22,18 @@
 
 namespace primesieve {
 
-/// @stop:       Upper bound for sieving
-/// @sieveSize:  Sieve size in bytes
-/// @maxPrime:   Sieving primes <= maxPrime
+/// @stop:      Upper bound for sieving
+/// @sieveSize: Sieve size in bytes
+/// @maxPrime:  Sieving primes <= maxPrime
 ///
 void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 {
   uint64_t maxSieveSize = 4096 << 10;
 
   if (sieveSize > maxSieveSize)
-    throw primesieve_error("EratMedium: sieveSize must be <= 4096 kilobytes");
+    throw primesieve_error("EratMedium: sieveSize > 4096 KiB");
   if (maxPrime > sieveSize * 5)
-    throw primesieve_error("EratMedium: maxPrime must be <= sieveSize * 5");
+    throw primesieve_error("EratMedium: maxPrime > sieveSize * 5");
 
   enabled_ = true;
   maxPrime_ = maxPrime;

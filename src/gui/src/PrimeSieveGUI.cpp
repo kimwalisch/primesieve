@@ -98,12 +98,12 @@ void PrimeSieveGUI::initGUI() {
   this->setWindowTitle(APPLICATION_NAME + " " + PRIMESIEVE_VERSION);
   this->createMenu(primeText_);
 
-  // fill the sieveSizeComboBox with power of 2 values <= "4096 KB"
+  // fill sieveSizeComboBox with power of 2 values <= "4096 KiB"
   for (int i = MINIMUM_SIEVE_SIZE; i <= MAXIMUM_SIEVE_SIZE; i *= 2)
-    ui->sieveSizeComboBox->addItem(QString::number(i) + " KB");
+    ui->sieveSizeComboBox->addItem(QString::number(i) + " KiB");
 
   int sieveSize = get_sieve_size();
-  this->setTo(ui->sieveSizeComboBox, QString::number(sieveSize) + " KB");
+  this->setTo(ui->sieveSizeComboBox, QString::number(sieveSize) + " KiB");
 
   maxThreads_ = ParallelSieve::getMaxThreads();
 
@@ -154,13 +154,13 @@ void PrimeSieveGUI::initConnections() {
 }
 
 /**
- * Get the sieve size in kilobytes from the sieveSizeComboBox.
+ * Get the sieve size in from the sieveSizeComboBox.
  * @post sieveSize >= 1 && sieveSize <= 4096.
  */
 int PrimeSieveGUI::getSieveSize() {
   QString sieveSize(ui->sieveSizeComboBox->currentText());
-  // remove " KB"
-  sieveSize.chop(3);
+  // remove " KiB"
+  sieveSize.chop(4);
   return sieveSize.toInt();
 }
 

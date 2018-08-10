@@ -29,15 +29,15 @@ using namespace std;
 
 namespace primesieve {
 
-/// @stop:       Upper bound for sieving
-/// @sieveSize:  Sieve size in bytes
-/// @maxPrime:   Sieving primes <= maxPrime
+/// @stop:      Upper bound for sieving
+/// @sieveSize: Sieve size in bytes
+/// @maxPrime:  Sieving primes <= maxPrime
 ///
 void EratBig::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 {
   // '>> log2SieveSize' requires power of 2 sieveSize
   if (!isPow2(sieveSize))
-    throw primesieve_error("EratBig: sieveSize must be a power of 2");
+    throw primesieve_error("EratBig: sieveSize is not a power of 2");
 
   enabled_ = true;
   maxPrime_ = maxPrime;
@@ -57,7 +57,7 @@ void EratBig::init(uint64_t sieveSize)
   uint64_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
   uint64_t size = maxSegmentCount + 1;
 
-  // EratBig uses up to 1.6 gigabytes of memory
+  // EratBig uses up to 1.6 GiB of memory
   uint64_t maxBytes = (1u << 30) * 2;
   memory_.reserve(maxBytes / config::BYTES_PER_ALLOC);
 

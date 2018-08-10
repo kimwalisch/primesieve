@@ -156,10 +156,7 @@ void PrimeSieve::addFlags(int flags)
   flags_ |= flags;
 }
 
-/// Set the size of the sieve array in kilobytes.
-/// The best sieving performance is usually achieved if the
-/// sieve size is set to the CPU's L1 or L2 cache size.
-///
+/// Set the size of the sieve array in KiB (kibibyte)
 void PrimeSieve::setSieveSize(int sieveSize)
 {
   sieveSize_ = inBetween(8, sieveSize, 4096);

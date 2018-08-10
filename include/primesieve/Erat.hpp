@@ -100,10 +100,10 @@ inline uint64_t Erat::getStop() const
   return stop_;
 }
 
-/// Sieve size in kilobytes
+/// Sieve size in KiB
 inline uint64_t Erat::getSieveSize() const
 {
-  return sieveSize_ / 1024;
+  return sieveSize_ >> 10;
 }
 
 } // namespace

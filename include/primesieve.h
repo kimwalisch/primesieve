@@ -176,18 +176,17 @@ void primesieve_print_sextuplets(uint64_t start, uint64_t stop);
  */
 uint64_t primesieve_get_max_stop();
 
-/** Get the current set sieve size in kilobytes */
+/** Get the current set sieve size in KiB */
 int primesieve_get_sieve_size();
 
 /** Get the current set number of threads */
 int primesieve_get_num_threads();
 
 /**
- * Set the sieve size in kilobytes.
+ * Set the sieve size in KiB (kibibyte).
  * The best sieving performance is achieved with a sieve size
  * of your CPU's L1 or L2 cache size (per core).
- * @param sieve_size Sieve size in kilobytes.
- * @pre   sieve_size >= 8 && <= 4096.
+ * @pre sieve_size >= 8 && <= 4096.
  */
 void primesieve_set_sieve_size(int sieve_size);
 

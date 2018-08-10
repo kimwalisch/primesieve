@@ -66,7 +66,7 @@ void sieve(CmdOptions& opt)
 
   if (!opt.quiet)
   {
-    cout << "Sieve size = " << ps.getSieveSize() << " kilobytes" << endl;
+    cout << "Sieve size = " << ps.getSieveSize() << " KiB" << endl;
     cout << "Threads = " << ps.idealNumThreads() << endl;
   }
 
@@ -99,7 +99,7 @@ void nthPrime(CmdOptions& opt)
 
   if (!opt.quiet)
   {
-    cout << "Sieve size = " << ps.getSieveSize() << " kilobytes" << endl;
+    cout << "Sieve size = " << ps.getSieveSize() << " KiB" << endl;
     cout << "Threads = " << ps.idealNumThreads() << endl;
   }
 

@@ -158,9 +158,9 @@ std::string primesieve_version()
   return PRIMESIEVE_VERSION;
 }
 
-void set_sieve_size(int kilobytes)
+void set_sieve_size(int size)
 {
-  sieve_size = inBetween(8, kilobytes, 4096);
+  sieve_size = inBetween(8, size, 4096);
   sieve_size = floorPow2(sieve_size);
 }
 
@@ -173,9 +173,9 @@ int get_sieve_size()
   size_t l1CacheSize = cpuInfo.l1CacheSize();
   size_t l2CacheSize = cpuInfo.l2CacheSize();
 
-  // convert to kilobytes
-  l1CacheSize /= 1024;
-  l2CacheSize /= 1024;
+  // convert bytes to KiB
+  l1CacheSize >>= 10;
+  l2CacheSize >>= 10;
 
   // check if each CPU core has a private L2 cache
   if (cpuInfo.hasL2Cache() &&

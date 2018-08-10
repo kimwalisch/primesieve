@@ -47,7 +47,7 @@ const QString APPLICATION_ABOUT(
     "(at your option) any later version.</p>");
 
 /**
- * Minimum sieve size in kilobytes.
+ * Minimum sieve size in KiB (kibibyte).
  * For performance reasons the minimum sieve size should not be much
  * smaller than the system's CPU L1 cache size.
  * @pre MINIMUM_SIEVE_SIZE >= 1

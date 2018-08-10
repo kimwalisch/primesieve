@@ -73,10 +73,10 @@ Erat::Erat(uint64_t start, uint64_t stop) :
 
 Erat::~Erat() { }
 
-/// @start:      Sieve primes >= start
-/// @stop:       Sieve primes <= stop
-/// @sieveSize:  Sieve size in kilobytes
-/// @preSieve:   Pre-sieve primes
+/// @start:     Sieve primes >= start
+/// @stop:      Sieve primes <= stop
+/// @sieveSize: Sieve size in KiB
+/// @preSieve:  Pre-sieve small primes
 ///
 void Erat::init(uint64_t start,
                 uint64_t stop,
@@ -87,7 +87,7 @@ void Erat::init(uint64_t start,
     return;
 
   if (start < 7)
-    throw primesieve_error("Erat: start must be >= 7");
+    throw primesieve_error("Erat: start < 7");
 
   start_ = start;
   stop_ = stop;

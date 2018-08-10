@@ -102,7 +102,7 @@ protected:
     uint64_t maxSieveSize = SievingPrime::MAX_MULTIPLEINDEX + 1;
 
     if (sieveSize > maxSieveSize)
-      throw primesieve_error("Wheel: sieveSize must be <= " + std::to_string(maxSieveSize));
+      throw primesieve_error("Wheel: sieveSize > " + std::to_string(maxSieveSize));
   }
 
   virtual ~Wheel()

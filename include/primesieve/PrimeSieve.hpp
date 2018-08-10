@@ -97,7 +97,7 @@ private:
   uint64_t toUpdate_;
   /// Status of sieve() in percent
   double percent_;
-  /// Sieve size in kilobytes
+  /// Sieve size in KiB
   int sieveSize_;
   /// Setter methods set flags e.g. COUNT_PRIMES
   int flags_;

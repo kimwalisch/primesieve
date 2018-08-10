@@ -32,7 +32,7 @@ enum {
   BUCKETSIZE = 1 << 10,
 
   /// EratBig allocates BYTES_PER_ALLOC of new memory each time
-  /// it needs more buckets. Default = 8 megabytes.
+  /// it needs more buckets.
   ///
   BYTES_PER_ALLOC = (1 << 20) * 8,
 
