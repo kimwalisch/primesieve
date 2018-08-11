@@ -486,29 +486,15 @@ void trimString(string& str)
     str.erase(pos + 1);
 }
 
-void removeAllSpaces(string& str)
-{
-  str.erase(remove_if(str.begin(), str.end(),
-    [](unsigned char c) {
-      return isspace(c);
-  }), str.end());
-}
-
-/// Returns file content as a string
-/// with all spaces removed.
-///
 string getString(const string& filename)
 {
   ifstream file(filename);
   string str;
 
+  // read the first string,
+  // stops at any space character
   if (file)
-  {
-    stringstream ss;
-    ss << file.rdbuf();
-    str = ss.str();
-    removeAllSpaces(str);
-  }
+   file >> str;
 
   return str;
 }
@@ -569,7 +555,7 @@ string getCpuName(const string& line)
     "cpu"
   };
 
-  size_t pos = line.find_first_of(':');
+  size_t pos = line.find(':');
   string cpuName;
 
   if (pos != string::npos)
@@ -621,14 +607,14 @@ string getCpuName()
 vector<string> split(const string& str,
                      char delimiter)
 {
-   vector<string> tokens;
-   string token;
-   istringstream tokenStream(str);
+  vector<string> tokens;
+  string token;
+  istringstream tokenStream(str);
 
-   while (getline(tokenStream, token, delimiter))
-      tokens.push_back(token);
+  while (getline(tokenStream, token, delimiter))
+    tokens.push_back(token);
 
-   return tokens;
+  return tokens;
 }
 
 /// A thread list file contains a human
