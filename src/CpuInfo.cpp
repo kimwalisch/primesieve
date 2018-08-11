@@ -496,12 +496,12 @@ string getString(const string& filename)
   ifstream file(filename);
   string str;
 
-  // read the first string,
+  // Read the first string,
   // stops at any space character
-  if (file)
-   file >> str;
-
-  return str;
+  if (file && (file >> str))
+    return str;
+  else
+    return {};
 }
 
 size_t getValue(const string& filename)
