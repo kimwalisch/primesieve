@@ -265,14 +265,19 @@ void CpuInfo::init()
 #include <algorithm>
 #include <iterator>
 
-#if defined(_MSC_VER)
-  #if !defined(__has_include)
-    #include <intrin.h>
-    #define MSVC_CPUID
-  #elif __has_include(<intrin.h>)
-    #include <intrin.h>
-    #define MSVC_CPUID
+// Check if compiler supports <intrin.h>
+#if defined(__has_include)
+  #if __has_include(<intrin.h>)
+    #define HAS_INTRIN_H
   #endif
+#elif defined(_MSC_VER)
+  #define HAS_INTRIN_H
+#endif
+
+// Check if compiler supports CPUID
+#if defined(HAS_INTRIN_H)
+  #include <intrin.h>
+  #define MSVC_CPUID
 #elif defined(__GNUC__) || \
       defined(__clang__)
   #define GNUC_CPUID
