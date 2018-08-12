@@ -12,13 +12,16 @@
 #include "cmdoptions.hpp"
 
 #include <primesieve/calculator.hpp>
+#include <primesieve/CpuInfo.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/primesieve_error.hpp>
 
-#include <string>
-#include <map>
 #include <cstddef>
+#include <cstdlib>
+#include <iostream>
+#include <map>
 #include <stdint.h>
+#include <string>
 
 void help();
 void version();
@@ -35,6 +38,7 @@ struct Option
   string str;
   string opt;
   string val;
+
   template <typename T>
   T getValue() const
   {
@@ -47,6 +51,7 @@ struct Option
 enum OptionID
 {
   OPTION_COUNT,
+  OPTION_CPU_INFO,
   OPTION_HELP,
   OPTION_NTHPRIME,
   OPTION_NO_STATUS,
@@ -65,6 +70,7 @@ map<string, OptionID> optionMap =
 {
   { "-c",          OPTION_COUNT },
   { "--count",     OPTION_COUNT },
+  { "--cpu-info",  OPTION_CPU_INFO },
   { "-h",          OPTION_HELP },
   { "--help",      OPTION_HELP },
   { "-n",          OPTION_NTHPRIME },
@@ -174,6 +180,79 @@ Option makeOption(const string& str)
   return opt;
 }
 
+void optionCpuInfo()
+{
+  if (cpuInfo.hasCpuName())
+    cout << cpuInfo.cpuName() << endl;
+  else
+    cout << "CPU name: unknown" << endl;
+
+  if (cpuInfo.hasCpuCores())
+    cout << "Number of cores: " << cpuInfo.cpuCores() << endl;
+  else
+    cout << "Number of cores: unknown" << endl;
+
+  if (cpuInfo.hasCpuThreads())
+    cout << "Number of threads: " << cpuInfo.cpuThreads() << endl;
+  else
+    cout << "Number of threads: unknown" << endl;
+
+  if (cpuInfo.hasThreadsPerCore())
+    cout << "Threads per core: " << cpuInfo.threadsPerCore() << endl;
+  else
+    cout << "Threads per core: unknown" << endl;
+
+  if (cpuInfo.hasL1Cache())
+    cout << "L1 cache size: " << cpuInfo.l1CacheSize() / (1 << 10) << " KiB" << endl;
+
+  if (cpuInfo.hasL2Cache())
+    cout << "L2 cache size: " << cpuInfo.l2CacheSize() / (1 << 10) << " KiB" << endl;
+
+  if (cpuInfo.hasL3Cache())
+    cout << "L3 cache size: " << cpuInfo.l3CacheSize() / (double) (1 << 20) << " MiB" << endl;
+
+  if (cpuInfo.hasL1Cache())
+  {
+    if (!cpuInfo.hasL1Sharing())
+      cout << "L1 cache sharing: unknown" << endl;
+    else
+      cout << "L1 cache sharing: " << cpuInfo.l1Sharing()
+           << ((cpuInfo.l1Sharing() > 1) ? " threads" : " thread") << endl;
+  }
+
+  if (cpuInfo.hasL2Cache())
+  {
+    if (!cpuInfo.hasL2Sharing())
+      cout << "L2 cache sharing: unknown" << endl;
+    else
+      cout << "L2 cache sharing: " << cpuInfo.l2Sharing()
+           << ((cpuInfo.l2Sharing() > 1) ? " threads" : " thread") << endl;
+  }
+
+  if (cpuInfo.hasL3Cache())
+  {
+    if (!cpuInfo.hasL3Sharing())
+      cout << "L3 cache sharing: unknown" << endl;
+    else
+      cout << "L3 cache sharing: " << cpuInfo.l3Sharing()
+           << ((cpuInfo.l3Sharing() > 1) ? " threads" : " thread") << endl;
+  }
+
+  if (!cpuInfo.hasL1Cache() &&
+      !cpuInfo.hasL2Cache() &&
+      !cpuInfo.hasL3Cache())
+  {
+    cout << "L1 cache size: unknown" << endl;
+    cout << "L2 cache size: unknown" << endl;
+    cout << "L3 cache size: unknown" << endl;
+    cout << "L1 cache sharing: unknown" << endl;
+    cout << "L2 cache sharing: unknown" << endl;
+    cout << "L3 cache sharing: unknown" << endl;
+  }
+
+  exit(0);
+}
+
 } // namespace
 
 CmdOptions parseOptions(int argc, char* argv[])
@@ -187,6 +266,7 @@ CmdOptions parseOptions(int argc, char* argv[])
     switch (optionMap[opt.opt])
     {
       case OPTION_COUNT:     optionCount(opt, opts); break;
+      case OPTION_CPU_INFO:  optionCpuInfo(); break;
       case OPTION_PRINT:     optionPrint(opt, opts); break;
       case OPTION_SIZE:      opts.sieveSize = opt.getValue<int>(); break;
       case OPTION_THREADS:   opts.threads = opt.getValue<int>(); break;
