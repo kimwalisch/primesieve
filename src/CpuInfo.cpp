@@ -417,7 +417,7 @@ string getCpuName(const string& line)
   // model name : Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz
   // Processor  : ARMv7 Processor rev 5 (v7l)
   // cpu        : POWER9 (raw), altivec supported
-  set<string> cpuLabels
+  static set<string> cpuLabels
   {
     "model name",
     "Processor",
@@ -539,6 +539,13 @@ size_t parseThreadMap(const string& filename)
   return threads;
 }
 
+/// Some information inside /sys/devices/system/cpu
+/// is available twice:
+/// 1) As a human readable list file.
+/// 2) As a map file (with binary or hexadecimal strings).
+/// But you cannot know in advance if any of these
+/// files exist, hence you have to check it.
+///
 size_t getThreads(const string& threadList,
                   const string& threadMap)
 {
