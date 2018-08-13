@@ -175,7 +175,8 @@ namespace primesieve {
 
 void CpuInfo::init()
 {
-  typedef BOOL (WINAPI *LPFN_GLPIEX)(LOGICAL_PROCESSOR_RELATIONSHIP, PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX, PDWORD);
+  typedef BOOL (WINAPI *LPFN_GLPIEX)(LOGICAL_PROCESSOR_RELATIONSHIP,
+      PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX, PDWORD);
 
   LPFN_GLPIEX glpiex = (LPFN_GLPIEX) GetProcAddress(
       GetModuleHandle(TEXT("kernel32")), "GetLogicalProcessorInformationEx");
