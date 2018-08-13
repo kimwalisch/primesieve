@@ -544,7 +544,7 @@ size_t parseThreadMap(const string& filename)
 /// 1) As a human readable list file.
 /// 2) As a map file (with binary or hexadecimal strings).
 /// But you cannot know in advance if any of these
-/// files exist, hence you have to check it.
+/// files exist, hence you need to try both.
 ///
 size_t getThreads(const string& threadList,
                   const string& threadMap)
