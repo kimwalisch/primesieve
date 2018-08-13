@@ -144,9 +144,9 @@ string getCpuName()
   // Example: Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz
   // https://en.wikipedia.org/wiki/CPUID
 
-  vector<int> vect;
   int cpuInfo[4] = { 0, 0, 0, 0 };
   cpuId(cpuInfo, 0x80000000);
+  vector<int> vect;
 
   // check if CPU name is supported
   if ((unsigned) cpuInfo[0] >= 0x80000004u)
