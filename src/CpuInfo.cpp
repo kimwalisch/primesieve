@@ -499,11 +499,11 @@ size_t parseThreadList(const string& filename)
 
   for (auto& str : tokens)
   {
-    if (str.find('-') == string::npos)
+    auto values = split(str, '-');
+    if (values.size() == 1)
       threads++;
     else
     {
-      auto values = split(str, '-');
       auto t0 = stoul(values.at(0));
       auto t1 = stoul(values.at(1));
       threads += t1 - t0 + 1;
