@@ -630,7 +630,7 @@ string CpuInfo::cpuName() const
     // On Linux we get the CPU name by parsing /proc/cpuinfo
     // which can be quite slow on PCs without fast SSD.
     // For this reason we don't initialize the CPU name at
-    // startup but instead we only retrieve it when needed.
+    // startup but instead we lazy load it when needed.
     return getCpuName();
   }
   catch (exception&)
