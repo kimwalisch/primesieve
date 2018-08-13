@@ -17,163 +17,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
-namespace primesieve {
-
-/// Singleton (initialized at startup)
-const CpuInfo cpuInfo;
-
-CpuInfo::CpuInfo() :
-  cpuCores_(0),
-  cpuThreads_(0),
-  threadsPerCore_(0),
-  cacheSizes_{0, 0, 0, 0},
-  cacheSharing_{0, 0, 0, 0}
-{
-  try
-  {
-    init();
-  }
-  catch (exception& e)
-  {
-    // We don't trust the operating system to reliably report
-    // all CPU information. In case an unexpected error
-    // occurs we continue without relying on CpuInfo and
-    // primesieve will fallback to using default CPU settings
-    // e.g. 32 KiB L1 data cache size.
-    error_ = e.what();
-  }
-}
-
-string CpuInfo::cpuName() const
-{
-  return cpuName_;
-}
-
-size_t CpuInfo::cpuCores() const
-{
-  return cpuCores_;
-}
-
-size_t CpuInfo::cpuThreads() const
-{
-  return cpuThreads_;
-}
-
-size_t CpuInfo::l1CacheSize() const
-{
-  return cacheSizes_[1];
-}
-
-size_t CpuInfo::l2CacheSize() const
-{
-  return cacheSizes_[2];
-}
-
-size_t CpuInfo::l3CacheSize() const
-{
-  return cacheSizes_[3];
-}
-
-size_t CpuInfo::l1Sharing() const
-{
-  return cacheSharing_[1];
-}
-
-size_t CpuInfo::l2Sharing() const
-{
-  return cacheSharing_[2];
-}
-
-size_t CpuInfo::l3Sharing() const
-{
-  return cacheSharing_[3];
-}
-
-size_t CpuInfo::threadsPerCore() const
-{
-  return threadsPerCore_;
-}
-
-string CpuInfo::getError() const
-{
-  return error_;
-}
-
-bool CpuInfo::hasCpuName() const
-{
-  return !cpuName_.empty();
-}
-
-bool CpuInfo::hasCpuCores() const
-{
-  return cpuCores_ >= 1 &&
-         cpuCores_ <= (1 << 20);
-}
-
-bool CpuInfo::hasCpuThreads() const
-{
-  return cpuThreads_ >= 1 &&
-         cpuThreads_ <= (1 << 20);
-}
-
-bool CpuInfo::hasL1Cache() const
-{
-  return cacheSizes_[1] >= (1 << 12) &&
-         cacheSizes_[1] <= (1 << 30);
-}
-
-bool CpuInfo::hasL2Cache() const
-{
-  uint64_t cacheSize = cacheSizes_[2];
-
-  return cacheSize >= (1 << 12) &&
-         cacheSize <= (1ull << 40);
-}
-
-bool CpuInfo::hasL3Cache() const
-{
-  uint64_t cacheSize = cacheSizes_[3];
-
-  return cacheSize >= (1 << 12) &&
-         cacheSize <= (1ull << 40);
-}
-
-bool CpuInfo::hasL1Sharing() const
-{
-  return cacheSharing_[1] >= 1 &&
-         cacheSharing_[1] <= (1 << 20);
-}
-
-bool CpuInfo::hasL2Sharing() const
-{
-  return cacheSharing_[2] >= 1 &&
-         cacheSharing_[2] <= (1 << 20);
-}
-
-bool CpuInfo::hasL3Sharing() const
-{
-  return cacheSharing_[3] >= 1 &&
-         cacheSharing_[3] <= (1 << 20);
-}
-
-bool CpuInfo::hasThreadsPerCore() const
-{
-  return threadsPerCore_ >= 1 &&
-         threadsPerCore_ <= (1 << 10);
-}
-
-bool CpuInfo::hasPrivateL2Cache() const
-{
-  return hasL2Cache() &&
-         hasL2Sharing() &&
-         hasThreadsPerCore() &&
-         l2Sharing() <= threadsPerCore_;
-}
-
-} // namespace
-
 #if defined(__APPLE__)
   #if !defined(__has_include)
     #define APPLE_SYSCTL
@@ -183,72 +26,7 @@ bool CpuInfo::hasPrivateL2Cache() const
   #endif
 #endif
 
-#if defined(APPLE_SYSCTL)
-
-#include <primesieve/pmath.hpp>
-#include <algorithm>
-#include <sys/types.h>
-#include <sys/sysctl.h>
-
-namespace {
-
-/// Get CPU information from the operating
-/// system kernel using sysctl.
-/// https://www.freebsd.org/cgi/man.cgi?sysctl(3)
-///
-template <typename T>
-vector<T> getSysctl(const string& name)
-{
-  vector<T> res;
-  size_t bytes = 0;
-
-  if (!sysctlbyname(name.data(), 0, &bytes, 0, 0))
-  {
-    using primesieve::ceilDiv;
-    size_t size = ceilDiv(bytes, sizeof(T));
-    vector<T> buffer(size, 0);
-    if (!sysctlbyname(name.data(), buffer.data(), &bytes, 0, 0))
-      res = buffer;
-  }
-
-  return res;
-}
-
-} // namespace
-
-namespace primesieve {
-
-void CpuInfo::init()
-{
-  auto cpuName = getSysctl<char>("machdep.cpu.brand_string");
-  if (!cpuName.empty())
-    cpuName_ = cpuName.data();
-
-  auto cpuCores = getSysctl<size_t>("hw.physicalcpu");
-  if (!cpuCores.empty())
-    cpuCores_ = cpuCores[0];
-
-  auto cpuThreads = getSysctl<size_t>("hw.logicalcpu");
-  if (!cpuThreads.empty())
-    cpuThreads_ = cpuThreads[0];
-
-  if (hasCpuCores() && hasCpuThreads())
-    threadsPerCore_ = cpuThreads_ / cpuCores_;
-
-  // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
-  auto cacheSizes = getSysctl<size_t>("hw.cachesize");
-  for (size_t i = 1; i < min(cacheSizes.size(), cacheSizes_.size()); i++)
-    cacheSizes_[i] = cacheSizes[i];
-
-  // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
-  auto cacheConfig = getSysctl<size_t>("hw.cacheconfig");
-  for (size_t i = 1; i < min(cacheConfig.size(), cacheSharing_.size()); i++)
-    cacheSharing_[i] = cacheConfig[i];
-}
-
-} // namespace
-
-#elif defined(_WIN32)
+#if defined(_WIN32)
 
 #include <windows.h>
 
@@ -282,6 +60,8 @@ void CpuInfo::init()
       defined(__clang__)
   #define GNUC_CPUID
 #endif
+
+using namespace std;
 
 namespace {
 
@@ -347,16 +127,25 @@ void trimString(string& str)
     str.erase(pos + 1);
 }
 
-/// Get the CPU name using CPUID.
-/// Example: Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz
-/// https://en.wikipedia.org/wiki/CPUID
-///
+} // namespace
+
+#endif
+
+using namespace std;
+
+namespace {
+
 string getCpuName()
 {
   string cpuName;
+
+#if defined(IS_X86)
+  // Get the CPU name using CPUID.
+  // Example: Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz
+  // https://en.wikipedia.org/wiki/CPUID
+
   vector<int> vect;
   int cpuInfo[4] = { 0, 0, 0, 0 };
-
   cpuId(cpuInfo, 0x80000000);
 
   // check if CPU name is supported
@@ -375,22 +164,17 @@ string getCpuName()
     cpuName = (char*) vect.data();
     trimString(cpuName);
   }
+#endif
 
   return cpuName;
 }
 
 } // namespace
 
-#endif
-
 namespace primesieve {
 
 void CpuInfo::init()
 {
-#if defined(IS_X86)
-  cpuName_ = getCpuName();
-#endif
-
   typedef BOOL (WINAPI *LPFN_GLPIEX)(LOGICAL_PROCESSOR_RELATIONSHIP, PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX, PDWORD);
 
   LPFN_GLPIEX glpiex = (LPFN_GLPIEX) GetProcAddress(
@@ -433,8 +217,8 @@ void CpuInfo::init()
       // @warning: GetLogicalProcessorInformationEx() reports
       // incorrect data when Windows is run inside a virtual
       // machine. Specifically the GROUP_AFFINITY.Mask will
-      // only have 1 or 2 bits set for each CPU cache (L1, L2 and
-      // L3) even if more logical CPU cores share the cache
+      // only have 1 or 2 bits set for each CPU cache even if
+      // more logical CPU cores share the cache
       auto mask = info->Cache.GroupMask.Mask;
       cacheSharing_[level] = 0;
 
@@ -448,9 +232,12 @@ void CpuInfo::init()
     {
       cpuCores_++;
       threadsPerCore_ = 0;
+      size_t size = info->Processor.GroupCount;
 
-      for (size_t j = 0; j < info->Processor.GroupCount; j++)
+      for (size_t j = 0; j < size; j++)
       {
+        // Processor.GroupMask.Mask contains one bit set for
+        // each thread associated to the current CPU core
         auto mask = info->Processor.GroupMask[j].Mask;
         for (; mask > 0; mask &= mask - 1)
           threadsPerCore_++;
@@ -459,6 +246,81 @@ void CpuInfo::init()
       cpuThreads_ += threadsPerCore_;
     }
   }
+}
+
+} // namespace
+
+#elif defined(APPLE_SYSCTL)
+
+#include <primesieve/pmath.hpp>
+
+#include <algorithm>
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
+using namespace std;
+
+namespace {
+
+/// Get CPU information from the operating
+/// system kernel using sysctl.
+/// https://www.freebsd.org/cgi/man.cgi?sysctl(3)
+///
+template <typename T>
+vector<T> getSysctl(const string& name)
+{
+  vector<T> res;
+  size_t bytes = 0;
+
+  if (!sysctlbyname(name.data(), 0, &bytes, 0, 0))
+  {
+    using primesieve::ceilDiv;
+    size_t size = ceilDiv(bytes, sizeof(T));
+    vector<T> buffer(size, 0);
+    if (!sysctlbyname(name.data(), buffer.data(), &bytes, 0, 0))
+      res = buffer;
+  }
+
+  return res;
+}
+
+string getCpuName()
+{
+  string cpuName;
+
+  auto buffer = getSysctl<char>("machdep.cpu.brand_string");
+  if (!buffer.empty())
+    cpuName = buffer.data();
+
+  return cpuName;
+}
+
+} // namespace
+
+namespace primesieve {
+
+void CpuInfo::init()
+{
+  auto cpuCores = getSysctl<size_t>("hw.physicalcpu");
+  if (!cpuCores.empty())
+    cpuCores_ = cpuCores[0];
+
+  auto cpuThreads = getSysctl<size_t>("hw.logicalcpu");
+  if (!cpuThreads.empty())
+    cpuThreads_ = cpuThreads[0];
+
+  if (hasCpuCores() && hasCpuThreads())
+    threadsPerCore_ = cpuThreads_ / cpuCores_;
+
+  // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
+  auto cacheSizes = getSysctl<size_t>("hw.cachesize");
+  for (size_t i = 1; i < min(cacheSizes.size(), cacheSizes_.size()); i++)
+    cacheSizes_[i] = cacheSizes[i];
+
+  // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
+  auto cacheConfig = getSysctl<size_t>("hw.cacheconfig");
+  for (size_t i = 1; i < min(cacheConfig.size(), cacheSharing_.size()); i++)
+    cacheSharing_[i] = cacheConfig[i];
 }
 
 } // namespace
@@ -473,6 +335,7 @@ void CpuInfo::init()
 #include <set>
 #include <sstream>
 
+using namespace std;
 using namespace primesieve;
 
 namespace {
@@ -692,8 +555,6 @@ namespace primesieve {
 
 void CpuInfo::init()
 {
-  cpuName_ = getCpuName();
-
   string cpusOnline = "/sys/devices/system/cpu/online";
   cpuThreads_ = parseThreadList(cpusOnline);
 
@@ -733,3 +594,169 @@ void CpuInfo::init()
 } // namespace
 
 #endif
+
+namespace primesieve {
+
+/// Singleton (initialized at startup)
+const CpuInfo cpuInfo;
+
+CpuInfo::CpuInfo() :
+  cpuCores_(0),
+  cpuThreads_(0),
+  threadsPerCore_(0),
+  cacheSizes_{0, 0, 0, 0},
+  cacheSharing_{0, 0, 0, 0}
+{
+  try
+  {
+    init();
+  }
+  catch (exception& e)
+  {
+    // We don't trust the operating system to reliably report
+    // all CPU information. In case an unexpected error
+    // occurs we continue without relying on CpuInfo and
+    // primesieve will fallback to using default CPU settings
+    // e.g. 32 KiB L1 data cache size.
+    error_ = e.what();
+  }
+}
+
+string CpuInfo::cpuName() const
+{
+  try
+  {
+    // On Linux we get the CPU name by parsing /proc/cpuinfo
+    // which can be quite slow on PCs without fast SSD.
+    // For this reason we don't initialize the CPU name at
+    // startup but instead we only retrieve it when needed.
+    return getCpuName();
+  }
+  catch (exception&)
+  {
+    return {};
+  }
+}
+
+size_t CpuInfo::cpuCores() const
+{
+  return cpuCores_;
+}
+
+size_t CpuInfo::cpuThreads() const
+{
+  return cpuThreads_;
+}
+
+size_t CpuInfo::l1CacheSize() const
+{
+  return cacheSizes_[1];
+}
+
+size_t CpuInfo::l2CacheSize() const
+{
+  return cacheSizes_[2];
+}
+
+size_t CpuInfo::l3CacheSize() const
+{
+  return cacheSizes_[3];
+}
+
+size_t CpuInfo::l1Sharing() const
+{
+  return cacheSharing_[1];
+}
+
+size_t CpuInfo::l2Sharing() const
+{
+  return cacheSharing_[2];
+}
+
+size_t CpuInfo::l3Sharing() const
+{
+  return cacheSharing_[3];
+}
+
+size_t CpuInfo::threadsPerCore() const
+{
+  return threadsPerCore_;
+}
+
+string CpuInfo::getError() const
+{
+  return error_;
+}
+
+bool CpuInfo::hasCpuName() const
+{
+  return !cpuName().empty();
+}
+
+bool CpuInfo::hasCpuCores() const
+{
+  return cpuCores_ >= 1 &&
+         cpuCores_ <= (1 << 20);
+}
+
+bool CpuInfo::hasCpuThreads() const
+{
+  return cpuThreads_ >= 1 &&
+         cpuThreads_ <= (1 << 20);
+}
+
+bool CpuInfo::hasL1Cache() const
+{
+  return cacheSizes_[1] >= (1 << 12) &&
+         cacheSizes_[1] <= (1 << 30);
+}
+
+bool CpuInfo::hasL2Cache() const
+{
+  uint64_t cacheSize = cacheSizes_[2];
+
+  return cacheSize >= (1 << 12) &&
+         cacheSize <= (1ull << 40);
+}
+
+bool CpuInfo::hasL3Cache() const
+{
+  uint64_t cacheSize = cacheSizes_[3];
+
+  return cacheSize >= (1 << 12) &&
+         cacheSize <= (1ull << 40);
+}
+
+bool CpuInfo::hasL1Sharing() const
+{
+  return cacheSharing_[1] >= 1 &&
+         cacheSharing_[1] <= (1 << 20);
+}
+
+bool CpuInfo::hasL2Sharing() const
+{
+  return cacheSharing_[2] >= 1 &&
+         cacheSharing_[2] <= (1 << 20);
+}
+
+bool CpuInfo::hasL3Sharing() const
+{
+  return cacheSharing_[3] >= 1 &&
+         cacheSharing_[3] <= (1 << 20);
+}
+
+bool CpuInfo::hasThreadsPerCore() const
+{
+  return threadsPerCore_ >= 1 &&
+         threadsPerCore_ <= (1 << 10);
+}
+
+bool CpuInfo::hasPrivateL2Cache() const
+{
+  return hasL2Cache() &&
+         hasL2Sharing() &&
+         hasThreadsPerCore() &&
+         l2Sharing() <= threadsPerCore_;
+}
+
+} // namespace

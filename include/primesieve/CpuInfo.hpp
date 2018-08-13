@@ -50,7 +50,6 @@ private:
   std::size_t threadsPerCore_;
   std::array<std::size_t, 4> cacheSizes_;
   std::array<std::size_t, 4> cacheSharing_;
-  std::string cpuName_;
   std::string error_;
 };
 
