@@ -522,9 +522,9 @@ size_t parseThreadList(const string& filename)
 size_t parseThreadMap(const string& filename)
 {
   size_t threads = 0;
-  auto threadMap = getString(filename);
+  string threadMap = getString(filename);
 
-  for (auto c : threadMap)
+  for (char c : threadMap)
   {
     if (c != ',')
     {
