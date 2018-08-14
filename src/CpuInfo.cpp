@@ -523,11 +523,10 @@ size_t parseThreadMap(const string& filename)
 {
   size_t threads = 0;
   auto threadMap = getString(filename);
-  auto tokens = split(threadMap, ',');
 
-  for (auto& str : tokens)
+  for (auto c : threadMap)
   {
-    for (char c : str)
+    if (c != ',')
     {
       string hexChar { c };
       size_t bitmap = stoul(hexChar, nullptr, 16);
