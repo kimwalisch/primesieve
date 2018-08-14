@@ -170,35 +170,30 @@ int get_sieve_size()
   if (sieve_size)
     return sieve_size;
 
-  size_t l1CacheSize = cpuInfo.l1CacheSize();
-  size_t l2CacheSize = cpuInfo.l2CacheSize();
+  // default sieve size in KiB
+  size_t size = 32;
 
-  // convert bytes to KiB
-  l1CacheSize >>= 10;
-  l2CacheSize >>= 10;
-
-  // check if each CPU core has a private L2 cache
-  if (cpuInfo.hasL2Cache() &&
-      cpuInfo.hasPrivateL2Cache() &&
-      l2CacheSize > l1CacheSize)
+  // We use the L2 cache size as sieve size only if the L2
+  // cache is not shared by multiple physical CPU cores.
+  // Also we use a sieve size that is slightly smaller than
+  // the L2 cache size because we want to reduce the number
+  // of L2 cache misses (because the L3 cache is slow).
+  if (cpuInfo.hasPrivateL2Cache())
   {
-    l2CacheSize = inBetween(32, l2CacheSize, 4096);
-    l2CacheSize = floorPow2(l2CacheSize);
-    return (int) l2CacheSize;
-  }
-  else
-  {
-    if (!cpuInfo.hasL1Cache())
-      l1CacheSize = 32;
+    // convert bytes to KiB
+    size = cpuInfo.l2CacheSize() >> 10;
 
-    // if the CPU does not have an L2 cache or if the
-    // cache is shared between all CPU cores we
-    // set the sieve size to the CPU's L1 cache size
-
-    l1CacheSize = inBetween(8, l1CacheSize, 4096);
-    l1CacheSize = floorPow2(l1CacheSize);
-    return (int) l1CacheSize;
+    if (!isPow2(size))
+      size = floorPow2(size);
+    else
+      size /= 2;
   }
+  else if (cpuInfo.hasL1Cache())
+    size = cpuInfo.l1CacheSize() >> 10;
+
+  size = inBetween(8, size, 4096);
+  size = floorPow2(size);
+  return (int) size;
 }
 
 } // namespace
