@@ -53,7 +53,7 @@ enum OptionID
   OPTION_COUNT,
   OPTION_CPU_INFO,
   OPTION_HELP,
-  OPTION_NTHPRIME,
+  OPTION_NTH_PRIME,
   OPTION_NO_STATUS,
   OPTION_NUMBER,
   OPTION_DISTANCE,
@@ -73,8 +73,9 @@ map<string, OptionID> optionMap =
   { "--cpu-info",  OPTION_CPU_INFO },
   { "-h",          OPTION_HELP },
   { "--help",      OPTION_HELP },
-  { "-n",          OPTION_NTHPRIME },
-  { "--nthprime",  OPTION_NTHPRIME },
+  { "-n",          OPTION_NTH_PRIME },
+  { "--nthprime",  OPTION_NTH_PRIME },
+  { "--nth-prime", OPTION_NTH_PRIME },
   { "--no-status", OPTION_NO_STATUS },
   { "--number",    OPTION_NUMBER },
   { "-d",          OPTION_DISTANCE },
@@ -271,7 +272,7 @@ CmdOptions parseOptions(int argc, char* argv[])
       case OPTION_SIZE:      opts.sieveSize = opt.getValue<int>(); break;
       case OPTION_THREADS:   opts.threads = opt.getValue<int>(); break;
       case OPTION_QUIET:     opts.quiet = true; break;
-      case OPTION_NTHPRIME:  opts.nthPrime = true; break;
+      case OPTION_NTH_PRIME: opts.nthPrime = true; break;
       case OPTION_NO_STATUS: opts.status = false; break;
       case OPTION_TIME:      opts.time = true; break;
       case OPTION_NUMBER:    opts.numbers.push_back(opt.getValue<uint64_t>()); break;

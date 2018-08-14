@@ -32,7 +32,7 @@ const string helpMenu
   "          --cpu-info      Print CPU information\n"
   "  -d<N>,  --dist=<N>      Sieve the interval [START, START + N]\n"
   "  -h,     --help          Print this help menu\n"
-  "  -n,     --nthprime      Calculate the nth prime,\n"
+  "  -n,     --nth-prime     Calculate the nth prime,\n"
   "                          e.g. 1 100 -n finds the 1st prime > 100\n"
   "          --no-status     Turn off the progressing status\n"
   "  -p[N],  --print[=N]     Print primes or prime k-tuplets, N <= 6,\n"
