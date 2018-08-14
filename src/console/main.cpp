@@ -22,26 +22,15 @@ using namespace primesieve;
 
 namespace {
 
-void printResults(ParallelSieve& ps, CmdOptions& opt)
+void printSettings(const ParallelSieve& ps)
 {
-  cout << left;
+  cout << "Sieve size = " << ps.getSieveSize() << " KiB" << endl;
+  cout << "Threads = " << ps.idealNumThreads() << endl;
+}
 
-  const string text[6] =
-  {
-    "Primes: ",
-    "Twin primes: ",
-    "Prime triplets: ",
-    "Prime quadruplets: ",
-    "Prime quintuplets: ",
-    "Prime sextuplets: "
-  };
-
-  for (int i = 0; i < 6; i++)
-    if (ps.isCount(i))
-      cout << text[i] << ps.getCount(i) << endl;
-
-  if (opt.time)
-    cout << "Seconds: " << fixed << setprecision(3) << ps.getSeconds() << endl;
+void printSeconds(double sec)
+{
+  cout << "Seconds: " << fixed << setprecision(3) << sec << endl;
 }
 
 /// Count & print primes and prime k-tuplets
@@ -52,6 +41,8 @@ void sieve(CmdOptions& opt)
 
   if (opt.flags)
     ps.setFlags(opt.flags);
+  if (opt.status)
+    ps.addFlags(PRINT_STATUS);
   if (opt.sieveSize)
     ps.setSieveSize(opt.sieveSize);
   if (opt.threads)
@@ -65,16 +56,26 @@ void sieve(CmdOptions& opt)
   ps.setStop(numbers[1]);
 
   if (!opt.quiet)
-  {
-    cout << "Sieve size = " << ps.getSieveSize() << " KiB" << endl;
-    cout << "Threads = " << ps.idealNumThreads() << endl;
-  }
-
-  if (opt.status)
-    ps.addFlags(PRINT_STATUS);
+    printSettings(ps);
 
   ps.sieve();
-  printResults(ps, opt);
+
+  const string text[6] =
+  {
+    "Primes: ",
+    "Twin primes: ",
+    "Prime triplets: ",
+    "Prime quadruplets: ",
+    "Prime quintuplets: ",
+    "Prime sextuplets: "
+  };
+
+  if (opt.time)
+    printSeconds(ps.getSeconds());
+
+  for (int i = 0; i < 6; i++)
+    if (ps.isCount(i))
+      cout << text[i] << ps.getCount(i) << endl;
 }
 
 void nthPrime(CmdOptions& opt)
@@ -98,16 +99,14 @@ void nthPrime(CmdOptions& opt)
   ps.setStop(start + abs(n * 20));
 
   if (!opt.quiet)
-  {
-    cout << "Sieve size = " << ps.getSieveSize() << " KiB" << endl;
-    cout << "Threads = " << ps.idealNumThreads() << endl;
-  }
+    printSettings(ps);
 
   nthPrime = ps.nthPrime(n, start);
-  cout << "Nth prime: " << nthPrime << endl;
 
   if (opt.time)
-    cout << "Seconds: " << fixed << setprecision(3) << ps.getSeconds() << endl;
+    printSeconds(ps.getSeconds());
+
+  cout << "Nth prime: " << nthPrime << endl;
 }
 
 } // namespace
