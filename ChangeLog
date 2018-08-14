@@ -1,11 +1,20 @@
-Changes in version 7.1, 12/08/2018
+Changes in version 7.1, 14/08/2018
 ==================================
 
 This is a minor new release, the API and ABI (Application binary
 interface) are backwards compatible.
 
-* --cpu-info: New option, prints CPU information.
+primesieve-7.1 runs up to 30% faster on Intel Skylake-X CPUs!
+The default sieve size is now (L2 cache size / 2). Using a sieve size
+that is slightly smaller than the L2 cache size reduces the number
+of L2 cache misses which improves performance on CPUs with slow L3
+caches. primesieve-7.1 will also run slightly faster (< 3%) on most
+other Intel CPUs.
+
+* api.cpp: Default sieve size = (L2 cache size / 2).
 * CpuInfo.cpp: Improved CPU info detection.
+* --cpu-info: New option, prints CPU information.
+* Rename kilobytes to KiB because it is more accurate.
 
 Changes in version 7.0, 25/04/2018
 ==================================
