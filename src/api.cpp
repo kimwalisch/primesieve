@@ -179,12 +179,7 @@ int get_sieve_size()
   {
     // convert bytes to KiB
     size_t size = cpuInfo.l2CacheSize() >> 10;
-
-    if (!isPow2(size))
-      size = floorPow2(size);
-    else
-      size /= 2;
-
+    size = size - 1;
     size = inBetween(32, size, 4096);
     size = floorPow2(size);
     return (int) size;
