@@ -47,7 +47,6 @@ protected:
   uint64_t segmentHigh_ = 0;
   /// Sieve of Eratosthenes array
   byte_t* sieve_ = nullptr;
-  PreSieve* preSieve_;
   Erat();
   Erat(uint64_t, uint64_t);
   virtual ~Erat();
@@ -62,6 +61,7 @@ private:
   uint64_t maxEratSmall_;
   uint64_t maxEratMedium_;
   std::unique_ptr<byte_t[]> deleter_;
+  PreSieve* preSieve_;
   EratSmall eratSmall_;
   EratMedium eratMedium_;
   EratBig eratBig_;
