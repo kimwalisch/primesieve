@@ -1,4 +1,4 @@
-Changes in version 7.1, 14/08/2018
+Changes in version 7.1, 15/08/2018
 ==================================
 
 This is a minor new release, the API and ABI (Application binary
@@ -13,6 +13,8 @@ other Intel CPUs.
 
 * api.cpp: Default sieve size = (L2 cache size / 2).
 * CpuInfo.cpp: Improved CPU info detection.
+* EratSmall.cpp: Fix too large sieve size.
+* help.cpp: Update help menu (--help).
 * --cpu-info: New option, prints CPU information.
 * Rename kilobytes to KiB because it is more accurate.
 
