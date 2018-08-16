@@ -37,9 +37,9 @@ private:
   uint64_t low_ = 0;
   /// Count lookup tables for prime k-tuplets
   std::vector<byte_t> kCounts_[6];
-  /// Reference to the associated PrimeSieve object
   PreSieve preSieve_;
   counts_t& counts_;
+  /// Reference to the associated PrimeSieve object
   PrimeSieve& ps_;
   void initCounts();
   void print();
