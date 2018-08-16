@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMEGENERATOR_HPP
-#define PRIMEGENERATOR_HPP
+#ifndef PRINTPRIMES_HPP
+#define PRINTPRIMES_HPP
 
 #include "Erat.hpp"
 #include "PreSieve.hpp"
