@@ -45,7 +45,7 @@ void* store_primes(uint64_t start, uint64_t stop, size_t* size)
       *size = 0;
 
     errno = EDOM;
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -62,7 +62,7 @@ void* store_n_primes(uint64_t n, uint64_t start)
   catch (exception&)
   {
     errno = EDOM;
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -92,7 +92,7 @@ void* primesieve_generate_primes(uint64_t start, uint64_t stop, size_t* size, in
     *size = 0;
 
   errno = EDOM;
-  return NULL;
+  return nullptr;
 }
 
 void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type)
@@ -116,7 +116,7 @@ void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type)
   }
 
   errno = EDOM;
-  return NULL;
+  return nullptr;
 }
 
 void primesieve_free(void* primes)
