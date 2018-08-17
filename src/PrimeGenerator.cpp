@@ -79,20 +79,55 @@ const array<uint8_t, 312> PrimeGenerator::primePi =
 };
 
 PrimeGenerator::PrimeGenerator(uint64_t start, uint64_t stop) :
-  Erat(start, stop),
-  preSieve_(start, stop)
+  Erat(start, stop)
 { }
 
-void PrimeGenerator::init()
+void PrimeGenerator::init(vector<uint64_t>& primes)
 {
-  // sieving is used > max(SmallPrime)
-  uint64_t sieving = smallPrimes.back() + 1;
-  uint64_t sieveSize = get_sieve_size();
-  start_ = max(start_, sieving);
+  size_t size = primeCountApprox(start_, stop_);
+  primes.reserve(size);
 
-  Erat::init(start_, stop_, sieveSize, preSieve_);
-  sievingPrimes_.init(this, preSieve_);
+  if (start_ <= maxCachedPrime())
+  {
+    size_t a = getStartIdx();
+    size_t b = getStopIdx();
+
+    primes.insert(primes.end(),
+             smallPrimes.begin() + a,
+             smallPrimes.begin() + b);
+  }
+
+  initErat();
+}
+
+void PrimeGenerator::init(vector<uint64_t>& primes, size_t* size)
+{
+  if (start_ <= maxCachedPrime())
+  {
+    size_t a = getStartIdx();
+    size_t b = getStopIdx();
+    *size = b - a;
+
+    copy(smallPrimes.begin() + a,
+         smallPrimes.begin() + b,
+         primes.begin());
+  }
+
+  initErat();
+}
+
+void PrimeGenerator::initErat()
+{
+  uint64_t startErat = maxCachedPrime() + 1;
+  startErat = max(startErat, start_);
   isInit_ = true;
+
+  if (startErat <= stop_)
+  {
+    uint64_t sieveSize = get_sieve_size();
+    Erat::init(startErat, stop_, sieveSize, preSieve_);
+    sievingPrimes_.init(this, preSieve_);
+  }
 }
 
 size_t PrimeGenerator::getStartIdx() const
@@ -109,46 +144,12 @@ size_t PrimeGenerator::getStopIdx() const
 {
   size_t stopIdx = 0;
 
-  if (stop_ < smallPrimes.back())
+  if (stop_ < maxCachedPrime())
     stopIdx = primePi[stop_];
   else
     stopIdx = smallPrimes.size();
 
   return stopIdx;
-}
-
-void PrimeGenerator::init(vector<uint64_t>& primes)
-{
-  size_t size = primeCountApprox(start_, stop_);
-  primes.reserve(size);
-
-  if (start_ <= smallPrimes.back())
-  {
-    size_t a = getStartIdx();
-    size_t b = getStopIdx();
-
-    primes.insert(primes.end(),
-             smallPrimes.begin() + a,
-             smallPrimes.begin() + b);
-  }
-
-  init();
-}
-
-void PrimeGenerator::init(vector<uint64_t>& primes, size_t* size)
-{
-  if (start_ <= smallPrimes.back())
-  {
-    size_t a = getStartIdx();
-    size_t b = getStopIdx();
-    *size = b - a;
-
-    copy(smallPrimes.begin() + a,
-         smallPrimes.begin() + b,
-         primes.begin());
-  }
-
-  init();
 }
 
 bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes)

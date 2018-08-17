@@ -17,10 +17,10 @@
 #include <stdint.h>
 #include <algorithm>
 #include <array>
+#include <iterator>
 #include <memory>
 
 using namespace std;
-using namespace primesieve;
 
 namespace {
 
@@ -34,31 +34,29 @@ const array<uint64_t, 5> primeProducts = { 210, 2310, 30030, 510510, 9699690 };
 
 namespace primesieve {
 
-PreSieve::PreSieve(uint64_t start, uint64_t stop)
+void PreSieve::init(uint64_t start,
+                    uint64_t stop)
 {
-  // use a small buffer_ array if the
-  // sieve interval is small
-  uint64_t distance = stop - start;
-  uint64_t threshold = max(distance, isqrt(stop)) / 10;
-  size_t i = 0;
+  uint64_t dist = stop - start;
+  uint64_t threshold = max(dist, isqrt(stop)) / 10;
+  auto last =  primeProducts.end() - 1;
+  auto iter = lower_bound(primeProducts.begin(), last, threshold);
+  auto i = distance(primeProducts.begin(), iter);
 
-  for (uint64_t pp : primeProducts)
-    if (pp < threshold)
-      i += 1;
-
-  i = min(i, primes.size() - 1);
-  maxPrime_ = primes[i];
-  primeProduct_ = primeProducts[i];
-
-  init();
+  if (primes.at(i) > maxPrime_)
+    initBuffer(primes[i], primeProducts[i]);
 }
 
 /// Pre-sieve a small buffer by removing the
 /// multiples of primes <= maxPrime.
 ///
-void PreSieve::init()
+void PreSieve::initBuffer(uint64_t maxPrime,
+                          uint64_t primeProduct)
 {
+  maxPrime_ = maxPrime;
+  primeProduct_ = primeProduct;
   size_ = primeProduct_ / 30;
+
   buffer_ = new byte_t[size_];
   deleter_.reset(buffer_);
   fill_n(buffer_, size_, 0xff);
@@ -96,6 +94,7 @@ void PreSieve::copy(byte_t* sieve,
     for (i = sizeLeft; i + size_ < sieveSize; i += size_)
       copy_n(buffer_, size_, &sieve[i]);
 
+    // copy the last remaining bytes
     copy_n(buffer_, sieveSize - i, &sieve[i]);
   }
 }

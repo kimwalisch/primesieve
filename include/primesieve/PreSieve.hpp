@@ -39,16 +39,16 @@ namespace primesieve {
 class PreSieve
 {
 public:
-  PreSieve(uint64_t start, uint64_t stop);
+  void init(uint64_t, uint64_t);
   uint64_t getMaxPrime() const { return maxPrime_; }
   void copy(byte_t*, uint64_t, uint64_t) const;
 private:
-  uint64_t maxPrime_;
-  uint64_t primeProduct_;
-  uint64_t size_;
-  byte_t* buffer_;
+  uint64_t maxPrime_ = 0;
+  uint64_t primeProduct_ = 0;
+  uint64_t size_ = 0;
+  byte_t* buffer_ = nullptr;
   std::unique_ptr<byte_t[]> deleter_;
-  void init();
+  void initBuffer(uint64_t, uint64_t);
 };
 
 } // namespace

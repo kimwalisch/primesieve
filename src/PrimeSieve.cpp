@@ -13,6 +13,7 @@
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/PrintPrimes.hpp>
+#include <primesieve/PreSieve.hpp>
 #include <primesieve/types.hpp>
 
 #include <stdint.h>
@@ -139,6 +140,11 @@ int PrimeSieve::getSieveSize() const
 double PrimeSieve::getSeconds() const
 {
   return seconds_;
+}
+
+PreSieve& PrimeSieve::getPreSieve()
+{
+  return preSieve_;
 }
 
 double PrimeSieve::getStatus() const

@@ -71,7 +71,7 @@ private:
   static const std::array<uint8_t, 312> primePi;
   std::size_t getStartIdx() const;
   std::size_t getStopIdx() const;
-  void init();
+  void initErat();
   void init(std::vector<uint64_t>&);
   void init(std::vector<uint64_t>&, std::size_t*);
   bool sieveSegment(std::vector<uint64_t>&);

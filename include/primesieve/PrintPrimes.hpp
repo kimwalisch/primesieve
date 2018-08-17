@@ -7,11 +7,10 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMEGENERATOR_HPP
-#define PRIMEGENERATOR_HPP
+#ifndef PRINTPRIMES_HPP
+#define PRINTPRIMES_HPP
 
 #include "Erat.hpp"
-#include "PreSieve.hpp"
 #include "PrimeSieve.hpp"
 #include "types.hpp"
 
@@ -37,7 +36,6 @@ private:
   uint64_t low_ = 0;
   /// Count lookup tables for prime k-tuplets
   std::vector<byte_t> kCounts_[6];
-  PreSieve preSieve_;
   counts_t& counts_;
   /// Reference to the associated PrimeSieve object
   PrimeSieve& ps_;

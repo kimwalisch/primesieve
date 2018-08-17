@@ -92,7 +92,8 @@ void Erat::init(uint64_t start,
   start_ = start;
   stop_ = stop;
   preSieve_ = &preSieve;
-  maxPreSieve_ = preSieve.getMaxPrime();
+  preSieve_->init(start, stop);
+  maxPreSieve_ = preSieve_->getMaxPrime();
   initSieve(sieveSize);
 
   uint64_t rem = byteRemainder(start);

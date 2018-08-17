@@ -13,7 +13,6 @@
 
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/PreSieve.hpp>
 #include <primesieve/PrintPrimes.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/Erat.hpp>
@@ -40,15 +39,15 @@ const uint64_t PrintPrimes::bitmasks_[6][5] =
 };
 
 PrintPrimes::PrintPrimes(PrimeSieve& ps) :
-  preSieve_(ps.getStart(), ps.getStop()),
   counts_(ps.getCounts()),
   ps_(ps)
 {
-  uint64_t start = max<uint64_t>(7, ps.getStart());
+  uint64_t start = ps.getStart();
   uint64_t stop = ps.getStop();
   uint64_t sieveSize = ps.getSieveSize();
+  start = max<uint64_t>(start, 7);
 
-  Erat::init(start, stop, sieveSize, preSieve_);
+  Erat::init(start, stop, sieveSize, ps.getPreSieve());
 
   if (ps_.isCountkTuplets())
     initCounts();
@@ -81,7 +80,7 @@ void PrintPrimes::initCounts()
 
 void PrintPrimes::sieve()
 {
-  SievingPrimes sievingPrimes(this, preSieve_);
+  SievingPrimes sievingPrimes(this, ps_.getPreSieve());
   uint64_t prime = sievingPrimes.next();
 
   while (hasNextSegment())
