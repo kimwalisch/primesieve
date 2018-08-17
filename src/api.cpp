@@ -170,12 +170,16 @@ int get_sieve_size()
   if (sieve_size)
     return sieve_size;
 
-  // We use the L2 cache size as sieve size only if the L2
-  // cache is not shared by multiple physical CPU cores.
+  // We use the L2 cache for sieving only if we can assume
+  // that it is fast. There are two rules that help us
+  // identify whether the L2 cache is fast or not.
+  // Rule 1: Shared CPU caches are slow.
+  // Rule 2: The last level CPU cache is slow.
   // Also we use a sieve size that is slightly smaller than
   // the L2 cache size because we want to reduce the number
   // of L2 cache misses (because the L3 cache is slow).
-  if (cpuInfo.hasPrivateL2Cache())
+  if (cpuInfo.hasPrivateL2Cache() &&
+      cpuInfo.hasL3Cache())
   {
     // convert bytes to KiB
     size_t size = cpuInfo.l2CacheSize() >> 10;
