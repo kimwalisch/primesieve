@@ -171,14 +171,18 @@ int get_sieve_size()
     return sieve_size;
 
   // We use the L2 cache size as sieve size only if the L2
-  // cache is not shared by multiple physical CPU cores.
+  // exists.
   // Also we use a sieve size that is slightly smaller than
   // the L2 cache size because we want to reduce the number
   // of L2 cache misses (because the L3 cache is slow).
-  if (cpuInfo.hasPrivateL2Cache())
+  if (cpuInfo.hasL2Cache())
   {
     // convert bytes to KiB
     size_t size = cpuInfo.l2CacheSize() >> 10;
+
+    // Divide by number of threads sharing the L2
+    size /= cpuInfo.l2Sharing();
+
     size = size - 1;
     size = inBetween(32, size, 4096);
     size = floorPow2(size);
