@@ -38,7 +38,7 @@ void PreSieve::init(uint64_t start,
                     uint64_t stop)
 {
   uint64_t dist = stop - start;
-  uint64_t threshold = max(dist, isqrt(stop)) / 10;
+  uint64_t threshold = max(dist, isqrt(stop)) / 100;
   auto last =  primeProducts.end() - 1;
   auto iter = lower_bound(primeProducts.begin(), last, threshold);
   auto i = distance(primeProducts.begin(), iter);
