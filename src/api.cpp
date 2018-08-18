@@ -156,8 +156,8 @@ int get_sieve_size()
   // Rule 1: Shared CPU caches are slow.
   // Rule 2: The last level CPU cache is slow.
   // Also we use a sieve size that is slightly smaller than
-  // the L2 cache size because we want to reduce the number
-  // of L2 cache misses (because the L3 cache is slow).
+  // the L2 cache size so that other important data
+  // structures also fit into the L2 cache.
   if (cpuInfo.hasPrivateL2Cache() &&
       cpuInfo.hasL3Cache())
   {
