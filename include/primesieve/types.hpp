@@ -19,10 +19,10 @@ namespace primesieve {
 using byte_t = uint8_t;
 using uint_t = unsigned int;
 
+int get_num_threads();
 int get_sieve_size();
 
 uint64_t get_max_stop();
-
 uint64_t popcount(const uint64_t* array, uint64_t size);
 
 } // namespace

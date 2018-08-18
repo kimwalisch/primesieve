@@ -57,7 +57,8 @@ PrimeSieve::PrimeSieve() :
   flags_(COUNT_PRIMES),
   parent_(nullptr)
 {
-  setSieveSize(get_sieve_size());
+  int sieveSize = get_sieve_size();
+  setSieveSize(sieveSize);
   reset();
 }
 

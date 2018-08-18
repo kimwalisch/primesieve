@@ -8,11 +8,11 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve.hpp>
 #include <primesieve/config.hpp>
 #include <primesieve/ParallelSieve.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/types.hpp>
 
 #include <stdint.h>
 #include <algorithm>
