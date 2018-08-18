@@ -8,6 +8,7 @@
 /// file in the top level directory.
 ///
 
+#include <primesieve.hpp>
 #include <primesieve/config.hpp>
 #include <primesieve/ParallelSieve.hpp>
 #include <primesieve/PrimeSieve.hpp>
@@ -39,9 +40,11 @@ counts_t& operator+=(counts_t& v1, const counts_t& v2)
 namespace primesieve {
 
 ParallelSieve::ParallelSieve() :
-  shm_(nullptr),
-  numThreads_(getMaxThreads())
-{ }
+  shm_(nullptr)
+{
+  int threads = get_num_threads();
+  setNumThreads(threads);
+}
 
 void ParallelSieve::init(SharedMemory& shm)
 {
