@@ -37,6 +37,9 @@ namespace primesieve {
 void PreSieve::init(uint64_t start,
                     uint64_t stop)
 {
+  // the pre-sieve buffer should be at least 10
+  // times smaller than the sieving distance
+  // in order to reduce initialization overhead
   uint64_t dist = stop - start;
   uint64_t threshold = max(dist, isqrt(stop)) / 100;
   auto last =  primeProducts.end() - 1;
@@ -47,7 +50,7 @@ void PreSieve::init(uint64_t start,
     initBuffer(primes[i], primeProducts[i]);
 }
 
-/// Pre-sieve a small buffer by removing the
+/// Initialize the buffer by removing the
 /// multiples of primes <= maxPrime.
 ///
 void PreSieve::initBuffer(uint64_t maxPrime,
