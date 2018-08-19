@@ -88,24 +88,28 @@ int ParallelSieve::idealNumThreads() const
   return (int) threads;
 }
 
-/// Get a thread distance which ensures a good load
-/// balance when using multiple threads
-///
 uint64_t ParallelSieve::getThreadDistance(int threads) const
 {
   assert(threads > 0);
+  assert(getDistance() > 0);
 
+  uint64_t dist = getDistance();
   uint64_t balanced = isqrt(stop_) * 1000;
-  uint64_t unbalanced = getDistance() / threads;
+  uint64_t unbalanced = dist / threads;
   uint64_t fastest = min(balanced, unbalanced);
-  uint64_t threadDistance = max(config::MIN_THREAD_DISTANCE, fastest);
-  uint64_t iters = getDistance() / threadDistance;
+  uint64_t iters = dist / fastest;
 
-  if (iters < threads * 5u)
-    threadDistance = max(config::MIN_THREAD_DISTANCE, unbalanced);
+  // the number of iterations should always be
+  // a multiple of threads in order to ensure
+  // all threads finish nearly at the same time
+  iters = (iters / threads) * threads;
+  iters = max(iters, (uint64_t) threads);
 
-  threadDistance += 30 - threadDistance % 30;
-  return threadDistance;
+  uint64_t threadDist = ((dist - 1) / iters) + 1;
+  threadDist = max(threadDist, config::MIN_THREAD_DISTANCE);
+  threadDist += 30 - threadDist % 30;
+
+  return threadDist;
 }
 
 /// Align n to modulo (30 + 2) to prevent prime k-tuplet
@@ -138,8 +142,9 @@ void ParallelSieve::sieve()
   else
   {
     auto t1 = chrono::system_clock::now();
-    uint64_t threadDistance = getThreadDistance(threads);
-    uint64_t iters = ((getDistance() - 1) / threadDistance) + 1;
+    uint64_t dist = getDistance();
+    uint64_t threadDist = getThreadDistance(threads);
+    uint64_t iters = ((dist - 1) / threadDist) + 1;
     threads = inBetween(1, threads, iters);
     atomic<uint64_t> i(0);
 
@@ -153,8 +158,8 @@ void ParallelSieve::sieve()
 
       while ((j = i++) < iters)
       {
-        uint64_t start = start_ + j * threadDistance;
-        uint64_t stop = checkedAdd(start, threadDistance);
+        uint64_t start = start_ + j * threadDist;
+        uint64_t stop = checkedAdd(start, threadDist);
         stop = align(stop);
         if (start > start_)
           start = align(start) + 1;
