@@ -1,4 +1,4 @@
-Changes in version 7.1, 17/08/2018
+Changes in version 7.1, 19/08/2018
 ==================================
 
 This is a minor new release, the API and ABI (Application binary
@@ -16,6 +16,7 @@ other Intel CPUs.
 * Erat.cpp: Lazy PreSieve initialization.
 * EratSmall.cpp: Fix too large sieve size.
 * help.cpp: Update help menu (--help).
+* ParallelSieve.cpp: Improved load balancing.
 * --cpu-info: New option, prints CPU information.
 * Rename kilobytes to KiB because it is more accurate.
 * Faster Windows binary built using clang-cl.
