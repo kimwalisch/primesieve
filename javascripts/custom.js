@@ -10,7 +10,7 @@ $(document).ready(function()
   }
 
   // Update download links
-  var primesieve_version = '7.0';
+  var primesieve_version = '7.1';
   var primesieve_win64_binary = 'v6.2/primesieve-6.2-win64.zip';
   var primesieve_win32_binary = 'v3.6/primesieve-3.6-win32.zip';
   var primesieve_macosx_x64_binary = 'v5.5.0/primesieve-5.5.0-macOS-x64.zip';
