@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">primesieve
-   &#160;<span id="projectnumber">7.0</span>
+   &#160;<span id="projectnumber">7.1</span>
    </div>
   </td>
  </tr>
@@ -151,14 +151,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="name
 <tr class="separator:ab9b2f9df590eee04918ee2674cfc447a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4239a2d00a804cd0f49cc754e8b7c33d"><td class="memItemLeft" align="right" valign="top"><a id="a4239a2d00a804cd0f49cc754e8b7c33d"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a4239a2d00a804cd0f49cc754e8b7c33d">get_sieve_size</a> ()</td></tr>
-<tr class="memdesc:a4239a2d00a804cd0f49cc754e8b7c33d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current set sieve size in kilobytes. <br /></td></tr>
+<tr class="memdesc:a4239a2d00a804cd0f49cc754e8b7c33d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current set sieve size in KiB. <br /></td></tr>
 <tr class="separator:a4239a2d00a804cd0f49cc754e8b7c33d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0f5ac18ae2ed2ab1dc5c686894919c0"><td class="memItemLeft" align="right" valign="top"><a id="ac0f5ac18ae2ed2ab1dc5c686894919c0"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#ac0f5ac18ae2ed2ab1dc5c686894919c0">get_num_threads</a> ()</td></tr>
 <tr class="memdesc:ac0f5ac18ae2ed2ab1dc5c686894919c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current set number of threads. <br /></td></tr>
 <tr class="separator:ac0f5ac18ae2ed2ab1dc5c686894919c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83a4e509144f3da3ee24d9e0d0d10e8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a83a4e509144f3da3ee24d9e0d0d10e8d">set_sieve_size</a> (int sieve_size)</td></tr>
-<tr class="memdesc:a83a4e509144f3da3ee24d9e0d0d10e8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the sieve size in kilobytes.  <a href="#a83a4e509144f3da3ee24d9e0d0d10e8d">More...</a><br /></td></tr>
+<tr class="memdesc:a83a4e509144f3da3ee24d9e0d0d10e8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the sieve size in KiB (kibibyte).  <a href="#a83a4e509144f3da3ee24d9e0d0d10e8d">More...</a><br /></td></tr>
 <tr class="separator:a83a4e509144f3da3ee24d9e0d0d10e8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a620522a113c81237cd8ae9a5a058c0f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceprimesieve.html#a620522a113c81237cd8ae9a5a058c0f1">set_num_threads</a> (int num_threads)</td></tr>
 <tr class="memdesc:a620522a113c81237cd8ae9a5a058c0f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the number of threads for use in primesieve::count_*() and <a class="el" href="namespaceprimesieve.html#a559e8ba0e9b3b9c8b3a75ca9419a1afb" title="Find the nth prime. ">primesieve::nth_prime()</a>.  <a href="#a620522a113c81237cd8ae9a5a058c0f1">More...</a><br /></td></tr>
@@ -454,14 +454,8 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
       </table>
 </div><div class="memdoc">
 
-<p>Set the sieve size in kilobytes. </p>
-<p>The best sieving performance is achieved with a sieve size of your CPU's L1 or L2 cache size (per core). </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">sieve_size</td><td>Sieve size in kilobytes. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section pre"><dt>Precondition</dt><dd>sieve_size &gt;= 8 &amp;&amp; &lt;= 4096. </dd></dl>
+<p>Set the sieve size in KiB (kibibyte). </p>
+<p>The best sieving performance is achieved with a sieve size of your CPU's L1 or L2 cache size (per core). </p><dl class="section pre"><dt>Precondition</dt><dd>sieve_size &gt;= 8 &amp;&amp; &lt;= 4096. </dd></dl>
 
 </div>
 </div>

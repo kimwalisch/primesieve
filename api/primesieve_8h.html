@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">primesieve
-   &#160;<span id="projectnumber">7.0</span>
+   &#160;<span id="projectnumber">7.1</span>
    </div>
   </td>
  </tr>
@@ -82,20 +82,20 @@ Include dependency graph for primesieve.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="primesieve_8h__incl.png" border="0" usemap="#primesieve_8h" alt=""/></div>
 <map name="primesieve_8h" id="primesieve_8h">
-<area shape="rect" id="node2" href="iterator_8h.html" title="primesieve_iterator allows to easily iterate over primes both forwards and backwards. " alt="" coords="68,80,208,107"/>
+<area shape="rect" id="node2" href="iterator_8h.html" title="primesieve_iterator allows to easily iterate over primes both forwards and backwards. " alt="" coords="22,80,162,107"/>
 </map>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memItemLeft" align="right" valign="top"><a id="aefdd13bcd657eb6778799e8e2dd72b19"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;7.0&quot;</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;7.1&quot;</td></tr>
 <tr class="separator:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memItemLeft" align="right" valign="top"><a id="acf3a768a4fbf9c2ddd8d26421b452298"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MAJOR</b>&#160;&#160;&#160;7</td></tr>
 <tr class="separator:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae49659380a65afba42223665c77241d1"><td class="memItemLeft" align="right" valign="top"><a id="ae49659380a65afba42223665c77241d1"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;0</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:ae49659380a65afba42223665c77241d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa15f4d1456167707e37c0d6de61a86e3"><td class="memItemLeft" align="right" valign="top"><a id="aa15f4d1456167707e37c0d6de61a86e3"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#aa15f4d1456167707e37c0d6de61a86e3">PRIMESIEVE_ERROR</a>&#160;&#160;&#160;((uint64_t) ~((uint64_t) 0))</td></tr>
@@ -184,14 +184,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="prim
 <tr class="separator:a477c4ec9724d43461f9da04d34d02683"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cb168947a4832288b4f903618e34af0"><td class="memItemLeft" align="right" valign="top"><a id="a9cb168947a4832288b4f903618e34af0"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#a9cb168947a4832288b4f903618e34af0">primesieve_get_sieve_size</a> ()</td></tr>
-<tr class="memdesc:a9cb168947a4832288b4f903618e34af0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current set sieve size in kilobytes. <br /></td></tr>
+<tr class="memdesc:a9cb168947a4832288b4f903618e34af0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current set sieve size in KiB. <br /></td></tr>
 <tr class="separator:a9cb168947a4832288b4f903618e34af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b05b366c3c25be37828374ca31086c4"><td class="memItemLeft" align="right" valign="top"><a id="a0b05b366c3c25be37828374ca31086c4"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#a0b05b366c3c25be37828374ca31086c4">primesieve_get_num_threads</a> ()</td></tr>
 <tr class="memdesc:a0b05b366c3c25be37828374ca31086c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current set number of threads. <br /></td></tr>
 <tr class="separator:a0b05b366c3c25be37828374ca31086c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51b428b44a1c045b179f581d93f4b1b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#a51b428b44a1c045b179f581d93f4b1b7">primesieve_set_sieve_size</a> (int sieve_size)</td></tr>
-<tr class="memdesc:a51b428b44a1c045b179f581d93f4b1b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the sieve size in kilobytes.  <a href="#a51b428b44a1c045b179f581d93f4b1b7">More...</a><br /></td></tr>
+<tr class="memdesc:a51b428b44a1c045b179f581d93f4b1b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the sieve size in KiB (kibibyte).  <a href="#a51b428b44a1c045b179f581d93f4b1b7">More...</a><br /></td></tr>
 <tr class="separator:a51b428b44a1c045b179f581d93f4b1b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac75933075b832eb2996adc5e72d6cd0f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#ac75933075b832eb2996adc5e72d6cd0f">primesieve_set_num_threads</a> (int num_threads)</td></tr>
 <tr class="memdesc:ac75933075b832eb2996adc5e72d6cd0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the number of threads for use in primesieve_count_*() and <a class="el" href="primesieve_8h.html#a272b54509075a0ed1dafe9858ae90d02" title="Find the nth prime. ">primesieve_nth_prime()</a>.  <a href="#ac75933075b832eb2996adc5e72d6cd0f">More...</a><br /></td></tr>
@@ -632,14 +632,8 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
       </table>
 </div><div class="memdoc">
 
-<p>Set the sieve size in kilobytes. </p>
-<p>The best sieving performance is achieved with a sieve size of your CPU's L1 or L2 cache size (per core). </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">sieve_size</td><td>Sieve size in kilobytes. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section pre"><dt>Precondition</dt><dd>sieve_size &gt;= 8 &amp;&amp; &lt;= 4096. </dd></dl>
+<p>Set the sieve size in KiB (kibibyte). </p>
+<p>The best sieving performance is achieved with a sieve size of your CPU's L1 or L2 cache size (per core). </p><dl class="section pre"><dt>Precondition</dt><dd>sieve_size &gt;= 8 &amp;&amp; &lt;= 4096. </dd></dl>
 
 </div>
 </div>
