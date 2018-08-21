@@ -7,8 +7,8 @@
 #   This script runs prime counting benchmarks using different
 #   sieve sizes and reports the time elapsed in seconds. The
 #   fastest timing indicates the best sieve size for the user's
-#   CPU. Note that we run single and multi-thread benchmarks
-#   for small and large numbers.
+#   CPU. Note that we run single and multi-threaded benchmarks
+#   for small and large primes.
 
 # Find the primesieve binary
 command -v ./primesieve >/dev/null 2>/dev/null
@@ -71,7 +71,7 @@ then
     l2CacheSize=1024
 fi
 
-echo "=== Single-thread benchmark: small numbers ==="
+echo "=== Single-threaded benchmark: small primes ==="
 echo
 
 for ((size=$l1CacheSize; size<=$l2CacheSize; size*=2))
@@ -81,7 +81,7 @@ do
 done
 
 echo
-echo "=== Single-thread benchmark: large numbers ==="
+echo "=== Single-threaded benchmark: large primes ==="
 echo
 
 for ((size=$l1CacheSize; size<=$l2CacheSize; size*=2))
@@ -95,7 +95,7 @@ then
     dist=$((25*10**10 * $cpuCores))
 
     echo
-    echo "=== Multi-thread benchmark: small numbers ==="
+    echo "=== Multi-threaded benchmark: small primes ==="
     echo
 
     for ((size=$l1CacheSize; size<=$l2CacheSize; size*=2))
@@ -107,7 +107,7 @@ then
     dist=$((5*10**10 * $cpuCores))
 
     echo
-    echo "=== Multi-thread benchmark: large numbers ==="
+    echo "=== Multi-threaded benchmark: large primes ==="
     echo
 
     for ((size=$l1CacheSize; size<=$l2CacheSize; size*=2))
