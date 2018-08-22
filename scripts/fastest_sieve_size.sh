@@ -8,7 +8,7 @@
 #   sieve sizes and reports the time elapsed in seconds. The
 #   fastest timing indicates the best sieve size for the user's
 #   CPU. Note that we run single and multi-threaded benchmarks
-#   for small and large primes.
+#   for small, medium and large primes.
 
 # Find the primesieve binary
 command -v ./primesieve >/dev/null 2>/dev/null
@@ -40,8 +40,9 @@ fi
 
 # Print CPU info
 $primesieve --cpu-info
-echo ""
 
+start=(0 1e15 1e18)
+label=("Small primes" "Medium primes" "Large primes")
 cpuCores=$($primesieve --cpu-info | grep 'Number of cores' | cut -f2 -d':' | cut -f2 -d' ')
 threads=$($primesieve --cpu-info | grep 'Number of threads' | cut -f2 -d':' | cut -f2 -d' ')
 l1CacheSize=$($primesieve --cpu-info | grep 'L1 cache size' | cut -f2 -d':' | cut -f2 -d' ')
@@ -71,51 +72,31 @@ then
     l2CacheSize=1024
 fi
 
-echo "=== Single-threaded benchmark: small primes ==="
-echo
-
-for ((size=$l1CacheSize; size<=$l2CacheSize; size*=2))
-do  
-   $primesieve 1e11 -t1 -s$size
-   sleep 1
-done
-
-echo
-echo "=== Single-threaded benchmark: large primes ==="
-echo
-
-for ((size=$l1CacheSize; size<=$l2CacheSize; size*=2))
-do  
-   $primesieve 1e18 -d5e10 -t1 -s$size
-   sleep 1
-done
-
-if [ "$threads" -gt 1 ]
-then
-    dist=$((25*10**10 * $cpuCores))
-
+printTitle() {
     echo
-    echo "=== Multi-threaded benchmark: small primes ==="
+    echo "=== $1: $2-threaded benchmark ==="
     echo
+}
+
+for i in {0..2}
+do
+    printTitle "${label[$i]}" "single"
 
     for ((size=$l1CacheSize; size<=$l2CacheSize; size*=2))
-    do  
-        $primesieve $dist -s$size
-        sleep 10
+    do
+       $primesieve ${start[$i]} -d1e11 -t1 -s$size
+       sleep 1
     done
 
-    dist=$((5*10**10 * $cpuCores))
+    if [ "$threads" -gt 1 ]
+    then
+        printTitle "${label[$i]}" "multi"
+        dist=$((10**11 * $cpuCores))
 
-    echo
-    echo "=== Multi-threaded benchmark: large primes ==="
-    echo
-
-    for ((size=$l1CacheSize; size<=$l2CacheSize; size*=2))
-    do  
-        $primesieve 1e18 -d$dist -s$size
-        if [ "$size" -lt "$l2CacheSize" ]
-        then
-            sleep 10
-        fi
-    done
-fi
+        for ((size=$l1CacheSize; size<=$l2CacheSize; size*=2))
+        do
+            $primesieve ${start[$i]} -d$dist -s$size
+            sleep 1
+        done
+    fi
+done
