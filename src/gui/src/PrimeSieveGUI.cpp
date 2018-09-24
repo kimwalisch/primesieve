@@ -23,7 +23,6 @@
 
 #include <primesieve.hpp>
 #include <primesieve/calculator.hpp>
-#include <primesieve/CpuInfo.hpp>
 #include <primesieve/ParallelSieve.hpp>
 #include <primesieve/pmath.hpp>
 
