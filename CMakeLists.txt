@@ -54,6 +54,13 @@ if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
     message(FATAL_ERROR "One or both of BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be set to ON")
 endif()
 
+# On Unix-like OSes we use shared linking against libprimesieve by
+# default mainly because this is required by Linux distributions.
+# On Windows we use static linking by default because the library's
+# path is not encoded into the binary. This means that the binary will
+# only work if the DLL is in the same directory or a directory that
+# is in the PATH environment variable.
+
 if(BUILD_STATIC_LIBS AND WIN32)
     set(STATIC_LINKING ON)
 elseif(NOT BUILD_SHARED_LIBS)
