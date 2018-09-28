@@ -12,14 +12,6 @@ option(BUILD_DOC         "Build documentation"        OFF)
 option(BUILD_EXAMPLES    "Build example programs"     OFF)
 option(BUILD_TESTS       "Build test programs"        OFF)
 
-if(WIN32)
-    set(BUILD_SHARED_LIBS OFF)
-endif()
-
-if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
-    message(FATAL_ERROR "One or both of BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be set to ON")
-endif()
-
 # primesieve binary source files #####################################
 
 set(BIN_SRC src/console/cmdoptions.cpp
@@ -55,6 +47,24 @@ include(CMakePushCheckState)
 include(CheckCXXCompilerFlag)
 include(CheckCXXSourceCompiles)
 include(CMakePackageConfigHelpers)
+
+# libprimesieve linking options ######################################
+
+if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
+    message(FATAL_ERROR "One or both of BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be set to ON")
+endif()
+
+if(BUILD_STATIC_LIBS AND WIN32)
+    set(STATIC_LINKING ON)
+elseif(NOT BUILD_SHARED_LIBS)
+    set(STATIC_LINKING ON)
+endif()
+
+# For building a shared library (DLL) on Windows
+# we need to export symbols to .def file
+if(BUILD_SHARED_LIBS AND WIN32)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 
 # Set default build type to Release ##################################
 
@@ -123,7 +133,6 @@ find_package(Threads REQUIRED QUIET)
 
 if(BUILD_SHARED_LIBS)
     add_library(libprimesieve SHARED ${LIB_SRC})
-    add_library(primesieve::primesieve ALIAS libprimesieve)
     set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve PRIVATE Threads::Threads ${LIBATOMIC})
 
@@ -160,8 +169,6 @@ if(BUILD_STATIC_LIBS)
 
     if(BUILD_SHARED_LIBS)
         add_dependencies(libprimesieve-static libprimesieve)
-    else()
-        add_library(primesieve::primesieve ALIAS libprimesieve-static)
     endif()
 
     target_compile_features(libprimesieve-static
@@ -181,6 +188,14 @@ if(BUILD_STATIC_LIBS)
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif()
+
+# Static or shared linking ###########################################
+
+if(STATIC_LINKING)
+    add_library(primesieve::primesieve ALIAS libprimesieve-static)
+else()
+    add_library(primesieve::primesieve ALIAS libprimesieve)
 endif()
 
 # primesieve binary ##################################################
