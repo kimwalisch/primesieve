@@ -31,5 +31,6 @@ test_script:
   - cd static_linking
   - ctest -C Release
   - cd ..\shared_linking
+  - copy Release\primesieve.dll test\Release
   - ctest -C Release
   - Release\primesieve.exe --cpu-info
