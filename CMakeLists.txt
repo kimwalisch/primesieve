@@ -16,6 +16,11 @@ if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
     message(FATAL_ERROR "One or both of BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be set to ON")
 endif()
 
+if(WIN32 AND BUILD_SHARED_LIBS)
+    # Export symbols to .def file
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
 # primesieve binary source files #####################################
 
 set(BIN_SRC src/console/cmdoptions.cpp
@@ -125,10 +130,7 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
-    if(WIN32)
-        # Export symbols to .def file
-        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    else()
+    if(NOT WIN32)
         # Name shared library libprimesieve.*
         set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
     endif()
