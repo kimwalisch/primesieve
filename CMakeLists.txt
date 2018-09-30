@@ -12,6 +12,10 @@ option(BUILD_DOC         "Build documentation"        OFF)
 option(BUILD_EXAMPLES    "Build example programs"     OFF)
 option(BUILD_TESTS       "Build test programs"        OFF)
 
+if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
+    message(FATAL_ERROR "One or both of BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be set to ON")
+endif()
+
 # primesieve binary source files #####################################
 
 set(BIN_SRC src/console/cmdoptions.cpp
@@ -47,31 +51,6 @@ include(CMakePushCheckState)
 include(CheckCXXCompilerFlag)
 include(CheckCXXSourceCompiles)
 include(CMakePackageConfigHelpers)
-
-# libprimesieve linking options ######################################
-
-if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
-    message(FATAL_ERROR "One or both of BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be set to ON")
-endif()
-
-# On Unix-like OSes we use shared linking against libprimesieve by
-# default mainly because this is required by Linux distributions.
-# On Windows we use static linking by default because the library's
-# path is not encoded into the binary. This means that the binary will
-# only work if the DLL is in the same directory or a directory that
-# is in the PATH environment variable.
-
-if(BUILD_STATIC_LIBS AND WIN32)
-    set(STATIC_LINKING ON)
-elseif(NOT BUILD_SHARED_LIBS)
-    set(STATIC_LINKING ON)
-endif()
-
-# For building a shared library (DLL) on Windows
-# we need to export symbols to .def file
-if(BUILD_SHARED_LIBS AND WIN32)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
 
 # Set default build type to Release ##################################
 
@@ -139,6 +118,11 @@ cmake_pop_check_state()
 find_package(Threads REQUIRED QUIET)
 
 if(BUILD_SHARED_LIBS)
+    if(WIN32)
+        # Export symbols to .def file
+        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    endif()
+
     add_library(libprimesieve SHARED ${LIB_SRC})
     set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve PRIVATE Threads::Threads ${LIBATOMIC})
@@ -174,7 +158,7 @@ if(BUILD_STATIC_LIBS)
     set_target_properties(libprimesieve-static PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${LIBATOMIC})
 
-    if(BUILD_SHARED_LIBS)
+    if(TARGET libprimesieve)
         add_dependencies(libprimesieve-static libprimesieve)
     endif()
 
@@ -199,13 +183,26 @@ endif()
 
 # Static or shared linking ###########################################
 
+# On Unix-like OSes we use shared linking against libprimesieve by
+# default mainly because this is required by Linux distributions.
+# On Windows we use static linking by default because the library's
+# path is not encoded into the binary. This means that the binary
+# will only work if the DLL is in the same directory or a directory
+# that is in the PATH environment variable.
+
+if(WIN32)
+    set(STATIC_LINKING ON)
+elseif(NOT TARGET libprimesieve)
+    set(STATIC_LINKING ON)
+endif()
+
 if(STATIC_LINKING)
     add_library(primesieve::primesieve ALIAS libprimesieve-static)
 else()
     add_library(primesieve::primesieve ALIAS libprimesieve)
 endif()
 
-# primesieve binary ##################################################
+# Build primesieve binary ############################################
 
 if(BUILD_PRIMESIEVE)
     add_executable(primesieve ${BIN_SRC})
@@ -213,7 +210,7 @@ if(BUILD_PRIMESIEVE)
     target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-    if(BUILD_STATIC_LIBS)
+    if(TARGET libprimesieve-static)
         add_dependencies(primesieve libprimesieve-static)
     endif()
 endif()
@@ -248,13 +245,13 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/primesieveConfig.cmake"
               "${CMAKE_CURRENT_BINARY_DIR}/primesieveConfigVersion.cmake"
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/primesieve")
 
-if(BUILD_SHARED_LIBS)
+if(TARGET libprimesieve)
     install(EXPORT primesieveShared
             NAMESPACE primesieve::
             DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/primesieve")
 endif()
 
-if(BUILD_STATIC_LIBS)
+if(TARGET libprimesieve-static)
     install(EXPORT primesieveStatic
             NAMESPACE primesieve::
             DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/primesieve")
