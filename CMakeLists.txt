@@ -202,7 +202,7 @@ else()
     add_library(primesieve::primesieve ALIAS libprimesieve)
 endif()
 
-# Build primesieve binary ############################################
+# primesieve binary ##################################################
 
 if(BUILD_PRIMESIEVE)
     add_executable(primesieve ${BIN_SRC})
