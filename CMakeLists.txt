@@ -118,19 +118,20 @@ cmake_pop_check_state()
 find_package(Threads REQUIRED QUIET)
 
 if(BUILD_SHARED_LIBS)
-    if(WIN32)
-        # Export symbols to .def file
-        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    endif()
-
     add_library(libprimesieve SHARED ${LIB_SRC})
-    set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve PRIVATE Threads::Threads ${LIBATOMIC})
-
     string(REPLACE "." ";" SOVERSION_LIST ${PRIMESIEVE_SOVERSION})
     list(GET SOVERSION_LIST 0 PRIMESIEVE_SOVERSION_MAJOR)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
+
+    if(WIN32)
+        # Export symbols to .def file
+        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    else()
+        # Name shared library libprimesieve.*
+        set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
+    endif()
 
     target_compile_features(libprimesieve
     PUBLIC
@@ -190,7 +191,7 @@ endif()
 # will only work if the DLL is in the same directory or a directory
 # that is in the PATH environment variable.
 
-if(WIN32)
+if(WIN32 AND TARGET libprimesieve-static)
     set(STATIC_LINKING ON)
 elseif(NOT TARGET libprimesieve)
     set(STATIC_LINKING ON)
