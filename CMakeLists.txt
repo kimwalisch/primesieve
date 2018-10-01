@@ -131,7 +131,7 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
-    if(WIN32)
+    if(WIN32 AND NOT MINGW)
         # On Windows the shared library will be named primesieve.dll
         # and the associated import library will be named
         # primesieve.lib. This is an issue as the static library
