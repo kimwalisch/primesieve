@@ -131,6 +131,16 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
+    if(WIN32)
+        # On Windows the shared library will be named primesieve.dll
+        # and the associated import library will be named
+        # primesieve.lib. This is an issue as the static library
+        # is also named primesieve.lib. Hence we rename the import
+        # library to primesieve.dll.lib. This is the same naming
+        # convention as the Rust programming language.
+        set_target_properties(libprimesieve PROPERTIES IMPORT_SUFFIX "dll.lib")
+    endif()
+
     target_compile_features(libprimesieve
     PUBLIC
         cxx_alias_templates
@@ -156,16 +166,6 @@ if(BUILD_STATIC_LIBS)
     add_library(libprimesieve-static STATIC ${LIB_SRC})
     set_target_properties(libprimesieve-static PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${LIBATOMIC})
-
-    if(WIN32)
-        # On Windows the shared library will be named primesieve.dll
-        # and the associated import library will be named
-        # primesieve.lib. Hence we cannot name the static library
-        # primesieve.lib but instead we name it libprimesieve.lib.
-        # This is the same naming convention Microsoft uses to
-        # distinguish static and shared libraries.
-        set_target_properties(libprimesieve-static PROPERTIES PREFIX "lib")
-    endif()
 
     if(TARGET libprimesieve)
         add_dependencies(libprimesieve-static libprimesieve)
