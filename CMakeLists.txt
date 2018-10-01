@@ -138,7 +138,7 @@ if(BUILD_SHARED_LIBS)
         # is also named primesieve.lib. Hence we rename the import
         # library to primesieve.dll.lib. This is the same naming
         # convention as the Rust programming language.
-        set_target_properties(libprimesieve PROPERTIES IMPORT_SUFFIX "dll.lib")
+        set_target_properties(libprimesieve PROPERTIES IMPORT_SUFFIX ".dll.lib")
     endif()
 
     target_compile_features(libprimesieve
