@@ -131,7 +131,7 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
-    if(WIN32)
+    if(WIN32 AND BUILD_STATIC_LIBS)
         # On Windows me must output the static and shared libraries
         # into separate directories to avoid file name clashes.
         set_target_properties(libprimesieve
