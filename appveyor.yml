@@ -28,9 +28,10 @@ build_script:
   - cd ..
 
 test_script:
-  - cd static_linking
-  - ctest -C Release
-  - cd ..\shared_linking
+  - cd shared_linking
   - copy Release\primesieve.dll test\Release
   - ctest -C Release
+  - cd ..\static_linking
+  - ctest -C Release
+  - cmake --build . --target install
   - Release\primesieve.exe --cpu-info
