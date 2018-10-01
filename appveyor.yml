@@ -14,10 +14,23 @@ platform:
   - x64
 
 build_script:
-  - if "%platform%" == "x86" cmake -G "Visual Studio 15 2017" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON .
-  - if "%platform%" == "x64" cmake -G "Visual Studio 15 2017 Win64" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON .
+  - mkdir shared_linking
+  - cd shared_linking
+  - if "%platform%" == "x86" cmake -G "Visual Studio 15 2017" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_STATIC_LIBS=OFF ..
+  - if "%platform%" == "x64" cmake -G "Visual Studio 15 2017 Win64" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_STATIC_LIBS=OFF ..
   - cmake --build . --config Release
+  - cd ..
+  - mkdir static_linking
+  - cd static_linking
+  - if "%platform%" == "x86" cmake -G "Visual Studio 15 2017" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
+  - if "%platform%" == "x64" cmake -G "Visual Studio 15 2017 Win64" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
+  - cmake --build . --config Release --target install
+  - cd ..
 
 test_script:
+  - cd shared_linking
+  - copy Release\primesieve.dll test\Release
   - ctest -C Release
-  - test\Release\cpu_info.exe
+  - cd ..\static_linking
+  - ctest -C Release
+  - Release\primesieve.exe --cpu-info
