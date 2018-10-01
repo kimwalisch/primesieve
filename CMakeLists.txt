@@ -124,15 +124,21 @@ find_package(Threads REQUIRED QUIET)
 
 if(BUILD_SHARED_LIBS)
     add_library(libprimesieve SHARED ${LIB_SRC})
+    set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve PRIVATE Threads::Threads ${LIBATOMIC})
     string(REPLACE "." ";" SOVERSION_LIST ${PRIMESIEVE_SOVERSION})
     list(GET SOVERSION_LIST 0 PRIMESIEVE_SOVERSION_MAJOR)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
-    if(NOT WIN32)
-        # Name shared library libprimesieve.*
-        set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
+    if(WIN32)
+        # On Windows me must output the static and shared libraries
+        # into separate directories to avoid file name clashes.
+        set_target_properties(libprimesieve
+        PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/DLL"
+            LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/DLL"
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/DLL")
     endif()
 
     target_compile_features(libprimesieve
