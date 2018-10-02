@@ -16,7 +16,11 @@ if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
     message(FATAL_ERROR "One or both of BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be set to ON")
 endif()
 
-if(WIN32 AND BUILD_SHARED_LIBS)
+if(WIN32 AND NOT MINGW)
+    set(WIN32_MSVC_COMPATIBLE TRUE)
+endif()
+
+if(WIN32_MSVC_COMPATIBLE && BUILD_SHARED_LIBS)
     # Export symbols to .def file
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
@@ -131,7 +135,7 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
-    if(WIN32 AND NOT MINGW)
+    if(WIN32_MSVC_COMPATIBLE)
         # On Windows the shared library will be named primesieve.dll
         # and the associated import library will be named
         # primesieve.lib. This is an issue as the static library
