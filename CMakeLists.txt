@@ -16,15 +16,6 @@ if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
     message(FATAL_ERROR "One or both of BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be set to ON")
 endif()
 
-if(WIN32 AND NOT MINGW)
-    set(WIN32_MSVC_COMPATIBLE ON)
-endif()
-
-if(WIN32_MSVC_COMPATIBLE AND BUILD_SHARED_LIBS)
-    # Export symbols to .def file
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
-
 # primesieve binary source files #####################################
 
 set(BIN_SRC src/console/cmdoptions.cpp
@@ -67,6 +58,16 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
         "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
         FORCE)
+endif()
+
+# MSVC DLL support (Windows) ######################################### 
+
+if(WIN32 AND NOT MINGW)
+    set(WIN32_MSVC_COMPATIBLE ON)
+    if(BUILD_SHARED_LIBS)
+        # Export symbols to .def file
+        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    endif()
 endif()
 
 # Silence GCC switch fall through warnings ###########################
