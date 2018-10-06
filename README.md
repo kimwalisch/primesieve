@@ -26,9 +26,7 @@ operations and uses
 <img src="https://primesieve.org/images/Osqrtn.svg" height="20" align="absmiddle"/>
 memory. Furthermore primesieve uses the
 [bucket sieve](http://sweet.ua.pt/tos/software/prime_sieve.html)
-algorithm for large sieving primes which reduces the memory usage to
-<img src="https://primesieve.org/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
-bytes per thread.
+algorithm which improves cache efficiency when generating primes > 2^32.
 
 ## Installation
 
