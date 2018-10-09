@@ -5,7 +5,7 @@
 ///         that in EratMedium each sieving prime is sorted (by its
 ///         wheelIndex) after the sieving step. When we then iterate
 ///         over the sorted sieving primes in the next segment the
-///         initial indirect branch i.e. switch(wheelIndex) is
+///         initial indirect branch i.e. 'switch (wheelIndex)' is
 ///         predicted correctly by the CPU which improves performance
 ///         by up to 15%.
 ///
@@ -87,6 +87,19 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)
   }
 }
 
+/// This macro sorts the current sieving prime by its
+/// wheelIndex after sieving has finished. When we
+/// then iterate over the sieving primes in the next
+/// segment the 'switch (wheelIndex)' branch will be
+/// predicted correctly by the CPU.
+///
+#define SORT_SIEVING_PRIME(wheelIndex) \
+  out ## wheelIndex: \
+  multipleIndex -= sieveSize; \
+  if (!lists_[wheelIndex]->store(sievingPrime, multipleIndex, wheelIndex)) \
+    memoryPool_.addBucket(lists_[wheelIndex]); \
+  continue;
+
 /// Segmented sieve of Eratosthenes with wheel factorization
 /// optimized for medium sieving primes that have a few
 /// multiples per segment. This algorithm uses a hardcoded
@@ -99,18 +112,6 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
     uint64_t sievingPrime = prime->getSievingPrime();
     uint64_t multipleIndex = prime->getMultipleIndex();
     uint64_t wheelIndex = prime->getWheelIndex();
-
-    // This macro sorts the current sieving prime by its
-    // wheelIndex after sieving has finished. When we
-    // then iterate over the sieving primes in the next
-    // segment the 'switch (wheelIndex)' branch will be
-    // predicted correctly by the CPU.
-    #define SORT_SIEVING_PRIME(wheelIndex) \
-      out ## wheelIndex: \
-      multipleIndex -= sieveSize; \
-      if (!lists_[wheelIndex]->store(sievingPrime, multipleIndex, wheelIndex)) \
-        memoryPool_.addBucket(lists_[wheelIndex]); \
-      continue;
 
     switch (wheelIndex)
     {
