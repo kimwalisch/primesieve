@@ -88,7 +88,7 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)
 }
 
 /// Segmented sieve of Eratosthenes with wheel factorization
-/// optimized for small sieving primes that have a few
+/// optimized for medium sieving primes that have a few
 /// multiples per segment. This algorithm uses a hardcoded
 /// modulo 30 wheel that skips multiples of 2, 3 and 5.
 ///
