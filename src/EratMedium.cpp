@@ -314,6 +314,10 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
       }
     }
 
+    // Sort the current sieving prime by its wheelIndex.
+    // This way when we iterate over the sieving
+    // primes in the next next segment all branches
+    // will be predicted correctly.
     #define UPDATE_SIEVING_PRIME(wheelIndex) \
       out ## wheelIndex: \
       multipleIndex -= sieveSize; \
