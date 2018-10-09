@@ -72,8 +72,9 @@ void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t
     memoryPool_.addBucket(lists_[segment]);
 }
 
-/// Cross-off the multiples of big sieving
-/// primes from the sieve array.
+/// Get the bucket list related to the current
+/// segment, then iterate over its buckets
+/// and call crossOff() for each bucket.
 ///
 void EratBig::crossOff(byte_t* sieve)
 {
