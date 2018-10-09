@@ -21,9 +21,10 @@
 
 #include <stdint.h>
 #include <cassert>
+#include <algorithm>
 #include <vector>
 
-using namespace std;
+using std::rotate;
 
 namespace primesieve {
 
