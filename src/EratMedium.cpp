@@ -100,6 +100,18 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
     uint64_t multipleIndex = prime->getMultipleIndex();
     uint64_t wheelIndex = prime->getWheelIndex();
 
+    // This macro sorts the current sieving prime by its
+    // wheelIndex after sieving has finished. When we
+    // then iterate over the sieving primes in the next
+    // segment the 'switch (wheelIndex)' branch will be
+    // predicted correctly by the CPU.
+    #define SORT_SIEVING_PRIME(wheelIndex) \
+      out ## wheelIndex: \
+      multipleIndex -= sieveSize; \
+      if (!lists_[wheelIndex]->store(sievingPrime, multipleIndex, wheelIndex)) \
+        memoryPool_.addBucket(lists_[wheelIndex]); \
+      continue;
+
     switch (wheelIndex)
     {
       for (;;) // i*30 + 7
@@ -129,6 +141,15 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
                 sieve[multipleIndex] &= BIT5;
                 multipleIndex += sievingPrime * 2 + 1;
       }
+      SORT_SIEVING_PRIME(0)
+      SORT_SIEVING_PRIME(1)
+      SORT_SIEVING_PRIME(2)
+      SORT_SIEVING_PRIME(3)
+      SORT_SIEVING_PRIME(4)
+      SORT_SIEVING_PRIME(5)
+      SORT_SIEVING_PRIME(6)
+      SORT_SIEVING_PRIME(7)
+
       for (;;) // i*30 + 11
       {
         case  8: if (multipleIndex >= sieveSize) goto out8;
@@ -156,6 +177,15 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
                  sieve[multipleIndex] &= BIT4;
                  multipleIndex += sievingPrime * 2 + 1;
       }
+      SORT_SIEVING_PRIME(8)
+      SORT_SIEVING_PRIME(9)
+      SORT_SIEVING_PRIME(10)
+      SORT_SIEVING_PRIME(11)
+      SORT_SIEVING_PRIME(12)
+      SORT_SIEVING_PRIME(13)
+      SORT_SIEVING_PRIME(14)
+      SORT_SIEVING_PRIME(15)
+
       for (;;) // i*30 + 13
       {
         case 16: if (multipleIndex >= sieveSize) goto out16;
@@ -183,6 +213,15 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
                  sieve[multipleIndex] &= BIT3;
                  multipleIndex += sievingPrime * 2 + 1;
       }
+      SORT_SIEVING_PRIME(16)
+      SORT_SIEVING_PRIME(17)
+      SORT_SIEVING_PRIME(18)
+      SORT_SIEVING_PRIME(19)
+      SORT_SIEVING_PRIME(20)
+      SORT_SIEVING_PRIME(21)
+      SORT_SIEVING_PRIME(22)
+      SORT_SIEVING_PRIME(23)
+
       for (;;) // i*30 + 17
       {
         case 24: if (multipleIndex >= sieveSize) goto out24;
@@ -210,6 +249,15 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
                  sieve[multipleIndex] &= BIT2;
                  multipleIndex += sievingPrime * 2 + 1;
       }
+      SORT_SIEVING_PRIME(24)
+      SORT_SIEVING_PRIME(25)
+      SORT_SIEVING_PRIME(26)
+      SORT_SIEVING_PRIME(27)
+      SORT_SIEVING_PRIME(28)
+      SORT_SIEVING_PRIME(29)
+      SORT_SIEVING_PRIME(30)
+      SORT_SIEVING_PRIME(31)
+
       for (;;) // i*30 + 19
       {
         case 32: if (multipleIndex >= sieveSize) goto out32;
@@ -237,6 +285,15 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
                  sieve[multipleIndex] &= BIT1;
                  multipleIndex += sievingPrime * 2 + 1;
       }
+      SORT_SIEVING_PRIME(32)
+      SORT_SIEVING_PRIME(33)
+      SORT_SIEVING_PRIME(34)
+      SORT_SIEVING_PRIME(35)
+      SORT_SIEVING_PRIME(36)
+      SORT_SIEVING_PRIME(37)
+      SORT_SIEVING_PRIME(38)
+      SORT_SIEVING_PRIME(39)
+
       for (;;) // i*30 + 23
       {
         case 40: if (multipleIndex >= sieveSize) goto out40;
@@ -264,6 +321,15 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
                  sieve[multipleIndex] &= BIT0;
                  multipleIndex += sievingPrime * 2 + 1;
       }
+      SORT_SIEVING_PRIME(40)
+      SORT_SIEVING_PRIME(41)
+      SORT_SIEVING_PRIME(42)
+      SORT_SIEVING_PRIME(43)
+      SORT_SIEVING_PRIME(44)
+      SORT_SIEVING_PRIME(45)
+      SORT_SIEVING_PRIME(46)
+      SORT_SIEVING_PRIME(47)
+
       for (;;) // i*30 + 29
       {
         case 48: if (multipleIndex >= sieveSize) goto out48;
@@ -291,6 +357,15 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
                  sieve[multipleIndex] &= BIT7;
                  multipleIndex += sievingPrime * 2 + 2;
       }
+      SORT_SIEVING_PRIME(48)
+      SORT_SIEVING_PRIME(49)
+      SORT_SIEVING_PRIME(50)
+      SORT_SIEVING_PRIME(51)
+      SORT_SIEVING_PRIME(52)
+      SORT_SIEVING_PRIME(53)
+      SORT_SIEVING_PRIME(54)
+      SORT_SIEVING_PRIME(55)
+
       for (;;) // i*30 + 31
       {
         case 56: if (multipleIndex >= sieveSize) goto out56;
@@ -318,83 +393,15 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
                  sieve[multipleIndex] &= BIT6;
                  multipleIndex += sievingPrime * 2 + 0;
       }
+      SORT_SIEVING_PRIME(56)
+      SORT_SIEVING_PRIME(57)
+      SORT_SIEVING_PRIME(58)
+      SORT_SIEVING_PRIME(59)
+      SORT_SIEVING_PRIME(60)
+      SORT_SIEVING_PRIME(61)
+      SORT_SIEVING_PRIME(62)
+      SORT_SIEVING_PRIME(63)
     }
-
-    // Sort the current sieving prime by its wheelIndex.
-    // This way when we iterate over the sieving
-    // primes in the next next segment all branches
-    // will be predicted correctly.
-    #define SORT_SIEVING_PRIME(wheelIndex) \
-      out ## wheelIndex: \
-      multipleIndex -= sieveSize; \
-      if (!lists_[wheelIndex]->store(sievingPrime, multipleIndex, wheelIndex)) \
-        memoryPool_.addBucket(lists_[wheelIndex]); \
-      continue;
-
-    SORT_SIEVING_PRIME(0)
-    SORT_SIEVING_PRIME(1)
-    SORT_SIEVING_PRIME(2)
-    SORT_SIEVING_PRIME(3)
-    SORT_SIEVING_PRIME(4)
-    SORT_SIEVING_PRIME(5)
-    SORT_SIEVING_PRIME(6)
-    SORT_SIEVING_PRIME(7)
-    SORT_SIEVING_PRIME(8)
-    SORT_SIEVING_PRIME(9)
-    SORT_SIEVING_PRIME(10)
-    SORT_SIEVING_PRIME(11)
-    SORT_SIEVING_PRIME(12)
-    SORT_SIEVING_PRIME(13)
-    SORT_SIEVING_PRIME(14)
-    SORT_SIEVING_PRIME(15)
-    SORT_SIEVING_PRIME(16)
-    SORT_SIEVING_PRIME(17)
-    SORT_SIEVING_PRIME(18)
-    SORT_SIEVING_PRIME(19)
-    SORT_SIEVING_PRIME(20)
-    SORT_SIEVING_PRIME(21)
-    SORT_SIEVING_PRIME(22)
-    SORT_SIEVING_PRIME(23)
-    SORT_SIEVING_PRIME(24)
-    SORT_SIEVING_PRIME(25)
-    SORT_SIEVING_PRIME(26)
-    SORT_SIEVING_PRIME(27)
-    SORT_SIEVING_PRIME(28)
-    SORT_SIEVING_PRIME(29)
-    SORT_SIEVING_PRIME(30)
-    SORT_SIEVING_PRIME(31)
-    SORT_SIEVING_PRIME(32)
-    SORT_SIEVING_PRIME(33)
-    SORT_SIEVING_PRIME(34)
-    SORT_SIEVING_PRIME(35)
-    SORT_SIEVING_PRIME(36)
-    SORT_SIEVING_PRIME(37)
-    SORT_SIEVING_PRIME(38)
-    SORT_SIEVING_PRIME(39)
-    SORT_SIEVING_PRIME(40)
-    SORT_SIEVING_PRIME(41)
-    SORT_SIEVING_PRIME(42)
-    SORT_SIEVING_PRIME(43)
-    SORT_SIEVING_PRIME(44)
-    SORT_SIEVING_PRIME(45)
-    SORT_SIEVING_PRIME(46)
-    SORT_SIEVING_PRIME(47)
-    SORT_SIEVING_PRIME(48)
-    SORT_SIEVING_PRIME(49)
-    SORT_SIEVING_PRIME(50)
-    SORT_SIEVING_PRIME(51)
-    SORT_SIEVING_PRIME(52)
-    SORT_SIEVING_PRIME(53)
-    SORT_SIEVING_PRIME(54)
-    SORT_SIEVING_PRIME(55)
-    SORT_SIEVING_PRIME(56)
-    SORT_SIEVING_PRIME(57)
-    SORT_SIEVING_PRIME(58)
-    SORT_SIEVING_PRIME(59)
-    SORT_SIEVING_PRIME(60)
-    SORT_SIEVING_PRIME(61)
-    SORT_SIEVING_PRIME(62)
-    SORT_SIEVING_PRIME(63)
   }
 }
 
