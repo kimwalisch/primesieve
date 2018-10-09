@@ -1,16 +1,17 @@
-Changes in version 7.2, 01/10/2018
+Changes in version 7.2, 09/10/2018
 ==================================
 
 Unreleased, work in progress.
 
-This version finally builds libprimesieve as a shared library i.e.
-primesieve.dll on Windows making it easier to use libprimesieve
-in other programming languages on Windows. This feature has been
-requested by many users for a long time.
+primesieve-7.2 features a new algorithm for medium sieving primes
+that improves the CPU's branch prediction rate by sorting the
+sieving primes (before using them). On recent Intel CPUs I
+measured a speedup of about 3% and on AMD EPYC CPUs I measured a
+speedup of up to 15%.
 
+* EratMedium.cpp: New sieving algorithm.
+* MemoryPool.cpp: Move memory pool into its own class.
 * CMakeLists.txt: Add support for primesieve.dll.
-* cmdoptions.cpp: Fix DLL linking issue.
-* cpu_info.cpp: Fix DLL linking issue.
 
 Changes in version 7.1, 19/08/2018
 ==================================
