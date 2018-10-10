@@ -27,11 +27,14 @@
   [[1]](https://github.com/kimwalisch/primesieve/tree/master/src#references).
 
 * **EratMedium** is derived from Wheel. EratMedium is a segmented
-  sieve of Eratosthenes algorithm with a modulo 210 wheel that skips
-  multiples of 2, 3, 5 and 7. The wheel is implemented using a
-  precomputed lookup table (```wheel210``` array from
-  ```Wheel.cpp```). This algorithm is optimized for medium sieving
-  primes with a few multiples per segment.
+  sieve of Eratosthenes algorithm with a hard-coded modulo 30 wheel
+  that skips multiples of 2, 3 and 5. EratMedium is similar to
+  EratSmall except that in EratMedium each sieving prime is sorted
+  (by its ```wheelIndex```) after the sieving step. When we then iterate
+  over the sorted sieving primes in the next segment the initial
+  indirect branch ```switch (wheelIndex)``` is predicted correctly
+  by the CPU which gives a speedup of about 15% for medium sieving
+  primes that have a few multiples per segment.
 
 * **EratBig** is derived from Wheel. EratBig is a segmented sieve of
   Eratosthenes algorithm with Tomás Oliveira's improvement for big
@@ -40,6 +43,14 @@
   wheel is implemented using a precomputed lookup table (```wheel210```
   array from ```Wheel.cpp```). EratBig is optimized for big sieving
   primes that have less than one multiple per segment.
+
+* **MemoryPool** is used to reduce the number of memory allocations in
+  ```EratMedium``` and ```EratBig```. Up to 1024 sieving primes are
+  stored in a bucket. Whenever the ```EratMedium``` and ```EratBig```
+  algorithms run out of buckets for storing sieving primes they request
+  a new bucket from the ```MemoryPool```. The ```MemoryPool``` has a
+  stock of buckets and only when there are no more buckets in the stock
+  the ```MemoryPool``` will allocate new buckets.
 
 * **PreSieve** is used to pre-sieve multiples of small primes ≤ 19
   to speed up the sieve of Eratosthenes. Upon creation the
