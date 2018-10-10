@@ -9,10 +9,10 @@
 /// file in the top level directory.
 ///
 
+#include <primesieve/EratSmall.hpp>
 #include <primesieve/bits.hpp>
 #include <primesieve/Bucket.hpp>
 #include <primesieve/CpuInfo.hpp>
-#include <primesieve/EratSmall.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/types.hpp>
@@ -23,7 +23,7 @@
 #include <cassert>
 #include <vector>
 
-using namespace std;
+using std::min;
 
 namespace primesieve {
 
@@ -73,7 +73,7 @@ void EratSmall::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64
 }
 
 /// Cross-off the multiples of small sieving
-/// primes from the sieve array
+/// primes from the sieve array.
 ///
 void EratSmall::crossOff(byte_t* sieve, uint64_t sieveSize)
 {
@@ -91,7 +91,7 @@ void EratSmall::crossOff(byte_t* sieve, uint64_t sieveSize)
 /// Segmented sieve of Eratosthenes with wheel factorization
 /// optimized for small sieving primes that have many multiples
 /// per segment. This algorithm uses a hardcoded modulo 30
-/// wheel that skips multiples of 2, 3 and 5
+/// wheel that skips multiples of 2, 3 and 5.
 ///
 void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
 {
