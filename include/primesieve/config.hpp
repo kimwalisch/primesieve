@@ -58,16 +58,15 @@ enum {
   ///
   const double FACTOR_ERATSMALL = 0.4;
 
-  /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
-  /// (and > EratSmall see above) are processed in EratMedium objects.
-  /// @pre FACTOR_ERATMEDIUM >= 0 && <= 5
+  /// The formula below ensures that each sieving prime in EratMedium
+  /// has at least 1 multiple occurrence in each segment.
+  /// @pre FACTOR_ERATMEDIUM >= 0 && <= 6
   ///
-  /// Statistically ideal factor for 3rd Wheel is:
-  /// FACTOR_ERATMEDIUM * 6 + FACTOR_ERATMEDIUM * 4 = 30
-  /// FACTOR_ERATMEDIUM = 30 / 10
-  /// FACTOR_ERATMEDIUM = 3.0
+  /// FACTOR_ERATMEDIUM <= 30 numbers per byte / max(wheelFactor)
+  /// FACTOR_ERATMEDIUM = 30 / 6
+  /// FACTOR_ERATMEDIUM = 5.0
   ///
-  const double FACTOR_ERATMEDIUM = 3.0;
+  const double FACTOR_ERATMEDIUM = 5.0;
 
   /// Each thread sieves at least a distance of MIN_THREAD_DISTANCE
   /// in order to reduce the initialization overhead.

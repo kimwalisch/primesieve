@@ -38,8 +38,8 @@ void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 
   if (sieveSize > maxSieveSize)
     throw primesieve_error("EratMedium: sieveSize > 4096 KiB");
-  if (maxPrime > sieveSize * 5)
-    throw primesieve_error("EratMedium: maxPrime > sieveSize * 5");
+  if (maxPrime > sieveSize * 6)
+    throw primesieve_error("EratMedium: maxPrime > sieveSize * 6");
 
   enabled_ = true;
   maxPrime_ = maxPrime;
