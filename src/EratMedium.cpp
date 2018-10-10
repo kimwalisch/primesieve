@@ -113,7 +113,7 @@ void EratMedium::crossOff(byte_t* sieve, byte_t* sieveEnd, SievingPrime* prime, 
     uint64_t sievingPrime = prime->getSievingPrime();
     uint64_t multipleIndex = prime->getMultipleIndex();
     uint64_t wheelIndex = prime->getWheelIndex();
-    byte_t* p = &sieve[multipleIndex];
+    byte_t* p = sieve + multipleIndex;
 
     switch (wheelIndex)
     {
