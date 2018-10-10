@@ -94,7 +94,7 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)
 /// predicted correctly by the CPU.
 ///
 #define SORT_SIEVING_PRIME(wheelIndex) \
-  out ## wheelIndex: \
+  sort ## wheelIndex: \
   multipleIndex -= sieveSize; \
   if (!lists_[wheelIndex]->store(sievingPrime, multipleIndex, wheelIndex)) \
     memoryPool_.addBucket(lists_[wheelIndex]); \
@@ -117,28 +117,28 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
     {
       for (;;) // i*30 + 7
       {
-        case 0: if (multipleIndex >= sieveSize) goto out0;
+        case 0: if (multipleIndex >= sieveSize) goto sort0;
                 sieve[multipleIndex] &= BIT0;
                 multipleIndex += sievingPrime * 6 + 1;
-        case 1: if (multipleIndex >= sieveSize) goto out1;
+        case 1: if (multipleIndex >= sieveSize) goto sort1;
                 sieve[multipleIndex] &= BIT4;
                 multipleIndex += sievingPrime * 4 + 1;
-        case 2: if (multipleIndex >= sieveSize) goto out2;
+        case 2: if (multipleIndex >= sieveSize) goto sort2;
                 sieve[multipleIndex] &= BIT3;
                 multipleIndex += sievingPrime * 2 + 0;
-        case 3: if (multipleIndex >= sieveSize) goto out3;
+        case 3: if (multipleIndex >= sieveSize) goto sort3;
                 sieve[multipleIndex] &= BIT7;
                 multipleIndex += sievingPrime * 4 + 1;
-        case 4: if (multipleIndex >= sieveSize) goto out4;
+        case 4: if (multipleIndex >= sieveSize) goto sort4;
                 sieve[multipleIndex] &= BIT6;
                 multipleIndex += sievingPrime * 2 + 1;
-        case 5: if (multipleIndex >= sieveSize) goto out5;
+        case 5: if (multipleIndex >= sieveSize) goto sort5;
                 sieve[multipleIndex] &= BIT2;
                 multipleIndex += sievingPrime * 4 + 1;
-        case 6: if (multipleIndex >= sieveSize) goto out6;
+        case 6: if (multipleIndex >= sieveSize) goto sort6;
                 sieve[multipleIndex] &= BIT1;
                 multipleIndex += sievingPrime * 6 + 1;
-        case 7: if (multipleIndex >= sieveSize) goto out7;
+        case 7: if (multipleIndex >= sieveSize) goto sort7;
                 sieve[multipleIndex] &= BIT5;
                 multipleIndex += sievingPrime * 2 + 1;
       }
@@ -153,28 +153,28 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
 
       for (;;) // i*30 + 11
       {
-        case  8: if (multipleIndex >= sieveSize) goto out8;
+        case  8: if (multipleIndex >= sieveSize) goto sort8;
                  sieve[multipleIndex] &= BIT1;
                  multipleIndex += sievingPrime * 6 + 2;
-        case  9: if (multipleIndex >= sieveSize) goto out9;
+        case  9: if (multipleIndex >= sieveSize) goto sort9;
                  sieve[multipleIndex] &= BIT3;
                  multipleIndex += sievingPrime * 4 + 1;
-        case 10: if (multipleIndex >= sieveSize) goto out10;
+        case 10: if (multipleIndex >= sieveSize) goto sort10;
                  sieve[multipleIndex] &= BIT7;
                  multipleIndex += sievingPrime * 2 + 1;
-        case 11: if (multipleIndex >= sieveSize) goto out11;
+        case 11: if (multipleIndex >= sieveSize) goto sort11;
                  sieve[multipleIndex] &= BIT5;
                  multipleIndex += sievingPrime * 4 + 2;
-        case 12: if (multipleIndex >= sieveSize) goto out12;
+        case 12: if (multipleIndex >= sieveSize) goto sort12;
                  sieve[multipleIndex] &= BIT0;
                  multipleIndex += sievingPrime * 2 + 0;
-        case 13: if (multipleIndex >= sieveSize) goto out13;
+        case 13: if (multipleIndex >= sieveSize) goto sort13;
                  sieve[multipleIndex] &= BIT6;
                  multipleIndex += sievingPrime * 4 + 2;
-        case 14: if (multipleIndex >= sieveSize) goto out14;
+        case 14: if (multipleIndex >= sieveSize) goto sort14;
                  sieve[multipleIndex] &= BIT2;
                  multipleIndex += sievingPrime * 6 + 2;
-        case 15: if (multipleIndex >= sieveSize) goto out15;
+        case 15: if (multipleIndex >= sieveSize) goto sort15;
                  sieve[multipleIndex] &= BIT4;
                  multipleIndex += sievingPrime * 2 + 1;
       }
@@ -189,28 +189,28 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
 
       for (;;) // i*30 + 13
       {
-        case 16: if (multipleIndex >= sieveSize) goto out16;
+        case 16: if (multipleIndex >= sieveSize) goto sort16;
                  sieve[multipleIndex] &= BIT2;
                  multipleIndex += sievingPrime * 6 + 2;
-        case 17: if (multipleIndex >= sieveSize) goto out17;
+        case 17: if (multipleIndex >= sieveSize) goto sort17;
                  sieve[multipleIndex] &= BIT7;
                  multipleIndex += sievingPrime * 4 + 2;
-        case 18: if (multipleIndex >= sieveSize) goto out18;
+        case 18: if (multipleIndex >= sieveSize) goto sort18;
                  sieve[multipleIndex] &= BIT5;
                  multipleIndex += sievingPrime * 2 + 1;
-        case 19: if (multipleIndex >= sieveSize) goto out19;
+        case 19: if (multipleIndex >= sieveSize) goto sort19;
                  sieve[multipleIndex] &= BIT4;
                  multipleIndex += sievingPrime * 4 + 2;
-        case 20: if (multipleIndex >= sieveSize) goto out20;
+        case 20: if (multipleIndex >= sieveSize) goto sort20;
                  sieve[multipleIndex] &= BIT1;
                  multipleIndex += sievingPrime * 2 + 1;
-        case 21: if (multipleIndex >= sieveSize) goto out21;
+        case 21: if (multipleIndex >= sieveSize) goto sort21;
                  sieve[multipleIndex] &= BIT0;
                  multipleIndex += sievingPrime * 4 + 1;
-        case 22: if (multipleIndex >= sieveSize) goto out22;
+        case 22: if (multipleIndex >= sieveSize) goto sort22;
                  sieve[multipleIndex] &= BIT6;
                  multipleIndex += sievingPrime * 6 + 3;
-        case 23: if (multipleIndex >= sieveSize) goto out23;
+        case 23: if (multipleIndex >= sieveSize) goto sort23;
                  sieve[multipleIndex] &= BIT3;
                  multipleIndex += sievingPrime * 2 + 1;
       }
@@ -225,28 +225,28 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
 
       for (;;) // i*30 + 17
       {
-        case 24: if (multipleIndex >= sieveSize) goto out24;
+        case 24: if (multipleIndex >= sieveSize) goto sort24;
                  sieve[multipleIndex] &= BIT3;
                  multipleIndex += sievingPrime * 6 + 3;
-        case 25: if (multipleIndex >= sieveSize) goto out25;
+        case 25: if (multipleIndex >= sieveSize) goto sort25;
                  sieve[multipleIndex] &= BIT6;
                  multipleIndex += sievingPrime * 4 + 3;
-        case 26: if (multipleIndex >= sieveSize) goto out26;
+        case 26: if (multipleIndex >= sieveSize) goto sort26;
                  sieve[multipleIndex] &= BIT0;
                  multipleIndex += sievingPrime * 2 + 1;
-        case 27: if (multipleIndex >= sieveSize) goto out27;
+        case 27: if (multipleIndex >= sieveSize) goto sort27;
                  sieve[multipleIndex] &= BIT1;
                  multipleIndex += sievingPrime * 4 + 2;
-        case 28: if (multipleIndex >= sieveSize) goto out28;
+        case 28: if (multipleIndex >= sieveSize) goto sort28;
                  sieve[multipleIndex] &= BIT4;
                  multipleIndex += sievingPrime * 2 + 1;
-        case 29: if (multipleIndex >= sieveSize) goto out29;
+        case 29: if (multipleIndex >= sieveSize) goto sort29;
                  sieve[multipleIndex] &= BIT5;
                  multipleIndex += sievingPrime * 4 + 2;
-        case 30: if (multipleIndex >= sieveSize) goto out30;
+        case 30: if (multipleIndex >= sieveSize) goto sort30;
                  sieve[multipleIndex] &= BIT7;
                  multipleIndex += sievingPrime * 6 + 4;
-        case 31: if (multipleIndex >= sieveSize) goto out31;
+        case 31: if (multipleIndex >= sieveSize) goto sort31;
                  sieve[multipleIndex] &= BIT2;
                  multipleIndex += sievingPrime * 2 + 1;
       }
@@ -261,28 +261,28 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
 
       for (;;) // i*30 + 19
       {
-        case 32: if (multipleIndex >= sieveSize) goto out32;
+        case 32: if (multipleIndex >= sieveSize) goto sort32;
                  sieve[multipleIndex] &= BIT4;
                  multipleIndex += sievingPrime * 6 + 4;
-        case 33: if (multipleIndex >= sieveSize) goto out33;
+        case 33: if (multipleIndex >= sieveSize) goto sort33;
                  sieve[multipleIndex] &= BIT2;
                  multipleIndex += sievingPrime * 4 + 2;
-        case 34: if (multipleIndex >= sieveSize) goto out34;
+        case 34: if (multipleIndex >= sieveSize) goto sort34;
                  sieve[multipleIndex] &= BIT6;
                  multipleIndex += sievingPrime * 2 + 2;
-        case 35: if (multipleIndex >= sieveSize) goto out35;
+        case 35: if (multipleIndex >= sieveSize) goto sort35;
                  sieve[multipleIndex] &= BIT0;
                  multipleIndex += sievingPrime * 4 + 2;
-        case 36: if (multipleIndex >= sieveSize) goto out36;
+        case 36: if (multipleIndex >= sieveSize) goto sort36;
                  sieve[multipleIndex] &= BIT5;
                  multipleIndex += sievingPrime * 2 + 1;
-        case 37: if (multipleIndex >= sieveSize) goto out37;
+        case 37: if (multipleIndex >= sieveSize) goto sort37;
                  sieve[multipleIndex] &= BIT7;
                  multipleIndex += sievingPrime * 4 + 3;
-        case 38: if (multipleIndex >= sieveSize) goto out38;
+        case 38: if (multipleIndex >= sieveSize) goto sort38;
                  sieve[multipleIndex] &= BIT3;
                  multipleIndex += sievingPrime * 6 + 4;
-        case 39: if (multipleIndex >= sieveSize) goto out39;
+        case 39: if (multipleIndex >= sieveSize) goto sort39;
                  sieve[multipleIndex] &= BIT1;
                  multipleIndex += sievingPrime * 2 + 1;
       }
@@ -297,28 +297,28 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
 
       for (;;) // i*30 + 23
       {
-        case 40: if (multipleIndex >= sieveSize) goto out40;
+        case 40: if (multipleIndex >= sieveSize) goto sort40;
                  sieve[multipleIndex] &= BIT5;
                  multipleIndex += sievingPrime * 6 + 5;
-        case 41: if (multipleIndex >= sieveSize) goto out41;
+        case 41: if (multipleIndex >= sieveSize) goto sort41;
                  sieve[multipleIndex] &= BIT1;
                  multipleIndex += sievingPrime * 4 + 3;
-        case 42: if (multipleIndex >= sieveSize) goto out42;
+        case 42: if (multipleIndex >= sieveSize) goto sort42;
                  sieve[multipleIndex] &= BIT2;
                  multipleIndex += sievingPrime * 2 + 1;
-        case 43: if (multipleIndex >= sieveSize) goto out43;
+        case 43: if (multipleIndex >= sieveSize) goto sort43;
                  sieve[multipleIndex] &= BIT6;
                  multipleIndex += sievingPrime * 4 + 3;
-        case 44: if (multipleIndex >= sieveSize) goto out44;
+        case 44: if (multipleIndex >= sieveSize) goto sort44;
                  sieve[multipleIndex] &= BIT7;
                  multipleIndex += sievingPrime * 2 + 2;
-        case 45: if (multipleIndex >= sieveSize) goto out45;
+        case 45: if (multipleIndex >= sieveSize) goto sort45;
                  sieve[multipleIndex] &= BIT3;
                  multipleIndex += sievingPrime * 4 + 3;
-        case 46: if (multipleIndex >= sieveSize) goto out46;
+        case 46: if (multipleIndex >= sieveSize) goto sort46;
                  sieve[multipleIndex] &= BIT4;
                  multipleIndex += sievingPrime * 6 + 5;
-        case 47: if (multipleIndex >= sieveSize) goto out47;
+        case 47: if (multipleIndex >= sieveSize) goto sort47;
                  sieve[multipleIndex] &= BIT0;
                  multipleIndex += sievingPrime * 2 + 1;
       }
@@ -333,28 +333,28 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
 
       for (;;) // i*30 + 29
       {
-        case 48: if (multipleIndex >= sieveSize) goto out48;
+        case 48: if (multipleIndex >= sieveSize) goto sort48;
                  sieve[multipleIndex] &= BIT6;
                  multipleIndex += sievingPrime * 6 + 6;
-        case 49: if (multipleIndex >= sieveSize) goto out49;
+        case 49: if (multipleIndex >= sieveSize) goto sort49;
                  sieve[multipleIndex] &= BIT5;
                  multipleIndex += sievingPrime * 4 + 4;
-        case 50: if (multipleIndex >= sieveSize) goto out50;
+        case 50: if (multipleIndex >= sieveSize) goto sort50;
                  sieve[multipleIndex] &= BIT4;
                  multipleIndex += sievingPrime * 2 + 2;
-        case 51: if (multipleIndex >= sieveSize) goto out51;
+        case 51: if (multipleIndex >= sieveSize) goto sort51;
                  sieve[multipleIndex] &= BIT3;
                  multipleIndex += sievingPrime * 4 + 4;
-        case 52: if (multipleIndex >= sieveSize) goto out52;
+        case 52: if (multipleIndex >= sieveSize) goto sort52;
                  sieve[multipleIndex] &= BIT2;
                  multipleIndex += sievingPrime * 2 + 2;
-        case 53: if (multipleIndex >= sieveSize) goto out53;
+        case 53: if (multipleIndex >= sieveSize) goto sort53;
                  sieve[multipleIndex] &= BIT1;
                  multipleIndex += sievingPrime * 4 + 4;
-        case 54: if (multipleIndex >= sieveSize) goto out54;
+        case 54: if (multipleIndex >= sieveSize) goto sort54;
                  sieve[multipleIndex] &= BIT0;
                  multipleIndex += sievingPrime * 6 + 5;
-        case 55: if (multipleIndex >= sieveSize) goto out55;
+        case 55: if (multipleIndex >= sieveSize) goto sort55;
                  sieve[multipleIndex] &= BIT7;
                  multipleIndex += sievingPrime * 2 + 2;
       }
@@ -369,28 +369,28 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize, SievingPrime* prime
 
       for (;;) // i*30 + 31
       {
-        case 56: if (multipleIndex >= sieveSize) goto out56;
+        case 56: if (multipleIndex >= sieveSize) goto sort56;
                  sieve[multipleIndex] &= BIT7;
                  multipleIndex += sievingPrime * 6 + 1;
-        case 57: if (multipleIndex >= sieveSize) goto out57;
+        case 57: if (multipleIndex >= sieveSize) goto sort57;
                  sieve[multipleIndex] &= BIT0;
                  multipleIndex += sievingPrime * 4 + 0;
-        case 58: if (multipleIndex >= sieveSize) goto out58;
+        case 58: if (multipleIndex >= sieveSize) goto sort58;
                  sieve[multipleIndex] &= BIT1;
                  multipleIndex += sievingPrime * 2 + 0;
-        case 59: if (multipleIndex >= sieveSize) goto out59;
+        case 59: if (multipleIndex >= sieveSize) goto sort59;
                  sieve[multipleIndex] &= BIT2;
                  multipleIndex += sievingPrime * 4 + 0;
-        case 60: if (multipleIndex >= sieveSize) goto out60;
+        case 60: if (multipleIndex >= sieveSize) goto sort60;
                  sieve[multipleIndex] &= BIT3;
                  multipleIndex += sievingPrime * 2 + 0;
-        case 61: if (multipleIndex >= sieveSize) goto out61;
+        case 61: if (multipleIndex >= sieveSize) goto sort61;
                  sieve[multipleIndex] &= BIT4;
                  multipleIndex += sievingPrime * 4 + 0;
-        case 62: if (multipleIndex >= sieveSize) goto out62;
+        case 62: if (multipleIndex >= sieveSize) goto sort62;
                  sieve[multipleIndex] &= BIT5;
                  multipleIndex += sievingPrime * 6 + 0;
-        case 63: if (multipleIndex >= sieveSize) goto out63;
+        case 63: if (multipleIndex >= sieveSize) goto sort63;
                  sieve[multipleIndex] &= BIT6;
                  multipleIndex += sievingPrime * 2 + 0;
       }
