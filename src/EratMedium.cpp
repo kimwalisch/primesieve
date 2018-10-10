@@ -89,10 +89,10 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)
 }
 
 /// This macro sorts the current sieving prime by its
-/// wheelIndex after sieving has finished. When we
-/// then iterate over the sieving primes in the next
-/// segment the 'switch (wheelIndex)' branch will be
-/// predicted correctly by the CPU.
+/// wheelIndex after sieving has finished. When we then
+/// iterate over the sieving primes in the next segment the
+/// 'switch (wheelIndex)' branch will be predicted
+/// correctly by the CPU.
 ///
 #define SORT_SIEVING_PRIME(wheelIndex) \
   sort ## wheelIndex: \
