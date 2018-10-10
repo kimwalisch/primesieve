@@ -62,12 +62,12 @@ enum {
   /// (and > EratSmall see above) are processed in EratMedium objects.
   /// @pre FACTOR_ERATMEDIUM >= 0 && <= 5
   ///
-  /// Statistically ideal factor for 4th Wheel is:
-  /// FACTOR_ERATMEDIUM * 2 + FACTOR_ERATMEDIUM * 10 = 30
-  /// FACTOR_ERATMEDIUM = 30 / 12
-  /// FACTOR_ERATMEDIUM = 2.5
+  /// Statistically ideal factor for 3rd Wheel is:
+  /// FACTOR_ERATMEDIUM * 6 + FACTOR_ERATMEDIUM * 4 = 30
+  /// FACTOR_ERATMEDIUM = 30 / 10
+  /// FACTOR_ERATMEDIUM = 3.0
   ///
-  const double FACTOR_ERATMEDIUM = 2.5;
+  const double FACTOR_ERATMEDIUM = 3.0;
 
   /// Each thread sieves at least a distance of MIN_THREAD_DISTANCE
   /// in order to reduce the initialization overhead.
