@@ -49,10 +49,10 @@ void EratBig::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 
 void EratBig::init(uint64_t sieveSize)
 {
-  uint64_t maxSievingPrime  = maxPrime_ / 30;
-  uint64_t maxNextMultiple  = maxSievingPrime * getMaxFactor() + getMaxFactor();
+  uint64_t maxSievingPrime = maxPrime_ / 30;
+  uint64_t maxNextMultiple = maxSievingPrime * getMaxFactor() + getMaxFactor();
   uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
-  uint64_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
+  uint64_t maxSegmentCount = maxMultipleIndex >> log2SieveSize_;
   uint64_t size = maxSegmentCount + 1;
 
   lists_.resize(size, nullptr);
