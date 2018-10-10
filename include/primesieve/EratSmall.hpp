@@ -21,7 +21,7 @@ namespace primesieve {
 
 /// EratSmall is an implementation of the segmented sieve
 /// of Eratosthenes optimized for small sieving primes that
-/// have many multiples per segment
+/// have many multiples per segment.
 ///
 class EratSmall : public Wheel30_t
 {

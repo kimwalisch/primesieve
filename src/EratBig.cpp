@@ -11,21 +11,20 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/Bucket.hpp>
-#include <primesieve/config.hpp>
 #include <primesieve/EratBig.hpp>
+#include <primesieve/Bucket.hpp>
+#include <primesieve/MemoryPool.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/types.hpp>
 #include <primesieve/Wheel.hpp>
 
 #include <stdint.h>
-#include <algorithm>
 #include <cassert>
-#include <memory>
+#include <algorithm>
 #include <vector>
 
-using namespace std;
+using std::rotate;
 
 namespace primesieve {
 
@@ -43,7 +42,6 @@ void EratBig::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
   maxPrime_ = maxPrime;
   log2SieveSize_ = ilog2(sieveSize);
   moduloSieveSize_ = sieveSize - 1;
-  stock_ = nullptr;
 
   Wheel::init(stop, sieveSize);
   init(sieveSize);
@@ -51,19 +49,16 @@ void EratBig::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 
 void EratBig::init(uint64_t sieveSize)
 {
-  uint64_t maxSievingPrime  = maxPrime_ / 30;
-  uint64_t maxNextMultiple  = maxSievingPrime * getMaxFactor() + getMaxFactor();
+  uint64_t maxSievingPrime = maxPrime_ / 30;
+  uint64_t maxNextMultiple = maxSievingPrime * getMaxFactor() + getMaxFactor();
   uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
-  uint64_t maxSegmentCount  = maxMultipleIndex >> log2SieveSize_;
+  uint64_t maxSegmentCount = maxMultipleIndex >> log2SieveSize_;
   uint64_t size = maxSegmentCount + 1;
 
-  // EratBig uses up to 1.6 GiB of memory
-  uint64_t maxBytes = (1u << 30) * 2;
-  memory_.reserve(maxBytes / config::BYTES_PER_ALLOC);
-
   lists_.resize(size, nullptr);
-  for (uint64_t i = 0; i < size; i++)
-    pushBucket(i);
+
+  for (Bucket*& list : lists_)
+    memoryPool_.addBucket(list);
 }
 
 /// Add a new sieving prime to EratBig
@@ -75,52 +70,29 @@ void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t
   multipleIndex &= moduloSieveSize_;
 
   if (!lists_[segment]->store(sievingPrime, multipleIndex, wheelIndex))
-    pushBucket(segment);
+    memoryPool_.addBucket(lists_[segment]);
 }
 
-/// Add an empty bucket to the front of lists_[segment]
-void EratBig::pushBucket(uint64_t segment)
-{
-  // allocate new buckets
-  if (!stock_)
-  {
-    int N = config::BYTES_PER_ALLOC / sizeof(Bucket);
-    memory_.emplace_back(unique_ptr<Bucket[]>(new Bucket[N]));
-    Bucket* bucket = memory_.back().get();
-
-    for (int i = 0; i < N - 1; i++)
-      bucket[i].setNext(&bucket[i + 1]);
-    bucket[N-1].setNext(nullptr);
-    stock_ = bucket;
-  }
-  Bucket* empty = stock_;
-  stock_ = stock_->next();
-  moveBucket(*empty, lists_[segment]);
-}
-
-void EratBig::moveBucket(Bucket& src, Bucket*& dest)
-{
-  src.setNext(dest);
-  dest = &src;
-}
-
-/// Cross-off the multiples of big sieving
-/// primes from the sieve array
+/// Get the bucket list related to the current
+/// segment, then iterate over its buckets
+/// and call crossOff() for each bucket.
 ///
 void EratBig::crossOff(byte_t* sieve)
 {
-  while (lists_[0]->hasNext() || !lists_[0]->empty())
+  while (lists_[0]->hasNext() ||
+         !lists_[0]->empty())
   {
     Bucket* bucket = lists_[0];
     lists_[0] = nullptr;
-    pushBucket(0);
-    do {
+    memoryPool_.addBucket(lists_[0]);
+
+    while (bucket)
+    {
       crossOff(sieve, bucket->begin(), bucket->end());
       Bucket* processed = bucket;
       bucket = bucket->next();
-      processed->reset();
-      moveBucket(*processed, stock_);
-    } while (bucket);
+      memoryPool_.freeBucket(processed);
+    }
   }
 
   rotate(lists_.begin(), lists_.begin() + 1, lists_.end());
@@ -129,7 +101,7 @@ void EratBig::crossOff(byte_t* sieve)
 /// Segmented sieve of Eratosthenes with wheel factorization
 /// optimized for big sieving primes that have very few
 /// multiples per segment. Cross-off the next multiple of
-/// each sieving prime in the current bucket
+/// each sieving prime in the current bucket.
 ///
 void EratBig::crossOff(byte_t* sieve, SievingPrime* primes, SievingPrime* end)
 {
@@ -162,9 +134,9 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* primes, SievingPrime* end)
     // move the 2 sieving primes to the list related
     // to their next multiple
     if (!lists[segment0]->store(sievingPrime0, multipleIndex0, wheelIndex0))
-      pushBucket(segment0);
+      memoryPool_.addBucket(lists_[segment0]);
     if (!lists[segment1]->store(sievingPrime1, multipleIndex1, wheelIndex1))
-      pushBucket(segment1);
+      memoryPool_.addBucket(lists_[segment1]);
   }
 
   if (primes != end)
@@ -178,7 +150,7 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* primes, SievingPrime* end)
     multipleIndex &= moduloSieveSize;
 
     if (!lists[segment]->store(sievingPrime, multipleIndex, wheelIndex))
-      pushBucket(segment);
+      memoryPool_.addBucket(lists_[segment]);
   }
 }
 
