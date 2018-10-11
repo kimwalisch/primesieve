@@ -40,7 +40,7 @@ void MemoryPool::allocateBuckets()
 
 void MemoryPool::increaseAllocCount()
 {
-  count_ += count_ / 3;
+  count_ += count_ / 8;
   if (count_ > maxCount_)
     count_ = maxCount_;
 }
