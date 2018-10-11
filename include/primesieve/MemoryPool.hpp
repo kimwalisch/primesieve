@@ -22,12 +22,16 @@ namespace primesieve {
 class MemoryPool
 {
 public:
-  void setAllocCount(uint64_t count);
   void addBucket(Bucket*& dest);
   void freeBucket(Bucket* b);
 private:
+  void allocateBuckets();
+  void increaseAllocCount();
   Bucket* getBucket();
-  uint64_t count_ = config::BYTES_PER_ALLOC / sizeof(Bucket);
+  /// EratMedium::lists_.size() * 2 = 128
+  /// so EratMedium will require only 1 allocation
+  uint64_t count_ = 128;
+  uint64_t maxCount_ = config::MAX_ALLOC_BYTES / sizeof(Bucket);
   /// List of empty buckets
   Bucket* stock_ = nullptr;
   /// Pointers of allocated buckets

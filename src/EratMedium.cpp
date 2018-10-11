@@ -43,7 +43,6 @@ void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 
   enabled_ = true;
   maxPrime_ = maxPrime;
-  memoryPool_.setAllocCount(lists_.size() * 2);
 
   Wheel::init(stop, sieveSize);
   resetLists();

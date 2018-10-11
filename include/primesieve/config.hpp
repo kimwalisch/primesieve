@@ -22,8 +22,8 @@ namespace primesieve {
 namespace config {
 
 enum {
-  /// Number of sieving primes per Bucket in EratSmall, EratMedium and
-  /// EratBig objects, affects performance by about 3%.
+  /// Number of sieving primes per Bucket in EratSmall, EratMedium
+  /// and EratBig objects, affects performance by about 3%.
   ///
   /// - For x86-64 CPUs after  2010 use 1024
   /// - For x86-64 CPUs before 2010 use 512
@@ -31,10 +31,10 @@ enum {
   ///
   BUCKETSIZE = 1 << 10,
 
-  /// The MemoryPool allocates BYTES_PER_ALLOC of new memory
-  /// when it runs out of buckets.
+  /// The MemoryPool allocates at most MAX_ALLOC_BYTES of new
+  /// memory when it runs out of buckets.
   ///
-  BYTES_PER_ALLOC = (1 << 20) * 8,
+  MAX_ALLOC_BYTES = (1 << 20) * 16,
 
   /// primesieve::iterator caches at least MIN_CACHE_ITERATOR
   /// bytes of primes. Larger is usually faster but also
@@ -42,8 +42,8 @@ enum {
   ///
   MIN_CACHE_ITERATOR = (1 << 20) * 8,
 
-  /// primesieve::iterator maximum cache size in bytes, used if
-  /// pi(sqrt(n)) * 8 bytes > MAX_CACHE_ITERATOR.
+  /// primesieve::iterator maximum cache size in bytes, used
+  /// if pi(sqrt(n)) * 8 bytes > MAX_CACHE_ITERATOR.
   ///
   MAX_CACHE_ITERATOR = (1 << 20) * 1024
 };

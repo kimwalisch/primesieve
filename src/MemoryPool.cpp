@@ -15,23 +15,38 @@
 
 namespace primesieve {
 
-void MemoryPool::setAllocCount(uint64_t count)
+void MemoryPool::allocateBuckets()
 {
-  count_ = count;
+  if (memory_.empty())
+    memory_.reserve(128);
+
+  using std::unique_ptr;
+  Bucket* buckets = new Bucket[count_];
+  memory_.emplace_back(unique_ptr<Bucket[]>(buckets));
+  uint64_t lastIdx = count_ - 1;
+
+  for (uint64_t i = 0; i < lastIdx; i++)
+  {
+    Bucket* next = &buckets[i + 1];
+    buckets[i].setNext(next);
+  }
+
+  buckets[lastIdx].setNext(nullptr);
+  stock_ = buckets;
+  increaseAllocCount();
+}
+
+void MemoryPool::increaseAllocCount()
+{
+  count_ += count_ / 3;
+  if (count_ > maxCount_)
+    count_ = maxCount_;
 }
 
 Bucket* MemoryPool::getBucket()
 {
-  // allocate new buckets
   if (!stock_)
-  {
-    Bucket* buckets = new Bucket[count_];
-    memory_.emplace_back(std::unique_ptr<Bucket[]>(buckets));
-    for (uint64_t i = 0; i < count_ - 1; i++)
-      buckets[i].setNext(&buckets[i + 1]);
-    buckets[count_ - 1].setNext(nullptr);
-    stock_ = buckets;
-  }
+    allocateBuckets();
 
   Bucket* bucket = stock_;
   stock_ = stock_->next();
