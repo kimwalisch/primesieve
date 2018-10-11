@@ -23,15 +23,17 @@ void MemoryPool::allocateBuckets()
   using std::unique_ptr;
   Bucket* buckets = new Bucket[count_];
   memory_.emplace_back(unique_ptr<Bucket[]>(buckets));
-  uint64_t lastIdx = count_ - 1;
 
-  for (uint64_t i = 0; i < lastIdx; i++)
+  for (uint64_t i = 0; i < count_; i++)
   {
-    Bucket* next = &buckets[i + 1];
+    Bucket* next = nullptr;
+    if (i + 1 < count_)
+      next = &buckets[i + 1];
+
+    buckets[i].reset();
     buckets[i].setNext(next);
   }
 
-  buckets[lastIdx].setNext(nullptr);
   stock_ = buckets;
   increaseAllocCount();
 }
@@ -50,7 +52,6 @@ Bucket* MemoryPool::getBucket()
 
   Bucket* bucket = stock_;
   stock_ = stock_->next();
-  bucket->reset();
   return bucket;
 }
 
@@ -64,6 +65,7 @@ void MemoryPool::addBucket(Bucket*& dest)
 void MemoryPool::freeBucket(Bucket* b)
 {
   Bucket& bucket = *b;
+  bucket.reset();
   bucket.setNext(stock_);
   stock_ = &bucket;
 }
