@@ -106,18 +106,14 @@ private:
 class Bucket
 {
 public:
-  Bucket()              { reset(); }
   SievingPrime* begin() { return &sievingPrimes_[0]; }
   SievingPrime* last()  { return &sievingPrimes_[config::BUCKETSIZE - 1]; }
   SievingPrime* end()   { return prime_; }
   Bucket* next()        { return next_; }
   bool hasNext() const  { return next_ != nullptr; }
   bool empty()          { return begin() == end(); }
-  void reset()          { prime_ = begin(); }
-  void setNext(Bucket* next)
-  {
-    next_ = next;
-  }
+  void setNext(Bucket* next) { next_ = next; }
+  void reset() { prime_ = begin(); }
 
   /// Store a sieving prime in the bucket
   /// @return false if the bucket is full else true
