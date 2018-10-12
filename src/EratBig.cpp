@@ -4,6 +4,12 @@
 ///         primes. This is an optimized implementation of Tomas
 ///         Oliveira e Silva's cache-friendly bucket sieve algorithm:
 ///         http://www.ieeta.pt/~tos/software/prime_sieve.html
+///         The idea is that for each segment we keep a list of buckets
+///         which contain the sieving primes that have a multiple
+///         occurrence in that segment. When we then cross off the
+///         multiples from the current segment we avoid processing
+///         sieving primes that do not have a multiple occurrence in
+///         the current segment.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -124,10 +130,8 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* primes, SievingPrime* end)
     // and calculate the next multiple
     unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
     unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
-
     uint64_t segment0 = multipleIndex0 >> log2SieveSize;
     uint64_t segment1 = multipleIndex1 >> log2SieveSize;
-
     multipleIndex0 &= moduloSieveSize;
     multipleIndex1 &= moduloSieveSize;
 
