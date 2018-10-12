@@ -3,7 +3,7 @@
 /// @brief  Segmented sieve of Eratosthenes optimized for small sieving
 ///         primes. Since each sieving prime in EratSmall has many
 ///         multiple occurrences per segment the initialization overhead
-///         of each sieving prime at the beginning of each segment is
+///         of the sieving primes at the beginning of each segment is
 ///         not really important for performance. What matters is that
 ///         crossing off multiples uses as few instructions as possible
 ///         since there are so many multiples.
