@@ -33,7 +33,6 @@ set(LIB_SRC src/api-c.cpp
             src/iterator-c.cpp
             src/iterator.cpp
             src/IteratorHelper.cpp
-            src/MemoryPool.cpp
             src/PrimeGenerator.cpp
             src/nthPrime.cpp
             src/ParallelSieve.cpp
