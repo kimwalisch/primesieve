@@ -77,6 +77,7 @@ check_cxx_compiler_flag(-Wno-implicit-fallthrough Wno_fallthrough)
 
 if(Wno_fallthrough)
     set_source_files_properties(src/EratSmall.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
+    set_source_files_properties(src/EratMedium.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
 # Check if libatomic is needed #######################################
