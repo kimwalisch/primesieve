@@ -63,8 +63,8 @@ private:
   std::unique_ptr<byte_t[]> deleter_;
   PreSieve* preSieve_;
   EratSmall eratSmall_;
-  EratMedium eratMedium_;
   EratBig eratBig_;
+  EratMedium eratMedium_;
   static uint64_t byteRemainder(uint64_t);
   void initSieve(uint64_t);
   void initErat();
