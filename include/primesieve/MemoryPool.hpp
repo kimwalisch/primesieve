@@ -27,11 +27,28 @@
 #include <memory>
 #include <vector>
 
+#if !defined(__has_attribute)
+  #define __has_attribute(x) 0
+#endif
+
 namespace primesieve {
 
 class MemoryPool
 {
 public:
+  /// addBucket() is called inside the main sieving loop in EratBig
+  /// whenever the currently used bucket is full. Each bucket can
+  /// store 1024 sieving primes so addBucket() is called very rarely
+  /// and should hence not be inlined in order to avoid register
+  /// spilling. However when using MSVC 2017 x64 and addBucket() is
+  /// not inlined performance deteriorates by up to 30%.
+  ///
+  /// MSVC: addBucket() should be inlined.
+  /// Other compilers: addBucket() should not be inlined.
+  ///
+  #if __has_attribute(noinline)
+    __attribute__((noinline))
+  #endif
   void addBucket(Bucket*& list)
   {
     // allocate new buckets
@@ -40,10 +57,11 @@ public:
       if (memory_.empty())
         memory_.reserve(128);
 
+      using std::unique_ptr;
       Bucket* buckets = new Bucket[count_];
-      memory_.emplace_back(std::unique_ptr<Bucket[]>(buckets));
+      memory_.emplace_back(unique_ptr<Bucket[]>(buckets));
 
-      // init buckets
+      // initialize buckets
       for (uint64_t i = 0; i < count_; i++)
       {
         Bucket* next = nullptr;
@@ -56,8 +74,11 @@ public:
 
       // put new buckets into stock
       stock_ = buckets;
+  
+      // next time allocate more buckets
       count_ += count_ / 8;
-      count_ = std::min(count_, maxCount_);
+      uint64_t maxCount = config::MAX_ALLOC_BYTES / sizeof(Bucket);
+      count_ = std::min(count_, maxCount);
     }
 
     // get first bucket
@@ -76,12 +97,10 @@ public:
   }
 
 private:
-  /// EratMedium::lists_.size() * 2 = 128
-  /// so EratMedium will require only 1 allocation
-  uint64_t count_ = 128;
-  uint64_t maxCount_ = config::MAX_ALLOC_BYTES / sizeof(Bucket);
   /// List of empty buckets
   Bucket* stock_ = nullptr;
+  /// Number of buckets to allocate
+  uint64_t count_ = 128;
   /// Pointers of allocated buckets
   std::vector<std::unique_ptr<Bucket[]>> memory_;
 };
