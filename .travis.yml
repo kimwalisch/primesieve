@@ -65,7 +65,6 @@ script:
   # 5) Run integration tests
   - ninja test
   - test/cpu_info
-  - test/atomic
   - cd ..
   # 6) Test using valgrind
   - $CXX -Iinclude -O2 -std=c++11 -g src/*.cpp examples/cpp/nth_prime.cpp -o nth_prime -lpthread
