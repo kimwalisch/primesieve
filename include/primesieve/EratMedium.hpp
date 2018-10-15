@@ -11,6 +11,7 @@
 #define ERATMEDIUM_HPP
 
 #include "MemoryPool.hpp"
+#include "Bucket.hpp"
 #include "types.hpp"
 #include "Wheel.hpp"
 
@@ -36,7 +37,15 @@ private:
   std::array<Bucket*, 64> lists_;
   void resetLists();
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
-  void crossOff(byte_t*, byte_t*, SievingPrime*, SievingPrime*);
+  void crossOff(byte_t*, byte_t*, Bucket*);
+  void crossOff_7(byte_t*, byte_t*, Bucket*);
+  void crossOff_11(byte_t*, byte_t*, Bucket*);
+  void crossOff_13(byte_t*, byte_t*, Bucket*);
+  void crossOff_17(byte_t*, byte_t*, Bucket*);
+  void crossOff_19(byte_t*, byte_t*, Bucket*);
+  void crossOff_23(byte_t*, byte_t*, Bucket*);
+  void crossOff_29(byte_t*, byte_t*, Bucket*);
+  void crossOff_31(byte_t*, byte_t*, Bucket*);
 };
 
 } // namespace
