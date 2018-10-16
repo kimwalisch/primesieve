@@ -114,7 +114,8 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
 
     switch (wheelIndex)
     {
-      for (;;) // i*30 + 7
+      // sievingPrime % 30 == 7
+      for (;;)
       {
         case 0: // each iteration removes the next 8 multiples
                 // of the current sievingPrime
@@ -147,7 +148,9 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                 *p &= BIT5; p += sievingPrime * 2 + 1;
       }
       break;
-      for (;;) // i*30 + 11
+
+      // sievingPrime % 30 == 11
+      for (;;)
       {
         case  8: for (; p < loopEnd; p += sievingPrime * 30 + 11)
                  {
@@ -178,7 +181,9 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                  *p &= BIT4; p += sievingPrime * 2 + 1;
       }
       break;
-      for (;;) // i*30 + 13
+
+      // sievingPrime % 30 == 13
+      for (;;)
       {
         case 16: for (; p < loopEnd; p += sievingPrime * 30 + 13)
                  {
@@ -209,7 +214,9 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                  *p &= BIT3; p += sievingPrime * 2 + 1;
       }
       break;
-      for (;;) // i*30 + 17
+
+      // sievingPrime % 30 == 17
+      for (;;)
       {
         case 24: for (; p < loopEnd; p += sievingPrime * 30 + 17)
                  {
@@ -240,7 +247,9 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                  *p &= BIT2; p += sievingPrime * 2 + 1;
       }
       break;
-      for (;;) // i*30 + 19
+
+      // sievingPrime % 30 == 19
+      for (;;)
       {
         case 32: for (; p < loopEnd; p += sievingPrime * 30 + 19)
                  {
@@ -271,7 +280,9 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                  *p &= BIT1; p += sievingPrime * 2 + 1;
       }
       break;
-      for (;;) // i*30 + 23
+
+      // sievingPrime % 30 == 23
+      for (;;)
       {
         case 40: for (; p < loopEnd; p += sievingPrime * 30 + 23)
                  {
@@ -302,7 +313,9 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                  *p &= BIT0; p += sievingPrime * 2 + 1;
       }
       break;
-      for (;;) // i*30 + 29
+
+      // sievingPrime % 30 == 29
+      for (;;)
       {
         case 48: for (; p < loopEnd; p += sievingPrime * 30 + 29)
                  {
@@ -333,7 +346,9 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                  *p &= BIT7; p += sievingPrime * 2 + 2;
       }
       break;
-      for (;;) // i*30 + 31
+
+      // sievingPrime % 30 == 1
+      for (;;)
       {
         case 56: for (; p < loopEnd; p += sievingPrime * 30 + 1)
                  {
@@ -365,6 +380,7 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
       }
       break;
     }
+
     // set multipleIndex for next segment
     prime.setMultipleIndex((uint64_t) (p - sieveEnd));
   }
