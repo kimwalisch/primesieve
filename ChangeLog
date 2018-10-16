@@ -1,15 +1,16 @@
-Changes in version 7.2, 09/10/2018
+Changes in version 7.2, 16/10/2018
 ==================================
 
-Unreleased, work in progress.
+This is a minor new release, the API and ABI (Application binary
+interface) are backwards compatible.
 
 primesieve-7.2 features a new algorithm for medium sieving primes
 that improves the CPU's branch prediction rate by sorting the
-sieving primes (before using them). On recent Intel CPUs I
-measured a speedup of about 3% and on AMD EPYC CPUs I measured a
+sieving primes (before using them). On Intel Skylake CPUs I
+measured a speedup of up to 10% and on AMD EPYC CPUs I measured a
 speedup of up to 15%.
 
-* EratMedium.cpp: New sieving algorithm.
+* EratMedium.cpp: New faster sieving algorithm.
 * MemoryPool.cpp: Move memory pool into its own class.
 * CMakeLists.txt: Add support for primesieve.dll.
 
