@@ -103,11 +103,12 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
     uint64_t sievingPrime = prime.getSievingPrime();
     uint64_t multipleIndex = prime.getMultipleIndex();
     uint64_t wheelIndex = prime.getWheelIndex();
+    uint64_t maxLoopDist = sievingPrime * 28 + 27;
 
     // pointer to the byte containing the first multiple
     // of sievingPrime within the current segment
     byte_t* p = &sieve[multipleIndex];
-    byte_t* loopEnd = sieveEnd - (sievingPrime * 28 + 27);
+    byte_t* loopEnd = sieveEnd - maxLoopDist;
 
     if (loopEnd > sieveEnd)
       loopEnd = p;
