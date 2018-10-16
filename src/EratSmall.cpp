@@ -28,7 +28,14 @@
 #include <cassert>
 #include <vector>
 
-using std::min;
+/// Update the current sieving prime's wheelIndex and
+/// and multipleIndex after sieving has finished.
+///
+#define UPDATE_SIEVING_PRIME(wheelIndex) \
+  out ## wheelIndex: \
+  prime.setWheelIndex(wheelIndex); \
+  prime.setMultipleIndex((uint64_t) (p - sieveEnd)); \
+  continue;
 
 namespace primesieve {
 
@@ -68,7 +75,7 @@ uint64_t EratSmall::getL1Size(uint64_t sieveSize)
   uint64_t minSize = 8 << 10;
   uint64_t maxSize = 4096 << 10;
 
-  size = min(size, sieveSize);
+  size = std::min(size, sieveSize);
   size = inBetween(minSize, size, maxSize);
 
   return size;
@@ -86,7 +93,7 @@ void EratSmall::crossOff(byte_t* sieve, uint64_t sieveSize)
   {
     byte_t* start = sieve;
     sieve += l1Size_;
-    sieve = min(sieve, sieveEnd);
+    sieve = std::min(sieve, sieveEnd);
     crossOff(start, sieve);
   }
 }
@@ -131,24 +138,32 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                   p[sievingPrime * 22 + 5] &= BIT1;
                   p[sievingPrime * 28 + 6] &= BIT5;
                 }
-                if (p >= sieveEnd) { prime.setWheelIndex(0); break; }
+                if (p >= sieveEnd) goto out0;
                 *p &= BIT0; p += sievingPrime * 6 + 1;
-        case 1: if (p >= sieveEnd) { prime.setWheelIndex(1); break; }
+        case 1: if (p >= sieveEnd) goto out1;
                 *p &= BIT4; p += sievingPrime * 4 + 1;
-        case 2: if (p >= sieveEnd) { prime.setWheelIndex(2); break; }
+        case 2: if (p >= sieveEnd) goto out2;
                 *p &= BIT3; p += sievingPrime * 2 + 0;
-        case 3: if (p >= sieveEnd) { prime.setWheelIndex(3); break; }
+        case 3: if (p >= sieveEnd) goto out3;
                 *p &= BIT7; p += sievingPrime * 4 + 1;
-        case 4: if (p >= sieveEnd) { prime.setWheelIndex(4); break; }
+        case 4: if (p >= sieveEnd) goto out4;
                 *p &= BIT6; p += sievingPrime * 2 + 1;
-        case 5: if (p >= sieveEnd) { prime.setWheelIndex(5); break; }
+        case 5: if (p >= sieveEnd) goto out5;
                 *p &= BIT2; p += sievingPrime * 4 + 1;
-        case 6: if (p >= sieveEnd) { prime.setWheelIndex(6); break; }
+        case 6: if (p >= sieveEnd) goto out6;
                 *p &= BIT1; p += sievingPrime * 6 + 1;
-        case 7: if (p >= sieveEnd) { prime.setWheelIndex(7); break; }
+        case 7: if (p >= sieveEnd) goto out7;
                 *p &= BIT5; p += sievingPrime * 2 + 1;
       }
-      break;
+
+      UPDATE_SIEVING_PRIME(0)
+      UPDATE_SIEVING_PRIME(1)
+      UPDATE_SIEVING_PRIME(2)
+      UPDATE_SIEVING_PRIME(3)
+      UPDATE_SIEVING_PRIME(4)
+      UPDATE_SIEVING_PRIME(5)
+      UPDATE_SIEVING_PRIME(6)
+      UPDATE_SIEVING_PRIME(7)
 
       // sievingPrime % 30 == 11
       for (;;)
@@ -164,24 +179,32 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                    p[sievingPrime * 22 +  8] &= BIT2;
                    p[sievingPrime * 28 + 10] &= BIT4;
                  }
-                 if (p >= sieveEnd) { prime.setWheelIndex(8);  break; }
+                 if (p >= sieveEnd) goto out8;
                  *p &= BIT1; p += sievingPrime * 6 + 2;
-        case  9: if (p >= sieveEnd) { prime.setWheelIndex(9);  break; }
+        case  9: if (p >= sieveEnd) goto out9;
                  *p &= BIT3; p += sievingPrime * 4 + 1;
-        case 10: if (p >= sieveEnd) { prime.setWheelIndex(10); break; }
+        case 10: if (p >= sieveEnd) goto out10;
                  *p &= BIT7; p += sievingPrime * 2 + 1;
-        case 11: if (p >= sieveEnd) { prime.setWheelIndex(11); break; }
+        case 11: if (p >= sieveEnd) goto out11;
                  *p &= BIT5; p += sievingPrime * 4 + 2;
-        case 12: if (p >= sieveEnd) { prime.setWheelIndex(12); break; }
+        case 12: if (p >= sieveEnd) goto out12;
                  *p &= BIT0; p += sievingPrime * 2 + 0;
-        case 13: if (p >= sieveEnd) { prime.setWheelIndex(13); break; }
+        case 13: if (p >= sieveEnd) goto out13;
                  *p &= BIT6; p += sievingPrime * 4 + 2;
-        case 14: if (p >= sieveEnd) { prime.setWheelIndex(14); break; }
+        case 14: if (p >= sieveEnd) goto out14;
                  *p &= BIT2; p += sievingPrime * 6 + 2;
-        case 15: if (p >= sieveEnd) { prime.setWheelIndex(15); break; }
+        case 15: if (p >= sieveEnd) goto out15;
                  *p &= BIT4; p += sievingPrime * 2 + 1;
       }
-      break;
+
+      UPDATE_SIEVING_PRIME(8)
+      UPDATE_SIEVING_PRIME(9)
+      UPDATE_SIEVING_PRIME(10)
+      UPDATE_SIEVING_PRIME(11)
+      UPDATE_SIEVING_PRIME(12)
+      UPDATE_SIEVING_PRIME(13)
+      UPDATE_SIEVING_PRIME(14)
+      UPDATE_SIEVING_PRIME(15)
 
       // sievingPrime % 30 == 13
       for (;;)
@@ -197,24 +220,32 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                    p[sievingPrime * 22 +  9] &= BIT6;
                    p[sievingPrime * 28 + 12] &= BIT3;
                  }
-                 if (p >= sieveEnd) { prime.setWheelIndex(16); break; }
+                 if (p >= sieveEnd) goto out16;
                  *p &= BIT2; p += sievingPrime * 6 + 2;
-        case 17: if (p >= sieveEnd) { prime.setWheelIndex(17); break; }
+        case 17: if (p >= sieveEnd) goto out17;
                  *p &= BIT7; p += sievingPrime * 4 + 2;
-        case 18: if (p >= sieveEnd) { prime.setWheelIndex(18); break; }
+        case 18: if (p >= sieveEnd) goto out18;
                  *p &= BIT5; p += sievingPrime * 2 + 1;
-        case 19: if (p >= sieveEnd) { prime.setWheelIndex(19); break; }
+        case 19: if (p >= sieveEnd) goto out19;
                  *p &= BIT4; p += sievingPrime * 4 + 2;
-        case 20: if (p >= sieveEnd) { prime.setWheelIndex(20); break; }
+        case 20: if (p >= sieveEnd) goto out20;
                  *p &= BIT1; p += sievingPrime * 2 + 1;
-        case 21: if (p >= sieveEnd) { prime.setWheelIndex(21); break; }
+        case 21: if (p >= sieveEnd) goto out21;
                  *p &= BIT0; p += sievingPrime * 4 + 1;
-        case 22: if (p >= sieveEnd) { prime.setWheelIndex(22); break; }
+        case 22: if (p >= sieveEnd) goto out22;
                  *p &= BIT6; p += sievingPrime * 6 + 3;
-        case 23: if (p >= sieveEnd) { prime.setWheelIndex(23); break; }
+        case 23: if (p >= sieveEnd) goto out23;
                  *p &= BIT3; p += sievingPrime * 2 + 1;
       }
-      break;
+
+      UPDATE_SIEVING_PRIME(16)
+      UPDATE_SIEVING_PRIME(17)
+      UPDATE_SIEVING_PRIME(18)
+      UPDATE_SIEVING_PRIME(19)
+      UPDATE_SIEVING_PRIME(20)
+      UPDATE_SIEVING_PRIME(21)
+      UPDATE_SIEVING_PRIME(22)
+      UPDATE_SIEVING_PRIME(23)
 
       // sievingPrime % 30 == 17
       for (;;)
@@ -230,24 +261,32 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                    p[sievingPrime * 22 + 12] &= BIT7;
                    p[sievingPrime * 28 + 16] &= BIT2;
                  }
-                 if (p >= sieveEnd) { prime.setWheelIndex(24); break; }
+                 if (p >= sieveEnd) goto out24;
                  *p &= BIT3; p += sievingPrime * 6 + 3;
-        case 25: if (p >= sieveEnd) { prime.setWheelIndex(25); break; }
+        case 25: if (p >= sieveEnd) goto out25;
                  *p &= BIT6; p += sievingPrime * 4 + 3;
-        case 26: if (p >= sieveEnd) { prime.setWheelIndex(26); break; }
+        case 26: if (p >= sieveEnd) goto out26;
                  *p &= BIT0; p += sievingPrime * 2 + 1;
-        case 27: if (p >= sieveEnd) { prime.setWheelIndex(27); break; }
+        case 27: if (p >= sieveEnd) goto out27;
                  *p &= BIT1; p += sievingPrime * 4 + 2;
-        case 28: if (p >= sieveEnd) { prime.setWheelIndex(28); break; }
+        case 28: if (p >= sieveEnd) goto out28;
                  *p &= BIT4; p += sievingPrime * 2 + 1;
-        case 29: if (p >= sieveEnd) { prime.setWheelIndex(29); break; }
+        case 29: if (p >= sieveEnd) goto out29;
                  *p &= BIT5; p += sievingPrime * 4 + 2;
-        case 30: if (p >= sieveEnd) { prime.setWheelIndex(30); break; }
+        case 30: if (p >= sieveEnd) goto out30;
                  *p &= BIT7; p += sievingPrime * 6 + 4;
-        case 31: if (p >= sieveEnd) { prime.setWheelIndex(31); break; }
+        case 31: if (p >= sieveEnd) goto out31;
                  *p &= BIT2; p += sievingPrime * 2 + 1;
       }
-      break;
+
+      UPDATE_SIEVING_PRIME(24)
+      UPDATE_SIEVING_PRIME(25)
+      UPDATE_SIEVING_PRIME(26)
+      UPDATE_SIEVING_PRIME(27)
+      UPDATE_SIEVING_PRIME(28)
+      UPDATE_SIEVING_PRIME(29)
+      UPDATE_SIEVING_PRIME(30)
+      UPDATE_SIEVING_PRIME(31)
 
       // sievingPrime % 30 == 19
       for (;;)
@@ -263,24 +302,32 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                    p[sievingPrime * 22 + 14] &= BIT3;
                    p[sievingPrime * 28 + 18] &= BIT1;
                  }
-                 if (p >= sieveEnd) { prime.setWheelIndex(32); break; }
+                 if (p >= sieveEnd) goto out32;
                  *p &= BIT4; p += sievingPrime * 6 + 4;
-        case 33: if (p >= sieveEnd) { prime.setWheelIndex(33); break; }
+        case 33: if (p >= sieveEnd) goto out33;
                  *p &= BIT2; p += sievingPrime * 4 + 2;
-        case 34: if (p >= sieveEnd) { prime.setWheelIndex(34); break; }
+        case 34: if (p >= sieveEnd) goto out34;
                  *p &= BIT6; p += sievingPrime * 2 + 2;
-        case 35: if (p >= sieveEnd) { prime.setWheelIndex(35); break; }
+        case 35: if (p >= sieveEnd) goto out35;
                  *p &= BIT0; p += sievingPrime * 4 + 2;
-        case 36: if (p >= sieveEnd) { prime.setWheelIndex(36); break; }
+        case 36: if (p >= sieveEnd) goto out36;
                  *p &= BIT5; p += sievingPrime * 2 + 1;
-        case 37: if (p >= sieveEnd) { prime.setWheelIndex(37); break; }
+        case 37: if (p >= sieveEnd) goto out37;
                  *p &= BIT7; p += sievingPrime * 4 + 3;
-        case 38: if (p >= sieveEnd) { prime.setWheelIndex(38); break; }
+        case 38: if (p >= sieveEnd) goto out38;
                  *p &= BIT3; p += sievingPrime * 6 + 4;
-        case 39: if (p >= sieveEnd) { prime.setWheelIndex(39); break; }
+        case 39: if (p >= sieveEnd) goto out39;
                  *p &= BIT1; p += sievingPrime * 2 + 1;
       }
-      break;
+
+      UPDATE_SIEVING_PRIME(32)
+      UPDATE_SIEVING_PRIME(33)
+      UPDATE_SIEVING_PRIME(34)
+      UPDATE_SIEVING_PRIME(35)
+      UPDATE_SIEVING_PRIME(36)
+      UPDATE_SIEVING_PRIME(37)
+      UPDATE_SIEVING_PRIME(38)
+      UPDATE_SIEVING_PRIME(39)
 
       // sievingPrime % 30 == 23
       for (;;)
@@ -296,24 +343,32 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                    p[sievingPrime * 22 + 17] &= BIT4;
                    p[sievingPrime * 28 + 22] &= BIT0;
                  }
-                 if (p >= sieveEnd) { prime.setWheelIndex(40); break; }
+                 if (p >= sieveEnd) goto out40;
                  *p &= BIT5; p += sievingPrime * 6 + 5;
-        case 41: if (p >= sieveEnd) { prime.setWheelIndex(41); break; }
+        case 41: if (p >= sieveEnd) goto out41;
                  *p &= BIT1; p += sievingPrime * 4 + 3;
-        case 42: if (p >= sieveEnd) { prime.setWheelIndex(42); break; }
+        case 42: if (p >= sieveEnd) goto out42;
                  *p &= BIT2; p += sievingPrime * 2 + 1;
-        case 43: if (p >= sieveEnd) { prime.setWheelIndex(43); break; }
+        case 43: if (p >= sieveEnd) goto out43;
                  *p &= BIT6; p += sievingPrime * 4 + 3;
-        case 44: if (p >= sieveEnd) { prime.setWheelIndex(44); break; }
+        case 44: if (p >= sieveEnd) goto out44;
                  *p &= BIT7; p += sievingPrime * 2 + 2;
-        case 45: if (p >= sieveEnd) { prime.setWheelIndex(45); break; }
+        case 45: if (p >= sieveEnd) goto out45;
                  *p &= BIT3; p += sievingPrime * 4 + 3;
-        case 46: if (p >= sieveEnd) { prime.setWheelIndex(46); break; }
+        case 46: if (p >= sieveEnd) goto out46;
                  *p &= BIT4; p += sievingPrime * 6 + 5;
-        case 47: if (p >= sieveEnd) { prime.setWheelIndex(47); break; }
+        case 47: if (p >= sieveEnd) goto out47;
                  *p &= BIT0; p += sievingPrime * 2 + 1;
       }
-      break;
+
+      UPDATE_SIEVING_PRIME(40)
+      UPDATE_SIEVING_PRIME(41)
+      UPDATE_SIEVING_PRIME(42)
+      UPDATE_SIEVING_PRIME(43)
+      UPDATE_SIEVING_PRIME(44)
+      UPDATE_SIEVING_PRIME(45)
+      UPDATE_SIEVING_PRIME(46)
+      UPDATE_SIEVING_PRIME(47)
 
       // sievingPrime % 30 == 29
       for (;;)
@@ -329,24 +384,32 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                    p[sievingPrime * 22 + 22] &= BIT0;
                    p[sievingPrime * 28 + 27] &= BIT7;
                  }
-                 if (p >= sieveEnd) { prime.setWheelIndex(48); break; }
+                 if (p >= sieveEnd) goto out48;
                  *p &= BIT6; p += sievingPrime * 6 + 6;
-        case 49: if (p >= sieveEnd) { prime.setWheelIndex(49); break; }
+        case 49: if (p >= sieveEnd) goto out49;
                  *p &= BIT5; p += sievingPrime * 4 + 4;
-        case 50: if (p >= sieveEnd) { prime.setWheelIndex(50); break; }
+        case 50: if (p >= sieveEnd) goto out50;
                  *p &= BIT4; p += sievingPrime * 2 + 2;
-        case 51: if (p >= sieveEnd) { prime.setWheelIndex(51); break; }
+        case 51: if (p >= sieveEnd) goto out51;
                  *p &= BIT3; p += sievingPrime * 4 + 4;
-        case 52: if (p >= sieveEnd) { prime.setWheelIndex(52); break; }
+        case 52: if (p >= sieveEnd) goto out52;
                  *p &= BIT2; p += sievingPrime * 2 + 2;
-        case 53: if (p >= sieveEnd) { prime.setWheelIndex(53); break; }
+        case 53: if (p >= sieveEnd) goto out53;
                  *p &= BIT1; p += sievingPrime * 4 + 4;
-        case 54: if (p >= sieveEnd) { prime.setWheelIndex(54); break; }
+        case 54: if (p >= sieveEnd) goto out54;
                  *p &= BIT0; p += sievingPrime * 6 + 5;
-        case 55: if (p >= sieveEnd) { prime.setWheelIndex(55); break; }
+        case 55: if (p >= sieveEnd) goto out55;
                  *p &= BIT7; p += sievingPrime * 2 + 2;
       }
-      break;
+
+      UPDATE_SIEVING_PRIME(48)
+      UPDATE_SIEVING_PRIME(49)
+      UPDATE_SIEVING_PRIME(50)
+      UPDATE_SIEVING_PRIME(51)
+      UPDATE_SIEVING_PRIME(52)
+      UPDATE_SIEVING_PRIME(53)
+      UPDATE_SIEVING_PRIME(54)
+      UPDATE_SIEVING_PRIME(55)
 
       // sievingPrime % 30 == 1
       for (;;)
@@ -362,28 +425,33 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
                    p[sievingPrime * 22 + 1] &= BIT5;
                    p[sievingPrime * 28 + 1] &= BIT6;
                  }
-                 if (p >= sieveEnd) { prime.setWheelIndex(56); break; }
+                 if (p >= sieveEnd) goto out56;
                  *p &= BIT7; p += sievingPrime * 6 + 1;
-        case 57: if (p >= sieveEnd) { prime.setWheelIndex(57); break; }
+        case 57: if (p >= sieveEnd) goto out57;
                  *p &= BIT0; p += sievingPrime * 4 + 0;
-        case 58: if (p >= sieveEnd) { prime.setWheelIndex(58); break; }
+        case 58: if (p >= sieveEnd) goto out58;
                  *p &= BIT1; p += sievingPrime * 2 + 0;
-        case 59: if (p >= sieveEnd) { prime.setWheelIndex(59); break; }
+        case 59: if (p >= sieveEnd) goto out59;
                  *p &= BIT2; p += sievingPrime * 4 + 0;
-        case 60: if (p >= sieveEnd) { prime.setWheelIndex(60); break; }
+        case 60: if (p >= sieveEnd) goto out60;
                  *p &= BIT3; p += sievingPrime * 2 + 0;
-        case 61: if (p >= sieveEnd) { prime.setWheelIndex(61); break; }
+        case 61: if (p >= sieveEnd) goto out61;
                  *p &= BIT4; p += sievingPrime * 4 + 0;
-        case 62: if (p >= sieveEnd) { prime.setWheelIndex(62); break; }
+        case 62: if (p >= sieveEnd) goto out62;
                  *p &= BIT5; p += sievingPrime * 6 + 0;
-        case 63: if (p >= sieveEnd) { prime.setWheelIndex(63); break; }
+        case 63: if (p >= sieveEnd) goto out63;
                  *p &= BIT6; p += sievingPrime * 2 + 0;
       }
-      break;
-    }
 
-    // set multipleIndex for next segment
-    prime.setMultipleIndex((uint64_t) (p - sieveEnd));
+      UPDATE_SIEVING_PRIME(56)
+      UPDATE_SIEVING_PRIME(57)
+      UPDATE_SIEVING_PRIME(58)
+      UPDATE_SIEVING_PRIME(59)
+      UPDATE_SIEVING_PRIME(60)
+      UPDATE_SIEVING_PRIME(61)
+      UPDATE_SIEVING_PRIME(62)
+      UPDATE_SIEVING_PRIME(63)
+    }
   }
 }
 
