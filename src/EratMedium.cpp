@@ -7,7 +7,7 @@
 ///         over the sorted sieving primes in the next segment the
 ///         initial indirect branch i.e. 'switch (wheelIndex)' is
 ///         predicted correctly by the CPU. This improves performance
-///         by up to 15% for sieving primes that have only a few
+///         by up to 20% for sieving primes that have only a few
 ///         multiple occurrences per segment.
 ///
 /// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
