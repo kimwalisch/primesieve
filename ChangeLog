@@ -11,6 +11,7 @@ measured a speedup of up to 10% and on AMD EPYC CPUs I measured a
 speedup of up to 15%.
 
 * EratMedium.cpp: New faster sieving algorithm.
+* EratSmall.cpp: Slightly reduce the number of instructions.
 * MemoryPool.cpp: Move memory pool into its own class.
 * CMakeLists.txt: Add support for primesieve.dll.
 
