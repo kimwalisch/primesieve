@@ -65,7 +65,9 @@ void EratSmall::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64
   primes_.emplace_back(sievingPrime, multipleIndex, wheelIndex);
 }
 
-/// Get the CPU's L1 cache size
+/// Use the CPU's L1 cache size as
+/// sieveSize in EratSmall.
+///
 uint64_t EratSmall::getL1Size(uint64_t sieveSize)
 {
   if (!cpuInfo.hasL1Cache())
