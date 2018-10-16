@@ -27,6 +27,26 @@
 
 namespace primesieve {
 
+void MemoryPool::addBucket(Bucket*& list)
+{
+  if (!stock_)
+    allocateBuckets();
+
+  // get first bucket
+  Bucket& bucket = *stock_;
+  stock_ = stock_->next();
+  bucket.setNext(list);
+  list = &bucket;
+}
+
+void MemoryPool::freeBucket(Bucket* b)
+{
+  Bucket& bucket = *b;
+  bucket.reset();
+  bucket.setNext(stock_);
+  stock_ = &bucket;
+}
+
 void MemoryPool::allocateBuckets()
 {
   if (memory_.empty())
@@ -56,26 +76,6 @@ void MemoryPool::increaseAllocCount()
   count_ += count_ / 8;
   uint64_t maxCount = config::MAX_ALLOC_BYTES / sizeof(Bucket);
   count_ = std::min(count_, maxCount);
-}
-
-void MemoryPool::addBucket(Bucket*& list)
-{
-  if (!stock_)
-    allocateBuckets();
-
-  // get first bucket
-  Bucket& bucket = *stock_;
-  stock_ = stock_->next();
-  bucket.setNext(list);
-  list = &bucket;
-}
-
-void MemoryPool::freeBucket(Bucket* b)
-{
-  Bucket& bucket = *b;
-  bucket.reset();
-  bucket.setNext(stock_);
-  stock_ = &bucket;
 }
 
 } // namespace
