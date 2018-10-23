@@ -30,7 +30,6 @@ SOURCES += \
 HEADERS += \
   ../../include/primesieve/calculator.hpp \
   src/PrimeSieveGUI.hpp \
-  src/PrimeSieveGUI_const.hpp \
   src/PrimeSieveProcess.hpp
 
 # ---------------------------------------------------------

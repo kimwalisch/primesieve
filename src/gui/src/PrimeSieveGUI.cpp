@@ -53,9 +53,9 @@
 using namespace primesieve;
 
 PrimeSieveGUI::PrimeSieveGUI(QWidget *parent) :
-  QMainWindow(parent), ui(new Ui::PrimeSieveGUI), validator_(0),
-  primeSieveProcess_(0), saveAct_(0), quitAct_(0), aboutAct_(0),
-  alignmentGroup_(0) {
+  QMainWindow(parent),
+  ui(new Ui::PrimeSieveGUI)
+{
   ui->setupUi(this);
   primeText_.push_back("Prime numbers");
   primeText_.push_back("Twin primes");
@@ -67,17 +67,20 @@ PrimeSieveGUI::PrimeSieveGUI(QWidget *parent) :
   this->initConnections();
 }
 
-PrimeSieveGUI::~PrimeSieveGUI() {
+PrimeSieveGUI::~PrimeSieveGUI()
+{
   this->cleanUp();
   delete validator_;
   delete saveAct_;
   delete quitAct_;
   delete aboutAct_;
   delete alignmentGroup_;
+
   for (; !countAct_.isEmpty(); countAct_.pop_back())
     delete countAct_.back();
   for (; !printAct_.isEmpty(); printAct_.pop_back())
     delete printAct_.back();
+
   // Qt code
   delete ui;
 }
@@ -389,11 +392,14 @@ void PrimeSieveGUI::on_cancelButton_clicked() {
  * Clean up after sieving is finished or canceled (abort the
  * PrimeSieveProcess if still running).
  */
-void PrimeSieveGUI::cleanUp() {
+void PrimeSieveGUI::cleanUp()
+{
   progressBarTimer_.stop();
-  if (primeSieveProcess_ != 0)
+
+  if (primeSieveProcess_)
     delete primeSieveProcess_;
-  primeSieveProcess_ = 0;
+
+  primeSieveProcess_ = nullptr;
   // invert buttons
   ui->cancelButton->setDisabled(true);
   ui->sieveButton->setEnabled(true);

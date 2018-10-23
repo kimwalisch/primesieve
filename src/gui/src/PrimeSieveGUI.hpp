@@ -20,34 +20,48 @@
 #ifndef PRIMESIEVEGUI_HPP
 #define PRIMESIEVEGUI_HPP
 
-#include "PrimeSieveGUI_const.hpp"
+#include <QtGlobal>
+#include <QProcess>
+#include <QVector>
+#include <QString>
+#include <QTime>
+#include <QTimer>
+#include <QValidator>
+
 #include <primesieve/ParallelSieve.hpp>
+#include <limits>
+#include <stdint.h>
 
 #if QT_VERSION >= 0x050000
-  #include <QtGlobal>
   #include <QtWidgets/QMainWindow>
   #include <QtWidgets/QMenu>
   #include <QtWidgets/QAction>
   #include <QtWidgets/QComboBox>
-  #include <QProcess>
-  #include <QVector>
-  #include <QTime>
-  #include <QTimer>
-  #include <QValidator>
-  #include <QString>
 #else
   #include <QMainWindow>
-  #include <QtGlobal>
   #include <QMenu>
   #include <QAction>
-  #include <QProcess>
-  #include <QVector>
   #include <QComboBox>
-  #include <QTime>
-  #include <QTimer>
-  #include <QValidator>
-  #include <QString>
 #endif
+
+const int PRINT_BUFFER_SIZE = 1024;
+const int MINIMUM_SIEVE_SIZE = 16;
+const int MAXIMUM_SIEVE_SIZE = 4096;
+const quint64 UPPER_BOUND_LIMIT = std::numeric_limits<uint64_t>::max();
+
+const QString UPPER_BOUND_STR = QString::number(UPPER_BOUND_LIMIT);
+const QString APPLICATION_NAME("primesieve");
+const QString APPLICATION_HOMEPAGE("https://primesieve.org");
+
+const QString APPLICATION_ABOUT(
+    "<p>Copyright &copy; 2018 Kim Walisch</p>"
+    "<p>primesieve generates prime numbers and prime k-tuplets using a highly "
+    "optimized implementation of the sieve of Eratosthenes."
+    "<br><br>"
+    "This is free software: you can redistribute it and/or modify "
+    "it under the terms of the GNU General Public License as published by "
+    "the Free Software Foundation; either version 3 of the License, or "
+    "(at your option) any later version.</p>");
 
 namespace Ui {
   class PrimeSieveGUI;
@@ -62,7 +76,7 @@ class PrimeSieveProcess;
 class PrimeSieveGUI : public QMainWindow {
 Q_OBJECT
 public:
-  PrimeSieveGUI(QWidget* parent = 0);
+  PrimeSieveGUI(QWidget* parent = nullptr);
   ~PrimeSieveGUI();
 protected:
   void changeEvent(QEvent* e);
@@ -103,14 +117,14 @@ private:
 
   QVector<QString> primeText_;
   /// Validates the input of the lower and upperBoundLineEdit.
-  QValidator* validator_;
-  int maxThreads_;
+  QValidator* validator_ = nullptr;
+  int maxThreads_ = 0;
   /// Settings (bit flags) for PrimeSieveProcess.
-  int flags_;
+  int flags_ = 0;
   /// Timer for the progressBar.
   QTimer progressBarTimer_;
   /// Separate process used for sieving
-  PrimeSieveProcess* primeSieveProcess_;
+  PrimeSieveProcess* primeSieveProcess_ = nullptr;
 
   /**
    * PrimeSieveGUI_menu.cpp & menu bar objects.
@@ -119,19 +133,19 @@ private:
   void createMenu(QVector<QString>&);
   int getMenuSettings();
 
-  QMenu* fileMenu_;
-  QMenu* printMenu_;
-  QMenu* countMenu_;
-  QMenu* helpMenu_;
+  QMenu* fileMenu_ = nullptr;
+  QMenu* printMenu_ = nullptr;
+  QMenu* countMenu_ = nullptr;
+  QMenu* helpMenu_ = nullptr;
 
   /// Save textEdit content to file.
-  QAction* saveAct_;
+  QAction* saveAct_ = nullptr;
   /// Quit application.
-  QAction* quitAct_;
+  QAction* quitAct_ = nullptr;
   /// Show about dialog.
-  QAction* aboutAct_;
+  QAction* aboutAct_ = nullptr;
   /// Use radio button like behaviour.
-  QActionGroup* alignmentGroup_;
+  QActionGroup* alignmentGroup_ = nullptr;
 
   /// Count settings for PrimeSieveProcess.
   QVector<QAction*> countAct_;
