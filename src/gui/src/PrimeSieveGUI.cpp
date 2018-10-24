@@ -133,7 +133,7 @@ void PrimeSieveGUI::initGUI() {
   QSize size = this->sizeHint();
   size.setWidth(this->minimumSizeHint().width());
 #if defined(Q_OS_WIN)
-  size.setHeight(size.height() - size.height() / 10);
+  size.setHeight(size.height() - (size.height() / 20));
 #endif
   this->resize(size);
 
