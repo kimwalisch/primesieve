@@ -3,8 +3,6 @@
 # ---------------------------------------------------------
 
 TARGET = primesieve
-target.path += $$OUT_PWD/release
-INSTALLS += target
 TEMPLATE = app
 FORMS += forms/PrimeSieveGUI.ui
 
