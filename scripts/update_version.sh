@@ -23,7 +23,7 @@ old_major=$(echo $old_version | cut -f1 -d'.')
 old_minor=$(echo $old_version | cut -f2 -d'.')
 
 new_year=$(date +'%Y')
-old_year=$(grep "Copyright (C)" src/gui/src/PrimeSieveGUI_const.hpp | cut -f5 -d' ')
+old_year=$(grep "Copyright (C)" src/gui/src/PrimeSieveGUI.hpp | cut -f5 -d' ')
 
 echo "New version: $new_version"
 echo "Old version: $old_version"
@@ -67,7 +67,7 @@ done
 # Update year
 for i in $(echo COPYING \
                 src/console/help.cpp \
-                src/gui/src/PrimeSieveGUI_const.hpp)
+                src/gui/src/PrimeSieveGUI.hpp)
 do
     echo "Update year in $i"
     sed "s/$old_year/$new_year/g" $i > $i.tmp
