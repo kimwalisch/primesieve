@@ -54,7 +54,7 @@ include(CheckCXXCompilerFlag)
 include(CheckCXXSourceCompiles)
 include(CMakePackageConfigHelpers)
 
-# MSVC DLL support (Windows) ######################################### 
+# MSVC DLL support (Windows) #########################################
 
 if(WIN32 AND NOT MINGW)
     set(WIN32_MSVC_COMPATIBLE ON)
