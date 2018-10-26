@@ -1,14 +1,17 @@
-Changes in version 7.2, 16/10/2018
+Changes in version 7.2, 26/10/2018
 ==================================
 
 This is a minor new release, the API and ABI (Application binary
 interface) are backwards compatible.
 
 primesieve-7.2 features a new algorithm for medium sieving primes
-that improves the CPU's branch prediction rate by sorting the
-sieving primes (before using them). On Intel Skylake CPUs I
-measured a speedup of up to 10% and on AMD EPYC CPUs I measured a
-speedup of up to 15%.
+that improves the CPU's branch prediction rate by sorting the sieving
+primes (before using them). On AMD EPYC CPUs I have measured a
+speedup of up to 15% and on Intel Skylake CPUs I have measured a
+speedup of up to 10%. Ever since primesieve was created in 2010 its
+algorithm for medium sieving primes has been slower than yafu's
+algorithm for medium sieving primes. This performance issue has now
+been fixed!
 
 * EratMedium.cpp: New faster sieving algorithm.
 * EratSmall.cpp: Slightly reduce the number of instructions.
