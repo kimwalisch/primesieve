@@ -47,19 +47,21 @@ int main()
 
   // test move assignment operator ///////////////////////////////////
 
-  prime = it2.prev_prime();
+  // moved from objects can be reused
+  // but they need to be reset
+  it.skipto(0);
+  prime = it.next_prime();
   sum = 0;
 
-  // use 2nd iterator for primes > 6e8
-  for (; prime > 600000000ull; prime = it2.prev_prime())
+  // use 1st iterator up to 6e8
+  for (; prime < 600000000ull; prime = it.next_prime())
     sum += prime;
 
   // move assignment operator
-  primesieve::iterator it3;
-  it3 = std::move(it2);
+  it2 = std::move(it);
 
-  // use 3rd iterator for primes <= 6e8
-  for (; prime > 0; prime = it3.prev_prime())
+  // use 2nd iterator up to 1e9
+  for (; prime < 1000000000ull; prime = it2.next_prime())
     sum += prime;
 
   cout << "Sum of the primes below 10^9 = " << sum;
@@ -73,8 +75,8 @@ int main()
   cout << "1st prime < 1000 = " << prime;
   check(prime == 997);
 
-  it3.skipto(5);
-  vect.emplace_back(std::move(it3));
+  it2.skipto(5);
+  vect.emplace_back(std::move(it2));
   prime = vect.back().next_prime();
   cout << "1st prime > 5 = " << prime;
   check(prime == 7);

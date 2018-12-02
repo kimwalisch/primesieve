@@ -71,4 +71,4 @@ script:
   - valgrind --error-exitcode=1 ./nth_prime 500000000
   # 7) Test using cppcheck
   - rm -rf build
-  - cppcheck . -q --error-exitcode=1 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp -itest/next_prime1.cpp -itest/prev_prime1.cpp
+  - cppcheck . -q --error-exitcode=1 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp -itest/move_primesieve_iterator.cpp -itest/next_prime1.cpp -itest/prev_prime1.cpp
