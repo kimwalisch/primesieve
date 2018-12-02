@@ -41,6 +41,16 @@ public:
   ///
   iterator(uint64_t start = 0, uint64_t stop_hint = get_max_stop());
 
+  /// primesieve::iterator objects cannot be copied.
+  iterator(const iterator&) = delete;
+  iterator& operator=(const iterator&) = delete;
+
+  /// primesieve::iterator objects support move semantics.
+  iterator(iterator&&) noexcept;
+  iterator& operator=(iterator&&) noexcept;
+
+  ~iterator();
+
   /// Reset the primesieve iterator to start.
   /// @param start      Generate primes > start (or < start).
   /// @param stop_hint  Stop number optimization hint, gives significant
@@ -70,7 +80,6 @@ public:
     return primes_[i_];
   }
 
-  ~iterator();
 private:
   std::size_t i_;
   std::size_t last_idx_;
