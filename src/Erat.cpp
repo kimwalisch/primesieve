@@ -71,8 +71,6 @@ Erat::Erat(uint64_t start, uint64_t stop) :
   stop_(stop)
 { }
 
-Erat::~Erat() { }
-
 /// @start:     Sieve primes >= start
 /// @stop:      Sieve primes <= stop
 /// @sieveSize: Sieve size in KiB

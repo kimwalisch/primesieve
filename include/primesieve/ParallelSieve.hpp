@@ -35,21 +35,20 @@ public:
     int threads;
   };
   ParallelSieve();
-  virtual ~ParallelSieve() { }
   void init(SharedMemory&);
   static int getMaxThreads();
   int getNumThreads() const;
   int idealNumThreads() const;
   void setNumThreads(int numThreads);
   using PrimeSieve::sieve;
-  virtual void sieve();
+  void sieve();
 private:
   std::mutex lock_;
   SharedMemory* shm_;
   int numThreads_;
   uint64_t getThreadDistance(int) const;
   uint64_t align(uint64_t) const;
-  virtual bool updateStatus(uint64_t, bool);
+  bool updateStatus(uint64_t, bool);
 };
 
 } // namespace

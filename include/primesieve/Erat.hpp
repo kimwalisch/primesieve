@@ -34,6 +34,7 @@ class Erat
 public:
   uint64_t getSieveSize() const;
   uint64_t getStop() const;
+
 protected:
   /// Sieve primes >= start_
   uint64_t start_ = 0;
@@ -49,12 +50,12 @@ protected:
   byte_t* sieve_ = nullptr;
   Erat();
   Erat(uint64_t, uint64_t);
-  virtual ~Erat();
   void init(uint64_t, uint64_t, uint64_t, PreSieve&);
   void addSievingPrime(uint64_t);
   void sieveSegment();
   bool hasNextSegment() const;
   static uint64_t nextPrime(uint64_t*, uint64_t);
+
 private:
   static const std::array<uint64_t, 64> bruijnBitValues_;
   uint64_t maxPreSieve_;
