@@ -27,17 +27,17 @@ void clear(std::unique_ptr<T>& ptr)
 
 namespace primesieve {
 
-iterator::iterator(uint64_t start,
-                   uint64_t stop_hint)
-{
-  skipto(start, stop_hint);
-}
-
 iterator::~iterator() = default;
 
 iterator::iterator(iterator&&) noexcept = default;
 
 iterator& iterator::operator=(iterator&&) noexcept = default;
+
+iterator::iterator(uint64_t start,
+                   uint64_t stop_hint)
+{
+  skipto(start, stop_hint);
+}
 
 void iterator::skipto(uint64_t start,
                       uint64_t stop_hint)
