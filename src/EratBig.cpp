@@ -62,10 +62,7 @@ void EratBig::init(uint64_t sieveSize)
   sievingPrimes_.resize(size);
 
   for (SievingPrime*& sievingPrime : sievingPrimes_)
-  {
-    Bucket* bucket = memoryPool_.getBucket();
-    sievingPrime = bucket->begin();
-  }
+    memoryPool_.reset(sievingPrime);
 }
 
 /// Add a new sieving prime
@@ -90,8 +87,7 @@ void EratBig::crossOff(byte_t* sieve)
   {
     Bucket* bucket = sievingPrimes_[0]->getBucket();
     bucket->setEnd(sievingPrimes_[0]);
-    Bucket* empty = memoryPool_.getBucket();
-    sievingPrimes_[0] = empty->begin();
+    memoryPool_.reset(sievingPrimes_[0]);
 
     while (bucket)
     {
@@ -114,7 +110,7 @@ void EratBig::crossOff(byte_t* sieve)
 ///
 void EratBig::crossOff(byte_t* sieve, SievingPrime* primes, SievingPrime* end)
 {
-  SievingPrime** sievingPrimes = sievingPrimes_.data();
+  SievingPrime** sievingPrimes = &sievingPrimes_[0];
   uint64_t moduloSieveSize = moduloSieveSize_;
   uint64_t log2SieveSize = log2SieveSize_;
 

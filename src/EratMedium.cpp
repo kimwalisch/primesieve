@@ -62,6 +62,12 @@ void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
   resetSievingPrimes();
 }
 
+void EratMedium::resetSievingPrimes()
+{
+  for (SievingPrime*& sievingPrime : sievingPrimes_)
+    memoryPool_.reset(sievingPrime);
+}
+
 /// Add a new sieving prime to EratMedium
 void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t wheelIndex)
 {
@@ -69,15 +75,6 @@ void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint6
   uint64_t sievingPrime = prime / 30;
   if (!sievingPrimes_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex))
     memoryPool_.addBucket(sievingPrimes_[wheelIndex]);
-}
-
-void EratMedium::resetSievingPrimes()
-{
-  for (SievingPrime*& sievingPrime : sievingPrimes_)
-  {
-    Bucket* bucket = memoryPool_.getBucket();
-    sievingPrime = bucket->begin();
-  }
 }
 
 void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)

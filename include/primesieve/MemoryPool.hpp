@@ -10,7 +10,6 @@
 #ifndef MEMORYPOOL_HPP
 #define MEMORYPOOL_HPP
 
-#include <stdint.h>
 #include <vector>
 #include <memory>
 
@@ -22,7 +21,7 @@ class SievingPrime;
 class MemoryPool
 {
 public:
-  Bucket* getBucket();
+  void reset(SievingPrime*& sievingPrime);
   void addBucket(SievingPrime*& sievingPrime);
   void freeBucket(Bucket* bucket);
 private:
@@ -31,7 +30,7 @@ private:
   /// List of empty buckets
   Bucket* stock_ = nullptr;
   /// Number of buckets to allocate
-  uint64_t count_ = 128;
+  std::size_t count_ = 128;
   /// Pointers of allocated buckets
   std::vector<std::unique_ptr<char[]>> memory_;
 };

@@ -20,25 +20,24 @@
 #include <primesieve/config.hpp>
 #include <primesieve/Bucket.hpp>
 
-#include <stdint.h>
 #include <algorithm>
 #include <memory>
 #include <vector>
 
-using namespace std;
+using std::size_t;
+using std::unique_ptr;
 
 namespace primesieve {
 
-Bucket* MemoryPool::getBucket()
+void MemoryPool::reset(SievingPrime*& sievingPrime)
 {
   if (!stock_)
     allocateBuckets();
 
-  // get first bucket
   Bucket* bucket = stock_;
   stock_ = stock_->next();
   bucket->setNext(nullptr);
-  return bucket;
+  sievingPrime = bucket->begin();
 }
 
 void MemoryPool::addBucket(SievingPrime*& sievingPrime)
@@ -79,7 +78,7 @@ void MemoryPool::allocateBuckets()
   Bucket* buckets = (Bucket*) ptr;
 
   // initialize buckets
-  for (uint64_t i = 0; i < count_; i++)
+  for (size_t i = 0; i < count_; i++)
   {
     Bucket* next = nullptr;
     if (i + 1 < count_)
@@ -96,7 +95,7 @@ void MemoryPool::allocateBuckets()
 void MemoryPool::increaseAllocCount()
 {
   count_ += count_ / 8;
-  uint64_t maxCount = config::MAX_ALLOC_BYTES / sizeof(Bucket);
+  size_t maxCount = config::MAX_ALLOC_BYTES / sizeof(Bucket);
   count_ = std::min(count_, maxCount);
 }
 
