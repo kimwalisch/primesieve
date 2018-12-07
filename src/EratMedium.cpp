@@ -36,8 +36,7 @@
 #define SORT_SIEVING_PRIME(wheelIndex) \
   sort ## wheelIndex: \
   multipleIndex = (uint64_t) (p - sieveEnd); \
-  if (!lists_[wheelIndex]->store(sievingPrime, multipleIndex, wheelIndex)) \
-    memoryPool_.addBucket(lists_[wheelIndex]); \
+  moveSievingPrime(sievingPrime, multipleIndex, wheelIndex); \
   continue;
 
 namespace primesieve {
@@ -67,15 +66,33 @@ void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint6
 {
   assert(prime <= maxPrime_);
   uint64_t sievingPrime = prime / 30;
-  if (!lists_[wheelIndex]->store(sievingPrime, multipleIndex, wheelIndex))
-    memoryPool_.addBucket(lists_[wheelIndex]);
+  moveSievingPrime(sievingPrime, multipleIndex, wheelIndex);
+}
+
+/// Move the sieving prime to the list related
+/// to the sieving prime's wheelIndex.
+///
+void EratMedium::moveSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t wheelIndex)
+{
+  SievingPrime*& sievingPrime = lists_[wheelIndex];
+
+  if (!sievingPrime++->set(prime, multipleIndex, wheelIndex))
+  {
+    Bucket* bucket = sievingPrime->getBucket();
+    bucket->setEnd(sievingPrime);
+    memoryPool_.addBucket(bucket);
+    sievingPrime = bucket->begin();
+  }
 }
 
 void EratMedium::resetLists()
 {
-  lists_.fill(nullptr);
-  for (Bucket*& list : lists_)
-    memoryPool_.addBucket(list);
+  for (SievingPrime*& sievingPrime : lists_)
+  {
+    Bucket* bucket = nullptr;
+    memoryPool_.addBucket(bucket);
+    sievingPrime = bucket->begin();
+  }
 }
 
 /// Iterate over the 64 bucket lists (which
@@ -89,8 +106,11 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)
   copyLists = lists_;
   resetLists();
 
-  for (Bucket* bucket : copyLists)
+  for (SievingPrime* sievingPrime : copyLists)
   {
+    Bucket* bucket = sievingPrime->getBucket();
+    bucket->setEnd(sievingPrime);
+
     while (bucket)
     {
       if (!bucket->empty())

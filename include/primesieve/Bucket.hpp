@@ -15,11 +15,14 @@
 #define BUCKET_HPP
 
 #include "config.hpp"
+#include "pmath.hpp"
 
 #include <stdint.h>
 #include <cassert>
 
 namespace primesieve {
+
+class Bucket;
 
 /// Each SievingPrime object contains a sieving prime and the
 /// position of its next multiple inside the sieve array i.e.
@@ -36,7 +39,10 @@ public:
     MAX_WHEELINDEX    = (1 << (32 - 23)) - 1
   };
 
-  SievingPrime() { }
+  SievingPrime() = default;
+  Bucket* getBucket() const;
+  bool empty() const;
+  bool isBucketFull() const;
 
   SievingPrime(uint64_t sievingPrime,
                uint64_t multipleIndex,
@@ -55,12 +61,13 @@ public:
     indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 23));
   }
 
-  void set(uint64_t sievingPrime,
+  bool set(uint64_t sievingPrime,
            uint64_t multipleIndex,
            uint64_t wheelIndex)
   {
     set(multipleIndex, wheelIndex);
     sievingPrime_ = (uint32_t) sievingPrime;
+    return !isBucketFull();
   }
 
   uint64_t getSievingPrime() const
@@ -106,31 +113,48 @@ private:
 class Bucket
 {
 public:
+  Bucket() = delete;
   SievingPrime* begin() { return &sievingPrimes_[0]; }
-  SievingPrime* last()  { return &sievingPrimes_[config::BUCKETSIZE - 1]; }
-  SievingPrime* end()   { return prime_; }
+  SievingPrime* end()   { return end_; }
   Bucket* next()        { return next_; }
   bool hasNext() const  { return next_ != nullptr; }
   bool empty()          { return begin() == end(); }
   void setNext(Bucket* next) { next_ = next; }
-  void reset() { prime_ = begin(); }
-
-  /// Store a sieving prime in the bucket
-  /// @return false if the bucket is full else true
-  ///
-  bool store(uint64_t sievingPrime,
-             uint64_t multipleIndex,
-             uint64_t wheelIndex)
-  {
-    prime_->set(sievingPrime, multipleIndex, wheelIndex);
-    return prime_++ != last();
-  }
+  void setEnd(SievingPrime* end) { end_ = end; }
+  void reset() { end_ = begin(); }
 
 private:
-  SievingPrime* prime_;
+  SievingPrime* end_;
   Bucket* next_;
-  SievingPrime sievingPrimes_[config::BUCKETSIZE];
+  SievingPrime sievingPrimes_[(config::BUCKET_BYTES - sizeof(SievingPrime*) - sizeof(Bucket*)) / sizeof(SievingPrime)];
 };
+
+static_assert(isPow2(sizeof(Bucket)), "sizeof(Bucket) must be a power of 2");
+
+inline Bucket* SievingPrime::getBucket() const
+{
+  std::size_t address = (std::size_t) this;
+  // We need to adjust the address
+  // in case the bucket is full
+  address -= 1;
+  std::size_t BucketAddress = address - address % sizeof(Bucket);
+  return (Bucket*) BucketAddress;
+}
+
+inline bool SievingPrime::isBucketFull() const
+{
+  std::size_t address = (std::size_t) this;
+  address += sizeof(SievingPrime);
+  return (address % sizeof(Bucket)) == 0;
+}
+
+inline bool SievingPrime::empty() const
+{
+  std::size_t address = (std::size_t) this;
+  std::size_t offset = sizeof(SievingPrime*) + sizeof(Bucket*);
+  bool isEmpty = (address % sizeof(Bucket)) == offset;
+  return isEmpty && !getBucket()->hasNext();
+}
 
 } // namespace
 

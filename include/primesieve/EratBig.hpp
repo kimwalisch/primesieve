@@ -34,12 +34,12 @@ private:
   uint64_t maxPrime_;
   uint64_t log2SieveSize_;
   uint64_t moduloSieveSize_;
-  /// Vector of bucket lists, holds the sieving primes
-  std::vector<Bucket*> lists_;
+  std::vector<SievingPrime*> lists_;
   MemoryPool memoryPool_;
   bool enabled_ = false;
   void init(uint64_t);
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
+  void moveSievingPrime(SievingPrime*&, uint64_t, uint64_t, uint64_t);
   void crossOff(byte_t*, SievingPrime*, SievingPrime*);
 };
 

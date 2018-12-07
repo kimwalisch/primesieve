@@ -25,6 +25,8 @@
 #include <memory>
 #include <vector>
 
+using namespace std;
+
 namespace primesieve {
 
 void MemoryPool::addBucket(Bucket*& list)
@@ -52,9 +54,16 @@ void MemoryPool::allocateBuckets()
   if (memory_.empty())
     memory_.reserve(128);
 
-  using std::unique_ptr;
-  Bucket* buckets = new Bucket[count_];
-  memory_.emplace_back(unique_ptr<Bucket[]>(buckets));
+  // allocate a large chunk of memory
+  size_t bytes = sizeof(Bucket) * count_;
+  bytes += sizeof(Bucket) - 1;
+  char* memory = new char[bytes];
+  memory_.emplace_back(unique_ptr<char[]>(memory));
+
+  // convert raw memory into buckets
+  void* ptr = memory;
+  ptr = std::align(sizeof(Bucket), sizeof(Bucket), ptr, bytes);
+  Bucket* buckets = (Bucket*) ptr;
 
   // initialize buckets
   for (uint64_t i = 0; i < count_; i++)

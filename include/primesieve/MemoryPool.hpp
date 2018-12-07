@@ -13,8 +13,8 @@
 #include "Bucket.hpp"
 
 #include <stdint.h>
-#include <memory>
 #include <vector>
+#include <memory>
 
 namespace primesieve {
 
@@ -31,7 +31,7 @@ private:
   /// Number of buckets to allocate
   uint64_t count_ = 128;
   /// Pointers of allocated buckets
-  std::vector<std::unique_ptr<Bucket[]>> memory_;
+  std::vector<std::unique_ptr<char[]>> memory_;
 };
 
 } // namespace
