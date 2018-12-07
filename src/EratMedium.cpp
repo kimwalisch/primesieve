@@ -36,8 +36,8 @@
 #define SORT_SIEVING_PRIME(wheelIndex) \
   sort ## wheelIndex: \
   multipleIndex = (uint64_t) (p - sieveEnd); \
-  if (!lists_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex)) \
-    memoryPool_.addBucket(lists_[wheelIndex]); \
+  if (!sievingPrimes_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex)) \
+    memoryPool_.addBucket(sievingPrimes_[wheelIndex]); \
   continue;
 
 namespace primesieve {
@@ -59,7 +59,7 @@ void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
   maxPrime_ = maxPrime;
 
   Wheel::init(stop, sieveSize);
-  resetLists();
+  resetSievingPrimes();
 }
 
 /// Add a new sieving prime to EratMedium
@@ -67,35 +67,34 @@ void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint6
 {
   assert(prime <= maxPrime_);
   uint64_t sievingPrime = prime / 30;
-  if (!lists_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex))
-    memoryPool_.addBucket(lists_[wheelIndex]);
+  if (!sievingPrimes_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex))
+    memoryPool_.addBucket(sievingPrimes_[wheelIndex]);
 }
 
-void EratMedium::resetLists()
+void EratMedium::resetSievingPrimes()
 {
-  for (SievingPrime*& sievingPrime : lists_)
+  for (SievingPrime*& sievingPrime : sievingPrimes_)
   {
     Bucket* bucket = memoryPool_.getBucket();
     sievingPrime = bucket->begin();
   }
 }
 
-/// Iterate over the 64 bucket lists (which
-/// contain the sieving primes) and call
-/// crossOff() for each bucket.
-///
 void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)
 {
   byte_t* sieveEnd = sieve + sieveSize;
-  decltype(lists_) copyLists;
-  copyLists = lists_;
-  resetLists();
+  auto copy = sievingPrimes_;
+  resetSievingPrimes();
 
-  for (SievingPrime* sievingPrime : copyLists)
+  // Iterate over 64 bucket lists
+  for (SievingPrime* sievingPrime : copy)
   {
     Bucket* bucket = sievingPrime->getBucket();
     bucket->setEnd(sievingPrime);
 
+    // Iterate over the current bucket list.
+    // For each bucket cross off the
+    // multiples of its sieving primes.
     while (bucket)
     {
       if (!bucket->empty())

@@ -36,8 +36,8 @@ private:
   bool enabled_ = false;
   uint64_t maxPrime_;
   MemoryPool memoryPool_;
-  std::array<SievingPrime*, 64> lists_;
-  void resetLists();
+  std::array<SievingPrime*, 64> sievingPrimes_;
+  void resetSievingPrimes();
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   void crossOff(byte_t*, byte_t*, Bucket*);
   void crossOff_7(byte_t*, byte_t*, Bucket*);
