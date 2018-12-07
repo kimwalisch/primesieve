@@ -29,24 +29,37 @@ using namespace std;
 
 namespace primesieve {
 
-void MemoryPool::addBucket(Bucket*& list)
+Bucket* MemoryPool::getBucket()
 {
   if (!stock_)
     allocateBuckets();
 
   // get first bucket
-  Bucket& bucket = *stock_;
+  Bucket* bucket = stock_;
   stock_ = stock_->next();
-  bucket.setNext(list);
-  list = &bucket;
+  bucket->setNext(nullptr);
+  return bucket;
 }
 
-void MemoryPool::freeBucket(Bucket* b)
+void MemoryPool::addBucket(SievingPrime*& sievingPrime)
 {
-  Bucket& bucket = *b;
-  bucket.reset();
-  bucket.setNext(stock_);
-  stock_ = &bucket;
+  if (!stock_)
+    allocateBuckets();
+
+  Bucket* bucket = stock_;
+  stock_ = stock_->next();
+
+  Bucket* old = sievingPrime->getBucket();
+  old->setEnd(sievingPrime);
+  bucket->setNext(old);
+  sievingPrime = bucket->begin();
+}
+
+void MemoryPool::freeBucket(Bucket* bucket)
+{
+  bucket->reset();
+  bucket->setNext(stock_);
+  stock_ = bucket;
 }
 
 void MemoryPool::allocateBuckets()

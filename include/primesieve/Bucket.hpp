@@ -113,7 +113,6 @@ private:
 class Bucket
 {
 public:
-  Bucket() = delete;
   SievingPrime* begin() { return &sievingPrimes_[0]; }
   SievingPrime* end()   { return end_; }
   Bucket* next()        { return next_; }
@@ -145,7 +144,7 @@ inline bool SievingPrime::isBucketFull() const
 {
   std::size_t address = (std::size_t) this;
   address += sizeof(SievingPrime);
-  return (address % sizeof(Bucket)) == 0;
+  return address % sizeof(Bucket) == 0;
 }
 
 inline bool SievingPrime::empty() const

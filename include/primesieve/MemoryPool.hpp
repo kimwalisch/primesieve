@@ -10,19 +10,21 @@
 #ifndef MEMORYPOOL_HPP
 #define MEMORYPOOL_HPP
 
-#include "Bucket.hpp"
-
 #include <stdint.h>
 #include <vector>
 #include <memory>
 
 namespace primesieve {
 
+class Bucket;
+class SievingPrime;
+
 class MemoryPool
 {
 public:
-  void addBucket(Bucket*& list);
-  void freeBucket(Bucket* b);
+  Bucket* getBucket();
+  void addBucket(SievingPrime*& sievingPrime);
+  void freeBucket(Bucket* bucket);
 private:
   void allocateBuckets();
   void increaseAllocCount();

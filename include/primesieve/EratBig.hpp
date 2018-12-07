@@ -10,7 +10,6 @@
 #ifndef ERATBIG_HPP
 #define ERATBIG_HPP
 
-#include "Bucket.hpp"
 #include "MemoryPool.hpp"
 #include "Wheel.hpp"
 #include "types.hpp"
@@ -19,6 +18,8 @@
 #include <vector>
 
 namespace primesieve {
+
+class SievingPrime;
 
 /// EratBig is an implementation of the segmented sieve of
 /// Eratosthenes optimized for big sieving primes that have
@@ -39,7 +40,6 @@ private:
   bool enabled_ = false;
   void init(uint64_t);
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
-  void moveSievingPrime(SievingPrime*&, uint64_t, uint64_t, uint64_t);
   void crossOff(byte_t*, SievingPrime*, SievingPrime*);
 };
 
