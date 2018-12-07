@@ -130,6 +130,16 @@ private:
 
 static_assert(isPow2(sizeof(Bucket)), "sizeof(Bucket) must be a power of 2");
 
+/// Get the current sieving prime's bucket.
+/// For performance reasons we don't keep an array with
+/// all buckets. Instead we find the sieving prime's bucket
+/// by doing pointer arithmetic using the sieving prime's
+/// address. Since all buckets are aligned by
+/// sizeof(Bucket) we calculate the next address that is
+/// smaller than the sieving prime's address and that
+/// is aligned by sizeof(Bucket). That's the address of
+/// the sieving prime's bucket.
+///
 inline Bucket* SievingPrime::getBucket() const
 {
   std::size_t address = (std::size_t) this;
@@ -140,6 +150,11 @@ inline Bucket* SievingPrime::getBucket() const
   return (Bucket*) BucketAddress;
 }
 
+/// Returns true if the sieving prime's bucket is full.
+/// Since each bucket's memory is aligned by sizeof(Bucket)
+/// we can compute the position of the current sieving
+/// prime using address % sizeof(Bucket).
+///
 inline bool SievingPrime::isBucketFull() const
 {
   std::size_t address = (std::size_t) this;
@@ -147,6 +162,10 @@ inline bool SievingPrime::isBucketFull() const
   return address % sizeof(Bucket) == 0;
 }
 
+/// Returns true if the sieving prime's bucket is empty
+/// and if that bucket does not have a pointer to other
+/// buckets full with sieving primes.
+///
 inline bool SievingPrime::empty() const
 {
   std::size_t address = (std::size_t) this;
