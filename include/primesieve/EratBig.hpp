@@ -35,7 +35,7 @@ private:
   uint64_t maxPrime_;
   uint64_t log2SieveSize_;
   uint64_t moduloSieveSize_;
-  std::vector<SievingPrime*> lists_;
+  std::vector<SievingPrime*> sievingPrimes_;
   MemoryPool memoryPool_;
   bool enabled_ = false;
   void init(uint64_t);
