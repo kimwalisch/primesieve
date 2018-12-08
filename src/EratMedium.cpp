@@ -83,7 +83,11 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)
   auto copy = sievingPrimes_;
   resetSievingPrimes();
 
-  // Iterate over 64 bucket lists
+  // Iterate over all bucket lists.
+  // The 1st list contains sieving primes with wheelIndex = 0.
+  // The 2nd list contains sieving primes with wheelIndex = 1.
+  // The 3rd list contains sieving primes with wheelIndex = 2.
+  // ...
   for (SievingPrime* sievingPrime : copy)
   {
     Bucket* bucket = sievingPrime->getBucket();
