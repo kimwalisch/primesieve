@@ -19,6 +19,7 @@
 #include <primesieve/MemoryPool.hpp>
 #include <primesieve/config.hpp>
 #include <primesieve/Bucket.hpp>
+#include <primesieve/primesieve_error.hpp>
 
 #include <algorithm>
 #include <memory>
@@ -26,6 +27,7 @@
 
 using std::size_t;
 using std::unique_ptr;
+using primesieve::primesieve_error;
 
 namespace primesieve {
 
@@ -67,17 +69,31 @@ void MemoryPool::allocateBuckets()
     memory_.reserve(128);
 
   // allocate a large chunk of memory
-  size_t bytes = sizeof(Bucket) * count_;
-  bytes += sizeof(Bucket) - 1;
-  char* memory = new char[bytes];
+  size_t size = sizeof(Bucket) * count_;
+  size += sizeof(Bucket) - 1;
+  char* memory = new char[size];
   memory_.emplace_back(unique_ptr<char[]>(memory));
-
-  // convert raw memory into buckets
   void* ptr = memory;
-  ptr = std::align(sizeof(Bucket), sizeof(Bucket), ptr, bytes);
+
+  // align memory address to sizeof(Bucket)
+  if (!std::align(sizeof(Bucket), sizeof(Bucket), ptr, size))
+    throw primesieve_error("MemoryPool: failed to align memory!");
+
+  if ((size_t) ptr % sizeof(Bucket) != 0)
+    throw primesieve_error("MemoryPool: failed to align memory!");
+
+  if (size / sizeof(Bucket) < 10)
+    throw primesieve_error("MemoryPool: insufficient memory allocated!");
+
+  count_ = size / sizeof(Bucket);
   Bucket* buckets = (Bucket*) ptr;
 
-  // initialize buckets
+  initBuckets(buckets);
+  increaseAllocCount();
+}
+
+void MemoryPool::initBuckets(Bucket* buckets)
+{
   for (size_t i = 0; i < count_; i++)
   {
     Bucket* next = nullptr;
@@ -89,7 +105,6 @@ void MemoryPool::allocateBuckets()
   }
 
   stock_ = buckets;
-  increaseAllocCount();
 }
 
 void MemoryPool::increaseAllocCount()

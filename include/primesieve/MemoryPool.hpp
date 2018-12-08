@@ -26,6 +26,7 @@ public:
   void freeBucket(Bucket* bucket);
 private:
   void allocateBuckets();
+  void initBuckets(Bucket* buckets);
   void increaseAllocCount();
   /// List of empty buckets
   Bucket* stock_ = nullptr;
