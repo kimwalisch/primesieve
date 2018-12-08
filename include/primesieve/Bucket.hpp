@@ -1,7 +1,7 @@
 ///
 /// @file   Bucket.hpp
-/// @brief  A bucket is a container for sieving primes. The
-///         Bucket class is designed as a singly linked list,
+/// @brief  A bucket is a container for sieving primes.
+///         The Bucket class is designed as a singly linked list,
 ///         once there is no more space in the current Bucket
 ///         a new Bucket is allocated.
 ///
@@ -131,14 +131,14 @@ private:
 static_assert(isPow2(sizeof(Bucket)), "sizeof(Bucket) must be a power of 2");
 
 /// Get the current sieving prime's bucket.
-/// For performance reasons we don't keep an array with
-/// all buckets. Instead we find the sieving prime's bucket
-/// by doing pointer arithmetic using the sieving prime's
-/// address. Since all buckets are aligned by
-/// sizeof(Bucket) we calculate the next address that is
-/// smaller than the sieving prime's address and that
-/// is aligned by sizeof(Bucket). That's the address of
-/// the sieving prime's bucket.
+/// For performance reasons we don't keep an array with all
+/// buckets. Instead we find the sieving prime's bucket by
+/// doing pointer arithmetic using the sieving prime's
+/// address. Since all buckets are aligned by sizeof(Bucket)
+/// we calculate the next address that is smaller than the
+/// sieving prime's address and that is aligned by
+/// sizeof(Bucket). That's the address of the sieving prime's
+/// bucket.
 ///
 inline Bucket* SievingPrime::getBucket() const
 {
