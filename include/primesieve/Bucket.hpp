@@ -146,8 +146,8 @@ inline Bucket* SievingPrime::getBucket() const
   // We need to adjust the address
   // in case the bucket is full
   address -= 1;
-  std::size_t BucketAddress = address - address % sizeof(Bucket);
-  return (Bucket*) BucketAddress;
+  address -= address % sizeof(Bucket);
+  return (Bucket*) address;
 }
 
 /// Returns true if the sieving prime's bucket is full.
