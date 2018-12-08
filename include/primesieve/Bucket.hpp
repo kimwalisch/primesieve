@@ -158,8 +158,7 @@ inline Bucket* SievingPrime::getBucket() const
 inline bool SievingPrime::isBucketFull() const
 {
   std::size_t address = (std::size_t) this;
-  address += sizeof(SievingPrime);
-  return address % sizeof(Bucket) == 0;
+  return (address + sizeof(SievingPrime)) % sizeof(Bucket) == 0;
 }
 
 /// Returns true if the sieving prime's bucket is empty
@@ -169,8 +168,8 @@ inline bool SievingPrime::isBucketFull() const
 inline bool SievingPrime::empty() const
 {
   std::size_t address = (std::size_t) this;
-  std::size_t offset = sizeof(SievingPrime*) + sizeof(Bucket*);
-  bool isEmpty = (address % sizeof(Bucket)) == offset;
+  std::size_t begin = sizeof(SievingPrime*) + sizeof(Bucket*);
+  bool isEmpty = (address % sizeof(Bucket)) == begin;
   return isEmpty && !getBucket()->hasNext();
 }
 
