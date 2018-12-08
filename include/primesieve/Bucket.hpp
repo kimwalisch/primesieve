@@ -31,8 +31,7 @@ namespace primesieve {
 class SievingPrime
 {
 public:
-  enum
-  {
+  enum {
     MAX_MULTIPLEINDEX = (1 << 23) - 1,
     MAX_WHEELINDEX    = (1 << (32 - 23)) - 1
   };
@@ -115,12 +114,16 @@ public:
   void setNext(Bucket* next) { next_ = next; }
   void setEnd(SievingPrime* end) { end_ = end; }
   void reset() { end_ = begin(); }
-  enum { SIEVING_PRIMES_OFFSET = sizeof(SievingPrime*) + sizeof(Bucket*) };
+
+  enum {
+    SIEVING_PRIMES_OFFSET = sizeof(SievingPrime*) + sizeof(Bucket*),
+    SIEVING_PRIMES_SIZE = (config::BUCKET_BYTES - SIEVING_PRIMES_OFFSET) / sizeof(SievingPrime)
+  };
 
 private:
   SievingPrime* end_;
   Bucket* next_;
-  SievingPrime sievingPrimes_[(config::BUCKET_BYTES - SIEVING_PRIMES_OFFSET) / sizeof(SievingPrime)];
+  SievingPrime sievingPrimes_[SIEVING_PRIMES_SIZE];
 };
 
 static_assert(isPow2(sizeof(Bucket)), "sizeof(Bucket) must be a power of 2!");
