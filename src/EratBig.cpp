@@ -73,7 +73,8 @@ void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t
   uint64_t segment = multipleIndex >> log2SieveSize_;
   multipleIndex &= moduloSieveSize_;
 
-  if (!sievingPrimes_[segment]++->set(sievingPrime, multipleIndex, wheelIndex))
+  sievingPrimes_[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
+  if (memoryPool_.isBucketFull(sievingPrimes_[segment]))
     memoryPool_.addBucket(sievingPrimes_[segment]);
 }
 
@@ -83,9 +84,9 @@ void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t
 ///
 void EratBig::crossOff(byte_t* sieve)
 {
-  while (!sievingPrimes_[0]->empty())
+  while (!memoryPool_.isEmpty(sievingPrimes_[0]))
   {
-    Bucket* bucket = sievingPrimes_[0]->getBucket();
+    Bucket* bucket = memoryPool_.getBucket(sievingPrimes_[0]);
     bucket->setEnd(sievingPrimes_[0]);
     memoryPool_.reset(sievingPrimes_[0]);
 
@@ -136,9 +137,12 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* prime, SievingPrime* end)
 
     // move the 2 sieving primes to the list related
     // to their next multiple's segment
-    if (!sievingPrimes[segment0]++->set(sievingPrime0, multipleIndex0, wheelIndex0))
+    sievingPrimes[segment0]++->set(sievingPrime0, multipleIndex0, wheelIndex0);
+    if (memoryPool_.isBucketFull(sievingPrimes[segment0]))
       memoryPool_.addBucket(sievingPrimes[segment0]);
-    if (!sievingPrimes[segment1]++->set(sievingPrime1, multipleIndex1, wheelIndex1))
+
+    sievingPrimes[segment1]++->set(sievingPrime1, multipleIndex1, wheelIndex1);
+    if (memoryPool_.isBucketFull(sievingPrimes[segment1]))
       memoryPool_.addBucket(sievingPrimes[segment1]);
   }
 
@@ -152,7 +156,8 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* prime, SievingPrime* end)
     uint64_t segment = multipleIndex >> log2SieveSize;
     multipleIndex &= moduloSieveSize;
 
-    if (!sievingPrimes[segment]++->set(sievingPrime, multipleIndex, wheelIndex))
+    sievingPrimes[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
+    if (memoryPool_.isBucketFull(sievingPrimes[segment]))
       memoryPool_.addBucket(sievingPrimes[segment]);
   }
 }

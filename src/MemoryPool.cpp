@@ -49,7 +49,7 @@ void MemoryPool::addBucket(SievingPrime*& sievingPrime)
   Bucket* bucket = stock_;
   stock_ = stock_->next();
 
-  Bucket* old = sievingPrime->getBucket();
+  Bucket* old = getBucket(sievingPrime);
   old->setEnd(sievingPrime);
   bucket->setNext(old);
   sievingPrime = bucket->begin();

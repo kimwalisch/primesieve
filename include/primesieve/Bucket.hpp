@@ -22,8 +22,6 @@
 
 namespace primesieve {
 
-class Bucket;
-
 /// Each SievingPrime object contains a sieving prime and the
 /// position of its next multiple inside the sieve array i.e.
 /// multipleIndex and a wheelIndex. In order to reduce the memory
@@ -40,9 +38,6 @@ public:
   };
 
   SievingPrime() = default;
-  Bucket* getBucket() const;
-  bool empty() const;
-  bool isBucketFull() const;
 
   SievingPrime(uint64_t sievingPrime,
                uint64_t multipleIndex,
@@ -61,13 +56,12 @@ public:
     indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 23));
   }
 
-  bool set(uint64_t sievingPrime,
+  void set(uint64_t sievingPrime,
            uint64_t multipleIndex,
            uint64_t wheelIndex)
   {
     set(multipleIndex, wheelIndex);
     sievingPrime_ = (uint32_t) sievingPrime;
-    return !isBucketFull();
   }
 
   uint64_t getSievingPrime() const
@@ -128,50 +122,7 @@ private:
   SievingPrime sievingPrimes_[(config::BUCKET_BYTES - sizeof(SievingPrime*) - sizeof(Bucket*)) / sizeof(SievingPrime)];
 };
 
-static_assert(isPow2(sizeof(Bucket)), "sizeof(Bucket) must be a power of 2");
-
-/// Get the current sieving prime's bucket.
-/// For performance reasons we don't keep an array with all
-/// buckets. Instead we find the sieving prime's bucket by
-/// doing pointer arithmetic using the sieving prime's
-/// address. Since all buckets are aligned by sizeof(Bucket)
-/// we calculate the next address that is smaller than the
-/// sieving prime's address and that is aligned by
-/// sizeof(Bucket). That's the address of the sieving prime's
-/// bucket.
-///
-inline Bucket* SievingPrime::getBucket() const
-{
-  std::size_t address = (std::size_t) this;
-  // We need to adjust the address
-  // in case the bucket is full
-  address -= 1;
-  address -= address % sizeof(Bucket);
-  return (Bucket*) address;
-}
-
-/// Returns true if the sieving prime's bucket is full.
-/// Since each bucket's memory is aligned by sizeof(Bucket)
-/// we can compute the position of the current sieving
-/// prime using address % sizeof(Bucket).
-///
-inline bool SievingPrime::isBucketFull() const
-{
-  std::size_t address = (std::size_t) this;
-  return (address + sizeof(SievingPrime)) % sizeof(Bucket) == 0;
-}
-
-/// Returns true if the sieving prime's bucket is empty
-/// and if that bucket does not have a pointer to other
-/// buckets full with sieving primes.
-///
-inline bool SievingPrime::empty() const
-{
-  std::size_t address = (std::size_t) this;
-  std::size_t begin = sizeof(SievingPrime*) + sizeof(Bucket*);
-  bool isEmpty = (address % sizeof(Bucket)) == begin;
-  return isEmpty && !getBucket()->hasNext();
-}
+static_assert(isPow2(sizeof(Bucket)), "sizeof(Bucket) must be a power of 2!");
 
 } // namespace
 

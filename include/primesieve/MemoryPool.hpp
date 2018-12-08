@@ -10,13 +10,11 @@
 #ifndef MEMORYPOOL_HPP
 #define MEMORYPOOL_HPP
 
+#include "Bucket.hpp"
 #include <vector>
 #include <memory>
 
 namespace primesieve {
-
-class Bucket;
-class SievingPrime;
 
 class MemoryPool
 {
@@ -24,6 +22,50 @@ public:
   void reset(SievingPrime*& sievingPrime);
   void addBucket(SievingPrime*& sievingPrime);
   void freeBucket(Bucket* bucket);
+
+  /// Get the sieving prime's bucket.
+  /// For performance reasons we don't keep an array with all
+  /// buckets. Instead we find the sieving prime's bucket by
+  /// doing pointer arithmetic using the sieving prime's
+  /// address. Since all buckets are aligned by sizeof(Bucket)
+  /// we calculate the next address that is smaller than the
+  /// sieving prime's address and that is aligned by
+  /// sizeof(Bucket). That's the address of the sieving prime's
+  /// bucket.
+  ///
+  static Bucket* getBucket(SievingPrime* sievingPrime)
+  {
+    std::size_t address = (std::size_t) sievingPrime;
+    // We need to adjust the address
+    // in case the bucket is full
+    address -= 1;
+    address -= address % sizeof(Bucket);
+    return (Bucket*) address;
+  }
+
+  /// Returns true if the sieving prime's bucket is full.
+  /// Since each bucket's memory is aligned by sizeof(Bucket) we can
+  /// compute the position of the current sieving prime using
+  /// address % sizeof(Bucket).
+  ///
+  static bool isBucketFull(SievingPrime* sievingPrime)
+  {
+    std::size_t address = (std::size_t) sievingPrime;
+    return address % sizeof(Bucket) == 0;
+  }
+
+  /// Returns true if the sieving prime's bucket is empty
+  /// and if that bucket does not have a pointer to other
+  /// buckets full with sieving primes.
+  ///
+  static bool isEmpty(SievingPrime* sievingPrime)
+  {
+    std::size_t address = (std::size_t) sievingPrime;
+    std::size_t begin = sizeof(SievingPrime*) + sizeof(Bucket*);
+    bool isEmpty = (address % sizeof(Bucket)) == begin;
+    return isEmpty && !getBucket(sievingPrime)->hasNext();
+  }
+
 private:
   void allocateBuckets();
   void initBuckets(Bucket* buckets);
