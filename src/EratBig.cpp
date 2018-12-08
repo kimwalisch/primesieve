@@ -108,7 +108,7 @@ void EratBig::crossOff(byte_t* sieve)
 /// multiples per segment. Cross-off the next multiple of
 /// each sieving prime in the current bucket.
 ///
-void EratBig::crossOff(byte_t* sieve, SievingPrime* primes, SievingPrime* end)
+void EratBig::crossOff(byte_t* sieve, SievingPrime* prime, SievingPrime* end)
 {
   SievingPrime** sievingPrimes = &sievingPrimes_[0];
   uint64_t moduloSieveSize = moduloSieveSize_;
@@ -116,14 +116,14 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* primes, SievingPrime* end)
 
   // 2 sieving primes are processed per loop iteration
   // to increase instruction level parallelism
-  for (; primes + 2 <= end; primes += 2)
+  for (; prime + 2 <= end; prime += 2)
   { 
-    uint64_t multipleIndex0 = primes[0].getMultipleIndex();
-    uint64_t wheelIndex0    = primes[0].getWheelIndex();
-    uint64_t sievingPrime0  = primes[0].getSievingPrime();
-    uint64_t multipleIndex1 = primes[1].getMultipleIndex();
-    uint64_t wheelIndex1    = primes[1].getWheelIndex();
-    uint64_t sievingPrime1  = primes[1].getSievingPrime();
+    uint64_t multipleIndex0 = prime[0].getMultipleIndex();
+    uint64_t wheelIndex0    = prime[0].getWheelIndex();
+    uint64_t sievingPrime0  = prime[0].getSievingPrime();
+    uint64_t multipleIndex1 = prime[1].getMultipleIndex();
+    uint64_t wheelIndex1    = prime[1].getWheelIndex();
+    uint64_t sievingPrime1  = prime[1].getSievingPrime();
 
     // cross-off the current multiple (unset bit)
     // and calculate the next multiple
@@ -142,11 +142,11 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* primes, SievingPrime* end)
       memoryPool_.addBucket(sievingPrimes[segment1]);
   }
 
-  if (primes != end)
+  if (prime != end)
   {
-    uint64_t multipleIndex = primes->getMultipleIndex();
-    uint64_t wheelIndex    = primes->getWheelIndex();
-    uint64_t sievingPrime  = primes->getSievingPrime();
+    uint64_t multipleIndex = prime->getMultipleIndex();
+    uint64_t wheelIndex    = prime->getWheelIndex();
+    uint64_t sievingPrime  = prime->getSievingPrime();
 
     unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
     uint64_t segment = multipleIndex >> log2SieveSize;
