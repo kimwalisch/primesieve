@@ -27,7 +27,6 @@
 
 using std::size_t;
 using std::unique_ptr;
-using primesieve::primesieve_error;
 
 namespace primesieve {
 
