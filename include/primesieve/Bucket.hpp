@@ -115,11 +115,12 @@ public:
   void setNext(Bucket* next) { next_ = next; }
   void setEnd(SievingPrime* end) { end_ = end; }
   void reset() { end_ = begin(); }
+  enum { SIEVING_PRIMES_OFFSET = sizeof(SievingPrime*) + sizeof(Bucket*) };
 
 private:
   SievingPrime* end_;
   Bucket* next_;
-  SievingPrime sievingPrimes_[(config::BUCKET_BYTES - sizeof(SievingPrime*) - sizeof(Bucket*)) / sizeof(SievingPrime)];
+  SievingPrime sievingPrimes_[(config::BUCKET_BYTES - SIEVING_PRIMES_OFFSET) / sizeof(SievingPrime)];
 };
 
 static_assert(isPow2(sizeof(Bucket)), "sizeof(Bucket) must be a power of 2!");

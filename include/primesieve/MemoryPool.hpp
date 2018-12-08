@@ -61,8 +61,7 @@ public:
   static bool isEmpty(SievingPrime* sievingPrime)
   {
     std::size_t address = (std::size_t) sievingPrime;
-    std::size_t begin = sizeof(SievingPrime*) + sizeof(Bucket*);
-    bool isEmpty = (address % sizeof(Bucket)) == begin;
+    bool isEmpty = (address % sizeof(Bucket)) == Bucket::SIEVING_PRIMES_OFFSET;
     return isEmpty && !getBucket(sievingPrime)->hasNext();
   }
 
