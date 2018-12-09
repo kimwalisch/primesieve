@@ -141,8 +141,8 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* prime, SievingPrime* end)
     multipleIndex0 &= moduloSieveSize;
     multipleIndex1 &= moduloSieveSize;
 
-    // move the 2 sieving primes to the list related
-    // to their next multiple's segment
+    // move the sieving prime to the list related
+    // to the segment of its next multiple
     sievingPrimes[segment0]++->set(sievingPrime0, multipleIndex0, wheelIndex0);
     if (memoryPool_.isFullBucket(sievingPrimes[segment0]))
       memoryPool_.addBucket(sievingPrimes[segment0]);
