@@ -48,21 +48,10 @@ public:
   /// compute the position of the current sieving prime using
   /// address % sizeof(Bucket).
   ///
-  static bool isBucketFull(SievingPrime* sievingPrime)
+  static bool isFullBucket(SievingPrime* sievingPrime)
   {
     std::size_t address = (std::size_t) sievingPrime;
     return address % sizeof(Bucket) == 0;
-  }
-
-  /// Returns true if the sieving prime's bucket is empty
-  /// and if that bucket does not have a pointer to other
-  /// buckets full with sieving primes.
-  ///
-  static bool isEmpty(SievingPrime* sievingPrime)
-  {
-    std::size_t address = (std::size_t) sievingPrime;
-    bool isEmpty = (address % sizeof(Bucket)) == Bucket::SIEVING_PRIMES_OFFSET;
-    return isEmpty && !getBucket(sievingPrime)->hasNext();
   }
 
 private:

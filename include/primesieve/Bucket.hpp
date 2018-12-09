@@ -115,12 +115,12 @@ public:
   void setEnd(SievingPrime* end) { end_ = end; }
   void reset() { end_ = begin(); }
 
+private:
   enum {
     SIEVING_PRIMES_OFFSET = sizeof(SievingPrime*) + sizeof(Bucket*),
     SIEVING_PRIMES_SIZE = (config::BUCKET_BYTES - SIEVING_PRIMES_OFFSET) / sizeof(SievingPrime)
   };
 
-private:
   SievingPrime* end_;
   Bucket* next_;
   SievingPrime sievingPrimes_[SIEVING_PRIMES_SIZE];

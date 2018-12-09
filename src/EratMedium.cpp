@@ -37,7 +37,7 @@
   sort ## wheelIndex: \
   multipleIndex = (uint64_t) (p - sieveEnd); \
   sievingPrimes_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex); \
-  if (memoryPool_.isBucketFull(sievingPrimes_[wheelIndex])) \
+  if (memoryPool_.isFullBucket(sievingPrimes_[wheelIndex])) \
     memoryPool_.addBucket(sievingPrimes_[wheelIndex]); \
   continue;
 
@@ -75,7 +75,7 @@ void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint6
   assert(prime <= maxPrime_);
   uint64_t sievingPrime = prime / 30;
   sievingPrimes_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);
-  if (memoryPool_.isBucketFull(sievingPrimes_[wheelIndex]))
+  if (memoryPool_.isFullBucket(sievingPrimes_[wheelIndex]))
     memoryPool_.addBucket(sievingPrimes_[wheelIndex]);
 }
 

@@ -74,7 +74,7 @@ void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t
   multipleIndex &= moduloSieveSize_;
 
   sievingPrimes_[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
-  if (memoryPool_.isBucketFull(sievingPrimes_[segment]))
+  if (memoryPool_.isFullBucket(sievingPrimes_[segment]))
     memoryPool_.addBucket(sievingPrimes_[segment]);
 }
 
@@ -84,10 +84,13 @@ void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t
 ///
 void EratBig::crossOff(byte_t* sieve)
 {
-  while (!memoryPool_.isEmpty(sievingPrimes_[0]))
+  while (true)
   {
     Bucket* bucket = memoryPool_.getBucket(sievingPrimes_[0]);
     bucket->setEnd(sievingPrimes_[0]);
+    if (bucket->empty() && !bucket->hasNext())
+      break;
+
     memoryPool_.reset(sievingPrimes_[0]);
 
     while (bucket)
@@ -99,6 +102,9 @@ void EratBig::crossOff(byte_t* sieve)
     }
   }
 
+  // Move the sieving primes related to the next segment to
+  // the 1st position so that they will be used when
+  // sieving the next segment.
   std::rotate(sievingPrimes_.begin(),
               sievingPrimes_.begin() + 1,
               sievingPrimes_.end());
@@ -138,11 +144,11 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* prime, SievingPrime* end)
     // move the 2 sieving primes to the list related
     // to their next multiple's segment
     sievingPrimes[segment0]++->set(sievingPrime0, multipleIndex0, wheelIndex0);
-    if (memoryPool_.isBucketFull(sievingPrimes[segment0]))
+    if (memoryPool_.isFullBucket(sievingPrimes[segment0]))
       memoryPool_.addBucket(sievingPrimes[segment0]);
 
     sievingPrimes[segment1]++->set(sievingPrime1, multipleIndex1, wheelIndex1);
-    if (memoryPool_.isBucketFull(sievingPrimes[segment1]))
+    if (memoryPool_.isFullBucket(sievingPrimes[segment1]))
       memoryPool_.addBucket(sievingPrimes[segment1]);
   }
 
@@ -157,7 +163,7 @@ void EratBig::crossOff(byte_t* sieve, SievingPrime* prime, SievingPrime* end)
     multipleIndex &= moduloSieveSize;
 
     sievingPrimes[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
-    if (memoryPool_.isBucketFull(sievingPrimes[segment]))
+    if (memoryPool_.isFullBucket(sievingPrimes[segment]))
       memoryPool_.addBucket(sievingPrimes[segment]);
   }
 }
