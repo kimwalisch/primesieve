@@ -1,8 +1,20 @@
-Changes in version 7.3, 03/12/2018
+Changes in version 7.3, 09/12/2018
 ==================================
 
 Unreleased, work in progress.
 
+This is a minor new release, the API and ABI (Application binary
+interface) are backwards compatible.
+
+primesieve-7.3 improves the cache efficiency of the sieving algorithm
+for large sieving primes. By using aligned memory it is possible
+to reduce the number of pointer indirections which reduces cache
+pollution. I have measured a speed up of 15% near 1e18 and a speed up
+of 25% near 1e19.
+
+* EratBig.cpp: Improve cache efficiency.
+* MemoryPoop.cpp: Allocate buckets aligned by sizeof(Bucket).
+* Bucket.hpp: sizeof(Bucket) is now power of 2.
 * primesieve::iterator: Support C++ move semantics.
 
 Changes in version 7.2, 26/10/2018
