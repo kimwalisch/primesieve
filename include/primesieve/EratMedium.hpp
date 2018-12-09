@@ -11,7 +11,6 @@
 #define ERATMEDIUM_HPP
 
 #include "MemoryPool.hpp"
-#include "Bucket.hpp"
 #include "types.hpp"
 #include "Wheel.hpp"
 
@@ -19,6 +18,9 @@
 #include <array>
 
 namespace primesieve {
+
+class Bucket;
+class SievingPrime;
 
 /// EratMedium is an implementation of the segmented sieve of
 /// Eratosthenes optimized for medium sieving primes
@@ -34,8 +36,8 @@ private:
   bool enabled_ = false;
   uint64_t maxPrime_;
   MemoryPool memoryPool_;
-  std::array<Bucket*, 64> lists_;
-  void resetLists();
+  std::array<SievingPrime*, 64> sievingPrimes_;
+  void resetSievingPrimes();
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   void crossOff(byte_t*, byte_t*, Bucket*);
   void crossOff_7(byte_t*, byte_t*, Bucket*);

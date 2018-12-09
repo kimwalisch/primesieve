@@ -24,12 +24,13 @@ namespace config {
 enum {
   /// Number of sieving primes per Bucket in EratSmall, EratMedium
   /// and EratBig objects, affects performance by about 3%.
+  /// @pre BUCKET_BYTES must be a power of 2.
   ///
-  /// - For x86-64 CPUs after  2010 use 1024
-  /// - For x86-64 CPUs before 2010 use 512
-  /// - For PowerPC G4 CPUs    2003 use 256
+  /// - For x86-64 CPUs after  2010 use 8192
+  /// - For x86-64 CPUs before 2010 use 4096
+  /// - For PowerPC G4 CPUs    2003 use 2048
   ///
-  BUCKETSIZE = 1 << 10,
+  BUCKET_BYTES = 1 << 13,
 
   /// The MemoryPool allocates at most MAX_ALLOC_BYTES of new
   /// memory when it runs out of buckets.

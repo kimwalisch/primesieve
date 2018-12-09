@@ -19,32 +19,47 @@
 #include <primesieve/MemoryPool.hpp>
 #include <primesieve/config.hpp>
 #include <primesieve/Bucket.hpp>
+#include <primesieve/primesieve_error.hpp>
 
-#include <stdint.h>
 #include <algorithm>
 #include <memory>
 #include <vector>
 
+using std::size_t;
+using std::unique_ptr;
+
 namespace primesieve {
 
-void MemoryPool::addBucket(Bucket*& list)
+void MemoryPool::reset(SievingPrime*& sievingPrime)
 {
   if (!stock_)
     allocateBuckets();
 
-  // get first bucket
-  Bucket& bucket = *stock_;
+  Bucket* bucket = stock_;
   stock_ = stock_->next();
-  bucket.setNext(list);
-  list = &bucket;
+  bucket->setNext(nullptr);
+  sievingPrime = bucket->begin();
 }
 
-void MemoryPool::freeBucket(Bucket* b)
+void MemoryPool::addBucket(SievingPrime*& sievingPrime)
 {
-  Bucket& bucket = *b;
-  bucket.reset();
-  bucket.setNext(stock_);
-  stock_ = &bucket;
+  if (!stock_)
+    allocateBuckets();
+
+  Bucket* bucket = stock_;
+  stock_ = stock_->next();
+
+  Bucket* old = getBucket(sievingPrime);
+  old->setEnd(sievingPrime);
+  bucket->setNext(old);
+  sievingPrime = bucket->begin();
+}
+
+void MemoryPool::freeBucket(Bucket* bucket)
+{
+  bucket->reset();
+  bucket->setNext(stock_);
+  stock_ = bucket;
 }
 
 void MemoryPool::allocateBuckets()
@@ -52,12 +67,33 @@ void MemoryPool::allocateBuckets()
   if (memory_.empty())
     memory_.reserve(128);
 
-  using std::unique_ptr;
-  Bucket* buckets = new Bucket[count_];
-  memory_.emplace_back(unique_ptr<Bucket[]>(buckets));
+  // allocate a large chunk of memory
+  size_t size = sizeof(Bucket) * count_;
+  size += sizeof(Bucket) - 1;
+  char* memory = new char[size];
+  memory_.emplace_back(unique_ptr<char[]>(memory));
+  void* ptr = memory;
 
-  // initialize buckets
-  for (uint64_t i = 0; i < count_; i++)
+  // align memory address to sizeof(Bucket)
+  if (!std::align(sizeof(Bucket), sizeof(Bucket), ptr, size))
+    throw primesieve_error("MemoryPool: failed to align memory!");
+
+  if ((size_t) ptr % sizeof(Bucket) != 0)
+    throw primesieve_error("MemoryPool: failed to align memory!");
+
+  if (size / sizeof(Bucket) < 10)
+    throw primesieve_error("MemoryPool: insufficient memory allocated!");
+
+  count_ = size / sizeof(Bucket);
+  Bucket* buckets = (Bucket*) ptr;
+
+  initBuckets(buckets);
+  increaseAllocCount();
+}
+
+void MemoryPool::initBuckets(Bucket* buckets)
+{
+  for (size_t i = 0; i < count_; i++)
   {
     Bucket* next = nullptr;
     if (i + 1 < count_)
@@ -68,13 +104,12 @@ void MemoryPool::allocateBuckets()
   }
 
   stock_ = buckets;
-  increaseAllocCount();
 }
 
 void MemoryPool::increaseAllocCount()
 {
   count_ += count_ / 8;
-  uint64_t maxCount = config::MAX_ALLOC_BYTES / sizeof(Bucket);
+  size_t maxCount = config::MAX_ALLOC_BYTES / sizeof(Bucket);
   count_ = std::min(count_, maxCount);
 }
 

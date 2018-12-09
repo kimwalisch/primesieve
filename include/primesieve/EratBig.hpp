@@ -10,7 +10,6 @@
 #ifndef ERATBIG_HPP
 #define ERATBIG_HPP
 
-#include "Bucket.hpp"
 #include "MemoryPool.hpp"
 #include "Wheel.hpp"
 #include "types.hpp"
@@ -19,6 +18,8 @@
 #include <vector>
 
 namespace primesieve {
+
+class SievingPrime;
 
 /// EratBig is an implementation of the segmented sieve of
 /// Eratosthenes optimized for big sieving primes that have
@@ -34,8 +35,7 @@ private:
   uint64_t maxPrime_;
   uint64_t log2SieveSize_;
   uint64_t moduloSieveSize_;
-  /// Vector of bucket lists, holds the sieving primes
-  std::vector<Bucket*> lists_;
+  std::vector<SievingPrime*> sievingPrimes_;
   MemoryPool memoryPool_;
   bool enabled_ = false;
   void init(uint64_t);

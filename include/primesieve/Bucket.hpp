@@ -1,7 +1,7 @@
 ///
 /// @file   Bucket.hpp
-/// @brief  A bucket is a container for sieving primes. The
-///         Bucket class is designed as a singly linked list,
+/// @brief  A bucket is a container for sieving primes.
+///         The Bucket class is designed as a singly linked list,
 ///         once there is no more space in the current Bucket
 ///         a new Bucket is allocated.
 ///
@@ -15,6 +15,7 @@
 #define BUCKET_HPP
 
 #include "config.hpp"
+#include "pmath.hpp"
 
 #include <stdint.h>
 #include <cassert>
@@ -30,13 +31,12 @@ namespace primesieve {
 class SievingPrime
 {
 public:
-  enum
-  {
+  enum {
     MAX_MULTIPLEINDEX = (1 << 23) - 1,
     MAX_WHEELINDEX    = (1 << (32 - 23)) - 1
   };
 
-  SievingPrime() { }
+  SievingPrime() = default;
 
   SievingPrime(uint64_t sievingPrime,
                uint64_t multipleIndex,
@@ -107,30 +107,26 @@ class Bucket
 {
 public:
   SievingPrime* begin() { return &sievingPrimes_[0]; }
-  SievingPrime* last()  { return &sievingPrimes_[config::BUCKETSIZE - 1]; }
-  SievingPrime* end()   { return prime_; }
+  SievingPrime* end()   { return end_; }
   Bucket* next()        { return next_; }
   bool hasNext() const  { return next_ != nullptr; }
   bool empty()          { return begin() == end(); }
   void setNext(Bucket* next) { next_ = next; }
-  void reset() { prime_ = begin(); }
-
-  /// Store a sieving prime in the bucket
-  /// @return false if the bucket is full else true
-  ///
-  bool store(uint64_t sievingPrime,
-             uint64_t multipleIndex,
-             uint64_t wheelIndex)
-  {
-    prime_->set(sievingPrime, multipleIndex, wheelIndex);
-    return prime_++ != last();
-  }
+  void setEnd(SievingPrime* end) { end_ = end; }
+  void reset() { end_ = begin(); }
 
 private:
-  SievingPrime* prime_;
+  enum {
+    SIEVING_PRIMES_OFFSET = sizeof(SievingPrime*) + sizeof(Bucket*),
+    SIEVING_PRIMES_SIZE = (config::BUCKET_BYTES - SIEVING_PRIMES_OFFSET) / sizeof(SievingPrime)
+  };
+
+  SievingPrime* end_;
   Bucket* next_;
-  SievingPrime sievingPrimes_[config::BUCKETSIZE];
+  SievingPrime sievingPrimes_[SIEVING_PRIMES_SIZE];
 };
+
+static_assert(isPow2(sizeof(Bucket)), "sizeof(Bucket) must be a power of 2!");
 
 } // namespace
 

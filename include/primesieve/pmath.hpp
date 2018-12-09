@@ -27,7 +27,7 @@ inline X ceilDiv(X x, Y y)
 }
 
 template <typename T>
-inline bool isPow2(T x)
+constexpr bool isPow2(T x)
 {
   return x != 0 && (x & (x - 1)) == 0;
 }
