@@ -69,7 +69,7 @@ void MemoryPool::allocateBuckets()
 
   // allocate a large chunk of memory
   size_t size = sizeof(Bucket) * count_;
-  size += sizeof(Bucket) - 1;
+  size += sizeof(Bucket);
   char* memory = new char[size];
   memory_.emplace_back(unique_ptr<char[]>(memory));
   void* ptr = memory;
