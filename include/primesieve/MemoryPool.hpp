@@ -61,7 +61,7 @@ private:
   /// List of empty buckets
   Bucket* stock_ = nullptr;
   /// Number of buckets to allocate
-  std::size_t count_ = 128;
+  std::size_t count_ = 64;
   /// Pointers of allocated buckets
   std::vector<std::unique_ptr<char[]>> memory_;
 };
