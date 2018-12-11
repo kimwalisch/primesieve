@@ -95,7 +95,7 @@ void EratBig::crossOff(byte_t* sieve)
 
     while (bucket)
     {
-      crossOff(sieve, bucket->begin(), bucket->end());
+      crossOff(sieve, bucket);
       Bucket* processed = bucket;
       bucket = bucket->next();
       memoryPool_.freeBucket(processed);
@@ -115,8 +115,10 @@ void EratBig::crossOff(byte_t* sieve)
 /// multiples per segment. Cross-off the next multiple of
 /// each sieving prime in the current bucket.
 ///
-void EratBig::crossOff(byte_t* sieve, SievingPrime* prime, SievingPrime* end)
+void EratBig::crossOff(byte_t* sieve, Bucket* bucket)
 {
+  SievingPrime* prime = bucket->begin();
+  SievingPrime* end = bucket->end();
   SievingPrime** sievingPrimes = &sievingPrimes_[0];
   uint64_t moduloSieveSize = moduloSieveSize_;
   uint64_t log2SieveSize = log2SieveSize_;

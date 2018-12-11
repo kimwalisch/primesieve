@@ -10,6 +10,7 @@
 #ifndef ERATMEDIUM_HPP
 #define ERATMEDIUM_HPP
 
+#include "Bucket.hpp"
 #include "MemoryPool.hpp"
 #include "types.hpp"
 #include "Wheel.hpp"
@@ -18,9 +19,6 @@
 #include <array>
 
 namespace primesieve {
-
-class Bucket;
-class SievingPrime;
 
 /// EratMedium is an implementation of the segmented sieve of
 /// Eratosthenes optimized for medium sieving primes
