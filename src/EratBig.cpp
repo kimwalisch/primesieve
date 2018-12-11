@@ -78,9 +78,9 @@ void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t
     memoryPool_.addBucket(sievingPrimes_[segment]);
 }
 
-/// Iterate over the buckets related to the current segment.
-/// These buckets contain the sieving primes that
-/// have multiple occurrences in the current segment.
+/// Iterate over the buckets related to the current segment
+/// and for each bucket execute crossOff() to remove
+/// the multiples of its sieving primes.
 ///
 void EratBig::crossOff(byte_t* sieve)
 {
