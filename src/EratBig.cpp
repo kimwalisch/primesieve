@@ -123,10 +123,10 @@ void EratBig::crossOff(byte_t* sieve, Bucket* bucket)
   uint64_t moduloSieveSize = moduloSieveSize_;
   uint64_t log2SieveSize = log2SieveSize_;
 
-  // 2 sieving primes are processed per loop iteration
-  // to increase instruction level parallelism
+  // process 2 sieving primes per loop iteration to
+  // increase instruction level parallelism
   for (; prime + 2 <= end; prime += 2)
-  { 
+  {
     uint64_t multipleIndex0 = prime[0].getMultipleIndex();
     uint64_t wheelIndex0    = prime[0].getWheelIndex();
     uint64_t sievingPrime0  = prime[0].getSievingPrime();
