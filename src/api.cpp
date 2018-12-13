@@ -150,16 +150,12 @@ int get_sieve_size()
   if (sieve_size)
     return sieve_size;
 
-  // We use the L2 cache for sieving only if we can assume
-  // that it is fast. There are two rules that help us
-  // identify whether the L2 cache is fast or not.
-  // Rule 1: Shared CPU caches are slow.
-  // Rule 2: The last level CPU cache is slow.
-  // Also we use a sieve size that is slightly smaller than
-  // the L2 cache size so that other important data
-  // structures also fit into the L2 cache.
-  if (cpuInfo.hasPrivateL2Cache() &&
-      cpuInfo.hasL3Cache())
+  // Shared CPU caches are usually slow. Hence we only use
+  // the L2 cache for sieving if each physical CPU core
+  // has a private L2 cache. Also we only use half of the
+  // L2 cache for the sieve array so that other important
+  // data structures can also fit into the L2 cache.
+  if (cpuInfo.hasPrivateL2Cache())
   {
     // convert bytes to KiB
     size_t size = cpuInfo.l2CacheSize() >> 10;
