@@ -138,6 +138,19 @@ void optionCount(Option& opt,
   }
 }
 
+void optionDistance(Option& opt,
+                    CmdOptions& opts)
+{
+  uint64_t start = 0;
+  uint64_t val = opt.getValue<uint64_t>();
+  auto& numbers = opts.numbers;
+
+  if (!numbers.empty())
+    start = numbers[0];
+
+  numbers.push_back(start + val);
+}
+
 /// e.g. "--thread=4" -> return "--thread"
 string getOption(const string& str)
 {
@@ -270,6 +283,7 @@ CmdOptions parseOptions(int argc, char* argv[])
     {
       case OPTION_COUNT:     optionCount(opt, opts); break;
       case OPTION_CPU_INFO:  optionCpuInfo(); break;
+      case OPTION_DISTANCE:  optionDistance(opt, opts); break;
       case OPTION_PRINT:     optionPrint(opt, opts); break;
       case OPTION_SIZE:      opts.sieveSize = opt.getValue<int>(); break;
       case OPTION_THREADS:   opts.threads = opt.getValue<int>(); break;
@@ -278,7 +292,6 @@ CmdOptions parseOptions(int argc, char* argv[])
       case OPTION_NO_STATUS: opts.status = false; break;
       case OPTION_TIME:      opts.time = true; break;
       case OPTION_NUMBER:    opts.numbers.push_back(opt.getValue<uint64_t>()); break;
-      case OPTION_DISTANCE:  opts.numbers.push_back(opt.getValue<uint64_t>() + opts.numbers[0]); break;
       case OPTION_VERSION:   version(); break;
       case OPTION_HELP:      help(); break;
     }
