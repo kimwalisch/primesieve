@@ -1,4 +1,4 @@
-Changes in version 7.3, 09/12/2018
+Changes in version 7.3, 23/12/2018
 ==================================
 
 Unreleased, work in progress.
@@ -16,6 +16,7 @@ of 25% near 1e19.
 * MemoryPoop.cpp: Allocate buckets aligned by sizeof(Bucket).
 * Bucket.hpp: sizeof(Bucket) is now power of 2.
 * primesieve::iterator: Support C++ move semantics.
+* cmdoptions.cpp: Fix array out of bounds bug.
 
 Changes in version 7.2, 26/10/2018
 ==================================
