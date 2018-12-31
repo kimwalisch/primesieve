@@ -182,7 +182,7 @@ void CpuInfo::init()
        PDWORD);
 
   LPFN_GLPIEX glpiex = (LPFN_GLPIEX) (void*) GetProcAddress(
-      GetModuleHandle(TEXT("kernel32")), 
+      GetModuleHandle(TEXT("kernel32")),
       "GetLogicalProcessorInformationEx");
 
   // GetLogicalProcessorInformationEx() is supported on Windows 7
