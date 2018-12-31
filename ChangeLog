@@ -1,7 +1,5 @@
-Changes in version 7.3, 23/12/2018
+Changes in version 7.3, 31/12/2018
 ==================================
-
-Unreleased, work in progress.
 
 This is a minor new release, the API and ABI (Application binary
 interface) are backwards compatible.
@@ -14,9 +12,10 @@ of 25% near 1e19.
 
 * EratBig.cpp: Improve cache efficiency.
 * MemoryPoop.cpp: Allocate buckets aligned by sizeof(Bucket).
-* Bucket.hpp: sizeof(Bucket) is now power of 2.
+* Bucket.hpp: sizeof(Bucket) is now a power of 2.
 * primesieve::iterator: Support C++ move semantics.
 * cmdoptions.cpp: Fix array out of bounds bug.
+* CpuInfo.cpp: Fix MinGW/MSYS2 -Wcast-function-type warning.
 
 Changes in version 7.2, 26/10/2018
 ==================================
