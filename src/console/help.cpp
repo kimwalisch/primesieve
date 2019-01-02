@@ -3,7 +3,7 @@
 /// @brief  help() and version() functions of the primesieve
 ///         console application.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -61,7 +61,7 @@ void version()
 {
   cout << "primesieve " << primesieve::primesieve_version();
   cout << ", <https://primesieve.org>" << endl;
-  cout << "Copyright (C) 2010 - 2018 Kim Walisch" << endl << endl;
+  cout << "Copyright (C) 2010 - 2019 Kim Walisch" << endl << endl;
   cout << "BSD 2-Clause License <https://opensource.org/licenses/BSD-2-Clause>" << endl;
   exit(0);
 }
