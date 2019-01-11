@@ -20,7 +20,7 @@ before_install:
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get install -y gcc-5 g++-5 make cmake ninja-build cppcheck doxygen doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind
+  - sudo apt-get install -y gcc-5 g++-5 make cmake ninja-build cppcheck doxygen doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind mingw-w64
   - sudo rm -f /usr/bin/gcc
   - sudo rm -f /usr/bin/g++
   - sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
@@ -71,4 +71,23 @@ script:
   - valgrind --error-exitcode=1 ./nth_prime 500000000
   # 7) Test using cppcheck
   - rm -rf build
-  - cppcheck . -q --error-exitcode=1 -iexamples/cpp/prev_prime.cpp -iexamples/cpp/primesieve_iterator.cpp -itest/move_primesieve_iterator.cpp -itest/next_prime1.cpp -itest/prev_prime1.cpp
+  - |
+    cppcheck . -q \
+               --error-exitcode=1 \
+               -iexamples/cpp/prev_prime.cpp \
+               -iexamples/cpp/primesieve_iterator.cpp \
+               -itest/move_primesieve_iterator.cpp \
+               -itest/next_prime1.cpp \
+               -itest/prev_prime1.cpp
+  # 8) Test using MinGW/GCC
+  - mkdir build
+  - cd build
+  - |
+    cmake .. -DCMAKE_SYSTEM_NAME=Windows \
+             -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc-posix \
+             -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++-posix \
+             -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
+             -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
+             -DBUILD_TESTS=ON \
+             -DBUILD_EXAMPLES=ON
+  - make -j4
