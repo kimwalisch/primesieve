@@ -176,8 +176,7 @@ namespace primesieve {
 void CpuInfo::init()
 {
 // Windows 7 (2009) or later
-#if defined(_WIN32_WINNT) && \
-    _WIN32_WINNT >= 0x0601
+#if _WIN32_WINNT >= 0x0601
 
   using LPFN_GLPIEX = decltype(&GetLogicalProcessorInformationEx);
 
