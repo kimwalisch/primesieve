@@ -175,17 +175,16 @@ namespace primesieve {
 
 void CpuInfo::init()
 {
+// Windows 7 (2009) or later
+#if defined(_WIN32_WINNT) && \
+    _WIN32_WINNT >= 0x0601
+
   using LPFN_GLPIEX = decltype(&GetLogicalProcessorInformationEx);
 
   LPFN_GLPIEX glpiex = (LPFN_GLPIEX) (void*) GetProcAddress(
       GetModuleHandle(TEXT("kernel32")),
       "GetLogicalProcessorInformationEx");
 
-  // GetLogicalProcessorInformationEx() is supported on Windows 7
-  // (2009) or later. So we first check if the user's Windows
-  // version supports GetLogicalProcessorInformationEx() before
-  // using it. This way primesieve will also run on old Windows
-  // versions (though without CPU information).
   if (!glpiex)
     return;
 
@@ -247,6 +246,7 @@ void CpuInfo::init()
       cpuThreads_ += threadsPerCore_;
     }
   }
+#endif
 }
 
 } // namespace
