@@ -7,22 +7,70 @@ branches:
 
 matrix:
   include:
-    - os: linux
-      dist: xenial
-      compiler: gcc
-
-    - os: linux
-      dist: xenial
-      compiler: clang
-
     - os: osx
       compiler: clang
+
+    - os: linux
+      dist: xenial
+      compiler: clang
+
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - gcc-5
+            - g++-5
+          sources: &sources
+            - ubuntu-toolchain-r-test
+      env:
+        - COMPILERS="CC=gcc-5 && CXX=g++-5"
+
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - gcc-6
+            - g++-6
+          sources: &sources
+            - ubuntu-toolchain-r-test
+      env:
+        - COMPILERS="CC=gcc-6 && CXX=g++-6"
+
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - gcc-7
+            - g++-7
+          sources: &sources
+            - ubuntu-toolchain-r-test
+      env:
+        - COMPILERS="CC=gcc-7 && CXX=g++-7"
+
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - gcc-8
+            - g++-8
+          sources: &sources
+            - ubuntu-toolchain-r-test
+      env:
+        - COMPILERS="CC=gcc-8 && CXX=g++-8"
 
 env:
   global:
     - CXXFLAGS="-O3 -g -DDEBUG -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
     - CFLAGS="-O3 -g -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
     - SANITIZER_FLAGS="-O1 -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fno-omit-frame-pointer"
+
+before_install:
+  # Overwrite default CC and CXX
+  - eval "${COMPILERS}"
 
 install:
   - |
