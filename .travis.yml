@@ -84,7 +84,7 @@ script:
              -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++-posix \
              -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
              -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
-             -DCMAKE_C_FLAGS="-Wno-format" \
+             -DCMAKE_C_FLAGS="$CFLAGS -Wno-format" \
              -DBUILD_TESTS=ON \
              -DBUILD_EXAMPLES=ON
   - make -j4 VERBOSE=1
