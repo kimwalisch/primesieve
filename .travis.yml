@@ -62,6 +62,15 @@ matrix:
       env:
         - COMPILERS="CC=gcc-8 && CXX=g++-8"
 
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - mingw-w64
+      env:
+        - COMPILERS="CC=x86_64-w64-mingw32-gcc-posix && CXX=x86_64-w64-mingw32-g++-posix"
+
 env:
   global:
     - CXXFLAGS="-O3 -g -DDEBUG -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
@@ -78,13 +87,25 @@ install:
     then
         sudo apt-get update -qq
         sudo apt-get install -y g++-multilib make cmake ninja-build cppcheck doxygen \
-                                doxygen-latex help2man graphviz libqt4-dev qt4-qmake \
-                                valgrind mingw-w64
+            doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind
     fi
 
 script:
   - |
-    if [ "${TRAVIS_OS_NAME}" == "linux" ]
+    if [ "$CXX" == "x86_64-w64-mingw32-g++-posix" ]
+    then
+        # 1) Test MinGW/GCC compilation
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_SYSTEM_NAME=Windows \
+                 -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
+                 -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
+                 -DCMAKE_C_FLAGS="$CFLAGS -Wno-format" \
+                 -DBUILD_TESTS=ON \
+                 -DBUILD_EXAMPLES=ON
+        make -j4 VERBOSE=1
+
+    elif [ "${TRAVIS_OS_NAME}" == "linux" ]
     then
         # 1) Build using GNU make
         mkdir build
@@ -164,22 +185,7 @@ script:
                    -itest/next_prime1.cpp \
                    -itest/prev_prime1.cpp
 
-        # 8) Test using MinGW/GCC
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_SYSTEM_NAME=Windows \
-                 -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc-posix \
-                 -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++-posix \
-                 -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
-                 -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
-                 -DCMAKE_C_FLAGS="$CFLAGS -Wno-format" \
-                 -DBUILD_TESTS=ON \
-                 -DBUILD_EXAMPLES=ON
-        make -j4 VERBOSE=1
-
-        # 9) Test 32-bit
-        cd ..
-        rm -rf build
+        # 8) Test 32-bit
         mkdir build
         cd build
         cmake .. -DCMAKE_C_FLAGS="$CFLAGS -m32 -Wno-long-long" \
