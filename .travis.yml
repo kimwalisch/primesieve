@@ -83,16 +83,15 @@ before_install:
 
 install:
   - |
-    if [ "${TRAVIS_OS_NAME}" == "linux" ]
+    if [ "${TRAVIS_OS_NAME}" = "linux" ]
     then
-        sudo apt-get update -qq
         sudo apt-get install -y g++-multilib make cmake ninja-build cppcheck doxygen \
             doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind
     fi
 
 script:
   - |
-    if [ "$CXX" == "x86_64-w64-mingw32-g++-posix" ]
+    if [ "$CXX" = "x86_64-w64-mingw32-g++-posix" ]
     then
         # 1) Test MinGW/GCC compilation
         mkdir build
@@ -105,7 +104,7 @@ script:
                  -DBUILD_EXAMPLES=ON
         make -j4 VERBOSE=1
 
-    elif [ "${TRAVIS_OS_NAME}" == "linux" ]
+    elif [ "${TRAVIS_OS_NAME}" = "linux" ]
     then
         # 1) Build using GNU make
         mkdir build
@@ -195,7 +194,7 @@ script:
         make -j4 VERBOSE=1
         make test
 
-    elif [ "${TRAVIS_OS_NAME}" == "osx" ]
+    elif [ "${TRAVIS_OS_NAME}" = "osx" ]
     then
         # 1) Build using GNU make
         mkdir build
