@@ -20,7 +20,7 @@ before_install:
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get install -y make cmake ninja-build cppcheck doxygen doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind mingw-w64
+  - sudo apt-get install -y g++-multilib make cmake ninja-build cppcheck doxygen doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind mingw-w64
 
 script:
   # 1) Build using GNU make
@@ -58,7 +58,7 @@ script:
   - if [ "$CXX" = "clang++" ]; then cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON ..; fi
   - ninja -v
   - ninja doc >/dev/null
-  # 5) Run integration tests
+  # 5) Run test suite (64-bit)
   - ninja test
   - test/cpu_info
   - cd ..
@@ -88,3 +88,15 @@ script:
              -DBUILD_TESTS=ON \
              -DBUILD_EXAMPLES=ON
   - make -j4 VERBOSE=1
+  # 9) Test 32-bit
+  - cd ..
+  - rm -rf build
+  - mkdir build
+  - cd build
+  - |
+    cmake .. -DCMAKE_C_FLAGS="$CFLAGS -m32 -Wno-long-long" \
+             -DCMAKE_CXX_FLAGS="$CXXFLAGS -m32 -Wno-long-long" \
+             -DBUILD_TESTS=ON \
+             -DBUILD_EXAMPLES=ON
+  - make -j4 VERBOSE=1
+  - make test
