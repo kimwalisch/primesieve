@@ -19,8 +19,8 @@ matrix:
       addons:
         apt:
           packages:
-            - gcc-5
             - g++-5
+            - g++-5-multilib
           sources: &sources
             - ubuntu-toolchain-r-test
       env:
@@ -31,8 +31,8 @@ matrix:
       addons:
         apt:
           packages:
-            - gcc-6
             - g++-6
+            - g++-6-multilib
           sources: &sources
             - ubuntu-toolchain-r-test
       env:
@@ -43,8 +43,8 @@ matrix:
       addons:
         apt:
           packages:
-            - gcc-7
             - g++-7
+            - g++-7-multilib
           sources: &sources
             - ubuntu-toolchain-r-test
       env:
@@ -55,8 +55,8 @@ matrix:
       addons:
         apt:
           packages:
-            - gcc-8
             - g++-8
+            - g++-8-multilib
           sources: &sources
             - ubuntu-toolchain-r-test
       env:
