@@ -13,10 +13,6 @@ matrix:
     - os: linux
       dist: xenial
       compiler: clang
-      addons:
-        apt:
-          packages:
-            - g++-multilib
 
     - os: linux
       dist: xenial
@@ -25,7 +21,6 @@ matrix:
           packages:
             - g++-5
             - g++-5-multilib
-            - g++-multilib
           sources: &sources
             - ubuntu-toolchain-r-test
       env:
@@ -38,7 +33,6 @@ matrix:
           packages:
             - g++-6
             - g++-6-multilib
-            - g++-multilib
           sources: &sources
             - ubuntu-toolchain-r-test
       env:
@@ -51,7 +45,6 @@ matrix:
           packages:
             - g++-7
             - g++-7-multilib
-            - g++-multilib
           sources: &sources
             - ubuntu-toolchain-r-test
       env:
@@ -64,7 +57,6 @@ matrix:
           packages:
             - g++-8
             - g++-8-multilib
-            - g++-multilib
           sources: &sources
             - ubuntu-toolchain-r-test
       env:
@@ -93,7 +85,7 @@ install:
   - |
     if [ "${TRAVIS_OS_NAME}" = "linux" ]
     then
-        sudo apt-get install -y make cmake ninja-build cppcheck doxygen \
+        sudo apt-get install -y g++-multilib make cmake ninja-build cppcheck doxygen \
             doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind
     fi
 
@@ -148,7 +140,6 @@ script:
 
         # 4) Build using ninja
         cd ../..
-        sed -i 's#if(HELP2MAN)#if(DISABLE_HELP2MAN)#g' CMakeLists.txt
         mkdir build
         cd build
         if [ "${CXX:0:3}" = "g++" ]
@@ -165,6 +156,7 @@ script:
                      -DCMAKE_BUILD_TYPE=Debug \
                      -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" \
                      -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" \
+                     -DHELP2MAN=OFF \
                      -DBUILD_SHARED_LIBS=OFF \
                      -DBUILD_EXAMPLES=ON \
                      -DBUILD_TESTS=ON \

@@ -268,34 +268,46 @@ endif()
 
 # Regenerate man page ################################################
 
-if(BUILD_PRIMESIEVE)
-    find_program(HELP2MAN help2man)
+if(CMAKE_SYSTEM_NAME AND
+   CMAKE_HOST_SYSTEM_NAME AND
+   NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "${CMAKE_HOST_SYSTEM_NAME}")
+    set(IS_CROSS_COMPILIATION ON)
 endif()
 
-if(HELP2MAN)
-    message(STATUS "Found help2man: ${HELP2MAN}")
+if(CMAKE_SYSTEM_PROCESSOR AND
+   CMAKE_HOST_SYSTEM_PROCESSOR AND
+   NOT "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "${CMAKE_HOST_SYSTEM_PROCESSOR}")
+    set(IS_CROSS_COMPILIATION ON)
+endif()
 
-    execute_process(COMMAND perl -e "use Locale::gettext;"
-                    RESULT_VARIABLE LOCALE_RES
-                    OUTPUT_QUIET ERROR_QUIET)
+if(BUILD_PRIMESIEVE AND NOT IS_CROSS_COMPILIATION)
+    find_program(HELP2MAN help2man)
 
-    if(LOCALE_RES EQUAL 0)
-        message(STATUS "Found help2man option: --locale=C.UTF-8")
-        set(HELP2MAN_LOCALE "--locale=C.UTF-8")
+    if(HELP2MAN)
+        message(STATUS "Found help2man: ${HELP2MAN}")
+
+        execute_process(COMMAND perl -e "use Locale::gettext;"
+                        RESULT_VARIABLE LOCALE_RES
+                        OUTPUT_QUIET ERROR_QUIET)
+
+        if(LOCALE_RES EQUAL 0)
+            message(STATUS "Found help2man option: --locale=C.UTF-8")
+            set(HELP2MAN_LOCALE "--locale=C.UTF-8")
+        endif()
+
+        add_custom_command(
+            TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${HELP2MAN}
+            ARGS -s 1
+                 --manual="primesieve"
+                 --source="primesieve ${PRIMESIEVE_VERSION}"
+                 --no-info
+                 ${HELP2MAN_LOCALE}
+                 -n "efficient prime number generator"
+                 -o ${PROJECT_SOURCE_DIR}/doc/primesieve.1
+                 ./primesieve
+            VERBATIM)
     endif()
-
-    add_custom_command(
-        TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${HELP2MAN}
-        ARGS -s 1
-             --manual="primesieve"
-             --source="primesieve ${PRIMESIEVE_VERSION}"
-             --no-info
-             ${HELP2MAN_LOCALE}
-             -n "efficient prime number generator"
-             -o ${PROJECT_SOURCE_DIR}/doc/primesieve.1
-             ./primesieve
-        VERBATIM)
 endif()
 
 # Install man page ###################################################
