@@ -13,6 +13,10 @@ matrix:
     - os: linux
       dist: xenial
       compiler: clang
+      addons:
+        apt:
+          packages:
+            - g++-multilib
 
     - os: linux
       dist: xenial
@@ -21,6 +25,7 @@ matrix:
           packages:
             - g++-5
             - g++-5-multilib
+            - g++-multilib
           sources: &sources
             - ubuntu-toolchain-r-test
       env:
@@ -33,6 +38,7 @@ matrix:
           packages:
             - g++-6
             - g++-6-multilib
+            - g++-multilib
           sources: &sources
             - ubuntu-toolchain-r-test
       env:
@@ -45,6 +51,7 @@ matrix:
           packages:
             - g++-7
             - g++-7-multilib
+            - g++-multilib
           sources: &sources
             - ubuntu-toolchain-r-test
       env:
@@ -57,6 +64,7 @@ matrix:
           packages:
             - g++-8
             - g++-8-multilib
+            - g++-multilib
           sources: &sources
             - ubuntu-toolchain-r-test
       env:
@@ -85,7 +93,7 @@ install:
   - |
     if [ "${TRAVIS_OS_NAME}" = "linux" ]
     then
-        sudo apt-get install -y g++-multilib make cmake ninja-build cppcheck doxygen \
+        sudo apt-get install -y make cmake ninja-build cppcheck doxygen \
             doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind
     fi
 
