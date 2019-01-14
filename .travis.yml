@@ -161,6 +161,7 @@ script:
         valgrind --error-exitcode=1 ./primesieve 1e13 --dist=1e9 --size=32 --print=6
 
         # 7) Test using cppcheck
+        cd ..
         rm -rf build
         cppcheck . -q \
                    --error-exitcode=1 \
@@ -201,7 +202,7 @@ script:
         ./primesieve 1e9 --nth-prime
         ./primesieve 1e13 --dist=1e9 --size=32 --print=6
 
-        # 3) Test printing primes and prime k-tuplets
+        # 4) Test printing primes and prime k-tuplets
         if [ "$(./primesieve 1e8 -p | md5 | cut -f1 -d' ')" != "4e2b0027288a27e9c99699364877c9db" ]; then exit 1; fi
         if [ "$(./primesieve 1e8 -p2 | md5 | cut -f1 -d' ')" != "5076d235d5b03389034ec107227eab98" ]; then exit 1; fi
         if [ "$(./primesieve 1e8 -p3 | md5 | cut -f1 -d' ')" != "1b40d7e67868ccc857df11c3e0f7e0f5" ]; then exit 1; fi
