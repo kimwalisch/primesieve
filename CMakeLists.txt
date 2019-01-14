@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.4)
 project(primesieve CXX)
 set(PRIMESIEVE_VERSION "7.3")
 set(PRIMESIEVE_SOVERSION "9.3.0")
-set(CMAKE_BUILD_TYPE Release)
 
 # Build options ######################################################
 
@@ -15,6 +14,19 @@ option(BUILD_TESTS       "Build test programs"        OFF)
 
 if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
     message(FATAL_ERROR "One or both of BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be set to ON")
+endif()
+
+# Set default build type to Release ##################################
+
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.9)
+    get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+elseif(CMAKE_CONFIGURATION_TYPES)
+    set(isMultiConfig TRUE)
+endif()
+
+if(NOT isMultiConfig AND NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING
+    "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
 # primesieve binary source files #####################################
