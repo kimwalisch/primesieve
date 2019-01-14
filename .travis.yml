@@ -151,7 +151,7 @@ script:
         ninja -v
         ninja doc >/dev/null
 
-        # 5) Run test suite (Sanitizers are enabled for Clang)
+        # 5) Run test suite
         ninja test
         test/cpu_info
 
