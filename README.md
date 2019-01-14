@@ -50,8 +50,6 @@ choco install primesieve
 
 ## Usage examples
 
-The primesieve console application can generate primes and prime k-tuplets.
-
 ```sh
 # Count the primes below 1e10 using all CPU cores
 primesieve 1e10
@@ -59,11 +57,36 @@ primesieve 1e10
 # Print the primes below 1000000
 primesieve 1000000 --print
 
-# Count the primes within [1e10, 2e10] using 4 threads
-primesieve 1e10 2e10 --threads=4
+# Print the twin primes below 1000000
+primesieve 1000000 --print=2
 
-# Print an option summary
-primesieve --help
+# Count the prime triplets inside [1e10, 1e10+2^32]
+primesieve 1e10 --dist=2^32 --count=3
+```
+
+## Command-line options
+
+```
+Usage: primesieve [START] STOP [OPTION]...
+Generate the primes and/or prime k-tuplets inside [START, STOP]
+(< 2^64) using the segmented sieve of Eratosthenes.
+
+Options:
+  -c[N+], --count[=N+]   Count primes and prime k-tuplets, N <= 6,
+                         e.g. -c1 primes, -c2 twins, -c3 triplets, ...
+          --cpu-info     Print CPU information
+  -d<N>,  --dist=<N>     Sieve the interval [START, START + N]
+  -h,     --help         Print this help menu
+  -n,     --nth-prime    Calculate the nth prime,
+                         e.g. 1 100 -n finds the 1st prime > 100
+          --no-status    Turn off the progressing status
+  -p[N],  --print[=N]    Print primes or prime k-tuplets, N <= 6,
+                         e.g. -p1 primes, -p2 twins, -p3 triplets, ...
+  -q,     --quiet        Quiet mode, prints less output
+  -s<N>,  --size=<N>     Set the sieve size in KiB, N <= 4096
+  -t<N>,  --threads=<N>  Set the number of threads, N <= CPU cores
+          --time         Print the time elapsed in seconds
+  -v,     --version      Print version and license information
 ```
 
 ## Build instructions
