@@ -73,8 +73,8 @@ matrix:
 
 env:
   global:
-    - CXXFLAGS="-O3 -g -DDEBUG -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
-    - CFLAGS="-O3 -g -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
+    - CXXFLAGS="-O3 -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
+    - CFLAGS="-O3 -Wall -Wextra -Werror -pedantic -Wno-missing-braces"
     - SANITIZER_FLAGS="-O1 -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fno-omit-frame-pointer"
 
 before_install:
@@ -142,26 +142,12 @@ script:
         cd ../..
         mkdir build
         cd build
-        if [ "${CXX:0:3}" = "g++" ]
-        then
-            cmake .. -GNinja \
-                     -DCMAKE_BUILD_TYPE=Debug \
-                     -DBUILD_EXAMPLES=ON \
-                     -DBUILD_TESTS=ON \
-                     -DBUILD_DOC=ON
-        fi
-        if [ "$CXX" = "clang++" ]
-        then
-            cmake .. -GNinja \
-                     -DCMAKE_BUILD_TYPE=Debug \
-                     -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" \
-                     -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" \
-                     -DHELP2MAN=OFF \
-                     -DBUILD_SHARED_LIBS=OFF \
-                     -DBUILD_EXAMPLES=ON \
-                     -DBUILD_TESTS=ON \
-                     -DBUILD_DOC=ON
-        fi
+        cmake .. -GNinja \
+                 -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+                 -DBUILD_SHARED_LIBS=OFF \
+                 -DBUILD_EXAMPLES=ON \
+                 -DBUILD_TESTS=ON \
+                 -DBUILD_DOC=ON
         ninja -v
         ninja doc >/dev/null
 
@@ -170,9 +156,9 @@ script:
         test/cpu_info
 
         # 6) Test using valgrind
-        cd ..
-        $CXX -Iinclude -O2 -std=c++11 -g src/*.cpp examples/cpp/nth_prime.cpp -o nth_prime -lpthread
-        valgrind --error-exitcode=1 ./nth_prime 500000000
+        valgrind --error-exitcode=1 ./primesieve 1e10
+        valgrind --error-exitcode=1 ./primesieve 1e9 --nth-prime
+        valgrind --error-exitcode=1 ./primesieve 1e13 --dist=1e9 --size=32 --print=6
 
         # 7) Test using cppcheck
         rm -rf build
@@ -199,12 +185,21 @@ script:
         # 1) Build using GNU make
         mkdir build
         cd build
-        cmake .. -DBUILD_EXAMPLES=ON \
+        cmake .. -DCMAKE_BUILD_TYPE=Debug \
+                 -DCMAKE_CXX_FLAGS="$SANITIZER_FLAGS" \
+                 -DCMAKE_C_FLAGS="$SANITIZER_FLAGS" \
+                 -DBUILD_SHARED_LIBS=OFF \
+                 -DBUILD_EXAMPLES=ON \
                  -DBUILD_TESTS=ON
         make -j4 VERBOSE=1
 
-        # 2) Run test suite
+        # 2) Run test suite (using sanitizers)
         make test
+
+        # 3) Run primesieve (using sanitizers)
+        ./primesieve 1e10
+        ./primesieve 1e9 --nth-prime
+        ./primesieve 1e13 --dist=1e9 --size=32 --print=6
 
         # 3) Test printing primes and prime k-tuplets
         if [ "$(./primesieve 1e8 -p | md5 | cut -f1 -d' ')" != "4e2b0027288a27e9c99699364877c9db" ]; then exit 1; fi
