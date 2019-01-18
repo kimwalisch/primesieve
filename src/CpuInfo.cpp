@@ -245,6 +245,66 @@ void CpuInfo::init()
       cpuThreads_ += threadsPerCore_;
     }
   }
+// Windows XP or later
+#elif _WIN32_WINNT >= 0x0501
+
+  using LPFN_GLPI = decltype(&GetLogicalProcessorInformation);
+
+  LPFN_GLPI glpi = (LPFN_GLPI) (void*) GetProcAddress(
+      GetModuleHandle(TEXT("kernel32")),
+      "GetLogicalProcessorInformation");
+
+  if (!glpi)
+    return;
+
+  DWORD bytes = 0;
+  glpi(0, &bytes);
+
+  if (!bytes)
+    return;
+
+  size_t size = bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
+  vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> info(size);
+
+  if (!glpi(&info[0], &bytes))
+    return;
+
+  for (size_t i = 0; i < size; i++)
+  {
+    if (info[i].Relationship == RelationProcessorCore)
+    {
+      // ProcessorMask contains one bit set for
+      // each logical CPU core related to the
+      // current physical CPU core
+      auto mask = info[i].ProcessorMask;
+      for (threadsPerCore_ = 0; mask > 0; threadsPerCore_++)
+        mask &= mask - 1;
+
+      cpuCores_++;
+      cpuThreads_ += threadsPerCore_;
+    }
+  }
+
+  for (size_t i = 0; i < size; i++)
+  {
+    if (info[i].Relationship == RelationCache &&
+        info[i].Cache.Level >= 1 &&
+        info[i].Cache.Level <= 3 &&
+        (info[i].Cache.Type == CacheData ||
+         info[i].Cache.Type == CacheUnified))
+    {
+      auto level = info[i].Cache.Level;
+      cacheSizes_[level] = info[i].Cache.Size;
+
+      // We assume the L1 and L2 caches are private
+      if (info[i].Cache.Level <= 2)
+        cacheSharing_[level] = threadsPerCore_;
+
+      // We assume the L3 cache is shared
+      if (info[i].Cache.Level == 3)
+        cacheSharing_[level] = threadsPerCore_ * cpuCores_;
+    }
+  }
 #endif
 }
 
