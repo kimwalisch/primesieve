@@ -305,6 +305,14 @@ void CpuInfo::init()
         cacheSharing_[level] = threadsPerCore_ * cpuCores_;
     }
   }
+
+  // Most Intel CPUs have an L3 cache.
+  // But a few Intel CPUs don't have an L3 cache
+  // and for many of those CPUs the L2 cache is
+  // shared e.g. Intel Core 2 Duo/Quad CPUs and
+  // Intel Atom x5-Z8350 CPUs.
+  if (hasL2Cache() && !hasL3Cache())
+    cacheSharing_[2] = threadsPerCore_ * cpuCores_;
 #endif
 }
 
