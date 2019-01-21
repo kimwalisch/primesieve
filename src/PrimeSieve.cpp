@@ -4,7 +4,7 @@
 ///         sieving. It is used for printing and counting primes
 ///         and for computing the nth prime.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -206,7 +206,7 @@ void PrimeSieve::printStatus(double old, double current)
   {
     cout << '\r' << percent << '%' << flush;
     if (percent == 100)
-      cout << endl;
+      cout << '\n';
   }
 }
 

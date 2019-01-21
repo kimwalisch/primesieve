@@ -3,7 +3,7 @@
 /// @brief  Get detailed information about the CPU's caches
 ///         on Windows, macOS and Linux.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.

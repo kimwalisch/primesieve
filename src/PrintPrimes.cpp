@@ -5,7 +5,7 @@
 ///         (using Erat) PrintPrimes is used to reconstruct primes
 ///         and prime k-tuplets from 1 bits of the sieve array.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -107,7 +107,6 @@ void PrintPrimes::print()
     printPrimes();
   if (ps_.isPrintkTuplets())
     printkTuplets();
-
   if (ps_.isStatus())
     ps_.updateStatus(sieveSize_ * 30);
 }
