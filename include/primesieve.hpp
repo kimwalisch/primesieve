@@ -5,7 +5,7 @@
 ///         primesieve::primesieve_error exception (derived form
 ///         std::runtime_error) is thrown.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License.
 ///
@@ -13,9 +13,9 @@
 #ifndef PRIMESIEVE_HPP
 #define PRIMESIEVE_HPP
 
-#define PRIMESIEVE_VERSION "7.3"
+#define PRIMESIEVE_VERSION "7.4"
 #define PRIMESIEVE_VERSION_MAJOR 7
-#define PRIMESIEVE_VERSION_MINOR 3
+#define PRIMESIEVE_VERSION_MINOR 4
 
 #include <primesieve/iterator.hpp>
 #include <primesieve/primesieve_error.hpp>

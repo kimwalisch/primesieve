@@ -1,3 +1,16 @@
+Changes in version 7.4, 21/01/2019
+==================================
+
+Unreleased, work in progress!
+
+This is a minor new release, the API and ABI (Application binary
+interface) are backwards compatible.
+
+* CpuInfo.cpp: Fix MinGW CPU detection.
+* CMakeLists.txt: Fix cross compilation bug.
+* ParallelSieve.cpp: Reduce number of locks.
+* PrimeSieve.cpp: Simplify status update.
+
 Changes in version 7.3, 04/01/2019
 ==================================
 
