@@ -44,11 +44,11 @@ public:
   void sieve();
 private:
   std::mutex lock_;
-  SharedMemory* shm_;
-  int numThreads_;
+  SharedMemory* shm_ = nullptr;
+  int numThreads_ = 0;
   uint64_t getThreadDistance(int) const;
   uint64_t align(uint64_t) const;
-  bool updateStatus(uint64_t, bool);
+  void updateStatus(uint64_t);
 };
 
 } // namespace

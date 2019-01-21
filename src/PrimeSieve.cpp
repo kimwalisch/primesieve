@@ -51,41 +51,29 @@ const array<SmallPrime, 8> smallPrimes
 
 namespace primesieve {
 
-PrimeSieve::PrimeSieve() :
-  start_(0),
-  stop_(0),
-  flags_(COUNT_PRIMES),
-  parent_(nullptr)
+PrimeSieve::PrimeSieve()
 {
   int sieveSize = get_sieve_size();
   setSieveSize(sieveSize);
-  reset();
 }
 
-/// ParallelSieve creates one PrimeSieve
-/// child object for each thread.
-///
+/// Used for multi-threading
 PrimeSieve::PrimeSieve(PrimeSieve* parent) :
-  sieveSize_(parent->sieveSize_),
-  flags_(parent->flags_),
-  parent_(parent)
-{ }
+  sieveSize_(parent->sieveSize_)
+{
+  flags_ = parent->flags_;
+  flags_ &= ~CALCULATE_STATUS;
+  flags_ &= ~PRINT_STATUS;
+}
 
-PrimeSieve::~PrimeSieve()
-{ }
+PrimeSieve::~PrimeSieve() = default;
 
 void PrimeSieve::reset()
 {
   counts_.fill(0);
   seconds_ = 0.0;
-  toUpdate_ = 0;
   processed_ = 0;
   percent_ = -1.0;
-}
-
-bool PrimeSieve::isParallelSieve() const
-{
-  return parent_ != nullptr;
 }
 
 bool PrimeSieve::isFlag(int flag) const
@@ -120,7 +108,10 @@ uint64_t PrimeSieve::getStop() const
 
 uint64_t PrimeSieve::getDistance() const
 {
-  return stop_ - start_;
+  if (start_ <= stop_)
+    return stop_ - start_;
+  else
+    return 0;
 }
 
 uint64_t PrimeSieve::getCount(int i) const
@@ -182,18 +173,20 @@ void PrimeSieve::setStop(uint64_t stop)
   stop_ = stop;
 }
 
-/// Print status in percent to stdout.
-/// @processed:  Sum of recently processed segments
-///
-bool PrimeSieve::updateStatus(uint64_t processed, bool tryLock)
+void PrimeSieve::setStatus(int percent)
 {
-  if (isParallelSieve())
+  if (isStatus())
   {
-    toUpdate_ += processed;
-    if (parent_->updateStatus(toUpdate_, tryLock))
-      toUpdate_ = 0;
+    double old = percent_;
+    percent_ = percent;
+    if (isFlag(PRINT_STATUS))
+      printStatus(old, percent_);
   }
-  else
+}
+
+void PrimeSieve::updateStatus(uint64_t processed)
+{
+  if (isStatus())
   {
     processed_ += processed;
     double percent = 100;
@@ -204,7 +197,6 @@ bool PrimeSieve::updateStatus(uint64_t processed, bool tryLock)
     if (isFlag(PRINT_STATUS))
       printStatus(old, percent_);
   }
-  return true;
 }
 
 void PrimeSieve::printStatus(double old, double current)
@@ -264,12 +256,8 @@ void PrimeSieve::sieve()
   if (start_ > stop_)
     return;
 
+  setStatus(0);
   auto t1 = chrono::system_clock::now();
-  int initStatus = 0;
-  int finishStatus = 10;
-
-  if (isStatus())
-    updateStatus(initStatus);
 
   if (start_ <= 5)
     processSmallPrimes();
@@ -283,9 +271,7 @@ void PrimeSieve::sieve()
   auto t2 = chrono::system_clock::now();
   chrono::duration<double> seconds = t2 - t1;
   seconds_ = seconds.count();
-
-  if (isStatus())
-    updateStatus(finishStatus, false);
+  setStatus(100);
 }
 
 } // namespace

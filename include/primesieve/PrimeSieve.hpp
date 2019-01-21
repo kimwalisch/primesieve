@@ -49,6 +49,7 @@ public:
   // Getters
   uint64_t getStart() const;
   uint64_t getStop() const;
+  uint64_t getDistance() const;
   int getSieveSize() const;
   double getStatus() const;
   double getSeconds() const;
@@ -59,6 +60,7 @@ public:
   void setSieveSize(int);
   void setFlags(int);
   void addFlags(int);
+  virtual void updateStatus(uint64_t);
   // Bool is*
   bool isCount(int) const;
   bool isCountPrimes() const;
@@ -81,34 +83,28 @@ public:
   counts_t& getCounts();
   uint64_t getCount(int) const;
   uint64_t countPrimes(uint64_t, uint64_t);
-  virtual bool updateStatus(uint64_t, bool tryLock = true);
 protected:
   /// Sieve primes >= start_
-  uint64_t start_;
+  uint64_t start_ = 0;
   /// Sieve primes <= stop_
-  uint64_t stop_;
+  uint64_t stop_ = 0;
   /// Prime number and prime k-tuplet counts
-  counts_t counts_;
+  counts_t counts_ = { 0, 0, 0, 0, 0, 0 };
   /// Time elapsed of sieve()
-  double seconds_;
-  uint64_t getDistance() const;
+  double seconds_ = 0;
   void reset();
+  void setStatus(int);
 private:
   /// Sum of all processed segments
-  uint64_t processed_;
-  /// Sum of processed segments to update
-  uint64_t toUpdate_;
-  /// Status of sieve() in percent
-  double percent_;
+  uint64_t processed_ = 0;
+  /// Sieving status in percent
+  double percent_ = 0;
   /// Sieve size in KiB
-  int sieveSize_;
-  /// Setter methods set flags e.g. COUNT_PRIMES
-  int flags_;
-  /// parent ParallelSieve object
-  PrimeSieve* parent_;
+  int sieveSize_ = 0;
+  /// Default flags
+  int flags_ = COUNT_PRIMES;
   PreSieve preSieve_;
   static void printStatus(double, double);
-  bool isParallelSieve() const;
   void processSmallPrimes();
 };
 
