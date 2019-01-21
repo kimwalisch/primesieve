@@ -89,7 +89,7 @@ protected:
   /// Sieve primes <= stop_
   uint64_t stop_ = 0;
   /// Prime number and prime k-tuplet counts
-  counts_t counts_ = { 0, 0, 0, 0, 0, 0 };
+  counts_t counts_;
   /// Time elapsed of sieve()
   double seconds_ = 0;
   void reset();
