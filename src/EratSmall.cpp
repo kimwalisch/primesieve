@@ -83,14 +83,12 @@ uint64_t EratSmall::getL1Size(uint64_t sieveSize)
   return size;
 }
 
-/// Usually sieveSize = l2CacheSize / 2
-/// but EratSmall runs faster using
-/// sieveSize = l1CacheSize.
-///
 void EratSmall::crossOff(byte_t* sieve, uint64_t sieveSize)
 {
   byte_t* sieveEnd = sieve + sieveSize;
 
+  // Usually we use the L2 cache for sieving
+  // but EratSmall runs faster using the L1 cache.
   while (sieve < sieveEnd)
   {
     byte_t* start = sieve;
