@@ -87,14 +87,45 @@ bool PrimeSieve::isFlag(int first, int last) const
   return (flags_ & mask) != 0;
 }
 
-bool PrimeSieve::isCountPrimes()   const { return isFlag(COUNT_PRIMES); }
-bool PrimeSieve::isPrintPrimes()   const { return isFlag(PRINT_PRIMES); }
-bool PrimeSieve::isPrint()         const { return isFlag(PRINT_PRIMES, PRINT_SEXTUPLETS); }
-bool PrimeSieve::isCountkTuplets() const { return isFlag(COUNT_TWINS, COUNT_SEXTUPLETS); }
-bool PrimeSieve::isPrintkTuplets() const { return isFlag(PRINT_TWINS, PRINT_SEXTUPLETS); }
-bool PrimeSieve::isStatus()        const { return isFlag(PRINT_STATUS, CALCULATE_STATUS); }
-bool PrimeSieve::isCount(int i)    const { return isFlag(COUNT_PRIMES << i); }
-bool PrimeSieve::isPrint(int i)    const { return isFlag(PRINT_PRIMES << i); }
+bool PrimeSieve::isCountPrimes() const
+{
+  return isFlag(COUNT_PRIMES);
+}
+
+bool PrimeSieve::isPrintPrimes() const
+{
+  return isFlag(PRINT_PRIMES);
+}
+
+bool PrimeSieve::isPrint() const
+{
+  return isFlag(PRINT_PRIMES, PRINT_SEXTUPLETS);
+}
+
+bool PrimeSieve::isCountkTuplets() const
+{
+  return isFlag(COUNT_TWINS, COUNT_SEXTUPLETS);
+}
+
+bool PrimeSieve::isPrintkTuplets() const
+{
+  return isFlag(PRINT_TWINS, PRINT_SEXTUPLETS);
+}
+
+bool PrimeSieve::isStatus() const
+{
+  return isFlag(PRINT_STATUS, CALCULATE_STATUS);
+}
+
+bool PrimeSieve::isCount(int i) const
+{
+  return isFlag(COUNT_PRIMES << i);
+}
+
+bool PrimeSieve::isPrint(int i) const
+{
+  return isFlag(PRINT_PRIMES << i);
+}
 
 uint64_t PrimeSieve::getStart() const
 {
@@ -139,9 +170,9 @@ PreSieve& PrimeSieve::getPreSieve()
   return preSieve_;
 }
 
-double PrimeSieve::getStatus() const
+void PrimeSieve::setPercentGui(double* percentGui)
 {
-  return percent_;
+  percentGui_ = percentGui;
 }
 
 void PrimeSieve::setFlags(int flags)
@@ -154,6 +185,16 @@ void PrimeSieve::addFlags(int flags)
   flags_ |= flags;
 }
 
+void PrimeSieve::setStart(uint64_t start)
+{
+  start_ = start;
+}
+
+void PrimeSieve::setStop(uint64_t stop)
+{
+  stop_ = stop;
+}
+
 /// Set the size of the sieve array in KiB (kibibyte)
 void PrimeSieve::setSieveSize(int sieveSize)
 {
@@ -161,24 +202,14 @@ void PrimeSieve::setSieveSize(int sieveSize)
   sieveSize_ = floorPow2(sieveSize_);
 }
 
-/// Set a start number (lower bound) for sieving
-void PrimeSieve::setStart(uint64_t start)
-{
-  start_ = start;
-}
-
-/// Set a stop number (upper bound) for sieving
-void PrimeSieve::setStop(uint64_t stop)
-{
-  stop_ = stop;
-}
-
-void PrimeSieve::setStatus(int percent)
+void PrimeSieve::setStatus(double percent)
 {
   if (isStatus())
   {
-    double old = percent_;
+    auto old = percent_;
     percent_ = percent;
+    if (percentGui_)
+      *percentGui_ = percent_;
     if (isFlag(PRINT_STATUS))
       printStatus(old, percent_);
   }
@@ -192,8 +223,11 @@ void PrimeSieve::updateStatus(uint64_t processed)
     double percent = 100;
     if (getDistance() > 0)
       percent = processed_ * 100.0 / getDistance();
-    double old = percent_;
+    auto old = percent_;
     percent_ = min(percent, 100.0);
+
+    if (percentGui_)
+      *percentGui_ = percent_;
     if (isFlag(PRINT_STATUS))
       printStatus(old, percent_);
   }

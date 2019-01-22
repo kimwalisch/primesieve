@@ -52,6 +52,7 @@ void ParallelSieve::init(SharedMemory& shm)
   setSieveSize(shm.sieveSize);
   setFlags(shm.flags);
   setNumThreads(shm.threads);
+  setPercentGui(&shm.percent);
   shm_ = &shm;
 }
 
@@ -111,8 +112,8 @@ uint64_t ParallelSieve::getThreadDistance(int threads) const
   return threadDist;
 }
 
-/// Align n to modulo (30 + 2) to prevent prime k-tuplet
-/// (twin primes, prime triplets) gaps.
+/// (n % 30) == 2 ensures that prime k-tuplets
+/// cannot be split at thread boundaries.
 ///
 uint64_t ParallelSieve::align(uint64_t n) const
 {
@@ -120,21 +121,18 @@ uint64_t ParallelSieve::align(uint64_t n) const
 
   if (n32 >= stop_)
     return stop_;
-
-  return n32 - n % 30;
+  else
+    return n32 - n % 30;
 }
 
-/// Print sieving status to stdout.
-/// @distance: Finished sieving distance.
-///
-void ParallelSieve::updateStatus(uint64_t distance)
+/// Print sieving status to stdout
+void ParallelSieve::updateStatus(const PrimeSieve& ps)
 {
   if (isStatus())
   {
     lock_guard<mutex> lock(lock_);
-    PrimeSieve::updateStatus(distance);
-    if (shm_)
-      shm_->status = getStatus();
+    uint64_t distance = ps.getDistance();
+    updateStatus(distance);
   }
 }
 
@@ -180,8 +178,8 @@ void ParallelSieve::sieve()
 
         // Sieve the primes inside [start, stop]
         ps.sieve(start, stop);
-        updateStatus(ps.getDistance());
         counts += ps.getCounts();
+        updateStatus(ps);
       }
 
       return counts;

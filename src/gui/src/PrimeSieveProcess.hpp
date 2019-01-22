@@ -40,7 +40,7 @@ public:
   void start(quint64, quint64, int, int, int);
   bool isFinished();
   quint64 getCount(unsigned int) const;
-  double getStatus() const;
+  double getPercent() const;
   double getSeconds() const;
 private:
   /// Shared memory for interprocess communication between the

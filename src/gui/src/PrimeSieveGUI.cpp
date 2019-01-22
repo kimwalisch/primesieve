@@ -276,7 +276,7 @@ void PrimeSieveGUI::on_sieveButton_clicked() {
 }
 
 void PrimeSieveGUI::advanceProgressBar() {
-  int permil = static_cast<int>(primeSieveProcess_->getStatus() * 10.0);
+  int permil = static_cast<int>(primeSieveProcess_->getPercent() * 10.0);
   ui->progressBar->setValue(permil);
 }
 

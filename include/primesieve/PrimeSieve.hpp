@@ -51,16 +51,16 @@ public:
   uint64_t getStop() const;
   uint64_t getDistance() const;
   int getSieveSize() const;
-  double getStatus() const;
   double getSeconds() const;
   PreSieve& getPreSieve();
   // Setters
   void setStart(uint64_t);
   void setStop(uint64_t);
   void setSieveSize(int);
+  void setPercentGui(double*);
   void setFlags(int);
   void addFlags(int);
-  virtual void updateStatus(uint64_t);
+  void updateStatus(uint64_t);
   // Bool is*
   bool isCount(int) const;
   bool isCountPrimes() const;
@@ -83,6 +83,7 @@ public:
   counts_t& getCounts();
   uint64_t getCount(int) const;
   uint64_t countPrimes(uint64_t, uint64_t);
+
 protected:
   /// Sieve primes >= start_
   uint64_t start_ = 0;
@@ -93,12 +94,14 @@ protected:
   /// Time elapsed of sieve()
   double seconds_ = 0;
   void reset();
-  void setStatus(int);
+  void setStatus(double);
+
 private:
   /// Sum of all processed segments
   uint64_t processed_ = 0;
   /// Sieving status in percent
   double percent_ = 0;
+  double* percentGui_ = nullptr;
   /// Sieve size in KiB
   int sieveSize_ = 0;
   /// Default flags

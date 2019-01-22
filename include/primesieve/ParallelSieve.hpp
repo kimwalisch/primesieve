@@ -21,6 +21,9 @@ namespace primesieve {
 class ParallelSieve : public PrimeSieve
 {
 public:
+  using PrimeSieve::sieve;
+  using PrimeSieve::updateStatus;
+
   /// Used for inter-process communication with the
   /// primesieve GUI application.
   struct SharedMemory
@@ -28,27 +31,28 @@ public:
     uint64_t start;
     uint64_t stop;
     uint64_t counts[6];
-    double status;
+    double percent;
     double seconds;
     int flags;
     int sieveSize;
     int threads;
   };
+
   ParallelSieve();
   void init(SharedMemory&);
   static int getMaxThreads();
   int getNumThreads() const;
   int idealNumThreads() const;
   void setNumThreads(int numThreads);
-  using PrimeSieve::sieve;
-  void sieve();
+  virtual void sieve();
+
 private:
   std::mutex lock_;
   SharedMemory* shm_ = nullptr;
   int numThreads_ = 0;
   uint64_t getThreadDistance(int) const;
   uint64_t align(uint64_t) const;
-  void updateStatus(uint64_t);
+  void updateStatus(const PrimeSieve& ps);
 };
 
 } // namespace
