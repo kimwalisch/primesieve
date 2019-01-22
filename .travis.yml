@@ -10,9 +10,21 @@ matrix:
     - os: osx
       compiler: clang
 
+    # Clang-7.0
     - os: linux
       dist: xenial
       compiler: clang
+
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - clang-4.0
+          sources: &sources
+            - llvm-toolchain-4.0
+      env:
+        - COMPILERS="CC=clang-4.0 && CXX=clang++-4.0"
 
     - os: linux
       dist: xenial
