@@ -71,9 +71,9 @@ PrimeSieve::~PrimeSieve() = default;
 void PrimeSieve::reset()
 {
   counts_.fill(0);
-  seconds_ = 0.0;
-  processed_ = 0;
   percent_ = -1.0;
+  seconds_ = 0.0;
+  sievedDistance_ = 0;
 }
 
 bool PrimeSieve::isFlag(int flag) const
@@ -215,14 +215,14 @@ void PrimeSieve::setStatus(double percent)
   }
 }
 
-void PrimeSieve::updateStatus(uint64_t processed)
+void PrimeSieve::updateStatus(uint64_t dist)
 {
   if (isStatus())
   {
-    processed_ += processed;
+    sievedDistance_ += dist;
     double percent = 100;
     if (getDistance() > 0)
-      percent = processed_ * 100.0 / getDistance();
+      percent = sievedDistance_ * 100.0 / getDistance();
     auto old = percent_;
     percent_ = min(percent, 100.0);
 

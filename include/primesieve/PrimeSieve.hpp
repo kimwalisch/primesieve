@@ -97,8 +97,8 @@ protected:
   void setStatus(double);
 
 private:
-  /// Sum of all processed segments
-  uint64_t processed_ = 0;
+  /// Distance sieved so far
+  uint64_t sievedDistance_ = 0;
   /// Sieving status in percent
   double percent_ = 0;
   double* percentGui_ = nullptr;
