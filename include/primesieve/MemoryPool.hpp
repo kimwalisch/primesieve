@@ -56,7 +56,7 @@ public:
 
 private:
   void allocateBuckets();
-  void initBuckets(Bucket* buckets);
+  void initBuckets(void* memory, std::size_t bytes);
   void increaseAllocCount();
   /// List of empty buckets
   Bucket* stock_ = nullptr;

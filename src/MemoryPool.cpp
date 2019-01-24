@@ -10,7 +10,7 @@
 ///        doing any memory allocation as long as the MemoryPool's
 ///        stock is not empty.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -68,40 +68,39 @@ void MemoryPool::allocateBuckets()
     memory_.reserve(128);
 
   // allocate a large chunk of memory
-  size_t size = sizeof(Bucket) * count_;
-  char* memory = new char[size];
+  size_t bytes = count_ * sizeof(Bucket);
+  char* memory = new char[bytes];
   memory_.emplace_back(unique_ptr<char[]>(memory));
   void* ptr = memory;
 
-  // align memory address to sizeof(Bucket)
-  if (!std::align(sizeof(Bucket), sizeof(Bucket), ptr, size))
+  // align pointer address to sizeof(Bucket)
+  if (!std::align(sizeof(Bucket), sizeof(Bucket), ptr, bytes))
     throw primesieve_error("MemoryPool: failed to align memory!");
 
-  if ((size_t) ptr % sizeof(Bucket) != 0)
-    throw primesieve_error("MemoryPool: failed to align memory!");
-
-  if (size / sizeof(Bucket) < 10)
-    throw primesieve_error("MemoryPool: insufficient memory allocated!");
-
-  count_ = size / sizeof(Bucket);
-  Bucket* buckets = (Bucket*) ptr;
-
-  initBuckets(buckets);
+  initBuckets(ptr, bytes);
   increaseAllocCount();
 }
 
-void MemoryPool::initBuckets(Bucket* buckets)
+void MemoryPool::initBuckets(void* memory, size_t bytes)
 {
-  for (size_t i = 0; i < count_; i++)
-  {
-    Bucket* next = nullptr;
-    if (i + 1 < count_)
-      next = &buckets[i + 1];
+  Bucket* buckets = (Bucket*) memory;
+  count_ = bytes / sizeof(Bucket);
+  size_t i = 0;
 
+  if ((size_t) buckets % sizeof(Bucket) != 0)
+    throw primesieve_error("MemoryPool: failed to align memory!");
+
+  if (count_ < 10)
+    throw primesieve_error("MemoryPool: insufficient buckets allocated!");
+
+  for (; i + 1 < count_; i++)
+  {
     buckets[i].reset();
-    buckets[i].setNext(next);
+    buckets[i].setNext(&buckets[i + 1]);
   }
 
+  buckets[i].reset();
+  buckets[i].setNext(nullptr);
   stock_ = buckets;
 }
 
