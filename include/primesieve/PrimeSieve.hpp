@@ -102,10 +102,10 @@ protected:
 private:
   uint64_t sievedDistance_ = 0;
   uint64_t updateDistance_ = 0;
-  /// Sieve size in KiB
-  int sieveSize_ = 0;
   /// Default flags
   int flags_ = COUNT_PRIMES;
+  /// Sieve size in KiB
+  int sieveSize_ = 0;
   /// Status updates must be synchronized by main thread
   ParallelSieve* parent_ = nullptr;
   double* percentGui_ = nullptr;
