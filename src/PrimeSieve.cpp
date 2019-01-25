@@ -285,7 +285,7 @@ void PrimeSieve::sieve(uint64_t start, uint64_t stop, int flags)
 }
 
 /// Sieve the primes and prime k-tuplets (twin primes,
-/// prime triplets, ...) in [start, stop]
+/// prime triplets, ...) in [start, stop].
 ///
 void PrimeSieve::sieve()
 {
