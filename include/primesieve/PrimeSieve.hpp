@@ -20,6 +20,7 @@
 
 namespace primesieve {
 
+class ParallelSieve;
 using counts_t = std::array<uint64_t, 6>;
 
 enum
@@ -44,7 +45,7 @@ class PrimeSieve
 {
 public:
   PrimeSieve();
-  PrimeSieve(PrimeSieve*);
+  PrimeSieve(ParallelSieve*);
   virtual ~PrimeSieve();
   // Getters
   uint64_t getStart() const;
@@ -56,11 +57,10 @@ public:
   // Setters
   void setStart(uint64_t);
   void setStop(uint64_t);
+  void updateStatus(uint64_t);
   void setSieveSize(int);
-  void setPercentGui(double*);
   void setFlags(int);
   void addFlags(int);
-  void updateStatus(uint64_t);
   // Bool is*
   bool isCount(int) const;
   bool isCountPrimes() const;
@@ -89,26 +89,29 @@ protected:
   uint64_t start_ = 0;
   /// Sieve primes <= stop_
   uint64_t stop_ = 0;
-  /// Prime number and prime k-tuplet counts
-  counts_t counts_;
   /// Time elapsed of sieve()
   double seconds_ = 0;
-  void reset();
-  void setStatus(double);
-
-private:
-  /// Distance sieved so far
-  uint64_t sievedDistance_ = 0;
   /// Sieving status in percent
   double percent_ = 0;
-  double* percentGui_ = nullptr;
+  /// Prime number and prime k-tuplet counts
+  counts_t counts_;
+  void reset();
+  void setStatus(double);
+  void setPercentGui(double*);
+
+private:
+  uint64_t sievedDistance_ = 0;
+  uint64_t updateDistance_ = 0;
   /// Sieve size in KiB
   int sieveSize_ = 0;
   /// Default flags
   int flags_ = COUNT_PRIMES;
+  /// Status updates must be synchronized by main thread
+  ParallelSieve* parent_ = nullptr;
+  double* percentGui_ = nullptr;
   PreSieve preSieve_;
-  static void printStatus(double, double);
   void processSmallPrimes();
+  static void printStatus(double, double);
 };
 
 } // namespace

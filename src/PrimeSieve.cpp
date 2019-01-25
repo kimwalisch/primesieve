@@ -11,6 +11,7 @@
 ///
 
 #include <primesieve/PrimeSieve.hpp>
+#include <primesieve/ParallelSieve.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/PrintPrimes.hpp>
 #include <primesieve/PreSieve.hpp>
@@ -58,13 +59,11 @@ PrimeSieve::PrimeSieve()
 }
 
 /// Used for multi-threading
-PrimeSieve::PrimeSieve(PrimeSieve* parent) :
-  sieveSize_(parent->sieveSize_)
-{
-  flags_ = parent->flags_;
-  flags_ &= ~CALCULATE_STATUS;
-  flags_ &= ~PRINT_STATUS;
-}
+PrimeSieve::PrimeSieve(ParallelSieve* parent) :
+  flags_(parent->flags_),
+  sieveSize_(parent->sieveSize_),
+  parent_(parent)
+{ }
 
 PrimeSieve::~PrimeSieve() = default;
 
@@ -204,7 +203,7 @@ void PrimeSieve::setSieveSize(int sieveSize)
 
 void PrimeSieve::setStatus(double percent)
 {
-  if (isStatus())
+  if (!parent_)
   {
     auto old = percent_;
     percent_ = percent;
@@ -217,7 +216,13 @@ void PrimeSieve::setStatus(double percent)
 
 void PrimeSieve::updateStatus(uint64_t dist)
 {
-  if (isStatus())
+  if (parent_)
+  {
+    updateDistance_ += dist;
+    if (parent_->tryUpdateStatus(updateDistance_))
+      updateDistance_ = 0;
+  }
+  else
   {
     sievedDistance_ += dist;
     double percent = 100;
@@ -225,7 +230,6 @@ void PrimeSieve::updateStatus(uint64_t dist)
       percent = sievedDistance_ * 100.0 / getDistance();
     auto old = percent_;
     percent_ = min(percent, 100.0);
-
     if (percentGui_)
       *percentGui_ = percent_;
     if (isFlag(PRINT_STATUS))

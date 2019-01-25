@@ -126,14 +126,14 @@ uint64_t ParallelSieve::align(uint64_t n) const
 }
 
 /// Print sieving status to stdout
-void ParallelSieve::updateStatus(const PrimeSieve& ps)
+bool ParallelSieve::tryUpdateStatus(uint64_t dist)
 {
-  if (isStatus())
-  {
-    lock_guard<mutex> lock(lock_);
-    uint64_t distance = ps.getDistance();
-    updateStatus(distance);
-  }
+  unique_lock<mutex> lock(mutex_, try_to_lock);
+
+  if (lock.owns_lock())
+    updateStatus(dist);
+
+  return lock.owns_lock();
 }
 
 /// Sieve the primes and prime k-tuplets in [start, stop]
@@ -179,7 +179,6 @@ void ParallelSieve::sieve()
         // Sieve the primes inside [start, stop]
         ps.sieve(start, stop);
         counts += ps.getCounts();
-        updateStatus(ps);
       }
 
       return counts;
