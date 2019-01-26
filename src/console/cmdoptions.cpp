@@ -3,7 +3,7 @@
 /// @brief  Parse command-line options for the primesieve console
 ///         (terminal) application.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -24,6 +24,7 @@
 #include <string>
 
 void help();
+void test();
 void version();
 
 using namespace std;
@@ -60,6 +61,7 @@ enum OptionID
   OPTION_PRINT,
   OPTION_QUIET,
   OPTION_SIZE,
+  OPTION_TEST,
   OPTION_THREADS,
   OPTION_TIME,
   OPTION_VERSION
@@ -86,6 +88,7 @@ map<string, OptionID> optionMap =
   { "--quiet",     OPTION_QUIET },
   { "-s",          OPTION_SIZE },
   { "--size",      OPTION_SIZE },
+  { "--test",      OPTION_TEST },
   { "-t",          OPTION_THREADS },
   { "--threads",   OPTION_THREADS },
   { "--time",      OPTION_TIME },
@@ -292,8 +295,9 @@ CmdOptions parseOptions(int argc, char* argv[])
       case OPTION_NO_STATUS: opts.status = false; break;
       case OPTION_TIME:      opts.time = true; break;
       case OPTION_NUMBER:    opts.numbers.push_back(opt.getValue<uint64_t>()); break;
-      case OPTION_VERSION:   version(); break;
       case OPTION_HELP:      help(); break;
+      case OPTION_TEST:      test(); break;
+      case OPTION_VERSION:   version(); break;
     }
   }
 

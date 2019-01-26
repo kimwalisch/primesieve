@@ -38,6 +38,7 @@ const string helpMenu
   "                         e.g. -p1 primes, -p2 twins, -p3 triplets, ...\n"
   "  -q,     --quiet        Quiet mode, prints less output\n"
   "  -s<N>,  --size=<N>     Set the sieve size in KiB, N <= 4096\n"
+  "          --test         Run various sieving tests\n"
   "  -t<N>,  --threads=<N>  Set the number of threads, N <= CPU cores\n"
   "          --time         Print the time elapsed in seconds\n"
   "  -v,     --version      Print version and license information\n"

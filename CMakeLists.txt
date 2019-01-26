@@ -33,7 +33,8 @@ endif()
 
 set(BIN_SRC src/console/cmdoptions.cpp
             src/console/help.cpp
-            src/console/main.cpp)
+            src/console/main.cpp
+            src/console/test.cpp)
 
 # primesieve library source files ####################################
 
