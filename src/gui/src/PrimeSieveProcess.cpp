@@ -70,7 +70,7 @@ void PrimeSieveProcess::createSharedMemory() {
         "Interprocess communication error, could not allocate shared memory.");
   }
   // map the attached shared memory to the shm_ segment
-  shm_ = static_cast<primesieve::ParallelSieve::SharedMemory*>(sharedMemory_.data());
+  shm_ = static_cast<primesieve::SharedMemory*>(sharedMemory_.data());
 }
 
 /**
@@ -88,8 +88,7 @@ void PrimeSieveProcess::start(quint64 start, quint64 stop,
   shm_->threads = threads;
   shm_->percent = 0.0;
   shm_->seconds = 0.0;
-  for (int i = 0; i < 6; i++)
-    shm_->counts[i] = 0;
+  shm_->counts.fill(0);
   // path + file name of the aplication
   QString path = QCoreApplication::applicationFilePath();
   // process arguments, see main.cpp
@@ -109,7 +108,7 @@ bool PrimeSieveProcess::isFinished() {
  * @pre index < 6
  */
 quint64 PrimeSieveProcess::getCount(unsigned int index) const {
-  return shm_->counts[index];
+  return shm_->counts.at(index);
 }
 
 /**

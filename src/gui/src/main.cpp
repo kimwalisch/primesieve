@@ -1,7 +1,7 @@
 /*
  * main.cpp -- This file is part of primesieve
  *
- * Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,15 +57,14 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
       }
       // map the attached shared memory to the shm segment
-      primesieve::ParallelSieve::SharedMemory* shm =
-          static_cast<primesieve::ParallelSieve::SharedMemory*>(sharedMemory.data());
+      auto* shm = (primesieve::SharedMemory*) sharedMemory.data();
       try
       {
         // initialize the ParallelSieve object with
         // values from the shared memory segment provided by
         // the primesieve GUI and start sieving
         if (!shm)
-          throw std::runtime_error("sharedMemory.data() must not be NULL");
+          throw std::runtime_error("sharedMemory is nullptr!");
         primesieve::ParallelSieve ps;
         ps.init(*shm);
         ps.sieve();

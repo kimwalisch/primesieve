@@ -28,7 +28,7 @@ struct SharedMemory
 {
   uint64_t start;
   uint64_t stop;
-  uint64_t counts[6];
+  counts_t counts;
   double percent;
   double seconds;
   int flags;

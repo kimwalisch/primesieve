@@ -48,7 +48,7 @@ private:
   QSharedMemory sharedMemory_;
   /// Contains the settings (start, stop, sieveSize, ...)
   /// for sieving, will be mapped to sharedMemory_
-  primesieve::ParallelSieve::SharedMemory* shm_;
+  primesieve::SharedMemory* shm_;
   void createSharedMemory();
   int getProcessId();
 };

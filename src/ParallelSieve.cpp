@@ -202,7 +202,7 @@ void ParallelSieve::sieve()
   if (sharedMemory_)
   {
     // Send results to primesieve GUI app
-    copy(counts_.begin(), counts_.end(), sharedMemory_->counts);
+    sharedMemory_->counts = counts_;
     sharedMemory_->seconds = seconds_;
   }
 }
