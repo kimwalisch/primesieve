@@ -23,20 +23,6 @@ class ParallelSieve : public PrimeSieve
 public:
   using PrimeSieve::sieve;
 
-  /// Used for inter-process communication with the
-  /// primesieve GUI application.
-  struct SharedMemory
-  {
-    uint64_t start;
-    uint64_t stop;
-    uint64_t counts[6];
-    double percent;
-    double seconds;
-    int flags;
-    int sieveSize;
-    int threads;
-  };
-
   ParallelSieve();
   void init(SharedMemory&);
   static int getMaxThreads();
@@ -48,7 +34,6 @@ public:
 
 private:
   std::mutex mutex_;
-  SharedMemory* shm_ = nullptr;
   int numThreads_ = 0;
   uint64_t getThreadDistance(int) const;
   uint64_t align(uint64_t) const;

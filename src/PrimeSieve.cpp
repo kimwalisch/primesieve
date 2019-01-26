@@ -169,11 +169,6 @@ PreSieve& PrimeSieve::getPreSieve()
   return preSieve_;
 }
 
-void PrimeSieve::setPercentGui(double* percentGui)
-{
-  percentGui_ = percentGui;
-}
-
 void PrimeSieve::setFlags(int flags)
 {
   flags_ = flags;
@@ -207,8 +202,8 @@ void PrimeSieve::setStatus(double percent)
   {
     auto old = percent_;
     percent_ = percent;
-    if (percentGui_)
-      *percentGui_ = percent_;
+    if (sharedMemory_)
+      sharedMemory_->percent = percent_;
     if (isFlag(PRINT_STATUS))
       printStatus(old, percent_);
   }
@@ -230,8 +225,8 @@ void PrimeSieve::updateStatus(uint64_t dist)
       percent = sievedDistance_ * 100.0 / getDistance();
     auto old = percent_;
     percent_ = min(percent, 100.0);
-    if (percentGui_)
-      *percentGui_ = percent_;
+    if (sharedMemory_)
+      sharedMemory_->percent = percent_;
     if (isFlag(PRINT_STATUS))
       printStatus(old, percent_);
   }

@@ -14,14 +14,29 @@
 #define PRIMESIEVE_CLASS_HPP
 
 #include "PreSieve.hpp"
-
 #include <stdint.h>
 #include <array>
 
 namespace primesieve {
 
-class ParallelSieve;
 using counts_t = std::array<uint64_t, 6>;
+
+class ParallelSieve;
+class SharedMemory;
+
+/// Used for inter-process communication with the
+/// primesieve Qt GUI application.
+struct SharedMemory
+{
+  uint64_t start;
+  uint64_t stop;
+  uint64_t counts[6];
+  double percent;
+  double seconds;
+  int flags;
+  int sieveSize;
+  int threads;
+};
 
 enum
 {
@@ -95,9 +110,10 @@ protected:
   double percent_ = 0;
   /// Prime number and prime k-tuplet counts
   counts_t counts_;
+  /// Used for communication with the Qt GUI app
+  SharedMemory* sharedMemory_ = nullptr;
   void reset();
   void setStatus(double);
-  void setPercentGui(double*);
 
 private:
   uint64_t sievedDistance_ = 0;
@@ -108,7 +124,6 @@ private:
   int sieveSize_ = 0;
   /// Status updates must be synchronized by main thread
   ParallelSieve* parent_ = nullptr;
-  double* percentGui_ = nullptr;
   PreSieve preSieve_;
   void processSmallPrimes();
   static void printStatus(double, double);
