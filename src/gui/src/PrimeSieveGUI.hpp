@@ -98,7 +98,6 @@ private:
   Ui::PrimeSieveGUI* ui;
 
   enum {
-    COUNT_KTUPLETS   = primesieve::COUNT_SEXTUPLETS * 2 - primesieve::COUNT_TWINS,
     COUNT_PRIMES      = primesieve::COUNT_PRIMES,
     COUNT_KTUPLETS    = primesieve::COUNT_SEXTUPLETS * 2 - primesieve::COUNT_TWINS,
     COUNT_FLAGS       = primesieve::COUNT_SEXTUPLETS * 2 - primesieve::COUNT_PRIMES,
