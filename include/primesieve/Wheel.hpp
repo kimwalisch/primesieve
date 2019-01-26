@@ -3,7 +3,7 @@
 /// @brief  Wheel factorization is used to skip multiles of
 ///         small primes in the sieve of Eratosthenes.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -105,9 +105,7 @@ protected:
       throw primesieve_error("Wheel: sieveSize > " + std::to_string(maxSieveSize));
   }
 
-  virtual ~Wheel()
-  { }
-
+  virtual ~Wheel() = default;
   virtual void storeSievingPrime(uint64_t, uint64_t, uint64_t) = 0;
 
   static uint64_t getMaxFactor()
@@ -131,7 +129,7 @@ protected:
 
 private:
   static const uint64_t wheelOffsets_[30];
-  uint64_t stop_;
+  uint64_t stop_ = 0;
 };
 
 template <int MODULO, int SIZE, const WheelElement* WHEEL, const WheelInit* INIT>
