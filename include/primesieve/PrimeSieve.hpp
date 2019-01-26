@@ -53,7 +53,7 @@ enum
   PRINT_QUINTUPLETS = 1 << 10,
   PRINT_SEXTUPLETS  = 1 << 11,
   PRINT_STATUS      = 1 << 12,
-  CALCULATE_STATUS  = 1 << 13
+  UPDATE_GUI_STATUS = 1 << 13
 };
 
 class PrimeSieve

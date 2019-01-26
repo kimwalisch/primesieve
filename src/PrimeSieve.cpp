@@ -113,7 +113,7 @@ bool PrimeSieve::isPrintkTuplets() const
 
 bool PrimeSieve::isStatus() const
 {
-  return isFlag(PRINT_STATUS, CALCULATE_STATUS);
+  return isFlag(PRINT_STATUS, UPDATE_GUI_STATUS);
 }
 
 bool PrimeSieve::isCount(int i) const

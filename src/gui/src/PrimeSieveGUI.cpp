@@ -241,7 +241,7 @@ void PrimeSieveGUI::on_sieveButton_clicked() {
   ui->sieveButton->setDisabled(true);
   ui->cancelButton->setEnabled(true);
   try {
-    flags_ = this->getMenuSettings() | CALCULATE_STATUS;
+    flags_ = this->getMenuSettings() | UPDATE_GUI_STATUS;
     if ((flags_ & (COUNT_FLAGS | PRINT_FLAGS)) == 0)
       throw std::invalid_argument("Nothing to do, no count or print options selected.");
 

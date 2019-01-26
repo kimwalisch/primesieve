@@ -98,12 +98,13 @@ private:
   Ui::PrimeSieveGUI* ui;
 
   enum {
-    COUNT_PRIMES     = primesieve::COUNT_PRIMES,
     COUNT_KTUPLETS   = primesieve::COUNT_SEXTUPLETS * 2 - primesieve::COUNT_TWINS,
-    COUNT_FLAGS      = primesieve::COUNT_SEXTUPLETS * 2 - primesieve::COUNT_PRIMES,
-    PRINT_FLAGS      = primesieve::PRINT_SEXTUPLETS * 2 - primesieve::PRINT_PRIMES,
-    PRINT_PRIMES     = primesieve::PRINT_PRIMES,
-    CALCULATE_STATUS = primesieve::CALCULATE_STATUS
+    COUNT_PRIMES      = primesieve::COUNT_PRIMES,
+    COUNT_KTUPLETS    = primesieve::COUNT_SEXTUPLETS * 2 - primesieve::COUNT_TWINS,
+    COUNT_FLAGS       = primesieve::COUNT_SEXTUPLETS * 2 - primesieve::COUNT_PRIMES,
+    PRINT_FLAGS       = primesieve::PRINT_SEXTUPLETS * 2 - primesieve::PRINT_PRIMES,
+    PRINT_PRIMES      = primesieve::PRINT_PRIMES,
+    UPDATE_GUI_STATUS = primesieve::UPDATE_GUI_STATUS
   };
 
   void initGUI();
