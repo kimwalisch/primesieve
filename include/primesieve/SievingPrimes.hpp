@@ -30,7 +30,7 @@ private:
   uint64_t i_ = 0;
   uint64_t size_ = 0;
   uint64_t low_ = 0;
-  uint64_t tinyIdx_;
+  uint64_t tinyIdx_ = 0;
   uint64_t sieveIdx_ = ~0ull;
   uint64_t primes_[64];
   std::vector<char> tinySieve_;

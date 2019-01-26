@@ -31,9 +31,9 @@ public:
   void crossOff(byte_t*);
   bool enabled() const { return enabled_; }
 private:
-  uint64_t maxPrime_;
-  uint64_t log2SieveSize_;
-  uint64_t moduloSieveSize_;
+  uint64_t maxPrime_ = 0;
+  uint64_t log2SieveSize_ = 0;
+  uint64_t moduloSieveSize_ = 0;
   std::vector<SievingPrime*> sievingPrimes_;
   MemoryPool memoryPool_;
   bool enabled_ = false;

@@ -31,8 +31,8 @@ public:
   void crossOff(byte_t*, uint64_t);
   bool enabled() const { return enabled_; }
 private:
-  uint64_t maxPrime_;
-  uint64_t l1Size_;
+  uint64_t maxPrime_ = 0;
+  uint64_t l1Size_ = 0;
   std::vector<SievingPrime> primes_;
   bool enabled_ = false;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);

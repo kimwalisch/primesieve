@@ -32,7 +32,7 @@ public:
   void crossOff(byte_t*, uint64_t);
 private:
   bool enabled_ = false;
-  uint64_t maxPrime_;
+  uint64_t maxPrime_ = 0;
   MemoryPool memoryPool_;
   std::array<SievingPrime*, 64> sievingPrimes_;
   void resetSievingPrimes();
