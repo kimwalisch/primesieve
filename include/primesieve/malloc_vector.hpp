@@ -1,7 +1,7 @@
 ///
 /// @file  malloc_vector
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -26,19 +26,11 @@ class malloc_vector
 {
 public:
   malloc_vector()
-    : array_(0),
-      size_(0),
-      capacity_(0),
-      is_free_(true)
   {
     resize(16);
   }
 
   malloc_vector(std::size_t n)
-    : array_(0),
-      size_(0),
-      capacity_(0),
-      is_free_(true)
   {
     resize(n);
   }
@@ -99,10 +91,10 @@ public:
   using value_type = T;
 
 private:
-  T* array_;
-  std::size_t size_;
-  std::size_t capacity_;
-  bool is_free_;
+  T* array_ = nullptr;
+  std::size_t size_ = 0;
+  std::size_t capacity_ = 0;
+  bool is_free_ = true;
 };
 
 } // namespace

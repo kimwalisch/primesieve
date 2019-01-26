@@ -1,7 +1,7 @@
 /*
  * PrimeSieveProcess.hpp -- This file is part of primesieve
  *
- * Copyright (C) 2012 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ private:
   QSharedMemory sharedMemory_;
   /// Contains the settings (start, stop, sieveSize, ...)
   /// for sieving, will be mapped to sharedMemory_
-  primesieve::SharedMemory* shm_;
+  primesieve::SharedMemory* shm_ = nullptr;
   void createSharedMemory();
   int getProcessId();
 };

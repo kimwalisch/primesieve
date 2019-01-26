@@ -58,11 +58,11 @@ protected:
 
 private:
   static const std::array<uint64_t, 64> bruijnBitValues_;
-  uint64_t maxPreSieve_;
-  uint64_t maxEratSmall_;
-  uint64_t maxEratMedium_;
+  uint64_t maxPreSieve_ = 0;
+  uint64_t maxEratSmall_ = 0;
+  uint64_t maxEratMedium_ = 0;
   std::unique_ptr<byte_t[]> deleter_;
-  PreSieve* preSieve_;
+  PreSieve* preSieve_ = nullptr;
   EratSmall eratSmall_;
   EratBig eratBig_;
   EratMedium eratMedium_;
