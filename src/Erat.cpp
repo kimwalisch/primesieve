@@ -3,7 +3,7 @@
 /// @brief  The Erat class manages prime sieving using the
 ///         EratSmall, EratMedium, EratBig classes.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -64,7 +64,7 @@ const array<uint64_t, 64> Erat::bruijnBitValues_ =
   173, 223, 193,  31, 221,  29,  23, 241
 };
 
-Erat::Erat() { }
+Erat::Erat() = default;
 
 Erat::Erat(uint64_t start, uint64_t stop) :
   start_(start),

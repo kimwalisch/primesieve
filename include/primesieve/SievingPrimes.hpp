@@ -22,7 +22,7 @@ class PreSieve;
 class SievingPrimes : public Erat
 {
 public:
-  SievingPrimes() { }
+  SievingPrimes() = default;
   SievingPrimes(Erat*, PreSieve&);
   void init(Erat*, PreSieve&);
   uint64_t next();
