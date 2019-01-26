@@ -33,9 +33,9 @@ bytes per thread.
 
 ## Installation
 
-The primesieve console application can be installed using your operating
-system's package manager. The primesieve GUI application can be downloaded from
-[https://primesieve.org/downloads](https://primesieve.org/downloads).
+The primesieve console application can be installed using your operating system's
+package manager. You can also download the primesieve console and GUI applications
+from [https://primesieve.org/downloads](https://primesieve.org/downloads).
 
 ```sh
 # Debian/Ubuntu
