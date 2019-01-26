@@ -20,9 +20,7 @@
 namespace primesieve {
 
 using counts_t = std::array<uint64_t, 6>;
-
 class ParallelSieve;
-class SharedMemory;
 
 /// Used for inter-process communication with the
 /// primesieve Qt GUI application.
