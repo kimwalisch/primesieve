@@ -84,6 +84,7 @@ Options:
                          e.g. -p1 primes, -p2 twins, -p3 triplets, ...
   -q,     --quiet        Quiet mode, prints less output
   -s<N>,  --size=<N>     Set the sieve size in KiB, N <= 4096
+          --test         Run various sieving tests
   -t<N>,  --threads=<N>  Set the number of threads, N <= CPU cores
           --time         Print the time elapsed in seconds
   -v,     --version      Print version and license information
