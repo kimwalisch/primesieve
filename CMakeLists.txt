@@ -318,7 +318,7 @@ if(BUILD_PRIMESIEVE AND NOT IS_CROSS_COMPILIATION)
                  ${HELP2MAN_LOCALE}
                  -n "efficient prime number generator"
                  -o ${PROJECT_SOURCE_DIR}/doc/primesieve.1
-                 ./primesieve
+                 $<TARGET_FILE:primesieve>
             VERBATIM)
     endif()
 endif()
