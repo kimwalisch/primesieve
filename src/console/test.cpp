@@ -134,6 +134,7 @@ void countPrimesRandom()
   random_device rd;
   mt19937 gen(rd());
   uniform_int_distribution<uint64_t> dist(0, maxDist);
+  int defaultSieveSize = get_sieve_size();
 
   while (stop < upperBound)
   {
@@ -145,6 +146,39 @@ void countPrimesRandom()
   }
 
   check(count == 334067230);
+  set_sieve_size(defaultSieveSize);
+}
+
+void smallNthPrimes()
+{
+  const array<uint64_t, 9> nthPrimes =
+  {
+    29,         // nthPrime(10^1)
+    541,        // nthPrime(10^2)
+    7919,       // nthPrime(10^3)
+    104729,     // nthPrime(10^4)
+    1299709,    // nthPrime(10^5)
+    15485863,   // nthPrime(10^6)
+    179424673,  // nthPrime(10^7)
+    2038074743, // nthPrime(10^8)
+    22801763489 // nthPrime(10^9)
+  };
+
+  ParallelSieve ps;
+  uint64_t n = 0;
+  uint64_t nthPrime = 0;
+
+  for (size_t i = 0; i < nthPrimes.size(); i++)
+  {
+    uint64_t oldN = n;
+    uint64_t oldNthPrime = nthPrime;
+    n = (uint64_t) pow(10.0, i + 1);
+    nthPrime = ps.nthPrime(n - oldN, oldNthPrime);
+    ostringstream oss;
+    oss << "NthPrime(10^" << i + 1 << ") = " << nthPrime;
+    cout << left << setw(28) << oss.str();
+    check(nthPrime == nthPrimes[i]);
+  }
 }
 
 } // namespace
@@ -155,10 +189,12 @@ void test()
 
   countSmallPrimes();
   cout << endl;
-  countPrimeKTuplets();
-  cout << endl;
   countLargePrimes();
   countPrimesRandom();
+  cout << endl;
+  countPrimeKTuplets();
+  cout << endl;
+  smallNthPrimes();
 
   auto t2 = chrono::system_clock::now();
   chrono::duration<double> seconds = t2 - t1;
