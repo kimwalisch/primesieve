@@ -2,7 +2,7 @@
 /// @file   config.hpp
 /// @brief  primesieve compile time constants.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -37,13 +37,13 @@ enum {
   ///
   MAX_ALLOC_BYTES = (1 << 20) * 16,
 
-  /// primesieve::iterator caches at least MIN_CACHE_ITERATOR
+  /// iterator::prev_prime() caches at least MIN_CACHE_ITERATOR
   /// bytes of primes. Larger is usually faster but also
   /// requires more memory.
   ///
   MIN_CACHE_ITERATOR = (1 << 20) * 8,
 
-  /// primesieve::iterator maximum cache size in bytes, used
+  /// iterator::prev_prime() maximum cache size in bytes, used
   /// if pi(sqrt(n)) * 8 bytes > MAX_CACHE_ITERATOR.
   ///
   MAX_CACHE_ITERATOR = (1 << 20) * 1024

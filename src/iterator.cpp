@@ -1,7 +1,7 @@
 ///
 /// @file  iterator.cpp
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -47,7 +47,7 @@ void iterator::skipto(uint64_t start,
   stop_hint_ = stop_hint;
   i_ = 0;
   last_idx_ = 0;
-  dist_ = PrimeGenerator::maxCachedPrime();
+  dist_ = 0;
   clear(primeGenerator_);
   primes_.clear();
 }

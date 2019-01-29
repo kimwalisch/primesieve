@@ -2,7 +2,7 @@
 /// @file   iterator-c.cpp
 /// @brief  C port of primesieve::iterator.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -52,7 +52,7 @@ void primesieve_init(primesieve_iterator* it)
   it->stop_hint = get_max_stop();
   it->i = 0;
   it->last_idx = 0;
-  it->dist = PrimeGenerator::maxCachedPrime();
+  it->dist = 0;
   it->vector = new vector<uint64_t>;
   it->primeGenerator = nullptr;
   it->is_error = false;
@@ -67,7 +67,7 @@ void primesieve_skipto(primesieve_iterator* it,
   it->stop_hint = stop_hint;
   it->i = 0;
   it->last_idx = 0;
-  it->dist = PrimeGenerator::maxCachedPrime();
+  it->dist = 0;
   auto& primes = getPrimes(it);
   primes.clear();
   clearPrimeGenerator(it);
