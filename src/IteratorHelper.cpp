@@ -3,7 +3,7 @@
 ///        Functions used to calculate the next start and stop
 ///        numbers for primesieve::iterator.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,6 +11,7 @@
 
 #include <primesieve/config.hpp>
 #include <primesieve/IteratorHelper.hpp>
+#include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
@@ -92,11 +93,25 @@ void IteratorHelper::next(uint64_t* start,
                           uint64_t* dist)
 {
   *start = checkedAdd(*stop, 1);
-  *dist = getNextDist(*start, *dist);
-  *stop = checkedAdd(*start, *dist);
+  uint64_t maxCachedPrime = PrimeGenerator::maxCachedPrime();
 
-  if (useStopHint(*start, stopHint))
-    *stop = checkedAdd(stopHint, maxPrimeGap(stopHint));
+  if (*start < maxCachedPrime)
+  {
+    // When the stop number <= maxCachedPrime
+    // primesieve::iterator uses the primes
+    // cache instead of sieving and does not
+    // even initialize Erat::init()
+    *stop = maxCachedPrime;
+    *dist = *stop - *start;
+  }
+  else
+  {
+    *dist = getNextDist(*start, *dist);
+    *stop = checkedAdd(*start, *dist);
+
+    if (useStopHint(*start, stopHint))
+      *stop = checkedAdd(stopHint, maxPrimeGap(stopHint));
+  }
 }
 
 void IteratorHelper::prev(uint64_t* start,

@@ -1,4 +1,4 @@
-Changes in version 7.4, 26/01/2019
+Changes in version 7.4, 29/01/2019
 ==================================
 
 Unreleased, work in progress!
@@ -9,6 +9,7 @@ interface) are backwards compatible.
 * CpuInfo.cpp: Fix MinGW CPU detection.
 * CMakeLists.txt: Fix cross compilation bug.
 * Add --test option: Runs self tests.
+* IteratorHelper.cpp: Improve caching of small primes.
 * ParallelSieve.cpp: Non-blocking status updates.
 * PrimeSieve.cpp: Simplify status update.
 * travis.yml: Test using GCC 5, 6, 7, 8, Clang 7 and MinGW.
