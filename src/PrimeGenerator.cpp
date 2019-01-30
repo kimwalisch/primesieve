@@ -6,7 +6,7 @@
 ///        returns the primes. When there are no more primes left in
 ///        the vector PrimeGenerator generates new primes.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -22,6 +22,7 @@
 #include <stdint.h>
 #include <algorithm>
 #include <array>
+#include <cassert>
 #include <vector>
 
 using namespace std;
@@ -106,7 +107,9 @@ void PrimeGenerator::init(vector<uint64_t>& primes, size_t* size)
   {
     size_t a = getStartIdx();
     size_t b = getStopIdx();
+
     *size = b - a;
+    assert(*size <= primes.size());
 
     copy(smallPrimes.begin() + a,
          smallPrimes.begin() + b,
