@@ -27,16 +27,13 @@ namespace {
 uint64_t getNextDist(uint64_t n, uint64_t dist)
 {
   double x = (double) n;
-  x = max(x, 16.0);
-  x = sqrt(x) / log(log(x));
+  uint64_t tinyDist = PrimeGenerator::maxCachedPrime() * 4;
+  uint64_t minDist = (uint64_t) sqrt(x);
+  uint64_t maxDist = 1ull << 60;
 
-  uint64_t minDist = (uint64_t) x;
-  uint64_t maxDist = numeric_limits<uint64_t>::max() / 4;
-  uint64_t maxCachedPrime = PrimeGenerator::maxCachedPrime();
-
-  dist = max(dist, minDist);
-  dist = max(dist, maxCachedPrime);
   dist *= 4;
+  dist = max(dist, tinyDist);
+  dist = max(dist, minDist);
   dist = min(dist, maxDist);
 
   return dist;
@@ -55,11 +52,11 @@ uint64_t getPrevDist(uint64_t n, uint64_t dist)
   minDist *= (uint64_t) logx;
   maxDist *= (uint64_t) logx;
 
-  uint64_t maxCachedPrime = PrimeGenerator::maxCachedPrime();
-  dist = max(dist, maxCachedPrime);
-  dist *= 4;
-
+  uint64_t tinyDist = PrimeGenerator::maxCachedPrime() * 4;
   uint64_t defaultDist = (uint64_t) (sqrt(x) * 2);
+
+  dist *= 4;
+  dist = max(dist, tinyDist);
   dist = min(dist, minDist);
   dist = max(dist, defaultDist);
   dist = min(dist, maxDist);
