@@ -13,11 +13,6 @@
 
 #include <stdint.h>
 
-/// Disable assert() by default
-#if !defined(DEBUG) && !defined(NDEBUG)
-  #define NDEBUG
-#endif
-
 namespace primesieve {
 namespace config {
 
