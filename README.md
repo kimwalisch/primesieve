@@ -38,10 +38,10 @@ package manager. You can also download the primesieve console and GUI applicatio
 from [https://primesieve.org/downloads](https://primesieve.org/downloads).
 
 ```sh
-# Debian/Ubuntu
+# Debian, Ubuntu
 sudo apt install primesieve
 
-# macOS
+# Homebrew (macOS) or Linuxbrew
 brew install primesieve
 
 # Windows using Chocolatey package manager
