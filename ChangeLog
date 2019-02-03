@@ -1,7 +1,5 @@
-Changes in version 7.4, 29/01/2019
+Changes in version 7.4, 03/02/2019
 ==================================
-
-Unreleased, work in progress!
 
 This is a minor new release, the API and ABI (Application binary
 interface) are backwards compatible.
