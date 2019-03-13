@@ -1,5 +1,5 @@
 prefix=@CMAKE_INSTALL_PREFIX@
-bindir=${prefix}/bin
+bindir=${prefix}/@CMAKE_INSTALL_BINDIR@
 libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
 includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
 
