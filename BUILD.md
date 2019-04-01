@@ -5,6 +5,10 @@
 You need to have installed a C++ compiler which supports C++11 (or later) and CMake ≥ 3.4.
 
 ```bash
+# macOS
+xcode-select --install
+brew install cmake
+
 # Debian, Ubuntu
 sudo apt install g++ cmake
 
@@ -13,9 +17,6 @@ sudo dnf install gcc-c++ cmake
 
 # Arch Linux
 sudo pacman -S gcc cmake
-
-# macOS
-xcode-select --install && brew install cmake
 ```
 
 ## Unix-like OSes
