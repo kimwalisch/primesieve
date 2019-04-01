@@ -62,7 +62,7 @@ void PreSieve::initBuffer(uint64_t maxPrime,
 
   buffer_ = new byte_t[size_];
   deleter_.reset(buffer_);
-  fill_n(buffer_, size_, 0xff);
+  fill_n(buffer_, size_, (byte_t) 0xff);
 
   EratSmall eratSmall;
   uint64_t stop = primeProduct_ * 2;

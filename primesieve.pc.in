@@ -1,7 +1,7 @@
 prefix=@CMAKE_INSTALL_PREFIX@
-bindir=${prefix}/bin
-libdir=${prefix}/lib/@CMAKE_LIBRARY_ARCHITECTURE@
-includedir=${prefix}/include
+bindir=${prefix}/@CMAKE_INSTALL_BINDIR@
+libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
 
 Name: primesieve
 Description: Fast C/C++ prime number generator
