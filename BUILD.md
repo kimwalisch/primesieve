@@ -32,9 +32,9 @@ sudo make install
 ## Microsoft Visual C++
 
 First install [Visual Studio](https://visualstudio.microsoft.com/downloads/)
-and [CMake](https://cmake.org/download/) on your Windows PC. Then go to the
-start menu, select Visual Studio and open a **x64 Command Prompt**. Now cd into
-the primesieve directory and run the commands below:
+(includes CMake) on your Windows PC. Then go to the start menu, select Visual
+Studio and open a **x64 Command Prompt**. Now cd into the primesieve directory
+and run the commands below:
 
 ```bash
 # Use 'cmake -G' to find your Visual Studio version
