@@ -7,39 +7,9 @@
 <!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
 
 <url>
-  <loc>https://primesieve.org</loc>
-  <lastmod>2018-03-07T09:25:15+00:00</lastmod>
-  <priority>1.00</priority>
-</url>
-<url>
-  <loc>https://primesieve.org/downloads</loc>
-  <lastmod>2018-03-07T09:25:15+00:00</lastmod>
-  <priority>0.90</priority>
-</url>
-<url>
-  <loc>https://primesieve.org/screenshots.html</loc>
-  <lastmod>2018-03-07T09:25:15+00:00</lastmod>
-  <priority>0.70</priority>
-</url>
-<url>
-  <loc>https://primesieve.org/segmented_sieve.html</loc>
-  <lastmod>2018-03-07T09:25:15+00:00</lastmod>
-  <priority>0.90</priority>
-</url>
-<url>
   <loc>https://primesieve.org/api</loc>
   <lastmod>2018-03-07T09:25:15+00:00</lastmod>
   <priority>0.70</priority>
-</url>
-<url>
-  <loc>https://primesieve.org/links.html</loc>
-  <lastmod>2018-03-07T09:25:15+00:00</lastmod>
-  <priority>0.70</priority>
-</url>
-<url>
-  <loc>https://primesieve.org/cpu_usage_screenshot.html</loc>
-  <lastmod>2018-03-07T09:25:15+00:00</lastmod>
-  <priority>0.50</priority>
 </url>
 
 </urlset>
