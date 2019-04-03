@@ -51,7 +51,7 @@ const quint64 UPPER_BOUND_LIMIT = std::numeric_limits<uint64_t>::max();
 
 const QString UPPER_BOUND_STR = QString::number(UPPER_BOUND_LIMIT);
 const QString APPLICATION_NAME("primesieve");
-const QString APPLICATION_HOMEPAGE("https://primesieve.org");
+const QString APPLICATION_HOMEPAGE("https://github.com/kimwalisch/primesieve");
 
 const QString APPLICATION_ABOUT(
     "<p>Copyright &copy; 2019 Kim Walisch</p>"

@@ -61,7 +61,7 @@ void help()
 void version()
 {
   cout << "primesieve " << primesieve::primesieve_version();
-  cout << ", <https://primesieve.org>" << endl;
+  cout << ", <https://github.com/kimwalisch/primesieve>" << endl;
   cout << "Copyright (C) 2010 - 2019 Kim Walisch" << endl << endl;
   cout << "BSD 2-Clause License <https://opensource.org/licenses/BSD-2-Clause>" << endl;
   exit(0);
