@@ -160,6 +160,58 @@ int main()
 * [More C examples](examples/c)
 * [Browse primesieve's C API online](https://primesieve.org/api/primesieve_8h.html)
 
+## Multi-threading
+
+By default libprimesieve uses multi-threading for counting primes/k-tuplets
+and for finding the nth prime. However ```primesieve::iterator``` the most
+important feature provided by libprimesieve runs single-threaded because
+it is simply not possible to efficiently parallelize the generation of primes
+in sequential order.
+
+Hence if you want to parallelize an algorithm using ```primesieve::iterator```
+you need to implement the multi-threading part yourself. The basic technique
+for parallelizing an algorithm using ```primesieve::iterator``` is:
+
+* Subdivide the distance into N equally sized chunks.
+* Process each chunk in its own thread.
+* Combine the partial thread results to get the final result.
+
+The C++ example below calculates the sum of the primes < 2^32 in parallel
+using [OpenMP](https://en.wikipedia.org/wiki/OpenMP). Each thread processes a chunk
+of the total distance (2^32) using its own ```primesieve::iterator``` object. The OpenMP
+```reduction``` clause takes care of adding the partial prime sum results together
+in a thread safe manner.
+
+```C++
+#include <primesieve.hpp>
+#include <iostream>
+#include <omp.h>
+
+int main()
+{
+  uint64_t prime_sum = 0;
+  uint64_t dist = 1ull << 32;
+  uint64_t threads = omp_get_max_threads();
+  uint64_t thread_dist = dist / threads;
+
+  #pragma omp parallel for reduction(+: prime_sum)
+  for (uint64_t i = 0; i < dist; i += thread_dist)
+  {
+    primesieve::iterator it;
+    it.skipto(i);
+    uint64_t prime = it.next_prime();
+    uint64_t stop = i + thread_dist;
+
+    for (; prime <= stop; prime = it.next_prime())
+      prime_sum += prime;
+  }
+
+  std::cout << "Sum of the primes below " << dist << ": " << prime_sum << std::endl;
+
+  return 0;
+}
+```
+
 ## Linking against libprimesieve
 
 #### Unix-like OSes
