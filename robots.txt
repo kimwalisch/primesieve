@@ -2,5 +2,4 @@
 
 # Allow crawling of all content
 User-agent: *
-Disallow: /github-star-button.html
 Sitemap: https://primesieve.org/sitemap.xml
