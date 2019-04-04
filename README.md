@@ -212,6 +212,18 @@ int main()
 }
 ```
 
+<details>
+<summary>Build instructions</summary>
+
+```bash
+# Unix-like OSes
+wget https://primesieve.org/primesum.cpp
+c++ -O3 -fopenmp primesum.cpp -o primesum -lprimesieve
+time ./primesum
+```
+
+</details>
+
 ## Linking against libprimesieve
 
 #### Unix-like OSes
