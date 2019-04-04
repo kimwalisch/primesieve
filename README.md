@@ -14,7 +14,7 @@ Intel Core i7-6700 CPU (4 x 3.4 GHz). primesieve can generate primes and
 * [Downloads](https://github.com/kimwalisch/primesieve/wiki/Downloads)
 * [API documentation](https://primesieve.org/api)
 
-![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve_win10.png)
+![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve74_win10.png)
 
 ## Algorithms
 
