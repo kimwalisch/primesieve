@@ -21,14 +21,14 @@ Intel Core i7-6700 CPU (4 x 3.4 GHz). primesieve can generate primes and
 primesieve generates primes using the segmented sieve of Eratosthenes with
 [wheel factorization](https://en.wikipedia.org/wiki/Wheel_factorization).
 This algorithm has a run time complexity of
-<img src="https://primesieve.org/images/Onloglogn.svg" height="20" align="absmiddle"/>
+<img src="https://github.com/kimwalisch/primesieve/blob/gh-pages/images/Onloglogn.svg" height="20" align="absmiddle"/>
 operations and uses
-<img src="https://primesieve.org/images/Osqrtn.svg" height="20" align="absmiddle"/>
+<img src="https://github.com/kimwalisch/primesieve/blob/gh-pages/images/Osqrtn.svg" height="20" align="absmiddle"/>
 memory. Furthermore primesieve uses the
 [bucket sieve](http://sweet.ua.pt/tos/software/prime_sieve.html)
 algorithm which improves the cache efficiency when generating primes > 2^32.
 primesieve uses 8 bytes per sieving prime, hence its memory usage is about
-<img src="http://primesieve.org/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
+<img src="https://github.com/kimwalisch/primesieve/blob/gh-pages/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
 bytes per thread.
 
 * [More implementation details](https://github.com/kimwalisch/primesieve/wiki)
