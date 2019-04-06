@@ -176,11 +176,11 @@ for parallelizing an algorithm using ```primesieve::iterator``` is:
 * Process each chunk in its own thread.
 * Combine the partial thread results to get the final result.
 
-The C++ example below calculates the sum of the primes < 2^32 in parallel
-using [OpenMP](https://en.wikipedia.org/wiki/OpenMP). Each thread processes a chunk
-of the total distance (2^32) using its own ```primesieve::iterator``` object. The OpenMP
-```reduction``` clause takes care of adding the partial prime sum results together
-in a thread safe manner.
+The C++ example below calculates the sum of the primes ≤ 10^10 in parallel
+using [OpenMP](https://en.wikipedia.org/wiki/OpenMP). Each thread processes a
+chunk of the total distance (2^32) using its own ```primesieve::iterator```
+object. The OpenMP ```reduction``` clause takes care of adding the partial
+prime sum results together in a thread safe manner.
 
 ```C++
 #include <primesieve.hpp>
@@ -189,24 +189,24 @@ in a thread safe manner.
 
 int main()
 {
-  uint64_t prime_sum = 0;
-  uint64_t dist = 1ull << 32;
-  uint64_t threads = omp_get_max_threads();
-  uint64_t thread_dist = dist / threads;
+  uint64_t sum = 0;
+  uint64_t dist = 1e10;
+  int threads = omp_get_max_threads();
+  uint64_t thread_dist = (dist / threads) + 1;
 
-  #pragma omp parallel for reduction(+: prime_sum)
-  for (uint64_t i = 0; i < dist; i += thread_dist)
+  #pragma omp parallel for reduction(+: sum)
+  for (int i = 0; i < threads; i++)
   {
-    primesieve::iterator it;
-    it.skipto(i);
+    uint64_t start = i * thread_dist;
+    uint64_t stop = std::min(start + thread_dist, dist);
+    primesieve::iterator it(start, stop);
     uint64_t prime = it.next_prime();
-    uint64_t stop = i + thread_dist;
 
     for (; prime <= stop; prime = it.next_prime())
-      prime_sum += prime;
+      sum += prime;
   }
 
-  std::cout << "Sum of the primes below " << dist << ": " << prime_sum << std::endl;
+  std::cout << "Sum of the primes below " << dist << ": " << sum << std::endl;
 
   return 0;
 }
