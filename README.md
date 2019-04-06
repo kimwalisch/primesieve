@@ -172,14 +172,14 @@ Hence if you want to parallelize an algorithm using ```primesieve::iterator```
 you need to implement the multi-threading part yourself. The basic technique
 for parallelizing an algorithm using ```primesieve::iterator``` is:
 
-* Subdivide the distance into N equally sized chunks.
+* Subdivide the sieving distance into equally sized chunks.
 * Process each chunk in its own thread.
 * Combine the partial thread results to get the final result.
 
 The C++ example below calculates the sum of the primes ≤ 10^10 in parallel
 using [OpenMP](https://en.wikipedia.org/wiki/OpenMP). Each thread processes a
-chunk of the total distance (2^32) using its own ```primesieve::iterator```
-object. The OpenMP ```reduction``` clause takes care of adding the partial
+chunk of size ```(dist / threads) + 1``` using its own ```primesieve::iterator```
+object. The OpenMP reduction clause takes care of adding the partial
 prime sum results together in a thread safe manner.
 
 ```C++
