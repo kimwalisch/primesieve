@@ -10,9 +10,9 @@ implementation. It counts the primes below 10^10 in just 0.4 seconds on an
 Intel Core i7-6700 CPU (4 x 3.4 GHz). primesieve can generate primes and
 [prime k-tuplets](https://en.wikipedia.org/wiki/Prime_k-tuple) up to 2^64.
 
-* [primesieve Wiki](https://github.com/kimwalisch/primesieve/wiki)
+* [Release notes](https://github.com/kimwalisch/primesieve/releases)
 * [Downloads](https://github.com/kimwalisch/primesieve/wiki/Downloads)
-* [API documentation](https://primesieve.org/api)
+* [API documentation](#c-api)
 
 ![primesieve windows screenshot](https://github.com/kimwalisch/primesieve/blob/gh-pages/screenshots/primesieve74_win10.png)
 
@@ -31,7 +31,7 @@ primesieve uses 8 bytes per sieving prime, hence its memory usage is about
 <img src="https://github.com/kimwalisch/primesieve/blob/gh-pages/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
 bytes per thread.
 
-* [More implementation details](https://github.com/kimwalisch/primesieve/wiki)
+* [More algorithm details](doc/ALGORITHMS.md#algorithm-details)
 
 ## Installation
 
