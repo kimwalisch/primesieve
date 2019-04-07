@@ -164,7 +164,7 @@ int main()
 
 By default libprimesieve uses multi-threading for counting primes/k-tuplets
 and for finding the nth prime. However ```primesieve::iterator``` the most
-important feature provided by libprimesieve runs single-threaded because
+useful feature provided by libprimesieve runs single-threaded because
 it is simply not possible to efficiently parallelize the generation of primes
 in sequential order.
 
