@@ -35,20 +35,28 @@ bytes per thread.
 
 ## Installation
 
-The primesieve console application can be installed using your operating system's
-package manager. You can also download the latest primesieve console and GUI applications
+The primesieve command-line program can be installed using your operating system's
+package manager. You can also download the latest primesieve command-line and GUI programs
 from the [downloads](https://github.com/kimwalisch/primesieve/wiki/Downloads) page.
 
-```sh
-# Debian, Ubuntu
-sudo apt install primesieve
-
-# Homebrew (macOS) or Linuxbrew
-brew install primesieve
-
-# Windows using Chocolatey package manager
-choco install primesieve
-```
+<table>
+    <tr>
+        <td><b>Windows:</b></td>
+        <td><code>choco install primesieve</code></td>
+    </tr>
+    <tr>
+        <td><b>macOS:</b></td>
+        <td><code>brew install primesieve</code></td>
+    </tr>
+    <tr>
+        <td><b>Debian/Ubuntu:</b></td>
+        <td><code>sudo apt install primesieve</code></td>
+    </tr>
+    <tr>
+        <td><b>Fedora:</b></td>
+        <td><code>sudo dnf install primesieve</code></td>
+    </tr>
+</table>
 
 ## Usage examples
 
