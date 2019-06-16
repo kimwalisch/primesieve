@@ -56,6 +56,10 @@ from the [downloads](https://github.com/kimwalisch/primesieve/wiki/Downloads) pa
         <td><b>Fedora:</b></td>
         <td><code>sudo dnf install primesieve</code></td>
     </tr>
+    <tr>
+        <td><b>openSUSE:</b></td>
+        <td><code>sudo zypper install primesieve</code></td>
+    </tr>
 </table>
 
 ## Usage examples
