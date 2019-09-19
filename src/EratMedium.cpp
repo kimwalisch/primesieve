@@ -1,16 +1,17 @@
 ///
 /// @file   EratMedium.cpp
-/// @brief  Segmented sieve of Eratosthenes optimized for medium
-///         sieving primes. EratMedium is similar to EratSmall except
-///         that in EratMedium each sieving prime is sorted (by its
+/// @brief  EratMedium is a segmented sieve of Eratosthenes
+///         implementation optimized for medium sieving primes.
+///         EratMedium is similar to EratSmall except that in
+///         EratMedium each sieving prime is sorted (by its
 ///         wheelIndex) after the sieving step. When we then iterate
 ///         over the sorted sieving primes in the next segment the
 ///         initial indirect branch i.e. 'switch (wheelIndex)' is
 ///         predicted correctly by the CPU. This improves performance
-///         by up to 20% for sieving primes that have only a few
+///         by up to 30% for sieving primes that have only a few
 ///         multiple occurrences per segment.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.

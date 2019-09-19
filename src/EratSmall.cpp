@@ -1,14 +1,15 @@
 ///
 /// @file   EratSmall.cpp
-/// @brief  Segmented sieve of Eratosthenes optimized for small sieving
-///         primes. Since each sieving prime in EratSmall has many
-///         multiple occurrences per segment the initialization overhead
-///         of the sieving primes at the beginning of each segment is
-///         not really important for performance. What matters is that
-///         crossing off multiples uses as few instructions as possible
-///         since there are so many multiples.
+/// @brief  EratSmall is a segmented sieve of Eratosthenes
+///         implementation optimized for small sieving primes. Since
+///         each small sieving prime has many multiple occurrences per
+///         segment the initialization overhead of the sieving primes
+///         at the beginning of each segment is not really important
+///         for performance. What matters is that crossing off
+///         multiples uses as few instructions as possible since there
+///         are so many multiples.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.

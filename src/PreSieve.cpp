@@ -1,9 +1,28 @@
 ///
 /// @file   PreSieve.cpp
-/// @brief  Pre-sieve multiples of small primes to speed up
-///         the sieve of Eratosthenes.
+/// @brief  Pre-sieve multiples of small primes to speed up the sieve
+///         of Eratosthenes. At startup primesieve initializes a small
+///         buffer of size p1*p2*p3*pn and removes the multiples of
+///         the first n primes from that buffer. Then while sieving at
+///         the start of each new segment this buffer is simply copied
+///         to the sieve array and now we can start sieving at p(n+1)
+///         instead of p1. By default primesieve pre-sieves multiples
+///         of primes <= 19, in practice pre-sieving using even larger
+///         primes uses too much memory and slows things down. In
+///         primesieve pre-sieving provides a minor speed of up to 20%
+///         when the sieving distance is relatively small
+///         e.g. < 10^10.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+///         The pre-sieve buffer can be both smaller or larger than
+///         the actual sieve array so a little care needs to be taken
+///         when copying the buffer to the sieve array. When the
+///         buffer is smaller than the sieve array we need to
+///         repeatedly copy the buffer to the sieve array until the
+///         sieve array has been filled completely. When the buffer is
+///         larger than the sieve array we only need to partially copy
+///         it to the sieve array.
+///
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
