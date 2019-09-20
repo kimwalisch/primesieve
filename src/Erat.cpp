@@ -116,13 +116,13 @@ void Erat::initSieve(uint64_t sieveSize)
 void Erat::initErat()
 {
   uint64_t sqrtStop = isqrt(stop_);
-  uint64_t l1Size = EratSmall::getL1Size(sieveSize_);
+  uint64_t l1CacheSize = EratSmall::getL1CacheSize(sieveSize_);
 
-  maxEratSmall_  = (uint64_t) (l1Size * config::FACTOR_ERATSMALL);
+  maxEratSmall_ = (uint64_t) (l1CacheSize * config::FACTOR_ERATSMALL);
   maxEratMedium_ = (uint64_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
 
   if (sqrtStop > maxPreSieve_)
-    eratSmall_.init(stop_, l1Size, maxEratSmall_);
+    eratSmall_.init(stop_, l1CacheSize, maxEratSmall_);
   if (sqrtStop > maxEratSmall_)
     eratMedium_.init(stop_, sieveSize_, maxEratMedium_);
   if (sqrtStop > maxEratMedium_)
