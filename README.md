@@ -60,6 +60,10 @@ from the [downloads](https://github.com/kimwalisch/primesieve/wiki/Downloads) pa
         <td><b>openSUSE:</b></td>
         <td><code>sudo zypper install primesieve</code></td>
     </tr>
+    <tr>
+        <td><b>FreeBSD:</b></td>
+        <td><code>pkg install primesieve</code></td>
+    </tr>
 </table>
 
 ## Usage examples
