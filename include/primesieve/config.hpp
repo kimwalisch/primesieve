@@ -64,9 +64,9 @@ enum {
   ///
   /// @pre FACTOR_ERATMEDIUM >= 0 && <= 9
   /// FACTOR_ERATMEDIUM * max(sieveSize) / 30 * 6 + 6 <= max(multipleIndex)
-  /// FACTOR_ERATMEDIUM * 2^22 / 30 * 6 + 6 < 2^23
-  /// FACTOR_ERATMEDIUM <= ((2^23 - 6) * 30) / (2^22 * 6)
-  /// FACTOR_ERATMEDIUM <= 9.999992847
+  /// FACTOR_ERATMEDIUM * 2^22 / 30 * 6 + 6 <= 2^23 - 1
+  /// FACTOR_ERATMEDIUM <= ((2^23 - 7) * 30) / (2^22 * 6)
+  /// FACTOR_ERATMEDIUM <= 9.999991655
   ///
   const double FACTOR_ERATMEDIUM = 5.0;
 
