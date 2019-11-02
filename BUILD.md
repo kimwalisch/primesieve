@@ -4,20 +4,28 @@
 
 You need to have installed a C++ compiler which supports C++11 (or later) and CMake ≥ 3.4.
 
-```bash
-# macOS
-xcode-select --install
-brew install cmake
-
-# Debian, Ubuntu
-sudo apt install g++ cmake
-
-# Fedora, Red Hat
-sudo dnf install gcc-c++ cmake
-
-# Arch Linux
-sudo pacman -S gcc cmake
-```
+<table>
+    <tr>
+        <td><b>macOS</b></td>
+        <td><code>xcode-select --install && brew install cmake</code></td>
+    </tr>
+    <tr>
+        <td><b>Debian/Ubuntu:</b></td>
+        <td><code>sudo apt install g++ cmake</code></td>
+    </tr>
+    <tr>
+        <td><b>Fedora:</b></td>
+        <td><code>sudo dnf install gcc-c++ cmake</code></td>
+    </tr>
+    <tr>
+        <td><b>openSUSE:</b></td>
+        <td><code>sudo zypper install gcc-c++ cmake</code></td>
+    </tr>
+    <tr>
+        <td><b>Arch Linux:</b></td>
+        <td><code>sudo pacman -S gcc cmake</code></td>
+    </tr>
+</table>
 
 ## Unix-like OSes
 
@@ -25,6 +33,16 @@ Open a terminal, cd into the primesieve directory and run:
 
 ```bash
 cmake .
+make -j
+sudo make install
+```
+
+## MinGW/MSYS2 (Windows)
+
+Open a terminal, cd into the primesieve directory and run:
+
+```bash
+cmake -G "Unix Makefiles" .
 make -j
 sudo make install
 ```
@@ -43,27 +61,6 @@ cmake --build . --config Release
 
 # Optionally install using Admin shell
 cmake --build . --config Release --target install
-```
-
-## MinGW/MSYS2 (Windows)
-
-Open a terminal, cd into the primesieve directory and run:
-
-```bash
-cmake -G "Unix Makefiles" .
-make -j
-sudo make install
-```
-
-## MinGW cross compilation
-
-Open a terminal, cd into the primesieve directory and run:
-
-```bash
-CC=x86_64-w64-mingw32-gcc-posix CXX=x86_64-w64-mingw32-g++-posix \
-cmake -DCMAKE_SYSTEM_NAME=Windows .
-
-make -j
 ```
 
 ## CMake configure options
