@@ -90,22 +90,32 @@ Generate the primes and/or prime k-tuplets inside [START, STOP]
 (< 2^64) using the segmented sieve of Eratosthenes.
 
 Options:
-  -c[N+], --count[=N+]   Count primes and prime k-tuplets, N <= 6,
-                         e.g. -c1 primes, -c2 twins, -c3 triplets, ...
-          --cpu-info     Print CPU information
-  -d<N>,  --dist=<N>     Sieve the interval [START, START + N]
-  -h,     --help         Print this help menu
-  -n,     --nth-prime    Calculate the nth prime,
-                         e.g. 1 100 -n finds the 1st prime > 100
-          --no-status    Turn off the progressing status
-  -p[N],  --print[=N]    Print primes or prime k-tuplets, N <= 6,
-                         e.g. -p1 primes, -p2 twins, -p3 triplets, ...
-  -q,     --quiet        Quiet mode, prints less output
-  -s<N>,  --size=<N>     Set the sieve size in KiB, N <= 4096
-          --test         Run various sieving tests
-  -t<N>,  --threads=<N>  Set the number of threads, N <= CPU cores
-          --time         Print the time elapsed in seconds
-  -v,     --version      Print version and license information
+  -c, --count[=N+]    Count primes and/or prime k-tuplets, N <= 6.
+                      Count primes: -c or --count (default option),
+                      count twin primes: -c2 or --count=2,
+                      count prime triplets: -c3 or --count=3, ...
+      --cpu-info      Print CPU information (cache sizes).
+  -d, --dist <DIST>   Sieve the interval [START, START + DIST].
+                      e.g. -d 1e10: sieves [START, START + 10^10].
+  -h, --help          Print this help menu.
+  -n, --nth-prime     Find the nth prime.
+                      primesieve 100 -n: finds the 100th prime,
+                      primesieve 2 100 -n: finds the 2nd prime > 100.
+      --no-status     Turn off the progressing status.
+  -p, --print[=N]     Print primes or prime k-tuplets, N <= 6.
+                      Print primes: -p or --print,
+                      print twin primes: -p2 or --print=2,
+                      print prime triplets: -p3 or --print=3, ...
+  -q, --quiet         Quiet mode, prints less output.
+  -s, --size <SIZE>   Set the sieve size in KiB, N <= 4096.
+                      By default primesieve uses a sieve size that
+                      matches your CPU's L1 cache size or half
+                      of your CPU's L2 cache size.
+      --test          Run various sieving tests.
+  -t, --threads <N>   Set the number of threads, N <= CPU cores.
+                      Default setting: use all available CPU cores.
+      --time          Print the time elapsed in seconds.
+  -v, --version       Print version and license information.
 ```
 
 ## Build instructions
