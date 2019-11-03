@@ -15,12 +15,14 @@ make doc
 Build man page
 ==============
 
-To regenerate the primesieve man page you need to have installed
-the ```help2man``` program. Run the commands below from the parent
-directory.
+primesieve includes an up to date man page at ```doc/primesieve.1```.
+That man page has been generated from ```doc/primesieve.txt``` using
+the ```a2x``` program from the ```asciidoc``` package. However when
+packaging primesieve for e.g. a Linux distro it is recommended to
+regenerate the man page.
 
 ```bash
-# Build man page
-cmake .
-make
+# Build man page using a2x program (asciidoc package)
+cmake -DBUILD_MANPAGE=ON .
+make -j
 ```
