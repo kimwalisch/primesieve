@@ -56,10 +56,10 @@ const string helpMenu
 
 } // namespace
 
-void help()
+void help(int exitCode)
 {
   cout << helpMenu << endl;
-  exit(0);
+  exit(exitCode);
 }
 
 void version()

@@ -11,7 +11,7 @@ https://github.com/kimwalisch/primesieve
 * CMakeLists.txt: Require CMake 3.4 instead 3.9.
 * Erat.cpp: Silence MSVC debug warning.
 * StorePrimes.hpp: Add workaround for windows.h max/min macros.
-* primecount.pc.in: Fix libdir and includedir.
+* primesieve.pc.in: Fix libdir and includedir.
 * README.md: Add libprimesieve multi-threading section.
 * BUILD.md: Add detailed build instructions.
 * doc/ALGORITHMS.md: Info from https://primesieve.org.
