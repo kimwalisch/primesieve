@@ -320,6 +320,11 @@ Option parseOption(int argc, char* argv[], int& i)
   if (!optionMap.count(opt.opt))
     throw primesieve_error("unrecognized option '" + opt.opt + "'");
 
+  // Prevent '--option='
+  if (opt.val.empty() &&
+      optionMap[opt.opt].second == REQUIRED_PARAM)
+    throw primesieve_error("missing value for option '" + opt.opt + "'");
+
   return opt;
 }
 
