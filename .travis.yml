@@ -86,7 +86,7 @@ install:
     if [ "${TRAVIS_OS_NAME}" = "linux" ]
     then
         sudo apt-get install -y g++-multilib make cmake ninja-build cppcheck doxygen \
-            doxygen-latex graphviz libqt4-dev qt4-qmake valgrind asciidoc
+            doxygen-latex graphviz libqt4-dev qt4-qmake valgrind asciidoc libxml2-utils xmlto
     fi
 
 script:
