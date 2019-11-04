@@ -36,7 +36,7 @@ primesieve \- generate prime numbers
 .sp
 Generate the prime numbers and/or prime k\-tuplets inside [START, STOP] (< 2^64) using the segmented sieve of Eratosthenes\&. primesieve includes a number of extensions to the sieve of Eratosthenes which further improve performance: multiples of small primes are pre\-sieved, it uses wheel factorization to skip multiples with small prime factors and it uses the bucket sieve algorithm which improves cache efficiency when sieving > 2^32\&. primesieve is also multi\-threaded, it uses all available CPU cores by default for counting primes and for finding the nth prime\&.
 .sp
-The runtime complexity of the segmented sieve of Eratosthenes is O(n log log n) operations and it uses O(n^(1/2)) memory\&. More specifically primesieve uses 8 bytes per sieving prime, hence its memory usage can be approximated by PrimePi(n^(1/2)) * 8 bytes (per thread)\&.
+The segmented sieve of Eratosthenes has a runtime complexity of O(n log log n) operations and it uses O(n^(1/2)) bits of memory\&. More specifically primesieve uses 8 bytes per sieving prime, hence its memory usage can be approximated by PrimePi(n^(1/2)) * 8 bytes (per thread)\&.
 .SH "OPTIONS"
 .PP
 \fB\-c\fR[\fINUM+\fR], \fB\-\-count\fR[=\fINUM+\fR]
@@ -49,17 +49,17 @@ Count primes and/or prime k\-tuplets, 1 <= NUM <= 6\&. Count primes: \-c or \-\-
 Print CPU information: CPU name, frequency, number of cores, cache sizes, \&...
 .RE
 .PP
-\fB\-d\fR, \fB\-\-dist\fR=\fIDIST\fR
+\fB\-d, \-\-dist\fR=\fIDIST\fR
 .RS 4
 Sieve the interval [START, START + DIST]\&.
 .RE
 .PP
-\fB\-h\fR, \fB\-\-help\fR
+\fB\-h, \-\-help\fR
 .RS 4
 Print this help menu\&.
 .RE
 .PP
-\fB\-n\fR, \fB\-\-nth\-prime\fR
+\fB\-n, \-\-nth\-prime\fR
 .RS 4
 Find the nth prime, e\&.g\&. 100 \-n finds the 100th prime\&. If 2 numbers
 \fIN\fR
@@ -77,12 +77,12 @@ Turn off the progressing status\&.
 Print primes or prime k\-tuplets, 1 <= NUM <= 6\&. Print primes: \-p, print twin primes: \-p2, print prime triplets: \-p3, \&...
 .RE
 .PP
-\fB\-q\fR, \fB\-\-quiet\fR
+\fB\-q, \-\-quiet\fR
 .RS 4
 Quiet mode, prints less output\&.
 .RE
 .PP
-\fB\-s\fR, \fB\-\-size\fR=\fISIZE\fR
+\fB\-s, \-\-size\fR=\fISIZE\fR
 .RS 4
 Set the size of the sieve array in KiB, 8 <= SIZE <= 4096\&. By default primesieve uses a sieve size that matches your CPU\(cqs L1 cache size or half of your CPU\(cqs L2 cache size (per core)\&. This setting is crucial for performance, on exotic CPUs primesieve sometimes fails to determine the CPU\(cqs cache sizes which usually causes a big slowdown\&. In this case you can get a significant speedup by manually setting the sieve size to the CPU\(cqs L1 or L2 cache size (per core)\&.
 .RE
@@ -92,7 +92,7 @@ Set the size of the sieve array in KiB, 8 <= SIZE <= 4096\&. By default primesie
 Run various sieving tests\&.
 .RE
 .PP
-\fB\-t\fR, \fB\-\-threads\fR=\fINUM\fR
+\fB\-t, \-\-threads\fR=\fINUM\fR
 .RS 4
 Set the number of threads, 1 <= NUM <= CPU cores\&. By default primesieve uses all available CPU cores for counting primes and for finding the nth prime\&.
 .RE
@@ -102,7 +102,7 @@ Set the number of threads, 1 <= NUM <= CPU cores\&. By default primesieve uses a
 Print the time elapsed in seconds\&.
 .RE
 .PP
-\fB\-v\fR, \fB\-\-version\fR
+\fB\-v, \-\-version\fR
 .RS 4
 Print version and license information\&.
 .RE
