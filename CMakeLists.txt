@@ -5,12 +5,13 @@ set(PRIMESIEVE_SOVERSION "9.5.0")
 
 # Build options ######################################################
 
-option(BUILD_PRIMESIEVE  "Build primesieve binary"    ON)
-option(BUILD_SHARED_LIBS "Build shared libprimesieve" ON)
-option(BUILD_STATIC_LIBS "Build static libprimesieve" ON)
-option(BUILD_DOC         "Build documentation"        OFF)
-option(BUILD_EXAMPLES    "Build example programs"     OFF)
-option(BUILD_TESTS       "Build test programs"        OFF)
+option(BUILD_PRIMESIEVE  "Build primesieve binary"       ON)
+option(BUILD_SHARED_LIBS "Build shared libprimesieve"    ON)
+option(BUILD_STATIC_LIBS "Build static libprimesieve"    ON)
+option(BUILD_DOC         "Build C/C++ API documentation" OFF)
+option(BUILD_MANPAGE     "Regenerate man page using a2x" OFF)
+option(BUILD_EXAMPLES    "Build example programs"        OFF)
+option(BUILD_TESTS       "Build test programs"           OFF)
 
 if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
     message(FATAL_ERROR "One or both of BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be set to ON")
@@ -281,32 +282,20 @@ endif()
 
 # Regenerate man page ################################################
 
-if(BUILD_PRIMESIEVE AND NOT CMAKE_CROSSCOMPILING)
-    find_program(HELP2MAN help2man)
+if(BUILD_MANPAGE)
+    find_program(A2X_EXECUTABLE a2x)
 
-    if(HELP2MAN)
-        message(STATUS "Found help2man: ${HELP2MAN}")
-
-        execute_process(COMMAND perl -e "use Locale::gettext;"
-                        RESULT_VARIABLE LOCALE_RES
-                        OUTPUT_QUIET ERROR_QUIET)
-
-        if(LOCALE_RES EQUAL 0)
-            message(STATUS "Found help2man option: --locale=C.UTF-8")
-            set(HELP2MAN_LOCALE "--locale=C.UTF-8")
-        endif()
+    if(NOT A2X_EXECUTABLE)
+        message(FATAL_ERROR "Missing a2x program (required for man page generation)!")
+    else()
+        message(STATUS "Found a2x: ${A2X_EXECUTABLE}")
 
         add_custom_command(
             TARGET ${PROJECT_NAME} POST_BUILD
-            COMMAND ${HELP2MAN}
-            ARGS -s 1
-                 --manual="primesieve"
-                 --source="primesieve ${PRIMESIEVE_VERSION}"
-                 --no-info
-                 ${HELP2MAN_LOCALE}
-                 -n "efficient prime number generator"
-                 -o ${PROJECT_SOURCE_DIR}/doc/primesieve.1
-                 $<TARGET_FILE:primesieve>
+            COMMAND ${A2X_EXECUTABLE}
+            ARGS --format=manpage
+                 -D "${PROJECT_SOURCE_DIR}/doc"
+                 "${PROJECT_SOURCE_DIR}/doc/primesieve.txt"
             VERBATIM)
     endif()
 endif()

@@ -86,7 +86,7 @@ install:
     if [ "${TRAVIS_OS_NAME}" = "linux" ]
     then
         sudo apt-get install -y g++-multilib make cmake ninja-build cppcheck doxygen \
-            doxygen-latex help2man graphviz libqt4-dev qt4-qmake valgrind
+            doxygen-latex graphviz libqt4-dev qt4-qmake valgrind asciidoc libxml2-utils xmlto
     fi
 
 script:
@@ -112,6 +112,7 @@ script:
         cmake .. -DBUILD_EXAMPLES=ON \
                  -DBUILD_TESTS=ON \
                  -DBUILD_DOC=ON \
+                 -DBUILD_MANPAGE=ON \
                  -DCMAKE_INSTALL_PREFIX=$(pwd)
         make -j4 VERBOSE=1
         make doc >/dev/null
@@ -147,7 +148,8 @@ script:
                  -DBUILD_SHARED_LIBS=OFF \
                  -DBUILD_EXAMPLES=ON \
                  -DBUILD_TESTS=ON \
-                 -DBUILD_DOC=ON
+                 -DBUILD_DOC=ON \
+                 -DBUILD_MANPAGE=ON
         ninja -v
         ninja doc >/dev/null
 

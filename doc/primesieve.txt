@@ -1,0 +1,109 @@
+primesieve(1)
+=============
+:doctype: manpage
+
+NAME
+----
+primesieve - generate prime numbers
+
+SYNOPSIS
+--------
+*primesieve* ['START'] 'STOP' ['OPTION']...
+
+DESCRIPTION
+-----------
+Generate the prime numbers and/or prime k-tuplets inside ['START', 'STOP']
+(< 2\^64) using the segmented sieve of Eratosthenes. primesieve includes a
+number of extensions to the sieve of Eratosthenes which significantly improve
+performance: multiples of small primes are pre-sieved, it uses wheel
+factorization to skip multiples with small prime factors and it uses the bucket
+sieve algorithm which improves cache efficiency when sieving > 2^32. primesieve
+is also multi-threaded, it uses all available CPU cores by default for counting
+primes and for finding the nth prime.
+
+The segmented sieve of Eratosthenes has a runtime complexity of O(n log log n)
+operations and it uses O(n\^(1/2)) bits of memory. More specifically primesieve
+uses 8 bytes per sieving prime, hence its memory usage can be approximated by
+PrimePi(n^(1/2)) * 8 bytes (per thread).
+
+OPTIONS
+-------
+
+*-c*['NUM+']::
+*--count*[='NUM+']::
+	Count primes and/or prime k-tuplets, 1 \<= 'NUM' \<= 6. Count primes: *-c*
+	or *--count*, count twin primes: *-c2* or *--count=2*, count prime
+	triplets: *-c3* or *--count=3*, ... You can also count primes and prime
+	k-tuplets at the same time, e.g. *-c123* counts primes, twin primes and
+	prime triplets.
+
+*--cpu-info*::
+	Print CPU information: CPU name, frequency, number of cores, cache sizes, ...
+
+*-d, --dist*='DIST'::
+	Sieve the interval ['START', 'START' + 'DIST'].
+
+*-h, --help*::
+	Print this help menu.
+
+*-n, --nth-prime*::
+	Find the nth prime, e.g. 100 *-n* finds the 100th prime. If 2 numbers 'N'
+	'START' are provided finds the nth prime > 'START', e.g. 2 100 *-n* finds
+	the 2nd prime > 100.
+
+*--no-status*::
+	Turn off the progressing status.
+
+*-p*['NUM']::
+*--print*[='NUM']::
+	Print primes or prime k-tuplets, 1 \<= 'NUM' \<= 6. Print primes: *-p*,
+	print twin primes: *-p2*, print prime triplets: *-p3*, ...
+
+*-q, --quiet*::
+	Quiet mode, prints less output.
+
+*-s, --size*='SIZE'::
+	Set the size of the sieve array in KiB, 8 \<= 'SIZE' \<= 4096. By default
+	primesieve uses a sieve size that matches your CPU's L1 cache size or half
+	of your CPU's L2 cache size (per core). This setting is crucial for
+	performance, on exotic CPUs primesieve sometimes fails to determine the
+	CPU's cache sizes which usually causes a big slowdown. In this case you can
+	get a significant speedup by manually setting the sieve size to the CPU's
+	L1 or L2 cache size (per core).
+
+*--test*::
+	Run various sieving tests.
+
+*-t, --threads*='NUM'::
+	Set the number of threads, 1 \<= 'NUM' \<= CPU cores. By default primesieve
+	uses all available CPU cores for counting primes and for finding the nth
+	prime.
+
+*--time*::
+Print the time elapsed in seconds.
+
+*-v, --version*::
+	Print version and license information.
+
+EXAMPLES
+--------
+
+**primesieve 1000**::
+	Count the primes \<= 1000.
+
+**primesieve 1e6 --print**::
+	Print the primes \<= 10^6.
+
+**primesieve 2^32 --print=2**::
+	Print the twin primes \<= 2^32.
+
+**primesieve 1e16 --dist=1e10 --threads=1**::
+	Count the primes inside [10\^16, 10\^16 + 10^10] using a single thread.
+
+HOMEPAGE
+--------
+https://github.com/kimwalisch/primesieve
+
+AUTHOR
+------
+Kim Walisch <kim.walisch@gmail.com>

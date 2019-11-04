@@ -70,12 +70,13 @@ built. The build options can be modified at the configure step using e.g.
 ```cmake . -DBUILD_TESTS=ON```.
 
 ```CMake
-option(BUILD_PRIMESIEVE  "Build primesieve binary"    ON)
-option(BUILD_SHARED_LIBS "Build shared libprimesieve" ON)
-option(BUILD_STATIC_LIBS "Build static libprimesieve" ON)
-option(BUILD_DOC         "Build documentation"        OFF)
-option(BUILD_EXAMPLES    "Build example programs"     OFF)
-option(BUILD_TESTS       "Build test programs"        OFF)
+option(BUILD_PRIMESIEVE  "Build primesieve binary"       ON)
+option(BUILD_SHARED_LIBS "Build shared libprimesieve"    ON)
+option(BUILD_STATIC_LIBS "Build static libprimesieve"    ON)
+option(BUILD_DOC         "Build C/C++ API documentation" OFF)
+option(BUILD_MANPAGE     "Regenerate man page using a2x" OFF)
+option(BUILD_EXAMPLES    "Build example programs"        OFF)
+option(BUILD_TESTS       "Build test programs"           OFF)
 ```
 
 ## Run the tests
@@ -106,4 +107,18 @@ you need to have installed the ```doxygen```, ```doxygen-latex``` and
 ```bash
 cmake -DBUILD_DOC=ON .
 make doc
+```
+
+## Man page regeneration
+
+primesieve includes an up to date man page at ```doc/primesieve.1```.
+That man page has been generated from ```doc/primesieve.txt``` using
+the ```a2x``` program from the ```asciidoc``` package. However when
+packaging primesieve for e.g. a Linux distro it is recommended to
+regenerate the man page.
+
+```bash
+# Build man page using a2x program (asciidoc package)
+cmake -DBUILD_MANPAGE=ON .
+make -j
 ```
