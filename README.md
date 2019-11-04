@@ -303,8 +303,8 @@ primesieve natively supports C and C++ and has bindings available for:
         <td><a href="https://github.com/hickford/primesieve-python">primesieve-python</a></td>
     </tr>
     <tr>
-        <td><b>Perl:</b></td>
-        <td><a href="https://github.com/CurtTilmes/perl6-primesieve">perl6-primesieve</a></td>
+        <td><b>Raku:</b></td>
+        <td><a href="https://github.com/CurtTilmes/raku-primesieve">raku-primesieve</a></td>
     </tr>
     <tr>
         <td><b>Ruby:</b></td>
