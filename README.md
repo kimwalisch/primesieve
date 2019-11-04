@@ -95,8 +95,7 @@ Options:
                       count twin primes: -c2 or --count=2,
                       count prime triplets: -c3 or --count=3, ...
       --cpu-info      Print CPU information (cache sizes).
-  -d, --dist=DIST     Sieve the interval [START, START + DIST],
-                      e.g. -d 1e10: sieves [START, START + 10^10].
+  -d, --dist=DIST     Sieve the interval [START, START + DIST].
   -h, --help          Print this help menu.
   -n, --nth-prime     Find the nth prime.
                       primesieve 100 -n: finds the 100th prime,
