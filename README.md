@@ -157,7 +157,7 @@ int main()
 ```
 
 * [More C++ examples](examples/cpp)
-* [Browse primesieve's C++ API online](https://primesieve.org/api/primesieve_8hpp.html)
+* [Browse primesieve's C++ API online](https://primesieve.org/api)
 
 ## C API
 
@@ -183,7 +183,7 @@ int main()
 ```
 
 * [More C examples](examples/c)
-* [Browse primesieve's C API online](https://primesieve.org/api/primesieve_8h.html)
+* [Browse primesieve's C API online](https://primesieve.org/api)
 
 ## Multi-threading
 
