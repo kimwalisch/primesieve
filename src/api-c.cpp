@@ -4,7 +4,7 @@
 ///         Contains the implementations of the functions declared
 ///         in the primesieve.h header file.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -26,7 +26,7 @@ using namespace primesieve;
 namespace {
 
 template <typename T>
-void* store_primes(uint64_t start, uint64_t stop, size_t* size)
+void* get_primes(uint64_t start, uint64_t stop, size_t* size)
 {
   try
   {
@@ -50,7 +50,7 @@ void* store_primes(uint64_t start, uint64_t stop, size_t* size)
 }
 
 template <typename T>
-void* store_n_primes(uint64_t n, uint64_t start)
+void* get_n_primes(uint64_t n, uint64_t start)
 {
   try
   {
@@ -72,20 +72,20 @@ void* primesieve_generate_primes(uint64_t start, uint64_t stop, size_t* size, in
 {
   switch (type)
   {
-    case SHORT_PRIMES:     return store_primes<short>(start, stop, size);
-    case USHORT_PRIMES:    return store_primes<unsigned short>(start, stop, size);
-    case INT_PRIMES:       return store_primes<int>(start, stop, size);
-    case UINT_PRIMES:      return store_primes<unsigned int>(start, stop, size);
-    case LONG_PRIMES:      return store_primes<long>(start, stop, size);
-    case ULONG_PRIMES:     return store_primes<unsigned long>(start, stop, size);
-    case LONGLONG_PRIMES:  return store_primes<long long>(start, stop, size);
-    case ULONGLONG_PRIMES: return store_primes<unsigned long long>(start, stop, size);
-    case INT16_PRIMES:     return store_primes<int16_t>(start, stop, size);
-    case UINT16_PRIMES:    return store_primes<uint16_t>(start, stop, size);
-    case INT32_PRIMES:     return store_primes<int32_t>(start, stop, size);
-    case UINT32_PRIMES:    return store_primes<uint32_t>(start, stop, size);
-    case INT64_PRIMES:     return store_primes<int64_t>(start, stop, size);
-    case UINT64_PRIMES:    return store_primes<uint64_t>(start, stop, size);
+    case SHORT_PRIMES:     return get_primes<short>(start, stop, size);
+    case USHORT_PRIMES:    return get_primes<unsigned short>(start, stop, size);
+    case INT_PRIMES:       return get_primes<int>(start, stop, size);
+    case UINT_PRIMES:      return get_primes<unsigned int>(start, stop, size);
+    case LONG_PRIMES:      return get_primes<long>(start, stop, size);
+    case ULONG_PRIMES:     return get_primes<unsigned long>(start, stop, size);
+    case LONGLONG_PRIMES:  return get_primes<long long>(start, stop, size);
+    case ULONGLONG_PRIMES: return get_primes<unsigned long long>(start, stop, size);
+    case INT16_PRIMES:     return get_primes<int16_t>(start, stop, size);
+    case UINT16_PRIMES:    return get_primes<uint16_t>(start, stop, size);
+    case INT32_PRIMES:     return get_primes<int32_t>(start, stop, size);
+    case UINT32_PRIMES:    return get_primes<uint32_t>(start, stop, size);
+    case INT64_PRIMES:     return get_primes<int64_t>(start, stop, size);
+    case UINT64_PRIMES:    return get_primes<uint64_t>(start, stop, size);
   }
 
   if (size)
@@ -99,20 +99,20 @@ void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type)
 {
   switch (type)
   {
-    case SHORT_PRIMES:     return store_n_primes<short>(n, start);
-    case USHORT_PRIMES:    return store_n_primes<unsigned short>(n, start);
-    case INT_PRIMES:       return store_n_primes<int>(n, start);
-    case UINT_PRIMES:      return store_n_primes<unsigned int>(n, start);
-    case LONG_PRIMES:      return store_n_primes<long>(n, start);
-    case ULONG_PRIMES:     return store_n_primes<unsigned long>(n, start);
-    case LONGLONG_PRIMES:  return store_n_primes<long long>(n, start);
-    case ULONGLONG_PRIMES: return store_n_primes<unsigned long long>(n, start);
-    case INT16_PRIMES:     return store_n_primes<int16_t>(n, start);
-    case UINT16_PRIMES:    return store_n_primes<uint16_t>(n, start);
-    case INT32_PRIMES:     return store_n_primes<int32_t>(n, start);
-    case UINT32_PRIMES:    return store_n_primes<uint32_t>(n, start);
-    case INT64_PRIMES:     return store_n_primes<int64_t>(n, start);
-    case UINT64_PRIMES:    return store_n_primes<uint64_t>(n, start);
+    case SHORT_PRIMES:     return get_n_primes<short>(n, start);
+    case USHORT_PRIMES:    return get_n_primes<unsigned short>(n, start);
+    case INT_PRIMES:       return get_n_primes<int>(n, start);
+    case UINT_PRIMES:      return get_n_primes<unsigned int>(n, start);
+    case LONG_PRIMES:      return get_n_primes<long>(n, start);
+    case ULONG_PRIMES:     return get_n_primes<unsigned long>(n, start);
+    case LONGLONG_PRIMES:  return get_n_primes<long long>(n, start);
+    case ULONGLONG_PRIMES: return get_n_primes<unsigned long long>(n, start);
+    case INT16_PRIMES:     return get_n_primes<int16_t>(n, start);
+    case UINT16_PRIMES:    return get_n_primes<uint16_t>(n, start);
+    case INT32_PRIMES:     return get_n_primes<int32_t>(n, start);
+    case UINT32_PRIMES:    return get_n_primes<uint32_t>(n, start);
+    case INT64_PRIMES:     return get_n_primes<int64_t>(n, start);
+    case UINT64_PRIMES:    return get_n_primes<uint64_t>(n, start);
   }
 
   errno = EDOM;
