@@ -19,6 +19,7 @@ install_manifest.txt
 CTestTestfile.cmake
 /primesieve*
 /libprimesieve*
+doc/primesieve.xml
 doc/Doxyfile
 doc/html
 doc/latex

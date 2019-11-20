@@ -45,7 +45,9 @@ enum {
 };
 
   /// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
-  /// are processed in EratSmall objects, speed up ~ 5%.
+  /// are processed in EratSmall. The ideal value for
+  /// FACTOR_ERATSMALL has been determined experimentally by
+  /// running benchmarks near 10^10.
   /// @pre FACTOR_ERATSMALL >= 0 && <= 3
   ///
   /// - For x86-64 CPUs after  2010 use 0.4
@@ -54,13 +56,17 @@ enum {
   ///
   const double FACTOR_ERATSMALL = 0.4;
 
-  /// The formula below ensures that each sieving prime in EratMedium
-  /// has at least 1 multiple occurrence in each segment.
-  /// @pre FACTOR_ERATMEDIUM >= 0 && <= 6
+  /// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL)
+  /// and <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
+  /// are processed in EratMedium. The ideal value for
+  /// FACTOR_ERATMEDIUM has been determined experimentally by
+  /// running benchmarks near 10^14.
   ///
-  /// FACTOR_ERATMEDIUM <= 30 numbers per byte / max(wheelFactor)
-  /// FACTOR_ERATMEDIUM = 30 / 6
-  /// FACTOR_ERATMEDIUM = 5.0
+  /// @pre FACTOR_ERATMEDIUM >= 0 && <= 9
+  /// FACTOR_ERATMEDIUM * max(sieveSize) / 30 * 6 + 6 <= max(multipleIndex)
+  /// FACTOR_ERATMEDIUM * 2^22 / 30 * 6 + 6 <= 2^23 - 1
+  /// FACTOR_ERATMEDIUM <= ((2^23 - 7) * 30) / (2^22 * 6)
+  /// FACTOR_ERATMEDIUM <= 9.999991655
   ///
   const double FACTOR_ERATMEDIUM = 5.0;
 

@@ -1,3 +1,24 @@
+Changes in version 7.5, 03/11/2019
+==================================
+
+This version fixes a few non critical bugs/issues.
+I have also removed the https://primesieve.org website because it
+simply takes too much effort to maintain it and make it look
+nice across all devices, operating systems and browsers.
+Hence primesieve's main homepage is now its GitHub repo:
+https://github.com/kimwalisch/primesieve
+
+* CMakeLists.txt: Require CMake 3.4 instead 3.9.
+* Erat.cpp: Silence MSVC debug warning.
+* cmdoptions.cpp: Support options of type: --option VALUE.
+* help.cpp: Improve help menu.
+* StorePrimes.hpp: Add workaround for windows.h max/min macros.
+* primesieve.pc.in: Fix libdir and includedir.
+* README.md: Add libprimesieve multi-threading section.
+* BUILD.md: Add detailed build instructions.
+* doc/ALGORITHMS.md: Info from https://primesieve.org.
+* doc/primesieve.txt: New AsciiDoc man page.
+
 Changes in version 7.4, 10/02/2019
 ==================================
 

@@ -1,14 +1,15 @@
 ///
 /// @file   EratSmall.cpp
-/// @brief  Segmented sieve of Eratosthenes optimized for small sieving
-///         primes. Since each sieving prime in EratSmall has many
-///         multiple occurrences per segment the initialization overhead
-///         of the sieving primes at the beginning of each segment is
-///         not really important for performance. What matters is that
-///         crossing off multiples uses as few instructions as possible
-///         since there are so many multiples.
+/// @brief  EratSmall is a segmented sieve of Eratosthenes
+///         implementation optimized for small sieving primes. Since
+///         each small sieving prime has many multiple occurrences per
+///         segment the initialization overhead of the sieving primes
+///         at the beginning of each segment is not really important
+///         for performance. What matters is that crossing off
+///         multiples uses as few instructions as possible since there
+///         are so many multiples.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -39,19 +40,19 @@
 
 namespace primesieve {
 
-/// @stop:     Upper bound for sieving
-/// @l1Size:   Sieve size in bytes
-/// @maxPrime: Sieving primes <= maxPrime
+/// @stop:        Upper bound for sieving
+/// @l1CacheSize: CPU L1 cache size
+/// @maxPrime:    Sieving primes <= maxPrime
 ///
-void EratSmall::init(uint64_t stop, uint64_t l1Size, uint64_t maxPrime)
+void EratSmall::init(uint64_t stop, uint64_t l1CacheSize, uint64_t maxPrime)
 {
-  if (maxPrime > l1Size * 3)
-    throw primesieve_error("EratSmall: maxPrime > l1Size * 3");
+  if (maxPrime > l1CacheSize * 3)
+    throw primesieve_error("EratSmall: maxPrime > l1CacheSize * 3");
 
   enabled_ = true;
   maxPrime_ = maxPrime;
-  l1Size_ = l1Size;
-  Wheel::init(stop, l1Size);
+  l1CacheSize_ = l1CacheSize;
+  Wheel::init(stop, l1CacheSize);
 
   size_t count = primeCountApprox(maxPrime);
   primes_.reserve(count);
@@ -68,7 +69,7 @@ void EratSmall::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64
 /// Use the CPU's L1 cache size as
 /// sieveSize in EratSmall.
 ///
-uint64_t EratSmall::getL1Size(uint64_t sieveSize)
+uint64_t EratSmall::getL1CacheSize(uint64_t sieveSize)
 {
   if (!cpuInfo.hasL1Cache())
     return sieveSize;
@@ -83,16 +84,24 @@ uint64_t EratSmall::getL1Size(uint64_t sieveSize)
   return size;
 }
 
+/// Both EratMedium and EratBig run fastest using a sieve size
+/// that matches the CPU's L2 cache size (or slightly less).
+/// However, proportionally EratSmall does a lot more memory
+/// writes than both EratMedium and EratBig and hence EratSmall
+/// runs fastest using a smaller sieve size that matches the
+/// CPU's L1 cache size.
+///
+/// @sieveSize:   CPU L2 cache size / 2
+/// @l1CacheSize: CPU L1 cache size
+///
 void EratSmall::crossOff(byte_t* sieve, uint64_t sieveSize)
 {
   byte_t* sieveEnd = sieve + sieveSize;
 
-  // Usually we use the L2 cache for sieving
-  // but EratSmall runs faster using the L1 cache.
   while (sieve < sieveEnd)
   {
     byte_t* start = sieve;
-    sieve += l1Size_;
+    sieve += l1CacheSize_;
     sieve = std::min(sieve, sieveEnd);
     crossOff(start, sieve);
   }

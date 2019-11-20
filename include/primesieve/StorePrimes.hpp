@@ -77,7 +77,7 @@ inline void store_n_primes(uint64_t n,
   using V = typename T::value_type;
 
   double x = (double) start;
-  x = std::max(10.0, x);
+  x = std::max<double>(10.0, x);
   uint64_t logx = (uint64_t) std::log(x);
   uint64_t dist = n * (logx + 1);
   uint64_t stop = start + dist;

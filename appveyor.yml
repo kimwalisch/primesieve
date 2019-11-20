@@ -3,29 +3,86 @@
 
 version: 1.0.{build}
 
+image:
+- Visual Studio 2015
+- Visual Studio 2017
+
 branches:
   except:
     - gh-pages
-
-os: Visual Studio 2017
 
 platform:
   - x86
   - x64
 
-build_script:
-  - mkdir shared_linking
-  - cd shared_linking
-  - if "%platform%" == "x86" cmake -G "Visual Studio 15 2017" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_STATIC_LIBS=OFF ..
-  - if "%platform%" == "x64" cmake -G "Visual Studio 15 2017 Win64" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_STATIC_LIBS=OFF ..
-  - cmake --build . --config Release
-  - cd ..
-  - mkdir static_linking
-  - cd static_linking
-  - if "%platform%" == "x86" cmake -G "Visual Studio 15 2017" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
-  - if "%platform%" == "x64" cmake -G "Visual Studio 15 2017 Win64" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
-  - cmake --build . --config Release --target install
-  - cd ..
+for:
+  - matrix:
+      only:
+        - image: Visual Studio 2015
+          platform: x86
+    build_script:
+      - mkdir shared_linking
+      - cd shared_linking
+      - cmake . -G "Visual Studio 14 2015" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_STATIC_LIBS=OFF ..
+      - cmake --build . --config Release
+      - cd ..
+      - mkdir static_linking
+      - cd static_linking
+      - cmake . -G "Visual Studio 14 2015" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
+      - cmake --build . --config Release --target install
+      - cd ..
+
+  - matrix:
+      only:
+        - image: Visual Studio 2015
+          platform: x64
+    environment:
+      CXXFLAGS: "/W3 /WX"
+    build_script:
+      - mkdir shared_linking
+      - cd shared_linking
+      - cmake . -G "Visual Studio 14 2015 Win64" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_STATIC_LIBS=OFF ..
+      - cmake --build . --config Release
+      - cd ..
+      - mkdir static_linking
+      - cd static_linking
+      - cmake . -G "Visual Studio 14 2015 Win64" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
+      - cmake --build . --config Release --target install
+      - cd ..
+
+  - matrix:
+      only:
+        - image: Visual Studio 2017
+          platform: x86
+    build_script:
+      - mkdir shared_linking
+      - cd shared_linking
+      - cmake . -G "Visual Studio 15 2017" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_STATIC_LIBS=OFF ..
+      - cmake --build . --config Release
+      - cd ..
+      - mkdir static_linking
+      - cd static_linking
+      - cmake . -G "Visual Studio 15 2017" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
+      - cmake --build . --config Release --target install
+      - cd ..
+
+  - matrix:
+      only:
+        - image: Visual Studio 2017
+          platform: x64
+    environment:
+      CXXFLAGS: "/W3 /WX"
+    build_script:
+      - mkdir shared_linking
+      - cd shared_linking
+      - cmake . -G "Visual Studio 15 2017 Win64" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_STATIC_LIBS=OFF ..
+      - cmake --build . --config Release
+      - cd ..
+      - mkdir static_linking
+      - cd static_linking
+      - cmake . -G "Visual Studio 15 2017 Win64" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON ..
+      - cmake --build . --config Release --target install
+      - cd ..
 
 test_script:
   - cd shared_linking

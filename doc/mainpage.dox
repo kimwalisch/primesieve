@@ -12,7 +12,7 @@
 /// primes using next_prime() or prev_prime() and storing primes in
 /// a vector or an array.
 ///
-/// For more information please visit https://primesieve.org.
+/// For more information please visit https://github.com/kimwalisch/primesieve.
 ///
 /// @section CPP_API C++ API
 ///

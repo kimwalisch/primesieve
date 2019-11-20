@@ -15,7 +15,6 @@
 #include <iostream>
 
 using namespace std;
-using namespace primesieve;
 
 #if defined(BAD_ISQRT)
 

@@ -342,7 +342,6 @@ vector<T> getSysctl(const string& name)
 
   if (!sysctlbyname(name.data(), 0, &bytes, 0, 0))
   {
-    using primesieve::ceilDiv;
     size_t size = ceilDiv(bytes, sizeof(T));
     vector<T> buffer(size, 0);
     if (!sysctlbyname(name.data(), buffer.data(), &bytes, 0, 0))

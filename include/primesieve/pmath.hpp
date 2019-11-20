@@ -18,7 +18,7 @@
 #include <limits>
 #include <type_traits>
 
-namespace primesieve {
+namespace {
 
 template <typename X, typename Y>
 inline X ceilDiv(X x, Y y)

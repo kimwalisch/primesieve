@@ -1,8 +1,9 @@
 ///
 /// @file   EratBig.cpp
-/// @brief  Segmented sieve of Eratosthenes optimized for big sieving
-///         primes. This is an optimized implementation of Tomas
-///         Oliveira e Silva's cache-friendly bucket sieve algorithm:
+/// @brief  EratBig is a segmented sieve of Eratosthenes
+///         implementation optimized for big sieving primes. EratBig
+///         is a highly optimized implementation of Tomas Oliveira e
+///         Silva's cache-friendly bucket sieve algorithm:
 ///         http://www.ieeta.pt/~tos/software/prime_sieve.html
 ///         The idea is that for each segment we keep a list of buckets
 ///         which contain the sieving primes that have a multiple
@@ -11,7 +12,7 @@
 ///         sieving primes that do not have a multiple occurrence in
 ///         the current segment.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
