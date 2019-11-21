@@ -1,8 +1,8 @@
 ///
-/// @file   types.hpp
-/// @brief  Types and forward declarations.
+/// @file   forward.hpp
+/// @brief  Forward declarations.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,12 +11,12 @@
 #ifndef TYPES_HPP
 #define TYPES_HPP
 
+#include <array>
 #include <stdint.h>
 
 namespace primesieve {
 
-
-using uint_t = unsigned int;
+extern const std::array<uint64_t, 64> bruijnBitValues;
 
 int get_num_threads();
 int get_sieve_size();

@@ -48,6 +48,7 @@ set(LIB_SRC src/api-c.cpp
             src/iterator-c.cpp
             src/iterator.cpp
             src/IteratorHelper.cpp
+            src/LookupTables.cpp
             src/MemoryPool.cpp
             src/PrimeGenerator.cpp
             src/nthPrime.cpp
@@ -57,8 +58,7 @@ set(LIB_SRC src/api-c.cpp
             src/PrintPrimes.cpp
             src/PrimeSieve.cpp
             src/Erat.cpp
-            src/SievingPrimes.cpp
-            src/Wheel.cpp)
+            src/SievingPrimes.cpp)
 
 # Required includes ##################################################
 

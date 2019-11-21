@@ -9,9 +9,9 @@
 ///
 
 #include <primesieve.h>
+#include <primesieve/forward.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
-#include <primesieve/types.hpp>
 
 #include <stdint.h>
 #include <cerrno>
