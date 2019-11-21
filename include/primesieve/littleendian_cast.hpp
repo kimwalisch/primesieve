@@ -13,6 +13,7 @@
 #define LITTLEENDIAN_CAST_HPP
 
 #include <stdint.h>
+
 namespace primesieve {
 
 /// http://c-faq.com/misc/endiantest.html
