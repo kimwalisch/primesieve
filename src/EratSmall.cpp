@@ -21,7 +21,6 @@
 #include <primesieve/CpuInfo.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
-#include <primesieve/types.hpp>
 #include <primesieve/Wheel.hpp>
 
 #include <stdint.h>
@@ -94,13 +93,13 @@ uint64_t EratSmall::getL1CacheSize(uint64_t sieveSize)
 /// @sieveSize:   CPU L2 cache size / 2
 /// @l1CacheSize: CPU L1 cache size
 ///
-void EratSmall::crossOff(byte_t* sieve, uint64_t sieveSize)
+void EratSmall::crossOff(uint8_t* sieve, uint64_t sieveSize)
 {
-  byte_t* sieveEnd = sieve + sieveSize;
+  uint8_t* sieveEnd = sieve + sieveSize;
 
   while (sieve < sieveEnd)
   {
-    byte_t* start = sieve;
+    uint8_t* start = sieve;
     sieve += l1CacheSize_;
     sieve = std::min(sieve, sieveEnd);
     crossOff(start, sieve);
@@ -112,7 +111,7 @@ void EratSmall::crossOff(byte_t* sieve, uint64_t sieveSize)
 /// per segment. This algorithm uses a hardcoded modulo 30
 /// wheel that skips multiples of 2, 3 and 5.
 ///
-void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
+void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
 {
   for (auto& prime : primes_)
   {
@@ -123,8 +122,8 @@ void EratSmall::crossOff(byte_t* sieve, byte_t* sieveEnd)
 
     // pointer to the byte containing the first multiple
     // of sievingPrime within the current segment
-    byte_t* p = &sieve[multipleIndex];
-    byte_t* loopEnd = sieveEnd - maxLoopDist;
+    uint8_t* p = &sieve[multipleIndex];
+    uint8_t* loopEnd = sieveEnd - maxLoopDist;
 
     if (loopEnd > sieveEnd)
       loopEnd = p;

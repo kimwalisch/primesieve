@@ -12,7 +12,6 @@
 
 #include "Erat.hpp"
 #include "PrimeSieve.hpp"
-#include "types.hpp"
 
 #include <stdint.h>
 #include <vector>
@@ -33,7 +32,7 @@ public:
 private:
   uint64_t low_ = 0;
   /// Count lookup tables for prime k-tuplets
-  std::vector<byte_t> kCounts_[6];
+  std::vector<uint8_t> kCounts_[6];
   counts_t& counts_;
   /// Reference to the associated PrimeSieve object
   PrimeSieve& ps_;

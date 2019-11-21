@@ -13,7 +13,6 @@
 #include "Bucket.hpp"
 #include "MemoryPool.hpp"
 #include "Wheel.hpp"
-#include "types.hpp"
 
 #include <stdint.h>
 #include <vector>
@@ -28,7 +27,7 @@ class EratBig : public Wheel210_t
 {
 public:
   void init(uint64_t, uint64_t, uint64_t);
-  void crossOff(byte_t*);
+  void crossOff(uint8_t*);
   bool enabled() const { return enabled_; }
 private:
   uint64_t maxPrime_ = 0;
@@ -39,7 +38,7 @@ private:
   bool enabled_ = false;
   void init(uint64_t);
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
-  void crossOff(byte_t*, Bucket*);
+  void crossOff(uint8_t*, Bucket*);
 };
 
 } // namespace

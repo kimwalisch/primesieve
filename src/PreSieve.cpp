@@ -31,7 +31,6 @@
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/EratSmall.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/types.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -79,9 +78,9 @@ void PreSieve::initBuffer(uint64_t maxPrime,
   primeProduct_ = primeProduct;
   size_ = primeProduct_ / 30;
 
-  buffer_ = new byte_t[size_];
+  buffer_ = new uint8_t[size_];
   deleter_.reset(buffer_);
-  fill_n(buffer_, size_, (byte_t) 0xff);
+  fill_n(buffer_, size_, (uint8_t) 0xff);
 
   EratSmall eratSmall;
   uint64_t stop = primeProduct_ * 2;
@@ -95,7 +94,7 @@ void PreSieve::initBuffer(uint64_t maxPrime,
 }
 
 /// Copy pre-sieved buffer to sieve array
-void PreSieve::copy(byte_t* sieve,
+void PreSieve::copy(uint8_t* sieve,
                     uint64_t sieveSize,
                     uint64_t segmentLow) const
 {

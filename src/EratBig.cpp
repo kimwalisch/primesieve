@@ -23,7 +23,6 @@
 #include <primesieve/MemoryPool.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
-#include <primesieve/types.hpp>
 #include <primesieve/Wheel.hpp>
 
 #include <stdint.h>
@@ -83,7 +82,7 @@ void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t
 /// and for each bucket execute crossOff() to remove
 /// the multiples of its sieving primes.
 ///
-void EratBig::crossOff(byte_t* sieve)
+void EratBig::crossOff(uint8_t* sieve)
 {
   while (true)
   {
@@ -116,7 +115,7 @@ void EratBig::crossOff(byte_t* sieve)
 /// multiples per segment. Cross-off the next multiple of
 /// each sieving prime in the current bucket.
 ///
-void EratBig::crossOff(byte_t* sieve, Bucket* bucket)
+void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();

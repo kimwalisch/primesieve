@@ -10,8 +10,6 @@
 #ifndef PRESIEVE_HPP
 #define PRESIEVE_HPP
 
-#include "types.hpp"
-
 #include <stdint.h>
 #include <memory>
 
@@ -41,13 +39,13 @@ class PreSieve
 public:
   void init(uint64_t, uint64_t);
   uint64_t getMaxPrime() const { return maxPrime_; }
-  void copy(byte_t*, uint64_t, uint64_t) const;
+  void copy(uint8_t*, uint64_t, uint64_t) const;
 private:
   uint64_t maxPrime_ = 0;
   uint64_t primeProduct_ = 0;
   uint64_t size_ = 0;
-  byte_t* buffer_ = nullptr;
-  std::unique_ptr<byte_t[]> deleter_;
+  uint8_t* buffer_ = nullptr;
+  std::unique_ptr<uint8_t[]> deleter_;
   void initBuffer(uint64_t, uint64_t);
 };
 

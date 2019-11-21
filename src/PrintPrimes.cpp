@@ -71,7 +71,7 @@ void PrintPrimes::initCounts()
 
     for (uint64_t j = 0; j < 256; j++)
     {
-      byte_t count = 0;
+      uint8_t count = 0;
       for (const uint64_t* b = bitmasks[i]; *b <= j; b++)
       {
         if ((j & *b) == *b)

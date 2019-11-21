@@ -29,7 +29,7 @@ using namespace primesieve;
 namespace {
 
 /// unset bits < start
-const array<byte_t, 37> unsetSmaller =
+const array<uint8_t, 37> unsetSmaller =
 {
   0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
   0xfe, 0xfe, 0xfe, 0xfe, 0xfc, 0xfc, 0xf8, 0xf8,
@@ -39,7 +39,7 @@ const array<byte_t, 37> unsetSmaller =
 };
 
 /// unset bits > stop
-const array<byte_t, 37> unsetLarger =
+const array<uint8_t, 37> unsetLarger =
 {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
   0x01, 0x01, 0x01, 0x03, 0x03, 0x07, 0x07, 0x07,
@@ -109,7 +109,7 @@ void Erat::initSieve(uint64_t sieveSize)
   sieveSize_ = inBetween(8, sieveSize_, 4096);
   sieveSize_ *= 1024;
 
-  sieve_ = new byte_t[sieveSize_];
+  sieve_ = new uint8_t[sieveSize_];
   deleter_.reset(sieve_);
 }
 
@@ -199,7 +199,7 @@ void Erat::sieveLastSegment()
   // unset bytes > stop
   uint64_t bytes = sieveSize_ % 8;
   bytes = (8 - bytes) % 8;
-  fill_n(&sieve_[sieveSize_], bytes, (byte_t) 0);
+  fill_n(&sieve_[sieveSize_], bytes, (uint8_t) 0);
 
   segmentLow_ = stop_;
 }

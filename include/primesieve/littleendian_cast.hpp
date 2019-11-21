@@ -12,8 +12,7 @@
 #ifndef LITTLEENDIAN_CAST_HPP
 #define LITTLEENDIAN_CAST_HPP
 
-#include "types.hpp"
-
+#include <stdint.h>
 namespace primesieve {
 
 /// http://c-faq.com/misc/endiantest.html
@@ -37,7 +36,7 @@ inline bool is_littleendian()
 template <typename T, int INDEX, int STOP>
 struct littleendian_cast_helper
 {
-  static T sum(const byte_t* array, T n)
+  static T sum(const uint8_t* array, T n)
   {
     n += static_cast<T>(array[INDEX]) << (INDEX * 8);
     return littleendian_cast_helper<T, INDEX + 1, STOP - 1>::sum(array, n);
@@ -47,14 +46,14 @@ struct littleendian_cast_helper
 template <typename T, int INDEX>
 struct littleendian_cast_helper<T, INDEX, 0>
 {
-  static T sum(const byte_t*, T n)
+  static T sum(const uint8_t*, T n)
   {
     return n;
   }
 };
 
 template <typename T>
-inline T littleendian_cast(const byte_t* array)
+inline T littleendian_cast(const uint8_t* array)
 {
   if (is_littleendian())
     return *reinterpret_cast<const T*>(array);

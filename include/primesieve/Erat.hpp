@@ -13,7 +13,6 @@
 #include "EratSmall.hpp"
 #include "EratMedium.hpp"
 #include "EratBig.hpp"
-#include "types.hpp"
 
 #include <stdint.h>
 #include <array>
@@ -47,7 +46,7 @@ protected:
   /// Upper bound of the current segment
   uint64_t segmentHigh_ = 0;
   /// Sieve of Eratosthenes array
-  byte_t* sieve_ = nullptr;
+  uint8_t* sieve_ = nullptr;
   Erat();
   Erat(uint64_t, uint64_t);
   void init(uint64_t, uint64_t, uint64_t, PreSieve&);
@@ -61,7 +60,7 @@ private:
   uint64_t maxPreSieve_ = 0;
   uint64_t maxEratSmall_ = 0;
   uint64_t maxEratMedium_ = 0;
-  std::unique_ptr<byte_t[]> deleter_;
+  std::unique_ptr<uint8_t[]> deleter_;
   PreSieve* preSieve_ = nullptr;
   EratSmall eratSmall_;
   EratBig eratBig_;

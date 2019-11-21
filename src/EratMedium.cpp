@@ -22,7 +22,6 @@
 #include <primesieve/MemoryPool.hpp>
 #include <primesieve/Wheel.hpp>
 #include <primesieve/primesieve_error.hpp>
-#include <primesieve/types.hpp>
 #include <primesieve/bits.hpp>
 
 #include <stdint.h>
@@ -80,9 +79,9 @@ void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint6
     memoryPool_.addBucket(sievingPrimes_[wheelIndex]);
 }
 
-void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)
+void EratMedium::crossOff(uint8_t* sieve, uint64_t sieveSize)
 {
-  byte_t* sieveEnd = sieve + sieveSize;
+  uint8_t* sieveEnd = sieve + sieveSize;
   auto copy = sievingPrimes_;
   resetSievingPrimes();
 
@@ -110,7 +109,7 @@ void EratMedium::crossOff(byte_t* sieve, uint64_t sieveSize)
   }
 }
 
-void EratMedium::crossOff(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
+void EratMedium::crossOff(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
 {
   SievingPrime* prime = bucket->begin();
   uint64_t primeType = prime->getWheelIndex() / 8;
@@ -129,7 +128,7 @@ void EratMedium::crossOff(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
 }
 
 /// For sieving primes of type n % 30 == 7
-void EratMedium::crossOff_7(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
+void EratMedium::crossOff_7(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
@@ -139,7 +138,7 @@ void EratMedium::crossOff_7(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
   {
     uint64_t sievingPrime = prime->getSievingPrime();
     uint64_t multipleIndex = prime->getMultipleIndex();
-    byte_t* p = sieve + multipleIndex;
+    uint8_t* p = sieve + multipleIndex;
 
     uint64_t dist0 = sievingPrime * 6 + 1;
     uint64_t dist1 = sievingPrime * 4 + 1;
@@ -185,7 +184,7 @@ void EratMedium::crossOff_7(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
 }
 
 /// For sieving primes of type n % 30 == 11
-void EratMedium::crossOff_11(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
+void EratMedium::crossOff_11(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
@@ -195,7 +194,7 @@ void EratMedium::crossOff_11(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
   {
     uint64_t sievingPrime = prime->getSievingPrime();
     uint64_t multipleIndex = prime->getMultipleIndex();
-    byte_t* p = sieve + multipleIndex;
+    uint8_t* p = sieve + multipleIndex;
 
     uint64_t dist0 = sievingPrime * 6 + 2;
     uint64_t dist1 = sievingPrime * 4 + 1;
@@ -241,7 +240,7 @@ void EratMedium::crossOff_11(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
 }
 
 /// For sieving primes of type n % 30 == 13
-void EratMedium::crossOff_13(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
+void EratMedium::crossOff_13(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
@@ -251,7 +250,7 @@ void EratMedium::crossOff_13(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
   {
     uint64_t sievingPrime = prime->getSievingPrime();
     uint64_t multipleIndex = prime->getMultipleIndex();
-    byte_t* p = sieve + multipleIndex;
+    uint8_t* p = sieve + multipleIndex;
 
     uint64_t dist0 = sievingPrime * 6 + 2;
     uint64_t dist1 = sievingPrime * 4 + 2;
@@ -297,7 +296,7 @@ void EratMedium::crossOff_13(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
 }
 
 /// For sieving primes of type n % 30 == 17
-void EratMedium::crossOff_17(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
+void EratMedium::crossOff_17(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
@@ -307,7 +306,7 @@ void EratMedium::crossOff_17(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
   {
     uint64_t sievingPrime = prime->getSievingPrime();
     uint64_t multipleIndex = prime->getMultipleIndex();
-    byte_t* p = sieve + multipleIndex;
+    uint8_t* p = sieve + multipleIndex;
 
     uint64_t dist0 = sievingPrime * 6 + 3;
     uint64_t dist1 = sievingPrime * 4 + 3;
@@ -353,7 +352,7 @@ void EratMedium::crossOff_17(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
 }
 
 /// For sieving primes of type n % 30 == 19
-void EratMedium::crossOff_19(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
+void EratMedium::crossOff_19(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
@@ -363,7 +362,7 @@ void EratMedium::crossOff_19(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
   {
     uint64_t sievingPrime = prime->getSievingPrime();
     uint64_t multipleIndex = prime->getMultipleIndex();
-    byte_t* p = sieve + multipleIndex;
+    uint8_t* p = sieve + multipleIndex;
 
     uint64_t dist0 = sievingPrime * 6 + 4;
     uint64_t dist1 = sievingPrime * 4 + 2;
@@ -409,7 +408,7 @@ void EratMedium::crossOff_19(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
 }
 
 /// For sieving primes of type n % 30 == 23
-void EratMedium::crossOff_23(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
+void EratMedium::crossOff_23(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
@@ -419,7 +418,7 @@ void EratMedium::crossOff_23(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
   {
     uint64_t sievingPrime = prime->getSievingPrime();
     uint64_t multipleIndex = prime->getMultipleIndex();
-    byte_t* p = sieve + multipleIndex;
+    uint8_t* p = sieve + multipleIndex;
 
     uint64_t dist0 = sievingPrime * 6 + 5;
     uint64_t dist1 = sievingPrime * 4 + 3;
@@ -465,7 +464,7 @@ void EratMedium::crossOff_23(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
 }
 
 /// For sieving primes of type n % 30 == 29
-void EratMedium::crossOff_29(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
+void EratMedium::crossOff_29(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
@@ -475,7 +474,7 @@ void EratMedium::crossOff_29(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
   {
     uint64_t sievingPrime = prime->getSievingPrime();
     uint64_t multipleIndex = prime->getMultipleIndex();
-    byte_t* p = sieve + multipleIndex;
+    uint8_t* p = sieve + multipleIndex;
 
     uint64_t dist0 = sievingPrime * 6 + 6;
     uint64_t dist1 = sievingPrime * 4 + 4;
@@ -521,7 +520,7 @@ void EratMedium::crossOff_29(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
 }
 
 /// For sieving primes of type n % 30 == 1
-void EratMedium::crossOff_31(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
+void EratMedium::crossOff_31(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
@@ -531,7 +530,7 @@ void EratMedium::crossOff_31(byte_t* sieve, byte_t* sieveEnd, Bucket* bucket)
   {
     uint64_t sievingPrime = prime->getSievingPrime();
     uint64_t multipleIndex = prime->getMultipleIndex();
-    byte_t* p = sieve + multipleIndex;
+    uint8_t* p = sieve + multipleIndex;
 
     uint64_t dist0 = sievingPrime * 6 + 1;
     uint64_t dist1 = sievingPrime * 4 + 0;

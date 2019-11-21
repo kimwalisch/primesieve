@@ -15,8 +15,7 @@
 
 namespace primesieve {
 
-/// byte type must be unsigned and have 8-bits
-using byte_t = uint8_t;
+
 using uint_t = unsigned int;
 
 int get_num_threads();

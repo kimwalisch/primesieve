@@ -15,7 +15,6 @@
 #include "config.hpp"
 #include "primesieve_error.hpp"
 #include "Bucket.hpp"
-#include "types.hpp"
 
 #include <stdint.h>
 #include <algorithm>
@@ -116,7 +115,7 @@ protected:
   /// Cross-off the current multiple of sievingPrime
   /// and calculate its next multiple
   ///
-  static void unsetBit(byte_t* sieve,
+  static void unsetBit(uint8_t* sieve,
                        uint64_t sievingPrime,
                        uint64_t* multipleIndex,
                        uint64_t* wheelIndex)
