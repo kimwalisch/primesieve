@@ -14,6 +14,7 @@
 
 #include <primesieve/Erat.hpp>
 #include <primesieve/forward.hpp>
+#include <primesieve/littleendian_cast.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
@@ -207,11 +208,18 @@ void PrimeGenerator::sieveSegment()
   Erat::sieveSegment();
 }
 
+/// This method is used by iterator::prev_prime().
+/// This method stores all primes inside [a, b] into the primes
+/// vector. (b - a) is about sqrt(stop) so the memory usage is
+/// quite large. Also after primesieve::iterator has iterated
+/// over the primes inside [a, b] we need to generate new
+/// primes which incurs an initialization overhead of O(sqrt(n)).
+///
 void PrimeGenerator::fill(vector<uint64_t>& primes)
 {
   while (sieveSegment(primes))
   {
-    for (; sieveIdx_ < sieveSize_; sieveIdx_ += 8)
+    while (sieveIdx_ < sieveSize_)
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
 
@@ -219,8 +227,48 @@ void PrimeGenerator::fill(vector<uint64_t>& primes)
         primes.push_back(nextPrime(&bits, low_));
 
       low_ += 8 * 30;
+      sieveIdx_ += 8;
     }
   }
+}
+
+/// This method is used by iterator::next_prime().
+/// This method stores only the next few primes (~ 64) in the
+/// primes vector. Also for iterator::next_prime() there is no
+/// initialization overhead (unlike iterator::prev_prime())
+/// for this reason iterator::next_prime() runs about 2x faster
+/// than iterator::prev_prime().
+///
+void PrimeGenerator::fill(std::vector<uint64_t>& primes,
+                          std::size_t* size)
+{
+  if (sieveIdx_ >= sieveSize_)
+    if (!sieveSegment(primes, size))
+      return;
+
+  std::size_t i = 0;
+  std::size_t maxSize = primes.size();
+
+  while (true)
+  {
+    uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
+
+    for (; bits != 0; i++)
+      primes[i] = nextPrime(&bits, low_);
+
+    low_ += 8 * 30;
+    sieveIdx_ += 8;
+
+    // Fill the buffer with at least maxSize - 64 primes.
+    // Each loop iteration can generate up to 64 primes
+    // so we have to stop generating primes once there is
+    // not enough space for 64 more primes.
+    if (maxSize - i < 64 ||
+        sieveIdx_ >= sieveSize_)
+      break;
+  }
+
+  *size = i;
 }
 
 } // namespace

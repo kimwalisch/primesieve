@@ -2,7 +2,7 @@
 /// @file  SievingPrimes.cpp
 ///        Generates the sieving primes up n^(1/2).
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -56,15 +56,29 @@ void SievingPrimes::fill()
       return;
 
   uint64_t num = 0;
-  uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
-  sieveIdx_ += 8;
+  uint64_t maxSize = primes_.size();
 
-  for (; bits != 0; num++)
-    primes_[num] = nextPrime(&bits, low_);
+  while (true)
+  {
+    uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
+
+    for (; bits != 0; num++)
+      primes_[num] = nextPrime(&bits, low_);
+
+    low_ += 8 * 30;
+    sieveIdx_ += 8;
+
+    // Fill the buffer with at least maxSize - 64 primes.
+    // Each loop iteration can generate up to 64 primes
+    // so we have to stop generating primes once there is
+    // not enough space for 64 more primes.
+    if (maxSize - num < 64 ||
+        sieveIdx_ >= sieveSize_)
+      break;
+  }
 
   i_ = 0;
   size_ = num;
-  low_ += 8 * 30;
 }
 
 bool SievingPrimes::sieveSegment()

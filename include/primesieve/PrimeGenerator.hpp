@@ -6,7 +6,7 @@
 ///        returns the primes. When there are no more primes left in
 ///        the vector PrimeGenerator generates new primes.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -17,7 +17,6 @@
 
 #include "Erat.hpp"
 #include "PreSieve.hpp"
-#include "littleendian_cast.hpp"
 #include "SievingPrimes.hpp"
 
 #include <stdint.h>
@@ -31,6 +30,7 @@ class PrimeGenerator : public Erat
 public:
   PrimeGenerator(uint64_t start, uint64_t stop);
   void fill(std::vector<uint64_t>&);
+  void fill(std::vector<uint64_t>& primes, std::size_t* size);
 
   bool finished() const
   {
@@ -42,23 +42,6 @@ public:
     return smallPrimes.back();
   }
 
-  void fill(std::vector<uint64_t>& primes,
-            std::size_t* size)
-  {
-    if (sieveIdx_ >= sieveSize_)
-      if (!sieveSegment(primes, size))
-        return;
-
-    std::size_t i = 0;
-    uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
-    sieveIdx_ += 8;
-
-    for (; bits != 0; i++)
-      primes[i] = nextPrime(&bits, low_);
-
-    *size = i;
-    low_ += 8 * 30;
-  }
 private:
   uint64_t low_ = 0;
   uint64_t sieveIdx_ = ~0ull;
