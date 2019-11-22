@@ -20,7 +20,6 @@
 #include "SievingPrimes.hpp"
 
 #include <stdint.h>
-#include <array>
 #include <vector>
 
 namespace primesieve {
@@ -31,15 +30,11 @@ public:
   PrimeGenerator(uint64_t start, uint64_t stop);
   void fill(std::vector<uint64_t>&);
   void fill(std::vector<uint64_t>& primes, std::size_t* size);
+  static uint64_t maxCachedPrime();
 
   bool finished() const
   {
     return finished_;
-  }
-
-  static uint64_t maxCachedPrime()
-  {
-    return smallPrimes.back();
   }
 
 private:
@@ -50,8 +45,6 @@ private:
   SievingPrimes sievingPrimes_;
   bool isInit_ = false;
   bool finished_ = false;
-  static const std::array<uint64_t, 64> smallPrimes;
-  static const std::array<uint8_t, 312> primePi;
   std::size_t getStartIdx() const;
   std::size_t getStopIdx() const;
   void initErat();

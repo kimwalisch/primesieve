@@ -28,10 +28,10 @@
 
 using namespace std;
 
-namespace primesieve {
+namespace {
 
 /// First 64 primes
-const array<uint64_t, 64> PrimeGenerator::smallPrimes =
+const array<uint64_t, 64> smallPrimes =
 {
     2,   3,   5,   7,  11,  13,  17,  19,
    23,  29,  31,  37,  41,  43,  47,  53,
@@ -44,7 +44,7 @@ const array<uint64_t, 64> PrimeGenerator::smallPrimes =
 };
 
 /// Number of primes <= n
-const array<uint8_t, 312> PrimeGenerator::primePi =
+const array<uint8_t, 312> primePi =
 {
    0,  0,  1,  2,  2,  3,  3,  4,  4,  4,
    4,  5,  5,  6,  6,  6,  6,  7,  7,  8,
@@ -79,6 +79,10 @@ const array<uint8_t, 312> PrimeGenerator::primePi =
   62, 62, 62, 62, 62, 62, 62, 63, 63, 63,
   63, 64
 };
+
+} // namespace
+
+namespace primesieve {
 
 PrimeGenerator::PrimeGenerator(uint64_t start, uint64_t stop) :
   Erat(start, stop)
@@ -132,6 +136,11 @@ void PrimeGenerator::initErat()
     Erat::init(startErat, stop_, sieveSize, preSieve_);
     sievingPrimes_.init(this, preSieve_);
   }
+}
+
+uint64_t PrimeGenerator::maxCachedPrime()
+{
+  return smallPrimes.back();
 }
 
 size_t PrimeGenerator::getStartIdx() const
@@ -239,15 +248,15 @@ void PrimeGenerator::fill(vector<uint64_t>& primes)
 /// for this reason iterator::next_prime() runs about 2x faster
 /// than iterator::prev_prime().
 ///
-void PrimeGenerator::fill(std::vector<uint64_t>& primes,
-                          std::size_t* size)
+void PrimeGenerator::fill(vector<uint64_t>& primes,
+                          size_t* size)
 {
   if (sieveIdx_ >= sieveSize_)
     if (!sieveSegment(primes, size))
       return;
 
-  std::size_t i = 0;
-  std::size_t maxSize = primes.size();
+  size_t i = 0;
+  size_t maxSize = primes.size();
 
   while (true)
   {
