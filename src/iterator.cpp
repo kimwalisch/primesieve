@@ -61,7 +61,7 @@ void iterator::generate_next_primes()
       IteratorHelper::next(&start_, &stop_, stop_hint_, &dist_);
       auto p = new PrimeGenerator(start_, stop_);
       primeGenerator_.reset(p);
-      primes_.resize(128);
+      primes_.resize(256);
     }
 
     for (last_idx_ = 0; !last_idx_;)
