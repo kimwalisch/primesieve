@@ -17,6 +17,12 @@
 
 namespace primesieve {
 
+/// The De Bruijn bitscan is a fast method to compute the index of
+/// the first set bit in a 64-bit integer using only integer
+/// operations. For primesieve's use case this is as fast as the
+/// bsf or tzcnt instructions on x64 (but more portable).
+/// https://www.chessprogramming.org/BitScan#De_Bruijn_Multiplication
+///
 const std::array<uint64_t, 64> bruijnBitValues =
 {
     7,  47,  11,  49,  67, 113,  13,  53,
@@ -29,6 +35,9 @@ const std::array<uint64_t, 64> bruijnBitValues =
   173, 223, 193,  31, 221,  29,  23, 241
 };
 
+/// Used to find the next multiple (of a prime)
+/// that is not divisible by 2, 3 and 5.
+///
 const WheelInit wheel30Init[30] =
 {
   {1,  0}, {0,  0}, {5,  1}, {4,  1}, {3,  1}, {2,  1}, {1,  1}, {0,  1},
@@ -37,6 +46,9 @@ const WheelInit wheel30Init[30] =
   {5,  7}, {4,  7}, {3,  7}, {2,  7}, {1,  7}, {0,  7}
 };
 
+/// Used to find the next multiple (of a prime)
+/// that is not divisible by 2, 3, 5 and 7.
+///
 const WheelInit wheel210Init[210] =
 {
   {1,  0}, {0,  0}, {9,  1}, {8,  1}, {7,  1}, {6,  1}, {5,  1}, {4,  1},

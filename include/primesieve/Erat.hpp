@@ -73,13 +73,17 @@ private:
   void sieveLastSegment();
 };
 
-/// Reconstruct the prime number corresponding to
-/// the first set bit and unset that bit
+/// Find the first set bit and calculate the
+/// corresponding prime, then unset that bit.
 ///
 inline uint64_t Erat::nextPrime(uint64_t* bits, uint64_t low)
 {
-  // calculate bitValues_[bitScanForward(*bits)]
-  // using a custom De Bruijn bitscan
+  // Calculate bitValues[bitScanForward(*bits)] using a custom
+  // De Bruijn bitscan (that directly computes the bitValue
+  // without ever computing the bitIndex). For primesieve's
+  // use case this is as fast as the bsf or tzcnt instructions
+  // on x64 but more portable.
+  // https://www.chessprogramming.org/BitScan#De_Bruijn_Multiplication
   uint64_t debruijn = 0x3F08A4C6ACB9DBDull;
   uint64_t mask = *bits - 1;
   uint64_t bitValue = bruijnBitValues[((*bits ^ mask) * debruijn) >> 58];
