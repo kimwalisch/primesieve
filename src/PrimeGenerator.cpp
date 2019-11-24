@@ -263,7 +263,7 @@ void PrimeGenerator::fill(vector<uint64_t>& primes)
 }
 
 /// This method is used by iterator::next_prime().
-/// This method stores only the next few primes (~ 64) in the
+/// This method stores only the next few primes (~ 200) in the
 /// primes vector. Also for iterator::next_prime() there is no
 /// initialization overhead (unlike iterator::prev_prime())
 /// for this reason iterator::next_prime() runs about 2x faster
