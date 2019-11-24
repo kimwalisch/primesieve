@@ -80,6 +80,14 @@ void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type);
  * By default all CPU cores are used, use
  * primesieve_set_num_threads(int threads) to change the
  * number of threads.
+ *
+ * Note that each call to primesieve_nth_prime(n, start) incurs an
+ * initialization overhead of O(sqrt(start)) even if n is tiny.
+ * Hence it is not a good idea to use primesieve_nth_prime()
+ * repeatedly in a loop to get the next (or previous) prime. For
+ * this use case it is better to use a primesieve::iterator which
+ * needs to be initialized only once.
+ *
  * @param n  if n = 0 finds the 1st prime >= start, <br/>
  *           if n > 0 finds the nth prime > start, <br/>
  *           if n < 0 finds the nth prime < start (backwards).
@@ -91,6 +99,13 @@ uint64_t primesieve_nth_prime(int64_t n, uint64_t start);
  * By default all CPU cores are used, use
  * primesieve_set_num_threads(int threads) to change the
  * number of threads.
+ *
+ * Note that each call to primesieve_count_primes() incurs an
+ * initialization overhead of O(sqrt(stop)) even if the interval
+ * [start, stop] is tiny. Hence if you have written an algorithm
+ * that makes many calls to primesieve_count_primes() it may be
+ * preferable to use a primesieve::iterator which needs to be
+ * initialized only once.
  */
 uint64_t primesieve_count_primes(uint64_t start, uint64_t stop);
 

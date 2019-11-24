@@ -3,7 +3,7 @@
 /// @brief  The iterator class allows to easily iterate (forwards
 ///         and backwards) over prime numbers.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -72,6 +72,9 @@ public:
 
   /// Get the previous prime.
   /// prev_prime(n) = 0 if n <= 2.
+  /// Note that next_prime() runs up to 2x faster than prev_prime().
+  /// Hence if the same algorithm can be written using either
+  /// prev_prime() or next_prime() it is preferable to use next_prime().
   ///
   uint64_t prev_prime()
   {

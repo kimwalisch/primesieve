@@ -13,8 +13,8 @@
  *         primesieve_prev_prime() return PRIMESIEVE_ERROR.
  *         Furthermore primesieve_iterator.is_error is initialized
  *         to 0 and set to 1 if any error occurs.
- * 
- * Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+ *
+ * Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This file is distributed under the BSD License. See the COPYING
  * file in the top level directory.
@@ -84,6 +84,10 @@ static inline uint64_t primesieve_next_prime(primesieve_iterator* it)
 /**
  * Get the previous prime.
  * primesieve_prev_prime(n) = 0 if n <= 2.
+ * Note that primesieve_next_prime() runs up to 2x faster than
+ * primesieve_prev_prime(). Hence if the same algorithm can be written
+ * using either primesieve_prev_prime() or primesieve_next_prime()
+ * it is preferable to use primesieve_next_prime().
  */
 static inline uint64_t primesieve_prev_prime(primesieve_iterator* it)
 {
