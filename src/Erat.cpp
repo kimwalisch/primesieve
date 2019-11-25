@@ -82,6 +82,11 @@ void Erat::init(uint64_t start,
   maxPreSieve_ = preSieve_->getMaxPrime();
   initSieve(sieveSize);
 
+  // The 8 bits of each byte of the sieve array correspond to
+  // the offsets { 7, 11, 13, 17, 19, 23, 29, 31 }. If we
+  // would set dist = sieveSize * 30 we would not include the
+  // last bit of the last byte which corresponds to the offset
+  // 31. For this reason we set dist = sieveSize * 30 + 6.
   uint64_t rem = byteRemainder(start);
   uint64_t dist = sieveSize_ * 30 + 6;
   segmentLow_ = start_ - rem;
