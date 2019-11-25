@@ -71,7 +71,7 @@ public:
   }
 
   /// Get the previous prime.
-  /// prev_prime(n) = 0 if n <= 2.
+  /// prev_prime(n) returns 0 for n <= 2.
   /// Note that next_prime() runs up to 2x faster than prev_prime().
   /// Hence if the same algorithm can be written using either
   /// prev_prime() or next_prime() it is preferable to use next_prime().
