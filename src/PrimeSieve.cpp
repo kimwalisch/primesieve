@@ -213,6 +213,10 @@ void PrimeSieve::updateStatus(uint64_t dist)
 {
   if (parent_)
   {
+    // This is a worker thread, so we need
+    // to send the update status request
+    // to the parent object which handles
+    // thread synchronization.
     updateDistance_ += dist;
     if (parent_->tryUpdateStatus(updateDistance_))
       updateDistance_ = 0;
