@@ -211,7 +211,15 @@ bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes, size_t* size)
   {
     *size = 1;
     primes[0] = ~0ull;
-    finished_ = (primes[0] > stop_);
+    // The current PrimeGenerator object cannot be used to
+    // generate more primes. So we set finished = true and then
+    // create a new PrimeGenerator object in iterator.cpp and
+    // iterator-c.cpp that will be used to generate more primes.
+    // The only case where we set finished = false is when
+    // stop = 2^64-1. In this case the next prime would be > 2^64
+    // However since primesieve only supports primes < 2^64 we
+    // simply return UINT64_MAX.
+    finished_ = (stop_ < primes[0]);
     return false;
   }
 
