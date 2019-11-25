@@ -109,6 +109,7 @@ PrimeGenerator::PrimeGenerator(uint64_t start, uint64_t stop) :
   Erat(start, stop)
 { }
 
+/// Used by iterator::prev_prime()
 void PrimeGenerator::init(vector<uint64_t>& primes)
 {
   size_t size = primeCountApprox(start_, stop_);
@@ -127,6 +128,7 @@ void PrimeGenerator::init(vector<uint64_t>& primes)
   initErat();
 }
 
+/// Used by iterator::next_prime()
 void PrimeGenerator::init(vector<uint64_t>& primes, size_t* size)
 {
   if (start_ <= maxCachedPrime())
@@ -186,6 +188,7 @@ size_t PrimeGenerator::getStopIdx() const
   return stopIdx;
 }
 
+/// Used by iterator::prev_prime()
 bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes)
 {
   if (!isInit_)
@@ -198,6 +201,7 @@ bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes)
   return true;
 }
 
+/// Used by iterator::next_prime()
 bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes, size_t* size)
 {
   if (!isInit_)
@@ -273,8 +277,8 @@ void PrimeGenerator::fill(vector<uint64_t>& primes)
 /// This method is used by iterator::next_prime().
 /// This method stores only the next few primes (~ 200) in the
 /// primes vector. Also for iterator::next_prime() there is no
-/// initialization overhead (unlike iterator::prev_prime())
-/// for this reason iterator::next_prime() runs about 2x faster
+/// recurring initialization overhead (unlike prev_prime()) for
+/// this reason iterator::next_prime() runs up to 2x faster
 /// than iterator::prev_prime().
 ///
 void PrimeGenerator::fill(vector<uint64_t>& primes,
