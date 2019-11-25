@@ -1,5 +1,13 @@
-/** @example prev_prime.c
- *  Iterate backwards over primes using primesieve_iterator. */
+/**
+ * @example prev_prime.c
+ * Iterate backwards over primes using primesieve_iterator.
+ * 
+ * Note that primesieve_next_prime() runs up to 2x faster and uses
+ * only half as much memory as primesieve_prev_prime(). Hence if
+ * it is possible to write the same algorithm using either
+ * primesieve_prev_prime() or primesieve_next_prime() then it is
+ * preferable to use primesieve_next_prime().
+ */
 
 #include <primesieve.h>
 #include <inttypes.h>
