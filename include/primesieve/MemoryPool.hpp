@@ -21,7 +21,6 @@ namespace primesieve {
 class MemoryPool
 {
 public:
-  void reset(SievingPrime*& sievingPrime);
   void addBucket(SievingPrime*& sievingPrime);
   void freeBucket(Bucket* bucket);
 

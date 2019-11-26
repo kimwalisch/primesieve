@@ -5,7 +5,7 @@
 ///         once there is no more space in the current Bucket
 ///         a new Bucket is allocated.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -110,7 +110,6 @@ public:
   SievingPrime* end()   { return end_; }
   Bucket* next()        { return next_; }
   bool hasNext() const  { return next_ != nullptr; }
-  bool empty()          { return begin() == end(); }
   void setNext(Bucket* next) { next_ = next; }
   void setEnd(SievingPrime* end) { end_ = end; }
   void reset() { end_ = begin(); }

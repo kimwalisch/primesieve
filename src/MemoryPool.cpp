@@ -30,17 +30,6 @@ using std::unique_ptr;
 
 namespace primesieve {
 
-void MemoryPool::reset(SievingPrime*& sievingPrime)
-{
-  if (!stock_)
-    allocateBuckets();
-
-  Bucket* bucket = stock_;
-  stock_ = stock_->next();
-  bucket->setNext(nullptr);
-  sievingPrime = bucket->begin();
-}
-
 void MemoryPool::addBucket(SievingPrime*& sievingPrime)
 {
   if (!stock_)
