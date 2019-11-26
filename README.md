@@ -132,7 +132,7 @@ sudo make install
 
 ## C++ API
 
-Below is an example with the most common libprimesieve use cases.
+Below is a C++ example with the most common libprimesieve use cases.
 
 ```C++
 #include <primesieve.hpp>
@@ -141,14 +141,14 @@ Below is an example with the most common libprimesieve use cases.
 
 int main()
 {
-  // store the primes below 1000
+  // Store the primes below 1000
   std::vector<int> primes;
   primesieve::generate_primes(1000, &primes);
 
   primesieve::iterator it;
   uint64_t prime = it.next_prime();
 
-  // iterate over the primes below 10^6
+  // Iterate over the primes below 10^6
   for (; prime < 1000000; prime = it.next_prime())
     std::cout << prime << std::endl;
 
@@ -157,11 +157,11 @@ int main()
 ```
 
 * [More C++ examples](examples/cpp)
-* [Browse primesieve's C++ API online](https://primesieve.org/api)
+* [Browse libprimesieve's C++ API online](https://primesieve.org/api)
 
 ## C API
 
-primesieve's functions are exposed as C API via the ```primesieve.h``` header.
+libprimesieve's functions are exposed as C API via the ```primesieve.h``` header.
 
 ```C
 #include <primesieve.h>
@@ -173,7 +173,7 @@ int main()
   primesieve_init(&it);
   uint64_t prime;
 
-  /* iterate over the primes below 10^6 */
+  /* Iterate over the primes below 10^6 */
   while ((prime = primesieve_next_prime(&it)) < 1000000)
     printf("%llu\n", prime);
 
@@ -183,7 +183,31 @@ int main()
 ```
 
 * [More C examples](examples/c)
-* [Browse primesieve's C API online](https://primesieve.org/api)
+* [Browse libprimesieve's C API online](https://primesieve.org/api)
+
+## libprimesieve performance tips
+
+* ```primesieve::iterator::next_prime()``` runs up to 2x faster and uses only
+half as much memory as ```prev_prime()```. Hence if the same algorithm can be
+written using either ```prev_prime()``` or ```next_prime()``` it is better to
+use ```next_prime()```.
+
+* ```primesieve::iterator``` is single-threaded. See the
+[Multi-threading](#multi-threading) section for how to parallelize an algorithm
+using multiple ```primesieve::iterator``` objects.
+
+* The ```primesieve::iterator``` constructor and the
+```primesieve::iterator::skipto()``` method take an optional ```stop_hint```
+parameter which can provide a significant speedup if the sieving distance
+is relatively small e.g.&nbsp;<&nbsp;sqrt(start). If ```stop_hint``` is set
+```primesieve::iterator``` will only buffer primes up to this limit.
+
+* Many of libprimesieve's functions e.g. ```count_primes(start, stop)``` &
+```nth_prime(n, start)``` incur an initialization overhead of about
+O(sqrt(start)) even if the total sieving distance is tiny. It is therefore not
+a good idea to call e.g. ```prime = nth_prime(1, prime)``` in a loop to iterate
+over the primes. Use a ```primesieve::iterator``` instead to avoid the recurring
+initialization overhead.
 
 ## Multi-threading
 
