@@ -28,13 +28,13 @@
 #include <cassert>
 #include <vector>
 
-/// Update the current sieving prime's wheelIndex and
-/// and multipleIndex after sieving has finished.
+/// Update the current sieving prime's multipleIndex
+/// and wheelIndex after sieving has finished.
 ///
 #define UPDATE_SIEVING_PRIME(wheelIndex) \
   out ## wheelIndex: \
-  prime.setWheelIndex(wheelIndex); \
-  prime.setMultipleIndex((uint64_t) (p - sieveEnd)); \
+  multipleIndex = (uint64_t) (p - sieveEnd); \
+  prime.set(multipleIndex, wheelIndex); \
   continue;
 
 namespace primesieve {

@@ -42,8 +42,7 @@ public:
                uint64_t multipleIndex,
                uint64_t wheelIndex)
   {
-    set(multipleIndex, wheelIndex);
-    sievingPrime_ = (uint32_t) sievingPrime;
+    set(sievingPrime, multipleIndex, wheelIndex);
   }
 
   void set(uint64_t multipleIndex,
@@ -51,7 +50,6 @@ public:
   {
     assert(multipleIndex <= MAX_MULTIPLEINDEX);
     assert(wheelIndex <= MAX_WHEELINDEX);
-
     indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 23));
   }
 
@@ -59,7 +57,9 @@ public:
            uint64_t multipleIndex,
            uint64_t wheelIndex)
   {
-    set(multipleIndex, wheelIndex);
+    assert(multipleIndex <= MAX_MULTIPLEINDEX);
+    assert(wheelIndex <= MAX_WHEELINDEX);
+    indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 23));
     sievingPrime_ = (uint32_t) sievingPrime;
   }
 
@@ -76,18 +76,6 @@ public:
   uint64_t getWheelIndex() const
   {
     return indexes_ >> 23;
-  }
-
-  void setMultipleIndex(uint64_t multipleIndex)
-  {
-    assert(multipleIndex <= MAX_MULTIPLEINDEX);
-    indexes_ = (uint32_t) (indexes_ | multipleIndex);
-  }
-
-  void setWheelIndex(uint64_t wheelIndex)
-  {
-    assert(wheelIndex <= MAX_WHEELINDEX);
-    indexes_ = (uint32_t) (wheelIndex << 23);
   }
 
 private:
