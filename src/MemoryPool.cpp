@@ -65,13 +65,13 @@ void MemoryPool::allocateBuckets()
   if (memory_.empty())
     memory_.reserve(128);
 
-  // allocate a large chunk of memory
+  // Allocate a large chunk of memory
   size_t bytes = count_ * sizeof(Bucket);
   char* memory = new char[bytes];
   memory_.emplace_back(unique_ptr<char[]>(memory));
   void* ptr = memory;
 
-  // align pointer address to sizeof(Bucket)
+  // Align pointer address to sizeof(Bucket)
   if (!std::align(sizeof(Bucket), sizeof(Bucket), ptr, bytes))
     throw primesieve_error("MemoryPool: failed to align memory!");
 
