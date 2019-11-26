@@ -48,10 +48,19 @@ void MemoryPool::addBucket(SievingPrime*& sievingPrime)
 
   Bucket* bucket = stock_;
   stock_ = stock_->next();
+  bucket->setNext(nullptr);
 
-  Bucket* old = getBucket(sievingPrime);
-  old->setEnd(sievingPrime);
-  bucket->setNext(old);
+  // In case we add a bucket to the front of a
+  // non empty bucket list we need to set the
+  // next pointer of the new bucket to the bucket
+  // that was previously at the front of the list.
+  if (sievingPrime)
+  {
+    Bucket* old = getBucket(sievingPrime);
+    old->setEnd(sievingPrime);
+    bucket->setNext(old);
+  }
+
   sievingPrime = bucket->begin();
 }
 
