@@ -188,9 +188,9 @@ int main()
 ## libprimesieve performance tips
 
 * ```primesieve::iterator::next_prime()``` runs up to 2x faster and uses only
-half as much memory as ```prev_prime()```. Hence if the same algorithm can be
-written using either ```prev_prime()``` or ```next_prime()``` it is better to
-use ```next_prime()```.
+half as much memory as ```prev_prime()```. Oftentimes algorithms that iterate
+over primes using ```prev_prime()``` can be rewritten using ```next_prime()```
+which improves performance in most cases.
 
 * ```primesieve::iterator``` is single-threaded. See the
 [Multi-threading](#multi-threading) section for how to parallelize an algorithm
@@ -198,7 +198,7 @@ using multiple ```primesieve::iterator``` objects.
 
 * The ```primesieve::iterator``` constructor and the
 ```primesieve::iterator::skipto()``` method take an optional ```stop_hint```
-parameter which can provide a significant speedup if the sieving distance
+parameter that can provide a significant speedup if the sieving distance
 is relatively small e.g.&nbsp;<&nbsp;sqrt(start). If ```stop_hint``` is set
 ```primesieve::iterator``` will only buffer primes up to this limit.
 
