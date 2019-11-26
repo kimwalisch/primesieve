@@ -36,9 +36,9 @@
 #define SORT_SIEVING_PRIME(wheelIndex) \
   sort ## wheelIndex: \
   multipleIndex = (uint64_t) (p - sieveEnd); \
-  sievingPrimes_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex); \
   if (memoryPool_.isFullBucket(sievingPrimes_[wheelIndex])) \
     memoryPool_.addBucket(sievingPrimes_[wheelIndex]); \
+  sievingPrimes_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex); \
   continue;
 
 namespace primesieve {
@@ -58,15 +58,9 @@ void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 
   enabled_ = true;
   maxPrime_ = maxPrime;
+  sievingPrimes_.fill(nullptr);
 
   Wheel::init(stop, sieveSize);
-  resetSievingPrimes();
-}
-
-void EratMedium::resetSievingPrimes()
-{
-  for (SievingPrime*& sievingPrime : sievingPrimes_)
-    memoryPool_.reset(sievingPrime);
 }
 
 /// Add a new sieving prime to EratMedium
@@ -74,16 +68,18 @@ void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint6
 {
   assert(prime <= maxPrime_);
   uint64_t sievingPrime = prime / 30;
-  sievingPrimes_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);
+
   if (memoryPool_.isFullBucket(sievingPrimes_[wheelIndex]))
     memoryPool_.addBucket(sievingPrimes_[wheelIndex]);
+
+  sievingPrimes_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);
 }
 
 void EratMedium::crossOff(uint8_t* sieve, uint64_t sieveSize)
 {
   uint8_t* sieveEnd = sieve + sieveSize;
   auto copy = sievingPrimes_;
-  resetSievingPrimes();
+  sievingPrimes_.fill(nullptr);
 
   // Iterate over all bucket lists.
   // The 1st list contains sieving primes with wheelIndex = 0.
@@ -92,6 +88,9 @@ void EratMedium::crossOff(uint8_t* sieve, uint64_t sieveSize)
   // ...
   for (SievingPrime* sievingPrime : copy)
   {
+    if (!sievingPrime)
+      continue;
+
     Bucket* bucket = memoryPool_.getBucket(sievingPrime);
     bucket->setEnd(sievingPrime);
 
@@ -100,8 +99,7 @@ void EratMedium::crossOff(uint8_t* sieve, uint64_t sieveSize)
     // multiples of its sieving primes.
     while (bucket)
     {
-      if (!bucket->empty())
-        crossOff(sieve, sieveEnd, bucket);
+      crossOff(sieve, sieveEnd, bucket);
       Bucket* processed = bucket;
       bucket = bucket->next();
       memoryPool_.freeBucket(processed);
