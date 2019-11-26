@@ -109,7 +109,6 @@ public:
   SievingPrime* begin() { return &sievingPrimes_[0]; }
   SievingPrime* end()   { return end_; }
   Bucket* next()        { return next_; }
-  bool hasNext() const  { return next_ != nullptr; }
   void setNext(Bucket* next) { next_ = next; }
   void setEnd(SievingPrime* end) { end_ = end; }
   void reset() { end_ = begin(); }
