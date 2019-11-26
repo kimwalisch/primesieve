@@ -1,7 +1,7 @@
 ///
 /// @file  EratMedium.hpp
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -34,7 +34,6 @@ private:
   uint64_t maxPrime_ = 0;
   MemoryPool memoryPool_;
   std::array<SievingPrime*, 64> sievingPrimes_;
-  void resetSievingPrimes();
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   void crossOff(uint8_t*, uint8_t*, Bucket*);
   void crossOff_7(uint8_t*, uint8_t*, Bucket*);

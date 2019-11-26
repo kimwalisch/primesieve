@@ -36,7 +36,6 @@ private:
   std::vector<SievingPrime*> sievingPrimes_;
   MemoryPool memoryPool_;
   bool enabled_ = false;
-  void init(uint64_t);
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   void crossOff(uint8_t*, Bucket*);
 };

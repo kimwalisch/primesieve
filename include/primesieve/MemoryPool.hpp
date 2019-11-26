@@ -1,7 +1,7 @@
 ///
 /// @file  MemoryPool.hpp
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,15 +11,16 @@
 #define MEMORYPOOL_HPP
 
 #include "Bucket.hpp"
-#include <vector>
+
+#include <cassert>
 #include <memory>
+#include <vector>
 
 namespace primesieve {
 
 class MemoryPool
 {
 public:
-  void reset(SievingPrime*& sievingPrime);
   void addBucket(SievingPrime*& sievingPrime);
   void freeBucket(Bucket* bucket);
 
@@ -35,6 +36,7 @@ public:
   ///
   static Bucket* getBucket(SievingPrime* sievingPrime)
   {
+    assert(sievingPrime != nullptr);
     std::size_t address = (std::size_t) sievingPrime;
     // We need to adjust the address
     // in case the bucket is full
@@ -43,9 +45,10 @@ public:
     return (Bucket*) address;
   }
 
-  /// Returns true if the sieving prime's bucket is full.
-  /// Since each bucket's memory is aligned by sizeof(Bucket) we can
-  /// compute the position of the current sieving prime using
+  /// Returns true if the sieving prime's bucket is full (or
+  /// if there is no bucket at all). Since each bucket's
+  /// memory is aligned by sizeof(Bucket) we can compute the
+  /// position of the current sieving prime using
   /// address % sizeof(Bucket).
   ///
   static bool isFullBucket(SievingPrime* sievingPrime)
