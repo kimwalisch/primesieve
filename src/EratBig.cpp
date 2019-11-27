@@ -101,10 +101,12 @@ void EratBig::crossOff(uint8_t* sieve)
               sievingPrimes_.end());
 }
 
-/// Segmented sieve of Eratosthenes with wheel factorization
-/// optimized for big sieving primes that have very few
-/// multiples per segment. Cross-off the next multiple of
-/// each sieving prime in the current bucket.
+/// Removes the next multiple of each sieving prime from the
+/// sieve array. After the next multiple of a sieving prime
+/// has been removed we calculate its next multiple and
+/// determine in which segment that multiple will occur. Then
+/// we move the sieving prime to the list related to the
+/// previously computed segment.
 ///
 void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
 {
@@ -128,11 +130,8 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     // Cross-off the current multiple (unset bit)
     // and calculate the next multiple.
     unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
-    unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
     uint64_t segment0 = multipleIndex0 >> log2SieveSize;
-    uint64_t segment1 = multipleIndex1 >> log2SieveSize;
     multipleIndex0 &= moduloSieveSize;
-    multipleIndex1 &= moduloSieveSize;
 
     if (memoryPool_.isFullBucket(sievingPrimes[segment0]))
       memoryPool_.addBucket(sievingPrimes[segment0]);
@@ -142,6 +141,11 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     // sieving prime to the list which corresponds
     // to that segment.
     sievingPrimes[segment0]++->set(sievingPrime0, multipleIndex0, wheelIndex0);
+
+    // Process the 2nd sieving prime
+    unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
+    uint64_t segment1 = multipleIndex1 >> log2SieveSize;
+    multipleIndex1 &= moduloSieveSize;
 
     if (memoryPool_.isFullBucket(sievingPrimes[segment1]))
       memoryPool_.addBucket(sievingPrimes[segment1]);
