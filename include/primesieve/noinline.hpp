@@ -1,5 +1,5 @@
 ///
-/// @file  macros.hpp
+/// @file  noinline.hpp
 ///
 /// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef MACROS_HPP
-#define MACROS_HPP
+#ifndef NOINLINE_HPP
+#define NOINLINE_HPP
 
 /// Some functions in primesieve use a large number of variables
 /// at the same time. If such functions are inlined then

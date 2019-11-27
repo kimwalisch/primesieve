@@ -11,7 +11,7 @@
 #define ERATSMALL_HPP
 
 #include "Bucket.hpp"
-#include "macros.hpp"
+#include "noinline.hpp"
 #include "Wheel.hpp"
 
 #include <stdint.h>

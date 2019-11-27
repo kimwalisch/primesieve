@@ -11,7 +11,7 @@
 #define MEMORYPOOL_HPP
 
 #include "Bucket.hpp"
-#include "macros.hpp"
+#include "noinline.hpp"
 
 #include <cassert>
 #include <memory>
