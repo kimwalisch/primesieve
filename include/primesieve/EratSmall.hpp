@@ -11,6 +11,7 @@
 #define ERATSMALL_HPP
 
 #include "Bucket.hpp"
+#include "macros.hpp"
 #include "Wheel.hpp"
 
 #include <stdint.h>
@@ -35,7 +36,7 @@ private:
   std::vector<SievingPrime> primes_;
   bool enabled_ = false;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
-  void crossOff(uint8_t*, uint8_t*);
+  NOINLINE void crossOff(uint8_t*, uint8_t*);
 };
 
 } // namespace

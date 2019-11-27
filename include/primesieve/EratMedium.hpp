@@ -11,6 +11,7 @@
 #define ERATMEDIUM_HPP
 
 #include "Bucket.hpp"
+#include "macros.hpp"
 #include "MemoryPool.hpp"
 #include "Wheel.hpp"
 
@@ -36,14 +37,14 @@ private:
   std::array<SievingPrime*, 64> sievingPrimes_;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   void crossOff(uint8_t*, uint8_t*, Bucket*);
-  void crossOff_7(uint8_t*, uint8_t*, Bucket*);
-  void crossOff_11(uint8_t*, uint8_t*, Bucket*);
-  void crossOff_13(uint8_t*, uint8_t*, Bucket*);
-  void crossOff_17(uint8_t*, uint8_t*, Bucket*);
-  void crossOff_19(uint8_t*, uint8_t*, Bucket*);
-  void crossOff_23(uint8_t*, uint8_t*, Bucket*);
-  void crossOff_29(uint8_t*, uint8_t*, Bucket*);
-  void crossOff_31(uint8_t*, uint8_t*, Bucket*);
+  NOINLINE void crossOff_7(uint8_t*, uint8_t*, Bucket*);
+  NOINLINE void crossOff_11(uint8_t*, uint8_t*, Bucket*);
+  NOINLINE void crossOff_13(uint8_t*, uint8_t*, Bucket*);
+  NOINLINE void crossOff_17(uint8_t*, uint8_t*, Bucket*);
+  NOINLINE void crossOff_19(uint8_t*, uint8_t*, Bucket*);
+  NOINLINE void crossOff_23(uint8_t*, uint8_t*, Bucket*);
+  NOINLINE void crossOff_29(uint8_t*, uint8_t*, Bucket*);
+  NOINLINE void crossOff_31(uint8_t*, uint8_t*, Bucket*);
 };
 
 } // namespace

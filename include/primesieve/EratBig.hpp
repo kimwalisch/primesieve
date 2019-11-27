@@ -11,6 +11,7 @@
 #define ERATBIG_HPP
 
 #include "Bucket.hpp"
+#include "macros.hpp"
 #include "MemoryPool.hpp"
 #include "Wheel.hpp"
 
@@ -37,7 +38,7 @@ private:
   MemoryPool memoryPool_;
   bool enabled_ = false;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
-  void crossOff(uint8_t*, Bucket*);
+  NOINLINE void crossOff(uint8_t*, Bucket*);
 };
 
 } // namespace
