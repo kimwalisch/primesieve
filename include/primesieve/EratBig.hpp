@@ -28,7 +28,7 @@ class EratBig : public Wheel210_t
 {
 public:
   void init(uint64_t, uint64_t, uint64_t);
-  void crossOff(uint8_t*);
+  NOINLINE void crossOff(uint8_t*);
   bool enabled() const { return enabled_; }
 private:
   uint64_t maxPrime_ = 0;

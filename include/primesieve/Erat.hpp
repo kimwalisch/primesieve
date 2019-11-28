@@ -14,6 +14,7 @@
 #include "EratSmall.hpp"
 #include "EratMedium.hpp"
 #include "EratBig.hpp"
+#include "noinline.hpp"
 
 #include <stdint.h>
 #include <array>
@@ -52,7 +53,7 @@ protected:
   Erat(uint64_t, uint64_t);
   void init(uint64_t, uint64_t, uint64_t, PreSieve&);
   void addSievingPrime(uint64_t);
-  void sieveSegment();
+  NOINLINE void sieveSegment();
   bool hasNextSegment() const;
   static uint64_t nextPrime(uint64_t*, uint64_t);
 

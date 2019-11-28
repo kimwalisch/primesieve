@@ -29,7 +29,7 @@ class EratMedium : public Wheel30_t
 public:
   void init(uint64_t, uint64_t, uint64_t);
   bool enabled() const { return enabled_; }
-  void crossOff(uint8_t*, uint64_t);
+  NOINLINE void crossOff(uint8_t*, uint64_t);
 private:
   bool enabled_ = false;
   uint64_t maxPrime_ = 0;
