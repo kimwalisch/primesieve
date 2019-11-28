@@ -11,6 +11,7 @@
 #define SIEVINGPRIMES_HPP
 
 #include "Erat.hpp"
+#include "noinline.hpp"
 
 #include <stdint.h>
 #include <array>
@@ -35,7 +36,7 @@ private:
   uint64_t sieveIdx_ = ~0ull;
   std::array<uint64_t, 128> primes_;
   std::vector<char> tinySieve_;
-  void fill();
+  NOINLINE void fill();
   void tinySieve();
   bool sieveSegment();
 };
