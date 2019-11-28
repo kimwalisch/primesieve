@@ -1,7 +1,7 @@
 ///
 /// @file  PrintPrimes.hpp
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,6 +11,7 @@
 #define PRINTPRIMES_HPP
 
 #include "Erat.hpp"
+#include "noinline.hpp"
 #include "PrimeSieve.hpp"
 
 #include <stdint.h>
@@ -28,7 +29,7 @@ class PrintPrimes : public Erat
 {
 public:
   PrintPrimes(PrimeSieve&);
-  void sieve();
+  NOINLINE void sieve();
 private:
   uint64_t low_ = 0;
   /// Count lookup tables for prime k-tuplets
