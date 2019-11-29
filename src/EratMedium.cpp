@@ -77,16 +77,17 @@ void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint6
 
 void EratMedium::crossOff(uint8_t* sieve, uint64_t sieveSize)
 {
-  uint8_t* sieveEnd = sieve + sieveSize;
-  auto copy = sievingPrimes_;
+  // Make a copy of sievingPrimes, then reset it
+  auto lists = sievingPrimes_;
   sievingPrimes_.fill(nullptr);
+  uint8_t* sieveEnd = sieve + sieveSize;
 
   // Iterate over the 64 bucket lists.
   // The 1st list contains sieving primes with wheelIndex = 0.
   // The 2nd list contains sieving primes with wheelIndex = 1.
   // The 3rd list contains sieving primes with wheelIndex = 2.
   // ...
-  for (SievingPrime* sievingPrime : copy)
+  for (SievingPrime* sievingPrime : lists)
   {
     if (!sievingPrime)
       continue;
