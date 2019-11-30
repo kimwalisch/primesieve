@@ -12,8 +12,8 @@
 #ifndef WHEEL_HPP
 #define WHEEL_HPP
 
-#include "primesieve_error.hpp"
 #include "Bucket.hpp"
+#include "primesieve_error.hpp"
 
 #include <stdint.h>
 #include <algorithm>
