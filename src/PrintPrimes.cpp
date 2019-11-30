@@ -72,7 +72,7 @@ void PrintPrimes::initCounts()
     for (uint64_t j = 0; j < 256; j++)
     {
       uint8_t count = 0;
-      for (const uint64_t* b = bitmasks[i]; *b <= j; b++)
+      for (auto* b = bitmasks[i]; *b <= j; b++)
       {
         if ((j & *b) == *b)
           count++;
@@ -151,7 +151,8 @@ void PrintPrimes::printPrimes() const
 
   while (i < sieveSize_)
   {
-    uint64_t size = min(i + (1 << 16), sieveSize_);
+    uint64_t size = i + (1 << 16);
+    size = std::min(size, sieveSize_);
     ostringstream primes;
 
     for (; i < size; i += 8)
@@ -179,7 +180,7 @@ void PrintPrimes::printkTuplets() const
 
   for (uint64_t j = 0; j < sieveSize_; j++, low += 30)
   {
-    for (const uint64_t* bitmask = bitmasks[i]; *bitmask <= sieve_[j]; bitmask++)
+    for (auto* bitmask = bitmasks[i]; *bitmask <= sieve_[j]; bitmask++)
     {
       if ((sieve_[j] & *bitmask) == *bitmask)
       {
