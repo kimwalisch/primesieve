@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 
-namespace primesieve {
+namespace {
 namespace config {
 
 enum {
@@ -77,6 +77,6 @@ enum {
   const uint64_t MIN_THREAD_DISTANCE = (uint64_t) 1e7;
 
 } // namespace config
-} // namespace primesieve
+} // namespace
 
 #endif
