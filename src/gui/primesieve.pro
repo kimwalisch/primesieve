@@ -56,7 +56,7 @@ SOURCES += \
   ../SievingPrimes.cpp \
   ../PrimeSieve.cpp \
   ../Erat.cpp \
-  ../Wheel.cpp
+  ../LookupTables.cpp
 
 # ---------------------------------------------------------
 # primesieve icon file
