@@ -131,6 +131,8 @@ void PrimeGenerator::init(vector<uint64_t>& primes)
 /// Used by iterator::next_prime()
 void PrimeGenerator::init(vector<uint64_t>& primes, size_t* size)
 {
+  *size = 0;
+
   if (start_ <= maxCachedPrime())
   {
     size_t a = getStartIdx();
@@ -188,6 +190,25 @@ size_t PrimeGenerator::getStopIdx() const
   return stopIdx;
 }
 
+void PrimeGenerator::sieveSegment()
+{
+  uint64_t sqrtHigh = isqrt(segmentHigh_);
+
+  sieveIdx_ = 0;
+  low_ = segmentLow_;
+
+  if (!prime_)
+    prime_ = sievingPrimes_.next();
+
+  while (prime_ <= sqrtHigh)
+  {
+    addSievingPrime(prime_);
+    prime_ = sievingPrimes_.next();
+  }
+
+  Erat::sieveSegment();
+}
+
 /// Used by iterator::prev_prime()
 bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes)
 {
@@ -231,25 +252,6 @@ bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes, size_t* size)
   return true;
 }
 
-void PrimeGenerator::sieveSegment()
-{
-  uint64_t sqrtHigh = isqrt(segmentHigh_);
-
-  sieveIdx_ = 0;
-  low_ = segmentLow_;
-
-  if (!prime_)
-    prime_ = sievingPrimes_.next();
-
-  while (prime_ <= sqrtHigh)
-  {
-    addSievingPrime(prime_);
-    prime_ = sievingPrimes_.next();
-  }
-
-  Erat::sieveSegment();
-}
-
 /// This method is used by iterator::prev_prime().
 /// This method stores all primes inside [a, b] into the primes
 /// vector. (b - a) is about sqrt(stop) so the memory usage is
@@ -284,34 +286,41 @@ void PrimeGenerator::fill(vector<uint64_t>& primes)
 void PrimeGenerator::fill(vector<uint64_t>& primes,
                           size_t* size)
 {
-  if (sieveIdx_ >= sieveSize_)
-    if (!sieveSegment(primes, size))
-      return;
-
-  size_t i = 0;
-  size_t maxSize = primes.size();
-  assert(maxSize >= 64);
-
   while (true)
   {
-    uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
+    if (sieveIdx_ >= sieveSize_)
+      if (!sieveSegment(primes, size))
+        return;
 
-    for (; bits != 0; i++)
-      primes[i] = nextPrime(&bits, low_);
+    size_t i = 0;
+    size_t maxSize = primes.size();
+    assert(maxSize >= 64);
 
-    low_ += 8 * 30;
-    sieveIdx_ += 8;
+    while (true)
+    {
+      uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
 
-    // Fill the buffer with at least maxSize - 64 primes.
-    // Each loop iteration can generate up to 64 primes
-    // so we have to stop generating primes once there is
-    // not enough space for 64 more primes.
-    if (i > maxSize - 64 ||
-        sieveIdx_ >= sieveSize_)
-      break;
+      for (; bits != 0; i++)
+        primes[i] = nextPrime(&bits, low_);
+
+      low_ += 8 * 30;
+      sieveIdx_ += 8;
+
+      // Fill the buffer with at least maxSize - 64 primes.
+      // Each loop iteration can generate up to 64 primes
+      // so we have to stop generating primes once there is
+      // not enough space for 64 more primes.
+      if (i > maxSize - 64 ||
+          sieveIdx_ >= sieveSize_)
+        break;
+    }
+
+    if (i > 0)
+    {
+      *size = i;
+      return;
+    }
   }
-
-  *size = i;
 }
 
 } // namespace

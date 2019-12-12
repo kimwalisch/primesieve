@@ -102,8 +102,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
         it->primes = &primes[0];
       }
 
-      for (it->last_idx = 0; !it->last_idx;)
-        primeGenerator->fill(primes, &it->last_idx);
+      primeGenerator->fill(primes, &it->last_idx);
 
       // There are 3 different cases here:
       // 1) The primes array contains a few primes (<= 256).

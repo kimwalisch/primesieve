@@ -64,8 +64,7 @@ void iterator::generate_next_primes()
       primes_.resize(256);
     }
 
-    for (last_idx_ = 0; !last_idx_;)
-      primeGenerator_->fill(primes_, &last_idx_);
+    primeGenerator_->fill(primes_, &last_idx_);
 
     // There are 3 different cases here:
     // 1) The primes array contains a few primes (<= 256).
