@@ -15,6 +15,7 @@
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
+#include <cassert>
 #include <vector>
 
 namespace primesieve {
@@ -57,6 +58,7 @@ void SievingPrimes::fill()
 
   uint64_t num = 0;
   uint64_t maxSize = primes_.size();
+  assert(maxSize >= 64);
 
   while (true)
   {
@@ -72,7 +74,7 @@ void SievingPrimes::fill()
     // Each loop iteration can generate up to 64 primes
     // so we have to stop generating primes once there is
     // not enough space for 64 more primes.
-    if (maxSize - num < 64 ||
+    if (num > maxSize - 64 ||
         sieveIdx_ >= sieveSize_)
       break;
   }

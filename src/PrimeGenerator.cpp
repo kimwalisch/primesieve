@@ -290,6 +290,7 @@ void PrimeGenerator::fill(vector<uint64_t>& primes,
 
   size_t i = 0;
   size_t maxSize = primes.size();
+  assert(maxSize >= 64);
 
   while (true)
   {
@@ -305,7 +306,7 @@ void PrimeGenerator::fill(vector<uint64_t>& primes,
     // Each loop iteration can generate up to 64 primes
     // so we have to stop generating primes once there is
     // not enough space for 64 more primes.
-    if (maxSize - i < 64 ||
+    if (i > maxSize - 64 ||
         sieveIdx_ >= sieveSize_)
       break;
   }
