@@ -76,7 +76,7 @@ void iterator::generate_next_primes()
     // 3) The next prime > 2^64. In this case the primes
     //    array contains an error code (UINT64_MAX) which
     //    is returned to the user.
-    if (primeGenerator_->finished())
+    if (last_idx_ == 0)
       clear(primeGenerator_);
     else
       break;

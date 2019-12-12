@@ -114,7 +114,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       // 3) The next prime > 2^64. In this case the primes
       //    array contains an error code (UINT64_MAX) which
       //    is returned to the user.
-      if (primeGenerator->finished())
+      if (it->last_idx == 0)
         clearPrimeGenerator(it);
       else
         break;

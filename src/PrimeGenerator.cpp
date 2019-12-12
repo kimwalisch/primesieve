@@ -131,8 +131,6 @@ void PrimeGenerator::init(vector<uint64_t>& primes)
 /// Used by iterator::next_prime()
 void PrimeGenerator::init(vector<uint64_t>& primes, size_t* size)
 {
-  *size = 0;
-
   if (start_ <= maxCachedPrime())
   {
     size_t a = getStartIdx();
@@ -215,16 +213,20 @@ bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes)
   if (!isInit_)
     init(primes);
 
-  if (!hasNextSegment())
-    return false;
+  if (hasNextSegment())
+  {
+    sieveSegment();
+    return true;
+  }
 
-  sieveSegment();
-  return true;
+  return false;
 }
 
 /// Used by iterator::next_prime()
 bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes, size_t* size)
 {
+  *size = 0;
+
   if (!isInit_)
   {
     init(primes, size);
@@ -232,24 +234,21 @@ bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes, size_t* size)
       return false;
   }
 
-  if (!hasNextSegment())
+  if (hasNextSegment())
   {
-    *size = 1;
-    primes[0] = ~0ull;
-    // The current PrimeGenerator object cannot be used to
-    // generate more primes. So we set finished = true and then
-    // create a new PrimeGenerator object in iterator.cpp and
-    // iterator-c.cpp that will be used to generate more primes.
-    // The only case where we set finished = false is when
-    // stop = 2^64-1. In this case the next prime would be > 2^64
-    // However since primesieve only supports primes < 2^64 we
-    // simply return UINT64_MAX.
-    finished_ = (stop_ < primes[0]);
-    return false;
+    sieveSegment();
+    return true;
   }
 
-  sieveSegment();
-  return true;
+  // primesieve only supports primes < 2^64. In case the next
+  // prime would be > 2^64 we simply return UINT64_MAX.
+  if (stop_ >= numeric_limits<uint64_t>::max())
+  {
+    primes[0] = ~0ull;
+    *size = 1;
+  }
+
+  return false;
 }
 
 /// This method is used by iterator::prev_prime().

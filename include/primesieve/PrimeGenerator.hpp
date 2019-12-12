@@ -32,11 +32,6 @@ public:
   void fill(std::vector<uint64_t>& primes, std::size_t* size);
   static uint64_t maxCachedPrime();
 
-  bool finished() const
-  {
-    return finished_;
-  }
-
 private:
   uint64_t low_ = 0;
   uint64_t sieveIdx_ = ~0ull;
@@ -44,7 +39,6 @@ private:
   PreSieve preSieve_;
   SievingPrimes sievingPrimes_;
   bool isInit_ = false;
-  bool finished_ = false;
   std::size_t getStartIdx() const;
   std::size_t getStopIdx() const;
   void initErat();
