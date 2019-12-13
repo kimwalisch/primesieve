@@ -60,7 +60,11 @@ void SievingPrimes::fill()
   uint64_t maxSize = primes_.size();
   assert(maxSize >= 64);
 
-  while (true)
+  // Fill the buffer with at least (maxSize - 64) primes.
+  // Each loop iteration can generate up to 64 primes
+  // so we have to stop generating primes once there is
+  // not enough space for 64 more primes.
+  do
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
 
@@ -69,15 +73,9 @@ void SievingPrimes::fill()
 
     low_ += 8 * 30;
     sieveIdx_ += 8;
-
-    // Fill the buffer with at least maxSize - 64 primes.
-    // Each loop iteration can generate up to 64 primes
-    // so we have to stop generating primes once there is
-    // not enough space for 64 more primes.
-    if (num > maxSize - 64 ||
-        sieveIdx_ >= sieveSize_)
-      break;
   }
+  while (num <= maxSize - 64 &&
+         sieveIdx_ < sieveSize_);
 
   i_ = 0;
   size_ = num;

@@ -285,7 +285,7 @@ void PrimeGenerator::fill(vector<uint64_t>& primes)
 void PrimeGenerator::fill(vector<uint64_t>& primes,
                           size_t* size)
 {
-  while (true)
+  do
   {
     if (sieveIdx_ >= sieveSize_)
       if (!sieveSegment(primes, size))
@@ -295,7 +295,11 @@ void PrimeGenerator::fill(vector<uint64_t>& primes,
     size_t maxSize = primes.size();
     assert(maxSize >= 64);
 
-    while (true)
+    // Fill the buffer with at least (maxSize - 64) primes.
+    // Each loop iteration can generate up to 64 primes
+    // so we have to stop generating primes once there is
+    // not enough space for 64 more primes.
+    do
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
 
@@ -304,22 +308,13 @@ void PrimeGenerator::fill(vector<uint64_t>& primes,
 
       low_ += 8 * 30;
       sieveIdx_ += 8;
-
-      // Fill the buffer with at least maxSize - 64 primes.
-      // Each loop iteration can generate up to 64 primes
-      // so we have to stop generating primes once there is
-      // not enough space for 64 more primes.
-      if (i > maxSize - 64 ||
-          sieveIdx_ >= sieveSize_)
-        break;
     }
+    while (i <= maxSize - 64 &&
+           sieveIdx_ < sieveSize_);
 
-    if (i > 0)
-    {
-      *size = i;
-      return;
-    }
+    *size = i;
   }
+  while (*size == 0);
 }
 
 } // namespace
