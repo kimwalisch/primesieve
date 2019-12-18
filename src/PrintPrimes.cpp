@@ -176,7 +176,8 @@ void PrintPrimes::printkTuplets() const
   uint64_t low = low_;
   ostringstream kTuplets;
 
-  for (; !ps_.isPrint(i); i++);
+  while (!ps_.isPrint(i))
+    i++;
 
   for (uint64_t j = 0; j < sieveSize_; j++, low += 30)
   {
