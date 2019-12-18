@@ -68,8 +68,8 @@ void SievingPrimes::fill()
   {
     uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
 
-    for (; bits != 0; num++)
-      primes_[num] = nextPrime(&bits, low_);
+    for (; bits != 0; bits &= bits - 1)
+      primes_[num++] = nextPrime(bits, low_);
 
     low_ += 8 * 30;
     sieveIdx_ += 8;

@@ -158,8 +158,8 @@ void PrintPrimes::printPrimes() const
     for (; i < size; i += 8)
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve_[i]);
-      while (bits)
-        primes << nextPrime(&bits, low) << '\n';
+      for (; bits != 0; bits &= bits - 1)
+        primes << nextPrime(bits, low) << '\n';
 
       low += 8 * 30;
     }
@@ -186,10 +186,12 @@ void PrintPrimes::printkTuplets() const
       {
         kTuplets << "(";
         uint64_t bits = *bitmask;
-        while (bits != 0)
+
+        for (; bits != 0; bits &= bits - 1)
         {
-          kTuplets << nextPrime(&bits, low);
-          kTuplets << ((bits != 0) ? ", " : ")\n");
+          kTuplets << nextPrime(bits, low);
+          bool hasNext = (bits & (bits - 1)) != 0;
+          kTuplets << (hasNext ? ", " : ")\n");
         }
       }
     }
