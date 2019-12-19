@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">primesieve
-   &#160;<span id="projectnumber">7.4</span>
+   &#160;<span id="projectnumber">7.5</span>
    </div>
   </td>
  </tr>
@@ -198,7 +198,8 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 </div><div class="memdoc">
 
 <p>Count the primes within the interval [start, stop]. </p>
-<p>By default all CPU cores are used, use <a class="el" href="namespaceprimesieve.html#a620522a113c81237cd8ae9a5a058c0f1" title="Set the number of threads for use in primesieve::count_*() and primesieve::nth_prime(). ">primesieve::set_num_threads(int threads)</a> to change the number of threads. </p>
+<p>By default all CPU cores are used, use <a class="el" href="namespaceprimesieve.html#a620522a113c81237cd8ae9a5a058c0f1" title="Set the number of threads for use in primesieve::count_*() and primesieve::nth_prime(). ">primesieve::set_num_threads(int threads)</a> to change the number of threads.</p>
+<p>Note that each call to <a class="el" href="namespaceprimesieve.html#a6e8caa0de4a20596b0fe8b4a9f0f3f1a" title="Count the primes within the interval [start, stop]. ">count_primes()</a> incurs an initialization overhead of O(sqrt(stop)) even if the interval [start, stop] is tiny. Hence if you have written an algorithm that makes many calls to <a class="el" href="namespaceprimesieve.html#a6e8caa0de4a20596b0fe8b4a9f0f3f1a" title="Count the primes within the interval [start, stop]. ">count_primes()</a> it may be preferable to use a <a class="el" href="classprimesieve_1_1iterator.html" title="primesieve::iterator allows to easily iterate over primes both forwards and backwards. ">primesieve::iterator</a> which needs to be initialized only once. </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="count_primes_8cpp-example.html#a0">count_primes.cpp</a>.</dd>
 </dl>
 </div>
@@ -405,7 +406,9 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 </div><div class="memdoc">
 
 <p>Find the nth prime. </p>
-<p>By default all CPU cores are used, use <a class="el" href="namespaceprimesieve.html#a620522a113c81237cd8ae9a5a058c0f1" title="Set the number of threads for use in primesieve::count_*() and primesieve::nth_prime(). ">primesieve::set_num_threads(int threads)</a> to change the number of threads. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>By default all CPU cores are used, use <a class="el" href="namespaceprimesieve.html#a620522a113c81237cd8ae9a5a058c0f1" title="Set the number of threads for use in primesieve::count_*() and primesieve::nth_prime(). ">primesieve::set_num_threads(int threads)</a> to change the number of threads.</p>
+<p>Note that each call to nth_prime(n, start) incurs an initialization overhead of O(sqrt(start)) even if n is tiny. Hence it is not a good idea to use <a class="el" href="namespaceprimesieve.html#a559e8ba0e9b3b9c8b3a75ca9419a1afb" title="Find the nth prime. ">nth_prime()</a> repeatedly in a loop to get the next (or previous) prime. For this use case it is better to use a <a class="el" href="classprimesieve_1_1iterator.html" title="primesieve::iterator allows to easily iterate over primes both forwards and backwards. ">primesieve::iterator</a> which needs to be initialized only once.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">n</td><td>if n = 0 finds the 1st prime &gt;= start, <br />
  if n &gt; 0 finds the nth prime &gt; start, <br />

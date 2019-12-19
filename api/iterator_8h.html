@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">primesieve
-   &#160;<span id="projectnumber">7.4</span>
+   &#160;<span id="projectnumber">7.5</span>
    </div>
   </td>
  </tr>
@@ -121,7 +121,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="iter
 <div class="textblock"><p><a class="el" href="structprimesieve__iterator.html" title="C prime iterator, please refer to iterator.h  for more information. ">primesieve_iterator</a> allows to easily iterate over primes both forwards and backwards. </p>
 <p>Generating the first prime has a complexity of O(r log log r) operations with r = n^0.5, after that any additional prime is generated in amortized O(log n log log n) operations. The memory usage is about PrimePi(n^0.5) * 8 bytes.</p>
 <p>The <a class="el" href="primesieve_iterator_8c-example.html">primesieve_iterator.c </a> example shows how to use <a class="el" href="structprimesieve__iterator.html" title="C prime iterator, please refer to iterator.h  for more information. ">primesieve_iterator</a>. If any error occurs <a class="el" href="iterator_8h.html#a2505c348a432d9e1d7ce2ef823f096e7" title="Get the next prime. ">primesieve_next_prime()</a> and <a class="el" href="iterator_8h.html#a6af87fc5f89b298db6aa9b05a74b741e" title="Get the previous prime. ">primesieve_prev_prime()</a> return PRIMESIEVE_ERROR. Furthermore primesieve_iterator.is_error is initialized to 0 and set to 1 if any error occurs.</p>
-<p>Copyright (C) 2018 Kim Walisch, <a href="#" onclick="location.href='mai'+'lto:'+'kim'+'.w'+'ali'+'sc'+'h@g'+'ma'+'il.'+'co'+'m'; return false;">kim.w<span style="display: none;">.nosp@m.</span>alis<span style="display: none;">.nosp@m.</span>ch@gm<span style="display: none;">.nosp@m.</span>ail.<span style="display: none;">.nosp@m.</span>com</a></p>
+<p>Copyright (C) 2019 Kim Walisch, <a href="#" onclick="location.href='mai'+'lto:'+'kim'+'.w'+'ali'+'sc'+'h@g'+'ma'+'il.'+'co'+'m'; return false;">kim.w<span style="display: none;">.nosp@m.</span>alis<span style="display: none;">.nosp@m.</span>ch@gm<span style="display: none;">.nosp@m.</span>ail.<span style="display: none;">.nosp@m.</span>com</a></p>
 <p>This file is distributed under the BSD License. See the COPYING file in the top level directory. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a2505c348a432d9e1d7ce2ef823f096e7"></a>
@@ -179,7 +179,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="iter
 </div><div class="memdoc">
 
 <p>Get the previous prime. </p>
-<p>primesieve_prev_prime(n) = 0 if n &lt;= 2. </p>
+<p>primesieve_prev_prime(n) returns 0 for n &lt;= 2. Note that <a class="el" href="iterator_8h.html#a2505c348a432d9e1d7ce2ef823f096e7" title="Get the next prime. ">primesieve_next_prime()</a> runs up to 2x faster than <a class="el" href="iterator_8h.html#a6af87fc5f89b298db6aa9b05a74b741e" title="Get the previous prime. ">primesieve_prev_prime()</a>. Hence if the same algorithm can be written using either <a class="el" href="iterator_8h.html#a6af87fc5f89b298db6aa9b05a74b741e" title="Get the previous prime. ">primesieve_prev_prime()</a> or <a class="el" href="iterator_8h.html#a2505c348a432d9e1d7ce2ef823f096e7" title="Get the next prime. ">primesieve_next_prime()</a> it is preferable to use <a class="el" href="iterator_8h.html#a2505c348a432d9e1d7ce2ef823f096e7" title="Get the next prime. ">primesieve_next_prime()</a>. </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="prev_prime_8c-example.html#a3">prev_prime.c</a>.</dd>
 </dl>
 </div>

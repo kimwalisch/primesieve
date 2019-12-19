@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">primesieve
-   &#160;<span id="projectnumber">7.4</span>
+   &#160;<span id="projectnumber">7.5</span>
    </div>
   </td>
  </tr>
@@ -89,13 +89,13 @@ Include dependency graph for primesieve.h:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memItemLeft" align="right" valign="top"><a id="aefdd13bcd657eb6778799e8e2dd72b19"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;7.4&quot;</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;7.5&quot;</td></tr>
 <tr class="separator:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memItemLeft" align="right" valign="top"><a id="acf3a768a4fbf9c2ddd8d26421b452298"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MAJOR</b>&#160;&#160;&#160;7</td></tr>
 <tr class="separator:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae49659380a65afba42223665c77241d1"><td class="memItemLeft" align="right" valign="top"><a id="ae49659380a65afba42223665c77241d1"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;4</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;5</td></tr>
 <tr class="separator:ae49659380a65afba42223665c77241d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa15f4d1456167707e37c0d6de61a86e3"><td class="memItemLeft" align="right" valign="top"><a id="aa15f4d1456167707e37c0d6de61a86e3"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#aa15f4d1456167707e37c0d6de61a86e3">PRIMESIEVE_ERROR</a>&#160;&#160;&#160;((uint64_t) ~((uint64_t) 0))</td></tr>
@@ -283,7 +283,8 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 </div><div class="memdoc">
 
 <p>Count the primes within the interval [start, stop]. </p>
-<p>By default all CPU cores are used, use <a class="el" href="primesieve_8h.html#ac75933075b832eb2996adc5e72d6cd0f" title="Set the number of threads for use in primesieve_count_*() and primesieve_nth_prime(). ">primesieve_set_num_threads(int threads)</a> to change the number of threads. </p>
+<p>By default all CPU cores are used, use <a class="el" href="primesieve_8h.html#ac75933075b832eb2996adc5e72d6cd0f" title="Set the number of threads for use in primesieve_count_*() and primesieve_nth_prime(). ">primesieve_set_num_threads(int threads)</a> to change the number of threads.</p>
+<p>Note that each call to <a class="el" href="primesieve_8h.html#af0555d30a24a8828ee584c7b2f6083d3" title="Count the primes within the interval [start, stop]. ">primesieve_count_primes()</a> incurs an initialization overhead of O(sqrt(stop)) even if the interval [start, stop] is tiny. Hence if you have written an algorithm that makes many calls to <a class="el" href="primesieve_8h.html#af0555d30a24a8828ee584c7b2f6083d3" title="Count the primes within the interval [start, stop]. ">primesieve_count_primes()</a> it may be preferable to use a <a class="el" href="classprimesieve_1_1iterator.html" title="primesieve::iterator allows to easily iterate over primes both forwards and backwards. ">primesieve::iterator</a> which needs to be initialized only once. </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="count_primes_8c-example.html#a0">count_primes.c</a>.</dd>
 </dl>
 </div>
@@ -583,7 +584,9 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 </div><div class="memdoc">
 
 <p>Find the nth prime. </p>
-<p>By default all CPU cores are used, use <a class="el" href="primesieve_8h.html#ac75933075b832eb2996adc5e72d6cd0f" title="Set the number of threads for use in primesieve_count_*() and primesieve_nth_prime(). ">primesieve_set_num_threads(int threads)</a> to change the number of threads. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>By default all CPU cores are used, use <a class="el" href="primesieve_8h.html#ac75933075b832eb2996adc5e72d6cd0f" title="Set the number of threads for use in primesieve_count_*() and primesieve_nth_prime(). ">primesieve_set_num_threads(int threads)</a> to change the number of threads.</p>
+<p>Note that each call to primesieve_nth_prime(n, start) incurs an initialization overhead of O(sqrt(start)) even if n is tiny. Hence it is not a good idea to use <a class="el" href="primesieve_8h.html#a272b54509075a0ed1dafe9858ae90d02" title="Find the nth prime. ">primesieve_nth_prime()</a> repeatedly in a loop to get the next (or previous) prime. For this use case it is better to use a <a class="el" href="classprimesieve_1_1iterator.html" title="primesieve::iterator allows to easily iterate over primes both forwards and backwards. ">primesieve::iterator</a> which needs to be initialized only once.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">n</td><td>if n = 0 finds the 1st prime &gt;= start, <br />
  if n &gt; 0 finds the nth prime &gt; start, <br />
