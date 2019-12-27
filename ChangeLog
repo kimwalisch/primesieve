@@ -1,12 +1,12 @@
-Changes in version 7.5, 24/11/2019
+Changes in version 7.5, 27/12/2019
 ==================================
 
 This is a minor new release, the API and ABI (Application binary
 interface) are backwards compatible.
 
-The next_prime() method of primesieve::iterator has been sped up by
-about 10%. Since primesieve::iterator is also used under the hood
-for generating an array (or vector) of primes this should also run
+primesieve::iterator::next_prime() has been sped up by about 10%.
+Since primesieve::iterator is also used under the hood for
+generating an array (or vector) of primes that should also run
 slightly faster.
 
 I have also removed the https://primesieve.org website because it
