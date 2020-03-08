@@ -49,6 +49,10 @@ from the [downloads](https://github.com/kimwalisch/primesieve/wiki/Downloads) pa
         <td><code>brew install primesieve</code></td>
     </tr>
     <tr>
+        <td><b>Arch Linux:</b></td>
+        <td><code>sudo pacman -S primesieve</code></td>
+    </tr>
+    <tr>
         <td><b>Debian/Ubuntu:</b></td>
         <td><code>sudo apt install primesieve</code></td>
     </tr>
