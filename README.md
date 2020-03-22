@@ -335,6 +335,10 @@ primesieve natively supports C and C++ and has bindings available for:
         <td><a href="https://hackage.haskell.org/package/primesieve">primesieve-haskell</a></td>
     </tr>
     <tr>
+        <td><b>Perl:</b></td>
+        <td><a href="https://gitlab.com/oesiman/primesieve">Primesieve</a></td>
+    </tr>
+    <tr>
         <td><b>Python:</b></td>
         <td><a href="https://github.com/kimwalisch/primesieve-python">primesieve-python</a></td>
     </tr>
