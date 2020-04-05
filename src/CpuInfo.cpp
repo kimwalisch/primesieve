@@ -631,14 +631,24 @@ void CpuInfo::init()
   string cpusOnline = "/sys/devices/system/cpu/online";
   cpuThreads_ = parseThreadList(cpusOnline);
 
-  string threadSiblingsList = "/sys/devices/system/cpu/cpu0/topology/thread_siblings_list";
-  string threadSiblings = "/sys/devices/system/cpu/cpu0/topology/thread_siblings";
+  // Works on Linux kernel >= 5.3
+  string threadSiblingsList = "/sys/devices/system/cpu/cpu0/topology/core_cpus_list";
+  string threadSiblings = "/sys/devices/system/cpu/cpu0/topology/core_cpus";
   threadsPerCore_ = getThreads(threadSiblingsList, threadSiblings);
+
+  if (!threadsPerCore_)
+  {
+    // Works on Linux kernel < 5.3
+    threadSiblingsList = "/sys/devices/system/cpu/cpu0/topology/thread_siblings_list";
+    threadSiblings = "/sys/devices/system/cpu/cpu0/topology/thread_siblings";
+    threadsPerCore_ = getThreads(threadSiblingsList, threadSiblings);
+  }
 
   if (hasCpuThreads() &&
       hasThreadsPerCore())
     cpuCores_ = cpuThreads_ / threadsPerCore_;
 
+  // Retrieve CPU cache info
   for (size_t i = 0; i <= 3; i++)
   {
     string path = "/sys/devices/system/cpu/cpu0/cache/index" + to_string(i);
