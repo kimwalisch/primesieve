@@ -40,27 +40,27 @@ uint64_t nth_prime(int64_t n, uint64_t start)
 static uint64_t pe__count_primes(const uint64_t N)
 {
   const uint64_t root = (uint64_t)sqrtl(N);
-  int64_t * low = new int64_t[root+1];
-  for (int64_t i = 0; i <= root; i++)
+  uint64_t * low = new uint64_t[root + 1];
+  for (uint64_t i = 1; i <= root; ++i)
   {
-    low[i] = i-1;
+    low[i] = i - 1;
   }
-  int64_t * high = new int64_t[root+1];
+  uint64_t * high = new uint64_t[root + 1];
   high[0] = 0;
-  for (int64_t i = 1; i <= root; i++)
+  for (uint64_t i = 1; i <= root; ++i)
   {
-    high[i] = (N / i)-1;
+    high[i] = (N / i) - 1;
   }
-  for (int64_t p = 2; p <= root; p++)
+  for (uint64_t p = 2; p <= root; ++p)
   {
-    if (low[p]==low[p-1])
+    const auto p_cnt = low[p - 1];
+    if (low[p] == p_cnt)
     {
       continue;
     }
-    const auto p_cnt = low[p-1];
     const auto q = p * p;
     const auto end = std::min(root, N / q);
-    for (int i = 1; i <= end; i++)
+    for (int i = 1; i <= end; ++i)
     {
       const auto d = i * p;
       high[i] -= (((d <= root) ? high[d] : low[N / d]) - p_cnt);
