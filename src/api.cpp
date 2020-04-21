@@ -37,8 +37,52 @@ uint64_t nth_prime(int64_t n, uint64_t start)
   return ps.nthPrime(n, start);
 }
 
+static uint64_t pe__count_primes(const uint64_t N)
+{
+  const uint64_t root = (uint64_t)sqrtl(N);
+  int64_t * low = new int64_t[root+1];
+  for (int64_t i = 0; i <= root; i++)
+  {
+    low[i] = i-1;
+  }
+  int64_t * high = new int64_t[root+1];
+  high[0] = 0;
+  for (int64_t i = 1; i <= root; i++)
+  {
+    high[i] = (N / i)-1;
+  }
+  for (int64_t p = 2; p <= root; p++)
+  {
+    if (low[p]==low[p-1])
+    {
+      continue;
+    }
+    const auto p_cnt = low[p-1];
+    const auto q = p * p;
+    const auto end = std::min(root, N / q);
+    for (int i = 1; i <= end; i++)
+    {
+      const auto d = i * p;
+      high[i] -= (((d <= root) ? high[d] : low[N / d]) - p_cnt);
+    }
+    for (int i = root; i >= q; --i)
+    {
+      low[i] -= (low[i / p] - p_cnt);
+    }
+  }
+  const auto ret = high[1];
+  delete [] high;
+  delete [] low;
+  return ret;
+}
+
 uint64_t count_primes(uint64_t start, uint64_t stop)
 {
+  if ((start <= stop) && (start <= stop - (stop >> 3)) && (stop >= 10000000000ULL) && (stop <= 100000000000000ULL))
+  {
+    uint64_t ret = pe__count_primes(stop);
+    return ret - ((start <= 2) ? 0 : count_primes(2, start-1));
+  }
   ParallelSieve ps;
   ps.sieve(start, stop, COUNT_PRIMES);
   return ps.getCount(0);

@@ -8,6 +8,7 @@
 /// file in the top level directory.
 ///
 
+#include <primesieve.hpp>
 #include <primesieve/ParallelSieve.hpp>
 #include "cmdoptions.hpp"
 
@@ -36,8 +37,18 @@ void printSeconds(double sec)
 /// Count & print primes and prime k-tuplets
 void sieve(CmdOptions& opt)
 {
-  ParallelSieve ps;
   auto& numbers = opt.numbers;
+  if (numbers.size() < 2)
+    numbers.push_front(0);
+  if (numbers[1] <= 100000000000000ULL)
+  {
+    if (opt.flags == COUNT_PRIMES)
+    {
+      std::cout << count_primes(numbers[0], numbers[1]) << std::endl;
+      return;
+    }
+  }
+  ParallelSieve ps;
 
   if (opt.flags)
     ps.setFlags(opt.flags);
@@ -49,8 +60,6 @@ void sieve(CmdOptions& opt)
     ps.setNumThreads(opt.threads);
   if (ps.isPrint())
     ps.setNumThreads(1);
-  if (numbers.size() < 2)
-    numbers.push_front(0);
 
   ps.setStart(numbers[0]);
   ps.setStop(numbers[1]);
