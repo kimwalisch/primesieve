@@ -354,6 +354,10 @@ primesieve natively supports C and C++ and has bindings available for:
         <td><b>Rust:</b></td>
         <td><a href="https://github.com/pthariensflame/primesieve.rs">primesieve.rs</a></td>
     </tr>
+    <tr>
+        <td><b>Pascal:</b></td>
+        <td><a href="https://github.com/JulStrat/primesieve-pas">primesieve-pas</a></td>
+    </tr>    
 </table>
 
 Many thanks to the developers of these bindings!
