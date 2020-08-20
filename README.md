@@ -155,7 +155,7 @@ int main()
 }
 ```
 
-* [More C++ examples](doc/CppExamples.md)
+* [More C++ examples](doc/CPP_Examples.md)
 * [Browse libprimesieve's C++ API online](https://primesieve.org/api)
 
 ## C API
@@ -181,7 +181,7 @@ int main()
 }
 ```
 
-* [More C examples](examples/c)
+* [More C examples](doc/C_Examples.md)
 * [Browse libprimesieve's C API online](https://primesieve.org/api)
 
 ## libprimesieve performance tips
