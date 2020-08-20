@@ -189,3 +189,11 @@ int main()
   return 0;
 }
 ```
+
+# How to compile
+
+You can compile any of the C++ example programs above using:
+
+```C
+c++ -O2 primes.cpp -o primes -lprimesieve
+```
