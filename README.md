@@ -136,19 +136,14 @@ sudo make install
 
 ## C++ API
 
-Below is a C++ example with the most common libprimesieve use cases.
+Below is a C++ example with the most common libprimesieve use case.
 
 ```C++
 #include <primesieve.hpp>
 #include <iostream>
-#include <vector>
 
 int main()
 {
-  // Store the primes below 1000
-  std::vector<int> primes;
-  primesieve::generate_primes(1000, &primes);
-
   primesieve::iterator it;
   uint64_t prime = it.next_prime();
 
@@ -160,7 +155,7 @@ int main()
 }
 ```
 
-* [More C++ examples](examples/cpp)
+* [More C++ examples](doc/CppExamples.md)
 * [Browse libprimesieve's C++ API online](https://primesieve.org/api)
 
 ## C API
