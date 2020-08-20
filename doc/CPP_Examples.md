@@ -55,10 +55,9 @@ int main()
 ```
 
 The ```primesieve::iterator::skipto()``` method (and the ```primesieve::iterator```
-constructor) take an optional **stop_hint** parameter that can provide a significant
-speedup if the sieving distance is relatively small e.g.&nbsp;<&nbsp;sqrt(start). If
-```stop_hint``` is set ```primesieve::iterator``` will only buffer primes up to this
-limit.
+constructor) take an optional **stop_hint** parameter for performance optimization.
+If ```stop_hint``` is set ```primesieve::iterator``` will only buffer primes up to
+this limit.
 
 ```C++
 #include <primesieve.hpp>
