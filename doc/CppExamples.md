@@ -106,7 +106,9 @@ int main()
 
 ## ```primesieve::generate_primes()```
 
-Stores the primes inside [start, stop] in a ```std::vector```.
+Stores the primes inside [start, stop] in a ```std::vector```. If you are iterating over the same primes
+many times in a loop you will likely get better performance if you store the primes in a vector
+instead of using a ```primesieve::iterator``` (provided your system has enough memory).
 
 ```C++
 #include <primesieve.hpp>
