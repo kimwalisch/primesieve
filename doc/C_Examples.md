@@ -179,3 +179,11 @@ int main(int argc, char** argv)
   return 0;
 }
 ```
+
+# How to compile
+
+You can compile any of the C example programs above using:
+
+```C
+cc -O2 primes.cpp -o primes -lprimesieve
+```
