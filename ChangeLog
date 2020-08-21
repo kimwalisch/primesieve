@@ -1,3 +1,10 @@
+Changes for upcoming release, 21/08/2020
+========================================
+
+* CpuInfo.cpp: Linux kernel CPU detection has been updated.
+* doc/C_Examples.md: libprimesieve C code examples.
+* doc/CPP_Examples.md: libprimesieve C++ code examples.
+
 Changes in version 7.5, 27/12/2019
 ==================================
 
