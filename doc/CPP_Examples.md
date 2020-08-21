@@ -1,8 +1,11 @@
 # primesieve C++ examples
 
 This is a short selection of C++ code snippets that use libprimesieve to generate prime numbers.
-These examples cover the most frequently used functionality of libprimesieve, for in-depth
-documentation please refer to the [C++ API documentation](https://primesieve.org/api).
+These examples cover the most frequently used functionality of libprimesieve. Arguably the most
+useful feature provided by libprimesieve is the ```primesieve::iterator``` which lets you
+iterate over primes using the ```next_prime()``` or ```prev_prime()``` methods.
+
+For in-dept documentation please refer to the [C++ API documentation](https://primesieve.org/api).
 
 ## ```primesieve::iterator::next_prime()```
 
