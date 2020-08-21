@@ -19,15 +19,11 @@
 ///
 /// @li @link primesieve.hpp primesieve.hpp @endlink - primesieve C++ header.
 /// @li primesieve::iterator - Provides the @link primesieve::iterator::next_prime() next_prime() @endlink and @link primesieve::iterator::prev_prime() prev_prime() @endlink methods.
-/// @li @link primesieve_iterator.cpp primesieve_iterator.cpp @endlink - Example that shows how to iterate over primes.
-/// @li @link store_primes_in_vector.cpp store_primes_in_vector.cpp @endlink - Example that shows how to store primes in a std::vector.
-/// @li @link count_primes.cpp count_primes.cpp @endlink - Example that shows how to count primes.
-///
+/// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/CPP_Examples.md"><b>C++ examples</b></a> - Example programs that show how to use libprimesieve.
+/// 
 /// @section C_API C API
 ///
 /// @li @link primesieve.h primesieve.h @endlink - primesieve C header.
 /// @li @link iterator.h primesieve_iterator @endlink - Provides the primesieve_next_prime() and primesieve_prev_prime() functions.
-/// @li @link primesieve_iterator.c primesieve_iterator.c @endlink - Example that shows how to iterate over primes.
-/// @li @link store_primes_in_array.c store_primes_in_array.c @endlink - Example that shows how to store primes in an array.
-/// @li @link count_primes.c count_primes.c @endlink - Example that shows how to count primes.
-///
+/// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/C_Examples.md"><b>C examples</b></a> - Example programs that show how to use libprimesieve.
+/// 
