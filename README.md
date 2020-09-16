@@ -326,6 +326,14 @@ primesieve natively supports C and C++ and has bindings available for:
         <td><a href="https://github.com/AaronChen0/cl-primesieve">cl-primesieve</a></td>
     </tr>
     <tr>
+        <td><b>Julia:</b></td>
+        <td><a href="https://github.com/jlapeyre/PrimeSieve.jl">PrimeSieve.jl</a></td>
+    </tr>
+    <tr>
+        <td><b>Nim:</b></td>
+        <td><a href="https://github.com/nandub/primesievec-nim">primesievec-nim</a></td>
+    </tr>
+    <tr>
         <td><b>Haskell:</b></td>
         <td><a href="https://hackage.haskell.org/package/primesieve">primesieve-haskell</a></td>
     </tr>
