@@ -22,6 +22,7 @@
 #include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/Wheel.hpp>
+#include <primesieve/unlikely.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -31,11 +32,13 @@
 /// Update the current sieving prime's multipleIndex
 /// and wheelIndex after sieving has finished.
 ///
-#define UPDATE_SIEVING_PRIME(wheelIndex) \
-  out ## wheelIndex: \
-  multipleIndex = (uint64_t) (p - sieveEnd); \
-  prime.set(multipleIndex, wheelIndex); \
-  continue;
+#define CHECK_FINISHED(wheelIndex) \
+  if_unlikely(p >= sieveEnd) \
+  { \
+    multipleIndex = (uint64_t) (p - sieveEnd); \
+    prime.set(multipleIndex, wheelIndex); \
+    break; \
+  }
 
 namespace primesieve {
 
@@ -146,32 +149,24 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                   p[sievingPrime * 22 + 5] &= BIT1;
                   p[sievingPrime * 28 + 6] &= BIT5;
                 }
-                if (p >= sieveEnd) goto out0;
+                CHECK_FINISHED(0);
                 *p &= BIT0; p += sievingPrime * 6 + 1;
-        case 1: if (p >= sieveEnd) goto out1;
+        case 1: CHECK_FINISHED(1);
                 *p &= BIT4; p += sievingPrime * 4 + 1;
-        case 2: if (p >= sieveEnd) goto out2;
+        case 2: CHECK_FINISHED(2);
                 *p &= BIT3; p += sievingPrime * 2 + 0;
-        case 3: if (p >= sieveEnd) goto out3;
+        case 3: CHECK_FINISHED(3);
                 *p &= BIT7; p += sievingPrime * 4 + 1;
-        case 4: if (p >= sieveEnd) goto out4;
+        case 4: CHECK_FINISHED(4);
                 *p &= BIT6; p += sievingPrime * 2 + 1;
-        case 5: if (p >= sieveEnd) goto out5;
+        case 5: CHECK_FINISHED(5);
                 *p &= BIT2; p += sievingPrime * 4 + 1;
-        case 6: if (p >= sieveEnd) goto out6;
+        case 6: CHECK_FINISHED(6);
                 *p &= BIT1; p += sievingPrime * 6 + 1;
-        case 7: if (p >= sieveEnd) goto out7;
+        case 7: CHECK_FINISHED(7);
                 *p &= BIT5; p += sievingPrime * 2 + 1;
       }
-
-      UPDATE_SIEVING_PRIME(0)
-      UPDATE_SIEVING_PRIME(1)
-      UPDATE_SIEVING_PRIME(2)
-      UPDATE_SIEVING_PRIME(3)
-      UPDATE_SIEVING_PRIME(4)
-      UPDATE_SIEVING_PRIME(5)
-      UPDATE_SIEVING_PRIME(6)
-      UPDATE_SIEVING_PRIME(7)
+      break;
 
       // sievingPrime % 30 == 11
       for (;;)
@@ -187,32 +182,24 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 +  8] &= BIT2;
                    p[sievingPrime * 28 + 10] &= BIT4;
                  }
-                 if (p >= sieveEnd) goto out8;
+                 CHECK_FINISHED(8);
                  *p &= BIT1; p += sievingPrime * 6 + 2;
-        case  9: if (p >= sieveEnd) goto out9;
+        case  9: CHECK_FINISHED(9);
                  *p &= BIT3; p += sievingPrime * 4 + 1;
-        case 10: if (p >= sieveEnd) goto out10;
+        case 10: CHECK_FINISHED(10);
                  *p &= BIT7; p += sievingPrime * 2 + 1;
-        case 11: if (p >= sieveEnd) goto out11;
+        case 11: CHECK_FINISHED(11);
                  *p &= BIT5; p += sievingPrime * 4 + 2;
-        case 12: if (p >= sieveEnd) goto out12;
+        case 12: CHECK_FINISHED(12);
                  *p &= BIT0; p += sievingPrime * 2 + 0;
-        case 13: if (p >= sieveEnd) goto out13;
+        case 13: CHECK_FINISHED(13);
                  *p &= BIT6; p += sievingPrime * 4 + 2;
-        case 14: if (p >= sieveEnd) goto out14;
+        case 14: CHECK_FINISHED(14);
                  *p &= BIT2; p += sievingPrime * 6 + 2;
-        case 15: if (p >= sieveEnd) goto out15;
+        case 15: CHECK_FINISHED(15);
                  *p &= BIT4; p += sievingPrime * 2 + 1;
       }
-
-      UPDATE_SIEVING_PRIME(8)
-      UPDATE_SIEVING_PRIME(9)
-      UPDATE_SIEVING_PRIME(10)
-      UPDATE_SIEVING_PRIME(11)
-      UPDATE_SIEVING_PRIME(12)
-      UPDATE_SIEVING_PRIME(13)
-      UPDATE_SIEVING_PRIME(14)
-      UPDATE_SIEVING_PRIME(15)
+      break;
 
       // sievingPrime % 30 == 13
       for (;;)
@@ -228,32 +215,24 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 +  9] &= BIT6;
                    p[sievingPrime * 28 + 12] &= BIT3;
                  }
-                 if (p >= sieveEnd) goto out16;
+                 CHECK_FINISHED(16);
                  *p &= BIT2; p += sievingPrime * 6 + 2;
-        case 17: if (p >= sieveEnd) goto out17;
+        case 17: CHECK_FINISHED(17);
                  *p &= BIT7; p += sievingPrime * 4 + 2;
-        case 18: if (p >= sieveEnd) goto out18;
+        case 18: CHECK_FINISHED(18);
                  *p &= BIT5; p += sievingPrime * 2 + 1;
-        case 19: if (p >= sieveEnd) goto out19;
+        case 19: CHECK_FINISHED(19);
                  *p &= BIT4; p += sievingPrime * 4 + 2;
-        case 20: if (p >= sieveEnd) goto out20;
+        case 20: CHECK_FINISHED(20);
                  *p &= BIT1; p += sievingPrime * 2 + 1;
-        case 21: if (p >= sieveEnd) goto out21;
+        case 21: CHECK_FINISHED(21);
                  *p &= BIT0; p += sievingPrime * 4 + 1;
-        case 22: if (p >= sieveEnd) goto out22;
+        case 22: CHECK_FINISHED(22);
                  *p &= BIT6; p += sievingPrime * 6 + 3;
-        case 23: if (p >= sieveEnd) goto out23;
+        case 23: CHECK_FINISHED(23);
                  *p &= BIT3; p += sievingPrime * 2 + 1;
       }
-
-      UPDATE_SIEVING_PRIME(16)
-      UPDATE_SIEVING_PRIME(17)
-      UPDATE_SIEVING_PRIME(18)
-      UPDATE_SIEVING_PRIME(19)
-      UPDATE_SIEVING_PRIME(20)
-      UPDATE_SIEVING_PRIME(21)
-      UPDATE_SIEVING_PRIME(22)
-      UPDATE_SIEVING_PRIME(23)
+      break;
 
       // sievingPrime % 30 == 17
       for (;;)
@@ -269,32 +248,24 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 + 12] &= BIT7;
                    p[sievingPrime * 28 + 16] &= BIT2;
                  }
-                 if (p >= sieveEnd) goto out24;
+                 CHECK_FINISHED(24);
                  *p &= BIT3; p += sievingPrime * 6 + 3;
-        case 25: if (p >= sieveEnd) goto out25;
+        case 25: CHECK_FINISHED(25);
                  *p &= BIT6; p += sievingPrime * 4 + 3;
-        case 26: if (p >= sieveEnd) goto out26;
+        case 26: CHECK_FINISHED(26);
                  *p &= BIT0; p += sievingPrime * 2 + 1;
-        case 27: if (p >= sieveEnd) goto out27;
+        case 27: CHECK_FINISHED(27);
                  *p &= BIT1; p += sievingPrime * 4 + 2;
-        case 28: if (p >= sieveEnd) goto out28;
+        case 28: CHECK_FINISHED(28);
                  *p &= BIT4; p += sievingPrime * 2 + 1;
-        case 29: if (p >= sieveEnd) goto out29;
+        case 29: CHECK_FINISHED(29);
                  *p &= BIT5; p += sievingPrime * 4 + 2;
-        case 30: if (p >= sieveEnd) goto out30;
+        case 30: CHECK_FINISHED(30);
                  *p &= BIT7; p += sievingPrime * 6 + 4;
-        case 31: if (p >= sieveEnd) goto out31;
+        case 31: CHECK_FINISHED(31);
                  *p &= BIT2; p += sievingPrime * 2 + 1;
       }
-
-      UPDATE_SIEVING_PRIME(24)
-      UPDATE_SIEVING_PRIME(25)
-      UPDATE_SIEVING_PRIME(26)
-      UPDATE_SIEVING_PRIME(27)
-      UPDATE_SIEVING_PRIME(28)
-      UPDATE_SIEVING_PRIME(29)
-      UPDATE_SIEVING_PRIME(30)
-      UPDATE_SIEVING_PRIME(31)
+      break;
 
       // sievingPrime % 30 == 19
       for (;;)
@@ -310,32 +281,24 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 + 14] &= BIT3;
                    p[sievingPrime * 28 + 18] &= BIT1;
                  }
-                 if (p >= sieveEnd) goto out32;
+                 CHECK_FINISHED(32);
                  *p &= BIT4; p += sievingPrime * 6 + 4;
-        case 33: if (p >= sieveEnd) goto out33;
+        case 33: CHECK_FINISHED(33);
                  *p &= BIT2; p += sievingPrime * 4 + 2;
-        case 34: if (p >= sieveEnd) goto out34;
+        case 34: CHECK_FINISHED(34);
                  *p &= BIT6; p += sievingPrime * 2 + 2;
-        case 35: if (p >= sieveEnd) goto out35;
+        case 35: CHECK_FINISHED(35);
                  *p &= BIT0; p += sievingPrime * 4 + 2;
-        case 36: if (p >= sieveEnd) goto out36;
+        case 36: CHECK_FINISHED(36);
                  *p &= BIT5; p += sievingPrime * 2 + 1;
-        case 37: if (p >= sieveEnd) goto out37;
+        case 37: CHECK_FINISHED(37);
                  *p &= BIT7; p += sievingPrime * 4 + 3;
-        case 38: if (p >= sieveEnd) goto out38;
+        case 38: CHECK_FINISHED(38);
                  *p &= BIT3; p += sievingPrime * 6 + 4;
-        case 39: if (p >= sieveEnd) goto out39;
+        case 39: CHECK_FINISHED(39);
                  *p &= BIT1; p += sievingPrime * 2 + 1;
       }
-
-      UPDATE_SIEVING_PRIME(32)
-      UPDATE_SIEVING_PRIME(33)
-      UPDATE_SIEVING_PRIME(34)
-      UPDATE_SIEVING_PRIME(35)
-      UPDATE_SIEVING_PRIME(36)
-      UPDATE_SIEVING_PRIME(37)
-      UPDATE_SIEVING_PRIME(38)
-      UPDATE_SIEVING_PRIME(39)
+      break;
 
       // sievingPrime % 30 == 23
       for (;;)
@@ -351,32 +314,24 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 + 17] &= BIT4;
                    p[sievingPrime * 28 + 22] &= BIT0;
                  }
-                 if (p >= sieveEnd) goto out40;
+                 CHECK_FINISHED(40);
                  *p &= BIT5; p += sievingPrime * 6 + 5;
-        case 41: if (p >= sieveEnd) goto out41;
+        case 41: CHECK_FINISHED(41);
                  *p &= BIT1; p += sievingPrime * 4 + 3;
-        case 42: if (p >= sieveEnd) goto out42;
+        case 42: CHECK_FINISHED(42);
                  *p &= BIT2; p += sievingPrime * 2 + 1;
-        case 43: if (p >= sieveEnd) goto out43;
+        case 43: CHECK_FINISHED(43);
                  *p &= BIT6; p += sievingPrime * 4 + 3;
-        case 44: if (p >= sieveEnd) goto out44;
+        case 44: CHECK_FINISHED(44);
                  *p &= BIT7; p += sievingPrime * 2 + 2;
-        case 45: if (p >= sieveEnd) goto out45;
+        case 45: CHECK_FINISHED(45);
                  *p &= BIT3; p += sievingPrime * 4 + 3;
-        case 46: if (p >= sieveEnd) goto out46;
+        case 46: CHECK_FINISHED(46);
                  *p &= BIT4; p += sievingPrime * 6 + 5;
-        case 47: if (p >= sieveEnd) goto out47;
+        case 47: CHECK_FINISHED(47);
                  *p &= BIT0; p += sievingPrime * 2 + 1;
       }
-
-      UPDATE_SIEVING_PRIME(40)
-      UPDATE_SIEVING_PRIME(41)
-      UPDATE_SIEVING_PRIME(42)
-      UPDATE_SIEVING_PRIME(43)
-      UPDATE_SIEVING_PRIME(44)
-      UPDATE_SIEVING_PRIME(45)
-      UPDATE_SIEVING_PRIME(46)
-      UPDATE_SIEVING_PRIME(47)
+      break;
 
       // sievingPrime % 30 == 29
       for (;;)
@@ -392,32 +347,24 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 + 22] &= BIT0;
                    p[sievingPrime * 28 + 27] &= BIT7;
                  }
-                 if (p >= sieveEnd) goto out48;
+                 CHECK_FINISHED(48);
                  *p &= BIT6; p += sievingPrime * 6 + 6;
-        case 49: if (p >= sieveEnd) goto out49;
+        case 49: CHECK_FINISHED(49);
                  *p &= BIT5; p += sievingPrime * 4 + 4;
-        case 50: if (p >= sieveEnd) goto out50;
+        case 50: CHECK_FINISHED(50);
                  *p &= BIT4; p += sievingPrime * 2 + 2;
-        case 51: if (p >= sieveEnd) goto out51;
+        case 51: CHECK_FINISHED(51);
                  *p &= BIT3; p += sievingPrime * 4 + 4;
-        case 52: if (p >= sieveEnd) goto out52;
+        case 52: CHECK_FINISHED(52);
                  *p &= BIT2; p += sievingPrime * 2 + 2;
-        case 53: if (p >= sieveEnd) goto out53;
+        case 53: CHECK_FINISHED(53);
                  *p &= BIT1; p += sievingPrime * 4 + 4;
-        case 54: if (p >= sieveEnd) goto out54;
+        case 54: CHECK_FINISHED(54);
                  *p &= BIT0; p += sievingPrime * 6 + 5;
-        case 55: if (p >= sieveEnd) goto out55;
+        case 55: CHECK_FINISHED(55);
                  *p &= BIT7; p += sievingPrime * 2 + 2;
       }
-
-      UPDATE_SIEVING_PRIME(48)
-      UPDATE_SIEVING_PRIME(49)
-      UPDATE_SIEVING_PRIME(50)
-      UPDATE_SIEVING_PRIME(51)
-      UPDATE_SIEVING_PRIME(52)
-      UPDATE_SIEVING_PRIME(53)
-      UPDATE_SIEVING_PRIME(54)
-      UPDATE_SIEVING_PRIME(55)
+      break;
 
       // sievingPrime % 30 == 1
       for (;;)
@@ -433,32 +380,23 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 + 1] &= BIT5;
                    p[sievingPrime * 28 + 1] &= BIT6;
                  }
-                 if (p >= sieveEnd) goto out56;
+                 CHECK_FINISHED(56);
                  *p &= BIT7; p += sievingPrime * 6 + 1;
-        case 57: if (p >= sieveEnd) goto out57;
+        case 57: CHECK_FINISHED(57);
                  *p &= BIT0; p += sievingPrime * 4 + 0;
-        case 58: if (p >= sieveEnd) goto out58;
+        case 58: CHECK_FINISHED(58);
                  *p &= BIT1; p += sievingPrime * 2 + 0;
-        case 59: if (p >= sieveEnd) goto out59;
+        case 59: CHECK_FINISHED(59);
                  *p &= BIT2; p += sievingPrime * 4 + 0;
-        case 60: if (p >= sieveEnd) goto out60;
+        case 60: CHECK_FINISHED(60);
                  *p &= BIT3; p += sievingPrime * 2 + 0;
-        case 61: if (p >= sieveEnd) goto out61;
+        case 61: CHECK_FINISHED(61);
                  *p &= BIT4; p += sievingPrime * 4 + 0;
-        case 62: if (p >= sieveEnd) goto out62;
+        case 62: CHECK_FINISHED(62);
                  *p &= BIT5; p += sievingPrime * 6 + 0;
-        case 63: if (p >= sieveEnd) goto out63;
+        case 63: CHECK_FINISHED(63);
                  *p &= BIT6; p += sievingPrime * 2 + 0;
       }
-
-      UPDATE_SIEVING_PRIME(56)
-      UPDATE_SIEVING_PRIME(57)
-      UPDATE_SIEVING_PRIME(58)
-      UPDATE_SIEVING_PRIME(59)
-      UPDATE_SIEVING_PRIME(60)
-      UPDATE_SIEVING_PRIME(61)
-      UPDATE_SIEVING_PRIME(62)
-      UPDATE_SIEVING_PRIME(63)
     }
   }
 }
