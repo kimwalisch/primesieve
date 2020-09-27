@@ -1,7 +1,7 @@
 ///
 /// @file  EratBig.hpp
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -34,7 +34,7 @@ private:
   uint64_t maxPrime_ = 0;
   uint64_t log2SieveSize_ = 0;
   uint64_t moduloSieveSize_ = 0;
-  std::vector<SievingPrime*> sievingPrimes_;
+  std::vector<SievingPrime*> buckets_;
   MemoryPool memoryPool_;
   bool enabled_ = false;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);

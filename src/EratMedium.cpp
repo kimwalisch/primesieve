@@ -38,9 +38,9 @@
   if_unlikely(p >= sieveEnd) \
   { \
     multipleIndex = (uint64_t) (p - sieveEnd); \
-    if (memoryPool_.isFullBucket(sievingPrimes_[wheelIndex])) \
-      memoryPool_.addBucket(sievingPrimes_[wheelIndex]); \
-    sievingPrimes_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex); \
+    if (memoryPool_.isFullBucket(buckets_[wheelIndex])) \
+      memoryPool_.addBucket(buckets_[wheelIndex]); \
+    buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex); \
     break; \
   }
 
@@ -61,7 +61,7 @@ void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 
   enabled_ = true;
   maxPrime_ = maxPrime;
-  sievingPrimes_.fill(nullptr);
+  buckets_.fill(nullptr);
 
   Wheel::init(stop, sieveSize);
 }
@@ -72,17 +72,17 @@ void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint6
   assert(prime <= maxPrime_);
   uint64_t sievingPrime = prime / 30;
 
-  if (memoryPool_.isFullBucket(sievingPrimes_[wheelIndex]))
-    memoryPool_.addBucket(sievingPrimes_[wheelIndex]);
+  if (memoryPool_.isFullBucket(buckets_[wheelIndex]))
+    memoryPool_.addBucket(buckets_[wheelIndex]);
 
-  sievingPrimes_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);
+  buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);
 }
 
 void EratMedium::crossOff(uint8_t* sieve, uint64_t sieveSize)
 {
-  // Make a copy of sievingPrimes, then reset it
-  auto lists = sievingPrimes_;
-  sievingPrimes_.fill(nullptr);
+  // Make a copy of buckets, then reset it
+  auto buckets = buckets_;
+  buckets_.fill(nullptr);
   uint8_t* sieveEnd = sieve + sieveSize;
 
   // Iterate over the 64 bucket lists.
@@ -92,11 +92,11 @@ void EratMedium::crossOff(uint8_t* sieve, uint64_t sieveSize)
   // ...
   for (uint64_t i = 0; i < 64; i++)
   {
-    if (!lists[i])
+    if (!buckets[i])
       continue;
 
-    Bucket* bucket = memoryPool_.getBucket(lists[i]);
-    bucket->setEnd(lists[i]);
+    Bucket* bucket = memoryPool_.getBucket(buckets[i]);
+    bucket->setEnd(buckets[i]);
     uint64_t wheel_index = i;
 
     // Iterate over the current bucket list.
