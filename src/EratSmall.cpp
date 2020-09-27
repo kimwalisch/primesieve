@@ -98,14 +98,11 @@ uint64_t EratSmall::getL1CacheSize(uint64_t sieveSize)
 ///
 void EratSmall::crossOff(uint8_t* sieve, uint64_t sieveSize)
 {
-  uint8_t* sieveEnd = sieve + sieveSize;
-
-  while (sieve < sieveEnd)
+  for (uint64_t i = 0; i < sieveSize; i += l1CacheSize_)
   {
-    uint8_t* start = sieve;
-    sieve += l1CacheSize_;
-    sieve = std::min(sieve, sieveEnd);
-    crossOff(start, sieve);
+    uint64_t end = i + l1CacheSize_;
+    end = std::min(end, sieveSize);
+    crossOff(&sieve[i], &sieve[end]);
   }
 }
 
@@ -127,7 +124,6 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
     // of sievingPrime within the current segment
     uint8_t* p = &sieve[multipleIndex];
     uint8_t* loopEnd = sieveEnd - maxLoopDist;
-
     if (loopEnd > sieveEnd)
       loopEnd = p;
 
