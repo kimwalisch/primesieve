@@ -90,42 +90,36 @@ void EratMedium::crossOff(uint8_t* sieve, uint64_t sieveSize)
   // The 2nd list contains sieving primes with wheelIndex = 1.
   // The 3rd list contains sieving primes with wheelIndex = 2.
   // ...
-  for (SievingPrime* sievingPrime : lists)
+  for (uint64_t i = 0; i < 64; i++)
   {
-    if (!sievingPrime)
+    if (!lists[i])
       continue;
 
-    Bucket* bucket = memoryPool_.getBucket(sievingPrime);
-    bucket->setEnd(sievingPrime);
+    Bucket* bucket = memoryPool_.getBucket(lists[i]);
+    bucket->setEnd(lists[i]);
+    uint64_t wheel_index = i;
 
     // Iterate over the current bucket list.
     // For each bucket cross off the
     // multiples of its sieving primes.
     while (bucket)
     {
-      crossOff(sieve, sieveEnd, bucket);
+      switch (wheel_index / 8)
+      {
+        case 0: crossOff_7 (sieve, sieveEnd, bucket); break;
+        case 1: crossOff_11(sieve, sieveEnd, bucket); break;
+        case 2: crossOff_13(sieve, sieveEnd, bucket); break;
+        case 3: crossOff_17(sieve, sieveEnd, bucket); break;
+        case 4: crossOff_19(sieve, sieveEnd, bucket); break;
+        case 5: crossOff_23(sieve, sieveEnd, bucket); break;
+        case 6: crossOff_29(sieve, sieveEnd, bucket); break;
+        case 7: crossOff_31(sieve, sieveEnd, bucket); break;
+      }
+
       Bucket* processed = bucket;
       bucket = bucket->next();
       memoryPool_.freeBucket(processed);
     }
-  }
-}
-
-void EratMedium::crossOff(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
-{
-  SievingPrime* prime = bucket->begin();
-  uint64_t primeType = prime->getWheelIndex() / 8;
-
-  switch (primeType)
-  {
-    case 0: crossOff_7 (sieve, sieveEnd, bucket); break;
-    case 1: crossOff_11(sieve, sieveEnd, bucket); break;
-    case 2: crossOff_13(sieve, sieveEnd, bucket); break;
-    case 3: crossOff_17(sieve, sieveEnd, bucket); break;
-    case 4: crossOff_19(sieve, sieveEnd, bucket); break;
-    case 5: crossOff_23(sieve, sieveEnd, bucket); break;
-    case 6: crossOff_29(sieve, sieveEnd, bucket); break;
-    case 7: crossOff_31(sieve, sieveEnd, bucket); break;
   }
 }
 
