@@ -25,7 +25,8 @@
   #define NOINLINE
 #endif
 
-#if defined(__has_cpp_attribute) && \
+#if __cplusplus >= 202002L && \
+    defined(__has_cpp_attribute) && \
     __has_cpp_attribute(unlikely)
   #define if_unlikely(x) if (x) [[unlikely]]
 #elif defined(__GNUC__) || \
@@ -35,7 +36,8 @@
   #define if_unlikely(x) if (x)
 #endif
 
-#if defined(__has_cpp_attribute) && \
+#if __cplusplus >= 201703L && \
+    defined(__has_cpp_attribute) && \
     __has_cpp_attribute(fallthrough)
   #define FALLTHROUGH [[fallthrough]];
 #elif defined(__has_attribute) && \
