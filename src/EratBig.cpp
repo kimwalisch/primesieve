@@ -138,8 +138,8 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
 
     // The next multiple of the sieving prime will
     // occur in segment0. Hence we move the
-    // sieving prime to the list which corresponds
-    // to that segment.
+    // sieving prime to the bucket list which
+    // corresponds to that segment.
     buckets[segment0]++->set(sievingPrime0, multipleIndex0, wheelIndex0);
 
     // Process the 2nd sieving prime
