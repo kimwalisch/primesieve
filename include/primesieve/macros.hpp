@@ -10,6 +10,14 @@
 #ifndef MACROS_HPP
 #define MACROS_HPP
 
+#ifndef __has_attribute
+  #define __has_attribute(x) 0
+#endif
+
+#ifndef __has_cpp_attribute
+  #define __has_cpp_attribute(x) 0
+#endif
+
 /// Some functions in primesieve use a large number of variables
 /// at the same time. If such functions are inlined then
 /// performance drops because not all variables fit into registers
@@ -26,7 +34,6 @@
 #endif
 
 #if __cplusplus >= 202002L && \
-    defined(__has_cpp_attribute) && \
     __has_cpp_attribute(unlikely)
   #define if_unlikely(x) if (x) [[unlikely]]
 #elif defined(__GNUC__) || \
@@ -37,11 +44,9 @@
 #endif
 
 #if __cplusplus >= 201703L && \
-    defined(__has_cpp_attribute) && \
     __has_cpp_attribute(fallthrough)
   #define FALLTHROUGH [[fallthrough]];
-#elif defined(__has_attribute) && \
-      __has_attribute(fallthrough)
+#elif __has_attribute(fallthrough)
   #define FALLTHROUGH __attribute__((fallthrough));
 #else
   #define FALLTHROUGH // fallthrough
