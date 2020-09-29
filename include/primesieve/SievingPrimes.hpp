@@ -11,7 +11,7 @@
 #define SIEVINGPRIMES_HPP
 
 #include "Erat.hpp"
-#include "noinline.hpp"
+#include "macros.hpp"
 
 #include <stdint.h>
 #include <array>

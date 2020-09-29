@@ -14,7 +14,7 @@
 #include "EratSmall.hpp"
 #include "EratMedium.hpp"
 #include "EratBig.hpp"
-#include "noinline.hpp"
+#include "macros.hpp"
 
 #include <stdint.h>
 #include <array>

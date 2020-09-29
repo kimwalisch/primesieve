@@ -64,7 +64,6 @@ set(LIB_SRC src/api-c.cpp
 
 include(GNUInstallDirs)
 include(CMakePushCheckState)
-include(CheckCXXCompilerFlag)
 include(CheckCXXSourceCompiles)
 include(CMakePackageConfigHelpers)
 
@@ -76,15 +75,6 @@ if(WIN32 AND NOT MINGW)
         # Export symbols to .def file
         set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     endif()
-endif()
-
-# Silence GCC switch fall through warnings ###########################
-
-check_cxx_compiler_flag(-Wno-implicit-fallthrough Wno_fallthrough)
-
-if(Wno_fallthrough)
-    set_source_files_properties(src/EratSmall.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
-    set_source_files_properties(src/EratMedium.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
 # Check if libatomic is needed #######################################

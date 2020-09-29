@@ -11,7 +11,7 @@
 #define PRINTPRIMES_HPP
 
 #include "Erat.hpp"
-#include "noinline.hpp"
+#include "macros.hpp"
 #include "PrimeSieve.hpp"
 
 #include <stdint.h>

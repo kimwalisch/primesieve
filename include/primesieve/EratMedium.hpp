@@ -11,7 +11,7 @@
 #define ERATMEDIUM_HPP
 
 #include "Bucket.hpp"
-#include "noinline.hpp"
+#include "macros.hpp"
 #include "MemoryPool.hpp"
 #include "Wheel.hpp"
 
