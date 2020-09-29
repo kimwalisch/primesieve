@@ -145,7 +145,11 @@ void EratMedium::crossOff_7(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
     uint64_t dist6 = sievingPrime * 6 + 1;
     uint64_t dist7 = sievingPrime * 2 + 1;
 
-    switch (wheelIndex)
+    // By using switch(n & 7) we let the compiler know that n is
+    // always within [0, 7]. This trick reduces the number of
+    // instructions as the compiler now does not add a check
+    // if (n > 7) which skips to the end of the switch statement.
+    switch (wheelIndex & 7)
     {
       for (;;)
       {
@@ -192,26 +196,26 @@ void EratMedium::crossOff_11(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
     uint64_t dist6 = sievingPrime * 6 + 2;
     uint64_t dist7 = sievingPrime * 2 + 1;
 
-    switch (wheelIndex)
+    switch (wheelIndex & 7)
     {
       for (;;)
       {
-        case  8: CHECK_FINISHED(8);
-                 *p &= BIT1; p += dist0;
-        case  9: CHECK_FINISHED(9);
-                 *p &= BIT3; p += dist1;
-        case 10: CHECK_FINISHED(10);
-                 *p &= BIT7; p += dist2;
-        case 11: CHECK_FINISHED(11);
-                 *p &= BIT5; p += dist3;
-        case 12: CHECK_FINISHED(12);
-                 *p &= BIT0; p += dist4;
-        case 13: CHECK_FINISHED(13);
-                 *p &= BIT6; p += dist5;
-        case 14: CHECK_FINISHED(14);
-                 *p &= BIT2; p += dist6;
-        case 15: CHECK_FINISHED(15);
-                 *p &= BIT4; p += dist7;
+        case 0: CHECK_FINISHED(8);
+                *p &= BIT1; p += dist0;
+        case 1: CHECK_FINISHED(9);
+                *p &= BIT3; p += dist1;
+        case 2: CHECK_FINISHED(10);
+                *p &= BIT7; p += dist2;
+        case 3: CHECK_FINISHED(11);
+                *p &= BIT5; p += dist3;
+        case 4: CHECK_FINISHED(12);
+                *p &= BIT0; p += dist4;
+        case 5: CHECK_FINISHED(13);
+                *p &= BIT6; p += dist5;
+        case 6: CHECK_FINISHED(14);
+                *p &= BIT2; p += dist6;
+        case 7: CHECK_FINISHED(15);
+                *p &= BIT4; p += dist7;
       }
     }
   }
@@ -239,26 +243,26 @@ void EratMedium::crossOff_13(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
     uint64_t dist6 = sievingPrime * 6 + 3;
     uint64_t dist7 = sievingPrime * 2 + 1;
 
-    switch (wheelIndex)
+    switch (wheelIndex & 7)
     {
       for (;;)
       {
-        case 16: CHECK_FINISHED(16);
-                 *p &= BIT2; p += dist0;
-        case 17: CHECK_FINISHED(17);
-                 *p &= BIT7; p += dist1;
-        case 18: CHECK_FINISHED(18);
-                 *p &= BIT5; p += dist2;
-        case 19: CHECK_FINISHED(19);
-                 *p &= BIT4; p += dist3;
-        case 20: CHECK_FINISHED(20);
-                 *p &= BIT1; p += dist4;
-        case 21: CHECK_FINISHED(21);
-                 *p &= BIT0; p += dist5;
-        case 22: CHECK_FINISHED(22);
-                 *p &= BIT6; p += dist6;
-        case 23: CHECK_FINISHED(23);
-                 *p &= BIT3; p += dist7;
+        case 0: CHECK_FINISHED(16);
+                *p &= BIT2; p += dist0;
+        case 1: CHECK_FINISHED(17);
+                *p &= BIT7; p += dist1;
+        case 2: CHECK_FINISHED(18);
+                *p &= BIT5; p += dist2;
+        case 3: CHECK_FINISHED(19);
+                *p &= BIT4; p += dist3;
+        case 4: CHECK_FINISHED(20);
+                *p &= BIT1; p += dist4;
+        case 5: CHECK_FINISHED(21);
+                *p &= BIT0; p += dist5;
+        case 6: CHECK_FINISHED(22);
+                *p &= BIT6; p += dist6;
+        case 7: CHECK_FINISHED(23);
+                *p &= BIT3; p += dist7;
       }
     }
   }
@@ -286,26 +290,26 @@ void EratMedium::crossOff_17(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
     uint64_t dist6 = sievingPrime * 6 + 4;
     uint64_t dist7 = sievingPrime * 2 + 1;
 
-    switch (wheelIndex)
+    switch (wheelIndex & 7)
     {
       for (;;)
       {
-        case 24: CHECK_FINISHED(24);
-                 *p &= BIT3; p += dist0;
-        case 25: CHECK_FINISHED(25);
-                 *p &= BIT6; p += dist1;
-        case 26: CHECK_FINISHED(26);
-                 *p &= BIT0; p += dist2;
-        case 27: CHECK_FINISHED(27);
-                 *p &= BIT1; p += dist3;
-        case 28: CHECK_FINISHED(28);
-                 *p &= BIT4; p += dist4;
-        case 29: CHECK_FINISHED(29);
-                 *p &= BIT5; p += dist5;
-        case 30: CHECK_FINISHED(30);
-                 *p &= BIT7; p += dist6;
-        case 31: CHECK_FINISHED(31);
-                 *p &= BIT2; p += dist7;
+        case 0: CHECK_FINISHED(24);
+                *p &= BIT3; p += dist0;
+        case 1: CHECK_FINISHED(25);
+                *p &= BIT6; p += dist1;
+        case 2: CHECK_FINISHED(26);
+                *p &= BIT0; p += dist2;
+        case 3: CHECK_FINISHED(27);
+                *p &= BIT1; p += dist3;
+        case 4: CHECK_FINISHED(28);
+                *p &= BIT4; p += dist4;
+        case 5: CHECK_FINISHED(29);
+                *p &= BIT5; p += dist5;
+        case 6: CHECK_FINISHED(30);
+                *p &= BIT7; p += dist6;
+        case 7: CHECK_FINISHED(31);
+                *p &= BIT2; p += dist7;
       }
     }
   }
@@ -333,26 +337,26 @@ void EratMedium::crossOff_19(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
     uint64_t dist6 = sievingPrime * 6 + 4;
     uint64_t dist7 = sievingPrime * 2 + 1;
 
-    switch (wheelIndex)
+    switch (wheelIndex & 7)
     {
       for (;;)
       {
-        case 32: CHECK_FINISHED(32);
-                 *p &= BIT4; p += dist0;
-        case 33: CHECK_FINISHED(33);
-                 *p &= BIT2; p += dist1;
-        case 34: CHECK_FINISHED(34);
-                 *p &= BIT6; p += dist2;
-        case 35: CHECK_FINISHED(35);
-                 *p &= BIT0; p += dist3;
-        case 36: CHECK_FINISHED(36);
-                 *p &= BIT5; p += dist4;
-        case 37: CHECK_FINISHED(37);
-                 *p &= BIT7; p += dist5;
-        case 38: CHECK_FINISHED(38);
-                 *p &= BIT3; p += dist6;
-        case 39: CHECK_FINISHED(39);
-                 *p &= BIT1; p += dist7;
+        case 0: CHECK_FINISHED(32);
+                *p &= BIT4; p += dist0;
+        case 1: CHECK_FINISHED(33);
+                *p &= BIT2; p += dist1;
+        case 2: CHECK_FINISHED(34);
+                *p &= BIT6; p += dist2;
+        case 3: CHECK_FINISHED(35);
+                *p &= BIT0; p += dist3;
+        case 4: CHECK_FINISHED(36);
+                *p &= BIT5; p += dist4;
+        case 5: CHECK_FINISHED(37);
+                *p &= BIT7; p += dist5;
+        case 6: CHECK_FINISHED(38);
+                *p &= BIT3; p += dist6;
+        case 7: CHECK_FINISHED(39);
+                *p &= BIT1; p += dist7;
       }
     }
   }
@@ -380,26 +384,26 @@ void EratMedium::crossOff_23(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
     uint64_t dist6 = sievingPrime * 6 + 5;
     uint64_t dist7 = sievingPrime * 2 + 1;
 
-    switch (wheelIndex)
+    switch (wheelIndex & 7)
     {
       for (;;)
       {
-        case 40: CHECK_FINISHED(40);
-                 *p &= BIT5; p += dist0;
-        case 41: CHECK_FINISHED(41);
-                 *p &= BIT1; p += dist1;
-        case 42: CHECK_FINISHED(42);
-                 *p &= BIT2; p += dist2;
-        case 43: CHECK_FINISHED(43);
-                 *p &= BIT6; p += dist3;
-        case 44: CHECK_FINISHED(44);
-                 *p &= BIT7; p += dist4;
-        case 45: CHECK_FINISHED(45);
-                 *p &= BIT3; p += dist5;
-        case 46: CHECK_FINISHED(46);
-                 *p &= BIT4; p += dist6;
-        case 47: CHECK_FINISHED(47);
-                 *p &= BIT0; p += dist7;
+        case 0: CHECK_FINISHED(40);
+                *p &= BIT5; p += dist0;
+        case 1: CHECK_FINISHED(41);
+                *p &= BIT1; p += dist1;
+        case 2: CHECK_FINISHED(42);
+                *p &= BIT2; p += dist2;
+        case 3: CHECK_FINISHED(43);
+                *p &= BIT6; p += dist3;
+        case 4: CHECK_FINISHED(44);
+                *p &= BIT7; p += dist4;
+        case 5: CHECK_FINISHED(45);
+                *p &= BIT3; p += dist5;
+        case 6: CHECK_FINISHED(46);
+                *p &= BIT4; p += dist6;
+        case 7: CHECK_FINISHED(47);
+                *p &= BIT0; p += dist7;
       }
     }
   }
@@ -427,26 +431,26 @@ void EratMedium::crossOff_29(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
     uint64_t dist6 = sievingPrime * 6 + 5;
     uint64_t dist7 = sievingPrime * 2 + 2;
 
-    switch (wheelIndex)
+    switch (wheelIndex & 7)
     {
       for (;;)
       {
-        case 48: CHECK_FINISHED(48);
-                 *p &= BIT6; p += dist0;
-        case 49: CHECK_FINISHED(49);
-                 *p &= BIT5; p += dist1;
-        case 50: CHECK_FINISHED(50);
-                 *p &= BIT4; p += dist2;
-        case 51: CHECK_FINISHED(51);
-                 *p &= BIT3; p += dist3;
-        case 52: CHECK_FINISHED(52);
-                 *p &= BIT2; p += dist4;
-        case 53: CHECK_FINISHED(53);
-                 *p &= BIT1; p += dist5;
-        case 54: CHECK_FINISHED(54);
-                 *p &= BIT0; p += dist6;
-        case 55: CHECK_FINISHED(55);
-                 *p &= BIT7; p += dist7;
+        case 0: CHECK_FINISHED(48);
+                *p &= BIT6; p += dist0;
+        case 1: CHECK_FINISHED(49);
+                *p &= BIT5; p += dist1;
+        case 2: CHECK_FINISHED(50);
+                *p &= BIT4; p += dist2;
+        case 3: CHECK_FINISHED(51);
+                *p &= BIT3; p += dist3;
+        case 4: CHECK_FINISHED(52);
+                *p &= BIT2; p += dist4;
+        case 5: CHECK_FINISHED(53);
+                *p &= BIT1; p += dist5;
+        case 6: CHECK_FINISHED(54);
+                *p &= BIT0; p += dist6;
+        case 7: CHECK_FINISHED(55);
+                *p &= BIT7; p += dist7;
       }
     }
   }
@@ -474,26 +478,26 @@ void EratMedium::crossOff_31(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
     uint64_t dist6 = sievingPrime * 6 + 0;
     uint64_t dist7 = sievingPrime * 2 + 0;
 
-    switch (wheelIndex)
+    switch (wheelIndex & 7)
     {
       for (;;)
       {
-        case 56: CHECK_FINISHED(56);
-                 *p &= BIT7; p += dist0;
-        case 57: CHECK_FINISHED(57);
-                 *p &= BIT0; p += dist1;
-        case 58: CHECK_FINISHED(58);
-                 *p &= BIT1; p += dist2;
-        case 59: CHECK_FINISHED(59);
-                 *p &= BIT2; p += dist3;
-        case 60: CHECK_FINISHED(60);
-                 *p &= BIT3; p += dist4;
-        case 61: CHECK_FINISHED(61);
-                 *p &= BIT4; p += dist5;
-        case 62: CHECK_FINISHED(62);
-                 *p &= BIT5; p += dist6;
-        case 63: CHECK_FINISHED(63);
-                 *p &= BIT6; p += dist7;
+        case 0: CHECK_FINISHED(56);
+                *p &= BIT7; p += dist0;
+        case 1: CHECK_FINISHED(57);
+                *p &= BIT0; p += dist1;
+        case 2: CHECK_FINISHED(58);
+                *p &= BIT1; p += dist2;
+        case 3: CHECK_FINISHED(59);
+                *p &= BIT2; p += dist3;
+        case 4: CHECK_FINISHED(60);
+                *p &= BIT3; p += dist4;
+        case 5: CHECK_FINISHED(61);
+                *p &= BIT4; p += dist5;
+        case 6: CHECK_FINISHED(62);
+                *p &= BIT5; p += dist6;
+        case 7: CHECK_FINISHED(63);
+                *p &= BIT6; p += dist7;
       }
     }
   }
