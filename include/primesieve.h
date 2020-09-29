@@ -4,7 +4,7 @@
  *         number generation. In case an error occurs errno is set to
  *         EDOM and PRIMESIEVE_ERROR is returned.
  * 
- * Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
  * 
  * This file is distributed under the BSD License.
  */
@@ -12,9 +12,9 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
-#define PRIMESIEVE_VERSION "7.5"
+#define PRIMESIEVE_VERSION "7.6"
 #define PRIMESIEVE_VERSION_MAJOR 7
-#define PRIMESIEVE_VERSION_MINOR 5
+#define PRIMESIEVE_VERSION_MINOR 6
 
 #include <primesieve/iterator.h>
 

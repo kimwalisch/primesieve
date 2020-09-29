@@ -1,7 +1,7 @@
 /*
  * PrimeSieveGUI.hpp -- This file is part of primesieve
  *
- * Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ const QString APPLICATION_NAME("primesieve");
 const QString APPLICATION_HOMEPAGE("https://github.com/kimwalisch/primesieve");
 
 const QString APPLICATION_ABOUT(
-    "<p>Copyright &copy; 2019 Kim Walisch</p>"
+    "<p>Copyright &copy; 2020 Kim Walisch</p>"
     "<p>primesieve generates prime numbers and prime k-tuplets using a highly "
     "optimized implementation of the sieve of Eratosthenes."
     "<br><br>"
