@@ -125,17 +125,18 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
     // sievingPrime within the current segment.
     uint8_t* p = &sieve[multipleIndex];
 
-    // By using switch(n & 63) we let the compiler know that n is
-    // always within [0, 63]. This trick reduces the number of
-    // instructions as the compiler now does not add a check
-    // if (n > 63) which skips to the end of the switch statement.
+    // By using switch(n & 63) we let the compiler know that
+    // n is always within [0, 63]. This trick reduces the
+    // number of instructions as the compiler now does not
+    // add a check if (n > 63) which skips to the end of the
+    // switch statement.
     switch (wheelIndex & 63)
     {
       // sievingPrime % 30 == 7
       for (;;)
       {
-        case 0: // Each iteration removes the next 8 multiples
-                // of the current sievingPrime.
+        case 0: // Each iteration removes the next 8
+                // multiples of the sievingPrime.
                 for (; p < loopEnd; p += sievingPrime * 30 + 7)
                 {
                   p[sievingPrime *  0 + 0] &= BIT0;

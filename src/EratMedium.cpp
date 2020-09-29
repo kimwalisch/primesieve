@@ -145,10 +145,11 @@ void EratMedium::crossOff_7(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
     uint64_t dist6 = sievingPrime * 6 + 1;
     uint64_t dist7 = sievingPrime * 2 + 1;
 
-    // By using switch(n & 7) we let the compiler know that n is
-    // always within [0, 7]. This trick reduces the number of
-    // instructions as the compiler now does not add a check
-    // if (n > 7) which skips to the end of the switch statement.
+    // By using switch(n & 7) we let the compiler know that
+    // n is always within [0, 7]. This trick reduces the
+    // number of instructions as the compiler now does not
+    // add a check if (n > 7) which skips to the end of the
+    // switch statement.
     switch (wheelIndex & 7)
     {
       for (;;)
