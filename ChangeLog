@@ -1,9 +1,11 @@
-Changes for upcoming release, 26/09/2020
+Changes for upcoming release, 29/09/2020
 ========================================
 
 * CpuInfo.cpp: Linux kernel CPU detection has been updated.
 * EratSmall.cpp: Get rid of goto.
+* EratSmall.cpp: Optimize switch statement.
 * EratMedium.cpp: Get rid of goto.
+* EratMedium.cpp: Optimize switch statements.
 * doc/C_Examples.md: libprimesieve C code examples.
 * doc/CPP_Examples.md: libprimesieve C++ code examples.
 
