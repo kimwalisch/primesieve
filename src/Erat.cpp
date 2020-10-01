@@ -17,11 +17,11 @@
 #include <primesieve/EratBig.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
 #include <array>
 #include <algorithm>
+#include <cassert>
 #include <memory>
 
 using namespace std;
@@ -73,9 +73,7 @@ void Erat::init(uint64_t start,
   if (start > stop)
     return;
 
-  if (start < 7)
-    throw primesieve_error("Erat: start < 7");
-
+  assert(start >= 7);
   start_ = start;
   stop_ = stop;
   preSieve_ = &preSieve;

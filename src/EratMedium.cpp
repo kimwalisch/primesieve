@@ -22,8 +22,6 @@
 #include <primesieve/Bucket.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/MemoryPool.hpp>
-#include <primesieve/Wheel.hpp>
-#include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
 #include <cassert>
@@ -52,18 +50,13 @@ namespace primesieve {
 ///
 void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 {
-  uint64_t maxSieveSize = 4096 << 10;
-
-  if (sieveSize > maxSieveSize)
-    throw primesieve_error("EratMedium: sieveSize > 4096 KiB");
-  if (maxPrime > sieveSize * 9)
-    throw primesieve_error("EratMedium: maxPrime > sieveSize * 9");
+  assert(maxPrime <= sieveSize * 9);
+  assert(sieveSize * 2 <= SievingPrime::MAX_MULTIPLEINDEX + 1);
 
   enabled_ = true;
+  stop_ = stop;
   maxPrime_ = maxPrime;
   buckets_.fill(nullptr);
-
-  Wheel::init(stop, sieveSize);
 }
 
 /// Add a new sieving prime to EratMedium

@@ -20,8 +20,6 @@
 #include <primesieve/Bucket.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/primesieve_error.hpp>
-#include <primesieve/Wheel.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -47,13 +45,13 @@ namespace primesieve {
 ///
 void EratSmall::init(uint64_t stop, uint64_t l1CacheSize, uint64_t maxPrime)
 {
-  if (maxPrime > l1CacheSize * 3)
-    throw primesieve_error("EratSmall: maxPrime > l1CacheSize * 3");
+  assert(maxPrime <= l1CacheSize * 3);
+  assert(l1CacheSize <= SievingPrime::MAX_MULTIPLEINDEX + 1);
 
   enabled_ = true;
+  stop_ = stop;
   maxPrime_ = maxPrime;
   l1CacheSize_ = l1CacheSize;
-  Wheel::init(stop, l1CacheSize);
 
   size_t count = primeCountApprox(maxPrime);
   primes_.reserve(count);

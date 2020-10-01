@@ -22,7 +22,6 @@
 #include <primesieve/Bucket.hpp>
 #include <primesieve/MemoryPool.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/primesieve_error.hpp>
 #include <primesieve/Wheel.hpp>
 
 #include <stdint.h>
@@ -39,12 +38,11 @@ namespace primesieve {
 void EratBig::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
 {
   // '>> log2SieveSize' requires power of 2 sieveSize
-  if (!isPow2(sieveSize))
-    throw primesieve_error("EratBig: sieveSize is not a power of 2");
-
-  Wheel::init(stop, sieveSize);
+  assert(isPow2(sieveSize));
+  assert(sieveSize <= SievingPrime::MAX_MULTIPLEINDEX + 1);
 
   enabled_ = true;
+  stop_ = stop;
   maxPrime_ = maxPrime;
   log2SieveSize_ = ilog2(sieveSize);
   moduloSieveSize_ = sieveSize - 1;
