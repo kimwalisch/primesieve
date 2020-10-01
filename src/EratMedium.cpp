@@ -38,7 +38,7 @@
   if_unlikely(p >= sieveEnd) \
   { \
     multipleIndex = (uint64_t) (p - sieveEnd); \
-    if (memoryPool_.isFullBucket(buckets_[wheelIndex])) \
+    if (MemoryPool::isFullBucket(buckets_[wheelIndex])) \
       memoryPool_.addBucket(buckets_[wheelIndex]); \
     buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex); \
     break; \
@@ -72,7 +72,7 @@ void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint6
   assert(prime <= maxPrime_);
   uint64_t sievingPrime = prime / 30;
 
-  if (memoryPool_.isFullBucket(buckets_[wheelIndex]))
+  if (MemoryPool::isFullBucket(buckets_[wheelIndex]))
     memoryPool_.addBucket(buckets_[wheelIndex]);
 
   buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);

@@ -66,7 +66,7 @@ void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t
   uint64_t segment = multipleIndex >> log2SieveSize_;
   multipleIndex &= moduloSieveSize_;
 
-  if (memoryPool_.isFullBucket(buckets_[segment]))
+  if (MemoryPool::isFullBucket(buckets_[segment]))
     memoryPool_.addBucket(buckets_[segment]);
 
   buckets_[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
@@ -133,7 +133,7 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     uint64_t segment0 = multipleIndex0 >> log2SieveSize;
     multipleIndex0 &= moduloSieveSize;
 
-    if (memoryPool_.isFullBucket(buckets[segment0]))
+    if (MemoryPool::isFullBucket(buckets[segment0]))
       memoryPool_.addBucket(buckets[segment0]);
 
     // The next multiple of the sieving prime will
@@ -147,7 +147,7 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     uint64_t segment1 = multipleIndex1 >> log2SieveSize;
     multipleIndex1 &= moduloSieveSize;
 
-    if (memoryPool_.isFullBucket(buckets[segment1]))
+    if (MemoryPool::isFullBucket(buckets[segment1]))
       memoryPool_.addBucket(buckets[segment1]);
 
     buckets[segment1]++->set(sievingPrime1, multipleIndex1, wheelIndex1);
@@ -163,7 +163,7 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     uint64_t segment = multipleIndex >> log2SieveSize;
     multipleIndex &= moduloSieveSize;
 
-    if (memoryPool_.isFullBucket(buckets[segment]))
+    if (MemoryPool::isFullBucket(buckets[segment]))
       memoryPool_.addBucket(buckets[segment]);
 
     buckets[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
