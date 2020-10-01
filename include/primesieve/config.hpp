@@ -50,11 +50,7 @@ enum {
   /// running benchmarks near 10^10.
   /// @pre FACTOR_ERATSMALL >= 0 && <= 3
   ///
-  /// - For x86-64 CPUs after  2010 use 0.2
-  /// - For x86-64 CPUs before 2010 use 0.6
-  /// - For PowerPC G4 CPUs    2003 use 1.0
-  ///
-  const double FACTOR_ERATSMALL = 0.2;
+  const double FACTOR_ERATSMALL = 0.175;
 
   /// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL)
   /// and <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
