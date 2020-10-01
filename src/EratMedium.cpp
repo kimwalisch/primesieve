@@ -48,7 +48,9 @@ namespace primesieve {
 /// @sieveSize: Sieve size in bytes
 /// @maxPrime:  Sieving primes <= maxPrime
 ///
-void EratMedium::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
+void EratMedium::init(uint64_t stop,
+                      uint64_t MAYBE_UNUSED(sieveSize),
+                      uint64_t maxPrime)
 {
   assert(maxPrime <= sieveSize * 9);
   assert(sieveSize * 2 <= SievingPrime::MAX_MULTIPLEINDEX + 1);

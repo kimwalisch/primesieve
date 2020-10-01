@@ -52,4 +52,11 @@
   #define FALLTHROUGH // fallthrough
 #endif
 
+/// Use [[maybe_unused]] from C++17 once widely supported
+#if defined(NDEBUG)
+  #define MAYBE_UNUSED(x)
+#else
+  #define MAYBE_UNUSED(x) x
+#endif
+
 #endif
