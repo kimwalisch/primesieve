@@ -1,7 +1,7 @@
 ///
 /// @file  Erat.hpp
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -67,6 +67,7 @@ private:
   EratBig eratBig_;
   EratMedium eratMedium_;
   static uint64_t byteRemainder(uint64_t);
+  uint64_t getL1CacheSize() const;
   void initSieve(uint64_t);
   void initErat();
   void preSieve();

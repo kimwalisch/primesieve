@@ -3,13 +3,14 @@
 /// @brief  The Erat class manages prime sieving using the
 ///         EratSmall, EratMedium, EratBig classes.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
 #include <primesieve/config.hpp>
+#include <primesieve/CpuInfo.hpp>
 #include <primesieve/Erat.hpp>
 #include <primesieve/EratSmall.hpp>
 #include <primesieve/EratMedium.hpp>
@@ -109,7 +110,7 @@ void Erat::initSieve(uint64_t sieveSize)
 void Erat::initErat()
 {
   uint64_t sqrtStop = isqrt(stop_);
-  uint64_t l1CacheSize = EratSmall::getL1CacheSize(sieveSize_);
+  uint64_t l1CacheSize = getL1CacheSize();
 
   maxEratSmall_ = (uint64_t) (l1CacheSize * config::FACTOR_ERATSMALL);
   maxEratMedium_ = (uint64_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
@@ -120,6 +121,28 @@ void Erat::initErat()
     eratMedium_.init(stop_, sieveSize_, maxEratMedium_);
   if (sqrtStop > maxEratMedium_)
     eratBig_.init(stop_, sieveSize_, sqrtStop);
+}
+
+/// EratMedium and EratBig usually run fastest using a sieve
+/// size that matches the CPUs L2 cache size. EratSmall
+/// however runs fastest using a sieve size that matches the
+/// CPUs L1 cache size. Hence we use a smaller sieve size
+/// (L1 cache size) in EratSmall and a larger sieve size (L2
+/// cache size) in both EratMedium and EratBig.
+///
+uint64_t Erat::getL1CacheSize() const
+{
+  if (!cpuInfo.hasL1Cache())
+    return sieveSize_;
+
+  uint64_t size = cpuInfo.l1CacheSize();
+  uint64_t minSize = 8 << 10;
+  uint64_t maxSize = 4096 << 10;
+
+  size = std::min(size, sieveSize_);
+  size = inBetween(minSize, size, maxSize);
+
+  return size;
 }
 
 bool Erat::hasNextSegment() const
