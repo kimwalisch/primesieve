@@ -2,7 +2,7 @@
 /// @file   config.hpp
 /// @brief  primesieve compile time constants.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -50,11 +50,11 @@ enum {
   /// running benchmarks near 10^10.
   /// @pre FACTOR_ERATSMALL >= 0 && <= 3
   ///
-  /// - For x86-64 CPUs after  2010 use 0.4
-  /// - For x86-64 CPUs before 2010 use 0.8
+  /// - For x86-64 CPUs after  2010 use 0.2
+  /// - For x86-64 CPUs before 2010 use 0.6
   /// - For PowerPC G4 CPUs    2003 use 1.0
   ///
-  const double FACTOR_ERATSMALL = 0.4;
+  const double FACTOR_ERATSMALL = 0.2;
 
   /// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL)
   /// and <= (sieveSize in bytes * FACTOR_ERATMEDIUM)

@@ -1,7 +1,8 @@
-Changes for upcoming release, 29/09/2020
+Changes for upcoming release, 01/10/2020
 ========================================
 
 * CpuInfo.cpp: Linux kernel CPU detection has been updated.
+* config.hpp: Tune FACTOR_ERATSMALL factor.
 * EratSmall.cpp: Get rid of goto.
 * EratSmall.cpp: Optimize switch statement.
 * EratSmall.cpp: Annotate switch cases with fallthrough.
