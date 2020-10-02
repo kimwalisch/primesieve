@@ -3,7 +3,7 @@
 /// @brief  Cast bytes in ascending address order on both little and
 ///         big endian CPUs.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -14,7 +14,7 @@
 
 #include <stdint.h>
 
-namespace primesieve {
+namespace {
 
 /// http://c-faq.com/misc/endiantest.html
 inline bool is_littleendian()

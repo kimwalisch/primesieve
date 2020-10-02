@@ -1,7 +1,7 @@
 ///
 /// @file  malloc_vector
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -15,7 +15,7 @@
 #include <cstddef>
 #include <new>
 
-namespace primesieve {
+namespace {
 
 /// malloc_vector is a dynamically growing array.
 /// It has the same API (though not complete) as std::vector but it
