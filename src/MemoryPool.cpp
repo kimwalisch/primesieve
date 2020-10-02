@@ -10,7 +10,7 @@
 ///        doing any memory allocation as long as the MemoryPool's
 ///        stock is not empty.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -45,7 +45,7 @@ void MemoryPool::addBucket(SievingPrime*& sievingPrime)
   // that was previously at the front of the list.
   if (sievingPrime)
   {
-    Bucket* old = getBucket(sievingPrime);
+    Bucket* old = Bucket::get(sievingPrime);
     old->setEnd(sievingPrime);
     bucket->setNext(old);
   }
