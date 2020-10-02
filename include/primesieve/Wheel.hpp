@@ -12,8 +12,6 @@
 #ifndef WHEEL_HPP
 #define WHEEL_HPP
 
-#include "Bucket.hpp"
-
 #include <stdint.h>
 #include <algorithm>
 #include <cassert>
