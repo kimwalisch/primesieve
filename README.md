@@ -1,3 +1,4 @@
+Primesieve is a program and C/C++ library that generates primes using a highly optimized.
 # primesieve
 
 [![Build Status](https://travis-ci.org/kimwalisch/primesieve.svg)](https://travis-ci.org/kimwalisch/primesieve)
