@@ -22,7 +22,7 @@
 ///         larger than the sieve array we only need to partially copy
 ///         it to the sieve array.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -36,7 +36,7 @@
 #include <algorithm>
 #include <array>
 #include <iterator>
-#include <memory>
+#include <vector>
 
 using namespace std;
 
@@ -77,10 +77,7 @@ void PreSieve::initBuffer(uint64_t maxPrime,
   maxPrime_ = maxPrime;
   primeProduct_ = primeProduct;
   size_ = primeProduct_ / 30;
-
-  buffer_ = new uint8_t[size_];
-  deleter_.reset(buffer_);
-  fill_n(buffer_, size_, (uint8_t) 0xff);
+  buffer_.resize(size_, 0xff);
 
   EratSmall eratSmall;
   uint64_t stop = primeProduct_ * 2;
@@ -90,7 +87,8 @@ void PreSieve::initBuffer(uint64_t maxPrime,
     if (prime <= maxPrime_)
       eratSmall.addSievingPrime(prime, primeProduct_);
 
-  eratSmall.crossOff(buffer_, size_);
+  auto buffer = buffer_.data();
+  eratSmall.crossOff(buffer, size_);
 }
 
 /// Copy pre-sieved buffer to sieve array
@@ -102,21 +100,22 @@ void PreSieve::copy(uint8_t* sieve,
   uint64_t remainder = segmentLow % primeProduct_;
   uint64_t i = remainder / 30;
   uint64_t sizeLeft = size_ - i;
+  auto buffer = buffer_.data();
 
   if (sieveSize <= sizeLeft)
-    copy_n(&buffer_[i], sieveSize, sieve);
+    copy_n(&buffer[i], sieveSize, sieve);
   else
   {
     // Copy the last remaining bytes of buffer
     // to the beginning of the sieve array
-    copy_n(&buffer_[i], sizeLeft, sieve);
+    copy_n(&buffer[i], sizeLeft, sieve);
 
     // Restart copying at the beginning of buffer
     for (i = sizeLeft; i + size_ < sieveSize; i += size_)
-      copy_n(buffer_, size_, &sieve[i]);
+      copy_n(buffer, size_, &sieve[i]);
 
     // Copy the last remaining bytes
-    copy_n(buffer_, sieveSize - i, &sieve[i]);
+    copy_n(buffer, sieveSize - i, &sieve[i]);
   }
 }
 

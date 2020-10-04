@@ -1,7 +1,7 @@
 ///
 /// @file  PreSieve.hpp
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,7 +11,7 @@
 #define PRESIEVE_HPP
 
 #include <stdint.h>
-#include <memory>
+#include <vector>
 
 namespace primesieve {
 
@@ -44,8 +44,7 @@ private:
   uint64_t maxPrime_ = 0;
   uint64_t primeProduct_ = 0;
   uint64_t size_ = 0;
-  uint8_t* buffer_ = nullptr;
-  std::unique_ptr<uint8_t[]> deleter_;
+  std::vector<uint8_t> buffer_;
   void initBuffer(uint64_t, uint64_t);
 };
 
