@@ -2,7 +2,7 @@
 /// @file   ParallelSieve.cpp
 /// @brief  Multi-threaded prime sieve using std::async.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -190,7 +190,7 @@ void ParallelSieve::sieve()
     for (int t = 0; t < threads; t++)
       futures.emplace_back(async(launch::async, task));
 
-    for (auto &f : futures)
+    for (auto& f : futures)
       counts_ += f.get();
 
     auto t2 = chrono::system_clock::now();
