@@ -88,7 +88,7 @@ efficiently uses the CPU's multi level cache hierarchy.
  * Uses specialized algorithms for small, medium and big sieving primes
  * Uses L1 cache for small sieving primes & L2 cache for medium and big sieving primes
  * Sorts medium sieving primes to reduce branch misprediction rate
- * Uses a custom memory pool (for big sieving primes)
+ * Uses a custom memory pool (for medium & big sieving primes)
  * Multi-threaded using C++11 ```std::async```
 
 ### Highly optimized inner loop
