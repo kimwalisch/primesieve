@@ -1,4 +1,4 @@
-Changes for upcoming release, 01/10/2020
+Changes for upcoming release, 04/10/2020
 ========================================
 
 * CpuInfo.cpp: Linux kernel CPU detection has been updated.
@@ -9,6 +9,7 @@ Changes for upcoming release, 01/10/2020
 * EratMedium.cpp: Get rid of goto.
 * EratMedium.cpp: Optimize switch statements.
 * EratMedium.cpp: Annotate switch cases with fallthrough.
+* EratBig.cpp: Simplify main sieving loop.
 * doc/C_Examples.md: libprimesieve C code examples.
 * doc/CPP_Examples.md: libprimesieve C++ code examples.
 
