@@ -22,7 +22,6 @@
 #include <primesieve/Bucket.hpp>
 #include <primesieve/MemoryPool.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/Wheel.hpp>
 
 #include <stdint.h>
 #include <cassert>
