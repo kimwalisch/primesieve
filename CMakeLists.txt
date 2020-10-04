@@ -42,9 +42,10 @@ set(BIN_SRC src/console/cmdoptions.cpp
 set(LIB_SRC src/api-c.cpp
             src/api.cpp
             src/CpuInfo.cpp
-            src/EratBig.cpp
-            src/EratMedium.cpp
+            src/Erat.cpp
             src/EratSmall.cpp
+            src/EratMedium.cpp
+            src/EratBig.cpp
             src/iterator-c.cpp
             src/iterator.cpp
             src/IteratorHelper.cpp
@@ -57,7 +58,6 @@ set(LIB_SRC src/api-c.cpp
             src/PreSieve.cpp
             src/PrintPrimes.cpp
             src/PrimeSieve.cpp
-            src/Erat.cpp
             src/SievingPrimes.cpp)
 
 # Required includes ##################################################
