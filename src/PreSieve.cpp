@@ -77,6 +77,8 @@ void PreSieve::initBuffer(uint64_t maxPrime,
   maxPrime_ = maxPrime;
   primeProduct_ = primeProduct;
   size_ = primeProduct_ / 30;
+
+  buffer_.clear();
   buffer_.resize(size_, 0xff);
 
   EratSmall eratSmall;
