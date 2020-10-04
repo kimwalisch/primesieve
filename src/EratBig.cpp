@@ -103,8 +103,8 @@ void EratBig::crossOff(uint8_t* sieve)
 /// sieve array. After the next multiple of a sieving prime
 /// has been removed we calculate its next multiple and
 /// determine in which segment that multiple will occur. Then
-/// we move the sieving prime to the list related to the
-/// previously computed segment.
+/// we move the sieving prime to the bucket list related to
+/// the previously computed segment.
 ///
 void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
 {
@@ -114,44 +114,7 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
   uint64_t moduloSieveSize = moduloSieveSize_;
   uint64_t log2SieveSize = log2SieveSize_;
 
-  // Process 2 sieving primes per loop iteration to
-  // increase instruction level parallelism.
-  for (; prime <= end - 2; prime += 2)
-  {
-    uint64_t multipleIndex0 = prime[0].getMultipleIndex();
-    uint64_t wheelIndex0    = prime[0].getWheelIndex();
-    uint64_t sievingPrime0  = prime[0].getSievingPrime();
-    uint64_t multipleIndex1 = prime[1].getMultipleIndex();
-    uint64_t wheelIndex1    = prime[1].getWheelIndex();
-    uint64_t sievingPrime1  = prime[1].getSievingPrime();
-
-    // Cross-off the current multiple (unset bit)
-    // and calculate the next multiple.
-    unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
-    uint64_t segment0 = multipleIndex0 >> log2SieveSize;
-    multipleIndex0 &= moduloSieveSize;
-
-    if (Bucket::isFull(buckets[segment0]))
-      memoryPool_.addBucket(buckets[segment0]);
-
-    // The next multiple of the sieving prime will
-    // occur in segment0. Hence we move the
-    // sieving prime to the bucket list which
-    // corresponds to that segment.
-    buckets[segment0]++->set(sievingPrime0, multipleIndex0, wheelIndex0);
-
-    // Process the 2nd sieving prime
-    unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
-    uint64_t segment1 = multipleIndex1 >> log2SieveSize;
-    multipleIndex1 &= moduloSieveSize;
-
-    if (Bucket::isFull(buckets[segment1]))
-      memoryPool_.addBucket(buckets[segment1]);
-
-    buckets[segment1]++->set(sievingPrime1, multipleIndex1, wheelIndex1);
-  }
-
-  if (prime != end)
+  for (; prime != end; prime++)
   {
     uint64_t multipleIndex = prime->getMultipleIndex();
     uint64_t wheelIndex    = prime->getWheelIndex();
