@@ -22,11 +22,9 @@
 #include <primesieve/primesieve_error.hpp>
 
 #include <algorithm>
-#include <memory>
 #include <vector>
 
 using std::size_t;
-using std::unique_ptr;
 
 namespace primesieve {
 
@@ -68,7 +66,7 @@ void MemoryPool::allocateBuckets()
   // Allocate a large chunk of memory
   size_t bytes = count_ * sizeof(Bucket);
   char* memory = new char[bytes];
-  memory_.emplace_back(unique_ptr<char[]>(memory));
+  memory_.emplace_back(memory);
   void* ptr = memory;
 
   // Align pointer address to sizeof(Bucket)
