@@ -25,7 +25,6 @@
 #include <memory>
 
 using namespace std;
-using namespace primesieve;
 
 namespace {
 
