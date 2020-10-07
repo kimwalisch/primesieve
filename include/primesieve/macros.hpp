@@ -45,11 +45,20 @@
 
 #if __cplusplus >= 201703L && \
     __has_cpp_attribute(fallthrough)
-  #define FALLTHROUGH [[fallthrough]];
+  #define FALLTHROUGH [[fallthrough]]
 #elif __has_attribute(fallthrough)
-  #define FALLTHROUGH __attribute__((fallthrough));
+  #define FALLTHROUGH __attribute__((fallthrough))
 #else
   #define FALLTHROUGH // fallthrough
+#endif
+
+#if defined(__GNUC__) || \
+    defined(__clang__)
+  #define UNREACHABLE __builtin_unreachable()
+#elif defined(_MSC_VER)
+  #define UNREACHABLE __assume(0)
+#else
+  #define UNREACHABLE
 #endif
 
 /// Use [[maybe_unused]] from C++17 once widely supported

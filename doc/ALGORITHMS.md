@@ -94,7 +94,7 @@ efficiently uses the CPU's multi level cache hierarchy.
 ### Highly optimized inner loop
 
 primesieve's inner sieving loop has been optimized using
-[extreme loop unrolling](https://github.com/kimwalisch/primesieve/blob/master/src/EratSmall.cpp#L117),
+[extreme loop unrolling](https://github.com/kimwalisch/primesieve/blob/master/src/EratSmall.cpp#L112),
 on average crossing off a multiple uses just 1.375 instructions on
 x64 CPUs. Below is the assembly GCC generates for primesieve's inner
 sieving loop, each andb instruction unsets a bit (crosses off a

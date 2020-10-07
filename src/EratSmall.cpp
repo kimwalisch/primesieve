@@ -104,12 +104,7 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
     // sievingPrime within the current segment.
     uint8_t* p = &sieve[multipleIndex];
 
-    // By using switch(n & 63) we let the compiler know that
-    // n is always within [0, 63]. This trick reduces the
-    // number of instructions as the compiler now does not
-    // add a check if (n > 63) which skips to the end of the
-    // switch statement.
-    switch (wheelIndex & 63)
+    switch (wheelIndex)
     {
       // sievingPrime % 30 == 7
       for (;;)
@@ -127,13 +122,13 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                   p[sievingPrime * 22 + 5] &= BIT1;
                   p[sievingPrime * 28 + 6] &= BIT5;
                 }
-                CHECK_FINISHED(0); *p &= BIT0; p += sievingPrime * 6 + 1; FALLTHROUGH
-        case 1: CHECK_FINISHED(1); *p &= BIT4; p += sievingPrime * 4 + 1; FALLTHROUGH
-        case 2: CHECK_FINISHED(2); *p &= BIT3; p += sievingPrime * 2 + 0; FALLTHROUGH
-        case 3: CHECK_FINISHED(3); *p &= BIT7; p += sievingPrime * 4 + 1; FALLTHROUGH
-        case 4: CHECK_FINISHED(4); *p &= BIT6; p += sievingPrime * 2 + 1; FALLTHROUGH
-        case 5: CHECK_FINISHED(5); *p &= BIT2; p += sievingPrime * 4 + 1; FALLTHROUGH
-        case 6: CHECK_FINISHED(6); *p &= BIT1; p += sievingPrime * 6 + 1; FALLTHROUGH
+                CHECK_FINISHED(0); *p &= BIT0; p += sievingPrime * 6 + 1; FALLTHROUGH;
+        case 1: CHECK_FINISHED(1); *p &= BIT4; p += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 2: CHECK_FINISHED(2); *p &= BIT3; p += sievingPrime * 2 + 0; FALLTHROUGH;
+        case 3: CHECK_FINISHED(3); *p &= BIT7; p += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 4: CHECK_FINISHED(4); *p &= BIT6; p += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 5: CHECK_FINISHED(5); *p &= BIT2; p += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 6: CHECK_FINISHED(6); *p &= BIT1; p += sievingPrime * 6 + 1; FALLTHROUGH;
         case 7: CHECK_FINISHED(7); *p &= BIT5; p += sievingPrime * 2 + 1;
       }
       break;
@@ -152,13 +147,13 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 +  8] &= BIT2;
                    p[sievingPrime * 28 + 10] &= BIT4;
                  }
-                 CHECK_FINISHED( 8); *p &= BIT1; p += sievingPrime * 6 + 2; FALLTHROUGH
-        case  9: CHECK_FINISHED( 9); *p &= BIT3; p += sievingPrime * 4 + 1; FALLTHROUGH
-        case 10: CHECK_FINISHED(10); *p &= BIT7; p += sievingPrime * 2 + 1; FALLTHROUGH
-        case 11: CHECK_FINISHED(11); *p &= BIT5; p += sievingPrime * 4 + 2; FALLTHROUGH
-        case 12: CHECK_FINISHED(12); *p &= BIT0; p += sievingPrime * 2 + 0; FALLTHROUGH
-        case 13: CHECK_FINISHED(13); *p &= BIT6; p += sievingPrime * 4 + 2; FALLTHROUGH
-        case 14: CHECK_FINISHED(14); *p &= BIT2; p += sievingPrime * 6 + 2; FALLTHROUGH
+                 CHECK_FINISHED( 8); *p &= BIT1; p += sievingPrime * 6 + 2; FALLTHROUGH;
+        case  9: CHECK_FINISHED( 9); *p &= BIT3; p += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 10: CHECK_FINISHED(10); *p &= BIT7; p += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 11: CHECK_FINISHED(11); *p &= BIT5; p += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 12: CHECK_FINISHED(12); *p &= BIT0; p += sievingPrime * 2 + 0; FALLTHROUGH;
+        case 13: CHECK_FINISHED(13); *p &= BIT6; p += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 14: CHECK_FINISHED(14); *p &= BIT2; p += sievingPrime * 6 + 2; FALLTHROUGH;
         case 15: CHECK_FINISHED(15); *p &= BIT4; p += sievingPrime * 2 + 1;
       }
       break;
@@ -177,13 +172,13 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 +  9] &= BIT6;
                    p[sievingPrime * 28 + 12] &= BIT3;
                  }
-                 CHECK_FINISHED(16); *p &= BIT2; p += sievingPrime * 6 + 2; FALLTHROUGH
-        case 17: CHECK_FINISHED(17); *p &= BIT7; p += sievingPrime * 4 + 2; FALLTHROUGH
-        case 18: CHECK_FINISHED(18); *p &= BIT5; p += sievingPrime * 2 + 1; FALLTHROUGH
-        case 19: CHECK_FINISHED(19); *p &= BIT4; p += sievingPrime * 4 + 2; FALLTHROUGH
-        case 20: CHECK_FINISHED(20); *p &= BIT1; p += sievingPrime * 2 + 1; FALLTHROUGH
-        case 21: CHECK_FINISHED(21); *p &= BIT0; p += sievingPrime * 4 + 1; FALLTHROUGH
-        case 22: CHECK_FINISHED(22); *p &= BIT6; p += sievingPrime * 6 + 3; FALLTHROUGH
+                 CHECK_FINISHED(16); *p &= BIT2; p += sievingPrime * 6 + 2; FALLTHROUGH;
+        case 17: CHECK_FINISHED(17); *p &= BIT7; p += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 18: CHECK_FINISHED(18); *p &= BIT5; p += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 19: CHECK_FINISHED(19); *p &= BIT4; p += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 20: CHECK_FINISHED(20); *p &= BIT1; p += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 21: CHECK_FINISHED(21); *p &= BIT0; p += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 22: CHECK_FINISHED(22); *p &= BIT6; p += sievingPrime * 6 + 3; FALLTHROUGH;
         case 23: CHECK_FINISHED(23); *p &= BIT3; p += sievingPrime * 2 + 1;
       }
       break;
@@ -202,13 +197,13 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 + 12] &= BIT7;
                    p[sievingPrime * 28 + 16] &= BIT2;
                  }
-                 CHECK_FINISHED(24); *p &= BIT3; p += sievingPrime * 6 + 3; FALLTHROUGH
-        case 25: CHECK_FINISHED(25); *p &= BIT6; p += sievingPrime * 4 + 3; FALLTHROUGH
-        case 26: CHECK_FINISHED(26); *p &= BIT0; p += sievingPrime * 2 + 1; FALLTHROUGH
-        case 27: CHECK_FINISHED(27); *p &= BIT1; p += sievingPrime * 4 + 2; FALLTHROUGH
-        case 28: CHECK_FINISHED(28); *p &= BIT4; p += sievingPrime * 2 + 1; FALLTHROUGH
-        case 29: CHECK_FINISHED(29); *p &= BIT5; p += sievingPrime * 4 + 2; FALLTHROUGH
-        case 30: CHECK_FINISHED(30); *p &= BIT7; p += sievingPrime * 6 + 4; FALLTHROUGH
+                 CHECK_FINISHED(24); *p &= BIT3; p += sievingPrime * 6 + 3; FALLTHROUGH;
+        case 25: CHECK_FINISHED(25); *p &= BIT6; p += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 26: CHECK_FINISHED(26); *p &= BIT0; p += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 27: CHECK_FINISHED(27); *p &= BIT1; p += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 28: CHECK_FINISHED(28); *p &= BIT4; p += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 29: CHECK_FINISHED(29); *p &= BIT5; p += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 30: CHECK_FINISHED(30); *p &= BIT7; p += sievingPrime * 6 + 4; FALLTHROUGH;
         case 31: CHECK_FINISHED(31); *p &= BIT2; p += sievingPrime * 2 + 1;
       }
       break;
@@ -227,13 +222,13 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 + 14] &= BIT3;
                    p[sievingPrime * 28 + 18] &= BIT1;
                  }
-                 CHECK_FINISHED(32); *p &= BIT4; p += sievingPrime * 6 + 4; FALLTHROUGH
-        case 33: CHECK_FINISHED(33); *p &= BIT2; p += sievingPrime * 4 + 2; FALLTHROUGH
-        case 34: CHECK_FINISHED(34); *p &= BIT6; p += sievingPrime * 2 + 2; FALLTHROUGH
-        case 35: CHECK_FINISHED(35); *p &= BIT0; p += sievingPrime * 4 + 2; FALLTHROUGH
-        case 36: CHECK_FINISHED(36); *p &= BIT5; p += sievingPrime * 2 + 1; FALLTHROUGH
-        case 37: CHECK_FINISHED(37); *p &= BIT7; p += sievingPrime * 4 + 3; FALLTHROUGH
-        case 38: CHECK_FINISHED(38); *p &= BIT3; p += sievingPrime * 6 + 4; FALLTHROUGH
+                 CHECK_FINISHED(32); *p &= BIT4; p += sievingPrime * 6 + 4; FALLTHROUGH;
+        case 33: CHECK_FINISHED(33); *p &= BIT2; p += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 34: CHECK_FINISHED(34); *p &= BIT6; p += sievingPrime * 2 + 2; FALLTHROUGH;
+        case 35: CHECK_FINISHED(35); *p &= BIT0; p += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 36: CHECK_FINISHED(36); *p &= BIT5; p += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 37: CHECK_FINISHED(37); *p &= BIT7; p += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 38: CHECK_FINISHED(38); *p &= BIT3; p += sievingPrime * 6 + 4; FALLTHROUGH;
         case 39: CHECK_FINISHED(39); *p &= BIT1; p += sievingPrime * 2 + 1;
       }
       break;
@@ -252,13 +247,13 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 + 17] &= BIT4;
                    p[sievingPrime * 28 + 22] &= BIT0;
                  }
-                 CHECK_FINISHED(40); *p &= BIT5; p += sievingPrime * 6 + 5; FALLTHROUGH
-        case 41: CHECK_FINISHED(41); *p &= BIT1; p += sievingPrime * 4 + 3; FALLTHROUGH
-        case 42: CHECK_FINISHED(42); *p &= BIT2; p += sievingPrime * 2 + 1; FALLTHROUGH
-        case 43: CHECK_FINISHED(43); *p &= BIT6; p += sievingPrime * 4 + 3; FALLTHROUGH
-        case 44: CHECK_FINISHED(44); *p &= BIT7; p += sievingPrime * 2 + 2; FALLTHROUGH
-        case 45: CHECK_FINISHED(45); *p &= BIT3; p += sievingPrime * 4 + 3; FALLTHROUGH
-        case 46: CHECK_FINISHED(46); *p &= BIT4; p += sievingPrime * 6 + 5; FALLTHROUGH
+                 CHECK_FINISHED(40); *p &= BIT5; p += sievingPrime * 6 + 5; FALLTHROUGH;
+        case 41: CHECK_FINISHED(41); *p &= BIT1; p += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 42: CHECK_FINISHED(42); *p &= BIT2; p += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 43: CHECK_FINISHED(43); *p &= BIT6; p += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 44: CHECK_FINISHED(44); *p &= BIT7; p += sievingPrime * 2 + 2; FALLTHROUGH;
+        case 45: CHECK_FINISHED(45); *p &= BIT3; p += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 46: CHECK_FINISHED(46); *p &= BIT4; p += sievingPrime * 6 + 5; FALLTHROUGH;
         case 47: CHECK_FINISHED(47); *p &= BIT0; p += sievingPrime * 2 + 1;
       }
       break;
@@ -277,13 +272,13 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 + 22] &= BIT0;
                    p[sievingPrime * 28 + 27] &= BIT7;
                  }
-                 CHECK_FINISHED(48); *p &= BIT6; p += sievingPrime * 6 + 6; FALLTHROUGH
-        case 49: CHECK_FINISHED(49); *p &= BIT5; p += sievingPrime * 4 + 4; FALLTHROUGH
-        case 50: CHECK_FINISHED(50); *p &= BIT4; p += sievingPrime * 2 + 2; FALLTHROUGH
-        case 51: CHECK_FINISHED(51); *p &= BIT3; p += sievingPrime * 4 + 4; FALLTHROUGH
-        case 52: CHECK_FINISHED(52); *p &= BIT2; p += sievingPrime * 2 + 2; FALLTHROUGH
-        case 53: CHECK_FINISHED(53); *p &= BIT1; p += sievingPrime * 4 + 4; FALLTHROUGH
-        case 54: CHECK_FINISHED(54); *p &= BIT0; p += sievingPrime * 6 + 5; FALLTHROUGH
+                 CHECK_FINISHED(48); *p &= BIT6; p += sievingPrime * 6 + 6; FALLTHROUGH;
+        case 49: CHECK_FINISHED(49); *p &= BIT5; p += sievingPrime * 4 + 4; FALLTHROUGH;
+        case 50: CHECK_FINISHED(50); *p &= BIT4; p += sievingPrime * 2 + 2; FALLTHROUGH;
+        case 51: CHECK_FINISHED(51); *p &= BIT3; p += sievingPrime * 4 + 4; FALLTHROUGH;
+        case 52: CHECK_FINISHED(52); *p &= BIT2; p += sievingPrime * 2 + 2; FALLTHROUGH;
+        case 53: CHECK_FINISHED(53); *p &= BIT1; p += sievingPrime * 4 + 4; FALLTHROUGH;
+        case 54: CHECK_FINISHED(54); *p &= BIT0; p += sievingPrime * 6 + 5; FALLTHROUGH;
         case 55: CHECK_FINISHED(55); *p &= BIT7; p += sievingPrime * 2 + 2;
       }
       break;
@@ -302,15 +297,18 @@ void EratSmall::crossOff(uint8_t* sieve, uint8_t* sieveEnd)
                    p[sievingPrime * 22 + 1] &= BIT5;
                    p[sievingPrime * 28 + 1] &= BIT6;
                  }
-                 CHECK_FINISHED(56); *p &= BIT7; p += sievingPrime * 6 + 1; FALLTHROUGH
-        case 57: CHECK_FINISHED(57); *p &= BIT0; p += sievingPrime * 4 + 0; FALLTHROUGH
-        case 58: CHECK_FINISHED(58); *p &= BIT1; p += sievingPrime * 2 + 0; FALLTHROUGH
-        case 59: CHECK_FINISHED(59); *p &= BIT2; p += sievingPrime * 4 + 0; FALLTHROUGH
-        case 60: CHECK_FINISHED(60); *p &= BIT3; p += sievingPrime * 2 + 0; FALLTHROUGH
-        case 61: CHECK_FINISHED(61); *p &= BIT4; p += sievingPrime * 4 + 0; FALLTHROUGH
-        case 62: CHECK_FINISHED(62); *p &= BIT5; p += sievingPrime * 6 + 0; FALLTHROUGH
+                 CHECK_FINISHED(56); *p &= BIT7; p += sievingPrime * 6 + 1; FALLTHROUGH;
+        case 57: CHECK_FINISHED(57); *p &= BIT0; p += sievingPrime * 4 + 0; FALLTHROUGH;
+        case 58: CHECK_FINISHED(58); *p &= BIT1; p += sievingPrime * 2 + 0; FALLTHROUGH;
+        case 59: CHECK_FINISHED(59); *p &= BIT2; p += sievingPrime * 4 + 0; FALLTHROUGH;
+        case 60: CHECK_FINISHED(60); *p &= BIT3; p += sievingPrime * 2 + 0; FALLTHROUGH;
+        case 61: CHECK_FINISHED(61); *p &= BIT4; p += sievingPrime * 4 + 0; FALLTHROUGH;
+        case 62: CHECK_FINISHED(62); *p &= BIT5; p += sievingPrime * 6 + 0; FALLTHROUGH;
         case 63: CHECK_FINISHED(63); *p &= BIT6; p += sievingPrime * 2 + 0;
       }
+      break;
+
+      default: UNREACHABLE;
     }
   }
 }
