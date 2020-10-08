@@ -14,6 +14,10 @@
   #define __has_attribute(x) 0
 #endif
 
+#ifndef __has_builtin
+  #define __has_builtin(x) 0
+#endif
+
 #ifndef __has_cpp_attribute
   #define __has_cpp_attribute(x) 0
 #endif
@@ -24,11 +28,10 @@
 /// which causes register spilling. We annotate such functions
 /// with NOINLINE in order to avoid these issues.
 ///
-#if defined(_MSC_VER)
-  #define NOINLINE __declspec(noinline)
-#elif defined(__GNUC__) || \
-      defined(__clang__)
+#if __has_attribute(noinline)
   #define NOINLINE __attribute__((noinline))
+#elif defined(_MSC_VER)
+  #define NOINLINE __declspec(noinline)
 #else
   #define NOINLINE
 #endif
@@ -37,7 +40,7 @@
     __has_cpp_attribute(unlikely)
   #define if_unlikely(x) if (x) [[unlikely]]
 #elif defined(__GNUC__) || \
-      defined(__clang__)
+      __has_builtin(__builtin_expect)
   #define if_unlikely(x) if (__builtin_expect(!!(x), 0))
 #else
   #define if_unlikely(x) if (x)
@@ -49,11 +52,11 @@
 #elif __has_attribute(fallthrough)
   #define FALLTHROUGH __attribute__((fallthrough))
 #else
-  #define FALLTHROUGH // fallthrough
+  #define FALLTHROUGH
 #endif
 
 #if defined(__GNUC__) || \
-    defined(__clang__)
+    __has_builtin(__builtin_unreachable)
   #define UNREACHABLE __builtin_unreachable()
 #elif defined(_MSC_VER)
   #define UNREACHABLE __assume(0)
