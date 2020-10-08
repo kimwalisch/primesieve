@@ -92,14 +92,14 @@ void EratMedium::crossOff(uint8_t* sieve, uint64_t sieveSize)
 
     Bucket* bucket = Bucket::get(buckets[i]);
     bucket->setEnd(buckets[i]);
-    uint64_t wheel_index = i;
+    uint64_t wheelIndex = i;
 
     // Iterate over the current bucket list.
     // For each bucket cross off the
     // multiples of its sieving primes.
     while (bucket)
     {
-      switch (wheel_index / 8)
+      switch (wheelIndex / 8)
       {
         case 0: crossOff_7 (sieve, sieveEnd, bucket); break;
         case 1: crossOff_11(sieve, sieveEnd, bucket); break;
