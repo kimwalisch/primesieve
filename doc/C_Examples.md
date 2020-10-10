@@ -188,5 +188,5 @@ int main(int argc, char** argv)
 You can compile any of the C example programs above using:
 
 ```C
-cc -O2 primes.cpp -o primes -lprimesieve
+cc -O2 primes.c -o primes -lprimesieve
 ```
