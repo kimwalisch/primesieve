@@ -158,21 +158,22 @@ void ParallelSieve::sieve()
     uint64_t threadDist = getThreadDistance(threads);
     uint64_t iters = ((dist - 1) / threadDist) + 1;
     threads = inBetween(1, threads, iters);
-    atomic<uint64_t> i(0);
+    atomic<uint64_t> a(0);
 
     // Each thread executes 1 task
     auto task = [&]()
     {
       PrimeSieve ps(this);
-      uint64_t j;
+      uint64_t i;
       counts_t counts;
       counts.fill(0);
 
-      while ((j = i++) < iters)
+      while ((i = a.fetch_add(1, memory_order_relaxed)) < iters)
       {
-        uint64_t start = start_ + j * threadDist;
+        uint64_t start = start_ + threadDist * i;
         uint64_t stop = checkedAdd(start, threadDist);
         stop = align(stop);
+
         if (start > start_)
           start = align(start) + 1;
 
