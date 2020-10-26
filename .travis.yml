@@ -86,7 +86,7 @@ install:
     if [ "${TRAVIS_OS_NAME}" = "linux" ]
     then
         sudo apt-get install -y g++-multilib make cmake ninja-build cppcheck doxygen \
-            doxygen-latex graphviz libqt4-dev qt4-qmake valgrind asciidoc libxml2-utils xmlto
+            doxygen-latex graphviz valgrind asciidoc libxml2-utils xmlto
     fi
 
 script:
@@ -132,15 +132,9 @@ script:
         if [ "$(./primesieve 1e10 -d1e8 -p5 | md5sum | cut -f1 -d' ')" != "11b50e4f75899891a62465f6d68fb76e" ]; then exit 1; fi
         if [ "$(./primesieve 1e10 -d1e8 -p6 | md5sum | cut -f1 -d' ')" != "5a0bc83fdef0bb116d60f356adfde52f" ]; then exit 1; fi
 
-        # 3) Build primesieve GUI app using Qt
+        # 3) Build using ninja
         cd ..
         rm -rf build
-        cd src/gui
-        qmake QMAKE_CXX=$CXX QMAKE_CC=$CC
-        make -j4
-
-        # 4) Build using ninja
-        cd ../..
         mkdir build
         cd build
         cmake .. -GNinja \
@@ -153,16 +147,16 @@ script:
         ninja -v
         ninja doc >/dev/null
 
-        # 5) Run test suite
+        # 4) Run test suite
         ninja test
         test/cpu_info
 
-        # 6) Test using valgrind
+        # 5) Test using valgrind
         valgrind --error-exitcode=1 ./primesieve 1e10
         valgrind --error-exitcode=1 ./primesieve 1e9 --nth-prime
         valgrind --error-exitcode=1 ./primesieve 1e13 --dist=1e9 --size=32 --print=6
 
-        # 7) Test using cppcheck
+        # 6) Test using cppcheck
         cd ..
         rm -rf build
         cppcheck . -q \
@@ -173,7 +167,7 @@ script:
                    -itest/next_prime1.cpp \
                    -itest/prev_prime1.cpp
 
-        # 8) Test 32-bit
+        # 7) Test 32-bit
         mkdir build
         cd build
         cmake .. -DCMAKE_C_FLAGS="$CFLAGS -m32 -Wno-long-long" \

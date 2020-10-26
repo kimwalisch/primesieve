@@ -113,7 +113,7 @@ bool PrimeSieve::isPrintkTuplets() const
 
 bool PrimeSieve::isStatus() const
 {
-  return isFlag(PRINT_STATUS, UPDATE_GUI_STATUS);
+  return isFlag(PRINT_STATUS);
 }
 
 bool PrimeSieve::isCount(int i) const
@@ -202,8 +202,6 @@ void PrimeSieve::setStatus(double percent)
   {
     auto old = percent_;
     percent_ = percent;
-    if (sharedMemory_)
-      sharedMemory_->percent = percent_;
     if (isFlag(PRINT_STATUS))
       printStatus(old, percent_);
   }
@@ -229,8 +227,6 @@ void PrimeSieve::updateStatus(uint64_t dist)
       percent = sievedDistance_ * 100.0 / getDistance();
     auto old = percent_;
     percent_ = min(percent, 100.0);
-    if (sharedMemory_)
-      sharedMemory_->percent = percent_;
     if (isFlag(PRINT_STATUS))
       printStatus(old, percent_);
   }

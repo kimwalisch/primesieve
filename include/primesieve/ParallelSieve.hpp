@@ -24,7 +24,6 @@ public:
   using PrimeSieve::sieve;
 
   ParallelSieve();
-  void init(SharedMemory&);
   static int getMaxThreads();
   int getNumThreads() const;
   int idealNumThreads() const;

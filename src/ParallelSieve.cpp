@@ -45,17 +45,6 @@ ParallelSieve::ParallelSieve()
   setNumThreads(threads);
 }
 
-/// Used by Qt GUI app
-void ParallelSieve::init(SharedMemory& s)
-{
-  setStart(s.start);
-  setStop(s.stop);
-  setSieveSize(s.sieveSize);
-  setFlags(s.flags);
-  setNumThreads(s.threads);
-  sharedMemory_ = &s;
-}
-
 int ParallelSieve::getMaxThreads()
 {
   int maxThreads = thread::hardware_concurrency();
@@ -198,13 +187,6 @@ void ParallelSieve::sieve()
     chrono::duration<double> seconds = t2 - t1;
     seconds_ = seconds.count();
     setStatus(100);
-  }
-
-  if (sharedMemory_)
-  {
-    // Send results to primesieve GUI app
-    sharedMemory_->counts = counts_;
-    sharedMemory_->seconds = seconds_;
   }
 }
 

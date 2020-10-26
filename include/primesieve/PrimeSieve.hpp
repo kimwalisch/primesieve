@@ -4,7 +4,7 @@
 ///         sieving. It is used for printing and counting primes
 ///         and for computing the nth prime.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -22,20 +22,6 @@ namespace primesieve {
 using counts_t = std::array<uint64_t, 6>;
 class ParallelSieve;
 
-/// Used for inter-process communication with the
-/// primesieve Qt GUI application.
-struct SharedMemory
-{
-  uint64_t start;
-  uint64_t stop;
-  counts_t counts;
-  double percent;
-  double seconds;
-  int flags;
-  int sieveSize;
-  int threads;
-};
-
 enum
 {
   COUNT_PRIMES      = 1 << 0,
@@ -50,8 +36,7 @@ enum
   PRINT_QUADRUPLETS = 1 << 9,
   PRINT_QUINTUPLETS = 1 << 10,
   PRINT_SEXTUPLETS  = 1 << 11,
-  PRINT_STATUS      = 1 << 12,
-  UPDATE_GUI_STATUS = 1 << 13
+  PRINT_STATUS      = 1 << 12
 };
 
 class PrimeSieve
@@ -108,8 +93,6 @@ protected:
   double percent_ = 0;
   /// Prime number and prime k-tuplet counts
   counts_t counts_;
-  /// Used for communication with the Qt GUI app
-  SharedMemory* sharedMemory_ = nullptr;
   void reset();
   void setStatus(double);
 
