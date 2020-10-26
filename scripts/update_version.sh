@@ -66,7 +66,7 @@ done
 
 # Update year
 for i in $(echo COPYING \
-                src/console/help.cpp)
+                src/app/help.cpp)
 do
     echo "Update year in $i"
     sed "s/$old_year/$new_year/g" $i > $i.tmp
