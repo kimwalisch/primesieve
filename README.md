@@ -25,7 +25,7 @@ primesieve uses 8 bytes per sieving prime, hence its memory usage is about
 <img src="https://github.com/kimwalisch/primesieve/blob/gh-pages/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
 bytes per thread.
 
-* [More algorithm details](doc/ALGORITHMS.md#algorithm-details)
+* [More algorithm details](doc/ALGORITHMS.md)
 
 ## Installation
 
