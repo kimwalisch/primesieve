@@ -30,8 +30,8 @@ bytes per thread.
 ## Installation
 
 The primesieve command-line program can be installed using your operating system's
-package manager. You can also download the latest primesieve binaries for various OSes
-from the [downloads](https://github.com/kimwalisch/primesieve/wiki/Downloads) page.
+package manager. For doing development with libprimesieve you may need
+to install ```libprimesieve-dev``` or ```libprimesieve-devel```.
 
 <table>
     <tr>
