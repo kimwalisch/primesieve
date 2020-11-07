@@ -11,6 +11,11 @@
 
 #include <stdint.h>
 
+#if defined(_MSC_VER) && defined(__AVX__)
+#  include <intrin.h>
+#  define __builtin_popcountll __popcnt64
+#endif
+
 namespace {
 
 /// This uses fewer arithmetic operations than any other known
@@ -20,6 +25,9 @@ namespace {
 ///
 uint64_t popcount64(uint64_t x)
 {
+#if (defined(_MSC_VER) && defined(__AVX__)) || __GNUC__
+  return __builtin_popcountll(x);
+#else
   const uint64_t m1 = 0x5555555555555555ull;
   const uint64_t m2 = 0x3333333333333333ull;
   const uint64_t m4 = 0x0F0F0F0F0F0F0F0Full;
@@ -29,6 +37,7 @@ uint64_t popcount64(uint64_t x)
   x = (x & m2) + ((x >> 2) & m2);
   x = (x + (x >> 4)) & m4;
   return (x * h01) >> 56;
+#endif
 }
 
 /// Carry-save adder (CSA).
