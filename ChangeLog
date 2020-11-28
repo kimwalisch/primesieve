@@ -1,9 +1,10 @@
-Changes for upcoming release, 26/10/2020
+Changes for upcoming release, 28/11/2020
 ========================================
 
 * The primesieve GUI application has been deprecated/removed.
   It only works with QT4 which has reached end-of-life.
 * CpuInfo.cpp: Linux kernel CPU detection has been updated.
+* CpuInfo.cpp: Add workaround for sysctl bug (macOS & iOS).
 * config.hpp: Tune FACTOR_ERATSMALL factor.
 * EratSmall.cpp: Get rid of goto.
 * EratSmall.cpp: Optimize switch statement.

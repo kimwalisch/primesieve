@@ -3,7 +3,7 @@
 /// @brief  Get detailed information about the CPU's caches
 ///         on Windows, macOS and Linux.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -388,6 +388,37 @@ void CpuInfo::init()
   auto cacheConfig = getSysctl<size_t>("hw.cacheconfig");
   for (size_t i = 1; i < min(cacheConfig.size(), cacheSharing_.size()); i++)
     cacheSharing_[i] = cacheConfig[i];
+
+// For Apple silicon CPUs (ARM & ARM64) sysctl returns
+// erroneous L2 & L3 cache information. However for
+// x86 and PowerPC CPUs sysctl works correctly.
+// See: https://github.com/kimwalisch/primesieve/issues/96
+#if !(defined(__x86_64__) || \
+      defined(__i386__) || \
+      defined(__ppc64__) || \
+      defined(__ppc__))
+
+  // Check if this CPU has an L2 cache. Because of sysctl
+  // bugs and/or limitations we cannot reliably know what
+  // size it is and whether it is private or shared.
+  // However based on benchmarks of the Apple M1 CPU the
+  // L2 cache performance scales nicely with
+  // multi-threading provided we use less or equal the
+  // (total L2 cache size / threads sharing the L2 cache).
+  // For these reasons we make an educated guess here that
+  // the L2 cache is fast and that using some of it will
+  // improve performance.
+  if (hasPrivateL2Cache() &&
+      hasL1Cache() &&
+      l1CacheSize() * 4 <= l2CacheSize())
+    sysctlL2CacheWorkaround_ = true;
+
+  // Delete erroneous L2 & L3 cache info
+  for (size_t i = 2; cacheSizes.size(); i++)
+    cacheSizes_[i] = 0;
+  for (size_t i = 2; cacheConfig.size(); i++)
+    cacheSharing__[i] = 0;
+#endif
 }
 
 } // namespace
@@ -687,6 +718,7 @@ CpuInfo::CpuInfo() :
   cpuCores_(0),
   cpuThreads_(0),
   threadsPerCore_(0),
+  sysctlL2CacheWorkaround_(false),
   cacheSizes_{0, 0, 0, 0},
   cacheSharing_{0, 0, 0, 0}
 {
@@ -840,6 +872,11 @@ bool CpuInfo::hasPrivateL2Cache() const
          hasL2Sharing() &&
          hasThreadsPerCore() &&
          l2Sharing() <= threadsPerCore_;
+}
+
+bool CpuInfo::sysctlL2CacheWorkaround() const
+{
+  return sysctlL2CacheWorkaround_;
 }
 
 } // namespace

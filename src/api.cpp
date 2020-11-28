@@ -4,7 +4,7 @@
 ///         Contains the implementations of the functions declared
 ///         in the primesieve.hpp header file.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -150,17 +150,35 @@ int get_sieve_size()
   if (sieve_size)
     return sieve_size;
 
+  // On Apple's operating systems (macOS & iOS) we use
+  // the sysctl library to query CPU info. Unfortunately
+  // sysctl returns erroneous L2 & L3 cache information on
+  // Apple silicon CPUs (ARM & ARM64). We can only know
+  // if an L2 cache exists and that it is likely fast.
+  // If this is the case we do a very conservative guess
+  // that the L2 cache per core is at least 4x larger than
+  // the L1 cache as this will likely improve performance.
+  if (cpuInfo.sysctlL2CacheWorkaround() &&
+      cpuInfo.hasL1Cache())
+  {
+    // convert bytes to KiB
+    size_t size = cpuInfo.l1CacheSize() >> 10;
+    size = inBetween(8, size * 4, 4096);
+    size = floorPow2(size);
+    return (int) size;
+  }
+
   // Shared CPU caches are usually slow. Hence we only use
   // the L2 cache for sieving if each physical CPU core
   // has a private L2 cache. Also we only use half of the
-  // L2 cache for the sieve array so that other important
-  // data structures can also fit into the L2 cache.
+  // L2 cache. This is a safety measure as some CPUs incur
+  // a significant performance degradation if we fully
+  // utilize the L2 cache.
   if (cpuInfo.hasPrivateL2Cache())
   {
     // convert bytes to KiB
     size_t size = cpuInfo.l2CacheSize() >> 10;
-    size = size - 1;
-    size = inBetween(32, size, 4096);
+    size = inBetween(32, size - 1, 4096);
     size = floorPow2(size);
     return (int) size;
   }

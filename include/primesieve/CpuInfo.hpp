@@ -1,7 +1,7 @@
 ///
 /// @file  CpuInfo.hpp
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -31,6 +31,7 @@ public:
   bool hasL3Sharing() const;
   bool hasThreadsPerCore() const;
   bool hasPrivateL2Cache() const;
+  bool sysctlL2CacheWorkaround() const;
   std::string cpuName() const;
   std::string getError() const;
   std::size_t l1CacheSize() const;
@@ -48,6 +49,7 @@ private:
   std::size_t cpuCores_;
   std::size_t cpuThreads_;
   std::size_t threadsPerCore_;
+  bool sysctlL2CacheWorkaround_;
   std::array<std::size_t, 4> cacheSizes_;
   std::array<std::size_t, 4> cacheSharing_;
   std::string error_;
