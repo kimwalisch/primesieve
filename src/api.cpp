@@ -154,16 +154,16 @@ int get_sieve_size()
   // the sysctl library to query CPU info. Unfortunately
   // sysctl returns erroneous L2 & L3 cache information on
   // Apple silicon CPUs (ARM & ARM64). We can only know
-  // if an L2 cache exists and that it is likely fast.
-  // If this is the case we do a very conservative guess
-  // that the L2 cache per core is at least 4x larger than
-  // the L1 cache as this will likely improve performance.
+  // if an L2 cache exists and that it is likely fast. If
+  // this is the case, we make a conservative guess that
+  // the L2 cache per core is at least 8x larger than the
+  // L1 cache as this will likely improve performance.
   if (cpuInfo.sysctlL2CacheWorkaround() &&
       cpuInfo.hasL1Cache())
   {
     // convert bytes to KiB
     size_t size = cpuInfo.l1CacheSize() >> 10;
-    size = inBetween(8, size * 4, 4096);
+    size = inBetween(8, size * 8, 4096);
     size = floorPow2(size);
     return (int) size;
   }

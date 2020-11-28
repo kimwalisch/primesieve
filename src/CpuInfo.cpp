@@ -389,35 +389,35 @@ void CpuInfo::init()
   for (size_t i = 1; i < min(cacheConfig.size(), cacheSharing_.size()); i++)
     cacheSharing_[i] = cacheConfig[i];
 
-// For Apple silicon CPUs (ARM & ARM64) sysctl returns
-// erroneous L2 & L3 cache information. However for
-// x86 and PowerPC CPUs sysctl works correctly.
-// See: https://github.com/kimwalisch/primesieve/issues/96
 #if !(defined(__x86_64__) || \
       defined(__i386__) || \
       defined(__ppc64__) || \
       defined(__ppc__))
 
-  // Check if this CPU has an L2 cache. Because of sysctl
-  // bugs and/or limitations we cannot reliably know what
-  // size it is and whether it is private or shared.
-  // However based on benchmarks of the Apple M1 CPU the
-  // L2 cache performance scales nicely with
+  // For Apple silicon CPUs (ARM & ARM64) sysctl returns
+  // erroneous L2 cache information. For the L1 cache
+  // sysctl returns the cache size per core which is correct
+  // (like on x86 CPUs). However for the L2 cache sysctl
+  // returns the total cache size. It is unclear whether
+  // hw.cachesize or hw.cacheconfig is erroneous.
+  // See: https://github.com/kimwalisch/primesieve/issues/96
+  //
+  // Because of this sysctl issue it is impossible to know
+  // the exact L2 cache size per core and whether the L2
+  // cache is private or shared. However based on benchmarks
+  // of the Apple M1 CPU the L2 cache scales nicely with
   // multi-threading provided we use less or equal the
   // (total L2 cache size / threads sharing the L2 cache).
-  // For these reasons we make an educated guess here that
-  // the L2 cache is fast and that using some of it will
-  // improve performance.
+  //
+  // For these reasons we make an educated guess here:
+  // If the CPU has an L2 cache we assume it is fast (will
+  // scale nicely with multi-threading) and that using some
+  // of it will improve the sieving performance.
+  //
   if (hasPrivateL2Cache() &&
       hasL1Cache() &&
-      l1CacheSize() * 4 <= l2CacheSize())
+      l2CacheSize() > l1CacheSize() * 16)
     sysctlL2CacheWorkaround_ = true;
-
-  // Delete erroneous L2 & L3 cache info
-  for (size_t i = 2; cacheSizes.size(); i++)
-    cacheSizes_[i] = 0;
-  for (size_t i = 2; cacheConfig.size(); i++)
-    cacheSharing__[i] = 0;
 #endif
 }
 
