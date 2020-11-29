@@ -656,8 +656,8 @@ namespace primesieve {
 
 void CpuInfo::init()
 {
-  string cpusPresent = "/sys/devices/system/cpu/present";
-  cpuThreads_ = parseThreadList(cpusPresent);
+  string cpusOnline = "/sys/devices/system/cpu/online";
+  cpuThreads_ = parseThreadList(cpusOnline);
 
   // Works on Linux kernel >= 5.3
   string threadSiblingsList = "/sys/devices/system/cpu/cpu0/topology/core_cpus_list";
