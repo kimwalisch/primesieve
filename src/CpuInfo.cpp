@@ -20,8 +20,7 @@
 #if defined(__APPLE__)
   #if !defined(__has_include)
     #define APPLE_SYSCTL
-  #elif __has_include(<sys/types.h>) && \
-        __has_include(<sys/sysctl.h>)
+  #elif __has_include(<sys/sysctl.h>)
     #define APPLE_SYSCTL
   #endif
 #endif
@@ -323,7 +322,7 @@ void CpuInfo::init()
 #include <primesieve/pmath.hpp>
 
 #include <algorithm>
-#include <sys/types.h>
+#include <cstddef>
 #include <sys/sysctl.h>
 
 using namespace std;
@@ -414,9 +413,7 @@ void CpuInfo::init()
   // scale nicely with multi-threading) and that using some
   // of it will improve the sieving performance.
   //
-  if (hasPrivateL2Cache() &&
-      hasL1Cache() &&
-      l2CacheSize() > l1CacheSize() * 16)
+  if (hasL2Cache())
     sysctlL2CacheWorkaround_ = true;
 #endif
 }
