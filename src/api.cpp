@@ -161,7 +161,7 @@ int get_sieve_size()
   // L1 cache as this will likely improve performance.
   if (cpuInfo.sysctlL2CacheWorkaround() &&
       cpuInfo.hasL1Cache() &&
-      cpuInfo.l2CacheSize() > cpuInfo.l1CacheSize() * 16)
+      cpuInfo.l2CacheSize() > cpuInfo.l1CacheSize() * 8)
   {
     // Convert bytes to KiB
     size_t size = cpuInfo.l1CacheSize() >> 10;
