@@ -1,5 +1,5 @@
-Changes for upcoming release, 28/11/2020
-========================================
+Changes in version 7.6, 07/12/2020
+==================================
 
 * The primesieve GUI application has been deprecated/removed.
   It only works with QT4 which has reached end-of-life.
