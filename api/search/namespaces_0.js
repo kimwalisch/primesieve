@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['primesieve',['primesieve',['../namespaceprimesieve.html',1,'']]]
+  ['primesieve_76',['primesieve',['../namespaceprimesieve.html',1,'']]]
 ];
