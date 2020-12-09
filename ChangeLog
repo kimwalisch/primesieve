@@ -1,8 +1,9 @@
-Changes in version 7.6, 07/12/2020
+Changes in version 7.6, 09/12/2020
 ==================================
 
 * The primesieve GUI application has been deprecated/removed.
   It only works with QT4 which has reached end-of-life.
+* Get rid Travis-CI because it is not free anymore.
 * CpuInfo.cpp: Linux kernel CPU detection has been updated.
 * CpuInfo.cpp: Add workaround for sysctl bug (macOS & iOS).
 * config.hpp: Tune FACTOR_ERATSMALL factor.

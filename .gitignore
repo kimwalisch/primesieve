@@ -1,7 +1,6 @@
 .*
 *~
 !/.gitignore
-!/.travis.yml
 *.exe
 *.tar.gz
 *.zip
