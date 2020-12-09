@@ -1,4 +1,4 @@
-# Automated Windows (MSVC++) testing using appveyor.com
+# Automated testing using appveyor.com
 # https://ci.appveyor.com/projects
 
 version: 1.0.{build}
