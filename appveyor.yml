@@ -60,9 +60,14 @@ for:
     environment:
       CFLAGS: "-Wall -Wextra -pedantic -Werror -Wno-long-long"
       CXXFLAGS: "-Wall -Wextra -pedantic -Werror -Wno-long-long"
+    install:
+      - sudo apt update -qq
+      - sudo apt install -y doxygen doxygen-latex graphviz asciidoc libxml2-utils xmlto
     build_script:
-      - cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=$Configuration
+      - cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_DOC=ON -DBUILD_MANPAGE=ON -DCMAKE_BUILD_TYPE=$Configuration -DCMAKE_INSTALL_PREFIX=$(pwd)
       - make VERBOSE=1
+      - make doc >/dev/null
+      - make install
     test_script:
       - ctest
       # Run primesieve binary
@@ -91,8 +96,9 @@ for:
       CFLAGS: "-Wall -Wextra -pedantic -Werror -Wno-long-long"
       CXXFLAGS: "-Wall -Wextra -pedantic -Werror -Wno-long-long"
     build_script:
-      - cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=$Configuration
+      - cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=$Configuration -DCMAKE_INSTALL_PREFIX=$(pwd)
       - make VERBOSE=1
+      - make install
     test_script:
       - ctest
       # Run primesieve binary
