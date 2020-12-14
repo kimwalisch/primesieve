@@ -14,3 +14,9 @@ mkdir build-msvc
 cd build-msvc
 
 cl /O2 /EHsc /W3 /D NDEBUG /I ../include ../src/*.cpp ../src/app/*.cpp /Feprimesieve.exe
+
+echo ""
+primesieve.exe --version
+
+echo ""
+primesieve.exe --test
