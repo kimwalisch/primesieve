@@ -125,7 +125,7 @@ make -j
 sudo make install
 ```
 
-* [Detailed build instructions](BUILD.md)
+* [Detailed build instructions](doc/BUILD.md)
 
 ## C++ API
 
