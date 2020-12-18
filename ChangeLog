@@ -1,4 +1,4 @@
-Changes in version 7.6, 09/12/2020
+Changes in version 7.6, 18/12/2020
 ==================================
 
 * The primesieve GUI application has been deprecated/removed.
@@ -6,6 +6,7 @@ Changes in version 7.6, 09/12/2020
 * Get rid Travis-CI because it is not free anymore.
 * CpuInfo.cpp: Linux kernel CPU detection has been updated.
 * CpuInfo.cpp: Add workaround for sysctl bug (macOS & iOS).
+* Erat.hpp: Use CTZ instruction on x64 and ARM64 CPUs.
 * config.hpp: Tune FACTOR_ERATSMALL factor.
 * EratSmall.cpp: Get rid of goto.
 * EratSmall.cpp: Optimize switch statement.
