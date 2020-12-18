@@ -2,7 +2,7 @@
 /// @file   LookupTables.cpp
 /// @brief  Static gobal arrays.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -16,6 +16,26 @@
 #include <stdint.h>
 
 namespace primesieve {
+
+/// primesieve uses a bit array for sieving in which the 8 bits
+/// of each byte correspond to the offsets:
+/// { 1, 7, 11, 13, 17, 19, 23, 29 }. However, in order to more
+/// efficiently sieve prime k-tuplets (e.g. twin primes) we
+/// rearrange these offsets to { 7, 11, 13, 17, 19, 23, 29, 31 }.
+/// 64 bits of the sieve array correspond to 8 bytes which span
+/// an interval of size 30 * 8 = 240.
+///
+const std::array<uint64_t, 64> bitValues =
+{
+    7,  11,  13,  17,  19,  23,  29, 31,
+   37,  41,  43,  47,  49,  53,  59, 61,
+   67,  71,  73,  77,  79,  83,  89, 91,
+   97, 101, 103, 107, 109, 113, 119, 121,
+  127, 131, 133, 137, 139, 143, 149, 151,
+  157, 161, 163, 167, 169, 173, 179, 181,
+  187, 191, 193, 197, 199, 203, 209, 211,
+  217, 221, 223, 227, 229, 233, 239, 241
+};
 
 /// The De Bruijn bitscan is a fast method to compute the index of
 /// the first set bit in a 64-bit integer using only integer
