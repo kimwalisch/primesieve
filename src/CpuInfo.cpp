@@ -3,7 +3,7 @@
 /// @brief  Get detailed information about the CPU's caches
 ///         on Windows, macOS and Linux.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -20,8 +20,7 @@
 #if defined(__APPLE__)
   #if !defined(__has_include)
     #define APPLE_SYSCTL
-  #elif __has_include(<sys/types.h>) && \
-        __has_include(<sys/sysctl.h>)
+  #elif __has_include(<sys/sysctl.h>)
     #define APPLE_SYSCTL
   #endif
 #endif
@@ -323,7 +322,7 @@ void CpuInfo::init()
 #include <primesieve/pmath.hpp>
 
 #include <algorithm>
-#include <sys/types.h>
+#include <cstddef>
 #include <sys/sysctl.h>
 
 using namespace std;
@@ -388,6 +387,35 @@ void CpuInfo::init()
   auto cacheConfig = getSysctl<size_t>("hw.cacheconfig");
   for (size_t i = 1; i < min(cacheConfig.size(), cacheSharing_.size()); i++)
     cacheSharing_[i] = cacheConfig[i];
+
+#if !(defined(__x86_64__) || \
+      defined(__i386__) || \
+      defined(__ppc64__) || \
+      defined(__ppc__))
+
+  // For Apple silicon CPUs (ARM & ARM64) sysctl returns
+  // erroneous L2 cache information. For the L1 cache
+  // sysctl returns the cache size per core which is correct
+  // (like on x86 CPUs). However for the L2 cache sysctl
+  // returns the total cache size. It is unclear whether
+  // hw.cachesize or hw.cacheconfig is erroneous.
+  // See: https://github.com/kimwalisch/primesieve/issues/96
+  //
+  // Because of this sysctl issue it is impossible to know
+  // the exact L2 cache size per core and whether the L2
+  // cache is private or shared. However based on benchmarks
+  // of the Apple M1 CPU the L2 cache scales nicely with
+  // multi-threading provided we use less or equal the
+  // (total L2 cache size / threads sharing the L2 cache).
+  //
+  // For these reasons we make an educated guess here:
+  // If the CPU has an L2 cache we assume it is fast (will
+  // scale nicely with multi-threading) and that using some
+  // of it will improve the sieving performance.
+  //
+  if (hasL2Cache())
+    sysctlL2CacheWorkaround_ = true;
+#endif
 }
 
 } // namespace
@@ -687,6 +715,7 @@ CpuInfo::CpuInfo() :
   cpuCores_(0),
   cpuThreads_(0),
   threadsPerCore_(0),
+  sysctlL2CacheWorkaround_(false),
   cacheSizes_{0, 0, 0, 0},
   cacheSharing_{0, 0, 0, 0}
 {
@@ -840,6 +869,11 @@ bool CpuInfo::hasPrivateL2Cache() const
          hasL2Sharing() &&
          hasThreadsPerCore() &&
          l2Sharing() <= threadsPerCore_;
+}
+
+bool CpuInfo::sysctlL2CacheWorkaround() const
+{
+  return sysctlL2CacheWorkaround_;
 }
 
 } // namespace

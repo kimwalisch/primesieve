@@ -4,7 +4,7 @@
 ///         Contains the implementations of the functions declared
 ///         in the primesieve.hpp header file.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -146,27 +146,67 @@ void set_sieve_size(int size)
 
 int get_sieve_size()
 {
-  // user specified sieve size
+  // User specified sieve size
   if (sieve_size)
     return sieve_size;
+
+#if defined(__APPLE__)
+  // On Apple's operating systems (macOS & iOS) we use
+  // the sysctl library to query CPU info. Unfortunately
+  // sysctl returns erroneous L2 & L3 cache information on
+  // Apple silicon CPUs (ARM & ARM64). We can only know
+  // if an L2 cache exists and that it is likely fast. If
+  // this is the case, we make a conservative guess that
+  // the L2 cache per core is at least 8x larger than the
+  // L1 cache as this will likely improve performance.
+  if (cpuInfo.sysctlL2CacheWorkaround() &&
+      cpuInfo.hasL1Cache() &&
+      cpuInfo.l2CacheSize() > cpuInfo.l1CacheSize() * 8)
+  {
+    // Convert bytes to KiB
+    size_t size = cpuInfo.l1CacheSize() >> 10;
+    size = inBetween(8, size * 8, 4096);
+    size = floorPow2(size);
+    return (int) size;
+  }
+#endif
 
   // Shared CPU caches are usually slow. Hence we only use
   // the L2 cache for sieving if each physical CPU core
   // has a private L2 cache. Also we only use half of the
-  // L2 cache for the sieve array so that other important
-  // data structures can also fit into the L2 cache.
+  // L2 cache. This is a safety measure as some CPUs incur
+  // a significant performance degradation if we fully
+  // utilize the L2 cache.
   if (cpuInfo.hasPrivateL2Cache())
   {
-    // convert bytes to KiB
+    // Convert bytes to KiB
     size_t size = cpuInfo.l2CacheSize() >> 10;
-    size = size - 1;
-    size = inBetween(32, size, 4096);
+    size = inBetween(32, size - 1, 4096);
     size = floorPow2(size);
     return (int) size;
   }
-  else if (cpuInfo.hasL1Cache())
+
+  // TODO: Shared L2 caches can also be fast?!
+  //
+  // Up until 2020 shared L2 caches have been slow when
+  // used with multi-threading in primesieve on all
+  // desktop and server CPUs. However in 2020 Apple
+  // released their M1 CPU (ARM64) with an L2 cache that
+  // performs well using multi-threading in primesieve and
+  // media seems to agree that this L2 cache is shared.
+  // I still have some doubts whether this is really the
+  // case, but if it's really true then it is likely that
+  // competitors will eventually catch up and also build
+  // CPUs with fast shared L2 caches.
+  //
+  // If the CPU manufacturers move to fast L2 shared
+  // caches then we have to add support for it here. We
+  // should then set the sieve size to e.g.:
+  // total L2 cache size / (L2 cache sharing * 2).
+
+  if (cpuInfo.hasL1Cache())
   {
-    // convert bytes to KiB
+    // Convert bytes to KiB
     size_t size = cpuInfo.l1CacheSize() >> 10;
     size = inBetween(8, size, 4096);
     size = floorPow2(size);
@@ -174,7 +214,7 @@ int get_sieve_size()
   }
   else
   {
-    // default sieve size in KiB
+    // Default sieve size in KiB
     size_t size = 32;
     size = inBetween(8, size, 4096);
     size = floorPow2(size);
