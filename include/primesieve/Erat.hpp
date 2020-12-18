@@ -20,6 +20,39 @@
 #include <array>
 #include <memory>
 
+#if !defined(__has_builtin)
+  #define __has_builtin(x) 0
+#endif
+
+#if !defined(__has_include)
+  #define __has_include(x) 0
+#endif
+
+/// On x64 CPUs there are 2 instructions to count the number of
+/// trailing zeros: BSF and TZCNT. BSF is an old instruction
+/// whereas TZCNT is much more recent (Bit Manipulation
+/// Instruction Set 1). Since I expect BSF to be slow on future
+/// x64 CPUs (because it is legacy) we only use __builtin_ctzll()
+/// if we can guarantee that BSF will not be generated.
+///
+#if __cplusplus >= 202002L && \
+    __has_include(<bit>) && \
+    (defined(__BMI__) || \
+    (!defined(__x86_64__) && !defined(__i386__) && \
+     !defined(_M_X64) && !defined(_M_IX86)))
+
+#include <bit>
+#define ctz64(x) std::countr_zero(x)
+
+#elif __has_builtin(__builtin_ctzll) && \
+    (defined(__BMI__) || \
+    (!defined(__x86_64__) && !defined(__i386__) && \
+     !defined(_M_X64) && !defined(_M_IX86)))
+
+#define ctz64(x) __builtin_ctzll(x)
+
+#endif
+
 namespace primesieve {
 
 class PreSieve;
@@ -75,22 +108,23 @@ private:
   void sieveLastSegment();
 };
 
-/// Find the first set bit and calculate
-/// the corresponding prime.
-///
+/// Convert 1st set bit into prime
 inline uint64_t Erat::nextPrime(uint64_t bits, uint64_t low)
 {
-  // Calculate bitValues[bitScanForward(bits)] using a custom
-  // De Bruijn bitscan (that directly computes the bitValue
-  // without ever computing the bitIndex). For primesieve's
-  // use case this is as fast as the bsf or tzcnt instructions
-  // on x64 but more portable.
-  // https://www.chessprogramming.org/BitScan#De_Bruijn_Multiplication
+#if defined(ctz64)
+  // Find first set 1 bit
+  auto bitIndex = ctz64(bits);
+  uint64_t bitValue = bitValues[bitIndex];
+  uint64_t prime = low + bitValue;
+  return prime;
+#else
+  // Fallback if CTZ instruction is not avilable
   uint64_t debruijn = 0x3F08A4C6ACB9DBDull;
   uint64_t hash = ((bits ^ (bits - 1)) * debruijn) >> 58;
   uint64_t bitValue = bruijnBitValues[hash];
   uint64_t prime = low + bitValue;
   return prime;
+#endif
 }
 
 inline void Erat::addSievingPrime(uint64_t prime)
