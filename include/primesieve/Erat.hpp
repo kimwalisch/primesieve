@@ -20,6 +20,34 @@
 #include <array>
 #include <memory>
 
+/// In order convert 1 bits of the sieve array into primes we
+/// need to quickly calculate the index of the first set bit.
+/// This CPU instruction is usually named CTZ (Count trailing
+/// zeros). Unfortunately only x86 and x64 CPUs currently have
+/// an instruction for that, other CPU architectures like
+/// ARM64 or PPC64 have to emulate the CTZ instruction using
+/// multiple other instructions.
+///
+/// On x64 CPUs there are actually 2 instructions to count the
+/// number of trailing zeros: BSF and TZCNT. BSF is an old
+/// instruction whereas TZCNT is much more recent (Bit
+/// Manipulation Instruction Set 1). Since I expect BSF to be
+/// slow on future x64 CPUs (because it is legacy) we only use
+/// __builtin_ctzll() if we can guarantee that TZCNT will be
+/// generated.
+///
+/// There is also a quick, pure integer algorithm known for
+/// quickly computing the index of the 1st set bit. This
+/// algorithm is named the "De Bruijn bitscan".
+/// https://www.chessprogramming.org/BitScan
+///
+/// Because of this situation, we only use __builtin_ctzll()
+/// or std::countr_zero() when we know that the user's CPU
+/// architecture can quickly compute CTZ, either using a single
+/// instruction or emulated using very few instructions. For
+/// all other CPU architectures we fallback to the "De Bruijn
+/// bitscan" algorithm.
+
 #if !defined(__has_builtin)
   #define __has_builtin(x) 0
 #endif
@@ -28,26 +56,17 @@
   #define __has_include(x) 0
 #endif
 
-/// On x64 CPUs there are 2 instructions to count the number of
-/// trailing zeros: BSF and TZCNT. BSF is an old instruction
-/// whereas TZCNT is much more recent (Bit Manipulation
-/// Instruction Set 1). Since I expect BSF to be slow on future
-/// x64 CPUs (because it is legacy) we only use __builtin_ctzll()
-/// if we can guarantee that BSF will not be generated.
-///
 #if __cplusplus >= 202002L && \
     __has_include(<bit>) && \
-    (defined(__BMI__) || \
-    (!defined(__x86_64__) && !defined(__i386__) && \
-     !defined(_M_X64) && !defined(_M_IX86)))
+    (defined(__aarch64__) || defined(_M_ARM64) || \
+     defined(__BMI__) /* x64 with TZCNT */)
 
 #include <bit>
 #define ctz64(x) std::countr_zero(x)
 
 #elif __has_builtin(__builtin_ctzll) && \
-    (defined(__BMI__) || \
-    (!defined(__x86_64__) && !defined(__i386__) && \
-     !defined(_M_X64) && !defined(_M_IX86)))
+    (defined(__aarch64__) || defined(_M_ARM64) || \
+     defined(__BMI__) /* x64 with TZCNT */)
 
 #define ctz64(x) __builtin_ctzll(x)
 
