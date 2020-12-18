@@ -58,15 +58,17 @@
 
 #if __cplusplus >= 202002L && \
     __has_include(<bit>) && \
-    (defined(__aarch64__) || defined(_M_ARM64) || \
-     defined(__BMI__) /* x64 with TZCNT */)
+    (defined(__BMI__) /* TZCNT (x64) */ || \
+     defined(__aarch64__) /* CTZ = RBIT + CLZ */ || \
+     defined(_M_ARM64) /* CTZ = RBIT + CLZ */)
 
 #include <bit>
 #define ctz64(x) std::countr_zero(x)
 
 #elif __has_builtin(__builtin_ctzll) && \
-    (defined(__aarch64__) || defined(_M_ARM64) || \
-     defined(__BMI__) /* x64 with TZCNT */)
+    (defined(__BMI__) /* TZCNT (x64) */ || \
+     defined(__aarch64__) /* CTZ = RBIT + CLZ */ || \
+     defined(_M_ARM64) /* CTZ = RBIT + CLZ */)
 
 #define ctz64(x) __builtin_ctzll(x)
 
