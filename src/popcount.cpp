@@ -8,8 +8,8 @@
 ///         why we do not use the POPCNT instruction here:
 ///
 ///         1) This algorithm is not really a bottleneck.
-///         2) This algorithm is portable but very fast, it is nearly
-///            as fast as POPCNT on most CPU architectures.
+///         2) This algorithm is portable (unlike POPCNT on x64)
+///            and very fast, its speed is very close to POPCNT.
 ///         3) Recent compilers can autovectorize this loop (e.g
 ///            using AVX512 on x64 CPUs) in which case this algorithm
 ///            will even outperform the POPCNT instruction.
