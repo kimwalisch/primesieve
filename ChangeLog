@@ -1,3 +1,15 @@
+Changes in version 7.7, 19/02/2021
+==================================
+
+The behavior of the -q/--quiet option has been modified. Before it
+printed e.g. "Primes: 1229", while with the new behavior the
+"Primes:" label will not be printed anymore. Hence the new output
+will be "1229". This is a backwards incompatible change, however I
+won't increase primesieve's major version since this change does not
+affect primesieve's API/ABI.
+
+* main.cpp: Improve -q/--quiet option #102.
+
 Changes in version 7.6, 18/12/2020
 ==================================
 
