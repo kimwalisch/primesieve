@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4...3.19)
 project(primesieve CXX)
-set(PRIMESIEVE_VERSION "7.6")
-set(PRIMESIEVE_SOVERSION "9.6.0")
+set(PRIMESIEVE_VERSION "7.7")
+set(PRIMESIEVE_SOVERSION "9.7.0")
 
 # Build options ######################################################
 
