@@ -2,7 +2,7 @@
 /// @file   main.cpp
 /// @brief  primesieve console application.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -12,6 +12,7 @@
 #include "cmdoptions.hpp"
 
 #include <stdint.h>
+#include <array>
 #include <iostream>
 #include <exception>
 #include <iomanip>
@@ -60,7 +61,7 @@ void sieve(CmdOptions& opt)
 
   ps.sieve();
 
-  const string text[6] =
+  const array<string, 6> labels =
   {
     "Primes: ",
     "Twin primes: ",
@@ -73,9 +74,22 @@ void sieve(CmdOptions& opt)
   if (opt.time)
     printSeconds(ps.getSeconds());
 
+  // Did we count primes & k-tuplets simultaneously?
+  int cnt = 0;
   for (int i = 0; i < 6; i++)
     if (ps.isCount(i))
-      cout << text[i] << ps.getCount(i) << endl;
+      cnt++;
+
+  for (int i = 0; i < 6; i++)
+  {
+    if (ps.isCount(i))
+    {
+      if (opt.quiet && cnt == 1)
+        cout << ps.getCount(i) << endl;
+      else
+        cout << labels[i] << ps.getCount(i) << endl;
+    }
+  }
 }
 
 void nthPrime(CmdOptions& opt)
@@ -106,7 +120,10 @@ void nthPrime(CmdOptions& opt)
   if (opt.time)
     printSeconds(ps.getSeconds());
 
-  cout << "Nth prime: " << nthPrime << endl;
+  if (opt.quiet)
+    cout << nthPrime << endl;
+  else
+    cout << "Nth prime: " << nthPrime << endl;
 }
 
 } // namespace
