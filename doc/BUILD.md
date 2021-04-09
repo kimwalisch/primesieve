@@ -51,7 +51,7 @@ sudo make install
 
 First install [Visual Studio](https://visualstudio.microsoft.com/downloads/)
 (includes CMake) on your Windows PC. Then go to the start menu, select Visual
-Studio and open a **x64 Command Prompt**. Now cd into the primecount directory
+Studio and open a **x64 Command Prompt**. Now cd into the primesieve directory
 and run the commands below:
 
 ```bash
