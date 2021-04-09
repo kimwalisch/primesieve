@@ -51,12 +51,12 @@ sudo make install
 
 First install [Visual Studio](https://visualstudio.microsoft.com/downloads/)
 (includes CMake) on your Windows PC. Then go to the start menu, select Visual
-Studio and open a **x64 Command Prompt**. Now cd into the primesieve directory
+Studio and open a **x64 Command Prompt**. Now cd into the primecount directory
 and run the commands below:
 
 ```bash
 # Use 'cmake -G' to find your Visual Studio version
-cmake -G "Visual Studio 15 2017 Win64" .
+cmake -G "Visual Studio 16 2019" .
 cmake --build . --config Release
 
 # Optionally install using Admin shell
