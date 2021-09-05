@@ -30,8 +30,6 @@ public:
   bool hasL2Sharing() const;
   bool hasL3Sharing() const;
   bool hasThreadsPerCore() const;
-  bool hasPrivateL2Cache() const;
-  bool sysctlL2CacheWorkaround() const;
   std::string cpuName() const;
   std::string getError() const;
   std::size_t l1CacheSize() const;

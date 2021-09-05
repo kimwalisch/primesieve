@@ -95,13 +95,5 @@ int main()
   cout << "L2 cache size: " << (cpu.l2CacheSize() >> 10) << " KiB" << endl;
   cout << "L3 cache size: " << (cpu.l3CacheSize() >> 10) << " KiB" << endl;
 
-  if (cpu.hasL2Cache())
-  {
-    if (cpu.hasPrivateL2Cache())
-      cout << "L2 cache: private" << endl;
-    else
-      cout << "L2 cache: shared"  << endl;
-  }
-
   return 0;
 }

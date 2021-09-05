@@ -833,12 +833,4 @@ bool CpuInfo::hasThreadsPerCore() const
          threadsPerCore_ <= (1 << 10);
 }
 
-bool CpuInfo::hasPrivateL2Cache() const
-{
-  return hasL2Cache() &&
-         hasL2Sharing() &&
-         hasThreadsPerCore() &&
-         l2Sharing() <= threadsPerCore_;
-}
-
 } // namespace
