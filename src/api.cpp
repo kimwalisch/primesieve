@@ -162,7 +162,7 @@ int get_sieve_size()
   // https://github.com/kimwalisch/primesieve/issues/96
   if (cpuInfo.hasL1Cache() &&
       cpuInfo.hasPrivateL2Cache() &&
-      cpuInfo.l1CacheSize() * 8 <= cpuInfo.l2CacheSize())
+      cpuInfo.l1CacheSize() * 4 <= cpuInfo.l2CacheSize())
   {
     // Convert bytes to KiB
     size_t l1Size = cpuInfo.l1CacheSize() >> 10;
