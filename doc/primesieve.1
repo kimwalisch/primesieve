@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: primesieve
 .\"    Author: [see the "AUTHOR" section]
-.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
-.\"      Date: 11/04/2019
+.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
+.\"      Date: 09/05/2021
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "PRIMESIEVE" "1" "11/04/2019" "\ \&" "\ \&"
+.TH "PRIMESIEVE" "1" "09/05/2021" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -112,7 +112,7 @@ Quiet mode, prints less output\&.
 .RS 4
 Set the size of the sieve array in KiB, 8 <=
 \fISIZE\fR
-<= 4096\&. By default primesieve uses a sieve size that matches your CPU\(cqs L1 cache size or half of your CPU\(cqs L2 cache size (per core)\&. This setting is crucial for performance, on exotic CPUs primesieve sometimes fails to determine the CPU\(cqs cache sizes which usually causes a big slowdown\&. In this case you can get a significant speedup by manually setting the sieve size to the CPU\(cqs L1 or L2 cache size (per core)\&.
+<= 4096\&. By default primesieve uses a sieve size that matches your CPU\(cqs L1 cache size (per core) or is slightly smaller than your CPU\(cqs L2 cache size\&. This setting is crucial for performance, on exotic CPUs primesieve sometimes fails to determine the CPU\(cqs cache sizes which usually causes a big slowdown\&. In this case you can get a significant speedup by manually setting the sieve size to your CPU\(cqs L1 or L2 cache size (per core)\&.
 .RE
 .PP
 \fB\-\-test\fR
