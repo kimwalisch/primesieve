@@ -1,4 +1,4 @@
-Changes in version 7.7, 19/02/2021
+Changes in version 7.7, 05/09/2021
 ==================================
 
 The behavior of the -q/--quiet option has been modified. Before it
@@ -9,6 +9,7 @@ won't increase primesieve's major version since this change does not
 affect primesieve's API/ABI.
 
 * main.cpp: Improve -q/--quiet option #102.
+* api.cpp: Simplify private L2 cache size detection #103.
 
 Changes in version 7.6, 18/12/2020
 ==================================
