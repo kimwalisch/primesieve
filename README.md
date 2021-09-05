@@ -105,8 +105,8 @@ Options:
   -q, --quiet         Quiet mode, prints less output.
   -s, --size=SIZE     Set the sieve size in KiB, SIZE <= 4096.
                       By default primesieve uses a sieve size that
-                      matches your CPU's L1 cache size (per core) or
-                      that is slightly smaller than the L2 cache size.
+                      matches your CPU's L1 cache size (per core) or is
+                      slightly smaller than your CPU's L2 cache size.
       --test          Run various sieving tests.
   -t, --threads=NUM   Set the number of threads, NUM <= CPU cores.
                       Default setting: use all available CPU cores.
