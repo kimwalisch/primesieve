@@ -10,6 +10,9 @@ affect primesieve's API/ABI.
 
 * main.cpp: Improve -q/--quiet option #102.
 * api.cpp: Simplify private L2 cache size detection #103.
+* doc/primesieve.1: Update man page.
+* help.cpp: Update documentation of --size option.
+* README.md: Update documentation of --size option.
 
 Changes in version 7.6, 18/12/2020
 ==================================
