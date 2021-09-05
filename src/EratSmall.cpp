@@ -9,7 +9,7 @@
 ///         multiples uses as few instructions as possible since there
 ///         are so many multiples.
 ///
-/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -65,15 +65,13 @@ void EratSmall::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64
   primes_.emplace_back(sievingPrime, multipleIndex, wheelIndex);
 }
 
-/// Both EratMedium and EratBig run fastest using a sieve size
-/// that matches the CPU's L2 cache size (or slightly less).
-/// However, proportionally EratSmall does a lot more memory
-/// writes than both EratMedium and EratBig and hence EratSmall
-/// runs fastest using a smaller sieve size that matches the
-/// CPU's L1 cache size.
+/// Both EratMedium and EratBig usually run fastest using a
+/// sieve size that is slightly smaller than the CPU's L2 cache
+/// size. EratSmall however, runs fastest using a smaller sieve
+/// size that matches the CPU's L1 cache size.
 ///
-/// @sieveSize:   CPU L2 cache size / 2
-/// @l1CacheSize: CPU L1 cache size
+/// @sieveSize:   EratBig & EratMedium sieve size
+/// @l1CacheSize: EratSmall sieve size
 ///
 void EratSmall::crossOff(uint8_t* sieve, uint64_t sieveSize)
 {
