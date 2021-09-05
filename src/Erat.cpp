@@ -3,7 +3,7 @@
 /// @brief  The Erat class manages prime sieving using the
 ///         EratSmall, EratMedium, EratBig classes.
 ///
-/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -121,11 +121,11 @@ void Erat::initErat()
 }
 
 /// EratMedium and EratBig usually run fastest using a sieve
-/// size that matches the CPUs L2 cache size. EratSmall
-/// however runs fastest using a sieve size that matches the
-/// CPUs L1 cache size. Hence we use a smaller sieve size
-/// (L1 cache size) in EratSmall and a larger sieve size (L2
-/// cache size) in both EratMedium and EratBig.
+/// size that is slightly smaller than the CPU's L2 cache size.
+/// EratSmall however runs fastest using a sieve size that
+/// matches the CPU's L1 cache size. Hence we use a smaller
+/// sieve size (L1 cache size) in EratSmall and a larger sieve
+/// size (< L2 cache size) in both EratMedium and EratBig.
 ///
 uint64_t Erat::getL1CacheSize() const
 {
