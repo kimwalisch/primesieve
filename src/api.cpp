@@ -161,13 +161,20 @@ int get_sieve_size()
   // https://github.com/kimwalisch/primesieve/issues/103
   // https://github.com/kimwalisch/primesieve/issues/96
   if (cpuInfo.hasL1Cache() &&
-      cpuInfo.hasPrivateL2Cache() &&
-      cpuInfo.l1CacheSize() * 4 <= cpuInfo.l2CacheSize())
+      cpuInfo.hasL2Cache())
   {
     // Convert bytes to KiB
     size_t l1Size = cpuInfo.l1CacheSize() >> 10;
     size_t l2Size = cpuInfo.l2CacheSize() >> 10;
-    size_t size = inBetween(8, std::min(l1Size * 8, l2Size / 2), 4096);
+    size_t maxSize = l2Size / 2;
+
+    if (cpuInfo.hasL2Sharing() &&
+        cpuInfo.l2Sharing() > 2)
+      maxSize = l2Size / cpuInfo.l2Sharing();
+
+    maxSize = std::max(l1Size, maxSize);
+    size_t size = std::min(l1Size * 8, maxSize);
+    size = inBetween(8, size, 4096);
     size = floorPow2(size);
     return (int) size;
   }
