@@ -29,11 +29,10 @@ constexpr uint64_t L1D_CACHE_BYTES = 32 << 10;
 ///
 /// The best performance is usually achieved using a sieve
 /// size that matches the CPU's L1 data cache size per core or
-/// that is slightly larger than the CPU's L1 data cache size.
+/// that is slightly larger than the CPU's L1 data cache size
+/// but smaller than the L2 cache size per core.
 ///
-constexpr uint64_t SIEVE_BYTES = (L1D_CACHE_BYTES < (512 << 10))
-                                 ? L1D_CACHE_BYTES * 8
-                                 : L1D_CACHE_BYTES;
+constexpr uint64_t SIEVE_BYTES = L1D_CACHE_BYTES * 8;
 
 /// Number of sieving primes per Bucket in EratSmall, EratMedium
 /// and EratBig objects, affects performance by about 3%.
