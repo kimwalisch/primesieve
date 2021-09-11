@@ -1,5 +1,13 @@
-Changes in version 7.7, 05/09/2021
+Changes in version 7.7, 11/09/2021
 ==================================
+
+The CPU cache size detection has been improved. The code now better
+handles uncertain situations when CPU cache information is only
+partially available. If the CPU cache detection fails entirely, then
+the new code uses a larger sieve size (than before) that will most
+likely provide a significant speedup. Most BSD operating systems
+that are currently not supported in CpuInfo.cpp will benefit from
+this change.
 
 The behavior of the -q/--quiet option has been modified. Before it
 printed e.g. "Primes: 1229", while with the new behavior the
@@ -8,8 +16,11 @@ will be "1229". This is a backwards incompatible change, however I
 won't increase primesieve's major version since this change does not
 affect primesieve's API/ABI.
 
-* main.cpp: Improve -q/--quiet option #102.
 * api.cpp: Simplify private L2 cache size detection #103.
+* config.cpp: Add fallback sieve size & L1 data cache size.
+* Erat.cpp: If runtime CPU cache detection fails use
+  config::L1D_CACHE_BYTES. 
+* main.cpp: Improve -q/--quiet option #102.
 * doc/primesieve.1: Update man page.
 * help.cpp: Update documentation of --size option.
 * README.md: Update documentation of --size option.

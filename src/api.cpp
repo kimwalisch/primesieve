@@ -11,6 +11,7 @@
 ///
 
 #include <primesieve.hpp>
+#include <primesieve/config.hpp>
 #include <primesieve/CpuInfo.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/PrimeSieve.hpp>
@@ -193,7 +194,7 @@ int get_sieve_size()
   else
   {
     // Default sieve size in KiB
-    size_t size = 32;
+    size_t size = config::SIEVE_BYTES >> 10;
     size = inBetween(8, size, 4096);
     size = floorPow2(size);
     return (int) size;
