@@ -227,7 +227,7 @@ Note that the CMake command you need to use might be different depending which o
 and compiler you are using. Please refer to [BUILD.md](BUILD.md) for the correct CMake command
 for your operating system.
 
-## CMake support
+# CMake support
 
 If you are using the CMake build system to compile your program and libprimesieve has been
 [installed](BUILD.md#primesieve-build-instructions) on your system, then you can add the
