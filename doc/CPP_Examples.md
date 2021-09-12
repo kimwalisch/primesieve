@@ -237,3 +237,21 @@ binary program to other PCs where libprimesieve is not installed.
 Note that the CMake command you need to use might be different depending which operating system
 and compiler you are using. Please refer to [BUILD.md](BUILD.md) for the correct CMake command
 for your operating system.
+
+# CMake support
+
+If you are using the CMake build system to compile your program and libprimesieve has been
+[installed](BUILD.md#primesieve-build-instructions) on your system, then you can add the
+following two lines to your ```CMakeLists.txt``` to link your program against libprimesieve.
+
+```CMake
+find_package(primesieve REQUIRED)
+target_link_libraries(your_target primesieve::primesieve)
+```
+
+To link against the static libprimesieve use:
+
+```CMake
+find_package(primesieve REQUIRED static)
+target_link_libraries(your_target primesieve::primesieve)
+```
