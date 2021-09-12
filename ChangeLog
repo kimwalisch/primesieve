@@ -1,4 +1,4 @@
-Changes in version 7.7, 11/09/2021
+Changes in version 7.7, 12/09/2021
 ==================================
 
 The CPU cache size detection has been improved. The code now better
@@ -24,6 +24,8 @@ affect primesieve's API/ABI.
 * doc/primesieve.1: Update man page.
 * help.cpp: Update documentation of --size option.
 * README.md: Update documentation of --size option.
+* C_Examples.md: Add alternative compilation method.
+* CPP_Examples.md: Add alternative compilation method.
 
 Changes in version 7.6, 18/12/2020
 ==================================
