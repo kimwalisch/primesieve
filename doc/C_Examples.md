@@ -236,8 +236,8 @@ advantage that you don't need to specify the libprimesieve include path and the
 # File: CMakeLists.txt
 cmake_minimum_required(VERSION 3.4...3.19)
 project(primes C CXX)
-add_executable(primes primes.c)
 find_package(primesieve REQUIRED)
+add_executable(primes primes.c)
 target_link_libraries(primes primesieve::primesieve)
 ```
 
