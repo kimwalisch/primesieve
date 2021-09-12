@@ -31,6 +31,8 @@ int main()
 }
 ```
 
+* [Build instructions](#how-to-compile)
+
 ## ```primesieve::iterator::skipto()```
 
 This method changes the start number of the ```primesieve::iterator``` object. (By default
@@ -57,8 +59,10 @@ int main()
 }
 ```
 
+* [Build instructions](#how-to-compile)
+
 The ```primesieve::iterator::skipto()``` method (and the ```primesieve::iterator```
-constructor) take an optional **stop_hint** parameter for performance optimization.
+constructor) take an optional ```stop_hint``` parameter for performance optimization.
 If ```stop_hint``` is set ```primesieve::iterator``` will only buffer primes up to
 this limit.
 
@@ -81,6 +85,8 @@ int main()
   return 0;
 }
 ```
+
+* [Build instructions](#how-to-compile)
 
 ## ```primesieve::iterator::prev_prime()```
 
@@ -105,6 +111,8 @@ int main()
   return 0;
 }
 ```
+
+* [Build instructions](#how-to-compile)
 
 ## ```primesieve::generate_primes()```
 
@@ -132,6 +140,8 @@ int main()
 }
 ```
 
+* [Build instructions](#how-to-compile)
+
 ## ```primesieve::generate_n_primes()```
 
 Stores n primes in a ```std::vector```.
@@ -156,6 +166,8 @@ int main()
 }
 ```
 
+* [Build instructions](#how-to-compile)
+
 ## ```primesieve::count_primes()```
 
 Counts the primes inside [start, stop]. This method is multi-threaded and uses all
@@ -173,6 +185,8 @@ int main()
   return 0;
 }
 ```
+
+* [Build instructions](#how-to-compile)
 
 ## ```primesieve::nth_prime()```
 
@@ -192,10 +206,33 @@ int main()
 }
 ```
 
+* [Build instructions](#how-to-compile)
+
 # How to compile
 
-You can compile any of the C++ example programs above using:
+On Unix-like OSes if [libprimesieve is installed](BUILD.md#primesieve-build-instructions) on
+your system, then you can compile any of the C++ example programs above using:
 
 ```C
 c++ -O2 primes.cpp -o primes -lprimesieve
 ```
+
+# Alternative compilation method
+
+The compilation method above works well on Linux if libprimesieve has previously been installed
+using the operating system's package manager. If libprimesieve has not been installed on your
+system (e.g. when using MSVC on Windows) or if you experience any include path or linker issues
+then you can use the following alternative compilation method:
+
+1. Put your .cpp file into the ```primesieve/examples/cpp``` directory.
+2. Build your program using: ```cmake . -DBUILD_EXAMPLES=ON && cmake --build .```
+
+By specifying the ```-DBUILD_EXAMPLES=ON``` CMake option, all C++ files present in the
+```primesieve/examples/cpp``` directory will be compiled and linked against libprimesieve.
+Optionally, you can also add the ```-DBUILD_SHARED_LIBS=OFF``` CMake option, this way your
+program will be linked against the static libprimesieve which will allow you to distribute your
+binary program to other PCs where libprimesieve is not installed.
+
+Note that the CMake command you need to use might be different depending which operating system
+and compiler you are using. Please refer to [BUILD.md](BUILD.md) for the correct CMake command
+for your operating system.
