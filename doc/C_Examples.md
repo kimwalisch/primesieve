@@ -241,8 +241,8 @@ find_package(primesieve REQUIRED)
 target_link_libraries(primes primesieve::primesieve)
 ```
 
-1. Put the ```CMakeLists.txt``` file from above into the same directory as your ```primes.c``` file.
-2. Open a terminal, cd into that directory and build your project using:
+Put the ```CMakeLists.txt``` file from above into the same directory as your ```primes.c``` file.<br/>
+Then open a terminal, cd into that directory and build your project using:
 
 ```
 cmake .
