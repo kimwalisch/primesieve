@@ -252,7 +252,7 @@ add_executable(primes primes.cpp)
 target_link_libraries(primes primesieve::primesieve)
 ```
 
-Put the ```CMakeLists.txt``` file from above into the same directory as your ```primes.cpp``` file.
+Put the ```CMakeLists.txt``` file from above into the same directory as your ```primes.cpp``` file.<br/>
 Then open a terminal, cd into that directory and build your project using:
 
 ```
