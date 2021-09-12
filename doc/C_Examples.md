@@ -33,6 +33,8 @@ int main()
 }
 ```
 
+* [Build instructions](#how-to-compile)
+
 ## ```primesieve_skipto()```
 
 This method changes the start number of the ```primesieve_iterator``` object. (By
@@ -62,6 +64,8 @@ int main()
 }
 ```
 
+* [Build instructions](#how-to-compile)
+
 ## ```primesieve_prev_prime()```
 
 Before using ```primesieve_prev_prime()``` you must first change the start
@@ -89,6 +93,8 @@ int main()
   return 0;
 }
 ```
+
+* [Build instructions](#how-to-compile)
 
 ## ```primesieve_generate_primes()```
 
@@ -119,6 +125,8 @@ int main()
 }
 ```
 
+* [Build instructions](#how-to-compile)
+
 ## ```primesieve_generate_n_primes()```
 
 Stores n primes in an array.
@@ -145,6 +153,8 @@ int main()
 }
 ```
 
+* [Build instructions](#how-to-compile)
+
 ## ```primesieve_count_primes()```
 
 Counts the primes inside [start, stop]. This method is multi-threaded and uses all
@@ -163,6 +173,8 @@ int main()
   return 0;
 }
 ```
+
+* [Build instructions](#how-to-compile)
 
 ## ```primesieve_nth_prime()```
 
@@ -183,10 +195,33 @@ int main(int argc, char** argv)
 }
 ```
 
+* [Build instructions](#how-to-compile)
+
 # How to compile
 
-You can compile any of the C example programs above using:
+On Unix-like OSes if [libprimesieve is installed](BUILD.md#primesieve-build-instructions) on
+your system, then you can compile any of the C example programs above using:
 
 ```C
 cc -O2 primes.c -o primes -lprimesieve
 ```
+
+# Alternative compilation method
+
+The compilation method above works well on Linux if libprimesieve has previously been installed
+using the operating system's package manager. If libprimesieve has not been installed on your
+system (e.g. when using MSVC on Windows) or if you experience any include path or linker issues
+then you can use the following alternative compilation method:
+
+1. Put your .c file into the ```primesieve/examples/c``` directory.
+2. Build your program using ```cmake . -DBUILD_EXAMPLES=ON && cmake --build .```
+
+By specifying the ```-DBUILD_EXAMPLES=ON``` CMake option, all C files present in the
+```primesieve/examples/c``` directory will be compiled and linked against libprimesieve.
+Optionally, you can also add the ```-DBUILD_SHARED_LIBS=OFF``` CMake option, this way your
+program will be linked against the static libprimesieve which will allow you to distribute your
+binary program to other PCs where libprimesieve is not installed.
+
+Note that the CMake command you need to use might be different depending which operating system
+and compiler you are using. Please refer to [BUILD.md](BUILD.md) for the correct CMake command
+for your operating system.
