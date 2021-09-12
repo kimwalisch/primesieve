@@ -225,7 +225,8 @@ system (e.g. when using MSVC on Windows) or if you experience any include path o
 then you can use the following alternative compilation method:
 
 1. Put your .cpp file into the ```primesieve/examples/cpp``` directory.
-2. Build your program using: ```cmake . -DBUILD_EXAMPLES=ON && cmake --build .```
+2. Open a terminal and cd into the ```primesieve``` directory.
+3. Compile your program using: ```cmake . -DBUILD_EXAMPLES=ON && cmake --build .```
 
 By specifying the ```-DBUILD_EXAMPLES=ON``` CMake option, all C++ files present in the
 ```primesieve/examples/cpp``` directory will be compiled and linked against libprimesieve.
