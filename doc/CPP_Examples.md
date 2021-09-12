@@ -234,9 +234,9 @@ Optionally, you can also add the ```-DBUILD_SHARED_LIBS=OFF``` CMake option, thi
 program will be linked against the static libprimesieve which will allow you to distribute your
 binary program to other PCs where libprimesieve is not installed.
 
-Note that the CMake command you need to use might be different depending which operating system
-and compiler you are using. Please refer to [BUILD.md](BUILD.md) for the correct CMake command
-for your operating system.
+Note that the CMake command you need to use might be different depending on which operating
+system and compiler you are using. Please refer to [BUILD.md](BUILD.md) for the correct CMake
+command for your operating system.
 
 # CMake support
 
