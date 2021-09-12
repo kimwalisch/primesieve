@@ -217,27 +217,6 @@ your system, then you can compile any of the C++ example programs above using:
 c++ -O2 primes.cpp -o primes -lprimesieve
 ```
 
-# Alternative compilation method
-
-The compilation method above works well on Linux if libprimesieve has previously been installed
-using the operating system's package manager. If libprimesieve has not been installed on your
-system (e.g. when using MSVC on Windows) or if you experience any include path or linker issues
-then you can use the following alternative compilation method:
-
-1. Put your .cpp file into the ```primesieve/examples/cpp``` directory.
-2. Open a terminal and cd into the ```primesieve``` directory.
-3. Compile your program using: ```cmake . -DBUILD_EXAMPLES=ON && cmake --build .```
-
-By specifying the ```-DBUILD_EXAMPLES=ON``` CMake option, all C++ files present in the
-```primesieve/examples/cpp``` directory will be compiled and linked against libprimesieve.
-Optionally, you can also add the ```-DBUILD_SHARED_LIBS=OFF``` CMake option, this way your
-program will be linked against the static libprimesieve which will allow you to distribute your
-binary program to other PCs where libprimesieve is not installed.
-
-Note that the CMake command you need to use might be different depending on which operating
-system and compiler you are using. Please refer to [BUILD.md](BUILD.md) for the correct CMake
-command for your operating system.
-
 # CMake support
 
 If you are using the CMake build system to compile your program and libprimesieve has been
@@ -254,4 +233,37 @@ To link against the static libprimesieve use:
 ```CMake
 find_package(primesieve REQUIRED static)
 target_link_libraries(your_target primesieve::primesieve)
+```
+
+# Minimal CMake project file
+
+If you wish to build your C++ program (named ```primes.cpp```) using CMake, then you can use
+the minimal ```CMakeLists.txt``` below. Note that this requires that libprimesieve has been
+[installed](BUILD.md#primesieve-build-instructions) on your system. Using CMake has the
+advantage that you don't need to specify the libprimesieve include path and the
+```-lprimesieve``` linker option when building your project.
+
+```CMake
+# File: CMakeLists.txt
+cmake_minimum_required(VERSION 3.4...3.19)
+project(primes CXX)
+find_package(primesieve REQUIRED)
+add_executable(primes primes.cpp)
+target_link_libraries(primes primesieve::primesieve)
+```
+
+1. Put the ```CMakeLists.txt``` file from above into the same directory as your ```primes.cpp``` file.
+2. Open a terminal, cd into that directory and build your project using:
+
+```
+cmake .
+cmake --build .
+```
+
+If you are using the MSVC compiler (Windows), then the build instructions are slightly
+different:
+
+```
+cmake -G "Visual Studio 16 2019" .
+cmake --build . --config Release
 ```
