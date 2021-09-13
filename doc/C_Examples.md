@@ -188,7 +188,8 @@ multi-threaded and uses all available CPU cores by default.
 int main(int argc, char** argv)
 {
   /* primesieve_nth_prime(n, start) */
-  uint64_t prime = primesieve_nth_prime(25, 0);
+  uint64_t n = 25;
+  uint64_t prime = primesieve_nth_prime(n, 0);
   printf("%" PRIu64 "th prime = %" PRIu64 "\n", n, prime);
 
   return 0;

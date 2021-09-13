@@ -199,7 +199,8 @@ multi-threaded and uses all available CPU cores by default.
 
 int main()
 {
-  uint64_t nth_prime = primesieve::nth_prime(25);
+  uint64_t n = 25;
+  uint64_t nth_prime = primesieve::nth_prime(n);
   std::cout << n << "th prime = " << nth_prime << std::endl;
 
   return 0;
