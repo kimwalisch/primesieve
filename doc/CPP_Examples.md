@@ -218,6 +218,12 @@ your system, then you can compile any of the C++ example programs above using:
 c++ -O2 primes.cpp -o primes -lprimesieve
 ```
 
+Using the MSVC compiler (Windows):
+
+```bash
+cl /O2 /MD /EHsc primes.cpp /I "path\to\primesieve\include" /link "path\to\primesieve.lib"
+```
+
 # CMake support
 
 If you are using the CMake build system to compile your program and libprimesieve has been
