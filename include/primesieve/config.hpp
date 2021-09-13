@@ -66,7 +66,7 @@ constexpr uint64_t MAX_CACHE_ITERATOR = 1 << 30;
 ///
 constexpr uint64_t MIN_THREAD_DISTANCE = (uint64_t) 1e7;
 
-/// Sieving primes <= (sieveSize in bytes * FACTOR_ERATSMALL)
+/// Sieving primes <= (L1D_CACHE_BYTES * FACTOR_ERATSMALL)
 /// are processed in EratSmall. The ideal value for
 /// FACTOR_ERATSMALL has been determined experimentally by
 /// running benchmarks near 10^10.
