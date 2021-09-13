@@ -6,7 +6,7 @@ useful feature provided by libprimesieve is the ```primesieve_iterator``` which 
 iterate over primes using the ```primesieve_next_prime()``` or ```primesieve_prev_prime()```
 functions.
 
-For in-depth documentation please refer to the [C API Reference](https://primesieve.org/api).
+For in-depth documentation please refer to the [C API Reference](https://kimwalisch.github.io/primesieve/api).
 
 ## ```primesieve_next_prime()```
 

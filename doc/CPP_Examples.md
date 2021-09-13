@@ -5,7 +5,7 @@ These examples cover the most frequently used functionality of libprimesieve. Ar
 useful feature provided by libprimesieve is the ```primesieve::iterator``` which lets you
 iterate over primes using the ```next_prime()``` or ```prev_prime()``` methods.
 
-For in-depth documentation please refer to the [C++ API Reference](https://primesieve.org/api).
+For in-depth documentation please refer to the [C++ API Reference](https://kimwalisch.github.io/primesieve/api).
 
 ## ```primesieve::iterator::next_prime()```
 
