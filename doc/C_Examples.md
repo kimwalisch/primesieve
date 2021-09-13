@@ -203,8 +203,14 @@ int main(int argc, char** argv)
 On Unix-like OSes if [libprimesieve is installed](BUILD.md#primesieve-build-instructions) on
 your system, then you can compile any of the C example programs above using:
 
-```C
+```bash
 cc -O2 primes.c -o primes -lprimesieve
+```
+
+Using the MSVC compiler (Windows):
+
+```bash
+cl /O2 /MD primes.c /I "path\to\primesieve\include" /link "path\to\primesieve.lib"
 ```
 
 # CMake support
