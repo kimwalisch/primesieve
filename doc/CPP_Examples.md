@@ -257,12 +257,14 @@ Put the ```CMakeLists.txt``` file from above into the same directory as your ```
 Then open a terminal, cd into that directory and build your project using:
 
 ```
-cmake .
+cmake . -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ```
 
-If you are using the MSVC compiler (Windows), then the build instructions are slightly
-different:
+Using the MSVC compiler (Windows) the build instructions are slightly different. First you should link
+against the static libprimesieve in your ```CMakeLists.txt``` using:
+```find_package(primesieve REQUIRED static)```. Next open a Visual Studio Command Prompt, cd into your
+project's directory and build your project using:
 
 ```
 cmake -G "Visual Studio 16 2019" .
