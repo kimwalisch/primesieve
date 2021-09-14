@@ -211,7 +211,7 @@ int main()
 
 # How to compile
 
-#### Unix-like OSes
+### Unix-like OSes
 
 If [libprimesieve is installed](https://github.com/kimwalisch/primesieve#installation)
 on your system, then you can compile any of the C++ example programs above using:
@@ -231,7 +231,7 @@ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 export CPLUS_INCLUDE_PATH=/usr/local/include:$CPLUS_INCLUDE_PATH
 ```
 
-#### Microsoft Visual C++
+### Microsoft Visual C++
 
 ```sh
 cl /O2 /EHsc /MD primes.cpp /I "path\to\primesieve\include" /link "path\to\primesieve.lib"
