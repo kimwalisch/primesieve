@@ -206,7 +206,7 @@ If [libprimesieve is installed](https://github.com/kimwalisch/primesieve#install
 on your system, then you can compile any of the C example programs above using:
 
 ```sh
-cc -O2 primes.c -o primes -lprimesieve
+cc -O3 primes.c -o primes -lprimesieve
 ```
 
 If you have [built libprimesieve yourself](BUILD.md#primesieve-build-instructions)

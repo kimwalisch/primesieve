@@ -271,8 +271,8 @@ time ./primesum
 #### Unix-like OSes
 
 ```sh
-c++ -O2 primes.cpp -lprimesieve
-cc  -O2 primes.c   -lprimesieve
+c++ -O3 primes.cpp -lprimesieve
+cc  -O3 primes.c   -lprimesieve
 ```
 
 If you have

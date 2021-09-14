@@ -217,7 +217,7 @@ If [libprimesieve is installed](https://github.com/kimwalisch/primesieve#install
 on your system, then you can compile any of the C++ example programs above using:
 
 ```sh
-c++ -O2 primes.cpp -o primes -lprimesieve
+c++ -O3 primes.cpp -o primes -lprimesieve
 ```
 
 If you have [built libprimesieve yourself](BUILD.md#primesieve-build-instructions)
