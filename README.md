@@ -296,19 +296,20 @@ cl /O2 /EHsc /MD primes.cpp /I "path\to\primesieve\include" /link "path\to\prime
 
 ## CMake support
 
-Since primesieve-6.4 you can easily link against libprimesieve in your
-```CMakeLists.txt```:
+If you are using the CMake build system to compile your program and libprimesieve has been
+[installed](#installation) on your system, then you can add the following two lines to your
+```CMakeLists.txt``` to link your program against libprimesieve.
 
 ```CMake
 find_package(primesieve REQUIRED)
-target_link_libraries(your_target primesieve::primesieve)
+target_link_libraries(your_program primesieve::primesieve)
 ```
 
 To link against the static libprimesieve use:
 
 ```CMake
 find_package(primesieve REQUIRED static)
-target_link_libraries(your_target primesieve::primesieve)
+target_link_libraries(your_program primesieve::primesieve)
 ```
 
 * Example [CMakeLists.txt](doc/C_Examples.md#minimal-cmake-project-file) for C programs

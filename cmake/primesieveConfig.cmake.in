@@ -5,12 +5,12 @@
 #     In your CMakeLists.txt, add these lines:
 #
 #     find_package(primesieve REQUIRED)
-#     target_link_libraries(your_target primesieve::primesieve)
+#     target_link_libraries(your_program primesieve::primesieve)
 #
 #     To link against the static libprimesieve use:
 #
 #     find_package(primesieve REQUIRED static)
-#     target_link_libraries(your_target primesieve::primesieve)
+#     target_link_libraries(your_program primesieve::primesieve)
 #
 # ====================================================================
 
