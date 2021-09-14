@@ -289,7 +289,7 @@ export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
 #### Microsoft Visual C++
 
 ```sh
-cl /O2 /MD /EHsc primes.cpp /I "path\to\primesieve\include" /link "path\to\primesieve.lib"
+cl /O2 /EHsc /MD primes.cpp /I "path\to\primesieve\include" /link "path\to\primesieve.lib"
 ```
 
 ## CMake support
