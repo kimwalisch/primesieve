@@ -309,6 +309,9 @@ find_package(primesieve REQUIRED static)
 target_link_libraries(your_target primesieve::primesieve)
 ```
 
+* Example [CMakeLists.txt](doc/C_Examples.md#minimal-cmake-project-file) for C programs
+* Example [CMakeLists.txt](doc/CPP_Examples.md#minimal-cmake-project-file) for C++ programs
+
 ## Bindings for other languages
 
 primesieve natively supports C and C++ and has bindings available for:
