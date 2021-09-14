@@ -1,4 +1,4 @@
-Changes in version 7.7, 12/09/2021
+Changes in version 7.7, 14/09/2021
 ==================================
 
 The CPU cache size detection has been improved. The code now better
@@ -21,9 +21,9 @@ affect primesieve's API/ABI.
 * Erat.cpp: If runtime CPU cache detection fails use
   config::L1D_CACHE_BYTES. 
 * main.cpp: Improve -q/--quiet option #102.
-* doc/primesieve.1: Update man page.
 * help.cpp: Update documentation of --size option.
-* README.md: Update documentation of --size option.
+* doc/primesieve.1: Update man page.
+* CMakeLists.txt: Add MSVC_CRT_STATIC option to force static linking.
 * C_Examples.md: Add CMake build instructions.
 * CPP_Examples.md: Add CMake build instructions.
 
