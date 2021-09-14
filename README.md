@@ -275,9 +275,11 @@ c++ -O2 primes.cpp -lprimesieve
 cc  -O2 primes.c   -lprimesieve
 ```
 
-If you have built libprimesieve yourself then the default installation path is
-usually ```/usr/local/lib``` which is not part of ```LD_LIBRARY_PATH``` on many
-OSes. Hence you may need to export some environment variables:
+If you have
+[built libprimesieve yourself](doc/BUILD.md#primesieve-build-instructions) then
+the default installation path is usually ```/usr/local/lib``` which is not part
+of ```LD_LIBRARY_PATH``` on many OSes. Hence you may need to export some
+environment variables:
 
 ```sh
 export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
