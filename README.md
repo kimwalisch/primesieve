@@ -276,8 +276,8 @@ cc  -O2 primes.c   -lprimesieve
 ```
 
 If you have built primesieve yourself then the default installation path is 
-```/usr/local/lib``` which is not part of ```LD_LIBRARY_PATH``` on many OSes.
-Hence you may need to export some environment variables:
+usually ```/usr/local/lib``` which is not part of ```LD_LIBRARY_PATH``` on many
+OSes. Hence you may need to export some environment variables:
 
 ```sh
 export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
