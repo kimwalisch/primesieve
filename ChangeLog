@@ -23,7 +23,7 @@ affect primesieve's API/ABI.
 * main.cpp: Improve -q/--quiet option #102.
 * help.cpp: Update documentation of --size option.
 * doc/primesieve.1: Update man page.
-* CMakeLists.txt: Add MSVC_CRT_STATIC option to force static linking.
+* CMakeLists.txt: Add WITH_MSVC_CRT_STATIC option to force static linking.
 * C_Examples.md: Add CMake build instructions.
 * CPP_Examples.md: Add CMake build instructions.
 

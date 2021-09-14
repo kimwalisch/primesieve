@@ -12,7 +12,10 @@ option(BUILD_DOC         "Build C/C++ API documentation" OFF)
 option(BUILD_MANPAGE     "Regenerate man page using a2x" OFF)
 option(BUILD_EXAMPLES    "Build example programs"        OFF)
 option(BUILD_TESTS       "Build test programs"           OFF)
-option(MSVC_CRT_STATIC   "Link primesieve.lib with /MT instead of the default /MD" OFF)
+
+option(WITH_MSVC_CRT_STATIC "Link primesieve.lib with /MT instead of the default /MD" OFF)
+
+# libprimesieve sanity check #########################################
 
 if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
     message(FATAL_ERROR "One or both of BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be set to ON")
@@ -172,7 +175,7 @@ if(BUILD_STATIC_LIBS)
     set_target_properties(libprimesieve-static PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${LIBATOMIC})
 
-    if(MSVC_CRT_STATIC)
+    if(WITH_MSVC_CRT_STATIC)
         set_target_properties(libprimesieve-static PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")
     endif()
 
@@ -228,7 +231,7 @@ if(BUILD_PRIMESIEVE)
     target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-    if(MSVC_CRT_STATIC)
+    if(WITH_MSVC_CRT_STATIC)
         set_target_properties(primesieve PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")
     endif()
 
