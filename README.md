@@ -296,9 +296,10 @@ cl /O2 /EHsc /MD primes.cpp /I "path\to\primesieve\include" /link "path\to\prime
 
 ## CMake support
 
-If you are using the CMake build system to compile your program and libprimesieve has been
-[installed](#installation) on your system, then you can add the following two lines to your
-```CMakeLists.txt``` to link your program against libprimesieve.
+If you are using the CMake build system to compile your program and
+[libprimesieve is installed](https://github.com/kimwalisch/primesieve#installation) on your
+system, then you can add the following two lines to your ```CMakeLists.txt``` to link your
+program against libprimesieve.
 
 ```CMake
 find_package(primesieve REQUIRED)
