@@ -220,7 +220,7 @@ on your system, then you can compile any of the C++ example programs above using
 c++ -O2 primes.cpp -o primes -lprimesieve
 ```
 
-If you have [built primesieve yourself](BUILD.md#primesieve-build-instructions)
+If you have [built libprimesieve yourself](BUILD.md#primesieve-build-instructions)
 then the default installation path is usually ```/usr/local/lib``` which is not
 part of ```LD_LIBRARY_PATH``` on many OSes. Hence you may need to export some
 environment variables:
