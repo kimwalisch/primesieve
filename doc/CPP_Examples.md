@@ -229,10 +229,10 @@ int main()
 {
   try
   {
-    // Try generating primes > 2^64 to trigger an exception
-    std::vector<uint64_t> primes;
+    // Try generating primes > 2^64
     uint64_t start = ~0ull - 1;
     uint64_t n = 1000;
+    std::vector<uint64_t> primes;
     primesieve::generate_n_primes(n, start, &primes);
   }
   catch (const std::exception& e)
