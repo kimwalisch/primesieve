@@ -4,7 +4,7 @@
 ///         Contains the implementations of the functions declared
 ///         in the primesieve.h header file.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -19,8 +19,9 @@
 #include <cstddef>
 #include <cerrno>
 #include <exception>
+#include <iostream>
 
-using namespace std;
+using std::size_t;
 using namespace primesieve;
 
 namespace {
@@ -39,11 +40,12 @@ void* get_primes(uint64_t start, uint64_t stop, size_t* size)
     primes.disable_free();
     return primes.data();
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
     if (size)
       *size = 0;
 
+    std::cerr << "primesieve_generate_primes: " << e.what() << std::endl;
     errno = EDOM;
     return nullptr;
   }
@@ -59,8 +61,9 @@ void* get_n_primes(uint64_t n, uint64_t start)
     primes.disable_free();
     return primes.data();
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_generate_n_primes: " << e.what() << std::endl;
     errno = EDOM;
     return nullptr;
   }
@@ -91,6 +94,7 @@ void* primesieve_generate_primes(uint64_t start, uint64_t stop, size_t* size, in
   if (size)
     *size = 0;
 
+  std::cerr << "primesieve_generate_primes: Invalid type parameter!" << std::endl;
   errno = EDOM;
   return nullptr;
 }
@@ -115,6 +119,7 @@ void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type)
     case UINT64_PRIMES:    return get_n_primes<uint64_t>(n, start);
   }
 
+  std::cerr << "primesieve_generate_n_primes: Invalid type parameter!" << std::endl;
   errno = EDOM;
   return nullptr;
 }
@@ -130,8 +135,9 @@ uint64_t primesieve_nth_prime(int64_t n, uint64_t start)
   {
     return nth_prime(n, start);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_nth_prime: " << e.what() << std::endl;
     errno = EDOM;
     return PRIMESIEVE_ERROR;
   }
@@ -143,8 +149,9 @@ uint64_t primesieve_count_primes(uint64_t start, uint64_t stop)
   {
     return count_primes(start, stop);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_count_primes: " << e.what() << std::endl;
     errno = EDOM;
     return PRIMESIEVE_ERROR;
   }
@@ -156,8 +163,9 @@ uint64_t primesieve_count_twins(uint64_t start, uint64_t stop)
   {
     return count_twins(start, stop);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_count_twins: " << e.what() << std::endl;
     errno = EDOM;
     return PRIMESIEVE_ERROR;
   }
@@ -169,8 +177,9 @@ uint64_t primesieve_count_triplets(uint64_t start, uint64_t stop)
   {
     return count_triplets(start, stop);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_count_triplets: " << e.what() << std::endl;
     errno = EDOM;
     return PRIMESIEVE_ERROR;
   }
@@ -182,8 +191,9 @@ uint64_t primesieve_count_quadruplets(uint64_t start, uint64_t stop)
   {
     return count_quadruplets(start, stop);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_count_quadruplets: " << e.what() << std::endl;
     errno = EDOM;
     return PRIMESIEVE_ERROR;
   }
@@ -195,8 +205,9 @@ uint64_t primesieve_count_quintuplets(uint64_t start, uint64_t stop)
   {
     return count_quintuplets(start, stop);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_count_quintuplets: " << e.what() << std::endl;
     errno = EDOM;
     return PRIMESIEVE_ERROR;
   }
@@ -208,8 +219,9 @@ uint64_t primesieve_count_sextuplets(uint64_t start, uint64_t stop)
   {
     return count_sextuplets(start, stop);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_count_sextuplets: " << e.what() << std::endl;
     errno = EDOM;
     return PRIMESIEVE_ERROR;
   }
@@ -221,8 +233,9 @@ void primesieve_print_primes(uint64_t start, uint64_t stop)
   {
     print_primes(start, stop);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_print_primes: " << e.what() << std::endl;
     errno = EDOM;
   }
 }
@@ -233,8 +246,9 @@ void primesieve_print_twins(uint64_t start, uint64_t stop)
   {
     print_twins(start, stop);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_print_twins: " << e.what() << std::endl;
     errno = EDOM;
   }
 }
@@ -245,8 +259,9 @@ void primesieve_print_triplets(uint64_t start, uint64_t stop)
   {
     print_triplets(start, stop);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_print_triplets: " << e.what() << std::endl;
     errno = EDOM;
   }
 }
@@ -257,8 +272,9 @@ void primesieve_print_quadruplets(uint64_t start, uint64_t stop)
   {
     print_quadruplets(start, stop);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_print_quadruplets: " << e.what() << std::endl;
     errno = EDOM;
   }
 }
@@ -269,8 +285,9 @@ void primesieve_print_quintuplets(uint64_t start, uint64_t stop)
   {
     print_quintuplets(start, stop);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_print_quintuplets: " << e.what() << std::endl;
     errno = EDOM;
   }
 }
@@ -281,8 +298,9 @@ void primesieve_print_sextuplets(uint64_t start, uint64_t stop)
   {
     print_sextuplets(start, stop);
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_print_sextuplets: " << e.what() << std::endl;
     errno = EDOM;
   }
 }

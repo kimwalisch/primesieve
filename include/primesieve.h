@@ -1,8 +1,11 @@
 /**
  * @file   primesieve.h
- * @brief  primesieve C API. primesieve is a library for fast prime
- *         number generation. In case an error occurs errno is set to
- *         EDOM and PRIMESIEVE_ERROR is returned.
+ * @brief  primesieve C API. primesieve is a library for quickly
+ *         generating prime numbers. If an error occurs, primesieve
+ *         functions with a uint64_t return type return PRIMESIEVE_ERROR
+ *         and the corresponding error message is printed to the
+ *         standard error stream. libprimesieve also sets the global C
+ *         errno variable to EDOM if an error occurs.
  * 
  * Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
  * 

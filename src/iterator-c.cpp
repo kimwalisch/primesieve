@@ -2,7 +2,7 @@
 /// @file   iterator-c.cpp
 /// @brief  C port of primesieve::iterator.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -16,9 +16,9 @@
 #include <stdint.h>
 #include <cerrno>
 #include <exception>
+#include <iostream>
 #include <vector>
 
-using namespace std;
 using namespace primesieve;
 
 namespace {
@@ -35,9 +35,9 @@ void clearPrimeGenerator(primesieve_iterator* it)
   it->primeGenerator = nullptr;
 }
 
-vector<uint64_t>& getPrimes(primesieve_iterator* it)
+std::vector<uint64_t>& getPrimes(primesieve_iterator* it)
 {
-  using T = vector<uint64_t>;
+  using T = std::vector<uint64_t>;
   T* primes = (T*) it->vector;
   return *primes;
 }
@@ -53,7 +53,7 @@ void primesieve_init(primesieve_iterator* it)
   it->i = 0;
   it->last_idx = 0;
   it->dist = 0;
-  it->vector = new vector<uint64_t>;
+  it->vector = new std::vector<uint64_t>;
   it->primeGenerator = nullptr;
   it->is_error = false;
 }
@@ -120,8 +120,9 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
         break;
     }
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_iterator: " << e.what() << std::endl;
     clearPrimeGenerator(it);
     primes.resize(1);
     primes[0] = PRIMESIEVE_ERROR;
@@ -157,8 +158,9 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
       clearPrimeGenerator(it);
     }
   }
-  catch (exception&)
+  catch (const std::exception& e)
   {
+    std::cerr << "primesieve_iterator: " << e.what() << std::endl;
     clearPrimeGenerator(it);
     primes.resize(1);
     primes[0] = PRIMESIEVE_ERROR;
