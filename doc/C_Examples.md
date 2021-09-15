@@ -271,7 +271,7 @@ target_link_libraries(primes primesieve::primesieve)
 Put the ```CMakeLists.txt``` file from above into the same directory as your ```primes.c``` file.<br/>
 Then open a terminal, cd into that directory and build your project using:
 
-```
+```sh
 cmake . -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ```
@@ -281,7 +281,7 @@ against the static libprimesieve in your ```CMakeLists.txt``` using:
 ```find_package(primesieve REQUIRED static)```. Next open a Visual Studio Command Prompt, cd into your
 project's directory and build your project using:
 
-```
+```sh
 cmake -G "Visual Studio 16 2019" .
 cmake --build . --config Release
 ```
