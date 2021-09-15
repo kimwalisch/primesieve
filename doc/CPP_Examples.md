@@ -213,6 +213,37 @@ int main()
 
 * [Build instructions](#how-to-compile)
 
+## ```primesieve::primesieve_error```
+
+If an error occurs libprimesieve throws a ```primesieve::primesieve_error``` exception that is
+derived from ```std::runtime_error```. Note that libprimesieve very rarely throws an exception,
+the two main cases which will trigger an exception are: memory allocation failure (throws
+```std::bad_alloc```) and trying to generate primes > 2^64 (throws
+```primesieve::primesieve_error```).
+
+```C++
+#include <primesieve.hpp>
+#include <iostream>
+
+int main()
+{
+  try
+  {
+    // Try generating primes > 2^64 to trigger an exception
+    std::vector<uint64_t> primes;
+    uint64_t start = ~0ull - 1;
+    uint64_t n = 1000;
+    primesieve::generate_n_primes(n, start, &primes);
+  }
+  catch (const std::exception& e)
+  {
+    std::cerr << e.what() << std::endl;
+  }
+
+  return 0;
+}
+```
+
 # How to compile
 
 ### Unix-like OSes
