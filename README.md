@@ -149,7 +149,7 @@ int main()
 ```
 
 * [More C++ examples](doc/CPP_Examples.md)
-* [C++ API documentation](https://kimwalisch.github.io/primesieve/api)
+* [C++ API reference](https://kimwalisch.github.io/primesieve/api)
 
 ## C API
 
@@ -175,7 +175,7 @@ int main()
 ```
 
 * [More C examples](doc/C_Examples.md)
-* [C API documentation](https://kimwalisch.github.io/primesieve/api)
+* [C API reference](https://kimwalisch.github.io/primesieve/api)
 
 ## libprimesieve performance tips
 

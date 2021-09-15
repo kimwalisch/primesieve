@@ -1,4 +1,4 @@
-# primesieve C examples
+# libprimesieve C examples
 
 This is a short selection of C code snippets that use libprimesieve to generate prime numbers.
 These examples cover the most frequently used functionality of libprimesieve. Arguably the most
