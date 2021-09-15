@@ -1,8 +1,8 @@
 /// @mainpage
 /// @section About
 ///
-/// primesieve is a C/C++ library for fast prime number generation. It
-/// generates the primes below 10^9 in just 0.2 seconds on a single
+/// primesieve is a C/C++ library for quickly generating prime numbers.
+/// It generates the primes below 10^9 in just 0.2 seconds on a single
 /// core of an Intel Core i7-6700 3.4GHz CPU. primesieve can generate
 /// primes and prime k-tuplets up to 2^64. primesieve's memory
 /// requirement is about pi(sqrt(n)) * 8 bytes per thread, its
@@ -15,15 +15,27 @@
 ///
 /// For more information please visit https://github.com/kimwalisch/primesieve.
 ///
-/// @section CPP_API C++ API
+/// @section Installation Installation
 ///
-/// @li @link primesieve.hpp primesieve.hpp @endlink - primesieve C++ header.
-/// @li primesieve::iterator - Provides the @link primesieve::iterator::next_prime() next_prime() @endlink and @link primesieve::iterator::prev_prime() prev_prime() @endlink methods.
-/// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/CPP_Examples.md"><b>C++ examples</b></a> - Example programs that show how to use libprimesieve.
-/// 
+/// @li <a href="https://github.com/kimwalisch/primesieve#installation"><b>Install libprimesieve using package manager.</b></a>
+/// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/BUILD.md#primesieve-build-instructions"><b>Build libprimesieve from source.</b></a>
+///
 /// @section C_API C API
 ///
 /// @li @link primesieve.h primesieve.h @endlink - primesieve C header.
 /// @li @link iterator.h primesieve_iterator @endlink - Provides the primesieve_next_prime() and primesieve_prev_prime() functions.
 /// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/C_Examples.md"><b>C examples</b></a> - Example programs that show how to use libprimesieve.
-/// 
+/// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/C_Examples.md#how-to-compile"><b>Link against libprimesieve.</b></a>
+///
+/// @section CPP_API C++ API
+///
+/// @li @link primesieve.hpp primesieve.hpp @endlink - primesieve C++ header.
+/// @li primesieve::iterator - Provides the @link primesieve::iterator::next_prime() next_prime() @endlink and @link primesieve::iterator::prev_prime() prev_prime() @endlink methods.
+/// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/CPP_Examples.md"><b>C++ examples</b></a> - Example programs that show how to use libprimesieve.
+/// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/CPP_Examples.md#how-to-compile"><b>Link against libprimesieve.</b></a>
+///
+/// @section Performance_tips Performance tips
+///
+/// @li <a href="https://github.com/kimwalisch/primesieve#libprimesieve-performance-tips"><b>libprimesieve performance tips.</b></a>
+/// @li <a href="https://github.com/kimwalisch/primesieve#libprimesieve-multi-threading"><b>libprimesieve multi-threading tips.</b></a>
+///
