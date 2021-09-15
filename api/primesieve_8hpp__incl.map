@@ -1,5 +1,5 @@
 <map id="primesieve.hpp" name="primesieve.hpp">
-<area shape="rect" id="node1" title="primesieve C++ API. primesieve is a library for fast prime number generation, in case an error occurs..." alt="" coords="315,5,438,32"/>
+<area shape="rect" id="node1" title="primesieve C++ API." alt="" coords="315,5,438,32"/>
 <area shape="rect" id="node2" href="$iterator_8hpp.html" title="The iterator class allows to easily iterate (forwards and backwards) over prime numbers." alt="" coords="103,87,277,114"/>
 <area shape="rect" id="node3" title=" " alt="" coords="5,169,76,196"/>
 <area shape="rect" id="node5" title=" " alt="" coords="297,169,360,196"/>

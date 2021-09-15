@@ -1,6 +1,6 @@
 <map id="primesieve.h" name="primesieve.h">
-<area shape="rect" id="node1" title="primesieve C API. primesieve is a library for fast prime number generation. In case an error occurs e..." alt="" coords="48,5,155,32"/>
-<area shape="rect" id="node2" href="$iterator_8h.html" title="primesieve_iterator allows to easily iterate over primes both forwards and backwards...." alt="" coords="22,80,181,107"/>
+<area shape="rect" id="node1" title="primesieve C API." alt="" coords="48,5,155,32"/>
+<area shape="rect" id="node2" href="$iterator_8h.html" title="primesieve_iterator allows to easily iterate over primes both forwards and backwards." alt="" coords="22,80,181,107"/>
 <area shape="rect" id="node3" title=" " alt="" coords="13,155,84,181"/>
 <area shape="rect" id="node4" title=" " alt="" coords="118,155,192,181"/>
 </map>
