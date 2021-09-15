@@ -53,7 +53,7 @@ int main()
 
   // generate primes > 1000
   it.skipto(1000);
-  prime = it.next_prime();
+  uint64_t prime = it.next_prime();
 
   // generate primes > 1000 and <= 1100
   for (; prime <= 1100; prime = it.next_prime())
@@ -81,7 +81,7 @@ int main()
 
   // generate primes > 1000 and <= 1100
   primesieve::iterator it(start, stop_hint);
-  prime = it.next_prime();
+  uint64_t prime = it.next_prime();
 
   for (; prime <= 1100; prime = it.next_prime())
     std::cout << prime << std::endl;
