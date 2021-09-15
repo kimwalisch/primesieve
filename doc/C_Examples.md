@@ -250,8 +250,8 @@ target_link_libraries(your_program primesieve::primesieve)
 If you wish to build your C program (named ```primes.c```) using CMake, then you can use
 the minimal ```CMakeLists.txt``` below. Note that this requires that
 [libprimesieve is installed](https://github.com/kimwalisch/primesieve#installation) on your
-CMake has the advantage that you don't need to specify the libprimesieve include path and
-the ```-lprimesieve``` linker option when building your project.
+system. Using CMake has the advantage that you don't need to specify the libprimesieve include
+path and the ```-lprimesieve``` linker option when building your project.
 
 ```CMake
 # File: CMakeLists.txt
