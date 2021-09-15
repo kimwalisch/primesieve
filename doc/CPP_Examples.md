@@ -51,11 +51,11 @@ int main()
 {
   primesieve::iterator it;
 
-  // generate primes > 1000
+  // iterate over primes > 1000
   it.skipto(1000);
   uint64_t prime = it.next_prime();
 
-  // generate primes > 1000 and <= 1100
+  // iterate over primes from ]1000, 1100]
   for (; prime <= 1100; prime = it.next_prime())
     std::cout << prime << std::endl;
 
@@ -79,10 +79,11 @@ int main()
   uint64_t start = 1000;
   uint64_t stop_hint = 1100;
 
-  // generate primes > 1000 and <= 1100
+  // iterate over primes > start
   primesieve::iterator it(start, stop_hint);
   uint64_t prime = it.next_prime();
 
+  // iterate over primes from ]1000, 1100]
   for (; prime <= 1100; prime = it.next_prime())
     std::cout << prime << std::endl;
 
@@ -104,11 +105,11 @@ initialized to 0 be default.
 
 int main()
 {
-  // generate primes < 1000
+  // iterate over primes < 1000
   primesieve::iterator it(1000);
   uint64_t prime = it.prev_prime();
 
-  // iterate over primes from 1000 to 0
+  // iterate over primes from ]1000, 0[
   for (; prime > 0;  prime = it.prev_prime())
     std::cout << prime << std::endl;
 
