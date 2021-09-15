@@ -45,7 +45,7 @@ int main()
 ## ```primesieve_skipto()```
 
 This method changes the start number of the ```primesieve_iterator``` object. (By
-default the start number is initialized to 0). The ```stop_hint``` paramater is
+default the start number is initialized to 0). The ```stop_hint``` parameter is
 used for performance optimization, ```primesieve_iterator``` only buffers primes
 up to this limit.
 
@@ -107,7 +107,7 @@ int main()
 
 ## ```primesieve_generate_primes()```
 
-Stores the primes inside [start, stop] in an array. The last primes ```type``` paramater
+Stores the primes inside [start, stop] in an array. The last primes ```type``` parameter
 can be one of: ```SHORT_PRIMES```, ```USHORT_PRIMES```, ```INT_PRIMES```, ```UINT_PRIMES```,
 ```LONG_PRIMES```, ```ULONG_PRIMES```, ```LONGLONG_PRIMES```, ```ULONGLONG_PRIMES```,
 ```INT16_PRIMES```, ```UINT16_PRIMES```, ```INT32_PRIMES```, ```UINT32_PRIMES```,
@@ -139,7 +139,7 @@ int main()
 
 ## ```primesieve_generate_n_primes()```
 
-Stores the first n primes ≥ start in an array. The last primes ```type``` paramater can
+Stores the first n primes ≥ start in an array. The last primes ```type``` parameter can
 be one of: ```SHORT_PRIMES```, ```USHORT_PRIMES```, ```INT_PRIMES```, ```UINT_PRIMES```,
 ```LONG_PRIMES```, ```ULONG_PRIMES```, ```LONGLONG_PRIMES```, ```ULONGLONG_PRIMES```,
 ```INT16_PRIMES```, ```UINT16_PRIMES```, ```INT32_PRIMES```, ```UINT32_PRIMES```,
