@@ -210,8 +210,8 @@ If an error occurs, libprimesieve functions with a ```uint64_t``` return type re
 ```PRIMESIEVE_ERROR``` (which is defined as ```UINT64_MAX``` in ```<primesieve.h>```)
 and the corresponding error message is printed to the standard error stream.
 libprimesieve also sets the global C ```errno``` variable to ```EDOM``` if an error
-occurs, this is primarily needed to check if an error has occurred in a libprimesieve
-function with a ```void``` return type.
+occurs, this is mainly useful for checking if an error has occurred in
+libprimesieve functions with a ```void``` return type.
 
 ```C
 #include <primesieve.h>
