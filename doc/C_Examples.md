@@ -18,6 +18,7 @@ By default ```primesieve_next_prime()``` generates primes > 0 i.e. 2, 3, 5, 7, .
 
 ```C
 #include <primesieve.h>
+#include <inttypes.h>
 #include <stdio.h>
 
 int main()
@@ -50,6 +51,7 @@ up to this limit.
 
 ```C
 #include <primesieve.h>
+#include <inttypes.h>
 #include <stdio.h>
 
 int main()
@@ -80,6 +82,7 @@ initialized to 0 be default.
 
 ```C
 #include <primesieve.h>
+#include <inttypes.h>
 #include <stdio.h>
 
 int main()
@@ -152,7 +155,7 @@ int main()
   int64_t* primes = (int64_t*) primesieve_generate_n_primes(n, start, INT64_PRIMES);
 
   for (i = 0; i < n; i++)
-    printf("%i\n", primes[i]);
+    printf("%li\n", primes[i]);
 
   primesieve_free(primes);
   return 0;
@@ -168,6 +171,7 @@ available CPU cores by default.
 
 ```C
 #include <primesieve.h>
+#include <inttypes.h>
 #include <stdio.h>
 
 int main()
@@ -189,6 +193,7 @@ multi-threaded and uses all available CPU cores by default.
 
 ```C
 #include <primesieve.h>
+#include <inttypes.h>
 #include <stdio.h>
 
 int main(int argc, char** argv)
@@ -215,6 +220,7 @@ libprimesieve functions with a ```void``` return type.
 
 ```C
 #include <primesieve.h>
+#include <inttypes.h>
 #include <stdio.h>
 
 int main()
