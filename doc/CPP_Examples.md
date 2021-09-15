@@ -213,7 +213,7 @@ int main()
 
 * [Build instructions](#how-to-compile)
 
-## ```primesieve::primesieve_error```
+# Error handling
 
 If an error occurs libprimesieve throws a ```primesieve::primesieve_error``` exception that is
 derived from ```std::runtime_error```. Note that libprimesieve very rarely throws an exception,
