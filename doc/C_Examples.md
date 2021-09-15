@@ -107,10 +107,11 @@ int main()
 
 ## ```primesieve_generate_primes()```
 
-Stores the primes inside [start, stop] in an array. If you are iterating over
-the same primes many times in a loop you will likely get better performance
-if you store the primes in an array instead of using a ```primesieve_iterator```
-(provided your system has enough memory).
+Stores the primes inside [start, stop] in an array. The last primes ```type``` paramater
+can be one of: ```SHORT_PRIMES```, ```USHORT_PRIMES```, ```INT_PRIMES```, ```UINT_PRIMES```,
+```LONG_PRIMES```, ```ULONG_PRIMES```, ```LONGLONG_PRIMES```, ```ULONGLONG_PRIMES```,
+```INT16_PRIMES```, ```UINT16_PRIMES```, ```INT32_PRIMES```, ```UINT32_PRIMES```,
+```INT64_PRIMES```, ```UINT64_PRIMES```.
 
 ```C
 #include <primesieve.h>
@@ -138,7 +139,11 @@ int main()
 
 ## ```primesieve_generate_n_primes()```
 
-Stores n primes in an array.
+Stores the first n primes ≥ start in an array. The last primes ```type``` paramater can
+be one of: ```SHORT_PRIMES```, ```USHORT_PRIMES```, ```INT_PRIMES```, ```UINT_PRIMES```,
+```LONG_PRIMES```, ```ULONG_PRIMES```, ```LONGLONG_PRIMES```, ```ULONGLONG_PRIMES```,
+```INT16_PRIMES```, ```UINT16_PRIMES```, ```INT32_PRIMES```, ```UINT32_PRIMES```,
+```INT64_PRIMES```, ```UINT64_PRIMES```.
 
 ```C
 #include <primesieve.h>
