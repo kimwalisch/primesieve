@@ -129,7 +129,7 @@ sudo make install
 
 ## C++ API
 
-Below is a C++ example with the most common libprimesieve use case.
+Include the ```<primesieve.hpp>``` header to use libprimesieve's C++ API.
 
 ```C++
 #include <primesieve.hpp>
@@ -153,7 +153,7 @@ int main()
 
 ## C API
 
-libprimesieve's functions are exposed as C API via the ```primesieve.h``` header.
+Include the ```<primesieve.h>``` header to use libprimesieve's C API.
 
 ```C
 #include <primesieve.h>
