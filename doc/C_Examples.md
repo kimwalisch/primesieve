@@ -29,6 +29,8 @@ int main()
     sum += prime;
 
   printf("Sum of the primes below 10^9 = %" PRIu64 "\n", sum);
+  primesieve_free_iterator(&it);
+
   return 0;
 }
 ```
