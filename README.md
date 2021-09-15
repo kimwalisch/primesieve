@@ -157,6 +157,7 @@ Include the ```<primesieve.h>``` header to use libprimesieve's C API.
 
 ```C
 #include <primesieve.h>
+#include <inttypes.h>
 #include <stdio.h>
 
 int main()
@@ -167,7 +168,7 @@ int main()
 
   /* Iterate over the primes below 10^6 */
   while ((prime = primesieve_next_prime(&it)) < 1000000)
-    printf("%llu\n", prime);
+    printf("%" PRIu64 "\n", prime);
 
   primesieve_free_iterator(&it);
   return 0;
