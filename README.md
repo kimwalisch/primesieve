@@ -35,7 +35,7 @@ to install ```libprimesieve-dev``` or ```libprimesieve-devel```.
 <table>
     <tr>
         <td><b>Windows:</b></td>
-        <td><code>choco install primesieve</code></td>
+        <td><code>winget install primesieve</code></td>
     </tr>
     <tr>
         <td><b>macOS:</b></td>
@@ -46,6 +46,10 @@ to install ```libprimesieve-dev``` or ```libprimesieve-devel```.
         <td><code>sudo pacman -S primesieve</code></td>
     </tr>
     <tr>
+        <td><b>Chocolatey:</b></td>
+        <td><code>choco install primesieve</code></td>
+    </tr>
+    <tr>
         <td><b>Debian/Ubuntu:</b></td>
         <td><code>sudo apt install primesieve</code></td>
     </tr>
@@ -54,12 +58,12 @@ to install ```libprimesieve-dev``` or ```libprimesieve-devel```.
         <td><code>sudo dnf install primesieve</code></td>
     </tr>
     <tr>
-        <td><b>openSUSE:</b></td>
-        <td><code>sudo zypper install primesieve</code></td>
-    </tr>
-    <tr>
         <td><b>FreeBSD:</b></td>
         <td><code>pkg install primesieve</code></td>
+    </tr>
+    <tr>
+        <td><b>openSUSE:</b></td>
+        <td><code>sudo zypper install primesieve</code></td>
     </tr>
 </table>
 
