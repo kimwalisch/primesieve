@@ -26,7 +26,7 @@ int main()
   uint64_t sum = 0;
 
   // iterate over the primes below 10^9
-  for (; prime < 1000000000ull; prime = it.next_prime())
+  for (; prime < 1000000000; prime = it.next_prime())
     sum += prime;
 
   std::cout << "Sum of the primes below 10^9 = " << sum << std::endl;
