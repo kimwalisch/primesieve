@@ -227,7 +227,6 @@ and the corresponding error message is printed to the standard error stream.
 
 int main()
 {
-  /* primesieve_count_primes(start, stop) */
   uint64_t count = primesieve_count_primes(0, 1000);
 
   if (count != PRIMESIEVE_ERROR)
