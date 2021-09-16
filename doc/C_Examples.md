@@ -59,7 +59,7 @@ int main()
   primesieve_iterator it;
   primesieve_init(&it);
 
-  /* primesieve_skipto(&it, start_number, stop_hint) */
+  /* primesieve_skipto(&it, start, stop_hint) */
   primesieve_skipto(&it, 1000, 1100);
   uint64_t prime;
 
@@ -90,7 +90,7 @@ int main()
   primesieve_iterator it;
   primesieve_init(&it);
 
-  /* primesieve_skipto(&it, start_number, stop_hint) */
+  /* primesieve_skipto(&it, start, stop_hint) */
   primesieve_skipto(&it, 2000, 1000);
   uint64_t prime;
 
