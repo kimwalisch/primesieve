@@ -198,7 +198,7 @@ multi-threaded and uses all available CPU cores by default.
 #include <inttypes.h>
 #include <stdio.h>
 
-int main(int argc, char** argv)
+int main()
 {
   /* primesieve_nth_prime(n, start) */
   uint64_t n = 25;
