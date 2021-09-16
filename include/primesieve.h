@@ -4,8 +4,8 @@
  *         generating prime numbers. If an error occurs, primesieve
  *         functions with a uint64_t return type return PRIMESIEVE_ERROR
  *         and the corresponding error message is printed to the
- *         standard error stream. libprimesieve also sets the global C
- *         errno variable to EDOM if an error occurs.
+ *         standard error stream. libprimesieve also sets the C errno
+ *         variable to EDOM if an error occurs.
  * 
  * Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
  * 
