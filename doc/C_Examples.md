@@ -30,7 +30,7 @@ int main()
   uint64_t prime = 0;
 
   /* iterate over the primes < 10^9 */
-  while ((prime = primesieve_next_prime(&it)) < 1000000000ull)
+  while ((prime = primesieve_next_prime(&it)) < 1000000000)
     sum += prime;
 
   printf("Sum of the primes below 10^9 = %" PRIu64 "\n", sum);
@@ -219,9 +219,6 @@ int main(int argc, char** argv)
 If an error occurs, libprimesieve functions with a ```uint64_t``` return type return
 ```PRIMESIEVE_ERROR``` (which is defined as ```UINT64_MAX``` in ```<primesieve.h>```)
 and the corresponding error message is printed to the standard error stream.
-libprimesieve also sets the global C ```errno``` variable to ```EDOM``` if an error
-occurs, this is mainly useful for checking if an error has occurred in
-libprimesieve functions with a ```void``` return type.
 
 ```C
 #include <primesieve.h>
@@ -236,8 +233,44 @@ int main()
   if (count != PRIMESIEVE_ERROR)
     printf("Primes below 1000 = %" PRIu64 "\n", count);
   else
-    printf("Error in libprimesieve!");
+    printf("Error in libprimesieve!\n");
 
+  return 0;
+}
+```
+
+libprimesieve also sets the C ```errno``` variable to ```EDOM``` if an error
+occurs. This is useful for checking if an error has occurred in libprimesieve
+functions with a ```void``` return type. ```errno``` can also be used to check
+after a computation that no error has occurred, this way you don't have to
+check the return value of every single primesieve function call.
+
+```C
+#include <primesieve.h>
+#include <errno.h>
+#include <inttypes.h>
+#include <stdio.h>
+
+int main()
+{
+  /* Reset errno before computation */
+  errno = 0;
+
+  primesieve_iterator it;
+  primesieve_init(&it);
+  uint64_t sum = 0;
+  uint64_t prime = 0;
+
+  while ((prime = primesieve_next_prime(&it)) < 1000000000)
+    sum += prime;
+
+  /* Check errno after computation */
+  if (errno != EDOM)
+    printf("Sum of the primes below 10^9 = %" PRIu64 "\n", sum);
+  else
+    printf("Error in libprimesieve!\n");
+
+  primesieve_free_iterator(&it);
   return 0;
 }
 ```
