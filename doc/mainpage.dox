@@ -25,6 +25,7 @@
 /// @li @link primesieve.h primesieve.h @endlink - primesieve C header.
 /// @li @link iterator.h primesieve_iterator @endlink - Provides the primesieve_next_prime() and primesieve_prev_prime() functions.
 /// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/C_Examples.md"><b>C examples</b></a> - Example programs that show how to use libprimesieve.
+/// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/C_Examples.md#error-handling"><b>C error handling</b></a> - How to detect and handle errors.
 /// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/C_Examples.md#how-to-compile"><b>Link against libprimesieve.</b></a>
 ///
 /// @section CPP_API C++ API
@@ -32,6 +33,7 @@
 /// @li @link primesieve.hpp primesieve.hpp @endlink - primesieve C++ header.
 /// @li primesieve::iterator - Provides the @link primesieve::iterator::next_prime() next_prime() @endlink and @link primesieve::iterator::prev_prime() prev_prime() @endlink methods.
 /// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/CPP_Examples.md"><b>C++ examples</b></a> - Example programs that show how to use libprimesieve.
+/// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/CPP_Examples.md#error-handling"><b>C++ error handling</b></a> - How to detect and handle errors.
 /// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/CPP_Examples.md#how-to-compile"><b>Link against libprimesieve.</b></a>
 ///
 /// @section Performance_tips Performance tips
