@@ -1,7 +1,19 @@
 ///
 /// @file   CpuInfo.cpp
-/// @brief  Get detailed information about the CPU's caches
-///         on Windows, macOS and Linux.
+/// @brief  Get detailed information about the CPU's caches.
+///         We want the code to be as portable as possible, hence we
+///         try to avoid using assembly language and also don't use
+///         non standard libc extensions. Instead we query the CPU
+///         cache information from the operating system API.
+///
+///         Ideally each primesieve thread should use a sieve array
+///         size that corresponds to the cache size of the CPU core
+///         the thread is running on. Unfortunately, due to the many
+///         different operating systems, CPU architectures and the
+///         rise of hybrid CPUs this is too difficult to implement.
+///         Hence instead, we detect the cache sizes of the 1st CPU
+///         core and all primesieve threads use a sieve array size
+///         that is related to the 1st CPU core's cache sizes.
 ///
 /// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -202,46 +214,34 @@ void CpuInfo::init()
   {
     info = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[i];
 
+    if (info->Relationship == RelationProcessorCore)
+    {
+      size_t size = info->Processor.GroupCount;
+      for (size_t j = 0; j < size; j++)
+      {
+        // Processor.GroupMask.Mask contains one bit set for
+        // each thread associated to the current CPU core
+        for (auto mask = info->Processor.GroupMask[j].Mask; mask > 0; mask &= mask - 1)
+          logicalCpuCores_++;
+      }
+    }
+
     if (info->Relationship == RelationCache &&
         info->Cache.GroupMask.Group == 0 &&
         info->Cache.Level >= 1 &&
         info->Cache.Level <= 3 &&
+        (!cacheSizes_[info->Cache.Level] ||
+         !cacheSharing_[info->Cache.Level]) &&
         (info->Cache.Type == CacheData ||
          info->Cache.Type == CacheUnified))
     {
       auto level = info->Cache.Level;
       cacheSizes_[level] = info->Cache.CacheSize;
 
-      // @warning: GetLogicalProcessorInformationEx() reports
-      // incorrect data when Windows is run inside a virtual
-      // machine. Specifically the GROUP_AFFINITY.Mask will
-      // only have 1 or 2 bits set for each CPU cache even if
-      // more logical CPU cores share the cache
-      auto mask = info->Cache.GroupMask.Mask;
-      cacheSharing_[level] = 0;
-
       // Cache.GroupMask.Mask contains one bit set for
       // each logical CPU core sharing the cache
-      for (; mask > 0; mask &= mask - 1)
+      for (auto mask = info->Cache.GroupMask.Mask; mask > 0; mask &= mask - 1)
         cacheSharing_[level]++;
-    }
-
-    if (info->Relationship == RelationProcessorCore)
-    {
-      cpuCores_++;
-      threadsPerCore_ = 0;
-      size_t size = info->Processor.GroupCount;
-
-      for (size_t j = 0; j < size; j++)
-      {
-        // Processor.GroupMask.Mask contains one bit set for
-        // each thread associated to the current CPU core
-        auto mask = info->Processor.GroupMask[j].Mask;
-        for (; mask > 0; mask &= mask - 1)
-          threadsPerCore_++;
-      }
-
-      cpuThreads_ += threadsPerCore_;
     }
   }
 // Windows XP or later
@@ -262,6 +262,7 @@ void CpuInfo::init()
   if (!bytes)
     return;
 
+  size_t threadsPerCore = 0;
   size_t size = bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
   vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> info(size);
 
@@ -275,12 +276,21 @@ void CpuInfo::init()
       // ProcessorMask contains one bit set for
       // each logical CPU core related to the
       // current physical CPU core
-      auto mask = info[i].ProcessorMask;
-      for (threadsPerCore_ = 0; mask > 0; threadsPerCore_++)
-        mask &= mask - 1;
+      for (auto mask = info[i].ProcessorMask; mask > 0; mask &= mask - 1)
+        logicalCpuCores_++
+    }
+  }
 
-      cpuCores_++;
-      cpuThreads_ += threadsPerCore_;
+  for (size_t i = 0; i < size; i++)
+  {
+    if (info[i].Relationship == RelationProcessorCore)
+    {
+      // ProcessorMask contains one bit set for
+      // each logical CPU core related to the
+      // current physical CPU core
+      for (auto mask = info[i].ProcessorMask; mask > 0; mask &= mask - 1)
+        threadsPerCore++
+      break;
     }
   }
 
@@ -289,6 +299,8 @@ void CpuInfo::init()
     if (info[i].Relationship == RelationCache &&
         info[i].Cache.Level >= 1 &&
         info[i].Cache.Level <= 3 &&
+        (!cacheSizes_[info[i].Cache.Level] ||
+         !cacheSharing_[info[i].Cache.Level]) &&
         (info[i].Cache.Type == CacheData ||
          info[i].Cache.Type == CacheUnified))
     {
@@ -297,11 +309,11 @@ void CpuInfo::init()
 
       // We assume the L1 and L2 caches are private
       if (info[i].Cache.Level <= 2)
-        cacheSharing_[level] = threadsPerCore_;
+        cacheSharing_[level] = threadsPerCore;
 
       // We assume the L3 cache is shared
       if (info[i].Cache.Level == 3)
-        cacheSharing_[level] = threadsPerCore_ * cpuCores_;
+        cacheSharing_[level] = logicalCpuCores_;
     }
   }
 
@@ -311,7 +323,7 @@ void CpuInfo::init()
   // shared e.g. Intel Core 2 Duo/Quad CPUs and
   // Intel Atom x5-Z8350 CPUs.
   if (hasL2Cache() && !hasL3Cache())
-    cacheSharing_[2] = threadsPerCore_ * cpuCores_;
+    cacheSharing_[2] = logicalCpuCores_;
 #endif
 }
 
@@ -367,16 +379,9 @@ namespace primesieve {
 
 void CpuInfo::init()
 {
-  auto cpuCores = getSysctl<size_t>("hw.physicalcpu");
-  if (!cpuCores.empty())
-    cpuCores_ = cpuCores[0];
-
-  auto cpuThreads = getSysctl<size_t>("hw.logicalcpu");
-  if (!cpuThreads.empty())
-    cpuThreads_ = cpuThreads[0];
-
-  if (hasCpuCores() && hasCpuThreads())
-    threadsPerCore_ = cpuThreads_ / cpuCores_;
+  auto logicalCpuCores = getSysctl<size_t>("hw.logicalcpu");
+  if (!logicalCpuCores.empty())
+    logicalCpuCores_ = logicalCpuCores[0];
 
   // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
   auto cacheSizes = getSysctl<size_t>("hw.cachesize");
@@ -628,24 +633,7 @@ namespace primesieve {
 void CpuInfo::init()
 {
   string cpusOnline = "/sys/devices/system/cpu/online";
-  cpuThreads_ = parseThreadList(cpusOnline);
-
-  // Works on Linux kernel >= 5.3
-  string threadSiblingsList = "/sys/devices/system/cpu/cpu0/topology/core_cpus_list";
-  string threadSiblings = "/sys/devices/system/cpu/cpu0/topology/core_cpus";
-  threadsPerCore_ = getThreads(threadSiblingsList, threadSiblings);
-
-  if (!threadsPerCore_)
-  {
-    // Works on Linux kernel < 5.3
-    threadSiblingsList = "/sys/devices/system/cpu/cpu0/topology/thread_siblings_list";
-    threadSiblings = "/sys/devices/system/cpu/cpu0/topology/thread_siblings";
-    threadsPerCore_ = getThreads(threadSiblingsList, threadSiblings);
-  }
-
-  if (hasCpuThreads() &&
-      hasThreadsPerCore())
-    cpuCores_ = cpuThreads_ / threadsPerCore_;
+  logicalCpuCores_ = parseThreadList(cpusOnline);
 
   // Retrieve CPU cache info
   for (size_t i = 0; i <= 3; i++)
@@ -683,9 +671,7 @@ namespace primesieve {
 const CpuInfo cpuInfo;
 
 CpuInfo::CpuInfo() :
-  cpuCores_(0),
-  cpuThreads_(0),
-  threadsPerCore_(0),
+  logicalCpuCores_(0),
   cacheSizes_{0, 0, 0, 0},
   cacheSharing_{0, 0, 0, 0}
 {
@@ -720,27 +706,22 @@ string CpuInfo::cpuName() const
   }
 }
 
-size_t CpuInfo::cpuCores() const
+size_t CpuInfo::logicalCpuCores() const
 {
-  return cpuCores_;
+  return logicalCpuCores_;
 }
 
-size_t CpuInfo::cpuThreads() const
-{
-  return cpuThreads_;
-}
-
-size_t CpuInfo::l1CacheSize() const
+size_t CpuInfo::l1CacheBytes() const
 {
   return cacheSizes_[1];
 }
 
-size_t CpuInfo::l2CacheSize() const
+size_t CpuInfo::l2CacheBytes() const
 {
   return cacheSizes_[2];
 }
 
-size_t CpuInfo::l3CacheSize() const
+size_t CpuInfo::l3CacheBytes() const
 {
   return cacheSizes_[3];
 }
@@ -760,11 +741,6 @@ size_t CpuInfo::l3Sharing() const
   return cacheSharing_[3];
 }
 
-size_t CpuInfo::threadsPerCore() const
-{
-  return threadsPerCore_;
-}
-
 string CpuInfo::getError() const
 {
   return error_;
@@ -775,16 +751,10 @@ bool CpuInfo::hasCpuName() const
   return !cpuName().empty();
 }
 
-bool CpuInfo::hasCpuCores() const
+bool CpuInfo::hasLogicalCpuCores() const
 {
-  return cpuCores_ >= 1 &&
-         cpuCores_ <= (1 << 20);
-}
-
-bool CpuInfo::hasCpuThreads() const
-{
-  return cpuThreads_ >= 1 &&
-         cpuThreads_ <= (1 << 20);
+  return logicalCpuCores_ >= 1 &&
+         logicalCpuCores_ <= (1 << 20);
 }
 
 bool CpuInfo::hasL1Cache() const
@@ -825,12 +795,6 @@ bool CpuInfo::hasL3Sharing() const
 {
   return cacheSharing_[3] >= 1 &&
          cacheSharing_[3] <= (1 << 20);
-}
-
-bool CpuInfo::hasThreadsPerCore() const
-{
-  return threadsPerCore_ >= 1 &&
-         threadsPerCore_ <= (1 << 10);
 }
 
 } // namespace

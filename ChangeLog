@@ -1,4 +1,4 @@
-Changes in version 7.7, 15/09/2021
+Changes in version 7.7, 13/11/2021
 ==================================
 
 The CPU cache size detection has been improved. The code now better
@@ -16,6 +16,7 @@ will be "1229". This is a backwards incompatible change, however I
 won't increase primesieve's major version since this change does not
 affect primesieve's API/ABI.
 
+* CpuInfo.cpp: Fix issues with big.LITTLE CPUs #105.
 * api.cpp: Simplify private L2 cache size detection #103.
 * config.cpp: Add fallback sieve size & L1 data cache size.
 * Erat.cpp: If runtime CPU cache detection fails use

@@ -3,7 +3,7 @@
 /// @brief  Parse command-line options for the primesieve console
 ///         (terminal) application.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -312,29 +312,19 @@ void optionCpuInfo()
   else
     cout << "CPU name: unknown" << endl;
 
-  if (cpu.hasCpuCores())
-    cout << "Number of cores: " << cpu.cpuCores() << endl;
+  if (cpu.hasLogicalCpuCores())
+    cout << "Logical CPU cores: " << cpu.logicalCpuCores() << endl;
   else
-    cout << "Number of cores: unknown" << endl;
-
-  if (cpu.hasCpuThreads())
-    cout << "Number of threads: " << cpu.cpuThreads() << endl;
-  else
-    cout << "Number of threads: unknown" << endl;
-
-  if (cpu.hasThreadsPerCore())
-    cout << "Threads per core: " << cpu.threadsPerCore() << endl;
-  else
-    cout << "Threads per core: unknown" << endl;
+    cout << "Logical CPU cores: unknown" << endl;
 
   if (cpu.hasL1Cache())
-    cout << "L1 cache size: " << cpu.l1CacheSize() / (1 << 10) << " KiB" << endl;
+    cout << "L1 cache size: " << (cpu.l1CacheBytes() >> 10) << " KiB" << endl;
 
   if (cpu.hasL2Cache())
-    cout << "L2 cache size: " << cpu.l2CacheSize() / (1 << 10) << " KiB" << endl;
+    cout << "L2 cache size: " << (cpu.l2CacheBytes() >> 10) << " KiB" << endl;
 
   if (cpu.hasL3Cache())
-    cout << "L3 cache size: " << cpu.l3CacheSize() / (double) (1 << 20) << " MiB" << endl;
+    cout << "L3 cache size: " << (cpu.l3CacheBytes() >> 20) << " MiB" << endl;
 
   if (cpu.hasL1Cache())
   {

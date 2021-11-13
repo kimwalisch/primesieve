@@ -21,32 +21,26 @@ class CpuInfo
 public:
   CpuInfo();
   bool hasCpuName() const;
-  bool hasCpuCores() const;
-  bool hasCpuThreads() const;
+  bool hasLogicalCpuCores() const;
   bool hasL1Cache() const;
   bool hasL2Cache() const;
   bool hasL3Cache() const;
   bool hasL1Sharing() const;
   bool hasL2Sharing() const;
   bool hasL3Sharing() const;
-  bool hasThreadsPerCore() const;
   std::string cpuName() const;
   std::string getError() const;
-  std::size_t l1CacheSize() const;
-  std::size_t l2CacheSize() const;
-  std::size_t l3CacheSize() const;
+  std::size_t l1CacheBytes() const;
+  std::size_t l2CacheBytes() const;
+  std::size_t l3CacheBytes() const;
   std::size_t l1Sharing() const;
   std::size_t l2Sharing() const;
   std::size_t l3Sharing() const;
-  std::size_t cpuCores() const;
-  std::size_t cpuThreads() const;
-  std::size_t threadsPerCore() const;
+  std::size_t logicalCpuCores() const;
 
 private:
   void init();
-  std::size_t cpuCores_;
-  std::size_t cpuThreads_;
-  std::size_t threadsPerCore_;
+  std::size_t logicalCpuCores_;
   std::array<std::size_t, 4> cacheSizes_;
   std::array<std::size_t, 4> cacheSharing_;
   std::string error_;

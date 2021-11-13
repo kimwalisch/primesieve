@@ -2,7 +2,7 @@
 /// @file   cpu_info.cpp
 /// @brief  Detect the CPUs' cache sizes
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -25,38 +25,31 @@ int main()
     return 1;
   }
 
-  if (!cpu.hasCpuCores() &&
-      cpu.cpuCores() > 0)
+  if (!cpu.hasLogicalCpuCores() &&
+      cpu.logicalCpuCores() > 0)
   {
-    cerr << "Invalid CPU cores: " << cpu.cpuCores() << endl;
-    return 1;
-  }
-
-  if (!cpu.hasCpuThreads() &&
-      cpu.cpuThreads() > 0)
-  {
-    cerr << "Invalid CPU threads: " << cpu.cpuThreads() << endl;
+    cerr << "Invalid logical CPU cores: " << cpu.logicalCpuCores() << endl;
     return 1;
   }
 
   if (!cpu.hasL1Cache() &&
-      cpu.l1CacheSize() > 0)
+      cpu.l1CacheBytes() > 0)
   {
-    cerr << "Invalid L1 cache size: " << cpu.l1CacheSize() << endl;
+    cerr << "Invalid L1 cache size: " << cpu.l1CacheBytes() << endl;
     return 1;
   }
 
   if (!cpu.hasL2Cache() &&
-      cpu.l2CacheSize() > 0)
+      cpu.l2CacheBytes() > 0)
   {
-    cerr << "Invalid L2 cache size: " << cpu.l2CacheSize() << endl;
+    cerr << "Invalid L2 cache size: " << cpu.l2CacheBytes() << endl;
     return 1;
   }
 
   if (!cpu.hasL3Cache() &&
-      cpu.l3CacheSize() > 0)
+      cpu.l3CacheBytes() > 0)
   {
-    cerr << "Invalid L3 cache size: " << cpu.l3CacheSize() << endl;
+    cerr << "Invalid L3 cache size: " << cpu.l3CacheBytes() << endl;
     return 1;
   }
 
@@ -81,19 +74,12 @@ int main()
     return 1;
   }
 
-  if (!cpu.hasThreadsPerCore() &&
-      cpu.threadsPerCore() > 0)
-  {
-    cerr << "Invalid threads per CPU core: " << cpu.threadsPerCore() << endl;
-    return 1;
-  }
-
   if (cpu.hasCpuName())
     cout << cpu.cpuName() << endl;
 
-  cout << "L1 cache size: " << (cpu.l1CacheSize() >> 10) << " KiB" << endl;
-  cout << "L2 cache size: " << (cpu.l2CacheSize() >> 10) << " KiB" << endl;
-  cout << "L3 cache size: " << (cpu.l3CacheSize() >> 10) << " KiB" << endl;
+  cout << "L1 cache size: " << (cpu.l1CacheBytes() >> 10) << " KiB" << endl;
+  cout << "L2 cache size: " << (cpu.l2CacheBytes() >> 10) << " KiB" << endl;
+  cout << "L3 cache size: " << (cpu.l3CacheBytes() >> 10) << " KiB" << endl;
 
   return 0;
 }

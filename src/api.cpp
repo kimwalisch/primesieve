@@ -165,8 +165,8 @@ int get_sieve_size()
       cpuInfo.hasL2Cache())
   {
     // Convert bytes to KiB
-    size_t l1Size = cpuInfo.l1CacheSize() >> 10;
-    size_t l2Size = cpuInfo.l2CacheSize() >> 10;
+    size_t l1Size = cpuInfo.l1CacheBytes() >> 10;
+    size_t l2Size = cpuInfo.l2CacheBytes() >> 10;
     size_t maxSize = l2Size / 2;
 
     if (cpuInfo.hasL2Sharing() &&
@@ -183,7 +183,7 @@ int get_sieve_size()
   if (cpuInfo.hasL1Cache())
   {
     // Convert bytes to KiB
-    size_t l1Size = cpuInfo.l1CacheSize() >> 10;
+    size_t l1Size = cpuInfo.l1CacheBytes() >> 10;
     l1Size = inBetween(8, l1Size, 4096);
     l1Size = floorPow2(l1Size);
     return (int) l1Size;

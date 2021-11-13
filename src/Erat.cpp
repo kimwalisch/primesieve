@@ -129,7 +129,7 @@ void Erat::initErat()
 ///
 uint64_t Erat::getL1CacheSize() const
 {
-  uint64_t size = cpuInfo.hasL1Cache() ? cpuInfo.l1CacheSize() : config::L1D_CACHE_BYTES;
+  uint64_t size = cpuInfo.hasL1Cache() ? cpuInfo.l1CacheBytes() : config::L1D_CACHE_BYTES;
   uint64_t minSize = 8 << 10;
   uint64_t maxSize = 4096 << 10;
 
