@@ -230,13 +230,13 @@ void CpuInfo::init()
         info->Cache.GroupMask.Group == 0 &&
         info->Cache.Level >= 1 &&
         info->Cache.Level <= 3 &&
-        (!cacheSizes_[info->Cache.Level] ||
-         !cacheSharing_[info->Cache.Level]) &&
+        !cacheSizes_[info->Cache.Level] &&
         (info->Cache.Type == CacheData ||
          info->Cache.Type == CacheUnified))
     {
       auto level = info->Cache.Level;
       cacheSizes_[level] = info->Cache.CacheSize;
+      cacheSharing_[level] = 0;
 
       // Cache.GroupMask.Mask contains one bit set for
       // each logical CPU core sharing the cache
@@ -299,8 +299,7 @@ void CpuInfo::init()
     if (info[i].Relationship == RelationCache &&
         info[i].Cache.Level >= 1 &&
         info[i].Cache.Level <= 3 &&
-        (!cacheSizes_[info[i].Cache.Level] ||
-         !cacheSharing_[info[i].Cache.Level]) &&
+        !cacheSizes_[info[i].Cache.Level] &&
         (info[i].Cache.Type == CacheData ||
          info[i].Cache.Type == CacheUnified))
     {
