@@ -278,19 +278,10 @@ void CpuInfo::init()
       // current physical CPU core
       for (auto mask = info[i].ProcessorMask; mask > 0; mask &= mask - 1)
         logicalCpuCores_++
-    }
-  }
-
-  for (size_t i = 0; i < size; i++)
-  {
-    if (info[i].Relationship == RelationProcessorCore)
-    {
-      // ProcessorMask contains one bit set for
-      // each logical CPU core related to the
-      // current physical CPU core
-      for (auto mask = info[i].ProcessorMask; mask > 0; mask &= mask - 1)
-        threadsPerCore++
-      break;
+      
+      if (!threadsPerCore)
+        for (auto mask = info[i].ProcessorMask; mask > 0; mask &= mask - 1)
+          threadsPerCore++
     }
   }
 
