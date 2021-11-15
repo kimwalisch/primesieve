@@ -97,7 +97,7 @@ void Erat::init(uint64_t start,
 void Erat::initSieve(uint64_t sieveSize)
 {
   sieveSize_ = floorPow2(sieveSize);
-  sieveSize_ = inBetween(8, sieveSize_, 4096);
+  sieveSize_ = inBetween(16, sieveSize_, 4096);
   sieveSize_ *= 1024;
 
   sieve_ = new uint8_t[sieveSize_];
