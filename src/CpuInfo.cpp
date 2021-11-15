@@ -194,17 +194,22 @@ void CpuInfo::init()
 // Windows 7 (2009) or later
 #if _WIN32_WINNT >= 0x0601
 
-  using LPFN_GLPIEX = decltype(&GetLogicalProcessorInformationEx);
+  using LPFN_GAPC = decltype(&GetActiveProcessorCount);
+  LPFN_GAPC getCpuCoreCount = (LPFN_GAPC) (void*) GetProcAddress(
+      GetModuleHandle(TEXT("kernel32")), "GetActiveProcessorCount");
 
+  if (getCpuCoreCount)
+    logicalCpuCores_ = getCpuCoreCount(ALL_PROCESSOR_GROUPS);
+
+  using LPFN_GLPIEX = decltype(&GetLogicalProcessorInformationEx);
   LPFN_GLPIEX glpiex = (LPFN_GLPIEX) (void*) GetProcAddress(
-      GetModuleHandle(TEXT("kernel32")),
-      "GetLogicalProcessorInformationEx");
+      GetModuleHandle(TEXT("kernel32")), "GetLogicalProcessorInformationEx");
 
   if (!glpiex)
     return;
 
   DWORD bytes = 0;
-  glpiex(RelationAll, 0, &bytes);
+  glpiex(RelationCache, 0, &bytes);
 
   if (!bytes)
     return;
@@ -212,24 +217,12 @@ void CpuInfo::init()
   vector<char> buffer(bytes);
   SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* info;
 
-  if (!glpiex(RelationAll, (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[0], &bytes))
+  if (!glpiex(RelationCache, (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[0], &bytes))
     return;
 
   for (size_t i = 0; i < bytes; i += info->Size)
   {
     info = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[i];
-
-    if (info->Relationship == RelationProcessorCore)
-    {
-      size_t size = info->Processor.GroupCount;
-      for (size_t j = 0; j < size; j++)
-      {
-        // Processor.GroupMask.Mask contains one bit set for
-        // each thread associated to the current CPU core
-        for (auto mask = info->Processor.GroupMask[j].Mask; mask > 0; mask &= mask - 1)
-          logicalCpuCores_++;
-      }
-    }
 
     if (info->Relationship == RelationCache &&
         info->Cache.GroupMask.Group == 0 &&
@@ -252,10 +245,8 @@ void CpuInfo::init()
 #elif _WIN32_WINNT >= 0x0501
 
   using LPFN_GLPI = decltype(&GetLogicalProcessorInformation);
-
   LPFN_GLPI glpi = (LPFN_GLPI) (void*) GetProcAddress(
-      GetModuleHandle(TEXT("kernel32")),
-      "GetLogicalProcessorInformation");
+      GetModuleHandle(TEXT("kernel32")), "GetLogicalProcessorInformation");
 
   if (!glpi)
     return;
