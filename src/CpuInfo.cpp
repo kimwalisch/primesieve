@@ -3,8 +3,8 @@
 /// @brief  Get detailed information about the CPU's caches.
 ///         Ideally each primesieve thread should use a sieve array
 ///         size that corresponds to the cache sizes of the CPU core
-///         the thread is running on. Unfortunately, due to the many
-///         different operating systems, compilers and CPU
+///         the thread is currently running on. Unfortunately, due to
+///         the many different operating systems, compilers and CPU
 ///         architectures this is difficult to implement (portably).
 ///         Furthermore, any thread may randomly be moved to another
 ///         CPU core by the operating system scheduler.
@@ -13,10 +13,12 @@
 ///         alternative strategy: We detect the cache sizes of one of
 ///         the CPU cores at startup and all primesieve threads use a
 ///         sieve array size that is related to that CPU core's cache
-///         sizes. For homogeneous CPUs with just one type of cores
+///         sizes. For homogeneous CPUs with just one type of CPU core
 ///         this strategy is optimal. For hybrid CPUs with multiple
 ///         types of CPU cores we try to detect the cache sizes of one
-///         of the efficiency CPU cores with smaller cache sizes.
+///         of the efficiency CPU cores with smaller cache sizes. This
+///         will hopefully minimize the cache misses when doing
+///         multi-threading with all CPU cores.
 ///
 /// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
 ///
