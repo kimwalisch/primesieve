@@ -236,7 +236,11 @@ void CpuInfo::init()
       cacheSharing_[level] = 0;
 
       // Cache.GroupMask.Mask contains one bit set for
-      // each logical CPU core sharing the cache
+      // each logical CPU core sharing the cache.
+      // We could also calculate the CPU core ID (or
+      // thread ID) corresponding to each bit using:
+      // for (; mask > 0; mask &= mask - 1)
+      //     cpuCoreId = std::countr_zero(mask);
       for (auto mask = info->Cache.GroupMask.Mask; mask > 0; mask &= mask - 1)
         cacheSharing_[level]++;
     }
