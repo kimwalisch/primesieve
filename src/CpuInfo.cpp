@@ -1,19 +1,22 @@
 ///
 /// @file   CpuInfo.cpp
 /// @brief  Get detailed information about the CPU's caches.
-///         We want the code to be as portable as possible, hence we
-///         try to avoid using assembly language and also don't use
-///         non standard libc extensions. Instead we query the CPU
-///         cache information from the operating system API.
-///
 ///         Ideally each primesieve thread should use a sieve array
-///         size that corresponds to the cache size of the CPU core
+///         size that corresponds to the cache sizes of the CPU core
 ///         the thread is running on. Unfortunately, due to the many
-///         different operating systems, CPU architectures and the
-///         rise of hybrid CPUs this is too difficult to implement.
-///         Hence instead, we detect the cache sizes of the 1st CPU
-///         core and all primesieve threads use a sieve array size
-///         that is related to the 1st CPU core's cache sizes.
+///         different operating systems, compilers and CPU
+///         architectures this is difficult to implement (portably).
+///         Furthermore, any thread may randomly be moved to another
+///         CPU core by the operating system scheduler.
+///
+///         Hence in order to ensure good scaling we use the following
+///         alternative strategy: We detect the cache sizes of one of
+///         the CPU cores at startup and all primesieve threads use a
+///         sieve array size that is related to that CPU core's cache
+///         sizes. For homogeneous CPUs with just one type of cores
+///         this strategy is optimal. For hybrid CPUs with multiple
+///         types of CPU cores we try to detect the cache sizes of one
+///         of the efficiency CPU cores with smaller cache sizes.
 ///
 /// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -625,10 +628,17 @@ void CpuInfo::init()
   string cpusOnline = "/sys/devices/system/cpu/online";
   logicalCpuCores_ = parseThreadList(cpusOnline);
 
+  // For hybrid CPUs with multiple types of CPU cores Linux seems
+  // to order the CPU cores within /sys/devices/system/cpu*
+  // from fastest to slowest. By picking a CPU core from the middle
+  // we hopefully get an average CPU core that is representative
+  // for the CPU's overall (multi-threading) performance.
+  string cpuNumber = to_string(logicalCpuCores_ / 2);
+
   // Retrieve CPU cache info
   for (size_t i = 0; i <= 3; i++)
   {
-    string path = "/sys/devices/system/cpu/cpu0/cache/index" + to_string(i);
+    string path = "/sys/devices/system/cpu" + cpuNumber + "/cpu0/cache/index" + to_string(i);
     string cacheLevel = path + "/level";
     size_t level = getValue(cacheLevel);
 
