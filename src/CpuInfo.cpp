@@ -235,7 +235,6 @@ void CpuInfo::init()
         info->Cache.GroupMask.Group == 0 &&
         info->Cache.Level >= 1 &&
         info->Cache.Level <= 3 &&
-        !cacheSizes_[info->Cache.Level] &&
         (info->Cache.Type == CacheData ||
          info->Cache.Type == CacheUnified))
     {
@@ -281,12 +280,11 @@ void CpuInfo::init()
       // ProcessorMask contains one bit set for
       // each logical CPU core related to the
       // current physical CPU core
+      threadsPerCore = 0;
       for (auto mask = info[i].ProcessorMask; mask > 0; mask &= mask - 1)
-        logicalCpuCores_++
-      
-      if (!threadsPerCore)
-        for (auto mask = info[i].ProcessorMask; mask > 0; mask &= mask - 1)
-          threadsPerCore++
+        threadsPerCore++;
+
+      logicalCpuCores_ += threadsPerCore;
     }
   }
 
@@ -295,7 +293,6 @@ void CpuInfo::init()
     if (info[i].Relationship == RelationCache &&
         info[i].Cache.Level >= 1 &&
         info[i].Cache.Level <= 3 &&
-        !cacheSizes_[info[i].Cache.Level] &&
         (info[i].Cache.Type == CacheData ||
          info[i].Cache.Type == CacheUnified))
     {
