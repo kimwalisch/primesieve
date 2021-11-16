@@ -228,7 +228,8 @@ void CpuInfo::init()
     std::array<size_t, 4> cacheSharing;
   };
 
-  std::map<size_t, CpuCoreCacheInfo> cacheInfo;
+  using CpuCoreId_t = size_t;
+  std::map<CpuCoreId_t, CpuCoreCacheInfo> cacheInfo;
   SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* info;
 
   // Fill the cacheInfo map with the L1, L2 & L3 cache
@@ -275,7 +276,8 @@ void CpuInfo::init()
   };
 
   // Items must be sorted in ascending order
-  std::map<size_t, L1CacheStatistics> l1CacheStatistics;
+  using CacheSize_t = size_t;
+  std::map<CacheSize_t, L1CacheStatistics> l1CacheStatistics;
   size_t totalCpuCores = cacheInfo.size();
 
   // Fill map with different types of L1 caches
