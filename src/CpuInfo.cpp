@@ -15,10 +15,8 @@
 ///         sieve array size that is related to that CPU core's cache
 ///         sizes. For homogeneous CPUs with just one type of CPU core
 ///         this strategy is optimal. For hybrid CPUs with multiple
-///         types of CPU cores we try to detect the cache sizes of one
-///         of the efficiency CPU cores with smaller cache sizes. This
-///         will hopefully minimize the cache misses when doing
-///         multi-threading with all CPU cores.
+///         types of CPU cores we try to detect the cache sizes of the
+///         CPU core type that e.g. occurs most frequently.
 ///
 /// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
 ///
