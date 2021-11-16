@@ -229,7 +229,7 @@ void CpuInfo::init()
     std::array<size_t, 4> cacheSharing;
   };
 
-  using CpuCoreId_t = size_t;
+  using CpuCoreId_t = long;
   std::map<CpuCoreId_t, CpuCoreCacheInfo> cacheInfo;
   SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* info;
 
@@ -272,16 +272,17 @@ void CpuInfo::init()
         // correct as there may be multiple processor groups that
         // are not fully filled. However our formula yields unique
         // cpuCoreId's which is good enough for our usage.
-        auto cpuCoreId = processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex;
-        cacheInfo[cpuCoreId].cacheSizes[level] = cacheSize;
-        cacheInfo[cpuCoreId].cacheSharing[level] = cacheSharing;
+        CpuCoreId_t cpuCoreId = processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex;
+        auto& cpuCoreCacheInfo = cacheInfo[cpuCoreId];
+        cpuCoreCacheInfo.cacheSizes[level] = cacheSize;
+        cpuCoreCacheInfo.cacheSharing[level] = cacheSharing;
       }
     }
   }
 
   struct L1CacheStatistics
   {
-    size_t cpuCoreId = 0;
+    CpuCoreId_t cpuCoreId = -1;
     size_t cpuCoreCount = 0;
   };
 
@@ -293,9 +294,12 @@ void CpuInfo::init()
   // Fill map with different types of L1 caches
   for (const auto& item : cacheInfo)
   {
-    size_t l1CacheSize = item.second.cacheSizes[1];
-    l1CacheStatistics[l1CacheSize].cpuCoreId = item.first;
-    l1CacheStatistics[l1CacheSize].cpuCoreCount++;
+    auto cpuCoreId = item.first;
+    auto l1CacheSize = item.second.cacheSizes[1];
+    auto& mapEntry = l1CacheStatistics[l1CacheSize];
+    mapEntry.cpuCoreCount++;
+    if (mapEntry.cpuCoreId == -1)
+      mapEntry.cpuCoreId = cpuCoreId;
   }
 
   // Check if one of the L1 cache types is used
