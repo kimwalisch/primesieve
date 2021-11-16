@@ -25,6 +25,7 @@
 ///
 
 #include <primesieve/CpuInfo.hpp>
+#include <primesieve/pmath.hpp>
 
 #include <stdint.h>
 #include <cstddef>
@@ -238,17 +239,13 @@ void CpuInfo::init()
   {
     info = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[i];
 
-    // We currently only support processor group 0
-    // which can contain at most 64 CPU cores
-    // on 64-bit CPUs like x64, ARM64.
     if (info->Relationship == RelationCache &&
-        info->Cache.GroupMask.Group == 0 &&
         info->Cache.Level >= 1 &&
         info->Cache.Level <= 3 &&
         (info->Cache.Type == CacheData ||
          info->Cache.Type == CacheUnified))
     {
-      size_t cpuCoreId = 0;
+      size_t cpuCoreIndex = 0;
       size_t cacheSharing = 0;
 
       // Cache.GroupMask.Mask contains one bit set for
@@ -258,14 +255,24 @@ void CpuInfo::init()
 
       auto cacheSize = info->Cache.CacheSize;
       auto level = info->Cache.Level;
+      auto processorGroup = info->Cache.GroupMask.Group;
+      using Mask_t = decltype(info->Cache.GroupMask.Mask);
+      auto maxCpusPerProcessorGroup = countBits<Mask_t>();
       auto mask = info->Cache.GroupMask.Mask;
       mask = (mask == 0) ? 1 : mask;
 
       for (; mask > 0; mask &= mask - 1)
       {
-        // Convert next 1 bit into cpuCoreId,
+        // Convert next 1 bit into cpuCoreIndex,
         // by counting trailing zeros.
-        while (!(mask & (((KAFFINITY) 1) << cpuCoreId))) cpuCoreId++;
+        while (!(mask & (((Mask_t) 1) << cpuCoreIndex)))
+          cpuCoreIndex++;
+
+        // Note that calculating the cpuCoreId this way is not 100%
+        // correct as there may be multiple processor groups that
+        // are not fully filled. However our formula yields unique
+        // cpuCoreId's which is good enough for our usage.
+        cpuCoreId = processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex;
         cacheInfo[cpuCoreId].cacheSizes[level] = cacheSize;
         cacheInfo[cpuCoreId].cacheSharing[level] = cacheSharing;
       }
