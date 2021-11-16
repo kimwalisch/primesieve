@@ -308,7 +308,7 @@ void CpuInfo::init()
   {
     if (item.second.cpuCoreCount * (1 / 0.8) > totalCpuCores)
     {
-      size_t cpuCoreId = item.second.cpuCoreId;
+      long cpuCoreId = item.second.cpuCoreId;
       cacheSizes_ = cacheInfo[cpuCoreId].cacheSizes;
       cacheSharing_ = cacheInfo[cpuCoreId].cacheSharing;
       return;
@@ -321,7 +321,7 @@ void CpuInfo::init()
   size_t i = 0;
   for (const auto& item : l1CacheStatistics)
   {
-    size_t cpuCoreId = item.second.cpuCoreId;
+    long cpuCoreId = item.second.cpuCoreId;
     cacheSizes_ = cacheInfo[cpuCoreId].cacheSizes;
     cacheSharing_ = cacheInfo[cpuCoreId].cacheSharing;
     if ((++i * 2) >= l1CacheStatistics.size())
