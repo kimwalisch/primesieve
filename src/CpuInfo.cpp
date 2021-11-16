@@ -272,7 +272,7 @@ void CpuInfo::init()
         // correct as there may be multiple processor groups that
         // are not fully filled. However our formula yields unique
         // cpuCoreId's which is good enough for our usage.
-        CpuCoreId_t cpuCoreId = processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex;
+        long cpuCoreId = (long) (processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex);
         auto& cpuCoreCacheInfo = cacheInfo[cpuCoreId];
         cpuCoreCacheInfo.cacheSizes[level] = cacheSize;
         cpuCoreCacheInfo.cacheSharing[level] = cacheSharing;
@@ -282,7 +282,7 @@ void CpuInfo::init()
 
   struct L1CacheStatistics
   {
-    CpuCoreId_t cpuCoreId = -1;
+    long cpuCoreId = -1;
     size_t cpuCoreCount = 0;
   };
 
