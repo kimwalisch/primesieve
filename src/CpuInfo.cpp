@@ -272,7 +272,7 @@ void CpuInfo::init()
         // correct as there may be multiple processor groups that
         // are not fully filled. However our formula yields unique
         // cpuCoreId's which is good enough for our usage.
-        cpuCoreId = processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex;
+        auto cpuCoreId = processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex;
         cacheInfo[cpuCoreId].cacheSizes[level] = cacheSize;
         cacheInfo[cpuCoreId].cacheSharing[level] = cacheSharing;
       }
