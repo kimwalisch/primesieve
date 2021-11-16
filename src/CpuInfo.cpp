@@ -31,6 +31,7 @@
 #include <stdint.h>
 #include <cstddef>
 #include <exception>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -215,11 +216,25 @@ void CpuInfo::init()
     return;
 
   vector<char> buffer(bytes);
-  SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* info;
 
   if (!glpiex(RelationCache, (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[0], &bytes))
     return;
 
+  struct CpuCoreCacheInfo
+  {
+    CpuCoreCacheInfo::CpuCoreCacheInfo() :
+      cacheSizes{0, 0, 0, 0},
+      cacheSharing{0, 0, 0, 0}
+    { }
+    std::array<size_t, 4> cacheSizes;
+    std::array<size_t, 4> cacheSharing;
+  };
+
+  std::map<size_t, CpuCoreCacheInfo> cacheInfo;
+  SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* info;
+
+  // Fill the cacheInfo map with the L1, L2 & L3 cache
+  // sizes and cache sharing of each CPU core.
   for (size_t i = 0; i < bytes; i += info->Size)
   {
     info = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[i];
@@ -231,20 +246,74 @@ void CpuInfo::init()
         (info->Cache.Type == CacheData ||
          info->Cache.Type == CacheUnified))
     {
-      auto level = info->Cache.Level;
-      cacheSizes_[level] = info->Cache.CacheSize;
-      cacheSharing_[level] = 0;
+      size_t cpuCoreId = 0;
+      size_t cacheSharing = 0;
 
       // Cache.GroupMask.Mask contains one bit set for
       // each logical CPU core sharing the cache.
-      // We could also calculate the CPU core ID (or
-      // thread ID) corresponding to each bit using:
-      // for (; mask > 0; mask &= mask - 1)
-      //     cpuCoreId = std::countr_zero(mask);
       for (auto mask = info->Cache.GroupMask.Mask; mask > 0; mask &= mask - 1)
-        cacheSharing_[level]++;
+        cacheSharing++;
+
+      auto cacheSize = info->Cache.CacheSize;
+      auto level = info->Cache.Level;
+      auto mask = info->Cache.GroupMask.Mask;
+      mask = (mask == 0) ? 1 : mask;
+
+      for (; mask > 0; mask &= mask - 1)
+      {
+        // Convert next 1 bit into cpuCoreId,
+        // by counting trailing zeros.
+        while (!(mask & (((KAFFINITY) 1) << cpuCoreId))) cpuCoreId++;
+        cacheInfo[cpuCoreId].cacheSizes[level] = cacheSize;
+        cacheInfo[cpuCoreId].cacheSharing[level] = cacheSharing;
+      }
     }
   }
+
+  struct L1CacheStatistics
+  {
+    size_t cpuCoreId = 0;
+    size_t cpuCoreCount = 0;
+  };
+
+  // Items must be sorted in ascending order
+  std::map<size_t, L1CacheStatistics> l1CacheStatistics;
+  size_t totalCpuCores = cacheInfo.size();
+
+  // Fill map with different types of L1 caches
+  for (const auto& item : cacheInfo)
+  {
+    size_t l1CacheSize = item.second.cacheSizes[1];
+    l1CacheStatistics[l1CacheSize].cpuCoreId = item.first;
+    l1CacheStatistics[l1CacheSize].cpuCoreCount++;
+  }
+
+  // Check if one of the L1 cache types is used
+  // by more than 80% of all CPU cores.
+  for (const auto& item : l1CacheStatistics)
+  {
+    if (item.second.cpuCoreCount * (1 / 0.8) > totalCpuCores)
+    {
+      size_t cpuCoreId = item.second.cpuCoreId;
+      cacheSizes_ = cacheInfo[cpuCoreId].cacheSizes;
+      cacheSharing_ = cacheInfo[cpuCoreId].cacheSharing;
+      return;
+    }
+  }
+
+  // For hybrid CPUs with many different L1 cache types
+  // we pick one from the middle that is hopefully
+  // representative for the CPU's overall performance.
+  size_t i = 0;
+  for (const auto& item : l1CacheStatistics)
+  {
+    size_t cpuCoreId = item.second.cpuCoreId;
+    cacheSizes_ = cacheInfo[cpuCoreId].cacheSizes;
+    cacheSharing_ = cacheInfo[cpuCoreId].cacheSharing;
+    if ((++i * 2) >= l1CacheStatistics.size())
+      return;
+  }
+
 // Windows XP or later
 #elif _WIN32_WINNT >= 0x0501
 
