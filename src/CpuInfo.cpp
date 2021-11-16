@@ -238,6 +238,9 @@ void CpuInfo::init()
   {
     info = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[i];
 
+    // We currently only support processor group 0
+    // which can contain at most 64 CPU cores
+    // on 64-bit CPUs like x64, ARM64.
     if (info->Relationship == RelationCache &&
         info->Cache.GroupMask.Group == 0 &&
         info->Cache.Level >= 1 &&
