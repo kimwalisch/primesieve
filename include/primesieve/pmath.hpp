@@ -33,7 +33,7 @@ constexpr bool isPow2(T x)
 }
 
 template <typename T>
-constexpr T numberOfBits(T)
+constexpr T numberOfBits()
 {
   return (T) std::numeric_limits<
       typename std::make_unsigned<T>::type
@@ -43,7 +43,7 @@ constexpr T numberOfBits(T)
 template <typename T>
 inline T floorPow2(T x)
 {
-  for (T i = 1; i < numberOfBits(x); i += i)
+  for (T i = 1; i < numberOfBits<T>(); i += i)
     x |= (x >> i);
 
   return x - (x >> 1);
@@ -53,7 +53,7 @@ template <typename T>
 inline T ilog2(T x)
 {
   T log2 = 0;
-  T bits = numberOfBits(x);
+  T bits = numberOfBits<T>();
 
   for (T i = bits / 2; i > 0; i /= 2)
   {

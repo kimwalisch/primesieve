@@ -257,7 +257,7 @@ void CpuInfo::init()
       auto level = info->Cache.Level;
       auto processorGroup = info->Cache.GroupMask.Group;
       using Mask_t = decltype(info->Cache.GroupMask.Mask);
-      auto maxCpusPerProcessorGroup = countBits<Mask_t>();
+      auto maxCpusPerProcessorGroup = numberOfBits<Mask_t>();
       auto mask = info->Cache.GroupMask.Mask;
       mask = (mask == 0) ? 1 : mask;
 
