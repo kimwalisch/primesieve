@@ -239,6 +239,7 @@ void CpuInfo::init()
   // Items must be sorted in ascending order
   std::map<CacheSize_t, L1CacheStatistics> l1CacheStatistics;
   std::vector<CpuCoreCacheInfo> cacheInfo;
+  std::size_t totalL1CpuCores = 0;
   SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* info;
 
   // Fill the cacheInfo vector with the L1, L2 & L3 cache
@@ -294,6 +295,7 @@ void CpuInfo::init()
         if (level == 1)
         {
           auto& mapEntry = l1CacheStatistics[cacheSize];
+          totalL1CpuCores++;
           mapEntry.cpuCoreCount++;
           if (mapEntry.cpuCoreId == -1)
             mapEntry.cpuCoreId = cpuCoreId;
@@ -306,7 +308,7 @@ void CpuInfo::init()
   // by more than 80% of all CPU cores.
   for (const auto& item : l1CacheStatistics)
   {
-    if (item.second.cpuCoreCount > logicalCpuCores_ * 0.80)
+    if (item.second.cpuCoreCount > totalL1CpuCores * 0.80)
     {
       long cpuCoreId = item.second.cpuCoreId;
       cacheSizes_ = cacheInfo[cpuCoreId].cacheSizes;
