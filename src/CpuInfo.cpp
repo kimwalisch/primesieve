@@ -221,7 +221,7 @@ void CpuInfo::init()
 
   struct CpuCoreCacheInfo
   {
-    CpuCoreCacheInfo::CpuCoreCacheInfo() :
+    CpuCoreCacheInfo() :
       cacheSizes{0, 0, 0, 0},
       cacheSharing{0, 0, 0, 0}
     { }
@@ -282,7 +282,7 @@ void CpuInfo::init()
         // filled (they may have less than maxCpusPerProcessorGroup
         // CPU cores). However our formula yields unique
         // cpuCoreIds which is good enough for our usage.
-        long cpuCoreId = (long) (processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex);
+        size_t cpuCoreId = processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex;
 
         if (cacheInfo.size() <= cpuCoreId)
           cacheInfo.resize((cpuCoreId + 1) * 2);
@@ -298,7 +298,7 @@ void CpuInfo::init()
           totalL1CpuCores++;
           mapEntry.cpuCoreCount++;
           if (mapEntry.cpuCoreId == -1)
-            mapEntry.cpuCoreId = cpuCoreId;
+            mapEntry.cpuCoreId = (long) cpuCoreId;
         }
       }
     }
