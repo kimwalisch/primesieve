@@ -285,7 +285,7 @@ void CpuInfo::init()
         long cpuCoreId = (long) (processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex);
 
         if (cacheInfo.size() <= cpuCoreId)
-          cacheInfo.resize(cpuCoreId + 1);
+          cacheInfo.resize((cpuCoreId + 1) * 2);
         cacheInfo[cpuCoreId].cacheSizes[level] = cacheSize;
         cacheInfo[cpuCoreId].cacheSharing[level] = cacheSharing;
 
