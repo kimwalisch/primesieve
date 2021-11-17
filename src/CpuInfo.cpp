@@ -229,11 +229,19 @@ void CpuInfo::init()
     std::array<size_t, 4> cacheSharing;
   };
 
-  using CpuCoreId_t = long;
-  std::map<CpuCoreId_t, CpuCoreCacheInfo> cacheInfo;
+  struct L1CacheStatistics
+  {
+    long cpuCoreId = -1;
+    size_t cpuCoreCount = 0;
+  };
+
+  using CacheSize_t = size_t;
+  // Items must be sorted in ascending order
+  std::map<CacheSize_t, L1CacheStatistics> l1CacheStatistics;
+  std::vector<CpuCoreCacheInfo> cacheInfo;
   SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* info;
 
-  // Fill the cacheInfo map with the L1, L2 & L3 cache
+  // Fill the cacheInfo vector with the L1, L2 & L3 cache
   // sizes and cache sharing of each CPU core.
   for (size_t i = 0; i < bytes; i += info->Size)
   {
@@ -268,45 +276,37 @@ void CpuInfo::init()
         while (!(mask & (((Mask_t) 1) << cpuCoreIndex)))
           cpuCoreIndex++;
 
-        // Note that calculating the cpuCoreId this way is not 100%
-        // correct as there may be multiple processor groups that
-        // are not fully filled. However our formula yields unique
-        // cpuCoreId's which is good enough for our usage.
+        // Note that calculating the cpuCoreId this way is not
+        // 100% correct as processor groups may not be fully
+        // filled (they may have less than maxCpusPerProcessorGroup
+        // CPU cores). However our formula yields unique
+        // cpuCoreIds which is good enough for our usage.
         long cpuCoreId = (long) (processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex);
-        auto& cpuCoreCacheInfo = cacheInfo[cpuCoreId];
-        cpuCoreCacheInfo.cacheSizes[level] = cacheSize;
-        cpuCoreCacheInfo.cacheSharing[level] = cacheSharing;
+
+        if (cacheInfo.size() <= cpuCoreId)
+          cacheInfo.resize(cpuCoreId + 1);
+        cacheInfo[cpuCoreId].cacheSizes[level] = cacheSize;
+        cacheInfo[cpuCoreId].cacheSharing[level] = cacheSharing;
+
+        // Count the number of occurences of each type of L1 cache.
+        // If one of these L1 cache types is used predominantly
+        // we will use that cache as our default cache size.
+        if (level == 1)
+        {
+          auto& mapEntry = l1CacheStatistics[cacheSize];
+          mapEntry.cpuCoreCount++;
+          if (mapEntry.cpuCoreId == -1)
+            mapEntry.cpuCoreId = cpuCoreId;
+        }
       }
     }
-  }
-
-  struct L1CacheStatistics
-  {
-    long cpuCoreId = -1;
-    size_t cpuCoreCount = 0;
-  };
-
-  // Items must be sorted in ascending order
-  using CacheSize_t = size_t;
-  std::map<CacheSize_t, L1CacheStatistics> l1CacheStatistics;
-  size_t totalCpuCores = cacheInfo.size();
-
-  // Fill map with different types of L1 caches
-  for (const auto& item : cacheInfo)
-  {
-    auto cpuCoreId = item.first;
-    auto l1CacheSize = item.second.cacheSizes[1];
-    auto& mapEntry = l1CacheStatistics[l1CacheSize];
-    mapEntry.cpuCoreCount++;
-    if (mapEntry.cpuCoreId == -1)
-      mapEntry.cpuCoreId = cpuCoreId;
   }
 
   // Check if one of the L1 cache types is used
   // by more than 80% of all CPU cores.
   for (const auto& item : l1CacheStatistics)
   {
-    if (item.second.cpuCoreCount > totalCpuCores * 0.80)
+    if (item.second.cpuCoreCount > logicalCpuCores_ * 0.80)
     {
       long cpuCoreId = item.second.cpuCoreId;
       cacheSizes_ = cacheInfo[cpuCoreId].cacheSizes;
