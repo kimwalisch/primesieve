@@ -306,7 +306,7 @@ void CpuInfo::init()
   // by more than 80% of all CPU cores.
   for (const auto& item : l1CacheStatistics)
   {
-    if (item.second.cpuCoreCount * (1 / 0.8) > totalCpuCores)
+    if (item.second.cpuCoreCount > totalCpuCores * 0.80)
     {
       long cpuCoreId = item.second.cpuCoreId;
       cacheSizes_ = cacheInfo[cpuCoreId].cacheSizes;
