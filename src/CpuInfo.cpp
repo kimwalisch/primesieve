@@ -320,14 +320,13 @@ void CpuInfo::init()
   // For hybrid CPUs with many different L1 cache types
   // we pick one from the middle that is hopefully
   // representative for the CPU's overall performance.
-  size_t i = 0;
-  for (const auto& item : l1CacheStatistics)
+  if (!l1CacheStatistics.empty())
   {
-    long cpuCoreId = item.second.cpuCoreId;
+    auto iter = l1CacheStatistics.begin();
+    std::advance(iter, (l1CacheStatistics.size() - 1) / 2);
+    long cpuCoreId = iter->second.cpuCoreId;
     cacheSizes_ = cacheInfo[cpuCoreId].cacheSizes;
     cacheSharing_ = cacheInfo[cpuCoreId].cacheSharing;
-    if ((++i * 2) >= l1CacheStatistics.size())
-      return;
   }
 
 // Windows XP or later
