@@ -25,12 +25,10 @@
 ///
 
 #include <primesieve/CpuInfo.hpp>
-#include <primesieve/pmath.hpp>
 
 #include <stdint.h>
 #include <cstddef>
 #include <exception>
-#include <map>
 #include <string>
 #include <vector>
 
@@ -44,7 +42,11 @@
 
 #if defined(_WIN32)
 
+#include <primesieve/pmath.hpp>
+
 #include <windows.h>
+#include <iterator>
+#include <map>
 
 #if defined(__i386__) || \
     defined(_M_IX86) || \
@@ -57,7 +59,6 @@
 #if defined(IS_X86)
 
 #include <algorithm>
-#include <iterator>
 
 // Check if compiler supports <intrin.h>
 #if defined(__has_include)
