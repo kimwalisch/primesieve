@@ -283,9 +283,9 @@ cc -O3 primes.c -o primes -lprimesieve
 ```
 
 If you have [built libprimesieve yourself](BUILD.md#primesieve-build-instructions),
-then the default installation path is usually ```/usr/local/lib```. Executing
+then the default installation path is usually ```/usr/local/lib```. Running
 the ```ldconfig``` program after ```make install``` ensures that Linux's dynamic
-linker/loader finds the shared primesieve library when you execute your program.
+linker/loader will find the shared primesieve library when you execute your program.
 However, some OSes are missing the ```ldconfig``` program or ```ldconfig``` does
 not include ```/usr/local/lib``` by default. In these cases you need to export
 some environment variables:
