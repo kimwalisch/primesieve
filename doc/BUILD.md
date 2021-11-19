@@ -35,6 +35,7 @@ Open a terminal, cd into the primesieve directory and run:
 cmake .
 make -j
 sudo make install
+command -v ldconfig && sudo ldconfig
 ```
 
 ## MinGW/MSYS2 (Windows)
