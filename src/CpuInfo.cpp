@@ -717,7 +717,7 @@ void CpuInfo::init()
   // Retrieve CPU cache info
   for (size_t i = 0; i <= 3; i++)
   {
-    string path = "/sys/devices/system/cpu" + cpuNumber + "/cpu0/cache/index" + to_string(i);
+    string path = "/sys/devices/system/cpu/cpu" + cpuNumber + "/cache/index" + to_string(i);
     string cacheLevel = path + "/level";
     size_t level = getValue(cacheLevel);
 
