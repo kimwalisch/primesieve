@@ -26,6 +26,31 @@
 
 using std::size_t;
 
+#if defined(__GNUC__) && __GNUC__ == 4
+
+// gcc 4.9 does not implement std::align.
+// Use the implementation from
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=57350#c11
+
+using std::uintptr_t;
+
+static inline void *align(size_t alignment, size_t size,
+                          void *&ptr, size_t &space)
+{
+  uintptr_t pn = reinterpret_cast<uintptr_t>(ptr);
+  uintptr_t aligned = (pn + alignment - 1) & -alignment;
+  size_t padding = aligned - pn;
+  if (space < size + padding) return nullptr;
+  space -= padding;
+  return ptr = reinterpret_cast<void *>(aligned);
+}
+
+#else
+
+using std::align;
+
+#endif
+
 namespace primesieve {
 
 void MemoryPool::addBucket(SievingPrime*& sievingPrime)
@@ -70,7 +95,7 @@ void MemoryPool::allocateBuckets()
   void* ptr = memory;
 
   // Align pointer address to sizeof(Bucket)
-  if (!std::align(sizeof(Bucket), sizeof(Bucket), ptr, bytes))
+  if (!align(sizeof(Bucket), sizeof(Bucket), ptr, bytes))
     throw primesieve_error("MemoryPool: failed to align memory!");
 
   initBuckets(ptr, bytes);
