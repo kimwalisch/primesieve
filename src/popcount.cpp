@@ -22,8 +22,6 @@
 
 #include <stdint.h>
 
-namespace {
-
 /// This uses fewer arithmetic operations than any other known
 /// implementation on machines with fast multiplication.
 /// It uses 12 arithmetic operations, one of which is a multiply.
@@ -41,6 +39,8 @@ uint64_t popcount64(uint64_t x)
   x = (x + (x >> 4)) & m4;
   return (x * h01) >> 56;
 }
+
+namespace {
 
 /// Carry-save adder (CSA).
 /// @see Chapter 5 in "Hacker's Delight".

@@ -28,6 +28,8 @@
 
 using namespace std;
 
+uint64_t popcount64(uint64_t x);
+
 namespace {
 
 /// First 128 primes
@@ -310,7 +312,7 @@ void PrimeGenerator::fill(vector<uint64_t>& primes,
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
 
       size_t j = i;
-      i += __builtin_popcountll(bits);
+      i += popcount64(bits);
 
       // Note that bits may become 0 in the middle of the loop, and
       // then we'd continue writing garbage entries to primes[] until
