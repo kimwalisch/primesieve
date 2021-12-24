@@ -309,7 +309,7 @@ void PrimeGenerator::fill(vector<uint64_t>& primes,
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
 
-      int j = i;
+      size_t j = i;
       i += __builtin_popcountll(bits);
 
       // Note that bits may become 0 in the middle of the loop, and
@@ -318,25 +318,25 @@ void PrimeGenerator::fill(vector<uint64_t>& primes,
       // value of i is incremented correctly above, the test "i <=
       // maxSize - 64" below guarantees that primes[] has enough
       // space.
-      while (bits) {
-         primes[j+ 0] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+ 1] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+ 2] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+ 3] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+ 4] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+ 5] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+ 6] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+ 7] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+ 8] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+ 9] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+10] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+11] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+12] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+13] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+14] = nextPrime(bits, low); bits &= bits - 1;
-         primes[j+15] = nextPrime(bits, low); bits &= bits - 1;
-         j += 16;
-      }
+      do {
+        primes[j+ 0] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+ 1] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+ 2] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+ 3] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+ 4] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+ 5] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+ 6] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+ 7] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+ 8] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+ 9] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+10] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+11] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+12] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+13] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+14] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+15] = nextPrime(bits, low); bits &= bits - 1;
+        j += 16;
+      } while (j < i);
 
       low += 8 * 30;
       sieveIdx += 8;
