@@ -134,6 +134,19 @@ inline uint64_t Erat::nextPrime(uint64_t bits, uint64_t low)
 {
 #if defined(ctz64)
   // Find first set 1 bit
+
+  // Some implementations of ctz64 include an explicit check for the
+  // argument being 0. This is because, for example, the GCC version
+  // of countr_zero is implemented in terms of __builtin_ctz, which is
+  // undefined for 0. But since this function is never (*) called with
+  // bits == 0, we can avoid that check and the associated (untaken)
+  // conditional jump.
+  //
+  // (*) the proposed loop unrolling optimization in
+  // PrimeGenerator::fill actually passes bits == 0 sometimes. On
+  // processors where __builtin_ctzll is truly undefined for bits ==
+  // 0, this may segfault.
+  //  if (bits == 0) UNREACHABLE;
   auto bitIndex = ctz64(bits);
   uint64_t bitValue = bitValues[bitIndex];
   uint64_t prime = low + bitValue;

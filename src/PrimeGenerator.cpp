@@ -311,6 +311,9 @@ void PrimeGenerator::fill(vector<uint64_t>& primes,
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
 
+      // for (; bits != 0; bits &= bits - 1)
+      //   primes[i++] = nextPrime(bits, low);
+
       size_t j = i;
       i += popcount64(bits);
 
