@@ -307,6 +307,7 @@ void PrimeGenerator::fill(vector<uint64_t>& primes,
     // Each loop iteration can generate up to 64 primes
     // so we have to stop generating primes once there is
     // not enough space for 64 more primes.
+
     do
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
@@ -317,6 +318,22 @@ void PrimeGenerator::fill(vector<uint64_t>& primes,
       size_t j = i;
       i += popcount64(bits);
 
+      // We need to use (bits | highBit) in order to ensure that the
+      // first argument to nextPrime is not 0. If that argument is 0,
+      // all sorts of problems can show up:
+      //
+      // 1. If nextPrime uses __builtin_ctzll, the value of
+      //    __builtin_ctzll(0) is undefined, which can lead to
+      //    an out-of-bounds access on bitValues, and a segfault.
+      //
+      // 2. If nextPrime uses std::countr_zeros, the possibility of
+      //    passing a 0 would force a compiler to emit a conditional
+      //    jump, which would hurt performance (more than computing
+      //    bits | highBit). This test can be omitted only if the
+      //    target architecture is known to support the TZCTN
+      //    instruction.
+      const uint64_t highBit = (1ll << 63);
+
       // Note that bits may become 0 in the middle of the loop, and
       // then we'd continue writing garbage entries to primes[] until
       // the end of the loop is reached. This is not a problem: the
@@ -324,23 +341,15 @@ void PrimeGenerator::fill(vector<uint64_t>& primes,
       // maxSize - 64" below guarantees that primes[] has enough
       // space.
       do {
-        primes[j+ 0] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+ 1] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+ 2] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+ 3] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+ 4] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+ 5] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+ 6] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+ 7] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+ 8] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+ 9] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+10] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+11] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+12] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+13] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+14] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+15] = nextPrime(bits, low); bits &= bits - 1;
-        j += 16;
+        primes[j+ 0] = nextPrime(bits | highBit, low); bits &= bits - 1;
+        primes[j+ 1] = nextPrime(bits | highBit, low); bits &= bits - 1;
+        primes[j+ 2] = nextPrime(bits | highBit, low); bits &= bits - 1;
+        primes[j+ 3] = nextPrime(bits | highBit, low); bits &= bits - 1;
+        primes[j+ 4] = nextPrime(bits | highBit, low); bits &= bits - 1;
+        primes[j+ 5] = nextPrime(bits | highBit, low); bits &= bits - 1;
+        primes[j+ 6] = nextPrime(bits | highBit, low); bits &= bits - 1;
+        primes[j+ 7] = nextPrime(bits | highBit, low); bits &= bits - 1;
+        j += 8;
       } while (j < i);
 
       low += 8 * 30;
