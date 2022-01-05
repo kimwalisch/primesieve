@@ -32,6 +32,8 @@ void SievingPrimes::init(Erat* erat, PreSieve& preSieve)
              erat->getSieveSize(),
              preSieve);
 
+  low_ = (preSieve.getMaxPrime() - 6) / 30 * 30;
+
   tinySieve();
 }
 
