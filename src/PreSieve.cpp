@@ -45,8 +45,7 @@ using namespace std;
 
 namespace primesieve {
 
-void PreSieve::init(uint64_t start,
-                    uint64_t stop)
+void PreSieve::init(uint64_t, uint64_t)
 {
   // TODO: resolve this before committing upstream.
 
@@ -118,11 +117,11 @@ void PreSieve::copy(uint8_t* sieve,
   for (int i = 0; i < BUFFERS; ++i)
     pos[i] = (segmentLow % (buffers_[i].size() * 30)) / 30;
 
-  int offset = 0;
+  uint64_t offset = 0;
   while (offset < sieveSize) {
     uint64_t bytesToCopy = sieveSize - offset;
     for (int i = 0; i < BUFFERS; ++i) {
-      int left = buffers_[i].size() - pos[i];
+      uint64_t left = buffers_[i].size() - pos[i];
       if (left < bytesToCopy) bytesToCopy = left;
     }
 
