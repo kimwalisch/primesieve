@@ -252,10 +252,8 @@ void PreSieve::preSieveSmall(uint8_t* sieve,
                              uint64_t sieveSize,
                              uint64_t segmentLow) const
 {
-  // Find segmentLow index
-  uint64_t primeProduct = 30030;
-  uint64_t remainder = segmentLow % primeProduct;
-  uint64_t i = remainder / 30;
+  uint64_t primeProduct = buffer_7_11_13.size() * 30;
+  uint64_t i = (segmentLow % primeProduct) / 30;
   uint64_t size = buffer_7_11_13.size();
   uint64_t sizeLeft = size - i;
   auto buffer = buffer_7_11_13.data();
