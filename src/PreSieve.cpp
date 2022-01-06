@@ -29,7 +29,6 @@
 #include <stdint.h>
 #include <algorithm>
 #include <array>
-#include <iterator>
 #include <vector>
 
 using std::copy_n;
