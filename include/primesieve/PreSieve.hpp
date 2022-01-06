@@ -40,6 +40,7 @@ public:
 private:
   uint64_t maxPrime_ = 13;
   std::array<std::vector<uint8_t>, 4> buffers_;
+  void initBuffers();
   void preSieveSmall(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
   void preSieveLarge(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
   static void resetTinyPrimes(uint8_t* sieve, uint64_t segmentLow);

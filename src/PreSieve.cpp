@@ -196,8 +196,14 @@ void PreSieve::init(uint64_t start,
   if (threshold < buffersDist)
     return;
 
-  // We are sieving a large interval,
-  // initialize all pre-sieve buffers.
+  initBuffers();
+}
+
+/// We are sieving a large interval, we have to
+/// initialize all pre-sieve buffers.
+///
+void PreSieve::initBuffers()
+{
   for (size_t i = 0; i < buffers_.size(); i++) {
     uint64_t product = 30;
 
@@ -208,13 +214,14 @@ void PreSieve::init(uint64_t start,
     uint64_t maxPrime = bufferPrimes[i].back();
     maxPrime_ = std::max(maxPrime_, maxPrime);
 
-    EratSmall eratSmall;
     uint64_t start = product;
+    uint64_t stop = start + product;
     assert(start >= maxPrime * maxPrime);
-    eratSmall.init(start + product, buffers_[i].size(), maxPrime);
+    EratSmall eratSmall;
+    eratSmall.init(stop, buffers_[i].size(), maxPrime);
 
     for (uint64_t prime : bufferPrimes[i])
-      eratSmall.addSievingPrime(prime, product);
+      eratSmall.addSievingPrime(prime, start);
     eratSmall.crossOff(buffers_[i].data(), buffers_[i].size());
   }
 }
