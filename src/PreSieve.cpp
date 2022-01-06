@@ -141,6 +141,24 @@ void PreSieve::copy(uint8_t* sieve,
         pos[i] = 0;
     }
   }
+
+  resetTinyPrimes(sieve, segmentLow);
+}
+
+/// Pre-sieving removes the primes <= 59,
+/// we have to undo that work and
+/// reset these bits to 1.
+///
+void PreSieve::resetTinyPrimes(uint8_t* sieve,
+                               uint64_t segmentLow)
+{
+  uint8_t bit49 = 1 << 4;
+  size_t i = 0;
+
+  if (segmentLow < 30)
+    sieve[i++] = 0xff;
+  if (segmentLow < 60)
+    sieve[i++] = 0xff ^ bit49;
 }
 
 } // namespace

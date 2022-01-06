@@ -34,13 +34,13 @@ namespace primesieve {
 class PreSieve
 {
 public:
-  void init(uint64_t, uint64_t);
+  void init(uint64_t start, uint64_t stop);
+  void copy(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
   uint64_t getMaxPrime() const { return maxPrime_; }
-  void copy(uint8_t*, uint64_t, uint64_t) const;
 private:
   uint64_t maxPrime_ = 0;
   std::array<std::vector<uint8_t>, 4> buffers_;
-  void initBuffer(uint64_t, uint64_t);
+  static void resetTinyPrimes(uint8_t* sieve, uint64_t segmentLow);
 };
 
 } // namespace
