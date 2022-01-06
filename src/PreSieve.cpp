@@ -29,6 +29,7 @@
 #include <stdint.h>
 #include <algorithm>
 #include <array>
+#include <cassert>
 #include <vector>
 
 using std::copy_n;
