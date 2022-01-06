@@ -238,6 +238,7 @@ void PreSieve::preSieve(uint8_t* sieve,
 void PreSieve::resetTinyPrimes(uint8_t* sieve,
                                uint64_t segmentLow)
 {
+  // 7 * 7 is not a prime
   uint8_t bit49 = 1 << 4;
   size_t i = 0;
 
