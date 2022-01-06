@@ -35,11 +35,13 @@ class PreSieve
 {
 public:
   void init(uint64_t start, uint64_t stop);
-  void copy(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
+  void preSieve(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
   uint64_t getMaxPrime() const { return maxPrime_; }
 private:
-  uint64_t maxPrime_ = 0;
+  uint64_t maxPrime_ = 13;
   std::array<std::vector<uint8_t>, 4> buffers_;
+  void preSieveSmall(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
+  void preSieveLarge(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
   static void resetTinyPrimes(uint8_t* sieve, uint64_t segmentLow);
 };
 

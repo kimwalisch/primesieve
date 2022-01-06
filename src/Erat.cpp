@@ -156,7 +156,7 @@ uint64_t Erat::byteRemainder(uint64_t n)
 ///
 void Erat::preSieve()
 {
-  preSieve_->copy(sieve_, sieveSize_, segmentLow_);
+  preSieve_->preSieve(sieve_, sieveSize_, segmentLow_);
 
   // unset bits < start
   if (segmentLow_ <= start_)
