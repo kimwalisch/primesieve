@@ -223,7 +223,6 @@ void PreSieve::preSieve(uint8_t* sieve,
                         uint64_t sieveSize,
                         uint64_t segmentLow) const
 {
-  // Already initialized
   if (buffers_[0].empty())
     preSieveSmall(sieve, sieveSize, segmentLow);
   else
