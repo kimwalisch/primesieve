@@ -299,8 +299,7 @@ void PreSieve::preSieveLarge(uint8_t* sieve,
 
     for (size_t i = 0; i < buffers_.size(); i++) {
       uint64_t left = buffers_[i].size() - pos[i];
-      if (left < bytesToCopy)
-        bytesToCopy = left;
+      bytesToCopy = std::min(left, bytesToCopy);
     }
 
     andBuffers(&buffers_[0][pos[0]],
