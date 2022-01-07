@@ -10,6 +10,7 @@ provides a speedup of up to 10% when generating the primes < 10^11.
 Thanks to @zielaj for this amazing work!
 
 * PreSieve.cpp: Add multiple pre-sieve buffers #110.
+* ParallelSieve.cpp: Initialize PreSieve.
 
 Changes in version 7.7, 13/11/2021
 ==================================
