@@ -2,7 +2,7 @@
 /// @file  SievingPrimes.cpp
 ///        Generates the sieving primes up n^(1/2).
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -32,8 +32,7 @@ void SievingPrimes::init(Erat* erat, PreSieve& preSieve)
              erat->getSieveSize(),
              preSieve);
 
-  low_ = (preSieve.getMaxPrime() - 6) / 30 * 30;
-
+  low_ = segmentLow_;
   tinySieve();
 }
 
