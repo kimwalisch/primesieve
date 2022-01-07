@@ -16,7 +16,7 @@
 ///         Pre-sieving provides a speedup of up to 30% when
 ///         sieving the primes < 10^10 using primesieve.
 ///
-/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -175,25 +175,27 @@ void PreSieve::init(uint64_t start,
   if (!buffers_[0].empty())
     return;
 
-  // The pre-sieve buffers should be at least 100
+  // The pre-sieve buffers should be at least 30
   // times smaller than the sieving distance
   // in order to reduce initialization overhead.
   uint64_t dist = stop - start;
-  uint64_t threshold = std::max(dist, isqrt(stop)) / 100;
-  uint64_t buffersDist = 0;
+  uint64_t threshold = std::max(dist, isqrt(stop)) / 30;
 
-  for (const auto& primes : bufferPrimes)
+  if (!buffersDist_)
   {
-    uint64_t bufferBytes = 1;
-    for (auto prime : primes)
-      bufferBytes *= prime;
-    buffersDist += bufferBytes * 30;
+    for (const auto& primes : bufferPrimes)
+    {
+      uint64_t bufferBytes = 1;
+      for (auto prime : primes)
+        bufferBytes *= prime;
+      buffersDist_ += bufferBytes * 30;
+    }
   }
 
   // For small intervals we pre-sieve using the
   // static buffer_7_11_13 lookup table. In this
   // case no initialization is required.
-  if (threshold < buffersDist)
+  if (threshold < buffersDist_)
     return;
 
   initBuffers();
@@ -204,24 +206,26 @@ void PreSieve::init(uint64_t start,
 ///
 void PreSieve::initBuffers()
 {
-  for (size_t i = 0; i < buffers_.size(); i++) {
+  for (size_t i = 0; i < buffers_.size(); i++)
+  {
     uint64_t product = 30;
 
     for (auto prime : bufferPrimes[i])
       product *= prime;
 
-    buffers_[i].resize(product / 30, 0xff);
-    uint64_t maxPrime = bufferPrimes[i].back();
-    maxPrime_ = std::max(maxPrime_, maxPrime);
-
     uint64_t start = product;
     uint64_t stop = start + product;
+    buffers_[i].resize(product / 30, 0xff);
+    uint64_t maxPrime = bufferPrimes[i].back();
     assert(start >= maxPrime * maxPrime);
+    maxPrime_ = std::max(maxPrime_, maxPrime);
+
     EratSmall eratSmall;
     eratSmall.init(stop, buffers_[i].size(), maxPrime);
 
     for (uint64_t prime : bufferPrimes[i])
       eratSmall.addSievingPrime(prime, start);
+
     eratSmall.crossOff(buffers_[i].data(), buffers_[i].size());
   }
 }
@@ -235,17 +239,9 @@ void PreSieve::preSieve(uint8_t* sieve,
   else
     preSieveLarge(sieve, sieveSize, segmentLow);
 
-  resetTinyPrimes(sieve, segmentLow);
-}
-
-/// Pre-sieving removes the primes <= 59,
-/// we have to undo that work and
-/// reset these bits to 1.
-///
-void PreSieve::resetTinyPrimes(uint8_t* sieve,
-                               uint64_t segmentLow)
-{
-  // 7 * 7 is not a prime
+  // Pre-sieving removes the primes <= 59. We
+  // have to undo that work and reset these bits
+  // to 1 (but 49 = 7 * 7 is not a prime).
   uint8_t bit49 = 1 << 4;
   size_t i = 0;
 
@@ -258,7 +254,7 @@ void PreSieve::resetTinyPrimes(uint8_t* sieve,
 /// Pre-sieve with the primes <= 13
 void PreSieve::preSieveSmall(uint8_t* sieve,
                              uint64_t sieveSize,
-                             uint64_t segmentLow) const
+                             uint64_t segmentLow)
 {
   uint64_t size = buffer_7_11_13.size();
   uint64_t primeProduct = size * 30;
