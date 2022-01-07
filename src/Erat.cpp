@@ -151,18 +151,16 @@ uint64_t Erat::byteRemainder(uint64_t n)
   return n;
 }
 
-/// Pre-sieve multiples of small primes e.g. <= 19
+/// Pre-sieve multiples of small primes e.g. <= 59
 /// to speed up the sieve of Eratosthenes
 ///
 void Erat::preSieve()
 {
-  preSieve_->copy(sieve_, sieveSize_, segmentLow_);
+  preSieve_->preSieve(sieve_, sieveSize_, segmentLow_);
 
   // unset bits < start
   if (segmentLow_ <= start_)
   {
-    if (start_ <= maxPreSieve_)
-      sieve_[0] = 0xff;
     uint64_t rem = byteRemainder(start_);
     sieve_[0] &= unsetSmaller[rem];
   }

@@ -1,7 +1,22 @@
 ///
-/// @file  PreSieve.hpp
+/// @file   PreSieve.hpp
+/// @brief  Pre-sieve multiples of small primes <= 59 to speed up the
+///         sieve of Eratosthenes. The idea is to allocate several
+///         arrays (buffers_) and remove the multiples of small primes
+///         from them at initialization. Each buffer is assigned
+///         different primes, for example:
 ///
-/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
+///         Buffer 0 removes multiplies of:  7, 19, 23, 29
+///         Buffer 1 removes multiplies of: 11, 13, 17, 37
+///         Buffer 2 removes multiplies of: 31, 47, 59
+///         Buffer 3 removes multiplies of: 41, 43, 53
+///
+///         Then whilst sieving, we perform a bitwise AND on the
+///         buffers_ arrays and store the result in the sieve array.
+///         Pre-sieving provides a speedup of up to 30% when
+///         sieving the primes < 10^10 using primesieve.
+///
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,41 +26,24 @@
 #define PRESIEVE_HPP
 
 #include <stdint.h>
+#include <array>
 #include <vector>
 
 namespace primesieve {
 
-/// PreSieve objects are used to pre-sieve multiples of small primes
-/// e.g. <= 19 to speed up the sieve of Eratosthenes. The idea is to
-/// allocate an array (buffer_) and remove the multiples of small
-/// primes from it at initialization. Then whilst sieving, the
-/// buffer_ array is copied to the sieve array at the beginning of
-/// each new segment to pre-sieve the multiples of small
-/// primes <= maxPrime_. Pre-sieving speeds up my sieve of Eratosthenes
-/// implementation by about 20 percent when sieving < 10^10.
-///
-/// <b> Memory Usage </b>
-///
-/// - PreSieve objects use: primeProduct(maxPrime_) / 30 bytes of memory
-/// - PreSieve multiples of primes <=  7 uses    7    bytes
-/// - PreSieve multiples of primes <= 11 uses   77    bytes
-/// - PreSieve multiples of primes <= 13 uses 1001    bytes
-/// - PreSieve multiples of primes <= 17 uses   17.02 kilobytes
-/// - PreSieve multiples of primes <= 19 uses  323.32 kilobytes
-/// - PreSieve multiples of primes <= 23 uses    7.44 megabytes
-///
 class PreSieve
 {
 public:
-  void init(uint64_t, uint64_t);
+  void init(uint64_t start, uint64_t stop);
+  void preSieve(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
   uint64_t getMaxPrime() const { return maxPrime_; }
-  void copy(uint8_t*, uint64_t, uint64_t) const;
 private:
-  uint64_t maxPrime_ = 0;
-  uint64_t primeProduct_ = 0;
-  uint64_t size_ = 0;
-  std::vector<uint8_t> buffer_;
-  void initBuffer(uint64_t, uint64_t);
+  uint64_t buffersDist_ = 0;
+  uint64_t maxPrime_ = 13;
+  std::array<std::vector<uint8_t>, 4> buffers_;
+  void initBuffers();
+  static void preSieveSmall(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow);
+  void preSieveLarge(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
 };
 
 } // namespace
