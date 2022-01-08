@@ -152,11 +152,11 @@ const std::array<std::vector<uint64_t>, 4> bufferPrimes =
   { 41, 43, 53 }      // 93 KiB
 }};
 
-void andBuffers(const uint8_t* buf1,
-                const uint8_t* buf2,
-                const uint8_t* buf3,
-                const uint8_t* buf4,
-                uint8_t* output,
+void andBuffers(const uint8_t* __restrict buf1,
+                const uint8_t* __restrict buf2,
+                const uint8_t* __restrict buf3,
+                const uint8_t* __restrict buf4,
+                uint8_t* __restrict output,
                 size_t bytes)
 {
   // This loop should be auto-vectorized
