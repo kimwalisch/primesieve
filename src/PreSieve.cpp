@@ -285,7 +285,8 @@ void PreSieve::preSieveLarge(uint8_t* sieve,
                              uint64_t segmentLow) const
 {
   uint64_t offset = 0;
-  std::array<uint64_t, bufferPrimes.size()> pos;
+  std::array<uint64_t, 4> pos;
+  assert(pos.size() == buffers_.size());
 
   for (size_t i = 0; i < buffers_.size(); i++)
     pos[i] = (segmentLow % (buffers_[i].size() * 30)) / 30;
@@ -307,7 +308,7 @@ void PreSieve::preSieveLarge(uint8_t* sieve,
 
     offset += bytesToCopy;
 
-    for (size_t i = 0; i < buffers_.size(); i++) {
+    for (size_t i = 0; i < pos.size(); i++) {
       pos[i] += bytesToCopy;
       if (pos[i] >= buffers_[i].size())
         pos[i] = 0;
