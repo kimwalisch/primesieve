@@ -153,9 +153,6 @@ void ParallelSieve::sieve()
     auto task = [&]()
     {
       PrimeSieve ps(this);
-      uint64_t i;
-      counts_t counts;
-      counts.fill(0);
 
       // To improve load balancing each thread sieves many small
       // intervals. For small intervals only basic pre-sieving
@@ -163,7 +160,12 @@ void ParallelSieve::sieve()
       // However here we know that many intervals will be sieved
       // and hence there is no initialization overhead issue.
       // Therefore we manually initialize pre-sieving.
-      ps.getPreSieve().init(0, dist / threads);
+      PreSieve& preSieve = ps.getPreSieve();
+      preSieve.init(0, dist / threads);
+
+      uint64_t i;
+      counts_t counts;
+      counts.fill(0);
 
       while ((i = a.fetch_add(1, memory_order_relaxed)) < iters)
       {
