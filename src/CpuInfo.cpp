@@ -610,8 +610,8 @@ std::string getCpuName()
   return notFound;
 }
 
-vector<std::string> split(const std::string& str,
-                          char delimiter)
+std::vector<std::string> split(const std::string& str,
+                               char delimiter)
 {
   std::vector<std::string> tokens;
   std::string token;
@@ -707,12 +707,12 @@ void CpuInfo::init()
   // from fastest to slowest. By picking a CPU core from the middle
   // we hopefully get an average CPU core that is representative
   // for the CPU's overall (multi-threading) performance.
-  std::string cpuNumber = to_string(logicalCpuCores_ / 2);
+  std::string cpuNumber = std::to_string(logicalCpuCores_ / 2);
 
   // Retrieve CPU cache info
   for (size_t i = 0; i <= 3; i++)
   {
-    std::string path = "/sys/devices/system/cpu/cpu" + cpuNumber + "/cache/index" + to_string(i);
+    std::string path = "/sys/devices/system/cpu/cpu" + cpuNumber + "/cache/index" + std::to_string(i);
     std::string cacheLevel = path + "/level";
     size_t level = getValue(cacheLevel);
 
