@@ -2,7 +2,7 @@
 /// @file   generate_primes1.cpp
 /// @brief  Test prime number generation.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -15,7 +15,6 @@
 #include <cstdlib>
 #include <vector>
 
-using namespace std;
 using namespace primesieve;
 
 // primes inside [0, 100]
@@ -54,39 +53,38 @@ const uint64_t large_primes[19] =
 
 void check(bool OK)
 {
-  cout << "   " << (OK ? "OK" : "ERROR") << "\n";
+  std::cout << "   " << (OK ? "OK" : "ERROR") << "\n";
   if (!OK)
-    exit(1);
+    std::exit(1);
 }
 
 int main()
 {
-  vector<uint64_t> primes;
-
+  std::vector<uint64_t> primes;
   generate_primes(100, &primes);
-  cout << "primes.size() = " << primes.size();
+  std::cout << "primes.size() = " << primes.size();
   check(primes.size() == 25);
 
   for (uint64_t i = 0; i < primes.size(); i++)
   {
-    cout << "primes[" << i << "] = " << primes[i];
+    std::cout << "primes[" << i << "] = " << primes[i];
     check(primes[i] == small_primes[i]);
   }
 
   primes.clear();
 
   generate_primes(1000000000000000ull, 1000000000000741ull, &primes);
-  cout << "primes.size() = " << primes.size();
+  std::cout << "primes.size() = " << primes.size();
   check(primes.size() == 19);
 
   for (uint64_t i = 0; i < primes.size(); i++)
   {
-    cout << "primes[" << i << "] = " << primes[i];
+    std::cout << "primes[" << i << "] = " << primes[i];
     check(primes[i] == large_primes[i]);
   }
 
-  cout << endl;
-  cout << "All tests passed successfully!" << endl;
+  std::cout << std::endl;
+  std::cout << "All tests passed successfully!" << std::endl;
 
   return 0;
 }

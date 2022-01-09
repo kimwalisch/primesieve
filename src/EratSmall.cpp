@@ -9,7 +9,7 @@
 ///         multiples uses as few instructions as possible since there
 ///         are so many multiples.
 ///
-/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -25,6 +25,8 @@
 #include <algorithm>
 #include <cassert>
 #include <vector>
+
+using std::size_t;
 
 /// Update the current sieving prime's multipleIndex
 /// and wheelIndex after sieving has finished.

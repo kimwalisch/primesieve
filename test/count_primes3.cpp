@@ -3,7 +3,7 @@
 /// @brief  Count the primes within [10^12, 10^12 + 10^9]
 ///         using random sized intervals.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -17,19 +17,18 @@
 #include <iostream>
 #include <random>
 
-using namespace std;
 using namespace primesieve;
 
 void check(bool OK)
 {
-  cout << "   " << (OK ? "OK" : "ERROR") << "\n";
+  std::cout << "   " << (OK ? "OK" : "ERROR") << "\n";
   if (!OK)
-    exit(1);
+    std::exit(1);
 }
 
 int main()
 {
-  cout << "Sieving the primes within [10^12, 10^12 + 10^9] randomly" << endl;
+  std::cout << "Sieving the primes within [10^12, 10^12 + 10^9] randomly" << std::endl;
 
   uint64_t count = 0;
   uint64_t maxDist = (uint64_t) 1e7;
@@ -38,27 +37,27 @@ int main()
   uint64_t start = lowerBound - 1;
   uint64_t stop = start;
 
-  random_device rd;
-  mt19937 gen(rd());
-  uniform_int_distribution<uint64_t> dist(0, maxDist);
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<uint64_t> dist(0, maxDist);
 
   while (stop < upperBound)
   {
     start = stop + 1;
-    stop = min(start + dist(gen), upperBound);
+    stop = std::min(start + dist(gen), upperBound);
     set_sieve_size(1 << (dist(gen) % 13));
     count += count_primes(start, stop);
 
-    cout << "\rRemaining chunk:             "
-         << "\rRemaining chunk: "
-         << upperBound - stop << flush;
+    std::cout << "\rRemaining chunk:             "
+              << "\rRemaining chunk: "
+              << upperBound - stop << std::flush;
   }
 
-  cout << endl << "Prime count: " << count;
+  std::cout << "\nPrime count: " << count;
   check(count == 36190991);
 
-  cout << endl;
-  cout << "Test passed successfully!" << endl;
+  std::cout << std::endl;
+  std::cout << "Test passed successfully!" << std::endl;
 
   return 0;
 }

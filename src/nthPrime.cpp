@@ -1,7 +1,7 @@
 ///
 /// @file  nthPrime.cpp
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -19,7 +19,6 @@
 #include <chrono>
 #include <cmath>
 
-using namespace std;
 using namespace primesieve;
 
 namespace {
@@ -46,8 +45,8 @@ bool sieveBackwards(int64_t n, int64_t count, uint64_t stop)
 int64_t pix(int64_t n)
 {
   double x = (double) n;
-  x = max(4.0, x);
-  double pix = x / log(x);
+  x = std::max(4.0, x);
+  double pix = x / std::log(x);
   return (int64_t) pix;
 }
 
@@ -55,12 +54,12 @@ uint64_t nthPrimeDist(int64_t n, int64_t count, uint64_t start)
 {
   double x = (double) (n - count);
 
-  x = abs(x);
-  x = max(x, 4.0);
+  x = std::abs(x);
+  x = std::max(x, 4.0);
 
   // rough pi(x) approximation
-  double logx = log(x);
-  double loglogx = log(logx);
+  double logx = std::log(x);
+  double loglogx = std::log(logx);
   double pix = x * (logx + loglogx - 1);
 
   // correct start if sieving backwards to
@@ -68,28 +67,28 @@ uint64_t nthPrimeDist(int64_t n, int64_t count, uint64_t start)
   if (count >= n)
   {
     double st = start - pix;
-    st = max(0.0, st);
+    st = std::max(0.0, st);
     start = (uint64_t) st;
   }
 
   // approximate the nth prime using:
   // start + n * log(start + pi(n) / loglog(n))
   double startPix = start + pix / loglogx;
-  startPix = max(4.0, startPix);
-  double logStartPix = log(startPix);
-  double dist = max(pix, x * logStartPix);
+  startPix = std::max(4.0, startPix);
+  double logStartPix = std::log(startPix);
+  double dist = std::max(pix, x * logStartPix);
 
   // ensure start + dist <= nth prime
   if (count < n)
-    dist -= sqrt(dist) * log(logStartPix) * 2;
+    dist -= std::sqrt(dist) * std::log(logStartPix) * 2;
   // ensure start + dist >= nth prime
   if (count > n)
-    dist += sqrt(dist) * log(logStartPix) * 2;
+    dist += std::sqrt(dist) * std::log(logStartPix) * 2;
 
   // if n is very small:
   // ensure start + dist >= nth prime
   double primeGap = maxPrimeGap(startPix);
-  dist = max(dist, primeGap);
+  dist = std::max(dist, primeGap);
 
   return (uint64_t) dist;
 }
@@ -106,7 +105,7 @@ uint64_t PrimeSieve::nthPrime(uint64_t n)
 uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 {
   setStart(start);
-  auto t1 = chrono::system_clock::now();
+  auto t1 = std::chrono::system_clock::now();
 
   if (n == 0)
     n = 1; // like Mathematica
@@ -121,7 +120,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 
   int64_t count = 0;
   int64_t tinyN = 100000;
-  tinyN = max(tinyN, pix(isqrt(nthPrimeGuess)));
+  tinyN = std::max(tinyN, pix(isqrt(nthPrimeGuess)));
 
   while ((n - count) > tinyN ||
          sieveBackwards(n, count, stop))
@@ -164,8 +163,8 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   if (~prime == 0)
     throw primesieve_error("nth prime > 2^64");
 
-  auto t2 = chrono::system_clock::now();
-  chrono::duration<double> seconds = t2 - t1;
+  auto t2 = std::chrono::system_clock::now();
+  std::chrono::duration<double> seconds = t2 - t1;
   seconds_ = seconds.count();
 
   return prime;

@@ -18,7 +18,7 @@
 ///         types of CPU cores we try to detect the cache sizes of the
 ///         CPU core type that e.g. occurs most frequently.
 ///
-/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -31,6 +31,8 @@
 #include <exception>
 #include <string>
 #include <vector>
+
+using std::size_t;
 
 #if defined(__APPLE__)
   #if !defined(__has_include)
@@ -77,8 +79,6 @@
       defined(__clang__)
   #define GNUC_CPUID
 #endif
-
-using namespace std;
 
 namespace {
 
@@ -133,14 +133,14 @@ void cpuId(int cpuInfo[4], int eax)
 /// Remove all leading and trailing
 /// space characters.
 ///
-void trimString(string& str)
+void trimString(std::string& str)
 {
-  string spaceChars = " \f\n\r\t\v";
+  std::string spaceChars = " \f\n\r\t\v";
   size_t pos = str.find_first_not_of(spaceChars);
   str.erase(0, pos);
 
   pos = str.find_last_not_of(spaceChars);
-  if (pos != string::npos)
+  if (pos != std::string::npos)
     str.erase(pos + 1);
 }
 
@@ -148,13 +148,11 @@ void trimString(string& str)
 
 #endif
 
-using namespace std;
-
 namespace {
 
-string getCpuName()
+std::string getCpuName()
 {
-  string cpuName;
+  std::string cpuName;
 
 #if defined(IS_X86)
   // Get the CPU name using CPUID.
@@ -163,19 +161,19 @@ string getCpuName()
 
   int cpuInfo[4] = { 0, 0, 0, 0 };
   cpuId(cpuInfo, 0x80000000);
-  vector<int> vect;
+  std::vector<int> vect;
 
   // check if CPU name is supported
   if ((unsigned) cpuInfo[0] >= 0x80000004u)
   {
     cpuId(cpuInfo, 0x80000002);
-    copy_n(cpuInfo, 4, back_inserter(vect));
+    std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
     cpuId(cpuInfo, 0x80000003);
-    copy_n(cpuInfo, 4, back_inserter(vect));
+    std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
     cpuId(cpuInfo, 0x80000004);
-    copy_n(cpuInfo, 4, back_inserter(vect));
+    std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
     vect.push_back(0);
     cpuName = (char*) vect.data();
@@ -215,7 +213,7 @@ void CpuInfo::init()
   if (!bytes)
     return;
 
-  vector<char> buffer(bytes);
+  std::vector<char> buffer(bytes);
 
   if (!glpiex(RelationCache, (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[0], &bytes))
     return;
@@ -348,7 +346,7 @@ void CpuInfo::init()
 
   size_t threadsPerCore = 0;
   size_t size = bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
-  vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> info(size);
+  std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> info(size);
 
   if (!glpi(&info[0], &bytes))
     return;
@@ -409,8 +407,6 @@ void CpuInfo::init()
 #include <cstddef>
 #include <sys/sysctl.h>
 
-using namespace std;
-
 namespace {
 
 /// Get CPU information from the operating
@@ -418,15 +414,15 @@ namespace {
 /// https://www.freebsd.org/cgi/man.cgi?sysctl(3)
 ///
 template <typename T>
-vector<T> getSysctl(const string& name)
+std::vector<T> getSysctl(const std::string& name)
 {
-  vector<T> res;
+  std::vector<T> res;
   size_t bytes = 0;
 
   if (!sysctlbyname(name.data(), 0, &bytes, 0, 0))
   {
     size_t size = ceilDiv(bytes, sizeof(T));
-    vector<T> buffer(size, 0);
+    std::vector<T> buffer(size, 0);
     if (!sysctlbyname(name.data(), buffer.data(), &bytes, 0, 0))
       res = buffer;
   }
@@ -434,9 +430,9 @@ vector<T> getSysctl(const string& name)
   return res;
 }
 
-string getCpuName()
+std::string getCpuName()
 {
-  string cpuName;
+  std::string cpuName;
 
   auto buffer = getSysctl<char>("machdep.cpu.brand_string");
   if (!buffer.empty())
@@ -457,12 +453,12 @@ void CpuInfo::init()
 
   // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
   auto cacheSizes = getSysctl<size_t>("hw.cachesize");
-  for (size_t i = 1; i < min(cacheSizes.size(), cacheSizes_.size()); i++)
+  for (size_t i = 1; i < std::min(cacheSizes.size(), cacheSizes_.size()); i++)
     cacheSizes_[i] = cacheSizes[i];
 
   // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
   auto cacheConfig = getSysctl<size_t>("hw.cacheconfig");
-  for (size_t i = 1; i < min(cacheConfig.size(), cacheSharing_.size()); i++)
+  for (size_t i = 1; i < std::min(cacheConfig.size(), cacheSharing_.size()); i++)
     cacheSharing_[i] = cacheConfig[i];
 }
 
@@ -478,7 +474,6 @@ void CpuInfo::init()
 #include <set>
 #include <sstream>
 
-using namespace std;
 using namespace primesieve;
 
 namespace {
@@ -486,21 +481,21 @@ namespace {
 /// Remove all leading and trailing
 /// space characters.
 ///
-void trimString(string& str)
+void trimString(std::string& str)
 {
-  string spaceChars = " \f\n\r\t\v";
+  std::string spaceChars = " \f\n\r\t\v";
   size_t pos = str.find_first_not_of(spaceChars);
   str.erase(0, pos);
 
   pos = str.find_last_not_of(spaceChars);
-  if (pos != string::npos)
+  if (pos != std::string::npos)
     str.erase(pos + 1);
 }
 
-string getString(const string& filename)
+std::string getString(const std::string& filename)
 {
-  ifstream file(filename);
-  string str;
+  std::ifstream file(filename);
+  std::string str;
 
   // Read the first string,
   // stops at any space character
@@ -510,25 +505,25 @@ string getString(const string& filename)
     return {};
 }
 
-size_t getValue(const string& filename)
+size_t getValue(const std::string& filename)
 {
-  string str = getString(filename);
+  std::string str = getString(filename);
   size_t val = 0;
 
   if (!str.empty())
-    val = stoul(str);
+    val = std::stoul(str);
 
   return val;
 }
 
-size_t getCacheSize(const string& filename)
+size_t getCacheSize(const std::string& filename)
 {
-  string str = getString(filename);
+  std::string str = getString(filename);
   size_t val = 0;
 
   if (!str.empty())
   {
-    val = stoul(str);
+    val = std::stoul(str);
     char lastChar = str.back();
 
     // The last character may be:
@@ -553,13 +548,13 @@ size_t getCacheSize(const string& filename)
 /// Returns an empty string if line does
 /// not contain the CPU name.
 ///
-string getCpuName(const string& line)
+std::string getCpuName(const std::string& line)
 {
   // Examples of CPU names:
   // model name : Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz
   // Processor  : ARMv7 Processor rev 5 (v7l)
   // cpu        : POWER9 (raw), altivec supported
-  static set<string> cpuLabels
+  static const std::set<std::string> cpuLabels
   {
     "model name",
     "Processor",
@@ -567,11 +562,11 @@ string getCpuName(const string& line)
   };
 
   size_t pos = line.find(':');
-  string cpuName;
+  std::string cpuName;
 
-  if (pos != string::npos)
+  if (pos != std::string::npos)
   {
-    string label = line.substr(0, pos);
+    std::string label = line.substr(0, pos);
     trimString(label);
     if (cpuLabels.find(label) != cpuLabels.end())
       cpuName = line.substr(pos + 1);
@@ -580,29 +575,29 @@ string getCpuName(const string& line)
   return cpuName;
 }
 
-bool isValid(const string& cpuName)
+bool isValid(const std::string& cpuName)
 {
   if (cpuName.empty())
     return false;
-  if (cpuName.find_first_not_of("0123456789") == string::npos)
+  if (cpuName.find_first_not_of("0123456789") == std::string::npos)
     return false;
 
   return true;
 }
 
-string getCpuName()
+std::string getCpuName()
 {
-  ifstream file("/proc/cpuinfo");
-  string notFound;
+  std::ifstream file("/proc/cpuinfo");
+  std::string notFound;
 
   if (file)
   {
-    string line;
+    std::string line;
     size_t i = 0;
 
-    while (getline(file, line))
+    while (std::getline(file, line))
     {
-      string cpuName = getCpuName(line);
+      std::string cpuName = getCpuName(line);
       trimString(cpuName);
 
       if (isValid(cpuName))
@@ -615,14 +610,14 @@ string getCpuName()
   return notFound;
 }
 
-vector<string> split(const string& str,
-                     char delimiter)
+vector<std::string> split(const std::string& str,
+                          char delimiter)
 {
-  vector<string> tokens;
-  string token;
+  std::vector<std::string> tokens;
+  std::string token;
   istringstream tokenStream(str);
 
-  while (getline(tokenStream, token, delimiter))
+  while (std::getline(tokenStream, token, delimiter))
     tokens.push_back(token);
 
   return tokens;
@@ -633,7 +628,7 @@ vector<string> split(const string& str,
 /// Example: 0-8,18-26
 /// https://www.kernel.org/doc/Documentation/cputopology.txt
 ///
-size_t parseThreadList(const string& filename)
+size_t parseThreadList(const std::string& filename)
 {
   size_t threads = 0;
   auto threadList = getString(filename);
@@ -646,8 +641,8 @@ size_t parseThreadList(const string& filename)
       threads++;
     else
     {
-      auto t0 = stoul(values.at(0));
-      auto t1 = stoul(values.at(1));
+      auto t0 = std::stoul(values.at(0));
+      auto t1 = std::stoul(values.at(1));
       threads += t1 - t0 + 1;
     }
   }
@@ -661,17 +656,17 @@ size_t parseThreadList(const string& filename)
 /// Example: 00000000,00000000,00000000,07fc01ff
 /// https://www.kernel.org/doc/Documentation/cputopology.txt
 ///
-size_t parseThreadMap(const string& filename)
+size_t parseThreadMap(const std::string& filename)
 {
   size_t threads = 0;
-  string threadMap = getString(filename);
+  std::string threadMap = getString(filename);
 
   for (char c : threadMap)
   {
     if (c != ',')
     {
-      string hexChar { c };
-      size_t bitmap = stoul(hexChar, nullptr, 16);
+      std::string hexChar { c };
+      size_t bitmap = std::stoul(hexChar, nullptr, 16);
       for (; bitmap > 0; threads++)
         bitmap &= bitmap - 1;
     }
@@ -687,8 +682,8 @@ size_t parseThreadMap(const string& filename)
 /// But you cannot know in advance if any of these
 /// files exist, hence you need to try both.
 ///
-size_t getThreads(const string& threadList,
-                  const string& threadMap)
+size_t getThreads(const std::string& threadList,
+                  const std::string& threadMap)
 {
   size_t threads = parseThreadList(threadList);
 
@@ -704,7 +699,7 @@ namespace primesieve {
 
 void CpuInfo::init()
 {
-  string cpusOnline = "/sys/devices/system/cpu/online";
+  std::string cpusOnline = "/sys/devices/system/cpu/online";
   logicalCpuCores_ = parseThreadList(cpusOnline);
 
   // For hybrid CPUs with multiple types of CPU cores Linux seems
@@ -712,27 +707,27 @@ void CpuInfo::init()
   // from fastest to slowest. By picking a CPU core from the middle
   // we hopefully get an average CPU core that is representative
   // for the CPU's overall (multi-threading) performance.
-  string cpuNumber = to_string(logicalCpuCores_ / 2);
+  std::string cpuNumber = to_string(logicalCpuCores_ / 2);
 
   // Retrieve CPU cache info
   for (size_t i = 0; i <= 3; i++)
   {
-    string path = "/sys/devices/system/cpu/cpu" + cpuNumber + "/cache/index" + to_string(i);
-    string cacheLevel = path + "/level";
+    std::string path = "/sys/devices/system/cpu/cpu" + cpuNumber + "/cache/index" + to_string(i);
+    std::string cacheLevel = path + "/level";
     size_t level = getValue(cacheLevel);
 
     if (level >= 1 &&
         level <= 3)
     {
-      string type = path + "/type";
-      string cacheType = getString(type);
+      std::string type = path + "/type";
+      std::string cacheType = getString(type);
 
       if (cacheType == "Data" ||
           cacheType == "Unified")
       {
-        string cacheSize = path + "/size";
-        string sharedCpuList = path + "/shared_cpu_list";
-        string sharedCpuMap = path + "/shared_cpu_map";
+        std::string cacheSize = path + "/size";
+        std::string sharedCpuList = path + "/shared_cpu_list";
+        std::string sharedCpuMap = path + "/shared_cpu_map";
         cacheSizes_[level] = getCacheSize(cacheSize);
         cacheSharing_[level] = getThreads(sharedCpuList, sharedCpuMap);
       }
@@ -758,7 +753,7 @@ CpuInfo::CpuInfo() :
   {
     init();
   }
-  catch (exception& e)
+  catch (std::exception& e)
   {
     // We don't trust the operating system to reliably report
     // all CPU information. In case an unexpected error
@@ -769,7 +764,7 @@ CpuInfo::CpuInfo() :
   }
 }
 
-string CpuInfo::cpuName() const
+std::string CpuInfo::cpuName() const
 {
   try
   {
@@ -779,7 +774,7 @@ string CpuInfo::cpuName() const
     // startup but instead we lazy load it when needed.
     return getCpuName();
   }
-  catch (exception&)
+  catch (std::exception&)
   {
     return {};
   }
@@ -820,7 +815,7 @@ size_t CpuInfo::l3Sharing() const
   return cacheSharing_[3];
 }
 
-string CpuInfo::getError() const
+std::string CpuInfo::getError() const
 {
   return error_;
 }

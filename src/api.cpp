@@ -4,7 +4,7 @@
 ///         Contains the implementations of the functions declared
 ///         in the primesieve.hpp header file.
 ///
-/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -21,6 +21,8 @@
 #include <cstddef>
 #include <limits>
 #include <string>
+
+using std::size_t;
 
 namespace {
 

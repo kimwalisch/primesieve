@@ -3,7 +3,7 @@
 /// @brief  The Erat class manages prime sieving using the
 ///         EratSmall, EratMedium, EratBig classes.
 ///
-/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -24,12 +24,10 @@
 #include <cassert>
 #include <memory>
 
-using namespace std;
-
 namespace {
 
 /// unset bits < start
-const array<uint8_t, 37> unsetSmaller =
+const std::array<uint8_t, 37> unsetSmaller =
 {
   0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
   0xfe, 0xfe, 0xfe, 0xfe, 0xfc, 0xfc, 0xf8, 0xf8,
@@ -39,7 +37,7 @@ const array<uint8_t, 37> unsetSmaller =
 };
 
 /// unset bits > stop
-const array<uint8_t, 37> unsetLarger =
+const std::array<uint8_t, 37> unsetLarger =
 {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
   0x01, 0x01, 0x01, 0x03, 0x03, 0x07, 0x07, 0x07,
@@ -89,7 +87,7 @@ void Erat::init(uint64_t start,
   uint64_t dist = sieveSize_ * 30 + 6;
   segmentLow_ = start_ - rem;
   segmentHigh_ = checkedAdd(segmentLow_, dist);
-  segmentHigh_ = min(segmentHigh_, stop);
+  segmentHigh_ = std::min(segmentHigh_, stop);
 
   initErat();
 }
@@ -188,7 +186,7 @@ void Erat::sieveSegment()
     uint64_t dist = sieveSize_ * 30;
     segmentLow_ = checkedAdd(segmentLow_, dist);
     segmentHigh_ = checkedAdd(segmentHigh_, dist);
-    segmentHigh_ = min(segmentHigh_, stop_);
+    segmentHigh_ = std::min(segmentHigh_, stop_);
   }
 }
 
@@ -207,7 +205,7 @@ void Erat::sieveLastSegment()
   // unset bytes > stop
   uint64_t bytes = sieveSize_ % 8;
   bytes = (8 - bytes) % 8;
-  fill_n(&sieve_[sieveSize_], bytes, (uint8_t) 0);
+  std::fill_n(&sieve_[sieveSize_], bytes, (uint8_t) 0);
 
   segmentLow_ = stop_;
 }

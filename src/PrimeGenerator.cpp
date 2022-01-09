@@ -6,7 +6,7 @@
 ///         returns the primes. When there are no more primes left in
 ///         the vector PrimeGenerator generates new primes.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -26,12 +26,12 @@
 #include <cassert>
 #include <vector>
 
-using namespace std;
+using std::size_t;
 
 namespace {
 
 /// First 128 primes
-const array<uint64_t, 128> smallPrimes =
+const std::array<uint64_t, 128> smallPrimes =
 {
     2,   3,   5,   7,  11,  13,  17,  19,  23,  29,
    31,  37,  41,  43,  47,  53,  59,  61,  67,  71,
@@ -49,7 +49,7 @@ const array<uint64_t, 128> smallPrimes =
 };
 
 /// Number of primes <= n
-const array<uint8_t, 720> primePi =
+const std::array<uint8_t, 720> primePi =
 {
     0,   0,   1,   2,   2,   3,   3,   4,   4,   4,   4,   5,   5,   6,   6,
     6,   6,   7,   7,   8,   8,   8,   8,   9,   9,   9,   9,   9,   9,  10,
@@ -110,7 +110,7 @@ PrimeGenerator::PrimeGenerator(uint64_t start, uint64_t stop) :
 { }
 
 /// Used by iterator::prev_prime()
-void PrimeGenerator::init(vector<uint64_t>& primes)
+void PrimeGenerator::init(std::vector<uint64_t>& primes)
 {
   size_t size = primeCountApprox(start_, stop_);
   primes.reserve(size);
@@ -129,7 +129,7 @@ void PrimeGenerator::init(vector<uint64_t>& primes)
 }
 
 /// Used by iterator::next_prime()
-void PrimeGenerator::init(vector<uint64_t>& primes, size_t* size)
+void PrimeGenerator::init(std::vector<uint64_t>& primes, size_t* size)
 {
   if (start_ <= maxCachedPrime())
   {
@@ -139,9 +139,9 @@ void PrimeGenerator::init(vector<uint64_t>& primes, size_t* size)
     *size = b - a;
     assert(*size <= primes.size());
 
-    copy(smallPrimes.begin() + a,
-         smallPrimes.begin() + b,
-         primes.begin());
+    std::copy(smallPrimes.begin() + a,
+              smallPrimes.begin() + b,
+              primes.begin());
   }
 
   initErat();
@@ -150,7 +150,7 @@ void PrimeGenerator::init(vector<uint64_t>& primes, size_t* size)
 void PrimeGenerator::initErat()
 {
   uint64_t startErat = maxCachedPrime() + 1;
-  startErat = max(startErat, start_);
+  startErat = std::max(startErat, start_);
   isInit_ = true;
 
   if (startErat <= stop_)
@@ -208,7 +208,7 @@ void PrimeGenerator::sieveSegment()
 }
 
 /// Used by iterator::prev_prime()
-bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes)
+bool PrimeGenerator::sieveSegment(std::vector<uint64_t>& primes)
 {
   if (!isInit_)
     init(primes);
@@ -223,7 +223,7 @@ bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes)
 }
 
 /// Used by iterator::next_prime()
-bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes, size_t* size)
+bool PrimeGenerator::sieveSegment(std::vector<uint64_t>& primes, size_t* size)
 {
   *size = 0;
 
@@ -242,7 +242,7 @@ bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes, size_t* size)
 
   // primesieve only supports primes < 2^64. In case the next
   // prime would be > 2^64 we simply return UINT64_MAX.
-  if (stop_ >= numeric_limits<uint64_t>::max())
+  if (stop_ >= std::numeric_limits<uint64_t>::max())
   {
     primes[0] = ~0ull;
     *size = 1;
@@ -258,7 +258,7 @@ bool PrimeGenerator::sieveSegment(vector<uint64_t>& primes, size_t* size)
 /// over the primes inside [a, b] we need to generate new
 /// primes which incurs an initialization overhead of O(sqrt(n)).
 ///
-void PrimeGenerator::fill(vector<uint64_t>& primes)
+void PrimeGenerator::fill(std::vector<uint64_t>& primes)
 {
   while (sieveSegment(primes))
   {
@@ -282,7 +282,7 @@ void PrimeGenerator::fill(vector<uint64_t>& primes)
 /// this reason iterator::next_prime() runs up to 2x faster
 /// than iterator::prev_prime().
 ///
-void PrimeGenerator::fill(vector<uint64_t>& primes,
+void PrimeGenerator::fill(std::vector<uint64_t>& primes,
                           size_t* size)
 {
   do

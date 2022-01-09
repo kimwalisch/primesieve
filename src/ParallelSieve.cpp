@@ -23,7 +23,7 @@
 #include <mutex>
 #include <vector>
 
-using namespace std;
+using std::size_t;
 using namespace primesieve;
 
 namespace {
@@ -47,8 +47,8 @@ ParallelSieve::ParallelSieve()
 
 int ParallelSieve::getMaxThreads()
 {
-  int maxThreads = thread::hardware_concurrency();
-  return max(1, maxThreads);
+  int maxThreads = std::thread::hardware_concurrency();
+  return std::max(1, maxThreads);
 }
 
 int ParallelSieve::getNumThreads() const
@@ -70,7 +70,7 @@ int ParallelSieve::idealNumThreads() const
     return 1;
 
   uint64_t threshold = isqrt(stop_) / 5;
-  threshold = max(threshold, config::MIN_THREAD_DISTANCE);
+  threshold = std::max(threshold, config::MIN_THREAD_DISTANCE);
   uint64_t threads = getDistance() / threshold;
   threads = inBetween(1, threads, numThreads_);
 
@@ -85,17 +85,17 @@ uint64_t ParallelSieve::getThreadDistance(int threads) const
   uint64_t dist = getDistance();
   uint64_t balanced = isqrt(stop_) * 1000;
   uint64_t unbalanced = dist / threads;
-  uint64_t fastest = min(balanced, unbalanced);
+  uint64_t fastest = std::min(balanced, unbalanced);
   uint64_t iters = dist / fastest;
 
   // The number of iterations should always be
   // a multiple of threads in order to ensure
   // all threads finish nearly at the same time.
   iters = (iters / threads) * threads;
-  iters = max(iters, (uint64_t) threads);
+  iters = std::max(iters, (uint64_t) threads);
 
   uint64_t threadDist = ((dist - 1) / iters) + 1;
-  threadDist = max(threadDist, config::MIN_THREAD_DISTANCE);
+  threadDist = std::max(threadDist, config::MIN_THREAD_DISTANCE);
   threadDist += 30 - threadDist % 30;
 
   return threadDist;
@@ -117,7 +117,7 @@ uint64_t ParallelSieve::align(uint64_t n) const
 /// Print sieving status to stdout
 bool ParallelSieve::tryUpdateStatus(uint64_t dist)
 {
-  unique_lock<mutex> lock(mutex_, try_to_lock);
+  std::unique_lock<std::mutex> lock(mutex_, std::try_to_lock);
 
   if (lock.owns_lock())
     updateStatus(dist);
@@ -142,12 +142,12 @@ void ParallelSieve::sieve()
   else
   {
     setStatus(0);
-    auto t1 = chrono::system_clock::now();
+    auto t1 = std::chrono::system_clock::now();
     uint64_t dist = getDistance();
     uint64_t threadDist = getThreadDistance(threads);
     uint64_t iters = ((dist - 1) / threadDist) + 1;
     threads = inBetween(1, threads, iters);
-    atomic<uint64_t> a(0);
+    std::atomic<uint64_t> a(0);
 
     // Each thread executes 1 task
     auto task = [&]()
@@ -167,7 +167,7 @@ void ParallelSieve::sieve()
       counts_t counts;
       counts.fill(0);
 
-      while ((i = a.fetch_add(1, memory_order_relaxed)) < iters)
+      while ((i = a.fetch_add(1, std::memory_order_relaxed)) < iters)
       {
         uint64_t start = start_ + threadDist * i;
         uint64_t stop = checkedAdd(start, threadDist);
@@ -184,17 +184,17 @@ void ParallelSieve::sieve()
       return counts;
     };
 
-    vector<future<counts_t>> futures;
+    std::vector<std::future<counts_t>> futures;
     futures.reserve(threads);
 
     for (int t = 0; t < threads; t++)
-      futures.emplace_back(async(launch::async, task));
+      futures.emplace_back(std::async(std::launch::async, task));
 
     for (auto& f : futures)
       counts_ += f.get();
 
-    auto t2 = chrono::system_clock::now();
-    chrono::duration<double> seconds = t2 - t1;
+    auto t2 = std::chrono::system_clock::now();
+    std::chrono::duration<double> seconds = t2 - t1;
     seconds_ = seconds.count();
     setStatus(100);
   }

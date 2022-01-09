@@ -2,7 +2,7 @@
 /// @file   count_primes1.cpp
 /// @brief  Count the primes up to 10^9.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -16,7 +16,6 @@
 #include <cstdlib>
 #include <cmath>
 
-using namespace std;
 using namespace primesieve;
 
 /// Correct pi(x) values to compare with test results
@@ -35,14 +34,14 @@ const uint64_t pix[9] =
 
 void check(bool OK)
 {
-  cout << "   " << (OK ? "OK" : "ERROR") << "\n";
+  std::cout << "   " << (OK ? "OK" : "ERROR") << "\n";
   if (!OK)
-    exit(1);
+    std::exit(1);
 }
 
 int main()
 {
-  cout << left;
+  std::cout << std::left;
   ParallelSieve ps;
   ps.setStart(0);
   ps.setStop(0);
@@ -52,12 +51,12 @@ int main()
   for (int i = 1; i <= 9; i++)
   {
     count += ps.countPrimes(ps.getStop() + 1, (uint64_t) pow(10.0, i));
-    cout << "pi(10^" << i << ") = " << setw(12) << count;
+    std::cout << "pi(10^" << i << ") = " << std::setw(12) << count;
     check(count == pix[i - 1]);
   }
 
-  cout << endl;
-  cout << "All tests passed successfully!" << endl;
+  std::cout << std::endl;
+  std::cout << "All tests passed successfully!" << std::endl;
 
   return 0;
 }

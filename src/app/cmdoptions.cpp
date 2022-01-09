@@ -3,7 +3,7 @@
 /// @brief  Parse command-line options for the primesieve console
 ///         (terminal) application.
 ///
-/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -28,7 +28,7 @@ void help(int exitCode);
 void test();
 void version();
 
-using namespace std;
+using std::size_t;
 using namespace primesieve;
 
 namespace {
@@ -61,32 +61,32 @@ enum IsParam
 };
 
 /// Command-line options
-map<string, std::pair<OptionID, IsParam>> optionMap =
+std::map<std::string, std::pair<OptionID, IsParam>> optionMap =
 {
-  { "-c",          make_pair(OPTION_COUNT, OPTIONAL_PARAM) },
-  { "--count",     make_pair(OPTION_COUNT, OPTIONAL_PARAM) },
-  { "--cpu-info",  make_pair(OPTION_CPU_INFO, NO_PARAM) },
-  { "-h",          make_pair(OPTION_HELP, NO_PARAM) },
-  { "--help",      make_pair(OPTION_HELP, NO_PARAM) },
-  { "-n",          make_pair(OPTION_NTH_PRIME, NO_PARAM) },
-  { "--nthprime",  make_pair(OPTION_NTH_PRIME, NO_PARAM) },
-  { "--nth-prime", make_pair(OPTION_NTH_PRIME, NO_PARAM) },
-  { "--no-status", make_pair(OPTION_NO_STATUS, NO_PARAM) },
-  { "--number",    make_pair(OPTION_NUMBER, REQUIRED_PARAM) },
-  { "-d",          make_pair(OPTION_DISTANCE, REQUIRED_PARAM) },
-  { "--dist",      make_pair(OPTION_DISTANCE, REQUIRED_PARAM) },
-  { "-p",          make_pair(OPTION_PRINT, OPTIONAL_PARAM) },
-  { "--print",     make_pair(OPTION_PRINT, OPTIONAL_PARAM) },
-  { "-q",          make_pair(OPTION_QUIET, NO_PARAM) },
-  { "--quiet",     make_pair(OPTION_QUIET, NO_PARAM) },
-  { "-s",          make_pair(OPTION_SIZE, REQUIRED_PARAM) },
-  { "--size",      make_pair(OPTION_SIZE, REQUIRED_PARAM) },
-  { "--test",      make_pair(OPTION_TEST, NO_PARAM) },
-  { "-t",          make_pair(OPTION_THREADS, REQUIRED_PARAM) },
-  { "--threads",   make_pair(OPTION_THREADS, REQUIRED_PARAM) },
-  { "--time",      make_pair(OPTION_TIME, NO_PARAM) },
-  { "-v",          make_pair(OPTION_VERSION, NO_PARAM) },
-  { "--version",   make_pair(OPTION_VERSION, NO_PARAM) }
+  { "-c",          std::make_pair(OPTION_COUNT, OPTIONAL_PARAM) },
+  { "--count",     std::make_pair(OPTION_COUNT, OPTIONAL_PARAM) },
+  { "--cpu-info",  std::make_pair(OPTION_CPU_INFO, NO_PARAM) },
+  { "-h",          std::make_pair(OPTION_HELP, NO_PARAM) },
+  { "--help",      std::make_pair(OPTION_HELP, NO_PARAM) },
+  { "-n",          std::make_pair(OPTION_NTH_PRIME, NO_PARAM) },
+  { "--nthprime",  std::make_pair(OPTION_NTH_PRIME, NO_PARAM) },
+  { "--nth-prime", std::make_pair(OPTION_NTH_PRIME, NO_PARAM) },
+  { "--no-status", std::make_pair(OPTION_NO_STATUS, NO_PARAM) },
+  { "--number",    std::make_pair(OPTION_NUMBER, REQUIRED_PARAM) },
+  { "-d",          std::make_pair(OPTION_DISTANCE, REQUIRED_PARAM) },
+  { "--dist",      std::make_pair(OPTION_DISTANCE, REQUIRED_PARAM) },
+  { "-p",          std::make_pair(OPTION_PRINT, OPTIONAL_PARAM) },
+  { "--print",     std::make_pair(OPTION_PRINT, OPTIONAL_PARAM) },
+  { "-q",          std::make_pair(OPTION_QUIET, NO_PARAM) },
+  { "--quiet",     std::make_pair(OPTION_QUIET, NO_PARAM) },
+  { "-s",          std::make_pair(OPTION_SIZE, REQUIRED_PARAM) },
+  { "--size",      std::make_pair(OPTION_SIZE, REQUIRED_PARAM) },
+  { "--test",      std::make_pair(OPTION_TEST, NO_PARAM) },
+  { "-t",          std::make_pair(OPTION_THREADS, REQUIRED_PARAM) },
+  { "--threads",   std::make_pair(OPTION_THREADS, REQUIRED_PARAM) },
+  { "--time",      std::make_pair(OPTION_TIME, NO_PARAM) },
+  { "-v",          std::make_pair(OPTION_VERSION, NO_PARAM) },
+  { "--version",   std::make_pair(OPTION_VERSION, NO_PARAM) }
 };
 
 /// Command-line option
@@ -96,9 +96,9 @@ struct Option
   // str = "--threads=32"
   // opt = "--threads"
   // val = "32"
-  string str;
-  string opt;
-  string val;
+  std::string str;
+  std::string opt;
+  std::string val;
 
   template <typename T>
   T getValue() const
@@ -115,7 +115,7 @@ struct Option
 /// Options start with "-" or "--", then
 /// follows a Latin ASCII character.
 ///
-bool isOption(const string& str)
+bool isOption(const std::string& str)
 {
   // Option of type: -o...
   if (str.size() >= 2 &&
@@ -173,7 +173,7 @@ Option parseOption(int argc, char* argv[], int& i)
     // if the value is not a vaild option.
     if (isParam == OPTIONAL_PARAM &&
         i + 1 < argc &&
-        !string(argv[i + 1]).empty() &&
+        !std::string(argv[i + 1]).empty() &&
         !isOption(argv[i + 1]))
     {
       i += 1;
@@ -192,7 +192,7 @@ Option parseOption(int argc, char* argv[], int& i)
       size_t pos = opt.str.find("=");
 
       // Option of type: --opt=N
-      if (pos != string::npos)
+      if (pos != std::string::npos)
       {
         opt.opt = opt.str.substr(0, pos);
         opt.val = opt.str.substr(pos + 1);
@@ -206,7 +206,7 @@ Option parseOption(int argc, char* argv[], int& i)
         // Option of type: --opt[N]
         pos = opt.str.find_first_of("0123456789");
 
-        if (pos == string::npos)
+        if (pos == std::string::npos)
           opt.opt = opt.str;
         else
         {
@@ -232,7 +232,7 @@ Option parseOption(int argc, char* argv[], int& i)
       opt.val = opt.str;
 
       // This is not a valid number
-      if (opt.str.find_first_of("0123456789") == string::npos)
+      if (opt.str.find_first_of("0123456789") == std::string::npos)
         throw primesieve_error("unrecognized option '" + opt.str + "'");
 
       // Prevent negative numbers as there are
@@ -308,64 +308,64 @@ void optionCpuInfo()
   const CpuInfo cpu;
 
   if (cpu.hasCpuName())
-    cout << cpu.cpuName() << endl;
+    std::cout << cpu.cpuName() << std::endl;
   else
-    cout << "CPU name: unknown" << endl;
+    std::cout << "CPU name: unknown" << std::endl;
 
   if (cpu.hasLogicalCpuCores())
-    cout << "Logical CPU cores: " << cpu.logicalCpuCores() << endl;
+    std::cout << "Logical CPU cores: " << cpu.logicalCpuCores() << std::endl;
   else
-    cout << "Logical CPU cores: unknown" << endl;
+    std::cout << "Logical CPU cores: unknown" << std::endl;
 
   if (cpu.hasL1Cache())
-    cout << "L1 cache size: " << (cpu.l1CacheBytes() >> 10) << " KiB" << endl;
+    std::cout << "L1 cache size: " << (cpu.l1CacheBytes() >> 10) << " KiB" << std::endl;
 
   if (cpu.hasL2Cache())
-    cout << "L2 cache size: " << (cpu.l2CacheBytes() >> 10) << " KiB" << endl;
+    std::cout << "L2 cache size: " << (cpu.l2CacheBytes() >> 10) << " KiB" << std::endl;
 
   if (cpu.hasL3Cache())
-    cout << "L3 cache size: " << (cpu.l3CacheBytes() >> 20) << " MiB" << endl;
+    std::cout << "L3 cache size: " << (cpu.l3CacheBytes() >> 20) << " MiB" << std::endl;
 
   if (cpu.hasL1Cache())
   {
     if (!cpu.hasL1Sharing())
-      cout << "L1 cache sharing: unknown" << endl;
+      std::cout << "L1 cache sharing: unknown" << std::endl;
     else
-      cout << "L1 cache sharing: " << cpu.l1Sharing()
-           << ((cpu.l1Sharing() > 1) ? " threads" : " thread") << endl;
+      std::cout << "L1 cache sharing: " << cpu.l1Sharing()
+                << ((cpu.l1Sharing() > 1) ? " threads" : " thread") << std::endl;
   }
 
   if (cpu.hasL2Cache())
   {
     if (!cpu.hasL2Sharing())
-      cout << "L2 cache sharing: unknown" << endl;
+      std::cout << "L2 cache sharing: unknown" << std::endl;
     else
-      cout << "L2 cache sharing: " << cpu.l2Sharing()
-           << ((cpu.l2Sharing() > 1) ? " threads" : " thread") << endl;
+      std::cout << "L2 cache sharing: " << cpu.l2Sharing()
+                << ((cpu.l2Sharing() > 1) ? " threads" : " thread") << std::endl;
   }
 
   if (cpu.hasL3Cache())
   {
     if (!cpu.hasL3Sharing())
-      cout << "L3 cache sharing: unknown" << endl;
+      std::cout << "L3 cache sharing: unknown" << std::endl;
     else
-      cout << "L3 cache sharing: " << cpu.l3Sharing()
-           << ((cpu.l3Sharing() > 1) ? " threads" : " thread") << endl;
+      std::cout << "L3 cache sharing: " << cpu.l3Sharing()
+                << ((cpu.l3Sharing() > 1) ? " threads" : " thread") << std::endl;
   }
 
   if (!cpu.hasL1Cache() &&
       !cpu.hasL2Cache() &&
       !cpu.hasL3Cache())
   {
-    cout << "L1 cache size: unknown" << endl;
-    cout << "L2 cache size: unknown" << endl;
-    cout << "L3 cache size: unknown" << endl;
-    cout << "L1 cache sharing: unknown" << endl;
-    cout << "L2 cache sharing: unknown" << endl;
-    cout << "L3 cache sharing: unknown" << endl;
+    std::cout << "L1 cache size: unknown" << std::endl;
+    std::cout << "L2 cache size: unknown" << std::endl;
+    std::cout << "L3 cache size: unknown" << std::endl;
+    std::cout << "L1 cache sharing: unknown" << std::endl;
+    std::cout << "L2 cache sharing: unknown" << std::endl;
+    std::cout << "L3 cache sharing: unknown" << std::endl;
   }
 
-  exit(0);
+  std::exit(0);
 }
 
 } // namespace

@@ -2,7 +2,7 @@
 /// @file   main.cpp
 /// @brief  primesieve console application.
 ///
-/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -18,20 +18,19 @@
 #include <iomanip>
 #include <string>
 
-using namespace std;
 using namespace primesieve;
 
 namespace {
 
 void printSettings(const ParallelSieve& ps)
 {
-  cout << "Sieve size = " << ps.getSieveSize() << " KiB" << endl;
-  cout << "Threads = " << ps.idealNumThreads() << endl;
+  std::cout << "Sieve size = " << ps.getSieveSize() << " KiB" << std::endl;
+  std::cout << "Threads = " << ps.idealNumThreads() << std::endl;
 }
 
 void printSeconds(double sec)
 {
-  cout << "Seconds: " << fixed << setprecision(3) << sec << endl;
+  std::cout << "Seconds: " << std::fixed << std::setprecision(3) << sec << std::endl;
 }
 
 /// Count & print primes and prime k-tuplets
@@ -61,7 +60,7 @@ void sieve(CmdOptions& opt)
 
   ps.sieve();
 
-  const array<string, 6> labels =
+  const std::array<std::string, 6> labels =
   {
     "Primes: ",
     "Twin primes: ",
@@ -85,9 +84,9 @@ void sieve(CmdOptions& opt)
     if (ps.isCount(i))
     {
       if (opt.quiet && cnt == 1)
-        cout << ps.getCount(i) << endl;
+        std::cout << ps.getCount(i) << std::endl;
       else
-        cout << labels[i] << ps.getCount(i) << endl;
+        std::cout << labels[i] << ps.getCount(i) << std::endl;
     }
   }
 }
@@ -110,7 +109,7 @@ void nthPrime(CmdOptions& opt)
   uint64_t start = numbers[1];
   uint64_t nthPrime = 0;
   ps.setStart(start);
-  ps.setStop(start + abs(n * 20));
+  ps.setStop(start + std::abs(n * 20));
 
   if (!opt.quiet)
     printSettings(ps);
@@ -121,9 +120,9 @@ void nthPrime(CmdOptions& opt)
     printSeconds(ps.getSeconds());
 
   if (opt.quiet)
-    cout << nthPrime << endl;
+    std::cout << nthPrime << std::endl;
   else
-    cout << "Nth prime: " << nthPrime << endl;
+    std::cout << "Nth prime: " << nthPrime << std::endl;
 }
 
 } // namespace
@@ -139,10 +138,10 @@ int main(int argc, char* argv[])
     else
       sieve(opt);
   }
-  catch (exception& e)
+  catch (std::exception& e)
   {
-    cerr << "primesieve: " << e.what() << endl
-         << "Try 'primesieve --help' for more information." << endl;
+    std::cerr << "primesieve: " << e.what() << std::endl
+              << "Try 'primesieve --help' for more information." << std::endl;
     return 1;
   }
 

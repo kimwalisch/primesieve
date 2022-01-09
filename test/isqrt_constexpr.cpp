@@ -2,7 +2,7 @@
 /// @file   isqrt_constexpr.cpp
 /// @brief  Test compile time square root function.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -13,8 +13,6 @@
 #include <stdint.h>
 #include <limits>
 #include <iostream>
-
-using namespace std;
 
 #if defined(BAD_ISQRT)
 
@@ -112,7 +110,7 @@ int main()
   static_assert(ctSqrt(std::numeric_limits<int64_t>::max()) == 3037000499ll, "ctSqrt(2^63-1) failed!");
   static_assert(ctSqrt(std::numeric_limits<uint64_t>::max()) == 4294967295ull, "ctSqrt(2^64-1) failed!");
 
-  cout << "All tests passed successfully!" << endl;
+  std::cout << "All tests passed successfully!" << std::endl;
 
   return 0;
 }

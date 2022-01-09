@@ -14,13 +14,11 @@
 #include <memory>
 #include <vector>
 
-using namespace std;
-
 void check(bool OK)
 {
-  cout << "   " << (OK ? "OK" : "ERROR") << "\n";
+  std::cout << "   " << (OK ? "OK" : "ERROR") << "\n";
   if (!OK)
-    exit(1);
+    std::exit(1);
 }
 
 int main()
@@ -42,7 +40,7 @@ int main()
   for (; prime < 1000000000ull; prime = it2.next_prime())
     sum += prime;
 
-  cout << "Sum of the primes below 10^9 = " << sum;
+  std::cout << "Sum of the primes below 10^9 = " << sum;
   check(sum == 24739512092254535ull);
 
   // test move assignment operator ///////////////////////////////////
@@ -64,21 +62,21 @@ int main()
   for (; prime < 1000000000ull; prime = it2.next_prime())
     sum += prime;
 
-  cout << "Sum of the primes below 10^9 = " << sum;
+  std::cout << "Sum of the primes below 10^9 = " << sum;
   check(sum == 24739512092254535ull);
 
   // test std::vector ////////////////////////////////////////////////
 
-  vector<primesieve::iterator> vect;
+  std::vector<primesieve::iterator> vect;
   vect.emplace_back(1000);
   prime = vect.back().prev_prime();
-  cout << "1st prime < 1000 = " << prime;
+  std::cout << "1st prime < 1000 = " << prime;
   check(prime == 997);
 
   it2.skipto(5);
   vect.emplace_back(std::move(it2));
   prime = vect.back().next_prime();
-  cout << "1st prime > 5 = " << prime;
+  std::cout << "1st prime > 5 = " << prime;
   check(prime == 7);
 
   return 0;

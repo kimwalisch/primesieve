@@ -3,7 +3,7 @@
 ///        Functions used to calculate the next start and stop
 ///        numbers for primesieve::iterator.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -19,7 +19,6 @@
 #include <cmath>
 #include <limits>
 
-using namespace std;
 using namespace primesieve;
 
 namespace {
@@ -28,13 +27,13 @@ uint64_t getNextDist(uint64_t n, uint64_t dist)
 {
   double x = (double) n;
   uint64_t tinyDist = PrimeGenerator::maxCachedPrime() * 4;
-  uint64_t minDist = (uint64_t) sqrt(x);
+  uint64_t minDist = (uint64_t) std::sqrt(x);
   uint64_t maxDist = 1ull << 60;
 
   dist *= 4;
-  dist = max(dist, tinyDist);
-  dist = max(dist, minDist);
-  dist = min(dist, maxDist);
+  dist = std::max(dist, tinyDist);
+  dist = std::max(dist, minDist);
+  dist = std::min(dist, maxDist);
 
   return dist;
 }
@@ -42,7 +41,7 @@ uint64_t getNextDist(uint64_t n, uint64_t dist)
 uint64_t getPrevDist(uint64_t n, uint64_t dist)
 {
   double x = (double) n;
-  x = max(x, 10.0);
+  x = std::max(x, 10.0);
   double logx = ceil(log(x));
 
   uint64_t minDist = config::MIN_CACHE_ITERATOR;
@@ -56,10 +55,10 @@ uint64_t getPrevDist(uint64_t n, uint64_t dist)
   uint64_t defaultDist = (uint64_t) (sqrt(x) * 2);
 
   dist *= 4;
-  dist = max(dist, tinyDist);
-  dist = min(dist, minDist);
-  dist = max(dist, defaultDist);
-  dist = min(dist, maxDist);
+  dist = std::max(dist, tinyDist);
+  dist = std::min(dist, minDist);
+  dist = std::max(dist, defaultDist);
+  dist = std::min(dist, maxDist);
 
   return dist;
 }
@@ -68,7 +67,7 @@ bool useStopHint(uint64_t start,
                  uint64_t stopHint)
 {
   return stopHint >= start &&
-         stopHint < numeric_limits<uint64_t>::max();
+         stopHint < std::numeric_limits<uint64_t>::max();
 }
 
 bool useStopHint(uint64_t start,
