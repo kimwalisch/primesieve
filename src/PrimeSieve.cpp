@@ -22,7 +22,6 @@
 #include <array>
 #include <chrono>
 #include <iostream>
-#include <string>
 
 namespace {
 
@@ -31,7 +30,7 @@ struct SmallPrime
   uint64_t first;
   uint64_t last;
   int index;
-  std::string str;
+  const char* str;
 };
 
 const std::array<SmallPrime, 8> smallPrimes
