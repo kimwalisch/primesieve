@@ -554,7 +554,7 @@ std::string getCpuName(const std::string& line)
   // model name : Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz
   // Processor  : ARMv7 Processor rev 5 (v7l)
   // cpu        : POWER9 (raw), altivec supported
-  static const std::set<std::string> cpuLabels
+  const std::set<std::string> cpuLabels
   {
     "model name",
     "Processor",
