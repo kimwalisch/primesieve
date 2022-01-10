@@ -186,7 +186,7 @@ void PreSieve::init(uint64_t start,
     for (const auto& primes : bufferPrimes)
     {
       uint64_t bufferBytes = 1;
-      for (auto prime : primes)
+      for (uint64_t prime : primes)
         bufferBytes *= prime;
       buffersDist_ += bufferBytes * 30;
     }
@@ -210,7 +210,7 @@ void PreSieve::initBuffers()
   {
     uint64_t product = 30;
 
-    for (auto prime : bufferPrimes[i])
+    for (uint64_t prime : bufferPrimes[i])
       product *= prime;
 
     uint64_t start = product;
