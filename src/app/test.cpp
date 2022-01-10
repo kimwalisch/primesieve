@@ -60,7 +60,7 @@ void countSmallPrimes()
   for (size_t i = 0; i < primePi.size(); i++)
   {
     uint64_t start = ps.getStop() + 1;
-    uint64_t stop = (uint64_t) pow(10.0, i + 1);
+    uint64_t stop = (uint64_t) std::pow(10.0, i + 1);
     count += ps.countPrimes(start, stop);
     std::ostringstream oss;
     oss << "PrimePi(10^" << i + 1 << ") = " << count;
@@ -83,7 +83,7 @@ void countPrimeKTuplets()
   for (size_t i = 0; i < kTupletCounts.size(); i++)
   {
     size_t j = i + 12;
-    uint64_t start = (uint64_t) pow(10.0, j);
+    uint64_t start = (uint64_t) std::pow(10.0, j);
     uint64_t stop = start + (uint64_t) 1e10;
     int k = (int) (i + 2);
     int countKTuplet = COUNT_PRIMES << (k - 1);
@@ -114,7 +114,7 @@ void countLargePrimes()
   for (size_t i = 0; i < primePi.size(); i++)
   {
     size_t j = i + 12;
-    uint64_t start = (uint64_t) pow(10.0, j);
+    uint64_t start = (uint64_t) std::pow(10.0, j);
     uint64_t stop = start + (uint64_t) 1e10;
     uint64_t count = count_primes(start, stop);
     std::cout << "PrimePi(10^" << j << ", 10^" << j << "+10^10) = " << count;
@@ -172,7 +172,7 @@ void smallNthPrimes()
   {
     uint64_t oldN = n;
     uint64_t oldNthPrime = nthPrime;
-    n = (uint64_t) pow(10.0, i + 1);
+    n = (uint64_t) std::pow(10.0, i + 1);
     nthPrime = ps.nthPrime(n - oldN, oldNthPrime);
     std::ostringstream oss;
     oss << "NthPrime(10^" << i + 1 << ") = " << nthPrime;
