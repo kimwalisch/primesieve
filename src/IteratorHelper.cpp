@@ -42,7 +42,7 @@ uint64_t getPrevDist(uint64_t n, uint64_t dist)
 {
   double x = (double) n;
   x = std::max(x, 10.0);
-  double logx = ceil(log(x));
+  double logx = std::ceil(std::log(x));
 
   uint64_t minDist = config::MIN_CACHE_ITERATOR;
   uint64_t maxDist = config::MAX_CACHE_ITERATOR;
@@ -52,7 +52,7 @@ uint64_t getPrevDist(uint64_t n, uint64_t dist)
   maxDist *= (uint64_t) logx;
 
   uint64_t tinyDist = PrimeGenerator::maxCachedPrime() * 4;
-  uint64_t defaultDist = (uint64_t) (sqrt(x) * 2);
+  uint64_t defaultDist = (uint64_t) (std::sqrt(x) * 2);
 
   dist *= 4;
   dist = std::max(dist, tinyDist);
