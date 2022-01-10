@@ -40,7 +40,7 @@ public:
 private:
   uint64_t buffersDist_ = 0;
   uint64_t maxPrime_ = 13;
-  std::array<std::vector<uint8_t>, 4> buffers_;
+  std::array<std::vector<uint8_t>, 8> buffers_;
   void initBuffers();
   static void preSieveSmall(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow);
   void preSieveLarge(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
