@@ -149,7 +149,7 @@ uint64_t Erat::byteRemainder(uint64_t n)
   return n;
 }
 
-/// Pre-sieve multiples of small primes e.g. <= 59
+/// Pre-sieve multiples of small primes < 100
 /// to speed up the sieve of Eratosthenes
 ///
 void Erat::preSieve()

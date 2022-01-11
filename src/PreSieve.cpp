@@ -1,15 +1,19 @@
 ///
 /// @file   PreSieve.cpp
-/// @brief  Pre-sieve multiples of small primes <= 59 to speed up the
+/// @brief  Pre-sieve multiples of small primes < 100 to speed up the
 ///         sieve of Eratosthenes. The idea is to allocate several
 ///         arrays (buffers_) and remove the multiples of small primes
 ///         from them at initialization. Each buffer is assigned
 ///         different primes, for example:
 ///
-///         Buffer 0 removes multiplies of:  7, 19, 23, 29
-///         Buffer 1 removes multiplies of: 11, 13, 17, 37
-///         Buffer 2 removes multiplies of: 31, 47, 59
-///         Buffer 3 removes multiplies of: 41, 43, 53
+///         Buffer 0 removes multiplies of: {  7, 67, 71 }
+///         Buffer 1 removes multiplies of: { 11, 41, 73 }
+///         Buffer 2 removes multiplies of: { 13, 43, 59 }
+///         Buffer 3 removes multiplies of: { 17, 37, 53 }
+///         Buffer 4 removes multiplies of: { 19, 29, 61 }
+///         Buffer 5 removes multiplies of: { 23, 31, 47 }
+///         Buffer 6 removes multiplies of: { 79, 97 }
+///         Buffer 7 removes multiplies of: { 83, 89 }
 ///
 ///         Then whilst sieving, we perform a bitwise AND on the
 ///         buffers_ arrays and store the result in the sieve array.
@@ -143,25 +147,34 @@ const std::array<uint8_t, 7*11*13> buffer_7_11_13 =
   0xc7
 };
 
-/// Pre-sieve with the primes <= 59
-const std::array<std::vector<uint64_t>, 4> bufferPrimes =
+/// Pre-sieve with the primes < 100
+const std::array<std::vector<uint64_t>, 8> bufferPrimes =
 {{
-  {  7, 19, 23, 29 }, // 89 KiB
-  { 11, 13, 17, 37 }, // 90 KiB
-  { 31, 47, 59 },     // 86 KiB
-  { 41, 43, 53 }      // 93 KiB
+  {  7, 67, 71 },  // 32 KiB
+  { 11, 41, 73 },  // 32 KiB
+  { 13, 43, 59 },  // 32 KiB
+  { 17, 37, 53 },  // 32 KiB
+  { 19, 29, 61 },  // 32 KiB
+  { 23, 31, 47 },  // 32 KiB
+  { 79, 97 },      //  8 KiB
+  { 83, 89 }       //  7 KiB
 }};
 
 void andBuffers(const uint8_t* __restrict buf1,
                 const uint8_t* __restrict buf2,
                 const uint8_t* __restrict buf3,
                 const uint8_t* __restrict buf4,
+                const uint8_t* __restrict buf5,
+                const uint8_t* __restrict buf6,
+                const uint8_t* __restrict buf7,
+                const uint8_t* __restrict buf8,
                 uint8_t* __restrict output,
                 size_t bytes)
 {
   // This loop should be auto-vectorized
   for (size_t i = 0; i < bytes; i++)
-    output[i] = buf1[i] & buf2[i] & buf3[i] & buf4[i];
+    output[i] = buf1[i] & buf2[i] & buf3[i] & buf4[i]
+              & buf5[i] & buf6[i] & buf7[i] & buf8[i];
 }
 
 } // namespace
@@ -239,16 +252,25 @@ void PreSieve::preSieve(uint8_t* sieve,
   else
     preSieveLarge(sieve, sieveSize, segmentLow);
 
-  // Pre-sieving removes the primes <= 59. We
+  // Pre-sieving removes the primes < 100. We
   // have to undo that work and reset these bits
   // to 1 (but 49 = 7 * 7 is not a prime).
   uint8_t bit49 = 1 << 4;
+  uint8_t bit77 = 1 << 3;
+  uint8_t bit91 = 1 << 7;
+  uint8_t bit119 = 1 << 6;
+  uint8_t bit121 = 1 << 7;
+
   size_t i = 0;
 
   if (segmentLow < 30)
     sieve[i++] = 0xff;
   if (segmentLow < 60)
     sieve[i++] = 0xff ^ bit49;
+  if (segmentLow < 90)
+    sieve[i++] = 0xff ^ bit77 ^ bit91;
+  if (segmentLow < 120)
+    sieve[i++] = 0xff ^ bit119 ^ bit121;
 }
 
 /// Pre-sieve with the primes <= 13
@@ -279,13 +301,13 @@ void PreSieve::preSieveSmall(uint8_t* sieve,
   }
 }
 
-/// Pre-sieve with the primes <= 59
+/// Pre-sieve with the primes < 100
 void PreSieve::preSieveLarge(uint8_t* sieve,
                              uint64_t sieveSize,
                              uint64_t segmentLow) const
 {
   uint64_t offset = 0;
-  std::array<uint64_t, 4> pos;
+  std::array<uint64_t, 8> pos;
   assert(pos.size() == buffers_.size());
 
   for (size_t i = 0; i < buffers_.size(); i++)
@@ -303,6 +325,10 @@ void PreSieve::preSieveLarge(uint8_t* sieve,
                &buffers_[1][pos[1]],
                &buffers_[2][pos[2]],
                &buffers_[3][pos[3]],
+               &buffers_[4][pos[4]],
+               &buffers_[5][pos[5]],
+               &buffers_[6][pos[6]],
+               &buffers_[7][pos[7]],
                &sieve[offset],
                bytesToCopy);
 

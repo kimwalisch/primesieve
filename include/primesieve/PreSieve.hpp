@@ -1,15 +1,19 @@
 ///
 /// @file   PreSieve.hpp
-/// @brief  Pre-sieve multiples of small primes <= 59 to speed up the
+/// @brief  Pre-sieve multiples of small primes < 100 to speed up the
 ///         sieve of Eratosthenes. The idea is to allocate several
 ///         arrays (buffers_) and remove the multiples of small primes
 ///         from them at initialization. Each buffer is assigned
 ///         different primes, for example:
 ///
-///         Buffer 0 removes multiplies of:  7, 19, 23, 29
-///         Buffer 1 removes multiplies of: 11, 13, 17, 37
-///         Buffer 2 removes multiplies of: 31, 47, 59
-///         Buffer 3 removes multiplies of: 41, 43, 53
+///         Buffer 0 removes multiplies of: {  7, 67, 71 }
+///         Buffer 1 removes multiplies of: { 11, 41, 73 }
+///         Buffer 2 removes multiplies of: { 13, 43, 59 }
+///         Buffer 3 removes multiplies of: { 17, 37, 53 }
+///         Buffer 4 removes multiplies of: { 19, 29, 61 }
+///         Buffer 5 removes multiplies of: { 23, 31, 47 }
+///         Buffer 6 removes multiplies of: { 79, 97 }
+///         Buffer 7 removes multiplies of: { 83, 89 }
 ///
 ///         Then whilst sieving, we perform a bitwise AND on the
 ///         buffers_ arrays and store the result in the sieve array.
@@ -40,7 +44,7 @@ public:
 private:
   uint64_t buffersDist_ = 0;
   uint64_t maxPrime_ = 13;
-  std::array<std::vector<uint8_t>, 4> buffers_;
+  std::array<std::vector<uint8_t>, 8> buffers_;
   void initBuffers();
   static void preSieveSmall(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow);
   void preSieveLarge(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
