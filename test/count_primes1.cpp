@@ -19,7 +19,7 @@
 using namespace primesieve;
 
 /// Correct pi(x) values to compare with test results
-const uint64_t pix[9] =
+const std::array<uint64_t, 9> pix =
 {
   4,        // pi(10^1)
   25,       // pi(10^2)
@@ -47,13 +47,22 @@ int main()
   ps.setStop(0);
   uint64_t count = 0;
 
-  // pi(x) with x = 10^i for i = 1 to 9
-  for (int i = 1; i <= 9; i++)
+  // pi(x) with x = 10^(i+1)
+  for (size_t i = 0; i < pix.size(); i++)
   {
-    count += ps.countPrimes(ps.getStop() + 1, (uint64_t) std::pow(10.0, i));
-    std::cout << "pi(10^" << i << ") = " << std::setw(12) << count;
-    check(count == pix[i - 1]);
+    count += ps.countPrimes(ps.getStop() + 1, (uint64_t) std::pow(10.0, i + 1));
+    std::cout << "pi(10^" << i + 1 << ") = " << std::setw(12) << count;
+    check(count == pix[i]);
   }
+
+  // Test PreSieve with bufferPrimes < 100.
+  // The thread interval must be sufficiently large
+  // otherwise minimal pre-sieving is used. 
+  // Using a single thread increases thread interval.
+  ps.setNumThreads(1);
+  count = ps.countPrimes(0, (uint64_t) std::pow(10.0, 9));
+  std::cout << "pi(10^9) = " << std::setw(12) << count;
+  check(count == 50847534);
 
   std::cout << std::endl;
   std::cout << "All tests passed successfully!" << std::endl;
