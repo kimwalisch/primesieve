@@ -6,11 +6,11 @@
 ///         from them at initialization. Each buffer is assigned
 ///         different primes, for example:
 ///
-///         Buffer 0 removes multiplies of: {  7, 61, 73 }
-///         Buffer 1 removes multiplies of: { 11, 53, 59 }
-///         Buffer 2 removes multiplies of: { 13, 37, 71 }
-///         Buffer 3 removes multiplies of: { 17, 29, 67 }
-///         Buffer 4 removes multiplies of: { 19, 41, 43 }
+///         Buffer 0 removes multiplies of: {  7, 67, 71 }
+///         Buffer 1 removes multiplies of: { 11, 41, 73 }
+///         Buffer 2 removes multiplies of: { 13, 43, 59 }
+///         Buffer 3 removes multiplies of: { 17, 37, 53 }
+///         Buffer 4 removes multiplies of: { 19, 29, 61 }
 ///         Buffer 5 removes multiplies of: { 23, 31, 47 }
 ///         Buffer 6 removes multiplies of: { 79, 97 }
 ///         Buffer 7 removes multiplies of: { 83, 89 }

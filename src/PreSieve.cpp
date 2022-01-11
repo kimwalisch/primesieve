@@ -6,11 +6,11 @@
 ///         from them at initialization. Each buffer is assigned
 ///         different primes, for example:
 ///
-///         Buffer 0 removes multiplies of: {  7, 61, 73 }
-///         Buffer 1 removes multiplies of: { 11, 53, 59 }
-///         Buffer 2 removes multiplies of: { 13, 37, 71 }
-///         Buffer 3 removes multiplies of: { 17, 29, 67 }
-///         Buffer 4 removes multiplies of: { 19, 41, 43 }
+///         Buffer 0 removes multiplies of: {  7, 67, 71 }
+///         Buffer 1 removes multiplies of: { 11, 41, 73 }
+///         Buffer 2 removes multiplies of: { 13, 43, 59 }
+///         Buffer 3 removes multiplies of: { 17, 37, 53 }
+///         Buffer 4 removes multiplies of: { 19, 29, 61 }
 ///         Buffer 5 removes multiplies of: { 23, 31, 47 }
 ///         Buffer 6 removes multiplies of: { 79, 97 }
 ///         Buffer 7 removes multiplies of: { 83, 89 }
@@ -150,12 +150,12 @@ const std::array<uint8_t, 7*11*13> buffer_7_11_13 =
 /// Pre-sieve with the primes < 100
 const std::array<std::vector<uint64_t>, 8> bufferPrimes =
 {{
-  {  7, 61, 73 },  // 31 KiB
-  { 11, 53, 59 },  // 34 KiB
-  { 13, 37, 71 },  // 34 KiB
-  { 17, 29, 67 },  // 33 KiB
-  { 19, 41, 43 },  // 33 KiB
-  { 23, 31, 47 },  // 33 KiB
+  {  7, 67, 71 },  // 32 KiB
+  { 11, 41, 73 },  // 32 KiB
+  { 13, 43, 59 },  // 32 KiB
+  { 17, 37, 53 },  // 32 KiB
+  { 19, 29, 61 },  // 32 KiB
+  { 23, 31, 47 },  // 32 KiB
   { 79, 97 },      //  8 KiB
   { 83, 89 }       //  7 KiB
 }};
@@ -258,6 +258,9 @@ void PreSieve::preSieve(uint8_t* sieve,
   uint8_t bit49 = 1 << 4;
   uint8_t bit77 = 1 << 3;
   uint8_t bit91 = 1 << 7;
+  uint8_t bit119 = 1 << 6;
+  uint8_t bit121 = 1 << 7;
+
   size_t i = 0;
 
   if (segmentLow < 30)
@@ -266,6 +269,8 @@ void PreSieve::preSieve(uint8_t* sieve,
     sieve[i++] = 0xff ^ bit49;
   if (segmentLow < 90)
     sieve[i++] = 0xff ^ bit77 ^ bit91;
+  if (segmentLow < 120)
+    sieve[i++] = 0xff ^ bit119 ^ bit121;
 }
 
 /// Pre-sieve with the primes <= 13
