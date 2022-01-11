@@ -1,7 +1,7 @@
-Changes in version 7.8, 07/01/2022
+Changes in version 7.8, 11/01/2022
 ==================================
 
-primesieve can now pre-sieve the multiples of primes <= 59
+primesieve can now pre-sieve the multiples of primes < 100
 (previously <= 19) using about the same amount of memory. Instead
 of using a single large pre-sieved buffer primesieve now uses
 4 smaller pre-sieved buffers which are bitwise AND together before

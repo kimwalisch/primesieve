@@ -1,15 +1,19 @@
 ///
 /// @file   PreSieve.hpp
-/// @brief  Pre-sieve multiples of small primes <= 59 to speed up the
+/// @brief  Pre-sieve multiples of small primes < 100 to speed up the
 ///         sieve of Eratosthenes. The idea is to allocate several
 ///         arrays (buffers_) and remove the multiples of small primes
 ///         from them at initialization. Each buffer is assigned
 ///         different primes, for example:
 ///
-///         Buffer 0 removes multiplies of:  7, 19, 23, 29
-///         Buffer 1 removes multiplies of: 11, 13, 17, 37
-///         Buffer 2 removes multiplies of: 31, 47, 59
-///         Buffer 3 removes multiplies of: 41, 43, 53
+///         Buffer 0 removes multiplies of: {  7, 61, 73 }
+///         Buffer 1 removes multiplies of: { 11, 53, 59 }
+///         Buffer 2 removes multiplies of: { 13, 37, 71 }
+///         Buffer 3 removes multiplies of: { 17, 29, 67 }
+///         Buffer 4 removes multiplies of: { 19, 41, 43 }
+///         Buffer 5 removes multiplies of: { 23, 31, 47 }
+///         Buffer 6 removes multiplies of: { 79, 97 }
+///         Buffer 7 removes multiplies of: { 83, 89 }
 ///
 ///         Then whilst sieving, we perform a bitwise AND on the
 ///         buffers_ arrays and store the result in the sieve array.
