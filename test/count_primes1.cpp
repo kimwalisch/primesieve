@@ -50,7 +50,7 @@ int main()
   // pi(x) with x = 10^i for i = 1 to 9
   for (int i = 1; i <= 9; i++)
   {
-    count += ps.countPrimes(ps.getStop() + 1, (uint64_t) pow(10.0, i));
+    count += ps.countPrimes(ps.getStop() + 1, (uint64_t) std::pow(10.0, i));
     std::cout << "pi(10^" << i << ") = " << std::setw(12) << count;
     check(count == pix[i - 1]);
   }

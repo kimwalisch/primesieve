@@ -45,7 +45,7 @@ int main()
   {
     size_t j = i + 12;
     std::cout << "Sieving the primes within [10^" << j << ", 10^" << j << " + 10^8]" << std::endl;
-    uint64_t start = (uint64_t) pow(10.0, j);
+    uint64_t start = (uint64_t) std::pow(10.0, j);
     uint64_t stop = start + (uint64_t) 1e8;
     uint64_t count = count_primes(start, stop);
     std::cout << "\rPrime count: " << std::setw(7) << count;

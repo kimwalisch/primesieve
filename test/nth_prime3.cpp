@@ -44,8 +44,8 @@ int main()
   {
     for (int j = 8; j <= 10; j++)
     {
-      int64_t n = (int64_t) pow(10.0, i);
-      int64_t start = (int64_t) pow(10.0, j);
+      int64_t n = (int64_t) std::pow(10.0, i);
+      int64_t start = (int64_t) std::pow(10.0, j);
       int64_t iters = 5;
 
       std::cout << "nth_prime_test(" << n << ", " << start << ", " << iters << ")";
