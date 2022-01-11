@@ -11,10 +11,11 @@
 #include <primesieve/ParallelSieve.hpp>
 
 #include <stdint.h>
+#include <array>
+#include <cmath>
+#include <cstdlib>
 #include <iostream>
 #include <iomanip>
-#include <cstdlib>
-#include <cmath>
 
 using namespace primesieve;
 
