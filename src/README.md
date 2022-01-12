@@ -52,11 +52,12 @@
   buckets and only when there are no more buckets in the stock the
   MemoryPool will allocate new buckets.
 
-* **PreSieve** is used to pre-sieve multiples of small primes ≤ 19
+* **PreSieve** is used to pre-sieve multiples of small primes < 100
   to speed up the sieve of Eratosthenes. Upon creation the
-  multiples of small primes are removed from a buffer. Later this
-  buffer is simply copied to the sieve array to remove (pre-sieve)
-  the multiples of small primes.
+  multiples of small primes are removed from multiple buffers. Then
+  whilst sieving, we perform a bitwise AND on the buffer arrays
+  and store the result in the sieve array. Pre-sieving provides a
+  speedup of up to 30% when sieving the primes < 10^10.
 
 * **SievingPrimes** is derived from Erat. The SievingPrimes class is used
   to generate the sieving primes ≤ sqrt(stop). SievingPrimes is used

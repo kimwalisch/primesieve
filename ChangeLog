@@ -1,16 +1,17 @@
-Changes in version 7.8, 11/01/2022
+Changes in version 7.8, 12/01/2022
 ==================================
 
-primesieve can now pre-sieve the multiples of primes < 100
-(previously <= 19) using about the same amount of memory. Instead
+primesieve can now pre-sieve the multiples of small primes < 100
+(previously <= 19) using about only half as much memory. Instead
 of using a single large pre-sieved buffer primesieve now uses
-4 smaller pre-sieved buffers which are bitwise AND together before
-being copied to the sieve array. The new pre-sieveing algorithm
+8 smaller pre-sieved buffers which are bitwise AND together before
+being copied into the sieve array. The new pre-sieveing algorithm
 provides a speedup of up to 10% when generating the primes < 10^11.
 Thanks to @zielaj for this amazing work!
 
 * PreSieve.cpp: Add multiple pre-sieve buffers #110.
 * ParallelSieve.cpp: Initialize PreSieve.
+* ALGORITHMS.md: Update documentation.
 
 Changes in version 7.7, 13/11/2021
 ==================================
