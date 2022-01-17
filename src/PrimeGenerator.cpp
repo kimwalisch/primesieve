@@ -6,6 +6,11 @@
 ///         returns the primes. When there are no more primes left in
 ///         the vector PrimeGenerator generates new primes.
 ///
+///         PrimeGenerator::fill() is very important for the performance
+///         of primesieve::iterator. Therefore PrimeGenerator::fill()
+///         is highly optimized using hardware acceleration (e.g. CTZ,
+///         AVX512) whenever possible.
+///
 /// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
