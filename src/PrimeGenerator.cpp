@@ -380,7 +380,7 @@ void PrimeGenerator::fill(std::vector<uint64_t>& primes,
       // Move all non zero bytes (prime offsets) to the beginning
       primeOffsets = _mm512_maskz_compress_epi8(bits64, primeOffsets);
 
-      // Convert the low 8 bytes (prime offsets)
+      // Convert the first 8 bytes (prime offsets)
       // into eight 64-bit prime numbers.
       __m512i vprimes0 = _mm512_maskz_permutexvar_epi8(0x0101010101010101ull, bytes_0_to_7, primeOffsets);
       vprimes0 = _mm512_add_epi64(base, vprimes0);
