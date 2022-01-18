@@ -14,33 +14,16 @@
 ///            using AVX512 on x64 CPUs) in which case this algorithm
 ///            will even outperform the POPCNT instruction.
 ///
-/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
+#include <primesieve/popcnt.hpp>
 #include <stdint.h>
 
 namespace {
-
-/// This uses fewer arithmetic operations than any other known
-/// implementation on machines with fast multiplication.
-/// It uses 12 arithmetic operations, one of which is a multiply.
-/// https://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
-///
-uint64_t popcount64(uint64_t x)
-{
-  const uint64_t m1 = 0x5555555555555555ull;
-  const uint64_t m2 = 0x3333333333333333ull;
-  const uint64_t m4 = 0x0F0F0F0F0F0F0F0Full;
-  const uint64_t h01 = 0x0101010101010101ull;
-
-  x -= (x >> 1) & m1;
-  x = (x & m2) + ((x >> 2) & m2);
-  x = (x + (x >> 4)) & m4;
-  return (x * h01) >> 56;
-}
 
 /// Carry-save adder (CSA).
 /// @see Chapter 5 in "Hacker's Delight".
@@ -88,17 +71,17 @@ uint64_t popcount(const uint64_t* array, uint64_t size)
     CSA(eightsB, fours, fours, foursA, foursB);
     CSA(sixteens, eights, eights, eightsA, eightsB);
 
-    total += popcount64(sixteens);
+    total += popcnt64(sixteens);
   }
 
   total *= 16;
-  total += 8 * popcount64(eights);
-  total += 4 * popcount64(fours);
-  total += 2 * popcount64(twos);
-  total += 1 * popcount64(ones);
+  total += 8 * popcnt64(eights);
+  total += 4 * popcnt64(fours);
+  total += 2 * popcnt64(twos);
+  total += 1 * popcnt64(ones);
 
   for(; i < size; i++)
-    total += popcount64(array[i]);
+    total += popcnt64(array[i]);
 
   return total;
 }

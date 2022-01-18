@@ -23,6 +23,7 @@
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/popcnt.hpp>
 #include <primesieve/SievingPrimes.hpp>
 
 #include <stdint.h>
@@ -41,8 +42,7 @@
      defined(__AVX512F__) && \
      defined(__AVX512BW__) && \
      defined(__AVX512VBMI2__) && \
-     __has_include(<immintrin.h>) && \
-    (__has_builtin(__builtin_popcountll) || defined(__GNUC__))
+     __has_include(<immintrin.h>)
   #define ENABLE_AVX512
   #include <immintrin.h>
 #endif
@@ -356,7 +356,7 @@ void PrimeGenerator::fill(std::vector<uint64_t>& primes,
     {
       // Each iteration processes 8 bytes from the sieve array
       uint64_t bits64 = *(uint64_t*) &sieve_[sieveIdx_];
-      uint64_t primeCount = __builtin_popcountll(bits64);
+      uint64_t primeCount = popcnt64(bits64);
 
       // Prevent _mm512_storeu_si512() buffer overrun
       if (*size + primeCount + (8 - primeCount % 8) >= maxSize)
@@ -475,9 +475,19 @@ void PrimeGenerator::fill(std::vector<uint64_t>& primes,
     do
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
+      size_t j = i;
+      i += popcnt64(bits);
 
-      for (; bits != 0; bits &= bits - 1)
-        primes[i++] = nextPrime(bits, low);
+      do
+      {
+        assert(j + 4 < maxSize);
+        primes[j+0] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+1] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+2] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+3] = nextPrime(bits, low); bits &= bits - 1;
+        j += 4;
+      }
+      while (j < i);
 
       low += 8 * 30;
       sieveIdx += 8;

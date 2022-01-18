@@ -1,7 +1,7 @@
 ///
 /// @file  Erat.hpp
 ///
-/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -15,64 +15,11 @@
 #include "EratMedium.hpp"
 #include "EratBig.hpp"
 #include "macros.hpp"
+#include "popcnt.hpp"
 
 #include <stdint.h>
 #include <array>
 #include <memory>
-
-/// In order convert 1 bits of the sieve array into primes we
-/// need to quickly calculate the index of the first set bit.
-/// This CPU instruction is usually named CTZ (Count trailing
-/// zeros). Unfortunately only x86 and x64 CPUs currently have
-/// an instruction for that, other CPU architectures like
-/// ARM64 or PPC64 have to emulate the CTZ instruction using
-/// multiple other instructions.
-///
-/// On x64 CPUs there are actually 2 instructions to count the
-/// number of trailing zeros: BSF and TZCNT. BSF is an old
-/// instruction whereas TZCNT is much more recent (Bit
-/// Manipulation Instruction Set 1). Since I expect BSF to be
-/// slow on future x64 CPUs (because it is legacy) we only use
-/// __builtin_ctzll() if we can guarantee that TZCNT will be
-/// generated.
-///
-/// There is also a quick, pure integer algorithm known for
-/// quickly computing the index of the 1st set bit. This
-/// algorithm is named the "De Bruijn bitscan".
-/// https://www.chessprogramming.org/BitScan
-///
-/// Because of this situation, we only use __builtin_ctzll()
-/// or std::countr_zero() when we know that the user's CPU
-/// architecture can quickly compute CTZ, either using a single
-/// instruction or emulated using very few instructions. For
-/// all other CPU architectures we fallback to the "De Bruijn
-/// bitscan" algorithm.
-
-#if !defined(__has_builtin)
-  #define __has_builtin(x) 0
-#endif
-
-#if !defined(__has_include)
-  #define __has_include(x) 0
-#endif
-
-#if __cplusplus >= 202002L && \
-    __has_include(<bit>) && \
-    (defined(__BMI__) /* TZCNT (x64) */ || \
-     defined(__aarch64__) /* CTZ = RBIT + CLZ */ || \
-     defined(_M_ARM64) /* CTZ = RBIT + CLZ */)
-
-#include <bit>
-#define ctz64(x) std::countr_zero(x)
-
-#elif __has_builtin(__builtin_ctzll) && \
-    (defined(__BMI__) /* TZCNT (x64) */ || \
-     defined(__aarch64__) /* CTZ = RBIT + CLZ */ || \
-     defined(_M_ARM64) /* CTZ = RBIT + CLZ */)
-
-#define ctz64(x) __builtin_ctzll(x)
-
-#endif
 
 namespace primesieve {
 
@@ -132,7 +79,13 @@ private:
 /// Convert 1st set bit into prime
 inline uint64_t Erat::nextPrime(uint64_t bits, uint64_t low)
 {
-#if defined(ctz64)
+#if defined(HAS_CTZ64)
+  // In order to reduce branch mispredictions nextPrime()
+  // may be called with bits = 0. On some CPU architectures
+  // ctz(0) causes undefined behavior. To avoid undefined
+  // behavior we set the highest bit.
+  bits |= 1ull << 63;
+
   // Find first set 1 bit
   auto bitIndex = ctz64(bits);
   uint64_t bitValue = bitValues[bitIndex];
