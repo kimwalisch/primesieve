@@ -6,8 +6,8 @@
 ///         returns the primes. When there are no more primes left in
 ///         the vector PrimeGenerator generates new primes.
 ///
-///         PrimeGenerator::fill() is very important for the performance
-///         of primesieve::iterator. Therefore PrimeGenerator::fill()
+///         primesieve::iterator's next_prime() performance depends on
+///         PrimeGenerator::fill(). Therefore PrimeGenerator::fill()
 ///         is highly optimized using hardware acceleration (e.g. CTZ,
 ///         AVX512) whenever possible.
 ///
@@ -30,6 +30,22 @@
 #include <array>
 #include <cassert>
 #include <vector>
+
+/// Enable AVX512 for GCC & Clang if primesieve is compiled using
+/// -march=native on an AVX512 capable CPU. Currently the MSVC
+/// compiler is not yet supported as it does not support the
+/// __AVX512F__, __AVX512BW__, __AVX512VBMI2__ macros and hence it
+/// is not possible to know whether we can safely enable AVX512.
+///
+#if !defined(DISABLE_AVX512) && \
+     defined(__AVX512F__) && \
+     defined(__AVX512BW__) && \
+     defined(__AVX512VBMI2__) && \
+     __has_include(<immintrin.h>) && \
+    (__has_builtin(__builtin_popcountll) || defined(__GNUC__))
+  #define ENABLE_AVX512
+  #include <immintrin.h>
+#endif
 
 using std::size_t;
 
@@ -280,22 +296,7 @@ void PrimeGenerator::fill(std::vector<uint64_t>& primes)
   }
 }
 
-} // namespace
-
-/// The AVX512 algorithm below can be enabled by compiling primesieve
-/// using the -march=native flag on an AVX512 capable CPU.
-/// E.g.: CXXFLAGS="-march=native" cmake .
-///
-#if !defined(DISABLE_AVX512) && \
-    defined(__GNUC__) && \
-    defined(__AVX512F__) && \
-    defined(__AVX512BW__) && \
-    defined(__AVX512VBMI2__) && \
-    __has_include(<immintrin.h>)
-
-#include <immintrin.h>
-
-namespace primesieve {
+#if defined(ENABLE_AVX512)
 
 /// This algorithm converts 1 bits from the sieve array into primes
 /// using AVX512. The algorithm is a modified version of the AVX512
@@ -439,11 +440,7 @@ void PrimeGenerator::fill(std::vector<uint64_t>& primes,
   while (*size == 0);
 }
 
-} // namespace
-
 #else
-
-namespace primesieve {
 
 /// This method is used by iterator::next_prime().
 /// This method stores only the next few primes (~ 200) in the
@@ -495,6 +492,6 @@ void PrimeGenerator::fill(std::vector<uint64_t>& primes,
   while (*size == 0);
 }
 
-} // namespace
-
 #endif
+
+} // namespace
