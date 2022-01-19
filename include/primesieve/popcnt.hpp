@@ -89,7 +89,8 @@ uint64_t popcount(const uint64_t* array, uint64_t size);
      defined(__x86_64__) && \
      defined(__BMI__)
 
-#define HAS_ASM_CTZ64
+#define HAS_CTZ64
+#define CTZ64_SUPPORTS_ZERO
 
 namespace {
 
@@ -106,14 +107,15 @@ inline uint64_t ctz64(uint64_t x)
        defined(__clang__)) && \
        defined(__aarch64__)
 
-#define HAS_ASM_CTZ64
+#define HAS_CTZ64
+#define CTZ64_SUPPORTS_ZERO
 
 namespace {
 
 inline uint64_t ctz64(uint64_t x)
 {
-  // ARM64 has no CTZ instruction, we have to emulate it.
   // No undefined behavior, clz(0) = 64.
+  // ARM64 has no CTZ instruction, we have to emulate it.
   __asm__("rbit %0, %1 \n\t"
           "clz %0, %0  \n\t"
           : "=r" (x)

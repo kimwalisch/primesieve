@@ -84,7 +84,7 @@ private:
 ///
 inline uint64_t Erat::nextPrime(uint64_t bits, uint64_t low)
 {
-#if defined(HAS_ASM_CTZ64)
+#if defined(CTZ64_SUPPORTS_ZERO)
   // No undefined behavior, ctz64(0) = 64
   auto bitIndex = ctz64(bits);
   assert(bitIndex < bitValues.size());
