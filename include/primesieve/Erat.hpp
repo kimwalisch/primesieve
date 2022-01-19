@@ -15,7 +15,7 @@
 #include "EratMedium.hpp"
 #include "EratBig.hpp"
 #include "macros.hpp"
-#include "popcnt.hpp"
+#include "intrinsics.hpp"
 
 #include <stdint.h>
 #include <array>

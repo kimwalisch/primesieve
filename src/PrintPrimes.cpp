@@ -11,9 +11,9 @@
 /// file in the top level directory.
 ///
 
+#include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/popcnt.hpp>
 #include <primesieve/PrintPrimes.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/Erat.hpp>

@@ -23,7 +23,7 @@
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/popcnt.hpp>
+#include <primesieve/intrinsics.hpp>
 #include <primesieve/SievingPrimes.hpp>
 
 #include <stdint.h>

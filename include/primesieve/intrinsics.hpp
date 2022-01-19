@@ -1,7 +1,6 @@
 ///
-/// @file  popcnt.hpp
-/// @brief Functions to count the number of 1 bits inside
-///        an array or a 64-bit word.
+/// @file  intrinsics.hpp
+/// @brief Wrappers for compiler intrinsics.
 ///
 /// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -9,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef POPCNT_HPP
-#define POPCNT_HPP
+#ifndef INTRINSICS_HPP
+#define INTRINSICS_HPP
 
 #include <stdint.h>
 #include <cassert>
@@ -77,12 +76,6 @@ inline int popcnt64(uint64_t x)
 } // namespace
 
 #endif
-
-namespace primesieve {
-
-uint64_t popcount(const uint64_t* array, uint64_t size);
-
-} // namespace
 
 #if (defined(__GNUC__) || \
      defined(__clang__)) && \
@@ -167,4 +160,4 @@ inline int ctz64(uint64_t x)
 
 #endif
 
-#endif // POPCNT_HPP
+#endif // INTRINSICS_HPP

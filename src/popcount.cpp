@@ -20,7 +20,8 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/popcnt.hpp>
+#include <primesieve/intrinsics.hpp>
+#include <primesieve/forward.hpp>
 #include <stdint.h>
 
 namespace {
