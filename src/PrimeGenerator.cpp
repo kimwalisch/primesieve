@@ -32,12 +32,8 @@
 #include <cassert>
 #include <vector>
 
-/// Enable AVX512 for GCC & Clang if primesieve is compiled using
-/// -march=native on an AVX512 capable CPU. Currently the MSVC
-/// compiler is not yet supported as it does not support the
-/// __AVX512F__, __AVX512BW__, __AVX512VBMI2__ macros and hence it
-/// is not possible to know whether we can safely enable AVX512.
-///
+/// Enable AVX512 if primesieve is compiled using e.g.
+/// -march=native on an AVX512 capable CPU.
 #if !defined(DISABLE_AVX512) && \
      defined(__AVX512F__) && \
      defined(__AVX512BW__) && \

@@ -13,6 +13,7 @@
 #define POPCNT_HPP
 
 #include <stdint.h>
+#include <cassert>
 
 #if !defined(__has_builtin)
   #define __has_builtin(x) 0
@@ -83,7 +84,48 @@ uint64_t popcount(const uint64_t* array, uint64_t size);
 
 } // namespace
 
-#if __has_builtin(__builtin_ctzll)
+#if (defined(__GNUC__) || \
+     defined(__clang__)) && \
+     defined(__x86_64__) && \
+     defined(__BMI__)
+
+#define HAS_ASM_CTZ64
+
+namespace {
+
+inline uint64_t ctz64(uint64_t x)
+{
+  // No undefined behavior, tzcnt(0) = 64
+  __asm__("tzcnt %1, %0" : "=r"(x) : "r"(x));
+  return x;
+}
+
+} // namespace
+
+#elif (defined(__GNUC__) || \
+       defined(__clang__)) && \
+       defined(__aarch64__)
+
+#define HAS_ASM_CTZ64
+
+namespace {
+
+inline uint64_t ctz64(uint64_t x)
+{
+  // ARM64 has no CTZ instruction, we have to emulate it.
+  // No undefined behavior, clz(0) = 64.
+  __asm__("rbit %1, %0 \n\t"
+          "clz %0, %0  \n\t"
+          : "=r" (x)
+          : "r" (x));
+
+    return x;
+}
+
+} // namespace
+
+#elif defined(__GNUC__) || \
+      __has_builtin(__builtin_ctzl)
 
 #define HAS_CTZ64
 
@@ -91,6 +133,9 @@ namespace {
 
 inline int ctz64(uint64_t x)
 {
+  // __builtin_ctz(0) is undefined behavior
+  assert(x != 0);
+
 #if __cplusplus >= 201703L
   if constexpr(sizeof(int) >= sizeof(uint64_t))
     return __builtin_ctz(x);
@@ -111,6 +156,11 @@ inline int ctz64(uint64_t x)
 #include <bit>
 
 #define HAS_CTZ64
+
+// std::countr_zero() avoids undefined behavior by checking
+// if the input number is 0 before executing CTZ. This
+// hurts performance, therefore we only use std::countr_zero()
+// if the compiler does not support __builtin_ctz() or ASM.
 #define ctz64(x) std::countr_zero(x)
 
 #endif

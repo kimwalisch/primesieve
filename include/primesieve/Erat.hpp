@@ -76,29 +76,33 @@ private:
   void sieveLastSegment();
 };
 
-/// Convert 1st set bit into prime
+/// Convert the 1st set bit into a prime number.
+/// In order to reduce branch mispredictions nextPrime() may
+/// be called with bits = 0 in which case nextPrime()
+/// returns a random 64-bit integer. It is up to the caller
+/// to handle this use case correctly.
+///
 inline uint64_t Erat::nextPrime(uint64_t bits, uint64_t low)
 {
-#if defined(HAS_CTZ64)
-  // In order to reduce branch mispredictions nextPrime()
-  // may be called with bits = 0. On some CPU architectures
-  // ctz(0) causes undefined behavior. To avoid undefined
-  // behavior we set the highest bit.
-  bits |= 1ull << 63;
-
-  // Find first set 1 bit
+#if defined(HAS_ASM_CTZ64)
+  // No undefined behavior, ctz64(0) = 64
   auto bitIndex = ctz64(bits);
+  assert(bitIndex < bitValues.size());
   uint64_t bitValue = bitValues[bitIndex];
-  uint64_t prime = low + bitValue;
-  return prime;
+#elif defined(HAS_CTZ64)
+  // ctz64(0) is undefined behavior. To avoid undefined
+  // behavior we set the highest bit.
+  auto bitIndex = ctz64(bits | (1ull << 63));
+  uint64_t bitValue = bitValues[bitIndex];
 #else
   // Fallback if CTZ instruction is not avilable
   uint64_t debruijn = 0x3F08A4C6ACB9DBDull;
   uint64_t hash = ((bits ^ (bits - 1)) * debruijn) >> 58;
   uint64_t bitValue = bruijnBitValues[hash];
+#endif
+
   uint64_t prime = low + bitValue;
   return prime;
-#endif
 }
 
 inline void Erat::addSievingPrime(uint64_t prime)

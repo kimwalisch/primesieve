@@ -16,7 +16,7 @@
 
 namespace primesieve {
 
-extern const std::array<uint64_t, 64> bitValues;
+extern const std::array<uint64_t, 65> bitValues;
 extern const std::array<uint64_t, 64> bruijnBitValues;
 
 int get_num_threads();
