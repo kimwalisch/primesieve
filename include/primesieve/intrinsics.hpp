@@ -77,8 +77,18 @@ inline int popcnt64(uint64_t x)
 
 #endif
 
-// In 2022 std::countr_zero() is known to have bad performance
-// on these CPU architectures. Therefore don't use it.
+// In 2022 std::countr_zero() causes performance issues in many
+// cases therefore we need a lot of workarounds here. We try to use
+// alternative compiler intrinsics or inline assembly instead. If we
+// are luckly we can get rid of these workarounds by around 2030.
+//
+// std::countr_zero(0) is well defined (unlike __builtin_ctzll(0))
+// which is important for our use case. However on x64 CPUs
+// std::countr_zero() avoids undefined behavior by checking if the
+// input number is 0 before executing BSF or by checking if the CPU
+// supports TZCNT. GCC even adds zero checks on ARM64 where it is
+// not needed. These checks hurt performance, we try to avoid them.
+
 #if defined(_MSC_VER)
   #if defined(_M_X64)
     #define DONT_USE_COUNTR_ZERO
@@ -90,19 +100,10 @@ inline int popcnt64(uint64_t x)
   #define DONT_USE_COUNTR_ZERO
 #endif
 
-// std::countr_zero(0) is well defined, unlike __builtin_ctzll(0)
-// which causes undefined behavior. However, in 2022
-// std::countr_zero() causes performance issues in many cases. On x64
-// CPUs std::countr_zero() avoids undefined behavior by checking if
-// the input number is 0 before executing BSF or by checking if the
-// CPU supports TZCNT. GCC even adds zero checks on ARM64 where it is
-// not needed. Until these issues are fixed we use inline assembly
-// for the most important CPU architectures.
-
 #if (defined(__GNUC__) || \
      defined(__clang__)) && \
      defined(__x86_64__) && \
-     defined(__BMI__)
+    (defined(__BMI__) || (defined(_MSC_VER) && defined(__AVX2__)))
 
 #define HAS_CTZ64
 #define CTZ64_SUPPORTS_ZERO
