@@ -77,11 +77,10 @@ inline int popcnt64(uint64_t x)
 
 #endif
 
-// In 2022 std::countr_zero() is known to have very bad performance
+// In 2022 std::countr_zero() is known to have bad performance
 // on these CPU architectures. Therefore don't use it.
 #if defined(_MSC_VER)
-  #if defined(_M_X64) && \
-     !defined(__AVX2__)
+  #if defined(_M_X64)
     #define DONT_USE_COUNTR_ZERO
   #endif
 #elif (defined(__GNUC__) || \
@@ -141,6 +140,19 @@ inline uint64_t ctz64(uint64_t x)
 }
 
 } // namespace
+
+#elif defined(_MSC_VER) && \
+      defined(_M_X64) && \
+      defined(__AVX2__) && \
+      __has_include(<immintrin.h>)
+
+#define HAS_CTZ64
+#define CTZ64_SUPPORTS_ZERO
+
+// In 2022 MSVC code gen for std::countr_zero() is bad on x64,
+// if possible use _tzcnt_u64() instead.
+// No undefined behavior, _tzcnt_u64(0) = 64.
+#define ctz64(x) _tzcnt_u64(x)
 
 #elif __cplusplus >= 202002L && \
       __has_include(<bit>) && \
