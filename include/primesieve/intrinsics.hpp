@@ -79,14 +79,15 @@ inline int popcnt64(uint64_t x)
 
 // In 2022 std::countr_zero() is known to have very bad performance
 // on these CPU architectures. Therefore don't use it.
-#if (defined(__GNUC__) || \
-     defined(__clang__)) && \
-     defined(__x86_64__) && \
-    !defined(__BMI__)
-  #define DONT_USE_COUNTR_ZERO
-#elif defined(_MSC_VER) && \
-      defined(_M_X64) && \
+#if defined(_MSC_VER)
+  #if defined(_M_X64) && \
      !defined(__AVX2__)
+    #define DONT_USE_COUNTR_ZERO
+  #endif
+#elif (defined(__GNUC__) || \
+       defined(__clang__)) && \
+       defined(__x86_64__) && \
+      !defined(__BMI__)
   #define DONT_USE_COUNTR_ZERO
 #endif
 
