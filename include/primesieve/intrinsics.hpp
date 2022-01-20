@@ -91,13 +91,13 @@ inline int popcnt64(uint64_t x)
 
 #if defined(_MSC_VER)
   #if defined(_M_X64)
-    #define DONT_USE_COUNTR_ZERO
+    #define COUNTR_ZERO_IS_SLOW
   #endif
 #elif (defined(__GNUC__) || \
        defined(__clang__)) && \
        defined(__x86_64__) && \
       !defined(__BMI__)
-  #define DONT_USE_COUNTR_ZERO
+  #define COUNTR_ZERO_IS_SLOW
 #endif
 
 #if (defined(__GNUC__) || \
@@ -157,7 +157,7 @@ inline uint64_t ctz64(uint64_t x)
 
 #elif __cplusplus >= 202002L && \
       __has_include(<bit>) && \
-      !defined(DONT_USE_COUNTR_ZERO)
+      !defined(COUNTR_ZERO_IS_SLOW)
 
 #include <bit>
 
