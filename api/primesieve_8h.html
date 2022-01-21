@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">primesieve
-   &#160;<span id="projectnumber">7.7</span>
+   &#160;<span id="projectnumber">7.8</span>
    </div>
   </td>
  </tr>
@@ -95,13 +95,13 @@ Include dependency graph for primesieve.h:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memItemLeft" align="right" valign="top"><a id="aefdd13bcd657eb6778799e8e2dd72b19"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;7.7&quot;</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION</b>&#160;&#160;&#160;&quot;7.8&quot;</td></tr>
 <tr class="separator:aefdd13bcd657eb6778799e8e2dd72b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memItemLeft" align="right" valign="top"><a id="acf3a768a4fbf9c2ddd8d26421b452298"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MAJOR</b>&#160;&#160;&#160;7</td></tr>
 <tr class="separator:acf3a768a4fbf9c2ddd8d26421b452298"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae49659380a65afba42223665c77241d1"><td class="memItemLeft" align="right" valign="top"><a id="ae49659380a65afba42223665c77241d1"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;7</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PRIMESIEVE_VERSION_MINOR</b>&#160;&#160;&#160;8</td></tr>
 <tr class="separator:ae49659380a65afba42223665c77241d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa15f4d1456167707e37c0d6de61a86e3"><td class="memItemLeft" align="right" valign="top"><a id="aa15f4d1456167707e37c0d6de61a86e3"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primesieve_8h.html#aa15f4d1456167707e37c0d6de61a86e3">PRIMESIEVE_ERROR</a>&#160;&#160;&#160;((uint64_t) ~((uint64_t) 0))</td></tr>
@@ -214,7 +214,7 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>primesieve C API. </p>
 <p>primesieve is a library for quickly generating prime numbers. If an error occurs, primesieve functions with a uint64_t return type return PRIMESIEVE_ERROR and the corresponding error message is printed to the standard error stream. libprimesieve also sets the C errno variable to EDOM if an error occurs.</p>
-<p>Copyright (C) 2021 Kim Walisch, <a href="#" onclick="location.href='mai'+'lto:'+'kim'+'.w'+'ali'+'sc'+'h@g'+'ma'+'il.'+'co'+'m'; return false;">kim.w<span style="display: none;">.nosp@m.</span>alis<span style="display: none;">.nosp@m.</span>ch@gm<span style="display: none;">.nosp@m.</span>ail.<span style="display: none;">.nosp@m.</span>com</a></p>
+<p>Copyright (C) 2022 Kim Walisch, <a href="#" onclick="location.href='mai'+'lto:'+'kim'+'.w'+'ali'+'sc'+'h@g'+'ma'+'il.'+'co'+'m'; return false;">kim.w<span style="display: none;">.nosp@m.</span>alis<span style="display: none;">.nosp@m.</span>ch@gm<span style="display: none;">.nosp@m.</span>ail.<span style="display: none;">.nosp@m.</span>com</a></p>
 <p>This file is distributed under the BSD License. </p>
 </div><h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a06fc87d81c62e9abb8790b6e5713c55b"></a>
@@ -646,7 +646,7 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 </div><div class="memdoc">
 
 <p>Set the sieve size in KiB (kibibyte). </p>
-<p>The best sieving performance is achieved with a sieve size of your CPU's L1 or L2 cache size (per core). </p><dl class="section pre"><dt>Precondition</dt><dd>sieve_size &gt;= 8 &amp;&amp; &lt;= 4096. </dd></dl>
+<p>The best sieving performance is achieved with a sieve size of your CPU's L1 or L2 cache size (per core). </p><dl class="section pre"><dt>Precondition</dt><dd>sieve_size &gt;= 16 &amp;&amp; &lt;= 4096. </dd></dl>
 
 </div>
 </div>
