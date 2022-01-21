@@ -2,7 +2,7 @@
 /// @file   iterator-c.cpp
 /// @brief  C port of primesieve::iterator.
 ///
-/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -12,6 +12,7 @@
 #include <primesieve/forward.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
+#include <primesieve/resizeUninitialized.hpp>
 
 #include <stdint.h>
 #include <cerrno>
@@ -98,14 +99,14 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
         IteratorHelper::next(&it->start, &it->stop, it->stop_hint, &it->dist);
         it->primeGenerator = new PrimeGenerator(it->start, it->stop);
         primeGenerator = getPrimeGenerator(it);
-        primes.resize(256);
+        resizeUninitialized(primes, 512);
         it->primes = &primes[0];
       }
 
       primeGenerator->fill(primes, &it->last_idx);
 
       // There are 3 different cases here:
-      // 1) The primes array contains a few primes (<= 256).
+      // 1) The primes array contains a few primes (<= 512).
       //    In this case we return the primes to the user.
       // 2) The primes array is empty because the next
       //    prime > stop. In this case we reset the

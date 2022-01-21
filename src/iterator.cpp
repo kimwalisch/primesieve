@@ -1,7 +1,7 @@
 ///
 /// @file  iterator.cpp
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -10,6 +10,7 @@
 #include <primesieve/iterator.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
+#include <primesieve/resizeUninitialized.hpp>
 
 #include <stdint.h>
 #include <vector>
@@ -61,13 +62,13 @@ void iterator::generate_next_primes()
       IteratorHelper::next(&start_, &stop_, stop_hint_, &dist_);
       auto p = new PrimeGenerator(start_, stop_);
       primeGenerator_.reset(p);
-      primes_.resize(256);
+      resizeUninitialized(primes_, 512);
     }
 
     primeGenerator_->fill(primes_, &last_idx_);
 
     // There are 3 different cases here:
-    // 1) The primes array contains a few primes (<= 256).
+    // 1) The primes array contains a few primes (<= 512).
     //    In this case we return the primes to the user.
     // 2) The primes array is empty because the next
     //    prime > stop. In this case we reset the

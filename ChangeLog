@@ -1,4 +1,4 @@
-Changes in version 7.8, 18/01/2022
+Changes in version 7.8, 21/01/2022
 ==================================
 
 primesieve can now pre-sieve the multiples of small primes < 100
@@ -12,6 +12,8 @@ Thanks to @zielaj for this amazing work!
 * PreSieve.cpp: Add multiple pre-sieve buffers #110.
 * PrimeGenerator.cpp: Reduce branch mispredictions #109.
 * PrimeGenerator.cpp: Add AVX512 algorithm #109.
+* iterator.cpp: Avoid default initialization of primes vector.
+* iterator-c.cpp: Avoid default initialization of primes vector.
 * ParallelSieve.cpp: Initialize PreSieve.
 * ALGORITHMS.md: Update documentation.
 
