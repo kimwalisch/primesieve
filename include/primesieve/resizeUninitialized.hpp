@@ -14,6 +14,7 @@
 #define RESIZEUNINITIALIZED_HPP
 
 #include <stdint.h>
+#include <cstddef>
 #include <vector>
 
 namespace {
