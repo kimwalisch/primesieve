@@ -31,7 +31,7 @@ namespace {
 ///
 void CSA(uint64_t& h, uint64_t& l, uint64_t a, uint64_t b, uint64_t c)
 {
-  uint64_t u = a ^ b; 
+  uint64_t u = a ^ b;
   h = (a & b) | (u & c);
   l = u ^ c;
 }

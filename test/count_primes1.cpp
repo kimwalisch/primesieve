@@ -58,7 +58,7 @@ int main()
 
   // Test PreSieve with bufferPrimes < 100.
   // The thread interval must be sufficiently large
-  // otherwise minimal pre-sieving is used. 
+  // otherwise minimal pre-sieving is used.
   // Using a single thread increases thread interval.
   ps.setNumThreads(1);
   count = ps.countPrimes(0, (uint64_t) std::pow(10.0, 9));

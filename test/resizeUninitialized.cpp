@@ -44,7 +44,7 @@ int main()
     for (std::size_t i = 0; i < size; i += 37)
     {
       std::cout << "vect[" << i << "] = " << vect[i];
-      check(vect[i] == val);      
+      check(vect[i] == val);
     }
 
     std::size_t oldSize = size;
@@ -60,7 +60,7 @@ int main()
     for (std::size_t i = 0; i < size; i += 37)
     {
       std::cout << "vect[" << i << "] = " << vect[i];
-      check(vect[i] == val);      
+      check(vect[i] == val);
     }
   }
 

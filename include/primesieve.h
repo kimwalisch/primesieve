@@ -98,7 +98,7 @@ void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type);
 uint64_t primesieve_nth_prime(int64_t n, uint64_t start);
 
 /**
- * Count the primes within the interval [start, stop]. 
+ * Count the primes within the interval [start, stop].
  * By default all CPU cores are used, use
  * primesieve_set_num_threads(int threads) to change the
  * number of threads.
@@ -113,7 +113,7 @@ uint64_t primesieve_nth_prime(int64_t n, uint64_t start);
 uint64_t primesieve_count_primes(uint64_t start, uint64_t stop);
 
 /**
- * Count the twin primes within the interval [start, stop]. 
+ * Count the twin primes within the interval [start, stop].
  * By default all CPU cores are used, use
  * primesieve_set_num_threads(int threads) to change the
  * number of threads.
@@ -121,7 +121,7 @@ uint64_t primesieve_count_primes(uint64_t start, uint64_t stop);
 uint64_t primesieve_count_twins(uint64_t start, uint64_t stop);
 
 /**
- * Count the prime triplets within the interval [start, stop]. 
+ * Count the prime triplets within the interval [start, stop].
  * By default all CPU cores are used, use
  * primesieve_set_num_threads(int threads) to change the
  * number of threads.
@@ -137,7 +137,7 @@ uint64_t primesieve_count_triplets(uint64_t start, uint64_t stop);
 uint64_t primesieve_count_quadruplets(uint64_t start, uint64_t stop);
 
 /**
- * Count the prime quintuplets within the interval [start, stop]. 
+ * Count the prime quintuplets within the interval [start, stop].
  * By default all CPU cores are used, use
  * primesieve_set_num_threads(int threads) to change the
  * number of threads.
@@ -145,7 +145,7 @@ uint64_t primesieve_count_quadruplets(uint64_t start, uint64_t stop);
 uint64_t primesieve_count_quintuplets(uint64_t start, uint64_t stop);
 
 /**
- * Count the prime sextuplets within the interval [start, stop]. 
+ * Count the prime sextuplets within the interval [start, stop].
  * By default all CPU cores are used, use
  * primesieve_set_num_threads(int threads) to change the
  * number of threads.
