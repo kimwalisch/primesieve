@@ -15,6 +15,7 @@
 #include "EratMedium.hpp"
 #include "EratBig.hpp"
 #include "macros.hpp"
+#include "MemoryPool.hpp"
 #include "intrinsics.hpp"
 
 #include <stdint.h>
@@ -67,6 +68,7 @@ private:
   EratSmall eratSmall_;
   EratBig eratBig_;
   EratMedium eratMedium_;
+  MemoryPool memoryPool_;
   static uint64_t byteRemainder(uint64_t);
   uint64_t getL1CacheSize() const;
   void initSieve(uint64_t);

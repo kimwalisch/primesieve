@@ -11,7 +11,7 @@
 ///         by up to 30% for sieving primes that have only a few
 ///         multiple occurrences per segment.
 ///
-/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -37,7 +37,7 @@
   { \
     multipleIndex = (uint64_t) (p - sieveEnd); \
     if (Bucket::isFull(buckets_[wheelIndex])) \
-      memoryPool_.addBucket(buckets_[wheelIndex]); \
+      memoryPool.addBucket(buckets_[wheelIndex]); \
     buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex); \
     break; \
   }
@@ -50,7 +50,8 @@ namespace primesieve {
 ///
 void EratMedium::init(uint64_t stop,
                       uint64_t MAYBE_UNUSED(sieveSize),
-                      uint64_t maxPrime)
+                      uint64_t maxPrime,
+                      MemoryPool& memoryPool)
 {
   assert(maxPrime <= sieveSize * 9);
   assert(sieveSize * 2 <= SievingPrime::MAX_MULTIPLEINDEX + 1);
@@ -58,6 +59,7 @@ void EratMedium::init(uint64_t stop,
   enabled_ = true;
   stop_ = stop;
   maxPrime_ = maxPrime;
+  memoryPool_ = &memoryPool;
   buckets_.fill(nullptr);
 }
 
@@ -68,7 +70,7 @@ void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint6
   uint64_t sievingPrime = prime / 30;
 
   if (Bucket::isFull(buckets_[wheelIndex]))
-    memoryPool_.addBucket(buckets_[wheelIndex]);
+    memoryPool_->addBucket(buckets_[wheelIndex]);
 
   buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);
 }
@@ -114,7 +116,7 @@ void EratMedium::crossOff(uint8_t* sieve, uint64_t sieveSize)
 
       Bucket* processed = bucket;
       bucket = bucket->next();
-      memoryPool_.freeBucket(processed);
+      memoryPool_->freeBucket(processed);
     }
   }
 }
@@ -125,6 +127,7 @@ void EratMedium::crossOff_7(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   uint64_t wheelIndex = prime->getWheelIndex();
+  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -161,6 +164,7 @@ void EratMedium::crossOff_11(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   uint64_t wheelIndex = prime->getWheelIndex();
+  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -198,6 +202,7 @@ void EratMedium::crossOff_13(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   uint64_t wheelIndex = prime->getWheelIndex();
+  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -235,6 +240,7 @@ void EratMedium::crossOff_17(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   uint64_t wheelIndex = prime->getWheelIndex();
+  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -272,6 +278,7 @@ void EratMedium::crossOff_19(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   uint64_t wheelIndex = prime->getWheelIndex();
+  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -309,6 +316,7 @@ void EratMedium::crossOff_23(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   uint64_t wheelIndex = prime->getWheelIndex();
+  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -345,6 +353,7 @@ void EratMedium::crossOff_29(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   uint64_t wheelIndex = prime->getWheelIndex();
+  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -381,6 +390,7 @@ void EratMedium::crossOff_31(uint8_t* sieve, uint8_t* sieveEnd, Bucket* bucket)
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   uint64_t wheelIndex = prime->getWheelIndex();
+  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {

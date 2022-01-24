@@ -113,9 +113,9 @@ void Erat::initErat()
   if (sqrtStop > maxPreSieve_)
     eratSmall_.init(stop_, l1CacheSize, maxEratSmall_);
   if (sqrtStop > maxEratSmall_)
-    eratMedium_.init(stop_, sieveSize_, maxEratMedium_);
+    eratMedium_.init(stop_, sieveSize_, maxEratMedium_, memoryPool_);
   if (sqrtStop > maxEratMedium_)
-    eratBig_.init(stop_, sieveSize_, sqrtStop);
+    eratBig_.init(stop_, sieveSize_, sqrtStop, memoryPool_);
 }
 
 /// EratMedium and EratBig usually run fastest using a sieve

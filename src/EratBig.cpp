@@ -12,7 +12,7 @@
 ///         sieving primes that do not have a multiple occurrence in
 ///         the current segment.
 ///
-/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -34,7 +34,10 @@ namespace primesieve {
 /// @sieveSize: Sieve size in bytes
 /// @maxPrime:  Sieving primes <= maxPrime
 ///
-void EratBig::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
+void EratBig::init(uint64_t stop,
+                   uint64_t sieveSize,
+                   uint64_t maxPrime,
+                   MemoryPool& memoryPool)
 {
   // '>> log2SieveSize' requires power of 2 sieveSize
   assert(isPow2(sieveSize));
@@ -45,6 +48,7 @@ void EratBig::init(uint64_t stop, uint64_t sieveSize, uint64_t maxPrime)
   maxPrime_ = maxPrime;
   log2SieveSize_ = ilog2(sieveSize);
   moduloSieveSize_ = sieveSize - 1;
+  memoryPool_ = &memoryPool;
 
   uint64_t maxSievingPrime = maxPrime_ / 30;
   uint64_t maxNextMultiple = maxSievingPrime * getMaxFactor() + getMaxFactor();
@@ -64,7 +68,7 @@ void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t
   multipleIndex &= moduloSieveSize_;
 
   if (Bucket::isFull(buckets_[segment]))
-    memoryPool_.addBucket(buckets_[segment]);
+    memoryPool_->addBucket(buckets_[segment]);
 
   buckets_[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
 }
@@ -86,7 +90,7 @@ void EratBig::crossOff(uint8_t* sieve)
       crossOff(sieve, bucket);
       Bucket* processed = bucket;
       bucket = bucket->next();
-      memoryPool_.freeBucket(processed);
+      memoryPool_->freeBucket(processed);
     }
   }
 
@@ -112,6 +116,7 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
   auto buckets = buckets_.data();
   uint64_t moduloSieveSize = moduloSieveSize_;
   uint64_t log2SieveSize = log2SieveSize_;
+  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -124,7 +129,7 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     multipleIndex &= moduloSieveSize;
 
     if (Bucket::isFull(buckets[segment]))
-      memoryPool_.addBucket(buckets[segment]);
+      memoryPool.addBucket(buckets[segment]);
 
     buckets[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
   }
