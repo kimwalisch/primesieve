@@ -103,7 +103,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
         it->primes = &primes[0];
       }
 
-      primeGenerator->fill(primes, &it->last_idx);
+      primeGenerator->fillNextPrimes(primes, &it->last_idx);
 
       // There are 3 different cases here:
       // 1) The primes array contains a few primes (<= 512).
@@ -155,7 +155,7 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
       auto primeGenerator = getPrimeGenerator(it);
       if (it->start <= 2)
         primes.push_back(0);
-      primeGenerator->fill(primes);
+      primeGenerator->fillPrevPrimes(primes, &it->last_idx);
       clearPrimeGenerator(it);
     }
   }
@@ -165,11 +165,12 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     clearPrimeGenerator(it);
     primes.resize(1);
     primes[0] = PRIMESIEVE_ERROR;
+    it->last_idx = 1;
     it->is_error = true;
     errno = EDOM;
   }
 
   it->primes = &primes[0];
-  it->last_idx = primes.size() - 1;
+  it->last_idx--;
   it->i = it->last_idx;
 }

@@ -65,7 +65,7 @@ void iterator::generate_next_primes()
       resizeUninitialized(primes_, 512);
     }
 
-    primeGenerator_->fill(primes_, &last_idx_);
+    primeGenerator_->fillNextPrimes(primes_, &last_idx_);
 
     // There are 3 different cases here:
     // 1) The primes array contains a few primes (<= 512).
@@ -101,11 +101,11 @@ void iterator::generate_prev_primes()
       primes_.push_back(0);
     auto p = new PrimeGenerator(start_, stop_);
     primeGenerator_.reset(p);
-    primeGenerator_->fill(primes_);
+    primeGenerator_->fillPrevPrimes(primes_, &last_idx_);
     clear(primeGenerator_);
   }
 
-  last_idx_ = primes_.size() - 1;
+  last_idx_--;
   i_ = last_idx_;
 }
 

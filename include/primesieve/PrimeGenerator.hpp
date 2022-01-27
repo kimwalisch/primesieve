@@ -6,7 +6,7 @@
 ///        returns the primes. When there are no more primes left in
 ///        the vector PrimeGenerator generates new primes.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -28,8 +28,8 @@ class PrimeGenerator : public Erat
 {
 public:
   PrimeGenerator(uint64_t start, uint64_t stop);
-  void fill(std::vector<uint64_t>&);
-  void fill(std::vector<uint64_t>& primes, std::size_t* size);
+  void fillPrevPrimes(std::vector<uint64_t>& primes, std::size_t* size);
+  void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size);
   static uint64_t maxCachedPrime();
 
 private:
@@ -42,10 +42,10 @@ private:
   std::size_t getStartIdx() const;
   std::size_t getStopIdx() const;
   void initErat();
-  void init(std::vector<uint64_t>&);
-  void init(std::vector<uint64_t>&, std::size_t*);
-  bool sieveSegment(std::vector<uint64_t>&);
-  bool sieveSegment(std::vector<uint64_t>&, std::size_t*);
+  void initPrevPrimes(std::vector<uint64_t>&, std::size_t*);
+  void initNextPrimes(std::vector<uint64_t>&, std::size_t*);
+  bool sievePrevPrimes(std::vector<uint64_t>&, std::size_t*);
+  bool sieveNextPrimes(std::vector<uint64_t>&, std::size_t*);
   void sieveSegment();
 };
 

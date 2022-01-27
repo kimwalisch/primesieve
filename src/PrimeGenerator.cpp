@@ -24,6 +24,7 @@
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/intrinsics.hpp>
+#include <primesieve/resizeUninitialized.hpp>
 #include <primesieve/SievingPrimes.hpp>
 
 #include <stdint.h>
@@ -127,26 +128,38 @@ PrimeGenerator::PrimeGenerator(uint64_t start, uint64_t stop) :
 { }
 
 /// Used by iterator::prev_prime()
-void PrimeGenerator::init(std::vector<uint64_t>& primes)
+void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
+                                    size_t* size)
 {
-  size_t size = primeCountApprox(start_, stop_);
-  primes.reserve(size);
+  *size = primes.size();
+  size_t n = primeCountApprox(start_, stop_);
 
-  if (start_ <= maxCachedPrime())
+  if (start_ > maxCachedPrime())
+    // +64 prevents reallocation in fillPrevPrimes()
+    resizeUninitialized(primes, n + 64);
+  else
   {
     size_t a = getStartIdx();
     size_t b = getStopIdx();
+    assert(a <= b);
+    size_t newSize = *size + (b - a);
 
-    primes.insert(primes.end(),
-             smallPrimes.begin() + a,
-             smallPrimes.begin() + b);
+    n = std::max(n, newSize);
+    resizeUninitialized(primes, n + 64);
+
+    std::copy(smallPrimes.begin() + a,
+              smallPrimes.begin() + b,
+              &primes[*size]);
+
+    *size = newSize;
   }
 
   initErat();
 }
 
 /// Used by iterator::next_prime()
-void PrimeGenerator::init(std::vector<uint64_t>& primes, size_t* size)
+void PrimeGenerator::initNextPrimes(std::vector<uint64_t>& primes,
+                                    size_t* size)
 {
   if (start_ <= maxCachedPrime())
   {
@@ -225,10 +238,11 @@ void PrimeGenerator::sieveSegment()
 }
 
 /// Used by iterator::prev_prime()
-bool PrimeGenerator::sieveSegment(std::vector<uint64_t>& primes)
+bool PrimeGenerator::sievePrevPrimes(std::vector<uint64_t>& primes,
+                                     size_t* size)
 {
   if (!isInit_)
-    init(primes);
+    initPrevPrimes(primes, size);
 
   if (hasNextSegment())
   {
@@ -240,13 +254,14 @@ bool PrimeGenerator::sieveSegment(std::vector<uint64_t>& primes)
 }
 
 /// Used by iterator::next_prime()
-bool PrimeGenerator::sieveSegment(std::vector<uint64_t>& primes, size_t* size)
+bool PrimeGenerator::sieveNextPrimes(std::vector<uint64_t>& primes,
+                                     size_t* size)
 {
   *size = 0;
 
   if (!isInit_)
   {
-    init(primes, size);
+    initNextPrimes(primes, size);
     if (*size > 0)
       return false;
   }
@@ -275,20 +290,50 @@ bool PrimeGenerator::sieveSegment(std::vector<uint64_t>& primes, size_t* size)
 /// over the primes inside [a, b] we need to generate new
 /// primes which incurs an initialization overhead of O(sqrt(n)).
 ///
-void PrimeGenerator::fill(std::vector<uint64_t>& primes)
+void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
+                                    size_t* size)
 {
-  while (sieveSegment(primes))
+  while (sievePrevPrimes(primes, size))
   {
-    while (sieveIdx_ < sieveSize_)
+    // Use local variables to prevent the compiler from
+    // writing temporary results to memory.
+    size_t i = *size;
+    size_t maxSize = primes.size();
+    uint64_t low = low_;
+    uint8_t* sieve = sieve_;
+    uint64_t sieveIdx = sieveIdx_;
+    uint64_t sieveSize = sieveSize_;
+
+    while (sieveIdx < sieveSize)
     {
-      uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
+      // Each loop iteration can generate up to 64 primes,
+      // so we have to make sure there is enough space
+      // left in the primes vector.
+      if (i + 64 > maxSize)
+        resizeUninitialized(primes, i + 64);
 
-      for (; bits != 0; bits &= bits - 1)
-        primes.push_back(nextPrime(bits, low_));
+      uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
+      size_t j = i;
+      i += popcnt64(bits);
 
-      low_ += 8 * 30;
-      sieveIdx_ += 8;
+      do
+      {
+        assert(j + 4 < maxSize);
+        primes[j+0] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+1] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+2] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+3] = nextPrime(bits, low); bits &= bits - 1;
+        j += 4;
+      }
+      while (j < i);
+
+      low += 8 * 30;
+      sieveIdx += 8;
     }
+
+    low_ = low;
+    sieveIdx_ = sieveIdx;
+    *size = i;
   }
 }
 
@@ -307,13 +352,13 @@ void PrimeGenerator::fill(std::vector<uint64_t>& primes)
 /// benchmarks this algorithm ran about 15% faster than the default
 /// PrimeGenerator::fill() algorithm which uses __builtin_ctzll().
 ///
-void PrimeGenerator::fill(std::vector<uint64_t>& primes,
-                          size_t* size)
+void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
+                                    size_t* size)
 {
   do
   {
     if (sieveIdx_ >= sieveSize_)
-      if (!sieveSegment(primes, size))
+      if (!sieveNextPrimes(primes, size))
         return;
 
     *size = 0;
@@ -445,13 +490,13 @@ void PrimeGenerator::fill(std::vector<uint64_t>& primes,
 /// this reason iterator::next_prime() runs up to 2x faster
 /// than iterator::prev_prime().
 ///
-void PrimeGenerator::fill(std::vector<uint64_t>& primes,
-                          size_t* size)
+void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
+                                    size_t* size)
 {
   do
   {
     if (sieveIdx_ >= sieveSize_)
-      if (!sieveSegment(primes, size))
+      if (!sieveNextPrimes(primes, size))
         return;
 
     // Use local variables to prevent the compiler from
