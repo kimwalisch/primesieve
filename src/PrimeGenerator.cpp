@@ -127,6 +127,33 @@ PrimeGenerator::PrimeGenerator(uint64_t start, uint64_t stop) :
   Erat(start, stop)
 { }
 
+uint64_t PrimeGenerator::maxCachedPrime()
+{
+  return smallPrimes.back();
+}
+
+size_t PrimeGenerator::getStartIdx() const
+{
+  size_t startIdx = 0;
+
+  if (start_ > 1)
+    startIdx = primePi[start_ - 1];
+
+  return startIdx;
+}
+
+size_t PrimeGenerator::getStopIdx() const
+{
+  size_t stopIdx = 0;
+
+  if (stop_ < maxCachedPrime())
+    stopIdx = primePi[stop_];
+  else
+    stopIdx = smallPrimes.size();
+
+  return stopIdx;
+}
+
 /// Used by iterator::prev_prime()
 void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
                                     size_t* size)
@@ -189,33 +216,6 @@ void PrimeGenerator::initErat()
     Erat::init(startErat, stop_, sieveSize, preSieve_);
     sievingPrimes_.init(this, preSieve_);
   }
-}
-
-uint64_t PrimeGenerator::maxCachedPrime()
-{
-  return smallPrimes.back();
-}
-
-size_t PrimeGenerator::getStartIdx() const
-{
-  size_t startIdx = 0;
-
-  if (start_ > 1)
-    startIdx = primePi[start_ - 1];
-
-  return startIdx;
-}
-
-size_t PrimeGenerator::getStopIdx() const
-{
-  size_t stopIdx = 0;
-
-  if (stop_ < maxCachedPrime())
-    stopIdx = primePi[stop_];
-  else
-    stopIdx = smallPrimes.size();
-
-  return stopIdx;
 }
 
 void PrimeGenerator::sieveSegment()
