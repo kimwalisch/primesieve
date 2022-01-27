@@ -32,6 +32,8 @@ int main()
     std::vector<uint64_t> vect;
     vect.resize(size, val);
 
+    // After resizeUninitialized() the old vector
+    // content must still be the same.
     vect.clear();
     resizeUninitialized(vect, size);
 
@@ -47,20 +49,61 @@ int main()
       check(vect[i] == val);
     }
 
-    std::size_t oldSize = size;
-    size /= 67;
-    resizeUninitialized(vect, size);
+    // After resizeUninitialized() to a smaller size
+    // there must be no reallocation. The capacity
+    // must still be the same as before.
+    std::size_t newSize = size / 67;
+    resizeUninitialized(vect, newSize);
 
     std::cout << "vect.size() = " << vect.size();
-    check(vect.size() == size);
+    check(vect.size() == newSize);
 
     std::cout << "vect.capacity() = " << vect.capacity();
-    check(vect.capacity() == oldSize);
+    check(vect.capacity() == size);
 
-    for (std::size_t i = 0; i < size; i += 37)
+    for (std::size_t i = 0; i < newSize; i += 37)
     {
       std::cout << "vect[" << i << "] = " << vect[i];
       check(vect[i] == val);
+    }
+
+    // Test that reallocation works correctly.
+    // First print the current vector address.
+    uintptr_t address1 = (uintptr_t) vect.data();
+    std::cout << "1st vector allocation: " << address1 << std::endl;
+
+    // There must be no reallocation here.
+    vect.clear();
+    resizeUninitialized(vect, size);
+    uintptr_t address2 = (uintptr_t) vect.data();
+    std::cout << "1st vector allocation: " << address2 << std::endl;
+
+    if (address1 != address2)
+    {
+      std::cout << "address2 = " << address2;
+      check(address2 == address1);
+      std::exit(1);
+    }
+
+    // This causes a reallocation, the old vector
+    // content must be copied into the new vector.
+    resizeUninitialized(vect, size * 50);
+    uintptr_t address3 = (uintptr_t) vect.data();
+    std::cout << "2nd vector allocation: " << address3 << std::endl;
+
+    std::cout << "vect.size() = " << vect.size();
+    check(vect.size() == size * 50);
+    std::cout << "vect.capacity() = " << vect.capacity();
+    check(vect.capacity() == size * 50);
+
+    for (std::size_t i = 0; i < size; i++)
+    {
+      if (vect[i] != val)
+      {
+        std::cout << "vect[" << i << "] = " << vect[i];
+        check(vect[i] == val);
+        std::exit(1);
+      }
     }
   }
 
