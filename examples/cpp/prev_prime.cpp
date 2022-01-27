@@ -2,17 +2,33 @@
 /// Iterate backwards over primes using primesieve::iterator.
 
 #include <primesieve.hpp>
+#include <cstdlib>
 #include <iostream>
 
-int main()
+int main(int argc, char** argv)
 {
-  primesieve::iterator it;
-  it.skipto(2000);
-  uint64_t prime = it.prev_prime();
+  uint64_t limit = 10000000000ull;
 
-  // iterate over primes from 2000 to 1000
-  for (; prime >= 1000;  prime = it.prev_prime())
-    std::cout << prime << std::endl;
+  if (argc > 1)
+    limit = std::atol(argv[1]);
+
+  primesieve::iterator it;
+  it.skipto(limit);
+  uint64_t prime = it.prev_prime();
+  uint64_t sum = 0;
+
+  // iterate over the primes below 10^9
+  for (; prime > 0; prime = it.prev_prime())
+    sum += prime;
+
+  std::cout << "Sum of primes < " << limit << " = " << sum << std::endl;
+
+  // Note that since sum is a 64-bit variable the result
+  // will be incorrect (due to integer overflow) if
+  // limit > 10^10. However we do allow limits > 10^10
+  // since this is useful for benchmarking.
+  if (limit > 10000000000ull)
+    std::cerr << "Warning: sum is likely incorrect due to 64-bit integer overflow!" << std::endl;
 
   return 0;
 }
