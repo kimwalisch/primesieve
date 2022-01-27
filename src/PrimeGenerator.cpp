@@ -6,10 +6,10 @@
 ///         returns the primes. When there are no more primes left in
 ///         the vector PrimeGenerator generates new primes.
 ///
-///         primesieve::iterator's next_prime() performance depends on
-///         PrimeGenerator::fill(). Therefore PrimeGenerator::fill()
-///         is highly optimized using hardware acceleration (e.g. CTZ,
-///         AVX512) whenever possible.
+///         primesieve::iterator's next_prime() performance depends
+///         on PrimeGenerator::fillNextPrimes(). Therefore
+///         fillNextPrimes() is highly optimized using hardware
+///         acceleration (e.g. CTZ, AVX512) whenever possible.
 ///
 /// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -349,8 +349,8 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
 /// distributed relatively evenly. While processing a 64-bit word
 /// from the sieve array there are if checks that skip to the next
 /// loop iteration once all 1 bits have been processed. In my
-/// benchmarks this algorithm ran about 15% faster than the default
-/// PrimeGenerator::fill() algorithm which uses __builtin_ctzll().
+/// benchmarks this algorithm ran about 5% faster than the default
+/// fillNextPrimes() algorithm which uses __builtin_ctzll().
 ///
 void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
                                     size_t* size)
