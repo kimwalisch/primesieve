@@ -298,18 +298,17 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
     // Use local variables to prevent the compiler from
     // writing temporary results to memory.
     size_t i = *size;
-    size_t maxSize = primes.size();
     uint64_t low = low_;
-    uint8_t* sieve = sieve_;
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieveSize_;
+    uint8_t* sieve = sieve_;
 
     while (sieveIdx < sieveSize)
     {
       // Each loop iteration can generate up to 64 primes,
       // so we have to make sure there is enough space
       // left in the primes vector.
-      if (i + 64 > maxSize)
+      if (i + 64 > primes.size())
         resizeUninitialized(primes, i + 64);
 
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
@@ -318,7 +317,6 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
 
       do
       {
-        assert(j + 4 < maxSize);
         primes[j+0] = nextPrime(bits, low); bits &= bits - 1;
         primes[j+1] = nextPrime(bits, low); bits &= bits - 1;
         primes[j+2] = nextPrime(bits, low); bits &= bits - 1;
@@ -505,9 +503,9 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
     size_t maxSize = primes.size();
     assert(maxSize >= 64);
     uint64_t low = low_;
-    uint8_t* sieve = sieve_;
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieveSize_;
+    uint8_t* sieve = sieve_;
 
     // Fill the buffer with at least (maxSize - 64) primes.
     // Each loop iteration can generate up to 64 primes
