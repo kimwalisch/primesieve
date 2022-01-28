@@ -173,7 +173,7 @@ void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
     assert(a <= b);
     *size = (start_ <= 2) + b - a;
 
-    n = std::max<size_t>(*size, n);
+    n = std::max(*size, n);
     resizeUninitialized(primes, n + 64);
     size_t i = 0;
 
