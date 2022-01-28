@@ -10,7 +10,6 @@
 #include <primesieve/iterator.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
-#include <primesieve/resizeUninitialized.hpp>
 
 #include <stdint.h>
 #include <vector>
@@ -50,7 +49,6 @@ void iterator::skipto(uint64_t start,
   last_idx_ = 0;
   dist_ = 0;
   clear(primeGenerator_);
-  primes_.clear();
 }
 
 void iterator::generate_next_primes()
@@ -64,7 +62,6 @@ void iterator::generate_next_primes()
       IteratorHelper::next(&start_, &stop_, stop_hint_, &dist_);
       auto p = new PrimeGenerator(start_, stop_);
       primeGenerator_.reset(p);
-      resizeUninitialized(primes_, 512);
     }
 
     primeGenerator_->fillNextPrimes(primes_, &size);
@@ -92,14 +89,11 @@ void iterator::generate_prev_primes()
   if (primeGenerator_)
     start_ = primes_.front();
 
-  primes_.clear();
   std::size_t size = 0;
 
   while (!size)
   {
     IteratorHelper::prev(&start_, &stop_, stop_hint_, &dist_);
-    if (start_ <= 2)
-      primes_.push_back(0);
     auto p = new PrimeGenerator(start_, stop_);
     primeGenerator_.reset(p);
     primeGenerator_->fillPrevPrimes(primes_, &size);

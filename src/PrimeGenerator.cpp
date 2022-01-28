@@ -158,28 +158,31 @@ size_t PrimeGenerator::getStopIdx() const
 void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
                                     size_t* size)
 {
-  assert(primes.size() <= 1);
-  *size = primes.size();
   size_t n = primeCountApprox(start_, stop_);
 
   if (start_ > maxCachedPrime())
+  {
     // +64 prevents reallocation in fillPrevPrimes()
     resizeUninitialized(primes, n + 64);
+    *size = 0;
+  }
   else
   {
     size_t a = getStartIdx();
     size_t b = getStopIdx();
     assert(a <= b);
-    size_t newSize = *size + (b - a);
+    *size = (start_ <= 2) + b - a;
 
-    n = std::max(n, newSize);
+    n = std::max<size_t>(*size, n);
     resizeUninitialized(primes, n + 64);
+    size_t i = 0;
+
+    if (start_ <= 2)
+      primes[i++] = 0;
 
     std::copy(smallPrimes.begin() + a,
               smallPrimes.begin() + b,
-              &primes[*size]);
-
-    *size = newSize;
+              &primes[i]);
   }
 
   initErat();
@@ -189,6 +192,10 @@ void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
 void PrimeGenerator::initNextPrimes(std::vector<uint64_t>& primes,
                                     size_t* size)
 {
+  // A buffer of 512 primes provides good
+  // performance with little memory usage.
+  resizeUninitialized(primes, 512);
+
   if (start_ <= maxCachedPrime())
   {
     size_t a = getStartIdx();

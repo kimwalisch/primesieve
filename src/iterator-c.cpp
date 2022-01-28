@@ -12,7 +12,6 @@
 #include <primesieve/forward.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
-#include <primesieve/resizeUninitialized.hpp>
 
 #include <stdint.h>
 #include <cerrno>
@@ -69,8 +68,6 @@ void primesieve_skipto(primesieve_iterator* it,
   it->i = 0;
   it->last_idx = 0;
   it->dist = 0;
-  auto& primes = getPrimes(it);
-  primes.clear();
   clearPrimeGenerator(it);
 }
 
@@ -100,8 +97,6 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
         IteratorHelper::next(&it->start, &it->stop, it->stop_hint, &it->dist);
         it->primeGenerator = new PrimeGenerator(it->start, it->stop);
         primeGenerator = getPrimeGenerator(it);
-        resizeUninitialized(primes, 512);
-        it->primes = &primes[0];
       }
 
       primeGenerator->fillNextPrimes(primes, &size);
@@ -133,6 +128,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
 
   it->i = 0;
   it->last_idx = size - 1;
+  it->primes = &primes[0];
 }
 
 void primesieve_generate_prev_primes(primesieve_iterator* it)
@@ -145,7 +141,6 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     if (it->primeGenerator)
       it->start = primes.front();
 
-    primes.clear();
     clearPrimeGenerator(it);
 
     while (!size)
@@ -153,8 +148,6 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
       IteratorHelper::prev(&it->start, &it->stop, it->stop_hint, &it->dist);
       it->primeGenerator = new PrimeGenerator(it->start, it->stop);
       auto primeGenerator = getPrimeGenerator(it);
-      if (it->start <= 2)
-        primes.push_back(0);
       primeGenerator->fillPrevPrimes(primes, &size);
       clearPrimeGenerator(it);
     }
@@ -170,7 +163,7 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     errno = EDOM;
   }
 
-  it->primes = &primes[0];
   it->last_idx = size - 1;
   it->i = it->last_idx;
+  it->primes = &primes[0];
 }
