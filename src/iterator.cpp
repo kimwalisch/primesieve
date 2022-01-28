@@ -55,7 +55,9 @@ void iterator::skipto(uint64_t start,
 
 void iterator::generate_next_primes()
 {
-  while (true)
+  std::size_t size = 0;
+
+  while (!size)
   {
     if (!primeGenerator_)
     {
@@ -65,7 +67,7 @@ void iterator::generate_next_primes()
       resizeUninitialized(primes_, 512);
     }
 
-    primeGenerator_->fillNextPrimes(primes_, &last_idx_);
+    primeGenerator_->fillNextPrimes(primes_, &size);
 
     // There are 3 different cases here:
     // 1) The primes array contains a few primes (<= 512).
@@ -77,14 +79,12 @@ void iterator::generate_next_primes()
     // 3) The next prime > 2^64. In this case the primes
     //    array contains an error code (UINT64_MAX) which
     //    is returned to the user.
-    if (last_idx_ == 0)
+    if (size == 0)
       clear(primeGenerator_);
-    else
-      break;
   }
 
   i_ = 0;
-  last_idx_--;
+  last_idx_ = size - 1;
 }
 
 void iterator::generate_prev_primes()
@@ -93,19 +93,20 @@ void iterator::generate_prev_primes()
     start_ = primes_.front();
 
   primes_.clear();
+  std::size_t size = 0;
 
-  while (primes_.empty())
+  while (!size)
   {
     IteratorHelper::prev(&start_, &stop_, stop_hint_, &dist_);
     if (start_ <= 2)
       primes_.push_back(0);
     auto p = new PrimeGenerator(start_, stop_);
     primeGenerator_.reset(p);
-    primeGenerator_->fillPrevPrimes(primes_, &last_idx_);
+    primeGenerator_->fillPrevPrimes(primes_, &size);
     clear(primeGenerator_);
   }
 
-  last_idx_--;
+  last_idx_ = size - 1;
   i_ = last_idx_;
 }
 
