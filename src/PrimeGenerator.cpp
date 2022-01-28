@@ -158,6 +158,7 @@ size_t PrimeGenerator::getStopIdx() const
 void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
                                     size_t* size)
 {
+  assert(primes.size() <= 1);
   *size = primes.size();
   size_t n = primeCountApprox(start_, stop_);
 
