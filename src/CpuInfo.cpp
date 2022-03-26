@@ -26,7 +26,7 @@
 
 #include <primesieve/CpuInfo.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <cstddef>
 #include <exception>
 #include <string>

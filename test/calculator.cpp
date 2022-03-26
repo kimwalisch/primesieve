@@ -14,7 +14,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 
 #define STR1(s) #s
 #define TOSTRING(s) STR1(s)

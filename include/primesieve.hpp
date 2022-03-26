@@ -21,7 +21,7 @@
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/StorePrimes.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include <string>
 

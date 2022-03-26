@@ -15,7 +15,7 @@
 #include "MemoryPool.hpp"
 #include "Wheel.hpp"
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 
 namespace primesieve {

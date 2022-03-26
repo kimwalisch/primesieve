@@ -13,7 +13,7 @@
 #define PARALLELSIEVE_HPP
 
 #include "PrimeSieve.hpp"
-#include <stdint.h>
+#include <cstdint>
 #include <mutex>
 
 namespace primesieve {

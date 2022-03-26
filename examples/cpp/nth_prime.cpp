@@ -2,7 +2,7 @@
 /// Find the nth prime.
 
 #include <primesieve.hpp>
-#include <stdint.h>
+#include <cstdint>
 #include <iostream>
 #include <cstdlib>
 

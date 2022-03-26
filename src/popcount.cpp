@@ -22,7 +22,7 @@
 
 #include <primesieve/intrinsics.hpp>
 #include <primesieve/forward.hpp>
-#include <stdint.h>
+#include <cstdint>
 
 namespace {
 

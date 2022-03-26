@@ -23,7 +23,7 @@
 #include <primesieve/macros.hpp>
 #include <primesieve/MemoryPool.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <cassert>
 
 /// This macro sorts the current sieving prime by its

@@ -12,7 +12,7 @@
 #ifndef PRIMESIEVE_ITERATOR_HPP
 #define PRIMESIEVE_ITERATOR_HPP
 
-#include <stdint.h>
+#include <cstdint>
 #include <cstddef>
 #include <vector>
 #include <memory>

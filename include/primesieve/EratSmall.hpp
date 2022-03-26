@@ -14,7 +14,7 @@
 #include "macros.hpp"
 #include "Wheel.hpp"
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 
 namespace primesieve {

@@ -11,7 +11,7 @@
 #include <primesieve/ParallelSieve.hpp>
 #include "cmdoptions.hpp"
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 #include <iostream>
 #include <exception>

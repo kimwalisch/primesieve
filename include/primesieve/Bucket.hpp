@@ -17,7 +17,7 @@
 #include "config.hpp"
 #include "pmath.hpp"
 
-#include <stdint.h>
+#include <cstdint>
 #include <cstddef>
 #include <cassert>
 

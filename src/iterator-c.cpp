@@ -13,7 +13,7 @@
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <cerrno>
 #include <exception>
 #include <iostream>

@@ -12,7 +12,7 @@
 
 #include <primesieve/pmath.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <iostream>
 #include <cmath>
 #include <cstdlib>

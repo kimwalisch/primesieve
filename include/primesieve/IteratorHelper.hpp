@@ -10,7 +10,7 @@
 #ifndef ITERATOR_HELPER_HPP
 #define ITERATOR_HELPER_HPP
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace primesieve {
 

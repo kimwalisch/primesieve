@@ -11,7 +11,7 @@
 #ifndef INTRINSICS_HPP
 #define INTRINSICS_HPP
 
-#include <stdint.h>
+#include <cstdint>
 #include <cassert>
 
 #if !defined(__has_builtin)

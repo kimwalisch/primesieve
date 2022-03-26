@@ -11,7 +11,7 @@
 #ifndef PMATH_HPP
 #define PMATH_HPP
 
-#include <stdint.h>
+#include <cstdint>
 #include <algorithm>
 #include <cmath>
 #include <cstddef>

@@ -29,7 +29,7 @@
 #ifndef PRESIEVE_HPP
 #define PRESIEVE_HPP
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 #include <vector>
 

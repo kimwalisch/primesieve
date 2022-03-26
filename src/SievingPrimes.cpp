@@ -14,7 +14,7 @@
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/pmath.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <cassert>
 #include <vector>
 

@@ -19,7 +19,7 @@
 #include "PreSieve.hpp"
 #include "SievingPrimes.hpp"
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 
 namespace primesieve {

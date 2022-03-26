@@ -13,7 +13,7 @@
 #include <primesieve/Wheel.hpp>
 
 #include <array>
-#include <stdint.h>
+#include <cstdint>
 
 namespace primesieve {
 

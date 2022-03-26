@@ -17,7 +17,7 @@
 #include <primesieve/PrintPrimes.hpp>
 #include <primesieve/PreSieve.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <algorithm>
 #include <array>
 #include <chrono>

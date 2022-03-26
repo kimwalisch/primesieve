@@ -19,7 +19,7 @@
 #include <primesieve/Erat.hpp>
 #include <primesieve/SievingPrimes.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <algorithm>
 #include <iostream>
 #include <sstream>

@@ -10,7 +10,7 @@
 
 #include <primesieve.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <cstdlib>
 #include <exception>
 #include <iostream>

@@ -12,7 +12,7 @@
 #ifndef WHEEL_HPP
 #define WHEEL_HPP
 
-#include <stdint.h>
+#include <cstdint>
 #include <algorithm>
 #include <cassert>
 

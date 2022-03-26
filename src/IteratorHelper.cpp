@@ -14,7 +14,7 @@
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <algorithm>
 #include <cmath>
 #include <limits>

@@ -10,7 +10,7 @@
 
 #include <primesieve/ParallelSieve.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 #include <cmath>
 #include <cstdlib>

@@ -10,7 +10,7 @@
 #ifndef CMDOPTIONS_HPP
 #define CMDOPTIONS_HPP
 
-#include <stdint.h>
+#include <cstdint>
 #include <deque>
 
 struct CmdOptions

@@ -11,7 +11,7 @@
 
 #include <primesieve.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 #include <cstdlib>
 #include <cmath>

@@ -13,7 +13,7 @@
 #include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <algorithm>
 #include <cassert>
 #include <chrono>

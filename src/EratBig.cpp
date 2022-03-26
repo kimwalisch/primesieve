@@ -23,7 +23,7 @@
 #include <primesieve/MemoryPool.hpp>
 #include <primesieve/pmath.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <cassert>
 #include <algorithm>
 #include <vector>

@@ -12,7 +12,7 @@
 #ifndef LITTLEENDIAN_CAST_HPP
 #define LITTLEENDIAN_CAST_HPP
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace {
 

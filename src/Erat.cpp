@@ -18,7 +18,7 @@
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/pmath.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 #include <algorithm>
 #include <cassert>

@@ -11,7 +11,7 @@
 #include <primesieve.hpp>
 #include <primesieve/ParallelSieve.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <chrono>
 #include <cmath>
 #include <cstdlib>

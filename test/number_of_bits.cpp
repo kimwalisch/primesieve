@@ -10,7 +10,7 @@
 
 #include <primesieve/pmath.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <iostream>
 
 void check(bool OK)

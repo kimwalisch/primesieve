@@ -14,7 +14,7 @@
 #define PRIMESIEVE_CLASS_HPP
 
 #include "PreSieve.hpp"
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 
 namespace primesieve {

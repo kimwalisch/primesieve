@@ -13,7 +13,7 @@
 #include "Erat.hpp"
 #include "macros.hpp"
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 #include <vector>
 

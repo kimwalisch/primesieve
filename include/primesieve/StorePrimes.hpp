@@ -14,7 +14,7 @@
 #include "iterator.hpp"
 #include "primesieve_error.hpp"
 
-#include <stdint.h>
+#include <cstdint>
 #include <algorithm>
 #include <cmath>
 #include <cstddef>

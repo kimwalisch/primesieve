@@ -13,7 +13,7 @@
 #ifndef RESIZEUNINITIALIZED_HPP
 #define RESIZEUNINITIALIZED_HPP
 
-#include <stdint.h>
+#include <cstdint>
 #include <cstddef>
 #include <vector>
 

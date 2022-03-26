@@ -11,7 +11,7 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace {
 namespace config {

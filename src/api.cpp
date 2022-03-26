@@ -17,7 +17,7 @@
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelSieve.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <cstddef>
 #include <limits>
 #include <string>

@@ -14,7 +14,7 @@
 #include <primesieve.hpp>
 #include <primesieve/malloc_vector.hpp>
 
-#include <stdint.h>
+#include <cstdint>
 #include <cstdlib>
 #include <cstddef>
 #include <cerrno>

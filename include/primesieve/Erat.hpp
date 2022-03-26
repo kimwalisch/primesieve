@@ -18,7 +18,7 @@
 #include "MemoryPool.hpp"
 #include "intrinsics.hpp"
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 #include <memory>
 
