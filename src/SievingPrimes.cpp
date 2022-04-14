@@ -47,8 +47,8 @@ void SievingPrimes::tinySieve()
       for (uint64_t j = i * i; j <= n; j += i * 2)
         tinySieve_[j] = false;
 
-  tinyIdx_ = start_;
-  tinyIdx_ += ~tinyIdx_ & 1;
+  // Round up to next odd number
+  tinyIdx_ = start_ | 1;
 }
 
 void SievingPrimes::fill()
@@ -57,27 +57,38 @@ void SievingPrimes::fill()
     if (!sieveSegment())
       return;
 
-  uint64_t num = 0;
-  uint64_t maxSize = primes_.size();
-  assert(maxSize >= 64);
+  size_t num = 0;
+  uint64_t low = low_;
+  assert(primes_.size() >= 64);
 
-  // Fill the buffer with at least (maxSize - 64) primes.
+  // Fill the buffer with at least (primes_.size() - 64) primes.
   // Each loop iteration can generate up to 64 primes
   // so we have to stop generating primes once there is
   // not enough space for 64 more primes.
   do
   {
-    uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
+      uint64_t bits = littleendian_cast<uint64_t>(&sieve_[sieveIdx_]);
+      size_t j = num;
+      num += popcnt64(bits);
 
-    for (; bits != 0; bits &= bits - 1)
-      primes_[num++] = nextPrime(bits, low_);
+      do
+      {
+        assert(j + 4 < primes_.size());
+        primes_[j+0] = nextPrime(bits, low); bits &= bits - 1;
+        primes_[j+1] = nextPrime(bits, low); bits &= bits - 1;
+        primes_[j+2] = nextPrime(bits, low); bits &= bits - 1;
+        primes_[j+3] = nextPrime(bits, low); bits &= bits - 1;
+        j += 4;
+      }
+      while (j < num);
 
-    low_ += 8 * 30;
-    sieveIdx_ += 8;
+      low += 8 * 30;
+      sieveIdx_ += 8;
   }
-  while (num <= maxSize - 64 &&
+  while (num <= primes_.size() - 64 &&
          sieveIdx_ < sieveSize_);
 
+  low_ = low;
   i_ = 0;
   size_ = num;
 }
