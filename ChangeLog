@@ -2,6 +2,7 @@ Changes in version 7.9, 14/04/2022
 ==================================
 
 * intrinsics.hpp: Improved x64 BSF assembly.
+* EratBig.cpp: Use std::copy() instead of std::rotate().
 * SievingPrimes.cpp: Simplify round up to next odd number.
 
 Changes in version 7.8, 21/01/2022
