@@ -188,7 +188,8 @@ namespace {
 
 inline int ctz64(uint64_t x)
 {
-  // __builtin_ctz(0) is undefined behavior
+  // __builtin_ctz(0) is undefined behavior,
+  // we don't define CTZ64_SUPPORTS_ZERO.
   assert(x != 0);
 
 #if __cplusplus >= 201703L
