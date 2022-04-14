@@ -97,9 +97,8 @@ void EratBig::crossOff(uint8_t* sieve)
   // Move the bucket related to the next segment to
   // the 1st position so that it will be used when
   // sieving the next segment.
-  std::rotate(buckets_.begin(),
-              buckets_.begin() + 1,
-              buckets_.end());
+  std::copy(buckets_.begin() + 1, buckets_.end(), buckets_.begin());
+  buckets_.back() = nullptr;
 }
 
 /// Removes the next multiple of each sieving prime from the
