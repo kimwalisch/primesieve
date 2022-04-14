@@ -47,8 +47,8 @@ void SievingPrimes::tinySieve()
       for (uint64_t j = i * i; j <= n; j += i * 2)
         tinySieve_[j] = false;
 
-  tinyIdx_ = start_;
-  tinyIdx_ += ~tinyIdx_ & 1;
+  // Round up to next odd number
+  tinyIdx_ = start_ | 1;
 }
 
 void SievingPrimes::fill()
