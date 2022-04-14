@@ -77,29 +77,6 @@ inline int popcnt64(uint64_t x)
 
 #endif
 
-// In 2022 std::countr_zero() causes performance issues in many
-// cases therefore we need a lot of workarounds here. We try to use
-// alternative compiler intrinsics or inline assembly instead. If we
-// are luckly we can get rid of these workarounds by around 2030.
-//
-// std::countr_zero(0) is well defined (unlike __builtin_ctzll(0))
-// which is important for our use case. However on x64 CPUs
-// std::countr_zero() avoids undefined behavior by checking if the
-// input number is 0 before executing BSF or by checking if the CPU
-// supports TZCNT. GCC even adds zero checks on ARM64 where it is
-// not needed. These checks hurt performance, we try to avoid them.
-
-#if defined(_MSC_VER)
-  #if defined(_M_X64)
-    #define COUNTR_ZERO_IS_SLOW
-  #endif
-#elif (defined(__GNUC__) || \
-       defined(__clang__)) && \
-       defined(__x86_64__) && \
-      !defined(__BMI__)
-  #define COUNTR_ZERO_IS_SLOW
-#endif
-
 #if (defined(__GNUC__) || \
      defined(__clang__)) && \
      defined(__x86_64__) && \
@@ -118,6 +95,51 @@ inline uint64_t ctz64(uint64_t x)
 }
 
 } // namespace
+
+#elif (defined(__GNUC__) || \
+       defined(__clang__)) && \
+       defined(__x86_64__) && \
+      !defined(__BMI__)
+
+#define HAS_CTZ64
+#define CTZ64_SUPPORTS_ZERO
+
+namespace {
+
+inline uint64_t ctz64(uint64_t x)
+{
+  // REP BSF uses the TZCNT instruction on x64 CPUs with the BMI1
+  // instruction set (>= 2013) and the BSF instruction on older x64
+  // CPUs. BSF(0) is undefined behavior, it leaves the destination
+  // register unmodified. Fortunately, it is possible to avoid this
+  // undefined behavior by always setting the destination register
+  // to the same value before executing BSF(0). This works on all
+  // AMD & Intel CPUs since the i586 (from 1993), the Linux kernel
+  // also relies on this behavior, see this Linux commit:
+  // https://github.com/torvalds/linux/commit/ca3d30cc02f780f68771087040ce935add6ba2b7
+  //
+  // The constraint "0" for input operand 1 says that it must occupy
+  // the same location as output operand 0. Hence the assembly below
+  // uses the same input & output register. This ensures that
+  // BSF(0) = 0, hence there is no undefined behavior. However, you
+  // cannot rely on ctz64(0) = 0 since TZCNT(0) = 64.
+  __asm__("rep bsf %1, %0" : "=r"(x) : "0"(x));
+  assert(x <= 64);
+  return x;
+}
+
+} // namespace
+
+#elif defined(_MSC_VER) && \
+      defined(_M_X64) && \
+      defined(__AVX2__) && \
+      __has_include(<immintrin.h>)
+
+#define HAS_CTZ64
+#define CTZ64_SUPPORTS_ZERO
+
+// No undefined behavior, _tzcnt_u64(0) = 64
+#define ctz64(x) _tzcnt_u64(x)
 
 #elif (defined(__GNUC__) || \
        defined(__clang__)) && \
@@ -142,22 +164,12 @@ inline uint64_t ctz64(uint64_t x)
 
 } // namespace
 
-#elif defined(_MSC_VER) && \
-      defined(_M_X64) && \
-      defined(__AVX2__) && \
-      __has_include(<immintrin.h>)
-
-#define HAS_CTZ64
-#define CTZ64_SUPPORTS_ZERO
-
-// In 2022 MSVC code gen for std::countr_zero() is bad on x64,
-// if possible use _tzcnt_u64() instead.
-// No undefined behavior, _tzcnt_u64(0) = 64.
-#define ctz64(x) _tzcnt_u64(x)
-
+// In 2022 std::countr_zero() causes performance issues in many
+// cases, especially on x64 CPUs. Therefore we try to use alternative
+// compiler intrinsics or inline assembly whenever possible.
 #elif __cplusplus >= 202002L && \
       __has_include(<bit>) && \
-      !defined(COUNTR_ZERO_IS_SLOW)
+      !(defined(_MSC_VER) && defined(_M_X64))
 
 #include <bit>
 

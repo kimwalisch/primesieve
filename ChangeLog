@@ -1,3 +1,8 @@
+Changes in version 7.9, 14/04/2022
+==================================
+
+* intrinsics.hpp: Improved x64 BSF assembly.
+
 Changes in version 7.8, 21/01/2022
 ==================================
 
