@@ -76,9 +76,15 @@ constexpr double FACTOR_ERATSMALL = 0.2;
 
 /// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL)
 /// and <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
-/// are processed in EratMedium. The ideal value for
-/// FACTOR_ERATMEDIUM has been determined experimentally by
-/// running benchmarks near 10^14.
+/// are processed in EratMedium.
+///
+/// When FACTOR_ERATMEDIUM is small fewer sieving primes are
+/// processed in EratMedium.cpp and more sieving primes are
+/// processed in EratBig.cpp. Generally a larger FACTOR_ERATMEDIUM
+/// decreases the number of executed instructions, but increases
+/// the number of branch mispredictions. On newer CPUs it is more
+/// important to reduce the number of branch mispredictions than to
+/// aim for the fewest number of executed instructions.
 ///
 /// @pre FACTOR_ERATMEDIUM >= 0 && <= 9
 /// FACTOR_ERATMEDIUM * max(sieveSize) / 30 * 6 + 6 <= max(multipleIndex)
@@ -86,7 +92,7 @@ constexpr double FACTOR_ERATSMALL = 0.2;
 /// FACTOR_ERATMEDIUM <= ((2^23 - 7) * 30) / (2^22 * 6)
 /// FACTOR_ERATMEDIUM <= 9.999991655
 ///
-constexpr double FACTOR_ERATMEDIUM = 5.0;
+constexpr double FACTOR_ERATMEDIUM = 2.0;
 
 } // namespace config
 } // namespace
