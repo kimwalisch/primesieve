@@ -144,9 +144,10 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     buckets[segment1]++->set(sievingPrime1, multipleIndex1, wheelIndex1);
   }
 
-  // Process the remaining sieving prime(s)
-  for (; prime != end; prime++)
+  // Process the last sieving prime
+  if_unlikely(prime < end)
   {
+    assert(prime + 1 == end);
     uint64_t multipleIndex = prime->getMultipleIndex();
     uint64_t wheelIndex    = prime->getWheelIndex();
     uint64_t sievingPrime  = prime->getSievingPrime();
