@@ -117,6 +117,34 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
   uint64_t log2SieveSize = log2SieveSize_;
   MemoryPool& memoryPool = *memoryPool_;
 
+  // Process 2 sieving primes per loop iteration to
+  // increase instruction level parallelism.
+  for (; prime < end - 1; prime += 2)
+  {
+    uint64_t multipleIndex0 = prime[0].getMultipleIndex();
+    uint64_t wheelIndex0    = prime[0].getWheelIndex();
+    uint64_t sievingPrime0  = prime[0].getSievingPrime();
+    uint64_t multipleIndex1 = prime[1].getMultipleIndex();
+    uint64_t wheelIndex1    = prime[1].getWheelIndex();
+    uint64_t sievingPrime1  = prime[1].getSievingPrime();
+
+    unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
+    uint64_t segment0 = multipleIndex0 >> log2SieveSize;
+    multipleIndex0 &= moduloSieveSize;
+    unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
+    uint64_t segment1 = multipleIndex1 >> log2SieveSize;
+    multipleIndex1 &= moduloSieveSize;
+
+    if_unlikely(Bucket::isFull(buckets[segment0]))
+      memoryPool.addBucket(buckets[segment0]);
+    buckets[segment0]++->set(sievingPrime0, multipleIndex0, wheelIndex0);
+
+    if_unlikely(Bucket::isFull(buckets[segment1]))
+      memoryPool.addBucket(buckets[segment1]);
+    buckets[segment1]++->set(sievingPrime1, multipleIndex1, wheelIndex1);
+  }
+
+  // Process the remaining sieving prime(s)
   for (; prime != end; prime++)
   {
     uint64_t multipleIndex = prime->getMultipleIndex();
@@ -127,9 +155,8 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     uint64_t segment = multipleIndex >> log2SieveSize;
     multipleIndex &= moduloSieveSize;
 
-    if (Bucket::isFull(buckets[segment]))
+    if_unlikely(Bucket::isFull(buckets[segment]))
       memoryPool.addBucket(buckets[segment]);
-
     buckets[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
   }
 }
