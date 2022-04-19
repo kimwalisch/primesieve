@@ -3,7 +3,7 @@
 /// @brief  Wheel factorization is used to skip multiles of
 ///         small primes in the sieve of Eratosthenes.
 ///
-/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -105,20 +105,6 @@ protected:
   static uint64_t getMaxFactor()
   {
     return WHEEL[0].nextMultipleFactor;
-  }
-
-  /// Cross-off the current multiple of sievingPrime
-  /// and calculate its next multiple
-  ///
-  static void unsetBit(uint8_t* sieve,
-                       uint64_t sievingPrime,
-                       uint64_t* multipleIndex,
-                       uint64_t* wheelIndex)
-  {
-    sieve[*multipleIndex] &= WHEEL[*wheelIndex].unsetBit;
-    *multipleIndex        += WHEEL[*wheelIndex].nextMultipleFactor * sievingPrime;
-    *multipleIndex        += WHEEL[*wheelIndex].correct;
-    *wheelIndex           += WHEEL[*wheelIndex].next;
   }
 
 private:

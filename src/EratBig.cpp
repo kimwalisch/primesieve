@@ -128,11 +128,19 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     uint64_t wheelIndex1    = prime[1].getWheelIndex();
     uint64_t sievingPrime1  = prime[1].getSievingPrime();
 
-    unsetBit(sieve, sievingPrime0, &multipleIndex0, &wheelIndex0);
+    sieve[multipleIndex0] &= wheel210[wheelIndex0].unsetBit;
+    sieve[multipleIndex1] &= wheel210[wheelIndex1].unsetBit;
+
+    multipleIndex0 += wheel210[wheelIndex0].nextMultipleFactor * sievingPrime0;
+    multipleIndex0 += wheel210[wheelIndex0].correct;
+    wheelIndex0    += wheel210[wheelIndex0].next;
+    multipleIndex1 += wheel210[wheelIndex1].nextMultipleFactor * sievingPrime1;
+    multipleIndex1 += wheel210[wheelIndex1].correct;
+    wheelIndex1    += wheel210[wheelIndex1].next;
+
     uint64_t segment0 = multipleIndex0 >> log2SieveSize;
-    multipleIndex0 &= moduloSieveSize;
-    unsetBit(sieve, sievingPrime1, &multipleIndex1, &wheelIndex1);
     uint64_t segment1 = multipleIndex1 >> log2SieveSize;
+    multipleIndex0 &= moduloSieveSize;
     multipleIndex1 &= moduloSieveSize;
 
     if_unlikely(Bucket::isFull(buckets[segment0]))
@@ -152,7 +160,10 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     uint64_t wheelIndex    = prime->getWheelIndex();
     uint64_t sievingPrime  = prime->getSievingPrime();
 
-    unsetBit(sieve, sievingPrime, &multipleIndex, &wheelIndex);
+    sieve[multipleIndex] &= wheel210[wheelIndex].unsetBit;
+    multipleIndex += wheel210[wheelIndex].nextMultipleFactor * sievingPrime;
+    multipleIndex += wheel210[wheelIndex].correct;
+    wheelIndex    += wheel210[wheelIndex].next;
     uint64_t segment = multipleIndex >> log2SieveSize;
     multipleIndex &= moduloSieveSize;
 

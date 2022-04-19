@@ -89,9 +89,7 @@
   initialize sieving primes i.e. ```Wheel::addSievingPrime()```
   calculates the first multiple ≥ start of each sieving prime and the
   position within the sieve array of that multiple.
-  ```Wheel::unsetBit()``` is used to cross-off a multiple (unset a bit)
-  and to calculate the sieving prime's next multiple. The EratSmall,
-  EratMedium and EratBig classes are derived from Wheel.
+  The EratSmall, EratMedium and EratBig classes are derived from Wheel.
 
 # References
 
