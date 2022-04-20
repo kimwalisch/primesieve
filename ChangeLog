@@ -1,8 +1,9 @@
-Changes in version 7.9, 19/04/2022
+Changes in version 7.9, 20/04/2022
 ==================================
 
 * intrinsics.hpp: Improved x64 BSF assembly.
 * EratBig.cpp: Improve instruction level parallelism.
+* EratBig.cpp: Improve next wheel index code.
 * EratBig.cpp: Use std::copy() instead of std::rotate().
 * SievingPrimes.cpp: Reduce branch mispredictions.
 * config.hpp: Tune FACTOR_ERATSMALL constant.

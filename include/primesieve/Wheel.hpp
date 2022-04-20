@@ -12,6 +12,8 @@
 #ifndef WHEEL_HPP
 #define WHEEL_HPP
 
+#include "pmath.hpp"
+
 #include <stdint.h>
 #include <algorithm>
 #include <cassert>
@@ -44,10 +46,13 @@ struct WheelElement
   /// Overflow needed to correct the next multiple index
   /// (due to sievingPrime = prime / 30)
   uint8_t correct;
-  /// Used to calculate the next wheel index:
-  /// wheelIndex += next;
-  int8_t next;
+  /// Used to get the next wheel index:
+  /// wheelIndex = next;
+  uint32_t next;
 };
+
+/// The compiler should add 1 byte of padding to WheelElement
+static_assert(isPow2(sizeof(WheelElement)), "For best performance sizeof(WheelElement) must be a power of 2!");
 
 extern const WheelElement wheel30[8*8];
 extern const WheelElement wheel210[8*48];

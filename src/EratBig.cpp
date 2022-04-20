@@ -135,10 +135,10 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
 
     multipleIndex0 += wheel210[wheelIndex0].nextMultipleFactor * sievingPrime0;
     multipleIndex0 += wheel210[wheelIndex0].correct;
-    wheelIndex0    += wheel210[wheelIndex0].next;
+    wheelIndex0 = wheel210[wheelIndex0].next;
     multipleIndex1 += wheel210[wheelIndex1].nextMultipleFactor * sievingPrime1;
     multipleIndex1 += wheel210[wheelIndex1].correct;
-    wheelIndex1    += wheel210[wheelIndex1].next;
+    wheelIndex1 = wheel210[wheelIndex1].next;
 
     uint64_t segment0 = multipleIndex0 >> log2SieveSize;
     uint64_t segment1 = multipleIndex1 >> log2SieveSize;
@@ -165,7 +165,7 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     sieve[multipleIndex] &= wheel210[wheelIndex].unsetBit;
     multipleIndex += wheel210[wheelIndex].nextMultipleFactor * sievingPrime;
     multipleIndex += wheel210[wheelIndex].correct;
-    wheelIndex    += wheel210[wheelIndex].next;
+    wheelIndex = wheel210[wheelIndex].next;
     uint64_t segment = multipleIndex >> log2SieveSize;
     multipleIndex &= moduloSieveSize;
 
