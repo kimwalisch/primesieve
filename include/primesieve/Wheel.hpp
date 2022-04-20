@@ -50,13 +50,16 @@ struct WheelElement
 };
 
 extern const WheelElement wheel30[8*8];
-extern const WheelElement wheel210[48*8];
+extern const WheelElement wheel210[8*48];
 
 /// The abstract Wheel class is used skip multiples of small
 /// primes in the sieve of Eratosthenes. The EratSmall,
 /// EratMedium and EratBig classes are derived from Wheel.
 ///
-template <int MODULO, int SIZE, const WheelElement* WHEEL, const WheelInit* INIT>
+template <int MODULO,
+          int SIZE,
+          int MAXMULTIPLEFACTOR,
+          const WheelInit* INIT>
 class Wheel
 {
 public:
@@ -104,16 +107,19 @@ protected:
 
   static uint64_t getMaxFactor()
   {
-    return WHEEL[0].nextMultipleFactor;
+    return MAXMULTIPLEFACTOR;
   }
 
 private:
   static const uint64_t wheelOffsets_[30];
 };
 
-template <int MODULO, int SIZE, const WheelElement* WHEEL, const WheelInit* INIT>
+template <int MODULO,
+          int SIZE,
+          int MAXMULTIPLEFACTOR,
+          const WheelInit* INIT>
 const uint64_t
-Wheel<MODULO, SIZE, WHEEL, INIT>::wheelOffsets_[30] =
+Wheel<MODULO, SIZE, MAXMULTIPLEFACTOR, INIT>::wheelOffsets_[30] =
 {
   0, SIZE * 7, 0, 0, 0, 0,
   0, SIZE * 0, 0, 0, 0, SIZE * 1,
@@ -123,10 +129,10 @@ Wheel<MODULO, SIZE, WHEEL, INIT>::wheelOffsets_[30] =
 };
 
 /// 3rd wheel, skips multiples of 2, 3 and 5
-using Wheel30_t = Wheel<30, 8, wheel30, wheel30Init>;
+using Wheel30_t = Wheel<30, 8, 6, wheel30Init>;
 
 /// 4th wheel, skips multiples of 2, 3, 5 and 7
-using Wheel210_t = Wheel<210, 48, wheel210, wheel210Init>;
+using Wheel210_t = Wheel<210, 48, 10, wheel210Init>;
 
 } // namespace
 

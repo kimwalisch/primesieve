@@ -128,7 +128,7 @@ const WheelElement wheel30[8*8] =
   { BIT3, 2, 0, 1 }, { BIT4, 4, 0, 1 }, { BIT5, 6, 0, 1 }, { BIT6, 2, 0, -7 }
 };
 
-const WheelElement wheel210[48*8] =
+const WheelElement wheel210[8*48] =
 {
   { BIT0, 10, 2, 1 }, { BIT3, 2, 0, 1 }, { BIT7,  4, 1, 1 }, { BIT6, 2, 1, 1 },
   { BIT2,  4, 1, 1 }, { BIT1, 6, 1, 1 }, { BIT5,  2, 1, 1 }, { BIT0, 6, 1, 1 },

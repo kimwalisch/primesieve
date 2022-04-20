@@ -62,10 +62,12 @@ void EratBig::init(uint64_t stop,
 /// Add a new sieving prime
 void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t wheelIndex)
 {
-  assert(prime <= maxPrime_);
   uint64_t sievingPrime = prime / 30;
   uint64_t segment = multipleIndex >> log2SieveSize_;
   multipleIndex &= moduloSieveSize_;
+
+  assert(prime <= maxPrime_);
+  assert(segment < buckets_.size());
 
   if (Bucket::isFull(buckets_[segment]))
     memoryPool_->addBucket(buckets_[segment]);
