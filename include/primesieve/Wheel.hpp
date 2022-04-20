@@ -21,7 +21,7 @@
 namespace primesieve {
 
 /// The WheelInit data structure is used to calculate the
-/// first multiple >= start of each sieving prime
+/// first multiple >= start of each sieving prime.
 ///
 struct WheelInit
 {
@@ -33,15 +33,15 @@ extern const WheelInit wheel30Init[30];
 extern const WheelInit wheel210Init[210];
 
 /// The WheelElement data structure is used to skip multiples
-/// of small primes using wheel factorization
+/// of small primes using wheel factorization.
 ///
 struct WheelElement
 {
-  /// Bitmask used to unset the bit corresponding to the current
-  /// multiple of a SievingPrime object
+  /// Bitmask used to unset the bit corresponding to the
+  /// current multiple of a SievingPrime object.
   uint8_t unsetBit;
-  /// Factor used to calculate the next multiple of a sieving prime
-  /// that is not divisible by any of the wheel factors
+  /// Factor used to calculate the next multiple of a sieving
+  /// prime that is not divisible by any of the wheel factors.
   uint8_t nextMultipleFactor;
   /// Overflow needed to correct the next multiple index
   /// (due to sievingPrime = prime / 30)
@@ -51,7 +51,9 @@ struct WheelElement
   uint32_t next;
 };
 
-/// The compiler should add 1 byte of padding to WheelElement
+/// The compiler must insert 1 byte of padding to WheelElement
+/// before the uint32_t WheelElement::next variable so that
+/// this variable is properly aligned to a 4-byte boundary.
 static_assert(isPow2(sizeof(WheelElement)), "For best performance sizeof(WheelElement) must be a power of 2!");
 
 extern const WheelElement wheel30[8*8];
