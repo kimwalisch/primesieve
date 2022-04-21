@@ -101,6 +101,7 @@ public:
   void setNext(Bucket* next) { next_ = next; }
   void setEnd(SievingPrime* end) { end_ = end; }
   void reset() { end_ = begin(); }
+  bool empty() { return begin() == end(); }
 
   /// Get the sieving prime's bucket.
   /// For performance reasons we don't keep an array with all

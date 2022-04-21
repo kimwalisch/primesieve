@@ -188,7 +188,7 @@ void EratBig::crossOff(uint8_t* sieve)
     bucket->setEnd(buckets_[0]);
 
     // No more buckets in the current segment
-    if (bucket->begin() == bucket->end() &&
+    if (bucket->empty() &&
         bucket->next() == nullptr)
       break;
 
