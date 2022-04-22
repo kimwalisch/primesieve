@@ -6,6 +6,7 @@ Changes in version 7.9, 22/04/2022
 * EratBig.cpp: Improve next wheel index code.
 * EratBig.cpp: Use std::copy() instead of std::rotate().
 * SievingPrimes.cpp: Reduce branch mispredictions.
+* PreSieve.cpp: Hardcode buffersDist.
 * config.hpp: Tune FACTOR_ERATSMALL constant.
 * Use a single MemoryPool per thread (previously 2).
 * Increase max sieve array size to 8 KiB.

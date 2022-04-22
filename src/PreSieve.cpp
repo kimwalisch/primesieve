@@ -156,9 +156,20 @@ const std::array<std::vector<uint64_t>, 8> bufferPrimes =
   { 17, 37, 53 },  // 32 KiB
   { 19, 29, 61 },  // 32 KiB
   { 23, 31, 47 },  // 32 KiB
-  { 79, 97 },      //  8 KiB
-  { 83, 89 }       //  7 KiB
+      { 79, 97 },  //  8 KiB
+      { 83, 89 }   //  7 KiB
 }};
+
+/// Each byte represents an interval of 30 integers
+const uint64_t buffersDist =
+  ( 7 * 67 * 71) * 30 +
+  (11 * 41 * 73) * 30 +
+  (13 * 43 * 59) * 30 +
+  (17 * 37 * 53) * 30 +
+  (19 * 29 * 61) * 30 +
+  (23 * 31 * 47) * 30 +
+       (79 * 97) * 30 +
+       (83 * 89) * 30;
 
 void andBuffers(const uint8_t* __restrict buf1,
                 const uint8_t* __restrict buf2,
@@ -192,23 +203,12 @@ void PreSieve::init(uint64_t start,
   // times smaller than the sieving distance
   // in order to reduce initialization overhead.
   uint64_t dist = stop - start;
-  uint64_t threshold = std::max(dist, isqrt(stop)) / 20;
-
-  if (!buffersDist_)
-  {
-    for (const auto& primes : bufferPrimes)
-    {
-      uint64_t bufferBytes = 1;
-      for (uint64_t prime : primes)
-        bufferBytes *= prime;
-      buffersDist_ += bufferBytes * 30;
-    }
-  }
+  uint64_t threshold = std::max(dist, isqrt(stop));
 
   // For small intervals we pre-sieve using the
   // static buffer_7_11_13 lookup table. In this
   // case no initialization is required.
-  if (threshold < buffersDist_)
+  if (threshold < buffersDist * 20)
     return;
 
   initBuffers();
