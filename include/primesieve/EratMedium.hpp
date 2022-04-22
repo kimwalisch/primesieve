@@ -28,10 +28,10 @@ class EratMedium : public Wheel30_t
 {
 public:
   void init(uint64_t, uint64_t, uint64_t, MemoryPool&);
-  bool enabled() const { return enabled_; }
+  bool hasSievingPrimes() const { return hasSievingPrimes_; }
   NOINLINE void crossOff(uint8_t*, uint64_t);
 private:
-  bool enabled_ = false;
+  bool hasSievingPrimes_ = false;
   uint64_t maxPrime_ = 0;
   MemoryPool* memoryPool_ = nullptr;
   std::array<SievingPrime*, 64> buckets_;

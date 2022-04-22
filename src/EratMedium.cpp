@@ -56,7 +56,6 @@ void EratMedium::init(uint64_t stop,
   assert(maxPrime <= sieveSize * 9);
   assert(sieveSize * 2 <= SievingPrime::MAX_MULTIPLEINDEX + 1);
 
-  enabled_ = true;
   stop_ = stop;
   maxPrime_ = maxPrime;
   memoryPool_ = &memoryPool;
@@ -72,6 +71,7 @@ void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint6
   if (Bucket::isFull(buckets_[wheelIndex]))
     memoryPool_->addBucket(buckets_[wheelIndex]);
 
+  hasSievingPrimes_ = true;
   buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);
 }
 

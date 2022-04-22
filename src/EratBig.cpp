@@ -129,7 +129,6 @@ void EratBig::init(uint64_t stop,
   assert(isPow2(sieveSize));
   assert(sieveSize <= SievingPrime::MAX_MULTIPLEINDEX + 1);
 
-  enabled_ = true;
   stop_ = stop;
   maxPrime_ = maxPrime;
   log2SieveSize_ = ilog2(sieveSize);
@@ -140,13 +139,8 @@ void EratBig::init(uint64_t stop,
   uint64_t maxNextMultiple = maxSievingPrime * getMaxFactor() + getMaxFactor();
   uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
   uint64_t maxSegmentCount = maxMultipleIndex >> log2SieveSize_;
-  uint64_t size = maxSegmentCount + 1;
-  buckets_.reserve(size);
-
-  // Start off with a single bucket list,
-  // more will be added whilst sieving.
-  buckets_.push_back(nullptr);
-  memoryPool_->addBucket(buckets_[0]);
+  uint64_t maxSize = maxSegmentCount + 1;
+  buckets_.reserve(maxSize);
 }
 
 /// Add a new sieving prime

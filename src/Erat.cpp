@@ -166,11 +166,11 @@ void Erat::preSieve()
 
 void Erat::crossOff()
 {
-  if (eratSmall_.enabled())
+  if (eratSmall_.hasSievingPrimes())
     eratSmall_.crossOff(sieve_, sieveSize_);
-  if (eratMedium_.enabled())
+  if (eratMedium_.hasSievingPrimes())
     eratMedium_.crossOff(sieve_, sieveSize_);
-  if (eratBig_.enabled())
+  if (eratBig_.hasSievingPrimes())
     eratBig_.crossOff(sieve_);
 }
 
