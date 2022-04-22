@@ -1,16 +1,22 @@
 ///
 /// @file   EratBig.cpp
-/// @brief  EratBig is a segmented sieve of Eratosthenes
-///         implementation optimized for big sieving primes. EratBig
-///         is a highly optimized implementation of Tomas Oliveira e
-///         Silva's cache-friendly bucket sieve algorithm:
+/// @brief  EratBig is a segmented sieve of Eratosthenes algorithm
+///         optimized for big sieving primes that have very few
+///         multiple occurrences per segment. EratBig is based on
+///         Tomas Oliveira e Silva's cache-friendly bucket sieve algorithm:
 ///         http://www.ieeta.pt/~tos/software/prime_sieve.html
-///         The idea is that for each segment we keep a list of buckets
-///         which contain the sieving primes that have a multiple
-///         occurrence in that segment. When we then cross off the
-///         multiples from the current segment we avoid processing
-///         sieving primes that do not have a multiple occurrence in
-///         the current segment.
+///         The idea is that for each segment we keep a list of
+///         buckets which contain the sieving primes that have
+///         multiple occurrence(s) in that segment. When we then cross
+///         off the multiples from the current segment we avoid
+///         processing sieving primes that do not have a multiple
+///         occurrence in the current segment.
+///
+///         This algorithm is also very good at avoiding branch
+///         mispredictions. Unlike the EratSmall and EratMedium
+///         algorithms, in EratBig there is no branch misprediction
+///         after the last multiple of each sieving prime is removed
+///         from the sieve array.
 ///
 /// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
