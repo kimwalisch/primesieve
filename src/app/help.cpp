@@ -39,7 +39,7 @@ void help(int exitCode)
     "                      print twin primes: -p2 or --print=2,\n"
     "                      print prime triplets: -p3 or --print=3, ...\n"
     "  -q, --quiet         Quiet mode, prints less output.\n"
-    "  -s, --size=SIZE     Set the sieve size in KiB, SIZE <= 4096.\n"
+    "  -s, --size=SIZE     Set the sieve size in KiB, SIZE <= 8192.\n"
     "                      By default primesieve uses a sieve size that\n"
     "                      matches your CPU's L1 cache size (per core) or is\n"
     "                      slightly smaller than your CPU's L2 cache size.\n"

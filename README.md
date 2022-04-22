@@ -107,7 +107,7 @@ Options:
                       print twin primes: -p2 or --print=2,
                       print prime triplets: -p3 or --print=3, ...
   -q, --quiet         Quiet mode, prints less output.
-  -s, --size=SIZE     Set the sieve size in KiB, SIZE <= 4096.
+  -s, --size=SIZE     Set the sieve size in KiB, SIZE <= 8192.
                       By default primesieve uses a sieve size that
                       matches your CPU's L1 cache size (per core) or is
                       slightly smaller than your CPU's L2 cache size.

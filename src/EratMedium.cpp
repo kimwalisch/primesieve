@@ -54,7 +54,9 @@ void EratMedium::init(uint64_t stop,
                       MemoryPool* memoryPool)
 {
   assert(maxPrime <= sieveSize * 9);
-  assert(sieveSize * 2 <= SievingPrime::MAX_MULTIPLEINDEX + 1);
+  assert(sieveSize <= SievingPrime::MAX_MULTIPLEINDEX + 1);
+  static_assert(config::FACTOR_ERATMEDIUM <= 4.5,
+               "config::FACTOR_ERATMEDIUM > 4.5 causes multipleIndex overflow 23-bits!");
 
   stop_ = stop;
   maxPrime_ = maxPrime;

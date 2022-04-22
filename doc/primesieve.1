@@ -112,7 +112,7 @@ Quiet mode, prints less output\&.
 .RS 4
 Set the size of the sieve array in KiB, 8 <=
 \fISIZE\fR
-<= 4096\&. By default primesieve uses a sieve size that matches your CPU\(cqs L1 cache size (per core) or is slightly smaller than your CPU\(cqs L2 cache size\&. This setting is crucial for performance, on exotic CPUs primesieve sometimes fails to determine the CPU\(cqs cache sizes which usually causes a big slowdown\&. In this case you can get a significant speedup by manually setting the sieve size to your CPU\(cqs L1 or L2 cache size (per core)\&.
+<= 8192\&. By default primesieve uses a sieve size that matches your CPU\(cqs L1 cache size (per core) or is slightly smaller than your CPU\(cqs L2 cache size\&. This setting is crucial for performance, on exotic CPUs primesieve sometimes fails to determine the CPU\(cqs cache sizes which usually causes a big slowdown\&. In this case you can get a significant speedup by manually setting the sieve size to your CPU\(cqs L1 or L2 cache size (per core)\&.
 .RE
 .PP
 \fB\-\-test\fR

@@ -97,7 +97,7 @@ void Erat::init(uint64_t start,
 void Erat::initSieve(uint64_t sieveSize)
 {
   sieveSize_ = floorPow2(sieveSize);
-  sieveSize_ = inBetween(16, sieveSize_, 4096);
+  sieveSize_ = inBetween(16, sieveSize_, 8192);
   sieveSize_ *= 1024;
 
   sieve_ = new uint8_t[sieveSize_];
@@ -131,7 +131,7 @@ uint64_t Erat::getL1CacheSize() const
 {
   uint64_t size = cpuInfo.hasL1Cache() ? cpuInfo.l1CacheBytes() : config::L1D_CACHE_BYTES;
   uint64_t minSize = 8 << 10;
-  uint64_t maxSize = 4096 << 10;
+  uint64_t maxSize = 8192 << 10;
 
   size = std::min(size, sieveSize_);
   size = inBetween(minSize, size, maxSize);

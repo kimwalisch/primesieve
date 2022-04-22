@@ -189,7 +189,7 @@ void PrimeSieve::setStop(uint64_t stop)
 /// Set the size of the sieve array in KiB (kibibyte)
 void PrimeSieve::setSieveSize(int sieveSize)
 {
-  sieveSize_ = inBetween(16, sieveSize, 4096);
+  sieveSize_ = inBetween(16, sieveSize, 8192);
   sieveSize_ = floorPow2(sieveSize_);
 }
 

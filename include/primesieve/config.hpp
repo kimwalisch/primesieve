@@ -86,13 +86,13 @@ constexpr double FACTOR_ERATSMALL = 0.2;
 /// important to reduce the number of branch mispredictions than to
 /// aim for the fewest number of executed instructions.
 ///
-/// @pre FACTOR_ERATMEDIUM >= 0 && <= 9
+/// @pre FACTOR_ERATMEDIUM >= 0 && <= 4.5
 /// FACTOR_ERATMEDIUM * max(sieveSize) / 30 * 6 + 6 <= max(multipleIndex)
-/// FACTOR_ERATMEDIUM * 2^22 / 30 * 6 + 6 <= 2^23 - 1
-/// FACTOR_ERATMEDIUM <= ((2^23 - 7) * 30) / (2^22 * 6)
-/// FACTOR_ERATMEDIUM <= 9.999991655
+/// FACTOR_ERATMEDIUM * 2^23 / 30 * 6 + 6 <= 2^23 - 1
+/// FACTOR_ERATMEDIUM <= ((2^23 - 7) * 30) / (2^23 * 6)
+/// FACTOR_ERATMEDIUM <= 4.99999582
 ///
-constexpr double FACTOR_ERATMEDIUM = 2.0;
+constexpr double FACTOR_ERATMEDIUM = 1.75;
 
 } // namespace config
 } // namespace

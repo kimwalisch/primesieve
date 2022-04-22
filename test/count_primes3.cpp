@@ -45,7 +45,7 @@ int main()
   {
     start = stop + 1;
     stop = std::min(start + dist(gen), upperBound);
-    set_sieve_size(1 << (dist(gen) % 13));
+    set_sieve_size(1 << (dist(gen) % 14));
     count += count_primes(start, stop);
 
     std::cout << "\rRemaining chunk:             "
