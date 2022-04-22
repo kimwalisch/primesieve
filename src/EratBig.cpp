@@ -123,7 +123,7 @@ namespace primesieve {
 void EratBig::init(uint64_t stop,
                    uint64_t sieveSize,
                    uint64_t maxPrime,
-                   MemoryPool& memoryPool)
+                   MemoryPool* memoryPool)
 {
   // '>> log2SieveSize' requires power of 2 sieveSize
   assert(isPow2(sieveSize));
@@ -133,7 +133,7 @@ void EratBig::init(uint64_t stop,
   maxPrime_ = maxPrime;
   log2SieveSize_ = ilog2(sieveSize);
   moduloSieveSize_ = sieveSize - 1;
-  memoryPool_ = &memoryPool;
+  memoryPool_ = memoryPool;
 
   uint64_t maxSievingPrime = maxPrime_ / 30;
   uint64_t maxNextMultiple = maxSievingPrime * getMaxFactor() + getMaxFactor();

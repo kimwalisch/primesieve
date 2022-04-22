@@ -1,7 +1,7 @@
 ///
 /// @file  SievingPrimes.hpp
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -20,13 +20,14 @@
 namespace primesieve {
 
 class PreSieve;
+class MemoryPool;
 
 class SievingPrimes : public Erat
 {
 public:
   SievingPrimes() = default;
-  SievingPrimes(Erat*, PreSieve&);
-  void init(Erat*, PreSieve&);
+  SievingPrimes(Erat*, PreSieve&, MemoryPool& memoryPool);
+  void init(Erat*, PreSieve&, MemoryPool& memoryPool);
   uint64_t next();
 private:
   uint64_t i_ = 0;

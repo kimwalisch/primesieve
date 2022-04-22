@@ -16,6 +16,7 @@
 #define PRIMEGENERATOR_HPP
 
 #include "Erat.hpp"
+#include "MemoryPool.hpp"
 #include "PreSieve.hpp"
 #include "SievingPrimes.hpp"
 
@@ -36,6 +37,7 @@ private:
   uint64_t low_ = 0;
   uint64_t sieveIdx_ = ~0ull;
   uint64_t prime_ = 0;
+  MemoryPool memoryPool_;
   PreSieve preSieve_;
   SievingPrimes sievingPrimes_;
   bool isInit_ = false;

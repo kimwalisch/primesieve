@@ -1,7 +1,7 @@
 ///
 /// @file  PrintPrimes.hpp
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,6 +11,7 @@
 #define PRINTPRIMES_HPP
 
 #include "Erat.hpp"
+#include "MemoryPool.hpp"
 #include "macros.hpp"
 #include "PrimeSieve.hpp"
 
@@ -37,6 +38,7 @@ private:
   counts_t& counts_;
   /// Reference to the associated PrimeSieve object
   PrimeSieve& ps_;
+  MemoryPool memoryPool_;
   void initCounts();
   void print();
   void countPrimes();

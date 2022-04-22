@@ -11,12 +11,12 @@
 /// file in the top level directory.
 ///
 
+#include <primesieve/PrintPrimes.hpp>
+#include <primesieve/Erat.hpp>
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/PrintPrimes.hpp>
 #include <primesieve/PrimeSieve.hpp>
-#include <primesieve/Erat.hpp>
 #include <primesieve/SievingPrimes.hpp>
 
 #include <stdint.h>
@@ -49,7 +49,7 @@ PrintPrimes::PrintPrimes(PrimeSieve& ps) :
   uint64_t sieveSize = ps.getSieveSize();
   start = std::max<uint64_t>(start, 7);
 
-  Erat::init(start, stop, sieveSize, ps.getPreSieve());
+  Erat::init(start, stop, sieveSize, ps.getPreSieve(), memoryPool_);
 
   if (ps_.isCountkTuplets())
     initCounts();
@@ -82,7 +82,7 @@ void PrintPrimes::initCounts()
 
 void PrintPrimes::sieve()
 {
-  SievingPrimes sievingPrimes(this, ps_.getPreSieve());
+  SievingPrimes sievingPrimes(this, ps_.getPreSieve(), memoryPool_);
   uint64_t prime = sievingPrimes.next();
 
   while (hasNextSegment())

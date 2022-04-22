@@ -12,13 +12,14 @@
 
 #include "Bucket.hpp"
 #include "macros.hpp"
-#include "MemoryPool.hpp"
 #include "Wheel.hpp"
 
 #include <stdint.h>
 #include <vector>
 
 namespace primesieve {
+
+class MemoryPool;
 
 /// EratBig is an implementation of the segmented sieve of
 /// Eratosthenes optimized for big sieving primes that have
@@ -27,7 +28,7 @@ namespace primesieve {
 class EratBig : public Wheel210_t
 {
 public:
-  void init(uint64_t, uint64_t, uint64_t, MemoryPool&);
+  void init(uint64_t, uint64_t, uint64_t, MemoryPool*);
   NOINLINE void crossOff(uint8_t*);
   bool hasSievingPrimes() const { return !buckets_.empty(); }
 private:

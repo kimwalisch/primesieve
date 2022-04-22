@@ -15,7 +15,6 @@
 #include "EratMedium.hpp"
 #include "EratBig.hpp"
 #include "macros.hpp"
-#include "MemoryPool.hpp"
 #include "intrinsics.hpp"
 
 #include <stdint.h>
@@ -25,6 +24,7 @@
 namespace primesieve {
 
 class PreSieve;
+class MemoryPool;
 
 /// The abstract Erat class sieves primes using the segmented sieve
 /// of Eratosthenes. It uses a bit array for sieving, the bit array
@@ -53,7 +53,7 @@ protected:
   uint8_t* sieve_ = nullptr;
   Erat();
   Erat(uint64_t, uint64_t);
-  void init(uint64_t, uint64_t, uint64_t, PreSieve&);
+  void init(uint64_t, uint64_t, uint64_t, PreSieve&, MemoryPool& memoryPool);
   void addSievingPrime(uint64_t);
   NOINLINE void sieveSegment();
   bool hasNextSegment() const;
@@ -64,11 +64,11 @@ private:
   uint64_t maxEratSmall_ = 0;
   uint64_t maxEratMedium_ = 0;
   std::unique_ptr<uint8_t[]> deleter_;
+  MemoryPool* memoryPool_ = nullptr;
   PreSieve* preSieve_ = nullptr;
   EratSmall eratSmall_;
   EratBig eratBig_;
   EratMedium eratMedium_;
-  MemoryPool memoryPool_;
   static uint64_t byteRemainder(uint64_t);
   uint64_t getL1CacheSize() const;
   void initSieve(uint64_t);

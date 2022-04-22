@@ -51,14 +51,14 @@ namespace primesieve {
 void EratMedium::init(uint64_t stop,
                       uint64_t MAYBE_UNUSED(sieveSize),
                       uint64_t maxPrime,
-                      MemoryPool& memoryPool)
+                      MemoryPool* memoryPool)
 {
   assert(maxPrime <= sieveSize * 9);
   assert(sieveSize * 2 <= SievingPrime::MAX_MULTIPLEINDEX + 1);
 
   stop_ = stop;
   maxPrime_ = maxPrime;
-  memoryPool_ = &memoryPool;
+  memoryPool_ = memoryPool;
   buckets_.fill(nullptr);
 }
 

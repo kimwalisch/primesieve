@@ -65,7 +65,8 @@ Erat::Erat(uint64_t start, uint64_t stop) :
 void Erat::init(uint64_t start,
                 uint64_t stop,
                 uint64_t sieveSize,
-                PreSieve& preSieve)
+                PreSieve& preSieve,
+                MemoryPool& memoryPool)
 {
   if (start > stop)
     return;
@@ -73,6 +74,7 @@ void Erat::init(uint64_t start,
   assert(start >= 7);
   start_ = start;
   stop_ = stop;
+  memoryPool_ = &memoryPool;
   preSieve_ = &preSieve;
   preSieve_->init(start, stop);
   maxPreSieve_ = preSieve_->getMaxPrime();
