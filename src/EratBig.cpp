@@ -225,7 +225,7 @@ void EratBig::crossOff(uint8_t* sieve)
 void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
 {
   SievingPrime* prime = bucket->begin();
-  SievingPrime* end = bucket->end();
+  SievingPrime* last = bucket->end() - 1;
   auto buckets = buckets_.data();
   uint64_t moduloSieveSize = moduloSieveSize_;
   uint64_t log2SieveSize = log2SieveSize_;
@@ -233,7 +233,7 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
 
   // Process 2 sieving primes per loop iteration to
   // increase instruction level parallelism.
-  for (; prime < end - 1; prime += 2)
+  for (; prime < last; prime += 2)
   {
     uint64_t multipleIndex0 = prime[0].getMultipleIndex();
     uint64_t wheelIndex0    = prime[0].getWheelIndex();
@@ -266,9 +266,8 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
   }
 
   // Process the last sieving prime
-  if_unlikely(prime < end)
+  if_unlikely(prime == last)
   {
-    assert(prime + 1 == end);
     uint64_t multipleIndex = prime->getMultipleIndex();
     uint64_t wheelIndex    = prime->getWheelIndex();
     uint64_t sievingPrime  = prime->getSievingPrime();
