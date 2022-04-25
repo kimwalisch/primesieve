@@ -127,6 +127,7 @@ void Erat::initAlgorithms()
   }
 
   // Allocate the sieve array
+  assert(sieveSize_ % sizeof(uint64_t) == 0);
   sieve_ = new uint8_t[sieveSize_];
   deleter_.reset(sieve_);
 }
