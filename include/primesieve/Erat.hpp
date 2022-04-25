@@ -71,8 +71,7 @@ private:
   EratMedium eratMedium_;
   static uint64_t byteRemainder(uint64_t);
   uint64_t getL1CacheSize() const;
-  void initSieve(uint64_t);
-  void initErat();
+  void initAlgorithms();
   void preSieve();
   void crossOff();
   void sieveLastSegment();
