@@ -123,6 +123,7 @@ void Erat::initAlgorithms()
     uint64_t rem = byteRemainder(stop_);
     uint64_t dist = (stop_ - rem) - segmentLow_;
     sieveSize_ = dist / 30 + 1;
+    sieveSize_ = ceilDiv(sieveSize_, sizeof(uint64_t)) * sizeof(uint64_t);
   }
 
   // Allocate the sieve array
