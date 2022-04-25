@@ -130,18 +130,6 @@ void Erat::initAlgorithms()
   deleter_.reset(sieve_);
 }
 
-bool Erat::hasNextSegment() const
-{
-  return segmentLow_ < stop_;
-}
-
-uint64_t Erat::byteRemainder(uint64_t n)
-{
-  n %= 30;
-  if (n <= 6) n += 30;
-  return n;
-}
-
 /// EratMedium and EratBig usually run fastest using a sieve
 /// size that is slightly smaller than the CPU's L2 cache size.
 /// EratSmall however runs fastest using a sieve size that
@@ -159,6 +147,18 @@ uint64_t Erat::getL1CacheSize() const
   size = inBetween(minSize, size, maxSize);
 
   return size;
+}
+
+bool Erat::hasNextSegment() const
+{
+  return segmentLow_ < stop_;
+}
+
+uint64_t Erat::byteRemainder(uint64_t n)
+{
+  n %= 30;
+  if (n <= 6) n += 30;
+  return n;
 }
 
 void Erat::sieveSegment()
