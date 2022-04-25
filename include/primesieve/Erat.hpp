@@ -51,7 +51,7 @@ protected:
   uint64_t segmentHigh_ = 0;
   /// Sieve of Eratosthenes array
   uint8_t* sieve_ = nullptr;
-  Erat();
+  Erat() = default;
   Erat(uint64_t, uint64_t);
   void init(uint64_t, uint64_t, uint64_t, PreSieve&, MemoryPool& memoryPool);
   void addSievingPrime(uint64_t);

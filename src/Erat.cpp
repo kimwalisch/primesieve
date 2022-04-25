@@ -50,8 +50,6 @@ const std::array<uint8_t, 37> unsetLarger =
 
 namespace primesieve {
 
-Erat::Erat() = default;
-
 Erat::Erat(uint64_t start, uint64_t stop) :
   start_(start),
   stop_(stop)
