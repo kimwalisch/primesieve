@@ -70,7 +70,7 @@ constexpr uint64_t MIN_THREAD_DISTANCE = (uint64_t) 1e7;
 /// are processed in EratSmall. The ideal value for
 /// FACTOR_ERATSMALL has been determined experimentally by
 /// running benchmarks near 10^10.
-/// @pre FACTOR_ERATSMALL >= 0 && <= 3
+/// @pre FACTOR_ERATSMALL >= 0 && <= 4.5
 ///
 constexpr double FACTOR_ERATSMALL = 0.2;
 

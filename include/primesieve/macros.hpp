@@ -1,7 +1,7 @@
 ///
 /// @file  macros.hpp
 ///
-/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -62,13 +62,6 @@
   #define UNREACHABLE __assume(0)
 #else
   #define UNREACHABLE
-#endif
-
-/// Use [[maybe_unused]] from C++17 once widely supported
-#if defined(NDEBUG)
-  #define MAYBE_UNUSED(x)
-#else
-  #define MAYBE_UNUSED(x) x
 #endif
 
 #endif

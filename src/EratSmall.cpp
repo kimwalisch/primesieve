@@ -45,10 +45,13 @@ namespace primesieve {
 /// @l1CacheSize: CPU L1 cache size
 /// @maxPrime:    Sieving primes <= maxPrime
 ///
-void EratSmall::init(uint64_t stop, uint64_t l1CacheSize, uint64_t maxPrime)
+void EratSmall::init(uint64_t stop,
+                     uint64_t l1CacheSize,
+                     uint64_t maxPrime)
 {
-  assert(maxPrime <= l1CacheSize * 3);
-  assert(l1CacheSize <= SievingPrime::MAX_MULTIPLEINDEX + 1);
+  assert((maxPrime / 30) * getMaxFactor() + getMaxFactor() <= SievingPrime::MAX_MULTIPLEINDEX);
+  static_assert(config::FACTOR_ERATSMALL <= 4.5,
+               "config::FACTOR_ERATSMALL > 4.5 causes multipleIndex overflow 23-bits!");
 
   stop_ = stop;
   maxPrime_ = maxPrime;
@@ -58,7 +61,9 @@ void EratSmall::init(uint64_t stop, uint64_t l1CacheSize, uint64_t maxPrime)
 }
 
 /// Add a new sieving prime to EratSmall
-void EratSmall::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t wheelIndex)
+void EratSmall::storeSievingPrime(uint64_t prime,
+                                  uint64_t multipleIndex,
+                                  uint64_t wheelIndex)
 {
   assert(prime <= maxPrime_);
   uint64_t sievingPrime = prime / 30;

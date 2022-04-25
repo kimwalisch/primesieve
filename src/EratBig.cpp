@@ -150,7 +150,9 @@ void EratBig::init(uint64_t stop,
 }
 
 /// Add a new sieving prime
-void EratBig::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t wheelIndex)
+void EratBig::storeSievingPrime(uint64_t prime,
+                                uint64_t multipleIndex,
+                                uint64_t wheelIndex)
 {
   uint64_t sieveSize = 1ull << log2SieveSize_;
   uint64_t sievingPrime = prime / 30;

@@ -45,16 +45,13 @@
 namespace primesieve {
 
 /// @stop:      Upper bound for sieving
-/// @sieveSize: Sieve size in bytes
 /// @maxPrime:  Sieving primes <= maxPrime
 ///
 void EratMedium::init(uint64_t stop,
-                      uint64_t MAYBE_UNUSED(sieveSize),
                       uint64_t maxPrime,
                       MemoryPool* memoryPool)
 {
-  assert(maxPrime <= sieveSize * 4.5);
-  assert(sieveSize <= SievingPrime::MAX_MULTIPLEINDEX + 1);
+  assert((maxPrime / 30) * getMaxFactor() + getMaxFactor() <= SievingPrime::MAX_MULTIPLEINDEX);
   static_assert(config::FACTOR_ERATMEDIUM <= 4.5,
                "config::FACTOR_ERATMEDIUM > 4.5 causes multipleIndex overflow 23-bits!");
 
@@ -65,7 +62,9 @@ void EratMedium::init(uint64_t stop,
 }
 
 /// Add a new sieving prime to EratMedium
-void EratMedium::storeSievingPrime(uint64_t prime, uint64_t multipleIndex, uint64_t wheelIndex)
+void EratMedium::storeSievingPrime(uint64_t prime,
+                                   uint64_t multipleIndex,
+                                   uint64_t wheelIndex)
 {
   assert(prime <= maxPrime_);
   uint64_t sievingPrime = prime / 30;
