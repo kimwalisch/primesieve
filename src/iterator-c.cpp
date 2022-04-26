@@ -23,22 +23,22 @@ using namespace primesieve;
 
 namespace {
 
-PrimeGenerator* getPrimeGenerator(primesieve_iterator* it)
+void deletePrimeGenerator(primesieve_iterator* it)
 {
-  // primeGenerator is a pimpl
-  return (PrimeGenerator*) it->primeGenerator;
-}
-
-void clearPrimeGenerator(primesieve_iterator* it)
-{
-  delete getPrimeGenerator(it);
+  delete (PrimeGenerator*) it->primeGenerator;
   it->primeGenerator = nullptr;
 }
 
-std::vector<uint64_t>& getPrimes(primesieve_iterator* it)
+void deletePrimesVector(primesieve_iterator* it)
+{
+  delete (std::vector<uint64_t>*) it->vector;
+  it->vector = nullptr;
+}
+
+std::vector<uint64_t>& getPrimes(void* primesPimpl)
 {
   using T = std::vector<uint64_t>;
-  T* primes = (T*) it->vector;
+  T* primes = (T*) primesPimpl;
   return *primes;
 }
 
@@ -53,7 +53,8 @@ void primesieve_init(primesieve_iterator* it)
   it->i = 0;
   it->last_idx = 0;
   it->dist = 0;
-  it->vector = new std::vector<uint64_t>;
+  it->primes = nullptr;
+  it->vector = nullptr;
   it->primeGenerator = nullptr;
   it->is_error = false;
 }
@@ -68,7 +69,8 @@ void primesieve_skipto(primesieve_iterator* it,
   it->i = 0;
   it->last_idx = 0;
   it->dist = 0;
-  clearPrimeGenerator(it);
+  it->primes = nullptr;
+  deletePrimeGenerator(it);
 }
 
 /// C destructor
@@ -76,29 +78,31 @@ void primesieve_free_iterator(primesieve_iterator* it)
 {
   if (it)
   {
-    clearPrimeGenerator(it);
-    auto* primes = &getPrimes(it);
-    delete primes;
+    deletePrimeGenerator(it);
+    deletePrimesVector(it);
   }
 }
 
 void primesieve_generate_next_primes(primesieve_iterator* it)
 {
-  auto& primes = getPrimes(it);
-  auto primeGenerator = getPrimeGenerator(it);
   std::size_t size = 0;
 
   try
   {
     while (!size)
     {
-      if (!it->primeGenerator)
+      auto* primeGenerator = (PrimeGenerator*) it->primeGenerator;
+
+      if (!primeGenerator)
       {
         IteratorHelper::next(&it->start, &it->stop, it->stop_hint, &it->dist);
-        it->primeGenerator = new PrimeGenerator(it->start, it->stop);
-        primeGenerator = getPrimeGenerator(it);
+        primeGenerator = new PrimeGenerator(it->start, it->stop);
+        it->primeGenerator = primeGenerator;
+        if (!it->vector)
+          it->vector = new std::vector<uint64_t>();
       }
 
+      auto& primes = getPrimes(it->vector);
       primeGenerator->fillNextPrimes(primes, &size);
 
       // There are 3 different cases here:
@@ -112,13 +116,16 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       //    array contains an error code (UINT64_MAX) which
       //    is returned to the user.
       if (size == 0)
-        clearPrimeGenerator(it);
+        deletePrimeGenerator(it);
     }
   }
   catch (const std::exception& e)
   {
     std::cerr << "primesieve_iterator: " << e.what() << std::endl;
-    clearPrimeGenerator(it);
+    deletePrimeGenerator(it);
+    if (!it->vector)
+      it->vector = new std::vector<uint64_t>();
+    auto& primes = getPrimes(it->vector);
     size = 1;
     primes.resize(size);
     primes[0] = PRIMESIEVE_ERROR;
@@ -126,6 +133,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
     errno = EDOM;
   }
 
+  auto& primes = getPrimes(it->vector);
   it->i = 0;
   it->last_idx = size - 1;
   it->primes = &primes[0];
@@ -133,29 +141,38 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
 
 void primesieve_generate_prev_primes(primesieve_iterator* it)
 {
-  auto& primes = getPrimes(it);
   std::size_t size = 0;
 
   try
   {
-    if (it->primeGenerator)
-      it->start = primes.front();
+    if (!it->vector)
+      it->vector = new std::vector<uint64_t>();
 
-    clearPrimeGenerator(it);
+    auto& primes = getPrimes(it->vector);
+
+    // Special case if generate_next_primes() has
+    // been used before generate_prev_primes().
+    if (it->primeGenerator)
+    {
+      assert(!primes.empty());
+      it->start = primes.front();
+      deletePrimeGenerator(it);
+    }
 
     while (!size)
     {
       IteratorHelper::prev(&it->start, &it->stop, it->stop_hint, &it->dist);
-      it->primeGenerator = new PrimeGenerator(it->start, it->stop);
-      auto primeGenerator = getPrimeGenerator(it);
-      primeGenerator->fillPrevPrimes(primes, &size);
-      clearPrimeGenerator(it);
+      PrimeGenerator primeGenerator(it->start, it->stop);
+      primeGenerator.fillPrevPrimes(primes, &size);
     }
   }
   catch (const std::exception& e)
   {
     std::cerr << "primesieve_iterator: " << e.what() << std::endl;
-    clearPrimeGenerator(it);
+    deletePrimeGenerator(it);
+    if (!it->vector)
+      it->vector = new std::vector<uint64_t>();
+    auto& primes = getPrimes(it->vector);
     size = 1;
     primes.resize(size);
     primes[0] = PRIMESIEVE_ERROR;
@@ -163,6 +180,7 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     errno = EDOM;
   }
 
+  auto& primes = getPrimes(it->vector);
   it->last_idx = size - 1;
   it->i = it->last_idx;
   it->primes = &primes[0];

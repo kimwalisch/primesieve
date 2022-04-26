@@ -86,18 +86,22 @@ void iterator::generate_next_primes()
 
 void iterator::generate_prev_primes()
 {
+  // Special case if generate_next_primes() has
+  // been used before generate_prev_primes().
   if (primeGenerator_)
+  {
+    assert(!primes_.empty());
     start_ = primes_.front();
+    clear(primeGenerator_);
+  }
 
   std::size_t size = 0;
 
   while (!size)
   {
     IteratorHelper::prev(&start_, &stop_, stop_hint_, &dist_);
-    auto p = new PrimeGenerator(start_, stop_);
-    primeGenerator_.reset(p);
-    primeGenerator_->fillPrevPrimes(primes_, &size);
-    clear(primeGenerator_);
+    PrimeGenerator primeGenerator(start_, stop_);
+    primeGenerator.fillPrevPrimes(primes_, &size);
   }
 
   last_idx_ = size - 1;
