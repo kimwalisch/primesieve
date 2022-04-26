@@ -144,8 +144,8 @@ void EratBig::init(uint64_t stop,
   uint64_t maxSievingPrime = maxPrime_ / 30;
   uint64_t maxNextMultiple = maxSievingPrime * getMaxFactor() + getMaxFactor();
   uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
-  uint64_t maxSegmentCount = maxMultipleIndex >> log2SieveSize_;
-  uint64_t maxSize = maxSegmentCount + 1;
+  uint64_t maxSegmentIndex = maxMultipleIndex >> log2SieveSize_;
+  uint64_t maxSize = maxSegmentIndex + 1;
   buckets_.reserve(maxSize);
 }
 
@@ -158,8 +158,8 @@ void EratBig::storeSievingPrime(uint64_t prime,
   uint64_t sievingPrime = prime / 30;
   uint64_t maxNextMultiple = sievingPrime * getMaxFactor() + getMaxFactor();
   uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
-  uint64_t maxSegmentCount = maxMultipleIndex >> log2SieveSize_;
-  uint64_t maxSize = maxSegmentCount + 1;
+  uint64_t maxSegmentIndex = maxMultipleIndex >> log2SieveSize_;
+  uint64_t maxSize = maxSegmentIndex + 1;
   uint64_t segment = multipleIndex >> log2SieveSize_;
   multipleIndex &= moduloSieveSize_;
 
