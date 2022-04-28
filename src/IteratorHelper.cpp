@@ -79,14 +79,16 @@ void IteratorHelper::next(uint64_t* start,
     // For primesieve::iterator it is advantageous to buffer
     // slightly more primes than the stopHint since the
     // stopHint is often not 100% accurate and the user
-    // iterate over a few primes > stopHint.
+    // might iterate over a few primes > stopHint.
     *stop = checkedAdd(stopHint, maxPrimeGap(stopHint));
   }
   else
   {
     // In case the user has used the default stopHint=UINT64_MAX
     // we take a conservative approach and only buffer a
-    // small number of primes (use small sieving distance).
+    // small number of primes. If the user uses more primes
+    // than we have buffered, then we will increase the sieving
+    // distance and buffer more primes (than last time).
     *stop = checkedAdd(*start, *dist);
   }
 }
