@@ -2,7 +2,7 @@
 /// @file   StorePrimes.hpp
 /// @brief  Store primes in a vector.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -33,8 +33,7 @@ inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
   // pi(x) <= x / (log(x) - 1.1) + 5, for x >= 4
   double x = (double) stop;
   double logx = std::log(x);
-  double div = logx - 1.1;
-  double pix = (stop - start) / div + 5;
+  double pix = (stop - start) / (logx - 1.1) + 5;
 
   return (std::size_t) pix;
 }
@@ -76,10 +75,11 @@ inline void store_n_primes(uint64_t n,
   primes.reserve(size);
   using V = typename T::value_type;
 
-  double x = (double) start;
-  x = std::max<double>(10.0, x);
-  uint64_t logx = (uint64_t) std::log(x);
-  uint64_t dist = n * (logx + 1);
+  // nth prime < n(log n + log log n), for n >= 6.
+  // https://en.wikipedia.org/wiki/Prime_number_theorem#Approximations_for_the_nth_prime_number
+  double logn = std::log(std::max<double>(6.0, (double) n));
+  double loglogn = std::log(logn);
+  uint64_t dist = (uint64_t)(n * (logn + loglogn));
   uint64_t stop = start + dist;
 
   primesieve::iterator it(start, stop);
