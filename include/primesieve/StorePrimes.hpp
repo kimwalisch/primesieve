@@ -75,12 +75,13 @@ inline void store_n_primes(uint64_t n,
   primes.reserve(size);
   using V = typename T::value_type;
 
-  // nth prime < n(log n + log log n), for n >= 6.
+  // nthPrime < n(log n + log log n), for n >= 6.
   // https://en.wikipedia.org/wiki/Prime_number_theorem#Approximations_for_the_nth_prime_number
-  double logn = std::log(std::max<double>(6.0, (double) n));
+  double x = std::max<double>({6.0, (double) n, (double) start});
+  double logn = std::log(x);
   double loglogn = std::log(logn);
-  uint64_t dist = (uint64_t)(n * (logn + loglogn));
-  uint64_t stop = start + dist;
+  uint64_t nthPrime = (uint64_t)(n * (logn + loglogn));
+  uint64_t stop = start + nthPrime;
 
   primesieve::iterator it(start, stop);
   uint64_t prime = it.next_prime();
