@@ -2,7 +2,7 @@
 /// @file   pmath.hpp
 /// @brief  Auxiliary math functions for primesieve.
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -157,14 +157,11 @@ inline std::size_t primeCountApprox(uint64_t start, uint64_t stop)
 {
   if (start > stop)
     return 0;
-  if (stop <= 10)
-    return 4;
 
-  // pi(x) <= x / (log(x) - 1.1) + 5, for x >= 4
-  double x = (double) stop;
-  double logx = std::log(x);
-  double div = logx - 1.1;
-  double pix = (stop - start) / div + 5;
+  // pi(x) <= x / (log(x) - 1.1) + 5, for x >= 4.
+  // Pierre Dusart, https://arxiv.org/abs/1002.0442 eq. 6.6.
+  double x = std::max(100.0, (double) stop);
+  double pix = (stop - start) / (std::log(x) - 1.1) + 5;
 
   return (std::size_t) pix;
 }

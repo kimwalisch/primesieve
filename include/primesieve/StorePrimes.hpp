@@ -27,13 +27,12 @@ inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
 {
   if (start > stop)
     return 0;
-  if (stop <= 10)
-    return 4;
 
-  // pi(x) <= x / (log(x) - 1.1) + 5, for x >= 4
+  // pi(x) <= x / (log(x) - 1.1) + 5, for x >= 4.
+  // Pierre Dusart, https://arxiv.org/abs/1002.0442 eq. 6.6.
   double x = (double) stop;
-  double logx = std::log(x);
-  double pix = (stop - start) / (logx - 1.1) + 5;
+  x = std::max<double>(100.0, x);
+  double pix = (stop - start) / (std::log(x) - 1.1) + 5;
 
   return (std::size_t) pix;
 }
