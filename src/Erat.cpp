@@ -156,9 +156,10 @@ bool Erat::hasNextSegment() const
 
 uint64_t Erat::byteRemainder(uint64_t n)
 {
-  n %= 30;
-  if (n <= 6) n += 30;
-  return n;
+  // Return n % 30 using equivalence classes 7..36
+  // instead of the usual 0..29.
+  assert(n >= 7);
+  return (n - 7) % 30 + 7;
 }
 
 void Erat::sieveSegment()
