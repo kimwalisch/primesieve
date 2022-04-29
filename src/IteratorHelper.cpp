@@ -31,8 +31,7 @@ uint64_t getNextDist(uint64_t n, uint64_t dist)
 
   dist *= 4;
   dist = std::max(dist, PrimeGenerator::maxCachedPrime());
-  dist = std::max(dist, minDist);
-  dist = std::min(dist, maxDist);
+  dist = inBetween(minDist, dist, maxDist);
 
   return dist;
 }
@@ -55,8 +54,7 @@ uint64_t getPrevDist(uint64_t n, uint64_t dist)
 
   dist *= 4;
   dist = inBetween(tinyDist, dist, minDist);
-  dist = std::max(dist, defaultDist);
-  dist = std::min(dist, maxDist);
+  dist = inBetween(dist, defaultDist, maxDist);
 
   return dist;
 }
