@@ -26,7 +26,6 @@ namespace primesieve {
 class EratSmall : public Wheel30_t
 {
 public:
-  static uint64_t getL1CacheSize(uint64_t);
   void init(uint64_t, uint64_t, uint64_t);
   void crossOff(uint8_t*, uint64_t);
   bool hasSievingPrimes() const { return !primes_.empty(); }
