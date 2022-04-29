@@ -36,7 +36,12 @@ iterator& iterator::operator=(iterator&&) noexcept = default;
 iterator::iterator(uint64_t start,
                    uint64_t stop_hint)
 {
-  skipto(start, stop_hint);
+  start_ = start;
+  stop_ = start;
+  stop_hint_ = stop_hint;
+  i_ = 0;
+  last_idx_ = 0;
+  dist_ = 0;
 }
 
 void iterator::skipto(uint64_t start,

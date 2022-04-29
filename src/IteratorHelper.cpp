@@ -26,12 +26,11 @@ namespace {
 uint64_t getNextDist(uint64_t n, uint64_t dist)
 {
   double x = (double) n;
-  uint64_t tinyDist = PrimeGenerator::maxCachedPrime() * 4;
   uint64_t minDist = (uint64_t) std::sqrt(x);
   uint64_t maxDist = 1ull << 60;
 
   dist *= 4;
-  dist = std::max(dist, tinyDist);
+  dist = std::max(dist, PrimeGenerator::maxCachedPrime());
   dist = std::max(dist, minDist);
   dist = std::min(dist, maxDist);
 
@@ -55,27 +54,11 @@ uint64_t getPrevDist(uint64_t n, uint64_t dist)
   uint64_t defaultDist = (uint64_t) (std::sqrt(x) * 2);
 
   dist *= 4;
-  dist = std::max(dist, tinyDist);
-  dist = std::min(dist, minDist);
+  dist = inBetween(tinyDist, dist, minDist);
   dist = std::max(dist, defaultDist);
   dist = std::min(dist, maxDist);
 
   return dist;
-}
-
-bool useStopHint(uint64_t start,
-                 uint64_t stopHint)
-{
-  return stopHint >= start &&
-         stopHint < std::numeric_limits<uint64_t>::max();
-}
-
-bool useStopHint(uint64_t start,
-                 uint64_t stop,
-                 uint64_t stopHint)
-{
-  return stopHint >= start &&
-         stopHint <= stop;
 }
 
 } // namespace
@@ -88,24 +71,25 @@ void IteratorHelper::next(uint64_t* start,
                           uint64_t* dist)
 {
   *start = checkedAdd(*stop, 1);
-  uint64_t maxCachedPrime = PrimeGenerator::maxCachedPrime();
+  *dist = getNextDist(*start, *dist);
 
-  if (*start < maxCachedPrime)
+  if (stopHint >= *start &&
+      stopHint < std::numeric_limits<uint64_t>::max())
   {
-    // When the stop number <= maxCachedPrime
-    // primesieve::iterator uses the primes
-    // cache instead of sieving and does not
-    // even initialize Erat::init()
-    *stop = maxCachedPrime;
-    *dist = *stop - *start;
+    // For primesieve::iterator it is advantageous to buffer
+    // slightly more primes than the stopHint since the
+    // stopHint is often not 100% accurate and the user
+    // might iterate over a few primes > stopHint.
+    *stop = checkedAdd(stopHint, maxPrimeGap(stopHint));
   }
   else
   {
-    *dist = getNextDist(*start, *dist);
+    // In case the user has used the default stopHint=UINT64_MAX
+    // we take a conservative approach and only buffer a
+    // small number of primes. If the user uses more primes
+    // than we have buffered, then we will increase the sieving
+    // distance and buffer more primes (than last time).
     *stop = checkedAdd(*start, *dist);
-
-    if (useStopHint(*start, stopHint))
-      *stop = checkedAdd(stopHint, maxPrimeGap(stopHint));
   }
 }
 
@@ -118,7 +102,8 @@ void IteratorHelper::prev(uint64_t* start,
   *dist = getPrevDist(*stop, *dist);
   *start = checkedSub(*stop, *dist);
 
-  if (useStopHint(*start, *stop, stopHint))
+  if (stopHint >= *start &&
+      stopHint <= *stop)
     *start = checkedSub(stopHint, maxPrimeGap(stopHint));
 }
 
