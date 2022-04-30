@@ -23,10 +23,9 @@ using namespace primesieve;
 
 namespace {
 
-uint64_t getNextDist(uint64_t n, uint64_t dist)
+uint64_t getNextDist(uint64_t start, uint64_t dist)
 {
-  double x = (double) n;
-  uint64_t minDist = (uint64_t) std::sqrt(x);
+  uint64_t minDist = (uint64_t) std::sqrt(start);
   uint64_t maxDist = 1ull << 60;
 
   dist *= 4;
@@ -36,21 +35,14 @@ uint64_t getNextDist(uint64_t n, uint64_t dist)
   return dist;
 }
 
-uint64_t getPrevDist(uint64_t n, uint64_t dist)
+uint64_t getPrevDist(uint64_t stop, uint64_t dist)
 {
-  double x = (double) n;
-  x = std::max(x, 10.0);
-  double logx = std::ceil(std::log(x));
-
-  uint64_t minDist = config::MIN_CACHE_ITERATOR;
-  uint64_t maxDist = config::MAX_CACHE_ITERATOR;
-  minDist /= sizeof(uint64_t);
-  maxDist /= sizeof(uint64_t);
-  minDist *= (uint64_t) logx;
-  maxDist *= (uint64_t) logx;
-
+  double x = std::max(10.0, (double) stop);
+  uint64_t logx = (uint64_t) std::log(x);
+  uint64_t minDist = (config::MIN_CACHE_ITERATOR / sizeof(uint64_t)) * logx;
+  uint64_t maxDist = (config::MAX_CACHE_ITERATOR / sizeof(uint64_t)) * logx;
   uint64_t tinyDist = PrimeGenerator::maxCachedPrime() * 4;
-  uint64_t defaultDist = (uint64_t) (std::sqrt(x) * 2);
+  uint64_t defaultDist = (uint64_t) (std::sqrt(stop) * 2);
 
   dist *= 4;
   dist = inBetween(tinyDist, dist, minDist);
