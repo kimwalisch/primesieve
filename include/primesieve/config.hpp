@@ -2,7 +2,7 @@
 /// @file   config.hpp
 /// @brief  primesieve compile time constants.
 ///
-/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -53,7 +53,7 @@ constexpr uint64_t MAX_ALLOC_BYTES = 16 << 20;
 /// bytes of primes. Larger is usually faster but also
 /// requires more memory.
 ///
-constexpr uint64_t MIN_CACHE_ITERATOR = 8 << 20;
+constexpr uint64_t MIN_CACHE_ITERATOR = 4 << 20;
 
 /// iterator::prev_prime() maximum cache size in bytes, used
 /// if pi(sqrt(n)) * 8 bytes > MAX_CACHE_ITERATOR.
