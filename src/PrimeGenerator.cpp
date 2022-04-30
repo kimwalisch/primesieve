@@ -214,7 +214,8 @@ void PrimeGenerator::initNextPrimes(std::vector<uint64_t>& primes,
 
 void PrimeGenerator::initErat()
 {
-  uint64_t startErat = maxCachedPrime() + 1;
+  assert(maxCachedPrime() >= 5);
+  uint64_t startErat = maxCachedPrime() + 2;
   startErat = std::max(startErat, start_);
   isInit_ = true;
 
