@@ -31,12 +31,18 @@ void SievingPrimes::init(Erat* erat,
                          PreSieve& preSieve,
                          MemoryPool& memoryPool)
 {
-  uint64_t start = preSieve.getMaxPrime() + 1;
+  assert(preSieve.getMaxPrime() >= 7);
+  uint64_t start = preSieve.getMaxPrime() + 2;
   uint64_t stop = isqrt(erat->getStop());
   uint64_t sieveSize = erat->getSieveSize();
   Erat::init(start, stop, sieveSize, preSieve, memoryPool);
+
+  assert(start % 2 == 1);
+  tinyIdx_ = start;
   low_ = segmentLow_;
-  tinySieve();
+
+  if (start * start <= stop)
+    tinySieve();
 }
 
 /// Sieve up to n^(1/4)
@@ -49,9 +55,6 @@ void SievingPrimes::tinySieve()
     if (tinySieve_[i])
       for (uint64_t j = i * i; j <= n; j += i * 2)
         tinySieve_[j] = false;
-
-  // Round up to next odd number
-  tinyIdx_ = start_ | 1;
 }
 
 void SievingPrimes::fill()
