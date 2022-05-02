@@ -34,8 +34,14 @@ constexpr uint64_t L1D_CACHE_BYTES = 32 << 10;
 ///
 constexpr uint64_t SIEVE_BYTES = L1D_CACHE_BYTES * 8;
 
-/// Number of sieving primes per Bucket in EratSmall, EratMedium
-/// and EratBig objects, affects performance by about 3%.
+/// Number of sieving primes per Bucket in EratMedium.cpp and
+/// EratBig.cpp. A larger number of primes per bucket slightly
+/// increases memory usage, but on the other hand decreases branch
+/// mispredictions. Note that doubling the bucket size may also
+/// double primesieve's memory usage for small n < 10^11 because of
+/// the EratMedium.cpp algorithm, which may deteriorate
+/// multi-threading performance for small n.
+///
 /// @pre BUCKET_BYTES must be a power of 2.
 ///
 /// - For x86-64 CPUs after  2010 use 8192
@@ -66,10 +72,18 @@ constexpr uint64_t MAX_CACHE_ITERATOR = 1 << 30;
 ///
 constexpr uint64_t MIN_THREAD_DISTANCE = (uint64_t) 1e7;
 
-/// Sieving primes <= (L1D_CACHE_BYTES * FACTOR_ERATSMALL)
-/// are processed in EratSmall. The ideal value for
-/// FACTOR_ERATSMALL has been determined experimentally by
-/// running benchmarks near 10^10.
+/// Sieving primes <= (L1D_CACHE_BYTES * FACTOR_ERATSMALL) are
+/// processed in EratSmall. When FACTOR_ERATSMALL is small fewer
+/// sieving primes are processed in EratSmall.cpp and more sieving
+/// primes are processed in EratMedium.cpp.
+///
+/// Using a larger FACTOR_ERATSMALL decreases the number of executed
+/// instructions, reduces the memory usage and thereby decreases cache
+/// misses but on the other hand increases branch mispredictions. In
+/// my tests using a smaller FACTOR_ERATSMALL often improved single
+/// thread performance, but decreased multi-threading performance. On
+/// newer CPUs a smaller FACTOR_ERATSMALL is often faster.
+///
 /// @pre FACTOR_ERATSMALL >= 0 && <= 4.5
 ///
 constexpr double FACTOR_ERATSMALL = 0.2;
