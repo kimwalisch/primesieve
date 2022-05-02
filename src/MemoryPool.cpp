@@ -10,7 +10,7 @@
 ///        doing any memory allocation as long as the MemoryPool's
 ///        stock is not empty.
 ///
-/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -24,9 +24,85 @@
 #include <algorithm>
 #include <vector>
 
-using std::size_t;
-
 namespace primesieve {
+
+void MemoryPool::updateAllocCount()
+{
+  std::size_t allocationNr = memory_.size() + 1;
+
+  if (allocationNr == 1)
+  {
+    // Default number of buckets for the 1st allocation.
+    // EratMedium requires exactly 73 buckets for small sieving limits.
+    // EratMedium requires one bucket for each of its 64 bucket lists
+    // and an additional 8 buckets whilst sieving. We likely also waste
+    // 1 bucket in order to align all our buckets' memory addresses to
+    // power of 2 boundaries: &bucket % sizeof(Bucket) == 0.
+    count_ = 73;
+
+    // 64 MemoryPool allocations (per thread)
+    // are enough to sieve up to 9e17.
+    memory_.reserve(64);
+  }
+  else if (allocationNr == 2)
+  {
+    // The 1st allocation allocates a fairly large number of buckets
+    // (73) to initialize the EratMedium.cpp algorithm. For the 2nd
+    // allocation we set the number of buckets to a smaller value
+    // (count_ / 4) to reduce the memory usage.
+    std::size_t minBuckets = 16;
+    count_ = std::max(minBuckets, count_ / 4);
+  }
+  else
+  {
+    // From the 3rd allocation onwards, we slowly increase the number
+    // of buckets to allocate. Increasing the number of buckets
+    // reduces the number of allocations, but on the other hand also
+    // adds some memory usage overhead.
+    count_ += count_ / 8;
+    std::size_t maxCount = config::MAX_ALLOC_BYTES / sizeof(Bucket);
+    count_ = std::min(count_, maxCount);
+  }
+}
+
+void MemoryPool::allocateBuckets()
+{
+  updateAllocCount();
+
+  // Allocate a large chunk of memory
+  std::size_t bytes = count_ * sizeof(Bucket);
+  char* memory = new char[bytes];
+  memory_.emplace_back(memory);
+  void* ptr = memory;
+
+  // Align pointer address to sizeof(Bucket)
+  if (!std::align(sizeof(Bucket), sizeof(Bucket), ptr, bytes))
+    throw primesieve_error("MemoryPool: failed to align memory!");
+
+  count_ = bytes / sizeof(Bucket);
+  initBuckets(ptr);
+}
+
+void MemoryPool::initBuckets(void* memory)
+{
+  Bucket* buckets = (Bucket*) memory;
+
+  if ((std::size_t) buckets % sizeof(Bucket) != 0)
+    throw primesieve_error("MemoryPool: failed to align memory!");
+
+  if (count_ < 10)
+    throw primesieve_error("MemoryPool: insufficient buckets allocated!");
+
+  for (std::size_t i = 0; i < count_ - 1; i++)
+  {
+    buckets[i].reset();
+    buckets[i].setNext(&buckets[i + 1]);
+  }
+
+  buckets[count_ - 1].reset();
+  buckets[count_ - 1].setNext(nullptr);
+  stock_ = buckets;
+}
 
 void MemoryPool::addBucket(SievingPrime*& sievingPrime)
 {
@@ -56,55 +132,6 @@ void MemoryPool::freeBucket(Bucket* bucket)
   bucket->reset();
   bucket->setNext(stock_);
   stock_ = bucket;
-}
-
-void MemoryPool::allocateBuckets()
-{
-  if (memory_.empty())
-    memory_.reserve(128);
-
-  // Allocate a large chunk of memory
-  size_t bytes = count_ * sizeof(Bucket);
-  char* memory = new char[bytes];
-  memory_.emplace_back(memory);
-  void* ptr = memory;
-
-  // Align pointer address to sizeof(Bucket)
-  if (!std::align(sizeof(Bucket), sizeof(Bucket), ptr, bytes))
-    throw primesieve_error("MemoryPool: failed to align memory!");
-
-  initBuckets(ptr, bytes);
-  increaseAllocCount();
-}
-
-void MemoryPool::initBuckets(void* memory, size_t bytes)
-{
-  Bucket* buckets = (Bucket*) memory;
-  count_ = bytes / sizeof(Bucket);
-  size_t i = 0;
-
-  if ((size_t) buckets % sizeof(Bucket) != 0)
-    throw primesieve_error("MemoryPool: failed to align memory!");
-
-  if (count_ < 10)
-    throw primesieve_error("MemoryPool: insufficient buckets allocated!");
-
-  for (; i + 1 < count_; i++)
-  {
-    buckets[i].reset();
-    buckets[i].setNext(&buckets[i + 1]);
-  }
-
-  buckets[i].reset();
-  buckets[i].setNext(nullptr);
-  stock_ = buckets;
-}
-
-void MemoryPool::increaseAllocCount()
-{
-  count_ += count_ / 8;
-  size_t maxCount = config::MAX_ALLOC_BYTES / sizeof(Bucket);
-  count_ = std::min(count_, maxCount);
 }
 
 } // namespace

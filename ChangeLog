@@ -1,4 +1,4 @@
-Changes in version 7.9, 28/04/2022
+Changes in version 7.9, 02/05/2022
 ==================================
 
 * intrinsics.hpp: Improved x64 BSF assembly.
@@ -10,6 +10,7 @@ Changes in version 7.9, 28/04/2022
 * EratBig.cpp: Use std::copy() instead of std::rotate().
 * SievingPrimes.cpp: Reduce branch mispredictions.
 * PreSieve.cpp: Hardcode buffersDist.
+* MemoryPool.cpp: Reduce memory usage.
 * StorePrimes.hpp: Improve nth prime approximation.
 * config.hpp: Tune FACTOR_ERATSMALL constant.
 * Use a single MemoryPool per thread (previously 2).

@@ -1,7 +1,7 @@
 ///
 /// @file  MemoryPool.hpp
 ///
-/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -25,13 +25,13 @@ public:
   void freeBucket(Bucket* bucket);
 
 private:
+  void updateAllocCount();
   void allocateBuckets();
-  void initBuckets(void* memory, std::size_t bytes);
-  void increaseAllocCount();
+  void initBuckets(void* memory);
   /// List of empty buckets
   Bucket* stock_ = nullptr;
   /// Number of buckets to allocate
-  std::size_t count_ = 64;
+  std::size_t count_ = 0;
   /// Pointers of allocated buckets
   std::vector<std::unique_ptr<char[]>> memory_;
 };
