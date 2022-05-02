@@ -4,6 +4,7 @@ Changes in version 7.9, 02/05/2022
 * intrinsics.hpp: Improved x64 BSF assembly.
 * iterator.cpp: Reduce memory allocations in generate_prev_primes().
 * iterator-c.cpp: Reduce memory allocations.
+* CpuInfo.cpp: Improve hybrid CPU detection on Linux.
 * Erat.cpp: Reduce memory usage when sieving a single segment.
 * EratBig.cpp: Improve instruction level parallelism.
 * EratBig.cpp: Improve next wheel index code.

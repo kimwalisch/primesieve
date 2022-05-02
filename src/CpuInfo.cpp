@@ -471,6 +471,8 @@ void CpuInfo::init()
 #include <algorithm>
 #include <cctype>
 #include <fstream>
+#include <iterator>
+#include <map>
 #include <set>
 #include <sstream>
 
@@ -701,35 +703,92 @@ void CpuInfo::init()
 {
   std::string cpusOnline = "/sys/devices/system/cpu/online";
   logicalCpuCores_ = parseThreadList(cpusOnline);
+  bool identicalL1CacheSizes = false;
 
-  // For hybrid CPUs with multiple types of CPU cores Linux seems
-  // to order the CPU cores within /sys/devices/system/cpu*
-  // from fastest to slowest. By picking a CPU core from the middle
-  // we hopefully get an average CPU core that is representative
-  // for the CPU's overall (multi-threading) performance.
-  std::string cpuNumber = std::to_string(logicalCpuCores_ / 2);
+  using CacheSize_t = size_t;
+  // Items must be sorted in ascending order
+  std::map<CacheSize_t, size_t> l1CacheStatistics;
+  std::vector<size_t> cpuIds;
+  cpuIds.reserve(3);
 
-  // Retrieve CPU cache info
-  for (size_t i = 0; i <= 3; i++)
+  // Check 1st, last & middle CPU core
+  cpuIds.push_back(0);
+  if (logicalCpuCores_ >= 2)
+    cpuIds.push_back(logicalCpuCores_ - 1);
+  if (logicalCpuCores_ >= 3)
+    cpuIds.push_back(logicalCpuCores_ / 2);
+
+  // Because of hybrid CPUs with big & little CPU cores we
+  // first check whether there are CPU cores with different
+  // L1 data cache sizes in the system. Because these
+  // checks are slow, we only check 3 different CPU cores.
+  for (size_t cpuId : cpuIds)
   {
-    std::string path = "/sys/devices/system/cpu/cpu" + cpuNumber + "/cache/index" + std::to_string(i);
-    std::string cacheLevel = path + "/level";
-    size_t level = getValue(cacheLevel);
-
-    if (level >= 1 &&
-        level <= 3)
+    for (size_t i = 0; i <= 3; i++)
     {
-      std::string type = path + "/type";
-      std::string cacheType = getString(type);
+      std::string path = "/sys/devices/system/cpu/cpu" + std::to_string(cpuId) + "/cache/index" + std::to_string(i);
+      std::string cacheLevel = path + "/level";
+      size_t level = getValue(cacheLevel);
 
-      if (cacheType == "Data" ||
-          cacheType == "Unified")
+      if (level == 1)
       {
-        std::string cacheSize = path + "/size";
-        std::string sharedCpuList = path + "/shared_cpu_list";
-        std::string sharedCpuMap = path + "/shared_cpu_map";
-        cacheSizes_[level] = getCacheSize(cacheSize);
-        cacheSharing_[level] = getThreads(sharedCpuList, sharedCpuMap);
+        std::string type = path + "/type";
+        std::string cacheType = getString(type);
+
+        if (cacheType == "Data" ||
+            cacheType == "Unified")
+        {
+          size_t cacheSize = getCacheSize(path + "/size");
+          if (cacheSize > 0)
+          {
+            if (l1CacheStatistics.find(cacheSize) == l1CacheStatistics.end())
+              l1CacheStatistics[cacheSize] = cpuId;
+            else
+              identicalL1CacheSizes = true;
+          }
+          break;
+        }
+      }
+    }
+
+    // We have found 2 identical CPU cores.
+    // In this case we assume all CPU cores
+    // have the same cache hierarchy.
+    if (identicalL1CacheSizes)
+      break;
+  }
+
+  // Retrieve the cache sizes of the CPU core with the middle
+  // L1 data cache size. If there are only 2 different L1
+  // cache sizes we retrieve the cache sizes of the CPU core
+  // with the smaller L1 data cache size.
+  if (!l1CacheStatistics.empty())
+  {
+    auto iter = l1CacheStatistics.begin();
+    std::advance(iter, (l1CacheStatistics.size() - 1) / 2);
+    size_t cpuId = iter->second;
+
+    for (size_t i = 0; i <= 3; i++)
+    {
+      std::string path = "/sys/devices/system/cpu/cpu" + std::to_string(cpuId) + "/cache/index" + std::to_string(i);
+      std::string cacheLevel = path + "/level";
+      size_t level = getValue(cacheLevel);
+
+      if (level >= 1 &&
+          level <= 3)
+      {
+        std::string type = path + "/type";
+        std::string cacheType = getString(type);
+
+        if (cacheType == "Data" ||
+            cacheType == "Unified")
+        {
+          std::string cacheSize = path + "/size";
+          std::string sharedCpuList = path + "/shared_cpu_list";
+          std::string sharedCpuMap = path + "/shared_cpu_map";
+          cacheSizes_[level] = getCacheSize(cacheSize);
+          cacheSharing_[level] = getThreads(sharedCpuList, sharedCpuMap);
+        }
       }
     }
   }
