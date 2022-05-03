@@ -1,4 +1,4 @@
-Changes in version 7.9, 02/05/2022
+Changes in version 7.9, 03/05/2022
 ==================================
 
 * intrinsics.hpp: Improved x64 BSF assembly.
@@ -13,7 +13,7 @@ Changes in version 7.9, 02/05/2022
 * PreSieve.cpp: Hardcode buffersDist.
 * MemoryPool.cpp: Reduce memory usage.
 * StorePrimes.hpp: Improve nth prime approximation.
-* config.hpp: Tune FACTOR_ERATSMALL constant.
+* config.hpp: Tune FACTOR_ERATMEDIUM constant.
 * Use a single MemoryPool per thread (previously 2).
 * Increase max sieve array size to 8 KiB.
 
