@@ -102,20 +102,20 @@ void Erat::initAlgorithms()
   uint64_t sqrtStop = isqrt(stop_);
   uint64_t l1CacheSize = getL1CacheSize();
 
+  // Small sieving primes are processed using the EratSmall
+  // algorithm, medium sieving primes are processed using
+  // the EratMedium algorithm and large sieving primes are
+  // processed using the EratBig algorithm.
   maxEratSmall_ = (uint64_t) (l1CacheSize * config::FACTOR_ERATSMALL);
   maxEratMedium_ = (uint64_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
-
-  if (sqrtStop > maxPreSieve_)
-    eratSmall_.init(stop_, l1CacheSize, maxEratSmall_);
-  if (sqrtStop > maxEratSmall_)
-    eratMedium_.init(stop_, maxEratMedium_, memoryPool_);
-  if (sqrtStop > maxEratMedium_)
-    eratBig_.init(stop_, sieveSize_, sqrtStop, memoryPool_);
+  maxEratSmall_ = std::min(maxEratSmall_, sqrtStop);
+  maxEratMedium_ = std::min(maxEratMedium_, sqrtStop);
+  uint64_t maxEratBig = sqrtStop;
 
   // If we are sieving just a single segment
   // and the EratBig algorithm is not used, then
   // we can allocate a smaller sieve array.
-  if (segmentHigh_ == stop_ &&
+  if (segmentHigh_ >= stop_ &&
       sqrtStop <= maxEratMedium_)
   {
     uint64_t rem = byteRemainder(stop_);
@@ -128,6 +128,13 @@ void Erat::initAlgorithms()
   assert(sieveSize_ % sizeof(uint64_t) == 0);
   sieve_ = new uint8_t[sieveSize_];
   deleter_.reset(sieve_);
+
+  if (sqrtStop > maxPreSieve_)
+    eratSmall_.init(stop_, l1CacheSize, maxEratSmall_);
+  if (sqrtStop > maxEratSmall_)
+    eratMedium_.init(stop_, maxEratMedium_, memoryPool_);
+  if (sqrtStop > maxEratMedium_)
+    eratBig_.init(stop_, sieveSize_, maxEratBig, memoryPool_);
 }
 
 /// EratMedium and EratBig usually run fastest using a sieve
