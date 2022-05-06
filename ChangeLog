@@ -1,3 +1,9 @@
+Changes in version 7.10, 06/05/2022
+===================================
+
+* Erat.cpp: Reduce memory usage, allocate the minimum required
+  memory to store all sieving primes.
+
 Changes in version 7.9, 03/05/2022
 ==================================
 
