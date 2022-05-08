@@ -420,11 +420,9 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
       sieveIdx_ += 8;
 
       // Convert 1 bits from the sieve array (bits64) into prime
-      // bit values using the avxBitValues lookup table.
-      __m512i bitValues = _mm512_maskz_loadu_epi8(bits64, &avxBitValues);
-
-      // Move all non zero bytes (prime bit values) to the beginning
-      bitValues = _mm512_maskz_compress_epi8(bits64, bitValues);
+      // bit values (bytes) using the avxBitValues lookup table and
+      // move all non zero bytes (bit values) to the beginning.
+      __m512i bitValues = _mm512_maskz_compress_epi8(bits64, &avxBitValues);
 
       // Convert the first 8 bytes (prime bit values)
       // into eight 64-bit prime numbers.
