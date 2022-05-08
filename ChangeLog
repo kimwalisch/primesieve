@@ -1,8 +1,9 @@
-Changes in version 7.10, 06/05/2022
+Changes in version 7.10, 08/05/2022
 ===================================
 
 * Erat.cpp: Reduce memory usage, allocate the minimum required
   memory to store all sieving primes.
+* PrimeGenerator.cpp: Improve AVX512 of fillNextPrimes().
 
 Changes in version 7.9, 03/05/2022
 ==================================
