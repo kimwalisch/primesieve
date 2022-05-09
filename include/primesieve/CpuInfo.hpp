@@ -1,7 +1,7 @@
 ///
 /// @file  CpuInfo.hpp
 ///
-/// Copyright (C) 2021 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -40,7 +40,14 @@ public:
 
   bool hasAVX512() const
   {
-    return has_AVX512_;
+    // AVX512 extensions required by PrimeGenerator::fillNextPrimesAVX512()
+    #if defined(__AVX512F__) && \
+        defined(__AVX512VBMI__) && \
+        defined(__AVX512VBMI2__)
+      return true;
+    #else
+      return has_AVX512_;
+    #endif
   }
 
 private:
