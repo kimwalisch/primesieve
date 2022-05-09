@@ -10,6 +10,7 @@
 
 #include <primesieve.h>
 #include <primesieve/forward.hpp>
+#include <primesieve/CpuInfo.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 

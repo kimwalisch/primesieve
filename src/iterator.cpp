@@ -8,6 +8,7 @@
 ///
 
 #include <primesieve/iterator.hpp>
+#include <primesieve/CpuInfo.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 
@@ -71,7 +72,7 @@ void iterator::generate_next_primes()
 
     #if defined(ENABLE_AVX512)
       if (cpuInfo.hasAVX512())
-        primeGenerator_->fillNextPrimesAVX512(primes, size);
+        primeGenerator_->fillNextPrimesAVX512(primes_, &size);
       else
     #endif
         primeGenerator_->fillNextPrimes(primes_, &size);

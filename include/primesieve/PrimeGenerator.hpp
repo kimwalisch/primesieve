@@ -63,6 +63,10 @@ public:
   void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size);
   static uint64_t maxCachedPrime();
 
+#if defined(ENABLE_AVX512)
+  void fillNextPrimesAVX512(std::vector<uint64_t>& primes, std::size_t* size);
+#endif
+
 private:
   uint64_t low_ = 0;
   uint64_t sieveIdx_ = ~0ull;
@@ -79,10 +83,6 @@ private:
   bool sievePrevPrimes(std::vector<uint64_t>&, std::size_t*);
   bool sieveNextPrimes(std::vector<uint64_t>&, std::size_t*);
   void sieveSegment();
-
-#if defined(ENABLE_AVX512)
-  void fillNextPrimesAVX512(std::vector<uint64_t>& primes, std::size_t* size);
-#endif
 };
 
 } // namespace
