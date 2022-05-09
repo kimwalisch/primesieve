@@ -37,8 +37,6 @@
   #include <immintrin.h>
 #endif
 
-using std::size_t;
-
 namespace {
 
 /// First 128 primes
@@ -125,9 +123,9 @@ uint64_t PrimeGenerator::maxCachedPrime()
   return smallPrimes.back();
 }
 
-size_t PrimeGenerator::getStartIdx() const
+std::size_t PrimeGenerator::getStartIdx() const
 {
-  size_t startIdx = 0;
+  std::size_t startIdx = 0;
 
   if (start_ > 1)
     startIdx = primePi[start_ - 1];
@@ -135,9 +133,9 @@ size_t PrimeGenerator::getStartIdx() const
   return startIdx;
 }
 
-size_t PrimeGenerator::getStopIdx() const
+std::size_t PrimeGenerator::getStopIdx() const
 {
-  size_t stopIdx = 0;
+  std::size_t stopIdx = 0;
 
   if (stop_ < maxCachedPrime())
     stopIdx = primePi[stop_];
@@ -149,9 +147,9 @@ size_t PrimeGenerator::getStopIdx() const
 
 /// Used by iterator::prev_prime()
 void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
-                                    size_t* size)
+                                    std::size_t* size)
 {
-  size_t n = primeCountApprox(start_, stop_);
+  std::size_t n = primeCountApprox(start_, stop_);
 
   if (start_ > maxCachedPrime())
   {
@@ -161,14 +159,14 @@ void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
   }
   else
   {
-    size_t a = getStartIdx();
-    size_t b = getStopIdx();
+    std::size_t a = getStartIdx();
+    std::size_t b = getStopIdx();
     assert(a <= b);
     *size = (start_ <= 2) + b - a;
 
     n = std::max(*size, n);
     resizeUninitialized(primes, n + 64);
-    size_t i = 0;
+    std::size_t i = 0;
 
     if (start_ <= 2)
       primes[i++] = 0;
@@ -183,7 +181,7 @@ void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
 
 /// Used by iterator::next_prime()
 void PrimeGenerator::initNextPrimes(std::vector<uint64_t>& primes,
-                                    size_t* size)
+                                    std::size_t* size)
 {
   // A buffer of 512 primes provides good
   // performance with little memory usage.
@@ -191,8 +189,8 @@ void PrimeGenerator::initNextPrimes(std::vector<uint64_t>& primes,
 
   if (start_ <= maxCachedPrime())
   {
-    size_t a = getStartIdx();
-    size_t b = getStopIdx();
+    std::size_t a = getStartIdx();
+    std::size_t b = getStopIdx();
 
     *size = b - a;
     assert(*size <= primes.size());
@@ -241,7 +239,7 @@ void PrimeGenerator::sieveSegment()
 
 /// Used by iterator::prev_prime()
 bool PrimeGenerator::sievePrevPrimes(std::vector<uint64_t>& primes,
-                                     size_t* size)
+                                     std::size_t* size)
 {
   if (!isInit_)
     initPrevPrimes(primes, size);
@@ -257,7 +255,7 @@ bool PrimeGenerator::sievePrevPrimes(std::vector<uint64_t>& primes,
 
 /// Used by iterator::next_prime()
 bool PrimeGenerator::sieveNextPrimes(std::vector<uint64_t>& primes,
-                                     size_t* size)
+                                     std::size_t* size)
 {
   *size = 0;
 
@@ -293,13 +291,13 @@ bool PrimeGenerator::sieveNextPrimes(std::vector<uint64_t>& primes,
 /// primes which incurs an initialization overhead of O(sqrt(n)).
 ///
 void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
-                                    size_t* size)
+                                    std::size_t* size)
 {
   while (sievePrevPrimes(primes, size))
   {
     // Use local variables to prevent the compiler from
     // writing temporary results to memory.
-    size_t i = *size;
+    std::size_t i = *size;
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieveSize_;
@@ -314,7 +312,7 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
         resizeUninitialized(primes, i + 64);
 
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
-      size_t j = i;
+      std::size_t j = i;
       i += popcnt64(bits);
 
       do
@@ -345,7 +343,7 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
 /// than iterator::prev_prime().
 ///
 void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
-                                    size_t* size)
+                                    std::size_t* size)
 {
   do
   {
@@ -355,8 +353,8 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
 
     // Use local variables to prevent the compiler from
     // writing temporary results to memory.
-    size_t i = 0;
-    size_t maxSize = primes.size();
+    std::size_t i = 0;
+    std::size_t maxSize = primes.size();
     assert(maxSize >= 64);
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
@@ -370,7 +368,7 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
     do
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
-      size_t j = i;
+      std::size_t j = i;
       i += popcnt64(bits);
 
       do
@@ -416,7 +414,7 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
   __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
 #endif
 void PrimeGenerator::fillNextPrimesAVX512(std::vector<uint64_t>& primes,
-                                          size_t* size)
+                                          std::size_t* size)
 {
   do
   {
