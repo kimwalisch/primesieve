@@ -356,7 +356,7 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
 /// distributed relatively evenly. While processing a 64-bit word
 /// from the sieve array there are if checks that skip to the next
 /// loop iteration once all 1 bits have been processed. In my
-/// benchmarks this algorithm ran about 5% faster than the default
+/// benchmarks this algorithm ran about 8% faster than the default
 /// fillNextPrimes() algorithm which uses __builtin_ctzll().
 ///
 void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
@@ -368,7 +368,11 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
       if (!sieveNextPrimes(primes, size))
         return;
 
-    *size = 0;
+    uint8_t* sieve = sieve_;
+    uint64_t i = 0;
+    uint64_t low = low_;
+    uint64_t sieveIdx = sieveIdx_;
+    uint64_t sieveSize = sieveSize_;
     uint64_t maxSize = primes.size();
     assert(primes.size() >= 64);
 
@@ -400,24 +404,24 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
     __m512i bytes_48_to_55 = _mm512_setr_epi64(48, 49, 50, 51, 52, 53, 54, 55);
     __m512i bytes_56_to_63 = _mm512_setr_epi64(56, 57, 58, 59, 60, 61, 62, 63);
 
-    while (sieveIdx_ < sieveSize_)
+    while (sieveIdx < sieveSize)
     {
       // Each iteration processes 8 bytes from the sieve array
-      uint64_t bits64 = *(uint64_t*) &sieve_[sieveIdx_];
+      uint64_t bits64 = *(uint64_t*) &sieve[sieveIdx];
       uint64_t primeCount = popcnt64(bits64);
 
       // Prevent _mm512_storeu_si512() buffer overrun
-      if (*size + primeCount + (8 - primeCount % 8) >= maxSize)
+      if (i + primeCount + (8 - primeCount % 8) >= maxSize)
         break;
 
-      __m512i base = _mm512_set1_epi64(low_);
-      uint64_t* primes64 = &primes[*size];
+      __m512i base = _mm512_set1_epi64(low);
+      uint64_t* primes64 = &primes[i];
 
       // These variables are not used anymore during this
       // iteration, increment for next iteration.
-      *size += primeCount;
-      low_ += 8 * 30;
-      sieveIdx_ += 8;
+      i += primeCount;
+      low += 8 * 30;
+      sieveIdx += 8;
 
       // Convert 1 bits from the sieve array (bits64) into prime
       // bit values (bytes) using the avxBitValues lookup table and
@@ -479,6 +483,10 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
       vprimes7 = _mm512_add_epi64(base, vprimes7);
       _mm512_storeu_si512(&primes64[56], vprimes7);
     }
+
+    low_ = low;
+    sieveIdx_ = sieveIdx;
+    *size = i;
   }
   while (*size == 0);
 }
