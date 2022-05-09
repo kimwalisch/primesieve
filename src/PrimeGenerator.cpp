@@ -18,7 +18,6 @@
 ///
 
 #include <primesieve/Erat.hpp>
-#include <primesieve/CpuInfo.hpp>
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/PreSieve.hpp>
@@ -348,14 +347,6 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
 void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
                                     size_t* size)
 {
-#if defined(ENABLE_AVX512)
-  if (cpuInfo.hasAVX512())
-  {
-    fillNextPrimesAVX512(primes, size);
-    return;
-  }
-#endif
-
   do
   {
     if (sieveIdx_ >= sieveSize_)
@@ -422,7 +413,7 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
 /// fillNextPrimes() algorithm which uses __builtin_ctzll().
 ///
 #if !defined(_MSC_VER)
-  __attribute__ ((target ("avx512f,avx512bw,avx512vbmi,avx512vbmi2,popcnt")))
+  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
 #endif
 void PrimeGenerator::fillNextPrimesAVX512(std::vector<uint64_t>& primes,
                                           size_t* size)

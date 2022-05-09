@@ -103,7 +103,13 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       }
 
       auto& primes = getPrimes(it->vector);
-      primeGenerator->fillNextPrimes(primes, &size);
+
+      #if defined(ENABLE_AVX512)
+        if (cpuInfo.hasAVX512())
+          primeGenerator->fillNextPrimesAVX512(primes, size);
+        else
+      #endif
+          primeGenerator->fillNextPrimes(primes, &size);
 
       // There are 3 different cases here:
       // 1) The primes array contains a few primes (<= 512).

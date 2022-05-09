@@ -54,7 +54,6 @@
 
 /* %ebx bit flags */
 #define bit_AVX512F  (1 << 16)
-#define bit_AVX512BW (1 << 30)
 
 /* %ecx bit flags */
 #define bit_AVX512VBMI  (1 << 1)
@@ -143,7 +142,7 @@ bool has_AVX512()
     if ((xcr0 & zmm_mask) == zmm_mask)
     {
       // PrimeGenerator::fillNextPrimes() requires AVX512F, AVX512VBMI & AVX512VBMI2
-      if ((abcd[1] & (bit_AVX512F | bit_AVX512BW)) == (bit_AVX512F | bit_AVX512BW) &&
+      if ((abcd[1] & bit_AVX512F) == bit_AVX512F &&
           (abcd[2] & (bit_AVX512VBMI | bit_AVX512VBMI2)) == (bit_AVX512VBMI | bit_AVX512VBMI2))
         return true;
     }

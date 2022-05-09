@@ -69,7 +69,12 @@ void iterator::generate_next_primes()
       primeGenerator_.reset(p);
     }
 
-    primeGenerator_->fillNextPrimes(primes_, &size);
+    #if defined(ENABLE_AVX512)
+      if (cpuInfo.hasAVX512())
+        primeGenerator_->fillNextPrimesAVX512(primes, size);
+      else
+    #endif
+        primeGenerator_->fillNextPrimes(primes_, &size);
 
     // There are 3 different cases here:
     // 1) The primes array contains a few primes (<= 512).
