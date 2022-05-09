@@ -26,6 +26,7 @@
 
 #include <primesieve/CpuInfo.hpp>
 
+#include <algorithm>
 #include <stdint.h>
 #include <cstddef>
 #include <exception>
@@ -125,7 +126,7 @@ bool has_AVX512()
 
   run_cpuid(1, 0, abcd);
 
-  // PrimeGenerator::fillNextPrimes() requires POPCNT
+  // PrimeGenerator::fillNextPrimesAVX512() requires POPCNT
   if ((abcd[2] & bit_POPCNT) != bit_POPCNT)
     return false;
 
@@ -167,7 +168,6 @@ bool has_AVX512()
 #include <primesieve/pmath.hpp>
 
 #include <windows.h>
-#include <algorithm>
 #include <iterator>
 #include <map>
 
@@ -437,9 +437,6 @@ void CpuInfo::init()
 #elif defined(APPLE_SYSCTL)
 
 #include <primesieve/pmath.hpp>
-
-#include <algorithm>
-#include <cstddef>
 #include <sys/sysctl.h>
 
 namespace {
@@ -503,7 +500,6 @@ void CpuInfo::init()
 
 #include <primesieve/primesieve_error.hpp>
 
-#include <algorithm>
 #include <cctype>
 #include <fstream>
 #include <iterator>
