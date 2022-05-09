@@ -368,6 +368,8 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
       if (!sieveNextPrimes(primes, size))
         return;
 
+    // Use local variables to prevent the compiler from
+    // writing temporary results to memory.
     uint8_t* sieve = sieve_;
     uint64_t i = 0;
     uint64_t low = low_;
