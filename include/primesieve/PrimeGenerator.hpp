@@ -30,7 +30,14 @@
      defined(_M_X64)) && \
      __has_include(<immintrin.h>)
 
-  #ifdef __GNUC__
+  #if defined(__clang__)
+    #define CLANG_PREREQ(x, y) \
+      (__clang_major__ > x || (__clang_major__ == x && __clang_minor__ >= y))
+    // AVX512VBMI2 requires Clang 6.x or later
+    #if CLANG_PREREQ(6, 0)
+      #define ENABLE_AVX512
+    #endif
+  #elif defined(__GNUC__)
     #define GNUC_PREREQ(x, y) \
       (__GNUC__ > x || (__GNUC__ == x && __GNUC_MINOR__ >= y))
     // AVX512VBMI2 requires GCC 8.x or later
