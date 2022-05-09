@@ -30,7 +30,12 @@
      defined(_M_X64)) && \
      __has_include(<immintrin.h>)
 
-  #if defined(__clang__)
+  #if defined(_MSC_VER)
+    // AVX512VBMI2 requires MSVC 2019 or later
+    #if _MSC_VER >= 1920
+      #define ENABLE_AVX512
+    #endif
+  #elif defined(__clang__)
     #define CLANG_PREREQ(x, y) \
       (__clang_major__ > x || (__clang_major__ == x && __clang_minor__ >= y))
     // AVX512VBMI2 requires Clang 6.x or later
@@ -42,12 +47,6 @@
       (__GNUC__ > x || (__GNUC__ == x && __GNUC_MINOR__ >= y))
     // AVX512VBMI2 requires GCC 8.x or later
     #if GNUC_PREREQ(8, 0)
-      #define ENABLE_AVX512
-    #endif
-  #elif defined(_MSC_VER)
-    // MSVC 2017 or later does not require
-    // /arch:AVX2 or /arch:AVX512
-    #if _MSC_VER >= 1910
       #define ENABLE_AVX512
     #endif
   #endif
