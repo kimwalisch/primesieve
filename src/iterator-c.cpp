@@ -106,7 +106,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
 
       #if defined(ENABLE_AVX512)
         if (cpuInfo.hasAVX512())
-          primeGenerator->fillNextPrimesAVX512(primes, size);
+          primeGenerator->fillNextPrimesAVX512(primes, &size);
         else
       #endif
           primeGenerator->fillNextPrimes(primes, &size);
