@@ -18,6 +18,7 @@
 ///
 
 #include <primesieve/Erat.hpp>
+#include <primesieve/CpuInfo.hpp>
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/PreSieve.hpp>
@@ -33,14 +34,7 @@
 #include <cassert>
 #include <vector>
 
-/// Enable AVX512 if primesieve is compiled using e.g.
-/// -march=native on an AVX512 capable CPU.
-#if !defined(DISABLE_AVX512) && \
-     defined(__AVX512F__) && \
-     defined(__AVX512BW__) && \
-     defined(__AVX512VBMI2__) && \
-     __has_include(<immintrin.h>)
-  #define ENABLE_AVX512
+#if defined(ENABLE_AVX512)
   #include <immintrin.h>
 #endif
 
@@ -344,6 +338,74 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
   }
 }
 
+/// This method is used by iterator::next_prime().
+/// This method stores only the next few primes (~ 500) in the
+/// primes vector. Also for iterator::next_prime() there is no
+/// recurring initialization overhead (unlike prev_prime()) for
+/// this reason iterator::next_prime() runs up to 2x faster
+/// than iterator::prev_prime().
+///
+void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
+                                    size_t* size)
+{
+#if defined(ENABLE_AVX512)
+  if (cpuInfo.hasAVX512())
+  {
+    fillNextPrimesAVX512(primes, size);
+    return;
+  }
+#endif
+
+  do
+  {
+    if (sieveIdx_ >= sieveSize_)
+      if (!sieveNextPrimes(primes, size))
+        return;
+
+    // Use local variables to prevent the compiler from
+    // writing temporary results to memory.
+    size_t i = 0;
+    size_t maxSize = primes.size();
+    assert(maxSize >= 64);
+    uint64_t low = low_;
+    uint64_t sieveIdx = sieveIdx_;
+    uint64_t sieveSize = sieveSize_;
+    uint8_t* sieve = sieve_;
+
+    // Fill the buffer with at least (maxSize - 64) primes.
+    // Each loop iteration can generate up to 64 primes
+    // so we have to stop generating primes once there is
+    // not enough space for 64 more primes.
+    do
+    {
+      uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
+      size_t j = i;
+      i += popcnt64(bits);
+
+      do
+      {
+        assert(j + 4 < maxSize);
+        primes[j+0] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+1] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+2] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+3] = nextPrime(bits, low); bits &= bits - 1;
+        j += 4;
+      }
+      while (j < i);
+
+      low += 8 * 30;
+      sieveIdx += 8;
+    }
+    while (i <= maxSize - 64 &&
+           sieveIdx < sieveSize);
+
+    low_ = low;
+    sieveIdx_ = sieveIdx;
+    *size = i;
+  }
+  while (*size == 0);
+}
+
 #if defined(ENABLE_AVX512)
 
 /// This algorithm converts 1 bits from the sieve array into primes
@@ -359,8 +421,11 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
 /// benchmarks this algorithm ran about 8% faster than the default
 /// fillNextPrimes() algorithm which uses __builtin_ctzll().
 ///
-void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
-                                    size_t* size)
+#if !defined(_MSC_VER)
+  __attribute__ ((target ("avx512f,avx512bw,avx512vbmi,avx512vbmi2,popcnt")))
+#endif
+void PrimeGenerator::fillNextPrimesAVX512(std::vector<uint64_t>& primes,
+                                          size_t* size)
 {
   do
   {
@@ -485,68 +550,6 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
       vprimes7 = _mm512_add_epi64(base, vprimes7);
       _mm512_storeu_si512(&primes64[56], vprimes7);
     }
-
-    low_ = low;
-    sieveIdx_ = sieveIdx;
-    *size = i;
-  }
-  while (*size == 0);
-}
-
-#else
-
-/// This method is used by iterator::next_prime().
-/// This method stores only the next few primes (~ 500) in the
-/// primes vector. Also for iterator::next_prime() there is no
-/// recurring initialization overhead (unlike prev_prime()) for
-/// this reason iterator::next_prime() runs up to 2x faster
-/// than iterator::prev_prime().
-///
-void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
-                                    size_t* size)
-{
-  do
-  {
-    if (sieveIdx_ >= sieveSize_)
-      if (!sieveNextPrimes(primes, size))
-        return;
-
-    // Use local variables to prevent the compiler from
-    // writing temporary results to memory.
-    size_t i = 0;
-    size_t maxSize = primes.size();
-    assert(maxSize >= 64);
-    uint64_t low = low_;
-    uint64_t sieveIdx = sieveIdx_;
-    uint64_t sieveSize = sieveSize_;
-    uint8_t* sieve = sieve_;
-
-    // Fill the buffer with at least (maxSize - 64) primes.
-    // Each loop iteration can generate up to 64 primes
-    // so we have to stop generating primes once there is
-    // not enough space for 64 more primes.
-    do
-    {
-      uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
-      size_t j = i;
-      i += popcnt64(bits);
-
-      do
-      {
-        assert(j + 4 < maxSize);
-        primes[j+0] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+1] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+2] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+3] = nextPrime(bits, low); bits &= bits - 1;
-        j += 4;
-      }
-      while (j < i);
-
-      low += 8 * 30;
-      sieveIdx += 8;
-    }
-    while (i <= maxSize - 64 &&
-           sieveIdx < sieveSize);
 
     low_ = low;
     sieveIdx_ = sieveIdx;

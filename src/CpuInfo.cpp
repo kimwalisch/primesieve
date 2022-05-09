@@ -923,11 +923,6 @@ bool CpuInfo::hasLogicalCpuCores() const
          logicalCpuCores_ <= (1 << 20);
 }
 
-bool CpuInfo::hasAVX512() const
-{
-  return has_AVX512_;
-}
-
 bool CpuInfo::hasL1Cache() const
 {
   return cacheSizes_[1] >= (1 << 12) &&
