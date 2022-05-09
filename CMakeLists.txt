@@ -12,6 +12,7 @@ option(BUILD_DOC         "Build C/C++ API documentation" OFF)
 option(BUILD_MANPAGE     "Regenerate man page using a2x" OFF)
 option(BUILD_EXAMPLES    "Build example programs"        OFF)
 option(BUILD_TESTS       "Build test programs"           OFF)
+option(DISABLE_AVX512    "Disable AVX512 on x64 CPUs"    OFF)
 
 option(WITH_MSVC_CRT_STATIC "Link primesieve.lib with /MT instead of the default /MD" OFF)
 
@@ -139,6 +140,10 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
+    if(DISABLE_AVX512)
+        target_compile_definitions(libprimesieve PRIVATE "DISABLE_AVX512")
+    endif()
+
     if(WIN32_MSVC_COMPATIBLE)
         # On Windows the shared library will be named primesieve.dll
         # and the associated import library will be named
@@ -174,6 +179,10 @@ if(BUILD_STATIC_LIBS)
     add_library(libprimesieve-static STATIC ${LIB_SRC})
     set_target_properties(libprimesieve-static PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${LIBATOMIC})
+
+    if(DISABLE_AVX512)
+        target_compile_definitions(libprimesieve-static PRIVATE "DISABLE_AVX512")
+    endif()
 
     if(WITH_MSVC_CRT_STATIC)
         set_target_properties(libprimesieve-static PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")

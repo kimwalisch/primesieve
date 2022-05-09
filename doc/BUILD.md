@@ -78,6 +78,7 @@ option(BUILD_DOC         "Build C/C++ API documentation" OFF)
 option(BUILD_MANPAGE     "Regenerate man page using a2x" OFF)
 option(BUILD_EXAMPLES    "Build example programs"        OFF)
 option(BUILD_TESTS       "Build test programs"           OFF)
+option(DISABLE_AVX512    "Disable AVX512 on x64 CPUs"    OFF)
 
 option(WITH_MSVC_CRT_STATIC "Link primesieve.lib with /MT instead of the default /MD" OFF)
 ```
