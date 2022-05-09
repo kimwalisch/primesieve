@@ -38,8 +38,12 @@
   #elif defined(__clang__)
     #define CLANG_PREREQ(x, y) \
       (__clang_major__ > x || (__clang_major__ == x && __clang_minor__ >= y))
-    // AVX512VBMI2 requires Clang 6.x or later
-    #if CLANG_PREREQ(6, 0)
+    // AVX512VBMI2 requires Clang 6.x or later.
+    // Apple Clang used to report erroneous versions,
+    // therefore we require Clang 11.0 (though it
+    // seems like 9.1 would be enough).
+    // See: https://gist.github.com/yamaya/2924292
+    #if CLANG_PREREQ(11, 0)
       #define ENABLE_AVX512
     #endif
   #elif defined(__GNUC__)
