@@ -40,7 +40,10 @@ public:
 
   bool hasAVX512() const
   {
-    // AVX512 extensions required by PrimeGenerator::fillNextPrimesAVX512()
+    // By inlining and hardcoding 'return true' here if the compiler
+    // defines the AVX512 macros, the AVX512 runtime check in
+    // iterator.cpp will be removed if the user compiles with
+    // -march=native on a CPU that supports AVX512.
     #if defined(__AVX512F__) && \
         defined(__AVX512VBMI__) && \
         defined(__AVX512VBMI2__)
