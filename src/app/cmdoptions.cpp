@@ -317,6 +317,17 @@ void optionCpuInfo()
   else
     std::cout << "Logical CPU cores: unknown" << std::endl;
 
+#if defined(__i386__) || \
+    defined(__x86_64__) || \
+    defined(_M_IX86) || \
+    defined(_M_X64)
+
+  if (cpu.hasAVX512())
+    std::cout << "AVX512: true" << std::endl;
+  else
+    std::cout << "AVX512: false" << std::endl;
+#endif
+
   if (cpu.hasL1Cache())
     std::cout << "L1 cache size: " << (cpu.l1CacheBytes() >> 10) << " KiB" << std::endl;
 

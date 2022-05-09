@@ -32,8 +32,6 @@
 #include <string>
 #include <vector>
 
-using std::size_t;
-
 #if defined(__APPLE__)
   #if !defined(__has_include)
     #define APPLE_SYSCTL
@@ -42,111 +40,130 @@ using std::size_t;
   #endif
 #endif
 
-#if defined(_WIN32)
-
-#include <primesieve/pmath.hpp>
-
-#include <windows.h>
-#include <iterator>
-#include <map>
-
 #if defined(__i386__) || \
-    defined(_M_IX86) || \
     defined(__x86_64__) || \
-    defined(_M_X64) || \
-    defined(_M_AMD64)
-  #define IS_X86
-#endif
+    defined(_M_IX86) || \
+    defined(_M_X64)
 
-#if defined(IS_X86)
-
-#include <algorithm>
-
-// Check if compiler supports <intrin.h>
-#if defined(__has_include)
-  #if __has_include(<intrin.h>)
-    #define HAS_INTRIN_H
-  #endif
-#elif defined(_MSC_VER)
-  #define HAS_INTRIN_H
-#endif
-
-// Check if compiler supports CPUID
-#if defined(HAS_INTRIN_H)
+#if defined(_MSC_VER)
   #include <intrin.h>
-  #define MSVC_CPUID
-#elif defined(__GNUC__) || \
-      defined(__clang__)
-  #define GNUC_CPUID
+  #include <immintrin.h>
 #endif
+
+#define HAS_CPUID
+
+/* %ebx bit flags */
+#define bit_AVX512F  (1 << 16)
+#define bit_AVX512BW (1 << 30)
+
+/* %ecx bit flags */
+#define bit_AVX512VBMI  (1 << 1)
+#define bit_AVX512VBMI2 (1 << 6)
+#define bit_POPCNT      (1 << 23)
+
+/* xgetbv bit flags */
+#define XSTATE_SSE (1 << 1)
+#define XSTATE_YMM (1 << 2)
+#define XSTATE_ZMM (7 << 5)
 
 namespace {
 
-/// CPUID is not portable across all x86 CPU vendors and there
-/// are many pitfalls. For this reason we prefer to get CPU
-/// information from the operating system instead of CPUID.
-/// We only use CPUID for getting the CPU name on Windows x86
-/// because there is no other way to get that information.
-///
-void cpuId(int cpuInfo[4], int eax)
+void run_cpuid(int eax, int ecx, int* abcd)
 {
-#if defined(MSVC_CPUID)
-  __cpuid(cpuInfo, eax);
-#elif defined(GNUC_CPUID)
+#if defined(_MSC_VER)
+  __cpuidex(abcd, eax, ecx);
+#else
   int ebx = 0;
-  int ecx = 0;
   int edx = 0;
 
   #if defined(__i386__) && \
       defined(__PIC__)
-    // in case of PIC under 32-bit EBX cannot be clobbered
+    /* in case of PIC under 32-bit EBX cannot be clobbered */
     __asm__ ("movl %%ebx, %%edi;"
              "cpuid;"
              "xchgl %%ebx, %%edi;"
-             : "+a" (eax),
-               "=D" (ebx),
-               "=c" (ecx),
+             : "=D" (ebx),
+               "+a" (eax),
+               "+c" (ecx),
                "=d" (edx));
   #else
     __asm__ ("cpuid;"
-             : "+a" (eax),
-               "=b" (ebx),
-               "=c" (ecx),
+             : "+b" (ebx),
+               "+a" (eax),
+               "+c" (ecx),
                "=d" (edx));
   #endif
 
-  cpuInfo[0] = eax;
-  cpuInfo[1] = ebx;
-  cpuInfo[2] = ecx;
-  cpuInfo[3] = edx;
-#else
-  // CPUID is not supported
-  eax = 0;
-
-  cpuInfo[0] = eax;
-  cpuInfo[1] = 0;
-  cpuInfo[2] = 0;
-  cpuInfo[3] = 0;
+  abcd[0] = eax;
+  abcd[1] = ebx;
+  abcd[2] = ecx;
+  abcd[3] = edx;
 #endif
 }
 
-/// Remove all leading and trailing
-/// space characters.
-///
-void trimString(std::string& str)
+int get_xcr0()
 {
-  std::string spaceChars = " \f\n\r\t\v";
-  size_t pos = str.find_first_not_of(spaceChars);
-  str.erase(0, pos);
+  int xcr0;
 
-  pos = str.find_last_not_of(spaceChars);
-  if (pos != std::string::npos)
-    str.erase(pos + 1);
+#if defined(_MSC_VER)
+  xcr0 = (int) _xgetbv(0);
+#else
+  __asm__ ("xgetbv" : "=a" (xcr0) : "c" (0) : "%edx" );
+#endif
+
+  return xcr0;
+}
+
+bool has_AVX512()
+{
+  int abcd[4];
+
+  run_cpuid(1, 0, abcd);
+
+  // PrimeGenerator::fillNextPrimes() requires POPCNT
+  if ((abcd[2] & bit_POPCNT) != bit_POPCNT)
+    return false;
+
+  int osxsave_mask = (1 << 27);
+
+  // This check ensures the CPU supports the extended control register
+  // (XCR) which is needed to check for AVX support.
+  if ((abcd[2] & osxsave_mask) != osxsave_mask)
+    return false;
+
+  int ymm_mask = XSTATE_SSE | XSTATE_YMM;
+  int zmm_mask = XSTATE_SSE | XSTATE_YMM | XSTATE_ZMM;
+
+  int xcr0 = get_xcr0();
+
+  if ((xcr0 & ymm_mask) == ymm_mask)
+  {
+    run_cpuid(7, 0, abcd);
+
+    if ((xcr0 & zmm_mask) == zmm_mask)
+    {
+      // PrimeGenerator::fillNextPrimes() requires AVX512F, AVX512VBMI & AVX512VBMI2
+      if ((abcd[1] & (bit_AVX512F | bit_AVX512BW)) == (bit_AVX512F | bit_AVX512BW) &&
+          (abcd[2] & (bit_AVX512VBMI | bit_AVX512VBMI2)) == (bit_AVX512VBMI | bit_AVX512VBMI2))
+        return true;
+    }
+  }
+
+  return false;
 }
 
 } // namespace
 
 #endif
+
+#if defined(_WIN32)
+
+#include <primesieve/pmath.hpp>
+
+#include <windows.h>
+#include <algorithm>
+#include <iterator>
+#include <map>
 
 namespace {
 
@@ -154,29 +171,41 @@ std::string getCpuName()
 {
   std::string cpuName;
 
-#if defined(IS_X86)
+#if defined(HAS_CPUID)
   // Get the CPU name using CPUID.
   // Example: Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz
   // https://en.wikipedia.org/wiki/CPUID
 
   int cpuInfo[4] = { 0, 0, 0, 0 };
-  cpuId(cpuInfo, 0x80000000);
+  run_cpuid(0x80000000, 0, cpuInfo);
   std::vector<int> vect;
 
   // check if CPU name is supported
   if ((unsigned) cpuInfo[0] >= 0x80000004u)
   {
-    cpuId(cpuInfo, 0x80000002);
+    run_cpuid(0x80000002, 0, cpuInfo);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
-    cpuId(cpuInfo, 0x80000003);
+    run_cpuid(0x80000003, 0, cpuInfo);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
-    cpuId(cpuInfo, 0x80000004);
+    run_cpuid(0x80000004, 0, cpuInfo);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
     vect.push_back(0);
     cpuName = (char*) vect.data();
+
+    auto trimString = [](std::string& str)
+    {
+      std::string spaceChars = " \f\n\r\t\v";
+      std::size_t pos = str.find_first_not_of(spaceChars);
+      str.erase(0, pos);
+
+      pos = str.find_last_not_of(spaceChars);
+      if (pos != std::string::npos)
+        str.erase(pos + 1);
+    };
+
     trimString(cpuName);
   }
 #endif
@@ -231,10 +260,10 @@ void CpuInfo::init()
   struct L1CacheStatistics
   {
     long cpuCoreId = -1;
-    size_t cpuCoreCount = 0;
+    std::size_t cpuCoreCount = 0;
   };
 
-  using CacheSize_t = size_t;
+  using CacheSize_t = std::size_t;
   // Items must be sorted in ascending order
   std::map<CacheSize_t, L1CacheStatistics> l1CacheStatistics;
   std::vector<CpuCoreCacheInfo> cacheInfo;
@@ -243,7 +272,7 @@ void CpuInfo::init()
 
   // Fill the cacheInfo vector with the L1, L2 & L3 cache
   // sizes and cache sharing of each CPU core.
-  for (size_t i = 0; i < bytes; i += info->Size)
+  for (std::size_t i = 0; i < bytes; i += info->Size)
   {
     info = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*) &buffer[i];
 
@@ -253,8 +282,8 @@ void CpuInfo::init()
         (info->Cache.Type == CacheData ||
          info->Cache.Type == CacheUnified))
     {
-      size_t cpuCoreIndex = 0;
-      size_t cacheSharing = 0;
+      std::size_t cpuCoreIndex = 0;
+      std::size_t cacheSharing = 0;
 
       // Cache.GroupMask.Mask contains one bit set for
       // each logical CPU core sharing the cache.
@@ -281,7 +310,7 @@ void CpuInfo::init()
         // filled (they may have less than maxCpusPerProcessorGroup
         // CPU cores). However our formula yields unique
         // cpuCoreIds which is good enough for our usage.
-        size_t cpuCoreId = processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex;
+        std::size_t cpuCoreId = processorGroup * maxCpusPerProcessorGroup + cpuCoreIndex;
 
         if (cacheInfo.size() <= cpuCoreId)
           cacheInfo.resize((cpuCoreId + 1) * 2);
@@ -344,14 +373,14 @@ void CpuInfo::init()
   if (!bytes)
     return;
 
-  size_t threadsPerCore = 0;
-  size_t size = bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
+  std::size_t threadsPerCore = 0;
+  std::size_t size = bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
   std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> info(size);
 
   if (!glpi(&info[0], &bytes))
     return;
 
-  for (size_t i = 0; i < size; i++)
+  for (std::size_t i = 0; i < size; i++)
   {
     if (info[i].Relationship == RelationProcessorCore)
     {
@@ -366,7 +395,7 @@ void CpuInfo::init()
     }
   }
 
-  for (size_t i = 0; i < size; i++)
+  for (std::size_t i = 0; i < size; i++)
   {
     if (info[i].Relationship == RelationCache &&
         info[i].Cache.Level >= 1 &&
@@ -417,11 +446,11 @@ template <typename T>
 std::vector<T> getSysctl(const std::string& name)
 {
   std::vector<T> res;
-  size_t bytes = 0;
+  std::size_t bytes = 0;
 
   if (!sysctlbyname(name.data(), 0, &bytes, 0, 0))
   {
-    size_t size = ceilDiv(bytes, sizeof(T));
+    std::size_t size = ceilDiv(bytes, sizeof(T));
     std::vector<T> buffer(size, 0);
     if (!sysctlbyname(name.data(), buffer.data(), &bytes, 0, 0))
       res = buffer;
@@ -453,12 +482,12 @@ void CpuInfo::init()
 
   // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
   auto cacheSizes = getSysctl<size_t>("hw.cachesize");
-  for (size_t i = 1; i < std::min(cacheSizes.size(), cacheSizes_.size()); i++)
+  for (std::size_t i = 1; i < std::min(cacheSizes.size(), cacheSizes_.size()); i++)
     cacheSizes_[i] = cacheSizes[i];
 
   // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
   auto cacheConfig = getSysctl<size_t>("hw.cacheconfig");
-  for (size_t i = 1; i < std::min(cacheConfig.size(), cacheSharing_.size()); i++)
+  for (std::size_t i = 1; i < std::min(cacheConfig.size(), cacheSharing_.size()); i++)
     cacheSharing_[i] = cacheConfig[i];
 }
 
@@ -486,7 +515,7 @@ namespace {
 void trimString(std::string& str)
 {
   std::string spaceChars = " \f\n\r\t\v";
-  size_t pos = str.find_first_not_of(spaceChars);
+  std::size_t pos = str.find_first_not_of(spaceChars);
   str.erase(0, pos);
 
   pos = str.find_last_not_of(spaceChars);
@@ -510,7 +539,7 @@ std::string getString(const std::string& filename)
 size_t getValue(const std::string& filename)
 {
   std::string str = getString(filename);
-  size_t val = 0;
+  std::size_t val = 0;
 
   if (!str.empty())
     val = std::stoul(str);
@@ -521,7 +550,7 @@ size_t getValue(const std::string& filename)
 size_t getCacheSize(const std::string& filename)
 {
   std::string str = getString(filename);
-  size_t val = 0;
+  std::size_t val = 0;
 
   if (!str.empty())
   {
@@ -563,7 +592,7 @@ std::string getCpuName(const std::string& line)
     "cpu"
   };
 
-  size_t pos = line.find(':');
+  std::size_t pos = line.find(':');
   std::string cpuName;
 
   if (pos != std::string::npos)
@@ -595,7 +624,7 @@ std::string getCpuName()
   if (file)
   {
     std::string line;
-    size_t i = 0;
+    std::size_t i = 0;
 
     while (std::getline(file, line))
     {
@@ -632,7 +661,7 @@ std::vector<std::string> split(const std::string& str,
 ///
 size_t parseThreadList(const std::string& filename)
 {
-  size_t threads = 0;
+  std::size_t threads = 0;
   auto threadList = getString(filename);
   auto tokens = split(threadList, ',');
 
@@ -660,7 +689,7 @@ size_t parseThreadList(const std::string& filename)
 ///
 size_t parseThreadMap(const std::string& filename)
 {
-  size_t threads = 0;
+  std::size_t threads = 0;
   std::string threadMap = getString(filename);
 
   for (char c : threadMap)
@@ -668,7 +697,7 @@ size_t parseThreadMap(const std::string& filename)
     if (c != ',')
     {
       std::string hexChar { c };
-      size_t bitmap = std::stoul(hexChar, nullptr, 16);
+      std::size_t bitmap = std::stoul(hexChar, nullptr, 16);
       for (; bitmap > 0; threads++)
         bitmap &= bitmap - 1;
     }
@@ -687,7 +716,7 @@ size_t parseThreadMap(const std::string& filename)
 size_t getThreads(const std::string& threadList,
                   const std::string& threadMap)
 {
-  size_t threads = parseThreadList(threadList);
+  std::size_t threads = parseThreadList(threadList);
 
   if (threads != 0)
     return threads;
@@ -705,9 +734,9 @@ void CpuInfo::init()
   logicalCpuCores_ = parseThreadList(cpusOnline);
   bool identicalL1CacheSizes = false;
 
-  using CacheSize_t = size_t;
+  using CacheSize_t = std::size_t;
   // Items must be sorted in ascending order
-  std::map<CacheSize_t, size_t> l1CacheStatistics;
+  std::map<CacheSize_t, std::size_t> l1CacheStatistics;
   std::vector<size_t> cpuIds;
   cpuIds.reserve(3);
 
@@ -722,13 +751,13 @@ void CpuInfo::init()
   // first check whether there are CPU cores with different
   // L1 data cache sizes in the system. Because these
   // checks are slow, we only check 3 different CPU cores.
-  for (size_t cpuId : cpuIds)
+  for (std::size_t cpuId : cpuIds)
   {
-    for (size_t i = 0; i <= 3; i++)
+    for (std::size_t i = 0; i <= 3; i++)
     {
       std::string path = "/sys/devices/system/cpu/cpu" + std::to_string(cpuId) + "/cache/index" + std::to_string(i);
       std::string cacheLevel = path + "/level";
-      size_t level = getValue(cacheLevel);
+      std::size_t level = getValue(cacheLevel);
 
       if (level == 1)
       {
@@ -738,7 +767,7 @@ void CpuInfo::init()
         if (cacheType == "Data" ||
             cacheType == "Unified")
         {
-          size_t cacheSize = getCacheSize(path + "/size");
+          std::size_t cacheSize = getCacheSize(path + "/size");
           if (cacheSize > 0)
           {
             if (l1CacheStatistics.find(cacheSize) == l1CacheStatistics.end())
@@ -766,13 +795,13 @@ void CpuInfo::init()
   {
     auto iter = l1CacheStatistics.begin();
     std::advance(iter, (l1CacheStatistics.size() - 1) / 2);
-    size_t cpuId = iter->second;
+    std::size_t cpuId = iter->second;
 
-    for (size_t i = 0; i <= 3; i++)
+    for (std::size_t i = 0; i <= 3; i++)
     {
       std::string path = "/sys/devices/system/cpu/cpu" + std::to_string(cpuId) + "/cache/index" + std::to_string(i);
       std::string cacheLevel = path + "/level";
-      size_t level = getValue(cacheLevel);
+      std::size_t level = getValue(cacheLevel);
 
       if (level >= 1 &&
           level <= 3)
@@ -804,6 +833,7 @@ namespace primesieve {
 const CpuInfo cpuInfo;
 
 CpuInfo::CpuInfo() :
+  has_AVX512_(false),
   logicalCpuCores_(0),
   cacheSizes_{0, 0, 0, 0},
   cacheSharing_{0, 0, 0, 0}
@@ -811,6 +841,10 @@ CpuInfo::CpuInfo() :
   try
   {
     init();
+
+    #if defined(HAS_CPUID)
+      has_AVX512_ = has_AVX512();
+    #endif
   }
   catch (std::exception& e)
   {
@@ -878,7 +912,6 @@ std::string CpuInfo::getError() const
 {
   return error_;
 }
-
 bool CpuInfo::hasCpuName() const
 {
   return !cpuName().empty();
@@ -888,6 +921,11 @@ bool CpuInfo::hasLogicalCpuCores() const
 {
   return logicalCpuCores_ >= 1 &&
          logicalCpuCores_ <= (1 << 20);
+}
+
+bool CpuInfo::hasAVX512() const
+{
+  return has_AVX512_;
 }
 
 bool CpuInfo::hasL1Cache() const
