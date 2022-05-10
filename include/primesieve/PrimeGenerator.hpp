@@ -16,6 +16,7 @@
 #define PRIMEGENERATOR_HPP
 
 #include "Erat.hpp"
+#include "CpuInfo.hpp"
 #include "MemoryPool.hpp"
 #include "PreSieve.hpp"
 #include "SievingPrimes.hpp"
@@ -23,6 +24,10 @@
 #include <stdint.h>
 #include <vector>
 
+// On x64 CPUs we compile with AVX512 support if the
+// compiler supports it. At runtime we then dispatch
+// to fillNextPrimesAVX512() if the user's CPU supports
+// AVX512 or to fillNextPrimesCTZ() otherwise.
 #if !defined(DISABLE_AVX512) && \
     (defined(__i386__) || \
      defined(__x86_64__) || \
@@ -63,12 +68,19 @@ class PrimeGenerator : public Erat
 public:
   PrimeGenerator(uint64_t start, uint64_t stop);
   void fillPrevPrimes(std::vector<uint64_t>& primes, std::size_t* size);
-  void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size);
   static uint64_t maxCachedPrime();
 
-#if defined(ENABLE_AVX512)
-  void fillNextPrimesAVX512(std::vector<uint64_t>& primes, std::size_t* size);
-#endif
+  void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size)
+  {
+    #if defined(ENABLE_AVX512)
+      if (cpuInfo.hasAVX512())
+        fillNextPrimesAVX512(primes, size);
+      else
+        fillNextPrimesCTZ(primes, size);
+    #else
+        fillNextPrimesCTZ(primes, size);
+    #endif
+  }
 
 private:
   uint64_t low_ = 0;
@@ -81,11 +93,16 @@ private:
   std::size_t getStartIdx() const;
   std::size_t getStopIdx() const;
   void initErat();
+  void sieveSegment();
   void initPrevPrimes(std::vector<uint64_t>&, std::size_t*);
   void initNextPrimes(std::vector<uint64_t>&, std::size_t*);
   bool sievePrevPrimes(std::vector<uint64_t>&, std::size_t*);
   bool sieveNextPrimes(std::vector<uint64_t>&, std::size_t*);
-  void sieveSegment();
+  void fillNextPrimesCTZ(std::vector<uint64_t>& primes, std::size_t* size);
+
+#if defined(ENABLE_AVX512)
+  void fillNextPrimesAVX512(std::vector<uint64_t>& primes, std::size_t* size);
+#endif
 };
 
 } // namespace

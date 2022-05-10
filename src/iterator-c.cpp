@@ -10,7 +10,6 @@
 
 #include <primesieve.h>
 #include <primesieve/forward.hpp>
-#include <primesieve/CpuInfo.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 
@@ -104,15 +103,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       }
 
       auto& primes = getPrimes(it->vector);
-
-      #if defined(ENABLE_AVX512)
-        if (cpuInfo.hasAVX512())
-          primeGenerator->fillNextPrimesAVX512(primes, &size);
-        else
-          primeGenerator->fillNextPrimes(primes, &size);
-      #else
-          primeGenerator->fillNextPrimes(primes, &size);
-      #endif
+      primeGenerator->fillNextPrimes(primes, &size);
 
       // There are 3 different cases here:
       // 1) The primes array contains a few primes (<= 512).

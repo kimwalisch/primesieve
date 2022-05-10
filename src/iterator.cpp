@@ -8,7 +8,6 @@
 ///
 
 #include <primesieve/iterator.hpp>
-#include <primesieve/CpuInfo.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 
@@ -70,14 +69,7 @@ void iterator::generate_next_primes()
       primeGenerator_.reset(p);
     }
 
-    #if defined(ENABLE_AVX512)
-      if (cpuInfo.hasAVX512())
-        primeGenerator_->fillNextPrimesAVX512(primes_, &size);
-      else
-        primeGenerator_->fillNextPrimes(primes_, &size);
-    #else
-        primeGenerator_->fillNextPrimes(primes_, &size);
-    #endif
+    primeGenerator_->fillNextPrimes(primes_, &size);
 
     // There are 3 different cases here:
     // 1) The primes array contains a few primes (<= 512).

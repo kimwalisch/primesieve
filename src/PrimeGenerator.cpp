@@ -343,8 +343,8 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
 /// this reason iterator::next_prime() runs up to 2x faster
 /// than iterator::prev_prime().
 ///
-void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
-                                    std::size_t* size)
+void PrimeGenerator::fillNextPrimesCTZ(std::vector<uint64_t>& primes,
+                                       std::size_t* size)
 {
   do
   {
