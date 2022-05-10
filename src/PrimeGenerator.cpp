@@ -20,6 +20,7 @@
 #include <primesieve/Erat.hpp>
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
@@ -410,7 +411,7 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
 /// benchmarks this algorithm ran about 8% faster than the default
 /// fillNextPrimes() algorithm which uses __builtin_ctzll().
 ///
-#if !defined(_MSC_VER)
+#if __has_attribute(target)
   __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
 #endif
 void PrimeGenerator::fillNextPrimesAVX512(std::vector<uint64_t>& primes,
