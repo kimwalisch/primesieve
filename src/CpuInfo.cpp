@@ -88,11 +88,19 @@ void run_cpuid(int eax, int ecx, int* abcd)
 #endif
 }
 
-// We need runtime AVX512 detection if the macros below are not defined.
-// PrimeGenerator::fillNextPrimesAVX512() requires AVX512F, AVX512VBMI & AVX512VBMI2.
-#if !(defined(__AVX512F__) && \
-      defined(__AVX512VBMI__) && \
-      defined(__AVX512VBMI2__))
+// We only need runtime AVX512 detection if the macros below
+// are not defined. PrimeGenerator::fillNextPrimesAVX512()
+// requires AVX512F, AVX512VBMI & AVX512VBMI2.
+#if defined(__AVX512F__) && \
+    defined(__AVX512VBMI__) && \
+    defined(__AVX512VBMI2__)
+
+bool has_AVX512()
+{
+  return true;
+}
+
+#else
 
 /* %ebx bit flags */
 #define bit_AVX512F  (1 << 16)
@@ -844,12 +852,7 @@ CpuInfo::CpuInfo() :
   {
     init();
 
-    // AVX512 extensions required by PrimeGenerator::fillNextPrimesAVX512()
-    #if defined(__AVX512F__) && \
-        defined(__AVX512VBMI__) && \
-        defined(__AVX512VBMI2__)
-      has_AVX512_ = true;
-    #elif defined(HAS_CPUID)
+    #if defined(HAS_CPUID)
       has_AVX512_ = has_AVX512();
     #endif
   }
