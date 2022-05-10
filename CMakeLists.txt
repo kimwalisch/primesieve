@@ -267,6 +267,10 @@ if(BUILD_PRIMESIEVE)
     target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
 
+    if(compiler_supports_avx512)
+        target_compile_definitions(primesieve PRIVATE "ENABLE_AVX512")
+    endif()
+
     if(WITH_MSVC_CRT_STATIC)
         set_target_properties(primesieve PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")
     endif()
