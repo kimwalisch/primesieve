@@ -66,10 +66,9 @@ namespace primesieve {
 class PrimeGenerator : public Erat
 {
 public:
+  static uint64_t maxCachedPrime();
   PrimeGenerator(uint64_t start, uint64_t stop);
   void fillPrevPrimes(std::vector<uint64_t>& primes, std::size_t* size);
-  static uint64_t maxCachedPrime();
-
   void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size)
   {
     #if defined(ENABLE_AVX512)
