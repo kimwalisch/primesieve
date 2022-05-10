@@ -468,7 +468,7 @@ void PrimeGenerator::fillNextPrimesAVX512(std::vector<uint64_t>& primes,
       uint64_t primeCount = popcnt64(bits64);
 
       // Prevent _mm512_storeu_si512() buffer overrun
-      if (i + primeCount + (8 - primeCount % 8) >= maxSize)
+      if (i + primeCount >= maxSize - 7)
         break;
 
       __m512i base = _mm512_set1_epi64(low);
