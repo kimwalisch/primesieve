@@ -101,6 +101,7 @@ void run_cpuid(int eax, int ecx, int* abcd)
 #endif
 }
 
+// Get Value of Extended Control Register
 int get_xcr0()
 {
   int xcr0;
@@ -126,8 +127,7 @@ bool has_AVX512()
 
   int osxsave_mask = (1 << 27);
 
-  // This check ensures the CPU supports the extended control register
-  // (XCR) which is needed to check for AVX support.
+  // Ensure OS supports extended processor state management
   if ((abcd[2] & osxsave_mask) != osxsave_mask)
     return false;
 
@@ -136,20 +136,19 @@ bool has_AVX512()
 
   int xcr0 = get_xcr0();
 
-  if ((xcr0 & ymm_mask) == ymm_mask)
-  {
-    run_cpuid(7, 0, abcd);
+  // Check AVX OS support
+  if ((xcr0 & ymm_mask) != ymm_mask)
+    return false;
 
-    if ((xcr0 & zmm_mask) == zmm_mask)
-    {
-      // PrimeGenerator::fillNextPrimesAVX512() requires AVX512F, AVX512VBMI & AVX512VBMI2
-      if ((abcd[1] & bit_AVX512F) == bit_AVX512F &&
-          (abcd[2] & (bit_AVX512VBMI | bit_AVX512VBMI2)) == (bit_AVX512VBMI | bit_AVX512VBMI2))
-        return true;
-    }
-  }
+  // Check AVX512 OS support
+  if ((xcr0 & zmm_mask) != zmm_mask)
+    return false;
 
-  return false;
+  run_cpuid(7, 0, abcd);
+
+  // PrimeGenerator::fillNextPrimesAVX512() requires AVX512F, AVX512VBMI & AVX512VBMI2
+  return ((abcd[1] & bit_AVX512F) == bit_AVX512F &&
+          (abcd[2] & (bit_AVX512VBMI | bit_AVX512VBMI2)) == (bit_AVX512VBMI | bit_AVX512VBMI2));
 }
 
 } // namespace
