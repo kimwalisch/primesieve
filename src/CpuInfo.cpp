@@ -53,6 +53,19 @@
 
 #define HAS_CPUID
 
+/* %ebx bit flags */
+#define bit_AVX512F (1 << 16)
+
+/* %ecx bit flags */
+#define bit_AVX512VBMI  (1 << 1)
+#define bit_AVX512VBMI2 (1 << 6)
+#define bit_POPCNT      (1 << 23)
+
+/* xgetbv bit flags */
+#define XSTATE_SSE (1 << 1)
+#define XSTATE_YMM (1 << 2)
+#define XSTATE_ZMM (7 << 5)
+
 namespace {
 
 void run_cpuid(int eax, int ecx, int* abcd)
@@ -87,33 +100,6 @@ void run_cpuid(int eax, int ecx, int* abcd)
   abcd[3] = edx;
 #endif
 }
-
-// We only need runtime AVX512 detection if the macros below
-// are not defined. PrimeGenerator::fillNextPrimesAVX512()
-// requires AVX512F, AVX512VBMI & AVX512VBMI2.
-#if defined(__AVX512F__) && \
-    defined(__AVX512VBMI__) && \
-    defined(__AVX512VBMI2__)
-
-bool has_AVX512()
-{
-  return true;
-}
-
-#else
-
-/* %ebx bit flags */
-#define bit_AVX512F  (1 << 16)
-
-/* %ecx bit flags */
-#define bit_AVX512VBMI  (1 << 1)
-#define bit_AVX512VBMI2 (1 << 6)
-#define bit_POPCNT      (1 << 23)
-
-/* xgetbv bit flags */
-#define XSTATE_SSE (1 << 1)
-#define XSTATE_YMM (1 << 2)
-#define XSTATE_ZMM (7 << 5)
 
 int get_xcr0()
 {
@@ -168,7 +154,6 @@ bool has_AVX512()
 
 } // namespace
 
-#endif
 #endif
 
 #if defined(_WIN32)
