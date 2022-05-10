@@ -7,19 +7,20 @@
 
 int main(int argc, char** argv)
 {
-  primesieve::iterator it;
   uint64_t limit = 10000000000ull;
-  uint64_t prime = it.next_prime();
-  uint64_t sum = 0;
 
   if (argc > 1)
     limit = std::atol(argv[1]);
 
+  primesieve::iterator it(0, limit);
+  uint64_t prime = it.next_prime();
+  uint64_t sum = 0;
+
   // iterate over the primes below 10^9
-  for (; prime < limit; prime = it.next_prime())
+  for (; prime <= limit; prime = it.next_prime())
     sum += prime;
 
-  std::cout << "Sum of primes < " << limit << " = " << sum << std::endl;
+  std::cout << "Sum of primes <= " << limit << " = " << sum << std::endl;
 
   // Note that since sum is a 64-bit variable the result
   // will be incorrect (due to integer overflow) if
