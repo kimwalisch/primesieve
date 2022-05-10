@@ -24,43 +24,6 @@
 #include <stdint.h>
 #include <vector>
 
-// On x64 CPUs we compile with AVX512 support if the
-// compiler supports it. At runtime we then dispatch
-// to fillNextPrimesAVX512() if the user's CPU supports
-// AVX512 or to fillNextPrimesCTZ() otherwise.
-#if !defined(DISABLE_AVX512) && \
-    (defined(__i386__) || \
-     defined(__x86_64__) || \
-     defined(_M_IX86) || \
-     defined(_M_X64)) && \
-     __has_include(<immintrin.h>)
-
-  #if defined(_MSC_VER)
-    // AVX512VBMI2 requires MSVC 2019 or later
-    #if _MSC_VER >= 1920
-      #define ENABLE_AVX512
-    #endif
-  #elif defined(__clang__)
-    #define CLANG_PREREQ(x, y) \
-      (__clang_major__ > x || (__clang_major__ == x && __clang_minor__ >= y))
-    // AVX512VBMI2 requires Clang 6.x or later.
-    // Apple Clang used to report erroneous versions,
-    // therefore we require Clang 11.0 (though it
-    // seems like 9.1 would be enough).
-    // See: https://gist.github.com/yamaya/2924292
-    #if CLANG_PREREQ(11, 0)
-      #define ENABLE_AVX512
-    #endif
-  #elif defined(__GNUC__)
-    #define GNUC_PREREQ(x, y) \
-      (__GNUC__ > x || (__GNUC__ == x && __GNUC_MINOR__ >= y))
-    // AVX512VBMI2 requires GCC 8.x or later
-    #if GNUC_PREREQ(8, 0)
-      #define ENABLE_AVX512
-    #endif
-  #endif
-#endif
-
 namespace primesieve {
 
 class PrimeGenerator : public Erat

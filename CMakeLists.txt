@@ -12,8 +12,8 @@ option(BUILD_DOC         "Build C/C++ API documentation" OFF)
 option(BUILD_MANPAGE     "Regenerate man page using a2x" OFF)
 option(BUILD_EXAMPLES    "Build example programs"        OFF)
 option(BUILD_TESTS       "Build test programs"           OFF)
-option(DISABLE_AVX512    "Disable AVX512 on x64 CPUs"    OFF)
 
+option(ENABLE_AVX512 "Enable runtime AVX512 dispatching on x64 CPUs" ON)
 option(WITH_MSVC_CRT_STATIC "Link primesieve.lib with /MT instead of the default /MD" OFF)
 
 # libprimesieve sanity check #########################################
@@ -127,6 +127,33 @@ endif()
 
 cmake_pop_check_state()
 
+# Check if the compiler supports AVX512 ##############################
+
+if(ENABLE_AVX512)
+    check_cxx_source_compiles("
+        #include <immintrin.h>
+        #include <stdint.h>
+        #if __has_attribute(target)
+            __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
+        #endif
+        void fillNextPrimesAVX512(uint64_t* primes64)
+        {
+            __m512i bytes_0_to_7 = _mm512_setr_epi64(0, 1, 2, 3, 4, 5, 6, 7);
+            __m512i base = _mm512_set1_epi64(123);
+            __m512i bitValues = _mm512_maskz_compress_epi8(0xffff, base);
+            __m512i vprimes = _mm512_maskz_permutexvar_epi8(0x0101010101010101ull, bytes_0_to_7, bitValues);
+            vprimes = _mm512_add_epi64(base, vprimes);
+            _mm512_storeu_si512(primes64, vprimes);
+        }
+        int main()
+        {
+            uint64_t primes[8];
+            fillNextPrimesAVX512(primes);
+            return 0;
+        }
+    " compiler_supports_avx512)
+endif()
+
 # libprimesieve (shared library) #####################################
 
 find_package(Threads REQUIRED QUIET)
@@ -140,8 +167,8 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
-    if(DISABLE_AVX512)
-        target_compile_definitions(libprimesieve PRIVATE "DISABLE_AVX512")
+    if(compiler_supports_avx512)
+        target_compile_definitions(libprimesieve PRIVATE "ENABLE_AVX512")
     endif()
 
     if(WIN32_MSVC_COMPATIBLE)
@@ -180,8 +207,8 @@ if(BUILD_STATIC_LIBS)
     set_target_properties(libprimesieve-static PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${LIBATOMIC})
 
-    if(DISABLE_AVX512)
-        target_compile_definitions(libprimesieve-static PRIVATE "DISABLE_AVX512")
+    if(compiler_supports_avx512)
+        target_compile_definitions(libprimesieve-static PRIVATE "ENABLE_AVX512")
     endif()
 
     if(WITH_MSVC_CRT_STATIC)
