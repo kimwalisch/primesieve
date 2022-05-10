@@ -38,19 +38,10 @@ public:
   std::size_t l3Sharing() const;
   std::size_t logicalCpuCores() const;
 
+  // Should be inlined, imortant for performance
   bool hasAVX512() const
   {
-    // By inlining and hardcoding 'return true' here if the compiler
-    // defines the AVX512 macros, the AVX512 runtime check in
-    // PrimeGenerator.hpp will be removed if the user compiles with
-    // -march=native on a CPU that supports AVX512.
-    #if defined(__AVX512F__) && \
-        defined(__AVX512VBMI__) && \
-        defined(__AVX512VBMI2__)
-      return true;
-    #else
-      return has_AVX512_;
-    #endif
+    return has_AVX512_;
   }
 
 private:

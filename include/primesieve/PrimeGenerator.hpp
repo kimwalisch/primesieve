@@ -34,7 +34,12 @@ public:
   void fillPrevPrimes(std::vector<uint64_t>& primes, std::size_t* size);
   void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size)
   {
-    #if defined(ENABLE_AVX512)
+    #if defined(ENABLE_AVX512) && \
+        defined(__AVX512F__) && \
+        defined(__AVX512VBMI__) && \
+        defined(__AVX512VBMI2__)
+        fillNextPrimesAVX512(primes, size);
+    #elif defined(ENABLE_AVX512)
       if (cpuInfo.hasAVX512())
         fillNextPrimesAVX512(primes, size);
       else
