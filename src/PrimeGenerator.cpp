@@ -408,8 +408,8 @@ void PrimeGenerator::fillNextPrimesCTZ(std::vector<uint64_t>& primes,
 /// distributed relatively evenly. While processing a 64-bit word
 /// from the sieve array there are if checks that skip to the next
 /// loop iteration once all 1 bits have been processed. In my
-/// benchmarks this algorithm ran about 8% faster than the default
-/// fillNextPrimes() algorithm which uses __builtin_ctzll().
+/// benchmarks this algorithm ran about 10% faster than the default
+/// fillNextPrimesCTZ() algorithm which uses __builtin_ctzll().
 ///
 #if __has_attribute(target)
   __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
