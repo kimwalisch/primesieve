@@ -33,6 +33,7 @@ public:
   static uint64_t maxCachedPrime();
 
 #if defined(ENABLE_AVX512)
+  #define FILLNEXTPRIMES_FUNCTION_MULTIVERSIONING
   __attribute__ ((target ("default")))
   void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size);
   __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))

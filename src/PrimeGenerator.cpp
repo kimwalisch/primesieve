@@ -343,7 +343,7 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
 /// this reason iterator::next_prime() runs up to 2x faster
 /// than iterator::prev_prime().
 ///
-#if defined(ENABLE_AVX512)
+#if defined(FILLNEXTPRIMES_FUNCTION_MULTIVERSIONING)
   __attribute__ ((target ("default")))
 #endif
 void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
