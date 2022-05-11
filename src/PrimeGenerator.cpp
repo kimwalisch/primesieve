@@ -250,6 +250,9 @@ bool PrimeGenerator::sievePrevPrimes(std::vector<uint64_t>& primes,
     return true;
   }
 
+  // We have generated all primes inside [start, stop], we cannot
+  // generate more primes using this PrimeGenerator. Therefore we
+  // need to allocate a new PrimeGenerator in iterator.cpp.
   return false;
 }
 
@@ -272,14 +275,18 @@ bool PrimeGenerator::sieveNextPrimes(std::vector<uint64_t>& primes,
     return true;
   }
 
-  // primesieve only supports primes < 2^64. In case the next
-  // prime would be > 2^64 we simply return UINT64_MAX.
-  if (stop_ >= std::numeric_limits<uint64_t>::max())
-  {
-    primes[0] = ~0ull;
-    *size = 1;
-  }
+  // We have generated all primes <= stop, we cannot generate
+  // more primes using this PrimeGenerator. Therefore we
+  // need to allocate a new PrimeGenerator in iterator.cpp.
+  if (stop_ < std::numeric_limits<uint64_t>::max())
+    return false;
 
+  // The next prime would be > 2^64, however primesieve only
+  // supports primes < 2^64. In this case we simply return
+  // UINT64_MAX to the user (instead of throwing an exception).
+  resizeUninitialized(primes, 1);
+  primes[0] = std::numeric_limits<uint64_t>::max();
+  *size = primes.size();
   return false;
 }
 
