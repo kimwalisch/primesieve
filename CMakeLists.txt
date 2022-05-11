@@ -13,6 +13,7 @@ option(BUILD_MANPAGE     "Regenerate man page using a2x" OFF)
 option(BUILD_EXAMPLES    "Build example programs"        OFF)
 option(BUILD_TESTS       "Build test programs"           OFF)
 
+option(ENABLE_AVX512 "Enable runtime AVX512 dispatching on x64 CPUs" ON)
 option(WITH_MSVC_CRT_STATIC "Link primesieve.lib with /MT instead of the default /MD" OFF)
 
 # libprimesieve sanity check #########################################
@@ -126,6 +127,48 @@ endif()
 
 cmake_pop_check_state()
 
+# Check if the compiler supports AVX512 ##############################
+
+if(ENABLE_AVX512)
+    # We use GCC/Clang's function multi-versioning for AVX512
+    # support. This code will automatically dispatch to the
+    # AVX512 algorithm if the CPU supports AVX512 and use the
+    # default (portable) algorithm otherwise.
+    check_cxx_source_compiles("
+        #include <immintrin.h>
+        #include <stdint.h>
+        class PrimeGenerator {
+          public:
+            __attribute__ ((target (\"default\")))
+            void fillNextPrimes(uint64_t* primes64);
+            __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
+            void fillNextPrimes(uint64_t* primes64);
+        };
+        __attribute__ ((target (\"default\")))
+        void PrimeGenerator::fillNextPrimes(uint64_t* primes64)
+        {
+            primes64[0] = 2;
+        }
+        __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
+        void PrimeGenerator::fillNextPrimes(uint64_t* primes64)
+        {
+            __m512i bytes_0_to_7 = _mm512_setr_epi64(0, 1, 2, 3, 4, 5, 6, 7);
+            __m512i base = _mm512_set1_epi64(123);
+            __m512i bitValues = _mm512_maskz_compress_epi8(0xffff, base);
+            __m512i vprimes = _mm512_maskz_permutexvar_epi8(0x0101010101010101ull, bytes_0_to_7, bitValues);
+            vprimes = _mm512_add_epi64(base, vprimes);
+            _mm512_storeu_si512(primes64, vprimes);
+        }
+        int main()
+        {
+            uint64_t primes[8];
+            PrimeGenerator p;
+            p.fillNextPrimes(primes);
+            return 0;
+        }
+    " compiler_supports_avx512)
+endif()
+
 # libprimesieve (shared library) #####################################
 
 find_package(Threads REQUIRED QUIET)
@@ -138,6 +181,10 @@ if(BUILD_SHARED_LIBS)
     list(GET SOVERSION_LIST 0 PRIMESIEVE_SOVERSION_MAJOR)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
+
+    if(compiler_supports_avx512)
+        target_compile_definitions(libprimesieve PRIVATE "ENABLE_AVX512")
+    endif()
 
     if(WIN32_MSVC_COMPATIBLE)
         # On Windows the shared library will be named primesieve.dll
@@ -174,6 +221,10 @@ if(BUILD_STATIC_LIBS)
     add_library(libprimesieve-static STATIC ${LIB_SRC})
     set_target_properties(libprimesieve-static PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${LIBATOMIC})
+
+    if(compiler_supports_avx512)
+        target_compile_definitions(libprimesieve-static PRIVATE "ENABLE_AVX512")
+    endif()
 
     if(WITH_MSVC_CRT_STATIC)
         set_target_properties(libprimesieve-static PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")
@@ -230,6 +281,10 @@ if(BUILD_PRIMESIEVE)
     target_link_libraries(primesieve primesieve::primesieve)
     target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+    if(compiler_supports_avx512)
+        target_compile_definitions(primesieve PRIVATE "ENABLE_AVX512")
+    endif()
 
     if(WITH_MSVC_CRT_STATIC)
         set_target_properties(primesieve PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")

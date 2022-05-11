@@ -317,6 +317,16 @@ void optionCpuInfo()
   else
     std::cout << "Logical CPU cores: unknown" << std::endl;
 
+  // We only show AVX512 info if libprimesieve has been compiled
+  // with AVX512 support. If "AVX512: yes" then primesieve::iterator
+  // uses the AVX512 version of PrimeGenerator::fillNextPrimes().
+  #if defined(ENABLE_AVX512)
+    if (cpu.hasAVX512())
+      std::cout << "Has AVX512: yes" << std::endl;
+    else
+      std::cout << "Has AVX512: no" << std::endl;
+  #endif
+
   if (cpu.hasL1Cache())
     std::cout << "L1 cache size: " << (cpu.l1CacheBytes() >> 10) << " KiB" << std::endl;
 

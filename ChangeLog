@@ -1,9 +1,11 @@
-Changes in version 7.10, 08/05/2022
+Changes in version 7.10, 11/05/2022
 ===================================
 
+* PrimeGenerator.cpp: Improve AVX512 of fillNextPrimes().
+* PrimeGenerator.hpp: Add GCC/Clang's function multiversioning for AVX512.
 * Erat.cpp: Reduce memory usage, allocate the minimum required
   memory to store all sieving primes.
-* PrimeGenerator.cpp: Improve AVX512 of fillNextPrimes().
+* CpuInfo.cpp: Detect AVX512 using CPUID.
 
 Changes in version 7.9, 03/05/2022
 ==================================
