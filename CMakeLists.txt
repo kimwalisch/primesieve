@@ -132,7 +132,7 @@ cmake_pop_check_state()
 if(ENABLE_AVX512)
     # We use GCC/Clang's function multi-versioning for AVX512
     # support. This code will automatically dispatch to the
-    # AVX512 algorithm if the CPU support AVX512 and use the
+    # AVX512 algorithm if the CPU supports AVX512 and use the
     # default (portable) algorithm otherwise.
     check_cxx_source_compiles("
         #include <immintrin.h>
