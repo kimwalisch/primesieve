@@ -185,16 +185,22 @@ void PrimeGenerator::initNextPrimes(std::vector<uint64_t>& primes,
 {
   // A buffer of 512 primes provides good
   // performance with little memory usage.
-  resizeUninitialized(primes, 512);
+  std::size_t n = 512;
 
-  if (start_ <= maxCachedPrime())
+  if (start_ > maxCachedPrime())
+    resizeUninitialized(primes, n);
+  else
   {
     std::size_t a = getStartIdx();
     std::size_t b = getStopIdx();
-
     *size = b - a;
-    assert(*size <= primes.size());
 
+    if (stop_ < maxCachedPrime() + 2)
+      resizeUninitialized(primes, *size);
+    else
+      resizeUninitialized(primes, n);
+
+    assert(primes.size() >= *size);
     std::copy(smallPrimes.begin() + a,
               smallPrimes.begin() + b,
               primes.begin());
