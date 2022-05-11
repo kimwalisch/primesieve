@@ -121,7 +121,7 @@ bool has_AVX512()
 
   run_cpuid(1, 0, abcd);
 
-  // PrimeGenerator::fillNextPrimesAVX512() requires POPCNT
+  // PrimeGenerator::fillNextPrimes() requires POPCNT
   if ((abcd[2] & bit_POPCNT) != bit_POPCNT)
     return false;
 
@@ -146,7 +146,7 @@ bool has_AVX512()
 
   run_cpuid(7, 0, abcd);
 
-  // PrimeGenerator::fillNextPrimesAVX512() requires AVX512F, AVX512VBMI & AVX512VBMI2
+  // PrimeGenerator::fillNextPrimes() requires AVX512F, AVX512VBMI & AVX512VBMI2
   return ((abcd[1] & bit_AVX512F) == bit_AVX512F &&
           (abcd[2] & (bit_AVX512VBMI | bit_AVX512VBMI2)) == (bit_AVX512VBMI | bit_AVX512VBMI2));
 }
