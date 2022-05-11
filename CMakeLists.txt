@@ -130,13 +130,27 @@ cmake_pop_check_state()
 # Check if the compiler supports AVX512 ##############################
 
 if(ENABLE_AVX512)
+    # We use GCC/Clang's function multi-versioning for AVX512
+    # support. This code will automatically dispatch to the
+    # AVX512 algorithm if the CPU support AVX512 and use the
+    # default (portable) algorithm otherwise.
     check_cxx_source_compiles("
         #include <immintrin.h>
         #include <stdint.h>
-        #if __has_attribute(target)
+        class PrimeGenerator {
+          public:
+            __attribute__ ((target (\"default\")))
+            void fillNextPrimes(uint64_t* primes64);
             __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
-        #endif
-        void fillNextPrimesAVX512(uint64_t* primes64)
+            void fillNextPrimes(uint64_t* primes64);
+        };
+        __attribute__ ((target (\"default\")))
+        void PrimeGenerator::fillNextPrimes(uint64_t* primes64)
+        {
+            primes64[0] = 2;
+        }
+        __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
+        void PrimeGenerator::fillNextPrimes(uint64_t* primes64)
         {
             __m512i bytes_0_to_7 = _mm512_setr_epi64(0, 1, 2, 3, 4, 5, 6, 7);
             __m512i base = _mm512_set1_epi64(123);
@@ -148,7 +162,8 @@ if(ENABLE_AVX512)
         int main()
         {
             uint64_t primes[8];
-            fillNextPrimesAVX512(primes);
+            PrimeGenerator p;
+            p.fillNextPrimes(primes);
             return 0;
         }
     " compiler_supports_avx512)

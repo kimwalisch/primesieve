@@ -16,7 +16,6 @@
 #define PRIMEGENERATOR_HPP
 
 #include "Erat.hpp"
-#include "CpuInfo.hpp"
 #include "MemoryPool.hpp"
 #include "PreSieve.hpp"
 #include "SievingPrimes.hpp"
@@ -33,27 +32,13 @@ public:
   void fillPrevPrimes(std::vector<uint64_t>& primes, std::size_t* size);
   static uint64_t maxCachedPrime();
 
-#if defined(ENABLE_AVX512) && \
-    defined(__AVX512F__) && \
-    defined(__AVX512VBMI__) && \
-    defined(__AVX512VBMI2__)
-  void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size)
-  {
-    fillNextPrimesAVX512(primes, size);
-  }
-#elif defined(ENABLE_AVX512)
-  void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size)
-  {
-    if (cpuInfo.hasAVX512())
-      fillNextPrimesAVX512(primes, size);
-    else
-      fillNextPrimesCTZ(primes, size);
-  }
+#if defined(ENABLE_AVX512)
+  __attribute__ ((target ("default")))
+  void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size);
+  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
+  void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size);
 #else
-  void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size)
-  {
-    fillNextPrimesCTZ(primes, size);
-  }
+  void fillNextPrimes(std::vector<uint64_t>& primes, std::size_t* size);
 #endif
 
 private:
@@ -72,14 +57,8 @@ private:
   void initNextPrimes(std::vector<uint64_t>&, std::size_t*);
   bool sievePrevPrimes(std::vector<uint64_t>&, std::size_t*);
   bool sieveNextPrimes(std::vector<uint64_t>&, std::size_t*);
-  void fillNextPrimesCTZ(std::vector<uint64_t>& primes, std::size_t* size);
-
-#if defined(ENABLE_AVX512)
-  void fillNextPrimesAVX512(std::vector<uint64_t>& primes, std::size_t* size);
-#endif
 };
 
 } // namespace
 
 #endif
- 

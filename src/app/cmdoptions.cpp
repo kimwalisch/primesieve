@@ -319,7 +319,7 @@ void optionCpuInfo()
 
   // We only show AVX512 info if libprimesieve has been compiled
   // with AVX512 support. If "AVX512: yes" then primesieve::iterator
-  // uses PrimeGenerator::fillNextPrimesAVX512() under the hood.
+  // uses the AVX512 version of PrimeGenerator::fillNextPrimes().
   #if defined(ENABLE_AVX512)
     if (cpu.hasAVX512())
       std::cout << "Has AVX512: yes" << std::endl;

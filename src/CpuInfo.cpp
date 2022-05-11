@@ -827,7 +827,6 @@ namespace primesieve {
 const CpuInfo cpuInfo;
 
 CpuInfo::CpuInfo() :
-  has_AVX512_(false),
   logicalCpuCores_(0),
   cacheSizes_{0, 0, 0, 0},
   cacheSharing_{0, 0, 0, 0}
@@ -835,10 +834,6 @@ CpuInfo::CpuInfo() :
   try
   {
     init();
-
-    #if defined(HAS_CPUID)
-      has_AVX512_ = has_AVX512();
-    #endif
   }
   catch (std::exception& e)
   {
@@ -865,6 +860,19 @@ std::string CpuInfo::cpuName() const
   {
     return {};
   }
+}
+
+/// This method is only used by the primesieve command-line app
+/// with the --cpu-info option. Therefore we currently don't
+/// cache the result of has_AVX512().
+///
+bool CpuInfo::hasAVX512() const
+{
+  #if defined(HAS_CPUID)
+    return has_AVX512();
+  #else
+    return false;
+  #endif
 }
 
 size_t CpuInfo::logicalCpuCores() const

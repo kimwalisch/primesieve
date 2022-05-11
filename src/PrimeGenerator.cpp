@@ -343,8 +343,11 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
 /// this reason iterator::next_prime() runs up to 2x faster
 /// than iterator::prev_prime().
 ///
-void PrimeGenerator::fillNextPrimesCTZ(std::vector<uint64_t>& primes,
-                                       std::size_t* size)
+#if defined(ENABLE_AVX512)
+  __attribute__ ((target ("default")))
+#endif
+void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
+                                    std::size_t* size)
 {
   do
   {
@@ -409,13 +412,11 @@ void PrimeGenerator::fillNextPrimesCTZ(std::vector<uint64_t>& primes,
 /// from the sieve array there are if checks that skip to the next
 /// loop iteration once all 1 bits have been processed. In my
 /// benchmarks this algorithm ran about 10% faster than the default
-/// fillNextPrimesCTZ() algorithm which uses __builtin_ctzll().
+/// fillNextPrimes() algorithm which uses __builtin_ctzll().
 ///
-#if __has_attribute(target)
-  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
-#endif
-void PrimeGenerator::fillNextPrimesAVX512(std::vector<uint64_t>& primes,
-                                          std::size_t* size)
+__attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
+void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
+                                    std::size_t* size)
 {
   do
   {

@@ -21,6 +21,7 @@ class CpuInfo
 public:
   CpuInfo();
   bool hasCpuName() const;
+  bool hasAVX512() const;
   bool hasLogicalCpuCores() const;
   bool hasL1Cache() const;
   bool hasL2Cache() const;
@@ -38,15 +39,8 @@ public:
   std::size_t l3Sharing() const;
   std::size_t logicalCpuCores() const;
 
-  // Should be inlined, imortant for performance
-  bool hasAVX512() const
-  {
-    return has_AVX512_;
-  }
-
 private:
   void init();
-  bool has_AVX512_;
   std::size_t logicalCpuCores_;
   std::array<std::size_t, 4> cacheSizes_;
   std::array<std::size_t, 4> cacheSharing_;
