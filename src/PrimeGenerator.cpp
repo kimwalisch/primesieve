@@ -20,6 +20,7 @@
 #include <primesieve/Erat.hpp>
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
@@ -149,13 +150,25 @@ std::size_t PrimeGenerator::getStopIdx() const
 void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
                                     std::size_t* size)
 {
-  std::size_t n = primeCountApprox(start_, stop_);
+  auto resize = [](std::vector<uint64_t>& primes,
+                   std::size_t size)
+  {
+    // Prevent reallocation in fillPrevPrimes()
+    size += 64;
+    if (size > primes.size())
+    {
+      // Prevent unnecessary copying when resizing
+      primes.clear();
+      resizeUninitialized(primes, size);
+    }
+  };
+
+  std::size_t pix = primeCountApprox(start_, stop_);
 
   if (start_ > maxCachedPrime())
   {
-    // +64 prevents reallocation in fillPrevPrimes()
-    resizeUninitialized(primes, n + 64);
     *size = 0;
+    resize(primes, pix);
   }
   else
   {
@@ -164,8 +177,8 @@ void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
     assert(a <= b);
     *size = (start_ <= 2) + b - a;
 
-    n = std::max(*size, n);
-    resizeUninitialized(primes, n + 64);
+    pix = std::max(*size, pix);
+    resize(primes, pix);
     std::size_t i = 0;
 
     if (start_ <= 2)
@@ -185,10 +198,26 @@ void PrimeGenerator::initNextPrimes(std::vector<uint64_t>& primes,
 {
   // A buffer of 512 primes provides good
   // performance with little memory usage.
-  std::size_t n = 512;
+  std::size_t maxSize = 512;
+  std::size_t minSize = 64;
+
+  auto resize = [](std::vector<uint64_t>& primes,
+                   std::size_t size)
+  {
+    if (size > primes.size())
+    {
+      // Prevent unnecessary copying when resizing
+      primes.clear();
+      resizeUninitialized(primes, size);
+    }
+  };
 
   if (start_ > maxCachedPrime())
-    resizeUninitialized(primes, n);
+  {
+    std::size_t pix = primeCountApprox(start_, stop_);
+    pix = inBetween(minSize, pix, maxSize);
+    resize(primes, pix);
+  }
   else
   {
     std::size_t a = getStartIdx();
@@ -196,9 +225,14 @@ void PrimeGenerator::initNextPrimes(std::vector<uint64_t>& primes,
     *size = b - a;
 
     if (stop_ < maxCachedPrime() + 2)
-      resizeUninitialized(primes, *size);
+      resize(primes, *size);
     else
-      resizeUninitialized(primes, n);
+    {
+      std::size_t pix = primeCountApprox(start_, stop_);
+      pix = inBetween(minSize, pix, maxSize);
+      pix = std::max(*size, pix);
+      resize(primes, pix);
+    }
 
     assert(primes.size() >= *size);
     std::copy(smallPrimes.begin() + a,
@@ -321,7 +355,7 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
       // Each loop iteration can generate up to 64 primes,
       // so we have to make sure there is enough space
       // left in the primes vector.
-      if (i + 64 > primes.size())
+      if_unlikely(i + 64 > primes.size())
         resizeUninitialized(primes, i + 64);
 
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);

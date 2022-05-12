@@ -163,6 +163,10 @@ inline std::size_t primeCountApprox(uint64_t start, uint64_t stop)
   double x = std::max(100.0, (double) stop);
   double pix = (stop - start) / (std::log(x) - 1.1) + 5;
 
+  // This can only happen on 32-bit OSes
+  if (pix > (double) std::numeric_limits<std::size_t>::max())
+    return std::numeric_limits<std::size_t>::max();
+
   return (std::size_t) pix;
 }
 
