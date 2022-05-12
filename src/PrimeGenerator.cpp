@@ -170,10 +170,9 @@ void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
     std::size_t a = getStartIdx();
     std::size_t b = getStopIdx();
     assert(a <= b);
-    *size = (start_ <= 2) + b - a;
 
-    pix = std::max(*size, pix);
-    resize(primes, pix);
+    *size = (start_ <= 2) + b - a;
+    resize(primes, std::max(*size, pix));
     std::size_t i = 0;
 
     if (start_ <= 2)
