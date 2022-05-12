@@ -10,6 +10,7 @@
 #include <primesieve/iterator.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
+#include <primesieve/pod_vector.hpp>
 
 #include <stdint.h>
 #include <vector>
@@ -69,7 +70,9 @@ void iterator::generate_next_primes()
       primeGenerator_.reset(p);
     }
 
-    primeGenerator_->fillNextPrimes(primes_, &size);
+    pod_vector<uint64_t>* primes = (pod_vector<uint64_t>*) &primes_;
+    static_assert(sizeof(primes_) == sizeof(*primes), "Cannot convert std::vector into pod_vector!");
+    primeGenerator_->fillNextPrimes(*primes, &size);
 
     // There are 3 different cases here:
     // 1) The primes array contains a few primes (<= 512).
@@ -106,7 +109,9 @@ void iterator::generate_prev_primes()
   {
     IteratorHelper::prev(&start_, &stop_, stop_hint_, &dist_);
     PrimeGenerator primeGenerator(start_, stop_);
-    primeGenerator.fillPrevPrimes(primes_, &size);
+    pod_vector<uint64_t>* primes = (pod_vector<uint64_t>*) &primes_;
+    static_assert(sizeof(primes_) == sizeof(*primes), "Cannot convert std::vector into pod_vector!");
+    primeGenerator.fillPrevPrimes(*primes, &size);
   }
 
   last_idx_ = size - 1;

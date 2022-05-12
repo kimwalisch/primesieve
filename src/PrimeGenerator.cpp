@@ -24,8 +24,8 @@
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/pod_vector.hpp>
 #include <primesieve/intrinsics.hpp>
-#include <primesieve/resizeUninitialized.hpp>
 #include <primesieve/SievingPrimes.hpp>
 
 #include <stdint.h>
@@ -147,10 +147,10 @@ std::size_t PrimeGenerator::getStopIdx() const
 }
 
 /// Used by iterator::prev_prime()
-void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
+void PrimeGenerator::initPrevPrimes(pod_vector<uint64_t>& primes,
                                     std::size_t* size)
 {
-  auto resize = [](std::vector<uint64_t>& primes,
+  auto resize = [](pod_vector<uint64_t>& primes,
                    std::size_t size)
   {
     // Avoid reallocation in fillPrevPrimes()
@@ -159,7 +159,7 @@ void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
     {
       // Prevent unnecessary copying when resizing
       primes.clear();
-      resizeUninitialized(primes, size);
+      primes.resize(size);
     }
   };
 
@@ -192,17 +192,17 @@ void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
 }
 
 /// Used by iterator::next_prime()
-void PrimeGenerator::initNextPrimes(std::vector<uint64_t>& primes,
+void PrimeGenerator::initNextPrimes(pod_vector<uint64_t>& primes,
                                     std::size_t* size)
 {
-  auto resize = [](std::vector<uint64_t>& primes,
+  auto resize = [](pod_vector<uint64_t>& primes,
                    std::size_t size)
   {
     if (size > primes.size())
     {
       // Prevent unnecessary copying when resizing
       primes.clear();
-      resizeUninitialized(primes, size);
+      primes.resize(size);
     }
   };
 
@@ -277,7 +277,7 @@ void PrimeGenerator::sieveSegment()
 }
 
 /// Used by iterator::prev_prime()
-bool PrimeGenerator::sievePrevPrimes(std::vector<uint64_t>& primes,
+bool PrimeGenerator::sievePrevPrimes(pod_vector<uint64_t>& primes,
                                      std::size_t* size)
 {
   if (!isInit_)
@@ -296,7 +296,7 @@ bool PrimeGenerator::sievePrevPrimes(std::vector<uint64_t>& primes,
 }
 
 /// Used by iterator::next_prime()
-bool PrimeGenerator::sieveNextPrimes(std::vector<uint64_t>& primes,
+bool PrimeGenerator::sieveNextPrimes(pod_vector<uint64_t>& primes,
                                      std::size_t* size)
 {
   *size = 0;
@@ -323,7 +323,7 @@ bool PrimeGenerator::sieveNextPrimes(std::vector<uint64_t>& primes,
   // The next prime would be > 2^64, however primesieve only
   // supports primes < 2^64. In this case we simply return
   // UINT64_MAX to the user (instead of throwing an exception).
-  resizeUninitialized(primes, 1);
+  primes.resize(1);
   primes[0] = std::numeric_limits<uint64_t>::max();
   *size = primes.size();
   return false;
@@ -336,7 +336,7 @@ bool PrimeGenerator::sieveNextPrimes(std::vector<uint64_t>& primes,
 /// over the primes inside [a, b] we need to generate new
 /// primes which incurs an initialization overhead of O(sqrt(n)).
 ///
-void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
+void PrimeGenerator::fillPrevPrimes(pod_vector<uint64_t>& primes,
                                     std::size_t* size)
 {
   while (sievePrevPrimes(primes, size))
@@ -355,7 +355,7 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
       // so we have to make sure there is enough space
       // left in the primes vector.
       if_unlikely(i + 64 > primes.size())
-        resizeUninitialized(primes, i + 64);
+        primes.resize(i + 64);
 
       uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
       std::size_t j = i;
@@ -391,7 +391,7 @@ void PrimeGenerator::fillPrevPrimes(std::vector<uint64_t>& primes,
 #if defined(FILLNEXTPRIMES_FUNCTION_MULTIVERSIONING)
   __attribute__ ((target ("default")))
 #endif
-void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
+void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
                                     std::size_t* size)
 {
   do
@@ -460,7 +460,7 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
 /// fillNextPrimes() algorithm which uses __builtin_ctzll().
 ///
 __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
-void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
+void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
                                     std::size_t* size)
 {
   do
@@ -518,7 +518,7 @@ void PrimeGenerator::fillNextPrimes(std::vector<uint64_t>& primes,
         break;
 
       __m512i base = _mm512_set1_epi64(low);
-      uint64_t* primes64 = &primes[i];
+      uint64_t* primes64 = ((uint64_t*) primes.data()) + i;
 
       // These variables are not used anymore during this
       // iteration, increment for next iteration.

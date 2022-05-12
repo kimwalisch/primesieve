@@ -12,6 +12,7 @@
 #include <primesieve/forward.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
+#include <primesieve/pod_vector.hpp>
 
 #include <stdint.h>
 #include <cerrno>
@@ -102,8 +103,9 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
           it->vector = new std::vector<uint64_t>();
       }
 
-      auto& primes = getPrimes(it->vector);
-      primeGenerator->fillNextPrimes(primes, &size);
+      pod_vector<uint64_t>* primes = (pod_vector<uint64_t>*) it->vector;
+      static_assert(sizeof(std::vector<uint64_t>) == sizeof(*primes), "Cannot convert std::vector into pod_vector!");
+      primeGenerator->fillNextPrimes(*primes, &size);
 
       // There are 3 different cases here:
       // 1) The primes array contains a few primes (<= 512).
@@ -148,12 +150,11 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     if (!it->vector)
       it->vector = new std::vector<uint64_t>();
 
-    auto& primes = getPrimes(it->vector);
-
     // Special case if generate_next_primes() has
     // been used before generate_prev_primes().
     if (it->primeGenerator)
     {
+      auto& primes = getPrimes(it->vector);
       assert(!primes.empty());
       it->start = primes.front();
       deletePrimeGenerator(it);
@@ -163,7 +164,9 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     {
       IteratorHelper::prev(&it->start, &it->stop, it->stop_hint, &it->dist);
       PrimeGenerator primeGenerator(it->start, it->stop);
-      primeGenerator.fillPrevPrimes(primes, &size);
+      pod_vector<uint64_t>* primes = (pod_vector<uint64_t>*) it->vector;
+      static_assert(sizeof(std::vector<uint64_t>) == sizeof(*primes), "Cannot convert std::vector into pod_vector!");
+      primeGenerator.fillPrevPrimes(*primes, &size);
     }
   }
   catch (const std::exception& e)

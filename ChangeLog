@@ -1,4 +1,4 @@
-Changes in version 7.10, 11/05/2022
+Changes in version 7.10, 12/05/2022
 ===================================
 
 * PrimeGenerator.cpp: Improve AVX512 of fillNextPrimes().
@@ -7,6 +7,8 @@ Changes in version 7.10, 11/05/2022
 * Erat.cpp: Reduce memory usage, allocate the minimum required
   memory to store all sieving primes.
 * CpuInfo.cpp: Detect AVX512 using CPUID.
+* Fix undefined behavior (g++-12 issue) caused by resizeUninitialized.hpp,
+  use new pod_vector<uint64_t> from pod_vector.hpp instead.
 
 Changes in version 7.9, 03/05/2022
 ==================================
