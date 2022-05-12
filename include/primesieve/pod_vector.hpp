@@ -27,7 +27,14 @@ struct inttype_without_default_initialization
   operator T() { return n; }
   operator T() const { return n; }
   void operator=(T x) { n = x; }
+  T* get_address() { return &n; }
 };
+
+template <typename T>
+inline T* operator&(inttype_without_default_initialization<T>& x)
+{
+  return x.get_address();
+}
 
 /// Plain old data vector, does not default initialize memory.
 /// Since primesieve may allocate gigabytes of memory and

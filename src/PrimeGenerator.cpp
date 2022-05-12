@@ -518,7 +518,7 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
         break;
 
       __m512i base = _mm512_set1_epi64(low);
-      uint64_t* primes64 = ((uint64_t*) primes.data()) + i;
+      uint64_t* primes64 = &primes[i];
 
       // These variables are not used anymore during this
       // iteration, increment for next iteration.
