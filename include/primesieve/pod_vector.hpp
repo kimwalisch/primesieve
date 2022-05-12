@@ -24,7 +24,6 @@ struct inttype_without_default_initialization
   // User defined implicit conversions. Our type should work
   // like standard integer types. However we only define the
   // operators that are used in our code.
-  operator T() { return n; }
   operator T() const { return n; }
   void operator=(T x) { n = x; }
   T* get_address() { return &n; }
