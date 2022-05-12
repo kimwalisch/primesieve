@@ -165,12 +165,7 @@ void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
 
   std::size_t pix = primeCountApprox(start_, stop_);
 
-  if (start_ > maxCachedPrime())
-  {
-    *size = 0;
-    resize(primes, pix);
-  }
-  else
+  if (start_ <= maxCachedPrime())
   {
     std::size_t a = getStartIdx();
     std::size_t b = getStopIdx();
@@ -187,6 +182,11 @@ void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
     std::copy(smallPrimes.begin() + a,
               smallPrimes.begin() + b,
               &primes[i]);
+  }
+  else
+  {
+    resize(primes, pix);
+    *size = 0;
   }
 
   initErat();
@@ -212,13 +212,7 @@ void PrimeGenerator::initNextPrimes(std::vector<uint64_t>& primes,
   std::size_t maxSize = 512;
   std::size_t minSize = 64;
 
-  if (start_ > maxCachedPrime())
-  {
-    std::size_t pix = primeCountApprox(start_, stop_);
-    pix = inBetween(minSize, pix, maxSize);
-    resize(primes, pix);
-  }
-  else
+  if (start_ <= maxCachedPrime())
   {
     std::size_t a = getStartIdx();
     std::size_t b = getStopIdx();
@@ -238,6 +232,12 @@ void PrimeGenerator::initNextPrimes(std::vector<uint64_t>& primes,
     std::copy(smallPrimes.begin() + a,
               smallPrimes.begin() + b,
               primes.begin());
+  }
+  else
+  {
+    std::size_t pix = primeCountApprox(start_, stop_);
+    pix = inBetween(minSize, pix, maxSize);
+    resize(primes, pix);
   }
 
   initErat();
