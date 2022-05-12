@@ -153,7 +153,7 @@ void PrimeGenerator::initPrevPrimes(std::vector<uint64_t>& primes,
   auto resize = [](std::vector<uint64_t>& primes,
                    std::size_t size)
   {
-    // Prevent reallocation in fillPrevPrimes()
+    // Avoid reallocation in fillPrevPrimes()
     size += 64;
     if (size > primes.size())
     {
