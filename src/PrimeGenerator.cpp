@@ -32,7 +32,6 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
-#include <vector>
 
 #if defined(ENABLE_AVX512)
   #include <immintrin.h>

@@ -22,7 +22,7 @@
 #include "pod_vector.hpp"
 
 #include <stdint.h>
-#include <vector>
+#include <cstddef>
 
 namespace primesieve {
 
