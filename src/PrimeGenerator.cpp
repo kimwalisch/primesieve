@@ -323,8 +323,8 @@ bool PrimeGenerator::sieveNextPrimes(pod_vector<uint64_t>& primes,
   // The next prime would be > 2^64, however primesieve only
   // supports primes < 2^64. In this case we simply return
   // UINT64_MAX to the user (instead of throwing an exception).
-  primes.resize(1);
-  primes[0] = std::numeric_limits<uint64_t>::max();
+  primes.clear();
+  primes.push_back(~0ull);
   *size = primes.size();
   return false;
 }
