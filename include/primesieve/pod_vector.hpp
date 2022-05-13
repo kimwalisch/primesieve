@@ -38,7 +38,7 @@ struct type_without_default_initialization
 /// @TODO: We cast std::vector into pod_vector in
 ///        iterator.cpp, this is undefined behavior!
 ///        Use std::vector::resize_uninitialized() instead
-///        once it becomes available. 
+///        once it becomes available.
 ///
 template <typename T>
 using pod_vector = std::vector<type_without_default_initialization<T>>;
