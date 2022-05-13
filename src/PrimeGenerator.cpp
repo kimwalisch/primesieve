@@ -154,7 +154,18 @@ void PrimeGenerator::initPrevPrimes(pod_vector<uint64_t>& primes,
   {
     // Avoid reallocation in fillPrevPrimes()
     size += 64;
-    if (size > primes.size())
+
+    if (primes.empty())
+      primes.resize(size);
+    // When sieving backwards the number of primes inside [start, stop]
+    // slowly increases in each new segment as there are more small
+    // than large primes. Our new size has been calculated using
+    // primeCountApprox(start, stop) which is usually too large by 4%
+    // near 10^12 and by 2.5% near 10^19. Hence if the new size is less
+    // than 1% larger than the old size we do not increase the primes
+    // buffer as it will likely be large enough to fit all primes.
+    else if (size > primes.size() &&
+             (double) size / (double) primes.size() > 1.01)
     {
       // Prevent unnecessary copying when resizing
       primes.clear();

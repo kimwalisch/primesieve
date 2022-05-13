@@ -152,7 +152,14 @@ inline B inBetween(A min, B x, C max)
   return x;
 }
 
-/// primeCountApprox(x) >= pi(x)
+/// primeCountApprox(x) >= pi(x).
+/// In order to prevent having to resize vectors with prime numbers
+/// (which would incur additional overhead) it is important that
+/// primeCountApprox(x) >= pi(x). Also for our purpose, it is
+/// actually beneficial if primeCountApprox(x) is a few percent
+/// larger (e.g. 3%) than pi(x), this reduces the number of memory
+/// allocations in PrimeGenerator::fillPrevPrimes().
+///
 inline std::size_t primeCountApprox(uint64_t start, uint64_t stop)
 {
   if (start > stop)
