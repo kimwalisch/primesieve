@@ -15,25 +15,19 @@
 namespace primesieve {
 
 template <typename T>
-struct inttype_without_default_initialization
+struct type_without_default_initialization
 {
   T n;
   // Empty constructor, disables default initialization
-  inttype_without_default_initialization() { };
-  inttype_without_default_initialization(T x) : n(x) { };
+  type_without_default_initialization() { };
+  type_without_default_initialization(T x) : n(x) { };
   // User defined implicit conversions. Our type should work
   // like standard integer types. However we only define the
   // operators that are used in our code.
   operator T() const { return n; }
   void operator=(T x) { n = x; }
-  T* get_address() { return &n; }
+  T* operator&() { return &n; }
 };
-
-template <typename T>
-inline T* operator&(inttype_without_default_initialization<T>& x)
-{
-  return x.get_address();
-}
 
 /// Plain old data vector, does not default initialize memory.
 /// Since primesieve may allocate gigabytes of memory and
@@ -41,11 +35,13 @@ inline T* operator&(inttype_without_default_initialization<T>& x)
 /// we don't want our vector to default initialize our memory
 /// otherwise we would initialize the same memory twice.
 ///
-/// @TODO: Use std::vector.resize_uninitialized() instead once
-///        it becomes available (if it ever will). 
+/// @TODO: We cast std::vector into pod_vector in
+///        iterator.cpp, this is undefined behavior!
+///        Use std::vector::resize_uninitialized() instead
+///        once it becomes available. 
 ///
 template <typename T>
-using pod_vector = std::vector<inttype_without_default_initialization<T>>;
+using pod_vector = std::vector<type_without_default_initialization<T>>;
 
 } // namespace
 
