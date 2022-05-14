@@ -10,7 +10,6 @@
 ///
 
 #include <primesieve/pod_vector.hpp>
-#include <primesieve/macros.hpp>
 
 #include <cstdlib>
 #include <iostream>
@@ -25,12 +24,6 @@ void check(bool OK)
   std::cout << "   " << (OK ? "OK" : "ERROR") << "\n";
   if (!OK)
     std::exit(1);
-}
-
-NOINLINE void resize(pod_vector<char>& vect, size_t size)
-{
-  vect.clear();
-  vect.resize(size);
 }
 
 int main()
@@ -71,19 +64,6 @@ int main()
     std::cout << "Vect sum after resize: " << sum;
     check(sum == 123 * size);
   }
-
-  // This test runs too slow without
-  // compiler optimization flags.
-#if defined(__OPTIMIZE__) && \
-   !defined(__SANITIZE_ADDRESS__)
-  // This test would take forever (3000 secs on i5-12600K
-  // CPU from 2022) using std::vector because
-  // std::vector.resize() default initializes memory
-  // (to 0) on each resize whereas pod_vector does not.
-  pod_vector<char> vect;
-  for (int i = 0; i < 1000000; i++)
-    resize(vect, /* size = 64MiB */ 64 << 20);
-#endif
 
   std::cout << std::endl;
   std::cout << "All tests passed successfully!" << std::endl;
