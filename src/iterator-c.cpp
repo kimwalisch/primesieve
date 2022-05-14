@@ -12,6 +12,7 @@
 #include <primesieve/forward.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/pod_vector.hpp>
 
 #include <stdint.h>
@@ -20,9 +21,9 @@
 #include <iostream>
 #include <vector>
 
-using namespace primesieve;
-
 namespace {
+
+using namespace primesieve;
 
 void deletePrimeGenerator(primesieve_iterator* it)
 {
@@ -32,15 +33,13 @@ void deletePrimeGenerator(primesieve_iterator* it)
 
 void deletePrimesVector(primesieve_iterator* it)
 {
-  delete (std::vector<uint64_t>*) it->vector;
+  delete (pod_vector<uint64_t>*) it->vector;
   it->vector = nullptr;
 }
 
-std::vector<uint64_t>& getPrimes(void* primesPimpl)
+pod_vector<uint64_t>& getPrimes(primesieve_iterator* it)
 {
-  using T = std::vector<uint64_t>;
-  T* primes = (T*) primesPimpl;
-  return *primes;
+  return *(pod_vector<uint64_t>*) it->vector;
 }
 
 } // namespace
@@ -48,11 +47,11 @@ std::vector<uint64_t>& getPrimes(void* primesPimpl)
 /// C constructor
 void primesieve_init(primesieve_iterator* it)
 {
-  it->start = 0;
-  it->stop = 0;
-  it->stop_hint = get_max_stop();
   it->i = 0;
   it->last_idx = 0;
+  it->start = 0;
+  it->stop = 0;
+  it->stop_hint = std::numeric_limits<uint64_t>::max();
   it->dist = 0;
   it->primes = nullptr;
   it->vector = nullptr;
@@ -64,11 +63,11 @@ void primesieve_skipto(primesieve_iterator* it,
                        uint64_t start,
                        uint64_t stop_hint)
 {
+  it->i = 0;
+  it->last_idx = 0;
   it->start = start;
   it->stop = start;
   it->stop_hint = stop_hint;
-  it->i = 0;
-  it->last_idx = 0;
   it->dist = 0;
   it->primes = nullptr;
   deletePrimeGenerator(it);
@@ -100,12 +99,11 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
         primeGenerator = new PrimeGenerator(it->start, it->stop);
         it->primeGenerator = primeGenerator;
         if (!it->vector)
-          it->vector = new std::vector<uint64_t>();
+          it->vector = new pod_vector<uint64_t>();
       }
 
-      pod_vector<uint64_t>* primes = (pod_vector<uint64_t>*) it->vector;
-      static_assert(sizeof(std::vector<uint64_t>) == sizeof(*primes), "Cannot convert std::vector into pod_vector!");
-      primeGenerator->fillNextPrimes(*primes, &size);
+      auto& primes = getPrimes(it);
+      primeGenerator->fillNextPrimes(primes, &size);
 
       // There are 3 different cases here:
       // 1) The primes array contains a few primes (<= 512).
@@ -126,8 +124,8 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
     std::cerr << "primesieve_iterator: " << e.what() << std::endl;
     deletePrimeGenerator(it);
     if (!it->vector)
-      it->vector = new std::vector<uint64_t>();
-    auto& primes = getPrimes(it->vector);
+      it->vector = new pod_vector<uint64_t>();
+    auto& primes = getPrimes(it);
     size = 1;
     primes.resize(size);
     primes[0] = PRIMESIEVE_ERROR;
@@ -135,7 +133,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
     errno = EDOM;
   }
 
-  auto& primes = getPrimes(it->vector);
+  auto& primes = getPrimes(it);
   it->i = 0;
   it->last_idx = size - 1;
   it->primes = &primes[0];
@@ -148,13 +146,14 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
   try
   {
     if (!it->vector)
-      it->vector = new std::vector<uint64_t>();
+      it->vector = new pod_vector<uint64_t>();
+
+    auto& primes = getPrimes(it);
 
     // Special case if generate_next_primes() has
     // been used before generate_prev_primes().
-    if (it->primeGenerator)
+    if_unlikely(it->primeGenerator)
     {
-      auto& primes = getPrimes(it->vector);
       assert(!primes.empty());
       it->start = primes.front();
       deletePrimeGenerator(it);
@@ -164,9 +163,7 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     {
       IteratorHelper::prev(&it->start, &it->stop, it->stop_hint, &it->dist);
       PrimeGenerator primeGenerator(it->start, it->stop);
-      pod_vector<uint64_t>* primes = (pod_vector<uint64_t>*) it->vector;
-      static_assert(sizeof(std::vector<uint64_t>) == sizeof(*primes), "Cannot convert std::vector into pod_vector!");
-      primeGenerator.fillPrevPrimes(*primes, &size);
+      primeGenerator.fillPrevPrimes(primes, &size);
     }
   }
   catch (const std::exception& e)
@@ -174,8 +171,8 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     std::cerr << "primesieve_iterator: " << e.what() << std::endl;
     deletePrimeGenerator(it);
     if (!it->vector)
-      it->vector = new std::vector<uint64_t>();
-    auto& primes = getPrimes(it->vector);
+      it->vector = new pod_vector<uint64_t>();
+    auto& primes = getPrimes(it);
     size = 1;
     primes.resize(size);
     primes[0] = PRIMESIEVE_ERROR;
@@ -183,7 +180,7 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     errno = EDOM;
   }
 
-  auto& primes = getPrimes(it->vector);
+  auto& primes = getPrimes(it);
   it->last_idx = size - 1;
   it->i = it->last_idx;
   it->primes = &primes[0];

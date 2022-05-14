@@ -35,10 +35,8 @@ struct type_without_default_initialization
 /// we don't want our vector to default initialize our memory
 /// otherwise we would initialize the same memory twice.
 ///
-/// @TODO: We cast std::vector into pod_vector in
-///        iterator.cpp, this is undefined behavior!
-///        Use std::vector::resize_uninitialized() instead
-///        once it becomes available.
+/// @TODO: Use std::vector::resize_uninitialized() instead
+///        once it becomes available (it likely never will).
 ///
 template <typename T>
 using pod_vector = std::vector<type_without_default_initialization<T>>;
