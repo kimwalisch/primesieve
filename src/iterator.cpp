@@ -42,46 +42,43 @@ pod_vector<uint64_t>& getPrimes(primesieve::iterator* it)
 
 namespace primesieve {
 
-iterator::iterator() noexcept
-{
-  i_ = 0;
-  last_idx_ = 0;
-  start_ = 0;
-  stop_ = 0;
-  stop_hint_ = std::numeric_limits<uint64_t>::max();
-  dist_ = 0;
-  primes_ = nullptr;
-  primesVector_ = nullptr;
-  primeGenerator_ = nullptr;
-}
+iterator::iterator() noexcept :
+  i_(0),
+  last_idx_(0),
+  start_(0),
+  stop_(0),
+  stop_hint_(std::numeric_limits<uint64_t>::max()),
+  dist_(0),
+  primes_(nullptr),
+  primesVector_(nullptr),
+  primeGenerator_(nullptr)
+{ }
 
 iterator::iterator(uint64_t start,
-                   uint64_t stop_hint) noexcept
-{
-  i_ = 0;
-  last_idx_ = 0;
-  start_ = start;
-  stop_ = start;
-  stop_hint_ = stop_hint;
-  dist_ = 0;
-  primes_ = nullptr;
-  primesVector_ = nullptr;
-  primeGenerator_ = nullptr;
-}
+                   uint64_t stop_hint) noexcept :
+  i_(0),
+  last_idx_(0),
+  start_(start),
+  stop_(start),
+  stop_hint_(stop_hint),
+  dist_(0),
+  primes_(nullptr),
+  primesVector_(nullptr),
+  primeGenerator_(nullptr)
+{ }
 
 /// Move constructor
-iterator::iterator(iterator&& other) noexcept
+iterator::iterator(iterator&& other) noexcept :
+  i_(other.i_),
+  last_idx_(other.last_idx_),
+  start_(other.start_),
+  stop_(other.stop_),
+  stop_hint_(other.stop_hint_),
+  dist_(other.dist_),
+  primes_(other.primes_),
+  primesVector_(other.primesVector_),
+  primeGenerator_(other.primeGenerator_)
 {
-  i_ = other.i_;
-  last_idx_ = other.last_idx_;
-  start_ = other.start_;
-  stop_ = other.stop_;
-  stop_hint_ = other.stop_hint_;
-  dist_ = other.dist_;
-  primes_ = other.primes_;
-  primesVector_ = other.primesVector_;
-  primeGenerator_ = other.primeGenerator_;
-
   other.i_ = 0;
   other.last_idx_ = 0;
   other.start_ = 0;

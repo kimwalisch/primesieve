@@ -1,6 +1,6 @@
 ///
 /// @file   iterator.hpp
-/// @brief  The iterator class allows to easily iterate (forwards
+/// @brief  primesieve::iterator allows to easily iterate (forwards
 ///         and backwards) over prime numbers.
 ///
 /// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
@@ -26,9 +26,9 @@ namespace primesieve {
 ///
 struct iterator
 {
-public:
   /// Create a new iterator object.
-  /// Generate primes > 0 using the default stop_hint of UINT64_MAX.
+  /// Generate primes > 0. The start number is default initialized to
+  /// 0 and the stop_hint is default initialized UINT64_MAX.
   ///
   iterator() noexcept;
 
