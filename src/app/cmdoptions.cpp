@@ -104,7 +104,7 @@ struct Option
   T getValue() const
   {
     try {
-      return calculator::eval<T>(val);;
+      return calculator::eval<T>(val);
     }
     catch (std::exception&) {
       throw primesieve_error("invalid option '" + opt + "=" + val + "'");
