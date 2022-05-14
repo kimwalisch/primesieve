@@ -1,14 +1,18 @@
-Changes in version 7.10, 12/05/2022
+Changes in version 8.0, 14/05/2022
 ===================================
 
+* iterator.cpp: primesieve::iterator's ABI has been modified, the API
+  remains backwards compatible. Only the ABI of the C++ primesieve::iterator
+  has been modified, the C ABI & API have not been modified. This ABI
+  break was necessary to fix undefined behavior in PrimeGenerator.cpp.
+* Fix undefined behavior (g++-12 issue) caused by resizeUninitialized.hpp,
+  use new pod_vector<uint64_t> from pod_vector.hpp instead.
 * PrimeGenerator.cpp: Improve AVX512 of fillNextPrimes().
 * PrimeGenerator.cpp: Reduce memory usage for tiny stop numbers.
 * PrimeGenerator.hpp: Add GCC/Clang's function multiversioning for AVX512.
 * Erat.cpp: Reduce memory usage, allocate the minimum required
   memory to store all sieving primes.
 * CpuInfo.cpp: Detect AVX512 using CPUID.
-* Fix undefined behavior (g++-12 issue) caused by resizeUninitialized.hpp,
-  use new pod_vector<uint64_t> from pod_vector.hpp instead.
 
 Changes in version 7.9, 03/05/2022
 ==================================
