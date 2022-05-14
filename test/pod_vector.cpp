@@ -72,6 +72,9 @@ int main()
     check(sum == 123 * size);
   }
 
+  // This test runs too slow without
+  // compiler optimization flags.
+#if defined(__OPTIMIZE__)
   // This test would take forever (3000 secs on i5-12600K
   // CPU from 2022) using std::vector because
   // std::vector.resize() default initializes memory
@@ -79,6 +82,7 @@ int main()
   pod_vector<char> vect;
   for (int i = 0; i < 1000000; i++)
     resize(vect, /* size = 64MiB */ 64 << 20);
+#endif
 
   std::cout << std::endl;
   std::cout << "All tests passed successfully!" << std::endl;
