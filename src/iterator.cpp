@@ -130,7 +130,10 @@ void iterator::skipto(uint64_t start,
   stop_ = start;
   stop_hint_ = stop_hint;
   dist_ = 0;
+  primes_ = nullptr;
   deletePrimeGenerator(this);
+  // We don't delete/free the primesVector as
+  // it will likely be reused again.
 }
 
 iterator::~iterator()

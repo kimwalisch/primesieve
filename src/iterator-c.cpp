@@ -69,7 +69,10 @@ void primesieve_skipto(primesieve_iterator* it,
   it->stop = start;
   it->stop_hint = stop_hint;
   it->dist = 0;
+  it->primes = nullptr;
   deletePrimeGenerator(it);
+  // We don't delete/free the primesVector as
+  // it will likely be reused again.
 }
 
 /// C destructor
