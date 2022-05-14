@@ -95,6 +95,8 @@ iterator& iterator::operator=(iterator&& other) noexcept
 {
   if (this != &other)
   {
+    clear();
+
     i_ = other.i_;
     last_idx_ = other.last_idx_;
     start_ = other.start_;
