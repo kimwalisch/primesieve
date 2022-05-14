@@ -126,9 +126,9 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
     if (!it->vector)
       it->vector = new pod_vector<uint64_t>();
     auto& primes = getPrimes(it);
-    size = 1;
-    primes.resize(size);
-    primes[0] = PRIMESIEVE_ERROR;
+    primes.clear();
+    primes.push_back(PRIMESIEVE_ERROR);
+    size = primes.size();
     it->is_error = true;
     errno = EDOM;
   }
@@ -173,9 +173,9 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     if (!it->vector)
       it->vector = new pod_vector<uint64_t>();
     auto& primes = getPrimes(it);
-    size = 1;
-    primes.resize(size);
-    primes[0] = PRIMESIEVE_ERROR;
+    primes.clear();
+    primes.push_back(PRIMESIEVE_ERROR);
+    size = primes.size();
     it->is_error = true;
     errno = EDOM;
   }
