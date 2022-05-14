@@ -9,7 +9,6 @@
 ///
 
 #include <primesieve.h>
-#include <primesieve/forward.hpp>
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/macros.hpp>
@@ -19,7 +18,6 @@
 #include <cerrno>
 #include <exception>
 #include <iostream>
-#include <vector>
 
 namespace {
 
