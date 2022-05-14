@@ -48,7 +48,7 @@ struct iterator
   ///                   you want to generate the primes below 1000 use
   ///                   stop_hint = 1000.
   ///
-  void skipto(uint64_t start, uint64_t stop_hint = std::numeric_limits<uint64_t>::max());
+  void skipto(uint64_t start, uint64_t stop_hint = std::numeric_limits<uint64_t>::max()) noexcept;
 
   /// primesieve::iterator objects cannot be copied.
   iterator(const iterator&) = delete;
@@ -61,7 +61,7 @@ struct iterator
   ~iterator();
 
   /// Free all memory
-  void clear();
+  void clear() noexcept;
   void generate_next_primes();
   void generate_prev_primes();
 

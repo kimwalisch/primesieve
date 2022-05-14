@@ -120,7 +120,7 @@ iterator& iterator::operator=(iterator&& other) noexcept
 }
 
 void iterator::skipto(uint64_t start,
-                      uint64_t stop_hint)
+                      uint64_t stop_hint) noexcept
 {
   i_ = 0;
   last_idx_ = 0;
@@ -137,7 +137,7 @@ iterator::~iterator()
   clear();
 }
 
-void iterator::clear()
+void iterator::clear() noexcept
 {
   deletePrimeGenerator(this);
   deletePrimesVector(this);
