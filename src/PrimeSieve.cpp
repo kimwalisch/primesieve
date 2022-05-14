@@ -62,8 +62,6 @@ PrimeSieve::PrimeSieve(ParallelSieve* parent) :
   parent_(parent)
 { }
 
-PrimeSieve::~PrimeSieve() = default;
-
 void PrimeSieve::reset()
 {
   counts_.fill(0);

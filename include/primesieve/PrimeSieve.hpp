@@ -44,7 +44,7 @@ class PrimeSieve
 public:
   PrimeSieve();
   PrimeSieve(ParallelSieve*);
-  virtual ~PrimeSieve();
+  virtual ~PrimeSieve() = default;
   // Getters
   uint64_t getStart() const;
   uint64_t getStop() const;
