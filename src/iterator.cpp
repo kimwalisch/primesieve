@@ -96,25 +96,28 @@ iterator::iterator(iterator&& other) noexcept
 /// Move assignment operator
 iterator& iterator::operator=(iterator&& other) noexcept
 {
-  i_ = other.i_;
-  last_idx_ = other.last_idx_;
-  start_ = other.start_;
-  stop_ = other.stop_;
-  stop_hint_ = other.stop_hint_;
-  dist_ = other.dist_;
-  primes_ = other.primes_;
-  primesVector_ = other.primesVector_;
-  primeGenerator_ = other.primeGenerator_;
+  if (this != &other)
+  {
+    i_ = other.i_;
+    last_idx_ = other.last_idx_;
+    start_ = other.start_;
+    stop_ = other.stop_;
+    stop_hint_ = other.stop_hint_;
+    dist_ = other.dist_;
+    primes_ = other.primes_;
+    primesVector_ = other.primesVector_;
+    primeGenerator_ = other.primeGenerator_;
 
-  other.i_ = 0;
-  other.last_idx_ = 0;
-  other.start_ = 0;
-  other.stop_ = 0;
-  other.stop_hint_ = std::numeric_limits<uint64_t>::max();
-  other.dist_ = 0;
-  other.primes_ = nullptr;
-  other.primesVector_ = nullptr;
-  other.primeGenerator_ = nullptr;
+    other.i_ = 0;
+    other.last_idx_ = 0;
+    other.start_ = 0;
+    other.stop_ = 0;
+    other.stop_hint_ = std::numeric_limits<uint64_t>::max();
+    other.dist_ = 0;
+    other.primes_ = nullptr;
+    other.primesVector_ = nullptr;
+    other.primeGenerator_ = nullptr;
+  }
 
   return *this;
 }
