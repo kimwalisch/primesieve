@@ -74,7 +74,8 @@ int main()
 
   // This test runs too slow without
   // compiler optimization flags.
-#if defined(__OPTIMIZE__)
+#if defined(__OPTIMIZE__) && \
+   !defined(__SANITIZE_ADDRESS__)
   // This test would take forever (3000 secs on i5-12600K
   // CPU from 2022) using std::vector because
   // std::vector.resize() default initializes memory
