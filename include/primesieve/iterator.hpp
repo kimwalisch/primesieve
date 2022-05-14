@@ -15,7 +15,6 @@
 #include <stdint.h>
 #include <cstddef>
 #include <limits>
-#include <vector>
 
 namespace primesieve {
 
