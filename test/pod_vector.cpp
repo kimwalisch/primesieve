@@ -56,7 +56,7 @@ int main()
     int size = dist(gen);
     pod_vector<int> vect(size);
     std::fill_n(&vect[0], size, 123);
-    
+
     // Test if resize does not default initilize
     vect.resize(0);
     vect.resize(size);
