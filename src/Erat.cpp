@@ -72,7 +72,6 @@ void Erat::init(uint64_t start,
   assert(start >= 7);
   start_ = start;
   stop_ = stop;
-  memoryPool_ = &memoryPool;
   preSieve_ = &preSieve;
   preSieve_->init(start, stop);
   maxPreSieve_ = preSieve_->getMaxPrime();
@@ -94,10 +93,10 @@ void Erat::init(uint64_t start,
   segmentHigh_ = checkedAdd(segmentLow_, dist);
   segmentHigh_ = std::min(segmentHigh_, stop);
 
-  initAlgorithms();
+  initAlgorithms(memoryPool);
 }
 
-void Erat::initAlgorithms()
+void Erat::initAlgorithms(MemoryPool& memoryPool)
 {
   uint64_t sqrtStop = isqrt(stop_);
   uint64_t l1CacheSize = getL1CacheSize();
@@ -132,9 +131,9 @@ void Erat::initAlgorithms()
   if (sqrtStop > maxPreSieve_)
     eratSmall_.init(stop_, l1CacheSize, maxEratSmall_);
   if (sqrtStop > maxEratSmall_)
-    eratMedium_.init(stop_, maxEratMedium_, memoryPool_);
+    eratMedium_.init(stop_, maxEratMedium_, memoryPool);
   if (sqrtStop > maxEratMedium_)
-    eratBig_.init(stop_, sieveSize_, maxEratBig, memoryPool_);
+    eratBig_.init(stop_, sieveSize_, maxEratBig, memoryPool);
 }
 
 /// EratMedium and EratBig usually run fastest using a sieve

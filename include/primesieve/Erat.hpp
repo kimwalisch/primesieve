@@ -64,14 +64,13 @@ private:
   uint64_t maxEratSmall_ = 0;
   uint64_t maxEratMedium_ = 0;
   std::unique_ptr<uint8_t[]> deleter_;
-  MemoryPool* memoryPool_ = nullptr;
   PreSieve* preSieve_ = nullptr;
   EratSmall eratSmall_;
   EratBig eratBig_;
   EratMedium eratMedium_;
   static uint64_t byteRemainder(uint64_t);
   uint64_t getL1CacheSize() const;
-  void initAlgorithms();
+  void initAlgorithms(MemoryPool& memoryPool);
   void preSieve();
   void crossOff();
   void sieveLastSegment();

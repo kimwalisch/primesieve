@@ -28,7 +28,7 @@ class MemoryPool;
 class EratMedium : public Wheel30_t
 {
 public:
-  void init(uint64_t, uint64_t, MemoryPool*);
+  void init(uint64_t, uint64_t, MemoryPool&);
   bool hasSievingPrimes() const { return hasSievingPrimes_; }
   NOINLINE void crossOff(uint8_t*, uint64_t);
 private:

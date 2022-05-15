@@ -28,7 +28,7 @@ class MemoryPool;
 class EratBig : public Wheel210_t
 {
 public:
-  void init(uint64_t, uint64_t, uint64_t, MemoryPool*);
+  void init(uint64_t, uint64_t, uint64_t, MemoryPool&);
   NOINLINE void crossOff(uint8_t*);
   bool hasSievingPrimes() const { return !buckets_.empty(); }
 private:
