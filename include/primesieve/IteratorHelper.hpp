@@ -10,7 +10,6 @@
 #ifndef ITERATOR_HELPER_HPP
 #define ITERATOR_HELPER_HPP
 
-#include "MemoryPool.hpp"
 #include "PrimeGenerator.hpp"
 #include "PreSieve.hpp"
 #include "pod_vector.hpp"
@@ -23,10 +22,14 @@ namespace primesieve {
 // and don't need to be reallocated frequently.
 struct IteratorMemory
 {
+  IteratorMemory(uint64_t start) :
+    stop(start)
+  { }
+  uint64_t stop;
+  uint64_t dist = 0;
   PrimeGenerator* primeGenerator = nullptr;
   pod_vector<uint64_t> primes;
   PreSieve preSieve;
-  MemoryPool memoryPool;
 };
 
 class IteratorHelper

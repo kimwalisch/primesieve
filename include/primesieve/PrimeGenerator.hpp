@@ -16,6 +16,7 @@
 #define PRIMEGENERATOR_HPP
 
 #include "Erat.hpp"
+#include "MemoryPool.hpp"
 #include "SievingPrimes.hpp"
 #include "pod_vector.hpp"
 
@@ -24,13 +25,12 @@
 
 namespace primesieve {
 
-class MemoryPool;
 class PreSieve;
 
 class PrimeGenerator : public Erat
 {
 public:
-  PrimeGenerator(uint64_t start, uint64_t stop, PreSieve& preSieve, MemoryPool& memoryPool);
+  PrimeGenerator(uint64_t start, uint64_t stop, PreSieve& preSieve);
   void fillPrevPrimes(pod_vector<uint64_t>& primes, std::size_t* size);
   static uint64_t maxCachedPrime();
 
@@ -45,13 +45,13 @@ public:
 #endif
 
 private:
-  uint64_t low_ = 0;
-  uint64_t sieveIdx_ = ~0ull;
-  uint64_t prime_ = 0;
-  PreSieve& preSieve_;
-  MemoryPool& memoryPool_;
-  SievingPrimes sievingPrimes_;
   bool isInit_ = false;
+  uint64_t low_ = 0;
+  uint64_t prime_ = 0;
+  uint64_t sieveIdx_ = ~0ull;
+  PreSieve& preSieve_;
+  MemoryPool memoryPool_;
+  SievingPrimes sievingPrimes_;
   std::size_t getStartIdx() const;
   std::size_t getStopIdx() const;
   void initErat();

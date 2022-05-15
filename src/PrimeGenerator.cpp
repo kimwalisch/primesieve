@@ -115,11 +115,9 @@ namespace primesieve {
 
 PrimeGenerator::PrimeGenerator(uint64_t start,
                                uint64_t stop,
-                               PreSieve& preSieve,
-                               MemoryPool& memoryPool) :
+                               PreSieve& preSieve) :
   Erat(start, stop),
-  preSieve_(preSieve),
-  memoryPool_(memoryPool)
+  preSieve_(preSieve)
 { }
 
 uint64_t PrimeGenerator::maxCachedPrime()

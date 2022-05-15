@@ -18,8 +18,7 @@
 
 namespace {
 
-/// Frees all memory except the IteratorMemory struct (memory_)
-void freeMostMemory(primesieve::iterator* it)
+void deletePrimeGenerator(primesieve::iterator* it)
 {
   if (it->memory_)
   {
@@ -27,7 +26,6 @@ void freeMostMemory(primesieve::iterator* it)
     auto* memory = (IteratorMemory*) it->memory_;
     delete memory->primeGenerator;
     memory->primeGenerator = nullptr;
-    memory->memoryPool.clear();
   }
 }
 
@@ -39,9 +37,7 @@ iterator::iterator() noexcept :
   i_(0),
   last_idx_(0),
   start_(0),
-  stop_(0),
   stop_hint_(std::numeric_limits<uint64_t>::max()),
-  dist_(0),
   primes_(nullptr),
   memory_(nullptr)
 { }
@@ -51,9 +47,7 @@ iterator::iterator(uint64_t start,
   i_(0),
   last_idx_(0),
   start_(start),
-  stop_(start),
   stop_hint_(stop_hint),
-  dist_(0),
   primes_(nullptr),
   memory_(nullptr)
 { }
@@ -63,18 +57,14 @@ iterator::iterator(iterator&& other) noexcept :
   i_(other.i_),
   last_idx_(other.last_idx_),
   start_(other.start_),
-  stop_(other.stop_),
   stop_hint_(other.stop_hint_),
-  dist_(other.dist_),
   primes_(other.primes_),
   memory_(other.memory_)
 {
   other.i_ = 0;
   other.last_idx_ = 0;
   other.start_ = 0;
-  other.stop_ = 0;
   other.stop_hint_ = std::numeric_limits<uint64_t>::max();
-  other.dist_ = 0;
   other.primes_ = nullptr;
   other.memory_ = nullptr;
 }
@@ -89,18 +79,14 @@ iterator& iterator::operator=(iterator&& other) noexcept
     i_ = other.i_;
     last_idx_ = other.last_idx_;
     start_ = other.start_;
-    stop_ = other.stop_;
     stop_hint_ = other.stop_hint_;
-    dist_ = other.dist_;
     primes_ = other.primes_;
     memory_ = other.memory_;
 
     other.i_ = 0;
     other.last_idx_ = 0;
     other.start_ = 0;
-    other.stop_ = 0;
     other.stop_hint_ = std::numeric_limits<uint64_t>::max();
-    other.dist_ = 0;
     other.primes_ = nullptr;
     other.memory_ = nullptr;
   }
@@ -114,11 +100,16 @@ void iterator::skipto(uint64_t start,
   i_ = 0;
   last_idx_ = 0;
   start_ = start;
-  stop_ = start;
   stop_hint_ = stop_hint;
-  dist_ = 0;
   primes_ = nullptr;
-  freeMostMemory(this);
+
+  if (memory_)
+  {
+    auto* memory = (IteratorMemory*) memory_;
+    memory->stop = start;
+    memory->dist = 0;
+    deletePrimeGenerator(this);
+  }
 }
 
 iterator::~iterator()
@@ -140,7 +131,7 @@ void iterator::clear() noexcept
 void iterator::generate_next_primes()
 {
   if (!memory_)
-    memory_ = new IteratorMemory;
+    memory_ = new IteratorMemory(start_);
 
   auto& memory = *(IteratorMemory*) memory_;
   auto& primes = memory.primes;
@@ -150,8 +141,8 @@ void iterator::generate_next_primes()
   {
     if (!memory.primeGenerator)
     {
-      IteratorHelper::next(&start_, &stop_, stop_hint_, &dist_);
-      memory.primeGenerator = new PrimeGenerator(start_, stop_, memory.preSieve, memory.memoryPool);
+      IteratorHelper::next(&start_, &memory.stop, stop_hint_, &memory.dist);
+      memory.primeGenerator = new PrimeGenerator(start_, memory.stop, memory.preSieve);
     }
 
     memory.primeGenerator->fillNextPrimes(primes, &size);
@@ -167,7 +158,7 @@ void iterator::generate_next_primes()
     //    array contains an error code (UINT64_MAX) which
     //    is returned to the user.
     if (size == 0)
-      freeMostMemory(this);
+      deletePrimeGenerator(this);
   }
 
   i_ = 0;
@@ -178,7 +169,7 @@ void iterator::generate_next_primes()
 void iterator::generate_prev_primes()
 {
   if (!memory_)
-    memory_ = new IteratorMemory;
+    memory_ = new IteratorMemory(start_);
 
   auto& memory = *(IteratorMemory*) memory_;
   auto& primes = memory.primes;
@@ -189,17 +180,16 @@ void iterator::generate_prev_primes()
   {
     assert(!primes.empty());
     start_ = primes.front();
-    freeMostMemory(this);
+    deletePrimeGenerator(this);
   }
 
   std::size_t size = 0;
 
   while (!size)
   {
-    IteratorHelper::prev(&start_, &stop_, stop_hint_, &dist_);
-    PrimeGenerator primeGenerator(start_, stop_, memory.preSieve, memory.memoryPool);
+    IteratorHelper::prev(&start_, &memory.stop, stop_hint_, &memory.dist);
+    PrimeGenerator primeGenerator(start_, memory.stop, memory.preSieve);
     primeGenerator.fillPrevPrimes(primes, &size);
-    memory.memoryPool.clear();
   }
 
   last_idx_ = size - 1;

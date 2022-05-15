@@ -23,7 +23,6 @@ class MemoryPool
 public:
   NOINLINE void addBucket(SievingPrime*& sievingPrime);
   void freeBucket(Bucket* bucket);
-  void clear();
 
 private:
   void updateAllocCount();
