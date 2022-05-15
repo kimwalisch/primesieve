@@ -172,8 +172,8 @@ void iterator::generate_next_primes()
     // 1) The primes array contains a few primes (<= 512).
     //    In this case we return the primes to the user.
     // 2) The primes array is empty because the next
-    //    prime > stop_. In this case we reset the
-    //    primeGenerator object, increase the start_ & stop_
+    //    prime > stop. In this case we reset the
+    //    primeGenerator object, increase the start & stop
     //    numbers and sieve the next segment.
     // 3) The next prime > 2^64. In this case the primes
     //    array contains an error code (UINT64_MAX) which
