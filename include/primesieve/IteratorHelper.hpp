@@ -1,7 +1,7 @@
 ///
 /// @file   IteratorHelper.hpp
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -10,9 +10,24 @@
 #ifndef ITERATOR_HELPER_HPP
 #define ITERATOR_HELPER_HPP
 
+#include "MemoryPool.hpp"
+#include "PrimeGenerator.hpp"
+#include "PreSieve.hpp"
+#include "pod_vector.hpp"
+
 #include <stdint.h>
 
 namespace primesieve {
+
+// These objects can be reused by primesieve::iterator
+// and don't need to be reallocated frequently.
+struct IteratorMemory
+{
+  PrimeGenerator* primeGenerator = nullptr;
+  pod_vector<uint64_t> primes;
+  PreSieve preSieve;
+  MemoryPool memoryPool;
+};
 
 class IteratorHelper
 {

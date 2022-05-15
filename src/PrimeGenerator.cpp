@@ -21,7 +21,6 @@
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/macros.hpp>
-#include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/pod_vector.hpp>
@@ -114,8 +113,13 @@ const std::array<uint8_t, 720> primePi =
 
 namespace primesieve {
 
-PrimeGenerator::PrimeGenerator(uint64_t start, uint64_t stop) :
-  Erat(start, stop)
+PrimeGenerator::PrimeGenerator(uint64_t start,
+                               uint64_t stop,
+                               PreSieve& preSieve,
+                               MemoryPool& memoryPool) :
+  Erat(start, stop),
+  preSieve_(preSieve),
+  memoryPool_(memoryPool)
 { }
 
 uint64_t PrimeGenerator::maxCachedPrime()

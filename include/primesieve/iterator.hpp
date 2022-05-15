@@ -95,8 +95,7 @@ struct iterator
   uint64_t stop_hint_;
   uint64_t dist_;
   uint64_t* primes_;
-  void* primesVector_;
-  void* primeGenerator_;
+  void* memory_;
 };
 
 } // namespace

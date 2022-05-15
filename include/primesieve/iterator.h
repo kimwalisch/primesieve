@@ -43,8 +43,7 @@ typedef struct
   uint64_t stop_hint;
   uint64_t dist;
   uint64_t* primes;
-  void* vector;
-  void* primeGenerator;
+  void* memory;
   int is_error;
 } primesieve_iterator;
 

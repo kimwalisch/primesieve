@@ -26,6 +26,13 @@
 
 namespace primesieve {
 
+void MemoryPool::clear()
+{
+  memory_.clear();
+  stock_ = nullptr;
+  count_ = 0;
+}
+
 void MemoryPool::updateAllocCount()
 {
   std::size_t allocationNr = memory_.size() + 1;
