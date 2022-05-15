@@ -1,5 +1,5 @@
-Changes in version 8.0, 14/05/2022
-===================================
+Changes in version 8.0, 15/05/2022
+==================================
 
 * iterator.cpp: primesieve::iterator's ABI has been modified, the API
   remains backwards compatible. Only the ABI of the C++ primesieve::iterator
