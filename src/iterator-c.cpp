@@ -76,7 +76,7 @@ void primesieve_free_iterator(primesieve_iterator* it)
 
 /// Frees most memory, but keeps some smaller data structures
 /// (e.g. primes vector & PreSieve object) that are useful
-/// if the primesieve::iterator is reused. The remaining memory
+/// if the primesieve_iterator is reused. The remaining memory
 /// uses at most 200 kilobytes.
 ///
 void primesieve_clear(primesieve_iterator* it)
