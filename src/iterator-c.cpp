@@ -168,6 +168,13 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
       memory.deletePrimeGenerator();
     }
 
+    // When sieving backwards the sieving distance is subdivided
+    // into smaller chunks. If we can prove that the total
+    // sieving distance is large we enable pre-sieving.
+    if (memory.dist == 0 &&
+        it->stop_hint < it->start)
+      memory.preSieve.init(it->stop_hint, it->start);
+
     while (!size)
     {
       IteratorHelper::prev(&it->start, &memory.stop, it->stop_hint, &memory.dist);

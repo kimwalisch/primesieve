@@ -13,7 +13,7 @@ int main(int argc, char** argv)
     limit = std::atol(argv[1]);
 
   primesieve::iterator it;
-  it.skipto(limit);
+  it.skipto(limit, 0);
   uint64_t prime = it.prev_prime();
   uint64_t sum = 0;
 

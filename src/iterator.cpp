@@ -192,6 +192,13 @@ void iterator::generate_prev_primes()
     memory.deletePrimeGenerator();
   }
 
+  // When sieving backwards the sieving distance is subdivided
+  // into smaller chunks. If we can prove that the total
+  // sieving distance is large we enable pre-sieving.
+  if (memory.dist == 0 &&
+      stop_hint_ < start_)
+    memory.preSieve.init(stop_hint_, start_);
+
   std::size_t size = 0;
 
   while (!size)
