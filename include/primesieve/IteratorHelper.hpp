@@ -25,6 +25,19 @@ struct IteratorMemory
   IteratorMemory(uint64_t start) :
     stop(start)
   { }
+  ~IteratorMemory()
+  {
+    delete primeGenerator;
+  }
+  void deletePrimeGenerator()
+  {
+    delete primeGenerator;
+    primeGenerator = nullptr;
+  }
+  void deletePrimes()
+  {
+    pod_vector<uint64_t>().swap(primes);
+  }
   uint64_t stop;
   uint64_t dist = 0;
   PrimeGenerator* primeGenerator = nullptr;

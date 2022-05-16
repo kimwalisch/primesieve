@@ -23,9 +23,7 @@ void freeAllMemory(primesieve::iterator* it)
   if (it->memory_)
   {
     using primesieve::IteratorMemory;
-    auto* memory = (IteratorMemory*) it->memory_;
-    delete memory->primeGenerator;
-    delete memory;
+    delete (IteratorMemory*) it->memory_;
     it->memory_ = nullptr;
   }
 }
@@ -128,15 +126,14 @@ void iterator::clear() noexcept
   if (memory_)
   {
     auto* memory = (IteratorMemory*) memory_;
-    delete memory->primeGenerator;
-    memory->primeGenerator = nullptr;
+    memory->deletePrimeGenerator();
 
     // Delete the primes vector if > 100 KiB.
     // next_prime() uses primes vector of 4 KiB, but
     // prev_prime() uses primes vector of up to 1 GiB.
     std::size_t maxSize = ((1 << 10) * 100) / sizeof(uint64_t);
     if (memory->primes.size() > maxSize)
-      pod_vector<uint64_t>().swap(memory->primes);
+      memory->deletePrimes();
   }
 }
 
@@ -170,7 +167,7 @@ void iterator::generate_next_primes()
     //    array contains an error code (UINT64_MAX) which
     //    is returned to the user.
     if (size == 0)
-      clear();
+      memory.deletePrimeGenerator();
   }
 
   i_ = 0;
@@ -192,7 +189,7 @@ void iterator::generate_prev_primes()
   {
     assert(!primes.empty());
     start_ = primes.front();
-    clear();
+    memory.deletePrimeGenerator();
   }
 
   std::size_t size = 0;
