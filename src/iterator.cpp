@@ -117,8 +117,8 @@ iterator::~iterator()
 }
 
 /// Frees most memory, but keeps some smaller data structures
-/// (e.g. primes vector & PreSieve object) that are useful
-/// if the primesieve::iterator is reused. The remaining memory
+/// (e.g. the PreSieve object) that are useful if the
+/// primesieve::iterator is reused. The remaining memory
 /// uses at most 200 kilobytes.
 ///
 void iterator::clear() noexcept
@@ -127,13 +127,7 @@ void iterator::clear() noexcept
   {
     auto* memory = (IteratorMemory*) memory_;
     memory->deletePrimeGenerator();
-
-    // Delete the primes vector if > 100 KiB.
-    // next_prime() uses primes vector of 4 KiB, but
-    // prev_prime() uses primes vector of up to 1 GiB.
-    std::size_t maxSize = ((1 << 10) * 100) / sizeof(uint64_t);
-    if (memory->primes.size() > maxSize)
-      memory->deletePrimes();
+    memory->deletePrimes();
   }
 }
 
