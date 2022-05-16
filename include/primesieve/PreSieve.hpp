@@ -43,6 +43,7 @@ public:
   uint64_t getMaxPrime() const { return maxPrime_; }
 private:
   uint64_t maxPrime_ = 13;
+  uint64_t totalDist_ = 0;
   std::array<std::vector<uint8_t>, 8> buffers_;
   void initBuffers();
   static void preSieveSmall(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow);

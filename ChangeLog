@@ -7,6 +7,7 @@ Changes in version 8.0, 16/05/2022
   use new pod_vector<uint64_t> from pod_vector.hpp instead.
 * iterator.cpp: Enable pre-sieving for primesieve::iterator.prev_prime().
 * iterator-c.cpp: Enable pre-sieving for primesieve::iterator.prev_prime().
+* PreSieve.cpp: Detect if the user sieves many consective intervals.
 * PrimeGenerator.cpp: Improve AVX512 of fillNextPrimes().
 * PrimeGenerator.cpp: Reduce memory usage for tiny stop numbers.
 * PrimeGenerator.hpp: Add GCC/Clang's function multiversioning for AVX512.
