@@ -18,14 +18,15 @@
 
 namespace {
 
-void deletePrimeGenerator(primesieve::iterator* it)
+void freeAllMemory(primesieve::iterator* it)
 {
   if (it->memory_)
   {
     using primesieve::IteratorMemory;
     auto* memory = (IteratorMemory*) it->memory_;
     delete memory->primeGenerator;
-    memory->primeGenerator = nullptr;
+    delete memory;
+    it->memory_ = nullptr;
   }
 }
 
@@ -74,7 +75,7 @@ iterator& iterator::operator=(iterator&& other) noexcept
 {
   if (this != &other)
   {
-    clear();
+    freeAllMemory(this);
 
     i_ = other.i_;
     last_idx_ = other.last_idx_;
@@ -108,23 +109,27 @@ void iterator::skipto(uint64_t start,
     auto* memory = (IteratorMemory*) memory_;
     memory->stop = start;
     memory->dist = 0;
-    deletePrimeGenerator(this);
+    clear();
   }
 }
 
 iterator::~iterator()
 {
-  clear();
+  freeAllMemory(this);
 }
 
+/// Frees most memory, but keeps some smaller data structures
+/// (e.g. primes vector & PreSieve object) that are useful
+/// if the primesieve::iterator is reused. The remaining memory
+/// uses at most 200 kilobytes.
+///
 void iterator::clear() noexcept
 {
   if (memory_)
   {
     auto* memory = (IteratorMemory*) memory_;
     delete memory->primeGenerator;
-    delete memory;
-    memory_ = nullptr;
+    memory->primeGenerator = nullptr;
   }
 }
 
@@ -158,7 +163,7 @@ void iterator::generate_next_primes()
     //    array contains an error code (UINT64_MAX) which
     //    is returned to the user.
     if (size == 0)
-      deletePrimeGenerator(this);
+      clear();
   }
 
   i_ = 0;
@@ -180,7 +185,7 @@ void iterator::generate_prev_primes()
   {
     assert(!primes.empty());
     start_ = primes.front();
-    deletePrimeGenerator(this);
+    clear();
   }
 
   std::size_t size = 0;

@@ -20,23 +20,13 @@
 #include <iostream>
 
 namespace {
-
+ 
 using namespace primesieve;
 
 pod_vector<uint64_t>& getPrimes(primesieve_iterator* it)
 {
   auto* memory = (IteratorMemory*) it->memory;
   return memory->primes;
-}
-
-void deletePrimeGenerator(primesieve_iterator* it)
-{
-  if (it->memory)
-  {
-    auto* memory = (IteratorMemory*) it->memory;
-    delete memory->primeGenerator;
-    memory->primeGenerator = nullptr;
-  }
 }
 
 } // namespace
@@ -68,7 +58,7 @@ void primesieve_skipto(primesieve_iterator* it,
     auto* memory = (IteratorMemory*) it->memory;
     memory->stop = start;
     memory->dist = 0;
-    deletePrimeGenerator(it);
+    primesieve_clear(it);
   }
 }
 
@@ -81,6 +71,21 @@ void primesieve_free_iterator(primesieve_iterator* it)
     delete memory->primeGenerator;
     delete memory;
     it->memory = nullptr;
+  }
+}
+
+/// Frees most memory, but keeps some smaller data structures
+/// (e.g. primes vector & PreSieve object) that are useful
+/// if the primesieve::iterator is reused. The remaining memory
+/// uses at most 200 kilobytes.
+///
+void primesieve_clear(primesieve_iterator* it)
+{
+  if (it->memory)
+  {
+    auto* memory = (IteratorMemory*) it->memory;
+    delete memory->primeGenerator;
+    memory->primeGenerator = nullptr;
   }
 }
 
@@ -117,13 +122,13 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       //    array contains an error code (UINT64_MAX) which
       //    is returned to the user.
       if (size == 0)
-        deletePrimeGenerator(it);
+        primesieve_clear(it);
     }
   }
   catch (const std::exception& e)
   {
     std::cerr << "primesieve_iterator: " << e.what() << std::endl;
-    deletePrimeGenerator(it);
+    primesieve_clear(it);
     auto& primes = getPrimes(it);
     primes.clear();
     primes.push_back(PRIMESIEVE_ERROR);
@@ -156,7 +161,7 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     {
       assert(!primes.empty());
       it->start = primes.front();
-      deletePrimeGenerator(it);
+      primesieve_clear(it);
     }
 
     while (!size)
@@ -169,7 +174,7 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
   catch (const std::exception& e)
   {
     std::cerr << "primesieve_iterator: " << e.what() << std::endl;
-    deletePrimeGenerator(it);
+    primesieve_clear(it);
     auto& primes = getPrimes(it);
     primes.clear();
     primes.push_back(PRIMESIEVE_ERROR);

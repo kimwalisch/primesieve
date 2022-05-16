@@ -52,6 +52,14 @@ void primesieve_init(primesieve_iterator* it);
 void primesieve_free_iterator(primesieve_iterator* it);
 
 /**
+ * Frees most memory, but keeps some smaller data structures
+ * (e.g. primes vector & PreSieve object) that are useful
+ * if the primesieve::iterator is reused. The remaining memory
+ * uses at most 200 kilobytes.
+ */
+void primesieve_clear(primesieve_iterator* it);
+
+/**
  * Reset the primesieve iterator to start.
  * @param start      Generate primes > start (or < start).
  * @param stop_hint  Stop number optimization hint. E.g. if you want
