@@ -13,20 +13,34 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-int main()
+int main(int argc, char** argv)
 {
+  uint64_t limit = 10000000000ull;
+
+  if (argc > 1)
+    limit = atol(argv[1]);
+
   primesieve_iterator it;
   primesieve_init(&it);
 
   /* primesieve_skipto(&it, start_number, stop_hint) */
-  primesieve_skipto(&it, 2000, 1000);
+  primesieve_skipto(&it, limit, 0);
   uint64_t prime;
+  uint64_t sum = 0;
 
-  /* iterate over primes from 2000 to 1000 */
-  while ((prime = primesieve_prev_prime(&it)) >= 1000)
-    printf("%" PRIu64 "\n", prime);
+  /* iterate over primes from limit to 0 */
+  while ((prime = primesieve_prev_prime(&it)) > 0)
+    sum += prime;
 
   primesieve_free_iterator(&it);
+  printf("Sum of the primes: %" PRIu64 "\n", sum);
+
+  /* Note that since sum is a 64-bit variable the result
+   * will be incorrect (due to integer overflow) if
+   * limit > 10^10. However we do allow limits > 10^10
+   * since this is useful for benchmarking. */
+  if (limit > 10000000000ull)
+    printf("Warning: sum is likely incorrect due to 64-bit integer overflow!");
 
   return 0;
 }
