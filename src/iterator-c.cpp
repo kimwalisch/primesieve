@@ -86,6 +86,13 @@ void primesieve_clear(primesieve_iterator* it)
     auto* memory = (IteratorMemory*) it->memory;
     delete memory->primeGenerator;
     memory->primeGenerator = nullptr;
+
+    // Delete the primes vector if > 100 KiB.
+    // next_prime() uses primes vector of 4 KiB, but
+    // prev_prime() uses primes vector of up to 1 GiB.
+    std::size_t maxSize = ((1 << 10) * 100) / sizeof(uint64_t);
+    if (memory->primes.size() > maxSize)
+      pod_vector<uint64_t>().swap(memory->primes);
   }
 }
 
