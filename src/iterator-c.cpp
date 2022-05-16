@@ -20,7 +20,7 @@
 #include <iostream>
 
 namespace {
- 
+
 using namespace primesieve;
 
 pod_vector<uint64_t>& getPrimes(primesieve_iterator* it)
