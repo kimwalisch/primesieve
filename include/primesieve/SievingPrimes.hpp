@@ -26,8 +26,8 @@ class SievingPrimes : public Erat
 {
 public:
   SievingPrimes() = default;
-  SievingPrimes(Erat*, uint64_t sieveSize, PreSieve&, MemoryPool& memoryPool);
-  void init(Erat*, uint64_t sieveSize, PreSieve&, MemoryPool& memoryPool);
+  SievingPrimes(Erat*, uint64_t, PreSieve&, MemoryPool& memoryPool);
+  void init(Erat*, uint64_t, PreSieve&, MemoryPool& memoryPool);
   uint64_t next();
 private:
   uint64_t i_ = 0;

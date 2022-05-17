@@ -42,7 +42,7 @@ protected:
   uint64_t start_ = 0;
   /// Sieve primes <= stop_
   uint64_t stop_ = 0;
-  /// Size of sieve_ in bytes (power of 2)
+  /// Size of sieve_ array in bytes
   uint64_t sieveSize_ = 0;
   /// Lower bound of the current segment
   uint64_t segmentLow_ = ~0ull;

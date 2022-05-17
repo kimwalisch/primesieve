@@ -55,14 +55,14 @@ Erat::Erat(uint64_t start, uint64_t stop) :
   stop_(stop)
 { }
 
-/// @start:     Sieve primes >= start
-/// @stop:      Sieve primes <= stop
-/// @sieveSize: Sieve array size in bytes
-/// @preSieve:  Pre-sieve small primes
+/// @start: Sieve primes >= start.
+/// @stop:  Sieve primes <= stop.
+/// @maxSieveSize: Maximum sieve array size in bytes.
+/// @preSieve: Pre-sieve small primes.
 ///
 void Erat::init(uint64_t start,
                 uint64_t stop,
-                uint64_t sieveSize,
+                uint64_t maxSieveSize,
                 PreSieve& preSieve,
                 MemoryPool& memoryPool)
 {
@@ -70,12 +70,13 @@ void Erat::init(uint64_t start,
     return;
 
   assert(start >= 7);
-  assert(sieveSize >= (16 << 10));
+  assert(maxSieveSize >= (16 << 10));
+
   start_ = start;
   stop_ = stop;
+  sieveSize_ = maxSieveSize;
   preSieve_ = &preSieve;
   maxPreSieve_ = preSieve_->getMaxPrime();
-  sieveSize_ = sieveSize;
 
   initAlgorithms(memoryPool);
 }
