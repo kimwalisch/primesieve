@@ -218,10 +218,9 @@ void PrimeGenerator::initNextPrimes(pod_vector<uint64_t>& primes,
     }
   };
 
-  // A buffer of 512 primes provides good
+  // A buffer of 1024 primes provides good
   // performance with little memory usage.
-  std::size_t maxSize = 512;
-  std::size_t minSize = 64;
+  std::size_t maxSize = 1 << 10;
 
   if (start_ <= maxCachedPrime())
   {
@@ -234,6 +233,7 @@ void PrimeGenerator::initNextPrimes(pod_vector<uint64_t>& primes,
     else
     {
       std::size_t pix = primeCountApprox(start_, stop_);
+      std::size_t minSize = *size + 64;
       pix = inBetween(minSize, pix, maxSize);
       pix = std::max(*size, pix);
       resize(primes, pix);
@@ -247,6 +247,7 @@ void PrimeGenerator::initNextPrimes(pod_vector<uint64_t>& primes,
   else
   {
     std::size_t pix = primeCountApprox(start_, stop_);
+    std::size_t minSize = 64;
     pix = inBetween(minSize, pix, maxSize);
     resize(primes, pix);
   }
@@ -314,11 +315,7 @@ bool PrimeGenerator::sieveNextPrimes(pod_vector<uint64_t>& primes,
   *size = 0;
 
   if (!isInit_)
-  {
     initNextPrimes(primes, size);
-    if (*size > 0)
-      return false;
-  }
 
   if (hasNextSegment())
   {
@@ -414,9 +411,9 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
 
     // Use local variables to prevent the compiler from
     // writing temporary results to memory.
-    std::size_t i = 0;
+    std::size_t i = *size;
     std::size_t maxSize = primes.size();
-    assert(maxSize >= 64);
+    assert(i + 64 <= maxSize);
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieveSize_;
@@ -483,13 +480,13 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
 
     // Use local variables to prevent the compiler from
     // writing temporary results to memory.
-    uint8_t* sieve = sieve_;
-    uint64_t i = 0;
+    std::size_t i = *size;
+    std::size_t maxSize = primes.size();
+    assert(i + 64 <= maxSize);
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieveSize_;
-    uint64_t maxSize = primes.size();
-    assert(primes.size() >= 64);
+    uint8_t* sieve = sieve_;
 
     __m512i avxBitValues = _mm512_set_epi8(
       (char) 241, (char) 239, (char) 233, (char) 229,
