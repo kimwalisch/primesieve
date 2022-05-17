@@ -21,6 +21,7 @@
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/macros.hpp>
+#include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/pod_vector.hpp>
@@ -265,6 +266,7 @@ void PrimeGenerator::initErat()
   if (startErat <= stop_)
   {
     int sieveSize = get_sieve_size();
+    preSieve_.init(startErat, stop_);
     Erat::init(startErat, stop_, sieveSize, preSieve_, memoryPool_);
     sievingPrimes_.init(this, preSieve_, memoryPool_);
   }

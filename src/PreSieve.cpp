@@ -202,7 +202,7 @@ void PreSieve::init(uint64_t start,
   // To reduce the initialization overhead, we only enable
   // pre-sieving if the sieving distance is at least 20x
   // larger than the distance (size) of the pre-sieve buffers.
-  uint64_t dist = stop - start;
+  uint64_t dist = std::max(start, stop) - start;
   uint64_t sqrtStop = (uint64_t) std::sqrt(stop);
   dist = std::max(dist, sqrtStop);
 

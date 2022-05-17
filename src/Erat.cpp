@@ -73,7 +73,6 @@ void Erat::init(uint64_t start,
   start_ = start;
   stop_ = stop;
   preSieve_ = &preSieve;
-  preSieve_->init(start, stop);
   maxPreSieve_ = preSieve_->getMaxPrime();
 
   // Convert sieveSize from KiB to bytes.

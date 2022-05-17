@@ -16,6 +16,7 @@
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/SievingPrimes.hpp>
 
@@ -49,6 +50,7 @@ PrintPrimes::PrintPrimes(PrimeSieve& ps) :
   uint64_t sieveSize = ps.getSieveSize();
   start = std::max<uint64_t>(start, 7);
 
+  ps.getPreSieve().init(start, stop);
   Erat::init(start, stop, sieveSize, ps.getPreSieve(), memoryPool_);
 
   if (ps_.isCountkTuplets())
