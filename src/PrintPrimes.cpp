@@ -47,11 +47,11 @@ PrintPrimes::PrintPrimes(PrimeSieve& ps) :
 {
   uint64_t start = ps.getStart();
   uint64_t stop = ps.getStop();
-  uint64_t sieveSize = ps.getSieveSize();
+  uint64_t sieveBytes = ps.getSieveSize() << 10;
   start = std::max<uint64_t>(start, 7);
 
   ps.getPreSieve().init(start, stop);
-  Erat::init(start, stop, sieveSize, ps.getPreSieve(), memoryPool_);
+  Erat::init(start, stop, sieveBytes, ps.getPreSieve(), memoryPool_);
 
   if (ps_.isCountkTuplets())
     initCounts();
@@ -84,7 +84,8 @@ void PrintPrimes::initCounts()
 
 void PrintPrimes::sieve()
 {
-  SievingPrimes sievingPrimes(this, ps_.getPreSieve(), memoryPool_);
+  uint64_t sieveBytes = ps_.getSieveSize() << 10;
+  SievingPrimes sievingPrimes(this, sieveBytes, ps_.getPreSieve(), memoryPool_);
   uint64_t prime = sievingPrimes.next();
 
   while (hasNextSegment())

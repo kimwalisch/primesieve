@@ -35,7 +35,6 @@ class MemoryPool;
 class Erat
 {
 public:
-  uint64_t getSieveSize() const;
   uint64_t getStop() const;
 
 protected:
@@ -116,12 +115,6 @@ inline void Erat::addSievingPrime(uint64_t prime)
 inline uint64_t Erat::getStop() const
 {
   return stop_;
-}
-
-/// Sieve size in KiB
-inline uint64_t Erat::getSieveSize() const
-{
-  return sieveSize_ >> 10;
 }
 
 } // namespace

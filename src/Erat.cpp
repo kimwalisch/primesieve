@@ -57,7 +57,7 @@ Erat::Erat(uint64_t start, uint64_t stop) :
 
 /// @start:     Sieve primes >= start
 /// @stop:      Sieve primes <= stop
-/// @sieveSize: Sieve size in KiB
+/// @sieveSize: Sieve array size in bytes
 /// @preSieve:  Pre-sieve small primes
 ///
 void Erat::init(uint64_t start,
@@ -70,35 +70,43 @@ void Erat::init(uint64_t start,
     return;
 
   assert(start >= 7);
+  assert(sieveSize >= (16 << 10));
   start_ = start;
   stop_ = stop;
   preSieve_ = &preSieve;
   maxPreSieve_ = preSieve_->getMaxPrime();
-
-  // Convert sieveSize from KiB to bytes.
-  // EratBig requires a power of 2 sieveSize.
-  sieveSize_ = floorPow2(sieveSize);
-  sieveSize_ = inBetween(16, sieveSize_, 8192);
-  sieveSize_ <<= 10;
-
-  // The 8 bits of each byte of the sieve array correspond to
-  // the offsets { 7, 11, 13, 17, 19, 23, 29, 31 }. If we
-  // would set dist = sieveSize * 30 we would not include the
-  // last bit of the last byte which corresponds to the offset
-  // 31. For this reason we set dist = sieveSize * 30 + 6.
-  uint64_t rem = byteRemainder(start);
-  uint64_t dist = sieveSize_ * 30 + 6;
-  segmentLow_ = start_ - rem;
-  segmentHigh_ = checkedAdd(segmentLow_, dist);
-  segmentHigh_ = std::min(segmentHigh_, stop);
+  sieveSize_ = sieveSize;
 
   initAlgorithms(memoryPool);
 }
 
+/// EratMedium and EratBig usually run fastest using a sieve
+/// size that is slightly smaller than the CPU's L2 cache size.
+/// EratSmall however runs fastest using a sieve size that
+/// matches the CPU's L1 cache size. Hence we use a smaller
+/// sieve size (L1 cache size) in EratSmall and a larger sieve
+/// size (< L2 cache size) in both EratMedium and EratBig.
+///
+uint64_t Erat::getL1CacheSize() const
+{
+  uint64_t l1CacheSize = cpuInfo.hasL1Cache() ? cpuInfo.l1CacheBytes() : config::L1D_CACHE_BYTES;
+  return inBetween(16 << 10, l1CacheSize, 8192 << 10);
+}
+
 void Erat::initAlgorithms(MemoryPool& memoryPool)
 {
-  uint64_t sqrtStop = isqrt(stop_);
   uint64_t l1CacheSize = getL1CacheSize();
+  uint64_t maxSieveSize = std::max(l1CacheSize, sieveSize_);
+  uint64_t sqrtStop = isqrt(stop_);
+
+  // For small stop numbers a small sieve array size that
+  // matches the CPU's L1 data cache size performs best.
+  // For larger stop numbers a sieve array size that is
+  // within [L1CacheSize, L2CacheSize] usually performs best.
+  // The sieve size must satisfy: sieveSize % 8 == 0.
+  sieveSize_ = inBetween(l1CacheSize, sqrtStop, maxSieveSize);
+  sieveSize_ = inBetween(16 << 10, sieveSize_, 8192 << 10);
+  sieveSize_ = ceilDiv(sieveSize_, sizeof(uint64_t)) * sizeof(uint64_t);
 
   // Small sieving primes are processed using the EratSmall
   // algorithm, medium sieving primes are processed using
@@ -108,7 +116,25 @@ void Erat::initAlgorithms(MemoryPool& memoryPool)
   maxEratMedium_ = (uint64_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
   maxEratSmall_ = std::min(maxEratSmall_, sqrtStop);
   maxEratMedium_ = std::min(maxEratMedium_, sqrtStop);
-  uint64_t maxEratBig = sqrtStop;
+
+  // EratBig requires a power of 2 sieve size
+  if (sqrtStop > maxEratMedium_)
+  {
+    sieveSize_ = floorPow2(sieveSize_);
+    maxEratMedium_ = (uint64_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
+    maxEratMedium_ = std::min(maxEratMedium_, sqrtStop);
+  }
+
+  // The 8 bits of each byte of the sieve array correspond to
+  // the offsets { 7, 11, 13, 17, 19, 23, 29, 31 }. If we
+  // would set dist = sieveSize * 30 we would not include the
+  // last bit of the last byte which corresponds to the offset
+  // 31. For this reason we set dist = sieveSize * 30 + 6.
+  uint64_t rem = byteRemainder(start_);
+  uint64_t dist = sieveSize_ * 30 + 6;
+  segmentLow_ = start_ - rem;
+  segmentHigh_ = checkedAdd(segmentLow_, dist);
+  segmentHigh_ = std::min(segmentHigh_, stop_);
 
   // If we are sieving just a single segment
   // and the EratBig algorithm is not used, then
@@ -132,26 +158,7 @@ void Erat::initAlgorithms(MemoryPool& memoryPool)
   if (sqrtStop > maxEratSmall_)
     eratMedium_.init(stop_, maxEratMedium_, memoryPool);
   if (sqrtStop > maxEratMedium_)
-    eratBig_.init(stop_, sieveSize_, maxEratBig, memoryPool);
-}
-
-/// EratMedium and EratBig usually run fastest using a sieve
-/// size that is slightly smaller than the CPU's L2 cache size.
-/// EratSmall however runs fastest using a sieve size that
-/// matches the CPU's L1 cache size. Hence we use a smaller
-/// sieve size (L1 cache size) in EratSmall and a larger sieve
-/// size (< L2 cache size) in both EratMedium and EratBig.
-///
-uint64_t Erat::getL1CacheSize() const
-{
-  uint64_t size = cpuInfo.hasL1Cache() ? cpuInfo.l1CacheBytes() : config::L1D_CACHE_BYTES;
-  uint64_t minSize = 8 << 10;
-  uint64_t maxSize = 8192 << 10;
-
-  size = std::min(size, sieveSize_);
-  size = inBetween(minSize, size, maxSize);
-
-  return size;
+    eratBig_.init(stop_, sieveSize_, sqrtStop, memoryPool);
 }
 
 bool Erat::hasNextSegment() const

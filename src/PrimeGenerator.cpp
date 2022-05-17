@@ -265,10 +265,10 @@ void PrimeGenerator::initErat()
 
   if (startErat <= stop_)
   {
-    int sieveSize = get_sieve_size();
     preSieve_.init(startErat, stop_);
-    Erat::init(startErat, stop_, sieveSize, preSieve_, memoryPool_);
-    sievingPrimes_.init(this, preSieve_, memoryPool_);
+    int sieveBytes = get_sieve_size() << 10;
+    Erat::init(startErat, stop_, sieveBytes, preSieve_, memoryPool_);
+    sievingPrimes_.init(this, sieveBytes, preSieve_, memoryPool_);
   }
 }
 

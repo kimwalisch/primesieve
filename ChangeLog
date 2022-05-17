@@ -1,4 +1,4 @@
-Changes in version 8.0, 16/05/2022
+Changes in version 8.0, 17/05/2022
 ==================================
 
 * primesieve::iterator's ABI has been modified in both the C & C++ API.
@@ -11,6 +11,8 @@ Changes in version 8.0, 16/05/2022
 * PrimeGenerator.cpp: Improve AVX512 of fillNextPrimes().
 * PrimeGenerator.cpp: Reduce memory usage for tiny stop numbers.
 * PrimeGenerator.hpp: Add GCC/Clang's function multiversioning for AVX512.
+* Erat.cpp: Dynamically grow the sieve size: use a small sieve size for
+  small stop numbers and a large sieve size for large stop numbers.
 * Erat.cpp: Reduce memory usage, allocate the minimum required
   memory to store all sieving primes.
 * CpuInfo.cpp: Detect AVX512 using CPUID.
