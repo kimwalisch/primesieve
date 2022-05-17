@@ -110,7 +110,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       memory.primeGenerator->fillNextPrimes(primes, &size);
 
       // There are 3 different cases here:
-      // 1) The primes array contains a few primes (<= 512).
+      // 1) The primes array contains a few primes (<= 1024).
       //    In this case we return the primes to the user.
       // 2) The primes array is empty because the next
       //    prime > stop. In this case we reset the
