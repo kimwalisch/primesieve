@@ -80,7 +80,7 @@ void Erat::init(uint64_t start,
 
   // Convert KiB to bytes
   maxSieveSize <<= 10;
-  initAlgorithms(memoryPool, maxSieveSize);
+  initAlgorithms(maxSieveSize, memoryPool);
 }
 
 /// EratMedium and EratBig usually run fastest using a sieve
@@ -96,8 +96,8 @@ uint64_t Erat::getL1CacheSize() const
   return inBetween(16 << 10, l1CacheSize, 8192 << 10);
 }
 
-void Erat::initAlgorithms(MemoryPool& memoryPool,
-                          uint64_t maxSieveSize)
+void Erat::initAlgorithms(uint64_t maxSieveSize,
+                          MemoryPool& memoryPool)
 {
   uint64_t l1CacheSize = getL1CacheSize();
   uint64_t minSieveSize = std::min(l1CacheSize, maxSieveSize);
