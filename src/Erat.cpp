@@ -57,7 +57,7 @@ Erat::Erat(uint64_t start, uint64_t stop) :
 
 /// @start: Sieve primes >= start.
 /// @stop:  Sieve primes <= stop.
-/// @maxSieveSize: Maximum sieve array size in bytes.
+/// @maxSieveSize: Maximum sieve array size in kilobytes.
 /// @preSieve: Pre-sieve small primes.
 ///
 void Erat::init(uint64_t start,
@@ -70,15 +70,17 @@ void Erat::init(uint64_t start,
     return;
 
   assert(start >= 7);
-  assert(maxSieveSize >= (16 << 10));
+  assert(maxSieveSize >= 16);
+  assert(maxSieveSize <= 8192);
 
   start_ = start;
   stop_ = stop;
-  sieveSize_ = maxSieveSize;
   preSieve_ = &preSieve;
   maxPreSieve_ = preSieve_->getMaxPrime();
 
-  initAlgorithms(memoryPool);
+  // Convert KiB to bytes
+  maxSieveSize <<= 10;
+  initAlgorithms(memoryPool, maxSieveSize);
 }
 
 /// EratMedium and EratBig usually run fastest using a sieve
@@ -94,10 +96,11 @@ uint64_t Erat::getL1CacheSize() const
   return inBetween(16 << 10, l1CacheSize, 8192 << 10);
 }
 
-void Erat::initAlgorithms(MemoryPool& memoryPool)
+void Erat::initAlgorithms(MemoryPool& memoryPool,
+                          uint64_t maxSieveSize)
 {
   uint64_t l1CacheSize = getL1CacheSize();
-  uint64_t maxSieveSize = std::max(l1CacheSize, sieveSize_);
+  uint64_t minSieveSize = std::min(l1CacheSize, maxSieveSize);
   uint64_t sqrtStop = isqrt(stop_);
 
   // For small stop numbers a small sieve array size that
@@ -105,7 +108,7 @@ void Erat::initAlgorithms(MemoryPool& memoryPool)
   // For larger stop numbers a sieve array size that is
   // within [L1CacheSize, L2CacheSize] usually performs best.
   // The sieve size must satisfy: sieveSize % 8 == 0.
-  sieveSize_ = inBetween(l1CacheSize, sqrtStop, maxSieveSize);
+  sieveSize_ = inBetween(minSieveSize, sqrtStop, maxSieveSize);
   sieveSize_ = inBetween(16 << 10, sieveSize_, 8192 << 10);
   sieveSize_ = ceilDiv(sieveSize_, sizeof(uint64_t)) * sizeof(uint64_t);
 
