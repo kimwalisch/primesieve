@@ -111,12 +111,13 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   sieveSize_ = inBetween(minSieveSize, sqrtStop, maxSieveSize);
   sieveSize_ = inBetween(16 << 10, sieveSize_, 8192 << 10);
   sieveSize_ = ceilDiv(sieveSize_, sizeof(uint64_t)) * sizeof(uint64_t);
+  minSieveSize = std::min(l1CacheSize, sieveSize_);
 
   // Small sieving primes are processed using the EratSmall
   // algorithm, medium sieving primes are processed using
   // the EratMedium algorithm and large sieving primes are
   // processed using the EratBig algorithm.
-  maxEratSmall_ = (uint64_t) (l1CacheSize * config::FACTOR_ERATSMALL);
+  maxEratSmall_ = (uint64_t) (minSieveSize * config::FACTOR_ERATSMALL);
   maxEratMedium_ = (uint64_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
   maxEratSmall_ = std::min(maxEratSmall_, sqrtStop);
   maxEratMedium_ = std::min(maxEratMedium_, sqrtStop);
