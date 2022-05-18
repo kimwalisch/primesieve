@@ -11,14 +11,20 @@
 #ifndef PMATH_HPP
 #define PMATH_HPP
 
-#include "macros.hpp"
-
 #include <stdint.h>
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <limits>
 #include <type_traits>
+
+#if __cplusplus >= 202002L
+  #include <bit>
+#endif
+
+#if !defined(__has_builtin)
+  #define __has_builtin(x) 0
+#endif
 
 namespace {
 
@@ -45,10 +51,25 @@ constexpr T numberOfBits()
 template <typename T>
 inline T floorPow2(T x)
 {
+#if __cplusplus >= 202002L
+  if (x == 0)
+    return 0;
+  auto ux = std::make_unsigned_t<T>(x);
+  return ((T) 1) << (std::bit_width(ux) - 1);
+
+#elif __has_builtin(__builtin_clzll)
+  if (x == 0)
+    return 0;
+  static_assert(sizeof(T) <= sizeof(unsigned long long), "Unsupported type, wider than long long!");
+  auto bits = numberOfBits<unsigned long long>();
+  T ilog2_x = (T) ((bits - 1) - __builtin_clzll(x));
+  return ((T) 1) << ilog2_x;
+
+#else
   for (T i = 1; i < numberOfBits<T>(); i += i)
     x |= (x >> i);
-
   return x - (x >> 1);
+#endif
 }
 
 template <typename T>
