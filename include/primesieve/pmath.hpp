@@ -11,6 +11,8 @@
 #ifndef PMATH_HPP
 #define PMATH_HPP
 
+#include "macros.hpp"
+
 #include <stdint.h>
 #include <algorithm>
 #include <cmath>
@@ -52,6 +54,21 @@ inline T floorPow2(T x)
 template <typename T>
 inline T ilog2(T x)
 {
+#if __cplusplus >= 202002L
+  auto ux = std::make_unsigned_t<T>(x);
+  ux = (ux > 0) ? ux : 1;
+  return std::bit_width(ux) - 1;
+
+#elif __has_builtin(__builtin_clzll)
+  static_assert(sizeof(T) <= sizeof(unsigned long long), "Unsupported type, wider than long long!");
+  auto bits = numberOfBits<unsigned long long>();
+
+  // Workaround to avoid undefined behavior,
+  // __builtin_clz(0) is undefined.
+  x = (x > 0) ? x : 1;
+  return (T) ((bits - 1) - __builtin_clzll(x));
+
+#else
   T log2 = 0;
   T bits = numberOfBits<T>();
 
@@ -66,6 +83,7 @@ inline T ilog2(T x)
   }
 
   return log2;
+#endif
 }
 
 #if __cplusplus >= 201402L
