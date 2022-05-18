@@ -119,16 +119,19 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   // processed using the EratBig algorithm.
   maxEratSmall_ = (uint64_t) (minSieveSize * config::FACTOR_ERATSMALL);
   maxEratMedium_ = (uint64_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
-  maxEratSmall_ = std::min(maxEratSmall_, sqrtStop);
-  maxEratMedium_ = std::min(maxEratMedium_, sqrtStop);
 
   // EratBig requires a power of 2 sieve size
   if (sqrtStop > maxEratMedium_)
   {
     sieveSize_ = floorPow2(sieveSize_);
+    minSieveSize = std::min(l1CacheSize, sieveSize_);
+    maxEratSmall_ = (uint64_t) (minSieveSize * config::FACTOR_ERATSMALL);
     maxEratMedium_ = (uint64_t) (sieveSize_ * config::FACTOR_ERATMEDIUM);
-    maxEratMedium_ = std::min(maxEratMedium_, sqrtStop);
   }
+
+  // Ensure we allocate the smallest possible amount of memory
+  maxEratSmall_ = std::min(maxEratSmall_, sqrtStop);
+  maxEratMedium_ = std::min(maxEratMedium_, sqrtStop);
 
   // The 8 bits of each byte of the sieve array correspond to
   // the offsets { 7, 11, 13, 17, 19, 23, 29, 31 }. If we
