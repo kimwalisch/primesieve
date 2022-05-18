@@ -13,8 +13,8 @@
 #include <primesieve/forward.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/ParallelSieve.hpp>
+#include <primesieve/CountPrintPrimes.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/PrintPrimes.hpp>
 #include <primesieve/PreSieve.hpp>
 
 #include <stdint.h>
@@ -292,8 +292,8 @@ void PrimeSieve::sieve()
 
   if (stop_ >= 7)
   {
-    PrintPrimes printPrimes(*this);
-    printPrimes.sieve();
+    CountPrintPrimes countPrintPrimes(*this);
+    countPrintPrimes.sieve();
   }
 
   auto t2 = std::chrono::system_clock::now();

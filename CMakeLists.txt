@@ -46,6 +46,7 @@ set(BIN_SRC src/app/cmdoptions.cpp
 
 set(LIB_SRC src/api-c.cpp
             src/api.cpp
+            src/CountPrintPrimes.cpp
             src/CpuInfo.cpp
             src/Erat.cpp
             src/EratSmall.cpp
@@ -61,7 +62,6 @@ set(LIB_SRC src/api-c.cpp
             src/ParallelSieve.cpp
             src/popcount.cpp
             src/PreSieve.cpp
-            src/PrintPrimes.cpp
             src/PrimeSieve.cpp
             src/SievingPrimes.cpp)
 

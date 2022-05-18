@@ -1,9 +1,10 @@
 ///
-/// @file   PrintPrimes.cpp
-/// @brief  PrintPrimes is used for printing primes to stdout and for
-///         counting primes. After a segment has been sieved (using
-///         Erat) PrintPrimes is used to reconstruct primes and prime
-///         k-tuplets from 1 bits of the sieve array.
+/// @file   CountPrintPrimes.cpp
+/// @brief  CountPrintPrimes is used for counting primes and for
+///         printing primes to stdout. After a segment has been sieved
+///         (using the parent Erat class) CountPrintPrimes is used
+///         to reconstruct primes and prime k-tuplets from 1 bits of
+///         the sieve array.
 ///
 /// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -11,7 +12,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/PrintPrimes.hpp>
+#include <primesieve/CountPrintPrimes.hpp>
 #include <primesieve/Erat.hpp>
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
@@ -41,7 +42,7 @@ const uint64_t bitmasks[6][5] =
 
 namespace primesieve {
 
-PrintPrimes::PrintPrimes(PrimeSieve& ps) :
+CountPrintPrimes::CountPrintPrimes(PrimeSieve& ps) :
   counts_(ps.getCounts()),
   ps_(ps)
 {
@@ -60,7 +61,7 @@ PrintPrimes::PrintPrimes(PrimeSieve& ps) :
 /// Initialize the lookup tables to count the number
 /// of twins, triplets, ... per byte
 ///
-void PrintPrimes::initCounts()
+void CountPrintPrimes::initCounts()
 {
   for (unsigned i = 1; i < counts_.size(); i++)
   {
@@ -82,7 +83,7 @@ void PrintPrimes::initCounts()
   }
 }
 
-void PrintPrimes::sieve()
+void CountPrintPrimes::sieve()
 {
   uint64_t sieveSize = ps_.getSieveSize();
   SievingPrimes sievingPrimes(this, sieveSize, ps_.getPreSieve(), memoryPool_);
@@ -97,32 +98,27 @@ void PrintPrimes::sieve()
       addSievingPrime(prime);
 
     sieveSegment();
-    print();
+
+    if (ps_.isCountPrimes())
+      countPrimes();
+    if (ps_.isCountkTuplets())
+      countkTuplets();
+    if (ps_.isPrintPrimes())
+      printPrimes();
+    if (ps_.isPrintkTuplets())
+      printkTuplets();
+    if (ps_.isStatus())
+      ps_.updateStatus(sieveSize_ * 30);
   }
 }
 
-/// Executed after each sieved segment
-void PrintPrimes::print()
-{
-  if (ps_.isCountPrimes())
-    countPrimes();
-  if (ps_.isCountkTuplets())
-    countkTuplets();
-  if (ps_.isPrintPrimes())
-    printPrimes();
-  if (ps_.isPrintkTuplets())
-    printkTuplets();
-  if (ps_.isStatus())
-    ps_.updateStatus(sieveSize_ * 30);
-}
-
-void PrintPrimes::countPrimes()
+void CountPrintPrimes::countPrimes()
 {
   uint64_t size = ceilDiv(sieveSize_, 8);
   counts_[0] += popcount((const uint64_t*) sieve_, size);
 }
 
-void PrintPrimes::countkTuplets()
+void CountPrintPrimes::countkTuplets()
 {
   // i = 1 twins, i = 2 triplets, ...
   for (unsigned i = 1; i < counts_.size(); i++)
@@ -145,7 +141,7 @@ void PrintPrimes::countkTuplets()
 }
 
 /// Print primes to stdout
-void PrintPrimes::printPrimes() const
+void CountPrintPrimes::printPrimes() const
 {
   uint64_t i = 0;
   uint64_t low = low_;
@@ -170,7 +166,7 @@ void PrintPrimes::printPrimes() const
 }
 
 /// Print prime k-tuplets to stdout
-void PrintPrimes::printkTuplets() const
+void CountPrintPrimes::printkTuplets() const
 {
   // i = 1 twins, i = 2 triplets, ...
   unsigned i = 1;

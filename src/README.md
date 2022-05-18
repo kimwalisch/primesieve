@@ -60,12 +60,13 @@
   speedup of up to 30% when sieving the primes < 10^10.
 
 * **SievingPrimes** is used to generate the sieving primes ≤ sqrt(stop).
-  SievingPrimes is used by the PrintPrimes and PrimeGenerator classes.
+  SievingPrimes is used by the CountPrintPrimes and PrimeGenerator classes.
 
-* **PrintPrimes** is used for printing primes to stdout and for counting
-  primes. After a segment has been sieved (using Erat) PrintPrimes is used
-  to reconstruct primes and prime k-tuplets from 1 bits of the sieve array.
-  This class is mainly used by the primesieve command-line app.
+* **CountPrintPrimes** is used for counting primes and for printing
+  primes to stdout. After a segment has been sieved (using Erat)
+  CountPrintPrimes is used to reconstruct primes and prime k-tuplets
+  from 1 bits of the sieve array. This class is mainly used by the
+  primesieve command-line app.
 
 * **PrimeGenerator** is derived from Erat. ```primesieve::iterator``` uses
   PrimeGenerator under the hood: PrimeGenerator generates a few primes
