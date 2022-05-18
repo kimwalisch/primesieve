@@ -68,7 +68,7 @@ private:
   EratBig eratBig_;
   EratMedium eratMedium_;
   static uint64_t byteRemainder(uint64_t);
-  uint64_t getL1CacheSize() const;
+  static uint64_t getL1CacheSize();
   void initAlgorithms(uint64_t maxSieveSize, MemoryPool&);
   void preSieve();
   void crossOff();
