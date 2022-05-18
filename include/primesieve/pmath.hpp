@@ -86,59 +86,6 @@ inline T ilog2(T x)
 #endif
 }
 
-#if __cplusplus >= 201402L
-
-/// C++14 compile time square root using binary search
-template <typename T>
-constexpr T ctSqrt(T x, T lo, T hi)
-{
-  if (lo == hi)
-    return lo;
-
-  const T mid = (lo + hi + 1) / 2;
-
-  if (x / mid < mid)
-    return ctSqrt<T>(x, lo, mid - 1);
-  else
-    return ctSqrt(x, mid, hi);
-}
-
-#else
-
-#define MID ((lo + hi + 1) / 2)
-
-/// C++11 compile time square root using binary search
-template <typename T>
-constexpr T ctSqrt(T x, T lo, T hi)
-{
-  return lo == hi ? lo : ((x / MID < MID)
-      ? ctSqrt<T>(x, lo, MID - 1) : ctSqrt<T>(x, MID, hi));
-}
-
-#endif
-
-template <typename T>
-constexpr T ctSqrt(T x)
-{
-  return ctSqrt<T>(x, 0, x / 2 + 1);
-}
-
-template <typename T>
-inline T isqrt(T x)
-{
-  T r = (T) std::sqrt((double) x);
-
-  constexpr T maxSqrt = ctSqrt(std::numeric_limits<T>::max());
-  r = std::min(r, maxSqrt);
-
-  while (r * r > x)
-    r--;
-  while (x - r * r > r * 2)
-    r++;
-
-  return r;
-}
-
 /// Returns 2^64-1 if (x + y) > 2^64-1
 inline uint64_t checkedAdd(uint64_t x, uint64_t y)
 {
@@ -210,6 +157,121 @@ inline T maxPrimeGap(T n)
   double prime_gap = logx * logx;
 
   return (T) prime_gap;
+}
+
+#if __cplusplus >= 202002L
+
+/// C++20 compile time square root using binary search
+template <typename T>
+consteval T ctSqrt(T x, T lo, T hi)
+{
+  if (lo == hi)
+    return lo;
+
+  const T mid = (lo + hi + 1) / 2;
+
+  if (x / mid < mid)
+    return ctSqrt<T>(x, lo, mid - 1);
+  else
+    return ctSqrt(x, mid, hi);
+}
+
+template <typename T>
+consteval T ctSqrt(T x)
+{
+  return ctSqrt<T>(x, 0, x / 2 + 1);
+}
+
+#elif __cplusplus >= 201402L
+
+/// C++14 compile time square root using binary search
+template <typename T>
+constexpr T ctSqrt(T x, T lo, T hi)
+{
+  if (lo == hi)
+    return lo;
+
+  const T mid = (lo + hi + 1) / 2;
+
+  if (x / mid < mid)
+    return ctSqrt<T>(x, lo, mid - 1);
+  else
+    return ctSqrt(x, mid, hi);
+}
+
+template <typename T>
+constexpr T ctSqrt(T x)
+{
+  return ctSqrt<T>(x, 0, x / 2 + 1);
+}
+
+#else
+
+#define MID ((lo + hi + 1) / 2)
+
+/// C++11 compile time square root using binary search
+template <typename T>
+constexpr T ctSqrt(T x, T lo, T hi)
+{
+  return lo == hi ? lo : ((x / MID < MID)
+      ? ctSqrt<T>(x, lo, MID - 1) : ctSqrt<T>(x, MID, hi));
+}
+
+template <typename T>
+constexpr T ctSqrt(T x)
+{
+  return ctSqrt<T>(x, 0, x / 2 + 1);
+}
+
+#endif
+
+template <typename T>
+inline T isqrt(T x)
+{
+  T s = (T) std::sqrt((double) x);
+
+  // By using constexpr for the sqrt_max variable type it
+  // is guaranteed that ctSqrt() is evaluated at compile
+  // time. Compilation will fail if the compiler fails to
+  // evaluate ctSqrt() at compile time. This is great,
+  // ctSqrt() must be evaluated at compile time otherwise
+  // the runtime complexity of isqrt(x) would deteriorate
+  // from O(1) to O(log2(x)).
+  //
+  // If sqrt_max were declared without constexpr then the
+  // compiler would be free to compute ctSqrt() either at
+  // compile time or at run time e.g. GCC-11 computes
+  // ctSqrt(MAX_INT128) at compile time whereas Clang-12
+  // computes ctSqrt(MAX_INT128) at run time even at -O2.
+  //
+  // C++20 fixed this annoying issue by adding consteval
+  // to C++. Hence if the compiler supports C++20 ctSqrt()
+  // is defined as consteval instead of constexpr. Hence
+  // using C++20 ctSqrt() will be evaluated at compile
+  // time in all cases i.e. even if sqrt_max were declared
+  // without constexpr.
+  //
+  constexpr T sqrt_max = ctSqrt(std::numeric_limits<T>::max());
+  T r = std::min(s, sqrt_max);
+
+  // In my tests the first corrections were needed above
+  // 10^22 where the results were off by 1. Above 10^32 the
+  // first results occurred that were off by > 1. Since
+  // primecount only supports numbers up to 10^31 this is
+  // not an issue for us.
+  if (r * r > x)
+  {
+    do { r--; }
+    while (r * r > x);
+  }
+  // Same as (r + 1)^2 < x but overflow safe
+  else if (r * 2 < x - r * r)
+  {
+    do { r++; }
+    while (r * 2 < x - r * r);
+  }
+
+  return r;
 }
 
 } // namespace
