@@ -17,6 +17,7 @@
 #include <stdint.h>
 #include <cerrno>
 #include <exception>
+#include <limits>
 #include <iostream>
 
 namespace {
