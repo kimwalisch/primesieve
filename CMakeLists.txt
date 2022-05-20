@@ -13,7 +13,7 @@ option(BUILD_MANPAGE     "Regenerate man page using a2x" OFF)
 option(BUILD_EXAMPLES    "Build example programs"        OFF)
 option(BUILD_TESTS       "Build test programs"           OFF)
 
-option(ENABLE_AVX512 "Enable runtime AVX512 dispatching on x64 CPUs" ON)
+option(WITH_MULTIARCH       "Enable runtime dispatching to fastest supported CPU instruction set" ON)
 option(WITH_MSVC_CRT_STATIC "Link primesieve.lib with /MT instead of the default /MD" OFF)
 
 # libprimesieve sanity check #########################################
@@ -129,7 +129,7 @@ cmake_pop_check_state()
 
 # Check if the compiler supports AVX512 ##############################
 
-if(ENABLE_AVX512)
+if(WITH_MULTIARCH)
     # We use GCC/Clang's function multi-versioning for AVX512
     # support. This code will automatically dispatch to the
     # AVX512 algorithm if the CPU supports AVX512 and use the
