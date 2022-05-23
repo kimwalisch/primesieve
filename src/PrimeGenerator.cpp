@@ -394,7 +394,7 @@ void PrimeGenerator::fillPrevPrimes(pod_vector<uint64_t>& primes,
 }
 
 /// This method is used by iterator::next_prime().
-/// This method stores only the next few primes (~ 500) in the
+/// This method stores only the next few primes (~ 1000) in the
 /// primes vector. Also for iterator::next_prime() there is no
 /// recurring initialization overhead (unlike prev_prime()) for
 /// this reason iterator::next_prime() runs up to 2x faster
