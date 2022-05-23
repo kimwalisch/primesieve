@@ -6,10 +6,11 @@ set(CMAKE_REQUIRED_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 check_cxx_source_compiles("
     // We need to ensure this code snippet fails on non x64 CPUs
+    // (and not simply print a compiler warning).
     #if !defined(__x86_64__)
         Error: not x86-64
     #endif
-    #if defined(__x86_64__) && defined(__POPCNT__) && defined(__BMI__)
+    #if defined(__POPCNT__) && defined(__BMI__)
         Error: multiarch_popcnt_bmi not needed
     #endif
     #include <primesieve/intrinsics.hpp>
