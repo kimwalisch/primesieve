@@ -34,15 +34,22 @@ public:
   void fillPrevPrimes(pod_vector<uint64_t>& primes, std::size_t* size);
   static uint64_t maxCachedPrime();
 
-#if defined(ENABLE_AVX512)
-  #define FILLNEXTPRIMES_FUNCTION_MULTIVERSIONING
-  __attribute__ ((target ("default")))
-  void fillNextPrimes(pod_vector<uint64_t>& primes, std::size_t* size);
-  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
-  void fillNextPrimes(pod_vector<uint64_t>& primes, std::size_t* size);
-#else
+#if defined(MULTIARCH_POPCNT_BMI)
+  #define MULTIARCH
+  __attribute__ ((target ("popcnt,bmi")))
   void fillNextPrimes(pod_vector<uint64_t>& primes, std::size_t* size);
 #endif
+
+#if defined(MULTIARCH_AVX512)
+  #define MULTIARCH
+  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
+  void fillNextPrimes(pod_vector<uint64_t>& primes, std::size_t* size);
+#endif
+
+#if defined(MULTIARCH)
+  __attribute__ ((target ("default")))
+#endif
+  void fillNextPrimes(pod_vector<uint64_t>& primes, std::size_t* size);
 
 private:
   bool isInit_ = false;

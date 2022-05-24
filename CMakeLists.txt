@@ -68,8 +68,6 @@ set(LIB_SRC src/api-c.cpp
 # Required includes ##################################################
 
 include(GNUInstallDirs)
-include(CMakePushCheckState)
-include(CheckCXXSourceCompiles)
 include(CMakePackageConfigHelpers)
 
 # MSVC DLL support (Windows) #########################################
@@ -82,91 +80,15 @@ if(WIN32 AND NOT MINGW)
     endif()
 endif()
 
-# Check if libatomic is needed #######################################
+# Check if libatomic is needed (old 32-bit systems) ##################
 
-cmake_push_check_state()
+include("${PROJECT_SOURCE_DIR}/cmake/libatomic.cmake")
 
-if(CMAKE_CXX11_STANDARD_COMPILE_OPTION)
-    set(CMAKE_REQUIRED_FLAGS ${CMAKE_CXX11_STANDARD_COMPILE_OPTION})
-endif()
-
-check_cxx_source_compiles("
-    #include <atomic>
-    #include <stdint.h>
-    int main() {
-        std::atomic<int64_t> x;
-        x = 1;
-        x--;
-        return (int) x;
-    }"
-    atomic64)
-
-if(NOT atomic64)
-    find_library(ATOMIC NAMES atomic libatomic.so.1)
-
-    if(ATOMIC)
-        set(LIBATOMIC ${ATOMIC})
-        message(STATUS "Found libatomic: ${LIBATOMIC}")
-    else()
-        check_cxx_source_compiles("
-            #include <atomic>
-            #include <stdint.h>
-            int main() {
-                std::atomic<int32_t> x;
-                x = 1;
-                x--;
-                return (int) x;
-            }"
-            atomic32)
-
-        if(atomic32)
-            message(FATAL_ERROR "Failed to find libatomic!")
-        endif()
-    endif()
-endif()
-
-cmake_pop_check_state()
-
-# Check if the compiler supports AVX512 ##############################
+# Check if compiler supports x64 multiarch ###########################
 
 if(WITH_MULTIARCH)
-    # We use GCC/Clang's function multi-versioning for AVX512
-    # support. This code will automatically dispatch to the
-    # AVX512 algorithm if the CPU supports AVX512 and use the
-    # default (portable) algorithm otherwise.
-    check_cxx_source_compiles("
-        #include <immintrin.h>
-        #include <stdint.h>
-        class PrimeGenerator {
-          public:
-            __attribute__ ((target (\"default\")))
-            void fillNextPrimes(uint64_t* primes64);
-            __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
-            void fillNextPrimes(uint64_t* primes64);
-        };
-        __attribute__ ((target (\"default\")))
-        void PrimeGenerator::fillNextPrimes(uint64_t* primes64)
-        {
-            primes64[0] = 2;
-        }
-        __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
-        void PrimeGenerator::fillNextPrimes(uint64_t* primes64)
-        {
-            __m512i bytes_0_to_7 = _mm512_setr_epi64(0, 1, 2, 3, 4, 5, 6, 7);
-            __m512i base = _mm512_set1_epi64(123);
-            __m512i bitValues = _mm512_maskz_compress_epi8(0xffff, base);
-            __m512i vprimes = _mm512_maskz_permutexvar_epi8(0x0101010101010101ull, bytes_0_to_7, bitValues);
-            vprimes = _mm512_add_epi64(base, vprimes);
-            _mm512_storeu_si512(primes64, vprimes);
-        }
-        int main()
-        {
-            uint64_t primes[8];
-            PrimeGenerator p;
-            p.fillNextPrimes(primes);
-            return 0;
-        }
-    " compiler_supports_avx512)
+    include("${PROJECT_SOURCE_DIR}/cmake/multiarch_popcnt_bmi.cmake")
+    include("${PROJECT_SOURCE_DIR}/cmake/multiarch_avx512.cmake")
 endif()
 
 # libprimesieve (shared library) #####################################
@@ -182,8 +104,11 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
 
-    if(compiler_supports_avx512)
-        target_compile_definitions(libprimesieve PRIVATE "ENABLE_AVX512")
+    if(multiarch_popcnt_bmi)
+        target_compile_definitions(libprimesieve PRIVATE "MULTIARCH_POPCNT_BMI")
+    endif()
+    if(multiarch_avx512)
+        target_compile_definitions(libprimesieve PRIVATE "MULTIARCH_AVX512")
     endif()
 
     if(WIN32_MSVC_COMPATIBLE)
@@ -222,8 +147,11 @@ if(BUILD_STATIC_LIBS)
     set_target_properties(libprimesieve-static PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${LIBATOMIC})
 
-    if(compiler_supports_avx512)
-        target_compile_definitions(libprimesieve-static PRIVATE "ENABLE_AVX512")
+    if(multiarch_popcnt_bmi)
+        target_compile_definitions(libprimesieve-static PRIVATE "MULTIARCH_POPCNT_BMI")
+    endif()
+    if(multiarch_avx512)
+        target_compile_definitions(libprimesieve-static PRIVATE "MULTIARCH_AVX512")
     endif()
 
     if(WITH_MSVC_CRT_STATIC)
@@ -282,8 +210,8 @@ if(BUILD_PRIMESIEVE)
     target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-    if(compiler_supports_avx512)
-        target_compile_definitions(primesieve PRIVATE "ENABLE_AVX512")
+    if(multiarch_avx512)
+        target_compile_definitions(primesieve PRIVATE "MULTIARCH_AVX512")
     endif()
 
     if(WITH_MSVC_CRT_STATIC)

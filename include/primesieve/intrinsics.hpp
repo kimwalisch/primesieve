@@ -79,8 +79,7 @@ inline int popcnt64(uint64_t x)
 
 #if (defined(__GNUC__) || \
      defined(__clang__)) && \
-     defined(__x86_64__) && \
-    (defined(__BMI__) || (defined(_MSC_VER) && defined(__AVX2__)))
+     defined(__x86_64__)
 
 #define HAS_CTZ64
 #define CTZ64_SUPPORTS_ZERO
@@ -89,25 +88,11 @@ namespace {
 
 inline uint64_t ctz64(uint64_t x)
 {
+#if defined(__BMI__) || (defined(_MSC_VER) && defined(__AVX2__))
   // No undefined behavior, tzcnt(0) = 64
   __asm__("tzcnt %1, %0" : "=r"(x) : "r"(x));
   return x;
-}
-
-} // namespace
-
-#elif (defined(__GNUC__) || \
-       defined(__clang__)) && \
-       defined(__x86_64__) && \
-      !defined(__BMI__)
-
-#define HAS_CTZ64
-#define CTZ64_SUPPORTS_ZERO
-
-namespace {
-
-inline uint64_t ctz64(uint64_t x)
-{
+#else
   // REP BSF uses the TZCNT instruction on x64 CPUs with the BMI1
   // instruction set (>= 2013) and the BSF instruction on older x64
   // CPUs. BSF(0) is undefined behavior, it leaves the destination
@@ -126,20 +111,10 @@ inline uint64_t ctz64(uint64_t x)
   __asm__("rep bsf %1, %0" : "=r"(x) : "0"(x));
   assert(x <= 64);
   return x;
+#endif
 }
 
 } // namespace
-
-#elif defined(_MSC_VER) && \
-      defined(_M_X64) && \
-      defined(__AVX2__) && \
-      __has_include(<immintrin.h>)
-
-#define HAS_CTZ64
-#define CTZ64_SUPPORTS_ZERO
-
-// No undefined behavior, _tzcnt_u64(0) = 64
-#define ctz64(x) _tzcnt_u64(x)
 
 #elif (defined(__GNUC__) || \
        defined(__clang__)) && \
@@ -164,6 +139,18 @@ inline uint64_t ctz64(uint64_t x)
 
 } // namespace
 
+#elif defined(_MSC_VER) && \
+      defined(_M_X64) && \
+      defined(__AVX2__) && \
+      __has_include(<immintrin.h>)
+
+#include <immintrin.h>
+#define HAS_CTZ64
+#define CTZ64_SUPPORTS_ZERO
+
+// No undefined behavior, _tzcnt_u64(0) = 64
+#define ctz64(x) _tzcnt_u64(x)
+
 // In 2022 std::countr_zero() causes performance issues in many
 // cases, especially on x64 CPUs. Therefore we try to use alternative
 // compiler intrinsics or inline assembly whenever possible.
@@ -172,7 +159,6 @@ inline uint64_t ctz64(uint64_t x)
       !(defined(_MSC_VER) && defined(_M_X64))
 
 #include <bit>
-
 #define HAS_CTZ64
 #define CTZ64_SUPPORTS_ZERO
 

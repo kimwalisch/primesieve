@@ -34,7 +34,7 @@
 #include <cassert>
 #include <limits>
 
-#if defined(ENABLE_AVX512)
+#if defined(MULTIARCH_AVX512)
   #include <immintrin.h>
 #endif
 
@@ -394,13 +394,13 @@ void PrimeGenerator::fillPrevPrimes(pod_vector<uint64_t>& primes,
 }
 
 /// This method is used by iterator::next_prime().
-/// This method stores only the next few primes (~ 500) in the
+/// This method stores only the next few primes (~ 1000) in the
 /// primes vector. Also for iterator::next_prime() there is no
 /// recurring initialization overhead (unlike prev_prime()) for
 /// this reason iterator::next_prime() runs up to 2x faster
 /// than iterator::prev_prime().
 ///
-#if defined(FILLNEXTPRIMES_FUNCTION_MULTIVERSIONING)
+#if defined(MULTIARCH)
   __attribute__ ((target ("default")))
 #endif
 void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
@@ -456,7 +456,69 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
   while (*size == 0);
 }
 
-#if defined(ENABLE_AVX512)
+#if defined(MULTIARCH_POPCNT_BMI)
+
+/// This algorithm is identical to the default fillNextPrimes()
+/// method, except that the POPCNT & BMI instruction sets (x64 CPUs)
+/// have been enabled which should provide up to 10% speedup.
+///
+__attribute__ ((target ("popcnt,bmi")))
+void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
+                                    std::size_t* size)
+{
+  do
+  {
+    if (sieveIdx_ >= sieveSize_)
+      if (!sieveNextPrimes(primes, size))
+        return;
+
+    // Use local variables to prevent the compiler from
+    // writing temporary results to memory.
+    std::size_t i = *size;
+    std::size_t maxSize = primes.size();
+    assert(i + 64 <= maxSize);
+    uint64_t low = low_;
+    uint64_t sieveIdx = sieveIdx_;
+    uint64_t sieveSize = sieveSize_;
+    uint8_t* sieve = sieve_;
+
+    // Fill the buffer with at least (maxSize - 64) primes.
+    // Each loop iteration can generate up to 64 primes
+    // so we have to stop generating primes once there is
+    // not enough space for 64 more primes.
+    do
+    {
+      uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
+      std::size_t j = i;
+      i += popcnt64(bits);
+
+      do
+      {
+        assert(j + 4 < maxSize);
+        primes[j+0] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+1] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+2] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+3] = nextPrime(bits, low); bits &= bits - 1;
+        j += 4;
+      }
+      while (j < i);
+
+      low += 8 * 30;
+      sieveIdx += 8;
+    }
+    while (i <= maxSize - 64 &&
+           sieveIdx < sieveSize);
+
+    low_ = low;
+    sieveIdx_ = sieveIdx;
+    *size = i;
+  }
+  while (*size == 0);
+}
+
+#endif
+
+#if defined(MULTIARCH_AVX512)
 
 /// This algorithm converts 1 bits from the sieve array into primes
 /// using AVX512. The algorithm is a modified version of the AVX512
