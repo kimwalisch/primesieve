@@ -12,7 +12,7 @@ check_cxx_source_compiles("
     #if defined(__POPCNT__) && defined(__BMI__)
         Error: multiarch_popcnt_bmi not needed!
     #endif
-    #if defined(__GNUC__)
+    #if defined(__GNUC__) && !defined(__clang__) && !defined(_MSC_VER)
         #if __GNUC__ <= 5
             Error: The linker does not support function multiversioning
                    for shared libraries.
