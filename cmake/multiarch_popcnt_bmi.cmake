@@ -13,9 +13,11 @@ check_cxx_source_compiles("
         Error: multiarch_popcnt_bmi not needed!
     #endif
     #if defined(__GNUC__) && !defined(__clang__) && !defined(_MSC_VER)
-        #if __GNUC__ <= 5
-            Error: The linker does not support function multiversioning
-                   for shared libraries.
+        #if __GNUC__ <= 8
+            Error: The GCC5 linker does not support function
+                   multiversioning for shared libraries.
+                   GCC6, GCC7 & GCC8 may cause duplicate symbol
+                   definitions in debug builds.
         #endif
     #endif
 
