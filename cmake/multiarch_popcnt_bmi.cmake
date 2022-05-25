@@ -38,10 +38,10 @@ check_cxx_source_compiles("
     {
         uint64_t bits = 789;
         uint64_t count = popcnt64(bits);
-        if (count > 0) primes64[0] = ctz64(bits); bits &= bits - 1;
-        if (count > 1) primes64[1] = ctz64(bits); bits &= bits - 1;
-        if (count > 2) primes64[2] = ctz64(bits); bits &= bits - 1;
-        if (count > 3) primes64[3] = ctz64(bits); bits &= bits - 1;
+        if (count > 0) { primes64[0] = ctz64(bits); bits &= bits - 1; }
+        if (count > 1) { primes64[1] = ctz64(bits); bits &= bits - 1; }
+        if (count > 2) { primes64[2] = ctz64(bits); bits &= bits - 1; }
+        if (count > 3) { primes64[3] = ctz64(bits); bits &= bits - 1; }
     }
     int main()
     {
