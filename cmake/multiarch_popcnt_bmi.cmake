@@ -5,14 +5,20 @@ cmake_push_check_state()
 set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}/include")
 
 check_cxx_source_compiles("
-    // We need to ensure this code snippet fails on non x64 CPUs
-    // (and not simply print a compiler warning).
     #if !defined(__x86_64__)
-        Error: not x86-64
+        Error: We need to ensure this code snippet fails on non x64
+               CPUs (and not simply print a compiler warning).
     #endif
     #if defined(__POPCNT__) && defined(__BMI__)
-        Error: multiarch_popcnt_bmi not needed
+        Error: multiarch_popcnt_bmi not needed!
     #endif
+    #if defined(__GNUC__)
+        #if __GNUC__ <= 5
+            Error: The linker does not support function multiversioning
+                   for shared libraries.
+        #endif
+    #endif
+
     #include <primesieve/intrinsics.hpp>
     #include <stdint.h>
     class PrimeGenerator {
