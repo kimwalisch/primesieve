@@ -96,9 +96,31 @@ inline int popcnt64(uint64_t x)
   #define HAS_TZCNT
 #endif
 
-#if (defined(__GNUC__) || \
-     defined(__clang__)) && \
-     defined(__x86_64__)
+// In 2022 std::countr_zero(x) generates good assembly for
+// most compilers & CPU architectures, except for:
+// 1) GCC & Clang on x64 without __BMI__.
+// 2) MSVC on x64 without __AVX2__.
+// Hence we avoid using std::countr_zero(x) in those 2 cases.
+#if defined(HAS_CPP20_BIT_HEADER) && \
+ ((!defined(__x86_64__) && !defined(_M_X64)) || \
+    defined(HAS_TZCNT))
+
+#define HAS_CTZ64
+#define CTZ64_SUPPORTS_ZERO
+
+namespace {
+
+inline int ctz64(uint64_t x)
+{
+  // No undefined behavior, std::countr_zero(0) = 64
+  return std::countr_zero(x);
+}
+
+} // namespace
+
+#elif (defined(__GNUC__) || \
+       defined(__clang__)) && \
+       defined(__x86_64__)
 
 #define HAS_CTZ64
 #define CTZ64_SUPPORTS_ZERO
@@ -107,10 +129,7 @@ namespace {
 
 inline uint64_t ctz64(uint64_t x)
 {
-#if defined(HAS_TZCNT) && defined(HAS_CPP20_BIT_HEADER)
-  // This generates the TZCNT instruction
-  return std::countr_zero(x);
-#elif defined(HAS_TZCNT)
+#if defined(HAS_TZCNT)
   // No undefined behavior, TZCNT(0) = 64
   __asm__("tzcnt %1, %0" : "=r"(x) : "r"(x));
   return x;
@@ -149,18 +168,14 @@ namespace {
 
 inline uint64_t ctz64(uint64_t x)
 {
-#if defined(HAS_CPP20_BIT_HEADER)
-  // This generates the same assembly as below
-  return std::countr_zero(x);
-#else
   // No undefined behavior, CTZ(0) = 64.
   // ARM64 has no CTZ instruction, we have to emulate it.
   __asm__("rbit %0, %1 \n\t"
           "clz %0, %0  \n\t"
           : "=r" (x)
           : "r" (x));
+
   return x;
-#endif
 }
 
 } // namespace
@@ -177,27 +192,6 @@ inline uint64_t ctz64(uint64_t x)
 // without C++20 support, hence without std::countr_zero(x).
 // No undefined behavior, _tzcnt_u64(0) = 64.
 #define ctz64(x) _tzcnt_u64(x)
-
-#elif defined(HAS_CPP20_BIT_HEADER) && \
-   ((!defined(__x86_64__) && !defined(_M_X64)) || \
-      defined(HAS_TZCNT))
-
-#define HAS_CTZ64
-#define CTZ64_SUPPORTS_ZERO
-
-namespace {
-
-inline int ctz64(uint64_t x)
-{
-  // In 2022 std::countr_zero(x) generates good assembly for
-  // most compilers & CPU architectures, except for:
-  // 1) MSVC on x64 without __AVX2__.
-  // 2) GCC/Clang on x64 without __BMI__.
-  // Hence we avoid using std::countr_zero(x) in those 2 cases.
-  return std::countr_zero(x);
-}
-
-} // namespace
 
 #elif defined(__GNUC__) || \
       __has_builtin(__builtin_ctzl)
