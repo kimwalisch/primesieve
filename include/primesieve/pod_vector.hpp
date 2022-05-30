@@ -173,14 +173,14 @@ public:
   ALWAYS_INLINE void push_back(const T& value)
   {
     if_unlikely(end_ >= capacity_)
-      reserve((std::size_t)((size() + 1) * 1.5));
+      reserve(capacity() * 2);
     *end_++ = value;
   }
 
   ALWAYS_INLINE void push_back(T&& value)
   {
     if_unlikely(end_ >= capacity_)
-      reserve((std::size_t)((size() + 1) * 1.5));
+      reserve(capacity() * 2);
     *end_++ = value;
   }
 
@@ -188,7 +188,7 @@ public:
   ALWAYS_INLINE void emplace_back(Args&&... args)
   {
     if_unlikely(end_ >= capacity_)
-      reserve((std::size_t)((size() + 1) * 1.5));
+      reserve(capacity() * 2);
     *end_++ = T(std::forward<Args>(args)...);
   }
 
@@ -236,6 +236,13 @@ public:
     }
     else
     {
+      // GCC & Clang's std::vector grow the capacity by at least
+      // 2x for every call to resize() with n > capacity(). We
+      // grow by at least 1.5x as we tend to accurately calculate
+      // the amount of memory we need upfront.
+      assert(n > capacity());
+      n = std::max(n, (std::size_t)(capacity() * 1.5));
+
       // This default initializes memory of classes and
       // structs with constructors. But it does not default
       // initialize memory for POD types like int, long.
