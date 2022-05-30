@@ -173,14 +173,14 @@ public:
   ALWAYS_INLINE void push_back(const T& value)
   {
     if_unlikely(end_ >= capacity_)
-      reserve(capacity() * 2);
+      reserve(std::max((std::size_t) 1, capacity() * 2));
     *end_++ = value;
   }
 
   ALWAYS_INLINE void push_back(T&& value)
   {
     if_unlikely(end_ >= capacity_)
-      reserve(capacity() * 2);
+      reserve(std::max((std::size_t) 1, capacity() * 2));
     *end_++ = value;
   }
 
@@ -188,7 +188,7 @@ public:
   ALWAYS_INLINE void emplace_back(Args&&... args)
   {
     if_unlikely(end_ >= capacity_)
-      reserve(capacity() * 2);
+      reserve(std::max((std::size_t) 1, capacity() * 2));
     *end_++ = T(std::forward<Args>(args)...);
   }
 
