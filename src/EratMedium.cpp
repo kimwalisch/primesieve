@@ -76,12 +76,11 @@ void EratMedium::storeSievingPrime(uint64_t prime,
   buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);
 }
 
-void EratMedium::crossOff(uint8_t* sieve, uint64_t sieveSize)
+void EratMedium::crossOff(pod_vector<uint8_t>& sieve)
 {
   // Make a copy of buckets, then reset it
   auto buckets = buckets_;
   buckets_.fill(nullptr);
-  uint8_t* sieveEnd = sieve + sieveSize;
 
   // Iterate over the 64 bucket lists.
   // The 1st list contains sieving primes with wheelIndex = 0.
@@ -104,14 +103,14 @@ void EratMedium::crossOff(uint8_t* sieve, uint64_t sieveSize)
     {
       switch (wheelIndex / 8)
       {
-        case 0: crossOff_7 (sieve, sieveEnd, bucket); break;
-        case 1: crossOff_11(sieve, sieveEnd, bucket); break;
-        case 2: crossOff_13(sieve, sieveEnd, bucket); break;
-        case 3: crossOff_17(sieve, sieveEnd, bucket); break;
-        case 4: crossOff_19(sieve, sieveEnd, bucket); break;
-        case 5: crossOff_23(sieve, sieveEnd, bucket); break;
-        case 6: crossOff_29(sieve, sieveEnd, bucket); break;
-        case 7: crossOff_31(sieve, sieveEnd, bucket); break;
+        case 0: crossOff_7 (sieve.begin(), sieve.end(), bucket); break;
+        case 1: crossOff_11(sieve.begin(), sieve.end(), bucket); break;
+        case 2: crossOff_13(sieve.begin(), sieve.end(), bucket); break;
+        case 3: crossOff_17(sieve.begin(), sieve.end(), bucket); break;
+        case 4: crossOff_19(sieve.begin(), sieve.end(), bucket); break;
+        case 5: crossOff_23(sieve.begin(), sieve.end(), bucket); break;
+        case 6: crossOff_29(sieve.begin(), sieve.end(), bucket); break;
+        case 7: crossOff_31(sieve.begin(), sieve.end(), bucket); break;
         default: UNREACHABLE;
       }
 

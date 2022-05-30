@@ -16,10 +16,10 @@
 #include "EratBig.hpp"
 #include "macros.hpp"
 #include "intrinsics.hpp"
+#include "pod_vector.hpp"
 
 #include <stdint.h>
 #include <array>
-#include <memory>
 
 namespace primesieve {
 
@@ -42,14 +42,12 @@ protected:
   uint64_t start_ = 0;
   /// Sieve primes <= stop_
   uint64_t stop_ = 0;
-  /// Size of sieve_ array in bytes
-  uint64_t sieveSize_ = 0;
   /// Lower bound of the current segment
   uint64_t segmentLow_ = ~0ull;
   /// Upper bound of the current segment
   uint64_t segmentHigh_ = 0;
   /// Sieve of Eratosthenes array
-  uint8_t* sieve_ = nullptr;
+  pod_vector<uint8_t> sieve_;
   Erat() = default;
   Erat(uint64_t, uint64_t);
   void init(uint64_t, uint64_t, uint64_t, PreSieve&, MemoryPool& memoryPool);
@@ -62,7 +60,6 @@ private:
   uint64_t maxPreSieve_ = 0;
   uint64_t maxEratSmall_ = 0;
   uint64_t maxEratMedium_ = 0;
-  std::unique_ptr<uint8_t[]> deleter_;
   PreSieve* preSieve_ = nullptr;
   EratSmall eratSmall_;
   EratBig eratBig_;

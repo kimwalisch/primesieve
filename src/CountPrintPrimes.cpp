@@ -108,14 +108,14 @@ void CountPrintPrimes::sieve()
     if (ps_.isPrintkTuplets())
       printkTuplets();
     if (ps_.isStatus())
-      ps_.updateStatus(sieveSize_ * 30);
+      ps_.updateStatus(sieve_.size() * 30);
   }
 }
 
 void CountPrintPrimes::countPrimes()
 {
-  uint64_t size = ceilDiv(sieveSize_, 8);
-  counts_[0] += popcount((const uint64_t*) sieve_, size);
+  uint64_t size = ceilDiv(sieve_.size(), 8);
+  counts_[0] += popcount((const uint64_t*) sieve_.data(), size);
 }
 
 void CountPrintPrimes::countkTuplets()
@@ -128,7 +128,7 @@ void CountPrintPrimes::countkTuplets()
 
     uint64_t sum = 0;
 
-    for (uint64_t j = 0; j < sieveSize_; j += 4)
+    for (uint64_t j = 0; j < sieve_.size(); j += 4)
     {
       sum += kCounts_[i][sieve_[j+0]];
       sum += kCounts_[i][sieve_[j+1]];
@@ -143,13 +143,13 @@ void CountPrintPrimes::countkTuplets()
 /// Print primes to stdout
 void CountPrintPrimes::printPrimes() const
 {
-  uint64_t i = 0;
   uint64_t low = low_;
+  std::size_t i = 0;
 
-  while (i < sieveSize_)
+  while (i < sieve_.size())
   {
-    uint64_t size = i + (1 << 16);
-    size = std::min(size, sieveSize_);
+    std::size_t size = i + (1 << 16);
+    size = std::min(size, sieve_.size());
     std::ostringstream primes;
 
     for (; i < size; i += 8)
@@ -176,7 +176,7 @@ void CountPrintPrimes::printkTuplets() const
   while (!ps_.isPrint(i))
     i++;
 
-  for (uint64_t j = 0; j < sieveSize_; j++, low += 30)
+  for (std::size_t j = 0; j < sieve_.size(); j++, low += 30)
   {
     for (auto* bitmask = bitmasks[i]; *bitmask <= sieve_[j]; bitmask++)
     {

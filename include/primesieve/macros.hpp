@@ -22,6 +22,14 @@
   #define __has_cpp_attribute(x) 0
 #endif
 
+#if __has_attribute(always_inline)
+  #define ALWAYS_INLINE __attribute__((always_inline)) inline
+#elif defined(_MSC_VER)
+  #define ALWAYS_INLINE __forceinline
+#else
+  #define ALWAYS_INLINE
+#endif
+
 /// Some functions in primesieve use a large number of variables
 /// at the same time. If such functions are inlined then
 /// performance drops because not all variables fit into registers

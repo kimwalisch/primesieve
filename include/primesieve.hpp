@@ -22,41 +22,54 @@
 #include <primesieve/StorePrimes.hpp>
 
 #include <stdint.h>
-#include <vector>
 #include <string>
 
 /// Contains primesieve's C++ functions and classes.
 namespace primesieve {
 
 /// Store the primes <= stop in the primes vector.
-template <typename T>
-inline void generate_primes(uint64_t stop, std::vector<T>* primes)
+/// @vect: std::vector or other vector type that is API compatible
+///        with std::vector (must implement size(), reserve(),
+///        push_back() and value_type).
+///
+template <typename vect>
+inline void generate_primes(uint64_t stop, vect* primes)
 {
   if (primes)
     store_primes(0, stop, *primes);
 }
 
-/// Store the primes within the interval [start, stop]
-/// in the primes vector.
+/// Store the primes within the interval [start, stop] in the primes vector.
+/// @vect: std::vector or other vector type that is API compatible
+///        with std::vector (must implement size(), reserve(),
+///        push_back() and value_type).
 ///
-template <typename T>
-inline void generate_primes(uint64_t start, uint64_t stop, std::vector<T>* primes)
+template <typename vect>
+inline void generate_primes(uint64_t start, uint64_t stop, vect* primes)
 {
   if (primes)
     store_primes(start, stop, *primes);
 }
 
 /// Store the first n primes in the primes vector.
-template <typename T>
-inline void generate_n_primes(uint64_t n, std::vector<T>* primes)
+/// @vect: std::vector or other vector type that is API compatible
+///        with std::vector (must implement size(), reserve(),
+///        push_back() and value_type).
+///
+template <typename vect>
+inline void generate_n_primes(uint64_t n, vect* primes)
 {
   if (primes)
     store_n_primes(n, 0, *primes);
 }
 
 /// Store the first n primes >= start in the primes vector.
-template <typename T>
-inline void generate_n_primes(uint64_t n, uint64_t start, std::vector<T>* primes)
+/// @vect: std::vector or other vector type that is API compatible
+///        with std::vector (must implement size(), reserve(),
+///        push_back() and value_type).
+///
+template <typename vect>
+inline void generate_n_primes(uint64_t n, uint64_t start, vect* primes)
 {
   if (primes)
     store_n_primes(n, start, *primes);

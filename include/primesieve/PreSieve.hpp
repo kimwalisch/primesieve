@@ -29,9 +29,10 @@
 #ifndef PRESIEVE_HPP
 #define PRESIEVE_HPP
 
+#include "pod_vector.hpp"
+
 #include <stdint.h>
 #include <array>
-#include <vector>
 
 namespace primesieve {
 
@@ -39,15 +40,15 @@ class PreSieve
 {
 public:
   void init(uint64_t start, uint64_t stop);
-  void preSieve(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
+  void preSieve(pod_vector<uint8_t>& sieve, uint64_t segmentLow) const;
   uint64_t getMaxPrime() const { return maxPrime_; }
 private:
   uint64_t maxPrime_ = 13;
   uint64_t totalDist_ = 0;
-  std::array<std::vector<uint8_t>, 8> buffers_;
+  std::array<pod_vector<uint8_t>, 8> buffers_;
   void initBuffers();
-  static void preSieveSmall(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow);
-  void preSieveLarge(uint8_t* sieve, uint64_t sieveSize, uint64_t segmentLow) const;
+  static void preSieveSmall(pod_vector<uint8_t>& sieve, uint64_t segmentLow);
+  void preSieveLarge(pod_vector<uint8_t>& sieve, uint64_t segmentLow) const;
 };
 
 } // namespace

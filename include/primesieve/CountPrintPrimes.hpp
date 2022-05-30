@@ -13,10 +13,10 @@
 #include "Erat.hpp"
 #include "MemoryPool.hpp"
 #include "macros.hpp"
+#include "pod_vector.hpp"
 #include "PrimeSieve.hpp"
 
 #include <stdint.h>
-#include <vector>
 
 namespace primesieve {
 
@@ -34,7 +34,7 @@ public:
 private:
   uint64_t low_ = 0;
   /// Count lookup tables for prime k-tuplets
-  std::vector<uint8_t> kCounts_[6];
+  pod_vector<uint8_t> kCounts_[6];
   counts_t& counts_;
   /// Reference to the associated PrimeSieve object
   PrimeSieve& ps_;

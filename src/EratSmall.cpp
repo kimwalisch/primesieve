@@ -24,7 +24,6 @@
 #include <stdint.h>
 #include <algorithm>
 #include <cassert>
-#include <vector>
 
 using std::size_t;
 
@@ -55,7 +54,7 @@ void EratSmall::init(uint64_t stop,
 
   stop_ = stop;
   maxPrime_ = maxPrime;
-  l1CacheSize_ = l1CacheSize;
+  l1CacheSize_ = (std::size_t) l1CacheSize;
   size_t count = primeCountApprox(maxPrime);
   primes_.reserve(count);
 }
@@ -78,12 +77,12 @@ void EratSmall::storeSievingPrime(uint64_t prime,
 /// @sieveSize:   EratBig & EratMedium sieve size
 /// @l1CacheSize: EratSmall sieve size
 ///
-void EratSmall::crossOff(uint8_t* sieve, uint64_t sieveSize)
+void EratSmall::crossOff(pod_vector<uint8_t>& sieve)
 {
-  for (uint64_t i = 0; i < sieveSize; i += l1CacheSize_)
+  for (std::size_t i = 0; i < sieve.size(); i += l1CacheSize_)
   {
-    uint64_t end = i + l1CacheSize_;
-    end = std::min(end, sieveSize);
+    std::size_t end = i + l1CacheSize_;
+    end = std::min(end, sieve.size());
     crossOff(&sieve[i], &sieve[end]);
   }
 }

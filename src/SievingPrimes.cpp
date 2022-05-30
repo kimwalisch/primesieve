@@ -15,8 +15,8 @@
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
+#include <algorithm>
 #include <cassert>
-#include <vector>
 
 namespace primesieve {
 
@@ -50,7 +50,8 @@ void SievingPrimes::init(Erat* erat,
 void SievingPrimes::tinySieve()
 {
   uint64_t n = isqrt(stop_);
-  tinySieve_.resize(n + 1, true);
+  tinySieve_.resize(n + 1);
+  std::fill(tinySieve_.begin(), tinySieve_.end(), true);
 
   for (uint64_t i = 3; i * i <= n; i += 2)
     if (tinySieve_[i])
@@ -60,12 +61,13 @@ void SievingPrimes::tinySieve()
 
 void SievingPrimes::fill()
 {
-  if (sieveIdx_ >= sieveSize_)
+  if (sieveIdx_ >= sieve_.size())
     if (!sieveSegment())
       return;
 
   size_t num = 0;
   uint64_t low = low_;
+  uint64_t sieveSize = sieve_.size();
   assert(primes_.size() >= 64);
 
   // Fill the buffer with at least (primes_.size() - 64) primes.
@@ -93,7 +95,7 @@ void SievingPrimes::fill()
       sieveIdx_ += 8;
   }
   while (num <= primes_.size() - 64 &&
-         sieveIdx_ < sieveSize_);
+         sieveIdx_ < sieveSize);
 
   low_ = low;
   i_ = 0;

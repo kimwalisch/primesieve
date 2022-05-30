@@ -36,7 +36,7 @@ struct IteratorMemory
   }
   void deletePrimes()
   {
-    pod_vector<uint64_t>().swap(primes);
+    primes.free();
   }
   uint64_t stop;
   uint64_t dist = 0;

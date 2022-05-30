@@ -358,8 +358,8 @@ void PrimeGenerator::fillPrevPrimes(pod_vector<uint64_t>& primes,
     std::size_t i = *size;
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
-    uint64_t sieveSize = sieveSize_;
-    uint8_t* sieve = sieve_;
+    uint64_t sieveSize = sieve_.size();
+    uint8_t* sieve = sieve_.data();
 
     while (sieveIdx < sieveSize)
     {
@@ -408,7 +408,7 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
 {
   do
   {
-    if (sieveIdx_ >= sieveSize_)
+    if (sieveIdx_ >= sieve_.size())
       if (!sieveNextPrimes(primes, size))
         return;
 
@@ -419,8 +419,8 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
     assert(i + 64 <= maxSize);
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
-    uint64_t sieveSize = sieveSize_;
-    uint8_t* sieve = sieve_;
+    uint64_t sieveSize = sieve_.size();
+    uint8_t* sieve = sieve_.data();
 
     // Fill the buffer with at least (maxSize - 64) primes.
     // Each loop iteration can generate up to 64 primes
@@ -468,7 +468,7 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
 {
   do
   {
-    if (sieveIdx_ >= sieveSize_)
+    if (sieveIdx_ >= sieve_.size())
       if (!sieveNextPrimes(primes, size))
         return;
 
@@ -479,8 +479,8 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
     assert(i + 64 <= maxSize);
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
-    uint64_t sieveSize = sieveSize_;
-    uint8_t* sieve = sieve_;
+    uint64_t sieveSize = sieve_.size();
+    uint8_t* sieve = sieve_.data();
 
     // Fill the buffer with at least (maxSize - 64) primes.
     // Each loop iteration can generate up to 64 primes
@@ -539,7 +539,7 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
 {
   do
   {
-    if (sieveIdx_ >= sieveSize_)
+    if (sieveIdx_ >= sieve_.size())
       if (!sieveNextPrimes(primes, size))
         return;
 
@@ -550,8 +550,8 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
     assert(i + 64 <= maxSize);
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
-    uint64_t sieveSize = sieveSize_;
-    uint8_t* sieve = sieve_;
+    uint64_t sieveSize = sieve_.size();
+    uint8_t* sieve = sieve_.data();
 
     __m512i avxBitValues = _mm512_set_epi8(
       (char) 241, (char) 239, (char) 233, (char) 229,

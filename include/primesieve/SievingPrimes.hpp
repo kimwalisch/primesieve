@@ -12,10 +12,10 @@
 
 #include "Erat.hpp"
 #include "macros.hpp"
+#include "pod_vector.hpp"
 
 #include <stdint.h>
 #include <array>
-#include <vector>
 
 namespace primesieve {
 
@@ -36,7 +36,7 @@ private:
   uint64_t tinyIdx_ = 0;
   uint64_t sieveIdx_ = ~0ull;
   std::array<uint64_t, 128> primes_;
-  std::vector<char> tinySieve_;
+  pod_vector<bool> tinySieve_;
   NOINLINE void fill();
   void tinySieve();
   bool sieveSegment();
