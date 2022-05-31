@@ -211,8 +211,7 @@ public:
   ALWAYS_INLINE typename std::enable_if<!std::is_pod<TT>::value>::type
   default_initialize_range(TT* first, TT* last)
   {
-    for (; first < last; first++)
-      *first = TT();
+    std::fill(first, last, TT());
   }
 
   /// Resize without default initializing memory.
