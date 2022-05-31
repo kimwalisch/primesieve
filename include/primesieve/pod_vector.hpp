@@ -192,16 +192,6 @@ public:
     *end_++ = T(std::forward<Args>(args)...);
   }
 
-  void reserve(std::size_t n)
-  {
-    if (n > capacity())
-    {
-      std::size_t old_size = size();
-      resize(n);
-      end_ = array_ + old_size;
-    }
-  }
-
   template <typename TT>
   ALWAYS_INLINE typename std::enable_if<std::is_trivial<TT>::value>::type
   default_initialize_range(TT*, TT*)
@@ -212,6 +202,34 @@ public:
   default_initialize_range(TT* first, TT* last)
   {
     std::fill(first, last, TT());
+  }
+
+  void reserve(std::size_t n)
+  {
+    if (n > capacity())
+    {
+      // GCC & Clang's std::vector grow the capacity by at least
+      // 2x for every call to resize() with n > capacity(). We
+      // grow by at least 1.5x as we tend to accurately calculate
+      // the amount of memory we need upfront.
+      n = std::max(n, (std::size_t)(capacity() * 1.5));
+      std::size_t old_size = size();
+
+      // This default initializes memory of classes and
+      // structs with constructors. But it does not default
+      // initialize memory for POD types like int, long.
+      T* new_array = new T[n];
+
+      if (array_)
+      {
+        std::copy(array_, end_, new_array);
+        delete [] array_;
+      }
+
+      array_ = new_array;
+      end_ = array_ + old_size;
+      capacity_ = array_ + n;
+    }
   }
 
   /// Resize without default initializing memory.
