@@ -203,12 +203,12 @@ public:
   }
 
   template <typename TT>
-  ALWAYS_INLINE typename std::enable_if<std::is_pod<TT>::value>::type
+  ALWAYS_INLINE typename std::enable_if<std::is_trivial<TT>::value>::type
   default_initialize_range(TT*, TT*)
   { }
 
   template <typename TT>
-  ALWAYS_INLINE typename std::enable_if<!std::is_pod<TT>::value>::type
+  ALWAYS_INLINE typename std::enable_if<!std::is_trivial<TT>::value>::type
   default_initialize_range(TT* first, TT* last)
   {
     std::fill(first, last, TT());
