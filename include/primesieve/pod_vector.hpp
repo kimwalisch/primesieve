@@ -36,6 +36,7 @@ public:
   static_assert(std::is_trivially_destructible<T>::value,
                 "pod_vector<T> only supports types with trivial destructors!");
 
+  using value_type = T;
   pod_vector() noexcept = default;
 
   pod_vector(std::size_t size)
@@ -191,45 +192,6 @@ public:
     *end_++ = T(std::forward<Args>(args)...);
   }
 
-  template <typename U>
-  ALWAYS_INLINE typename std::enable_if<std::is_trivial<U>::value>::type
-  default_initialize_range(U*, U*)
-  { }
-
-  template <typename U>
-  ALWAYS_INLINE typename std::enable_if<!std::is_trivial<U>::value>::type
-  default_initialize_range(U* first, U* last)
-  {
-    std::fill(first, last, U());
-  }
-
-  template <typename U>
-  ALWAYS_INLINE typename std::enable_if<std::is_trivial<U>::value, std::size_t>::type
-  get_new_capacity(std::size_t size)
-  {
-    // GCC & Clang's std::vector grow the capacity by at least
-    // 2x for every call to resize() with n > capacity(). We
-    // grow by at least 1.5x as we tend to accurately calculate
-    // the amount of memory we need upfront.
-    assert(size > 0);
-    std::size_t new_capacity = (std::size_t)(capacity() * 1.5);
-    constexpr std::size_t min_alignment = (sizeof(long) * 2) / sizeof(U);
-    return std::max({min_alignment, size, new_capacity});
-  }
-
-  template <typename U>
-  ALWAYS_INLINE typename std::enable_if<!std::is_trivial<U>::value, std::size_t>::type
-  get_new_capacity(std::size_t size)
-  {
-    // GCC & Clang's std::vector grow the capacity by at least
-    // 2x for every call to resize() with n > capacity(). We
-    // grow by at least 1.5x as we tend to accurately calculate
-    // the amount of memory we need upfront.
-    assert(size > 0);
-    std::size_t new_capacity = (std::size_t)(capacity() * 1.5);
-    return std::max(size, new_capacity);
-  }
-
   void reserve(std::size_t n)
   {
     if (n > capacity())
@@ -298,12 +260,49 @@ public:
     }
   }
 
-  using value_type = T;
-
 private:
   T* array_ = nullptr;
   T* end_ = nullptr;
   T* capacity_ = nullptr;
+
+  template <typename U>
+  ALWAYS_INLINE typename std::enable_if<std::is_trivial<U>::value>::type
+  default_initialize_range(U*, U*)
+  { }
+
+  template <typename U>
+  ALWAYS_INLINE typename std::enable_if<!std::is_trivial<U>::value>::type
+  default_initialize_range(U* first, U* last)
+  {
+    std::fill(first, last, U());
+  }
+
+  template <typename U>
+  ALWAYS_INLINE typename std::enable_if<std::is_trivial<U>::value, std::size_t>::type
+  get_new_capacity(std::size_t size)
+  {
+    assert(size > 0);
+    // GCC & Clang's std::vector grow the capacity by at least
+    // 2x for every call to resize() with n > capacity(). We
+    // grow by at least 1.5x as we tend to accurately calculate
+    // the amount of memory we need upfront.
+    std::size_t new_capacity = (std::size_t)(capacity() * 1.5);
+    constexpr std::size_t min_alignment = (sizeof(long) * 2) / sizeof(U);
+    return std::max({min_alignment, size, new_capacity});
+  }
+
+  template <typename U>
+  ALWAYS_INLINE typename std::enable_if<!std::is_trivial<U>::value, std::size_t>::type
+  get_new_capacity(std::size_t size)
+  {
+    assert(size > 0);
+    // GCC & Clang's std::vector grow the capacity by at least
+    // 2x for every call to resize() with n > capacity(). We
+    // grow by at least 1.5x as we tend to accurately calculate
+    // the amount of memory we need upfront.
+    std::size_t new_capacity = (std::size_t)(capacity() * 1.5);
+    return std::max(size, new_capacity);
+  }
 };
 
 } // namespace
