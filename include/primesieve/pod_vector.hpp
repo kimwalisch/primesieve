@@ -196,6 +196,7 @@ public:
   {
     if (n > capacity())
     {
+      T* old = array_;
       std::size_t old_size = size();
       std::size_t new_capacity = get_new_capacity<T>(n);
       assert(new_capacity >= n);
@@ -204,17 +205,15 @@ public:
       // This default initializes memory of classes and
       // structs with constructors. But it does not default
       // initialize memory for POD types like int, long.
-      T* new_array = new T[new_capacity];
-
-      if (array_)
-      {
-        std::copy(array_, end_, new_array);
-        delete [] array_;
-      }
-
-      array_ = new_array;
+      array_ = new T[new_capacity];
       end_ = array_ + old_size;
       capacity_ = array_ + new_capacity;
+
+      if (old)
+      {
+        std::copy_n(old, old_size, array_);
+        delete [] old;
+      }
     }
   }
 
@@ -239,24 +238,24 @@ public:
     }
     else
     {
+      T* old = array_;
+      std::size_t old_size = size();
       std::size_t new_capacity = get_new_capacity<T>(n);
       assert(new_capacity >= n);
-      assert(new_capacity > size());
+      assert(new_capacity > old_size);
 
       // This default initializes memory of classes and
       // structs with constructors. But it does not default
       // initialize memory for POD types like int, long.
-      T* new_array = new T[new_capacity];
-
-      if (array_)
-      {
-        std::copy(array_, end_, new_array);
-        delete [] array_;
-      }
-
-      array_ = new_array;
+      array_ = new T[new_capacity];
       end_ = array_ + n;
       capacity_ = array_ + new_capacity;
+
+      if (old)
+      {
+        std::copy_n(old, old_size, array_);
+        delete [] old;
+      }
     }
   }
 
