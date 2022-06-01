@@ -141,7 +141,7 @@ int main()
     std::cout << "Vect size after resize*2: " << vect.size();
     check(vect.size() == n * 2);
     std::cout << "Vect capacity after resize*2: " << vect.capacity();
-    check(vect.capacity() == n * 2);
+    check(vect.capacity() >= n * 2);
   }
 
   {
