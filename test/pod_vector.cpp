@@ -116,6 +116,32 @@ int main()
     check(vect.empty() == true);
     std::cout << "Vect capacity after reserve: " << vect.capacity();
     check(vect.capacity() == n);
+
+    vect.reserve(n / 2);
+    std::cout << "Vect size after reserve/2: " << vect.size();
+    check(vect.size() == 0);
+    std::cout << "Vect empty after reserve/2: " << vect.empty();
+    check(vect.empty() == true);
+    std::cout << "Vect capacity after reserve/2: " << vect.capacity();
+    check(vect.capacity() == n);
+
+    vect.resize(n);
+    std::cout << "Vect size after resize: " << vect.size();
+    check(vect.size() == n);
+    std::cout << "Vect capacity after resize: " << vect.capacity();
+    check(vect.capacity() == n);
+
+    vect.resize(n / 2);
+    std::cout << "Vect size after resize/2: " << vect.size();
+    check(vect.size() == n / 2);
+    std::cout << "Vect capacity after resize/2: " << vect.capacity();
+    check(vect.capacity() == n);
+
+    vect.resize(n * 2);
+    std::cout << "Vect size after resize*2: " << vect.size();
+    check(vect.size() == n * 2);
+    std::cout << "Vect capacity after resize*2: " << vect.capacity();
+    check(vect.capacity() == n * 2);
   }
 
   {
