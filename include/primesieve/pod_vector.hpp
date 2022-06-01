@@ -72,23 +72,22 @@ public:
   /// Move constructor
   pod_vector(pod_vector&& other) noexcept
   {
-    this->swap(other);
+    std::swap(array_, other.array_);
+    std::swap(end_, other.end_);
+    std::swap(capacity_, other.capacity_);
   }
 
   /// Move assignment operator
   pod_vector& operator=(pod_vector&& other) noexcept
   {
     if (this != &other)
-      this->swap(other);
+    {
+      std::swap(array_, other.array_);
+      std::swap(end_, other.end_);
+      std::swap(capacity_, other.capacity_);
+    }
 
     return *this;
-  }
-
-  void swap(pod_vector& other) noexcept
-  {
-    std::swap(array_, other.array_);
-    std::swap(end_, other.end_);
-    std::swap(capacity_, other.capacity_);
   }
 
   bool empty() const noexcept
@@ -192,33 +191,58 @@ public:
     *end_++ = T(std::forward<Args>(args)...);
   }
 
-  template <typename TT>
-  ALWAYS_INLINE typename std::enable_if<std::is_trivial<TT>::value>::type
-  default_initialize_range(TT*, TT*)
+  template <typename U>
+  ALWAYS_INLINE typename std::enable_if<std::is_trivial<U>::value>::type
+  default_initialize_range(U*, U*)
   { }
 
-  template <typename TT>
-  ALWAYS_INLINE typename std::enable_if<!std::is_trivial<TT>::value>::type
-  default_initialize_range(TT* first, TT* last)
+  template <typename U>
+  ALWAYS_INLINE typename std::enable_if<!std::is_trivial<U>::value>::type
+  default_initialize_range(U* first, U* last)
   {
-    std::fill(first, last, TT());
+    std::fill(first, last, U());
+  }
+
+  template <typename U>
+  ALWAYS_INLINE typename std::enable_if<std::is_trivial<U>::value, std::size_t>::type
+  get_new_capacity(std::size_t size)
+  {
+    // GCC & Clang's std::vector grow the capacity by at least
+    // 2x for every call to resize() with n > capacity(). We
+    // grow by at least 1.5x as we tend to accurately calculate
+    // the amount of memory we need upfront.
+    assert(size > 0);
+    std::size_t new_capacity = (std::size_t)(capacity() * 1.5);
+    constexpr std::size_t min_alignment = (sizeof(long) * 2) / sizeof(U);
+    return std::max({min_alignment, size, new_capacity});
+  }
+
+  template <typename U>
+  ALWAYS_INLINE typename std::enable_if<!std::is_trivial<U>::value, std::size_t>::type
+  get_new_capacity(std::size_t size)
+  {
+    // GCC & Clang's std::vector grow the capacity by at least
+    // 2x for every call to resize() with n > capacity(). We
+    // grow by at least 1.5x as we tend to accurately calculate
+    // the amount of memory we need upfront.
+    assert(size > 0);
+    std::size_t new_capacity = (std::size_t)(capacity() * 1.5);
+    return std::max(size, new_capacity);
   }
 
   void reserve(std::size_t n)
   {
     if (n > capacity())
     {
-      // GCC & Clang's std::vector grow the capacity by at least
-      // 2x for every call to resize() with n > capacity(). We
-      // grow by at least 1.5x as we tend to accurately calculate
-      // the amount of memory we need upfront.
-      n = std::max(n, (std::size_t)(capacity() * 1.5));
       std::size_t old_size = size();
+      std::size_t new_capacity = get_new_capacity<T>(n);
+      assert(new_capacity >= n);
+      assert(new_capacity > old_size);
 
       // This default initializes memory of classes and
       // structs with constructors. But it does not default
       // initialize memory for POD types like int, long.
-      T* new_array = new T[n];
+      T* new_array = new T[new_capacity];
 
       if (array_)
       {
@@ -228,7 +252,7 @@ public:
 
       array_ = new_array;
       end_ = array_ + old_size;
-      capacity_ = array_ + n;
+      capacity_ = array_ + new_capacity;
     }
   }
 
@@ -253,17 +277,14 @@ public:
     }
     else
     {
-      // GCC & Clang's std::vector grow the capacity by at least
-      // 2x for every call to resize() with n > capacity(). We
-      // grow by at least 1.5x as we tend to accurately calculate
-      // the amount of memory we need upfront.
-      assert(n > capacity());
-      n = std::max(n, (std::size_t)(capacity() * 1.5));
+      std::size_t new_capacity = get_new_capacity<T>(n);
+      assert(new_capacity >= n);
+      assert(new_capacity > size());
 
       // This default initializes memory of classes and
       // structs with constructors. But it does not default
       // initialize memory for POD types like int, long.
-      T* new_array = new T[n];
+      T* new_array = new T[new_capacity];
 
       if (array_)
       {
@@ -273,7 +294,7 @@ public:
 
       array_ = new_array;
       end_ = array_ + n;
-      capacity_ = end_;
+      capacity_ = array_ + new_capacity;
     }
   }
 
