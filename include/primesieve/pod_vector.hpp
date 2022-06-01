@@ -98,11 +98,17 @@ public:
 
   T& operator[] (std::size_t pos) noexcept
   {
+    // For performance reasons primesieve is allowed to access
+    // memory with pos > size() but <= capacity().
+    assert(pos <= capacity());
     return array_[pos];
   }
 
   T& operator[] (std::size_t pos) const noexcept
   {
+    // For performance reasons primesieve is allowed to access
+    // memory with pos > size() but <= capacity().
+    assert(pos <= capacity());
     return array_[pos];
   }
 
