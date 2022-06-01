@@ -287,8 +287,9 @@ private:
     // grow by at least 1.5x as we tend to accurately calculate
     // the amount of memory we need upfront.
     std::size_t new_capacity = (std::size_t)(capacity() * 1.5);
-    constexpr std::size_t min_alignment = (sizeof(long) * 2) / sizeof(U);
-    return std::max({min_alignment, size, new_capacity});
+    constexpr std::size_t min_alignment = sizeof(long) * 2;
+    constexpr std::size_t min_size = min_alignment / sizeof(U);
+    return std::max({min_size, size, new_capacity});
   }
 
   template <typename U>
