@@ -96,7 +96,7 @@ public:
     return array_ == end_;
   }
 
-  T& operator[] (std::size_t pos) noexcept
+  T& operator[](std::size_t pos) noexcept
   {
     // For performance reasons primesieve is allowed to access
     // memory with pos > size() but <= capacity().
@@ -104,7 +104,7 @@ public:
     return array_[pos];
   }
 
-  T& operator[] (std::size_t pos) const noexcept
+  T& operator[](std::size_t pos) const noexcept
   {
     // For performance reasons primesieve is allowed to access
     // memory with pos > size() but <= capacity().
@@ -179,14 +179,14 @@ public:
   ALWAYS_INLINE void push_back(const T& value)
   {
     if_unlikely(end_ == capacity_)
-      reserve(std::max((std::size_t) 1, capacity() * 2));
+      reserve_unchecked(std::max((std::size_t) 1, capacity() * 2));
     *end_++ = value;
   }
 
   ALWAYS_INLINE void push_back(T&& value)
   {
     if_unlikely(end_ == capacity_)
-      reserve(std::max((std::size_t) 1, capacity() * 2));
+      reserve_unchecked(std::max((std::size_t) 1, capacity() * 2));
     *end_++ = value;
   }
 
@@ -194,33 +194,14 @@ public:
   ALWAYS_INLINE void emplace_back(Args&&... args)
   {
     if_unlikely(end_ == capacity_)
-      reserve(std::max((std::size_t) 1, capacity() * 2));
+      reserve_unchecked(std::max((std::size_t) 1, capacity() * 2));
     *end_++ = T(std::forward<Args>(args)...);
   }
 
   void reserve(std::size_t n)
   {
     if (n > capacity())
-    {
-      T* old = array_;
-      std::size_t old_size = size();
-      std::size_t new_capacity = get_new_capacity<T>(n);
-      assert(new_capacity >= n);
-      assert(new_capacity > old_size);
-
-      // This default initializes memory of classes and
-      // structs with constructors. But it does not default
-      // initialize memory for POD types like int, long.
-      array_ = new T[new_capacity];
-      end_ = array_ + old_size;
-      capacity_ = array_ + new_capacity;
-
-      if (old)
-      {
-        std::copy_n(old, old_size, array_);
-        delete [] old;
-      }
-    }
+      reserve_unchecked(n);
   }
 
   /// Resize without default initializing memory.
@@ -229,40 +210,17 @@ public:
   ///
   void resize(std::size_t n)
   {
-    if (n == size())
-      return;
-    else if (n <= capacity())
+    if (n > capacity())
+      reserve_unchecked(n);
+    else if (!std::is_trivial<T>::value && n > size())
     {
-      assert(capacity() > 0);
-
       // This will only be used for classes
       // and structs with constructors.
-      if (n > size())
-        default_initialize_range(end_, array_ + n);
-
-      end_ = array_ + n;
+      assert(n <= capacity());
+      std::fill(end_, array_ + n, T());
     }
-    else
-    {
-      T* old = array_;
-      std::size_t old_size = size();
-      std::size_t new_capacity = get_new_capacity<T>(n);
-      assert(new_capacity >= n);
-      assert(new_capacity > old_size);
 
-      // This default initializes memory of classes and
-      // structs with constructors. But it does not default
-      // initialize memory for POD types like int, long.
-      array_ = new T[new_capacity];
-      end_ = array_ + n;
-      capacity_ = array_ + new_capacity;
-
-      if (old)
-      {
-        std::copy_n(old, old_size, array_);
-        delete [] old;
-      }
-    }
+    end_ = array_ + n;
   }
 
 private:
@@ -270,16 +228,27 @@ private:
   T* end_ = nullptr;
   T* capacity_ = nullptr;
 
-  template <typename U>
-  ALWAYS_INLINE typename std::enable_if<std::is_trivial<U>::value>::type
-  default_initialize_range(U*, U*)
-  { }
-
-  template <typename U>
-  ALWAYS_INLINE typename std::enable_if<!std::is_trivial<U>::value>::type
-  default_initialize_range(U* first, U* last)
+  void reserve_unchecked(std::size_t n)
   {
-    std::fill(first, last, U());
+    assert(n > capacity());
+    std::size_t new_capacity = get_new_capacity<T>(n);
+    std::size_t old_size = size();
+    assert(new_capacity >= n);
+    assert(new_capacity > old_size);
+
+    // This default initializes memory of classes and
+    // structs with constructors. But it does not default
+    // initialize memory for POD types like int, long.
+    T* old = array_;
+    array_ = new T[new_capacity];
+    end_ = array_ + old_size;
+    capacity_ = array_ + new_capacity;
+
+    if (old)
+    {
+      std::copy_n(old, old_size, array_);
+      delete [] old;
+    }
   }
 
   template <typename U>
