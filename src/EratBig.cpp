@@ -33,7 +33,6 @@
 #include <stdint.h>
 #include <cassert>
 #include <algorithm>
-#include <array>
 
 namespace {
 
@@ -65,7 +64,7 @@ static_assert(isPow2(sizeof(WheelElement)),
               "sizeof(WheelElement) must be a power of 2!");
 
 /// Used to skip multiples of 2, 3, 5 and 7
-const std::array<WheelElement, 8*48> wheel210 =
+const primesieve::pod_array<WheelElement, 8*48> wheel210 =
 {{
   { BIT0, 10, 2, 1 }, { BIT3, 2, 0, 2 }, { BIT7, 4, 1, 3 }, { BIT6, 2, 1, 4 }, { BIT2, 4, 1, 5 }, { BIT1, 6, 1, 6 }, { BIT5, 2, 1, 7 }, { BIT0, 6, 1, 8 }, 
   { BIT4, 4, 1, 9 }, { BIT3, 2, 0, 10 }, { BIT7, 4, 1, 11 }, { BIT6, 6, 2, 12 }, { BIT1, 6, 1, 13 }, { BIT5, 2, 1, 14 }, { BIT0, 6, 1, 15 }, { BIT4, 4, 1, 16 }, 

@@ -11,13 +11,13 @@
 #ifndef TYPES_HPP
 #define TYPES_HPP
 
-#include <array>
+#include "pod_vector.hpp"
 #include <stdint.h>
 
 namespace primesieve {
 
-extern const std::array<uint64_t, 65> bitValues;
-extern const std::array<uint64_t, 64> bruijnBitValues;
+extern const pod_array<uint64_t, 65> bitValues;
+extern const pod_array<uint64_t, 64> bruijnBitValues;
 
 int get_num_threads();
 int get_sieve_size();

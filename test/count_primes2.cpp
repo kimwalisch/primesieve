@@ -10,9 +10,9 @@
 ///
 
 #include <primesieve.hpp>
+#include <primesieve/pod_vector.hpp>
 
 #include <stdint.h>
-#include <array>
 #include <cstdlib>
 #include <cmath>
 #include <iostream>
@@ -20,7 +20,7 @@
 
 using namespace primesieve;
 
-const std::array<uint64_t, 6> pix =
+const pod_array<uint64_t, 6> pix =
 {
   3618282, // pi[10^12, 10^12+10^8]
   3342093, // pi[10^13, 10^13+10^8]

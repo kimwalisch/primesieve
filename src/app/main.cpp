@@ -9,10 +9,10 @@
 ///
 
 #include <primesieve/ParallelSieve.hpp>
+#include <primesieve/pod_vector.hpp>
 #include "cmdoptions.hpp"
 
 #include <stdint.h>
-#include <array>
 #include <iostream>
 #include <exception>
 #include <iomanip>
@@ -60,7 +60,7 @@ void sieve(CmdOptions& opt)
 
   ps.sieve();
 
-  const std::array<std::string, 6> labels =
+  const pod_array<std::string, 6> labels =
   {
     "Primes: ",
     "Twin primes: ",

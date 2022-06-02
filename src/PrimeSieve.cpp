@@ -15,11 +15,11 @@
 #include <primesieve/ParallelSieve.hpp>
 #include <primesieve/CountPrintPrimes.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/pod_vector.hpp>
 #include <primesieve/PreSieve.hpp>
 
 #include <stdint.h>
 #include <algorithm>
-#include <array>
 #include <chrono>
 #include <iostream>
 
@@ -33,7 +33,7 @@ struct SmallPrime
   const char* str;
 };
 
-const std::array<SmallPrime, 8> smallPrimes
+const primesieve::pod_array<SmallPrime, 8> smallPrimes
 {{
   { 2,  2, 0, "2" },
   { 3,  3, 0, "3" },
@@ -141,7 +141,7 @@ uint64_t PrimeSieve::getDistance() const
 
 uint64_t PrimeSieve::getCount(int i) const
 {
-  return counts_.at(i);
+  return counts_[i];
 }
 
 counts_t& PrimeSieve::getCounts()
