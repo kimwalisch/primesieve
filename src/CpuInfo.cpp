@@ -251,8 +251,8 @@ void CpuInfo::init()
       cacheSizes{0, 0, 0, 0},
       cacheSharing{0, 0, 0, 0}
     { }
-    std::array<size_t, 4> cacheSizes;
-    std::array<size_t, 4> cacheSharing;
+    pod_array<size_t, 4> cacheSizes;
+    pod_array<size_t, 4> cacheSharing;
   };
 
   struct L1CacheStatistics

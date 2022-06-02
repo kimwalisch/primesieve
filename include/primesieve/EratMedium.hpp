@@ -16,7 +16,6 @@
 #include "Wheel.hpp"
 
 #include <stdint.h>
-#include <array>
 
 namespace primesieve {
 
@@ -36,7 +35,7 @@ private:
   bool hasSievingPrimes_ = false;
   uint64_t maxPrime_ = 0;
   MemoryPool* memoryPool_ = nullptr;
-  std::array<SievingPrime*, 64> buckets_;
+  pod_array<SievingPrime*, 64> buckets_;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   NOINLINE void crossOff_7(uint8_t*, uint8_t*, Bucket*);
   NOINLINE void crossOff_11(uint8_t*, uint8_t*, Bucket*);

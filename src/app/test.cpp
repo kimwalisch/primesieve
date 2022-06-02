@@ -10,6 +10,7 @@
 
 #include <primesieve.hpp>
 #include <primesieve/ParallelSieve.hpp>
+#include <primesieve/pod_vector.hpp>
 
 #include <stdint.h>
 #include <chrono>
@@ -39,7 +40,7 @@ void check(bool OK)
 
 void countSmallPrimes()
 {
-  const std::array<uint64_t, 9> primePi =
+  const pod_array<uint64_t, 9> primePi =
   {
     4,        // PrimePi(10^1)
     25,       // PrimePi(10^2)
@@ -71,7 +72,7 @@ void countSmallPrimes()
 
 void countPrimeKTuplets()
 {
-  const std::array<uint64_t, 5> kTupletCounts =
+  const pod_array<uint64_t, 5> kTupletCounts =
   {
     17278660, // PrimePi2(10^12, 10^12+10^10)
     2130571,  // PrimePi3(10^13, 10^13+10^10)
@@ -101,7 +102,7 @@ void countPrimeKTuplets()
 
 void countLargePrimes()
 {
-  const std::array<uint64_t, 6> primePi =
+  const pod_array<uint64_t, 6> primePi =
   {
     361840208, // PrimePi(10^12, 10^12+10^10)
     334067230, // PrimePi(10^13, 10^13+10^10)
@@ -151,7 +152,7 @@ void countPrimesRandom()
 
 void smallNthPrimes()
 {
-  const std::array<uint64_t, 9> nthPrimes =
+  const pod_array<uint64_t, 9> nthPrimes =
   {
     29,         // nthPrime(10^1)
     541,        // nthPrime(10^2)

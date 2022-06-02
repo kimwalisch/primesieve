@@ -10,9 +10,10 @@
 #ifndef CPUINFO_HPP
 #define CPUINFO_HPP
 
+#include "pod_vector.hpp"
+
 #include <cstddef>
 #include <string>
-#include <array>
 
 namespace primesieve {
 
@@ -42,8 +43,8 @@ public:
 private:
   void init();
   std::size_t logicalCpuCores_;
-  std::array<std::size_t, 4> cacheSizes_;
-  std::array<std::size_t, 4> cacheSharing_;
+  pod_array<std::size_t, 4> cacheSizes_;
+  pod_array<std::size_t, 4> cacheSharing_;
   std::string error_;
 };
 

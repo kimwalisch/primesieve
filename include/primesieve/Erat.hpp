@@ -19,7 +19,6 @@
 #include "pod_vector.hpp"
 
 #include <stdint.h>
-#include <array>
 
 namespace primesieve {
 

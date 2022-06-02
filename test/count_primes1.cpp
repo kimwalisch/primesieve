@@ -9,9 +9,9 @@
 ///
 
 #include <primesieve/ParallelSieve.hpp>
+#include <primesieve/pod_vector.hpp>
 
 #include <stdint.h>
-#include <array>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -20,7 +20,7 @@
 using namespace primesieve;
 
 /// Correct pi(x) values to compare with test results
-const std::array<uint64_t, 9> pix =
+const pod_array<uint64_t, 9> pix =
 {
   4,        // pi(10^1)
   25,       // pi(10^2)
