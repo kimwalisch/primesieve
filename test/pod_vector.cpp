@@ -108,39 +108,58 @@ int main()
 
     std::size_t n = dist(gen);
     pod_vector<int> vect;
+    vect.resize(0);
+
+    std::cout << "Vect size after resize(0): " << vect.size();
+    check(vect.size() == 0);
+    std::cout << "Vect capacity after resize(0): " << vect.capacity();
+    check(vect.capacity() == 0);
+
     vect.reserve(n);
 
-    std::cout << "Vect size after reserve: " << vect.size();
+    std::cout << "Vect size after reserve(n): " << vect.size();
     check(vect.size() == 0);
-    std::cout << "Vect empty after reserve: " << vect.empty();
+    std::cout << "Vect empty after reserve(n): " << vect.empty();
     check(vect.empty() == true);
-    std::cout << "Vect capacity after reserve: " << vect.capacity();
+    std::cout << "Vect capacity after reserve(n): " << vect.capacity();
     check(vect.capacity() == n);
 
     vect.reserve(n / 2);
-    std::cout << "Vect size after reserve/2: " << vect.size();
+    std::cout << "Vect size after reserve(n/2): " << vect.size();
     check(vect.size() == 0);
-    std::cout << "Vect empty after reserve/2: " << vect.empty();
+    std::cout << "Vect empty after reserve(n/2): " << vect.empty();
     check(vect.empty() == true);
-    std::cout << "Vect capacity after reserve/2: " << vect.capacity();
+    std::cout << "Vect capacity after reserve(n/2): " << vect.capacity();
     check(vect.capacity() == n);
 
     vect.resize(n);
-    std::cout << "Vect size after resize: " << vect.size();
+    std::cout << "Vect size after resize(n): " << vect.size();
     check(vect.size() == n);
-    std::cout << "Vect capacity after resize: " << vect.capacity();
+    std::cout << "Vect capacity after resize(n): " << vect.capacity();
+    check(vect.capacity() == n);
+
+    vect.resize(n);
+    std::cout << "Vect size after 2nd resize(n): " << vect.size();
+    check(vect.size() == n);
+    std::cout << "Vect capacity after 2nd resize(n): " << vect.capacity();
     check(vect.capacity() == n);
 
     vect.resize(n / 2);
-    std::cout << "Vect size after resize/2: " << vect.size();
+    std::cout << "Vect size after resize(n/2): " << vect.size();
     check(vect.size() == n / 2);
-    std::cout << "Vect capacity after resize/2: " << vect.capacity();
+    std::cout << "Vect capacity after resize(n/2): " << vect.capacity();
+    check(vect.capacity() == n);
+
+    vect.resize(0);
+    std::cout << "Vect size after resize(0): " << vect.size();
+    check(vect.size() == 0);
+    std::cout << "Vect capacity after resize(0): " << vect.capacity();
     check(vect.capacity() == n);
 
     vect.resize(n * 2);
-    std::cout << "Vect size after resize*2: " << vect.size();
+    std::cout << "Vect size after resize(n*2): " << vect.size();
     check(vect.size() == n * 2);
-    std::cout << "Vect capacity after resize*2: " << vect.capacity();
+    std::cout << "Vect capacity after resize(n*2): " << vect.capacity();
     check(vect.capacity() >= n * 2);
   }
 
