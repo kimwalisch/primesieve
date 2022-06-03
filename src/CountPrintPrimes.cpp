@@ -66,20 +66,17 @@ void CountPrintPrimes::initCounts()
 {
   for (unsigned i = 1; i < counts_.size(); i++)
   {
-    if (!ps_.isCount(i))
-      continue;
-
-    kCounts_[i].resize(256);
-
-    for (uint64_t j = 0; j < 256; j++)
+    if (ps_.isCount(i))
     {
-      uint8_t count = 0;
-      for (auto* b = bitmasks[i]; *b <= j; b++)
+      kCounts_[i].resize(256);
+
+      for (uint64_t j = 0; j < 256; j++)
       {
-        if ((j & *b) == *b)
-          count++;
+        kCounts_[i][j] = 0;
+        for (auto* b = bitmasks[i]; *b <= j; b++)
+          if ((j & *b) == *b)
+            kCounts_[i][j]++;
       }
-      kCounts_[i][j] = count;
     }
   }
 }
@@ -125,20 +122,22 @@ void CountPrintPrimes::countkTuplets()
   // i = 1 twins, i = 2 triplets, ...
   for (unsigned i = 1; i < counts_.size(); i++)
   {
-    if (!ps_.isCount(i))
-      continue;
-
-    uint64_t sum = 0;
-
-    for (uint64_t j = 0; j < sieve_.size(); j += 4)
+    if (ps_.isCount(i))
     {
-      sum += kCounts_[i][sieve_[j+0]];
-      sum += kCounts_[i][sieve_[j+1]];
-      sum += kCounts_[i][sieve_[j+2]];
-      sum += kCounts_[i][sieve_[j+3]];
-    }
+      assert(sieve_.capacity() % 4 == 0);
+      auto* sieve = sieve_.data();
+      uint64_t sum = 0;
 
-    counts_[i] += sum;
+      for (std::size_t j = 0; j < sieve_.size(); j += 4)
+      {
+        sum += kCounts_[i][sieve[j+0]];
+        sum += kCounts_[i][sieve[j+1]];
+        sum += kCounts_[i][sieve[j+2]];
+        sum += kCounts_[i][sieve[j+3]];
+      }
+
+      counts_[i] += sum;
+    }
   }
 }
 
