@@ -152,23 +152,25 @@ public:
 
   T& front() noexcept
   {
+    assert(!empty());
     return *array_;
   }
 
   const T& front() const noexcept
   {
+    assert(!empty());
     return *array_;
   }
 
   T& back() noexcept
   {
-    assert(end_ != nullptr);
+    assert(!empty());
     return *(end_ - 1);
   }
 
   const T& back() const noexcept
   {
-    assert(end_ != nullptr);
+    assert(!empty());
     return *(end_ - 1);
   }
 
