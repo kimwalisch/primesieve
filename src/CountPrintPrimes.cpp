@@ -23,6 +23,7 @@
 
 #include <stdint.h>
 #include <algorithm>
+#include <cassert>
 #include <iostream>
 #include <sstream>
 
@@ -114,6 +115,7 @@ void CountPrintPrimes::sieve()
 
 void CountPrintPrimes::countPrimes()
 {
+  assert(sieve_.capacity() % sizeof(uint64_t) == 0);
   uint64_t size = ceilDiv(sieve_.size(), 8);
   counts_[0] += popcount((const uint64_t*) sieve_.data(), size);
 }
