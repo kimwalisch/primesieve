@@ -18,6 +18,7 @@
 #include <utility>
 
 using std::size_t;
+using primesieve::pod_array;
 using primesieve::pod_vector;
 
 void check(bool OK)
@@ -203,6 +204,27 @@ int main()
     int sum = std::accumulate(vect2.begin(), vect2.end(), 0);
     std::cout << "Vect2 sum after std::move: " << sum;
     check(sum == 123 * size);
+  }
+
+  {
+    pod_array<unsigned int, 10> arr1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    auto arr2 = arr1;
+    arr1.fill(0);
+
+    std::cout << "arr2.size() = " << arr2.size();
+    check(arr2.size() == 10);
+
+    for (const auto& value : arr1)
+    {
+      std::cout << "arr1.value = " << value;
+      check(value == 0);
+    }
+
+    for (std::size_t i = 0; i < 10; i++)
+    {
+      std::cout << "arr2[" << i << "] = " << arr2[i];
+      check(arr2[i] == i);
+    }
   }
 
   std::cout << std::endl;
