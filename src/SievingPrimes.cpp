@@ -82,7 +82,6 @@ void SievingPrimes::fill()
 
       do
       {
-        assert(j + 4 < primes_.size());
         primes_[j+0] = nextPrime(bits, low); bits &= bits - 1;
         primes_[j+1] = nextPrime(bits, low); bits &= bits - 1;
         primes_[j+2] = nextPrime(bits, low); bits &= bits - 1;

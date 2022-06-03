@@ -158,7 +158,6 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     // been used before generate_prev_primes().
     if_unlikely(memory.primeGenerator)
     {
-      assert(!primes.empty());
       it->start = primes.front();
       memory.deletePrimeGenerator();
     }

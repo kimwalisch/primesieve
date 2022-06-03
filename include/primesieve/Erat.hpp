@@ -83,7 +83,6 @@ inline uint64_t Erat::nextPrime(uint64_t bits, uint64_t low)
 // in this case we use the optimal code path.
 #if defined(CTZ64_SUPPORTS_ZERO)
   auto bitIndex = ctz64(bits);
-  assert(bitIndex < bitValues.size());
   uint64_t bitValue = bitValues[bitIndex];
 #elif defined(HAS_CTZ64)
   // ctz64(0) is undefined behavior. To avoid undefined

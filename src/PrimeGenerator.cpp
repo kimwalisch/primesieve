@@ -433,7 +433,6 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
 
       do
       {
-        assert(j + 4 < maxSize);
         primes[j+0] = nextPrime(bits, low); bits &= bits - 1;
         primes[j+1] = nextPrime(bits, low); bits &= bits - 1;
         primes[j+2] = nextPrime(bits, low); bits &= bits - 1;

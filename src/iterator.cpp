@@ -14,7 +14,6 @@
 #include <primesieve/pod_vector.hpp>
 
 #include <stdint.h>
-#include <cassert>
 #include <limits>
 
 namespace {
@@ -182,7 +181,6 @@ void iterator::generate_prev_primes()
   // been used before generate_prev_primes().
   if_unlikely(memory.primeGenerator)
   {
-    assert(!primes.empty());
     start_ = primes.front();
     memory.deletePrimeGenerator();
   }
