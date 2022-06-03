@@ -83,7 +83,7 @@ void EratSmall::crossOff(pod_vector<uint8_t>& sieve)
   {
     std::size_t end = i + l1CacheSize_;
     end = std::min(end, sieve.size());
-    crossOff(&sieve[i], &sieve[end]);
+    crossOff(sieve.data() + i, sieve.data() + end);
   }
 }
 
