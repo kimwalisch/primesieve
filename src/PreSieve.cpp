@@ -263,22 +263,16 @@ void PreSieve::preSieve(pod_vector<uint8_t>& sieve,
   // Pre-sieving removes the primes < 100. We
   // have to undo that work and reset these bits
   // to 1 (but 49 = 7 * 7 is not a prime).
-  uint8_t bit49 = 1 << 4;
-  uint8_t bit77 = 1 << 3;
-  uint8_t bit91 = 1 << 7;
-  uint8_t bit119 = 1 << 6;
-  uint8_t bit121 = 1 << 7;
-
-  std::size_t i = 0;
-
-  if (segmentLow < 30)
-    sieve[i++] = 0xff;
-  if (segmentLow < 60)
-    sieve[i++] = 0xff ^ bit49;
-  if (segmentLow < 90)
-    sieve[i++] = 0xff ^ bit77 ^ bit91;
   if (segmentLow < 120)
-    sieve[i++] = 0xff ^ bit119 ^ bit121;
+  {
+    uint64_t i = segmentLow / 30;
+    uint8_t* sieveArray = sieve.data();
+    pod_array<uint8_t, 8> primeBits = { 0xff, 0xef, 0x77, 0x3f, 0xdb, 0xed, 0x9e, 0xfc };
+
+    assert(sieve.capacity() >= 4);
+    for (std::size_t j = 0; j < 4; j++)
+      sieveArray[j] = primeBits[i + j];
+  }
 }
 
 /// Pre-sieve with the primes <= 13
