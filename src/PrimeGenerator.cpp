@@ -155,7 +155,7 @@ void PrimeGenerator::initPrevPrimes(pod_vector<uint64_t>& primes,
   auto resize = [](pod_vector<uint64_t>& primes,
                    std::size_t size)
   {
-    // Avoid reallocation in fillPrevPrimes()
+    // Avoids reallocation in fillPrevPrimes()
     size += 64;
 
     if (primes.empty())
@@ -233,8 +233,11 @@ void PrimeGenerator::initNextPrimes(pod_vector<uint64_t>& primes,
       resize(primes, *size);
     else
     {
-      std::size_t pix = primeCountApprox(start_, stop_);
+      // +64 is needed because our fillNextPrimes()
+      // algorithm aborts as soon as there is not
+      // enough space to store 64 more primes.
       std::size_t minSize = *size + 64;
+      std::size_t pix = primeCountApprox(start_, stop_) + 64;
       pix = inBetween(minSize, pix, maxSize);
       pix = std::max(*size, pix);
       resize(primes, pix);
@@ -247,8 +250,11 @@ void PrimeGenerator::initNextPrimes(pod_vector<uint64_t>& primes,
   }
   else
   {
-    std::size_t pix = primeCountApprox(start_, stop_);
+    // +64 is needed because our fillNextPrimes()
+    // algorithm aborts as soon as there is not
+    // enough space to store 64 more primes.
     std::size_t minSize = 64;
+    std::size_t pix = primeCountApprox(start_, stop_) + 64;
     pix = inBetween(minSize, pix, maxSize);
     resize(primes, pix);
   }
