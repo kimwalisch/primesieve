@@ -12,11 +12,11 @@
 #include <primesieve/Erat.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/littleendian_cast.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
 #include <algorithm>
-#include <cassert>
 
 namespace primesieve {
 
@@ -33,12 +33,12 @@ void SievingPrimes::init(Erat* erat,
                          PreSieve& preSieve,
                          MemoryPool& memoryPool)
 {
-  assert(preSieve.getMaxPrime() >= 7);
+  ASSERT(preSieve.getMaxPrime() >= 7);
   uint64_t start = preSieve.getMaxPrime() + 2;
   uint64_t stop = isqrt(erat->getStop());
   Erat::init(start, stop, sieveSize, preSieve, memoryPool);
 
-  assert(start % 2 == 1);
+  ASSERT(start % 2 == 1);
   tinyIdx_ = start;
   low_ = segmentLow_;
 
@@ -68,7 +68,7 @@ void SievingPrimes::fill()
   size_t num = 0;
   uint64_t low = low_;
   uint64_t sieveSize = sieve_.size();
-  assert(primes_.size() >= 64);
+  ASSERT(primes_.size() >= 64);
 
   // Fill the buffer with at least (primes_.size() - 64) primes.
   // Each loop iteration can generate up to 64 primes

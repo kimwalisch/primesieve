@@ -13,7 +13,6 @@
 #include "macros.hpp"
 
 #include <algorithm>
-#include <cassert>
 #include <cstddef>
 #include <type_traits>
 #include <utility>
@@ -98,13 +97,13 @@ public:
 
   T& operator[](std::size_t pos) noexcept
   {
-    assert(pos < size());
+    ASSERT(pos < size());
     return array_[pos];
   }
 
   const T& operator[](std::size_t pos) const noexcept
   {
-    assert(pos < size());
+    ASSERT(pos < size());
     return array_[pos];
   }
 
@@ -120,13 +119,13 @@ public:
 
   std::size_t size() const noexcept
   {
-    assert(end_ >= array_);
+    ASSERT(end_ >= array_);
     return (std::size_t)(end_ - array_);
   }
 
   std::size_t capacity() const noexcept
   {
-    assert(capacity_ >= array_);
+    ASSERT(capacity_ >= array_);
     return (std::size_t)(capacity_ - array_);
   }
 
@@ -152,25 +151,25 @@ public:
 
   T& front() noexcept
   {
-    assert(!empty());
+    ASSERT(!empty());
     return *array_;
   }
 
   const T& front() const noexcept
   {
-    assert(!empty());
+    ASSERT(!empty());
     return *array_;
   }
 
   T& back() noexcept
   {
-    assert(!empty());
+    ASSERT(!empty());
     return *(end_ - 1);
   }
 
   const T& back() const noexcept
   {
-    assert(!empty());
+    ASSERT(!empty());
     return *(end_ - 1);
   }
 
@@ -214,7 +213,7 @@ public:
     {
       // This will only be used for classes
       // and structs with constructors.
-      assert(n <= capacity());
+      ASSERT(n <= capacity());
       std::fill(end_, array_ + n, T());
     }
 
@@ -228,11 +227,11 @@ private:
 
   void reserve_unchecked(std::size_t n)
   {
-    assert(n > capacity());
+    ASSERT(n > capacity());
     std::size_t new_capacity = get_new_capacity<T>(n);
     std::size_t old_size = size();
-    assert(new_capacity >= n);
-    assert(new_capacity > old_size);
+    ASSERT(new_capacity >= n);
+    ASSERT(new_capacity > old_size);
 
     // This default initializes memory of classes and
     // structs with constructors. But it does not default
@@ -253,7 +252,7 @@ private:
   ALWAYS_INLINE typename std::enable_if<std::is_trivial<U>::value, std::size_t>::type
   get_new_capacity(std::size_t size)
   {
-    assert(size > 0);
+    ASSERT(size > 0);
     // GCC & Clang's std::vector grow the capacity by at least
     // 2x for every call to resize() with n > capacity(). We
     // grow by at least 1.5x as we tend to accurately calculate
@@ -268,7 +267,7 @@ private:
   ALWAYS_INLINE typename std::enable_if<!std::is_trivial<U>::value, std::size_t>::type
   get_new_capacity(std::size_t size)
   {
-    assert(size > 0);
+    ASSERT(size > 0);
     // GCC & Clang's std::vector grow the capacity by at least
     // 2x for every call to resize() with n > capacity(). We
     // grow by at least 1.5x as we tend to accurately calculate
@@ -287,13 +286,13 @@ public:
 
   T& operator[](std::size_t pos) noexcept
   {
-    assert(pos < size());
+    ASSERT(pos < size());
     return array_[pos];
   }
 
   const T& operator[](std::size_t pos) const noexcept
   {
-    assert(pos < size());
+    ASSERT(pos < size());
     return array_[pos];
   }
 
@@ -334,13 +333,13 @@ public:
 
   T& back() noexcept
   {
-    assert(N > 0);
+    ASSERT(N > 0);
     return array_[N - 1];
   }
 
   const T& back() const noexcept
   {
-    assert(N > 0);
+    ASSERT(N > 0);
     return array_[N - 1];
   }
 

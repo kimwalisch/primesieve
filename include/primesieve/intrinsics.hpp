@@ -11,8 +11,8 @@
 #ifndef INTRINSICS_HPP
 #define INTRINSICS_HPP
 
+#include "macros.hpp"
 #include <stdint.h>
-#include <cassert>
 
 #if !defined(__has_include)
   #define __has_include(x) 0
@@ -150,7 +150,7 @@ inline uint64_t ctz64(uint64_t x)
   // BSF(0) = 0, hence there is no undefined behavior. However, you
   // cannot rely on ctz64(0) = 0 since TZCNT(0) = 64.
   __asm__("rep bsf %1, %0" : "=r"(x) : "0"(x));
-  assert(x <= 64);
+  ASSERT(x <= 64);
   return x;
 #endif
 }
@@ -204,7 +204,7 @@ inline int ctz64(uint64_t x)
 {
   // __builtin_ctz(0) is undefined behavior,
   // we don't define CTZ64_SUPPORTS_ZERO.
-  assert(x != 0);
+  ASSERT(x != 0);
 
 #if __cplusplus >= 201703L
   if constexpr(sizeof(int) >= sizeof(uint64_t))

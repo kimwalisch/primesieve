@@ -12,9 +12,10 @@
 #ifndef WHEEL_HPP
 #define WHEEL_HPP
 
+#include "macros.hpp"
+
 #include <stdint.h>
 #include <algorithm>
-#include <cassert>
 
 namespace primesieve {
 
@@ -48,7 +49,7 @@ public:
   ///
   void addSievingPrime(uint64_t prime, uint64_t segmentLow)
   {
-    assert(segmentLow % 30 == 0);
+    ASSERT(segmentLow % 30 == 0);
 
     // This hack is required because in primesieve the 8
     // bits of each byte (of the sieve array) correspond to

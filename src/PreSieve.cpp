@@ -28,10 +28,10 @@
 
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/EratSmall.hpp>
+#include <primesieve/macros.hpp>
 
 #include <stdint.h>
 #include <algorithm>
-#include <cassert>
 #include <cmath>
 #include <vector>
 
@@ -238,8 +238,8 @@ void PreSieve::initBuffers()
     buffers_[i].resize(product / 30);
     std::fill(buffers_[i].begin(), buffers_[i].end(), 0xff);
     uint64_t maxPrime = bufferPrimes[i].back();
-    assert(maxPrime == *std::max_element(bufferPrimes[i].begin(), bufferPrimes[i].end()));
-    assert(start >= maxPrime * maxPrime);
+    ASSERT(maxPrime == *std::max_element(bufferPrimes[i].begin(), bufferPrimes[i].end()));
+    ASSERT(start >= maxPrime * maxPrime);
     maxPrime_ = std::max(maxPrime_, maxPrime);
 
     EratSmall eratSmall;
@@ -269,7 +269,7 @@ void PreSieve::preSieve(pod_vector<uint8_t>& sieve,
     uint8_t* sieveArray = sieve.data();
     pod_array<uint8_t, 8> primeBits = { 0xff, 0xef, 0x77, 0x3f, 0xdb, 0xed, 0x9e, 0xfc };
 
-    assert(sieve.capacity() >= 4);
+    ASSERT(sieve.capacity() >= 4);
     for (std::size_t j = 0; j < 4; j++)
       sieveArray[j] = primeBits[i + j];
   }

@@ -23,7 +23,6 @@
 
 #include <stdint.h>
 #include <algorithm>
-#include <cassert>
 
 using std::size_t;
 
@@ -48,7 +47,7 @@ void EratSmall::init(uint64_t stop,
                      uint64_t l1CacheSize,
                      uint64_t maxPrime)
 {
-  assert((maxPrime / 30) * getMaxFactor() + getMaxFactor() <= SievingPrime::MAX_MULTIPLEINDEX);
+  ASSERT((maxPrime / 30) * getMaxFactor() + getMaxFactor() <= SievingPrime::MAX_MULTIPLEINDEX);
   static_assert(config::FACTOR_ERATSMALL <= 4.5,
                "config::FACTOR_ERATSMALL > 4.5 causes multipleIndex overflow 23-bits!");
 
@@ -64,7 +63,7 @@ void EratSmall::storeSievingPrime(uint64_t prime,
                                   uint64_t multipleIndex,
                                   uint64_t wheelIndex)
 {
-  assert(prime <= maxPrime_);
+  ASSERT(prime <= maxPrime_);
   uint64_t sievingPrime = prime / 30;
   primes_.emplace_back(sievingPrime, multipleIndex, wheelIndex);
 }

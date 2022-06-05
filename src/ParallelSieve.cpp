@@ -12,12 +12,12 @@
 #include <primesieve/forward.hpp>
 #include <primesieve/ParallelSieve.hpp>
 #include <primesieve/PrimeSieve.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
 #include <algorithm>
 #include <atomic>
-#include <cassert>
 #include <chrono>
 #include <future>
 #include <mutex>
@@ -79,8 +79,8 @@ int ParallelSieve::idealNumThreads() const
 
 uint64_t ParallelSieve::getThreadDistance(int threads) const
 {
-  assert(threads > 0);
-  assert(getDistance() > 0);
+  ASSERT(threads > 0);
+  ASSERT(getDistance() > 0);
 
   uint64_t dist = getDistance();
   uint64_t balanced = isqrt(stop_) * 1000;

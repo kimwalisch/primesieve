@@ -5,7 +5,7 @@
 ///         once there is no more space in the current Bucket
 ///         a new Bucket is allocated.
 ///
-/// Copyright (C) 2020 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -15,11 +15,11 @@
 #define BUCKET_HPP
 
 #include "config.hpp"
+#include "macros.hpp"
 #include "pmath.hpp"
 
 #include <stdint.h>
 #include <cstddef>
-#include <cassert>
 
 namespace primesieve {
 
@@ -49,8 +49,8 @@ public:
   void set(uint64_t multipleIndex,
            uint64_t wheelIndex)
   {
-    assert(multipleIndex <= MAX_MULTIPLEINDEX);
-    assert(wheelIndex <= MAX_WHEELINDEX);
+    ASSERT(multipleIndex <= MAX_MULTIPLEINDEX);
+    ASSERT(wheelIndex <= MAX_WHEELINDEX);
     indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 23));
   }
 
@@ -58,8 +58,8 @@ public:
            uint64_t multipleIndex,
            uint64_t wheelIndex)
   {
-    assert(multipleIndex <= MAX_MULTIPLEINDEX);
-    assert(wheelIndex <= MAX_WHEELINDEX);
+    ASSERT(multipleIndex <= MAX_MULTIPLEINDEX);
+    ASSERT(wheelIndex <= MAX_WHEELINDEX);
     indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 23));
     sievingPrime_ = (uint32_t) sievingPrime;
   }
@@ -114,7 +114,7 @@ public:
   ///
   static Bucket* get(SievingPrime* sievingPrime)
   {
-    assert(sievingPrime != nullptr);
+    ASSERT(sievingPrime != nullptr);
     std::size_t address = (std::size_t) sievingPrime;
     // We need to adjust the address
     // in case the bucket is full.

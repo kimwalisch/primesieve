@@ -16,6 +16,7 @@
 #include <primesieve/Erat.hpp>
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeSieve.hpp>
@@ -23,7 +24,6 @@
 
 #include <stdint.h>
 #include <algorithm>
-#include <cassert>
 #include <iostream>
 #include <sstream>
 
@@ -112,7 +112,7 @@ void CountPrintPrimes::sieve()
 
 void CountPrintPrimes::countPrimes()
 {
-  assert(sieve_.capacity() % sizeof(uint64_t) == 0);
+  ASSERT(sieve_.capacity() % sizeof(uint64_t) == 0);
   uint64_t size = ceilDiv(sieve_.size(), 8);
   counts_[0] += popcount((const uint64_t*) sieve_.data(), size);
 }
@@ -124,7 +124,7 @@ void CountPrintPrimes::countkTuplets()
   {
     if (ps_.isCount(i))
     {
-      assert(sieve_.capacity() % 4 == 0);
+      ASSERT(sieve_.capacity() % 4 == 0);
       auto* sieve = sieve_.data();
       uint64_t sum = 0;
 

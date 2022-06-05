@@ -22,6 +22,18 @@
   #define __has_cpp_attribute(x) 0
 #endif
 
+/// We do the opposite of C/C++'s assert():
+/// 1) By default ASSERT() is disabled (no-op).
+/// 2) ASSERT() must be explicitly enabled using -DENABLE_ASSERT.
+///
+#if defined(ENABLE_ASSERT)
+  #undef NDEBUG
+  #include <cassert>
+  #define ASSERT(x) assert(x)
+#else
+  #define ASSERT(x) (static_cast<void>(0))
+#endif
+
 #if __has_attribute(always_inline)
   #define ALWAYS_INLINE __attribute__((always_inline)) inline
 #elif defined(_MSC_VER)

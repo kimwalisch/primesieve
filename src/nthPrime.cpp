@@ -10,12 +10,12 @@
 #include <primesieve/iterator.hpp>
 #include <primesieve/forward.hpp>
 #include <primesieve/PrimeSieve.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
 #include <algorithm>
-#include <cassert>
 #include <chrono>
 #include <cmath>
 
@@ -149,7 +149,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   // here start < nth prime,
   // hence we can sieve forward the remaining
   // distance and find the nth prime
-  assert(count < n);
+  ASSERT(count < n);
 
   checkLimit(start);
   dist = nthPrimeDist(n, count, start) * 2;

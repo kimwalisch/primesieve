@@ -23,6 +23,7 @@
 #include <primesieve/macros.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/pod_vector.hpp>
 #include <primesieve/intrinsics.hpp>
@@ -30,7 +31,6 @@
 
 #include <stdint.h>
 #include <algorithm>
-#include <cassert>
 #include <limits>
 
 #if defined(MULTIARCH_AVX512)
@@ -182,7 +182,7 @@ void PrimeGenerator::initPrevPrimes(pod_vector<uint64_t>& primes,
   {
     std::size_t a = getStartIdx();
     std::size_t b = getStopIdx();
-    assert(a <= b);
+    ASSERT(a <= b);
 
     *size = (start_ <= 2) + b - a;
     resize(primes, std::max(*size, pix));
@@ -243,7 +243,7 @@ void PrimeGenerator::initNextPrimes(pod_vector<uint64_t>& primes,
       resize(primes, pix);
     }
 
-    assert(primes.size() >= *size);
+    ASSERT(primes.size() >= *size);
     std::copy(smallPrimes.begin() + a,
               smallPrimes.begin() + b,
               primes.begin());
@@ -264,7 +264,7 @@ void PrimeGenerator::initNextPrimes(pod_vector<uint64_t>& primes,
 
 void PrimeGenerator::initErat()
 {
-  assert(maxCachedPrime() >= 5);
+  ASSERT(maxCachedPrime() >= 5);
   uint64_t startErat = maxCachedPrime() + 2;
   startErat = std::max(startErat, start_);
   isInit_ = true;
@@ -421,7 +421,7 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
     // writing temporary results to memory.
     std::size_t i = *size;
     std::size_t maxSize = primes.size();
-    assert(i + 64 <= maxSize);
+    ASSERT(i + 64 <= maxSize);
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieve_.size();
@@ -480,7 +480,7 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
     // writing temporary results to memory.
     std::size_t i = *size;
     std::size_t maxSize = primes.size();
-    assert(i + 64 <= maxSize);
+    ASSERT(i + 64 <= maxSize);
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieve_.size();
@@ -498,7 +498,6 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
 
       do
       {
-        assert(j + 4 < maxSize);
         primes[j+0] = nextPrime(bits, low); bits &= bits - 1;
         primes[j+1] = nextPrime(bits, low); bits &= bits - 1;
         primes[j+2] = nextPrime(bits, low); bits &= bits - 1;
@@ -551,7 +550,7 @@ void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
     // writing temporary results to memory.
     std::size_t i = *size;
     std::size_t maxSize = primes.size();
-    assert(i + 64 <= maxSize);
+    ASSERT(i + 64 <= maxSize);
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieve_.size();

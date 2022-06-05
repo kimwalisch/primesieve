@@ -1,4 +1,4 @@
-Changes in version 8.0, 18/05/2022
+Changes in version 8.0, 05/06/2022
 ==================================
 
 * primesieve::iterator's ABI has been modified in both the C & C++ API.
@@ -17,6 +17,8 @@ Changes in version 8.0, 18/05/2022
   memory to store all sieving primes.
 * CpuInfo.cpp: Detect AVX512 using CPUID.
 * pmath.hpp: Use compiler instrinsics for ilog2() & floorPow2().
+* CMakeLists.txt: Automatically enable expensive debug assertions in debug
+                  mode (if CMAKE_BUILD_TYPE=Debug).
 
 Changes in version 7.9, 03/05/2022
 ==================================

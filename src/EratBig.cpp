@@ -28,10 +28,10 @@
 #include <primesieve/bits.hpp>
 #include <primesieve/Bucket.hpp>
 #include <primesieve/MemoryPool.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
-#include <cassert>
 #include <algorithm>
 
 namespace {
@@ -130,8 +130,8 @@ void EratBig::init(uint64_t stop,
                    MemoryPool& memoryPool)
 {
   // '>> log2SieveSize' requires power of 2 sieveSize
-  assert(isPow2(sieveSize));
-  assert(sieveSize <= SievingPrime::MAX_MULTIPLEINDEX + 1);
+  ASSERT(isPow2(sieveSize));
+  ASSERT(sieveSize <= SievingPrime::MAX_MULTIPLEINDEX + 1);
 
   stop_ = stop;
   maxPrime_ = maxPrime;
@@ -167,8 +167,8 @@ void EratBig::storeSievingPrime(uint64_t prime,
     memoryPool_->addBucket(buckets_.back());
   }
 
-  assert(prime <= maxPrime_);
-  assert(segment < buckets_.size());
+  ASSERT(prime <= maxPrime_);
+  ASSERT(segment < buckets_.size());
 
   buckets_[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
   if (Bucket::isFull(buckets_[segment]))

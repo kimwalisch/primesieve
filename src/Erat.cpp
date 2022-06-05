@@ -16,11 +16,11 @@
 #include <primesieve/EratMedium.hpp>
 #include <primesieve/EratBig.hpp>
 #include <primesieve/PreSieve.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>
 #include <algorithm>
-#include <cassert>
 
 namespace {
 
@@ -67,9 +67,9 @@ void Erat::init(uint64_t start,
   if (start > stop)
     return;
 
-  assert(start >= 7);
-  assert(maxSieveSize >= 16);
-  assert(maxSieveSize <= 8192);
+  ASSERT(start >= 7);
+  ASSERT(maxSieveSize >= 16);
+  ASSERT(maxSieveSize <= 8192);
 
   start_ = start;
   stop_ = stop;
@@ -157,7 +157,7 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
     sieveSize = ceilDiv(sieveSize, sizeof(uint64_t)) * sizeof(uint64_t);
   }
 
-  assert(sieveSize % sizeof(uint64_t) == 0);
+  ASSERT(sieveSize % sizeof(uint64_t) == 0);
   sieve_.resize(sieveSize);
 
   if (sqrtStop > maxPreSieve_)
@@ -177,7 +177,7 @@ uint64_t Erat::byteRemainder(uint64_t n)
 {
   // Return n % 30 using equivalence classes 7..36
   // instead of the usual 0..29.
-  assert(n >= 7);
+  ASSERT(n >= 7);
   return (n - 7) % 30 + 7;
 }
 
@@ -212,7 +212,7 @@ void Erat::sieveLastSegment()
   // unset bytes > stop
   auto* sieve = sieve_.data();
   auto i = sieve_.size();
-  assert(sieve_.capacity() % sizeof(uint64_t) == 0);
+  ASSERT(sieve_.capacity() % sizeof(uint64_t) == 0);
   for (; i % sizeof(uint64_t); i++)
     sieve[i] = 0;
 
