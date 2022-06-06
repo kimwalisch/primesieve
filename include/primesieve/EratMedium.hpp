@@ -29,10 +29,9 @@ class EratMedium : public Wheel30_t
 {
 public:
   void init(uint64_t, uint64_t, MemoryPool&);
-  bool hasSievingPrimes() const { return hasSievingPrimes_; }
+  bool hasSievingPrimes() const { return !buckets_.empty(); }
   NOINLINE void crossOff(pod_vector<uint8_t>& sieve);
 private:
-  bool hasSievingPrimes_ = false;
   uint64_t maxPrime_ = 0;
   MemoryPool* memoryPool_ = nullptr;
   pod_vector<SievingPrime*> buckets_;

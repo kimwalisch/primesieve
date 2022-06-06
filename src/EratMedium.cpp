@@ -79,7 +79,6 @@ void EratMedium::storeSievingPrime(uint64_t prime,
   if (Bucket::isFull(buckets_[wheelIndex]))
     memoryPool_->addBucket(buckets_[wheelIndex]);
 
-  hasSievingPrimes_ = true;
   buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);
 }
 
