@@ -73,6 +73,7 @@ void EratMedium::storeSievingPrime(uint64_t prime,
     buckets_.resize(64);
     currentBuckets_.resize(64);
     std::fill_n(buckets_.begin(), 64, nullptr);
+    std::fill_n(currentBuckets_.begin(), 64, nullptr);
   }
 
   if (Bucket::isFull(buckets_[wheelIndex]))
@@ -85,7 +86,6 @@ void EratMedium::storeSievingPrime(uint64_t prime,
 void EratMedium::crossOff(pod_vector<uint8_t>& sieve)
 {
   std::swap(buckets_, currentBuckets_);
-  std::fill_n(buckets_.begin(), 64, nullptr);
 
   // Iterate over the 64 bucket lists.
   // The 1st list contains sieving primes with wheelIndex = 0.
@@ -98,6 +98,7 @@ void EratMedium::crossOff(pod_vector<uint8_t>& sieve)
     {
       Bucket* bucket = Bucket::get(currentBuckets_[i]);
       bucket->setEnd(currentBuckets_[i]);
+      currentBuckets_[i] = nullptr;
       uint64_t wheelIndex = i;
 
       // Iterate over the current bucket list.
