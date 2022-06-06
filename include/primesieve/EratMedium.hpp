@@ -35,7 +35,8 @@ private:
   bool hasSievingPrimes_ = false;
   uint64_t maxPrime_ = 0;
   MemoryPool* memoryPool_ = nullptr;
-  pod_array<SievingPrime*, 64> buckets_;
+  pod_vector<SievingPrime*> buckets_;
+  pod_vector<SievingPrime*> currentBuckets_;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   NOINLINE void crossOff_7(uint8_t*, uint8_t*, Bucket*);
   NOINLINE void crossOff_11(uint8_t*, uint8_t*, Bucket*);

@@ -24,6 +24,7 @@
 #include <primesieve/MemoryPool.hpp>
 
 #include <stdint.h>
+#include <utility>
 
 /// This macro sorts the current sieving prime by its
 /// wheelIndex after sieving has finished. When we then
@@ -57,7 +58,6 @@ void EratMedium::init(uint64_t stop,
   stop_ = stop;
   maxPrime_ = maxPrime;
   memoryPool_ = &memoryPool;
-  buckets_.fill(nullptr);
 }
 
 /// Add a new sieving prime to EratMedium
@@ -68,6 +68,13 @@ void EratMedium::storeSievingPrime(uint64_t prime,
   ASSERT(prime <= maxPrime_);
   uint64_t sievingPrime = prime / 30;
 
+  if_unlikely(buckets_.empty())
+  {
+    buckets_.resize(64);
+    currentBuckets_.resize(64);
+    std::fill_n(buckets_.begin(), 64, nullptr);
+  }
+
   if (Bucket::isFull(buckets_[wheelIndex]))
     memoryPool_->addBucket(buckets_[wheelIndex]);
 
@@ -77,9 +84,8 @@ void EratMedium::storeSievingPrime(uint64_t prime,
 
 void EratMedium::crossOff(pod_vector<uint8_t>& sieve)
 {
-  // Make a copy of buckets, then reset it
-  auto buckets = buckets_;
-  buckets_.fill(nullptr);
+  std::swap(buckets_, currentBuckets_);
+  std::fill_n(buckets_.begin(), 64, nullptr);
 
   // Iterate over the 64 bucket lists.
   // The 1st list contains sieving primes with wheelIndex = 0.
@@ -88,34 +94,34 @@ void EratMedium::crossOff(pod_vector<uint8_t>& sieve)
   // ...
   for (uint64_t i = 0; i < 64; i++)
   {
-    if (!buckets[i])
-      continue;
-
-    Bucket* bucket = Bucket::get(buckets[i]);
-    bucket->setEnd(buckets[i]);
-    uint64_t wheelIndex = i;
-
-    // Iterate over the current bucket list.
-    // For each bucket cross off the
-    // multiples of its sieving primes.
-    while (bucket)
+    if (currentBuckets_[i])
     {
-      switch (wheelIndex / 8)
-      {
-        case 0: crossOff_7 (sieve.begin(), sieve.end(), bucket); break;
-        case 1: crossOff_11(sieve.begin(), sieve.end(), bucket); break;
-        case 2: crossOff_13(sieve.begin(), sieve.end(), bucket); break;
-        case 3: crossOff_17(sieve.begin(), sieve.end(), bucket); break;
-        case 4: crossOff_19(sieve.begin(), sieve.end(), bucket); break;
-        case 5: crossOff_23(sieve.begin(), sieve.end(), bucket); break;
-        case 6: crossOff_29(sieve.begin(), sieve.end(), bucket); break;
-        case 7: crossOff_31(sieve.begin(), sieve.end(), bucket); break;
-        default: UNREACHABLE;
-      }
+      Bucket* bucket = Bucket::get(currentBuckets_[i]);
+      bucket->setEnd(currentBuckets_[i]);
+      uint64_t wheelIndex = i;
 
-      Bucket* processed = bucket;
-      bucket = bucket->next();
-      memoryPool_->freeBucket(processed);
+      // Iterate over the current bucket list.
+      // For each bucket cross off the
+      // multiples of its sieving primes.
+      while (bucket)
+      {
+        switch (wheelIndex / 8)
+        {
+          case 0: crossOff_7 (sieve.begin(), sieve.end(), bucket); break;
+          case 1: crossOff_11(sieve.begin(), sieve.end(), bucket); break;
+          case 2: crossOff_13(sieve.begin(), sieve.end(), bucket); break;
+          case 3: crossOff_17(sieve.begin(), sieve.end(), bucket); break;
+          case 4: crossOff_19(sieve.begin(), sieve.end(), bucket); break;
+          case 5: crossOff_23(sieve.begin(), sieve.end(), bucket); break;
+          case 6: crossOff_29(sieve.begin(), sieve.end(), bucket); break;
+          case 7: crossOff_31(sieve.begin(), sieve.end(), bucket); break;
+          default: UNREACHABLE;
+        }
+
+        Bucket* processed = bucket;
+        bucket = bucket->next();
+        memoryPool_->freeBucket(processed);
+      }
     }
   }
 }
