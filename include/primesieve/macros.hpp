@@ -22,9 +22,9 @@
   #define __has_cpp_attribute(x) 0
 #endif
 
-/// We do the opposite of C/C++'s assert():
-/// 1) By default ASSERT() is disabled (no-op).
-/// 2) ASSERT() must be explicitly enabled using -DENABLE_ASSERT.
+/// Enable expensive debugging assertions.
+/// These assertions enable e.g. bounds checks for the
+/// pod_vector and pod_array types.
 ///
 #if defined(ENABLE_ASSERT)
   #undef NDEBUG
