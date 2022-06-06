@@ -24,7 +24,6 @@
 #include <primesieve/MemoryPool.hpp>
 
 #include <stdint.h>
-#include <utility>
 
 /// This macro sorts the current sieving prime by its
 /// wheelIndex after sieving has finished. When we then
@@ -84,7 +83,7 @@ void EratMedium::storeSievingPrime(uint64_t prime,
 
 void EratMedium::crossOff(pod_vector<uint8_t>& sieve)
 {
-  std::swap(buckets_, currentBuckets_);
+  currentBuckets_.swap(buckets_);
 
   // Iterate over the 64 bucket lists.
   // The 1st list contains sieving primes with wheelIndex = 0.

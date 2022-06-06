@@ -72,22 +72,32 @@ public:
   /// Move constructor
   pod_vector(pod_vector&& other) noexcept
   {
-    std::swap(array_, other.array_);
-    std::swap(end_, other.end_);
-    std::swap(capacity_, other.capacity_);
+    swap(other);
   }
 
   /// Move assignment operator
   pod_vector& operator=(pod_vector&& other) noexcept
   {
     if (this != &other)
-    {
-      std::swap(array_, other.array_);
-      std::swap(end_, other.end_);
-      std::swap(capacity_, other.capacity_);
-    }
+      swap(other);
 
     return *this;
+  }
+
+  /// Better assembly than: std::swap(vect1, vect2)
+  void swap(pod_vector& other) noexcept
+  {
+    T* tmp_array = array_;
+    T* tmp_end = end_;
+    T* tmp_capacity = capacity_;
+
+    array_ = other.array_;
+    end_ = other.end_;
+    capacity_ =  other.capacity_;
+
+    other.array_ = tmp_array;
+    other.end_ = tmp_end;
+    other.capacity_ = tmp_capacity;
   }
 
   bool empty() const noexcept
