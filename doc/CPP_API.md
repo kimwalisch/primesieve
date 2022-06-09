@@ -1,15 +1,22 @@
-# libprimesieve C++ examples
+# libprimesieve C++ API
 
 This is a short selection of C++ code snippets that use libprimesieve to generate prime numbers.
 These examples cover the most frequently used functionality of libprimesieve. Arguably the most
 useful feature provided by libprimesieve is the ```primesieve::iterator``` which lets you
 iterate over primes using the ```next_prime()``` or ```prev_prime()``` methods.
 
-Additional libprimesieve documentation links:
+Quick links:
 
-* [Install libprimesieve](https://github.com/kimwalisch/primesieve#installation)
-* [C++ API Reference](https://kimwalisch.github.io/primesieve/api)
-* [libprimesieve performance tips](https://github.com/kimwalisch/primesieve#libprimesieve-performance-tips)
+* [```primesieve::iterator::next_prime()```](#primesieveiteratornext_prime)
+* [```primesieve::iterator::skipto()```](#primesieveiteratorskipto)
+* [```primesieve::iterator::prev_prime()```](#primesieveiteratorprev_prime)
+* [```primesieve::generate_primes()```](#primesievegenerate_primes)
+* [```primesieve::generate_n_primes()```](#primesievegenerate_n_primes)
+* [```primesieve::count_primes()```](#primesievecount_primes)
+* [```primesieve::nth_prime()```](#primesieventh_prime)
+* [Error handling](#error-handling)
+* [Performance tips](#performance-tips)
+* [libprimesieve multi-threading](#libprimesieve-multi-threading)
 
 ## ```primesieve::iterator::next_prime()```
 
@@ -214,7 +221,7 @@ int main()
 
 * [Build instructions](#how-to-compile)
 
-# Error handling
+## Error handling
 
 If an error occurs libprimesieve throws a ```primesieve::primesieve_error``` exception that is
 derived from ```std::runtime_error```. Note that libprimesieve very rarely throws an exception,
@@ -245,7 +252,95 @@ int main()
 }
 ```
 
-# How to compile
+## Performance tips
+
+* ```primesieve::iterator::next_prime()``` runs up to 2x faster and uses only
+half as much memory as ```prev_prime()```. Oftentimes algorithms that iterate
+over primes using ```prev_prime()``` can be rewritten using ```next_prime()```
+which improves performance in most cases.
+
+* ```primesieve::iterator``` is single-threaded. See the
+[multi-threading](#libprimesieve-multi-threading) section for how to
+parallelize an algorithm using multiple ```primesieve::iterator``` objects.
+
+* The ```primesieve::iterator``` constructor and the
+```primesieve::iterator::skipto()``` method take an optional ```stop_hint```
+parameter that can provide a significant speedup if the sieving distance
+is relatively small e.g.&nbsp;<&nbsp;sqrt(start). If ```stop_hint``` is set
+```primesieve::iterator``` will only buffer primes up to this limit.
+
+* Many of libprimesieve's functions e.g. ```count_primes(start, stop)``` &
+```nth_prime(n, start)``` incur an initialization overhead of O(sqrt(start))
+even if the total sieving distance is tiny. It is therefore not a good idea to
+call these functions repeatedly in a loop unless the sieving distance is
+sufficiently large e.g. >&nbsp;sqrt(start). If the sieving distance is mostly
+small consider using a ```primesieve::iterator``` instead to avoid the
+recurring initialization overhead.
+
+## libprimesieve multi-threading
+
+By default libprimesieve uses multi-threading for counting primes/k-tuplets
+and for finding the nth prime. However ```primesieve::iterator``` the most
+useful feature provided by libprimesieve runs single-threaded because
+it is simply not possible to efficiently parallelize the generation of primes
+in sequential order.
+
+Hence if you want to parallelize an algorithm using ```primesieve::iterator```
+you need to implement the multi-threading part yourself. The basic technique
+for parallelizing an algorithm using ```primesieve::iterator``` is:
+
+* Subdivide the sieving distance into equally sized chunks.
+* Process each chunk in its own thread.
+* Combine the partial thread results to get the final result.
+
+The C++ example below calculates the sum of the primes ≤ 10<sup>10</sup> in parallel
+using [OpenMP](https://en.wikipedia.org/wiki/OpenMP). Each thread processes a
+chunk of size ```(dist / threads) + 1``` using its own ```primesieve::iterator```
+object. The OpenMP reduction clause takes care of adding the partial
+prime sum results together in a thread safe manner.
+
+```C++
+#include <primesieve.hpp>
+#include <iostream>
+#include <omp.h>
+
+int main()
+{
+  uint64_t sum = 0;
+  uint64_t dist = 1e10;
+  int threads = omp_get_max_threads();
+  uint64_t thread_dist = (dist / threads) + 1;
+
+  #pragma omp parallel for reduction(+: sum)
+  for (int i = 0; i < threads; i++)
+  {
+    uint64_t start = i * thread_dist;
+    uint64_t stop = std::min(start + thread_dist, dist);
+    primesieve::iterator it(start, stop);
+    uint64_t prime = it.next_prime();
+
+    for (; prime <= stop; prime = it.next_prime())
+      sum += prime;
+  }
+
+  std::cout << "Sum of the primes below " << dist << ": " << sum << std::endl;
+
+  return 0;
+}
+```
+
+<details>
+<summary>Build instructions</summary>
+
+```bash
+# Unix-like OSes
+c++ -O3 -fopenmp primesum.cpp -o primesum -lprimesieve
+time ./primesum
+```
+
+</details>
+
+## How to compile
 
 ### Unix-like OSes
 
@@ -295,7 +390,7 @@ find_package(primesieve REQUIRED static)
 target_link_libraries(your_program primesieve::primesieve)
 ```
 
-# Minimal CMake project file
+## Minimal CMake project file
 
 If you want to build your C++ program (named ```primes.cpp```) using CMake, then you can use
 the minimal ```CMakeLists.txt``` below. Note that this requires that
