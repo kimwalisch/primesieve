@@ -5,6 +5,11 @@ numbers. These examples cover the most frequently used functionality of libprime
 the most useful feature provided by libprimesieve is the ```primesieve::iterator``` which lets you
 iterate over primes using the ```next_prime()``` or ```prev_prime()``` methods. 
 
+The functions of libprimesieve's C++ API are defined in the [```<primesieve.hpp>```](../include/primesieve.hpp)
+and [```<primesieve/iterator.hpp>```](../include/primesieve/iterator.hpp) header files. You can
+also build libprimesieve's [Doxygen API documentation](BUILD.md#api-documentation) if you need
+more detailed information.
+
 ## Quick links:
 
 * [```primesieve::iterator::next_prime()```](#primesieveiteratornext_prime)
