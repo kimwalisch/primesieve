@@ -1,11 +1,11 @@
 # libprimesieve C++ API
 
-This is a short selection of C++ code snippets that use libprimesieve to generate prime numbers.
-These examples cover the most frequently used functionality of libprimesieve. Arguably the most
-useful feature provided by libprimesieve is the ```primesieve::iterator``` which lets you
-iterate over primes using the ```next_prime()``` or ```prev_prime()``` methods.
+This page contains a short selection of C++ code snippets that use libprimesieve to generate prime
+numbers. These examples cover the most frequently used functionality of libprimesieve. Arguably
+the most useful feature provided by libprimesieve is the ```primesieve::iterator``` which lets you
+iterate over primes using the ```next_prime()``` or ```prev_prime()``` methods. 
 
-Quick links:
+## Quick links:
 
 * [```primesieve::iterator::next_prime()```](#primesieveiteratornext_prime)
 * [```primesieve::iterator::skipto()```](#primesieveiteratorskipto)
@@ -17,6 +17,8 @@ Quick links:
 * [Error handling](#error-handling)
 * [Performance tips](#performance-tips)
 * [libprimesieve multi-threading](#libprimesieve-multi-threading)
+* [Compiling and linking](#compiling-and-linking)
+* [CMake support](#cmake-support)
 
 ## ```primesieve::iterator::next_prime()```
 
@@ -221,7 +223,7 @@ int main()
 
 * [Build instructions](#how-to-compile)
 
-## Error handling
+# Error handling
 
 If an error occurs libprimesieve throws a ```primesieve::primesieve_error``` exception that is
 derived from ```std::runtime_error```. Note that libprimesieve very rarely throws an exception,
@@ -252,7 +254,7 @@ int main()
 }
 ```
 
-## Performance tips
+# Performance tips
 
 * ```primesieve::iterator::next_prime()``` runs up to 2x faster and uses only
 half as much memory as ```prev_prime()```. Oftentimes algorithms that iterate
@@ -277,7 +279,7 @@ sufficiently large e.g. >&nbsp;sqrt(start). If the sieving distance is mostly
 small consider using a ```primesieve::iterator``` instead to avoid the
 recurring initialization overhead.
 
-## libprimesieve multi-threading
+# libprimesieve multi-threading
 
 By default libprimesieve uses multi-threading for counting primes/k-tuplets
 and for finding the nth prime. However ```primesieve::iterator``` the most
@@ -340,7 +342,7 @@ time ./primesum
 
 </details>
 
-## How to compile
+# Compiling and linking
 
 ### Unix-like OSes
 
