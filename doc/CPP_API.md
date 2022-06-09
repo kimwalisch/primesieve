@@ -10,7 +10,7 @@ and [```<primesieve/iterator.hpp>```](../include/primesieve/iterator.hpp) header
 also build libprimesieve's [Doxygen API documentation](BUILD.md#api-documentation) if you need
 more detailed information.
 
-## Quick links:
+## Contents
 
 * [```primesieve::iterator::next_prime()```](#primesieveiteratornext_prime)
 * [```primesieve::iterator::skipto()```](#primesieveiteratorskipto)
