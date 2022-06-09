@@ -40,7 +40,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve_skipto()```
 
@@ -72,7 +72,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve_prev_prime()```
 
@@ -103,7 +103,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve_generate_primes()```
 
@@ -134,7 +134,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve_generate_n_primes()```
 
@@ -164,7 +164,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve_count_primes()```
 
@@ -186,7 +186,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve_nth_prime()```
 
@@ -209,7 +209,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 # Error handling
 

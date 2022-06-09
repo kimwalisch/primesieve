@@ -49,7 +49,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve::iterator::skipto()```
 
@@ -77,7 +77,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 The ```primesieve::iterator::skipto()``` method (and the ```primesieve::iterator```
 constructor) take an optional ```stop_hint``` parameter for performance optimization.
@@ -105,7 +105,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve::iterator::prev_prime()```
 
@@ -131,7 +131,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve::generate_primes()```
 
@@ -159,7 +159,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve::generate_n_primes()```
 
@@ -185,7 +185,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve::count_primes()```
 
@@ -205,7 +205,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve::nth_prime()```
 
@@ -226,7 +226,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 # Error handling
 
