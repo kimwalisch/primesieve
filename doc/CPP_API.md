@@ -29,9 +29,11 @@ more detailed information.
 
 ## ```primesieve::iterator::next_prime()```
 
-By default ```primesieve::iterator::next_prime()``` generates primes > 0 i.e. 2, 3, 5, 7, ...
-If needed, you can also use multiple ```primesieve::iterator``` objects within
-the same program. 
+By default ```primesieve::next_prime()``` generates primes > 0 i.e. 2, 3, 5, 7, ...
+If needed, you can also use multiple ```primesieve::iterator``` objects within the
+same program. Note that ```primesieve::iterator``` is not ideal if you are
+iterating over the same primes many times in a loop, in this case it is better
+to [store the primes in a vector](#primesievegenerate_primes).
 
 ```C++
 #include <primesieve.hpp>
