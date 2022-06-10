@@ -2,10 +2,15 @@
 
 libprimesieve is a highly optimized library for generating prime numbers, it can generate primes
 and [prime k-tuplets](https://en.wikipedia.org/wiki/Prime_k-tuple) up to 2<sup>64</sup>.
-This page contains a short selection of C++ code snippets that use libprimesieve to generate prime
-numbers. These examples cover the most frequently used functionality of libprimesieve. Arguably
-the most useful feature provided by libprimesieve is the ```primesieve::iterator``` which lets you
-iterate over primes using the ```next_prime()``` or ```prev_prime()``` methods. 
+libprimesieve generates primes using the segmented
+[sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) with
+[wheel factorization](https://en.wikipedia.org/wiki/Wheel_factorization).
+This algorithm has a run time complexity of $O(n\ log\ log\ n)$ operations and uses
+$O(\sqrt{n})$ memory. This page contains a selection of C++ code snippets that show use
+libprimesieve to generate prime numbers. These examples cover the most frequently used
+functionality of libprimesieve. Arguably the most useful feature provided by libprimesieve is the
+```primesieve::iterator``` which lets you iterate over primes using the ```next_prime()``` or
+```prev_prime()``` methods.
 
 The functions of libprimesieve's C++ API are defined in the [```<primesieve.hpp>```](../include/primesieve.hpp)
 and [```<primesieve/iterator.hpp>```](../include/primesieve/iterator.hpp) header files. You can
