@@ -349,6 +349,7 @@ prime sum results together in a thread safe manner.
 
 ```C
 #include <primesieve.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <omp.h>
 
