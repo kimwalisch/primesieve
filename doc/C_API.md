@@ -1,20 +1,40 @@
-# libprimesieve C examples
+# libprimesieve C API
 
-This is a short selection of C code snippets that use libprimesieve to generate prime numbers.
-These examples cover the most frequently used functionality of libprimesieve. Arguably the most
-useful feature provided by libprimesieve is the ```primesieve_iterator``` which lets you
+libprimesieve is a highly optimized library for generating prime numbers, it can generate primes
+and [prime k-tuplets](https://en.wikipedia.org/wiki/Prime_k-tuple) up to 2<sup>64</sup>.
+This page contains a short selection of C code snippets that use libprimesieve to generate prime
+numbers. These examples cover the most frequently used functionality of libprimesieve. Arguably
+the most useful feature provided by libprimesieve is the ```primesieve_iterator``` which lets you
 iterate over primes using the ```primesieve_next_prime()``` or ```primesieve_prev_prime()```
-functions.
+methods. 
 
-Additional libprimesieve documentation links:
+The functions of libprimesieve's C API are defined in the [```<primesieve.h>```](../include/primesieve.h)
+and [```<primesieve/iterator.h>```](../include/primesieve/iterator.h) header files. You can
+also build libprimesieve's [Doxygen API documentation](BUILD.md#api-documentation) if you need
+more detailed information.
 
-* [Install libprimesieve](https://github.com/kimwalisch/primesieve#installation)
-* [C API Reference](https://kimwalisch.github.io/primesieve/api)
-* [libprimesieve performance tips](https://github.com/kimwalisch/primesieve#libprimesieve-performance-tips)
+## Contents
+
+* [```primesieve_next_prime()```](#primesieve_next_prime)
+* [```primesieve_skipto()```](#primesieve_skipto)
+* [```primesieve_prev_prime()```](#primesieve_prev_prime)
+* [```primesieve_generate_primes()```](#primesieve_generate_primes)
+* [```primesieve_generate_n_primes()```](#primesieve_generate_n_primes)
+* [```primesieve_count_primes()```](#primesieve_count_primes)
+* [```primesieve_nth_prime()```](#primesieve_nth_prime)
+* [Error handling](#error-handling)
+* [Performance tips](#performance-tips)
+* [libprimesieve multi-threading](#libprimesieve-multi-threading)
+* [Compiling and linking](#compiling-and-linking)
+* [CMake support](#cmake-support)
 
 ## ```primesieve_next_prime()```
 
 By default ```primesieve_next_prime()``` generates primes > 0 i.e. 2, 3, 5, 7, ...
+If needed, you can also use multiple ```primesieve_iterator``` objects within the
+same program. Note that ```primesieve_iterator``` is not ideal if you are
+iterating over the same primes many times in a loop, in this case it is better
+to [store the primes in an array](#primesieve_generate_primes).
 
 ```C
 #include <primesieve.h>
@@ -29,7 +49,7 @@ int main()
   uint64_t sum = 0;
   uint64_t prime = 0;
 
-  /* iterate over the primes < 10^9 */
+  /* Iterate over the primes < 10^9 */
   while ((prime = primesieve_next_prime(&it)) < 1000000000)
     sum += prime;
 
@@ -40,7 +60,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve_skipto()```
 
@@ -63,7 +83,7 @@ int main()
   primesieve_skipto(&it, 1000, 1100);
   uint64_t prime;
 
-  /* iterate over primes from ]1000, 1100] */
+  /* Iterate over primes from ]1000, 1100] */
   while ((prime = primesieve_next_prime(&it)) <= 1100)
     printf("%" PRIu64 "\n", prime);
 
@@ -72,7 +92,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve_prev_prime()```
 
@@ -94,7 +114,7 @@ int main()
   primesieve_skipto(&it, 2000, 1000);
   uint64_t prime;
 
-  /* iterate over primes from ]2000, 1000] */
+  /* Iterate over primes from ]2000, 1000] */
   while ((prime = primesieve_prev_prime(&it)) >= 1000)
     printf("%" PRIu64 "\n", prime);
 
@@ -103,7 +123,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve_generate_primes()```
 
@@ -134,7 +154,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve_generate_n_primes()```
 
@@ -164,7 +184,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve_count_primes()```
 
@@ -186,7 +206,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 ## ```primesieve_nth_prime()```
 
@@ -209,7 +229,7 @@ int main()
 }
 ```
 
-* [Build instructions](#how-to-compile)
+* [Build instructions](#compiling-and-linking)
 
 # Error handling
 
@@ -271,7 +291,101 @@ int main()
 }
 ```
 
-# How to compile
+# Performance tips
+
+* If you are iterating over the same primes many times in a loop, you should
+use ```primesieve_generate_primes()``` or
+```primesieve_generate_n_primes()``` to store these primes in an array
+instead of using a ```primesieve_iterator```.
+
+* ```primesieve_next_prime()``` runs up to 2x faster and uses only
+half as much memory as ```primesieve_prev_prime()```. Oftentimes algorithms
+that iterate over primes using ```primesieve_prev_prime()``` can be rewritten
+using ```primesieve_next_prime()``` which improves performance in most cases.
+
+* ```primesieve_iterator``` is single-threaded. See the
+[multi-threading](#libprimesieve-multi-threading) section for how to
+parallelize an algorithm using multiple ```primesieve_iterator``` objects.
+
+* The ```primesieve_skipto()``` method takes an optional ```stop_hint```
+parameter that can provide a significant speedup if the sieving distance
+is relatively small e.g.&nbsp;<&nbsp;sqrt(start). If ```stop_hint``` is set
+```primesieve_iterator``` will only buffer primes up to this limit.
+
+* Many of libprimesieve's functions e.g. ```primesieve_count_primes(start, stop)``` &
+```primesieve_nth_prime(n, start)``` incur an initialization overhead of O(sqrt(start))
+even if the total sieving distance is tiny. It is therefore not a good idea to
+call these functions repeatedly in a loop unless the sieving distance is
+sufficiently large e.g. >&nbsp;sqrt(start). If the sieving distance is mostly
+small consider using a ```primesieve_iterator``` instead to avoid the
+recurring initialization overhead.
+
+# libprimesieve multi-threading
+
+By default libprimesieve uses multi-threading for counting primes/k-tuplets
+and for finding the nth prime. However ```primesieve_iterator``` the most
+useful feature provided by libprimesieve runs single-threaded because
+it is simply not possible to efficiently parallelize the generation of primes
+in sequential order.
+
+Hence if you want to parallelize an algorithm using ```primesieve_iterator```
+you need to implement the multi-threading part yourself. The basic technique
+for parallelizing an algorithm using ```primesieve_iterator``` is:
+
+* Subdivide the sieving distance into equally sized chunks.
+* Process each chunk in its own thread.
+* Combine the partial thread results to get the final result.
+
+The C example below calculates the sum of the primes ≤ 10<sup>10</sup> in parallel
+using [OpenMP](https://en.wikipedia.org/wiki/OpenMP). Each thread processes a
+chunk of size ```(dist / threads) + 1``` using its own ```primesieve_iterator```
+object. The OpenMP reduction clause takes care of adding the partial
+prime sum results together in a thread safe manner.
+
+```C
+#include <primesieve.h>
+#include <stdio.h>
+#include <omp.h>
+
+int main()
+{
+  uint64_t sum = 0;
+  uint64_t dist = 1e10;
+  int threads = omp_get_max_threads();
+  uint64_t thread_dist = (dist / threads) + 1;
+
+  #pragma omp parallel for reduction(+: sum)
+  for (int i = 0; i < threads; i++)
+  {
+    uint64_t start = i * thread_dist;
+    uint64_t stop = start + thread_dist < dist ? start + thread_dist : dist;
+    primesieve_iterator it;
+    primesieve_init(&it);
+    primesieve_skipto(&it, start, stop);
+    uint64_t prime = primesieve_next_prime(&it);
+
+    for (; prime <= stop; prime = primesieve_next_prime(&it))
+      sum += prime;
+  }
+
+  printf("Sum of the primes below 10^10 = %" PRIu64 "\n", sum);
+
+  return 0;
+}
+```
+
+<details>
+<summary>Build instructions</summary>
+
+```bash
+# Unix-like OSes
+cc -O3 -fopenmp primesum.c -o primesum -lprimesieve
+time ./primesum
+```
+
+</details>
+
+# Compiling and linking
 
 ### Unix-like OSes
 

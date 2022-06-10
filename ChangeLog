@@ -1,8 +1,16 @@
-Changes in version 8.0, 05/06/2022
+Changes in version 8.0, 10/06/2022
 ==================================
+
+There has been a minor change in the ABI (Application binary interface) of
+libprimesieve-8.0 compared to libprimesieve-7.x. This ABI break was necessary
+to fix undefined behavior present in libprimesieve-7.x
+(in primesieve::iterator). For more information, please read:
+https://github.com/kimwalisch/primesieve/wiki/libprimesieve-8.0-ABI-changes
 
 * primesieve::iterator's ABI has been modified in both the C & C++ API.
   primesieve::iterator's API remains backwards compatible.
+* CPP_API.md: Renamed doc/CPP_Examples.md to doc/CPP_API.md.
+* C_API.md: Renamed doc/C_Examples.md to doc/C_API.md.
 * Fix undefined behavior (g++-12 issue) caused by resizeUninitialized.hpp,
   use new pod_vector<uint64_t> from pod_vector.hpp instead.
 * iterator.cpp: Enable pre-sieving for primesieve::iterator.prev_prime().

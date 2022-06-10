@@ -13,16 +13,12 @@ up to 2<sup>64</sup>.
 primesieve generates primes using the segmented
 [sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) with
 [wheel factorization](https://en.wikipedia.org/wiki/Wheel_factorization).
-This algorithm has a run time complexity of
-<img src="https://github.com/kimwalisch/primesieve/blob/gh-pages/images/Onloglogn.svg" height="20" align="absmiddle"/>
-operations and uses
-<img src="https://github.com/kimwalisch/primesieve/blob/gh-pages/images/Osqrtn.svg" height="20" align="absmiddle"/>
-memory. Furthermore primesieve uses the
+This algorithm has a run time complexity of $O(n\ log\ log\ n)$ operations and uses
+$O(\sqrt{n})$ memory. Furthermore primesieve uses the
 [bucket sieve](http://sweet.ua.pt/tos/software/prime_sieve.html)
 algorithm which improves the cache efficiency when generating primes > 2<sup>32</sup>.
 primesieve uses 8 bytes per sieving prime, hence its memory usage is about
-<img src="https://github.com/kimwalisch/primesieve/blob/gh-pages/images/primesieve_memory_usage.svg" height="20" align="absmiddle"/>
-bytes per thread.
+$pi(\sqrt{n}) * 8$ bytes per thread.
 
 * [More algorithm details](doc/ALGORITHMS.md)
 
@@ -153,8 +149,7 @@ int main()
 }
 ```
 
-* [More C++ examples](doc/CPP_Examples.md)
-* [C++ API reference](https://kimwalisch.github.io/primesieve/api)
+* [C++ API documentation](doc/CPP_API.md)
 
 ## C API
 
@@ -180,149 +175,7 @@ int main()
 }
 ```
 
-* [More C examples](doc/C_Examples.md)
-* [C API reference](https://kimwalisch.github.io/primesieve/api)
-
-## libprimesieve performance tips
-
-* ```primesieve::iterator::next_prime()``` runs up to 2x faster and uses only
-half as much memory as ```prev_prime()```. Oftentimes algorithms that iterate
-over primes using ```prev_prime()``` can be rewritten using ```next_prime()```
-which improves performance in most cases.
-
-* ```primesieve::iterator``` is single-threaded. See the
-[multi-threading](#libprimesieve-multi-threading) section for how to
-parallelize an algorithm using multiple ```primesieve::iterator``` objects.
-
-* The ```primesieve::iterator``` constructor and the
-```primesieve::iterator::skipto()``` method take an optional ```stop_hint```
-parameter that can provide a significant speedup if the sieving distance
-is relatively small e.g.&nbsp;<&nbsp;sqrt(start). If ```stop_hint``` is set
-```primesieve::iterator``` will only buffer primes up to this limit.
-
-* Many of libprimesieve's functions e.g. ```count_primes(start, stop)``` &
-```nth_prime(n, start)``` incur an initialization overhead of O(sqrt(start))
-even if the total sieving distance is tiny. It is therefore not a good idea to
-call these functions repeatedly in a loop unless the sieving distance is
-sufficiently large e.g. >&nbsp;sqrt(start). If the sieving distance is mostly
-small consider using a ```primesieve::iterator``` instead to avoid the
-recurring initialization overhead.
-
-## libprimesieve multi-threading
-
-By default libprimesieve uses multi-threading for counting primes/k-tuplets
-and for finding the nth prime. However ```primesieve::iterator``` the most
-useful feature provided by libprimesieve runs single-threaded because
-it is simply not possible to efficiently parallelize the generation of primes
-in sequential order.
-
-Hence if you want to parallelize an algorithm using ```primesieve::iterator```
-you need to implement the multi-threading part yourself. The basic technique
-for parallelizing an algorithm using ```primesieve::iterator``` is:
-
-* Subdivide the sieving distance into equally sized chunks.
-* Process each chunk in its own thread.
-* Combine the partial thread results to get the final result.
-
-The C++ example below calculates the sum of the primes ≤ 10<sup>10</sup> in parallel
-using [OpenMP](https://en.wikipedia.org/wiki/OpenMP). Each thread processes a
-chunk of size ```(dist / threads) + 1``` using its own ```primesieve::iterator```
-object. The OpenMP reduction clause takes care of adding the partial
-prime sum results together in a thread safe manner.
-
-```C++
-#include <primesieve.hpp>
-#include <iostream>
-#include <omp.h>
-
-int main()
-{
-  uint64_t sum = 0;
-  uint64_t dist = 1e10;
-  int threads = omp_get_max_threads();
-  uint64_t thread_dist = (dist / threads) + 1;
-
-  #pragma omp parallel for reduction(+: sum)
-  for (int i = 0; i < threads; i++)
-  {
-    uint64_t start = i * thread_dist;
-    uint64_t stop = std::min(start + thread_dist, dist);
-    primesieve::iterator it(start, stop);
-    uint64_t prime = it.next_prime();
-
-    for (; prime <= stop; prime = it.next_prime())
-      sum += prime;
-  }
-
-  std::cout << "Sum of the primes below " << dist << ": " << sum << std::endl;
-
-  return 0;
-}
-```
-
-<details>
-<summary>Build instructions</summary>
-
-```bash
-# Unix-like OSes
-wget https://kimwalisch.github.io/primesieve/primesum.cpp
-c++ -O3 -fopenmp primesum.cpp -o primesum -lprimesieve
-time ./primesum
-```
-
-</details>
-
-## Linking against libprimesieve
-
-#### Unix-like OSes
-
-```sh
-c++ -O3 primes.cpp -lprimesieve
-cc  -O3 primes.c   -lprimesieve
-```
-
-If you have [built libprimesieve yourself](BUILD.md#primesieve-build-instructions),
-then the default installation path is usually ```/usr/local/lib```. Running
-the ```ldconfig``` program after ```make install``` ensures that Linux's dynamic
-linker/loader will find the shared primesieve library when you execute your program.
-However, some OSes are missing the ```ldconfig``` program or ```ldconfig``` does
-not include ```/usr/local/lib``` by default. In these cases you need to export
-some environment variables:
-
-```sh
-export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-export CPLUS_INCLUDE_PATH=/usr/local/include:$CPLUS_INCLUDE_PATH
-export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
-```
-
-#### Microsoft Visual C++
-
-```sh
-cl /O2 /EHsc /MD primes.cpp /I "path\to\primesieve\include" /link "path\to\primesieve.lib"
-```
-
-## CMake support
-
-If you are using the CMake build system to compile your program and
-[libprimesieve is installed](https://github.com/kimwalisch/primesieve#installation) on your
-system, then you can add the following two lines to your ```CMakeLists.txt``` to link your
-program against libprimesieve.
-
-```CMake
-find_package(primesieve REQUIRED)
-target_link_libraries(your_program primesieve::primesieve)
-```
-
-To link against the static libprimesieve use:
-
-```CMake
-find_package(primesieve REQUIRED static)
-target_link_libraries(your_program primesieve::primesieve)
-```
-
-* Example [CMakeLists.txt](doc/C_Examples.md#minimal-cmake-project-file) for C programs
-* Example [CMakeLists.txt](doc/CPP_Examples.md#minimal-cmake-project-file) for C++ programs
+* [C API documentation](doc/C_API.md)
 
 ## Bindings for other languages
 
