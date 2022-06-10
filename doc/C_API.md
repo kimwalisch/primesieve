@@ -31,6 +31,8 @@ more detailed information.
 ## ```primesieve_next_prime()```
 
 By default ```primesieve_next_prime()``` generates primes > 0 i.e. 2, 3, 5, 7, ...
+If needed, you can also use multiple ```primesieve_iterator``` objects within
+the same program. 
 
 ```C
 #include <primesieve.h>
@@ -288,6 +290,11 @@ int main()
 ```
 
 # Performance tips
+
+* If you are iterating over the same primes many times in a loop you should
+use ```primesieve_generate_primes()``` or
+```primesieve_generate_n_primes()``` to store these primes in an array
+instead of using a ```primesieve_iterator```.
 
 * ```primesieve_next_prime()``` runs up to 2x faster and uses only
 half as much memory as ```primesieve_prev_prime()```. Oftentimes algorithms
