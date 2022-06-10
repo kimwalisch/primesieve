@@ -6,7 +6,7 @@ This page contains a short selection of C code snippets that use libprimesieve t
 numbers. These examples cover the most frequently used functionality of libprimesieve. Arguably
 the most useful feature provided by libprimesieve is the ```primesieve_iterator``` which lets you
 iterate over primes using the ```primesieve_next_prime()``` or ```primesieve_prev_prime()```
-methods. 
+functions. 
 
 The functions of libprimesieve's C API are defined in the [```<primesieve.h>```](../include/primesieve.h)
 and [```<primesieve/iterator.h>```](../include/primesieve/iterator.h) header files. You can
@@ -64,7 +64,7 @@ int main()
 
 ## ```primesieve_skipto()```
 
-This method changes the start number of the ```primesieve_iterator``` object. (By
+This function changes the start number of the ```primesieve_iterator``` object. (By
 default the start number is initialized to 0). The ```stop_hint``` parameter is
 used for performance optimization, ```primesieve_iterator``` only buffers primes
 up to this limit.
@@ -188,7 +188,7 @@ int main()
 
 ## ```primesieve_count_primes()```
 
-Counts the primes inside [start, stop]. This method is multi-threaded and uses all
+Counts the primes inside [start, stop]. This function is multi-threaded and uses all
 available CPU cores by default.
 
 ```C
@@ -210,7 +210,7 @@ int main()
 
 ## ```primesieve_nth_prime()```
 
-This method finds the nth prime e.g. ```nth_prime(25) = 97```. This method is
+This function finds the nth prime e.g. ```nth_prime(25) = 97```. This function is
 multi-threaded and uses all available CPU cores by default.
 
 ```C
@@ -307,7 +307,7 @@ using ```primesieve_next_prime()``` which improves performance in most cases.
 [multi-threading](#libprimesieve-multi-threading) section for how to
 parallelize an algorithm using multiple ```primesieve_iterator``` objects.
 
-* The ```primesieve_skipto()``` method takes an optional ```stop_hint```
+* The ```primesieve_skipto()``` function takes an optional ```stop_hint```
 parameter that can provide a significant speedup if the sieving distance
 is relatively small e.g.&nbsp;<&nbsp;sqrt(start). If ```stop_hint``` is set
 ```primesieve_iterator``` will only buffer primes up to this limit.

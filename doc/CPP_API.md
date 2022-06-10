@@ -195,7 +195,7 @@ int main()
 
 ## ```primesieve::count_primes()```
 
-Counts the primes inside [start, stop]. This method is multi-threaded and uses all
+Counts the primes inside [start, stop]. This function is multi-threaded and uses all
 available CPU cores by default.
 
 ```C++
@@ -215,7 +215,7 @@ int main()
 
 ## ```primesieve::nth_prime()```
 
-This method finds the nth prime e.g. ```nth_prime(25) = 97```. This method is
+This function finds the nth prime e.g. ```nth_prime(25) = 97```. This function is
 multi-threaded and uses all available CPU cores by default.
 
 ```C++
