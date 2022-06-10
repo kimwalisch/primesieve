@@ -1,5 +1,7 @@
 # libprimesieve C++ API
 
+libprimesieve is a highly optimized library for generating prime numbers, it can generate primes
+and [prime k-tuplets](https://en.wikipedia.org/wiki/Prime_k-tuple) up to 2<sup>64</sup>.
 This page contains a short selection of C++ code snippets that use libprimesieve to generate prime
 numbers. These examples cover the most frequently used functionality of libprimesieve. Arguably
 the most useful feature provided by libprimesieve is the ```primesieve::iterator``` which lets you
