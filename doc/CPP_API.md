@@ -126,7 +126,7 @@ int main()
   uint64_t prime = it.prev_prime();
 
   // iterate over primes from ]1000, 0[
-  for (; prime > 0;  prime = it.prev_prime())
+  for (; prime > 0; prime = it.prev_prime())
     std::cout << prime << std::endl;
 
   return 0;
