@@ -37,7 +37,7 @@ more detailed information.
 By default ```primesieve_next_prime()``` generates primes > 0 i.e. 2, 3, 5, 7, ...
 If needed, you can also use multiple ```primesieve_iterator``` objects within the
 same program. Note that ```primesieve_iterator``` is not ideal if you are
-iterating over the same primes many times in a loop, in this case it is better
+repeatedly iterating over the same primes in a loop, in this case it is better
 to [store the primes in an array](#primesieve_generate_primes) (provided your PC has
 sufficient RAM memory).
 
@@ -298,7 +298,7 @@ int main()
 
 # Performance tips
 
-* If you are iterating over the same primes many times in a loop, you should
+* If you are repeatedly iterating over the same primes many times in a loop, you should
 use ```primesieve_generate_primes()``` or
 ```primesieve_generate_n_primes()``` to store these primes in an array
 instead of using a ```primesieve_iterator```.

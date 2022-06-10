@@ -37,7 +37,7 @@ more detailed information.
 By default ```primesieve::iterator::next_prime()``` generates primes > 0 i.e. 2, 3, 5, 7, ...
 If needed, you can also use multiple ```primesieve::iterator``` objects within the
 same program. Note that ```primesieve::iterator``` is not ideal if you are
-iterating over the same primes many times in a loop, in this case it is better
+repeatedly iterating over the same primes in a loop, in this case it is better
 to [store the primes in a vector](#primesievegenerate_primes) (provided your PC has
 sufficient RAM memory).
 
@@ -147,7 +147,7 @@ int main()
 
 ## ```primesieve::generate_primes()```
 
-Stores the primes inside [start, stop] in a ```std::vector```. If you are iterating over the same primes
+Stores the primes inside [start, stop] in a ```std::vector```. If you are repeatedly iterating over the same primes
 many times in a loop you will likely get better performance if you store the primes in a vector
 instead of using a ```primesieve::iterator``` (provided your system has enough memory).
 
@@ -273,7 +273,7 @@ int main()
 
 # Performance tips
 
-* If you are iterating over the same primes many times in a loop, you should
+* If you are repeatedly iterating over the same primes many times in a loop, you should
 use ```primesieve::generate_primes()``` or
 ```primesieve::generate_n_primes()``` to store these primes in a vector
 instead of using a ```primesieve::iterator```.
