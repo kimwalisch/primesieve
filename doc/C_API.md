@@ -353,9 +353,9 @@ int main()
     primesieve_iterator it;
     primesieve_init(&it);
     primesieve_skipto(&it, start, stop);
-    uint64_t prime = it.next_prime();
+    uint64_t prime = primesieve_next_prime(&it);
 
-    for (; prime <= stop; prime = it.next_prime())
+    for (; prime <= stop; prime = primesieve_next_prime(&it))
       sum += prime;
   }
 
