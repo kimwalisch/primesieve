@@ -267,7 +267,7 @@ int main()
 
 # Performance tips
 
-* If you are iterating over the same primes many times in a loop you should
+* If you are iterating over the same primes many times in a loop, you should
 use ```primesieve::generate_primes()``` or
 ```primesieve::generate_n_primes()``` to store these primes in a vector
 instead of using a ```primesieve::iterator```.
