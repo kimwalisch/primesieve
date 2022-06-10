@@ -49,7 +49,7 @@ int main()
   uint64_t sum = 0;
   uint64_t prime = 0;
 
-  /* iterate over the primes < 10^9 */
+  /* Iterate over the primes < 10^9 */
   while ((prime = primesieve_next_prime(&it)) < 1000000000)
     sum += prime;
 
@@ -83,7 +83,7 @@ int main()
   primesieve_skipto(&it, 1000, 1100);
   uint64_t prime;
 
-  /* iterate over primes from ]1000, 1100] */
+  /* Iterate over primes from ]1000, 1100] */
   while ((prime = primesieve_next_prime(&it)) <= 1100)
     printf("%" PRIu64 "\n", prime);
 
@@ -114,7 +114,7 @@ int main()
   primesieve_skipto(&it, 2000, 1000);
   uint64_t prime;
 
-  /* iterate over primes from ]2000, 1000] */
+  /* Iterate over primes from ]2000, 1000] */
   while ((prime = primesieve_prev_prime(&it)) >= 1000)
     printf("%" PRIu64 "\n", prime);
 

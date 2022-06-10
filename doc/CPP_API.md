@@ -45,7 +45,7 @@ int main()
   uint64_t prime = it.next_prime();
   uint64_t sum = 0;
 
-  // iterate over the primes below 10^9
+  // Iterate over the primes below 10^9
   for (; prime < 1000000000; prime = it.next_prime())
     sum += prime;
 
@@ -71,11 +71,11 @@ int main()
 {
   primesieve::iterator it;
 
-  // iterate over primes > 1000
+  // Iterate over primes > 1000
   it.skipto(1000);
   uint64_t prime = it.next_prime();
 
-  // iterate over primes from ]1000, 1100]
+  // Iterate over primes from ]1000, 1100]
   for (; prime <= 1100; prime = it.next_prime())
     std::cout << prime << std::endl;
 
@@ -99,11 +99,11 @@ int main()
   uint64_t start = 1000;
   uint64_t stop_hint = 1100;
 
-  // iterate over primes > start
+  // Iterate over primes > start
   primesieve::iterator it(start, stop_hint);
   uint64_t prime = it.next_prime();
 
-  // iterate over primes from ]1000, 1100]
+  // Iterate over primes from ]1000, 1100]
   for (; prime <= 1100; prime = it.next_prime())
     std::cout << prime << std::endl;
 
@@ -125,11 +125,11 @@ initialized to 0 be default.
 
 int main()
 {
-  // iterate over primes < 1000
+  // Iterate over primes < 1000
   primesieve::iterator it(1000);
   uint64_t prime = it.prev_prime();
 
-  // iterate over primes from ]1000, 0[
+  // Iterate over primes from ]1000, 0[
   for (; prime > 0; prime = it.prev_prime())
     std::cout << prime << std::endl;
 
