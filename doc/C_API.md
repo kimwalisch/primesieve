@@ -349,6 +349,7 @@ int main()
     uint64_t start = i * thread_dist;
     uint64_t stop = start + thread_dist < dist ? start + thread_dist : dist;
     primesieve_iterator it;
+    primesieve_init(&it);
     primesieve_skipto(&it, start, stop);
     uint64_t prime = it.next_prime();
 
