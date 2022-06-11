@@ -34,7 +34,7 @@ namespace primesieve {
 
 iterator::iterator() noexcept :
   i_(0),
-  last_idx_(0),
+  size_(0),
   start_(0),
   stop_hint_(std::numeric_limits<uint64_t>::max()),
   primes_(nullptr),
@@ -44,7 +44,7 @@ iterator::iterator() noexcept :
 iterator::iterator(uint64_t start,
                    uint64_t stop_hint) noexcept :
   i_(0),
-  last_idx_(0),
+  size_(0),
   start_(start),
   stop_hint_(stop_hint),
   primes_(nullptr),
@@ -54,14 +54,14 @@ iterator::iterator(uint64_t start,
 /// Move constructor
 iterator::iterator(iterator&& other) noexcept :
   i_(other.i_),
-  last_idx_(other.last_idx_),
+  size_(other.size_),
   start_(other.start_),
   stop_hint_(other.stop_hint_),
   primes_(other.primes_),
   memory_(other.memory_)
 {
   other.i_ = 0;
-  other.last_idx_ = 0;
+  other.size_ = 0;
   other.start_ = 0;
   other.stop_hint_ = std::numeric_limits<uint64_t>::max();
   other.primes_ = nullptr;
@@ -76,14 +76,14 @@ iterator& iterator::operator=(iterator&& other) noexcept
     freeAllMemory(this);
 
     i_ = other.i_;
-    last_idx_ = other.last_idx_;
+    size_ = other.size_;
     start_ = other.start_;
     stop_hint_ = other.stop_hint_;
     primes_ = other.primes_;
     memory_ = other.memory_;
 
     other.i_ = 0;
-    other.last_idx_ = 0;
+    other.size_ = 0;
     other.start_ = 0;
     other.stop_hint_ = std::numeric_limits<uint64_t>::max();
     other.primes_ = nullptr;
@@ -97,7 +97,7 @@ void iterator::skipto(uint64_t start,
                       uint64_t stop_hint) noexcept
 {
   i_ = 0;
-  last_idx_ = 0;
+  size_ = 0;
   start_ = start;
   stop_hint_ = stop_hint;
   primes_ = nullptr;
@@ -138,9 +138,9 @@ void iterator::generate_next_primes()
 
   auto& memory = *(IteratorMemory*) memory_;
   auto& primes = memory.primes;
-  std::size_t size = 0;
+  size_ = 0;
 
-  while (!size)
+  while (!size_)
   {
     if (!memory.primeGenerator)
     {
@@ -148,7 +148,7 @@ void iterator::generate_next_primes()
       memory.primeGenerator = new PrimeGenerator(start_, memory.stop, memory.preSieve);
     }
 
-    memory.primeGenerator->fillNextPrimes(primes, &size);
+    memory.primeGenerator->fillNextPrimes(primes, &size_);
 
     // There are 3 different cases here:
     // 1) The primes array contains a few primes (<= 1024).
@@ -160,12 +160,11 @@ void iterator::generate_next_primes()
     // 3) The next prime > 2^64. In this case the primes
     //    array contains an error code (UINT64_MAX) which
     //    is returned to the user.
-    if (size == 0)
+    if (size_ == 0)
       memory.deletePrimeGenerator();
   }
 
   i_ = 0;
-  last_idx_ = size - 1;
   primes_ = &primes[0];
 }
 
@@ -192,17 +191,16 @@ void iterator::generate_prev_primes()
       stop_hint_ < start_)
     memory.preSieve.init(stop_hint_, start_);
 
-  std::size_t size = 0;
+  size_ = 0;
 
-  while (!size)
+  while (!size_)
   {
     IteratorHelper::prev(&start_, &memory.stop, stop_hint_, &memory.dist);
     PrimeGenerator primeGenerator(start_, memory.stop, memory.preSieve);
-    primeGenerator.fillPrevPrimes(primes, &size);
+    primeGenerator.fillPrevPrimes(primes, &size_);
   }
 
-  last_idx_ = size - 1;
-  i_ = last_idx_;
+  i_ = size_ - 1;
   primes_ = &primes[0];
 }
 

@@ -37,7 +37,7 @@ extern "C" {
 typedef struct
 {
   size_t i;
-  size_t last_idx;
+  size_t size;
   uint64_t start;
   uint64_t stop_hint;
   uint64_t* primes;
@@ -81,7 +81,7 @@ void primesieve_generate_prev_primes(primesieve_iterator*);
  */
 static inline uint64_t primesieve_next_prime(primesieve_iterator* it)
 {
-  if (it->i++ == it->last_idx)
+  if (++(it->i) >= it->size)
     primesieve_generate_next_primes(it);
   return it->primes[it->i];
 }

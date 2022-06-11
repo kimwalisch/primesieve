@@ -76,7 +76,7 @@ struct iterator
   ///
   uint64_t next_prime()
   {
-    if (i_++ == last_idx_)
+    if (++i_ >= size_)
       generate_next_primes();
     return primes_[i_];
   }
@@ -95,7 +95,7 @@ struct iterator
   }
 
   std::size_t i_;
-  std::size_t last_idx_;
+  std::size_t size_;
   uint64_t start_;
   uint64_t stop_hint_;
   uint64_t* primes_;
