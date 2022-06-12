@@ -137,8 +137,8 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
   }
 
   auto& primes = getPrimes(it);
-  it->i = 0;
   it->primes = &primes[0];
+  it->i = 0;
 }
 
 void primesieve_generate_prev_primes(primesieve_iterator* it)
@@ -188,6 +188,6 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
   }
 
   auto& primes = getPrimes(it);
-  it->i = it->size - 1;
   it->primes = &primes[0];
+  it->i = it->size;
 }

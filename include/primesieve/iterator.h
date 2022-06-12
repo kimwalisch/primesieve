@@ -95,7 +95,8 @@ void primesieve_generate_prev_primes(primesieve_iterator*);
  */
 static inline uint64_t primesieve_next_prime(primesieve_iterator* it)
 {
-  IF_UNLIKELY_PRIMESIEVE(++(it->i) >= it->size)
+  it->i += 1;
+  IF_UNLIKELY_PRIMESIEVE(it->i >= it->size)
     primesieve_generate_next_primes(it);
   return it->primes[it->i];
 }
@@ -110,8 +111,9 @@ static inline uint64_t primesieve_next_prime(primesieve_iterator* it)
  */
 static inline uint64_t primesieve_prev_prime(primesieve_iterator* it)
 {
-  IF_UNLIKELY_PRIMESIEVE(it->i-- == 0)
+  IF_UNLIKELY_PRIMESIEVE(it->i == 0)
     primesieve_generate_prev_primes(it);
+  it->i -= 1;
   return it->primes[it->i];
 }
 

@@ -200,7 +200,7 @@ void iterator::generate_prev_primes()
     primeGenerator.fillPrevPrimes(primes, &size_);
   }
 
-  i_ = size_ - 1;
+  i_ = size_;
   primes_ = &primes[0];
 }
 

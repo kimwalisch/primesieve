@@ -90,7 +90,8 @@ struct iterator
   ///
   uint64_t next_prime()
   {
-    IF_UNLIKELY_PRIMESIEVE(++i_ >= size_)
+    i_ += 1;
+    IF_UNLIKELY_PRIMESIEVE(i_ >= size_)
       generate_next_primes();
     return primes_[i_];
   }
@@ -103,8 +104,9 @@ struct iterator
   ///
   uint64_t prev_prime()
   {
-    IF_UNLIKELY_PRIMESIEVE(i_-- == 0)
+    IF_UNLIKELY_PRIMESIEVE(i_ == 0)
       generate_prev_primes();
+    i_ -= 1;
     return primes_[i_];
   }
 
