@@ -2,7 +2,7 @@
 /// @file   generate_primes2.c
 /// @brief  Test prime number generation.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -75,6 +75,27 @@ int main()
   }
 
   primesieve_free(primes);
+
+  primes = (uint64_t*) primesieve_generate_primes(0, 1000, &size, UINT64_PRIMES);
+  printf("primes.size = %zu", size);
+  check(size == 168);
+  primesieve_free(primes);
+
+  primes = (uint64_t*) primesieve_generate_primes(0, 1000000, &size, UINT64_PRIMES);
+  printf("primes.size = %zu", size);
+  check(size == 78498);
+  primesieve_free(primes);
+
+  primes = (uint64_t*) primesieve_generate_primes(1000003, 9999991, &size, UINT64_PRIMES);
+  printf("primes.size = %zu", size);
+  check(size == 664579 - 78498);
+  primesieve_free(primes);
+
+  primes = (uint64_t*) primesieve_generate_primes(1000000, 1000000, &size, UINT64_PRIMES);
+  printf("primes.size = %zu", size);
+  check(size == 0);
+  primesieve_free(primes);
+
   primes = (uint64_t*) primesieve_generate_primes(18446744073709550672ull, 18446744073709551556ull, &size, UINT64_PRIMES);
   printf("primes.size = %zu", size);
   check(size == 19);
