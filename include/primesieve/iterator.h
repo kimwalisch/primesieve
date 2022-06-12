@@ -26,6 +26,20 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#if __cplusplus >= 202002L && \
+    defined(__has_cpp_attribute)
+  #if __has_cpp_attribute(unlikely)
+    #define IF_UNLIKELY_PRIMESIEVE(x) if (x) [[unlikely]]
+  #endif
+#elif defined(__has_builtin)
+  #if __has_builtin(__builtin_expect)
+    #define IF_UNLIKELY_PRIMESIEVE(x) if (__builtin_expect(!!(x), 0))
+  #endif
+#endif
+#if !defined(IF_UNLIKELY_PRIMESIEVE)
+  #define IF_UNLIKELY_PRIMESIEVE(x) if (x)
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -81,7 +95,7 @@ void primesieve_generate_prev_primes(primesieve_iterator*);
  */
 static inline uint64_t primesieve_next_prime(primesieve_iterator* it)
 {
-  if (++(it->i) >= it->size)
+  IF_UNLIKELY_PRIMESIEVE(++(it->i) >= it->size)
     primesieve_generate_next_primes(it);
   return it->primes[it->i];
 }
@@ -96,7 +110,7 @@ static inline uint64_t primesieve_next_prime(primesieve_iterator* it)
  */
 static inline uint64_t primesieve_prev_prime(primesieve_iterator* it)
 {
-  if (it->i-- == 0)
+  IF_UNLIKELY_PRIMESIEVE(it->i-- == 0)
     primesieve_generate_prev_primes(it);
   return it->primes[it->i];
 }

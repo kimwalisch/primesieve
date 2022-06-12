@@ -16,6 +16,20 @@
 #include <cstddef>
 #include <limits>
 
+#if __cplusplus >= 202002L && \
+    defined(__has_cpp_attribute)
+  #if __has_cpp_attribute(unlikely)
+    #define IF_UNLIKELY_PRIMESIEVE(x) if (x) [[unlikely]]
+  #endif
+#elif defined(__has_builtin)
+  #if __has_builtin(__builtin_expect)
+    #define IF_UNLIKELY_PRIMESIEVE(x) if (__builtin_expect(!!(x), 0))
+  #endif
+#endif
+#if !defined(IF_UNLIKELY_PRIMESIEVE)
+  #define IF_UNLIKELY_PRIMESIEVE(x) if (x)
+#endif
+
 namespace primesieve {
 
 /// primesieve::iterator allows to easily iterate over primes both
@@ -76,7 +90,7 @@ struct iterator
   ///
   uint64_t next_prime()
   {
-    if (++i_ >= size_)
+    IF_UNLIKELY_PRIMESIEVE(++i_ >= size_)
       generate_next_primes();
     return primes_[i_];
   }
@@ -89,7 +103,7 @@ struct iterator
   ///
   uint64_t prev_prime()
   {
-    if (i_-- == 0)
+    IF_UNLIKELY_PRIMESIEVE(i_-- == 0)
       generate_prev_primes();
     return primes_[i_];
   }
