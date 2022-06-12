@@ -21,8 +21,7 @@ namespace {
 
 /// malloc_vector is a dynamically growing array.
 /// It has the same API (though not complete) as std::vector but it
-/// uses malloc as its allocator. malloc_vector also does not
-/// default initialize memory allocated using resize().
+/// uses malloc as its allocator.
 ///
 template <typename T>
 class malloc_vector
@@ -74,18 +73,6 @@ public:
   {
     if (n > capacity())
       reserve_unchecked(n);
-  }
-
-  /// Resize without default initializing memory.
-  /// If the malloc_vector is not empty the current content
-  /// will be copied into the new array.
-  ///
-  void resize(std::size_t n)
-  {
-    if (n > capacity())
-      reserve_unchecked(n);
-
-    end_ = array_ + n;
   }
 
 private:
