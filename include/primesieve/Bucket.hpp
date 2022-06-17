@@ -102,6 +102,7 @@ public:
   void setEnd(SievingPrime* end) { end_ = end; }
   void reset() { end_ = begin(); }
   bool empty() { return begin() == end(); }
+  std::size_t size() { return (std::size_t) (end() - begin()); }
 
   /// Get the sieving prime's bucket.
   /// For performance reasons we don't keep an array with all

@@ -198,7 +198,11 @@ void EratBig::crossOff(pod_vector<uint8_t>& sieve)
     // to the current segment.
     while (bucket)
     {
-      crossOff(sieve.data(), bucket);
+      if (bucket->size() % 2)
+        crossOff_1(sieve.data(), bucket->begin(), bucket->end());
+      else
+        crossOff_2(sieve.data(), bucket->begin(), bucket->end());
+
       Bucket* processed = bucket;
       bucket = bucket->next();
       memoryPool_->freeBucket(processed);
@@ -220,25 +224,53 @@ void EratBig::crossOff(pod_vector<uint8_t>& sieve)
 /// we move the sieving prime to the bucket list related to
 /// the previously computed segment.
 ///
-void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
+void EratBig::crossOff_1(uint8_t* sieve,
+                         SievingPrime* prime,
+                         SievingPrime* end)
 {
-  SievingPrime* prime = bucket->begin();
-  SievingPrime* last = bucket->end() - 1;
   auto buckets = buckets_.data();
-  uint64_t moduloSieveSize = moduloSieveSize_;
-  uint64_t log2SieveSize = log2SieveSize_;
   MemoryPool& memoryPool = *memoryPool_;
+  std::size_t moduloSieveSize = moduloSieveSize_;
+  std::size_t log2SieveSize = log2SieveSize_;
+
+  for (; prime != end; prime++)
+  {
+    std::size_t multipleIndex = prime->getMultipleIndex();
+    std::size_t wheelIndex    = prime->getWheelIndex();
+    std::size_t sievingPrime  = prime->getSievingPrime();
+
+    sieve[multipleIndex] &= wheel210[wheelIndex].unsetBit;
+    multipleIndex += wheel210[wheelIndex].nextMultipleFactor * sievingPrime;
+    multipleIndex += wheel210[wheelIndex].correct;
+    wheelIndex = wheel210[wheelIndex].next;
+    std::size_t segment = multipleIndex >> log2SieveSize;
+    multipleIndex &= moduloSieveSize;
+
+    buckets[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
+    if_unlikely(Bucket::isFull(buckets[segment]))
+      memoryPool.addBucket(buckets[segment]);
+  }
+}
+
+void EratBig::crossOff_2(uint8_t* sieve,
+                         SievingPrime* prime,
+                         SievingPrime* end)
+{
+  auto buckets = buckets_.data();
+  MemoryPool& memoryPool = *memoryPool_;
+  std::size_t moduloSieveSize = moduloSieveSize_;
+  std::size_t log2SieveSize = log2SieveSize_;
 
   // Process 2 sieving primes per loop iteration to
   // increase instruction level parallelism.
-  for (; prime < last; prime += 2)
+  for (; prime != end; prime += 2)
   {
-    uint64_t multipleIndex0 = prime[0].getMultipleIndex();
-    uint64_t wheelIndex0    = prime[0].getWheelIndex();
-    uint64_t sievingPrime0  = prime[0].getSievingPrime();
-    uint64_t multipleIndex1 = prime[1].getMultipleIndex();
-    uint64_t wheelIndex1    = prime[1].getWheelIndex();
-    uint64_t sievingPrime1  = prime[1].getSievingPrime();
+    std::size_t multipleIndex0 = prime[0].getMultipleIndex();
+    std::size_t wheelIndex0    = prime[0].getWheelIndex();
+    std::size_t sievingPrime0  = prime[0].getSievingPrime();
+    std::size_t multipleIndex1 = prime[1].getMultipleIndex();
+    std::size_t wheelIndex1    = prime[1].getWheelIndex();
+    std::size_t sievingPrime1  = prime[1].getSievingPrime();
 
     sieve[multipleIndex0] &= wheel210[wheelIndex0].unsetBit;
     sieve[multipleIndex1] &= wheel210[wheelIndex1].unsetBit;
@@ -249,8 +281,8 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     multipleIndex1 += wheel210[wheelIndex1].correct;
     wheelIndex0 = wheel210[wheelIndex0].next;
     wheelIndex1 = wheel210[wheelIndex1].next;
-    uint64_t segment0 = multipleIndex0 >> log2SieveSize;
-    uint64_t segment1 = multipleIndex1 >> log2SieveSize;
+    std::size_t segment0 = multipleIndex0 >> log2SieveSize;
+    std::size_t segment1 = multipleIndex1 >> log2SieveSize;
     multipleIndex0 &= moduloSieveSize;
     multipleIndex1 &= moduloSieveSize;
 
@@ -261,25 +293,6 @@ void EratBig::crossOff(uint8_t* sieve, Bucket* bucket)
     buckets[segment1]++->set(sievingPrime1, multipleIndex1, wheelIndex1);
     if_unlikely(Bucket::isFull(buckets[segment1]))
       memoryPool.addBucket(buckets[segment1]);
-  }
-
-  // Process the last sieving prime
-  if_unlikely(prime == last)
-  {
-    uint64_t multipleIndex = prime->getMultipleIndex();
-    uint64_t wheelIndex    = prime->getWheelIndex();
-    uint64_t sievingPrime  = prime->getSievingPrime();
-
-    sieve[multipleIndex] &= wheel210[wheelIndex].unsetBit;
-    multipleIndex += wheel210[wheelIndex].nextMultipleFactor * sievingPrime;
-    multipleIndex += wheel210[wheelIndex].correct;
-    wheelIndex = wheel210[wheelIndex].next;
-    uint64_t segment = multipleIndex >> log2SieveSize;
-    multipleIndex &= moduloSieveSize;
-
-    buckets[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
-    if_unlikely(Bucket::isFull(buckets[segment]))
-      memoryPool.addBucket(buckets[segment]);
   }
 }
 
