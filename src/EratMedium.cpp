@@ -90,7 +90,7 @@ void EratMedium::crossOff(pod_vector<uint8_t>& sieve)
   // The 2nd list contains sieving primes with wheelIndex = 1.
   // The 3rd list contains sieving primes with wheelIndex = 2.
   // ...
-  for (uint64_t i = 0; i < 64; i++)
+  for (std::size_t i = 0; i < 64; i++)
   {
     if (currentBuckets_[i])
     {
