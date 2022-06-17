@@ -62,10 +62,10 @@ void EratMedium::init(uint64_t stop,
 /// Add a new sieving prime to EratMedium
 void EratMedium::storeSievingPrime(uint64_t prime,
                                    uint64_t multipleIndex,
-                                   uint64_t wheelIndex)
+                                   std::size_t wheelIndex)
 {
   ASSERT(prime <= maxPrime_);
-  uint64_t sievingPrime = prime / 30;
+  std::size_t sievingPrime = prime / 30;
 
   if_unlikely(buckets_.empty())
   {
@@ -97,7 +97,7 @@ void EratMedium::crossOff(pod_vector<uint8_t>& sieve)
       Bucket* bucket = Bucket::get(currentBuckets_[i]);
       bucket->setEnd(currentBuckets_[i]);
       currentBuckets_[i] = nullptr;
-      uint64_t wheelIndex = i;
+      std::size_t wheelIndex = i;
 
       // Iterate over the current bucket list.
       // For each bucket cross off the
@@ -130,17 +130,17 @@ void EratMedium::crossOff_7(uint8_t* sieve, std::size_t sieveSize, Bucket* bucke
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
-  uint64_t wheelIndex = prime->getWheelIndex();
+  std::size_t wheelIndex = prime->getWheelIndex();
   MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
-    uint64_t sievingPrime = prime->getSievingPrime();
-    uint64_t i = prime->getMultipleIndex();
-    uint64_t dist0 = sievingPrime * 6 + 1;
-    uint64_t dist1 = sievingPrime * 4 + 1;
-    uint64_t dist2 = sievingPrime * 2 + 0;
-    uint64_t dist4 = sievingPrime * 2 + 1;
+    std::size_t sievingPrime = prime->getSievingPrime();
+    std::size_t i = prime->getMultipleIndex();
+    std::size_t dist0 = sievingPrime * 6 + 1;
+    std::size_t dist1 = sievingPrime * 4 + 1;
+    std::size_t dist2 = sievingPrime * 2 + 0;
+    std::size_t dist4 = sievingPrime * 2 + 1;
 
     switch (wheelIndex)
     {
@@ -166,18 +166,18 @@ void EratMedium::crossOff_11(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
-  uint64_t wheelIndex = prime->getWheelIndex();
+  std::size_t wheelIndex = prime->getWheelIndex();
   MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
-    uint64_t sievingPrime = prime->getSievingPrime();
-    uint64_t i = prime->getMultipleIndex();
-    uint64_t dist0 = sievingPrime * 6 + 2;
-    uint64_t dist1 = sievingPrime * 4 + 1;
-    uint64_t dist2 = sievingPrime * 2 + 1;
-    uint64_t dist3 = sievingPrime * 4 + 2;
-    uint64_t dist4 = sievingPrime * 2 + 0;
+    std::size_t sievingPrime = prime->getSievingPrime();
+    std::size_t i = prime->getMultipleIndex();
+    std::size_t dist0 = sievingPrime * 6 + 2;
+    std::size_t dist1 = sievingPrime * 4 + 1;
+    std::size_t dist2 = sievingPrime * 2 + 1;
+    std::size_t dist3 = sievingPrime * 4 + 2;
+    std::size_t dist4 = sievingPrime * 2 + 0;
 
     switch (wheelIndex)
     {
@@ -203,18 +203,18 @@ void EratMedium::crossOff_13(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
-  uint64_t wheelIndex = prime->getWheelIndex();
+  std::size_t wheelIndex = prime->getWheelIndex();
   MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
-    uint64_t sievingPrime = prime->getSievingPrime();
-    uint64_t i = prime->getMultipleIndex();
-    uint64_t dist0 = sievingPrime * 6 + 2;
-    uint64_t dist1 = sievingPrime * 4 + 2;
-    uint64_t dist2 = sievingPrime * 2 + 1;
-    uint64_t dist5 = sievingPrime * 4 + 1;
-    uint64_t dist6 = sievingPrime * 6 + 3;
+    std::size_t sievingPrime = prime->getSievingPrime();
+    std::size_t i = prime->getMultipleIndex();
+    std::size_t dist0 = sievingPrime * 6 + 2;
+    std::size_t dist1 = sievingPrime * 4 + 2;
+    std::size_t dist2 = sievingPrime * 2 + 1;
+    std::size_t dist5 = sievingPrime * 4 + 1;
+    std::size_t dist6 = sievingPrime * 6 + 3;
 
     switch (wheelIndex)
     {
@@ -240,18 +240,18 @@ void EratMedium::crossOff_17(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
-  uint64_t wheelIndex = prime->getWheelIndex();
+  std::size_t wheelIndex = prime->getWheelIndex();
   MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
-    uint64_t sievingPrime = prime->getSievingPrime();
-    uint64_t i = prime->getMultipleIndex();
-    uint64_t dist0 = sievingPrime * 6 + 3;
-    uint64_t dist1 = sievingPrime * 4 + 3;
-    uint64_t dist2 = sievingPrime * 2 + 1;
-    uint64_t dist3 = sievingPrime * 4 + 2;
-    uint64_t dist6 = sievingPrime * 6 + 4;
+    std::size_t sievingPrime = prime->getSievingPrime();
+    std::size_t i = prime->getMultipleIndex();
+    std::size_t dist0 = sievingPrime * 6 + 3;
+    std::size_t dist1 = sievingPrime * 4 + 3;
+    std::size_t dist2 = sievingPrime * 2 + 1;
+    std::size_t dist3 = sievingPrime * 4 + 2;
+    std::size_t dist6 = sievingPrime * 6 + 4;
 
     switch (wheelIndex)
     {
@@ -277,18 +277,18 @@ void EratMedium::crossOff_19(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
-  uint64_t wheelIndex = prime->getWheelIndex();
+  std::size_t wheelIndex = prime->getWheelIndex();
   MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
-    uint64_t sievingPrime = prime->getSievingPrime();
-    uint64_t i = prime->getMultipleIndex();
-    uint64_t dist0 = sievingPrime * 6 + 4;
-    uint64_t dist1 = sievingPrime * 4 + 2;
-    uint64_t dist2 = sievingPrime * 2 + 2;
-    uint64_t dist4 = sievingPrime * 2 + 1;
-    uint64_t dist5 = sievingPrime * 4 + 3;
+    std::size_t sievingPrime = prime->getSievingPrime();
+    std::size_t i = prime->getMultipleIndex();
+    std::size_t dist0 = sievingPrime * 6 + 4;
+    std::size_t dist1 = sievingPrime * 4 + 2;
+    std::size_t dist2 = sievingPrime * 2 + 2;
+    std::size_t dist4 = sievingPrime * 2 + 1;
+    std::size_t dist5 = sievingPrime * 4 + 3;
 
     switch (wheelIndex)
     {
@@ -314,17 +314,17 @@ void EratMedium::crossOff_23(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
-  uint64_t wheelIndex = prime->getWheelIndex();
+  std::size_t wheelIndex = prime->getWheelIndex();
   MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
-    uint64_t sievingPrime = prime->getSievingPrime();
-    uint64_t i = prime->getMultipleIndex();
-    uint64_t dist0 = sievingPrime * 6 + 5;
-    uint64_t dist1 = sievingPrime * 4 + 3;
-    uint64_t dist2 = sievingPrime * 2 + 1;
-    uint64_t dist4 = sievingPrime * 2 + 2;
+    std::size_t sievingPrime = prime->getSievingPrime();
+    std::size_t i = prime->getMultipleIndex();
+    std::size_t dist0 = sievingPrime * 6 + 5;
+    std::size_t dist1 = sievingPrime * 4 + 3;
+    std::size_t dist2 = sievingPrime * 2 + 1;
+    std::size_t dist4 = sievingPrime * 2 + 2;
 
     switch (wheelIndex)
     {
@@ -350,17 +350,17 @@ void EratMedium::crossOff_29(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
-  uint64_t wheelIndex = prime->getWheelIndex();
+  std::size_t wheelIndex = prime->getWheelIndex();
   MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
-    uint64_t sievingPrime = prime->getSievingPrime();
-    uint64_t i = prime->getMultipleIndex();
-    uint64_t dist0 = sievingPrime * 6 + 6;
-    uint64_t dist1 = sievingPrime * 4 + 4;
-    uint64_t dist2 = sievingPrime * 2 + 2;
-    uint64_t dist6 = sievingPrime * 6 + 5;
+    std::size_t sievingPrime = prime->getSievingPrime();
+    std::size_t i = prime->getMultipleIndex();
+    std::size_t dist0 = sievingPrime * 6 + 6;
+    std::size_t dist1 = sievingPrime * 4 + 4;
+    std::size_t dist2 = sievingPrime * 2 + 2;
+    std::size_t dist6 = sievingPrime * 6 + 5;
 
     switch (wheelIndex)
     {
@@ -386,17 +386,17 @@ void EratMedium::crossOff_31(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 {
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
-  uint64_t wheelIndex = prime->getWheelIndex();
+  std::size_t wheelIndex = prime->getWheelIndex();
   MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
-    uint64_t sievingPrime = prime->getSievingPrime();
-    uint64_t i = prime->getMultipleIndex();
-    uint64_t dist0 = sievingPrime * 6 + 1;
-    uint64_t dist1 = sievingPrime * 4 + 0;
-    uint64_t dist2 = sievingPrime * 2 + 0;
-    uint64_t dist6 = sievingPrime * 6 + 0;
+    std::size_t sievingPrime = prime->getSievingPrime();
+    std::size_t i = prime->getMultipleIndex();
+    std::size_t dist0 = sievingPrime * 6 + 1;
+    std::size_t dist1 = sievingPrime * 4 + 0;
+    std::size_t dist2 = sievingPrime * 2 + 0;
+    std::size_t dist6 = sievingPrime * 6 + 0;
 
     switch (wheelIndex)
     {
