@@ -62,10 +62,10 @@ void EratMedium::init(uint64_t stop,
 /// Add a new sieving prime to EratMedium
 void EratMedium::storeSievingPrime(uint64_t prime,
                                    uint64_t multipleIndex,
-                                   std::size_t wheelIndex)
+                                   uint64_t wheelIndex)
 {
   ASSERT(prime <= maxPrime_);
-  std::size_t sievingPrime = prime / 30;
+  uint64_t sievingPrime = prime / 30;
 
   if_unlikely(buckets_.empty())
   {
