@@ -81,16 +81,16 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
 {
   for (auto& prime : primes_)
   {
-    uint64_t sievingPrime = prime.getSievingPrime();
-    uint64_t i = prime.getMultipleIndex();
-    uint64_t wheelIndex = prime.getWheelIndex();
-    uint64_t maxLoopDist = sievingPrime * 28 + 27;
-    uint64_t loopEnd = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+    std::size_t sievingPrime = prime.getSievingPrime();
+    std::size_t i = prime.getMultipleIndex();
+    std::size_t wheelIndex = prime.getWheelIndex();
+    std::size_t maxLoopDist = sievingPrime * 28 + 27;
+    std::size_t loopEnd = std::max(sieveSize, maxLoopDist) - maxLoopDist;
 
     #define CHECK_FINISHED(wheelIndex) \
       if_unlikely(i >= sieveSize) \
       { \
-        uint64_t multipleIndex = i - sieveSize; \
+        std::size_t multipleIndex = i - sieveSize; \
         prime.set(multipleIndex, wheelIndex); \
         break; \
       }
