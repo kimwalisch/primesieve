@@ -90,7 +90,8 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
     #define CHECK_FINISHED(wheelIndex) \
       if_unlikely(i >= sieveSize) \
       { \
-        prime.set(i - sieveSize, wheelIndex); \
+        uint64_t multipleIndex = i - sieveSize; \
+        prime.set(multipleIndex, wheelIndex); \
         break; \
       }
 
