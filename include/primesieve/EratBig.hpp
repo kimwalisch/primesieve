@@ -38,7 +38,7 @@ private:
   MemoryPool* memoryPool_ = nullptr;
   pod_vector<SievingPrime*> buckets_;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
-  NOINLINE void crossOff(uint8_t* sieve, SievingPrime* prime, std::size_t size);
+  NOINLINE void crossOff(uint8_t* sieve, SievingPrime* prime, SievingPrime* end);
 };
 
 } // namespace
