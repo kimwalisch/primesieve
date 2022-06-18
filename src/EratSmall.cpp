@@ -100,11 +100,11 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 0: {
                   std::size_t maxLoopDist = sievingPrime * 28 + 6;
-                  std::size_t loopEnd = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                  std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
 
                   // Each iteration removes the next 8
                   // multiples of the sievingPrime.
-                  for (; i < loopEnd; i += sievingPrime * 30 + 7)
+                  for (; i < limit; i += sievingPrime * 30 + 7)
                   {
                     sieve[i + sievingPrime *  0 + 0] &= BIT0;
                     sieve[i + sievingPrime *  6 + 1] &= BIT4;
@@ -131,9 +131,9 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case  8: {
                    std::size_t maxLoopDist = sievingPrime * 28 + 10;
-                   std::size_t loopEnd = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
 
-                   for (; i < loopEnd; i += sievingPrime * 30 + 11)
+                   for (; i < limit; i += sievingPrime * 30 + 11)
                    {
                      sieve[i + sievingPrime *  0 +  0] &= BIT1;
                      sieve[i + sievingPrime *  6 +  2] &= BIT3;
@@ -160,9 +160,9 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 16: {
                    std::size_t maxLoopDist = sievingPrime * 28 + 12;
-                   std::size_t loopEnd = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
 
-                   for (; i < loopEnd; i += sievingPrime * 30 + 13)
+                   for (; i < limit; i += sievingPrime * 30 + 13)
                    {
                      sieve[i + sievingPrime *  0 +  0] &= BIT2;
                      sieve[i + sievingPrime *  6 +  2] &= BIT7;
@@ -189,9 +189,9 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 24: {
                    std::size_t maxLoopDist = sievingPrime * 28 + 16;
-                   std::size_t loopEnd = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
 
-                   for (; i < loopEnd; i += sievingPrime * 30 + 17)
+                   for (; i < limit; i += sievingPrime * 30 + 17)
                    {
                      sieve[i + sievingPrime *  0 +  0] &= BIT3;
                      sieve[i + sievingPrime *  6 +  3] &= BIT6;
@@ -218,9 +218,9 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 32: {
                    std::size_t maxLoopDist = sievingPrime * 28 + 18;
-                   std::size_t loopEnd = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
 
-                   for (; i < loopEnd; i += sievingPrime * 30 + 19)
+                   for (; i < limit; i += sievingPrime * 30 + 19)
                    {
                      sieve[i + sievingPrime *  0 +  0] &= BIT4;
                      sieve[i + sievingPrime *  6 +  4] &= BIT2;
@@ -247,9 +247,9 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 40: {
                    std::size_t maxLoopDist = sievingPrime * 28 + 22;
-                   std::size_t loopEnd = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
 
-                   for (; i < loopEnd; i += sievingPrime * 30 + 23)
+                   for (; i < limit; i += sievingPrime * 30 + 23)
                    {
                      sieve[i + sievingPrime *  0 +  0] &= BIT5;
                      sieve[i + sievingPrime *  6 +  5] &= BIT1;
@@ -276,9 +276,9 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 48: {
                    std::size_t maxLoopDist = sievingPrime * 28 + 27;
-                   std::size_t loopEnd = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
 
-                   for (; i < loopEnd; i += sievingPrime * 30 + 29)
+                   for (; i < limit; i += sievingPrime * 30 + 29)
                    {
                      sieve[i + sievingPrime *  0 +  0] &= BIT6;
                      sieve[i + sievingPrime *  6 +  6] &= BIT5;
@@ -305,9 +305,9 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 56: {
                    std::size_t maxLoopDist = sievingPrime * 28 + 1;
-                   std::size_t loopEnd = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
 
-                   for (; i < loopEnd; i += sievingPrime * 30 + 1)
+                   for (; i < limit; i += sievingPrime * 30 + 1)
                    {
                      sieve[i + sievingPrime *  0 + 0] &= BIT7;
                      sieve[i + sievingPrime *  6 + 1] &= BIT0;
