@@ -25,22 +25,6 @@
 
 #include <stdint.h>
 
-/// This macro sorts the current sieving prime by its
-/// wheelIndex after sieving has finished. When we then
-/// iterate over the sieving primes in the next segment the
-/// 'switch (wheelIndex)' branch will be predicted
-/// correctly by the CPU.
-///
-#define CHECK_FINISHED(wheelIndex) \
-  if_unlikely(i >= sieveSize) \
-  { \
-    auto multipleIndex = i - sieveSize; \
-    if (Bucket::isFull(buckets_[wheelIndex])) \
-      memoryPool.addBucket(buckets_[wheelIndex]); \
-    buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex); \
-    break; \
-  }
-
 namespace primesieve {
 
 /// @stop:      Upper bound for sieving
@@ -125,13 +109,30 @@ void EratMedium::crossOff(pod_vector<uint8_t>& sieve)
   }
 }
 
+/// This macro sorts the current sieving prime by its
+/// wheelIndex after sieving has finished. When we then
+/// iterate over the sieving primes in the next segment the
+/// 'switch (wheelIndex)' branch will be predicted
+/// correctly by the CPU.
+///
+#define CHECK_FINISHED(wheelIndex) \
+  if_unlikely(i >= sieveSize) \
+  { \
+    i -= sieveSize; \
+    if (Bucket::isFull(buckets[wheelIndex])) \
+      memoryPool.addBucket(buckets[wheelIndex]); \
+    buckets[wheelIndex]++->set(sievingPrime, i, wheelIndex); \
+    break; \
+  }
+
 /// For sieving primes of type n % 30 == 7
 void EratMedium::crossOff_7(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
 {
+  auto buckets = buckets_.data();
+  MemoryPool& memoryPool = *memoryPool_;
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   std::size_t wheelIndex = prime->getWheelIndex();
-  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -164,10 +165,11 @@ void EratMedium::crossOff_7(uint8_t* sieve, std::size_t sieveSize, Bucket* bucke
 /// For sieving primes of type n % 30 == 11
 void EratMedium::crossOff_11(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
 {
+  auto buckets = buckets_.data();
+  MemoryPool& memoryPool = *memoryPool_;
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   std::size_t wheelIndex = prime->getWheelIndex();
-  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -201,10 +203,11 @@ void EratMedium::crossOff_11(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 /// For sieving primes of type n % 30 == 13
 void EratMedium::crossOff_13(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
 {
+  auto buckets = buckets_.data();
+  MemoryPool& memoryPool = *memoryPool_;
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   std::size_t wheelIndex = prime->getWheelIndex();
-  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -238,10 +241,11 @@ void EratMedium::crossOff_13(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 /// For sieving primes of type n % 30 == 17
 void EratMedium::crossOff_17(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
 {
+  auto buckets = buckets_.data();
+  MemoryPool& memoryPool = *memoryPool_;
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   std::size_t wheelIndex = prime->getWheelIndex();
-  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -275,10 +279,11 @@ void EratMedium::crossOff_17(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 /// For sieving primes of type n % 30 == 19
 void EratMedium::crossOff_19(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
 {
+  auto buckets = buckets_.data();
+  MemoryPool& memoryPool = *memoryPool_;
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   std::size_t wheelIndex = prime->getWheelIndex();
-  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -312,10 +317,11 @@ void EratMedium::crossOff_19(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 /// For sieving primes of type n % 30 == 23
 void EratMedium::crossOff_23(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
 {
+  auto buckets = buckets_.data();
+  MemoryPool& memoryPool = *memoryPool_;
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   std::size_t wheelIndex = prime->getWheelIndex();
-  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -348,10 +354,11 @@ void EratMedium::crossOff_23(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 /// For sieving primes of type n % 30 == 29
 void EratMedium::crossOff_29(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
 {
+  auto buckets = buckets_.data();
+  MemoryPool& memoryPool = *memoryPool_;
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   std::size_t wheelIndex = prime->getWheelIndex();
-  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
@@ -384,10 +391,11 @@ void EratMedium::crossOff_29(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 /// For sieving primes of type n % 30 == 1
 void EratMedium::crossOff_31(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
 {
+  auto buckets = buckets_.data();
+  MemoryPool& memoryPool = *memoryPool_;
   SievingPrime* prime = bucket->begin();
   SievingPrime* end = bucket->end();
   std::size_t wheelIndex = prime->getWheelIndex();
-  MemoryPool& memoryPool = *memoryPool_;
 
   for (; prime != end; prime++)
   {
