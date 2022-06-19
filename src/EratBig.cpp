@@ -229,7 +229,7 @@ void EratBig::crossOff(uint8_t* sieve,
   std::size_t moduloSieveSize = moduloSieveSize_;
   std::size_t log2SieveSize = log2SieveSize_;
   std::size_t size = (std::size_t) (end - prime);
-  SievingPrime* end2 = prime + size - size % 2;
+  SievingPrime* end2 = end - size % 2;
 
   // Process 2 sieving primes per loop iteration to
   // increase instruction level parallelism.
