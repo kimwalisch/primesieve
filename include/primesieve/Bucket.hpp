@@ -116,12 +116,12 @@ public:
   static Bucket* get(SievingPrime* sievingPrime)
   {
     ASSERT(sievingPrime != nullptr);
-    std::size_t address = (std::size_t) sievingPrime;
+    uintptr_t address = (uintptr_t) (void*) sievingPrime;
     // We need to adjust the address
     // in case the bucket is full.
     address -= 1;
     address -= address % sizeof(Bucket);
-    return (Bucket*) address;
+    return (Bucket*) (void*) address;
   }
 
   /// Returns true if the bucket is full with sieving primes
@@ -133,7 +133,7 @@ public:
   ///
   static bool isFull(SievingPrime* sievingPrime)
   {
-    std::size_t address = (std::size_t) sievingPrime;
+    uintptr_t address = (uintptr_t) (void*) sievingPrime;
     return address % sizeof(Bucket) == 0;
   }
 
