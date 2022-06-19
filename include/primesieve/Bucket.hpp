@@ -39,24 +39,24 @@ public:
 
   SievingPrime() = default;
 
-  SievingPrime(uint64_t sievingPrime,
-               uint64_t multipleIndex,
-               uint64_t wheelIndex)
+  SievingPrime(std::size_t sievingPrime,
+               std::size_t multipleIndex,
+               std::size_t wheelIndex)
   {
     set(sievingPrime, multipleIndex, wheelIndex);
   }
 
-  void set(uint64_t multipleIndex,
-           uint64_t wheelIndex)
+  void set(std::size_t multipleIndex,
+           std::size_t wheelIndex)
   {
     ASSERT(multipleIndex <= MAX_MULTIPLEINDEX);
     ASSERT(wheelIndex <= MAX_WHEELINDEX);
     indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 23));
   }
 
-  void set(uint64_t sievingPrime,
-           uint64_t multipleIndex,
-           uint64_t wheelIndex)
+  void set(std::size_t sievingPrime,
+           std::size_t multipleIndex,
+           std::size_t wheelIndex)
   {
     ASSERT(multipleIndex <= MAX_MULTIPLEINDEX);
     ASSERT(wheelIndex <= MAX_WHEELINDEX);
@@ -64,17 +64,17 @@ public:
     sievingPrime_ = (uint32_t) sievingPrime;
   }
 
-  uint64_t getSievingPrime() const
+  std::size_t getSievingPrime() const
   {
     return sievingPrime_;
   }
 
-  uint64_t getMultipleIndex() const
+  std::size_t getMultipleIndex() const
   {
     return indexes_ & MAX_MULTIPLEINDEX;
   }
 
-  uint64_t getWheelIndex() const
+  std::size_t getWheelIndex() const
   {
     return indexes_ >> 23;
   }
@@ -115,12 +115,12 @@ public:
   static Bucket* get(SievingPrime* sievingPrime)
   {
     ASSERT(sievingPrime != nullptr);
-    std::size_t address = (std::size_t) sievingPrime;
+    uintptr_t address = (uintptr_t) (void*) sievingPrime;
     // We need to adjust the address
     // in case the bucket is full.
     address -= 1;
     address -= address % sizeof(Bucket);
-    return (Bucket*) address;
+    return (Bucket*) (void*) address;
   }
 
   /// Returns true if the bucket is full with sieving primes
@@ -132,7 +132,7 @@ public:
   ///
   static bool isFull(SievingPrime* sievingPrime)
   {
-    std::size_t address = (std::size_t) sievingPrime;
+    uintptr_t address = (uintptr_t) (void*) sievingPrime;
     return address % sizeof(Bucket) == 0;
   }
 

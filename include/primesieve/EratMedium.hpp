@@ -37,14 +37,14 @@ private:
   pod_vector<SievingPrime*> buckets_;
   pod_vector<SievingPrime*> currentBuckets_;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
-  NOINLINE void crossOff_7(uint8_t*, uint8_t*, Bucket*);
-  NOINLINE void crossOff_11(uint8_t*, uint8_t*, Bucket*);
-  NOINLINE void crossOff_13(uint8_t*, uint8_t*, Bucket*);
-  NOINLINE void crossOff_17(uint8_t*, uint8_t*, Bucket*);
-  NOINLINE void crossOff_19(uint8_t*, uint8_t*, Bucket*);
-  NOINLINE void crossOff_23(uint8_t*, uint8_t*, Bucket*);
-  NOINLINE void crossOff_29(uint8_t*, uint8_t*, Bucket*);
-  NOINLINE void crossOff_31(uint8_t*, uint8_t*, Bucket*);
+  NOINLINE void crossOff_7(uint8_t*, std::size_t, Bucket*);
+  NOINLINE void crossOff_11(uint8_t*, std::size_t, Bucket*);
+  NOINLINE void crossOff_13(uint8_t*, std::size_t, Bucket*);
+  NOINLINE void crossOff_17(uint8_t*, std::size_t, Bucket*);
+  NOINLINE void crossOff_19(uint8_t*, std::size_t, Bucket*);
+  NOINLINE void crossOff_23(uint8_t*, std::size_t, Bucket*);
+  NOINLINE void crossOff_29(uint8_t*, std::size_t, Bucket*);
+  NOINLINE void crossOff_31(uint8_t*, std::size_t, Bucket*);
 };
 
 } // namespace
