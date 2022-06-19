@@ -99,8 +99,8 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       for (;;)
       {
         case 0: {
-                  std::size_t maxLoopDist = sievingPrime * 28 + 6;
-                  std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                  std::size_t maxOffset = sievingPrime * 28 + 6;
+                  std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
 
                   // Each iteration removes the next 8
                   // multiples of the sievingPrime.
@@ -130,8 +130,8 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       for (;;)
       {
         case  8: {
-                   std::size_t maxLoopDist = sievingPrime * 28 + 10;
-                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t maxOffset = sievingPrime * 28 + 10;
+                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 11)
                    {
@@ -159,8 +159,8 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       for (;;)
       {
         case 16: {
-                   std::size_t maxLoopDist = sievingPrime * 28 + 12;
-                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t maxOffset = sievingPrime * 28 + 12;
+                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 13)
                    {
@@ -188,8 +188,8 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       for (;;)
       {
         case 24: {
-                   std::size_t maxLoopDist = sievingPrime * 28 + 16;
-                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t maxOffset = sievingPrime * 28 + 16;
+                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 17)
                    {
@@ -217,8 +217,8 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       for (;;)
       {
         case 32: {
-                   std::size_t maxLoopDist = sievingPrime * 28 + 18;
-                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t maxOffset = sievingPrime * 28 + 18;
+                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 19)
                    {
@@ -246,8 +246,8 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       for (;;)
       {
         case 40: {
-                   std::size_t maxLoopDist = sievingPrime * 28 + 22;
-                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t maxOffset = sievingPrime * 28 + 22;
+                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 23)
                    {
@@ -275,8 +275,8 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       for (;;)
       {
         case 48: {
-                   std::size_t maxLoopDist = sievingPrime * 28 + 27;
-                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t maxOffset = sievingPrime * 28 + 27;
+                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 29)
                    {
@@ -304,8 +304,8 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       for (;;)
       {
         case 56: {
-                   std::size_t maxLoopDist = sievingPrime * 28 + 1;
-                   std::size_t limit = std::max(sieveSize, maxLoopDist) - maxLoopDist;
+                   std::size_t maxOffset = sievingPrime * 28 + 1;
+                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 1)
                    {
