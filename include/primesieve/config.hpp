@@ -86,7 +86,7 @@ constexpr uint64_t MIN_THREAD_DISTANCE = (uint64_t) 1e7;
 ///
 /// @pre FACTOR_ERATSMALL >= 0 && <= 4.5
 ///
-constexpr double FACTOR_ERATSMALL = 0.25;
+constexpr double FACTOR_ERATSMALL = 0.2;
 
 /// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL)
 /// and <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
