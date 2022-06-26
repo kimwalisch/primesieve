@@ -50,6 +50,21 @@ public:
     return array_;
   }
 
+  const T* data() const noexcept
+  {
+    return array_;
+  }
+
+  T* end() noexcept
+  {
+    return end_;
+  }
+
+  const T* end() const noexcept
+  {
+    return end_;
+  }
+
   std::size_t size() const noexcept
   {
     ASSERT(end_ >= array_);
@@ -67,6 +82,23 @@ public:
     if_unlikely(end_ == capacity_)
       reserve_unchecked(std::max((std::size_t) 1, capacity() * 2));
     *end_++ = value;
+  }
+
+  template <class InputIt>
+  void insert(T* const pos, InputIt first, InputIt last)
+  {
+    // We only support appending to the vector
+    ASSERT(pos == end_);
+    (void) pos;
+
+    if (first < last)
+    {
+      std::size_t old_size = size();
+      std::size_t new_size = old_size + (std::size_t) (last - first);
+      reserve(new_size);
+      end_ = array_ + new_size;
+      std::copy(first, last, &array_[old_size]);
+    }
   }
 
   void reserve(std::size_t n)

@@ -205,6 +205,23 @@ public:
     *end_++ = T(std::forward<Args>(args)...);
   }
 
+  template <class InputIt>
+  void insert(T* const pos, InputIt first, InputIt last)
+  {
+    // We only support appending to the vector
+    ASSERT(pos == end_);
+    (void) pos;
+
+    if (first < last)
+    {
+      std::size_t old_size = size();
+      std::size_t new_size = old_size + (std::size_t) (last - first);
+      reserve(new_size);
+      end_ = array_ + new_size;
+      std::copy(first, last, &array_[old_size]);
+    }
+  }
+
   void reserve(std::size_t n)
   {
     if (n > capacity())
