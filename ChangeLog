@@ -1,4 +1,4 @@
-Changes in version 8.0, 10/06/2022
+Changes in version 8.0, 26/06/2022
 ==================================
 
 There has been a minor change in the ABI (Application binary interface) of
@@ -25,6 +25,8 @@ https://github.com/kimwalisch/primesieve/wiki/libprimesieve-8.0-ABI-changes
   memory to store all sieving primes.
 * CpuInfo.cpp: Detect AVX512 using CPUID.
 * pmath.hpp: Use compiler instrinsics for ilog2() & floorPow2().
+* StorePrimes.hpp: Use vector::insert() instead of vector::push_back(),
+                   see: https://github.com/kimwalisch/primesieve/issues/123.
 * CMakeLists.txt: Automatically enable expensive debug assertions in debug
                   mode (if CMAKE_BUILD_TYPE=Debug).
 
