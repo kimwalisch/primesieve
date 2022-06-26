@@ -29,8 +29,7 @@ namespace primesieve {
 
 /// Store the primes <= stop in the primes vector.
 /// @vect: std::vector or other vector type that is API compatible
-///        with std::vector (must implement size(), reserve(),
-///        push_back() and value_type).
+///        with std::vector.
 ///
 template <typename vect>
 inline void generate_primes(uint64_t stop, vect* primes)
@@ -41,8 +40,7 @@ inline void generate_primes(uint64_t stop, vect* primes)
 
 /// Store the primes within the interval [start, stop] in the primes vector.
 /// @vect: std::vector or other vector type that is API compatible
-///        with std::vector (must implement size(), reserve(),
-///        push_back() and value_type).
+///        with std::vector.
 ///
 template <typename vect>
 inline void generate_primes(uint64_t start, uint64_t stop, vect* primes)
@@ -53,8 +51,7 @@ inline void generate_primes(uint64_t start, uint64_t stop, vect* primes)
 
 /// Store the first n primes in the primes vector.
 /// @vect: std::vector or other vector type that is API compatible
-///        with std::vector (must implement size(), reserve(),
-///        push_back() and value_type).
+///        with std::vector.
 ///
 template <typename vect>
 inline void generate_n_primes(uint64_t n, vect* primes)
@@ -65,8 +62,7 @@ inline void generate_n_primes(uint64_t n, vect* primes)
 
 /// Store the first n primes >= start in the primes vector.
 /// @vect: std::vector or other vector type that is API compatible
-///        with std::vector (must implement size(), reserve(),
-///        push_back() and value_type).
+///        with std::vector.
 ///
 template <typename vect>
 inline void generate_n_primes(uint64_t n, uint64_t start, vect* primes)
