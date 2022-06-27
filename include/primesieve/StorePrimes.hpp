@@ -63,8 +63,8 @@ inline void store_primes(uint64_t start,
 
   for (; it.primes_[it.size_ - 1] <= stop; it.generate_next_primes())
     primes.insert(primes.end(), it.primes_, it.primes_ + it.size_);
-  for (; it.primes_[it.i_] <= stop; it.i_++)
-    primes.push_back((V) it.primes_[it.i_]);
+  for (std::size_t i = 0; it.primes_[i] <= stop; i++)
+    primes.push_back((V) it.primes_[i]);
 
 #if defined(_MSC_VER)
   #pragma warning(pop)
@@ -104,8 +104,8 @@ inline void store_n_primes(uint64_t n,
 
   for (; n > it.size_; n -= it.size_, it.generate_next_primes())
     primes.insert(primes.end(), it.primes_, it.primes_ + it.size_);
-  for (; n > 0; n--, it.i_++)
-    primes.push_back((V) it.primes_[it.i_]);
+  for (std::size_t i = 0; i < (std::size_t) n; i++)
+    primes.push_back((V) it.primes_[i]);
 
 #if defined(_MSC_VER)
   #pragma warning(pop)
