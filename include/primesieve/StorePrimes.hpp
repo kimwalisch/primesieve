@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <limits>
 
 namespace primesieve {
 
@@ -56,7 +57,7 @@ inline void store_primes(uint64_t start,
   it.generate_next_primes();
 
 #if defined(_MSC_VER)
-  // Disable warning C4244: conversion from X to Y, possible loss of data
+  // Disable warning: conversion from X to Y, possible loss of data
   #pragma warning(push)
   #pragma warning(disable : 4244)
 #endif
@@ -96,23 +97,32 @@ inline void store_n_primes(uint64_t n,
   primesieve::iterator it(start, stop);
   it.generate_next_primes();
 
+  if (it.primes_[0] == std::numeric_limits<uint64_t>::max())
+    throw primesieve_error("cannot generate primes > 2^64");
+
 #if defined(_MSC_VER)
-  // Disable warning C4244: conversion from X to Y, possible loss of data
+  // Disable warning: conversion from X to Y, possible loss of data
   #pragma warning(push)
   #pragma warning(disable : 4244)
 #endif
 
-  for (; n > it.size_; n -= it.size_, it.generate_next_primes())
+  while (n >= it.size_)
+  {
     primes.insert(primes.end(), it.primes_, it.primes_ + it.size_);
+    n -= it.size_;
+    if (n == 0)
+      return;
+    it.generate_next_primes();
+    if (it.primes_[0] == std::numeric_limits<uint64_t>::max())
+      throw primesieve_error("cannot generate primes > 2^64");
+  }
+
   for (std::size_t i = 0; i < (std::size_t) n; i++)
     primes.push_back((V) it.primes_[i]);
 
 #if defined(_MSC_VER)
   #pragma warning(pop)
 #endif
-
-  if (~it.primes_[it.i_ - 1] == 0)
-    throw primesieve_error("cannot generate primes > 2^64");
 }
 
 } // namespace
