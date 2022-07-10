@@ -66,11 +66,11 @@ void primesieve_init(primesieve_iterator* it);
 void primesieve_free_iterator(primesieve_iterator* it);
 
 /**
-  * Reset the start number to 0 and free most memory.
-  * Keeps some smaller data structures in memory
-  * (e.g. the PreSieve object) that are useful if the
-  * primesieve::iterator is reused. The remaining memory
-  * uses at most 200 kilobytes.
+ * Reset the start number to 0 and free most memory.
+ * Keeps some smaller data structures in memory
+ * (e.g. the PreSieve object) that are useful if the
+ * primesieve::iterator is reused. The remaining memory
+ * uses at most 200 kilobytes.
  */
 void primesieve_clear(primesieve_iterator* it);
 
