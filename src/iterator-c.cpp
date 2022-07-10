@@ -54,13 +54,23 @@ void primesieve_skipto(primesieve_iterator* it,
   it->stop_hint = stop_hint;
   it->primes = nullptr;
 
+  // Frees most memory, but keeps some smaller data
+  // structures (e.g. the PreSieve object) that are
+  // useful if the primesieve::iterator is reused.
+  // The remaining memory uses at most 200 kilobytes.
   if (it->memory)
   {
     auto* memory = (IteratorMemory*) it->memory;
     memory->stop = start;
     memory->dist = 0;
-    primesieve_clear(it);
+    memory->deletePrimeGenerator();
+    memory->deletePrimes();
   }
+}
+
+void primesieve_clear(primesieve_iterator* it)
+{
+  primesieve_skipto(it, 0, std::numeric_limits<uint64_t>::max());
 }
 
 /// C destructor
@@ -70,21 +80,6 @@ void primesieve_free_iterator(primesieve_iterator* it)
   {
     delete (IteratorMemory*) it->memory;
     it->memory = nullptr;
-  }
-}
-
-/// Frees most memory, but keeps some smaller data structures
-/// (e.g. the PreSieve object) that are useful if the
-/// primesieve_iterator is reused. The remaining memory
-/// uses at most 200 kilobytes.
-///
-void primesieve_clear(primesieve_iterator* it)
-{
-  if (it->memory)
-  {
-    auto* memory = (IteratorMemory*) it->memory;
-    memory->deletePrimeGenerator();
-    memory->deletePrimes();
   }
 }
 

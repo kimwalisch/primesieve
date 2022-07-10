@@ -75,7 +75,8 @@ struct iterator
   /// Frees all memory
   ~iterator();
 
-  /// Frees most memory, but keeps some smaller data structures
+  /// Reset the start number to 0 and free most memory.
+  /// Keeps some smaller data structures in memory
   /// (e.g. the PreSieve object) that are useful if the
   /// primesieve::iterator is reused. The remaining memory
   /// uses at most 200 kilobytes.

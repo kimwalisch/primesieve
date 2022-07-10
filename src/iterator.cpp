@@ -102,33 +102,28 @@ void iterator::skipto(uint64_t start,
   stop_hint_ = stop_hint;
   primes_ = nullptr;
 
+  // Frees most memory, but keeps some smaller data
+  // structures (e.g. the PreSieve object) that are
+  // useful if the primesieve::iterator is reused.
+  // The remaining memory uses at most 200 kilobytes.
   if (memory_)
   {
     auto* memory = (IteratorMemory*) memory_;
     memory->stop = start;
     memory->dist = 0;
-    clear();
+    memory->deletePrimeGenerator();
+    memory->deletePrimes();
   }
+}
+
+void iterator::clear() noexcept
+{
+  skipto(0);
 }
 
 iterator::~iterator()
 {
   freeAllMemory(this);
-}
-
-/// Frees most memory, but keeps some smaller data structures
-/// (e.g. the PreSieve object) that are useful if the
-/// primesieve::iterator is reused. The remaining memory
-/// uses at most 200 kilobytes.
-///
-void iterator::clear() noexcept
-{
-  if (memory_)
-  {
-    auto* memory = (IteratorMemory*) memory_;
-    memory->deletePrimeGenerator();
-    memory->deletePrimes();
-  }
 }
 
 void iterator::generate_next_primes()
