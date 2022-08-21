@@ -72,6 +72,9 @@ primesieve 1e10
 # Print the primes below 1000000
 primesieve 1000000 --print
 
+# Store the primes below 1000000 in a text file
+primesieve 1000000 --print > primes.txt
+
 # Print the twin primes below 1000000
 primesieve 1000000 --print=2
 
