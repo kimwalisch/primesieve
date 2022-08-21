@@ -66,16 +66,16 @@ to install ```libprimesieve-dev``` or ```libprimesieve-devel```.
 ## Usage examples
 
 ```sh
-# Count the primes below 1e10 using all CPU cores
+# Count the primes ≤ 1e10 using all CPU cores
 primesieve 1e10
 
-# Print the primes below 1000000
+# Print the primes ≤ 1000000
 primesieve 1000000 --print
 
-# Store the primes below 1000000 in a text file
+# Store the primes ≤ 1000000 in a text file
 primesieve 1000000 --print > primes.txt
 
-# Print the twin primes below 1000000
+# Print the twin primes ≤ 1000000
 primesieve 1000000 --print=2
 
 # Count the prime triplets inside [1e10, 1e10+2^32]
