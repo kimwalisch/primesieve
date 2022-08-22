@@ -2,12 +2,12 @@
 .\"     Title: primesieve
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 01/07/2022
+.\"      Date: 08/22/2022
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "PRIMESIEVE" "1" "01/07/2022" "\ \&" "\ \&"
+.TH "PRIMESIEVE" "1" "08/22/2022" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -146,6 +146,11 @@ Count the primes <= 1000\&.
 \fBprimesieve 1e6 \-\-print\fR
 .RS 4
 Print the primes <= 10^6\&.
+.RE
+.PP
+\fBprimesieve 1e6 \-\-print > primes\&.txt\fR
+.RS 4
+Store the primes <= 10^6 in a text file\&.
 .RE
 .PP
 \fBprimesieve 2^32 \-\-print=2\fR

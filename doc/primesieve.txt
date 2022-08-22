@@ -94,6 +94,9 @@ EXAMPLES
 **primesieve 1e6 --print**::
 	Print the primes \<= 10^6.
 
+**primesieve 1e6 --print > primes.txt**::
+	Store the primes \<= 10^6 in a text file.
+
 **primesieve 2^32 --print=2**::
 	Print the twin primes \<= 2^32.
 
