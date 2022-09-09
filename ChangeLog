@@ -1,8 +1,9 @@
-Changes in version 8.1, 10/07/2022
+Changes in version 8.1, 09/09/2022
 ==================================
 
 * iterator.cpp: Fix use after free in primesieve::iterator::clear().
 * iterator-c.cpp: Fix use after free in primesieve_iterator_clear().
+* Erat.cpp: Improve documentation.
 
 Changes in version 8.0, 26/06/2022
 ==================================
