@@ -144,7 +144,6 @@ std::string primesieve_version()
 void set_sieve_size(int size)
 {
   sieve_size = inBetween(16, size, 8192);
-  sieve_size = floorPow2(sieve_size);
 }
 
 int get_sieve_size()
@@ -178,7 +177,6 @@ int get_sieve_size()
     maxSize = std::max(l1Size, maxSize);
     size_t size = std::min(l1Size * 8, maxSize);
     size = inBetween(16, size, 8192);
-    size = floorPow2(size);
     return (int) size;
   }
 
@@ -187,7 +185,6 @@ int get_sieve_size()
     // Convert bytes to KiB
     size_t l1Size = cpuInfo.l1CacheBytes() >> 10;
     l1Size = inBetween(16, l1Size, 8192);
-    l1Size = floorPow2(l1Size);
     return (int) l1Size;
   }
   else
@@ -195,7 +192,6 @@ int get_sieve_size()
     // Default sieve size in KiB
     size_t size = config::SIEVE_BYTES >> 10;
     size = inBetween(16, size, 8192);
-    size = floorPow2(size);
     return (int) size;
   }
 }

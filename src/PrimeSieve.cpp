@@ -188,7 +188,6 @@ void PrimeSieve::setStop(uint64_t stop)
 void PrimeSieve::setSieveSize(int sieveSize)
 {
   sieveSize_ = inBetween(16, sieveSize, 8192);
-  sieveSize_ = floorPow2(sieveSize_);
 }
 
 void PrimeSieve::setStatus(double percent)
