@@ -1,4 +1,4 @@
-Changes in version 8.1, 09/09/2022
+Changes in version 8.1, 20/09/2022
 ==================================
 
 * iterator.cpp: Fix use after free in primesieve::iterator::clear().
@@ -6,6 +6,8 @@ Changes in version 8.1, 09/09/2022
 * api.cpp: Support non power of 2 sieve sizes.
 * PrimeSieve.cpp: Support non power of 2 sieve sizes.
 * Erat.cpp: Improve documentation.
+* C_API.md: Improve next_prime() and prev_prime() documentation.
+* CPP_API.md: Improve next_prime() and prev_prime() documentation.
 
 Changes in version 8.0, 26/06/2022
 ==================================
