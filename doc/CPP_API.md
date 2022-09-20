@@ -35,11 +35,17 @@ more detailed information.
 ## ```primesieve::iterator::next_prime()```
 
 By default ```primesieve::iterator::next_prime()``` generates primes > 0 i.e. 2, 3, 5, 7, ...
-If needed, you can also use multiple ```primesieve::iterator``` objects within the
-same program. Note that ```primesieve::iterator``` is not ideal if you are
-repeatedly iterating over the same primes in a loop, in this case it is better
-to [store the primes in a vector](#primesievegenerate_primes) (provided your PC has
-sufficient RAM memory).
+
+* If you have specified a non-default start number in the ```primesieve::iterator```
+  constructor or in the ```skipto()``` method, then the first ```next_prime()``` invocation
+  returns the 1st prime > start number. If want to generate primes ≥ start number you need to
+  use e.g. ```skipto(start-1)```.
+* Note that ```primesieve::iterator``` is not ideal if you are
+  repeatedly iterating over the same primes in a loop, in this case it is better
+  to [store the primes in a vector](#primesievegenerate_primes) (provided your PC has
+  sufficient RAM memory).
+* If needed, you can also use multiple ```primesieve::iterator``` objects within the
+  same program.
 
 ```C++
 #include <primesieve.hpp>
@@ -122,8 +128,10 @@ int main()
 ## ```primesieve::iterator::prev_prime()```
 
 Before using ```primesieve::iterator::prev_prime()``` you must change the start number
-(either in the constructor or using the ```skipto()``` method) as the start number is
-initialized to 0 be default.
+either in the constructor or using the ```skipto()``` method (as the start number is
+initialized to 0 be default). Please note that the first ```prev_prime()``` invocation
+returns the 1st prime < start number. If want to generate primes ≤ start number you
+need to use e.g. ```skipto(start+1)```.
 
 ```C++
 #include <primesieve.hpp>
