@@ -35,11 +35,17 @@ more detailed information.
 ## ```primesieve_next_prime()```
 
 By default ```primesieve_next_prime()``` generates primes > 0 i.e. 2, 3, 5, 7, ...
-If needed, you can also use multiple ```primesieve_iterator``` objects within the
-same program. Note that ```primesieve_iterator``` is not ideal if you are
-repeatedly iterating over the same primes in a loop, in this case it is better
-to [store the primes in an array](#primesieve_generate_primes) (provided your PC has
-sufficient RAM memory).
+
+* If you have specified a non-default start number using the ```primesieve_skipto()```
+  function, then the first ```primesieve_next_prime()``` invocation returns the 1st
+  prime > start number. If want to generate primes ≥ start number you need to
+  use e.g. ```primesieve_skipto(start-1)```.
+* Note that ```primesieve_iterator``` is not ideal if you are
+  repeatedly iterating over the same primes in a loop, in this case it is better
+  to [store the primes in an array](#primesieve_generate_primes) (provided your PC has
+  sufficient RAM memory).
+* If needed, you can also use multiple ```primesieve_iterator``` objects within the
+  same program.
 
 ```C
 #include <primesieve.h>
@@ -101,9 +107,12 @@ int main()
 
 ## ```primesieve_prev_prime()```
 
-Before using ```primesieve_prev_prime()``` you must first change the start
-number using the ```primesieve_skipto()``` function as the start number is
-initialized to 0 be default.
+Before using ```primesieve_prev_prime()``` you must first change the
+start number using the ```primesieve_skipto()``` function (as the start
+number is initialized to 0 be default). Please note that the first
+```primesieve_prev_prime()``` invocation returns the 1st prime < start
+number. If want to generate primes ≤ start number you need to use e.g.
+```primesieve_skipto(start+1)```.
 
 ```C
 #include <primesieve.h>
