@@ -308,7 +308,7 @@ int main()
 
 libprimesieve also sets the C ```errno``` variable to ```EDOM``` if an error
 occurs. This makes it possible to check if an error has occurred in libprimesieve
-functions with e.g. a ```void``` return type. ```errno``` is also useful for checking
+C functions with e.g. a ```void``` return type. ```errno``` is also useful for checking
 after a computation that no error has occurred, this way you don't have to
 check the return value of every single primesieve function call.
 
