@@ -276,8 +276,8 @@ For the ```primesieve_iterator```, you can check if the return value of ```prime
 is ```PRIMESIEVE_ERROR``` to know if an error occured. However, ```primesieve_iterator``` also supports
 a 2nd option for error handling: by default ```primesieve_iterator.is_error``` is initialized to 0 in
 ```primesieve_init()```, if any error occurs ```primesieve_iterator.is_error``` is set to 1.
-This is useful to check afterwards that no error occurred inside libprimesieve,
-this way you don't have to check the return value of every single ```primesieve_next_prime()``` call.
+This is useful to check after a computation that no error has occurred, this way you don't have to
+check the return value of every single ```primesieve_next_prime()``` call.
 
 ```C
 #include <primesieve.h>
@@ -308,7 +308,7 @@ int main()
 
 libprimesieve also sets the C ```errno``` variable to ```EDOM``` if an error
 occurs. This makes it possible to check if an error has occurred in libprimesieve
-C functions with e.g. a ```void``` return type. ```errno``` is also useful for checking
+C functions with e.g. a ```void``` return type. ```errno``` is also useful to check
 after a computation that no error has occurred, this way you don't have to
 check the return value of every single primesieve function call.
 
