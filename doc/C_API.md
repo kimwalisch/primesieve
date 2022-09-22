@@ -309,9 +309,9 @@ uint64_t get_prime_sum(uint64_t stop)
 
 ## ```errno```
 
-libprimesieve also sets the C ```errno``` variable to ```EDOM``` if an error
+libprimesieve C API functions also set the C ```errno``` variable to ```EDOM``` if any error
 occurs. This makes it possible to check if an error has occurred in libprimesieve
-C API functions with e.g. a ```void``` return type. ```errno``` is also useful to
+functions with e.g. a ```void``` return type. ```errno``` is also useful to
 check after a computation that no error has occurred, this way you don't have to
 check the return value of every single primesieve function call.
 
