@@ -316,6 +316,7 @@ check the return value of every single primesieve function call.
 #include <primesieve.h>
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int* get_primes(int n, int start)
 {
@@ -327,7 +328,7 @@ int* get_primes(int n, int start)
   /* Check errno after computation */
   if (errno == EDOM) {
     printf("Error in libprimesieve!\n");
-    return NULL;
+    exit(EXIT_FAILURE);
   }
 
   return primes;
