@@ -37,7 +37,7 @@ more detailed information.
 By default ```primesieve_next_prime()``` generates primes > 0 i.e. 2, 3, 5, 7, ...
 
 * If you have specified a non-default start number using the ```primesieve_skipto()```
-  function, then the first ```primesieve_next_prime()``` invocation returns the 1st
+  function, then the first ```primesieve_next_prime()``` invocation returns the first
   prime > start number. If want to generate primes ≥ start number you need to
   use e.g. ```primesieve_skipto(start-1)```.
 * Note that ```primesieve_iterator``` is not ideal if you are
@@ -107,12 +107,14 @@ int main()
 
 ## ```primesieve_prev_prime()```
 
-Before using ```primesieve_prev_prime()``` you must first change the
-start number using the ```primesieve_skipto()``` function (as the start
-number is initialized to 0 be default). Please note that the first
-```primesieve_prev_prime()``` invocation returns the 1st prime < start
-number. If want to generate primes ≤ start number you need to use e.g.
-```primesieve_skipto(start+1)```.
+Before using ```primesieve_prev_prime()``` you must first change the start number using the
+```primesieve_skipto()``` function (because the start number is initialized to 0 be default).
+
+* Please note that the first ```primesieve_prev_prime()``` invocation returns the first prime < start
+  number. If want to generate primes ≤ start number you need to use e.g. ```primesieve_skipto(start+1)```.
+* As a special case, ```primesieve_prev_prime()``` returns 0 after the prime 2 (i.e. when there are no
+  more primes). This makes it possible to conveniently iterate backwards over all primes > 0 as can be
+  seen in the example below.
 
 ```C
 #include <primesieve.h>
@@ -125,11 +127,11 @@ int main()
   primesieve_init(&it);
 
   /* primesieve_skipto(&it, start, stop_hint) */
-  primesieve_skipto(&it, 2000, 1000);
+  primesieve_skipto(&it, 2000, 0);
   uint64_t prime;
 
-  /* Iterate over primes from ]2000, 1000] */
-  while ((prime = primesieve_prev_prime(&it)) >= 1000)
+  /* Iterate over primes from ]2000, 0[ */
+  while ((prime = primesieve_prev_prime(&it)) > 0)
     printf("%" PRIu64 "\n", prime);
 
   primesieve_free_iterator(&it);
