@@ -33,7 +33,7 @@
 #include <stdint.h>
 #include <algorithm>
 #include <cmath>
-#include <vector>
+#include <initializer_list>
 
 using std::copy_n;
 using primesieve::pod_array;
@@ -147,7 +147,7 @@ const pod_array<uint8_t, 7*11*13> buffer_7_11_13 =
 };
 
 /// Pre-sieve with the primes < 100
-const pod_array<std::vector<uint64_t>, 8> bufferPrimes =
+const pod_array<std::initializer_list<uint64_t>, 8> bufferPrimes =
 {{
   {  7, 67, 71 },  // 32 KiB
   { 11, 41, 73 },  // 32 KiB
@@ -237,7 +237,7 @@ void PreSieve::initBuffers()
     uint64_t stop = start + product;
     buffers_[i].resize(product / 30);
     std::fill(buffers_[i].begin(), buffers_[i].end(), 0xff);
-    uint64_t maxPrime = bufferPrimes[i].back();
+    uint64_t maxPrime = *(bufferPrimes[i].end() - 1);
     ASSERT(maxPrime == *std::max_element(bufferPrimes[i].begin(), bufferPrimes[i].end()));
     ASSERT(start >= maxPrime * maxPrime);
     maxPrime_ = std::max(maxPrime_, maxPrime);
