@@ -24,10 +24,14 @@ namespace {
 
 using namespace primesieve;
 
+IteratorData& getIterData(primesieve_iterator* it)
+{
+  return *(IteratorData*) it->memory;
+}
+
 pod_vector<uint64_t>& getPrimes(primesieve_iterator* it)
 {
-  auto* memory = (IteratorMemory*) it->memory;
-  return memory->primes;
+  return getIterData(it).primes;
 }
 
 } // namespace
@@ -44,9 +48,9 @@ void primesieve_init(primesieve_iterator* it)
   it->is_error = false;
 }
 
-void primesieve_skipto(primesieve_iterator* it,
-                       uint64_t start,
-                       uint64_t stop_hint)
+void primesieve_jump_to(primesieve_iterator* it,
+                        uint64_t start,
+                        uint64_t stop_hint)
 {
   it->i = 0;
   it->size = 0;
@@ -60,17 +64,43 @@ void primesieve_skipto(primesieve_iterator* it,
   // The remaining memory uses at most 200 kilobytes.
   if (it->memory)
   {
-    auto* memory = (IteratorMemory*) it->memory;
-    memory->stop = start;
-    memory->dist = 0;
-    memory->deletePrimeGenerator();
-    memory->deletePrimes();
+    auto& iterData = getIterData(it);
+    iterData.stop = start;
+    iterData.dist = 0;
+    iterData.include_start_number = true;
+    iterData.deletePrimeGenerator();
+    iterData.deletePrimes();
   }
+}
+
+/// Deprecated, use primesieve_jump_to() instead.
+/// primesieve_jump_to() includes the start number,
+/// whereas primesieve_skipto() excludes the start number.
+///
+void primesieve_skipto(primesieve_iterator* it,
+                       uint64_t start,
+                       uint64_t stop_hint)
+{
+  it->i = 0;
+  it->size = 0;
+  it->start = start;
+  it->stop_hint = stop_hint;
+  it->primes = nullptr;
+
+  if (!it->memory)
+    it->memory = new IteratorData(it->start);
+
+  auto& iterData = getIterData(it);
+  iterData.stop = start;
+  iterData.dist = 0;
+  iterData.include_start_number = false;
+  iterData.deletePrimeGenerator();
+  iterData.deletePrimes();
 }
 
 void primesieve_clear(primesieve_iterator* it)
 {
-  primesieve_skipto(it, 0, std::numeric_limits<uint64_t>::max());
+  primesieve_jump_to(it, 0, std::numeric_limits<uint64_t>::max());
 }
 
 /// C destructor
@@ -78,45 +108,43 @@ void primesieve_free_iterator(primesieve_iterator* it)
 {
   if (it && it->memory)
   {
-    delete (IteratorMemory*) it->memory;
+    delete (IteratorData*) it->memory;
     it->memory = nullptr;
   }
 }
 
 void primesieve_generate_next_primes(primesieve_iterator* it)
 {
-  it->size = 0;
-
   try
   {
     if (!it->memory)
-      it->memory = new IteratorMemory(it->start);
+      it->memory = new IteratorData(it->start);
 
-    auto& memory = *(IteratorMemory*) it->memory;
-    auto& primes = memory.primes;
+    auto& iterData = getIterData(it);
+    auto& primes = iterData.primes;
 
-    while (!it->size)
+    while (true)
     {
-      if (!memory.primeGenerator)
+      if (!iterData.primeGenerator)
       {
-        IteratorHelper::next(&it->start, &memory.stop, it->stop_hint, &memory.dist);
-        memory.primeGenerator = new PrimeGenerator(it->start, memory.stop, memory.preSieve);
+        IteratorHelper::updateNext(it->start, it->stop_hint, iterData);
+        iterData.primeGenerator = new PrimeGenerator(it->start, iterData.stop, iterData.preSieve);
       }
 
-      memory.primeGenerator->fillNextPrimes(primes, &it->size);
+      iterData.primeGenerator->fillNextPrimes(primes, &it->size);
 
-      // There are 3 different cases here:
-      // 1) The primes array contains a few primes (<= 1024).
-      //    In this case we return the primes to the user.
-      // 2) The primes array is empty because the next
-      //    prime > stop. In this case we reset the
-      //    primeGenerator object, increase the start & stop
-      //    numbers and sieve the next segment.
-      // 3) The next prime > 2^64. In this case the primes
-      //    array contains an error code (UINT64_MAX) which
-      //    is returned to the user.
+      // There are 2 different cases here:
+      // 1) The primes array is empty because the next prime > stop.
+      //    In this case we reset the primeGenerator object, increase
+      //    the start & stop numbers and sieve the next segment.
+      // 2) The primes array is not empty, in this case we return
+      //    it to the user. The primes array either contains a few
+      //    primes (<= 1024) or an error code (UINT64_MAX). The error
+      //    code only occurs if the next prime > 2^64.
       if (it->size == 0)
-        memory.deletePrimeGenerator();
+        iterData.deletePrimeGenerator();
+      else
+        break;
     }
   }
   catch (const std::exception& e)
@@ -124,7 +152,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
     std::cerr << "primesieve_iterator: " << e.what() << std::endl;
     primesieve_clear(it);
     auto& primes = getPrimes(it);
-    primes.clear();
+    ASSERT(primes.empty());
     primes.push_back(PRIMESIEVE_ERROR);
     it->size = primes.size();
     it->is_error = true;
@@ -138,44 +166,44 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
 
 void primesieve_generate_prev_primes(primesieve_iterator* it)
 {
-  it->size = 0;
-
   try
   {
     if (!it->memory)
-      it->memory = new IteratorMemory(it->start);
+      it->memory = new IteratorData(it->start);
 
-    auto& memory = *(IteratorMemory*) it->memory;
-    auto& primes = memory.primes;
+    auto& iterData = getIterData(it);
+    auto& primes = iterData.primes;
 
     // Special case if generate_next_primes() has
     // been used before generate_prev_primes().
-    if_unlikely(memory.primeGenerator)
+    if_unlikely(iterData.primeGenerator)
     {
       it->start = primes.front();
-      memory.deletePrimeGenerator();
+      iterData.deletePrimeGenerator();
+      ASSERT(!iterData.include_start_number);
     }
 
     // When sieving backwards the sieving distance is subdivided
     // into smaller chunks. If we can prove that the total
     // sieving distance is large we enable pre-sieving.
-    if (memory.dist == 0 &&
+    if (iterData.dist == 0 &&
         it->stop_hint < it->start)
-      memory.preSieve.init(it->stop_hint, it->start);
+      iterData.preSieve.init(it->stop_hint, it->start);
 
-    while (!it->size)
+    do
     {
-      IteratorHelper::prev(&it->start, &memory.stop, it->stop_hint, &memory.dist);
-      PrimeGenerator primeGenerator(it->start, memory.stop, memory.preSieve);
+      IteratorHelper::updatePrev(it->start, it->stop_hint, iterData);
+      PrimeGenerator primeGenerator(it->start, iterData.stop, iterData.preSieve);
       primeGenerator.fillPrevPrimes(primes, &it->size);
     }
+    while (!it->size);
   }
   catch (const std::exception& e)
   {
     std::cerr << "primesieve_iterator: " << e.what() << std::endl;
     primesieve_clear(it);
     auto& primes = getPrimes(it);
-    primes.clear();
+    ASSERT(primes.empty());
     primes.push_back(PRIMESIEVE_ERROR);
     it->size = primes.size();
     it->is_error = true;

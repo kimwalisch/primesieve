@@ -16,11 +16,11 @@ int main(int argc, char** argv)
   uint64_t prime = it.next_prime();
   uint64_t sum = 0;
 
-  // iterate over the primes below 10^9
+  // Iterate over the primes <= 10^9
   for (; prime <= limit; prime = it.next_prime())
     sum += prime;
 
-  std::cout << "Sum of primes <= " << limit << " = " << sum << std::endl;
+  std::cout << "Sum of primes <= " << limit << ": " << sum << std::endl;
 
   // Note that since sum is a 64-bit variable the result
   // will be incorrect (due to integer overflow) if

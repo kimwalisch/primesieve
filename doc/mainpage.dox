@@ -3,8 +3,8 @@
 ///
 /// primesieve is a C/C++ library for quickly generating prime numbers.
 /// It generates the primes below 10^9 in just 0.2 seconds on a single
-/// core of an Intel Core i7-6700 3.4GHz CPU. primesieve can generate
-/// primes and prime k-tuplets up to 2^64. primesieve's memory
+/// core of an Intel Core i7-6700 3.4GHz CPU from 2015. primesieve can
+/// generate primes and prime k-tuplets up to 2^64. primesieve's memory
 /// requirement is about pi(sqrt(n)) * 8 bytes per thread, its
 /// run-time complexity is O(n log log n) operations. The recommended
 /// way to get started is to first have a look at a few C or C++

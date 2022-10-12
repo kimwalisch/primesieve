@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <algorithm>
 #include <cstddef>
+#include <memory>
 #include <new>
 
 namespace {
@@ -30,10 +31,10 @@ public:
   using value_type = T;
   malloc_vector() = default;
 
-  /// malloc_vector is used by primesieve's C API.
-  /// We return the primes array_ to the user, hence we
-  /// don't want to delete the array_ in the destructor.
-  ~malloc_vector() { }
+  ~malloc_vector()
+  {
+    free(array_);
+  }
 
   /// Copying is slow, we prevent it
   malloc_vector(const malloc_vector&) = delete;
@@ -45,14 +46,17 @@ public:
     return array_[pos];
   }
 
-  T* data() noexcept
+  /// Returns the array and releases the ownership to the caller
+  /// (which has to free the array after he's done).
+  T* release() noexcept
   {
-    return array_;
-  }
+    T* arr = array_;
 
-  const T* data() const noexcept
-  {
-    return array_;
+    array_ = nullptr;
+    end_ = nullptr;
+    capacity_ = nullptr;
+
+    return arr;
   }
 
   T* end() noexcept
@@ -93,11 +97,10 @@ public:
 
     if (first < last)
     {
-      std::size_t old_size = size();
-      std::size_t new_size = old_size + (std::size_t) (last - first);
+      std::size_t new_size = size() + (std::size_t) (last - first);
       reserve(new_size);
+      std::uninitialized_copy(first, last, end_);
       end_ = array_ + new_size;
-      std::copy(first, last, &array_[old_size]);
     }
   }
 
@@ -120,11 +123,15 @@ private:
     ASSERT(new_capacity >= n);
     ASSERT(new_capacity > old_size);
 
-    // realloc calls malloc if array_ is NULL
-    array_ = (T*) realloc((void*) array_, new_capacity * sizeof(T));
-    if (!array_)
+    // If there is not enough memory, the old memory block
+    // is not freed and null pointer is returned.
+    // https://en.cppreference.com/w/c/memory/realloc
+    T* new_array = (T*) realloc((void*) array_, new_capacity * sizeof(T));
+
+    if_unlikely(!new_array)
       throw std::bad_alloc();
 
+    array_ = new_array;
     end_ = array_ + old_size;
     capacity_ = array_ + new_capacity;
   }

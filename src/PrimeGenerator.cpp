@@ -196,10 +196,7 @@ void PrimeGenerator::initPrevPrimes(pod_vector<uint64_t>& primes,
               &primes[i]);
   }
   else
-  {
     resize(primes, pix);
-    *size = 0;
-  }
 
   initErat();
 }
@@ -320,8 +317,6 @@ bool PrimeGenerator::sievePrevPrimes(pod_vector<uint64_t>& primes,
 bool PrimeGenerator::sieveNextPrimes(pod_vector<uint64_t>& primes,
                                      std::size_t* size)
 {
-  *size = 0;
-
   if (!isInit_)
     initNextPrimes(primes, size);
 
@@ -356,6 +351,8 @@ bool PrimeGenerator::sieveNextPrimes(pod_vector<uint64_t>& primes,
 void PrimeGenerator::fillPrevPrimes(pod_vector<uint64_t>& primes,
                                     std::size_t* size)
 {
+  *size = 0;
+
   while (sievePrevPrimes(primes, size))
   {
     // Use local variables to prevent the compiler from
@@ -411,6 +408,8 @@ void PrimeGenerator::fillPrevPrimes(pod_vector<uint64_t>& primes,
 void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
                                     std::size_t* size)
 {
+  *size = 0;
+
   do
   {
     if (sieveIdx_ >= sieve_.size())
@@ -470,6 +469,8 @@ __attribute__ ((target ("popcnt,bmi")))
 void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
                                     std::size_t* size)
 {
+  *size = 0;
+
   do
   {
     if (sieveIdx_ >= sieve_.size())
@@ -540,6 +541,8 @@ __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
 void PrimeGenerator::fillNextPrimes(pod_vector<uint64_t>& primes,
                                     std::size_t* size)
 {
+  *size = 0;
+
   do
   {
     if (sieveIdx_ >= sieve_.size())

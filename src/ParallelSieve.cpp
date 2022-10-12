@@ -14,6 +14,7 @@
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/pod_vector.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -21,7 +22,6 @@
 #include <chrono>
 #include <future>
 #include <mutex>
-#include <vector>
 
 using std::size_t;
 using namespace primesieve;
@@ -184,7 +184,7 @@ void ParallelSieve::sieve()
       return counts;
     };
 
-    std::vector<std::future<counts_t>> futures;
+    pod_vector<std::future<counts_t>> futures;
     futures.reserve(threads);
 
     for (int t = 0; t < threads; t++)

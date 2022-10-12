@@ -51,22 +51,26 @@ uint64_t getPrevDist(uint64_t stop, uint64_t dist)
 
 namespace primesieve {
 
-void IteratorHelper::next(uint64_t* start,
-                          uint64_t* stop,
-                          uint64_t stopHint,
-                          uint64_t* dist)
+void IteratorHelper::updateNext(uint64_t& start,
+                                uint64_t stopHint,
+                                IteratorData& iter)
 {
-  *start = checkedAdd(*stop, 1);
-  *dist = getNextDist(*start, *dist);
+  if (iter.include_start_number)
+    start = iter.stop;
+  else
+    start = checkedAdd(iter.stop, 1);
 
-  if (stopHint >= *start &&
+  iter.include_start_number = false;
+  iter.dist = getNextDist(start, iter.dist);
+
+  if (stopHint >= start &&
       stopHint < std::numeric_limits<uint64_t>::max())
   {
     // For primesieve::iterator it is advantageous to buffer
     // slightly more primes than the stopHint since the
     // stopHint is often not 100% accurate and the user
     // might iterate over a few primes > stopHint.
-    *stop = checkedAdd(stopHint, maxPrimeGap(stopHint));
+    iter.stop = checkedAdd(stopHint, maxPrimeGap(stopHint));
   }
   else
   {
@@ -75,22 +79,26 @@ void IteratorHelper::next(uint64_t* start,
     // small number of primes. If the user uses more primes
     // than we have buffered, then we will increase the sieving
     // distance and buffer more primes (than last time).
-    *stop = checkedAdd(*start, *dist);
+    iter.stop = checkedAdd(start, iter.dist);
   }
 }
 
-void IteratorHelper::prev(uint64_t* start,
-                          uint64_t* stop,
-                          uint64_t stopHint,
-                          uint64_t* dist)
+void IteratorHelper::updatePrev(uint64_t& start,
+                                uint64_t stopHint,
+                                IteratorData& iter)
 {
-  *stop = checkedSub(*start, 1);
-  *dist = getPrevDist(*stop, *dist);
-  *start = checkedSub(*stop, *dist);
+  if (iter.include_start_number)
+    iter.stop = start;
+  else
+    iter.stop = checkedSub(start, 1);
 
-  if (stopHint >= *start &&
-      stopHint <= *stop)
-    *start = checkedSub(stopHint, maxPrimeGap(stopHint));
+  iter.include_start_number = false;
+  iter.dist = getPrevDist(iter.stop, iter.dist);
+  start = checkedSub(iter.stop, iter.dist);
+
+  if (stopHint >= start &&
+      stopHint <= iter.stop)
+    start = checkedSub(stopHint, maxPrimeGap(stopHint));
 }
 
 } // namespace

@@ -144,7 +144,7 @@ int main()
   primesieve::iterator it;
   uint64_t prime = it.next_prime();
 
-  // Iterate over the primes below 10^6
+  // Iterate over the primes < 10^6
   for (; prime < 1000000; prime = it.next_prime())
     std::cout << prime << std::endl;
 
@@ -169,7 +169,7 @@ int main()
   primesieve_init(&it);
   uint64_t prime;
 
-  /* Iterate over the primes below 10^6 */
+  /* Iterate over the primes < 10^6 */
   while ((prime = primesieve_next_prime(&it)) < 1000000)
     printf("%" PRIu64 "\n", prime);
 

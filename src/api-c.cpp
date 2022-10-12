@@ -36,9 +36,7 @@ void* get_primes(uint64_t start, uint64_t stop, size_t* size)
     if (size)
       *size = primes.size();
 
-    // We return the primes array to the user, malloc_vector
-    // does not free memory in its destructor.
-    return primes.data();
+    return primes.release();
   }
   catch (const std::exception& e)
   {
@@ -58,9 +56,7 @@ void* get_n_primes(uint64_t n, uint64_t start)
   {
     malloc_vector<T> primes;
     store_n_primes(n, start, primes);
-    // We return the primes array to the user, malloc_vector
-    // does not free memory in its destructor.
-    return primes.data();
+    return primes.release();
   }
   catch (const std::exception& e)
   {

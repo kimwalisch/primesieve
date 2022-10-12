@@ -20,12 +20,12 @@ namespace primesieve {
 
 // These objects can be reused by primesieve::iterator
 // and don't need to be reallocated frequently.
-struct IteratorMemory
+struct IteratorData
 {
-  IteratorMemory(uint64_t start) :
-    stop(start)
+  IteratorData(uint64_t stp) :
+    stop(stp)
   { }
-  ~IteratorMemory()
+  ~IteratorData()
   {
     delete primeGenerator;
   }
@@ -36,10 +36,12 @@ struct IteratorMemory
   }
   void deletePrimes()
   {
-    primes.free();
+    primes.deallocate();
   }
   uint64_t stop;
   uint64_t dist = 0;
+  // Generate primes >= start number
+  bool include_start_number = true;
   PrimeGenerator* primeGenerator = nullptr;
   pod_vector<uint64_t> primes;
   PreSieve preSieve;
@@ -48,15 +50,13 @@ struct IteratorMemory
 class IteratorHelper
 {
 public:
-  static void next(uint64_t* start,
-                   uint64_t* stop,
-                   uint64_t stopHint,
-                   uint64_t* dist);
+  static void updateNext(uint64_t& start,
+                         uint64_t stopHint,
+                         IteratorData& iter);
 
-  static void prev(uint64_t* start,
-                   uint64_t* stop,
-                   uint64_t stopHint,
-                   uint64_t* dist);
+  static void updatePrev(uint64_t& start,
+                         uint64_t stopHint,
+                         IteratorData& iter);
 };
 
 } // namespace
