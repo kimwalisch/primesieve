@@ -42,11 +42,9 @@ inline void store_primes(uint64_t start,
                          uint64_t stop,
                          T& primes)
 {
-  if (start > 0)
-    start--;
   if (~stop == 0)
     stop--;
-  if (start >= stop)
+  if (start > stop)
     return;
 
   using V = typename T::value_type;
@@ -79,8 +77,6 @@ inline void store_n_primes(uint64_t n,
 {
   if (n == 0)
     return;
-  if (start > 0)
-    start--;
 
   using V = typename T::value_type;
   std::size_t size = primes.size() + (std::size_t) n;

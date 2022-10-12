@@ -153,7 +153,6 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 
   checkLimit(start);
   dist = nthPrimeDist(n, count, start) * 2;
-  start = checkedSub(start, 1);
   stop = checkedAdd(start, dist);
   uint64_t prime = 0;
 

@@ -76,12 +76,27 @@ void primesieve_clear(primesieve_iterator* it);
 
 /**
  * Reset the primesieve iterator to start.
- * @param start      Generate primes > start (or < start).
+ * @param start      Generate primes >= start (or <= start).
  * @param stop_hint  Stop number optimization hint. E.g. if you want
- *                   to generate the primes below 1000 use
+ *                   to generate the primes <= 1000 use
  *                   stop_hint = 1000, if you don't know use
  *                   UINT64_MAX.
  */
+void primesieve_jump_to(primesieve_iterator* it, uint64_t start, uint64_t stop_hint);
+
+/**
+ * Reset the primesieve iterator to start.
+ * @param start      Generate primes > start (or < start).
+ * @param stop_hint  Stop number optimization hint. E.g. if you want
+ *                   to generate the primes <= 1000 use
+ *                   stop_hint = 1000, if you don't know use
+ *                   UINT64_MAX.
+ */
+#if __STDC_VERSION__ >= 202301
+  [[deprecated("Use the new primesieve_jump_to() instead. Note that primesieve_jump_to() includes the start number, whereas primesieve_skipto() excludes the start number.")]]
+#elif __GNUC__ >= 5
+  __attribute__ ((deprecated("Use the new primesieve_jump_to() instead. Note that primesieve_jump_to() includes the start number, whereas primesieve_skipto() excludes the start number.")))
+#endif
 void primesieve_skipto(primesieve_iterator* it, uint64_t start, uint64_t stop_hint);
 
 /** Internal use */

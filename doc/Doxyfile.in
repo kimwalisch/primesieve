@@ -10,12 +10,12 @@ INPUT                  = @PROJECT_SOURCE_DIR@/doc/mainpage.dox \
                          @PROJECT_SOURCE_DIR@/examples/cpp/primesieve_iterator.cpp \
                          @PROJECT_SOURCE_DIR@/examples/cpp/nth_prime.cpp \
                          @PROJECT_SOURCE_DIR@/examples/cpp/prev_prime.cpp \
-                         @PROJECT_SOURCE_DIR@/examples/cpp/store_primes_in_vector.cpp \
+                         @PROJECT_SOURCE_DIR@/examples/cpp/primes_vector.cpp \
                          @PROJECT_SOURCE_DIR@/examples/c/count_primes.c \
                          @PROJECT_SOURCE_DIR@/examples/c/prev_prime.c \
                          @PROJECT_SOURCE_DIR@/examples/c/primesieve_iterator.c \
                          @PROJECT_SOURCE_DIR@/examples/c/nth_prime.c \
-                         @PROJECT_SOURCE_DIR@/examples/c/store_primes_in_array.c
+                         @PROJECT_SOURCE_DIR@/examples/c/primes_array.c
 HTML_INDEX_NUM_ENTRIES = 3
 HTML_TIMESTAMP         = NO
 JAVADOC_AUTOBRIEF      = YES

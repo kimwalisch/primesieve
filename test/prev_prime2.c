@@ -2,7 +2,7 @@
 /// @file   prev_prime2.cpp
 /// @brief  Test primesieve_prev_prime().
 ///
-/// Copyright (C) 2018 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -40,24 +40,35 @@ int main()
 
   for (i = size - 1; i > 0; i--)
   {
-    primesieve_skipto(&it, primes[i] + 1, 0);
-    prime = primesieve_prev_prime(&it);
-    printf("prev_prime(%" PRIu64 ") = %" PRIu64, primes[i] + 1, prime);
-    check(prime == primes[i]);
-
-    primesieve_skipto(&it, primes[i], 0);
+    primesieve_jump_to(&it, primes[i], 0);
     prime = primesieve_prev_prime(&it);
     printf("prev_prime(%" PRIu64 ") = %" PRIu64, primes[i], prime);
+    check(prime == primes[i]);
+
+    primesieve_jump_to(&it, primes[i] - 1, 0);
+    prime = primesieve_prev_prime(&it);
+    printf("prev_prime(%" PRIu64 ") = %" PRIu64, primes[i] - 1, prime);
     check(prime == primes[i - 1]);
   }
 
-  primesieve_skipto(&it, 100000000, 0);
+  primesieve_jump_to(&it, 100000000, 0);
 
-  // iterate over the primes below 10^8
+  // iterate over the primes <= 10^8
   while ((prime = primesieve_prev_prime(&it)) > 0)
     sum += prime;
 
-  printf("Sum of the primes below 10^8 = %" PRIu64, sum);
+  printf("Sum of the primes <= 10^8: %" PRIu64, sum);
+  check(sum == 279209790387276ull);
+
+  // Test iterating past the stop_hint
+  primesieve_jump_to(&it, 100000000, 5000000);
+  sum = 0;
+
+  // iterate over the primes <= 10^8
+  while ((prime = primesieve_prev_prime(&it)) > 0)
+    sum += prime;
+
+  printf("Sum of the primes <= 10^8: %" PRIu64, sum);
   check(sum == 279209790387276ull);
 
   for (i = 0; i < 1000; i++)
@@ -75,7 +86,7 @@ int main()
     check(prime == primes[i]);
   }
 
-  primesieve_skipto(&it, primes[size - 1], 0);
+  primesieve_jump_to(&it, primes[size-1] - 1, 0);
 
   for (i = 0; i < 1000; i++)
   {

@@ -37,7 +37,6 @@ void printSeconds(double sec)
 void sieve(CmdOptions& opt)
 {
   ParallelSieve ps;
-  auto& numbers = opt.numbers;
 
   if (opt.flags)
     ps.setFlags(opt.flags);
@@ -49,11 +48,14 @@ void sieve(CmdOptions& opt)
     ps.setNumThreads(opt.threads);
   if (ps.isPrint())
     ps.setNumThreads(1);
-  if (numbers.size() < 2)
-    numbers.push_front(0);
 
-  ps.setStart(numbers[0]);
-  ps.setStop(numbers[1]);
+  if (opt.numbers.size() < 2)
+    ps.setStop(opt.numbers[0]);
+  else
+  {
+    ps.setStart(opt.numbers[0]);
+    ps.setStop(opt.numbers[1]);
+  }
 
   if (!opt.quiet)
     printSettings(ps);
@@ -94,19 +96,18 @@ void sieve(CmdOptions& opt)
 void nthPrime(CmdOptions& opt)
 {
   ParallelSieve ps;
-  auto& numbers = opt.numbers;
+  int64_t n = opt.numbers[0];
+  uint64_t start = 0;
 
+  if (opt.numbers.size() > 1)
+    start = opt.numbers[1];
   if (opt.flags)
     ps.setFlags(opt.flags);
   if (opt.sieveSize)
     ps.setSieveSize(opt.sieveSize);
   if (opt.threads)
     ps.setNumThreads(opt.threads);
-  if (numbers.size() < 2)
-    numbers.push_back(0);
 
-  int64_t n = numbers[0];
-  uint64_t start = numbers[1];
   uint64_t nthPrime = 0;
   ps.setStart(start);
   ps.setStop(start + std::abs(n * 20));

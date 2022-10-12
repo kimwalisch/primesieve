@@ -8,7 +8,7 @@
 int main()
 {
   uint64_t count = primesieve::count_primes(0, 1000);
-  std::cout << "Primes below 1000 = " << count << std::endl;
+  std::cout << "Primes <= 1000: " << count << std::endl;
 
   return 0;
 }

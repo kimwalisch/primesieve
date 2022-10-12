@@ -60,35 +60,6 @@ enum IsParam
   OPTIONAL_PARAM
 };
 
-/// Command-line options
-std::map<std::string, std::pair<OptionID, IsParam>> optionMap =
-{
-  { "-c",          std::make_pair(OPTION_COUNT, OPTIONAL_PARAM) },
-  { "--count",     std::make_pair(OPTION_COUNT, OPTIONAL_PARAM) },
-  { "--cpu-info",  std::make_pair(OPTION_CPU_INFO, NO_PARAM) },
-  { "-h",          std::make_pair(OPTION_HELP, NO_PARAM) },
-  { "--help",      std::make_pair(OPTION_HELP, NO_PARAM) },
-  { "-n",          std::make_pair(OPTION_NTH_PRIME, NO_PARAM) },
-  { "--nthprime",  std::make_pair(OPTION_NTH_PRIME, NO_PARAM) },
-  { "--nth-prime", std::make_pair(OPTION_NTH_PRIME, NO_PARAM) },
-  { "--no-status", std::make_pair(OPTION_NO_STATUS, NO_PARAM) },
-  { "--number",    std::make_pair(OPTION_NUMBER, REQUIRED_PARAM) },
-  { "-d",          std::make_pair(OPTION_DISTANCE, REQUIRED_PARAM) },
-  { "--dist",      std::make_pair(OPTION_DISTANCE, REQUIRED_PARAM) },
-  { "-p",          std::make_pair(OPTION_PRINT, OPTIONAL_PARAM) },
-  { "--print",     std::make_pair(OPTION_PRINT, OPTIONAL_PARAM) },
-  { "-q",          std::make_pair(OPTION_QUIET, NO_PARAM) },
-  { "--quiet",     std::make_pair(OPTION_QUIET, NO_PARAM) },
-  { "-s",          std::make_pair(OPTION_SIZE, REQUIRED_PARAM) },
-  { "--size",      std::make_pair(OPTION_SIZE, REQUIRED_PARAM) },
-  { "--test",      std::make_pair(OPTION_TEST, NO_PARAM) },
-  { "-t",          std::make_pair(OPTION_THREADS, REQUIRED_PARAM) },
-  { "--threads",   std::make_pair(OPTION_THREADS, REQUIRED_PARAM) },
-  { "--time",      std::make_pair(OPTION_TIME, NO_PARAM) },
-  { "-v",          std::make_pair(OPTION_VERSION, NO_PARAM) },
-  { "--version",   std::make_pair(OPTION_VERSION, NO_PARAM) }
-};
-
 /// Command-line option
 struct Option
 {
@@ -141,7 +112,11 @@ bool isOption(const std::string& str)
 /// -> opt.opt = "--threads"
 /// -> opt.val = "8"
 ///
-Option parseOption(int argc, char* argv[], int& i)
+template <typename T>
+Option parseOption(int argc,
+                   char* argv[],
+                   int& i,
+                   const T& optionMap)
 {
   Option opt;
   opt.str = argv[i];
@@ -154,7 +129,7 @@ Option parseOption(int argc, char* argv[], int& i)
   if (optionMap.count(opt.str))
   {
     opt.opt = opt.str;
-    IsParam isParam = optionMap[opt.str].second;
+    IsParam isParam = optionMap.at(opt.str).second;
 
     if (isParam == REQUIRED_PARAM)
     {
@@ -221,7 +196,7 @@ Option parseOption(int argc, char* argv[], int& i)
 
       // Prevent '--option='
       if (opt.val.empty() &&
-          optionMap[opt.opt].second == REQUIRED_PARAM)
+          optionMap.at(opt.opt).second == REQUIRED_PARAM)
         throw primesieve_error("missing value for option '" + opt.opt + "'");
     }
     else
@@ -382,16 +357,45 @@ void optionCpuInfo()
 
 CmdOptions parseOptions(int argc, char* argv[])
 {
-  CmdOptions opts;
-
   // No command-line options provided
   if (argc <= 1)
     help(/* exitCode */ 1);
 
+  /// primesieve command-line options
+  const std::map<std::string, std::pair<OptionID, IsParam>> optionMap =
+  {
+    { "-c",          std::make_pair(OPTION_COUNT, OPTIONAL_PARAM) },
+    { "--count",     std::make_pair(OPTION_COUNT, OPTIONAL_PARAM) },
+    { "--cpu-info",  std::make_pair(OPTION_CPU_INFO, NO_PARAM) },
+    { "-h",          std::make_pair(OPTION_HELP, NO_PARAM) },
+    { "--help",      std::make_pair(OPTION_HELP, NO_PARAM) },
+    { "-n",          std::make_pair(OPTION_NTH_PRIME, NO_PARAM) },
+    { "--nthprime",  std::make_pair(OPTION_NTH_PRIME, NO_PARAM) },
+    { "--nth-prime", std::make_pair(OPTION_NTH_PRIME, NO_PARAM) },
+    { "--no-status", std::make_pair(OPTION_NO_STATUS, NO_PARAM) },
+    { "--number",    std::make_pair(OPTION_NUMBER, REQUIRED_PARAM) },
+    { "-d",          std::make_pair(OPTION_DISTANCE, REQUIRED_PARAM) },
+    { "--dist",      std::make_pair(OPTION_DISTANCE, REQUIRED_PARAM) },
+    { "-p",          std::make_pair(OPTION_PRINT, OPTIONAL_PARAM) },
+    { "--print",     std::make_pair(OPTION_PRINT, OPTIONAL_PARAM) },
+    { "-q",          std::make_pair(OPTION_QUIET, NO_PARAM) },
+    { "--quiet",     std::make_pair(OPTION_QUIET, NO_PARAM) },
+    { "-s",          std::make_pair(OPTION_SIZE, REQUIRED_PARAM) },
+    { "--size",      std::make_pair(OPTION_SIZE, REQUIRED_PARAM) },
+    { "--test",      std::make_pair(OPTION_TEST, NO_PARAM) },
+    { "-t",          std::make_pair(OPTION_THREADS, REQUIRED_PARAM) },
+    { "--threads",   std::make_pair(OPTION_THREADS, REQUIRED_PARAM) },
+    { "--time",      std::make_pair(OPTION_TIME, NO_PARAM) },
+    { "-v",          std::make_pair(OPTION_VERSION, NO_PARAM) },
+    { "--version",   std::make_pair(OPTION_VERSION, NO_PARAM) }
+  };
+
+  CmdOptions opts;
+
   for (int i = 1; i < argc; i++)
   {
-    Option opt = parseOption(argc, argv, i);
-    OptionID optionID = optionMap[opt.opt].first;
+    Option opt = parseOption(argc, argv, i, optionMap);
+    OptionID optionID = optionMap.at(opt.opt).first;
 
     switch (optionID)
     {

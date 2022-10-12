@@ -41,28 +41,28 @@ namespace primesieve {
 struct iterator
 {
   /// Create a new iterator object.
-  /// Generate primes > 0. The start number is default initialized to
+  /// Generate primes >= 2. The start number is default initialized to
   /// 0 and the stop_hint is default initialized UINT64_MAX.
   ///
   iterator() noexcept;
 
   /// Create a new iterator object.
-  /// @param start      Generate primes > start (or < start).
+  /// @param start      Generate primes >= start (or <= start).
   /// @param stop_hint  Stop number optimization hint, gives significant
   ///                   speed up if few primes are generated. E.g. if
-  ///                   you want to generate the primes below 1000 use
+  ///                   you want to generate the primes <= 1000 use
   ///                   stop_hint = 1000.
   ///
   iterator(uint64_t start, uint64_t stop_hint = std::numeric_limits<uint64_t>::max()) noexcept;
 
   /// Reset the primesieve iterator to start.
-  /// @param start      Generate primes > start (or < start).
+  /// @param start      Generate primes >= start (or <= start).
   /// @param stop_hint  Stop number optimization hint, gives significant
   ///                   speed up if few primes are generated. E.g. if
-  ///                   you want to generate the primes below 1000 use
+  ///                   you want to generate the primes <= 1000 use
   ///                   stop_hint = 1000.
   ///
-  void skipto(uint64_t start, uint64_t stop_hint = std::numeric_limits<uint64_t>::max()) noexcept;
+  void jump_to(uint64_t start, uint64_t stop_hint = std::numeric_limits<uint64_t>::max()) noexcept;
 
   /// primesieve::iterator objects cannot be copied.
   iterator(const iterator&) = delete;

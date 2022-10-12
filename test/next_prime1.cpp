@@ -33,29 +33,29 @@ int main()
 
   for (uint64_t i = 0; i < stop; i++)
   {
-    it.skipto(primes[i] - 1);
-    prime = it.next_prime();
-    std::cout << "next_prime(" << primes[i] - 1 << ") = " << prime;
-    check(prime == primes[i]);
-
-    it.skipto(primes[i]);
+    it.jump_to(primes[i]);
     prime = it.next_prime();
     std::cout << "next_prime(" << primes[i] << ") = " << prime;
+    check(prime == primes[i]);
+
+    it.jump_to(primes[i] + 1);
+    prime = it.next_prime();
+    std::cout << "next_prime(" << primes[i] + 1 << ") = " << prime;
     check(prime == primes[i + 1]);
   }
 
-  it.skipto(0);
+  it.jump_to(0);
   prime = it.next_prime();
   uint64_t sum = 0;
 
-  // iterate over the primes below 10^9
-  for (; prime < 1000000000; prime = it.next_prime())
+  // Iterate over the primes <= 10^9
+  for (; prime <= 1000000000; prime = it.next_prime())
     sum += prime;
 
-  std::cout << "Sum of the primes below 10^9 = " << sum;
+  std::cout << "Sum of the primes <= 10^9: " << sum;
   check(sum == 24739512092254535ull);
 
-  it.skipto(primes.back() - 200, primes.back());
+  it.jump_to(primes.back() - 200, primes.back());
   prime = it.next_prime();
 
   while (prime <= primes.back())

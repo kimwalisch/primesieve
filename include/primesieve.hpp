@@ -13,9 +13,9 @@
 #ifndef PRIMESIEVE_HPP
 #define PRIMESIEVE_HPP
 
-#define PRIMESIEVE_VERSION "8.1"
-#define PRIMESIEVE_VERSION_MAJOR 8
-#define PRIMESIEVE_VERSION_MINOR 1
+#define PRIMESIEVE_VERSION "9.0"
+#define PRIMESIEVE_VERSION_MAJOR 9
+#define PRIMESIEVE_VERSION_MINOR 0
 
 #include <primesieve/iterator.hpp>
 #include <primesieve/primesieve_error.hpp>
@@ -24,10 +24,9 @@
 #include <stdint.h>
 #include <string>
 
-/// Contains primesieve's C++ functions and classes.
 namespace primesieve {
 
-/// Store the primes <= stop in the primes vector.
+/// Appends the primes <= stop to the end of the primes vector.
 /// @vect: std::vector or other vector type that is API compatible
 ///        with std::vector.
 ///
@@ -38,7 +37,7 @@ inline void generate_primes(uint64_t stop, vect* primes)
     store_primes(0, stop, *primes);
 }
 
-/// Store the primes within the interval [start, stop] in the primes vector.
+/// Appends the primes inside [start, stop] to the end of the primes vector.
 /// @vect: std::vector or other vector type that is API compatible
 ///        with std::vector.
 ///
@@ -49,7 +48,7 @@ inline void generate_primes(uint64_t start, uint64_t stop, vect* primes)
     store_primes(start, stop, *primes);
 }
 
-/// Store the first n primes in the primes vector.
+/// Appends the first n primes to the end of the primes vector.
 /// @vect: std::vector or other vector type that is API compatible
 ///        with std::vector.
 ///
@@ -60,7 +59,7 @@ inline void generate_n_primes(uint64_t n, vect* primes)
     store_n_primes(n, 0, *primes);
 }
 
-/// Store the first n primes >= start in the primes vector.
+/// Appends the first n primes >= start to the end of the primes vector.
 /// @vect: std::vector or other vector type that is API compatible
 ///        with std::vector.
 ///

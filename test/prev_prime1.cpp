@@ -33,26 +33,38 @@ int main()
 
   for (uint64_t i = back; i > 0; i--)
   {
-    it.skipto(primes[i] + 1);
-    prime = it.prev_prime();
-    std::cout << "prev_prime(" << primes[i] + 1 << ") = " << prime;
-    check(prime == primes[i]);
-
-    it.skipto(primes[i]);
+    it.jump_to(primes[i]);
     prime = it.prev_prime();
     std::cout << "prev_prime(" << primes[i] << ") = " << prime;
+    check(prime == primes[i]);
+
+    it.jump_to(primes[i] - 1);
+    prime = it.prev_prime();
+    std::cout << "prev_prime(" << primes[i] - 1 << ") = " << prime;
     check(prime == primes[i - 1]);
   }
 
-  it.skipto(100000000);
+  it.jump_to(100000000);
   prime = it.prev_prime();
   uint64_t sum = 0;
 
-  // iterate over the primes below 10^8
+  // iterate over the primes <= 10^8
   for (; prime > 0; prime = it.prev_prime())
     sum += prime;
 
-  std::cout << "Sum of the primes below 10^8 = " << sum;
+  std::cout << "Sum of the primes <= 10^8: " << sum;
+  check(sum == 279209790387276ull);
+
+  // Test iterating past the stop_hint
+  it.jump_to(100000000, 1000000);
+  prime = it.prev_prime();
+  sum = 0;
+
+  // iterate over the primes <= 10^8
+  for (; prime > 0; prime = it.prev_prime())
+    sum += prime;
+
+  std::cout << "Sum of the primes <= 10^8: " << sum;
   check(sum == 279209790387276ull);
 
   for (uint64_t i = 0; i < 1000; i++)
@@ -70,7 +82,7 @@ int main()
     check(prime == primes[i]);
   }
 
-  it.skipto(primes.back());
+  it.jump_to(primes.back() - 1);
 
   for (uint64_t i = 0; i < 1000; i++)
   {
@@ -90,7 +102,7 @@ int main()
     check(prime == primes[j]);
   }
 
-  it.skipto(18446744073709551615ull, 18446744073709551557ull);
+  it.jump_to(18446744073709551615ull, 18446744073709551557ull);
   prime = it.prev_prime();
   std::cout << "prev_prime(" << 18446744073709551615ull << ") = " << prime;
   check(prime == 18446744073709551557ull);

@@ -14,6 +14,8 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <memory>
+#include <stdint.h>
 #include <type_traits>
 #include <utility>
 
@@ -28,12 +30,27 @@ namespace primesieve {
 /// the Fedora Linux distribution compiles with -D_GLIBCXX_ASSERTIONS
 /// which enables std::vector bounds checks.
 ///
-template <typename T>
+template <typename T,
+          typename Allocator = std::allocator<T>>
 class pod_vector
 {
 public:
-  static_assert(std::is_trivially_destructible<T>::value,
-                "pod_vector<T> only supports types with trivial destructors!");
+  // The default C++ std::allocator is stateless. We use this
+  // allocator and do not support other statefull allocators,
+  // which simplifies our implementation.
+  //
+  // "The default allocator is stateless, that is, all instances
+  // of the given allocator are interchangeable, compare equal
+  // and can deallocate memory allocated by any other instance
+  // of the same allocator type."
+  // https://en.cppreference.com/w/cpp/memory/allocator
+  //
+  // "The member type is_always_equal of std::allocator_traits
+  // is intendedly used for determining whether an allocator
+  // type is stateless."
+  // https://en.cppreference.com/w/cpp/named_req/Allocator
+  static_assert(std::allocator_traits<Allocator>::is_always_equal::value,
+                "pod_vector<T> only supports stateless allocators!");
 
   using value_type = T;
   pod_vector() noexcept = default;
@@ -45,14 +62,15 @@ public:
 
   ~pod_vector()
   {
-    delete [] array_;
+    destroy(array_, end_);
+    Allocator().deallocate(array_, capacity());
   }
 
   /// Free all memory, the pod_vector
   /// can be reused afterwards.
-  void free() noexcept
+  void deallocate() noexcept
   {
-    delete [] array_;
+    this->~pod_vector<T>();
     array_ = nullptr;
     end_ = nullptr;
     capacity_ = nullptr;
@@ -62,6 +80,7 @@ public:
   /// memory. Same as std::vector.clear().
   void clear() noexcept
   {
+    destroy(array_, end_);
     end_ = array_;
   }
 
@@ -187,14 +206,19 @@ public:
   {
     if_unlikely(end_ == capacity_)
       reserve_unchecked(std::max((std::size_t) 1, capacity() * 2));
-    *end_++ = value;
+    // Placement new
+    new(end_) T(value);
+    end_++;
   }
 
   ALWAYS_INLINE void push_back(T&& value)
   {
     if_unlikely(end_ == capacity_)
       reserve_unchecked(std::max((std::size_t) 1, capacity() * 2));
-    *end_++ = value;
+    // Without std::move() the copy constructor will
+    // be called instead of the move constructor.
+    new(end_) T(std::move(value));
+    end_++;
   }
 
   template <class... Args>
@@ -202,23 +226,27 @@ public:
   {
     if_unlikely(end_ == capacity_)
       reserve_unchecked(std::max((std::size_t) 1, capacity() * 2));
-    *end_++ = T(std::forward<Args>(args)...);
+    // Placement new
+    new(end_) T(std::forward<Args>(args)...);
+    end_++;
   }
 
   template <class InputIt>
   void insert(T* const pos, InputIt first, InputIt last)
   {
+    static_assert(std::is_trivially_copyable<T>::value,
+                  "pod_vector<T>::insert() supports only trivially copyable types!");
+
     // We only support appending to the vector
     ASSERT(pos == end_);
     (void) pos;
 
     if (first < last)
     {
-      std::size_t old_size = size();
-      std::size_t new_size = old_size + (std::size_t) (last - first);
+      std::size_t new_size = size() + (std::size_t) (last - first);
       reserve(new_size);
+      std::uninitialized_copy(first, last, end_);
       end_ = array_ + new_size;
-      std::copy(first, last, &array_[old_size]);
     }
   }
 
@@ -228,21 +256,22 @@ public:
       reserve_unchecked(n);
   }
 
-  /// Resize without default initializing memory.
-  /// If the pod_vector is not empty the current content
-  /// will be copied into the new array.
-  ///
   void resize(std::size_t n)
   {
-    if (n > capacity())
-      reserve_unchecked(n);
-    else if (!std::is_trivial<T>::value && n > size())
+    if (n > size())
     {
-      // This will only be used for classes
-      // and structs with constructors.
-      ASSERT(n <= capacity());
-      std::fill(end_, array_ + n, T());
+      if (n > capacity())
+        reserve_unchecked(n);
+
+      // This default initializes memory of classes and structs
+      // with constructors (and with in-class initialization of
+      // non-static members). But it does not default initialize
+      // memory for POD types like int, long.
+      if (!std::is_trivial<T>::value)
+        uninitialized_default_construct(end_, array_ + n);
     }
+    else if (n < size())
+      destroy(array_ + n, end_);
 
     end_ = array_ + n;
   }
@@ -255,23 +284,32 @@ private:
   void reserve_unchecked(std::size_t n)
   {
     ASSERT(n > capacity());
-    std::size_t new_capacity = get_new_capacity<T>(n);
     std::size_t old_size = size();
+    std::size_t old_capacity = capacity();
+    std::size_t new_capacity = get_new_capacity<T>(n);
     ASSERT(new_capacity >= n);
     ASSERT(new_capacity > old_size);
 
-    // This default initializes memory of classes and
-    // structs with constructors. But it does not default
-    // initialize memory for POD types like int, long.
     T* old = array_;
-    array_ = new T[new_capacity];
+    array_ = Allocator().allocate(new_capacity);
     end_ = array_ + old_size;
     capacity_ = array_ + new_capacity;
 
+    // Both primesieve & primecount require that byte arrays are
+    // aligned to at least a alignof(uint64_t) boundary. This is
+    // needed because our code casts byte arrays into uint64_t arrays
+    // in some places in order to improve performance. The default
+    // allocator guarantees that each memory allocation is at least
+    // aligned to the largest built-in type (usually 16 or 32).
+    ASSERT(((uintptr_t) (void*) array_) % sizeof(uint64_t) == 0);
+
     if (old)
     {
-      std::copy_n(old, old_size, array_);
-      delete [] old;
+      static_assert(std::is_nothrow_move_constructible<T>::value,
+                    "pod_vector<T> only supports nothrow moveable types!");
+
+      uninitialized_move_n(old, old_size, array_);
+      Allocator().deallocate(old, old_capacity);
     }
   }
 
@@ -301,6 +339,60 @@ private:
     // the amount of memory we need upfront.
     std::size_t new_capacity = (std::size_t)(capacity() * 1.5);
     return std::max(size, new_capacity);
+  }
+
+  template <typename U>
+  ALWAYS_INLINE typename std::enable_if<std::is_trivially_copyable<U>::value, void>::type
+  uninitialized_move_n(U* __restrict first,
+                       std::size_t count,
+                       U* __restrict d_first)
+  {
+    // We can use memcpy to move trivially copyable types.
+    // https://en.cppreference.com/w/cpp/language/classes#Trivially_copyable_class
+    // https://stackoverflow.com/questions/17625635/moving-an-object-in-memory-using-stdmemcpy
+    std::uninitialized_copy_n(first, count, d_first);
+  }
+
+  /// Same as std::uninitialized_move_n() from C++17.
+  /// https://en.cppreference.com/w/cpp/memory/uninitialized_move_n
+  ///
+  /// Unlike std::uninitialized_move_n() our implementation uses
+  /// __restrict pointers which improves the generated assembly
+  /// (using GCC & Clang). We can do this because we only use this
+  /// method for non-overlapping arrays.
+  template <typename U>
+  ALWAYS_INLINE typename std::enable_if<!std::is_trivially_copyable<U>::value, void>::type
+  uninitialized_move_n(U* __restrict first,
+                       std::size_t count,
+                       U* __restrict d_first)
+  {
+    for (std::size_t i = 0; i < count; i++)
+      new (d_first++) T(std::move(*first++));
+  }
+
+  /// Same as std::uninitialized_default_construct() from C++17.
+  /// https://en.cppreference.com/w/cpp/memory/uninitialized_default_construct
+  ALWAYS_INLINE void uninitialized_default_construct(T* first, T* last)
+  {
+    // Default initialize array using placement new.
+    // Note that `new (first) T();` zero initializes built-in integer types,
+    // whereas `new (first) T;` does not initialize built-in integer types.
+    for (; first != last; first++)
+      new (first) T;
+  }
+
+  /// Same as std::destroy() from C++17.
+  /// https://en.cppreference.com/w/cpp/memory/destroy
+  ALWAYS_INLINE void destroy(T* first, T* last)
+  {
+    if (!std::is_trivially_destructible<T>::value)
+    {
+      // Theoretically deallocating in reverse order is more
+      // cache efficient. Clang's std::vector implementation
+      // also deallocates in reverse order.
+      while (first != last)
+        (--last)->~T();
+    }
   }
 };
 

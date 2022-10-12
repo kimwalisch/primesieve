@@ -24,12 +24,12 @@ int main(int argc, char** argv)
   primesieve_iterator it;
   primesieve_init(&it);
 
-  /* primesieve_skipto(&it, start_number, stop_hint) */
-  primesieve_skipto(&it, limit, 0);
+  /* primesieve_jump_to(&it, start_number, stop_hint) */
+  primesieve_jump_to(&it, limit, 0);
   uint64_t prime;
   uint64_t sum = 0;
 
-  /* iterate over primes from limit to 0 */
+  /* Backwards iterate over the primes <= limit */
   while ((prime = primesieve_prev_prime(&it)) > 0)
     sum += prime;
 
