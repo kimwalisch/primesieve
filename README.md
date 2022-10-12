@@ -13,12 +13,12 @@ up to 2<sup>64</sup>.
 primesieve generates primes using the segmented
 [sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) with
 [wheel factorization](https://en.wikipedia.org/wiki/Wheel_factorization).
-This algorithm has a run time complexity of $O(n\ log\ log\ n)$ operations and uses
+This algorithm has a run time complexity of $O(n\log{\log{n}})$ operations and uses
 $O(\sqrt{n})$ memory. Furthermore primesieve uses the
 [bucket sieve](http://sweet.ua.pt/tos/software/prime_sieve.html)
 algorithm which improves the cache efficiency when generating primes > 2<sup>32</sup>.
 primesieve uses 8 bytes per sieving prime, hence its memory usage is about
-$pi(\sqrt{n}) * 8$ bytes per thread.
+$\pi(\sqrt{n})\times 8$ bytes per thread.
 
 * [More algorithm details](doc/ALGORITHMS.md)
 

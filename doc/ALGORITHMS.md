@@ -3,7 +3,7 @@
 primesieve generates primes using the segmented
 [sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) with
 [wheel factorization](https://en.wikipedia.org/wiki/Wheel_factorization).
-This algorithm has a run time complexity of $O(n\ log\ log\ n)$ operations and uses
+This algorithm has a run time complexity of $O(n\log{\log{n}})$ operations and uses
 $O(\sqrt{n})$ memory. Furthermore primesieve uses the
 [bucket sieve](http://sweet.ua.pt/tos/software/prime_sieve.html)
 algorithm which improves the cache efficiency when generating primes > 2<sup>32</sup>.
@@ -31,7 +31,7 @@ primes are skipped. The 1st wheel considers only odd numbers, the 2nd
 wheel (modulo 6) skips multiples of 2 and 3, the 3rd wheel (modulo 30)
 skips multiples of 2, 3, 5 and so on. Pritchard has shown in
 [[2]](#references) that the running time of the sieve of
-Eratosthenes can be reduced by a factor of $O(log\ log\ n)$
+Eratosthenes can be reduced by a factor of $O(\log{\log{n}})$
 if the wheel size is proportional to $O(\sqrt{n})$
 but for cache reasons the sieve of Eratosthenes usually performs best
 with a modulo 30 or 210 wheel. Sorenson explains wheels in
