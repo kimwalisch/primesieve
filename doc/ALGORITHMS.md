@@ -8,7 +8,7 @@ $O(\sqrt{n})$ memory. Furthermore primesieve uses the
 [bucket sieve](http://sweet.ua.pt/tos/software/prime_sieve.html)
 algorithm which improves the cache efficiency when generating primes > 2<sup>32</sup>.
 primesieve uses 8 bytes per sieving prime, hence its memory usage is about
-$pi(\sqrt{n}) * 8$ bytes per thread.
+$\pi(\sqrt{n})\times 8$ bytes per thread.
 
 # Algorithm details
 
