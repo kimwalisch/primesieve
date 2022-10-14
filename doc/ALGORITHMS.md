@@ -110,8 +110,8 @@ multiple) in the sieve array.
 
 # References
 
-1. R. C. Singleton, "An efficient prime number generator", <br/>Communications of the ACM 12, 563-564, 1969.
-2. Paul Pritchard, "Fast compact prime number sieves (among others)", <br/>Journal of Algorithms 4 (1983), 332-344.
-3. Jonathan Sorenson, ["An analysis of two prime number sieves"](ftp://ftp.cs.wisc.edu/pub/techreports/1991/TR1028.pdf), <br/>Computer Science Technical Report Vol. 1028, 1991.
+1. R. C. Singleton, "An efficient prime number generator", Communications of the ACM 12, 563-564, 1969.
+2. Paul Pritchard, "Fast compact prime number sieves (among others)", Journal of Algorithms 4 (1983), 332-344.
+3. Jonathan Sorenson, ["An analysis of two prime number sieves"](ftp://ftp.cs.wisc.edu/pub/techreports/1991/TR1028.pdf), Computer Science Technical Report Vol. 1028, 1991.
 4. Tomás Oliveira e Silva, ["Fast implementation of the segmented sieve of Eratosthenes"](http://www.ieeta.pt/~tos/software/prime_sieve.html), 2002.
 5. Actually not the sieving primes are compressed but their sieve and wheel indexes.
