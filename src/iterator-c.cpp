@@ -141,7 +141,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       //    it to the user. The primes array either contains a few
       //    primes (<= 1024) or an error code (UINT64_MAX). The error
       //    code only occurs if the next prime > 2^64.
-      if (it->size == 0)
+      if_unlikely(it->size == 0)
         iterData.deletePrimeGenerator();
       else
         break;
