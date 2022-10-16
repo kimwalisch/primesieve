@@ -132,6 +132,8 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       }
 
       iterData.primeGenerator->fillNextPrimes(primes, &it->size);
+      it->primes = primes.data();
+      it->i = 0;
 
       // There are 2 different cases here:
       // 1) The primes array is empty because the next prime > stop.
@@ -144,7 +146,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       if_unlikely(it->size == 0)
         iterData.deletePrimeGenerator();
       else
-        break;
+        return;
     }
   }
   catch (const std::exception& e)
@@ -154,14 +156,12 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
     auto& primes = getPrimes(it);
     ASSERT(primes.empty());
     primes.push_back(PRIMESIEVE_ERROR);
+    it->primes = primes.data();
     it->size = primes.size();
+    it->i = 0;
     it->is_error = true;
     errno = EDOM;
   }
-
-  auto& primes = getPrimes(it);
-  it->primes = &primes[0];
-  it->i = 0;
 }
 
 void primesieve_generate_prev_primes(primesieve_iterator* it)
@@ -195,6 +195,8 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
       IteratorHelper::updatePrev(it->start, it->stop_hint, iterData);
       PrimeGenerator primeGenerator(it->start, iterData.stop, iterData.preSieve);
       primeGenerator.fillPrevPrimes(primes, &it->size);
+      it->primes = primes.data();
+      it->i = it->size;
     }
     while (!it->size);
   }
@@ -205,12 +207,10 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     auto& primes = getPrimes(it);
     ASSERT(primes.empty());
     primes.push_back(PRIMESIEVE_ERROR);
+    it->primes = primes.data();
     it->size = primes.size();
+    it->i = it->size;
     it->is_error = true;
     errno = EDOM;
   }
-
-  auto& primes = getPrimes(it);
-  it->primes = &primes[0];
-  it->i = it->size;
 }

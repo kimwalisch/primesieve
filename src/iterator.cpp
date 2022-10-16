@@ -144,6 +144,8 @@ void iterator::generate_next_primes()
     }
 
     iterData.primeGenerator->fillNextPrimes(primes, &size_);
+    primes_ = primes.data();
+    i_ = 0;
 
     // There are 2 different cases here:
     // 1) The primes array is empty because the next prime > stop.
@@ -156,11 +158,8 @@ void iterator::generate_next_primes()
     if_unlikely(size_ == 0)
       iterData.deletePrimeGenerator();
     else
-      break;
+      return;
   }
-
-  i_ = 0;
-  primes_ = &primes[0];
 }
 
 void iterator::generate_prev_primes()
@@ -192,11 +191,10 @@ void iterator::generate_prev_primes()
     IteratorHelper::updatePrev(start_, stop_hint_, iterData);
     PrimeGenerator primeGenerator(start_, iterData.stop, iterData.preSieve);
     primeGenerator.fillPrevPrimes(primes, &size_);
+    primes_ = primes.data();
+    i_ = size_;
   }
   while (!size_);
-
-  i_ = size_;
-  primes_ = &primes[0];
 }
 
 } // namespace
