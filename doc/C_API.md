@@ -73,7 +73,7 @@ int main()
 
 * [Build instructions](#compiling-and-linking)
 
-## ```primesieve_jump_to()``` <sub><sup>*(since primesieve-9.0)*</sup></sub>
+## ```primesieve_jump_to()``` <sub><sup>*(since primesieve-11.0)*</sup></sub>
 
 This function changes the start number of the ```primesieve_iterator``` object. (By
 default the start number is initialized to 0). The ```stop_hint``` parameter is
@@ -110,14 +110,14 @@ int main()
 
 * [Build instructions](#compiling-and-linking)
 
-## ```primesieve_skipto()``` <sub><sup>*(deprecated in primesieve-9.0)*</sup></sub>
+## ```primesieve_skipto()``` <sub><sup>*(deprecated in primesieve-11.0)*</sup></sub>
 
 Similar to ```primesieve_jump_to()```, the ```primesieve_skipto()``` function changes
 the start number of the ```primesieve_iterator``` object. However, when calling
 ```primesieve_next_prime()``` or ```primesieve_prev_prime()``` for the first time
 the start number will be excluded. Hence ```primesieve_next_prime()``` will generate
 primes > start and ```primesieve_prev_prime()``` will generate primes < start.
-```primesieve_skipto()``` has been deprecated in primesieve-9.0 in favor of
+```primesieve_skipto()``` has been deprecated in primesieve-11.0 in favor of
 ```primesieve_jump_to()```, because the use of ```primesieve_skipto()``` requires to
 correct the start number in most cases using e.g.
 ```primesieve_skipto(iter, start-1, stop)```.

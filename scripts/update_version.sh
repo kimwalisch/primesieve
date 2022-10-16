@@ -47,10 +47,8 @@ done
 for i in $(echo CMakeLists.txt)
 do
     echo "Update shared libprimesieve version in $i"
-    old_so_major=$(($old_major + 2))
-    new_so_major=$(($new_major + 2))
-    new_so_version="$new_so_major.$new_minor.0"
-    sed "s/$old_so_major\.$old_minor\.0/$new_so_version/g" $i > $i.tmp
+    new_so_version="$new_major.$new_minor.0"
+    sed "s/$old_major\.$old_minor\.0/$new_so_version/g" $i > $i.tmp
     mv -f $i.tmp $i
 done
 

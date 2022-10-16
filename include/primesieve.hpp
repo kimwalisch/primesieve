@@ -13,8 +13,8 @@
 #ifndef PRIMESIEVE_HPP
 #define PRIMESIEVE_HPP
 
-#define PRIMESIEVE_VERSION "9.0"
-#define PRIMESIEVE_VERSION_MAJOR 9
+#define PRIMESIEVE_VERSION "11.0"
+#define PRIMESIEVE_VERSION_MAJOR 11
 #define PRIMESIEVE_VERSION_MINOR 0
 
 #include <primesieve/iterator.hpp>

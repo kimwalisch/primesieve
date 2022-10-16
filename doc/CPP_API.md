@@ -69,7 +69,7 @@ int main()
 
 * [Build instructions](#compiling-and-linking)
 
-## ```primesieve::iterator::jump_to()``` <sub><sup>*(since primesieve-9.0)*</sup></sub>
+## ```primesieve::iterator::jump_to()``` <sub><sup>*(since primesieve-11.0)*</sup></sub>
 
 This method changes the start number of the ```primesieve::iterator``` object. (By default
 the start number is initialized to 0). Note that you can also specify the start number in
@@ -129,14 +129,14 @@ int main()
 
 * [Build instructions](#compiling-and-linking)
 
-## ```primesieve::iterator::skipto()``` <sub><sup>*(removed in primesieve-9.0)*</sup></sub>
+## ```primesieve::iterator::skipto()``` <sub><sup>*(removed in primesieve-11.0)*</sup></sub>
 
 Similar to ```primesieve::iterator::jump_to()```, the ```primesieve::iterator::skipto()```
 method changes the start number of the ```primesieve::iterator``` object. However, when
 calling ```next_prime()``` or ```prev_prime()``` for the first time the start number will
 be excluded. Hence ```next_prime()``` will generate primes > start and ```prev_prime()```
 will generate primes < start. ```primesieve::iterator::skipto()``` has been replaced by
-```primesieve::iterator::jump_to()``` in primesieve-9.0, because the use of the
+```primesieve::iterator::jump_to()``` in primesieve-11.0, because the use of the
 ```skipto()``` method required to correct the start number in most cases using e.g.
 ```iter.skipto(start-1, stop)```.
 
