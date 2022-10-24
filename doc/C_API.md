@@ -20,7 +20,7 @@ more detailed information.
 ## Contents
 
 * [```primesieve_next_prime()```](#primesieve_next_prime)
-* [```primesieve_jump_to()```](#primesieve_jump_to-since-primesieve-90)
+* [```primesieve_jump_to()```](#primesieve_jump_to-since-primesieve-110)
 * [```primesieve_prev_prime()```](#primesieve_prev_prime)
 * [```primesieve_generate_primes()```](#primesieve_generate_primes)
 * [```primesieve_generate_n_primes()```](#primesieve_generate_n_primes)
@@ -37,9 +37,9 @@ more detailed information.
 By default ```primesieve_next_prime()``` generates primes ≥ 2 i.e. 2, 3, 5, 7, ...
 
 * If you have specified a non-default start number using the ```primesieve_jump_to()```
-  function, then the first ```primesieve_next_prime()``` invocation returns the first
+  function, then the first ```primesieve_next_prime()``` call returns the first
   prime ≥ start number. If want to generate primes > start number you need to
-  use e.g. ```primesieve_jump_to(start+1)```.
+  use e.g. ```primesieve_jump_to(iter, start+1, stop)```.
 * Note that ```primesieve_iterator``` is not ideal if you are
   repeatedly iterating over the same primes in a loop, in this case it is better
   to [store the primes in an array](#primesieve_generate_primes) (provided your PC has
@@ -80,10 +80,13 @@ default the start number is initialized to 0). The ```stop_hint``` parameter is
 used for performance optimization, ```primesieve_iterator``` only buffers primes
 up to this limit.
 
-* Please note that the first ```primesieve_next_prime()``` invocation after
-  ```primesieve_jump_to()``` returns the first prime ≥ start number. If want to
-  generate primes > start number you need to use e.g.
+* The first ```primesieve_next_prime()``` call after ```primesieve_jump_to()``` returns the first
+  prime ≥ start number. If want to generate primes > start number you need to use e.g.
   ```primesieve_jump_to(iter, start+1, stop)```.
+* The first ```primesieve_next_prime()``` call after ```primesieve_jump_to()``` incurs an initialization
+  overhead of $O(\sqrt{start}\times \log{\log{\sqrt{start}}})$ operations. After that, any
+  additional ```primesieve_next_prime()``` call executes in amortized
+  $O(\log{n}\times \log{\log{n}})$ operations.
 
 ```C
 #include <primesieve.h>
@@ -122,6 +125,11 @@ primes > start and ```primesieve_prev_prime()``` will generate primes < start.
 correct the start number in most cases using e.g.
 ```primesieve_skipto(iter, start-1, stop)```.
 
+* The first ```primesieve_next_prime()``` call after ```primesieve_skipto()``` incurs an initialization
+  overhead of $O(\sqrt{start}\times \log{\log{\sqrt{start}}})$ operations. After that, any
+  additional ```primesieve_next_prime()``` call executes in amortized
+  $O(\log{n}\times \log{\log{n}})$ operations.
+
 ```C
 #include <primesieve.h>
 #include <inttypes.h>
@@ -152,8 +160,8 @@ int main()
 Before using ```primesieve_prev_prime()``` you must first change the start number using the
 ```primesieve_jump_to()``` function (because the start number is initialized to 0 be default).
 
-* Please note that the first ```primesieve_prev_prime()``` invocation returns the first prime ≤ start
-  number. If want to generate primes < start number you need to use e.g. ```primesieve_jump_to(start-1)```.
+* Please note that the first ```primesieve_prev_prime()``` call returns the first prime ≤ start
+  number. If want to generate primes < start number you need to use e.g. ```primesieve_jump_to(iter, start-1, stop)```.
 * As a special case, ```primesieve_prev_prime()``` returns 0 after the prime 2 (i.e. when there are no
   more primes). This makes it possible to conveniently iterate backwards over all primes > 0 as can be
   seen in the example below.
