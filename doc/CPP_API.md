@@ -20,7 +20,7 @@ more detailed information.
 ## Contents
 
 * [```primesieve::iterator::next_prime()```](#primesieveiteratornext_prime)
-* [```primesieve::iterator::jump_to()```](#primesieveiteratorjump_to-since-primesieve-90)
+* [```primesieve::iterator::jump_to()```](#primesieveiteratorjump_to-since-primesieve-110)
 * [```primesieve::iterator::prev_prime()```](#primesieveiteratorprev_prime)
 * [```primesieve::generate_primes()```](#primesievegenerate_primes)
 * [```primesieve::generate_n_primes()```](#primesievegenerate_n_primes)
@@ -75,9 +75,13 @@ This method changes the start number of the ```primesieve::iterator``` object. (
 the start number is initialized to 0). Note that you can also specify the start number in
 the constructor of the ```primesieve::iterator``` object.
 
-* The first ```next_prime()``` invocation after ```jump_to()``` returns the first
+* The first ```next_prime()``` call after ```jump_to()``` returns the first
   prime ≥ start number. If want to generate primes > start number you need to use e.g.
   ```jump_to(start+1, stop)```.
+* The first ```next_prime()``` call after ```jump_to()``` incurs an initialization
+  overhead of $O(\sqrt{start}\times \log{\log{\sqrt{start}}})$ operations. After that, any
+  additional ```next_prime()``` call executes in amortized
+  $O(\log{n}\times \log{\log{n}})$ operations.
 
 ```C++
 #include <primesieve.hpp>
