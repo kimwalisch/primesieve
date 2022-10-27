@@ -269,11 +269,14 @@ public:
       // memory for POD types like int, long.
       if (!std::is_trivial<T>::value)
         uninitialized_default_construct(end_, array_ + n);
+
+      end_ = array_ + n;
     }
     else if (n < size())
+    {
       destroy(array_ + n, end_);
-
-    end_ = array_ + n;
+      end_ = array_ + n;
+    }
   }
 
 private:
@@ -286,8 +289,13 @@ private:
     ASSERT(n > capacity());
     std::size_t old_size = size();
     std::size_t old_capacity = capacity();
-    std::size_t new_capacity = get_new_capacity<T>(n);
-    ASSERT(new_capacity >= n);
+
+    // GCC & Clang's std::vector grow the capacity by at least
+    // 2x for every call to resize() with n > capacity(). We
+    // grow by at least 1.5x as we tend to accurately calculate
+    // the amount of memory we need upfront.
+    std::size_t new_capacity = (old_capacity * 3) / 2;
+    new_capacity = std::max(new_capacity, n);
     ASSERT(new_capacity > old_size);
 
     T* old = array_;
@@ -311,34 +319,6 @@ private:
       uninitialized_move_n(old, old_size, array_);
       Allocator().deallocate(old, old_capacity);
     }
-  }
-
-  template <typename U>
-  ALWAYS_INLINE typename std::enable_if<std::is_trivial<U>::value, std::size_t>::type
-  get_new_capacity(std::size_t size)
-  {
-    ASSERT(size > 0);
-    // GCC & Clang's std::vector grow the capacity by at least
-    // 2x for every call to resize() with n > capacity(). We
-    // grow by at least 1.5x as we tend to accurately calculate
-    // the amount of memory we need upfront.
-    std::size_t new_capacity = (std::size_t)(capacity() * 1.5);
-    constexpr std::size_t min_alignment = sizeof(long) * 2;
-    constexpr std::size_t min_capacity = min_alignment / sizeof(U);
-    return std::max({min_capacity, size, new_capacity});
-  }
-
-  template <typename U>
-  ALWAYS_INLINE typename std::enable_if<!std::is_trivial<U>::value, std::size_t>::type
-  get_new_capacity(std::size_t size)
-  {
-    ASSERT(size > 0);
-    // GCC & Clang's std::vector grow the capacity by at least
-    // 2x for every call to resize() with n > capacity(). We
-    // grow by at least 1.5x as we tend to accurately calculate
-    // the amount of memory we need upfront.
-    std::size_t new_capacity = (std::size_t)(capacity() * 1.5);
-    return std::max(size, new_capacity);
   }
 
   template <typename U>
