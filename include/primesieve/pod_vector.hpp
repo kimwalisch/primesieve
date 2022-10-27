@@ -284,9 +284,11 @@ private:
   T* end_ = nullptr;
   T* capacity_ = nullptr;
 
+  /// Requires n > capacity()
   void reserve_unchecked(std::size_t n)
   {
     ASSERT(n > capacity());
+    ASSERT(size() <= capacity());
     std::size_t old_size = size();
     std::size_t old_capacity = capacity();
 
@@ -296,12 +298,13 @@ private:
     // the amount of memory we need upfront.
     std::size_t new_capacity = (old_capacity * 3) / 2;
     new_capacity = std::max(new_capacity, n);
-    ASSERT(new_capacity > old_size);
+    ASSERT(old_capacity < new_capacity);
 
     T* old = array_;
     array_ = Allocator().allocate(new_capacity);
     end_ = array_ + old_size;
     capacity_ = array_ + new_capacity;
+    ASSERT(size() < capacity());
 
     // Both primesieve & primecount require that byte arrays are
     // aligned to at least a alignof(uint64_t) boundary. This is
