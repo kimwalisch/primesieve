@@ -21,6 +21,7 @@
 
 #include <stdint.h>
 #include <algorithm>
+#include <limits>
 
 namespace {
 
@@ -64,7 +65,8 @@ void Erat::init(uint64_t start,
                 PreSieve& preSieve,
                 MemoryPool& memoryPool)
 {
-  if (start > stop)
+  if_unlikely(start > stop || 
+              start >= std::numeric_limits<uint64_t>::max())
     return;
 
   ASSERT(start >= 7);

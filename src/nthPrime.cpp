@@ -159,9 +159,6 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   for (primesieve::iterator it(start, stop); count < n; count++)
     prime = it.next_prime();
 
-  if (~prime == 0)
-    throw primesieve_error("nth prime > 2^64");
-
   auto t2 = std::chrono::system_clock::now();
   std::chrono::duration<double> seconds = t2 - t1;
   seconds_ = seconds.count();

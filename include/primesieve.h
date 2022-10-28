@@ -67,6 +67,8 @@ enum {
 
 /**
  * Get an array with the primes inside the interval [start, stop].
+ * In case an error occurs the error message is printed to the
+ * standard error stream and a NULL pointer is returned.
  * @param size  The size of the returned primes array.
  * @param type  The type of the primes to generate, e.g. INT_PRIMES.
  */
@@ -74,6 +76,8 @@ void* primesieve_generate_primes(uint64_t start, uint64_t stop, size_t* size, in
 
 /**
  * Get an array with the first n primes >= start.
+ * In case an error occurs the error message is printed to the
+ * standard error stream and a NULL pointer is returned.
  * @param type  The type of the primes to generate, e.g. INT_PRIMES.
  */
 void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type);

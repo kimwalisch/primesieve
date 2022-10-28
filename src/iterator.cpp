@@ -151,10 +151,8 @@ void iterator::generate_next_primes()
     // 1) The primes array is empty because the next prime > stop.
     //    In this case we reset the primeGenerator object, increase
     //    the start & stop numbers and sieve the next segment.
-    // 2) The primes array is not empty, in this case we return
-    //    it to the user. The primes array either contains a few
-    //    primes (<= 1024) or an error code (UINT64_MAX). The error
-    //    code only occurs if the next prime > 2^64.
+    // 2) The primes array is not empty (contains up to 1024 primes),
+    //    in this case we return it to the user.
     if_unlikely(size_ == 0)
       iterData.deletePrimeGenerator();
     else

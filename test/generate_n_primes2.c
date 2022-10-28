@@ -84,6 +84,11 @@ int main()
   }
 
   primesieve_free(primes);
+
+  uint16_t* primes16 = (uint16_t*) primesieve_generate_n_primes(100000, (1 << 16) - 100, UINT16_PRIMES);
+  printf("Detect 16-bit overflow:");
+  check(primes16 == NULL);
+
   printf("\n");
   printf("All tests passed successfully!\n");
 

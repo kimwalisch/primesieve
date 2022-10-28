@@ -23,6 +23,7 @@
 #include <primesieve/macros.hpp>
 #include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
+#include <primesieve/primesieve_error.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/pod_vector.hpp>
@@ -266,7 +267,8 @@ void PrimeGenerator::initErat()
   startErat = std::max(startErat, start_);
   isInit_ = true;
 
-  if (startErat <= stop_)
+  if (startErat <= stop_ &&
+      startErat < std::numeric_limits<uint64_t>::max())
   {
     preSieve_.init(startErat, stop_);
     int sieveSize = get_sieve_size();
@@ -326,18 +328,13 @@ bool PrimeGenerator::sieveNextPrimes(pod_vector<uint64_t>& primes,
     return true;
   }
 
+  // The next prime would be > 2^64
+  if_unlikely(stop_ >= std::numeric_limits<uint64_t>::max())
+    throw primesieve_error("cannot generate primes > 2^64");
+
   // We have generated all primes <= stop, we cannot generate
   // more primes using this PrimeGenerator. Therefore we
   // need to allocate a new PrimeGenerator in iterator.cpp.
-  if (stop_ < std::numeric_limits<uint64_t>::max())
-    return false;
-
-  // The next prime would be > 2^64, however primesieve only
-  // supports primes < 2^64. In this case we simply return
-  // UINT64_MAX to the user (instead of throwing an exception).
-  primes.clear();
-  primes.push_back(~0ull);
-  *size = primes.size();
   return false;
 }
 

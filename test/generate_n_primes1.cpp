@@ -88,10 +88,10 @@ int main()
 
   try
   {
-    std::vector<int16_t> primes16;
-    generate_n_primes(10000, 30000, &primes16);
+    std::vector<uint16_t> primes16;
+    generate_n_primes(10, (1 << 16) - 10, &primes16);
   }
-  catch (const primesieve::primesieve_error& e)
+  catch (const primesieve_error& e)
   {
     errorMsg = e.what();
   }

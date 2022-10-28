@@ -22,6 +22,7 @@
 #include <string>
 
 namespace primesieve {
+namespace {
 
 /// primeCountApprox(x) >= pi(x)
 inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
@@ -38,19 +39,37 @@ inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
   return (std::size_t) pix;
 }
 
+/// Unknown type
+template <typename T> std::string getTypeName() { return "Type"; }
+
+template <> std::string getTypeName<int8_t>() { return "int8_t"; }
+template <> std::string getTypeName<uint8_t>() { return "uint8_t"; }
+template <> std::string getTypeName<int16_t>() { return "int16_t"; }
+template <> std::string getTypeName<uint16_t>() { return "uint16_t"; }
+template <> std::string getTypeName<int32_t>() { return "int32_t"; }
+template <> std::string getTypeName<uint32_t>() { return "uint32_t"; }
+template <> std::string getTypeName<int64_t>() { return "int64_t"; }
+template <> std::string getTypeName<uint64_t>() { return "uint64_t"; }
+
 template <typename T>
 inline void store_primes(uint64_t start,
                          uint64_t stop,
                          T& primes)
 {
-  if (~stop == 0)
-    stop--;
+#if defined(_MSC_VER)
+  #pragma warning(push)
+  // Disable warning: conversion from X to Y, possible loss of data
+  #pragma warning(disable : 4244)
+  // Disable warning C4018: '>': signed/unsigned mismatch 
+  #pragma warning(disable : 4018)
+#endif
+
   if (start > stop)
     return;
 
   using V = typename T::value_type;
   if (stop > std::numeric_limits<V>::max())
-    throw primesieve_error("store_primes(): Type is too narrow for generating primes up to " + std::to_string(stop));
+    throw primesieve_error("store_primes(): " + getTypeName<V>() + " is too narrow for generating primes up to " + std::to_string(stop));
 
   std::size_t size = primes.size() + prime_count_approx(start, stop);
   primes.reserve(size);
@@ -58,16 +77,16 @@ inline void store_primes(uint64_t start,
   primesieve::iterator it(start, stop);
   it.generate_next_primes();
 
-#if defined(_MSC_VER)
-  // Disable warning: conversion from X to Y, possible loss of data
-  #pragma warning(push)
-  #pragma warning(disable : 4244)
-#endif
+  uint64_t maxPrime64bits = 18446744073709551557ull;
+  uint64_t limit = std::min(stop, maxPrime64bits - 1);
 
-  for (; it.primes_[it.size_ - 1] <= stop; it.generate_next_primes())
+  for (; it.primes_[it.size_ - 1] <= limit; it.generate_next_primes())
     primes.insert(primes.end(), it.primes_, it.primes_ + it.size_);
-  for (std::size_t i = 0; it.primes_[i] <= stop; i++)
+  for (std::size_t i = 0; it.primes_[i] <= limit; i++)
     primes.push_back((V) it.primes_[i]);
+
+  if (stop >= maxPrime64bits)
+    primes.push_back((V) maxPrime64bits);
 
 #if defined(_MSC_VER)
   #pragma warning(pop)
@@ -79,6 +98,14 @@ inline void store_n_primes(uint64_t n,
                            uint64_t start,
                            T& primes)
 {
+#if defined(_MSC_VER)
+  #pragma warning(push)
+  // Disable warning: conversion from X to Y, possible loss of data
+  #pragma warning(disable : 4244)
+  // Disable warning C4018: '>': signed/unsigned mismatch 
+  #pragma warning(disable : 4018)
+#endif
+
   if (n == 0)
     return;
 
@@ -97,18 +124,10 @@ inline void store_n_primes(uint64_t n,
   primesieve::iterator it(start, stop);
   it.generate_next_primes();
 
-#if defined(_MSC_VER)
-  // Disable warning: conversion from X to Y, possible loss of data
-  #pragma warning(push)
-  #pragma warning(disable : 4244)
-#endif
-
   while (n >= it.size_)
   {
-    if (it.primes_[0] == std::numeric_limits<uint64_t>::max())
-      throw primesieve_error("store_n_primes(): Cannot generate primes > 2^64");
     if (it.primes_[it.size_ - 1] > std::numeric_limits<V>::max())
-      throw primesieve_error("store_n_primes(): Type is too narrow for generating primes up to " + std::to_string(stop));
+      throw primesieve_error("store_n_primes(): " + getTypeName<V>() + " is too narrow for generating primes up to " + std::to_string(stop));
 
     primes.insert(primes.end(), it.primes_, it.primes_ + it.size_);
     n -= it.size_;
@@ -118,10 +137,8 @@ inline void store_n_primes(uint64_t n,
     it.generate_next_primes();
   }
 
-  if (it.primes_[0] == std::numeric_limits<uint64_t>::max())
-    throw primesieve_error("store_n_primes(): Cannot generate primes > 2^64");
   if (it.primes_[n - 1] > std::numeric_limits<V>::max())
-    throw primesieve_error("store_n_primes(): Type is too narrow for generating primes up to " + std::to_string(stop));
+    throw primesieve_error("store_n_primes(): " + getTypeName<V>() + " is too narrow for generating primes up to " + std::to_string(stop));
 
   for (std::size_t i = 0; i < (std::size_t) n; i++)
     primes.push_back((V) it.primes_[i]);
@@ -132,5 +149,6 @@ inline void store_n_primes(uint64_t n,
 }
 
 } // namespace
+} // namespace primesieve
 
 #endif

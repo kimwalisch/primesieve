@@ -26,6 +26,7 @@ using namespace primesieve;
 
 IteratorData& getIterData(primesieve_iterator* it)
 {
+  ASSERT(it->memory != nullptr);
   return *(IteratorData*) it->memory;
 }
 
@@ -139,10 +140,8 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       // 1) The primes array is empty because the next prime > stop.
       //    In this case we reset the primeGenerator object, increase
       //    the start & stop numbers and sieve the next segment.
-      // 2) The primes array is not empty, in this case we return
-      //    it to the user. The primes array either contains a few
-      //    primes (<= 1024) or an error code (UINT64_MAX). The error
-      //    code only occurs if the next prime > 2^64.
+      // 2) The primes array is not empty (contains up to 1024 primes),
+      //    in this case we return it to the user.
       if_unlikely(it->size == 0)
         iterData.deletePrimeGenerator();
       else
@@ -156,6 +155,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
     auto& primes = getPrimes(it);
     ASSERT(primes.empty());
     primes.push_back(PRIMESIEVE_ERROR);
+    getIterData(it).stop = PRIMESIEVE_ERROR;
     it->primes = primes.data();
     it->size = primes.size();
     it->i = 0;

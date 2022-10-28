@@ -87,7 +87,8 @@ struct iterator
   void generate_prev_primes();
 
   /// Get the next prime.
-  /// Returns UINT64_MAX if next prime > 2^64.
+  /// Throws a primesieve::primesieve_error exception (derived from
+  /// std::runtime_error) if any error occurs.
   ///
   uint64_t next_prime()
   {
