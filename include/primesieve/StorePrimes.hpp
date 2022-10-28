@@ -22,7 +22,6 @@
 #include <string>
 
 namespace primesieve {
-namespace {
 
 /// primeCountApprox(x) >= pi(x)
 inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
@@ -148,6 +147,5 @@ inline void store_n_primes(uint64_t n,
 }
 
 } // namespace
-} // namespace primesieve
 
 #endif
