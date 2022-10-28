@@ -115,13 +115,21 @@ private:
   T* end_ = nullptr;
   T* capacity_ = nullptr;
 
+  /// Requires n > capacity()
   void reserve_unchecked(std::size_t n)
   {
     ASSERT(n > capacity());
-    std::size_t new_capacity = get_new_capacity<T>(n);
+    ASSERT(size() <= capacity());
     std::size_t old_size = size();
-    ASSERT(new_capacity >= n);
-    ASSERT(new_capacity > old_size);
+    std::size_t old_capacity = capacity();
+
+    // GCC & Clang's std::vector grow the capacity by at least
+    // 2x for every call to resize() with n > capacity(). We
+    // grow by at least 1.5x as we tend to accurately calculate
+    // the amount of memory we need upfront.
+    std::size_t new_capacity = (old_capacity * 3) / 2;
+    new_capacity = std::max(new_capacity, n);
+    ASSERT(old_capacity < new_capacity);
 
     // If there is not enough memory, the old memory block
     // is not freed and null pointer is returned.
@@ -134,20 +142,7 @@ private:
     array_ = new_array;
     end_ = array_ + old_size;
     capacity_ = array_ + new_capacity;
-  }
-
-  template <typename U>
-  ALWAYS_INLINE std::size_t get_new_capacity(std::size_t size)
-  {
-    ASSERT(size > 0);
-    // GCC & Clang's std::vector grow the capacity by at least
-    // 2x for every call to resize() with n > capacity(). We
-    // grow by at least 1.5x as we tend to accurately calculate
-    // the amount of memory we need upfront.
-    std::size_t new_capacity = (std::size_t)(capacity() * 1.5);
-    constexpr std::size_t min_alignment = sizeof(long) * 2;
-    constexpr std::size_t min_capacity = min_alignment / sizeof(U);
-    return std::max({min_capacity, size, new_capacity});
+    ASSERT(size() < capacity());
   }
 };
 
