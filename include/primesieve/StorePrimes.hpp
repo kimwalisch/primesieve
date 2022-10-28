@@ -19,6 +19,7 @@
 #include <cmath>
 #include <cstddef>
 #include <limits>
+#include <string>
 
 namespace primesieve {
 
@@ -48,6 +49,9 @@ inline void store_primes(uint64_t start,
     return;
 
   using V = typename T::value_type;
+  if (stop > std::numeric_limits<V>::max())
+    throw primesieve_error("store_primes(): Type is too narrow for generating primes up to " + std::to_string(stop));
+
   std::size_t size = primes.size() + prime_count_approx(start, stop);
   primes.reserve(size);
 
@@ -93,9 +97,6 @@ inline void store_n_primes(uint64_t n,
   primesieve::iterator it(start, stop);
   it.generate_next_primes();
 
-  if (it.primes_[0] == std::numeric_limits<uint64_t>::max())
-    throw primesieve_error("cannot generate primes > 2^64");
-
 #if defined(_MSC_VER)
   // Disable warning: conversion from X to Y, possible loss of data
   #pragma warning(push)
@@ -104,14 +105,23 @@ inline void store_n_primes(uint64_t n,
 
   while (n >= it.size_)
   {
+    if (it.primes_[0] == std::numeric_limits<uint64_t>::max())
+      throw primesieve_error("store_n_primes(): Cannot generate primes > 2^64");
+    if (it.primes_[it.size_ - 1] > std::numeric_limits<V>::max())
+      throw primesieve_error("store_n_primes(): Type is too narrow for generating primes up to " + std::to_string(stop));
+
     primes.insert(primes.end(), it.primes_, it.primes_ + it.size_);
     n -= it.size_;
     if (n == 0)
       return;
+
     it.generate_next_primes();
-    if (it.primes_[0] == std::numeric_limits<uint64_t>::max())
-      throw primesieve_error("cannot generate primes > 2^64");
   }
+
+  if (it.primes_[0] == std::numeric_limits<uint64_t>::max())
+    throw primesieve_error("store_n_primes(): Cannot generate primes > 2^64");
+  if (it.primes_[n - 1] > std::numeric_limits<V>::max())
+    throw primesieve_error("store_n_primes(): Type is too narrow for generating primes up to " + std::to_string(stop));
 
   for (std::size_t i = 0; i < (std::size_t) n; i++)
     primes.push_back((V) it.primes_[i]);

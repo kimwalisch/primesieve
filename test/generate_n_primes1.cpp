@@ -13,6 +13,7 @@
 #include <stdint.h>
 #include <iostream>
 #include <cstdlib>
+#include <string>
 #include <vector>
 
 using namespace primesieve;
@@ -82,6 +83,21 @@ int main()
     std::cout << "primes[" << i << "] = " << primes[i];
     check(primes[i] == large_primes[i]);
   }
+
+  std::string errorMsg;
+
+  try
+  {
+    std::vector<int16_t> primes16;
+    generate_n_primes(10000, 30000, &primes16);
+  }
+  catch (const primesieve::primesieve_error& e)
+  {
+    errorMsg = e.what();
+  }
+
+  std::cout << "Detect 16-bit overflow: " << errorMsg;
+  check(!errorMsg.empty());
 
   std::cout << std::endl;
   std::cout << "All tests passed successfully!" << std::endl;
