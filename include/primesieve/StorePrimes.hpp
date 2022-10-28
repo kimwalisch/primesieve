@@ -39,17 +39,16 @@ inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
   return (std::size_t) pix;
 }
 
-/// Unknown type
-template <typename T> std::string getTypeName() { return "Type"; }
-
-template <> std::string getTypeName<int8_t>() { return "int8_t"; }
-template <> std::string getTypeName<uint8_t>() { return "uint8_t"; }
-template <> std::string getTypeName<int16_t>() { return "int16_t"; }
-template <> std::string getTypeName<uint16_t>() { return "uint16_t"; }
-template <> std::string getTypeName<int32_t>() { return "int32_t"; }
-template <> std::string getTypeName<uint32_t>() { return "uint32_t"; }
-template <> std::string getTypeName<int64_t>() { return "int64_t"; }
-template <> std::string getTypeName<uint64_t>() { return "uint64_t"; }
+/// Used to print type name in error messages
+template <typename T> inline std::string getTypeName() { return "Type"; }
+template <> inline std::string getTypeName<int8_t>() { return "int8_t"; }
+template <> inline std::string getTypeName<uint8_t>() { return "uint8_t"; }
+template <> inline std::string getTypeName<int16_t>() { return "int16_t"; }
+template <> inline std::string getTypeName<uint16_t>() { return "uint16_t"; }
+template <> inline std::string getTypeName<int32_t>() { return "int32_t"; }
+template <> inline std::string getTypeName<uint32_t>() { return "uint32_t"; }
+template <> inline std::string getTypeName<int64_t>() { return "int64_t"; }
+template <> inline std::string getTypeName<uint64_t>() { return "uint64_t"; }
 
 template <typename T>
 inline void store_primes(uint64_t start,
