@@ -79,6 +79,13 @@ int main()
     std::cout << "OK: " << e.what() << std::endl;
   }
 
+// This test triggers a GCC bug if GCC version <= 12,
+// hence we avoid running this test with GCC <= 12.
+// See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=106627
+#if __GNUC__ >= 14 || \
+    !defined(__GNUC__) || \
+    defined(__clang__)
+
   try
   {
     n = 1;
@@ -91,6 +98,8 @@ int main()
   {
     std::cout << "OK: " << e.what() << std::endl;
   }
+
+#endif
 
   std::cout << std::endl;
   std::cout << "All tests passed successfully!" << std::endl;
