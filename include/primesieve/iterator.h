@@ -107,7 +107,7 @@ void primesieve_generate_prev_primes(primesieve_iterator*);
 
 /**
  * Get the next prime.
- * Returns UINT64_MAX if next prime > 2^64.
+ * Returns PRIMESIEVE_ERROR (UINT64_MAX) if any error occrus.
  */
 static inline uint64_t primesieve_next_prime(primesieve_iterator* it)
 {
