@@ -373,12 +373,12 @@ check the return value of every single primesieve function call.
 #include <stdio.h>
 #include <stdlib.h>
 
-int* get_primes(int n, int start)
+int* get_primes(int start, int stop, size_t* size)
 {
   /* Reset errno before computation */
   errno = 0;
 
-  int* primes = (int*) primesieve_generate_n_primes(n, start, INT_PRIMES);
+  int* primes = (int*) primesieve_generate_primes(start, stop, size, INT_PRIMES);
 
   /* Check errno after computation */
   if (errno == EDOM) {
