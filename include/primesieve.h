@@ -67,18 +67,29 @@ enum {
 
 /**
  * Get an array with the primes inside the interval [start, stop].
- * In case an error occurs the error message is printed to the
- * standard error stream and a NULL pointer is returned.
  * @param size  The size of the returned primes array.
  * @param type  The type of the primes to generate, e.g. INT_PRIMES.
+ * 
+ * In case an error occurs the error message is printed to the
+ * standard error stream, the size is set to 0 and a NULL pointer
+ * is returned. In order to distinguish an "error" from "no primes
+ * found within [start, stop]" libprimesieve also sets the C errno
+ * variable (from <errno.h>) to EDOM if any error occurs. By
+ * checking errno after calling primesieve_generate_primes() users
+ * can reliably detect errors.
  */
 void* primesieve_generate_primes(uint64_t start, uint64_t stop, size_t* size, int type);
 
 /**
  * Get an array with the first n primes >= start.
+ * @param type  The type of the primes to generate, e.g. INT_PRIMES.
+ * 
  * In case an error occurs the error message is printed to the
  * standard error stream and a NULL pointer is returned.
- * @param type  The type of the primes to generate, e.g. INT_PRIMES.
+ * libprimesieve also sets the C errno variable (from <errno.h>)
+ * to EDOM if any error occurs, but checking if the return of
+ * primesieve_generate_n_primes() is a NULL pointer is slightly
+ * faster and just as reliable as checking errno.
  */
 void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type);
 
