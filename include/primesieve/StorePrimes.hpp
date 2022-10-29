@@ -75,6 +75,9 @@ inline void store_primes(uint64_t start,
   primesieve::iterator it(start, stop);
   it.generate_next_primes();
 
+  // primesieve::iterator throws an exception if one tries to
+  // generate primes > 2^64. Hence we must avoid calling
+  // generate_next_primes() after the largest 64-bit prime.
   uint64_t maxPrime64bits = 18446744073709551557ull;
   uint64_t limit = std::min(stop, maxPrime64bits - 1);
 
