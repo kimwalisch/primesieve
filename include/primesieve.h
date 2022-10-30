@@ -91,7 +91,7 @@ void* primesieve_generate_primes(uint64_t start, uint64_t stop, size_t* size, in
  * errno (after primesieve_generate_n_primes()) has over checking
  * if a NULL pointer has been returned, is that errno is not set
  * when calling primesieve_generate_n_primes(0, start, type) which
- * is legal (but useless) and which returns a NULL pointer.
+ * is valid (but useless) and which returns a NULL pointer.
  */
 void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type);
 
