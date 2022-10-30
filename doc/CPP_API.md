@@ -34,7 +34,7 @@ more detailed information.
 
 ## ```primesieve::iterator::next_prime()```
 
-By default ```primesieve::iterator::next_prime()``` generates primes ≥ 2 i.e. 2, 3, 5, 7, ...
+By default ```primesieve::iterator::next_prime()``` generates primes ≥ 0 i.e. 2, 3, 5, 7, ...
 
 * If you have specified a non-default start number in the ```primesieve::iterator```
   constructor or in the ```jump_to()``` method, then the first ```next_prime()``` invocation

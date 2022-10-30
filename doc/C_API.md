@@ -34,7 +34,7 @@ more detailed information.
 
 ## ```primesieve_next_prime()```
 
-By default ```primesieve_next_prime()``` generates primes ≥ 2 i.e. 2, 3, 5, 7, ...
+By default ```primesieve_next_prime()``` generates primes ≥ 0 i.e. 2, 3, 5, 7, ...
 
 * If you have specified a non-default start number using the ```primesieve_jump_to()```
   function, then the first ```primesieve_next_prime()``` call returns the first
