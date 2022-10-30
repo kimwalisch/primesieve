@@ -164,7 +164,7 @@ Option parseOption(int argc,
 
     if (isOption(opt.str))
     {
-      size_t pos = opt.str.find("=");
+      size_t pos = opt.str.find('=');
 
       // Option of type: --opt=N
       if (pos != std::string::npos)
