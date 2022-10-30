@@ -13,9 +13,11 @@ is the ```primesieve_iterator``` which lets you iterate over primes using the
 ```primesieve_next_prime()``` or ```primesieve_prev_prime()``` functions. 
 
 The functions of libprimesieve's C API are defined in the [```<primesieve.h>```](../include/primesieve.h)
-and [```<primesieve/iterator.h>```](../include/primesieve/iterator.h) header files. You can
-also build libprimesieve's [Doxygen API documentation](BUILD.md#api-documentation) if you need
-more detailed information.
+and [```<primesieve/iterator.h>```](../include/primesieve/iterator.h) header files. If you
+need detailed information about libprimesieve's function signatures, e.g. because you want to
+write libprimesieve bindings for another programming language, then I suggest you read
+the libprimesieve header files which also contain additional documentation about the function
+parameters and return values.
 
 ## Contents
 
