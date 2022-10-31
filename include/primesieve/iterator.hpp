@@ -30,12 +30,13 @@
   #define IF_UNLIKELY_PRIMESIEVE(x) if (x)
 #endif
 
-#if defined(max)
+#if defined(min) || defined(max)
+  #undef min
   #undef max
-  #if __cplusplus >= 202302L || defined(__GNUG__)
-    #warning "Undefining max() macro from <Windows.h>. Please define NOMINMAX before including <Windows.h>"
-  #elif defined(_MSC_VER)
-    #pragma message("Undefining max() macro from <Windows.h>. Please define NOMINMAX before including <Windows.h>")
+  #if __cplusplus >= 202302L
+    #warning "Undefining min()/max() macros. Please define NOMINMAX before including <Windows.h>"
+  #elif defined(_MSC_VER) || defined(__GNUG__)
+    #pragma message("Undefining min()/max() macros. Please define NOMINMAX before including <Windows.h>")
   #endif
 #endif
 
