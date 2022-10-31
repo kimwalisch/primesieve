@@ -30,6 +30,15 @@
   #define IF_UNLIKELY_PRIMESIEVE(x) if (x)
 #endif
 
+#if defined(max)
+  #undef max
+  #if __cplusplus >= 202302L || defined(__GNUG__)
+    #warning "Undefining max() macro from <Windows.h>. Please define NOMINMAX before including <Windows.h>"
+  #elif defined(_MSC_VER)
+    #pragma message("Undefining max() macro from <Windows.h>. Please define NOMINMAX before including <Windows.h>")
+  #endif
+#endif
+
 namespace primesieve {
 
 /// primesieve::iterator allows to easily iterate over primes both
