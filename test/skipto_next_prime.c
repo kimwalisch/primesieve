@@ -15,6 +15,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/// primesieve_skipto() is deprecated
+#if defined(__clang__)
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(__GNUC__)
+  #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+
 void check(int OK)
 {
   if (OK)
