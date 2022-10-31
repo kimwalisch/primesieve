@@ -33,12 +33,7 @@ void freeAllMemory(primesieve::iterator* it)
 namespace primesieve {
 
 iterator::iterator() noexcept :
-  i_(0),
-  size_(0),
-  start_(0),
-  stop_hint_(std::numeric_limits<uint64_t>::max()),
-  primes_(nullptr),
-  memory_(nullptr)
+  iterator(0)
 { }
 
 iterator::iterator(uint64_t start,
