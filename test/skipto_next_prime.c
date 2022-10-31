@@ -89,6 +89,13 @@ int main()
   printf("next_prime(18446744073709551556) = %" PRIu64, prime);
   check(prime == 18446744073709551557ull);
 
+// This test triggers a GCC bug if GCC version <= 12,
+// hence we avoid running this test with GCC <= 12.
+// See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=106627
+#if __GNUC__ >= 14 || \
+    !defined(__GNUC__) || \
+    defined(__clang__)
+
   for (i = 0; i < 100; i++)
   {
     old = prime;
@@ -96,6 +103,8 @@ int main()
     printf("next_prime(%" PRIu64 ") = %" PRIu64, old, prime);
     check(prime == 18446744073709551615ull);
   }
+
+#endif
 
   primesieve_free(primes);
   primesieve_free_iterator(&it);
