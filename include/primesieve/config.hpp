@@ -22,18 +22,6 @@ namespace config {
 ///
 constexpr uint64_t L1D_CACHE_BYTES = 32 << 10;
 
-/// Fallback sieve array size (in bytes) that will be used if
-/// the CpuInfo class is unable to detect the CPU's cache sizes
-/// at runtime and the user has not set the sieve size.
-/// @see get_sieve_size() in api.cpp.
-///
-/// The best performance is usually achieved using a sieve
-/// size that matches the CPU's L1 data cache size per core or
-/// that is slightly larger than the CPU's L1 data cache size
-/// but smaller than the L2 cache size per core.
-///
-constexpr uint64_t SIEVE_BYTES = L1D_CACHE_BYTES * 8;
-
 /// Number of sieving primes per Bucket in EratMedium.cpp and
 /// EratBig.cpp. A larger number of primes per bucket slightly
 /// increases memory usage, but on the other hand decreases branch

@@ -92,15 +92,18 @@ void Erat::init(uint64_t start,
 ///
 uint64_t Erat::getL1CacheSize()
 {
-  uint64_t l1CacheSize = cpuInfo.hasL1Cache() ? cpuInfo.l1CacheBytes() : config::L1D_CACHE_BYTES;
-  return inBetween(16 << 10, l1CacheSize, 8192 << 10);
+  if (cpuInfo.hasL1Cache())
+    return cpuInfo.l1CacheBytes();
+  else
+    return config::L1D_CACHE_BYTES;
 }
 
 void Erat::initAlgorithms(uint64_t maxSieveSize,
                           MemoryPool& memoryPool)
 {
-  uint64_t l1CacheSize = getL1CacheSize();
   uint64_t sqrtStop = isqrt(stop_);
+  uint64_t l1CacheSize = getL1CacheSize();
+  l1CacheSize = inBetween(16 << 10, l1CacheSize, 8192 << 10);
 
   // ================================================================
   // 1. sieveSize must satisfy: sieveSize % sizeof(uint64_t) == 0

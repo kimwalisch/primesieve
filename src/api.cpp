@@ -152,14 +152,17 @@ int get_sieve_size()
   if (sieve_size)
     return sieve_size;
 
-  // The CPU cache hierarchy has become very complex and
-  // hence accurately detecting the private L2 cache size has
-  // become very difficult. The problem is that there are now
-  // big.LITTLE CPUs and that L2 caches can now be private and
-  // shared at the same time e.g. in the IBM Telum CPU from
-  // 2021. Therefore, we don't want to use a sieve size that
-  // matches the CPU's L2 cache size, instead we use a sieve
-  // size that is 8x larger than the L1 cache size.
+  // The CPU cache hierarchy has become very complex and hence accurately
+  // detecting the private L2 cache size per core has become very
+  // difficult. The CPU information returned by the operating system is
+  // also unreliable, for new CPUs or niche CPUs the CPU info is
+  // frequently incorrect. Therefore, we don't want to use a sieve size
+  // that matches the CPU's L2 cache size because if we guessed wrong
+  // and our sieve array is too large the performance will deteriorate
+  // significantly due to excessive cache misses. In order to prevent
+  // this issue, we use a smaller sieve size that is 8x larger than the
+  // L1 cache size. This sieve size provides great performance on every
+  // CPU (architecture) that I have tested.
   // https://github.com/kimwalisch/primesieve/issues/103
   // https://github.com/kimwalisch/primesieve/issues/96
   if (cpuInfo.hasL1Cache() &&
@@ -190,7 +193,8 @@ int get_sieve_size()
   else
   {
     // Default sieve size in KiB
-    size_t size = config::SIEVE_BYTES >> 10;
+    size_t l1Size = config::L1D_CACHE_BYTES >> 10;
+    size_t size = l1Size * 8;
     size = inBetween(16, size, 8192);
     return (int) size;
   }
