@@ -27,24 +27,37 @@ struct IteratorData
   { }
   ~IteratorData()
   {
-    delete primeGenerator;
+    if (primeGenerator)
+      primeGenerator->~PrimeGenerator();
   }
   void deletePrimeGenerator()
   {
-    delete primeGenerator;
-    primeGenerator = nullptr;
+    if (primeGenerator)
+    {
+      primeGenerator->~PrimeGenerator();
+      primeGenerator = nullptr;
+    }
   }
   void deletePrimes()
   {
     primes.deallocate();
   }
+  void newPrimeGenerator(uint64_t start,
+                         uint64_t stop,
+                         PreSieve& preSieve)
+  {
+    // We use placement new to put the PrimeGenerator
+    // into an existing buffer. This way we don't
+    // need to allocate any new memory.
+    primeGenerator = new (primeGeneratorBuffer) PrimeGenerator(start, stop, preSieve);
+  }
   uint64_t stop;
   uint64_t dist = 0;
-  // Generate primes >= start number
   bool include_start_number = true;
   PrimeGenerator* primeGenerator = nullptr;
   pod_vector<uint64_t> primes;
   PreSieve preSieve;
+  alignas(alignof(PrimeGenerator)) char primeGeneratorBuffer[sizeof(PrimeGenerator)];
 };
 
 class IteratorHelper

@@ -129,7 +129,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       if (!iterData.primeGenerator)
       {
         IteratorHelper::updateNext(it->start, it->stop_hint, iterData);
-        iterData.primeGenerator = new PrimeGenerator(it->start, iterData.stop, iterData.preSieve);
+        iterData.newPrimeGenerator(it->start, iterData.stop, iterData.preSieve);
       }
 
       iterData.primeGenerator->fillNextPrimes(primes, &it->size);

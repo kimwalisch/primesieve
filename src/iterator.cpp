@@ -135,7 +135,7 @@ void iterator::generate_next_primes()
     if (!iterData.primeGenerator)
     {
       IteratorHelper::updateNext(start_, stop_hint_, iterData);
-      iterData.primeGenerator = new PrimeGenerator(start_, iterData.stop, iterData.preSieve);
+      iterData.newPrimeGenerator(start_, iterData.stop, iterData.preSieve);
     }
 
     iterData.primeGenerator->fillNextPrimes(primes, &size_);
