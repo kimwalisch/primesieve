@@ -193,8 +193,9 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
     do
     {
       IteratorHelper::updatePrev(it->start, it->stop_hint, iterData);
-      PrimeGenerator primeGenerator(it->start, iterData.stop, iterData.preSieve);
-      primeGenerator.fillPrevPrimes(primes, &it->size);
+      iterData.newPrimeGenerator(it->start, iterData.stop, iterData.preSieve);
+      iterData.primeGenerator->fillPrevPrimes(primes, &it->size);
+      iterData.deletePrimeGenerator();
       it->primes = primes.data();
       it->i = it->size;
     }
