@@ -93,9 +93,16 @@ void primesieve_jump_to(primesieve_iterator* it, uint64_t start, uint64_t stop_h
  *                   UINT64_MAX.
  */
 #if __STDC_VERSION__ >= 202301
-  [[deprecated("Use the new primesieve_jump_to() instead. Note that primesieve_jump_to() includes the start number, whereas primesieve_skipto() excludes the start number.")]]
+  [[deprecated("Use the new primesieve_jump_to() instead. "
+               "Attention: primesieve_jump_to() includes the start number, "
+               "whereas primesieve_skipto() excludes the start number. "
+               "See: https://github.com/kimwalisch/primesieve/blob/master/doc/C_API.md#primesieve_jump_to-since-primesieve-110")]]
 #elif __GNUC__ >= 5
-  __attribute__ ((deprecated("Use the new primesieve_jump_to() instead. Note that primesieve_jump_to() includes the start number, whereas primesieve_skipto() excludes the start number.")))
+  __attribute__((deprecated(
+               "Use the new primesieve_jump_to() instead. "
+               "Attention: primesieve_jump_to() includes the start number, "
+               "whereas primesieve_skipto() excludes the start number. "
+               "See: https://github.com/kimwalisch/primesieve/blob/master/doc/C_API.md#primesieve_jump_to-since-primesieve-110")))
 #endif
 void primesieve_skipto(primesieve_iterator* it, uint64_t start, uint64_t stop_hint);
 
