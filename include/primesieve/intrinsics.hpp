@@ -88,6 +88,12 @@ inline int popcnt64(uint64_t x)
 
 #endif
 
+// GCC/Clang & MSVC
+#if defined(__x86_64__) || \
+    defined(_M_X64)
+  #define IS_X64
+#endif
+
 // On x64 CPUs:
 // GCC & Clang enable TZCNT with -mbmi.
 // MSVC enables TZCNT with /arch:AVX2 or /arch:AVX512.
@@ -100,10 +106,10 @@ inline int popcnt64(uint64_t x)
 // most compilers & CPU architectures, except for:
 // 1) GCC & Clang on x64 without __BMI__.
 // 2) MSVC on x64 without __AVX2__.
-// Hence we avoid using std::countr_zero(x) in those 2 cases.
+// Hence on x64 CPUs we only use std::countr_zero(x) if
+// the compiler generates the TZCNT instruction.
 #if defined(HAS_CPP20_BIT_HEADER) && \
- ((!defined(__x86_64__) && !defined(_M_X64)) || \
-    defined(HAS_TZCNT))
+   (defined(HAS_TZCNT) || !defined(IS_X64))
 
 #define HAS_CTZ64
 #define CTZ64_SUPPORTS_ZERO
