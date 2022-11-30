@@ -22,6 +22,16 @@
   #define __has_cpp_attribute(x) 0
 #endif
 
+#if !defined(__has_include)
+  #define __has_include(x) 0
+#endif
+
+#if __cplusplus >= 202002L && \
+    __has_include(<version>)
+  // Required for __cpp_lib_unreachable
+  #include <version>
+#endif
+
 /// Enable expensive debugging assertions.
 /// These assertions enable e.g. bounds checks for the
 /// pod_vector and pod_array types.
@@ -75,8 +85,12 @@
   #define FALLTHROUGH
 #endif
 
-#if defined(__GNUC__) || \
-    __has_builtin(__builtin_unreachable)
+#if __cplusplus >= 202301L && \
+    defined(__cpp_lib_unreachable)
+  #include <utility>
+  #define UNREACHABLE std::unreachable()
+#elif defined(__GNUC__) || \
+      __has_builtin(__builtin_unreachable)
   #define UNREACHABLE __builtin_unreachable()
 #elif defined(_MSC_VER)
   #define UNREACHABLE __assume(0)

@@ -25,6 +25,7 @@
 ///
 
 #include <primesieve/CpuInfo.hpp>
+#include <primesieve/macros.hpp>
 
 #include <algorithm>
 #include <stdint.h>
@@ -33,12 +34,9 @@
 #include <string>
 #include <vector>
 
-#if defined(__APPLE__)
-  #if !defined(__has_include)
-    #define APPLE_SYSCTL
-  #elif __has_include(<sys/sysctl.h>)
-    #define APPLE_SYSCTL
-  #endif
+#if defined(__APPLE__) && \
+    __has_include(<sys/sysctl.h>)
+  #define APPLE_SYSCTL
 #endif
 
 #if defined(__i386__) || \
