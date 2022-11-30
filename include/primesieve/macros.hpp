@@ -26,11 +26,8 @@
   #define __has_include(x) 0
 #endif
 
-#if __cplusplus >= 202002L && \
-    __has_include(<version>)
-  // Required for __cpp_lib_unreachable
-  #include <version>
-#endif
+// Required for std::unreachable()
+#include <utility>
 
 /// Enable expensive debugging assertions.
 /// These assertions enable e.g. bounds checks for the
@@ -85,15 +82,18 @@
   #define FALLTHROUGH
 #endif
 
-#if __cplusplus >= 202301L && \
-    defined(__cpp_lib_unreachable)
-  #include <utility>
-  #define UNREACHABLE std::unreachable()
-#elif defined(__GNUC__) || \
-      __has_builtin(__builtin_unreachable)
+#if defined(__GNUC__) || \
+    __has_builtin(__builtin_unreachable)
   #define UNREACHABLE __builtin_unreachable()
 #elif defined(_MSC_VER)
   #define UNREACHABLE __assume(0)
+#elif __cplusplus >= 202301L && \
+      defined(__cpp_lib_unreachable)
+  // We prefer __builtin_unreachable() over std::unreachable()
+  // because GCC's std::unreachable() implementation uses
+  // __builtin_trap() instead of __builtin_unreachable() if
+  // _GLIBCXX_ASSERTIONS is defined.
+  #define UNREACHABLE std::unreachable()
 #else
   #define UNREACHABLE
 #endif
