@@ -14,18 +14,10 @@
 #include "macros.hpp"
 #include <stdint.h>
 
-#if !defined(__has_include)
-  #define __has_include(x) 0
-#endif
-
 #if __cplusplus >= 202002L && \
     __has_include(<bit>)
   #include <bit>
   #define HAS_CPP20_BIT_HEADER
-#endif
-
-#if !defined(__has_builtin)
-  #define __has_builtin(x) 0
 #endif
 
 // GCC & Clang
