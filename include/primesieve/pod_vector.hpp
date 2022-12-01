@@ -70,7 +70,8 @@ public:
   /// can be reused afterwards.
   void deallocate() noexcept
   {
-    this->~pod_vector<T>();
+    destroy(array_, end_);
+    Allocator().deallocate(array_, capacity());
     array_ = nullptr;
     end_ = nullptr;
     capacity_ = nullptr;
