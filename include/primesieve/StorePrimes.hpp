@@ -75,13 +75,13 @@ inline void store_primes(uint64_t start,
   if (start > stop)
     return;
 
-  using V = typename T::value_type;
-  if (stop > std::numeric_limits<V>::max())
-    throw primesieve_error("store_primes(): " + getTypeName<V>() + " is too narrow for generating primes up to " + std::to_string(stop));
-
   uint64_t maxPrime64bits = 18446744073709551557ull;
   if (start > maxPrime64bits)
     return;
+
+  using V = typename T::value_type;
+  if (stop > std::numeric_limits<V>::max())
+    throw primesieve_error("store_primes(): " + getTypeName<V>() + " is too narrow for generating primes up to " + std::to_string(stop));
 
   std::size_t size = primes.size() + prime_count_approx(start, stop);
   primes.reserve(size);
