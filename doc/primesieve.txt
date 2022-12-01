@@ -63,7 +63,7 @@ OPTIONS
 	Quiet mode, prints less output.
 
 *-s, --size*='SIZE'::
-	Set the size of the sieve array in KiB, 8 \<= 'SIZE' \<= 8192. By default
+	Set the size of the sieve array in KiB, 16 \<= 'SIZE' \<= 8192. By default
 	primesieve uses a sieve size that matches your CPU's L1 cache size (per
 	core) or is slightly smaller than your CPU's L2 cache size. This setting is
 	crucial for performance, on exotic CPUs primesieve sometimes fails to
