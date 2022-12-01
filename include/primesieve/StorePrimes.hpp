@@ -24,7 +24,7 @@
 #if defined(min) || defined(max)
   #undef min
   #undef max
-  #if __cplusplus >= 202302L
+  #if __cplusplus >= 202301L
     #warning "Undefining min()/max() macros. Please define NOMINMAX before including <Windows.h>"
   #elif defined(_MSC_VER) || defined(__GNUG__)
     #pragma message("Undefining min()/max() macros. Please define NOMINMAX before including <Windows.h>")
@@ -68,7 +68,7 @@ inline void store_primes(uint64_t start,
   #pragma warning(push)
   // Disable warning: conversion from X to Y, possible loss of data
   #pragma warning(disable : 4244)
-  // Disable warning C4018: '>': signed/unsigned mismatch 
+  // Disable warning C4018: '>': signed/unsigned mismatch
   #pragma warning(disable : 4018)
 #endif
 
@@ -113,7 +113,7 @@ inline void store_n_primes(uint64_t n,
   #pragma warning(push)
   // Disable warning: conversion from X to Y, possible loss of data
   #pragma warning(disable : 4244)
-  // Disable warning C4018: '>': signed/unsigned mismatch 
+  // Disable warning C4018: '>': signed/unsigned mismatch
   #pragma warning(disable : 4018)
 #endif
 
