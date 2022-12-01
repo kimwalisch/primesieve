@@ -79,6 +79,10 @@ inline void store_primes(uint64_t start,
   if (stop > std::numeric_limits<V>::max())
     throw primesieve_error("store_primes(): " + getTypeName<V>() + " is too narrow for generating primes up to " + std::to_string(stop));
 
+  uint64_t maxPrime64bits = 18446744073709551557ull;
+  if (start > maxPrime64bits)
+    return;
+
   std::size_t size = primes.size() + prime_count_approx(start, stop);
   primes.reserve(size);
 
@@ -88,7 +92,6 @@ inline void store_primes(uint64_t start,
   // primesieve::iterator throws an exception if one tries to
   // generate primes > 2^64. Hence we must avoid calling
   // generate_next_primes() after the largest 64-bit prime.
-  uint64_t maxPrime64bits = 18446744073709551557ull;
   uint64_t limit = std::min(stop, maxPrime64bits - 1);
 
   for (; it.primes_[it.size_ - 1] <= limit; it.generate_next_primes())
