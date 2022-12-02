@@ -6,12 +6,22 @@ set(PRIMESIEVE_SOVERSION "11.0.0")
 # Build options ######################################################
 
 option(BUILD_PRIMESIEVE  "Build primesieve binary"       ON)
-option(BUILD_SHARED_LIBS "Build shared libprimesieve"    ON)
 option(BUILD_STATIC_LIBS "Build static libprimesieve"    ON)
 option(BUILD_DOC         "Build C/C++ API documentation" OFF)
 option(BUILD_MANPAGE     "Regenerate man page using a2x" OFF)
 option(BUILD_EXAMPLES    "Build example programs"        OFF)
 option(BUILD_TESTS       "Build test programs"           OFF)
+
+# By default we enable building the shared libprimesieve library.
+# However, the Emscripten WebAssembly compiler does not
+# support shared libraries, hence we disable building the
+# shared libprimesieve when using Emscripten.
+get_property(SHARED_LIBS_SUPPORTED GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS)
+if(SHARED_LIBS_SUPPORTED)
+    option(BUILD_SHARED_LIBS "Build shared libprimesieve" ON)
+else()
+    option(BUILD_SHARED_LIBS "Build shared libprimesieve" OFF)
+endif()
 
 option(WITH_MULTIARCH       "Enable runtime dispatching to fastest supported CPU instruction set" ON)
 option(WITH_MSVC_CRT_STATIC "Link primesieve.lib with /MT instead of the default /MD" OFF)

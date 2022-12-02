@@ -1,4 +1,4 @@
-Changes in version 11.0, 16/10/2022
+Changes in version 11.0, 02/12/2022
 ===================================
 
 The primesieve major version has been increased from 8 to 11 in order
@@ -22,6 +22,7 @@ primesieve_skipto(iter, start, stop) excludes the start number
 requires up to 2x less start number corrections (e.g. start-1) compared
 to primesieve_skipto().
 
+* CMakeLists.txt: Improve Emscripten WebAssembly support.
 * iterator.cpp: Add new primesieve::iterator::jump_to().
 * iterator.cpp: Fix use after free in primesieve::iterator::clear().
 * iterator-c.cpp: Add new primesieve_jump_to().
