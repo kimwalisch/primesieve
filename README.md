@@ -215,7 +215,7 @@ primesieve natively supports C and C++ and has bindings available for:
     </tr>
     <tr>
         <td><b>Python:</b></td>
-        <td><a href="https://github.com/kimwalisch/primesieve-python">primesieve-python</a></td>
+        <td><a href="https://github.com/shlomif/primesieve-python">primesieve-python</a></td>
     </tr>
     <tr>
         <td><b>Raku:</b></td>
