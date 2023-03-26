@@ -54,7 +54,7 @@ By default ```primesieve_next_prime()``` generates primes ≥ 0 i.e. 2, 3, 5, 7,
 #include <inttypes.h>
 #include <stdio.h>
 
-int main()
+int main(void)
 {
   primesieve_iterator it;
   primesieve_init(&it);
@@ -95,7 +95,7 @@ up to this limit.
 #include <inttypes.h>
 #include <stdio.h>
 
-int main()
+int main(void)
 {
   primesieve_iterator it;
   primesieve_init(&it);
@@ -137,7 +137,7 @@ correct the start number in most cases using e.g.
 #include <inttypes.h>
 #include <stdio.h>
 
-int main()
+int main(void)
 {
   primesieve_iterator it;
   primesieve_init(&it);
@@ -173,7 +173,7 @@ Before using ```primesieve_prev_prime()``` you must first change the start numbe
 #include <inttypes.h>
 #include <stdio.h>
 
-int main()
+int main(void)
 {
   primesieve_iterator it;
   primesieve_init(&it);
@@ -205,7 +205,7 @@ may be one of: ```SHORT_PRIMES```, ```USHORT_PRIMES```, ```INT_PRIMES```, ```UIN
 #include <primesieve.h>
 #include <stdio.h>
 
-int main()
+int main(void)
 {
   uint64_t start = 0;
   uint64_t stop = 1000;
@@ -236,7 +236,7 @@ be one of: ```SHORT_PRIMES```, ```USHORT_PRIMES```, ```INT_PRIMES```, ```UINT_PR
 #include <primesieve.h>
 #include <stdio.h>
 
-int main()
+int main(void)
 {
   uint64_t n = 1000;
   uint64_t start = 0;
@@ -264,7 +264,7 @@ available CPU cores by default.
 #include <inttypes.h>
 #include <stdio.h>
 
-int main()
+int main(void)
 {
   /* primesieve_count_primes(start, stop) */
   uint64_t count = primesieve_count_primes(0, 1000);
@@ -286,7 +286,7 @@ multi-threaded and uses all available CPU cores by default.
 #include <inttypes.h>
 #include <stdio.h>
 
-int main()
+int main(void)
 {
   /* primesieve_nth_prime(n, start) */
   uint64_t n = 25;
@@ -311,7 +311,7 @@ and the corresponding error message is printed to the standard error stream.
 #include <inttypes.h>
 #include <stdio.h>
 
-int main()
+int main(void)
 {
   uint64_t count = primesieve_count_primes(0, 1000);
 
@@ -449,7 +449,7 @@ prime sum results together in a thread safe manner.
 #include <stdio.h>
 #include <omp.h>
 
-int main()
+int main(void)
 {
   uint64_t sum = 0;
   uint64_t dist = 1e10;

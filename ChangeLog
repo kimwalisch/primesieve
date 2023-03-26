@@ -1,3 +1,10 @@
+Changes in version 11.1, 26/13/2023
+===================================
+
+* primesieve.h: Fix -Wstrict-prototypes warning.
+* examples/c/*.c: Fix -Wstrict-prototypes warning.
+* test/*.c: Fix -Wstrict-prototypes warning.
+
 Changes in version 11.0, 02/12/2022
 ===================================
 

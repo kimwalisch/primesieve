@@ -35,7 +35,7 @@ void check(int OK)
   }
 }
 
-int main()
+int main(void)
 {
   size_t size = 0;
   uint64_t* primes = (uint64_t*) primesieve_generate_primes(0, 100000, &size, UINT64_PRIMES);

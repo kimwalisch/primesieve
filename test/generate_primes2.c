@@ -61,7 +61,7 @@ void check(int OK)
   }
 }
 
-int main()
+int main(void)
 {
   size_t i;
   size_t size = 0;

@@ -4,7 +4,7 @@
 #include <primesieve.h>
 #include <stdio.h>
 
-int main()
+int main(void)
 {
   uint64_t start = 0;
   uint64_t stop = 1000;

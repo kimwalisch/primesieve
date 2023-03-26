@@ -26,7 +26,7 @@ void check(int OK)
   }
 }
 
-int main()
+int main(void)
 {
   primesieve_iterator it;
   primesieve_init(&it);

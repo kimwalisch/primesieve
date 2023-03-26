@@ -302,12 +302,12 @@ void primesieve_print_sextuplets(uint64_t start, uint64_t stop)
   }
 }
 
-int primesieve_get_sieve_size()
+int primesieve_get_sieve_size(void)
 {
   return get_sieve_size();
 }
 
-int primesieve_get_num_threads()
+int primesieve_get_num_threads(void)
 {
   return get_num_threads();
 }
@@ -322,12 +322,12 @@ void primesieve_set_num_threads(int num_threads)
   set_num_threads(num_threads);
 }
 
-uint64_t primesieve_get_max_stop()
+uint64_t primesieve_get_max_stop(void)
 {
   return get_max_stop();
 }
 
-const char* primesieve_version()
+const char* primesieve_version(void)
 {
   return PRIMESIEVE_VERSION;
 }
