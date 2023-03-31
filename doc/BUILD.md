@@ -93,6 +93,11 @@ make -j
 ctest
 ```
 
+For developers hacking on primesieve's source code the
+[test/README.md](../test/README.md) document contains more information
+about primesieve testing such as testing in debug mode and testing
+using GCC/Clang sanitizers.
+
 ## C/C++ examples
 
 Open a terminal, cd into the primesieve directory and run:
