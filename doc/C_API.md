@@ -519,6 +519,17 @@ export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
 cl /O2 /EHsc /MD primes.c /I "path\to\primesieve\include" /link "path\to\primesieve.lib"
 ```
 
+# pkg-config support
+
+primesieve also has support for the
+[pkg-config](https://en.wikipedia.org/wiki/Pkg-config) program which
+allows to easily compile C and C++ programs depending on libprimesieve
+without having to care about the library and include paths:
+
+```sh
+cc -O3 main.c -o main $(pkg-config --libs --cflags primesieve)
+```
+
 # CMake support
 
 If you are using the CMake build system to compile your program and
