@@ -32,6 +32,7 @@ parameters and return values.
 * [Performance tips](#performance-tips)
 * [libprimesieve multi-threading](#libprimesieve-multi-threading)
 * [Compiling and linking](#compiling-and-linking)
+* [pkg-config support](#pkg-config-support)
 * [CMake support](#cmake-support)
 
 ## ```primesieve::iterator::next_prime()```
