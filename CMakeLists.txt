@@ -311,7 +311,7 @@ if(BUILD_PRIMESIEVE)
             DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 endif()
 
-# Install primesieve.pc (pkg-config) #################################
+# Install primesieve.pc (pkgconf) ####################################
 
 configure_file(primesieve.pc.in primesieve.pc @ONLY)
 
