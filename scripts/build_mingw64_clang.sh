@@ -5,13 +5,13 @@
 # Builds a primesieve release binary that is statically linked
 # and ready for distribution.
 
-# Prerequisites:
+# Prerequisites arm64:
 # 1) Install MSYS2 x64 (or arm64 if available)
 # 2) Open C:/msys64/clangarm64.exe
 # 3) pacman -Syu (exit then run it again)
 # 4) pacman -S mingw-w64-clang-aarch64-clang mingw-w64-clang-aarch64-openmp make cmake git zip unzip
 # 5) cd primesieve
-# 6) scripts/build_mingw64_clang.sh x64
+# 6) scripts/build_mingw64_clang.sh arm64
 
 if [ $# -ne 1 ]
 then
@@ -63,7 +63,7 @@ clang++ -static -O3 -DNDEBUG -D_WIN32_WINNT=0x0A00 -Wall -Wextra -pedantic -I ..
 strip primesieve.exe
 
 # Create a release zip archive
-wget https://github.com/kimwalisch/primesieve/releases/download/v6.1/primesieve-11.0-win-$arch.zip
+wget https://github.com/kimwalisch/primesieve/releases/download/v11.0/primesieve-11.0-win-$arch.zip
 unzip primesieve-11.0-win-$arch.zip -d primesieve-$VERSION-win-$arch
 rm primesieve-11.0-win-$arch.zip
 
