@@ -1,9 +1,11 @@
-Changes in version 11.1, 26/13/2023
+Changes in version 11.1, 06/05/2023
 ===================================
 
 * primesieve.h: Fix -Wstrict-prototypes warning.
 * examples/c/*.c: Fix -Wstrict-prototypes warning.
 * test/*.c: Fix -Wstrict-prototypes warning.
+* scripts/build_mingw64_clang.sh: Bash script for building primesieve
+  Windows x64 & arm64 release binaries using MSYS2/Mingw-w64.
 
 Changes in version 11.0, 02/12/2022
 ===================================
