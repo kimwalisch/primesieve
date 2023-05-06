@@ -36,7 +36,7 @@ FULL_DATE=$(date +'%B %d, %Y')
 YEAR=$(date +'%Y')
 
 cd include
-VERSION=$(grep "primesieve_VERSION " primesieve.hpp | cut -f2 -d'"')
+VERSION=$(grep "PRIMESIEVE_VERSION " primesieve.hpp | cut -f2 -d'"')
 cd ..
 
 ####################################################################
