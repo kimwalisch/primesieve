@@ -6,12 +6,14 @@
 # and ready for distribution.
 
 # Prerequisites arm64:
-# 1) Install MSYS2 x64 (or arm64 if available)
-# 2) Open C:/msys64/clangarm64.exe
-# 3) pacman -Syu (exit then run it again)
-# 4) pacman -S mingw-w64-clang-aarch64-clang mingw-w64-clang-aarch64-openmp make cmake git zip unzip
-# 5) cd primesieve
-# 6) scripts/build_mingw64_clang.sh arm64
+# 1) Install a trial version of both Parallels & Windows on a MacBook ARM64.
+# 2) No need to purchase/register Parallels & Windows, keep using the trial version.
+# 3) Install MSYS2 x64 (or arm64 if available)
+# 4) Open C:/msys64/clangarm64.exe
+# 5) pacman -Syu (exit then run it again)
+# 6) pacman -S mingw-w64-clang-aarch64-clang mingw-w64-clang-aarch64-openmp make cmake git zip unzip
+# 7) cd primesieve
+# 8) scripts/build_mingw64_clang.sh arm64
 
 if [ $# -ne 1 ]
 then
