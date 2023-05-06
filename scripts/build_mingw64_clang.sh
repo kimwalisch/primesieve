@@ -88,14 +88,23 @@ sed -i "3 s/.*/Copyright \(c\) 2010 - $YEAR, Kim Walisch\./" COPYING
 zip primesieve-$VERSION-win-$arch.zip primesieve.exe README.txt COPYING
 cp primesieve-$VERSION-win-$arch.zip ..
 
+./primesieve -v
+echo ""
+echo ""
+
+./primesieve --cpu-info
+echo ""
+echo ""
+
 ./primesieve --test
 echo ""
 echo ""
-./primesieve 1e11 -s
 
-cd ..
+./primesieve 1e11
+echo ""
+echo ""
 
 ####################################################################
 
-echo ""
 echo "Release binary built successfully!"
+cd ..
