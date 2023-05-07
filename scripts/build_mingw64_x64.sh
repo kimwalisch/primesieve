@@ -45,7 +45,7 @@ git pull
 mkdir build-release
 cd build-release
 
-g++ -static -O3 -DNDEBUG -D_WIN32_WINNT=0x0A00 -Wall -Wextra -pedantic -I ../include ../src/*.cpp ../src/app/*.cpp -o primesieve.exe
+g++ -static -O3 -flto -DNDEBUG -D_WIN32_WINNT=0x0A00 -Wall -Wextra -pedantic -I ../include ../src/*.cpp ../src/app/*.cpp -o primesieve.exe
 strip primesieve.exe
 
 # Create a release zip archive
