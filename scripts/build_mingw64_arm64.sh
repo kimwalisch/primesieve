@@ -12,7 +12,7 @@
 # 5) pacman -Syu (exit then run it again)
 # 6) pacman -S mingw-w64-clang-aarch64-clang mingw-w64-clang-aarch64-openmp make git zip unzip
 # 7) git clone https://github.com/kimwalisch/primesieve.git
-# 8) scripts/build_mingw64_arm64.sh arm64
+# 8) scripts/build_mingw64_arm64.sh
 
 # Exit if any error occurs
 set -e
