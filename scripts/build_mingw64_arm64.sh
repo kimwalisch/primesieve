@@ -1,38 +1,18 @@
 #!/bin/bash
 
-# Usage: scripts/build_mingw64_clang.sh ARCH
-# @ARCH: either x64 or arm64
+# Usage: scripts/build_mingw64_arm64.sh
 # Builds a primesieve release binary that is statically linked
 # and ready for distribution.
-
-# === Prerequisites x64 ===
-# 1) Install MSYS2 x64
-# 2) pacman -Syu (exit then run it again)
-# 3) pacman -S mingw-w64-x86_64-clang mingw-w64-x86_64-openmp make cmake git zip unzip
-# 4) git clone https://github.com/kimwalisch/primesieve.git
-# 5) scripts/build_mingw64_clang.sh x64
 
 # === Prerequisites arm64 ===
 # 1) Install a trial version of both Parallels & Windows on a MacBook ARM64.
 # 2) No need to purchase/register Parallels & Windows, keep using the trial version.
-# 3) Install MSYS2 x64 (or arm64 if available)
+# 3) Install MSYS2 x64
 # 4) Open C:/msys64/clangarm64.exe
 # 5) pacman -Syu (exit then run it again)
-# 6) pacman -S mingw-w64-clang-aarch64-clang mingw-w64-clang-aarch64-openmp make cmake git zip unzip
+# 6) pacman -S mingw-w64-clang-aarch64-clang mingw-w64-clang-aarch64-openmp make git zip unzip
 # 7) git clone https://github.com/kimwalisch/primesieve.git
-# 8) scripts/build_mingw64_clang.sh arm64
-
-if [ $# -ne 1 ]
-then
-    echo "Usage examples:"
-    echo "$ scripts/build_mingw64_clang.sh x64"
-    echo "Build primesieve for the x64 CPU architecture."
-    echo "$ scripts/build_mingw64_clang.sh arm64"
-    echo "Build primesieve for the arm64 CPU architecture."
-    exit 1
-fi
-
-arch=$1
+# 8) scripts/build_mingw64_arm64.sh arm64
 
 # Exit if any error occurs
 set -e
@@ -72,19 +52,19 @@ clang++ -static -O3 -DNDEBUG -D_WIN32_WINNT=0x0A00 -Wall -Wextra -pedantic -I ..
 strip primesieve.exe
 
 # Create a release zip archive
-wget https://github.com/kimwalisch/primesieve/releases/download/v11.0/primesieve-11.0-win-$arch.zip
-unzip primesieve-11.0-win-$arch.zip -d primesieve-$VERSION-win-$arch
-rm primesieve-11.0-win-$arch.zip
+wget https://github.com/kimwalisch/primesieve/releases/download/v11.0/primesieve-11.0-win-arm64.zip
+unzip primesieve-11.0-win-arm64.zip -d primesieve-$VERSION-win-arm64
+rm primesieve-11.0-win-arm64.zip
 
 echo ""
 echo ""
-echo "Old file size: $(ls -l --block-size=K primesieve-$VERSION-win-$arch/primesieve.exe)"
+echo "Old file size: $(ls -l --block-size=K primesieve-$VERSION-win-arm64/primesieve.exe)"
 echo "New file size: $(ls -l --block-size=K primesieve.exe)"
 echo ""
 echo ""
 
-mv -f primesieve.exe primesieve-$VERSION-win-$arch
-cd primesieve-$VERSION-win-$arch
+mv -f primesieve.exe primesieve-$VERSION-win-arm64
+cd primesieve-$VERSION-win-arm64
 sed -i "1 s/.*/primesieve $VERSION/" README.txt
 sed -i "2 s/.*/$FULL_DATE/" README.txt
 sed -i "3 s/.*/Copyright \(c\) 2010 - $YEAR, Kim Walisch\./" COPYING
@@ -94,8 +74,8 @@ sed -i "3 s/.*/Copyright \(c\) 2010 - $YEAR, Kim Walisch\./" COPYING
 [ "$(sed -n '2p' < README.txt)" = "$FULL_DATE" ] || handle_error "failed updating README.txt"
 [ "$(sed -n '3p' < COPYING)" = "Copyright (c) 2010 - $YEAR, Kim Walisch." ] || handle_error "failed updating COPYING"
 
-zip primesieve-$VERSION-win-$arch.zip primesieve.exe README.txt COPYING
-cp primesieve-$VERSION-win-$arch.zip ..
+zip primesieve-$VERSION-win-arm64.zip primesieve.exe README.txt COPYING
+cp primesieve-$VERSION-win-arm64.zip ..
 
 ./primesieve -v
 echo ""
