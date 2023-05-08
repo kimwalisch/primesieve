@@ -11,5 +11,5 @@ Run the commands below from the root primesieve directory.
 
 ```sh
 cmake -DBUILD_EXAMPLES=ON .
-make -j
+cmake --build . --parallel
 ```

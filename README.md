@@ -124,8 +124,8 @@ and CMake ≥ 3.4.
 
 ```sh
 cmake .
-make -j
-sudo make install
+cmake --build . --parallel
+sudo cmake --install .
 sudo ldconfig
 ```
 

@@ -74,7 +74,7 @@ done
 # Update version number in man page
 echo ""
 cmake .
-make -j
+cmake --build . --parallel
 echo ""
 
 echo "Version has been updated!"

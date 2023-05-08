@@ -4,7 +4,7 @@ Run the commands below from the primesieve root directory.
 
 ```bash
 cmake . -DBUILD_TESTS=ON
-make -j
+cmake --build . --parallel
 ctest
 ```
 
@@ -19,7 +19,7 @@ the screen. This helps to quickly identify newly introduced bugs.
 ```bash
 # Run commands from primesieve root directory
 cmake . -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-O1 -Wall -Wextra -pedantic" -DCMAKE_C_FLAGS="-O1 -Wall -Wextra -pedantic"
-make -j
+cmake --build . --parallel
 ctest --output-on-failure
 ```
 
@@ -31,6 +31,6 @@ as this helps find undefined behavior bugs and data races.
 ```bash
 # Run commands from primesieve root directory
 cmake . -DBUILD_TESTS=ON -DCMAKE_CXX_FLAGS="-g -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -Wall -Wextra -pedantic" -DCMAKE_C_FLAGS="-g -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -Wall -Wextra -pedantic"
-make -j
+cmake --build . --parallel
 ctest --output-on-failure
 ```

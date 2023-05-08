@@ -33,8 +33,8 @@ Open a terminal, cd into the primesieve directory and run:
 
 ```bash
 cmake .
-make -j
-sudo make install
+cmake --build . --parallel
+sudo cmake --install .
 sudo ldconfig
 ```
 
@@ -44,8 +44,7 @@ Open a terminal, cd into the primesieve directory and run:
 
 ```bash
 cmake -G "Unix Makefiles" .
-make -j
-sudo make install
+cmake --build . --parallel
 ```
 
 ## Microsoft Visual C++
@@ -61,7 +60,7 @@ cmake -G "Visual Studio 17 2022" .
 cmake --build . --config Release
 
 # Optionally install using Admin shell
-cmake --build . --config Release --target install
+cmake --install . --config Release
 ```
 
 ## CMake configure options
@@ -89,7 +88,7 @@ Open a terminal, cd into the primesieve directory and run:
 
 ```bash
 cmake -DBUILD_TESTS=ON .
-make -j
+cmake --build . --parallel
 ctest
 ```
 
@@ -104,7 +103,7 @@ Open a terminal, cd into the primesieve directory and run:
 
 ```bash
 cmake -DBUILD_EXAMPLES=ON .
-make -j
+cmake --build . --parallel
 ```
 
 ## API documentation
@@ -115,7 +114,7 @@ you need to have installed the ```doxygen```, ```doxygen-latex``` and
 
 ```bash
 cmake -DBUILD_DOC=ON .
-make doc
+cmake --build . --target doc
 ```
 
 ## Man page regeneration
@@ -129,5 +128,5 @@ regenerate the man page.
 ```bash
 # Build man page using a2x program (asciidoc package)
 cmake -DBUILD_MANPAGE=ON .
-make -j
+cmake --build . --parallel
 ```
