@@ -42,10 +42,6 @@ to install ```libprimesieve-dev``` or ```libprimesieve-devel```.
         <td><code>sudo pacman -S primesieve</code></td>
     </tr>
     <tr>
-        <td><b>Chocolatey:</b></td>
-        <td><code>choco install primesieve</code></td>
-    </tr>
-    <tr>
         <td><b>Debian/Ubuntu:</b></td>
         <td><code>sudo apt install primesieve</code></td>
     </tr>
