@@ -20,7 +20,7 @@
 ///         Pre-sieving provides a speedup of up to 30% when
 ///         sieving the primes < 10^10 using primesieve.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -197,9 +197,9 @@ void andBuffers(const uint8_t* __restrict buf0,
                 std::size_t bytes)
 {
   std::size_t i = 0;
-  std::size_t limit16 = bytes - bytes % sizeof(uint8x16_t);
+  std::size_t limit = bytes - bytes % sizeof(uint8x16_t);
 
-  for (; i < limit16; i += sizeof(uint8x16_t))
+  for (; i < limit; i += sizeof(uint8x16_t))
   {
     vst1q_u8(&output[i],
         vandq_u8(
