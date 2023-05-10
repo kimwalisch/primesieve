@@ -35,6 +35,12 @@
 #include <cmath>
 #include <initializer_list>
 
+#if (defined(__ARM_NEON) || defined(__aarch64__)) && \
+     __has_include(<arm_neon.h>)
+  #include <arm_neon.h>
+  #define HAS_ARM_NEON
+#endif
+
 using std::copy_n;
 using primesieve::pod_array;
 
@@ -170,22 +176,68 @@ const uint64_t buffersDist =
        (79 * 97) * 30 +
        (83 * 89) * 30;
 
-void andBuffers(const uint8_t* __restrict buf1,
+#if defined(HAS_ARM_NEON)
+
+/// Homebrew compiles its C/C++ packages on macOS using Clang -Os
+/// (instead of -O2 or -O3) which does not auto-vectorize our simple
+/// loop with Bitwise AND. If this loop is not vectorized this
+/// deteriorates the performance of primesieve by up to 40%. As a
+/// workaround for this Homebrew issue we have manually vectorized
+/// the Bitwise AND loop using ARM NEON.
+///
+void andBuffers(const uint8_t* __restrict buf0,
+                const uint8_t* __restrict buf1,
                 const uint8_t* __restrict buf2,
                 const uint8_t* __restrict buf3,
                 const uint8_t* __restrict buf4,
                 const uint8_t* __restrict buf5,
                 const uint8_t* __restrict buf6,
                 const uint8_t* __restrict buf7,
-                const uint8_t* __restrict buf8,
                 uint8_t* __restrict output,
                 std::size_t bytes)
 {
-  // This loop should be auto-vectorized
-  for (std::size_t i = 0; i < bytes; i++)
-    output[i] = buf1[i] & buf2[i] & buf3[i] & buf4[i]
-              & buf5[i] & buf6[i] & buf7[i] & buf8[i];
+  std::size_t i = 0;
+  std::size_t limit16 = bytes - bytes % sizeof(uint8x16_t);
+
+  for (; i < limit16; i += sizeof(uint8x16_t))
+  {
+    vst1q_u8(&output[i],
+        vandq_u8(
+            vandq_u8(
+                vandq_u8(vld1q_u8(&buf0[i]), vld1q_u8(&buf1[i])),
+                vandq_u8(vld1q_u8(&buf2[i]), vld1q_u8(&buf3[i]))),
+            vandq_u8(
+                vandq_u8(vld1q_u8(&buf4[i]), vld1q_u8(&buf5[i])),
+                vandq_u8(vld1q_u8(&buf6[i]), vld1q_u8(&buf7[i])))));
+  }
+
+  for (; i < bytes; i++)
+    output[i] = buf0[i] & buf1[i] & buf2[i] & buf3[i] &
+                buf4[i] & buf5[i] & buf6[i] & buf7[i];
 }
+
+#else
+
+void andBuffers(const uint8_t* __restrict buf0,
+                const uint8_t* __restrict buf1,
+                const uint8_t* __restrict buf2,
+                const uint8_t* __restrict buf3,
+                const uint8_t* __restrict buf4,
+                const uint8_t* __restrict buf5,
+                const uint8_t* __restrict buf6,
+                const uint8_t* __restrict buf7,
+                uint8_t* __restrict output,
+                std::size_t bytes)
+{
+  // This loop will get auto-vectorized if compiled with GCC/Clang
+  // using either -O2 or -O3. (But be careful e.g. Clang15 -Os
+  // does not auto-vectorized this loop)
+  for (std::size_t i = 0; i < bytes; i++)
+    output[i] = buf0[i] & buf1[i] & buf2[i] & buf3[i] &
+                buf4[i] & buf5[i] & buf6[i] & buf7[i];
+}
+
+#endif
 
 } // namespace
 

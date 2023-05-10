@@ -1,6 +1,7 @@
-Changes in version 11.1, 07/05/2023
+Changes in version 11.1, 10/05/2023
 ===================================
 
+* PreSieve.cpp: Vectorize loop using ARM NEON.
 * primesieve.h: Fix -Wstrict-prototypes warning.
 * examples/c/*.c: Fix -Wstrict-prototypes warning.
 * test/*.c: Fix -Wstrict-prototypes warning.
