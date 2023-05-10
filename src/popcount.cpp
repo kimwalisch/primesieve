@@ -2,19 +2,7 @@
 /// @file   popcount.cpp
 /// @brief  Quickly count the number of 1 bits in an array.
 ///
-///         The "Harley-Seal popcount" algorithm that we use is a pure
-///         integer algorithm that does not use the POPCNT instruction
-///         present on many CPU architectures. There are a few reasons
-///         why we do not use the POPCNT instruction here:
-///
-///         1) This algorithm is not really a bottleneck.
-///         2) This algorithm is portable (unlike POPCNT on x64)
-///            and very fast, its speed is very close to POPCNT.
-///         3) Recent compilers can autovectorize this loop (e.g
-///            using AVX512 on x64 CPUs) in which case this algorithm
-///            will even outperform the POPCNT instruction.
-///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -23,6 +11,50 @@
 #include <primesieve/intrinsics.hpp>
 #include <primesieve/forward.hpp>
 #include <stdint.h>
+
+/// For CPU architectures that have a POPCNT instruction, we use
+/// that to count the number of 1 bits in the sieve array as
+/// this will generally provide the best performance. For CPU
+/// architectures without POPCNT we use the portable Harley-Seal
+/// popcount algorithm further down.
+///
+#if defined(__POPCNT__) /* x64 */ || \
+   (defined(__ARM_NEON) || defined(__aarch64__))
+
+namespace primesieve {
+
+uint64_t popcount(const uint64_t* array, uint64_t size)
+{
+  uint64_t i;
+  uint64_t limit = size - size % 4;
+  uint64_t cnt = 0;
+
+  for(i = 0; i < limit; i += 4)
+  {
+    cnt += popcnt64(array[i+0]);
+    cnt += popcnt64(array[i+1]);
+    cnt += popcnt64(array[i+2]);
+    cnt += popcnt64(array[i+3]);
+  }
+  for(; i < size; i++)
+    cnt += popcnt64(array[i]);
+
+  return cnt;
+}
+
+} // namespace
+
+#else
+
+/// The "Harley-Seal popcount" algorithm that we use is a pure
+/// integer algorithm that does not use the POPCNT instruction
+/// present on many CPU architectures.
+///
+/// 1) This algorithm is portable (unlike POPCNT on x64)
+///    and very fast, its speed is very close to POPCNT.
+/// 2) Recent compilers can autovectorize this loop (e.g
+///    using AVX512 on x64 CPUs) in which case this algorithm
+///    will even outperform the POPCNT instruction.
 
 namespace {
 
@@ -88,3 +120,5 @@ uint64_t popcount(const uint64_t* array, uint64_t size)
 }
 
 } // namespace
+
+#endif
