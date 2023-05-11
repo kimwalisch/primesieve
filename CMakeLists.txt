@@ -23,8 +23,9 @@ else()
     option(BUILD_SHARED_LIBS "Build shared libprimesieve" OFF)
 endif()
 
-option(WITH_MULTIARCH       "Enable runtime dispatching to fastest supported CPU instruction set" ON)
-option(WITH_MSVC_CRT_STATIC "Link primesieve.lib with /MT instead of the default /MD" OFF)
+option(WITH_AUTO_VECTORIZATION "Enable compiler auto-vectorization" ON)
+option(WITH_MULTIARCH          "Enable runtime dispatching to fastest supported CPU instruction set" ON)
+option(WITH_MSVC_CRT_STATIC    "Link primesieve.lib with /MT instead of the default /MD" OFF)
 
 # libprimesieve sanity check #########################################
 
@@ -94,6 +95,12 @@ endif()
 
 include("${PROJECT_SOURCE_DIR}/cmake/libatomic.cmake")
 
+# Check if compiler supports auto vectorization ######################
+
+if(WITH_AUTO_VECTORIZATION)
+    include("${PROJECT_SOURCE_DIR}/cmake/auto_vectorization.cmake")
+endif()
+
 # Check if compiler supports x64 multiarch ###########################
 
 if(WITH_MULTIARCH)
@@ -113,6 +120,7 @@ if(BUILD_SHARED_LIBS)
     list(GET SOVERSION_LIST 0 PRIMESIEVE_SOVERSION_MAJOR)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
+    target_compile_options(libprimesieve PRIVATE ${FTREE_VECTORIZE_FLAG} ${FVECT_COST_MODEL_FLAG})
 
     if(multiarch_popcnt_bmi)
         target_compile_definitions(libprimesieve PRIVATE "MULTIARCH_POPCNT_BMI")
@@ -159,6 +167,7 @@ if(BUILD_STATIC_LIBS)
     add_library(libprimesieve-static STATIC ${LIB_SRC})
     set_target_properties(libprimesieve-static PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${LIBATOMIC})
+    target_compile_options(libprimesieve-static PRIVATE ${FTREE_VECTORIZE_FLAG} ${FVECT_COST_MODEL_FLAG})
 
     if(multiarch_popcnt_bmi)
         target_compile_definitions(libprimesieve-static PRIVATE "MULTIARCH_POPCNT_BMI")

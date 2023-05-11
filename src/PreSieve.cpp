@@ -230,8 +230,10 @@ void andBuffers(const uint8_t* __restrict buf0,
                 std::size_t bytes)
 {
   // This loop will get auto-vectorized if compiled with GCC/Clang
-  // using either -O2 or -O3. (But be careful e.g. Clang15 -Os
-  // does not auto-vectorized this loop)
+  // using -O3. Using GCC -O2 does not auto-vectorize this loop
+  // because -O2 uses the "very-cheap" vector cost model. To fix
+  // this issue we enable -ftree-vectorize -fvect-cost-model=dynamic
+  // if the compiler supports it in auto_vectorization.cmake.
   for (std::size_t i = 0; i < bytes; i++)
     output[i] = buf0[i] & buf1[i] & buf2[i] & buf3[i] &
                 buf4[i] & buf5[i] & buf6[i] & buf7[i];
