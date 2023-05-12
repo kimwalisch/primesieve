@@ -1,6 +1,14 @@
 Changes in version 11.1, 12/05/2023
 ===================================
 
+When primesieve is distributed via distro package managers, it is often
+not compiled using the highest optimization level -O3. Because of this
+primesieve's pre-sieving algorithm was not auto-vectorized in many
+cases. As a workaround for this issue I have now manually vectorized
+the pre-sieving algorithm for x64 CPUs (using portable SSE2) and for
+ARM64 CPUs (using portable ARM NEON). This can improve performance by
+up to 40%.
+
 * PreSieve.cpp: Vectorize loop using x64 SSE2 & ARM NEON.
 * popcount.cpp: Add POPCNT algorithm for x64 & AArch64.
 * primesieve.h: Fix -Wstrict-prototypes warning.
