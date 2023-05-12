@@ -203,7 +203,7 @@ void andBuffers(const uint8_t* __restrict buf0,
                 std::size_t bytes)
 {
   std::size_t i = 0;
-  std::size_t limit = bytes - bytes % 16;
+  std::size_t limit = bytes - bytes % sizeof(__m128i);
 
   // Note that I also tried vectorizing this algorithm using AVX2
   // which has double the vector width compared to SSE2, but this did
@@ -212,7 +212,7 @@ void andBuffers(const uint8_t* __restrict buf0,
   // by increasing the vector width this also increases the number of
   // scalar loop iterations after the vector loop finishes which
   // could potentially even become a bottleneck.
-  for (; i < limit; i += 16)
+  for (; i < limit; i += sizeof(__m128i))
   {
     _mm_storeu_si128((__m128i*) &output[i],
         _mm_and_si128(
