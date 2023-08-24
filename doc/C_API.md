@@ -460,15 +460,16 @@ int main(void)
   #pragma omp parallel for reduction(+: sum)
   for (int i = 0; i < threads; i++)
   {
-    uint64_t start = i * thread_dist + 1;
-    uint64_t stop = start + thread_dist < dist ? start + thread_dist : dist;
+    uint64_t start = i * thread_dist;
+    uint64_t stop = start + thread_dist;
+    stop = stop < dist + 1 ? stop : dist + 1;
     primesieve_iterator it;
     primesieve_init(&it);
     primesieve_jump_to(&it, start, stop);
     uint64_t prime = primesieve_next_prime(&it);
 
-    /* Sum primes inside [start, stop] */
-    for (; prime <= stop; prime = primesieve_next_prime(&it))
+    /* Sum primes inside [start, stop[ */
+    for (; prime < stop; prime = primesieve_next_prime(&it))
       sum += prime;
   }
 

@@ -399,13 +399,13 @@ int main()
   #pragma omp parallel for reduction(+: sum)
   for (int i = 0; i < threads; i++)
   {
-    uint64_t start = i * thread_dist + 1;
-    uint64_t stop = std::min(start + thread_dist, dist);
+    uint64_t start = i * thread_dist;
+    uint64_t stop = std::min(start + thread_dist, dist + 1);
     primesieve::iterator it(start, stop);
     uint64_t prime = it.next_prime();
 
-    // Sum primes inside [start, stop]
-    for (; prime <= stop; prime = it.next_prime())
+    // Sum primes inside [start, stop[
+    for (; prime < stop; prime = it.next_prime())
       sum += prime;
   }
 
