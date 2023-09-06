@@ -119,12 +119,12 @@ void primesieve_skipto(primesieve_iterator* it, uint64_t start, uint64_t stop_hi
 
 /**
  * Used internally by primesieve_next_prime().
- * primesieve_generate_next_primes() fills the primesieve_iterator.primes
+ * primesieve_generate_next_primes() fills (overwrites) the primes
  * array with the next few primes (~ 1000) that are larger than the
  * current largest prime in the primes array or with the
  * primes >= start if the primes array is empty.
  * Note that the current largest prime in the primes array can be
- * accessed using primes[size-1] and the current smallest value can be
+ * accessed using primes[size-1] and the current smallest prime can be
  * accessed using primes[0].
  * If an error occurs primesieve_iterator.is_error is set to 1
  * and the primes array will contain PRIMESIEVE_ERROR.
@@ -133,12 +133,12 @@ void primesieve_generate_next_primes(primesieve_iterator*);
 
 /**
  * Used internally by primesieve_prev_prime().
- * primesieve_generate_prev_primes() fills the primesieve_iterator.primes
+ * primesieve_generate_prev_primes() fills (overwrites) the primes
  * array with the next few primes ~ O(sqrt(n)) that are smaller than
  * the current smallest prime in the primes array or with the
  * primes <= start if the primes array is empty.
  * Note that the current largest prime in the primes array can be
- * accessed using primes[size-1] and the current smallest value can be
+ * accessed using primes[size-1] and the current smallest prime can be
  * accessed using primes[0].
  * If an error occurs primesieve_iterator.is_error is set to 1
  * and the primes array will contain PRIMESIEVE_ERROR.

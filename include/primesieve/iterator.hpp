@@ -94,10 +94,10 @@ struct iterator
   void clear() noexcept;
 
   /// Used internally by next_prime().
-  /// generate_next_primes() fills the primes array with the next few
-  /// primes (~ 1000) that are larger than the current largest
-  /// prime in the primes array or with the primes >= start if the
-  /// primes array is empty.
+  /// generate_next_primes() fills (overwrites) the primes array with
+  /// the next few primes (~ 1000) that are larger than the current
+  /// largest prime in the primes array or with the primes >= start
+  /// if the primes array is empty.
   /// Note that the current largest prime in the primes array can be
   /// accessed using primes[size-1] and the current smallest prime can
   /// be accessed using primes[0].
@@ -105,10 +105,10 @@ struct iterator
   void generate_next_primes();
 
   /// Used internally by prev_prime().
-  /// generate_prev_primes() fills the primes array with the next few
-  /// primes ~ O(sqrt(n)) that are smaller than the current smallest
-  /// prime in the primes array or with the primes <= start if the
-  /// primes array is empty.
+  /// generate_prev_primes() fills (overwrites) the primes array with
+  /// the next few primes ~ O(sqrt(n)) that are smaller than the
+  /// current smallest prime in the primes array or with the
+  /// primes <= start if the primes array is empty.
   /// Note that the current largest prime in the primes array can be
   /// accessed using primes[size-1] and the current smallest prime can
   /// be accessed using primes[0].
