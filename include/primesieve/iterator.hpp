@@ -3,7 +3,7 @@
 /// @brief  primesieve::iterator allows to easily iterate (forwards
 ///         and backwards) over prime numbers.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -93,7 +93,26 @@ struct iterator
   ///
   void clear() noexcept;
 
+  /// Used internally by next_prime().
+  /// generate_next_primes() fills the primes array with the next few
+  /// primes (~ 1000) that are larger than the current largest
+  /// prime in the primes array or with the primes >= start if the
+  /// primes array is empty.
+  /// Note that the current largest prime in the primes array can be
+  /// accessed using primes[size-1] and the current smallest prime can
+  /// be accessed using primes[0].
+  ///
   void generate_next_primes();
+
+  /// Used internally by prev_prime().
+  /// generate_prev_primes() fills the primes array with the next few
+  /// primes ~ O(sqrt(n)) that are smaller than the current smallest
+  /// prime in the primes array or with the primes <= start if the
+  /// primes array is empty.
+  /// Note that the current largest prime in the primes array can be
+  /// accessed using primes[size-1] and the current smallest prime can
+  /// be accessed using primes[0].
+  ///
   void generate_prev_primes();
 
   /// Get the next prime.
@@ -122,11 +141,19 @@ struct iterator
     return primes_[i_];
   }
 
+  /// Current index of the primes array.
   std::size_t i_;
+  /// Current number of primes in the primes array.
+  /// The current smallest prime can be accessed using primes[0].
+  /// The current largest prime can be accessed using primes[size-1].
   std::size_t size_;
+  /// Generate primes >= start.
   uint64_t start_;
+  /// Generate primes <= stop_hint.
   uint64_t stop_hint_;
+  /// The primes array.
   uint64_t* primes_;
+  /// Pointer to internal IteratorData data structure.
   void* memory_;
 };
 

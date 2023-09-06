@@ -14,7 +14,7 @@
  *         Furthermore primesieve_iterator.is_error is initialized
  *         to 0 and set to 1 if any error occurs.
  *
- * Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This file is distributed under the BSD License. See the COPYING
  * file in the top level directory.
@@ -50,12 +50,23 @@ extern "C" {
  */
 typedef struct
 {
+  /** Current index of the primes array */
   size_t i;
+  /**
+   * Current number of primes in the primes array.
+   * The current smallest prime can be accessed using primes[0].
+   * The current largest prime can be accessed using primes[size-1].
+   */
   size_t size;
+  /** Generate primes >= start */
   uint64_t start;
+  /** Generate primes <= stop_hint */
   uint64_t stop_hint;
+  /** The primes array */
   uint64_t* primes;
+  /** Pointer to internal IteratorData data structure */
   void* memory;
+  /** Initialized to 0, set to 1 if any error occurs */
   int is_error;
 } primesieve_iterator;
 
@@ -106,10 +117,32 @@ void primesieve_jump_to(primesieve_iterator* it, uint64_t start, uint64_t stop_h
 #endif
 void primesieve_skipto(primesieve_iterator* it, uint64_t start, uint64_t stop_hint);
 
-/** Internal use */
+/**
+ * Used internally by primesieve_next_prime().
+ * primesieve_generate_next_primes() fills the primesieve_iterator.primes
+ * array with the next few primes (~ 1000) that are larger than the
+ * current largest prime in the primes array or with the
+ * primes >= start if the primes array is empty.
+ * Note that the current largest prime in the primes array can be
+ * accessed using primes[size-1] and the current smallest value can be
+ * accessed using primes[0].
+ * If an error occurs primesieve_iterator.is_error is set to 1
+ * and the primes array will contain PRIMESIEVE_ERROR.
+ */
 void primesieve_generate_next_primes(primesieve_iterator*);
 
-/** Internal use */
+/**
+ * Used internally by primesieve_prev_prime().
+ * primesieve_generate_prev_primes() fills the primesieve_iterator.primes
+ * array with the next few primes ~ O(sqrt(n)) that are smaller than
+ * the current smallest prime in the primes array or with the
+ * primes <= start if the primes array is empty.
+ * Note that the current largest prime in the primes array can be
+ * accessed using primes[size-1] and the current smallest value can be
+ * accessed using primes[0].
+ * If an error occurs primesieve_iterator.is_error is set to 1
+ * and the primes array will contain PRIMESIEVE_ERROR.
+ */
 void primesieve_generate_prev_primes(primesieve_iterator*);
 
 /**
