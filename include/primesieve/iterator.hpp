@@ -144,14 +144,14 @@ struct iterator
   /// Current index of the primes array.
   std::size_t i_;
   /// Current number of primes in the primes array.
-  /// The current smallest prime can be accessed using primes[0].
-  /// The current largest prime can be accessed using primes[size-1].
   std::size_t size_;
   /// Generate primes >= start.
   uint64_t start_;
   /// Generate primes <= stop_hint.
   uint64_t stop_hint_;
   /// The primes array.
+  /// The current smallest prime can be accessed using primes[0].
+  /// The current largest prime can be accessed using primes[size-1].
   uint64_t* primes_;
   /// Pointer to internal IteratorData data structure.
   void* memory_;
