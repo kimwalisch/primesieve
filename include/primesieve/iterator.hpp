@@ -95,12 +95,12 @@ struct iterator
 
   /// Used internally by next_prime().
   /// generate_next_primes() fills (overwrites) the primes array with
-  /// the next few primes (~ 1000) that are larger than the current
+  /// the next few primes (~ 2^10) that are larger than the current
   /// largest prime in the primes array or with the primes >= start
   /// if the primes array is empty.
-  /// Note that the current largest prime in the primes array can be
-  /// accessed using primes[size-1] and the current smallest prime can
-  /// be accessed using primes[0].
+  /// Note that this method also updates the i & size member variables
+  /// of this primesieve::iterator struct. The size of the primes array
+  /// varies, but it is usually close to 2^10.
   ///
   void generate_next_primes();
 
@@ -109,9 +109,9 @@ struct iterator
   /// the next few primes ~ O(sqrt(n)) that are smaller than the
   /// current smallest prime in the primes array or with the
   /// primes <= start if the primes array is empty.
-  /// Note that the current largest prime in the primes array can be
-  /// accessed using primes[size-1] and the current smallest prime can
-  /// be accessed using primes[0].
+  /// Note that this method also updates the i & size member variables
+  /// of this primesieve::iterator struct. The size of the primes array
+  /// varies, but it is ~ O(sqrt(n)).
   ///
   void generate_prev_primes();
 
