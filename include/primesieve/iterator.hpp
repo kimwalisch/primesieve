@@ -100,7 +100,7 @@ struct iterator
   /// if the primes array is empty.
   /// Note that this method also updates the i & size member variables
   /// of this primesieve::iterator struct. The size of the primes array
-  /// varies, but it is usually close to 2^10.
+  /// varies, but it is > 0 and usually close to 2^10.
   ///
   void generate_next_primes();
 
@@ -111,7 +111,7 @@ struct iterator
   /// primes <= start if the primes array is empty.
   /// Note that this method also updates the i & size member variables
   /// of this primesieve::iterator struct. The size of the primes array
-  /// varies, but it is ~ O(sqrt(n)).
+  /// varies, but it is > 0 and ~ O(sqrt(n)).
   ///
   void generate_prev_primes();
 

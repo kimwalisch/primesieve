@@ -125,7 +125,7 @@ void primesieve_skipto(primesieve_iterator* it, uint64_t start, uint64_t stop_hi
  * primes >= start if the primes array is empty.
  * Note that this function also updates the i & size member variables
  * of the primesieve_iterator struct. The size of the primes array
- * varies, but it is usually close to 2^10.
+ * varies, but it is > 0 and usually close to 2^10.
  * If an error occurs primesieve_iterator.is_error is set to 1
  * and the primes array will contain PRIMESIEVE_ERROR.
  */
@@ -139,7 +139,7 @@ void primesieve_generate_next_primes(primesieve_iterator*);
  * primes <= start if the primes array is empty.
  * Note that this function also updates the i & size member variables
  * of the primesieve_iterator struct. The size of the primes array
- * varies, but it is ~ O(sqrt(n)).
+ * varies, but it is > 0 and ~ O(sqrt(n)).
  * If an error occurs primesieve_iterator.is_error is set to 1
  * and the primes array will contain PRIMESIEVE_ERROR.
  */
