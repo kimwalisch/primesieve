@@ -41,7 +41,7 @@ jobs:
         run: ./primesieve 1e9 --nth-prime
       - name: primesieve --dist=1e9 --size=32 --print=6
         run: ./primesieve 1e13 --dist=1e9 --size=32 --print=6
-      #Test printing primes and prime k-tuplets
+      # Test printing primes and prime k-tuplets
       - name: primesieve 1e8 -p | md5sum
         run: if [ "$(./primesieve 1e8 -p | md5sum | cut -f1 -d' ')" != "4e2b0027288a27e9c99699364877c9db" ]; then exit 1; fi
       - name: primesieve 1e8 -p2 | md5sum
@@ -99,7 +99,7 @@ jobs:
         run: ./primesieve 1e9 --nth-prime
       - name: primesieve --dist=1e9 --size=32 --print=6
         run: ./primesieve 1e13 --dist=1e9 --size=32 --print=6
-      #Test printing primes and prime k-tuplets
+      # Test printing primes and prime k-tuplets
       - name: primesieve 1e8 -p | md5sum
         run: if [ "$(./primesieve 1e8 -p | md5sum | cut -f1 -d' ')" != "4e2b0027288a27e9c99699364877c9db" ]; then exit 1; fi
       - name: primesieve 1e8 -p2 | md5sum
@@ -154,7 +154,7 @@ jobs:
         run: ./primesieve 1e9 --nth-prime
       - name: primesieve --dist=1e9 --size=32 --print=6
         run: ./primesieve 1e13 --dist=1e9 --size=32 --print=6
-      #Test printing primes and prime k-tuplets
+      # Test printing primes and prime k-tuplets
       - name: primesieve 1e8 -p | md5
         run: if [ "$(./primesieve 1e8 -p | md5 | cut -f1 -d' ')" != "4e2b0027288a27e9c99699364877c9db" ]; then exit 1; fi
       - name: primesieve 1e8 -p2 | md5
@@ -255,7 +255,7 @@ jobs:
         run: ./primesieve 1e9 --nth-prime
       - name: primesieve --dist=1e9 --size=32 --print=6
         run: ./primesieve 1e13 --dist=1e9 --size=32 --print=6
-      #Test printing primes and prime k-tuplets
+      # Test printing primes and prime k-tuplets
       - name: primesieve 1e8 -p | md5sum
         run: if [ "$(./primesieve 1e8 -p | md5sum | cut -f1 -d' ')" != "4e2b0027288a27e9c99699364877c9db" ]; then exit 1; fi
       - name: primesieve 1e8 -p2 | md5sum
