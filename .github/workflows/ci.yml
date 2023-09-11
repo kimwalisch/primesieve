@@ -92,7 +92,7 @@ jobs:
             sudo apt install valgrind
       - name: Build primesieve
         run: |
-            cmake . -DBUILD_TESTS=ON -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
+            cmake . -DBUILD_TESTS=ON -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror -g"
             make -j2 VERBOSE=1
       - name: CTest (unit tests)
         run: ctest -j2
@@ -200,7 +200,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build primesieve
         run: |
-            cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=$CONFIGURATION -DCMAKE_INSTALL_PREFIX=$(pwd)
+            cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$(pwd)
             make -j2 VERBOSE=1
             make install
       - name: CTest (unit tests)
