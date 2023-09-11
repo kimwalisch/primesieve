@@ -9,26 +9,6 @@ on:
       - gh-pages
 
 jobs:
-  windows_mingw64:
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: msys2 {0}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: msys2/setup-msys2@v2
-        with:
-          update: true
-          install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
-      - name: Build primesieve
-        run: |
-            cmake . -G "Unix Makefiles" -DBUILD_TESTS=ON -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
-            make -j2 VERBOSE=1
-      - name: CTest (unit tests)
-        run: ctest -j2
-      - name: primesieve --test option
-        run: ./primesieve --test
-
   linux_gcc_sanitizers:
     runs-on: ubuntu-latest
     env:
@@ -89,10 +69,10 @@ jobs:
       - name: Install valgrind
         run: |
             sudo apt update
-            sudo apt install valgrind
+            sudo apt install valgrind asciidoc libxml2-utils xmlto
       - name: Build primesieve
         run: |
-            cmake . -DBUILD_TESTS=ON -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror -g"
+            cmake . -DBUILD_TESTS=ON -DBUILD_MANPAGE=ON -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror -g"
             make -j2 VERBOSE=1
       - name: CTest (unit tests)
         run: ctest -j2
@@ -241,3 +221,39 @@ jobs:
         run: if [ "$(./primesieve 1e10 -d1e8 -p5 | md5 | cut -f1 -d' ')" != "11b50e4f75899891a62465f6d68fb76e" ]; then exit 1; fi
       - name: primesieve 1e10 -d1e8 -p6 | md5
         run: if [ "$(./primesieve 1e10 -d1e8 -p6 | md5 | cut -f1 -d' ')" != "5a0bc83fdef0bb116d60f356adfde52f" ]; then exit 1; fi
+
+  windows_mingw64:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
+      - name: Build primesieve
+        run: |
+            cmake . -G "Unix Makefiles" -DBUILD_TESTS=ON -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
+            make -j2 VERBOSE=1
+      - name: CTest (unit tests)
+        run: ctest -j2
+      - name: primesieve --test option
+        run: ./primesieve --test
+
+  windows_msvc2022:
+    runs-on: windows-2022
+    defaults:
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build primesieve
+        run: |
+            cmake . -G "Visual Studio 17 2022" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON
+            cmake --build . --config Release --target install
+      - name: CTest (unit tests)
+        run: ctest -j2 -C Release --output-on-failure
+      - name: primesieve --test option
+        run: ./primesieve --test
+      - name: primesieve --cpu-info
+        run: ./primesieve --cpu-info
