@@ -241,6 +241,10 @@ jobs:
         run: ctest -j2
       - name: primesieve --test option
         run: ./primesieve --test
+      - name: primesieve --cpu-info
+        run: ./primesieve --cpu-info
+      - name: primesieve --print
+        run: ./primesieve 1000 --print
 
   windows_msvc2022:
     runs-on: windows-2022
@@ -253,6 +257,8 @@ jobs:
       - name: CTest (unit tests)
         run: ctest -j2 -C Release --output-on-failure
       - name: primesieve --test option
-        run: ./primesieve --test
+        run: Release\primesieve.exe --test
       - name: primesieve --cpu-info
-        run: ./primesieve --cpu-info
+        run: Release\primesieve.exe --cpu-info
+      - name: primesieve --print
+        run: Release\primesieve.exe 1000 --print
