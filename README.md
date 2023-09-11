@@ -1,6 +1,6 @@
 # primesieve
 
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/kimwalisch/primesieve?branch=master&svg=true)](https://ci.appveyor.com/project/kimwalisch/primesieve)
+[![Build status](https://github.com/kimwalisch/primesieve/actions/workflows/ci.yml/badge.svg)](https://github.com/kimwalisch/primesieve/actions/workflows/ci.yml)
 [![Github Releases](https://img.shields.io/github/release/kimwalisch/primesieve.svg)](https://github.com/kimwalisch/primesieve/releases)
 
 primesieve is a command-line program and C/C++ library for quickly generating prime numbers.
