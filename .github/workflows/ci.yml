@@ -1,0 +1,193 @@
+name: ci
+
+on:
+  push:
+    branches-ignore:
+      - gh-pages
+  pull_request:
+    branches-ignore:
+      - gh-pages
+
+jobs:
+  windows_mingw64:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: msys2/setup-msys2@v3
+        with:
+          update: true
+          install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
+      - name: Build primesieve
+        run: |
+            cmake . -G "Unix Makefiles" -DBUILD_TESTS=ON -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
+            make -j2 VERBOSE=1
+      - name: CTest (unit tests)
+        run: ctest -j2
+      - name: primesieve --test option
+        run: ./primesieve --test
+
+  linux_gcc_valgrind:
+    runs-on: ubuntu-latest
+    env:
+      CC: gcc
+      CXX: g++
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install valgrind
+        run: |
+            sudo apt update
+            sudo apt install valgrind
+      - name: Build primesieve
+        run: |
+            cmake . -DBUILD_TESTS=ON -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
+            make -j2 VERBOSE=1
+      - name: CTest (unit tests)
+        run: ctest -j2
+      - name: primesieve --test option
+        run: ./primesieve --test
+      - name: Valgrind primesieve count test
+        run: valgrind --error-exitcode=1 ./primesieve 1e10
+      - name: Valgrind primesieve print test
+        run: valgrind --error-exitcode=1 ./primesieve 100 --print
+      # Run primesieve binary
+      - name: primesieve --cpu-info
+        run: ./primesieve --cpu-info
+      - name: primesieve 1e10
+        run: ./primesieve 1e10
+      - name: primesieve 1e9 --nth-prime
+        run: ./primesieve 1e9 --nth-prime
+      - name: primesieve --dist=1e9 --size=32 --print=6
+        run: ./primesieve 1e13 --dist=1e9 --size=32 --print=6
+      #Test printing primes and prime k-tuplets
+      - name: primesieve 1e8 -p | md5
+        run: if [ "$(./primesieve 1e8 -p | md5 | cut -f1 -d' ')" != "4e2b0027288a27e9c99699364877c9db" ]; then exit 1; fi
+      - name: primesieve 1e8 -p2 | md5
+        run: if [ "$(./primesieve 1e8 -p2 | md5 | cut -f1 -d' ')" != "5076d235d5b03389034ec107227eab98" ]; then exit 1; fi
+      - name: primesieve 1e8 -p3 | md5
+        run: if [ "$(./primesieve 1e8 -p3 | md5 | cut -f1 -d' ')" != "1b40d7e67868ccc857df11c3e0f7e0f5" ]; then exit 1; fi
+      - name: primesieve 1e8 -p4 | md5
+        run: if [ "$(./primesieve 1e8 -p4 | md5 | cut -f1 -d' ')" != "b998d7cdbeae6623cdecba1b921cb2e1" ]; then exit 1; fi
+      - name: primesieve 1e8 -p5 | md5
+        run: if [ "$(./primesieve 1e8 -p5 | md5 | cut -f1 -d' ')" != "1ec7d5704d7399caf43667090b5bf836" ]; then exit 1; fi
+      - name: primesieve 1e8 -p6 | md5
+        run: if [ "$(./primesieve 1e8 -p6 | md5 | cut -f1 -d' ')" != "0fb813d345c94cf2012588d1f71328b5" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p | md5 | cut -f1 -d' ')" != "5fbe254a97ad3bbc07c224908c9d59b2" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p2 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p2 | md5 | cut -f1 -d' ')" != "7a7a770c1841a17a9a63b92b7b6532b9" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p3 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p3 | md5 | cut -f1 -d' ')" != "72323b08c62ad8342f7331e3d6d45a64" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p4 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p4 | md5 | cut -f1 -d' ')" != "c2b0818499f77aa35681db3826caf3f6" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p5 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p5 | md5 | cut -f1 -d' ')" != "11b50e4f75899891a62465f6d68fb76e" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p6 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p6 | md5 | cut -f1 -d' ')" != "5a0bc83fdef0bb116d60f356adfde52f" ]; then exit 1; fi
+
+  linux_clang:
+    runs-on: ubuntu-latest
+    env:
+      CC: clang
+      CXX: clang++
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+            sudo apt update
+            sudo apt install libomp-dev
+      - name: Build primesieve
+        run: |
+            cmake . -DBUILD_TESTS=ON -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
+            make -j2 VERBOSE=1
+      - name: CTest (unit tests)
+        run: ctest -j2
+      - name: primesieve --test option
+        run: ./primesieve --test
+      # Run primesieve binary
+      - name: primesieve --cpu-info
+        run: ./primesieve --cpu-info
+      - name: primesieve 1e10
+        run: ./primesieve 1e10
+      - name: primesieve 1e9 --nth-prime
+        run: ./primesieve 1e9 --nth-prime
+      - name: primesieve --dist=1e9 --size=32 --print=6
+        run: ./primesieve 1e13 --dist=1e9 --size=32 --print=6
+      #Test printing primes and prime k-tuplets
+      - name: primesieve 1e8 -p | md5
+        run: if [ "$(./primesieve 1e8 -p | md5 | cut -f1 -d' ')" != "4e2b0027288a27e9c99699364877c9db" ]; then exit 1; fi
+      - name: primesieve 1e8 -p2 | md5
+        run: if [ "$(./primesieve 1e8 -p2 | md5 | cut -f1 -d' ')" != "5076d235d5b03389034ec107227eab98" ]; then exit 1; fi
+      - name: primesieve 1e8 -p3 | md5
+        run: if [ "$(./primesieve 1e8 -p3 | md5 | cut -f1 -d' ')" != "1b40d7e67868ccc857df11c3e0f7e0f5" ]; then exit 1; fi
+      - name: primesieve 1e8 -p4 | md5
+        run: if [ "$(./primesieve 1e8 -p4 | md5 | cut -f1 -d' ')" != "b998d7cdbeae6623cdecba1b921cb2e1" ]; then exit 1; fi
+      - name: primesieve 1e8 -p5 | md5
+        run: if [ "$(./primesieve 1e8 -p5 | md5 | cut -f1 -d' ')" != "1ec7d5704d7399caf43667090b5bf836" ]; then exit 1; fi
+      - name: primesieve 1e8 -p6 | md5
+        run: if [ "$(./primesieve 1e8 -p6 | md5 | cut -f1 -d' ')" != "0fb813d345c94cf2012588d1f71328b5" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p | md5 | cut -f1 -d' ')" != "5fbe254a97ad3bbc07c224908c9d59b2" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p2 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p2 | md5 | cut -f1 -d' ')" != "7a7a770c1841a17a9a63b92b7b6532b9" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p3 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p3 | md5 | cut -f1 -d' ')" != "72323b08c62ad8342f7331e3d6d45a64" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p4 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p4 | md5 | cut -f1 -d' ')" != "c2b0818499f77aa35681db3826caf3f6" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p5 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p5 | md5 | cut -f1 -d' ')" != "11b50e4f75899891a62465f6d68fb76e" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p6 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p6 | md5 | cut -f1 -d' ')" != "5a0bc83fdef0bb116d60f356adfde52f" ]; then exit 1; fi
+
+  macos_clang:
+    runs-on: macos-latest
+    env:
+      CC: clang
+      CXX: clang++
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build primesieve
+        run: |
+            cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=$CONFIGURATION -DCMAKE_INSTALL_PREFIX=$(pwd)
+            make -j2 VERBOSE=1
+            make install
+      - name: CTest (unit tests)
+        run: ctest -j2
+      - name: primesieve --test option
+        run: ./primesieve --test
+      # Run primesieve binary
+      - name: primesieve --cpu-info
+        run: ./primesieve --cpu-info
+      - name: primesieve 1e10
+        run: ./primesieve 1e10
+      - name: primesieve 1e9 --nth-prime
+        run: ./primesieve 1e9 --nth-prime
+      - name: primesieve --dist=1e9 --size=32 --print=6
+        run: ./primesieve 1e13 --dist=1e9 --size=32 --print=6
+      #Test printing primes and prime k-tuplets
+      - name: primesieve 1e8 -p | md5
+        run: if [ "$(./primesieve 1e8 -p | md5 | cut -f1 -d' ')" != "4e2b0027288a27e9c99699364877c9db" ]; then exit 1; fi
+      - name: primesieve 1e8 -p2 | md5
+        run: if [ "$(./primesieve 1e8 -p2 | md5 | cut -f1 -d' ')" != "5076d235d5b03389034ec107227eab98" ]; then exit 1; fi
+      - name: primesieve 1e8 -p3 | md5
+        run: if [ "$(./primesieve 1e8 -p3 | md5 | cut -f1 -d' ')" != "1b40d7e67868ccc857df11c3e0f7e0f5" ]; then exit 1; fi
+      - name: primesieve 1e8 -p4 | md5
+        run: if [ "$(./primesieve 1e8 -p4 | md5 | cut -f1 -d' ')" != "b998d7cdbeae6623cdecba1b921cb2e1" ]; then exit 1; fi
+      - name: primesieve 1e8 -p5 | md5
+        run: if [ "$(./primesieve 1e8 -p5 | md5 | cut -f1 -d' ')" != "1ec7d5704d7399caf43667090b5bf836" ]; then exit 1; fi
+      - name: primesieve 1e8 -p6 | md5
+        run: if [ "$(./primesieve 1e8 -p6 | md5 | cut -f1 -d' ')" != "0fb813d345c94cf2012588d1f71328b5" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p | md5 | cut -f1 -d' ')" != "5fbe254a97ad3bbc07c224908c9d59b2" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p2 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p2 | md5 | cut -f1 -d' ')" != "7a7a770c1841a17a9a63b92b7b6532b9" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p3 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p3 | md5 | cut -f1 -d' ')" != "72323b08c62ad8342f7331e3d6d45a64" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p4 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p4 | md5 | cut -f1 -d' ')" != "c2b0818499f77aa35681db3826caf3f6" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p5 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p5 | md5 | cut -f1 -d' ')" != "11b50e4f75899891a62465f6d68fb76e" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p6 | md5
+        run: if [ "$(./primesieve 1e10 -d1e8 -p6 | md5 | cut -f1 -d' ')" != "5a0bc83fdef0bb116d60f356adfde52f" ]; then exit 1; fi
