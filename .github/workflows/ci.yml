@@ -222,13 +222,14 @@ jobs:
       - name: primesieve 1e10 -d1e8 -p6 | md5
         run: if [ "$(./primesieve 1e10 -d1e8 -p6 | md5 | cut -f1 -d' ')" != "5a0bc83fdef0bb116d60f356adfde52f" ]; then exit 1; fi
 
+  # See documentation: https://www.msys2.org/docs/ci/
   windows_mingw64:
     runs-on: windows-latest
     defaults:
       run:
         shell: msys2 {0}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: msys2/setup-msys2@v2
         with:
           update: true
