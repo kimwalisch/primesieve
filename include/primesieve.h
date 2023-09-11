@@ -15,9 +15,9 @@
 #ifndef PRIMESIEVE_H
 #define PRIMESIEVE_H
 
-#define PRIMESIEVE_VERSION "11.1"
+#define PRIMESIEVE_VERSION "11.2"
 #define PRIMESIEVE_VERSION_MAJOR 11
-#define PRIMESIEVE_VERSION_MINOR 1
+#define PRIMESIEVE_VERSION_MINOR 2
 
 #include <primesieve/iterator.h>
 
