@@ -1,7 +1,7 @@
 ///
 /// @file  SievingPrimes.hpp
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -12,7 +12,7 @@
 
 #include "Erat.hpp"
 #include "macros.hpp"
-#include "pod_vector.hpp"
+#include "Vector.hpp"
 
 #include <stdint.h>
 
@@ -34,8 +34,8 @@ private:
   uint64_t low_ = 0;
   uint64_t tinyIdx_ = 0;
   uint64_t sieveIdx_ = ~0ull;
-  pod_array<uint64_t, 128> primes_;
-  pod_vector<bool> tinySieve_;
+  Array<uint64_t, 128> primes_;
+  Vector<bool> tinySieve_;
   NOINLINE void fill();
   void tinySieve();
   bool sieveSegment();

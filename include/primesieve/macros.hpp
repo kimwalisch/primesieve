@@ -1,7 +1,7 @@
 ///
 /// @file  macros.hpp
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -31,7 +31,7 @@
 
 /// Enable expensive debugging assertions.
 /// These assertions enable e.g. bounds checks for the
-/// pod_vector and pod_array types.
+/// Vector and Array types.
 ///
 #if defined(ENABLE_ASSERT)
   #undef NDEBUG

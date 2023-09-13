@@ -1,7 +1,7 @@
 ///
 /// @file  CountPrintPrimes.hpp
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -13,7 +13,7 @@
 #include "Erat.hpp"
 #include "MemoryPool.hpp"
 #include "macros.hpp"
-#include "pod_vector.hpp"
+#include "Vector.hpp"
 #include "PrimeSieve.hpp"
 
 #include <stdint.h>
@@ -34,7 +34,7 @@ public:
 private:
   uint64_t low_ = 0;
   /// Count lookup tables for prime k-tuplets
-  pod_vector<uint8_t> kCounts_[6];
+  Vector<uint8_t> kCounts_[6];
   counts_t& counts_;
   /// Reference to the associated PrimeSieve object
   PrimeSieve& ps_;

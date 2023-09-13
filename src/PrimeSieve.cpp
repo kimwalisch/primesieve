@@ -4,7 +4,7 @@
 ///         sieving. It is used for printing and counting primes
 ///         and for computing the nth prime.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -15,7 +15,7 @@
 #include <primesieve/ParallelSieve.hpp>
 #include <primesieve/CountPrintPrimes.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/pod_vector.hpp>
+#include <primesieve/Vector.hpp>
 #include <primesieve/PreSieve.hpp>
 
 #include <stdint.h>
@@ -33,7 +33,7 @@ struct SmallPrime
   const char* str;
 };
 
-const primesieve::pod_array<SmallPrime, 8> smallPrimes
+const primesieve::Array<SmallPrime, 8> smallPrimes
 {{
   { 2,  2, 0, "2" },
   { 3,  3, 0, "3" },

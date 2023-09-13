@@ -1,7 +1,7 @@
 ///
 /// @file  EratMedium.hpp
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -12,7 +12,7 @@
 
 #include "Bucket.hpp"
 #include "macros.hpp"
-#include "pod_vector.hpp"
+#include "Vector.hpp"
 #include "Wheel.hpp"
 
 #include <stdint.h>
@@ -30,12 +30,12 @@ class EratMedium : public Wheel30_t
 public:
   void init(uint64_t, uint64_t, MemoryPool&);
   bool hasSievingPrimes() const { return !buckets_.empty(); }
-  NOINLINE void crossOff(pod_vector<uint8_t>& sieve);
+  NOINLINE void crossOff(Vector<uint8_t>& sieve);
 private:
   uint64_t maxPrime_ = 0;
   MemoryPool* memoryPool_ = nullptr;
-  pod_vector<SievingPrime*> buckets_;
-  pod_vector<SievingPrime*> currentBuckets_;
+  Vector<SievingPrime*> buckets_;
+  Vector<SievingPrime*> currentBuckets_;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   NOINLINE void crossOff_7(uint8_t*, std::size_t, Bucket*);
   NOINLINE void crossOff_11(uint8_t*, std::size_t, Bucket*);

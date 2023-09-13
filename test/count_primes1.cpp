@@ -2,14 +2,14 @@
 /// @file   count_primes1.cpp
 /// @brief  Count the primes up to 10^9.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
 #include <primesieve/ParallelSieve.hpp>
-#include <primesieve/pod_vector.hpp>
+#include <primesieve/Vector.hpp>
 
 #include <stdint.h>
 #include <cmath>
@@ -20,7 +20,7 @@
 using namespace primesieve;
 
 /// Correct pi(x) values to compare with test results
-const pod_array<uint64_t, 9> pix =
+const Array<uint64_t, 9> pix =
 {
   4,        // pi(10^1)
   25,       // pi(10^2)

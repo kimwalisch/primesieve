@@ -1,14 +1,14 @@
 ///
-/// @file  pod_vector.hpp
+/// @file  Vector.hpp
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
-#ifndef POD_VECTOR_HPP
-#define POD_VECTOR_HPP
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
 
 #include "macros.hpp"
 
@@ -21,18 +21,18 @@
 
 namespace primesieve {
 
-/// pod_vector is a dynamically growing array.
+/// Vector is a dynamically growing array.
 /// It has the same API (though not complete) as std::vector but its
 /// resize() method does not default initialize memory for built-in
 /// integer types. It does however default initialize classes and
-/// struct types if they have a constructor. It also prevents
-/// bounds checks which is important for primesieve's performance, e.g.
-/// the Fedora Linux distribution compiles with -D_GLIBCXX_ASSERTIONS
-/// which enables std::vector bounds checks.
+/// struct types if they have a constructor. It also prevents bounds
+/// checks in release builds which is important for primesieve's
+/// performance, e.g. the Fedora Linux distribution compiles with
+/// -D_GLIBCXX_ASSERTIONS which enables std::vector bounds checks.
 ///
 template <typename T,
           typename Allocator = std::allocator<T>>
-class pod_vector
+class Vector
 {
 public:
   // The default C++ std::allocator is stateless. We use this
@@ -50,23 +50,23 @@ public:
   // type is stateless."
   // https://en.cppreference.com/w/cpp/named_req/Allocator
   static_assert(std::allocator_traits<Allocator>::is_always_equal::value,
-                "pod_vector<T> only supports stateless allocators!");
+                "Vector<T> only supports stateless allocators!");
 
   using value_type = T;
-  pod_vector() noexcept = default;
+  Vector() noexcept = default;
 
-  pod_vector(std::size_t size)
+  Vector(std::size_t size)
   {
     resize(size);
   }
 
-  ~pod_vector()
+  ~Vector()
   {
     destroy(array_, end_);
     Allocator().deallocate(array_, capacity());
   }
 
-  /// Free all memory, the pod_vector
+  /// Free all memory, the Vector
   /// can be reused afterwards.
   void deallocate() noexcept
   {
@@ -77,7 +77,7 @@ public:
     capacity_ = nullptr;
   }
 
-  /// Reset the pod_vector, but do not free its
+  /// Reset the Vector, but do not free its
   /// memory. Same as std::vector.clear().
   void clear() noexcept
   {
@@ -86,17 +86,17 @@ public:
   }
 
   /// Copying is slow, we prevent it
-  pod_vector(const pod_vector&) = delete;
-  pod_vector& operator=(const pod_vector&) = delete;
+  Vector(const Vector&) = delete;
+  Vector& operator=(const Vector&) = delete;
 
   /// Move constructor
-  pod_vector(pod_vector&& other) noexcept
+  Vector(Vector&& other) noexcept
   {
     swap(other);
   }
 
   /// Move assignment operator
-  pod_vector& operator=(pod_vector&& other) noexcept
+  Vector& operator=(Vector&& other) noexcept
   {
     if (this != &other)
       swap(other);
@@ -105,7 +105,7 @@ public:
   }
 
   /// Better assembly than: std::swap(vect1, vect2)
-  void swap(pod_vector& other) noexcept
+  void swap(Vector& other) noexcept
   {
     T* tmp_array = array_;
     T* tmp_end = end_;
@@ -236,7 +236,7 @@ public:
   void insert(T* const pos, InputIt first, InputIt last)
   {
     static_assert(std::is_trivially_copyable<T>::value,
-                  "pod_vector<T>::insert() supports only trivially copyable types!");
+                  "Vector<T>::insert() supports only trivially copyable types!");
 
     // We only support appending to the vector
     ASSERT(pos == end_);
@@ -318,7 +318,7 @@ private:
     if (old)
     {
       static_assert(std::is_nothrow_move_constructible<T>::value,
-                    "pod_vector<T> only supports nothrow moveable types!");
+                    "Vector<T> only supports nothrow moveable types!");
 
       uninitialized_move_n(old, old_size, array_);
       Allocator().deallocate(old, old_capacity);
@@ -380,8 +380,13 @@ private:
   }
 };
 
+/// Array has the same API as std::array, but unlike std::array
+/// our Array is guaranteed to not use any bounds checks in release
+/// builds. E.g. the Fedora Linux distribution compiles with
+/// -D_GLIBCXX_ASSERTIONS which enables std::array bounds checks.
+///
 template <typename T, std::size_t N>
-class pod_array
+class Array
 {
 public:
   using value_type = T;

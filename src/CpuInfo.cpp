@@ -18,7 +18,7 @@
 ///         types of CPU cores we try to detect the cache sizes of the
 ///         CPU core type that e.g. occurs most frequently.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -249,8 +249,8 @@ void CpuInfo::init()
       cacheSizes{0, 0, 0, 0},
       cacheSharing{0, 0, 0, 0}
     { }
-    pod_array<size_t, 4> cacheSizes;
-    pod_array<size_t, 4> cacheSharing;
+    Array<size_t, 4> cacheSizes;
+    Array<size_t, 4> cacheSharing;
   };
 
   struct L1CacheStatistics

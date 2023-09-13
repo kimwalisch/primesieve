@@ -1,7 +1,7 @@
 ///
 /// @file  MemoryPool.hpp
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -12,7 +12,7 @@
 
 #include "Bucket.hpp"
 #include "macros.hpp"
-#include "pod_vector.hpp"
+#include "Vector.hpp"
 
 namespace primesieve {
 
@@ -31,7 +31,7 @@ private:
   /// Number of buckets to allocate
   std::size_t count_ = 0;
   /// Pointers of allocated buckets
-  pod_vector<pod_vector<char>> memory_;
+  Vector<Vector<char>> memory_;
 };
 
 } // namespace

@@ -50,12 +50,12 @@
 #endif
 
 using std::copy_n;
-using primesieve::pod_array;
+using primesieve::Array;
 
 namespace {
 
 /// Pre-sieve with the primes <= 13
-const pod_array<uint8_t, 7*11*13> buffer_7_11_13 =
+const Array<uint8_t, 7*11*13> buffer_7_11_13 =
 {
   0xf8, 0xef, 0x77, 0x3f, 0xdb, 0xed, 0x9e, 0xfc, 0xea, 0x37,
   0xaf, 0xf9, 0xf5, 0xd3, 0x7e, 0x4f, 0x77, 0x9e, 0xeb, 0xf9,
@@ -161,7 +161,7 @@ const pod_array<uint8_t, 7*11*13> buffer_7_11_13 =
 };
 
 /// Pre-sieve with the primes < 100
-const pod_array<std::initializer_list<uint64_t>, 8> bufferPrimes =
+const Array<std::initializer_list<uint64_t>, 8> bufferPrimes =
 {{
   {  7, 67, 71 },  // 32 KiB
   { 11, 41, 73 },  // 32 KiB
@@ -359,7 +359,7 @@ void PreSieve::initBuffers()
   }
 }
 
-void PreSieve::preSieve(pod_vector<uint8_t>& sieve,
+void PreSieve::preSieve(Vector<uint8_t>& sieve,
                         uint64_t segmentLow) const
 {
   if (buffers_[0].empty())
@@ -374,7 +374,7 @@ void PreSieve::preSieve(pod_vector<uint8_t>& sieve,
   {
     uint64_t i = segmentLow / 30;
     uint8_t* sieveArray = sieve.data();
-    pod_array<uint8_t, 8> primeBits = { 0xff, 0xef, 0x77, 0x3f, 0xdb, 0xed, 0x9e, 0xfc };
+    Array<uint8_t, 8> primeBits = { 0xff, 0xef, 0x77, 0x3f, 0xdb, 0xed, 0x9e, 0xfc };
 
     ASSERT(sieve.capacity() >= 4);
     for (std::size_t j = 0; j < 4; j++)
@@ -383,7 +383,7 @@ void PreSieve::preSieve(pod_vector<uint8_t>& sieve,
 }
 
 /// Pre-sieve with the primes <= 13
-void PreSieve::preSieveSmall(pod_vector<uint8_t>& sieve,
+void PreSieve::preSieveSmall(Vector<uint8_t>& sieve,
                              uint64_t segmentLow)
 {
   uint64_t size = buffer_7_11_13.size();
@@ -410,11 +410,11 @@ void PreSieve::preSieveSmall(pod_vector<uint8_t>& sieve,
 }
 
 /// Pre-sieve with the primes < 100
-void PreSieve::preSieveLarge(pod_vector<uint8_t>& sieve,
+void PreSieve::preSieveLarge(Vector<uint8_t>& sieve,
                              uint64_t segmentLow) const
 {
   uint64_t offset = 0;
-  pod_array<uint64_t, 8> pos;
+  Array<uint64_t, 8> pos;
 
   for (std::size_t i = 0; i < buffers_.size(); i++)
     pos[i] = (segmentLow % (buffers_[i].size() * 30)) / 30;

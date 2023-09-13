@@ -2,7 +2,7 @@
 /// @file   ParallelSieve.cpp
 /// @brief  Multi-threaded prime sieve using std::async.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -14,7 +14,7 @@
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/pod_vector.hpp>
+#include <primesieve/Vector.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -184,7 +184,7 @@ void ParallelSieve::sieve()
       return counts;
     };
 
-    pod_vector<std::future<counts_t>> futures;
+    Vector<std::future<counts_t>> futures;
     futures.reserve(threads);
 
     for (int t = 0; t < threads; t++)

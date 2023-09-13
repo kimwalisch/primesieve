@@ -1,7 +1,7 @@
 ///
 /// @file  CpuInfo.hpp
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -10,7 +10,7 @@
 #ifndef CPUINFO_HPP
 #define CPUINFO_HPP
 
-#include "pod_vector.hpp"
+#include "Vector.hpp"
 
 #include <cstddef>
 #include <string>
@@ -43,8 +43,8 @@ public:
 private:
   void init();
   std::size_t logicalCpuCores_;
-  pod_array<std::size_t, 4> cacheSizes_;
-  pod_array<std::size_t, 4> cacheSharing_;
+  Array<std::size_t, 4> cacheSizes_;
+  Array<std::size_t, 4> cacheSharing_;
   std::string error_;
 };
 

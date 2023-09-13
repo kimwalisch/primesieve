@@ -1,15 +1,15 @@
 ///
-/// @file   pod_vector.cpp
+/// @file   vector.cpp
 /// @brief  Plain old data vector, like std::vector but does not 
 ///         default initialize memory.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
-#include <primesieve/pod_vector.hpp>
+#include <primesieve/Vector.hpp>
 
 #include <cstdlib>
 #include <iostream>
@@ -18,8 +18,8 @@
 #include <utility>
 
 using std::size_t;
-using primesieve::pod_array;
-using primesieve::pod_vector;
+using primesieve::Array;
+using primesieve::Vector;
 
 void check(bool OK)
 {
@@ -30,17 +30,14 @@ void check(bool OK)
 
 int main()
 {
-  // The pod_vector class uses std::vector internally. For
-  // performance reasons we want vector::resize() not to
-  // free memory when resizing to a smaller size. The C++
-  // standard seems to indirectly guarantee this behavior,
-  // but it is not 100% clear. So this tests verifies this
-  // behavior.
+  // For performance reasons we want Vector::resize() not
+  // to free memory when resizing to a smaller size.
+  // So this tests verifies this behavior.
 
   // Allocate from 1 KiB to 128 MiB
   for (size_t i = 10; i <= 27; i++)
   {
-    pod_vector<char> vect;
+    Vector<char> vect;
     vect.resize(size_t(1) << i);
     auto capacity1 = vect.capacity();
     vect.resize(100);
@@ -56,7 +53,7 @@ int main()
     std::uniform_int_distribution<std::size_t> dist(100, 200);
 
     std::size_t n = dist(gen);
-    pod_vector<size_t> vect;
+    Vector<size_t> vect;
 
     for (size_t i = 0; i <= n; i++)
       vect.push_back(i);
@@ -75,7 +72,7 @@ int main()
 
     std::size_t size = dist(gen);
 
-    // pod_vector does not default initialize POD types
+    // Vector does not default initialize POD types
     // but it does initialize classes and structs with constructors.
     struct pod_t
     {
@@ -85,7 +82,7 @@ int main()
       int b = 200;
     };
 
-    pod_vector<pod_t> vect(size);
+    Vector<pod_t> vect(size);
 
     for (size_t i = 0; i < size; i++)
     {
@@ -108,7 +105,7 @@ int main()
     std::uniform_int_distribution<std::size_t> dist(10000, 20000);
 
     std::size_t n = dist(gen);
-    pod_vector<int> vect;
+    Vector<int> vect;
     vect.resize(0);
 
     std::cout << "Vect size after resize(0): " << vect.size();
@@ -170,7 +167,7 @@ int main()
     std::uniform_int_distribution<int> dist(10000, 20000);
 
     int size = dist(gen);
-    pod_vector<int> vect(size);
+    Vector<int> vect(size);
     std::fill_n(&vect[0], size, 123);
 
     // Test if resize does not default initilize
@@ -195,10 +192,10 @@ int main()
     std::uniform_int_distribution<int> dist(10000, 20000);
 
     int size = dist(gen);
-    pod_vector<int> vect(size);
+    Vector<int> vect(size);
     std::fill_n(&vect[0], size, 123);
 
-    pod_vector<int> vect2 = std::move(vect);
+    Vector<int> vect2 = std::move(vect);
     std::cout << "Vect1 empty after std::move: " << vect.empty();
     check(vect.empty() == true);
     int sum = std::accumulate(vect2.begin(), vect2.end(), 0);
@@ -207,7 +204,7 @@ int main()
   }
 
   {
-    pod_array<unsigned int, 10> arr1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    Array<unsigned int, 10> arr1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     auto arr2 = arr1;
     arr1.fill(0);
 

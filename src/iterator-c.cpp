@@ -2,7 +2,7 @@
 /// @file   iterator-c.cpp
 /// @brief  C port of primesieve::iterator.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -12,7 +12,7 @@
 #include <primesieve/IteratorHelper.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/macros.hpp>
-#include <primesieve/pod_vector.hpp>
+#include <primesieve/Vector.hpp>
 
 #include <stdint.h>
 #include <cerrno>
@@ -30,7 +30,7 @@ IteratorData& getIterData(primesieve_iterator* it)
   return *(IteratorData*) it->memory;
 }
 
-pod_vector<uint64_t>& getPrimes(primesieve_iterator* it)
+Vector<uint64_t>& getPrimes(primesieve_iterator* it)
 {
   return getIterData(it).primes;
 }

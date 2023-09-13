@@ -3,7 +3,7 @@
 /// @brief  The Erat class manages prime sieving using the
 ///         EratSmall, EratMedium, EratBig classes.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -26,7 +26,7 @@
 namespace {
 
 /// unset bits < start
-const primesieve::pod_array<uint8_t, 37> unsetSmaller =
+const primesieve::Array<uint8_t, 37> unsetSmaller =
 {
   0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
   0xfe, 0xfe, 0xfe, 0xfe, 0xfc, 0xfc, 0xf8, 0xf8,
@@ -36,7 +36,7 @@ const primesieve::pod_array<uint8_t, 37> unsetSmaller =
 };
 
 /// unset bits > stop
-const primesieve::pod_array<uint8_t, 37> unsetLarger =
+const primesieve::Array<uint8_t, 37> unsetLarger =
 {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
   0x01, 0x01, 0x01, 0x03, 0x03, 0x07, 0x07, 0x07,

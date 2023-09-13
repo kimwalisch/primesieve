@@ -11,7 +11,7 @@
 ///         by up to 30% for sieving primes that have only a few
 ///         multiple occurrences per segment.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -65,7 +65,7 @@ void EratMedium::storeSievingPrime(uint64_t prime,
   buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);
 }
 
-void EratMedium::crossOff(pod_vector<uint8_t>& sieve)
+void EratMedium::crossOff(Vector<uint8_t>& sieve)
 {
   currentBuckets_.swap(buckets_);
 

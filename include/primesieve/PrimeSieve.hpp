@@ -4,7 +4,7 @@
 ///         sieving. It is used for printing and counting primes
 ///         and for computing the nth prime.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -14,13 +14,13 @@
 #define PRIMESIEVE_CLASS_HPP
 
 #include "PreSieve.hpp"
-#include "pod_vector.hpp"
+#include "Vector.hpp"
 
 #include <stdint.h>
 
 namespace primesieve {
 
-using counts_t = pod_array<uint64_t, 6>;
+using counts_t = Array<uint64_t, 6>;
 class ParallelSieve;
 
 enum

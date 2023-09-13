@@ -2,14 +2,14 @@
 /// @file   main.cpp
 /// @brief  primesieve console application.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
 #include <primesieve/ParallelSieve.hpp>
-#include <primesieve/pod_vector.hpp>
+#include <primesieve/Vector.hpp>
 #include "cmdoptions.hpp"
 
 #include <stdint.h>
@@ -62,7 +62,7 @@ void sieve(CmdOptions& opt)
 
   ps.sieve();
 
-  const pod_array<std::string, 6> labels =
+  const Array<std::string, 6> labels =
   {
     "Primes: ",
     "Twin primes: ",

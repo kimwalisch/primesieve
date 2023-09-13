@@ -1,7 +1,7 @@
 ///
 /// @file  Erat.hpp
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -16,7 +16,7 @@
 #include "EratBig.hpp"
 #include "macros.hpp"
 #include "intrinsics.hpp"
-#include "pod_vector.hpp"
+#include "Vector.hpp"
 
 #include <stdint.h>
 
@@ -46,7 +46,7 @@ protected:
   /// Upper bound of the current segment
   uint64_t segmentHigh_ = 0;
   /// Sieve of Eratosthenes array
-  pod_vector<uint8_t> sieve_;
+  Vector<uint8_t> sieve_;
   Erat() = default;
   Erat(uint64_t, uint64_t);
   void init(uint64_t, uint64_t, uint64_t, PreSieve&, MemoryPool& memoryPool);

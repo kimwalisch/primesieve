@@ -2,7 +2,7 @@
 /// @file   LookupTables.cpp
 /// @brief  Static gobal arrays.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -10,7 +10,7 @@
 
 #include <primesieve/forward.hpp>
 #include <primesieve/Wheel.hpp>
-#include <primesieve/pod_vector.hpp>
+#include <primesieve/Vector.hpp>
 
 #include <stdint.h>
 
@@ -31,7 +31,7 @@ namespace primesieve {
 /// therefore we add an additional 0 at the end of the array to
 /// prevent out of bounds acceses.
 ///
-const pod_array<uint64_t, 65> bitValues =
+const Array<uint64_t, 65> bitValues =
 {
     7,  11,  13,  17,  19,  23,  29, 31,
    37,  41,  43,  47,  49,  53,  59, 61,
@@ -50,7 +50,7 @@ const pod_array<uint64_t, 65> bitValues =
 /// bsf or tzcnt instructions on x64 (but more portable).
 /// https://www.chessprogramming.org/BitScan#De_Bruijn_Multiplication
 ///
-const pod_array<uint64_t, 64> bruijnBitValues =
+const Array<uint64_t, 64> bruijnBitValues =
 {
     7,  47,  11,  49,  67, 113,  13,  53,
    89,  71, 161, 101, 119, 187,  17, 233,

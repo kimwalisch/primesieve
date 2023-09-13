@@ -1,7 +1,7 @@
 ///
 /// @file   IteratorHelper.hpp
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -13,7 +13,7 @@
 #include "PrimeGenerator.hpp"
 #include "PreSieve.hpp"
 #include "macros.hpp"
-#include "pod_vector.hpp"
+#include "Vector.hpp"
 
 #include <stdint.h>
 
@@ -26,11 +26,13 @@ struct IteratorData
   IteratorData(uint64_t stp) :
     stop(stp)
   { }
+
   ~IteratorData()
   {
     if (primeGenerator)
       primeGenerator->~PrimeGenerator();
   }
+
   void deletePrimeGenerator()
   {
     if (primeGenerator)
@@ -39,10 +41,12 @@ struct IteratorData
       primeGenerator = nullptr;
     }
   }
+
   void deletePrimes()
   {
     primes.deallocate();
   }
+
   void newPrimeGenerator(uint64_t start,
                          uint64_t stop,
                          PreSieve& preSieve)
@@ -53,11 +57,12 @@ struct IteratorData
     ASSERT(primeGenerator == nullptr);
     primeGenerator = new (primeGeneratorBuffer) PrimeGenerator(start, stop, preSieve);
   }
+
   uint64_t stop;
   uint64_t dist = 0;
   bool include_start_number = true;
   PrimeGenerator* primeGenerator = nullptr;
-  pod_vector<uint64_t> primes;
+  Vector<uint64_t> primes;
   PreSieve preSieve;
   alignas(PrimeGenerator) char primeGeneratorBuffer[sizeof(PrimeGenerator)];
 };

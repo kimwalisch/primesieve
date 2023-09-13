@@ -9,7 +9,7 @@
 ///         multiples uses as few instructions as possible since there
 ///         are so many multiples.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -63,7 +63,7 @@ void EratSmall::storeSievingPrime(uint64_t prime,
 /// @sieveSize:   EratBig & EratMedium sieve size
 /// @l1CacheSize: EratSmall sieve size
 ///
-void EratSmall::crossOff(pod_vector<uint8_t>& sieve)
+void EratSmall::crossOff(Vector<uint8_t>& sieve)
 {
   for (std::size_t i = 0; i < sieve.size(); i += l1CacheSize_)
   {

@@ -3,14 +3,14 @@
 /// @brief  Count the primes within [10^i, 10^i + 10^8]
 ///         for i = 12 to 19
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
 #include <primesieve.hpp>
-#include <primesieve/pod_vector.hpp>
+#include <primesieve/Vector.hpp>
 
 #include <stdint.h>
 #include <cstdlib>
@@ -20,7 +20,7 @@
 
 using namespace primesieve;
 
-const pod_array<uint64_t, 6> pix =
+const Array<uint64_t, 6> pix =
 {
   3618282, // pi[10^12, 10^12+10^8]
   3342093, // pi[10^13, 10^13+10^8]

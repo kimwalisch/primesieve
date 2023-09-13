@@ -2,7 +2,7 @@
 /// @file   test.cpp
 /// @brief  primesieve self tests (option: --test).
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -10,7 +10,7 @@
 
 #include <primesieve.hpp>
 #include <primesieve/ParallelSieve.hpp>
-#include <primesieve/pod_vector.hpp>
+#include <primesieve/Vector.hpp>
 
 #include <stdint.h>
 #include <chrono>
@@ -40,7 +40,7 @@ void check(bool OK)
 
 void countSmallPrimes()
 {
-  const pod_array<uint64_t, 9> primePi =
+  const Array<uint64_t, 9> primePi =
   {
     4,        // PrimePi(10^1)
     25,       // PrimePi(10^2)
@@ -72,7 +72,7 @@ void countSmallPrimes()
 
 void countPrimeKTuplets()
 {
-  const pod_array<uint64_t, 5> kTupletCounts =
+  const Array<uint64_t, 5> kTupletCounts =
   {
     17278660, // PrimePi2(10^12, 10^12+10^10)
     2130571,  // PrimePi3(10^13, 10^13+10^10)
@@ -102,7 +102,7 @@ void countPrimeKTuplets()
 
 void countLargePrimes()
 {
-  const pod_array<uint64_t, 6> primePi =
+  const Array<uint64_t, 6> primePi =
   {
     361840208, // PrimePi(10^12, 10^12+10^10)
     334067230, // PrimePi(10^13, 10^13+10^10)
@@ -152,7 +152,7 @@ void countPrimesRandom()
 
 void smallNthPrimes()
 {
-  const pod_array<uint64_t, 9> nthPrimes =
+  const Array<uint64_t, 9> nthPrimes =
   {
     29,         // nthPrime(10^1)
     541,        // nthPrime(10^2)

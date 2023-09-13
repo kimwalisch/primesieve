@@ -1,7 +1,7 @@
 ///
 /// @file  EratBig.hpp
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -12,7 +12,7 @@
 
 #include "Bucket.hpp"
 #include "macros.hpp"
-#include "pod_vector.hpp"
+#include "Vector.hpp"
 #include "Wheel.hpp"
 
 #include <stdint.h>
@@ -29,14 +29,14 @@ class EratBig : public Wheel210_t
 {
 public:
   void init(uint64_t, uint64_t, uint64_t, MemoryPool&);
-  NOINLINE void crossOff(pod_vector<uint8_t>& sieve);
+  NOINLINE void crossOff(Vector<uint8_t>& sieve);
   bool hasSievingPrimes() const { return !buckets_.empty(); }
 private:
   uint64_t maxPrime_ = 0;
   uint64_t log2SieveSize_ = 0;
   uint64_t moduloSieveSize_ = 0;
   MemoryPool* memoryPool_ = nullptr;
-  pod_vector<SievingPrime*> buckets_;
+  Vector<SievingPrime*> buckets_;
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   NOINLINE void crossOff(uint8_t* sieve, SievingPrime* prime, SievingPrime* end);
 };
