@@ -2,6 +2,8 @@
 
 [![Build status](https://github.com/kimwalisch/primesieve/actions/workflows/ci.yml/badge.svg)](https://github.com/kimwalisch/primesieve/actions/workflows/ci.yml)
 [![Github Releases](https://img.shields.io/github/release/kimwalisch/primesieve.svg)](https://github.com/kimwalisch/primesieve/releases)
+[![C API Documentation](https://img.shields.io/badge/docs-C_API-blue)](doc/C_API.md)
+[![C++ API Documentation](https://img.shields.io/badge/docs-C++_API-blue)](doc/CPP_API.md)
 
 primesieve is a command-line program and C/C++ library for quickly generating prime numbers.
 It is very cache efficient, it detects your CPU's L1 & L2 cache sizes and allocates its main
