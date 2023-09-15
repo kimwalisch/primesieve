@@ -436,10 +436,10 @@ SIMD instructions can significantly speed up some algorithms. The
 ```primesieve::iterator``` data structure allows you to access the underlying
 ```primes``` array and process its elements using SIMD instructions.
 
-The C++ example below calculates the sum of all primes ≤ 10^10 using the AVX2 vector
+The C++ example below calculates the sum of all primes ≤ 10^10 using the AVX512 vector
 instruction set for x64 CPUs. This code uses the ```generate_next_primes()```
 method to generate the next 2^10 primes in a loop and then calculates their sum using
-AVX2 vector intrinsics. Note that ```generate_next_primes()``` is also used under
+AVX512 vector intrinsics. Note that ```generate_next_primes()``` is also used under
 the hood by the ```next_prime()``` method.
 
 ```C
@@ -458,20 +458,18 @@ int main()
   while (it.primes_[it.size_ - 1] <= limit)
   {
     std::size_t i = 0;
-    __m256i vsums = _mm256_setzero_si256();
+    __m512i vsums = _mm512_setzero_si512();
 
-    // Sum primes using AVX2 (256-bits)
-    for (; i + 4 < it.size_; i += 4) {
-      __m256i primes = _mm256_loadu_si256((__m256i*) &it.primes_[i]);
-      vsums = _mm256_add_epi64(vsums, primes);
+    // Sum primes using AVX512
+    for (; i + 8 < it.size_; i += 8) {
+      __m512i primes = _mm512_loadu_si512((__m512i*) &it.primes_[i]);
+      vsums = _mm512_add_epi64(vsums, primes);
     }
 
-    // Sum 4 integers in the vsums vector
-    vsums = _mm256_add_epi64(vsums, _mm256_srli_si256(vsums, 8));
-    __m128i vsums2 = _mm_add_epi64(_mm256_extracti128_si256(vsums, 0), _mm256_extracti128_si256(vsums, 1));
-    sum += _mm_cvtsi128_si64(vsums2);
+    // Sum 8 integers in the vsums vector
+    sum += _mm512_reduce_add_epi64(vsums);
 
-    // Process the remaining primes (at most 3)
+    // Process the remaining primes (at most 7)
     for (; i < it.size_; i++)
       sum += it.primes_[i];
 
@@ -494,7 +492,7 @@ int main()
 
 ```bash
 # Unix-like OSes
-c++ -O3 -mavx2 primesum.cpp -o primesum -lprimesieve
+c++ -O3 -mavx512f primesum.cpp -o primesum -lprimesieve
 time ./primesum
 ```
 
