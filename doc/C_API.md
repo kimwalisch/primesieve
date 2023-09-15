@@ -508,8 +508,8 @@ AVX2 vector intrinsics. Note that ```primesieve_generate_next_primes()``` is als
 used under the hood by the ```primesieve_next_prime()``` function.
 
 ```C
-#include <immintrin.h>
 #include <primesieve.h>
+#include <immintrin.h>
 #include <inttypes.h>
 #include <stdio.h>
 
@@ -519,18 +519,24 @@ int main(void)
   primesieve_init(&it);
   primesieve_generate_next_primes(&it);
 
-  size_t i = 0;
   uint64_t sum = 0;
   uint64_t limit = 10000000000;
-  __m256i vsums = _mm256_setzero_si256();
 
   while (it.primes[it.size - 1] <= limit)
   {
+    size_t i = 0;
+    __m256i vsums = _mm256_setzero_si256();
+
     // Sum primes using AVX2 (256-bits)
-    for (i = 0; i + 4 < it.size; i += 4) {
+    for (; i + 4 < it.size; i += 4) {
       __m256i primes = _mm256_loadu_si256((__m256i*) &it.primes[i]);
       vsums = _mm256_add_epi64(vsums, primes);
     }
+
+    // Sum 4 integers in the vsums vector
+    vsums = _mm256_add_epi64(vsums, _mm256_srli_si256(vsums, 8));
+    __m128i vsums2 = _mm_add_epi64(_mm256_extracti128_si256(vsums, 0), _mm256_extracti128_si256(vsums, 1));
+    sum += _mm_cvtsi128_si64(vsums2);
 
     // Process the remaining primes (at most 3)
     for (; i < it.size; i++)
@@ -540,15 +546,8 @@ int main(void)
     primesieve_generate_next_primes(&it);
   }
 
-  // Extract the 4 individual 64-bit sums from the vsums vector
-  uint64_t isums[4];
-  _mm256_storeu_si256((__m256i*) isums, vsums);
-  for (i = 0; i < 4; i++) {
-    sum += isums[i];
-  }
-
   // Process the remaining primes (at most 2^10)
-  for (i = 0; it.primes[i] <= limit; i++)
+  for (size_t i = 0; it.primes[i] <= limit; i++)
     sum += it.primes[i];
 
   printf("Sum of the primes <= %" PRIu64 ": %" PRIu64 "\n", limit, sum);
