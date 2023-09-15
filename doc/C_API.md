@@ -31,6 +31,7 @@ parameters and return values.
 * [Error handling](#error-handling)
 * [Performance tips](#performance-tips)
 * [libprimesieve multi-threading](#libprimesieve-multi-threading)
+* [libprimesieve SIMD](#libprimesieve-SIMD)
 * [Compiling and linking](#compiling-and-linking)
 * [pkgconf support](#pkgconf-support)
 * [CMake support](#cmake-support)
@@ -301,6 +302,7 @@ int main(void)
 * [Build instructions](#compiling-and-linking)
 
 # Error handling
+
 ## ```PRIMESIEVE_ERROR```
 
 If an error occurs, libprimesieve functions with a ```uint64_t``` return type return
@@ -485,6 +487,82 @@ int main(void)
 ```bash
 # Unix-like OSes
 cc -O3 -fopenmp primesum.c -o primesum -lprimesieve
+time ./primesum
+```
+
+</details>
+
+# libprimesieve SIMD
+
+SIMD stands for Single Instruction/Multiple Data, it is supported by most CPUs e.g.
+all ARM64 CPUs support the ARM NEON instruction set and most x64 CPUs support the
+AVX2 or AVX512 instruction sets. Using SIMD instructions can significantly speed up
+some algorithms. The ```primesieve_iterator``` data structure allows you to access
+the underlying ```primes``` array and process its elements using SIMD instructions.
+
+The C example below calculates the sum of all primes ≤ 10^10 using the AVX2 vector
+instruction set for x64 CPUs. This code uses the ```primesieve_generate_next_primes()```
+function to generate the next 2^10 primes in a loop and then calculates the sum using
+AVX2 vector intrinsics. Note that ```primesieve_generate_next_primes()``` is also
+used under the hood by the ```primesieve_next_prime()``` function.
+
+```C
+#include <immintrin.h>
+#include <primesieve.h>
+#include <inttypes.h>
+#include <stdio.h>
+
+int main(void)
+{
+  primesieve_iterator it;
+  primesieve_init(&it);
+  primesieve_generate_next_primes(&it);
+
+  size_t i = 0;
+  uint64_t sum = 0;
+  uint64_t limit = 10000000000;
+  __m256i vsums = _mm256_setzero_si256();
+
+  while (it.primes[it.size - 1] <= limit)
+  {
+    // Sum primes using AVX2 (256-bits)
+    for (i = 0; i + 4 < it.size; i += 4) {
+      __m256i primes = _mm256_loadu_si256((__m256i*) &it.primes[i]);
+      vsums = _mm256_add_epi64(vsums, primes);
+    }
+
+    // Process the remaining primes (at most 3)
+    for (; i < it.size; i++)
+      sum += it.primes[i];
+
+    // Generate up to 2^10 new primes
+    primesieve_generate_next_primes(&it);
+  }
+
+  // Extract the 4 individual 64-bit sums from the vsums vector
+  uint64_t isums[4];
+  _mm256_storeu_si256((__m256i*) isums, vsums);
+  for (i = 0; i < 4; i++) {
+    sum += isums[i];
+  }
+
+  // Process the remaining primes (at most 2^10)
+  for (i = 0; it.primes[i] <= limit; i++)
+    sum += it.primes[i];
+
+  printf("Sum of the primes <= %" PRIu64 ": %" PRIu64 "\n", limit, sum);
+  primesieve_free_iterator(&it);
+
+  return 0;
+}
+```
+
+<details>
+<summary>Build instructions</summary>
+
+```bash
+# Unix-like OSes
+cc -O3 -mavx2 primesum.c -o primesum -lprimesieve
 time ./primesum
 ```
 

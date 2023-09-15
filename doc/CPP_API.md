@@ -31,6 +31,7 @@ parameters and return values.
 * [Error handling](#error-handling)
 * [Performance tips](#performance-tips)
 * [libprimesieve multi-threading](#libprimesieve-multi-threading)
+* [libprimesieve SIMD](#libprimesieve-SIMD)
 * [Compiling and linking](#compiling-and-linking)
 * [pkgconf support](#pkgconf-support)
 * [CMake support](#cmake-support)
@@ -421,6 +422,79 @@ int main()
 ```bash
 # Unix-like OSes
 c++ -O3 -fopenmp primesum.cpp -o primesum -lprimesieve
+time ./primesum
+```
+
+</details>
+
+# libprimesieve SIMD
+
+SIMD stands for Single Instruction/Multiple Data, it is supported by most CPUs e.g.
+all ARM64 CPUs support the ARM NEON instruction set and most x64 CPUs support the
+AVX2 or AVX512 instruction sets. Using SIMD instructions can significantly speed up
+some algorithms. The ```primesieve::iterator``` data structure allows you to access
+the underlying ```primes``` array and process its elements using SIMD instructions.
+
+The C++ example below calculates the sum of all primes ≤ 10^10 using the AVX2 vector
+instruction set for x64 CPUs. This code uses the ```generate_next_primes()```
+method to generate the next 2^10 primes in a loop and then calculates the sum using
+AVX2 vector intrinsics. Note that ```generate_next_primes()``` is also used under
+the hood by the ```next_prime()``` method.
+
+```C
+#include <primesieve.hpp>
+#include <immintrin.h>
+#include <iostream>
+
+int main()
+{
+  primesieve::iterator it;
+  it.generate_next_primes();
+
+  std::size_t i = 0;
+  uint64_t sum = 0;
+  uint64_t limit = 10000000000;
+  __m256i vsums = _mm256_setzero_si256();
+
+  while (it.primes_[it.size_ - 1] <= limit)
+  {
+    // Sum primes using AVX2 (256-bits)
+    for (i = 0; i + 4 < it.size_; i += 4) {
+      __m256i primes = _mm256_loadu_si256((__m256i*) &it.primes_[i]);
+      vsums = _mm256_add_epi64(vsums, primes);
+    }
+
+    // Process the remaining primes (at most 3)
+    for (; i < it.size_; i++)
+      sum += it.primes_[i];
+
+    // Generate up to 2^10 new primes
+    it.generate_next_primes();
+  }
+
+  // Extract the 4 individual 64-bit sums from the vsums vector
+  uint64_t isums[4];
+  _mm256_storeu_si256((__m256i*) isums, vsums);
+  for (i = 0; i < 4; i++) {
+    sum += isums[i];
+  }
+
+  // Process the remaining primes (at most 2^10)
+  for (i = 0; it.primes_[i] <= limit; i++)
+    sum += it.primes_[i];
+
+  std::cout << "Sum of the primes <= " << limit << ": " << sum << std::endl;
+
+  return 0;
+}
+```
+
+<details>
+<summary>Build instructions</summary>
+
+```bash
+# Unix-like OSes
+c++ -O3 -mavx2 primesum.cpp -o primesum -lprimesieve
 time ./primesum
 ```
 
