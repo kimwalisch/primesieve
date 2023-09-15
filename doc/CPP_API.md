@@ -429,15 +429,16 @@ time ./primesum
 
 # libprimesieve SIMD
 
-SIMD stands for Single Instruction/Multiple Data, it is supported by most CPUs e.g.
-all ARM64 CPUs support the ARM NEON instruction set and most x64 CPUs support the
-AVX2 or AVX512 instruction sets. Using SIMD instructions can significantly speed up
-some algorithms. The ```primesieve::iterator``` data structure allows you to access
-the underlying ```primes``` array and process its elements using SIMD instructions.
+SIMD stands for Single Instruction/Multiple Data, it is also commonly known as vector
+instructions. SIMD is supported by most CPUs e.g. all ARM64 CPUs support the ARM NEON
+instruction set and most x64 CPUs support the AVX2 or AVX512 instruction sets. Using
+SIMD instructions can significantly speed up some algorithms. The
+```primesieve::iterator``` data structure allows you to access the underlying
+```primes``` array and process its elements using SIMD instructions.
 
 The C++ example below calculates the sum of all primes ≤ 10^10 using the AVX2 vector
 instruction set for x64 CPUs. This code uses the ```generate_next_primes()```
-method to generate the next 2^10 primes in a loop and then calculates the sum using
+method to generate the next 2^10 primes in a loop and then calculates their sum using
 AVX2 vector intrinsics. Note that ```generate_next_primes()``` is also used under
 the hood by the ```next_prime()``` method.
 
