@@ -4,10 +4,12 @@ Changes in version 11.2, 15/09/2023
 * .github/workflows/ci.yml: Port AppVeyor CI tests to GitHub Actions.
 * doc/C_API.md: Fix off by 1 error in OpenMP example #137.
 * doc/CPP_API.md: Fix off by 1 error in OpenMP example #137.
+* Vector.hpp: Rename pod_vector to Vector and pod_array to Array.
 * iterator.h: Improve documentation.
 * iterator.hpp: Improve documentation.
 * C_API.md: Add libprimesieve SIMD section.
 * CPP_API.md: Add libprimesieve SIMD section.
+* README.md: Add C & C++ API badges.
 
 Changes in version 11.1, 12/05/2023
 ===================================
