@@ -399,7 +399,8 @@ int* get_primes(int n, int start)
 
 * If you are repeatedly iterating over the same primes in a loop, you should use
 ```primesieve_generate_primes()``` or ```primesieve_generate_n_primes()``` to store
-these primes in an array instead of using a ```primesieve_iterator```.
+these primes in an array (provided your PC has sufficient RAM memory) instead of using
+a ```primesieve_iterator```.
 
 * ```primesieve_next_prime()``` runs up to 2x faster and uses only
 half as much memory as ```primesieve_prev_prime()```. Oftentimes algorithms
