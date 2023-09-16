@@ -498,7 +498,7 @@ SIMD stands for Single Instruction/Multiple Data, it is also commonly known as v
 instructions. SIMD is supported by most CPUs e.g. all ARM64 CPUs support the ARM NEON
 instruction set and most x64 CPUs support the AVX2 or AVX512 instruction sets. Using
 SIMD instructions can significantly speed up some algorithms. The
-```primesieve_iterator``` data structure allows you to access the underlying
+```primesieve_iterator``` data structure allows you to access the underlying 64-bit
 ```primes``` array and process its elements using SIMD instructions.
 
 The C example below calculates the sum of all primes ≤ 10^10 using the AVX512 vector
@@ -527,7 +527,7 @@ int main(void)
     size_t i = 0;
     __m512i vsums = _mm512_setzero_si512();
 
-    // Sum primes using AVX512
+    // Sum 64-bit primes using AVX512
     for (; i + 8 < it.size; i += 8) {
       __m512i primes = _mm512_loadu_si512((__m512i*) &it.primes[i]);
       vsums = _mm512_add_epi64(vsums, primes);
