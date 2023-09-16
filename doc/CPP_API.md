@@ -335,10 +335,11 @@ int main()
 
 # Performance tips
 
-* If you are repeatedly iterating over the same primes many times in a loop, you should
+* If you are repeatedly iterating over the same primes in a loop, you should
 use ```primesieve::generate_primes()``` or
 ```primesieve::generate_n_primes()``` to store these primes in a vector
-instead of using a ```primesieve::iterator```.
+(provided your PC has sufficient RAM memory) instead of using a
+```primesieve::iterator```.
 
 * ```primesieve::iterator::next_prime()``` runs up to 2x faster and uses only
 half as much memory as ```prev_prime()```. Oftentimes algorithms that iterate
@@ -348,6 +349,12 @@ which improves performance in most cases.
 * ```primesieve::iterator``` is single-threaded. See the
 [multi-threading](#libprimesieve-multi-threading) section for how to
 parallelize an algorithm using multiple ```primesieve::iterator``` objects.
+
+*  The ```primesieve::iterator``` data structure allows you to access the underlying
+64-bit ```primes``` array, together with the ```generate_next_primes()``` method,
+this can be used for all kinds of low-level optimizations. E.g. the
+[libprimesieve SIMD](#libprimesieve-SIMD) section contains an example that shows how
+to process primes using SIMD instructions.
 
 * The ```primesieve::iterator``` constructor and the
 ```primesieve::iterator::jump_to()``` method take an optional ```stop_hint```
