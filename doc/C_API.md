@@ -397,10 +397,9 @@ int* get_primes(int n, int start)
 
 # Performance tips
 
-* If you are repeatedly iterating over the same primes many times in a loop, you should
-use ```primesieve_generate_primes()``` or
-```primesieve_generate_n_primes()``` to store these primes in an array
-instead of using a ```primesieve_iterator```.
+* If you are repeatedly iterating over the same primes in a loop, you should use
+```primesieve_generate_primes()``` or ```primesieve_generate_n_primes()``` to store
+these primes in an array instead of using a ```primesieve_iterator```.
 
 * ```primesieve_next_prime()``` runs up to 2x faster and uses only
 half as much memory as ```primesieve_prev_prime()```. Oftentimes algorithms
@@ -411,12 +410,18 @@ using ```primesieve_next_prime()``` which improves performance in most cases.
 [multi-threading](#libprimesieve-multi-threading) section for how to
 parallelize an algorithm using multiple ```primesieve_iterator``` objects.
 
+*  The ```primesieve_iterator``` data structure allows you to access the underlying
+64-bit ```primes``` array, together with the ```primesieve_generate_next_primes()```
+function, this can be used for all kinds of low-level optimizations. E.g. the
+[libprimesieve SIMD](#libprimesieve-SIMD) section contains an example that shows how
+to process primes using SIMD instructions.
+
 * The ```primesieve_jump_to()``` function takes an optional ```stop_hint```
 parameter that can provide a significant speedup if the sieving distance
 is relatively small e.g.&nbsp;<&nbsp;sqrt(start). If ```stop_hint``` is set
 ```primesieve_iterator``` will only buffer primes up to this limit.
 
-* Many of libprimesieve's functions e.g. ```primesieve_count_primes(start, stop)``` &
+* Many of libprimesieve's functions e.g. ```primesieve_count_primes(start, stop)``` and
 ```primesieve_nth_prime(n, start)``` incur an initialization overhead of O(sqrt(start))
 even if the total sieving distance is tiny. It is therefore not a good idea to
 call these functions repeatedly in a loop unless the sieving distance is
