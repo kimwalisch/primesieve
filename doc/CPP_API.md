@@ -460,7 +460,7 @@ int main()
   it.generate_next_primes();
 
   uint64_t limit = 10000000000;
-  __m512i vsums = _mm512_setzero_si512();
+  __m512i sums = _mm512_setzero_si512();
 
   while (it.primes_[it.size_ - 1] <= limit)
   {
@@ -468,15 +468,15 @@ int main()
     for (std::size_t i = 0; i < it.size_; i += 8) { 
       __mmask8 mask = (it.size_ - i > 8) ? 255 : (1 << (it.size_ - i)) - 1;
       __m512i primes = _mm512_maskz_loadu_epi64(mask, (__m512i*) &it.primes_[i]);
-      vsums = _mm512_add_epi64(vsums, primes);
+      sums = _mm512_add_epi64(sums, primes);
     }
 
     // Generate up to 2^10 new primes
     it.generate_next_primes();
   }
 
-  // Sum 8 partial sums in the vsums vector
-  uint64_t sum = _mm512_reduce_add_epi64(vsums);
+  // Sum the 8 partial sums
+  uint64_t sum = _mm512_reduce_add_epi64(sums);
 
   // Process the remaining primes (at most 2^10)
   for (std::size_t i = 0; it.primes_[i] <= limit; i++)
