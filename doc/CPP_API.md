@@ -31,7 +31,7 @@ parameters and return values.
 * [Error handling](#error-handling)
 * [Performance tips](#performance-tips)
 * [Multi-threading](#Multi-threading)
-* [SIMD (vectorization)](#SIMD-(vectorization))
+* [SIMD (vectorization)](#SIMD-vectorization)
 * [Compiling and linking](#compiling-and-linking)
 * [pkgconf support](#pkgconf-support)
 * [CMake support](#cmake-support)
@@ -353,7 +353,7 @@ parallelize an algorithm using multiple ```primesieve::iterator``` objects.
 *  The ```primesieve::iterator``` data structure allows you to access the underlying
 64-bit ```primes``` array, together with the ```generate_next_primes()``` method,
 this can be used for all kinds of low-level optimizations. E.g. the
-[SIMD (vectorization)](#SIMD-(vectorization)) section contains an example that shows how
+[SIMD (vectorization)](#SIMD-vectorization) section contains an example that shows how
 to process primes using SIMD instructions.
 
 * The ```primesieve::iterator``` constructor and the

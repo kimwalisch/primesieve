@@ -40,5 +40,5 @@
 ///
 /// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/C_API.md#performance-tips"><b>libprimesieve performance tips</b></a>
 /// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/C_API.md#Multi-threading"><b>Multi-threading</b></a>
-/// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/C_API.md#SIMD-(vectorization)"><b>SIMD (vectorization)</b></a>
+/// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/C_API.md#SIMD-vectorization"><b>SIMD (vectorization)</b></a>
 ///
