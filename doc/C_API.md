@@ -525,30 +525,24 @@ int main(void)
   primesieve_init(&it);
   primesieve_generate_next_primes(&it);
 
-  uint64_t sum = 0;
   uint64_t limit = 10000000000;
+  __m512i vsums = _mm512_setzero_si512();
 
   while (it.primes[it.size - 1] <= limit)
   {
-    size_t i = 0;
-    __m512i vsums = _mm512_setzero_si512();
-
     // Sum 64-bit primes using AVX512
-    for (; i + 8 < it.size; i += 8) {
-      __m512i primes = _mm512_loadu_si512((__m512i*) &it.primes[i]);
+    for (size_t i = 0; i < it.size; i += 8) {
+      __mmask8 mask = (it.size - i > 8) ? 255 : (1 << (it.size - i)) - 1;
+      __m512i primes = _mm512_maskz_loadu_epi64(mask, (__m512i*) &it.primes[i]);
       vsums = _mm512_add_epi64(vsums, primes);
     }
-
-    // Sum 8 integers in the vsums vector
-    sum += _mm512_reduce_add_epi64(vsums);
-
-    // Process the remaining primes (at most 7)
-    for (; i < it.size; i++)
-      sum += it.primes[i];
 
     // Generate up to 2^10 new primes
     primesieve_generate_next_primes(&it);
   }
+
+  // Sum 8 partial sums in the vsums vector
+  uint64_t sum = _mm512_reduce_add_epi64(vsums);
 
   // Process the remaining primes (at most 2^10)
   for (size_t i = 0; it.primes[i] <= limit; i++)

@@ -459,30 +459,24 @@ int main()
   primesieve::iterator it;
   it.generate_next_primes();
 
-  uint64_t sum = 0;
   uint64_t limit = 10000000000;
+  __m512i vsums = _mm512_setzero_si512();
 
   while (it.primes_[it.size_ - 1] <= limit)
   {
-    std::size_t i = 0;
-    __m512i vsums = _mm512_setzero_si512();
-
     // Sum 64-bit primes using AVX512
-    for (; i + 8 < it.size_; i += 8) {
-      __m512i primes = _mm512_loadu_si512((__m512i*) &it.primes_[i]);
+    for (std::size_t i = 0; i < it.size_; i += 8) { 
+      __mmask8 mask = (it.size_ - i > 8) ? 255 : (1 << (it.size_ - i)) - 1;
+      __m512i primes = _mm512_maskz_loadu_epi64(mask, (__m512i*) &it.primes_[i]);
       vsums = _mm512_add_epi64(vsums, primes);
     }
-
-    // Sum 8 integers in the vsums vector
-    sum += _mm512_reduce_add_epi64(vsums);
-
-    // Process the remaining primes (at most 7)
-    for (; i < it.size_; i++)
-      sum += it.primes_[i];
 
     // Generate up to 2^10 new primes
     it.generate_next_primes();
   }
+
+  // Sum 8 partial sums in the vsums vector
+  uint64_t sum = _mm512_reduce_add_epi64(vsums);
 
   // Process the remaining primes (at most 2^10)
   for (std::size_t i = 0; it.primes_[i] <= limit; i++)
