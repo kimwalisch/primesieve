@@ -30,8 +30,8 @@ parameters and return values.
 * [```primesieve_nth_prime()```](#primesieve_nth_prime)
 * [Error handling](#error-handling)
 * [Performance tips](#performance-tips)
-* [libprimesieve multi-threading](#libprimesieve-multi-threading)
-* [libprimesieve SIMD](#libprimesieve-SIMD)
+* [Multi-threading](#Multi-threading)
+* [SIMD (vectorization)](#SIMD-(vectorization))
 * [Compiling and linking](#compiling-and-linking)
 * [pkgconf support](#pkgconf-support)
 * [CMake support](#cmake-support)
@@ -408,13 +408,13 @@ that iterate over primes using ```primesieve_prev_prime()``` can be rewritten
 using ```primesieve_next_prime()``` which improves performance in most cases.
 
 * ```primesieve_iterator``` is single-threaded. See the
-[multi-threading](#libprimesieve-multi-threading) section for how to
+[Multi-threading](#Multi-threading) section for how to
 parallelize an algorithm using multiple ```primesieve_iterator``` objects.
 
 *  The ```primesieve_iterator``` data structure allows you to access the underlying
 64-bit ```primes``` array, together with the ```primesieve_generate_next_primes()```
 function, this can be used for all kinds of low-level optimizations. E.g. the
-[libprimesieve SIMD](#libprimesieve-SIMD) section contains an example that shows how
+[SIMD (vectorization)](#SIMD-(vectorization)) section contains an example that shows how
 to process primes using SIMD instructions.
 
 * The ```primesieve_jump_to()``` function takes an optional ```stop_hint```
@@ -430,7 +430,7 @@ sufficiently large e.g. >&nbsp;sqrt(start). If the sieving distance is mostly
 small consider using a ```primesieve_iterator``` instead to avoid the
 recurring initialization overhead.
 
-# libprimesieve multi-threading
+# Multi-threading
 
 By default libprimesieve uses multi-threading for counting primes/k-tuplets
 and for finding the nth prime. However ```primesieve_iterator``` the most
@@ -498,10 +498,10 @@ time ./primesum
 
 </details>
 
-# libprimesieve SIMD
+# SIMD (vectorization)
 
-SIMD stands for Single Instruction/Multiple Data, it is also commonly known as vector
-instructions. SIMD is supported by most CPUs e.g. all ARM64 CPUs support the ARM NEON
+SIMD stands for Single Instruction/Multiple Data, it is also commonly known as
+vectorization. SIMD is supported by most CPUs e.g. all ARM64 CPUs support the ARM NEON
 instruction set and most x64 CPUs support the AVX2 or AVX512 instruction sets. Using
 SIMD instructions can significantly speed up some algorithms. The
 ```primesieve_iterator``` data structure allows you to access the underlying 64-bit
