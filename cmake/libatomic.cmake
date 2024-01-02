@@ -40,7 +40,7 @@ if(NOT atomic64)
         # libraries in a subdirectory of the library directory. E.g. GCC
         # installed via homebrew stores libatomic at lib/gcc/13/libatomic.dylib
         # instead of lib/libatomic.dylib. CMake's find_library() cannot easily
-        # be used to recursively find libraries. There we use this workaround
+        # be used to recursively find libraries. Therefore we use this workaround
         # here (try adding -latomic to linker options) for this use case.
         set(CMAKE_REQUIRED_LINK_OPTIONS "-latomic")
 
