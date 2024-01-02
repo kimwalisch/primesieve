@@ -42,41 +42,25 @@ if(NOT atomic64)
         # instead of lib/libatomic.dylib. CMake's find_library() cannot easily
         # be used to recursively find libraries. Therefore we use this workaround
         # here (try adding -latomic to linker options) for this use case.
-        set(CMAKE_REQUIRED_LINK_OPTIONS "-latomic")
+        set(LIBATOMIC "-latomic")
+        message(STATUS "Add linker flag: ${LIBATOMIC}")
+    endif()
 
-        check_cxx_source_compiles("
-            #include <atomic>
-            #include <stdint.h>
-            int main() {
-                std::atomic<int64_t> x;
-                x = 1;
-                x--;
-                return (int) x;
-            }"
-            atomic_linker_flag)
+    set(CMAKE_REQUIRED_LIBRARIES "${LIB_ATOMIC}")
 
-        if (atomic_linker_flag)
-            set(LIBATOMIC "-latomic")
-            message(STATUS "Add linker flag: ${LIBATOMIC}")
-        else()
-            # This code block is used to print a nice error message to the
-            # user. If atomic32 compiles and atomic64 does not compile then
-            # this is almost likely due to the missing libatomic library.
-            check_cxx_source_compiles("
-                #include <atomic>
-                #include <stdint.h>
-                int main() {
-                    std::atomic<int32_t> x;
-                    x = 1;
-                    x--;
-                    return (int) x;
-                }"
-                atomic32)
+    check_cxx_source_compiles("
+        #include <atomic>
+        #include <stdint.h>
+        int main() {
+            std::atomic<int64_t> x;
+            x = 1;
+            x--;
+            return (int) x;
+        }"
+        atomic64_with_libatomic)
 
-            if(atomic32)
-                message(FATAL_ERROR "Failed to find libatomic!")
-            endif()
-        endif()
+    if (NOT atomic64_with_libatomic)
+        message(FATAL "Failed to compile std::atomic, libatomic likely not found!")
     endif()
 endif()
 
