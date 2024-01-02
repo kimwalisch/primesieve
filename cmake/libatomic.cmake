@@ -14,6 +14,8 @@ if(CMAKE_CXX11_STANDARD_COMPILE_OPTION)
     set(CMAKE_REQUIRED_FLAGS ${CMAKE_CXX11_STANDARD_COMPILE_OPTION})
 endif()
 
+# Check if code compiles without libatomic.
+# Should always work on CPUs >= 64-bits
 check_cxx_source_compiles("
     #include <atomic>
     #include <stdint.h>
@@ -25,10 +27,12 @@ check_cxx_source_compiles("
     }"
     atomic64)
 
+# Our code requires libatomic to compile
 if(NOT atomic64)
     find_library(ATOMIC NAMES atomic atomic.so.1 libatomic.so.1)
 
     if(ATOMIC)
+        # We have found libatomic, add it to the linker flags
         set(LIBATOMIC ${ATOMIC})
         message(STATUS "Found libatomic: ${LIBATOMIC}")
     else()
@@ -55,6 +59,9 @@ if(NOT atomic64)
             set(LIBATOMIC "-latomic")
             message(STATUS "Add linker flag: ${LIBATOMIC}")
         else()
+            # This code block is used to print a nice error message to the
+            # user. If atomic32 compiles and atomic64 does not compile then
+            # this is almost likely due to the missing libatomic library.
             check_cxx_source_compiles("
                 #include <atomic>
                 #include <stdint.h>
