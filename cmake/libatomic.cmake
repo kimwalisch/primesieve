@@ -1,3 +1,10 @@
+# This file first tries to find out whether it is necessary to
+# add libatomic to the linker flags. Usually this is required
+# on old 32-bit CPUs. Then it tries to find libatomic, ideally
+# we would have liked to use an offical CMake module to find
+# libatomic, however there is none.
+# See discussion: https://github.com/kimwalisch/primesieve/issues/141
+
 include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
 
@@ -19,25 +26,49 @@ check_cxx_source_compiles("
     atomic64)
 
 if(NOT atomic64)
-    find_library(ATOMIC NAMES atomic libatomic.so.1)
+    find_library(ATOMIC NAMES atomic atomic.so.1 libatomic.so.1)
 
     if(ATOMIC)
         set(LIBATOMIC ${ATOMIC})
         message(STATUS "Found libatomic: ${LIBATOMIC}")
     else()
+        # Some package managers like homebrew and macports store the compiler's
+        # libraries in a subdirectory of the library directory. E.g. GCC
+        # installed via homebrew stores libatomic at lib/gcc/13/libatomic.dylib
+        # instead of lib/libatomic.dylib. CMake's find_library() cannot easily
+        # be used to recursively find libraries. There we use this workaround
+        # here (try adding -latomic to linker options) for this use case.
+        set(CMAKE_REQUIRED_LINK_OPTIONS "-latomic")
+
         check_cxx_source_compiles("
             #include <atomic>
             #include <stdint.h>
             int main() {
-                std::atomic<int32_t> x;
+                std::atomic<int64_t> x;
                 x = 1;
                 x--;
                 return (int) x;
             }"
-            atomic32)
+            atomic_linker_flag)
 
-        if(atomic32)
-            message(FATAL_ERROR "Failed to find libatomic!")
+        if (atomic_linker_flag)
+            set(LIBATOMIC "-latomic")
+            message(STATUS "Add linker flag: ${LIBATOMIC}")
+        else()
+            check_cxx_source_compiles("
+                #include <atomic>
+                #include <stdint.h>
+                int main() {
+                    std::atomic<int32_t> x;
+                    x = 1;
+                    x--;
+                    return (int) x;
+                }"
+                atomic32)
+
+            if(atomic32)
+                message(FATAL_ERROR "Failed to find libatomic!")
+            endif()
         endif()
     endif()
 endif()
