@@ -46,7 +46,7 @@ if(NOT atomic64)
         message(STATUS "Add linker flag: ${LIBATOMIC}")
     endif()
 
-    set(CMAKE_REQUIRED_LIBRARIES "${LIB_ATOMIC}")
+    set(CMAKE_REQUIRED_LIBRARIES "${LIBATOMIC}")
 
     check_cxx_source_compiles("
         #include <atomic>
@@ -60,7 +60,7 @@ if(NOT atomic64)
         atomic64_with_libatomic)
 
     if (NOT atomic64_with_libatomic)
-        message(FATAL "Failed to compile std::atomic, libatomic likely not found!")
+        message(FATAL_ERROR "Failed to compile std::atomic, libatomic likely not found!")
     endif()
 endif()
 
