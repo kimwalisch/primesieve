@@ -29,11 +29,9 @@ check_cxx_source_compiles("
 
 # Our code requires libatomic to compile
 if(NOT atomic64)
-    find_library(ATOMIC NAMES atomic atomic.so.1 libatomic.so.1)
+    find_library(LIBATOMIC NAMES atomic atomic.so.1 libatomic.so.1)
 
-    if(ATOMIC)
-        # We have found libatomic, add it to the linker flags
-        set(LIBATOMIC ${ATOMIC})
+    if(LIBATOMIC)
         message(STATUS "Found libatomic: ${LIBATOMIC}")
     else()
         # Some package managers like homebrew and macports store the compiler's
