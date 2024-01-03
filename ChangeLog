@@ -1,7 +1,7 @@
 Changes in version 11.2, 02/01/2024
 ===================================
 
-* cmake/libatomic.cmake: Fix failed to find libatomic #141
+* cmake/libatomic.cmake: Fix failed to find libatomic #141.
 * .github/workflows/ci.yml: Port AppVeyor CI tests to GitHub Actions.
 * doc/C_API.md: Fix off by 1 error in OpenMP example #137.
 * doc/CPP_API.md: Fix off by 1 error in OpenMP example #137.
