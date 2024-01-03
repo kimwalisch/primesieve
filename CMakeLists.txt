@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4...3.22)
+cmake_minimum_required(VERSION 3.4...3.27)
 project(primesieve CXX)
 set(PRIMESIEVE_VERSION "11.2")
 set(PRIMESIEVE_SOVERSION "11.2.0")
