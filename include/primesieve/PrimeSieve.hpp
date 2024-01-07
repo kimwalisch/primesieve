@@ -78,6 +78,7 @@ public:
   // nth prime
   uint64_t nthPrime(uint64_t);
   uint64_t nthPrime(int64_t, uint64_t);
+  uint64_t negativeNthPrime(int64_t, uint64_t);
   // Count
   counts_t& getCounts();
   uint64_t getCount(int) const;
