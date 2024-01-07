@@ -20,6 +20,13 @@
 #include <chrono>
 #include <cmath>
 
+namespace {
+
+/// PrimePi(2^64)
+const int64_t max_n = 425656284035217743ull;
+
+} // namespace
+
 namespace primesieve {
 
 uint64_t PrimeSieve::nthPrime(uint64_t n)
@@ -34,8 +41,8 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 
   if (n == 0)
     n = 1; // like Mathematica
-  //if (n > max_n)
-  //  throw primecount_error("nth_prime(n): n must be <= " + std::to_string(max_n));
+  if (n > max_n)
+    throw primesieve_error("nth_prime(n): n must be <= " + std::to_string(max_n));
 
   uint64_t prime_approx;
 
