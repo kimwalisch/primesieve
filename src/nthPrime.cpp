@@ -67,7 +67,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 
   // Only use multi-threading if the sieving distance is sufficiently
   // large. For small n this if statement also avoids calling
-  // countPrimes() and hence the initailization overhead of
+  // countPrimes() and hence the initialization overhead of
   // O(x^0.5 log log x^0.5) occurs only once (instead of twice) when
   // using primesieve::iterator further down.
   if (primeApprox - start > isqrt(primeApprox) / 10)
