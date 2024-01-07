@@ -61,6 +61,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     primeApprox = nthPrimeApprox(nApprox);
   }
 
+  primeApprox = std::max(primeApprox, start);
   if (primeApprox > 0)
     avgPrimeGap = ilog(primeApprox) + 2;
 
@@ -69,8 +70,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   // countPrimes() and hence the initailization overhead of
   // O(x^0.5 log log x^0.5) occurs only once (instead of twice) when
   // using primesieve::iterator further down.
-  if (start < primeApprox &&
-      primeApprox - start > isqrt(primeApprox) / 10)
+  if (primeApprox - start > isqrt(primeApprox) / 10)
   {
     // Count primes > start
     start = checkedAdd(start, 1);
