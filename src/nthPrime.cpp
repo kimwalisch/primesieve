@@ -48,8 +48,13 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 
   if (start == 0) 
     prime_approx = nthPrimeApprox(n);
-  else // start > 0
-    prime_approx = nthPrimeApprox(primesApprox(start) + n);
+  else
+  {
+    ASSERT(start > 0);
+    uint64_t new_n = checkedAdd(primesApprox(start), n);
+    new_n = std::min(new_n, max_n);
+    prime_approx = nthPrimeApprox(new_n);
+  }
 
   if (n > 0)
     start = checkedAdd(start, 1);
@@ -67,8 +72,14 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     uint64_t start = prime_approx + 1;
     uint64_t stop = checkedAdd(start, (n - count_approx) * avg_prime_gap);
     primesieve::iterator iter(start, stop);
-    for (int64_t i = count_approx; i < n; i++)
+    int64_t i = count_approx;
+    while (i < n)
+    {
       prime = iter.next_prime();
+      i += 1;
+      if_unlikely(i < n && prime == 18446744073709551557ull)
+        throw primesieve_error("nth_prime(n) > 2^64 is not supported!");
+    }
   }
   else // if (count_approx >= n)
   {
