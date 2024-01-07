@@ -85,8 +85,8 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   }
   else // if (countApprox >= n)
   {
-    uint64_t stop = primeApprox;
-    uint64_t start = checkedSub(stop, (countApprox - n) * avgPrimeGap);
+    uint64_t start = primeApprox;
+    uint64_t stop = checkedSub(start, (countApprox - n) * avgPrimeGap);
     primesieve::iterator iter(start, stop);
     for (int64_t i = countApprox; i >= n; i--)
       prime = iter.prev_prime();
