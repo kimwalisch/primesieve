@@ -70,7 +70,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   // O(x^0.5 log log x^0.5) occurs only once (instead of twice) when
   // using primesieve::iterator further down.
   if (start < primeApprox &&
-      primeApprox - start > isqrt(primeApprox - start) / 10)
+      primeApprox - start > isqrt(primeApprox) / 10)
   {
     // Count primes > start
     start = checkedAdd(start, 1);
