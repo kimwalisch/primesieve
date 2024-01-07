@@ -46,9 +46,9 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 
   setStart(start);
   auto t1 = std::chrono::system_clock::now();
-  int64_t countApprox = 0;
-  uint64_t primeApprox = 0;
+  uint64_t primeApprox = start;
   uint64_t avgPrimeGap = 0;
+  int64_t countApprox = 0;
   uint64_t prime = 0;
 
   if (start == 0)
@@ -70,7 +70,9 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   // countPrimes() and hence the initialization overhead of
   // O(x^0.5 log log x^0.5) occurs only once (instead of twice) when
   // using primesieve::iterator further down.
-  if (primeApprox - start > isqrt(primeApprox) / 10)
+  if (primeApprox - start < isqrt(primeApprox) / 10)
+    primeApprox = start;
+  else
   {
     // Count primes > start
     start = checkedAdd(start, 1);
@@ -126,13 +128,26 @@ uint64_t PrimeSieve::negativeNthPrime(int64_t n, uint64_t start)
   uint64_t primeApprox = nthPrimeApprox(nApprox);
   uint64_t avgPrimeGap = 0;
   uint64_t prime = 0;
+  int64_t countApprox = 0;
 
-  // Count primes < start
-  start = checkedSub(start, 1);
   primeApprox = std::min(primeApprox, start);
-  int64_t countApprox = countPrimes(primeApprox, start);
   if (primeApprox > 0)
     avgPrimeGap = ilog(primeApprox) + 2;
+
+  // Only use multi-threading if the sieving distance is sufficiently
+  // large. For small n this if statement also avoids calling
+  // countPrimes() and hence the initialization overhead of
+  // O(x^0.5 log log x^0.5) occurs only once (instead of twice) when
+  // using primesieve::iterator further down.
+  if (start - primeApprox < isqrt(start) / 10)
+    primeApprox = start;
+  else
+  {
+    // Count primes < start
+    start = checkedSub(start, 1);
+    primeApprox = std::min(primeApprox, start);
+    countApprox = countPrimes(primeApprox, start);
+  }
 
   // Here we are very close to the nth prime < sqrt(nth_prime),
   // we simply iterate over the primes until we find it.
