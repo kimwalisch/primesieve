@@ -57,15 +57,15 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     start = checkedSub(start, 1);
 
   int64_t count_approx = countPrimes(start, prime_approx);
-  int64_t avg_prime_gap =  ilog(prime_approx) + 2;
-  int64_t prime = -1;
+  uint64_t avg_prime_gap =  ilog(prime_approx) + 2;
+  uint64_t prime = -1;
 
   // Here we are very close to the nth prime < sqrt(nth_prime),
   // we simply iterate over the primes until we find it.
   if (count_approx < n)
   {
     uint64_t start = prime_approx + 1;
-    uint64_t stop = start + (n - count_approx) * avg_prime_gap;
+    uint64_t stop = checkedAdd(start, (n - count_approx) * avg_prime_gap);
     primesieve::iterator iter(start, stop);
     for (int64_t i = count_approx; i < n; i++)
       prime = iter.next_prime();
@@ -73,7 +73,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   else // if (count_approx >= n)
   {
     uint64_t start = prime_approx;
-    uint64_t stop = start - (count_approx - n) * avg_prime_gap;
+    uint64_t stop = checkedSub(start, (count_approx - n) * avg_prime_gap);
     primesieve::iterator iter(start, stop);
     for (int64_t i = count_approx; i + 1 > n; i--)
       prime = iter.prev_prime();
