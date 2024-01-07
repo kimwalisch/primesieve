@@ -46,7 +46,9 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 
   setStart(start);
   auto t1 = std::chrono::system_clock::now();
-  uint64_t primeApprox;
+  uint64_t primeApprox = 0;
+  uint64_t avgPrimeGap = 0;
+  uint64_t prime = 0;
 
   if (start == 0) 
     primeApprox = nthPrimeApprox(n);
@@ -60,9 +62,10 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 
   // Count primes > start
   start = checkedAdd(start, 1);
+  primeApprox = std::max(start, primeApprox);
   int64_t countApprox = countPrimes(start, primeApprox);
-  uint64_t avgPrimeGap = ilog(primeApprox) + 2;
-  uint64_t prime = -1;
+  if (primeApprox > 0)
+    avgPrimeGap = ilog(primeApprox) + 2;
 
   // Here we are very close to the nth prime < sqrt(nth_prime),
   // we simply iterate over the primes until we find it.
@@ -82,10 +85,10 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   }
   else // if (countApprox >= n)
   {
-    uint64_t start = primeApprox;
-    uint64_t stop = checkedSub(start, (countApprox - n) * avgPrimeGap);
+    uint64_t stop = primeApprox;
+    uint64_t start = checkedSub(stop, (countApprox - n) * avgPrimeGap);
     primesieve::iterator iter(start, stop);
-    for (int64_t i = countApprox; i + 1 > n; i--)
+    for (int64_t i = countApprox; i >= n; i--)
       prime = iter.prev_prime();
   }
 
@@ -104,44 +107,43 @@ uint64_t PrimeSieve::negativeNthPrime(int64_t n, uint64_t start)
   if ((uint64_t) n >= start)
     throw primesieve_error("nth_prime(n): abs(n) must be < start");
   else if ((uint64_t) n > max_n)
-    throw primesieve_error("nth_prime(n): n must be <= " + std::to_string(max_n));
+    throw primesieve_error("nth_prime(n): abs(n) must be <= " + std::to_string(max_n));
 
   setStart(start);
   auto t1 = std::chrono::system_clock::now();
   uint64_t nApprox = checkedSub(primesApprox(start), n);
   uint64_t primeApprox = nthPrimeApprox(nApprox);
+  uint64_t avgPrimeGap = 0;
+  uint64_t prime = 0;
 
   // Count primes < start
   start = checkedSub(start, 1);
   primeApprox = std::min(primeApprox, start);
-
   int64_t countApprox = countPrimes(primeApprox, start);
-  uint64_t avgPrimeGap = ilog(primeApprox) + 2;
-  uint64_t prime = -1;
+  if (primeApprox > 0)
+    avgPrimeGap = ilog(primeApprox) + 2;
 
   // Here we are very close to the nth prime < sqrt(nth_prime),
   // we simply iterate over the primes until we find it.
-  if (countApprox > n)
+  if (countApprox >= n)
   {
     uint64_t start = primeApprox;
     uint64_t stop = checkedAdd(start, (n - countApprox) * avgPrimeGap);
     primesieve::iterator iter(start, stop);
-    int64_t i = countApprox;
-    while (i < n)
-    {
+    for (int64_t i = countApprox; i >= n; i--)
       prime = iter.next_prime();
-      i += 1;
-      if_unlikely(i < n && prime == 18446744073709551557ull)
-        throw primesieve_error("nth_prime(n) > 2^64 is not supported!");
-    }
   }
-  else // if (countApprox <= n)
+  else // if (countApprox < n)
   {
     uint64_t start = checkedSub(primeApprox, 1);
     uint64_t stop = checkedSub(start, (countApprox - n) * avgPrimeGap);
     primesieve::iterator iter(start, stop);
-    for (int64_t i = countApprox; i + 1 > n; i--)
+    for (int64_t i = countApprox; i < n; i += 1)
+    {
       prime = iter.prev_prime();
+      if_unlikely(prime == 0)
+        throw primesieve_error("nth_prime(n): n is too small, nth_prime(n) < 2!");
+    }
   }
 
   auto t2 = std::chrono::system_clock::now();
