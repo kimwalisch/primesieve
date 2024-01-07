@@ -46,11 +46,12 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 
   setStart(start);
   auto t1 = std::chrono::system_clock::now();
+  int64_t countApprox = 0;
   uint64_t primeApprox = 0;
   uint64_t avgPrimeGap = 0;
   uint64_t prime = 0;
 
-  if (start == 0) 
+  if (start == 0)
     primeApprox = nthPrimeApprox(n);
   else
   {
@@ -60,12 +61,22 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     primeApprox = nthPrimeApprox(nApprox);
   }
 
-  // Count primes > start
-  start = checkedAdd(start, 1);
-  primeApprox = std::max(start, primeApprox);
-  int64_t countApprox = countPrimes(start, primeApprox);
   if (primeApprox > 0)
     avgPrimeGap = ilog(primeApprox) + 2;
+
+  // Only use multi-threading if the sieving distance is sufficiently
+  // large. For small n this if statement also avoids calling
+  // countPrimes() and hence the initailization overhead of
+  // O(x^0.5 log log x^0.5) occurs only once (instead of twice) when
+  // using primesieve::iterator further down.
+  if (start < primeApprox &&
+      primeApprox - start > isqrt(primeApprox - start) / 10)
+  {
+    // Count primes > start
+    start = checkedAdd(start, 1);
+    primeApprox = std::max(start, primeApprox);
+    countApprox = countPrimes(start, primeApprox);
+  }
 
   // Here we are very close to the nth prime < sqrt(nth_prime),
   // we simply iterate over the primes until we find it.
