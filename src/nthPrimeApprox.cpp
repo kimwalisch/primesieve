@@ -257,7 +257,7 @@ uint64_t Ri_inverse(uint64_t x)
 uint64_t primePiApprox(uint64_t x)
 {
   // Li(x) is faster but less accurate than Ri(x).
-  // For small n speed is more important than accuracy.
+  // For small x speed is more important than accuracy.
   if (x < 1e10)
     return Li(x);
   else
@@ -266,7 +266,7 @@ uint64_t primePiApprox(uint64_t x)
 
 uint64_t nthPrimeApprox(uint64_t n)
 {
-  // Li_inverse(x) is faster but less accurate than Ri_inverse(x).
+  // Li_inverse(n) is faster but less accurate than Ri_inverse(n).
   // For small n speed is more important than accuracy.
   if (n < 1e8)
     return Li_inverse(n);
