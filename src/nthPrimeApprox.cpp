@@ -1,5 +1,18 @@
 ///
 /// @file  nthPrimeApprox.cpp
+///        This file contains implementations of the logarithmic
+///        integral and the Riemann R function which are very
+///        accurate approximations of PrimePi(x). Please note that
+///        most of this code has been copied from the primecount
+///        project: https://github.com/kimwalisch/primecount
+///
+///        Note that while the Riemann R function is extremely
+///        accurate it is much slower than other simpler PrimePi(x)
+///        approximations. When speed matters, e.g. for allocating
+///        a vector of primes, we avoid using the functions defined
+///        in this file. Currently, the functions defined in this
+///        file are only used in nthPrime.cpp where accuracy is of
+///        utmost importance.
 ///
 /// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
