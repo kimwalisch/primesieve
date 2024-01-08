@@ -1,6 +1,8 @@
-Changes in version 11.2, 02/01/2024
+Changes in version 11.2, 08/01/2024
 ===================================
 
+* nthPrime.cpp: Rewritten using faster nth prime approximation.
+* nthPrimeApprox.cpp: Logarithmic integral and Riemann R implementations.
 * cmake/libatomic.cmake: Fix failed to find libatomic #141.
 * .github/workflows/ci.yml: Port AppVeyor CI tests to GitHub Actions.
 * doc/C_API.md: Fix off by 1 error in OpenMP example #137.
