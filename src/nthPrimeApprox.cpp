@@ -254,7 +254,7 @@ uint64_t Ri_inverse(uint64_t x)
   return (uint64_t) ::Ri_inverse((long double) x);
 }
 
-uint64_t primesApprox(uint64_t x)
+uint64_t primePiApprox(uint64_t x)
 {
   // Li(x) is faster but less accurate than Ri(x).
   // For small n speed is more important than accuracy.

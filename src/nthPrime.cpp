@@ -60,7 +60,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 
   setStart(start);
   auto t1 = std::chrono::system_clock::now();
-  uint64_t nApprox = checkedAdd(primesApprox(start), n);
+  uint64_t nApprox = checkedAdd(primePiApprox(start), n);
   nApprox = std::min(nApprox, max_n);
   uint64_t primeApprox = nthPrimeApprox(nApprox);
   primeApprox = std::max(primeApprox, start);
@@ -125,7 +125,7 @@ uint64_t PrimeSieve::negativeNthPrime(int64_t n, uint64_t start)
 
   setStart(start);
   auto t1 = std::chrono::system_clock::now();
-  uint64_t nApprox = checkedSub(primesApprox(start), n);
+  uint64_t nApprox = checkedSub(primePiApprox(start), n);
   nApprox = std::min(nApprox, max_n);
   uint64_t primeApprox = nthPrimeApprox(nApprox);
   primeApprox = std::min(primeApprox, start);

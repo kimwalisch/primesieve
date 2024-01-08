@@ -17,7 +17,7 @@ uint64_t Li(uint64_t x);
 uint64_t Li_inverse(uint64_t x);
 uint64_t Ri(uint64_t x);
 uint64_t Ri_inverse(uint64_t x);
-uint64_t primesApprox(uint64_t x);
+uint64_t primePiApprox(uint64_t x);
 uint64_t nthPrimeApprox(uint64_t n);
 
 } // namespace
