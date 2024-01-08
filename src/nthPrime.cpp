@@ -150,7 +150,7 @@ uint64_t PrimeSieve::negativeNthPrime(int64_t n, uint64_t start)
   // we simply iterate over the primes until we find it.
   if (countApprox >= n)
   {
-    uint64_t dist = (n - countApprox) * avgPrimeGap(start);
+    uint64_t dist = (countApprox - n) * avgPrimeGap(start);
     uint64_t stop = checkedAdd(start, dist);
     primesieve::iterator iter(start, stop);
     for (int64_t i = countApprox; i >= n; i--)
@@ -159,7 +159,7 @@ uint64_t PrimeSieve::negativeNthPrime(int64_t n, uint64_t start)
   else // if (countApprox < n)
   {
     start = checkedSub(start, 1);
-    uint64_t dist = (countApprox - n) * avgPrimeGap(start);
+    uint64_t dist = (n - countApprox) * avgPrimeGap(start);
     uint64_t stop = checkedSub(start, dist);
     primesieve::iterator iter(start, stop);
     for (int64_t i = countApprox; i < n; i++)
