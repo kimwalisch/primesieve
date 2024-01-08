@@ -86,7 +86,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   if (countApprox < n)
   {
     start = checkedAdd(start, 1);
-    uint64_t dist = (n - countApprox) * avgPrimeGap(start);
+    uint64_t dist = (n - countApprox) * avgPrimeGap(primeApprox);
     uint64_t stop = checkedAdd(start, dist);
     primesieve::iterator iter(start, stop);
     for (int64_t i = countApprox; i < n; i++)
@@ -94,7 +94,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
   }
   else // if (countApprox >= n)
   {
-    uint64_t dist = (countApprox - n) * avgPrimeGap(start);
+    uint64_t dist = (countApprox - n) * avgPrimeGap(primeApprox);
     uint64_t stop = checkedSub(start, dist);
     primesieve::iterator iter(start, stop);
     for (int64_t i = countApprox; i >= n; i--)
