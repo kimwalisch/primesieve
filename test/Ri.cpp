@@ -14,6 +14,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
+#include <limits>
 #include <vector>
 
 using std::max;
