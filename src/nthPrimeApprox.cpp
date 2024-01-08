@@ -24,6 +24,7 @@
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
+#include <algorithm>
 #include <cmath>
 #include <limits>
 
