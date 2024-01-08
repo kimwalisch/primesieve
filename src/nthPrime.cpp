@@ -101,7 +101,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     {
       prime = iter.prev_prime();
       if_unlikely(prime == 0)
-        throw primesieve_error("nth_prime(n): n is too small, nth_prime(n) < 2!");
+        throw primesieve_error("nth_prime(n): invalid n, nth prime < 2 is impossible!");
     }
   }
 
@@ -166,7 +166,7 @@ uint64_t PrimeSieve::negativeNthPrime(int64_t n, uint64_t start)
     {
       prime = iter.prev_prime();
       if_unlikely(prime == 0)
-        throw primesieve_error("nth_prime(n): n is too small, nth_prime(n) < 2!");
+        throw primesieve_error("nth_prime(n): invalid n, nth prime < 2 is impossible!");
     }
   }
 
