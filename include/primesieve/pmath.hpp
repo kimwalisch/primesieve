@@ -73,12 +73,6 @@ inline T floorPow2(T x)
 }
 
 template <typename T>
-inline int ilog(T x)
-{
-  return (int) std::log((double) x);
-}
-
-template <typename T>
 inline T ilog2(T x)
 {
 #if __cplusplus >= 202002L
