@@ -8,7 +8,6 @@
 ///
 
 #include <primesieve/iterator.hpp>
-#include <primesieve/forward.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
