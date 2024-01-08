@@ -94,6 +94,16 @@ int main()
     }
   }
 
+  {
+    uint64_t x = std::numeric_limits<uint64_t>::max() / 10;
+    uint64_t res = Li_inverse(x);
+    if (res != std::numeric_limits<uint64_t>::max())
+    {
+      std::cout << "Li_inverse(" << x << ") != UINT64_MAX, failed to prevent integer overflow!" << std::endl;
+      std::exit(1);
+    }
+  }
+
   std::cout << std::endl;
   std::cout << "All tests passed successfully!" << std::endl;
 
