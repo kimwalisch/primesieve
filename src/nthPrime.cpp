@@ -26,7 +26,7 @@ namespace {
 const uint64_t max_n = 425656284035217743ull;
 
 /// Average prime gap near n
-inline uint64_t avgPrimeGap(uint64_t n)
+uint64_t avgPrimeGap(uint64_t n)
 {
   double x = (double) n;
   x = std::max(8.0, x);
