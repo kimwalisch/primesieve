@@ -41,7 +41,7 @@ void EratSmall::init(uint64_t stop,
   stop_ = stop;
   maxPrime_ = maxPrime;
   l1CacheSize_ = (std::size_t) l1CacheSize;
-  std::size_t count = primeCountApprox(maxPrime);
+  std::size_t count = primeCountUpper(maxPrime);
   primes_.reserve(count);
 }
 

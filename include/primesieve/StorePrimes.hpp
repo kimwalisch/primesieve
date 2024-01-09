@@ -33,8 +33,8 @@
 
 namespace primesieve {
 
-/// primeCountApprox(x) >= pi(x)
-inline std::size_t prime_count_approx(uint64_t start, uint64_t stop)
+/// prime_count_upper(x) >= pi(x)
+inline std::size_t prime_count_upper(uint64_t start, uint64_t stop)
 {
   if (start > stop)
     return 0;
@@ -83,7 +83,7 @@ inline void store_primes(uint64_t start,
   if (stop > std::numeric_limits<V>::max())
     throw primesieve_error("store_primes(): " + getTypeName<V>() + " is too narrow for generating primes up to " + std::to_string(stop));
 
-  std::size_t size = primes.size() + prime_count_approx(start, stop);
+  std::size_t size = primes.size() + prime_count_upper(start, stop);
   primes.reserve(size);
 
   primesieve::iterator it(start, stop);

@@ -164,7 +164,7 @@ void PrimeGenerator::initPrevPrimes(Vector<uint64_t>& primes,
     // When sieving backwards the number of primes inside [start, stop]
     // slowly increases in each new segment as there are more small
     // than large primes. Our new size has been calculated using
-    // primeCountApprox(start, stop) which is usually too large by 4%
+    // primeCountUpper(start, stop) which is usually too large by 4%
     // near 10^12 and by 2.5% near 10^19. Hence if the new size is less
     // than 1% larger than the old size we do not increase the primes
     // buffer as it will likely be large enough to fit all primes.
@@ -177,7 +177,7 @@ void PrimeGenerator::initPrevPrimes(Vector<uint64_t>& primes,
     }
   };
 
-  std::size_t pix = primeCountApprox(start_, stop_);
+  std::size_t pix = primeCountUpper(start_, stop_);
 
   if (start_ <= maxCachedPrime())
   {
@@ -235,7 +235,7 @@ void PrimeGenerator::initNextPrimes(Vector<uint64_t>& primes,
       // algorithm aborts as soon as there is not
       // enough space to store 64 more primes.
       std::size_t minSize = *size + 64;
-      std::size_t pix = primeCountApprox(start_, stop_) + 64;
+      std::size_t pix = primeCountUpper(start_, stop_) + 64;
       pix = inBetween(minSize, pix, maxSize);
       pix = std::max(*size, pix);
       resize(primes, pix);
@@ -252,7 +252,7 @@ void PrimeGenerator::initNextPrimes(Vector<uint64_t>& primes,
     // algorithm aborts as soon as there is not
     // enough space to store 64 more primes.
     std::size_t minSize = 64;
-    std::size_t pix = primeCountApprox(start_, stop_) + 64;
+    std::size_t pix = primeCountUpper(start_, stop_) + 64;
     pix = inBetween(minSize, pix, maxSize);
     resize(primes, pix);
   }

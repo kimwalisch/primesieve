@@ -271,7 +271,7 @@ uint64_t Ri_inverse(uint64_t x)
 /// with |PrimePi(x) - primePiApprox(x)| < sqrt(x).
 /// Since primePiApprox(x) may be smaller than PrimePi(x) it
 /// cannot be used to calculate the size of a primes array, for
-/// this use case primeCountApprox() should be used.
+/// this use case primeCountUpper() should be used.
 ///
 uint64_t primePiApprox(uint64_t x)
 {
