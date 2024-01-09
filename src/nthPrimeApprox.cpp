@@ -267,6 +267,12 @@ uint64_t Ri_inverse(uint64_t x)
   return (uint64_t) res;
 }
 
+/// primePiApprox(x) is a very accurate approximation of PrimePi(x)
+/// with |PrimePi(x) - primePiApprox(x)| < sqrt(x).
+/// Since primePiApprox(x) may be smaller than PrimePi(x) it
+/// cannot be used to calculate the size of a primes array, for
+/// this use case primeCountApprox() should be used.
+///
 uint64_t primePiApprox(uint64_t x)
 {
   // Li(x) is faster but less accurate than Ri(x).
@@ -277,6 +283,11 @@ uint64_t primePiApprox(uint64_t x)
     return Ri(x);
 }
 
+/// nthPrimeApprox(n) is a very accurate approximation of the nth
+/// prime with |nth prime - nthPrimeApprox(n)| < sqrt(nth prime).
+/// Please note that nthPrimeApprox(n) may be smaller or larger than
+/// the actual nth prime.
+///
 uint64_t nthPrimeApprox(uint64_t n)
 {
   // Li_inverse(n) is faster but less accurate than Ri_inverse(n).
