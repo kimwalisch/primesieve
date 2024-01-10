@@ -113,7 +113,7 @@ public:
 
     array_ = other.array_;
     end_ = other.end_;
-    capacity_ =  other.capacity_;
+    capacity_ = other.capacity_;
 
     other.array_ = tmp_array;
     other.end_ = tmp_end;
