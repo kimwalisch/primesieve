@@ -8,13 +8,8 @@
 ///        non standard __float128 type, but for primesieve's purpose
 ///        speed is more important than accuracy.
 ///
-///        Note that while the Riemann R function is extremely
-///        accurate it is much slower than other simpler PrimePi(x)
-///        approximations. When speed matters, e.g. for allocating
-///        a vector of primes, we avoid using the functions defined
-///        in this file. Currently, the functions defined in this
-///        file are only used in nthPrime.cpp where accuracy is of
-///        utmost importance.
+///        More details about this Riemann R function implementation:
+///        https://github.com/kimwalisch/primesieve/pull/144
 ///
 /// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2024 @nipzu, https://github.com/nipzu
@@ -306,9 +301,10 @@ uint64_t Ri_inverse(uint64_t x)
 
 /// primePiApprox(x) is a very accurate approximation of PrimePi(x)
 /// with |PrimePi(x) - primePiApprox(x)| < sqrt(x).
-/// Since primePiApprox(x) may be smaller than PrimePi(x) it
-/// cannot be used to calculate the size of a primes array, for
-/// this use case primeCountUpper() should be used.
+/// primePiApprox(x) is currently only used in nthPrime.cpp where
+/// accuracy is more important than speed. primeCountUpper(x) is much
+/// faster, but less accurate than primePiApprox(x). For allocating a
+/// vector of primes we always prefer using primeCountUpper(x).
 ///
 uint64_t primePiApprox(uint64_t x)
 {
