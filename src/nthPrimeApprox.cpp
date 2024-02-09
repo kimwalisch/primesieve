@@ -1,10 +1,12 @@
 ///
 /// @file  nthPrimeApprox.cpp
-///        This file contains implementations of the logarithmic
-///        integral and the Riemann R function which are very
-///        accurate approximations of PrimePi(x). Please note that
-///        most of this code has been copied from the primecount
-///        project: https://github.com/kimwalisch/primecount
+///        This file contains an implementation of the Riemann R
+///        function which is a very accurate approximation of
+///        PrimePi(x). Note that this Riemann R implementation is
+///        only accurate up to about 10^19 (if the long double type
+///        has 80 bits). It could be made more accurate using the
+///        non standard __float128 type, but for primesieve's purpose
+///        speed is more important than accuracy.
 ///
 ///        Note that while the Riemann R function is extremely
 ///        accurate it is much slower than other simpler PrimePi(x)
@@ -15,16 +17,15 @@
 ///        utmost importance.
 ///
 /// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 @nipzu, https://github.com/nipzu
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
-#include <primesieve/pmath.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
-#include <algorithm>
 #include <cmath>
 #include <limits>
 
@@ -178,24 +179,24 @@ long double Ri(long double x)
   if (x < 0.1)
     return 0;
 
-  long double epsilon = std::numeric_limits<long double>::epsilon();
-  long double old_sum = -1;
   long double sum = 1;
+  long double old_sum = -1;
   long double term = 1;
+  long double epsilon = std::numeric_limits<long double>::epsilon();
   long double logx = std::log(x);
 
   for (int k = 1; k < 128 && std::abs(old_sum - sum) >= epsilon; k++)
   {
-    long double k_inv = 1.0L / (long double)k;
+    long double k_inv = 1.0L / (long double) k;
     term *= logx * k_inv;
     old_sum = sum;
     sum += term * k_inv * zetaInv[k];
   }
 
-  // For k >= 128, approximate zeta(k + 1) by 1. 
+  // For k >= 128, approximate zeta(k + 1) by 1
   for (int k = 128; std::abs(old_sum - sum) >= epsilon; k++)
   {
-    long double k_inv = 1.0L / (long double)k;
+    long double k_inv = 1.0L / (long double) k;
     term *= logx * k_inv;
     old_sum = sum;
     sum += term * k_inv;
@@ -212,24 +213,24 @@ long double Ri_prime(long double x)
   if (x < 0.1)
     return 0;
 
-  long double epsilon = std::numeric_limits<long double>::epsilon();
-  long double old_sum = -1;
   long double sum = 0;
+  long double old_sum = -1;
   long double term = 1;
+  long double epsilon = std::numeric_limits<long double>::epsilon();
   long double logx = std::log(x);
 
   for (int k = 1; k < 128 && std::abs(old_sum - sum) >= epsilon; k++)
   {
-    long double k_inv = 1.0L / (long double)k;
+    long double k_inv = 1.0L / (long double) k;
     term *= logx * k_inv;
     old_sum = sum;
     sum += term * zetaInv[k];
   }
 
-  // For k >= 128, approximate zeta(k + 1) by 1. 
+  // For k >= 128, approximate zeta(k + 1) by 1
   for (int k = 128; std::abs(old_sum - sum) >= epsilon; k++)
   {
-    long double k_inv = 1.0L / (long double)k;
+    long double k_inv = 1.0L / (long double) k;
     term *= logx * k_inv;
     old_sum = sum;
     sum += term;
@@ -255,16 +256,18 @@ long double Ri_inverse(long double x)
 
   long double logx = std::log(x);
   long double loglogx = std::log(logx);
-
-  // Calculate an initial approximation for the inverse
-  long double t = logx + 0.5L * loglogx;
-  if (x > 1600)
-    t += 0.5L * loglogx - 1.0L + (loglogx - 2.0L) / logx;
-  if (x > 1200000)
-    t -= (loglogx * loglogx - 6.0L * loglogx + 11.0L) / (2.0L * logx * logx);
-  t *= x;
-
   long double old_term = std::numeric_limits<long double>::infinity();
+
+  // Calculate an initial nth prime approximation using Cesàro's formula.
+  // Cesàro, Ernesto (1894). "Sur une formule empirique de M. Pervouchine". Comptes
+  // Rendus Hebdomadaires des Séances de l'Académie des Sciences. 119: 848–849.
+  // https://en.wikipedia.org/wiki/Prime_number_theorem#Approximations_for_the_nth_prime_number
+  long double t = logx + 0.5 * loglogx;
+  if (x > 1600)
+    t += 0.5 * loglogx - 1.0 + (loglogx - 2.0) / logx;
+  if (x > 1200000)
+    t -= (loglogx * loglogx - 6.0 * loglogx + 11.0) / (2.0 * logx * logx);
+  t *= x;
 
   while (true)
   {
