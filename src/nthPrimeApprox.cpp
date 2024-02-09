@@ -169,7 +169,7 @@ const primesieve::Array<long double, 128> zetaInv =
 /// The calculation is done with the Gram series:
 /// RiemannR(x) = 1 + \sum_{k=1}^{∞} ln(x)^k / (zeta(k + 1) * k * k!)
 ///
-long double Ri(long double x)
+long double RiemannR(long double x)
 {
   if (x < 0.1)
     return 0;
@@ -203,7 +203,7 @@ long double Ri(long double x)
 /// Calculate the derivative of the Riemann R function.
 /// RiemannR'(x) = 1/x * \sum_{k=1}^{∞} ln(x)^(k-1) / (zeta(k + 1) * k!)
 ///
-long double Ri_prime(long double x)
+long double RiemannR_prime(long double x)
 {
   if (x < 0.1)
     return 0;
@@ -236,15 +236,15 @@ long double Ri_prime(long double x)
 
 /// Calculate the inverse Riemann R function which is a very
 /// accurate approximation of the nth prime.
-/// This implementation computes Ri^-1(x) as the zero of the
-/// function f(z) = Ri(z) - x using the Newton–Raphson method.
+/// This implementation computes RiemannR^-1(x) as the zero of the
+/// function f(z) = RiemannR(z) - x using the Newton–Raphson method.
 /// https://math.stackexchange.com/a/853192
 ///
 /// Newton–Raphson method:
 /// zn+1 = zn - (f(zn) / f'(zn)).
-/// zn+1 = zn - (Ri(zn) - x) / Ri'(zn)
+/// zn+1 = zn - (RiemannR(zn) - x) / RiemannR'(zn)
 ///
-long double Ri_inverse(long double x)
+long double RiemannR_inverse(long double x)
 {
   if (x < 2)
     return 0;
@@ -266,7 +266,7 @@ long double Ri_inverse(long double x)
 
   while (true)
   {
-    long double term = (Ri(t) - x) / Ri_prime(t);
+    long double term = (RiemannR(t) - x) / RiemannR_prime(t);
 
     // Not converging anymore
     if (std::abs(term) >= std::abs(old_term))
@@ -283,14 +283,14 @@ long double Ri_inverse(long double x)
 
 namespace primesieve {
 
-uint64_t Ri(uint64_t x)
+uint64_t RiemannR(uint64_t x)
 {
-  return (uint64_t) ::Ri((long double) x);
+  return (uint64_t) ::RiemannR((long double) x);
 }
 
-uint64_t Ri_inverse(uint64_t x)
+uint64_t RiemannR_inverse(uint64_t x)
 {
-  auto res = ::Ri_inverse((long double) x);
+  auto res = ::RiemannR_inverse((long double) x);
 
   // Prevent 64-bit integer overflow
   if (res > (long double) std::numeric_limits<uint64_t>::max())
@@ -308,7 +308,7 @@ uint64_t Ri_inverse(uint64_t x)
 ///
 uint64_t primePiApprox(uint64_t x)
 {
-  return Ri(x);
+  return RiemannR(x);
 }
 
 /// nthPrimeApprox(n) is a very accurate approximation of the nth
@@ -318,7 +318,7 @@ uint64_t primePiApprox(uint64_t x)
 ///
 uint64_t nthPrimeApprox(uint64_t n)
 {
-  return Ri_inverse(n);
+  return RiemannR_inverse(n);
 }
 
 } // namespace

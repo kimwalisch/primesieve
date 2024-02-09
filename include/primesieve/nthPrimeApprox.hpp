@@ -12,8 +12,8 @@
 
 namespace primesieve {
 
-uint64_t Ri(uint64_t x);
-uint64_t Ri_inverse(uint64_t x);
+uint64_t RiemannR(uint64_t x);
+uint64_t RiemannR_inverse(uint64_t x);
 uint64_t primePiApprox(uint64_t x);
 uint64_t nthPrimeApprox(uint64_t n);
 

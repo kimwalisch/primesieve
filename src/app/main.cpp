@@ -138,9 +138,9 @@ int main(int argc, char* argv[])
     if (opt.nthPrime)
       nthPrime(opt);
     else if (opt.RiemannR)
-      std::cout << Ri(opt.numbers[0]) << std::endl;
+      std::cout << RiemannR(opt.numbers[0]) << std::endl;
     else if (opt.RiemannR_inverse)
-      std::cout << Ri_inverse(opt.numbers[0]) << std::endl;
+      std::cout << RiemannR_inverse(opt.numbers[0]) << std::endl;
     else
       sieve(opt);
   }
