@@ -205,7 +205,7 @@ long double RiemannR(long double x)
 ///
 long double RiemannR_prime(long double x)
 {
-  if (x < 0.1)
+  if (x <= 1)
     return 0;
 
   long double sum = 0;
