@@ -1,3 +1,10 @@
+Changes in version 11.3, 09/02/2024
+===================================
+
+* Faster Riemann R function implementation #144.
+* New -R && --RiemannR command line options.
+* New --R-inverse command line option.
+
 Changes in version 11.2, 08/01/2024
 ===================================
 
