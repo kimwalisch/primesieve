@@ -18,7 +18,6 @@ namespace primesieve {
 
 extern const Array<uint64_t, 65> bitValues;
 extern const Array<uint64_t, 64> bruijnBitValues;
-extern const Array<long double, 128> zetaInv;
 
 int get_num_threads();
 int get_sieve_size();
