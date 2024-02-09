@@ -1,5 +1,5 @@
 ///
-/// @file  nthPrimeApprox.cpp
+/// @file  RiemannR.cpp
 ///        This file contains an implementation of the Riemann R
 ///        function which is a very accurate approximation of
 ///        PrimePi(x). Note that this Riemann R implementation is

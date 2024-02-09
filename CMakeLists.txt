@@ -70,11 +70,11 @@ set(LIB_SRC src/api-c.cpp
             src/MemoryPool.cpp
             src/PrimeGenerator.cpp
             src/nthPrime.cpp
-            src/nthPrimeApprox.cpp
             src/ParallelSieve.cpp
             src/popcount.cpp
             src/PreSieve.cpp
             src/PrimeSieve.cpp
+            src/RiemannR.cpp
             src/SievingPrimes.cpp)
 
 # Required includes ##################################################

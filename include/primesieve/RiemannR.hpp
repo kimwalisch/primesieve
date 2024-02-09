@@ -1,5 +1,5 @@
 ///
-/// @file  nthPrimeApprox.hpp
+/// @file  RiemannR.hpp
 ///
 /// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///

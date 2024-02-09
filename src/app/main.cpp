@@ -9,7 +9,7 @@
 ///
 
 #include <primesieve/ParallelSieve.hpp>
-#include <primesieve/nthPrimeApprox.hpp>
+#include <primesieve/RiemannR.hpp>
 #include <primesieve/Vector.hpp>
 #include "cmdoptions.hpp"
 

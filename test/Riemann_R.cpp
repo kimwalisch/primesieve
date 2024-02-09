@@ -8,7 +8,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/nthPrimeApprox.hpp>
+#include <primesieve/RiemannR.hpp>
 
 #include <stdint.h>
 #include <iostream>

@@ -12,7 +12,7 @@
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/primesieve_error.hpp>
-#include <primesieve/nthPrimeApprox.hpp>
+#include <primesieve/RiemannR.hpp>
 
 #include <stdint.h>
 #include <algorithm>
