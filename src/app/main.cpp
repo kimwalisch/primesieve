@@ -2,13 +2,14 @@
 /// @file   main.cpp
 /// @brief  primesieve console application.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
 #include <primesieve/ParallelSieve.hpp>
+#include <primesieve/nthPrimeApprox.hpp>
 #include <primesieve/Vector.hpp>
 #include "cmdoptions.hpp"
 
@@ -136,6 +137,10 @@ int main(int argc, char* argv[])
 
     if (opt.nthPrime)
       nthPrime(opt);
+    else if (opt.RiemannR)
+      std::cout << Ri(opt.numbers[0]) << std::endl;
+    else if (opt.RiemannR_inverse)
+      std::cout << Ri_inverse(opt.numbers[0]) << std::endl;
     else
       sieve(opt);
   }

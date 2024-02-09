@@ -62,6 +62,12 @@ OPTIONS
 *-q, --quiet*::
 	Quiet mode, prints less output.
 
+*-R, --RiemannR*::
+	Approximate PrimePi(x) using the Riemann R function: R(x).
+
+*--R-inverse*::
+	Approximate the nth prime using the inverse Riemann R function: R^-1(x).
+
 *-s, --size*='SIZE'::
 	Set the size of the sieve array in KiB, 16 \<= 'SIZE' \<= 8192. By default
 	primesieve uses a sieve size that matches your CPU's L1 cache size (per
