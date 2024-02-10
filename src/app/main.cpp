@@ -14,6 +14,7 @@
 #include "cmdoptions.hpp"
 
 #include <stdint.h>
+#include <cmath>
 #include <exception>
 #include <iostream>
 #include <iomanip>
@@ -140,13 +141,13 @@ int main(int argc, char* argv[])
     else if (opt.RiemannR)
     {
       long double res = RiemannR(opt.numbers[0]);
-      int precision = (res != (uint64_t) res) ? 3 : 0;
+      int precision = (res != std::floor(res)) ? 3 : 0;
       std::cout << std::fixed << std::setprecision(precision) << res << std::endl;
     }
     else if (opt.RiemannR_inverse)
     {
       long double res = RiemannR_inverse(opt.numbers[0]);
-      int precision = (res != (uint64_t) res) ? 3 : 0;
+      int precision = (res != std::floor(res)) ? 3 : 0;
       std::cout << std::fixed << std::setprecision(precision) << res << std::endl;
     }
     else
