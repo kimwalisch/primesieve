@@ -14,8 +14,8 @@
 #include "cmdoptions.hpp"
 
 #include <stdint.h>
-#include <iostream>
 #include <exception>
+#include <iostream>
 #include <iomanip>
 #include <string>
 
@@ -138,9 +138,17 @@ int main(int argc, char* argv[])
     if (opt.nthPrime)
       nthPrime(opt);
     else if (opt.RiemannR)
-      std::cout << RiemannR(opt.numbers[0]) << std::endl;
+    {
+      long double res = RiemannR(opt.numbers[0]);
+      int precision = (res != (uint64_t) res) ? 3 : 0;
+      std::cout << std::fixed << std::setprecision(precision) << res << std::endl;
+    }
     else if (opt.RiemannR_inverse)
-      std::cout << RiemannR_inverse(opt.numbers[0]) << std::endl;
+    {
+      long double res = RiemannR_inverse(opt.numbers[0]);
+      int precision = (res != (uint64_t) res) ? 3 : 0;
+      std::cout << std::fixed << std::setprecision(precision) << res << std::endl;
+    }
     else
       sieve(opt);
   }

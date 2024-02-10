@@ -163,6 +163,73 @@ const primesieve::Array<long double, 128> zetaInv =
   1.00000000000000000000000000000000000000L
 };
 
+/// Calculate an initial nth prime approximation using Cesàro's formula.
+/// Cesàro, Ernesto (1894). "Sur une formule empirique de M. Pervouchine". Comptes
+/// Rendus Hebdomadaires des Séances de l'Académie des Sciences. 119: 848–849.
+/// https://en.wikipedia.org/wiki/Prime_number_theorem#Approximations_for_the_nth_prime_number
+///
+long double initialNthPrimeApprox(long double x)
+{
+  if (x < 2)
+    return 0;
+
+  long double logx = std::log(x);
+  long double t = logx;
+
+  if (x > /* e = */ 2.719)
+  {
+    long double loglogx = std::log(logx);
+    t += 0.5 * loglogx;
+
+    if (x > 1600)
+      t += 0.5 * loglogx - 1.0 + (loglogx - 2.0) / logx;
+    if (x > 1200000)
+      t -= (loglogx * loglogx - 6.0 * loglogx + 11.0) / (2.0 * logx * logx);
+  }
+
+  return x * t;
+}
+
+/// Calculate the derivative of the Riemann R function.
+/// RiemannR'(x) = 1/x * \sum_{k=1}^{∞} ln(x)^(k-1) / (zeta(k + 1) * k!)
+///
+long double RiemannR_prime(long double x)
+{
+  if (x < 0.1)
+    return 0;
+
+  long double sum = 0;
+  long double old_sum = -1;
+  long double term = 1;
+  long double logx = std::log(x);
+  long double epsilon = std::numeric_limits<long double>::epsilon();
+
+  for (int k = 1; k < 128 && std::abs(old_sum - sum) >= epsilon; k++)
+  {
+    long double k_inv = 1.0L / (long double) k;
+    term *= logx * k_inv;
+    old_sum = sum;
+    sum += term * zetaInv[k];
+  }
+
+  // For k >= 128, approximate zeta(k + 1) by 1
+  for (int k = 128; std::abs(old_sum - sum) >= epsilon; k++)
+  {
+    long double k_inv = 1.0L / (long double) k;
+    term *= logx * k_inv;
+    old_sum = sum;
+    sum += term;
+  }
+
+  return sum / (x * logx);
+}
+
+
+
+} // namespace
+
+namespace primesieve {
+
 /// Calculate the Riemann R function which is a very accurate
 /// approximation of the number of primes below x.
 /// http://mathworld.wolfram.com/RiemannPrimeCountingFunction.html
@@ -174,10 +241,14 @@ long double RiemannR(long double x)
   if (x < 0.1)
     return 0;
 
+  long double epsilon = std::numeric_limits<long double>::epsilon();
+
+  if (std::abs(x - 1.0) < epsilon)
+    return 1;
+
   long double sum = 1;
   long double old_sum = -1;
   long double term = 1;
-  long double epsilon = std::numeric_limits<long double>::epsilon();
   long double logx = std::log(x);
 
   for (int k = 1; k < 128 && std::abs(old_sum - sum) >= epsilon; k++)
@@ -200,40 +271,6 @@ long double RiemannR(long double x)
   return sum;
 }
 
-/// Calculate the derivative of the Riemann R function.
-/// RiemannR'(x) = 1/x * \sum_{k=1}^{∞} ln(x)^(k-1) / (zeta(k + 1) * k!)
-///
-long double RiemannR_prime(long double x)
-{
-  if (x <= 1)
-    return 0;
-
-  long double sum = 0;
-  long double old_sum = -1;
-  long double term = 1;
-  long double epsilon = std::numeric_limits<long double>::epsilon();
-  long double logx = std::log(x);
-
-  for (int k = 1; k < 128 && std::abs(old_sum - sum) >= epsilon; k++)
-  {
-    long double k_inv = 1.0L / (long double) k;
-    term *= logx * k_inv;
-    old_sum = sum;
-    sum += term * zetaInv[k];
-  }
-
-  // For k >= 128, approximate zeta(k + 1) by 1
-  for (int k = 128; std::abs(old_sum - sum) >= epsilon; k++)
-  {
-    long double k_inv = 1.0L / (long double) k;
-    term *= logx * k_inv;
-    old_sum = sum;
-    sum += term;
-  }
-
-  return sum / (x * logx);
-}
-
 /// Calculate the inverse Riemann R function which is a very
 /// accurate approximation of the nth prime.
 /// This implementation computes RiemannR^-1(x) as the zero of the
@@ -249,20 +286,8 @@ long double RiemannR_inverse(long double x)
   if (x < 2)
     return 0;
 
-  long double logx = std::log(x);
-  long double loglogx = std::log(logx);
+  long double t = initialNthPrimeApprox(x);
   long double old_term = std::numeric_limits<long double>::infinity();
-
-  // Calculate an initial nth prime approximation using Cesàro's formula.
-  // Cesàro, Ernesto (1894). "Sur une formule empirique de M. Pervouchine". Comptes
-  // Rendus Hebdomadaires des Séances de l'Académie des Sciences. 119: 848–849.
-  // https://en.wikipedia.org/wiki/Prime_number_theorem#Approximations_for_the_nth_prime_number
-  long double t = logx + 0.5 * loglogx;
-  if (x > 1600)
-    t += 0.5 * loglogx - 1.0 + (loglogx - 2.0) / logx;
-  if (x > 1200000)
-    t -= (loglogx * loglogx - 6.0 * loglogx + 11.0) / (2.0 * logx * logx);
-  t *= x;
 
   while (true)
   {
@@ -279,26 +304,6 @@ long double RiemannR_inverse(long double x)
   return t;
 }
 
-} // namespace
-
-namespace primesieve {
-
-uint64_t RiemannR(uint64_t x)
-{
-  return (uint64_t) ::RiemannR((long double) x);
-}
-
-uint64_t RiemannR_inverse(uint64_t x)
-{
-  auto res = ::RiemannR_inverse((long double) x);
-
-  // Prevent 64-bit integer overflow
-  if (res > (long double) std::numeric_limits<uint64_t>::max())
-    return std::numeric_limits<uint64_t>::max();
-
-  return (uint64_t) res;
-}
-
 /// primePiApprox(x) is a very accurate approximation of PrimePi(x)
 /// with |PrimePi(x) - primePiApprox(x)| < sqrt(x).
 /// primePiApprox(x) is currently only used in nthPrime.cpp where
@@ -308,7 +313,7 @@ uint64_t RiemannR_inverse(uint64_t x)
 ///
 uint64_t primePiApprox(uint64_t x)
 {
-  return RiemannR(x);
+  return (uint64_t) RiemannR((long double) x);
 }
 
 /// nthPrimeApprox(n) is a very accurate approximation of the nth
@@ -318,7 +323,13 @@ uint64_t primePiApprox(uint64_t x)
 ///
 uint64_t nthPrimeApprox(uint64_t n)
 {
-  return RiemannR_inverse(n);
+  auto res = RiemannR_inverse((long double) n);
+
+  // Prevent 64-bit integer overflow
+  if (res > (long double) std::numeric_limits<uint64_t>::max())
+    return std::numeric_limits<uint64_t>::max();
+
+  return (uint64_t) res;
 }
 
 } // namespace

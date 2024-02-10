@@ -52,23 +52,23 @@ int main()
   for (size_t i = 0; i < RiemannR_table.size(); i++)
   {
     x *= 10;
-    std::cout << "RiemannR(" << x << ") = " << RiemannR(x);
-    check(RiemannR(x) == RiemannR_table[i]);
+    std::cout << "RiemannR(" << x << ") = " << (uint64_t) RiemannR((long double) x);
+    check((uint64_t) RiemannR((long double) x) == RiemannR_table[i]);
   }
 
   x = 1;
   for (size_t i = 0; i < RiemannR_table.size(); i++)
   {
     x *= 10;
-    std::cout << "RiemannR_inverse(" << RiemannR_table[i] << ") = " << RiemannR_inverse(RiemannR_table[i]);
-    check(RiemannR_inverse(RiemannR_table[i]) < x &&
-          RiemannR_inverse(RiemannR_table[i] + 1) >= x);
+    std::cout << "RiemannR_inverse(" << RiemannR_table[i] << ") = " << (uint64_t) RiemannR_inverse((long double) RiemannR_table[i]);
+    check((uint64_t) RiemannR_inverse((long double) RiemannR_table[i]) < x &&
+          (uint64_t) RiemannR_inverse((long double) RiemannR_table[i] + 1) >= x);
   }
 
   // Sanity checks for tiny values of RiemannR(x)
   for (x = 0; x < 10000; x++)
   {
-    uint64_t rix = RiemannR(x);
+    uint64_t rix = (uint64_t) RiemannR((long double) x);
     double logx = std::log(max((double) x, 2.0));
 
     if ((x >= 20 && rix < x / logx) ||
@@ -82,7 +82,7 @@ int main()
   // Sanity checks for small values of RiemannR(x)
   for (; x < 100000; x += 101)
   {
-    uint64_t rix = RiemannR(x);
+    uint64_t rix = (uint64_t) RiemannR((long double) x);
     double logx = std::log(max((double) x, 2.0));
 
     if ((x >= 20 && rix < x / logx) ||
@@ -96,7 +96,7 @@ int main()
   // Sanity checks for tiny values of RiemannR_inverse(x)
   for (x = 2; x < 1000; x++)
   {
-    uint64_t res = RiemannR_inverse(x);
+    uint64_t res = (uint64_t) RiemannR_inverse((long double) x);
     double logx = std::log((double) x);
 
     if (res < x ||
@@ -110,7 +110,7 @@ int main()
   // Sanity checks for small values of RiemannR_inverse(x)
   for (; x < 100000; x += 101)
   {
-    uint64_t res = RiemannR_inverse(x);
+    uint64_t res = (uint64_t) RiemannR_inverse((long double) x);
     double logx = std::log((double) x);
 
     if (res < x ||
@@ -123,10 +123,10 @@ int main()
 
   {
     uint64_t x = std::numeric_limits<uint64_t>::max() / 10;
-    uint64_t res = RiemannR_inverse(x);
+    uint64_t res = nthPrimeApprox(x);
     if (res != std::numeric_limits<uint64_t>::max())
     {
-      std::cout << "RiemannR_inverse(" << x << ") != UINT64_MAX, failed to prevent integer overflow!" << std::endl;
+      std::cout << "nthPrimeApprox(" << x << ") != UINT64_MAX, failed to prevent integer overflow!" << std::endl;
       std::exit(1);
     }
   }
