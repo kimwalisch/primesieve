@@ -7,7 +7,6 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/Vector.hpp>
 #include <stdint.h>
 
 namespace primesieve {
