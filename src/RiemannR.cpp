@@ -210,19 +210,13 @@ long double RiemannR_prime(long double x)
   long double term = 1;
   long double logx = std::log(x);
 
-  for (int k = 1; k < 128 && std::abs(old_sum - sum) >= epsilon; k++)
+  for (unsigned k = 1; std::abs(old_sum - sum) >= epsilon; k++)
   {
     term *= logx / k;
     old_sum = sum;
-    sum += term * zetaInv[k];
-  }
-
-  // For k >= 128, approximate zeta(k + 1) by 1
-  for (int k = 128; std::abs(old_sum - sum) >= epsilon; k++)
-  {
-    term *= logx / k;
-    old_sum = sum;
-    sum += term;
+    // For k >= 128, approximate zeta(k + 1) by 1
+    long double zik = (k < zetaInv.size()) ? zetaInv[k] : 1;
+    sum += term * zik;
   }
 
   return sum / (x * logx);
@@ -255,19 +249,13 @@ long double RiemannR(long double x)
   long double term = 1;
   long double logx = std::log(x);
 
-  for (int k = 1; k < 128 && std::abs(old_sum - sum) >= epsilon; k++)
+  for (unsigned k = 1; std::abs(old_sum - sum) >= epsilon; k++)
   {
     term *= logx / k;
     old_sum = sum;
-    sum += term / k * zetaInv[k];
-  }
-
-  // For k >= 128, approximate zeta(k + 1) by 1
-  for (int k = 128; std::abs(old_sum - sum) >= epsilon; k++)
-  {
-    term *= logx / k;
-    old_sum = sum;
-    sum += term / k;
+    // For k >= 128, approximate 1/zeta(k+1) by 1
+    long double zik = (k < zetaInv.size()) ? zetaInv[k] : 1;
+    sum += term / k * zik;
   }
 
   return sum;
