@@ -9,6 +9,7 @@
 ///
 
 #include <primesieve/ParallelSieve.hpp>
+#include <primesieve/primesieve_error.hpp>
 #include <primesieve/RiemannR.hpp>
 #include <primesieve/Vector.hpp>
 #include "cmdoptions.hpp"
@@ -20,7 +21,10 @@
 #include <sstream>
 #include <string>
 
-using namespace primesieve;
+using primesieve::Array;
+using primesieve::ParallelSieve;
+using primesieve::primesieve_error;
+using primesieve::PRINT_STATUS;
 
 namespace {
 
@@ -38,6 +42,9 @@ void printSeconds(double sec)
 /// Count & print primes and prime k-tuplets
 void sieve(CmdOptions& opt)
 {
+  if (opt.numbers.empty())
+    throw primesieve_error("missing STOP number");
+
   ParallelSieve ps;
 
   if (opt.flags)
@@ -97,6 +104,9 @@ void sieve(CmdOptions& opt)
 
 void nthPrime(CmdOptions& opt)
 {
+  if (opt.numbers.empty())
+    throw primesieve_error("missing input number n");
+
   ParallelSieve ps;
   int64_t n = opt.numbers[0];
   uint64_t start = 0;
@@ -128,6 +138,58 @@ void nthPrime(CmdOptions& opt)
     std::cout << "Nth prime: " << nthPrime << std::endl;
 }
 
+void RiemannR(CmdOptions& opt)
+{
+  if (opt.numbers.empty())
+    throw primesieve_error("missing input number x");
+
+  long double x = (long double) opt.numbers[0];
+  long double Rx = primesieve::RiemannR(x);
+
+  std::ostringstream oss;
+  oss << std::fixed << std::setprecision(10) << Rx;
+  std::string res = oss.str();
+
+  // Remove trailing 0 decimal digits
+  if (res.find('.') != std::string::npos)
+  {
+    std::reverse(res.begin(), res.end());
+    res = res.substr(res.find_first_not_of('0'));
+    if (res.at(0) == '.')
+      res = res.substr(1);
+
+    std::reverse(res.begin(), res.end());
+  }
+
+  std::cout << res << std::endl;
+}
+
+void RiemannR_inverse(CmdOptions& opt)
+{
+  if (opt.numbers.empty())
+    throw primesieve_error("missing input number x");
+
+  long double x = (long double) opt.numbers[0];
+  long double R_inv_x = primesieve::RiemannR_inverse(x);
+
+  std::ostringstream oss;
+  oss << std::fixed << std::setprecision(10) << R_inv_x;
+  std::string res = oss.str();
+
+  // Remove trailing 0 decimal digits
+  if (res.find('.') != std::string::npos)
+  {
+    std::reverse(res.begin(), res.end());
+    res = res.substr(res.find_first_not_of('0'));
+    if (res.at(0) == '.')
+      res = res.substr(1);
+
+    std::reverse(res.begin(), res.end());
+  }
+
+  std::cout << res << std::endl;
+}
+
 } // namespace
 
 int main(int argc, char* argv[])
@@ -136,48 +198,13 @@ int main(int argc, char* argv[])
   {
     CmdOptions opt = parseOptions(argc, argv);
 
-    if (opt.nthPrime)
-      nthPrime(opt);
-    else if (opt.RiemannR)
+    switch (opt.option)
     {
-      std::ostringstream oss;
-      oss << std::fixed << std::setprecision(10) << RiemannR((long double) opt.numbers[0]);
-      std::string res = oss.str();
-
-      // Remove trailing 0 decimal digits
-      if (res.find('.') != std::string::npos)
-      {
-        std::reverse(res.begin(), res.end());
-        res = res.substr(res.find_first_not_of('0'));
-        if (res.at(0) == '.')
-          res = res.substr(1);
-
-        std::reverse(res.begin(), res.end());
-      }
-
-      std::cout << res << std::endl;
+      case OPTION_NTH_PRIME: nthPrime(opt); break;
+      case OPTION_R:         RiemannR(opt); break;
+      case OPTION_R_INVERSE: RiemannR_inverse(opt); break;
+      default:               sieve(opt); break;
     }
-    else if (opt.RiemannR_inverse)
-    {
-      std::ostringstream oss;
-      oss << std::fixed << std::setprecision(10) << RiemannR_inverse((long double) opt.numbers[0]);
-      std::string res = oss.str();
-
-      // Remove trailing 0 decimal digits
-      if (res.find('.') != std::string::npos)
-      {
-        std::reverse(res.begin(), res.end());
-        res = res.substr(res.find_first_not_of('0'));
-        if (res.at(0) == '.')
-          res = res.substr(1);
-
-        std::reverse(res.begin(), res.end());
-      }
-
-      std::cout << res << std::endl;
-    }
-    else
-      sieve(opt);
   }
   catch (std::exception& e)
   {

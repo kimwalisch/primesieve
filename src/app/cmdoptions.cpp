@@ -33,26 +33,6 @@ using namespace primesieve;
 
 namespace {
 
-enum OptionID
-{
-  OPTION_COUNT,
-  OPTION_CPU_INFO,
-  OPTION_HELP,
-  OPTION_NTH_PRIME,
-  OPTION_NO_STATUS,
-  OPTION_NUMBER,
-  OPTION_DISTANCE,
-  OPTION_PRINT,
-  OPTION_QUIET,
-  OPTION_R,
-  OPTION_R_INVERSE,
-  OPTION_SIZE,
-  OPTION_TEST,
-  OPTION_THREADS,
-  OPTION_TIME,
-  OPTION_VERSION
-};
-
 /// Some command-line options require an additional parameter.
 /// Examples: --threads THREADS, -a ALPHA, ...
 enum IsParam
@@ -411,20 +391,15 @@ CmdOptions parseOptions(int argc, char* argv[])
       case OPTION_SIZE:      opts.sieveSize = opt.getValue<int>(); break;
       case OPTION_THREADS:   opts.threads = opt.getValue<int>(); break;
       case OPTION_QUIET:     opts.quiet = true; break;
-      case OPTION_NTH_PRIME: opts.nthPrime = true; break;
       case OPTION_NO_STATUS: opts.status = false; break;
-      case OPTION_R:         opts.RiemannR = true; break;
-      case OPTION_R_INVERSE: opts.RiemannR_inverse = true; break;
       case OPTION_TIME:      opts.time = true; break;
       case OPTION_NUMBER:    opts.numbers.push_back(opt.getValue<uint64_t>()); break;
       case OPTION_HELP:      help(/* exitCode */ 0); break;
       case OPTION_TEST:      test(); break;
       case OPTION_VERSION:   version(); break;
+      default:               opts.option = optionID;
     }
   }
-
-  if (opts.numbers.empty())
-    throw primesieve_error("missing STOP number");
 
   if (opts.quiet)
     opts.status = false;
