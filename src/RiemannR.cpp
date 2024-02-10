@@ -3,7 +3,7 @@
 ///        This file contains an implementation of the Riemann R
 ///        function which is a very accurate approximation of
 ///        PrimePi(x). Note that this Riemann R implementation is
-///        only accurate up to about 10^19 (if the long double type
+///        only accurate up to about 10^15 (if the long double type
 ///        has 80 bits). It could be made more accurate using the
 ///        non standard __float128 type, but for primesieve's purpose
 ///        speed is more important than accuracy.
