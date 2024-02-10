@@ -202,8 +202,9 @@ long double RiemannR_prime(long double x)
 
   long double epsilon = std::numeric_limits<long double>::epsilon();
 
-  // RiemannR_prime(1) = NaN
-  // Hence we return RiemannR_prime(1.0000000000000001)
+  // RiemannR_prime(1) = NaN.
+  // Hence we return RiemannR_prime(1.0000000000000001).
+  // Required because: sum / log(1) = 0 / 0.
   if (std::abs(x - 1.0) < epsilon)
     return 0.60792710185402643042L;
 
