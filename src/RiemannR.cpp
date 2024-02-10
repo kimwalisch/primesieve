@@ -243,10 +243,6 @@ long double RiemannR(long double x)
     return 0;
 
   long double epsilon = std::numeric_limits<long double>::epsilon();
-
-  if (std::abs(x - 1.0) < epsilon)
-    return 1;
-
   long double sum = 1;
   long double old_sum = -1;
   long double term = 1;
