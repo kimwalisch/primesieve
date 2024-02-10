@@ -1,12 +1,14 @@
 ///
 /// @file  RiemannR.cpp
 ///        This file contains an implementation of the Riemann R
-///        function which is a very accurate approximation of
-///        PrimePi(x). Note that this Riemann R implementation is
-///        only accurate up to about 10^15 (if the long double type
-///        has 80 bits). It could be made more accurate using the
-///        non standard __float128 type, but for primesieve's purpose
-///        speed is more important than accuracy.
+///        function which is a very accurate approximation of PrimePi(x).
+///        The accuracy of this implementation depends on width of the
+///        long double type. If the long double type has 80 bits (e.g.
+///        Linux) then RiemannR(x) is accurate up to 10^19, if the long
+///        double type has 64 bits (e.g. MSVC & macOS) then RiemannR(x)
+///        is accurate up to 10^15. This implementation could be made
+///        more accurate using the non standard __float128 type, but for
+///        primesieve's purpose speed is more important than accuracy.
 ///
 ///        More details about this Riemann R function implementation:
 ///        https://github.com/kimwalisch/primesieve/pull/144
