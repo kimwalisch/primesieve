@@ -2,20 +2,22 @@
 /// @file   main.cpp
 /// @brief  primesieve console application.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
 #include <primesieve/ParallelSieve.hpp>
+#include <primesieve/RiemannR.hpp>
 #include <primesieve/Vector.hpp>
 #include "cmdoptions.hpp"
 
 #include <stdint.h>
-#include <iostream>
 #include <exception>
+#include <iostream>
 #include <iomanip>
+#include <sstream>
 #include <string>
 
 using namespace primesieve;
@@ -136,6 +138,44 @@ int main(int argc, char* argv[])
 
     if (opt.nthPrime)
       nthPrime(opt);
+    else if (opt.RiemannR)
+    {
+      std::ostringstream oss;
+      oss << std::fixed << std::setprecision(10) << RiemannR((long double) opt.numbers[0]);
+      std::string res = oss.str();
+
+      // Remove trailing 0 decimal digits
+      if (res.find('.') != std::string::npos)
+      {
+        std::reverse(res.begin(), res.end());
+        res = res.substr(res.find_first_not_of('0'));
+        if (res.at(0) == '.')
+          res = res.substr(1);
+
+        std::reverse(res.begin(), res.end());
+      }
+
+      std::cout << res << std::endl;
+    }
+    else if (opt.RiemannR_inverse)
+    {
+      std::ostringstream oss;
+      oss << std::fixed << std::setprecision(10) << RiemannR_inverse((long double) opt.numbers[0]);
+      std::string res = oss.str();
+
+      // Remove trailing 0 decimal digits
+      if (res.find('.') != std::string::npos)
+      {
+        std::reverse(res.begin(), res.end());
+        res = res.substr(res.find_first_not_of('0'));
+        if (res.at(0) == '.')
+          res = res.substr(1);
+
+        std::reverse(res.begin(), res.end());
+      }
+
+      std::cout << res << std::endl;
+    }
     else
       sieve(opt);
   }

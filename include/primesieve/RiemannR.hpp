@@ -1,5 +1,5 @@
 ///
-/// @file  nthPrimeApprox.hpp
+/// @file  RiemannR.hpp
 ///
 /// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -7,16 +7,13 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/Vector.hpp>
 #include <stdint.h>
 
 namespace primesieve {
 
-Vector<int32_t> generate_moebius(int64_t max);
-uint64_t Li(uint64_t x);
-uint64_t Li_inverse(uint64_t x);
-uint64_t Ri(uint64_t x);
-uint64_t Ri_inverse(uint64_t x);
+long double RiemannR(long double x);
+long double RiemannR_inverse(long double x);
+
 uint64_t primePiApprox(uint64_t x);
 uint64_t nthPrimeApprox(uint64_t n);
 

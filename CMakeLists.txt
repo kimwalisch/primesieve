@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4...3.27)
 project(primesieve CXX)
-set(PRIMESIEVE_VERSION "11.2")
-set(PRIMESIEVE_SOVERSION "11.2.0")
+set(PRIMESIEVE_VERSION "11.3")
+set(PRIMESIEVE_SOVERSION "11.3.0")
 
 # Build options ######################################################
 
@@ -70,11 +70,11 @@ set(LIB_SRC src/api-c.cpp
             src/MemoryPool.cpp
             src/PrimeGenerator.cpp
             src/nthPrime.cpp
-            src/nthPrimeApprox.cpp
             src/ParallelSieve.cpp
             src/popcount.cpp
             src/PreSieve.cpp
             src/PrimeSieve.cpp
+            src/RiemannR.cpp
             src/SievingPrimes.cpp)
 
 # Required includes ##################################################

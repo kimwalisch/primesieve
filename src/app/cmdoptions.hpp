@@ -1,7 +1,7 @@
 ///
 /// @file  cmdoptions.hpp
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -21,6 +21,8 @@ struct CmdOptions
   int threads = 0;
   bool quiet = false;
   bool nthPrime = false;
+  bool RiemannR = false;
+  bool RiemannR_inverse = false;
   bool status = true;
   bool time = false;
 };

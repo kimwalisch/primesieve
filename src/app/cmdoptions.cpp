@@ -3,7 +3,7 @@
 /// @brief  Parse command-line options for the primesieve console
 ///         (terminal) application.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -44,6 +44,8 @@ enum OptionID
   OPTION_DISTANCE,
   OPTION_PRINT,
   OPTION_QUIET,
+  OPTION_R,
+  OPTION_R_INVERSE,
   OPTION_SIZE,
   OPTION_TEST,
   OPTION_THREADS,
@@ -380,6 +382,9 @@ CmdOptions parseOptions(int argc, char* argv[])
     { "--print",     std::make_pair(OPTION_PRINT, OPTIONAL_PARAM) },
     { "-q",          std::make_pair(OPTION_QUIET, NO_PARAM) },
     { "--quiet",     std::make_pair(OPTION_QUIET, NO_PARAM) },
+    { "-R",          std::make_pair(OPTION_R, NO_PARAM) },
+    { "--RiemannR",  std::make_pair(OPTION_R, NO_PARAM) },
+    { "--R-inverse", std::make_pair(OPTION_R_INVERSE, NO_PARAM) },
     { "-s",          std::make_pair(OPTION_SIZE, REQUIRED_PARAM) },
     { "--size",      std::make_pair(OPTION_SIZE, REQUIRED_PARAM) },
     { "--test",      std::make_pair(OPTION_TEST, NO_PARAM) },
@@ -408,6 +413,8 @@ CmdOptions parseOptions(int argc, char* argv[])
       case OPTION_QUIET:     opts.quiet = true; break;
       case OPTION_NTH_PRIME: opts.nthPrime = true; break;
       case OPTION_NO_STATUS: opts.status = false; break;
+      case OPTION_R:         opts.RiemannR = true; break;
+      case OPTION_R_INVERSE: opts.RiemannR_inverse = true; break;
       case OPTION_TIME:      opts.time = true; break;
       case OPTION_NUMBER:    opts.numbers.push_back(opt.getValue<uint64_t>()); break;
       case OPTION_HELP:      help(/* exitCode */ 0); break;
