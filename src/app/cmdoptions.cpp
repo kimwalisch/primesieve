@@ -12,12 +12,10 @@
 #include "cmdoptions.hpp"
 
 #include <primesieve/calculator.hpp>
-#include <primesieve/CpuInfo.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/primesieve_error.hpp>
 
 #include <cstddef>
-#include <cstdlib>
 #include <iostream>
 #include <map>
 #include <stdint.h>
@@ -260,81 +258,6 @@ void optionDistance(Option& opt,
   numbers.push_back(start + val);
 }
 
-void optionCpuInfo()
-{
-  const CpuInfo cpu;
-
-  if (cpu.hasCpuName())
-    std::cout << cpu.cpuName() << std::endl;
-  else
-    std::cout << "CPU name: unknown" << std::endl;
-
-  if (cpu.hasLogicalCpuCores())
-    std::cout << "Logical CPU cores: " << cpu.logicalCpuCores() << std::endl;
-  else
-    std::cout << "Logical CPU cores: unknown" << std::endl;
-
-  // We only show AVX512 info if libprimesieve has been compiled
-  // with AVX512 support. If "AVX512: yes" then primesieve::iterator
-  // uses the AVX512 version of PrimeGenerator::fillNextPrimes().
-  #if defined(MULTIARCH_AVX512)
-    if (cpu.hasAVX512())
-      std::cout << "Has AVX512: yes" << std::endl;
-    else
-      std::cout << "Has AVX512: no" << std::endl;
-  #endif
-
-  if (cpu.hasL1Cache())
-    std::cout << "L1 cache size: " << (cpu.l1CacheBytes() >> 10) << " KiB" << std::endl;
-
-  if (cpu.hasL2Cache())
-    std::cout << "L2 cache size: " << (cpu.l2CacheBytes() >> 10) << " KiB" << std::endl;
-
-  if (cpu.hasL3Cache())
-    std::cout << "L3 cache size: " << (cpu.l3CacheBytes() >> 20) << " MiB" << std::endl;
-
-  if (cpu.hasL1Cache())
-  {
-    if (!cpu.hasL1Sharing())
-      std::cout << "L1 cache sharing: unknown" << std::endl;
-    else
-      std::cout << "L1 cache sharing: " << cpu.l1Sharing()
-                << ((cpu.l1Sharing() > 1) ? " threads" : " thread") << std::endl;
-  }
-
-  if (cpu.hasL2Cache())
-  {
-    if (!cpu.hasL2Sharing())
-      std::cout << "L2 cache sharing: unknown" << std::endl;
-    else
-      std::cout << "L2 cache sharing: " << cpu.l2Sharing()
-                << ((cpu.l2Sharing() > 1) ? " threads" : " thread") << std::endl;
-  }
-
-  if (cpu.hasL3Cache())
-  {
-    if (!cpu.hasL3Sharing())
-      std::cout << "L3 cache sharing: unknown" << std::endl;
-    else
-      std::cout << "L3 cache sharing: " << cpu.l3Sharing()
-                << ((cpu.l3Sharing() > 1) ? " threads" : " thread") << std::endl;
-  }
-
-  if (!cpu.hasL1Cache() &&
-      !cpu.hasL2Cache() &&
-      !cpu.hasL3Cache())
-  {
-    std::cout << "L1 cache size: unknown" << std::endl;
-    std::cout << "L2 cache size: unknown" << std::endl;
-    std::cout << "L3 cache size: unknown" << std::endl;
-    std::cout << "L1 cache sharing: unknown" << std::endl;
-    std::cout << "L2 cache sharing: unknown" << std::endl;
-    std::cout << "L3 cache sharing: unknown" << std::endl;
-  }
-
-  std::exit(0);
-}
-
 } // namespace
 
 CmdOptions parseOptions(int argc, char* argv[])
@@ -385,7 +308,6 @@ CmdOptions parseOptions(int argc, char* argv[])
     switch (optionID)
     {
       case OPTION_COUNT:     optionCount(opt, opts); break;
-      case OPTION_CPU_INFO:  optionCpuInfo(); break;
       case OPTION_DISTANCE:  optionDistance(opt, opts); break;
       case OPTION_PRINT:     optionPrint(opt, opts); break;
       case OPTION_SIZE:      opts.sieveSize = opt.getValue<int>(); break;
