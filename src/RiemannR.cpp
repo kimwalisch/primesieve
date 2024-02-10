@@ -198,11 +198,17 @@ long double RiemannR_prime(long double x)
   if (x < 0.1)
     return 0;
 
+  long double epsilon = std::numeric_limits<long double>::epsilon();
+
+  // RiemannR_prime(1) = NaN
+  // Hence we return RiemannR_prime(1.0000000000000001)
+  if (std::abs(x - 1.0) < epsilon)
+    return 0.60792710185402643042L;
+
   long double sum = 0;
   long double old_sum = -1;
   long double term = 1;
   long double logx = std::log(x);
-  long double epsilon = std::numeric_limits<long double>::epsilon();
 
   for (int k = 1; k < 128 && std::abs(old_sum - sum) >= epsilon; k++)
   {
