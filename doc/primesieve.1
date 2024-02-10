@@ -2,12 +2,12 @@
 .\"     Title: primesieve
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 12/02/2022
+.\"      Date: 02/10/2024
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "PRIMESIEVE" "1" "12/02/2022" "\ \&" "\ \&"
+.TH "PRIMESIEVE" "1" "02/10/2024" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -106,6 +106,16 @@ Print primes or prime k\-tuplets, 1 <=
 \fB\-q, \-\-quiet\fR
 .RS 4
 Quiet mode, prints less output\&.
+.RE
+.PP
+\fB\-R, \-\-RiemannR\fR
+.RS 4
+Approximate PrimePi(x) using the Riemann R function: R(x)\&.
+.RE
+.PP
+\fB\-\-R\-inverse\fR
+.RS 4
+Approximate the nth prime using the inverse Riemann R function: R^\-1(x)\&.
 .RE
 .PP
 \fB\-s, \-\-size\fR=\fISIZE\fR
