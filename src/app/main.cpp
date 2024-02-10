@@ -14,10 +14,10 @@
 #include "cmdoptions.hpp"
 
 #include <stdint.h>
-#include <cmath>
 #include <exception>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 #include <string>
 
 using namespace primesieve;
@@ -140,15 +140,41 @@ int main(int argc, char* argv[])
       nthPrime(opt);
     else if (opt.RiemannR)
     {
-      long double res = RiemannR((long double) opt.numbers[0]);
-      int precision = (res != std::floor(res)) ? 3 : 0;
-      std::cout << std::fixed << std::setprecision(precision) << res << std::endl;
+      std::ostringstream oss;
+      oss << std::fixed << std::setprecision(10) << RiemannR((long double) opt.numbers[0]);
+      std::string res = oss.str();
+
+      // Remove trailing 0 decimal digits
+      if (res.find('.') != std::string::npos)
+      {
+        std::reverse(res.begin(), res.end());
+        res = res.substr(res.find_first_not_of('0'));
+        if (res.at(0) == '.')
+          res = res.substr(1);
+
+        std::reverse(res.begin(), res.end());
+      }
+
+      std::cout << res << std::endl;
     }
     else if (opt.RiemannR_inverse)
     {
-      long double res = RiemannR_inverse((long double) opt.numbers[0]);
-      int precision = (res != std::floor(res)) ? 3 : 0;
-      std::cout << std::fixed << std::setprecision(precision) << res << std::endl;
+      std::ostringstream oss;
+      oss << std::fixed << std::setprecision(10) << RiemannR_inverse((long double) opt.numbers[0]);
+      std::string res = oss.str();
+
+      // Remove trailing 0 decimal digits
+      if (res.find('.') != std::string::npos)
+      {
+        std::reverse(res.begin(), res.end());
+        res = res.substr(res.find_first_not_of('0'));
+        if (res.at(0) == '.')
+          res = res.substr(1);
+
+        std::reverse(res.begin(), res.end());
+      }
+
+      std::cout << res << std::endl;
     }
     else
       sieve(opt);
