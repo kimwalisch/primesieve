@@ -212,8 +212,7 @@ long double RiemannR_prime(long double x)
 
   for (int k = 1; k < 128 && std::abs(old_sum - sum) >= epsilon; k++)
   {
-    long double k_inv = 1.0L / (long double) k;
-    term *= logx * k_inv;
+    term *= logx / k;
     old_sum = sum;
     sum += term * zetaInv[k];
   }
@@ -221,8 +220,7 @@ long double RiemannR_prime(long double x)
   // For k >= 128, approximate zeta(k + 1) by 1
   for (int k = 128; std::abs(old_sum - sum) >= epsilon; k++)
   {
-    long double k_inv = 1.0L / (long double) k;
-    term *= logx * k_inv;
+    term *= logx / k;
     old_sum = sum;
     sum += term;
   }
@@ -259,19 +257,17 @@ long double RiemannR(long double x)
 
   for (int k = 1; k < 128 && std::abs(old_sum - sum) >= epsilon; k++)
   {
-    long double k_inv = 1.0L / (long double) k;
-    term *= logx * k_inv;
+    term *= logx / k;
     old_sum = sum;
-    sum += term * k_inv * zetaInv[k];
+    sum += term / k * zetaInv[k];
   }
 
   // For k >= 128, approximate zeta(k + 1) by 1
   for (int k = 128; std::abs(old_sum - sum) >= epsilon; k++)
   {
-    long double k_inv = 1.0L / (long double) k;
-    term *= logx * k_inv;
+    term *= logx / k;
     old_sum = sum;
-    sum += term * k_inv;
+    sum += term / k;
   }
 
   return sum;
