@@ -41,7 +41,7 @@ void printSeconds(double sec)
 }
 
 /// Count & print primes and prime k-tuplets
-void sieve(CmdOptions& opts)
+void sieve(const CmdOptions& opts)
 {
   if (opts.numbers.empty())
     throw primesieve_error("missing STOP number");
@@ -103,7 +103,7 @@ void sieve(CmdOptions& opts)
   }
 }
 
-void nthPrime(CmdOptions& opts)
+void nthPrime(const CmdOptions& opts)
 {
   if (opts.numbers.empty())
     throw primesieve_error("missing n number");
@@ -139,7 +139,7 @@ void nthPrime(CmdOptions& opts)
     std::cout << "Nth prime: " << nthPrime << std::endl;
 }
 
-void RiemannR(CmdOptions& opts)
+void RiemannR(const CmdOptions& opts)
 {
   if (opts.numbers.empty())
     throw primesieve_error("missing x number");
@@ -165,7 +165,7 @@ void RiemannR(CmdOptions& opts)
   std::cout << res << std::endl;
 }
 
-void RiemannR_inverse(CmdOptions& opts)
+void RiemannR_inverse(const CmdOptions& opts)
 {
   if (opts.numbers.empty())
     throw primesieve_error("missing x number");
