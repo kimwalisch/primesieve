@@ -112,10 +112,15 @@ const Array<uint64_t, 100> primeCounts_RamMode =
 
 void stressTest(const CmdOptions& opts)
 {
-  auto lastStatusOutput = std::chrono::system_clock::now();
-  // Make sure the first result is printed without delay
-  lastStatusOutput -= std::chrono::seconds(10000);
+  int threads;
 
+  if (opts.threads > 0)
+    threads = opts.threads;
+  else
+    threads = std::thread::hardware_concurrency();
+
+  threads = std::max(1, threads);
+  int threadIdPadding = std::to_string(threads - 1).size();
   std::mutex mutex;
 
   // Each thread executes 1 task
@@ -149,6 +154,10 @@ void stressTest(const CmdOptions& opts)
         it.generate_next_primes();
         uint64_t count = 0;
 
+        // The primesieve::iterator::generate_next_primes() method is
+        // vectorized using AVX512 on x64 CPUs. Hence for stress testing
+        // we use this method for counting primes since it causes a
+        // higher CPU load then primesieve::count_primes().
         for (; it.primes_[it.size_ - 1] <= threadStop; it.generate_next_primes())
           count += it.size_ - it.i_;
         for (; it.primes_[it.i_] <= threadStop; it.i_++)
@@ -162,7 +171,7 @@ void stressTest(const CmdOptions& opts)
         if (count != primeCounts[i])
         {
           std::unique_lock<std::mutex> lock(mutex);
-          std::cerr << "Thread: " << threadId
+          std::cerr << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
                     << ", secs: " << std::fixed << std::setprecision(3) << seconds.count()
                     << ", PrimeCount(" << startStr << i << "*1e11, " << startStr << i+1 << "*1e11) = " << count << "   ERROR" << std::endl;
           std::exit(1);
@@ -173,29 +182,14 @@ void stressTest(const CmdOptions& opts)
 
           if (lock.owns_lock())
           {
-            std::chrono::duration<double> statusSecs = t2 - lastStatusOutput;
-
-            // We only print one line every 30 seconds
-            // for correct results.
-            if (statusSecs.count() >= 30)
-            {
-              lastStatusOutput = t2; 
-              std::cout << "Thread: " << threadId
-                        << ", secs: " << std::fixed << std::setprecision(3) << seconds.count()
-                        << ", PrimeCount(" << startStr << i << "*1e11, " << startStr << i+1 << "*1e11) = " << count << "   OK" << std::endl;
-            }
+            std::cout << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
+                      << ", secs: " << std::fixed << std::setprecision(3) << seconds.count()
+                      << ", PrimeCount(" << startStr << i << "*1e11, " << startStr << i+1 << "*1e11) = " << count << "   OK" << std::endl;
           }
         }
       }
     }
   };
-
-  int threads;
-
-  if (opts.threads > 0)
-    threads = opts.threads;
-  else
-    threads = std::thread::hardware_concurrency();
 
   using primesieve::Vector;
   Vector<std::future<void>> futures;
