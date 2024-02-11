@@ -106,7 +106,7 @@ void sieve(CmdOptions& opt)
 void nthPrime(CmdOptions& opt)
 {
   if (opt.numbers.empty())
-    throw primesieve_error("missing input number n");
+    throw primesieve_error("missing n number");
 
   ParallelSieve ps;
   int64_t n = opt.numbers[0];
@@ -142,7 +142,7 @@ void nthPrime(CmdOptions& opt)
 void RiemannR(CmdOptions& opt)
 {
   if (opt.numbers.empty())
-    throw primesieve_error("missing input number x");
+    throw primesieve_error("missing x number");
 
   long double x = (long double) opt.numbers[0];
   long double Rx = primesieve::RiemannR(x);
@@ -168,7 +168,7 @@ void RiemannR(CmdOptions& opt)
 void RiemannR_inverse(CmdOptions& opt)
 {
   if (opt.numbers.empty())
-    throw primesieve_error("missing input number x");
+    throw primesieve_error("missing x number");
 
   long double x = (long double) opt.numbers[0];
   long double R_inv_x = primesieve::RiemannR_inverse(x);
