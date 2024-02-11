@@ -324,7 +324,7 @@ CmdOptions parseOptions(int argc, char* argv[])
 
   if (opts.quiet)
     opts.status = false;
-  else
+  if (!opts.quiet)
     opts.time = true;
 
   return opts;
