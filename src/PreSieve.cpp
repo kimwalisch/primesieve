@@ -21,6 +21,7 @@
 ///         sieving the primes < 10^10 using primesieve.
 ///
 /// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 @zielaj, https://github.com/zielaj
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
