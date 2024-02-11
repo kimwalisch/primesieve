@@ -1,10 +1,10 @@
 ///
-/// @file  PrimeGenerator.hpp
-///        Generates the primes inside [start, stop] and stores them
-///        in a vector. After the primes have been stored in the
-///        vector primesieve::iterator iterates over the vector and
-///        returns the primes. When there are no more primes left in
-///        the vector PrimeGenerator generates new primes.
+/// @file   PrimeGenerator.hpp
+/// @brief  Generates the primes inside [start, stop] and stores them
+///         in a vector. After the primes have been stored in the
+///         vector primesieve::iterator iterates over the vector and
+///         returns the primes. When there are no more primes left in
+///         the vector PrimeGenerator generates new primes.
 ///
 /// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///

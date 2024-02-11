@@ -1,6 +1,6 @@
 ///
-/// @file  intrinsics.hpp
-/// @brief Wrappers for compiler intrinsics.
+/// @file   intrinsics.hpp
+/// @brief  Wrappers for compiler intrinsics.
 ///
 /// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///

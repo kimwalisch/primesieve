@@ -1,14 +1,14 @@
 ///
-/// @file  MemoryPool.cpp
-///        EratMedium and EratBig may use millions of buckets for
-///        storing the sieving primes that are required to cross off
-///        multiples. As many memory allocations/deallocations are
-///        bad for performance the MemoryPool initially allocates a
-///        large number of buckets (using a single memory allocation)
-///        and puts the buckets into its stock. The MemoryPool can
-///        then serve buckets to EratMedium and EratBig without
-///        doing any memory allocation as long as the MemoryPool's
-///        stock is not empty.
+/// @file   MemoryPool.cpp
+/// @brief  EratMedium and EratBig may use millions of buckets for
+///         storing the sieving primes that are required to cross off
+///         multiples. As many memory allocations/deallocations are
+///         bad for performance the MemoryPool initially allocates a
+///         large number of buckets (using a single memory allocation)
+///         and puts the buckets into its stock. The MemoryPool can
+///         then serve buckets to EratMedium and EratBig without
+///         doing any memory allocation as long as the MemoryPool's
+///         stock is not empty.
 ///
 /// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
