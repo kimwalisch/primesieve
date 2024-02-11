@@ -12,6 +12,8 @@
 ///         1) Add a new option enum in cmdoptions.h.
 ///         2) Add your option to parseOptions() in cmdoptions.cpp.
 ///         3) Add your option to main() in main.cpp.
+///         4) Document your option in help.cpp (--help option summary)
+///            and in doc/primesieve.txt (manpage).
 ///
 /// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
