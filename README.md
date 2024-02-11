@@ -108,7 +108,9 @@ Options:
                       By default primesieve uses a sieve size that
                       matches your CPU's L1 cache size (per core) or is
                       slightly smaller than your CPU's L2 cache size.
-      --test          Run various sieving tests.
+      --stress-test[=MODE]   Run stress testing. The MODE can be either
+                      CPU (default) or RAM. Keeps on running forever.
+      --test          Run various correctness tests (< 1 minute).
   -t, --threads=NUM   Set the number of threads, NUM <= CPU cores.
                       Default setting: use all available CPU cores.
       --time          Print the time elapsed in seconds.
