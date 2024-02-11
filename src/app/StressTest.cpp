@@ -121,7 +121,7 @@ void stressTest(const CmdOptions& opts)
     threads = std::thread::hardware_concurrency();
 
   threads = std::max(1, threads);
-  int threadIdPadding = std::to_string(threads).size();
+  int threadIdPadding = (int) std::to_string(threads).size();
   std::mutex mutex;
 
   // Each thread executes 1 task
@@ -162,11 +162,11 @@ void stressTest(const CmdOptions& opts)
         }
         else
         {
+          // The primesieve::iterator::generate_next_primes() method
+          // is vectorized using AVX512 on x64 CPUs.
           primesieve::iterator it(threadStart, threadStop);
           it.generate_next_primes();
 
-          // The primesieve::iterator::generate_next_primes() method is
-          // vectorized using AVX512 on x64 CPUs.
           for (; it.primes_[it.size_ - 1] <= threadStop; it.generate_next_primes())
             count += it.size_ - it.i_;
           for (; it.primes_[it.i_] <= threadStop; it.i_++)
@@ -188,6 +188,8 @@ void stressTest(const CmdOptions& opts)
         }
         else
         {
+          // We don't wait here. Keeping the CPU buys is more
+          // important then printing status output. 
           std::unique_lock<std::mutex> lock(mutex, std::try_to_lock);
 
           if (lock.owns_lock())
