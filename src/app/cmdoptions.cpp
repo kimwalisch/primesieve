@@ -16,7 +16,6 @@
 #include <primesieve/primesieve_error.hpp>
 
 #include <cstddef>
-#include <iostream>
 #include <map>
 #include <stdint.h>
 #include <string>
