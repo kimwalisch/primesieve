@@ -16,6 +16,7 @@
 ///
 
 #include <primesieve/iterator.hpp>
+#include <primesieve/PrimeSieve.hpp>
 #include <primesieve/Vector.hpp>
 #include "cmdoptions.hpp"
 
@@ -120,7 +121,7 @@ void stressTest(const CmdOptions& opts)
     threads = std::thread::hardware_concurrency();
 
   threads = std::max(1, threads);
-  int threadIdPadding = std::to_string(threads - 1).size();
+  int threadIdPadding = std::to_string(threads).size();
   std::mutex mutex;
 
   // Each thread executes 1 task
@@ -128,7 +129,6 @@ void stressTest(const CmdOptions& opts)
                   int threadId,
                   uint64_t start)
   {
-    primesieve::iterator it;
     std::string startStr;
 
     if (start > 0)
@@ -149,19 +149,29 @@ void stressTest(const CmdOptions& opts)
         uint64_t ChunkSize = (uint64_t) 1e11;
         uint64_t threadStart = start + ChunkSize * i;
         uint64_t threadStop = threadStart + ChunkSize;
-
-        it.jump_to(threadStart, threadStop);
-        it.generate_next_primes();
         uint64_t count = 0;
 
-        // The primesieve::iterator::generate_next_primes() method is
-        // vectorized using AVX512 on x64 CPUs. Hence for stress testing
-        // we use this method for counting primes since it causes a
-        // higher CPU load then primesieve::count_primes().
-        for (; it.primes_[it.size_ - 1] <= threadStop; it.generate_next_primes())
-          count += it.size_ - it.i_;
-        for (; it.primes_[it.i_] <= threadStop; it.i_++)
-          count += 1;
+        // We use 2 different algorithms for counting primes in order
+        // to use as many of the CPU's resources as possible.
+        // All threads alternately execute algorithm 1 and algorithm 2.
+        if ((threadId + i) % 2)
+        {
+          // Single threaded count primes algorithm
+          primesieve::PrimeSieve ps;
+          count = ps.countPrimes(threadStart, threadStop);
+        }
+        else
+        {
+          primesieve::iterator it(threadStart, threadStop);
+          it.generate_next_primes();
+
+          // The primesieve::iterator::generate_next_primes() method is
+          // vectorized using AVX512 on x64 CPUs.
+          for (; it.primes_[it.size_ - 1] <= threadStop; it.generate_next_primes())
+            count += it.size_ - it.i_;
+          for (; it.primes_[it.i_] <= threadStop; it.i_++)
+            count += 1;
+        }
 
         auto t2 = std::chrono::system_clock::now();
         std::chrono::duration<double> seconds = t2 - t1;
@@ -201,7 +211,7 @@ void stressTest(const CmdOptions& opts)
   std::cout << std::endl;
 
   // We create 1 thread per CPU core
-  for (int threadId = 0; threadId < threads; threadId++)
+  for (int threadId = 1; threadId <= threads; threadId++)
   {
     if (opts.stressTestMode == "RAM")
     {
