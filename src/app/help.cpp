@@ -47,7 +47,9 @@ void help(int exitCode)
     "                      By default primesieve uses a sieve size that\n"
     "                      matches your CPU's L1 cache size (per core) or is\n"
     "                      slightly smaller than your CPU's L2 cache size.\n"
-    "      --test          Run various sieving tests.\n"
+    "      --stress-test[=MODE]   Run stress testing. The MODE can be either\n"
+    "                      CPU (default) or RAM. Keeps on running forever.\n"
+    "      --test          Run various correctness tests (< 1 minute).\n"
     "  -t, --threads=NUM   Set the number of threads, NUM <= CPU cores.\n"
     "                      Default setting: use all available CPU cores.\n"
     "      --time          Print the time elapsed in seconds.\n"
@@ -63,5 +65,4 @@ void version()
   std::cout << ", <https://github.com/kimwalisch/primesieve>" << std::endl;
   std::cout << "Copyright (C) 2010 - 2024 Kim Walisch" << std::endl;
   std::cout << "BSD 2-Clause License <https://opensource.org/licenses/BSD-2-Clause>" << std::endl;
-  std::exit(0);
 }

@@ -77,6 +77,14 @@ OPTIONS
 	this case you can get a significant speedup by manually setting the sieve
 	size to your CPU's L1 or L2 cache size (per core).
 
+*--stress-test*[='MODE']::
+	Run stress testing. 'MODE' can be either CPU (default) or RAM. The CPU
+	'MODE' uses little memory and puts the highest load on the CPU, whereas the
+	RAM 'MODE' puts the highest load on the RAM (each thread uses about 135
+	MiB), but the CPU usually won't get as hot as in the CPU 'MODE'. Stress
+	testing keeps on running until a miscalculation occurs (due to a hardware
+	issue) or the user cancels it using Ctrl+C.
+
 *--test*::
 	Run various sieving tests.
 

@@ -2,12 +2,12 @@
 .\"     Title: primesieve
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 02/10/2024
+.\"      Date: 02/11/2024
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "PRIMESIEVE" "1" "02/10/2024" "\ \&" "\ \&"
+.TH "PRIMESIEVE" "1" "02/11/2024" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -123,6 +123,18 @@ Approximate the nth prime using the inverse Riemann R function: R^\-1(x)\&.
 Set the size of the sieve array in KiB, 16 <=
 \fISIZE\fR
 <= 8192\&. By default primesieve uses a sieve size that matches your CPU\(cqs L1 cache size (per core) or is slightly smaller than your CPU\(cqs L2 cache size\&. This setting is crucial for performance, on exotic CPUs primesieve sometimes fails to determine the CPU\(cqs cache sizes which usually causes a big slowdown\&. In this case you can get a significant speedup by manually setting the sieve size to your CPU\(cqs L1 or L2 cache size (per core)\&.
+.RE
+.PP
+\fB\-\-stress\-test\fR[=\fIMODE\fR]
+.RS 4
+Run stress testing\&.
+\fIMODE\fR
+can be either CPU (default) or RAM\&. The CPU
+\fIMODE\fR
+uses little memory and puts the highest load on the CPU, whereas the RAM
+\fIMODE\fR
+puts the highest load on the RAM (each thread uses about 135 MiB), but the CPU usually won\(cqt get as hot as in the CPU
+\fIMODE\fR\&. Stress testing keeps on running until a miscalculation occurs (due to a hardware issue) or the user cancels it using Ctrl+C\&.
 .RE
 .PP
 \fB\-\-test\fR

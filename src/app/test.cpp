@@ -203,6 +203,4 @@ void test()
   std::cout << std::endl;
   std::cout << "All tests passed successfully!" << std::endl;
   std::cout << "Seconds: " << std::fixed << std::setprecision(3) << seconds.count() << std::endl;
-
-  std::exit(0);
 }

@@ -12,6 +12,7 @@
 
 #include <primesieve/Vector.hpp>
 #include <stdint.h>
+#include <string>
 
 enum OptionID
 {
@@ -27,6 +28,7 @@ enum OptionID
   OPTION_R,
   OPTION_R_INVERSE,
   OPTION_SIZE,
+  OPTION_STRESS_TEST,
   OPTION_TEST,
   OPTION_THREADS,
   OPTION_TIME,
@@ -36,6 +38,7 @@ enum OptionID
 struct CmdOptions
 {
   primesieve::Vector<uint64_t> numbers;
+  std::string stressTestMode;
   int option = -1;
   int flags = 0;
   int sieveSize = 0;

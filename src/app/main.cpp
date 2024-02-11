@@ -35,6 +35,11 @@
 #include <sstream>
 #include <string>
 
+void help(int exitCode);
+void version();
+void stressTest(const CmdOptions& opts);
+void test();
+
 using primesieve::Array;
 using primesieve::ParallelSieve;
 using primesieve::primesieve_error;
@@ -287,11 +292,15 @@ int main(int argc, char* argv[])
 
     switch (opts.option)
     {
-      case OPTION_CPU_INFO:  cpuInfo(); break;
-      case OPTION_NTH_PRIME: nthPrime(opts); break;
-      case OPTION_R:         RiemannR(opts); break;
-      case OPTION_R_INVERSE: RiemannR_inverse(opts); break;
-      default:               sieve(opts); break;
+      case OPTION_CPU_INFO:    cpuInfo(); break;
+      case OPTION_HELP:        help(/* exitCode */ 0); break;
+      case OPTION_NTH_PRIME:   nthPrime(opts); break;
+      case OPTION_R:           RiemannR(opts); break;
+      case OPTION_R_INVERSE:   RiemannR_inverse(opts); break;
+      case OPTION_STRESS_TEST: stressTest(opts); break;
+      case OPTION_TEST:        test(); break;
+      case OPTION_VERSION:     version(); break;
+      default:                 sieve(opts); break;
     }
   }
   catch (std::exception& e)
