@@ -1,11 +1,11 @@
 ///
 /// @file   cmdoptions.cpp
 /// @brief  Command-line option handling for the primesieve
-///         command-line application. The command-line options are
-///         first parsed in cmdoptions.cpp and stored in a CmdOptions
-///         object. Afterwards we execute the function corresponding
-///         to the user's command-line options in the main() function
-///         in main.cpp.
+///         command-line application. The user's command-line options
+///         are first parsed in cmdoptions.cpp and stored in a
+///         CmdOptions object. Afterwards we execute the function
+///         corresponding to the user's command-line options in the
+///         main() function in main.cpp.
 ///
 ///         How to add a new command-line option:
 ///
