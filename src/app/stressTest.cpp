@@ -23,6 +23,7 @@
 #include "CmdOptions.hpp"
 
 #include <stdint.h>
+#include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <iomanip>
@@ -184,8 +185,9 @@ std::string getStartString(uint64_t start)
     return std::string();
   else
   {
-    std::size_t size = std::to_string(start).size();
-    return "1e" + std::to_string(size) + "+";
+    double log10_start = std::log10(start);
+    int exponent = (int) std::round(log10_start);
+    return "1e" + std::to_string(exponent) + "+";
   }
 }
 
