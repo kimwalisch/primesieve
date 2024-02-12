@@ -131,8 +131,7 @@ void stressTest(const CmdOptions& opts)
   std::mutex mutex;
 
   // Each thread executes 1 task
-  auto task = [&](const Array<uint64_t, 100>& primeCounts,
-                  int threadId)
+  auto task = [&](int threadId, const Array<uint64_t, 100>& primeCounts)
   {
     uint64_t start = primeCounts[0];
     std::size_t maxIndex = primeCounts.size() - 1;
@@ -247,9 +246,9 @@ void stressTest(const CmdOptions& opts)
     // otherwise the threads might become idle due to the limited
     // memory bandwidth.
     if (opts.stressTestMode == "CPU" && threadId % 5 != 0)
-      futures.emplace_back(std::async(std::launch::async, task, primeCounts_CpuMode, threadId));
+      futures.emplace_back(std::async(std::launch::async, task, threadId, primeCounts_CpuMode));
     else // RAM stress test
-      futures.emplace_back(std::async(std::launch::async, task, primeCounts_RamMode, threadId));
+      futures.emplace_back(std::async(std::launch::async, task, threadId, primeCounts_RamMode));
   }
 
   // Wait for all threads to finish
