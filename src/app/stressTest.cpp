@@ -150,7 +150,7 @@ void stressTest(const CmdOptions& opts)
       {
         auto t1 = std::chrono::system_clock::now();
         uint64_t ChunkSize = (uint64_t) 1e11;
-        uint64_t threadStart = start + ChunkSize * i;
+        uint64_t threadStart = start + ChunkSize * (i - 1);
         uint64_t threadStop = threadStart + ChunkSize;
         uint64_t count = 0;
 
@@ -186,7 +186,7 @@ void stressTest(const CmdOptions& opts)
           std::unique_lock<std::mutex> lock(mutex);
           std::cerr << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
                     << ", secs: " << std::fixed << std::setprecision(3) << seconds.count()
-                    << ", PrimeCount(" << startStr << i << "*1e11, " << startStr << i+1 << "*1e11) = " << count << "   ERROR" << std::endl;
+                    << ", PrimeCount(" << startStr << i-1 << "*1e11, " << startStr << i << "*1e11) = " << count << "   ERROR" << std::endl;
           std::exit(1);
         }
         else
@@ -199,7 +199,7 @@ void stressTest(const CmdOptions& opts)
           {
             std::cout << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
                       << ", secs: " << std::fixed << std::setprecision(3) << seconds.count()
-                      << ", PrimeCount(" << startStr << i << "*1e11, " << startStr << i+1 << "*1e11) = " << count << "   OK" << std::endl;
+                      << ", PrimeCount(" << startStr << i-1 << "*1e11, " << startStr << i << "*1e11) = " << count << "   OK" << std::endl;
           }
         }
       }
