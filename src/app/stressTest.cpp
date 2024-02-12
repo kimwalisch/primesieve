@@ -16,7 +16,6 @@
 ///
 
 #include <primesieve/iterator.hpp>
-#include <primesieve/macros.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/Vector.hpp>
 #include "CmdOptions.hpp"
@@ -149,8 +148,7 @@ void stressTest(const CmdOptions& opts)
     // same time, which allows us to more effectively limit the status
     // output (print results of a different thread every 10 secs).
     uint64_t dist = primeCounts.size() / threads;
-    dist += (dist % 2 == 0);
-    ASSERT(dist >= 1 && dist % 2 == 1);
+    dist = std::max((uint64_t) 1, dist);
     uint64_t startIndex = 1 + (dist * threadId) % primeCounts.size();
 
     // The thread keeps on running forever. It only stops if
