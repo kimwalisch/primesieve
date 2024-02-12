@@ -16,6 +16,7 @@
 ///
 
 #include <primesieve/iterator.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/Vector.hpp>
 #include "CmdOptions.hpp"
@@ -125,6 +126,8 @@ void stressTest(const CmdOptions& opts)
 
   threads = std::max(1, threads);
   int threadIdPadding = (int) std::to_string(threads).size();
+  auto lastStatusOutput = std::chrono::system_clock::now();
+  lastStatusOutput -= std::chrono::seconds(1000);
   std::mutex mutex;
 
   // Each thread executes 1 task
@@ -141,12 +144,21 @@ void stressTest(const CmdOptions& opts)
       startStr = "1e" + std::to_string(exponent) + "+";
     }
 
+    // We evenly distribute the start indexes of the different threads.
+    // This way we ensure that the threads don't all finish at the
+    // same time, which allows us to more effectively limit the status
+    // output (print results of a different thread every 10 secs).
+    uint64_t dist = primeCounts.size() / threads;
+    dist += (dist % 2 == 0);
+    ASSERT(dist >= 1 && dist % 2 == 1);
+    uint64_t startIndex = 1 + (dist * threadId) % primeCounts.size();
+
     // The thread keeps on running forever. It only stops if
     // a miscalculation occurs (due to a hardware issue)
     // or if the user cancels it using Ctrl+C.
-    while (true)
+    for (; true; startIndex = 1)
     {
-      for (uint64_t i = 1; i < primeCounts.size(); i++)
+      for (uint64_t i = startIndex; i < primeCounts.size(); i++)
       {
         auto t1 = std::chrono::system_clock::now();
         uint64_t ChunkSize = (uint64_t) 1e11;
@@ -177,7 +189,7 @@ void stressTest(const CmdOptions& opts)
         }
 
         auto t2 = std::chrono::system_clock::now();
-        std::chrono::duration<double> seconds = t2 - t1;
+        std::chrono::duration<double> secsThread = t2 - t1;
 
         // If an error occurs we always print it
         // to the standard error stream.
@@ -185,7 +197,7 @@ void stressTest(const CmdOptions& opts)
         {
           std::unique_lock<std::mutex> lock(mutex);
           std::cerr << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
-                    << ", secs: " << std::fixed << std::setprecision(3) << seconds.count()
+                    << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
                     << ", PrimeCount(" << startStr << i-1 << "*1e11, " << startStr << i << "*1e11) = " << count << "   ERROR" << std::endl;
           std::exit(1);
         }
@@ -197,9 +209,17 @@ void stressTest(const CmdOptions& opts)
 
           if (lock.owns_lock())
           {
-            std::cout << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
-                      << ", secs: " << std::fixed << std::setprecision(3) << seconds.count()
-                      << ", PrimeCount(" << startStr << i-1 << "*1e11, " << startStr << i << "*1e11) = " << count << "   OK" << std::endl;
+            std::chrono::duration<double> secsLastStatusOutput = t2 - lastStatusOutput;
+
+            // Prevent excessive status output when many using many
+            // threads. We print 1 result every 10 secs.
+            if (secsLastStatusOutput.count() >= 10)
+            {
+              lastStatusOutput = t2;
+              std::cout << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
+                        << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
+                        << ", PrimeCount(" << startStr << i-1 << "*1e11, " << startStr << i << "*1e11) = " << count << "   OK" << std::endl;
+            }
           }
         }
       }
