@@ -34,9 +34,10 @@ using primesieve::Array;
 namespace {
 
 /// Lookup table of correct prime count results.
-/// This test sieves up to 10^13 where most memory fits into the CPU's
-/// cache. This tests puts the highest load on the CPU.
 /// primeCounts_CpuMode[i] = PrimePi((i+1)*1e11) - PrimePi(i*1e11)
+/// This test sieves up to 10^13 where most memory fits into
+/// the CPU's cache. Each thread uses < 5 MiB of memory.
+/// This tests puts the highest load on the CPU.
 ///
 /// The table was generated using this bash program:
 ///
@@ -47,8 +48,9 @@ namespace {
 ///     if [ $((($i+1) % 5)) -eq 0 ]; then printf "\n"; fi;
 /// done
 ///
-const Array<uint64_t, 100> primeCounts_CpuMode =
+const Array<uint64_t, 101> primeCounts_CpuMode =
 {
+  /* Start number = */ 0,
   4118054813ull, 3889050246ull, 3811334076ull, 3762566522ull, 3727130485ull,
   3699365644ull, 3676572524ull, 3657309217ull, 3640604059ull, 3625924432ull,
   3612791400ull, 3600947714ull, 3590161711ull, 3580266494ull, 3571130592ull,
@@ -72,41 +74,42 @@ const Array<uint64_t, 100> primeCounts_CpuMode =
 };
 
 /// Lookup table of correct prime count results.
-/// This test sieves near 10^17 where each thread uses about 135 MB.
-/// This test puts higher load on the RAM, but less load on the CPU.
 /// primeCounts_RamMode[i] = PrimePi(1e17+(i+1)*1e11) - PrimePi(1e17+i*1e11)
+/// This test sieves near 10^18 where each thread uses about 400 MiB.
+/// This test puts higher load on the RAM, but less load on the CPU.
 ///
 /// The table was generated using this bash program:
 ///
 /// for i in {0..99};
 /// do
-///     res=$(primesieve 1e17+$i*1e11 -d1e11 -q);
+///     res=$(primesieve 1e18+$i*1e11 -d1e11 -q);
 ///     printf "$((res))ull, ";
 ///     if [ $((($i+1) % 5)) -eq 0 ]; then printf "\n"; fi;
 /// done
 ///
-const Array<uint64_t, 100> primeCounts_RamMode =
+const Array<uint64_t, 101> primeCounts_RamMode =
 {
-  2554712095ull, 2554681993ull, 2554649315ull, 2554651498ull, 2554644244ull,
-  2554686171ull, 2554691088ull, 2554665891ull, 2554617302ull, 2554660125ull,
-  2554706966ull, 2554658780ull, 2554695439ull, 2554707394ull, 2554679470ull,
-  2554628893ull, 2554673909ull, 2554623255ull, 2554666481ull, 2554643847ull,
-  2554688629ull, 2554639827ull, 2554673925ull, 2554661160ull, 2554695332ull,
-  2554712302ull, 2554659626ull, 2554635209ull, 2554695183ull, 2554668181ull,
-  2554676415ull, 2554640063ull, 2554632147ull, 2554680747ull, 2554648205ull,
-  2554617344ull, 2554665523ull, 2554705497ull, 2554694952ull, 2554620484ull,
-  2554659846ull, 2554659419ull, 2554690829ull, 2554704969ull, 2554623780ull,
-  2554656411ull, 2554675028ull, 2554644123ull, 2554682647ull, 2554657664ull,
-  2554661012ull, 2554652585ull, 2554662768ull, 2554642884ull, 2554649131ull,
-  2554695511ull, 2554676175ull, 2554648595ull, 2554701314ull, 2554615169ull,
-  2554687615ull, 2554712832ull, 2554665636ull, 2554707500ull, 2554697836ull,
-  2554669861ull, 2554673712ull, 2554632018ull, 2554699152ull, 2554683316ull,
-  2554673723ull, 2554736577ull, 2554672478ull, 2554721577ull, 2554707863ull,
-  2554723050ull, 2554659306ull, 2554661747ull, 2554689312ull, 2554641796ull,
-  2554659688ull, 2554675637ull, 2554654642ull, 2554672630ull, 2554643861ull,
-  2554651578ull, 2554686668ull, 2554697776ull, 2554670327ull, 2554701883ull,
-  2554650228ull, 2554663464ull, 2554655459ull, 2554722937ull, 2554686090ull,
-  2554678384ull, 2554664301ull, 2554711315ull, 2554619910ull, 2554663745ull
+  /* Start number = */ 1000000000000000000ull,
+  2412731214ull, 2412797363ull, 2412781034ull, 2412775259ull, 2412726439ull,
+  2412765373ull, 2412791513ull, 2412809711ull, 2412753236ull, 2412706641ull,
+  2412659448ull, 2412749044ull, 2412714308ull, 2412754638ull, 2412738125ull,
+  2412699893ull, 2412718669ull, 2412760534ull, 2412773145ull, 2412746755ull,
+  2412748299ull, 2412707071ull, 2412739033ull, 2412750060ull, 2412714714ull,
+  2412718992ull, 2412714673ull, 2412820507ull, 2412696545ull, 2412714170ull,
+  2412726975ull, 2412709569ull, 2412802038ull, 2412769163ull, 2412766838ull,
+  2412716683ull, 2412784827ull, 2412719465ull, 2412741445ull, 2412750232ull,
+  2412755807ull, 2412737195ull, 2412742277ull, 2412719679ull, 2412738603ull,
+  2412732373ull, 2412713957ull, 2412734446ull, 2412751453ull, 2412734458ull,
+  2412752689ull, 2412753272ull, 2412755364ull, 2412746762ull, 2412746615ull,
+  2412738550ull, 2412743701ull, 2412755851ull, 2412768210ull, 2412774793ull,
+  2412764687ull, 2412755091ull, 2412706068ull, 2412753581ull, 2412788056ull,
+  2412733574ull, 2412747096ull, 2412728625ull, 2412693566ull, 2412768899ull,
+  2412752135ull, 2412731543ull, 2412754613ull, 2412791419ull, 2412747754ull,
+  2412771098ull, 2412730098ull, 2412712274ull, 2412753983ull, 2412753799ull,
+  2412718390ull, 2412768080ull, 2412768019ull, 2412737595ull, 2412800284ull,
+  2412715726ull, 2412775347ull, 2412705861ull, 2412754859ull, 2412767108ull,
+  2412806188ull, 2412724931ull, 2412761773ull, 2412730012ull, 2412700512ull,
+  2412686405ull, 2412760693ull, 2412749045ull, 2412744369ull, 2412786014ull
 };
 
 } // namespace
@@ -125,10 +128,10 @@ void stressTest(const CmdOptions& opts)
   std::mutex mutex;
 
   // Each thread executes 1 task
-  auto task = [&](const Array<uint64_t, 100>& primeCounts,
-                  int threadId,
-                  uint64_t start)
+  auto task = [&](const Array<uint64_t, 101>& primeCounts,
+                  int threadId)
   {
+    uint64_t start = primeCounts[0];
     std::string startStr;
 
     if (start > 0)
@@ -143,7 +146,7 @@ void stressTest(const CmdOptions& opts)
     // or if the user cancels it using Ctrl+C.
     while (true)
     {
-      for (uint64_t i = 0; i < primeCounts.size(); i++)
+      for (uint64_t i = 1; i < primeCounts.size(); i++)
       {
         auto t1 = std::chrono::system_clock::now();
         uint64_t ChunkSize = (uint64_t) 1e11;
@@ -215,16 +218,16 @@ void stressTest(const CmdOptions& opts)
   // We create 1 thread per CPU core
   for (int threadId = 1; threadId <= threads; threadId++)
   {
-    if (opts.stressTestMode == "RAM")
-    {
-      uint64_t start = 100000000000000000ll;
-      futures.emplace_back(std::async(std::launch::async, task, primeCounts_RamMode, threadId, start));
-    }
-    else // opts.stressTestMode == "CPU"
-    {
-      uint64_t start = 0;
-      futures.emplace_back(std::async(std::launch::async, task, primeCounts_CpuMode, threadId, start));
-    }
+    // In CPU stress test mode, we also run 20% of the threads using
+    // the RAM stress test (threadId % 5 != 0). Since most PCs are
+    // memory bound e.g. Desktop PC CPUs frequently only have 2 memory
+    // channels we don't want to use too many RAM stress test threads
+    // otherwise the threads might become idle due to the limited
+    // memory bandwidth.
+    if (opts.stressTestMode == "CPU" && threadId % 5 != 0)
+      futures.emplace_back(std::async(std::launch::async, task, primeCounts_CpuMode, threadId));
+    else // RAM stress test
+      futures.emplace_back(std::async(std::launch::async, task, primeCounts_RamMode, threadId));
   }
 
   // Wait for all threads to finish
