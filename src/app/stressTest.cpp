@@ -24,7 +24,6 @@
 
 #include <stdint.h>
 #include <cstdlib>
-#include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <chrono>
@@ -154,6 +153,84 @@ const Array<uint64_t, 100> primeCounts_1e19 =
   2285748648ull, 2285751228ull, 2285725270ull, 2285701010ull
 };
 
+void stressTestInfo(const std::string& stressTestMode,
+                    int threads)
+{
+  ASSERT(stressTestMode == "CPU" || stressTestMode == "RAM");
+
+  std::cout << "Started " << stressTestMode << " stress testing using " << threads << " threads.\n";
+  std::cout << "The expected memory usage is: " << threads << " threads * ";
+
+  if (stressTestMode == "CPU")
+  {
+    int threads_1e18 = threads / 5;
+    int threads_1e13 = threads - threads_1e18;
+    int avgMiB = (threads_1e13 * 3 /* MiB */ + threads_1e18 * 400 /* MiB */) / threads;
+    std::cout << avgMiB << " MiB = " << threads * avgMiB << " MiB.\n";
+  }
+  else // stressTestMode == "RAM"
+    std::cout << "1.16 GiB = " << std::fixed << std::setprecision(2) << threads * 1.16 << " GiB.\n";
+
+  std::cout << "Stress testing keeps on running until either a miscalculation occurs\n";
+  std::cout << "(due to a hardware issue) or you cancel it using Ctrl+C.\n";
+  std::cout << std::endl;
+}
+
+std::string getStartString(uint64_t start)
+{
+  ASSERT(start % 10 == 0);
+
+  if (start == 0)
+    return std::string();
+  else
+  {
+    std::size_t size = std::to_string(start).size();
+    return "1e" + std::to_string(size) + "+";
+  }
+}
+
+/// We evenly distribute the start indexes of the
+/// different threads. (dist % 2 == 1) ensures that we
+/// get both even and odd start indexes.
+///
+int getStartIndex(int threadId,
+                  int threads,
+                  const Array<uint64_t, 100>& primeCounts)
+{
+  uint64_t dist = primeCounts.size() / threads;
+  dist += (dist % 2 == 0);
+  ASSERT(dist >= 1 && dist % 2 == 1);
+  return 1 + (dist * threadId) % primeCounts.size();
+}
+
+/// Count primes using a PrimeSieve object, on x64 CPUs this
+/// uses the POPCNT instruction for counting primes.
+/// PrimeSieve objects use a single thread.
+///
+uint64_t countPrimesAlgo1(uint64_t start, uint64_t stop)
+{
+  primesieve::PrimeSieve ps;
+  return ps.countPrimes(start, stop);
+}
+
+/// Count primes using a primesieve::iterator, this uses the
+/// PrimeGenerator::fillNextPrimes() method which is
+/// vectorized using AVX512 on x64 CPUs.
+///
+uint64_t countPrimesAlgo2(uint64_t start, uint64_t stop)
+{
+  primesieve::iterator it(start, stop);
+  it.generate_next_primes();
+  uint64_t count = 0;
+
+  for (; it.primes_[it.size_ - 1] <= stop; it.generate_next_primes())
+    count += it.size_ - it.i_;
+  for (; it.primes_[it.i_] <= stop; it.i_++)
+    count += 1;
+
+  return count;
+}
+
 } // namespace
 
 void stressTest(const CmdOptions& opts)
@@ -171,56 +248,29 @@ void stressTest(const CmdOptions& opts)
     uint64_t start = primeCounts[0];
     std::size_t maxIndex = primeCounts.size() - 1;
     int iPadding = (int) std::to_string(maxIndex).size();
-    std::string startStr;
-
-    if (start > 0)
-    {
-      double log10_start = std::log10((double) start);
-      int exponent = (int) std::round(log10_start);
-      startStr = "1e" + std::to_string(exponent) + "+";
-    }
-
-    // We evenly distribute the start indexes of the different threads.
-    // (dist % 2 == 1) ensures we get even and odd start indexes.
-    uint64_t dist = primeCounts.size() / threads;
-    dist += (dist % 2 == 0);
-    ASSERT(dist >= 1 && dist % 2 == 1);
-    uint64_t startIndex = 1 + (dist * threadId) % primeCounts.size();
+    std::string startStr = getStartString(start);
+    uint64_t i = getStartIndex(threadId, threads, primeCounts);
 
     // The thread keeps on running forever. It only stops if
     // a miscalculation occurs (due to a hardware issue)
     // or if the user cancels it using Ctrl+C.
-    for (; true; startIndex = 1)
+    for (; true; i = 1)
     {
-      for (uint64_t i = startIndex; i < primeCounts.size(); i++)
+      for (; i < primeCounts.size(); i++)
       {
         auto t1 = std::chrono::system_clock::now();
         uint64_t ChunkSize = (uint64_t) 1e11;
         uint64_t threadStart = start + ChunkSize * (i - 1);
         uint64_t threadStop = threadStart + ChunkSize;
-        uint64_t count = 0;
+        uint64_t count;
 
         // We use 2 different algorithms for counting primes in order
         // to use as many of the CPU's resources as possible.
         // All threads alternately execute algorithm 1 and algorithm 2.
         if (i % 2)
-        {
-          // Single threaded count primes algorithm
-          primesieve::PrimeSieve ps;
-          count = ps.countPrimes(threadStart, threadStop);
-        }
+          count = countPrimesAlgo1(threadStart, threadStop);
         else
-        {
-          // The primesieve::iterator::generate_next_primes() method
-          // is vectorized using AVX512 on x64 CPUs.
-          primesieve::iterator it(threadStart, threadStop);
-          it.generate_next_primes();
-
-          for (; it.primes_[it.size_ - 1] <= threadStop; it.generate_next_primes())
-            count += it.size_ - it.i_;
-          for (; it.primes_[it.i_] <= threadStop; it.i_++)
-            count += 1;
-        }
+          count = countPrimesAlgo2(threadStart, threadStop);
 
         auto t2 = std::chrono::system_clock::now();
         std::chrono::duration<double> secsThread = t2 - t1;
@@ -262,22 +312,7 @@ void stressTest(const CmdOptions& opts)
     }
   };
 
-  std::cout << "Started " << opts.stressTestMode << " stress testing using " << threads << " threads." << std::endl;
-  std::cout << "The total expected memory usage is: " << threads << " threads * ";
-
-  if (opts.stressTestMode == "CPU")
-  {
-    int threads_1e18 = threads / 5;
-    int threads_1e13 = threads - threads_1e18;
-    int avgMiB = (threads_1e13 * 3 /* MiB */ + threads_1e18 * 400 /* MiB */) / threads;
-    std::cout << avgMiB << " MiB = " << threads * avgMiB << " MiB." << std::endl;
-  }
-  else if (opts.stressTestMode == "RAM")
-    std::cout << "1.16 GiB = " << std::fixed << std::setprecision(2) << threads * 1.16 << " GiB." << std::endl;
-
-  std::cout << "Stress testing keeps on running until either a miscalculation occurs" << std::endl;
-  std::cout << "(due to a hardware issue) or you cancel it using Ctrl+C." << std::endl;
-  std::cout << std::endl;
+  stressTestInfo(opts.stressTestMode, threads);
 
   using primesieve::Vector;
   Vector<std::future<void>> futures;
