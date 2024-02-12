@@ -204,7 +204,7 @@ void stressTest(const CmdOptions& opts)
         }
         else
         {
-          // We don't wait here. Keeping the CPU buys is more
+          // We don't wait here. Keeping the CPU busy is more
           // important then printing status output. 
           std::unique_lock<std::mutex> lock(mutex, std::try_to_lock);
 
@@ -212,8 +212,8 @@ void stressTest(const CmdOptions& opts)
           {
             std::chrono::duration<double> secsLastStatusOutput = t2 - lastStatusOutput;
 
-            // Prevent excessive status output when many using many
-            // threads. We print 1 result every 10 secs.
+            // Prevent excessive status output when using many
+            // threads. We print one result every 10 secs.
             if (secsLastStatusOutput.count() >= 10)
             {
               lastStatusOutput = t2;
