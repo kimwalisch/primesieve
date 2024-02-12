@@ -262,10 +262,6 @@ void stressTest(const CmdOptions& opts)
     }
   };
 
-  using primesieve::Vector;
-  Vector<std::future<void>> futures;
-  futures.reserve(threads);
-
   std::cout << "Started " << opts.stressTestMode << " stress testing using " << threads << " threads." << std::endl;
   std::cout << "The total expected memory usage is: " << threads << " threads * ";
 
@@ -282,6 +278,10 @@ void stressTest(const CmdOptions& opts)
   std::cout << "Stress testing keeps on running until either a miscalculation occurs" << std::endl;
   std::cout << "(due to a hardware issue) or you cancel it using Ctrl+C." << std::endl;
   std::cout << std::endl;
+
+  using primesieve::Vector;
+  Vector<std::future<void>> futures;
+  futures.reserve(threads);
 
   // We create 1 thread per CPU core
   for (int threadId = 1; threadId <= threads; threadId++)
