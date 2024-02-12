@@ -193,9 +193,9 @@ std::string getStartString(uint64_t start)
 /// different threads. (dist % 2 == 1) ensures that we
 /// get both even and odd start indexes.
 ///
-int getStartIndex(int threadId,
-                  int threads,
-                  const Array<uint64_t, 100>& primeCounts)
+uint64_t getStartIndex(int threadId,
+                       int threads,
+                       const Array<uint64_t, 100>& primeCounts)
 {
   uint64_t dist = primeCounts.size() / threads;
   dist += (dist % 2 == 0);
