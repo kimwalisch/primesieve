@@ -125,9 +125,9 @@ void stressTestInfo(const std::string& stressTestMode,
 
   if (stressTestMode == "CPU")
   {
-    int threads_1e18 = threads / 5;
-    int threads_1e13 = threads - threads_1e18;
-    int avgMiB = (threads_1e13 * 3 + threads_1e18 * 1160) / threads;
+    int threads_1e19 = threads / 5;
+    int threads_1e13 = threads - threads_1e19;
+    int avgMiB = (threads_1e13 * 3 + threads_1e19 * 1160) / threads;
     double avgGiB = avgMiB / 1024.0;
 
     if (threads * avgMiB < 1024)
