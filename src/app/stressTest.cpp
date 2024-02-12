@@ -1,5 +1,5 @@
 ///
-/// @file   StressTest.cpp
+/// @file   stressTest.cpp
 /// @brief  Run a stress test (--stress-test[=MODE] command-line
 ///         option) that puts maximum load on the CPU (default) or RAM
 ///         and verify that there are no miscalculations due to

@@ -1,7 +1,7 @@
 Changes in version 11.3, 11/02/2024
 ===================================
 
-* StressTest.cpp: New --stress-test[=MODE] command-line option.
+* stressTest.cpp: New --stress-test[=MODE] command-line option.
 * RiemannR.cpp: Faster Riemann R function implementation #144.
 * cmdoptions.cpp: New -R && --RiemannR command line options.
 * cmdoptions.cpp: New --R-inverse command line option.
