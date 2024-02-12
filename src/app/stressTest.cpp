@@ -16,6 +16,7 @@
 ///
 
 #include <primesieve/iterator.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/Vector.hpp>
 #include "CmdOptions.hpp"
@@ -144,11 +145,10 @@ void stressTest(const CmdOptions& opts)
     }
 
     // We evenly distribute the start indexes of the different threads.
-    // This way we ensure that the threads don't all finish at the
-    // same time, which allows us to more effectively limit the status
-    // output (print results of a different thread every 10 secs).
+    // (dist % 2 == 1) ensures we get even and odd start indexes.
     uint64_t dist = primeCounts.size() / threads;
-    dist = std::max((uint64_t) 1, dist);
+    dist += (dist % 2 == 0);
+    ASSERT(dist >= 1 && dist % 2 == 1);
     uint64_t startIndex = 1 + (dist * threadId) % primeCounts.size();
 
     // The thread keeps on running forever. It only stops if
@@ -167,7 +167,7 @@ void stressTest(const CmdOptions& opts)
         // We use 2 different algorithms for counting primes in order
         // to use as many of the CPU's resources as possible.
         // All threads alternately execute algorithm 1 and algorithm 2.
-        if ((threadId + i) % 2)
+        if (i % 2)
         {
           // Single threaded count primes algorithm
           primesieve::PrimeSieve ps;
