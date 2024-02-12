@@ -77,45 +77,6 @@ const Array<uint64_t, 100> primeCounts_1e13 =
 };
 
 /// Lookup table of correct prime count results.
-/// primeCounts_1e18[i] = PrimePi(1e18+i*1e11) - PrimePi(1e18+(i-1)*1e11)
-/// This test sieves near 10^18 where each thread uses about 400 MiB.
-/// This test puts higher load on the RAM, but less load on the CPU.
-///
-/// The table was generated using this bash program:
-///
-/// for i in {0..98};
-/// do
-///     res=$(primesieve 1e18+$i*1e11 -d1e11 -q);
-///     printf "$((res))ull, ";
-///     if [ $((($i+1) % 5)) -eq 0 ]; then printf "\n"; fi;
-/// done
-///
-const Array<uint64_t, 100> primeCounts_1e18 =
-{
-  /* Start number = */ 1000000000000000000ull,
-  2412731214ull, 2412797363ull, 2412781034ull, 2412775259ull, 2412726439ull,
-  2412765373ull, 2412791513ull, 2412809711ull, 2412753236ull, 2412706641ull,
-  2412659448ull, 2412749044ull, 2412714308ull, 2412754638ull, 2412738125ull,
-  2412699893ull, 2412718669ull, 2412760534ull, 2412773145ull, 2412746755ull,
-  2412748299ull, 2412707071ull, 2412739033ull, 2412750060ull, 2412714714ull,
-  2412718992ull, 2412714673ull, 2412820507ull, 2412696545ull, 2412714170ull,
-  2412726975ull, 2412709569ull, 2412802038ull, 2412769163ull, 2412766838ull,
-  2412716683ull, 2412784827ull, 2412719465ull, 2412741445ull, 2412750232ull,
-  2412755807ull, 2412737195ull, 2412742277ull, 2412719679ull, 2412738603ull,
-  2412732373ull, 2412713957ull, 2412734446ull, 2412751453ull, 2412734458ull,
-  2412752689ull, 2412753272ull, 2412755364ull, 2412746762ull, 2412746615ull,
-  2412738550ull, 2412743701ull, 2412755851ull, 2412768210ull, 2412774793ull,
-  2412764687ull, 2412755091ull, 2412706068ull, 2412753581ull, 2412788056ull,
-  2412733574ull, 2412747096ull, 2412728625ull, 2412693566ull, 2412768899ull,
-  2412752135ull, 2412731543ull, 2412754613ull, 2412791419ull, 2412747754ull,
-  2412771098ull, 2412730098ull, 2412712274ull, 2412753983ull, 2412753799ull,
-  2412718390ull, 2412768080ull, 2412768019ull, 2412737595ull, 2412800284ull,
-  2412715726ull, 2412775347ull, 2412705861ull, 2412754859ull, 2412767108ull,
-  2412806188ull, 2412724931ull, 2412761773ull, 2412730012ull, 2412700512ull,
-  2412686405ull, 2412760693ull, 2412749045ull, 2412744369ull
-};
-
-/// Lookup table of correct prime count results.
 /// primeCounts_1e19[i] = PrimePi(1e19+i*1e11) - PrimePi(1e19+(i-1)*1e11)
 /// This test sieves near 10^19 where each thread uses about 1160 MiB.
 /// This test puts the highest load on the RAM.
@@ -166,8 +127,14 @@ void stressTestInfo(const std::string& stressTestMode,
   {
     int threads_1e18 = threads / 5;
     int threads_1e13 = threads - threads_1e18;
-    int avgMiB = (threads_1e13 * 3 /* MiB */ + threads_1e18 * 400 /* MiB */) / threads;
-    std::cout << avgMiB << " MiB = " << threads * avgMiB << " MiB.\n";
+    int avgMiB = (threads_1e13 * 3 + threads_1e18 * 1160) / threads;
+    double avgGiB = avgMiB / 1024.0;
+
+    if (threads * avgMiB < 1024)
+      std::cout << avgMiB << " MiB = " << threads * avgMiB << " MiB.\n";
+    else
+      std::cout << avgMiB << " MiB = " << std::fixed
+                << std::setprecision(2) << threads * avgGiB << " GiB.\n";
   }
   else // stressTestMode == "RAM"
     std::cout << "1.16 GiB = " << std::fixed << std::setprecision(2) << threads * 1.16 << " GiB.\n";
@@ -323,21 +290,16 @@ void stressTest(const CmdOptions& opts)
   // We create 1 thread per CPU core
   for (int threadId = 1; threadId <= threads; threadId++)
   {
-    if (opts.stressTestMode == "RAM")
+    // In CPU stress test mode, we also run 20% of the threads using
+    // the RAM stress test (threadId % 5 != 0). Since most PCs are
+    // memory bound e.g. Desktop PC CPUs frequently only have 2 memory
+    // channels we don't want to use too many RAM stress test threads
+    // otherwise the threads might become idle due to the limited
+    // memory bandwidth.
+    if (opts.stressTestMode == "CPU" && threadId % 5 != 0)
+      futures.emplace_back(std::async(std::launch::async, task, threadId, primeCounts_1e13));
+    else // RAM stress test
       futures.emplace_back(std::async(std::launch::async, task, threadId, primeCounts_1e19));
-    else
-    {
-      // In CPU stress test mode, we run 80% of the threads near 10^13
-      // where most memory fits into the CPU's cache. Then we also run
-      // 20% of the threads near 10^18 where each thread uses about
-      // 400 MiB of memory. We don't want to run too many threads near
-      // 10^18 otherwise the threads might become idle due to the
-      // limited memory bandwidth on most PCs.
-      if (threadId % 5 != 0)
-        futures.emplace_back(std::async(std::launch::async, task, threadId, primeCounts_1e13));
-      else
-        futures.emplace_back(std::async(std::launch::async, task, threadId, primeCounts_1e18));
-    }
   }
 
   for (auto& future : futures)
