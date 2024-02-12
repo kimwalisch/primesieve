@@ -42,14 +42,14 @@ namespace {
 ///
 /// The table was generated using this bash program:
 ///
-/// for i in {0..99};
+/// for i in {0..98};
 /// do
 ///     res=$(primesieve $i*1e11 -d1e11 -q);
 ///     printf "$((res))ull, ";
 ///     if [ $((($i+1) % 5)) -eq 0 ]; then printf "\n"; fi;
 /// done
 ///
-const Array<uint64_t, 101> primeCounts_CpuMode =
+const Array<uint64_t, 100> primeCounts_CpuMode =
 {
   /* Start number = */ 0,
   4118054813ull, 3889050246ull, 3811334076ull, 3762566522ull, 3727130485ull,
@@ -71,7 +71,7 @@ const Array<uint64_t, 101> primeCounts_CpuMode =
   3365100850ull, 3363709833ull, 3362327791ull, 3360990563ull, 3359614618ull,
   3358291592ull, 3357002793ull, 3355683015ull, 3354424950ull, 3353137292ull,
   3351906327ull, 3350687979ull, 3349462327ull, 3348236947ull, 3347061905ull,
-  3345852373ull, 3344702803ull, 3343552482ull, 3342407298ull, 3341312290ull
+  3345852373ull, 3344702803ull, 3343552482ull, 3342407298ull
 };
 
 /// Lookup table of correct prime count results.
@@ -81,14 +81,14 @@ const Array<uint64_t, 101> primeCounts_CpuMode =
 ///
 /// The table was generated using this bash program:
 ///
-/// for i in {0..99};
+/// for i in {0..98};
 /// do
 ///     res=$(primesieve 1e18+$i*1e11 -d1e11 -q);
 ///     printf "$((res))ull, ";
 ///     if [ $((($i+1) % 5)) -eq 0 ]; then printf "\n"; fi;
 /// done
 ///
-const Array<uint64_t, 101> primeCounts_RamMode =
+const Array<uint64_t, 100> primeCounts_RamMode =
 {
   /* Start number = */ 1000000000000000000ull,
   2412731214ull, 2412797363ull, 2412781034ull, 2412775259ull, 2412726439ull,
@@ -110,7 +110,7 @@ const Array<uint64_t, 101> primeCounts_RamMode =
   2412718390ull, 2412768080ull, 2412768019ull, 2412737595ull, 2412800284ull,
   2412715726ull, 2412775347ull, 2412705861ull, 2412754859ull, 2412767108ull,
   2412806188ull, 2412724931ull, 2412761773ull, 2412730012ull, 2412700512ull,
-  2412686405ull, 2412760693ull, 2412749045ull, 2412744369ull, 2412786014ull
+  2412686405ull, 2412760693ull, 2412749045ull, 2412744369ull
 };
 
 } // namespace
@@ -131,10 +131,12 @@ void stressTest(const CmdOptions& opts)
   std::mutex mutex;
 
   // Each thread executes 1 task
-  auto task = [&](const Array<uint64_t, 101>& primeCounts,
+  auto task = [&](const Array<uint64_t, 100>& primeCounts,
                   int threadId)
   {
     uint64_t start = primeCounts[0];
+    std::size_t maxIndex = primeCounts.size() - 1;
+    int iPadding = (int) std::to_string(maxIndex).size();
     std::string startStr;
 
     if (start > 0)
@@ -196,7 +198,8 @@ void stressTest(const CmdOptions& opts)
           std::unique_lock<std::mutex> lock(mutex);
           std::cerr << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
                     << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
-                    << ", PrimeCount(" << startStr << i-1 << "*1e11, " << startStr << i << "*1e11) = " << count << "   ERROR" << std::endl;
+                    << ", PrimeCount(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
+                    << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   ERROR" << std::endl;
           std::exit(1);
         }
         else
@@ -216,7 +219,8 @@ void stressTest(const CmdOptions& opts)
               lastStatusOutput = t2;
               std::cout << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
                         << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
-                        << ", PrimeCount(" << startStr << i-1 << "*1e11, " << startStr << i << "*1e11) = " << count << "   OK" << std::endl;
+                        << ", PrimeCount(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
+                        << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   OK" << std::endl;
             }
           }
         }
