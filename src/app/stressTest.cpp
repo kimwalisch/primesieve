@@ -18,7 +18,7 @@
 #include <primesieve/iterator.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/Vector.hpp>
-#include "cmdoptions.hpp"
+#include "CmdOptions.hpp"
 
 #include <stdint.h>
 #include <cstdlib>

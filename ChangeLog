@@ -3,8 +3,8 @@ Changes in version 11.3, 11/02/2024
 
 * stressTest.cpp: New --stress-test[=MODE] command-line option.
 * RiemannR.cpp: Faster Riemann R function implementation #144.
-* cmdoptions.cpp: New -R && --RiemannR command line options.
-* cmdoptions.cpp: New --R-inverse command line option.
+* CmdOptions.cpp: New -R && --RiemannR command line options.
+* CmdOptions.cpp: New --R-inverse command line option.
 * main.cpp: Improve command-line option handling.
 
 Changes in version 11.2, 08/01/2024
@@ -226,7 +226,7 @@ https://github.com/kimwalisch/primesieve
 * StorePrimes.hpp: Add workaround for windows.h max/min macros.
 * PrimeGenerator.cpp: Cache more primes.
 * SievingPrimes.cpp: Cache more primes.
-* cmdoptions.cpp: Support options of type: --option VALUE.
+* CmdOptions.cpp: Support options of type: --option VALUE.
 * help.cpp: Improve help menu.
 * CMakeLists.txt: Require CMake 3.4 instead 3.9.
 * primesieve.pc.in: Fix libdir and includedir.
@@ -265,7 +265,7 @@ of 25% near 1e19.
 * MemoryPoop.cpp: Allocate buckets aligned by sizeof(Bucket).
 * Bucket.hpp: sizeof(Bucket) is now a power of 2.
 * primesieve::iterator: Support C++ move semantics.
-* cmdoptions.cpp: Fix array out of bounds bug.
+* CmdOptions.cpp: Fix array out of bounds bug.
 * CpuInfo.cpp: Fix MinGW/MSYS2 -Wcast-function-type warning.
 
 Changes in version 7.2, 26/10/2018

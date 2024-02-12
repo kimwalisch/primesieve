@@ -1,16 +1,16 @@
 ///
-/// @file   cmdoptions.cpp
+/// @file   CmdOptions.cpp
 /// @brief  Command-line option handling for the primesieve
 ///         command-line application. The user's command-line options
-///         are first parsed in cmdoptions.cpp and stored in a
+///         are first parsed in CmdOptions.cpp and stored in a
 ///         CmdOptions object. Afterwards we execute the function
 ///         corresponding to the user's command-line options in the
 ///         main() function in main.cpp.
 ///
 ///         How to add a new command-line option:
 ///
-///         1) Add a new option enum in cmdoptions.h.
-///         2) Add your option to parseOptions() in cmdoptions.cpp.
+///         1) Add a new option enum in CmdOptions.h.
+///         2) Add your option to parseOptions() in CmdOptions.cpp.
 ///         3) Add your option to main() in main.cpp.
 ///         4) Document your option in help.cpp (--help option summary)
 ///            and in doc/primesieve.txt (manpage).
@@ -21,7 +21,7 @@
 /// file in the top level directory.
 ///
 
-#include "cmdoptions.hpp"
+#include "CmdOptions.hpp"
 
 #include <primesieve/calculator.hpp>
 #include <primesieve/PrimeSieve.hpp>

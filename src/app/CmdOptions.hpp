@@ -1,5 +1,5 @@
 ///
-/// @file  cmdoptions.hpp
+/// @file  CmdOptions.hpp
 ///
 /// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
