@@ -23,6 +23,7 @@
 #include "CmdOptions.hpp"
 
 #include <stdint.h>
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -304,13 +305,13 @@ void stressTest(const CmdOptions& opts)
             std::chrono::duration<double> secsStatus = t2 - lastStatusOutput;
 
             // We slowly increase the status output delay (in seconds)
-            // until it reaches one minute. This way, long running
+            // until it reaches 10 minutes. This way, long running
             // computations don't produce excessive logs.
             if (secsStatus.count() >= statusOutputDelay)
             {
               lastStatusOutput = t2;
-              statusOutputDelay += 1;
-              statusOutputDelay = inBetween(10, statusOutputDelay, 60);
+              statusOutputDelay += 5;
+              statusOutputDelay = std::min(statusOutputDelay, 600);
               printResult(threadId, threads, i, count, secsThread, primeCounts);
             }
           }
