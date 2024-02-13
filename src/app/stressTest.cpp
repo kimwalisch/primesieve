@@ -137,8 +137,6 @@ std::string getTimeout(int64_t secs)
 void stressTestInfo(const CmdOptions& opts,
                     int threads)
 {
-  ASSERT(stressTestMode == "CPU" || stressTestMode == "RAM");
-
   std::cout << "Started " << opts.stressTestMode << " stress testing using " << threads << " threads.\n";
   std::cout << "The expected memory usage is: " << threads << " threads * ";
 
