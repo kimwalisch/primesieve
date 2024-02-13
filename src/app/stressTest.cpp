@@ -30,6 +30,7 @@
 #include <chrono>
 #include <future>
 #include <mutex>
+#include <sstream>
 
 using primesieve::Array;
 
@@ -158,18 +159,55 @@ std::string getStartString(uint64_t start)
   }
 }
 
-/// We evenly distribute the start indexes of the
-/// different threads. (dist % 2 == 1) ensures that we
-/// get both even and odd start indexes.
-///
-uint64_t getStartIndex(int threadId,
-                       int threads,
-                       const Array<uint64_t, 100>& primeCounts)
+/// Time format: 3h 25m 07s
+std::string getTimeElapsed(std::chrono::duration<double> duration)
 {
-  uint64_t dist = primeCounts.size() / threads;
-  dist += (dist % 2 == 0);
-  ASSERT(dist >= 1 && dist % 2 == 1);
-  return 1 + (dist * threadId) % primeCounts.size();
+  using std::chrono::duration_cast;
+
+  int hours = duration_cast<std::chrono::hours>(duration).count();
+  duration -= std::chrono::hours(hours);
+  int min = duration_cast<std::chrono::minutes>(duration).count();
+  duration -= std::chrono::minutes(min);
+  int sec = duration_cast<std::chrono::seconds>(duration).count();
+
+  std::ostringstream oss;
+  oss << hours << "h "
+      << std::setfill('0') << std::setw(2) << min << "m "
+      << std::setfill('0') << std::setw(2) << sec << "s";
+
+  return oss.str();
+}
+
+void printResult(int threadId,
+                 int threads,
+                 uint64_t i,
+                 uint64_t count,
+                 const std::chrono::duration<double>& secsThread,
+                 const Array<uint64_t, 100>& primeCounts)
+{
+  uint64_t start = primeCounts[0];
+  std::string startStr = getStartString(start);
+  std::size_t maxIndex = primeCounts.size() - 1;
+  int iPadding = (int) std::to_string(maxIndex).size();
+  int threadIdPadding = (int) std::to_string(threads).size();
+
+  if (count == primeCounts[i])
+  {
+    std::cout << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
+              << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
+              << ", PrimeCount(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
+              << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   OK" << std::endl;
+  }
+  else
+  {
+    std::cerr << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
+              << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
+              << ", PrimeCount(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
+              << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   ERROR" << std::endl;
+
+    std::cerr << "\nMiscalculation detected after running for: "
+              << getTimeElapsed(secsThread) << std::endl;
+  }
 }
 
 /// Count primes using a PrimeSieve object, on x64 CPUs this
@@ -207,18 +245,21 @@ void stressTest(const CmdOptions& opts)
   int maxThreads = std::thread::hardware_concurrency();
   int threads = (opts.threads > 0) ? opts.threads : maxThreads;
   threads = inBetween(1, threads, maxThreads);
-  int threadIdPadding = (int) std::to_string(threads).size();
   auto lastStatusOutput = std::chrono::system_clock::now();
+  int statusOutputDelay = 0;
   std::mutex mutex;
 
   // Each thread executes 1 task
   auto task = [&](int threadId, const Array<uint64_t, 100>& primeCounts)
   {
+    // We evenly distribute the start indexes of the
+    // different threads. (dist % 2 == 1) ensures that we
+    // get both even and odd start indexes.
     uint64_t start = primeCounts[0];
-    std::size_t maxIndex = primeCounts.size() - 1;
-    int iPadding = (int) std::to_string(maxIndex).size();
-    std::string startStr = getStartString(start);
-    uint64_t i = getStartIndex(threadId, threads, primeCounts);
+    uint64_t dist = primeCounts.size() / threads;
+    dist += (dist % 2 == 0);
+    ASSERT(dist >= 1 && dist % 2 == 1);
+    uint64_t i = 1 + (dist * threadId) % primeCounts.size();
 
     // The thread keeps on running forever. It only stops if
     // a miscalculation occurs (due to a hardware issue)
@@ -249,10 +290,7 @@ void stressTest(const CmdOptions& opts)
         if (count != primeCounts[i])
         {
           std::unique_lock<std::mutex> lock(mutex);
-          std::cerr << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
-                    << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
-                    << ", PrimeCount(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
-                    << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   ERROR" << std::endl;
+          printResult(threadId, threads, i, count, secsThread, primeCounts);
           std::exit(1);
         }
         else
@@ -263,17 +301,17 @@ void stressTest(const CmdOptions& opts)
 
           if (lock.owns_lock())
           {
-            std::chrono::duration<double> secsLastStatusOutput = t2 - lastStatusOutput;
+            std::chrono::duration<double> secsStatus = t2 - lastStatusOutput;
 
-            // Prevent excessive status output when using many
-            // threads. We print one result every 10 secs.
-            if (secsLastStatusOutput.count() >= 10)
+            // We slowly increase the status output delay (in seconds)
+            // until it reaches one minute. This way, long running
+            // computations don't produce excessive logs.
+            if (secsStatus.count() >= statusOutputDelay)
             {
               lastStatusOutput = t2;
-              std::cout << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
-                        << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
-                        << ", PrimeCount(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
-                        << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   OK" << std::endl;
+              statusOutputDelay += 1;
+              statusOutputDelay = inBetween(10, statusOutputDelay, 60);
+              printResult(threadId, threads, i, count, secsThread, primeCounts);
             }
           }
         }
