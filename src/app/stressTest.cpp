@@ -28,7 +28,6 @@
 #include <chrono>
 #include <future>
 #include <mutex>
-#include <sstream>
 
 using primesieve::Array;
 
@@ -114,24 +113,25 @@ const Array<uint64_t, 100> primeCounts_1e19 =
   2285748648ull, 2285751228ull, 2285725270ull, 2285701010ull
 };
 
-std::string getTimeout(int64_t secs)
+/// Time format: 3h 15m 57s
+std::string getTimeElapsed(int64_t secs)
 {
   // Seconds per: year, day, hour, minute, second
   Array<int64_t, 5> time = { 365 * 24 * 3600, 24 * 3600, 3600, 60, 1 };
   Array<std::string, 5> suffix = { "y", "d", "h", "m", "s" };
-  std::string timeout;
+  std::string timeStr;
 
   for (std::size_t i = 0; i < time.size(); i++)
   {
     if (secs > time[i])
     {
-      timeout += (timeout.empty()) ? "" : " ";
-      timeout += std::to_string(secs / time[i]) + suffix[i];
+      timeStr += (timeStr.empty()) ? "" : " ";
+      timeStr += std::to_string(secs / time[i]) + suffix[i];
       secs %= time[i];
     }
   }
 
-  return timeout;
+  return timeStr;
 }
 
 void stressTestInfo(const CmdOptions& opts,
@@ -158,7 +158,7 @@ void stressTestInfo(const CmdOptions& opts,
     std::cout << "1.16 GiB = " << std::fixed << std::setprecision(2) << threads * 1.16 << " GiB.\n";
 
   std::cout << "The stress test keeps on running until either a miscalculation occurs\n";
-  std::cout << "(due to a hardware issue) or the timeout of " << getTimeout(opts.timeout) << " expires.\n";
+  std::cout << "(due to a hardware issue) or the timeout of " << getTimeElapsed(opts.timeout) << " expires.\n";
   std::cout << "You may cancel the stress test at any time using Ctrl+C.\n";
   std::cout << std::endl;
 }
@@ -175,25 +175,6 @@ std::string getStartString(uint64_t start)
     int exponent = (int) std::round(log10_start);
     return "1e" + std::to_string(exponent) + "+";
   }
-}
-
-/// Time format: 3h 25m 07s
-std::string getTimeElapsed(std::chrono::duration<double> duration)
-{
-  using std::chrono::duration_cast;
-
-  auto hours = duration_cast<std::chrono::hours>(duration).count();
-  duration -= std::chrono::hours(hours);
-  auto min = duration_cast<std::chrono::minutes>(duration).count();
-  duration -= std::chrono::minutes(min);
-  auto sec = duration_cast<std::chrono::seconds>(duration).count();
-
-  std::ostringstream oss;
-  oss << hours << "h "
-      << std::setfill('0') << std::setw(2) << min << "m "
-      << std::setfill('0') << std::setw(2) << sec << "s";
-
-  return oss.str();
 }
 
 void printResult(int threadId,
@@ -224,7 +205,7 @@ void printResult(int threadId,
               << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   ERROR" << std::endl;
 
     std::cerr << "\nMiscalculation detected after running for: "
-              << getTimeElapsed(secsThread) << std::endl;
+              << getTimeElapsed((int64_t) secsThread.count()) << std::endl;
   }
 }
 
