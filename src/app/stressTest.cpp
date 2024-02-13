@@ -164,11 +164,11 @@ std::string getTimeElapsed(std::chrono::duration<double> duration)
 {
   using std::chrono::duration_cast;
 
-  int hours = duration_cast<std::chrono::hours>(duration).count();
+  auto hours = duration_cast<std::chrono::hours>(duration).count();
   duration -= std::chrono::hours(hours);
-  int min = duration_cast<std::chrono::minutes>(duration).count();
+  auto min = duration_cast<std::chrono::minutes>(duration).count();
   duration -= std::chrono::minutes(min);
-  int sec = duration_cast<std::chrono::seconds>(duration).count();
+  auto sec = duration_cast<std::chrono::seconds>(duration).count();
 
   std::ostringstream oss;
   oss << hours << "h "
