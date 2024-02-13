@@ -149,7 +149,7 @@ void stressTestInfo(const CmdOptions& opts,
 
     if (threads * avgMiB < 1024)
       std::cout << std::fixed << std::setprecision(2) << avgMiB << " MiB = "
-                << std::fixed << std::setprecision(2) << threads * avgGiB << " MiB.\n";
+                << std::fixed << std::setprecision(2) << threads * avgMiB << " MiB.\n";
     else
       std::cout << std::fixed << std::setprecision(2) << avgMiB << " MiB = "
                 << std::fixed << std::setprecision(2) << threads * avgGiB << " GiB.\n";
