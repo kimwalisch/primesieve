@@ -94,11 +94,9 @@ Options:
                       count prime triplets: -c3 or --count=3, ...
       --cpu-info      Print CPU information (cache sizes).
   -d, --dist=DIST     Sieve the interval [START, START + DIST].
-  -h, --help          Print this help menu.
   -n, --nth-prime     Find the nth prime.
                       primesieve 100 -n: finds the 100th prime,
                       primesieve 2 100 -n: finds the 2nd prime > 100.
-      --no-status     Turn off the progressing status.
   -p, --print[=NUM]   Print primes or prime k-tuplets, NUM <= 6.
                       Print primes: -p or --print,
                       print twin primes: -p2 or --print=2,
@@ -108,13 +106,15 @@ Options:
                       By default primesieve uses a sieve size that
                       matches your CPU's L1 cache size (per core) or is
                       slightly smaller than your CPU's L2 cache size.
-      --stress-test[=MODE]   Run stress testing. The MODE can be either
-                      CPU (default) or RAM. Keeps on running forever.
+      --stress-test[=MODE]   Run a stress test. The MODE can be either
+                      CPU (default) or RAM. The default timeout is 24h.
       --test          Run various correctness tests (< 1 minute).
   -t, --threads=NUM   Set the number of threads, NUM <= CPU cores.
                       Default setting: use all available CPU cores.
       --time          Print the time elapsed in seconds.
-  -v, --version       Print version and license information.
+      --timeout=SEC   Set the stress test timeout in seconds. Supported
+                      units of time suffixes: s, m, h, d or y.
+                      30 minutes timeout: --timeout 30m
 ```
 
 ## Build instructions

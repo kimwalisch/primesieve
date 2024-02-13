@@ -47,12 +47,15 @@ void help(int exitCode)
     "                      By default primesieve uses a sieve size that\n"
     "                      matches your CPU's L1 cache size (per core) or is\n"
     "                      slightly smaller than your CPU's L2 cache size.\n"
-    "      --stress-test[=MODE]   Run stress testing. The MODE can be either\n"
-    "                      CPU (default) or RAM. Keeps on running forever.\n"
+    "      --stress-test[=MODE]   Run a stress test. The MODE can be either\n"
+    "                      CPU (default) or RAM. The default timeout is 24h.\n"
     "      --test          Run various correctness tests (< 1 minute).\n"
     "  -t, --threads=NUM   Set the number of threads, NUM <= CPU cores.\n"
     "                      Default setting: use all available CPU cores.\n"
     "      --time          Print the time elapsed in seconds.\n"
+    "      --timeout=SEC   Set the stress test timeout in seconds. Supported\n"
+    "                      units of time suffixes: s, m, h, d or y.\n"
+    "                      30 minutes timeout: --timeout 30m\n"
     "  -v, --version       Print version and license information.";
 
   std::cout << helpMenu << std::endl;

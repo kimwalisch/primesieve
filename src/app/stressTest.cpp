@@ -1,13 +1,10 @@
 ///
 /// @file   stressTest.cpp
 /// @brief  Run a stress test (--stress-test[=MODE] command-line
-///         option) that puts maximum load on the CPU (default) or RAM
-///         and verify that there are no miscalculations due to
-///         hardware issues.
-///
-///         Stress testing keeps on running until a miscalculation
-///         occurs (which shouldn't happen on most PCs) or until the
-///         user cancels it using Ctrl+C.
+///         option) that puts maximum load on the CPU (default) or RAM.
+///         The stress test keeps on running until either a
+///         miscalculation occurs (due to a hardware issue) or the
+///         timeout (--timeout=SECS option) expires.
 ///
 /// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -117,32 +114,54 @@ const Array<uint64_t, 100> primeCounts_1e19 =
   2285748648ull, 2285751228ull, 2285725270ull, 2285701010ull
 };
 
-void stressTestInfo(const std::string& stressTestMode,
+std::string getTimeout(int64_t secs)
+{
+  // Seconds per: year, day, hour, minute, second
+  Array<int64_t, 5> time = { 365 * 24 * 3600, 24 * 3600, 3600, 60, 1 };
+  Array<std::string, 5> suffix = { "y", "d", "h", "m", "s" };
+  std::string timeout;
+
+  for (std::size_t i = 0; i < time.size(); i++)
+  {
+    if (secs > time[i])
+    {
+      timeout += (timeout.empty()) ? "" : " ";
+      timeout += std::to_string(secs / time[i]) + suffix[i];
+      secs %= time[i];
+    }
+  }
+
+  return timeout;
+}
+
+void stressTestInfo(const CmdOptions& opts,
                     int threads)
 {
   ASSERT(stressTestMode == "CPU" || stressTestMode == "RAM");
 
-  std::cout << "Started " << stressTestMode << " stress testing using " << threads << " threads.\n";
+  std::cout << "Started " << opts.stressTestMode << " stress testing using " << threads << " threads.\n";
   std::cout << "The expected memory usage is: " << threads << " threads * ";
 
-  if (stressTestMode == "CPU")
+  if (opts.stressTestMode == "CPU")
   {
     int threads_1e19 = threads / 5;
     int threads_1e13 = threads - threads_1e19;
-    int avgMiB = (threads_1e13 * 3 + threads_1e19 * 1160) / threads;
+    double avgMiB = (threads_1e13 * 3.0 + threads_1e19 * 1160.0) / threads;
     double avgGiB = avgMiB / 1024.0;
 
     if (threads * avgMiB < 1024)
-      std::cout << avgMiB << " MiB = " << threads * avgMiB << " MiB.\n";
+      std::cout << std::fixed << std::setprecision(2) << avgMiB << " MiB = "
+                << std::fixed << std::setprecision(2) << threads * avgGiB << " MiB.\n";
     else
-      std::cout << avgMiB << " MiB = " << std::fixed
-                << std::setprecision(2) << threads * avgGiB << " GiB.\n";
+      std::cout << std::fixed << std::setprecision(2) << avgMiB << " MiB = "
+                << std::fixed << std::setprecision(2) << threads * avgGiB << " GiB.\n";
   }
   else // stressTestMode == "RAM"
     std::cout << "1.16 GiB = " << std::fixed << std::setprecision(2) << threads * 1.16 << " GiB.\n";
 
-  std::cout << "Stress testing keeps on running until either a miscalculation occurs\n";
-  std::cout << "(due to a hardware issue) or you cancel it using Ctrl+C.\n";
+  std::cout << "The stress test keeps on running until either a miscalculation occurs\n";
+  std::cout << "(due to a hardware issue) or the timeout of " << getTimeout(opts.timeout) << " expires.\n";
+  std::cout << "You may cancel the stress test at any time using Ctrl+C.\n";
   std::cout << std::endl;
 }
 
@@ -246,7 +265,8 @@ void stressTest(const CmdOptions& opts)
   int maxThreads = std::thread::hardware_concurrency();
   int threads = (opts.threads > 0) ? opts.threads : maxThreads;
   threads = inBetween(1, threads, maxThreads);
-  auto lastStatusOutput = std::chrono::system_clock::now();
+  auto timeBeginning = std::chrono::system_clock::now();
+  auto lastStatusOutput = timeBeginning;
   int statusOutputDelay = 0;
   std::mutex mutex;
 
@@ -296,31 +316,41 @@ void stressTest(const CmdOptions& opts)
         }
         else
         {
+          // --timeout option
+          if (opts.timeout)
+          {
+            std::chrono::duration<double> secsBeginning = t2 - timeBeginning;
+            if (secsBeginning.count() >= (double) opts.timeout)
+              return;
+          }
+
+          // --quiet option, no status output
+          if (opts.quiet)
+            continue;
+
           // We don't wait here. Keeping the CPU busy is more
           // important then printing status output. 
           std::unique_lock<std::mutex> lock(mutex, std::try_to_lock);
+          if (!lock.owns_lock())
+            continue;
 
-          if (lock.owns_lock())
+          // We slowly increase the status output delay (in seconds)
+          // until it reaches 10 minutes. This way, long running
+          // computations don't produce excessive logs.
+          std::chrono::duration<double> secsStatus = t2 - lastStatusOutput;
+          if (secsStatus.count() >= statusOutputDelay)
           {
-            std::chrono::duration<double> secsStatus = t2 - lastStatusOutput;
-
-            // We slowly increase the status output delay (in seconds)
-            // until it reaches 10 minutes. This way, long running
-            // computations don't produce excessive logs.
-            if (secsStatus.count() >= statusOutputDelay)
-            {
-              lastStatusOutput = t2;
-              statusOutputDelay += 5;
-              statusOutputDelay = std::min(statusOutputDelay, 600);
-              printResult(threadId, threads, i, count, secsThread, primeCounts);
-            }
+            lastStatusOutput = t2;
+            statusOutputDelay += 5;
+            statusOutputDelay = std::min(statusOutputDelay, 600);
+            printResult(threadId, threads, i, count, secsThread, primeCounts);
           }
         }
       }
     }
   };
 
-  stressTestInfo(opts.stressTestMode, threads);
+  stressTestInfo(opts, threads);
 
   using primesieve::Vector;
   Vector<std::future<void>> futures;
@@ -343,4 +373,10 @@ void stressTest(const CmdOptions& opts)
 
   for (auto& future : futures)
     future.wait();
+
+  // Add new line if test results have been printed
+  if (statusOutputDelay > 0)
+    std::cout << std::endl;
+
+  std::cout << "All tests passed successfully!" << std::endl;
 }

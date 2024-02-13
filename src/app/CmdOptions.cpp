@@ -283,6 +283,28 @@ void optionStressTest(Option& opt,
     opts.stressTestMode = "CPU";
 }
 
+/// Stress test timeout
+void optionTimeout(Option& opt,
+                   CmdOptions& opts)
+{
+  std::transform(opt.val.begin(), opt.val.end(), opt.val.begin(),
+                 [](unsigned char c){ return std::tolower(c); });
+
+  // We support the same options as stress-ng.
+  // https://manpages.debian.org/unstable/stress-ng/stress-ng.1.en.html
+  switch (opt.val.back())
+  {
+    case 's': opt.val.pop_back(); opts.timeout = opt.getValue<int64_t>(); break;
+    case 'm': opt.val.pop_back(); opts.timeout = opt.getValue<int64_t>() * 60; break;
+    case 'h': opt.val.pop_back(); opts.timeout = opt.getValue<int64_t>() * 3600; break;
+    case 'd': opt.val.pop_back(); opts.timeout = opt.getValue<int64_t>() * 24 * 3600; break;
+    case 'y': opt.val.pop_back(); opts.timeout = opt.getValue<int64_t>() * 365 * 24 * 3600; break;
+
+    // By default assume seconds like stress-ng
+    default: opts.timeout = opt.getValue<int64_t>();
+  }
+}
+
 } // namespace
 
 CmdOptions parseOptions(int argc, char* argv[])
@@ -320,6 +342,7 @@ CmdOptions parseOptions(int argc, char* argv[])
     { "-t",            std::make_pair(OPTION_THREADS, REQUIRED_PARAM) },
     { "--threads",     std::make_pair(OPTION_THREADS, REQUIRED_PARAM) },
     { "--time",        std::make_pair(OPTION_TIME, NO_PARAM) },
+    { "--timeout",     std::make_pair(OPTION_TIMEOUT, REQUIRED_PARAM) },
     { "-v",            std::make_pair(OPTION_VERSION, NO_PARAM) },
     { "--version",     std::make_pair(OPTION_VERSION, NO_PARAM) }
   };
@@ -337,6 +360,7 @@ CmdOptions parseOptions(int argc, char* argv[])
       case OPTION_DISTANCE:    optionDistance(opt, opts); break;
       case OPTION_PRINT:       optionPrint(opt, opts); break;
       case OPTION_STRESS_TEST: optionStressTest(opt, opts); break;
+      case OPTION_TIMEOUT:     optionTimeout(opt, opts); break;
       case OPTION_SIZE:        opts.sieveSize = opt.getValue<int>(); break;
       case OPTION_THREADS:     opts.threads = opt.getValue<int>(); break;
       case OPTION_QUIET:       opts.quiet = true; break;

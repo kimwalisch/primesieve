@@ -78,13 +78,16 @@ OPTIONS
 	size to your CPU's L1 or L2 cache size (per core).
 
 *--stress-test*[='MODE']::
-	Run stress testing. 'MODE' can be either CPU (default) or RAM. The CPU
+	Run a stress test. The 'MODE' can be either CPU (default) or RAM. The CPU
 	'MODE' uses little memory (on average about 225 MiB per thread) and puts the
 	highest load on the CPU. The RAM 'MODE' uses much more memory than the
 	CPU 'MODE' (each thread uses about 1.16 GiB), but the CPU usually won't get
 	as hot as in the CPU 'MODE'. Stress testing keeps on running until either a
-	miscalculation occurs (due to a hardware issue) or the user cancels it
-	using Ctrl+C.
+	miscalculation occurs (due to a hardware issue) or the timeout expires. The
+	default timeout is 24 hours, the timeout can be changed using the
+	*--timeout=SECS* option. By default the stress test uses a number of threads
+	that matches the number of CPU cores, the number of threads can be changed
+	using the *--threads=NUM* option.
 
 *--test*::
 	Run various sieving tests.
@@ -95,7 +98,13 @@ OPTIONS
 	prime.
 
 *--time*::
-Print the time elapsed in seconds.
+	Print the time elapsed in seconds.
+
+*--timeout*='SECS'::
+	Set the stress test timeout in seconds. Units of time for seconds, minutes,
+	hours, days and years are also supported with the suffix s, m, h, d or y.
+	E.g. *--timeout 10m* sets a timeout of 10 minutes. The default stress test
+	timeout is 24 hours.
 
 *-v, --version*::
 	Print version and license information.

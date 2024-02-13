@@ -32,6 +32,7 @@ enum OptionID
   OPTION_TEST,
   OPTION_THREADS,
   OPTION_TIME,
+  OPTION_TIMEOUT,
   OPTION_VERSION
 };
 
@@ -43,6 +44,9 @@ struct CmdOptions
   int flags = 0;
   int sieveSize = 0;
   int threads = 0;
+  // Stress test timeout in seconds.
+  // The default timeout is 24 hours (same as stress-ng).
+  int64_t timeout = 24 * 3600;
   bool quiet = false;
   bool status = true;
   bool time = false;
