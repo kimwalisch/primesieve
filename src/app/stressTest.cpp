@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <ctime>
 #include <exception>
 #include <iostream>
 #include <iomanip>
@@ -179,6 +180,22 @@ std::string getStartString(uint64_t start)
   }
 }
 
+/// Date time format: "[Jan 13 22:07] "
+/// This function is not thread safe because it uses std::localtime.
+/// However we always lock a mutex when calling printResult()
+/// which calls getDateTime().
+///
+std::string getDateTime()
+{
+  auto now = std::chrono::system_clock::now();
+  std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
+  std::tm *currentDateTime = std::localtime(&currentTime);
+
+  std::ostringstream oss;
+  oss << std::put_time(currentDateTime, "[%b %d %H:%M] ");
+  return oss.str();
+}
+
 void printResult(int threadId,
                  int threads,
                  uint64_t i,
@@ -194,14 +211,16 @@ void printResult(int threadId,
 
   if (count == primeCounts[i])
   {
-    std::cout << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
+    std::cout << getDateTime()
+              << "Thread " << std::setw(threadIdPadding) << std::right << threadId
               << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
               << ", PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
               << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   OK" << std::endl;
   }
   else
   {
-    std::cerr << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
+    std::cerr << getDateTime()
+              << "Thread " << std::setw(threadIdPadding) << std::right << threadId
               << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
               << ", PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
               << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   ERROR" << std::endl;
