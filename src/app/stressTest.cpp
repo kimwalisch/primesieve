@@ -118,7 +118,7 @@ std::string getTimeElapsed(int64_t secs)
 {
   // Seconds per: year, day, hour, minute, second
   Array<int64_t, 5> time = { 365 * 24 * 3600, 24 * 3600, 3600, 60, 1 };
-  Array<std::string, 5> suffix = { "y", "d", "h", "m", "s" };
+  Array<char, 5> suffix = { 'y', 'd', 'h', 'm', 's' };
   std::string timeStr;
 
   for (std::size_t i = 0; i < time.size(); i++)
