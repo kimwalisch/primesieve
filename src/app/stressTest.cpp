@@ -189,7 +189,7 @@ std::string getDateTime()
   // MSVC 2022 and MinGW-w64 compilers.
   std::tm result;
   std::time_t currentTime = std::time(nullptr);
-  if (localtime_r(&currentTime, &result) == nullptr)
+  if (!localtime_r(&currentTime, &result))
     return "";
 
   std::ostringstream oss;
@@ -204,6 +204,9 @@ std::string getDateTime()
   #endif
   std::time_t currentTime = std::time(nullptr);
   std::tm* currentDateTime = std::localtime(&currentTime);
+  if (!currentDateTime)
+    return "";
+
   std::ostringstream oss;
   oss << std::put_time(currentDateTime, "[%b %d %H:%M] ");
   return oss.str();
