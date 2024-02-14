@@ -187,16 +187,19 @@ std::string getDateTime()
 #if __cplusplus >= 202301L
   std::tm result;
   std::time_t currentTime = std::time(nullptr);
-  if (std::localtime_r(&currentTime, &result) == nullptr)
+  if (localtime_r(&currentTime, &result) == nullptr)
     return "";
 
   std::ostringstream oss;
-  oss << std::put_time(result, "[%b %d %H:%M] ");
+  oss << std::put_time(&result, "[%b %d %H:%M] ");
   return oss.str();
 #else
-  // Not thread safe
-  #pragma warning(disable : 4996)
-
+  // Not thread safe.
+  // But we lock a mutex before calling getDateTime()
+  // hence this is not an issue for us.
+  #if defined(_MSC_VER)
+    #pragma warning(disable : 4996)
+  #endif
   std::time_t currentTime = std::time(nullptr);
   std::tm *currentDateTime = std::localtime(&currentTime);
   std::ostringstream oss;
