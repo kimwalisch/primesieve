@@ -2,12 +2,12 @@
 .\"     Title: primesieve
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-.\"      Date: 02/13/2024
+.\"      Date: 02/14/2024
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "PRIMESIEVE" "1" "02/13/2024" "\ \&" "\ \&"
+.TH "PRIMESIEVE" "1" "02/14/2024" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -125,7 +125,7 @@ Set the size of the sieve array in KiB, 16 <=
 <= 8192\&. By default primesieve uses a sieve size that matches your CPU\(cqs L1 cache size (per core) or is slightly smaller than your CPU\(cqs L2 cache size\&. This setting is crucial for performance, on exotic CPUs primesieve sometimes fails to determine the CPU\(cqs cache sizes which usually causes a big slowdown\&. In this case you can get a significant speedup by manually setting the sieve size to your CPU\(cqs L1 or L2 cache size (per core)\&.
 .RE
 .PP
-\fB\-\-stress\-test\fR[=\fIMODE\fR]
+\fB\-S, \-\-stress\-test\fR[=\fIMODE\fR]
 .RS 4
 Run a stress test\&. The
 \fIMODE\fR
@@ -145,7 +145,7 @@ option\&.
 .PP
 \fB\-\-test\fR
 .RS 4
-Run various sieving tests\&.
+Run various correctness tests (< 1 minute)\&.
 .RE
 .PP
 \fB\-t, \-\-threads\fR=\fINUM\fR

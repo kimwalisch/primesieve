@@ -337,6 +337,7 @@ CmdOptions parseOptions(int argc, char* argv[])
     { "--R-inverse",   std::make_pair(OPTION_R_INVERSE, NO_PARAM) },
     { "-s",            std::make_pair(OPTION_SIZE, REQUIRED_PARAM) },
     { "--size",        std::make_pair(OPTION_SIZE, REQUIRED_PARAM) },
+    { "-S",            std::make_pair(OPTION_STRESS_TEST, OPTIONAL_PARAM) },
     { "--stress-test", std::make_pair(OPTION_STRESS_TEST, OPTIONAL_PARAM) },
     { "--test",        std::make_pair(OPTION_TEST, NO_PARAM) },
     { "-t",            std::make_pair(OPTION_THREADS, REQUIRED_PARAM) },

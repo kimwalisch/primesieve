@@ -77,7 +77,7 @@ OPTIONS
 	this case you can get a significant speedup by manually setting the sieve
 	size to your CPU's L1 or L2 cache size (per core).
 
-*--stress-test*[='MODE']::
+*-S, --stress-test*[='MODE']::
 	Run a stress test. The 'MODE' can be either CPU (default) or RAM. The CPU
 	'MODE' uses little memory (on average about 225 MiB per thread) and puts the
 	highest load on the CPU. The RAM 'MODE' uses much more memory than the
@@ -90,7 +90,7 @@ OPTIONS
 	using the *--threads=NUM* option.
 
 *--test*::
-	Run various sieving tests.
+	Run various correctness tests (< 1 minute).
 
 *-t, --threads*='NUM'::
 	Set the number of threads, 1 \<= 'NUM' \<= CPU cores. By default primesieve
