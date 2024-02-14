@@ -10,6 +10,7 @@
 #ifndef CMDOPTIONS_HPP
 #define CMDOPTIONS_HPP
 
+#include <primesieve/primesieve_error.hpp>
 #include <primesieve/Vector.hpp>
 #include <stdint.h>
 #include <string>
@@ -40,6 +41,7 @@ struct CmdOptions
 {
   primesieve::Vector<uint64_t> numbers;
   std::string stressTestMode;
+  std::string optionStr;
   int option = -1;
   int flags = 0;
   int sieveSize = 0;
@@ -50,6 +52,19 @@ struct CmdOptions
   bool quiet = false;
   bool status = true;
   bool time = false;
+
+  void setMainOption(OptionID optionID,
+                     const std::string& optStr)
+  {
+    // Multiple main options are not allowed
+    if (!optionStr.empty())
+      throw primesieve::primesieve_error("incompatible options: " + optionStr + " " + optStr);
+    else
+    {
+      optionStr = optStr;
+      option = optionID;
+    }
+  }
 };
 
 CmdOptions parseOptions(int, char**);

@@ -271,7 +271,6 @@ void optionDistance(Option& opt,
 void optionStressTest(Option& opt,
                       CmdOptions& opts)
 {
-  opts.option = OPTION_STRESS_TEST;
   std::transform(opt.val.begin(), opt.val.end(), opt.val.begin(),
                  [](unsigned char c){ return std::toupper(c); });
 
@@ -285,6 +284,8 @@ void optionStressTest(Option& opt,
     opts.stressTestMode = "RAM";
   else
     throw primesieve_error("invalid option '" + opt.str + "=" + opt.val + "'");
+
+  opts.setMainOption(OPTION_STRESS_TEST, opt.str);
 }
 
 /// Stress test timeout
@@ -372,7 +373,7 @@ CmdOptions parseOptions(int argc, char* argv[])
       case OPTION_NO_STATUS:   opts.status = false; break;
       case OPTION_TIME:        opts.time = true; break;
       case OPTION_NUMBER:      opts.numbers.push_back(opt.getValue<uint64_t>()); break;
-      default:                 opts.option = optionID;
+      default:                 opts.setMainOption(optionID, opt.str);
     }
   }
 
