@@ -181,19 +181,28 @@ std::string getStartString(uint64_t start)
 }
 
 /// Date time format: "[Jan 13 22:07] "
-/// This function is not thread safe because it uses std::localtime.
-/// However we always lock a mutex when calling printResult()
-/// which calls getDateTime().
-///
 std::string getDateTime()
 {
-  auto now = std::chrono::system_clock::now();
-  std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
-  std::tm *currentDateTime = std::localtime(&currentTime);
+// Thread safe
+#if __cplusplus >= 202301L
+  std::tm result;
+  std::time_t currentTime = std::time(nullptr);
+  if (std::localtime_r(&currentTime, &result) == nullptr)
+    return "";
 
+  std::ostringstream oss;
+  oss << std::put_time(result, "[%b %d %H:%M] ");
+  return oss.str();
+#else
+  // Not thread safe
+  #pragma warning(disable : 4996)
+
+  std::time_t currentTime = std::time(nullptr);
+  std::tm *currentDateTime = std::localtime(&currentTime);
   std::ostringstream oss;
   oss << std::put_time(currentDateTime, "[%b %d %H:%M] ");
   return oss.str();
+#endif
 }
 
 void printResult(int threadId,
