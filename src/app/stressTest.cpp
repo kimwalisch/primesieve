@@ -23,11 +23,13 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <exception>
 #include <iostream>
 #include <iomanip>
 #include <chrono>
-#include <future>
 #include <mutex>
+#include <thread>
+#include <sstream>
 
 using primesieve::Array;
 
@@ -194,14 +196,14 @@ void printResult(int threadId,
   {
     std::cout << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
               << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
-              << ", PrimeCount(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
+              << ", PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
               << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   OK" << std::endl;
   }
   else
   {
     std::cerr << "Thread: " << std::setw(threadIdPadding) << std::right << threadId
               << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
-              << ", PrimeCount(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
+              << ", PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
               << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   ERROR" << std::endl;
 
     std::cerr << "\nMiscalculation detected after running for: "
@@ -213,7 +215,7 @@ void printResult(int threadId,
 /// uses the POPCNT instruction for counting primes.
 /// PrimeSieve objects use a single thread.
 ///
-uint64_t countPrimesAlgo1(uint64_t start, uint64_t stop)
+NOINLINE uint64_t countPrimesAlgo1(uint64_t start, uint64_t stop)
 {
   primesieve::PrimeSieve ps;
   return ps.countPrimes(start, stop);
@@ -223,7 +225,7 @@ uint64_t countPrimesAlgo1(uint64_t start, uint64_t stop)
 /// PrimeGenerator::fillNextPrimes() method which is
 /// vectorized using AVX512 on x64 CPUs.
 ///
-uint64_t countPrimesAlgo2(uint64_t start, uint64_t stop)
+NOINLINE uint64_t countPrimesAlgo2(uint64_t start, uint64_t stop)
 {
   primesieve::iterator it(start, stop);
   it.generate_next_primes();
@@ -252,88 +254,111 @@ void stressTest(const CmdOptions& opts)
   // Each thread executes 1 task
   auto task = [&](int threadId, const Array<uint64_t, 100>& primeCounts)
   {
-    // We evenly distribute the start indexes of the
-    // different threads. (dist % 2 == 1) ensures that we
-    // get both even and odd start indexes.
-    uint64_t start = primeCounts[0];
-    uint64_t dist = primeCounts.size() / threads;
-    dist += (dist % 2 == 0);
-    ASSERT(dist >= 1 && dist % 2 == 1);
-    uint64_t i = 1 + (dist * threadId) % primeCounts.size();
-
-    // The thread keeps on running forever. It only stops if
-    // a miscalculation occurs (due to a hardware issue)
-    // or if the user cancels it using Ctrl+C.
-    for (; true; i = 1)
+    try
     {
-      for (; i < primeCounts.size(); i++)
+      // We evenly distribute the start indexes of the
+      // different threads. (dist % 2 == 1) ensures that we
+      // get both even and odd start indexes.
+      uint64_t start = primeCounts[0];
+      uint64_t dist = primeCounts.size() / threads;
+      dist += (dist % 2 == 0);
+      ASSERT(dist >= 1 && dist % 2 == 1);
+      uint64_t i = 1 + (dist * threadId) % primeCounts.size();
+
+      // The thread keeps on running forever. It only stops if
+      // a miscalculation occurs (due to a hardware issue)
+      // or if the user cancels it using Ctrl+C.
+      for (; true; i = 1)
       {
-        auto t1 = std::chrono::system_clock::now();
-        uint64_t ChunkSize = (uint64_t) 1e11;
-        uint64_t threadStart = start + ChunkSize * (i - 1);
-        uint64_t threadStop = threadStart + ChunkSize;
-        uint64_t count;
-
-        // We use 2 different algorithms for counting primes in order
-        // to use as many of the CPU's resources as possible.
-        // All threads alternately execute algorithm 1 and algorithm 2.
-        if (i % 2)
-          count = countPrimesAlgo1(threadStart, threadStop);
-        else
-          count = countPrimesAlgo2(threadStart, threadStop);
-
-        auto t2 = std::chrono::system_clock::now();
-        std::chrono::duration<double> secsThread = t2 - t1;
-
-        // If an error occurs we always print it
-        // to the standard error stream.
-        if (count != primeCounts[i])
+        for (; i < primeCounts.size(); i++)
         {
-          std::unique_lock<std::mutex> lock(mutex);
-          printResult(threadId, threads, i, count, secsThread, primeCounts);
-          std::exit(1);
-        }
-        else
-        {
-          // --timeout option
-          if (opts.timeout)
+          auto t1 = std::chrono::system_clock::now();
+          uint64_t ChunkSize = (uint64_t) 1e11;
+          uint64_t threadStart = start + ChunkSize * (i - 1);
+          uint64_t threadStop = threadStart + ChunkSize;
+          uint64_t count;
+
+          // We use 2 different algorithms for counting primes in order
+          // to use as many of the CPU's resources as possible.
+          // All threads alternately execute algorithm 1 and algorithm 2.
+          if (i % 2)
+            count = countPrimesAlgo1(threadStart, threadStop);
+          else
+            count = countPrimesAlgo2(threadStart, threadStop);
+
+          auto t2 = std::chrono::system_clock::now();
+          std::chrono::duration<double> secsThread = t2 - t1;
+
+          // If an error occurs we always print it
+          // to the standard error stream.
+          if (count != primeCounts[i])
           {
-            std::chrono::duration<double> secsBeginning = t2 - timeBeginning;
-            if (secsBeginning.count() >= (double) opts.timeout)
-              return;
-          }
-
-          // --quiet option, no status output
-          if (opts.quiet)
-            continue;
-
-          // We don't wait here. Keeping the CPU busy is more
-          // important then printing status output. 
-          std::unique_lock<std::mutex> lock(mutex, std::try_to_lock);
-          if (!lock.owns_lock())
-            continue;
-
-          // We slowly increase the status output delay (in seconds)
-          // until it reaches 10 minutes. This way, long running
-          // computations don't produce excessive logs.
-          std::chrono::duration<double> secsStatus = t2 - lastStatusOutput;
-          if (secsStatus.count() >= statusOutputDelay)
-          {
-            lastStatusOutput = t2;
-            statusOutputDelay += 5;
-            statusOutputDelay = std::min(statusOutputDelay, 600);
+            std::unique_lock<std::mutex> lock(mutex);
             printResult(threadId, threads, i, count, secsThread, primeCounts);
+            std::exit(1);
+          }
+          else
+          {
+            // --timeout option
+            if (opts.timeout)
+            {
+              std::chrono::duration<double> secsBeginning = t2 - timeBeginning;
+              if (secsBeginning.count() >= (double) opts.timeout)
+                return;
+            }
+
+            // --quiet option, no status output
+            if (opts.quiet)
+              continue;
+
+            // We don't wait here. Keeping the CPU busy is more
+            // important then printing status output. 
+            std::unique_lock<std::mutex> lock(mutex, std::try_to_lock);
+            if (!lock.owns_lock())
+              continue;
+
+            // We slowly increase the status output delay (in seconds)
+            // until it reaches 10 minutes. This way, long running
+            // computations don't produce excessive logs.
+            std::chrono::duration<double> secsStatus = t2 - lastStatusOutput;
+            if (secsStatus.count() >= statusOutputDelay)
+            {
+              lastStatusOutput = t2;
+              statusOutputDelay += 5;
+              statusOutputDelay = std::min(statusOutputDelay, 600);
+              printResult(threadId, threads, i, count, secsThread, primeCounts);
+            }
           }
         }
       }
+    }
+    catch (const std::bad_alloc&)
+    {
+      std::ostringstream oss;
+      if (statusOutputDelay > 0)
+        oss << std::endl;
+
+      oss << "ERROR: failed to allocate memory!" << std::endl;
+      std::cerr << oss.str();
+      std::exit(1);
+    }
+    catch (const std::exception& e)
+    {
+      std::ostringstream oss;
+      if (statusOutputDelay > 0)
+        oss << std::endl;
+
+      oss << "ERROR: " << e.what() << std::endl;
+      std::cerr << oss.str();
+      std::exit(1);
     }
   };
 
   stressTestInfo(opts, threads);
 
   using primesieve::Vector;
-  Vector<std::future<void>> futures;
-  futures.reserve(threads);
+  Vector<std::thread> workerThreads;
+  workerThreads.reserve(threads);
 
   // We create 1 thread per CPU core
   for (int threadId = 1; threadId <= threads; threadId++)
@@ -345,15 +370,14 @@ void stressTest(const CmdOptions& opts)
     // otherwise the threads might become idle due to the limited
     // memory bandwidth.
     if (opts.stressTestMode == "CPU" && threadId % 5 != 0)
-      futures.emplace_back(std::async(std::launch::async, task, threadId, primeCounts_1e13));
+      workerThreads.emplace_back(task, threadId, primeCounts_1e13);
     else // RAM stress test
-      futures.emplace_back(std::async(std::launch::async, task, threadId, primeCounts_1e19));
+      workerThreads.emplace_back(task, threadId, primeCounts_1e19);
   }
 
-  for (auto& future : futures)
-    future.wait();
+  for (auto& thread : workerThreads)
+    thread.join();
 
-  // Add new line if test results have been printed
   if (statusOutputDelay > 0)
     std::cout << std::endl;
 
