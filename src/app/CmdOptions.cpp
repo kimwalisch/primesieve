@@ -23,7 +23,6 @@
 
 #include "CmdOptions.hpp"
 
-#include <primesieve/calculator.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/primesieve_error.hpp>
 
@@ -48,29 +47,6 @@ enum IsParam
   NO_PARAM,
   REQUIRED_PARAM,
   OPTIONAL_PARAM
-};
-
-/// Command-line option
-struct Option
-{
-  // Example:
-  // str = "--threads=32"
-  // opt = "--threads"
-  // val = "32"
-  std::string str;
-  std::string opt;
-  std::string val;
-
-  template <typename T>
-  T getValue() const
-  {
-    try {
-      return calculator::eval<T>(val);
-    }
-    catch (std::exception&) {
-      throw primesieve_error("invalid option '" + opt + "=" + val + "'");
-    }
-  }
 };
 
 /// Options start with "-" or "--", then
@@ -210,10 +186,24 @@ Option parseOption(int argc,
   return opt;
 }
 
-void optionPrint(Option& opt,
-                 CmdOptions& opts)
+} // namespace
+
+void CmdOptions::setMainOption(OptionID optionID,
+                               const std::string& optStr)
 {
-  opts.quiet = true;
+  // Multiple main options are not allowed
+  if (!optionStr.empty())
+    throw primesieve_error("incompatible options: " + optionStr + " " + optStr);
+  else
+  {
+    optionStr = optStr;
+    option = optionID;
+  }
+}
+
+void CmdOptions::optionPrint(Option& opt)
+{
+  quiet = true;
 
   // by default print primes
   if (opt.val.empty())
@@ -221,18 +211,17 @@ void optionPrint(Option& opt,
 
   switch (opt.getValue<int>())
   {
-    case 1: opts.flags |= PRINT_PRIMES; break;
-    case 2: opts.flags |= PRINT_TWINS; break;
-    case 3: opts.flags |= PRINT_TRIPLETS; break;
-    case 4: opts.flags |= PRINT_QUADRUPLETS; break;
-    case 5: opts.flags |= PRINT_QUINTUPLETS; break;
-    case 6: opts.flags |= PRINT_SEXTUPLETS; break;
+    case 1: flags |= PRINT_PRIMES; break;
+    case 2: flags |= PRINT_TWINS; break;
+    case 3: flags |= PRINT_TRIPLETS; break;
+    case 4: flags |= PRINT_QUADRUPLETS; break;
+    case 5: flags |= PRINT_QUINTUPLETS; break;
+    case 6: flags |= PRINT_SEXTUPLETS; break;
     default: throw primesieve_error("invalid option '" + opt.str + "'");
   }
 }
 
-void optionCount(Option& opt,
-                 CmdOptions& opts)
+void CmdOptions::optionCount(Option& opt)
 {
   // by default count primes
   if (opt.val.empty())
@@ -244,23 +233,21 @@ void optionCount(Option& opt,
   {
     switch (n % 10)
     {
-      case 1: opts.flags |= COUNT_PRIMES; break;
-      case 2: opts.flags |= COUNT_TWINS; break;
-      case 3: opts.flags |= COUNT_TRIPLETS; break;
-      case 4: opts.flags |= COUNT_QUADRUPLETS; break;
-      case 5: opts.flags |= COUNT_QUINTUPLETS; break;
-      case 6: opts.flags |= COUNT_SEXTUPLETS; break;
+      case 1: flags |= COUNT_PRIMES; break;
+      case 2: flags |= COUNT_TWINS; break;
+      case 3: flags |= COUNT_TRIPLETS; break;
+      case 4: flags |= COUNT_QUADRUPLETS; break;
+      case 5: flags |= COUNT_QUINTUPLETS; break;
+      case 6: flags |= COUNT_SEXTUPLETS; break;
       default: throw primesieve_error("invalid option '" + opt.str + "'");
     }
   }
 }
 
-void optionDistance(Option& opt,
-                    CmdOptions& opts)
+void CmdOptions::optionDistance(Option& opt)
 {
   uint64_t start = 0;
   uint64_t val = opt.getValue<uint64_t>();
-  auto& numbers = opts.numbers;
 
   if (!numbers.empty())
     start = numbers[0];
@@ -268,29 +255,26 @@ void optionDistance(Option& opt,
   numbers.push_back(start + val);
 }
 
-void optionStressTest(Option& opt,
-                      CmdOptions& opts)
+void CmdOptions::optionStressTest(Option& opt)
 {
+  setMainOption(OPTION_STRESS_TEST, opt.str);
   std::transform(opt.val.begin(), opt.val.end(), opt.val.begin(),
                  [](unsigned char c){ return std::toupper(c); });
 
   // If the stress test mode is not specified
   // we use "CPU" by default.
   if (opt.val.empty())
-    opts.stressTestMode = "CPU";
+    stressTestMode = "CPU";
   else if (opt.val == "CPU")
-    opts.stressTestMode = "CPU";
+    stressTestMode = "CPU";
   else if (opt.val == "RAM")
-    opts.stressTestMode = "RAM";
+    stressTestMode = "RAM";
   else
     throw primesieve_error("invalid option '" + opt.str + "=" + opt.val + "'");
-
-  opts.setMainOption(OPTION_STRESS_TEST, opt.str);
 }
 
 /// Stress test timeout
-void optionTimeout(Option& opt,
-                   CmdOptions& opts)
+void CmdOptions::optionTimeout(Option& opt)
 {
   std::transform(opt.val.begin(), opt.val.end(), opt.val.begin(),
                  [](unsigned char c){ return std::tolower(c); });
@@ -299,18 +283,16 @@ void optionTimeout(Option& opt,
   // https://manpages.debian.org/unstable/stress-ng/stress-ng.1.en.html
   switch (opt.val.back())
   {
-    case 's': opt.val.pop_back(); opts.timeout = opt.getValue<int64_t>(); break;
-    case 'm': opt.val.pop_back(); opts.timeout = opt.getValue<int64_t>() * 60; break;
-    case 'h': opt.val.pop_back(); opts.timeout = opt.getValue<int64_t>() * 3600; break;
-    case 'd': opt.val.pop_back(); opts.timeout = opt.getValue<int64_t>() * 24 * 3600; break;
-    case 'y': opt.val.pop_back(); opts.timeout = opt.getValue<int64_t>() * 365 * 24 * 3600; break;
+    case 's': opt.val.pop_back(); timeout = opt.getValue<int64_t>(); break;
+    case 'm': opt.val.pop_back(); timeout = opt.getValue<int64_t>() * 60; break;
+    case 'h': opt.val.pop_back(); timeout = opt.getValue<int64_t>() * 3600; break;
+    case 'd': opt.val.pop_back(); timeout = opt.getValue<int64_t>() * 24 * 3600; break;
+    case 'y': opt.val.pop_back(); timeout = opt.getValue<int64_t>() * 365 * 24 * 3600; break;
 
     // By default assume seconds like stress-ng
-    default: opts.timeout = opt.getValue<int64_t>();
+    default: timeout = opt.getValue<int64_t>();
   }
 }
-
-} // namespace
 
 CmdOptions parseOptions(int argc, char* argv[])
 {
@@ -362,11 +344,11 @@ CmdOptions parseOptions(int argc, char* argv[])
 
     switch (optionID)
     {
-      case OPTION_COUNT:       optionCount(opt, opts); break;
-      case OPTION_DISTANCE:    optionDistance(opt, opts); break;
-      case OPTION_PRINT:       optionPrint(opt, opts); break;
-      case OPTION_STRESS_TEST: optionStressTest(opt, opts); break;
-      case OPTION_TIMEOUT:     optionTimeout(opt, opts); break;
+      case OPTION_COUNT:       opts.optionCount(opt); break;
+      case OPTION_DISTANCE:    opts.optionDistance(opt); break;
+      case OPTION_PRINT:       opts.optionPrint(opt); break;
+      case OPTION_STRESS_TEST: opts.optionStressTest(opt); break;
+      case OPTION_TIMEOUT:     opts.optionTimeout(opt); break;
       case OPTION_SIZE:        opts.sieveSize = opt.getValue<int>(); break;
       case OPTION_THREADS:     opts.threads = opt.getValue<int>(); break;
       case OPTION_QUIET:       opts.quiet = true; break;
