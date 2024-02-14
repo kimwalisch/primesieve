@@ -277,10 +277,14 @@ void optionStressTest(Option& opt,
 
   // If the stress test mode is not specified
   // we use "CPU" by default.
-  if (opt.val == "RAM")
+  if (opt.val.empty())
+    opts.stressTestMode = "CPU";
+  else if (opt.val == "CPU")
+    opts.stressTestMode = "CPU";
+  else if (opt.val == "RAM")
     opts.stressTestMode = "RAM";
   else
-    opts.stressTestMode = "CPU";
+    throw primesieve_error("invalid option '" + opt.str + "=" + opt.val + "'");
 }
 
 /// Stress test timeout
