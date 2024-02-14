@@ -213,7 +213,7 @@ void printResult(int threadId,
   {
     std::cout << getDateTime()
               << "Thread " << std::setw(threadIdPadding) << std::right << threadId
-              << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
+              << ", " << std::fixed << std::setprecision(2) << secsThread.count() << " secs"
               << ", PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
               << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   OK" << std::endl;
   }
@@ -221,7 +221,7 @@ void printResult(int threadId,
   {
     std::cerr << getDateTime()
               << "Thread " << std::setw(threadIdPadding) << std::right << threadId
-              << ", secs: " << std::fixed << std::setprecision(3) << secsThread.count()
+              << ", " << std::fixed << std::setprecision(2) << secsThread.count() << " secs"
               << ", PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
               << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   ERROR" << std::endl;
 
