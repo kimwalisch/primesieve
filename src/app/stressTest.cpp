@@ -183,8 +183,10 @@ std::string getStartString(uint64_t start)
 /// Date time format: "[Jan 13 22:07] "
 std::string getDateTime()
 {
-// Thread safe
-#if __cplusplus >= 202301L
+#if 0
+  // Thread safe.
+  // Requires C23, but does not work yet with the
+  // MSVC 2022 and MinGW-w64 compilers.
   std::tm result;
   std::time_t currentTime = std::time(nullptr);
   if (localtime_r(&currentTime, &result) == nullptr)
@@ -201,7 +203,7 @@ std::string getDateTime()
     #pragma warning(disable : 4996)
   #endif
   std::time_t currentTime = std::time(nullptr);
-  std::tm *currentDateTime = std::localtime(&currentTime);
+  std::tm* currentDateTime = std::localtime(&currentTime);
   std::ostringstream oss;
   oss << std::put_time(currentDateTime, "[%b %d %H:%M] ");
   return oss.str();
