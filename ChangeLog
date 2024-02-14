@@ -1,4 +1,4 @@
-Changes in version 11.3, 13/02/2024
+Changes in version 12.0, 13/02/2024
 ===================================
 
 * stressTest.cpp: New --stress-test[=MODE] command-line option.
