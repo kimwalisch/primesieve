@@ -125,7 +125,7 @@ std::string getTimeElapsed(int64_t secs)
 
   for (std::size_t i = 0; i < time.size(); i++)
   {
-    if (secs >= time[i])
+    if (secs > time[i])
     {
       timeStr += (timeStr.empty()) ? "" : " ";
       timeStr += std::to_string(secs / time[i]) + suffix[i];
