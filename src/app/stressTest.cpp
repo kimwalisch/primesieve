@@ -300,7 +300,7 @@ void stressTest(const CmdOptions& opts)
           {
             std::chrono::duration<double> secsBeginning = t2 - timeBeginning;
             if (secsBeginning.count() >= (double) opts.timeout)
-              return;
+              return true;
           }
 
           // --quiet option, no status output
@@ -332,7 +332,7 @@ void stressTest(const CmdOptions& opts)
   stressTestInfo(opts, threads);
 
   using primesieve::Vector;
-  Vector<std::future<void>> futures;
+  Vector<std::future<bool>> futures;
   futures.reserve(threads);
 
   // We create 1 thread per CPU core
@@ -350,10 +350,11 @@ void stressTest(const CmdOptions& opts)
       futures.emplace_back(std::async(std::launch::async, task, threadId, primeCounts_1e19));
   }
 
+  // If an exception was thrown inside a thread
+  // future.get() will rethrow it here.
   for (auto& future : futures)
-    future.wait();
+    future.get();
 
-  // Add new line if test results have been printed
   if (statusOutputDelay > 0)
     std::cout << std::endl;
 
