@@ -12,7 +12,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/iterator.hpp>
+#include <primesieve.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/PrimeSieve.hpp>
@@ -145,12 +145,12 @@ void stressTestInfo(const CmdOptions& opts,
 
   if (opts.stressTestMode == "CPU")
   {
-    double avgMiB = 3.1;
-    double avgGiB = avgMiB / 1024.0;
-    std::cout << std::fixed << std::setprecision(1) << avgMiB << " MiB = "
-              << std::fixed << std::setprecision(1) << threads * avgMiB << " MiB.\n";
+    double sieveSizeKiB = primesieve::get_sieve_size();
+    double avgMiB = 2.8 + (sieveSizeKiB / 1024.0);
+    std::cout << std::fixed << std::setprecision(2) << avgMiB << " MiB = "
+              << std::fixed << std::setprecision(2) << threads * avgMiB << " MiB.\n";
   }
-  else // stressTestMode == "RAM"
+  else // RAM stress test
     std::cout << "1.16 GiB = " << std::fixed << std::setprecision(2) << threads * 1.16 << " GiB.\n";
 
   std::cout << "The stress test keeps on running until either a miscalculation occurs\n";
