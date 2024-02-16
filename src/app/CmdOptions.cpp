@@ -22,7 +22,6 @@
 ///
 
 #include "CmdOptions.hpp"
-
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/primesieve_error.hpp>
 
