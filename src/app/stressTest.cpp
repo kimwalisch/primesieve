@@ -363,7 +363,7 @@ void stressTest(const CmdOptions& opts)
             if (secsStatus.count() >= statusOutputDelay)
             {
               lastStatusOutput = t2;
-              statusOutputDelay += 5;
+              statusOutputDelay += 7;
               statusOutputDelay = std::min(statusOutputDelay, 600);
               printResult(threadId, threads, i, count, secsThread, primeCounts);
             }
