@@ -254,7 +254,7 @@ void printResult(int threadId,
 /// uses the POPCNT instruction for counting primes.
 /// PrimeSieve objects use a single thread.
 ///
-NOINLINE uint64_t countPrimesAlgo1(uint64_t start, uint64_t stop)
+NOINLINE uint64_t countPrimes1(uint64_t start, uint64_t stop)
 {
   primesieve::PrimeSieve ps;
   return ps.countPrimes(start, stop);
@@ -264,7 +264,7 @@ NOINLINE uint64_t countPrimesAlgo1(uint64_t start, uint64_t stop)
 /// PrimeGenerator::fillNextPrimes() method which is
 /// vectorized using AVX512 on x64 CPUs.
 ///
-NOINLINE uint64_t countPrimesAlgo2(uint64_t start, uint64_t stop)
+NOINLINE uint64_t countPrimes2(uint64_t start, uint64_t stop)
 {
   primesieve::iterator it(start, stop);
   it.generate_next_primes();
@@ -276,6 +276,20 @@ NOINLINE uint64_t countPrimesAlgo2(uint64_t start, uint64_t stop)
     count += 1;
 
   return count;
+}
+
+/// We use 2 different algorithms for counting primes in order
+/// to use as many of the CPU's resources as possible. All
+/// threads alternately execute algorithm 1 and 2.
+///
+uint64_t countPrimes(uint64_t threadIndex,
+                     uint64_t start,
+                     uint64_t stop)
+{
+  if (threadIndex % 2)
+    return countPrimes1(start, stop);
+  else
+    return countPrimes2(start, stop);
 }
 
 } // namespace
@@ -311,20 +325,12 @@ void stressTest(const CmdOptions& opts)
       {
         for (; i < primeCounts.size(); i++)
         {
-          auto t1 = std::chrono::system_clock::now();
           uint64_t ChunkSize = (uint64_t) 1e11;
           uint64_t threadStart = start + ChunkSize * (i - 1);
           uint64_t threadStop = threadStart + ChunkSize;
-          uint64_t count;
 
-          // We use 2 different algorithms for counting primes in order
-          // to use as many of the CPU's resources as possible.
-          // All threads alternately execute algorithm 1 and algorithm 2.
-          if (i % 2)
-            count = countPrimesAlgo1(threadStart, threadStop);
-          else
-            count = countPrimesAlgo2(threadStart, threadStop);
-
+          auto t1 = std::chrono::system_clock::now();
+          uint64_t count = countPrimes(i, threadStart, threadStop);
           auto t2 = std::chrono::system_clock::now();
           std::chrono::duration<double> secsThread = t2 - t1;
 
