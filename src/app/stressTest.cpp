@@ -225,25 +225,28 @@ void printResult(int threadId,
   std::size_t maxIndex = primeCounts.size() - 1;
   int iPadding = (int) std::to_string(maxIndex).size();
   int threadIdPadding = (int) std::to_string(threads).size();
+  std::ostringstream oss;
 
   if (count == primeCounts[i])
   {
-    std::cout << getDateTime()
-              << "Thread " << std::setw(threadIdPadding) << std::right << threadId
-              << ", " << std::fixed << std::setprecision(2) << secsThread.count() << " secs"
-              << ", PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
-              << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   OK" << std::endl;
+    oss << getDateTime()
+        << "Thread " << std::setw(threadIdPadding) << std::right << threadId
+        << ", " << std::fixed << std::setprecision(2) << secsThread.count() << " secs"
+        << ", PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
+        << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   OK\n";
+
+    std::cout << oss.str() << std::flush;
   }
   else
   {
-    std::cerr << getDateTime()
-              << "Thread " << std::setw(threadIdPadding) << std::right << threadId
-              << ", " << std::fixed << std::setprecision(2) << secsThread.count() << " secs"
-              << ", PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
-              << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   ERROR" << std::endl;
+    oss << getDateTime()
+        << "Thread " << std::setw(threadIdPadding) << std::right << threadId
+        << ", " << std::fixed << std::setprecision(2) << secsThread.count() << " secs"
+        << ", PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
+        << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   ERROR\n\n"
+        << "Miscalculation detected after running for: " << getTimeElapsed((int64_t) secsThread.count()) << "\n";
 
-    std::cerr << "\nMiscalculation detected after running for: "
-              << getTimeElapsed((int64_t) secsThread.count()) << std::endl;
+    std::cerr << oss.str();
   }
 }
 
@@ -370,21 +373,13 @@ void stressTest(const CmdOptions& opts)
     }
     catch (const std::bad_alloc&)
     {
-      std::ostringstream oss;
-      if (statusOutputDelay > 0)
-        oss << std::endl;
-
-      oss << "ERROR: failed to allocate memory!" << std::endl;
-      std::cerr << oss.str();
+      std::cerr << "ERROR: failed to allocate memory!\n";
       std::exit(1);
     }
     catch (const std::exception& e)
     {
       std::ostringstream oss;
-      if (statusOutputDelay > 0)
-        oss << std::endl;
-
-      oss << "ERROR: " << e.what() << std::endl;
+      oss << "ERROR: " << e.what() << "\n";
       std::cerr << oss.str();
       std::exit(1);
     }
