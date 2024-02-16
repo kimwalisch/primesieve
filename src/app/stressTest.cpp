@@ -78,6 +78,44 @@ const Array<uint64_t, 100> primeCounts_1e13 =
 };
 
 /// Lookup table of correct prime count results.
+/// primeCounts_1e16[i] = PrimePi(1e16+i*1e11) - PrimePi(1e16+(i-1)*1e11)
+/// This test sieves near 10^16 where each thread uses about 47.3 MiB.
+///
+/// The table was generated using this bash program:
+///
+/// for i in {0..98};
+/// do
+///     res=$(primesieve 1e16+$i*1e11 -d1e11 -q);
+///     printf "$((res))ull, ";
+///     if [ $((($i+1) % 5)) -eq 0 ]; then printf "\n"; fi;
+/// done
+///
+const Array<uint64_t, 100> primeCounts_1e16 =
+{
+  /* Start number = */ 10000000000000000ull,
+  2714336584ull, 2714326790ull, 2714355257ull, 2714346750ull, 2714380169ull,
+  2714367355ull, 2714315487ull, 2714346194ull, 2714339624ull, 2714291584ull,
+  2714260506ull, 2714328048ull, 2714330822ull, 2714364692ull, 2714350998ull,
+  2714321130ull, 2714300726ull, 2714295343ull, 2714311187ull, 2714326401ull,
+  2714308833ull, 2714343112ull, 2714304377ull, 2714303764ull, 2714302043ull,
+  2714310793ull, 2714286914ull, 2714323447ull, 2714288442ull, 2714286027ull,
+  2714381328ull, 2714331996ull, 2714321106ull, 2714324408ull, 2714284821ull,
+  2714304663ull, 2714356021ull, 2714350025ull, 2714312511ull, 2714291166ull,
+  2714281777ull, 2714323140ull, 2714330999ull, 2714301448ull, 2714260108ull,
+  2714331787ull, 2714317499ull, 2714307884ull, 2714277954ull, 2714288641ull,
+  2714307481ull, 2714301755ull, 2714295022ull, 2714295584ull, 2714256920ull,
+  2714304618ull, 2714317910ull, 2714304904ull, 2714219074ull, 2714294337ull,
+  2714340626ull, 2714263462ull, 2714270120ull, 2714302754ull, 2714319589ull,
+  2714285403ull, 2714279110ull, 2714291862ull, 2714300197ull, 2714319007ull,
+  2714243950ull, 2714366813ull, 2714290168ull, 2714319835ull, 2714278666ull,
+  2714229768ull, 2714246712ull, 2714284668ull, 2714332601ull, 2714320497ull,
+  2714279010ull, 2714271560ull, 2714273265ull, 2714285220ull, 2714301566ull,
+  2714308511ull, 2714248825ull, 2714250223ull, 2714324411ull, 2714272780ull,
+  2714262114ull, 2714312851ull, 2714250307ull, 2714271837ull, 2714250326ull,
+  2714299075ull, 2714278170ull, 2714242608ull, 2714262238ull
+};
+
+/// Lookup table of correct prime count results.
 /// primeCounts_1e19[i] = PrimePi(1e19+i*1e11) - PrimePi(1e19+(i-1)*1e11)
 /// This test sieves near 10^19 where each thread uses about 1160 MiB.
 /// This test puts the highest load on the RAM.
@@ -145,9 +183,9 @@ void stressTestInfo(const CmdOptions& opts,
 
   if (opts.stressTestMode == "CPU")
   {
-    int threads_1e19 = threads / 5;
-    int threads_1e13 = threads - threads_1e19;
-    double avgMiB = (threads_1e13 * 3.0 + threads_1e19 * 1160.0) / threads;
+    int threads_1e16 = threads / 5;
+    int threads_1e13 = threads - threads_1e16;
+    double avgMiB = (threads_1e13 * 3.0 + threads_1e16 * 47.3) / threads;
     // Due to over-allocation and memory fragmentation
     // caused by the allocator (malloc), we increase
     // the expected memory usage by 2%.
@@ -234,9 +272,9 @@ void printResult(int threadId,
   if (count == primeCounts[i])
   {
     oss << getDateTime()
-        << "Thread " << std::setw(threadIdPadding) << std::right << threadId
-        << ", " << std::fixed << std::setprecision(2) << secsThread.count() << " secs"
-        << ", PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
+        << "Thread " << std::setw(threadIdPadding) << std::right << threadId << ", "
+        << std::fixed << std::setprecision(2) << secsThread.count() << " secs, "
+        << "PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
         << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   OK\n";
 
     std::cout << oss.str() << std::flush;
@@ -244,9 +282,9 @@ void printResult(int threadId,
   else
   {
     oss << getDateTime()
-        << "Thread " << std::setw(threadIdPadding) << std::right << threadId
-        << ", " << std::fixed << std::setprecision(2) << secsThread.count() << " secs"
-        << ", PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
+        << "Thread " << std::setw(threadIdPadding) << std::right << threadId << ", "
+        << std::fixed << std::setprecision(2) << secsThread.count() << " secs, "
+        << "PrimePi(" << startStr << std::setw(iPadding) << std::right << i-1 << "e11, "
         << startStr << std::setw(iPadding) << std::right << i << "e11) = " << count << "   ERROR\n\n"
         << "Miscalculation detected after running for: " << getTimeElapsed((int64_t) secsThread.count()) << "\n";
 
@@ -401,19 +439,28 @@ void stressTest(const CmdOptions& opts)
   Vector<std::thread> workerThreads;
   workerThreads.reserve(threads);
 
-  // We create 1 thread per CPU core
-  for (int threadId = 1; threadId <= threads; threadId++)
+  if (opts.stressTestMode == "RAM")
   {
-    // In CPU stress test mode, we also run 20% of the threads using
-    // the RAM stress test (threadId % 5 != 0). Since most PCs are
-    // memory bound e.g. Desktop PC CPUs frequently only have 2 memory
-    // channels we don't want to use too many RAM stress test threads
-    // otherwise the threads might become idle due to the limited
-    // memory bandwidth.
-    if (opts.stressTestMode == "CPU" && threadId % 5 != 0)
-      workerThreads.emplace_back(task, threadId, primeCounts_1e13);
-    else // RAM stress test
+    // Each thread uses about 1.16 GiB
+    for (int threadId = 1; threadId <= threads; threadId++)
       workerThreads.emplace_back(task, threadId, primeCounts_1e19);
+  }
+  else // CPU stress test
+  {
+    for (int threadId = 1; threadId <= threads; threadId++)
+    {
+      // In CPU stress test mode we run 80% of the threads near 1e13
+      // where all memory fits into the CPU's cache. And we run 20%
+      // of the threads near 1e16 where not all memory fits into the
+      // CPU's cache. Since Desktop PC CPUs frequently only have two
+      // memory channels we don't want to use too many threads that
+      // are sieving >= 1e16 otherwise the threads might become idle
+      // due to the limited memory bandwidth.
+      if (threadId % 5 != 0)
+        workerThreads.emplace_back(task, threadId, primeCounts_1e13);
+      else
+        workerThreads.emplace_back(task, threadId, primeCounts_1e16);
+    }
   }
 
   for (auto& thread : workerThreads)
