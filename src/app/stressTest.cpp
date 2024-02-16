@@ -39,7 +39,7 @@ namespace {
 /// Lookup table of correct prime count results.
 /// primeCounts_1e13[i] = PrimePi(1e13+i*1e11) - PrimePi(1e13+(i-1)*1e11)
 /// This test sieves near 10^13 where most memory fits into
-/// the CPU's cache. Each thread uses about 3.1 MiB of memory.
+/// the CPU's cache. Each thread uses < 5 MiB of memory.
 /// This tests puts the highest load on the CPU, but not much
 /// load on the RAM.
 ///
