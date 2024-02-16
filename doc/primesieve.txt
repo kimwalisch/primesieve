@@ -79,8 +79,8 @@ OPTIONS
 
 *-S, --stress-test*[='MODE']::
 	Run a stress test. The 'MODE' can be either CPU (default) or RAM. The CPU
-	'MODE' uses little memory (on average about 3.1 MiB per thread) and puts the
-	highest load on the CPU. The RAM 'MODE' uses much more memory than the
+	'MODE' uses little memory (< 5 MiB per thread) and puts the highest load on
+	the CPU. The RAM 'MODE' on the other hand uses much more memory than the
 	CPU 'MODE' (each thread uses about 1.16 GiB), but the CPU usually won't get
 	as hot as in the CPU 'MODE'. Stress testing keeps on running until either a
 	miscalculation occurs (due to a hardware issue) or the timeout expires. The
