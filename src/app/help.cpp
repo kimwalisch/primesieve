@@ -41,7 +41,7 @@ void help(int exitCode)
     "  -q, --quiet                Quiet mode, prints less output.\n"
     "  -R, --RiemannR             Riemann R function, very accurate\n"
     "                             approximation of PrimePi(x).\n"
-    "      --R-inverse            Inverse Riemann R function, very accurate\n"
+    "      --RiemannR-inverse     Inverse Riemann R function, very accurate\n"
     "                             approximation of the nth prime.\n"
     "  -s, --size=SIZE            Set the sieve size in KiB, SIZE <= 8192.\n"
     "                             By default primesieve uses a sieve size that\n"

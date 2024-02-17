@@ -65,7 +65,7 @@ OPTIONS
 *-R, --RiemannR*::
 	Approximate PrimePi(x) using the Riemann R function: R(x).
 
-*--R-inverse*::
+*--RiemannR-inverse*::
 	Approximate the nth prime using the inverse Riemann R function: R^-1(x).
 
 *-s, --size*='SIZE'::
