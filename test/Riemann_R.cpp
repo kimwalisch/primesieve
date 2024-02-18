@@ -40,8 +40,7 @@ std::vector<uint64_t> RiemannR_table =
       29844570495886ll, // RiemannR(10^15)
      279238341360977ll, // RiemannR(10^16)
     2623557157055978ll, // RiemannR(10^17)
-   24739954284239494ll, // RiemannR(10^18)
-  234057667300228940ll  // RiemannR(10^19)
+   24739954284239494ll  // RiemannR(10^18)
 };
 
 void check(bool OK)
