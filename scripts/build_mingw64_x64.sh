@@ -49,9 +49,9 @@ g++ -static -O3 -flto -DNDEBUG -D_WIN32_WINNT=0x0A00 -Wall -Wextra -pedantic -I 
 strip primesieve.exe
 
 # Create a release zip archive
-wget https://github.com/kimwalisch/primesieve/releases/download/v11.0/primesieve-11.0-win-x64.zip
-unzip primesieve-11.0-win-x64.zip -d primesieve-$VERSION-win-x64
-rm primesieve-11.0-win-x64.zip
+wget https://github.com/kimwalisch/primesieve/releases/download/v12.0/primesieve-12.0-win-x64.zip
+unzip primesieve-12.0-win-x64.zip -d primesieve-$VERSION-win-x64
+rm primesieve-12.0-win-x64.zip
 
 echo ""
 echo ""
