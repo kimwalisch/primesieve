@@ -251,6 +251,8 @@ if(BUILD_PRIMESIEVE)
     if(TARGET libprimesieve-static)
         add_dependencies(primesieve libprimesieve-static)
     endif()
+
+    target_link_libraries(primesieve Threads::Threads)
 endif()
 
 # Install headers ####################################################
