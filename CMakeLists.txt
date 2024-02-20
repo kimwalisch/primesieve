@@ -233,7 +233,7 @@ endif()
 
 if(BUILD_PRIMESIEVE)
     add_executable(primesieve ${BIN_SRC})
-    target_link_libraries(primesieve primesieve::primesieve)
+    target_link_libraries(primesieve primesieve::primesieve Threads::Threads)
     target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
 
@@ -251,8 +251,6 @@ if(BUILD_PRIMESIEVE)
     if(TARGET libprimesieve-static)
         add_dependencies(primesieve libprimesieve-static)
     endif()
-
-    target_link_libraries(primesieve Threads::Threads)
 endif()
 
 # Install headers ####################################################
