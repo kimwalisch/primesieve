@@ -2,7 +2,7 @@
 /// @file   nth_prime3.cpp
 /// @brief  Long distance nth prime testing.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -39,15 +39,17 @@ int main()
   // Set a small sieve size in order to
   // ensure many segments are sieved
   set_sieve_size(16);
+  int64_t n = 100;
 
   for (int i = 3; i <= 6; i++)
   {
+    n *= 10;
+    int64_t start = (int64_t) 1e7;
+    int64_t iters = 5;
+
     for (int j = 8; j <= 10; j++)
     {
-      int64_t n = (int64_t) std::pow(10.0, i);
-      int64_t start = (int64_t) std::pow(10.0, j);
-      int64_t iters = 5;
-
+      start *= 10;
       std::cout << "nth_prime_test(" << n << ", " << start << ", " << iters << ")";
       nth_prime_test(n, start, iters);
       std::cout << " = OK" << std::endl;
