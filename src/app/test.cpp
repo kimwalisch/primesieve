@@ -2,7 +2,7 @@
 /// @file   test.cpp
 /// @brief  primesieve self tests (option: --test).
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -14,7 +14,6 @@
 
 #include <stdint.h>
 #include <chrono>
-#include <cmath>
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
@@ -54,14 +53,13 @@ void countSmallPrimes()
   };
 
   ParallelSieve ps;
-  ps.setStart(0);
-  ps.setStop(0);
   uint64_t count = 0;
+  uint64_t stop = 1;
 
   for (size_t i = 0; i < primePi.size(); i++)
   {
-    uint64_t start = ps.getStop() + 1;
-    uint64_t stop = (uint64_t) std::pow(10.0, i + 1);
+    stop *= 10;
+    uint64_t start = stop / 10 + 1;
     count += ps.countPrimes(start, stop);
     std::ostringstream oss;
     oss << "PrimePi(10^" << i + 1 << ") = " << count;
@@ -81,10 +79,11 @@ void countPrimeKTuplets()
     66        // PrimePi6(10^16, 10^16+10^10)
   };
 
+  uint64_t start = (uint64_t) 1e12;
+  size_t j = 12;
+
   for (size_t i = 0; i < kTupletCounts.size(); i++)
   {
-    size_t j = i + 12;
-    uint64_t start = (uint64_t) std::pow(10.0, j);
     uint64_t stop = start + (uint64_t) 1e10;
     int k = (int) (i + 2);
     int countKTuplet = COUNT_PRIMES << (k - 1);
@@ -97,6 +96,9 @@ void countPrimeKTuplets()
     oss << "PrimePi" << k << "(10^" << j << ", 10^" << j << "+10^10) = " << count;
     std::cout << std::left << std::setw(39) << oss.str();
     check(count == kTupletCounts[i]);
+
+    start *= 10;
+    j += 1;
   }
 }
 
@@ -112,14 +114,18 @@ void countLargePrimes()
     255481287  // PrimePi(10^17, 10^17+10^10)
   };
 
+  uint64_t start = (uint64_t) 1e12;
+  size_t j = 12;
+
   for (size_t i = 0; i < primePi.size(); i++)
   {
-    size_t j = i + 12;
-    uint64_t start = (uint64_t) std::pow(10.0, j);
     uint64_t stop = start + (uint64_t) 1e10;
     uint64_t count = count_primes(start, stop);
     std::cout << "PrimePi(10^" << j << ", 10^" << j << "+10^10) = " << count;
     check(count == primePi[i]);
+
+    start *= 10;
+    j += 1;
   }
 }
 
@@ -166,14 +172,14 @@ void smallNthPrimes()
   };
 
   ParallelSieve ps;
-  uint64_t n = 0;
-  uint64_t nthPrime = 0;
+  uint64_t n = 1;
+  uint64_t nthPrime = 2;
 
   for (size_t i = 0; i < nthPrimes.size(); i++)
   {
     uint64_t oldN = n;
     uint64_t oldNthPrime = nthPrime;
-    n = (uint64_t) std::pow(10.0, i + 1);
+    n *= 10;
     nthPrime = ps.nthPrime(n - oldN, oldNthPrime);
     std::ostringstream oss;
     oss << "NthPrime(10^" << i + 1 << ") = " << nthPrime;

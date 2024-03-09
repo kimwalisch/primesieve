@@ -3,6 +3,7 @@ Changes in version 12.1, 09/03/2024
 
 CMakeLists.txt: Fix undefined reference to pthread_create #146.
 PrimeSieve.cpp: Improve status output.
+src/app/test.cpp: Fix -ffast-math failure.
 test/count_primes2.cpp: Fix -ffast-math failure.
 
 Changes in version 12.0, 17/02/2024
