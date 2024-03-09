@@ -5,6 +5,7 @@ CMakeLists.txt: Fix undefined reference to pthread_create #146.
 PrimeSieve.cpp: Improve status output.
 src/app/test.cpp: Fix -ffast-math failure.
 test/count_primes2.cpp: Fix -ffast-math failure.
+test/Riemann_R.cpp: Fix musl libc issue #147.
 
 Changes in version 12.0, 17/02/2024
 ===================================

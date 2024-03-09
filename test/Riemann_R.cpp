@@ -9,19 +9,18 @@
 ///
 
 #include <primesieve/RiemannR.hpp>
+#include <primesieve/Vector.hpp>
 
 #include <stdint.h>
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
 #include <limits>
-#include <vector>
 
-using std::max;
 using std::size_t;
 using namespace primesieve;
 
-std::vector<uint64_t> RiemannR_table =
+Array<uint64_t, 15> RiemannR_table =
 {
                      4, // RiemannR(10^1)
                     25, // RiemannR(10^2)
@@ -37,10 +36,7 @@ std::vector<uint64_t> RiemannR_table =
          37607910542ll, // RiemannR(10^12)
         346065531065ll, // RiemannR(10^13)
        3204941731601ll, // RiemannR(10^14)
-      29844570495886ll, // RiemannR(10^15)
-     279238341360977ll, // RiemannR(10^16)
-    2623557157055978ll, // RiemannR(10^17)
-   24739954284239494ll  // RiemannR(10^18)
+      29844570495886ll  // RiemannR(10^15)
 };
 
 void check(bool OK)
@@ -55,11 +51,6 @@ int main()
   uint64_t x = 1;
   for (size_t i = 0; i < RiemannR_table.size(); i++)
   {
-    // The accuracy of RiemannR(x) depends on
-    // the width of the long double type.
-    if (i >= std::numeric_limits<long double>::digits10)
-      break;
-
     x *= 10;
     std::cout << "RiemannR(" << x << ") = " << (uint64_t) RiemannR((long double) x);
     check((uint64_t) RiemannR((long double) x) == RiemannR_table[i]);
@@ -68,11 +59,6 @@ int main()
   x = 1;
   for (size_t i = 0; i < RiemannR_table.size(); i++)
   {
-    // The accuracy of RiemannR(x) depends on
-    // the width of the long double type.
-    if (i >= std::numeric_limits<long double>::digits10)
-      break;
-
     x *= 10;
     std::cout << "RiemannR_inverse(" << RiemannR_table[i] << ") = " << (uint64_t) RiemannR_inverse((long double) RiemannR_table[i]);
     check((uint64_t) RiemannR_inverse((long double) RiemannR_table[i]) < x &&
@@ -83,7 +69,7 @@ int main()
   for (x = 0; x < 10000; x++)
   {
     uint64_t rix = (uint64_t) RiemannR((long double) x);
-    double logx = std::log(max((double) x, 2.0));
+    double logx = std::log(std::max((double) x, 2.0));
 
     if ((x >= 20 && rix < x / logx) ||
         (x >= 2  && rix > x * logx))
@@ -97,7 +83,7 @@ int main()
   for (; x < 100000; x += 101)
   {
     uint64_t rix = (uint64_t) RiemannR((long double) x);
-    double logx = std::log(max((double) x, 2.0));
+    double logx = std::log(std::max((double) x, 2.0));
 
     if ((x >= 20 && rix < x / logx) ||
         (x >= 2  && rix > x * logx))
