@@ -20,7 +20,7 @@
 using std::size_t;
 using namespace primesieve;
 
-Array<uint64_t, 15> RiemannR_table =
+Array<uint64_t, 14> RiemannR_table =
 {
                      4, // RiemannR(10^1)
                     25, // RiemannR(10^2)
@@ -35,8 +35,7 @@ Array<uint64_t, 15> RiemannR_table =
           4118052494ll, // RiemannR(10^11)
          37607910542ll, // RiemannR(10^12)
         346065531065ll, // RiemannR(10^13)
-       3204941731601ll, // RiemannR(10^14)
-      29844570495886ll  // RiemannR(10^15)
+       3204941731601ll  // RiemannR(10^14)
 };
 
 void check(bool OK)
