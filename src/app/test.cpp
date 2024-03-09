@@ -58,8 +58,8 @@ void countSmallPrimes()
 
   for (size_t i = 0; i < primePi.size(); i++)
   {
+    uint64_t start = stop + 1;
     stop *= 10;
-    uint64_t start = stop / 10 + 1;
     count += ps.countPrimes(start, stop);
     std::ostringstream oss;
     oss << "PrimePi(10^" << i + 1 << ") = " << count;
