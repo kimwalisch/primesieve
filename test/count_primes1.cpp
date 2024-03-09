@@ -2,7 +2,7 @@
 /// @file   count_primes1.cpp
 /// @brief  Count the primes up to 10^9.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -12,7 +12,6 @@
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
-#include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <iomanip>
@@ -44,14 +43,15 @@ int main()
 {
   std::cout << std::left;
   ParallelSieve ps;
-  ps.setStart(0);
-  ps.setStop(0);
   uint64_t count = 0;
+  uint64_t stop = 1;
 
   // pi(x) with x = 10^(i+1)
   for (size_t i = 0; i < pix.size(); i++)
   {
-    count += ps.countPrimes(ps.getStop() + 1, (uint64_t) std::pow(10.0, i + 1));
+    uint64_t start = stop + 1;
+    stop *= 10;
+    count += ps.countPrimes(start, stop);
     std::cout << "pi(10^" << i + 1 << ") = " << std::setw(12) << count;
     check(count == pix[i]);
   }
@@ -61,7 +61,7 @@ int main()
   // otherwise minimal pre-sieving is used.
   // Using a single thread increases thread interval.
   ps.setNumThreads(1);
-  count = ps.countPrimes(0, (uint64_t) std::pow(10.0, 9));
+  count = ps.countPrimes(0, (uint64_t) 1e9);
   std::cout << "pi(10^9) = " << std::setw(12) << count;
   check(count == 50847534);
 
