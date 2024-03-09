@@ -3,7 +3,7 @@
 /// @brief  Count the primes within [10^i, 10^i + 10^8]
 ///         for i = 12 to 19
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -14,7 +14,6 @@
 
 #include <stdint.h>
 #include <cstdlib>
-#include <cmath>
 #include <iostream>
 #include <iomanip>
 
@@ -40,16 +39,19 @@ void check(bool OK)
 int main()
 {
   std::cout << std::left;
+  uint64_t start = (uint64_t) 1e12;
+  size_t j = 12;
 
   for (size_t i = 0; i < pix.size(); i++)
   {
-    size_t j = i + 12;
     std::cout << "Sieving the primes within [10^" << j << ", 10^" << j << " + 10^8]" << std::endl;
-    uint64_t start = (uint64_t) std::pow(10.0, j);
     uint64_t stop = start + (uint64_t) 1e8;
     uint64_t count = count_primes(start, stop);
     std::cout << "\rPrime count: " << std::setw(7) << count;
     check(count == pix[i]);
+
+    start *= 10;
+    j++;
   }
 
   std::cout << std::endl;
