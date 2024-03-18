@@ -306,7 +306,7 @@ T RiemannR_inverse(T x)
       term = (RiemannR(t) - x) / RiemannR_prime(t);
     else
       // Converges faster for large x
-      term = (RiemannR(t) - x) / std::log(t);
+      term = (RiemannR(t) - x) * std::log(t);
 
     // Not converging anymore
     if (std::abs(term) >= std::abs(old_term))
