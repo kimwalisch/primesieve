@@ -1,3 +1,9 @@
+Changes in version 12.2, 18/03/2024
+===================================
+
+* RiemannR.cpp: Fix infinite loop on Linux i386,
+  see https://github.com/kimwalisch/primecount/issues/66.
+
 Changes in version 12.1, 09/03/2024
 ===================================
 
