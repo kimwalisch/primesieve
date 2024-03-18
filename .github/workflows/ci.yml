@@ -232,7 +232,9 @@ jobs:
         run: Release\primesieve.exe 1000 --print
 
   linux_gcc_sanitizers:
-    runs-on: ubuntu-latest
+    # This test fails on Ubuntu 22.04 likely due to an Ubuntu or compiler bug.
+    # See discussion at: https://github.com/quantumlib/Stim/issues/717#issuecomment-2002623560
+    runs-on: ubuntu-20.04
     env:
       CC: gcc
       CXX: g++
@@ -243,7 +245,7 @@ jobs:
             cmake . -DBUILD_TESTS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-Wall -Wextra -pedantic -Werror -O1 -g -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fno-omit-frame-pointer" -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror -O1 -g -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fno-omit-frame-pointer"
             cmake --build . --parallel --verbose
       - name: CTest (unit tests)
-        run: ctest -j2
+        run: ctest -j2 --output-on-failure
       - name: primesieve --test
         run: ./primesieve --test
       # Run primesieve binary
