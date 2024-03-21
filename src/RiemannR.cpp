@@ -182,10 +182,10 @@ T initialNthPrimeApprox(T x)
 
   T logx = std::log(x);
   T loglogx = std::log(logx);
-  T t = logx + T(0.5) * loglogx;
+  T t = logx + (loglogx / 2);
 
   if (x > 1600)
-    t += T(0.5) * loglogx - 1 + (loglogx - 2) / logx;
+    t += (loglogx / 2) - 1 + (loglogx - 2) / logx;
   if (x > 1200000)
     t -= (loglogx * loglogx - 6 * loglogx + 11) / (2 * logx * logx);
 
@@ -253,7 +253,7 @@ T RiemannR_inverse(T x)
   {
     // term = f(t) / f'(t)
     // f(t) = RiemannR(t) - x
-    // RiemannR(t) ~ li(t), with li'(t) = 1 / log(t)
+    // RiemannR(t) ~ li(t), hence f'(t) = li'(t) = 1 / log(t)
     // term = (RiemannR(t) - x) / li'(t) = (RiemannR(t) - x) * log(t)
     T term = (RiemannR(t) - x) * std::log(t);
 
