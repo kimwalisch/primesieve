@@ -201,7 +201,7 @@ T initialNthPrimeApprox(T x)
 template <typename T>
 T RiemannR(T x)
 {
-  if (x < T(0.1))
+  if (x < T(1e-5))
     return 0;
 
   T epsilon = std::numeric_limits<T>::epsilon();
@@ -240,11 +240,11 @@ T RiemannR(T x)
 template <typename T>
 T RiemannR_inverse(T x)
 {
+  if (x < 1)
+    return 0;
+
   T t = initialNthPrimeApprox(x);
   T old_term = std::numeric_limits<T>::infinity();
-
-  if (x < 3)
-    return t;
 
   // The condition i < ITERS is required in case the computation
   // does not converge. This happened on Linux i386 where
@@ -274,8 +274,6 @@ namespace primesieve {
 
 long double RiemannR(long double x)
 {
-  if (x <= 100)
-    return ::RiemannR((float) x);
   if (x <= 1e8)
     return ::RiemannR((double) x);
   else
@@ -284,8 +282,6 @@ long double RiemannR(long double x)
 
 long double RiemannR_inverse(long double x)
 {
-  if (x <= 100)
-    return ::RiemannR_inverse((float) x);
   if (x <= 1e8)
     return ::RiemannR_inverse((double) x);
   else
