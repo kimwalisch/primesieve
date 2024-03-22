@@ -77,13 +77,25 @@ int main()
     check((uint64_t) RiemannR((long double) x) == RiemannR_table[i]);
   }
 
+  std::cout << "RiemannR_inverse(1) = " << RiemannR_inverse((long double) 1);
+  check((uint64_t) RiemannR_inverse((long double) 1) == 1);
+
+  for (x = 2; x < RiemannR_tiny.size(); x++)
+  {
+    uint64_t y = RiemannR_tiny[x];
+    std::cout << "RiemannR_inverse(" << y << ") = " << (uint64_t) RiemannR_inverse((long double) y);
+    check((uint64_t) RiemannR_inverse((long double) y) < x &&
+          (uint64_t) RiemannR_inverse((long double) y + 1) >= x);
+  }
+
   x = 1;
   for (size_t i = 0; i < RiemannR_table.size(); i++)
   {
     x *= 10;
-    std::cout << "RiemannR_inverse(" << RiemannR_table[i] << ") = " << (uint64_t) RiemannR_inverse((long double) RiemannR_table[i]);
-    check((uint64_t) RiemannR_inverse((long double) RiemannR_table[i]) < x &&
-          (uint64_t) RiemannR_inverse((long double) RiemannR_table[i] + 1) >= x);
+    uint64_t y = RiemannR_table[i];
+    std::cout << "RiemannR_inverse(" << y << ") = " << (uint64_t) RiemannR_inverse((long double) y);
+    check((uint64_t) RiemannR_inverse((long double) y) < x &&
+          (uint64_t) RiemannR_inverse((long double) y + 1) >= x);
   }
 
   // Sanity checks for tiny values of RiemannR(x)
