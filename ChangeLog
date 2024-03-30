@@ -1,4 +1,4 @@
-Changes in version 12.2, 19/03/2024
+Changes in version 12.2, 30/03/2024
 ===================================
 
 * RiemannR.cpp: Fix infinite loop on Linux i386,
