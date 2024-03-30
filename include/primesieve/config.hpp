@@ -2,7 +2,7 @@
 /// @file   config.hpp
 /// @brief  primesieve compile time constants.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -94,7 +94,7 @@ constexpr double FACTOR_ERATSMALL = 0.2;
 /// FACTOR_ERATMEDIUM <= ((2^23 - 7) * 30) / (2^23 * 6)
 /// FACTOR_ERATMEDIUM <= 4.99999582
 ///
-constexpr double FACTOR_ERATMEDIUM = 1.75;
+constexpr double FACTOR_ERATMEDIUM = 3.0;
 
 } // namespace config
 } // namespace
