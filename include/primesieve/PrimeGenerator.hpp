@@ -33,10 +33,8 @@
     // overhead, hence we disable it if it is not needed.
     #undef MULTIARCH_AVX512
   #else
-    #define MULTIARCH_TARGET_DEFAULT \
-      __attribute__ ((target ("default")))
-    #define MULTIARCH_TARGET_AVX512 \
-      __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
+    #define MULTIARCH_TARGET_DEFAULT
+    #define MULTIARCH_TARGET_AVX512
   #endif
 #endif
 
