@@ -2,7 +2,7 @@
 /// @file   intrinsics.hpp
 /// @brief  Wrappers for compiler intrinsics.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -13,6 +13,7 @@
 
 #include "CPUID.hpp"
 #include "macros.hpp"
+
 #include <stdint.h>
 
 namespace {
@@ -42,16 +43,16 @@ inline uint64_t popcnt64_bitwise(uint64_t x)
 #if defined(__GNUC__) || \
     __has_builtin(__builtin_popcountl)
 
-namespace {
-
 // CPUID is only enabled on x86 and x86-64 CPUs
 // if the user compiles without -mpopcnt.
 #if defined(ENABLE_CPUID_POPCNT)
 
-inline uint64_t popcnt64(uint64_t x)
-{
 #if defined(__x86_64__)
 
+namespace {
+
+inline uint64_t popcnt64(uint64_t x)
+{
   // On my AMD EPYC 7642 CPU using GCC 12 this runtime
   // check incurs an overall overhead of about 1%.
   if_likely(HAS_CPUID_POPCNT)
@@ -67,8 +68,16 @@ inline uint64_t popcnt64(uint64_t x)
     // using __builtin_popcount*(x) here.
     return popcnt64_bitwise(x);
   }
+}
+
+} // namespace
+
 #elif defined(__i386__)
 
+namespace {
+
+inline uint64_t popcnt64(uint64_t x)
+{
   if_likely(HAS_CPUID_POPCNT)
   {
     uint32_t x0 = uint32_t(x);
@@ -85,10 +94,15 @@ inline uint64_t popcnt64(uint64_t x)
     // using __builtin_popcount*(x) here.
     return popcnt64_bitwise(x);
   }
-#endif
 }
 
-#else // !defined(ENABLE_CPUID_POPCNT)
+} // namespace
+
+#endif // i386
+
+#else // GCC & Clang (no CPUID, not x86)
+
+namespace {
 
 inline int popcnt64(uint64_t x)
 {
@@ -104,9 +118,9 @@ inline int popcnt64(uint64_t x)
 #endif
 }
 
-#endif
-
 } // namespace
+
+#endif // GCC & Clang
 
 #elif defined(_MSC_VER) && \
       defined(_M_X64) && \
@@ -179,7 +193,7 @@ inline int popcnt64(uint64_t x)
 
 namespace {
 
-/// Portable fallback popcount algorithm
+/// Portable (but slow) popcount algorithm
 inline uint64_t popcnt64(uint64_t x)
 {
   return popcnt64_bitwise(x);
@@ -187,7 +201,7 @@ inline uint64_t popcnt64(uint64_t x)
 
 } // namespace
 
-#endif
+#endif // popcnt64()
 
 // GCC/Clang & MSVC
 #if defined(__x86_64__) || \
