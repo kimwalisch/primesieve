@@ -46,6 +46,10 @@ if(NOT isMultiConfig AND NOT CMAKE_BUILD_TYPE)
     "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(ENABLE_ASSERT "ENABLE_ASSERT")
+endif()
+
 # primesieve binary source files #####################################
 
 set(BIN_SRC src/app/CmdOptions.cpp
@@ -107,6 +111,9 @@ endif()
 
 if(WITH_MULTIARCH)
     include("${PROJECT_SOURCE_DIR}/cmake/multiarch_avx512.cmake")
+    if(multiarch_avx512)
+        set(MULTIARCH_AVX512 "MULTIARCH_AVX512")
+    endif()
 endif()
 
 # libprimesieve (shared library) #####################################
@@ -122,13 +129,7 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
     target_compile_options(libprimesieve PRIVATE ${FTREE_VECTORIZE_FLAG} ${FVECT_COST_MODEL_FLAG})
-
-    if(multiarch_avx512)
-        target_compile_definitions(libprimesieve PRIVATE "MULTIARCH_AVX512")
-    endif()
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        target_compile_definitions(libprimesieve PRIVATE "ENABLE_ASSERT")
-    endif()
+    target_compile_definitions(libprimesieve PRIVATE "${ENABLE_ASSERT}" "${MULTIARCH_AVX512}")
 
     if(WIN32_MSVC_COMPATIBLE)
         # On Windows the shared library will be named primesieve.dll
@@ -166,13 +167,7 @@ if(BUILD_STATIC_LIBS)
     set_target_properties(libprimesieve-static PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${LIBATOMIC})
     target_compile_options(libprimesieve-static PRIVATE ${FTREE_VECTORIZE_FLAG} ${FVECT_COST_MODEL_FLAG})
-
-    if(multiarch_avx512)
-        target_compile_definitions(libprimesieve-static PRIVATE "MULTIARCH_AVX512")
-    endif()
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        target_compile_definitions(libprimesieve-static PRIVATE "ENABLE_ASSERT")
-    endif()
+    target_compile_definitions(libprimesieve-static PRIVATE "${ENABLE_ASSERT}" "${MULTIARCH_AVX512}")
 
     if(WITH_MSVC_CRT_STATIC)
         set_target_properties(libprimesieve-static PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")
@@ -227,15 +222,9 @@ endif()
 if(BUILD_PRIMESIEVE)
     add_executable(primesieve ${BIN_SRC})
     target_link_libraries(primesieve primesieve::primesieve Threads::Threads)
+    target_compile_definitions(primesieve PRIVATE "${ENABLE_ASSERT}")
     target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-    if(multiarch_avx512)
-        target_compile_definitions(primesieve PRIVATE "MULTIARCH_AVX512")
-    endif()
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        target_compile_definitions(primesieve PRIVATE "ENABLE_ASSERT")
-    endif()
 
     if(WITH_MSVC_CRT_STATIC)
         set_target_properties(primesieve PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")
