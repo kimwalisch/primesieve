@@ -24,14 +24,13 @@
 #include <cstddef>
 
 #if defined(MULTIARCH_AVX512)
-  #if defined(__AVX512__) || \
-      (defined(__AVX512F__) && \
-       defined(__AVX512VBMI__) && \
-       defined(__AVX512VBMI2__))
-    // GCC/Clang function multiversioning for AVX512 is not needed if
-    // the user compiles with -mavx512f -mavx512vbmi -mavx512vbmi2.
-    // GCC/Clang function multiversioning generally causes a minor
-    // overhead, hence we disable it if it is not needed.
+  // GCC/Clang function multiversioning for AVX512 is not needed if
+  // the user compiles with -mavx512f -mavx512vbmi -mavx512vbmi2.
+  // GCC/Clang function multiversioning generally causes a minor
+  // overhead, hence we disable it if it is not needed.
+  #if defined(__AVX512__) || (defined(__AVX512F__) && \
+                              defined(__AVX512VBMI__) && \
+                              defined(__AVX512VBMI2__))
     #undef MULTIARCH_AVX512
   #else
     #define MULTIARCH_TARGET_DEFAULT
