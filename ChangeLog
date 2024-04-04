@@ -1,3 +1,10 @@
+Changes in version 12.3, 04/04/2024
+===================================
+
+* Add runtime POPCNT detection using CPUID for x86 CPUs.
+* Improve GCC/Clang multiarch preprocessor logic.
+* CMakeLists.txt: Remove POPCNT/BMI check for x86 CPUs.
+
 Changes in version 12.2, 30/03/2024
 ===================================
 
