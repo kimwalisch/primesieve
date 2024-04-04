@@ -47,6 +47,9 @@
 #elif defined(MULTIARCH_TARGET_AVX512) && \
     __has_include(<immintrin.h>)
   #include <immintrin.h>
+
+#else // Default portable algorithm
+  #define DEFAULT_CPU_ARCH
 #endif
 
 namespace {
@@ -403,6 +406,9 @@ void PrimeGenerator::fillPrevPrimes(Vector<uint64_t>& primes,
   }
 }
 
+#if defined(DEFAULT_CPU_ARCH) || \
+    defined(MULTIARCH_TARGET_DEFAULT)
+
 /// This method is used by iterator::next_prime().
 /// This method stores only the next few primes (~ 1000) in the
 /// primes vector. Also for iterator::next_prime() there is no
@@ -466,6 +472,8 @@ void PrimeGenerator::fillNextPrimes(Vector<uint64_t>& primes,
   }
   while (*size == 0);
 }
+
+#endif
 
 #if defined(HAS_AVX512) || \
     defined(MULTIARCH_TARGET_AVX512)
