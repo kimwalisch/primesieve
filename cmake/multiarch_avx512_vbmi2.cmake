@@ -11,7 +11,7 @@ check_cxx_source_compiles("
         public:
         __attribute__ ((target (\"default\")))
         void fillNextPrimes(uint64_t* primes64);
-        __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
+        __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2\")))
         void fillNextPrimes(uint64_t* primes64);
     };
     __attribute__ ((target (\"default\")))
@@ -19,7 +19,7 @@ check_cxx_source_compiles("
     {
         primes64[0] = 2;
     }
-    __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
+    __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2\")))
     void PrimeGenerator::fillNextPrimes(uint64_t* primes64)
     {
         __m512i bytes_0_to_7 = _mm512_setr_epi64(0, 1, 2, 3, 4, 5, 6, 7);
@@ -36,4 +36,4 @@ check_cxx_source_compiles("
         p.fillNextPrimes(primes);
         return 0;
     }
-" multiarch_avx512)
+" multiarch_avx512_vbmi2)
