@@ -11,7 +11,7 @@
 ///         fillNextPrimes() is highly optimized using hardware
 ///         acceleration (e.g. CTZ, AVX512) whenever possible.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2022 @zielaj, https://github.com/zielaj
 ///
 /// This file is distributed under the BSD License. See the COPYING
@@ -456,69 +456,6 @@ void PrimeGenerator::fillNextPrimes(Vector<uint64_t>& primes,
   }
   while (*size == 0);
 }
-
-#if defined(MULTIARCH_POPCNT_BMI)
-
-/// This algorithm is identical to the default fillNextPrimes()
-/// method, except that the POPCNT & BMI instruction sets (x64 CPUs)
-/// have been enabled which should provide up to 10% speedup.
-///
-__attribute__ ((target ("popcnt,bmi")))
-void PrimeGenerator::fillNextPrimes(Vector<uint64_t>& primes,
-                                    std::size_t* size)
-{
-  *size = 0;
-
-  do
-  {
-    if (sieveIdx_ >= sieve_.size())
-      if (!sieveNextPrimes(primes, size))
-        return;
-
-    // Use local variables to prevent the compiler from
-    // writing temporary results to memory.
-    std::size_t i = *size;
-    std::size_t maxSize = primes.size();
-    ASSERT(i + 64 <= maxSize);
-    uint64_t low = low_;
-    uint64_t sieveIdx = sieveIdx_;
-    uint64_t sieveSize = sieve_.size();
-    uint8_t* sieve = sieve_.data();
-
-    // Fill the buffer with at least (maxSize - 64) primes.
-    // Each loop iteration can generate up to 64 primes
-    // so we have to stop generating primes once there is
-    // not enough space for 64 more primes.
-    do
-    {
-      uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
-      std::size_t j = i;
-      i += popcnt64(bits);
-
-      do
-      {
-        primes[j+0] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+1] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+2] = nextPrime(bits, low); bits &= bits - 1;
-        primes[j+3] = nextPrime(bits, low); bits &= bits - 1;
-        j += 4;
-      }
-      while (j < i);
-
-      low += 8 * 30;
-      sieveIdx += 8;
-    }
-    while (i <= maxSize - 64 &&
-           sieveIdx < sieveSize);
-
-    low_ = low;
-    sieveIdx_ = sieveIdx;
-    *size = i;
-  }
-  while (*size == 0);
-}
-
-#endif
 
 #if defined(MULTIARCH_AVX512)
 

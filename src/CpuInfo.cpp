@@ -18,13 +18,14 @@
 ///         types of CPU cores we try to detect the cache sizes of the
 ///         CPU core type that e.g. occurs most frequently.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
 #include <primesieve/CpuInfo.hpp>
+#include <primesieve/CPUID.hpp>
 #include <primesieve/macros.hpp>
 
 #include <algorithm>
@@ -66,39 +67,6 @@
 
 namespace {
 
-void run_cpuid(int eax, int ecx, int* abcd)
-{
-#if defined(_MSC_VER)
-  __cpuidex(abcd, eax, ecx);
-#else
-  int ebx = 0;
-  int edx = 0;
-
-  #if defined(__i386__) && \
-      defined(__PIC__)
-    /* in case of PIC under 32-bit EBX cannot be clobbered */
-    __asm__ ("movl %%ebx, %%edi;"
-             "cpuid;"
-             "xchgl %%ebx, %%edi;"
-             : "=D" (ebx),
-               "+a" (eax),
-               "+c" (ecx),
-               "=d" (edx));
-  #else
-    __asm__ ("cpuid;"
-             : "+b" (ebx),
-               "+a" (eax),
-               "+c" (ecx),
-               "=d" (edx));
-  #endif
-
-  abcd[0] = eax;
-  abcd[1] = ebx;
-  abcd[2] = ecx;
-  abcd[3] = edx;
-#endif
-}
-
 // Get Value of Extended Control Register
 int get_xcr0()
 {
@@ -117,7 +85,7 @@ bool has_AVX512()
 {
   int abcd[4];
 
-  run_cpuid(1, 0, abcd);
+  run_CPUID(1, 0, abcd);
 
   // PrimeGenerator::fillNextPrimes() requires POPCNT
   if ((abcd[2] & bit_POPCNT) != bit_POPCNT)
@@ -142,7 +110,7 @@ bool has_AVX512()
   if ((xcr0 & zmm_mask) != zmm_mask)
     return false;
 
-  run_cpuid(7, 0, abcd);
+  run_CPUID(7, 0, abcd);
 
   // PrimeGenerator::fillNextPrimes() requires AVX512F, AVX512VBMI & AVX512VBMI2
   return ((abcd[1] & bit_AVX512F) == bit_AVX512F &&
@@ -173,19 +141,19 @@ std::string getCpuName()
   // https://en.wikipedia.org/wiki/CPUID
 
   int cpuInfo[4] = { 0, 0, 0, 0 };
-  run_cpuid(0x80000000, 0, cpuInfo);
+  run_CPUID(0x80000000, 0, cpuInfo);
   std::vector<int> vect;
 
   // check if CPU name is supported
   if ((unsigned) cpuInfo[0] >= 0x80000004u)
   {
-    run_cpuid(0x80000002, 0, cpuInfo);
+    run_CPUID(0x80000002, 0, cpuInfo);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
-    run_cpuid(0x80000003, 0, cpuInfo);
+    run_CPUID(0x80000003, 0, cpuInfo);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
-    run_cpuid(0x80000004, 0, cpuInfo);
+    run_CPUID(0x80000004, 0, cpuInfo);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
     vect.push_back(0);

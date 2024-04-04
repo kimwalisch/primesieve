@@ -6,7 +6,7 @@
 ///         returns the primes. When there are no more primes left in
 ///         the vector PrimeGenerator generates new primes.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -33,12 +33,6 @@ public:
   PrimeGenerator(uint64_t start, uint64_t stop, PreSieve& preSieve);
   void fillPrevPrimes(Vector<uint64_t>& primes, std::size_t* size);
   static uint64_t maxCachedPrime();
-
-#if defined(MULTIARCH_POPCNT_BMI)
-  #define MULTIARCH
-  __attribute__ ((target ("popcnt,bmi")))
-  void fillNextPrimes(Vector<uint64_t>& primes, std::size_t* size);
-#endif
 
 #if defined(MULTIARCH_AVX512)
   #define MULTIARCH

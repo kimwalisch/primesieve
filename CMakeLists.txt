@@ -106,7 +106,6 @@ endif()
 # Check if compiler supports x64 multiarch ###########################
 
 if(WITH_MULTIARCH)
-    include("${PROJECT_SOURCE_DIR}/cmake/multiarch_popcnt_bmi.cmake")
     include("${PROJECT_SOURCE_DIR}/cmake/multiarch_avx512.cmake")
 endif()
 
@@ -124,9 +123,6 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
     target_compile_options(libprimesieve PRIVATE ${FTREE_VECTORIZE_FLAG} ${FVECT_COST_MODEL_FLAG})
 
-    if(multiarch_popcnt_bmi)
-        target_compile_definitions(libprimesieve PRIVATE "MULTIARCH_POPCNT_BMI")
-    endif()
     if(multiarch_avx512)
         target_compile_definitions(libprimesieve PRIVATE "MULTIARCH_AVX512")
     endif()
@@ -171,9 +167,6 @@ if(BUILD_STATIC_LIBS)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${LIBATOMIC})
     target_compile_options(libprimesieve-static PRIVATE ${FTREE_VECTORIZE_FLAG} ${FVECT_COST_MODEL_FLAG})
 
-    if(multiarch_popcnt_bmi)
-        target_compile_definitions(libprimesieve-static PRIVATE "MULTIARCH_POPCNT_BMI")
-    endif()
     if(multiarch_avx512)
         target_compile_definitions(libprimesieve-static PRIVATE "MULTIARCH_AVX512")
     endif()
