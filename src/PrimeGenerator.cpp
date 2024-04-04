@@ -38,7 +38,7 @@
 // x86-64 AVX512
 #if defined(__AVX512F__) && \
     defined(__AVX512VBMI__) && \
-    defined(__AVX512VBMI2__)
+    defined(__AVX512VBMI2__) && \
     __has_include(<immintrin.h>)
   #include <immintrin.h>
   #define HAS_AVX512
