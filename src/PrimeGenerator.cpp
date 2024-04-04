@@ -35,7 +35,17 @@
 #include <algorithm>
 #include <limits>
 
-#if defined(MULTIARCH_AVX512)
+// x86-64 AVX512
+#if defined(__AVX512F__) && \
+    defined(__AVX512VBMI__) && \
+    defined(__AVX512VBMI2__)
+    __has_include(<immintrin.h>)
+  #include <immintrin.h>
+  #define HAS_AVX512
+
+// GCC/Clang function multiversioning
+#elif defined(MULTIARCH_TARGET_AVX512) && \
+    __has_include(<immintrin.h>)
   #include <immintrin.h>
 #endif
 
@@ -400,7 +410,7 @@ void PrimeGenerator::fillPrevPrimes(Vector<uint64_t>& primes,
 /// this reason iterator::next_prime() runs up to 2x faster
 /// than iterator::prev_prime().
 ///
-#if defined(MULTIARCH)
+#if defined(MULTIARCH_TARGET_DEFAULT)
   __attribute__ ((target ("default")))
 #endif
 void PrimeGenerator::fillNextPrimes(Vector<uint64_t>& primes,
@@ -457,7 +467,8 @@ void PrimeGenerator::fillNextPrimes(Vector<uint64_t>& primes,
   while (*size == 0);
 }
 
-#if defined(MULTIARCH_AVX512)
+#if defined(HAS_AVX512) || \
+    defined(MULTIARCH_TARGET_AVX512)
 
 /// This algorithm converts 1 bits from the sieve array into primes
 /// using AVX512. The algorithm is a modified version of the AVX512
@@ -472,7 +483,9 @@ void PrimeGenerator::fillNextPrimes(Vector<uint64_t>& primes,
 /// benchmarks this algorithm ran about 10% faster than the default
 /// fillNextPrimes() algorithm which uses __builtin_ctzll().
 ///
-__attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
+#if defined(MULTIARCH_TARGET_AVX512)
+  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
+#endif
 void PrimeGenerator::fillNextPrimes(Vector<uint64_t>& primes,
                                     std::size_t* size)
 {
