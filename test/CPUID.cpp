@@ -8,7 +8,7 @@
 /// file in the top level directory.
 ///
 
-#include <CPUID.hpp>
+#include <primesieve/CPUID.hpp>
 #include <iostream>
 
 int main()
