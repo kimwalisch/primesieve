@@ -110,8 +110,8 @@ endif()
 # Check if compiler supports x64 multiarch ###########################
 
 if(WITH_MULTIARCH)
-    include("${PROJECT_SOURCE_DIR}/cmake/multiarch_avx512.cmake")
-    if(multiarch_avx512)
+    include("${PROJECT_SOURCE_DIR}/cmake/multiarch_avx512_vbmi2.cmake")
+    if(multiarch_avx512_vbmi2)
         set(MULTIARCH_AVX512 "MULTIARCH_AVX512")
     endif()
 endif()
