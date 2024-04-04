@@ -58,7 +58,6 @@
 /* %ecx bit flags */
 #define bit_AVX512VBMI  (1 << 1)
 #define bit_AVX512VBMI2 (1 << 6)
-#define bit_POPCNT      (1 << 23)
 
 /* xgetbv bit flags */
 #define XSTATE_SSE (1 << 1)
@@ -86,10 +85,6 @@ bool has_AVX512()
   int abcd[4];
 
   run_CPUID(1, 0, abcd);
-
-  // PrimeGenerator::fillNextPrimes() requires POPCNT
-  if ((abcd[2] & bit_POPCNT) != bit_POPCNT)
-    return false;
 
   int osxsave_mask = (1 << 27);
 
