@@ -41,7 +41,7 @@
     defined(__AVX512VBMI2__) && \
     __has_include(<immintrin.h>)
   #include <immintrin.h>
-  #define HAS_AVX512
+  #define HAS_AVX512_VBMI2
 
 // GCC/Clang function multiversioning
 #elif defined(MULTIARCH_TARGET_AVX512) && \
@@ -475,7 +475,7 @@ void PrimeGenerator::fillNextPrimes(Vector<uint64_t>& primes,
 
 #endif
 
-#if defined(HAS_AVX512) || \
+#if defined(HAS_AVX512_VBMI2) || \
     defined(MULTIARCH_TARGET_AVX512)
 
 /// This algorithm converts 1 bits from the sieve array into primes
