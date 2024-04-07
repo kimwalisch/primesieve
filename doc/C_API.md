@@ -532,7 +532,7 @@ int main(void)
   {
     // Sum 64-bit primes using AVX512
     for (size_t i = 0; i < it.size; i += 8) {
-      __mmask8 mask = (i + 8 < it.size) ? 0xff : 0xff >> (i + 8 - it.size);
+      __mmask8 mask = (__mmask8) _bzhi_u64(0xff, it.size - i);
       __m512i primes = _mm512_maskz_loadu_epi64(mask, (__m512i*) &it.primes[i]);
       sums = _mm512_add_epi64(sums, primes);
     }
@@ -560,7 +560,7 @@ int main(void)
 
 ```bash
 # Unix-like OSes
-cc -O3 -mavx512f -funroll-loops primesum.c -o primesum -lprimesieve
+cc -O3 -mavx512f -mbmi2 -funroll-loops primesum.c -o primesum -lprimesieve
 time ./primesum
 ```
 
