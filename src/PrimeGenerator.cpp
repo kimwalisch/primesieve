@@ -46,12 +46,6 @@
   #include <immintrin.h>
   #define ENABLE_AVX512
 
-#elif defined(_MSC_VER) && \
-      defined(__AVX512__) && \
-      __has_include(<immintrin.h>)
-  #include <immintrin.h>
-  #define ENABLE_AVX512
-
 #else
   #define ENABLE_DEFAULT
 #endif
