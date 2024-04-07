@@ -23,21 +23,6 @@
 #include <stdint.h>
 #include <cstddef>
 
-#if defined(MULTIARCH_AVX512)
-  // GCC/Clang function multiversioning for AVX512 is not needed if
-  // the user compiles with -mavx512f -mavx512vbmi -mavx512vbmi2.
-  // GCC/Clang function multiversioning generally causes a minor
-  // overhead, hence we disable it if it is not needed.
-  #if defined(__AVX512__) || (defined(__AVX512F__) && \
-                              defined(__AVX512VBMI__) && \
-                              defined(__AVX512VBMI2__))
-    #undef MULTIARCH_AVX512
-  #else
-    #define MULTIARCH_TARGET_DEFAULT
-    #define MULTIARCH_TARGET_AVX512
-  #endif
-#endif
-
 namespace primesieve {
 
 class PreSieve;
@@ -49,15 +34,16 @@ public:
   void fillPrevPrimes(Vector<uint64_t>& primes, std::size_t* size);
   static uint64_t maxCachedPrime();
 
-#if defined(MULTIARCH_TARGET_DEFAULT)
-  __attribute__ ((target ("default")))
-#endif
-  void fillNextPrimes(Vector<uint64_t>& primes, std::size_t* size);
-
-#if defined(MULTIARCH_TARGET_AVX512)
+#if defined(ENABLE_MULTIARCH_AVX512)
+  #define ENABLE_MULTIARCH_DEFAULT
   __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
   void fillNextPrimes(Vector<uint64_t>& primes, std::size_t* size);
 #endif
+
+#if defined(ENABLE_MULTIARCH_DEFAULT)
+  __attribute__ ((target ("default")))
+#endif
+  void fillNextPrimes(Vector<uint64_t>& primes, std::size_t* size);
 
 private:
   bool isInit_ = false;
