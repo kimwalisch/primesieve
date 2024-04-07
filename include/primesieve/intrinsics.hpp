@@ -211,9 +211,9 @@ inline uint64_t popcnt64(uint64_t x)
 
 // On x64 CPUs:
 // GCC & Clang enable TZCNT with -mbmi.
-// MSVC enables TZCNT with /arch:AVX2 or /arch:AVX512.
+// MSVC enables TZCNT with /arch:AVX2 or later.
 #if defined(__BMI__) || \
-   (defined(_MSC_VER) && (defined(__AVX2__) || defined(__AVX512__)))
+   (defined(_MSC_VER) && defined(__AVX2__))
   #define HAS_TZCNT
 #endif
 

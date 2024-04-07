@@ -228,7 +228,6 @@ void cpuInfo()
       defined(__i386__) || \
       defined(_M_X64) || \
       defined(_M_IX86) || \
-      defined(__AVX512__) || \
       defined(__AVX512F__)
 
     if (cpu.hasAVX512())
