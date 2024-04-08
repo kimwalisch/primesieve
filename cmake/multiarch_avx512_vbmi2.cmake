@@ -52,3 +52,7 @@ check_cxx_source_compiles("
         return 0;
     }
 " multiarch_avx512_vbmi2)
+
+if(multiarch_avx512_vbmi2)
+    set(ENABLE_MULTIARCH_AVX512 "ENABLE_MULTIARCH_AVX512")
+endif()

@@ -33,23 +33,6 @@ if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
     message(FATAL_ERROR "One or both of BUILD_SHARED_LIBS or BUILD_STATIC_LIBS must be set to ON")
 endif()
 
-# Set default build type to Release ##################################
-
-if(NOT CMAKE_VERSION VERSION_LESS 3.9)
-    get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-elseif(CMAKE_CONFIGURATION_TYPES)
-    set(isMultiConfig TRUE)
-endif()
-
-if(NOT isMultiConfig AND NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release CACHE STRING
-    "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
-endif()
-
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(ENABLE_ASSERT "ENABLE_ASSERT")
-endif()
-
 # primesieve binary source files #####################################
 
 set(BIN_SRC src/app/CmdOptions.cpp
@@ -111,9 +94,27 @@ endif()
 
 if(WITH_MULTIARCH)
     include("${PROJECT_SOURCE_DIR}/cmake/multiarch_avx512_vbmi2.cmake")
-    if(multiarch_avx512_vbmi2)
-        set(ENABLE_MULTIARCH_AVX512 "ENABLE_MULTIARCH_AVX512")
-    endif()
+endif()
+
+# Set default build type to Release ##################################
+
+# We do this after the C++ compilation tests above (include *.cmake)
+# so that those tests are compiled without optimization flags
+# which should speed up the cmake configure step.
+
+if(NOT CMAKE_VERSION VERSION_LESS 3.9)
+    get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+elseif(CMAKE_CONFIGURATION_TYPES)
+    set(isMultiConfig TRUE)
+endif()
+
+if(NOT isMultiConfig AND NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING
+    "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(ENABLE_ASSERT "ENABLE_ASSERT")
 endif()
 
 # libprimesieve (shared library) #####################################
