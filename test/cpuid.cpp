@@ -8,7 +8,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/cpu_supports_avx512_vbmi2.hpp>
+#include <primesieve/cpu_supports_popcnt.hpp>
 #include <iostream>
 
 int main()
