@@ -35,19 +35,9 @@
 #include <algorithm>
 #include <limits>
 
-#if defined(ENABLE_MULTIARCH_AVX512) && \
-    __has_include(<immintrin.h>)
+#if defined(ENABLE_AVX512) || \
+    defined(ENABLE_MULTIARCH_AVX512)
   #include <immintrin.h>
-
-#elif defined(__AVX512F__) && \
-      defined(__AVX512VBMI__) && \
-      defined(__AVX512VBMI2__) && \
-      __has_include(<immintrin.h>)
-  #include <immintrin.h>
-  #define ENABLE_AVX512
-
-#else
-  #define ENABLE_DEFAULT
 #endif
 
 namespace {
@@ -404,8 +394,7 @@ void PrimeGenerator::fillPrevPrimes(Vector<uint64_t>& primes,
   }
 }
 
-#if defined(ENABLE_DEFAULT) || \
-    defined(ENABLE_MULTIARCH_DEFAULT)
+#if defined(ENABLE_DEFAULT)
 
 /// This method is used by iterator::next_prime().
 /// This method stores only the next few primes (~ 1000) in the
@@ -414,11 +403,7 @@ void PrimeGenerator::fillPrevPrimes(Vector<uint64_t>& primes,
 /// this reason iterator::next_prime() runs up to 2x faster
 /// than iterator::prev_prime().
 ///
-#if defined(ENABLE_MULTIARCH_DEFAULT)
-  __attribute__ ((target ("default")))
-#endif
-void PrimeGenerator::fillNextPrimes(Vector<uint64_t>& primes,
-                                    std::size_t* size)
+void PrimeGenerator::fillNextPrimes_default(Vector<uint64_t>& primes, std::size_t* size)
 {
   *size = 0;
 
@@ -492,8 +477,7 @@ void PrimeGenerator::fillNextPrimes(Vector<uint64_t>& primes,
 #if defined(ENABLE_MULTIARCH_AVX512)
   __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
 #endif
-void PrimeGenerator::fillNextPrimes(Vector<uint64_t>& primes,
-                                    std::size_t* size)
+void PrimeGenerator::fillNextPrimes_avx512(Vector<uint64_t>& primes, std::size_t* size)
 {
   *size = 0;
 

@@ -1,5 +1,5 @@
 ///
-/// @file   CPUID.cpp
+/// @file   cpuid.cpp
 /// @brief  Test CPUID code on x86 and x64 CPUs.
 ///
 /// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
@@ -8,7 +8,7 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/CPUID.hpp>
+#include <primesieve/cpu_supports_avx512_vbmi2.hpp>
 #include <iostream>
 
 int main()
@@ -64,7 +64,7 @@ int main()
   #endif
 
   #if defined(ENABLE_CPUID_POPCNT)
-    std::cout << "CPU supports POPCNT: " << (HAS_CPUID_POPCNT ? "yes" : "no") << std::endl;
+    std::cout << "CPU supports POPCNT: " << (cpu_supports_popcnt ? "yes" : "no") << std::endl;
   #endif
 
 #endif

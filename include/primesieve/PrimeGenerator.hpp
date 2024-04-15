@@ -23,6 +23,20 @@
 #include <stdint.h>
 #include <cstddef>
 
+#if defined(__AVX512F__) && \
+    defined(__AVX512VBMI__) && \
+    defined(__AVX512VBMI2__) && \
+    __has_include(<immintrin.h>)
+  #define ENABLE_AVX512
+
+#elif defined(ENABLE_MULTIARCH_AVX512) && \
+      __has_include(<immintrin.h>)
+  #include "cpu_supports_avx512_vbmi2.hpp"
+  #define ENABLE_DEFAULT
+#else
+  #define ENABLE_DEFAULT
+#endif
+
 namespace primesieve {
 
 class PreSieve;
@@ -34,18 +48,36 @@ public:
   void fillPrevPrimes(Vector<uint64_t>& primes, std::size_t* size);
   static uint64_t maxCachedPrime();
 
-#if defined(ENABLE_MULTIARCH_AVX512)
-  #define ENABLE_MULTIARCH_DEFAULT
-  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
-  void fillNextPrimes(Vector<uint64_t>& primes, std::size_t* size);
-#endif
-
-#if defined(ENABLE_MULTIARCH_DEFAULT)
-  __attribute__ ((target ("default")))
-#endif
-  void fillNextPrimes(Vector<uint64_t>& primes, std::size_t* size);
+  ALWAYS_INLINE void fillNextPrimes(Vector<uint64_t>& primes, std::size_t* size)
+  {
+    #if defined(ENABLE_AVX512)
+      fillNextPrimes_avx512(primes, size);
+    #elif defined(ENABLE_MULTIARCH_AVX512)
+      if (cpu_supports_avx512_vbmi2)
+        fillNextPrimes_avx512(primes, size);
+      else
+        fillNextPrimes_default(primes, size);
+    #else
+      fillNextPrimes_default(primes, size);
+    #endif
+  }
 
 private:
+
+#if defined(ENABLE_DEFAULT)
+  void fillNextPrimes_default(Vector<uint64_t>& primes, std::size_t* size);
+#endif
+
+#if defined(ENABLE_AVX512) || \
+    defined(ENABLE_MULTIARCH_AVX512)
+
+  #if defined(ENABLE_MULTIARCH_AVX512)
+    __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
+  #endif
+  void fillNextPrimes_avx512(Vector<uint64_t>& primes, std::size_t* size);
+
+#endif
+
   bool isInit_ = false;
   uint64_t low_ = 0;
   uint64_t prime_ = 0;

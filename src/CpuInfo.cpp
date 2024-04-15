@@ -25,7 +25,6 @@
 ///
 
 #include <primesieve/CpuInfo.hpp>
-#include <primesieve/CPUID.hpp>
 #include <primesieve/macros.hpp>
 
 #include <algorithm>
@@ -44,76 +43,9 @@
     defined(__x86_64__) || \
     defined(_M_IX86) || \
     defined(_M_X64)
-
-#if defined(_MSC_VER)
-  #include <intrin.h>
-  #include <immintrin.h>
-#endif
-
-#define HAS_CPUID
-
-/* %ebx bit flags */
-#define bit_AVX512F (1 << 16)
-
-/* %ecx bit flags */
-#define bit_AVX512VBMI  (1 << 1)
-#define bit_AVX512VBMI2 (1 << 6)
-
-/* xgetbv bit flags */
-#define XSTATE_SSE (1 << 1)
-#define XSTATE_YMM (1 << 2)
-#define XSTATE_ZMM (7 << 5)
-
-namespace {
-
-// Get Value of Extended Control Register
-int get_xcr0()
-{
-  int xcr0;
-
-#if defined(_MSC_VER)
-  xcr0 = (int) _xgetbv(0);
-#else
-  __asm__ ("xgetbv" : "=a" (xcr0) : "c" (0) : "%edx" );
-#endif
-
-  return xcr0;
-}
-
-bool has_AVX512()
-{
-  int abcd[4];
-
-  run_CPUID(1, 0, abcd);
-
-  int osxsave_mask = (1 << 27);
-
-  // Ensure OS supports extended processor state management
-  if ((abcd[2] & osxsave_mask) != osxsave_mask)
-    return false;
-
-  int ymm_mask = XSTATE_SSE | XSTATE_YMM;
-  int zmm_mask = XSTATE_SSE | XSTATE_YMM | XSTATE_ZMM;
-
-  int xcr0 = get_xcr0();
-
-  // Check AVX OS support
-  if ((xcr0 & ymm_mask) != ymm_mask)
-    return false;
-
-  // Check AVX512 OS support
-  if ((xcr0 & zmm_mask) != zmm_mask)
-    return false;
-
-  run_CPUID(7, 0, abcd);
-
-  // PrimeGenerator::fillNextPrimes() requires AVX512F, AVX512VBMI & AVX512VBMI2
-  return ((abcd[1] & bit_AVX512F) == bit_AVX512F &&
-          (abcd[2] & (bit_AVX512VBMI | bit_AVX512VBMI2)) == (bit_AVX512VBMI | bit_AVX512VBMI2));
-}
-
-} // namespace
-
+  #include <primesieve/cpuid.hpp>
+  #include <primesieve/cpu_supports_avx512_vbmi2.hpp>
+  #define HAS_CPUID
 #endif
 
 #if defined(_WIN32)
@@ -136,19 +68,19 @@ std::string getCpuName()
   // https://en.wikipedia.org/wiki/CPUID
 
   int cpuInfo[4] = { 0, 0, 0, 0 };
-  run_CPUID(0x80000000, 0, cpuInfo);
+  run_cpuid(0x80000000, 0, cpuInfo);
   std::vector<int> vect;
 
   // check if CPU name is supported
   if ((unsigned) cpuInfo[0] >= 0x80000004u)
   {
-    run_CPUID(0x80000002, 0, cpuInfo);
+    run_cpuid(0x80000002, 0, cpuInfo);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
-    run_CPUID(0x80000003, 0, cpuInfo);
+    run_cpuid(0x80000003, 0, cpuInfo);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
-    run_CPUID(0x80000004, 0, cpuInfo);
+    run_cpuid(0x80000004, 0, cpuInfo);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
     vect.push_back(0);
@@ -823,14 +755,10 @@ std::string CpuInfo::cpuName() const
   }
 }
 
-/// This method is only used by the primesieve command-line app
-/// with the --cpu-info option. Therefore we currently don't
-/// cache the result of has_AVX512().
-///
 bool CpuInfo::hasAVX512() const
 {
   #if defined(HAS_CPUID)
-    return has_AVX512();
+    return cpu_supports_avx512_vbmi2;
   #else
     return false;
   #endif
