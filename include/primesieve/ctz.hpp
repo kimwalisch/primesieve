@@ -28,31 +28,9 @@
   #define HAS_TZCNT
 #endif
 
-// In 2022 std::countr_zero(x) generates good assembly for
-// most compilers & CPU architectures, except for:
-// 1) GCC & Clang on x64 without __BMI__.
-// 2) MSVC on x64 without __AVX2__.
-// Hence on x64 CPUs we only use std::countr_zero(x) if
-// the compiler generates the TZCNT instruction.
-#if defined(HAS_CPP20_BIT_HEADER) && \
-   (defined(HAS_TZCNT) || !defined(IS_X64))
-
-#define HAS_CTZ64
-#define CTZ64_SUPPORTS_ZERO
-
-namespace {
-
-inline int ctz64(uint64_t x)
-{
-  // No undefined behavior, std::countr_zero(0) = 64
-  return std::countr_zero(x);
-}
-
-} // namespace
-
-#elif (defined(__GNUC__) || \
-       defined(__clang__)) && \
-       defined(__x86_64__)
+#if (defined(__GNUC__) || \
+     defined(__clang__)) && \
+     defined(__x86_64__)
 
 #define HAS_CTZ64
 #define CTZ64_SUPPORTS_ZERO
@@ -124,6 +102,31 @@ inline uint64_t ctz64(uint64_t x)
 // without C++20 support, hence without std::countr_zero(x).
 // No undefined behavior, _tzcnt_u64(0) = 64.
 #define ctz64(x) _tzcnt_u64(x)
+
+#elif __cplusplus >= 202002L && \
+      __has_include(<bit>) && \
+     (!defined(IS_X64) || defined(HAS_TZCNT))
+
+#include <bit>
+
+// No undefined behavior, std::countr_zero(0) = 64
+#define CTZ64_SUPPORTS_ZERO
+#define HAS_CTZ64
+
+namespace {
+
+inline int ctz64(uint64_t x)
+{
+  // In 2022 std::countr_zero(x) generates good assembly for
+  // most compilers & CPU architectures, except for:
+  // 1) GCC & Clang on x64 without __BMI__.
+  // 2) MSVC on x64 without __AVX2__.
+  // Hence on x64 CPUs we only use std::countr_zero(x) if
+  // the compiler generates the TZCNT instruction.
+  return std::countr_zero(x);
+}
+
+} // namespace
 
 #elif defined(__GNUC__) || \
       __has_builtin(__builtin_ctzl)
