@@ -57,7 +57,10 @@ if(NOT atomic64)
         }"
         atomic64_with_libatomic)
 
-    if (NOT atomic64_with_libatomic)
+    if(atomic64_with_libatomic)
+        list(APPEND PRIMESIEVE_LINK_LIBRARIES "${LIBATOMIC}")
+    else()
+        set(LIBATOMIC "")
         message(FATAL_ERROR "Failed to compile std::atomic, libatomic likely not found!")
     endif()
 endif()

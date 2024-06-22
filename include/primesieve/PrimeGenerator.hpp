@@ -27,9 +27,9 @@
     defined(__AVX512VBMI__) && \
     defined(__AVX512VBMI2__) && \
     __has_include(<immintrin.h>)
-  #define ENABLE_AVX512
+  #define ENABLE_AVX512_VBMI2
 
-#elif defined(ENABLE_MULTIARCH_AVX512) && \
+#elif defined(ENABLE_MULTIARCH_AVX512_VBMI2) && \
       __has_include(<immintrin.h>)
   #include "cpu_supports_avx512_vbmi2.hpp"
   #define ENABLE_DEFAULT
@@ -50,11 +50,11 @@ public:
 
   ALWAYS_INLINE void fillNextPrimes(Vector<uint64_t>& primes, std::size_t* size)
   {
-    #if defined(ENABLE_AVX512)
-      fillNextPrimes_avx512(primes, size);
-    #elif defined(ENABLE_MULTIARCH_AVX512)
+    #if defined(ENABLE_AVX512_VBMI2)
+      fillNextPrimes_avx512_vbmi2(primes, size);
+    #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
       if (cpu_supports_avx512_vbmi2)
-        fillNextPrimes_avx512(primes, size);
+        fillNextPrimes_avx512_vbmi2(primes, size);
       else
         fillNextPrimes_default(primes, size);
     #else
@@ -68,13 +68,13 @@ private:
   void fillNextPrimes_default(Vector<uint64_t>& primes, std::size_t* size);
 #endif
 
-#if defined(ENABLE_AVX512) || \
-    defined(ENABLE_MULTIARCH_AVX512)
+#if defined(ENABLE_AVX512_VBMI2) || \
+    defined(ENABLE_MULTIARCH_AVX512_VBMI2)
 
-  #if defined(ENABLE_MULTIARCH_AVX512)
+  #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
     __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
   #endif
-  void fillNextPrimes_avx512(Vector<uint64_t>& primes, std::size_t* size);
+  void fillNextPrimes_avx512_vbmi2(Vector<uint64_t>& primes, std::size_t* size);
 
 #endif
 

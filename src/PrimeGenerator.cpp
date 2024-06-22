@@ -27,16 +27,16 @@
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/popcnt.hpp>
 #include <primesieve/Vector.hpp>
-#include <primesieve/intrinsics.hpp>
 #include <primesieve/SievingPrimes.hpp>
 
 #include <stdint.h>
 #include <algorithm>
 #include <limits>
 
-#if defined(ENABLE_AVX512) || \
-    defined(ENABLE_MULTIARCH_AVX512)
+#if defined(ENABLE_AVX512_VBMI2) || \
+    defined(ENABLE_MULTIARCH_AVX512_VBMI2)
   #include <immintrin.h>
 #endif
 
@@ -458,8 +458,8 @@ void PrimeGenerator::fillNextPrimes_default(Vector<uint64_t>& primes, std::size_
 
 #endif
 
-#if defined(ENABLE_AVX512) || \
-    defined(ENABLE_MULTIARCH_AVX512)
+#if defined(ENABLE_AVX512_VBMI2) || \
+    defined(ENABLE_MULTIARCH_AVX512_VBMI2)
 
 /// This algorithm converts 1 bits from the sieve array into primes
 /// using AVX512. The algorithm is a modified version of the AVX512
@@ -474,10 +474,10 @@ void PrimeGenerator::fillNextPrimes_default(Vector<uint64_t>& primes, std::size_
 /// benchmarks this algorithm ran about 10% faster than the default
 /// fillNextPrimes() algorithm which uses __builtin_ctzll().
 ///
-#if defined(ENABLE_MULTIARCH_AVX512)
+#if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
   __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
 #endif
-void PrimeGenerator::fillNextPrimes_avx512(Vector<uint64_t>& primes, std::size_t* size)
+void PrimeGenerator::fillNextPrimes_avx512_vbmi2(Vector<uint64_t>& primes, std::size_t* size)
 {
   *size = 0;
 
