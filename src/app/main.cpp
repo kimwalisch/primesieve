@@ -39,7 +39,7 @@
 
 namespace primesieve {
 
-bool has_cpuid_avx512_vbmi2()
+bool has_cpuid_avx512_vbmi2();
 
 } // namespace
 
