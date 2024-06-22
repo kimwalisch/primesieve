@@ -35,6 +35,16 @@
 #include <sstream>
 #include <string>
 
+#if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
+
+namespace primesieve {
+
+bool has_cpuid_avx512_vbmi2()
+
+} // namespace
+
+#endif
+
 void help(int exitCode);
 void version();
 void stressTest(const CmdOptions& opts);
@@ -223,14 +233,9 @@ void cpuInfo()
   else
     std::cout << "Logical CPU cores: unknown" << std::endl;
 
-  // Enable on x86 CPUs
-  #if defined(__x86_64__) || \
-      defined(__i386__) || \
-      defined(_M_X64) || \
-      defined(_M_IX86) || \
-      defined(__AVX512F__)
+  #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
 
-    if (cpu.hasAVX512())
+    if (primesieve::has_cpuid_avx512_vbmi2())
       std::cout << "Has AVX512: yes" << std::endl;
     else
       std::cout << "Has AVX512: no" << std::endl;

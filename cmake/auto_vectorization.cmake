@@ -16,7 +16,7 @@ check_cxx_compiler_flag(-ftree-vectorize ftree_vectorize)
 cmake_pop_check_state()
 
 if(ftree_vectorize)
-    set(FTREE_VECTORIZE_FLAG "-ftree-vectorize")
+    list(APPEND PRIMESIEVE_COMPILE_OPTIONS "-ftree-vectorize")
 
     cmake_push_check_state()
     set(CMAKE_REQUIRED_FLAGS -Werror)
@@ -24,6 +24,6 @@ if(ftree_vectorize)
     cmake_pop_check_state()
 
     if(fvect_cost_model)
-        set(FVECT_COST_MODEL_FLAG "-fvect-cost-model=dynamic")
+        list(APPEND PRIMESIEVE_COMPILE_OPTIONS "-fvect-cost-model=dynamic")
     endif()
 endif()

@@ -1,7 +1,7 @@
 ///
 /// @file  Erat.hpp
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -15,8 +15,8 @@
 #include "EratMedium.hpp"
 #include "EratBig.hpp"
 #include "macros.hpp"
-#include "intrinsics.hpp"
 #include "Vector.hpp"
+#include "ctz.hpp"
 
 #include <stdint.h>
 

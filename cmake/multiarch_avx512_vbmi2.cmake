@@ -7,7 +7,7 @@ include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
 
 cmake_push_check_state()
-set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}/include")
+set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}")
 
 check_cxx_source_compiles("
     // GCC/Clang function multiversioning for AVX512 is not needed if
@@ -20,19 +20,19 @@ check_cxx_source_compiles("
       Error: AVX512VBMI2 multiarch not needed!
     #endif
 
-    #include <primesieve/cpu_supports_avx512_vbmi2.hpp>
+    #include <src/x86/cpuid.cpp>
     #include <immintrin.h>
     #include <stdint.h>
 
     class PrimeGenerator {
     public:
         __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2\")))
-        void fillNextPrimes_avx512(uint64_t* primes64);
+        void fillNextPrimes_avx512_vbmi2(uint64_t* primes64);
         void fillNextPrimes_default(uint64_t* primes64);
         void fillNextPrimes(uint64_t* primes64)
         {
-            if (cpu_supports_avx512_vbmi2)
-                fillNextPrimes_avx512(primes64);
+            if (primesieve::has_cpuid_avx512_vbmi2())
+                fillNextPrimes_avx512_vbmi2(primes64);
             else
                 fillNextPrimes_default(primes64);
         }
@@ -44,7 +44,7 @@ check_cxx_source_compiles("
     }
 
     __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2\")))
-    void PrimeGenerator::fillNextPrimes_avx512(uint64_t* primes64)
+    void PrimeGenerator::fillNextPrimes_avx512_vbmi2(uint64_t* primes64)
     {
         __m512i bytes_0_to_7 = _mm512_setr_epi64(0, 1, 2, 3, 4, 5, 6, 7);
         __m512i base = _mm512_set1_epi64(123);
@@ -64,7 +64,7 @@ check_cxx_source_compiles("
 " multiarch_avx512_vbmi2)
 
 if(multiarch_avx512_vbmi2)
-    set(ENABLE_MULTIARCH_AVX512 "ENABLE_MULTIARCH_AVX512")
+    list(APPEND PRIMESIEVE_COMPILE_DEFINITIONS "ENABLE_MULTIARCH_AVX512_VBMI2")
 endif()
 
 cmake_pop_check_state()

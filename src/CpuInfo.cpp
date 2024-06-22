@@ -39,20 +39,12 @@
   #define APPLE_SYSCTL
 #endif
 
-#if defined(__i386__) || \
-    defined(__x86_64__) || \
-    defined(_M_IX86) || \
-    defined(_M_X64)
-  #include <primesieve/cpuid.hpp>
-  #include <primesieve/cpu_supports_avx512_vbmi2.hpp>
-  #define HAS_CPUID
-#endif
-
 #if defined(_WIN32)
 
 #include <primesieve/pmath.hpp>
 
 #include <windows.h>
+#include <intrin.h>
 #include <iterator>
 #include <map>
 
@@ -62,25 +54,29 @@ std::string getCpuName()
 {
   std::string cpuName;
 
-#if defined(HAS_CPUID)
+#if defined(__i386__) || \
+    defined(__x86_64__) || \
+    defined(_M_IX86) || \
+    defined(_M_X64)
+
   // Get the CPU name using CPUID.
   // Example: Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz
   // https://en.wikipedia.org/wiki/CPUID
 
   int cpuInfo[4] = { 0, 0, 0, 0 };
-  run_cpuid(0x80000000, 0, cpuInfo);
+  __cpuidex(cpuInfo, 0x80000000, 0);
   std::vector<int> vect;
 
   // check if CPU name is supported
   if ((unsigned) cpuInfo[0] >= 0x80000004u)
   {
-    run_cpuid(0x80000002, 0, cpuInfo);
+    __cpuidex(cpuInfo, 0x80000002, 0);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
-    run_cpuid(0x80000003, 0, cpuInfo);
+    __cpuidex(cpuInfo, 0x80000003, 0);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
-    run_cpuid(0x80000004, 0, cpuInfo);
+    __cpuidex(cpuInfo, 0x80000004, 0);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));
 
     vect.push_back(0);
@@ -753,15 +749,6 @@ std::string CpuInfo::cpuName() const
   {
     return {};
   }
-}
-
-bool CpuInfo::hasAVX512() const
-{
-  #if defined(HAS_CPUID)
-    return cpu_supports_avx512_vbmi2;
-  #else
-    return false;
-  #endif
 }
 
 size_t CpuInfo::logicalCpuCores() const

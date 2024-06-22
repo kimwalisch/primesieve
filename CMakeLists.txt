@@ -47,7 +47,7 @@ if(NOT isMultiConfig AND NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(ENABLE_ASSERT "ENABLE_ASSERT")
+    list(APPEND PRIMESIEVE_COMPILE_DEFINITIONS "ENABLE_ASSERT")
 endif()
 
 # primesieve binary source files #####################################
@@ -82,6 +82,17 @@ set(LIB_SRC src/api-c.cpp
             src/RiemannR.cpp
             src/SievingPrimes.cpp)
 
+# Check if compiler supports CPU multiarch ###########################
+
+if(WITH_MULTIARCH)
+    include("${PROJECT_SOURCE_DIR}/cmake/multiarch_x86_popcnt.cmake")
+    include("${PROJECT_SOURCE_DIR}/cmake/multiarch_avx512_vbmi2.cmake")
+
+    if(multiarch_x86_popcnt OR multiarch_avx512_vbmi2)
+        set(LIB_SRC ${LIB_SRC} src/x86/cpuid.cpp)
+    endif()
+endif()
+
 # Required includes ##################################################
 
 include(GNUInstallDirs)
@@ -107,12 +118,6 @@ if(WITH_AUTO_VECTORIZATION)
     include("${PROJECT_SOURCE_DIR}/cmake/auto_vectorization.cmake")
 endif()
 
-# Check if compiler supports x64 multiarch ###########################
-
-if(WITH_MULTIARCH)
-    include("${PROJECT_SOURCE_DIR}/cmake/multiarch_avx512_vbmi2.cmake")
-endif()
-
 # libprimesieve (shared library) #####################################
 
 find_package(Threads REQUIRED QUIET)
@@ -120,13 +125,13 @@ find_package(Threads REQUIRED QUIET)
 if(BUILD_SHARED_LIBS)
     add_library(libprimesieve SHARED ${LIB_SRC})
     set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
-    target_link_libraries(libprimesieve PRIVATE Threads::Threads ${LIBATOMIC})
+    target_link_libraries(libprimesieve PRIVATE Threads::Threads ${PRIMESIEVE_LINK_LIBRARIES})
     string(REPLACE "." ";" SOVERSION_LIST ${PRIMESIEVE_SOVERSION})
     list(GET SOVERSION_LIST 0 PRIMESIEVE_SOVERSION_MAJOR)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
-    target_compile_options(libprimesieve PRIVATE ${FTREE_VECTORIZE_FLAG} ${FVECT_COST_MODEL_FLAG})
-    target_compile_definitions(libprimesieve PRIVATE "${ENABLE_ASSERT}" "${ENABLE_MULTIARCH_AVX512}")
+    target_compile_options(libprimesieve PRIVATE ${PRIMESIEVE_COMPILE_OPTIONS})
+    target_compile_definitions(libprimesieve PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
 
     if(WIN32_MSVC_COMPATIBLE)
         # On Windows the shared library will be named primesieve.dll
@@ -162,9 +167,9 @@ endif()
 if(BUILD_STATIC_LIBS)
     add_library(libprimesieve-static STATIC ${LIB_SRC})
     set_target_properties(libprimesieve-static PROPERTIES OUTPUT_NAME primesieve)
-    target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${LIBATOMIC})
-    target_compile_options(libprimesieve-static PRIVATE ${FTREE_VECTORIZE_FLAG} ${FVECT_COST_MODEL_FLAG})
-    target_compile_definitions(libprimesieve-static PRIVATE "${ENABLE_ASSERT}" "${ENABLE_MULTIARCH_AVX512}")
+    target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${PRIMESIEVE_LINK_LIBRARIES})
+    target_compile_options(libprimesieve-static PRIVATE ${PRIMESIEVE_COMPILE_OPTIONS})
+    target_compile_definitions(libprimesieve-static PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
 
     if(WITH_MSVC_CRT_STATIC)
         set_target_properties(libprimesieve-static PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")
@@ -219,7 +224,7 @@ endif()
 if(BUILD_PRIMESIEVE)
     add_executable(primesieve ${BIN_SRC})
     target_link_libraries(primesieve primesieve::primesieve Threads::Threads)
-    target_compile_definitions(primesieve PRIVATE "${ENABLE_ASSERT}")
+    target_compile_definitions(primesieve PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
     target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
 

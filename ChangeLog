@@ -1,3 +1,11 @@
+Changes in version 12.4, 22/06/2024
+===================================
+
+* Move x86 CPUID code from cpuid.hpp to src/x86/cpuid.cpp.
+* multiarch_x86_popcnt.cmake: Detect x86 POPCNT support.
+* CMakeLists.txt: Use CMake list for all compile time definitions.
+* CMakeLists.txt: Use CMake list for all link libraries.
+
 Changes in version 12.3, 15/04/2024
 ===================================
 

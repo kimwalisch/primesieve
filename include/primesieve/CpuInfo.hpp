@@ -1,7 +1,7 @@
 ///
 /// @file  CpuInfo.hpp
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -22,7 +22,6 @@ class CpuInfo
 public:
   CpuInfo();
   bool hasCpuName() const;
-  bool hasAVX512() const;
   bool hasLogicalCpuCores() const;
   bool hasL1Cache() const;
   bool hasL2Cache() const;
