@@ -2,7 +2,7 @@
 /// @file  SievingPrimes.cpp
 ///        Generates the sieving primes up n^(1/2).
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -14,6 +14,7 @@
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/popcnt.hpp>
 
 #include <stdint.h>
 #include <algorithm>
