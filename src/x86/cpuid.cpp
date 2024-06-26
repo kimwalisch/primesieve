@@ -44,19 +44,19 @@ void run_cpuid(int eax, int ecx, int* abcd)
   #if defined(__i386__) && \
       defined(__PIC__)
     // In case of PIC under 32-bit EBX cannot be clobbered
-    asm volatile("movl %%ebx, %%edi;"
-                 "cpuid;"
-                 "xchgl %%ebx, %%edi;"
-                 : "+a" (eax),
-                   "=D" (ebx),
-                   "+c" (ecx),
-                   "=d" (edx));
+    __asm__ __volatile__("movl %%ebx, %%edi;"
+                         "cpuid;"
+                         "xchgl %%ebx, %%edi;"
+                         : "+a" (eax),
+                           "=D" (ebx),
+                           "+c" (ecx),
+                           "=d" (edx));
   #else
-    asm volatile("cpuid"
-                 : "+a" (eax),
-                   "+b" (ebx),
-                   "+c" (ecx),
-                   "=d" (edx));
+    __asm__ __volatile__("cpuid"
+                         : "+a" (eax),
+                           "+b" (ebx),
+                           "+c" (ecx),
+                           "=d" (edx));
   #endif
 
   abcd[0] = eax;
@@ -75,7 +75,7 @@ uint64_t get_xcr0()
   uint32_t eax;
   uint32_t edx;
 
-  asm volatile("xgetbv" : "=a"(eax), "=d"(edx) : "c"(0));
+  __asm__ __volatile__("xgetbv" : "=a"(eax), "=d"(edx) : "c"(0));
   return eax | (uint64_t(edx) << 32);
 #endif
 }
