@@ -46,7 +46,7 @@
 #elif defined(_MSC_VER)
   #define ALWAYS_INLINE __forceinline
 #else
-  #define ALWAYS_INLINE
+  #define ALWAYS_INLINE inline
 #endif
 
 /// Some functions in primesieve use a large number of variables
