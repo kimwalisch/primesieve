@@ -26,7 +26,7 @@ namespace {
 /// It uses 12 arithmetic operations, one of which is a multiply.
 /// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
 ///
-inline uint64_t popcnt64_bitwise(uint64_t x)
+NOINLINE uint64_t popcnt64_bitwise(uint64_t x)
 {
   uint64_t m1 = 0x5555555555555555ull;
   uint64_t m2 = 0x3333333333333333ull;
@@ -63,13 +63,7 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
     return x;
   }
   else
-  {
-    // On x86 and x64 CPUs when using the GCC compiler
-    // __builtin_popcount*(x) is slow (not inlined function call)
-    // when compiling without -mpopcnt. Therefore we avoid
-    // using __builtin_popcount*(x) here.
     return popcnt64_bitwise(x);
-  }
 }
 
 } // namespace
@@ -89,13 +83,7 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
     return x0 + x1;
   }
   else
-  {
-    // On x86 and x64 CPUs when using the GCC compiler
-    // __builtin_popcount*(x) is slow (not inlined function call)
-    // when compiling without -mpopcnt. Therefore we avoid
-    // using __builtin_popcount*(x) here.
     return popcnt64_bitwise(x);
-  }
 }
 
 } // namespace
