@@ -12,11 +12,11 @@
 #ifndef POPCNT_HPP
 #define POPCNT_HPP
 
-#include "macros.hpp"
+#include <macros.hpp>
 #include <stdint.h>
 
 #if defined(ENABLE_MULTIARCH_x86_POPCNT)
-  #include "cpu_supports_popcnt.hpp"
+  #include <cpu_supports_popcnt.hpp>
 #endif
 
 // GCC & Clang
@@ -53,7 +53,7 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 {
   // On my AMD EPYC 7642 CPU using GCC 12 this runtime
   // check incurs an overall overhead of about 1%.
-  if_likely(cpu_supports_popcnt)
+  if (cpu_supports_popcnt)
   {
     __asm__("popcnt %1, %0" : "=r"(x) : "r"(x));
     return x;
@@ -89,7 +89,7 @@ NOINLINE uint64_t popcnt64_bitwise(uint64_t x)
 
 ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 {
-  if_likely(cpu_supports_popcnt)
+  if (cpu_supports_popcnt)
   {
     uint32_t x0 = uint32_t(x);
     uint32_t x1 = uint32_t(x >> 32);
@@ -166,7 +166,7 @@ NOINLINE uint64_t popcnt64_bitwise(uint64_t x)
 
 ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 {
-  if_likely(cpu_supports_popcnt)
+  if (cpu_supports_popcnt)
     return __popcnt64(x);
   else
     return popcnt64_bitwise(x);
@@ -237,7 +237,7 @@ NOINLINE uint64_t popcnt64_bitwise(uint64_t x)
 
 ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 {
-  if_likely(cpu_supports_popcnt)
+  if (cpu_supports_popcnt)
     return __popcnt(uint32_t(x)) +
            __popcnt(uint32_t(x >> 32));
   else
