@@ -35,7 +35,7 @@ namespace {
 /// It uses 12 arithmetic operations, one of which is a multiply.
 /// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
 ///
-NOINLINE uint64_t popcnt64_bitwise(uint64_t x)
+NOINLINE uint64_t popcnt64_bitwise_noinline(uint64_t x)
 {
   uint64_t m1 = 0x5555555555555555ull;
   uint64_t m2 = 0x3333333333333333ull;
@@ -59,7 +59,7 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
     return x;
   }
   else
-    return popcnt64_bitwise(x);
+    return popcnt64_bitwise_noinline(x);
 }
 
 } // namespace
@@ -73,7 +73,7 @@ namespace {
 /// It uses 12 arithmetic operations, one of which is a multiply.
 /// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
 ///
-NOINLINE uint64_t popcnt64_bitwise(uint64_t x)
+NOINLINE uint64_t popcnt64_bitwise_noinline(uint64_t x)
 {
   uint64_t m1 = 0x5555555555555555ull;
   uint64_t m2 = 0x3333333333333333ull;
@@ -98,7 +98,7 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
     return x0 + x1;
   }
   else
-    return popcnt64_bitwise(x);
+    return popcnt64_bitwise_noinline(x);
 }
 
 } // namespace
@@ -150,7 +150,7 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 /// It uses 12 arithmetic operations, one of which is a multiply.
 /// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
 ///
-NOINLINE uint64_t popcnt64_bitwise(uint64_t x)
+NOINLINE uint64_t popcnt64_bitwise_noinline(uint64_t x)
 {
   uint64_t m1 = 0x5555555555555555ull;
   uint64_t m2 = 0x3333333333333333ull;
@@ -169,7 +169,7 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
   if (cpu_supports_popcnt)
     return __popcnt64(x);
   else
-    return popcnt64_bitwise(x);
+    return popcnt64_bitwise_noinline(x);
 }
 
 #else
@@ -221,7 +221,7 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 /// It uses 12 arithmetic operations, one of which is a multiply.
 /// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
 ///
-NOINLINE uint64_t popcnt64_bitwise(uint64_t x)
+NOINLINE uint64_t popcnt64_bitwise_noinline(uint64_t x)
 {
   uint64_t m1 = 0x5555555555555555ull;
   uint64_t m2 = 0x3333333333333333ull;
@@ -241,7 +241,7 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
     return __popcnt(uint32_t(x)) +
            __popcnt(uint32_t(x >> 32));
   else
-    return popcnt64_bitwise(x);
+    return popcnt64_bitwise_noinline(x);
 }
 
 #else
