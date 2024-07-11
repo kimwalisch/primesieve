@@ -19,6 +19,15 @@
   #include "cpu_supports_popcnt.hpp"
 #endif
 
+// GCC & Clang
+#if defined(__GNUC__) || \
+    __has_builtin(__builtin_popcountl)
+
+// CPUID is only enabled on x86 and x86-64 CPUs
+// if the user compiles without -mpopcnt.
+#if defined(ENABLE_MULTIARCH_x86_POPCNT)
+#if defined(__x86_64__)
+
 namespace {
 
 /// This uses fewer arithmetic operations than any other known
@@ -40,19 +49,6 @@ NOINLINE uint64_t popcnt64_bitwise(uint64_t x)
   return (x * h01) >> 56;
 }
 
-} // namespace
-
-// GCC & Clang
-#if defined(__GNUC__) || \
-    __has_builtin(__builtin_popcountl)
-
-// CPUID is only enabled on x86 and x86-64 CPUs
-// if the user compiles without -mpopcnt.
-#if defined(ENABLE_MULTIARCH_x86_POPCNT)
-#if defined(__x86_64__)
-
-namespace {
-
 ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 {
   // On my AMD EPYC 7642 CPU using GCC 12 this runtime
@@ -71,6 +67,25 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 #elif defined(__i386__)
 
 namespace {
+
+/// This uses fewer arithmetic operations than any other known
+/// implementation on machines with fast multiplication.
+/// It uses 12 arithmetic operations, one of which is a multiply.
+/// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
+///
+NOINLINE uint64_t popcnt64_bitwise(uint64_t x)
+{
+  uint64_t m1 = 0x5555555555555555ull;
+  uint64_t m2 = 0x3333333333333333ull;
+  uint64_t m4 = 0x0F0F0F0F0F0F0F0Full;
+  uint64_t h01 = 0x0101010101010101ull;
+
+  x -= (x >> 1) & m1;
+  x = (x & m2) + ((x >> 2) & m2);
+  x = (x + (x >> 4)) & m4;
+
+  return (x * h01) >> 56;
+}
 
 ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 {
@@ -120,22 +135,65 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 
 namespace {
 
-ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
-{
 #if defined(__POPCNT__) || \
     defined(__AVX__)
+
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
   return __popcnt64(x);
+}
 
 #elif defined(ENABLE_MULTIARCH_x86_POPCNT)
+
+/// This uses fewer arithmetic operations than any other known
+/// implementation on machines with fast multiplication.
+/// It uses 12 arithmetic operations, one of which is a multiply.
+/// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
+///
+NOINLINE uint64_t popcnt64_bitwise(uint64_t x)
+{
+  uint64_t m1 = 0x5555555555555555ull;
+  uint64_t m2 = 0x3333333333333333ull;
+  uint64_t m4 = 0x0F0F0F0F0F0F0F0Full;
+  uint64_t h01 = 0x0101010101010101ull;
+
+  x -= (x >> 1) & m1;
+  x = (x & m2) + ((x >> 2) & m2);
+  x = (x + (x >> 4)) & m4;
+
+  return (x * h01) >> 56;
+}
+
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
   if_likely(cpu_supports_popcnt)
     return __popcnt64(x);
   else
     return popcnt64_bitwise(x);
+}
 
 #else
-  return popcnt64_bitwise(x);
-#endif
+
+/// This uses fewer arithmetic operations than any other known
+/// implementation on machines with fast multiplication.
+/// It uses 12 arithmetic operations, one of which is a multiply.
+/// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
+///
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
+  uint64_t m1 = 0x5555555555555555ull;
+  uint64_t m2 = 0x3333333333333333ull;
+  uint64_t m4 = 0x0F0F0F0F0F0F0F0Full;
+  uint64_t h01 = 0x0101010101010101ull;
+
+  x -= (x >> 1) & m1;
+  x = (x & m2) + ((x >> 2) & m2);
+  x = (x + (x >> 4)) & m4;
+
+  return (x * h01) >> 56;
 }
+
+#endif
 
 } // namespace
 
@@ -147,24 +205,67 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 
 namespace {
 
-ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
-{
 #if defined(__POPCNT__) || \
     defined(__AVX__)
+
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
   return __popcnt(uint32_t(x)) +
          __popcnt(uint32_t(x >> 32));
+}
 
 #elif defined(ENABLE_MULTIARCH_x86_POPCNT)
+
+/// This uses fewer arithmetic operations than any other known
+/// implementation on machines with fast multiplication.
+/// It uses 12 arithmetic operations, one of which is a multiply.
+/// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
+///
+NOINLINE uint64_t popcnt64_bitwise(uint64_t x)
+{
+  uint64_t m1 = 0x5555555555555555ull;
+  uint64_t m2 = 0x3333333333333333ull;
+  uint64_t m4 = 0x0F0F0F0F0F0F0F0Full;
+  uint64_t h01 = 0x0101010101010101ull;
+
+  x -= (x >> 1) & m1;
+  x = (x & m2) + ((x >> 2) & m2);
+  x = (x + (x >> 4)) & m4;
+
+  return (x * h01) >> 56;
+}
+
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
   if_likely(cpu_supports_popcnt)
     return __popcnt(uint32_t(x)) +
            __popcnt(uint32_t(x >> 32));
   else
     return popcnt64_bitwise(x);
+}
 
 #else
-  return popcnt64_bitwise(x);
-#endif
+
+/// This uses fewer arithmetic operations than any other known
+/// implementation on machines with fast multiplication.
+/// It uses 12 arithmetic operations, one of which is a multiply.
+/// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
+///
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
+  uint64_t m1 = 0x5555555555555555ull;
+  uint64_t m2 = 0x3333333333333333ull;
+  uint64_t m4 = 0x0F0F0F0F0F0F0F0Full;
+  uint64_t h01 = 0x0101010101010101ull;
+
+  x -= (x >> 1) & m1;
+  x = (x & m2) + ((x >> 2) & m2);
+  x = (x + (x >> 4)) & m4;
+
+  return (x * h01) >> 56;
 }
+
+#endif
 
 } // namespace
 
@@ -189,10 +290,23 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 
 namespace {
 
-/// Portable (but slow) popcount algorithm
+/// This uses fewer arithmetic operations than any other known
+/// implementation on machines with fast multiplication.
+/// It uses 12 arithmetic operations, one of which is a multiply.
+/// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
+///
 ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 {
-  return popcnt64_bitwise(x);
+  uint64_t m1 = 0x5555555555555555ull;
+  uint64_t m2 = 0x3333333333333333ull;
+  uint64_t m4 = 0x0F0F0F0F0F0F0F0Full;
+  uint64_t h01 = 0x0101010101010101ull;
+
+  x -= (x >> 1) & m1;
+  x = (x & m2) + ((x >> 2) & m2);
+  x = (x + (x >> 4)) & m4;
+
+  return (x * h01) >> 56;
 }
 
 } // namespace
