@@ -20,7 +20,7 @@ bool has_cpuid_avx512_vbmi2();
 namespace {
 
 /// Initialized at startup
-bool cpu_supports_avx512_vbmi2 = primesieve::has_cpuid_avx512_vbmi2();
+const bool cpu_supports_avx512_vbmi2 = primesieve::has_cpuid_avx512_vbmi2();
 
 } // namespace
 

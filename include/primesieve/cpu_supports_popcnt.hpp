@@ -20,7 +20,7 @@ bool has_cpuid_popcnt();
 namespace {
 
 /// Initialized at startup
-bool cpu_supports_popcnt = primesieve::has_cpuid_popcnt();
+const bool cpu_supports_popcnt = primesieve::has_cpuid_popcnt();
 
 } // namespace
 
