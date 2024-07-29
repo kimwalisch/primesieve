@@ -477,7 +477,7 @@ void PrimeGenerator::fillNextPrimes_default(Vector<uint64_t>& primes, std::size_
 #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
   __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
 #endif
-void PrimeGenerator::fillNextPrimes_avx512_vbmi2(Vector<uint64_t>& primes, std::size_t* size)
+void PrimeGenerator::fillNextPrimes_avx512(Vector<uint64_t>& primes, std::size_t* size)
 {
   *size = 0;
 

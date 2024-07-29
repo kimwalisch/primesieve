@@ -51,10 +51,10 @@ public:
   ALWAYS_INLINE void fillNextPrimes(Vector<uint64_t>& primes, std::size_t* size)
   {
     #if defined(ENABLE_AVX512_VBMI2)
-      fillNextPrimes_avx512_vbmi2(primes, size);
+      fillNextPrimes_avx512(primes, size);
     #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
       if (cpu_supports_avx512_vbmi2)
-        fillNextPrimes_avx512_vbmi2(primes, size);
+        fillNextPrimes_avx512(primes, size);
       else
         fillNextPrimes_default(primes, size);
     #else
@@ -74,7 +74,7 @@ private:
   #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
     __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
   #endif
-  void fillNextPrimes_avx512_vbmi2(Vector<uint64_t>& primes, std::size_t* size);
+  void fillNextPrimes_avx512(Vector<uint64_t>& primes, std::size_t* size);
 
 #endif
 
