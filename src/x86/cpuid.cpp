@@ -117,7 +117,7 @@ bool has_cpuid_avx512_vbmi2()
 
   run_cpuid(7, 0, abcd);
 
-  // PrimeGenerator::fillNextPrimes() requires AVX512F, AVX512VBMI & AVX512VBMI2
+  // PrimeGenerator::fillNextPrimes_avx512() requires AVX512F, AVX512VBMI & AVX512VBMI2
   return ((abcd[1] & bit_AVX512F) == bit_AVX512F &&
           (abcd[2] & (bit_AVX512VBMI | bit_AVX512VBMI2)) == (bit_AVX512VBMI | bit_AVX512VBMI2));
 }
