@@ -1,3 +1,8 @@
+Changes in version 12.5, 22/10/2024
+===================================
+
+* Improve thread load balancing for large number of CPU cores.
+
 Changes in version 12.4, 22/06/2024
 ===================================
 

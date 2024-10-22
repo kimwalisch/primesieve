@@ -2,7 +2,7 @@
 /// @file   ParallelSieve.cpp
 /// @brief  Multi-threaded prime sieve using std::async.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -83,7 +83,7 @@ uint64_t ParallelSieve::getThreadDistance(int threads) const
   ASSERT(getDistance() > 0);
 
   uint64_t dist = getDistance();
-  uint64_t balanced = isqrt(stop_) * 1000;
+  uint64_t balanced = isqrt(stop_) * 200;
   uint64_t unbalanced = dist / threads;
   uint64_t fastest = std::min(balanced, unbalanced);
   uint64_t iters = dist / fastest;
