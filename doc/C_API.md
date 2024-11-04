@@ -574,7 +574,14 @@ If [libprimesieve is installed](https://github.com/kimwalisch/primesieve#install
 on your system, then you can compile any of the C example programs above using:
 
 ```sh
+# Link against shared libprimesieve
 cc -O3 primes.c -o primes -lprimesieve
+
+# For statically linking libprimesieve into your C program you need to link
+# against libprimesieve, the C++ standard library and the math library.
+# Please note that the linking command may be different for your particular
+# compiler and operating system.
+gcc -O3 -static primes.c -o primes -lprimesieve -lstdc++ -lm
 ```
 
 If you have [built libprimesieve yourself](BUILD.md#primesieve-build-instructions),
