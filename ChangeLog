@@ -1,3 +1,9 @@
+Changes in version 12.6, 05/11/2024
+===================================
+
+* CpuInfo.cpp: Correctly detect Intel Arrow Lake CPU cache
+               topology on Windows and Linux.
+
 Changes in version 12.5, 22/10/2024
 ===================================
 
