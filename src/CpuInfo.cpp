@@ -689,6 +689,13 @@ void CpuInfo::init()
       if (level >= 1 &&
           level <= 3)
       {
+        // Intel Arrow Lake CPUs have two L1 data caches. These
+        // caches are ordered from fastest to slowest. Since we are
+        // interested in the fastest L1 data cache, we only store
+        // the information about the first L1 data cache we find.
+        if (cacheSizes_[level] != 0)
+          continue;
+
         std::string type = path + "/type";
         std::string cacheType = getString(type);
 
