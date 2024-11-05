@@ -201,6 +201,14 @@ void CpuInfo::init()
 
         if (cacheInfo.size() <= cpuCoreId)
           cacheInfo.resize((cpuCoreId + 1) * 2);
+
+        // Intel Arrow Lake CPUs have two L1 data caches. These
+        // caches are ordered from fastest to slowest. Since we are
+        // interested in the fastest L1 data cache, we only store
+        // the information about the first L1 data cache we find.
+        if (cacheInfo[cpuCoreId].cacheSizes[level] != 0)
+          continue;
+
         cacheInfo[cpuCoreId].cacheSizes[level] = cacheSize;
         cacheInfo[cpuCoreId].cacheSharing[level] = cacheSharing;
 
@@ -291,6 +299,14 @@ void CpuInfo::init()
          info[i].Cache.Type == CacheUnified))
     {
       auto level = info[i].Cache.Level;
+
+      // Intel Arrow Lake CPUs have two L1 data caches. These
+      // caches are ordered from fastest to slowest. Since we are
+      // interested in the fastest L1 data cache, we only store
+      // the information about the first L1 data cache we find.
+      if (cacheSizes_[level] != 0)
+        continue;
+
       cacheSizes_[level] = info[i].Cache.Size;
 
       // We assume the L1 and L2 caches are private
