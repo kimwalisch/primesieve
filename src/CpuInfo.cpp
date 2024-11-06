@@ -202,10 +202,10 @@ void CpuInfo::init()
         if (cacheInfo.size() <= cpuCoreId)
           cacheInfo.resize((cpuCoreId + 1) * 2);
 
-        // Intel Arrow Lake CPUs have two L1 data caches. These
-        // caches are ordered from fastest to slowest. Since we are
-        // interested in the fastest L1 data cache, we only store
-        // the information about the first L1 data cache we find.
+        // If the CPU has multiple caches of the same level, then
+        // we are only interested in the first such cache since
+        // this is likely the fastest cache. Usually, all caches
+        // are ordered from fastest to slowest.
         if (cacheInfo[cpuCoreId].cacheSizes[level] != 0)
           continue;
 
@@ -300,10 +300,10 @@ void CpuInfo::init()
     {
       auto level = info[i].Cache.Level;
 
-      // Intel Arrow Lake CPUs have two L1 data caches. These
-      // caches are ordered from fastest to slowest. Since we are
-      // interested in the fastest L1 data cache, we only store
-      // the information about the first L1 data cache we find.
+      // If the CPU has multiple caches of the same level, then
+      // we are only interested in the first such cache since
+      // this is likely the fastest cache. Usually, all caches
+      // are ordered from fastest to slowest.
       if (cacheSizes_[level] != 0)
         continue;
 
@@ -705,10 +705,10 @@ void CpuInfo::init()
       if (level >= 1 &&
           level <= 3)
       {
-        // Intel Arrow Lake CPUs have two L1 data caches. These
-        // caches are ordered from fastest to slowest. Since we are
-        // interested in the fastest L1 data cache, we only store
-        // the information about the first L1 data cache we find.
+        // If the CPU has multiple caches of the same level, then
+        // we are only interested in the first such cache since
+        // this is likely the fastest cache. Usually, all caches
+        // are ordered from fastest to slowest.
         if (cacheSizes_[level] != 0)
           continue;
 
