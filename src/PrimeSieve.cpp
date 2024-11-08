@@ -16,7 +16,6 @@
 #include <primesieve/CountPrintPrimes.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/Vector.hpp>
-#include <primesieve/PreSieve.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -158,11 +157,6 @@ int PrimeSieve::getSieveSize() const
 double PrimeSieve::getSeconds() const
 {
   return seconds_;
-}
-
-PreSieve& PrimeSieve::getPreSieve()
-{
-  return preSieve_;
 }
 
 void PrimeSieve::setFlags(int flags)

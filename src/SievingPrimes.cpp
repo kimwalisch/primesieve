@@ -23,21 +23,19 @@ namespace primesieve {
 
 SievingPrimes::SievingPrimes(Erat* erat,
                              uint64_t sieveSize,
-                             PreSieve& preSieve,
                              MemoryPool& memoryPool)
 {
-  init(erat, sieveSize, preSieve, memoryPool);
+  init(erat, sieveSize, memoryPool);
 }
 
 void SievingPrimes::init(Erat* erat,
                          uint64_t sieveSize,
-                         PreSieve& preSieve,
                          MemoryPool& memoryPool)
 {
-  ASSERT(preSieve.getMaxPrime() >= 7);
-  uint64_t start = preSieve.getMaxPrime() + 2;
+  ASSERT(PreSieve::getMaxPrime() >= 7);
+  uint64_t start = PreSieve::getMaxPrime() + 2;
   uint64_t stop = isqrt(erat->getStop());
-  Erat::init(start, stop, sieveSize, preSieve, memoryPool);
+  Erat::init(start, stop, sieveSize, memoryPool);
 
   ASSERT(start % 2 == 1);
   tinyIdx_ = start;

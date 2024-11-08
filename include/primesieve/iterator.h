@@ -14,7 +14,7 @@
  *         Furthermore primesieve_iterator.is_error is initialized
  *         to 0 and set to 1 if any error occurs.
  *
- * Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This file is distributed under the BSD License. See the COPYING
  * file in the top level directory.
@@ -79,9 +79,9 @@ void primesieve_free_iterator(primesieve_iterator* it);
 /**
  * Reset the start number to 0 and free most memory.
  * Keeps some smaller data structures in memory
- * (e.g. the PreSieve object) that are useful if the
+ * (e.g. the IteratorData object) that are useful if the
  * primesieve_iterator is reused. The remaining memory
- * uses at most 200 kilobytes.
+ * uses at most 2 kilobytes.
  */
 void primesieve_clear(primesieve_iterator* it);
 

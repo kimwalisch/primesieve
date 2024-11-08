@@ -22,7 +22,6 @@
 
 namespace primesieve {
 
-class PreSieve;
 class MemoryPool;
 
 /// The abstract Erat class sieves primes using the segmented sieve
@@ -49,17 +48,15 @@ protected:
   Vector<uint8_t> sieve_;
   Erat() = default;
   Erat(uint64_t, uint64_t);
-  void init(uint64_t, uint64_t, uint64_t, PreSieve&, MemoryPool& memoryPool);
+  void init(uint64_t, uint64_t, uint64_t, MemoryPool& memoryPool);
   void addSievingPrime(uint64_t);
   NOINLINE void sieveSegment();
   bool hasNextSegment() const;
   static uint64_t nextPrime(uint64_t, uint64_t);
 
 private:
-  uint64_t maxPreSieve_ = 0;
   uint64_t maxEratSmall_ = 0;
   uint64_t maxEratMedium_ = 0;
-  PreSieve* preSieve_ = nullptr;
   EratSmall eratSmall_;
   EratBig eratBig_;
   EratMedium eratMedium_;

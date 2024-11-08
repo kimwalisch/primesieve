@@ -6,7 +6,7 @@
 ///         to reconstruct primes and prime k-tuplets from 1 bits of
 ///         the sieve array.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -18,7 +18,6 @@
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeSieve.hpp>
 #include <primesieve/SievingPrimes.hpp>
 
@@ -52,8 +51,7 @@ CountPrintPrimes::CountPrintPrimes(PrimeSieve& ps) :
   uint64_t sieveSize = ps.getSieveSize();
   start = std::max<uint64_t>(start, 7);
 
-  ps.getPreSieve().init(start, stop);
-  Erat::init(start, stop, sieveSize, ps.getPreSieve(), memoryPool_);
+  Erat::init(start, stop, sieveSize, memoryPool_);
 
   if (ps_.isCountkTuplets())
     initCounts();
@@ -84,7 +82,7 @@ void CountPrintPrimes::initCounts()
 void CountPrintPrimes::sieve()
 {
   uint64_t sieveSize = ps_.getSieveSize();
-  SievingPrimes sievingPrimes(this, sieveSize, ps_.getPreSieve(), memoryPool_);
+  SievingPrimes sievingPrimes(this, sieveSize, memoryPool_);
   uint64_t prime = sievingPrimes.next();
 
   while (hasNextSegment())

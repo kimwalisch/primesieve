@@ -39,12 +39,10 @@
 
 namespace primesieve {
 
-class PreSieve;
-
 class PrimeGenerator : public Erat
 {
 public:
-  PrimeGenerator(uint64_t start, uint64_t stop, PreSieve& preSieve);
+  PrimeGenerator(uint64_t start, uint64_t stop);
   void fillPrevPrimes(Vector<uint64_t>& primes, std::size_t* size);
   static uint64_t maxCachedPrime();
 
@@ -82,7 +80,6 @@ private:
   uint64_t low_ = 0;
   uint64_t prime_ = 0;
   uint64_t sieveIdx_ = ~0ull;
-  PreSieve& preSieve_;
   MemoryPool memoryPool_;
   SievingPrimes sievingPrimes_;
   std::size_t getStartIdx() const;

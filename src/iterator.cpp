@@ -1,7 +1,7 @@
 ///
 /// @file  iterator.cpp
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -97,9 +97,9 @@ void iterator::jump_to(uint64_t start,
   primes_ = nullptr;
 
   // Frees most memory, but keeps some smaller data
-  // structures (e.g. the PreSieve object) that are
-  // useful if the primesieve::iterator is reused.
-  // The remaining memory uses at most 200 kilobytes.
+  // structures (e.g. the IteratorData object) that
+  // are useful if the primesieve::iterator is reused.
+  // The remaining memory uses at most 2 kilobytes.
   if (memory_)
   {
     auto& iterData = *(IteratorData*) memory_;
@@ -134,7 +134,7 @@ void iterator::generate_next_primes()
     if (!iterData.primeGenerator)
     {
       IteratorHelper::updateNext(start_, stop_hint_, iterData);
-      iterData.newPrimeGenerator(start_, iterData.stop, iterData.preSieve);
+      iterData.newPrimeGenerator(start_, iterData.stop);
     }
 
     iterData.primeGenerator->fillNextPrimes(primes, &size_);
@@ -171,17 +171,10 @@ void iterator::generate_prev_primes()
     ASSERT(!iterData.include_start_number);
   }
 
-  // When sieving backwards the sieving distance is subdivided
-  // into smaller chunks. If we can prove that the total
-  // sieving distance is large we enable pre-sieving.
-  if (iterData.dist == 0 &&
-      stop_hint_ < start_)
-    iterData.preSieve.init(stop_hint_, start_);
-
   do
   {
     IteratorHelper::updatePrev(start_, stop_hint_, iterData);
-    iterData.newPrimeGenerator(start_, iterData.stop, iterData.preSieve);
+    iterData.newPrimeGenerator(start_, iterData.stop);
     iterData.primeGenerator->fillPrevPrimes(primes, &size_);
     iterData.deletePrimeGenerator();
     primes_ = primes.data();

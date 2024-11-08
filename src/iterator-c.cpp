@@ -2,7 +2,7 @@
 /// @file   iterator-c.cpp
 /// @brief  C port of primesieve::iterator.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -60,9 +60,9 @@ void primesieve_jump_to(primesieve_iterator* it,
   it->primes = nullptr;
 
   // Frees most memory, but keeps some smaller data
-  // structures (e.g. the PreSieve object) that are
-  // useful if the primesieve_iterator is reused.
-  // The remaining memory uses at most 200 kilobytes.
+  // structures (e.g. the IteratorData object) that
+  // are useful if the primesieve_iterator is reused.
+  // The remaining memory uses at most 2 kilobytes.
   if (it->memory)
   {
     auto& iterData = getIterData(it);
@@ -129,7 +129,7 @@ void primesieve_generate_next_primes(primesieve_iterator* it)
       if (!iterData.primeGenerator)
       {
         IteratorHelper::updateNext(it->start, it->stop_hint, iterData);
-        iterData.newPrimeGenerator(it->start, iterData.stop, iterData.preSieve);
+        iterData.newPrimeGenerator(it->start, iterData.stop);
       }
 
       iterData.primeGenerator->fillNextPrimes(primes, &it->size);
@@ -183,17 +183,10 @@ void primesieve_generate_prev_primes(primesieve_iterator* it)
       ASSERT(!iterData.include_start_number);
     }
 
-    // When sieving backwards the sieving distance is subdivided
-    // into smaller chunks. If we can prove that the total
-    // sieving distance is large we enable pre-sieving.
-    if (iterData.dist == 0 &&
-        it->stop_hint < it->start)
-      iterData.preSieve.init(it->stop_hint, it->start);
-
     do
     {
       IteratorHelper::updatePrev(it->start, it->stop_hint, iterData);
-      iterData.newPrimeGenerator(it->start, iterData.stop, iterData.preSieve);
+      iterData.newPrimeGenerator(it->start, iterData.stop);
       iterData.primeGenerator->fillPrevPrimes(primes, &it->size);
       iterData.deletePrimeGenerator();
       it->primes = primes.data();
