@@ -181,14 +181,14 @@ void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
       bytesToCopy = std::min(left, bytesToCopy);
     }
 
-    andBuffers(buffers[0].begin() + pos[0],
-               buffers[1].begin() + pos[1],
-               buffers[2].begin() + pos[2],
-               buffers[3].begin() + pos[3],
-               buffers[4].begin() + pos[4],
-               buffers[5].begin() + pos[5],
-               buffers[6].begin() + pos[6],
-               buffers[7].begin() + pos[7],
+    andBuffers(&*(buffers[0].begin() + pos[0]), // &buffer[0][pos[0]]
+               &*(buffers[1].begin() + pos[1]), // &buffer[1][pos[1]]
+               &*(buffers[2].begin() + pos[2]), // &buffer[2][pos[2]]
+               &*(buffers[3].begin() + pos[3]), // &buffer[3][pos[3]]
+               &*(buffers[4].begin() + pos[4]), // &buffer[4][pos[4]]
+               &*(buffers[5].begin() + pos[5]), // &buffer[5][pos[5]]
+               &*(buffers[6].begin() + pos[6]), // &buffer[6][pos[6]]
+               &*(buffers[7].begin() + pos[7]), // &buffer[7][pos[7]]
                &sieve[offset],
                bytesToCopy);
 
