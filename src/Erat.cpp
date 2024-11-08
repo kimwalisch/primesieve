@@ -3,7 +3,7 @@
 /// @brief  The Erat class manages prime sieving using the
 ///         EratSmall, EratMedium, EratBig classes.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -57,12 +57,10 @@ Erat::Erat(uint64_t start, uint64_t stop) :
 /// @start: Sieve primes >= start.
 /// @stop:  Sieve primes <= stop.
 /// @maxSieveSize: Maximum sieve array size in kilobytes.
-/// @preSieve: Pre-sieve small primes.
 ///
 void Erat::init(uint64_t start,
                 uint64_t stop,
                 uint64_t maxSieveSize,
-                PreSieve& preSieve,
                 MemoryPool& memoryPool)
 {
   if_unlikely(start > stop || 
@@ -75,8 +73,6 @@ void Erat::init(uint64_t start,
 
   start_ = start;
   stop_ = stop;
-  preSieve_ = &preSieve;
-  maxPreSieve_ = preSieve_->getMaxPrime();
 
   // Convert KiB to bytes
   maxSieveSize <<= 10;
@@ -194,7 +190,7 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   ASSERT(sieveSize % sizeof(uint64_t) == 0);
   sieve_.resize(sieveSize);
 
-  if (sqrtStop > maxPreSieve_)
+  if (sqrtStop > PreSieve::getMaxPrime())
     eratSmall_.init(stop_, l1CacheSize, maxEratSmall_);
   if (sqrtStop > maxEratSmall_)
     eratMedium_.init(stop_, maxEratMedium_, memoryPool);
@@ -258,7 +254,7 @@ void Erat::sieveLastSegment()
 ///
 void Erat::preSieve()
 {
-  preSieve_->preSieve(sieve_, segmentLow_);
+  PreSieve::preSieve(sieve_, segmentLow_);
 
   // unset bits < start
   if (segmentLow_ <= start_)

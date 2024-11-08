@@ -1,7 +1,7 @@
 ///
 /// @file   IteratorHelper.hpp
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -11,7 +11,6 @@
 #define ITERATOR_HELPER_HPP
 
 #include "PrimeGenerator.hpp"
-#include "PreSieve.hpp"
 #include "macros.hpp"
 #include "Vector.hpp"
 
@@ -48,14 +47,13 @@ struct IteratorData
   }
 
   void newPrimeGenerator(uint64_t start,
-                         uint64_t stop,
-                         PreSieve& preSieve)
+                         uint64_t stop)
   {
     // We use placement new to put the PrimeGenerator
     // into an existing buffer. This way we don't
     // need to allocate any new memory.
     ASSERT(primeGenerator == nullptr);
-    primeGenerator = new (primeGeneratorBuffer) PrimeGenerator(start, stop, preSieve);
+    primeGenerator = new (primeGeneratorBuffer) PrimeGenerator(start, stop);
   }
 
   uint64_t stop;
@@ -63,7 +61,6 @@ struct IteratorData
   bool include_start_number = true;
   PrimeGenerator* primeGenerator = nullptr;
   Vector<uint64_t> primes;
-  PreSieve preSieve;
   alignas(PrimeGenerator) char primeGeneratorBuffer[sizeof(PrimeGenerator)];
 };
 

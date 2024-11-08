@@ -22,7 +22,6 @@
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/macros.hpp>
-#include <primesieve/PreSieve.hpp>
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/macros.hpp>
@@ -118,10 +117,8 @@ const primesieve::Array<uint8_t, 720> primePi =
 namespace primesieve {
 
 PrimeGenerator::PrimeGenerator(uint64_t start,
-                               uint64_t stop,
-                               PreSieve& preSieve) :
-  Erat(start, stop),
-  preSieve_(preSieve)
+                               uint64_t stop) :
+  Erat(start, stop)
 { }
 
 uint64_t PrimeGenerator::maxCachedPrime()
@@ -272,10 +269,9 @@ void PrimeGenerator::initErat()
   if (startErat <= stop_ &&
       startErat < std::numeric_limits<uint64_t>::max())
   {
-    preSieve_.init(startErat, stop_);
     int sieveSize = get_sieve_size();
-    Erat::init(startErat, stop_, sieveSize, preSieve_, memoryPool_);
-    sievingPrimes_.init(this, sieveSize, preSieve_, memoryPool_);
+    Erat::init(startErat, stop_, sieveSize, memoryPool_);
+    sievingPrimes_.init(this, sieveSize, memoryPool_);
   }
 }
 

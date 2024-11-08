@@ -4,7 +4,7 @@
 ///         sieving. It is used for printing and counting primes
 ///         and for computing the nth prime.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -13,9 +13,7 @@
 #ifndef PRIMESIEVE_CLASS_HPP
 #define PRIMESIEVE_CLASS_HPP
 
-#include "PreSieve.hpp"
 #include "Vector.hpp"
-
 #include <stdint.h>
 
 namespace primesieve {
@@ -52,7 +50,6 @@ public:
   uint64_t getDistance() const;
   int getSieveSize() const;
   double getSeconds() const;
-  PreSieve& getPreSieve();
   // Setters
   void setStart(uint64_t);
   void setStop(uint64_t);
@@ -107,7 +104,6 @@ private:
   int sieveSize_ = 0;
   /// Status updates must be synchronized by main thread
   ParallelSieve* parent_ = nullptr;
-  PreSieve preSieve_;
   void processSmallPrimes();
   static void printStatus(double, double);
 };

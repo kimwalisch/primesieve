@@ -3,7 +3,7 @@
 /// @brief  primesieve::iterator allows to easily iterate (forwards
 ///         and backwards) over prime numbers.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -87,9 +87,9 @@ struct iterator
 
   /// Reset the start number to 0 and free most memory.
   /// Keeps some smaller data structures in memory
-  /// (e.g. the PreSieve object) that are useful if the
+  /// (e.g. the IteratorData object) that are useful if the
   /// primesieve::iterator is reused. The remaining memory
-  /// uses at most 200 kilobytes.
+  /// uses at most 2 kilobytes.
   ///
   void clear() noexcept;
 
