@@ -65,6 +65,7 @@ const Array<std::initializer_list<uint64_t>, 8> bufferPrimes =
 int main()
 {
   Array<Vector<uint8_t>, 8> buffers;
+  uint64_t max_product = 0;
 
   for (std::size_t i = 0; i < buffers.size(); i++)
   {
@@ -74,8 +75,13 @@ int main()
       product *= prime;
 
     uint64_t start = product;
-    uint64_t stop = start + product;
-    buffers[i].resize(product / 30);
+    // Ensure all lookup tables have similar sizes.
+    // This decreases the number of iterations in the main
+    // pre-sieving loop which improves performance.
+    max_product = std::max(product, max_product);
+    uint64_t stop = start + product * (max_product / product);
+
+    buffers[i].resize((stop - start) / 30);
     std::fill(buffers[i].begin(), buffers[i].end(), 0xff);
     uint64_t maxPrime = *(bufferPrimes[i].end() - 1);
     ASSERT(maxPrime == *std::max_element(bufferPrimes[i].begin(), bufferPrimes[i].end()));
@@ -102,7 +108,7 @@ int main()
         std::cout << std::endl << "    ";
       std::cout << "0x" << std::hex << (int) buffers[i][j];
       if (j + 1 < buffers[i].size())
-        std::cout << (((j+1) % 20 == 0) ? "," : ", ");
+        std::cout << ((j+1) % 20 == 0 ? "," : ", ");
     }
     std::cout << (i + 1 < buffers.size() ? " }," : " }") << std::endl;
   }
