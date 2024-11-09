@@ -52,12 +52,14 @@
   buckets and only when there are no more buckets in the stock the
   MemoryPool will allocate new buckets.
 
-* **PreSieve** is used to pre-sieve multiples of small primes < 100
-  to speed up the sieve of Eratosthenes. Upon creation the
-  multiples of small primes are removed from multiple buffers. Then
-  whilst sieving, we perform a bitwise AND on the buffer arrays
-  and store the result in the sieve array. Pre-sieving provides a
-  speedup of up to 30% when sieving the primes < 10^10.
+* **PreSieve** is used to pre-sieve multiples of small primes < 100 to speed
+  up the sieve of Eratosthenes. The ```PreSieve_Tables.hpp``` header contains
+  8 static lookup tables which have been sieved using the primes < 100. Each
+  of these lookup tables has a size of about 32 kilobytes and the total size
+  of all pre-sieve lookup tables is about 200 kilobytes. Whilst sieving, we
+  perform a bitwise AND of the pre-sieve lookup tables and store the result in
+  the sieve array. Pre-sieving provides a speedup of up to 30% when sieving
+  the primes < 10^10.
 
 * **SievingPrimes** is used to generate the sieving primes ≤ sqrt(stop).
   SievingPrimes is used by the CountPrintPrimes and PrimeGenerator classes.

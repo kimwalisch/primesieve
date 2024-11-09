@@ -1,5 +1,5 @@
 ///
-/// @file   PreSieve_Table.hpp
+/// @file   PreSieve_Tables.hpp
 /// @brief  Pre-sieve multiples of small primes < 100 to speed up the
 ///         sieve of Eratosthenes. The idea is to allocate several
 ///         arrays (buffers_) and remove the multiples of small primes
