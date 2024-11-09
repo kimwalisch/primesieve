@@ -12,8 +12,8 @@
 ///         buffer[3] removes multiplies of: { 17, 37, 53 } // 32 KiB
 ///         buffer[4] removes multiplies of: { 19, 29, 61 } // 32 KiB
 ///         buffer[5] removes multiplies of: { 23, 31, 47 } // 32 KiB
-///         buffer[6] removes multiplies of: { 79, 97 }     // 30 KiB
-///         buffer[7] removes multiplies of: { 83, 89 }     // 29 KiB
+///         buffer[6] removes multiplies of: { 79, 97 }     //  8 KiB
+///         buffer[7] removes multiplies of: { 83, 89 }     //  7 KiB
 ///
 ///         Then whilst sieving, we perform a bitwise AND on the
 ///         buffers arrays and store the result in the sieve array.

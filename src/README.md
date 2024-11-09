@@ -56,7 +56,7 @@
   up the sieve of Eratosthenes. The ```PreSieve_Tables.hpp``` header contains
   8 static lookup tables which have been sieved using the primes < 100. Each
   of these lookup tables has a size of about 32 kilobytes and the total size
-  of all pre-sieve lookup tables is about 250 kilobytes. Whilst sieving, we
+  of all pre-sieve lookup tables is about 210 kilobytes. Whilst sieving, we
   perform a bitwise AND of the pre-sieve lookup tables and store the result in
   the sieve array. Pre-sieving provides a speedup of up to 30% when sieving
   the primes < 10^10.
