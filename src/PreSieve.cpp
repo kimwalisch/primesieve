@@ -80,7 +80,7 @@ void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
   // Note that I also tried vectorizing this algorithm using AVX512
   // which has 4x the vector width compared to SSE2, but this did
   // not provide any speedup. On average, this loop processes only
-  // 2192 bytes, hence there aren't many vector loop iterations and
+  // 956 bytes, hence there aren't many vector loop iterations and
   // by increasing the vector width this also increases the number of
   // scalar loop iterations after the vector loop finishes which
   // could potentially even become a bottleneck.
