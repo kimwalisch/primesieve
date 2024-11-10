@@ -78,8 +78,8 @@ void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
   std::size_t i = 0;
   std::size_t limit = bytes - bytes % sizeof(__m128i);
 
-  // Note that I also tried vectorizing this algorithm using AVX512
-  // which has 4x the vector width compared to SSE2, but this did
+  // Note that I also tried vectorizing this algorithm using AVX2
+  // which has twice the vector width compared to SSE2, but this did
   // not provide any speedup. On average, this loop processes only
   // 956 bytes, hence there aren't many vector loop iterations and
   // by increasing the vector width this also increases the number of
