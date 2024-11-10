@@ -277,14 +277,14 @@ void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
   // Pre-sieving removes the primes <= 163. We
   // have to undo that work and reset these bits
   // to 1 (but 49 = 7 * 7 is not a prime).
-  if (segmentLow < 180)
+  if (segmentLow <= getMaxPrime())
   {
     uint64_t i = segmentLow / 30;
     uint8_t* sieveArray = sieve.data();
     Array<uint8_t, 8> primeBits = { 0xff, 0xef, 0x77, 0x3f, 0xdb, 0xed, 0x9e, 0xfc };
 
-    ASSERT(sieve.capacity() >= 8);
-    for (std::size_t j = 0; i + j < 8 ; j++)
+    ASSERT(sieve.capacity() >= primeBits.size());
+    for (std::size_t j = 0; i + j < primeBits.size(); j++)
       sieveArray[j] = primeBits[i + j];
   }
 }
