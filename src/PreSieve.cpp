@@ -1,24 +1,33 @@
 ///
 /// @file   PreSieve.cpp
-/// @brief  Pre-sieve multiples of small primes < 100 to speed up the
-///         sieve of Eratosthenes. The idea is to allocate several
-///         arrays (buffers) and remove the multiples of small primes
-///         from them at initialization. Each buffer is assigned
-///         different primes, for example:
+/// @brief  Pre-sieve multiples of small primes <= 163 to speed up the
+///         sieve of Eratosthenes. We use 16 static lookup tables from
+///         which the multiples of small primes have been removed
+///         upfront. Each preSieve lookup table is assigned different
+///         primes used for pre-sieving:
 ///
-///         buffer[0] removes multiplies of: {  7, 67, 71 } // 32 KiB
-///         buffer[1] removes multiplies of: { 11, 41, 73 } // 32 KiB
-///         buffer[2] removes multiplies of: { 13, 43, 59 } // 32 KiB
-///         buffer[3] removes multiplies of: { 17, 37, 53 } // 32 KiB
-///         buffer[4] removes multiplies of: { 19, 29, 61 } // 32 KiB
-///         buffer[5] removes multiplies of: { 23, 31, 47 } // 32 KiB
-///         buffer[6] removes multiplies of: { 79, 97 }     //  8 KiB
-///         buffer[7] removes multiplies of: { 83, 89 }     //  7 KiB
+///         preSieveTable[0]  = {  7, 23, 37 }
+///         preSieveTable[1]  = { 11, 19, 31 }
+///         preSieveTable[2]  = { 13, 17, 29 }
+///         preSieveTable[3]  = { 41, 163 }
+///         preSieveTable[4]  = { 43, 157 }
+///         preSieveTable[5]  = { 47, 151 }
+///         preSieveTable[6]  = { 53, 149 }
+///         preSieveTable[7]  = { 59, 139 }
+///         preSieveTable[8]  = { 61, 137 }
+///         preSieveTable[9]  = { 67, 131 }
+///         preSieveTable[10] = { 71, 127 }
+///         preSieveTable[11] = { 73, 113 }
+///         preSieveTable[12] = { 79, 109 }
+///         preSieveTable[13] = { 83, 107 }
+///         preSieveTable[14] = { 89, 103 }
+///         preSieveTable[15] = { 97, 101 }
 ///
-///         Then whilst sieving, we perform a bitwise AND on the
-///         buffers arrays and store the result in the sieve array.
-///         Pre-sieving provides a speedup of up to 30% when
-///         sieving the primes < 10^10 using primesieve.
+///         The total size of these 16 preSieveTables is 123
+///         kilobytes. Whilst sieving, we perform a bitwise AND of all
+///         preSieveTables and store the result in the sieve array.
+///         Pre-sieving provides a speedup of up to 30% when sieving
+///         the primes < 10^10 using primesieve.
 ///
 /// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2022 @zielaj, https://github.com/zielaj
@@ -28,7 +37,7 @@
 ///
 
 #include <primesieve/PreSieve.hpp>
-#include <primesieve/PreSieve_Tables.hpp>
+#include <primesieve/PreSieveTables.hpp>
 #include <primesieve/Vector.hpp>
 #include <primesieve/macros.hpp>
 
@@ -54,22 +63,22 @@ namespace {
 #if defined(HAS_SSE2)
 
 /// Since compiler auto-vectorization is not 100% reliable, we have
-/// manually vectorized the andBuffers() function for x64 CPUs.
+/// manually vectorized the AND_PreSieveTables() function for x64 CPUs.
 /// This algorithm is portable since all x64 CPUs support the SSE2
 /// instruction set.
 ///
-void andBuffers(const uint8_t* __restrict buf0,
-                const uint8_t* __restrict buf1,
-                const uint8_t* __restrict buf2,
-                const uint8_t* __restrict buf3,
-                uint8_t* __restrict output,
-                std::size_t bytes)
+void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
+                        const uint8_t* __restrict preSieved1,
+                        const uint8_t* __restrict preSieved2,
+                        const uint8_t* __restrict preSieved3,
+                        uint8_t* __restrict sieve,
+                        std::size_t bytes)
 {
   std::size_t i = 0;
   std::size_t limit = bytes - bytes % sizeof(__m128i);
 
-  // Note that I also tried vectorizing this algorithm using AVX2
-  // which has double the vector width compared to SSE2, but this did
+  // Note that I also tried vectorizing this algorithm using AVX512
+  // which has 4x the vector width compared to SSE2, but this did
   // not provide any speedup. On average, this loop processes only
   // 2192 bytes, hence there aren't many vector loop iterations and
   // by increasing the vector width this also increases the number of
@@ -77,43 +86,36 @@ void andBuffers(const uint8_t* __restrict buf0,
   // could potentially even become a bottleneck.
   for (; i < limit; i += sizeof(__m128i))
   {
-    _mm_storeu_si128((__m128i*) &output[i],
+    _mm_storeu_si128((__m128i*) &sieve[i],
         _mm_and_si128(
-            _mm_and_si128(_mm_loadu_si128((const __m128i*) &buf0[i]), _mm_loadu_si128((const __m128i*) &buf1[i])),
-            _mm_and_si128(_mm_loadu_si128((const __m128i*) &buf2[i]), _mm_loadu_si128((const __m128i*) &buf3[i]))));
+            _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved0[i]), _mm_loadu_si128((const __m128i*) &preSieved1[i])),
+            _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved2[i]), _mm_loadu_si128((const __m128i*) &preSieved3[i]))));
   }
 
   for (; i < bytes; i++)
-    output[i] = buf0[i] & buf1[i] & buf2[i] & buf3[i];
+    sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
 }
 
-void andBuffers2(const uint8_t* __restrict buf0,
-                const uint8_t* __restrict buf1,
-                const uint8_t* __restrict buf2,
-                const uint8_t* __restrict buf3,
-                uint8_t* __restrict output,
-                std::size_t bytes)
+void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
+                              const uint8_t* __restrict preSieved1,
+                              const uint8_t* __restrict preSieved2,
+                              const uint8_t* __restrict preSieved3,
+                              uint8_t* __restrict sieve,
+                              std::size_t bytes)
 {
   std::size_t i = 0;
   std::size_t limit = bytes - bytes % sizeof(__m128i);
 
-  // Note that I also tried vectorizing this algorithm using AVX2
-  // which has double the vector width compared to SSE2, but this did
-  // not provide any speedup. On average, this loop processes only
-  // 2192 bytes, hence there aren't many vector loop iterations and
-  // by increasing the vector width this also increases the number of
-  // scalar loop iterations after the vector loop finishes which
-  // could potentially even become a bottleneck.
   for (; i < limit; i += sizeof(__m128i))
   {
-    _mm_storeu_si128((__m128i*) &output[i],
-        _mm_and_si128(_mm_loadu_si128((const __m128i*) &output[i]), _mm_and_si128(
-            _mm_and_si128(_mm_loadu_si128((const __m128i*) &buf0[i]), _mm_loadu_si128((const __m128i*) &buf1[i])),
-            _mm_and_si128(_mm_loadu_si128((const __m128i*) &buf2[i]), _mm_loadu_si128((const __m128i*) &buf3[i])))));
+    _mm_storeu_si128((__m128i*) &sieve[i],
+        _mm_and_si128(_mm_loadu_si128((const __m128i*) &sieve[i]), _mm_and_si128(
+            _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved0[i]), _mm_loadu_si128((const __m128i*) &preSieved1[i])),
+            _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved2[i]), _mm_loadu_si128((const __m128i*) &preSieved3[i])))));
   }
 
   for (; i < bytes; i++)
-    output[i] &= buf0[i] & buf1[i] & buf2[i] & buf3[i];
+    sieve[i] &= preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
 }
 
 #elif defined(HAS_ARM_NEON)
@@ -125,39 +127,78 @@ void andBuffers2(const uint8_t* __restrict buf0,
 /// workaround for this Homebrew issue we have manually vectorized
 /// the Bitwise AND loop using ARM NEON.
 ///
-void andBuffers(const uint8_t* __restrict buf0,
-                const uint8_t* __restrict buf1,
-                const uint8_t* __restrict buf2,
-                const uint8_t* __restrict buf3,
-                const uint8_t* __restrict buf4,
-                const uint8_t* __restrict buf5,
-                const uint8_t* __restrict buf6,
-                const uint8_t* __restrict buf7,
-                uint8_t* __restrict output,
-                std::size_t bytes)
+void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
+                        const uint8_t* __restrict preSieved1,
+                        const uint8_t* __restrict preSieved2,
+                        const uint8_t* __restrict preSieved3,
+                        uint8_t* __restrict sieve,
+                        std::size_t bytes)
 {
   std::size_t i = 0;
   std::size_t limit = bytes - bytes % sizeof(uint8x16_t);
 
   for (; i < limit; i += sizeof(uint8x16_t))
   {
-    vst1q_u8(&output[i],
+    vst1q_u8(&sieve[i],
         vandq_u8(
-            vandq_u8(
-                vandq_u8(vld1q_u8(&buf0[i]), vld1q_u8(&buf1[i])),
-                vandq_u8(vld1q_u8(&buf2[i]), vld1q_u8(&buf3[i]))),
-            vandq_u8(
-                vandq_u8(vld1q_u8(&buf4[i]), vld1q_u8(&buf5[i])),
-                vandq_u8(vld1q_u8(&buf6[i]), vld1q_u8(&buf7[i])))));
+            vandq_u8(vld1q_u8(&preSieved0[i]), vld1q_u8(&preSieved1[i])),
+            vandq_u8(vld1q_u8(&preSieved2[i]), vld1q_u8(&preSieved3[i]))));
   }
 
   for (; i < bytes; i++)
-    output[i] = buf0[i] & buf1[i] & buf2[i] & buf3[i] &
-                buf4[i] & buf5[i] & buf6[i] & buf7[i];
+    sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
+}
+
+void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
+                              const uint8_t* __restrict preSieved1,
+                              const uint8_t* __restrict preSieved2,
+                              const uint8_t* __restrict preSieved3,
+                              uint8_t* __restrict sieve,
+                              std::size_t bytes)
+{
+  std::size_t i = 0;
+  std::size_t limit = bytes - bytes % sizeof(uint8x16_t);
+
+  for (; i < limit; i += sizeof(uint8x16_t))
+  {
+    vst1q_u8(&sieve[i],
+        vandq_u8(vld1q_u8(&sieve[i]), vandq_u8(
+            vandq_u8(vld1q_u8(&preSieved0[i]), vld1q_u8(&preSieved1[i])),
+            vandq_u8(vld1q_u8(&preSieved2[i]), vld1q_u8(&preSieved3[i])))));
+  }
+
+  for (; i < bytes; i++)
+    sieve[i] &= preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
 }
 
 #else
 
+void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
+                        const uint8_t* __restrict preSieved1,
+                        const uint8_t* __restrict preSieved2,
+                        const uint8_t* __restrict preSieved3,
+                        uint8_t* __restrict sieve,
+                        std::size_t bytes)
+{
+  // This loop will get auto-vectorized if compiled with GCC/Clang
+  // using -O3. Using GCC -O2 does not auto-vectorize this loop
+  // because -O2 uses the "very-cheap" vector cost model. To fix
+  // this issue we enable -ftree-vectorize -fvect-cost-model=dynamic
+  // if the compiler supports it in auto_vectorization.cmake.
+  for (std::size_t i = 0; i < bytes; i++)
+    sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
+}
+
+void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
+                              const uint8_t* __restrict preSieved1,
+                              const uint8_t* __restrict preSieved2,
+                              const uint8_t* __restrict preSieved3,
+                              uint8_t* __restrict sieve,
+                              std::size_t bytes)
+{
+  for (std::size_t i = 0; i < bytes; i++)
+    sieve[i] &= preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
+}
 
 #endif
 
@@ -167,84 +208,83 @@ namespace primesieve {
 
 void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
 {
-  {
-    uint64_t offset = 0;
-    Array<uint64_t, 4> pos;
+  uint64_t offset = 0;
+  Array<uint64_t, 4> pos;
 
-    for (std::size_t j = 0; j < 4; j++)
-      pos[j] = (segmentLow % (buffers[j].size() * 30)) / 30;
+  pos[0] = (segmentLow % (preSieveTables[0].size() * 30)) / 30;
+  pos[1] = (segmentLow % (preSieveTables[1].size() * 30)) / 30;
+  pos[2] = (segmentLow % (preSieveTables[2].size() * 30)) / 30;
+  pos[3] = (segmentLow % (preSieveTables[3].size() * 30)) / 30;
+
+  while (offset < sieve.size())
+  {
+    uint64_t bytesToCopy = sieve.size() - offset;
+
+    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[0].size() - pos[0]));
+    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[1].size() - pos[1]));
+    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[2].size() - pos[2]));
+    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[3].size() - pos[3]));
+
+    AND_PreSieveTables(&*(preSieveTables[0].begin() + pos[0]),
+                       &*(preSieveTables[1].begin() + pos[1]),
+                       &*(preSieveTables[2].begin() + pos[2]),
+                       &*(preSieveTables[3].begin() + pos[3]),
+                       &sieve[offset],
+                       bytesToCopy);
+
+    offset += bytesToCopy;
+
+    pos[0] = (pos[0] + bytesToCopy) * (pos[0] < preSieveTables[0].size());
+    pos[1] = (pos[1] + bytesToCopy) * (pos[1] < preSieveTables[1].size());
+    pos[2] = (pos[2] + bytesToCopy) * (pos[2] < preSieveTables[2].size());
+    pos[3] = (pos[3] + bytesToCopy) * (pos[3] < preSieveTables[3].size());
+  }
+
+  for (std::size_t i = pos.size(); i < preSieveTables.size(); i += 4)
+  {
+    offset = 0;
+
+    pos[0] = (segmentLow % (preSieveTables[i+0].size() * 30)) / 30;
+    pos[1] = (segmentLow % (preSieveTables[i+1].size() * 30)) / 30;
+    pos[2] = (segmentLow % (preSieveTables[i+2].size() * 30)) / 30;
+    pos[3] = (segmentLow % (preSieveTables[i+3].size() * 30)) / 30;
 
     while (offset < sieve.size())
     {
       uint64_t bytesToCopy = sieve.size() - offset;
 
-      for (std::size_t j = 0; j < 4; j++) {
-        uint64_t left = buffers[j].size() - pos[j];
-        bytesToCopy = std::min(left, bytesToCopy);
-      }
+      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+0].size() - pos[0]));
+      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+1].size() - pos[1]));
+      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+2].size() - pos[2]));
+      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+3].size() - pos[3]));
 
-      andBuffers(&*(buffers[0].begin() + pos[0]),
-                 &*(buffers[1].begin() + pos[1]),
-                 &*(buffers[2].begin() + pos[2]),
-                 &*(buffers[3].begin() + pos[3]),
-                 &sieve[offset],
-                 bytesToCopy);
-
-      offset += bytesToCopy;
-
-      for (std::size_t j = 0; j < pos.size(); j++) {
-        pos[j] += bytesToCopy;
-        if (pos[j] >= buffers[j].size())
-          pos[j] = 0;
-      }
-    }
-  }
-
-  for (std::size_t i = 4; i < buffers.size(); i += 4)
-  {
-    uint64_t offset = 0;
-    Array<uint64_t, 4> pos;
-
-    for (std::size_t j = 0; j < 4; j++)
-      pos[j] = (segmentLow % (buffers[i+j].size() * 30)) / 30;
-
-    while (offset < sieve.size())
-    {
-      uint64_t bytesToCopy = sieve.size() - offset;
-
-      for (std::size_t j = 0; j < 4; j++) {
-        uint64_t left = buffers[i+j].size() - pos[j];
-        bytesToCopy = std::min(left, bytesToCopy);
-      }
-
-      andBuffers2(&*(buffers[i+0].begin() + pos[0]),
-                  &*(buffers[i+1].begin() + pos[1]),
-                  &*(buffers[i+2].begin() + pos[2]),
-                  &*(buffers[i+3].begin() + pos[3]),
-                  &sieve[offset],
-                  bytesToCopy);
+      AND_PreSieveTables_Sieve(&*(preSieveTables[i+0].begin() + pos[0]),
+                               &*(preSieveTables[i+1].begin() + pos[1]),
+                               &*(preSieveTables[i+2].begin() + pos[2]),
+                               &*(preSieveTables[i+3].begin() + pos[3]),
+                               &sieve[offset],
+                               bytesToCopy);
 
       offset += bytesToCopy;
 
-      for (std::size_t j = 0; j < pos.size(); j++) {
-        pos[j] += bytesToCopy;
-        if (pos[j] >= buffers[i+j].size())
-          pos[j] = 0;
-      }
+      pos[0] = (pos[0] + bytesToCopy) * (pos[0] < preSieveTables[i+0].size());
+      pos[1] = (pos[1] + bytesToCopy) * (pos[1] < preSieveTables[i+1].size());
+      pos[2] = (pos[2] + bytesToCopy) * (pos[2] < preSieveTables[i+2].size());
+      pos[3] = (pos[3] + bytesToCopy) * (pos[3] < preSieveTables[i+3].size());
     }
   }
 
-  // Pre-sieving removes the primes <= 151. We
+  // Pre-sieving removes the primes <= 163. We
   // have to undo that work and reset these bits
   // to 1 (but 49 = 7 * 7 is not a prime).
-  if (segmentLow < 150)
+  if (segmentLow < 180)
   {
     uint64_t i = segmentLow / 30;
     uint8_t* sieveArray = sieve.data();
     Array<uint8_t, 8> primeBits = { 0xff, 0xef, 0x77, 0x3f, 0xdb, 0xed, 0x9e, 0xfc };
 
-    ASSERT(sieve.capacity() >= 5);
-    for (std::size_t j = 0; j < 5; j++)
+    ASSERT(sieve.capacity() >= 8);
+    for (std::size_t j = 0; i + j < 8 ; j++)
       sieveArray[j] = primeBits[i + j];
   }
 }

@@ -56,7 +56,7 @@ int main()
     check(count == pix[i]);
   }
 
-  // Test PreSieve with bufferPrimes < 100.
+  // Test PreSieve with preSievePrimes <= 163.
   // The thread interval must be sufficiently large
   // otherwise minimal pre-sieving is used.
   // Using a single thread increases thread interval.
