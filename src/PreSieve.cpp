@@ -62,10 +62,6 @@ void andBuffers(const uint8_t* __restrict buf0,
                 const uint8_t* __restrict buf1,
                 const uint8_t* __restrict buf2,
                 const uint8_t* __restrict buf3,
-                const uint8_t* __restrict buf4,
-                const uint8_t* __restrict buf5,
-                const uint8_t* __restrict buf6,
-                const uint8_t* __restrict buf7,
                 uint8_t* __restrict output,
                 std::size_t bytes)
 {
@@ -83,17 +79,41 @@ void andBuffers(const uint8_t* __restrict buf0,
   {
     _mm_storeu_si128((__m128i*) &output[i],
         _mm_and_si128(
-            _mm_and_si128(
-                _mm_and_si128(_mm_loadu_si128((const __m128i*) &buf0[i]), _mm_loadu_si128((const __m128i*) &buf1[i])),
-                _mm_and_si128(_mm_loadu_si128((const __m128i*) &buf2[i]), _mm_loadu_si128((const __m128i*) &buf3[i]))),
-            _mm_and_si128(
-                _mm_and_si128(_mm_loadu_si128((const __m128i*) &buf4[i]), _mm_loadu_si128((const __m128i*) &buf5[i])),
-                _mm_and_si128(_mm_loadu_si128((const __m128i*) &buf6[i]), _mm_loadu_si128((const __m128i*) &buf7[i])))));
+            _mm_and_si128(_mm_loadu_si128((const __m128i*) &buf0[i]), _mm_loadu_si128((const __m128i*) &buf1[i])),
+            _mm_and_si128(_mm_loadu_si128((const __m128i*) &buf2[i]), _mm_loadu_si128((const __m128i*) &buf3[i]))));
   }
 
   for (; i < bytes; i++)
-    output[i] = buf0[i] & buf1[i] & buf2[i] & buf3[i] &
-                buf4[i] & buf5[i] & buf6[i] & buf7[i];
+    output[i] = buf0[i] & buf1[i] & buf2[i] & buf3[i];
+}
+
+void andBuffers2(const uint8_t* __restrict buf0,
+                const uint8_t* __restrict buf1,
+                const uint8_t* __restrict buf2,
+                const uint8_t* __restrict buf3,
+                uint8_t* __restrict output,
+                std::size_t bytes)
+{
+  std::size_t i = 0;
+  std::size_t limit = bytes - bytes % sizeof(__m128i);
+
+  // Note that I also tried vectorizing this algorithm using AVX2
+  // which has double the vector width compared to SSE2, but this did
+  // not provide any speedup. On average, this loop processes only
+  // 2192 bytes, hence there aren't many vector loop iterations and
+  // by increasing the vector width this also increases the number of
+  // scalar loop iterations after the vector loop finishes which
+  // could potentially even become a bottleneck.
+  for (; i < limit; i += sizeof(__m128i))
+  {
+    _mm_storeu_si128((__m128i*) &output[i],
+        _mm_and_si128(_mm_loadu_si128((const __m128i*) &output[i]), _mm_and_si128(
+            _mm_and_si128(_mm_loadu_si128((const __m128i*) &buf0[i]), _mm_loadu_si128((const __m128i*) &buf1[i])),
+            _mm_and_si128(_mm_loadu_si128((const __m128i*) &buf2[i]), _mm_loadu_si128((const __m128i*) &buf3[i])))));
+  }
+
+  for (; i < bytes; i++)
+    output[i] &= buf0[i] & buf1[i] & buf2[i] & buf3[i];
 }
 
 #elif defined(HAS_ARM_NEON)
@@ -138,26 +158,6 @@ void andBuffers(const uint8_t* __restrict buf0,
 
 #else
 
-void andBuffers(const uint8_t* __restrict buf0,
-                const uint8_t* __restrict buf1,
-                const uint8_t* __restrict buf2,
-                const uint8_t* __restrict buf3,
-                const uint8_t* __restrict buf4,
-                const uint8_t* __restrict buf5,
-                const uint8_t* __restrict buf6,
-                const uint8_t* __restrict buf7,
-                uint8_t* __restrict output,
-                std::size_t bytes)
-{
-  // This loop will get auto-vectorized if compiled with GCC/Clang
-  // using -O3. Using GCC -O2 does not auto-vectorize this loop
-  // because -O2 uses the "very-cheap" vector cost model. To fix
-  // this issue we enable -ftree-vectorize -fvect-cost-model=dynamic
-  // if the compiler supports it in auto_vectorization.cmake.
-  for (std::size_t i = 0; i < bytes; i++)
-    output[i] = buf0[i] & buf1[i] & buf2[i] & buf3[i] &
-                buf4[i] & buf5[i] & buf6[i] & buf7[i];
-}
 
 #endif
 
@@ -167,51 +167,84 @@ namespace primesieve {
 
 void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
 {
-  uint64_t offset = 0;
-  Array<uint64_t, 8> pos;
+  {
+    uint64_t offset = 0;
+    Array<uint64_t, 4> pos;
 
-  for (std::size_t i = 0; i < buffers.size(); i++)
-    pos[i] = (segmentLow % (buffers[i].size() * 30)) / 30;
+    for (std::size_t j = 0; j < 4; j++)
+      pos[j] = (segmentLow % (buffers[j].size() * 30)) / 30;
 
-  while (offset < sieve.size()) {
-    uint64_t bytesToCopy = sieve.size() - offset;
+    while (offset < sieve.size())
+    {
+      uint64_t bytesToCopy = sieve.size() - offset;
 
-    for (std::size_t i = 0; i < buffers.size(); i++) {
-      uint64_t left = buffers[i].size() - pos[i];
-      bytesToCopy = std::min(left, bytesToCopy);
-    }
+      for (std::size_t j = 0; j < 4; j++) {
+        uint64_t left = buffers[j].size() - pos[j];
+        bytesToCopy = std::min(left, bytesToCopy);
+      }
 
-    andBuffers(&*(buffers[0].begin() + pos[0]), // &buffer[0][pos[0]]
-               &*(buffers[1].begin() + pos[1]), // &buffer[1][pos[1]]
-               &*(buffers[2].begin() + pos[2]), // &buffer[2][pos[2]]
-               &*(buffers[3].begin() + pos[3]), // &buffer[3][pos[3]]
-               &*(buffers[4].begin() + pos[4]), // &buffer[4][pos[4]]
-               &*(buffers[5].begin() + pos[5]), // &buffer[5][pos[5]]
-               &*(buffers[6].begin() + pos[6]), // &buffer[6][pos[6]]
-               &*(buffers[7].begin() + pos[7]), // &buffer[7][pos[7]]
-               &sieve[offset],
-               bytesToCopy);
+      andBuffers(&*(buffers[0].begin() + pos[0]),
+                 &*(buffers[1].begin() + pos[1]),
+                 &*(buffers[2].begin() + pos[2]),
+                 &*(buffers[3].begin() + pos[3]),
+                 &sieve[offset],
+                 bytesToCopy);
 
-    offset += bytesToCopy;
+      offset += bytesToCopy;
 
-    for (std::size_t i = 0; i < pos.size(); i++) {
-      pos[i] += bytesToCopy;
-      if (pos[i] >= buffers[i].size())
-        pos[i] = 0;
+      for (std::size_t j = 0; j < pos.size(); j++) {
+        pos[j] += bytesToCopy;
+        if (pos[j] >= buffers[j].size())
+          pos[j] = 0;
+      }
     }
   }
 
-  // Pre-sieving removes the primes < 100. We
+  for (std::size_t i = 4; i < buffers.size(); i += 4)
+  {
+    uint64_t offset = 0;
+    Array<uint64_t, 4> pos;
+
+    for (std::size_t j = 0; j < 4; j++)
+      pos[j] = (segmentLow % (buffers[i+j].size() * 30)) / 30;
+
+    while (offset < sieve.size())
+    {
+      uint64_t bytesToCopy = sieve.size() - offset;
+
+      for (std::size_t j = 0; j < 4; j++) {
+        uint64_t left = buffers[i+j].size() - pos[j];
+        bytesToCopy = std::min(left, bytesToCopy);
+      }
+
+      andBuffers2(&*(buffers[i+0].begin() + pos[0]),
+                  &*(buffers[i+1].begin() + pos[1]),
+                  &*(buffers[i+2].begin() + pos[2]),
+                  &*(buffers[i+3].begin() + pos[3]),
+                  &sieve[offset],
+                  bytesToCopy);
+
+      offset += bytesToCopy;
+
+      for (std::size_t j = 0; j < pos.size(); j++) {
+        pos[j] += bytesToCopy;
+        if (pos[j] >= buffers[i+j].size())
+          pos[j] = 0;
+      }
+    }
+  }
+
+  // Pre-sieving removes the primes <= 151. We
   // have to undo that work and reset these bits
   // to 1 (but 49 = 7 * 7 is not a prime).
-  if (segmentLow < 120)
+  if (segmentLow < 150)
   {
     uint64_t i = segmentLow / 30;
     uint8_t* sieveArray = sieve.data();
     Array<uint8_t, 8> primeBits = { 0xff, 0xef, 0x77, 0x3f, 0xdb, 0xed, 0x9e, 0xfc };
 
-    ASSERT(sieve.capacity() >= 4);
-    for (std::size_t j = 0; j < 4; j++)
+    ASSERT(sieve.capacity() >= 5);
+    for (std::size_t j = 0; j < 5; j++)
       sieveArray[j] = primeBits[i + j];
   }
 }
