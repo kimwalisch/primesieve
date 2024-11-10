@@ -1,10 +1,11 @@
-Changes in version 12.6, 08/11/2024
+Changes in version 12.6, 10/11/2024
 ===================================
 
 * CpuInfo.cpp: Correctly detect Intel Arrow Lake CPU cache
   topology on Windows and Linux.
-* PreSieve.cpp: Use static pre-sieve lookup tables, this avoids
-  initialization overhead to generate these lookup tables.
+* PreSieve.cpp: Increased pre-sieving from primes <= 100 to
+  primes <= 163. Memory usage of pre-sieve lookup tables has been
+  reduced from 210 kilobytes to 123 kilobytes.
 
 Changes in version 12.5, 22/10/2024
 ===================================

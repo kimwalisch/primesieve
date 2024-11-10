@@ -1,26 +1,36 @@
 ///
 /// @file   PreSieve.hpp
-/// @brief  Pre-sieve multiples of small primes < 100 to speed up the
-///         sieve of Eratosthenes. The idea is to allocate several
-///         arrays (buffers_) and remove the multiples of small primes
-///         from them at initialization. Each buffer is assigned
-///         different primes, for example:
+/// @brief  Pre-sieve multiples of small primes <= 163 to speed up the
+///         sieve of Eratosthenes. We use 16 static lookup tables from
+///         which the multiples of small primes have been removed
+///         upfront. Each preSieve lookup table is assigned different
+///         primes used for pre-sieving:
 ///
-///         buffer[0] removes multiplies of: {  7, 67, 71 } // 32 KiB
-///         buffer[1] removes multiplies of: { 11, 41, 73 } // 32 KiB
-///         buffer[2] removes multiplies of: { 13, 43, 59 } // 32 KiB
-///         buffer[3] removes multiplies of: { 17, 37, 53 } // 32 KiB
-///         buffer[4] removes multiplies of: { 19, 29, 61 } // 32 KiB
-///         buffer[5] removes multiplies of: { 23, 31, 47 } // 32 KiB
-///         buffer[6] removes multiplies of: { 79, 97 }     //  8 KiB
-///         buffer[7] removes multiplies of: { 83, 89 }     //  7 KiB
+///         preSieveTable[0]  = {  7, 23, 37 }
+///         preSieveTable[1]  = { 11, 19, 31 }
+///         preSieveTable[2]  = { 13, 17, 29 }
+///         preSieveTable[3]  = { 41, 163 }
+///         preSieveTable[4]  = { 43, 157 }
+///         preSieveTable[5]  = { 47, 151 }
+///         preSieveTable[6]  = { 53, 149 }
+///         preSieveTable[7]  = { 59, 139 }
+///         preSieveTable[8]  = { 61, 137 }
+///         preSieveTable[9]  = { 67, 131 }
+///         preSieveTable[10] = { 71, 127 }
+///         preSieveTable[11] = { 73, 113 }
+///         preSieveTable[12] = { 79, 109 }
+///         preSieveTable[13] = { 83, 107 }
+///         preSieveTable[14] = { 89, 103 }
+///         preSieveTable[15] = { 97, 101 }
 ///
-///         Then whilst sieving, we perform a bitwise AND on the
-///         buffers_ arrays and store the result in the sieve array.
-///         Pre-sieving provides a speedup of up to 30% when
-///         sieving the primes < 10^10 using primesieve.
+///         The total size of these 16 preSieveTables is 123
+///         kilobytes. Whilst sieving, we perform a bitwise AND of all
+///         preSieveTables and store the result in the sieve array.
+///         Pre-sieving provides a speedup of up to 30% when sieving
+///         the primes < 10^10 using primesieve.
 ///
 /// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2022 @zielaj, https://github.com/zielaj
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -38,7 +48,7 @@ class PreSieve
 {
 public:
   static void preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow);
-  static uint64_t getMaxPrime() { return 97; }
+  static uint64_t getMaxPrime() { return 163; }
 };
 
 } // namespace

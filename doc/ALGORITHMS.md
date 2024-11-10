@@ -72,7 +72,7 @@ efficiently uses the CPU's multi level cache hierarchy.
 ### Optimizations used in primesieve
 
  * Uses a bit array with 8 flags each 30 numbers for sieving
- * Pre-sieves multiples of small primes < 100
+ * Pre-sieves multiples of small primes ≤ 163
  * Compresses the sieving primes in order to improve cache efficiency [[5]](#references)
  * Starts crossing off multiples at the square
  * Uses a modulo 210 wheel that skips multiples of 2, 3, 5 and 7

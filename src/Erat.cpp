@@ -249,7 +249,7 @@ void Erat::sieveLastSegment()
   segmentLow_ = stop_;
 }
 
-/// Pre-sieve multiples of small primes < 100
+/// Pre-sieve multiples of small primes <= 163
 /// to speed up the sieve of Eratosthenes
 ///
 void Erat::preSieve()
