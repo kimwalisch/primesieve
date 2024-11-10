@@ -43,6 +43,7 @@
 
 #include <stdint.h>
 #include <algorithm>
+#include <cstddef>
 
 /// All x64 CPUs support the SSE2 vector instruction set
 #if defined(__SSE2__) && \
