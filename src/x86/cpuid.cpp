@@ -120,7 +120,7 @@ bool has_cpuid_avx512_bw()
 
   // AND_PreSieveTables_avx512 requires AVX512F, AVX512BW
   return ((abcd[1] & bit_AVX512F) == bit_AVX512F &&
-          (abcd[1] & bit_AVX512F) == bit_AVX512BW);
+          (abcd[1] & bit_AVX512BW) == bit_AVX512BW);
 }
 
 bool has_cpuid_avx512_vbmi2()
