@@ -35,6 +35,10 @@
 #include <sstream>
 #include <string>
 
+#if defined(ENABLE_MULTIARCH_ARM_SVE)
+  #include <primesieve/cpu_supports_arm_sve.hpp>
+#endif
+
 #if defined(ENABLE_MULTIARCH_AVX512_BW)
 
 namespace primesieve {
@@ -243,22 +247,25 @@ void cpuInfo()
   else
     std::cout << "Logical CPU cores: unknown" << std::endl;
 
-  #if defined(ENABLE_MULTIARCH_AVX512_BW)
+  #if defined(ENABLE_MULTIARCH_ARM_SVE)
+    if (cpu_supports_sve)
+      std::cout << "Has ARM SVE: yes" << std::endl;
+    else
+      std::cout << "Has ARM SVE: no" << std::endl;
+  #endif
 
+  #if defined(ENABLE_MULTIARCH_AVX512_BW)
     if (primesieve::has_cpuid_avx512_bw())
       std::cout << "Has AVX512 BW: yes" << std::endl;
     else
       std::cout << "Has AVX512 BW: no" << std::endl;
-
   #endif
 
   #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-
     if (primesieve::has_cpuid_avx512_vbmi2())
       std::cout << "Has AVX512 VBMI2: yes" << std::endl;
     else
       std::cout << "Has AVX512 VBMI2: no" << std::endl;
-
   #endif
 
   if (cpu.hasL1Cache())

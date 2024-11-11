@@ -56,6 +56,11 @@
   #include <immintrin.h>
   #define ENABLE_AVX512_BW
 
+#elif defined(ENABLE_MULTIARCH_ARM_SVE)
+  #include <primesieve/cpu_supports_arm_sve.hpp>
+  #include <arm_sve.h>
+  #define ENABLE_DEFAULT
+
 #elif defined(ENABLE_MULTIARCH_AVX512_BW) && \
       __has_include(<immintrin.h>)
   #include <primesieve/cpu_supports_avx512_bw.hpp>
@@ -82,8 +87,12 @@
 
 namespace {
 
-#if defined(ENABLE_ARM_SVE)
+#if defined(ENABLE_ARM_SVE) || \
+    defined(ENABLE_MULTIARCH_ARM_SVE)
 
+#if defined(ENABLE_MULTIARCH_ARM_SVE)
+  __attribute__ ((target ("arch=armv8-a+sve")))
+#endif
 void AND_PreSieveTables_arm_sve(const uint8_t* __restrict preSieved0,
                                 const uint8_t* __restrict preSieved1,
                                 const uint8_t* __restrict preSieved2,
@@ -102,6 +111,9 @@ void AND_PreSieveTables_arm_sve(const uint8_t* __restrict preSieved0,
   }
 }
 
+#if defined(ENABLE_MULTIARCH_ARM_SVE)
+  __attribute__ ((target ("arch=armv8-a+sve")))
+#endif
 void AND_PreSieveTables_Sieve_arm_sve(const uint8_t* __restrict preSieved0,
                                       const uint8_t* __restrict preSieved1,
                                       const uint8_t* __restrict preSieved2,
@@ -320,11 +332,21 @@ void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
   AND_PreSieveTables_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #elif defined(ENABLE_AVX512_BW)
   AND_PreSieveTables_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+
+#elif defined(ENABLE_MULTIARCH_ARM_SVE)
+
+  if (cpu_supports_sve)
+    AND_PreSieveTables_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+  else
+    AND_PreSieveTables_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+
 #elif defined(ENABLE_MULTIARCH_AVX512_BW)
+
   if (cpu_supports_avx512_bw)
     AND_PreSieveTables_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
   else
     AND_PreSieveTables_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+
 #else
   AND_PreSieveTables_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #endif
@@ -341,11 +363,21 @@ void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
   AND_PreSieveTables_Sieve_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #elif defined(ENABLE_AVX512_BW)
   AND_PreSieveTables_Sieve_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+
+#elif defined(ENABLE_MULTIARCH_ARM_SVE)
+
+  if (cpu_supports_sve)
+    AND_PreSieveTables_Sieve_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+  else
+    AND_PreSieveTables_Sieve_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+
 #elif defined(ENABLE_MULTIARCH_AVX512_BW)
+
   if (cpu_supports_avx512_bw)
     AND_PreSieveTables_Sieve_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
   else
     AND_PreSieveTables_Sieve_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+
 #else
   AND_PreSieveTables_Sieve_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #endif
