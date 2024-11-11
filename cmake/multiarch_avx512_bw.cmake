@@ -74,7 +74,7 @@ check_cxx_source_compiles("
 " multiarch_avx512_bw)
 
 if(multiarch_avx512_bw)
-    list(APPEND PRIMESIEVE_COMPILE_DEFINITIONS "ENABLE_MULTIARCH_BW")
+    list(APPEND PRIMESIEVE_COMPILE_DEFINITIONS "ENABLE_MULTIARCH_AVX512_BW")
 endif()
 
 cmake_pop_check_state()
