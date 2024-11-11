@@ -321,12 +321,12 @@ void AND_PreSieveTables_Sieve_default(const uint8_t* __restrict preSieved0,
 #endif
 #endif
 
-void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
-                        const uint8_t* __restrict preSieved1,
-                        const uint8_t* __restrict preSieved2,
-                        const uint8_t* __restrict preSieved3,
-                        uint8_t* __restrict sieve,
-                        std::size_t bytes)
+ALWAYS_INLINE void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
+                                      const uint8_t* __restrict preSieved1,
+                                      const uint8_t* __restrict preSieved2,
+                                      const uint8_t* __restrict preSieved3,
+                                      uint8_t* __restrict sieve,
+                                      std::size_t bytes)
 {
 #if defined(ENABLE_ARM_SVE)
   AND_PreSieveTables_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
@@ -352,12 +352,12 @@ void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
 #endif
 }
 
-void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
-                              const uint8_t* __restrict preSieved1,
-                              const uint8_t* __restrict preSieved2,
-                              const uint8_t* __restrict preSieved3,
-                              uint8_t* __restrict sieve,
-                              std::size_t bytes)
+ALWAYS_INLINE void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
+                                            const uint8_t* __restrict preSieved1,
+                                            const uint8_t* __restrict preSieved2,
+                                            const uint8_t* __restrict preSieved3,
+                                            uint8_t* __restrict sieve,
+                                            std::size_t bytes)
 {
 #if defined(ENABLE_ARM_SVE)
   AND_PreSieveTables_Sieve_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
