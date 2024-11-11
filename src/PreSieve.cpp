@@ -45,21 +45,12 @@
 #include <algorithm>
 #include <cstddef>
 
-/// All x64 CPUs support the SSE2 vector instruction set
-#if defined(__SSE2__) && \
-    __has_include(<emmintrin.h>)
-  #include <emmintrin.h>
-  #define HAS_SSE2
-#endif
+#if defined(__ARM_FEATURE_SVE) && \
+    __has_include(<arm_sve.h>)
+  #include <arm_sve.h>
+  #define ENABLE_ARM_SVE
 
-// All ARM64 CPUs support the NEON vector instruction set
-#if (defined(__ARM_NEON) || defined(__aarch64__)) && \
-     __has_include(<arm_neon.h>)
-  #include <arm_neon.h>
-  #define HAS_ARM_NEON
-#endif
-
-#if defined(__AVX512F__) && \
+#elif defined(__AVX512F__) && \
     defined(__AVX512BW__) && \
     __has_include(<immintrin.h>)
   #include <immintrin.h>
@@ -69,16 +60,68 @@
       __has_include(<immintrin.h>)
   #include <primesieve/cpu_supports_avx512_bw.hpp>
   #include <immintrin.h>
+  #define ENABLE_DEFAULT
+#else
+  #define ENABLE_DEFAULT
 #endif
 
-#if !defined(ENABLE_AVX512_BW)
-  #define ENABLE_DEFAULT
+#if defined(ENABLE_DEFAULT)
+  /// All x64 CPUs support the SSE2 vector instruction set
+  #if defined(__SSE2__) && \
+      __has_include(<emmintrin.h>)
+    #include <emmintrin.h>
+    #define HAS_SSE2
+  #endif
+  // All ARM64 CPUs support the NEON vector instruction set
+  #if (defined(__ARM_NEON) || defined(__aarch64__)) && \
+      __has_include(<arm_neon.h>)
+    #include <arm_neon.h>
+    #define HAS_ARM_NEON
+  #endif
 #endif
 
 namespace {
 
-#if defined(ENABLE_AVX512_BW) || \
-    defined(ENABLE_MULTIARCH_AVX512_BW)
+#if defined(ENABLE_ARM_SVE)
+
+void AND_PreSieveTables_arm_sve(const uint8_t* __restrict preSieved0,
+                                const uint8_t* __restrict preSieved1,
+                                const uint8_t* __restrict preSieved2,
+                                const uint8_t* __restrict preSieved3,
+                                uint8_t* __restrict sieve,
+                                std::size_t bytes)
+{
+  for (std::size_t i = 0; i < bytes; i += svcntb())
+  {
+    svbool_t pg = svwhilelt_b8(i, bytes);
+
+    svst1_u8(pg, &sieve[i],
+      svand_u8_x(svptrue_b64(),
+        svand_u8_x(svptrue_b64(), svld1_u8(pg, &preSieved0[i]), svld1_u8(pg, &preSieved1[i])),
+        svand_u8_x(svptrue_b64(), svld1_u8(pg, &preSieved2[i]), svld1_u8(pg, &preSieved3[i]))));
+  }
+}
+
+void AND_PreSieveTables_Sieve_arm_sve(const uint8_t* __restrict preSieved0,
+                                      const uint8_t* __restrict preSieved1,
+                                      const uint8_t* __restrict preSieved2,
+                                      const uint8_t* __restrict preSieved3,
+                                      uint8_t* __restrict sieve,
+                                      std::size_t bytes)
+{
+  for (std::size_t i = 0; i < bytes; i += svcntb())
+  {
+    svbool_t pg = svwhilelt_b8(i, bytes);
+
+    svst1_u8(pg, &sieve[i],
+      svand_u8_x(svptrue_b64(), svld1_u8(pg, &sieve[i]), svand_u8_x(svptrue_b64(),
+        svand_u8_x(svptrue_b64(), svld1_u8(pg, &preSieved0[i]), svld1_u8(pg, &preSieved1[i])),
+        svand_u8_x(svptrue_b64(), svld1_u8(pg, &preSieved2[i]), svld1_u8(pg, &preSieved3[i])))));
+  }
+}
+
+#elif defined(ENABLE_AVX512_BW) || \
+      defined(ENABLE_MULTIARCH_AVX512_BW)
 
 #if defined(ENABLE_MULTIARCH_AVX512_BW)
   __attribute__ ((target ("avx512f,avx512bw")))
@@ -297,6 +340,8 @@ void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
                         uint8_t* __restrict sieve,
                         std::size_t bytes)
 {
+#if defined(ENABLE_ARM_SVE)
+  AND_PreSieveTables_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #if defined(ENABLE_AVX512_BW)
   AND_PreSieveTables_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #elif defined(ENABLE_MULTIARCH_AVX512_BW)
@@ -316,6 +361,8 @@ void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
                               uint8_t* __restrict sieve,
                               std::size_t bytes)
 {
+#if defined(ENABLE_ARM_SVE)
+  AND_PreSieveTables_Sieve_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #if defined(ENABLE_AVX512_BW)
   AND_PreSieveTables_Sieve_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #elif defined(ENABLE_MULTIARCH_AVX512_BW)
