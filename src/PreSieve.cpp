@@ -192,11 +192,6 @@ void AND_PreSieveTables_Sieve_avx512(const uint8_t* __restrict preSieved0,
 #if defined(ENABLE_DEFAULT)
 #if defined(HAS_SSE2)
 
-/// Since compiler auto-vectorization is not 100% reliable, we have
-/// manually vectorized the AND_PreSieveTables() function for x64 CPUs.
-/// This algorithm is portable since all x64 CPUs support the SSE2
-/// instruction set.
-///
 void AND_PreSieveTables_default(const uint8_t* __restrict preSieved0,
                                 const uint8_t* __restrict preSieved1,
                                 const uint8_t* __restrict preSieved2,
@@ -207,13 +202,6 @@ void AND_PreSieveTables_default(const uint8_t* __restrict preSieved0,
   std::size_t i = 0;
   std::size_t limit = bytes - bytes % sizeof(__m128i);
 
-  // Note that I also tried vectorizing this algorithm using AVX2
-  // which has twice the vector width compared to SSE2, but this did
-  // not provide any speedup. On average, this loop processes only
-  // 956 bytes, hence there aren't many vector loop iterations and
-  // by increasing the vector width this also increases the number of
-  // scalar loop iterations after the vector loop finishes which
-  // could potentially even become a bottleneck.
   for (; i < limit; i += sizeof(__m128i))
   {
     _mm_storeu_si128((__m128i*) &sieve[i],
@@ -250,13 +238,6 @@ void AND_PreSieveTables_Sieve_default(const uint8_t* __restrict preSieved0,
 
 #elif defined(HAS_ARM_NEON)
 
-/// Homebrew compiles its C/C++ packages on macOS using Clang -Os
-/// (instead of -O2 or -O3) which does not auto-vectorize our simple
-/// loop with Bitwise AND. If this loop is not vectorized this
-/// deteriorates the performance of primesieve by up to 40%. As a
-/// workaround for this Homebrew issue we have manually vectorized
-/// the Bitwise AND loop using ARM NEON.
-///
 void AND_PreSieveTables_default(const uint8_t* __restrict preSieved0,
                                 const uint8_t* __restrict preSieved1,
                                 const uint8_t* __restrict preSieved2,
@@ -310,11 +291,6 @@ void AND_PreSieveTables_default(const uint8_t* __restrict preSieved0,
                                 uint8_t* __restrict sieve,
                                 std::size_t bytes)
 {
-  // This loop will get auto-vectorized if compiled with GCC/Clang
-  // using -O3. Using GCC -O2 does not auto-vectorize this loop
-  // because -O2 uses the "very-cheap" vector cost model. To fix
-  // this issue we enable -ftree-vectorize -fvect-cost-model=dynamic
-  // if the compiler supports it in auto_vectorization.cmake.
   for (std::size_t i = 0; i < bytes; i++)
     sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
 }
