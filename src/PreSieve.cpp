@@ -45,46 +45,175 @@
 #include <algorithm>
 #include <cstddef>
 
-/// All x64 CPUs support the SSE2 vector instruction set
-#if defined(__SSE2__) && \
-    __has_include(<emmintrin.h>)
-  #include <emmintrin.h>
-  #define HAS_SSE2
+#if defined(__ARM_FEATURE_SVE) && \
+    __has_include(<arm_sve.h>)
+  #include <arm_sve.h>
+  #define ENABLE_ARM_SVE
+
+#elif defined(__AVX512F__) && \
+      defined(__AVX512BW__) && \
+      __has_include(<immintrin.h>)
+  #include <immintrin.h>
+  #define ENABLE_AVX512_BW
+
+#elif defined(ENABLE_MULTIARCH_ARM_SVE)
+  #include <primesieve/cpu_supports_arm_sve.hpp>
+  #include <arm_sve.h>
+  #define ENABLE_DEFAULT
+
+#elif defined(ENABLE_MULTIARCH_AVX512_BW) && \
+      __has_include(<immintrin.h>)
+  #include <primesieve/cpu_supports_avx512_bw.hpp>
+  #include <immintrin.h>
+  #define ENABLE_DEFAULT
+#else
+  #define ENABLE_DEFAULT
 #endif
 
-// All ARM64 CPUs support the NEON vector instruction set
-#if (defined(__ARM_NEON) || defined(__aarch64__)) && \
-     __has_include(<arm_neon.h>)
-  #include <arm_neon.h>
-  #define HAS_ARM_NEON
+#if defined(ENABLE_DEFAULT)
+  /// All x64 CPUs support the SSE2 vector instruction set
+  #if defined(__SSE2__) && \
+      __has_include(<emmintrin.h>)
+    #include <emmintrin.h>
+    #define HAS_SSE2
+  #endif
+  // All ARM64 CPUs support the NEON vector instruction set
+  #if (defined(__ARM_NEON) || defined(__aarch64__)) && \
+      __has_include(<arm_neon.h>)
+    #include <arm_neon.h>
+    #define HAS_ARM_NEON
+  #endif
 #endif
 
 namespace {
 
+#if defined(ENABLE_ARM_SVE) || \
+    defined(ENABLE_MULTIARCH_ARM_SVE)
+
+#if defined(ENABLE_MULTIARCH_ARM_SVE)
+  __attribute__ ((target ("arch=armv8-a+sve")))
+#endif
+void AND_PreSieveTables_arm_sve(const uint8_t* __restrict preSieved0,
+                                const uint8_t* __restrict preSieved1,
+                                const uint8_t* __restrict preSieved2,
+                                const uint8_t* __restrict preSieved3,
+                                uint8_t* __restrict sieve,
+                                std::size_t bytes)
+{
+  for (std::size_t i = 0; i < bytes; i += svcntb())
+  {
+    svbool_t pg = svwhilelt_b8(i, bytes);
+
+    svst1_u8(pg, &sieve[i],
+      svand_u8_x(svptrue_b64(),
+        svand_u8_z(pg, svld1_u8(pg, &preSieved0[i]), svld1_u8(pg, &preSieved1[i])),
+        svand_u8_z(pg, svld1_u8(pg, &preSieved2[i]), svld1_u8(pg, &preSieved3[i]))));
+  }
+}
+
+#if defined(ENABLE_MULTIARCH_ARM_SVE)
+  __attribute__ ((target ("arch=armv8-a+sve")))
+#endif
+void AND_PreSieveTables_Sieve_arm_sve(const uint8_t* __restrict preSieved0,
+                                      const uint8_t* __restrict preSieved1,
+                                      const uint8_t* __restrict preSieved2,
+                                      const uint8_t* __restrict preSieved3,
+                                      uint8_t* __restrict sieve,
+                                      std::size_t bytes)
+{
+  for (std::size_t i = 0; i < bytes; i += svcntb())
+  {
+    svbool_t pg = svwhilelt_b8(i, bytes);
+
+    svst1_u8(pg, &sieve[i],
+      svand_u8_z(pg, svld1_u8(pg, &sieve[i]), svand_u8_x(svptrue_b64(),
+        svand_u8_z(pg, svld1_u8(pg, &preSieved0[i]), svld1_u8(pg, &preSieved1[i])),
+        svand_u8_z(pg, svld1_u8(pg, &preSieved2[i]), svld1_u8(pg, &preSieved3[i])))));
+  }
+}
+
+#elif defined(ENABLE_AVX512_BW) || \
+      defined(ENABLE_MULTIARCH_AVX512_BW)
+
+#if defined(ENABLE_MULTIARCH_AVX512_BW)
+  __attribute__ ((target ("avx512f,avx512bw")))
+#endif
+void AND_PreSieveTables_avx512(const uint8_t* __restrict preSieved0,
+                               const uint8_t* __restrict preSieved1,
+                               const uint8_t* __restrict preSieved2,
+                               const uint8_t* __restrict preSieved3,
+                               uint8_t* __restrict sieve,
+                               std::size_t bytes)
+{
+  std::size_t i = 0;
+
+  for (; i + 64 <= bytes; i += sizeof(__m512i))
+  {
+    _mm512_storeu_epi8((__m512i*) &sieve[i],
+      _mm512_and_si512(
+        _mm512_and_si512(_mm512_loadu_epi8((const __m512i*) &preSieved0[i]), _mm512_loadu_epi8((const __m512i*) &preSieved1[i])),
+        _mm512_and_si512(_mm512_loadu_epi8((const __m512i*) &preSieved2[i]), _mm512_loadu_epi8((const __m512i*) &preSieved3[i]))));
+  }
+
+  if (i < bytes)
+  {
+    __mmask64 mask = 0xffffffffffffffffull >> (i + 64 - bytes);
+
+    _mm512_mask_storeu_epi8((__m512i*) &sieve[i], mask,
+      _mm512_and_si512(
+        _mm512_and_si512(_mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved0[i]), _mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved1[i])),
+        _mm512_and_si512(_mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved2[i]), _mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved3[i]))));
+  }
+}
+
+#if defined(ENABLE_MULTIARCH_AVX512_BW)
+  __attribute__ ((target ("avx512f,avx512bw")))
+#endif
+void AND_PreSieveTables_Sieve_avx512(const uint8_t* __restrict preSieved0,
+                                     const uint8_t* __restrict preSieved1,
+                                     const uint8_t* __restrict preSieved2,
+                                     const uint8_t* __restrict preSieved3,
+                                     uint8_t* __restrict sieve,
+                                     std::size_t bytes)
+{
+  std::size_t i = 0;
+
+  for (; i + 64 <= bytes; i += sizeof(__m512i))
+  {
+    _mm512_storeu_epi8((__m512i*) &sieve[i],
+      _mm512_and_si512(_mm512_loadu_epi8((const __m512i*) &sieve[i]), _mm512_and_si512(
+        _mm512_and_si512(_mm512_loadu_epi8((const __m512i*) &preSieved0[i]), _mm512_loadu_epi8((const __m512i*) &preSieved1[i])),
+        _mm512_and_si512(_mm512_loadu_epi8((const __m512i*) &preSieved2[i]), _mm512_loadu_epi8((const __m512i*) &preSieved3[i])))));
+  }
+
+  if (i < bytes)
+  {
+    __mmask64 mask = 0xffffffffffffffffull >> (i + 64 - bytes);
+
+    _mm512_mask_storeu_epi8((__m512i*) &sieve[i], mask,
+      _mm512_and_si512(_mm512_maskz_loadu_epi8(mask, (const __m512i*) &sieve[i]), _mm512_and_si512(
+        _mm512_and_si512(_mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved0[i]), _mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved1[i])),
+        _mm512_and_si512(_mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved2[i]), _mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved3[i])))));
+  }
+}
+
+#endif
+
+/// This section contains portable SIMD algorithms that don't need
+/// any runtime CPU support checks.
+#if defined(ENABLE_DEFAULT)
 #if defined(HAS_SSE2)
 
-/// Since compiler auto-vectorization is not 100% reliable, we have
-/// manually vectorized the AND_PreSieveTables() function for x64 CPUs.
-/// This algorithm is portable since all x64 CPUs support the SSE2
-/// instruction set.
-///
-void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
-                        const uint8_t* __restrict preSieved1,
-                        const uint8_t* __restrict preSieved2,
-                        const uint8_t* __restrict preSieved3,
-                        uint8_t* __restrict sieve,
-                        std::size_t bytes)
+void AND_PreSieveTables_default(const uint8_t* __restrict preSieved0,
+                                const uint8_t* __restrict preSieved1,
+                                const uint8_t* __restrict preSieved2,
+                                const uint8_t* __restrict preSieved3,
+                                uint8_t* __restrict sieve,
+                                std::size_t bytes)
 {
   std::size_t i = 0;
   std::size_t limit = bytes - bytes % sizeof(__m128i);
 
-  // Note that I also tried vectorizing this algorithm using AVX2
-  // which has twice the vector width compared to SSE2, but this did
-  // not provide any speedup. On average, this loop processes only
-  // 956 bytes, hence there aren't many vector loop iterations and
-  // by increasing the vector width this also increases the number of
-  // scalar loop iterations after the vector loop finishes which
-  // could potentially even become a bottleneck.
   for (; i < limit; i += sizeof(__m128i))
   {
     _mm_storeu_si128((__m128i*) &sieve[i],
@@ -97,12 +226,12 @@ void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
     sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
 }
 
-void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
-                              const uint8_t* __restrict preSieved1,
-                              const uint8_t* __restrict preSieved2,
-                              const uint8_t* __restrict preSieved3,
-                              uint8_t* __restrict sieve,
-                              std::size_t bytes)
+void AND_PreSieveTables_Sieve_default(const uint8_t* __restrict preSieved0,
+                                      const uint8_t* __restrict preSieved1,
+                                      const uint8_t* __restrict preSieved2,
+                                      const uint8_t* __restrict preSieved3,
+                                      uint8_t* __restrict sieve,
+                                      std::size_t bytes)
 {
   std::size_t i = 0;
   std::size_t limit = bytes - bytes % sizeof(__m128i);
@@ -121,19 +250,12 @@ void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
 
 #elif defined(HAS_ARM_NEON)
 
-/// Homebrew compiles its C/C++ packages on macOS using Clang -Os
-/// (instead of -O2 or -O3) which does not auto-vectorize our simple
-/// loop with Bitwise AND. If this loop is not vectorized this
-/// deteriorates the performance of primesieve by up to 40%. As a
-/// workaround for this Homebrew issue we have manually vectorized
-/// the Bitwise AND loop using ARM NEON.
-///
-void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
-                        const uint8_t* __restrict preSieved1,
-                        const uint8_t* __restrict preSieved2,
-                        const uint8_t* __restrict preSieved3,
-                        uint8_t* __restrict sieve,
-                        std::size_t bytes)
+void AND_PreSieveTables_default(const uint8_t* __restrict preSieved0,
+                                const uint8_t* __restrict preSieved1,
+                                const uint8_t* __restrict preSieved2,
+                                const uint8_t* __restrict preSieved3,
+                                uint8_t* __restrict sieve,
+                                std::size_t bytes)
 {
   std::size_t i = 0;
   std::size_t limit = bytes - bytes % sizeof(uint8x16_t);
@@ -150,12 +272,12 @@ void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
     sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
 }
 
-void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
-                              const uint8_t* __restrict preSieved1,
-                              const uint8_t* __restrict preSieved2,
-                              const uint8_t* __restrict preSieved3,
-                              uint8_t* __restrict sieve,
-                              std::size_t bytes)
+void AND_PreSieveTables_Sieve_default(const uint8_t* __restrict preSieved0,
+                                      const uint8_t* __restrict preSieved1,
+                                      const uint8_t* __restrict preSieved2,
+                                      const uint8_t* __restrict preSieved3,
+                                      uint8_t* __restrict sieve,
+                                      std::size_t bytes)
 {
   std::size_t i = 0;
   std::size_t limit = bytes - bytes % sizeof(uint8x16_t);
@@ -174,6 +296,31 @@ void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
 
 #else
 
+void AND_PreSieveTables_default(const uint8_t* __restrict preSieved0,
+                                const uint8_t* __restrict preSieved1,
+                                const uint8_t* __restrict preSieved2,
+                                const uint8_t* __restrict preSieved3,
+                                uint8_t* __restrict sieve,
+                                std::size_t bytes)
+{
+  for (std::size_t i = 0; i < bytes; i++)
+    sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
+}
+
+void AND_PreSieveTables_Sieve_default(const uint8_t* __restrict preSieved0,
+                                      const uint8_t* __restrict preSieved1,
+                                      const uint8_t* __restrict preSieved2,
+                                      const uint8_t* __restrict preSieved3,
+                                      uint8_t* __restrict sieve,
+                                      std::size_t bytes)
+{
+  for (std::size_t i = 0; i < bytes; i++)
+    sieve[i] &= preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
+}
+
+#endif
+#endif
+
 void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
                         const uint8_t* __restrict preSieved1,
                         const uint8_t* __restrict preSieved2,
@@ -181,13 +328,28 @@ void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
                         uint8_t* __restrict sieve,
                         std::size_t bytes)
 {
-  // This loop will get auto-vectorized if compiled with GCC/Clang
-  // using -O3. Using GCC -O2 does not auto-vectorize this loop
-  // because -O2 uses the "very-cheap" vector cost model. To fix
-  // this issue we enable -ftree-vectorize -fvect-cost-model=dynamic
-  // if the compiler supports it in auto_vectorization.cmake.
-  for (std::size_t i = 0; i < bytes; i++)
-    sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
+#if defined(ENABLE_ARM_SVE)
+  AND_PreSieveTables_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+#elif defined(ENABLE_AVX512_BW)
+  AND_PreSieveTables_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+
+#elif defined(ENABLE_MULTIARCH_ARM_SVE)
+
+  if (cpu_supports_sve)
+    AND_PreSieveTables_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+  else
+    AND_PreSieveTables_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+
+#elif defined(ENABLE_MULTIARCH_AVX512_BW)
+
+  if (cpu_supports_avx512_bw)
+    AND_PreSieveTables_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+  else
+    AND_PreSieveTables_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+
+#else
+  AND_PreSieveTables_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+#endif
 }
 
 void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
@@ -197,11 +359,29 @@ void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
                               uint8_t* __restrict sieve,
                               std::size_t bytes)
 {
-  for (std::size_t i = 0; i < bytes; i++)
-    sieve[i] &= preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
-}
+#if defined(ENABLE_ARM_SVE)
+  AND_PreSieveTables_Sieve_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+#elif defined(ENABLE_AVX512_BW)
+  AND_PreSieveTables_Sieve_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 
+#elif defined(ENABLE_MULTIARCH_ARM_SVE)
+
+  if (cpu_supports_sve)
+    AND_PreSieveTables_Sieve_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+  else
+    AND_PreSieveTables_Sieve_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+
+#elif defined(ENABLE_MULTIARCH_AVX512_BW)
+
+  if (cpu_supports_avx512_bw)
+    AND_PreSieveTables_Sieve_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+  else
+    AND_PreSieveTables_Sieve_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+
+#else
+  AND_PreSieveTables_Sieve_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #endif
+}
 
 } // namespace
 
