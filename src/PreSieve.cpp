@@ -106,8 +106,8 @@ void AND_PreSieveTables_arm_sve(const uint8_t* __restrict preSieved0,
 
     svst1_u8(pg, &sieve[i],
       svand_u8_x(svptrue_b64(),
-        svand_u8_x(svptrue_b64(), svld1_u8(pg, &preSieved0[i]), svld1_u8(pg, &preSieved1[i])),
-        svand_u8_x(svptrue_b64(), svld1_u8(pg, &preSieved2[i]), svld1_u8(pg, &preSieved3[i]))));
+        svand_u8_z(pg, svld1_u8(pg, &preSieved0[i]), svld1_u8(pg, &preSieved1[i])),
+        svand_u8_z(pg, svld1_u8(pg, &preSieved2[i]), svld1_u8(pg, &preSieved3[i]))));
   }
 }
 
@@ -126,9 +126,9 @@ void AND_PreSieveTables_Sieve_arm_sve(const uint8_t* __restrict preSieved0,
     svbool_t pg = svwhilelt_b8(i, bytes);
 
     svst1_u8(pg, &sieve[i],
-      svand_u8_x(svptrue_b64(), svld1_u8(pg, &sieve[i]), svand_u8_x(svptrue_b64(),
-        svand_u8_x(svptrue_b64(), svld1_u8(pg, &preSieved0[i]), svld1_u8(pg, &preSieved1[i])),
-        svand_u8_x(svptrue_b64(), svld1_u8(pg, &preSieved2[i]), svld1_u8(pg, &preSieved3[i])))));
+      svand_u8_z(pg, svld1_u8(pg, &sieve[i]), svand_u8_x(svptrue_b64(),
+        svand_u8_z(pg, svld1_u8(pg, &preSieved0[i]), svld1_u8(pg, &preSieved1[i])),
+        svand_u8_z(pg, svld1_u8(pg, &preSieved2[i]), svld1_u8(pg, &preSieved3[i])))));
   }
 }
 

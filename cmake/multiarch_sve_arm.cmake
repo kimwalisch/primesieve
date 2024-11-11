@@ -38,8 +38,8 @@ check_cxx_source_compiles("
 
             svst1_u8(pg, &sieve[i],
                 svand_u8_x(svptrue_b64(),
-                    svand_u8_x(svptrue_b64(), svld1_u8(pg, &preSieved0[i]), svld1_u8(pg, &preSieved1[i])),
-                    svand_u8_x(svptrue_b64(), svld1_u8(pg, &preSieved2[i]), svld1_u8(pg, &preSieved3[i]))));
+                    svand_u8_z(pg, svld1_u8(pg, &preSieved0[i]), svld1_u8(pg, &preSieved1[i])),
+                    svand_u8_z(pg, svld1_u8(pg, &preSieved2[i]), svld1_u8(pg, &preSieved3[i]))));
         }
     }
 
