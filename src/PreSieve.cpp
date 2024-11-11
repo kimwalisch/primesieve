@@ -51,8 +51,8 @@
   #define ENABLE_ARM_SVE
 
 #elif defined(__AVX512F__) && \
-    defined(__AVX512BW__) && \
-    __has_include(<immintrin.h>)
+      defined(__AVX512BW__) && \
+      __has_include(<immintrin.h>)
   #include <immintrin.h>
   #define ENABLE_AVX512_BW
 
@@ -342,7 +342,7 @@ void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
 {
 #if defined(ENABLE_ARM_SVE)
   AND_PreSieveTables_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
-#if defined(ENABLE_AVX512_BW)
+#elif defined(ENABLE_AVX512_BW)
   AND_PreSieveTables_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #elif defined(ENABLE_MULTIARCH_AVX512_BW)
   if (cpu_supports_avx512_bw)
@@ -363,7 +363,7 @@ void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
 {
 #if defined(ENABLE_ARM_SVE)
   AND_PreSieveTables_Sieve_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
-#if defined(ENABLE_AVX512_BW)
+#elif defined(ENABLE_AVX512_BW)
   AND_PreSieveTables_Sieve_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #elif defined(ENABLE_MULTIARCH_AVX512_BW)
   if (cpu_supports_avx512_bw)
