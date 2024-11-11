@@ -19,7 +19,8 @@
 // https://en.wikipedia.org/wiki/CPUID
 
 // %ebx bit flags
-#define bit_AVX512F (1 << 16)
+#define bit_AVX512F  (1 << 16)
+#define bit_AVX512BW (1 << 30)
 
 // %ecx bit flags
 #define bit_AVX512VBMI  (1 << 1)
@@ -89,6 +90,37 @@ bool has_cpuid_popcnt()
   int abcd[4];
   run_cpuid(1, 0, abcd);
   return (abcd[2] & bit_POPCNT) == bit_POPCNT;
+}
+
+bool has_cpuid_avx512_bw()
+{
+  int abcd[4];
+
+  run_cpuid(1, 0, abcd);
+
+  int osxsave_mask = (1 << 27);
+
+  // Ensure OS supports extended processor state management
+  if ((abcd[2] & osxsave_mask) != osxsave_mask)
+    return false;
+
+  uint64_t ymm_mask = XSTATE_SSE | XSTATE_YMM;
+  uint64_t zmm_mask = XSTATE_SSE | XSTATE_YMM | XSTATE_ZMM;
+  uint64_t xcr0 = get_xcr0();
+
+  // Check AVX OS support
+  if ((xcr0 & ymm_mask) != ymm_mask)
+    return false;
+
+  // Check AVX512 OS support
+  if ((xcr0 & zmm_mask) != zmm_mask)
+    return false;
+
+  run_cpuid(7, 0, abcd);
+
+  // AND_PreSieveTables_avx512 requires AVX512F, AVX512BW
+  return ((abcd[1] & bit_AVX512F) == bit_AVX512F &&
+          (abcd[1] & bit_AVX512F) == bit_AVX512BW);
 }
 
 bool has_cpuid_avx512_vbmi2()
