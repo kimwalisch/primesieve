@@ -639,6 +639,13 @@ void CpuInfo::init()
   std::vector<size_t> cpuIds;
   cpuIds.reserve(3);
 
+  // Based on my tests, for hybrid CPUs the Linux kernel always lists
+  // all performance CPU cores first and all efficiency CPU cores
+  // last, regardless of the actual physical CPU core layout on the
+  // die. I tested this using an Intel Arrow Lake 245K CPU where the
+  // physical CPU core layout (2 P-cores, 8 E-cores, 4 P-cores) on the
+  // die is different from what the Linux kernel reports.
+
   // Check 1st, last & middle CPU core
   cpuIds.push_back(0);
   if (logicalCpuCores_ >= 2)
