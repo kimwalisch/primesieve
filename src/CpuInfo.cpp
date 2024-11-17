@@ -140,8 +140,8 @@ void CpuInfo::init()
       cacheSizes{0, 0, 0, 0},
       cacheSharing{0, 0, 0, 0}
     { }
-    Array<size_t, 4> cacheSizes;
-    Array<size_t, 4> cacheSharing;
+    Array<std::size_t, 4> cacheSizes;
+    Array<std::size_t, 4> cacheSharing;
   };
 
   struct L1CacheInfo
@@ -380,17 +380,17 @@ namespace primesieve {
 
 void CpuInfo::init()
 {
-  auto logicalCpuCores = getSysctl<size_t>("hw.logicalcpu");
+  auto logicalCpuCores = getSysctl<std::size_t>("hw.logicalcpu");
   if (!logicalCpuCores.empty())
     logicalCpuCores_ = logicalCpuCores[0];
 
   // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
-  auto cacheSizes = getSysctl<size_t>("hw.cachesize");
+  auto cacheSizes = getSysctl<std::size_t>("hw.cachesize");
   for (std::size_t i = 1; i < std::min(cacheSizes.size(), cacheSizes_.size()); i++)
     cacheSizes_[i] = cacheSizes[i];
 
   // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
-  auto cacheConfig = getSysctl<size_t>("hw.cacheconfig");
+  auto cacheConfig = getSysctl<std::size_t>("hw.cacheconfig");
   for (std::size_t i = 1; i < std::min(cacheConfig.size(), cacheSharing_.size()); i++)
     cacheSharing_[i] = cacheConfig[i];
 }
@@ -439,7 +439,7 @@ std::string getString(const std::string& filename)
     return {};
 }
 
-size_t getValue(const std::string& filename)
+std::size_t getValue(const std::string& filename)
 {
   std::string str = getString(filename);
   std::size_t val = 0;
@@ -450,7 +450,7 @@ size_t getValue(const std::string& filename)
   return val;
 }
 
-size_t getCacheSize(const std::string& filename)
+std::size_t getCacheSize(const std::string& filename)
 {
   std::string str = getString(filename);
   std::size_t val = 0;
@@ -562,7 +562,7 @@ std::vector<std::string> split(const std::string& str,
 /// Example: 0-8,18-26
 /// https://www.kernel.org/doc/Documentation/cputopology.txt
 ///
-size_t parseThreadList(const std::string& filename)
+std::size_t parseThreadList(const std::string& filename)
 {
   std::size_t threads = 0;
   auto threadList = getString(filename);
@@ -590,7 +590,7 @@ size_t parseThreadList(const std::string& filename)
 /// Example: 00000000,00000000,00000000,07fc01ff
 /// https://www.kernel.org/doc/Documentation/cputopology.txt
 ///
-size_t parseThreadMap(const std::string& filename)
+std::size_t parseThreadMap(const std::string& filename)
 {
   std::size_t threads = 0;
   std::string threadMap = getString(filename);
@@ -616,8 +616,8 @@ size_t parseThreadMap(const std::string& filename)
 /// But you cannot know in advance if any of these
 /// files exist, hence you need to try both.
 ///
-size_t getThreads(const std::string& threadList,
-                  const std::string& threadMap)
+std::size_t getThreads(const std::string& threadList,
+                       const std::string& threadMap)
 {
   std::size_t threads = parseThreadList(threadList);
 
@@ -639,7 +639,7 @@ void CpuInfo::init()
   using CacheSize_t = std::size_t;
   // Items must be sorted in ascending order
   std::map<CacheSize_t, std::size_t> l1CacheSizes;
-  std::vector<size_t> cpuIds;
+  std::vector<std::size_t> cpuIds;
   cpuIds.reserve(3);
 
   // Based on my tests, for hybrid CPUs the Linux kernel always lists
@@ -781,37 +781,37 @@ std::string CpuInfo::cpuName() const
   }
 }
 
-size_t CpuInfo::logicalCpuCores() const
+std::size_t CpuInfo::logicalCpuCores() const
 {
   return logicalCpuCores_;
 }
 
-size_t CpuInfo::l1CacheBytes() const
+std::size_t CpuInfo::l1CacheBytes() const
 {
   return cacheSizes_[1];
 }
 
-size_t CpuInfo::l2CacheBytes() const
+std::size_t CpuInfo::l2CacheBytes() const
 {
   return cacheSizes_[2];
 }
 
-size_t CpuInfo::l3CacheBytes() const
+std::size_t CpuInfo::l3CacheBytes() const
 {
   return cacheSizes_[3];
 }
 
-size_t CpuInfo::l1Sharing() const
+std::size_t CpuInfo::l1Sharing() const
 {
   return cacheSharing_[1];
 }
 
-size_t CpuInfo::l2Sharing() const
+std::size_t CpuInfo::l2Sharing() const
 {
   return cacheSharing_[2];
 }
 
-size_t CpuInfo::l3Sharing() const
+std::size_t CpuInfo::l3Sharing() const
 {
   return cacheSharing_[3];
 }
