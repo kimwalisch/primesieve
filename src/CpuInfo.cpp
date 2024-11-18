@@ -681,7 +681,7 @@ void CpuInfo::init()
 
           if (cacheSize > 0)
           {
-            if (l1CacheSizes.find(cacheSize) != l1CacheSizes.end())
+            if (l1CacheSizes.find(cacheSize) == l1CacheSizes.end())
               l1CacheSizes[cacheSize] = cpuId;
             break;
           }
