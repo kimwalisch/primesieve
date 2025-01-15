@@ -190,6 +190,10 @@ primesieve natively supports C and C++ and has bindings available for:
         <td><a href="https://github.com/AaronChen0/cl-primesieve">cl-primesieve</a></td>
     </tr>
     <tr>
+        <td><b>Java:</b></td>
+        <td><a href="https://github.com/buildingnicesoftware/primesieve-java">primesieve-java</a></td>
+    </tr>
+    <tr>
         <td><b>Janet:</b></td>
         <td><a href="https://github.com/bunder/janet-primesieve">janet-primesieve</a></td>
     </tr>
