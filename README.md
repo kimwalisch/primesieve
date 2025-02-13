@@ -242,6 +242,7 @@ Many thanks to the developers of these bindings!
 Thanks to all current and past [sponsors of primesieve](https://github.com/sponsors/kimwalisch)! Your donations help me purchase (or rent) the latest CPUs and ensure primesieve runs at maximum performance on them. Your donations also motivate me to continue maintaining primesieve.
 
 <a href="https://github.com/AndrewVSutherland"><img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/11425002?v=4&h=60&w=60&fit=cover&mask=circle&maxage=100d"></img></a>
+<a href="https://github.com/wolframresearch"><img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/11549616?v=4&h=60&w=60&fit=cover&mask=circle&maxage=100d"></img></a>
 <a href="https://github.com/sethtroisi"><img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/10172976?v=4&h=60&w=60&fit=cover&mask=circle&maxage=100d"></img></a>
 <a href="https://github.com/entersoftone"><img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/80900902?v=4&h=60&w=60&fit=cover&mask=circle&maxage=100d"></img></a>
 <a href="https://github.com/utmcontent"><img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/4705133?v=4&h=60&w=60&fit=cover&mask=circle&maxage=100d"></img></a>
