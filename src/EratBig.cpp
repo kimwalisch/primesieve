@@ -144,9 +144,7 @@ void EratBig::init(uint64_t stop,
   uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
   uint64_t maxSegmentIndex = maxMultipleIndex >> log2SieveSize_;
   uint64_t maxSize = maxSegmentIndex + 1;
-
-  buckets_.resize(maxSize);
-  std::fill(buckets_.begin(), buckets_.end(), nullptr);
+  buckets_.reserve(maxSize);
 }
 
 /// Add a new sieving prime
@@ -154,12 +152,20 @@ void EratBig::storeSievingPrime(uint64_t prime,
                                 uint64_t multipleIndex,
                                 uint64_t wheelIndex)
 {
+  uint64_t sieveSize = 1ull << log2SieveSize_;
   uint64_t sievingPrime = prime / 30;
+  uint64_t maxNextMultiple = sievingPrime * getMaxFactor() + getMaxFactor();
+  uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
+  uint64_t maxSegmentIndex = maxMultipleIndex >> log2SieveSize_;
+  uint64_t newSize = maxSegmentIndex + 1;
   uint64_t segment = multipleIndex >> log2SieveSize_;
   multipleIndex &= moduloSieveSize_;
 
   ASSERT(prime <= maxPrime_);
   ASSERT(segment < buckets_.size());
+
+  while (buckets_.size() < newSize)
+    buckets_.push_back(nullptr);
 
   if_unlikely(Bucket::isFull(buckets_[segment]))
     memoryPool_->addBucket(buckets_[segment]);
