@@ -18,7 +18,7 @@
 ///         after the last multiple of each sieving prime is removed
 ///         from the sieve array.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -144,7 +144,9 @@ void EratBig::init(uint64_t stop,
   uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
   uint64_t maxSegmentIndex = maxMultipleIndex >> log2SieveSize_;
   uint64_t maxSize = maxSegmentIndex + 1;
-  buckets_.reserve(maxSize);
+
+  buckets_.resize(maxSize);
+  std::fill(buckets_.begin(), buckets_.end(), nullptr);
 }
 
 /// Add a new sieving prime
@@ -152,47 +154,26 @@ void EratBig::storeSievingPrime(uint64_t prime,
                                 uint64_t multipleIndex,
                                 uint64_t wheelIndex)
 {
-  uint64_t sieveSize = 1ull << log2SieveSize_;
   uint64_t sievingPrime = prime / 30;
-  uint64_t maxNextMultiple = sievingPrime * getMaxFactor() + getMaxFactor();
-  uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
-  uint64_t maxSegmentIndex = maxMultipleIndex >> log2SieveSize_;
-  uint64_t newSize = maxSegmentIndex + 1;
   uint64_t segment = multipleIndex >> log2SieveSize_;
   multipleIndex &= moduloSieveSize_;
-
-  while (buckets_.size() < newSize)
-  {
-    buckets_.push_back(nullptr);
-    memoryPool_->addBucket(buckets_.back());
-  }
 
   ASSERT(prime <= maxPrime_);
   ASSERT(segment < buckets_.size());
 
-  buckets_[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
-  if (Bucket::isFull(buckets_[segment]))
+  if_unlikely(Bucket::isFull(buckets_[segment]))
     memoryPool_->addBucket(buckets_[segment]);
+
+  buckets_[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
 }
 
 void EratBig::crossOff(Vector<uint8_t>& sieve)
 {
-  while (true)
+  while (buckets_[0])
   {
-    // Get the current bucket list, it's a singly linked
-    // list. This list contains the sieving primes that
-    // have multiple occurrences in the current segment.
     Bucket* bucket = Bucket::get(buckets_[0]);
     bucket->setEnd(buckets_[0]);
-
-    // No more buckets in the current segment
-    if (bucket->empty() &&
-        bucket->next() == nullptr)
-      break;
-
-    // Reset the buckets_[0] list
     buckets_[0] = nullptr;
-    memoryPool_->addBucket(buckets_[0]);
 
     // Iterate over the buckets related
     // to the current segment.
@@ -242,27 +223,40 @@ void EratBig::crossOff(uint8_t* sieve,
     std::size_t wheelIndex1    = prime[1].getWheelIndex();
     std::size_t sievingPrime1  = prime[1].getSievingPrime();
 
+    // Cross-off the current multiple (unset bit)
+    // and calculate the next multiple.
     sieve[multipleIndex0] &= wheel210[wheelIndex0].unsetBit;
-    sieve[multipleIndex1] &= wheel210[wheelIndex1].unsetBit;
-
     multipleIndex0 += wheel210[wheelIndex0].nextMultipleFactor * sievingPrime0;
-    multipleIndex1 += wheel210[wheelIndex1].nextMultipleFactor * sievingPrime1;
     multipleIndex0 += wheel210[wheelIndex0].correct;
-    multipleIndex1 += wheel210[wheelIndex1].correct;
     wheelIndex0 = wheel210[wheelIndex0].next;
-    wheelIndex1 = wheel210[wheelIndex1].next;
     std::size_t segment0 = multipleIndex0 >> log2SieveSize;
-    std::size_t segment1 = multipleIndex1 >> log2SieveSize;
     multipleIndex0 &= moduloSieveSize;
-    multipleIndex1 &= moduloSieveSize;
 
-    buckets[segment0]++->set(sievingPrime0, multipleIndex0, wheelIndex0);
     if_unlikely(Bucket::isFull(buckets[segment0]))
       memoryPool.addBucket(buckets[segment0]);
 
-    buckets[segment1]++->set(sievingPrime1, multipleIndex1, wheelIndex1);
+    // The next multiple of the sieving prime will
+    // occur in segment0. Hence we move the
+    // sieving prime to the bucket list which
+    // corresponds to that segment.
+    buckets[segment0]++->set(sievingPrime0, multipleIndex0, wheelIndex0);
+
+    // Process the 2nd sieving prime
+    sieve[multipleIndex1] &= wheel210[wheelIndex1].unsetBit;
+    multipleIndex1 += wheel210[wheelIndex1].nextMultipleFactor * sievingPrime1;
+    multipleIndex1 += wheel210[wheelIndex1].correct;
+    wheelIndex1 = wheel210[wheelIndex1].next;
+    std::size_t segment1 = multipleIndex1 >> log2SieveSize;
+    multipleIndex1 &= moduloSieveSize;
+
     if_unlikely(Bucket::isFull(buckets[segment1]))
       memoryPool.addBucket(buckets[segment1]);
+
+    // The next multiple of the sieving prime will
+    // occur in segment1. Hence we move the
+    // sieving prime to the bucket list which
+    // corresponds to that segment.
+    buckets[segment1]++->set(sievingPrime1, multipleIndex1, wheelIndex1);
   }
 
   if_unlikely(prime != end)
@@ -278,9 +272,10 @@ void EratBig::crossOff(uint8_t* sieve,
     std::size_t segment = multipleIndex >> log2SieveSize;
     multipleIndex &= moduloSieveSize;
 
-    buckets[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
     if_unlikely(Bucket::isFull(buckets[segment]))
       memoryPool.addBucket(buckets[segment]);
+
+    buckets[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
   }
 }
 
