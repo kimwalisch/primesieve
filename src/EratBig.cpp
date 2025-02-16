@@ -167,7 +167,7 @@ void EratBig::storeSievingPrime(uint64_t prime,
   ASSERT(prime <= maxPrime_);
   ASSERT(segment < buckets_.size());
 
-  if_unlikely(Bucket::isFull(buckets_[segment]))
+  if (Bucket::isFull(buckets_[segment]))
     memoryPool_->addBucket(buckets_[segment]);
 
   buckets_[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
@@ -231,7 +231,7 @@ void EratBig::crossOff(uint8_t* sieve,
     std::size_t segment = multipleIndex >> log2SieveSize;
     multipleIndex &= moduloSieveSize;
 
-    if_unlikely(Bucket::isFull(buckets[segment]))
+    if (Bucket::isFull(buckets[segment]))
       memoryPool.addBucket(buckets[segment]);
 
     buckets[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
