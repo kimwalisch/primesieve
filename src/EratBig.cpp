@@ -222,6 +222,8 @@ void EratBig::crossOff(uint8_t* sieve,
     std::size_t wheelIndex    = prime->getWheelIndex();
     std::size_t sievingPrime  = prime->getSievingPrime();
 
+    // Cross-off the current multiple (unset bit)
+    // and calculate the next multiple.
     sieve[multipleIndex] &= wheel210[wheelIndex].unsetBit;
     multipleIndex += wheel210[wheelIndex].nextMultipleFactor * sievingPrime;
     multipleIndex += wheel210[wheelIndex].correct;
