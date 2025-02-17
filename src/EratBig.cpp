@@ -18,7 +18,7 @@
 ///         after the last multiple of each sieving prime is removed
 ///         from the sieve array.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -162,37 +162,24 @@ void EratBig::storeSievingPrime(uint64_t prime,
   multipleIndex &= moduloSieveSize_;
 
   while (buckets_.size() < newSize)
-  {
     buckets_.push_back(nullptr);
-    memoryPool_->addBucket(buckets_.back());
-  }
 
   ASSERT(prime <= maxPrime_);
   ASSERT(segment < buckets_.size());
 
-  buckets_[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
   if (Bucket::isFull(buckets_[segment]))
     memoryPool_->addBucket(buckets_[segment]);
+
+  buckets_[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
 }
 
 void EratBig::crossOff(Vector<uint8_t>& sieve)
 {
-  while (true)
+  while (buckets_[0])
   {
-    // Get the current bucket list, it's a singly linked
-    // list. This list contains the sieving primes that
-    // have multiple occurrences in the current segment.
     Bucket* bucket = Bucket::get(buckets_[0]);
     bucket->setEnd(buckets_[0]);
-
-    // No more buckets in the current segment
-    if (bucket->empty() &&
-        bucket->next() == nullptr)
-      break;
-
-    // Reset the buckets_[0] list
     buckets_[0] = nullptr;
-    memoryPool_->addBucket(buckets_[0]);
 
     // Iterate over the buckets related
     // to the current segment.
@@ -228,49 +215,15 @@ void EratBig::crossOff(uint8_t* sieve,
   MemoryPool& memoryPool = *memoryPool_;
   std::size_t moduloSieveSize = moduloSieveSize_;
   std::size_t log2SieveSize = log2SieveSize_;
-  std::size_t size = (std::size_t) (end - prime);
-  SievingPrime* end2 = end - size % 2;
 
-  // Process 2 sieving primes per loop iteration to
-  // increase instruction level parallelism.
-  for (; prime != end2; prime += 2)
-  {
-    std::size_t multipleIndex0 = prime[0].getMultipleIndex();
-    std::size_t wheelIndex0    = prime[0].getWheelIndex();
-    std::size_t sievingPrime0  = prime[0].getSievingPrime();
-    std::size_t multipleIndex1 = prime[1].getMultipleIndex();
-    std::size_t wheelIndex1    = prime[1].getWheelIndex();
-    std::size_t sievingPrime1  = prime[1].getSievingPrime();
-
-    sieve[multipleIndex0] &= wheel210[wheelIndex0].unsetBit;
-    sieve[multipleIndex1] &= wheel210[wheelIndex1].unsetBit;
-
-    multipleIndex0 += wheel210[wheelIndex0].nextMultipleFactor * sievingPrime0;
-    multipleIndex1 += wheel210[wheelIndex1].nextMultipleFactor * sievingPrime1;
-    multipleIndex0 += wheel210[wheelIndex0].correct;
-    multipleIndex1 += wheel210[wheelIndex1].correct;
-    wheelIndex0 = wheel210[wheelIndex0].next;
-    wheelIndex1 = wheel210[wheelIndex1].next;
-    std::size_t segment0 = multipleIndex0 >> log2SieveSize;
-    std::size_t segment1 = multipleIndex1 >> log2SieveSize;
-    multipleIndex0 &= moduloSieveSize;
-    multipleIndex1 &= moduloSieveSize;
-
-    buckets[segment0]++->set(sievingPrime0, multipleIndex0, wheelIndex0);
-    if_unlikely(Bucket::isFull(buckets[segment0]))
-      memoryPool.addBucket(buckets[segment0]);
-
-    buckets[segment1]++->set(sievingPrime1, multipleIndex1, wheelIndex1);
-    if_unlikely(Bucket::isFull(buckets[segment1]))
-      memoryPool.addBucket(buckets[segment1]);
-  }
-
-  if_unlikely(prime != end)
+  for (; prime != end; prime++)
   {
     std::size_t multipleIndex = prime->getMultipleIndex();
     std::size_t wheelIndex    = prime->getWheelIndex();
     std::size_t sievingPrime  = prime->getSievingPrime();
 
+    // Cross-off the current multiple (unset bit)
+    // and calculate the next multiple.
     sieve[multipleIndex] &= wheel210[wheelIndex].unsetBit;
     multipleIndex += wheel210[wheelIndex].nextMultipleFactor * sievingPrime;
     multipleIndex += wheel210[wheelIndex].correct;
@@ -278,9 +231,10 @@ void EratBig::crossOff(uint8_t* sieve,
     std::size_t segment = multipleIndex >> log2SieveSize;
     multipleIndex &= moduloSieveSize;
 
-    buckets[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
-    if_unlikely(Bucket::isFull(buckets[segment]))
+    if (Bucket::isFull(buckets[segment]))
       memoryPool.addBucket(buckets[segment]);
+
+    buckets[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
   }
 }
 

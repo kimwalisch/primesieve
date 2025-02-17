@@ -1,3 +1,9 @@
+Changes in version 12.7, 17/02/2025
+===================================
+
+* EratBig.cpp: Simplify bucket handling.
+* README.md: Add Sponsors section.
+
 Changes in version 12.6, 11/11/2024
 ===================================
 
