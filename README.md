@@ -243,6 +243,7 @@ Thanks to all current and past [sponsors of primesieve](https://github.com/spons
 
 <a href="https://github.com/AndrewVSutherland"><img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/11425002?h=60&w=60&fit=cover&mask=circle"></img></a>
 <a href="https://github.com/wolframresearch"><img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/11549616?h=60&w=60&fit=cover&mask=circle"></img></a>
+<a href="https://github.com/AlgoWin"><img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/44401099?h=60&w=60&fit=cover&mask=circle"></img></a>
 <a href="https://github.com/sethtroisi"><img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/10172976?h=60&w=60&fit=cover&mask=circle"></img></a>
 <a href="https://github.com/entersoftone"><img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/80900902?h=60&w=60&fit=cover&mask=circle"></img></a>
 <a href="https://github.com/utmcontent"><img src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/4705133?h=60&w=60&fit=cover&mask=circle"></img></a>
