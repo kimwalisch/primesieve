@@ -6,7 +6,7 @@
 ///         miscalculation occurs (due to a hardware issue) or the
 ///         timeout (--timeout=SECS option) expires.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -146,7 +146,7 @@ void stressTestInfo(const CmdOptions& opts,
   if (opts.stressTestMode == "CPU")
   {
     double sieveSizeKiB = primesieve::get_sieve_size();
-    double avgMiB = 2.8 + (sieveSizeKiB / 1024.0);
+    double avgMiB = 2.6 + (sieveSizeKiB / 1024.0);
     std::cout << std::fixed << std::setprecision(2) << avgMiB << " MiB = "
               << std::fixed << std::setprecision(2) << threads * avgMiB << " MiB.\n";
   }
