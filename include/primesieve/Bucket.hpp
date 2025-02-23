@@ -33,8 +33,8 @@ class SievingPrime
 {
 public:
   enum {
-    MAX_MULTIPLEINDEX = (1 << 23) - 1,
-    MAX_WHEELINDEX    = (1 << (32 - 23)) - 1
+    MAX_MULTIPLEINDEX = (1 << 22) - 1,
+    MAX_WHEELINDEX    = (1 << (32 - 22)) - 1
   };
 
   SievingPrime() = default;
@@ -51,7 +51,7 @@ public:
   {
     ASSERT(multipleIndex <= MAX_MULTIPLEINDEX);
     ASSERT(wheelIndex <= MAX_WHEELINDEX);
-    indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 23));
+    indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 22));
   }
 
   void set(std::size_t sievingPrime,
@@ -60,7 +60,7 @@ public:
   {
     ASSERT(multipleIndex <= MAX_MULTIPLEINDEX);
     ASSERT(wheelIndex <= MAX_WHEELINDEX);
-    indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 23));
+    indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 22));
     sievingPrime_ = (uint32_t) sievingPrime;
   }
 
@@ -76,12 +76,12 @@ public:
 
   std::size_t getWheelIndex() const
   {
-    return indexes_ >> 23;
+    return indexes_ >> 22;
   }
 
 private:
-  /// multipleIndex = 23 least significant bits of indexes_
-  /// wheelIndex = 9 most significant bits of indexes_
+  /// multipleIndex = 22 least significant bits of indexes_
+  /// wheelIndex = 10 most significant bits of indexes_
   uint32_t indexes_;
   uint32_t sievingPrime_;
 };

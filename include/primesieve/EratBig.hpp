@@ -1,7 +1,7 @@
 ///
 /// @file  EratBig.hpp
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -25,7 +25,7 @@ class MemoryPool;
 /// Eratosthenes optimized for big sieving primes that have
 /// very few multiples per segment.
 ///
-class EratBig : public Wheel210_t
+class EratBig : public Wheel2310_t
 {
 public:
   void init(uint64_t, uint64_t, uint64_t, MemoryPool&);

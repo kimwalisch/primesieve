@@ -39,8 +39,8 @@
 * **EratBig** is a segmented sieve of Eratosthenes algorithm with Tomás
   Oliveira's improvement for big sieving primes
   [[2]](https://github.com/kimwalisch/primesieve/tree/master/src#references)
-  and a modulo 210 wheel that skips multiples of 2, 3, 5 and 7. The
-  wheel is implemented using the precomputed ```wheel210``` lookup table.
+  and a modulo 2310 wheel that skips multiples of 2, 3, 5, 7 and 11. The
+  wheel is implemented using the precomputed ```wheel2310``` lookup table.
   EratBig is optimized for big sieving primes that have very few
   multiples per segment.
 

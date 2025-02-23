@@ -3,7 +3,7 @@
 /// @brief  Wheel factorization is used to skip multiles of
 ///         small primes in the sieve of Eratosthenes.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -25,11 +25,11 @@ namespace primesieve {
 struct WheelInit
 {
   uint8_t nextMultipleFactor;
-  uint8_t wheelIndex;
+  uint16_t wheelIndex;
 };
 
 extern const WheelInit wheel30Init[30];
-extern const WheelInit wheel210Init[210];
+extern const WheelInit wheel2310Init[2310];
 
 /// The abstract Wheel class is used skip multiples of small
 /// primes in the sieve of Eratosthenes. The EratSmall,
@@ -110,8 +110,8 @@ Wheel<MODULO, SIZE, MAXMULTIPLEFACTOR, INIT>::wheelOffsets_[30] =
 /// 3rd wheel, skips multiples of 2, 3 and 5
 using Wheel30_t = Wheel<30, 8, 6, wheel30Init>;
 
-/// 4th wheel, skips multiples of 2, 3, 5 and 7
-using Wheel210_t = Wheel<210, 48, 10, wheel210Init>;
+/// 5th wheel, skips multiples of 2, 3, 5, 7 and 11
+using Wheel2310_t = Wheel<2310, 480, 14, wheel2310Init>;
 
 } // namespace
 

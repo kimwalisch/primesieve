@@ -75,7 +75,7 @@ efficiently uses the CPU's multi level cache hierarchy.
  * Pre-sieves multiples of small primes ≤ 163
  * Compresses the sieving primes in order to improve cache efficiency [[5]](#references)
  * Starts crossing off multiples at the square
- * Uses a modulo 210 wheel that skips multiples of 2, 3, 5 and 7
+ * Uses a modulo 2310 wheel that skips multiples of 2, 3, 5, 7 and 11
  * Uses specialized algorithms for small, medium and big sieving primes
  * Uses L1 cache for small sieving primes & L2 cache for medium and big sieving primes
  * Sorts medium sieving primes to reduce branch misprediction rate
