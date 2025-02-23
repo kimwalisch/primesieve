@@ -33,8 +33,8 @@ class SievingPrime
 {
 public:
   enum {
-    MAX_MULTIPLEINDEX = (1 << 23) - 1,
     MAX_SIEVINGPRIME  = (1 << 28) - 1,
+    MAX_MULTIPLEINDEX = (1 << 23) - 1,
     MAX_WHEELINDEX    = (1 << 13) - 1
   };
 
