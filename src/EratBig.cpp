@@ -36,6 +36,8 @@
 
 namespace {
 
+#pragma pack(push, 1)
+
 /// The WheelElement data structure is used to skip multiples
 /// of small primes using wheel factorization.
 ///
@@ -52,16 +54,10 @@ struct WheelElement
   uint8_t correct;
   /// Used to get the next wheel index:
   /// wheelIndex = next;
-  uint32_t next;
+  uint16_t next;
 };
 
-// The compiler must insert 1 byte of padding to WheelElement
-// before the uint32_t WheelElement::next variable so that
-// this variable is properly aligned to a 4-byte boundary and
-// sizeof(WheelElement) is a power of 2. This improves
-// performance by up to 15%.
-static_assert(isPow2(sizeof(WheelElement)),
-              "sizeof(WheelElement) must be a power of 2!");
+#pragma pack(pop)
 
 /// Used to skip multiples of: 2, 3, 5, 7, 11
 const primesieve::Array<WheelElement, 8*480> wheel2310 =
