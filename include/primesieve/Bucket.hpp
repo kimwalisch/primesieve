@@ -59,17 +59,17 @@ public:
     uint64_t m64 = uint64_t(multipleIndex);
     uint64_t w64 = uint64_t(wheelIndex);
 
-    data_ = m64 | (s64 << 23) | (w64 << 51);
+    data_ = s64 | (m64 << 28) | (w64 << 51);
   }
 
   std::size_t getSievingPrime() const
   {
-    return std::size_t((data_ >> 23) & MAX_SIEVINGPRIME);
+    return std::size_t(data_ & MAX_SIEVINGPRIME);
   }
 
   std::size_t getMultipleIndex() const
   {
-    return std::size_t(data_ & MAX_MULTIPLEINDEX);
+    return std::size_t((data_ >> 28) & MAX_MULTIPLEINDEX);
   }
 
   std::size_t getWheelIndex() const
@@ -78,8 +78,8 @@ public:
   }
 
 private:
-  /// multipleIndex = [bit0,  bit22]
-  /// sievingPrime  = [bit23, bit50]
+  /// sievingPrime  = [bit0,  bit28]
+  /// multipleIndex = [bit29, bit50]
   /// wheelIndex    = [bit51, bit63]
   uint64_t data_;
 };
