@@ -26,15 +26,16 @@ namespace primesieve {
 /// Each SievingPrime object contains a sieving prime and the
 /// position of its next multiple inside the sieve array i.e.
 /// multipleIndex and a wheelIndex. In order to reduce the memory
-/// usage the multipleIndex and wheelIndex are packed into a
-/// single 32-bit variable.
+/// usage the sievingPrime, multipleIndex and wheelIndex are
+/// packed into a single 64-bit variable.
 ///
 class SievingPrime
 {
 public:
   enum {
     MAX_MULTIPLEINDEX = (1 << 22) - 1,
-    MAX_WHEELINDEX    = (1 << (32 - 22)) - 1
+    MAX_SIEVINGPRIME  = (1 << 28) - 1,
+    MAX_WHEELINDEX    = (1 << 14) - 1
   };
 
   SievingPrime() = default;
@@ -46,44 +47,41 @@ public:
     set(sievingPrime, multipleIndex, wheelIndex);
   }
 
-  void set(std::size_t multipleIndex,
-           std::size_t wheelIndex)
-  {
-    ASSERT(multipleIndex <= MAX_MULTIPLEINDEX);
-    ASSERT(wheelIndex <= MAX_WHEELINDEX);
-    indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 22));
-  }
-
   void set(std::size_t sievingPrime,
            std::size_t multipleIndex,
            std::size_t wheelIndex)
   {
+    ASSERT(sievingPrime <= MAX_SIEVINGPRIME);
     ASSERT(multipleIndex <= MAX_MULTIPLEINDEX);
     ASSERT(wheelIndex <= MAX_WHEELINDEX);
-    indexes_ = (uint32_t) (multipleIndex | (wheelIndex << 22));
-    sievingPrime_ = (uint32_t) sievingPrime;
+
+    uint64_t s64 = uint64_t(sievingPrime);
+    uint64_t m64 = uint64_t(multipleIndex);
+    uint64_t w64 = uint64_t(wheelIndex);
+
+    data_ = m64 | (s64 << 22) | (w64 << 50);
   }
 
   std::size_t getSievingPrime() const
   {
-    return sievingPrime_;
+    return std::size_t((data_ >> 22) & MAX_SIEVINGPRIME);
   }
 
   std::size_t getMultipleIndex() const
   {
-    return indexes_ & MAX_MULTIPLEINDEX;
+    return std::size_t(data_ & MAX_MULTIPLEINDEX);
   }
 
   std::size_t getWheelIndex() const
   {
-    return indexes_ >> 22;
+    return std::size_t(data_ >> 50);
   }
 
 private:
-  /// multipleIndex = 22 least significant bits of indexes_
-  /// wheelIndex = 10 most significant bits of indexes_
-  uint32_t indexes_;
-  uint32_t sievingPrime_;
+  /// multipleIndex = [bit0,  bit21]
+  /// sievingPrime  = [bit22, bit49]
+  /// wheelIndex    = [bit50, bit63]
+  uint64_t data_;
 };
 
 /// The Bucket data structure is used to store sieving primes.

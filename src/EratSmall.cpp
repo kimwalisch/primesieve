@@ -83,7 +83,7 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
     if (i >= sieveSize) \
     { \
       std::size_t multipleIndex = i - sieveSize; \
-      prime.set(multipleIndex, wheelIndex); \
+      prime.set(sievingPrime, multipleIndex, wheelIndex); \
       goto next_iteration; \
     }
 
