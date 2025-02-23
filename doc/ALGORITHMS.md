@@ -72,7 +72,7 @@ efficiently uses the CPU's multi level cache hierarchy.
 ### Optimizations used in primesieve
 
  * Uses a bit array with 8 flags each 30 numbers for sieving
- * Pre-sieves multiples of small primes ≤ 163
+ * Pre-sieves multiples of small primes ≤ 163 using SIMD instructions (AVX512, ARM SVE)
  * Compresses the sieving primes in order to improve cache efficiency [[5]](#references)
  * Starts crossing off multiples at the square
  * Uses specialized algorithms for small, medium and big sieving primes
