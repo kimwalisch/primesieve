@@ -33,9 +33,9 @@ class SievingPrime
 {
 public:
   enum {
-    MAX_MULTIPLEINDEX = (1 << 22) - 1,
+    MAX_MULTIPLEINDEX = (1 << 23) - 1,
     MAX_SIEVINGPRIME  = (1 << 28) - 1,
-    MAX_WHEELINDEX    = (1 << 14) - 1
+    MAX_WHEELINDEX    = (1 << 13) - 1
   };
 
   SievingPrime() = default;
@@ -59,12 +59,12 @@ public:
     uint64_t m64 = uint64_t(multipleIndex);
     uint64_t w64 = uint64_t(wheelIndex);
 
-    data_ = m64 | (s64 << 22) | (w64 << 50);
+    data_ = m64 | (s64 << 23) | (w64 << 51);
   }
 
   std::size_t getSievingPrime() const
   {
-    return std::size_t((data_ >> 22) & MAX_SIEVINGPRIME);
+    return std::size_t((data_ >> 23) & MAX_SIEVINGPRIME);
   }
 
   std::size_t getMultipleIndex() const
@@ -74,13 +74,13 @@ public:
 
   std::size_t getWheelIndex() const
   {
-    return std::size_t(data_ >> 50);
+    return std::size_t(data_ >> 51);
   }
 
 private:
-  /// multipleIndex = [bit0,  bit21]
-  /// sievingPrime  = [bit22, bit49]
-  /// wheelIndex    = [bit50, bit63]
+  /// multipleIndex = [bit0,  bit22]
+  /// sievingPrime  = [bit23, bit50]
+  /// wheelIndex    = [bit51, bit63]
   uint64_t data_;
 };
 
