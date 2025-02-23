@@ -1,7 +1,10 @@
-Changes in version 12.7, 17/02/2025
+Changes in version 12.7, 23/02/2025
 ===================================
 
+* EratBig.cpp: Use larger wheel2310 instead of wheel210.
 * EratBig.cpp: Simplify bucket handling.
+* Bucket.hpp: Improve SievingPrime bit packing.
+* LookupTables.cpp: Update wheel lookup tables.
 * README.md: Add Sponsors section.
 
 Changes in version 12.6, 11/11/2024
