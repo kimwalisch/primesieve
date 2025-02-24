@@ -9,7 +9,7 @@
 ///         multiples uses as few instructions as possible since there
 ///         are so many multiples.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -92,6 +92,7 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
     std::size_t sievingPrime = prime.getSievingPrime();
     std::size_t i = prime.getMultipleIndex();
     std::size_t wheelIndex = prime.getWheelIndex();
+    ASSERT(wheelIndex <= 63);
 
     switch (wheelIndex)
     {

@@ -11,7 +11,7 @@
 ///         by up to 30% for sieving primes that have only a few
 ///         multiple occurrences per segment.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -142,6 +142,7 @@ void EratMedium::crossOff_7(uint8_t* sieve, std::size_t sieveSize, Bucket* bucke
     std::size_t dist1 = sievingPrime * 4 + 1;
     std::size_t dist2 = sievingPrime * 2 + 0;
     std::size_t dist4 = sievingPrime * 2 + 1;
+    ASSERT(wheelIndex <= 7);
 
     switch (wheelIndex)
     {
@@ -181,6 +182,9 @@ void EratMedium::crossOff_11(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
     std::size_t dist3 = sievingPrime * 4 + 2;
     std::size_t dist4 = sievingPrime * 2 + 0;
 
+    ASSERT(wheelIndex >= 8);
+    ASSERT(wheelIndex <= 15);
+
     switch (wheelIndex)
     {
       default: UNREACHABLE;
@@ -218,6 +222,9 @@ void EratMedium::crossOff_13(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
     std::size_t dist2 = sievingPrime * 2 + 1;
     std::size_t dist5 = sievingPrime * 4 + 1;
     std::size_t dist6 = sievingPrime * 6 + 3;
+
+    ASSERT(wheelIndex >= 16);
+    ASSERT(wheelIndex <= 23);
 
     switch (wheelIndex)
     {
@@ -257,6 +264,9 @@ void EratMedium::crossOff_17(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
     std::size_t dist3 = sievingPrime * 4 + 2;
     std::size_t dist6 = sievingPrime * 6 + 4;
 
+    ASSERT(wheelIndex >= 24);
+    ASSERT(wheelIndex <= 31);
+
     switch (wheelIndex)
     {
       default: UNREACHABLE;
@@ -295,6 +305,9 @@ void EratMedium::crossOff_19(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
     std::size_t dist4 = sievingPrime * 2 + 1;
     std::size_t dist5 = sievingPrime * 4 + 3;
 
+    ASSERT(wheelIndex >= 32);
+    ASSERT(wheelIndex <= 39);
+
     switch (wheelIndex)
     {
       default: UNREACHABLE;
@@ -331,6 +344,9 @@ void EratMedium::crossOff_23(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
     std::size_t dist1 = sievingPrime * 4 + 3;
     std::size_t dist2 = sievingPrime * 2 + 1;
     std::size_t dist4 = sievingPrime * 2 + 2;
+
+    ASSERT(wheelIndex >= 40);
+    ASSERT(wheelIndex <= 47);
 
     switch (wheelIndex)
     {
@@ -369,6 +385,9 @@ void EratMedium::crossOff_29(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
     std::size_t dist2 = sievingPrime * 2 + 2;
     std::size_t dist6 = sievingPrime * 6 + 5;
 
+    ASSERT(wheelIndex >= 48);
+    ASSERT(wheelIndex <= 55);
+
     switch (wheelIndex)
     {
       default: UNREACHABLE;
@@ -405,6 +424,9 @@ void EratMedium::crossOff_31(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
     std::size_t dist1 = sievingPrime * 4 + 0;
     std::size_t dist2 = sievingPrime * 2 + 0;
     std::size_t dist6 = sievingPrime * 6 + 0;
+
+    ASSERT(wheelIndex >= 56);
+    ASSERT(wheelIndex <= 63);
 
     switch (wheelIndex)
     {
