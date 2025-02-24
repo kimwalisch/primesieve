@@ -3,7 +3,7 @@
 /// @brief  Wheel factorization is used to skip multiles of
 ///         small primes in the sieve of Eratosthenes.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -72,6 +72,17 @@ public:
     uint64_t nextMultiple = prime * nextMultipleFactor;
     if (nextMultiple > stop_ - multiple)
       return;
+
+    #if defined(ENABLE_ASSERT)
+      uint64_t m = multiple + nextMultiple;
+
+      if (MODULO == 30)
+        ASSERT(m % 2 != 0 && m % 3 != 0 && m % 5 != 0);
+      if (MODULO == 210)
+        ASSERT(m % 2 != 0 && m % 3 != 0 && m % 5 != 0 && m % 7 != 0);
+      if (MODULO == 2310)
+        ASSERT(m % 2 != 0 && m % 3 != 0 && m % 5 != 0 && m % 7 != 0 && m % 11 != 0);
+    #endif
 
     nextMultiple += multiple - segmentLow;
     uint64_t multipleIndex = nextMultiple / 30;
