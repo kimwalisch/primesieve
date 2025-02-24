@@ -3,7 +3,7 @@
 /// @brief  The Erat class manages prime sieving using the
 ///         EratSmall, EratMedium, EratBig classes.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -117,7 +117,8 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   // matches the CPU's L1 data cache size performs best.
   // For larger stop numbers a sieve array size that is
   // within [L1CacheSize, L2CacheSize] usually performs best.
-  uint64_t sieveSize = inBetween(minSieveSize, sqrtStop, maxSieveSize);
+  uint64_t sieveSize = uint64_t(sqrtStop * config::FACTOR_SIEVESIZE);
+  sieveSize = inBetween(minSieveSize, sieveSize, maxSieveSize);
   sieveSize = inBetween(16 << 10, sieveSize, 8192 << 10);
   sieveSize = ceilDiv(sieveSize, sizeof(uint64_t)) * sizeof(uint64_t);
   minSieveSize = std::min(l1CacheSize, sieveSize);

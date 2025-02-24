@@ -2,7 +2,7 @@
 /// @file   config.hpp
 /// @brief  primesieve compile time constants.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -59,6 +59,21 @@ constexpr uint64_t MAX_CACHE_ITERATOR = 1 << 30;
 /// @pre MIN_THREAD_DISTANCE >= 100
 ///
 constexpr uint64_t MIN_THREAD_DISTANCE = (uint64_t) 1e7;
+
+/// sieveSize = sqrt(stop) * FACTOR_SIEVESIZE.
+///
+/// Using a larger FACTOR_SIEVESIZE increases the segment size in the
+/// sieve of Eratosthenes and hence reduces the number of operations
+/// used by the algorithm. However, as a drawback a larger segment
+/// size is less cache efficient and hence performance may deteriorate
+/// on CPUs with limited L2 cache bandwidth (especially when using
+/// multi-threading).
+///
+/// Using FACTOR_SIEVESIZE = 2.0 performs well for counting the primes
+/// up to 10^11 using multi-threading on both the Apple M3 CPU and the
+/// Intel Arrow Lake 245K CPU (from 2024).
+///
+constexpr double FACTOR_SIEVESIZE = 2.0;
 
 /// Sieving primes <= (L1D_CACHE_BYTES * FACTOR_ERATSMALL) are
 /// processed in EratSmall. When FACTOR_ERATSMALL is small fewer
