@@ -73,18 +73,17 @@ public:
     if (nextMultiple > stop_ - multiple)
       return;
 
-    #if defined(ENABLE_ASSERT)
-      uint64_t m = multiple + nextMultiple;
+    multiple += nextMultiple;
 
-      if (MODULO >=    2) ASSERT(m %  2 != 0);
-      if (MODULO >=    6) ASSERT(m %  3 != 0);
-      if (MODULO >=   30) ASSERT(m %  5 != 0);
-      if (MODULO >=  210) ASSERT(m %  7 != 0);
-      if (MODULO >= 2310) ASSERT(m % 11 != 0);
+    #if defined(ENABLE_ASSERT)
+      if (MODULO >=    2) ASSERT(multiple %  2 != 0);
+      if (MODULO >=    6) ASSERT(multiple %  3 != 0);
+      if (MODULO >=   30) ASSERT(multiple %  5 != 0);
+      if (MODULO >=  210) ASSERT(multiple %  7 != 0);
+      if (MODULO >= 2310) ASSERT(multiple % 11 != 0);
     #endif
 
-    nextMultiple += multiple - segmentLow;
-    uint64_t multipleIndex = nextMultiple / 30;
+    uint64_t multipleIndex = (multiple - segmentLow) / 30;
     uint64_t wheelIndex = wheelOffsets_[prime % 30] + INIT[quotient % MODULO].wheelIndex;
     storeSievingPrime(prime, multipleIndex, wheelIndex);
   }
