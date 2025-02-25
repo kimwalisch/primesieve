@@ -69,11 +69,11 @@ constexpr uint64_t MIN_THREAD_DISTANCE = (uint64_t) 1e7;
 /// on CPUs with limited L2 cache bandwidth (especially when using
 /// multi-threading).
 ///
-/// Using FACTOR_SIEVESIZE = 1.75 performs well for counting the
+/// Using FACTOR_SIEVESIZE = 2.0 performs well for counting the
 /// primes < 10^11 using multi-threading on both the Apple M3 CPU and
 /// the Intel Arrow Lake 245K CPU (from 2024).
 ///
-constexpr double FACTOR_SIEVESIZE = 1.75;
+constexpr double FACTOR_SIEVESIZE = 2.0;
 
 /// Sieving primes <= (L1D_CACHE_BYTES * FACTOR_ERATSMALL) are
 /// processed in EratSmall. When FACTOR_ERATSMALL is small fewer
