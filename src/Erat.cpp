@@ -110,21 +110,34 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   uint64_t minSieveSize = std::min(l1CacheSize, maxSieveSize);
 
   // ================================================================
-  // 2. sieveSize = inBetween(minSieveSize, sqrtStop, maxSieveSize)
+  // 2. sieveSize = sqrt(stop) * FACTOR_SIEVESIZE
+  // ================================================================
+
+  // Using a larger FACTOR_SIEVESIZE increases the segment size
+  // in the sieve of Eratosthenes and hence reduces the number
+  // of operations used by the algorithm. However, as a drawback
+  // a larger segment size is less cache efficient and hence
+  // performance may deteriorate on CPUs with limited L2 cache
+  // bandwidth (especially when using multi-threading).
+  uint64_t sieveSize = uint64_t(sqrtStop * config::FACTOR_SIEVESIZE);
+
+  // ================================================================
+  // 3. L1CacheSize <= sieveSize <= L2CacheSize
   // ================================================================
 
   // For small stop numbers a small sieve array size that
   // matches the CPU's L1 data cache size performs best.
-  // For larger stop numbers a sieve array size that is
-  // within [L1CacheSize, L2CacheSize] usually performs best.
-  uint64_t sieveSize = uint64_t(sqrtStop * config::FACTOR_SIEVESIZE);
+  // For larger stop numbers a sieve array size that is ~
+  // L2CacheSize usually performs best. Hence our sieve size
+  // increases dynamically based on the stop number but it
+  // can never exceed the L2CacheSize (or maxSieveSize).
   sieveSize = inBetween(minSieveSize, sieveSize, maxSieveSize);
   sieveSize = inBetween(16 << 10, sieveSize, 8192 << 10);
   sieveSize = ceilDiv(sieveSize, sizeof(uint64_t)) * sizeof(uint64_t);
   minSieveSize = std::min(l1CacheSize, sieveSize);
 
   // ================================================================
-  // 3. Initialize upper bounds for EratSmall & EratMedium
+  // 4. Initialize upper bounds for EratSmall & EratMedium
   // ================================================================
 
   // Small sieving primes are processed using the EratSmall
@@ -135,7 +148,7 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   maxEratMedium_ = (uint64_t) (sieveSize * config::FACTOR_ERATMEDIUM);
 
   // ================================================================
-  // 4. EratBig requires a power of 2 sieve size
+  // 5. EratBig requires a power of 2 sieve size
   // ================================================================
 
   if (sqrtStop > maxEratMedium_)
@@ -147,14 +160,14 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   }
 
   // ================================================================
-  // 5. Ensure we allocate the smallest possible amount of memory
+  // 6. Ensure we allocate the smallest possible amount of memory
   // ================================================================
 
   maxEratSmall_ = std::min(maxEratSmall_, sqrtStop);
   maxEratMedium_ = std::min(maxEratMedium_, sqrtStop);
 
   // ================================================================
-  // 6. Initialize segment bounds
+  // 7. Initialize segment bounds
   // ================================================================
 
   // The 8 bits of each byte of the sieve array correspond to
@@ -169,7 +182,7 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   segmentHigh_ = std::min(segmentHigh_, stop_);
 
   // ================================================================
-  // 7. Use tiny sieveSize if possible
+  // 8. Use tiny sieveSize if possible
   // ================================================================
 
   // If we are sieving just a single segment
@@ -185,7 +198,7 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   }
 
   // ================================================================
-  // 8. Finally, initialize EratSmall, EratMedium & EratBig
+  // 9. Finally, initialize EratSmall, EratMedium & EratBig
   // ================================================================
 
   ASSERT(sieveSize % sizeof(uint64_t) == 0);
