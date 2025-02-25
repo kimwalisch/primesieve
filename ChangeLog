@@ -1,7 +1,8 @@
-Changes in version 12.7, 17/02/2025
+Changes in version 12.7, 24/02/2025
 ===================================
 
 * EratBig.cpp: Simplify bucket handling.
+* Erat.cpp: Tune sieve size using FACTOR_SIEVESIZE.
 * README.md: Add Sponsors section.
 
 Changes in version 12.6, 11/11/2024
