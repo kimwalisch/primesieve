@@ -122,7 +122,18 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   uint64_t sieveSize = uint64_t(sqrtStop * config::FACTOR_SIEVESIZE);
 
   // ================================================================
-  // 3. L1CacheSize <= sieveSize <= L2CacheSize
+  // 3. sieveSize = minSieveSize * x
+  // ================================================================
+
+  // The EratSmall algorithm uses minSieveSize as its segment
+  // size. If sieveSize is a multiple of minSieveSize then
+  // there will be no short segments in EratSmall which should
+  // provide optimal performance.
+  if (sieveSize > minSieveSize)
+    sieveSize = (sieveSize / minSieveSize) * minSieveSize;
+
+  // ================================================================
+  // 4. L1CacheSize <= sieveSize <= L2CacheSize
   // ================================================================
 
   // For small stop numbers a small sieve array size that
@@ -137,7 +148,7 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   minSieveSize = std::min(l1CacheSize, sieveSize);
 
   // ================================================================
-  // 4. Initialize upper bounds for EratSmall & EratMedium
+  // 5. Initialize upper bounds for EratSmall & EratMedium
   // ================================================================
 
   // Small sieving primes are processed using the EratSmall
@@ -148,7 +159,7 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   maxEratMedium_ = (uint64_t) (sieveSize * config::FACTOR_ERATMEDIUM);
 
   // ================================================================
-  // 5. EratBig requires a power of 2 sieve size
+  // 6. EratBig requires a power of 2 sieve size
   // ================================================================
 
   if (sqrtStop > maxEratMedium_)
@@ -160,14 +171,14 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   }
 
   // ================================================================
-  // 6. Ensure we allocate the smallest possible amount of memory
+  // 7. Ensure we allocate the smallest possible amount of memory
   // ================================================================
 
   maxEratSmall_ = std::min(maxEratSmall_, sqrtStop);
   maxEratMedium_ = std::min(maxEratMedium_, sqrtStop);
 
   // ================================================================
-  // 7. Initialize segment bounds
+  // 8. Initialize segment bounds
   // ================================================================
 
   // The 8 bits of each byte of the sieve array correspond to
@@ -182,7 +193,7 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   segmentHigh_ = std::min(segmentHigh_, stop_);
 
   // ================================================================
-  // 8. Use tiny sieveSize if possible
+  // 9. Use tiny sieveSize if possible
   // ================================================================
 
   // If we are sieving just a single segment
@@ -198,7 +209,7 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   }
 
   // ================================================================
-  // 9. Finally, initialize EratSmall, EratMedium & EratBig
+  // 10. Finally, initialize EratSmall, EratMedium & EratBig
   // ================================================================
 
   ASSERT(sieveSize % sizeof(uint64_t) == 0);
