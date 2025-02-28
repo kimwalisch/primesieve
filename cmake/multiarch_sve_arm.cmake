@@ -7,7 +7,7 @@ include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
 
 cmake_push_check_state()
-set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}/include")
+set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}")
 
 check_cxx_source_compiles("
     // GCC/Clang function multiversioning for ARM SVE is not needed
@@ -19,7 +19,7 @@ check_cxx_source_compiles("
       Error: ARM SVE multiarch not needed!
     #endif
 
-    #include <primesieve/cpu_supports_arm_sve.hpp>
+    #include <src/arm/sve.cpp>
     #include <arm_sve.h>
     #include <stdint.h>
     #include <cstddef>
@@ -62,7 +62,7 @@ check_cxx_source_compiles("
         uint8_t PreSieveTable3[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         uint8_t PreSieveTable4[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-        if (cpu_supports_sve)
+        if (primesieve::has_arm_sve())
             AND_PreSieveTables_arm_sve(&PreSieveTable1[0], &PreSieveTable2[1], &PreSieveTable3[1], &PreSieveTable4[1], &sieve[0], 10);
         else
             AND_PreSieveTables_default(&PreSieveTable1[0], &PreSieveTable2[1], &PreSieveTable3[1], &PreSieveTable4[1], &sieve[0], 10);
