@@ -71,6 +71,9 @@ namespace primesieve {
 /// the ARM SVE instruction set. 
 bool has_arm_sve()
 {
+  // getauxval() requires glibc >= 2.16 (from 2012).
+  // We check using CMake (multiarch_sve_arm.cmake)
+  // if sve.cpp compiles and links.
   unsigned long hwcaps = getauxval(AT_HWCAP);
 
   if (hwcaps & HWCAP_SVE)
