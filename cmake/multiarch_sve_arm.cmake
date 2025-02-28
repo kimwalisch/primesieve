@@ -19,7 +19,7 @@ check_cxx_source_compiles("
       Error: ARM SVE multiarch not needed!
     #endif
 
-    #include <src/arm/sve.cpp>
+    #include <src/arch/arm/sve.cpp>
     #include <arm_sve.h>
     #include <stdint.h>
     #include <cstddef>
