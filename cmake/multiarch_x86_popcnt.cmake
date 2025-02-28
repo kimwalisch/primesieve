@@ -32,7 +32,7 @@ check_cxx_source_compiles("
         Error: x86 POPCNT multiarch not needed!
     #endif
 
-    #include <src/x86/cpuid.cpp>
+    #include <src/arch/x86/cpuid.cpp>
     #include <iostream>
 
     int main()

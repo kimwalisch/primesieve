@@ -20,7 +20,7 @@ check_cxx_source_compiles("
       Error: AVX512VBMI2 multiarch not needed!
     #endif
 
-    #include <src/x86/cpuid.cpp>
+    #include <src/arch/x86/cpuid.cpp>
     #include <immintrin.h>
     #include <stdint.h>
 
