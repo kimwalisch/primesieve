@@ -2,7 +2,7 @@ Changes in version 12.7, 28/02/2025
 ===================================
 
 * multiarch_sve_arm.cmake: Improve ARM SVE detection.
-* src/arm/sve.cpp: Detect ARM SVE on Linux and Windows.
+* src/arch/arm/sve.cpp: Detect ARM SVE on Linux and Windows.
 * EratBig.cpp: Simplify bucket handling.
 * Erat.cpp: Tune sieve size using FACTOR_SIEVESIZE.
 * README.md: Add Sponsors section.
