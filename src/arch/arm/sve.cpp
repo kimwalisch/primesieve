@@ -64,18 +64,25 @@ bool has_arm_sve()
 
 #include <sys/auxv.h>
 #include <asm/hwcap.h>
+#include <errno.h>
 
 namespace primesieve {
 
-/// Check if the Linux kernel and the CPU support
-/// the ARM SVE instruction set. 
 bool has_arm_sve()
 {
-  // getauxval() requires glibc >= 2.16 (from 2012).
-  // We check using CMake (multiarch_sve_arm.cmake)
-  // if sve.cpp compiles and links.
+  errno = 0;
+
+  // getauxval() is supported by glibc >= 2.16 (since 2012),
+  // musl libc >= 1.1.0 (2014) and Android's bionic libc (2010).
+  // We check using CMake (multiarch_sve_arm.cmake) if
+  // sve.cpp (and getauxval()) compiles and links correctly.
   unsigned long hwcaps = getauxval(AT_HWCAP);
 
+  if (errno != 0)
+    return false;
+
+  // Check if the Linux kernel and the CPU support
+  // the ARM SVE instruction set.
   if (hwcaps & HWCAP_SVE)
     return true;
   else
