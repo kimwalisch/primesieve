@@ -32,11 +32,7 @@ namespace primesieve {
 
 bool has_arm_sve()
 {
-#if defined(PF_ARM_SVE_INSTRUCTIONS_AVAILABLE)
   return IsProcessorFeaturePresent(PF_ARM_SVE_INSTRUCTIONS_AVAILABLE);
-#else
-  return false;
-#endif
 }
 
 } // namespace
