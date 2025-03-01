@@ -41,9 +41,10 @@ bool has_arm_sve()
 
 } // namespace
 
-#elif defined(__linux__) || \
-      defined(__gnu_linux__) || \
-      defined(__ANDROID__)
+#elif (defined(__linux__) || \
+       defined(__gnu_linux__) || \
+       defined(__ANDROID__)) && \
+       __has_include(<sys/auxv.h>)
 
 #include <sys/auxv.h>
 #include <asm/hwcap.h>
@@ -76,13 +77,6 @@ bool has_arm_sve()
 
 #else
 
-#ifndef __has_builtin
-  #define __has_builtin(x) 0
-#endif
-
-#if __has_builtin(__builtin_cpu_init) && \
-    __has_builtin(__builtin_cpu_supports)
-
 namespace primesieve {
 
 bool has_arm_sve()
@@ -99,7 +93,5 @@ bool has_arm_sve()
 }
 
 } // namespace
-
-#endif
 
 #endif
