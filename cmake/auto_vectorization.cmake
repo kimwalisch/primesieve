@@ -1,11 +1,11 @@
-# The AND_PreSieveTables() function in PreSieve.cpp is important for
-# performance and therefore it is important that this function is
-# auto-vectorized by the compiler. For GCC & Clang we can enable
-# auto vectorization using -ftree-vectorize.
+# The presieve*_default() functions in PreSieve_default.hpp are
+# important for performance and therefore it is important that these
+# functions are auto-vectorized by the compiler. For GCC & Clang we
+# can enable auto vectorization using -ftree-vectorize.
 
 # GCC/Clang enable auto-vectorization with -O2 and -O3, but for -O2
-# GCC uses the "very-cheap" cost model which prevents our AND_PreSieveTables()
-# function from getting auto vectorized. But compiling with e.g.
+# GCC uses the "very-cheap" cost model which prevents our presieve*_default()
+# functions from getting auto vectorized. But compiling with e.g.
 # "-O2 -ftree-vectorize -fvect-cost-model=dynamic" fixes this issue.
 
 include(CheckCXXCompilerFlag)

@@ -6,7 +6,7 @@
 ///         returns the primes. When there are no more primes left in
 ///         the vector PrimeGenerator generates new primes.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -29,8 +29,7 @@
     __has_include(<immintrin.h>)
   #define ENABLE_AVX512_VBMI2
 
-#elif defined(ENABLE_MULTIARCH_AVX512_VBMI2) && \
-      __has_include(<immintrin.h>)
+#elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
   #include "cpu_supports_avx512_vbmi2.hpp"
   #define ENABLE_DEFAULT
 #else
@@ -49,12 +48,14 @@ public:
   ALWAYS_INLINE void fillNextPrimes(Vector<uint64_t>& primes, std::size_t* size)
   {
     #if defined(ENABLE_AVX512_VBMI2)
-      fillNextPrimes_avx512(primes, size);
+      fillNextPrimes_x86_avx512(primes, size);
+
     #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
       if (cpu_supports_avx512_vbmi2)
-        fillNextPrimes_avx512(primes, size);
+        fillNextPrimes_x86_avx512(primes, size);
       else
         fillNextPrimes_default(primes, size);
+
     #else
       fillNextPrimes_default(primes, size);
     #endif
@@ -68,12 +69,10 @@ private:
 
 #if defined(ENABLE_AVX512_VBMI2) || \
     defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-
   #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
     __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
   #endif
-  void fillNextPrimes_avx512(Vector<uint64_t>& primes, std::size_t* size);
-
+  void fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
 #endif
 
   bool isInit_ = false;

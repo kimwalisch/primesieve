@@ -54,9 +54,9 @@
 #elif defined(__AVX512F__) && \
       defined(__AVX512BW__) && \
       __has_include(<immintrin.h>)
-  #include "PreSieve_avx512.hpp"
-  #define presieve1_default presieve1_avx512
-  #define presieve2_default presieve2_avx512
+  #include "PreSieve_x86_avx512.hpp"
+  #define presieve1_default presieve1_x86_avx512
+  #define presieve2_default presieve2_x86_avx512
 
 #elif defined(ENABLE_MULTIARCH_ARM_SVE)
   #include <primesieve/cpu_supports_arm_sve.hpp>
@@ -64,7 +64,7 @@
 
 #elif defined(ENABLE_MULTIARCH_AVX512_BW)
   #include <primesieve/cpu_supports_avx512_bw.hpp>
-  #include "PreSieve_avx512.hpp"
+  #include "PreSieve_x86_avx512.hpp"
 #endif
 
 // Portable algorithms that run on any CPU
@@ -73,9 +73,9 @@
 
 #if defined(__SSE2__) && \
     __has_include(<emmintrin.h>)
-  #include "PreSieve_sse2.hpp"
-  #define presieve1_default presieve1_sse2
-  #define presieve2_default presieve2_sse2
+  #include "PreSieve_x86_sse2.hpp"
+  #define presieve1_default presieve1_x86_sse2
+  #define presieve2_default presieve2_x86_sse2
 
 #elif (defined(__ARM_NEON) || defined(__aarch64__)) && \
       __has_include(<arm_neon.h>)
@@ -84,33 +84,7 @@
   #define presieve2_default presieve2_arm_neon
 
 #else
-
-namespace {
-
-void presieve1_default(const uint8_t* __restrict preSieved0,
-                       const uint8_t* __restrict preSieved1,
-                       const uint8_t* __restrict preSieved2,
-                       const uint8_t* __restrict preSieved3,
-                       uint8_t* __restrict sieve,
-                       std::size_t bytes)
-{
-  for (std::size_t i = 0; i < bytes; i++)
-    sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
-}
-
-void presieve2_default(const uint8_t* __restrict preSieved0,
-                       const uint8_t* __restrict preSieved1,
-                       const uint8_t* __restrict preSieved2,
-                       const uint8_t* __restrict preSieved3,
-                       uint8_t* __restrict sieve,
-                       std::size_t bytes)
-{
-  for (std::size_t i = 0; i < bytes; i++)
-    sieve[i] &= preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
-}
-
-} // namespace
-
+  #include "PreSieve_default.hpp"
 #endif
 #endif
 
@@ -123,15 +97,15 @@ ALWAYS_INLINE void presieve1(const uint8_t* __restrict preSieved0,
                              uint8_t* __restrict sieve,
                              std::size_t bytes)
 {
-#if defined(ENABLE_MULTIARCH_ARM_SVE)
-  if (cpu_supports_sve)
-    presieve1_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+#if defined(ENABLE_MULTIARCH_AVX512_BW)
+  if (cpu_supports_avx512_bw)
+    presieve1_x86_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
   else
     presieve1_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 
-#elif defined(ENABLE_MULTIARCH_AVX512_BW)
-  if (cpu_supports_avx512_bw)
-    presieve1_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+#elif defined(ENABLE_MULTIARCH_ARM_SVE)
+  if (cpu_supports_sve)
+    presieve1_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
   else
     presieve1_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 
@@ -147,15 +121,15 @@ ALWAYS_INLINE void presieve2(const uint8_t* __restrict preSieved0,
                              uint8_t* __restrict sieve,
                              std::size_t bytes)
 {
-#if defined(ENABLE_MULTIARCH_ARM_SVE)
-  if (cpu_supports_sve)
-    presieve2_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+#if defined(ENABLE_MULTIARCH_AVX512_BW)
+  if (cpu_supports_avx512_bw)
+    presieve2_x86_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
   else
     presieve2_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 
-#elif defined(ENABLE_MULTIARCH_AVX512_BW)
-  if (cpu_supports_avx512_bw)
-    presieve2_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+#elif defined(ENABLE_MULTIARCH_ARM_SVE)
+  if (cpu_supports_sve)
+    presieve2_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
   else
     presieve2_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 

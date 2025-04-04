@@ -25,12 +25,12 @@ check_cxx_source_compiles("
     #include <cstddef>
 
     __attribute__ ((target (\"arch=armv8-a+sve\")))
-    void AND_PreSieveTables_arm_sve(const uint8_t* __restrict preSieved0,
-                                    const uint8_t* __restrict preSieved1,
-                                    const uint8_t* __restrict preSieved2,
-                                    const uint8_t* __restrict preSieved3,
-                                    uint8_t* __restrict sieve,
-                                    std::size_t bytes)
+    void presieve1_arm_sve(const uint8_t* __restrict preSieved0,
+                           const uint8_t* __restrict preSieved1,
+                           const uint8_t* __restrict preSieved2,
+                           const uint8_t* __restrict preSieved3,
+                           uint8_t* __restrict sieve,
+                           std::size_t bytes)
     {
         for (std::size_t i = 0; i < bytes; i += svcntb())
         {
@@ -43,12 +43,12 @@ check_cxx_source_compiles("
         }
     }
 
-    void AND_PreSieveTables_default(const uint8_t* __restrict preSieved0,
-                                    const uint8_t* __restrict preSieved1,
-                                    const uint8_t* __restrict preSieved2,
-                                    const uint8_t* __restrict preSieved3,
-                                    uint8_t* __restrict sieve,
-                                    std::size_t bytes)
+    void presieve1_default(const uint8_t* __restrict preSieved0,
+                           const uint8_t* __restrict preSieved1,
+                           const uint8_t* __restrict preSieved2,
+                           const uint8_t* __restrict preSieved3,
+                           uint8_t* __restrict sieve,
+                           std::size_t bytes)
     {
         for (std::size_t i = 0; i < bytes; i++)
             sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
@@ -63,9 +63,9 @@ check_cxx_source_compiles("
         uint8_t PreSieveTable4[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         if (primesieve::has_arm_sve())
-            AND_PreSieveTables_arm_sve(&PreSieveTable1[0], &PreSieveTable2[1], &PreSieveTable3[1], &PreSieveTable4[1], &sieve[0], 10);
+            presieve1_arm_sve(&PreSieveTable1[0], &PreSieveTable2[1], &PreSieveTable3[1], &PreSieveTable4[1], &sieve[0], 10);
         else
-            AND_PreSieveTables_default(&PreSieveTable1[0], &PreSieveTable2[1], &PreSieveTable3[1], &PreSieveTable4[1], &sieve[0], 10);
+            presieve1_default(&PreSieveTable1[0], &PreSieveTable2[1], &PreSieveTable3[1], &PreSieveTable4[1], &sieve[0], 10);
 
         return (sieve[0] == 0) ? 0 : 1;
     }

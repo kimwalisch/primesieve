@@ -1,5 +1,5 @@
 ///
-/// @file PreSieve_avx512.hpp
+/// @file PreSieve_x86_avx512.hpp
 ///
 /// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2022 @zielaj, https://github.com/zielaj
@@ -8,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRESIEVE_AVX512_HPP
-#define PRESIEVE_AVX512_HPP
+#ifndef PRESIEVE_X86_AVX512_HPP
+#define PRESIEVE_X86_AVX512_HPP
 
 #include <immintrin.h>
 #include <stdint.h>
@@ -20,12 +20,12 @@ namespace {
 #if defined(ENABLE_MULTIARCH_AVX512_BW)
   __attribute__ ((target ("avx512f,avx512bw")))
 #endif
-void presieve1_avx512(const uint8_t* __restrict preSieved0,
-                      const uint8_t* __restrict preSieved1,
-                      const uint8_t* __restrict preSieved2,
-                      const uint8_t* __restrict preSieved3,
-                      uint8_t* __restrict sieve,
-                      std::size_t bytes)
+void presieve1_x86_avx512(const uint8_t* __restrict preSieved0,
+                          const uint8_t* __restrict preSieved1,
+                          const uint8_t* __restrict preSieved2,
+                          const uint8_t* __restrict preSieved3,
+                          uint8_t* __restrict sieve,
+                          std::size_t bytes)
 {
   std::size_t i = 0;
 
@@ -51,12 +51,12 @@ void presieve1_avx512(const uint8_t* __restrict preSieved0,
 #if defined(ENABLE_MULTIARCH_AVX512_BW)
   __attribute__ ((target ("avx512f,avx512bw")))
 #endif
-void presieve2_avx512(const uint8_t* __restrict preSieved0,
-                      const uint8_t* __restrict preSieved1,
-                      const uint8_t* __restrict preSieved2,
-                      const uint8_t* __restrict preSieved3,
-                      uint8_t* __restrict sieve,
-                      std::size_t bytes)
+void presieve2_x86_avx512(const uint8_t* __restrict preSieved0,
+                          const uint8_t* __restrict preSieved1,
+                          const uint8_t* __restrict preSieved2,
+                          const uint8_t* __restrict preSieved3,
+                          uint8_t* __restrict sieve,
+                          std::size_t bytes)
 {
   std::size_t i = 0;
 

@@ -25,10 +25,10 @@ check_cxx_source_compiles("
     #include <cstddef>
 
     __attribute__ ((target (\"avx512f,avx512bw\")))
-    void AND_PreSieveTables_avx512(const uint8_t* __restrict preSieve0,
-                                   const uint8_t* __restrict preSieve1,
-                                   uint8_t* __restrict sieve,
-                                   std::size_t bytes)
+    void presieve1_x86_avx512(const uint8_t* __restrict preSieve0,
+                              const uint8_t* __restrict preSieve1,
+                              uint8_t* __restrict sieve,
+                              std::size_t bytes)
     {
         std::size_t i = 0;
 
@@ -49,10 +49,10 @@ check_cxx_source_compiles("
         }
     }
 
-    void AND_PreSieveTables_default(const uint8_t* __restrict preSieved0,
-                                    const uint8_t* __restrict preSieved1,
-                                    uint8_t* __restrict sieve,
-                                    std::size_t bytes)
+    void presieve1_default(const uint8_t* __restrict preSieved0,
+                           const uint8_t* __restrict preSieved1,
+                           uint8_t* __restrict sieve,
+                           std::size_t bytes)
     {
         for (std::size_t i = 0; i < bytes; i++)
             sieve[i] = preSieved0[i] & preSieved1[i];
@@ -65,9 +65,9 @@ check_cxx_source_compiles("
         uint8_t PreSieveTable2[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         if (primesieve::has_cpuid_avx512_bw())
-            AND_PreSieveTables_avx512(&PreSieveTable1[0], &PreSieveTable2[1], &sieve[0], 10);
+            presieve1_x86_avx512(&PreSieveTable1[0], &PreSieveTable2[1], &sieve[0], 10);
         else
-            AND_PreSieveTables_default(&PreSieveTable1[0], &PreSieveTable2[1], &sieve[0], 10);
+            presieve1_default(&PreSieveTable1[0], &PreSieveTable2[1], &sieve[0], 10);
 
         return (sieve[0] == 0) ? 0 : 1;
     }
