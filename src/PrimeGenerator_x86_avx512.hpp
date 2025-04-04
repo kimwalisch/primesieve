@@ -7,8 +7,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRIMEGENERATOR_AVX512_HPP
-#define PRIMEGENERATOR_AVX512_HPP
+#ifndef PRIMEGENERATOR_X86_AVX512_HPP
+#define PRIMEGENERATOR_X86_AVX512_HPP
 
 #include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/macros.hpp>

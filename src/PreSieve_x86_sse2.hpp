@@ -8,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRESIEVE_SSE2_HPP
-#define PRESIEVE_SSE2_HPP
+#ifndef PRESIEVE_X86_SSE2_HPP
+#define PRESIEVE_X86_SSE2_HPP
 
 #include <emmintrin.h>
 #include <stdint.h>

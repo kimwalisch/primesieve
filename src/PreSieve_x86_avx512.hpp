@@ -8,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef PRESIEVE_AVX512_HPP
-#define PRESIEVE_AVX512_HPP
+#ifndef PRESIEVE_X86_AVX512_HPP
+#define PRESIEVE_X86_AVX512_HPP
 
 #include <immintrin.h>
 #include <stdint.h>
