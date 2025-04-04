@@ -2,7 +2,7 @@
 /// @file  cpuid.cpp
 /// @brief CPUID for x86 and x86-64 CPUs.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -118,7 +118,7 @@ bool has_cpuid_avx512_bw()
 
   run_cpuid(7, 0, abcd);
 
-  // AND_PreSieveTables_avx512 requires AVX512F, AVX512BW
+  // presieve1_x86_avx512() requires AVX512F, AVX512BW
   return ((abcd[1] & bit_AVX512F) == bit_AVX512F &&
           (abcd[1] & bit_AVX512BW) == bit_AVX512BW);
 }
@@ -149,7 +149,7 @@ bool has_cpuid_avx512_vbmi2()
 
   run_cpuid(7, 0, abcd);
 
-  // PrimeGenerator::fillNextPrimes_avx512() requires AVX512F, AVX512VBMI & AVX512VBMI2
+  // fillNextPrimes_x86_avx512() requires AVX512F, AVX512VBMI & AVX512VBMI2
   return ((abcd[1] & bit_AVX512F) == bit_AVX512F &&
           (abcd[2] & (bit_AVX512VBMI | bit_AVX512VBMI2)) == (bit_AVX512VBMI | bit_AVX512VBMI2));
 }
