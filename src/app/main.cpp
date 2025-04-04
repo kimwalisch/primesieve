@@ -15,7 +15,7 @@
 ///         4) Document your option in help.cpp (--help option summary)
 ///            and in doc/primesieve.txt (manpage).
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -36,7 +36,13 @@
 #include <string>
 
 #if defined(ENABLE_MULTIARCH_ARM_SVE)
-  #include <primesieve/cpu_supports_arm_sve.hpp>
+
+namespace primesieve {
+
+bool has_arm_sve();
+  
+} // namespace
+
 #endif
 
 #if defined(ENABLE_MULTIARCH_AVX512_BW)
@@ -248,7 +254,7 @@ void cpuInfo()
     std::cout << "Logical CPU cores: unknown" << std::endl;
 
   #if defined(ENABLE_MULTIARCH_ARM_SVE)
-    if (cpu_supports_sve)
+    if (primesieve::has_arm_sve())
       std::cout << "Has ARM SVE: yes" << std::endl;
     else
       std::cout << "Has ARM SVE: no" << std::endl;
