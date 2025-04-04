@@ -8,6 +8,9 @@
 /// file in the top level directory.
 ///
 
+#ifndef PRESIEVE_AVX512_HPP
+#define PRESIEVE_AVX512_HPP
+
 #include <immintrin.h>
 #include <stdint.h>
 #include <cstddef>
@@ -77,3 +80,5 @@ void presieve2_avx512(const uint8_t* __restrict preSieved0,
 }
 
 } // namespace
+
+#endif

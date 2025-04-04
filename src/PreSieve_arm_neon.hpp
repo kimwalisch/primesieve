@@ -8,6 +8,9 @@
 /// file in the top level directory.
 ///
 
+#ifndef PRESIEVE_ARM_NEON_HPP
+#define PRESIEVE_ARM_NEON_HPP
+
 #include <arm_neon.h>
 #include <stdint.h>
 #include <cstddef>
@@ -59,3 +62,5 @@ void presieve2_arm_neon(const uint8_t* __restrict preSieved0,
 }
 
 } // namespace
+
+#endif
