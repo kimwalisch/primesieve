@@ -1,3 +1,12 @@
+Changes in version 12.8, 04/04/2025
+===================================
+
+* PreSieve.cpp: Simplify SIMD code.
+* PreSieve_arm_neon.hpp: New file, contains ARM NEON algorithm.
+* PreSieve_arm_sve.hpp: New file, contains ARM SVE algorithm.
+* PreSieve_avx512.hpp: New file, contains AVX512 algorithm.
+* PreSieve_sse2.hpp: New file, contains SSE2 algorithm.
+
 Changes in version 12.7, 28/02/2025
 ===================================
 
