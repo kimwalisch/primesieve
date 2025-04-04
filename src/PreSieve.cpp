@@ -47,339 +47,120 @@
 
 #if defined(__ARM_FEATURE_SVE) && \
     __has_include(<arm_sve.h>)
-  #include <arm_sve.h>
-  #define ENABLE_ARM_SVE
+  #include "PreSieve_arm_sve.hpp"
+  #define presieve1_default presieve1_arm_sve
+  #define presieve2_default presieve2_arm_sve
 
 #elif defined(__AVX512F__) && \
       defined(__AVX512BW__) && \
       __has_include(<immintrin.h>)
-  #include <immintrin.h>
-  #define ENABLE_AVX512_BW
+  #include "PreSieve_avx512.hpp"
+  #define presieve1_default presieve1_avx512
+  #define presieve2_default presieve2_avx512
 
 #elif defined(ENABLE_MULTIARCH_ARM_SVE)
   #include <primesieve/cpu_supports_arm_sve.hpp>
-  #include <arm_sve.h>
-  #define ENABLE_DEFAULT
+  #include "PreSieve_arm_sve.hpp"
 
-#elif defined(ENABLE_MULTIARCH_AVX512_BW) && \
-      __has_include(<immintrin.h>)
+#elif defined(ENABLE_MULTIARCH_AVX512_BW)
   #include <primesieve/cpu_supports_avx512_bw.hpp>
-  #include <immintrin.h>
-  #define ENABLE_DEFAULT
-#else
-  #define ENABLE_DEFAULT
+  #include "PreSieve_avx512.hpp"
 #endif
 
-#if defined(ENABLE_DEFAULT)
-  /// All x64 CPUs support the SSE2 vector instruction set
-  #if defined(__SSE2__) && \
-      __has_include(<emmintrin.h>)
-    #include <emmintrin.h>
-    #define HAS_SSE2
-  #endif
-  // All ARM64 CPUs support the NEON vector instruction set
-  #if (defined(__ARM_NEON) || defined(__aarch64__)) && \
+// Portable algorithms that run on any CPU
+#if !defined(presieve1_default) || \
+    !defined(presieve2_default)
+
+#if defined(__SSE2__) && \
+    __has_include(<emmintrin.h>)
+  #include "PreSieve_sse2.hpp"
+  #define presieve1_default presieve1_sse2
+  #define presieve2_default presieve2_sse2
+
+#elif (defined(__ARM_NEON) || defined(__aarch64__)) && \
       __has_include(<arm_neon.h>)
-    #include <arm_neon.h>
-    #define HAS_ARM_NEON
-  #endif
+  #include "PreSieve_arm_neon.hpp"
+  #define presieve1_default presieve1_arm_neon
+  #define presieve2_default presieve2_arm_neon
+
+#else
+
+namespace {
+
+void presieve1_default(const uint8_t* __restrict preSieved0,
+                       const uint8_t* __restrict preSieved1,
+                       const uint8_t* __restrict preSieved2,
+                       const uint8_t* __restrict preSieved3,
+                       uint8_t* __restrict sieve,
+                       std::size_t bytes)
+{
+  for (std::size_t i = 0; i < bytes; i++)
+    sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
+}
+
+void presieve2_default(const uint8_t* __restrict preSieved0,
+                       const uint8_t* __restrict preSieved1,
+                       const uint8_t* __restrict preSieved2,
+                       const uint8_t* __restrict preSieved3,
+                       uint8_t* __restrict sieve,
+                       std::size_t bytes)
+{
+  for (std::size_t i = 0; i < bytes; i++)
+    sieve[i] &= preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
+}
+
+} // namespace
+
+#endif
 #endif
 
 namespace {
 
-#if defined(ENABLE_ARM_SVE) || \
-    defined(ENABLE_MULTIARCH_ARM_SVE)
-
+ALWAYS_INLINE void presieve1(const uint8_t* __restrict preSieved0,
+                             const uint8_t* __restrict preSieved1,
+                             const uint8_t* __restrict preSieved2,
+                             const uint8_t* __restrict preSieved3,
+                             uint8_t* __restrict sieve,
+                             std::size_t bytes)
+{
 #if defined(ENABLE_MULTIARCH_ARM_SVE)
-  __attribute__ ((target ("arch=armv8-a+sve")))
-#endif
-void AND_PreSieveTables_arm_sve(const uint8_t* __restrict preSieved0,
-                                const uint8_t* __restrict preSieved1,
-                                const uint8_t* __restrict preSieved2,
-                                const uint8_t* __restrict preSieved3,
-                                uint8_t* __restrict sieve,
-                                std::size_t bytes)
-{
-  for (std::size_t i = 0; i < bytes; i += svcntb())
-  {
-    svbool_t pg = svwhilelt_b8(i, bytes);
-
-    svst1_u8(pg, &sieve[i],
-      svand_u8_x(svptrue_b64(),
-        svand_u8_z(pg, svld1_u8(pg, &preSieved0[i]), svld1_u8(pg, &preSieved1[i])),
-        svand_u8_z(pg, svld1_u8(pg, &preSieved2[i]), svld1_u8(pg, &preSieved3[i]))));
-  }
-}
-
-#if defined(ENABLE_MULTIARCH_ARM_SVE)
-  __attribute__ ((target ("arch=armv8-a+sve")))
-#endif
-void AND_PreSieveTables_Sieve_arm_sve(const uint8_t* __restrict preSieved0,
-                                      const uint8_t* __restrict preSieved1,
-                                      const uint8_t* __restrict preSieved2,
-                                      const uint8_t* __restrict preSieved3,
-                                      uint8_t* __restrict sieve,
-                                      std::size_t bytes)
-{
-  for (std::size_t i = 0; i < bytes; i += svcntb())
-  {
-    svbool_t pg = svwhilelt_b8(i, bytes);
-
-    svst1_u8(pg, &sieve[i],
-      svand_u8_z(pg, svld1_u8(pg, &sieve[i]), svand_u8_x(svptrue_b64(),
-        svand_u8_z(pg, svld1_u8(pg, &preSieved0[i]), svld1_u8(pg, &preSieved1[i])),
-        svand_u8_z(pg, svld1_u8(pg, &preSieved2[i]), svld1_u8(pg, &preSieved3[i])))));
-  }
-}
-
-#elif defined(ENABLE_AVX512_BW) || \
-      defined(ENABLE_MULTIARCH_AVX512_BW)
-
-#if defined(ENABLE_MULTIARCH_AVX512_BW)
-  __attribute__ ((target ("avx512f,avx512bw")))
-#endif
-void AND_PreSieveTables_avx512(const uint8_t* __restrict preSieved0,
-                               const uint8_t* __restrict preSieved1,
-                               const uint8_t* __restrict preSieved2,
-                               const uint8_t* __restrict preSieved3,
-                               uint8_t* __restrict sieve,
-                               std::size_t bytes)
-{
-  std::size_t i = 0;
-
-  for (; i + 64 <= bytes; i += sizeof(__m512i))
-  {
-    _mm512_storeu_epi8((__m512i*) &sieve[i],
-      _mm512_and_si512(
-        _mm512_and_si512(_mm512_loadu_epi8((const __m512i*) &preSieved0[i]), _mm512_loadu_epi8((const __m512i*) &preSieved1[i])),
-        _mm512_and_si512(_mm512_loadu_epi8((const __m512i*) &preSieved2[i]), _mm512_loadu_epi8((const __m512i*) &preSieved3[i]))));
-  }
-
-  if (i < bytes)
-  {
-    __mmask64 mask = 0xffffffffffffffffull >> (i + 64 - bytes);
-
-    _mm512_mask_storeu_epi8((__m512i*) &sieve[i], mask,
-      _mm512_and_si512(
-        _mm512_and_si512(_mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved0[i]), _mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved1[i])),
-        _mm512_and_si512(_mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved2[i]), _mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved3[i]))));
-  }
-}
-
-#if defined(ENABLE_MULTIARCH_AVX512_BW)
-  __attribute__ ((target ("avx512f,avx512bw")))
-#endif
-void AND_PreSieveTables_Sieve_avx512(const uint8_t* __restrict preSieved0,
-                                     const uint8_t* __restrict preSieved1,
-                                     const uint8_t* __restrict preSieved2,
-                                     const uint8_t* __restrict preSieved3,
-                                     uint8_t* __restrict sieve,
-                                     std::size_t bytes)
-{
-  std::size_t i = 0;
-
-  for (; i + 64 <= bytes; i += sizeof(__m512i))
-  {
-    _mm512_storeu_epi8((__m512i*) &sieve[i],
-      _mm512_and_si512(_mm512_loadu_epi8((const __m512i*) &sieve[i]), _mm512_and_si512(
-        _mm512_and_si512(_mm512_loadu_epi8((const __m512i*) &preSieved0[i]), _mm512_loadu_epi8((const __m512i*) &preSieved1[i])),
-        _mm512_and_si512(_mm512_loadu_epi8((const __m512i*) &preSieved2[i]), _mm512_loadu_epi8((const __m512i*) &preSieved3[i])))));
-  }
-
-  if (i < bytes)
-  {
-    __mmask64 mask = 0xffffffffffffffffull >> (i + 64 - bytes);
-
-    _mm512_mask_storeu_epi8((__m512i*) &sieve[i], mask,
-      _mm512_and_si512(_mm512_maskz_loadu_epi8(mask, (const __m512i*) &sieve[i]), _mm512_and_si512(
-        _mm512_and_si512(_mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved0[i]), _mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved1[i])),
-        _mm512_and_si512(_mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved2[i]), _mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieved3[i])))));
-  }
-}
-
-#endif
-
-/// This section contains portable SIMD algorithms that don't need
-/// any runtime CPU support checks.
-#if defined(ENABLE_DEFAULT)
-#if defined(HAS_SSE2)
-
-void AND_PreSieveTables_default(const uint8_t* __restrict preSieved0,
-                                const uint8_t* __restrict preSieved1,
-                                const uint8_t* __restrict preSieved2,
-                                const uint8_t* __restrict preSieved3,
-                                uint8_t* __restrict sieve,
-                                std::size_t bytes)
-{
-  std::size_t i = 0;
-  std::size_t limit = bytes - bytes % sizeof(__m128i);
-
-  for (; i < limit; i += sizeof(__m128i))
-  {
-    _mm_storeu_si128((__m128i*) &sieve[i],
-        _mm_and_si128(
-            _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved0[i]), _mm_loadu_si128((const __m128i*) &preSieved1[i])),
-            _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved2[i]), _mm_loadu_si128((const __m128i*) &preSieved3[i]))));
-  }
-
-  for (; i < bytes; i++)
-    sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
-}
-
-void AND_PreSieveTables_Sieve_default(const uint8_t* __restrict preSieved0,
-                                      const uint8_t* __restrict preSieved1,
-                                      const uint8_t* __restrict preSieved2,
-                                      const uint8_t* __restrict preSieved3,
-                                      uint8_t* __restrict sieve,
-                                      std::size_t bytes)
-{
-  std::size_t i = 0;
-  std::size_t limit = bytes - bytes % sizeof(__m128i);
-
-  for (; i < limit; i += sizeof(__m128i))
-  {
-    _mm_storeu_si128((__m128i*) &sieve[i],
-        _mm_and_si128(_mm_loadu_si128((const __m128i*) &sieve[i]), _mm_and_si128(
-            _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved0[i]), _mm_loadu_si128((const __m128i*) &preSieved1[i])),
-            _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved2[i]), _mm_loadu_si128((const __m128i*) &preSieved3[i])))));
-  }
-
-  for (; i < bytes; i++)
-    sieve[i] &= preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
-}
-
-#elif defined(HAS_ARM_NEON)
-
-void AND_PreSieveTables_default(const uint8_t* __restrict preSieved0,
-                                const uint8_t* __restrict preSieved1,
-                                const uint8_t* __restrict preSieved2,
-                                const uint8_t* __restrict preSieved3,
-                                uint8_t* __restrict sieve,
-                                std::size_t bytes)
-{
-  std::size_t i = 0;
-  std::size_t limit = bytes - bytes % sizeof(uint8x16_t);
-
-  for (; i < limit; i += sizeof(uint8x16_t))
-  {
-    vst1q_u8(&sieve[i],
-        vandq_u8(
-            vandq_u8(vld1q_u8(&preSieved0[i]), vld1q_u8(&preSieved1[i])),
-            vandq_u8(vld1q_u8(&preSieved2[i]), vld1q_u8(&preSieved3[i]))));
-  }
-
-  for (; i < bytes; i++)
-    sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
-}
-
-void AND_PreSieveTables_Sieve_default(const uint8_t* __restrict preSieved0,
-                                      const uint8_t* __restrict preSieved1,
-                                      const uint8_t* __restrict preSieved2,
-                                      const uint8_t* __restrict preSieved3,
-                                      uint8_t* __restrict sieve,
-                                      std::size_t bytes)
-{
-  std::size_t i = 0;
-  std::size_t limit = bytes - bytes % sizeof(uint8x16_t);
-
-  for (; i < limit; i += sizeof(uint8x16_t))
-  {
-    vst1q_u8(&sieve[i],
-        vandq_u8(vld1q_u8(&sieve[i]), vandq_u8(
-            vandq_u8(vld1q_u8(&preSieved0[i]), vld1q_u8(&preSieved1[i])),
-            vandq_u8(vld1q_u8(&preSieved2[i]), vld1q_u8(&preSieved3[i])))));
-  }
-
-  for (; i < bytes; i++)
-    sieve[i] &= preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
-}
-
-#else
-
-void AND_PreSieveTables_default(const uint8_t* __restrict preSieved0,
-                                const uint8_t* __restrict preSieved1,
-                                const uint8_t* __restrict preSieved2,
-                                const uint8_t* __restrict preSieved3,
-                                uint8_t* __restrict sieve,
-                                std::size_t bytes)
-{
-  for (std::size_t i = 0; i < bytes; i++)
-    sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
-}
-
-void AND_PreSieveTables_Sieve_default(const uint8_t* __restrict preSieved0,
-                                      const uint8_t* __restrict preSieved1,
-                                      const uint8_t* __restrict preSieved2,
-                                      const uint8_t* __restrict preSieved3,
-                                      uint8_t* __restrict sieve,
-                                      std::size_t bytes)
-{
-  for (std::size_t i = 0; i < bytes; i++)
-    sieve[i] &= preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
-}
-
-#endif
-#endif
-
-ALWAYS_INLINE void AND_PreSieveTables(const uint8_t* __restrict preSieved0,
-                                      const uint8_t* __restrict preSieved1,
-                                      const uint8_t* __restrict preSieved2,
-                                      const uint8_t* __restrict preSieved3,
-                                      uint8_t* __restrict sieve,
-                                      std::size_t bytes)
-{
-#if defined(ENABLE_ARM_SVE)
-  AND_PreSieveTables_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
-#elif defined(ENABLE_AVX512_BW)
-  AND_PreSieveTables_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
-
-#elif defined(ENABLE_MULTIARCH_ARM_SVE)
-
   if (cpu_supports_sve)
-    AND_PreSieveTables_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+    presieve1_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
   else
-    AND_PreSieveTables_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+    presieve1_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 
 #elif defined(ENABLE_MULTIARCH_AVX512_BW)
-
   if (cpu_supports_avx512_bw)
-    AND_PreSieveTables_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+    presieve1_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
   else
-    AND_PreSieveTables_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+    presieve1_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 
 #else
-  AND_PreSieveTables_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+  presieve1_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #endif
 }
 
-ALWAYS_INLINE void AND_PreSieveTables_Sieve(const uint8_t* __restrict preSieved0,
-                                            const uint8_t* __restrict preSieved1,
-                                            const uint8_t* __restrict preSieved2,
-                                            const uint8_t* __restrict preSieved3,
-                                            uint8_t* __restrict sieve,
-                                            std::size_t bytes)
+ALWAYS_INLINE void presieve2(const uint8_t* __restrict preSieved0,
+                             const uint8_t* __restrict preSieved1,
+                             const uint8_t* __restrict preSieved2,
+                             const uint8_t* __restrict preSieved3,
+                             uint8_t* __restrict sieve,
+                             std::size_t bytes)
 {
-#if defined(ENABLE_ARM_SVE)
-  AND_PreSieveTables_Sieve_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
-#elif defined(ENABLE_AVX512_BW)
-  AND_PreSieveTables_Sieve_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
-
-#elif defined(ENABLE_MULTIARCH_ARM_SVE)
-
+#if defined(ENABLE_MULTIARCH_ARM_SVE)
   if (cpu_supports_sve)
-    AND_PreSieveTables_Sieve_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+    presieve2_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
   else
-    AND_PreSieveTables_Sieve_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+    presieve2_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 
 #elif defined(ENABLE_MULTIARCH_AVX512_BW)
-
   if (cpu_supports_avx512_bw)
-    AND_PreSieveTables_Sieve_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+    presieve2_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
   else
-    AND_PreSieveTables_Sieve_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+    presieve2_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 
 #else
-  AND_PreSieveTables_Sieve_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+  presieve2_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
 #endif
 }
 
@@ -390,68 +171,68 @@ namespace primesieve {
 void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
 {
   uint64_t offset = 0;
-  Array<uint64_t, 4> pos;
+  uint64_t pos0, pos1, pos2, pos3;
 
-  pos[0] = (segmentLow % (preSieveTables[0].size() * 30)) / 30;
-  pos[1] = (segmentLow % (preSieveTables[1].size() * 30)) / 30;
-  pos[2] = (segmentLow % (preSieveTables[2].size() * 30)) / 30;
-  pos[3] = (segmentLow % (preSieveTables[3].size() * 30)) / 30;
+  pos0 = (segmentLow % (preSieveTables[0].size() * 30)) / 30;
+  pos1 = (segmentLow % (preSieveTables[1].size() * 30)) / 30;
+  pos2 = (segmentLow % (preSieveTables[2].size() * 30)) / 30;
+  pos3 = (segmentLow % (preSieveTables[3].size() * 30)) / 30;
 
   while (offset < sieve.size())
   {
     uint64_t bytesToCopy = sieve.size() - offset;
 
-    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[0].size() - pos[0]));
-    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[1].size() - pos[1]));
-    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[2].size() - pos[2]));
-    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[3].size() - pos[3]));
+    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[0].size() - pos0));
+    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[1].size() - pos1));
+    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[2].size() - pos2));
+    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[3].size() - pos3));
 
-    AND_PreSieveTables(&*(preSieveTables[0].begin() + pos[0]),
-                       &*(preSieveTables[1].begin() + pos[1]),
-                       &*(preSieveTables[2].begin() + pos[2]),
-                       &*(preSieveTables[3].begin() + pos[3]),
-                       &sieve[offset],
-                       bytesToCopy);
+    presieve1(&*(preSieveTables[0].begin() + pos0),
+              &*(preSieveTables[1].begin() + pos1),
+              &*(preSieveTables[2].begin() + pos2),
+              &*(preSieveTables[3].begin() + pos3),
+              &sieve[offset],
+              bytesToCopy);
 
     offset += bytesToCopy;
 
-    pos[0] = (pos[0] + bytesToCopy) * (pos[0] < preSieveTables[0].size());
-    pos[1] = (pos[1] + bytesToCopy) * (pos[1] < preSieveTables[1].size());
-    pos[2] = (pos[2] + bytesToCopy) * (pos[2] < preSieveTables[2].size());
-    pos[3] = (pos[3] + bytesToCopy) * (pos[3] < preSieveTables[3].size());
+    pos0 = (pos0 + bytesToCopy) * (pos0 < preSieveTables[0].size());
+    pos1 = (pos1 + bytesToCopy) * (pos1 < preSieveTables[1].size());
+    pos2 = (pos2 + bytesToCopy) * (pos2 < preSieveTables[2].size());
+    pos3 = (pos3 + bytesToCopy) * (pos3 < preSieveTables[3].size());
   }
 
-  for (std::size_t i = pos.size(); i < preSieveTables.size(); i += 4)
+  for (std::size_t i = 4; i < preSieveTables.size(); i += 4)
   {
     offset = 0;
 
-    pos[0] = (segmentLow % (preSieveTables[i+0].size() * 30)) / 30;
-    pos[1] = (segmentLow % (preSieveTables[i+1].size() * 30)) / 30;
-    pos[2] = (segmentLow % (preSieveTables[i+2].size() * 30)) / 30;
-    pos[3] = (segmentLow % (preSieveTables[i+3].size() * 30)) / 30;
+    pos0 = (segmentLow % (preSieveTables[i+0].size() * 30)) / 30;
+    pos1 = (segmentLow % (preSieveTables[i+1].size() * 30)) / 30;
+    pos2 = (segmentLow % (preSieveTables[i+2].size() * 30)) / 30;
+    pos3 = (segmentLow % (preSieveTables[i+3].size() * 30)) / 30;
 
     while (offset < sieve.size())
     {
       uint64_t bytesToCopy = sieve.size() - offset;
 
-      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+0].size() - pos[0]));
-      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+1].size() - pos[1]));
-      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+2].size() - pos[2]));
-      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+3].size() - pos[3]));
+      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+0].size() - pos0));
+      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+1].size() - pos1));
+      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+2].size() - pos2));
+      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+3].size() - pos3));
 
-      AND_PreSieveTables_Sieve(&*(preSieveTables[i+0].begin() + pos[0]),
-                               &*(preSieveTables[i+1].begin() + pos[1]),
-                               &*(preSieveTables[i+2].begin() + pos[2]),
-                               &*(preSieveTables[i+3].begin() + pos[3]),
-                               &sieve[offset],
-                               bytesToCopy);
+      presieve2(&*(preSieveTables[i+0].begin() + pos0),
+                &*(preSieveTables[i+1].begin() + pos1),
+                &*(preSieveTables[i+2].begin() + pos2),
+                &*(preSieveTables[i+3].begin() + pos3),
+                &sieve[offset],
+                bytesToCopy);
 
       offset += bytesToCopy;
 
-      pos[0] = (pos[0] + bytesToCopy) * (pos[0] < preSieveTables[i+0].size());
-      pos[1] = (pos[1] + bytesToCopy) * (pos[1] < preSieveTables[i+1].size());
-      pos[2] = (pos[2] + bytesToCopy) * (pos[2] < preSieveTables[i+2].size());
-      pos[3] = (pos[3] + bytesToCopy) * (pos[3] < preSieveTables[i+3].size());
+      pos0 = (pos0 + bytesToCopy) * (pos0 < preSieveTables[i+0].size());
+      pos1 = (pos1 + bytesToCopy) * (pos1 < preSieveTables[i+1].size());
+      pos2 = (pos2 + bytesToCopy) * (pos2 < preSieveTables[i+2].size());
+      pos3 = (pos3 + bytesToCopy) * (pos3 < preSieveTables[i+3].size());
     }
   }
 
