@@ -30,9 +30,9 @@ void presieve1_x86_sse2(const uint8_t* __restrict preSieved0,
   for (; i < limit; i += sizeof(__m128i))
   {
     _mm_storeu_si128((__m128i*) &sieve[i],
-        _mm_and_si128(
-            _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved0[i]), _mm_loadu_si128((const __m128i*) &preSieved1[i])),
-            _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved2[i]), _mm_loadu_si128((const __m128i*) &preSieved3[i]))));
+      _mm_and_si128(
+        _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved0[i]), _mm_loadu_si128((const __m128i*) &preSieved1[i])),
+        _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved2[i]), _mm_loadu_si128((const __m128i*) &preSieved3[i]))));
   }
 
   for (; i < bytes; i++)
@@ -52,9 +52,9 @@ void presieve2_x86_sse2(const uint8_t* __restrict preSieved0,
   for (; i < limit; i += sizeof(__m128i))
   {
     _mm_storeu_si128((__m128i*) &sieve[i],
-        _mm_and_si128(_mm_loadu_si128((const __m128i*) &sieve[i]), _mm_and_si128(
-            _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved0[i]), _mm_loadu_si128((const __m128i*) &preSieved1[i])),
-            _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved2[i]), _mm_loadu_si128((const __m128i*) &preSieved3[i])))));
+      _mm_and_si128(_mm_loadu_si128((const __m128i*) &sieve[i]), _mm_and_si128(
+        _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved0[i]), _mm_loadu_si128((const __m128i*) &preSieved1[i])),
+        _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved2[i]), _mm_loadu_si128((const __m128i*) &preSieved3[i])))));
   }
 
   for (; i < bytes; i++)

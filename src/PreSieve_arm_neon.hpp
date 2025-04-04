@@ -30,9 +30,9 @@ void presieve1_arm_neon(const uint8_t* __restrict preSieved0,
   for (; i < limit; i += sizeof(uint8x16_t))
   {
     vst1q_u8(&sieve[i],
-        vandq_u8(
-            vandq_u8(vld1q_u8(&preSieved0[i]), vld1q_u8(&preSieved1[i])),
-            vandq_u8(vld1q_u8(&preSieved2[i]), vld1q_u8(&preSieved3[i]))));
+      vandq_u8(
+        vandq_u8(vld1q_u8(&preSieved0[i]), vld1q_u8(&preSieved1[i])),
+        vandq_u8(vld1q_u8(&preSieved2[i]), vld1q_u8(&preSieved3[i]))));
   }
 
   for (; i < bytes; i++)
@@ -52,9 +52,9 @@ void presieve2_arm_neon(const uint8_t* __restrict preSieved0,
   for (; i < limit; i += sizeof(uint8x16_t))
   {
     vst1q_u8(&sieve[i],
-        vandq_u8(vld1q_u8(&sieve[i]), vandq_u8(
-            vandq_u8(vld1q_u8(&preSieved0[i]), vld1q_u8(&preSieved1[i])),
-            vandq_u8(vld1q_u8(&preSieved2[i]), vld1q_u8(&preSieved3[i])))));
+      vandq_u8(vld1q_u8(&sieve[i]), vandq_u8(
+        vandq_u8(vld1q_u8(&preSieved0[i]), vld1q_u8(&preSieved1[i])),
+        vandq_u8(vld1q_u8(&preSieved2[i]), vld1q_u8(&preSieved3[i])))));
   }
 
   for (; i < bytes; i++)
