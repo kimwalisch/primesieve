@@ -82,10 +82,10 @@
   #include "PreSieve_arm_neon.hpp"
   #define presieve1_default presieve1_arm_neon
   #define presieve2_default presieve2_arm_neon
-
 #else
   #include "PreSieve_default.hpp"
 #endif
+
 #endif
 
 namespace {
