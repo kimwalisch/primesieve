@@ -83,6 +83,59 @@ void PrimeGenerator::fillNextPrimes_default(Vector<uint64_t>& primes, std::size_
   while (*size == 0);
 }
 
+/// This method is used by iterator::prev_prime().
+/// This method stores all primes inside [a, b] into the primes
+/// vector. (b - a) is about sqrt(stop) so the memory usage is
+/// quite large. Also after primesieve::iterator has iterated
+/// over the primes inside [a, b] we need to generate new
+/// primes which incurs an initialization overhead of O(sqrt(n)).
+///
+void PrimeGenerator::fillPrevPrimes_default(Vector<uint64_t>& primes, std::size_t* size)
+{
+  *size = 0;
+
+  while (sievePrevPrimes(primes, size))
+  {
+    // Use local variables to prevent the compiler from
+    // writing temporary results to memory.
+    std::size_t i = *size;
+    uint64_t low = low_;
+    uint64_t sieveIdx = sieveIdx_;
+    uint64_t sieveSize = sieve_.size();
+    uint8_t* sieve = sieve_.data();
+
+    while (sieveIdx < sieveSize)
+    {
+      // Each loop iteration can generate up to 64 primes,
+      // so we have to make sure there is enough space
+      // left in the primes vector.
+      if_unlikely(i + 64 > primes.size())
+        primes.resize(i + 64);
+
+      uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
+      std::size_t j = i;
+      i += popcnt64(bits);
+
+      do
+      {
+        primes[j+0] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+1] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+2] = nextPrime(bits, low); bits &= bits - 1;
+        primes[j+3] = nextPrime(bits, low); bits &= bits - 1;
+        j += 4;
+      }
+      while (j < i);
+
+      low += 8 * 30;
+      sieveIdx += 8;
+    }
+
+    low_ = low;
+    sieveIdx_ = sieveIdx;
+    *size = i;
+  }
+}
+
 } // namespace
 
 #endif

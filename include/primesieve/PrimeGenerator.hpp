@@ -31,9 +31,9 @@
 
 #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
   #include "cpu_supports_avx512_vbmi2.hpp"
-  #define ENABLE_DEFAULT
+  #define ENABLE_PRIMEGENERATOR_DEFAULT
 #else
-  #define ENABLE_DEFAULT
+  #define ENABLE_PRIMEGENERATOR_DEFAULT
 #endif
 
 namespace primesieve {
@@ -42,7 +42,6 @@ class PrimeGenerator : public Erat
 {
 public:
   PrimeGenerator(uint64_t start, uint64_t stop);
-  void fillPrevPrimes(Vector<uint64_t>& primes, std::size_t* size);
   static uint64_t maxCachedPrime();
 
   ALWAYS_INLINE void fillNextPrimes(Vector<uint64_t>& primes, std::size_t* size)
@@ -61,18 +60,42 @@ public:
     #endif
   }
 
+  ALWAYS_INLINE void fillPrevPrimes(Vector<uint64_t>& primes, std::size_t* size)
+  {
+    #if defined(ENABLE_AVX512_VBMI2)
+      fillPrevPrimes_x86_avx512(primes, size);
+
+    #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
+      if (cpu_supports_avx512_vbmi2)
+        fillPrevPrimes_x86_avx512(primes, size);
+      else
+        fillPrevPrimes_default(primes, size);
+
+    #else
+      fillPrevPrimes_default(primes, size);
+    #endif
+  }
+
 private:
 
-#if defined(ENABLE_DEFAULT)
+#if defined(ENABLE_PRIMEGENERATOR_DEFAULT)
   void fillNextPrimes_default(Vector<uint64_t>& primes, std::size_t* size);
+  void fillPrevPrimes_default(Vector<uint64_t>& primes, std::size_t* size);
 #endif
 
 #if defined(ENABLE_AVX512_VBMI2) || \
     defined(ENABLE_MULTIARCH_AVX512_VBMI2)
+
   #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
     __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
   #endif
   void fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
+
+  #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
+    __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
+  #endif
+  void fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
+
 #endif
 
   bool isInit_ = false;
