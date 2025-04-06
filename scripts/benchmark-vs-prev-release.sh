@@ -93,14 +93,14 @@ function benchmark_next_prime {
         for i in {1..7}
         do
             start=$(date +%s.%N)
-            build-curr-release/examples/c/./primesieve_iterator_c 1e10 >/dev/null
+            build-curr-release/examples/c/./primesieve_iterator_c $((10**10)) >/dev/null
             end=$(date +%s.%N)
             seconds_new=$(echo "scale=3; ($end - $start) / 1" | bc -l)
             echo "Seconds new code: $seconds_new"
             total_seconds_new=$(echo "scale=3; ($total_seconds_new + $seconds_new) / 1" | bc -l)
             sleep 1
             start=$(date +%s.%N)
-            build-prev-release/examples/c/./primesieve_iterator_c 1e10 >/dev/null
+            build-prev-release/examples/c/./primesieve_iterator_c $((10**10)) >/dev/null
             end=$(date +%s.%N)
             seconds_old=$(echo "scale=3; ($end - $start) / 1" | bc -l)
             echo "Seconds old code: $seconds_old"
@@ -116,14 +116,14 @@ function benchmark_next_prime {
         for i in {1..7}
         do
             start=$(date +%s.%N)
-            build-prev-release/examples/c/./primesieve_iterator_c 1e10 >/dev/null
+            build-prev-release/examples/c/./primesieve_iterator_c $((10**10)) >/dev/null
             end=$(date +%s.%N)
             seconds_old=$(echo "scale=3; ($end - $start) / 1" | bc -l)
             echo "Seconds old code: $seconds_old"
             total_seconds_old=$(echo "scale=3; ($total_seconds_old + $seconds_old) / 1" | bc -l)
             sleep 1
             start=$(date +%s.%N)
-            build-curr-release/examples/c/./primesieve_iterator_c 1e10 >/dev/null
+            build-curr-release/examples/c/./primesieve_iterator_c $((10**10)) >/dev/null
             end=$(date +%s.%N)
             seconds_new=$(echo "scale=3; ($end - $start) / 1" | bc -l)
             echo "Seconds new code: $seconds_new"
