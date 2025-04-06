@@ -256,10 +256,12 @@ echo ""
 
 echo "=== Old code (previous release) ==="
 build-prev-release/./primesieve --version
+build-prev-release/./primesieve --cpu-info
 echo ""
 
 echo "=== New code ==="
 build-curr-release/./primesieve --version
+build-curr-release/./primesieve --cpu-info
 
 # Execute benchmark functions
 benchmark_4e10_t1
