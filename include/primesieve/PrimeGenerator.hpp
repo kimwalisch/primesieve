@@ -16,6 +16,7 @@
 #define PRIMEGENERATOR_HPP
 
 #include "Erat.hpp"
+#include "macros.hpp"
 #include "MemoryPool.hpp"
 #include "SievingPrimes.hpp"
 #include "Vector.hpp"
