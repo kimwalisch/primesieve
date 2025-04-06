@@ -1,0 +1,51 @@
+# These tests benchmark the current code against the previous release
+# using both the GCC and Clang compilers. If the new code runs slower
+# than the previous release then the tests fail. This helps to detect
+# performance regressions.
+
+name: benchmark
+
+on:
+  push:
+    branches-ignore:
+      - backup3
+      - gh-pages
+  pull_request:
+    branches-ignore:
+      - backup3
+      - gh-pages
+
+jobs:
+  linux_gcc_performance_test:
+    runs-on: ubuntu-latest
+    env:
+      CC: gcc
+      CXX: g++
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Fetch all commits & tags
+          fetch-depth: 0
+      - name: Install dependencies
+        run: |
+            sudo apt update
+            sudo apt install bc
+      - name: Benchmark latest code vs. previous release
+        run: scripts/./benchmark-vs-prev-release.sh
+
+  linux_clang_performance_test:
+    runs-on: ubuntu-latest
+    env:
+      CC: clang
+      CXX: clang++
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Fetch all commits & tags
+          fetch-depth: 0
+      - name: Install dependencies
+        run: |
+            sudo apt update
+            sudo apt install bc libomp-dev
+      - name: Benchmark latest code vs. previous release
+        run: scripts/./benchmark-vs-prev-release.sh
