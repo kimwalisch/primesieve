@@ -28,7 +28,6 @@
     defined(__AVX512VBMI2__) && \
     __has_include(<immintrin.h>)
   #define ENABLE_AVX512_VBMI2
-
 #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
   #include "cpu_supports_avx512_vbmi2.hpp"
   #define ENABLE_PRIMEGENERATOR_DEFAULT
