@@ -61,12 +61,12 @@ function benchmark_4e10_t1 {
 
         if [ $new_code_is_fast -eq 1 ]
         then
-            echo "'primesieve 4e10 -t1' performance test passed successfully!"
+            echo "Test passed successfully!"
             return
         fi
     done
 
-    echo "'primesieve 4e10 -t1' is more than $factor times slower than previous release!"
+    echo "Error: current release is more than $factor times slower than previous release!"
     exit 1
 }
 
@@ -145,12 +145,12 @@ function benchmark_next_prime {
 
         if [ $new_code_is_fast -eq 1 ]
         then
-            echo "primesieve::iterator.next_prime() performance test passed successfully!"
+            echo "Test passed successfully!"
             return
         fi
     done
 
-    echo "primesieve::iterator.next_prime() is more than $factor times slower than previous release!"
+    echo "Error: current release is more than $factor times slower than previous release!"
     exit 1
 }
 
@@ -229,12 +229,12 @@ function benchmark_prev_prime {
 
         if [ $new_code_is_fast -eq 1 ]
         then
-            echo "primesieve::iterator.prev_prime() performance test passed successfully!"
+            echo "Test passed successfully!"
             return
         fi
     done
 
-    echo "primesieve::iterator.prev_prime() is more than $factor times slower than previous release!"
+    echo "Error: current release is more than $factor times slower than previous release!"
     exit 1
 }
 
