@@ -118,12 +118,6 @@ endif()
 
 include("${PROJECT_SOURCE_DIR}/cmake/libatomic.cmake")
 
-# Check if compiler supports auto vectorization ######################
-
-if(WITH_AUTO_VECTORIZATION)
-    include("${PROJECT_SOURCE_DIR}/cmake/auto_vectorization.cmake")
-endif()
-
 # libprimesieve (shared library) #####################################
 
 find_package(Threads REQUIRED QUIET)
@@ -136,7 +130,6 @@ if(BUILD_SHARED_LIBS)
     list(GET SOVERSION_LIST 0 PRIMESIEVE_SOVERSION_MAJOR)
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
-    target_compile_options(libprimesieve PRIVATE ${PRIMESIEVE_COMPILE_OPTIONS})
     target_compile_definitions(libprimesieve PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
 
     if(WIN32_MSVC_COMPATIBLE)
@@ -174,7 +167,6 @@ if(BUILD_STATIC_LIBS)
     add_library(libprimesieve-static STATIC ${LIB_SRC})
     set_target_properties(libprimesieve-static PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${PRIMESIEVE_LINK_LIBRARIES})
-    target_compile_options(libprimesieve-static PRIVATE ${PRIMESIEVE_COMPILE_OPTIONS})
     target_compile_definitions(libprimesieve-static PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
 
     if(WITH_MSVC_CRT_STATIC)
