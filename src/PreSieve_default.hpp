@@ -41,6 +41,7 @@ void presieve1_default(const uint8_t* __restrict preSieved0,
     std::memcpy(&sieve[i], &result, sizeof(uint64_t));
   }
 
+  // Process the remaining bytes
   for (std::size_t i = limit; i < bytes; i++)
     sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
 }
