@@ -232,9 +232,7 @@ jobs:
         run: Release\primesieve.exe 1000 --print
 
   linux_gcc_sanitizers:
-    # This test fails on Ubuntu 22.04 likely due to an Ubuntu or compiler bug.
-    # See discussion at: https://github.com/quantumlib/Stim/issues/717#issuecomment-2002623560
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       CC: gcc
       CXX: g++
