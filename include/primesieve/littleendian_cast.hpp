@@ -33,7 +33,7 @@ inline T littleendian_cast(const uint8_t* array)
 
 #else
 
-#include <macros.hpp>
+#include "macros.hpp"
 #include <stdint.h>
 
 namespace {
