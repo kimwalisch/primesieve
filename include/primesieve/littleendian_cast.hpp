@@ -36,6 +36,8 @@ inline T littleendian_cast(const uint8_t* array)
 #include <macros.hpp>
 #include <stdint.h>
 
+namespace {
+
 template <typename T>
 inline T littleendian_cast(const uint8_t* array)
 {
@@ -43,6 +45,8 @@ inline T littleendian_cast(const uint8_t* array)
   ASSERT(uintptr_t(array) % sizeof(T) == 0);
   return *reinterpret_cast<const T*>(array);
 }
+
+} // namespace
 
 #endif
 
