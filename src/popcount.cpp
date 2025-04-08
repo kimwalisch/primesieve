@@ -2,7 +2,7 @@
 /// @file   popcount.cpp
 /// @brief  Quickly count the number of 1 bits in an array.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -18,8 +18,8 @@
 /// architectures without POPCNT we use the portable Harley-Seal
 /// popcount algorithm further down.
 ///
-#if defined(__x86_64__) || \
-    defined(_M_X64) /* MSVC */ || \
+#if defined(__POPCNT__) /* x86 GCC/Clang */ || \
+    defined(ENABLE_MULTIARCH_x86_POPCNT) || \
    (defined(__ARM_NEON) || defined(__aarch64__))
 
 namespace primesieve {
