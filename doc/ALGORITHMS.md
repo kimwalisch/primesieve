@@ -31,7 +31,7 @@ primes are skipped. The 1st wheel considers only odd numbers, the 2nd
 wheel (modulo 6) skips multiples of 2 and 3, the 3rd wheel (modulo 30)
 skips multiples of 2, 3, 5 and so on. Pritchard has shown in
 [[2]](#references) that the running time of the sieve of
-Eratosthenes can be reduced by a factor of $O(\log{\log{n}})$
+Eratosthenes can be reduced by a factor of $O(\log\ \log\ n)$
 if the wheel size is proportional to $O(\sqrt{n})$
 but for cache reasons the sieve of Eratosthenes usually performs best
 with a modulo 30 or 210 wheel. Sorenson explains wheels in
