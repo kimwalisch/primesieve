@@ -131,29 +131,6 @@ sudo ldconfig
 
 * [Detailed build instructions](doc/BUILD.md)
 
-## C++ API
-
-Include the ```<primesieve.hpp>``` header to use libprimesieve's C++ API.
-
-```C++
-#include <primesieve.hpp>
-#include <iostream>
-
-int main()
-{
-  primesieve::iterator it;
-  uint64_t prime = it.next_prime();
-
-  // Iterate over the primes < 10^6
-  for (; prime < 1000000; prime = it.next_prime())
-    std::cout << prime << std::endl;
-
-  return 0;
-}
-```
-
-* [C++ API documentation](doc/CPP_API.md)
-
 ## C API
 
 Include the ```<primesieve.h>``` header to use libprimesieve's C API.
@@ -179,6 +156,29 @@ int main()
 ```
 
 * [C API documentation](doc/C_API.md)
+
+## C++ API
+
+Include the ```<primesieve.hpp>``` header to use libprimesieve's C++ API.
+
+```C++
+#include <primesieve.hpp>
+#include <iostream>
+
+int main()
+{
+  primesieve::iterator it;
+  uint64_t prime = it.next_prime();
+
+  // Iterate over the primes < 10^6
+  for (; prime < 1000000; prime = it.next_prime())
+    std::cout << prime << std::endl;
+
+  return 0;
+}
+```
+
+* [C++ API documentation](doc/CPP_API.md)
 
 ## Bindings for other languages
 
