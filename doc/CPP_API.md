@@ -83,7 +83,7 @@ the constructor of the ```primesieve::iterator``` object.
   prime ≥ start number. If want to generate primes > start number you need to use e.g.
   ```jump_to(start+1)```.
 * The first ```next_prime()``` call after ```jump_to()``` incurs an initialization
-  overhead of $O(\sqrt{start}\times \log{\log{\sqrt{start}}})$ operations. After that, any
+  overhead of $O(\sqrt{start}\ \times\ \log\ \log\ \sqrt{start})$ operations. After that, any
   additional ```next_prime()``` call executes in amortized
   $O(\log\ n\ \times\ \log\ \log\ n)$ operations.
 
@@ -149,7 +149,7 @@ will generate primes < start. ```primesieve::iterator::skipto()``` has been repl
 ```iter.skipto(start-1)```.
 
 * The first ```next_prime()``` call after ```skipto()``` incurs an initialization
-  overhead of $O(\sqrt{start}\times \log{\log{\sqrt{start}}})$ operations. After that, any
+  overhead of $O(\sqrt{start}\ \times\ \log\ \log\ \sqrt{start})$ operations. After that, any
   additional ```next_prime()``` call executes in amortized
   $O(\log\ n\ \times\ \log\ \log\ n)$ operations.
 

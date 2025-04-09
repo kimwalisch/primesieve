@@ -88,7 +88,7 @@ up to this limit.
   prime ≥ start number. If want to generate primes > start number you need to use e.g.
   ```primesieve_jump_to(iter, start+1, stop)```.
 * The first ```primesieve_next_prime()``` call after ```primesieve_jump_to()``` incurs an initialization
-  overhead of $O(\sqrt{start}\times \log{\log{\sqrt{start}}})$ operations. After that, any
+  overhead of $O(\sqrt{start}\ \times\ \log\ \log\ \sqrt{start})$ operations. After that, any
   additional ```primesieve_next_prime()``` call executes in amortized
   $O(\log\ n\ \times\ \log\ \log\ n)$ operations.
 
@@ -130,7 +130,7 @@ correct the start number in most cases using e.g.
 ```primesieve_skipto(iter, start-1, stop)```.
 
 * The first ```primesieve_next_prime()``` call after ```primesieve_skipto()``` incurs an initialization
-  overhead of $O(\sqrt{start}\times \log{\log{\sqrt{start}}})$ operations. After that, any
+  overhead of $O(\sqrt{start}\ \times\ \log\ \log\ \sqrt{start})$ operations. After that, any
   additional ```primesieve_next_prime()``` call executes in amortized
   $O(\log\ n\ \times\ \log\ \log\ n)$ operations.
 
