@@ -202,6 +202,10 @@ primesieve natively supports C and C++ and has bindings available for:
         <td><a href="https://github.com/jlapeyre/PrimeSieve.jl">PrimeSieve.jl</a></td>
     </tr>
     <tr>
+        <td><b>Lua:</b></td>
+        <td><a href="https://github.com/kennypm/lua-primesieve">lua-primesieve</a></td>
+    </tr>
+    <tr>
         <td><b>Nim:</b></td>
         <td><a href="https://github.com/nandub/primesievec-nim">primesievec-nim</a></td>
     </tr>
