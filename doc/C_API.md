@@ -90,7 +90,7 @@ up to this limit.
 * The first ```primesieve_next_prime()``` call after ```primesieve_jump_to()``` incurs an initialization
   overhead of $O(\sqrt{start}\times \log{\log{\sqrt{start}}})$ operations. After that, any
   additional ```primesieve_next_prime()``` call executes in amortized
-  $O(\log{n}\times \log{\log{n}})$ operations.
+  $O(\log\ n\ \times\ \log\ \log\ n)$ operations.
 
 ```C
 #include <primesieve.h>
@@ -132,7 +132,7 @@ correct the start number in most cases using e.g.
 * The first ```primesieve_next_prime()``` call after ```primesieve_skipto()``` incurs an initialization
   overhead of $O(\sqrt{start}\times \log{\log{\sqrt{start}}})$ operations. After that, any
   additional ```primesieve_next_prime()``` call executes in amortized
-  $O(\log{n}\times \log{\log{n}})$ operations.
+  $O(\log\ n\ \times\ \log\ \log\ n)$ operations.
 
 ```C
 #include <primesieve.h>

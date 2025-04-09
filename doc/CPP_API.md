@@ -85,7 +85,7 @@ the constructor of the ```primesieve::iterator``` object.
 * The first ```next_prime()``` call after ```jump_to()``` incurs an initialization
   overhead of $O(\sqrt{start}\times \log{\log{\sqrt{start}}})$ operations. After that, any
   additional ```next_prime()``` call executes in amortized
-  $O(\log{n}\times \log{\log{n}})$ operations.
+  $O(\log\ n\ \times\ \log\ \log\ n)$ operations.
 
 ```C++
 #include <primesieve.hpp>
@@ -151,7 +151,7 @@ will generate primes < start. ```primesieve::iterator::skipto()``` has been repl
 * The first ```next_prime()``` call after ```skipto()``` incurs an initialization
   overhead of $O(\sqrt{start}\times \log{\log{\sqrt{start}}})$ operations. After that, any
   additional ```next_prime()``` call executes in amortized
-  $O(\log{n}\times \log{\log{n}})$ operations.
+  $O(\log\ n\ \times\ \log\ \log\ n)$ operations.
 
 ```C++
 #include <primesieve.hpp>
