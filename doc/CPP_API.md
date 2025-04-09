@@ -363,7 +363,7 @@ is relatively small e.g.&nbsp;<&nbsp;sqrt(start). If ```stop_hint``` is set
 ```primesieve::iterator``` will only buffer primes up to this limit.
 
 * Many of libprimesieve's functions e.g. ```count_primes(start, stop)``` &
-```nth_prime(n, start)``` incur an initialization overhead of O(sqrt(start))
+```nth_prime(n, start)``` incur an initialization overhead of $O(\sqrt{start})$
 even if the total sieving distance is tiny. It is therefore not a good idea to
 call these functions repeatedly in a loop unless the sieving distance is
 sufficiently large e.g. >&nbsp;sqrt(start). If the sieving distance is mostly
