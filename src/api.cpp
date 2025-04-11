@@ -4,7 +4,7 @@
 ///         Contains the implementations of the functions declared
 ///         in the primesieve.hpp header file.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -152,38 +152,45 @@ int get_sieve_size()
   if (sieve_size)
     return sieve_size;
 
-  // The CPU cache hierarchy has become very complex and hence accurately
-  // detecting the private L2 cache size per core has become very
-  // difficult. The CPU information returned by the operating system is
-  // also unreliable, for new CPUs or niche CPUs the CPU info is
-  // frequently incorrect. Therefore, we don't want to use a sieve size
-  // that matches the CPU's L2 cache size because if we guessed wrong
-  // and our sieve array is too large the performance will deteriorate
-  // significantly due to excessive cache misses. In order to prevent
-  // this issue, we use a smaller sieve size that is 8x larger than the
-  // L1 cache size. This sieve size provides great performance on every
-  // CPU (architecture) that I have tested.
-  // https://github.com/kimwalisch/primesieve/issues/103
-  // https://github.com/kimwalisch/primesieve/issues/96
   if (cpuInfo.hasL1Cache() &&
       cpuInfo.hasL2Cache())
   {
     // Convert bytes to KiB
     size_t l1Size = cpuInfo.l1CacheBytes() >> 10;
     size_t l2Size = cpuInfo.l2CacheBytes() >> 10;
-    size_t maxSize = l2Size / 2;
 
-    if (cpuInfo.hasL2Sharing() &&
-        cpuInfo.l2Sharing() > 2)
-      maxSize = l2Size / cpuInfo.l2Sharing();
-
-    maxSize = std::max(l1Size, maxSize);
-    size_t size = std::min(l1Size * 8, maxSize);
-    size = inBetween(16, size, 8192);
-    return (int) size;
+    // Check if the CPU cache info is likely correct.
+    // When primesieve is run inside a virtual machine
+    // the cache sharing info is often reported as 1
+    // which is often not correct. Hence, if at least
+    // one of the CPU caches sharing info is > 1,
+    // we assume that the reported values are correct.
+    if (cpuInfo.hasL2Sharing() && (cpuInfo.l2Sharing() > 1 ||
+        (cpuInfo.hasL3Sharing() && cpuInfo.l3Sharing() > 1)))
+    {
+      // We use at most half of the L2 cache size as
+      // sieve array size. Some CPUs have multithreading
+      // scaling issues when fully using the L2 cache.
+      size_t maxSize = l2Size / 2;
+      maxSize /= cpuInfo.l2Sharing();
+      maxSize = std::max(l1Size, maxSize);
+      size_t size = std::min(l1Size * 16, maxSize);
+      size = inBetween(16, size, 8192);
+      return (int) size;
+    }
+    else
+    {
+      // In this code path we cannot trust the CPU cache
+      // info reported by the OS. Hence we are more
+      // conservative and use a smaller sieve array size.
+      size_t maxSize = l2Size / 2;
+      maxSize = std::max(l1Size, maxSize);
+      size_t size = std::min(l1Size * 8, maxSize);
+      size = inBetween(16, size, 8192);
+      return (int) size;
+    }
   }
-
-  if (cpuInfo.hasL1Cache())
+  else if (cpuInfo.hasL1Cache())
   {
     // Convert bytes to KiB
     size_t l1Size = cpuInfo.l1CacheBytes() >> 10;

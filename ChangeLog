@@ -1,7 +1,8 @@
-Changes in version 12.8, 09/04/2025
+Changes in version 12.8, 11/04/2025
 ===================================
 
 * Vectorize primesieve::iterator.prev_prime() using AVX512.
+* api.cpp: Tune sieve array size.
 * PreSieve.cpp: Simplify SIMD code.
 * PreSieve_default.hpp: New algorithm that is also fast using -Os and -O2.
 * PreSieve_arm_neon.hpp: New file, contains ARM NEON algorithm.
