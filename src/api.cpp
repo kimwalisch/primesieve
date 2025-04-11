@@ -187,7 +187,7 @@ int get_sieve_size()
       // In this code path we cannot trust the CPU cache
       // info reported by the OS. Hence, we are more
       // conservative and use a smaller sieve array size.
-      size_t maxSize = l2Size / 2;
+      size_t maxSize = floorPow2(l2Size - 1);
       maxSize = std::max(l1Size, maxSize);
       size_t size = std::min(l1Size * 8, maxSize);
       size = inBetween(16, size, 8192);
