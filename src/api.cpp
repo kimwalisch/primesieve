@@ -175,7 +175,7 @@ int get_sieve_size()
       // fully utilizing the L2 cache. Therefore, we further
       // reduce the sieve array size for such CPUs.
       if (maxSize >= 512 /* KiB */)
-        maxSize /= 2;
+        maxSize = floorPow2(maxSize - 1);
 
       maxSize = std::max(l1Size, maxSize);
       size_t size = std::min(l1Size * 16, maxSize);
