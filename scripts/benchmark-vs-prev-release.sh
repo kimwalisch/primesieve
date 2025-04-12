@@ -31,7 +31,7 @@ function benchmark_4e10_t1 {
 
     # Test failure must be observed 5 times,
     # we try to avoid false negatives.
-    for j in {1..5}
+    for j in {1..3}
     do
         echo ""
         echo "=== Benchmark: primesieve 4e10 -t1 ===="
@@ -46,6 +46,52 @@ function benchmark_4e10_t1 {
 
         start=$(date +%s.%N)
         build-curr-release/./primesieve 4e10 -t1 >/dev/null
+        end=$(date +%s.%N)
+        seconds_new=$(echo "scale=3; ($end - $start) / 1" | bc -l)
+        echo "Seconds new code: $seconds_new"
+        sleep 1
+
+        limit=$(echo "scale=3; $seconds_old * $factor" | bc -l)
+        new_code_is_fast=$(echo $seconds_new'<='$limit | bc -l)
+        new_code_percent=$(echo "scale=1; 100 * $seconds_new / $seconds_old" | bc -l)
+
+        echo ""
+        echo "Old code: 100.0%"
+        echo "New code: $new_code_percent%"
+
+        if [ $new_code_is_fast -eq 1 ]
+        then
+            echo "Test passed successfully!"
+            return
+        fi
+    done
+
+    echo "Error: current release is more than $factor times slower than previous release!"
+    exit 1
+}
+
+function benchmark_1e16_t1 {
+    # New code must not be more than 
+    # 1% slower than old code.
+    factor=1.01
+
+    # Test failure must be observed 5 times,
+    # we try to avoid false negatives.
+    for j in {1..3}
+    do
+        echo ""
+        echo "=== Benchmark: primesieve 1e16 -d1e10 -t1 -s256 ===="
+        echo ""
+
+        start=$(date +%s.%N)
+        build-prev-release/./primesieve 1e16 -d1e10 -t1 -s256 >/dev/null
+        end=$(date +%s.%N)
+        seconds_old=$(echo "scale=3; ($end - $start) / 1" | bc -l)
+        echo "Seconds old code: $seconds_old"
+        sleep 1
+
+        start=$(date +%s.%N)
+        build-curr-release/./primesieve 1e16 -d1e10 -t1 -s256 >/dev/null
         end=$(date +%s.%N)
         seconds_new=$(echo "scale=3; ($end - $start) / 1" | bc -l)
         echo "Seconds new code: $seconds_new"
@@ -265,5 +311,6 @@ build-curr-release/./primesieve --cpu-info
 
 # Execute benchmark functions
 benchmark_4e10_t1
+benchmark_1e16_t1
 benchmark_next_prime
 benchmark_prev_prime
