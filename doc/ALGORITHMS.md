@@ -56,11 +56,13 @@ access.
 
 # Implementation
 
-primesieve is written entirely in C++ and does not depend on
-external libraries. It's speed is mainly due to the segmentation of
-the sieve of Eratosthenes which prevents cache misses when crossing
-off multiples in the sieve array and the use of a bit array instead of
-a boolean sieve array. primesieve reuses and improves ideas from other
+primesieve is written in C++ and does not depend on external libraries.
+Some of its algorithms (such as e.g. pre-sieving) have been vectorized
+using SIMD instructions and we also use inline assembly in some places, e.g.
+for querying CPUID on x86 CPUs. The speed of primesieve is primarily due to the
+segmentation of the sieve of Eratosthenes which prevents cache misses when
+crossing off multiples in the sieve array and the use of a bit array instead
+of a boolean sieve array. primesieve reuses and improves ideas from other
 great sieve of Eratosthenes implementations, namely Achim
 Flammenkamp's [prime_sieve.c](https://wwwhomes.uni-bielefeld.de/achim/prime_sieve.html),
 Tomás Oliveira e Silva's [A1 implementation](http://sweet.ua.pt/tos/software/prime_sieve.html#s)
@@ -71,21 +73,21 @@ efficiently uses the CPU's multi level cache hierarchy.
 
 ### Optimizations used in primesieve
 
- * Uses a bit array with 8 flags each 30 numbers for sieving
- * Pre-sieves multiples of small primes ≤ 163
- * Compresses the sieving primes in order to improve cache efficiency [[5]](#references)
- * Starts crossing off multiples at the square
- * Uses a modulo 210 wheel that skips multiples of 2, 3, 5 and 7
- * Uses specialized algorithms for small, medium and big sieving primes
- * Uses L1 cache for small sieving primes & L2 cache for medium and big sieving primes
- * Sorts medium sieving primes to reduce branch misprediction rate
- * Uses a custom memory pool (for medium & big sieving primes)
- * Multi-threaded using C++11 ```std::async```
+ * Uses a bit array with 8 flags each 30 numbers for sieving.
+ * Pre-sieves multiples of small primes ≤ 163 using SIMD instructions.
+ * Compresses the sieving primes in order to improve cache efficiency [[5]](#references).
+ * Starts crossing off multiples at the square.
+ * Uses a modulo 210 wheel that skips multiples of 2, 3, 5 and 7.
+ * Uses specialized algorithms for small, medium and big sieving primes.
+ * Uses L1 cache for small sieving primes & L2 cache for medium and big sieving primes.
+ * Sorts medium sieving primes to reduce branch misprediction rate.
+ * Uses a custom memory pool (for medium & big sieving primes).
+ * Multi-threaded using C++11 ```std::async```.
 
 ### Highly optimized inner loop
 
 primesieve's inner sieving loop has been optimized using
-[extreme loop unrolling](https://github.com/kimwalisch/primesieve/blob/master/src/EratSmall.cpp#L112),
+[extreme loop unrolling](https://github.com/kimwalisch/primesieve/blob/v12.7/src/EratSmall.cpp#L108),
 on average crossing off a multiple uses just 1.375 instructions on
 x64 CPUs. Below is the assembly GCC generates for primesieve's inner
 sieving loop, each andb instruction unsets a bit (crosses off a
