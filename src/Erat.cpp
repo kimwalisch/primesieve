@@ -130,7 +130,7 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   // there will be no short segments in EratSmall which should
   // provide optimal performance.
   if (sieveSize > minSieveSize)
-    sieveSize = (sieveSize / minSieveSize) * minSieveSize;
+    sieveSize -= sieveSize % minSieveSize;
 
   // ================================================================
   // 4. L1CacheSize <= sieveSize <= L2CacheSize
