@@ -31,7 +31,7 @@ function benchmark_4e10_t1 {
 
     # Test failure must be observed 5 times,
     # we try to avoid false negatives.
-    for j in {1..3}
+    for j in {1..5}
     do
         echo ""
         echo "=== Benchmark: primesieve 4e10 -t1 ===="
@@ -77,7 +77,7 @@ function benchmark_1e16_t1 {
 
     # Test failure must be observed 5 times,
     # we try to avoid false negatives.
-    for j in {1..3}
+    for j in {1..5}
     do
         echo ""
         echo "=== Benchmark: primesieve 1e16 -d1e10 -t1 -s256 ===="
