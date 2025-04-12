@@ -176,6 +176,8 @@ int get_sieve_size()
       // reduce the sieve array size for such CPUs.
       if (maxSize >= 512 /* KiB */)
         maxSize = floorPow2(maxSize - 1);
+      else
+        maxSize = floorPow2(maxSize);
 
       maxSize = std::max(l1Size, maxSize);
       size_t size = std::min(l1Size * 16, maxSize);
