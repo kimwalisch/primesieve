@@ -80,6 +80,35 @@ primesieve 1000000 --print=2
 primesieve 1e10 --dist=2^32 --count=3
 ```
 
+## Stress testing
+
+primesieve includes support for stress testing both the CPU and memory. This feature
+is useful for checking system stability under maximum load and verifying whether
+your cooling solution (fans, heatsinks, thermal paste, etc.) is adequate. primesieve's
+stress test supports two modes: **CPU** (highest CPU load, uses little memory) and
+**RAM** (high memory usage, uses about 1.2 GiB per thread).
+
+```
+$ primesieve --stress-test --timeout 5m
+Started CPU stress testing using 14 threads.
+The expected memory usage is: 14 threads * 2.85 MiB = 39.90 MiB.
+The stress test keeps on running until either a miscalculation occurs
+(due to a hardware issue) or the timeout of 5m expires.
+You may cancel the stress test at any time using Ctrl+C.
+
+[Apr 12 19:09] Thread 14, 25.19 secs, PrimePi(1e13+98e11, 1e13+99e11) = 3265923128   OK
+[Apr 12 19:09] Thread  9, 32.48 secs, PrimePi(1e13+63e11, 1e13+64e11) = 3286757785   OK
+[Apr 12 19:09] Thread 14, 22.32 secs, PrimePi(1e13+ 0e11, 1e13+ 1e11) = 3340141707   OK
+[Apr 12 19:10] Thread  2, 17.10 secs, PrimePi(1e13+16e11, 1e13+17e11) = 3323791292   OK
+[Apr 12 19:10] Thread 14, 18.45 secs, PrimePi(1e13+ 3e11, 1e13+ 4e11) = 3336895789   OK
+[Apr 12 19:11] Thread 13, 16.96 secs, PrimePi(1e13+96e11, 1e13+97e11) = 3267004191   OK
+[Apr 12 19:11] Thread  2, 31.79 secs, PrimePi(1e13+20e11, 1e13+21e11) = 3320071119   OK
+[Apr 12 19:12] Thread 11, 29.96 secs, PrimePi(1e13+84e11, 1e13+85e11) = 3273743021   OK
+[Apr 12 19:13] Thread  4, 32.45 secs, PrimePi(1e13+37e11, 1e13+38e11) = 3305523133   OK
+
+All tests passed successfully!
+```
+
 ## Command-line options
 
 ```

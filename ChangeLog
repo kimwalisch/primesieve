@@ -1,4 +1,4 @@
-Changes in version 12.8, 11/04/2025
+Changes in version 12.8, 12/04/2025
 ===================================
 
 * Vectorize primesieve::iterator.prev_prime() using AVX512.
@@ -11,6 +11,7 @@ Changes in version 12.8, 11/04/2025
 * PreSieve_x86_sse2.hpp: New file, contains SSE2 algorithm.
 * ci/benchmark.yaml: Add CI test to detect performance regressions.
 * README.md: Fix Markdown math formula.
+* README.md: Add stress testing section.
 * C_API.md: Fix Markdown math formula.
 * CPP_API.md: Fix Markdown math formula.
 
