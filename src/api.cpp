@@ -169,15 +169,14 @@ int get_sieve_size()
         (cpuInfo.hasL3Sharing() && cpuInfo.l3Sharing() > 1)))
     {
       size_t maxSize = l2Size / cpuInfo.l2Sharing();
+      maxSize = floorPow2(maxSize);
 
-      // Newer CPUs with large L2 caches often have scaling
-      // issues when running multi-threaded workloads and
-      // fully utilizing the L2 cache. Therefore, we further
-      // reduce the sieve array size for such CPUs.
-      if (maxSize >= 512 /* KiB */)
+      // Many CPUs have scaling issues when running
+      // multi-threaded workloads and fully utilizing the
+      // L2 cache. Hence we ensure that the sieve array
+      // size is < L2 cache size.
+      if (maxSize == l2Size)
         maxSize = floorPow2(maxSize - 1);
-      else
-        maxSize = floorPow2(maxSize);
 
       maxSize = std::max(l1Size, maxSize);
       size_t size = std::min(l1Size * 16, maxSize);
