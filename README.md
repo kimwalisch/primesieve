@@ -85,7 +85,7 @@ primesieve 1e10 --dist=2^32 --count=3
 primesieve includes support for stress testing both the CPU and memory. This feature
 is useful for checking system stability under maximum load and verifying whether
 your cooling solution (fans, heatsinks, thermal paste, etc.) is adequate. primesieve's
-stress test supports 2 modes: **CPU** (highest CPU load, uses little memory) and
+stress test supports two modes: **CPU** (highest CPU load, uses little memory) and
 **RAM** (high memory usage, uses about 1.2 GiB per thread).
 
 ```
