@@ -12,27 +12,6 @@
 #ifndef LITTLEENDIAN_CAST_HPP
 #define LITTLEENDIAN_CAST_HPP
 
-#if defined(__BYTE_ORDER__) && \
-    defined(__ORDER_BIG_ENDIAN__) && \
-    __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-
-#include <stdint.h>
-#include <cstring>
-
-namespace {
-
-template <typename T>
-inline T littleendian_cast(const uint8_t* array)
-{
-  T result;
-  std::memcpy(&result, array, sizeof(T));
-  return result;
-}
-
-} // namespace
-
-#else
-
 #include "macros.hpp"
 #include <stdint.h>
 
@@ -43,11 +22,16 @@ inline T littleendian_cast(const uint8_t* array)
 {
   // Disallow unaligned memory accesses
   ASSERT(uintptr_t(array) % sizeof(T) == 0);
+
+#if defined(__BYTE_ORDER__) && \
+    defined(__ORDER_BIG_ENDIAN__) && \
+    __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+
+  static_assert(sizeof(T) == sizeof(uint64_t), "Type T must be uint64_t!");
+  return __builtin_bswap64(*reinterpret_cast<const T*>(array));
+#else
   return *reinterpret_cast<const T*>(array);
+#endif
 }
 
 } // namespace
-
-#endif
-
-#endif
