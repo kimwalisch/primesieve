@@ -24,7 +24,7 @@ then
     exit 1
 fi
 
-function benchmark_4e10_t1 {
+function benchmark_1e11 {
     # New code must not be more than 
     # 1% slower than old code.
     factor=1.01
@@ -34,18 +34,18 @@ function benchmark_4e10_t1 {
     for j in {1..5}
     do
         echo ""
-        echo "=== Benchmark: primesieve 4e10 -t1 ===="
+        echo "=== Benchmark: primesieve 1e11 ===="
         echo ""
 
         start=$(date +%s.%N)
-        build-prev-release/./primesieve 4e10 -t1 >/dev/null
+        build-prev-release/./primesieve 1e11 >/dev/null
         end=$(date +%s.%N)
         seconds_old=$(echo "scale=3; ($end - $start) / 1" | bc -l)
         echo "Seconds old code: $seconds_old"
         sleep 1
 
         start=$(date +%s.%N)
-        build-curr-release/./primesieve 4e10 -t1 >/dev/null
+        build-curr-release/./primesieve 1e11 >/dev/null
         end=$(date +%s.%N)
         seconds_new=$(echo "scale=3; ($end - $start) / 1" | bc -l)
         echo "Seconds new code: $seconds_new"
@@ -310,7 +310,7 @@ build-curr-release/./primesieve --version
 build-curr-release/./primesieve --cpu-info
 
 # Execute benchmark functions
-benchmark_4e10_t1
+benchmark_1e11
 benchmark_1e16_t1
 benchmark_next_prime
 benchmark_prev_prime
