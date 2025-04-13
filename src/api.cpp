@@ -173,11 +173,8 @@ int get_sieve_size()
       // Many CPUs have scaling issues when running
       // multi-threaded workloads and fully utilizing
       // the L2 cache. Hence we ensure that the sieve
-      // array size is < L2 cache size.
-      if (cpuInfo.l2Sharing() == 2)
-        maxSize = floorPow2(maxSize);
-      else
-        maxSize = floorPow2(maxSize - 1);
+      // array size is < L2 cache size (per core).
+      maxSize = floorPow2(maxSize - 1);
 
       maxSize = std::max(l1Size, maxSize);
       size_t size = std::min(l1Size * 16, maxSize);
