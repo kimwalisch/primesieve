@@ -35,3 +35,5 @@ inline T littleendian_cast(const uint8_t* array)
 }
 
 } // namespace
+
+#endif
