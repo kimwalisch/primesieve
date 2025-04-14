@@ -23,7 +23,6 @@ else()
     option(BUILD_SHARED_LIBS "Build shared libprimesieve" OFF)
 endif()
 
-option(WITH_AUTO_VECTORIZATION "Enable compiler auto-vectorization" ON)
 option(WITH_MULTIARCH          "Enable runtime dispatching to fastest supported CPU instruction set" ON)
 option(WITH_MSVC_CRT_STATIC    "Link primesieve.lib with /MT instead of the default /MD" OFF)
 
