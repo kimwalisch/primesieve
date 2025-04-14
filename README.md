@@ -1,6 +1,6 @@
 # primesieve
 
-[![Build status](https://github.com/kimwalisch/primesieve/actions/workflows/ci.yml/badge.svg)](https://github.com/kimwalisch/primesieve/actions/workflows/ci.yml)
+[![Build status](https://github.com/kimwalisch/primesieve/actions/workflows/ci.yml/badge.svg)](https://github.com/kimwalisch/primesieve/actions/workflows/ci.yml) [![Build status](https://github.com/kimwalisch/primesieve/actions/workflows/benchmark.yml/badge.svg)](https://github.com/kimwalisch/primesieve/actions/workflows/benchmark.yml)
 [![Github Releases](https://img.shields.io/github/release/kimwalisch/primesieve.svg)](https://github.com/kimwalisch/primesieve/releases)
 [![C API Documentation](https://img.shields.io/badge/docs-C_API-blue)](doc/C_API.md)
 [![C++ API Documentation](https://img.shields.io/badge/docs-C++_API-blue)](doc/CPP_API.md)
