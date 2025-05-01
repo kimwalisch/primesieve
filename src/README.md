@@ -1,4 +1,4 @@
-# C++ classes
+# primesieve C++ classes overview
 
 * **PrimeSieve** is a high level class that coordinates prime sieving.
   It is used for printing and counting primes and for computing the nth
