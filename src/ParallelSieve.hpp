@@ -3,7 +3,7 @@
 /// @brief  The ParallelSieve class provides an easy API for
 ///         multi-threaded prime sieving.
 ///
-/// Copyright (C) 2019 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -12,7 +12,8 @@
 #ifndef PARALLELSIEVE_HPP
 #define PARALLELSIEVE_HPP
 
-#include "PrimeSieve.hpp"
+#include "PrimeSieveClass.hpp"
+
 #include <stdint.h>
 #include <mutex>
 

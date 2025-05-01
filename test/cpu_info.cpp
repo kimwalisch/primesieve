@@ -2,13 +2,13 @@
 /// @file   cpu_info.cpp
 /// @brief  Detect the CPUs' cache sizes
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
-#include <primesieve/CpuInfo.hpp>
+#include <CpuInfo.hpp>
 
 #include <iostream>
 #include <string>

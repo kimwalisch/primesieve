@@ -2,15 +2,16 @@
 /// @file   iterator-c.cpp
 /// @brief  C port of primesieve::iterator.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
+#include "IteratorHelper.hpp"
+#include "PrimeGenerator.hpp"
+
 #include <primesieve.h>
-#include <primesieve/IteratorHelper.hpp>
-#include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/Vector.hpp>
 

@@ -21,12 +21,13 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/CpuInfo.hpp>
-#include <primesieve/ParallelSieve.hpp>
-#include <primesieve/primesieve_error.hpp>
-#include <primesieve/RiemannR.hpp>
-#include <primesieve/Vector.hpp>
 #include "CmdOptions.hpp"
+
+#include <CpuInfo.hpp>
+#include <ParallelSieve.hpp>
+#include <RiemannR.hpp>
+#include <primesieve/primesieve_error.hpp>
+#include <primesieve/Vector.hpp>
 
 #include <stdint.h>
 #include <exception>

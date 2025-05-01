@@ -10,6 +10,7 @@
 
 #include <primesieve/popcnt.hpp>
 #include <primesieve/forward.hpp>
+
 #include <stdint.h>
 
 /// For CPU architectures that have a POPCNT instruction, we use

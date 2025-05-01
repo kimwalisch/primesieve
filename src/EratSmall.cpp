@@ -15,7 +15,8 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/EratSmall.hpp>
+#include "EratSmall.hpp"
+
 #include <primesieve/bits.hpp>
 #include <primesieve/Bucket.hpp>
 #include <primesieve/macros.hpp>

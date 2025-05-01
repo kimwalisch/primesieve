@@ -10,7 +10,8 @@
 #ifndef PRIMEGENERATOR_X86_AVX512_HPP
 #define PRIMEGENERATOR_X86_AVX512_HPP
 
-#include <primesieve/PrimeGenerator.hpp>
+#include "PrimeGenerator.hpp"
+
 #include <primesieve/macros.hpp>
 #include <primesieve/popcnt.hpp>
 #include <primesieve/Vector.hpp>

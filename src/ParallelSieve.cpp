@@ -2,16 +2,17 @@
 /// @file   ParallelSieve.cpp
 /// @brief  Multi-threaded prime sieve using std::async.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
+#include "ParallelSieve.hpp"
+#include "PrimeSieveClass.hpp"
+
 #include <primesieve/config.hpp>
 #include <primesieve/forward.hpp>
-#include <primesieve/ParallelSieve.hpp>
-#include <primesieve/PrimeSieve.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/Vector.hpp>

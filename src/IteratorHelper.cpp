@@ -3,15 +3,16 @@
 ///        Functions used to calculate the next start and stop
 ///        numbers for primesieve::iterator.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
+#include "IteratorHelper.hpp"
+#include "PrimeGenerator.hpp"
+
 #include <primesieve/config.hpp>
-#include <primesieve/IteratorHelper.hpp>
-#include <primesieve/PrimeGenerator.hpp>
 #include <primesieve/pmath.hpp>
 
 #include <stdint.h>

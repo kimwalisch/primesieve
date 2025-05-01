@@ -2,14 +2,14 @@
 /// @file   test.cpp
 /// @brief  primesieve self tests (option: --test).
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
 #include <primesieve.hpp>
-#include <primesieve/ParallelSieve.hpp>
+#include <ParallelSieve.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>

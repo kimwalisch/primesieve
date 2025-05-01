@@ -1,7 +1,7 @@
 ///
 /// @file  EratSmall.hpp
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -10,10 +10,10 @@
 #ifndef ERATSMALL_HPP
 #define ERATSMALL_HPP
 
-#include "Bucket.hpp"
-#include "macros.hpp"
-#include "Vector.hpp"
-#include "Wheel.hpp"
+#include <primesieve/Bucket.hpp>
+#include <primesieve/macros.hpp>
+#include <primesieve/Vector.hpp>
+#include <primesieve/Wheel.hpp>
 
 #include <cstddef>
 #include <stdint.h>

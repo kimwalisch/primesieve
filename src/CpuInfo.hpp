@@ -1,7 +1,7 @@
 ///
 /// @file  CpuInfo.hpp
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -10,7 +10,7 @@
 #ifndef CPUINFO_HPP
 #define CPUINFO_HPP
 
-#include "Vector.hpp"
+#include <primesieve/Vector.hpp>
 
 #include <cstddef>
 #include <string>
