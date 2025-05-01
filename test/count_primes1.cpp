@@ -2,13 +2,13 @@
 /// @file   count_primes1.cpp
 /// @brief  Count the primes up to 10^9.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
-#include <primesieve/ParallelSieve.hpp>
+#include <ParallelSieve.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>

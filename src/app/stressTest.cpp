@@ -12,12 +12,13 @@
 /// file in the top level directory.
 ///
 
+#include "CmdOptions.hpp"
+
 #include <primesieve.hpp>
+#include <PrimeSieveClass.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/PrimeSieve.hpp>
 #include <primesieve/Vector.hpp>
-#include "CmdOptions.hpp"
 
 #include <stdint.h>
 #include <algorithm>

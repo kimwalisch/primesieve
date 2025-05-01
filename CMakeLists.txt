@@ -77,7 +77,7 @@ set(LIB_SRC src/api-c.cpp
             src/ParallelSieve.cpp
             src/popcount.cpp
             src/PreSieve.cpp
-            src/PrimeSieve.cpp
+            src/PrimeSieveClass.cpp
             src/RiemannR.cpp
             src/SievingPrimes.cpp)
 
@@ -149,9 +149,12 @@ if(BUILD_SHARED_LIBS)
         cxx_uniform_initialization
         cxx_lambdas)
 
-    target_include_directories(libprimesieve PUBLIC
+    target_include_directories(libprimesieve
+    PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>)
+        $<INSTALL_INTERFACE:include>
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
     install(TARGETS libprimesieve
             EXPORT primesieveShared
@@ -184,9 +187,12 @@ if(BUILD_STATIC_LIBS)
         cxx_uniform_initialization
         cxx_lambdas)
 
-    target_include_directories(libprimesieve-static PUBLIC
+    target_include_directories(libprimesieve-static
+    PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>)
+        $<INSTALL_INTERFACE:include>
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
     install(TARGETS libprimesieve-static
             EXPORT primesieveStatic
@@ -221,6 +227,7 @@ endif()
 if(BUILD_PRIMESIEVE)
     add_executable(primesieve ${BIN_SRC})
     target_link_libraries(primesieve primesieve::primesieve Threads::Threads)
+    target_include_directories(primesieve PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
     target_compile_definitions(primesieve PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
     target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})

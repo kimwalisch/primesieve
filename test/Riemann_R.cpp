@@ -2,13 +2,13 @@
 /// @file   Riemann_R.cpp
 /// @brief  Test the Riemann R function.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
-#include <primesieve/RiemannR.hpp>
+#include <RiemannR.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>

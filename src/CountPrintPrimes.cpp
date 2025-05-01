@@ -6,20 +6,21 @@
 ///         to reconstruct primes and prime k-tuplets from 1 bits of
 ///         the sieve array.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
-#include <primesieve/CountPrintPrimes.hpp>
-#include <primesieve/Erat.hpp>
+#include "CountPrintPrimes.hpp"
+#include "Erat.hpp"
+#include "PrimeSieveClass.hpp"
+#include "SievingPrimes.hpp"
+
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/PrimeSieve.hpp>
-#include <primesieve/SievingPrimes.hpp>
 
 #include <stdint.h>
 #include <algorithm>

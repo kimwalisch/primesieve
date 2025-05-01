@@ -17,11 +17,12 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/EratMedium.hpp>
+#include "EratMedium.hpp"
+#include "MemoryPool.hpp"
+
 #include <primesieve/bits.hpp>
 #include <primesieve/Bucket.hpp>
 #include <primesieve/macros.hpp>
-#include <primesieve/MemoryPool.hpp>
 
 #include <stdint.h>
 

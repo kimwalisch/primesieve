@@ -1,7 +1,7 @@
 ///
 /// @file  Erat.hpp
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -10,13 +10,14 @@
 #ifndef ERAT_HPP
 #define ERAT_HPP
 
-#include "forward.hpp"
 #include "EratSmall.hpp"
 #include "EratMedium.hpp"
 #include "EratBig.hpp"
-#include "macros.hpp"
-#include "Vector.hpp"
-#include "ctz.hpp"
+
+#include <primesieve/forward.hpp>
+#include <primesieve/macros.hpp>
+#include <primesieve/Vector.hpp>
+#include <primesieve/ctz.hpp>
 
 #include <stdint.h>
 

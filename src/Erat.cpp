@@ -9,13 +9,14 @@
 /// file in the top level directory.
 ///
 
+#include "CpuInfo.hpp"
+#include "Erat.hpp"
+#include "EratSmall.hpp"
+#include "EratMedium.hpp"
+#include "EratBig.hpp"
+#include "PreSieve.hpp"
+
 #include <primesieve/config.hpp>
-#include <primesieve/CpuInfo.hpp>
-#include <primesieve/Erat.hpp>
-#include <primesieve/EratSmall.hpp>
-#include <primesieve/EratMedium.hpp>
-#include <primesieve/EratBig.hpp>
-#include <primesieve/PreSieve.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 

@@ -36,8 +36,9 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/PreSieve.hpp>
-#include <primesieve/PreSieveTables.hpp>
+#include "PreSieve.hpp"
+#include "PreSieveTables.hpp"
+
 #include <primesieve/Vector.hpp>
 #include <primesieve/macros.hpp>
 

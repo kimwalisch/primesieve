@@ -18,13 +18,13 @@
 ///         types of CPU cores we try to detect the cache sizes of the
 ///         CPU core type that e.g. occurs most frequently.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
-#include <primesieve/CpuInfo.hpp>
+#include "CpuInfo.hpp"
 #include <primesieve/macros.hpp>
 
 #include <algorithm>

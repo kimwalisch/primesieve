@@ -1,19 +1,20 @@
 ///
-/// @file   PrimeSieve.cpp
+/// @file   PrimeSieveClass.cpp
 /// @brief  PrimeSieve is a high level class that manages prime
 ///         sieving. It is used for printing and counting primes
 ///         and for computing the nth prime.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
+#include "PrimeSieveClass.hpp"
+#include "ParallelSieve.hpp"
+#include "CountPrintPrimes.hpp"
+
 #include <primesieve/forward.hpp>
-#include <primesieve/PrimeSieve.hpp>
-#include <primesieve/ParallelSieve.hpp>
-#include <primesieve/CountPrintPrimes.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/Vector.hpp>
 

@@ -16,10 +16,11 @@
 #define PRIMEGENERATOR_HPP
 
 #include "Erat.hpp"
-#include "macros.hpp"
 #include "MemoryPool.hpp"
 #include "SievingPrimes.hpp"
-#include "Vector.hpp"
+
+#include <primesieve/macros.hpp>
+#include <primesieve/Vector.hpp>
 
 #include <stdint.h>
 #include <cstddef>
@@ -30,7 +31,7 @@
     __has_include(<immintrin.h>)
   #define ENABLE_AVX512_VBMI2
 #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-  #include "cpu_supports_avx512_vbmi2.hpp"
+  #include <primesieve/cpu_supports_avx512_vbmi2.hpp>
   #define ENABLE_PRIMEGENERATOR_DEFAULT
 #else
   #define ENABLE_PRIMEGENERATOR_DEFAULT

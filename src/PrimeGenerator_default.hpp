@@ -11,8 +11,9 @@
 #ifndef PRIMEGENERATOR_DEFAULT_HPP
 #define PRIMEGENERATOR_DEFAULT_HPP
 
-#include <primesieve/PrimeGenerator.hpp>
-#include <primesieve/Erat.hpp>
+#include "PrimeGenerator.hpp"
+#include "Erat.hpp"
+
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/popcnt.hpp>

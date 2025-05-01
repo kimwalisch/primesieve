@@ -29,7 +29,7 @@
 ///         Pre-sieving provides a speedup of up to 30% when sieving
 ///         the primes < 10^10 using primesieve.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2022 @zielaj, https://github.com/zielaj
 ///
 /// This file is distributed under the BSD License. See the COPYING
@@ -47,7 +47,8 @@
 // pre-sieving primes in the preSievePrimes array please make sure
 // to update getMaxPrime() in PreSieve.h afterwards.
 
-#include <primesieve/EratSmall.hpp>
+#include "EratSmall.hpp"
+
 #include <primesieve/Vector.hpp>
 #include <primesieve/macros.hpp>
 
@@ -131,7 +132,7 @@ int main()
 
 #endif
 
-#include "Vector.hpp"
+#include <primesieve/Vector.hpp>
 
 #include <initializer_list>
 #include <stdint.h>

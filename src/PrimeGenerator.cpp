@@ -18,8 +18,10 @@
 /// file in the top level directory.
 ///
 
-#include <primesieve/PrimeGenerator.hpp>
-#include <primesieve/Erat.hpp>
+#include "PrimeGenerator.hpp"
+#include "Erat.hpp"
+#include "SievingPrimes.hpp"
+
 #include <primesieve/forward.hpp>
 #include <primesieve/littleendian_cast.hpp>
 #include <primesieve/macros.hpp>
@@ -28,7 +30,6 @@
 #include <primesieve/pmath.hpp>
 #include <primesieve/popcnt.hpp>
 #include <primesieve/Vector.hpp>
-#include <primesieve/SievingPrimes.hpp>
 
 #include <stdint.h>
 #include <algorithm>
