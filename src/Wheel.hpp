@@ -12,7 +12,7 @@
 #ifndef WHEEL_HPP
 #define WHEEL_HPP
 
-#include "macros.hpp"
+#include <primesieve/macros.hpp>
 
 #include <stdint.h>
 #include <algorithm>

@@ -5,7 +5,7 @@
 ///         once there is no more space in the current Bucket
 ///         a new Bucket is allocated.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -14,9 +14,9 @@
 #ifndef BUCKET_HPP
 #define BUCKET_HPP
 
-#include "config.hpp"
-#include "macros.hpp"
-#include "pmath.hpp"
+#include <primesieve/config.hpp>
+#include <primesieve/macros.hpp>
+#include <primesieve/pmath.hpp>
 
 #include <stdint.h>
 #include <cstddef>

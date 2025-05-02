@@ -10,16 +10,17 @@
 #ifndef ERATBIG_HPP
 #define ERATBIG_HPP
 
-#include <primesieve/Bucket.hpp>
+#include "Wheel.hpp"
+
 #include <primesieve/macros.hpp>
 #include <primesieve/Vector.hpp>
-#include <primesieve/Wheel.hpp>
 
 #include <stdint.h>
 
 namespace primesieve {
 
 class MemoryPool;
+class SievingPrime;
 
 /// EratBig is an implementation of the segmented sieve of
 /// Eratosthenes optimized for big sieving primes that have

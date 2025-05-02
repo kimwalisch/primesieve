@@ -17,9 +17,9 @@
 ///
 
 #include "MemoryPool.hpp"
+#include "Bucket.hpp"
 
 #include <primesieve/config.hpp>
-#include <primesieve/Bucket.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/Vector.hpp>
 #include <primesieve/primesieve_error.hpp>

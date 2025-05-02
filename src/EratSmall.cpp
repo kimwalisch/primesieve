@@ -16,9 +16,9 @@
 ///
 
 #include "EratSmall.hpp"
+#include "Bucket.hpp"
 
 #include <primesieve/bits.hpp>
-#include <primesieve/Bucket.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 

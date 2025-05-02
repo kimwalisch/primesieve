@@ -10,10 +10,11 @@
 #ifndef ERATSMALL_HPP
 #define ERATSMALL_HPP
 
-#include <primesieve/Bucket.hpp>
+#include "Bucket.hpp"
+#include "Wheel.hpp"
+
 #include <primesieve/macros.hpp>
 #include <primesieve/Vector.hpp>
-#include <primesieve/Wheel.hpp>
 
 #include <cstddef>
 #include <stdint.h>

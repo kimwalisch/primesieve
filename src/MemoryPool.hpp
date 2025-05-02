@@ -10,11 +10,13 @@
 #ifndef MEMORYPOOL_HPP
 #define MEMORYPOOL_HPP
 
-#include <primesieve/Bucket.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/Vector.hpp>
 
 namespace primesieve {
+
+class SievingPrime;
+class Bucket;
 
 class MemoryPool
 {

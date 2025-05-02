@@ -18,10 +18,10 @@
 ///
 
 #include "EratMedium.hpp"
+#include "Bucket.hpp"
 #include "MemoryPool.hpp"
 
 #include <primesieve/bits.hpp>
-#include <primesieve/Bucket.hpp>
 #include <primesieve/macros.hpp>
 
 #include <stdint.h>

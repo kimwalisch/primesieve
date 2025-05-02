@@ -2,14 +2,15 @@
 /// @file   LookupTables.cpp
 /// @brief  Static gobal arrays.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
+#include "Wheel.hpp"
+
 #include <primesieve/forward.hpp>
-#include <primesieve/Wheel.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
