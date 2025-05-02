@@ -175,10 +175,6 @@ if(BUILD_STATIC_LIBS)
         set_target_properties(libprimesieve-static PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")
     endif()
 
-    if(TARGET libprimesieve)
-        add_dependencies(libprimesieve-static libprimesieve)
-    endif()
-
     target_compile_features(libprimesieve-static
     PUBLIC
         cxx_alias_templates
@@ -234,10 +230,6 @@ if(BUILD_PRIMESIEVE)
 
     if(WITH_MSVC_CRT_STATIC)
         set_target_properties(primesieve PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")
-    endif()
-
-    if(TARGET libprimesieve-static)
-        add_dependencies(primesieve libprimesieve-static)
     endif()
 endif()
 

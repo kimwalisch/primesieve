@@ -1,6 +1,7 @@
-Changes in version 12.9, 01/05/2025
+Changes in version 12.9, 02/05/2025
 ===================================
 
+* CMakeLists.txt: Speed up build by removing compile dependencies.
 * Move private header files from /include to /src.
 * src/CMakeLists.txt: Update for private header files in /src.
 * test/CMakeLists.txt: Update for private header files in /src.
