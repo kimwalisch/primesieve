@@ -12,6 +12,7 @@
 
 #include "Erat.hpp"
 #include "MemoryPool.hpp"
+#include "PrimeSieveClass.hpp"
 
 #include <primesieve/macros.hpp>
 #include <primesieve/Vector.hpp>
@@ -21,7 +22,6 @@
 namespace primesieve {
 
 class Store;
-class PrimeSieve;
 
 /// After a segment has been sieved CountPrintPrimes is
 /// used to reconstruct primes and prime k-tuplets from
