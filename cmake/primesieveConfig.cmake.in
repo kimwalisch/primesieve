@@ -14,6 +14,14 @@
 #
 # ====================================================================
 
+@PACKAGE_INIT@
+
+# Nothing to do if primesieve is included as a subdirectory in
+# another project that uses CMake as its build system.
+if(TARGET primesieve::primesieve)
+    return()
+endif()
+
 include(CMakeFindDependencyMacro)
 find_dependency(Threads QUIET)
 
