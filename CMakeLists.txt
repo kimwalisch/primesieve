@@ -207,12 +207,12 @@ endif()
 # that is in the PATH environment variable.
 
 if(WIN32 AND TARGET libprimesieve-static)
-    set(STATIC_LINKING ON)
+    set(STATICALLY_LINK_LIBPRIMESIEVE ON)
 elseif(NOT TARGET libprimesieve)
-    set(STATIC_LINKING ON)
+    set(STATICALLY_LINK_LIBPRIMESIEVE ON)
 endif()
 
-if(STATIC_LINKING)
+if(STATICALLY_LINK_LIBPRIMESIEVE)
     add_library(primesieve::primesieve ALIAS libprimesieve-static)
 else()
     add_library(primesieve::primesieve ALIAS libprimesieve)
