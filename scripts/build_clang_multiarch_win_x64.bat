@@ -1,1 +1,1 @@
-clang++ -I../include -O3 -mpopcnt -DNDEBUG -DENABLE_MULTIARCH_AVX512_BW -DENABLE_MULTIARCH_AVX512_VBMI2 ../src/*.cpp ../src/arch/x86/*.cpp ../src/app/*.cpp -o primesieve.exe "C:\Program Files\LLVM\lib\clang\18\lib\windows\clang_rt.builtins-x86_64.lib"
+clang++ -I../include -I../src -O3 -mpopcnt -DNDEBUG -DENABLE_MULTIARCH_AVX512_BW -DENABLE_MULTIARCH_AVX512_VBMI2 ../src/*.cpp ../src/arch/x86/*.cpp ../src/app/*.cpp -o primesieve.exe "C:\Program Files\LLVM\lib\clang\18\lib\windows\clang_rt.builtins-x86_64.lib"
