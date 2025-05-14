@@ -1,7 +1,7 @@
 ///
 /// @file  Vector.hpp
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -268,7 +268,7 @@ public:
       // with constructors (and with in-class initialization of
       // non-static members). But it does not default initialize
       // memory for POD types like int, long.
-      if (!std::is_trivial<T>::value)
+      if (!std::is_trivially_default_constructible<T>::value)
         uninitialized_default_construct(end_, array_ + n);
 
       end_ = array_ + n;

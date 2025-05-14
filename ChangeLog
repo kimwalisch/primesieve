@@ -1,10 +1,11 @@
-Changes in version 12.9, 02/05/2025
+Changes in version 12.9, 14/05/2025
 ===================================
 
 * CMakeLists.txt: Speed up build by removing compile dependencies.
 * Move private header files from /include to /src.
 * src/CMakeLists.txt: Update for private header files in /src.
 * test/CMakeLists.txt: Update for private header files in /src.
+* Vector.hpp: Get rid of std::is_trivial which is deprecated in C++26.
 
 Changes in version 12.8, 12/04/2025
 ===================================
