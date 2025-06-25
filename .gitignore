@@ -17,7 +17,8 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 CTestTestfile.cmake
-/primesieve*
+/primesieve
+/primesieve[0-9]*
 /libprimesieve*
 doc/primesieve.xml
 doc/Doxyfile
