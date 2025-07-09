@@ -1,3 +1,10 @@
+Changes in version 12.10, 09/07/2025
+====================================
+
+* test/CMakeLists.txt: Improve Windows libprimesieve.dll support.
+* examples/c/CMakeLists.txt: Improve Windows libprimesieve.dll support.
+* examples/cpp/CMakeLists.txt: Improve Windows libprimesieve.dll support.
+
 Changes in version 12.9, 14/05/2025
 ===================================
 
