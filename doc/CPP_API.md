@@ -179,7 +179,7 @@ int main()
 
 Before using ```primesieve::iterator::prev_prime()``` you must change the start number
 either in the constructor or using the ```jump_to()``` method (because the start number is
-initialized to 0 be default).
+initialized to 0 by default).
 
 * Please note that the first ```prev_prime()``` invocation returns the first prime ≤ start number.
   If want to generate primes < start number you need to use e.g. ```jump_to(start-1)```.
