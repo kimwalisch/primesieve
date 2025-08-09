@@ -330,7 +330,7 @@ int main(void)
 ## ```primesieve_iterator.is_error```
 
 For the ```primesieve_iterator```, you can check if the return value of ```primesieve_next_prime()```
-is ```PRIMESIEVE_ERROR``` to know if an error occured. However, ```primesieve_iterator``` also supports
+is ```PRIMESIEVE_ERROR``` to know if an error occurred. However, ```primesieve_iterator``` also supports
 a 2nd option for error handling: by default ```primesieve_iterator.is_error``` is initialized to 0 in
 ```primesieve_init()```, if any error occurs ```primesieve_iterator.is_error``` is set to 1.
 This is useful to check after a computation that no error has occurred, this way you don't have to
