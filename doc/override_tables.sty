@@ -1,0 +1,101 @@
+\NeedsTeXFormat{LaTeX2e}
+
+% Packages used by this style file
+\RequirePackage{doxygen}
+
+% Used by parameter lists
+\renewenvironment{DoxyParams}[2][]{%
+    \tabulinesep=1mm%
+    \par%
+    \ifthenelse{\equal{#1}{}}%
+      {\begin{longtable}[l]{|l|l|}}% name + description
+    {\ifthenelse{\equal{#1}{1}}%
+      {\begin{longtable}[l]{|l|l|l|}}% in/out + name + desc
+      {\begin{longtable}[l]{|l|l|l|l|}}% in/out + type + name + desc
+    }
+    \multicolumn{2}{l}{\hspace{-6pt}\bfseries\fontseries{bc}\selectfont\color{darkgray} #2}\\[1ex]%
+    \endfirsthead%
+    \multicolumn{2}{l}{\hspace{-6pt}\bfseries\fontseries{bc}\selectfont\color{darkgray} #2}\\[1ex]%
+    \endhead%
+    \hline%
+}{%
+    \end{longtable}%
+    \vspace{6pt}%
+}
+
+% Used for fields of simple structs
+\renewenvironment{DoxyFields}[1]{%
+    \tabulinesep=1mm%
+    \par%
+    \begin{longtable}[l]{|l|l|l|}%
+    \multicolumn{3}{l}{\hspace{-6pt}\bfseries\fontseries{bc}\selectfont\color{darkgray} #1}\\[1ex]%
+    \endfirsthead%
+    \multicolumn{3}{l}{\hspace{-6pt}\bfseries\fontseries{bc}\selectfont\color{darkgray} #1}\\[1ex]%
+    \endhead%
+    \hline%
+}{%
+    \end{longtable}%
+    \vspace{6pt}%
+}
+
+% Used for fields simple class style enums
+\renewenvironment{DoxyEnumFields}[2][]{%
+    \tabulinesep=1mm%
+    \par%
+    \ifthenelse{\equal{#1}{2}}%
+      {\begin{longtable}[l]{|l|l|}}%
+      {\begin{longtable}[l]{|l|l|l|}}% with init value
+    \multicolumn{2}{l}{\hspace{-6pt}\bfseries\fontseries{bc}\selectfont\color{darkgray} #2}\\[1ex]%
+    \endfirsthead%
+    \multicolumn{2}{l}{\hspace{-6pt}\bfseries\fontseries{bc}\selectfont\color{darkgray} #2}\\[1ex]%
+    \endhead%
+    \hline%
+}{%
+    \end{longtable}%
+    \vspace{6pt}%
+}
+
+% Used by return value lists
+\renewenvironment{DoxyRetVals}[1]{%
+    \tabulinesep=1mm%
+    \par%
+    \begin{longtable}[l]{|l|l|}%
+    \multicolumn{2}{l}{\hspace{-6pt}\bfseries\fontseries{bc}\selectfont\color{darkgray} #1}\\[1ex]%
+    \endfirsthead%
+    \multicolumn{2}{l}{\hspace{-6pt}\bfseries\fontseries{bc}\selectfont\color{darkgray} #1}\\[1ex]%
+    \endhead%
+    \hline%
+}{%
+    \end{longtable}%
+    \vspace{6pt}%
+}
+
+% Used by exception lists
+\renewenvironment{DoxyExceptions}[1]{%
+    \tabulinesep=1mm%
+    \par%
+    \begin{longtable}[l]{|l|l|}%
+    \multicolumn{2}{l}{\hspace{-6pt}\bfseries\fontseries{bc}\selectfont\color{darkgray} #1}\\[1ex]%
+    \endfirsthead%
+    \multicolumn{2}{l}{\hspace{-6pt}\bfseries\fontseries{bc}\selectfont\color{darkgray} #1}\\[1ex]%
+    \endhead%
+    \hline%
+}{%
+    \end{longtable}%
+    \vspace{6pt}%
+}
+
+% Used by template parameter lists
+\renewenvironment{DoxyTemplParams}[1]{%
+    \tabulinesep=1mm%
+    \par%
+    \begin{longtable}[l]{|l|l|}%
+    \multicolumn{2}{l}{\hspace{-6pt}\bfseries\fontseries{bc}\selectfont\color{darkgray} #1}\\[1ex]%
+    \endfirsthead%
+    \multicolumn{2}{l}{\hspace{-6pt}\bfseries\fontseries{bc}\selectfont\color{darkgray} #1}\\[1ex]%
+    \endhead%
+    \hline%
+}{%
+    \end{longtable}%
+    \vspace{6pt}%
+}
