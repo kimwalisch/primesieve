@@ -1,6 +1,7 @@
-Changes in version 12.10, 09/07/2025
+Changes in version 12.10, 01/10/2025
 ====================================
 
+* src/MemoryPool.cpp: Fix undefined behavior in Bucket allocation.
 * test/CMakeLists.txt: Improve Windows libprimesieve.dll support.
 * examples/c/CMakeLists.txt: Improve Windows libprimesieve.dll support.
 * examples/cpp/CMakeLists.txt: Improve Windows libprimesieve.dll support.
