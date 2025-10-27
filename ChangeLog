@@ -1,6 +1,7 @@
-Changes in version 12.10, 01/10/2025
+Changes in version 12.10, 27/10/2025
 ====================================
 
+* ci.yml: Add WebAssembly/Emscripten test.
 * src/MemoryPool.cpp: Fix undefined behavior in Bucket allocation.
 * test/CMakeLists.txt: Improve Windows libprimesieve.dll support.
 * examples/c/CMakeLists.txt: Improve Windows libprimesieve.dll support.

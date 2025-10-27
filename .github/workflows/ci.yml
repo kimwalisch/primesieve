@@ -125,6 +125,61 @@ jobs:
       - name: primesieve 1e10 -d1e8 -p6 | md5sum
         run: if [ "$(./primesieve 1e10 -d1e8 -p6 | md5sum | cut -f1 -d' ')" != "5a0bc83fdef0bb116d60f356adfde52f" ]; then exit 1; fi
 
+  linux_emscripten:
+    strategy:
+      matrix:
+        platform: ['ubuntu-latest']
+        config: ['Release']
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Emscripten SDK
+        run: |
+          git clone https://github.com/emscripten-core/emsdk.git
+          cd emsdk
+          ./emsdk install latest
+          ./emsdk activate latest
+      - name: Configure (CMake)
+        run: |
+          source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh
+          mkdir build
+          cd build
+          emcmake cmake .. -DCMAKE_BUILD_TYPE=${{matrix.config}} -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
+      - name: Build (emmake make)
+        run: |
+          source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh
+          cd build
+          emmake make -j2
+      - name: primesieve 1e10
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; node build/primesieve.js 1e10
+      - name: primesieve 1e8 --nth-prime
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; node build/primesieve.js 1e8 --nth-prime
+      # Test printing primes and prime k-tuplets
+      - name: primesieve 1e8 -p | md5sum
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; if [ "$(node build/primesieve.js 1e8 -p | md5sum | cut -f1 -d' ')" != "4e2b0027288a27e9c99699364877c9db" ]; then exit 1; fi
+      - name: primesieve 1e8 -p2 | md5sum
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; if [ "$(node build/primesieve.js 1e8 -p2 | md5sum | cut -f1 -d' ')" != "5076d235d5b03389034ec107227eab98" ]; then exit 1; fi
+      - name: primesieve 1e8 -p3 | md5sum
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; if [ "$(node build/primesieve.js 1e8 -p3 | md5sum | cut -f1 -d' ')" != "1b40d7e67868ccc857df11c3e0f7e0f5" ]; then exit 1; fi
+      - name: primesieve 1e8 -p4 | md5sum
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; if [ "$(node build/primesieve.js 1e8 -p4 | md5sum | cut -f1 -d' ')" != "b998d7cdbeae6623cdecba1b921cb2e1" ]; then exit 1; fi
+      - name: primesieve 1e8 -p5 | md5sum
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; if [ "$(node build/primesieve.js 1e8 -p5 | md5sum | cut -f1 -d' ')" != "1ec7d5704d7399caf43667090b5bf836" ]; then exit 1; fi
+      - name: primesieve 1e8 -p6 | md5sum
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; if [ "$(node build/primesieve.js 1e8 -p6 | md5sum | cut -f1 -d' ')" != "0fb813d345c94cf2012588d1f71328b5" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p | md5sum
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; if [ "$(node build/primesieve.js 1e10 -d1e8 -p | md5sum | cut -f1 -d' ')" != "5fbe254a97ad3bbc07c224908c9d59b2" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p2 | md5sum
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; if [ "$(node build/primesieve.js 1e10 -d1e8 -p2 | md5sum | cut -f1 -d' ')" != "7a7a770c1841a17a9a63b92b7b6532b9" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p3 | md5sum
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; if [ "$(node build/primesieve.js 1e10 -d1e8 -p3 | md5sum | cut -f1 -d' ')" != "72323b08c62ad8342f7331e3d6d45a64" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p4 | md5sum
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; if [ "$(node build/primesieve.js 1e10 -d1e8 -p4 | md5sum | cut -f1 -d' ')" != "c2b0818499f77aa35681db3826caf3f6" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p5 | md5sum
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; if [ "$(node build/primesieve.js 1e10 -d1e8 -p5 | md5sum | cut -f1 -d' ')" != "11b50e4f75899891a62465f6d68fb76e" ]; then exit 1; fi
+      - name: primesieve 1e10 -d1e8 -p6 | md5sum
+        run: source $GITHUB_WORKSPACE/emsdk/emsdk_env.sh; if [ "$(node build/primesieve.js 1e10 -d1e8 -p6 | md5sum | cut -f1 -d' ')" != "5a0bc83fdef0bb116d60f356adfde52f" ]; then exit 1; fi
+
   macos_clang:
     strategy:
       matrix:
