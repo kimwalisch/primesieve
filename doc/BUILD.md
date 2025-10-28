@@ -1,6 +1,18 @@
 # primesieve build instructions
 
-## Prerequisites
+# Contents
+
+* [Prerequisites](#prerequisites)
+* [Unix-like OSes](#unix-like-oses)
+* [MinGW/MSYS2 (Windows)](#mingwmsys2-windows)
+* [Microsoft Visual C++](#microsoft-visual-c)
+* [Emscripten/WebAssembly](#emscriptenwebassembly)
+* [CMake configure options](#cmake-configure-options)
+* [Run the tests](#run-the-tests)
+* [API documentation](#api-documentation)
+* [Man page regeneration](#man-page-regeneration)
+
+# Prerequisites
 
 You need to have installed a C++ compiler which supports C++11 (or later) and CMake ≥ 3.4.
 
@@ -27,7 +39,7 @@ You need to have installed a C++ compiler which supports C++11 (or later) and CM
     </tr>
 </table>
 
-## Unix-like OSes
+# Unix-like OSes
 
 Open a terminal, cd into the primesieve directory and run:
 
@@ -38,7 +50,7 @@ sudo cmake --install .
 sudo ldconfig
 ```
 
-## MinGW/MSYS2 (Windows)
+# MinGW/MSYS2 (Windows)
 
 Open a terminal, cd into the primesieve directory and run:
 
@@ -47,7 +59,7 @@ cmake -G "Unix Makefiles" .
 cmake --build . --parallel
 ```
 
-## Microsoft Visual C++
+# Microsoft Visual C++
 
 First install [Visual Studio](https://visualstudio.microsoft.com/downloads/)
 (includes CMake) on your Windows PC. Then go to the start menu, select Visual
@@ -63,7 +75,29 @@ cmake --build . --config Release
 cmake --install . --config Release
 ```
 
-## CMake configure options
+# Emscripten/WebAssembly
+
+Using the Emscripten compiler you can compile the primesieve C/C++ library to WebAssembly:
+
+```bash
+# Install the Emscripten compiler
+git clone https://github.com/emscripten-core/emsdk.git
+cd emsdk
+./emsdk install latest
+./emsdk activate latest
+source emsdk_env.sh
+
+# Compile primesieve to WebAssembly
+git clone https://github.com/kimwalisch/primesieve.git
+cd primesieve
+emcmake cmake .
+emmake make -j4
+
+# Run the primesieve WebAssembly binary
+node ./primesieve.js 1e10
+```
+
+# CMake configure options
 
 By default the primesieve binary and the static/shared libprimesieve will be
 built. The build options can be modified at the configure step using e.g.
@@ -82,7 +116,7 @@ option(WITH_MULTIARCH       "Enable runtime dispatching to fastest supported CPU
 option(WITH_MSVC_CRT_STATIC "Link primesieve.lib with /MT instead of the default /MD" OFF)
 ```
 
-## Run the tests
+# Run the tests
 
 Open a terminal, cd into the primesieve directory and run:
 
@@ -97,16 +131,7 @@ For developers hacking on primesieve's source code the
 about primesieve testing such as testing in debug mode and testing
 using GCC/Clang sanitizers.
 
-## C/C++ examples
-
-Open a terminal, cd into the primesieve directory and run:
-
-```bash
-cmake -DBUILD_EXAMPLES=ON .
-cmake --build . --parallel
-```
-
-## API documentation
+# API documentation
 
 To build the primesieve C/C++ API documentation in html/PDF format
 you need to have installed the ```doxygen```, ```doxygen-latex``` and
@@ -117,7 +142,7 @@ cmake -DBUILD_DOC=ON .
 cmake --build . --target doc
 ```
 
-## Man page regeneration
+# Man page regeneration
 
 primesieve includes an up to date man page at ```doc/primesieve.1```.
 That man page has been generated from ```doc/primesieve.txt``` using
