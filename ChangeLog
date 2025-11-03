@@ -1,7 +1,8 @@
-Changes in version 12.10, 28/10/2025
+Changes in version 12.10, 03/11/2025
 ====================================
 
 * src/MemoryPool.cpp: Fix undefined behavior in Bucket allocation.
+* build_mingw64_arm64.sh: Enable ARM SVE for Mingw-w64 on ARM64.
 * test/CMakeLists.txt: Improve Windows libprimesieve.dll support.
 * examples/c/CMakeLists.txt: Improve Windows libprimesieve.dll support.
 * examples/cpp/CMakeLists.txt: Improve Windows libprimesieve.dll support.
