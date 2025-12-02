@@ -45,6 +45,7 @@
 #include <stdint.h>
 #include <algorithm>
 #include <cstddef>
+#include <utility>
 
 #if defined(__ARM_FEATURE_SVE) && \
     __has_include(<arm_sve.h>)
@@ -91,51 +92,41 @@
 
 namespace {
 
-ALWAYS_INLINE void presieve1(const uint8_t* __restrict preSieved0,
-                             const uint8_t* __restrict preSieved1,
-                             const uint8_t* __restrict preSieved2,
-                             const uint8_t* __restrict preSieved3,
-                             uint8_t* __restrict sieve,
-                             std::size_t bytes)
+/// Runtime dispatch to optimized presieve1() SIMD algorithm
+template <typename... Args>
+void presieve1(Args&&... args)
 {
 #if defined(ENABLE_MULTIARCH_AVX512_BW)
   if (cpu_supports_avx512_bw)
-    presieve1_x86_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+    presieve1_x86_avx512(std::forward<Args>(args)...);
   else
-    presieve1_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
-
+    presieve1_default(std::forward<Args>(args)...);
 #elif defined(ENABLE_MULTIARCH_ARM_SVE)
   if (cpu_supports_sve)
-    presieve1_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+    presieve1_arm_sve(std::forward<Args>(args)...);
   else
-    presieve1_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
-
+    presieve1_default(std::forward<Args>(args)...);
 #else
-  presieve1_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+  presieve1_default(std::forward<Args>(args)...);
 #endif
 }
 
-ALWAYS_INLINE void presieve2(const uint8_t* __restrict preSieved0,
-                             const uint8_t* __restrict preSieved1,
-                             const uint8_t* __restrict preSieved2,
-                             const uint8_t* __restrict preSieved3,
-                             uint8_t* __restrict sieve,
-                             std::size_t bytes)
+/// Runtime dispatch to optimized presieve2() SIMD algorithm
+template <typename... Args>
+void presieve2(Args&&... args)
 {
 #if defined(ENABLE_MULTIARCH_AVX512_BW)
   if (cpu_supports_avx512_bw)
-    presieve2_x86_avx512(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+    presieve2_x86_avx512(std::forward<Args>(args)...);
   else
-    presieve2_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
-
+    presieve2_default(std::forward<Args>(args)...);
 #elif defined(ENABLE_MULTIARCH_ARM_SVE)
   if (cpu_supports_sve)
-    presieve2_arm_sve(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+    presieve2_arm_sve(std::forward<Args>(args)...);
   else
-    presieve2_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
-
+    presieve2_default(std::forward<Args>(args)...);
 #else
-  presieve2_default(preSieved0, preSieved1, preSieved2, preSieved3, sieve, bytes);
+  presieve2_default(std::forward<Args>(args)...);
 #endif
 }
 
