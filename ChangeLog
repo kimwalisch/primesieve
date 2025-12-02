@@ -1,3 +1,9 @@
+Changes in version 12.11, 02/12/2025
+====================================
+
+* src/PreSieve.cpp: Simplify SIMD runtime dispatching.
+* BUILD.md: Update MSVC build instructions.
+
 Changes in version 12.10, 03/11/2025
 ====================================
 
