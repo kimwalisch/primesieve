@@ -198,12 +198,12 @@ private:
   void throw_integer_overflow_error() const
   {
     std::ostringstream msg;
-    msg << "Error: " << maxLog2() << "-bit ";
+    msg << "Error: " << maxLog2() << "-bit integer overflow ";
 
     if (expr_.find_first_not_of("0123456789 \t\n\r\f\v") == std::string::npos)
-      msg << "integer overflow detected in string to integer conversion of '" << expr_ << "'";
+      msg << "detected in string to integer conversion of '" << expr_ << "'";
     else
-      msg << "integer overflow detected in math expression '" << expr_ << "'";
+      msg << "detected in math expression '" << expr_ << "'";
 
     throw calculator::error(msg.str());
   }
