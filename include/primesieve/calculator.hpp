@@ -5,9 +5,9 @@
 ///            occurs a calculator::error exception is thrown.
 ///            <https://github.com/kimwalisch/calculator>
 /// @author    Kim Walisch, <kim.walisch@gmail.com>
-/// @copyright Copyright (C) 2013-2018 Kim Walisch
+/// @copyright Copyright (C) 2013-2025 Kim Walisch
 /// @license   BSD 2-Clause, https://opensource.org/licenses/BSD-2-Clause
-/// @version   1.4 patched: `^' is raise to power instead of XOR.
+/// @version   2.0
 ///
 /// == Supported operators ==
 ///
@@ -59,12 +59,13 @@
 #ifndef CALCULATOR_HPP
 #define CALCULATOR_HPP
 
-#include <stdexcept>
-#include <string>
+#include <cctype>
+#include <climits>
+#include <cstddef>
 #include <sstream>
 #include <stack>
-#include <cstddef>
-#include <cctype>
+#include <stdexcept>
+#include <string>
 
 namespace calculator
 {
@@ -75,19 +76,9 @@ namespace calculator
 class error : public std::runtime_error
 {
 public:
-  error(const std::string& expr, const std::string& message)
-    : std::runtime_error(message),
-      expr_(expr)
+  error(const std::string& msg)
+    : std::runtime_error(msg)
   { }
-#if __cplusplus < 201103L
-  ~error() throw() { }
-#endif
-  std::string expression() const
-  {
-    return expr_;
-  }
-private:
-  std::string expr_;
 };
 
 template <typename T>
@@ -183,22 +174,70 @@ private:
   /// top of the stack has lower precedence.
   std::stack<OperatorValue> stack_;
 
-  /// Exponentiation by squaring, x^n.
-  static T pow(T x, T n)
+  /// Same as std::numeric_limits<T>::digit
+  /// but also works with __int128_t.
+  static std::size_t maxLog2()
   {
+    return T(~T(0)) > 0
+      ? sizeof(T) * CHAR_BIT
+      : sizeof(T) * CHAR_BIT - 1;
+  }
+
+  /// Same as std::numeric_limits<T>::max
+  /// but also works with __int128_t.
+  static T maxValue()
+  {
+    T maxVal = 0;
+
+    for (std::size_t i = 0; i < maxLog2(); i++)
+      maxVal |= T(1) << i;
+
+    return maxVal;
+  }
+
+  void throw_integer_overflow_error() const
+  {
+    std::ostringstream msg;
+    msg << "Error: " << maxLog2() << "-bit ";
+
+    if (expr_.find_first_not_of("0123456789 \t\n\r\f\v") == std::string::npos)
+      msg << "integer overflow detected in string to integer conversion of '" << expr_ << "'";
+    else
+      msg << "integer overflow detected in math expression '" << expr_ << "'";
+
+    throw calculator::error(msg.str());
+  }
+
+  /// Exponentiation by squaring, x^n.
+  T pow(T x, T n) const
+  {
+    if (x == 1 || n == 0)
+      return 1;
+    if (x == 0)
+      return 0;
+
     T res = 1;
+    T maxVal = maxValue();
 
     while (n > 0)
     {
       if (n % 2 != 0)
       {
+        if (res > maxVal / x)
+          throw_integer_overflow_error();
+
         res *= x;
         n -= 1;
       }
       n /= 2;
 
       if (n > 0)
+      {
+        if (x > maxVal / x)
+          throw_integer_overflow_error();
+
         x *= x;
+      }
     }
 
     return res;
@@ -213,10 +252,10 @@ private:
       std::ostringstream msg;
       msg << "Parser error: division by 0";
       if (division != std::string::npos)
-        msg << " (error token is \""
+        msg << " (error token is '"
             << expr_.substr(division, expr_.size() - division)
-            << "\")";
-      throw calculator::error(expr_, msg.str());
+            << "')";
+      throw calculator::error(msg.str());
     }
     return value;
   }
@@ -269,11 +308,11 @@ private:
   void unexpected() const
   {
     std::ostringstream msg;
-    msg << "Syntax error: unexpected token \""
+    msg << "Syntax error: unexpected token '"
         << expr_.substr(index_, expr_.size() - index_)
-        << "\" at index "
-        << index_;
-    throw calculator::error(expr_, msg.str());
+        << "' at index " << index_
+        << " in math expression '" << expr_ << "'";
+    throw calculator::error(msg.str());
   }
 
   /// Eat all white space characters at the
@@ -328,8 +367,19 @@ private:
   T parseDecimal()
   {
     T value = 0;
+    T maxVal = maxValue();
+
     for (T d; (d = getInteger()) <= 9; index_++)
-      value = value * 10 + d;
+    {
+      if (value > maxVal / 10)
+        throw_integer_overflow_error();
+      value *= 10;
+
+      if (value > maxVal - d)
+        throw_integer_overflow_error();
+      value += d;
+    }
+
     return value;
   }
 
@@ -337,8 +387,19 @@ private:
   {
     index_ = index_ + 2;
     T value = 0;
+    T maxVal = maxValue();
+
     for (T h; (h = getInteger()) <= 0xf; index_++)
-      value = value * 0x10 + h;
+    {
+      if (value > maxVal / 0x10)
+        throw_integer_overflow_error();
+      value *= 0x10;
+
+      if (value > maxVal - h)
+        throw_integer_overflow_error();
+      value += h;
+    }
+
     return value;
   }
 
@@ -379,7 +440,7 @@ private:
                 {
                   if (!isEnd())
                     unexpected();
-                  throw calculator::error(expr_, "Syntax error: `)' expected at end of expression");
+                  throw calculator::error("Syntax error: `)' expected at end of math expression '" + expr_ + "'");
                 }
                 index_++; break;
       case '~': index_++; val = ~parseValue(); break;
@@ -388,7 +449,7 @@ private:
                 break;
       default : if (!isEnd())
                   unexpected();
-                throw calculator::error(expr_, "Syntax error: value expected at end of expression");
+                throw calculator::error("Syntax error: value expected at end of math expression '" + expr_ + "'");
     }
     return val;
   }
