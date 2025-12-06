@@ -1,7 +1,7 @@
 ///
 /// @file  CmdOptions.hpp
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -10,11 +10,8 @@
 #ifndef CMDOPTIONS_HPP
 #define CMDOPTIONS_HPP
 
-#include <primesieve/calculator.hpp>
-#include <primesieve/primesieve_error.hpp>
 #include <primesieve/Vector.hpp>
 
-#include <exception>
 #include <stdint.h>
 #include <string>
 
@@ -50,17 +47,6 @@ struct Option
   std::string str;
   std::string opt;
   std::string val;
-
-  template <typename T>
-  T getValue() const
-  {
-    try {
-      return calculator::eval<T>(val);
-    }
-    catch (std::exception&) {
-      throw primesieve::primesieve_error("invalid option '" + opt + "=" + val + "'");
-    }
-  }
 };
 
 struct CmdOptions

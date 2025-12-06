@@ -24,10 +24,12 @@
 #include "CmdOptions.hpp"
 
 #include <PrimeSieveClass.hpp>
+#include <primesieve/calculator.hpp>
 #include <primesieve/primesieve_error.hpp>
 
 #include <cstddef>
 #include <cctype>
+#include <exception>
 #include <map>
 #include <stdint.h>
 #include <string>
@@ -186,6 +188,18 @@ Option parseOption(int argc,
   return opt;
 }
 
+// Convert opt.val string to integer value
+template <typename T>
+T getVal(const Option& opt)
+{
+  try {
+    return calculator::eval<T>(opt.val);
+  }
+  catch (std::exception& e) {
+    throw primesieve_error("invalid option '" + opt.opt + "=" + opt.val + "'\n" + e.what());
+  }
+}
+
 } // namespace
 
 void CmdOptions::setMainOption(OptionID optionID,
@@ -209,7 +223,7 @@ void CmdOptions::optionPrint(Option& opt)
   if (opt.val.empty())
     opt.val = "1";
 
-  switch (opt.getValue<int>())
+  switch (getVal<int>(opt))
   {
     case 1: flags |= PRINT_PRIMES; break;
     case 2: flags |= PRINT_TWINS; break;
@@ -227,7 +241,7 @@ void CmdOptions::optionCount(Option& opt)
   if (opt.val.empty())
     opt.val = "1";
 
-  int n = opt.getValue<int>();
+  int n = getVal<int>(opt);
 
   for (; n > 0; n /= 10)
   {
@@ -247,7 +261,7 @@ void CmdOptions::optionCount(Option& opt)
 void CmdOptions::optionDistance(Option& opt)
 {
   uint64_t start = 0;
-  uint64_t val = opt.getValue<uint64_t>();
+  uint64_t val = getVal<uint64_t>(opt);
 
   if (!numbers.empty())
     start = numbers[0];
@@ -283,14 +297,14 @@ void CmdOptions::optionTimeout(Option& opt)
   // https://manpages.debian.org/unstable/stress-ng/stress-ng.1.en.html
   switch (opt.val.back())
   {
-    case 's': opt.val.pop_back(); timeout = opt.getValue<int64_t>(); break;
-    case 'm': opt.val.pop_back(); timeout = opt.getValue<int64_t>() * 60; break;
-    case 'h': opt.val.pop_back(); timeout = opt.getValue<int64_t>() * 3600; break;
-    case 'd': opt.val.pop_back(); timeout = opt.getValue<int64_t>() * 24 * 3600; break;
-    case 'y': opt.val.pop_back(); timeout = opt.getValue<int64_t>() * 365 * 24 * 3600; break;
+    case 's': opt.val.pop_back(); timeout = getVal<int64_t>(opt); break;
+    case 'm': opt.val.pop_back(); timeout = getVal<int64_t>(opt) * 60; break;
+    case 'h': opt.val.pop_back(); timeout = getVal<int64_t>(opt) * 3600; break;
+    case 'd': opt.val.pop_back(); timeout = getVal<int64_t>(opt) * 24 * 3600; break;
+    case 'y': opt.val.pop_back(); timeout = getVal<int64_t>(opt) * 365 * 24 * 3600; break;
 
     // By default assume seconds like stress-ng
-    default: timeout = opt.getValue<int64_t>();
+    default: timeout = getVal<int64_t>(opt);
   }
 }
 
@@ -349,12 +363,12 @@ CmdOptions parseOptions(int argc, char* argv[])
       case OPTION_PRINT:       opts.optionPrint(opt); break;
       case OPTION_STRESS_TEST: opts.optionStressTest(opt); break;
       case OPTION_TIMEOUT:     opts.optionTimeout(opt); break;
-      case OPTION_SIZE:        opts.sieveSize = opt.getValue<int>(); break;
-      case OPTION_THREADS:     opts.threads = opt.getValue<int>(); break;
+      case OPTION_SIZE:        opts.sieveSize = getVal<int>(opt); break;
+      case OPTION_THREADS:     opts.threads = getVal<int>(opt); break;
       case OPTION_QUIET:       opts.quiet = true; break;
       case OPTION_NO_STATUS:   opts.status = false; break;
       case OPTION_TIME:        opts.time = true; break;
-      case OPTION_NUMBER:      opts.numbers.push_back(opt.getValue<uint64_t>()); break;
+      case OPTION_NUMBER:      opts.numbers.push_back(getVal<uint64_t>(opt)); break;
       default:                 opts.setMainOption(optionID, opt.str);
     }
   }
