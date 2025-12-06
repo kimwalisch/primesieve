@@ -194,6 +194,7 @@ void signed_integer_tests()
   check<int64_t>("300-(-200)", "500");
   check<int64_t>("1e18", "1000000000000000000");
   check<int64_t>("3e18", "3000000000000000000");
+  check<int64_t>("7e-2", "0");
   check<int64_t>("10^0", "1");
   check<int64_t>("10^1", "10");
   check<int64_t>("37^2", "1369");
