@@ -96,22 +96,12 @@ public:
     if (expr.size() >= 10000)
       throw calculator::error("Error: math expression string exceeds 10000 characters!");
 
-    T result = 0;
-    index_ = 0;
     expr_ = expr;
+    index_ = 0;
+    T result = parseExpr();
 
-    try
-    {
-      result = parseExpr();
-      if (!isEnd())
-        unexpected();
-    }
-    catch (const calculator::error&)
-    {
-      while(!stack_.empty())
-        stack_.pop();
-      throw;
-    }
+    if (!isEnd())
+      throw_unexpected();
 
     return result;
   }
@@ -173,6 +163,16 @@ private:
   /// are pushed onto the stack if the operator on
   /// top of the stack has lower precedence.
   std::stack<OperatorValue> stack_;
+
+  void throw_unexpected() const
+  {
+    std::ostringstream msg;
+    msg << "Syntax error: unexpected token '"
+        << expr_.substr(index_, expr_.size() - index_)
+        << "' at index " << index_
+        << " of math expression '" << expr_ << "'";
+    throw calculator::error(msg.str());
+  }
 
   void throw_integer_underflow_error() const
   {
@@ -519,18 +519,8 @@ private:
   void expect(const std::string& str)
   {
     if (expr_.compare(index_, str.size(), str) != 0)
-      unexpected();
+      throw_unexpected();
     index_ += str.size();
-  }
-
-  void unexpected() const
-  {
-    std::ostringstream msg;
-    msg << "Syntax error: unexpected token '"
-        << expr_.substr(index_, expr_.size() - index_)
-        << "' at index " << index_
-        << " of math expression '" << expr_ << "'";
-    throw calculator::error(msg.str());
   }
 
   /// Eat all white space characters at the
@@ -645,7 +635,7 @@ private:
                 if (getCharacter() != ')')
                 {
                   if (!isEnd())
-                    unexpected();
+                    throw_unexpected();
                   throw calculator::error("Syntax error: `)' expected at end of math expression '" + expr_ + "'");
                 }
                 index_++; break;
@@ -673,7 +663,7 @@ private:
 
                 break;
       default : if (!isEnd())
-                  unexpected();
+                  throw_unexpected();
                 throw calculator::error("Syntax error: value expected at end of math expression '" + expr_ + "'");
     }
     return val;
