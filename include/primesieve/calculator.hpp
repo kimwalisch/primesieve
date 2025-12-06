@@ -512,7 +512,7 @@ private:
     msg << "Syntax error: unexpected token '"
         << expr_.substr(index_, expr_.size() - index_)
         << "' at index " << index_
-        << " in math expression '" << expr_ << "'";
+        << " of math expression '" << expr_ << "'";
     throw calculator::error(msg.str());
   }
 
