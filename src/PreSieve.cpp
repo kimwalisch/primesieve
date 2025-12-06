@@ -144,7 +144,10 @@ void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
   pos2 = (segmentLow % (preSieveTables[2].size() * 30)) / 30;
   pos3 = (segmentLow % (preSieveTables[3].size() * 30)) / 30;
 
-  // PreSieve algo 1
+  // This loop performs the first pass.
+  // It performs a bitwise AND of the first four
+  // preSieveTables and stores the result in the
+  // sieve array, discarding its previous contents.
   while (offset < sieve.size())
   {
     uint64_t bytesToCopy = sieve.size() - offset;
@@ -169,7 +172,9 @@ void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
     pos3 = (pos3 + bytesToCopy) * (pos3 < preSieveTables[3].size());
   }
 
-  // PreSieve algo 2
+  // This loop performs a bitwise AND of the
+  // sieve array and the preSieveTables, storing
+  // the result back into the sieve array.
   for (std::size_t i = 4; i < preSieveTables.size(); i += 4)
   {
     offset = 0;
