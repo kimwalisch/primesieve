@@ -80,18 +80,15 @@ void check(const std::string& expr,
            const std::string& expected)
 {
   T n = calculator::eval<T>(expr);
-
   std::string res = to_string(n);
-  std::cout << (res == expected ? "Correct: " : "Error: ");
-  std::cout << expr << " = " << res;
 
-  if (res != expected)
+  if (res == expected)
+    std::cout << "Correct: " << expr << " = " << res << std::endl;
+  else
   {
-    std::cerr << " != " << expected << std::endl;
+    std::cerr << "Error: " << expr << " = " << res << " != " << expected << std::endl;
     std::exit(1);
   }
-
-  std::cout << std::endl;
 }
 
 template <typename T>
@@ -206,6 +203,8 @@ void signed_integer_tests()
   check<int64_t>("2^62-1+2^62", "9223372036854775807");
   check<int64_t>("-(2^62)-(2^62)", "-9223372036854775808");
 
+  std::cout << std::endl;
+
   check<int64_t>("1^60", "1");
   check<int64_t>("(-1)^59", "-1");
   check<int64_t>("(-1)^60", "1");
@@ -214,9 +213,25 @@ void signed_integer_tests()
   check<int64_t>("3^3", "27");
   check<int64_t>("(-3)^3", "-27");
   check<int64_t>("(-3)^20", "3486784401");
+  check<int64_t>("0^0", "1");
 
   std::cout << std::endl;
 
+  check<int64_t>("(-1)^1", "-1");
+  check<int64_t>("(-1)^-1", "-1");
+  check<int64_t>("(-1)^-2", "1");
+  check<int64_t>("(-1)^-3", "-1");
+  check<int64_t>("(-1)^-4", "1");
+  check<int64_t>("2^-1", "0");
+  check<int64_t>("1000^-2", "0");
+  check<int64_t>("100000000^-5", "0");
+  check<int64_t>("(-2)^-1", "0");
+  check<int64_t>("(-1000)^-2", "0");
+  check<int64_t>("(-100000000)^-5", "0");
+
+  std::cout << std::endl;
+
+  check_exception<int64_t>("0^(-1)");
   check_exception<int64_t>("0xfffffffffffffffffff");
   check_exception<int64_t>("1000000000000000000000000000");
   check_exception<int64_t>("10^20");

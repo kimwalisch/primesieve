@@ -432,17 +432,34 @@ private:
     return x % y;
   }
 
-  /// Exponentiation by squaring, x^n.
-  T pow(T x, T n) const
+  /// Calculate x^n using an exponentiation by
+  /// squaring algorithm for integers.
+  ///
+  T ipow(T x, T n) const
   {
+    // For 0^0 we use the same convention as
+    // std::pow(0, 0) which returns 1.
     if (x == 1 || n == 0)
       return 1;
 
-    if (is_signed() && n <= T(-1))
-      throw calculator::error("Error: unsupported x^-n detected in math expression '" + expr_ + "'");
-
     if (x == 0)
-      return 0;
+    {
+      if (n > 0)
+        return 0;
+      // 0^-n = 1/0^n = 1/0
+      if (is_signed() && n <= T(-1))
+        throw_division_by_0_error();
+    }
+
+    // Handle -1^n and x^-n
+    if (is_signed())
+    {
+      if (x == T(-1))
+        return (n % 2 == 0) ? 1 : T(-1);
+      // Here x != -1, 0, 1
+      if (n <= T(-1))
+        return 0;
+    }
 
     T res = 1;
 
@@ -475,8 +492,8 @@ private:
       case OPERATOR_MULTIPLICATION: return checked_mul(v1, v2);
       case OPERATOR_DIVISION:       return checked_div(v1, v2);
       case OPERATOR_MODULO:         return checked_modulo(v1, v2);
-      case OPERATOR_POWER:          return pow(v1, v2);
-      case OPERATOR_EXPONENT:       return checked_mul(v1, pow(10, v2));
+      case OPERATOR_POWER:          return ipow(v1, v2);
+      case OPERATOR_EXPONENT:       return checked_mul(v1, ipow(10, v2));
       default:                      return 0;
     }
   }
