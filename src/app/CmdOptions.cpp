@@ -308,7 +308,7 @@ void CmdOptions::optionTimeout(Option& opt)
   }
 }
 
-CmdOptions parseOptions(int argc, char* argv[])
+CmdOptions parseOptions(int argc, char** argv)
 {
   // No command-line options provided
   if (argc <= 1)
