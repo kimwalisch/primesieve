@@ -144,7 +144,7 @@ void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
   pos2 = (segmentLow % (preSieveTables[2].size() * 30)) / 30;
   pos3 = (segmentLow % (preSieveTables[3].size() * 30)) / 30;
 
-  // This loop performs the first pass.
+  // This loop initializes the sieve array.
   // It performs a bitwise AND of the first four
   // preSieveTables and stores the result in the
   // sieve array, discarding its previous contents.
