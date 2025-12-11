@@ -665,6 +665,7 @@ against the static libprimesieve in your ```CMakeLists.txt``` using:
 project's directory and build your project using:
 
 ```sh
-cmake -G "Visual Studio 16 2019" .
+# Use 'cmake -G' to find your Visual Studio version
+cmake -G "Visual Studio 18 2026" .
 cmake --build . --config Release
 ```
