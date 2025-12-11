@@ -217,6 +217,16 @@ void CmdOptions::setMainOption(OptionID optionID,
 
 void CmdOptions::optionPrint(Option& opt)
 {
+  // primesieve does not support printing multiple
+  // different types of primes simultaneously.
+  if (flags & (PRINT_PRIMES |
+               PRINT_TWINS |
+               PRINT_TRIPLETS |
+               PRINT_QUADRUPLETS |
+               PRINT_QUINTUPLETS |
+               PRINT_SEXTUPLETS))
+    return;
+
   quiet = true;
 
   // by default print primes
