@@ -288,12 +288,12 @@ rm -rf build-curr-release build-prev-release
 current_git_branch=$(git rev-parse --abbrev-ref HEAD)
 
 # Build the latest code
-cmake -S . -B build-curr-release  -G "Unix Makefiles" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON
+cmake -S . -DCMAKE_CXX_FLAGS="-flto" -B build-curr-release  -G "Unix Makefiles" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON
 cmake --build build-curr-release -- -j4
 
 # Checkout the previous release tag
 git checkout $(git describe --tags --abbrev=0)
-cmake -S . -B build-prev-release  -G "Unix Makefiles" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON
+cmake -S . -DCMAKE_CXX_FLAGS="-flto" -B build-prev-release  -G "Unix Makefiles" -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=ON
 cmake --build build-prev-release -- -j4
 
 # Go back to initial branch
