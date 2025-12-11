@@ -18,6 +18,7 @@
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
+#include <string>
 
 namespace primesieve {
 
@@ -40,11 +41,12 @@ private:
   /// Reference to the associated PrimeSieve object
   PrimeSieve& ps_;
   MemoryPool memoryPool_;
+  std::string stringBuffer_;
   void initCounts();
   void countPrimes();
   void countkTuplets();
-  void printPrimes() const;
-  void printkTuplets() const;
+  void printPrimes();
+  void printkTuplets();
 };
 
 } // namespace

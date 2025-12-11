@@ -5,6 +5,7 @@ Changes in version 12.11, 11/12/2025
   This version detects most integer overflows and underflows.
 * test/calculator.cpp: Add much more tests for calculator.hpp.
 * PreSieve.cpp: Simplify SIMD runtime dispatching.
+* CountPrintPrimes.cpp: Faster printing of primes to stdout.
 * CmdOptions.cpp: Prevent multiple different --print options.
 * CMakeLists.txt: Increase CMake min version to 3.9.
 * BUILD.md: Update MSVC build instructions.

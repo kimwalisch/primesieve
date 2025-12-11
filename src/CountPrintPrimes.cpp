@@ -25,7 +25,7 @@
 #include <stdint.h>
 #include <algorithm>
 #include <iostream>
-#include <sstream>
+#include <string>
 
 namespace {
 
@@ -141,37 +141,37 @@ void CountPrintPrimes::countkTuplets()
 }
 
 /// Print primes to stdout
-void CountPrintPrimes::printPrimes() const
+void CountPrintPrimes::printPrimes()
 {
   uint64_t low = low_;
   std::size_t i = 0;
 
   while (i < sieve_.size())
   {
+    stringBuffer_.clear();
     std::size_t size = i + (1 << 16);
     size = std::min(size, sieve_.size());
-    std::ostringstream primes;
 
     for (; i < size; i += 8)
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve_[i]);
       for (; bits != 0; bits &= bits - 1)
-        primes << nextPrime(bits, low) << '\n';
+        stringBuffer_ += std::to_string(nextPrime(bits, low)) + "\n";
 
       low += 8 * 30;
     }
 
-    std::cout << primes.str();
+    std::cout << stringBuffer_;
   }
 }
 
 /// Print prime k-tuplets to stdout
-void CountPrintPrimes::printkTuplets() const
+void CountPrintPrimes::printkTuplets()
 {
   // i = 1 twins, i = 2 triplets, ...
   unsigned i = 1;
   uint64_t low = low_;
-  std::ostringstream kTuplets;
+  stringBuffer_.clear();
 
   while (!ps_.isPrint(i))
     i++;
@@ -182,20 +182,20 @@ void CountPrintPrimes::printkTuplets() const
     {
       if ((sieve_[j] & *bitmask) == *bitmask)
       {
-        kTuplets << "(";
+        stringBuffer_ += "(";
         uint64_t bits = *bitmask;
 
         for (; bits != 0; bits &= bits - 1)
         {
-          kTuplets << nextPrime(bits, low);
           bool hasNext = (bits & (bits - 1)) != 0;
-          kTuplets << (hasNext ? ", " : ")\n");
+          stringBuffer_ += std::to_string(nextPrime(bits, low));
+          stringBuffer_ += hasNext ? ", " : ")\n";
         }
       }
     }
   }
 
-  std::cout << kTuplets.str();
+  std::cout << stringBuffer_;
 }
 
 } // namespace
