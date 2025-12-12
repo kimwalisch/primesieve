@@ -17,6 +17,7 @@ option(BUILD_TESTS       "Build test programs"           OFF)
 # support shared libraries, hence we disable building the
 # shared libprimesieve when using Emscripten.
 get_property(SHARED_LIBS_SUPPORTED GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS)
+
 if(SHARED_LIBS_SUPPORTED)
     option(BUILD_SHARED_LIBS "Build shared libprimesieve" ON)
 else()
@@ -26,6 +27,14 @@ endif()
 option(WITH_MULTIARCH       "Enable runtime dispatching to fastest supported CPU instruction set" ON)
 option(WITH_MSVC_CRT_STATIC "Link primesieve.lib with /MT instead of the default /MD" OFF)
 
+# Check if primesieve is top level project ###########################
+
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set(PRIMESIEVE_IS_TOP_PROJECT ON)
+else()
+    set(PRIMESIEVE_IS_TOP_PROJECT OFF)
+endif()
+
 # libprimesieve sanity check #########################################
 
 if(NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
@@ -34,15 +43,29 @@ endif()
 
 # Set default build type to Release ##################################
 
-get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if(PRIMESIEVE_IS_TOP_PROJECT)
+    get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 
-if(NOT isMultiConfig AND NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release CACHE STRING
-    "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+    if(NOT isMultiConfig AND NOT CMAKE_BUILD_TYPE)
+        message(STATUS "Setting CMAKE_BUILD_TYPE = Release")
+        set(CMAKE_BUILD_TYPE Release CACHE STRING
+            "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+    endif()
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     list(APPEND PRIMESIEVE_COMPILE_DEFINITIONS "ENABLE_ASSERT")
+endif()
+
+# Hide symbols of inline functions ###################################
+# This reduces the size of the shared libprimecount by about 1%.
+
+if(PRIMESIEVE_IS_TOP_PROJECT)
+    if (NOT DEFINED CMAKE_VISIBILITY_INLINES_HIDDEN)
+        message(STATUS "Setting CMAKE_VISIBILITY_INLINES_HIDDEN = ON")
+        set(CMAKE_VISIBILITY_INLINES_HIDDEN ON CACHE BOOL
+            "Whether to add a compiler flag to hide symbols of inline functions")
+    endif ()
 endif()
 
 # primesieve binary source files #####################################

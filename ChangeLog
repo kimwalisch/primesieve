@@ -1,4 +1,4 @@
-Changes in version 12.11, 11/12/2025
+Changes in version 12.11, 12/12/2025
 ====================================
 
 * calculator.hpp: Update to version 2.0 with improved error handling.
@@ -7,7 +7,7 @@ Changes in version 12.11, 11/12/2025
 * PreSieve.cpp: Simplify SIMD runtime dispatching.
 * CountPrintPrimes.cpp: Faster printing of primes to stdout.
 * CmdOptions.cpp: Prevent multiple different --print options.
-* CMakeLists.txt: Increase CMake min version to 3.9.
+* CMakeLists.txt: Set CMAKE_VISIBILITY_INLINES_HIDDEN=ON by default.
 * BUILD.md: Update MSVC build instructions.
 
 Changes in version 12.10, 03/11/2025
