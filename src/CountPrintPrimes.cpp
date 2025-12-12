@@ -155,8 +155,12 @@ void CountPrintPrimes::printPrimes()
     for (; i < size; i += 8)
     {
       uint64_t bits = littleendian_cast<uint64_t>(&sieve_[i]);
+
       for (; bits != 0; bits &= bits - 1)
-        stringBuffer_ += std::to_string(nextPrime(bits, low)) + "\n";
+      {
+        stringBuffer_ += std::to_string(nextPrime(bits, low));
+        stringBuffer_ += '\n';
+      }
 
       low += 8 * 30;
     }
