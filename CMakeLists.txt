@@ -58,7 +58,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 # Hide symbols of inline functions ###################################
-# This reduces the size of the shared libprimecount by about 1%.
+# This reduces the size of the shared libprimesieve by about 1%.
 
 if(PRIMESIEVE_IS_TOP_PROJECT)
     if (NOT DEFINED CMAKE_VISIBILITY_INLINES_HIDDEN)
