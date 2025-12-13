@@ -18,7 +18,6 @@
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
-#include <string>
 
 namespace primesieve {
 
@@ -37,11 +36,11 @@ private:
   uint64_t low_ = 0;
   /// Count lookup tables for prime k-tuplets
   Vector<uint8_t> kCounts_[6];
+  Vector<char> charBuffer_;
   counts_t& counts_;
   /// Reference to the associated PrimeSieve object
   PrimeSieve& ps_;
   MemoryPool memoryPool_;
-  std::string stringBuffer_;
   void initCounts();
   void countPrimes();
   void countkTuplets();

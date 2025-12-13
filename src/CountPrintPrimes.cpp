@@ -25,7 +25,8 @@
 #include <stdint.h>
 #include <algorithm>
 #include <iostream>
-#include <string>
+
+using namespace primesieve;
 
 namespace {
 
@@ -40,6 +41,60 @@ const uint64_t bitmasks[6][5] =
 };
 
 } // namespace
+
+#if __cplusplus >= 201703L && \
+    __has_include(<charconv>)
+
+#include <primesieve.hpp>
+#include <charconv>
+
+namespace {
+
+/// Appends a uint64_t prime to the char vector as a decimal
+/// string. This implementation uses std::to_chars() for
+/// fast, zero-allocation and zero-copy conversion directly
+/// into the vector's pre-reserved buffer memory.
+///
+void append_prime_as_string(Vector<char>& vect,
+                            uint64_t prime)
+{
+  std::size_t old_size = vect.size();
+
+  // When converting a 64-bit integer to a
+  // string we need at most 20 characters.
+  vect.resize(old_size + 20);
+  char* first = &vect[old_size];
+  char* last = vect.end();
+
+  std::to_chars_result res = std::to_chars(first, last, prime);
+
+  if (res.ec == std::errc{})
+    vect.resize(vect.size() - (last - res.ptr));
+  else
+    throw primesieve_error("append_prime_as_string(): failed to convert prime to string!");
+}
+
+} // namespace
+
+#else
+
+#include <string>
+#include <cstring>
+
+namespace {
+
+void append_prime_as_string(Vector<char>& vect,
+                            uint64_t prime)
+{
+  std::string str = std::to_string(prime);
+  std::size_t old_size = vect.size();
+  vect.resize(old_size + str.size());
+  std::memcpy(&vect[old_size], str.data(), str.size());
+}
+
+} // namespace
+
+#endif
 
 namespace primesieve {
 
@@ -148,7 +203,7 @@ void CountPrintPrimes::printPrimes()
 
   while (i < sieve_.size())
   {
-    stringBuffer_.clear();
+    charBuffer_.clear();
     std::size_t size = i + (1 << 16);
     size = std::min(size, sieve_.size());
 
@@ -158,14 +213,15 @@ void CountPrintPrimes::printPrimes()
 
       for (; bits != 0; bits &= bits - 1)
       {
-        stringBuffer_ += std::to_string(nextPrime(bits, low));
-        stringBuffer_ += '\n';
+        uint64_t prime = nextPrime(bits, low);
+        append_prime_as_string(charBuffer_, prime);
+        charBuffer_.push_back('\n');
       }
 
       low += 8 * 30;
     }
 
-    std::cout << stringBuffer_;
+    std::cout.write(charBuffer_.data(), charBuffer_.size());
   }
 }
 
@@ -175,7 +231,7 @@ void CountPrintPrimes::printkTuplets()
   // i = 1 twins, i = 2 triplets, ...
   unsigned i = 1;
   uint64_t low = low_;
-  stringBuffer_.clear();
+  charBuffer_.clear();
 
   while (!ps_.isPrint(i))
     i++;
@@ -186,20 +242,30 @@ void CountPrintPrimes::printkTuplets()
     {
       if ((sieve_[j] & *bitmask) == *bitmask)
       {
-        stringBuffer_ += "(";
+        charBuffer_.push_back('(');
         uint64_t bits = *bitmask;
 
         for (; bits != 0; bits &= bits - 1)
         {
-          bool hasNext = (bits & (bits - 1)) != 0;
-          stringBuffer_ += std::to_string(nextPrime(bits, low));
-          stringBuffer_ += hasNext ? ", " : ")\n";
+          uint64_t prime = nextPrime(bits, low);
+          append_prime_as_string(charBuffer_, prime);
+
+          if (bits & (bits - 1))
+          {
+            charBuffer_.push_back(',');
+            charBuffer_.push_back(' ');
+          }
+          else
+          {
+            charBuffer_.push_back(')');
+            charBuffer_.push_back('\n');
+          }
         }
       }
     }
   }
 
-  std::cout << stringBuffer_;
+  std::cout.write(charBuffer_.data(), charBuffer_.size());
 }
 
 } // namespace
