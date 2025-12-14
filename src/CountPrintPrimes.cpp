@@ -55,13 +55,12 @@ namespace {
 /// fast, zero-allocation and zero-copy conversion directly
 /// into the vector's pre-reserved buffer memory.
 ///
-void append_prime_as_string(Vector<char>& vect,
-                            uint64_t prime)
+ALWAYS_INLINE void append_prime_as_string(Vector<char>& vect, uint64_t prime)
 {
   std::size_t old_size = vect.size();
 
-  // When converting a 64-bit integer to a
-  // string we need at most 20 characters.
+  // Converting a 64-bit integer to a string
+  // requires at most 20 characters.
   vect.resize(old_size + 20);
   char* first = &vect[old_size];
   char* last = vect.end();
@@ -79,17 +78,13 @@ void append_prime_as_string(Vector<char>& vect,
 #else
 
 #include <string>
-#include <cstring>
 
 namespace {
 
-void append_prime_as_string(Vector<char>& vect,
-                            uint64_t prime)
+ALWAYS_INLINE void append_prime_as_string(Vector<char>& vect, uint64_t prime)
 {
   std::string str = std::to_string(prime);
-  std::size_t old_size = vect.size();
-  vect.resize(old_size + str.size());
-  std::memcpy(&vect[old_size], str.data(), str.size());
+  vect.insert(vect.end(), str.begin(), str.end());
 }
 
 } // namespace
