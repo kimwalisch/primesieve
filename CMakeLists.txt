@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.9...3.30)
-project(primesieve CXX)
-set(PRIMESIEVE_VERSION "12.11")
-set(PRIMESIEVE_SOVERSION "12.11.0")
+
+project(primesieve
+        VERSION 12.11
+        LANGUAGES CXX)
 
 # Build options ######################################################
 
@@ -144,10 +145,8 @@ if(BUILD_SHARED_LIBS)
     add_library(libprimesieve SHARED ${LIB_SRC})
     set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
     target_link_libraries(libprimesieve PRIVATE Threads::Threads ${PRIMESIEVE_LINK_LIBRARIES})
-    string(REPLACE "." ";" SOVERSION_LIST ${PRIMESIEVE_SOVERSION})
-    list(GET SOVERSION_LIST 0 PRIMESIEVE_SOVERSION_MAJOR)
-    set_target_properties(libprimesieve PROPERTIES SOVERSION ${PRIMESIEVE_SOVERSION_MAJOR})
-    set_target_properties(libprimesieve PROPERTIES VERSION ${PRIMESIEVE_SOVERSION})
+    set_target_properties(libprimesieve PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+    set_target_properties(libprimesieve PROPERTIES VERSION ${PROJECT_VERSION})
     target_compile_definitions(libprimesieve PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
 
     if(WIN32_MSVC_COMPATIBLE)
@@ -270,7 +269,7 @@ install(FILES include/primesieve/iterator.h
 
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/primesieveConfigVersion.cmake"
-    VERSION ${PRIMESIEVE_VERSION}
+    VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion)
 
 configure_package_config_file(

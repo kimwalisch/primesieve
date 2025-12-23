@@ -32,37 +32,32 @@ echo "New year: $new_year"
 echo "Old year: $old_year"
 echo ""
 
-# Update version
-for i in $(echo README.md \
-                CMakeLists.txt \
-                include/primesieve.hpp \
+# 1. Update VERSION in CMakeLists.txt
+echo "Update version in CMakeLists.txt"
+sed "s/VERSION $old_version/VERSION $new_version/" CMakeLists.txt > CMakeLists.txt.tmp
+mv -f CMakeLists.txt.tmp CMakeLists.txt
+
+# 2. Update version string in headers
+for i in $(echo include/primesieve.hpp \
                 include/primesieve.h)
 do
-    echo "Update version in $i"
+    echo "Update version string in $i"
     sed "s/$old_major\.$old_minor/$new_version/g" $i > $i.tmp
     mv -f $i.tmp $i
 done
 
-# Update shared libprimesieve version
-for i in $(echo CMakeLists.txt)
-do
-    echo "Update shared libprimesieve version in $i"
-    new_so_version="$new_major.$new_minor.0"
-    sed "s/$old_major\.$old_minor\.0/$new_so_version/g" $i > $i.tmp
-    mv -f $i.tmp $i
-done
-
-# Update version
+# 3. Update version macros in headers (MAJOR/MINOR)
 for i in $(echo include/primesieve.hpp \
                 include/primesieve.h)
 do
+    echo "Update version macros in $i"
     sed "s/PRIMESIEVE_VERSION_MAJOR $old_major/PRIMESIEVE_VERSION_MAJOR $new_major/g" $i > $i.tmp
     mv -f $i.tmp $i
     sed "s/PRIMESIEVE_VERSION_MINOR $old_minor/PRIMESIEVE_VERSION_MINOR $new_minor/g" $i > $i.tmp
     mv -f $i.tmp $i
 done
 
-# Update year
+# 4. Update copyright year
 for i in $(echo COPYING \
                 src/app/help.cpp)
 do
