@@ -1,6 +1,6 @@
 find_package(Doxygen)
 
-if(DOXYGEN_FOUND)
+if(Doxygen_FOUND)
     find_package(LATEX)
     find_program(DOT_FONUD dot)
 
