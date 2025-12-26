@@ -2,6 +2,7 @@ Changes in version 12.12, 12/26/2025
 ====================================
 
 * CMakeLists.txt: Fix CMAKE_PROJECT_VERSION not defined.
+* doc/Doxyfile.in: REVERSE workaround for Doxygen/LaTeX broken tables #172.
 
 Changes in version 12.11, 12/12/2025
 ====================================
