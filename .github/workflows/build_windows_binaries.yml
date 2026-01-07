@@ -85,5 +85,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: primesieve-${{ env.PROJECT_VERSION }}-win-arm64.zip
-          path: build-release-arm64/primesieve-${{ env.PROJECT_VERSION }}-win-arm64/*
+          path: build-release/primesieve-${{ env.PROJECT_VERSION }}-win-arm64/*
           retention-days: 7
