@@ -36,15 +36,8 @@ handle_error() {
     exit 1
 }
 
-####################################################################
-
-# The repo must no have any uncommited changes as we
-# switch to another branch during the script.
-git diff --exit-code > /dev/null || handle_error "repo must not have any uncommitted changes"
-
 # Build primesieve binary ##########################################
 
-git pull
 mkdir build-release
 cd build-release
 
@@ -75,7 +68,7 @@ sed -i "3 s/.*/Copyright \(c\) 2010 - $YEAR, Kim Walisch\./" COPYING
 [ "$(sed -n '3p' < COPYING)" = "Copyright (c) 2010 - $YEAR, Kim Walisch." ] || handle_error "failed updating COPYING"
 
 zip primesieve-$VERSION-win-arm64.zip primesieve.exe README.txt COPYING
-cp primesieve-$VERSION-win-arm64.zip ..
+mv primesieve-$VERSION-win-arm64.zip ..
 
 ./primesieve -v
 echo ""
