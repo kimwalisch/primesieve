@@ -46,18 +46,18 @@ strip primesieve.exe
 
 # Create a release zip archive
 wget https://github.com/kimwalisch/primesieve/releases/download/v12.0/primesieve-12.0-win-arm64.zip
-unzip primesieve-12.0-win-arm64.zip -d primesieve-$VERSION-win-arm64
+unzip primesieve-12.0-win-arm64.zip -d primesieve-$VERSION-win-arm64-tmp
 rm primesieve-12.0-win-arm64.zip
 
 echo ""
 echo ""
-echo "Old file size: $(ls -l --block-size=K primesieve-$VERSION-win-arm64/primesieve.exe)"
+echo "Old file size: $(ls -l --block-size=K primesieve-$VERSION-win-arm64-tmp/primesieve.exe)"
 echo "New file size: $(ls -l --block-size=K primesieve.exe)"
 echo ""
 echo ""
 
-mv -f primesieve.exe primesieve-$VERSION-win-arm64
-cd primesieve-$VERSION-win-arm64
+mv -f primesieve.exe primesieve-$VERSION-win-arm64-tmp
+cd primesieve-$VERSION-win-arm64-tmp
 sed -i "1 s/.*/primesieve $VERSION/" README.txt
 sed -i "2 s/.*/$FULL_DATE/" README.txt
 sed -i "3 s/.*/Copyright \(c\) 2010 - $YEAR, Kim Walisch\./" COPYING
@@ -66,9 +66,6 @@ sed -i "3 s/.*/Copyright \(c\) 2010 - $YEAR, Kim Walisch\./" COPYING
 [ "$(sed -n '1p' < README.txt)" = "primesieve $VERSION" ] || handle_error "failed updating README.txt"
 [ "$(sed -n '2p' < README.txt)" = "$FULL_DATE" ] || handle_error "failed updating README.txt"
 [ "$(sed -n '3p' < COPYING)" = "Copyright (c) 2010 - $YEAR, Kim Walisch." ] || handle_error "failed updating COPYING"
-
-zip primesieve-$VERSION-win-arm64.zip primesieve.exe README.txt COPYING
-mv primesieve-$VERSION-win-arm64.zip ..
 
 ./primesieve -v
 echo ""
@@ -85,6 +82,14 @@ echo ""
 ./primesieve 1e11
 echo ""
 echo ""
+
+# Build release zip archive ########################################
+
+cd ..
+mv primesieve-$VERSION-win-arm64-tmp primesieve-$VERSION-win-arm64
+cd primesieve-$VERSION-win-arm64
+zip primesieve-$VERSION-win-arm64.zip primesieve.exe README.txt COPYING
+mv primesieve-$VERSION-win-arm64.zip ..
 
 ####################################################################
 
