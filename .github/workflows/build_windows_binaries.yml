@@ -44,7 +44,7 @@ jobs:
       - name: Upload Windows x64 CI artifact
         uses: actions/upload-artifact@v4
         with:
-          name: primesieve-${{ env.PROJECT_VERSION }}-win-x64.zip
+          name: primesieve-${{ env.PROJECT_VERSION }}-win-x64
           path: build-release/primesieve-${{ env.PROJECT_VERSION }}-win-x64/*
           if-no-files-found: error
           retention-days: 7
@@ -85,7 +85,7 @@ jobs:
       - name: Upload Windows ARM64 CI artifact
         uses: actions/upload-artifact@v4
         with:
-          name: primesieve-${{ env.PROJECT_VERSION }}-win-arm64.zip
+          name: primesieve-${{ env.PROJECT_VERSION }}-win-arm64
           path: build-release/primesieve-${{ env.PROJECT_VERSION }}-win-arm64/*
           if-no-files-found: error
           retention-days: 7
