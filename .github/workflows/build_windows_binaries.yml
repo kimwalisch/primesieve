@@ -46,6 +46,7 @@ jobs:
         with:
           name: primesieve-${{ env.PROJECT_VERSION }}-win-x64.zip
           path: build-release/primesieve-${{ env.PROJECT_VERSION }}-win-x64/*
+          if-no-files-found: error
           retention-days: 7
 
   windows-arm64:
@@ -86,4 +87,5 @@ jobs:
         with:
           name: primesieve-${{ env.PROJECT_VERSION }}-win-arm64.zip
           path: build-release/primesieve-${{ env.PROJECT_VERSION }}-win-arm64/*
+          if-no-files-found: error
           retention-days: 7
