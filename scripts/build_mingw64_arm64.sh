@@ -45,9 +45,9 @@ clang++ -static -O3 -flto -DENABLE_MULTIARCH_ARM_SVE -DNDEBUG -D_WIN32_WINNT=0x0
 strip primesieve.exe
 
 # Create a release zip archive
-wget https://github.com/kimwalisch/primesieve/releases/download/v12.0/primesieve-12.0-win-arm64.zip
-unzip primesieve-12.0-win-arm64.zip -d primesieve-$VERSION-win-arm64-tmp
-rm primesieve-12.0-win-arm64.zip
+wget https://github.com/kimwalisch/primesieve/releases/download/v12.11/primesieve-12.11-win-arm64.zip
+unzip primesieve-12.11-win-arm64.zip -d primesieve-$VERSION-win-arm64-tmp
+rm primesieve-12.11-win-arm64.zip
 
 echo ""
 echo ""
