@@ -10,7 +10,7 @@
 # 3) Install MSYS2 x64
 # 4) Open C:/msys64/clangarm64.exe
 # 5) pacman -Syu (exit then run it again)
-# 6) pacman -S mingw-w64-clang-aarch64-clang mingw-w64-clang-aarch64-openmp make git zip unzip
+# 6) pacman -S mingw-w64-clang-aarch64-clang make git zip unzip
 # 7) git clone https://github.com/kimwalisch/primesieve.git
 # 8) scripts/build_mingw64_arm64.sh
 
@@ -85,11 +85,10 @@ echo ""
 
 # Build release zip archive ########################################
 
-cd ..
-mv primesieve-$VERSION-win-arm64-tmp primesieve-$VERSION-win-arm64
-cd primesieve-$VERSION-win-arm64
 zip primesieve-$VERSION-win-arm64.zip primesieve.exe README.txt COPYING
 mv primesieve-$VERSION-win-arm64.zip ..
+cd ..
+mv primesieve-$VERSION-win-arm64-tmp primesieve-$VERSION-win-arm64
 
 ####################################################################
 

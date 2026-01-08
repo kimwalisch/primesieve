@@ -82,11 +82,10 @@ echo ""
 
 # Build release zip archive ########################################
 
-cd ..
-mv primesieve-$VERSION-win-x64-tmp primesieve-$VERSION-win-x64
-cd primesieve-$VERSION-win-x64
 zip primesieve-$VERSION-win-x64.zip primesieve.exe README.txt COPYING
 mv primesieve-$VERSION-win-x64.zip ..
+cd ..
+mv primesieve-$VERSION-win-x64-tmp primesieve-$VERSION-win-x64
 
 ####################################################################
 
