@@ -5,7 +5,7 @@ $ErrorActionPreference = "Stop"
 
 Remove-Item -Recurse -Force "build-release" -ErrorAction SilentlyContinue
 mkdir build-release
-cd build-release
+Set-Location "build-release"
 
 $LLVM_VERSION = "21.1.8"
 $LLVM_LOCAL_DIR = Join-Path (Get-Location) "llvm-toolchain"
@@ -41,8 +41,8 @@ $7z = "$7ZIP_LOCAL_DIR\7za.exe"
 if (-not (Test-Path "$LLVM_LOCAL_DIR\bin\clang++.exe")) {
     Write-Host "LLVM Clang not found locally. Downloading to current directory..." -ForegroundColor Cyan
     
-    $xzFile = "llvm_temp.tar.xz"
-    $tarFile = "llvm_temp.tar"
+    $xzFile = Join-Path (Get-Location) "llvm_temp.tar.xz" 
+    $tarFile = Join-Path (Get-Location) "llvm_temp.tar"
 
     Write-Host "Downloading LLVM..."
     (New-Object System.Net.WebClient).DownloadFile($LLVM_URL, $xzFile)
@@ -71,15 +71,6 @@ $Version = $VersionLine.Matches.Groups[1].Value
 $FullDate = Get-Date -Format "MMMM dd, yyyy"
 $Year = Get-Date -Format "yyyy"
 
-# Cleanup previous build
-Remove-Item -Recurse -Force "primesieve-$Version-win-x64" -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force "primesieve-$Version-win-x64-tmp" -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force "primesieve-$Version-win-x64.zip" -ErrorAction SilentlyContinue
-
-# Find clang_rt library within the local LLVM folder
-$ClangLib = Get-ChildItem -Path "$LLVM_LOCAL_DIR\lib\clang\*\lib\windows\clang_rt.builtins-x86_64.lib" | Select-Object -First 1
-if (-not $ClangLib) { throw "Could not find clang_rt.builtins-x86_64.lib in $LLVM_LOCAL_DIR" }
-
 Write-Host "Compiling with Clang $LLVM_VERSION..." -ForegroundColor Cyan
 
 # Manually resolve wildcards for PowerShell
@@ -90,7 +81,7 @@ $AppFiles = Get-Item "../src/app/*.cpp"
 & clang++ -I../include -I../src -O3 -mpopcnt -DNDEBUG `
     -DENABLE_MULTIARCH_AVX512_BW -DENABLE_MULTIARCH_AVX512_VBMI2 `
     $SrcFiles $ArchFiles $AppFiles `
-    -o primesieve.exe "$($ClangLib.FullName)"
+    -o primesieve.exe
 
 if ($LASTEXITCODE -ne 0) { throw "Compilation failed." }
 & llvm-strip primesieve.exe
