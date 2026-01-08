@@ -9,37 +9,23 @@ permissions:
 
 jobs:
   windows-x64:
-    name: Windows x64 (MSYS2 / MinGW-w64 / GCC)
+    name: Windows x64 (Clang 21.1.8)
     runs-on: windows-2022
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup MSYS2 (MINGW64)
-        uses: msys2/setup-msys2@v2
-        with:
-          update: true
-          msystem: MINGW64
-          install: >-
-            base-devel
-            mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-cmake
-            git
-            zip
-            unzip
-
-      - name: Get Project Version
-        shell: msys2 {0}
+      - name: Build and Package
+        shell: powershell
         run: |
-          VERSION=$(grep 'PRIMESIEVE_VERSION' include/primesieve.h | grep -oP '\d+\.\d+(\.\d+)?')
-          echo "PROJECT_VERSION=$VERSION" >> $GITHUB_ENV
+          ./scripts/build_clang_win_x64.ps1
 
-      - name: Build Windows x64 binary
-        shell: msys2 {0}
+      - name: Get Version for Artifact
+        shell: powershell
         run: |
-          chmod +x ./scripts/build_mingw64_x64.sh
-          ./scripts/build_mingw64_x64.sh
+          $VersionString = Select-String -Path "include/primesieve.hpp" -Pattern 'PRIMESIEVE_VERSION "(.*)"'
+          echo "PROJECT_VERSION=$($VersionString.Matches.Groups[1].Value)" >> $env:GITHUB_ENV
 
       - name: Upload Windows x64 CI artifact
         uses: actions/upload-artifact@v4
