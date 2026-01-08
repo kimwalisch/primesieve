@@ -106,12 +106,20 @@ Get-Item primesieve-$Version-win-x64-tmp/primesieve.exe | Select-Object Name, Le
 
 Write-Host "Running Tests..."
 Set-Location "primesieve-$Version-win-x64-tmp"
+
+Write-Host ""
 ./primesieve -v
 if ($LASTEXITCODE -ne 0) { throw "Tests failed." }
+
+Write-Host ""
 ./primesieve --cpu-info
 if ($LASTEXITCODE -ne 0) { throw "Tests failed." }
+
+Write-Host ""
 ./primesieve --test
 if ($LASTEXITCODE -ne 0) { throw "Tests failed." }
+
+Write-Host ""
 ./primesieve 1e11
 if ($LASTEXITCODE -ne 0) { throw "Tests failed." }
 
