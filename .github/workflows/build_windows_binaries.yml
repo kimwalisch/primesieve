@@ -19,7 +19,7 @@ jobs:
       - name: Build and Package
         shell: powershell
         run: |
-          ./scripts/build_clang_win_x64.ps1
+          ./scripts/build_clang_x64.ps1
 
       - name: Get Version for Artifact
         shell: powershell
