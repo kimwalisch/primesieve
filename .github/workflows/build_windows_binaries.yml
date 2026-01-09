@@ -43,31 +43,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup MSYS2 (CLANGARM64)
-        uses: msys2/setup-msys2@v2
-        with:
-          update: true
-          msystem: CLANGARM64
-          install: >-
-            mingw-w64-clang-aarch64-clang
-            make
-            git
-            zip
-            unzip
-
-      - name: Get Project Version
-        shell: msys2 {0}
+      - name: Build and Package
+        shell: powershell
         run: |
-          VERSION=$(grep 'PRIMESIEVE_VERSION' include/primesieve.h | grep -oP '\d+\.\d+(\.\d+)?')
-          echo "PROJECT_VERSION=$VERSION" >> $GITHUB_ENV
+          ./scripts/build_clang_arm64.ps1
 
-      - name: Build Windows ARM64 binary
-        shell: msys2 {0}
+      - name: Get Version for Artifact
+        shell: powershell
         run: |
-          chmod +x ./scripts/build_mingw64_arm64.sh
-          ./scripts/build_mingw64_arm64.sh
+          $VersionString = Select-String -Path "include/primesieve.hpp" -Pattern 'PRIMESIEVE_VERSION "(.*)"'
+          echo "PROJECT_VERSION=$($VersionString.Matches.Groups[1].Value)" >> $env:GITHUB_ENV
 
-      - name: Upload Windows ARM64 CI artifact
+      - name: Upload Windows arm64 CI artifact
         uses: actions/upload-artifact@v4
         with:
           name: primesieve-${{ env.PROJECT_VERSION }}-win-arm64
