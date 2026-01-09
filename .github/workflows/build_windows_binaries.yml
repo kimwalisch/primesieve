@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   windows-x64:
-    name: Windows x64 (Clang 21.1.8)
+    name: Windows x64 / Clang
     runs-on: windows-2022
 
     steps:
@@ -36,7 +36,7 @@ jobs:
           retention-days: 7
 
   windows-arm64:
-    name: Windows ARM64 (MSYS2 / Clang / ARM64)
+    name: Windows ARM64 / Clang
     runs-on: windows-11-arm
 
     steps:
