@@ -3,11 +3,13 @@ $ErrorActionPreference = "Stop"
 
 # Configuration ######################################################
 
-$LLVM_VER    = "21.1.8"
-$BUILD_DIR   = Join-Path (Get-Location) "build-release"
-$LLVM_DIR    = Join-Path $BUILD_DIR "clang+llvm-$LLVM_VER-x86_64-pc-windows-msvc"
-$URL_LLVM    = "https://github.com/llvm/llvm-project/releases/download/llvmorg-$LLVM_VER/clang+llvm-$LLVM_VER-x86_64-pc-windows-msvc.tar.xz"
-$URL_PREV    = "https://github.com/kimwalisch/primesieve/releases/download/v12.11/primesieve-12.11-win-x64.zip"
+$LLVM_VER  = "21.1.8"
+$BUILD_DIR = Join-Path (Get-Location) "build-release"
+$7ZIP_DIR  = Join-Path $BUILD_DIR "7z-extra"
+$LLVM_DIR  = Join-Path $BUILD_DIR "clang+llvm-$LLVM_VER-x86_64-pc-windows-msvc"
+$URL_7ZIP  = "https://www.7-zip.org/a/7z2409-extra.7z"
+$URL_LLVM  = "https://github.com/llvm/llvm-project/releases/download/llvmorg-$LLVM_VER/clang+llvm-$LLVM_VER-x86_64-pc-windows-msvc.tar.xz"
+$URL_PREV  = "https://github.com/kimwalisch/primesieve/releases/download/v12.11/primesieve-12.11-win-x64.zip"
 
 # Clean and Init #####################################################
 
@@ -21,13 +23,23 @@ function Download-File ($Url, $Dest) {
     (New-Object System.Net.WebClient).DownloadFile($Url, $Dest)
 }
 
+# Setup 7-Zip ########################################################
+
+Download-File $URL_7ZIP "$BUILD_DIR\7z-extra.7z"
+
+Write-Host "Extracting 7-Zip..."
+tar.exe -xf "7z-extra.7z"
+$7z = "$7ZIP_DIR\7za.exe"
+
 # Setup LLVM #########################################################
 
 Download-File $URL_LLVM "$BUILD_DIR\llvm.tar.xz"
 
 Write-Host "Extracting LLVM..."
-tar.exe -xf "llvm.tar.xz"
-Remove-Item "llvm.tar.xz" -Force
+& $7z x "llvm.tar.xz" -y | Out-Null
+& $7z x "llvm.tar" -y | Out-Null
+Remove-Item "llvm.tar.xz", "llvm.tar" -Force
+
 $env:Path = "$(Join-Path $LLVM_DIR 'bin');$env:Path"
 
 # Compilation ########################################################
