@@ -28,7 +28,7 @@ function Download-File ($Url, $Dest) {
 Download-File $URL_7ZIP "$BUILD_DIR\7z-extra.7z"
 
 Write-Host "Extracting 7-Zip..."
-tar.exe -xf "7z-extra.7z"
+tar.exe -xf "7z-extra.7z" -C "$7ZIP_DIR"
 $7z = "$7ZIP_DIR\7za.exe"
 
 # Setup LLVM #########################################################
