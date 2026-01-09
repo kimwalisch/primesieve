@@ -23,6 +23,11 @@ function Download-File ($Url, $Dest) {
 
 # Setup LLVM #########################################################
 
+# LLVM/Clang 20.1.6 is installed by default on the windows-11-arm
+# GitHub Actions CI instance. However, that version is unable to
+# compile our ARM SVE code. Hence we download LLVM/Clang 21 which
+# has no problem compiling our code.
+
 Download-File $URL_LLVM "$BUILD_DIR\llvm.tar.xz"
 
 Write-Host "Extracting LLVM..."
