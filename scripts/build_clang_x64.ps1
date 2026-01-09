@@ -1,136 +1,104 @@
 # Usage: ./scripts/build_clang_win_x64.ps1
-# Self-contained build script for Windows x64 using Clang 21.1.8
-
 $ErrorActionPreference = "Stop"
 
-Remove-Item -Recurse -Force "build-release" -ErrorAction SilentlyContinue
-mkdir build-release
-Set-Location "build-release"
+# Configuration ######################################################
 
-$LLVM_VERSION = "21.1.8"
-$LLVM_LOCAL_DIR = Join-Path (Get-Location) "llvm-toolchain"
-$7ZIP_LOCAL_DIR = Join-Path (Get-Location) "7zip-portable"
-$7ZR_URL = "https://www.7-zip.org/a/7zr.exe"
-$7Z_EXTRA_URL = "https://www.7-zip.org/a/7z2409-extra.7z"
-$LLVM_URL = "https://github.com/llvm/llvm-project/releases/download/llvmorg-$LLVM_VERSION/clang+llvm-$LLVM_VERSION-x86_64-pc-windows-msvc.tar.xz"
-$PrevReleaseUrl = "https://github.com/kimwalisch/primesieve/releases/download/v12.11/primesieve-12.11-win-x64.zip"
+$LLVM_VER    = "21.1.8"
+$BUILD_DIR   = Join-Path (Get-Location) "build-release"
+$LLVM_DIR    = Join-Path $BUILD_DIR "llvm-toolchain"
+$7ZIP_DIR    = Join-Path $BUILD_DIR "7z-extra"
+$URL_7ZR     = "https://www.7-zip.org/a/7zr.exe"
+$URL_7Z_EXT  = "https://www.7-zip.org/a/7z2409-extra.7z"
+$URL_LLVM    = "https://github.com/llvm/llvm-project/releases/download/llvmorg-$LLVM_VER/clang+llvm-$LLVM_VER-x86_64-pc-windows-msvc.tar.xz"
+$URL_PREV    = "https://github.com/kimwalisch/primesieve/releases/download/v12.11/primesieve-12.11-win-x64.zip"
 
-###########################################################################
+# Clean and Init #####################################################
 
-New-Item -ItemType Directory -Force -Path $7ZIP_LOCAL_DIR | Out-Null
+Remove-Item -Recurse -Force $BUILD_DIR -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Force -Path $7ZIP_DIR | Out-Null
+Set-Location $BUILD_DIR
 
-# Stage A: Download 7zr.exe (standalone that can extract .7z)
-Write-Host "Downloading 7zr.exe..."
-Invoke-WebRequest -Uri $7ZR_URL -OutFile "$7ZIP_LOCAL_DIR\7zr.exe"
+# Helper: Silent Download (.NET WebClient is faster than Invoke-WebRequest and has no progress bar)
+function Download-File ($Url, $Dest) {
+    Write-Host "Downloading $(Split-Path $Dest -Leaf)..."
+    (New-Object System.Net.WebClient).DownloadFile($Url, $Dest)
+}
 
-# Stage B: Download 7-Zip Extra (.7z format)
-Write-Host "Downloading 7-Zip Extra..."
-$7zExtraFile = Join-Path $7ZIP_LOCAL_DIR "7z-extra.7z"
-Invoke-WebRequest -Uri $7Z_EXTRA_URL -OutFile $7zExtraFile
+# Setup 7-Zip ########################################################
 
-# Stage C: Use 7zr to extract 7-Zip Extra
-Write-Host "Extracting 7-Zip Extra using 7zr..."
-& "$7ZIP_LOCAL_DIR\7zr.exe" x $7zExtraFile -o"$7ZIP_LOCAL_DIR" -y | Out-Null
+Download-File $URL_7ZR "$BUILD_DIR\7zr.exe"
+Download-File $URL_7Z_EXT "$BUILD_DIR\7z-extra.7z"
 
-# Cleanup temp 7z file
-Remove-Item $7zExtraFile -Force
-Write-Host "7-Zip Portable is ready." -ForegroundColor Green
-$7z = "$7ZIP_LOCAL_DIR\7za.exe"
+Write-Host "Extracting 7-Zip..."
+& "$BUILD_DIR\7zr.exe" x "7z-extra.7z" -o"$7ZIP_DIR" -y | Out-Null
+$7z = "$7ZIP_DIR\7za.exe"
 
-###########################################################################
+# Setup LLVM #########################################################
 
-$xzFile = Join-Path (Get-Location) "llvm_temp.tar.xz" 
-$tarFile = Join-Path (Get-Location) "llvm_temp.tar"
+Download-File $URL_LLVM "$BUILD_DIR\llvm.tar.xz"
 
-Write-Host "Downloading LLVM..."
-(New-Object System.Net.WebClient).DownloadFile($LLVM_URL, $xzFile)
+Write-Host "Extracting LLVM..."
+& $7z x "llvm.tar.xz" -y | Out-Null
+& $7z x "llvm.tar" -o"$LLVM_DIR" -y | Out-Null
 
-Write-Host "Extracting LLVM (this may take a moment)..."
-# Using 7z (standard on GH runners and common on Windows)
-& $7z x $xzFile -y | Out-Null
-& $7z x $tarFile -o"$LLVM_LOCAL_DIR" -y | Out-Null
+# Move contents from nested folder to root of $LLVM_DIR
+$subDir = Get-ChildItem $LLVM_DIR -Directory | Select-Object -First 1
+Move-Item "$($subDir.FullName)\*" $LLVM_DIR -Force
+Remove-Item "llvm.tar.xz", "llvm.tar", $subDir.FullName -Recurse -Force
+$env:Path = "$(Join-Path $LLVM_DIR 'bin');$env:Path"
 
-# The tar contains a long-named subfolder; move its contents up to 'llvm-toolchain'
-$subfolder = Get-ChildItem -Path $LLVM_LOCAL_DIR -Directory | Select-Object -First 1
-Move-Item -Path "$($subfolder.FullName)\*" -Destination $LLVM_LOCAL_DIR -Force
+# Compilation ########################################################
 
-# Cleanup temp files
-Remove-Item $xzFile, $tarFile -Force
-Remove-Item $subfolder.FullName -Recurse -Force
-Write-Host "LLVM extracted to: $LLVM_LOCAL_DIR" -ForegroundColor Green
+$Version = [regex]::Match((Get-Content "../include/primesieve.hpp"), 'PRIMESIEVE_VERSION "(.*)"').Groups[1].Value
+Write-Host "Compiling Primesieve $Version with Clang $LLVM_VER..." -ForegroundColor Cyan
 
-###########################################################################
+# Gather source files
+$Src = @("../src/*.cpp", "../src/arch/x86/*.cpp", "../src/app/*.cpp") | ForEach-Object { Get-Item $_ }
 
-# Add the local LLVM bin to the path for this session
-$env:Path = "$(Join-Path $LLVM_LOCAL_DIR 'bin');$env:Path"
-
-# === Version Setup ===
-$VersionLine = Select-String -Path "../include/primesieve.hpp" -Pattern 'PRIMESIEVE_VERSION "(.*)"'
-$Version = $VersionLine.Matches.Groups[1].Value
-$FullDate = Get-Date -Format "MMMM dd, yyyy"
-$Year = Get-Date -Format "yyyy"
-
-Write-Host "Compiling with Clang $LLVM_VERSION..." -ForegroundColor Cyan
-
-# Manually resolve wildcards for PowerShell
-$SrcFiles = Get-Item "../src/*.cpp"
-$ArchFiles = Get-Item "../src/arch/x86/*.cpp"
-$AppFiles = Get-Item "../src/app/*.cpp"
-
-& clang++ -I../include -I../src -O3 -mpopcnt -DNDEBUG `
-    -DENABLE_MULTIARCH_AVX512_BW -DENABLE_MULTIARCH_AVX512_VBMI2 `
-    $SrcFiles $ArchFiles $AppFiles `
-    -o primesieve.exe
+# Splatting arguments for readability
+$ClangArgs = @(
+    "-I../include", "-I../src", "-O3", "-mpopcnt", "-DNDEBUG",
+    "-DENABLE_MULTIARCH_AVX512_BW", "-DENABLE_MULTIARCH_AVX512_VBMI2",
+    "-o", "primesieve.exe"
+)
+& clang++ $ClangArgs $Src
 
 if ($LASTEXITCODE -ne 0) { throw "Compilation failed." }
 & llvm-strip primesieve.exe
 
-###########################################################################
+# Packaging ##########################################################
 
-# === Packaging ===
 Write-Host "Packaging release..."
-Invoke-WebRequest -Uri $PrevReleaseUrl -OutFile "prev.zip"
-Expand-Archive -Path "prev.zip" -DestinationPath "primesieve-$Version-win-x64-tmp" -Force
+Download-File $URL_PREV "$BUILD_DIR\prev.zip"
+$PkgName = "primesieve-$Version-win-x64"
+Expand-Archive "prev.zip" -DestinationPath "$PkgName-tmp" -Force
 
-Write-Host ""
-Write-Host "Old primesieve binary size:"
-Get-Item primesieve-$Version-win-x64-tmp/primesieve.exe | Select-Object Name, Length
+# Verify Size and Move Binary
+Write-Host "Old binary size: $((Get-Item "$PkgName-tmp/primesieve.exe").Length)"
+Move-Item "primesieve.exe" "$PkgName-tmp" -Force
+Write-Host "New binary size: $((Get-Item "$PkgName-tmp/primesieve.exe").Length)"
 
-Move-Item -Force "primesieve.exe" "primesieve-$Version-win-x64-tmp"
-Write-Host "New primesieve binary size:"
-Get-Item primesieve-$Version-win-x64-tmp/primesieve.exe | Select-Object Name, Length
+# Update version info (Regex replace)
+$Date = Get-Date -Format "MMMM dd, yyyy"
+$Year = Get-Date -Format "yyyy"
+(Get-Content "$PkgName-tmp\README.txt") -replace "^primesieve.*", "primesieve $Version" -replace "^\w+ \d+, \d+", $Date | Set-Content "$PkgName-tmp\README.txt"
+(Get-Content "$PkgName-tmp\COPYING")    -replace "Copyright \(c\) 2010 - \d+", "Copyright (c) 2010 - $Year"    | Set-Content "$PkgName-tmp\COPYING"
 
-# Update metadata
-(Get-Content "primesieve-$Version-win-x64-tmp\README.txt") -replace "^primesieve.*", "primesieve $Version" -replace "^\w+ \d+, \d+", $FullDate | Set-Content "primesieve-$Version-win-x64-tmp\README.txt"
-(Get-Content "primesieve-$Version-win-x64-tmp\COPYING") -replace "Copyright \(c\) 2010 - \d+", "Copyright (c) 2010 - $Year" | Set-Content "primesieve-$Version-win-x64-tmp\COPYING"
+# Testing ############################################################
 
 Write-Host "Running Tests..."
-Set-Location "primesieve-$Version-win-x64-tmp"
+Set-Location "$PkgName-tmp"
+Write-Host "================================================================================"
 
-Write-Host ""
-./primesieve -v
-if ($LASTEXITCODE -ne 0) { throw "Tests failed." }
+foreach ($arg in @("-v", "--cpu-info", "--test", "1e11")) { 
+    & ./primesieve $arg
+    if ($LASTEXITCODE -ne 0) { throw "Test failed: $arg" }
+    Write-Host "================================================================================"
+}
 
-Write-Host ""
-./primesieve --cpu-info
-if ($LASTEXITCODE -ne 0) { throw "Tests failed." }
+# Compress zip archive ###############################################
 
-Write-Host ""
-./primesieve --test
-if ($LASTEXITCODE -ne 0) { throw "Tests failed." }
-
-Write-Host ""
-./primesieve 1e11
-if ($LASTEXITCODE -ne 0) { throw "Tests failed." }
-
-Compress-Archive `
-  -Path (Get-Item README.txt, primesieve.exe, COPYING) `
-  -DestinationPath "primesieve-$Version-win-x64.zip" `
-  -Force
-
-Move-Item "primesieve-$Version-win-x64.zip" .. -Force
+Compress-Archive -Path "README.txt", "primesieve.exe", "COPYING" -DestinationPath "..\$PkgName.zip" -Force
 Set-Location ..
-Rename-Item "primesieve-$Version-win-x64-tmp" "primesieve-$Version-win-x64"
-
-Write-Host ""
+Rename-Item "$PkgName-tmp" $PkgName
 Write-Host "Release binary built successfully!" -ForegroundColor Green
