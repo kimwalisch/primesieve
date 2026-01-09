@@ -3,9 +3,8 @@ $ErrorActionPreference = "Stop"
 
 # Configuration ######################################################
 
-$LLVM_VER    = "21.1.8"
-$BUILD_DIR   = Join-Path (Get-Location) "build-release"
-$URL_PREV    = "https://github.com/kimwalisch/primesieve/releases/download/v12.11/primesieve-12.11-win-x64.zip"
+$BUILD_DIR = Join-Path (Get-Location) "build-release"
+$URL_PREV  = "https://github.com/kimwalisch/primesieve/releases/download/v12.11/primesieve-12.11-win-x64.zip"
 
 # Clean and Init #####################################################
 
