@@ -40,8 +40,9 @@ $Src = @("../src/*.cpp", "../src/arch/arm/*.cpp", "../src/app/*.cpp") | ForEach-
 
 # Compiler options
 $ClangArgs = @(
-    "-I../include", "-I../src", "-O3", "-mpopcnt", "-DNDEBUG",
-    "-DENABLE_MULTIARCH_ARM_SVE", "-o", "primesieve.exe"
+    "-I../include", "-I../src", "-O3",
+    "-DNDEBUG", "-DENABLE_MULTIARCH_ARM_SVE",
+    "-o", "primesieve.exe"
 )
 & clang++ $ClangArgs $Src
 
