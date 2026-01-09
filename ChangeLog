@@ -1,10 +1,11 @@
-Changes in version 12.12, 08/01/2026
+Changes in version 12.12, 09/01/2026
 ====================================
 
 * CMakeLists.txt: Fix CMAKE_PROJECT_VERSION not defined.
 * doc/Doxyfile.in: REVERSE workaround for Doxygen/LaTeX broken tables #172.
 * Automated building Windows binaries using GitHub Actions CI.
 * build_clang_x64.ps1: New Clang Windows x64 build script.
+* build_clang_arm64.ps1: New Clang Windows ARM64 build script.
 
 Changes in version 12.11, 12/12/2025
 ====================================

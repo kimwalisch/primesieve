@@ -1,10 +1,13 @@
-# Usage: ./scripts/build_clang_x64.ps1
+# Usage: ./scripts/build_clang_arm64.ps1
 $ErrorActionPreference = "Stop"
 
 # Configuration ######################################################
 
-$BUILD_DIR = Join-Path (Get-Location) "build-release"
-$URL_PREV  = "https://github.com/kimwalisch/primesieve/releases/download/v12.11/primesieve-12.11-win-x64.zip"
+$LLVM_VER    = "21.1.8"
+$BUILD_DIR   = Join-Path (Get-Location) "build-release"
+$LLVM_DIR    = Join-Path $BUILD_DIR "clang+llvm-$LLVM_VER-aarch64-pc-windows-msvc"
+$URL_LLVM    = "https://github.com/llvm/llvm-project/releases/download/llvmorg-$LLVM_VER/clang+llvm-$LLVM_VER-aarch64-pc-windows-msvc.tar.xz"
+$URL_PREV    = "https://github.com/kimwalisch/primesieve/releases/download/v12.11/primesieve-12.11-win-arm64.zip"
 
 # Clean and Init #####################################################
 
@@ -18,18 +21,32 @@ function Download-File ($Url, $Dest) {
     (New-Object System.Net.WebClient).DownloadFile($Url, $Dest)
 }
 
+# Setup LLVM #########################################################
+
+# LLVM/Clang 20.1.6 is installed by default on the windows-11-arm
+# GitHub Actions CI instance. However, that version is unable to
+# compile our ARM SVE code. Hence we download LLVM/Clang 21 which
+# has no problem compiling our code.
+
+Download-File $URL_LLVM "$BUILD_DIR\llvm.tar.xz"
+
+Write-Host "Extracting LLVM..."
+tar.exe -xf "llvm.tar.xz"
+Remove-Item "llvm.tar.xz" -Force
+$env:Path = "$(Join-Path $LLVM_DIR 'bin');$env:Path"
+
 # Compilation ########################################################
 
 $Version = [regex]::Match((Get-Content "../include/primesieve.hpp"), 'PRIMESIEVE_VERSION "(.*)"').Groups[1].Value
-Write-Host "Compiling primesieve-$Version with Clang" -ForegroundColor Cyan
+Write-Host "Compiling Primesieve $Version with Clang $LLVM_VER..." -ForegroundColor Cyan
 
 # Gather source files
-$Src = @("../src/*.cpp", "../src/arch/x86/*.cpp", "../src/app/*.cpp") | ForEach-Object { Get-Item $_ }
+$Src = @("../src/*.cpp", "../src/arch/arm/*.cpp", "../src/app/*.cpp") | ForEach-Object { Get-Item $_ }
 
 # Compiler options
 $ClangArgs = @(
-    "-I../include", "-I../src", "-O3", "-mpopcnt", "-DNDEBUG",
-    "-DENABLE_MULTIARCH_AVX512_BW", "-DENABLE_MULTIARCH_AVX512_VBMI2",
+    "-I../include", "-I../src", "-O3",
+    "-DNDEBUG", "-DENABLE_MULTIARCH_ARM_SVE",
     "-o", "primesieve.exe"
 )
 & clang++ $ClangArgs $Src
@@ -41,7 +58,7 @@ if ($LASTEXITCODE -ne 0) { throw "Compilation failed." }
 
 Write-Host "Packaging release..."
 Download-File $URL_PREV "$BUILD_DIR\prev.zip"
-$PkgName = "primesieve-$Version-win-x64"
+$PkgName = "primesieve-$Version-win-arm64"
 Expand-Archive "prev.zip" -DestinationPath "$PkgName-tmp" -Force
 
 # Verify Size and Move Binary
