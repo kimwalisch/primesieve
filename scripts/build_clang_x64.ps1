@@ -1,4 +1,4 @@
-# Usage: ./scripts/build_clang_win_x64.ps1
+# Usage: ./scripts/build_clang_x64.ps1
 $ErrorActionPreference = "Stop"
 
 # Configuration ######################################################
