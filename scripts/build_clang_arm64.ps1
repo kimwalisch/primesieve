@@ -5,8 +5,6 @@ $ErrorActionPreference = "Stop"
 
 $LLVM_VER    = "21.1.8"
 $BUILD_DIR   = Join-Path (Get-Location) "build-release"
-$LLVM_DIR    = Join-Path $BUILD_DIR "clang+llvm-$LLVM_VER-aarch64-pc-windows-msvc"
-$URL_LLVM    = "https://github.com/llvm/llvm-project/releases/download/llvmorg-$LLVM_VER/clang+llvm-$LLVM_VER-aarch64-pc-windows-msvc.tar.xz"
 $URL_PREV    = "https://github.com/kimwalisch/primesieve/releases/download/v12.11/primesieve-12.11-win-arm64.zip"
 
 # Clean and Init #####################################################
@@ -21,19 +19,10 @@ function Download-File ($Url, $Dest) {
     (New-Object System.Net.WebClient).DownloadFile($Url, $Dest)
 }
 
-# Setup LLVM #########################################################
-
-Download-File $URL_LLVM "$BUILD_DIR\llvm.tar.xz"
-
-Write-Host "Extracting LLVM..."
-tar.exe -xf "llvm.tar.xz"
-Remove-Item "llvm.tar.xz" -Force
-$env:Path = "$(Join-Path $LLVM_DIR 'bin');$env:Path"
-
 # Compilation ########################################################
 
 $Version = [regex]::Match((Get-Content "../include/primesieve.hpp"), 'PRIMESIEVE_VERSION "(.*)"').Groups[1].Value
-Write-Host "Compiling Primesieve $Version with Clang $LLVM_VER..." -ForegroundColor Cyan
+Write-Host "Compiling Primesieve $Version with Clang" -ForegroundColor Cyan
 
 # Gather source files
 $Src = @("../src/*.cpp", "../src/arch/arm/*.cpp", "../src/app/*.cpp") | ForEach-Object { Get-Item $_ }
