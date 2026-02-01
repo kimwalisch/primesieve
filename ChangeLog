@@ -1,3 +1,8 @@
+Changes in version 12.13, 01/02/2026
+====================================
+
+* Fix missing version in .pc file #176.
+
 Changes in version 12.12, 09/01/2026
 ====================================
 
