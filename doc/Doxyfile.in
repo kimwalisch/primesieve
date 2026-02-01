@@ -1,5 +1,5 @@
 PROJECT_NAME           = "primesieve"
-PROJECT_NUMBER         = @PRIMESIEVE_VERSION@
+PROJECT_NUMBER         = @PROJECT_VERSION@
 INPUT                  = @PROJECT_SOURCE_DIR@/doc/mainpage.dox \
                          @PROJECT_SOURCE_DIR@/include/primesieve.hpp \
                          @PROJECT_SOURCE_DIR@/include/primesieve.h \
