@@ -14,7 +14,7 @@
 
 # Prerequisites
 
-You need to have installed a C++ compiler which supports C++11 (or later) and CMake ≥ 3.4.
+You need to have installed a C++ compiler which supports C++11 (or later) and CMake ≥ 3.9.
 
 <table>
     <tr>

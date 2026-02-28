@@ -149,7 +149,7 @@ Options:
 ## Build instructions
 
 You need to have installed a C++ compiler which supports C++11 (or later)
-and CMake ≥ 3.4.
+and CMake ≥ 3.9.
 
 ```sh
 cmake .
