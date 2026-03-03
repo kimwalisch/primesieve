@@ -33,7 +33,6 @@ public:
   bool hasSievingPrimes() const;
 private:
   uint64_t maxPrime_ = 0;
-  std::size_t l1CacheSize_ = 0;
   Vector<SievingPrime> primeVectors_[8];
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   NOINLINE void crossOff0(Vector<SievingPrime>&, Vector<uint8_t>&);
