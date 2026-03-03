@@ -92,7 +92,9 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
     std::size_t loopDist = sievingPrime * 30 + LOOP_ADD;
     const uint8_t* distAdd = wheel30DistAdd[GROUP];
     const uint8_t* masks = wheel30Masks[GROUP];
-    std::size_t adv[8] =
+    std::size_t s0, s1, s2, s3, s4, s5, s6, s7;
+
+    const Array<std::size_t, 8> adv =
     {
       sievingPrime * wheel30DistMul[0] + distAdd[0],
       sievingPrime * wheel30DistMul[1] + distAdd[1],
@@ -104,15 +106,6 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
       sievingPrime * wheel30DistMul[7] + distAdd[7]
     };
 
-    std::size_t s0 = sievingPrime *  0 + OFF_0;
-    std::size_t s1 = sievingPrime *  6 + OFF_1;
-    std::size_t s2 = sievingPrime * 10 + OFF_2;
-    std::size_t s3 = sievingPrime * 12 + OFF_3;
-    std::size_t s4 = sievingPrime * 16 + OFF_4;
-    std::size_t s5 = sievingPrime * 18 + OFF_5;
-    std::size_t s6 = sievingPrime * 22 + OFF_6;
-    std::size_t s7 = sievingPrime * 28 + OFF_7;
-
     // Get ready for loop unrolling.
     for (; state; state = (state + 1) & 7)
     {
@@ -121,6 +114,15 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
       sieve[i] &= masks[state];
       i += adv[state];
     }
+
+    s0 = sievingPrime *  0 + OFF_0;
+    s1 = sievingPrime *  6 + OFF_1;
+    s2 = sievingPrime * 10 + OFF_2;
+    s3 = sievingPrime * 12 + OFF_3;
+    s4 = sievingPrime * 16 + OFF_4;
+    s5 = sievingPrime * 18 + OFF_5;
+    s6 = sievingPrime * 22 + OFF_6;
+    s7 = sievingPrime * 28 + OFF_7;
 
     // Each iteration removes the next 8
     // multiples of the sievingPrime.
