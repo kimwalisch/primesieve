@@ -89,6 +89,7 @@ public:
   }
 
 protected:
+  static const uint64_t wheelOffsets_[30];
   uint64_t stop_ = 0;
   virtual ~Wheel() = default;
   virtual void storeSievingPrime(uint64_t, uint64_t, uint64_t) = 0;
@@ -97,9 +98,6 @@ protected:
   {
     return MAXMULTIPLEFACTOR;
   }
-
-private:
-  static const uint64_t wheelOffsets_[30];
 };
 
 template <int MODULO,

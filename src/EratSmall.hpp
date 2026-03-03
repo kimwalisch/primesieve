@@ -30,13 +30,21 @@ class EratSmall : public Wheel30_t
 public:
   void init(uint64_t, uint64_t, uint64_t);
   void crossOff(Vector<uint8_t>& sieve);
-  bool hasSievingPrimes() const { return !primes_.empty(); }
+  bool hasSievingPrimes() const;
 private:
   uint64_t maxPrime_ = 0;
   std::size_t l1CacheSize_ = 0;
-  Vector<SievingPrime> primes_;
+  Vector<SievingPrime> primeVectors_[8];
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   NOINLINE void crossOff(uint8_t*, std::size_t);
+  NOINLINE void crossOff0(Vector<SievingPrime>&, uint8_t*, std::size_t);
+  NOINLINE void crossOff1(Vector<SievingPrime>&, uint8_t*, std::size_t);
+  NOINLINE void crossOff2(Vector<SievingPrime>&, uint8_t*, std::size_t);
+  NOINLINE void crossOff3(Vector<SievingPrime>&, uint8_t*, std::size_t);
+  NOINLINE void crossOff4(Vector<SievingPrime>&, uint8_t*, std::size_t);
+  NOINLINE void crossOff5(Vector<SievingPrime>&, uint8_t*, std::size_t);
+  NOINLINE void crossOff6(Vector<SievingPrime>&, uint8_t*, std::size_t);
+  NOINLINE void crossOff7(Vector<SievingPrime>&, uint8_t*, std::size_t);
 };
 
 } // namespace
