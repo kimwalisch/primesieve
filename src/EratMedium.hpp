@@ -10,43 +10,40 @@
 #ifndef ERATMEDIUM_HPP
 #define ERATMEDIUM_HPP
 
+#include "Bucket.hpp"
 #include "Wheel.hpp"
 
 #include <primesieve/macros.hpp>
 #include <primesieve/Vector.hpp>
 
+#include <cstddef>
 #include <stdint.h>
 
 namespace primesieve {
 
-class MemoryPool;
-class SievingPrime;
-class Bucket;
-
-/// EratMedium is an implementation of the segmented sieve of
-/// Eratosthenes optimized for medium sieving primes
-/// that have a few multiples per segment.
+/// EratMedium is an implementation of the segmented sieve
+/// of Eratosthenes optimized for small sieving primes that
+/// have many multiples per segment.
 ///
 class EratMedium : public Wheel30_t
 {
 public:
-  void init(uint64_t, uint64_t, MemoryPool&);
-  bool hasSievingPrimes() const { return !buckets_.empty(); }
-  NOINLINE void crossOff(Vector<uint8_t>& sieve);
+  void init(uint64_t, uint64_t);
+  void crossOff(Vector<uint8_t>& sieve);
+  bool hasSievingPrimes() const;
 private:
   uint64_t maxPrime_ = 0;
-  MemoryPool* memoryPool_ = nullptr;
-  Vector<SievingPrime*> buckets_;
-  Vector<SievingPrime*> currentBuckets_;
+  std::size_t l1CacheSize_ = 0;
+  Vector<SievingPrime> primeVectors_[8];
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
-  NOINLINE void crossOff_7(uint8_t*, std::size_t, Bucket*);
-  NOINLINE void crossOff_11(uint8_t*, std::size_t, Bucket*);
-  NOINLINE void crossOff_13(uint8_t*, std::size_t, Bucket*);
-  NOINLINE void crossOff_17(uint8_t*, std::size_t, Bucket*);
-  NOINLINE void crossOff_19(uint8_t*, std::size_t, Bucket*);
-  NOINLINE void crossOff_23(uint8_t*, std::size_t, Bucket*);
-  NOINLINE void crossOff_29(uint8_t*, std::size_t, Bucket*);
-  NOINLINE void crossOff_31(uint8_t*, std::size_t, Bucket*);
+  NOINLINE void crossOff0(Vector<SievingPrime>&, Vector<uint8_t>&);
+  NOINLINE void crossOff1(Vector<SievingPrime>&, Vector<uint8_t>&);
+  NOINLINE void crossOff2(Vector<SievingPrime>&, Vector<uint8_t>&);
+  NOINLINE void crossOff3(Vector<SievingPrime>&, Vector<uint8_t>&);
+  NOINLINE void crossOff4(Vector<SievingPrime>&, Vector<uint8_t>&);
+  NOINLINE void crossOff5(Vector<SievingPrime>&, Vector<uint8_t>&);
+  NOINLINE void crossOff6(Vector<SievingPrime>&, Vector<uint8_t>&);
+  NOINLINE void crossOff7(Vector<SievingPrime>&, Vector<uint8_t>&);
 };
 
 } // namespace

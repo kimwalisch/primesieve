@@ -219,7 +219,7 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   if (sqrtStop > PreSieve::getMaxPrime())
     eratSmall_.init(stop_, l1CacheSize, maxEratSmall_);
   if (sqrtStop > maxEratSmall_)
-    eratMedium_.init(stop_, maxEratMedium_, memoryPool);
+    eratMedium_.init(stop_, maxEratMedium_);
   if (sqrtStop > maxEratMedium_)
     eratBig_.init(stop_, sieve_.size(), sqrtStop, memoryPool);
 }

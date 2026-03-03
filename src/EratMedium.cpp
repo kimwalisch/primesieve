@@ -1,15 +1,13 @@
 ///
 /// @file   EratMedium.cpp
 /// @brief  EratMedium is a segmented sieve of Eratosthenes
-///         implementation optimized for medium sieving primes.
-///         EratMedium is similar to EratSmall except that in
-///         EratMedium each sieving prime is sorted (by its
-///         wheelIndex) after the sieving step. When we then iterate
-///         over the sorted sieving primes in the next segment the
-///         initial indirect branch i.e. 'switch (wheelIndex)' is
-///         predicted correctly by the CPU. This improves performance
-///         by up to 30% for sieving primes that have only a few
-///         multiple occurrences per segment.
+///         implementation optimized for small sieving primes. Since
+///         each small sieving prime has many multiple occurrences per
+///         segment the initialization overhead of the sieving primes
+///         at the beginning of each segment is not really important
+///         for performance. What matters is that crossing off
+///         multiples uses as few instructions as possible since there
+///         are so many multiples.
 ///
 /// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///
@@ -19,21 +17,150 @@
 
 #include "EratMedium.hpp"
 #include "Bucket.hpp"
-#include "MemoryPool.hpp"
 
 #include <primesieve/bits.hpp>
 #include <primesieve/macros.hpp>
+#include <primesieve/pmath.hpp>
 
 #include <stdint.h>
+#include <algorithm>
 
 namespace primesieve {
 
-/// @stop:      Upper bound for sieving
-/// @maxPrime:  Sieving primes <= maxPrime
+namespace {
+
+const uint8_t wheel30DistMul[8] =
+{
+  6, 4, 2, 4, 2, 4, 6, 2
+};
+
+const uint8_t wheel30DistAdd[8][8] =
+{
+  { 1, 1, 0, 1, 1, 1, 1, 1 },
+  { 2, 1, 1, 2, 0, 2, 2, 1 },
+  { 2, 2, 1, 2, 1, 1, 3, 1 },
+  { 3, 3, 1, 2, 1, 2, 4, 1 },
+  { 4, 2, 2, 2, 1, 3, 4, 1 },
+  { 5, 3, 1, 3, 2, 3, 5, 1 },
+  { 6, 4, 2, 4, 2, 4, 5, 2 },
+  { 1, 0, 0, 0, 0, 0, 0, 0 }
+};
+
+const uint8_t wheel30Masks[8][8] =
+{
+  { BIT0, BIT4, BIT3, BIT7, BIT6, BIT2, BIT1, BIT5 },
+  { BIT1, BIT3, BIT7, BIT5, BIT0, BIT6, BIT2, BIT4 },
+  { BIT2, BIT7, BIT5, BIT4, BIT1, BIT0, BIT6, BIT3 },
+  { BIT3, BIT6, BIT0, BIT1, BIT4, BIT5, BIT7, BIT2 },
+  { BIT4, BIT2, BIT6, BIT0, BIT5, BIT7, BIT3, BIT1 },
+  { BIT5, BIT1, BIT2, BIT6, BIT7, BIT3, BIT4, BIT0 },
+  { BIT6, BIT5, BIT4, BIT3, BIT2, BIT1, BIT0, BIT7 },
+  { BIT7, BIT0, BIT1, BIT2, BIT3, BIT4, BIT5, BIT6 }
+};
+
+template <uint8_t GROUP,
+          uint8_t BASE,
+          uint8_t MAX_OFFSET_ADD,
+          uint8_t LOOP_ADD,
+          uint8_t OFF_0, uint8_t OFF_1, uint8_t OFF_2, uint8_t OFF_3,
+          uint8_t OFF_4, uint8_t OFF_5, uint8_t OFF_6, uint8_t OFF_7,
+          uint8_t MASK_0, uint8_t MASK_1, uint8_t MASK_2, uint8_t MASK_3,
+          uint8_t MASK_4, uint8_t MASK_5, uint8_t MASK_6, uint8_t MASK_7>
+void crossOffByResidue(Vector<SievingPrime>& primes,
+                       uint8_t* sieve,
+                       std::size_t sieveSize)
+{
+  #define CHECK_FINISHED(wheelIndex) \
+    if (i >= sieveSize) \
+    { \
+      std::size_t multipleIndex = i - sieveSize; \
+      prime.set(multipleIndex, wheelIndex); \
+      goto next_iteration; \
+    }
+
+  for (auto& prime : primes)
+  {
+    std::size_t sievingPrime = prime.getSievingPrime();
+    std::size_t i = prime.getMultipleIndex();
+    std::size_t wheelIndex = prime.getWheelIndex();
+    std::size_t state = wheelIndex & 7;
+    ASSERT(wheelIndex >= BASE);
+    ASSERT(wheelIndex <= BASE + 7);
+
+    std::size_t maxOffset = sievingPrime * 28 + MAX_OFFSET_ADD;
+    std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
+    std::size_t loopDist = sievingPrime * 30 + LOOP_ADD;
+    const uint8_t* distAdd = wheel30DistAdd[GROUP];
+    const uint8_t* masks = wheel30Masks[GROUP];
+    std::size_t s0, s1, s2, s3, s4, s5, s6, s7;
+
+    const Array<std::size_t, 8> adv =
+    {
+      sievingPrime * wheel30DistMul[0] + distAdd[0],
+      sievingPrime * wheel30DistMul[1] + distAdd[1],
+      sievingPrime * wheel30DistMul[2] + distAdd[2],
+      sievingPrime * wheel30DistMul[3] + distAdd[3],
+      sievingPrime * wheel30DistMul[4] + distAdd[4],
+      sievingPrime * wheel30DistMul[5] + distAdd[5],
+      sievingPrime * wheel30DistMul[6] + distAdd[6],
+      sievingPrime * wheel30DistMul[7] + distAdd[7]
+    };
+
+    // Get ready for loop unrolling.
+    for (; state; state = (state + 1) & 7)
+    {
+      wheelIndex = BASE + state;
+      CHECK_FINISHED(wheelIndex);
+      sieve[i] &= masks[state];
+      i += adv[state];
+    }
+
+    s0 = sievingPrime *  0 + OFF_0;
+    s1 = sievingPrime *  6 + OFF_1;
+    s2 = sievingPrime * 10 + OFF_2;
+    s3 = sievingPrime * 12 + OFF_3;
+    s4 = sievingPrime * 16 + OFF_4;
+    s5 = sievingPrime * 18 + OFF_5;
+    s6 = sievingPrime * 22 + OFF_6;
+    s7 = sievingPrime * 28 + OFF_7;
+
+    // Each iteration removes the next 8
+    // multiples of the sievingPrime.
+    for (; i < limit; i += loopDist)
+    {
+      sieve[i + s0] &= MASK_0;
+      sieve[i + s1] &= MASK_1;
+      sieve[i + s2] &= MASK_2;
+      sieve[i + s3] &= MASK_3;
+      sieve[i + s4] &= MASK_4;
+      sieve[i + s5] &= MASK_5;
+      sieve[i + s6] &= MASK_6;
+      sieve[i + s7] &= MASK_7;
+    }
+
+    // Cross off the last few multiples where i >= limit.
+    for (;; state = (state + 1) & 7)
+    {
+      wheelIndex = BASE + state;
+      CHECK_FINISHED(wheelIndex);
+      sieve[i] &= masks[state];
+      i += adv[state];
+    }
+
+    next_iteration:;
+  }
+
+  #undef CHECK_FINISHED
+}
+
+} // namespace
+
+/// @stop:        Upper bound for sieving
+/// @l1CacheSize: CPU L1 cache size
+/// @maxPrime:    Sieving primes <= maxPrime
 ///
 void EratMedium::init(uint64_t stop,
-                      uint64_t maxPrime,
-                      MemoryPool& memoryPool)
+                     uint64_t maxPrime)
 {
   ASSERT((maxPrime / 30) * getMaxFactor() + getMaxFactor() <= SievingPrime::MAX_MULTIPLEINDEX);
   static_assert(config::FACTOR_ERATMEDIUM <= 4.5,
@@ -41,411 +168,106 @@ void EratMedium::init(uint64_t stop,
 
   stop_ = stop;
   maxPrime_ = maxPrime;
-  memoryPool_ = &memoryPool;
+  std::size_t count = primeCountUpper(maxPrime);
+
+  for (auto& primes : primeVectors_)
+  {
+    primes.clear();
+    primes.reserve((count / 8) + 64);
+  }
 }
 
 /// Add a new sieving prime to EratMedium
 void EratMedium::storeSievingPrime(uint64_t prime,
-                                   uint64_t multipleIndex,
-                                   uint64_t wheelIndex)
+                                  uint64_t multipleIndex,
+                                  uint64_t wheelIndex)
 {
   ASSERT(prime <= maxPrime_);
   uint64_t sievingPrime = prime / 30;
-
-  if_unlikely(buckets_.empty())
-  {
-    buckets_.resize(64);
-    currentBuckets_.resize(64);
-    std::fill_n(buckets_.begin(), 64, nullptr);
-    std::fill_n(currentBuckets_.begin(), 64, nullptr);
-  }
-
-  if (Bucket::isFull(buckets_[wheelIndex]))
-    memoryPool_->addBucket(buckets_[wheelIndex]);
-
-  buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);
+  uint64_t vectorIndex = wheelOffsets_[prime % 30] / 8;
+  primeVectors_[vectorIndex].emplace_back(sievingPrime, multipleIndex, wheelIndex);
 }
 
+bool EratMedium::hasSievingPrimes() const
+{
+  for (const auto& primes : primeVectors_)
+    if (!primes.empty())
+      return true;
+
+  return false;
+}
+
+/// Segmented sieve of Eratosthenes with wheel factorization
+/// optimized for small sieving primes that have many multiples
+/// per segment. This algorithm uses a hardcoded modulo 30
+/// wheel that skips multiples of 2, 3 and 5.
+///
 void EratMedium::crossOff(Vector<uint8_t>& sieve)
 {
-  currentBuckets_.swap(buckets_);
-
-  // Iterate over the 64 bucket lists.
-  // The 1st list contains sieving primes with wheelIndex = 0.
-  // The 2nd list contains sieving primes with wheelIndex = 1.
-  // The 3rd list contains sieving primes with wheelIndex = 2.
-  // ...
-  for (std::size_t i = 0; i < 64; i++)
-  {
-    if (currentBuckets_[i])
-    {
-      Bucket* bucket = Bucket::get(currentBuckets_[i]);
-      bucket->setEnd(currentBuckets_[i]);
-      currentBuckets_[i] = nullptr;
-      std::size_t wheelIndex = i;
-
-      // Iterate over the current bucket list.
-      // For each bucket cross off the
-      // multiples of its sieving primes.
-      while (bucket)
-      {
-        switch (wheelIndex / 8)
-        {
-          case 0: crossOff_7 (sieve.data(), sieve.size(), bucket); break;
-          case 1: crossOff_11(sieve.data(), sieve.size(), bucket); break;
-          case 2: crossOff_13(sieve.data(), sieve.size(), bucket); break;
-          case 3: crossOff_17(sieve.data(), sieve.size(), bucket); break;
-          case 4: crossOff_19(sieve.data(), sieve.size(), bucket); break;
-          case 5: crossOff_23(sieve.data(), sieve.size(), bucket); break;
-          case 6: crossOff_29(sieve.data(), sieve.size(), bucket); break;
-          case 7: crossOff_31(sieve.data(), sieve.size(), bucket); break;
-          default: UNREACHABLE;
-        }
-
-        Bucket* processed = bucket;
-        bucket = bucket->next();
-        memoryPool_->freeBucket(processed);
-      }
-    }
-  }
+  crossOff0(primeVectors_[0], sieve);
+  crossOff1(primeVectors_[1], sieve);
+  crossOff2(primeVectors_[2], sieve);
+  crossOff3(primeVectors_[3], sieve);
+  crossOff4(primeVectors_[4], sieve);
+  crossOff5(primeVectors_[5], sieve);
+  crossOff6(primeVectors_[6], sieve);
+  crossOff7(primeVectors_[7], sieve);
 }
 
-/// This macro sorts the current sieving prime by its
-/// wheelIndex after sieving has finished. When we then
-/// iterate over the sieving primes in the next segment the
-/// 'switch (wheelIndex)' branch will be predicted
-/// correctly by the CPU.
-///
-#define CHECK_FINISHED(wheelIndex) \
-  if_unlikely(i >= sieveSize) \
-  { \
-    i -= sieveSize; \
-    if (Bucket::isFull(buckets[wheelIndex])) \
-      memoryPool.addBucket(buckets[wheelIndex]); \
-    buckets[wheelIndex]++->set(sievingPrime, i, wheelIndex); \
-    break; \
-  }
-
-/// For sieving primes of type n % 30 == 7
-void EratMedium::crossOff_7(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff0(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  auto buckets = buckets_.data();
-  MemoryPool& memoryPool = *memoryPool_;
-  SievingPrime* prime = bucket->begin();
-  SievingPrime* end = bucket->end();
-  std::size_t wheelIndex = prime->getWheelIndex();
-
-  for (; prime != end; prime++)
-  {
-    std::size_t sievingPrime = prime->getSievingPrime();
-    std::size_t i = prime->getMultipleIndex();
-    std::size_t dist0 = sievingPrime * 6 + 1;
-    std::size_t dist1 = sievingPrime * 4 + 1;
-    std::size_t dist2 = sievingPrime * 2 + 0;
-    std::size_t dist4 = sievingPrime * 2 + 1;
-    ASSERT(wheelIndex <= 7);
-
-    switch (wheelIndex)
-    {
-      default: UNREACHABLE;
-
-      for (;;)
-      {
-        case 0: CHECK_FINISHED(0); sieve[i] &= BIT0; i += dist0; FALLTHROUGH;
-        case 1: CHECK_FINISHED(1); sieve[i] &= BIT4; i += dist1; FALLTHROUGH;
-        case 2: CHECK_FINISHED(2); sieve[i] &= BIT3; i += dist2; FALLTHROUGH;
-        case 3: CHECK_FINISHED(3); sieve[i] &= BIT7; i += dist1; FALLTHROUGH;
-        case 4: CHECK_FINISHED(4); sieve[i] &= BIT6; i += dist4; FALLTHROUGH;
-        case 5: CHECK_FINISHED(5); sieve[i] &= BIT2; i += dist1; FALLTHROUGH;
-        case 6: CHECK_FINISHED(6); sieve[i] &= BIT1; i += dist0; FALLTHROUGH;
-        case 7: CHECK_FINISHED(7); sieve[i] &= BIT5; i += dist4;
-      }
-    }
-  }
+  crossOffByResidue<0, 0, 6, 7,
+                    0, 1, 2, 2, 3, 4, 5, 6,
+                    BIT0, BIT4, BIT3, BIT7, BIT6, BIT2, BIT1, BIT5>(primes, &sieve[0], sieve.size());
 }
 
-/// For sieving primes of type n % 30 == 11
-void EratMedium::crossOff_11(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff1(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  auto buckets = buckets_.data();
-  MemoryPool& memoryPool = *memoryPool_;
-  SievingPrime* prime = bucket->begin();
-  SievingPrime* end = bucket->end();
-  std::size_t wheelIndex = prime->getWheelIndex();
-
-  for (; prime != end; prime++)
-  {
-    std::size_t sievingPrime = prime->getSievingPrime();
-    std::size_t i = prime->getMultipleIndex();
-    std::size_t dist0 = sievingPrime * 6 + 2;
-    std::size_t dist1 = sievingPrime * 4 + 1;
-    std::size_t dist2 = sievingPrime * 2 + 1;
-    std::size_t dist3 = sievingPrime * 4 + 2;
-    std::size_t dist4 = sievingPrime * 2 + 0;
-
-    ASSERT(wheelIndex >= 8);
-    ASSERT(wheelIndex <= 15);
-
-    switch (wheelIndex)
-    {
-      default: UNREACHABLE;
-
-      for (;;)
-      {
-        case  8: CHECK_FINISHED( 8); sieve[i] &= BIT1; i += dist0; FALLTHROUGH;
-        case  9: CHECK_FINISHED( 9); sieve[i] &= BIT3; i += dist1; FALLTHROUGH;
-        case 10: CHECK_FINISHED(10); sieve[i] &= BIT7; i += dist2; FALLTHROUGH;
-        case 11: CHECK_FINISHED(11); sieve[i] &= BIT5; i += dist3; FALLTHROUGH;
-        case 12: CHECK_FINISHED(12); sieve[i] &= BIT0; i += dist4; FALLTHROUGH;
-        case 13: CHECK_FINISHED(13); sieve[i] &= BIT6; i += dist3; FALLTHROUGH;
-        case 14: CHECK_FINISHED(14); sieve[i] &= BIT2; i += dist0; FALLTHROUGH;
-        case 15: CHECK_FINISHED(15); sieve[i] &= BIT4; i += dist2;
-      }
-    }
-  }
+  crossOffByResidue<1, 8, 10, 11,
+                    0, 2, 3, 4, 6, 6, 8, 10,
+                    BIT1, BIT3, BIT7, BIT5, BIT0, BIT6, BIT2, BIT4>(primes, &sieve[0], sieve.size());
 }
 
-/// For sieving primes of type n % 30 == 13
-void EratMedium::crossOff_13(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff2(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  auto buckets = buckets_.data();
-  MemoryPool& memoryPool = *memoryPool_;
-  SievingPrime* prime = bucket->begin();
-  SievingPrime* end = bucket->end();
-  std::size_t wheelIndex = prime->getWheelIndex();
-
-  for (; prime != end; prime++)
-  {
-    std::size_t sievingPrime = prime->getSievingPrime();
-    std::size_t i = prime->getMultipleIndex();
-    std::size_t dist0 = sievingPrime * 6 + 2;
-    std::size_t dist1 = sievingPrime * 4 + 2;
-    std::size_t dist2 = sievingPrime * 2 + 1;
-    std::size_t dist5 = sievingPrime * 4 + 1;
-    std::size_t dist6 = sievingPrime * 6 + 3;
-
-    ASSERT(wheelIndex >= 16);
-    ASSERT(wheelIndex <= 23);
-
-    switch (wheelIndex)
-    {
-      default: UNREACHABLE;
-
-      for (;;)
-      {
-        case 16: CHECK_FINISHED(16); sieve[i] &= BIT2; i += dist0; FALLTHROUGH;
-        case 17: CHECK_FINISHED(17); sieve[i] &= BIT7; i += dist1; FALLTHROUGH;
-        case 18: CHECK_FINISHED(18); sieve[i] &= BIT5; i += dist2; FALLTHROUGH;
-        case 19: CHECK_FINISHED(19); sieve[i] &= BIT4; i += dist1; FALLTHROUGH;
-        case 20: CHECK_FINISHED(20); sieve[i] &= BIT1; i += dist2; FALLTHROUGH;
-        case 21: CHECK_FINISHED(21); sieve[i] &= BIT0; i += dist5; FALLTHROUGH;
-        case 22: CHECK_FINISHED(22); sieve[i] &= BIT6; i += dist6; FALLTHROUGH;
-        case 23: CHECK_FINISHED(23); sieve[i] &= BIT3; i += dist2;
-      }
-    }
-  }
+  crossOffByResidue<2, 16, 12, 13,
+                    0, 2, 4, 5, 7, 8, 9, 12,
+                    BIT2, BIT7, BIT5, BIT4, BIT1, BIT0, BIT6, BIT3>(primes, &sieve[0], sieve.size());
 }
 
-/// For sieving primes of type n % 30 == 17
-void EratMedium::crossOff_17(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff3(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  auto buckets = buckets_.data();
-  MemoryPool& memoryPool = *memoryPool_;
-  SievingPrime* prime = bucket->begin();
-  SievingPrime* end = bucket->end();
-  std::size_t wheelIndex = prime->getWheelIndex();
-
-  for (; prime != end; prime++)
-  {
-    std::size_t sievingPrime = prime->getSievingPrime();
-    std::size_t i = prime->getMultipleIndex();
-    std::size_t dist0 = sievingPrime * 6 + 3;
-    std::size_t dist1 = sievingPrime * 4 + 3;
-    std::size_t dist2 = sievingPrime * 2 + 1;
-    std::size_t dist3 = sievingPrime * 4 + 2;
-    std::size_t dist6 = sievingPrime * 6 + 4;
-
-    ASSERT(wheelIndex >= 24);
-    ASSERT(wheelIndex <= 31);
-
-    switch (wheelIndex)
-    {
-      default: UNREACHABLE;
-
-      for (;;)
-      {
-        case 24: CHECK_FINISHED(24); sieve[i] &= BIT3; i += dist0; FALLTHROUGH;
-        case 25: CHECK_FINISHED(25); sieve[i] &= BIT6; i += dist1; FALLTHROUGH;
-        case 26: CHECK_FINISHED(26); sieve[i] &= BIT0; i += dist2; FALLTHROUGH;
-        case 27: CHECK_FINISHED(27); sieve[i] &= BIT1; i += dist3; FALLTHROUGH;
-        case 28: CHECK_FINISHED(28); sieve[i] &= BIT4; i += dist2; FALLTHROUGH;
-        case 29: CHECK_FINISHED(29); sieve[i] &= BIT5; i += dist3; FALLTHROUGH;
-        case 30: CHECK_FINISHED(30); sieve[i] &= BIT7; i += dist6; FALLTHROUGH;
-        case 31: CHECK_FINISHED(31); sieve[i] &= BIT2; i += dist2;
-      }
-    }
-  }
+  crossOffByResidue<3, 24, 16, 17,
+                    0, 3, 6, 7, 9, 10, 12, 16,
+                    BIT3, BIT6, BIT0, BIT1, BIT4, BIT5, BIT7, BIT2>(primes, &sieve[0], sieve.size());
 }
 
-/// For sieving primes of type n % 30 == 19
-void EratMedium::crossOff_19(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff4(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  auto buckets = buckets_.data();
-  MemoryPool& memoryPool = *memoryPool_;
-  SievingPrime* prime = bucket->begin();
-  SievingPrime* end = bucket->end();
-  std::size_t wheelIndex = prime->getWheelIndex();
-
-  for (; prime != end; prime++)
-  {
-    std::size_t sievingPrime = prime->getSievingPrime();
-    std::size_t i = prime->getMultipleIndex();
-    std::size_t dist0 = sievingPrime * 6 + 4;
-    std::size_t dist1 = sievingPrime * 4 + 2;
-    std::size_t dist2 = sievingPrime * 2 + 2;
-    std::size_t dist4 = sievingPrime * 2 + 1;
-    std::size_t dist5 = sievingPrime * 4 + 3;
-
-    ASSERT(wheelIndex >= 32);
-    ASSERT(wheelIndex <= 39);
-
-    switch (wheelIndex)
-    {
-      default: UNREACHABLE;
-
-      for (;;)
-      {
-        case 32: CHECK_FINISHED(32); sieve[i] &= BIT4; i += dist0; FALLTHROUGH;
-        case 33: CHECK_FINISHED(33); sieve[i] &= BIT2; i += dist1; FALLTHROUGH;
-        case 34: CHECK_FINISHED(34); sieve[i] &= BIT6; i += dist2; FALLTHROUGH;
-        case 35: CHECK_FINISHED(35); sieve[i] &= BIT0; i += dist1; FALLTHROUGH;
-        case 36: CHECK_FINISHED(36); sieve[i] &= BIT5; i += dist4; FALLTHROUGH;
-        case 37: CHECK_FINISHED(37); sieve[i] &= BIT7; i += dist5; FALLTHROUGH;
-        case 38: CHECK_FINISHED(38); sieve[i] &= BIT3; i += dist0; FALLTHROUGH;
-        case 39: CHECK_FINISHED(39); sieve[i] &= BIT1; i += dist4;
-      }
-    }
-  }
+  crossOffByResidue<4, 32, 18, 19,
+                    0, 4, 6, 8, 10, 11, 14, 18,
+                    BIT4, BIT2, BIT6, BIT0, BIT5, BIT7, BIT3, BIT1>(primes, &sieve[0], sieve.size());
 }
 
-/// For sieving primes of type n % 30 == 23
-void EratMedium::crossOff_23(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff5(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  auto buckets = buckets_.data();
-  MemoryPool& memoryPool = *memoryPool_;
-  SievingPrime* prime = bucket->begin();
-  SievingPrime* end = bucket->end();
-  std::size_t wheelIndex = prime->getWheelIndex();
-
-  for (; prime != end; prime++)
-  {
-    std::size_t sievingPrime = prime->getSievingPrime();
-    std::size_t i = prime->getMultipleIndex();
-    std::size_t dist0 = sievingPrime * 6 + 5;
-    std::size_t dist1 = sievingPrime * 4 + 3;
-    std::size_t dist2 = sievingPrime * 2 + 1;
-    std::size_t dist4 = sievingPrime * 2 + 2;
-
-    ASSERT(wheelIndex >= 40);
-    ASSERT(wheelIndex <= 47);
-
-    switch (wheelIndex)
-    {
-      default: UNREACHABLE;
-
-      for (;;)
-      {
-        case 40: CHECK_FINISHED(40); sieve[i] &= BIT5; i += dist0; FALLTHROUGH;
-        case 41: CHECK_FINISHED(41); sieve[i] &= BIT1; i += dist1; FALLTHROUGH;
-        case 42: CHECK_FINISHED(42); sieve[i] &= BIT2; i += dist2; FALLTHROUGH;
-        case 43: CHECK_FINISHED(43); sieve[i] &= BIT6; i += dist1; FALLTHROUGH;
-        case 44: CHECK_FINISHED(44); sieve[i] &= BIT7; i += dist4; FALLTHROUGH;
-        case 45: CHECK_FINISHED(45); sieve[i] &= BIT3; i += dist1; FALLTHROUGH;
-        case 46: CHECK_FINISHED(46); sieve[i] &= BIT4; i += dist0; FALLTHROUGH;
-        case 47: CHECK_FINISHED(47); sieve[i] &= BIT0; i += dist2;
-      }
-    }
-  }
+  crossOffByResidue<5, 40, 22, 23,
+                    0, 5, 8, 9, 12, 14, 17, 22,
+                    BIT5, BIT1, BIT2, BIT6, BIT7, BIT3, BIT4, BIT0>(primes, &sieve[0], sieve.size());
 }
 
-/// For sieving primes of type n % 30 == 29
-void EratMedium::crossOff_29(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff6(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  auto buckets = buckets_.data();
-  MemoryPool& memoryPool = *memoryPool_;
-  SievingPrime* prime = bucket->begin();
-  SievingPrime* end = bucket->end();
-  std::size_t wheelIndex = prime->getWheelIndex();
-
-  for (; prime != end; prime++)
-  {
-    std::size_t sievingPrime = prime->getSievingPrime();
-    std::size_t i = prime->getMultipleIndex();
-    std::size_t dist0 = sievingPrime * 6 + 6;
-    std::size_t dist1 = sievingPrime * 4 + 4;
-    std::size_t dist2 = sievingPrime * 2 + 2;
-    std::size_t dist6 = sievingPrime * 6 + 5;
-
-    ASSERT(wheelIndex >= 48);
-    ASSERT(wheelIndex <= 55);
-
-    switch (wheelIndex)
-    {
-      default: UNREACHABLE;
-
-      for (;;)
-      {
-        case 48: CHECK_FINISHED(48); sieve[i] &= BIT6; i += dist0; FALLTHROUGH;
-        case 49: CHECK_FINISHED(49); sieve[i] &= BIT5; i += dist1; FALLTHROUGH;
-        case 50: CHECK_FINISHED(50); sieve[i] &= BIT4; i += dist2; FALLTHROUGH;
-        case 51: CHECK_FINISHED(51); sieve[i] &= BIT3; i += dist1; FALLTHROUGH;
-        case 52: CHECK_FINISHED(52); sieve[i] &= BIT2; i += dist2; FALLTHROUGH;
-        case 53: CHECK_FINISHED(53); sieve[i] &= BIT1; i += dist1; FALLTHROUGH;
-        case 54: CHECK_FINISHED(54); sieve[i] &= BIT0; i += dist6; FALLTHROUGH;
-        case 55: CHECK_FINISHED(55); sieve[i] &= BIT7; i += dist2;
-      }
-    }
-  }
+  crossOffByResidue<6, 48, 27, 29,
+                    0, 6, 10, 12, 16, 18, 22, 27,
+                    BIT6, BIT5, BIT4, BIT3, BIT2, BIT1, BIT0, BIT7>(primes, &sieve[0], sieve.size());
 }
 
-/// For sieving primes of type n % 30 == 1
-void EratMedium::crossOff_31(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff7(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  auto buckets = buckets_.data();
-  MemoryPool& memoryPool = *memoryPool_;
-  SievingPrime* prime = bucket->begin();
-  SievingPrime* end = bucket->end();
-  std::size_t wheelIndex = prime->getWheelIndex();
-
-  for (; prime != end; prime++)
-  {
-    std::size_t sievingPrime = prime->getSievingPrime();
-    std::size_t i = prime->getMultipleIndex();
-    std::size_t dist0 = sievingPrime * 6 + 1;
-    std::size_t dist1 = sievingPrime * 4 + 0;
-    std::size_t dist2 = sievingPrime * 2 + 0;
-    std::size_t dist6 = sievingPrime * 6 + 0;
-
-    ASSERT(wheelIndex >= 56);
-    ASSERT(wheelIndex <= 63);
-
-    switch (wheelIndex)
-    {
-      default: UNREACHABLE;
-
-      for (;;)
-      {
-        case 56: CHECK_FINISHED(56); sieve[i] &= BIT7; i += dist0; FALLTHROUGH;
-        case 57: CHECK_FINISHED(57); sieve[i] &= BIT0; i += dist1; FALLTHROUGH;
-        case 58: CHECK_FINISHED(58); sieve[i] &= BIT1; i += dist2; FALLTHROUGH;
-        case 59: CHECK_FINISHED(59); sieve[i] &= BIT2; i += dist1; FALLTHROUGH;
-        case 60: CHECK_FINISHED(60); sieve[i] &= BIT3; i += dist2; FALLTHROUGH;
-        case 61: CHECK_FINISHED(61); sieve[i] &= BIT4; i += dist1; FALLTHROUGH;
-        case 62: CHECK_FINISHED(62); sieve[i] &= BIT5; i += dist6; FALLTHROUGH;
-        case 63: CHECK_FINISHED(63); sieve[i] &= BIT6; i += dist2;
-      }
-    }
-  }
+  crossOffByResidue<7, 56, 1, 1,
+                    0, 1, 1, 1, 1, 1, 1, 1,
+                    BIT7, BIT0, BIT1, BIT2, BIT3, BIT4, BIT5, BIT6>(primes, &sieve[0], sieve.size());
 }
 
 } // namespace
