@@ -169,6 +169,7 @@ void EratSmall::init(uint64_t stop,
   maxPrime_ = maxPrime;
   l1CacheSize_ = (std::size_t) l1CacheSize;
   std::size_t count = primeCountUpper(maxPrime);
+
   for (auto& primes : primeVectors_)
   {
     primes.clear();
