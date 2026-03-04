@@ -29,23 +29,6 @@ namespace primesieve {
 
 namespace {
 
-const uint8_t wheel30DistMul[8] =
-{
-  6, 4, 2, 4, 2, 4, 6, 2
-};
-
-const uint8_t wheel30DistAdd[8][8] =
-{
-  { 1, 1, 0, 1, 1, 1, 1, 1 },
-  { 2, 1, 1, 2, 0, 2, 2, 1 },
-  { 2, 2, 1, 2, 1, 1, 3, 1 },
-  { 3, 3, 1, 2, 1, 2, 4, 1 },
-  { 4, 2, 2, 2, 1, 3, 4, 1 },
-  { 5, 3, 1, 3, 2, 3, 5, 1 },
-  { 6, 4, 2, 4, 2, 4, 5, 2 },
-  { 1, 0, 0, 0, 0, 0, 0, 0 }
-};
-
 const uint8_t wheel30Masks[8][8] =
 {
   { BIT0, BIT4, BIT3, BIT7, BIT6, BIT2, BIT1, BIT5 },
@@ -90,20 +73,19 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
     std::size_t maxOffset = sievingPrime * 28 + MAX_OFFSET_ADD;
     std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
     std::size_t loopDist = sievingPrime * 30 + LOOP_ADD;
-    const uint8_t* distAdd = wheel30DistAdd[GROUP];
     const uint8_t* masks = wheel30Masks[GROUP];
     std::size_t s0, s1, s2, s3, s4, s5, s6, s7;
 
     const Array<std::size_t, 8> adv =
     {
-      sievingPrime * wheel30DistMul[0] + distAdd[0],
-      sievingPrime * wheel30DistMul[1] + distAdd[1],
-      sievingPrime * wheel30DistMul[2] + distAdd[2],
-      sievingPrime * wheel30DistMul[3] + distAdd[3],
-      sievingPrime * wheel30DistMul[4] + distAdd[4],
-      sievingPrime * wheel30DistMul[5] + distAdd[5],
-      sievingPrime * wheel30DistMul[6] + distAdd[6],
-      sievingPrime * wheel30DistMul[7] + distAdd[7]
+      sievingPrime * 6 + OFF_1 - OFF_0,
+      sievingPrime * 4 + OFF_2 - OFF_1,
+      sievingPrime * 2 + OFF_3 - OFF_2,
+      sievingPrime * 4 + OFF_4 - OFF_3,
+      sievingPrime * 2 + OFF_5 - OFF_4,
+      sievingPrime * 4 + OFF_6 - OFF_5,
+      sievingPrime * 6 + OFF_7 - OFF_6,
+      sievingPrime * 2 + LOOP_ADD - OFF_7
     };
 
     // Get ready for loop unrolling.
