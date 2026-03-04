@@ -69,9 +69,9 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
     std::size_t state = wheelIndex & 7;
     ASSERT(wheelIndex >= BASE);
     ASSERT(wheelIndex <= BASE + 7);
-    std::size_t loopDist = sievingPrime * 30 + LOOP_ADD;
     const uint8_t* masks = wheel30Masks[GROUP];
-    std::size_t s0, s1, s2, s3, s4, s5, s6, s7;
+    std::size_t maxOffset = sievingPrime * 28 + MAX_OFFSET_ADD;
+    std::size_t unroll_limit = std::max(sieveSize, maxOffset) - maxOffset;
 
     const Array<std::size_t, 8> adv =
     {
@@ -94,27 +94,18 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
       i += adv[state];
     }
 
-    s0 = sievingPrime *  0 + OFF_0;
-    s1 = sievingPrime *  6 + OFF_1;
-    s2 = sievingPrime * 10 + OFF_2;
-    s3 = sievingPrime * 12 + OFF_3;
-    s4 = sievingPrime * 16 + OFF_4;
-    s5 = sievingPrime * 18 + OFF_5;
-    s6 = sievingPrime * 22 + OFF_6;
-    s7 = sievingPrime * 28 + OFF_7;
-
     // Each iteration removes the next 8
     // multiples of the sievingPrime.
-    for (; i + s7 < sieveSize; i += loopDist)
+    while (i < unroll_limit)
     {
-      sieve[i + s0] &= MASK_0;
-      sieve[i + s1] &= MASK_1;
-      sieve[i + s2] &= MASK_2;
-      sieve[i + s3] &= MASK_3;
-      sieve[i + s4] &= MASK_4;
-      sieve[i + s5] &= MASK_5;
-      sieve[i + s6] &= MASK_6;
-      sieve[i + s7] &= MASK_7;
+      sieve[i] &= MASK_0; i += adv[0];
+      sieve[i] &= MASK_1; i += adv[1];
+      sieve[i] &= MASK_2; i += adv[2];
+      sieve[i] &= MASK_3; i += adv[3];
+      sieve[i] &= MASK_4; i += adv[4];
+      sieve[i] &= MASK_5; i += adv[5];
+      sieve[i] &= MASK_6; i += adv[6];
+      sieve[i] &= MASK_7; i += adv[7];
     }
 
     CHECK_FINISHED(0); sieve[i] &= MASK_0; i += adv[0];
