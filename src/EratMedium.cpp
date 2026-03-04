@@ -69,9 +69,6 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
     std::size_t state = wheelIndex & 7;
     ASSERT(wheelIndex >= BASE);
     ASSERT(wheelIndex <= BASE + 7);
-
-    std::size_t maxOffset = sievingPrime * 28 + MAX_OFFSET_ADD;
-    std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
     std::size_t loopDist = sievingPrime * 30 + LOOP_ADD;
     const uint8_t* masks = wheel30Masks[GROUP];
     std::size_t s0, s1, s2, s3, s4, s5, s6, s7;
@@ -108,7 +105,7 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
 
     // Each iteration removes the next 8
     // multiples of the sievingPrime.
-    for (; i < limit; i += loopDist)
+    for (; i + s7 < sieveSize; i += loopDist)
     {
       sieve[i + s0] &= MASK_0;
       sieve[i + s1] &= MASK_1;
@@ -120,14 +117,14 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
       sieve[i + s7] &= MASK_7;
     }
 
-    // Cross off the last few multiples where i >= limit.
-    for (;; state = (state + 1) & 7)
-    {
-      wheelIndex = BASE + state;
-      CHECK_FINISHED(wheelIndex);
-      sieve[i] &= masks[state];
-      i += adv[state];
-    }
+    CHECK_FINISHED(0); sieve[i] &= MASK_0; i += adv[0];
+    CHECK_FINISHED(1); sieve[i] &= MASK_1; i += adv[1];
+    CHECK_FINISHED(2); sieve[i] &= MASK_2; i += adv[2];
+    CHECK_FINISHED(3); sieve[i] &= MASK_3; i += adv[3];
+    CHECK_FINISHED(4); sieve[i] &= MASK_4; i += adv[4];
+    CHECK_FINISHED(5); sieve[i] &= MASK_5; i += adv[5];
+    CHECK_FINISHED(6); sieve[i] &= MASK_6; i += adv[6];
+    CHECK_FINISHED(7); sieve[i] &= MASK_7; i += adv[7];
 
     next_iteration:;
   }
