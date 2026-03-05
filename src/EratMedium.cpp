@@ -82,7 +82,7 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
       sievingPrime * 2 + LOOP_ADD - OFF_7
     };
 
-    // Get ready for loop unrolling.
+    // Get ready for loop unrolling
     for (; w; w = (w + 1) & 7)
     {
       CHECK_FINISHED(w);
