@@ -42,7 +42,6 @@ const uint8_t wheel30Masks[8][8] =
 };
 
 template <uint8_t GROUP,
-          uint8_t BASE,
           uint8_t MAX_OFFSET_ADD,
           uint8_t LOOP_ADD,
           uint8_t OFF_0, uint8_t OFF_1, uint8_t OFF_2, uint8_t OFF_3,
@@ -65,13 +64,11 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
   {
     std::size_t sievingPrime = prime.getSievingPrime();
     std::size_t i = prime.getMultipleIndex();
-    std::size_t wheelIndex = prime.getWheelIndex();
-    std::size_t state = wheelIndex & 7;
-    ASSERT(wheelIndex >= BASE);
-    ASSERT(wheelIndex <= BASE + 7);
-    const uint8_t* masks = wheel30Masks[GROUP];
+    std::size_t w = prime.getWheelIndex();
     std::size_t max_unroll_index = sievingPrime * 28 + MAX_OFFSET_ADD;
     std::size_t unroll_limit = std::max(sieveSize, max_unroll_index) - max_unroll_index;
+    const uint8_t* masks = wheel30Masks[GROUP];
+    ASSERT(w < 8);
 
     const Array<std::size_t, 8> adv =
     {
@@ -86,12 +83,11 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
     };
 
     // Get ready for loop unrolling.
-    for (; state; state = (state + 1) & 7)
+    for (; w; w = (w + 1) & 7)
     {
-      wheelIndex = BASE + state;
-      CHECK_FINISHED(wheelIndex);
-      sieve[i] &= masks[state];
-      i += adv[state];
+      CHECK_FINISHED(w);
+      sieve[i] &= masks[w];
+      i += adv[w];
     }
 
     // Each iteration removes the next 8
@@ -153,8 +149,10 @@ void EratMedium::storeSievingPrime(uint64_t prime,
                                   uint64_t wheelIndex)
 {
   ASSERT(prime <= maxPrime_);
+  wheelIndex %= 8;
   uint64_t sievingPrime = prime / 30;
-  uint64_t vectorIndex = wheelOffsets_[prime % 30] / 8;
+  uint64_t wheelOffset = wheelOffsets_[prime % 30];
+  uint64_t vectorIndex = wheelOffset / 8;
   primeVectors_[vectorIndex].emplace_back(sievingPrime, multipleIndex, wheelIndex);
 }
 
@@ -186,56 +184,56 @@ void EratMedium::crossOff(Vector<uint8_t>& sieve)
 
 void EratMedium::crossOff0(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  crossOffByResidue<0, 0, 6, 7,
+  crossOffByResidue<0, 6, 7,
                     0, 1, 2, 2, 3, 4, 5, 6,
                     BIT0, BIT4, BIT3, BIT7, BIT6, BIT2, BIT1, BIT5>(primes, &sieve[0], sieve.size());
 }
 
 void EratMedium::crossOff1(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  crossOffByResidue<1, 8, 10, 11,
+  crossOffByResidue<1, 10, 11,
                     0, 2, 3, 4, 6, 6, 8, 10,
                     BIT1, BIT3, BIT7, BIT5, BIT0, BIT6, BIT2, BIT4>(primes, &sieve[0], sieve.size());
 }
 
 void EratMedium::crossOff2(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  crossOffByResidue<2, 16, 12, 13,
+  crossOffByResidue<2, 12, 13,
                     0, 2, 4, 5, 7, 8, 9, 12,
                     BIT2, BIT7, BIT5, BIT4, BIT1, BIT0, BIT6, BIT3>(primes, &sieve[0], sieve.size());
 }
 
 void EratMedium::crossOff3(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  crossOffByResidue<3, 24, 16, 17,
+  crossOffByResidue<3, 16, 17,
                     0, 3, 6, 7, 9, 10, 12, 16,
                     BIT3, BIT6, BIT0, BIT1, BIT4, BIT5, BIT7, BIT2>(primes, &sieve[0], sieve.size());
 }
 
 void EratMedium::crossOff4(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  crossOffByResidue<4, 32, 18, 19,
+  crossOffByResidue<4, 18, 19,
                     0, 4, 6, 8, 10, 11, 14, 18,
                     BIT4, BIT2, BIT6, BIT0, BIT5, BIT7, BIT3, BIT1>(primes, &sieve[0], sieve.size());
 }
 
 void EratMedium::crossOff5(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  crossOffByResidue<5, 40, 22, 23,
+  crossOffByResidue<5, 22, 23,
                     0, 5, 8, 9, 12, 14, 17, 22,
                     BIT5, BIT1, BIT2, BIT6, BIT7, BIT3, BIT4, BIT0>(primes, &sieve[0], sieve.size());
 }
 
 void EratMedium::crossOff6(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  crossOffByResidue<6, 48, 27, 29,
+  crossOffByResidue<6, 27, 29,
                     0, 6, 10, 12, 16, 18, 22, 27,
                     BIT6, BIT5, BIT4, BIT3, BIT2, BIT1, BIT0, BIT7>(primes, &sieve[0], sieve.size());
 }
 
 void EratMedium::crossOff7(Vector<SievingPrime>& primes, Vector<uint8_t>& sieve)
 {
-  crossOffByResidue<7, 56, 1, 1,
+  crossOffByResidue<7, 1, 1,
                     0, 1, 1, 1, 1, 1, 1, 1,
                     BIT7, BIT0, BIT1, BIT2, BIT3, BIT4, BIT5, BIT6>(primes, &sieve[0], sieve.size());
 }
