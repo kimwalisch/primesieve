@@ -70,8 +70,8 @@ void crossOffByResidue(Vector<SievingPrime>& primes,
     ASSERT(wheelIndex >= BASE);
     ASSERT(wheelIndex <= BASE + 7);
     const uint8_t* masks = wheel30Masks[GROUP];
-    std::size_t maxOffset = sievingPrime * 28 + MAX_OFFSET_ADD;
-    std::size_t unroll_limit = std::max(sieveSize, maxOffset) - maxOffset;
+    std::size_t max_unroll_index = sievingPrime * 28 + MAX_OFFSET_ADD;
+    std::size_t unroll_limit = std::max(sieveSize, max_unroll_index) - max_unroll_index;
 
     const Array<std::size_t, 8> adv =
     {
