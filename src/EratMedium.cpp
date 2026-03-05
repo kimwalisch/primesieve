@@ -154,15 +154,7 @@ void EratMedium::storeSievingPrime(uint64_t prime,
   uint64_t wheelOffset = wheelOffsets_[prime % 30];
   uint64_t wheelGroup = wheelOffset / 8;
   primeVectors_[wheelGroup].emplace_back(sievingPrime, multipleIndex, wheelIndex);
-}
-
-bool EratMedium::hasSievingPrimes() const
-{
-  for (const auto& primes : primeVectors_)
-    if (!primes.empty())
-      return true;
-
-  return false;
+  hasSievingPrimes_ = true;
 }
 
 /// Segmented sieve of Eratosthenes with wheel factorization

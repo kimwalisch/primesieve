@@ -30,9 +30,10 @@ class EratMedium : public Wheel30_t
 public:
   void init(uint64_t, uint64_t);
   void crossOff(Vector<uint8_t>& sieve);
-  bool hasSievingPrimes() const;
+  bool hasSievingPrimes() const { return hasSievingPrimes_; }
 private:
   uint64_t maxPrime_ = 0;
+  bool hasSievingPrimes_ = false;
   Vector<SievingPrime> primeVectors_[8];
   void storeSievingPrime(uint64_t, uint64_t, uint64_t);
   NOINLINE void crossOff0(Vector<SievingPrime>&, Vector<uint8_t>&);
