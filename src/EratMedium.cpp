@@ -152,8 +152,8 @@ void EratMedium::storeSievingPrime(uint64_t prime,
   wheelIndex %= 8;
   uint64_t sievingPrime = prime / 30;
   uint64_t wheelOffset = wheelOffsets_[prime % 30];
-  uint64_t vectorIndex = wheelOffset / 8;
-  primeVectors_[vectorIndex].emplace_back(sievingPrime, multipleIndex, wheelIndex);
+  uint64_t wheelGroup = wheelOffset / 8;
+  primeVectors_[wheelGroup].emplace_back(sievingPrime, multipleIndex, wheelIndex);
 }
 
 bool EratMedium::hasSievingPrimes() const
