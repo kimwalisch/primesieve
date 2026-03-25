@@ -28,7 +28,7 @@ jobs:
           echo "PROJECT_VERSION=$($VersionString.Matches.Groups[1].Value)" >> $env:GITHUB_ENV
 
       - name: Upload Windows x64 CI artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: primesieve-${{ env.PROJECT_VERSION }}-win-x64
           path: build-release/primesieve-${{ env.PROJECT_VERSION }}-win-x64/*
@@ -55,7 +55,7 @@ jobs:
           echo "PROJECT_VERSION=$($VersionString.Matches.Groups[1].Value)" >> $env:GITHUB_ENV
 
       - name: Upload Windows arm64 CI artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: primesieve-${{ env.PROJECT_VERSION }}-win-arm64
           path: build-release/primesieve-${{ env.PROJECT_VERSION }}-win-arm64/*
