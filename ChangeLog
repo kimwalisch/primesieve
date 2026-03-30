@@ -1,3 +1,8 @@
+Changes in version 12.14, 30/03/2026
+====================================
+
+* Vector.hpp: Fix potential double free issue.
+
 Changes in version 12.13, 01/02/2026
 ====================================
 

@@ -1,7 +1,7 @@
 ///
 /// @file  Vector.hpp
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -62,19 +62,25 @@ public:
 
   ~Vector()
   {
-    destroy(array_, end_);
-    Allocator().deallocate(array_, capacity());
+    if (array_)
+    {
+      destroy(array_, end_);
+      Allocator().deallocate(array_, capacity());
+    }
   }
 
   /// Free all memory, the Vector
   /// can be reused afterwards.
   void deallocate() noexcept
   {
-    destroy(array_, end_);
-    Allocator().deallocate(array_, capacity());
-    array_ = nullptr;
-    end_ = nullptr;
-    capacity_ = nullptr;
+    if (array_)
+    {
+      destroy(array_, end_);
+      Allocator().deallocate(array_, capacity());
+      array_ = nullptr;
+      end_ = nullptr;
+      capacity_ = nullptr;
+    }
   }
 
   /// Reset the Vector, but do not free its
