@@ -327,6 +327,7 @@ private:
                     "Vector<T> only supports nothrow moveable types!");
 
       uninitialized_move_n(old, old_size, array_);
+      destroy(old, old + old_size);
       Allocator().deallocate(old, old_capacity);
     }
   }
