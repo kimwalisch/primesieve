@@ -347,7 +347,7 @@ private:
     std::size_t new_capacity = capacity() * 2;
 
     // The minimum allocation size of malloc is usually 16 bytes
-    constexpr std::size_t min_capacity = std::max(std::size_t(1), 16 / sizeof(T));
+    std::size_t min_capacity = std::max(std::size_t(1), 16 / sizeof(T));
     new_capacity = std::max(min_capacity, new_capacity);
     ASSERT(capacity() < new_capacity);
 
