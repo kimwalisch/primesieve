@@ -41,7 +41,7 @@
 namespace primesieve {
 
 bool has_arm_sve();
-  
+
 } // namespace
 
 #endif

@@ -79,7 +79,7 @@
   provides ```next_prime()``` and ```prev_prime()``` methods.
   ```primesieve::iterator``` is also used for storing primes in a vector
   or an array.
-  
+
 * **CpuInfo** is used to get the CPU's L1 and L2 cache sizes. The
   best prime sieving performance is achieved using a sieve array
   size that matches the CPU's L1 or L2 cache size (depending on the
