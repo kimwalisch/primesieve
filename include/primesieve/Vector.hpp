@@ -340,7 +340,7 @@ public:
 
 private:
 
-  std::size_t increase_capacity()
+  std::size_t increase_capacity() const
   {
     // GCC & Clang's std::vector grow the capacity by 2x
     // for every call to resize() with n > capacity().
