@@ -1,7 +1,8 @@
-Changes in version 12.14, 01/04/2026
+Changes in version 12.14, 05/04/2026
 ====================================
 
 * Vector.hpp: Improve Vector exception safety.
+* GitHub Actions CI: Fix node 20 deprecation warning.
 
 Changes in version 12.13, 01/02/2026
 ====================================
