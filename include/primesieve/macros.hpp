@@ -1,7 +1,7 @@
 ///
 /// @file  macros.hpp
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -106,6 +106,25 @@
   #define UNREACHABLE std::unreachable()
 #else
   #define UNREACHABLE
+#endif
+
+#if __cplusplus >= 201703L && \
+    __has_cpp_attribute(maybe_unused)
+  #define MAYBE_UNUSED [[maybe_unused]]
+#elif __has_attribute(unused)
+  #define MAYBE_UNUSED __attribute__((unused))
+#else
+  #define MAYBE_UNUSED
+#endif
+
+// Silence GCC < 12 warning:
+// warning: 'unused' attribute ignored [-Wattributes]
+#if defined(__GNUC__) && \
+   !defined(__clang__)
+  #if __GNUC__ < 12
+    #undef MAYBE_UNUSED
+    #define MAYBE_UNUSED
+  #endif
 #endif
 
 #endif
