@@ -2,7 +2,7 @@
 /// @file   config.hpp
 /// @brief  primesieve compile time constants.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -59,6 +59,15 @@ constexpr uint64_t MAX_CACHE_ITERATOR = 1 << 30;
 /// @pre MIN_THREAD_DISTANCE >= 100
 ///
 constexpr uint64_t MIN_THREAD_DISTANCE = (uint64_t) 1e7;
+
+/// Maximum CPU cache line size in bytes (of all CPU types that
+/// will be produced over the next few decades).
+/// In order to prevent false sharing when using a mutex (or atomic
+/// variable) we need to ensure that this mutex is stored on a
+/// cache line where no other data is stored. We achieve this by
+/// adding MAX_CACHE_LINE_SIZE bytes before and after the mutex.
+///
+constexpr int MAX_CACHE_LINE_SIZE = 512;
 
 /// sieveSize = sqrt(stop) * FACTOR_SIEVESIZE.
 ///

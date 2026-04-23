@@ -2,7 +2,7 @@
 /// @file   ParallelSieve.cpp
 /// @brief  Multi-threaded prime sieve using std::async.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -22,7 +22,6 @@
 #include <atomic>
 #include <chrono>
 #include <future>
-#include <mutex>
 
 using std::size_t;
 using namespace primesieve;
@@ -118,12 +117,41 @@ uint64_t ParallelSieve::align(uint64_t n) const
 /// Print sieving status to stdout
 bool ParallelSieve::tryUpdateStatus(uint64_t dist)
 {
-  std::unique_lock<std::mutex> lock(mutex_, std::try_to_lock);
+  // For printing the status it is OK to use a non-blocking
+  // userspace lock because printing the status is a non
+  // essential operation and hence even if the OS preempts
+  // the thread holding the lock it won't cause any
+  // deadlocks or performance issues, it will only delay
+  // the status output.
+  struct LockGuard
+  {
+  public:
+    LockGuard(std::atomic<bool>& lock)
+      : lock_(&lock)
+    {
+      bool expected = false;
+      is_locked_ = lock.compare_exchange_weak(expected, true, std::memory_order_acquire);
+    }
+    ~LockGuard()
+    {
+      if (is_locked_)
+        lock_->store(false, std::memory_order_release);
+    }
+    bool owns_lock() const
+    {
+      return is_locked_;
+    }
+  private:
+    std::atomic<bool>* lock_ = nullptr;
+    bool is_locked_ = false;
+  };
 
-  if (lock.owns_lock())
+  LockGuard lockGuard(print_lock_);
+
+  if (lockGuard.owns_lock())
     updateStatus(dist);
 
-  return lock.owns_lock();
+  return lockGuard.owns_lock();
 }
 
 /// Sieve the primes and prime k-tuplets in [start, stop]
@@ -149,6 +177,7 @@ void ParallelSieve::sieve()
     uint64_t iters = ((dist - 1) / threadDist) + 1;
     threads = inBetween(1, threads, iters);
     std::atomic<uint64_t> a(0);
+    print_lock_ = false;
 
     // Each thread executes 1 task
     auto task = [&]()
