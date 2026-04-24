@@ -59,7 +59,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     throw primesieve_error("nth_prime(n): n must be <= " + std::to_string(max_n));
 
   setStart(start);
-  auto t1 = std::chrono::system_clock::now();
+  auto t1 = std::chrono::steady_clock::now();
   uint64_t nApprox = checkedAdd(primePiApprox(start), n);
   nApprox = std::min(nApprox, max_n);
   uint64_t primeApprox = nthPrimeApprox(nApprox);
@@ -105,7 +105,7 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     }
   }
 
-  auto t2 = std::chrono::system_clock::now();
+  auto t2 = std::chrono::steady_clock::now();
   std::chrono::duration<double> seconds = t2 - t1;
   seconds_ = seconds.count();
 
@@ -124,7 +124,7 @@ uint64_t PrimeSieve::negativeNthPrime(int64_t n, uint64_t start)
     throw primesieve_error("nth_prime(n): abs(n) must be <= " + std::to_string(max_n));
 
   setStart(start);
-  auto t1 = std::chrono::system_clock::now();
+  auto t1 = std::chrono::steady_clock::now();
   uint64_t nApprox = checkedSub(primePiApprox(start), n);
   nApprox = std::min(nApprox, max_n);
   uint64_t primeApprox = nthPrimeApprox(nApprox);
@@ -170,7 +170,7 @@ uint64_t PrimeSieve::negativeNthPrime(int64_t n, uint64_t start)
     }
   }
 
-  auto t2 = std::chrono::system_clock::now();
+  auto t2 = std::chrono::steady_clock::now();
   std::chrono::duration<double> seconds = t2 - t1;
   seconds_ = seconds.count();
 

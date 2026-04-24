@@ -293,7 +293,7 @@ void stressTest(const CmdOptions& opts)
   int maxThreads = std::thread::hardware_concurrency();
   int threads = (opts.threads > 0) ? opts.threads : maxThreads;
   threads = inBetween(1, threads, maxThreads);
-  auto timeBeginning = std::chrono::system_clock::now();
+  auto timeBeginning = std::chrono::steady_clock::now();
   auto lastStatusOutput = timeBeginning;
   int statusOutputDelay = 0;
   std::mutex mutex;
@@ -323,9 +323,9 @@ void stressTest(const CmdOptions& opts)
           uint64_t threadStart = start + ChunkSize * (i - 1);
           uint64_t threadStop = threadStart + ChunkSize;
 
-          auto t1 = std::chrono::system_clock::now();
+          auto t1 = std::chrono::steady_clock::now();
           uint64_t count = countPrimes(i, threadStart, threadStop);
-          auto t2 = std::chrono::system_clock::now();
+          auto t2 = std::chrono::steady_clock::now();
           std::chrono::duration<double> secsThread = t2 - t1;
 
           // If an error occurs we always print it

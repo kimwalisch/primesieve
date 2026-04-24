@@ -192,7 +192,7 @@ void smallNthPrimes()
 
 void test()
 {
-  auto t1 = std::chrono::system_clock::now();
+  auto t1 = std::chrono::steady_clock::now();
 
   countSmallPrimes();
   std::cout << std::endl;
@@ -203,7 +203,7 @@ void test()
   std::cout << std::endl;
   smallNthPrimes();
 
-  auto t2 = std::chrono::system_clock::now();
+  auto t2 = std::chrono::steady_clock::now();
   std::chrono::duration<double> seconds = t2 - t1;
 
   std::cout << std::endl;

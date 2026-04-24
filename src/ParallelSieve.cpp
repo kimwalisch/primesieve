@@ -143,7 +143,7 @@ void ParallelSieve::sieve()
   else
   {
     setStatus(0);
-    auto t1 = std::chrono::system_clock::now();
+    auto t1 = std::chrono::steady_clock::now();
     uint64_t dist = getDistance();
     uint64_t threadDist = getThreadDistance(threads);
     uint64_t iters = ((dist - 1) / threadDist) + 1;
@@ -184,7 +184,7 @@ void ParallelSieve::sieve()
     for (auto& f : futures)
       counts_ += f.get();
 
-    auto t2 = std::chrono::system_clock::now();
+    auto t2 = std::chrono::steady_clock::now();
     std::chrono::duration<double> seconds = t2 - t1;
     seconds_ = seconds.count();
     setStatus(100);
