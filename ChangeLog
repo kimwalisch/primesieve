@@ -1,7 +1,7 @@
-Changes in version 12.14, 23/04/2026
+Changes in version 12.14, 24/04/2026
 ====================================
 
-* ParallelSieve.cpp: Use std::atomic instead of mutex.
+* PrimeSieveClass.cpp: Reduce mutex contention.
 * config.hpp: Add MAX_CACHE_LINE_SIZE.
 * macros.hpp: Add MAYBE_UNUSED.
 * Vector.hpp: Improve Vector exception safety.

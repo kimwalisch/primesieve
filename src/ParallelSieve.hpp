@@ -18,7 +18,7 @@
 #include <primesieve/macros.hpp>
 
 #include <stdint.h>
-#include <atomic>
+#include <mutex>
 
 namespace primesieve {
 
@@ -41,7 +41,7 @@ private:
 
   int numThreads_ = 0;
   MAYBE_UNUSED char pad1[config::MAX_CACHE_LINE_SIZE];
-  std::atomic<bool> print_lock_;
+  std::mutex mutex_;
   MAYBE_UNUSED char pad2[config::MAX_CACHE_LINE_SIZE];
 };
 

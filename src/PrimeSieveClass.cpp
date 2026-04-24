@@ -199,24 +199,42 @@ void PrimeSieve::setStatus(double percent)
 
 void PrimeSieve::updateStatus(uint64_t dist)
 {
+  // This is a worker thread, so we need to send
+  // the update status request to the parent
+  // object which handles thread synchronization.
   if (parent_)
   {
-    // This is a worker thread, so we need
-    // to send the update status request
-    // to the parent object which handles
-    // thread synchronization.
     updateDistance_ += dist;
-    if (parent_->tryUpdateStatus(updateDistance_))
+    bool tryUpdate = true;
+    auto time = std::chrono::steady_clock::now();
+
+    // tryUpdateStatus() uses a mutex. This code
+    // reduces lock contention: each thread may
+    // only try to lock the mutex every 0.03 secs
+    if (lastUpdateTime_ != std::chrono::steady_clock::time_point{})
+    {
+      std::chrono::duration<double> elapsed = time - lastUpdateTime_;
+      tryUpdate = (elapsed.count() >= 0.03);
+    }
+
+    if (tryUpdate &&
+        parent_->tryUpdateStatus(updateDistance_))
+    {
       updateDistance_ = 0;
+      lastUpdateTime_ = time;
+    }
   }
   else
   {
     sievedDistance_ += dist;
     double percent = 100;
+
     if (getDistance() > 0)
       percent = sievedDistance_ * 100.0 / getDistance();
-    auto old = percent_;
+
+    double old = percent_;
     percent_ = std::min(percent, 100.0);
+
     if (isFlag(PRINT_STATUS))
       printStatus(old, percent_);
   }
@@ -282,7 +300,7 @@ void PrimeSieve::sieve()
     return;
 
   setStatus(0);
-  auto t1 = std::chrono::system_clock::now();
+  auto t1 = std::chrono::steady_clock::now();
 
   if (start_ <= 5)
     processSmallPrimes();
@@ -293,7 +311,7 @@ void PrimeSieve::sieve()
     countPrintPrimes.sieve();
   }
 
-  auto t2 = std::chrono::system_clock::now();
+  auto t2 = std::chrono::steady_clock::now();
   std::chrono::duration<double> seconds = t2 - t1;
   seconds_ = seconds.count();
   setStatus(100);

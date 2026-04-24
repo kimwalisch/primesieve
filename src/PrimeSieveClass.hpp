@@ -4,7 +4,7 @@
 ///         sieving. It is used for printing and counting primes
 ///         and for computing the nth prime.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -14,7 +14,9 @@
 #define PRIMESIEVE_CLASS_HPP
 
 #include <primesieve/Vector.hpp>
+
 #include <stdint.h>
+#include <chrono>
 
 namespace primesieve {
 
@@ -98,6 +100,7 @@ protected:
 private:
   uint64_t sievedDistance_ = 0;
   uint64_t updateDistance_ = 0;
+  std::chrono::steady_clock::time_point lastUpdateTime_{};
   /// Default flags
   int flags_ = COUNT_PRIMES;
   /// Sieve size in KiB
