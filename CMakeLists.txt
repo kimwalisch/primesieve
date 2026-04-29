@@ -122,12 +122,6 @@ endif()
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-# MSVC DLL support (Windows) #########################################
-
-if(WIN32 AND NOT MINGW)
-    set(WIN32_MSVC_COMPATIBLE ON)
-endif()
-
 # Check if libatomic is needed (old 32-bit systems) ##################
 
 include("${PROJECT_SOURCE_DIR}/cmake/libatomic.cmake")
@@ -139,14 +133,11 @@ find_package(Threads REQUIRED QUIET)
 if(BUILD_SHARED_LIBS)
     add_library(libprimesieve SHARED ${LIB_SRC})
     set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
-    target_link_libraries(libprimesieve PRIVATE Threads::Threads ${PRIMESIEVE_LINK_LIBRARIES})
     set_target_properties(libprimesieve PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
     set_target_properties(libprimesieve PROPERTIES VERSION ${PROJECT_VERSION})
+    set_target_properties(libprimesieve PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    target_link_libraries(libprimesieve PRIVATE Threads::Threads ${PRIMESIEVE_LINK_LIBRARIES})
     target_compile_definitions(libprimesieve PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
-
-    if(WIN32_MSVC_COMPATIBLE)
-        set_target_properties(libprimesieve PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    endif()
 
     target_compile_features(libprimesieve
     PUBLIC
@@ -178,7 +169,8 @@ if(BUILD_STATIC_LIBS)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${PRIMESIEVE_LINK_LIBRARIES})
     target_compile_definitions(libprimesieve-static PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
 
-    if(WIN32_MSVC_COMPATIBLE)
+    if(CMAKE_IMPORT_LIBRARY_SUFFIX AND
+       "${CMAKE_IMPORT_LIBRARY_SUFFIX}" STREQUAL "${CMAKE_STATIC_LIBRARY_SUFFIX}")
         set_target_properties(libprimesieve-static PROPERTIES ARCHIVE_OUTPUT_NAME primesieve_static)
     endif()
 
