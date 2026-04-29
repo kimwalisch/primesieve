@@ -26,7 +26,6 @@ else()
 endif()
 
 option(WITH_MULTIARCH       "Enable runtime dispatching to fastest supported CPU instruction set" ON)
-option(WITH_MSVC_CRT_STATIC "Link primesieve.lib with /MT instead of the default /MD" OFF)
 
 # Check if primesieve is top level project ###########################
 
@@ -127,10 +126,6 @@ include(CMakePackageConfigHelpers)
 
 if(WIN32 AND NOT MINGW)
     set(WIN32_MSVC_COMPATIBLE ON)
-    if(BUILD_SHARED_LIBS)
-        # Export symbols to .def file
-        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    endif()
 endif()
 
 # Check if libatomic is needed (old 32-bit systems) ##################
@@ -150,13 +145,7 @@ if(BUILD_SHARED_LIBS)
     target_compile_definitions(libprimesieve PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
 
     if(WIN32_MSVC_COMPATIBLE)
-        # On Windows the shared library will be named primesieve.dll
-        # and the associated import library will be named
-        # primesieve.lib. This is an issue as the static library
-        # is also named primesieve.lib. Hence we rename the import
-        # library to primesieve.dll.lib. The Rust programming
-        # language uses the same naming convention.
-        set_target_properties(libprimesieve PROPERTIES IMPORT_SUFFIX ".dll.lib")
+        set_target_properties(libprimesieve PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
     endif()
 
     target_compile_features(libprimesieve
@@ -189,8 +178,8 @@ if(BUILD_STATIC_LIBS)
     target_link_libraries(libprimesieve-static PRIVATE Threads::Threads ${PRIMESIEVE_LINK_LIBRARIES})
     target_compile_definitions(libprimesieve-static PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
 
-    if(WITH_MSVC_CRT_STATIC)
-        set_target_properties(libprimesieve-static PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")
+    if(WIN32_MSVC_COMPATIBLE)
+        set_target_properties(libprimesieve-static PROPERTIES ARCHIVE_OUTPUT_NAME primesieve_static)
     endif()
 
     target_compile_features(libprimesieve-static
@@ -245,10 +234,6 @@ if(BUILD_PRIMESIEVE)
     target_compile_definitions(primesieve PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
     target_compile_features(primesieve PRIVATE cxx_auto_type)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-    if(WITH_MSVC_CRT_STATIC)
-        set_target_properties(primesieve PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded")
-    endif()
 endif()
 
 # Install headers ####################################################
