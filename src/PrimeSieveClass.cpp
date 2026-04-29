@@ -205,24 +205,19 @@ void PrimeSieve::updateStatus(uint64_t dist)
   if (parent_)
   {
     updateDistance_ += dist;
-    bool tryUpdate = true;
     auto time = std::chrono::steady_clock::now();
 
     // tryUpdateStatus() uses a mutex. This code
     // reduces lock contention: each thread may
     // only try to lock the mutex every 0.03 secs
-    if (lastUpdateTime_ != std::chrono::steady_clock::time_point{})
-    {
-      std::chrono::duration<double> elapsed = time - lastUpdateTime_;
-      tryUpdate = (elapsed.count() >= 0.03);
-    }
+    if (lastUpdateTime_ != std::chrono::steady_clock::time_point{} &&
+        time - lastUpdateTime_ < std::chrono::milliseconds(30))
+      return;
 
-    if (tryUpdate &&
-        parent_->tryUpdateStatus(updateDistance_))
-    {
+    lastUpdateTime_ = time;
+
+    if (parent_->tryUpdateStatus(updateDistance_))
       updateDistance_ = 0;
-      lastUpdateTime_ = time;
-    }
   }
   else
   {
