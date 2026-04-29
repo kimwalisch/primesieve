@@ -1,4 +1,4 @@
-Changes in version 12.14, 24/04/2026
+Changes in version 12.14, 29/04/2026
 ====================================
 
 * PrimeSieveClass.cpp: Reduce mutex contention.
@@ -6,6 +6,8 @@ Changes in version 12.14, 24/04/2026
 * macros.hpp: Add MAYBE_UNUSED.
 * Vector.hpp: Improve Vector exception safety.
 * GitHub Actions CI: Fix node 20 deprecation warning.
+* CMakeLists.txt: On Windows rename static library to primesieve_static.lib #183.
+* CMakeLists.txt: Remove WITH_MSVC_CRT_STATIC option.
 
 Changes in version 12.13, 01/02/2026
 ====================================

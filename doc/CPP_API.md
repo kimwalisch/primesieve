@@ -527,6 +527,10 @@ export CPLUS_INCLUDE_PATH=/usr/local/include:$CPLUS_INCLUDE_PATH
 ### Microsoft Visual C++
 
 ```sh
+# Link against static primesieve library
+cl /O2 /EHsc /MD primes.cpp /I "path\to\primesieve\include" /link "path\to\primesieve_static.lib"
+
+# Link against shared primesieve library
 cl /O2 /EHsc /MD primes.cpp /I "path\to\primesieve\include" /link "path\to\primesieve.lib"
 ```
 
