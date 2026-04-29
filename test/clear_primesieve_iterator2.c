@@ -44,6 +44,11 @@ int main(void)
   check(primes == 9592 * 10);
 
   primesieve_free_iterator(&it);
+  uint64_t prime = primesieve_next_prime(&it);
+  printf("Prime after free = %" PRIu64, prime);
+  check(prime == 2);
+
+  primesieve_free_iterator(&it);
   printf("\n");
   printf("All tests passed successfully!\n");
 

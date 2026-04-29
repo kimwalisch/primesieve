@@ -108,10 +108,10 @@ void primesieve_clear(primesieve_iterator* it)
 /// C destructor
 void primesieve_free_iterator(primesieve_iterator* it)
 {
-  if (it && it->memory)
+  if (it)
   {
     delete (IteratorData*) it->memory;
-    it->memory = nullptr;
+    primesieve_init(it);
   }
 }
 

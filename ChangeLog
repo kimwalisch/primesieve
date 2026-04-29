@@ -2,6 +2,7 @@ Changes in version 12.14, 29/04/2026
 ====================================
 
 * PrimeSieveClass.cpp: Reduce mutex contention.
+* iterator-c.cpp: Fix use after free in primesieve_free_iterator().
 * config.hpp: Add MAX_CACHE_LINE_SIZE.
 * macros.hpp: Add MAYBE_UNUSED.
 * Vector.hpp: Improve Vector exception safety.
