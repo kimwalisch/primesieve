@@ -5,9 +5,9 @@
 ///            occurs a calculator::error exception is thrown.
 ///            <https://github.com/kimwalisch/calculator>
 /// @author    Kim Walisch, <kim.walisch@gmail.com>
-/// @copyright Copyright (C) 2013-2025 Kim Walisch
+/// @copyright Copyright (C) 2013-2026 Kim Walisch
 /// @license   BSD 2-Clause, https://opensource.org/licenses/BSD-2-Clause
-/// @version   2.0
+/// @version   2.1
 ///
 /// == Supported operators ==
 ///
@@ -506,7 +506,7 @@ private:
   /// Returns the character at the current expression index or
   /// 0 if the end of the expression is reached.
   ///
-  char getCharacter() const
+  unsigned char getCharacter() const
   {
     if (!isEnd())
       return expr_[index_];
@@ -558,7 +558,7 @@ private:
     }
   }
 
-  static T toInteger(char c)
+  static T toInteger(unsigned char c)
   {
     if (c >= '0' && c <= '9') return c -'0';
     if (c >= 'a' && c <= 'f') return c -'a' + 0xa;
@@ -603,8 +603,8 @@ private:
   {
     if (index_ + 2 < expr_.size())
     {
-      char x = expr_[index_ + 1];
-      char h = expr_[index_ + 2];
+      unsigned char x = expr_[index_ + 1];
+      unsigned char h = expr_[index_ + 2];
       return (std::tolower(x) == 'x' && toInteger(h) <= 0xf);
     }
     return false;

@@ -18,7 +18,7 @@
 ///         types of CPU cores we try to detect the cache sizes of the
 ///         CPU core type that e.g. occurs most frequently.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -458,7 +458,7 @@ std::size_t getCacheSize(const std::string& filename)
   if (!str.empty())
   {
     val = std::stoul(str);
-    char lastChar = str.back();
+    unsigned char lastChar = str.back();
 
     // The last character may be:
     // 'K' = KiB (kibibyte)
@@ -470,7 +470,7 @@ std::size_t getCacheSize(const std::string& filename)
       case 'M': val *= 1 << 20; break;
       case 'G': val *= 1 << 30; break;
       default:
-        if (!isdigit(lastChar))
+        if (!std::isdigit(lastChar))
           throw primesieve_error("invalid cache size: " + str);
     }
   }

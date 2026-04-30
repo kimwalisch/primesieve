@@ -2,6 +2,8 @@ Changes in version 12.14, 30/04/2026
 ====================================
 
 * malloc_vector.h: Fix undefined behavior.
+* calculator.hpp: Fix std::tolower undefined behavior.
+* CpuInfo.cpp:: Fix std::isdigit undefined behavior.
 * CmdOptions.cpp: Fix 64-bit integer overflow in optionTimeout().
 * PrimeSieveClass.cpp: Reduce mutex contention.
 * iterator-c.cpp: Fix use after free in primesieve_free_iterator().
