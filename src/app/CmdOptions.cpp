@@ -15,7 +15,7 @@
 ///         4) Document your option in help.cpp (--help option summary)
 ///            and in doc/primesieve.txt (manpage).
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -303,18 +303,21 @@ void CmdOptions::optionTimeout(Option& opt)
   std::transform(opt.val.begin(), opt.val.end(), opt.val.begin(),
                  [](unsigned char c){ return std::tolower(c); });
 
+  int64_t secs;
+
   // We support the same options as stress-ng.
   // https://manpages.debian.org/unstable/stress-ng/stress-ng.1.en.html
   switch (opt.val.back())
   {
-    case 's': opt.val.pop_back(); timeout = getVal<int64_t>(opt); break;
-    case 'm': opt.val.pop_back(); timeout = getVal<int64_t>(opt) * 60; break;
-    case 'h': opt.val.pop_back(); timeout = getVal<int64_t>(opt) * 3600; break;
-    case 'd': opt.val.pop_back(); timeout = getVal<int64_t>(opt) * 24 * 3600; break;
-    case 'y': opt.val.pop_back(); timeout = getVal<int64_t>(opt) * 365 * 24 * 3600; break;
+    case 's': opt.val.pop_back(); secs = getVal<uint32_t>(opt); timeout = secs; break;
+    case 'm': opt.val.pop_back(); secs = getVal<uint32_t>(opt); timeout = secs * 60; break;
+    case 'h': opt.val.pop_back(); secs = getVal<uint32_t>(opt); timeout = secs * 3600; break;
+    case 'd': opt.val.pop_back(); secs = getVal<uint32_t>(opt); timeout = secs * 24 * 3600; break;
+    case 'y': opt.val.pop_back(); secs = getVal<uint32_t>(opt); timeout = secs * 365 * 24 * 3600; break;
 
     // By default assume seconds like stress-ng
-    default: timeout = getVal<int64_t>(opt);
+    default: secs = getVal<uint32_t>(opt);
+             timeout = secs;
   }
 }
 
