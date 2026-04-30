@@ -1,7 +1,7 @@
 ///
 /// @file  malloc_vector
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -17,6 +17,7 @@
 #include <cstddef>
 #include <memory>
 #include <new>
+#include <type_traits>
 
 namespace {
 
@@ -27,6 +28,9 @@ namespace {
 template <typename T>
 class malloc_vector
 {
+  static_assert(std::is_trivially_copyable<T>::value,
+                "malloc_vector requires trivially copyable types!");
+
 public:
   using value_type = T;
   malloc_vector() = default;
@@ -85,7 +89,9 @@ public:
   {
     if_unlikely(end_ == capacity_)
       reserve_unchecked(std::max((std::size_t) 1, capacity() * 2));
-    *end_++ = value;
+
+    new(end_) T(value);
+    end_++;
   }
 
   template <class InputIt>
