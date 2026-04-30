@@ -1,6 +1,7 @@
-Changes in version 12.14, 29/04/2026
+Changes in version 12.14, 30/04/2026
 ====================================
 
+* CmdOptions.cpp: Fix 64-bit integer overflow in optionTimeout().
 * PrimeSieveClass.cpp: Reduce mutex contention.
 * iterator-c.cpp: Fix use after free in primesieve_free_iterator().
 * config.hpp: Add MAX_CACHE_LINE_SIZE.
