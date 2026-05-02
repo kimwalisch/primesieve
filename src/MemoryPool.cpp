@@ -10,7 +10,7 @@
 ///         doing any memory allocation as long as the MemoryPool's
 ///         stock is not empty.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
