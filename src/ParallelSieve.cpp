@@ -2,7 +2,7 @@
 /// @file   ParallelSieve.cpp
 /// @brief  Multi-threaded prime sieve using std::async.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -10,6 +10,7 @@
 
 #include "ParallelSieve.hpp"
 #include "PrimeSieveClass.hpp"
+#include "RelaxedAtomic.hpp"
 
 #include <primesieve/config.hpp>
 #include <primesieve/forward.hpp>
@@ -148,7 +149,7 @@ void ParallelSieve::sieve()
     uint64_t threadDist = getThreadDistance(threads);
     uint64_t iters = ((dist - 1) / threadDist) + 1;
     threads = inBetween(1, threads, iters);
-    std::atomic<uint64_t> a(0);
+    RelaxedAtomic<uint64_t> a(0);
 
     // Each thread executes 1 task
     auto task = [&]()
@@ -158,7 +159,7 @@ void ParallelSieve::sieve()
       counts_t counts;
       counts.fill(0);
 
-      while ((i = a.fetch_add(1, std::memory_order_relaxed)) < iters)
+      while ((i = a++) < iters)
       {
         uint64_t start = start_ + threadDist * i;
         uint64_t stop = checkedAdd(start, threadDist);

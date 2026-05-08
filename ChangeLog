@@ -1,6 +1,8 @@
-Changes in version 12.14, 07/05/2026
+Changes in version 12.14, 08/05/2026
 ====================================
 
+* ParallelSieve.cpp: Prevent CPU false sharing.
+* PrimeSieveClass.hpp.cpp: Prevent CPU false sharing.
 * malloc_vector.h: Fix undefined behavior.
 * calculator.hpp: Fix std::tolower undefined behavior.
 * CpuInfo.cpp: Fix std::isdigit undefined behavior.

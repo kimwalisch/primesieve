@@ -13,6 +13,8 @@
 #ifndef PRIMESIEVE_CLASS_HPP
 #define PRIMESIEVE_CLASS_HPP
 
+#include <primesieve/config.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
@@ -84,21 +86,22 @@ public:
   uint64_t countPrimes(uint64_t, uint64_t);
 
 protected:
+  void reset();
+  void setStatus(double);
+
   /// Sieve primes >= start_
   uint64_t start_ = 0;
   /// Sieve primes <= stop_
   uint64_t stop_ = 0;
   /// Time elapsed of sieve()
   double seconds_ = 0;
-  /// Sieving status in percent
-  double percent_ = 0;
   /// Prime number and prime k-tuplet counts
   counts_t counts_;
-  void reset();
-  void setStatus(double);
 
 private:
-  uint64_t sievedDistance_ = 0;
+  void processSmallPrimes();
+  static void printStatus(double, double);
+
   uint64_t updateDistance_ = 0;
   std::chrono::steady_clock::time_point lastUpdateTime_{};
   /// Default flags
@@ -107,8 +110,13 @@ private:
   int sieveSize_ = 0;
   /// Status updates must be synchronized by main thread
   ParallelSieve* parent_ = nullptr;
-  void processSmallPrimes();
-  static void printStatus(double, double);
+  MAYBE_UNUSED char pad1_[config::MAX_CACHE_LINE_SIZE];
+  /// These variables may be updated by multiple
+  /// threads. Hence, they are on a separate
+  /// cache line to prevent CPU false sharing.
+  uint64_t sievedDistance_ = 0;
+  double percent_ = 0;
+  MAYBE_UNUSED char pad2_[config::MAX_CACHE_LINE_SIZE];
 };
 
 } // namespace
