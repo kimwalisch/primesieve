@@ -35,6 +35,17 @@
 #include <stdint.h>
 #include <algorithm>
 
+// Prefetch hints for cache optimization
+// Use built-in prefetch on GCC/Clang, or _mm_prefetch on x86
+#if defined(__GNUC__) || defined(__clang__)
+  #define PREFETCH(addr) __builtin_prefetch(addr, 0, 0)
+#elif defined(_MSC_VER) && defined(__x86_64__) || defined(_M_X64)
+  #include <xmmintrin.h>
+  #define PREFETCH(addr) _mm_prefetch((const char*)(addr), _MM_HINT_T0)
+#else
+  #define PREFETCH(addr) ((void)0)
+#endif
+
 namespace {
 
 /// The WheelElement data structure is used to skip multiples
@@ -186,9 +197,14 @@ void EratBig::crossOff(Vector<uint8_t>& sieve)
     // to the current segment.
     while (bucket)
     {
+      // Prefetch the next bucket for better cache locality
+      Bucket* nextBucket = bucket->next();
+      if (nextBucket)
+        PREFETCH(nextBucket);
+
       crossOff(sieve.data(), bucket->begin(), bucket->end());
       Bucket* processed = bucket;
-      bucket = bucket->next();
+      bucket = nextBucket;
       memoryPool_->freeBucket(processed);
     }
   }
@@ -217,8 +233,17 @@ void EratBig::crossOff(uint8_t* sieve,
   std::size_t moduloSieveSize = moduloSieveSize_;
   std::size_t log2SieveSize = log2SieveSize_;
 
+  // Process primes with prefetching for better cache utilization
+  // Prefetch sieve location for primes a few iterations ahead
   for (; prime != end; prime++)
   {
+    // Prefetch the sieve location for upcoming primes (look ahead 4 iterations)
+    if (prime + 4 < end)
+    {
+      std::size_t prefetchIdx = (prime + 4)->getMultipleIndex();
+      PREFETCH(&sieve[prefetchIdx]);
+    }
+
     std::size_t multipleIndex = prime->getMultipleIndex();
     std::size_t wheelIndex    = prime->getWheelIndex();
     std::size_t sievingPrime  = prime->getSievingPrime();

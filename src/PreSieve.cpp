@@ -60,6 +60,12 @@
   #define presieve1_default presieve1_x86_avx512
   #define presieve2_default presieve2_x86_avx512
 
+#elif defined(__AVX2__) && \
+      __has_include(<immintrin.h>)
+  #include "PreSieve_x86_avx2.hpp"
+  #define presieve1_default presieve1_x86_avx2
+  #define presieve2_default presieve2_x86_avx2
+
 #elif defined(ENABLE_MULTIARCH_ARM_SVE)
   #include <primesieve/cpu_supports_arm_sve.hpp>
   #include "PreSieve_arm_sve.hpp"
@@ -67,6 +73,11 @@
 #elif defined(ENABLE_MULTIARCH_AVX512_BW)
   #include <primesieve/cpu_supports_avx512_bw.hpp>
   #include "PreSieve_x86_avx512.hpp"
+  #include "PreSieve_x86_avx2.hpp"
+
+#elif defined(ENABLE_MULTIARCH_AVX2)
+  #include <primesieve/cpu_supports_avx2.hpp>
+  #include "PreSieve_x86_avx2.hpp"
 #endif
 
 // Portable algorithms that run on any CPU
@@ -100,6 +111,11 @@ void presieve1(Args&&... args)
   if (cpu_supports_avx512_bw)
     presieve1_x86_avx512(std::forward<Args>(args)...);
   else
+    presieve1_x86_avx2(std::forward<Args>(args)...);
+#elif defined(ENABLE_MULTIARCH_AVX2)
+  if (cpu_supports_avx2)
+    presieve1_x86_avx2(std::forward<Args>(args)...);
+  else
     presieve1_default(std::forward<Args>(args)...);
 #elif defined(ENABLE_MULTIARCH_ARM_SVE)
   if (cpu_supports_sve)
@@ -118,6 +134,11 @@ void presieve2(Args&&... args)
 #if defined(ENABLE_MULTIARCH_AVX512_BW)
   if (cpu_supports_avx512_bw)
     presieve2_x86_avx512(std::forward<Args>(args)...);
+  else
+    presieve2_x86_avx2(std::forward<Args>(args)...);
+#elif defined(ENABLE_MULTIARCH_AVX2)
+  if (cpu_supports_avx2)
+    presieve2_x86_avx2(std::forward<Args>(args)...);
   else
     presieve2_default(std::forward<Args>(args)...);
 #elif defined(ENABLE_MULTIARCH_ARM_SVE)

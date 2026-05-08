@@ -30,8 +30,15 @@
     defined(__AVX512VBMI2__) && \
     __has_include(<immintrin.h>)
   #define ENABLE_AVX512_VBMI2
+#elif defined(__AVX2__) && \
+    __has_include(<immintrin.h>)
+  #define ENABLE_AVX2
 #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
   #include <primesieve/cpu_supports_avx512_vbmi2.hpp>
+  #include <primesieve/cpu_supports_avx2.hpp>
+  #define ENABLE_PRIMEGENERATOR_DEFAULT
+#elif defined(ENABLE_MULTIARCH_AVX2)
+  #include <primesieve/cpu_supports_avx2.hpp>
   #define ENABLE_PRIMEGENERATOR_DEFAULT
 #else
   #define ENABLE_PRIMEGENERATOR_DEFAULT
@@ -50,9 +57,20 @@ public:
     #if defined(ENABLE_AVX512_VBMI2)
       fillNextPrimes_x86_avx512(primes, size);
 
+    #elif defined(ENABLE_AVX2)
+      fillNextPrimes_x86_avx2(primes, size);
+
     #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
       if (cpu_supports_avx512_vbmi2)
         fillNextPrimes_x86_avx512(primes, size);
+      else if (cpu_supports_avx2)
+        fillNextPrimes_x86_avx2(primes, size);
+      else
+        fillNextPrimes_default(primes, size);
+
+    #elif defined(ENABLE_MULTIARCH_AVX2)
+      if (cpu_supports_avx2)
+        fillNextPrimes_x86_avx2(primes, size);
       else
         fillNextPrimes_default(primes, size);
 
@@ -66,9 +84,20 @@ public:
     #if defined(ENABLE_AVX512_VBMI2)
       fillPrevPrimes_x86_avx512(primes, size);
 
+    #elif defined(ENABLE_AVX2)
+      fillPrevPrimes_x86_avx2(primes, size);
+
     #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
       if (cpu_supports_avx512_vbmi2)
         fillPrevPrimes_x86_avx512(primes, size);
+      else if (cpu_supports_avx2)
+        fillPrevPrimes_x86_avx2(primes, size);
+      else
+        fillPrevPrimes_default(primes, size);
+
+    #elif defined(ENABLE_MULTIARCH_AVX2)
+      if (cpu_supports_avx2)
+        fillPrevPrimes_x86_avx2(primes, size);
       else
         fillPrevPrimes_default(primes, size);
 
@@ -87,15 +116,30 @@ private:
 #if defined(ENABLE_AVX512_VBMI2) || \
     defined(ENABLE_MULTIARCH_AVX512_VBMI2)
 
-  #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
+  #if defined(ENABLE_MULTIARCH_AVX512_VBMI2) && defined(__GNUC__)
     __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
   #endif
   void fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
 
-  #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
+  #if defined(ENABLE_MULTIARCH_AVX512_VBMI2) && defined(__GNUC__)
     __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
   #endif
   void fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
+
+#endif
+
+#if defined(ENABLE_AVX2) || \
+    defined(ENABLE_MULTIARCH_AVX2)
+
+  #if defined(ENABLE_MULTIARCH_AVX2) && defined(__GNUC__)
+    __attribute__ ((target ("avx2")))
+  #endif
+  void fillNextPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size);
+
+  #if defined(ENABLE_MULTIARCH_AVX2) && defined(__GNUC__)
+    __attribute__ ((target ("avx2")))
+  #endif
+  void fillPrevPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size);
 
 #endif
 

@@ -18,9 +18,10 @@
 // CPUID bits documentation:
 // https://en.wikipedia.org/wiki/CPUID
 
-// %ebx bit flags
-#define bit_AVX512F  (1 << 16)
-#define bit_AVX512BW (1 << 30)
+// %ebx bit flags (leaf 7)
+#define bit_AVX2      (1 << 5)
+#define bit_AVX512F   (1 << 16)
+#define bit_AVX512BW  (1 << 30)
 
 // %ecx bit flags
 #define bit_AVX512VBMI  (1 << 1)
@@ -90,6 +91,31 @@ bool has_cpuid_popcnt()
   int abcd[4];
   run_cpuid(1, 0, abcd);
   return (abcd[2] & bit_POPCNT) == bit_POPCNT;
+}
+
+bool has_cpuid_avx2()
+{
+  int abcd[4];
+
+  run_cpuid(1, 0, abcd);
+
+  int osxsave_mask = (1 << 27);
+
+  // Ensure OS supports extended processor state management
+  if ((abcd[2] & osxsave_mask) != osxsave_mask)
+    return false;
+
+  uint64_t ymm_mask = XSTATE_SSE | XSTATE_YMM;
+  uint64_t xcr0 = get_xcr0();
+
+  // Check AVX OS support (SSE and YMM state saving)
+  if ((xcr0 & ymm_mask) != ymm_mask)
+    return false;
+
+  run_cpuid(7, 0, abcd);
+
+  // AVX2 requires bit 5 in EBX from leaf 7
+  return (abcd[1] & bit_AVX2) == bit_AVX2;
 }
 
 bool has_cpuid_avx512_bw()

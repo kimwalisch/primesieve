@@ -26,6 +26,16 @@
 
 #include <stdint.h>
 
+// Prefetch hints for cache optimization
+#if defined(__GNUC__) || defined(__clang__)
+  #define PREFETCH(addr) __builtin_prefetch(addr, 0, 0)
+#elif defined(_MSC_VER) && (defined(__x86_64__) || defined(_M_X64))
+  #include <xmmintrin.h>
+  #define PREFETCH(addr) _mm_prefetch((const char*)(addr), _MM_HINT_T0)
+#else
+  #define PREFETCH(addr) ((void)0)
+#endif
+
 namespace primesieve {
 
 /// @stop:      Upper bound for sieving
@@ -89,6 +99,11 @@ void EratMedium::crossOff(Vector<uint8_t>& sieve)
       // multiples of its sieving primes.
       while (bucket)
       {
+        // Prefetch the next bucket for better cache locality
+        Bucket* nextBucket = bucket->next();
+        if (nextBucket)
+          PREFETCH(nextBucket);
+
         switch (wheelIndex / 8)
         {
           case 0: crossOff_7 (sieve.data(), sieve.size(), bucket); break;
@@ -103,7 +118,7 @@ void EratMedium::crossOff(Vector<uint8_t>& sieve)
         }
 
         Bucket* processed = bucket;
-        bucket = bucket->next();
+        bucket = nextBucket;
         memoryPool_->freeBucket(processed);
       }
     }
