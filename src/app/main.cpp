@@ -131,23 +131,63 @@ void sieve(const CmdOptions& opts)
     "Prime sextuplets: "
   };
 
-  if (opts.time)
-    printSeconds(ps.getSeconds());
-
-  // Did we count primes & k-tuplets simultaneously?
-  int cnt = 0;
-  for (int i = 0; i < 6; i++)
-    if (ps.isCount(i))
-      cnt++;
-
-  for (int i = 0; i < 6; i++)
+  const Array<std::string, 6> jsonKeys =
   {
-    if (ps.isCount(i))
+    "primes",
+    "twin_primes",
+    "prime_triplets",
+    "prime_quadruplets",
+    "prime_quintuplets",
+    "prime_sextuplets"
+  };
+
+  if (opts.json)
+  {
+    // JSON output format
+    std::cout << "{" << std::endl;
+    std::cout << "  \"start\": " << ps.getStart() << "," << std::endl;
+    std::cout << "  \"stop\": " << ps.getStop() << "," << std::endl;
+    std::cout << "  \"sieve_size_kib\": " << ps.getSieveSize() << "," << std::endl;
+    std::cout << "  \"threads\": " << ps.idealNumThreads() << "," << std::endl;
+    std::cout << "  \"seconds\": " << std::fixed << std::setprecision(6) << ps.getSeconds() << "," << std::endl;
+    std::cout << "  \"counts\": {" << std::endl;
+
+    // Output counts
+    bool firstCount = true;
+    for (int i = 0; i < 6; i++)
     {
-      if (opts.quiet && cnt == 1)
-        std::cout << ps.getCount(i) << std::endl;
-      else
-        std::cout << labels[i] << ps.getCount(i) << std::endl;
+      if (ps.isCount(i))
+      {
+        if (!firstCount)
+          std::cout << "," << std::endl;
+        std::cout << "    \"" << jsonKeys[i] << "\": " << ps.getCount(i);
+        firstCount = false;
+      }
+    }
+    std::cout << std::endl << "  }" << std::endl;
+    std::cout << "}" << std::endl;
+  }
+  else
+  {
+    // Standard output format
+    if (opts.time)
+      printSeconds(ps.getSeconds());
+
+    // Did we count primes & k-tuplets simultaneously?
+    int cnt = 0;
+    for (int i = 0; i < 6; i++)
+      if (ps.isCount(i))
+        cnt++;
+
+    for (int i = 0; i < 6; i++)
+    {
+      if (ps.isCount(i))
+      {
+        if (opts.quiet && cnt == 1)
+          std::cout << ps.getCount(i) << std::endl;
+        else
+          std::cout << labels[i] << ps.getCount(i) << std::endl;
+      }
     }
   }
 }
@@ -179,13 +219,28 @@ void nthPrime(const CmdOptions& opts)
 
   nthPrime = ps.nthPrime(n, start);
 
-  if (opts.time)
-    printSeconds(ps.getSeconds());
-
-  if (opts.quiet)
-    std::cout << nthPrime << std::endl;
+  if (opts.json)
+  {
+    // JSON output format for nth prime
+    std::cout << "{" << std::endl;
+    std::cout << "  \"n\": " << n << "," << std::endl;
+    std::cout << "  \"start\": " << start << "," << std::endl;
+    std::cout << "  \"nth_prime\": " << nthPrime << "," << std::endl;
+    std::cout << "  \"sieve_size_kib\": " << ps.getSieveSize() << "," << std::endl;
+    std::cout << "  \"threads\": " << ps.idealNumThreads() << "," << std::endl;
+    std::cout << "  \"seconds\": " << std::fixed << std::setprecision(6) << ps.getSeconds() << std::endl;
+    std::cout << "}" << std::endl;
+  }
   else
-    std::cout << "Nth prime: " << nthPrime << std::endl;
+  {
+    if (opts.time)
+      printSeconds(ps.getSeconds());
+
+    if (opts.quiet)
+      std::cout << nthPrime << std::endl;
+    else
+      std::cout << "Nth prime: " << nthPrime << std::endl;
+  }
 }
 
 void RiemannR(const CmdOptions& opts)

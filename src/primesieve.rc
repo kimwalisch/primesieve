@@ -1,0 +1,50 @@
+// primesieve.rc - Windows Resource File for primesieve DLL
+// This file contains version information and other metadata
+// that is embedded into the Windows DLL.
+
+#include <winresrc.h>
+
+// Version information
+#define PRIMESIEVE_VERSION_MAJOR 12
+#define PRIMESIEVE_VERSION_MINOR 14
+#define PRIMESIEVE_VERSION_PATCH 0
+#define PRIMESIEVE_VERSION_STRING "12.14.0"
+
+// Language and code page
+#define LANG_ENGLISH 0x0409
+#define CODEPAGE_UNICODE 1200
+
+/////////////////////////////////////////////////////////////////////////////
+// Version information
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION    PRIMESIEVE_VERSION_MAJOR,PRIMESIEVE_VERSION_MINOR,PRIMESIEVE_VERSION_PATCH,0
+ PRODUCTVERSION PRIMESIEVE_VERSION_MAJOR,PRIMESIEVE_VERSION_MINOR,PRIMESIEVE_VERSION_PATCH,0
+ FILEFLAGSMASK  0x3fL
+ FILEFLAGS      0x0L
+ FILEOS         VOS_NT_WINDOWS32
+ FILETYPE       VFT_DLL
+ FILESUBTYPE    VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0" // English (US), Unicode
+        BEGIN
+            VALUE "CompanyName", "Kim Walisch"
+            VALUE "FileDescription", "primesieve - Fast prime number generation library"
+            VALUE "FileVersion", PRIMESIEVE_VERSION_STRING
+            VALUE "InternalName", "primesieve"
+            VALUE "LegalCopyright", "Copyright (C) 2025 Kim Walisch. BSD License."
+            VALUE "OriginalFilename", "primesieve.dll"
+            VALUE "ProductName", "primesieve"
+            VALUE "ProductVersion", PRIMESIEVE_VERSION_STRING
+            VALUE "License", "BSD 3-Clause License"
+            VALUE "Website", "https://github.com/kimwalisch/primesieve"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", LANG_ENGLISH, CODEPAGE_UNICODE
+    END
+END

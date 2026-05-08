@@ -1,0 +1,55 @@
+/*
+ * primesieve symbol version script
+ * 
+ * This script defines the symbol versioning for the shared library.
+ * It helps maintain ABI stability across library versions by ensuring
+ * that symbols exported by the library are tagged with a version.
+ *
+ * On Linux, this script is passed to the linker using:
+ * -Wl,--version-script=primesieve.sym
+ *
+ * The version tag (PRIMESIEVE_12.0) corresponds to the library's
+ * major version number, ensuring ABI compatibility within the same
+ * major version.
+ */
+
+PRIMESIEVE_12.0 {
+    global:
+        /* C API functions */
+        primesieve_generate_primes;
+        primesieve_generate_n_primes;
+        primesieve_nth_prime;
+        primesieve_count_primes;
+        primesieve_count_twins;
+        primesieve_count_triplets;
+        primesieve_count_quadruplets;
+        primesieve_count_quintuplets;
+        primesieve_count_sextuplets;
+        primesieve_print_primes;
+        primesieve_print_twins;
+        primesieve_print_triplets;
+        primesieve_print_quadruplets;
+        primesieve_print_quintuplets;
+        primesieve_print_sextuplets;
+        primesieve_get_max_stop;
+        primesieve_get_sieve_size;
+        primesieve_get_num_threads;
+        primesieve_set_sieve_size;
+        primesieve_set_num_threads;
+        primesieve_free;
+        primesieve_version;
+
+        /* C iterator API functions */
+        primesieve_init;
+        primesieve_clear;
+        primesieve_free_iterator;
+        primesieve_next_prime;
+        primesieve_prev_prime;
+        primesieve_jump_to;
+        primesieve_skipto_next_prime;
+        primesieve_skipto_prev_prime;
+
+    local:
+        /* Hide all internal symbols */
+        *;
+};

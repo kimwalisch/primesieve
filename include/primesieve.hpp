@@ -19,6 +19,7 @@
 
 #include <primesieve/iterator.hpp>
 #include <primesieve/primesieve_error.hpp>
+#include <primesieve/Range.hpp>
 #include <primesieve/StorePrimes.hpp>
 
 #include <stdint.h>
@@ -86,7 +87,7 @@ inline void generate_n_primes(uint64_t n, uint64_t start, vect* primes)
 ///           if n > 0 finds the nth prime > start, <br/>
 ///           if n < 0 finds the nth prime < start (backwards).
 ///
-uint64_t nth_prime(int64_t n, uint64_t start = 0);
+[[nodiscard]] uint64_t nth_prime(int64_t n, uint64_t start = 0);
 
 /// Count the primes within the interval [start, stop].
 /// By default all CPU cores are used, use
@@ -99,42 +100,42 @@ uint64_t nth_prime(int64_t n, uint64_t start = 0);
 /// many calls to count_primes() it may be preferable to use
 /// a primesieve::iterator which needs to be initialized only once.
 ///
-uint64_t count_primes(uint64_t start, uint64_t stop);
+[[nodiscard]] uint64_t count_primes(uint64_t start, uint64_t stop);
 
 /// Count the twin primes within the interval [start, stop].
 /// By default all CPU cores are used, use
 /// primesieve::set_num_threads(int threads) to change the
 /// number of threads.
 ///
-uint64_t count_twins(uint64_t start, uint64_t stop);
+[[nodiscard]] uint64_t count_twins(uint64_t start, uint64_t stop);
 
 /// Count the prime triplets within the interval [start, stop].
 /// By default all CPU cores are used, use
 /// primesieve::set_num_threads(int threads) to change the
 /// number of threads.
 ///
-uint64_t count_triplets(uint64_t start, uint64_t stop);
+[[nodiscard]] uint64_t count_triplets(uint64_t start, uint64_t stop);
 
 /// Count the prime quadruplets within the interval [start, stop].
 /// By default all CPU cores are used, use
 /// primesieve::set_num_threads(int threads) to change the
 /// number of threads.
 ///
-uint64_t count_quadruplets(uint64_t start, uint64_t stop);
+[[nodiscard]] uint64_t count_quadruplets(uint64_t start, uint64_t stop);
 
 /// Count the prime quintuplets within the interval [start, stop].
 /// By default all CPU cores are used, use
 /// primesieve::set_num_threads(int threads) to change the
 /// number of threads.
 ///
-uint64_t count_quintuplets(uint64_t start, uint64_t stop);
+[[nodiscard]] uint64_t count_quintuplets(uint64_t start, uint64_t stop);
 
 /// Count the prime sextuplets within the interval [start, stop].
 /// By default all CPU cores are used, use
 /// primesieve::set_num_threads(int threads) to change the
 /// number of threads.
 ///
-uint64_t count_sextuplets(uint64_t start, uint64_t stop);
+[[nodiscard]] uint64_t count_sextuplets(uint64_t start, uint64_t stop);
 
 /// Print the primes within the interval [start, stop]
 /// to the standard output.
@@ -169,29 +170,29 @@ void print_sextuplets(uint64_t start, uint64_t stop);
 /// Returns the largest valid stop number for primesieve.
 /// @return 2^64-1 (UINT64_MAX).
 ///
-uint64_t get_max_stop();
+[[nodiscard]] uint64_t get_max_stop() noexcept;
 
 /// Get the current set sieve size in KiB.
-int get_sieve_size();
+[[nodiscard]] int get_sieve_size() noexcept;
 
 /// Get the current set number of threads.
-int get_num_threads();
+[[nodiscard]] int get_num_threads() noexcept;
 
 /// Set the sieve size in KiB (kibibyte).
 /// The best sieving performance is achieved with a sieve size
 /// of your CPU's L1 or L2 cache size (per core).
 /// @pre sieve_size >= 16 && <= 8192.
 ///
-void set_sieve_size(int sieve_size);
+void set_sieve_size(int sieve_size) noexcept;
 
 /// Set the number of threads for use in
 /// primesieve::count_*() and primesieve::nth_prime().
 /// By default all CPU cores are used.
 ///
-void set_num_threads(int num_threads);
+void set_num_threads(int num_threads) noexcept;
 
-/// Get the primesieve version number, in the form “i.j”.
-std::string primesieve_version();
+/// Get the primesieve version number, in the form "i.j".
+[[nodiscard]] std::string primesieve_version();
 
 }
 

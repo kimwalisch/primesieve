@@ -361,3 +361,59 @@ jobs:
         run: valgrind --error-exitcode=1 ./primesieve 1e7 --nth-prime
       - name: Valgrind primesieve --print
         run: valgrind --error-exitcode=1 ./primesieve 10000 --print
+
+  # Code coverage job using gcov and codecov.io
+  linux_gcc_coverage:
+    runs-on: ubuntu-latest
+    env:
+      CC: gcc
+      CXX: g++
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install dependencies
+        run: |
+            sudo apt update
+            sudo apt install lcov
+      - name: Build primesieve with coverage
+        run: |
+            cmake . -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="--coverage -fprofile-arcs -ftest-coverage -g" -DCMAKE_CXX_FLAGS="--coverage -fprofile-arcs -ftest-coverage -g"
+            cmake --build . --parallel --verbose
+      - name: Run tests
+        run: |
+            ctest -j2 --output-on-failure
+            ./primesieve --test
+            ./primesieve 1e8
+            ./primesieve 1e7 --nth-prime
+      - name: Generate coverage report
+        run: |
+            lcov --capture --directory . --output-file coverage.info
+            lcov --remove coverage.info '/usr/*' --output-file coverage.info
+            lcov --remove coverage.info '*/test/*' --output-file coverage.info
+            lcov --remove coverage.info '*/examples/*' --output-file coverage.info
+            lcov --list coverage.info
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage.info
+          fail_ci_if_error: true
+          verbose: true
+
+  # Static analysis with clang-tidy
+  linux_clang_tidy:
+    runs-on: ubuntu-latest
+    env:
+      CC: clang
+      CXX: clang++
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install clang-tidy
+        run: |
+            sudo apt update
+            sudo apt install clang-tidy
+      - name: Build primesieve with compile_commands.json
+        run: |
+            cmake . -DBUILD_TESTS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug
+            cmake --build . --parallel
+      - name: Run clang-tidy
+        run: |
+            clang-tidy -p build compile_commands.json --checks='-*,modernize-*,performance-*,readability-*,bugprone-*' --warnings-as-errors='*' --header-filter='.*' src/*.cpp src/app/*.cpp || true

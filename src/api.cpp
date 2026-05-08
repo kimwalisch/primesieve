@@ -27,9 +27,13 @@ using std::size_t;
 
 namespace {
 
-int sieve_size = 0;
+// Thread-local storage for library settings.
+// This ensures that each thread has its own copy of sieve_size and num_threads,
+// preventing race conditions when multiple threads use the library concurrently.
+// Each thread can independently configure its settings without affecting others.
+thread_local int sieve_size = 0;
 
-int num_threads = 0;
+thread_local int num_threads = 0;
 
 }
 
@@ -119,7 +123,7 @@ void print_sextuplets(uint64_t start, uint64_t stop)
   ps.sieve(start, stop, PRINT_SEXTUPLETS);
 }
 
-int get_num_threads()
+int get_num_threads() noexcept
 {
   if (num_threads)
     return num_threads;
@@ -127,12 +131,12 @@ int get_num_threads()
     return ParallelSieve::getMaxThreads();
 }
 
-void set_num_threads(int threads)
+void set_num_threads(int threads) noexcept
 {
   num_threads = inBetween(1, threads, ParallelSieve::getMaxThreads());
 }
 
-uint64_t get_max_stop()
+uint64_t get_max_stop() noexcept
 {
   return std::numeric_limits<uint64_t>::max();
 }
@@ -142,12 +146,12 @@ std::string primesieve_version()
   return PRIMESIEVE_VERSION;
 }
 
-void set_sieve_size(int size)
+void set_sieve_size(int size) noexcept
 {
   sieve_size = inBetween(16, size, 8192);
 }
 
-int get_sieve_size()
+int get_sieve_size() noexcept
 {
   // User specified sieve size
   if (sieve_size)

@@ -1,0 +1,285 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Kitware/CMake/master/Help/schema/cmake-presets-schema.json",
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "base",
+      "hidden": true,
+      "inherits": "default",
+      "cacheVariables": {
+        "BUILD_PRIMESIEVE": "ON",
+        "BUILD_STATIC_LIBS": "ON",
+        "BUILD_SHARED_LIBS": "ON",
+        "WITH_MULTIARCH": "ON"
+      }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug Build",
+      "description": "Debug build with assertions enabled",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS_DEBUG": "-Wall -Wextra -pedantic -g",
+        "CMAKE_CXX_FLAGS_DEBUG": "-Wall -Wextra -pedantic -g",
+        "ENABLE_ASSERT": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release Build",
+      "description": "Optimized release build",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_FLAGS_RELEASE": "-Wall -Wextra -pedantic -O3",
+        "CMAKE_CXX_FLAGS_RELEASE": "-Wall -Wextra -pedantic -O3"
+      }
+    },
+    {
+      "name": "relwithdebinfo",
+      "displayName": "RelWithDebInfo Build",
+      "description": "Release build with debug information",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_C_FLAGS_RELWITHDEBINFO": "-Wall -Wextra -pedantic -O2 -g",
+        "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-Wall -Wextra -pedantic -O2 -g"
+      }
+    },
+    {
+      "name": "minsizerel",
+      "displayName": "MinSizeRel Build",
+      "description": "Release build optimized for size",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "CMAKE_C_FLAGS_MINSIZEREL": "-Wall -Wextra -pedantic -Os",
+        "CMAKE_CXX_FLAGS_MINSIZEREL": "-Wall -Wextra -pedantic -Os"
+      }
+    },
+    {
+      "name": "dev",
+      "displayName": "Developer Build",
+      "description": "Developer build with tests and examples",
+      "inherits": "debug",
+      "cacheVariables": {
+        "BUILD_TESTS": "ON",
+        "BUILD_EXAMPLES": "ON",
+        "CMAKE_C_FLAGS_DEBUG": "-Wall -Wextra -Wpedantic -Werror -g",
+        "CMAKE_CXX_FLAGS_DEBUG": "-Wall -Wextra -Wpedantic -Werror -g"
+      }
+    },
+    {
+      "name": "sanitize",
+      "displayName": "Sanitizer Build",
+      "description": "Build with Address and Undefined Behavior sanitizers",
+      "inherits": "debug",
+      "cacheVariables": {
+        "BUILD_TESTS": "ON",
+        "BUILD_SHARED_LIBS": "OFF",
+        "CMAKE_C_FLAGS_DEBUG": "-Wall -Wextra -Wpedantic -Werror -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer",
+        "CMAKE_CXX_FLAGS_DEBUG": "-Wall -Wextra -Wpedantic -Werror -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer"
+      }
+    },
+    {
+      "name": "coverage",
+      "displayName": "Coverage Build",
+      "description": "Build with code coverage instrumentation",
+      "inherits": "debug",
+      "cacheVariables": {
+        "BUILD_TESTS": "ON",
+        "CMAKE_C_FLAGS_DEBUG": "-Wall -Wextra -Wpedantic -g --coverage -fprofile-arcs -ftest-coverage",
+        "CMAKE_CXX_FLAGS_DEBUG": "-Wall -Wextra -Wpedantic -g --coverage -fprofile-arcs -ftest-coverage"
+      }
+    },
+    {
+      "name": "install",
+      "displayName": "Install Build",
+      "description": "Build for installation with documentation",
+      "inherits": "release",
+      "cacheVariables": {
+        "BUILD_DOC": "ON",
+        "BUILD_MANPAGE": "ON"
+      }
+    },
+    {
+      "name": "msvc-debug",
+      "displayName": "MSVC Debug",
+      "description": "Debug build using Visual Studio",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS": "/W4 /WX /EHsc"
+      }
+    },
+    {
+      "name": "msvc-release",
+      "displayName": "MSVC Release",
+      "description": "Release build using Visual Studio",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_FLAGS": "/W4 /WX /MP /EHsc"
+      }
+    },
+    {
+      "name": "emscripten",
+      "displayName": "Emscripten (WebAssembly)",
+      "description": "Build for WebAssembly using Emscripten",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "toolchainFile": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_PRIMESIEVE": "ON",
+        "BUILD_STATIC_LIBS": "ON",
+        "BUILD_SHARED_LIBS": "OFF",
+        "BUILD_TESTS": "OFF",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Wpedantic -O3"
+      }
+    },
+    {
+      "name": "analyze",
+      "displayName": "Static Analysis Build",
+      "description": "Build with clang-tidy static analysis enabled",
+      "inherits": "debug",
+      "cacheVariables": {
+        "CMAKE_C_CLANG_TIDY": "clang-tidy;-checks=*,-fuchsia-*,-google-*,-llvm-*,-modernize-use-trailing-return-type",
+        "CMAKE_CXX_CLANG_TIDY": "clang-tidy;-checks=*,-fuchsia-*,-google-*,-llvm-*,-modernize-use-trailing-return-type"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "configurePreset": "debug"
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    },
+    {
+      "name": "dev",
+      "configurePreset": "dev"
+    },
+    {
+      "name": "sanitize",
+      "configurePreset": "sanitize"
+    },
+    {
+      "name": "coverage",
+      "configurePreset": "coverage"
+    },
+    {
+      "name": "install",
+      "configurePreset": "install"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false,
+        "jobs": 4
+      }
+    },
+    {
+      "name": "sanitize",
+      "configurePreset": "sanitize",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true,
+        "jobs": 2
+      }
+    },
+    {
+      "name": "coverage",
+      "configurePreset": "coverage",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false,
+        "jobs": 4
+      }
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "release",
+      "configurePreset": "release",
+      "generators": [
+        "TGZ",
+        "ZIP"
+      ]
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "dev-test",
+      "displayName": "Developer Build and Test",
+      "description": "Build and run tests with developer settings",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "dev"
+        },
+        {
+          "type": "build",
+          "name": "dev"
+        },
+        {
+          "type": "test",
+          "name": "dev"
+        }
+      ]
+    },
+    {
+      "name": "ci-linux",
+      "displayName": "CI Linux Workflow",
+      "description": "Full CI workflow for Linux",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "sanitize"
+        },
+        {
+          "type": "build",
+          "name": "sanitize"
+        },
+        {
+          "type": "test",
+          "name": "sanitize"
+        }
+      ]
+    }
+  ]
+}

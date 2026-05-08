@@ -335,6 +335,8 @@ CmdOptions parseOptions(int argc, char** argv)
     { "--cpu-info",         std::make_pair(OPTION_CPU_INFO, NO_PARAM) },
     { "-h",                 std::make_pair(OPTION_HELP, NO_PARAM) },
     { "--help",             std::make_pair(OPTION_HELP, NO_PARAM) },
+    { "-j",                 std::make_pair(OPTION_JSON, NO_PARAM) },
+    { "--json",             std::make_pair(OPTION_JSON, NO_PARAM) },
     { "-n",                 std::make_pair(OPTION_NTH_PRIME, NO_PARAM) },
     { "--nthprime",         std::make_pair(OPTION_NTH_PRIME, NO_PARAM) },
     { "--nth-prime",        std::make_pair(OPTION_NTH_PRIME, NO_PARAM) },
@@ -381,6 +383,7 @@ CmdOptions parseOptions(int argc, char** argv)
       case OPTION_QUIET:       opts.quiet = true; break;
       case OPTION_NO_STATUS:   opts.status = false; break;
       case OPTION_TIME:        opts.time = true; break;
+      case OPTION_JSON:        opts.json = true; opts.quiet = true; break;
       case OPTION_NUMBER:      opts.numbers.push_back(getVal<uint64_t>(opt)); break;
       default:                 opts.setMainOption(optionID, opt.str);
     }

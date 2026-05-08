@@ -20,6 +20,7 @@ enum OptionID
   OPTION_COUNT,
   OPTION_CPU_INFO,
   OPTION_HELP,
+  OPTION_JSON,
   OPTION_NTH_PRIME,
   OPTION_NO_STATUS,
   OPTION_NUMBER,
@@ -64,6 +65,7 @@ struct CmdOptions
   bool quiet = false;
   bool status = true;
   bool time = false;
+  bool json = false;
 
   void setMainOption(OptionID optionID, const std::string& optStr);
   void optionPrint(Option& opt);

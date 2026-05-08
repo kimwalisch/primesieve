@@ -100,6 +100,11 @@ set(LIB_SRC src/api-c.cpp
             src/RiemannR.cpp
             src/SievingPrimes.cpp)
 
+# Add Windows resource file for DLL version information
+if(WIN32 AND BUILD_SHARED_LIBS)
+    set(LIB_SRC ${LIB_SRC} src/primesieve.rc)
+endif()
+
 # Check if compiler supports CPU multiarch ###########################
 
 if(WITH_MULTIARCH)
@@ -138,6 +143,13 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(libprimesieve PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
     target_link_libraries(libprimesieve PRIVATE Threads::Threads ${PRIMESIEVE_LINK_LIBRARIES})
     target_compile_definitions(libprimesieve PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
+
+    # Add version script for ABI stability on Linux/Unix
+    # This ensures exported symbols are tagged with a version
+    if(NOT WIN32 AND NOT APPLE)
+        target_link_options(libprimesieve PRIVATE
+            "LINKER:--version-script=${PROJECT_SOURCE_DIR}/src/primesieve.sym")
+    endif()
 
     target_compile_features(libprimesieve
     PUBLIC

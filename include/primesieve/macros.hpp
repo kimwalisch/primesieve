@@ -36,9 +36,75 @@
 #if defined(ENABLE_ASSERT)
   #undef NDEBUG
   #include <cassert>
+  #include <cstdio>
+  #include <cstdlib>
   #define ASSERT(x) assert(x)
 #else
   #define ASSERT(x) (static_cast<void>(0))
+#endif
+
+/// Contract-style pre-condition checking macro.
+/// PRECONDITION(cond) asserts that a condition must be true
+/// before entering a function. Used for documenting and
+/// validating function requirements.
+/// Example: PRECONDITION(n >= 0)
+///
+#if defined(ENABLE_ASSERT)
+  #define PRECONDITION(cond) \
+    do { if (!(cond)) { \
+      std::fprintf(stderr, "PRECONDITION failed: %s, file %s, line %d\n", \
+                   #cond, __FILE__, __LINE__); \
+      std::abort(); \
+    } } while(0)
+#else
+  #define PRECONDITION(cond) (static_cast<void>(0))
+#endif
+
+/// Contract-style post-condition checking macro.
+/// POSTCONDITION(cond) asserts that a condition must be true
+/// after exiting a function. Used for documenting and
+/// validating function guarantees.
+/// Example: POSTCONDITION(result >= 0)
+///
+#if defined(ENABLE_ASSERT)
+  #define POSTCONDITION(cond) \
+    do { if (!(cond)) { \
+      std::fprintf(stderr, "POSTCONDITION failed: %s, file %s, line %d\n", \
+                   #cond, __FILE__, __LINE__); \
+      std::abort(); \
+    } } while(0)
+#else
+  #define POSTCONDITION(cond) (static_cast<void>(0))
+#endif
+
+/// Bounds checking macro for array/vector access.
+/// CHECK_BOUNDS(pos, size) validates that pos is within bounds.
+/// This is more explicit than ASSERT and provides better error messages.
+///
+#if defined(ENABLE_ASSERT)
+  #define CHECK_BOUNDS(pos, size) \
+    do { if (pos >= size) { \
+      std::fprintf(stderr, "Bounds check failed: pos=%zu >= size=%zu, file %s, line %d\n", \
+                   static_cast<std::size_t>(pos), static_cast<std::size_t>(size), __FILE__, __LINE__); \
+      std::abort(); \
+    } } while(0)
+#else
+  #define CHECK_BOUNDS(pos, size) (static_cast<void>(0))
+#endif
+
+/// Invariant checking macro.
+/// INVARIANT(cond) asserts that a condition must hold true
+/// at specific points within a function (usually loop invariants).
+///
+#if defined(ENABLE_ASSERT)
+  #define INVARIANT(cond) \
+    do { if (!(cond)) { \
+      std::fprintf(stderr, "INVARIANT failed: %s, file %s, line %d\n", \
+                   #cond, __FILE__, __LINE__); \
+      std::abort(); \
+    } } while(0)
+#else
+  #define INVARIANT(cond) (static_cast<void>(0))
 #endif
 
 #if __has_attribute(always_inline)
