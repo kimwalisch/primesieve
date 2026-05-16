@@ -12,10 +12,10 @@
 #include "Erat.hpp"
 #include "PreSieve.hpp"
 
-#include <primesieve/littleendian_cast.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/popcnt.hpp>
+#include <primesieve/util.hpp>
 
 #include <stdint.h>
 #include <algorithm>

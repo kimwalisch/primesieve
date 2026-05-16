@@ -18,9 +18,9 @@
 #include "SievingPrimes.hpp"
 
 #include <primesieve/forward.hpp>
-#include <primesieve/littleendian_cast.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
+#include <primesieve/util.hpp>
 
 #include <stdint.h>
 #include <algorithm>
@@ -161,9 +161,7 @@ void CountPrintPrimes::sieve()
 
 void CountPrintPrimes::countPrimes()
 {
-  ASSERT(sieve_.capacity() % sizeof(uint64_t) == 0);
-  uint64_t size = ceilDiv(sieve_.size(), 8);
-  counts_[0] += popcount((const uint64_t*) sieve_.data(), size);
+  counts_[0] += popcount(sieve_.data(), sieve_.size());
 }
 
 void CountPrintPrimes::countkTuplets()

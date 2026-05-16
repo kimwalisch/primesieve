@@ -14,6 +14,7 @@
 
 #include <primesieve/macros.hpp>
 #include <primesieve/popcnt.hpp>
+#include <primesieve/util.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
@@ -89,7 +90,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
     while (sieveIdx < sieveSize)
     {
       // Each iteration processes 8 bytes from the sieve array
-      uint64_t bits64 = *(uint64_t*) &sieve[sieveIdx];
+      uint64_t bits64 = load_aligned<uint64_t>(&sieve[sieveIdx]);
       uint64_t primeCount = popcnt64(bits64);
 
       // Prevent _mm512_storeu_si512() buffer overrun
@@ -228,7 +229,7 @@ void PrimeGenerator::fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
     while (sieveIdx < sieveSize)
     {
       // Each iteration processes 8 bytes from the sieve array
-      uint64_t bits64 = *(uint64_t*) &sieve[sieveIdx];
+      uint64_t bits64 = load_aligned<uint64_t>(&sieve[sieveIdx]);
       uint64_t primeCount = popcnt64(bits64);
 
       // Prevent _mm512_storeu_si512() buffer overrun
