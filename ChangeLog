@@ -1,6 +1,7 @@
 Changes in version 12.15, 17/05/2026
 ====================================
 
+* nthPrime.cpp: Fix undefined behavior.
 * util.hpp: Fix undefined behavior in littleendian_cast<T>().
 * PrimeGenerator_x86_avx512.hpp: Fix undefined behavior.
 * CountPrintPrimes.cpp: Fix undefined behavior.

@@ -1,7 +1,7 @@
 ///
 /// @file  nthPrime.cpp
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -116,12 +116,20 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
 uint64_t PrimeSieve::negativeNthPrime(int64_t n, uint64_t start)
 {
   ASSERT(n < 0);
-  n = -n;
 
-  if ((uint64_t) n >= start)
+  // -n causes undefined behavior for n = INT64_MIN.
+  // Hence we use the defined two's complement negation: ~n + 1.
+  // Casting ~n to unsigned ensures the result of the addition
+  // (2^63 for INT64_MIN) is safely stored in a uint64_t
+  // without signed overflow.
+  uint64_t abs_n = uint64_t(~n) + 1;
+
+  if (abs_n >= start)
     throw primesieve_error("nth_prime(n): abs(n) must be < start");
-  else if ((uint64_t) n > max_n)
+  else if (abs_n > max_n)
     throw primesieve_error("nth_prime(n): abs(n) must be <= " + std::to_string(max_n));
+
+  n = int64_t(abs_n);
 
   setStart(start);
   auto t1 = std::chrono::steady_clock::now();
