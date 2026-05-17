@@ -20,20 +20,18 @@
 
 namespace {
 
-/// Load a trivially copyable type from aligned byte storage.
-/// std::memcpy avoids undefined behavior due to type aliasing
-/// and object lifetime rules. Compilers optimize this to a
-/// plain load when the size is known at compile time.
+/// Safely loads a trivially copyable type T from a byte
+/// array. Employs std::memcpy to bypass strict aliasing
+/// and avoid UB. Uses C++20 std::assume_aligned to
+/// guarantee optimal assembly code gen.
+///
 template <typename T>
 ALWAYS_INLINE T load_aligned(const uint8_t* array)
 {
   static_assert(std::is_trivially_copyable<T>::value, "Type T must be trivially copyable!");
-  ASSERT(((uintptr_t) array) % alignof(T) == 0);
+  ASSERT(uintptr_t(array) % alignof(T) == 0);
 
-#if defined(__GNUC__) || \
-    defined(__clang__)
-  array = (const uint8_t*) __builtin_assume_aligned(array, alignof(T));
-#elif defined(__cpp_lib_assume_aligned)
+#if defined(__cpp_lib_assume_aligned)
   array = std::assume_aligned<alignof(T)>(array);
 #endif
 
@@ -42,8 +40,6 @@ ALWAYS_INLINE T load_aligned(const uint8_t* array)
   return result;
 }
 
-/// Cast bytes in ascending address order on both little and
-/// big endian CPUs.
 template <typename T>
 ALWAYS_INLINE T littleendian_cast(const uint8_t* array)
 {
@@ -52,7 +48,7 @@ ALWAYS_INLINE T littleendian_cast(const uint8_t* array)
     __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
 
   static_assert(sizeof(T) == sizeof(uint64_t), "Type T must be uint64_t!");
-  return (T) __builtin_bswap64(load_aligned<T>(array));
+  return __builtin_bswap64(load_aligned<T>(array));
 #else
   return load_aligned<T>(array);
 #endif
