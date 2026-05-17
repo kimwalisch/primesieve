@@ -12,9 +12,7 @@
 #define TYPES_HPP
 
 #include "Vector.hpp"
-
 #include <stdint.h>
-#include <cstddef>
 
 namespace primesieve {
 
@@ -25,7 +23,7 @@ int get_num_threads();
 int get_sieve_size();
 
 uint64_t get_max_stop();
-uint64_t popcount(const uint8_t* array, std::size_t bytes);
+uint64_t popcount(const uint64_t* array, uint64_t size);
 
 } // namespace
 
