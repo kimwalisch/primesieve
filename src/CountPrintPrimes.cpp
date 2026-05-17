@@ -147,7 +147,7 @@ void CountPrintPrimes::sieve()
     sieveSegment();
 
     if (ps_.isCountPrimes())
-      countPrimes();
+      counts_[0] += popcount(sieve_);
     if (ps_.isCountkTuplets())
       countkTuplets();
     if (ps_.isPrintPrimes())
@@ -157,13 +157,6 @@ void CountPrintPrimes::sieve()
     if (ps_.isStatus())
       ps_.updateStatus(sieve_.size() * 30);
   }
-}
-
-void CountPrintPrimes::countPrimes()
-{
-  ASSERT(sieve_.capacity() % sizeof(uint64_t) == 0);
-  uint64_t size = ceilDiv(sieve_.size(), 8);
-  counts_[0] += popcount((const uint64_t*) sieve_.data(), size);
 }
 
 void CountPrintPrimes::countkTuplets()

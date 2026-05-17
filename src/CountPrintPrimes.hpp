@@ -1,7 +1,7 @@
 ///
 /// @file  CountPrintPrimes.hpp
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -42,7 +42,6 @@ private:
   PrimeSieve& ps_;
   MemoryPool memoryPool_;
   void initCounts();
-  void countPrimes();
   void countkTuplets();
   void printPrimes();
   void printkTuplets();
