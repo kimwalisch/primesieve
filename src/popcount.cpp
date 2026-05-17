@@ -10,6 +10,7 @@
 
 #include <primesieve/forward.hpp>
 #include <primesieve/popcnt.hpp>
+#include <primesieve/util.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
