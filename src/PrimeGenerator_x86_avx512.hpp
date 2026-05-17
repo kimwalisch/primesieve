@@ -1,7 +1,7 @@
 ///
 /// @file PrimeGenerator_x86_avx512.hpp
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -91,7 +91,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
     {
       // Each iteration processes 8 bytes from the sieve array
       uint64_t bits64 = load_aligned<uint64_t>(&sieve[sieveIdx]);
-      uint64_t primeCount = popcnt64(bits64);
+      uint64_t primeCount = popcnt64_native(bits64);
 
       // Prevent _mm512_storeu_si512() buffer overrun
       if (i + primeCount > maxSize - 8)
@@ -230,7 +230,7 @@ void PrimeGenerator::fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
     {
       // Each iteration processes 8 bytes from the sieve array
       uint64_t bits64 = load_aligned<uint64_t>(&sieve[sieveIdx]);
-      uint64_t primeCount = popcnt64(bits64);
+      uint64_t primeCount = popcnt64_native(bits64);
 
       // Prevent _mm512_storeu_si512() buffer overrun
       if_unlikely(i + primeCount + 8 > primes.size())

@@ -1,9 +1,13 @@
 ///
 /// @file  popcnt.hpp
-/// @brief Functions to count the number of 1 bits inside
-///        a 64-bit variable.
+/// @brief Functions to count the number of 1 bits in a 64-bit
+///        variable. On x86 CPUs popcnt64_native(x) uses the POPCNT
+///        instruction directly, without runtime check if the CPU
+///        supports it. popcnt64(x) on the other hand does a runtime
+///        check and falls back to a portable algorithm if the CPU
+///        does not support the POPCNT instruction.
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -49,15 +53,18 @@ NOINLINE uint64_t popcnt64_bitwise_noinline(uint64_t x)
   return (x * h01) >> 56;
 }
 
+ALWAYS_INLINE uint64_t popcnt64_native(uint64_t x)
+{
+  __asm__("popcnt %1, %0" : "=r"(x) : "r"(x));
+  return x;
+}
+
 ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 {
   // On my AMD EPYC 7642 CPU using GCC 12 this runtime
   // check incurs an overall overhead of about 1%.
   if_likely(cpu_supports_popcnt)
-  {
-    __asm__("popcnt %1, %0" : "=r"(x) : "r"(x));
-    return x;
-  }
+    return popcnt64_native(x);
   else
     return popcnt64_bitwise_noinline(x);
 }
@@ -87,16 +94,19 @@ NOINLINE uint64_t popcnt64_bitwise_noinline(uint64_t x)
   return (x * h01) >> 56;
 }
 
+ALWAYS_INLINE uint64_t popcnt64_native(uint64_t x)
+{
+  uint32_t x0 = uint32_t(x);
+  uint32_t x1 = uint32_t(x >> 32);
+  __asm__("popcnt %1, %0" : "=r"(x0) : "r"(x0));
+  __asm__("popcnt %1, %0" : "=r"(x1) : "r"(x1));
+  return x0 + x1;
+}
+
 ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 {
   if_likely(cpu_supports_popcnt)
-  {
-    uint32_t x0 = uint32_t(x);
-    uint32_t x1 = uint32_t(x >> 32);
-    __asm__("popcnt %1, %0" : "=r"(x0) : "r"(x0));
-    __asm__("popcnt %1, %0" : "=r"(x1) : "r"(x1));
-    return x0 + x1;
-  }
+    return popcnt64_native(x);
   else
     return popcnt64_bitwise_noinline(x);
 }
@@ -109,7 +119,7 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 
 namespace {
 
-ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+ALWAYS_INLINE uint64_t popcnt64_native(uint64_t x)
 {
 #if __cplusplus >= 201703L
   if constexpr(sizeof(int) >= sizeof(uint64_t))
@@ -121,6 +131,11 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 #else
     return (uint64_t) __builtin_popcountll(x);
 #endif
+}
+
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
+  return popcnt64_native(x);
 }
 
 } // namespace
@@ -138,9 +153,14 @@ namespace {
 #if defined(__POPCNT__) || \
     defined(__AVX__)
 
-ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+ALWAYS_INLINE uint64_t popcnt64_native(uint64_t x)
 {
   return __popcnt64(x);
+}
+
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
+  return popcnt64_native(x);
 }
 
 #elif defined(ENABLE_MULTIARCH_x86_POPCNT)
@@ -164,10 +184,15 @@ NOINLINE uint64_t popcnt64_bitwise_noinline(uint64_t x)
   return (x * h01) >> 56;
 }
 
+ALWAYS_INLINE uint64_t popcnt64_native(uint64_t x)
+{
+  return __popcnt64(x);
+}
+
 ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 {
   if_likely(cpu_supports_popcnt)
-    return __popcnt64(x);
+    return popcnt64_native(x);
   else
     return popcnt64_bitwise_noinline(x);
 }
@@ -179,7 +204,7 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 /// It uses 12 arithmetic operations, one of which is a multiply.
 /// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
 ///
-ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+ALWAYS_INLINE uint64_t popcnt64_native(uint64_t x)
 {
   uint64_t m1 = 0x5555555555555555ull;
   uint64_t m2 = 0x3333333333333333ull;
@@ -191,6 +216,11 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
   x = (x + (x >> 4)) & m4;
 
   return (x * h01) >> 56;
+}
+
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
+  return popcnt64_native(x);
 }
 
 #endif
@@ -208,10 +238,15 @@ namespace {
 #if defined(__POPCNT__) || \
     defined(__AVX__)
 
-ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+ALWAYS_INLINE uint64_t popcnt64_native(uint64_t x)
 {
   return __popcnt(uint32_t(x)) +
          __popcnt(uint32_t(x >> 32));
+}
+
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
+  return popcnt64_native(x);
 }
 
 #elif defined(ENABLE_MULTIARCH_x86_POPCNT)
@@ -235,11 +270,16 @@ NOINLINE uint64_t popcnt64_bitwise_noinline(uint64_t x)
   return (x * h01) >> 56;
 }
 
+ALWAYS_INLINE uint64_t popcnt64_native(uint64_t x)
+{
+  return __popcnt(uint32_t(x)) +
+         __popcnt(uint32_t(x >> 32));
+}
+
 ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 {
   if_likely(cpu_supports_popcnt)
-    return __popcnt(uint32_t(x)) +
-           __popcnt(uint32_t(x >> 32));
+    return popcnt64_native(x);
   else
     return popcnt64_bitwise_noinline(x);
 }
@@ -251,7 +291,7 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 /// It uses 12 arithmetic operations, one of which is a multiply.
 /// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
 ///
-ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+ALWAYS_INLINE uint64_t popcnt64_native(uint64_t x)
 {
   uint64_t m1 = 0x5555555555555555ull;
   uint64_t m2 = 0x3333333333333333ull;
@@ -263,6 +303,11 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
   x = (x + (x >> 4)) & m4;
 
   return (x * h01) >> 56;
+}
+
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
+  return popcnt64_native(x);
 }
 
 #endif
@@ -279,9 +324,14 @@ namespace {
 /// We only use the C++ standard library as a fallback if there
 /// are no compiler intrinsics available for POPCNT.
 /// Compiler intrinsics often generate faster assembly.
-ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+ALWAYS_INLINE uint64_t popcnt64_native(uint64_t x)
 {
   return std::popcount(x);
+}
+
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
+  return popcnt64_native(x);
 }
 
 } // namespace
@@ -295,7 +345,7 @@ namespace {
 /// It uses 12 arithmetic operations, one of which is a multiply.
 /// http://en.wikipedia.org/wiki/Hamming_weight#Efficient_implementation
 ///
-ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+ALWAYS_INLINE uint64_t popcnt64_native(uint64_t x)
 {
   uint64_t m1 = 0x5555555555555555ull;
   uint64_t m2 = 0x3333333333333333ull;
@@ -307,6 +357,11 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
   x = (x + (x >> 4)) & m4;
 
   return (x * h01) >> 56;
+}
+
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
+  return popcnt64_native(x);
 }
 
 } // namespace
