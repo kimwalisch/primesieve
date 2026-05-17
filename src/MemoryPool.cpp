@@ -24,6 +24,7 @@
 #include <primesieve/Vector.hpp>
 #include <primesieve/primesieve_error.hpp>
 
+#include <stdint.h>
 #include <algorithm>
 #include <memory>
 
@@ -89,7 +90,7 @@ void MemoryPool::initBuckets(void* alignedPtr)
 {
   Bucket* buckets = (Bucket*) alignedPtr;
 
-  if_unlikely((std::size_t) buckets % sizeof(Bucket) != 0)
+  if_unlikely(uintptr_t(buckets) % sizeof(Bucket) != 0)
     throw primesieve_error("MemoryPool: failed to align memory!");
   if_unlikely(count_ < 10)
     throw primesieve_error("MemoryPool: insufficient buckets allocated!");

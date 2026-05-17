@@ -23,12 +23,12 @@
 #include "SievingPrimes.hpp"
 
 #include <primesieve/forward.hpp>
-#include <primesieve/littleendian_cast.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/popcnt.hpp>
+#include <primesieve/util.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>

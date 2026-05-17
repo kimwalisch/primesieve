@@ -1,3 +1,9 @@
+Changes in version 12.15, 17/05/2026
+====================================
+
+* util.hpp: Fix undefined behavior in littleendian_cast<T>().
+* PrimeGenerator_x86_avx512.hpp: Fix undefined behavior.
+
 Changes in version 12.14, 08/05/2026
 ====================================
 
