@@ -27,11 +27,11 @@
 
 namespace primesieve {
 
-uint64_t popcount(const Vector<uint8_t>& array)
+uint64_t popcount(const Vector<uint8_t>& vect)
 {
-  ASSERT(array.capacity() % sizeof(uint64_t) == 0);
-  uint64_t bytes = array.size();
-  const uint8_t* data = array.data();
+  ASSERT(vect.capacity() % sizeof(uint64_t) == 0);
+  const uint8_t* array = vect.data();
+  uint64_t bytes = vect.size();
 
   constexpr uint64_t iter_bytes = sizeof(uint64_t) * 4;
   uint64_t limit = bytes - bytes % iter_bytes;
@@ -40,13 +40,13 @@ uint64_t popcount(const Vector<uint8_t>& array)
 
   for(i = 0; i < limit; i += iter_bytes)
   {
-    cnt += popcnt64(&data[i + 0 * sizeof(uint64_t)]);
-    cnt += popcnt64(&data[i + 1 * sizeof(uint64_t)]);
-    cnt += popcnt64(&data[i + 2 * sizeof(uint64_t)]);
-    cnt += popcnt64(&data[i + 3 * sizeof(uint64_t)]);
+    cnt += popcnt64(&array[i + 0 * sizeof(uint64_t)]);
+    cnt += popcnt64(&array[i + 1 * sizeof(uint64_t)]);
+    cnt += popcnt64(&array[i + 2 * sizeof(uint64_t)]);
+    cnt += popcnt64(&array[i + 3 * sizeof(uint64_t)]);
   }
   for(; i < bytes; i += sizeof(uint64_t))
-    cnt += popcnt64(&data[i]);
+    cnt += popcnt64(&array[i]);
 
   return cnt;
 }
@@ -87,49 +87,49 @@ namespace primesieve {
 /// This implementation uses only 5.69 instructions per 64-bit word.
 /// @see Chapter 5 in "Hacker's Delight" 2nd edition.
 ///
-uint64_t popcount(const Vector<uint8_t>& array)
+uint64_t popcount(const Vector<uint8_t>& vect)
 {
-  ASSERT(array.capacity() % sizeof(uint64_t) == 0);
-  uint64_t bytes = array.size();
-  const uint8_t* data = array.data();
+  ASSERT(vect.capacity() % sizeof(uint64_t) == 0);
+  const uint8_t* array = vect.data();
+  uint64_t bytes = vect.size();
 
   uint64_t total = 0;
   uint64_t ones = 0, twos = 0, fours = 0, eights = 0, sixteens = 0;
   uint64_t twosA, twosB, foursA, foursB, eightsA, eightsB;
   constexpr uint64_t iter_bytes = sizeof(uint64_t) * 16;
   uint64_t limit = bytes - bytes % iter_bytes;
-  uint64_t i = 0;
+  uint64_t i;
 
-  for(; i < limit; i += iter_bytes)
+  for(i = 0; i < limit; i += iter_bytes)
   {
     CSA(twosA, ones, ones,
-        load_aligned<uint64_t>(&data[i + 0 * sizeof(uint64_t)]),
-        load_aligned<uint64_t>(&data[i + 1 * sizeof(uint64_t)]));
+        load_aligned<uint64_t>(&array[i + 0 * sizeof(uint64_t)]),
+        load_aligned<uint64_t>(&array[i + 1 * sizeof(uint64_t)]));
     CSA(twosB, ones, ones,
-        load_aligned<uint64_t>(&data[i + 2 * sizeof(uint64_t)]),
-        load_aligned<uint64_t>(&data[i + 3 * sizeof(uint64_t)]));
+        load_aligned<uint64_t>(&array[i + 2 * sizeof(uint64_t)]),
+        load_aligned<uint64_t>(&array[i + 3 * sizeof(uint64_t)]));
     CSA(foursA, twos, twos, twosA, twosB);
     CSA(twosA, ones, ones,
-        load_aligned<uint64_t>(&data[i + 4 * sizeof(uint64_t)]),
-        load_aligned<uint64_t>(&data[i + 5 * sizeof(uint64_t)]));
+        load_aligned<uint64_t>(&array[i + 4 * sizeof(uint64_t)]),
+        load_aligned<uint64_t>(&array[i + 5 * sizeof(uint64_t)]));
     CSA(twosB, ones, ones,
-        load_aligned<uint64_t>(&data[i + 6 * sizeof(uint64_t)]),
-        load_aligned<uint64_t>(&data[i + 7 * sizeof(uint64_t)]));
+        load_aligned<uint64_t>(&array[i + 6 * sizeof(uint64_t)]),
+        load_aligned<uint64_t>(&array[i + 7 * sizeof(uint64_t)]));
     CSA(foursB, twos, twos, twosA, twosB);
     CSA(eightsA,fours, fours, foursA, foursB);
     CSA(twosA, ones, ones,
-        load_aligned<uint64_t>(&data[i + 8 * sizeof(uint64_t)]),
-        load_aligned<uint64_t>(&data[i + 9 * sizeof(uint64_t)]));
+        load_aligned<uint64_t>(&array[i + 8 * sizeof(uint64_t)]),
+        load_aligned<uint64_t>(&array[i + 9 * sizeof(uint64_t)]));
     CSA(twosB, ones, ones,
-        load_aligned<uint64_t>(&data[i + 10 * sizeof(uint64_t)]),
-        load_aligned<uint64_t>(&data[i + 11 * sizeof(uint64_t)]));
+        load_aligned<uint64_t>(&array[i + 10 * sizeof(uint64_t)]),
+        load_aligned<uint64_t>(&array[i + 11 * sizeof(uint64_t)]));
     CSA(foursA, twos, twos, twosA, twosB);
     CSA(twosA, ones, ones,
-        load_aligned<uint64_t>(&data[i + 12 * sizeof(uint64_t)]),
-        load_aligned<uint64_t>(&data[i + 13 * sizeof(uint64_t)]));
+        load_aligned<uint64_t>(&array[i + 12 * sizeof(uint64_t)]),
+        load_aligned<uint64_t>(&array[i + 13 * sizeof(uint64_t)]));
     CSA(twosB, ones, ones,
-        load_aligned<uint64_t>(&data[i + 14 * sizeof(uint64_t)]),
-        load_aligned<uint64_t>(&data[i + 15 * sizeof(uint64_t)]));
+        load_aligned<uint64_t>(&array[i + 14 * sizeof(uint64_t)]),
+        load_aligned<uint64_t>(&array[i + 15 * sizeof(uint64_t)]));
     CSA(foursB, twos, twos, twosA, twosB);
     CSA(eightsB, fours, fours, foursA, foursB);
     CSA(sixteens, eights, eights, eightsA, eightsB);
@@ -144,7 +144,7 @@ uint64_t popcount(const Vector<uint8_t>& array)
   total += 1 * popcnt64(ones);
 
   for(; i < bytes; i += sizeof(uint64_t))
-    total += popcnt64(&data[i]);
+    total += popcnt64(&array[i]);
 
   return total;
 }
