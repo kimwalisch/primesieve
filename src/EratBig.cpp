@@ -18,7 +18,7 @@
 ///         after the last multiple of each sieving prime is removed
 ///         from the sieve array.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -121,29 +121,30 @@ const primesieve::Array<WheelElement, 8*48> wheel210 =
 
 namespace primesieve {
 
-/// @stop:      Upper bound for sieving
-/// @sieveSize: Sieve size in bytes
-/// @maxPrime:  Sieving primes <= maxPrime
+/// @stop:     Upper bound for sieving
+/// @maxPrime: Sieving primes <= maxPrime
 ///
 void EratBig::init(uint64_t stop,
-                   uint64_t sieveSize,
                    uint64_t maxPrime,
+                   const Vector<uint64_t>& sieve,
                    MemoryPool& memoryPool)
 {
-  // '>> log2SieveSize' requires power of 2 sieveSize
-  ASSERT(isPow2(sieveSize));
-  ASSERT(sieveSize <= SievingPrime::MAX_MULTIPLEINDEX + 1);
+  uint64_t sieveBytes = sieve.size() * sizeof(uint64_t);
+
+  // '>> log2SieveBytes' requires power of 2 sieveBytes
+  ASSERT(isPow2(sieveBytes));
+  ASSERT(sieveBytes <= SievingPrime::MAX_MULTIPLEINDEX + 1);
 
   stop_ = stop;
   maxPrime_ = maxPrime;
-  log2SieveSize_ = ilog2(sieveSize);
-  moduloSieveSize_ = sieveSize - 1;
+  log2SieveBytes_ = ilog2(sieveBytes);
+  moduloSieveBytes_ = sieveBytes - 1;
   memoryPool_ = &memoryPool;
 
   uint64_t maxSievingPrime = maxPrime_ / 30;
   uint64_t maxNextMultiple = maxSievingPrime * getMaxFactor() + getMaxFactor();
-  uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
-  uint64_t maxSegmentIndex = maxMultipleIndex >> log2SieveSize_;
+  uint64_t maxMultipleIndex = sieveBytes - 1 + maxNextMultiple;
+  uint64_t maxSegmentIndex = maxMultipleIndex >> log2SieveBytes_;
   uint64_t maxSize = maxSegmentIndex + 1;
   buckets_.reserve(maxSize);
 }
@@ -153,14 +154,14 @@ void EratBig::storeSievingPrime(uint64_t prime,
                                 uint64_t multipleIndex,
                                 uint64_t wheelIndex)
 {
-  uint64_t sieveSize = 1ull << log2SieveSize_;
+  uint64_t sieveBytes = 1ull << log2SieveBytes_;
   uint64_t sievingPrime = prime / 30;
   uint64_t maxNextMultiple = sievingPrime * getMaxFactor() + getMaxFactor();
-  uint64_t maxMultipleIndex = sieveSize - 1 + maxNextMultiple;
-  uint64_t maxSegmentIndex = maxMultipleIndex >> log2SieveSize_;
+  uint64_t maxMultipleIndex = sieveBytes - 1 + maxNextMultiple;
+  uint64_t maxSegmentIndex = maxMultipleIndex >> log2SieveBytes_;
   uint64_t newSize = maxSegmentIndex + 1;
-  uint64_t segment = multipleIndex >> log2SieveSize_;
-  multipleIndex &= moduloSieveSize_;
+  uint64_t segment = multipleIndex >> log2SieveBytes_;
+  multipleIndex &= moduloSieveBytes_;
 
   while (buckets_.size() < newSize)
     buckets_.push_back(nullptr);
@@ -174,8 +175,10 @@ void EratBig::storeSievingPrime(uint64_t prime,
   buckets_[segment]++->set(sievingPrime, multipleIndex, wheelIndex);
 }
 
-void EratBig::crossOff(Vector<uint8_t>& sieve)
+void EratBig::crossOff(Vector<uint64_t>& sieve)
 {
+  uint8_t* sieve8 = (uint8_t*) sieve.data();
+
   while (buckets_[0])
   {
     Bucket* bucket = Bucket::get(buckets_[0]);
@@ -186,7 +189,7 @@ void EratBig::crossOff(Vector<uint8_t>& sieve)
     // to the current segment.
     while (bucket)
     {
-      crossOff(sieve.data(), bucket->begin(), bucket->end());
+      crossOff(sieve8, bucket->begin(), bucket->end());
       Bucket* processed = bucket;
       bucket = bucket->next();
       memoryPool_->freeBucket(processed);
@@ -214,8 +217,8 @@ void EratBig::crossOff(uint8_t* sieve,
 {
   auto buckets = buckets_.data();
   MemoryPool& memoryPool = *memoryPool_;
-  std::size_t moduloSieveSize = moduloSieveSize_;
-  std::size_t log2SieveSize = log2SieveSize_;
+  std::size_t moduloSieveBytes = moduloSieveBytes_;
+  std::size_t log2SieveBytes = log2SieveBytes_;
 
   for (; prime != end; prime++)
   {
@@ -229,8 +232,8 @@ void EratBig::crossOff(uint8_t* sieve,
     multipleIndex += wheel210[wheelIndex].nextMultipleFactor * sievingPrime;
     multipleIndex += wheel210[wheelIndex].correct;
     wheelIndex = wheel210[wheelIndex].next;
-    std::size_t segment = multipleIndex >> log2SieveSize;
-    multipleIndex &= moduloSieveSize;
+    std::size_t segment = multipleIndex >> log2SieveBytes;
+    multipleIndex &= moduloSieveBytes;
 
     if (Bucket::isFull(buckets[segment]))
       memoryPool.addBucket(buckets[segment]);

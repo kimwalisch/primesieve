@@ -11,7 +11,7 @@
 ///         by up to 30% for sieving primes that have only a few
 ///         multiple occurrences per segment.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -66,9 +66,11 @@ void EratMedium::storeSievingPrime(uint64_t prime,
   buckets_[wheelIndex]++->set(sievingPrime, multipleIndex, wheelIndex);
 }
 
-void EratMedium::crossOff(Vector<uint8_t>& sieve)
+void EratMedium::crossOff(Vector<uint64_t>& sieve)
 {
   currentBuckets_.swap(buckets_);
+  uint8_t* sieve8 = (uint8_t*) sieve.data();
+  std::size_t sieveBytes = sieve.size() * sizeof(uint64_t);
 
   // Iterate over the 64 bucket lists.
   // The 1st list contains sieving primes with wheelIndex = 0.
@@ -91,14 +93,14 @@ void EratMedium::crossOff(Vector<uint8_t>& sieve)
       {
         switch (wheelIndex / 8)
         {
-          case 0: crossOff_7 (sieve.data(), sieve.size(), bucket); break;
-          case 1: crossOff_11(sieve.data(), sieve.size(), bucket); break;
-          case 2: crossOff_13(sieve.data(), sieve.size(), bucket); break;
-          case 3: crossOff_17(sieve.data(), sieve.size(), bucket); break;
-          case 4: crossOff_19(sieve.data(), sieve.size(), bucket); break;
-          case 5: crossOff_23(sieve.data(), sieve.size(), bucket); break;
-          case 6: crossOff_29(sieve.data(), sieve.size(), bucket); break;
-          case 7: crossOff_31(sieve.data(), sieve.size(), bucket); break;
+          case 0: crossOff_7 (sieve8, sieveBytes, bucket); break;
+          case 1: crossOff_11(sieve8, sieveBytes, bucket); break;
+          case 2: crossOff_13(sieve8, sieveBytes, bucket); break;
+          case 3: crossOff_17(sieve8, sieveBytes, bucket); break;
+          case 4: crossOff_19(sieve8, sieveBytes, bucket); break;
+          case 5: crossOff_23(sieve8, sieveBytes, bucket); break;
+          case 6: crossOff_29(sieve8, sieveBytes, bucket); break;
+          case 7: crossOff_31(sieve8, sieveBytes, bucket); break;
           default: UNREACHABLE;
         }
 
@@ -117,9 +119,9 @@ void EratMedium::crossOff(Vector<uint8_t>& sieve)
 /// correctly by the CPU.
 ///
 #define CHECK_FINISHED(wheelIndex) \
-  if_unlikely(i >= sieveSize) \
+  if_unlikely(i >= sieveBytes) \
   { \
-    i -= sieveSize; \
+    i -= sieveBytes; \
     if (Bucket::isFull(buckets[wheelIndex])) \
       memoryPool.addBucket(buckets[wheelIndex]); \
     buckets[wheelIndex]++->set(sievingPrime, i, wheelIndex); \
@@ -127,7 +129,7 @@ void EratMedium::crossOff(Vector<uint8_t>& sieve)
   }
 
 /// For sieving primes of type n % 30 == 7
-void EratMedium::crossOff_7(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff_7(uint8_t* sieve, std::size_t sieveBytes, Bucket* bucket)
 {
   auto buckets = buckets_.data();
   MemoryPool& memoryPool = *memoryPool_;
@@ -165,7 +167,7 @@ void EratMedium::crossOff_7(uint8_t* sieve, std::size_t sieveSize, Bucket* bucke
 }
 
 /// For sieving primes of type n % 30 == 11
-void EratMedium::crossOff_11(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff_11(uint8_t* sieve, std::size_t sieveBytes, Bucket* bucket)
 {
   auto buckets = buckets_.data();
   MemoryPool& memoryPool = *memoryPool_;
@@ -206,7 +208,7 @@ void EratMedium::crossOff_11(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 }
 
 /// For sieving primes of type n % 30 == 13
-void EratMedium::crossOff_13(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff_13(uint8_t* sieve, std::size_t sieveBytes, Bucket* bucket)
 {
   auto buckets = buckets_.data();
   MemoryPool& memoryPool = *memoryPool_;
@@ -247,7 +249,7 @@ void EratMedium::crossOff_13(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 }
 
 /// For sieving primes of type n % 30 == 17
-void EratMedium::crossOff_17(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff_17(uint8_t* sieve, std::size_t sieveBytes, Bucket* bucket)
 {
   auto buckets = buckets_.data();
   MemoryPool& memoryPool = *memoryPool_;
@@ -288,7 +290,7 @@ void EratMedium::crossOff_17(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 }
 
 /// For sieving primes of type n % 30 == 19
-void EratMedium::crossOff_19(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff_19(uint8_t* sieve, std::size_t sieveBytes, Bucket* bucket)
 {
   auto buckets = buckets_.data();
   MemoryPool& memoryPool = *memoryPool_;
@@ -329,7 +331,7 @@ void EratMedium::crossOff_19(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 }
 
 /// For sieving primes of type n % 30 == 23
-void EratMedium::crossOff_23(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff_23(uint8_t* sieve, std::size_t sieveBytes, Bucket* bucket)
 {
   auto buckets = buckets_.data();
   MemoryPool& memoryPool = *memoryPool_;
@@ -369,7 +371,7 @@ void EratMedium::crossOff_23(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 }
 
 /// For sieving primes of type n % 30 == 29
-void EratMedium::crossOff_29(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff_29(uint8_t* sieve, std::size_t sieveBytes, Bucket* bucket)
 {
   auto buckets = buckets_.data();
   MemoryPool& memoryPool = *memoryPool_;
@@ -409,7 +411,7 @@ void EratMedium::crossOff_29(uint8_t* sieve, std::size_t sieveSize, Bucket* buck
 }
 
 /// For sieving primes of type n % 30 == 1
-void EratMedium::crossOff_31(uint8_t* sieve, std::size_t sieveSize, Bucket* bucket)
+void EratMedium::crossOff_31(uint8_t* sieve, std::size_t sieveBytes, Bucket* bucket)
 {
   auto buckets = buckets_.data();
   MemoryPool& memoryPool = *memoryPool_;

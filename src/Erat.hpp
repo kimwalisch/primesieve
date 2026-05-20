@@ -1,7 +1,7 @@
 ///
 /// @file  Erat.hpp
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -46,7 +46,7 @@ protected:
   /// Upper bound of the current segment
   uint64_t segmentHigh_ = 0;
   /// Sieve of Eratosthenes array
-  Vector<uint8_t> sieve_;
+  Vector<uint64_t> sieve_;
   Erat() = default;
   Erat(uint64_t, uint64_t);
   void init(uint64_t, uint64_t, uint64_t, MemoryPool& memoryPool);
@@ -63,7 +63,7 @@ private:
   EratMedium eratMedium_;
   static uint64_t byteRemainder(uint64_t);
   static uint64_t getL1CacheSize();
-  void initAlgorithms(uint64_t maxSieveSize, MemoryPool&);
+  void initAlgorithms(uint64_t maxSieveBytes, MemoryPool&);
   void preSieve();
   void crossOff();
   void sieveLastSegment();
