@@ -9,7 +9,7 @@
 ///         multiples uses as few instructions as possible since there
 ///         are so many multiples.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -61,15 +61,15 @@ void EratSmall::storeSievingPrime(uint64_t prime,
 /// size. EratSmall however, runs fastest using a smaller sieve
 /// size that matches the CPU's L1 cache size.
 ///
-/// @sieveSize:   EratBig & EratMedium sieve size
-/// @l1CacheSize: EratSmall sieve size
-///
-void EratSmall::crossOff(Vector<uint8_t>& sieve)
+void EratSmall::crossOff(Vector<uint64_t>& sieve)
 {
-  for (std::size_t i = 0; i < sieve.size(); i += l1CacheSize_)
+  uint8_t* sieve8 = (uint8_t*) sieve.data();
+  std::size_t sieveBytes = sieve.size() * sizeof(uint64_t);
+
+  for (std::size_t i = 0; i < sieveBytes; i += l1CacheSize_)
   {
-    std::size_t sieveSize = std::min(l1CacheSize_, sieve.size() - i);
-    crossOff(&sieve[i], sieveSize);
+    std::size_t chunkSize = std::min(l1CacheSize_, sieveBytes - i);
+    crossOff(&sieve8[i], chunkSize);
   }
 }
 
@@ -78,12 +78,12 @@ void EratSmall::crossOff(Vector<uint8_t>& sieve)
 /// per segment. This algorithm uses a hardcoded modulo 30
 /// wheel that skips multiples of 2, 3 and 5.
 ///
-void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
+void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveBytes)
 {
   #define CHECK_FINISHED(wheelIndex) \
-    if (i >= sieveSize) \
+    if (i >= sieveBytes) \
     { \
-      std::size_t multipleIndex = i - sieveSize; \
+      std::size_t multipleIndex = i - sieveBytes; \
       prime.set(multipleIndex, wheelIndex); \
       goto next_iteration; \
     }
@@ -102,7 +102,7 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 0: {
                   std::size_t maxOffset = sievingPrime * 28 + 6;
-                  std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
+                  std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
 
                   // Each iteration removes the next 8
                   // multiples of the sievingPrime.
@@ -133,7 +133,7 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case  8: {
                    std::size_t maxOffset = sievingPrime * 28 + 10;
-                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
+                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 11)
                    {
@@ -162,7 +162,7 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 16: {
                    std::size_t maxOffset = sievingPrime * 28 + 12;
-                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
+                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 13)
                    {
@@ -191,7 +191,7 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 24: {
                    std::size_t maxOffset = sievingPrime * 28 + 16;
-                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
+                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 17)
                    {
@@ -220,7 +220,7 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 32: {
                    std::size_t maxOffset = sievingPrime * 28 + 18;
-                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
+                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 19)
                    {
@@ -249,7 +249,7 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 40: {
                    std::size_t maxOffset = sievingPrime * 28 + 22;
-                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
+                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 23)
                    {
@@ -278,7 +278,7 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 48: {
                    std::size_t maxOffset = sievingPrime * 28 + 27;
-                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
+                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 29)
                    {
@@ -307,7 +307,7 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveSize)
       {
         case 56: {
                    std::size_t maxOffset = sievingPrime * 28 + 1;
-                   std::size_t limit = std::max(sieveSize, maxOffset) - maxOffset;
+                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
 
                    for (; i < limit; i += sievingPrime * 30 + 1)
                    {

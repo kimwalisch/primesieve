@@ -29,7 +29,7 @@
 ///         Pre-sieving provides a speedup of up to 30% when sieving
 ///         the primes < 10^10 using primesieve.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2022 @zielaj, https://github.com/zielaj
 ///
 /// This file is distributed under the BSD License. See the COPYING
@@ -47,7 +47,7 @@ namespace primesieve {
 class PreSieve
 {
 public:
-  static void preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow);
+  static void preSieve(Vector<uint64_t>& sieve, uint64_t segmentLow);
   static uint64_t getMaxPrime() { return 163; }
 };
 

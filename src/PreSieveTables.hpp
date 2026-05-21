@@ -29,7 +29,7 @@
 ///         Pre-sieving provides a speedup of up to 30% when sieving
 ///         the primes < 10^10 using primesieve.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2022 @zielaj, https://github.com/zielaj
 ///
 /// This file is distributed under the BSD License. See the COPYING
@@ -83,7 +83,7 @@ const Array<std::initializer_list<uint64_t>, 16> preSievePrimes =
 
 int main()
 {
-  Array<Vector<uint8_t>, preSievePrimes.size()> preSieveTables;
+  Array<Vector<uint64_t>, preSievePrimes.size()> preSieveTables;
 
   for (std::size_t i = 0; i < preSieveTables.size(); i++)
   {
@@ -94,14 +94,15 @@ int main()
 
     uint64_t start = product;
     uint64_t stop = start + product;
-    preSieveTables[i].resize(product / 30);
-    std::fill(preSieveTables[i].begin(), preSieveTables[i].end(), 0xff);
+    uint64_t bytes = product / 30;
+    preSieveTables[i].resize((bytes + sizeof(uint64_t) - 1) / sizeof(uint64_t));
+    std::fill(preSieveTables[i].begin(), preSieveTables[i].end(), ~0ull);
     uint64_t maxPrime = *(preSievePrimes[i].end() - 1);
     ASSERT(maxPrime == *std::max_element(preSievePrimes[i].begin(), preSievePrimes[i].end()));
     ASSERT(start >= maxPrime * maxPrime);
 
     EratSmall eratSmall;
-    eratSmall.init(stop, preSieveTables[i].size(), maxPrime);
+    eratSmall.init(stop, bytes, maxPrime);
 
     for (uint64_t prime : preSievePrimes[i])
       eratSmall.addSievingPrime(prime, start);
@@ -116,12 +117,16 @@ int main()
   for (std::size_t i = 0; i < preSieveTables.size(); i++)
   {
     std::cout << "  { ";
-    for (std::size_t j = 0; j < preSieveTables[i].size(); j++)
+    uint8_t* table = (uint8_t*) preSieveTables[i].data();
+    std::size_t bytes = 1;
+    for (uint64_t prime : preSievePrimes[i])
+      bytes *= prime;
+    for (std::size_t j = 0; j < bytes; j++)
     {
       if (j != 0 && j % 20 == 0)
         std::cout << std::endl << "    ";
-      std::cout << "0x" << std::hex << (int) preSieveTables[i][j];
-      if (j + 1 < preSieveTables[i].size())
+      std::cout << "0x" << std::hex << (int) table[j];
+      if (j + 1 < bytes)
         std::cout << ((j+1) % 20 == 0 ? "," : ", ");
     }
     std::cout << (i + 1 < preSieveTables.size() ? " }," : " }") << std::endl;

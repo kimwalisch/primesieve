@@ -372,14 +372,6 @@ private:
     capacity_ = begin_ + new_capacity;
     ASSERT(size() < capacity());
 
-    // Both primesieve & primecount require that byte arrays are
-    // aligned to at least a alignof(uint64_t) boundary. This is
-    // needed because our code casts byte arrays into uint64_t arrays
-    // in some places in order to improve performance. The default
-    // allocator guarantees that each memory allocation is at least
-    // aligned to the largest built-in type (usually 16 or 32).
-    ASSERT(((uintptr_t) (void*) begin_) % sizeof(uint64_t) == 0);
-
     // The code below is guaranteed to not throw
     // any exceptions, hence no memory leaks are
     // possible here anymore.
@@ -413,14 +405,6 @@ private:
       {
         begin = Allocator().allocate(cap);
         capacity = cap;
-
-        // Both primesieve & primecount require that byte arrays are
-        // aligned to at least a alignof(uint64_t) boundary. This is
-        // needed because our code casts byte arrays into uint64_t arrays
-        // in some places in order to improve performance. The default
-        // allocator guarantees that each memory allocation is at least
-        // aligned to the largest built-in type (usually 16 or 32).
-        ASSERT(((uintptr_t) (void*) begin) % sizeof(uint64_t) == 0);
       }
 
       ~AllocateMemory()
@@ -476,14 +460,6 @@ private:
       {
         begin = Allocator().allocate(cap);
         capacity = cap;
-
-        // Both primesieve & primecount require that byte arrays are
-        // aligned to at least a alignof(uint64_t) boundary. This is
-        // needed because our code casts byte arrays into uint64_t arrays
-        // in some places in order to improve performance. The default
-        // allocator guarantees that each memory allocation is at least
-        // aligned to the largest built-in type (usually 16 or 32).
-        ASSERT(((uintptr_t) (void*) begin) % sizeof(uint64_t) == 0);
       }
 
       ~AllocateMemory()

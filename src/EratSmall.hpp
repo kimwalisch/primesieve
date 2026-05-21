@@ -1,7 +1,7 @@
 ///
 /// @file  EratSmall.hpp
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -29,7 +29,7 @@ class EratSmall : public Wheel30_t
 {
 public:
   void init(uint64_t, uint64_t, uint64_t);
-  void crossOff(Vector<uint8_t>& sieve);
+  void crossOff(Vector<uint64_t>& sieve);
   bool hasSievingPrimes() const { return !primes_.empty(); }
 private:
   uint64_t maxPrime_ = 0;

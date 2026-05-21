@@ -17,7 +17,6 @@
 #define POPCNT_HPP
 
 #include "macros.hpp"
-#include "util.hpp"
 
 #include <stdint.h>
 
@@ -369,14 +368,5 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 } // namespace
 
 #endif
-
-namespace {
-
-ALWAYS_INLINE uint64_t popcnt64(const uint8_t* ptr)
-{
-  return popcnt64(load_aligned<uint64_t>(ptr));
-}
-
-} // namespace
 
 #endif // POPCNT_HPP

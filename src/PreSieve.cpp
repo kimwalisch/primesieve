@@ -29,7 +29,7 @@
 ///         Pre-sieving provides a speedup of up to 30% when sieving
 ///         the primes < 10^10 using primesieve.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2022 @zielaj, https://github.com/zielaj
 ///
 /// This file is distributed under the BSD License. See the COPYING
@@ -134,10 +134,12 @@ void presieve2(Args&&... args)
 
 namespace primesieve {
 
-void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
+void PreSieve::preSieve(Vector<uint64_t>& sieve, uint64_t segmentLow)
 {
   uint64_t offset = 0;
   uint64_t pos0, pos1, pos2, pos3;
+  uint8_t* sieve8 = (uint8_t*) sieve.data();
+  uint64_t sieveBytes = sieve.size() * sizeof(uint64_t);
 
   pos0 = (segmentLow % (preSieveTables[0].size() * 30)) / 30;
   pos1 = (segmentLow % (preSieveTables[1].size() * 30)) / 30;
@@ -148,9 +150,9 @@ void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
   // It performs a bitwise AND of the first four
   // preSieveTables and stores the result in the
   // sieve array, discarding its previous contents.
-  while (offset < sieve.size())
+  while (offset < sieveBytes)
   {
-    uint64_t bytesToCopy = sieve.size() - offset;
+    uint64_t bytesToCopy = sieveBytes - offset;
 
     bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[0].size() - pos0));
     bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[1].size() - pos1));
@@ -161,7 +163,7 @@ void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
               preSieveTables[1].begin() + pos1,
               preSieveTables[2].begin() + pos2,
               preSieveTables[3].begin() + pos3,
-              &sieve[offset],
+              &sieve8[offset],
               bytesToCopy);
 
     offset += bytesToCopy;
@@ -184,9 +186,9 @@ void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
     pos2 = (segmentLow % (preSieveTables[i+2].size() * 30)) / 30;
     pos3 = (segmentLow % (preSieveTables[i+3].size() * 30)) / 30;
 
-    while (offset < sieve.size())
+    while (offset < sieveBytes)
     {
-      uint64_t bytesToCopy = sieve.size() - offset;
+      uint64_t bytesToCopy = sieveBytes - offset;
 
       bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+0].size() - pos0));
       bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+1].size() - pos1));
@@ -197,7 +199,7 @@ void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
                 preSieveTables[i+1].begin() + pos1,
                 preSieveTables[i+2].begin() + pos2,
                 preSieveTables[i+3].begin() + pos3,
-                &sieve[offset],
+                &sieve8[offset],
                 bytesToCopy);
 
       offset += bytesToCopy;
@@ -215,12 +217,11 @@ void PreSieve::preSieve(Vector<uint8_t>& sieve, uint64_t segmentLow)
   if (segmentLow <= getMaxPrime())
   {
     uint64_t i = segmentLow / 30;
-    uint8_t* sieveArray = sieve.data();
     Array<uint8_t, 8> primeBits = { 0xff, 0xef, 0x77, 0x3f, 0xdb, 0xed, 0x9e, 0xfc };
 
-    ASSERT(sieve.capacity() >= primeBits.size());
+    ASSERT(sieveBytes >= primeBits.size());
     for (std::size_t j = 0; i + j < primeBits.size(); j++)
-      sieveArray[j] = primeBits[i + j];
+      sieve8[j] = primeBits[i + j];
   }
 }
 

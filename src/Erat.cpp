@@ -3,7 +3,7 @@
 /// @brief  The Erat class manages prime sieving using the
 ///         EratSmall, EratMedium, EratBig classes.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -76,8 +76,8 @@ void Erat::init(uint64_t start,
   stop_ = stop;
 
   // Convert KiB to bytes
-  maxSieveSize <<= 10;
-  initAlgorithms(maxSieveSize, memoryPool);
+  uint64_t maxSieveBytes = maxSieveSize << 10;
+  initAlgorithms(maxSieveBytes, memoryPool);
 }
 
 /// EratMedium and EratBig usually run fastest using a sieve
@@ -95,7 +95,7 @@ uint64_t Erat::getL1CacheSize()
     return config::L1D_CACHE_BYTES;
 }
 
-void Erat::initAlgorithms(uint64_t maxSieveSize,
+void Erat::initAlgorithms(uint64_t maxSieveBytes,
                           MemoryPool& memoryPool)
 {
   uint64_t sqrtStop = isqrt(stop_);
@@ -103,15 +103,15 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   l1CacheSize = inBetween(16 << 10, l1CacheSize, 8192 << 10);
 
   // ================================================================
-  // 1. sieveSize must satisfy: sieveSize % sizeof(uint64_t) == 0
+  // 1. sieveBytes must satisfy: sieveBytes % sizeof(uint64_t) == 0
   // ================================================================
 
   l1CacheSize = ceilDiv(l1CacheSize, sizeof(uint64_t)) * sizeof(uint64_t);
-  maxSieveSize = ceilDiv(maxSieveSize, sizeof(uint64_t)) * sizeof(uint64_t);
-  uint64_t minSieveSize = std::min(l1CacheSize, maxSieveSize);
+  maxSieveBytes = ceilDiv(maxSieveBytes, sizeof(uint64_t)) * sizeof(uint64_t);
+  uint64_t minSieveBytes = std::min(l1CacheSize, maxSieveBytes);
 
   // ================================================================
-  // 2. sieveSize = sqrt(stop) * FACTOR_SIEVESIZE
+  // 2. sieveBytes = sqrt(stop) * FACTOR_SIEVESIZE
   // ================================================================
 
   // Using a larger FACTOR_SIEVESIZE increases the segment size
@@ -120,21 +120,21 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   // a larger segment size is less cache efficient and hence
   // performance may deteriorate on CPUs with limited L2 cache
   // bandwidth (especially when using multi-threading).
-  uint64_t sieveSize = uint64_t(sqrtStop * config::FACTOR_SIEVESIZE);
+  uint64_t sieveBytes = uint64_t(sqrtStop * config::FACTOR_SIEVESIZE);
 
   // ================================================================
-  // 3. sieveSize = minSieveSize * x
+  // 3. sieveBytes = minSieveBytes * x
   // ================================================================
 
-  // The EratSmall algorithm uses minSieveSize as its segment
-  // size. If sieveSize is a multiple of minSieveSize then
+  // The EratSmall algorithm uses minSieveBytes as its segment
+  // size. If sieveBytes is a multiple of minSieveBytes then
   // there will be no short segments in EratSmall which should
   // provide optimal performance.
-  if (sieveSize > minSieveSize)
-    sieveSize -= sieveSize % minSieveSize;
+  if (sieveBytes > minSieveBytes)
+    sieveBytes -= sieveBytes % minSieveBytes;
 
   // ================================================================
-  // 4. L1CacheSize <= sieveSize <= L2CacheSize
+  // 4. L1CacheSize <= sieveBytes <= L2CacheSize
   // ================================================================
 
   // For small stop numbers a small sieve array size that
@@ -142,11 +142,10 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   // For larger stop numbers a sieve array size that is ~
   // L2CacheSize usually performs best. Hence our sieve size
   // increases dynamically based on the stop number but it
-  // can never exceed the L2CacheSize (or maxSieveSize).
-  sieveSize = inBetween(minSieveSize, sieveSize, maxSieveSize);
-  sieveSize = inBetween(16 << 10, sieveSize, 8192 << 10);
-  sieveSize = ceilDiv(sieveSize, sizeof(uint64_t)) * sizeof(uint64_t);
-  minSieveSize = std::min(l1CacheSize, sieveSize);
+  // can never exceed the L2CacheSize (or maxSieveBytes).
+  sieveBytes = inBetween(minSieveBytes, sieveBytes, maxSieveBytes);
+  sieveBytes = inBetween(16 << 10, sieveBytes, 8192 << 10);
+  minSieveBytes = std::min(l1CacheSize, sieveBytes);
 
   // ================================================================
   // 5. Initialize upper bounds for EratSmall & EratMedium
@@ -156,8 +155,8 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   // algorithm, medium sieving primes are processed using
   // the EratMedium algorithm and large sieving primes are
   // processed using the EratBig algorithm.
-  maxEratSmall_ = (uint64_t) (minSieveSize * config::FACTOR_ERATSMALL);
-  maxEratMedium_ = (uint64_t) (sieveSize * config::FACTOR_ERATMEDIUM);
+  maxEratSmall_ = (uint64_t) (minSieveBytes * config::FACTOR_ERATSMALL);
+  maxEratMedium_ = (uint64_t) (sieveBytes * config::FACTOR_ERATMEDIUM);
 
   // ================================================================
   // 6. EratBig requires a power of 2 sieve size
@@ -165,10 +164,10 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
 
   if (sqrtStop > maxEratMedium_)
   {
-    sieveSize = floorPow2(sieveSize);
-    minSieveSize = std::min(l1CacheSize, sieveSize);
-    maxEratSmall_ = (uint64_t) (minSieveSize * config::FACTOR_ERATSMALL);
-    maxEratMedium_ = (uint64_t) (sieveSize * config::FACTOR_ERATMEDIUM);
+    sieveBytes = floorPow2(sieveBytes);
+    minSieveBytes = std::min(l1CacheSize, sieveBytes);
+    maxEratSmall_ = (uint64_t) (minSieveBytes * config::FACTOR_ERATSMALL);
+    maxEratMedium_ = (uint64_t) (sieveBytes * config::FACTOR_ERATMEDIUM);
   }
 
   // ================================================================
@@ -184,17 +183,17 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
 
   // The 8 bits of each byte of the sieve array correspond to
   // the offsets { 7, 11, 13, 17, 19, 23, 29, 31 }. If we
-  // would set dist = sieveSize * 30 we would not include the
+  // would set dist = sieveBytes * 30 we would not include the
   // last bit of the last byte which corresponds to the offset
-  // 31. For this reason we set dist = sieveSize * 30 + 6.
+  // 31. For this reason we set dist = sieveBytes * 30 + 6.
   uint64_t rem = byteRemainder(start_);
-  uint64_t dist = sieveSize * 30 + 6;
+  uint64_t dist = sieveBytes * 30 + 6;
   segmentLow_ = start_ - rem;
   segmentHigh_ = checkedAdd(segmentLow_, dist);
   segmentHigh_ = std::min(segmentHigh_, stop_);
 
   // ================================================================
-  // 9. Use tiny sieveSize if possible
+  // 9. Use tiny sieveBytes if possible
   // ================================================================
 
   // If we are sieving just a single segment
@@ -205,23 +204,23 @@ void Erat::initAlgorithms(uint64_t maxSieveSize,
   {
     uint64_t rem = byteRemainder(stop_);
     uint64_t dist = (stop_ - rem) - segmentLow_;
-    sieveSize = dist / 30 + 1;
-    sieveSize = ceilDiv(sieveSize, sizeof(uint64_t)) * sizeof(uint64_t);
+    sieveBytes = dist / 30 + 1;
+    sieveBytes = ceilDiv(sieveBytes, sizeof(uint64_t)) * sizeof(uint64_t);
   }
 
   // ================================================================
   // 10. Finally, initialize EratSmall, EratMedium & EratBig
   // ================================================================
 
-  ASSERT(sieveSize % sizeof(uint64_t) == 0);
-  sieve_.resize(sieveSize);
+  ASSERT(sieveBytes % sizeof(uint64_t) == 0);
+  sieve_.resize(sieveBytes / sizeof(uint64_t));
 
   if (sqrtStop > PreSieve::getMaxPrime())
     eratSmall_.init(stop_, l1CacheSize, maxEratSmall_);
   if (sqrtStop > maxEratSmall_)
     eratMedium_.init(stop_, maxEratMedium_, memoryPool);
   if (sqrtStop > maxEratMedium_)
-    eratBig_.init(stop_, sieve_.size(), sqrtStop, memoryPool);
+    eratBig_.init(stop_, sqrtStop, sieve_, memoryPool);
 }
 
 bool Erat::hasNextSegment() const
@@ -244,7 +243,7 @@ void Erat::sieveSegment()
     preSieve();
     crossOff();
 
-    uint64_t dist = sieve_.size() * 30;
+    uint64_t dist = sieve_.size() * 240;
     segmentLow_ = checkedAdd(segmentLow_, dist);
     segmentHigh_ = checkedAdd(segmentHigh_, dist);
     segmentHigh_ = std::min(segmentHigh_, stop_);
@@ -257,18 +256,18 @@ void Erat::sieveLastSegment()
 {
   uint64_t rem = byteRemainder(stop_);
   uint64_t dist = (stop_ - rem) - segmentLow_;
-  sieve_.resize(dist / 30 + 1);
+  uint64_t sieveBytes = dist / 30 + 1;
+  sieve_.resize(ceilDiv(sieveBytes, sizeof(uint64_t)));
 
   preSieve();
   crossOff();
 
   // unset bits > stop
-  sieve_.back() &= unsetLarger[rem];
+  uint8_t* sieve = (uint8_t*) sieve_.data();
+  sieve[sieveBytes - 1] &= unsetLarger[rem];
 
   // unset bytes > stop
-  auto* sieve = sieve_.data();
-  auto i = sieve_.size();
-  ASSERT(sieve_.capacity() % sizeof(uint64_t) == 0);
+  uint64_t i = sieveBytes;
   for (; i % sizeof(uint64_t); i++)
     sieve[i] = 0;
 
@@ -286,7 +285,8 @@ void Erat::preSieve()
   if (segmentLow_ <= start_)
   {
     uint64_t rem = byteRemainder(start_);
-    sieve_[0] &= unsetSmaller[rem];
+    uint8_t* sieve = (uint8_t*) sieve_.data();
+    sieve[0] &= unsetSmaller[rem];
   }
 }
 

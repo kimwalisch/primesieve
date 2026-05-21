@@ -1,7 +1,7 @@
 ///
 /// @file PrimeGenerator_default.hpp
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2022 @zielaj, https://github.com/zielaj
 ///
 /// This file is distributed under the BSD License. See the COPYING
@@ -49,7 +49,7 @@ void PrimeGenerator::fillNextPrimes_default(Vector<uint64_t>& primes, std::size_
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieve_.size();
-    uint8_t* sieve = sieve_.data();
+    const uint64_t* sieve = sieve_.data();
 
     // Fill the buffer with at least (maxSize - 64) primes.
     // Each loop iteration can generate up to 64 primes
@@ -57,7 +57,7 @@ void PrimeGenerator::fillNextPrimes_default(Vector<uint64_t>& primes, std::size_
     // not enough space for 64 more primes.
     do
     {
-      uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
+      uint64_t bits = to_littleendian(sieve[sieveIdx]);
       std::size_t j = i;
       i += popcnt64(bits);
 
@@ -72,7 +72,7 @@ void PrimeGenerator::fillNextPrimes_default(Vector<uint64_t>& primes, std::size_
       while (j < i);
 
       low += 8 * 30;
-      sieveIdx += 8;
+      sieveIdx++;
     }
     while (i <= maxSize - 64 &&
            sieveIdx < sieveSize);
@@ -103,7 +103,7 @@ void PrimeGenerator::fillPrevPrimes_default(Vector<uint64_t>& primes, std::size_
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieve_.size();
-    uint8_t* sieve = sieve_.data();
+    const uint64_t* sieve = sieve_.data();
 
     while (sieveIdx < sieveSize)
     {
@@ -113,7 +113,7 @@ void PrimeGenerator::fillPrevPrimes_default(Vector<uint64_t>& primes, std::size_
       if_unlikely(i + 64 > primes.size())
         primes.resize(i + 64);
 
-      uint64_t bits = littleendian_cast<uint64_t>(&sieve[sieveIdx]);
+      uint64_t bits = to_littleendian(sieve[sieveIdx]);
       std::size_t j = i;
       i += popcnt64(bits);
 
@@ -128,7 +128,7 @@ void PrimeGenerator::fillPrevPrimes_default(Vector<uint64_t>& primes, std::size_
       while (j < i);
 
       low += 8 * 30;
-      sieveIdx += 8;
+      sieveIdx++;
     }
 
     low_ = low;

@@ -23,7 +23,7 @@ int get_num_threads();
 int get_sieve_size();
 
 uint64_t get_max_stop();
-uint64_t popcount(const Vector<uint8_t>& vect);
+uint64_t popcount(const Vector<uint64_t>& vect);
 
 } // namespace
 
