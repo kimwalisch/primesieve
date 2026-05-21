@@ -56,6 +56,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieve_.size();
+    const uint64_t* sieve = sieve_.data();
 
     __m512i avxBitValues = _mm512_set_epi8(
       (char) 241, (char) 239, (char) 233, (char) 229,
@@ -88,7 +89,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
     while (sieveIdx < sieveSize)
     {
       // Each iteration processes 8 bytes from the sieve array
-      uint64_t bits64 = sieve_[sieveIdx];
+      uint64_t bits64 = sieve[sieveIdx];
       uint64_t primeCount = popcnt64_native(bits64);
 
       // Prevent _mm512_storeu_si512() buffer overrun
@@ -194,6 +195,7 @@ void PrimeGenerator::fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
     uint64_t low = low_;
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieve_.size();
+    const uint64_t* sieve = sieve_.data();
 
     __m512i avxBitValues = _mm512_set_epi8(
       (char) 241, (char) 239, (char) 233, (char) 229,
@@ -226,7 +228,7 @@ void PrimeGenerator::fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
     while (sieveIdx < sieveSize)
     {
       // Each iteration processes 8 bytes from the sieve array
-      uint64_t bits64 = sieve_[sieveIdx];
+      uint64_t bits64 = sieve[sieveIdx];
       uint64_t primeCount = popcnt64_native(bits64);
 
       // Prevent _mm512_storeu_si512() buffer overrun
