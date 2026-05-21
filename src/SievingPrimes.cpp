@@ -68,6 +68,7 @@ void SievingPrimes::fill()
   size_t num = 0;
   uint64_t low = low_;
   uint64_t sieveSize = sieve_.size();
+  const uint64_t* sieve = sieve_.data();
   ASSERT(primes_.size() >= 64);
 
   // Fill the buffer with at least (primes_.size() - 64) primes.
@@ -76,7 +77,7 @@ void SievingPrimes::fill()
   // not enough space for 64 more primes.
   do
   {
-      uint64_t bits = to_littleendian(sieve_[sieveIdx_]);
+      uint64_t bits = to_littleendian(sieve[sieveIdx_]);
       size_t j = num;
       num += popcnt64(bits);
 
