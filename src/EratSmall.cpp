@@ -61,9 +61,6 @@ void EratSmall::storeSievingPrime(uint64_t prime,
 /// size. EratSmall however, runs fastest using a smaller sieve
 /// size that matches the CPU's L1 cache size.
 ///
-/// @sieveBytes:  EratBig & EratMedium sieve size
-/// @l1CacheSize: EratSmall sieve size
-///
 void EratSmall::crossOff(Vector<uint64_t>& sieve)
 {
   uint8_t* sieve8 = (uint8_t*) sieve.data();
