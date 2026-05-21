@@ -145,7 +145,6 @@ void Erat::initAlgorithms(uint64_t maxSieveBytes,
   // can never exceed the L2CacheSize (or maxSieveBytes).
   sieveBytes = inBetween(minSieveBytes, sieveBytes, maxSieveBytes);
   sieveBytes = inBetween(16 << 10, sieveBytes, 8192 << 10);
-  sieveBytes = ceilDiv(sieveBytes, sizeof(uint64_t)) * sizeof(uint64_t);
   minSieveBytes = std::min(l1CacheSize, sieveBytes);
 
   // ================================================================
@@ -269,8 +268,7 @@ void Erat::sieveLastSegment()
 
   // unset bytes > stop
   uint64_t i = sieveBytes;
-  uint64_t bytes = sieve_.size() * sizeof(uint64_t);
-  for (; i < bytes; i++)
+  for (; i % sizeof(uint64_t); i++)
     sieve[i] = 0;
 
   segmentLow_ = stop_;
