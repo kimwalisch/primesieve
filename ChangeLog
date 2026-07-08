@@ -1,6 +1,7 @@
 Changes in version 12.15, 27/06/2026
 ====================================
 
+* macros.hpp: Add INDETERMINATE macro to prevent memset zero initialization of large stack arrays.
 * nthPrime.cpp: Fix undefined behavior.
 * util.hpp: Fix undefined behavior in littleendian_cast<T>().
 * PrimeGenerator_x86_avx512.hpp: Fix undefined behavior.

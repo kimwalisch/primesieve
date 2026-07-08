@@ -6,7 +6,7 @@
 ///         miscalculation occurs (due to a hardware issue) or the
 ///         timeout (--timeout=SECS option) expires.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -250,7 +250,7 @@ void printResult(int threadId,
 ///
 NOINLINE uint64_t countPrimes1(uint64_t start, uint64_t stop)
 {
-  primesieve::PrimeSieve ps;
+  INDETERMINATE primesieve::PrimeSieve ps;
   return ps.countPrimes(start, stop);
 }
 

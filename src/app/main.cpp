@@ -15,7 +15,7 @@
 ///         4) Document your option in help.cpp (--help option summary)
 ///            and in doc/primesieve.txt (manpage).
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -26,6 +26,7 @@
 #include <CpuInfo.hpp>
 #include <ParallelSieve.hpp>
 #include <RiemannR.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/Vector.hpp>
 
@@ -95,7 +96,7 @@ void sieve(const CmdOptions& opts)
   if (opts.numbers.empty())
     throw primesieve_error("missing STOP number");
 
-  ParallelSieve ps;
+  INDETERMINATE ParallelSieve ps;
 
   if (opts.flags)
     ps.setFlags(opts.flags);
@@ -157,7 +158,7 @@ void nthPrime(const CmdOptions& opts)
   if (opts.numbers.empty())
     throw primesieve_error("missing n number");
 
-  ParallelSieve ps;
+  INDETERMINATE ParallelSieve ps;
   int64_t n = opts.numbers[0];
   uint64_t start = 0;
 

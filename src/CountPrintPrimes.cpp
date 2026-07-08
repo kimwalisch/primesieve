@@ -133,7 +133,7 @@ void CountPrintPrimes::initCounts()
 void CountPrintPrimes::sieve()
 {
   uint64_t sieveSize = ps_.getSieveSize();
-  SievingPrimes sievingPrimes(this, sieveSize, memoryPool_);
+  INDETERMINATE SievingPrimes sievingPrimes(this, sieveSize, memoryPool_);
   uint64_t prime = sievingPrimes.next();
 
   while (hasNextSegment())

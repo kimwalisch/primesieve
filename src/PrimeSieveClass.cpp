@@ -15,6 +15,7 @@
 #include "CountPrintPrimes.hpp"
 
 #include <primesieve/forward.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/Vector.hpp>
 
@@ -302,7 +303,7 @@ void PrimeSieve::sieve()
 
   if (stop_ >= 7)
   {
-    CountPrintPrimes countPrintPrimes(*this);
+    INDETERMINATE CountPrintPrimes countPrintPrimes(*this);
     countPrintPrimes.sieve();
   }
 

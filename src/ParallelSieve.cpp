@@ -154,7 +154,7 @@ void ParallelSieve::sieve()
     // Each thread executes 1 task
     auto task = [&]()
     {
-      PrimeSieve ps(this);
+      INDETERMINATE PrimeSieve ps(this);
       uint64_t i;
       counts_t counts;
       counts.fill(0);

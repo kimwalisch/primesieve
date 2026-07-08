@@ -127,4 +127,19 @@
   #endif
 #endif
 
+/// By default C++26 (and GCC/Clang's -ftrivial-auto-var-init) zero
+/// initializes variables with automatic storage duration. In primesieve
+/// we place INDETERMINATE in front of large stack variable declarations
+/// whose memory is initialized later, in order to prevent this and
+/// avoid the unnecessary memset performance overhead.
+///
+#if __has_attribute(uninitialized)
+  #define INDETERMINATE __attribute__((uninitialized))
+#elif __cplusplus >= 202603L && \
+      __has_cpp_attribute(indeterminate)
+  #define INDETERMINATE [[indeterminate]]
+#else
+  #define INDETERMINATE
+#endif
+
 #endif

@@ -2,13 +2,14 @@
 /// @file   count_primes1.cpp
 /// @brief  Count the primes up to 10^9.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
 ///
 
 #include <ParallelSieve.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
@@ -42,7 +43,7 @@ void check(bool OK)
 int main()
 {
   std::cout << std::left;
-  ParallelSieve ps;
+  INDETERMINATE ParallelSieve ps;
   uint64_t count = 0;
   uint64_t stop = 1;
 

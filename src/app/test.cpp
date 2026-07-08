@@ -2,7 +2,7 @@
 /// @file   test.cpp
 /// @brief  primesieve self tests (option: --test).
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -10,6 +10,7 @@
 
 #include <primesieve.hpp>
 #include <ParallelSieve.hpp>
+#include <primesieve/macros.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
@@ -52,7 +53,7 @@ void countSmallPrimes()
     50847534  // PrimePi(10^9)
   };
 
-  ParallelSieve ps;
+  INDETERMINATE ParallelSieve ps;
   uint64_t count = 0;
   uint64_t stop = 1;
 
@@ -88,7 +89,7 @@ void countPrimeKTuplets()
     int k = (int) (i + 2);
     int countKTuplet = COUNT_PRIMES << (k - 1);
 
-    ParallelSieve ps;
+    INDETERMINATE ParallelSieve ps;
     ps.addFlags(countKTuplet);
     ps.sieve(start, stop);
     uint64_t count = ps.getCount(k - 1);
@@ -171,7 +172,7 @@ void smallNthPrimes()
     22801763489 // nthPrime(10^9)
   };
 
-  ParallelSieve ps;
+  INDETERMINATE ParallelSieve ps;
   uint64_t n = 1;
   uint64_t nthPrime = 2;
 
