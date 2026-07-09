@@ -21,7 +21,6 @@
 #include "Bucket.hpp"
 #include "MemoryPool.hpp"
 
-#include <primesieve/bits.hpp>
 #include <primesieve/macros.hpp>
 
 #include <stdint.h>
@@ -153,14 +152,14 @@ void EratMedium::crossOff_7(uint8_t* sieve, std::size_t sieveBytes, Bucket* buck
 
       for (;;)
       {
-        case 0: CHECK_FINISHED(0); sieve[i] &= BIT0; i += dist0; FALLTHROUGH;
-        case 1: CHECK_FINISHED(1); sieve[i] &= BIT4; i += dist1; FALLTHROUGH;
-        case 2: CHECK_FINISHED(2); sieve[i] &= BIT3; i += dist2; FALLTHROUGH;
-        case 3: CHECK_FINISHED(3); sieve[i] &= BIT7; i += dist1; FALLTHROUGH;
-        case 4: CHECK_FINISHED(4); sieve[i] &= BIT6; i += dist4; FALLTHROUGH;
-        case 5: CHECK_FINISHED(5); sieve[i] &= BIT2; i += dist1; FALLTHROUGH;
-        case 6: CHECK_FINISHED(6); sieve[i] &= BIT1; i += dist0; FALLTHROUGH;
-        case 7: CHECK_FINISHED(7); sieve[i] &= BIT5; i += dist4;
+        case 0: CHECK_FINISHED(0); sieve[i] &= ~(1 << 0); i += dist0; FALLTHROUGH;
+        case 1: CHECK_FINISHED(1); sieve[i] &= ~(1 << 4); i += dist1; FALLTHROUGH;
+        case 2: CHECK_FINISHED(2); sieve[i] &= ~(1 << 3); i += dist2; FALLTHROUGH;
+        case 3: CHECK_FINISHED(3); sieve[i] &= ~(1 << 7); i += dist1; FALLTHROUGH;
+        case 4: CHECK_FINISHED(4); sieve[i] &= ~(1 << 6); i += dist4; FALLTHROUGH;
+        case 5: CHECK_FINISHED(5); sieve[i] &= ~(1 << 2); i += dist1; FALLTHROUGH;
+        case 6: CHECK_FINISHED(6); sieve[i] &= ~(1 << 1); i += dist0; FALLTHROUGH;
+        case 7: CHECK_FINISHED(7); sieve[i] &= ~(1 << 5); i += dist4;
       }
     }
   }
@@ -194,14 +193,14 @@ void EratMedium::crossOff_11(uint8_t* sieve, std::size_t sieveBytes, Bucket* buc
 
       for (;;)
       {
-        case  8: CHECK_FINISHED( 8); sieve[i] &= BIT1; i += dist0; FALLTHROUGH;
-        case  9: CHECK_FINISHED( 9); sieve[i] &= BIT3; i += dist1; FALLTHROUGH;
-        case 10: CHECK_FINISHED(10); sieve[i] &= BIT7; i += dist2; FALLTHROUGH;
-        case 11: CHECK_FINISHED(11); sieve[i] &= BIT5; i += dist3; FALLTHROUGH;
-        case 12: CHECK_FINISHED(12); sieve[i] &= BIT0; i += dist4; FALLTHROUGH;
-        case 13: CHECK_FINISHED(13); sieve[i] &= BIT6; i += dist3; FALLTHROUGH;
-        case 14: CHECK_FINISHED(14); sieve[i] &= BIT2; i += dist0; FALLTHROUGH;
-        case 15: CHECK_FINISHED(15); sieve[i] &= BIT4; i += dist2;
+        case  8: CHECK_FINISHED( 8); sieve[i] &= ~(1 << 1); i += dist0; FALLTHROUGH;
+        case  9: CHECK_FINISHED( 9); sieve[i] &= ~(1 << 3); i += dist1; FALLTHROUGH;
+        case 10: CHECK_FINISHED(10); sieve[i] &= ~(1 << 7); i += dist2; FALLTHROUGH;
+        case 11: CHECK_FINISHED(11); sieve[i] &= ~(1 << 5); i += dist3; FALLTHROUGH;
+        case 12: CHECK_FINISHED(12); sieve[i] &= ~(1 << 0); i += dist4; FALLTHROUGH;
+        case 13: CHECK_FINISHED(13); sieve[i] &= ~(1 << 6); i += dist3; FALLTHROUGH;
+        case 14: CHECK_FINISHED(14); sieve[i] &= ~(1 << 2); i += dist0; FALLTHROUGH;
+        case 15: CHECK_FINISHED(15); sieve[i] &= ~(1 << 4); i += dist2;
       }
     }
   }
@@ -235,14 +234,14 @@ void EratMedium::crossOff_13(uint8_t* sieve, std::size_t sieveBytes, Bucket* buc
 
       for (;;)
       {
-        case 16: CHECK_FINISHED(16); sieve[i] &= BIT2; i += dist0; FALLTHROUGH;
-        case 17: CHECK_FINISHED(17); sieve[i] &= BIT7; i += dist1; FALLTHROUGH;
-        case 18: CHECK_FINISHED(18); sieve[i] &= BIT5; i += dist2; FALLTHROUGH;
-        case 19: CHECK_FINISHED(19); sieve[i] &= BIT4; i += dist1; FALLTHROUGH;
-        case 20: CHECK_FINISHED(20); sieve[i] &= BIT1; i += dist2; FALLTHROUGH;
-        case 21: CHECK_FINISHED(21); sieve[i] &= BIT0; i += dist5; FALLTHROUGH;
-        case 22: CHECK_FINISHED(22); sieve[i] &= BIT6; i += dist6; FALLTHROUGH;
-        case 23: CHECK_FINISHED(23); sieve[i] &= BIT3; i += dist2;
+        case 16: CHECK_FINISHED(16); sieve[i] &= ~(1 << 2); i += dist0; FALLTHROUGH;
+        case 17: CHECK_FINISHED(17); sieve[i] &= ~(1 << 7); i += dist1; FALLTHROUGH;
+        case 18: CHECK_FINISHED(18); sieve[i] &= ~(1 << 5); i += dist2; FALLTHROUGH;
+        case 19: CHECK_FINISHED(19); sieve[i] &= ~(1 << 4); i += dist1; FALLTHROUGH;
+        case 20: CHECK_FINISHED(20); sieve[i] &= ~(1 << 1); i += dist2; FALLTHROUGH;
+        case 21: CHECK_FINISHED(21); sieve[i] &= ~(1 << 0); i += dist5; FALLTHROUGH;
+        case 22: CHECK_FINISHED(22); sieve[i] &= ~(1 << 6); i += dist6; FALLTHROUGH;
+        case 23: CHECK_FINISHED(23); sieve[i] &= ~(1 << 3); i += dist2;
       }
     }
   }
@@ -276,14 +275,14 @@ void EratMedium::crossOff_17(uint8_t* sieve, std::size_t sieveBytes, Bucket* buc
 
       for (;;)
       {
-        case 24: CHECK_FINISHED(24); sieve[i] &= BIT3; i += dist0; FALLTHROUGH;
-        case 25: CHECK_FINISHED(25); sieve[i] &= BIT6; i += dist1; FALLTHROUGH;
-        case 26: CHECK_FINISHED(26); sieve[i] &= BIT0; i += dist2; FALLTHROUGH;
-        case 27: CHECK_FINISHED(27); sieve[i] &= BIT1; i += dist3; FALLTHROUGH;
-        case 28: CHECK_FINISHED(28); sieve[i] &= BIT4; i += dist2; FALLTHROUGH;
-        case 29: CHECK_FINISHED(29); sieve[i] &= BIT5; i += dist3; FALLTHROUGH;
-        case 30: CHECK_FINISHED(30); sieve[i] &= BIT7; i += dist6; FALLTHROUGH;
-        case 31: CHECK_FINISHED(31); sieve[i] &= BIT2; i += dist2;
+        case 24: CHECK_FINISHED(24); sieve[i] &= ~(1 << 3); i += dist0; FALLTHROUGH;
+        case 25: CHECK_FINISHED(25); sieve[i] &= ~(1 << 6); i += dist1; FALLTHROUGH;
+        case 26: CHECK_FINISHED(26); sieve[i] &= ~(1 << 0); i += dist2; FALLTHROUGH;
+        case 27: CHECK_FINISHED(27); sieve[i] &= ~(1 << 1); i += dist3; FALLTHROUGH;
+        case 28: CHECK_FINISHED(28); sieve[i] &= ~(1 << 4); i += dist2; FALLTHROUGH;
+        case 29: CHECK_FINISHED(29); sieve[i] &= ~(1 << 5); i += dist3; FALLTHROUGH;
+        case 30: CHECK_FINISHED(30); sieve[i] &= ~(1 << 7); i += dist6; FALLTHROUGH;
+        case 31: CHECK_FINISHED(31); sieve[i] &= ~(1 << 2); i += dist2;
       }
     }
   }
@@ -317,14 +316,14 @@ void EratMedium::crossOff_19(uint8_t* sieve, std::size_t sieveBytes, Bucket* buc
 
       for (;;)
       {
-        case 32: CHECK_FINISHED(32); sieve[i] &= BIT4; i += dist0; FALLTHROUGH;
-        case 33: CHECK_FINISHED(33); sieve[i] &= BIT2; i += dist1; FALLTHROUGH;
-        case 34: CHECK_FINISHED(34); sieve[i] &= BIT6; i += dist2; FALLTHROUGH;
-        case 35: CHECK_FINISHED(35); sieve[i] &= BIT0; i += dist1; FALLTHROUGH;
-        case 36: CHECK_FINISHED(36); sieve[i] &= BIT5; i += dist4; FALLTHROUGH;
-        case 37: CHECK_FINISHED(37); sieve[i] &= BIT7; i += dist5; FALLTHROUGH;
-        case 38: CHECK_FINISHED(38); sieve[i] &= BIT3; i += dist0; FALLTHROUGH;
-        case 39: CHECK_FINISHED(39); sieve[i] &= BIT1; i += dist4;
+        case 32: CHECK_FINISHED(32); sieve[i] &= ~(1 << 4); i += dist0; FALLTHROUGH;
+        case 33: CHECK_FINISHED(33); sieve[i] &= ~(1 << 2); i += dist1; FALLTHROUGH;
+        case 34: CHECK_FINISHED(34); sieve[i] &= ~(1 << 6); i += dist2; FALLTHROUGH;
+        case 35: CHECK_FINISHED(35); sieve[i] &= ~(1 << 0); i += dist1; FALLTHROUGH;
+        case 36: CHECK_FINISHED(36); sieve[i] &= ~(1 << 5); i += dist4; FALLTHROUGH;
+        case 37: CHECK_FINISHED(37); sieve[i] &= ~(1 << 7); i += dist5; FALLTHROUGH;
+        case 38: CHECK_FINISHED(38); sieve[i] &= ~(1 << 3); i += dist0; FALLTHROUGH;
+        case 39: CHECK_FINISHED(39); sieve[i] &= ~(1 << 1); i += dist4;
       }
     }
   }
@@ -357,14 +356,14 @@ void EratMedium::crossOff_23(uint8_t* sieve, std::size_t sieveBytes, Bucket* buc
 
       for (;;)
       {
-        case 40: CHECK_FINISHED(40); sieve[i] &= BIT5; i += dist0; FALLTHROUGH;
-        case 41: CHECK_FINISHED(41); sieve[i] &= BIT1; i += dist1; FALLTHROUGH;
-        case 42: CHECK_FINISHED(42); sieve[i] &= BIT2; i += dist2; FALLTHROUGH;
-        case 43: CHECK_FINISHED(43); sieve[i] &= BIT6; i += dist1; FALLTHROUGH;
-        case 44: CHECK_FINISHED(44); sieve[i] &= BIT7; i += dist4; FALLTHROUGH;
-        case 45: CHECK_FINISHED(45); sieve[i] &= BIT3; i += dist1; FALLTHROUGH;
-        case 46: CHECK_FINISHED(46); sieve[i] &= BIT4; i += dist0; FALLTHROUGH;
-        case 47: CHECK_FINISHED(47); sieve[i] &= BIT0; i += dist2;
+        case 40: CHECK_FINISHED(40); sieve[i] &= ~(1 << 5); i += dist0; FALLTHROUGH;
+        case 41: CHECK_FINISHED(41); sieve[i] &= ~(1 << 1); i += dist1; FALLTHROUGH;
+        case 42: CHECK_FINISHED(42); sieve[i] &= ~(1 << 2); i += dist2; FALLTHROUGH;
+        case 43: CHECK_FINISHED(43); sieve[i] &= ~(1 << 6); i += dist1; FALLTHROUGH;
+        case 44: CHECK_FINISHED(44); sieve[i] &= ~(1 << 7); i += dist4; FALLTHROUGH;
+        case 45: CHECK_FINISHED(45); sieve[i] &= ~(1 << 3); i += dist1; FALLTHROUGH;
+        case 46: CHECK_FINISHED(46); sieve[i] &= ~(1 << 4); i += dist0; FALLTHROUGH;
+        case 47: CHECK_FINISHED(47); sieve[i] &= ~(1 << 0); i += dist2;
       }
     }
   }
@@ -397,14 +396,14 @@ void EratMedium::crossOff_29(uint8_t* sieve, std::size_t sieveBytes, Bucket* buc
 
       for (;;)
       {
-        case 48: CHECK_FINISHED(48); sieve[i] &= BIT6; i += dist0; FALLTHROUGH;
-        case 49: CHECK_FINISHED(49); sieve[i] &= BIT5; i += dist1; FALLTHROUGH;
-        case 50: CHECK_FINISHED(50); sieve[i] &= BIT4; i += dist2; FALLTHROUGH;
-        case 51: CHECK_FINISHED(51); sieve[i] &= BIT3; i += dist1; FALLTHROUGH;
-        case 52: CHECK_FINISHED(52); sieve[i] &= BIT2; i += dist2; FALLTHROUGH;
-        case 53: CHECK_FINISHED(53); sieve[i] &= BIT1; i += dist1; FALLTHROUGH;
-        case 54: CHECK_FINISHED(54); sieve[i] &= BIT0; i += dist6; FALLTHROUGH;
-        case 55: CHECK_FINISHED(55); sieve[i] &= BIT7; i += dist2;
+        case 48: CHECK_FINISHED(48); sieve[i] &= ~(1 << 6); i += dist0; FALLTHROUGH;
+        case 49: CHECK_FINISHED(49); sieve[i] &= ~(1 << 5); i += dist1; FALLTHROUGH;
+        case 50: CHECK_FINISHED(50); sieve[i] &= ~(1 << 4); i += dist2; FALLTHROUGH;
+        case 51: CHECK_FINISHED(51); sieve[i] &= ~(1 << 3); i += dist1; FALLTHROUGH;
+        case 52: CHECK_FINISHED(52); sieve[i] &= ~(1 << 2); i += dist2; FALLTHROUGH;
+        case 53: CHECK_FINISHED(53); sieve[i] &= ~(1 << 1); i += dist1; FALLTHROUGH;
+        case 54: CHECK_FINISHED(54); sieve[i] &= ~(1 << 0); i += dist6; FALLTHROUGH;
+        case 55: CHECK_FINISHED(55); sieve[i] &= ~(1 << 7); i += dist2;
       }
     }
   }
@@ -437,14 +436,14 @@ void EratMedium::crossOff_31(uint8_t* sieve, std::size_t sieveBytes, Bucket* buc
 
       for (;;)
       {
-        case 56: CHECK_FINISHED(56); sieve[i] &= BIT7; i += dist0; FALLTHROUGH;
-        case 57: CHECK_FINISHED(57); sieve[i] &= BIT0; i += dist1; FALLTHROUGH;
-        case 58: CHECK_FINISHED(58); sieve[i] &= BIT1; i += dist2; FALLTHROUGH;
-        case 59: CHECK_FINISHED(59); sieve[i] &= BIT2; i += dist1; FALLTHROUGH;
-        case 60: CHECK_FINISHED(60); sieve[i] &= BIT3; i += dist2; FALLTHROUGH;
-        case 61: CHECK_FINISHED(61); sieve[i] &= BIT4; i += dist1; FALLTHROUGH;
-        case 62: CHECK_FINISHED(62); sieve[i] &= BIT5; i += dist6; FALLTHROUGH;
-        case 63: CHECK_FINISHED(63); sieve[i] &= BIT6; i += dist2;
+        case 56: CHECK_FINISHED(56); sieve[i] &= ~(1 << 7); i += dist0; FALLTHROUGH;
+        case 57: CHECK_FINISHED(57); sieve[i] &= ~(1 << 0); i += dist1; FALLTHROUGH;
+        case 58: CHECK_FINISHED(58); sieve[i] &= ~(1 << 1); i += dist2; FALLTHROUGH;
+        case 59: CHECK_FINISHED(59); sieve[i] &= ~(1 << 2); i += dist1; FALLTHROUGH;
+        case 60: CHECK_FINISHED(60); sieve[i] &= ~(1 << 3); i += dist2; FALLTHROUGH;
+        case 61: CHECK_FINISHED(61); sieve[i] &= ~(1 << 4); i += dist1; FALLTHROUGH;
+        case 62: CHECK_FINISHED(62); sieve[i] &= ~(1 << 5); i += dist6; FALLTHROUGH;
+        case 63: CHECK_FINISHED(63); sieve[i] &= ~(1 << 6); i += dist2;
       }
     }
   }

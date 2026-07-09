@@ -18,7 +18,6 @@
 #include "EratSmall.hpp"
 #include "Bucket.hpp"
 
-#include <primesieve/bits.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 
@@ -114,24 +113,24 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveBytes)
                   // multiples of the sievingPrime.
                   while (i7 < sieveBytes)
                   {
-                    sieve[i0] &= BIT0; i0 += dist;
-                    sieve[i1] &= BIT4; i1 += dist;
-                    sieve[i2] &= BIT3; i2 += dist;
-                    sieve[i3] &= BIT7; i3 += dist;
-                    sieve[i4] &= BIT6; i4 += dist;
-                    sieve[i5] &= BIT2; i5 += dist;
-                    sieve[i6] &= BIT1; i6 += dist;
-                    sieve[i7] &= BIT5; i7 += dist;
+                    sieve[i0] &= ~(1 << 0); i0 += dist;
+                    sieve[i1] &= ~(1 << 4); i1 += dist;
+                    sieve[i2] &= ~(1 << 3); i2 += dist;
+                    sieve[i3] &= ~(1 << 7); i3 += dist;
+                    sieve[i4] &= ~(1 << 6); i4 += dist;
+                    sieve[i5] &= ~(1 << 2); i5 += dist;
+                    sieve[i6] &= ~(1 << 1); i6 += dist;
+                    sieve[i7] &= ~(1 << 5); i7 += dist;
                   }
                 }
-                CHECK_FINISHED(0); sieve[i0] &= BIT0; i0 += sievingPrime * 6 + 1; FALLTHROUGH;
-        case 1: CHECK_FINISHED(1); sieve[i0] &= BIT4; i0 += sievingPrime * 4 + 1; FALLTHROUGH;
-        case 2: CHECK_FINISHED(2); sieve[i0] &= BIT3; i0 += sievingPrime * 2 + 0; FALLTHROUGH;
-        case 3: CHECK_FINISHED(3); sieve[i0] &= BIT7; i0 += sievingPrime * 4 + 1; FALLTHROUGH;
-        case 4: CHECK_FINISHED(4); sieve[i0] &= BIT6; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 5: CHECK_FINISHED(5); sieve[i0] &= BIT2; i0 += sievingPrime * 4 + 1; FALLTHROUGH;
-        case 6: CHECK_FINISHED(6); sieve[i0] &= BIT1; i0 += sievingPrime * 6 + 1; FALLTHROUGH;
-        case 7: CHECK_FINISHED(7); sieve[i0] &= BIT5; i0 += sievingPrime * 2 + 1;
+                CHECK_FINISHED(0); sieve[i0] &= ~(1 << 0); i0 += sievingPrime * 6 + 1; FALLTHROUGH;
+        case 1: CHECK_FINISHED(1); sieve[i0] &= ~(1 << 4); i0 += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 2: CHECK_FINISHED(2); sieve[i0] &= ~(1 << 3); i0 += sievingPrime * 2 + 0; FALLTHROUGH;
+        case 3: CHECK_FINISHED(3); sieve[i0] &= ~(1 << 7); i0 += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 4: CHECK_FINISHED(4); sieve[i0] &= ~(1 << 6); i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 5: CHECK_FINISHED(5); sieve[i0] &= ~(1 << 2); i0 += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 6: CHECK_FINISHED(6); sieve[i0] &= ~(1 << 1); i0 += sievingPrime * 6 + 1; FALLTHROUGH;
+        case 7: CHECK_FINISHED(7); sieve[i0] &= ~(1 << 5); i0 += sievingPrime * 2 + 1;
       }
 
       // sievingPrime % 30 == 11
@@ -151,24 +150,24 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveBytes)
                    // multiples of the sievingPrime.
                    while (i7 < sieveBytes)
                    {
-                     sieve[i0] &= BIT1; i0 += dist;
-                     sieve[i1] &= BIT3; i1 += dist;
-                     sieve[i2] &= BIT7; i2 += dist;
-                     sieve[i3] &= BIT5; i3 += dist;
-                     sieve[i4] &= BIT0; i4 += dist;
-                     sieve[i5] &= BIT6; i5 += dist;
-                     sieve[i6] &= BIT2; i6 += dist;
-                     sieve[i7] &= BIT4; i7 += dist;
+                     sieve[i0] &= ~(1 << 1); i0 += dist;
+                     sieve[i1] &= ~(1 << 3); i1 += dist;
+                     sieve[i2] &= ~(1 << 7); i2 += dist;
+                     sieve[i3] &= ~(1 << 5); i3 += dist;
+                     sieve[i4] &= ~(1 << 0); i4 += dist;
+                     sieve[i5] &= ~(1 << 6); i5 += dist;
+                     sieve[i6] &= ~(1 << 2); i6 += dist;
+                     sieve[i7] &= ~(1 << 4); i7 += dist;
                    }
                  }
-                 CHECK_FINISHED( 8); sieve[i0] &= BIT1; i0 += sievingPrime * 6 + 2; FALLTHROUGH;
-        case  9: CHECK_FINISHED( 9); sieve[i0] &= BIT3; i0 += sievingPrime * 4 + 1; FALLTHROUGH;
-        case 10: CHECK_FINISHED(10); sieve[i0] &= BIT7; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 11: CHECK_FINISHED(11); sieve[i0] &= BIT5; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 12: CHECK_FINISHED(12); sieve[i0] &= BIT0; i0 += sievingPrime * 2 + 0; FALLTHROUGH;
-        case 13: CHECK_FINISHED(13); sieve[i0] &= BIT6; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 14: CHECK_FINISHED(14); sieve[i0] &= BIT2; i0 += sievingPrime * 6 + 2; FALLTHROUGH;
-        case 15: CHECK_FINISHED(15); sieve[i0] &= BIT4; i0 += sievingPrime * 2 + 1;
+                 CHECK_FINISHED( 8); sieve[i0] &= ~(1 << 1); i0 += sievingPrime * 6 + 2; FALLTHROUGH;
+        case  9: CHECK_FINISHED( 9); sieve[i0] &= ~(1 << 3); i0 += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 10: CHECK_FINISHED(10); sieve[i0] &= ~(1 << 7); i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 11: CHECK_FINISHED(11); sieve[i0] &= ~(1 << 5); i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 12: CHECK_FINISHED(12); sieve[i0] &= ~(1 << 0); i0 += sievingPrime * 2 + 0; FALLTHROUGH;
+        case 13: CHECK_FINISHED(13); sieve[i0] &= ~(1 << 6); i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 14: CHECK_FINISHED(14); sieve[i0] &= ~(1 << 2); i0 += sievingPrime * 6 + 2; FALLTHROUGH;
+        case 15: CHECK_FINISHED(15); sieve[i0] &= ~(1 << 4); i0 += sievingPrime * 2 + 1;
       }
 
       // sievingPrime % 30 == 13
@@ -188,24 +187,24 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveBytes)
                    // multiples of the sievingPrime.
                    while (i7 < sieveBytes)
                    {
-                     sieve[i0] &= BIT2; i0 += dist;
-                     sieve[i1] &= BIT7; i1 += dist;
-                     sieve[i2] &= BIT5; i2 += dist;
-                     sieve[i3] &= BIT4; i3 += dist;
-                     sieve[i4] &= BIT1; i4 += dist;
-                     sieve[i5] &= BIT0; i5 += dist;
-                     sieve[i6] &= BIT6; i6 += dist;
-                     sieve[i7] &= BIT3; i7 += dist;
+                     sieve[i0] &= ~(1 << 2); i0 += dist;
+                     sieve[i1] &= ~(1 << 7); i1 += dist;
+                     sieve[i2] &= ~(1 << 5); i2 += dist;
+                     sieve[i3] &= ~(1 << 4); i3 += dist;
+                     sieve[i4] &= ~(1 << 1); i4 += dist;
+                     sieve[i5] &= ~(1 << 0); i5 += dist;
+                     sieve[i6] &= ~(1 << 6); i6 += dist;
+                     sieve[i7] &= ~(1 << 3); i7 += dist;
                    }
                  }
-                 CHECK_FINISHED(16); sieve[i0] &= BIT2; i0 += sievingPrime * 6 + 2; FALLTHROUGH;
-        case 17: CHECK_FINISHED(17); sieve[i0] &= BIT7; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 18: CHECK_FINISHED(18); sieve[i0] &= BIT5; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 19: CHECK_FINISHED(19); sieve[i0] &= BIT4; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 20: CHECK_FINISHED(20); sieve[i0] &= BIT1; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 21: CHECK_FINISHED(21); sieve[i0] &= BIT0; i0 += sievingPrime * 4 + 1; FALLTHROUGH;
-        case 22: CHECK_FINISHED(22); sieve[i0] &= BIT6; i0 += sievingPrime * 6 + 3; FALLTHROUGH;
-        case 23: CHECK_FINISHED(23); sieve[i0] &= BIT3; i0 += sievingPrime * 2 + 1;
+                 CHECK_FINISHED(16); sieve[i0] &= ~(1 << 2); i0 += sievingPrime * 6 + 2; FALLTHROUGH;
+        case 17: CHECK_FINISHED(17); sieve[i0] &= ~(1 << 7); i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 18: CHECK_FINISHED(18); sieve[i0] &= ~(1 << 5); i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 19: CHECK_FINISHED(19); sieve[i0] &= ~(1 << 4); i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 20: CHECK_FINISHED(20); sieve[i0] &= ~(1 << 1); i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 21: CHECK_FINISHED(21); sieve[i0] &= ~(1 << 0); i0 += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 22: CHECK_FINISHED(22); sieve[i0] &= ~(1 << 6); i0 += sievingPrime * 6 + 3; FALLTHROUGH;
+        case 23: CHECK_FINISHED(23); sieve[i0] &= ~(1 << 3); i0 += sievingPrime * 2 + 1;
       }
 
       // sievingPrime % 30 == 17
@@ -225,24 +224,24 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveBytes)
                    // multiples of the sievingPrime.
                    while (i7 < sieveBytes)
                    {
-                     sieve[i0] &= BIT3; i0 += dist;
-                     sieve[i1] &= BIT6; i1 += dist;
-                     sieve[i2] &= BIT0; i2 += dist;
-                     sieve[i3] &= BIT1; i3 += dist;
-                     sieve[i4] &= BIT4; i4 += dist;
-                     sieve[i5] &= BIT5; i5 += dist;
-                     sieve[i6] &= BIT7; i6 += dist;
-                     sieve[i7] &= BIT2; i7 += dist;
+                     sieve[i0] &= ~(1 << 3); i0 += dist;
+                     sieve[i1] &= ~(1 << 6); i1 += dist;
+                     sieve[i2] &= ~(1 << 0); i2 += dist;
+                     sieve[i3] &= ~(1 << 1); i3 += dist;
+                     sieve[i4] &= ~(1 << 4); i4 += dist;
+                     sieve[i5] &= ~(1 << 5); i5 += dist;
+                     sieve[i6] &= ~(1 << 7); i6 += dist;
+                     sieve[i7] &= ~(1 << 2); i7 += dist;
                    }
                  }
-                 CHECK_FINISHED(24); sieve[i0] &= BIT3; i0 += sievingPrime * 6 + 3; FALLTHROUGH;
-        case 25: CHECK_FINISHED(25); sieve[i0] &= BIT6; i0 += sievingPrime * 4 + 3; FALLTHROUGH;
-        case 26: CHECK_FINISHED(26); sieve[i0] &= BIT0; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 27: CHECK_FINISHED(27); sieve[i0] &= BIT1; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 28: CHECK_FINISHED(28); sieve[i0] &= BIT4; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 29: CHECK_FINISHED(29); sieve[i0] &= BIT5; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 30: CHECK_FINISHED(30); sieve[i0] &= BIT7; i0 += sievingPrime * 6 + 4; FALLTHROUGH;
-        case 31: CHECK_FINISHED(31); sieve[i0] &= BIT2; i0 += sievingPrime * 2 + 1;
+                 CHECK_FINISHED(24); sieve[i0] &= ~(1 << 3); i0 += sievingPrime * 6 + 3; FALLTHROUGH;
+        case 25: CHECK_FINISHED(25); sieve[i0] &= ~(1 << 6); i0 += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 26: CHECK_FINISHED(26); sieve[i0] &= ~(1 << 0); i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 27: CHECK_FINISHED(27); sieve[i0] &= ~(1 << 1); i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 28: CHECK_FINISHED(28); sieve[i0] &= ~(1 << 4); i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 29: CHECK_FINISHED(29); sieve[i0] &= ~(1 << 5); i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 30: CHECK_FINISHED(30); sieve[i0] &= ~(1 << 7); i0 += sievingPrime * 6 + 4; FALLTHROUGH;
+        case 31: CHECK_FINISHED(31); sieve[i0] &= ~(1 << 2); i0 += sievingPrime * 2 + 1;
       }
 
       // sievingPrime % 30 == 19
@@ -262,24 +261,24 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveBytes)
                    // multiples of the sievingPrime.
                    while (i7 < sieveBytes)
                    {
-                     sieve[i0] &= BIT4; i0 += dist;
-                     sieve[i1] &= BIT2; i1 += dist;
-                     sieve[i2] &= BIT6; i2 += dist;
-                     sieve[i3] &= BIT0; i3 += dist;
-                     sieve[i4] &= BIT5; i4 += dist;
-                     sieve[i5] &= BIT7; i5 += dist;
-                     sieve[i6] &= BIT3; i6 += dist;
-                     sieve[i7] &= BIT1; i7 += dist;
+                     sieve[i0] &= ~(1 << 4); i0 += dist;
+                     sieve[i1] &= ~(1 << 2); i1 += dist;
+                     sieve[i2] &= ~(1 << 6); i2 += dist;
+                     sieve[i3] &= ~(1 << 0); i3 += dist;
+                     sieve[i4] &= ~(1 << 5); i4 += dist;
+                     sieve[i5] &= ~(1 << 7); i5 += dist;
+                     sieve[i6] &= ~(1 << 3); i6 += dist;
+                     sieve[i7] &= ~(1 << 1); i7 += dist;
                    }
                  }
-                 CHECK_FINISHED(32); sieve[i0] &= BIT4; i0 += sievingPrime * 6 + 4; FALLTHROUGH;
-        case 33: CHECK_FINISHED(33); sieve[i0] &= BIT2; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 34: CHECK_FINISHED(34); sieve[i0] &= BIT6; i0 += sievingPrime * 2 + 2; FALLTHROUGH;
-        case 35: CHECK_FINISHED(35); sieve[i0] &= BIT0; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 36: CHECK_FINISHED(36); sieve[i0] &= BIT5; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 37: CHECK_FINISHED(37); sieve[i0] &= BIT7; i0 += sievingPrime * 4 + 3; FALLTHROUGH;
-        case 38: CHECK_FINISHED(38); sieve[i0] &= BIT3; i0 += sievingPrime * 6 + 4; FALLTHROUGH;
-        case 39: CHECK_FINISHED(39); sieve[i0] &= BIT1; i0 += sievingPrime * 2 + 1;
+                 CHECK_FINISHED(32); sieve[i0] &= ~(1 << 4); i0 += sievingPrime * 6 + 4; FALLTHROUGH;
+        case 33: CHECK_FINISHED(33); sieve[i0] &= ~(1 << 2); i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 34: CHECK_FINISHED(34); sieve[i0] &= ~(1 << 6); i0 += sievingPrime * 2 + 2; FALLTHROUGH;
+        case 35: CHECK_FINISHED(35); sieve[i0] &= ~(1 << 0); i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 36: CHECK_FINISHED(36); sieve[i0] &= ~(1 << 5); i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 37: CHECK_FINISHED(37); sieve[i0] &= ~(1 << 7); i0 += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 38: CHECK_FINISHED(38); sieve[i0] &= ~(1 << 3); i0 += sievingPrime * 6 + 4; FALLTHROUGH;
+        case 39: CHECK_FINISHED(39); sieve[i0] &= ~(1 << 1); i0 += sievingPrime * 2 + 1;
       }
 
       // sievingPrime % 30 == 23
@@ -299,24 +298,24 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveBytes)
                    // multiples of the sievingPrime.
                    while (i7 < sieveBytes)
                    {
-                     sieve[i0] &= BIT5; i0 += dist;
-                     sieve[i1] &= BIT1; i1 += dist;
-                     sieve[i2] &= BIT2; i2 += dist;
-                     sieve[i3] &= BIT6; i3 += dist;
-                     sieve[i4] &= BIT7; i4 += dist;
-                     sieve[i5] &= BIT3; i5 += dist;
-                     sieve[i6] &= BIT4; i6 += dist;
-                     sieve[i7] &= BIT0; i7 += dist;
+                     sieve[i0] &= ~(1 << 5); i0 += dist;
+                     sieve[i1] &= ~(1 << 1); i1 += dist;
+                     sieve[i2] &= ~(1 << 2); i2 += dist;
+                     sieve[i3] &= ~(1 << 6); i3 += dist;
+                     sieve[i4] &= ~(1 << 7); i4 += dist;
+                     sieve[i5] &= ~(1 << 3); i5 += dist;
+                     sieve[i6] &= ~(1 << 4); i6 += dist;
+                     sieve[i7] &= ~(1 << 0); i7 += dist;
                    }
                  }
-                 CHECK_FINISHED(40); sieve[i0] &= BIT5; i0 += sievingPrime * 6 + 5; FALLTHROUGH;
-        case 41: CHECK_FINISHED(41); sieve[i0] &= BIT1; i0 += sievingPrime * 4 + 3; FALLTHROUGH;
-        case 42: CHECK_FINISHED(42); sieve[i0] &= BIT2; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 43: CHECK_FINISHED(43); sieve[i0] &= BIT6; i0 += sievingPrime * 4 + 3; FALLTHROUGH;
-        case 44: CHECK_FINISHED(44); sieve[i0] &= BIT7; i0 += sievingPrime * 2 + 2; FALLTHROUGH;
-        case 45: CHECK_FINISHED(45); sieve[i0] &= BIT3; i0 += sievingPrime * 4 + 3; FALLTHROUGH;
-        case 46: CHECK_FINISHED(46); sieve[i0] &= BIT4; i0 += sievingPrime * 6 + 5; FALLTHROUGH;
-        case 47: CHECK_FINISHED(47); sieve[i0] &= BIT0; i0 += sievingPrime * 2 + 1;
+                 CHECK_FINISHED(40); sieve[i0] &= ~(1 << 5); i0 += sievingPrime * 6 + 5; FALLTHROUGH;
+        case 41: CHECK_FINISHED(41); sieve[i0] &= ~(1 << 1); i0 += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 42: CHECK_FINISHED(42); sieve[i0] &= ~(1 << 2); i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 43: CHECK_FINISHED(43); sieve[i0] &= ~(1 << 6); i0 += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 44: CHECK_FINISHED(44); sieve[i0] &= ~(1 << 7); i0 += sievingPrime * 2 + 2; FALLTHROUGH;
+        case 45: CHECK_FINISHED(45); sieve[i0] &= ~(1 << 3); i0 += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 46: CHECK_FINISHED(46); sieve[i0] &= ~(1 << 4); i0 += sievingPrime * 6 + 5; FALLTHROUGH;
+        case 47: CHECK_FINISHED(47); sieve[i0] &= ~(1 << 0); i0 += sievingPrime * 2 + 1;
       }
 
       // sievingPrime % 30 == 29
@@ -336,24 +335,24 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveBytes)
                    // multiples of the sievingPrime.
                    while (i7 < sieveBytes)
                    {
-                     sieve[i0] &= BIT6; i0 += dist;
-                     sieve[i1] &= BIT5; i1 += dist;
-                     sieve[i2] &= BIT4; i2 += dist;
-                     sieve[i3] &= BIT3; i3 += dist;
-                     sieve[i4] &= BIT2; i4 += dist;
-                     sieve[i5] &= BIT1; i5 += dist;
-                     sieve[i6] &= BIT0; i6 += dist;
-                     sieve[i7] &= BIT7; i7 += dist;
+                     sieve[i0] &= ~(1 << 6); i0 += dist;
+                     sieve[i1] &= ~(1 << 5); i1 += dist;
+                     sieve[i2] &= ~(1 << 4); i2 += dist;
+                     sieve[i3] &= ~(1 << 3); i3 += dist;
+                     sieve[i4] &= ~(1 << 2); i4 += dist;
+                     sieve[i5] &= ~(1 << 1); i5 += dist;
+                     sieve[i6] &= ~(1 << 0); i6 += dist;
+                     sieve[i7] &= ~(1 << 7); i7 += dist;
                    }
                  }
-                 CHECK_FINISHED(48); sieve[i0] &= BIT6; i0 += sievingPrime * 6 + 6; FALLTHROUGH;
-        case 49: CHECK_FINISHED(49); sieve[i0] &= BIT5; i0 += sievingPrime * 4 + 4; FALLTHROUGH;
-        case 50: CHECK_FINISHED(50); sieve[i0] &= BIT4; i0 += sievingPrime * 2 + 2; FALLTHROUGH;
-        case 51: CHECK_FINISHED(51); sieve[i0] &= BIT3; i0 += sievingPrime * 4 + 4; FALLTHROUGH;
-        case 52: CHECK_FINISHED(52); sieve[i0] &= BIT2; i0 += sievingPrime * 2 + 2; FALLTHROUGH;
-        case 53: CHECK_FINISHED(53); sieve[i0] &= BIT1; i0 += sievingPrime * 4 + 4; FALLTHROUGH;
-        case 54: CHECK_FINISHED(54); sieve[i0] &= BIT0; i0 += sievingPrime * 6 + 5; FALLTHROUGH;
-        case 55: CHECK_FINISHED(55); sieve[i0] &= BIT7; i0 += sievingPrime * 2 + 2;
+                 CHECK_FINISHED(48); sieve[i0] &= ~(1 << 6); i0 += sievingPrime * 6 + 6; FALLTHROUGH;
+        case 49: CHECK_FINISHED(49); sieve[i0] &= ~(1 << 5); i0 += sievingPrime * 4 + 4; FALLTHROUGH;
+        case 50: CHECK_FINISHED(50); sieve[i0] &= ~(1 << 4); i0 += sievingPrime * 2 + 2; FALLTHROUGH;
+        case 51: CHECK_FINISHED(51); sieve[i0] &= ~(1 << 3); i0 += sievingPrime * 4 + 4; FALLTHROUGH;
+        case 52: CHECK_FINISHED(52); sieve[i0] &= ~(1 << 2); i0 += sievingPrime * 2 + 2; FALLTHROUGH;
+        case 53: CHECK_FINISHED(53); sieve[i0] &= ~(1 << 1); i0 += sievingPrime * 4 + 4; FALLTHROUGH;
+        case 54: CHECK_FINISHED(54); sieve[i0] &= ~(1 << 0); i0 += sievingPrime * 6 + 5; FALLTHROUGH;
+        case 55: CHECK_FINISHED(55); sieve[i0] &= ~(1 << 7); i0 += sievingPrime * 2 + 2;
       }
 
       // sievingPrime % 30 == 1
@@ -373,24 +372,24 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveBytes)
                    // multiples of the sievingPrime.
                    while (i7 < sieveBytes)
                    {
-                     sieve[i0] &= BIT7; i0 += dist;
-                     sieve[i1] &= BIT0; i1 += dist;
-                     sieve[i2] &= BIT1; i2 += dist;
-                     sieve[i3] &= BIT2; i3 += dist;
-                     sieve[i4] &= BIT3; i4 += dist;
-                     sieve[i5] &= BIT4; i5 += dist;
-                     sieve[i6] &= BIT5; i6 += dist;
-                     sieve[i7] &= BIT6; i7 += dist;
+                     sieve[i0] &= ~(1 << 7); i0 += dist;
+                     sieve[i1] &= ~(1 << 0); i1 += dist;
+                     sieve[i2] &= ~(1 << 1); i2 += dist;
+                     sieve[i3] &= ~(1 << 2); i3 += dist;
+                     sieve[i4] &= ~(1 << 3); i4 += dist;
+                     sieve[i5] &= ~(1 << 4); i5 += dist;
+                     sieve[i6] &= ~(1 << 5); i6 += dist;
+                     sieve[i7] &= ~(1 << 6); i7 += dist;
                    }
                  }
-                 CHECK_FINISHED(56); sieve[i0] &= BIT7; i0 += sievingPrime * 6 + 1; FALLTHROUGH;
-        case 57: CHECK_FINISHED(57); sieve[i0] &= BIT0; i0 += sievingPrime * 4 + 0; FALLTHROUGH;
-        case 58: CHECK_FINISHED(58); sieve[i0] &= BIT1; i0 += sievingPrime * 2 + 0; FALLTHROUGH;
-        case 59: CHECK_FINISHED(59); sieve[i0] &= BIT2; i0 += sievingPrime * 4 + 0; FALLTHROUGH;
-        case 60: CHECK_FINISHED(60); sieve[i0] &= BIT3; i0 += sievingPrime * 2 + 0; FALLTHROUGH;
-        case 61: CHECK_FINISHED(61); sieve[i0] &= BIT4; i0 += sievingPrime * 4 + 0; FALLTHROUGH;
-        case 62: CHECK_FINISHED(62); sieve[i0] &= BIT5; i0 += sievingPrime * 6 + 0; FALLTHROUGH;
-        case 63: CHECK_FINISHED(63); sieve[i0] &= BIT6; i0 += sievingPrime * 2 + 0;
+                 CHECK_FINISHED(56); sieve[i0] &= ~(1 << 7); i0 += sievingPrime * 6 + 1; FALLTHROUGH;
+        case 57: CHECK_FINISHED(57); sieve[i0] &= ~(1 << 0); i0 += sievingPrime * 4 + 0; FALLTHROUGH;
+        case 58: CHECK_FINISHED(58); sieve[i0] &= ~(1 << 1); i0 += sievingPrime * 2 + 0; FALLTHROUGH;
+        case 59: CHECK_FINISHED(59); sieve[i0] &= ~(1 << 2); i0 += sievingPrime * 4 + 0; FALLTHROUGH;
+        case 60: CHECK_FINISHED(60); sieve[i0] &= ~(1 << 3); i0 += sievingPrime * 2 + 0; FALLTHROUGH;
+        case 61: CHECK_FINISHED(61); sieve[i0] &= ~(1 << 4); i0 += sievingPrime * 4 + 0; FALLTHROUGH;
+        case 62: CHECK_FINISHED(62); sieve[i0] &= ~(1 << 5); i0 += sievingPrime * 6 + 0; FALLTHROUGH;
+        case 63: CHECK_FINISHED(63); sieve[i0] &= ~(1 << 6); i0 += sievingPrime * 2 + 0;
       }
 
       default: UNREACHABLE;
