@@ -81,9 +81,9 @@ void EratSmall::crossOff(Vector<uint64_t>& sieve)
 void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveBytes)
 {
   #define CHECK_FINISHED(wheelIndex) \
-    if (i >= sieveBytes) \
+    if (i0 >= sieveBytes) \
     { \
-      std::size_t multipleIndex = i - sieveBytes; \
+      std::size_t multipleIndex = i0 - sieveBytes; \
       prime.set(multipleIndex, wheelIndex); \
       goto next_iteration; \
     }
@@ -91,7 +91,7 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveBytes)
   for (auto& prime : primes_)
   {
     std::size_t sievingPrime = prime.getSievingPrime();
-    std::size_t i = prime.getMultipleIndex();
+    std::size_t i0 = prime.getMultipleIndex();
     std::size_t wheelIndex = prime.getWheelIndex();
     ASSERT(wheelIndex <= 63);
 
@@ -101,234 +101,296 @@ void EratSmall::crossOff(uint8_t* sieve, std::size_t sieveBytes)
       for (;;)
       {
         case 0: {
-                  std::size_t maxOffset = sievingPrime * 28 + 6;
-                  std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
+                  std::size_t i1 = i0 + sievingPrime *  6 + 1;
+                  std::size_t i2 = i0 + sievingPrime * 10 + 2;
+                  std::size_t i3 = i0 + sievingPrime * 12 + 2;
+                  std::size_t i4 = i0 + sievingPrime * 16 + 3;
+                  std::size_t i5 = i0 + sievingPrime * 18 + 4;
+                  std::size_t i6 = i0 + sievingPrime * 22 + 5;
+                  std::size_t i7 = i0 + sievingPrime * 28 + 6;
+                  std::size_t dist = sievingPrime * 30 + 7;
 
                   // Each iteration removes the next 8
                   // multiples of the sievingPrime.
-                  for (; i < limit; i += sievingPrime * 30 + 7)
+                  while (i7 < sieveBytes)
                   {
-                    sieve[i + sievingPrime *  0 + 0] &= BIT0;
-                    sieve[i + sievingPrime *  6 + 1] &= BIT4;
-                    sieve[i + sievingPrime * 10 + 2] &= BIT3;
-                    sieve[i + sievingPrime * 12 + 2] &= BIT7;
-                    sieve[i + sievingPrime * 16 + 3] &= BIT6;
-                    sieve[i + sievingPrime * 18 + 4] &= BIT2;
-                    sieve[i + sievingPrime * 22 + 5] &= BIT1;
-                    sieve[i + sievingPrime * 28 + 6] &= BIT5;
+                    sieve[i0] &= BIT0; i0 += dist;
+                    sieve[i1] &= BIT4; i1 += dist;
+                    sieve[i2] &= BIT3; i2 += dist;
+                    sieve[i3] &= BIT7; i3 += dist;
+                    sieve[i4] &= BIT6; i4 += dist;
+                    sieve[i5] &= BIT2; i5 += dist;
+                    sieve[i6] &= BIT1; i6 += dist;
+                    sieve[i7] &= BIT5; i7 += dist;
                   }
                 }
-                CHECK_FINISHED(0); sieve[i] &= BIT0; i += sievingPrime * 6 + 1; FALLTHROUGH;
-        case 1: CHECK_FINISHED(1); sieve[i] &= BIT4; i += sievingPrime * 4 + 1; FALLTHROUGH;
-        case 2: CHECK_FINISHED(2); sieve[i] &= BIT3; i += sievingPrime * 2 + 0; FALLTHROUGH;
-        case 3: CHECK_FINISHED(3); sieve[i] &= BIT7; i += sievingPrime * 4 + 1; FALLTHROUGH;
-        case 4: CHECK_FINISHED(4); sieve[i] &= BIT6; i += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 5: CHECK_FINISHED(5); sieve[i] &= BIT2; i += sievingPrime * 4 + 1; FALLTHROUGH;
-        case 6: CHECK_FINISHED(6); sieve[i] &= BIT1; i += sievingPrime * 6 + 1; FALLTHROUGH;
-        case 7: CHECK_FINISHED(7); sieve[i] &= BIT5; i += sievingPrime * 2 + 1;
+                CHECK_FINISHED(0); sieve[i0] &= BIT0; i0 += sievingPrime * 6 + 1; FALLTHROUGH;
+        case 1: CHECK_FINISHED(1); sieve[i0] &= BIT4; i0 += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 2: CHECK_FINISHED(2); sieve[i0] &= BIT3; i0 += sievingPrime * 2 + 0; FALLTHROUGH;
+        case 3: CHECK_FINISHED(3); sieve[i0] &= BIT7; i0 += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 4: CHECK_FINISHED(4); sieve[i0] &= BIT6; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 5: CHECK_FINISHED(5); sieve[i0] &= BIT2; i0 += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 6: CHECK_FINISHED(6); sieve[i0] &= BIT1; i0 += sievingPrime * 6 + 1; FALLTHROUGH;
+        case 7: CHECK_FINISHED(7); sieve[i0] &= BIT5; i0 += sievingPrime * 2 + 1;
       }
 
       // sievingPrime % 30 == 11
       for (;;)
       {
         case  8: {
-                   std::size_t maxOffset = sievingPrime * 28 + 10;
-                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
+                   std::size_t i1 = i0 + sievingPrime *  6 +  2;
+                   std::size_t i2 = i0 + sievingPrime * 10 +  3;
+                   std::size_t i3 = i0 + sievingPrime * 12 +  4;
+                   std::size_t i4 = i0 + sievingPrime * 16 +  6;
+                   std::size_t i5 = i0 + sievingPrime * 18 +  6;
+                   std::size_t i6 = i0 + sievingPrime * 22 +  8;
+                   std::size_t i7 = i0 + sievingPrime * 28 + 10;
+                   std::size_t dist = sievingPrime * 30 + 11;
 
-                   for (; i < limit; i += sievingPrime * 30 + 11)
+                   // Each iteration removes the next 8
+                   // multiples of the sievingPrime.
+                   while (i7 < sieveBytes)
                    {
-                     sieve[i + sievingPrime *  0 +  0] &= BIT1;
-                     sieve[i + sievingPrime *  6 +  2] &= BIT3;
-                     sieve[i + sievingPrime * 10 +  3] &= BIT7;
-                     sieve[i + sievingPrime * 12 +  4] &= BIT5;
-                     sieve[i + sievingPrime * 16 +  6] &= BIT0;
-                     sieve[i + sievingPrime * 18 +  6] &= BIT6;
-                     sieve[i + sievingPrime * 22 +  8] &= BIT2;
-                     sieve[i + sievingPrime * 28 + 10] &= BIT4;
+                     sieve[i0] &= BIT1; i0 += dist;
+                     sieve[i1] &= BIT3; i1 += dist;
+                     sieve[i2] &= BIT7; i2 += dist;
+                     sieve[i3] &= BIT5; i3 += dist;
+                     sieve[i4] &= BIT0; i4 += dist;
+                     sieve[i5] &= BIT6; i5 += dist;
+                     sieve[i6] &= BIT2; i6 += dist;
+                     sieve[i7] &= BIT4; i7 += dist;
                    }
                  }
-                 CHECK_FINISHED( 8); sieve[i] &= BIT1; i += sievingPrime * 6 + 2; FALLTHROUGH;
-        case  9: CHECK_FINISHED( 9); sieve[i] &= BIT3; i += sievingPrime * 4 + 1; FALLTHROUGH;
-        case 10: CHECK_FINISHED(10); sieve[i] &= BIT7; i += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 11: CHECK_FINISHED(11); sieve[i] &= BIT5; i += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 12: CHECK_FINISHED(12); sieve[i] &= BIT0; i += sievingPrime * 2 + 0; FALLTHROUGH;
-        case 13: CHECK_FINISHED(13); sieve[i] &= BIT6; i += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 14: CHECK_FINISHED(14); sieve[i] &= BIT2; i += sievingPrime * 6 + 2; FALLTHROUGH;
-        case 15: CHECK_FINISHED(15); sieve[i] &= BIT4; i += sievingPrime * 2 + 1;
+                 CHECK_FINISHED( 8); sieve[i0] &= BIT1; i0 += sievingPrime * 6 + 2; FALLTHROUGH;
+        case  9: CHECK_FINISHED( 9); sieve[i0] &= BIT3; i0 += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 10: CHECK_FINISHED(10); sieve[i0] &= BIT7; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 11: CHECK_FINISHED(11); sieve[i0] &= BIT5; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 12: CHECK_FINISHED(12); sieve[i0] &= BIT0; i0 += sievingPrime * 2 + 0; FALLTHROUGH;
+        case 13: CHECK_FINISHED(13); sieve[i0] &= BIT6; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 14: CHECK_FINISHED(14); sieve[i0] &= BIT2; i0 += sievingPrime * 6 + 2; FALLTHROUGH;
+        case 15: CHECK_FINISHED(15); sieve[i0] &= BIT4; i0 += sievingPrime * 2 + 1;
       }
 
       // sievingPrime % 30 == 13
       for (;;)
       {
         case 16: {
-                   std::size_t maxOffset = sievingPrime * 28 + 12;
-                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
+                   std::size_t i1 = i0 + sievingPrime *  6 +  2;
+                   std::size_t i2 = i0 + sievingPrime * 10 +  4;
+                   std::size_t i3 = i0 + sievingPrime * 12 +  5;
+                   std::size_t i4 = i0 + sievingPrime * 16 +  7;
+                   std::size_t i5 = i0 + sievingPrime * 18 +  8;
+                   std::size_t i6 = i0 + sievingPrime * 22 +  9;
+                   std::size_t i7 = i0 + sievingPrime * 28 + 12;
+                   std::size_t dist = sievingPrime * 30 + 13;
 
-                   for (; i < limit; i += sievingPrime * 30 + 13)
+                   // Each iteration removes the next 8
+                   // multiples of the sievingPrime.
+                   while (i7 < sieveBytes)
                    {
-                     sieve[i + sievingPrime *  0 +  0] &= BIT2;
-                     sieve[i + sievingPrime *  6 +  2] &= BIT7;
-                     sieve[i + sievingPrime * 10 +  4] &= BIT5;
-                     sieve[i + sievingPrime * 12 +  5] &= BIT4;
-                     sieve[i + sievingPrime * 16 +  7] &= BIT1;
-                     sieve[i + sievingPrime * 18 +  8] &= BIT0;
-                     sieve[i + sievingPrime * 22 +  9] &= BIT6;
-                     sieve[i + sievingPrime * 28 + 12] &= BIT3;
+                     sieve[i0] &= BIT2; i0 += dist;
+                     sieve[i1] &= BIT7; i1 += dist;
+                     sieve[i2] &= BIT5; i2 += dist;
+                     sieve[i3] &= BIT4; i3 += dist;
+                     sieve[i4] &= BIT1; i4 += dist;
+                     sieve[i5] &= BIT0; i5 += dist;
+                     sieve[i6] &= BIT6; i6 += dist;
+                     sieve[i7] &= BIT3; i7 += dist;
                    }
                  }
-                 CHECK_FINISHED(16); sieve[i] &= BIT2; i += sievingPrime * 6 + 2; FALLTHROUGH;
-        case 17: CHECK_FINISHED(17); sieve[i] &= BIT7; i += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 18: CHECK_FINISHED(18); sieve[i] &= BIT5; i += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 19: CHECK_FINISHED(19); sieve[i] &= BIT4; i += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 20: CHECK_FINISHED(20); sieve[i] &= BIT1; i += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 21: CHECK_FINISHED(21); sieve[i] &= BIT0; i += sievingPrime * 4 + 1; FALLTHROUGH;
-        case 22: CHECK_FINISHED(22); sieve[i] &= BIT6; i += sievingPrime * 6 + 3; FALLTHROUGH;
-        case 23: CHECK_FINISHED(23); sieve[i] &= BIT3; i += sievingPrime * 2 + 1;
+                 CHECK_FINISHED(16); sieve[i0] &= BIT2; i0 += sievingPrime * 6 + 2; FALLTHROUGH;
+        case 17: CHECK_FINISHED(17); sieve[i0] &= BIT7; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 18: CHECK_FINISHED(18); sieve[i0] &= BIT5; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 19: CHECK_FINISHED(19); sieve[i0] &= BIT4; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 20: CHECK_FINISHED(20); sieve[i0] &= BIT1; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 21: CHECK_FINISHED(21); sieve[i0] &= BIT0; i0 += sievingPrime * 4 + 1; FALLTHROUGH;
+        case 22: CHECK_FINISHED(22); sieve[i0] &= BIT6; i0 += sievingPrime * 6 + 3; FALLTHROUGH;
+        case 23: CHECK_FINISHED(23); sieve[i0] &= BIT3; i0 += sievingPrime * 2 + 1;
       }
 
       // sievingPrime % 30 == 17
       for (;;)
       {
         case 24: {
-                   std::size_t maxOffset = sievingPrime * 28 + 16;
-                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
+                   std::size_t i1 = i0 + sievingPrime *  6 +  3;
+                   std::size_t i2 = i0 + sievingPrime * 10 +  6;
+                   std::size_t i3 = i0 + sievingPrime * 12 +  7;
+                   std::size_t i4 = i0 + sievingPrime * 16 +  9;
+                   std::size_t i5 = i0 + sievingPrime * 18 + 10;
+                   std::size_t i6 = i0 + sievingPrime * 22 + 12;
+                   std::size_t i7 = i0 + sievingPrime * 28 + 16;
+                   std::size_t dist = sievingPrime * 30 + 17;
 
-                   for (; i < limit; i += sievingPrime * 30 + 17)
+                   // Each iteration removes the next 8
+                   // multiples of the sievingPrime.
+                   while (i7 < sieveBytes)
                    {
-                     sieve[i + sievingPrime *  0 +  0] &= BIT3;
-                     sieve[i + sievingPrime *  6 +  3] &= BIT6;
-                     sieve[i + sievingPrime * 10 +  6] &= BIT0;
-                     sieve[i + sievingPrime * 12 +  7] &= BIT1;
-                     sieve[i + sievingPrime * 16 +  9] &= BIT4;
-                     sieve[i + sievingPrime * 18 + 10] &= BIT5;
-                     sieve[i + sievingPrime * 22 + 12] &= BIT7;
-                     sieve[i + sievingPrime * 28 + 16] &= BIT2;
+                     sieve[i0] &= BIT3; i0 += dist;
+                     sieve[i1] &= BIT6; i1 += dist;
+                     sieve[i2] &= BIT0; i2 += dist;
+                     sieve[i3] &= BIT1; i3 += dist;
+                     sieve[i4] &= BIT4; i4 += dist;
+                     sieve[i5] &= BIT5; i5 += dist;
+                     sieve[i6] &= BIT7; i6 += dist;
+                     sieve[i7] &= BIT2; i7 += dist;
                    }
                  }
-                 CHECK_FINISHED(24); sieve[i] &= BIT3; i += sievingPrime * 6 + 3; FALLTHROUGH;
-        case 25: CHECK_FINISHED(25); sieve[i] &= BIT6; i += sievingPrime * 4 + 3; FALLTHROUGH;
-        case 26: CHECK_FINISHED(26); sieve[i] &= BIT0; i += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 27: CHECK_FINISHED(27); sieve[i] &= BIT1; i += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 28: CHECK_FINISHED(28); sieve[i] &= BIT4; i += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 29: CHECK_FINISHED(29); sieve[i] &= BIT5; i += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 30: CHECK_FINISHED(30); sieve[i] &= BIT7; i += sievingPrime * 6 + 4; FALLTHROUGH;
-        case 31: CHECK_FINISHED(31); sieve[i] &= BIT2; i += sievingPrime * 2 + 1;
+                 CHECK_FINISHED(24); sieve[i0] &= BIT3; i0 += sievingPrime * 6 + 3; FALLTHROUGH;
+        case 25: CHECK_FINISHED(25); sieve[i0] &= BIT6; i0 += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 26: CHECK_FINISHED(26); sieve[i0] &= BIT0; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 27: CHECK_FINISHED(27); sieve[i0] &= BIT1; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 28: CHECK_FINISHED(28); sieve[i0] &= BIT4; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 29: CHECK_FINISHED(29); sieve[i0] &= BIT5; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 30: CHECK_FINISHED(30); sieve[i0] &= BIT7; i0 += sievingPrime * 6 + 4; FALLTHROUGH;
+        case 31: CHECK_FINISHED(31); sieve[i0] &= BIT2; i0 += sievingPrime * 2 + 1;
       }
 
       // sievingPrime % 30 == 19
       for (;;)
       {
         case 32: {
-                   std::size_t maxOffset = sievingPrime * 28 + 18;
-                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
+                   std::size_t i1 = i0 + sievingPrime *  6 +  4;
+                   std::size_t i2 = i0 + sievingPrime * 10 +  6;
+                   std::size_t i3 = i0 + sievingPrime * 12 +  8;
+                   std::size_t i4 = i0 + sievingPrime * 16 + 10;
+                   std::size_t i5 = i0 + sievingPrime * 18 + 11;
+                   std::size_t i6 = i0 + sievingPrime * 22 + 14;
+                   std::size_t i7 = i0 + sievingPrime * 28 + 18;
+                   std::size_t dist = sievingPrime * 30 + 19;
 
-                   for (; i < limit; i += sievingPrime * 30 + 19)
+                   // Each iteration removes the next 8
+                   // multiples of the sievingPrime.
+                   while (i7 < sieveBytes)
                    {
-                     sieve[i + sievingPrime *  0 +  0] &= BIT4;
-                     sieve[i + sievingPrime *  6 +  4] &= BIT2;
-                     sieve[i + sievingPrime * 10 +  6] &= BIT6;
-                     sieve[i + sievingPrime * 12 +  8] &= BIT0;
-                     sieve[i + sievingPrime * 16 + 10] &= BIT5;
-                     sieve[i + sievingPrime * 18 + 11] &= BIT7;
-                     sieve[i + sievingPrime * 22 + 14] &= BIT3;
-                     sieve[i + sievingPrime * 28 + 18] &= BIT1;
+                     sieve[i0] &= BIT4; i0 += dist;
+                     sieve[i1] &= BIT2; i1 += dist;
+                     sieve[i2] &= BIT6; i2 += dist;
+                     sieve[i3] &= BIT0; i3 += dist;
+                     sieve[i4] &= BIT5; i4 += dist;
+                     sieve[i5] &= BIT7; i5 += dist;
+                     sieve[i6] &= BIT3; i6 += dist;
+                     sieve[i7] &= BIT1; i7 += dist;
                    }
                  }
-                 CHECK_FINISHED(32); sieve[i] &= BIT4; i += sievingPrime * 6 + 4; FALLTHROUGH;
-        case 33: CHECK_FINISHED(33); sieve[i] &= BIT2; i += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 34: CHECK_FINISHED(34); sieve[i] &= BIT6; i += sievingPrime * 2 + 2; FALLTHROUGH;
-        case 35: CHECK_FINISHED(35); sieve[i] &= BIT0; i += sievingPrime * 4 + 2; FALLTHROUGH;
-        case 36: CHECK_FINISHED(36); sieve[i] &= BIT5; i += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 37: CHECK_FINISHED(37); sieve[i] &= BIT7; i += sievingPrime * 4 + 3; FALLTHROUGH;
-        case 38: CHECK_FINISHED(38); sieve[i] &= BIT3; i += sievingPrime * 6 + 4; FALLTHROUGH;
-        case 39: CHECK_FINISHED(39); sieve[i] &= BIT1; i += sievingPrime * 2 + 1;
+                 CHECK_FINISHED(32); sieve[i0] &= BIT4; i0 += sievingPrime * 6 + 4; FALLTHROUGH;
+        case 33: CHECK_FINISHED(33); sieve[i0] &= BIT2; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 34: CHECK_FINISHED(34); sieve[i0] &= BIT6; i0 += sievingPrime * 2 + 2; FALLTHROUGH;
+        case 35: CHECK_FINISHED(35); sieve[i0] &= BIT0; i0 += sievingPrime * 4 + 2; FALLTHROUGH;
+        case 36: CHECK_FINISHED(36); sieve[i0] &= BIT5; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 37: CHECK_FINISHED(37); sieve[i0] &= BIT7; i0 += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 38: CHECK_FINISHED(38); sieve[i0] &= BIT3; i0 += sievingPrime * 6 + 4; FALLTHROUGH;
+        case 39: CHECK_FINISHED(39); sieve[i0] &= BIT1; i0 += sievingPrime * 2 + 1;
       }
 
       // sievingPrime % 30 == 23
       for (;;)
       {
         case 40: {
-                   std::size_t maxOffset = sievingPrime * 28 + 22;
-                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
+                   std::size_t i1 = i0 + sievingPrime *  6 +  5;
+                   std::size_t i2 = i0 + sievingPrime * 10 +  8;
+                   std::size_t i3 = i0 + sievingPrime * 12 +  9;
+                   std::size_t i4 = i0 + sievingPrime * 16 + 12;
+                   std::size_t i5 = i0 + sievingPrime * 18 + 14;
+                   std::size_t i6 = i0 + sievingPrime * 22 + 17;
+                   std::size_t i7 = i0 + sievingPrime * 28 + 22;
+                   std::size_t dist = sievingPrime * 30 + 23;
 
-                   for (; i < limit; i += sievingPrime * 30 + 23)
+                   // Each iteration removes the next 8
+                   // multiples of the sievingPrime.
+                   while (i7 < sieveBytes)
                    {
-                     sieve[i + sievingPrime *  0 +  0] &= BIT5;
-                     sieve[i + sievingPrime *  6 +  5] &= BIT1;
-                     sieve[i + sievingPrime * 10 +  8] &= BIT2;
-                     sieve[i + sievingPrime * 12 +  9] &= BIT6;
-                     sieve[i + sievingPrime * 16 + 12] &= BIT7;
-                     sieve[i + sievingPrime * 18 + 14] &= BIT3;
-                     sieve[i + sievingPrime * 22 + 17] &= BIT4;
-                     sieve[i + sievingPrime * 28 + 22] &= BIT0;
+                     sieve[i0] &= BIT5; i0 += dist;
+                     sieve[i1] &= BIT1; i1 += dist;
+                     sieve[i2] &= BIT2; i2 += dist;
+                     sieve[i3] &= BIT6; i3 += dist;
+                     sieve[i4] &= BIT7; i4 += dist;
+                     sieve[i5] &= BIT3; i5 += dist;
+                     sieve[i6] &= BIT4; i6 += dist;
+                     sieve[i7] &= BIT0; i7 += dist;
                    }
                  }
-                 CHECK_FINISHED(40); sieve[i] &= BIT5; i += sievingPrime * 6 + 5; FALLTHROUGH;
-        case 41: CHECK_FINISHED(41); sieve[i] &= BIT1; i += sievingPrime * 4 + 3; FALLTHROUGH;
-        case 42: CHECK_FINISHED(42); sieve[i] &= BIT2; i += sievingPrime * 2 + 1; FALLTHROUGH;
-        case 43: CHECK_FINISHED(43); sieve[i] &= BIT6; i += sievingPrime * 4 + 3; FALLTHROUGH;
-        case 44: CHECK_FINISHED(44); sieve[i] &= BIT7; i += sievingPrime * 2 + 2; FALLTHROUGH;
-        case 45: CHECK_FINISHED(45); sieve[i] &= BIT3; i += sievingPrime * 4 + 3; FALLTHROUGH;
-        case 46: CHECK_FINISHED(46); sieve[i] &= BIT4; i += sievingPrime * 6 + 5; FALLTHROUGH;
-        case 47: CHECK_FINISHED(47); sieve[i] &= BIT0; i += sievingPrime * 2 + 1;
+                 CHECK_FINISHED(40); sieve[i0] &= BIT5; i0 += sievingPrime * 6 + 5; FALLTHROUGH;
+        case 41: CHECK_FINISHED(41); sieve[i0] &= BIT1; i0 += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 42: CHECK_FINISHED(42); sieve[i0] &= BIT2; i0 += sievingPrime * 2 + 1; FALLTHROUGH;
+        case 43: CHECK_FINISHED(43); sieve[i0] &= BIT6; i0 += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 44: CHECK_FINISHED(44); sieve[i0] &= BIT7; i0 += sievingPrime * 2 + 2; FALLTHROUGH;
+        case 45: CHECK_FINISHED(45); sieve[i0] &= BIT3; i0 += sievingPrime * 4 + 3; FALLTHROUGH;
+        case 46: CHECK_FINISHED(46); sieve[i0] &= BIT4; i0 += sievingPrime * 6 + 5; FALLTHROUGH;
+        case 47: CHECK_FINISHED(47); sieve[i0] &= BIT0; i0 += sievingPrime * 2 + 1;
       }
 
       // sievingPrime % 30 == 29
       for (;;)
       {
         case 48: {
-                   std::size_t maxOffset = sievingPrime * 28 + 27;
-                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
+                   std::size_t i1 = i0 + sievingPrime *  6 +  6;
+                   std::size_t i2 = i0 + sievingPrime * 10 + 10;
+                   std::size_t i3 = i0 + sievingPrime * 12 + 12;
+                   std::size_t i4 = i0 + sievingPrime * 16 + 16;
+                   std::size_t i5 = i0 + sievingPrime * 18 + 18;
+                   std::size_t i6 = i0 + sievingPrime * 22 + 22;
+                   std::size_t i7 = i0 + sievingPrime * 28 + 27;
+                   std::size_t dist = sievingPrime * 30 + 29;
 
-                   for (; i < limit; i += sievingPrime * 30 + 29)
+                   // Each iteration removes the next 8
+                   // multiples of the sievingPrime.
+                   while (i7 < sieveBytes)
                    {
-                     sieve[i + sievingPrime *  0 +  0] &= BIT6;
-                     sieve[i + sievingPrime *  6 +  6] &= BIT5;
-                     sieve[i + sievingPrime * 10 + 10] &= BIT4;
-                     sieve[i + sievingPrime * 12 + 12] &= BIT3;
-                     sieve[i + sievingPrime * 16 + 16] &= BIT2;
-                     sieve[i + sievingPrime * 18 + 18] &= BIT1;
-                     sieve[i + sievingPrime * 22 + 22] &= BIT0;
-                     sieve[i + sievingPrime * 28 + 27] &= BIT7;
+                     sieve[i0] &= BIT6; i0 += dist;
+                     sieve[i1] &= BIT5; i1 += dist;
+                     sieve[i2] &= BIT4; i2 += dist;
+                     sieve[i3] &= BIT3; i3 += dist;
+                     sieve[i4] &= BIT2; i4 += dist;
+                     sieve[i5] &= BIT1; i5 += dist;
+                     sieve[i6] &= BIT0; i6 += dist;
+                     sieve[i7] &= BIT7; i7 += dist;
                    }
                  }
-                 CHECK_FINISHED(48); sieve[i] &= BIT6; i += sievingPrime * 6 + 6; FALLTHROUGH;
-        case 49: CHECK_FINISHED(49); sieve[i] &= BIT5; i += sievingPrime * 4 + 4; FALLTHROUGH;
-        case 50: CHECK_FINISHED(50); sieve[i] &= BIT4; i += sievingPrime * 2 + 2; FALLTHROUGH;
-        case 51: CHECK_FINISHED(51); sieve[i] &= BIT3; i += sievingPrime * 4 + 4; FALLTHROUGH;
-        case 52: CHECK_FINISHED(52); sieve[i] &= BIT2; i += sievingPrime * 2 + 2; FALLTHROUGH;
-        case 53: CHECK_FINISHED(53); sieve[i] &= BIT1; i += sievingPrime * 4 + 4; FALLTHROUGH;
-        case 54: CHECK_FINISHED(54); sieve[i] &= BIT0; i += sievingPrime * 6 + 5; FALLTHROUGH;
-        case 55: CHECK_FINISHED(55); sieve[i] &= BIT7; i += sievingPrime * 2 + 2;
+                 CHECK_FINISHED(48); sieve[i0] &= BIT6; i0 += sievingPrime * 6 + 6; FALLTHROUGH;
+        case 49: CHECK_FINISHED(49); sieve[i0] &= BIT5; i0 += sievingPrime * 4 + 4; FALLTHROUGH;
+        case 50: CHECK_FINISHED(50); sieve[i0] &= BIT4; i0 += sievingPrime * 2 + 2; FALLTHROUGH;
+        case 51: CHECK_FINISHED(51); sieve[i0] &= BIT3; i0 += sievingPrime * 4 + 4; FALLTHROUGH;
+        case 52: CHECK_FINISHED(52); sieve[i0] &= BIT2; i0 += sievingPrime * 2 + 2; FALLTHROUGH;
+        case 53: CHECK_FINISHED(53); sieve[i0] &= BIT1; i0 += sievingPrime * 4 + 4; FALLTHROUGH;
+        case 54: CHECK_FINISHED(54); sieve[i0] &= BIT0; i0 += sievingPrime * 6 + 5; FALLTHROUGH;
+        case 55: CHECK_FINISHED(55); sieve[i0] &= BIT7; i0 += sievingPrime * 2 + 2;
       }
 
       // sievingPrime % 30 == 1
       for (;;)
       {
         case 56: {
-                   std::size_t maxOffset = sievingPrime * 28 + 1;
-                   std::size_t limit = std::max(sieveBytes, maxOffset) - maxOffset;
+                   std::size_t i1 = i0 + sievingPrime *  6 + 1;
+                   std::size_t i2 = i0 + sievingPrime * 10 + 1;
+                   std::size_t i3 = i0 + sievingPrime * 12 + 1;
+                   std::size_t i4 = i0 + sievingPrime * 16 + 1;
+                   std::size_t i5 = i0 + sievingPrime * 18 + 1;
+                   std::size_t i6 = i0 + sievingPrime * 22 + 1;
+                   std::size_t i7 = i0 + sievingPrime * 28 + 1;
+                   std::size_t dist = sievingPrime * 30 + 1;
 
-                   for (; i < limit; i += sievingPrime * 30 + 1)
+                   // Each iteration removes the next 8
+                   // multiples of the sievingPrime.
+                   while (i7 < sieveBytes)
                    {
-                     sieve[i + sievingPrime *  0 + 0] &= BIT7;
-                     sieve[i + sievingPrime *  6 + 1] &= BIT0;
-                     sieve[i + sievingPrime * 10 + 1] &= BIT1;
-                     sieve[i + sievingPrime * 12 + 1] &= BIT2;
-                     sieve[i + sievingPrime * 16 + 1] &= BIT3;
-                     sieve[i + sievingPrime * 18 + 1] &= BIT4;
-                     sieve[i + sievingPrime * 22 + 1] &= BIT5;
-                     sieve[i + sievingPrime * 28 + 1] &= BIT6;
+                     sieve[i0] &= BIT7; i0 += dist;
+                     sieve[i1] &= BIT0; i1 += dist;
+                     sieve[i2] &= BIT1; i2 += dist;
+                     sieve[i3] &= BIT2; i3 += dist;
+                     sieve[i4] &= BIT3; i4 += dist;
+                     sieve[i5] &= BIT4; i5 += dist;
+                     sieve[i6] &= BIT5; i6 += dist;
+                     sieve[i7] &= BIT6; i7 += dist;
                    }
                  }
-                 CHECK_FINISHED(56); sieve[i] &= BIT7; i += sievingPrime * 6 + 1; FALLTHROUGH;
-        case 57: CHECK_FINISHED(57); sieve[i] &= BIT0; i += sievingPrime * 4 + 0; FALLTHROUGH;
-        case 58: CHECK_FINISHED(58); sieve[i] &= BIT1; i += sievingPrime * 2 + 0; FALLTHROUGH;
-        case 59: CHECK_FINISHED(59); sieve[i] &= BIT2; i += sievingPrime * 4 + 0; FALLTHROUGH;
-        case 60: CHECK_FINISHED(60); sieve[i] &= BIT3; i += sievingPrime * 2 + 0; FALLTHROUGH;
-        case 61: CHECK_FINISHED(61); sieve[i] &= BIT4; i += sievingPrime * 4 + 0; FALLTHROUGH;
-        case 62: CHECK_FINISHED(62); sieve[i] &= BIT5; i += sievingPrime * 6 + 0; FALLTHROUGH;
-        case 63: CHECK_FINISHED(63); sieve[i] &= BIT6; i += sievingPrime * 2 + 0;
+                 CHECK_FINISHED(56); sieve[i0] &= BIT7; i0 += sievingPrime * 6 + 1; FALLTHROUGH;
+        case 57: CHECK_FINISHED(57); sieve[i0] &= BIT0; i0 += sievingPrime * 4 + 0; FALLTHROUGH;
+        case 58: CHECK_FINISHED(58); sieve[i0] &= BIT1; i0 += sievingPrime * 2 + 0; FALLTHROUGH;
+        case 59: CHECK_FINISHED(59); sieve[i0] &= BIT2; i0 += sievingPrime * 4 + 0; FALLTHROUGH;
+        case 60: CHECK_FINISHED(60); sieve[i0] &= BIT3; i0 += sievingPrime * 2 + 0; FALLTHROUGH;
+        case 61: CHECK_FINISHED(61); sieve[i0] &= BIT4; i0 += sievingPrime * 4 + 0; FALLTHROUGH;
+        case 62: CHECK_FINISHED(62); sieve[i0] &= BIT5; i0 += sievingPrime * 6 + 0; FALLTHROUGH;
+        case 63: CHECK_FINISHED(63); sieve[i0] &= BIT6; i0 += sievingPrime * 2 + 0;
       }
 
       default: UNREACHABLE;
