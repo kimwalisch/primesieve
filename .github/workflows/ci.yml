@@ -435,3 +435,83 @@ jobs:
         run: valgrind --error-exitcode=1 ./primesieve 1e7 --nth-prime
       - name: Valgrind primesieve --print
         run: valgrind --error-exitcode=1 ./primesieve 10000 --print
+
+  linux_gcc_pkgconfig:
+    strategy:
+      matrix:
+        shared: ['ON', 'OFF']
+    runs-on: ubuntu-latest
+    env:
+      CC: gcc
+      CXX: g++
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build & install primesieve
+        run: |
+            cmake . -DBUILD_SHARED_LIBS=${{matrix.shared}} -DCMAKE_INSTALL_PREFIX=$PWD/inst
+            cmake --build . --parallel --verbose
+            cmake --install .
+            cat inst/lib/pkgconfig/primesieve.pc
+      - name: Link libprimesieve using pkg-config (shared)
+        if: matrix.shared == 'ON'
+        run: |
+            export PKG_CONFIG_PATH=$PWD/inst/lib/pkgconfig
+            export LD_LIBRARY_PATH=$PWD/inst/lib
+            pkg-config --cflags --libs primesieve
+            printf '#include <primesieve.hpp>\nint main() { return primesieve::count_primes(0, 1000) != 168; }\n' > pkgconfig_test.cpp
+            g++ pkgconfig_test.cpp $(pkg-config --cflags --libs primesieve) -o pkgconfig_test
+            ./pkgconfig_test
+      - name: Link libprimesieve using pkg-config (static)
+        if: matrix.shared == 'OFF'
+        run: |
+            export PKG_CONFIG_PATH=$PWD/inst/lib/pkgconfig
+            pkg-config --cflags --libs --static primesieve
+            printf '#include <primesieve.hpp>\nint main() { return primesieve::count_primes(0, 1000) != 168; }\n' > pkgconfig_test.cpp
+            g++ pkgconfig_test.cpp $(pkg-config --cflags --libs --static primesieve) -o pkgconfig_test
+            ./pkgconfig_test
+
+  linux_gcc_cmake_find_package:
+    strategy:
+      matrix:
+        shared: ['ON', 'OFF']
+    runs-on: ubuntu-latest
+    env:
+      CC: gcc
+      CXX: g++
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build & install primesieve
+        run: |
+            cmake . -DBUILD_SHARED_LIBS=${{matrix.shared}} -DCMAKE_INSTALL_PREFIX=$PWD/inst
+            cmake --build . --parallel --verbose
+            cmake --install .
+      - name: Create test program
+        run: |
+            mkdir cmake_test
+            printf '#include <primesieve.hpp>\nint main() { return primesieve::count_primes(0, 1000) != 168; }\n' > cmake_test/main.cpp
+      - name: Link libprimesieve using find_package (shared)
+        if: matrix.shared == 'ON'
+        run: |
+            cat > cmake_test/CMakeLists.txt <<'EOF'
+            cmake_minimum_required(VERSION 3.9...4.2)
+            project(cmake_test LANGUAGES CXX)
+            find_package(primesieve REQUIRED)
+            add_executable(cmake_test main.cpp)
+            target_link_libraries(cmake_test primesieve::primesieve)
+            EOF
+            cmake -S cmake_test -B cmake_test/build -DCMAKE_PREFIX_PATH=$PWD/inst
+            cmake --build cmake_test/build --parallel --verbose
+            LD_LIBRARY_PATH=$PWD/inst/lib ./cmake_test/build/cmake_test
+      - name: Link libprimesieve using find_package (static)
+        if: matrix.shared == 'OFF'
+        run: |
+            cat > cmake_test/CMakeLists.txt <<'EOF'
+            cmake_minimum_required(VERSION 3.9...4.2)
+            project(cmake_test LANGUAGES CXX)
+            find_package(primesieve REQUIRED static)
+            add_executable(cmake_test main.cpp)
+            target_link_libraries(cmake_test primesieve::primesieve)
+            EOF
+            cmake -S cmake_test -B cmake_test/build -DCMAKE_PREFIX_PATH=$PWD/inst
+            cmake --build cmake_test/build --parallel --verbose
+            ./cmake_test/build/cmake_test
