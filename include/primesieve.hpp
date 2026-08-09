@@ -13,9 +13,9 @@
 #ifndef PRIMESIEVE_HPP
 #define PRIMESIEVE_HPP
 
-#define PRIMESIEVE_VERSION "12.15"
+#define PRIMESIEVE_VERSION "12.16"
 #define PRIMESIEVE_VERSION_MAJOR 12
-#define PRIMESIEVE_VERSION_MINOR 15
+#define PRIMESIEVE_VERSION_MINOR 16
 
 #include <primesieve/iterator.hpp>
 #include <primesieve/primesieve_error.hpp>
