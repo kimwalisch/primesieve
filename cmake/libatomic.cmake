@@ -10,13 +10,7 @@ include(CMakePushCheckState)
 
 cmake_push_check_state()
 
-if(CMAKE_CXX11_STANDARD_COMPILE_OPTION)
-    set(CMAKE_REQUIRED_FLAGS ${CMAKE_CXX11_STANDARD_COMPILE_OPTION})
-endif()
-
-# Check if code compiles without libatomic.
-# Should always work on CPUs >= 64-bits
-check_cxx_source_compiles("
+set(atomic64_TEST_SOURCE "
     #include <atomic>
     #include <stdint.h>
     int main() {
@@ -24,44 +18,43 @@ check_cxx_source_compiles("
         x = 1;
         x--;
         return (int) x;
-    }"
-    atomic64)
+    }")
+
+if(CMAKE_CXX11_STANDARD_COMPILE_OPTION)
+    set(CMAKE_REQUIRED_FLAGS ${CMAKE_CXX11_STANDARD_COMPILE_OPTION})
+endif()
+
+# Check if code compiles without libatomic.
+# Should always work on CPUs >= 64-bits
+check_cxx_source_compiles("${atomic64_TEST_SOURCE}" atomic64)
 
 # Our code requires libatomic to compile
 if(NOT atomic64)
-    find_library(LIBATOMIC NAMES atomic atomic.so.1 libatomic.so.1)
+    # First try -latomic as the compiler may find libraries
+    # in directories which CMake does not search.
+    set(CMAKE_REQUIRED_LIBRARIES "-latomic")
+    check_cxx_source_compiles("${atomic64_TEST_SOURCE}" atomic64_with_latomic)
 
-    if(LIBATOMIC)
-        message(STATUS "Found libatomic: ${LIBATOMIC}")
-    else()
-        # Some package managers like homebrew and macports store the compiler's
-        # libraries in a subdirectory of the library directory. E.g. GCC
-        # installed via homebrew stores libatomic at lib/gcc/13/libatomic.dylib
-        # instead of lib/libatomic.dylib. CMake's find_library() cannot easily
-        # be used to recursively find libraries. Therefore we use this workaround
-        # here (try adding -latomic to linker options) for this use case.
+    if(atomic64_with_latomic)
         set(LIBATOMIC "-latomic")
-        message(STATUS "Add linker flag: ${LIBATOMIC}")
+    else()
+        find_library(LIBATOMIC NAMES atomic atomic.so.1 libatomic.so.1)
+
+        if(LIBATOMIC)
+            set(CMAKE_REQUIRED_LIBRARIES "${LIBATOMIC}")
+            check_cxx_source_compiles("${atomic64_TEST_SOURCE}" atomic64_with_libatomic_path)
+        endif()
     endif()
 
-    set(CMAKE_REQUIRED_LIBRARIES "${LIBATOMIC}")
-
-    check_cxx_source_compiles("
-        #include <atomic>
-        #include <stdint.h>
-        int main() {
-            std::atomic<int64_t> x;
-            x = 1;
-            x--;
-            return (int) x;
-        }"
-        atomic64_with_libatomic)
-
-    if(atomic64_with_libatomic)
+    if(atomic64_with_latomic OR
+       atomic64_with_libatomic_path)
         list(APPEND PRIMESIEVE_LINK_LIBRARIES "${LIBATOMIC}")
     else()
-        set(LIBATOMIC "")
         message(FATAL_ERROR "Failed to compile std::atomic, libatomic likely not found!")
+    endif()
+
+    if(atomic64_with_latomic)
+        string(APPEND PRIMESIEVE_PKGCONFIG_LIBS_PRIVATE "-latomic ")
     endif()
 endif()
 

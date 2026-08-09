@@ -134,6 +134,10 @@ include("${PROJECT_SOURCE_DIR}/cmake/libatomic.cmake")
 
 find_package(Threads REQUIRED QUIET)
 
+if(CMAKE_THREAD_LIBS_INIT)
+    string(APPEND PRIMESIEVE_PKGCONFIG_LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT} ")
+endif()
+
 if(BUILD_SHARED_LIBS)
     add_library(libprimesieve SHARED ${LIB_SRC})
     set_target_properties(libprimesieve PROPERTIES OUTPUT_NAME primesieve)
