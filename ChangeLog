@@ -1,7 +1,7 @@
 Changes in version 12.16, 09/08/2026
 ====================================
 
-* primesieve.pc.in: Add missing libatomic and libquadmath dependencies.
+* primesieve.pc.in: Add missing libatomic dependency.
 
 Changes in version 12.15, 17/07/2026
 ====================================
