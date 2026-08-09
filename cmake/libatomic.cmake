@@ -36,7 +36,8 @@ if(NOT atomic64)
     check_cxx_source_compiles("${atomic64_TEST_SOURCE}" atomic64_with_latomic)
 
     if(atomic64_with_latomic)
-        set(LIBATOMIC "-latomic")
+        list(APPEND PRIMESIEVE_LINK_LIBRARIES "-latomic")
+        string(APPEND PRIMESIEVE_PKGCONFIG_LIBS_PRIVATE "-latomic ")
     else()
         find_library(LIBATOMIC NAMES atomic atomic.so.1 libatomic.so.1)
 
@@ -44,17 +45,12 @@ if(NOT atomic64)
             set(CMAKE_REQUIRED_LIBRARIES "${LIBATOMIC}")
             check_cxx_source_compiles("${atomic64_TEST_SOURCE}" atomic64_with_libatomic_path)
         endif()
-    endif()
 
-    if(atomic64_with_latomic OR
-       atomic64_with_libatomic_path)
-        list(APPEND PRIMESIEVE_LINK_LIBRARIES "${LIBATOMIC}")
-    else()
-        message(FATAL_ERROR "Failed to compile std::atomic, libatomic likely not found!")
-    endif()
-
-    if(atomic64_with_latomic)
-        string(APPEND PRIMESIEVE_PKGCONFIG_LIBS_PRIVATE "-latomic ")
+        if(atomic64_with_libatomic_path)
+            list(APPEND PRIMESIEVE_LINK_LIBRARIES "${LIBATOMIC}")
+        else()
+            message(FATAL_ERROR "Failed to compile std::atomic, libatomic likely not found!")
+        endif()
     endif()
 endif()
 
