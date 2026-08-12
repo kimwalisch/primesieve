@@ -3,6 +3,7 @@ Changes in version 12.16, 09/08/2026
 
 * primesieve.pc.in: Add missing libatomic dependency.
 * ci.yml: Add pkg-config and CMake find_package() CI tests.
+* iterator.h: Fix -Wundef warnings.
 
 Changes in version 12.15, 17/07/2026
 ====================================

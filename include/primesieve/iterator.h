@@ -26,7 +26,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#if __cplusplus >= 202002L && \
+#if defined(__cplusplus) && \
+    __cplusplus >= 202002L && \
     defined(__has_cpp_attribute)
   #if __has_cpp_attribute(unlikely)
     #define IF_UNLIKELY_PRIMESIEVE(x) if (x) [[unlikely]]
@@ -103,12 +104,14 @@ void primesieve_jump_to(primesieve_iterator* it, uint64_t start, uint64_t stop_h
  *                   stop_hint = 1000, if you don't know use
  *                   UINT64_MAX.
  */
-#if __STDC_VERSION__ >= 202301
+#if defined(__STDC_VERSION__) && \
+    __STDC_VERSION__ >= 202301
   [[deprecated("Use the new primesieve_jump_to() instead. "
                "Attention: primesieve_jump_to() includes the start number, "
                "whereas primesieve_skipto() excludes the start number. "
                "See: https://github.com/kimwalisch/primesieve/blob/master/doc/C_API.md#primesieve_jump_to-since-primesieve-110")]]
-#elif __GNUC__ >= 5
+#elif defined(__GNUC__) && \
+      __GNUC__ >= 5
   __attribute__((deprecated(
                "Use the new primesieve_jump_to() instead. "
                "Attention: primesieve_jump_to() includes the start number, "
