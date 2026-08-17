@@ -3,7 +3,7 @@
 /// @brief  Plain old data vector, like std::vector but does not
 ///         default initialize memory.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.

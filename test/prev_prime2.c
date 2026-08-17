@@ -2,7 +2,7 @@
 /// @file   prev_prime2.c
 /// @brief  Test primesieve_prev_prime().
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.

@@ -14,7 +14,7 @@
  *         Furthermore primesieve_iterator.is_error is initialized
  *         to 0 and set to 1 if any error occurs.
  *
- * Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+ * Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
  *
  * This file is distributed under the BSD License. See the COPYING
  * file in the top level directory.

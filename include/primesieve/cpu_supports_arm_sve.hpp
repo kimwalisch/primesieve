@@ -2,7 +2,7 @@
 /// @file  cpu_supports_arm_sve.hpp
 /// @brief Check if the CPU supports the ARM SVE instruction set.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.

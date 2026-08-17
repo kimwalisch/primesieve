@@ -3,7 +3,7 @@
 /// @brief  Functions used to calculate the next start and stop
 ///         numbers for primesieve::iterator.
 ///
-/// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.

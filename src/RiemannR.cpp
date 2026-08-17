@@ -13,7 +13,7 @@
 ///         More details about this Riemann R function implementation:
 ///         https://github.com/kimwalisch/primesieve/pull/144
 ///
-/// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2024 @nipzu, https://github.com/nipzu
 ///
 /// This file is distributed under the BSD License. See the COPYING
