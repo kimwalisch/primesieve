@@ -9,7 +9,7 @@
 ///
 ///         How to add a new command-line option:
 ///
-///         1) Add a new option enum in CmdOptions.h.
+///         1) Add a new option enum in CmdOptions.hpp.
 ///         2) Add your option to parseOptions() in CmdOptions.cpp.
 ///         3) Add your option to main() in main.cpp.
 ///         4) Document your option in help.cpp (--help option summary)

@@ -42,7 +42,7 @@ By default ```primesieve_next_prime()``` generates primes ≥ 0 i.e. 2, 3, 5, 7,
 
 * If you have specified a non-default start number using the ```primesieve_jump_to()```
   function, then the first ```primesieve_next_prime()``` call returns the first
-  prime ≥ start number. If want to generate primes > start number you need to
+  prime ≥ start number. If you want to generate primes > start number you need to
   use e.g. ```primesieve_jump_to(iter, start+1, stop)```.
 * Note that ```primesieve_iterator``` is not ideal if you are
   repeatedly iterating over the same primes in a loop, in this case it is better
@@ -85,7 +85,7 @@ used for performance optimization, ```primesieve_iterator``` only buffers primes
 up to this limit.
 
 * The first ```primesieve_next_prime()``` call after ```primesieve_jump_to()``` returns the first
-  prime ≥ start number. If want to generate primes > start number you need to use e.g.
+  prime ≥ start number. If you want to generate primes > start number you need to use e.g.
   ```primesieve_jump_to(iter, start+1, stop)```.
 * The first ```primesieve_next_prime()``` call after ```primesieve_jump_to()``` incurs an initialization
   overhead of $O(\sqrt{start}\ \times\ \log\ \log\ \sqrt{start})$ operations. After that, any
@@ -165,7 +165,7 @@ Before using ```primesieve_prev_prime()``` you must first change the start numbe
 ```primesieve_jump_to()``` function (because the start number is initialized to 0 by default).
 
 * Please note that the first ```primesieve_prev_prime()``` call returns the first prime ≤ start
-  number. If want to generate primes < start number you need to use e.g. ```primesieve_jump_to(iter, start-1, stop)```.
+  number. If you want to generate primes < start number you need to use e.g. ```primesieve_jump_to(iter, start-1, stop)```.
 * As a special case, ```primesieve_prev_prime()``` returns 0 after the prime 2 (i.e. when there are no
   more primes). This makes it possible to conveniently iterate backwards over all primes > 0 as can be
   seen in the example below.

@@ -230,7 +230,7 @@ T isqrt(T x)
   // In my tests the first corrections were needed above
   // 10^22 where the results were off by 1. Above 10^32 the
   // first results occurred that were off by > 1. Since
-  // primecount only supports numbers up to 10^31 this is
+  // primesieve only supports numbers up to 2^64 this is
   // not an issue for us.
   if (r * r > x)
   {

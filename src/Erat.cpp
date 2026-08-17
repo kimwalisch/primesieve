@@ -57,7 +57,7 @@ Erat::Erat(uint64_t start, uint64_t stop) :
 
 /// @start: Sieve primes >= start.
 /// @stop:  Sieve primes <= stop.
-/// @maxSieveSize: Maximum sieve array size in kilobytes.
+/// @maxSieveSize: Maximum sieve array size in KiB.
 ///
 void Erat::init(uint64_t start,
                 uint64_t stop,

@@ -1,5 +1,5 @@
 ///
-/// @file   PreSieveTables.cpp
+/// @file   PreSieveTables.hpp
 /// @brief  Pre-sieve multiples of small primes <= 163 to speed up the
 ///         sieve of Eratosthenes. We use 16 static lookup tables from
 ///         which the multiples of small primes have been removed
@@ -45,7 +45,7 @@
 // tables in this file. In order to build this program you can
 // e.g. add it to the test directory. If you add (or remove)
 // pre-sieving primes in the preSievePrimes array please make sure
-// to update getMaxPrime() in PreSieve.h afterwards.
+// to update getMaxPrime() in PreSieve.hpp afterwards.
 
 #include "EratSmall.hpp"
 

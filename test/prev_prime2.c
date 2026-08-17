@@ -1,5 +1,5 @@
 ///
-/// @file   prev_prime2.cpp
+/// @file   prev_prime2.c
 /// @brief  Test primesieve_prev_prime().
 ///
 /// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>

@@ -241,8 +241,8 @@ void PrimeSieve::printStatus(double old, double current)
   int percent = (int) current;
   if (percent > (int) old)
   {
-    std::string precentStr = '\r' + std::to_string(percent) + '%';
-    std::cout << precentStr << std::flush;
+    std::string percentStr = '\r' + std::to_string(percent) + '%';
+    std::cout << percentStr << std::flush;
 
     if (percent == 100)
       std::cout << '\n';

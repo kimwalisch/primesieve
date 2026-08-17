@@ -1,6 +1,6 @@
 ///
 /// @file  cpu_supports_arm_sve.hpp
-///        Check if the CPU supports the ARM SVE instruction set.
+/// @brief Check if the CPU supports the ARM SVE instruction set.
 ///
 /// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
 ///

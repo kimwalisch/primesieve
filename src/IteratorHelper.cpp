@@ -1,7 +1,7 @@
 ///
-/// @file  IteratorHelper.cpp
-///        Functions used to calculate the next start and stop
-///        numbers for primesieve::iterator.
+/// @file   IteratorHelper.cpp
+/// @brief  Functions used to calculate the next start and stop
+///         numbers for primesieve::iterator.
 ///
 /// Copyright (C) 2023 Kim Walisch, <kim.walisch@gmail.com>
 ///

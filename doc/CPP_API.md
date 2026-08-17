@@ -42,7 +42,7 @@ By default ```primesieve::iterator::next_prime()``` generates primes ≥ 0 i.e. 
 
 * If you have specified a non-default start number in the ```primesieve::iterator```
   constructor or in the ```jump_to()``` method, then the first ```next_prime()``` invocation
-  returns the first prime ≥ start number. If want to generate primes > start number you need to
+  returns the first prime ≥ start number. If you want to generate primes > start number you need to
   use e.g. ```jump_to(start+1)```.
 * Note that ```primesieve::iterator``` is not ideal if you are
   repeatedly iterating over the same primes in a loop, in this case it is better
@@ -80,7 +80,7 @@ the start number is initialized to 0). Note that you can also specify the start 
 the constructor of the ```primesieve::iterator``` object.
 
 * The first ```next_prime()``` call after ```jump_to()``` returns the first
-  prime ≥ start number. If want to generate primes > start number you need to use e.g.
+  prime ≥ start number. If you want to generate primes > start number you need to use e.g.
   ```jump_to(start+1)```.
 * The first ```next_prime()``` call after ```jump_to()``` incurs an initialization
   overhead of $O(\sqrt{start}\ \times\ \log\ \log\ \sqrt{start})$ operations. After that, any
@@ -182,7 +182,7 @@ either in the constructor or using the ```jump_to()``` method (because the start
 initialized to 0 by default).
 
 * Please note that the first ```prev_prime()``` invocation returns the first prime ≤ start number.
-  If want to generate primes < start number you need to use e.g. ```jump_to(start-1)```.
+  If you want to generate primes < start number you need to use e.g. ```jump_to(start-1)```.
 * As a special case, ```prev_prime()``` returns 0 after the prime 2 (i.e. when there are no more
   primes). This makes it possible to conveniently iterate backwards over all primes > 0 as can be
   seen in the example below.

@@ -165,7 +165,7 @@ int get_sieve_size()
     // When primesieve is run inside a virtual machine
     // the cache sharing info is often reported as 1
     // which is often incorrect. Hence if at least one
-    // of the CPU caches sharing info is > 1, then we
+    // of the CPU caches' sharing info is > 1, then we
     // assume that the reported values are correct.
     if (cpuInfo.hasL2Sharing() && (cpuInfo.l2Sharing() > 1 ||
         (cpuInfo.hasL3Sharing() && cpuInfo.l3Sharing() > 1)))

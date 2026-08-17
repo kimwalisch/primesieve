@@ -1,7 +1,7 @@
 ///
 /// @file   count_primes2.cpp
 /// @brief  Count the primes within [10^i, 10^i + 10^8]
-///         for i = 12 to 19
+///         for i = 12 to 17
 ///
 /// Copyright (C) 2024 Kim Walisch, <kim.walisch@gmail.com>
 ///

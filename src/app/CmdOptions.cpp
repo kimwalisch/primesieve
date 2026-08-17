@@ -9,7 +9,7 @@
 ///
 ///         How to add a new command-line option:
 ///
-///         1) Add a new option enum in CmdOptions.h.
+///         1) Add a new option enum in CmdOptions.hpp.
 ///         2) Add your option to parseOptions() in CmdOptions.cpp.
 ///         3) Add your option to main() in main.cpp.
 ///         4) Document your option in help.cpp (--help option summary)
@@ -78,7 +78,7 @@ bool isOption(const std::string& str)
 /// e.g. "--threads=32"
 /// -> opt.str = "--threads=32"
 /// -> opt.opt = "--threads"
-/// -> opt.val = "8"
+/// -> opt.val = "32"
 ///
 template <typename T>
 Option parseOption(int argc,
@@ -113,7 +113,7 @@ Option parseOption(int argc,
 
     // If the option takes an optional argument we
     // assume the next value is an optional argument
-    // if the value is not a vaild option.
+    // if the value is not a valid option.
     if (isParam == OPTIONAL_PARAM &&
         i + 1 < argc &&
         !std::string(argv[i + 1]).empty() &&

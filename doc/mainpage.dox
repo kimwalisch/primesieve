@@ -17,7 +17,7 @@
 ///
 /// @section Installation Installation
 ///
-/// @li <a href="https://github.com/kimwalisch/primesieve#installation"><b>Install libprimesieve using package manager.</b></a>
+/// @li <a href="https://github.com/kimwalisch/primesieve#installation"><b>Install libprimesieve using a package manager.</b></a>
 /// @li <a href="https://github.com/kimwalisch/primesieve/blob/master/doc/BUILD.md#primesieve-build-instructions"><b>Build libprimesieve from source.</b></a>
 ///
 /// @section C_API C API

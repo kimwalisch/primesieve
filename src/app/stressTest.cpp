@@ -41,7 +41,7 @@ namespace {
 /// primeCounts_1e13[i] = PrimePi(1e13+i*1e11) - PrimePi(1e13+(i-1)*1e11)
 /// This test sieves near 10^13 where most memory fits into
 /// the CPU's cache. Each thread uses < 5 MiB of memory.
-/// This tests puts the highest load on the CPU, but not much
+/// This test puts the highest load on the CPU, but not much
 /// load on the RAM.
 ///
 /// The table was generated using this bash program:
@@ -320,9 +320,9 @@ void stressTest(const CmdOptions& opts)
       {
         for (; i < primeCounts.size(); i++)
         {
-          uint64_t ChunkSize = (uint64_t) 1e11;
-          uint64_t threadStart = start + ChunkSize * (i - 1);
-          uint64_t threadStop = threadStart + ChunkSize;
+          uint64_t chunkSize = (uint64_t) 1e11;
+          uint64_t threadStart = start + chunkSize * (i - 1);
+          uint64_t threadStop = threadStart + chunkSize;
 
           auto t1 = std::chrono::steady_clock::now();
           uint64_t count = countPrimes(i, threadStart, threadStop);
@@ -352,7 +352,7 @@ void stressTest(const CmdOptions& opts)
               continue;
 
             // We don't wait here. Keeping the CPU busy is more
-            // important then printing status output. 
+            // important than printing status output.
             std::unique_lock<std::mutex> lock(mutex, std::try_to_lock);
             if (!lock.owns_lock())
               continue;

@@ -1,6 +1,6 @@
 ///
 /// @file   Wheel.hpp
-/// @brief  Wheel factorization is used to skip multiles of
+/// @brief  Wheel factorization is used to skip multiples of
 ///         small primes in the sieve of Eratosthenes.
 ///
 /// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
@@ -31,7 +31,7 @@ struct WheelInit
 extern const WheelInit wheel30Init[30];
 extern const WheelInit wheel210Init[210];
 
-/// The abstract Wheel class is used skip multiples of small
+/// The abstract Wheel class is used to skip multiples of small
 /// primes in the sieve of Eratosthenes. The EratSmall,
 /// EratMedium and EratBig classes are derived from Wheel.
 ///

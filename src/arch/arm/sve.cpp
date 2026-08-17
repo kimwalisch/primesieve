@@ -16,7 +16,7 @@
 ///         ARM CPUs.
 ///
 ///         TODO: Add macOS support once Apple ARM CPUs support the
-///               SVE instruction yet.
+///               SVE instruction set.
 ///
 /// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///

@@ -73,7 +73,7 @@ efficiently uses the CPU's multi level cache hierarchy.
 
 ### Optimizations used in primesieve
 
- * Uses a bit array with 8 flags each 30 numbers for sieving.
+ * Uses a bit array with 8 flags per 30 numbers for sieving.
  * Pre-sieves multiples of small primes ≤ 163 using SIMD instructions.
  * Compresses the sieving primes in order to improve cache efficiency [[5]](#references).
  * Starts crossing off multiples at the square.
@@ -116,4 +116,4 @@ multiple) in the sieve array.
 2. Paul Pritchard, "Fast compact prime number sieves (among others)", Journal of Algorithms 4 (1983), 332-344.
 3. Jonathan Sorenson, ["An analysis of two prime number sieves"](ftp://ftp.cs.wisc.edu/pub/techreports/1991/TR1028.pdf), Computer Science Technical Report Vol. 1028, 1991.
 4. Tomás Oliveira e Silva, ["Fast implementation of the segmented sieve of Eratosthenes"](http://www.ieeta.pt/~tos/software/prime_sieve.html), 2002.
-5. Actually not the sieving primes are compressed but their sieve and wheel indexes.
+5. Actually it is not the sieving primes that are compressed but their sieve and wheel indexes.

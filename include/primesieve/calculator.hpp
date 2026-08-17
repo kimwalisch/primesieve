@@ -234,7 +234,7 @@ private:
     return !is_unsigned();
   }
 
-  /// Same as std::numeric_limits<T>::digit
+  /// Same as std::numeric_limits<T>::digits
   /// but also works with __int128_t.
   static constexpr std::size_t numBits()
   {
@@ -659,7 +659,7 @@ private:
                 if (is_signed() && val == minValue())
                   throw_integer_overflow_error();
                 else
-                   val *= T(-1);
+                  val *= T(-1);
 
                 break;
       default : if (!isEnd())

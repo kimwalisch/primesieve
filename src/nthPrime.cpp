@@ -81,8 +81,9 @@ uint64_t PrimeSieve::nthPrime(int64_t n, uint64_t start)
     start = primeApprox;
   }
 
-  // Here we are very close to the nth prime < sqrt(nth_prime),
-  // we simply iterate over the primes until we find it.
+  // Here we are very close to the nth prime, the remaining
+  // distance is < sqrt(nth prime). Hence we simply iterate
+  // over the primes until we find it.
   if (countApprox < n)
   {
     start = checkedAdd(start, 1);
@@ -154,8 +155,9 @@ uint64_t PrimeSieve::negativeNthPrime(int64_t n, uint64_t start)
     start = primeApprox;
   }
 
-  // Here we are very close to the nth prime < sqrt(nth_prime),
-  // we simply iterate over the primes until we find it.
+  // Here we are very close to the nth prime, the remaining
+  // distance is < sqrt(nth prime). Hence we simply iterate
+  // over the primes until we find it.
   if (countApprox >= n)
   {
     uint64_t dist = (countApprox - n) * avgPrimeGap(start);

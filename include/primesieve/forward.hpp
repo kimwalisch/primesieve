@@ -8,8 +8,8 @@
 /// file in the top level directory.
 ///
 
-#ifndef TYPES_HPP
-#define TYPES_HPP
+#ifndef FORWARD_HPP
+#define FORWARD_HPP
 
 #include "Vector.hpp"
 #include <stdint.h>

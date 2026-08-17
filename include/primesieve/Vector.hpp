@@ -80,7 +80,7 @@ class Vector : private VectorBase<T, Allocator>
 
 public:
   // The default C++ std::allocator is stateless. We use this
-  // allocator and do not support other statefull allocators,
+  // allocator and do not support other stateful allocators,
   // which simplifies our implementation.
   //
   // "The default allocator is stateless, that is, all instances
@@ -515,7 +515,7 @@ private:
   uninitialized_default_construct(T* first, T* last)
   {
     // Start object lifetimes without initializing storage.
-    // Will be optimized away be the compiler.
+    // Will be optimized away by the compiler.
     for (; first != last; first++)
       new (first) T;
   }

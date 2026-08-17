@@ -100,7 +100,7 @@ constexpr double FACTOR_SIEVESIZE = 2.0;
 ///
 constexpr double FACTOR_ERATSMALL = 0.2;
 
-/// Sieving primes > (sieveSize in bytes * FACTOR_ERATSMALL)
+/// Sieving primes > (L1D_CACHE_BYTES * FACTOR_ERATSMALL)
 /// and <= (sieveSize in bytes * FACTOR_ERATMEDIUM)
 /// are processed in EratMedium.
 ///

@@ -1,5 +1,5 @@
 ///
-/// @file  malloc_vector
+/// @file  malloc_vector.hpp
 ///
 /// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///

@@ -21,8 +21,6 @@
 
 namespace primesieve {
 
-class Store;
-
 /// After a segment has been sieved CountPrintPrimes is
 /// used to reconstruct primes and prime k-tuplets from
 /// 1 bits of the sieve array.

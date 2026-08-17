@@ -52,7 +52,7 @@ struct iterator
 {
   /// Create a new iterator object.
   /// Generate primes >= 0. The start number is default initialized to
-  /// 0 and the stop_hint is default initialized UINT64_MAX.
+  /// 0 and the stop_hint is default initialized to UINT64_MAX.
   ///
   iterator() noexcept;
 

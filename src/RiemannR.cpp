@@ -2,8 +2,8 @@
 /// @file   RiemannR.cpp
 /// @brief  This file contains an implementation of the Riemann R
 ///         function which is a very accurate approximation of PrimePi(x).
-///         The accuracy of this implementation depends on width of the
-///         long double type. If the long double type has 80 bits (e.g.
+///         The accuracy of this implementation depends on the width of
+///         the long double type. If the long double type has 80 bits (e.g.
 ///         Linux) then RiemannR(x) is accurate up to 1e15, if the long
 ///         double type has 64 bits (e.g. MSVC & macOS) then RiemannR(x)
 ///         is accurate up to 1e12. This implementation could be made

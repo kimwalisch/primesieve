@@ -1,6 +1,6 @@
 ///
-/// @file  SievingPrimes.cpp
-///        Generates the sieving primes up n^(1/2).
+/// @file   SievingPrimes.cpp
+/// @brief  Generates the sieving primes up to n^(1/2).
 ///
 /// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///

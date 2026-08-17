@@ -1,6 +1,6 @@
 ///
 /// @file   clear_primesieve_iterator1.cpp
-/// @brief  Test next_prime() of primesieve::iterator.
+/// @brief  Test clear() of primesieve::iterator.
 ///
 /// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
 ///

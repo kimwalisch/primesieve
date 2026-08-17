@@ -18,7 +18,7 @@
 
 /// The following compile time integer square root function
 /// has a recursion depth of O(sqrt(n)). This is very bad, the
-/// stack will explose if you try to compute the square root
+/// stack will explode if you try to compute the square root
 /// of a number > 10^9. Furthermore constexpr recursion depth
 /// is limited by the compiler even more e.g. both GCC and
 /// Clang currently limit constexpr recursion depth to 512.

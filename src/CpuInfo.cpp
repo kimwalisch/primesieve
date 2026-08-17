@@ -545,7 +545,7 @@ std::string getCpuName()
 }
 
 Vector<std::string> split(const std::string& str,
-                               char delimiter)
+                          char delimiter)
 {
   std::string token;
   Vector<std::string> tokens;
@@ -759,7 +759,7 @@ CpuInfo::CpuInfo() :
     // We don't trust the operating system to reliably report
     // all CPU information. In case an unexpected error
     // occurs we continue without relying on CpuInfo and
-    // primesieve will fallback to using default CPU settings
+    // primesieve will fall back to using default CPU settings
     // e.g. 32 KiB L1 data cache size.
     error_ = e.what();
   }
@@ -770,7 +770,7 @@ std::string CpuInfo::cpuName() const
   try
   {
     // On Linux we get the CPU name by parsing /proc/cpuinfo
-    // which can be quite slow on PCs without fast SSD.
+    // which can be quite slow on PCs without a fast SSD.
     // For this reason we don't initialize the CPU name at
     // startup but instead we lazy load it when needed.
     return getCpuName();
@@ -820,6 +820,7 @@ std::string CpuInfo::getError() const
 {
   return error_;
 }
+
 bool CpuInfo::hasCpuName() const
 {
   return !cpuName().empty();

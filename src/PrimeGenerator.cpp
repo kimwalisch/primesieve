@@ -25,7 +25,6 @@
 #include <primesieve/forward.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/primesieve_error.hpp>
-#include <primesieve/macros.hpp>
 #include <primesieve/pmath.hpp>
 #include <primesieve/popcnt.hpp>
 #include <primesieve/util.hpp>

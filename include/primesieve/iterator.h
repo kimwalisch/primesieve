@@ -150,7 +150,7 @@ void primesieve_generate_prev_primes(primesieve_iterator*);
 
 /**
  * Get the next prime.
- * Returns PRIMESIEVE_ERROR (UINT64_MAX) if any error occrus.
+ * Returns PRIMESIEVE_ERROR (UINT64_MAX) if any error occurs.
  */
 static inline uint64_t primesieve_next_prime(primesieve_iterator* it)
 {
