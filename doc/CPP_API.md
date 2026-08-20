@@ -21,6 +21,7 @@ parameters and return values.
 
 ## Contents
 
+* [```primesieve::iterator```](#primesieveiterator)
 * [```primesieve::iterator::next_prime()```](#primesieveiteratornext_prime)
 * [```primesieve::iterator::jump_to()```](#primesieveiteratorjump_to-since-primesieve-110)
 * [```primesieve::iterator::prev_prime()```](#primesieveiteratorprev_prime)
@@ -36,6 +37,33 @@ parameters and return values.
 * [pkgconf support](#pkgconf-support)
 * [CMake support](#cmake-support)
 
+## ```primesieve::iterator```
+
+```primesieve::iterator``` is an object that lets you iterate over primes, forward using
+[```next_prime()```](#primesieveiteratornext_prime) and backward using
+[```prev_prime()```](#primesieveiteratorprev_prime). It generates primes on the fly in
+small chunks that are stored in an internal buffer, instead of storing all primes in the
+range in memory. Hence it can iterate over primes up to 2<sup>64</sup> using only
+$O(\sqrt{n})$ memory. This makes ```primesieve::iterator``` ideal for processing primes
+in large ranges where storing them in a ```std::vector``` is not an option.
+
+* Calling [```jump_to()```](#primesieveiteratorjump_to-since-primesieve-110) changes the
+  start number and causes the sieve to be reinitialized on the next ```next_prime()```
+  or ```prev_prime()``` call.
+* ```primesieve::iterator``` is single-threaded. Multiple iterator objects can be used to
+  parallelize an algorithm, see the [Multi-threading](#Multi-threading) section.
+* The first [```next_prime()```](#primesieveiteratornext_prime) or
+  [```prev_prime()```](#primesieveiteratorprev_prime) call after setting a new start number
+  incurs an initialization overhead of
+  $O(\sqrt{start}\ \times\ \log\ \log\ \sqrt{start})$ operations. For best performance
+  at large start numbers, this cost should be amortized over a long sieving distance,
+  preferably ```stop - start > sqrt(stop)```. See the
+  [Performance tips](#performance-tips) section for more details.
+* Note that ```primesieve::iterator``` is not ideal if you are
+  repeatedly iterating over the same primes in a loop, in this case it is better
+  to [store the primes in a vector](#primesievegenerate_primes) (provided your PC has
+  sufficient RAM memory).
+
 ## ```primesieve::iterator::next_prime()```
 
 By default ```primesieve::iterator::next_prime()``` generates primes ≥ 0 i.e. 2, 3, 5, 7, ...
@@ -48,8 +76,6 @@ By default ```primesieve::iterator::next_prime()``` generates primes ≥ 0 i.e. 
   repeatedly iterating over the same primes in a loop, in this case it is better
   to [store the primes in a vector](#primesievegenerate_primes) (provided your PC has
   sufficient RAM memory).
-* If needed, you can also use multiple ```primesieve::iterator``` objects within the
-  same program.
 
 ```C++
 #include <primesieve.hpp>
