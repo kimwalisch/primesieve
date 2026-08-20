@@ -50,8 +50,6 @@ in large ranges where storing them in a ```std::vector``` is not an option.
 * Calling [```jump_to()```](#primesieveiteratorjump_to-since-primesieve-110) changes the
   start number and causes the sieve to be reinitialized on the next ```next_prime()```
   or ```prev_prime()``` call.
-* ```primesieve::iterator``` is single-threaded. Multiple iterator objects can be used to
-  parallelize an algorithm, see the [Multi-threading](#Multi-threading) section.
 * The first [```next_prime()```](#primesieveiteratornext_prime) or
   [```prev_prime()```](#primesieveiteratorprev_prime) call after setting a new start number
   incurs an initialization overhead of
@@ -59,6 +57,8 @@ in large ranges where storing them in a ```std::vector``` is not an option.
   at large start numbers, this cost should be amortized over a long sieving distance,
   preferably ```stop - start > sqrt(stop)```. See the
   [Performance tips](#performance-tips) section for more details.
+* ```primesieve::iterator``` is single-threaded. Multiple iterator objects can be used to
+  parallelize an algorithm, see the [Multi-threading](#Multi-threading) section.
 * Note that ```primesieve::iterator``` is not ideal if you are
   repeatedly iterating over the same primes in a loop, in this case it is better
   to [store the primes in a vector](#primesievegenerate_primes) (provided your PC has

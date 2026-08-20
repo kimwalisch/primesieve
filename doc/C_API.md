@@ -53,8 +53,6 @@ in large ranges where storing them in an array is not an option.
 * Calling [```primesieve_jump_to()```](#primesieve_jump_to-since-primesieve-110) changes the
   start number and causes the sieve to be reinitialized on the next ```primesieve_next_prime()```
   or ```primesieve_prev_prime()``` call.
-* ```primesieve_iterator``` is single-threaded. Multiple iterator objects can be used to
-  parallelize an algorithm, see the [Multi-threading](#Multi-threading) section.
 * The first [```primesieve_next_prime()```](#primesieve_next_prime) or
   [```primesieve_prev_prime()```](#primesieve_prev_prime) call after setting a new start number
   incurs an initialization overhead of
@@ -62,6 +60,8 @@ in large ranges where storing them in an array is not an option.
   at large start numbers, this cost should be amortized over a long sieving distance,
   preferably ```stop - start > sqrt(stop)```. See the
   [Performance tips](#performance-tips) section for more details.
+* ```primesieve_iterator``` is single-threaded. Multiple iterator objects can be used to
+  parallelize an algorithm, see the [Multi-threading](#Multi-threading) section.
 * Note that ```primesieve_iterator``` is not ideal if you are
   repeatedly iterating over the same primes in a loop, in this case it is better
   to [store the primes in an array](#primesieve_generate_primes) (provided your PC has
