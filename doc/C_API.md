@@ -45,7 +45,7 @@ parameters and return values.
 small chunks that are stored in an internal buffer, instead of storing all primes in the
 range in memory. Hence it can iterate over primes up to 2<sup>64</sup> using only
 $O(\sqrt{n})$ memory. This makes ```primesieve_iterator``` ideal for processing primes
-in large ranges where storing them in an array is not an option.
+in large ranges where storing them in an array is not possible.
 
 * A ```primesieve_iterator``` must be initialized using ```primesieve_init()``` before it is
   used and its memory must be freed using ```primesieve_free_iterator()``` once you are done
