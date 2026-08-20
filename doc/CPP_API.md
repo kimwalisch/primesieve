@@ -43,9 +43,10 @@ parameters and return values.
 [```next_prime()```](#primesieveiteratornext_prime) and backward using
 [```prev_prime()```](#primesieveiteratorprev_prime). It generates primes on the fly in
 small chunks that are stored in an internal buffer, instead of storing all primes in the
-range in memory. Hence it can iterate over primes up to 2<sup>64</sup> using only
-$O(\sqrt{n})$ memory. This makes ```primesieve::iterator``` ideal for processing primes
-in large ranges where storing them in a ```std::vector``` is not possible.
+range in memory. Hence it can iterate over primes up to $n$ (2<sup>64</sup> max) using
+$O(n\ \log\ \log\ n)$ operations and only $O(\sqrt{n})$ memory. This makes ```primesieve::iterator```
+ideal for processing primes in large ranges where storing them in a ```std::vector``` is
+not possible.
 
 * Calling [```jump_to()```](#primesieveiteratorjump_to-since-primesieve-110) changes the
   start number and causes the sieve to be reinitialized on the next ```next_prime()```
