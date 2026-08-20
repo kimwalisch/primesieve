@@ -21,6 +21,7 @@ parameters and return values.
 
 ## Contents
 
+* [```primesieve_iterator```](#primesieve_iterator)
 * [```primesieve_next_prime()```](#primesieve_next_prime)
 * [```primesieve_jump_to()```](#primesieve_jump_to-since-primesieve-110)
 * [```primesieve_prev_prime()```](#primesieve_prev_prime)
@@ -36,6 +37,36 @@ parameters and return values.
 * [pkgconf support](#pkgconf-support)
 * [CMake support](#cmake-support)
 
+## ```primesieve_iterator```
+
+```primesieve_iterator``` is a data structure that lets you iterate over primes, forward using
+[```primesieve_next_prime()```](#primesieve_next_prime) and backward using
+[```primesieve_prev_prime()```](#primesieve_prev_prime). It generates primes on the fly in
+small chunks that are stored in an internal buffer, instead of storing all primes in the
+range in memory. Hence it can iterate over primes up to 2<sup>64</sup> using only
+$O(\sqrt{n})$ memory. This makes ```primesieve_iterator``` ideal for processing primes
+in large ranges where storing them in an array is not an option.
+
+* A ```primesieve_iterator``` must be initialized using ```primesieve_init()``` before it is
+  used and its memory must be freed using ```primesieve_free_iterator()``` once you are done
+  using it.
+* Calling [```primesieve_jump_to()```](#primesieve_jump_to-since-primesieve-110) changes the
+  start number and causes the sieve to be reinitialized on the next ```primesieve_next_prime()```
+  or ```primesieve_prev_prime()``` call.
+* ```primesieve_iterator``` is single-threaded. Multiple iterator objects can be used to
+  parallelize an algorithm, see the [Multi-threading](#Multi-threading) section.
+* The first [```primesieve_next_prime()```](#primesieve_next_prime) or
+  [```primesieve_prev_prime()```](#primesieve_prev_prime) call after setting a new start number
+  incurs an initialization overhead of
+  $O(\sqrt{start}\ \times\ \log\ \log\ \sqrt{start})$ operations. For best performance
+  at large start numbers, this cost should be amortized over a long sieving distance,
+  preferably ```stop - start > sqrt(stop)```. See the
+  [Performance tips](#performance-tips) section for more details.
+* Note that ```primesieve_iterator``` is not ideal if you are
+  repeatedly iterating over the same primes in a loop, in this case it is better
+  to [store the primes in an array](#primesieve_generate_primes) (provided your PC has
+  sufficient RAM memory).
+
 ## ```primesieve_next_prime()```
 
 By default ```primesieve_next_prime()``` generates primes ≥ 0 i.e. 2, 3, 5, 7, ...
@@ -48,8 +79,6 @@ By default ```primesieve_next_prime()``` generates primes ≥ 0 i.e. 2, 3, 5, 7,
   repeatedly iterating over the same primes in a loop, in this case it is better
   to [store the primes in an array](#primesieve_generate_primes) (provided your PC has
   sufficient RAM memory).
-* If needed, you can also use multiple ```primesieve_iterator``` objects within the
-  same program.
 
 ```C
 #include <primesieve.h>
