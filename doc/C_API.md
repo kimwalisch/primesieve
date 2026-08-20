@@ -9,8 +9,8 @@ This algorithm has a run time complexity of $O(n\ \log\ \log\ n)$ operations and
 $O(\sqrt{n})$ memory. This page contains a selection of C code snippets that show how to use
 libprimesieve to generate prime numbers. These examples cover the most frequently used
 functionality of libprimesieve. Arguably the most useful feature provided by libprimesieve
-is the ```primesieve_iterator``` which lets you iterate over primes using the
-```primesieve_next_prime()``` or ```primesieve_prev_prime()``` functions. 
+is the [```primesieve_iterator```](#primesieve_iterator) which lets you iterate over primes
+using the ```primesieve_next_prime()``` or ```primesieve_prev_prime()``` functions. 
 
 The functions of libprimesieve's C API are defined in the [```<primesieve.h>```](../include/primesieve.h)
 and [```<primesieve/iterator.h>```](../include/primesieve/iterator.h) header files. If you
