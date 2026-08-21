@@ -39,8 +39,8 @@ parameters and return values.
 
 ## ```primesieve::iterator```
 
-```primesieve::iterator``` is an object that lets you iterate over primes, forward using
-[```next_prime()```](#primesieveiteratornext_prime) and backward using
+```primesieve::iterator``` is a stateful prime generator that lets you iterate over primes,
+forward using [```next_prime()```](#primesieveiteratornext_prime) and backward using
 [```prev_prime()```](#primesieveiteratorprev_prime). It generates primes on the fly in
 small chunks that are stored in an internal buffer, instead of storing all primes in the
 range in memory. Hence it can iterate over primes up to $n$ (2<sup>64</sup> max) using
