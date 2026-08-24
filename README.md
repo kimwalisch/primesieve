@@ -79,6 +79,11 @@ primesieve 1000000 --print=2
 primesieve 1e10 --dist=2^32 --count=3
 ```
 
+Note that printing primes and storing them in a text file are not primesieve's primary
+use cases: both run single-threaded as printing requires sequential ordering, and both
+use the same standard output path rather than file-specific I/O optimizations. For
+maximum throughput, generate primes in memory using [libprimesieve](doc/C_API.md).
+
 ## Stress testing
 
 primesieve includes support for stress testing both the CPU and memory. This feature
