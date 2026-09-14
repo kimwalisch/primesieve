@@ -2,7 +2,7 @@
 /// @file   generate_n_primes2.c
 /// @brief  Test n prime number generation.
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -28,26 +28,26 @@ const uint64_t small_primes[25] =
 // primes inside [10^16, 10^16 + 1000]
 const uint64_t large_primes[20] =
 {
-  10000000000000061ull,
-  10000000000000069ull,
-  10000000000000079ull,
-  10000000000000099ull,
-  10000000000000453ull,
-  10000000000000481ull,
-  10000000000000597ull,
-  10000000000000613ull,
-  10000000000000639ull,
-  10000000000000669ull,
-  10000000000000753ull,
-  10000000000000793ull,
-  10000000000000819ull,
-  10000000000000861ull,
-  10000000000000897ull,
-  10000000000000909ull,
-  10000000000000931ull,
-  10000000000000949ull,
-  10000000000000957ull,
-  10000000000000991ull,
+  10000000000000061,
+  10000000000000069,
+  10000000000000079,
+  10000000000000099,
+  10000000000000453,
+  10000000000000481,
+  10000000000000597,
+  10000000000000613,
+  10000000000000639,
+  10000000000000669,
+  10000000000000753,
+  10000000000000793,
+  10000000000000819,
+  10000000000000861,
+  10000000000000897,
+  10000000000000909,
+  10000000000000931,
+  10000000000000949,
+  10000000000000957,
+  10000000000000991,
 };
 
 void check(int OK)
@@ -75,7 +75,7 @@ int main(void)
 
   primesieve_free(primes);
   size = 20;
-  primes = (uint64_t*) primesieve_generate_n_primes(size, 10000000000000000ull, UINT64_PRIMES);
+  primes = (uint64_t*) primesieve_generate_n_primes(size, 10000000000000000, UINT64_PRIMES);
 
   for (i = 0; i < size; i++)
   {

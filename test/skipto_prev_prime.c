@@ -2,7 +2,7 @@
 /// @file   skipto_prev_prime.c
 /// @brief  Test primesieve_skipto() and primesieve_prev_prime().
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -67,7 +67,7 @@ int main(void)
     sum += prime;
 
   printf("Sum of the primes below 10^8 = %" PRIu64, sum);
-  check(sum == 279209790387276ull);
+  check(sum == 279209790387276);
 
   for (i = 0; i < 1000; i++)
   {

@@ -58,7 +58,7 @@ int main(void)
     sum += prime;
 
   printf("Sum of the primes <= 10^8: %" PRIu64, sum);
-  check(sum == 279209790387276ull);
+  check(sum == 279209790387276);
 
   // Test iterating past the stop_hint
   primesieve_jump_to(&it, 100000000, 5000000);
@@ -69,7 +69,7 @@ int main(void)
     sum += prime;
 
   printf("Sum of the primes <= 10^8: %" PRIu64, sum);
-  check(sum == 279209790387276ull);
+  check(sum == 279209790387276);
 
   for (i = 0; i < 1000; i++)
   {

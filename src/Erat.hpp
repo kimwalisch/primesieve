@@ -89,7 +89,7 @@ ALWAYS_INLINE uint64_t Erat::nextPrime(uint64_t bits, uint64_t low)
   uint64_t bitValue = bitValues[bitIndex];
 #else
   // Fallback if CTZ instruction is not available
-  uint64_t debruijn = 0x3F08A4C6ACB9DBDull;
+  uint64_t debruijn = 0x3F08A4C6ACB9DBD;
   uint64_t hash = ((bits ^ (bits - 1)) * debruijn) >> 58;
   uint64_t bitValue = bruijnBitValues[hash];
 #endif

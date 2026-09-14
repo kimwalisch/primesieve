@@ -70,7 +70,7 @@ std::string getCpuName()
   Vector<int> vect;
 
   // check if CPU name is supported
-  if ((unsigned) cpuInfo[0] >= 0x80000004u)
+  if ((unsigned) cpuInfo[0] >= 0x80000004)
   {
     __cpuidex(cpuInfo, 0x80000002, 0);
     std::copy_n(cpuInfo, 4, std::back_inserter(vect));

@@ -2,7 +2,7 @@
 /// @file   next_prime2.c
 /// @brief  Test primesieve_next_prime().
 ///
-/// Copyright (C) 2017 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -59,7 +59,7 @@ int main(void)
     sum += prime;
 
   printf("Sum of the primes <= 10^9: %" PRIu64, sum);
-  check(sum == 24739512092254535ull);
+  check(sum == 24739512092254535);
 
   primesieve_jump_to(&it, max_prime / 2, max_prime);
   prime = primesieve_next_prime(&it);

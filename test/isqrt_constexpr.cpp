@@ -109,8 +109,8 @@ int main()
   static_assert(ctSqrt(std::numeric_limits<uint16_t>::max()) == 255, "ctSqrt(2^16-1) failed!");
   static_assert(ctSqrt(std::numeric_limits<int32_t>::max()) == 46340, "ctSqrt(2^31-1) failed!");
   static_assert(ctSqrt(std::numeric_limits<uint32_t>::max()) == 65535, "ctSqrt(2^32-1) failed!");
-  static_assert(ctSqrt(std::numeric_limits<int64_t>::max()) == 3037000499ll, "ctSqrt(2^63-1) failed!");
-  static_assert(ctSqrt(std::numeric_limits<uint64_t>::max()) == 4294967295ull, "ctSqrt(2^64-1) failed!");
+  static_assert(ctSqrt(std::numeric_limits<int64_t>::max()) == 3037000499, "ctSqrt(2^63-1) failed!");
+  static_assert(ctSqrt(std::numeric_limits<uint64_t>::max()) == 4294967295, "ctSqrt(2^64-1) failed!");
 
   std::cout << "All tests passed successfully!" << std::endl;
 
