@@ -24,7 +24,7 @@
 namespace {
 
 /// PrimePi(2^64)
-const uint64_t max_n = 425656284035217743ull;
+const uint64_t max_n = 425656284035217743;
 
 /// Average prime gap near n
 uint64_t avgPrimeGap(uint64_t n)

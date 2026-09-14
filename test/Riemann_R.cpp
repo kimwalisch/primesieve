@@ -2,7 +2,7 @@
 /// @file   Riemann_R.cpp
 /// @brief  Test the Riemann R function.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -38,20 +38,20 @@ Array<uint64_t, 100> RiemannR_tiny =
 
 Array<uint64_t, 14> RiemannR_table =
 {
-                     4, // RiemannR(10^1)
-                    25, // RiemannR(10^2)
-                   168, // RiemannR(10^3)
-                  1226, // RiemannR(10^4)
-                  9587, // RiemannR(10^5)
-                 78527, // RiemannR(10^6)
-                664667, // RiemannR(10^7)
-               5761551, // RiemannR(10^8)
-              50847455, // RiemannR(10^9)
-             455050683, // RiemannR(10^10)
-          4118052494ll, // RiemannR(10^11)
-         37607910542ll, // RiemannR(10^12)
-        346065531065ll, // RiemannR(10^13)
-       3204941731601ll  // RiemannR(10^14)
+              4, // RiemannR(10^1)
+             25, // RiemannR(10^2)
+            168, // RiemannR(10^3)
+           1226, // RiemannR(10^4)
+           9587, // RiemannR(10^5)
+          78527, // RiemannR(10^6)
+         664667, // RiemannR(10^7)
+        5761551, // RiemannR(10^8)
+       50847455, // RiemannR(10^9)
+      455050683, // RiemannR(10^10)
+     4118052494, // RiemannR(10^11)
+    37607910542, // RiemannR(10^12)
+   346065531065, // RiemannR(10^13)
+  3204941731601  // RiemannR(10^14)
 };
 
 void check(bool OK)

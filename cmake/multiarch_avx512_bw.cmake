@@ -41,7 +41,7 @@ check_cxx_source_compiles("
 
         if (i < bytes)
         {
-            __mmask64 mask = 0xffffffffffffffffull >> (i + 64 - bytes);
+            __mmask64 mask = 0xffffffffffffffff >> (i + 64 - bytes);
 
             _mm512_mask_storeu_epi8((__m512i*) &sieve[i], mask,
                 _mm512_and_si512(_mm512_maskz_loadu_epi8(mask, (const __m512i*) &preSieve0[i]), 

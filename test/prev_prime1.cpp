@@ -2,7 +2,7 @@
 /// @file   prev_prime1.cpp
 /// @brief  Test prev_prime() of primesieve::iterator.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -53,7 +53,7 @@ int main()
     sum += prime;
 
   std::cout << "Sum of the primes <= 10^8: " << sum;
-  check(sum == 279209790387276ull);
+  check(sum == 279209790387276);
 
   // Test iterating past the stop_hint
   it.jump_to(100000000, 1000000);
@@ -65,7 +65,7 @@ int main()
     sum += prime;
 
   std::cout << "Sum of the primes <= 10^8: " << sum;
-  check(sum == 279209790387276ull);
+  check(sum == 279209790387276);
 
   for (uint64_t i = 0; i < 1000; i++)
   {

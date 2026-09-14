@@ -49,7 +49,7 @@ check_cxx_source_compiles("
         __m512i bytes_0_to_7 = _mm512_setr_epi64(0, 1, 2, 3, 4, 5, 6, 7);
         __m512i base = _mm512_set1_epi64(123);
         __m512i bitValues = _mm512_maskz_compress_epi8(0xffff, base);
-        __m512i vprimes = _mm512_maskz_permutexvar_epi8(0x0101010101010101ull, bytes_0_to_7, bitValues);
+        __m512i vprimes = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_0_to_7, bitValues);
         vprimes = _mm512_add_epi64(base, vprimes);
         _mm512_storeu_si512(primes64, vprimes);
     }

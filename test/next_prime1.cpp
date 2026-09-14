@@ -2,7 +2,7 @@
 /// @file   next_prime1.cpp
 /// @brief  Test next_prime() of primesieve::iterator.
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -53,7 +53,7 @@ int main()
     sum += prime;
 
   std::cout << "Sum of the primes <= 10^9: " << sum;
-  check(sum == 24739512092254535ull);
+  check(sum == 24739512092254535);
 
   it.jump_to(primes.back() - 200, primes.back());
   prime = it.next_prime();

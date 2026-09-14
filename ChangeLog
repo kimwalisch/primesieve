@@ -1,6 +1,7 @@
-Changes in version 12.16, 20/08/2026
+Changes in version 12.16, 14/09/2026
 ====================================
 
+* Remove unnecessary integer literal suffixes.
 * primesieve.pc.in: Add missing libatomic dependency.
 * ci.yml: Add pkg-config and CMake find_package() CI tests.
 * iterator.h: Fix -Wundef warnings.

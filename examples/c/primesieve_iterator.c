@@ -8,7 +8,7 @@
 
 int main(int argc, char** argv)
 {
-  uint64_t limit = 10000000000ull;
+  uint64_t limit = 10000000000;
 
   if (argc > 1)
     limit = atol(argv[1]);

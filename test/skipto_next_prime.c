@@ -2,7 +2,7 @@
 /// @file   skipto_next_prime.c
 /// @brief  Test primesieve_skipto() and primesieve_next_prime().
 ///
-/// Copyright (C) 2022 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -68,7 +68,7 @@ int main(void)
     sum += prime;
 
   printf("Sum of the primes below 10^9 = %" PRIu64, sum);
-  check(sum == 24739512092254535ull);
+  check(sum == 24739512092254535);
 
   primesieve_skipto(&it, max_prime / 2, max_prime);
   prime = primesieve_next_prime(&it);
