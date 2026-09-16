@@ -75,15 +75,16 @@
 #if defined(ENABLE_ASSERT)
   namespace primesieve {
   [[noreturn]]
-  void assertion_failed(const char* expression,
-                        const char* file,
-                        int line);
+  void assert_failed(const char* expression,
+                     const char* file,
+                     const char* function,
+                     int line);
   } // namespace
 
   #define ASSERT(x) \
     do { \
       if_unlikely(!(x)) \
-        primesieve::assertion_failed(#x, __FILE__, __LINE__); \
+        primesieve::assert_failed(#x, __FILE__, __func__, __LINE__); \
     } while (0)
 #else
   #define ASSERT(x) ((void) 0)
