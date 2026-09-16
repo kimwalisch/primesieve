@@ -26,21 +26,6 @@
   #define __has_include(x) 0
 #endif
 
-// Required for std::unreachable()
-#include <utility>
-
-/// Enable expensive debugging assertions.
-/// These assertions enable e.g. bounds checks for the
-/// Vector and Array types.
-///
-#if defined(ENABLE_ASSERT)
-  #undef NDEBUG
-  #include <cassert>
-  #define ASSERT(x) assert(x)
-#else
-  #define ASSERT(x) (static_cast<void>(0))
-#endif
-
 #if __has_attribute(always_inline)
   #define ALWAYS_INLINE inline __attribute__((always_inline))
 #elif defined(_MSC_VER)
@@ -83,6 +68,27 @@
   #define if_unlikely(x) if (x)
 #endif
 
+/// Enable expensive debugging assertions.
+/// These assertions enable e.g. bounds checks for the
+/// Vector and Array types.
+///
+#if defined(ENABLE_ASSERT)
+  namespace primesieve {
+  [[noreturn]]
+  void assertion_failed(const char* expression,
+                        const char* file,
+                        int line);
+  } // namespace
+
+  #define ASSERT(x) \
+    do { \
+      if_unlikely(!(x)) \
+        primesieve::assertion_failed(#x, __FILE__, __LINE__); \
+    } while (0)
+#else
+  #define ASSERT(x) ((void) 0)
+#endif
+
 #if __cplusplus >= 201703L && \
     __has_cpp_attribute(fallthrough)
   #define FALLTHROUGH [[fallthrough]]
@@ -103,6 +109,7 @@
   // because GCC's std::unreachable() implementation uses
   // __builtin_trap() instead of __builtin_unreachable() if
   // _GLIBCXX_ASSERTIONS is defined.
+  #include <utility>
   #define UNREACHABLE std::unreachable()
 #else
   #define UNREACHABLE

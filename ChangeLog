@@ -1,6 +1,7 @@
-Changes in version 12.16, 14/09/2026
+Changes in version 12.16, 16/09/2026
 ====================================
 
+* Fix MinGW GCC 16 assertion warning in debug mode.
 * Remove unnecessary integer literal suffixes.
 * primesieve.pc.in: Add missing libatomic dependency.
 * ci.yml: Add pkg-config and CMake find_package() CI tests.
