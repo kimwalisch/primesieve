@@ -28,16 +28,16 @@ namespace primesieve {
 /// infer that execution cannot continue after a failed assertion.
 ///
 [[noreturn]]
-void assert_failed(const char* expression,
+void assert_failed(const char* assertion,
                    const char* file,
-                   const char* function,
-                   int line)
+                   unsigned int line,
+                   const char* function)
 {
   std::string msg("\n");
   msg += std::string(file) + ":" + std::to_string(line);
   msg += ": " + std::string(function);
-  msg += ": Assertion failed: `";
-  msg += expression + std::string("'\n\n");
+  msg += ": Assertion `";
+  msg += assertion + std::string("' failed.\n\n");
 
   std::cerr << msg;
 
