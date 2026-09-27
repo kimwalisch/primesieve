@@ -93,7 +93,7 @@
 
   #define ASSERT(x) \
     do { \
-      if(!(x)) \
+      if_unlikely(!(x)) \
         primesieve::assert_failed(#x, __FILE__, __LINE__, ASSERT_FUNCTION); \
     } while (0)
 #else
