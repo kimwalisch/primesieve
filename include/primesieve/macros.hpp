@@ -10,6 +10,8 @@
 #ifndef MACROS_HPP
 #define MACROS_HPP
 
+#include <utility>
+
 #ifndef __has_attribute
   #define __has_attribute(x) 0
 #endif
@@ -118,7 +120,6 @@
   // because GCC's std::unreachable() implementation uses
   // __builtin_trap() instead of __builtin_unreachable() if
   // _GLIBCXX_ASSERTIONS is defined.
-  #include <utility>
   #define UNREACHABLE std::unreachable()
 #else
   #define UNREACHABLE
