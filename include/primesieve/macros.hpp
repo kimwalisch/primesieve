@@ -159,4 +159,28 @@
   #define INDETERMINATE
 #endif
 
+/// Unrolling loops that execute very few iterations on average
+/// tends to deteriorate performance due to increased branch
+/// mispredictions. Using the NO_UNROLL_LOOP macro we can disable
+/// loop unrolling for such loops.
+#if defined(__clang__)
+  #define NO_UNROLL_LOOP _Pragma("nounroll")
+#elif defined(__GNUC__) && __GNUC__ >= 8
+  #define NO_UNROLL_LOOP _Pragma("GCC unroll 0")
+#else
+  #define NO_UNROLL_LOOP
+#endif
+
+/// Disable automatic vectorization. Used for loops
+/// that execute very few iterations on average.
+#if defined(__clang__)
+  #define NO_VECTORIZE_LOOP _Pragma("clang loop vectorize(disable)")
+#elif defined(__GNUC__) && __GNUC__ >= 14
+  #define NO_VECTORIZE_LOOP _Pragma("GCC novector")
+#elif defined(_MSC_VER)
+  #define NO_VECTORIZE_LOOP __pragma(loop(no_vector))
+#else
+  #define NO_VECTORIZE_LOOP
+#endif
+
 #endif

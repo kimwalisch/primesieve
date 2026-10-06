@@ -165,6 +165,8 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
     i = buffer16 - buffer;
   }
 
+  NO_UNROLL_LOOP
+  NO_VECTORIZE_LOOP
   for (; i < count; i++)
     primes[i] = low + buffer[i];
 
