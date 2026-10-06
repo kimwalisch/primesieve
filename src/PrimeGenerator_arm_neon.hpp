@@ -23,9 +23,8 @@
 
 namespace {
 
-using primesieve::to_littleendian;
-
-/// Bit values of each sieve byte, padded to 8 entries with zeros
+/// Bit values of each sieve byte,
+/// padded to 8 entries with zeros.
 ///
 struct ByteBitValues
 {
@@ -54,11 +53,11 @@ alignas(64) constexpr ByteBitValues byteBitValues = generateByteBitValues();
 constexpr uint64_t maxBlockWords = 256;
 constexpr std::size_t maxBlockPrimes = 1024;
 
-/// This algorithm converts 1 bits from the sieve array into primes
-/// using ARM NEON. The first loop uses a lookup table to store
-/// 16-bit prime offsets. Overlapping stores discard unused table
-/// entries. The second loop widens the offsets and adds low to
-/// obtain 64-bit primes.
+/// This algorithm converts 1 bits from the sieve array into
+/// primes using ARM NEON. The first loop uses a lookup table to
+/// store 16-bit prime offsets. Overlapping stores discard
+/// unused table entries. The second loop widens the offsets and
+/// adds low to obtain 64-bit primes.
 ///
 /// Returns the number of sieve words processed, stopping before
 /// a word whose primes do not fit into the output buffer.
@@ -74,7 +73,7 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
   ASSERT(maxPrimes <= maxBlockPrimes);
 
   // +8 for the overlapping 8 x uint16_t stores
-  alignas(16) uint16_t buffer[maxBlockPrimes + 8];
+  INDETERMINATE alignas(16) uint16_t buffer[maxBlockPrimes + 8];
   std::size_t count = 0;
   uint64_t word = 0;
 
@@ -91,7 +90,7 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
   // Pass 1: Store the prime offsets as uint16_t
   for (; word < words; word++)
   {
-    uint64_t bits64 = to_littleendian(sieve[word]);
+    uint64_t bits64 = primesieve::to_littleendian(sieve[word]);
 
     // Byte i of prefix = number of 1 bits in bytes 0..i
     // = position (in the buffer) of byte i + 1's bit values.
@@ -107,8 +106,8 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
     count += wordPrimes;
 
     // Bit values of the 1 bits of each byte
-    uint8x8_t bitValues0 = vld1_u8(&byteBitValues.values[((bits64 >> 0) & 0xff) * 8]);
-    uint8x8_t bitValues1 = vld1_u8(&byteBitValues.values[((bits64 >> 8) & 0xff) * 8]);
+    uint8x8_t bitValues0 = vld1_u8(&byteBitValues.values[((bits64 >>  0) & 0xff) * 8]);
+    uint8x8_t bitValues1 = vld1_u8(&byteBitValues.values[((bits64 >>  8) & 0xff) * 8]);
     uint8x8_t bitValues2 = vld1_u8(&byteBitValues.values[((bits64 >> 16) & 0xff) * 8]);
     uint8x8_t bitValues3 = vld1_u8(&byteBitValues.values[((bits64 >> 24) & 0xff) * 8]);
     uint8x8_t bitValues4 = vld1_u8(&byteBitValues.values[((bits64 >> 32) & 0xff) * 8]);
@@ -120,8 +119,8 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
     // byte at its position. Each store overwrites the unused
     // table entries of the previous store.
     vst1q_u16(out, vaddw_u8(offsets0, bitValues0));
-    vst1q_u16(out + ((prefix >> 0) & 0xff), vaddw_u8(offsets1, bitValues1));
-    vst1q_u16(out + ((prefix >> 8) & 0xff), vaddw_u8(offsets2, bitValues2));
+    vst1q_u16(out + ((prefix >>  0) & 0xff), vaddw_u8(offsets1, bitValues1));
+    vst1q_u16(out + ((prefix >>  8) & 0xff), vaddw_u8(offsets2, bitValues2));
     vst1q_u16(out + ((prefix >> 16) & 0xff), vaddw_u8(offsets3, bitValues3));
     vst1q_u16(out + ((prefix >> 24) & 0xff), vaddw_u8(offsets4, bitValues4));
     vst1q_u16(out + ((prefix >> 32) & 0xff), vaddw_u8(offsets5, bitValues5));
@@ -208,7 +207,7 @@ void PrimeGenerator::fillNextPrimes_arm_neon(Vector<uint64_t>& primes, std::size
       std::size_t maxPrimes = std::min(maxSize - i, maxBlockPrimes);
       words = sieveWordsToPrimes(&sieve[sieveIdx], words, low, primes.data() + i, maxPrimes, &primeCount);
 
-      // The output buffer is full
+      // The primes array is full
       if (words == 0)
         break;
 
