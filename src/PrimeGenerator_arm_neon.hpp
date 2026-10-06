@@ -199,7 +199,8 @@ void PrimeGenerator::fillNextPrimes_arm_neon(Vector<uint64_t>& primes, std::size
       std::size_t maxPrimes = std::min(maxSize - i, maxBlockPrimes);
       words = sieveWordsToPrimes(&sieve[sieveIdx], words, low, primes.data() + i, maxPrimes, &primeCount);
 
-      // The primes array is full
+      // The next sieve word contains more primes than
+      // there are free slots left in the primes array.
       if (words == 0)
         break;
 
