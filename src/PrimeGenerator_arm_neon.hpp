@@ -49,9 +49,12 @@ constexpr ByteBitValues generateByteBitValues()
 
 alignas(64) constexpr ByteBitValues byteBitValues = generateByteBitValues();
 
-// Keep offsets within uint16_t: 240 * 255 + 241 = 61441
 constexpr uint64_t maxBlockWords = 256;
 constexpr std::size_t maxBlockPrimes = 1024;
+
+// The largest prime offset must fit into uint16_t
+static_assert(240 * (maxBlockWords - 1) + 241 <= 0xffff,
+              "Prime offsets must fit into uint16_t!");
 
 /// This algorithm converts 1 bits from the sieve array into
 /// primes using ARM NEON. The first loop uses a lookup table to
@@ -93,7 +96,7 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
     uint64_t bits64 = primesieve::to_littleendian(sieve[word]);
 
     // Byte i of prefix = number of 1 bits in bytes 0..i
-    // = position (in the buffer) of byte i + 1's bit values.
+    // = position (relative to out) of byte i + 1's bit values.
     uint8x8_t byteCounts = vcnt_u8(vcreate_u8(bits64));
     uint64_t prefix = vget_lane_u64(vreinterpret_u64_u8(byteCounts), 0) * 0x0101010101010101ull;
     uint64_t wordPrimes = prefix >> 56;
@@ -141,27 +144,15 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
   uint64x2_t base = vdupq_n_u64(low);
   std::size_t i = 0;
 
-  if (count >= 8)
+  for (; i + 8 <= count; i += 8)
   {
-    const uint16_t* buffer16 = buffer;
-    const uint16_t* end = &buffer[count - 8];
-    uint64_t* primes64 = primes;
-
-    do
-    {
-      uint16x8_t offsets = vld1q_u16(buffer16);
-      uint32x4_t offsets0 = vmovl_u16(vget_low_u16(offsets));
-      uint32x4_t offsets1 = vmovl_high_u16(offsets);
-      vst1q_u64(&primes64[0], vaddw_u32(base, vget_low_u32(offsets0)));
-      vst1q_u64(&primes64[2], vaddw_high_u32(base, offsets0));
-      vst1q_u64(&primes64[4], vaddw_u32(base, vget_low_u32(offsets1)));
-      vst1q_u64(&primes64[6], vaddw_high_u32(base, offsets1));
-      buffer16 += 8;
-      primes64 += 8;
-    }
-    while (buffer16 <= end);
-
-    i = buffer16 - buffer;
+    uint16x8_t offsets = vld1q_u16(&buffer[i]);
+    uint32x4_t offsetsLo = vmovl_u16(vget_low_u16(offsets));
+    uint32x4_t offsetsHi = vmovl_high_u16(offsets);
+    vst1q_u64(&primes[i + 0], vaddw_u32(base, vget_low_u32(offsetsLo)));
+    vst1q_u64(&primes[i + 2], vaddw_high_u32(base, offsetsLo));
+    vst1q_u64(&primes[i + 4], vaddw_u32(base, vget_low_u32(offsetsHi)));
+    vst1q_u64(&primes[i + 6], vaddw_high_u32(base, offsetsHi));
   }
 
   NO_UNROLL_LOOP
