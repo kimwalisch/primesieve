@@ -144,6 +144,7 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
   uint64x2_t base = vdupq_n_u64(low);
   std::size_t i = 0;
 
+  NO_UNROLL_LOOP
   for (; i + 8 <= count; i += 8)
   {
     uint16x8_t offsets = vld1q_u16(&buffer[i]);
