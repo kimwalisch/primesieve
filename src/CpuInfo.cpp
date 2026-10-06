@@ -382,17 +382,18 @@ namespace primesieve {
 
 void CpuInfo::init()
 {
-  auto logicalCpuCores = getSysctl<std::size_t>("hw.logicalcpu");
+  // hw.logicalcpu is a 32-bit int
+  auto logicalCpuCores = getSysctl<int>("hw.logicalcpu");
   if (!logicalCpuCores.empty())
     logicalCpuCores_ = logicalCpuCores[0];
 
   // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
-  auto cacheSizes = getSysctl<std::size_t>("hw.cachesize");
+  auto cacheSizes = getSysctl<uint64_t>("hw.cachesize");
   for (std::size_t i = 1; i < std::min(cacheSizes.size(), cacheSizes_.size()); i++)
     cacheSizes_[i] = cacheSizes[i];
 
   // https://developer.apple.com/library/content/releasenotes/Performance/RN-AffinityAPI/index.html
-  auto cacheConfig = getSysctl<std::size_t>("hw.cacheconfig");
+  auto cacheConfig = getSysctl<uint64_t>("hw.cacheconfig");
   for (std::size_t i = 1; i < std::min(cacheConfig.size(), cacheSharing_.size()); i++)
     cacheSharing_[i] = cacheConfig[i];
 }

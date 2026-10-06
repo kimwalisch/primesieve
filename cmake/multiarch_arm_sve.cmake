@@ -69,9 +69,9 @@ check_cxx_source_compiles("
 
         return (sieve[0] == 0) ? 0 : 1;
     }
-" multiarch_sve_arm)
+" multiarch_arm_sve)
 
-if(multiarch_sve_arm)
+if(multiarch_arm_sve)
     list(APPEND PRIMESIEVE_COMPILE_DEFINITIONS "ENABLE_MULTIARCH_ARM_SVE")
 endif()
 
