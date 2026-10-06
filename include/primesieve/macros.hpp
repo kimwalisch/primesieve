@@ -163,6 +163,7 @@
 /// tends to deteriorate performance due to increased branch
 /// mispredictions. Using the NO_UNROLL_LOOP macro we can disable
 /// loop unrolling for such loops.
+///
 #if defined(__clang__)
   #define NO_UNROLL_LOOP _Pragma("nounroll")
 #elif defined(__GNUC__) && __GNUC__ >= 8
@@ -173,6 +174,7 @@
 
 /// Disable automatic vectorization. Used for loops
 /// that execute very few iterations on average.
+///
 #if defined(__clang__)
   #define NO_VECTORIZE_LOOP _Pragma("clang loop vectorize(disable)")
 #elif defined(__GNUC__) && __GNUC__ >= 14
