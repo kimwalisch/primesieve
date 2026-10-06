@@ -225,9 +225,8 @@ void PrimeGenerator::initNextPrimes(Vector<uint64_t>& primes,
       resize(primes, *size);
     else
     {
-      // +64 is needed because our fillNextPrimes()
-      // algorithm aborts as soon as there is not
-      // enough space to store 64 more primes.
+      // Ensure room for one complete sieve word,
+      // which contains at most 64 primes.
       std::size_t minSize = *size + 64;
       std::size_t pix = primeCountUpper(start_, stop_) + 64;
       pix = inBetween(minSize, pix, maxSize);
@@ -242,9 +241,8 @@ void PrimeGenerator::initNextPrimes(Vector<uint64_t>& primes,
   }
   else
   {
-    // +64 is needed because our fillNextPrimes()
-    // algorithm aborts as soon as there is not
-    // enough space to store 64 more primes.
+    // Ensure room for one complete sieve word,
+    // which contains at most 64 primes.
     std::size_t minSize = 64;
     std::size_t pix = primeCountUpper(start_, stop_) + 64;
     pix = inBetween(minSize, pix, maxSize);
