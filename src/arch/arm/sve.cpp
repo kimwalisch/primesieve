@@ -2,7 +2,7 @@
 /// @file   sve.cpp
 /// @brief  Check if the CPU and OS support the SVE instruction set.
 ///         Compiling and linking of sve.cpp is tested by the CMake
-///         build system using multiarch_sve_arm.cmake.
+///         build system using multiarch_arm_sve.cmake.
 ///
 ///         In order to generate optimal code, we need to be able to
 ///         check if the ARM CPU supports the SVE instruction set
@@ -69,7 +69,7 @@ bool has_arm_sve()
 
     // getauxval() is supported by glibc >= 2.16 (since 2012),
     // musl libc >= 1.1.0 (2014) and Android's bionic libc (2010).
-    // We check using CMake (multiarch_sve_arm.cmake) if
+    // We check using CMake (multiarch_arm_sve.cmake) if
     // sve.cpp (and getauxval()) compiles and links correctly.
     unsigned long hwcaps = getauxval(AT_HWCAP);
 

@@ -152,7 +152,7 @@ Options:
 
 ## Build instructions
 
-You need to have installed a C++ compiler which supports C++11 (or later)
+You need to have installed a C++ compiler which supports C++14 (or later)
 and CMake ≥ 3.9.
 
 ```sh

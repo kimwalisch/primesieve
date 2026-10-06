@@ -6,7 +6,7 @@
 ///         returns the primes. When there are no more primes left in
 ///         the vector PrimeGenerator generates new primes.
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 ///
 /// This file is distributed under the BSD License. See the COPYING
 /// file in the top level directory.
@@ -32,9 +32,17 @@
   #define ENABLE_AVX512_VBMI2
 #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
   #include <primesieve/cpu_supports_avx512_vbmi2.hpp>
-  #define ENABLE_PRIMEGENERATOR_DEFAULT
+#endif
+
+#if defined(__aarch64__) && \
+    __has_include(<arm_neon.h>)
+  #define PRIMEGENERATOR_DEFAULT_HEADER "PrimeGenerator_arm_neon.hpp"
+  #define PRIMEGENERATOR_FILL_NEXT_DEFAULT fillNextPrimes_arm_neon
+  #define PRIMEGENERATOR_FILL_PREV_DEFAULT fillPrevPrimes_arm_neon
 #else
-  #define ENABLE_PRIMEGENERATOR_DEFAULT
+  #define PRIMEGENERATOR_DEFAULT_HEADER "PrimeGenerator_default.hpp"
+  #define PRIMEGENERATOR_FILL_NEXT_DEFAULT fillNextPrimes_default
+  #define PRIMEGENERATOR_FILL_PREV_DEFAULT fillPrevPrimes_default
 #endif
 
 namespace primesieve {
@@ -54,10 +62,10 @@ public:
       if (cpu_supports_avx512_vbmi2)
         fillNextPrimes_x86_avx512(primes, size);
       else
-        fillNextPrimes_default(primes, size);
+        PRIMEGENERATOR_FILL_NEXT_DEFAULT(primes, size);
 
     #else
-      fillNextPrimes_default(primes, size);
+      PRIMEGENERATOR_FILL_NEXT_DEFAULT(primes, size);
     #endif
   }
 
@@ -70,18 +78,18 @@ public:
       if (cpu_supports_avx512_vbmi2)
         fillPrevPrimes_x86_avx512(primes, size);
       else
-        fillPrevPrimes_default(primes, size);
+        PRIMEGENERATOR_FILL_PREV_DEFAULT(primes, size);
 
     #else
-      fillPrevPrimes_default(primes, size);
+      PRIMEGENERATOR_FILL_PREV_DEFAULT(primes, size);
     #endif
   }
 
 private:
 
-#if defined(ENABLE_PRIMEGENERATOR_DEFAULT)
-  void fillNextPrimes_default(Vector<uint64_t>& primes, std::size_t* size);
-  void fillPrevPrimes_default(Vector<uint64_t>& primes, std::size_t* size);
+#if !defined(ENABLE_AVX512_VBMI2)
+  void PRIMEGENERATOR_FILL_NEXT_DEFAULT(Vector<uint64_t>& primes, std::size_t* size);
+  void PRIMEGENERATOR_FILL_PREV_DEFAULT(Vector<uint64_t>& primes, std::size_t* size);
 #endif
 
 #if defined(ENABLE_AVX512_VBMI2) || \
