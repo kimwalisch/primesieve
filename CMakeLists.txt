@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.9...4.2)
 
 project(primesieve
-        VERSION 12.16
+        VERSION 12.17
         LANGUAGES CXX)
 
 # Build options ######################################################
