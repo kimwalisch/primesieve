@@ -73,7 +73,7 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
   ASSERT(maxPrimes <= maxBlockPrimes);
 
   // +8 for the overlapping 8 x uint16_t stores
-  INDETERMINATE alignas(16) uint16_t buffer[maxBlockPrimes + 8];
+  alignas(16) INDETERMINATE uint16_t buffer[maxBlockPrimes + 8];
   std::size_t count = 0;
   uint64_t word = 0;
 
