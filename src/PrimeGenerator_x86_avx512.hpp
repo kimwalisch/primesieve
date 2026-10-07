@@ -28,15 +28,12 @@ namespace primesieve {
 /// https://branchfree.org/2018/05/22/bits-to-indexes-in-bmi2-and-avx-512
 /// https://github.com/kimwalisch/primesieve/pull/109
 ///
-/// Our algorithm is optimized for sparse bitstreams that are
-/// distributed relatively evenly. While processing a 64-bit word
-/// from the sieve array there are if checks that skip to the next
-/// loop iteration once all 1 bits have been processed. In my
-/// benchmarks this algorithm ran about 10% faster than the default
-/// fillNextPrimes() algorithm which uses __builtin_ctzll().
+/// For each sieve word we unconditionally store the first 16 primes
+/// (unused entries are overwritten by the next sieve word), this
+/// avoids hard to predict branches that check the prime count.
 ///
 #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
+  __attribute__ ((target ("avx512f,avx512bw,avx512vbmi,avx512vbmi2")))
 #endif
 void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size)
 {
@@ -57,6 +54,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
     uint64_t sieveIdx = sieveIdx_;
     uint64_t sieveSize = sieve_.size();
     const uint64_t* sieve = sieve_.data();
+    uint64_t* primes64 = primes.data();
 
     __m512i avxBitValues = _mm512_set_epi8(
       (char) 241, (char) 239, (char) 233, (char) 229,
@@ -77,96 +75,57 @@ void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
       (char)  17, (char)  13, (char)  11, (char)   7
     );
 
-    __m512i bytes_0_to_7   = _mm512_setr_epi64( 0,  1,  2,  3,  4,  5,  6,  7);
-    __m512i bytes_8_to_15  = _mm512_setr_epi64( 8,  9, 10, 11, 12, 13, 14, 15);
-    __m512i bytes_16_to_23 = _mm512_setr_epi64(16, 17, 18, 19, 20, 21, 22, 23);
-    __m512i bytes_24_to_31 = _mm512_setr_epi64(24, 25, 26, 27, 28, 29, 30, 31);
-    __m512i bytes_32_to_39 = _mm512_setr_epi64(32, 33, 34, 35, 36, 37, 38, 39);
-    __m512i bytes_40_to_47 = _mm512_setr_epi64(40, 41, 42, 43, 44, 45, 46, 47);
-    __m512i bytes_48_to_55 = _mm512_setr_epi64(48, 49, 50, 51, 52, 53, 54, 55);
-    __m512i bytes_56_to_63 = _mm512_setr_epi64(56, 57, 58, 59, 60, 61, 62, 63);
+    __m512i bytes_0_to_7  = _mm512_setr_epi64( 0,  1,  2,  3,  4,  5,  6,  7);
+    __m512i bytes_8_to_15 = _mm512_setr_epi64( 8,  9, 10, 11, 12, 13, 14, 15);
+    __m512i base = _mm512_set1_epi64(low);
+    __m512i baseStep = _mm512_set1_epi64(8 * 30);
 
-    while (sieveIdx < sieveSize)
+    // Prevent _mm512_storeu_si512() buffer overrun,
+    // a sieve word generates up to 64 primes.
+    while (i <= maxSize - 64 &&
+           sieveIdx < sieveSize)
     {
       // Each iteration processes 8 bytes from the sieve array
       uint64_t bits64 = sieve[sieveIdx];
       uint64_t primeCount = popcnt64_native(bits64);
-
-      // Prevent _mm512_storeu_si512() buffer overrun
-      if (i + primeCount > maxSize - 8)
-        break;
-
-      __m512i base = _mm512_set1_epi64(low);
-      uint64_t* primes64 = &primes[i];
-
-      // These variables are not used anymore during this
-      // iteration, increment for next iteration.
-      i += primeCount;
-      low += 8 * 30;
-      sieveIdx++;
 
       // Convert 1 bits from the sieve array (bits64) into prime
       // bit values (bytes) using the avxBitValues lookup table and
       // move all non zero bytes (bit values) to the beginning.
       __m512i bitValues = _mm512_maskz_compress_epi8(bits64, avxBitValues);
 
-      // Convert the first 8 bytes (prime bit values)
-      // into eight 64-bit prime numbers.
+      // Convert the first 16 bytes (prime bit values)
+      // into sixteen 64-bit prime numbers.
       __m512i vprimes0 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_0_to_7, bitValues);
       vprimes0 = _mm512_add_epi64(base, vprimes0);
-      _mm512_storeu_si512(&primes64[0], vprimes0);
-
-      if (primeCount <= 8)
-        continue;
+      _mm512_storeu_si512(&primes64[i + 0], vprimes0);
 
       __m512i vprimes1 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_8_to_15, bitValues);
       vprimes1 = _mm512_add_epi64(base, vprimes1);
-      _mm512_storeu_si512(&primes64[8], vprimes1);
+      _mm512_storeu_si512(&primes64[i + 8], vprimes1);
 
-      if (primeCount <= 16)
-        continue;
+      // Rare case: the sieve word contains more than 16 primes
+      if_unlikely(primeCount > 16)
+      {
+        __m512i bytes = bytes_8_to_15;
+        __m512i eight = _mm512_set1_epi64(8);
 
-      __m512i vprimes2 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_16_to_23, bitValues);
-      vprimes2 = _mm512_add_epi64(base, vprimes2);
-      _mm512_storeu_si512(&primes64[16], vprimes2);
+        NO_UNROLL_LOOP
+        for (uint64_t j = 16; j < primeCount; j += 8)
+        {
+          bytes = _mm512_add_epi64(bytes, eight);
+          __m512i vprimes = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes, bitValues);
+          vprimes = _mm512_add_epi64(base, vprimes);
+          _mm512_storeu_si512(&primes64[i + j], vprimes);
+        }
+      }
 
-      if (primeCount <= 24)
-        continue;
-
-      __m512i vprimes3 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_24_to_31, bitValues);
-      vprimes3 = _mm512_add_epi64(base, vprimes3);
-      _mm512_storeu_si512(&primes64[24], vprimes3);
-
-      if (primeCount <= 32)
-        continue;
-
-      __m512i vprimes4 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_32_to_39, bitValues);
-      vprimes4 = _mm512_add_epi64(base, vprimes4);
-      _mm512_storeu_si512(&primes64[32], vprimes4);
-
-      if (primeCount <= 40)
-        continue;
-
-      __m512i vprimes5 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_40_to_47, bitValues);
-      vprimes5 = _mm512_add_epi64(base, vprimes5);
-      _mm512_storeu_si512(&primes64[40], vprimes5);
-
-      if (primeCount <= 48)
-        continue;
-
-      __m512i vprimes6 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_48_to_55, bitValues);
-      vprimes6 = _mm512_add_epi64(base, vprimes6);
-      _mm512_storeu_si512(&primes64[48], vprimes6);
-
-      if (primeCount <= 56)
-        continue;
-
-      __m512i vprimes7 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_56_to_63, bitValues);
-      vprimes7 = _mm512_add_epi64(base, vprimes7);
-      _mm512_storeu_si512(&primes64[56], vprimes7);
+      i += primeCount;
+      sieveIdx++;
+      base = _mm512_add_epi64(base, baseStep);
     }
 
-    low_ = low;
+    low_ = low + (sieveIdx - sieveIdx_) * 240;
     sieveIdx_ = sieveIdx;
     *size = i;
   }
@@ -181,7 +140,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
 /// primes which incurs an initialization overhead of O(sqrt(n)).
 ///
 #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
+  __attribute__ ((target ("avx512f,avx512bw,avx512vbmi,avx512vbmi2")))
 #endif
 void PrimeGenerator::fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size)
 {
@@ -216,14 +175,10 @@ void PrimeGenerator::fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
       (char)  17, (char)  13, (char)  11, (char)   7
     );
 
-    __m512i bytes_0_to_7   = _mm512_setr_epi64( 0,  1,  2,  3,  4,  5,  6,  7);
-    __m512i bytes_8_to_15  = _mm512_setr_epi64( 8,  9, 10, 11, 12, 13, 14, 15);
-    __m512i bytes_16_to_23 = _mm512_setr_epi64(16, 17, 18, 19, 20, 21, 22, 23);
-    __m512i bytes_24_to_31 = _mm512_setr_epi64(24, 25, 26, 27, 28, 29, 30, 31);
-    __m512i bytes_32_to_39 = _mm512_setr_epi64(32, 33, 34, 35, 36, 37, 38, 39);
-    __m512i bytes_40_to_47 = _mm512_setr_epi64(40, 41, 42, 43, 44, 45, 46, 47);
-    __m512i bytes_48_to_55 = _mm512_setr_epi64(48, 49, 50, 51, 52, 53, 54, 55);
-    __m512i bytes_56_to_63 = _mm512_setr_epi64(56, 57, 58, 59, 60, 61, 62, 63);
+    __m512i bytes_0_to_7  = _mm512_setr_epi64( 0,  1,  2,  3,  4,  5,  6,  7);
+    __m512i bytes_8_to_15 = _mm512_setr_epi64( 8,  9, 10, 11, 12, 13, 14, 15);
+    __m512i base = _mm512_set1_epi64(low);
+    __m512i baseStep = _mm512_set1_epi64(8 * 30);
 
     while (sieveIdx < sieveSize)
     {
@@ -232,80 +187,48 @@ void PrimeGenerator::fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
       uint64_t primeCount = popcnt64_native(bits64);
 
       // Prevent _mm512_storeu_si512() buffer overrun
-      if_unlikely(i + primeCount + 8 > primes.size())
-        primes.resize(i + primeCount + 8);
+      if_unlikely(i + primeCount + 16 > primes.size())
+        primes.resize(i + primeCount + 16);
 
-      __m512i base = _mm512_set1_epi64(low);
-      uint64_t* primes64 = &primes[i];
-
-      // These variables are not used anymore during this
-      // iteration, increment for next iteration.
-      i += primeCount;
-      low += 8 * 30;
-      sieveIdx++;
+      uint64_t* primes64 = primes.data();
 
       // Convert 1 bits from the sieve array (bits64) into prime
       // bit values (bytes) using the avxBitValues lookup table and
       // move all non zero bytes (bit values) to the beginning.
       __m512i bitValues = _mm512_maskz_compress_epi8(bits64, avxBitValues);
 
-      // Convert the first 8 bytes (prime bit values)
-      // into eight 64-bit prime numbers.
+      // Convert the first 16 bytes (prime bit values)
+      // into sixteen 64-bit prime numbers.
       __m512i vprimes0 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_0_to_7, bitValues);
       vprimes0 = _mm512_add_epi64(base, vprimes0);
-      _mm512_storeu_si512(&primes64[0], vprimes0);
-
-      if (primeCount <= 8)
-        continue;
+      _mm512_storeu_si512(&primes64[i + 0], vprimes0);
 
       __m512i vprimes1 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_8_to_15, bitValues);
       vprimes1 = _mm512_add_epi64(base, vprimes1);
-      _mm512_storeu_si512(&primes64[8], vprimes1);
+      _mm512_storeu_si512(&primes64[i + 8], vprimes1);
 
-      if (primeCount <= 16)
-        continue;
+      // Rare case: the sieve word contains more than 16 primes
+      if_unlikely(primeCount > 16)
+      {
+        __m512i bytes = bytes_8_to_15;
+        __m512i eight = _mm512_set1_epi64(8);
 
-      __m512i vprimes2 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_16_to_23, bitValues);
-      vprimes2 = _mm512_add_epi64(base, vprimes2);
-      _mm512_storeu_si512(&primes64[16], vprimes2);
+        NO_UNROLL_LOOP
+        for (uint64_t j = 16; j < primeCount; j += 8)
+        {
+          bytes = _mm512_add_epi64(bytes, eight);
+          __m512i vprimes = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes, bitValues);
+          vprimes = _mm512_add_epi64(base, vprimes);
+          _mm512_storeu_si512(&primes64[i + j], vprimes);
+        }
+      }
 
-      if (primeCount <= 24)
-        continue;
-
-      __m512i vprimes3 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_24_to_31, bitValues);
-      vprimes3 = _mm512_add_epi64(base, vprimes3);
-      _mm512_storeu_si512(&primes64[24], vprimes3);
-
-      if (primeCount <= 32)
-        continue;
-
-      __m512i vprimes4 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_32_to_39, bitValues);
-      vprimes4 = _mm512_add_epi64(base, vprimes4);
-      _mm512_storeu_si512(&primes64[32], vprimes4);
-
-      if (primeCount <= 40)
-        continue;
-
-      __m512i vprimes5 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_40_to_47, bitValues);
-      vprimes5 = _mm512_add_epi64(base, vprimes5);
-      _mm512_storeu_si512(&primes64[40], vprimes5);
-
-      if (primeCount <= 48)
-        continue;
-
-      __m512i vprimes6 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_48_to_55, bitValues);
-      vprimes6 = _mm512_add_epi64(base, vprimes6);
-      _mm512_storeu_si512(&primes64[48], vprimes6);
-
-      if (primeCount <= 56)
-        continue;
-
-      __m512i vprimes7 = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_56_to_63, bitValues);
-      vprimes7 = _mm512_add_epi64(base, vprimes7);
-      _mm512_storeu_si512(&primes64[56], vprimes7);
+      i += primeCount;
+      sieveIdx++;
+      base = _mm512_add_epi64(base, baseStep);
     }
 
-    low_ = low;
+    low_ = low + (sieveIdx - sieveIdx_) * 240;
     sieveIdx_ = sieveIdx;
     *size = i;
   }
