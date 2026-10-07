@@ -1,7 +1,7 @@
 ///
 /// @file PreSieve_arm_neon.hpp
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2022 @zielaj, https://github.com/zielaj
 ///
 /// This file is distributed under the BSD License. See the COPYING
@@ -10,6 +10,8 @@
 
 #ifndef PRESIEVE_ARM_NEON_HPP
 #define PRESIEVE_ARM_NEON_HPP
+
+#include <primesieve/macros.hpp>
 
 #include <arm_neon.h>
 #include <stdint.h>
@@ -35,6 +37,8 @@ void presieve1_arm_neon(const uint8_t* __restrict preSieved0,
         vandq_u8(vld1q_u8(&preSieved2[i]), vld1q_u8(&preSieved3[i]))));
   }
 
+  NO_UNROLL_LOOP
+  NO_VECTORIZE_LOOP
   for (; i < bytes; i++)
     sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
 }
@@ -57,6 +61,8 @@ void presieve2_arm_neon(const uint8_t* __restrict preSieved0,
         vandq_u8(vld1q_u8(&preSieved2[i]), vld1q_u8(&preSieved3[i])))));
   }
 
+  NO_UNROLL_LOOP
+  NO_VECTORIZE_LOOP
   for (; i < bytes; i++)
     sieve[i] &= preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
 }

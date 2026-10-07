@@ -1,7 +1,7 @@
 ///
 /// @file PreSieve_x86_sse2.hpp
 ///
-/// Copyright (C) 2025 Kim Walisch, <kim.walisch@gmail.com>
+/// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2022 @zielaj, https://github.com/zielaj
 ///
 /// This file is distributed under the BSD License. See the COPYING
@@ -10,6 +10,8 @@
 
 #ifndef PRESIEVE_X86_SSE2_HPP
 #define PRESIEVE_X86_SSE2_HPP
+
+#include <primesieve/macros.hpp>
 
 #include <emmintrin.h>
 #include <stdint.h>
@@ -35,6 +37,8 @@ void presieve1_x86_sse2(const uint8_t* __restrict preSieved0,
         _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved2[i]), _mm_loadu_si128((const __m128i*) &preSieved3[i]))));
   }
 
+  NO_UNROLL_LOOP
+  NO_VECTORIZE_LOOP
   for (; i < bytes; i++)
     sieve[i] = preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
 }
@@ -57,6 +61,8 @@ void presieve2_x86_sse2(const uint8_t* __restrict preSieved0,
         _mm_and_si128(_mm_loadu_si128((const __m128i*) &preSieved2[i]), _mm_loadu_si128((const __m128i*) &preSieved3[i])))));
   }
 
+  NO_UNROLL_LOOP
+  NO_VECTORIZE_LOOP
   for (; i < bytes; i++)
     sieve[i] &= preSieved0[i] & preSieved1[i] & preSieved2[i] & preSieved3[i];
 }
