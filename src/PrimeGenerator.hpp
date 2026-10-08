@@ -26,7 +26,6 @@
 #include <cstddef>
 
 #if defined(__AVX512F__) && \
-    defined(__AVX512BW__) && \
     defined(__AVX512VBMI__) && \
     defined(__AVX512VBMI2__) && \
     __has_include(<immintrin.h>)
@@ -97,12 +96,12 @@ private:
     defined(ENABLE_MULTIARCH_AVX512_VBMI2)
 
   #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-    __attribute__ ((target ("avx512f,avx512bw,avx512vbmi,avx512vbmi2")))
+    __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
   #endif
   void fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
 
   #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-    __attribute__ ((target ("avx512f,avx512bw,avx512vbmi,avx512vbmi2")))
+    __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
   #endif
   void fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
 

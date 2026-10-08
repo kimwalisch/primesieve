@@ -33,7 +33,7 @@ namespace primesieve {
 /// avoids hard to predict branches that check the prime count.
 ///
 #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-  __attribute__ ((target ("avx512f,avx512bw,avx512vbmi,avx512vbmi2")))
+  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
 #endif
 void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size)
 {
@@ -140,7 +140,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
 /// primes which incurs an initialization overhead of O(sqrt(n)).
 ///
 #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-  __attribute__ ((target ("avx512f,avx512bw,avx512vbmi,avx512vbmi2")))
+  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
 #endif
 void PrimeGenerator::fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size)
 {
