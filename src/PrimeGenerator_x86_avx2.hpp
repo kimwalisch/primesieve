@@ -215,7 +215,9 @@ void PrimeGenerator::fillNextPrimes_x86_avx2(Vector<uint64_t>& primes, std::size
       std::size_t primeCount;
       uint64_t words = std::min(sieveSize - sieveIdx, maxBlockWords);
       std::size_t maxPrimes = std::min(maxSize - i, maxBlockPrimes);
-      uint64_t processed = sieveWordsToPrimes(&sieve[sieveIdx], words, low, primes.data() + i, maxPrimes, &primeCount);
+      uint64_t processed = sieveWordsToPrimes(&sieve[sieveIdx], words, low, 
+          primes.data() + i, maxPrimes, &primeCount);
+
       i += primeCount;
       low += processed * 240;
       sieveIdx += processed;
@@ -261,7 +263,9 @@ void PrimeGenerator::fillPrevPrimes_x86_avx2(Vector<uint64_t>& primes, std::size
 
       std::size_t primeCount;
       uint64_t words = std::min(sieveSize - sieveIdx, maxBlockWords);
-      words = sieveWordsToPrimes(&sieve[sieveIdx], words, low, &primes[i], maxBlockPrimes, &primeCount);
+      words = sieveWordsToPrimes(&sieve[sieveIdx], words, low,
+          &primes[i], maxBlockPrimes, &primeCount);
+
       i += primeCount;
       low += words * 240;
       sieveIdx += words;
