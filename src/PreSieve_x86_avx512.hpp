@@ -11,6 +11,8 @@
 #ifndef PRESIEVE_X86_AVX512_HPP
 #define PRESIEVE_X86_AVX512_HPP
 
+#include <primesieve/cpu_arch_macros.hpp>
+
 #include <immintrin.h>
 #include <stdint.h>
 #include <cstddef>

@@ -39,6 +39,7 @@
 #include "PreSieve.hpp"
 #include "PreSieveTables.hpp"
 
+#include <primesieve/cpu_arch_macros.hpp>
 #include <primesieve/Vector.hpp>
 #include <primesieve/macros.hpp>
 
@@ -47,48 +48,42 @@
 #include <cstddef>
 #include <utility>
 
-#if defined(__ARM_FEATURE_SVE) && \
-    __has_include(<arm_sve.h>)
-  #include "PreSieve_arm_sve.hpp"
-  #define presieve1_default presieve1_arm_sve
-  #define presieve2_default presieve2_arm_sve
+#if defined(ENABLE_AVX512_BW)
+  #define PRESIEVE_DEFAULT_HEADER "PreSieve_x86_avx512.hpp"
+  #define PRESIEVE1_DEFAULT presieve1_x86_avx512
+  #define PRESIEVE2_DEFAULT presieve2_x86_avx512
+#elif (defined(__SSE2__) || \
+       defined(_M_X64)) && \
+      __has_include(<emmintrin.h>)
+  #define PRESIEVE_DEFAULT_HEADER "PreSieve_x86_sse2.hpp"
+  #define PRESIEVE1_DEFAULT presieve1_x86_sse2
+  #define PRESIEVE2_DEFAULT presieve2_x86_sse2
+#elif defined(ENABLE_ARM_SVE)
+  #define PRESIEVE_DEFAULT_HEADER "PreSieve_arm_sve.hpp"
+  #define PRESIEVE1_DEFAULT presieve1_arm_sve
+  #define PRESIEVE2_DEFAULT presieve2_arm_sve
+#elif defined(ENABLE_ARM_NEON)
+  #define PRESIEVE_DEFAULT_HEADER "PreSieve_arm_neon.hpp"
+  #define PRESIEVE1_DEFAULT presieve1_arm_neon
+  #define PRESIEVE2_DEFAULT presieve2_arm_neon
+#else
+  #define PRESIEVE_DEFAULT_HEADER "PreSieve_default.hpp"
+  #define PRESIEVE1_DEFAULT presieve1_default
+  #define PRESIEVE2_DEFAULT presieve2_default
+#endif
 
-#elif defined(__AVX512F__) && \
-      defined(__AVX512BW__) && \
-      __has_include(<immintrin.h>)
-  #include "PreSieve_x86_avx512.hpp"
-  #define presieve1_default presieve1_x86_avx512
-  #define presieve2_default presieve2_x86_avx512
-
-#elif defined(ENABLE_MULTIARCH_ARM_SVE)
-  #include <primesieve/cpu_supports_arm_sve.hpp>
-  #include "PreSieve_arm_sve.hpp"
-
-#elif defined(ENABLE_MULTIARCH_AVX512_BW)
+#if defined(ENABLE_MULTIARCH_AVX512_BW)
   #include <primesieve/cpu_supports_avx512_bw.hpp>
   #include "PreSieve_x86_avx512.hpp"
 #endif
 
-// Portable algorithms that run on any CPU
-#if !defined(presieve1_default) || \
-    !defined(presieve2_default)
-
-#if defined(__SSE2__) && \
-    __has_include(<emmintrin.h>)
-  #include "PreSieve_x86_sse2.hpp"
-  #define presieve1_default presieve1_x86_sse2
-  #define presieve2_default presieve2_x86_sse2
-
-#elif (defined(__ARM_NEON) || defined(__aarch64__)) && \
-      __has_include(<arm_neon.h>)
-  #include "PreSieve_arm_neon.hpp"
-  #define presieve1_default presieve1_arm_neon
-  #define presieve2_default presieve2_arm_neon
-#else
-  #include "PreSieve_default.hpp"
+#if defined(ENABLE_MULTIARCH_ARM_SVE)
+  #include <primesieve/cpu_supports_arm_sve.hpp>
+  #include "PreSieve_arm_sve.hpp"
 #endif
 
-#endif
+// Fastest algorithm supported by the compiler flags
+#include PRESIEVE_DEFAULT_HEADER
 
 namespace {
 
@@ -96,38 +91,34 @@ namespace {
 template <typename... Args>
 void presieve1(Args&&... args)
 {
-#if defined(ENABLE_MULTIARCH_AVX512_BW)
-  if (cpu_supports_avx512_bw)
-    presieve1_x86_avx512(std::forward<Args>(args)...);
-  else
-    presieve1_default(std::forward<Args>(args)...);
-#elif defined(ENABLE_MULTIARCH_ARM_SVE)
-  if (cpu_supports_sve)
-    presieve1_arm_sve(std::forward<Args>(args)...);
-  else
-    presieve1_default(std::forward<Args>(args)...);
-#else
-  presieve1_default(std::forward<Args>(args)...);
-#endif
+  #if defined(ENABLE_MULTIARCH_AVX512_BW)
+    if (cpu_supports_avx512_bw)
+      return presieve1_x86_avx512(std::forward<Args>(args)...);
+  #endif
+
+  #if defined(ENABLE_MULTIARCH_ARM_SVE)
+    if (cpu_supports_sve)
+      return presieve1_arm_sve(std::forward<Args>(args)...);
+  #endif
+
+  PRESIEVE1_DEFAULT(std::forward<Args>(args)...);
 }
 
 /// Runtime dispatch to optimized presieve2() SIMD algorithm
 template <typename... Args>
 void presieve2(Args&&... args)
 {
-#if defined(ENABLE_MULTIARCH_AVX512_BW)
-  if (cpu_supports_avx512_bw)
-    presieve2_x86_avx512(std::forward<Args>(args)...);
-  else
-    presieve2_default(std::forward<Args>(args)...);
-#elif defined(ENABLE_MULTIARCH_ARM_SVE)
-  if (cpu_supports_sve)
-    presieve2_arm_sve(std::forward<Args>(args)...);
-  else
-    presieve2_default(std::forward<Args>(args)...);
-#else
-  presieve2_default(std::forward<Args>(args)...);
-#endif
+  #if defined(ENABLE_MULTIARCH_AVX512_BW)
+    if (cpu_supports_avx512_bw)
+      return presieve2_x86_avx512(std::forward<Args>(args)...);
+  #endif
+
+  #if defined(ENABLE_MULTIARCH_ARM_SVE)
+    if (cpu_supports_sve)
+      return presieve2_arm_sve(std::forward<Args>(args)...);
+  #endif
+
+  PRESIEVE2_DEFAULT(std::forward<Args>(args)...);
 }
 
 } // namespace
