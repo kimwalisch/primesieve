@@ -47,8 +47,8 @@
 
 // Our ARM NEON algorithms require a 64-bit ARM CPU,
 // on 32-bit ARM we use the portable default algorithms.
-#if defined(__aarch64__) && \
-    defined(__ARM_NEON) && \
+#if (defined(__aarch64__) || \
+     defined(_M_ARM64)) && \
     __has_include(<arm_neon.h>)
   #define ENABLE_ARM_NEON
 #endif

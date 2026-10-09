@@ -7,6 +7,7 @@ Changes in version 12.17, 09/10/2026
 * PrimeGenerator.hpp: Update SIMD runtime dispatching.
 * PreSieve.cpp: Update SIMD runtime dispatching.
 * PreSieve.cpp: Use ARM NEON only on 64-bit ARM CPUs.
+* cpu_arch_macros.hpp: Enable ARM NEON algorithms for MSVC on ARM64.
 * cpu_arch_macros.hpp: New header to simplify SIMD preprocessor logic.
 * CMakeLists.txt: Building now requires C++14 (linking still works using C++11).
 * macros.hpp: Add NO_UNROLL_LOOP and NO_VECTORIZE_LOOP macros.
