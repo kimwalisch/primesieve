@@ -38,7 +38,7 @@ handle_error() {
 mkdir build-release
 cd build-release
 
-g++ -static -O3 -mpopcnt -flto -DNDEBUG -D_WIN32_WINNT=0x0A00 -Wall -Wextra -pedantic -DENABLE_MULTIARCH_AVX512_BW -DENABLE_MULTIARCH_AVX512_VBMI2 -I../include -I../src ../src/*.cpp ../src/arch/x86/*.cpp ../src/app/*.cpp -o primesieve.exe
+g++ -static -O3 -mpopcnt -flto -DNDEBUG -D_WIN32_WINNT=0x0A00 -Wall -Wextra -pedantic -DENABLE_MULTIARCH_AVX2 -DENABLE_MULTIARCH_AVX512_BW -DENABLE_MULTIARCH_AVX512_VBMI2 -I../include -I../src ../src/*.cpp ../src/arch/x86/*.cpp ../src/app/*.cpp -o primesieve.exe
 strip primesieve.exe
 
 # Create a release zip archive

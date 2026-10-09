@@ -1,9 +1,11 @@
-Changes in version 12.17, 06/10/2026
+Changes in version 12.17, 09/10/2026
 ====================================
 
 * PrimeGenerator_arm_neon.hpp: Convert 1-bits from sieve array to primes using ARM NEON.
 * PrimeGenerator_x86_avx512.hpp: New AVX512 algorithm with fewer branch mispredictions.
+* PrimeGenerator_x86_avx2.hpp: Convert 1-bits from sieve array to primes using AVX2.
 * PrimeGenerator.hpp: Update SIMD runtime dispatching.
+* cpu_arch_macros.hpp: New header to simplify SIMD preprocessor logic.
 * CMakeLists.txt: Building now requires C++14 (linking still works using C++11).
 * macros.hpp: Add NO_UNROLL_LOOP and NO_VECTORIZE_LOOP macros.
 * CpuInfo.cpp: Fix uninitialized read of 32-bit hw.logicalcpu sysctl on macOS.

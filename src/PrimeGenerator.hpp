@@ -19,23 +19,22 @@
 #include "MemoryPool.hpp"
 #include "SievingPrimes.hpp"
 
+#include <primesieve/cpu_arch_macros.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
 #include <cstddef>
 
-#if defined(__AVX512F__) && \
-    defined(__AVX512VBMI__) && \
-    defined(__AVX512VBMI2__) && \
-    __has_include(<immintrin.h>)
-  #define ENABLE_AVX512_VBMI2
-#elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-  #include <primesieve/cpu_supports_avx512_vbmi2.hpp>
-#endif
-
-#if defined(__aarch64__) && \
-    __has_include(<arm_neon.h>)
+#if defined(ENABLE_AVX512_VBMI2)
+  #define PRIMEGENERATOR_DEFAULT_HEADER "PrimeGenerator_x86_avx512.hpp"
+  #define PRIMEGENERATOR_FILL_NEXT_DEFAULT fillNextPrimes_x86_avx512
+  #define PRIMEGENERATOR_FILL_PREV_DEFAULT fillPrevPrimes_x86_avx512
+#elif defined(ENABLE_AVX2)
+  #define PRIMEGENERATOR_DEFAULT_HEADER "PrimeGenerator_x86_avx2.hpp"
+  #define PRIMEGENERATOR_FILL_NEXT_DEFAULT fillNextPrimes_x86_avx2
+  #define PRIMEGENERATOR_FILL_PREV_DEFAULT fillPrevPrimes_x86_avx2
+#elif defined(ENABLE_ARM_NEON)
   #define PRIMEGENERATOR_DEFAULT_HEADER "PrimeGenerator_arm_neon.hpp"
   #define PRIMEGENERATOR_FILL_NEXT_DEFAULT fillNextPrimes_arm_neon
   #define PRIMEGENERATOR_FILL_PREV_DEFAULT fillPrevPrimes_arm_neon
@@ -43,6 +42,14 @@
   #define PRIMEGENERATOR_DEFAULT_HEADER "PrimeGenerator_default.hpp"
   #define PRIMEGENERATOR_FILL_NEXT_DEFAULT fillNextPrimes_default
   #define PRIMEGENERATOR_FILL_PREV_DEFAULT fillPrevPrimes_default
+#endif
+
+#if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
+  #include <primesieve/cpu_supports_avx512_vbmi2.hpp>
+#endif
+
+#if defined(ENABLE_MULTIARCH_AVX2)
+  #include <primesieve/cpu_supports_avx2.hpp>
 #endif
 
 namespace primesieve {
@@ -55,56 +62,50 @@ public:
 
   ALWAYS_INLINE void fillNextPrimes(Vector<uint64_t>& primes, std::size_t* size)
   {
-    #if defined(ENABLE_AVX512_VBMI2)
-      fillNextPrimes_x86_avx512(primes, size);
-
-    #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
+    #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
       if (cpu_supports_avx512_vbmi2)
-        fillNextPrimes_x86_avx512(primes, size);
-      else
-        PRIMEGENERATOR_FILL_NEXT_DEFAULT(primes, size);
-
-    #else
-      PRIMEGENERATOR_FILL_NEXT_DEFAULT(primes, size);
+        return fillNextPrimes_x86_avx512(primes, size);
     #endif
+
+    #if defined(ENABLE_MULTIARCH_AVX2)
+      if (cpu_supports_avx2)
+        return fillNextPrimes_x86_avx2(primes, size);
+    #endif
+
+    PRIMEGENERATOR_FILL_NEXT_DEFAULT(primes, size);
   }
 
   ALWAYS_INLINE void fillPrevPrimes(Vector<uint64_t>& primes, std::size_t* size)
   {
-    #if defined(ENABLE_AVX512_VBMI2)
-      fillPrevPrimes_x86_avx512(primes, size);
-
-    #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
+    #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
       if (cpu_supports_avx512_vbmi2)
-        fillPrevPrimes_x86_avx512(primes, size);
-      else
-        PRIMEGENERATOR_FILL_PREV_DEFAULT(primes, size);
-
-    #else
-      PRIMEGENERATOR_FILL_PREV_DEFAULT(primes, size);
+        return fillPrevPrimes_x86_avx512(primes, size);
     #endif
+
+    #if defined(ENABLE_MULTIARCH_AVX2)
+      if (cpu_supports_avx2)
+        return fillPrevPrimes_x86_avx2(primes, size);
+    #endif
+
+    PRIMEGENERATOR_FILL_PREV_DEFAULT(primes, size);
   }
 
 private:
-
-#if !defined(ENABLE_AVX512_VBMI2)
   void PRIMEGENERATOR_FILL_NEXT_DEFAULT(Vector<uint64_t>& primes, std::size_t* size);
   void PRIMEGENERATOR_FILL_PREV_DEFAULT(Vector<uint64_t>& primes, std::size_t* size);
+
+#if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
+  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
+  void fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
+  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
+  void fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
 #endif
 
-#if defined(ENABLE_AVX512_VBMI2) || \
-    defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-
-  #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-    __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
-  #endif
-  void fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
-
-  #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-    __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
-  #endif
-  void fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
-
+#if defined(ENABLE_MULTIARCH_AVX2)
+  __attribute__ ((target ("avx2,bmi2,popcnt")))
+  void fillNextPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size);
+  __attribute__ ((target ("avx2,bmi2,popcnt")))
+  void fillPrevPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size);
 #endif
 
   bool isInit_ = false;
