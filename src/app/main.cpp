@@ -47,6 +47,16 @@ bool has_arm_sve();
 
 #endif
 
+#if defined(ENABLE_MULTIARCH_AVX2)
+
+namespace primesieve {
+
+bool has_avx2();
+
+} // namespace
+
+#endif
+
 #if defined(ENABLE_MULTIARCH_AVX512_BW)
 
 namespace primesieve {
@@ -260,6 +270,13 @@ void cpuInfo()
       std::cout << "Has ARM SVE: yes" << std::endl;
     else
       std::cout << "Has ARM SVE: no" << std::endl;
+  #endif
+
+  #if defined(ENABLE_MULTIARCH_AVX2)
+    if (primesieve::has_avx2())
+      std::cout << "Has AVX2: yes" << std::endl;
+    else
+      std::cout << "Has AVX2: no" << std::endl;
   #endif
 
   #if defined(ENABLE_MULTIARCH_AVX512_BW)

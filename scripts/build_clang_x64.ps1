@@ -29,7 +29,7 @@ $Src = @("../src/*.cpp", "../src/arch/x86/*.cpp", "../src/app/*.cpp") | ForEach-
 # Compiler options
 $ClangArgs = @(
     "-I../include", "-I../src", "-O3", "-mpopcnt", "-DNDEBUG",
-    "-DENABLE_MULTIARCH_AVX512_BW", "-DENABLE_MULTIARCH_AVX512_VBMI2",
+    "-DENABLE_MULTIARCH_AVX2", "-DENABLE_MULTIARCH_AVX512_BW", "-DENABLE_MULTIARCH_AVX512_VBMI2",
     "-o", "primesieve.exe"
 )
 & clang++ $ClangArgs $Src

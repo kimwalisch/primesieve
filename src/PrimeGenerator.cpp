@@ -331,12 +331,13 @@ bool PrimeGenerator::sieveNextPrimes(Vector<uint64_t>& primes,
 
 } // namespace
 
-#if defined(ENABLE_AVX512_VBMI2) || \
-    defined(ENABLE_MULTIARCH_AVX512_VBMI2)
+#if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
   #include "PrimeGenerator_x86_avx512.hpp"
 #endif
 
-// Portable fallback prime generation algorithm
-#if !defined(ENABLE_AVX512_VBMI2)
-  #include PRIMEGENERATOR_DEFAULT_HEADER
+#if defined(ENABLE_MULTIARCH_AVX2)
+  #include "PrimeGenerator_x86_avx2.hpp"
 #endif
+
+// Fastest algorithm supported by the compiler flags
+#include PRIMEGENERATOR_DEFAULT_HEADER
