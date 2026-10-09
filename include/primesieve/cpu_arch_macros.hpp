@@ -27,6 +27,7 @@
 #elif defined(__AVX2__) && \
       defined(__BMI2__) && \
       defined(__POPCNT__) && \
+      !defined(__i386__) && \
       __has_include(<immintrin.h>)
   #define ENABLE_AVX2
   #undef ENABLE_MULTIARCH_AVX2
@@ -47,6 +48,7 @@
 // Our ARM NEON algorithms require a 64-bit ARM CPU,
 // on 32-bit ARM we use the portable default algorithms.
 #if defined(__aarch64__) && \
+    defined(__ARM_NEON) && \
     __has_include(<arm_neon.h>)
   #define ENABLE_ARM_NEON
 #endif
