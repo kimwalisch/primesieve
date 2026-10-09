@@ -11,6 +11,8 @@
 #ifndef PRESIEVE_ARM_SVE_HPP
 #define PRESIEVE_ARM_SVE_HPP
 
+#include <primesieve/cpu_arch_macros.hpp>
+
 #include <arm_sve.h>
 #include <stdint.h>
 #include <cstddef>
