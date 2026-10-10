@@ -26,6 +26,7 @@
 #include <CpuInfo.hpp>
 #include <ParallelSieve.hpp>
 #include <RiemannR.hpp>
+#include <primesieve/cpu_arch_macros.hpp>
 #include <primesieve/macros.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/Vector.hpp>
@@ -265,28 +266,42 @@ void cpuInfo()
   else
     std::cout << "Logical CPU cores: unknown" << std::endl;
 
-  #if defined(ENABLE_MULTIARCH_ARM_SVE)
+  // We only display those CPU instruction
+  // sets that are actually used by the
+  // primesieve C/C++ library.
+
+  #if defined(ENABLE_ARM_SVE)
+    std::cout << "Has ARM SVE: yes" << std::endl;
+  #elif defined(ENABLE_MULTIARCH_ARM_SVE)
     if (primesieve::has_arm_sve())
       std::cout << "Has ARM SVE: yes" << std::endl;
     else
       std::cout << "Has ARM SVE: no" << std::endl;
   #endif
 
-  #if defined(ENABLE_MULTIARCH_AVX2)
+  #if defined(ENABLE_AVX2) || \
+      defined(ENABLE_AVX2_BMI2)
+    std::cout << "Has AVX2: yes" << std::endl;
+  #elif defined(ENABLE_MULTIARCH_AVX2) || \
+        defined(ENABLE_MULTIARCH_AVX2_BMI2)
     if (primesieve::has_avx2())
       std::cout << "Has AVX2: yes" << std::endl;
     else
       std::cout << "Has AVX2: no" << std::endl;
   #endif
 
-  #if defined(ENABLE_MULTIARCH_AVX512_BW)
+  #if defined(ENABLE_AVX512_BW)
+    std::cout << "Has AVX512 BW: yes" << std::endl;
+  #elif defined(ENABLE_MULTIARCH_AVX512_BW)
     if (primesieve::has_avx512_bw())
       std::cout << "Has AVX512 BW: yes" << std::endl;
     else
       std::cout << "Has AVX512 BW: no" << std::endl;
   #endif
 
-  #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
+  #if defined(ENABLE_AVX512_VBMI2)
+    std::cout << "Has AVX512 VBMI2: yes" << std::endl;
+  #elif defined(ENABLE_MULTIARCH_AVX512_VBMI2)
     if (primesieve::has_avx512_vbmi2())
       std::cout << "Has AVX512 VBMI2: yes" << std::endl;
     else
