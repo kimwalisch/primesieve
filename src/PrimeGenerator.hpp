@@ -95,9 +95,9 @@ private:
   void PRIMEGENERATOR_FILL_PREV_DEFAULT(Vector<uint64_t>& primes, std::size_t* size);
 
 #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
+  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
   void fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
-  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
+  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
   void fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
 #endif
 

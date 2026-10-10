@@ -107,6 +107,10 @@ bool has_avx2()
     run_cpuid(1, 0, abcd);
     int osxsave_mask = (1 << 27);
 
+    // fillNextPrimes_x86_avx2() requires POPCNT
+    if ((abcd[2] & bit_POPCNT) != bit_POPCNT)
+      return false;
+
     // Ensure OS supports extended processor state management
     if ((abcd[2] & osxsave_mask) != osxsave_mask)
       return false;
@@ -116,9 +120,6 @@ bool has_avx2()
 
     // Check AVX OS support
     if ((xcr0 & ymm_mask) != ymm_mask)
-      return false;
-
-    if ((abcd[2] & bit_POPCNT) != bit_POPCNT)
       return false;
 
     run_cpuid(7, 0, abcd);
@@ -172,6 +173,10 @@ bool has_avx512_vbmi2()
     int abcd[4];
     run_cpuid(1, 0, abcd);
     int osxsave_mask = (1 << 27);
+
+    // fillNextPrimes_x86_avx512() requires POPCNT
+    if ((abcd[2] & bit_POPCNT) != bit_POPCNT)
+      return false;
 
     // Ensure OS supports extended processor state management
     if ((abcd[2] & osxsave_mask) != osxsave_mask)

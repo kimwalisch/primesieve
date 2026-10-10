@@ -11,12 +11,13 @@ set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}")
 
 check_cxx_source_compiles("
     // GCC/Clang function multiversioning for AVX512 is not needed if
-    // the user compiles with -mavx512f -mavx512vbmi -mavx512vbmi2.
+    // the user compiles with -mavx512f -mavx512vbmi -mavx512vbmi2 -mpopcnt.
     // GCC/Clang function multiversioning generally causes a minor
     // overhead, hence we disable it if it is not needed.
     #if defined(__AVX512F__) && \
         defined(__AVX512VBMI__) && \
-        defined(__AVX512VBMI2__)
+        defined(__AVX512VBMI2__) && \
+        defined(__POPCNT__)
       Error: AVX512VBMI2 multiarch not needed!
     #endif
 
@@ -26,7 +27,7 @@ check_cxx_source_compiles("
 
     class PrimeGenerator {
     public:
-        __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2\")))
+        __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
         void fillNextPrimes_x86_avx512(uint64_t* primes64);
         void fillNextPrimes_default(uint64_t* primes64);
         void fillNextPrimes(uint64_t* primes64)
@@ -43,11 +44,11 @@ check_cxx_source_compiles("
         primes64[0] = 2;
     }
 
-    __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2\")))
+    __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
     void PrimeGenerator::fillNextPrimes_x86_avx512(uint64_t* primes64)
     {
         __m512i bytes_0_to_7 = _mm512_setr_epi64(0, 1, 2, 3, 4, 5, 6, 7);
-        __m512i base = _mm512_set1_epi64(123);
+        __m512i base = _mm512_set1_epi64(_mm_popcnt_u64(primes64[0]));
         __m512i bitValues = _mm512_maskz_compress_epi8(0xffff, base);
         __m512i vprimes = _mm512_maskz_permutexvar_epi8(0x0101010101010101, bytes_0_to_7, bitValues);
         vprimes = _mm512_add_epi64(base, vprimes);
@@ -56,7 +57,7 @@ check_cxx_source_compiles("
 
     int main()
     {
-        uint64_t primes[8];
+        uint64_t primes[8] = { 0xffff };
         PrimeGenerator p;
         p.fillNextPrimes(primes);
         return 0;
