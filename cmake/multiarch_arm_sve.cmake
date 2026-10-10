@@ -63,9 +63,9 @@ check_cxx_source_compiles("
         uint8_t PreSieveTable4[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         if (primesieve::has_arm_sve())
-            presieve1_arm_sve(&PreSieveTable1[0], &PreSieveTable2[1], &PreSieveTable3[1], &PreSieveTable4[1], &sieve[0], 10);
+            presieve1_arm_sve(&PreSieveTable1[0], &PreSieveTable2[0], &PreSieveTable3[0], &PreSieveTable4[0], &sieve[0], 10);
         else
-            presieve1_default(&PreSieveTable1[0], &PreSieveTable2[1], &PreSieveTable3[1], &PreSieveTable4[1], &sieve[0], 10);
+            presieve1_default(&PreSieveTable1[0], &PreSieveTable2[0], &PreSieveTable3[0], &PreSieveTable4[0], &sieve[0], 10);
 
         return (sieve[0] == 0) ? 0 : 1;
     }
