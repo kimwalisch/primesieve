@@ -58,6 +58,14 @@
       __has_include(<immintrin.h>)
   #define ENABLE_AVX2_BMI2
   #undef ENABLE_MULTIARCH_AVX2_BMI2
+// MSVC does not define __BMI2__ or __POPCNT__, but
+// /arch:AVX2 enables both instruction sets.
+#elif defined(_MSC_VER) && \
+      defined(__AVX2__) && \
+      !defined(_M_IX86) && \
+      __has_include(<immintrin.h>)
+  #define ENABLE_AVX2_BMI2
+  #undef ENABLE_MULTIARCH_AVX2_BMI2
 #endif
 
 // PreSieve.cpp SIMD algorithms
