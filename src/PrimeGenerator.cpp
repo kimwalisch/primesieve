@@ -7,9 +7,9 @@
 ///         the vector PrimeGenerator generates new primes.
 ///
 ///         primesieve::iterator's next_prime() performance depends
-///         on PrimeGenerator::fillNextPrimes(). Therefore
-///         fillNextPrimes() is highly optimized using hardware
-///         acceleration (e.g. CTZ, AVX512) whenever possible.
+///         on PrimeGenerator::fillNextPrimes(). Therefore fillNextPrimes()
+///         is highly optimized using hardware acceleration (e.g. CTZ,
+///         AVX512) whenever possible.
 ///
 /// Copyright (C) 2026 Kim Walisch, <kim.walisch@gmail.com>
 /// Copyright (C) 2022 @zielaj, https://github.com/zielaj
@@ -26,7 +26,6 @@
 #include <primesieve/macros.hpp>
 #include <primesieve/primesieve_error.hpp>
 #include <primesieve/pmath.hpp>
-#include <primesieve/popcnt.hpp>
 #include <primesieve/util.hpp>
 #include <primesieve/Vector.hpp>
 
