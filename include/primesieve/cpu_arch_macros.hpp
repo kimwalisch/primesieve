@@ -20,6 +20,8 @@
 #if defined(__AVX512F__) && \
     defined(__AVX512VBMI__) && \
     defined(__AVX512VBMI2__) && \
+    defined(__POPCNT__) && \
+    !defined(__i386__) && \
     __has_include(<immintrin.h>)
   #define ENABLE_AVX512_VBMI2
   #undef ENABLE_MULTIARCH_AVX512_VBMI2

@@ -24,7 +24,8 @@ check_cxx_source_compiles("
     // flags already enable the faster AVX512 algorithm.
     #if defined(__AVX512F__) && \
         defined(__AVX512VBMI__) && \
-        defined(__AVX512VBMI2__)
+        defined(__AVX512VBMI2__) && \
+        defined(__POPCNT__)
       Error: AVX2 multiarch not needed!
     #endif
 

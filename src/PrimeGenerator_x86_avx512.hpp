@@ -13,7 +13,6 @@
 #include "PrimeGenerator.hpp"
 
 #include <primesieve/macros.hpp>
-#include <primesieve/popcnt.hpp>
 #include <primesieve/Vector.hpp>
 
 #include <stdint.h>
@@ -33,7 +32,7 @@ namespace primesieve {
 /// avoids hard to predict branches that check the prime count.
 ///
 #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
+  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
 #endif
 void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size)
 {
@@ -87,7 +86,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
     {
       // Each iteration processes 8 bytes from the sieve array
       uint64_t bits64 = sieve[sieveIdx];
-      uint64_t primeCount = popcnt64_native(bits64);
+      uint64_t primeCount = _mm_popcnt_u64(bits64);
 
       // Convert 1 bits from the sieve array (bits64) into prime
       // bit values (bytes) using the avxBitValues lookup table and
@@ -140,7 +139,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
 /// primes which incurs an initialization overhead of O(sqrt(n)).
 ///
 #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2")))
+  __attribute__ ((target ("avx512f,avx512vbmi,avx512vbmi2,popcnt")))
 #endif
 void PrimeGenerator::fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size)
 {
@@ -184,7 +183,7 @@ void PrimeGenerator::fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::si
     {
       // Each iteration processes 8 bytes from the sieve array
       uint64_t bits64 = sieve[sieveIdx];
-      uint64_t primeCount = popcnt64_native(bits64);
+      uint64_t primeCount = _mm_popcnt_u64(bits64);
 
       // Prevent _mm512_storeu_si512() buffer overrun
       if_unlikely(i + primeCount + 16 > primes.size())
