@@ -56,9 +56,7 @@
   #define PRESIEVE_DEFAULT_HEADER "PreSieve_x86_avx2.hpp"
   #define PRESIEVE1_DEFAULT presieve1_x86_avx2
   #define PRESIEVE2_DEFAULT presieve2_x86_avx2
-#elif (defined(__SSE2__) || \
-       defined(_M_X64)) && \
-      __has_include(<emmintrin.h>)
+#elif defined(ENABLE_SSE2)
   #define PRESIEVE_DEFAULT_HEADER "PreSieve_x86_sse2.hpp"
   #define PRESIEVE1_DEFAULT presieve1_x86_sse2
   #define PRESIEVE2_DEFAULT presieve2_x86_sse2

@@ -15,8 +15,17 @@
 
 #include "macros.hpp"
 
-// Our ARM NEON algorithms require a 64-bit ARM CPU,
-// on 32-bit ARM we use the portable default algorithms.
+// SSE2 is supported by all x64 CPUs, but
+// MSVC does not define __SSE2__ on x64.
+#if (defined(__SSE2__) || \
+     defined(_M_X64)) && \
+    __has_include(<emmintrin.h>)
+  #define ENABLE_SSE2
+#endif
+
+// ARM NEON is supported by all 64-bit ARM CPUs. 32-bit ARM
+// uses the portable default algorithms, as NEON is optional
+// on 32-bit ARM and we use AArch64-only NEON intrinsics.
 #if (defined(__aarch64__) || \
      defined(_M_ARM64)) && \
     __has_include(<arm_neon.h>)
