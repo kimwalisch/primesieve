@@ -30,7 +30,7 @@
   #define PRIMEGENERATOR_DEFAULT_HEADER "PrimeGenerator_x86_avx512.hpp"
   #define PRIMEGENERATOR_FILL_NEXT_DEFAULT fillNextPrimes_x86_avx512
   #define PRIMEGENERATOR_FILL_PREV_DEFAULT fillPrevPrimes_x86_avx512
-#elif defined(ENABLE_AVX2)
+#elif defined(ENABLE_AVX2_BMI2)
   #define PRIMEGENERATOR_DEFAULT_HEADER "PrimeGenerator_x86_avx2.hpp"
   #define PRIMEGENERATOR_FILL_NEXT_DEFAULT fillNextPrimes_x86_avx2
   #define PRIMEGENERATOR_FILL_PREV_DEFAULT fillPrevPrimes_x86_avx2
@@ -48,7 +48,7 @@
   #include <primesieve/cpu_supports_avx512_vbmi2.hpp>
 #endif
 
-#if defined(ENABLE_MULTIARCH_AVX2)
+#if defined(ENABLE_MULTIARCH_AVX2_BMI2)
   #include <primesieve/cpu_supports_avx2.hpp>
 #endif
 
@@ -67,7 +67,7 @@ public:
         return fillNextPrimes_x86_avx512(primes, size);
     #endif
 
-    #if defined(ENABLE_MULTIARCH_AVX2)
+    #if defined(ENABLE_MULTIARCH_AVX2_BMI2)
       if (cpu_supports_avx2)
         return fillNextPrimes_x86_avx2(primes, size);
     #endif
@@ -82,7 +82,7 @@ public:
         return fillPrevPrimes_x86_avx512(primes, size);
     #endif
 
-    #if defined(ENABLE_MULTIARCH_AVX2)
+    #if defined(ENABLE_MULTIARCH_AVX2_BMI2)
       if (cpu_supports_avx2)
         return fillPrevPrimes_x86_avx2(primes, size);
     #endif
@@ -101,7 +101,7 @@ private:
   void fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
 #endif
 
-#if defined(ENABLE_MULTIARCH_AVX2)
+#if defined(ENABLE_MULTIARCH_AVX2_BMI2)
   __attribute__ ((target ("avx2,bmi2,popcnt")))
   void fillNextPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size);
   __attribute__ ((target ("avx2,bmi2,popcnt")))

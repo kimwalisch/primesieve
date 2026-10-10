@@ -81,8 +81,7 @@
   #include "PreSieve_x86_avx512.hpp"
 #endif
 
-#if defined(ENABLE_MULTIARCH_AVX2) && \
-    !defined(ENABLE_AVX512_BW)
+#if defined(ENABLE_MULTIARCH_AVX2)
   #include <primesieve/cpu_supports_avx2.hpp>
   #include "PreSieve_x86_avx2.hpp"
 #endif
@@ -106,8 +105,7 @@ void presieve1(Args&&... args)
       return presieve1_x86_avx512(std::forward<Args>(args)...);
   #endif
 
-  #if defined(ENABLE_MULTIARCH_AVX2) && \
-      !defined(ENABLE_AVX512_BW)
+  #if defined(ENABLE_MULTIARCH_AVX2)
     if (cpu_supports_avx2)
       return presieve1_x86_avx2(std::forward<Args>(args)...);
   #endif
@@ -129,8 +127,7 @@ void presieve2(Args&&... args)
       return presieve2_x86_avx512(std::forward<Args>(args)...);
   #endif
 
-  #if defined(ENABLE_MULTIARCH_AVX2) && \
-      !defined(ENABLE_AVX512_BW)
+  #if defined(ENABLE_MULTIARCH_AVX2)
     if (cpu_supports_avx2)
       return presieve2_x86_avx2(std::forward<Args>(args)...);
   #endif
@@ -187,7 +184,7 @@ void PreSieve::preSieve(Vector<uint64_t>& sieve, uint64_t segmentLow)
     pos2 += bytesToCopy;
     pos3 += bytesToCopy;
 
-    // Wrap the updated positions to avoid zero-byte calls.
+    // Wrap the updated positions to avoid zero-byte calls
     pos0 *= (pos0 < preSieveTables[0].size());
     pos1 *= (pos1 < preSieveTables[1].size());
     pos2 *= (pos2 < preSieveTables[2].size());
@@ -230,7 +227,7 @@ void PreSieve::preSieve(Vector<uint64_t>& sieve, uint64_t segmentLow)
       pos2 += bytesToCopy;
       pos3 += bytesToCopy;
 
-      // Wrap the updated positions to avoid zero-byte calls.
+      // Wrap the updated positions to avoid zero-byte calls
       pos0 *= (pos0 < preSieveTables[i+0].size());
       pos1 *= (pos1 < preSieveTables[i+1].size());
       pos2 *= (pos2 < preSieveTables[i+2].size());
