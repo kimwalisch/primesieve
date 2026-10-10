@@ -52,6 +52,10 @@
   #define PRESIEVE_DEFAULT_HEADER "PreSieve_x86_avx512.hpp"
   #define PRESIEVE1_DEFAULT presieve1_x86_avx512
   #define PRESIEVE2_DEFAULT presieve2_x86_avx512
+#elif defined(ENABLE_AVX2)
+  #define PRESIEVE_DEFAULT_HEADER "PreSieve_x86_avx2.hpp"
+  #define PRESIEVE1_DEFAULT presieve1_x86_avx2
+  #define PRESIEVE2_DEFAULT presieve2_x86_avx2
 #elif (defined(__SSE2__) || \
        defined(_M_X64)) && \
       __has_include(<emmintrin.h>)
@@ -77,6 +81,12 @@
   #include "PreSieve_x86_avx512.hpp"
 #endif
 
+#if defined(ENABLE_MULTIARCH_AVX2) && \
+    !defined(ENABLE_AVX512_BW)
+  #include <primesieve/cpu_supports_avx2.hpp>
+  #include "PreSieve_x86_avx2.hpp"
+#endif
+
 #if defined(ENABLE_MULTIARCH_ARM_SVE)
   #include <primesieve/cpu_supports_arm_sve.hpp>
   #include "PreSieve_arm_sve.hpp"
@@ -96,6 +106,12 @@ void presieve1(Args&&... args)
       return presieve1_x86_avx512(std::forward<Args>(args)...);
   #endif
 
+  #if defined(ENABLE_MULTIARCH_AVX2) && \
+      !defined(ENABLE_AVX512_BW)
+    if (cpu_supports_avx2)
+      return presieve1_x86_avx2(std::forward<Args>(args)...);
+  #endif
+
   #if defined(ENABLE_MULTIARCH_ARM_SVE)
     if (cpu_supports_sve)
       return presieve1_arm_sve(std::forward<Args>(args)...);
@@ -111,6 +127,12 @@ void presieve2(Args&&... args)
   #if defined(ENABLE_MULTIARCH_AVX512_BW)
     if (cpu_supports_avx512_bw)
       return presieve2_x86_avx512(std::forward<Args>(args)...);
+  #endif
+
+  #if defined(ENABLE_MULTIARCH_AVX2) && \
+      !defined(ENABLE_AVX512_BW)
+    if (cpu_supports_avx2)
+      return presieve2_x86_avx2(std::forward<Args>(args)...);
   #endif
 
   #if defined(ENABLE_MULTIARCH_ARM_SVE)
@@ -150,6 +172,7 @@ void PreSieve::preSieve(Vector<uint64_t>& sieve, uint64_t segmentLow)
     bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[2].size() - pos2));
     bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[3].size() - pos3));
 
+    ASSERT(bytesToCopy > 0);
     presieve1(preSieveTables[0].begin() + pos0,
               preSieveTables[1].begin() + pos1,
               preSieveTables[2].begin() + pos2,
@@ -159,10 +182,16 @@ void PreSieve::preSieve(Vector<uint64_t>& sieve, uint64_t segmentLow)
 
     offset += bytesToCopy;
 
-    pos0 = (pos0 + bytesToCopy) * (pos0 < preSieveTables[0].size());
-    pos1 = (pos1 + bytesToCopy) * (pos1 < preSieveTables[1].size());
-    pos2 = (pos2 + bytesToCopy) * (pos2 < preSieveTables[2].size());
-    pos3 = (pos3 + bytesToCopy) * (pos3 < preSieveTables[3].size());
+    pos0 += bytesToCopy;
+    pos1 += bytesToCopy;
+    pos2 += bytesToCopy;
+    pos3 += bytesToCopy;
+
+    // Wrap the updated positions to avoid zero-byte calls.
+    pos0 *= (pos0 < preSieveTables[0].size());
+    pos1 *= (pos1 < preSieveTables[1].size());
+    pos2 *= (pos2 < preSieveTables[2].size());
+    pos3 *= (pos3 < preSieveTables[3].size());
   }
 
   // This loop performs a bitwise AND of the
@@ -186,6 +215,7 @@ void PreSieve::preSieve(Vector<uint64_t>& sieve, uint64_t segmentLow)
       bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+2].size() - pos2));
       bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+3].size() - pos3));
 
+      ASSERT(bytesToCopy > 0);
       presieve2(preSieveTables[i+0].begin() + pos0,
                 preSieveTables[i+1].begin() + pos1,
                 preSieveTables[i+2].begin() + pos2,
@@ -195,10 +225,16 @@ void PreSieve::preSieve(Vector<uint64_t>& sieve, uint64_t segmentLow)
 
       offset += bytesToCopy;
 
-      pos0 = (pos0 + bytesToCopy) * (pos0 < preSieveTables[i+0].size());
-      pos1 = (pos1 + bytesToCopy) * (pos1 < preSieveTables[i+1].size());
-      pos2 = (pos2 + bytesToCopy) * (pos2 < preSieveTables[i+2].size());
-      pos3 = (pos3 + bytesToCopy) * (pos3 < preSieveTables[i+3].size());
+      pos0 += bytesToCopy;
+      pos1 += bytesToCopy;
+      pos2 += bytesToCopy;
+      pos3 += bytesToCopy;
+
+      // Wrap the updated positions to avoid zero-byte calls.
+      pos0 *= (pos0 < preSieveTables[i+0].size());
+      pos1 *= (pos1 < preSieveTables[i+1].size());
+      pos2 *= (pos2 < preSieveTables[i+2].size());
+      pos3 *= (pos3 < preSieveTables[i+3].size());
     }
   }
 
