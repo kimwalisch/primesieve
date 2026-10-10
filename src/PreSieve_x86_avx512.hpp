@@ -31,6 +31,10 @@ void presieve1_x86_avx512(const uint8_t* __restrict preSieved0,
 {
   std::size_t i = 0;
 
+  // This loop executes only about 16 iterations on average.
+  // Hence, unrolling this loop will most likely hurt
+  // performance since it will cause more branch misses.
+  NO_UNROLL_LOOP
   for (; i + 64 <= bytes; i += sizeof(__m512i))
   {
     _mm512_storeu_epi8((__m512i*) &sieve[i],
@@ -62,6 +66,10 @@ void presieve2_x86_avx512(const uint8_t* __restrict preSieved0,
 {
   std::size_t i = 0;
 
+  // This loop executes only about 16 iterations on average.
+  // Hence, unrolling this loop will most likely hurt
+  // performance since it will cause more branch misses.
+  NO_UNROLL_LOOP
   for (; i + 64 <= bytes; i += sizeof(__m512i))
   {
     _mm512_storeu_epi8((__m512i*) &sieve[i],

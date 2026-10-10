@@ -64,7 +64,7 @@ static_assert(240 * (maxBlockWords - 1) + 241 <= 0xffff,
 /// Returns the number of sieve words processed, stopping before
 /// a word whose primes do not fit into the output buffer.
 ///
-#if defined(ENABLE_MULTIARCH_AVX2)
+#if defined(ENABLE_MULTIARCH_AVX2_BMI2)
   __attribute__ ((target ("avx2,bmi2,popcnt")))
 #endif
 ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
@@ -187,7 +187,7 @@ namespace primesieve {
 /// This method is used by iterator::next_prime().
 /// Stores the next few primes (~ 1000) in the primes vector.
 ///
-#if defined(ENABLE_MULTIARCH_AVX2)
+#if defined(ENABLE_MULTIARCH_AVX2_BMI2)
   __attribute__ ((target ("avx2,bmi2,popcnt")))
 #endif
 void PrimeGenerator::fillNextPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size)
@@ -238,7 +238,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx2(Vector<uint64_t>& primes, std::size
 /// This method is used by iterator::prev_prime().
 /// Stores primes in ascending order for backward iteration.
 ///
-#if defined(ENABLE_MULTIARCH_AVX2)
+#if defined(ENABLE_MULTIARCH_AVX2_BMI2)
   __attribute__ ((target ("avx2,bmi2,popcnt")))
 #endif
 void PrimeGenerator::fillPrevPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size)

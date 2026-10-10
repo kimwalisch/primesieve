@@ -2,15 +2,15 @@ Changes in version 12.17, 10/10/2026
 ====================================
 
 * popcnt.hpp: Get rid of popcnt64_native(), use _mm_popcnt_u64() instead.
+* cpu_arch_macros.hpp: New header to simplify SIMD preprocessor logic.
 * PrimeGenerator_arm_neon.hpp: Convert 1-bits from sieve array to primes using ARM NEON.
 * PrimeGenerator_x86_avx512.hpp: New AVX512 algorithm with fewer branch mispredictions.
 * PrimeGenerator_x86_avx2.hpp: Convert 1-bits from sieve array to primes using AVX2.
 * PrimeGenerator.hpp: Update SIMD runtime dispatching.
 * PreSieve.cpp: Update SIMD runtime dispatching.
 * PreSieve.cpp: Use ARM NEON only on 64-bit ARM CPUs.
-* cpu_arch_macros.hpp: Enable ARM NEON algorithms for MSVC on ARM64.
 * PreSieve.cpp: Enable SSE2 algorithm for MSVC on x64.
-* cpu_arch_macros.hpp: New header to simplify SIMD preprocessor logic.
+* PreSieve_x86_avx2.hpp: Add AVX2 pre-sieving algorithm.
 * CMakeLists.txt: Building now requires C++14 (linking still works using C++11).
 * macros.hpp: Add NO_UNROLL_LOOP and NO_VECTORIZE_LOOP macros.
 * CpuInfo.cpp: Fix uninitialized read of 32-bit hw.logicalcpu sysctl on macOS.

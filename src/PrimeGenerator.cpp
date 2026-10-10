@@ -334,7 +334,7 @@ bool PrimeGenerator::sieveNextPrimes(Vector<uint64_t>& primes,
   #include "PrimeGenerator_x86_avx512.hpp"
 #endif
 
-#if defined(ENABLE_MULTIARCH_AVX2)
+#if defined(ENABLE_MULTIARCH_AVX2_BMI2)
   #include "PrimeGenerator_x86_avx2.hpp"
 #endif
 

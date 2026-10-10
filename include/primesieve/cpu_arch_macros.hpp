@@ -13,8 +13,33 @@
 #ifndef CPU_ARCH_MACROS_HPP
 #define CPU_ARCH_MACROS_HPP
 
-// Needed for __has_include
 #include "macros.hpp"
+
+// SSE2 is supported by all x64 CPUs, but
+// MSVC does not define __SSE2__ on x64.
+#if (defined(__SSE2__) || \
+     defined(_M_X64)) && \
+    __has_include(<emmintrin.h>)
+  #define ENABLE_SSE2
+#endif
+
+// ARM NEON is supported by all 64-bit ARM CPUs. 32-bit ARM
+// uses the portable default algorithms, as NEON is optional
+// on 32-bit ARM and we use AArch64-only NEON intrinsics.
+#if (defined(__aarch64__) || \
+     defined(_M_ARM64)) && \
+    __has_include(<arm_neon.h>)
+  #define ENABLE_ARM_NEON
+#endif
+
+// PrimeGenerator.hpp and PreSieve.cpp disable AVX2
+// runtime dispatching under different conditions,
+// hence each of them uses its own AVX2 multiarch macro.
+// PreSieve.cpp: ENABLE_MULTIARCH_AVX2
+// PrimeGenerator.hpp: ENABLE_MULTIARCH_AVX2_BMI2
+#if defined(ENABLE_MULTIARCH_AVX2)
+  #define ENABLE_MULTIARCH_AVX2_BMI2
+#endif
 
 // PrimeGenerator.hpp SIMD algorithms
 #if defined(__AVX512F__) && \
@@ -25,14 +50,14 @@
     __has_include(<immintrin.h>)
   #define ENABLE_AVX512_VBMI2
   #undef ENABLE_MULTIARCH_AVX512_VBMI2
-  #undef ENABLE_MULTIARCH_AVX2
+  #undef ENABLE_MULTIARCH_AVX2_BMI2
 #elif defined(__AVX2__) && \
       defined(__BMI2__) && \
       defined(__POPCNT__) && \
       !defined(__i386__) && \
       __has_include(<immintrin.h>)
-  #define ENABLE_AVX2
-  #undef ENABLE_MULTIARCH_AVX2
+  #define ENABLE_AVX2_BMI2
+  #undef ENABLE_MULTIARCH_AVX2_BMI2
 #endif
 
 // PreSieve.cpp SIMD algorithms
@@ -41,18 +66,15 @@
     __has_include(<immintrin.h>)
   #define ENABLE_AVX512_BW
   #undef ENABLE_MULTIARCH_AVX512_BW
+  #undef ENABLE_MULTIARCH_AVX2
+#elif defined(__AVX2__) && \
+      __has_include(<immintrin.h>)
+  #define ENABLE_AVX2
+  #undef ENABLE_MULTIARCH_AVX2
 #elif defined(__ARM_FEATURE_SVE) && \
       __has_include(<arm_sve.h>)
   #define ENABLE_ARM_SVE
   #undef ENABLE_MULTIARCH_ARM_SVE
-#endif
-
-// Our ARM NEON algorithms require a 64-bit ARM CPU,
-// on 32-bit ARM we use the portable default algorithms.
-#if (defined(__aarch64__) || \
-     defined(_M_ARM64)) && \
-    __has_include(<arm_neon.h>)
-  #define ENABLE_ARM_NEON
 #endif
 
 #endif
