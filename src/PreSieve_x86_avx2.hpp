@@ -32,6 +32,10 @@ void presieve1_x86_avx2(const uint8_t* __restrict preSieved0,
   std::size_t i = 0;
   std::size_t limit = bytes - bytes % sizeof(__m256i);
 
+  // This loop executes only about 32 iterations on average.
+  // Hence, unrolling this loop will most likely hurt
+  // performance since it will cause more branch misses.
+  NO_UNROLL_LOOP
   for (; i < limit; i += sizeof(__m256i))
   {
     _mm256_storeu_si256((__m256i*) &sieve[i],
@@ -59,6 +63,10 @@ void presieve2_x86_avx2(const uint8_t* __restrict preSieved0,
   std::size_t i = 0;
   std::size_t limit = bytes - bytes % sizeof(__m256i);
 
+  // This loop executes only about 32 iterations on average.
+  // Hence, unrolling this loop will most likely hurt
+  // performance since it will cause more branch misses.
+  NO_UNROLL_LOOP
   for (; i < limit; i += sizeof(__m256i))
   {
     _mm256_storeu_si256((__m256i*) &sieve[i],
