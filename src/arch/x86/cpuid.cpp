@@ -124,7 +124,7 @@ bool has_avx2()
 
     run_cpuid(7, 0, abcd);
 
-    // fillNextPrimes_x86_avx2() requires AVX2, POPCNT & BMI2
+    // fillNextPrimes_x86_avx2() requires AVX2 & BMI2
     return ((abcd[1] & bit_AVX2) == bit_AVX2 &&
             (abcd[1] & bit_BMI2) == bit_BMI2);
   }();
