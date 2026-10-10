@@ -20,7 +20,7 @@
 namespace {
 
 #if defined(ENABLE_MULTIARCH_AVX512_BW)
-  __attribute__ ((target ("avx512f,avx512bw")))
+  PRIMESIEVE_MULTIARCH_KERNEL("avx512f,avx512bw")
 #endif
 void presieve1_x86_avx512(const uint8_t* __restrict preSieved0,
                           const uint8_t* __restrict preSieved1,
@@ -55,7 +55,7 @@ void presieve1_x86_avx512(const uint8_t* __restrict preSieved0,
 }
 
 #if defined(ENABLE_MULTIARCH_AVX512_BW)
-  __attribute__ ((target ("avx512f,avx512bw")))
+  PRIMESIEVE_MULTIARCH_KERNEL("avx512f,avx512bw")
 #endif
 void presieve2_x86_avx512(const uint8_t* __restrict preSieved0,
                           const uint8_t* __restrict preSieved1,

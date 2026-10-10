@@ -1,7 +1,7 @@
-# We use GCC/Clang's function multi-versioning for AVX512
-# support. This code will automatically dispatch to the
-# AVX512 BW algorithm if the CPU supports it and use the
-# default (portable) algorithm otherwise.
+# Runtime dispatch selects AVX512 BW when supported by the CPU and OS,
+# and uses the default algorithm otherwise. The kernels use target
+# attributes with GCC/Clang (including clang-cl), and noinline with
+# native MSVC.
 
 include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
@@ -10,21 +10,22 @@ cmake_push_check_state()
 set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}")
 
 check_cxx_source_compiles("
-    // GCC/Clang function multiversioning for AVX512 is not needed if
+    // Runtime dispatch for AVX512 is not needed if
     // the user compiles with -mavx512f -mavx512bw.
-    // GCC/Clang function multiversioning generally causes a minor
+    // Runtime dispatch generally causes a minor
     // overhead, hence we disable it if it is not needed.
     #if defined(__AVX512F__) && \
         defined(__AVX512BW__)
       Error: AVX512BW multiarch not needed!
     #endif
 
+    #include <include/primesieve/macros.hpp>
     #include <src/arch/x86/cpuid.cpp>
     #include <immintrin.h>
     #include <stdint.h>
     #include <cstddef>
 
-    __attribute__ ((target (\"avx512f,avx512bw\")))
+    PRIMESIEVE_MULTIARCH_KERNEL(\"avx512f,avx512bw\")
     void presieve1_x86_avx512(const uint8_t* __restrict preSieve0,
                               const uint8_t* __restrict preSieve1,
                               uint8_t* __restrict sieve,

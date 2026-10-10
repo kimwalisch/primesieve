@@ -50,6 +50,16 @@
   #define NOINLINE
 #endif
 
+/// Keep ISA-specific kernels behind the runtime
+/// dispatch boundary. GCC/Clang use target attributes;
+/// native MSVC must prevent inlining.
+///
+#if __has_attribute(target)
+  #define PRIMESIEVE_MULTIARCH_KERNEL(isa) __attribute__((target(isa)))
+#elif defined(_MSC_VER)
+  #define PRIMESIEVE_MULTIARCH_KERNEL(isa) NOINLINE
+#endif
+
 #if __cplusplus >= 202002L && \
     __has_cpp_attribute(likely)
   #define if_likely(x) if (x) [[likely]]

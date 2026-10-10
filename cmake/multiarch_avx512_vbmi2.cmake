@@ -1,7 +1,7 @@
-# We use GCC/Clang's function multi-versioning for AVX512
-# support. This code will automatically dispatch to the
-# AVX512 VBMI2 algorithm if the CPU supports it and use
-# the default (portable) algorithm otherwise.
+# Runtime dispatch selects AVX512 VBMI2 when supported by the CPU and OS,
+# and uses the default algorithm otherwise. The kernels use target
+# attributes with GCC/Clang (including clang-cl), and noinline with
+# native MSVC.
 
 include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
@@ -10,9 +10,9 @@ cmake_push_check_state()
 set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}")
 
 check_cxx_source_compiles("
-    // GCC/Clang function multiversioning for AVX512 is not needed if
+    // Runtime dispatch for AVX512 is not needed if
     // the user compiles with -mavx512f -mavx512vbmi -mavx512vbmi2 -mpopcnt.
-    // GCC/Clang function multiversioning generally causes a minor
+    // Runtime dispatch generally causes a minor
     // overhead, hence we disable it if it is not needed.
     #if defined(__AVX512F__) && \
         defined(__AVX512VBMI__) && \
@@ -21,13 +21,14 @@ check_cxx_source_compiles("
       Error: AVX512VBMI2 multiarch not needed!
     #endif
 
+    #include <include/primesieve/macros.hpp>
     #include <src/arch/x86/cpuid.cpp>
     #include <immintrin.h>
     #include <stdint.h>
 
     class PrimeGenerator {
     public:
-        __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
+        PRIMESIEVE_MULTIARCH_KERNEL(\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")
         void fillNextPrimes_x86_avx512(uint64_t* primes64);
         void fillNextPrimes_default(uint64_t* primes64);
         void fillNextPrimes(uint64_t* primes64)
@@ -44,7 +45,7 @@ check_cxx_source_compiles("
         primes64[0] = 2;
     }
 
-    __attribute__ ((target (\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")))
+    PRIMESIEVE_MULTIARCH_KERNEL(\"avx512f,avx512vbmi,avx512vbmi2,popcnt\")
     void PrimeGenerator::fillNextPrimes_x86_avx512(uint64_t* primes64)
     {
         __m512i bytes_0_to_7 = _mm512_setr_epi64(0, 1, 2, 3, 4, 5, 6, 7);

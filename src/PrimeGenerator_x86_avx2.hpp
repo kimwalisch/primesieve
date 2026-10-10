@@ -65,14 +65,14 @@ static_assert(240 * (maxBlockWords - 1) + 241 <= 0xffff,
 /// a word whose primes do not fit into the output buffer.
 ///
 #if defined(ENABLE_MULTIARCH_AVX2_BMI2)
-  __attribute__ ((target ("avx2,bmi2,popcnt")))
+  PRIMESIEVE_MULTIARCH_KERNEL("avx2,bmi2,popcnt")
 #endif
-ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
-                                          uint64_t words,
-                                          uint64_t low,
-                                          uint64_t* primes,
-                                          std::size_t maxPrimes,
-                                          std::size_t* primeCount)
+uint64_t sieveWordsToPrimes(const uint64_t* sieve,
+                            uint64_t words,
+                            uint64_t low,
+                            uint64_t* primes,
+                            std::size_t maxPrimes,
+                            std::size_t* primeCount)
 {
   ASSERT(words <= maxBlockWords);
   ASSERT(maxPrimes <= maxBlockPrimes);
@@ -188,7 +188,7 @@ namespace primesieve {
 /// Stores the next few primes (~ 1000) in the primes vector.
 ///
 #if defined(ENABLE_MULTIARCH_AVX2_BMI2)
-  __attribute__ ((target ("avx2,bmi2,popcnt")))
+  PRIMESIEVE_MULTIARCH_KERNEL("avx2,bmi2,popcnt")
 #endif
 void PrimeGenerator::fillNextPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size)
 {
@@ -215,7 +215,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx2(Vector<uint64_t>& primes, std::size
       std::size_t primeCount;
       uint64_t words = std::min(sieveSize - sieveIdx, maxBlockWords);
       std::size_t maxPrimes = std::min(maxSize - i, maxBlockPrimes);
-      uint64_t processed = sieveWordsToPrimes(&sieve[sieveIdx], words, low, 
+      uint64_t processed = sieveWordsToPrimes(&sieve[sieveIdx], words, low,
           primes.data() + i, maxPrimes, &primeCount);
 
       i += primeCount;
@@ -239,7 +239,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx2(Vector<uint64_t>& primes, std::size
 /// Stores primes in ascending order for backward iteration.
 ///
 #if defined(ENABLE_MULTIARCH_AVX2_BMI2)
-  __attribute__ ((target ("avx2,bmi2,popcnt")))
+  PRIMESIEVE_MULTIARCH_KERNEL("avx2,bmi2,popcnt")
 #endif
 void PrimeGenerator::fillPrevPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size)
 {

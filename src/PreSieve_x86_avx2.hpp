@@ -20,7 +20,7 @@
 namespace {
 
 #if defined(ENABLE_MULTIARCH_AVX2)
-  __attribute__ ((target ("avx2")))
+  PRIMESIEVE_MULTIARCH_KERNEL("avx2")
 #endif
 void presieve1_x86_avx2(const uint8_t* __restrict preSieved0,
                         const uint8_t* __restrict preSieved1,
@@ -51,7 +51,7 @@ void presieve1_x86_avx2(const uint8_t* __restrict preSieved0,
 }
 
 #if defined(ENABLE_MULTIARCH_AVX2)
-  __attribute__ ((target ("avx2")))
+  PRIMESIEVE_MULTIARCH_KERNEL("avx2")
 #endif
 void presieve2_x86_avx2(const uint8_t* __restrict preSieved0,
                         const uint8_t* __restrict preSieved1,

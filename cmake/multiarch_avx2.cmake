@@ -1,7 +1,7 @@
-# We use GCC/Clang's function multi-versioning for AVX2
-# support. This code will automatically dispatch to the
-# AVX2 algorithm if the CPU supports it and use the
-# default (portable) algorithm otherwise.
+# Runtime dispatch selects AVX2 when supported by the CPU and OS,
+# and uses the default algorithm otherwise. The kernels use target
+# attributes with GCC/Clang (including clang-cl), and noinline with
+# native MSVC.
 
 include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
@@ -10,9 +10,9 @@ cmake_push_check_state()
 set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}")
 
 check_cxx_source_compiles("
-    // GCC/Clang function multiversioning for AVX2 is not needed if
+    // Runtime dispatch for AVX2 is not needed if
     // the user compiles with -mavx2 -mbmi2 -mpopcnt.
-    // GCC/Clang function multiversioning generally causes a minor
+    // Runtime dispatch generally causes a minor
     // overhead, hence we disable it if it is not needed.
     #if defined(__AVX2__) && \
         defined(__BMI2__) && \
@@ -29,13 +29,14 @@ check_cxx_source_compiles("
       Error: AVX2 multiarch not needed!
     #endif
 
+    #include <include/primesieve/macros.hpp>
     #include <src/arch/x86/cpuid.cpp>
     #include <immintrin.h>
     #include <stdint.h>
 
     class PrimeGenerator {
     public:
-        __attribute__ ((target (\"avx2,bmi2,popcnt\")))
+        PRIMESIEVE_MULTIARCH_KERNEL(\"avx2,bmi2,popcnt\")
         void fillNextPrimes_x86_avx2(uint64_t* primes64);
         void fillNextPrimes_default(uint64_t* primes64);
         void fillNextPrimes(uint64_t* primes64)
@@ -52,7 +53,7 @@ check_cxx_source_compiles("
         primes64[0] = 2;
     }
 
-    __attribute__ ((target (\"avx2,bmi2,popcnt\")))
+    PRIMESIEVE_MULTIARCH_KERNEL(\"avx2,bmi2,popcnt\")
     void PrimeGenerator::fillNextPrimes_x86_avx2(uint64_t* primes64)
     {
         alignas(16) uint16_t buffer[16] = { 7, 11, 13, 17, 19, 23, 29, 31 };

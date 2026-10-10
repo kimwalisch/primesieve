@@ -1,6 +1,7 @@
 Changes in version 12.17, 10/10/2026
 ====================================
 
+* Implement SIMD runtime dispatching for MSVC compiler.
 * main.cpp: Add -march=native support to --cpu-info option.
 * popcnt.hpp: Get rid of popcnt64_native(), use _mm_popcnt_u64() instead.
 * cpu_arch_macros.hpp: New header to simplify SIMD preprocessor logic.
