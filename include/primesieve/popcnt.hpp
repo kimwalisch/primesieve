@@ -289,6 +289,22 @@ ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
 
 } // namespace
 
+#elif defined(_MSC_VER) && \
+      defined(_M_ARM64) && \
+      __has_include(<arm_neon.h>)
+
+#include <arm_neon.h>
+
+namespace {
+
+ALWAYS_INLINE uint64_t popcnt64(uint64_t x)
+{
+  uint8x8_t cnt8 = vcnt_u8(vcreate_u8(x));
+  return vaddv_u8(cnt8);
+}
+
+} // namespace
+
 #else
 
 namespace {
