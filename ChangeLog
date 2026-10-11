@@ -1,6 +1,7 @@
 Changes in version 12.17, 11/10/2026
 ====================================
 
+* CMake: Reuse cpu_arch_macros.hpp in SIMD runtime dispatch probes.
 * Implement SIMD runtime dispatching for MSVC compiler.
 * main.cpp: Add -march=native support to --cpu-info option.
 * popcnt.hpp: Add ARM NEON popcnt64() implementation for MSVC compiler.

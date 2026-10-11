@@ -7,25 +7,19 @@ include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
 
 cmake_push_check_state()
-set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}")
+set(CMAKE_REQUIRED_INCLUDES
+    "${PROJECT_SOURCE_DIR}"
+    "${PROJECT_SOURCE_DIR}/include")
 
 check_cxx_source_compiles("
-    // Runtime dispatch for AVX2 is not needed if
-    // the user compiles with -mavx2 -mbmi2 -mpopcnt.
-    // Runtime dispatch generally causes a minor
-    // overhead, hence we disable it if it is not needed.
-    #if defined(__AVX2__) && \
-        defined(__BMI2__) && \
-        defined(__POPCNT__)
-      Error: AVX2 multiarch not needed!
-    #endif
+    #include <primesieve/cpu_arch_macros.hpp>
 
-    // AVX2 multiarch is also not needed if the compiler
-    // flags already enable the faster AVX512 algorithm.
-    #if defined(__AVX512F__) && \
-        defined(__AVX512VBMI__) && \
-        defined(__AVX512VBMI2__) && \
-        defined(__POPCNT__)
+    // Runtime dispatch for AVX2 is not needed if the compiler flags
+    // already enable AVX2 with BMI2 and POPCNT, or the faster
+    // AVX512 VBMI2 algorithm. Runtime dispatch generally causes
+    // a minor overhead, hence we disable it if it is not needed.
+    #if defined(ENABLE_AVX2_BMI2) || \
+        defined(ENABLE_AVX512_VBMI2)
       Error: AVX2 multiarch not needed!
     #endif
 

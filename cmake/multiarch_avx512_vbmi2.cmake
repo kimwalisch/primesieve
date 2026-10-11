@@ -7,17 +7,18 @@ include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
 
 cmake_push_check_state()
-set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}")
+set(CMAKE_REQUIRED_INCLUDES
+    "${PROJECT_SOURCE_DIR}"
+    "${PROJECT_SOURCE_DIR}/include")
 
 check_cxx_source_compiles("
+    #include <primesieve/cpu_arch_macros.hpp>
+
     // Runtime dispatch for AVX512 is not needed if
     // the user compiles with -mavx512f -mavx512vbmi -mavx512vbmi2 -mpopcnt.
     // Runtime dispatch generally causes a minor
     // overhead, hence we disable it if it is not needed.
-    #if defined(__AVX512F__) && \
-        defined(__AVX512VBMI__) && \
-        defined(__AVX512VBMI2__) && \
-        defined(__POPCNT__)
+    #if defined(ENABLE_AVX512_VBMI2)
       Error: AVX512VBMI2 multiarch not needed!
     #endif
 

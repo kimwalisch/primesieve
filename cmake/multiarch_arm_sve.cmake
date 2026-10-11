@@ -6,15 +6,18 @@ include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
 
 cmake_push_check_state()
-set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}")
+set(CMAKE_REQUIRED_INCLUDES
+    "${PROJECT_SOURCE_DIR}"
+    "${PROJECT_SOURCE_DIR}/include")
 
 check_cxx_source_compiles("
+    #include <primesieve/cpu_arch_macros.hpp>
+
     // Runtime dispatch for ARM SVE is not needed
     // if the user compiles with -march=armv8-a+sve.
     // Runtime dispatch generally causes a minor overhead,
     // hence we disable it if it is not needed.
-    #if defined(__ARM_FEATURE_SVE) && \
-        __has_include(<arm_sve.h>)
+    #if defined(ENABLE_ARM_SVE)
       Error: ARM SVE multiarch not needed!
     #endif
 
