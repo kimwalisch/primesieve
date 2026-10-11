@@ -65,7 +65,7 @@ static_assert(240 * (maxBlockWords - 1) + 241 <= 0xffff,
 /// a word whose primes do not fit into the output buffer.
 ///
 #if defined(ENABLE_MULTIARCH_AVX2_BMI2)
-  PRIMESIEVE_MULTIARCH_KERNEL("avx2,bmi2,popcnt")
+  PRIMESIEVE_TARGET_ATTRIBUTE("avx2,bmi2,popcnt")
 #endif
 uint64_t sieveWordsToPrimes(const uint64_t* sieve,
                             uint64_t words,
@@ -188,7 +188,7 @@ namespace primesieve {
 /// Stores the next few primes (~ 1000) in the primes vector.
 ///
 #if defined(ENABLE_MULTIARCH_AVX2_BMI2)
-  PRIMESIEVE_MULTIARCH_KERNEL("avx2,bmi2,popcnt")
+  PRIMESIEVE_TARGET_ATTRIBUTE("avx2,bmi2,popcnt")
 #endif
 void PrimeGenerator::fillNextPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size)
 {
@@ -239,7 +239,7 @@ void PrimeGenerator::fillNextPrimes_x86_avx2(Vector<uint64_t>& primes, std::size
 /// Stores primes in ascending order for backward iteration.
 ///
 #if defined(ENABLE_MULTIARCH_AVX2_BMI2)
-  PRIMESIEVE_MULTIARCH_KERNEL("avx2,bmi2,popcnt")
+  PRIMESIEVE_TARGET_ATTRIBUTE("avx2,bmi2,popcnt")
 #endif
 void PrimeGenerator::fillPrevPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size)
 {

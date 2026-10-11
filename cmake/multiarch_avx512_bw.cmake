@@ -25,7 +25,7 @@ check_cxx_source_compiles("
     #include <stdint.h>
     #include <cstddef>
 
-    PRIMESIEVE_MULTIARCH_KERNEL(\"avx512f,avx512bw\")
+    PRIMESIEVE_TARGET_ATTRIBUTE(\"avx512f,avx512bw\")
     void presieve1_x86_avx512(const uint8_t* __restrict preSieve0,
                               const uint8_t* __restrict preSieve1,
                               uint8_t* __restrict sieve,

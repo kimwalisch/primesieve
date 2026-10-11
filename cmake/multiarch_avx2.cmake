@@ -36,7 +36,7 @@ check_cxx_source_compiles("
 
     class PrimeGenerator {
     public:
-        PRIMESIEVE_MULTIARCH_KERNEL(\"avx2,bmi2,popcnt\")
+        PRIMESIEVE_TARGET_ATTRIBUTE(\"avx2,bmi2,popcnt\")
         void fillNextPrimes_x86_avx2(uint64_t* primes64);
         void fillNextPrimes_default(uint64_t* primes64);
         void fillNextPrimes(uint64_t* primes64)
@@ -53,7 +53,7 @@ check_cxx_source_compiles("
         primes64[0] = 2;
     }
 
-    PRIMESIEVE_MULTIARCH_KERNEL(\"avx2,bmi2,popcnt\")
+    PRIMESIEVE_TARGET_ATTRIBUTE(\"avx2,bmi2,popcnt\")
     void PrimeGenerator::fillNextPrimes_x86_avx2(uint64_t* primes64)
     {
         alignas(16) uint16_t buffer[16] = { 7, 11, 13, 17, 19, 23, 29, 31 };

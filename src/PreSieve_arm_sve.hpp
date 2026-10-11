@@ -20,7 +20,7 @@
 namespace {
 
 #if defined(ENABLE_MULTIARCH_ARM_SVE)
-  PRIMESIEVE_MULTIARCH_KERNEL("+sve")
+  PRIMESIEVE_TARGET_ATTRIBUTE("+sve")
 #endif
 void presieve1_arm_sve(const uint8_t* __restrict preSieved0,
                        const uint8_t* __restrict preSieved1,
@@ -41,7 +41,7 @@ void presieve1_arm_sve(const uint8_t* __restrict preSieved0,
 }
 
 #if defined(ENABLE_MULTIARCH_ARM_SVE)
-  PRIMESIEVE_MULTIARCH_KERNEL("+sve")
+  PRIMESIEVE_TARGET_ATTRIBUTE("+sve")
 #endif
 void presieve2_arm_sve(const uint8_t* __restrict preSieved0,
                        const uint8_t* __restrict preSieved1,

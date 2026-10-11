@@ -24,7 +24,7 @@ check_cxx_source_compiles("
     #include <stdint.h>
     #include <cstddef>
 
-    PRIMESIEVE_MULTIARCH_KERNEL(\"+sve\")
+    PRIMESIEVE_TARGET_ATTRIBUTE(\"+sve\")
     void presieve1_arm_sve(const uint8_t* __restrict preSieved0,
                            const uint8_t* __restrict preSieved1,
                            const uint8_t* __restrict preSieved2,

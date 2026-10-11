@@ -95,16 +95,16 @@ private:
   void PRIMEGENERATOR_FILL_PREV_DEFAULT(Vector<uint64_t>& primes, std::size_t* size);
 
 #if defined(ENABLE_MULTIARCH_AVX512_VBMI2)
-  PRIMESIEVE_MULTIARCH_KERNEL("avx512f,avx512vbmi,avx512vbmi2,popcnt")
+  PRIMESIEVE_TARGET_ATTRIBUTE("avx512f,avx512vbmi,avx512vbmi2,popcnt")
   void fillNextPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
-  PRIMESIEVE_MULTIARCH_KERNEL("avx512f,avx512vbmi,avx512vbmi2,popcnt")
+  PRIMESIEVE_TARGET_ATTRIBUTE("avx512f,avx512vbmi,avx512vbmi2,popcnt")
   void fillPrevPrimes_x86_avx512(Vector<uint64_t>& primes, std::size_t* size);
 #endif
 
 #if defined(ENABLE_MULTIARCH_AVX2_BMI2)
-  PRIMESIEVE_MULTIARCH_KERNEL("avx2,bmi2,popcnt")
+  PRIMESIEVE_TARGET_ATTRIBUTE("avx2,bmi2,popcnt")
   void fillNextPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size);
-  PRIMESIEVE_MULTIARCH_KERNEL("avx2,bmi2,popcnt")
+  PRIMESIEVE_TARGET_ATTRIBUTE("avx2,bmi2,popcnt")
   void fillPrevPrimes_x86_avx2(Vector<uint64_t>& primes, std::size_t* size);
 #endif
 
