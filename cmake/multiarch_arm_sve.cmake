@@ -1,7 +1,6 @@
-# We use GCC/Clang's function multi-versioning for ARM SVE
-# support. This code will automatically dispatch to the
-# ARM SVE algorithm if the CPU supports it and use the default
-# (portable) algorithm otherwise.
+# Runtime dispatch selects ARM SVE when supported by the CPU and OS,
+# and uses the default algorithm otherwise. The kernels use
+# GCC/Clang target attributes.
 
 include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
@@ -10,21 +9,22 @@ cmake_push_check_state()
 set(CMAKE_REQUIRED_INCLUDES "${PROJECT_SOURCE_DIR}")
 
 check_cxx_source_compiles("
-    // GCC/Clang function multiversioning for ARM SVE is not needed
-    // if the user compiles with -march=armv8-a+sve. GCC/Clang
-    // function multiversioning generally causes a minor overhead,
+    // Runtime dispatch for ARM SVE is not needed
+    // if the user compiles with -march=armv8-a+sve.
+    // Runtime dispatch generally causes a minor overhead,
     // hence we disable it if it is not needed.
     #if defined(__ARM_FEATURE_SVE) && \
         __has_include(<arm_sve.h>)
       Error: ARM SVE multiarch not needed!
     #endif
 
+    #include <include/primesieve/macros.hpp>
     #include <src/arch/arm/sve.cpp>
     #include <arm_sve.h>
     #include <stdint.h>
     #include <cstddef>
 
-    __attribute__ ((target (\"+sve\")))
+    PRIMESIEVE_TARGET_ATTRIBUTE(\"+sve\")
     void presieve1_arm_sve(const uint8_t* __restrict preSieved0,
                            const uint8_t* __restrict preSieved1,
                            const uint8_t* __restrict preSieved2,
@@ -63,9 +63,9 @@ check_cxx_source_compiles("
         uint8_t PreSieveTable4[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         if (primesieve::has_arm_sve())
-            presieve1_arm_sve(&PreSieveTable1[0], &PreSieveTable2[1], &PreSieveTable3[1], &PreSieveTable4[1], &sieve[0], 10);
+            presieve1_arm_sve(&PreSieveTable1[0], &PreSieveTable2[0], &PreSieveTable3[0], &PreSieveTable4[0], &sieve[0], 10);
         else
-            presieve1_default(&PreSieveTable1[0], &PreSieveTable2[1], &PreSieveTable3[1], &PreSieveTable4[1], &sieve[0], 10);
+            presieve1_default(&PreSieveTable1[0], &PreSieveTable2[0], &PreSieveTable3[0], &PreSieveTable4[0], &sieve[0], 10);
 
         return (sieve[0] == 0) ? 0 : 1;
     }
