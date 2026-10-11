@@ -1,6 +1,7 @@
 Changes in version 12.17, 11/10/2026
 ====================================
 
+* ci.yml: Migrate Windows GCC CI from MINGW64 to UCRT64.
 * ci.yml: Check that SIMD runtime dispatch probes succeed.
 * CMake: Reuse cpu_arch_macros.hpp in SIMD runtime dispatch probes.
 * Implement SIMD runtime dispatching for MSVC compiler.
