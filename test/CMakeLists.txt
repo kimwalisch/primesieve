@@ -4,6 +4,11 @@ file(GLOB files "*.cpp" "*.c")
 foreach(file ${files})
     get_filename_component(binary_name ${file} NAME_WE)
     add_executable(${binary_name} ${file})
+
+    if(file MATCHES "\\.cpp$")
+        target_compile_features(${binary_name} PRIVATE cxx_std_14)
+    endif()
+
     target_link_libraries(${binary_name} primesieve::primesieve)
     target_include_directories(${binary_name} PRIVATE ${CMAKE_SOURCE_DIR}/src)
     target_compile_definitions(${binary_name} PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})

@@ -153,7 +153,7 @@ if(BUILD_SHARED_LIBS)
     PUBLIC
         cxx_alias_templates
     PRIVATE
-        cxx_generic_lambdas)
+        cxx_std_14)
 
     target_include_directories(libprimesieve
     PUBLIC
@@ -186,7 +186,7 @@ if(BUILD_STATIC_LIBS)
     PUBLIC
         cxx_alias_templates
     PRIVATE
-        cxx_generic_lambdas)
+        cxx_std_14)
 
     target_include_directories(libprimesieve-static
     PUBLIC
@@ -230,7 +230,7 @@ if(BUILD_PRIMESIEVE)
     target_link_libraries(primesieve primesieve::primesieve Threads::Threads)
     target_include_directories(primesieve PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
     target_compile_definitions(primesieve PRIVATE ${PRIMESIEVE_COMPILE_DEFINITIONS})
-    target_compile_features(primesieve PRIVATE cxx_auto_type)
+    target_compile_features(primesieve PRIVATE cxx_std_14)
     install(TARGETS primesieve DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
 
