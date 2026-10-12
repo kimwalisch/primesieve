@@ -58,7 +58,7 @@ Keep changes limited to the requested task. Avoid unrelated refactoring, renamin
   2. `has_<isa>()` in `src/arch/`, checking CPU and OS support, and `include/primesieve/cpu_supports_<isa>.hpp`.
   3. Updates to `cpu_arch_macros.hpp`, the kernel header and the dispatch code.
   4. The `--cpu-info` output in `src/app/main.cpp`.
-  5. `-DENABLE_MULTIARCH_<ISA>` in `scripts/build_clang_*.ps1` and `scripts/build_mingw64_*.sh`, which build the release binaries without CMake.
+  5. `-DENABLE_MULTIARCH_<ISA>` in `scripts/build_clang_*.ps1`, which build the release binaries without CMake.
   6. A `multiarch_<isa>:INTERNAL=1` check in `.github/workflows/ci.yml`.
 - Split overly complicated expressions, especially nested `std::min()`/`std::max()` calls combined with table lookups, into simpler intermediate calculations.
 - Do not use `UINT64_C(...)` or similar integer-constant macros.

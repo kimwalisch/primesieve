@@ -1,6 +1,7 @@
 Changes in version 12.17, 12/10/2026
 ====================================
 
+* scripts: Remove unused build_mingw64_x64.sh and build_mingw64_arm64.sh.
 * Add AGENTS.md file for AI agents.
 * ci.yml: Migrate Windows GCC CI from MINGW64 to UCRT64.
 * ci.yml: Check that SIMD runtime dispatch probes succeed.
