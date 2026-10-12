@@ -132,6 +132,8 @@ Prepend that directory to `PATH` in every new shell used to configure, build, ru
 
 The following PowerShell commands were verified on the maintainer's PC using the `Unix Makefiles` generator from `doc/BUILD.md`, CMake 4.4.3, and GCC 16.2.0. Run each block in a new shell from the repository root. `build-agents` is an ignored build directory; reuse it when its compiler and generator match, or choose a fresh build directory when they differ.
 
+The probe checks below assume an x64 baseline build with `WITH_MULTIARCH=ON` and no compiler flags that enable the corresponding instruction sets natively. When adapting this recipe for native builds or `WITH_MULTIARCH=OFF`, adjust the probe checks as described in Required verification, step 7.
+
 ```powershell
 $env:Path = 'C:\msys64\mingw64\bin;' + $env:Path
 New-Item -ItemType Directory -Force -Path build-agents | Out-Null
@@ -198,7 +200,7 @@ Always build and run all of the following checks after code changes, using a sep
 4. Run `./primesieve --test` to run primesieve's correctness tests.
 5. Verify that `./primesieve 1e10 -q` prints exactly `455052511` and `./primesieve 1e9 --nth-prime -q` prints exactly `22801763489`.
 6. After changes to `src/` or `include/`, repeat these checks in a Debug build in another build directory, adding `-DCMAKE_BUILD_TYPE=Debug` and `-O1` to both sets of flags as in `test/README.md`. Debug builds enable `ASSERT()`, including bounds checks in `Vector` and `Array`.
-7. After changes to CMake files or runtime dispatch code, verify that `CMakeCache.txt` contains `multiarch_<isa>:INTERNAL=1` for `x86_popcnt`, `avx2`, `avx512_bw` and `avx512_vbmi2` on x64, or for `arm_sve` on ARM64 Linux with GCC 14 or later or Clang, as CI does.
+7. After changes to CMake files or runtime dispatch code, verify the multiarch probes in a baseline build with `WITH_MULTIARCH=ON` and no compiler flags that enable the corresponding instruction sets natively. In that configuration, require `multiarch_<isa>:INTERNAL=1` in `CMakeCache.txt` for `x86_popcnt`, `avx2`, `avx512_bw` and `avx512_vbmi2` on x64, or for `arm_sve` on ARM64 Linux with GCC 14 or later or Clang, as CI does. In native builds (e.g. `-march=native`), probes deliberately fail when runtime dispatch is redundant; check the conditions in the corresponding `cmake/multiarch_*.cmake` files and require success only for probes that are still needed and supported. With `WITH_MULTIARCH=OFF`, the probes are not run and no successful cache entries are required. Investigate unexpected failures; do not change correct probe logic merely to force success.
 8. After changes to printing code, compare the MD5 sums of the `--print` output with those in `.github/workflows/ci.yml`. On Windows, convert the output's CRLF line endings to LF before hashing.
 9. After changes to MSVC-specific code, also run the MSVC and clang-cl block above.
 
