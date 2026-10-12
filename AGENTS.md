@@ -132,7 +132,7 @@ Use MSYS2 MinGW-w64 GCC as the primary Windows compiler. The commands below use 
 
 Prepend that directory to `PATH` in every new shell used to configure, build, run tests, or run benchmarks. This makes both the build tools and their runtime DLLs available; without it, `g++` can fail with exit code 1 and no error message. Set the compiler and make program explicitly as shown below to avoid tool discovery delays.
 
-The following PowerShell commands were verified on the maintainer's PC using the `Unix Makefiles` generator from `doc/BUILD.md`, CMake 4.4.3, and GCC 16.2.0. Run each block in a new shell from the repository root. `build-agents` is an ignored build directory; reuse it when its compiler and generator match, or choose a fresh build directory when they differ.
+The following PowerShell commands were verified on the maintainer's PC using the `Unix Makefiles` generator from `doc/BUILD.md`, CMake 4.4.3, and GCC 16.2.0. Run each block in a new shell from the repository root. `build-agents` is an ignored build directory; reuse it when its compiler and generator match, or choose a fresh build directory when they differ. When reusing a build directory, rerun probes whose code or inputs changed as described in Required verification, step 1.
 
 The probe checks below assume an x64 baseline build with `WITH_MULTIARCH=ON` and no compiler flags that enable the corresponding instruction sets natively. When adapting this recipe for native builds or `WITH_MULTIARCH=OFF`, adjust the probe checks as described in Required verification, step 7.
 
@@ -196,6 +196,8 @@ Always build and run all of the following checks after code changes, using a sep
    ```
 
    On Windows, use the explicit tool paths and generator in the PowerShell recipe above.
+
+   CMake caches probe results. If a probe or its inputs change (e.g. included project sources/headers or relevant compiler flags and definitions), use a fresh build directory or clear the affected probe cache entries before reconfiguring with the intended options. For multiarch probes, add `-U 'multiarch_*'` to the configure command. Check the configure output to confirm the affected probes enabled for that configuration ran again; existing cached results do not verify changed probes.
 
 2. Build using `cmake --build . --parallel`.
 3. Run `ctest` from the build directory. If a test fails, inspect its output using `ctest --output-on-failure`.
