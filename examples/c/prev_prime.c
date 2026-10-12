@@ -13,13 +13,16 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 int main(int argc, char** argv)
 {
   uint64_t limit = 10000000000;
 
   if (argc > 1)
-    limit = atol(argv[1]);
+    limit = atoll(argv[1]);
+
+  clock_t t1 = clock();
 
   primesieve_iterator it;
   primesieve_init(&it);
@@ -33,15 +36,12 @@ int main(int argc, char** argv)
   while ((prime = primesieve_prev_prime(&it)) > 0)
     sum += prime;
 
+  clock_t t2 = clock();
+  double seconds = (double) (t2 - t1) / CLOCKS_PER_SEC;
+
   primesieve_free_iterator(&it);
   printf("Sum of the primes: %" PRIu64 "\n", sum);
-
-  /* Note that since sum is a 64-bit variable the result
-   * will be incorrect (due to integer overflow) if
-   * limit > 10^10. However we do allow limits > 10^10
-   * since this is useful for benchmarking. */
-  if (limit > 10000000000)
-    printf("Warning: sum is likely incorrect due to 64-bit integer overflow!");
+  printf("Seconds: %g\n", seconds);
 
   return 0;
 }

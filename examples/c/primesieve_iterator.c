@@ -5,13 +5,16 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int main(int argc, char** argv)
 {
   uint64_t limit = 10000000000;
 
   if (argc > 1)
-    limit = atol(argv[1]);
+    limit = atoll(argv[1]);
+
+  clock_t t1 = clock();
 
   primesieve_iterator it;
   primesieve_init(&it);
@@ -26,7 +29,11 @@ int main(int argc, char** argv)
   while ((prime = primesieve_next_prime(&it)) <= limit)
     sum += prime;
 
+  clock_t t2 = clock();
+  double seconds = (double) (t2 - t1) / CLOCKS_PER_SEC;
+
   printf("Sum of the primes <= %" PRIu64 ": %" PRIu64 "\n", limit, sum);
+  printf("Seconds: %g\n", seconds);
 
   primesieve_free_iterator(&it);
 
