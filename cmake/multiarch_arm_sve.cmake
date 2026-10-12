@@ -1,6 +1,7 @@
 # Runtime dispatch selects ARM SVE when supported by the CPU and OS,
-# and uses the default algorithm otherwise. The kernels use
-# GCC/Clang target attributes.
+# and uses the default algorithm otherwise. The kernels use target
+# attributes with GCC/Clang (including clang-cl), and noinline with
+# native MSVC.
 
 include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
