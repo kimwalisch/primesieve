@@ -42,27 +42,19 @@
 #if 0
 
 // This is the C++ program that was used to generate the lookup
-// tables in this file. In order to build this program you can
-// e.g. add it to the test directory. If you add (or remove)
-// pre-sieving primes in the preSievePrimes array please make sure
-// to update getMaxPrime() in PreSieve.hpp afterwards.
-
-#include "EratSmall.hpp"
-
-#include <primesieve/Vector.hpp>
-#include <primesieve/macros.hpp>
+// tables in this file. It does not depend on primesieve: compile
+// and run it, then replace the lookup tables below with its
+// output. If you add (or remove) pre-sieving primes in the
+// preSievePrimes array please make sure to update getMaxPrime()
+// in PreSieve.hpp afterwards.
 
 #include <stdint.h>
-#include <algorithm>
-#include <cmath>
 #include <iostream>
-#include <iomanip>
 
-using namespace primesieve;
-
-/// Pre-sieve with the primes <= 163
-const Array<std::initializer_list<uint64_t>, 16> preSievePrimes =
-{{
+/// Pre-sieve with the primes <= 163,
+/// unused entries are zero-initialized.
+const uint64_t preSievePrimes[][3] =
+{
   {  7, 23, 37 },
   { 11, 19, 31 },
   { 13, 17, 29 },
@@ -79,73 +71,51 @@ const Array<std::initializer_list<uint64_t>, 16> preSievePrimes =
   { 83, 107 },
   { 89, 103 },
   { 97, 101 }
-}};
+};
 
 int main()
 {
-  Array<Vector<uint64_t>, preSievePrimes.size()> preSieveTables;
+  const int tables = sizeof(preSievePrimes) / sizeof(preSievePrimes[0]);
+  const uint64_t bitValues[8] = { 7, 11, 13, 17, 19, 23, 29, 31 };
 
-  for (std::size_t i = 0; i < preSieveTables.size(); i++)
+  for (int i = 0; i < tables; i++)
   {
-    uint64_t product = 30;
-
+    // 30 * size is a multiple of each prime, hence
+    // the bit pattern repeats every size bytes.
+    uint64_t size = 1;
     for (uint64_t prime : preSievePrimes[i])
-      product *= prime;
+      if (prime)
+        size *= prime;
 
-    uint64_t start = product;
-    uint64_t stop = start + product;
-    uint64_t bytes = product / 30;
-    preSieveTables[i].resize((bytes + sizeof(uint64_t) - 1) / sizeof(uint64_t));
-    std::fill(preSieveTables[i].begin(), preSieveTables[i].end(), ~0ull);
-    uint64_t maxPrime = *(preSievePrimes[i].end() - 1);
-    ASSERT(maxPrime == *std::max_element(preSievePrimes[i].begin(), preSievePrimes[i].end()));
-    ASSERT(start >= maxPrime * maxPrime);
+    std::cout << "const primesieve::Array<uint8_t, " << size
+              << "> preSieveTable" << i << " =\n{\n  ";
 
-    EratSmall eratSmall;
-    eratSmall.init(stop, bytes, maxPrime);
-
-    for (uint64_t prime : preSievePrimes[i])
-      eratSmall.addSievingPrime(prime, start);
-
-    eratSmall.crossOff(preSieveTables[i]);
-  }
-
-  for (std::size_t i = 0; i < preSieveTables.size(); i++)
-  {
-    uint8_t* table = (uint8_t*) preSieveTables[i].data();
-    std::size_t bytes = 1;
-    for (uint64_t prime : preSievePrimes[i])
-      bytes *= prime;
-    std::cout << "const primesieve::Array<uint8_t, " << std::dec << bytes
-              << "> preSieveTable" << i << " =" << std::endl;
-    std::cout << "{" << std::endl << "  ";
-    for (std::size_t j = 0; j < bytes; j++)
+    for (uint64_t j = 0; j < size; j++)
     {
-      if (j != 0 && j % 20 == 0)
-        std::cout << std::endl << "  ";
-      std::cout << "0x" << std::hex << (int) table[j];
-      if (j + 1 < bytes)
-        std::cout << ((j+1) % 20 == 0 ? "," : ", ");
+      // Each bit of byte j corresponds to the number j * 30 + bitValues[bit]
+      int byte = 0xff;
+      for (int bit = 0; bit < 8; bit++)
+        for (uint64_t prime : preSievePrimes[i])
+          if (prime && (j * 30 + bitValues[bit]) % prime == 0)
+            byte &= ~(1 << bit);
+
+      if (j > 0)
+        std::cout << ((j % 20 == 0) ? ",\n  " : ", ");
+      std::cout << "0x" << std::hex << byte << std::dec;
     }
-    std::cout << std::endl << "};" << std::endl << std::endl;
+
+    std::cout << "\n};\n\n";
   }
 
-  std::cout << "constexpr primesieve::Array<const uint8_t*, "
-            << std::dec << preSievePrimes.size() << "> preSieveTables =" << std::endl;
-  std::cout << "{" << std::endl;
+  std::cout << "constexpr primesieve::Array<const uint8_t*, " << tables << "> preSieveTables =\n{\n";
 
-  for (std::size_t i = 0; i < preSieveTables.size(); i++)
-    std::cout << "  preSieveTable" << i << ".data()" << (i + 1 < preSieveTables.size() ? "," : "") << std::endl;
+  for (int i = 0; i < tables; i++)
+    std::cout << "  preSieveTable" << i << ".data()" << ((i + 1 < tables) ? ",\n" : "\n};\n\n");
 
-  std::cout << "};" << std::endl << std::endl;
-  std::cout << "constexpr primesieve::Array<std::size_t, "
-            << preSievePrimes.size() << "> preSieveTableSizes =" << std::endl;
-  std::cout << "{" << std::endl;
+  std::cout << "constexpr primesieve::Array<std::size_t, " << tables << "> preSieveTableSizes =\n{\n";
 
-  for (std::size_t i = 0; i < preSieveTables.size(); i++)
-    std::cout << "  preSieveTable" << i << ".size()" << (i + 1 < preSieveTables.size() ? "," : "") << std::endl;
-
-  std::cout << "};" << std::endl;
+  for (int i = 0; i < tables; i++)
+    std::cout << "  preSieveTable" << i << ".size()" << ((i + 1 < tables) ? ",\n" : "\n};\n");
 }
 
 #endif
@@ -6544,8 +6514,6 @@ const primesieve::Array<uint8_t, 9797> preSieveTable15 =
   0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xcf, 0xff, 0xff, 0xff
 };
 
-/// The pointer and size tables are constexpr, this guarantees
-/// that they are initialized at compile time.
 constexpr primesieve::Array<const uint8_t*, 16> preSieveTables =
 {
   preSieveTable0.data(),

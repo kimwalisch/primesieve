@@ -1,6 +1,7 @@
 Changes in version 12.17, 12/10/2026
 ====================================
 
+* PreSieveTables.hpp: Simplify the lookup table generator program.
 * CMake: Require C++14 for the executable and tests.
 * Vector.hpp: Make Array member functions constexpr.
 * PreSieveTables.hpp: Fix MSVC initializing preSieveTables at startup.
