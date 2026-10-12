@@ -619,13 +619,13 @@ public:
   using value_type = T;
   T array_[N];
 
-  T& operator[](std::size_t pos) noexcept
+  constexpr T& operator[](std::size_t pos) noexcept
   {
     ASSERT(pos < size());
     return array_[pos];
   }
 
-  const T& operator[](std::size_t pos) const noexcept
+  constexpr const T& operator[](std::size_t pos) const noexcept
   {
     ASSERT(pos < size());
     return array_[pos];
@@ -636,43 +636,43 @@ public:
     std::fill_n(begin(), size(), value);
   }
 
-  T* data() noexcept
+  constexpr T* data() noexcept
   {
     return array_;
   }
 
-  const T* data() const noexcept
+  constexpr const T* data() const noexcept
   {
     return array_;
   }
 
-  T* begin() noexcept
+  constexpr T* begin() noexcept
   {
     return array_;
   }
 
-  const T* begin() const noexcept
+  constexpr const T* begin() const noexcept
   {
     return array_;
   }
 
-  T* end() noexcept
+  constexpr T* end() noexcept
   {
     return array_ + N;
   }
 
-  const T* end() const noexcept
+  constexpr const T* end() const noexcept
   {
     return array_ + N;
   }
 
-  T& back() noexcept
+  constexpr T& back() noexcept
   {
     ASSERT(N > 0);
     return array_[N - 1];
   }
 
-  const T& back() const noexcept
+  constexpr const T& back() const noexcept
   {
     ASSERT(N > 0);
     return array_[N - 1];

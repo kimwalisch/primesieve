@@ -149,10 +149,10 @@ void PreSieve::preSieve(Vector<uint64_t>& sieve, uint64_t segmentLow)
   uint8_t* sieve8 = (uint8_t*) sieve.data();
   uint64_t sieveBytes = sieve.size() * sizeof(uint64_t);
 
-  pos0 = (segmentLow % (preSieveTables[0].size() * 30)) / 30;
-  pos1 = (segmentLow % (preSieveTables[1].size() * 30)) / 30;
-  pos2 = (segmentLow % (preSieveTables[2].size() * 30)) / 30;
-  pos3 = (segmentLow % (preSieveTables[3].size() * 30)) / 30;
+  pos0 = (segmentLow % (preSieveTableSizes[0] * 30)) / 30;
+  pos1 = (segmentLow % (preSieveTableSizes[1] * 30)) / 30;
+  pos2 = (segmentLow % (preSieveTableSizes[2] * 30)) / 30;
+  pos3 = (segmentLow % (preSieveTableSizes[3] * 30)) / 30;
 
   // This loop initializes the sieve array.
   // It performs a bitwise AND of the first four
@@ -162,31 +162,29 @@ void PreSieve::preSieve(Vector<uint64_t>& sieve, uint64_t segmentLow)
   {
     uint64_t bytesToCopy = sieveBytes - offset;
 
-    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[0].size() - pos0));
-    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[1].size() - pos1));
-    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[2].size() - pos2));
-    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[3].size() - pos3));
+    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTableSizes[0] - pos0));
+    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTableSizes[1] - pos1));
+    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTableSizes[2] - pos2));
+    bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTableSizes[3] - pos3));
 
     ASSERT(bytesToCopy > 0);
-    presieve1(preSieveTables[0].begin() + pos0,
-              preSieveTables[1].begin() + pos1,
-              preSieveTables[2].begin() + pos2,
-              preSieveTables[3].begin() + pos3,
-              &sieve8[offset],
-              bytesToCopy);
-
-    offset += bytesToCopy;
+    presieve1(preSieveTables[0] + pos0,
+              preSieveTables[1] + pos1,
+              preSieveTables[2] + pos2,
+              preSieveTables[3] + pos3,
+              &sieve8[offset], bytesToCopy);
 
     pos0 += bytesToCopy;
     pos1 += bytesToCopy;
     pos2 += bytesToCopy;
     pos3 += bytesToCopy;
+    offset += bytesToCopy;
 
     // Wrap the updated positions to avoid zero-byte calls
-    pos0 *= (pos0 < preSieveTables[0].size());
-    pos1 *= (pos1 < preSieveTables[1].size());
-    pos2 *= (pos2 < preSieveTables[2].size());
-    pos3 *= (pos3 < preSieveTables[3].size());
+    pos0 *= (pos0 < preSieveTableSizes[0]);
+    pos1 *= (pos1 < preSieveTableSizes[1]);
+    pos2 *= (pos2 < preSieveTableSizes[2]);
+    pos3 *= (pos3 < preSieveTableSizes[3]);
   }
 
   // This loop performs a bitwise AND of the
@@ -196,40 +194,38 @@ void PreSieve::preSieve(Vector<uint64_t>& sieve, uint64_t segmentLow)
   {
     offset = 0;
 
-    pos0 = (segmentLow % (preSieveTables[i+0].size() * 30)) / 30;
-    pos1 = (segmentLow % (preSieveTables[i+1].size() * 30)) / 30;
-    pos2 = (segmentLow % (preSieveTables[i+2].size() * 30)) / 30;
-    pos3 = (segmentLow % (preSieveTables[i+3].size() * 30)) / 30;
+    pos0 = (segmentLow % (preSieveTableSizes[i+0] * 30)) / 30;
+    pos1 = (segmentLow % (preSieveTableSizes[i+1] * 30)) / 30;
+    pos2 = (segmentLow % (preSieveTableSizes[i+2] * 30)) / 30;
+    pos3 = (segmentLow % (preSieveTableSizes[i+3] * 30)) / 30;
 
     while (offset < sieveBytes)
     {
       uint64_t bytesToCopy = sieveBytes - offset;
 
-      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+0].size() - pos0));
-      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+1].size() - pos1));
-      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+2].size() - pos2));
-      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTables[i+3].size() - pos3));
+      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTableSizes[i+0] - pos0));
+      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTableSizes[i+1] - pos1));
+      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTableSizes[i+2] - pos2));
+      bytesToCopy = std::min(bytesToCopy, uint64_t(preSieveTableSizes[i+3] - pos3));
 
       ASSERT(bytesToCopy > 0);
-      presieve2(preSieveTables[i+0].begin() + pos0,
-                preSieveTables[i+1].begin() + pos1,
-                preSieveTables[i+2].begin() + pos2,
-                preSieveTables[i+3].begin() + pos3,
-                &sieve8[offset],
-                bytesToCopy);
-
-      offset += bytesToCopy;
+      presieve2(preSieveTables[i+0] + pos0,
+                preSieveTables[i+1] + pos1,
+                preSieveTables[i+2] + pos2,
+                preSieveTables[i+3] + pos3,
+                &sieve8[offset], bytesToCopy);
 
       pos0 += bytesToCopy;
       pos1 += bytesToCopy;
       pos2 += bytesToCopy;
       pos3 += bytesToCopy;
+      offset += bytesToCopy;
 
       // Wrap the updated positions to avoid zero-byte calls
-      pos0 *= (pos0 < preSieveTables[i+0].size());
-      pos1 *= (pos1 < preSieveTables[i+1].size());
-      pos2 *= (pos2 < preSieveTables[i+2].size());
-      pos3 *= (pos3 < preSieveTables[i+3].size());
+      pos0 *= (pos0 < preSieveTableSizes[i+0]);
+      pos1 *= (pos1 < preSieveTableSizes[i+1]);
+      pos2 *= (pos2 < preSieveTableSizes[i+2]);
+      pos3 *= (pos3 < preSieveTableSizes[i+3]);
     }
   }
 
