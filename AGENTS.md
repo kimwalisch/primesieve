@@ -128,19 +128,19 @@ The user may revise or remove ChangeLog entries, including entries they consider
 
 ## Building on Windows
 
-Use MSYS2 MinGW-w64 GCC as the primary Windows compiler. The commands below use the MINGW64 environment in MSYS2's default location, `C:\msys64\mingw64\bin`. If MSYS2 is installed elsewhere, or you use another environment such as UCRT64 (used by CI), replace that path in all commands; the environment must provide `gcc`, `g++`, `cmake` and `mingw32-make`. Do not mix MSYS2 environments, and do not install or update packages.
+Use MSYS2 MinGW-w64 GCC in the UCRT64 environment as the primary Windows compiler, matching the Windows GCC job in `.github/workflows/ci.yml`. The commands below use MSYS2's default location, `C:\msys64\ucrt64\bin`. If MSYS2 is installed elsewhere, replace that path in all commands; the UCRT64 environment must provide `gcc`, `g++`, `cmake`, `ctest` and `mingw32-make`. Do not mix MSYS2 environments or reuse MINGW64 build directories for UCRT64. Do not install or update packages; report missing packages to the user.
 
 Prepend that directory to `PATH` in every new shell used to configure, build, run tests, or run benchmarks. This makes both the build tools and their runtime DLLs available; without it, `g++` can fail with exit code 1 and no error message. Set the compiler and make program explicitly as shown below to avoid tool discovery delays.
 
-The following PowerShell commands were verified on the maintainer's PC using the `Unix Makefiles` generator from `doc/BUILD.md`, CMake 4.4.3, and GCC 16.2.0. Run each block in a new shell from the repository root. `build-agents` is an ignored build directory; reuse it when its compiler and generator match, or choose a fresh build directory when they differ. When reusing a build directory, rerun probes whose code or inputs changed as described in Required verification, step 1.
+The following PowerShell commands were verified on the maintainer's PC using UCRT64, the `Unix Makefiles` generator from `doc/BUILD.md`, CMake 4.4.3, and GCC 16.2.0. Run each block in a new shell from the repository root. `build-agents-ucrt64` is an ignored build directory; reuse it when its compiler and generator match, or choose a fresh build directory when they differ. When reusing a build directory, rerun probes whose code or inputs changed as described in Required verification, step 1.
 
 The probe checks below assume an x64 baseline build with `WITH_MULTIARCH=ON` and no compiler flags that enable the corresponding instruction sets natively. When adapting this recipe for native builds or `WITH_MULTIARCH=OFF`, adjust the probe checks as described in Required verification, step 7.
 
 ```powershell
-$env:Path = 'C:\msys64\mingw64\bin;' + $env:Path
-New-Item -ItemType Directory -Force -Path build-agents | Out-Null
-Set-Location build-agents
-cmake .. -G 'Unix Makefiles' -DCMAKE_MAKE_PROGRAM=C:/msys64/mingw64/bin/mingw32-make.exe -DCMAKE_CXX_COMPILER=C:/msys64/mingw64/bin/g++.exe -DCMAKE_C_COMPILER=C:/msys64/mingw64/bin/gcc.exe '-DCMAKE_CXX_FLAGS=-Wall -Wextra -pedantic -Werror' '-DCMAKE_C_FLAGS=-Wall -Wextra -pedantic -Werror' -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON
+$env:Path = 'C:\msys64\ucrt64\bin;' + $env:Path
+New-Item -ItemType Directory -Force -Path build-agents-ucrt64 | Out-Null
+Set-Location build-agents-ucrt64
+cmake .. -G 'Unix Makefiles' -DCMAKE_MAKE_PROGRAM=C:/msys64/ucrt64/bin/mingw32-make.exe -DCMAKE_CXX_COMPILER=C:/msys64/ucrt64/bin/g++.exe -DCMAKE_C_COMPILER=C:/msys64/ucrt64/bin/gcc.exe -DCMAKE_BUILD_TYPE=Release '-DCMAKE_CXX_FLAGS=-Wall -Wextra -pedantic -Werror' '-DCMAKE_C_FLAGS=-Wall -Wextra -pedantic -Werror' -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON -DWITH_MULTIARCH=ON
 if ($LASTEXITCODE -ne 0) { throw 'CMake configuration failed' }
 foreach ($probe in 'multiarch_x86_popcnt', 'multiarch_avx2', 'multiarch_avx512_bw', 'multiarch_avx512_vbmi2') { if (-not (Select-String -Path CMakeCache.txt -Pattern "^${probe}:INTERNAL=1$" -Quiet)) { throw "CMake probe $probe failed" } }
 cmake --build . --parallel 14
@@ -156,9 +156,9 @@ if ($LASTEXITCODE -ne 0 -or $nth -ne '22801763489') { throw "Wrong nth prime: $n
 "Known answers OK: primesieve 1e10 = $count, primesieve 1e9 --nth-prime = $nth"
 ```
 
-The build defaults to `Release`. The parallel build above uses the maintainer's 14 logical processors; adjust the job count on other machines. For the Debug pass (Required verification, step 6), run the same commands with `build-agents-debug` as the build directory, `-DCMAKE_BUILD_TYPE=Debug` added, and `-O1` prepended to both sets of flags.
+The commands explicitly select `Release` and enable runtime dispatch, including when reusing a build directory. The parallel build above uses the maintainer's 14 logical processors; adjust the job count on other machines. For the Debug pass (Required verification, step 6), run the same commands with `build-agents-ucrt64-debug` as the build directory, `-DCMAKE_BUILD_TYPE=Release` replaced by `-DCMAKE_BUILD_TYPE=Debug`, and `-O1` prepended to both sets of flags.
 
-This configuration uses GNU's linker, with `CMAKE_LINKER` resolving to `C:/msys64/mingw64/bin/ld.exe`. Microsoft Visual Studio's `link.exe` is not required. Do not add a Visual Studio linker path or force `link.exe` for this MinGW build.
+This configuration uses GNU's linker, with `CMAKE_LINKER` resolving to `C:/msys64/ucrt64/bin/ld.exe`. Microsoft Visual Studio's `link.exe` is not required. Do not add a Visual Studio linker path or force `link.exe` for this MinGW build.
 
 `.\primesieve.exe --cpu-info` shows which of the instruction sets used for runtime dispatch (AVX2, AVX-512, ARM SVE) the CPU supports. Kernels for instruction sets that the CPU lacks, e.g. AVX-512 on many x64 CPUs, can only be compiled, and x64 compilers skip the ARM code, which CI's ARM64 Linux jobs run. Report which code paths you could not run.
 
@@ -183,7 +183,7 @@ foreach ($compiler in 'cl', 'clang-cl') {
 }
 ```
 
-To run the benchmarks on Windows, prepend `C:\msys64\mingw64\bin` to `PATH` and run the commands from the Benchmarking section unchanged in the `build-agents` directory.
+To run the benchmarks on Windows, prepend `C:\msys64\ucrt64\bin` to `PATH` and run the commands from the Benchmarking section unchanged in the `build-agents-ucrt64` directory.
 
 ## Required verification
 
