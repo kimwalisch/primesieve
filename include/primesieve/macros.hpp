@@ -50,9 +50,14 @@
   #define NOINLINE
 #endif
 
-/// Keep ISA-specific kernels behind the runtime
-/// dispatch boundary. GCC/Clang use target attributes;
-/// native MSVC must prevent inlining.
+/// Annotate SIMD functions used for runtime dispatching. GCC/Clang
+/// (including clang-cl) use target attributes. Native MSVC must
+/// not inline SIMD code into scalar code, as SIMD instructions may
+/// leak into the scalar code path. Hence, this macro is NOINLINE
+/// with native MSVC, which is fine as primesieve's SIMD functions
+/// are long running. primecount inlines small SIMD helpers, hence
+/// it uses two macros: PRIMECOUNT_TARGET_ENTRY (same as this macro)
+/// and PRIMECOUNT_TARGET_ATTRIBUTE (empty with native MSVC).
 ///
 #if __has_attribute(target)
   #define PRIMESIEVE_TARGET_ATTRIBUTE(isa) __attribute__((target(isa)))
