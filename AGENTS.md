@@ -116,7 +116,9 @@ Judge whether a change improves performance using these three single-threaded be
 
 The two example programs benchmark `primesieve::iterator`, the most important feature of libprimesieve. Each prints `Sum of primes <= 10000000000: 2220822432581729238` and `Seconds: ...`. Run them without arguments; their optional limit argument is parsed with `std::atoll`, so it must be a plain integer such as `10000000000` (`1e10` would be read as 1).
 
-To compare a change, build the unmodified code with the same configuration without touching the user's uncommitted changes, e.g. in a `git worktree` of the base commit. Run each benchmark several times, alternating between the two builds, and compare the minimum times; differences of about 1% are noise. No other CPU-intensive programs, including leftover benchmark runs, may run at the same time.
+Always benchmark the agent's code changes against the source state immediately before those changes, including pre-existing staged and unstaged user changes and any untracked source files needed for the build. Preserve this baseline before editing code that will be benchmarked, e.g. in an isolated source snapshot. A `git worktree` of the base commit is sufficient only if that commit matches the baseline; otherwise, include the pre-existing user changes in the isolated copy without modifying the user's working tree or index.
+
+Build the baseline and modified code with the same compiler and build configuration. Run each benchmark several times, alternating between the two builds, and compare the minimum times; differences of about 1% are noise. No other CPU-intensive programs, including leftover benchmark runs, may run at the same time.
 
 ## ChangeLog
 
