@@ -64,9 +64,9 @@ check_cxx_source_compiles("
         p.fillNextPrimes(primes);
         return 0;
     }
-" multiarch_avx512_vbmi2)
+" PRIMESIEVE_MULTIARCH_AVX512_VBMI2)
 
-if(multiarch_avx512_vbmi2)
+if(PRIMESIEVE_MULTIARCH_AVX512_VBMI2)
     list(APPEND PRIMESIEVE_COMPILE_DEFINITIONS "ENABLE_MULTIARCH_AVX512_VBMI2")
 endif()
 

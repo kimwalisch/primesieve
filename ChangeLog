@@ -1,6 +1,8 @@
-Changes in version 12.17, 12/10/2026
+Changes in version 12.17, 13/10/2026
 ====================================
 
+* primesieveConfig.cmake.in: Avoid overwriting the LOWER_COMPONENTS variable of consumers.
+* CMake: Prefix internal cache variables with PRIMESIEVE_ to avoid name collisions.
 * PreSieveTables.hpp: Simplify the lookup table generator program.
 * CMake: Require C++14 for the executable and tests.
 * Vector.hpp: Make Array member functions constexpr.

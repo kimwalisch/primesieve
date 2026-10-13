@@ -44,9 +44,9 @@ check_cxx_source_compiles("
 
         return 0;
     }
-" multiarch_x86_popcnt)
+" PRIMESIEVE_MULTIARCH_X86_POPCNT)
 
-if(multiarch_x86_popcnt)
+if(PRIMESIEVE_MULTIARCH_X86_POPCNT)
     list(APPEND PRIMESIEVE_COMPILE_DEFINITIONS "ENABLE_MULTIARCH_x86_POPCNT")
 endif()
 

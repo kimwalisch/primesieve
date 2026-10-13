@@ -26,28 +26,28 @@ endif()
 
 # Check if code compiles without libatomic.
 # Should always work on CPUs >= 64-bits
-check_cxx_source_compiles("${atomic64_TEST_SOURCE}" atomic64)
+check_cxx_source_compiles("${atomic64_TEST_SOURCE}" PRIMESIEVE_ATOMIC64)
 
 # Our code requires libatomic to compile
-if(NOT atomic64)
+if(NOT PRIMESIEVE_ATOMIC64)
     # First try -latomic as the compiler may find libraries
     # in directories which CMake does not search.
     set(CMAKE_REQUIRED_LIBRARIES "-latomic")
-    check_cxx_source_compiles("${atomic64_TEST_SOURCE}" atomic64_with_latomic)
+    check_cxx_source_compiles("${atomic64_TEST_SOURCE}" PRIMESIEVE_ATOMIC64_WITH_LATOMIC)
 
-    if(atomic64_with_latomic)
+    if(PRIMESIEVE_ATOMIC64_WITH_LATOMIC)
         list(APPEND PRIMESIEVE_LINK_LIBRARIES "-latomic")
         string(APPEND PRIMESIEVE_PKGCONFIG_LIBS_PRIVATE "-latomic ")
     else()
-        find_library(LIBATOMIC NAMES atomic atomic.so.1 libatomic.so.1)
+        find_library(PRIMESIEVE_LIBATOMIC NAMES atomic atomic.so.1 libatomic.so.1)
 
-        if(LIBATOMIC)
-            set(CMAKE_REQUIRED_LIBRARIES "${LIBATOMIC}")
-            check_cxx_source_compiles("${atomic64_TEST_SOURCE}" atomic64_with_libatomic_path)
+        if(PRIMESIEVE_LIBATOMIC)
+            set(CMAKE_REQUIRED_LIBRARIES "${PRIMESIEVE_LIBATOMIC}")
+            check_cxx_source_compiles("${atomic64_TEST_SOURCE}" PRIMESIEVE_ATOMIC64_WITH_LIBATOMIC_PATH)
         endif()
 
-        if(atomic64_with_libatomic_path)
-            list(APPEND PRIMESIEVE_LINK_LIBRARIES "${LIBATOMIC}")
+        if(PRIMESIEVE_ATOMIC64_WITH_LIBATOMIC_PATH)
+            list(APPEND PRIMESIEVE_LINK_LIBRARIES "${PRIMESIEVE_LIBATOMIC}")
         else()
             message(FATAL_ERROR "Failed to compile std::atomic, libatomic likely not found!")
         endif()

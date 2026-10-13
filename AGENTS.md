@@ -24,7 +24,7 @@ Exclude this vendored library from changes to the primesieve codebase, including
 
 Fixes to it belong in its upstream repository, https://github.com/kimwalisch/calculator.
 
-primecount (https://github.com/kimwalisch/primecount) in turn vendors the complete primesieve tree, including this file, in `lib/primesieve` and builds it using `add_subdirectory()`. Keep such subproject builds working: settings that would affect the parent project, such as the default build type, are only applied if `PRIMESIEVE_IS_TOP_PROJECT` is ON. Do not edit primecount's copy; fixes belong in the primesieve repository.
+primecount (https://github.com/kimwalisch/primecount) in turn vendors the complete primesieve tree, including this file, in `lib/primesieve` and builds it using `add_subdirectory()`. Keep such subproject builds working: settings that would affect the parent project, such as the default build type, are only applied if `PRIMESIEVE_IS_TOP_PROJECT` is ON. Since the CMake cache is shared with the parent project, compiler check and library search results use the `PRIMESIEVE_` prefix, e.g. `PRIMESIEVE_MULTIARCH_AVX2`, whereas public `BUILD_*` and `WITH_*` options keep their names. Do not edit primecount's copy; fixes belong in the primesieve repository.
 
 ## Preserve user changes
 
@@ -61,7 +61,7 @@ Keep changes limited to the requested task. Avoid unrelated refactoring, renamin
   3. Updates to `cpu_arch_macros.hpp`, the kernel header and the dispatch code.
   4. The `--cpu-info` output in `src/app/main.cpp`.
   5. `-DENABLE_MULTIARCH_<ISA>` in `scripts/build_clang_*.ps1`, which build the release binaries without CMake.
-  6. A `multiarch_<isa>:INTERNAL=1` check in `.github/workflows/ci.yml`.
+  6. A `PRIMESIEVE_MULTIARCH_<ISA>:INTERNAL=1` check in `.github/workflows/ci.yml`.
 - Split overly complicated expressions, especially nested `std::min()`/`std::max()` calls combined with table lookups, into simpler intermediate calculations.
 - Do not use `UINT64_C(...)` or similar integer-constant macros.
 - Add command-line options as described at the top of `src/app/main.cpp`, and document new or changed options in `src/app/help.cpp`, in the man page source `doc/primesieve.txt` and, if listed there, in `README.md`. Regenerating `doc/primesieve.1` (`-DBUILD_MANPAGE=ON`) requires `a2x`; if it is unavailable, tell the user.
@@ -144,7 +144,7 @@ New-Item -ItemType Directory -Force -Path build-agents-msys2-gcc | Out-Null
 Set-Location build-agents-msys2-gcc
 cmake .. -G 'Unix Makefiles' -DCMAKE_MAKE_PROGRAM=C:/msys64/ucrt64/bin/mingw32-make.exe -DCMAKE_CXX_COMPILER=C:/msys64/ucrt64/bin/g++.exe -DCMAKE_C_COMPILER=C:/msys64/ucrt64/bin/gcc.exe -DCMAKE_BUILD_TYPE=Release '-DCMAKE_CXX_FLAGS=-Wall -Wextra -pedantic -Werror' '-DCMAKE_C_FLAGS=-Wall -Wextra -pedantic -Werror' -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON -DWITH_MULTIARCH=ON
 if ($LASTEXITCODE -ne 0) { throw 'CMake configuration failed' }
-foreach ($probe in 'multiarch_x86_popcnt', 'multiarch_avx2', 'multiarch_avx512_bw', 'multiarch_avx512_vbmi2') { if (-not (Select-String -Path CMakeCache.txt -Pattern "^${probe}:INTERNAL=1$" -Quiet)) { throw "CMake probe $probe failed" } }
+foreach ($probe in 'PRIMESIEVE_MULTIARCH_X86_POPCNT', 'PRIMESIEVE_MULTIARCH_AVX2', 'PRIMESIEVE_MULTIARCH_AVX512_BW', 'PRIMESIEVE_MULTIARCH_AVX512_VBMI2') { if (-not (Select-String -Path CMakeCache.txt -Pattern "^${probe}:INTERNAL=1$" -Quiet)) { throw "CMake probe $probe failed" } }
 cmake --build . --parallel 14
 if ($LASTEXITCODE -ne 0) { throw 'Build failed' }
 ctest
@@ -199,14 +199,14 @@ Always build and run all of the following checks after code changes, using a sep
 
    On Windows, use the explicit tool paths and generator in the PowerShell recipe above.
 
-   CMake caches probe results. If a probe or its inputs change (e.g. included project sources/headers or relevant compiler flags and definitions), use a fresh build directory or clear the affected probe cache entries before reconfiguring with the intended options. For multiarch probes, add `-U 'multiarch_*'` to the configure command. Check the configure output to confirm the affected probes enabled for that configuration ran again; existing cached results do not verify changed probes.
+   CMake caches probe results. If a probe or its inputs change (e.g. included project sources/headers or relevant compiler flags and definitions), use a fresh build directory or clear the affected probe cache entries before reconfiguring with the intended options. For multiarch probes, add `-U 'PRIMESIEVE_MULTIARCH_*'` to the configure command. Check the configure output to confirm the affected probes enabled for that configuration ran again; existing cached results do not verify changed probes.
 
 2. Build using `cmake --build . --parallel`.
 3. Run `ctest` from the build directory. If a test fails, inspect its output using `ctest --output-on-failure`.
 4. Run `./primesieve --test` to run primesieve's correctness tests.
 5. Verify that `./primesieve 1e10 -q` prints exactly `455052511` and `./primesieve 1e9 --nth-prime -q` prints exactly `22801763489`.
 6. After changes to `src/` or `include/`, repeat these checks in a Debug build in another build directory, adding `-DCMAKE_BUILD_TYPE=Debug` and `-O1` to both sets of flags as in `test/README.md`. Debug builds enable `ASSERT()`, including bounds checks in `Vector` and `Array`.
-7. After changes to CMake files or runtime dispatch code, verify the multiarch probes in a baseline build with `WITH_MULTIARCH=ON` and no compiler flags that enable the corresponding instruction sets natively. In that configuration, require `multiarch_<isa>:INTERNAL=1` in `CMakeCache.txt` for `x86_popcnt`, `avx2`, `avx512_bw` and `avx512_vbmi2` on x64, or for `arm_sve` on ARM64 Linux with GCC 14 or later or Clang, as CI does. In native builds (e.g. `-march=native`), probes deliberately fail when runtime dispatch is redundant; check the conditions in the corresponding `cmake/multiarch_*.cmake` files and require success only for probes that are still needed and supported. With `WITH_MULTIARCH=OFF`, the probes are not run and no successful cache entries are required. Investigate unexpected failures; do not change correct probe logic merely to force success.
+7. After changes to CMake files or runtime dispatch code, verify the multiarch probes in a baseline build with `WITH_MULTIARCH=ON` and no compiler flags that enable the corresponding instruction sets natively. In that configuration, require `PRIMESIEVE_MULTIARCH_<ISA>:INTERNAL=1` in `CMakeCache.txt` for `X86_POPCNT`, `AVX2`, `AVX512_BW` and `AVX512_VBMI2` on x64, or for `ARM_SVE` on ARM64 Linux with GCC 14 or later or Clang, as CI does. In native builds (e.g. `-march=native`), probes deliberately fail when runtime dispatch is redundant; check the conditions in the corresponding `cmake/multiarch_*.cmake` files and require success only for probes that are still needed and supported. With `WITH_MULTIARCH=OFF`, the probes are not run and no successful cache entries are required. Investigate unexpected failures; do not change correct probe logic merely to force success.
 8. After changes to printing code, compare the MD5 sums of the `--print` output with those in `.github/workflows/ci.yml`. On Windows, convert the output's CRLF line endings to LF before hashing.
 9. After changes to MSVC-specific code, also run the MSVC and clang-cl block above.
 

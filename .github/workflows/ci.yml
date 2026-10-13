@@ -27,10 +27,10 @@ jobs:
       - name: Build primesieve
         run: |
             cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_MANPAGE=ON -DCMAKE_BUILD_TYPE=${{matrix.config}} -DCMAKE_C_FLAGS="-Wall -Wextra -pedantic -Werror" -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
-            grep "^multiarch_x86_popcnt:INTERNAL=1$" CMakeCache.txt
-            grep "^multiarch_avx2:INTERNAL=1$" CMakeCache.txt
-            grep "^multiarch_avx512_bw:INTERNAL=1$" CMakeCache.txt
-            grep "^multiarch_avx512_vbmi2:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_X86_POPCNT:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_AVX2:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_AVX512_BW:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_AVX512_VBMI2:INTERNAL=1$" CMakeCache.txt
             cmake --build . --parallel --verbose
       - name: CTest (unit tests)
         run: ctest -j2
@@ -89,10 +89,10 @@ jobs:
       - name: Build primesieve
         run: |
             cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{matrix.config}} -DCMAKE_C_FLAGS="-Wall -Wextra -pedantic -Werror" -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
-            grep "^multiarch_x86_popcnt:INTERNAL=1$" CMakeCache.txt
-            grep "^multiarch_avx2:INTERNAL=1$" CMakeCache.txt
-            grep "^multiarch_avx512_bw:INTERNAL=1$" CMakeCache.txt
-            grep "^multiarch_avx512_vbmi2:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_X86_POPCNT:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_AVX2:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_AVX512_BW:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_AVX512_VBMI2:INTERNAL=1$" CMakeCache.txt
             cmake --build . --parallel --verbose
       - name: CTest (unit tests)
         run: ctest -j2
@@ -159,7 +159,7 @@ jobs:
       - name: Build primesieve
         run: |
             cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{matrix.config}} -DCMAKE_C_FLAGS="-Wall -Wextra -pedantic -Werror" -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
-            grep "^multiarch_arm_sve:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_ARM_SVE:INTERNAL=1$" CMakeCache.txt
             cmake --build . --parallel --verbose
       - name: CTest (unit tests)
         run: ctest -j2
@@ -194,7 +194,7 @@ jobs:
       - name: Build primesieve
         run: |
             cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{matrix.config}} -DCMAKE_C_FLAGS="-Wall -Wextra -pedantic -Werror" -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
-            grep "^multiarch_arm_sve:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_ARM_SVE:INTERNAL=1$" CMakeCache.txt
             cmake --build . --parallel --verbose
       - name: CTest (unit tests)
         run: ctest -j2
@@ -339,10 +339,10 @@ jobs:
       - name: Build primesieve
         run: |
             cmake . -G "Unix Makefiles" -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{matrix.config}} -DCMAKE_C_FLAGS="-Wall -Wextra -pedantic -Werror" -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
-            grep "^multiarch_x86_popcnt:INTERNAL=1$" CMakeCache.txt
-            grep "^multiarch_avx2:INTERNAL=1$" CMakeCache.txt
-            grep "^multiarch_avx512_bw:INTERNAL=1$" CMakeCache.txt
-            grep "^multiarch_avx512_vbmi2:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_X86_POPCNT:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_AVX2:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_AVX512_BW:INTERNAL=1$" CMakeCache.txt
+            grep "^PRIMESIEVE_MULTIARCH_AVX512_VBMI2:INTERNAL=1$" CMakeCache.txt
             cmake --build . --parallel --verbose
       - name: CTest (unit tests)
         run: ctest -j2
@@ -365,10 +365,10 @@ jobs:
       - name: Build primesieve
         run: |
             cmake . -G "Visual Studio 17 2022" -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_CXX_FLAGS="/W3 /WX /MP /EHsc"
-            if (-not (Select-String -Path CMakeCache.txt -Pattern '^multiarch_x86_popcnt:INTERNAL=1$' -Quiet)) { exit 1 }
-            if (-not (Select-String -Path CMakeCache.txt -Pattern '^multiarch_avx2:INTERNAL=1$' -Quiet)) { exit 1 }
-            if (-not (Select-String -Path CMakeCache.txt -Pattern '^multiarch_avx512_bw:INTERNAL=1$' -Quiet)) { exit 1 }
-            if (-not (Select-String -Path CMakeCache.txt -Pattern '^multiarch_avx512_vbmi2:INTERNAL=1$' -Quiet)) { exit 1 }
+            if (-not (Select-String -Path CMakeCache.txt -Pattern '^PRIMESIEVE_MULTIARCH_X86_POPCNT:INTERNAL=1$' -Quiet)) { exit 1 }
+            if (-not (Select-String -Path CMakeCache.txt -Pattern '^PRIMESIEVE_MULTIARCH_AVX2:INTERNAL=1$' -Quiet)) { exit 1 }
+            if (-not (Select-String -Path CMakeCache.txt -Pattern '^PRIMESIEVE_MULTIARCH_AVX512_BW:INTERNAL=1$' -Quiet)) { exit 1 }
+            if (-not (Select-String -Path CMakeCache.txt -Pattern '^PRIMESIEVE_MULTIARCH_AVX512_VBMI2:INTERNAL=1$' -Quiet)) { exit 1 }
             cmake --build . --config Release --target install
       - name: CTest (unit tests)
         run: ctest -j2 -C Release --output-on-failure

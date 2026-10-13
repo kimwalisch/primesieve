@@ -75,9 +75,9 @@ check_cxx_source_compiles("
 
         return (sieve[0] == 0) ? 0 : 1;
     }
-" multiarch_avx512_bw)
+" PRIMESIEVE_MULTIARCH_AVX512_BW)
 
-if(multiarch_avx512_bw)
+if(PRIMESIEVE_MULTIARCH_AVX512_BW)
     list(APPEND PRIMESIEVE_COMPILE_DEFINITIONS "ENABLE_MULTIARCH_AVX512_BW")
 endif()
 

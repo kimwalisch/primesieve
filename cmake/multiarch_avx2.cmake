@@ -68,9 +68,9 @@ check_cxx_source_compiles("
         p.fillNextPrimes(primes);
         return 0;
     }
-" multiarch_avx2)
+" PRIMESIEVE_MULTIARCH_AVX2)
 
-if(multiarch_avx2)
+if(PRIMESIEVE_MULTIARCH_AVX2)
     list(APPEND PRIMESIEVE_COMPILE_DEFINITIONS "ENABLE_MULTIARCH_AVX2")
 endif()
 

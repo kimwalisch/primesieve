@@ -113,11 +113,14 @@ if(WITH_MULTIARCH)
     include("${PROJECT_SOURCE_DIR}/cmake/multiarch_avx512_bw.cmake")
     include("${PROJECT_SOURCE_DIR}/cmake/multiarch_avx512_vbmi2.cmake")
 
-    if(multiarch_x86_popcnt OR multiarch_avx2 OR multiarch_avx512_bw OR multiarch_avx512_vbmi2)
+    if(PRIMESIEVE_MULTIARCH_X86_POPCNT OR
+       PRIMESIEVE_MULTIARCH_AVX2 OR
+       PRIMESIEVE_MULTIARCH_AVX512_BW OR
+       PRIMESIEVE_MULTIARCH_AVX512_VBMI2)
         set(LIB_SRC ${LIB_SRC} src/arch/x86/cpuid.cpp)
     else()
         include("${PROJECT_SOURCE_DIR}/cmake/multiarch_arm_sve.cmake")
-        if(multiarch_arm_sve)
+        if(PRIMESIEVE_MULTIARCH_ARM_SVE)
             set(LIB_SRC ${LIB_SRC} src/arch/arm/sve.cpp)
         endif()
     endif()
