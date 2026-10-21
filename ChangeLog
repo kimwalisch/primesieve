@@ -1,6 +1,7 @@
-Changes in version 12.17, 13/10/2026
+Changes in version 12.17, 21/10/2026
 ====================================
 
+* ci.yml: Compile Linux x64 tests with -march=x86-64, Ubuntu 26.04 enables AVX2.
 * primesieveConfig.cmake.in: Avoid overwriting the LOWER_COMPONENTS variable of consumers.
 * CMake: Prefix internal cache variables with PRIMESIEVE_ to avoid name collisions.
 * PreSieveTables.hpp: Simplify the lookup table generator program.

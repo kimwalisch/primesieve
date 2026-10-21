@@ -9,6 +9,10 @@ on:
       - gh-pages
 
 jobs:
+  # GCC on the Ubuntu 26.04 runner image enables AVX2 and POPCNT by
+  # default. Hence we compile for the x86-64 baseline (also in
+  # linux_clang), otherwise our runtime dispatch code paths would be
+  # disabled and only the native AVX2 code paths would be tested.
   linux_gcc:
     strategy:
       matrix:
@@ -26,7 +30,7 @@ jobs:
             sudo apt install asciidoc libxml2-utils xmlto
       - name: Build primesieve
         run: |
-            cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_MANPAGE=ON -DCMAKE_BUILD_TYPE=${{matrix.config}} -DCMAKE_C_FLAGS="-Wall -Wextra -pedantic -Werror" -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
+            cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DBUILD_MANPAGE=ON -DCMAKE_BUILD_TYPE=${{matrix.config}} -DCMAKE_C_FLAGS="-march=x86-64 -Wall -Wextra -pedantic -Werror" -DCMAKE_CXX_FLAGS="-march=x86-64 -Wall -Wextra -pedantic -Werror"
             grep "^PRIMESIEVE_MULTIARCH_X86_POPCNT:INTERNAL=1$" CMakeCache.txt
             grep "^PRIMESIEVE_MULTIARCH_AVX2:INTERNAL=1$" CMakeCache.txt
             grep "^PRIMESIEVE_MULTIARCH_AVX512_BW:INTERNAL=1$" CMakeCache.txt
@@ -88,7 +92,7 @@ jobs:
             sudo apt install libomp-dev
       - name: Build primesieve
         run: |
-            cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{matrix.config}} -DCMAKE_C_FLAGS="-Wall -Wextra -pedantic -Werror" -DCMAKE_CXX_FLAGS="-Wall -Wextra -pedantic -Werror"
+            cmake . -DBUILD_EXAMPLES=ON -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{matrix.config}} -DCMAKE_C_FLAGS="-march=x86-64 -Wall -Wextra -pedantic -Werror" -DCMAKE_CXX_FLAGS="-march=x86-64 -Wall -Wextra -pedantic -Werror"
             grep "^PRIMESIEVE_MULTIARCH_X86_POPCNT:INTERNAL=1$" CMakeCache.txt
             grep "^PRIMESIEVE_MULTIARCH_AVX2:INTERNAL=1$" CMakeCache.txt
             grep "^PRIMESIEVE_MULTIARCH_AVX512_BW:INTERNAL=1$" CMakeCache.txt
