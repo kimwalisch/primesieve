@@ -15,7 +15,6 @@
 
 #include <arm_sve.h>
 #include <stdint.h>
-#include <cstddef>
 
 namespace {
 
@@ -27,9 +26,9 @@ void presieve1_arm_sve(const uint8_t* __restrict preSieved0,
                        const uint8_t* __restrict preSieved2,
                        const uint8_t* __restrict preSieved3,
                        uint8_t* __restrict sieve,
-                       std::size_t bytes)
+                       uint64_t bytes)
 {
-  for (std::size_t i = 0; i < bytes; i += svcntb())
+  for (uint64_t i = 0; i < bytes; i += svcntb())
   {
     svbool_t pg = svwhilelt_b8(i, bytes);
 
@@ -48,9 +47,9 @@ void presieve2_arm_sve(const uint8_t* __restrict preSieved0,
                        const uint8_t* __restrict preSieved2,
                        const uint8_t* __restrict preSieved3,
                        uint8_t* __restrict sieve,
-                       std::size_t bytes)
+                       uint64_t bytes)
 {
-  for (std::size_t i = 0; i < bytes; i += svcntb())
+  for (uint64_t i = 0; i < bytes; i += svcntb())
   {
     svbool_t pg = svwhilelt_b8(i, bytes);
 

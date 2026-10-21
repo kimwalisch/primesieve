@@ -1,6 +1,7 @@
 Changes in version 12.17, 21/10/2026
 ====================================
 
+* PreSieve_arm_sve.hpp: Fix ambiguous svwhilelt_b8() call on macOS.
 * ci.yml: Compile Linux x64 tests with -march=x86-64, Ubuntu 26.04 enables AVX2.
 * primesieveConfig.cmake.in: Avoid overwriting the LOWER_COMPONENTS variable of consumers.
 * CMake: Prefix internal cache variables with PRIMESIEVE_ to avoid name collisions.
