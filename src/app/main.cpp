@@ -48,7 +48,8 @@ bool has_arm_sve();
 
 #endif
 
-#if defined(ENABLE_MULTIARCH_AVX2)
+#if defined(ENABLE_MULTIARCH_AVX2) || \
+    defined(ENABLE_MULTIARCH_AVX2_BMI2)
 
 namespace primesieve {
 
