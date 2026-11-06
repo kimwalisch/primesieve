@@ -78,7 +78,7 @@ uint64_t sieveWordsToPrimes(const uint64_t* sieve,
   ASSERT(maxPrimes <= maxBlockPrimes);
 
   // +8 for the overlapping 8 x uint16_t stores
-  alignas(16) INDETERMINATE uint16_t buffer[maxBlockPrimes + 8];
+  alignas(16) INDETERMINATE uint16_t primeOffsets[maxBlockPrimes + 8];
 
   // offsetsK = 30 * K + 240 * word (byte K of the word)
   __m128i offsets0 = _mm_set1_epi16(0);
@@ -104,7 +104,7 @@ uint64_t sieveWordsToPrimes(const uint64_t* sieve,
     if (wordPrimes > maxPrimes - count)
       break;
 
-    uint16_t* out = &buffer[count];
+    uint16_t* out = &primeOffsets[count];
 
     // Store the prime offsets (bit values + offsets) of each
     // byte at its position, the position is the number of 1
@@ -167,14 +167,14 @@ uint64_t sieveWordsToPrimes(const uint64_t* sieve,
 
   for (; i + 4 <= count; i += 4)
   {
-    __m256i offsets64 = _mm256_cvtepu16_epi64(_mm_loadl_epi64((const __m128i*) &buffer[i]));
+    __m256i offsets64 = _mm256_cvtepu16_epi64(_mm_loadl_epi64((const __m128i*) &primeOffsets[i]));
     _mm256_storeu_si256((__m256i*) &primes[i], _mm256_add_epi64(base, offsets64));
   }
 
   NO_UNROLL_LOOP
   NO_VECTORIZE_LOOP
   for (; i < count; i++)
-    primes[i] = low + buffer[i];
+    primes[i] = low + primeOffsets[i];
 
   *primeCount = count;
   return word;

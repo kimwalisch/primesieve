@@ -76,7 +76,7 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
   ASSERT(maxPrimes <= maxBlockPrimes);
 
   // +8 for the overlapping 8 x uint16_t stores
-  alignas(16) INDETERMINATE uint16_t buffer[maxBlockPrimes + 8];
+  alignas(16) INDETERMINATE uint16_t primeOffsets[maxBlockPrimes + 8];
   std::size_t count = 0;
   uint64_t word = 0;
 
@@ -105,7 +105,7 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
     if (wordPrimes > maxPrimes - count)
       break;
 
-    uint16_t* out = &buffer[count];
+    uint16_t* out = &primeOffsets[count];
     count += wordPrimes;
 
     // Bit values of the 1 bits of each byte
@@ -147,7 +147,7 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
   NO_UNROLL_LOOP
   for (; i + 8 <= count; i += 8)
   {
-    uint16x8_t offsets = vld1q_u16(&buffer[i]);
+    uint16x8_t offsets = vld1q_u16(&primeOffsets[i]);
     uint32x4_t offsetsLo = vmovl_u16(vget_low_u16(offsets));
     uint32x4_t offsetsHi = vmovl_high_u16(offsets);
     vst1q_u64(&primes[i + 0], vaddw_u32(base, vget_low_u32(offsetsLo)));
@@ -159,7 +159,7 @@ ALWAYS_INLINE uint64_t sieveWordsToPrimes(const uint64_t* sieve,
   NO_UNROLL_LOOP
   NO_VECTORIZE_LOOP
   for (; i < count; i++)
-    primes[i] = low + buffer[i];
+    primes[i] = low + primeOffsets[i];
 
   *primeCount = count;
   return word;
