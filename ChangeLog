@@ -1,6 +1,7 @@
 Changes in version 12.18, 10/11/2026
 ====================================
 
+* RiemannR.cpp: Use max() instead of infinity() for -ffast-math compatibility.
 * multiarch_arm_sve.cmake: Disable ARM SVE runtime dispatching
   for GCC < 14 due to miscompilation #201.
 

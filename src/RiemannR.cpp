@@ -36,7 +36,7 @@ namespace {
 const primesieve::Array<long double, 128> zeta =
 {
  -0.500000000000000000000000000000000000000L,
-  std::numeric_limits<long double>::infinity(),
+  std::numeric_limits<long double>::max(), // Unused zeta(1) placeholder
   1.644934066848226436472415166646025189219L,
   1.202056903159594285399738161511449990765L,
   1.082323233711138191516003696541167902775L,
@@ -244,7 +244,7 @@ T RiemannR_inverse(T x)
     return 0;
 
   T t = initialNthPrimeApprox(x);
-  T old_term = std::numeric_limits<T>::infinity();
+  T old_term = std::numeric_limits<T>::max();
 
   // The condition i < ITERS is required in case the computation
   // does not converge. This happened on Linux i386 where
