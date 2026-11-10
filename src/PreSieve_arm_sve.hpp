@@ -63,3 +63,13 @@ void presieve2_arm_sve(const uint8_t* __restrict preSieved0,
 } // namespace
 
 #endif
+
+#if defined(ENABLE_MULTIARCH_ARM_SVE) && \
+    defined(__GNUC__) && !defined(__clang__)
+  #pragma GCC push_options
+#endif
+#if defined(ENABLE_MULTIARCH_ARM_SVE) && \
+    defined(__GNUC__) && !defined(__clang__)
+  #pragma GCC pop_options
+
+#endif

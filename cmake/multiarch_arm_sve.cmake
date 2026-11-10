@@ -80,3 +80,11 @@ if(PRIMESIEVE_MULTIARCH_ARM_SVE)
 endif()
 
 cmake_pop_check_state()
+    #if defined(__GNUC__) && !defined(__clang__)
+      #pragma GCC push_options
+    #endif
+
+
+    #if defined(__GNUC__) && !defined(__clang__)
+      #pragma GCC pop_options
+    #endif
