@@ -22,6 +22,15 @@ check_cxx_source_compiles("
       Error: ARM SVE multiarch not needed!
     #endif
 
+    // GCC < 14 bug: functions following a target(\"+sve\")
+    // function may also be compiled with SVE enabled, which
+    // crashes on CPUs without SVE.
+    #if defined(__GNUC__) && \
+        !defined(__clang__) && \
+        __GNUC__ < 14
+      Error: ARM SVE multiarch requires GCC >= 14!
+    #endif
+
     #include <include/primesieve/macros.hpp>
     #include <src/arch/arm/sve.cpp>
     #include <arm_sve.h>

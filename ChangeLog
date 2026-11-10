@@ -1,3 +1,9 @@
+Changes in version 12.18, 10/11/2026
+====================================
+
+* multiarch_arm_sve.cmake: Disable ARM SVE runtime dispatching
+  for GCC < 14 due to miscompilation #201.
+
 Changes in version 12.17, 21/10/2026
 ====================================
 
